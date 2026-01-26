@@ -1,0 +1,501 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "sources": [
+    {
+      "id": "ct24-aktualne",
+      "type": "articles",
+      "name": "ČT24",
+      "url": "http://www.ceskatelevize.cz/ct24/rss",
+      "enabled": true,
+      "priority": 5,
+      "topic": "aktualne",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "mainstream",
+        "public"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "irozhlas-aktualne",
+      "type": "articles",
+      "name": "iROZHLAS",
+      "url": "https://www.irozhlas.cz/rss/irozhlas",
+      "enabled": true,
+      "priority": 5,
+      "topic": "aktualne",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "mainstream",
+        "public"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "ceskenoviny-aktualne",
+      "type": "articles",
+      "name": "ČeskéNoviny.cz",
+      "url": "https://www.ceskenoviny.cz/rss/",
+      "enabled": true,
+      "priority": 4,
+      "topic": "aktualne",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "mainstream"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "seznamzpravy-aktualne",
+      "type": "articles",
+      "name": "Seznam Zprávy",
+      "url": "https://www.seznamzpravy.cz/rss",
+      "enabled": true,
+      "priority": 5,
+      "topic": "aktualne",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "mainstream"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "novinky-aktualne",
+      "type": "articles",
+      "name": "Novinky.cz",
+      "url": "https://www.novinky.cz/rss",
+      "enabled": true,
+      "priority": 5,
+      "topic": "aktualne",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "mainstream"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "idnes-aktualne",
+      "type": "articles",
+      "name": "iDNES.cz",
+      "url": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
+      "enabled": true,
+      "priority": 5,
+      "topic": "aktualne",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "mainstream"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "aktualne-cz-aktualne",
+      "type": "articles",
+      "name": "Aktuálně.cz",
+      "url": "https://www.aktualne.cz/rss/",
+      "enabled": true,
+      "priority": 4,
+      "topic": "aktualne",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "mainstream"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "denik-aktualne",
+      "type": "articles",
+      "name": "Deník.cz",
+      "url": "https://www.denik.cz/rss/zpravy.html",
+      "enabled": true,
+      "priority": 4,
+      "topic": "aktualne",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "mainstream",
+        "region"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "ct-sport",
+      "type": "articles",
+      "name": "ČT sport",
+      "url": "https://sport.ceskatelevize.cz/rss2",
+      "enabled": true,
+      "priority": 4,
+      "topic": "sport",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "sport",
+        "public"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "irozhlas-sport",
+      "type": "articles",
+      "name": "iROZHLAS Sport",
+      "url": "https://www.irozhlas.cz/rss/irozhlas/section/sport",
+      "enabled": true,
+      "priority": 3,
+      "topic": "sport",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "sport"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "sport-cz",
+      "type": "articles",
+      "name": "Sport.cz",
+      "url": "https://www.sport.cz/rss",
+      "enabled": true,
+      "priority": 4,
+      "topic": "sport",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "sport"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "isport-blesk",
+      "type": "articles",
+      "name": "iSport.cz",
+      "url": "https://isport.blesk.cz/rss",
+      "enabled": true,
+      "priority": 3,
+      "topic": "sport",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "sport"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "irozhlas-finance",
+      "type": "articles",
+      "name": "iROZHLAS Ekonomika",
+      "url": "https://www.irozhlas.cz/rss/irozhlas/section/ekonomika",
+      "enabled": true,
+      "priority": 4,
+      "topic": "finance",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "finance"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "e15-finance",
+      "type": "articles",
+      "name": "E15",
+      "url": "https://www.e15.cz/rss",
+      "enabled": true,
+      "priority": 4,
+      "topic": "finance",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "finance"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "hn-finance",
+      "type": "articles",
+      "name": "Hospodářské noviny",
+      "url": "https://hn.cz/?m=rss",
+      "enabled": true,
+      "priority": 4,
+      "topic": "finance",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "finance"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "kurzy-finance",
+      "type": "articles",
+      "name": "Kurzy.cz",
+      "url": "https://www.kurzy.cz/rss/",
+      "enabled": true,
+      "priority": 3,
+      "topic": "finance",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "finance"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "roklen24-finance",
+      "type": "articles",
+      "name": "Roklen24",
+      "url": "https://roklen24.cz/rss/",
+      "enabled": true,
+      "priority": 3,
+      "topic": "finance",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "finance"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "idnes-krimi",
+      "type": "articles",
+      "name": "iDNES.cz",
+      "url": "https://servis.idnes.cz/rss.aspx?c=krimi",
+      "enabled": true,
+      "priority": 3,
+      "topic": "krimi",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "krimi"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "novinky-krimi",
+      "type": "articles",
+      "name": "Novinky.cz",
+      "url": "https://www.novinky.cz/rss/krimi",
+      "enabled": true,
+      "priority": 3,
+      "topic": "krimi",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "krimi"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "idnes-zdravi",
+      "type": "articles",
+      "name": "iDNES.cz",
+      "url": "https://servis.idnes.cz/rss.aspx?c=zdravi",
+      "enabled": true,
+      "priority": 3,
+      "topic": "zdravi",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "zdravi"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "novinky-zdravi",
+      "type": "articles",
+      "name": "Novinky.cz",
+      "url": "https://www.novinky.cz/rss/zdravi",
+      "enabled": true,
+      "priority": 3,
+      "topic": "zdravi",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "zdravi"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "ct24-youtube-playlist-1",
+      "type": "videos",
+      "name": "ČT24",
+      "channel": "ČT24",
+      "playlistId": "PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
+      "url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
+      "enabled": true,
+      "priority": 5,
+      "topic": "aktualne",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "youtube",
+        "public",
+        "mainstream"
+      ],
+      "legal_mode": "rss_only"
+    },
+    {
+      "id": "ct24-youtube-playlist-2",
+      "type": "videos",
+      "name": "ČT24",
+      "channel": "ČT24",
+      "playlistId": "PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
+      "url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
+      "enabled": true,
+      "priority": 5,
+      "topic": "aktualne",
+      "policy": {
+        "timeout_ms": 20000,
+        "max_retries": 3,
+        "backoff_base_ms": 1000,
+        "cooldown_minutes": 30,
+        "max_items_per_run": 40,
+        "strictness": "normal"
+      },
+      "tags": [
+        "youtube",
+        "public",
+        "mainstream"
+      ],
+      "legal_mode": "rss_only"
+    }
+  ]
+}

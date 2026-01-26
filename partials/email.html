@@ -1,0 +1,130 @@
+<section class="card">
+  <h2 class="card-title">E-mail – rychlé odkazy</h2>
+
+  <div class="email-tags" id="email-tags">
+    <a href="https://login.szn.cz/" target="_blank" rel="noopener noreferrer"
+       class="email-tag tag-seznam" data-key="seznam">Seznam.cz</a>
+
+    <a href="https://accounts.google.com/signin/v2/identifier?service=mail"
+       target="_blank" rel="noopener noreferrer"
+       class="email-tag tag-gmail" data-key="gmail">Gmail</a>
+
+    <a href="https://outlook.live.com/mail/"
+       target="_blank" rel="noopener noreferrer"
+       class="email-tag tag-outlook" data-key="outlook">Outlook</a>
+
+    <a href="https://www.icloud.com/mail"
+       target="_blank" rel="noopener noreferrer"
+       class="email-tag tag-icloud" data-key="icloud">iCloud Mail</a>
+
+    <a href="https://mail.centrum.cz/"
+       target="_blank" rel="noopener noreferrer"
+       class="email-tag tag-centrum" data-key="centrum">Centrum.cz</a>
+
+    <a href="https://login.yahoo.com/"
+       target="_blank" rel="noopener noreferrer"
+       class="email-tag tag-yahoo" data-key="yahoo">Yahoo Mail</a>
+
+    <a href="https://account.proton.me/login"
+       target="_blank" rel="noopener noreferrer"
+       class="email-tag tag-proton" data-key="proton">Proton Mail</a>
+
+    <a href="https://app.tuta.com/login"
+       target="_blank" rel="noopener noreferrer"
+       class="email-tag tag-tuta" data-key="tuta">Tuta Mail</a>
+  </div>
+</section>
+
+<script>
+(() => {
+  const container = document.getElementById("email-tags");
+  if (!container) return;
+
+  const STORAGE_KEY = "pruzor_email_clicks_v1";
+  const ua = navigator.userAgent || "";
+  const platform = (navigator.platform || "").toLowerCase();
+
+  const baseOrder = ["seznam","gmail","outlook","icloud","centrum","yahoo","proton","tuta"];
+
+  const isApple = () =>
+    /iPhone|iPad|iPod/i.test(ua) ||
+    /macintosh|mac os x/i.test(ua) ||
+    platform.includes("mac");
+
+  const isWindows = () => /windows/i.test(ua) || platform.includes("win");
+  const isAndroid = () => /android/i.test(ua);
+
+  function deviceOrder() {
+    const o = baseOrder.slice();
+    const move = k => { const i=o.indexOf(k); if(i>-1){ o.splice(i,1); o.unshift(k);} };
+    if (isApple()) move("icloud");
+    else if (isWindows()) move("outlook");
+    else if (isAndroid()) move("gmail");
+    return o;
+  }
+
+  const load = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  const save = o => localStorage.setItem(STORAGE_KEY, JSON.stringify(o));
+
+  function orderFromClicks(clicks){
+    const fallback = deviceOrder();
+    const score = k => Number(clicks[k]||0);
+    const all = baseOrder.slice().sort((a,b)=>{
+      if(score(b)!==score(a)) return score(b)-score(a);
+      return fallback.indexOf(a)-fallback.indexOf(b);
+    });
+    return all.some(k=>score(k)>0) ? all : fallback;
+  }
+
+  function apply(order){
+    const links=[...container.querySelectorAll("a.email-tag")];
+    const map=new Map(links.map(a=>[a.dataset.key,a]));
+    const f=document.createDocumentFragment();
+    order.forEach(k=>map.get(k)&&f.appendChild(map.get(k)));
+    container.innerHTML="";
+    container.appendChild(f);
+  }
+
+  const clicks = load();
+  apply(orderFromClicks(clicks));
+
+  container.addEventListener("click",e=>{
+    const a=e.target.closest("a.email-tag");
+    if(!a) return;
+    const k=a.dataset.key;
+    const c=load();
+    c[k]=(c[k]||0)+1;
+    save(c);
+    apply(orderFromClicks(c));
+  }, true);
+})();
+</script>
+
+<style>
+.email-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.email-tag{
+  padding:8px 14px;
+  border-radius:999px;
+  text-decoration:none;
+  font-size:16px;
+  line-height:1.2;
+  white-space:nowrap;
+  transition:filter .15s ease;
+}
+
+.tag-seznam{background:#f6dada;color:#8b0000;}
+.tag-gmail{background:#fbe4e2;color:#b3261e;}
+.tag-outlook{background:#e1ecfb;color:#003a8f;}
+.tag-icloud{background:#e9eef2;color:#2f3a44;}
+.tag-centrum{background:#dde9f7;color:#003f8f;}
+.tag-yahoo{background:#eee4fb;color:#4b1fb8;}
+.tag-proton{background:#e8e3fb;color:#4b2cc4;}
+.tag-tuta{background:#f5dede;color:#8a0000;}
+
+.email-tag:hover{filter:brightness(.95);}
+</style>

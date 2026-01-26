@@ -1,0 +1,18 @@
+{
+  "health_gate": {
+    "min_articles": 50,
+    "min_videos": 10,
+    "min_sources_ok": 5
+  },
+  "limits": {
+    "max_items_per_feed": 40,
+    "max_output_articles": 220,
+    "max_output_videos": 120
+  },
+  "clustering": {
+    "jaccard_threshold": 0.56
+  },
+  "releases": {
+    "retention_count": 30
+  }
+}

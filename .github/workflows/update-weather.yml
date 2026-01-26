@@ -1,0 +1,56 @@
+name: Update Weather
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"  # každých 15 minut
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Ensure output folders
+        run: |
+          mkdir -p filtr/data
+
+      - name: Run updater (weather)
+        env:
+          OUTPUT_DIR: filtr/data
+        run: node scripts/update-weather-namedays.js weather
+
+      - name: Sanity check
+        run: |
+          ls -la filtr/data
+          head -c 200 filtr/data/weather.json || true
+          test -f filtr/data/weather.json && echo "OK: filtr/data/weather.json exists" || (echo "ERROR: weather.json missing" && exit 1)
+
+      - name: Validate generated JSON (publish root)
+        run: |
+          python3 -c "import json; json.load(open('filtr/data/weather.json','r',encoding='utf-8')); print('OK weather')" || (echo "ERROR: filtr/data/weather.json is not valid JSON" && exit 1)
+
+      - name: Commit and push filtr/data/weather.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add filtr/data/weather.json
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Update weather"
+          git push

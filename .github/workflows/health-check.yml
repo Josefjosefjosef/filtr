@@ -1,0 +1,41 @@
+name: Health Check (weather + namedays)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check required files under filtr/
+        run: |
+          echo "=== Checking files in filtr/data ==="
+          ls -la filtr/data || true
+
+          missing=0
+
+          if [ -f filtr/data/weather.json ]; then
+            echo "OK: filtr/data/weather.json"
+            cat filtr/data/weather.json | head -n 30 || true
+          else
+            echo "MISSING: filtr/data/weather.json"
+            missing=1
+          fi
+
+          if [ -f filtr/data/namedays.json ]; then
+            echo "OK: filtr/data/namedays.json"
+            cat filtr/data/namedays.json | head -n 30 || true
+          else
+            echo "MISSING: filtr/data/namedays.json"
+            missing=1
+          fi
+
+          if [ "$missing" -eq 1 ]; then
+            echo "Health check FAILED: missing required files under filtr/data"
+            exit 1
+          fi

@@ -1,0 +1,128 @@
+﻿Folder PATH listing for volume OS
+Volume serial number is 66ED-89E1
+C:.
+|   .nojekyll
+|   AUDIT_CODE_SNIPPETS.md
+|   CRASH_SHIELD_README.md
+|   debug.js
+|   DEBUG.md
+|   doprava.html
+|   FIX_DATA_GENERATORS_SUMMARY.txt
+|   FIX_EMPTY_FEED_SUMMARY.md
+|   FIX_INFINITE_LOADING_SUMMARY.txt
+|   index.html
+|   OPTIMIZATION_SUMMARY.md
+|   PAGES_DEPLOY_FIX.md
+|   PERFORMANCE_OPTIMIZATIONS.md
+|   RECOVERY.md
+|   requirements.txt
+|   robots.txt
+|   sitemap.xml
+|   STABILIZACE_WEBU_CI_SUMMARY.txt
+|   structure.txt
+|   sw.js
+|   zpravy.html
+|   
++---.github
+|   \---workflows
+|           health-check.yml
+|           pages.yml
+|           update-articles.yml
+|           update-namedays.yml
+|           update-weather.yml
+|           
++---assets
+|       .gitkeep
+|       app-crash-shield.js
+|       app-render-optimizer.js
+|       app.js
+|       masc
+|       mascot.png
+|       
++---data
+|       articles.json
+|       brief.json
+|       feed_health.json
+|       media.json
+|       meta.json
+|       namedays.json
+|       quizdata.json
+|       videos.json
+|       weather.json
+|       
++---filtr
+|   |   .nojekyll
+|   |   index.html
+|   |   sw.js
+|   |   
+|   +---assets
+|   |       app-crash-shield.js
+|   |       app-render-optimizer.js
+|   |       app.js
+|   |       masc
+|   |       mascot.png
+|   |       
+|   +---data
+|   |       articles.json
+|   |       brief.json
+|   |       feed_health.json
+|   |       media.json
+|   |       meta.json
+|   |       namedays.json
+|   |       videos.json
+|   |       weather.json
+|   |       
+|   \---partials
+|           date.html
+|           email.html
+|           news.html
+|           search.html
+|           traffic.html
+|           weather.html
+|           
++---partials
+|       .gitkeep
+|       date.html
+|       email.html
+|       news.html
+|       search.html
+|       traffic.html
+|       weather.html
+|       
++---programovani
+|   |   .gitkeep
+|   |   
+|   +---01-barva-pozadi
+|   |       index.js
+|   |       
+|   +---02-vzor-pozadi
+|   |       index.js
+|   |       
+|   +---03-styl-pisma
+|   |       index.js
+|   |       
+|   +---04-barva-pisma
+|   |       index.js
+|   |       
+|   +---05-nazev-stranky
+|   |       index.js
+|   |       
+|   +---06-logo
+|   |       index.js
+|   |       
+|   \---web
+|           .gitkeep
+|           style.css
+|           
+\---scripts
+        build_articles.py
+        feeds.json
+        feeds_youtube.json
+        make_backup.py
+        normalize_articles_json.py
+        requirements.txt
+        update-articles.js
+        update-weather-namedays.js
+        validate_json.py
+        write_status.py
+        

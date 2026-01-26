@@ -1,0 +1,119 @@
+SHRNUTÍ OPRAV - UPDATE ARTICLES WORKFLOW
+
+PŘÍČINA PROBLÉMU
+Workflow zapisoval do data/ v rootu, ale web na /filtr/ potřebuje filtr/data/. To způsobovalo 404 nebo stará data.
+
+ZMĚNĚNÉ SOUBORY
+
+1. .github/workflows/update-articles.yml
+   - Všechny cesty změněny z data/ na filtr/data/
+   - Přidán OUTPUT_DIR: filtr/data env variable
+   - Přidán sanity check krok
+   - mkdir -p filtr/data před generováním
+
+2. .github/workflows/update-weather.yml
+   - Cesty změněny na filtr/data/
+   - Přidán OUTPUT_DIR: filtr/data env variable
+   - Přidán sanity check krok
+
+3. .github/workflows/update-namedays.yml
+   - Cesty změněny na filtr/data/
+   - Přidán OUTPUT_DIR: filtr/data env variable
+   - Přidán sanity check krok
+
+4. scripts/build_articles.py
+   - Řádek 26-32: změněno z data/ na filtr/data/ s env variable support
+   - Všechny výstupní cesty (OUT_PATH, VIDEOS_OUT_PATH, atd.) používají OUTPUT_DIR
+
+5. scripts/update-weather-namedays.js
+   - Řádky 97, 121: změněno z data/ na filtr/data/ s env variable support
+
+6. scripts/make_backup.py
+   - Řádek 33: default změněn z "data" na os.getenv("OUTPUT_DIR", "filtr/data")
+
+7. scripts/write_status.py
+   - Řádek 18: default změněn z "data" na os.getenv("OUTPUT_DIR", "filtr/data")
+
+KONKRÉTNÍ ZMĚNY V KÓDU
+
+scripts/build_articles.py (řádky 26-35):
+
+PŘED:
+OUT_PATH = os.path.join(ROOT_DIR, "data", "articles.json")
+HEALTH_PATH = os.path.join(ROOT_DIR, "data", "feed_health.json")
+BRIEF_PATH = os.path.join(ROOT_DIR, "data", "brief.json")
+META_PATH = os.path.join(ROOT_DIR, "data", "meta.json")
+VIDEOS_OUT_PATH = os.path.join(ROOT_DIR, "data", "videos.json")
+
+PO:
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", os.path.join(ROOT_DIR, "filtr", "data"))
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+OUT_PATH = os.path.join(OUTPUT_DIR, "articles.json")
+HEALTH_PATH = os.path.join(OUTPUT_DIR, "feed_health.json")
+BRIEF_PATH = os.path.join(OUTPUT_DIR, "brief.json")
+META_PATH = os.path.join(OUTPUT_DIR, "meta.json")
+VIDEOS_OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
+
+scripts/update-weather-namedays.js (řádek 97 a 121):
+
+PŘED:
+const outPath = path.join("data", "weather.json");
+
+PO:
+const outputDir = process.env.OUTPUT_DIR || "filtr/data";
+const outPath = path.join(outputDir, "weather.json");
+fs.mkdirSync(outputDir, { recursive: true });
+
+A stejně pro namedays.json na řádku 121.
+
+scripts/make_backup.py (řádek 33):
+
+PŘED:
+base = sys.argv[1] if len(sys.argv) > 1 else "data"
+
+PO:
+base = sys.argv[1] if len(sys.argv) > 1 else os.getenv("OUTPUT_DIR", "filtr/data")
+
+scripts/write_status.py (řádek 18):
+
+PŘED:
+data_dir = sys.argv[1] if len(sys.argv) > 1 else "data"
+
+PO:
+data_dir = sys.argv[1] if len(sys.argv) > 1 else os.getenv("OUTPUT_DIR", "filtr/data")
+
+WORKFLOW ZMĚNY
+
+update-articles.yml:
+- Přidán krok "Ensure output folders" s mkdir -p filtr/data
+- Všechny kroky používají filtr/data/ místo data/
+- Přidán env OUTPUT_DIR: filtr/data pro build_articles.py
+- Přidán sanity check krok po generování
+- Commit pouze filtr/data/*.json souborů
+
+update-weather.yml:
+- Přidán krok "Ensure output folders"
+- Přidán env OUTPUT_DIR: filtr/data
+- Přidán sanity check krok
+- Commit filtr/data/weather.json
+
+update-namedays.yml:
+- Přidán krok "Ensure output folders"
+- Přidán env OUTPUT_DIR: filtr/data
+- Přidán sanity check krok
+- Commit filtr/data/namedays.json
+
+VÝSLEDEK
+
+Po push do main:
+- update-articles.yml generuje do filtr/data/articles.json
+- update-weather.yml generuje do filtr/data/weather.json
+- update-namedays.yml generuje do filtr/data/namedays.json
+- Web na https://josefjosefjosef.github.io/filtr/ načte data z /filtr/data/ bez 404
+
+COMMIT MESSAGE
+
+Fix data generators: write to filtr/data/ instead of data/ root
+
+Vše je připravené k commitu. Workflow by neměly padat a data budou na správném místě pro web na /filtr/.

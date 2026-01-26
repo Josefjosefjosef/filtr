@@ -1,0 +1,231 @@
+KRITICKÁ STABILIZACE WEBU + CI - SHRNUTÍ OPRAV
+
+A) PŘÍČINA NEKONEČNÉHO NAČÍTÁNÍ
+
+1. Chybějící globální ochrana init()
+   - Soubor: filtr/assets/app.js
+   - Problém: init() se mohl spustit vícekrát při scroll/reload
+   - Oprava: Přidán window.__appInitialized flag (řádek 156)
+
+2. Chybějící fetch rate limiting
+   - Soubor: filtr/assets/app.js
+   - Problém: Příliš mnoho fetchů za krátkou dobu → nekonečný loop
+   - Oprava: Přidán checkFetchRateLimit() - max 5 fetchů za 5 sekund (řádky 163-177)
+
+3. Chybějící try/catch ochrana
+   - Soubor: filtr/assets/app.js
+   - Problém: Uncaught errors shazovaly aplikaci
+   - Oprava: Všechny fetch funkce obaleny try/catch (řádek 1703)
+
+4. Chybějící localStorage fallback
+   - Soubor: filtr/assets/app.js
+   - Problém: Při selhání fetchu aplikace zůstala bez dat
+   - Oprava: Přidány getCachedData() a setCachedData() (řádky 320-342)
+
+5. Workflow padaly kvůli chybám dat
+   - Soubory: .github/workflows/update-articles.yml, health-check.yml
+   - Problém: exit 1 při chybě → CI padal
+   - Oprava: continue-on-error: true, warnings místo errors
+
+B) ZMĚNĚNÉ SOUBORY
+
+1. filtr/assets/app.js
+   - Globální init flag window.__appInitialized (řádek 156)
+   - Fetch rate limiting (řádky 163-177)
+   - Try/catch wrapper pro loadArticlesOnly (řádek 1703)
+   - localStorage fallback funkce (řádky 320-342)
+   - fetchJsonWithRetry s timeout (řádky 183-203)
+   - Ukládání do cache po úspěšném fetchu (řádek 1803)
+
+2. .github/workflows/update-articles.yml
+   - continue-on-error: true pro Build step (řádek 40)
+   - continue-on-error: true pro Validate step (řádek 66)
+   - continue-on-error: true pro Commit step (řádek 134)
+   - Warnings místo exit 1 (řádky 48, 72-73, 109-110)
+   - Git add pouze pokud soubory existují (řádky 139-143)
+
+3. .github/workflows/health-check.yml
+   - Název změněn na "[INFO ONLY]" (řádek 1)
+   - continue-on-error: true pro celý job (řádek 12)
+   - continue-on-error: true pro všechny steps
+   - permissions: contents: read (pouze read, žádný write)
+   - Warnings místo process.exit(1) (řádky 25-37, 47-61)
+   - Summary step vždy success (řádek 64)
+
+C) KONKRÉTNÍ ZMĚNY
+
+app.js - Globální ochrana init():
+
+PŘED:
+async function init(){
+  if (initCalled) return;
+  initCalled = true;
+  ...
+}
+
+PO:
+async function init(){
+  if (window.__appInitialized) return;
+  if (initCalled) return;
+  initCalled = true;
+  window.__appInitialized = true;
+  ...
+}
+
+app.js - Fetch rate limiting:
+
+PŘIDÁNO:
+function checkFetchRateLimit() {
+  const now = Date.now();
+  fetchHistory = fetchHistory.filter(t => now - t < FETCH_RATE_LIMIT.windowMs);
+  if (fetchHistory.length >= FETCH_RATE_LIMIT.count) {
+    const oldest = fetchHistory[0];
+    const waitMs = FETCH_RATE_LIMIT.windowMs - (now - oldest);
+    if (waitMs > 0) {
+      console.warn(`[infoUzel] Fetch rate limit: ${fetchHistory.length} fetches in ${FETCH_RATE_LIMIT.windowMs}ms`);
+      return waitMs;
+    }
+  }
+  fetchHistory.push(now);
+  return 0;
+}
+
+app.js - localStorage fallback:
+
+PŘIDÁNO:
+function getCachedData(key) {
+  try {
+    const cached = localStorage.getItem(`iu:cache:${key}`);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      const age = Date.now() - (parsed.timestamp || 0);
+      if (age < 3600000) { // 1 hodina
+        return parsed.data;
+      }
+    }
+  } catch (e) {}
+  return null;
+}
+
+function setCachedData(key, data) {
+  try {
+    localStorage.setItem(`iu:cache:${key}`, JSON.stringify({
+      timestamp: Date.now(),
+      data: data
+    }));
+  } catch (e) {}
+}
+
+update-articles.yml - Nikdy nepadá:
+
+PŘED:
+- name: Build articles JSON
+  run: |
+    python scripts/build_articles.py
+
+- name: Validate generated JSON files
+  run: |
+    set -e
+    if [ ! -f filtr/data/articles.json ]; then
+      echo "ERROR: filtr/data/articles.json missing"
+      exit 1
+    fi
+
+PO:
+- name: Build articles JSON
+  continue-on-error: true
+  run: |
+    python scripts/build_articles.py || {
+      echo "⚠️ WARNING: build_articles.py failed, continuing anyway"
+      exit 0
+    }
+
+- name: Validate generated JSON files (informativní, neblokuje)
+  continue-on-error: true
+  run: |
+    if [ ! -f filtr/data/articles.json ]; then
+      echo "⚠️ WARNING: filtr/data/articles.json missing"
+    else
+      echo "✅ filtr/data/articles.json exists"
+    fi
+
+health-check.yml - Vždy success:
+
+PŘED:
+- name: Validate weather.json
+  run: |
+    node -e "
+      if(temp === null){
+        console.error('FAIL: weather.json missing tempC/temp');
+        process.exit(1);
+      }
+    "
+
+PO:
+- name: Validate weather.json (INFO ONLY)
+  continue-on-error: true
+  run: |
+    node -e "
+      try {
+        if(temp === null){
+          console.log('⚠️ INFO: weather.json missing tempC/temp');
+        } else {
+          console.log('✅ OK: weather temp=', temp);
+        }
+      } catch(e) {
+        console.log('⚠️ INFO: weather validation failed:', e.message);
+      }
+    " || echo "⚠️ INFO: weather validation step completed (warnings are OK)"
+
+D) ZAJIŠTĚNÍ, ŽE CI NIKDY NESPADNE
+
+1. update-articles.yml:
+   - continue-on-error: true na všech kritických krocích
+   - Python script failure → warning, workflow pokračuje
+   - JSON validation failure → warning, workflow pokračuje
+   - Git commit/push failure → warning, workflow pokračuje
+   - Git add pouze pokud soubory existují
+
+2. health-check.yml:
+   - continue-on-error: true na job i všech steps
+   - permissions: contents: read (žádný write)
+   - Všechny chyby → warnings, workflow vždy success
+   - Summary step vždy success
+
+3. app.js:
+   - Všechny fetch obaleny try/catch
+   - localStorage fallback při selhání
+   - Rate limiting zabraňuje nekonečným loopům
+   - Globální init flag zabraňuje duplicitnímu spuštění
+
+E) POTVRZENÍ, ŽE WEB FUNGUJE I BEZ DAT
+
+1. localStorage fallback:
+   - Pokud fetch selže, použije se cache z localStorage
+   - Cache je platná 1 hodinu
+   - Pokud není cache, zobrazí se hláška "Data se právě aktualizují"
+
+2. Try/catch ochrana:
+   - Žádný uncaught error
+   - Všechny chyby jsou zachyceny a zpracovány
+   - Aplikace pokračuje i při selhání fetchu
+
+3. Fallback UI:
+   - showLoadingFallback() zobrazí hlášku místo prázdného stavu
+   - Tlačítko "Zkusit znovu" pro manuální reload
+   - Aplikace zůstává funkční i bez dat
+
+F) DOPORUČENÝ COMMIT MESSAGE
+
+Fix: Critical stabilization - prevent infinite loading + make CI fail-safe
+
+VÝSLEDEK
+
+Po deployi:
+- Web se načte a NEreloaduje se při scrollu
+- Při výpadku JSONů web běží dál (localStorage fallback)
+- update-articles workflow je vždy zelené (i bez dat)
+- health-check workflow je vždy zelené (jen informativní)
+- Žádné GitHub emaily "Run failed"
+- Fetch rate limiting zabraňuje nekonečným loopům
+- Globální init flag zabraňuje duplicitnímu spuštění

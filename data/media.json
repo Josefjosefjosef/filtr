@@ -1,0 +1,208 @@
+{
+  "version": 3,
+  "lastUpdated": "2026-01-19",
+  "topics": [
+    { "id": "aktualne", "label": "Aktuálně" },
+    { "id": "politika", "label": "Politika" },
+    { "id": "finance", "label": "Ekonomika / Finance", "aliases": ["ekonomika"] },
+    { "id": "doprava", "label": "Doprava" },
+    { "id": "krimi", "label": "Krimi / Bezpečnost" },
+    { "id": "sport", "label": "Sport" },
+    { "id": "pocasi", "label": "Počasí" },
+    { "id": "veda", "label": "Věda / Tech" },
+    { "id": "zdravi", "label": "Zdraví" },
+    { "id": "kultura", "label": "Kultura" },
+    { "id": "regiony", "label": "Regiony" }
+  ],
+  "media": [
+    {
+      "id": "ct24",
+      "name": "ČT24",
+      "type": "news",
+      "topics": ["aktualne", "politika", "finance", "krimi", "regiony", "pocasi", "veda", "zdravi", "kultura"],
+      "home": "https://ct24.ceskatelevize.cz/",
+      "aliases": ["CT24", "ČT 24", "Ceska televize CT24"]
+    },
+    {
+      "id": "irozhlas",
+      "name": "iROZHLAS",
+      "type": "news",
+      "topics": ["aktualne", "politika", "finance", "krimi", "sport", "regiony", "pocasi", "veda", "zdravi", "kultura"],
+      "home": "https://www.irozhlas.cz/",
+      "aliases": ["iRozhlas", "Český rozhlas", "Cesky rozhlas", "iROZHLAS – Sport", "iROZHLAS – Ekonomika"]
+    },
+    {
+      "id": "idnes",
+      "name": "iDNES.cz",
+      "type": "news",
+      "topics": ["aktualne", "politika", "finance", "krimi", "sport", "regiony", "pocasi", "veda", "zdravi", "kultura"],
+      "home": "https://www.idnes.cz/",
+      "aliases": ["iDNES", "Idnes", "idnes.cz", "iDNES – Krimi", "iDNES – Zdraví", "MFDNES", "MF DNES", "MF Dnes"]
+    },
+    {
+      "id": "seznamzpravy",
+      "name": "Seznam Zprávy",
+      "type": "news",
+      "topics": ["aktualne", "politika", "finance", "krimi", "regiony", "pocasi", "veda", "zdravi", "kultura"],
+      "home": "https://www.seznamzpravy.cz/",
+      "aliases": ["SeznamZpravy", "Seznam zpravy", "SZ", "Seznam Zprávy.cz"]
+    },
+    {
+      "id": "novinky",
+      "name": "Novinky.cz",
+      "type": "news",
+      "topics": ["aktualne", "politika", "finance", "krimi", "regiony", "pocasi", "veda", "zdravi", "kultura"],
+      "home": "https://www.novinky.cz/",
+      "aliases": ["Novinky", "novinky.cz"]
+    },
+    {
+      "id": "aktualnecz",
+      "name": "Aktuálně.cz",
+      "type": "news",
+      "topics": ["aktualne", "politika", "finance", "krimi", "sport", "regiony", "pocasi", "veda", "zdravi", "kultura"],
+      "home": "https://www.aktualne.cz/",
+      "aliases": ["Aktualne", "aktualne.cz"]
+    },
+    {
+      "id": "denik",
+      "name": "Deník.cz",
+      "type": "news",
+      "topics": ["aktualne", "politika", "finance", "krimi", "sport", "regiony", "pocasi", "zdravi", "kultura"],
+      "home": "https://www.denik.cz/",
+      "aliases": ["Denik", "denik.cz"]
+    },
+    {
+      "id": "ceskenoviny",
+      "name": "ČeskéNoviny.cz (ČTK)",
+      "type": "newswire",
+      "topics": ["aktualne", "politika", "finance", "krimi", "sport", "regiony", "pocasi", "veda", "zdravi", "kultura"],
+      "home": "https://www.ceskenoviny.cz/",
+      "aliases": ["ČTK", "CTK", "Ceske noviny", "ceskenoviny.cz"]
+    },
+    {
+      "id": "cnnprima",
+      "name": "CNN Prima NEWS",
+      "type": "tv",
+      "topics": ["aktualne", "politika", "finance", "krimi", "sport", "regiony", "pocasi", "zdravi", "kultura"],
+      "home": "https://cnn.iprima.cz/",
+      "aliases": ["CNN Prima", "Prima CNN", "CNNPrima", "cnn.iprima.cz"]
+    },
+
+    {
+      "id": "ctsport",
+      "name": "ČT sport",
+      "type": "sport",
+      "topics": ["sport"],
+      "home": "https://sport.ceskatelevize.cz/",
+      "aliases": ["CT sport", "ČT Sport", "Česká televize sport"]
+    },
+    {
+      "id": "sportcz",
+      "name": "Sport.cz",
+      "type": "sport",
+      "topics": ["sport"],
+      "home": "https://www.sport.cz/",
+      "aliases": ["Sport.cz", "sport.cz"]
+    },
+    {
+      "id": "isport",
+      "name": "iSport.cz",
+      "type": "sport",
+      "topics": ["sport"],
+      "home": "https://isport.blesk.cz/",
+      "aliases": ["iSport", "isport.cz", "Blesk Sport"]
+    },
+
+    {
+      "id": "e15",
+      "name": "E15",
+      "type": "finance",
+      "topics": ["finance"],
+      "home": "https://www.e15.cz/",
+      "aliases": ["e15.cz", "E15.cz"]
+    },
+    {
+      "id": "hn",
+      "name": "Hospodářské noviny",
+      "type": "finance",
+      "topics": ["finance"],
+      "home": "https://hn.cz/",
+      "aliases": ["HN", "hn.cz", "Hospodarske noviny"]
+    },
+    {
+      "id": "kurzy",
+      "name": "Kurzy.cz",
+      "type": "finance",
+      "topics": ["finance"],
+      "home": "https://www.kurzy.cz/",
+      "aliases": ["Kurzy", "kurzy.cz"]
+    },
+    {
+      "id": "patria",
+      "name": "Patria.cz",
+      "type": "finance",
+      "topics": ["finance"],
+      "home": "https://www.patria.cz/",
+      "aliases": ["Patria", "patria.cz"]
+    },
+    {
+      "id": "roklen24",
+      "name": "Roklen24",
+      "type": "finance",
+      "topics": ["finance"],
+      "home": "https://roklen24.cz/",
+      "aliases": ["Roklen", "roklen24.cz"]
+    },
+
+    {
+      "id": "chmu",
+      "name": "ČHMÚ",
+      "type": "weather",
+      "topics": ["pocasi"],
+      "home": "https://www.chmi.cz/",
+      "aliases": ["CHMU", "chmi.cz", "ČHMÚ – výstrahy"]
+    },
+
+    {
+      "id": "rsd",
+      "name": "ŘSD – Dopravní info",
+      "type": "traffic",
+      "topics": ["doprava"],
+      "home": "https://dopravniinfo.gov.cz/",
+      "aliases": ["RSD", "ŘSD", "Dopravní info", "dopravniinfo.gov.cz"]
+    },
+    {
+      "id": "sz",
+      "name": "Správa železnic",
+      "type": "traffic",
+      "topics": ["doprava"],
+      "home": "https://www.spravazeleznic.cz/",
+      "aliases": ["SŽ", "SŽDC", "Sprava zeleznic"]
+    },
+    {
+      "id": "cd",
+      "name": "České dráhy",
+      "type": "traffic",
+      "topics": ["doprava"],
+      "home": "https://www.cd.cz/",
+      "aliases": ["CD", "ČD", "Ceske drahy"]
+    },
+
+    {
+      "id": "policiecr",
+      "name": "Policie ČR",
+      "type": "authority",
+      "topics": ["krimi", "doprava"],
+      "home": "https://www.policie.cz/",
+      "aliases": ["Policie", "policie.cz"]
+    },
+    {
+      "id": "hzscr",
+      "name": "HZS ČR",
+      "type": "authority",
+      "topics": ["krimi", "doprava"],
+      "home": "https://www.hzscr.cz/",
+      "aliases": ["HZS", "Hasiči", "hzscr.cz"]
+    }
+  ]
+}

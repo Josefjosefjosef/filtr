@@ -1,0 +1,135 @@
+STRUKTURA REPOZITÁŘE - infoUzel.cz
+
+ROOT (c:\infoUzel.cz\)
+│
+├── .github/
+│   └── workflows/
+│       ├── health-check.yml          # Health check (weather + namedays) - INFO ONLY
+│       ├── pages.yml                  # Deploy static SPA to GitHub Pages
+│       ├── update-articles.yml        # Update articles data (každých 15 min)
+│       ├── update-namedays.yml        # Update namedays (denně)
+│       └── update-weather.yml        # Update weather (každých 15 min)
+│
+├── .nojekyll                          # Disable Jekyll processing
+│
+├── assets/                            # ⚠️ ROOT ASSETS (nepoužívané pro /filtr/)
+│   ├── app-crash-shield.js
+│   ├── app-render-optimizer.js
+│   ├── app.js
+│   ├── masc/
+│   └── mascot.png
+│
+├── data/                              # ⚠️ ROOT DATA (nepoužívané pro /filtr/)
+│   ├── articles.json
+│   ├── brief.json
+│   ├── feed_health.json
+│   ├── media.json
+│   ├── meta.json
+│   ├── namedays.json
+│   ├── quizdata.json
+│   ├── videos.json
+│   └── weather.json
+│
+├── filtr/                             # ✅ PUBLISH ROOT (web běží z /filtr/)
+│   ├── .nojekyll                      # Disable Jekyll pro filtr/
+│   │
+│   ├── assets/                        # ✅ WEB ASSETS (používané)
+│   │   ├── app-crash-shield.js        # Crash protection layer
+│   │   ├── app-render-optimizer.js    # Chunked rendering
+│   │   ├── app.js                     # Main application logic
+│   │   ├── masc/
+│   │   └── mascot.png
+│   │
+│   ├── data/                          # ✅ WEB DATA (používané)
+│   │   ├── articles.json              # Články z RSS feedů
+│   │   ├── brief.json                 # Brief zprávy
+│   │   ├── feed_health.json           # Health report feedů
+│   │   ├── media.json                 # Media data
+│   │   ├── meta.json                  # Metadata
+│   │   ├── namedays.json              # Svátky (generuje update-namedays.yml)
+│   │   ├── videos.json                # YouTube videa
+│   │   └── weather.json               # Počasí (generuje update-weather.yml)
+│   │
+│   ├── index.html                     # ✅ ENTRYPOINT (SPA)
+│   │
+│   ├── partials/                      # HTML partials
+│   │   ├── date.html
+│   │   ├── email.html
+│   │   ├── news.html
+│   │   ├── search.html
+│   │   ├── traffic.html
+│   │   └── weather.html
+│   │
+│   └── sw.js                          # ✅ Service Worker
+│
+├── scripts/                           # Data generation scripts
+│   ├── build_articles.py              # ✅ Generuje do filtr/data/ (OUTPUT_DIR)
+│   ├── feeds.json                     # RSS feed sources
+│   ├── feeds_youtube.json             # YouTube playlist sources
+│   ├── make_backup.py                 # Backup utility
+│   ├── normalize_articles_json.py     # JSON normalizer
+│   ├── requirements.txt               # Python dependencies
+│   ├── update-articles.js             # (legacy?)
+│   ├── update-weather-namedays.js     # Generuje weather + namedays
+│   ├── validate_json.py               # JSON validator
+│   └── write_status.py                 # Status writer
+│
+├── index.html                         # ⚠️ ROOT INDEX (nepoužívané pro /filtr/)
+├── sw.js                              # ⚠️ ROOT SW (nepoužívané pro /filtr/)
+│
+├── partials/                          # ⚠️ ROOT PARTIALS (nepoužívané)
+│
+├── programovani/                      # Programming examples
+│
+├── requirements.txt                   # Root requirements (legacy?)
+│
+└── [další soubory: .md, .html, .xml, .txt]
+
+═══════════════════════════════════════════════════════════════════
+
+KLÍČOVÉ CESTY:
+
+PUBLISH ROOT (GitHub Pages):
+  /filtr/                              # Web běží z této složky
+  ├── index.html                       # Entrypoint
+  ├── assets/                          # JS/CSS soubory
+  ├── data/                            # JSON data soubory
+  └── sw.js                            # Service Worker
+
+GENEROVÁNÍ DAT:
+  scripts/build_articles.py            # OUTPUT_DIR = filtr/data/
+  → filtr/data/articles.json
+  → filtr/data/videos.json
+  → filtr/data/brief.json
+  → filtr/data/feed_health.json
+  → filtr/data/meta.json
+
+  scripts/update-weather-namedays.js   # OUTPUT_DIR = filtr/data/
+  → filtr/data/weather.json
+  → filtr/data/namedays.json
+
+WORKFLOW:
+  .github/workflows/pages.yml          # Deploy filtr/ jako publish root
+  .github/workflows/update-articles.yml # Generuje a commituje filtr/data/*
+  .github/workflows/update-weather.yml  # Generuje filtr/data/weather.json
+  .github/workflows/update-namedays.yml  # Generuje filtr/data/namedays.json
+  .github/workflows/health-check.yml     # INFO ONLY (nikdy nepadá)
+
+═══════════════════════════════════════════════════════════════════
+
+POZNÁMKY:
+
+⚠️ ROOT ASSETS/DATA:
+  - Složky assets/ a data/ v rootu jsou legacy
+  - Web na /filtr/ používá filtr/assets/ a filtr/data/
+  - Root složky mohou být odstraněny nebo ponechány pro kompatibilitu
+
+✅ PUBLISH ROOT:
+  - Všechno, co web potřebuje, je pod filtr/
+  - Pages workflow deployuje path: filtr
+  - URL: https://josefjosefjosef.github.io/filtr/
+
+✅ DATA GENERATION:
+  - build_articles.py zapisuje do filtr/data/ (OUTPUT_DIR)
+  - update-weather-namedays.js zapisuje do filtr/data/ (OUTPUT_DIR)
+  - Workflow commitují filtr/data/*.json

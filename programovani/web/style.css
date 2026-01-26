@@ -1,0 +1,209 @@
+/* =========================
+   ZÁKLADNÍ STYL WEBU
+   ========================= */
+
+:root {
+  --bgPrimary: #2f8c3a;
+  --bgSecondary: #2a7b33;
+  --textColor: #15311c;
+  --pill: #d8ead8;
+  --pillText: #1f5a2a;
+  --card: #eaf4ea;
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background: linear-gradient(180deg, var(--bgPrimary), var(--bgSecondary));
+  color: var(--textColor);
+  min-height: 100vh;
+  padding: 16px;
+}
+
+/* Karty (rámečky) */
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+/* Zdroje / štítky */
+.sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.source {
+  background: var(--pill);
+  color: var(--pillText);
+  padding: 8px 12px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.source:hover {
+  text-decoration: underline;
+}
+
+/* ===== Hlavička stránky ===== */
+.site-header{
+  padding: 6px 4px 14px;
+}
+
+.site-title{
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: #ffffff;
+  margin-bottom: 0;
+}
+
+/* ===== Info řádek (datum/svátek) ===== */
+.today{
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+/* ===== Nadpis v kartě ===== */
+.card-header{
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* ===== Vyhledávání (přepis aby vypadalo líp) ===== */
+.search-card{
+  padding: 12px;
+}
+
+.search-form{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-input{
+  flex: 1;
+  border: 0;
+  outline: none;
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 12px 14px;
+  font-size: 16px;
+  color: var(--textColor);
+}
+
+.search-btn{
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 14px;
+  font-size: 14px;
+  background: var(--pill);
+  color: var(--pillText);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.search-btn:hover{
+  text-decoration: underline;
+}
+
+/* =========================
+   POČASÍ
+   ========================= */
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.card-subtitle {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+  margin-top: 4px;
+}
+
+.weather-box {
+  background: rgba(255,255,255,0.35);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border: 1px solid rgba(0,0,0,0.06);
+  margin-bottom: 12px;
+}
+
+.weather-left {
+  width: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.weather-icon {
+  font-size: 42px;
+  line-height: 1;
+}
+
+.weather-right {
+  flex: 1;
+}
+
+.weather-main {
+  margin-bottom: 10px;
+}
+
+.weather-line {
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.weather-temp {
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+.weather-alert {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(0,0,0,0.06);
+  margin-bottom: 10px;
+}
+
+.alert-icon {
+  font-size: 18px;
+}
+
+.alert-text {
+  font-size: 15px;
+}
+
+.weather-meta {
+  font-size: 14px;
+  opacity: 0.9;
+  line-height: 1.4;
+}

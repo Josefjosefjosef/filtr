@@ -1,0 +1,2229 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>infoUzel.cz</title>
+
+  <style>
+    :root{
+      /* ===== jednotné „zlomené bílé“ pozadí pro celý web (včetně topbar) ===== */
+      --pageBg: #FFFFFF;
+      --cardBg: #FFFFFF;
+
+      /* text */
+      --text: rgba(11,27,43,0.92);
+      --muted: rgba(11,27,43,0.60);
+      --muted2: rgba(11,27,43,0.50);
+      --hair: rgba(20,40,70,0.10);
+
+      /* barva článků (titulky + běžný text) */
+      --titleGreen: rgba(11,27,43,0.92);
+
+      /* ===== JEDEN AKCENT PRO CELÝ WEB ===== */
+      --accent: #1F4B99;                 /* ink blue */
+      --accentSoft: rgba(31,75,153,0.10);
+      --accentBorder: rgba(31,75,153,0.28);
+
+      /* linka mezi články */
+      --divider: rgba(11,27,43,0.10);
+
+      /* reklamy */
+      --adBg: rgba(255, 176, 64, 0.14);
+      --adStroke: rgba(255, 176, 64, 0.22);
+
+      /* stíny */
+      --shadow: 0 10px 28px rgba(20,40,70,0.07);
+      --shadow2: 0 6px 18px rgba(20,40,70,0.05);
+
+      /* radius */
+      --radius: 16px;
+      --radius2: 14px;
+
+      /* dynamické odsazení pod FIXED topbar (doplňuje JS v app.js) */
+      --topbarOffset: 0px;
+
+      /* line-clamp titulků */
+      --titleLineHeight: 1.22;
+      --titleLinesDesktop: 2;
+      --titleLinesMobile: 3;
+
+      /* pevná šířka čtecího sloupce */
+      --readWidth: 760px;
+
+      /* jednotné “chip” rohy (rounded rectangle) */
+      --chipRadius: 12px;
+
+      /* ===== VIDEO (sjednoceno do feedu) ===== */
+      --videoSoft: rgba(20,40,70,0.04);
+
+      /* ===== ROZCESTNÍK (ikony) ===== */
+      --rcTile: 60px;                 /* ✅ cílově malé – aby se vešlo 5 vedle sebe v sideCol */
+      --rcGap: 10px;
+      --rcLabel: 12.5px;
+      --rcLabelColor: var(--accent);  /* ✅ barva jako štítky (akcent) */
+
+      /* ===== HORNÍ PRUH NA RÁMEČCÍCH (sjednocení pro všechny rámečky) ===== */
+      --frameBarH: 2px;               /* ✅ poloviční výška (bylo 4px) */
+      --frameBarColor: var(--accent); /* ✅ základní varianta */
+
+      /* ===== VIP ===== */
+      --vipGold: #C9A227;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+
+    /* ===== STABILIZACE VYKRESLOVÁNÍ (aby se web „nesekal“) ===== */
+    body{
+      margin:0;
+      background: #FFFFFF; /* fallback mimo proměnné */
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
+      font-size: 14px;
+      line-height: 1.48;
+      letter-spacing: 0.005em;
+      font-weight: 400;
+      color: var(--text);
+      overflow-x: hidden;
+      padding-top: var(--topbarOffset);
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .topbar-wrap{
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      background: #FFFFFF; /* fallback mimo proměnné */
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      padding-top: env(safe-area-inset-top);
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    /* omezí “překreslování” při scrollu */
+    .news-card, .videoRow{
+      contain: content;
+    }
+
+    /* vypnout animace/transition když systém preferuje méně pohybu */
+    @media (prefers-reduced-motion: reduce){
+      *{
+        transition: none !important;
+        animation: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    img{ max-width:100%; height:auto; }
+
+    .container{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 14px 40px;
+    }
+
+    /* ===== dvousloupcový layout pod topbar (desktop) ===== */
+    .layout{
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 18px;
+      align-items: start;
+    }
+    .mainCol{ min-width: 0; }
+    .sideCol{ min-width: 0; }
+
+    @media (min-width: 901px){
+      .mainCol{ padding-left: 0 !important; }
+    }
+    @media (max-width: 900px){
+      .layout{ grid-template-columns: 1fr; gap: 14px; }
+      .mainCol{ padding-left: 0; }
+    }
+
+    .topbar{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .leftPack{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width: 0;
+      flex: 0 0 auto;
+    }
+
+    .menuBtn{
+      height: 40px;
+      width: 48px;
+      border: 1px solid var(--hair);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.90);
+      box-shadow: 0 4px 14px rgba(20,40,70,0.05);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+      flex: 0 0 auto;
+    }
+
+    @media (hover:hover) and (pointer:fine){
+      .menuBtn:hover{
+        border-color: rgba(31,75,153,0.22);
+        box-shadow: 0 10px 24px rgba(20,40,70,0.08);
+        background: rgba(255,255,255,0.94);
+      }
+    }
+    .menuBtn:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+    }
+
+    .burger{
+      width: 18px;
+      height: 12px;
+      display: grid;
+      gap: 3px;
+    }
+    .burger span{
+      display:block;
+      height:2px;
+      background: rgba(11,27,43,0.75);
+      border-radius: 999px;
+    }
+
+    .brand{
+      display:flex;
+      align-items: baseline;
+      gap: 0;
+      min-width: 0;
+      flex: 0 1 auto;
+    }
+    .brand .name{
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: 0.1px;
+      line-height: 1.0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* search = střed, menší, klidnější */
+    .searchForm{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1 1 auto;
+      justify-content: center;
+    }
+
+    .search{
+      position: relative;
+      min-width: 0;
+      width: min(620px, 70%);
+    }
+
+    .search input{
+      width: 100%;
+      height: 40px;
+      border: 1px solid var(--hair);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.90);
+      padding: 0 14px 0 38px;
+      font-size: 15px;
+      font-weight: 450;
+      outline: none;
+      box-shadow: 0 4px 14px rgba(20,40,70,0.05);
+      transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+    }
+
+    .search input:focus{
+      border-color: rgba(31,75,153,0.26);
+      box-shadow: 0 10px 24px rgba(20,40,70,0.08);
+      background: rgba(255,255,255,0.94);
+    }
+
+    .search .icon{
+      position:absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(11,27,43,0.45);
+      font-size: 14px;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* tlačítko Hledat: klidné (desktop), na mobilu bez textu */
+    .searchBtn{
+      height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(20,40,70,0.12);
+      background: rgba(255,255,255,0.90);
+      color: rgba(11,27,43,0.86);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(20,40,70,0.04);
+      -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
+      transition: box-shadow 140ms ease, border-color 140ms ease, color 140ms ease, background 140ms ease;
+      flex: 0 0 auto;
+    }
+
+    @media (hover:hover) and (pointer:fine){
+      .searchBtn:hover{
+        color: var(--accent);
+        border-color: var(--accentBorder);
+        box-shadow: 0 12px 28px rgba(20,40,70,0.08);
+        background: rgba(255,255,255,0.94);
+      }
+    }
+
+    .searchBtn:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+    }
+
+    /* pravá meta část (datum+svátek + připnutí) */
+    .rightMeta{
+      display:flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      min-width: 0;
+      flex: 0 0 auto;
+      max-width: 300px;
+    }
+
+    .topbarInfo{
+      font-size: 12px;
+      font-weight: 560;
+      color: var(--muted);
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: right;
+    }
+    .topbarInfo strong{
+      color: var(--accent);
+      font-weight: 750;
+    }
+
+    /* ===== ÚKOL 2P: připnutí jako domovská + VIP ===== */
+    .homePinRow{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      max-width: 300px;
+      justify-content: flex-end;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      cursor: pointer;
+    }
+
+    .homePinSep{
+      width: 1px;
+      height: 14px;
+      background: rgba(20,40,70,0.14);
+      flex: 0 0 auto;
+    }
+
+    .homePinStar{
+      width: 14px;
+      height: 14px;
+      display:block;
+      flex: 0 0 auto;
+      color: rgba(11,27,43,0.52);
+      transition: color 140ms ease;
+    }
+    .homePinStar svg{ display:block; width: 14px; height: 14px; }
+
+    .homePinText{
+      font-size: 11.8px;
+      font-weight: 650;
+      color: rgba(11,27,43,0.62);
+      line-height: 1.12;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+    }
+
+    .vipBadge{
+      display:none;
+      align-items:center;
+      gap: 6px;
+      font-size: 11.6px;
+      font-weight: 800;
+      color: var(--vipGold);
+      line-height: 1.1;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .homePinRow.isVip .homePinStar{
+      color: var(--vipGold);
+    }
+    .homePinRow.isVip .vipBadge{
+      display:inline-flex;
+    }
+
+    @media (hover:hover) and (pointer:fine){
+      .homePinRow:hover .homePinText{
+        color: rgba(11,27,43,0.74);
+      }
+      .homePinRow:hover .homePinStar{
+        color: rgba(31,75,153,0.70);
+      }
+      .homePinRow.isVip:hover .homePinStar{
+        color: var(--vipGold);
+      }
+    }
+
+    .homePinRow:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    .dataUpdatedAt{
+      font-size: 11.2px;
+      font-weight: 560;
+      color: rgba(11,27,43,0.52);
+      line-height: 1.12;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: right;
+    }
+
+    /* ===== BLOKY ===== */
+    .block{
+      margin-top: 0;
+      background: var(--cardBg);
+      border: 1px solid rgba(20,40,70,0.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 14px 14px 12px;
+      position: relative; /* pro horní pruh */
+      overflow: hidden;   /* aby pruh respektoval radius */
+    }
+
+    /* ✅ ÚKOL 4: jednotná horní modrá linka na VŠECH blocích v sidebaru */
+    .sideCol .block::before{
+      content:"";
+      position:absolute;
+      left:0; right:0; top:0;
+      height: var(--frameBarH);
+      background: var(--frameBarColor);
+      pointer-events:none;
+    }
+    .sideCol .block{
+      padding-top: calc(14px + var(--frameBarH));
+    }
+
+    .block + .block{ margin-top: 14px; }
+
+    .blockHead{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .blockHead .title{
+      font-size: 16.5px;
+      font-weight: 750;
+      line-height: 1.1;
+      color: var(--accent);
+    }
+
+    /* upozornění (pouze jednou dole v services bloku) */
+    .tinyLegal{
+      margin-top: 12px;
+      font-size: 10.2px;
+      line-height: 1.22;
+      color: rgba(11,27,43,0.40);
+      font-weight: 540;
+      letter-spacing: 0.01em;
+    }
+
+    /* ===== ŠTÍTKY ===== */
+    .chips{ display:flex; flex-wrap: wrap; gap: 10px; }
+
+    .chipLink{
+      display:inline-flex;
+      align-items:center;
+      padding: 8px 12px;
+      border-radius: var(--chipRadius);
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(20,40,70,0.10);
+      box-shadow: none;
+      font-weight: 650;
+      transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+      font-size: 12.8px;
+      line-height: 1.1;
+      -webkit-tap-highlight-color: transparent;
+      color: var(--text);
+    }
+
+    .chipIcon{ display:none !important; }
+
+    @media (hover:hover) and (pointer:fine){
+      .chipLink:hover{
+        color: var(--accent);
+        border-color: var(--accentBorder);
+        background: var(--accentSoft);
+      }
+    }
+
+    .chipLink:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+    }
+
+    /* ===== SLUŽBY (BEZ RÁMEČKU) – jen název + štítky ===== */
+    .servicesBlock{
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      position: static !important;
+      overflow: visible !important;
+    }
+    /* ✅ ÚKOL 4: služby jako „framed“ skupiny uvnitř – zachováno */
+    .servicesBlock::before{ display:none !important; }
+
+    .servicesList{ padding: 0; margin: 0; }
+
+    .serviceGroup{ padding: 12px 0 14px; }
+
+    .serviceGroup + .serviceGroup{
+      border-top: 1px solid var(--hair);
+      padding-top: 16px;
+      margin-top: 2px;
+    }
+
+    .serviceGroup .groupTitle{
+      font-size: 14px;
+      font-weight: 750;
+      color: var(--accent);
+      line-height: 1.15;
+      margin: 0 0 10px 0;
+    }
+
+    /* v „službách“ chceme klidný text – stejné jako články */
+    .servicesBlock .chipLink{
+      color: var(--titleGreen) !important;
+      background: rgba(255,255,255,0.92);
+    }
+
+    @media (hover:hover) and (pointer:fine){
+      .servicesBlock .chipLink:hover{
+        color: var(--accent) !important;
+        border-color: var(--accentBorder);
+        background: var(--accentSoft);
+      }
+    }
+
+    /* ===== 2Y: SEKCE SLUŽEB – UZAVŘENÉ RÁMEČKY + HORNÍ PRUH OD KRAJE DO KRAJE ===== */
+    .serviceGroup.isFramed{
+      position: relative;
+      border: 1px solid var(--hair);
+      border-radius: var(--radius);
+      padding: calc(14px + var(--frameBarH)) 12px 14px; /* prostor pro pruh */
+      background: rgba(255,255,255,0.88);
+      overflow: hidden; /* aby pruh respektoval zaoblení rohů */
+    }
+
+    .serviceGroup.isFramed::before{
+      content:"";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: var(--frameBarH);       /* ✅ poloviční výška */
+      background: var(--frameBarColor);
+      pointer-events: none;
+    }
+
+    /* zrušit původní meziskupinovou linku mezi framed bloky */
+    .servicesList .serviceGroup.isFramed + .serviceGroup.isFramed{
+      border-top: none;
+      margin-top: 14px;    /* vizuální mezera mezi rámečky */
+      padding-top: calc(14px + var(--frameBarH));
+    }
+
+    /* ===== ROZCESTNÍK – rám + pruh řeší už .sideCol .block::before ===== */
+    .rcBlock{
+      background: transparent !important;
+      box-shadow: none !important;
+      border: 1px solid var(--hair) !important;
+      border-radius: var(--radius) !important;
+      padding: calc(14px + var(--frameBarH)) 14px 14px !important;
+      position: relative;
+      overflow: hidden;
+    }
+    .rcBlock::before{
+      content:"";
+      position:absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: var(--frameBarH);
+      background: var(--frameBarColor);
+      pointer-events:none;
+    }
+
+    .rcPanel{
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .rcGrid{
+      display:grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: var(--rcGap);
+      align-items: start;
+    }
+
+    .rcItem{
+      display:flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      margin: 0;
+      background: transparent !important;
+      border: 0 !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .rcItem img{
+      width: var(--rcTile);
+      height: var(--rcTile);
+      display:block;
+      border: 0 !important;
+      background: transparent !important;
+      border-radius: 0 !important;
+      object-fit: contain;
+      object-position: center;
+      transform: none !important;
+    }
+
+    .rcItem span{
+      margin-top: 6px;
+      font-size: var(--rcLabel);
+      line-height: 1.1;
+      font-weight: 800;
+      color: var(--rcLabelColor);
+      text-align: center;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    @media (max-width: 520px){
+      :root{ --rcTile: 54px; --rcGap: 10px; --rcLabel: 12px; }
+      .rcGrid{ grid-template-columns: repeat(4, 1fr); }
+    }
+
+    /* ===== POČASÍ panel (ID z app.js zachováno) ===== */
+    .weatherPanel{ display: grid; gap: 10px; }
+
+    .weatherLine{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .weatherLine .left{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .weatherLine .sun{
+      font-size: 18px;
+      width: 20px;
+      text-align:center;
+      flex: 0 0 auto;
+    }
+
+    .weatherLine .temp{
+      font-size: 16px;
+      font-weight: 850;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .weatherLine .wMeta{
+      display:flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+      line-height: 1.08;
+    }
+
+    .weatherLine .cond{
+      font-size: 12.5px;
+      font-weight: 700;
+      color: rgba(11,27,43,0.74);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .weatherLine .loc{
+      font-size: 11.5px;
+      color: var(--muted);
+      font-weight: 560;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .weatherLine .arrow{
+      color: rgba(11,27,43,0.55);
+      font-weight: 800;
+      user-select: none;
+      flex: 0 0 auto;
+    }
+
+    /* ===== HOROSKOP ===== */
+    .horoBox{
+      font-size: 13px;
+      color: rgba(11,27,43,0.72);
+      line-height: 1.5;
+      font-weight: 560;
+    }
+    .horoHint{
+      margin-top: 8px;
+      font-size: 10.6px;
+      color: rgba(11,27,43,0.46);
+      font-weight: 560;
+      line-height: 1.35;
+    }
+
+    /* ===== FEED HEAD + SEKCE BAR ===== */
+    .feedHead{
+      margin-top: 0;
+      display:flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: var(--readWidth);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ✅ ÚKOL 1P: řádek „Sekce: Vše“ vlevo + aktualizace vpravo */
+    .feedTopRow{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .feedHead .sec{
+      font-size: 12.5px;
+      color: var(--titleGreen);
+      font-weight: 650;
+      min-width: 0;
+    }
+
+    .feedUpdatedAt{
+      font-size: 11.2px;
+      font-weight: 560;
+      color: rgba(11,27,43,0.52);
+      line-height: 1.12;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: right;
+      max-width: 260px;
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 520px){
+      .feedTopRow{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+      .feedUpdatedAt{
+        text-align: left;
+        max-width: 100%;
+        white-space: normal;
+      }
+    }
+
+    .sectionsBar{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .secBtn{
+      appearance: none;
+      border: 1px solid rgba(20,40,70,0.12);
+      background: rgba(255,255,255,0.92);
+      border-radius: var(--chipRadius);
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 12.8px;
+      font-weight: 650;
+      color: rgba(11,27,43,0.84);
+      -webkit-tap-highlight-color: transparent;
+      line-height: 1.1;
+      user-select: none;
+      transition: border-color 140ms ease, color 140ms ease, background 140ms ease, box-shadow 140ms ease;
+      box-shadow: none;
+    }
+
+    .secBtn.isActive{
+      color: var(--accent);
+      font-weight: 750;
+      border-color: var(--accentBorder);
+      background: var(--accentSoft);
+      box-shadow: 0 10px 24px rgba(20,40,70,0.06);
+    }
+
+    @media (hover:hover) and (pointer:fine){
+      .secBtn:hover{
+        color: var(--accent);
+        border-color: var(--accentBorder);
+        background: rgba(255,255,255,0.96);
+        box-shadow: 0 12px 28px rgba(20,40,70,0.07);
+      }
+      .secBtn.isActive:hover{
+        background: var(--accentSoft);
+        box-shadow: 0 12px 28px rgba(20,40,70,0.08);
+      }
+    }
+
+    .secBtn:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+    }
+
+    /* ===== FEED ===== */
+    .news-list{
+      margin-top: 10px;
+      display:grid;
+      gap: 0;
+      max-width: var(--readWidth);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .news-card{
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 18px 0;
+      box-shadow: none;
+      overflow-wrap: anywhere;
+      position: relative;
+      transition: none;
+    }
+
+    .news-card::after{
+      content:"";
+      position:absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: var(--divider);
+      pointer-events:none;
+    }
+
+    .srcSep{
+      color: rgba(11,27,43,0.40);
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 1.2;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .ad-card{
+      background: var(--adBg);
+      border: 1px solid var(--adStroke);
+      border-radius: var(--radius2);
+      box-shadow: 0 10px 26px rgba(20,40,70,0.06);
+      padding: 12px 12px 12px;
+      margin: 14px 0;
+      overflow-wrap: anywhere;
+      position: relative;
+    }
+
+    .ad-head{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      min-width: 0;
+    }
+
+    .ad-head .pos{
+      font-size: 11.6px;
+      font-weight: 800;
+      color: rgba(11,27,43,0.70);
+      white-space: nowrap;
+    }
+
+    .ad-head .ad-label{
+      font-size: 11.6px;
+      font-weight: 750;
+      color: rgba(11,27,43,0.58);
+      white-space: nowrap;
+    }
+
+    .ad-title{
+      margin: 0 0 6px 0;
+      font-size: 14px;
+      font-weight: 800;
+      color: rgba(11,27,43,0.86);
+      line-height: 1.18;
+    }
+
+    .ad-text{
+      font-size: 12.6px;
+      line-height: 1.38;
+      color: rgba(11,27,43,0.72);
+      font-weight: 560;
+    }
+
+    .ad-email{
+      font-weight: 800;
+      color: rgba(11,27,43,0.82);
+      border-bottom: 1px solid rgba(11,27,43,0.18);
+      padding-bottom: 1px;
+      white-space: nowrap;
+    }
+
+    .news-title{
+      margin: 0;
+      font-size: 19px;
+      font-weight: 550;
+      line-height: var(--titleLineHeight);
+      letter-spacing: 0;
+      min-width: 0;
+    }
+
+    .news-titleLink{
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: var(--titleLinesDesktop);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: var(--titleLineHeight);
+      min-height: calc(var(--titleLineHeight) * var(--titleLinesDesktop) * 1em);
+      max-height: calc(var(--titleLineHeight) * var(--titleLinesDesktop) * 1em);
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      hyphens: auto;
+      color: var(--titleGreen);
+      text-decoration: none;
+      transition: color 140ms ease, text-decoration-color 140ms ease;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+      text-decoration-color: rgba(31,75,153,0.00);
+      border-radius: 8px;
+    }
+
+    @media (max-width: 680px){
+      .news-titleLink{
+        -webkit-line-clamp: var(--titleLinesMobile);
+        min-height: calc(var(--titleLineHeight) * var(--titleLinesMobile) * 1em);
+        max-height: calc(var(--titleLineHeight) * var(--titleLinesMobile) * 1em);
+      }
+    }
+
+    @media (hover:hover) and (pointer:fine){
+      .news-titleLink:hover{
+        color: var(--accent);
+        text-decoration: underline;
+        text-decoration-color: rgba(31,75,153,0.40);
+      }
+    }
+
+    .news-titleLink:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+    }
+
+    .news-row2{
+      display:flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+      min-width: 0;
+    }
+
+    .meta-time{
+      font-size: 12.5px;
+      font-weight: 400;
+      color: rgba(11,27,43,0.55);
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+
+    .news-sourceLabel{
+      font-size: 12.5px;
+      font-weight: 400;
+      color: rgba(11,27,43,0.45);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .news-sources{
+      display:inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .sourceDomain{
+      font-size: 12.5px;
+      font-weight: 400;
+      color: rgba(11,27,43,0.56);
+      line-height: 1.2;
+      white-space: nowrap;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(11,27,43,0.14);
+      padding-bottom: 1px;
+      transition: color 140ms ease, border-bottom-color 140ms ease;
+    }
+
+    @media (hover:hover) and (pointer:fine){
+      .sourceDomain:hover{
+        color: var(--accent);
+        border-bottom-color: rgba(31,75,153,0.26);
+      }
+    }
+
+    .empty{
+      margin-top: 10px;
+      background: rgba(255,255,255,0.86);
+      border: 1px dashed rgba(20,40,70,0.18);
+      border-radius: 14px;
+      padding: 18px;
+      color: rgba(11,27,43,0.65);
+      font-weight: 560;
+      text-align:center;
+      max-width: var(--readWidth);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .footer{
+      margin-top: 16px;
+      text-align:center;
+      color: rgba(11,27,43,0.55);
+      font-weight: 560;
+      font-size: 12px;
+      max-width: var(--readWidth);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ===== VIDEO (sjednoceno do feedu) ===== */
+    .feedPause{
+      position: relative;
+      padding: 10px 0 6px;
+    }
+    .feedPause::before{
+      content:"";
+      display:block;
+      height: 1px;
+      background: var(--divider);
+      opacity: 0.9;
+    }
+
+    .videoRow{
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 18px 0;
+      margin: 0;
+      position: relative;
+      overflow-wrap: anywhere;
+    }
+    .videoRow::after{
+      content:"";
+      position:absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: var(--divider);
+      pointer-events:none;
+    }
+
+    .videoCardInner{
+      width: min(50%, 520px);
+      max-width: 520px;
+      min-width: 0;
+      margin-left: 0;
+      margin-right: auto;
+      padding: 0;
+    }
+
+    .videoTop{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      min-width: 0;
+    }
+
+    .videoTitle{
+      font-size: 13px;
+      font-weight: 750;
+      color: rgba(11,27,43,0.82);
+      line-height: 1.15;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .videoBadge{
+      display:inline-flex;
+      align-items:center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(20,40,70,0.12);
+      background: rgba(255,255,255,0.88);
+      color: rgba(11,27,43,0.70);
+      font-size: 11.6px;
+      font-weight: 750;
+      line-height: 1.1;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .videoMeta{
+      font-size: 11.6px;
+      font-weight: 560;
+      color: rgba(11,27,43,0.54);
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .videoTopRight{
+      display:flex;
+      align-items: baseline;
+      gap: 8px;
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+
+    .videoFrame{
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--videoSoft);
+      border: 1px solid rgba(20,40,70,0.10);
+    }
+
+    .videoFrame iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    .videoDesc{
+      margin-top: 10px;
+      font-size: 12.4px;
+      line-height: 1.4;
+      color: rgba(11,27,43,0.70);
+      font-weight: 560;
+    }
+
+    .videoSource{
+      margin-top: 6px;
+      font-size: 11.6px;
+      line-height: 1.25;
+      color: rgba(11,27,43,0.52);
+      font-weight: 560;
+    }
+
+    .videoSource a{
+      color: rgba(11,27,43,0.62);
+      border-bottom: 1px solid rgba(11,27,43,0.14);
+      padding-bottom: 1px;
+      transition: color 140ms ease, border-bottom-color 140ms ease;
+    }
+
+    @media (hover:hover) and (pointer:fine){
+      .videoSource a:hover{
+        color: var(--accent);
+        border-bottom-color: rgba(31,75,153,0.26);
+      }
+    }
+
+    @media (max-width: 680px){
+      .videoCardInner{
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+    }
+
+    /* ===== MENU OVERLAY ===== */
+    .overlay{
+      position: fixed;
+      inset: 0;
+      z-index: 20000;
+      background: rgba(11,27,43,0.30);
+      display:none;
+      padding: 14px;
+    }
+    .overlay.show{ display:block; }
+
+    .drawer{
+      width: min(420px, 100%);
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(20,40,70,0.14);
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+      padding: 12px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .drawerTop{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 6px 10px;
+    }
+
+    .drawerTop .t{
+      font-weight: 750;
+      font-size: 15px;
+      color: rgba(11,27,43,0.88);
+    }
+
+    .x{
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      border: 1px solid rgba(20,40,70,0.14);
+      background: rgba(255,255,255,0.90);
+      cursor:pointer;
+      font-weight: 750;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+    }
+
+    @media (hover:hover) and (pointer:fine){
+      .x:hover{
+        border-color: rgba(31,75,153,0.22);
+        box-shadow: 0 10px 24px rgba(20,40,70,0.08);
+        background: rgba(255,255,255,0.94);
+      }
+    }
+    .x:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+    }
+
+    .menuList{
+      display:grid;
+      gap: 8px;
+      padding: 4px;
+    }
+
+    .menuItem{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(20,40,70,0.10);
+      background: rgba(255,255,255,0.90);
+      font-weight: 700;
+      color: rgba(11,27,43,0.86);
+      cursor:pointer;
+    }
+    .menuItem[aria-pressed="true"]{
+      color: var(--accent);
+      border-color: var(--accentBorder);
+      background: var(--accentSoft);
+    }
+
+    /* ===== VLASTNÍ MODAL ===== */
+    .modal{
+      position: fixed;
+      inset: 0;
+      z-index: 30000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(11,27,43,0.35);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .modal.show{ display:flex; }
+
+    .modalCard{
+      width: min(420px, 100%);
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(20,40,70,0.14);
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.22);
+      padding: 14px;
+    }
+
+    .modalTitle{
+      font-weight: 750;
+      font-size: 14px;
+      color: rgba(11,27,43,0.90);
+      margin: 2px 4px 12px;
+      line-height: 1.25;
+    }
+
+    .modalActions{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .btn{
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(20,40,70,0.14);
+      background: rgba(255,255,255,0.90);
+      font-weight: 750;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: box-shadow 140ms ease, border-color 140ms ease, color 140ms ease, background 140ms ease;
+    }
+
+    .btnPrimary{
+      border-color: rgba(20,40,70,0.18);
+      background: rgba(255,255,255,0.94);
+    }
+
+    @media (hover:hover) and (pointer:fine){
+      .btn:hover{
+        color: var(--accent);
+        border-color: var(--accentBorder);
+        box-shadow: 0 12px 28px rgba(20,40,70,0.08);
+        background: rgba(255,255,255,0.94);
+      }
+    }
+
+    .btn:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+    }
+
+    /* ===== RESPONSIVE – MOBILE TOPBAR ===== */
+    @media (max-width: 820px){
+      .topbar{
+        display:grid;
+        grid-template-columns: 52px 1fr 44px;
+        gap: 10px;
+        align-items:center;
+        padding: 8px 12px;
+      }
+      .leftPack{ grid-column: 1 / 3; }
+      .rightMeta{ display:none; }
+
+      .searchForm{
+        grid-column: 1 / 4;
+        justify-content: stretch;
+      }
+      .search{ width: 100%; }
+
+      .searchBtn{
+        width: 44px;
+        padding: 0;
+        display:grid;
+        place-items:center;
+      }
+      .searchBtn::before{
+        content: "⌕";
+        font-size: 16px;
+        color: rgba(11,27,43,0.72);
+      }
+      .searchBtn{ font-size: 0; }
+    }
+
+    @media (max-width: 780px){
+      .news-title{ font-size: 18px; }
+      .container{ padding-left: 12px; padding-right: 12px; }
+      .videoTitle{ font-size: 12.8px; }
+      .videoDesc{ font-size: 12.2px; }
+      .videoBadge{ font-size: 11.4px; padding: 6px 9px; }
+    }
+
+    @media (max-width: 420px){
+      .brand .name{ font-size: 18px; }
+      .news-row2{ gap: 9px; }
+    }
+
+    /* ============================================ */
+    /* ===== ÚKOL 1: Osobní časovač pracovní doby ===== */
+    /* ============================================ */
+    .work-timer {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+    .work-timer h3 {
+      margin-bottom: 6px;
+    }
+    .work-timer .bigCountdown {
+      margin: 6px 0;
+    }
+    .work-timer .statsRow {
+      margin-top: 4px;
+      gap: 6px;
+    }
+    .work-timer .btnRow {
+      margin-top: 6px;
+    }
+    .work-timer .note {
+      margin-top: 6px;
+      font-size: 11px;
+    }
+    /* Mapování na existující třídy */
+    .work-timer .title {
+      margin-bottom: 6px;
+    }
+    .work-timer .timerBig {
+      margin: 6px 0;
+    }
+    .work-timer .timerMetaGrid {
+      margin-top: 4px;
+      gap: 6px;
+    }
+    .work-timer .timerControls {
+      margin-top: 6px;
+    }
+    .work-timer .timerHint {
+      margin-top: 6px;
+      font-size: 11px;
+    }
+    .timerWrap{
+      display:grid;
+      gap: 8px;
+    }
+    .timerRowTop{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .timerTitleMini{
+      font-size: 13.5px;
+      font-weight: 800;
+      color: rgba(11,27,43,0.86);
+      line-height: 1.1;
+    }
+    .timerStatus{
+      font-size: 12.2px;
+      font-weight: 750;
+      color: rgba(11,27,43,0.60);
+      line-height: 1.1;
+      white-space: normal;
+      word-break: break-word;
+      max-width: 100%;
+      min-width: 0;
+    }
+    .timerStatus.isWarn{ color: rgba(184, 94, 0, 0.92); }
+    .timerStatus.isEnd{ color: rgba(164, 34, 34, 0.92); }
+    .timerStatus.isOver{ color: rgba(31,75,153,0.92); }
+
+    .timerBig{
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+      line-height: 1.0;
+      color: rgba(11,27,43,0.92);
+      text-align: left;
+    }
+
+    .timerMetaGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .tCard{
+      border: 1px solid rgba(20,40,70,0.10);
+      background: rgba(255,255,255,0.92);
+      border-radius: 14px;
+      padding: 8px 8px;
+    }
+    .tLab{
+      font-size: 11px;
+      color: rgba(11,27,43,0.55);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+    .tVal{
+      font-size: 13.8px;
+      color: rgba(11,27,43,0.86);
+      font-weight: 850;
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .timerControls{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .tBtn{
+      height: 37px;
+      border-radius: 12px;
+      border: 1px solid rgba(20,40,70,0.14);
+      background: rgba(255,255,255,0.92);
+      font-weight: 850;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: box-shadow 140ms ease, border-color 140ms ease, color 140ms ease, background 140ms ease;
+      color: rgba(11,27,43,0.86);
+    }
+    @media (hover:hover) and (pointer:fine){
+      .tBtn:hover{
+        color: var(--accent);
+        border-color: var(--accentBorder);
+        box-shadow: 0 12px 28px rgba(20,40,70,0.08);
+        background: rgba(255,255,255,0.96);
+      }
+    }
+    .tBtn:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+    }
+    .tBtn.isPrimary{
+      border-color: rgba(31,75,153,0.20);
+      background: rgba(255,255,255,0.96);
+    }
+
+    .timerSetRow{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .timerSetRow label{
+      font-size: 12.2px;
+      font-weight: 750;
+      color: rgba(11,27,43,0.70);
+    }
+    .timerTime{
+      height: 35px;
+      border-radius: 10px;
+      border: 1px solid rgba(20,40,70,0.12);
+      background: rgba(255,255,255,0.92);
+      padding: 0 10px;
+      font-weight: 800;
+      color: rgba(11,27,43,0.86);
+      outline: none;
+      box-shadow: 0 4px 14px rgba(20,40,70,0.04);
+    }
+    .timerTime:focus{
+      border-color: rgba(31,75,153,0.26);
+      box-shadow: 0 10px 24px rgba(20,40,70,0.08);
+      background: rgba(255,255,255,0.96);
+    }
+
+    .timerHint{
+      font-size: 10.8px;
+      color: rgba(11,27,43,0.46);
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* ============================================ */
+    /* ===== ÚKOL 2: Denní otázka (anketa) ===== */
+    /* ============================================ */
+    .pollWrap{
+      display:grid;
+      gap: 10px;
+    }
+    .pollTopRow{
+      display:flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 2px;
+    }
+    .pollClose{
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      border: 1px solid rgba(20,40,70,0.12);
+      background: rgba(255,255,255,0.92);
+      cursor: pointer;
+      font-weight: 900;
+      color: rgba(11,27,43,0.70);
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease, color 140ms ease;
+    }
+    @media (hover:hover) and (pointer:fine){
+      .pollClose:hover{
+        color: var(--accent);
+        border-color: var(--accentBorder);
+        box-shadow: 0 12px 28px rgba(20,40,70,0.08);
+        background: rgba(255,255,255,0.96);
+      }
+    }
+    .pollClose:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+    }
+
+    .pollQ{
+      font-size: 13.2px;
+      line-height: 1.35;
+      color: rgba(11,27,43,0.82);
+      font-weight: 650;
+    }
+    .pollBtns{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .pollBtn{
+      height: 40px;
+      border-radius: 14px;
+      border: 1px solid rgba(20,40,70,0.12);
+      background: rgba(255,255,255,0.92);
+      font-weight: 800;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 140ms ease, box-shadow 140ms ease, color 140ms ease, background 140ms ease;
+      color: rgba(11,27,43,0.82);
+    }
+    @media (hover:hover) and (pointer:fine){
+      .pollBtn:hover{
+        color: var(--accent);
+        border-color: var(--accentBorder);
+        box-shadow: 0 12px 28px rgba(20,40,70,0.07);
+        background: rgba(255,255,255,0.96);
+      }
+    }
+    .pollBtn:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+    }
+    .pollResult{
+      display:grid;
+      gap: 8px;
+    }
+    .pollRow{
+      display:grid;
+      gap: 6px;
+    }
+    .pollRowTop{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12.2px;
+      color: rgba(11,27,43,0.72);
+      font-weight: 650;
+    }
+    .pollBar{
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(20,40,70,0.06);
+      border: 1px solid rgba(20,40,70,0.10);
+      overflow: hidden;
+    }
+    .pollBar > i{
+      display:block;
+      height: 100%;
+      width: 0%;
+      background: rgba(31,75,153,0.28);
+    }
+    .pollNote{
+      font-size: 10.8px;
+      line-height: 1.25;
+      color: rgba(11,27,43,0.48);
+      font-weight: 560;
+    }
+
+    /* ============================================ */
+    /* ===== ÚKOL 3P: ikony Počasí + Horoskop vedle časovače (svisle) ===== */
+    /* ============================================ */
+    .timerToolsWrap{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .sideToolsV{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 2px;
+    }
+
+    .toolBtn{
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(20,40,70,0.12);
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 6px 18px rgba(20,40,70,0.05);
+      cursor: pointer;
+      display:grid;
+      place-items:center;
+      font-size: 16px;
+      color: rgba(11,27,43,0.78);
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease, color 140ms ease;
+    }
+    @media (hover:hover) and (pointer:fine){
+      .toolBtn:hover{
+        color: var(--accent);
+        border-color: var(--accentBorder);
+        box-shadow: 0 12px 28px rgba(20,40,70,0.08);
+        background: rgba(255,255,255,0.96);
+      }
+    }
+    .toolBtn.isActive{
+      color: var(--accent);
+      border-color: var(--accentBorder);
+      background: var(--accentSoft);
+      box-shadow: 0 12px 28px rgba(20,40,70,0.08);
+    }
+    .toolBtn:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+    }
+
+    .toolPanel{
+      background: var(--cardBg);
+      border: 1px solid rgba(20,40,70,0.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 14px 14px 12px;
+      overflow: hidden;
+      transform-origin: top;
+      transition: transform 140ms ease, opacity 140ms ease;
+      opacity: 1;
+      transform: translateY(0);
+      position: relative;
+      margin-top: 14px;
+    }
+    /* ✅ ÚKOL 4: horní pruh i na toolPanel */
+    .toolPanel::before{
+      content:"";
+      position:absolute; left:0; right:0; top:0;
+      height: var(--frameBarH);
+      background: var(--frameBarColor);
+      pointer-events:none;
+    }
+    .toolPanel{
+      padding-top: calc(14px + var(--frameBarH));
+    }
+
+    .toolPanel[hidden]{
+      display:block; /* drží layout stabilní při přepnutí – panel jen mizí */
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+      height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-width: 0;
+      margin: 0;
+    }
+    .toolPanelInner{
+      display:grid;
+      gap: 10px;
+    }
+    .toolPane{
+      display:none;
+    }
+    .toolPane.isOpen{
+      display:block;
+    }
+    .toolPaneHead{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .toolPaneTitle{
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.15;
+    }
+    .toolPaneClose{
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      border: 1px solid rgba(20,40,70,0.12);
+      background: rgba(255,255,255,0.92);
+      cursor: pointer;
+      font-weight: 850;
+      color: rgba(11,27,43,0.70);
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease, color 140ms ease;
+    }
+    @media (hover:hover) and (pointer:fine){
+      .toolPaneClose:hover{
+        color: var(--accent);
+        border-color: var(--accentBorder);
+        box-shadow: 0 12px 28px rgba(20,40,70,0.08);
+        background: rgba(255,255,255,0.96);
+      }
+    }
+    .toolPaneClose:focus-visible{
+      outline: 2px solid rgba(31,75,153,0.22);
+      outline-offset: 3px;
+    }
+
+    /* Dnes se stalo */
+    .todayText{
+      font-size: 13px;
+      color: rgba(11,27,43,0.72);
+      line-height: 1.45;
+      font-weight: 560;
+    }
+    .todayText b{
+      color: rgba(11,27,43,0.84);
+      font-weight: 800;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar-wrap" id="topbarWrap">
+    <div class="topbar">
+      <div class="leftPack">
+        <button class="menuBtn" id="menuBtn" aria-label="Sekce">
+          <div class="burger" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+        </button>
+
+        <div class="brand">
+          <div class="name">infoUzel.cz</div>
+        </div>
+      </div>
+
+      <form class="searchForm" id="searchForm" autocomplete="off">
+        <div class="search">
+          <div class="icon">⌕</div>
+          <input id="searchInput" type="search" placeholder="Hledat" autocomplete="off" />
+        </div>
+        <button class="searchBtn" id="searchBtn" type="submit">Hledat</button>
+      </form>
+
+      <div class="rightMeta">
+        <div class="topbarInfo" id="topbarInfo">—</div>
+
+        <!-- ✅ ÚKOL 2P: připnout + hvězdička + VIP -->
+        <div class="homePinRow" id="homePinRow" tabindex="0" role="button" aria-label="Připnout stránku jako domovskou">
+          <div class="homePinSep" aria-hidden="true"></div>
+          <span class="homePinStar" aria-hidden="true">
+            <!-- obrys hvězdy (bez výplně) -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2.5l2.95 6.06 6.69.97-4.84 4.71 1.14 6.66L12 17.9 6.06 20.9l1.14-6.66L2.36 9.53l6.69-.97L12 2.5z"></path>
+            </svg>
+          </span>
+          <div class="homePinText" id="homePinText">Připnout stránku jako domovskou</div>
+          <div class="vipBadge" id="vipBadge">VIP uživatel</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container">
+    <div class="layout">
+      <!-- LEVÝ SLOUPEC: sekce + feed -->
+      <div class="mainCol">
+        <section class="feedHead">
+          <div class="feedTopRow">
+            <div class="sec" id="sectionLabel">Sekce: Vše</div>
+
+            <!-- ✅ ÚKOL 1P: přesun „Poslední aktualizace dat“ sem (ID zachováno pro app.js) -->
+            <div class="feedUpdatedAt" id="dataUpdatedAt">Poslední aktualizace dat: —</div>
+          </div>
+
+          <nav class="sectionsBar" id="sectionsBar" aria-label="Filtr sekcí"></nav>
+        </section>
+
+        <section class="news-list" id="newsList"></section>
+
+        <div id="emptyBox" style="display:none;padding:14px;border:1px solid rgba(20,40,70,0.12);border-radius:12px;background:#fff;margin-top:10px;">
+          <div style="font-weight:800;margin-bottom:6px;">Žádné články k zobrazení</div>
+          <div style="color:rgba(11,27,43,0.70);font-size:13px;margin-bottom:10px;">
+            Filtr nebo uložené nastavení může skrývat všechny zdroje. Zkuste reset filtrů.
+          </div>
+          <button id="btnResetFilters" style="padding:10px 14px;border-radius:10px;border:1px solid rgba(20,40,70,0.18);background:#1F4B99;color:#fff;font-weight:800;cursor:pointer;">
+            Reset filtrů
+          </button>
+        </div>
+        <div class="footer">© infoUzel.cz — agregace odkazů na zdroje.</div>
+
+        <!-- ===== TEMPLATES pro JS (assets/app.js) ===== -->
+        <template id="tplFeedPause">
+          <div class="feedPause" aria-hidden="true"></div>
+        </template>
+
+        <template id="tplVideoBlock">
+          <article class="videoRow" data-kind="video">
+            <div class="videoCardInner">
+              <div class="videoTop">
+                <div class="videoTitle">Video – souvislosti k tématu</div>
+                <div class="videoTopRight">
+                  <div class="videoBadge" data-video-channel style="display:none;">—</div>
+                  <div class="videoMeta" data-video-age="">—</div>
+                </div>
+              </div>
+
+              <div class="videoFrame">
+                <iframe
+                  title="Video"
+                  src=""
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allowfullscreen></iframe>
+              </div>
+
+              <div class="videoDesc" data-video-title="">—</div>
+
+              <div class="videoSource">
+                Zdroj:
+                <a href="" target="_blank" rel="noopener noreferrer" data-video-source="">YouTube / oficiální kanál</a>
+              </div>
+            </div>
+          </article>
+        </template>
+      </div>
+
+      <!-- PRAVÝ SIDEBAR -->
+      <aside class="sideCol" aria-label="Postranní panel">
+
+        <!-- ✅ ÚKOL 3P: vedle časovače (svisle) Počasí + Horoskop, mimo hlavní feed -->
+        <div class="timerToolsWrap" aria-label="Časovač + rychlé ikony">
+          <!-- ✅ ÚKOL 1: OSOBNÍ ČASOVAČ PRACOVNÍ DOBY (prioritní blok úplně nahoře) -->
+          <section class="block work-timer" aria-label="Osobní časovač pracovní doby">
+            <div class="blockHead">
+              <div class="title">Osobní časovač pracovní doby</div>
+            </div>
+
+            <div class="timerWrap" id="workTimer">
+              <div class="timerRowTop">
+                <div class="timerTitleMini">Konec směny</div>
+                <div class="timerStatus" id="timerStatus">Nastav konec a stiskni START</div>
+              </div>
+
+              <div class="timerSetRow">
+                <label for="shiftEnd">Čas konce:</label>
+                <input id="shiftEnd" class="timerTime" type="time" value="16:00" />
+              </div>
+
+              <div class="timerBig" id="timerBig">00:00:00</div>
+
+              <div class="timerMetaGrid">
+                <div class="tCard">
+                  <div class="tLab">Odpracováno</div>
+                  <div class="tVal" id="timerWorked">00:00:00</div>
+                </div>
+                <div class="tCard">
+                  <div class="tLab">Zbývá</div>
+                  <div class="tVal" id="timerLeft">00:00:00</div>
+                </div>
+              </div>
+
+              <div class="timerControls">
+                <button class="tBtn isPrimary" id="timerStart" type="button">START</button>
+                <button class="tBtn" id="timerStop" type="button">STOP</button>
+              </div>
+
+              <div class="timerHint">
+                Bez účtů a cloudu. Stav se ukládá jen do tohoto zařízení.
+              </div>
+            </div>
+          </section>
+
+          <div class="sideToolsV" aria-label="Rychlé ikony mimo hlavní feed">
+            <button class="toolBtn" id="btnWeather" type="button" aria-label="Počasí" aria-controls="toolPanel" aria-expanded="false">⛅</button>
+            <button class="toolBtn" id="btnHoro" type="button" aria-label="Horoskop" aria-controls="toolPanel" aria-expanded="false">♉</button>
+          </div>
+        </div>
+
+        <!-- panel zůstává v sidebaru, ale ovládá se ikonami vedle časovače -->
+        <div class="toolPanel" id="toolPanel" hidden>
+          <div class="toolPanelInner">
+            <!-- Počasí (ID z app.js zachováno) -->
+            <div class="toolPane" id="paneWeather" aria-label="Počasí panel">
+              <div class="toolPaneHead">
+                <div class="toolPaneTitle">Počasí</div>
+                <button class="toolPaneClose" id="toolClose1" type="button" aria-label="Zavřít">✕</button>
+              </div>
+
+              <div class="weatherPanel" title="Počasí">
+                <div class="weatherLine">
+                  <div class="left">
+                    <div class="sun" id="weatherIcon">⛅</div>
+                    <div class="temp" id="weatherTemp">—</div>
+                    <div class="wMeta">
+                      <div class="cond" id="weatherDesc">—</div>
+                      <div class="loc" id="weatherLoc">—</div>
+                    </div>
+                  </div>
+                  <div class="arrow">›</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Horoskop -->
+            <div class="toolPane" id="paneHoro" aria-label="Horoskop panel">
+              <div class="toolPaneHead">
+                <div class="toolPaneTitle">Horoskop</div>
+                <button class="toolPaneClose" id="toolClose2" type="button" aria-label="Zavřít">✕</button>
+              </div>
+
+              <div class="horoBox" id="horoText">
+                —
+                <div class="horoHint">Krátké, civilní. Max 2 věty.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ✅ ÚKOL 2: DENNÍ OTÁZKA / MINI ANKETA (pod časovačem a tool-panelem, menší, zavíratelná, po zavření už se neukáže) -->
+        <section class="block" id="pollBlock" aria-label="Denní otázka">
+          <div class="blockHead" style="margin-bottom:6px;">
+            <div class="title" style="font-size:15px;">Denní otázka</div>
+          </div>
+
+          <div class="pollWrap" id="dailyPoll">
+            <div class="pollTopRow">
+              <div style="font-size:11.6px;font-weight:800;color:rgba(11,27,43,0.58);">Anketa A/B</div>
+              <button class="pollClose" id="pollClose" type="button" aria-label="Zavřít">✕</button>
+            </div>
+
+            <div class="pollQ" id="pollQ">—</div>
+
+            <div class="pollBtns" id="pollBtns">
+              <button class="pollBtn" type="button" data-v="a">—</button>
+              <button class="pollBtn" type="button" data-v="b">—</button>
+            </div>
+
+            <div class="pollResult" id="pollResult" style="display:none;">
+              <div class="pollRow">
+                <div class="pollRowTop">
+                  <span id="pollLabA">—</span>
+                  <span id="pollPctA">0%</span>
+                </div>
+                <div class="pollBar"><i id="pollBarA"></i></div>
+              </div>
+
+              <div class="pollRow">
+                <div class="pollRowTop">
+                  <span id="pollLabB">—</span>
+                  <span id="pollPctB">0%</span>
+                </div>
+                <div class="pollBar"><i id="pollBarB"></i></div>
+              </div>
+
+              <div class="pollNote" id="pollNote">Hlas je uložen jen v tomto zařízení.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3) DNES SE STALO -->
+        <section class="block" aria-label="Dnes se stalo">
+          <div class="blockHead">
+            <div class="title">Dnes se stalo</div>
+          </div>
+          <div class="todayText" id="todayHistory">—</div>
+        </section>
+
+        <!-- SLUŽBY -->
+        <section class="block servicesBlock" aria-label="Služby">
+          <div class="servicesList">
+            <div class="serviceGroup isFramed">
+              <div class="groupTitle">E-mailové schránky</div>
+              <div class="chips" id="emailChips"></div>
+            </div>
+
+            <!-- Online aplikace ODSTRANĚNO -->
+
+            <div class="serviceGroup isFramed">
+              <div class="groupTitle">Komunikační aplikace</div>
+              <div class="chips">
+                <a class="chipLink" href="https://www.whatsapp.com/" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                <a class="chipLink" href="https://www.viber.com/" target="_blank" rel="noopener noreferrer">Viber</a>
+                <a class="chipLink" href="https://telegram.org/" target="_blank" rel="noopener noreferrer">Telegram</a>
+                <a class="chipLink" href="https://signal.org/" target="_blank" rel="noopener noreferrer">Signal</a>
+                <a class="chipLink" href="https://www.messenger.com/" target="_blank" rel="noopener noreferrer">Messenger</a>
+              </div>
+            </div>
+
+            <div class="serviceGroup isFramed">
+              <div class="groupTitle">Sociální sítě</div>
+              <div class="chips">
+                <a class="chipLink" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a>
+                <a class="chipLink" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a class="chipLink" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">YouTube</a>
+                <a class="chipLink" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a>
+                <a class="chipLink" href="https://x.com/" target="_blank" rel="noopener noreferrer">X</a>
+                <a class="chipLink" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a class="chipLink" href="https://www.reddit.com/" target="_blank" rel="noopener noreferrer">Reddit</a>
+                <a class="chipLink" href="https://www.pinterest.com/" target="_blank" rel="noopener noreferrer">Pinterest</a>
+                <a class="chipLink" href="https://www.snapchat.com/" target="_blank" rel="noopener noreferrer">Snapchat</a>
+                <a class="chipLink" href="https://discord.com/" target="_blank" rel="noopener noreferrer">Discord</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="tinyLegal">
+            infoUzel.cz není s uvedenými službami nijak spojen.<br />
+            Odkazy vedou na oficiální weby třetích stran.
+          </div>
+        </section>
+
+        <!-- ===== ROZCESTNÍK (ikony na ploše) ===== -->
+        <section class="block rcBlock" aria-label="Rozcestník">
+          <div class="blockHead">
+            <div class="title">Rozcestník</div>
+          </div>
+
+          <div class="rcPanel" aria-label="Rychlé odkazy">
+            <div class="rcGrid">
+              <a class="rcItem" href="#" data-section="reality" aria-label="Reality">
+                <img src="assets/icons/reality.png" alt="Reality" />
+                <span>Reality</span>
+              </a>
+
+              <a class="rcItem" href="#" data-section="automoto" aria-label="AutoMoto">
+                <img src="assets/icons/automoto.png" alt="AutoMoto" />
+                <span>AutoMoto</span>
+              </a>
+
+              <a class="rcItem" href="#" data-section="bazar" aria-label="Bazar">
+                <img src="assets/icons/bazar.png" alt="Bazar" />
+                <span>Bazar</span>
+              </a>
+
+              <a class="rcItem" href="#" data-section="prace" aria-label="Práce">
+                <img src="assets/icons/prace.png" alt="Práce" />
+                <span>Práce</span>
+              </a>
+
+              <a class="rcItem" href="#" data-section="sluzby" aria-label="Služby">
+                <img src="assets/icons/sluzby.png" alt="Služby" />
+                <span>Služby</span>
+              </a>
+
+              <a class="rcItem" href="#" data-section="jizdnirady" aria-label="Jízdní řády">
+                <img src="assets/icons/jizdnirady.png" alt="Jízdní řády" />
+                <span>Jízdní řády</span>
+              </a>
+
+              <a class="rcItem" href="#" data-section="mapy" aria-label="Mapy">
+                <img src="assets/icons/mapy.png" alt="Mapy" />
+                <span>Mapy</span>
+              </a>
+
+              <a class="rcItem" href="#" data-section="cestovani" aria-label="Cestování">
+                <img src="assets/icons/cestovani.png" alt="Cestování" />
+                <span>Cestování</span>
+              </a>
+
+              <a class="rcItem" href="#" data-section="prekladac" aria-label="Překladač">
+                <img src="assets/icons/prekladac.png" alt="Překladač" />
+                <span>Překladač</span>
+              </a>
+
+              <a class="rcItem" href="#" data-section="tvprogram" aria-label="TV program">
+                <img src="assets/icons/tvprogram.png" alt="TV program" />
+                <span>TV program</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <!-- MENU OVERLAY -->
+  <div class="overlay" id="overlay">
+    <div class="drawer" role="dialog" aria-modal="true" aria-label="Sekce">
+      <div class="drawerTop">
+        <div class="t">Sekce</div>
+        <button class="x" id="closeMenu" aria-label="Zavřít">✕</button>
+      </div>
+      <div class="menuList" id="menuList"></div>
+    </div>
+  </div>
+
+  <!-- SEARCH MODAL (jen když 0 výsledků) -->
+  <div class="modal" id="searchModal" role="dialog" aria-modal="true" aria-label="Hledání">
+    <div class="modalCard">
+      <div class="modalTitle" id="modalTitle">Na infoUzel.cz nenalezeno, hledat Google?</div>
+      <div class="modalActions">
+        <button class="btn btnPrimary" id="modalGoogle">OK</button>
+        <button class="btn" id="modalCancel">Zrušit</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
