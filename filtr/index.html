@@ -4,6 +4,68 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>infoUzel.cz</title>
+  <link rel="stylesheet" href="./assets/app.css" />
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">
+      <div class="logo">infoUzel.cz</div>
+      <div class="tagline">Zprávy z více zdrojů</div>
+    </div>
+    <nav class="nav">
+      <a class="nav-link" href="#">Aktuálně</a>
+      <a class="nav-link" href="#">Sport</a>
+      <a class="nav-link" href="#">Ekonomika</a>
+      <a class="nav-link" href="#">Svět</a>
+      <a class="nav-link" href="#">Kultura</a>
+    </nav>
+  </header>
+
+  <div id="layout">
+    <main id="content">
+      <section class="section-heading">
+        <h2>Aktuální články</h2>
+      </section>
+      <section id="feed" class="feed" aria-live="polite"></section>
+    </main>
+
+    <aside id="sidebar">
+      <section class="side-block">
+        <h3>Stav dat</h3>
+        <p><span class="pill" id="dataStatus">Stav dat: načítám…</span></p>
+        <p class="small">Počet položek: <span id="dataCount">—</span></p>
+      </section>
+      <section class="side-block">
+        <h3>Režim práce s daty</h3>
+        <button class="btn" id="toggleDebugBtn" type="button">Zapnout debug</button>
+        <p class="small">Slouží pro kontrolu struktury dat.</p>
+      </section>
+    </aside>
+  </div>
+
+  <footer id="footer">
+    <div>infoUzel.cz – agregátor zpráv</div>
+    <div>Data jsou načítána z veřejných zdrojů.</div>
+    <div>© 2026</div>
+  </footer>
+
+  <section id="debugPanel" class="debug" aria-label="Debug panel">
+    <div class="debugHead">
+      <span>Režim práce s daty (debug)</span>
+      <span class="hint" id="debugHint">?debug=1 nebo localStorage iu:debug=1</span>
+    </div>
+    <pre id="debugOut"></pre>
+  </section>
+
+  <script defer src="./assets/app.js"></script>
+</body>
+</html>
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>infoUzel.cz</title>
   <meta name="robots" content="noindex,nofollow" />
   <style>
     :root{

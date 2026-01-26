@@ -5,6 +5,7 @@
   const elFeed = $("#feed");
   const elDebugPanel = $("#debugPanel");
   const elDebugOut = $("#debugOut");
+  const elDataCount = $("#dataCount");
   const btnToggleDebug = $("#toggleDebugBtn");
 
   const DATA_URL = "./data/articles.json";
@@ -83,6 +84,7 @@
         ${extraHtml ? `<div style="margin-top:10px">${extraHtml}</div>` : ""}
       </div>
     `;
+    if (elDataCount) elDataCount.textContent = "0";
   }
 
   function renderItems(items) {
@@ -97,6 +99,7 @@
         note: "Žádné položky k zobrazení",
         itemsCount: 0,
       });
+      if (elDataCount) elDataCount.textContent = "0";
       return;
     }
 
@@ -129,6 +132,7 @@
       .join("");
 
     elFeed.innerHTML = html;
+    if (elDataCount) elDataCount.textContent = String(items.length);
   }
 
   function writeDebug(obj) {
