@@ -1,5 +1,4 @@
----
-name: Deploy static SPA to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -22,6 +21,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Ensure filtr/data exists + mirror data
+        run: |
+          echo "=== Ensure filtr/data exists ==="
+          mkdir -p filtr/data
+
+          if [ -d "data" ]; then
+            echo "Copying data/* → filtr/data/"
+            rm -rf filtr/data/*
+            cp -R data/* filtr/data/ || true
+          else
+            echo "No root data/ directory found"
+          fi
+
+          echo "=== filtr/data after mirror ==="
+          ls -la filtr/data || true
 
       - name: Sanity check – required files in filtr/ (publish root)
         run: |
@@ -63,4 +78,3 @@ jobs:
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
----
