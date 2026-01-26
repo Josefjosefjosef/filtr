@@ -110,21 +110,25 @@ jobs:
 
       - name: Commit and push if changed
         run: |
+          set -e
+
+          echo "=== Debug: ignored files (for visibility) ==="
+          git status --ignored || true
+
+          echo "=== Configure git identity ==="
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          if [ -f filtr/data/articles.json ]; then git add filtr/data/articles.json; fi
-          if [ -f filtr/data/videos.json ]; then git add filtr/data/videos.json; fi
-          if [ -f filtr/data/brief.json ]; then git add filtr/data/brief.json; fi
-          if [ -f filtr/data/feed_health.json ]; then git add filtr/data/feed_health.json; fi
-          if [ -f filtr/data/meta.json ]; then git add filtr/data/meta.json; fi
-          if [ -f filtr/data/weather.json ]; then git add filtr/data/weather.json; fi
-          if [ -f filtr/data/namedays.json ]; then git add filtr/data/namedays.json; fi
+          echo "=== Stage ONLY versioned files, EXCLUDING generated/ignored data ==="
+          # Přidá vše sledované i nové, ale VYLOUČÍ generovaná data v data/ a filtr/data/
+          git add -A -- ':!data/**' ':!filtr/data/**' ':!**/articles.json' || true
 
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-            exit 0
-          fi
+          echo "=== Show staged diff (if any) ==="
+          git diff --cached --name-status || true
 
-          git commit -m "Update data (articles, videos, brief, health, meta)"
+          echo "=== Guard: no staged changes => exit OK ==="
+          git diff --cached --quiet && echo "Nothing to commit (OK)" && exit 0
+
+          echo "=== Commit & push ==="
+          git commit -m "Update pipeline (no generated data committed)"
           git push origin HEAD:main
