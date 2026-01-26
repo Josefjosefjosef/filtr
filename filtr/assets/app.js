@@ -2,14 +2,87 @@
   const $ = (sel) => document.querySelector(sel);
 
   const elStatus = $("#dataStatus");
-  const elFeed = $("#feed");
   const elDebugPanel = $("#debugPanel");
   const elDebugOut = $("#debugOut");
   const elDataCount = $("#dataCount");
   const btnToggleDebug = $("#toggleDebugBtn");
+  const elNewsList = document.getElementById("newsList");
+  const emptyBox = document.getElementById("emptyBox");
+  const sectionLabel = document.getElementById("sectionLabel");
+  const sectionsBar = document.getElementById("sectionsBar");
+  const searchForm = document.getElementById("searchForm");
+  const searchInput = document.getElementById("searchInput");
+  const searchModal = document.getElementById("searchModal");
+  const modalGoogle = document.getElementById("modalGoogle");
+  const modalCancel = document.getElementById("modalCancel");
 
-  const DATA_URL = "./data/articles.json";
+  const feedTarget = elNewsList;
   const LS_KEY = "iu:debug";
+  const SECTION_KEYS = ["vse", "aktualne", "doprava", "pocasi", "sport", "finance", "krimi", "zdravi", "video"];
+  let activeSections = ["vse"];
+  let cachedItems = [];
+  let hasLoadedData = false;
+  const BASE_ROOT = getBaseRoot();
+  const DATA_URL = `${BASE_ROOT}data/articles.json`;
+  const SECTION_LABELS = {
+    vse: "Vše",
+    aktualne: "Aktuálně",
+    doprava: "Doprava",
+    pocasi: "Počasí",
+    sport: "Sport",
+    finance: "Finance",
+    krimi: "Krimi",
+    zdravi: "Zdraví",
+    video: "Video",
+  };
+
+  function getBaseRoot() {
+    // BASE = složka, kde leží tento skript (filtr/assets/app.js -> filtr/)
+    try {
+      const u = new URL(document.currentScript?.src || "", location.href);
+      return u.pathname.replace(/\/assets\/[^/]*$/, "/");
+    } catch {
+      // fallback: relativně k current path
+      let p = location.pathname.replace(/\\/g, "/");
+      if (p.endsWith("index.html")) p = p.slice(0, -10);
+      if (!p.endsWith("/")) p += "/";
+      return p || "/";
+    }
+  }
+
+  function freezeScroll() {
+    if (freezeScroll.lock) return;
+    freezeScroll.lock = { x: window.scrollX, y: window.scrollY };
+    window.requestAnimationFrame(() => {
+      window.scrollTo(freezeScroll.lock.x, freezeScroll.lock.y);
+      window.requestAnimationFrame(() => window.scrollTo(freezeScroll.lock.x, freezeScroll.lock.y));
+    });
+  }
+  freezeScroll.lock = null;
+
+  function restoreScroll() {
+    if (!freezeScroll.lock || restoreScroll.pending) return;
+    restoreScroll.pending = true;
+    const { x, y } = freezeScroll.lock;
+    window.requestAnimationFrame(() => {
+      window.scrollTo(x, y);
+      window.requestAnimationFrame(() => {
+        window.scrollTo(x, y);
+        freezeScroll.lock = null;
+        restoreScroll.pending = false;
+      });
+    });
+  }
+  restoreScroll.pending = false;
+
+  function withScrollLock(fn) {
+    freezeScroll();
+    try {
+      fn();
+    } finally {
+      restoreScroll();
+    }
+  }
 
   function isDebugOn() {
     const qs = new URLSearchParams(location.search);
@@ -43,6 +116,19 @@
     return String(value);
   }
 
+  function safeUrl(value) {
+    if (!value) return null;
+    try {
+      const url = new URL(value, location.origin);
+      if (url.protocol === "http:" || url.protocol === "https:") {
+        return url.href;
+      }
+    } catch {
+      return null;
+    }
+    return null;
+  }
+
   function fmtDate(iso) {
     if (!iso) return "";
     const d = new Date(iso);
@@ -68,27 +154,117 @@
       .replaceAll("'", "&#39;");
   }
 
-  function escapeAttr(str) {
-    return String(str)
-      .replaceAll("&", "&amp;")
-      .replaceAll("\"", "&quot;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;");
+  function getSectionLabelText(keys) {
+    const names = keys
+      .map((key) => SECTION_LABELS[key] || key)
+      .filter(Boolean);
+    return names.length ? names.join(", ") : SECTION_LABELS.vse;
+  }
+
+  function updateSectionLabel() {
+    if (!sectionLabel) return;
+    const labelText = getSectionLabelText(activeSections);
+    sectionLabel.textContent = `Sekce: ${labelText}`;
+  }
+
+  function renderSectionsBar() {
+    if (!sectionsBar) return;
+    sectionsBar.innerHTML = "";
+    SECTION_KEYS.forEach((key) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "secBtn";
+      btn.dataset.section = key;
+      btn.textContent = SECTION_LABELS[key] || key;
+      btn.addEventListener("click", () => handleSectionClick(key));
+      sectionsBar.appendChild(btn);
+    });
+    updateSectionButtons();
+  }
+
+  function updateSectionButtons() {
+    if (!sectionsBar) return;
+    sectionsBar.querySelectorAll(".secBtn").forEach((btn) => {
+      const key = btn.dataset.section;
+      btn.classList.toggle("isActive", activeSections.includes(key));
+    });
+  }
+
+  function handleSectionClick(key) {
+    if (key === "vse") {
+      if (location.hash.replace(/^#/, "") === "vse") {
+        setSectionsFromHash();
+        applyFilter();
+        return;
+      }
+      location.hash = "#vse";
+      return;
+    }
+
+    const current = new Set(activeSections.filter((k) => k !== "vse"));
+    if (current.has(key)) {
+      current.delete(key);
+    } else {
+      current.add(key);
+    }
+    const next = SECTION_KEYS.filter((k) => current.has(k));
+    const finalSections = next.length ? next : ["vse"];
+    const hashValue = finalSections.join(",");
+    if (location.hash.replace(/^#/, "") === hashValue) {
+      setSectionsFromHash();
+      applyFilter();
+      return;
+    }
+    location.hash = `#${hashValue}`;
+  }
+
+  function setSectionsFromHash() {
+    const hash = location.hash.replace(/^#/, "");
+    const parsed = hash
+      .split(",")
+      .map((s) => s.trim().toLowerCase())
+      .filter((s) => s && SECTION_KEYS.includes(s));
+
+    activeSections = parsed.length ? parsed : ["vse"];
+    updateSectionLabel();
+    updateSectionButtons();
+  }
+
+  function matchesSections(item) {
+    if (!item) return false;
+    if (activeSections.includes("vse")) return true;
+    if (activeSections.includes("video")) {
+      return String(item.contentType || "").toLowerCase() === "video";
+    }
+    const sectionValue = ((item.section || item.topic) || "").toLowerCase();
+    return activeSections.some((section) => section === sectionValue);
+  }
+
+  function getFeedTarget() {
+    return feedTarget;
   }
 
   function renderEmpty(message, extraHtml = "") {
-    if (!elFeed) return;
-    elFeed.innerHTML = `
-      <div class="empty">
-        <div>${message}</div>
-        ${extraHtml ? `<div style="margin-top:10px">${extraHtml}</div>` : ""}
-      </div>
-    `;
+    const target = getFeedTarget();
+    if (target) {
+      withScrollLock(() => {
+        target.innerHTML = "";
+      });
+    }
+    if (emptyBox) {
+      emptyBox.innerHTML = `<p>${escapeHtml(message)}</p>${extraHtml ? extraHtml : ""}`;
+      emptyBox.style.display = "block";
+    }
     if (elDataCount) elDataCount.textContent = "0";
   }
 
   function renderItems(items) {
-    if (!elFeed) return;
+    const target = getFeedTarget();
+    if (!target) return;
+    if (emptyBox) {
+      emptyBox.style.display = "none";
+      emptyBox.innerHTML = "";
+    }
     if (!items || items.length === 0) {
       renderEmpty(
         "Žádná data k zobrazení.",
@@ -99,7 +275,6 @@
         note: "Žádné položky k zobrazení",
         itemsCount: 0,
       });
-      if (elDataCount) elDataCount.textContent = "0";
       return;
     }
 
@@ -107,32 +282,58 @@
       .map((it) => {
         const title = safeText(it.title || it.name || "(bez názvu)");
         const publishedAt = fmtDate(it.publishedAt || it.date || it.published || "");
-        const sourceName =
-          safeText(
-            (it.source && (it.source.name || it.source.title)) || it.sourceName || it.source || ""
-          );
-        const url =
-          safeText(it.url || (it.link && (it.link.href || it.link)) || it.href || "");
+        const rawSources = Array.isArray(it.sources) && it.sources.length
+          ? it.sources
+          : it.source
+            ? [{ name: it.source }]
+            : [];
+        const sourceEntities = rawSources
+          .map((source) => {
+            const name = safeText(source.name || source.title || source);
+            const href = safeUrl(source.url || source.link);
+            return { name, href };
+          })
+          .filter((entry) => entry.name);
+        const sourceMarkup =
+          sourceEntities
+            .map((entry, idx) => {
+              const sep = idx === 0 ? "" : `<span class="srcSep">·</span>`;
+              const link =
+                entry.href
+                  ? `<a class="sourceDomain" href="${entry.href}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+                      entry.name
+                    )}</a>`
+                  : `<span class="sourceDomain">${escapeHtml(entry.name)}</span>`;
+              return `${sep}${link}`;
+            })
+            .join("") || '<span class="sourceDomain">—</span>';
 
-        const metaBits = [];
-        if (sourceName) metaBits.push(`<span>Zdroj: <b>${escapeHtml(sourceName)}</b></span>`);
-        if (publishedAt) metaBits.push(`<span>Publikováno: ${escapeHtml(publishedAt)}</span>`);
-        if (url)
-          metaBits.push(`<a href="${escapeAttr(url)}" target="_blank" rel="noopener">Otevřít</a>`);
+        const linkUrl =
+          safeUrl(it.url) ||
+          safeUrl((it.link && (it.link.href || it.link)) || it.href || "");
+        const titleMarkup = linkUrl
+          ? `<a class="news-titleLink" href="${linkUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+              title
+            )}</a>`
+          : `<span class="news-titleLink">${escapeHtml(title)}</span>`;
 
         return `
-          <article class="card">
-            <div class="titleRow">
-              <h2>${escapeHtml(title)}</h2>
+          <article class="news-card">
+            <h2 class="news-title">${titleMarkup}</h2>
+            <div class="news-row2">
+              ${publishedAt ? `<span class="meta-time">${escapeHtml(publishedAt)}</span>` : ""}
+              <span class="news-sourceLabel">Zdroj:</span>
+              <span class="news-sources">${sourceMarkup}</span>
             </div>
-            <div class="meta">${metaBits.join(" · ")}</div>
           </article>
         `;
       })
       .join("");
 
-    elFeed.innerHTML = html;
-    if (elDataCount) elDataCount.textContent = String(items.length);
+    withScrollLock(() => {
+      target.innerHTML = html;
+      if (elDataCount) elDataCount.textContent = String(items.length);
+    });
   }
 
   function writeDebug(obj) {
@@ -144,8 +345,80 @@
     }
   }
 
+  function openSearchModal() {
+    if (searchModal) searchModal.classList.add("show");
+  }
+
+  function hideSearchModal() {
+    if (searchModal) searchModal.classList.remove("show");
+  }
+
+  function resetSearchAndReload() {
+    if (searchInput) searchInput.value = "";
+    hideSearchModal();
+    applyFilter();
+  }
+
+  function applyFilter() {
+    if (!hasLoadedData) return;
+    const query = (searchInput && searchInput.value.trim()) || "";
+    const normalizedQuery = query.toLowerCase();
+    let filtered = cachedItems.filter(matchesSections);
+    if (normalizedQuery) {
+      filtered = filtered.filter((item) => {
+        const haystack =
+          [
+            item.title,
+            item.name,
+            item.summary,
+            item.section,
+            item.topic,
+            ...(Array.isArray(item.sources) ? item.sources.map((s) => s.name || s.title || s) : []),
+          ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase() || "";
+        return haystack.includes(normalizedQuery);
+      });
+    }
+
+    if (filtered.length === 0) {
+      if (query) {
+        openSearchModal();
+      } else {
+        hideSearchModal();
+        renderEmpty("Žádné články neodpovídají filtrům.");
+      }
+      setStatus(`Stav dat: OK (0 / ${cachedItems.length})`);
+      if (isDebugOn()) {
+        writeDebug({
+          sections: activeSections,
+          hash: location.hash,
+          search: query,
+          totalItems: cachedItems.length,
+          filtered: 0,
+        });
+      }
+      return;
+    }
+
+    hideSearchModal();
+    renderItems(filtered);
+    setStatus(`Stav dat: OK (${filtered.length} / ${cachedItems.length})`);
+    if (isDebugOn()) {
+      writeDebug({
+        sections: activeSections,
+        hash: location.hash,
+        search: query,
+        totalItems: cachedItems.length,
+        filtered: filtered.length,
+      });
+    }
+  }
+
   async function loadData() {
     const startedAt = new Date();
+    setStatus("Stav dat: načítám…");
     try {
       const res = await fetch(DATA_URL, { cache: "no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
@@ -158,9 +431,10 @@
         throw new Error("Neplatný JSON v data/articles.json");
       }
 
-      const items = normalizeItems(data);
-      setStatus(`Stav dat: OK (${items.length} položek)`);
-      renderItems(items);
+      cachedItems = normalizeItems(data);
+      hasLoadedData = true;
+      setStatus(`Stav dat: OK (${cachedItems.length} položek)`);
+      applyFilter();
 
       if (isDebugOn()) {
         writeDebug({
@@ -170,29 +444,28 @@
           durationMs: Date.now() - startedAt.getTime(),
           rawType: Array.isArray(data) ? "array" : typeof data,
           keys:
-            data && typeof data === "object" && !Array.isArray(data)
-              ? Object.keys(data)
-              : [],
-          itemsCount: items.length,
-          sample: items.slice(0, 3),
+            data && typeof data === "object" && !Array.isArray(data) ? Object.keys(data) : [],
+          itemsCount: cachedItems.length,
+          sample: cachedItems.slice(0, 3),
         });
       }
     } catch (err) {
       setStatus("Stav dat: chyba (nelze načíst)");
-      renderEmpty(
-        "Data se nepodařilo načíst. Stránka funguje, ale nemá co vykreslit.",
-        `
-        <div>
-          <a href="${DATA_URL}" target="_blank" rel="noopener">Otevřít ${DATA_URL}</a>
-          &nbsp;|&nbsp;
-          <a href="?debug=1">Zapnout debug</a>
-        </div>
-        <div style="margin-top:8px">
-          Pozn.: Soubor <code>articles.json</code> může dočasně chybět (generuje se jiným workflow). Deploy na Pages kvůli tomu nesmí padat.
-        </div>
-        `
-      );
-
+      if (!hasLoadedData) {
+        renderEmpty(
+          "Data se nepodařilo načíst. Stránka funguje, ale nemá co vykreslit.",
+          `
+          <div>
+            <a href="${DATA_URL}" target="_blank" rel="noopener">Otevřít ${DATA_URL}</a>
+            &nbsp;|&nbsp;
+            <a href="?debug=1">Zapnout debug</a>
+          </div>
+          <div style="margin-top:8px">
+            Pozn.: Soubor <code>articles.json</code> může dočasně chybět (generuje se jiným workflow). Deploy na Pages kvůli tomu nesmí padat.
+          </div>
+          `
+        );
+      }
       if (isDebugOn()) {
         writeDebug({
           ok: false,
@@ -207,6 +480,8 @@
 
   function init() {
     renderDebugVisibility();
+    renderSectionsBar();
+    setSectionsFromHash();
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
@@ -217,8 +492,37 @@
       });
     }
 
+    if (searchForm) {
+      searchForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        applyFilter();
+      });
+    }
+
+    if (modalGoogle) {
+      modalGoogle.addEventListener("click", () => {
+        const query = (searchInput && searchInput.value.trim()) || "";
+        const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        window.open(url, "_blank", "noopener");
+        resetSearchAndReload();
+      });
+    }
+
+    if (modalCancel) {
+      modalCancel.addEventListener("click", () => {
+        resetSearchAndReload();
+      });
+    }
+
     loadData();
   }
+
+  window.addEventListener("hashchange", () => {
+    freezeScroll();
+    setSectionsFromHash();
+    applyFilter();
+    restoreScroll();
+  });
 
   init();
 })();

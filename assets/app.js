@@ -8,6 +8,7 @@
     return p;
   }
   
+  
   // ✅ FIX: BASE je path-only (ne origin+path) - pro správný SW scope
   const BASE = getBaseRoot();
   
