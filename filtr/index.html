@@ -6,6 +6,9 @@
     <title>infoUzel.cz</title>
     <meta name="robots" content="noindex,nofollow" />
     <link rel="stylesheet" href="./assets/app.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
       :root{
         --pageGutter: 18px;
@@ -39,6 +42,22 @@
       .data-status{
         display:none !important;
       }
+      .brand .name{
+        font-family:"Inter",system-ui,sans-serif;
+        font-size:22px;
+        display:inline-flex;
+        gap:0;
+        align-items:center;
+        color: var(--accent);
+      }
+
+      .logo-part{
+        font-weight:400;
+      }
+      .logo-uzel{
+        font-weight:700;
+      }
+
       .sectionsWrapper{
         display:flex;
         flex-direction:column;
@@ -474,7 +493,11 @@
         </button>
 
         <div class="brand">
-          <div class="name">infoUzel.cz</div>
+          <div class="name">
+            <span class="logo-part logo-info">info</span>
+            <span class="logo-part logo-uzel">Uzel</span>
+            <span class="logo-part logo-dot">.cz</span>
+          </div>
         </div>
       </div>
 
