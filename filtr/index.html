@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./assets/app.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;700&display=swap" rel="stylesheet">
     <style>
       :root{
         --pageGutter: 18px;
@@ -43,18 +43,26 @@
         display:none !important;
       }
       .brand .name{
-        font-family:"Inter",system-ui,sans-serif;
+        font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
         font-size:22px;
+        line-height:1.05;
         display:inline-flex;
         gap:0;
         align-items:center;
-        color: var(--accent);
+        color:#1F3A5F;
       }
 
-      .logo-part{
+      @media (max-width: 720px){
+        .brand .name{
+          font-size:20px;
+        }
+      }
+
+      .brandInfo,
+      .brandCz{
         font-weight:400;
       }
-      .logo-uzel{
+      .brandUzel{
         font-weight:700;
       }
 
@@ -494,9 +502,9 @@
 
         <div class="brand">
           <div class="name">
-            <span class="logo-part logo-info">info</span>
-            <span class="logo-part logo-uzel">Uzel</span>
-            <span class="logo-part logo-dot">.cz</span>
+            <span class="brandInfo">info</span>
+            <span class="brandUzel">Uzel</span>
+            <span class="brandCz">.cz</span>
           </div>
         </div>
       </div>
