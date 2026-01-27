@@ -210,24 +210,31 @@
         border: 0;
         background: transparent;
         overflow: hidden;
-        transition: max-height 0.35s ease;
-      }
-
-      #topAdSpacer.ad-collapsed{
+        transition: max-height .35s ease;
         max-height: 28px;
       }
 
       #topAdSpacer.ad-expanded{
         max-height: 1000px;
+        padding: 12px 0 16px 0 !important;
       }
 
-      .topAdLabel{
+      #topAdSpacer .topAdLabel{
+        display:block;
         font-size: 12px;
         font-weight: 700;
         color: var(--muted);
-        padding: 6px 0 0;
+        padding: 6px 0;
         text-transform: uppercase;
         letter-spacing: .4px;
+      }
+
+      #topAdSpacer.ad-collapsed .topAdSpacer__inner{
+        display:none !important;
+      }
+
+      #topAdSpacer.ad-expanded .topAdSpacer__inner{
+        display:block !important;
       }
 
       /* ===== Top banner spacer (rezerva pro reklamu) ===== */
@@ -1209,6 +1216,9 @@
     (function(){
       const ad = document.getElementById("topAdSpacer");
       if(!ad) return;
+
+      ad.classList.remove("ad-expanded");
+      ad.classList.add("ad-collapsed");
 
       function onScroll(){
         if(window.scrollY > 20){
