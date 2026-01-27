@@ -1,145 +1,5 @@
 <!doctype html>
 <html lang="cs">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>infoUzel.cz</title>
-  <link rel="stylesheet" href="./assets/app.css" />
-</head>
-<body>
-  <header id="topbar">
-    <div class="brand">
-      <div class="logo">infoUzel.cz</div>
-      <div class="tagline">Zprávy z více zdrojů</div>
-    </div>
-    <nav class="nav">
-      <a class="nav-link" href="#">Aktuálně</a>
-      <a class="nav-link" href="#">Sport</a>
-      <a class="nav-link" href="#">Ekonomika</a>
-      <a class="nav-link" href="#">Svět</a>
-      <a class="nav-link" href="#">Kultura</a>
-    </nav>
-  </header>
-
-  <div id="layout">
-    <main id="content">
-      <section class="section-heading">
-        <h2>Aktuální články</h2>
-      </section>
-      <section id="feed" class="feed" aria-live="polite"></section>
-    </main>
-
-    <aside id="sidebar">
-      <section class="side-block">
-        <h3>Stav dat</h3>
-        <p><span class="pill" id="dataStatus">Stav dat: načítám…</span></p>
-        <p class="small">Počet položek: <span id="dataCount">—</span></p>
-      </section>
-      <section class="side-block">
-        <h3>Režim práce s daty</h3>
-        <button class="btn" id="toggleDebugBtn" type="button">Zapnout debug</button>
-        <p class="small">Slouží pro kontrolu struktury dat.</p>
-      </section>
-    </aside>
-  </div>
-
-  <footer id="footer">
-    <div>infoUzel.cz – agregátor zpráv</div>
-    <div>Data jsou načítána z veřejných zdrojů.</div>
-    <div>© 2026</div>
-  </footer>
-
-  <section id="debugPanel" class="debug" aria-label="Debug panel">
-    <div class="debugHead">
-      <span>Režim práce s daty (debug)</span>
-      <span class="hint" id="debugHint">?debug=1 nebo localStorage iu:debug=1</span>
-    </div>
-    <pre id="debugOut"></pre>
-  </section>
-
-  <script>
-    (function(){
-      const bannedSections = new Set(["pocasi","video"]);
-
-      function normalizeHashValue(hashValue){
-        const raw = (hashValue ?? location.hash).replace(/^#/, "");
-        const parts = raw
-          .split(",")
-          .map((segment) => segment.trim().toLowerCase())
-          .filter(Boolean);
-        const allowed = parts.filter((segment) => !bannedSections.has(segment));
-        return allowed.join(",");
-      }
-
-      function applyNormalizedHash(){
-        const normalized = normalizeHashValue();
-        const targetHash = normalized ? `#${normalized}` : "";
-        if (targetHash === location.hash) return false;
-        const newUrl = location.pathname + location.search + targetHash;
-        try{
-          history.replaceState(null, "", newUrl);
-        }catch(_){
-          location.hash = targetHash;
-        }
-        return true;
-      }
-
-      const helpers = window.__iuFilter || {};
-      helpers.bannedSections = bannedSections;
-      helpers.normalizeHashValue = normalizeHashValue;
-      helpers.applyNormalizedHash = applyNormalizedHash;
-      window.__iuFilter = helpers;
-
-      applyNormalizedHash();
-    })();
-  </script>
-  <script defer src="./assets/app.js"></script>
-  <script defer>
-    (function(){
-      const helpers = window.__iuFilter || {};
-      const bannedSections = helpers.bannedSections || new Set(["pocasi","video"]);
-      const normalizeHashValue = helpers.normalizeHashValue || function(hashValue){
-        const raw = (hashValue ?? location.hash).replace(/^#/, "");
-        const parts = raw
-          .split(",")
-          .map((segment) => segment.trim().toLowerCase())
-          .filter(Boolean);
-        const allowed = parts.filter((segment) => !bannedSections.has(segment));
-        return allowed.join(",");
-      };
-
-      function removeBannedButtons(){
-        const bar = document.getElementById("sectionsBar");
-        if(!bar) return;
-        bar.querySelectorAll(".secBtn[data-section]").forEach((btn) => {
-          if(bannedSections.has(btn.dataset.section)) btn.remove();
-        });
-      }
-
-      const sectionsBar = document.getElementById("sectionsBar");
-      if(sectionsBar){
-        const observer = new MutationObserver(removeBannedButtons);
-        observer.observe(sectionsBar, { childList:true, subtree:true });
-      }
-
-      document.addEventListener("DOMContentLoaded", removeBannedButtons);
-      removeBannedButtons();
-
-      function enforceHash(){
-        const normalized = normalizeHashValue(location.hash);
-        const targetHash = normalized ? `#${normalized}` : "";
-        if(targetHash === location.hash) return;
-        location.hash = targetHash;
-      }
-
-      window.addEventListener("hashchange", enforceHash);
-      enforceHash();
-    })();
-  </script>
-</body>
-</html>
-<!doctype html>
-<html lang="cs">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -298,6 +158,153 @@
         display:none !important;
       }
 
+      /* ===== Filtry row pod Témata ===== */
+      .filterRow{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        margin: 8px 0 10px;
+      }
+
+      .filterRow__label{
+        font-weight: 700;
+        color: var(--text, rgba(11,27,43,.92));
+        min-width: 70px;
+      }
+
+      .filterRow__actions{
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        align-items:center;
+      }
+
+      .chip{
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--hair, rgba(20,40,70,0.12));
+        background: var(--cardBg, #fff);
+        color: var(--text, rgba(11,27,43,0.92));
+        font-size: 12.4px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: border-color 140ms ease, background 140ms ease, color 140ms ease;
+      }
+
+      .chip--ghost{
+        background: rgba(255,255,255,0.92);
+      }
+
+      .chip:focus-visible{
+        outline: 2px solid rgba(31,75,153,0.22);
+        outline-offset: 3px;
+      }
+
+      /* ===== Overlay (sdílené) ===== */
+      .overlay{
+        position:fixed;
+        inset:0;
+        background: rgba(0,0,0,.35);
+        display:flex;
+        align-items:flex-start;
+        justify-content:center;
+        padding: 18px 12px;
+        z-index: 9999;
+      }
+
+      .overlayPanel{
+        width: min(860px, 96vw);
+        background: var(--cardBg, #fff);
+        border-radius: 16px;
+        border: 1px solid var(--hair, rgba(20,40,70,0.12));
+        box-shadow: 0 24px 60px rgba(0,0,0,.18);
+        overflow:hidden;
+      }
+
+      .overlayHead{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--hair, rgba(20,40,70,0.10));
+      }
+
+      .overlayTitle{
+        font-weight: 800;
+        letter-spacing: .2px;
+      }
+
+      .iconBtn{
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        border: 1px solid var(--hair, rgba(20,40,70,0.12));
+        background: var(--cardBg, #fff);
+        cursor:pointer;
+      }
+
+      .overlayBody{
+        padding: 12px 14px 14px;
+      }
+
+      .overlayHint{
+        color: var(--muted, rgba(11,27,43,.60));
+        font-size: 12.5px;
+        margin-bottom: 10px;
+      }
+
+      /* ===== Checklist ===== */
+      .checkList{
+        display:grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap:8px 12px;
+      }
+
+      .checkItem{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding: 10px 12px;
+        border: 1px solid var(--hair, rgba(20,40,70,0.10));
+        border-radius: 12px;
+        background: var(--cardBg, #fff);
+      }
+
+      .checkItem input{
+        width: 18px;
+        height: 18px;
+      }
+
+      .checkItem .checkLabel{
+        font-weight: 650;
+      }
+
+      .overlayFooter{
+        display:flex;
+        justify-content:space-between;
+        gap:10px;
+        margin-top: 12px;
+      }
+
+      .btnLite, .btnPrimary{
+        border-radius: 12px;
+        padding: 10px 12px;
+        cursor:pointer;
+        border: 1px solid var(--hair, rgba(20,40,70,0.12));
+        background: var(--cardBg, #fff);
+      }
+
+      .btnPrimary{
+        border-color: var(--accent, #1F4B99);
+        background: rgba(31,75,153,.10);
+      }
+
+      /* Mobile */
+      @media (max-width: 720px){
+        .checkList{ grid-template-columns: 1fr; }
+        .filterRow__label{ min-width: 58px; }
+      }
+
       @media (max-width: 520px){
         .barRow{
           grid-template-columns:1fr;
@@ -366,6 +373,19 @@
               <div class="barCaption">Témata</div>
               <nav class="sectionsBar" id="sectionsBar" aria-label="Filtr témat"></nav>
             </div>
+
+            <div class="filterRow" id="filterRow">
+              <div class="filterRow__label">Filtry</div>
+              <div class="filterRow__actions">
+                <button class="chip chip--ghost" id="btnRegions" type="button" aria-haspopup="dialog" aria-controls="overlayRegions">
+                  Regiony
+                </button>
+                <button class="chip chip--ghost" id="btnSources" type="button" aria-haspopup="dialog" aria-controls="overlaySources">
+                  Zdroje
+                </button>
+              </div>
+            </div>
+
             <div class="barRow">
               <div class="barCaption">Filtry</div>
               <div class="filtersBar" id="filtersBar" aria-label="Filtry"></div>
@@ -631,9 +651,111 @@
     </div>
   </div>
 
-  <script defer src="./assets/app.js"></script>
-  <script defer>
-    (function(){
+  <div id="overlayRegions" class="overlay" hidden>
+    <div class="overlayPanel" role="dialog" aria-modal="true" aria-label="Výběr regionů">
+      <div class="overlayHead">
+        <div class="overlayTitle">Regiony</div>
+        <button class="iconBtn" id="closeRegions" type="button" aria-label="Zavřít">✕</button>
+      </div>
+
+      <div class="overlayBody">
+        <div class="overlayHint">
+          Vyber kraje, které chceš zobrazovat. Zatím je to informativní – obsah se podle toho ještě nefiltruje.
+        </div>
+
+        <div class="checkList" id="regionsList"></div>
+
+        <div class="overlayFooter">
+          <button class="btnLite" id="regionsClear" type="button">Vymazat výběr</button>
+          <button class="btnPrimary" id="regionsDone" type="button">Hotovo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="overlaySources" class="overlay" hidden>
+    <div class="overlayPanel" role="dialog" aria-modal="true" aria-label="Výběr zdrojů">
+      <div class="overlayHead">
+        <div class="overlayTitle">Zdroje</div>
+        <button class="iconBtn" id="closeSources" type="button" aria-label="Zavřít">✕</button>
+      </div>
+
+      <div class="overlayBody">
+        <div class="overlayHint">
+          Vyber zdroje, ze kterých chceš vidět články a videa. Zatím informativní – bez dopadu na výpis.
+        </div>
+
+        <div class="checkList" id="sourcesList"></div>
+
+        <div class="overlayFooter">
+          <button class="btnLite" id="sourcesClear" type="button">Vymazat výběr</button>
+          <button class="btnPrimary" id="sourcesDone" type="button">Hotovo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const bannedSections = new Set(["pocasi","video"]);
+
+      function normalizeHashValue(hashValue){
+        const raw = (hashValue ?? location.hash).replace(/^#/, "");
+        const parts = raw
+          .split(",")
+          .map((segment) => segment.trim().toLowerCase())
+          .filter(Boolean);
+        const allowed = parts.filter((segment) => !bannedSections.has(segment));
+        return allowed.join(",");
+      }
+
+      function applyNormalizedHash(){
+        const normalized = normalizeHashValue();
+        const targetHash = normalized ? `#${normalized}` : "";
+        if (targetHash === location.hash) return false;
+        const newUrl = location.pathname + location.search + targetHash;
+        try{
+          history.replaceState(null, "", newUrl);
+        }catch(_){
+          location.hash = targetHash;
+        }
+        return true;
+      }
+
+      const helpers = window.__iuFilter || {};
+      helpers.bannedSections = bannedSections;
+      helpers.normalizeHashValue = normalizeHashValue;
+      helpers.applyNormalizedHash = applyNormalizedHash;
+      window.__iuFilter = helpers;
+
+      applyNormalizedHash();
+
+      const sectionsBar = document.getElementById("sectionsBar");
+      function removeBannedButtons(){
+        if(!sectionsBar) return;
+        sectionsBar.querySelectorAll(".secBtn[data-section]").forEach((btn) => {
+          if(bannedSections.has(btn.dataset.section)) btn.remove();
+        });
+      }
+
+      if(sectionsBar){
+        const observer = new MutationObserver(removeBannedButtons);
+        observer.observe(sectionsBar, { childList:true, subtree:true });
+      }
+
+      document.addEventListener("DOMContentLoaded", removeBannedButtons);
+      removeBannedButtons();
+
+      function enforceHash(){
+        const normalized = normalizeHashValue(location.hash);
+        const targetHash = normalized ? `#${normalized}` : "";
+        if(targetHash === location.hash) return;
+        location.hash = targetHash;
+      }
+
+      window.addEventListener("hashchange", enforceHash);
+      enforceHash();
+
       const BAR_ID = "sectionsBar";
       const TARGET_KEY = "tvprogram";
       const LABEL = "TV program";
@@ -685,5 +807,166 @@
       window.addEventListener("load", schedule);
     })();
   </script>
+
+  <script defer src="./assets/app.js"></script>
+
+  <script>
+    (() => {
+      const UI_REGIONS = [
+        ["praha","Praha"],
+        ["stredocesky","Středočeský"],
+        ["jihocesky","Jihočeský"],
+        ["plzensky","Plzeňský"],
+        ["karlovarsky","Karlovarský"],
+        ["ustecky","Ústecký"],
+        ["liberecky","Liberecký"],
+        ["kralovehradecky","Královéhradecký"],
+        ["pardubicky","Pardubický"],
+        ["vysocina","Vysočina"],
+        ["jihomoravsky","Jihomoravský"],
+        ["olomoucky","Olomoucký"],
+        ["zlinsky","Zlínský"],
+        ["moravskoslezsky","Moravskoslezský"]
+      ];
+
+      const UI_SOURCES = [
+        ["ct24","ČT24"],
+        ["seznamzpravy","Seznam Zprávy"],
+        ["irozhlas","iROZHLAS"],
+        ["novinky","Novinky.cz"],
+        ["idnes","iDNES.cz"],
+        ["denik","Deník.cz"],
+        ["sportcz","Sport.cz"]
+      ];
+
+      const LS_REGIONS = "iu:regions";
+      const LS_SOURCES = "iu:sources";
+
+      function loadSet(key){
+        try{
+          const arr = JSON.parse(localStorage.getItem(key) || "[]");
+          return new Set(Array.isArray(arr) ? arr : []);
+        }catch(_){
+          return new Set();
+        }
+      }
+
+      function saveSet(key, set){
+        try{ localStorage.setItem(key, JSON.stringify([...set])); }catch(_){}
+      }
+
+      function renderChecklist(container, items, selectedSet){
+        if(!container) return;
+        container.innerHTML = "";
+        for(const [id,label] of items){
+          const row = document.createElement("label");
+          row.className = "checkItem";
+          row.innerHTML = `
+            <input type="checkbox" data-id="${id}">
+            <span class="checkLabel">${label}</span>
+          `;
+          const cb = row.querySelector("input");
+          cb.checked = selectedSet.has(id);
+          cb.addEventListener("change", () => {
+            if(cb.checked) selectedSet.add(id);
+            else selectedSet.delete(id);
+          });
+          container.appendChild(row);
+        }
+      }
+
+      function openOverlay(overlayEl){
+        if(!overlayEl) return;
+        overlayEl.hidden = false;
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeOverlay(overlayEl){
+        if(!overlayEl) return;
+        overlayEl.hidden = true;
+        document.body.style.overflow = "";
+      }
+
+      function wireOverlayClose(overlayEl, panelCloseBtn){
+        if(panelCloseBtn){
+          panelCloseBtn.addEventListener("click", () => closeOverlay(overlayEl));
+        }
+        if(overlayEl){
+          overlayEl.addEventListener("click", (e) => {
+            if(e.target === overlayEl) closeOverlay(overlayEl);
+          });
+        }
+      }
+
+      const btnRegions = document.getElementById("btnRegions");
+      const btnSources = document.getElementById("btnSources");
+
+      const overlayRegions = document.getElementById("overlayRegions");
+      const overlaySources = document.getElementById("overlaySources");
+
+      const closeRegions = document.getElementById("closeRegions");
+      const closeSources = document.getElementById("closeSources");
+
+      const regionsList = document.getElementById("regionsList");
+      const sourcesList = document.getElementById("sourcesList");
+
+      const regionsClear = document.getElementById("regionsClear");
+      const sourcesClear = document.getElementById("sourcesClear");
+
+      const regionsDone = document.getElementById("regionsDone");
+      const sourcesDone = document.getElementById("sourcesDone");
+
+      if(!btnRegions || !btnSources || !overlayRegions || !overlaySources){
+        return;
+      }
+
+      const selRegions = loadSet(LS_REGIONS);
+      const selSources = loadSet(LS_SOURCES);
+
+      renderChecklist(regionsList, UI_REGIONS, selRegions);
+      renderChecklist(sourcesList, UI_SOURCES, selSources);
+
+      wireOverlayClose(overlayRegions, closeRegions);
+      wireOverlayClose(overlaySources, closeSources);
+
+      btnRegions.addEventListener("click", () => openOverlay(overlayRegions));
+      btnSources.addEventListener("click", () => openOverlay(overlaySources));
+
+      if(regionsClear){
+        regionsClear.addEventListener("click", () => {
+          selRegions.clear();
+          renderChecklist(regionsList, UI_REGIONS, selRegions);
+        });
+      }
+
+      if(sourcesClear){
+        sourcesClear.addEventListener("click", () => {
+          selSources.clear();
+          renderChecklist(sourcesList, UI_SOURCES, selSources);
+        });
+      }
+
+      if(regionsDone){
+        regionsDone.addEventListener("click", () => {
+          saveSet(LS_REGIONS, selRegions);
+          closeOverlay(overlayRegions);
+        });
+      }
+
+      if(sourcesDone){
+        sourcesDone.addEventListener("click", () => {
+          saveSet(LS_SOURCES, selSources);
+          closeOverlay(overlaySources);
+        });
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if(e.key !== "Escape") return;
+        if(overlayRegions && !overlayRegions.hidden) closeOverlay(overlayRegions);
+        if(overlaySources && !overlaySources.hidden) closeOverlay(overlaySources);
+      });
+    })();
+  </script>
 </body>
 </html>
+
