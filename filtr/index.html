@@ -521,6 +521,19 @@
         background: var(--divider);
         pointer-events:none;
       }
+      .news-card:first-child::before{
+        content:"";
+        position:absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 1px;
+        background: var(--divider);
+        pointer-events:none;
+      }
+      .news-card:first-child{
+        padding-top: 22px;
+      }
       #feed{
         border-top: 1px solid var(--divider);
       }
