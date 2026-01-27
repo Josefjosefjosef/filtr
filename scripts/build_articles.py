@@ -148,6 +148,30 @@ def normalize_media_name(name: str) -> str:
     return name.strip()
 
 
+def _cz_score(txt: str) -> int:
+    good = "ěščřžýáíéůúďťňĚŠČŘŽÝÁÍÉÚŮĎŤŇ"
+    bad = "ÄĂĹÂ�"
+    return sum(txt.count(ch) for ch in good) - sum(txt.count(ch) for ch in bad)
+
+
+def fix_cz_mojibake(s: str) -> str:
+    if not isinstance(s, str):
+        return s
+    if not any(bad in s for bad in ("Ă", "Ä", "Ĺ", "Â")):
+        return s
+    candidates = [s]
+    try:
+        candidates.append(s.encode("latin1").decode("utf-8"))
+    except Exception:
+        pass
+    try:
+        candidates.append(s.encode("cp1250").decode("utf-8"))
+    except Exception:
+        pass
+    best = max(candidates, key=_cz_score)
+    return best
+
+
 def clean_title_basic(title: str) -> str:
     t = (title or "").strip()
 
@@ -517,7 +541,7 @@ def load_all_feeds() -> list:
 def robust_fetch(url: str) -> tuple:
     """
     Robustní fetch RSS feedu s hlavičkami, timeoutem, redirecty, encoding fallback.
-    Vrací: (status_code, final_url, content_type, raw_bytes)
+    Vrací: (status_code, final_url, content_type, text)
     """
     headers = {
         "User-Agent": USER_AGENT,
@@ -537,9 +561,11 @@ def robust_fetch(url: str) -> tuple:
         status_code = response.status_code
         final_url = response.url
         content_type = response.headers.get("Content-Type", "").lower()
-        raw_bytes = response.content
+        encoding = response.encoding or response.apparent_encoding or "utf-8"
+        response.encoding = encoding
+        text = response.text
         
-        return (status_code, final_url, content_type, raw_bytes)
+        return (status_code, final_url, content_type, text)
     except requests.exceptions.Timeout:
         return (0, url, "", b"")
     except requests.exceptions.RequestException as e:
@@ -611,23 +637,23 @@ def fetch_feed(url: str) -> tuple:
     }
     
     try:
-        # Robustní fetch
-        status_code, final_url, content_type, raw_bytes = robust_fetch(url)
+        status_code, final_url, content_type, text = robust_fetch(url)
         diagnostics["httpStatus"] = status_code
         diagnostics["contentType"] = content_type
         diagnostics["finalUrl"] = final_url
-        diagnostics["bytes"] = len(raw_bytes)
-        
+        diagnostics["bytes"] = len(text.encode("utf-8", errors="ignore"))
+
         if status_code == 0:
             diagnostics["reason"] = "fetch_failed"
             return (None, diagnostics)
-        
+
         if status_code != 200:
             diagnostics["reason"] = f"http_{status_code}"
             return (None, diagnostics)
-        
-        # Encoding fallback
-        text = decode_with_fallback(raw_bytes)
+
+        if not text:
+            diagnostics["reason"] = "empty_content"
+            return (None, diagnostics)
         
         if not text:
             diagnostics["reason"] = "empty_content"
@@ -870,7 +896,23 @@ def main() -> int:
 
     for feed_url, meta in feed_items:
         fallback_topic = stable_section(meta.get("topic", "aktualne"))
-        source = str(meta.get("source") or meta.get("name") or meta.get("title") or feed_url)
+        source = fix_cz_mojibake(str(meta.get("source") or meta.get("name") or meta.get("title") or feed_url))
+        if meta.get("disabled"):
+            per_feed_report.append({
+                "feed": feed_url,
+                "source": source,
+                "topic": fallback_topic,
+                "status": "SKIPPED_DISABLED",
+                "reason": "disabled",
+                "httpStatus": 0,
+                "contentType": "",
+                "finalUrl": feed_url,
+                "bytes": 0,
+                "itemsParsed": 0,
+                "itemsKept": 0,
+                "accepted": 0,
+            })
+            continue
 
         # Nový robustní fetch
         d, diagnostics = fetch_feed(feed_url)
@@ -919,7 +961,7 @@ def main() -> int:
 
         is_youtube_feed = ("youtube.com" in host) or ("www.youtube.com" in host) or ("youtube" in host)
 
-        channel_name = (meta.get("channel") or "").strip() if isinstance(meta, dict) else ""
+        channel_name = fix_cz_mojibake((meta.get("channel") or "").strip() if isinstance(meta, dict) else "")
         if not channel_name:
             # fallback: když není channel v meta, vytáhneme z "YouTube – X"
             m = re.match(r"^\s*YouTube\s*[–-]\s*(.+?)\s*$", str(source), flags=re.IGNORECASE)
@@ -927,13 +969,13 @@ def main() -> int:
 
         for entry in entries[:MAX_ITEMS_PER_FEED]:
             link = canonicalize_url(getattr(entry, "link", "") or "")
-            title = getattr(entry, "title", "") or ""
+            title = fix_cz_mojibake(getattr(entry, "title", "") or "")
             dt = parse_dt(entry)
 
             if not link or not title:
                 continue
 
-            media_raw = str(source).strip()
+            media_raw = fix_cz_mojibake(str(source).strip())
             media_norm = normalize_media_name(media_raw)
 
             # ✅ YouTube položky: ukládáme výhradně do videos.json (ne do articles.json)
@@ -946,7 +988,7 @@ def main() -> int:
                 section = stable_section(section)
 
                 yt_videos.append({
-                    "title": clean_title_basic(title),
+                    "title": fix_cz_mojibake(clean_title_basic(title)),
                     "url": link,
                     "videoId": vid,
                     "publishedAt": dt.isoformat().replace("+00:00", "Z"),
@@ -967,7 +1009,7 @@ def main() -> int:
             item = {
                 "section": section,
                 "contentType": content_type,
-                "title": title,
+                "title": fix_cz_mojibake(title),
                 "url": link,
                 "dt": dt,
                 "media_raw": media_raw,
@@ -1030,11 +1072,11 @@ def main() -> int:
             else:
                 title_out = choose_neutral_title(c.titles(), section=c.section)
 
-        article_out = {
+            article_out = {
             "topic": c.section,          # topic = section (stabilně)
             "section": c.section,
             "contentType": c.content_type,
-            "title": title_out,
+                "title": fix_cz_mojibake(title_out),
             "publishedAt": published,
             "sources": sources
         }
