@@ -45,12 +45,15 @@
       .brand .name{
         font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
         font-size:22px;
-        line-height:1.05;
+        line-height:1;
         display:inline-flex;
-        gap:0;
-        align-items:center;
+        align-items:baseline;
         color:#1F3557;
-        letter-spacing:-0.2px;
+        white-space:nowrap;
+        gap:0;
+        font-style:italic;
+        transform: skewX(-10deg);
+        transform-origin:left center;
       }
 
       @media (max-width: 720px){
@@ -68,6 +71,7 @@
         font-size:1.15em;
         font-weight:700;
         letter-spacing:-0.4px;
+        font-style:normal;
       }
 
       .sectionsWrapper{
