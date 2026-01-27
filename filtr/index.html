@@ -51,8 +51,9 @@
         color:#1F3557;
         white-space:nowrap;
         gap:0;
-        font-style:italic;
-        transform-origin:left center;
+        font-style:normal;
+        transform: skewX(-12deg);
+        transform-origin: left center;
       }
 
       @media (max-width: 720px){
@@ -65,16 +66,21 @@
       .brandCz{
         font-size:0.85em;
         font-weight:500;
+        display:inline-block;
+        line-height:1;
       }
       .brandUzel{
         font-size:1.15em;
         font-weight:700;
         letter-spacing:-0.4px;
-        font-style:normal;
         display:inline-block;
-        transform: skewX(-12deg);
         line-height:1;
         vertical-align:baseline;
+      }
+      .brandUzelInner{
+        display:inline-block;
+        transform: skewX(-5deg);
+        transform-origin: left center;
       }
 
       .sectionsWrapper{
@@ -514,7 +520,7 @@
         <div class="brand">
           <div class="name">
             <span class="brandInfo">info</span>
-            <span class="brandUzel">Uzel</span>
+            <span class="brandUzel"><span class="brandUzelInner">Uzel</span></span>
             <span class="brandCz">.cz</span>
           </div>
         </div>
