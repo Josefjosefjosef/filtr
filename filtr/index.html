@@ -62,13 +62,64 @@
 </html>
 <!doctype html>
 <html lang="cs">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>infoUzel.cz</title>
-  <meta name="robots" content="noindex,nofollow" />
-  <link rel="stylesheet" href="./assets/app.css" />
-</head>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>infoUzel.cz</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="stylesheet" href="./assets/app.css" />
+    <style>
+      .sectionsWrapper{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+      }
+      .sectionsBar{
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+      }
+      #filtersBar{
+        display:flex;
+        justify-content:flex-end;
+        gap:8px;
+      }
+      #filtersBar .secBtn{
+        padding:6px 14px;
+        font-size:12px;
+        border-color:rgba(20,40,70,0.12);
+        background:rgba(255,255,255,0.92);
+      }
+      #filtersBar .secBtn:hover{
+        border-color:rgba(31,75,153,0.28);
+      }
+      .regionsRow{
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        margin-top:8px;
+      }
+      .regChip{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        padding:6px 10px;
+        border-radius:999px;
+        border:1px solid rgba(20,40,70,0.14);
+        background:rgba(255,255,255,0.92);
+        font-weight:700;
+        font-size:12.5px;
+        cursor:pointer;
+      }
+      .regChip span{
+        opacity:0.7;
+        font-weight:900;
+      }
+      .regChip:hover{
+        border-color:rgba(31,75,153,0.28);
+      }
+    </style>
+  </head>
 
 <body>
   <div class="topbar-wrap" id="topbarWrap">
@@ -121,7 +172,12 @@
             <div class="sec" id="sectionLabel">Sekce: Vše</div>
             <div class="feedUpdatedAt" id="dataUpdatedAt">Poslední aktualizace dat: —</div>
           </div>
-          <nav class="sectionsBar" id="sectionsBar" aria-label="Filtr sekcí"></nav>
+          <div class="sectionsWrapper">
+            <nav class="sectionsBar" id="sectionsBar" aria-label="Filtr sekcí"></nav>
+            <div id="filtersBar">
+              <button class="secBtn" type="button">Regiony</button>
+            </div>
+          </div>
         </section>
 
         <section class="news-list" id="newsList" aria-label="Aktuální články">
@@ -349,9 +405,9 @@
   </div>
 
   <div class="overlay" id="overlay">
-    <div class="drawer" role="dialog" aria-modal="true" aria-label="Sekce">
+    <div class="drawer" role="dialog" aria-modal="true" aria-label="Regiony">
       <div class="drawerTop">
-        <div class="t">Sekce</div>
+        <div class="t">Regiony</div>
         <button class="x" id="closeMenu" aria-label="Zavřít">✕</button>
       </div>
       <div class="menuList" id="menuList"></div>
