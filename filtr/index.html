@@ -632,5 +632,58 @@
   </div>
 
   <script defer src="./assets/app.js"></script>
+  <script defer>
+    (function(){
+      const BAR_ID = "sectionsBar";
+      const TARGET_KEY = "tvprogram";
+      const LABEL = "TV program";
+
+      function makeButton(){
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "secBtn";
+        btn.dataset.section = TARGET_KEY;
+        btn.dataset.external = "1";
+        btn.setAttribute("aria-pressed", "false");
+        btn.textContent = LABEL;
+        return btn;
+      }
+
+      function ensureButton(){
+        const bar = document.getElementById(BAR_ID);
+        if(!bar) return;
+
+        const existing = bar.querySelector(`.secBtn[data-section="${TARGET_KEY}"]`);
+        if(existing){
+          existing.dataset.external = existing.dataset.external || "1";
+          return;
+        }
+
+        const btn = makeButton();
+        const anchor = bar.querySelector('.secBtn[data-section="zdravi"]');
+        if(anchor && anchor.parentNode === bar){
+          bar.insertBefore(btn, anchor.nextSibling);
+        }else{
+          bar.appendChild(btn);
+        }
+      }
+
+      let observer;
+      function schedule(){
+        ensureButton();
+        const bar = document.getElementById(BAR_ID);
+        if(!bar || observer) return;
+        observer = new MutationObserver(() => ensureButton());
+        observer.observe(bar, { childList: true, subtree: false });
+      }
+
+      if(document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded", schedule);
+      }else{
+        schedule();
+      }
+      window.addEventListener("load", schedule);
+    })();
+  </script>
 </body>
 </html>
