@@ -1208,6 +1208,23 @@
     })();
   </script>
 
+  <script>
+    (() => {
+      const ad = document.getElementById("adBanner");
+      if(!ad) return;
+
+      window.addEventListener('load', () => {
+        if (sessionStorage.getItem('iu_ad_peek_done') === '1') return;
+        const rect = ad.getBoundingClientRect();
+        const H = Math.round(rect.height);
+        if (H <= 0) return;
+        const peek = Math.max(24, Math.round(H * 0.10));
+        const target = Math.max(0, H - peek);
+        window.scrollTo({ top: target, left: 0, behavior: 'instant' });
+        sessionStorage.setItem('iu_ad_peek_done', '1');
+      });
+    })();
+  </script>
 </body>
 </html>
 
