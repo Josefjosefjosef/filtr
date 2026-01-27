@@ -209,6 +209,25 @@
         padding: 0;
         border: 0;
         background: transparent;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+      }
+
+      #topAdSpacer.ad-collapsed{
+        max-height: 28px;
+      }
+
+      #topAdSpacer.ad-expanded{
+        max-height: 1000px;
+      }
+
+      .topAdLabel{
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        padding: 6px 0 0;
+        text-transform: uppercase;
+        letter-spacing: .4px;
       }
 
       /* ===== Top banner spacer (rezerva pro reklamu) ===== */
@@ -476,7 +495,8 @@
     </div>
   </div>
 
-  <div id="topAdSpacer" aria-hidden="true">
+  <div id="topAdSpacer" class="ad-collapsed" aria-hidden="true">
+    <div class="topAdLabel">Reklama</div>
     <div class="topAdSpacer__inner">
       Reklamní prostor (zatím rezervováno)
     </div>
@@ -1182,6 +1202,23 @@
           window.iuCloseOverlay(appMenuOverlay);
         });
       });
+    })();
+  </script>
+
+  <script>
+    (function(){
+      const ad = document.getElementById("topAdSpacer");
+      if(!ad) return;
+
+      function onScroll(){
+        if(window.scrollY > 20){
+          ad.classList.remove("ad-collapsed");
+          ad.classList.add("ad-expanded");
+          window.removeEventListener("scroll", onScroll);
+        }
+      }
+
+      window.addEventListener("scroll", onScroll, { passive: true });
     })();
   </script>
 
