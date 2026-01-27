@@ -84,32 +84,53 @@
       }
 
       .searchBox{
-        position:relative;
+        display:flex;
+        align-items:stretch;
         width:min(340px,100%);
+        border:1px solid rgba(31,53,87,0.18);
+        border-radius:999px;
+        background:#fff;
+        overflow:hidden;
       }
       .searchBox input{
-        width:100%;
-        padding:8px 16px 8px 12px;
-        border-radius:999px;
-        border:1px solid rgba(20,40,70,0.15);
-        background:rgba(255,255,255,0.92);
+        flex:1 1 auto;
+        border:0;
+        outline:none;
+        background:transparent;
+        padding:12px 16px;
         font-size:14px;
       }
       .searchBox .searchBtn{
-        position:absolute;
-        right:6px;
-        top:50%;
-        transform:translateY(-50%);
-        width:34px;
-        height:34px;
-        border-radius:50%;
-        border:1px solid rgba(31,53,87,0.2);
+        flex:0 0 auto;
+        width:56px;
+        height:100%;
+        border-radius:0 999px 999px 0;
+        border:1px solid rgba(31,53,87,0.25);
         background:transparent;
         display:inline-flex;
         align-items:center;
         justify-content:center;
         cursor:pointer;
         transition:background-color .15s ease,border-color .15s ease;
+      }
+      .searchBox .searchBtn svg{
+        width:22px;
+        height:22px;
+      }
+      .searchBox .searchBtn svg circle,
+      .searchBox .searchBtn svg line{
+        stroke:#1F3557;
+        stroke-width:2;
+        stroke-linecap:round;
+        stroke-linejoin:round;
+      }
+      .searchBox .searchBtn:hover{
+        background:#1F3557;
+        border-color:#1F3557;
+      }
+      .searchBox .searchBtn:hover svg circle,
+      .searchBox .searchBtn:hover svg line{
+        stroke:#FFFFFF;
       }
       .searchBox .searchBtn svg{
         width:18px;
