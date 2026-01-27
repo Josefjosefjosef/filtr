@@ -1454,6 +1454,44 @@
     .timerBlockCompact .blockHead .title{
       font-size: 14px;
     }
+    /* ===== TIMER COMPACT REFINEMENT ===== */
+    .isCompactTimer{
+      padding: 6px 8px !important;
+      min-height: unset !important;
+      height: auto !important;
+    }
+    .isCompactTimer .blockHead,
+    .isCompactTimer .timerRowTop{
+      margin-bottom: 4px !important;
+    }
+    .isCompactTimer .timerWrap{
+      gap: 4px !important;
+    }
+    .isCompactTimer .timerNote,
+    .isCompactTimer .timerHint,
+    .isCompactTimer .timerFooter{
+      margin-top: 6px !important;
+      font-size: 11px !important;
+      line-height: 1.2 !important;
+    }
+    .isCompactTimer #timerBig,
+    .isCompactTimer .timerBig{
+      font-size: 22px !important;
+      line-height: 1.05 !important;
+      margin: 4px 0 !important;
+    }
+    .isCompactTimer .timerControls button,
+    .isCompactTimer .tBtn{
+      padding: 6px 10px !important;
+      font-size: 12px !important;
+      min-height: 30px !important;
+    }
+    .isCompactTimer input[type="time"],
+    .isCompactTimer .timerTime{
+      height: 30px !important;
+      padding: 4px 8px !important;
+      font-size: 12px !important;
+    }
 
     .timerWrap{
       display:grid;
@@ -2142,7 +2180,7 @@
         <!-- ✅ ÚKOL 1: OSOBNÍ ČASOVAČ PRACOVNÍ DOBY + ikonky Počasí a Horoskopu vedle sebe -->
         <div class="timerWithToolsWrap">
           <!-- Časovač -->
-          <section class="block timerBlockCompact" aria-label="Osobní časovač pracovní doby">
+          <section class="block timerBlockCompact isCompactTimer" aria-label="Osobní časovač pracovní doby">
             <div class="blockHead">
               <div class="title">Osobní časovač pracovní doby</div>
             </div>
