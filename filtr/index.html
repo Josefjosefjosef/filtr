@@ -58,6 +58,97 @@
   </section>
 
   <script defer src="./assets/app.js"></script>
+  <script>
+    // ===== ÚKOL 1A: Témata vs Filtry (bez zásahu do assets/app.js) =====
+    (function(){
+      const sectionsBar = document.getElementById("sectionsBar");
+      const filtersBar = document.getElementById("filtersBar");
+      if(!sectionsBar || !filtersBar) return;
+
+      function makeFilterBtn(opts){
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "filterBtn";
+        b.id = opts.id;
+        b.innerHTML = `<span class="fi" aria-hidden="true">${opts.icon}</span><span>${opts.label}</span>`;
+        b.addEventListener("click", opts.onClick);
+        return b;
+      }
+
+      function openSourcesModal(){
+        const m = document.getElementById("sourcesModal");
+        if(!m) return;
+        m.classList.add("show");
+      }
+      function closeSourcesModal(){
+        const m = document.getElementById("sourcesModal");
+        if(!m) return;
+        m.classList.remove("show");
+      }
+
+      document.addEventListener("click", (e) => {
+        const m = document.getElementById("sourcesModal");
+        if(!m || !m.classList.contains("show")) return;
+        if(e.target && (e.target.id === "sourcesClose" || e.target.id === "sourcesOk")) closeSourcesModal();
+        if(e.target === m) closeSourcesModal();
+      });
+      document.addEventListener("keydown", (e) => {
+        if(e.key === "Escape") closeSourcesModal();
+      });
+
+      function norm(s){
+        return String(s || "").trim().toLowerCase().replace(/\s+/g, " ");
+      }
+
+      function applyBarRules(){
+        const btns = Array.from(sectionsBar.querySelectorAll(".secBtn"));
+        for(const b of btns){
+          const t = norm(b.textContent);
+          if(t === "počasí" || t === "pocasi" || t === "video"){
+            b.remove();
+          }
+        }
+
+        const rest = Array.from(sectionsBar.querySelectorAll(".secBtn"));
+        let regionBtn = null;
+        for(const b of rest){
+          if(norm(b.textContent) === "regiony"){
+            regionBtn = b;
+            break;
+          }
+        }
+
+        filtersBar.innerHTML = "";
+
+        if(regionBtn){
+          regionBtn.classList.add("filterBtn");
+          regionBtn.classList.remove("secBtn");
+          const label = regionBtn.textContent.trim();
+          regionBtn.innerHTML = `<span class="fi" aria-hidden="true">📍</span><span>${label}</span>`;
+          filtersBar.appendChild(regionBtn);
+        }else{
+          filtersBar.appendChild(makeFilterBtn({
+            id: "regionsBtnFallback",
+            icon: "📍",
+            label: "Regiony",
+            onClick: () => alert("Regiony: UI připravené, logika se doplní.")
+          }));
+        }
+
+        filtersBar.appendChild(makeFilterBtn({
+          id: "sourcesBtn",
+          icon: "📰",
+          label: "Zdroje",
+          onClick: openSourcesModal
+        }));
+      }
+
+      const mo = new MutationObserver(() => applyBarRules());
+      mo.observe(sectionsBar, { childList: true, subtree: true });
+
+      applyBarRules();
+    })();
+  </script>
 </body>
 </html>
 <!doctype html>
@@ -118,6 +209,113 @@
       .regChip:hover{
         border-color:rgba(31,75,153,0.28);
       }
+
+      /* ============================================ */
+      /* ===== ÚKOL 1A: Témata vs Filtry – moderní a pochopitelné ===== */
+      /* ============================================ */
+
+      .barsWrap{
+        display:grid;
+        gap:10px;
+      }
+
+      .barRow{
+        display:grid;
+        grid-template-columns:auto 1fr;
+        gap:10px;
+        align-items:center;
+        min-width:0;
+      }
+
+      .barCaption{
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        font-size:12px;
+        font-weight:800;
+        color:rgba(11,27,43,0.62);
+        white-space:nowrap;
+        user-select:none;
+        padding:0 2px;
+      }
+
+      .barCaption .dot{
+        width:6px;
+        height:6px;
+        border-radius:999px;
+        background:rgba(31,75,153,0.55);
+        box-shadow:0 0 0 3px rgba(31,75,153,0.10);
+      }
+
+      .filtersBar{
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        align-items:center;
+        min-width:0;
+      }
+
+      .filterBtn{
+        appearance:none;
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        border:1px solid rgba(31,75,153,0.22);
+        background:rgba(31,75,153,0.06);
+        border-radius:var(--chipRadius);
+        padding:8px 12px;
+        cursor:pointer;
+        font-size:12.8px;
+        font-weight:800;
+        color:rgba(11,27,43,0.86);
+        -webkit-tap-highlight-color:transparent;
+        line-height:1.1;
+        user-select:none;
+        transition:border-color 140ms ease,color 140ms ease,background 140ms ease,box-shadow 140ms ease,transform 140ms ease;
+        box-shadow:0 6px 16px rgba(20,40,70,0.05);
+      }
+
+      .filterBtn .fi{
+        width:18px;
+        height:18px;
+        display:grid;
+        place-items:center;
+        border-radius:6px;
+        background:rgba(255,255,255,0.80);
+        border:1px solid rgba(20,40,70,0.10);
+        font-size:12px;
+        line-height:1;
+        flex:0 0 auto;
+      }
+
+      @media (hover:hover) and (pointer:fine){
+        .filterBtn:hover{
+          color:var(--accent);
+          border-color:rgba(31,75,153,0.34);
+          background:rgba(31,75,153,0.10);
+          box-shadow:0 12px 28px rgba(20,40,70,0.08);
+          transform:translateY(-1px);
+        }
+      }
+
+      .filterBtn:focus-visible{
+        outline:2px solid rgba(31,75,153,0.22);
+        outline-offset:3px;
+      }
+
+      .sectionsBar{
+        gap:8px;
+      }
+
+      @media (max-width: 520px){
+        .barRow{
+          grid-template-columns:1fr;
+          gap:6px;
+        }
+        .barCaption{
+          padding:0;
+        }
+      }
     </style>
   </head>
 
@@ -172,10 +370,14 @@
             <div class="sec" id="sectionLabel">Sekce: Vše</div>
             <div class="feedUpdatedAt" id="dataUpdatedAt">Poslední aktualizace dat: —</div>
           </div>
-          <div class="sectionsWrapper">
-            <nav class="sectionsBar" id="sectionsBar" aria-label="Filtr sekcí"></nav>
-            <div id="filtersBar">
-              <button class="secBtn" type="button">Regiony</button>
+          <div class="barsWrap" aria-label="Ovládací panel témat a filtrů">
+            <div class="barRow">
+              <div class="barCaption">Témata</div>
+              <nav class="sectionsBar" id="sectionsBar" aria-label="Filtr témat"></nav>
+            </div>
+            <div class="barRow">
+              <div class="barCaption">Filtry</div>
+              <div class="filtersBar" id="filtersBar" aria-label="Filtry"></div>
             </div>
           </div>
         </section>
@@ -405,9 +607,9 @@
   </div>
 
   <div class="overlay" id="overlay">
-    <div class="drawer" role="dialog" aria-modal="true" aria-label="Regiony">
+    <div class="drawer" role="dialog" aria-modal="true" aria-label="Sekce">
       <div class="drawerTop">
-        <div class="t">Regiony</div>
+        <div class="t">Sekce</div>
         <button class="x" id="closeMenu" aria-label="Zavřít">✕</button>
       </div>
       <div class="menuList" id="menuList"></div>
@@ -420,6 +622,20 @@
       <div class="modalActions">
         <button class="btn btnPrimary" id="modalGoogle">OK</button>
         <button class="btn" id="modalCancel">Zrušit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOURCES MODAL (zatím placeholder – logiku doplníme později) -->
+  <div class="modal" id="sourcesModal" role="dialog" aria-modal="true" aria-label="Zdroje">
+    <div class="modalCard">
+      <div class="modalTitle">Zdroje</div>
+      <div style="font-size:12.6px; color: rgba(11,27,43,0.72); font-weight:560; line-height:1.35; margin: 0 4px 10px;">
+        Tady bude výběr médií (články / videa). Zatím připraveno jen UI tlačítko.
+      </div>
+      <div class="modalActions">
+        <button class="btn btnPrimary" id="sourcesClose">Zavřít</button>
+        <button class="btn" id="sourcesOk">OK</button>
       </div>
     </div>
   </div>
