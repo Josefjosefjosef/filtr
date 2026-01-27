@@ -110,12 +110,23 @@
         justify-content:center;
         cursor:pointer;
         transition:background-color .15s ease,border-color .15s ease;
-        mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M15.5 14h-.79l-.28-.27a6 6 0 1 0-.71.71l.27.28v.79L20 20.5 21.5 19zm-6 0a4 4 0 1 1 0-8 4 4 0 0 1 0 8z'/></svg>") center / 18px no-repeat;
-        -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M15.5 14h-.79l-.28-.27a6 6 0 1 0-.71.71l.27.28v.79L20 20.5 21.5 19zm-6 0a4 4 0 1 1 0-8 4 4 0 0 1 0 8z'/></svg>") center / 18px no-repeat;
+      }
+      .searchBox .searchBtn svg{
+        width:18px;
+        height:18px;
+      }
+      .searchBox .searchBtn svg circle,
+      .searchBox .searchBtn svg line{
+        stroke:#1F3557;
+        stroke-linecap:round;
       }
       .searchBox .searchBtn:hover{
-        background-color:#1F3557;
-        border-color:rgba(31,53,87,0);
+        background:#1F3557;
+        border-color:#1F3557;
+      }
+      .searchBox .searchBtn:hover svg circle,
+      .searchBox .searchBtn:hover svg line{
+        stroke:#FFFFFF;
       }
       .searchBox .searchBtn:hover::after{
         content:none;
@@ -567,7 +578,12 @@
       <form class="searchForm" id="searchForm" autocomplete="off">
         <div class="searchBox">
           <input id="searchInput" type="search" placeholder="Hledat" autocomplete="off" />
-          <button class="searchBtn" type="submit" aria-label="Hledat"></button>
+          <button class="searchBtn" type="submit" aria-label="Hledat">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" fill="none" stroke-width="2"></circle>
+              <line x1="15" y1="15" x2="20" y2="20" stroke-width="2"></line>
+            </svg>
+          </button>
         </div>
       </form>
 
