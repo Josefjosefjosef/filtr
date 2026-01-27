@@ -985,15 +985,11 @@
       }
 
       function openOverlay(overlayEl){
-        if(!overlayEl) return;
-        overlayEl.hidden = false;
-        document.body.style.overflow = "hidden";
+        window.iuOpenOverlay(overlayEl);
       }
 
       function closeOverlay(overlayEl){
-        if(!overlayEl) return;
-        overlayEl.hidden = true;
-        document.body.style.overflow = "";
+        window.iuCloseOverlay(overlayEl);
       }
 
       function wireOverlayClose(overlayEl, panelCloseBtn){
@@ -1024,11 +1020,6 @@
 
       const regionsDone = document.getElementById("regionsDone");
       const sourcesDone = document.getElementById("sourcesDone");
-
-      // ✅ bezpečný start: overlay nesmí být otevřený po načtení
-      if(overlayRegions) overlayRegions.hidden = true;
-      if(overlaySources) overlaySources.hidden = true;
-      document.body.style.overflow = "";
 
       if(!btnRegions || !btnSources || !overlayRegions || !overlaySources){
         return;
@@ -1076,8 +1067,7 @@
 
       document.addEventListener("keydown", (e) => {
         if(e.key !== "Escape") return;
-        if(overlayRegions && !overlayRegions.hidden) closeOverlay(overlayRegions);
-        if(overlaySources && !overlaySources.hidden) closeOverlay(overlaySources);
+        window.iuCloseAllOverlays();
       });
     })();
   </script>
@@ -1115,13 +1105,11 @@
       if(!menuBtn || !appMenuOverlay || !appMenuClose) return;
 
       function openAppMenu(){
-        appMenuOverlay.hidden = false;
-        document.body.style.overflow = "hidden";
+        window.iuOpenOverlay(appMenuOverlay);
       }
 
       function closeAppMenu(){
-        appMenuOverlay.hidden = true;
-        document.body.style.overflow = "";
+        window.iuCloseOverlay(appMenuOverlay);
       }
 
       closeAppMenu();
@@ -1136,15 +1124,13 @@
         if(e.target === appMenuOverlay) closeAppMenu();
       });
 
-      document.addEventListener("keydown", (e) => {
-        if(e.key === "Escape" && !appMenuOverlay.hidden){
-          closeAppMenu();
-        }
+      document.addEventListener("keydown", () => {
+        window.iuCloseAllOverlays();
       });
 
       appMenuOverlay.querySelectorAll(".menuItem").forEach(btn => {
         btn.addEventListener("click", () => {
-          closeAppMenu();
+          window.iuCloseOverlay(appMenuOverlay);
         });
       });
     })();
