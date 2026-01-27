@@ -7,6 +7,10 @@
     <meta name="robots" content="noindex,nofollow" />
     <link rel="stylesheet" href="./assets/app.css" />
     <style>
+      html, body{
+        height: auto;
+        overflow-y: auto;
+      }
       .sectionsWrapper{
         display:flex;
         flex-direction:column;
@@ -177,6 +181,32 @@
         flex-wrap:wrap;
         gap:8px;
         align-items:center;
+      }
+
+      /* ===== Top banner spacer (rezerva pro reklamu) ===== */
+      #topAdSpacer{
+        margin: 10px 0 12px;
+      }
+
+      .topAdSpacer__inner{
+        height: 120px;
+        border-radius: 16px;
+        border: 1px dashed var(--hair, rgba(20,40,70,0.18));
+        background: rgba(31,75,153,0.04);
+        color: var(--muted, rgba(11,27,43,.60));
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-weight: 700;
+        letter-spacing: .2px;
+        user-select:none;
+      }
+
+      @media (max-width: 720px){
+        .topAdSpacer__inner{
+          height: 86px;
+          border-radius: 14px;
+        }
       }
 
       .chip{
@@ -409,6 +439,12 @@
             <div class="barRow">
               <div class="barCaption">Témata</div>
               <nav class="sectionsBar" id="sectionsBar" aria-label="Filtr témat"></nav>
+            </div>
+
+            <div id="topAdSpacer" aria-hidden="true">
+              <div class="topAdSpacer__inner">
+                Reklamní prostor (zatím rezervováno)
+              </div>
             </div>
 
             <div class="filterRow" id="filterRow">
@@ -731,6 +767,42 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // ===== Overlay controller (globální) =====
+    (function(){
+      const openSet = new Set();
+
+      window.iuOpenOverlay = function(el){
+        if(!el) return;
+        el.hidden = false;
+        openSet.add(el);
+        document.body.style.overflow = "hidden";
+      };
+
+      window.iuCloseOverlay = function(el){
+        if(!el) return;
+        el.hidden = true;
+        openSet.delete(el);
+        if(openSet.size === 0){
+          document.body.style.overflow = "";
+        }
+      };
+
+      window.iuCloseAllOverlays = function(){
+        openSet.forEach(el => { try{ el.hidden = true; }catch(_){ } });
+        openSet.clear();
+        document.body.style.overflow = "";
+      };
+
+      window.addEventListener("pageshow", () => window.iuCloseAllOverlays());
+      document.addEventListener("keydown", (e) => {
+        if(e.key === "Escape"){
+          window.iuCloseAllOverlays();
+        }
+      });
+    })();
+  </script>
 
   <script>
     (() => {
