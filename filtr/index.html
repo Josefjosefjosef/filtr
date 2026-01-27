@@ -622,7 +622,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="overlay">
+  <div class="overlay" id="overlay" hidden>
     <div class="drawer" role="dialog" aria-modal="true" aria-label="Sekce">
       <div class="drawerTop">
         <div class="t">Sekce</div>
@@ -974,6 +974,48 @@
         if(e.key !== "Escape") return;
         if(overlayRegions && !overlayRegions.hidden) closeOverlay(overlayRegions);
         if(overlaySources && !overlaySources.hidden) closeOverlay(overlaySources);
+      });
+    })();
+  </script>
+  <script>
+    (() => {
+      const overlaySections = document.getElementById("overlay");
+      const menuBtn = document.getElementById("menuBtn");
+      const closeMenu = document.getElementById("closeMenu");
+
+      if(!overlaySections) return;
+
+      const ensureHidden = () => {
+        overlaySections.hidden = true;
+        overlaySections.classList.remove("show");
+        document.body.style.overflow = "";
+      };
+
+      const ensureVisible = () => {
+        overlaySections.hidden = false;
+        overlaySections.classList.add("show");
+        document.body.style.overflow = "hidden";
+      };
+
+      // ✅ bezpečný start: Sekce overlay nesmí být otevřený po načtení
+      ensureHidden();
+
+      if(menuBtn){
+        menuBtn.addEventListener("click", () => ensureVisible());
+      }
+
+      if(closeMenu){
+        closeMenu.addEventListener("click", () => ensureHidden());
+      }
+
+      overlaySections.addEventListener("click", (e) => {
+        if(e.target === overlaySections) ensureHidden();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if(e.key === "Escape" && overlaySections && !overlaySections.hidden){
+          ensureHidden();
+        }
       });
     })();
   </script>
