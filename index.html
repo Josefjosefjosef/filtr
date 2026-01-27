@@ -12,7 +12,7 @@
   <meta property="og:title" content="infoUzel.cz – Aktuální zprávy a zpravodajství" />
   <meta property="og:description" content="Aktuální zprávy, články a videa z českých médií. Agregace zpravodajství z důvěryhodných zdrojů." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://infouzel.github.io/filtr/" />
+  <meta property="og:url" content="https://josefjosefjosef.github.io/filtr/" />
   <meta property="og:site_name" content="infoUzel.cz" />
   
   <!-- Twitter Card -->
@@ -21,7 +21,7 @@
   <meta name="twitter:description" content="Aktuální zprávy, články a videa z českých médií. Agregace zpravodajství z důvěryhodných zdrojů." />
   
   <!-- Canonical URL -->
-  <link rel="canonical" href="https://infouzel.github.io/filtr/" />
+  <link rel="canonical" href="https://josefjosefjosef.github.io/filtr/" />
 
   <style>
     :root{
@@ -2916,9 +2916,12 @@
       // ===== NOVÉ: načítání otázek z /data/quizdata.json + deck rotace =====
       const QUIZDATA_URL = (() => {
         // Detekce BASE pro GitHub Pages
-        const path = window.location.pathname;
-        const base = path.startsWith('/filtr') ? '/filtr' : '';
-        return base + "/data/quizdata.json";
+      const BASE_PATH = (() => {
+        const path = window.location.pathname || "/";
+        if (path === "/filtr" || path.startsWith("/filtr/")) return "/filtr/";
+        return "/";
+      })();
+      return `${BASE_PATH}data/quizdata.json`;
       })();
       const DECK_KEY = "quiz:deck:v1";
       const DECKPOS_KEY = "quiz:deckpos:v1";
