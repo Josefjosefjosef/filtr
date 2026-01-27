@@ -97,7 +97,7 @@
       }
       .searchBox input{
         width:100%;
-        padding:8px 12px 8px 36px;
+        padding:8px 16px 8px 36px;
         border-radius:999px;
         border:1px solid rgba(20,40,70,0.15);
         background:rgba(255,255,255,0.92);
@@ -108,14 +108,25 @@
         right:6px;
         top:50%;
         transform:translateY(-50%);
-        width:32px;
-        height:32px;
+        width:34px;
+        height:34px;
         border-radius:50%;
-        border:none;
-        background:#1F3557;
+        border:1px solid rgba(31,53,87,0.2);
+        background:transparent;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
         cursor:pointer;
+        transition:background-color .15s ease,border-color .15s ease;
         mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M15.5 14h-.79l-.28-.27a6 6 0 1 0-.71.71l.27.28v.79L20 20.5 21.5 19zm-6 0a4 4 0 1 1 0-8 4 4 0 0 1 0 8z'/></svg>") center / 18px no-repeat;
         -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M15.5 14h-.79l-.28-.27a6 6 0 1 0-.71.71l.27.28v.79L20 20.5 21.5 19zm-6 0a4 4 0 1 1 0-8 4 4 0 0 1 0 8z'/></svg>") center / 18px no-repeat;
+      }
+      .searchBox .searchBtn:hover{
+        background-color:#1F3557;
+        border-color:rgba(31,53,87,0);
+      }
+      .searchBox .searchBtn:hover::after{
+        content:none;
       }
 
       .sectionsWrapper{
