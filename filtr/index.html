@@ -57,7 +57,85 @@
     <pre id="debugOut"></pre>
   </section>
 
+  <script>
+    (function(){
+      const bannedSections = new Set(["pocasi","video"]);
+
+      function normalizeHashValue(hashValue){
+        const raw = (hashValue ?? location.hash).replace(/^#/, "");
+        const parts = raw
+          .split(",")
+          .map((segment) => segment.trim().toLowerCase())
+          .filter(Boolean);
+        const allowed = parts.filter((segment) => !bannedSections.has(segment));
+        return allowed.join(",");
+      }
+
+      function applyNormalizedHash(){
+        const normalized = normalizeHashValue();
+        const targetHash = normalized ? `#${normalized}` : "";
+        if (targetHash === location.hash) return false;
+        const newUrl = location.pathname + location.search + targetHash;
+        try{
+          history.replaceState(null, "", newUrl);
+        }catch(_){
+          location.hash = targetHash;
+        }
+        return true;
+      }
+
+      const helpers = window.__iuFilter || {};
+      helpers.bannedSections = bannedSections;
+      helpers.normalizeHashValue = normalizeHashValue;
+      helpers.applyNormalizedHash = applyNormalizedHash;
+      window.__iuFilter = helpers;
+
+      applyNormalizedHash();
+    })();
+  </script>
   <script defer src="./assets/app.js"></script>
+  <script defer>
+    (function(){
+      const helpers = window.__iuFilter || {};
+      const bannedSections = helpers.bannedSections || new Set(["pocasi","video"]);
+      const normalizeHashValue = helpers.normalizeHashValue || function(hashValue){
+        const raw = (hashValue ?? location.hash).replace(/^#/, "");
+        const parts = raw
+          .split(",")
+          .map((segment) => segment.trim().toLowerCase())
+          .filter(Boolean);
+        const allowed = parts.filter((segment) => !bannedSections.has(segment));
+        return allowed.join(",");
+      };
+
+      function removeBannedButtons(){
+        const bar = document.getElementById("sectionsBar");
+        if(!bar) return;
+        bar.querySelectorAll(".secBtn[data-section]").forEach((btn) => {
+          if(bannedSections.has(btn.dataset.section)) btn.remove();
+        });
+      }
+
+      const sectionsBar = document.getElementById("sectionsBar");
+      if(sectionsBar){
+        const observer = new MutationObserver(removeBannedButtons);
+        observer.observe(sectionsBar, { childList:true, subtree:true });
+      }
+
+      document.addEventListener("DOMContentLoaded", removeBannedButtons);
+      removeBannedButtons();
+
+      function enforceHash(){
+        const normalized = normalizeHashValue(location.hash);
+        const targetHash = normalized ? `#${normalized}` : "";
+        if(targetHash === location.hash) return;
+        location.hash = targetHash;
+      }
+
+      window.addEventListener("hashchange", enforceHash);
+      enforceHash();
+    })();
+  </script>
 </body>
 </html>
 <!doctype html>
@@ -214,6 +292,10 @@
 
       .sectionsBar{
         gap:8px;
+      }
+      .sectionsBar .secBtn[data-section="pocasi"],
+      .sectionsBar .secBtn[data-section="video"]{
+        display:none !important;
       }
 
       @media (max-width: 520px){
