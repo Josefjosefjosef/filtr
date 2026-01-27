@@ -13,6 +13,10 @@
       :root{
         --pageGutter: 18px;
         --adPeek: 22px;
+        --titleLineHeight: 1.22;
+        --titleLinesDesktop: 2;
+        --titleLinesMobile: 3;
+        --divider: rgba(11,27,43,0.10);
       }
 
       .container{
@@ -459,6 +463,63 @@
         margin-top: 6px !important;
         font-size: 11px !important;
         line-height: 1.2 !important;
+      }
+
+      /* ===== FEED TITLES + DIVIDER ===== */
+      .news-title{
+        margin: 0;
+        font-size: 19px;
+        font-weight: 550;
+        line-height: var(--titleLineHeight);
+        letter-spacing: 0;
+        min-width: 0;
+      }
+      .news-titleLink{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: var(--titleLinesDesktop);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: var(--titleLineHeight);
+        min-height: calc(var(--titleLineHeight) * var(--titleLinesDesktop) * 1em);
+        max-height: calc(var(--titleLineHeight) * var(--titleLinesDesktop) * 1em);
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        hyphens: auto;
+        color: var(--titleGreen);
+        text-decoration: none;
+        transition: color 140ms ease, text-decoration-color 140ms ease;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
+        text-decoration-color: rgba(31,75,153,0.00);
+        border-radius: 8px;
+      }
+      @media (max-width: 680px){
+        .news-titleLink{
+          -webkit-line-clamp: var(--titleLinesMobile);
+          min-height: calc(var(--titleLineHeight) * var(--titleLinesMobile) * 1em);
+          max-height: calc(var(--titleLineHeight) * var(--titleLinesMobile) * 1em);
+        }
+      }
+      .news-card{
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        padding: 18px 0;
+        box-shadow: none;
+        overflow-wrap: anywhere;
+        position: relative;
+        transition: none;
+      }
+      .news-card::after{
+        content:"";
+        position:absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 1px;
+        background: var(--divider);
+        pointer-events:none;
       }
 
       @media (max-width: 720px){
