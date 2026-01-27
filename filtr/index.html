@@ -83,36 +83,61 @@
         transform-origin: left center;
       }
 
-      .iuSearch{
+      .searchForm{
         display:flex;
-        align-items:stretch;
-        height:44px;
-        max-width:420px;
-        width:100%;
-        background:#fff;
-        border:1px solid rgba(31,75,153,0.35);
+        align-items:center;
+        gap:0;
+        min-width:0;
+        flex:1 1 auto;
+        justify-content:center;
+        height:40px;
+        border:1px solid var(--hair, rgba(20,40,70,0.12));
         border-radius:999px;
+        background:rgba(255,255,255,0.90);
+        box-shadow:0 4px 14px rgba(20,40,70,0.05);
         overflow:hidden;
       }
-      .iuSearch__input{
-        flex:1 1 auto;
+      .search{
+        position:relative;
+        min-width:0;
+        width:min(620px,70%);
+        height:40px;
         border:0;
-        outline:0;
         background:transparent;
-        padding:0 18px;
-        font-size:16px;
       }
-      .iuSearch__btn{
-        flex:0 0 64px;
+      .search input{
+        width:100%;
+        height:40px;
+        border:0;
+        background:transparent;
+        box-shadow:none;
+        padding:0 14px 0 38px;
+        font-size:15px;
+        font-weight:450;
+        outline:none;
+      }
+      .searchBtn{
+        height:40px;
+        width:52px;
+        padding:0;
+        border:0;
+        border-left:1px solid rgba(20,40,70,0.10);
+        border-radius:0;
+        background:transparent;
+        color:rgba(11,27,43,0.86);
+        font-weight:800;
+        font-size:13px;
+        cursor:pointer;
+        box-shadow:none;
+        -webkit-tap-highlight-color:transparent;
+        white-space:nowrap;
+        transition:background 140ms ease, color 140ms ease;
+        flex:0 0 auto;
         display:flex;
         align-items:center;
         justify-content:center;
-        border:0;
-        background:transparent;
-        cursor:pointer;
-        transition:background-color .15s ease;
       }
-      .iuSearch__icon{
+      .searchBtn svg{
         width:22px;
         height:22px;
         fill:none;
@@ -121,11 +146,19 @@
         stroke-linecap:round;
         stroke-linejoin:round;
       }
-      .iuSearch__btn:hover{
-        background:var(--accent,#1F4B99);
+      .searchForm:focus-within{
+        border-color:rgba(31,75,153,0.26);
+        box-shadow:0 10px 24px rgba(20,40,70,0.08);
+        background:rgba(255,255,255,0.94);
       }
-      .iuSearch__btn:hover .iuSearch__icon{
-        stroke:#fff;
+      @media (hover:hover) and (pointer:fine){
+        .searchBtn:hover{
+          background:var(--accentSoft, rgba(31,75,153,0.08));
+          color:var(--accent, #1F3557);
+        }
+        .searchBtn:hover svg{
+          stroke:#fff;
+        }
       }
 
       .sectionsWrapper{
@@ -571,6 +604,18 @@
           min-width: 0 !important;
         }
 
+        .searchForm{
+          justify-content: stretch !important;
+          width: 100% !important;
+        }
+        .search{
+          width: 100% !important;
+        }
+        .searchBtn{
+          width: 44px !important;
+          border-left:1px solid rgba(20,40,70,0.10) !important;
+        }
+
         /* 2) opraví problém s horizontálním přetékáním (iOS) */
         .container{
           overflow-x: hidden;
@@ -652,15 +697,17 @@
         </div>
       </div>
 
-      <div class="iuSearch">
-        <input class="iuSearch__input" type="search" placeholder="Hledat" aria-label="Hledat" />
-        <button class="iuSearch__btn" type="button" aria-label="Hledat">
-          <svg class="iuSearch__icon" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="11" cy="11" r="6"></circle>
-            <path d="M16.5 16.5 L21 21"></path>
-          </svg>
-        </button>
-      </div>
+      <form class="searchForm" autocomplete="off">
+        <div class="search">
+          <input class="searchInput" type="search" placeholder="Hledat" aria-label="Hledat" />
+          <button class="searchBtn" type="button" aria-label="Hledat">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6"></circle>
+              <path d="M16.5 16.5 L21 21"></path>
+            </svg>
+          </button>
+        </div>
+      </form>
 
       <div class="rightMeta">
         <div class="statusLine">
