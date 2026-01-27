@@ -395,6 +395,57 @@
         margin-top: var(--adPeek) !important;
       }
 
+      /* Compact work timer */
+      #workTimer {
+        padding: 10px 12px;
+        min-height: auto;
+        border-radius: 12px;
+      }
+      #workTimer > * {
+        margin-bottom: 6px;
+      }
+      #workTimer > *:last-child {
+        margin-bottom: 0;
+      }
+      #workTimer .timerRowTop {
+        gap: 6px;
+      }
+      #workTimer .timerSetRow {
+        gap: 6px;
+      }
+      #workTimer .timerBig {
+        font-size: 22px;
+        line-height: 1.1;
+        letter-spacing: 0.03em;
+      }
+      #workTimer .timerTitleMini,
+      #workTimer .timerStatus,
+      #workTimer .timerSetRow label,
+      #workTimer .timerHint {
+        font-size: 11px;
+        line-height: 1.2;
+      }
+      #workTimer .timerMetaGrid .tLab {
+        font-size: 11px;
+        line-height: 1.2;
+      }
+      #workTimer .timerMetaGrid .tVal {
+        font-size: 13px;
+        line-height: 1.1;
+      }
+      #workTimer .timerMetaGrid {
+        gap: 6px;
+      }
+      #workTimer .timerControls {
+        gap: 6px;
+      }
+      #workTimer .timerControls .tBtn {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-height: 0;
+        height: auto;
+      }
+
       @media (max-width: 720px){
         :root{
           --pageGutter: 12px;
