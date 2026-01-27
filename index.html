@@ -2072,6 +2072,75 @@
       will-change: transform, opacity;
       filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));
     }
+    /* ===== MOBILE UX: větší pill tlačítka pro témata/filtry ===== */
+    @media (max-width: 640px){
+
+      .sectionsBar,
+      .chips,
+      .filtersBar,
+      .filterRow{
+        display:flex;
+        flex-wrap:wrap;
+        gap:10px;
+      }
+
+      .secBtn,
+      .chip,
+      .filterBtn,
+      .filterRow .secBtn,
+      .filterRow .chip,
+      .filterRow .filterBtn{
+        min-height:44px;
+        padding:0 16px;
+        border-radius:999px;
+        font-size:15px;
+        font-weight:600;
+        line-height:44px;
+        border:1px solid #D5DBE3;
+        background:#fff;
+        color:#2B2F36;
+        -webkit-tap-highlight-color:transparent;
+        touch-action:manipulation;
+      }
+
+      .secBtn.active,
+      .chip.active,
+      .filterBtn.active,
+      .filterRow .secBtn.active,
+      .filterRow .chip.active,
+      .filterRow .filterBtn.active{
+        background:#1F4B99;
+        border-color:#1F4B99;
+        color:#fff;
+      }
+
+      .secBtn:focus-visible,
+      .chip:focus-visible,
+      .filterBtn:focus-visible,
+      .filterRow .secBtn:focus-visible,
+      .filterRow .chip:focus-visible,
+      .filterRow .filterBtn:focus-visible{
+        outline:none;
+        box-shadow:0 0 0 3px rgba(31,75,153,0.18);
+      }
+
+      .sectionTitle,
+      .topicsTitle,
+      h3, h4{
+        margin-top:14px;
+        margin-bottom:10px;
+      }
+
+      .filtersBar .secBtn,
+      .filterRow .secBtn,
+      .filtersBar .chip,
+      .filterRow .chip{
+        min-height:40px;
+        line-height:40px;
+        font-size:14px;
+        padding:0 14px;
+      }
+    }
   </style>
 </head>
 
