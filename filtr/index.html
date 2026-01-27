@@ -395,55 +395,70 @@
         margin-top: var(--adPeek) !important;
       }
 
-      /* Compact work timer */
-      #workTimer {
-        padding: 10px 12px;
-        min-height: auto;
+      /* ===== TIMER COMPACT (vynucené zmenšení rámu) ===== */
+      .isCompactTimer{
+        padding: 10px 12px !important;
         border-radius: 12px;
+        min-height: unset !important;
+        height: auto !important;
+        gap: 6px !important;
       }
-      #workTimer > * {
-        margin-bottom: 6px;
+      .isCompactTimer .blockHead,
+      .isCompactTimer .timerRowTop{
+        margin-bottom: 6px !important;
       }
-      #workTimer > *:last-child {
-        margin-bottom: 0;
+      .isCompactTimer .timerWrap{
+        gap: 4px !important;
+        padding: 0 !important;
       }
-      #workTimer .timerRowTop {
-        gap: 6px;
+      .isCompactTimer .timerBig,
+      .isCompactTimer #timerClock{
+        font-size: 24px !important;
+        line-height: 1.05 !important;
+        margin: 4px 0 !important;
       }
-      #workTimer .timerSetRow {
-        gap: 6px;
+      .isCompactTimer .timerTitleMini,
+      .isCompactTimer .timerStatus,
+      .isCompactTimer .timerSetRow label,
+      .isCompactTimer .timerHint,
+      .isCompactTimer .timerNote{
+        font-size: 11px !important;
+        line-height: 1.2 !important;
       }
-      #workTimer .timerBig {
-        font-size: 22px;
-        line-height: 1.1;
-        letter-spacing: 0.03em;
+      .isCompactTimer .timerMetaGrid .tLab{
+        font-size: 11px !important;
+        line-height: 1.2 !important;
       }
-      #workTimer .timerTitleMini,
-      #workTimer .timerStatus,
-      #workTimer .timerSetRow label,
-      #workTimer .timerHint {
-        font-size: 11px;
-        line-height: 1.2;
+      .isCompactTimer .timerMetaGrid .tVal{
+        font-size: 13px !important;
+        line-height: 1.1 !important;
       }
-      #workTimer .timerMetaGrid .tLab {
-        font-size: 11px;
-        line-height: 1.2;
+      .isCompactTimer .timerMetaGrid{
+        gap: 6px !important;
       }
-      #workTimer .timerMetaGrid .tVal {
-        font-size: 13px;
-        line-height: 1.1;
+      .isCompactTimer .timerControls,
+      .isCompactTimer .timerSetRow{
+        gap: 6px !important;
       }
-      #workTimer .timerMetaGrid {
-        gap: 6px;
+      .isCompactTimer .timerControls .tBtn,
+      .isCompactTimer button#timerStart,
+      .isCompactTimer button#timerStop{
+        padding: 6px 10px !important;
+        font-size: 12px !important;
+        min-height: 30px !important;
       }
-      #workTimer .timerControls {
-        gap: 6px;
+      .isCompactTimer input[type="time"],
+      .isCompactTimer .timerTime{
+        height: 30px !important;
+        padding: 4px 8px !important;
+        font-size: 12px !important;
       }
-      #workTimer .timerControls .tBtn {
-        padding: 6px 10px;
-        font-size: 12px;
-        min-height: 0;
-        height: auto;
+      .isCompactTimer .timerHint,
+      .isCompactTimer .timerNote,
+      .isCompactTimer .timerFooter{
+        margin-top: 6px !important;
+        font-size: 11px !important;
+        line-height: 1.2 !important;
       }
 
       @media (max-width: 720px){
@@ -844,7 +859,7 @@
 
       <aside class="sideCol" aria-label="Postranní panel">
         <div class="timerToolsWrap" aria-label="Časovač + rychlé ikony">
-          <section class="block" aria-label="Osobní časovač pracovní doby">
+          <section class="block isCompactTimer" aria-label="Osobní časovač pracovní doby">
             <div class="blockHead">
               <div class="title">Osobní časovač pracovní doby</div>
             </div>
