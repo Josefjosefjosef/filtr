@@ -9,6 +9,7 @@
     <style>
       :root{
         --pageGutter: 18px;
+        --adPeek: 22px;
       }
 
       .container{
@@ -212,6 +213,13 @@
         overflow: hidden;
         transition: max-height .35s ease;
         max-height: 28px;
+        height: var(--adPeek) !important;
+        min-height: 0 !important;
+        font-size: 12px;
+        color: rgba(11,27,43,0.45);
+        display:flex;
+        align-items:center;
+        justify-content:center;
       }
 
       #topAdSpacer.ad-expanded{
@@ -235,6 +243,9 @@
 
       #topAdSpacer.ad-expanded .topAdSpacer__inner{
         display:block !important;
+      }
+      #topAdSpacer.ad-collapsed .topAdSpacer__inner{
+        display:none !important;
       }
 
       /* ===== Top banner spacer (rezerva pro reklamu) ===== */
@@ -261,6 +272,7 @@
         grid-template-columns:minmax(0,1fr) 360px;
         gap:18px;
         align-items:start;
+        margin-top: var(--adPeek) !important;
       }
 
       @media (max-width: 720px){
