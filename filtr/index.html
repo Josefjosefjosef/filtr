@@ -83,6 +83,41 @@
         transform-origin: left center;
       }
 
+      .searchBox{
+        position:relative;
+        width:min(340px,100%);
+      }
+      .searchBox .icon{
+        position:absolute;
+        left:12px;
+        top:50%;
+        transform:translateY(-50%);
+        font-size:14px;
+        color:rgba(11,27,43,0.45);
+      }
+      .searchBox input{
+        width:100%;
+        padding:8px 12px 8px 36px;
+        border-radius:999px;
+        border:1px solid rgba(20,40,70,0.15);
+        background:rgba(255,255,255,0.92);
+        font-size:14px;
+      }
+      .searchBox .searchBtn{
+        position:absolute;
+        right:6px;
+        top:50%;
+        transform:translateY(-50%);
+        width:32px;
+        height:32px;
+        border-radius:50%;
+        border:none;
+        background:#1F3557;
+        cursor:pointer;
+        mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M15.5 14h-.79l-.28-.27a6 6 0 1 0-.71.71l.27.28v.79L20 20.5 21.5 19zm-6 0a4 4 0 1 1 0-8 4 4 0 0 1 0 8z'/></svg>") center / 18px no-repeat;
+        -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M15.5 14h-.79l-.28-.27a6 6 0 1 0-.71.71l.27.28v.79L20 20.5 21.5 19zm-6 0a4 4 0 1 1 0-8 4 4 0 0 1 0 8z'/></svg>") center / 18px no-repeat;
+      }
+
       .sectionsWrapper{
         display:flex;
         flex-direction:column;
@@ -527,11 +562,11 @@
       </div>
 
       <form class="searchForm" id="searchForm" autocomplete="off">
-        <div class="search">
+        <div class="searchBox">
           <div class="icon">⌕</div>
           <input id="searchInput" type="search" placeholder="Hledat" autocomplete="off" />
+          <button class="searchBtn" type="submit" aria-label="Hledat"></button>
         </div>
-        <button class="searchBtn" id="searchBtn" type="submit">Hledat</button>
       </form>
 
       <div class="rightMeta">
