@@ -1789,15 +1789,7 @@
     buildMenu();
     setupSearch();
 
-    const menuBtn = $("menuBtn");
-    const closeBtn = $("closeMenu");
-    const overlay = $("overlay");
-
-    if(menuBtn) menuBtn.addEventListener("click", openMenu);
-    if(closeBtn) closeBtn.addEventListener("click", closeMenu);
-    if(overlay) overlay.addEventListener("click", (e) => {
-      if(e.target && e.target.id === "overlay") closeMenu();
-    });
+    // hamburger menu now handled in index appMenuOverlay (no direct Section toggle here)
 
     setSectionsFromHash();
 

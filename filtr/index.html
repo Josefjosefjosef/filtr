@@ -304,6 +304,38 @@
         background: rgba(31,75,153,.10);
       }
 
+      /* ===== App menu drawer ===== */
+      .overlayPanel--menu{
+        width: min(420px, 92vw);
+      }
+
+      .menuList{
+        display:flex;
+        flex-direction:column;
+        gap:8px;
+      }
+
+      .menuItem{
+        text-align:left;
+        width:100%;
+        padding: 12px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--hair, rgba(20,40,70,0.12));
+        background: var(--cardBg, #fff);
+        cursor:pointer;
+        font-weight: 700;
+      }
+
+      .menuItem:hover{
+        box-shadow: 0 10px 26px rgba(0,0,0,.08);
+        transform: translateY(-1px);
+      }
+
+      .menuItem:active{
+        transform: translateY(0px);
+        box-shadow:none;
+      }
+
       /* Mobile */
       @media (max-width: 720px){
         .checkList{ grid-template-columns: 1fr; }
@@ -977,48 +1009,75 @@
       });
     })();
   </script>
+  <div id="appMenuOverlay" class="overlay" hidden>
+    <div id="appMenuPanel" class="overlayPanel overlayPanel--menu" role="dialog" aria-modal="true" aria-label="Menu">
+      <div class="overlayHead">
+        <div class="overlayTitle">Menu</div>
+        <button class="iconBtn" id="appMenuClose" type="button" aria-label="Zavřít">✕</button>
+      </div>
+
+      <div class="overlayBody">
+        <nav class="menuList" aria-label="Hlavní menu">
+          <button class="menuItem" type="button" data-action="about">O nás</button>
+          <button class="menuItem" type="button" data-action="contact">Kontaktujte nás</button>
+          <button class="menuItem" type="button" data-action="terms">Podmínky</button>
+          <button class="menuItem" type="button" data-action="privacy">Ochrana soukromí</button>
+        </nav>
+
+        <div class="overlayHint" style="margin-top:12px">
+          Zatím informativní – později sem napojíme stránky/odkazy.
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     (() => {
-      const overlaySections = document.getElementById("overlay");
-      const menuBtn = document.getElementById("menuBtn");
-      const closeMenu = document.getElementById("closeMenu");
+      const menuBtn = document.getElementById("menuBtn")
+        || document.querySelector('[aria-label="Menu"]')
+        || document.querySelector(".hamburger");
 
-      if(!overlaySections) return;
+      const appMenuOverlay = document.getElementById("appMenuOverlay");
+      const appMenuClose = document.getElementById("appMenuClose");
 
-      const ensureHidden = () => {
-        overlaySections.hidden = true;
-        overlaySections.classList.remove("show");
-        document.body.style.overflow = "";
-      };
+      if(!menuBtn || !appMenuOverlay || !appMenuClose) return;
 
-      const ensureVisible = () => {
-        overlaySections.hidden = false;
-        overlaySections.classList.add("show");
+      function openAppMenu(){
+        appMenuOverlay.hidden = false;
         document.body.style.overflow = "hidden";
-      };
-
-      // ✅ bezpečný start: Sekce overlay nesmí být otevřený po načtení
-      ensureHidden();
-
-      if(menuBtn){
-        menuBtn.addEventListener("click", () => ensureVisible());
       }
 
-      if(closeMenu){
-        closeMenu.addEventListener("click", () => ensureHidden());
+      function closeAppMenu(){
+        appMenuOverlay.hidden = true;
+        document.body.style.overflow = "";
       }
 
-      overlaySections.addEventListener("click", (e) => {
-        if(e.target === overlaySections) ensureHidden();
+      closeAppMenu();
+
+      menuBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        openAppMenu();
+      });
+
+      appMenuClose.addEventListener("click", closeAppMenu);
+      appMenuOverlay.addEventListener("click", (e) => {
+        if(e.target === appMenuOverlay) closeAppMenu();
       });
 
       document.addEventListener("keydown", (e) => {
-        if(e.key === "Escape" && overlaySections && !overlaySections.hidden){
-          ensureHidden();
+        if(e.key === "Escape" && !appMenuOverlay.hidden){
+          closeAppMenu();
         }
+      });
+
+      appMenuOverlay.querySelectorAll(".menuItem").forEach(btn => {
+        btn.addEventListener("click", () => {
+          closeAppMenu();
+        });
       });
     })();
   </script>
+
 </body>
 </html>
 
