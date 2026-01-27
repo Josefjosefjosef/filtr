@@ -2185,55 +2185,53 @@
           <div class="todayText" id="todayHistory">—</div>
         </section>
 
-        <!-- ✅ ÚKOL 1: OSOBNÍ ČASOVAČ PRACOVNÍ DOBY + ikonky Počasí a Horoskopu vedle sebe -->
-        <div class="timerWithToolsWrap">
-          <!-- Časovač -->
-          <section class="block timerBlockCompact isCompactTimer" aria-label="Osobní časovač pracovní doby">
-            <div class="blockHead">
-              <div class="title">Osobní časovač pracovní doby</div>
+        <!-- ✅ ÚKOL 1: OSOBNÍ ČASOVAČ PRACOVNÍ DOBY -->
+        <section class="block timerBlockCompact isCompactTimer" aria-label="Osobní časovač pracovní doby">
+          <div class="blockHead">
+            <div class="title">Osobní časovač pracovní doby</div>
+          </div>
+
+          <div class="timerWrap" id="workTimer">
+            <div class="timerRowTop">
+              <div class="timerTitleMini">Konec směny</div>
+              <div class="timerStatus" id="timerStatus">Nastav konec a stiskni START</div>
             </div>
 
-            <div class="timerWrap" id="workTimer">
-              <div class="timerRowTop">
-                <div class="timerTitleMini">Konec směny</div>
-                <div class="timerStatus" id="timerStatus">Nastav konec a stiskni START</div>
+            <div class="timerSetRow">
+              <label for="shiftEnd">Čas konce:</label>
+              <input id="shiftEnd" class="timerTime" type="time" value="16:00" />
+            </div>
+
+            <div class="timerBig" id="timerBig">00:00:00</div>
+
+            <div class="timerMetaGrid">
+              <div class="tCard">
+                <div class="tLab">Odpracováno</div>
+                <div class="tVal" id="timerWorked">00:00:00</div>
               </div>
-
-              <div class="timerSetRow">
-                <label for="shiftEnd">Čas konce:</label>
-                <input id="shiftEnd" class="timerTime" type="time" value="16:00" />
-              </div>
-
-              <div class="timerBig" id="timerBig">00:00:00</div>
-
-              <div class="timerMetaGrid">
-                <div class="tCard">
-                  <div class="tLab">Odpracováno</div>
-                  <div class="tVal" id="timerWorked">00:00:00</div>
-                </div>
-                <div class="tCard">
-                  <div class="tLab">Zbývá</div>
-                  <div class="tVal" id="timerLeft">00:00:00</div>
-                </div>
-              </div>
-
-              <div class="timerControls">
-                <button class="tBtn isPrimary" id="timerStart" type="button">START</button>
-                <button class="tBtn" id="timerStop" type="button">STOP</button>
-              </div>
-
-              <div class="timerHint">
-                Bez účtů a cloudu. Stav se ukládá jen do tohoto zařízení.
+              <div class="tCard">
+                <div class="tLab">Zbývá</div>
+                <div class="tVal" id="timerLeft">00:00:00</div>
               </div>
             </div>
-          </section>
 
-          <!-- Ikony Počasí a Horoskopu vedle časovače -->
-          <div class="sideToolsH" aria-label="Rychlé ikony">
+            <div class="timerControls">
+              <button class="tBtn isPrimary" id="timerStart" type="button">START</button>
+              <button class="tBtn" id="timerStop" type="button">STOP</button>
+            </div>
+
+            <div class="timerHint">
+              Bez účtů a cloudu. Stav se ukládá jen do tohoto zařízení.
+            </div>
+          </div>
+        </section>
+
+        <section class="block" aria-label="Rychlé ikony">
+          <div class="chips">
             <button class="toolBtn" id="btnWeather" type="button" aria-label="Počasí" aria-controls="toolPanel" aria-expanded="false">⛅</button>
             <button class="toolBtn" id="btnHoro" type="button" aria-label="Horoskop" aria-controls="toolPanel" aria-expanded="false">♉</button>
           </div>
-        </div>
+        </section>
 
         <!-- panel zůstává v sidebaru, ale ovládá se ikonami vedle časovače -->
         <div class="toolPanel" id="toolPanel" hidden>
