@@ -227,7 +227,7 @@
         user-select:none;
         box-shadow: none;
         box-sizing: border-box;
-        border-bottom: 1px solid var(--accent);
+        border-bottom: 0;
       }
 
       .layout{
@@ -245,6 +245,17 @@
           height: 180px;
           border-radius: 14px;
         }
+      }
+      /* banner: žádná spodní modrá linka */
+      #topAdSpacer,
+      #topAdSpacer *{
+        border-bottom: 0 !important;
+      }
+
+      #topAdSpacer::before,
+      #topAdSpacer::after{
+        content: none !important;
+        display: none !important;
       }
 
       .chip{
