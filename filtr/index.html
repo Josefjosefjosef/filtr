@@ -186,9 +186,11 @@
       /* ===== Top banner spacer (rezerva pro reklamu) ===== */
       #topAdSpacer{
         margin: 10px 0 12px;
+        width: 100%;
       }
 
       .topAdSpacer__inner{
+        width: 100%;
         height: 120px;
         border-radius: 16px;
         border: 1px dashed var(--hair, rgba(20,40,70,0.18));
@@ -200,6 +202,13 @@
         font-weight: 700;
         letter-spacing: .2px;
         user-select:none;
+      }
+
+      .layout{
+        display:grid;
+        grid-template-columns:minmax(0,1fr) 360px;
+        gap:18px;
+        align-items:start;
       }
 
       @media (max-width: 720px){
@@ -428,6 +437,11 @@
   </div>
 
   <div class="container">
+    <div id="topAdSpacer" aria-hidden="true">
+      <div class="topAdSpacer__inner">
+        Reklamní prostor (zatím rezervováno)
+      </div>
+    </div>
     <div class="layout">
       <div class="mainCol">
         <section class="feedHead">
@@ -439,12 +453,6 @@
             <div class="barRow">
               <div class="barCaption">Témata</div>
               <nav class="sectionsBar" id="sectionsBar" aria-label="Filtr témat"></nav>
-            </div>
-
-            <div id="topAdSpacer" aria-hidden="true">
-              <div class="topAdSpacer__inner">
-                Reklamní prostor (zatím rezervováno)
-              </div>
             </div>
 
             <div class="filterRow" id="filterRow">
