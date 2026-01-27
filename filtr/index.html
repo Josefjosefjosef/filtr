@@ -212,6 +212,11 @@
         z-index: 9999;
       }
 
+      /* ✅ overlay musí respektovat HTML atribut hidden */
+      .overlay[hidden]{
+        display:none !important;
+      }
+
       .overlayPanel{
         width: min(860px, 96vw);
         background: var(--cardBg, #fff);
@@ -915,6 +920,11 @@
 
       const regionsDone = document.getElementById("regionsDone");
       const sourcesDone = document.getElementById("sourcesDone");
+
+      // ✅ bezpečný start: overlay nesmí být otevřený po načtení
+      if(overlayRegions) overlayRegions.hidden = true;
+      if(overlaySources) overlaySources.hidden = true;
+      document.body.style.overflow = "";
 
       if(!btnRegions || !btnSources || !overlayRegions || !overlaySources){
         return;
