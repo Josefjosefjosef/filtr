@@ -210,21 +210,12 @@
         padding: 0;
         border: 0;
         background: transparent;
-        overflow: hidden;
-        transition: max-height .35s ease;
-        max-height: 28px;
-        height: var(--adPeek) !important;
-        min-height: 0 !important;
         font-size: 12px;
         color: rgba(11,27,43,0.45);
         display:flex;
         align-items:center;
         justify-content:center;
-      }
-
-      #topAdSpacer.ad-expanded{
-        max-height: 1000px;
-        padding: 12px 0 16px 0 !important;
+        height: auto;
       }
 
       #topAdSpacer .topAdLabel{
@@ -237,15 +228,8 @@
         letter-spacing: .4px;
       }
 
-      #topAdSpacer.ad-collapsed .topAdSpacer__inner{
-        display:none !important;
-      }
-
-      #topAdSpacer.ad-expanded .topAdSpacer__inner{
-        display:block !important;
-      }
-      #topAdSpacer.ad-collapsed .topAdSpacer__inner{
-        display:none !important;
+      #topAdSpacer .topAdSpacer__inner{
+        display:block;
       }
 
       /* ===== Top banner spacer (rezerva pro reklamu) ===== */
@@ -514,7 +498,7 @@
     </div>
   </div>
 
-  <div id="topAdSpacer" class="ad-collapsed" aria-hidden="true">
+  <div id="topAdSpacer" aria-hidden="true">
     <div class="topAdLabel">Reklama</div>
     <div class="topAdSpacer__inner">
       Reklamní prostor (zatím rezervováno)
@@ -1221,26 +1205,6 @@
           window.iuCloseOverlay(appMenuOverlay);
         });
       });
-    })();
-  </script>
-
-  <script>
-    (function(){
-      const ad = document.getElementById("topAdSpacer");
-      if(!ad) return;
-
-      ad.classList.remove("ad-expanded");
-      ad.classList.add("ad-collapsed");
-
-      function onScroll(){
-        if(window.scrollY > 20){
-          ad.classList.remove("ad-collapsed");
-          ad.classList.add("ad-expanded");
-          window.removeEventListener("scroll", onScroll);
-        }
-      }
-
-      window.addEventListener("scroll", onScroll, { passive: true });
     })();
   </script>
 
