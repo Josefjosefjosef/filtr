@@ -464,6 +464,12 @@
         font-size: 11px !important;
         line-height: 1.2 !important;
       }
+      .timerToolsWrap{
+        display:grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        align-items: start;
+      }
 
       /* ===== FEED TITLES + DIVIDER ===== */
       .news-title{
@@ -785,25 +791,6 @@
           gap: 10px !important;
         }
 
-        /* 4) toolPanel: musí normálně zabírat místo v layoutu */
-        #toolPanel{
-          position: static !important;
-          transform: none !important;
-          margin-top: 12px !important;
-        }
-
-        /* 5) Kritické: když je toolPanel hidden, NESMÍ dělat divné výšky */
-        .toolPanel[hidden]{
-          display: none !important;
-          height: auto !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          border-width: 0 !important;
-          opacity: 1 !important;
-          transform: none !important;
-          pointer-events: none !important;
-        }
-
         /* 6) Video quiz wrap: na úzké šířce vždy 1 sloupec, ať se to nesnaží držet výšky */
         .videoQuizWrap{
           grid-template-columns: 1fr !important;
@@ -969,44 +956,6 @@
             </div>
           </section>
 
-          <div class="sideToolsV" aria-label="Rychlé ikony mimo hlavní feed">
-            <button class="toolBtn" id="btnWeather" type="button" aria-label="Počasí" aria-controls="toolPanel" aria-expanded="false">⛅</button>
-            <button class="toolBtn" id="btnHoro" type="button" aria-label="Horoskop" aria-controls="toolPanel" aria-expanded="false">♉</button>
-          </div>
-        </div>
-
-        <div class="toolPanel" id="toolPanel" hidden>
-          <div class="toolPanelInner">
-            <div class="toolPane" id="paneWeather" aria-label="Počasí panel">
-              <div class="toolPaneHead">
-                <div class="toolPaneTitle">Počasí</div>
-                <button class="toolPaneClose" id="toolClose1" type="button" aria-label="Zavřít">✕</button>
-              </div>
-              <div class="weatherPanel" title="Počasí">
-                <div class="weatherLine">
-                  <div class="left">
-                    <div class="sun" id="weatherIcon">⛅</div>
-                    <div class="temp" id="weatherTemp">—</div>
-                    <div class="wMeta">
-                      <div class="cond" id="weatherDesc">—</div>
-                      <div class="loc" id="weatherLoc">—</div>
-                    </div>
-                  </div>
-                  <div class="arrow">›</div>
-                </div>
-              </div>
-            </div>
-            <div class="toolPane" id="paneHoro" aria-label="Horoskop panel">
-              <div class="toolPaneHead">
-                <div class="toolPaneTitle">Horoskop</div>
-                <button class="toolPaneClose" id="toolClose2" type="button" aria-label="Zavřít">✕</button>
-              </div>
-              <div class="horoBox" id="horoText">
-                —
-                <div class="horoHint">Krátké, civilní. Max 2 věty.</div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <section class="block" id="pollBlock" aria-label="Denní otázka">
