@@ -31,6 +31,10 @@
         border-radius: 0;
         box-shadow: none !important;
       }
+
+      .debug-toggle{
+        display:none !important;
+      }
       .sectionsWrapper{
         display:flex;
         flex-direction:column;
@@ -481,7 +485,7 @@
       <div class="rightMeta">
         <div class="statusLine">
           <span class="pill" id="dataStatus">Stav dat: načítám…</span>
-          <button class="btn" id="toggleDebugBtn" type="button">Zapnout debug</button>
+          <button class="btn debug-toggle" id="toggleDebugBtn" type="button">Zapnout debug</button>
         </div>
         <div class="topbarInfo" id="topbarInfo">—</div>
         <div class="homePinRow" id="homePinRow" tabindex="0" role="button" aria-label="Připnout stránku jako domovskou">
