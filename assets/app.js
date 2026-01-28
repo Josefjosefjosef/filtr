@@ -11,6 +11,22 @@
   
   // ✅ FIX: BASE je path-only (ne origin+path) - pro správný SW scope
   const BASE = getBaseRoot();
+  function getBuildStamp(){
+    const meta = document.querySelector("meta[name=\"iu-build\"]");
+    const stamp = meta ? (meta.getAttribute("content") || "").trim() : "";
+    return stamp || null;
+  }
+  function makeDataUrl(relPath, opts = {}){
+    const url = new URL(relPath, `${location.origin}${BASE}`);
+    if(opts.bust){
+      const stamp = getBuildStamp();
+      const param = stamp || (DEBUG ? String(Date.now()) : null);
+      if(param){
+        url.searchParams.set("v", param);
+      }
+    }
+    return url.toString();
+  }
   
   // ✅ FIX: Debug log při ?debug=1
   const DEBUG = (() => {
