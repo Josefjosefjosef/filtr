@@ -382,8 +382,8 @@
   function renderItems(items) {
     const target = getFeedTarget();
     if (!target) {
-      handleMissingFeedContainer();
-      renderEmpty("DATA ERROR: Chyba DOM: chybí #feed i #newsList.");
+      renderEmpty("Chyba DOM: chybí #feed i #newsList.");
+      console.log("[RENDER] no target");
       return;
     }
     if (emptyBox) {
