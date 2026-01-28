@@ -24,6 +24,7 @@
         --sidebar-muted: #9aa4af;
         --gold-accent: #c9a24d;
         --gold-accent-soft: rgba(201,162,77,0.25);
+        --topbarStackH: 112px;
       }
 
       .container{
@@ -385,12 +386,8 @@
         grid-template-columns:minmax(0,1fr) 360px;
         gap:18px;
         align-items:start;
-        margin-top: var(--adPeek) !important;
-      }
-      /* FIX: po vypnutí reklamního pásu už nechceme horní mezeru */
-      .layout{
         margin-top: 0 !important;
-        padding-top: 0 !important;
+        padding-top: var(--topbarStackH) !important;
       }
       .accordionCol{
         color: var(--sidebar-text);
@@ -864,6 +861,7 @@
 
       .iuSubBars{
         width: 100%;
+        overflow: hidden;
       }
 
 
@@ -880,6 +878,7 @@
         padding: 8px var(--pageGutter);
         overflow-x: auto;
         overflow-y: hidden;
+        max-width: 100%;
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
         scrollbar-gutter: stable both-edges;
@@ -991,7 +990,28 @@
       body{
         position: static !important;
       }
+      /* FIX: stránka nesmí horizontálně přetékat (horizontální scroll jen v tématech) */
+      html, body{
+        overflow-x: hidden !important;
+      }
       /* ===== /NOVÉ: SUB LIŠTY POD HLAVIČKOU ===== */
+      /* FIX: žádný horizontální scroll stránky (horizontálně scrolují jen témata) */
+      html, body{
+        overflow-x: hidden !important;
+      }
+      .iuSubBars{
+        max-width: 100%;
+        overflow: hidden;
+      }
+      .iuSubBars .topicsBar,
+      .iuSubBars .filtersBar{
+        max-width: 100%;
+      }
+      .iuSubBars .topicsScroller{
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
     </style>
   </head>
 
