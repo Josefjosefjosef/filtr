@@ -221,47 +221,16 @@
     }
 
     .brand{
-      position:relative;
-      display:inline-flex;
-      align-items:baseline;
-      line-height:1;
-      text-decoration:none;
-      padding-bottom:10px;
-      flex:0 0 auto;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      flex: 0 0 auto;
     }
-    .brand-info{
-      font-family:"Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      font-weight:600;
-      font-style:italic;
-      color:#1F3A5F;
-      letter-spacing:.2px;
-    }
-    .brand-uzel{
-      font-family:"Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      font-weight:800;
-      color:#F39A1D;
-      letter-spacing:.2px;
-    }
-    .brand-cz{
-      font-family:"Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      font-weight:700;
-      color:#2F3B52;
-      margin-left:2px;
-      font-size:.92em;
-    }
-    .brand::after{
-      content:"";
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:0;
-      height:4px;
-      border-radius:4px;
-      background:linear-gradient(90deg,#1F4B99 0%,#1FB6A6 45%,#F2C94C 100%);
-    }
-    @media (max-width:520px){
-      .brand{ padding-bottom:9px; }
-      .brand::after{ height:3px; }
+
+    .brand svg{
+      height: 28px;
+      width: auto;
+      display: block;
     }
 
     /* search = střed, menší, klidnější */
@@ -2180,10 +2149,97 @@
           </div>
         </button>
 
-        <a class="brand" href="/">
-          <span class="brand-info">info</span>
-          <span class="brand-uzel">Uzel</span>
-          <span class="brand-cz">.cz</span>
+        <a class="brand" href="./" aria-label="infoUzel.cz">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               viewBox="0 0 820 210"
+               role="img"
+               aria-label="infoUzel.cz"
+               style="height:28px;width:auto;display:block">
+
+            <defs>
+              <!-- INFO + .CZ -->
+              <linearGradient id="navyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1F3A5F"/>
+                <stop offset="100%" stop-color="#142A4A"/>
+              </linearGradient>
+
+              <!-- U -->
+              <linearGradient id="gradU" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#E24A2A"/>
+                <stop offset="100%" stop-color="#F08A2B"/>
+              </linearGradient>
+
+              <!-- z -->
+              <linearGradient id="gradZ" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#F3A42A"/>
+                <stop offset="100%" stop-color="#F1C34B"/>
+              </linearGradient>
+
+              <!-- e -->
+              <linearGradient id="gradE" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#6BB357"/>
+                <stop offset="100%" stop-color="#3F9D55"/>
+              </linearGradient>
+
+              <!-- l -->
+              <linearGradient id="gradL" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#3A8ACB"/>
+                <stop offset="100%" stop-color="#1F5FAE"/>
+              </linearGradient>
+
+              <!-- underline -->
+              <linearGradient id="gradLine" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#2B5EA7"/>
+                <stop offset="60%" stop-color="#2FA0A1"/>
+                <stop offset="100%" stop-color="#D6B54A"/>
+              </linearGradient>
+            </defs>
+
+            <!-- TEXT -->
+            <g transform="translate(20,40)">
+              <!-- info -->
+              <text x="0" y="90"
+                    font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif"
+                    font-size="96"
+                    font-style="italic"
+                    font-weight="800"
+                    letter-spacing="-0.5"
+                    fill="url(#navyGrad)">
+                info
+              </text>
+
+              <!-- Uzel -->
+              <text x="230" y="90"
+                    font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif"
+                    font-size="96"
+                    font-weight="800"
+                    letter-spacing="-1.2">
+                <tspan fill="url(#gradU)">U</tspan>
+                <tspan fill="url(#gradZ)">z</tspan>
+                <tspan fill="url(#gradE)">e</tspan>
+                <tspan fill="url(#gradL)">l</tspan>
+              </text>
+
+              <!-- .cz -->
+              <text x="510" y="90"
+                    font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif"
+                    font-size="78"
+                    font-weight="800"
+                    letter-spacing="-0.4"
+                    fill="url(#navyGrad)">
+                .cz
+              </text>
+
+              <!-- underline curve -->
+              <path d="M 40 118
+                       C 220 140, 420 140, 640 118"
+                    fill="none"
+                    stroke="url(#gradLine)"
+                    stroke-width="9"
+                    stroke-linecap="round"
+                    opacity="0.95"/>
+            </g>
+          </svg>
         </a>
       </div>
 
