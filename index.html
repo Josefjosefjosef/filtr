@@ -154,148 +154,7 @@
         }
       }
 
-      .sectionsWrapper{
-        display:flex;
-        flex-direction:column;
-        gap:10px;
-      }
-      .sectionsBar{
-        display:flex;
-        flex-wrap:wrap;
-        gap:8px;
-      }
-      #filtersBar{
-        display:flex;
-        justify-content:flex-end;
-        gap:8px;
-      }
-      #filtersBar .secBtn{
-        padding:6px 14px;
-        font-size:12px;
-        border-color:rgba(20,40,70,0.12);
-        background:rgba(255,255,255,0.92);
-      }
-      #filtersBar .secBtn:hover{
-        border-color:rgba(31,75,153,0.28);
-      }
-      .regionsRow{
-        display:flex;
-        flex-wrap:wrap;
-        gap:8px;
-        margin-top:8px;
-      }
-      .regChip{
-        display:inline-flex;
-        align-items:center;
-        gap:6px;
-        padding:6px 10px;
-        border-radius:999px;
-        border:1px solid rgba(20,40,70,0.14);
-        background:rgba(255,255,255,0.92);
-        font-weight:700;
-        font-size:12.5px;
-        cursor:pointer;
-      }
-      .regChip span{
-        opacity:0.7;
-        font-weight:900;
-      }
-      .regChip:hover{
-        border-color:rgba(31,75,153,0.28);
-      }
-
-      /* ============================================ */
-      /* ===== ÚKOL 1A: Témata vs Filtry – moderní a pochopitelné ===== */
-      /* ============================================ */
-
-      .barsWrap{
-        display:grid;
-        gap:10px;
-      }
-
-      .barRow{
-        display:grid;
-        grid-template-columns:auto 1fr;
-        gap:10px;
-        align-items:center;
-        min-width:0;
-      }
-
-      .barCaption{
-        display:inline-flex;
-        align-items:center;
-        gap:8px;
-        font-size:12px;
-        font-weight:800;
-        color:rgba(11,27,43,0.62);
-        white-space:nowrap;
-        user-select:none;
-        padding:0 2px;
-      }
-
-      .barCaption .dot{
-        width:6px;
-        height:6px;
-        border-radius:999px;
-        background:rgba(31,75,153,0.55);
-        box-shadow:0 0 0 3px rgba(31,75,153,0.10);
-      }
-
-      .filtersBar{
-        display:flex;
-        flex-wrap:wrap;
-        gap:8px;
-        align-items:center;
-        min-width:0;
-      }
-
-      .filterBtn{
-        appearance:none;
-        display:inline-flex;
-        align-items:center;
-        gap:8px;
-        border:1px solid rgba(31,75,153,0.22);
-        background:rgba(31,75,153,0.06);
-        border-radius:var(--chipRadius);
-        padding:8px 12px;
-        cursor:pointer;
-        font-size:12.8px;
-        font-weight:800;
-        color:rgba(11,27,43,0.86);
-        -webkit-tap-highlight-color:transparent;
-        line-height:1.1;
-        user-select:none;
-        transition:border-color 140ms ease,color 140ms ease,background 140ms ease,box-shadow 140ms ease,transform 140ms ease;
-        box-shadow:0 6px 16px rgba(20,40,70,0.05);
-      }
-
-      .filterBtn .fi{
-        width:18px;
-        height:18px;
-        display:grid;
-        place-items:center;
-        border-radius:6px;
-        background:rgba(255,255,255,0.80);
-        border:1px solid rgba(20,40,70,0.10);
-        font-size:12px;
-        line-height:1;
-        flex:0 0 auto;
-      }
-
-      @media (hover:hover) and (pointer:fine){
-        .filterBtn:hover{
-          color:var(--accent);
-          border-color:rgba(31,75,153,0.34);
-          background:rgba(31,75,153,0.10);
-          box-shadow:0 12px 28px rgba(20,40,70,0.08);
-          transform:translateY(-1px);
-        }
-      }
-
-      .filterBtn:focus-visible{
-        outline:2px solid rgba(31,75,153,0.22);
-        outline-offset:3px;
-      }
+      
 
       .sectionsBar{
         gap:8px;
@@ -1031,9 +890,16 @@
         display: block !important;
       }
 
-      .layout{
+      .layout,
+      main,
+      #app,
+      .app,
+      .page,
+      .shell,
+      .container{
         height: auto !important;
         min-height: 0 !important;
+        max-height: none !important;
         overflow: visible !important;
       }
 
@@ -1145,8 +1011,8 @@
       <div class="filtersBar" role="navigation" aria-label="Filtry">
         <div class="filtersInner">
           <button class="filterBtn" type="button">Filtry</button>
-          <button class="filterBtn" type="button">Regiony</button>
-          <button class="filterBtn" type="button">Zdroje</button>
+          <button class="filterBtn" id="btnRegions" type="button" aria-haspopup="dialog" aria-controls="overlayRegions">Regiony</button>
+          <button class="filterBtn" id="btnSources" type="button" aria-haspopup="dialog" aria-controls="overlaySources">Zdroje</button>
 
           <div class="filtersSpacer"></div>
 
@@ -1165,37 +1031,8 @@
   </div>
 
   <div class="container">
-    <div class="layout">
+      <div class="layout">
       <div class="mainCol">
-        <section class="feedHead">
-          <div class="feedTopRow">
-            <div class="sec" id="sectionLabel">Sekce: Vše</div>
-            <div class="feedUpdatedAt" id="dataUpdatedAt">Poslední aktualizace dat: —</div>
-          </div>
-          <div class="barsWrap" aria-label="Ovládací panel témat a filtrů">
-            <div class="barRow">
-              <div class="barCaption">Témata</div>
-              <nav class="sectionsBar" id="sectionsBar" aria-label="Filtr témat"></nav>
-            </div>
-
-            <div class="filterRow" id="filterRow">
-              <div class="filterRow__label">Filtry</div>
-              <div class="filterRow__actions">
-                <button class="chip chip--ghost" id="btnRegions" type="button" aria-haspopup="dialog" aria-controls="overlayRegions">
-                  Regiony
-                </button>
-                <button class="chip chip--ghost" id="btnSources" type="button" aria-haspopup="dialog" aria-controls="overlaySources">
-                  Zdroje
-                </button>
-              </div>
-            </div>
-
-            <div class="barRow">
-              <div class="filtersBar" id="filtersBar" aria-label="Filtry"></div>
-            </div>
-          </div>
-        </section>
-
         <section class="news-list" id="newsList" aria-label="Aktuální články">
           <div id="feed"></div>
         </section>
