@@ -266,10 +266,7 @@
       emptyBox.innerHTML = "";
     }
     if (!items || items.length === 0) {
-      renderEmpty(
-        "Žádná data k zobrazení.",
-        `Tip: zapni <b>debug</b> (tlačítko nahoře nebo <code>?debug=1</code>) a zkontroluj strukturu JSON.`
-      );
+      renderEmpty("Žádné články k zobrazení. Zkontroluj Stav dat.");
       writeDebug({
         ok: true,
         note: "Žádné položky k zobrazení",
@@ -452,19 +449,7 @@
     } catch (err) {
       setStatus("Stav dat: chyba (nelze načíst)");
       if (!hasLoadedData) {
-        renderEmpty(
-          "Data se nepodařilo načíst. Stránka funguje, ale nemá co vykreslit.",
-          `
-          <div>
-            <a href="${DATA_URL}" target="_blank" rel="noopener">Otevřít ${DATA_URL}</a>
-            &nbsp;|&nbsp;
-            <a href="?debug=1">Zapnout debug</a>
-          </div>
-          <div style="margin-top:8px">
-            Pozn.: Soubor <code>articles.json</code> může dočasně chybět (generuje se jiným workflow). Deploy na Pages kvůli tomu nesmí padat.
-          </div>
-          `
-        );
+        renderEmpty("Nepodařilo se načíst články. Zkontroluj Stav dat.");
       }
       if (isDebugOn()) {
         writeDebug({

@@ -1587,16 +1587,15 @@
       console.error("[IU] safeFetch missing - crash shield not loaded");
       if (DEBUG) {
         debugLog("BASE:", BASE);
-        debugLog("ARTICLES_URL:", ARTICLES_URL);
         debugLog("window.__iuSafeFetch:", window.__iuSafeFetch);
       }
       return { changed:false, items:[] };
     }
 
-    // ✅ FIX: Debug log při ?debug=1
+    const articlesUrl = makeDataUrl("data/articles.json", { bust: true });
+
     if (DEBUG) {
-      debugLog("loadArticlesOnly: BASE=", BASE, "ARTICLES_URL=", ARTICLES_URL);
-      debugLog("safeFetch available:", !!safeFetch);
+      debugLog("loadArticlesOnly: BASE=", BASE, "safeFetch available:", !!safeFetch);
     }
 
     // ✅ FIX: Performance mark pro observabilitu
@@ -1605,7 +1604,7 @@
     }
     const fetchStart = performance.now();
 
-    const result = await safeFetch("articles", ARTICLES_URL, { silent });
+    const result = await safeFetch("articles", articlesUrl, { silent });
     
     // ✅ FIX: result.ok může být false, ale result.data může existovat (cache fallback)
     if (!result) {
@@ -1643,12 +1642,14 @@
     const arr = unwrapToArray(data);
 
     if (DEBUG) {
-      console.log("articles loaded:", arr.length, ARTICLES_URL);
-    }
-    
-    // ✅ FIX: Debug log výsledku fetch
-    if (DEBUG) {
+      console.log("articles loaded:", arr.length, articlesUrl);
       debugLog(`Fetch articles: ok=${result.ok}, source=${result?.source || "network"}, items=${arr.length}, error=${result?.error?.message || "none"}`);
+      if(arr.length > 0){
+        debugLog("[DATA] articles first:", {
+          title: arr[0].title,
+          source: (Array.isArray(arr[0]?.sources) && arr[0].sources[0]?.name) || ""
+        });
+      }
     }
     
     // Extrahuj generatedAt pokud existuje
