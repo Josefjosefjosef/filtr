@@ -115,18 +115,20 @@ img{ max-width:100%; height:auto; }
 
 .layout{
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: minmax(0, 1fr) var(--sideW, 360px);
   gap: 18px;
   align-items: start;
 }
 .mainCol{ min-width: 0; }
+.accordionCol{ width: var(--sideW, 360px); }
 .accordionCol{
-  min-width: 0;
   background: #e9f4ff;
-  padding: 18px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
+  border-radius: 14px;
+  min-width: 0;
   align-self: stretch;
   height: 100%;
 }
@@ -136,46 +138,61 @@ img{ max-width:100%; height:auto; }
 
 .accHeader{
   width: 100%;
-  text-align: left;
-  background: transparent;
-  border: none;
-  padding: 12px 14px;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text);
-  border-radius: 8px;
-  cursor: pointer;
+  min-height: 44px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.55);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
   transition: background 200ms ease, color 200ms ease;
 }
 
 .accHeader:hover,
 .accHeader:focus-visible{
-  background: rgba(31,75,153,0.12);
+  background: rgba(31,75,153,0.14);
+  outline: none;
 }
 
 .accHeader.is-open{
+  background: rgba(31,75,153,0.10);
   color: var(--accent);
 }
 
 .accContent{
   max-height: 0;
   overflow: hidden;
-  transition: max-height 280ms ease;
-  padding: 0 8px;
+  transition: max-height 300ms ease;
+  padding: 0 10px;
 }
 
 .accContent > *{
-  margin: 0;
+  margin-top: 10px;
+}
+
+.accContent[hidden]{
+  display: block;
 }
 
 .accPlaceholder{
   color: rgba(11,27,43,0.62);
   font-size: 13px;
   line-height: 1.45;
+}
+
+/* Panel: povolit vnitřním prvkům dýchat */
+.accordionCol .accContent{
+  overflow: hidden;
+}
+.accordionCol .accContent.is-open-overflow{
+  overflow: visible;
 }
 @media (min-width: 901px){
   .mainCol{ padding-left: 0 !important; }

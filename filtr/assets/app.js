@@ -1318,5 +1318,77 @@
     restoreScroll();
   });
 
+  (function(){
+    function initAccordion(){
+      const root = document.querySelector(".accordionCol");
+      if (!root) return;
+
+      const headers = Array.from(root.querySelectorAll(".accHeader"));
+      headers.forEach((btn, index)=>{
+        const item = btn.closest(".accItem");
+        const panel = item?.querySelector(".accContent");
+        if (!panel) return;
+
+        btn.classList.remove("is-open");
+        btn.setAttribute("aria-expanded", "false");
+        panel.hidden = true;
+        panel.style.maxHeight = "0px";
+
+        btn.addEventListener("click", ()=>{
+          const isOpen = btn.classList.toggle("is-open");
+          btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+
+          if (isOpen){
+            panel.hidden = false;
+            panel.style.maxHeight = "0px";
+            const h = panel.scrollHeight;
+            panel.style.maxHeight = h + "px";
+            panel.classList.add("is-open-overflow");
+            requestAnimationFrame(()=>{
+              panel.style.maxHeight = panel.scrollHeight + "px";
+            });
+          } else {
+            panel.style.maxHeight = panel.scrollHeight + "px";
+            panel.offsetHeight;
+            panel.style.maxHeight = "0px";
+            window.setTimeout(()=>{ panel.hidden = true; }, 300);
+            panel.classList.remove("is-open-overflow");
+          }
+        });
+
+        btn.addEventListener("keydown", (event)=>{
+          const { key } = event;
+          const isArrowDown = key === "ArrowDown" || key === "Down";
+          const isArrowUp = key === "ArrowUp" || key === "Up";
+          if (!isArrowDown && !isArrowUp && key !== "Home" && key !== "End") return;
+          event.preventDefault();
+          let targetIndex = index;
+          if (isArrowDown){
+            targetIndex = (index + 1) % headers.length;
+          } else if (isArrowUp){
+            targetIndex = (index - 1 + headers.length) % headers.length;
+          } else if (key === "Home"){
+            targetIndex = 0;
+          } else if (key === "End"){
+            targetIndex = headers.length - 1;
+          }
+          headers[targetIndex]?.focus();
+        });
+
+        const mo = new MutationObserver(()=>{
+          if (!btn.classList.contains("is-open")) return;
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        });
+        mo.observe(panel, { childList: true, subtree: true, characterData: true });
+      });
+    }
+
+    if (document.readyState === "loading"){
+      document.addEventListener("DOMContentLoaded", initAccordion);
+    } else {
+      initAccordion();
+    }
+  })();
+
   init();
 })();
