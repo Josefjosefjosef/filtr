@@ -521,10 +521,16 @@
       .news-title{
         margin: 0;
         font-size: 19px;
-        font-weight: 550;
-        line-height: var(--titleLineHeight);
+        font-weight: 650;
+        line-height: 1.22;
         letter-spacing: 0;
         min-width: 0;
+      }
+      @media (max-width: 680px){
+        .news-title{
+          font-size: 18px;
+          line-height: 1.24;
+        }
       }
       .news-titleLink{
         display: -webkit-box;
@@ -557,7 +563,7 @@
         background: transparent;
         border: none;
         border-radius: 0;
-        padding: 18px 0;
+        padding: 16px 0 18px;
         box-shadow: none;
         overflow-wrap: anywhere;
         position: relative;
@@ -573,21 +579,8 @@
         background: var(--divider);
         pointer-events:none;
       }
-      .news-card:first-child::before{
-        content:"";
-        position:absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        height: 1px;
-        background: var(--divider);
-        pointer-events:none;
-      }
       .news-card:first-child{
-        padding-top: 22px;
-      }
-      #feed{
-        border-top: 1px solid var(--divider);
+        padding-top: 20px;
       }
 
       @media (max-width: 720px){
