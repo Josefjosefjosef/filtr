@@ -831,6 +831,44 @@
     }
   }
 
+  async function nukeCachesAndSwOnBuildChange() {
+    const build = getBuildStamp() || "no-build";
+    const prev = localStorage.getItem("iu:lastBuildHard") || "";
+    if (prev === build) return;
+    try {
+      localStorage.setItem("iu:lastBuildHard", build);
+    } catch (_) {}
+    console.warn("[BUILD] change detected -> clearing caches + SW", prev, "->", build);
+
+    try {
+      if ("caches" in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map((k) => caches.delete(k)));
+        console.log("[BUILD] caches cleared", keys);
+      }
+    } catch (err) {
+      console.warn("[BUILD] caches clear failed", err);
+    }
+
+    try {
+      if ("serviceWorker" in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map((r) => r.unregister()));
+        console.log("[BUILD] service workers unregistered", regs.length);
+      }
+    } catch (err) {
+      console.warn("[BUILD] sw unregister failed", err);
+    }
+
+    try {
+      sessionStorage.removeItem("iu:swReloaded");
+      sessionStorage.removeItem("iu:swReloadedAt");
+      sessionStorage.removeItem("iu:scrolledToStatus");
+    } catch (_) {}
+
+    window.location.reload();
+  }
+
   function timeoutFetch(url, options = {}, ms = 10000) {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), ms);
@@ -1437,6 +1475,7 @@
     initAccordion();
     updateBuildStatusLabel();
     recordBuildSeen();
+    nukeCachesAndSwOnBuildChange();
 
     window.addEventListener("online", updateNetworkStatus);
     window.addEventListener("offline", updateNetworkStatus);
