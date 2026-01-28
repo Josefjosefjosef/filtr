@@ -503,6 +503,51 @@
     }
   }
 
+  const SW_RELOAD_KEY = "iu:swReloaded";
+
+  function scheduleSWReload(worker) {
+    if (!worker || !("sessionStorage" in window)) return;
+    if (sessionStorage.getItem(SW_RELOAD_KEY)) return;
+    try {
+      worker.postMessage({ type: "SKIP_WAITING" });
+    } catch (error) {
+      console.warn("[SW]", "skip waiting message failed", error);
+    }
+    sessionStorage.setItem(SW_RELOAD_KEY, "1");
+    window.location.reload();
+  }
+
+  function watchForSWUpdates() {
+    if (!("serviceWorker" in navigator)) return;
+    const handleRegistration = (reg) => {
+      if (!reg) return;
+      if (reg.waiting) {
+        scheduleSWReload(reg.waiting);
+        return;
+      }
+      const onUpdateFound = () => {
+        const installing = reg.installing;
+        if (!installing) return;
+        installing.addEventListener("statechange", () => {
+          if (installing.state === "installed" && reg.waiting) {
+            scheduleSWReload(reg.waiting);
+          }
+        });
+      };
+      reg.addEventListener("updatefound", onUpdateFound);
+      onUpdateFound();
+    };
+
+    navigator.serviceWorker
+      .getRegistration()
+      .then(handleRegistration)
+      .catch(() => {});
+    navigator.serviceWorker
+      .ready
+      .then(handleRegistration)
+      .catch(() => {});
+  }
+
   function init() {
     renderDebugVisibility();
     renderSectionsBar();
@@ -541,6 +586,7 @@
 
     loadData();
     loadVideoMetadata();
+    watchForSWUpdates();
   }
 
   window.addEventListener("hashchange", () => {
