@@ -19,6 +19,7 @@
   const elDataCount = $("#dataCount");
   const btnToggleDebug = $("#toggleDebugBtn");
   const elNewsList = document.getElementById("newsList");
+  const elFeed = document.getElementById("feed");
   const emptyBox = document.getElementById("emptyBox");
   const sectionLabel = document.getElementById("sectionLabel");
   const sectionsBar = document.getElementById("sectionsBar");
@@ -28,7 +29,7 @@
   const modalGoogle = document.getElementById("modalGoogle");
   const modalCancel = document.getElementById("modalCancel");
 
-  const feedTarget = elNewsList;
+  const feedTarget = elFeed || elNewsList;
   const LS_KEY = "iu:debug";
   const SECTION_KEYS = ["vse", "aktualne", "doprava", "pocasi", "sport", "finance", "krimi", "zdravi", "video"];
   let activeSections = ["vse"];
@@ -36,7 +37,6 @@
   let hasLoadedData = false;
   const BASE_ROOT = getBaseRoot();
   const DATA_URL = `${BASE_ROOT}data/articles.json`;
-  const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
   const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
   const SECTION_LABELS = {
     vse: "Vše",
@@ -49,6 +49,15 @@
     zdravi: "Zdraví",
     video: "Video",
   };
+
+  function makeDataUrl(relativePath) {
+    if (!relativePath) {
+      return BASE_ROOT;
+    }
+    const sanitized = String(relativePath).replace(/\\/g, "/").replace(/^\/+/, "");
+    const base = BASE_ROOT.endsWith("/") ? BASE_ROOT : `${BASE_ROOT}/`;
+    return sanitized ? `${base}${sanitized}` : base;
+  }
 
   function getBaseRoot() {
     // BASE = složka, kde leží tento skript (filtr/assets/app.js -> filtr/)
@@ -168,6 +177,70 @@
     return [];
   }
 
+  function extractYouTubeVideoId(value) {
+    if (!value) return null;
+    const str = String(value);
+    const patterns = [
+      /(?:v=)([A-Za-z0-9_-]{11})/,
+      /(?:\/embed\/)([A-Za-z0-9_-]{11})/,
+      /(?:youtu\.be\/)([A-Za-z0-9_-]{11})/,
+    ];
+    for (const pattern of patterns) {
+      const match = str.match(pattern);
+      if (match && match[1]) return match[1];
+    }
+    return null;
+  }
+
+  function normalizeVideoList(items) {
+    const source = normalizeItems(items);
+    return source
+      .map((video) => {
+        if (!video || typeof video !== "object") return null;
+        const id = video.videoId || extractYouTubeVideoId(video.url);
+        if (!id) return null;
+        const published = safeText(video.publishedAt || video.date || video.published || "");
+        const url = safeUrl(video.url) || safeUrl(`https://www.youtube.com/watch?v=${id}`);
+        if (!url) return null;
+        const title = safeText(video.title || video.name || video.headline || "Video");
+        return {
+          ...video,
+          contentType: "video",
+          videoId: id,
+          title,
+          publishedAt: published,
+          url,
+          channel: safeText(video.channel || video.source || ""),
+          section: safeText((video.section || "video").toLowerCase()),
+          summary: safeText(video.summary || video.description || ""),
+        };
+      })
+      .filter(Boolean);
+  }
+
+  function buildCombinedFeed(articles, videos) {
+    const normalizedArticles = Array.isArray(articles)
+      ? articles.map((item) => ({
+          ...item,
+          contentType: String(item.contentType || "article").toLowerCase(),
+        }))
+      : [];
+
+    const normalizedVideos = Array.isArray(videos) ? videos : [];
+
+    const combined = [...normalizedArticles, ...normalizedVideos];
+    combined.sort((a, b) => {
+      const ta = Number(new Date(a?.publishedAt || a?.date || a?.published || 0));
+      const tb = Number(new Date(b?.publishedAt || b?.date || b?.published || 0));
+      if (!Number.isFinite(ta) && !Number.isFinite(tb)) return 0;
+      if (!Number.isFinite(ta)) return 1;
+      if (!Number.isFinite(tb)) return -1;
+      return tb - ta;
+    });
+
+    return combined;
+  }
+
   function escapeHtml(str) {
     return String(str)
       .replaceAll("&", "&amp;")
@@ -255,9 +328,11 @@
 
   function matchesSections(item) {
     if (!item) return false;
+    const type = String(item.contentType || "article").toLowerCase();
+    if (type === "ad") return true;
     if (activeSections.includes("vse")) return true;
     if (activeSections.includes("video")) {
-      return String(item.contentType || "").toLowerCase() === "video";
+      return type === "video";
     }
     const sectionValue = ((item.section || item.topic) || "").toLowerCase();
     return activeSections.some((section) => section === sectionValue);
@@ -313,55 +388,8 @@
     }
 
     const html = items
-      .map((it) => {
-        const title = safeText(it.title || it.name || "(bez názvu)");
-        const publishedAt = fmtDate(it.publishedAt || it.date || it.published || "");
-        const rawSources = Array.isArray(it.sources) && it.sources.length
-          ? it.sources
-          : it.source
-            ? [{ name: it.source }]
-            : [];
-        const sourceEntities = rawSources
-          .map((source) => {
-            const name = safeText(source.name || source.title || source);
-            const href = safeUrl(source.url || source.link);
-            return { name, href };
-          })
-          .filter((entry) => entry.name);
-        const sourceMarkup =
-          sourceEntities
-            .map((entry, idx) => {
-              const sep = idx === 0 ? "" : `<span class="srcSep">·</span>`;
-              const link =
-                entry.href
-                  ? `<a class="sourceDomain" href="${entry.href}" target="_blank" rel="noopener noreferrer">${escapeHtml(
-                      entry.name
-                    )}</a>`
-                  : `<span class="sourceDomain">${escapeHtml(entry.name)}</span>`;
-              return `${sep}${link}`;
-            })
-            .join("") || '<span class="sourceDomain">—</span>';
-
-        const linkUrl =
-          safeUrl(it.url) ||
-          safeUrl((it.link && (it.link.href || it.link)) || it.href || "");
-        const titleMarkup = linkUrl
-          ? `<a class="news-titleLink" href="${linkUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(
-              title
-            )}</a>`
-          : `<span class="news-titleLink">${escapeHtml(title)}</span>`;
-
-        return `
-          <article class="news-card">
-            <h2 class="news-title">${titleMarkup}</h2>
-            <div class="news-row2">
-              ${publishedAt ? `<span class="meta-time">${escapeHtml(publishedAt)}</span>` : ""}
-              <span class="news-sourceLabel">Zdroj:</span>
-              <span class="news-sources">${sourceMarkup}</span>
-            </div>
-          </article>
-        `;
-      })
+      .map(renderFeedItemHtml)
+      .filter(Boolean)
       .join("");
 
     withScrollLock(() => {
@@ -373,6 +401,122 @@
       console.log("[PERF] renderMs=", Math.round(t1 - t0), "domCards=", newsCards);
       console.log("[SCROLL] y=", window.scrollY);
     });
+  }
+
+  function renderFeedItemHtml(item) {
+    if (!item) return "";
+    const type = String(item.contentType || "article").toLowerCase();
+    if (type === "video") return buildVideoHtml(item);
+    if (type === "ad") return buildAdHtml(item);
+    return buildArticleHtml(item);
+  }
+
+  function buildArticleHtml(it) {
+    const title = safeText(it.title || it.name || "(bez názvu)");
+    const publishedAt = fmtDate(it.publishedAt || it.date || it.published || "");
+    const rawSources = Array.isArray(it.sources) && it.sources.length
+      ? it.sources
+      : it.source
+        ? [{ name: it.source }]
+        : [];
+    const sourceEntities = rawSources
+      .map((source) => {
+        const name = safeText(source.name || source.title || source);
+        const href = safeUrl(source.url || source.link);
+        return { name, href };
+      })
+      .filter((entry) => entry.name);
+    const sourceMarkup =
+      sourceEntities
+        .map((entry, idx) => {
+          const sep = idx === 0 ? "" : `<span class="srcSep">·</span>`;
+          const link =
+            entry.href
+              ? `<a class="sourceDomain" href="${entry.href}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+                  entry.name
+                )}</a>`
+              : `<span class="sourceDomain">${escapeHtml(entry.name)}</span>`;
+          return `${sep}${link}`;
+        })
+        .join("") || '<span class="sourceDomain">—</span>';
+    const linkUrl =
+      safeUrl(it.url) ||
+      safeUrl((it.link && (it.link.href || it.link)) || it.href || "");
+    const titleMarkup = linkUrl
+      ? `<a class="news-titleLink" href="${linkUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+          title
+        )}</a>`
+      : `<span class="news-titleLink">${escapeHtml(title)}</span>`;
+
+    return `
+      <article class="news-card">
+        <h2 class="news-title">${titleMarkup}</h2>
+        <div class="news-row2">
+          ${publishedAt ? `<span class="meta-time">${escapeHtml(publishedAt)}</span>` : ""}
+          <span class="news-sourceLabel">Zdroj:</span>
+          <span class="news-sources">${sourceMarkup}</span>
+        </div>
+      </article>
+    `;
+  }
+
+  function buildVideoHtml(it) {
+    const title = safeText(it.title || "Video");
+    const description = safeText(it.summary || it.description || "");
+    const channel = safeText(it.channel || "YouTube");
+    const publishedAt = fmtDate(it.publishedAt || it.date || it.published || "");
+    const videoId = it.videoId || extractYouTubeVideoId(it.url);
+    if (!videoId) return "";
+    const iframeSrc = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
+    const videoUrl = safeUrl(it.url) || `https://www.youtube.com/watch?v=${videoId}`;
+    let sourceLabel = "YouTube";
+    try {
+      const parsed = new URL(videoUrl);
+      sourceLabel = parsed.hostname;
+    } catch {
+      sourceLabel = "YouTube";
+    }
+
+    return `
+      <article class="videoRow" data-kind="video">
+        <div class="videoCardInner">
+          <div class="videoTop">
+            <div class="videoTitle">${escapeHtml(title)}</div>
+            <div class="videoTopRight">
+              <div class="videoBadge" data-video-channel>${escapeHtml(channel)}</div>
+              <div class="videoMeta" data-video-age>${escapeHtml(publishedAt || "—")}</div>
+            </div>
+          </div>
+          <div class="videoFrame">
+            <iframe
+              title="${escapeHtml(title)}"
+              src="${iframeSrc}"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen></iframe>
+          </div>
+          ${description ? `<div class="videoDesc" data-video-title>${escapeHtml(description)}</div>` : ""}
+          <div class="videoSource">
+            Zdroj:
+            <a href="${videoUrl}" target="_blank" rel="noopener noreferrer" data-video-source>${escapeHtml(sourceLabel)}</a>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function buildAdHtml(it) {
+    const label = escapeHtml(it.adLabel || "Reklamní okýnko");
+    const slot = escapeHtml(it.adSlot || "slot");
+    return `
+      <article class="ad-card" aria-hidden="true">
+        <div class="ad-head">
+          <span class="pos">${slot}</span>
+          <span class="ad-label">${label}</span>
+        </div>
+      </article>
+    `;
   }
 
   function ensureFallbackMessage() {
@@ -413,19 +557,21 @@
     let filtered = cachedItems.filter(matchesSections);
     if (normalizedQuery) {
       filtered = filtered.filter((item) => {
-        const haystack =
-          [
-            item.title,
-            item.name,
-            item.summary,
-            item.section,
-            item.topic,
-            ...(Array.isArray(item.sources) ? item.sources.map((s) => s.name || s.title || s) : []),
-          ]
-            .filter(Boolean)
-            .join(" ")
-            .toLowerCase() || "";
-        return haystack.includes(normalizedQuery);
+        const type = String(item.contentType || "article").toLowerCase();
+        if (type === "ad") return true;
+        const haystackData = [
+          item.title,
+          item.name,
+          item.summary,
+          item.section,
+          item.topic,
+          item.channel,
+          ...(Array.isArray(item.sources) ? item.sources.map((s) => s.name || s.title || s) : []),
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        return haystackData.includes(normalizedQuery);
       });
     }
 
@@ -878,29 +1024,66 @@
   async function loadData() {
     const startedAt = new Date();
     setStatus("Stav dat: načítám…");
+    let data = null;
+    let sanitizedArticles = [];
+    let articleCount = 0;
+    let updatedAtValue = null;
+    let videoItems = [];
+
     try {
       const res = await timeoutFetch(makeDataUrl("data/articles.json"), { cache: "no-store" }, 9000);
       if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
 
       const text = await res.text();
-      let data;
       try {
         data = JSON.parse(text);
       } catch {
         throw new Error("Neplatný JSON v data/articles.json");
       }
 
-      cachedItems = normalizeItems(data);
-      const sanitized = normalizeArticleList(cachedItems);
-      if (sanitized.length < cachedItems.length) {
-        console.warn("[DATA] filtered invalid items", cachedItems.length, "->", sanitized.length);
+      const rawArticles = normalizeItems(data);
+      const sanitized = normalizeArticleList(rawArticles);
+      if (sanitized.length < rawArticles.length) {
+        console.warn("[DATA] filtered invalid items", rawArticles.length, "->", sanitized.length);
       }
-      cachedItems = sanitized;
+
+      sanitizedArticles = sanitized;
+      articleCount = sanitized.length;
+      updatedAtValue = data?.updatedAt ?? data?.updated_at ?? null;
+
+      try {
+        const videoRes = await timeoutFetch(makeDataUrl("data/videos.json"), { cache: "no-store" }, 9000);
+        if (videoRes.ok) {
+          const videoText = await videoRes.text();
+          let videoData;
+          try {
+            videoData = JSON.parse(videoText);
+          } catch (parseErr) {
+            console.warn(
+              "[DATA] videos.json parse error",
+              parseErr && parseErr.message ? parseErr.message : parseErr
+            );
+          }
+          if (videoData) {
+            videoItems = normalizeVideoList(videoData);
+          }
+        } else if (videoRes.status === 404) {
+          console.warn("[DATA] videos.json not found");
+        } else {
+          console.warn("[DATA] videos.json error", videoRes.status);
+        }
+      } catch (videoErr) {
+        console.warn(
+          "[DATA] videos.json error",
+          videoErr && videoErr.message ? videoErr.message : videoErr
+        );
+      }
+
+      cachedItems = buildCombinedFeed(sanitizedArticles, videoItems);
       hasLoadedData = true;
-      setStatus(`Stav dat: OK (${cachedItems.length} položek)`);
+      setStatus(`Stav dat: OK (${articleCount} článků, ${videoItems.length} videí)`);
       applyFilter();
-      const updatedAtValue = data?.updatedAt ?? data?.updated_at ?? null;
-      updateLastArticlesInfo(cachedItems.length, updatedAtValue);
+      updateLastArticlesInfo(articleCount, updatedAtValue);
 
       if (isDebugOn()) {
         writeDebug({
@@ -913,6 +1096,8 @@
             data && typeof data === "object" && !Array.isArray(data) ? Object.keys(data) : [],
           itemsCount: cachedItems.length,
           sample: cachedItems.slice(0, 3),
+          videoCount: videoItems.length,
+          videoSample: videoItems.slice(0, 1),
         });
       }
     } catch (err) {
@@ -930,35 +1115,6 @@
           error: err && err.message ? err.message : String(err),
         });
       }
-    }
-  }
-
-  async function loadVideoMetadata() {
-    try {
-      const res = await timeoutFetch(makeDataUrl("data/videos.json"), { cache: "no-store" }, 9000);
-      if (!res.ok) {
-        if (res.status === 404) {
-          console.warn("[DATA] videos.json not found");
-        } else {
-          console.warn("[DATA] videos.json error", res.status);
-        }
-        return;
-      }
-
-      const text = await res.text();
-      try {
-        JSON.parse(text);
-      } catch (err) {
-        console.warn(
-          "[DATA] videos.json parse error",
-          err && err.message ? err.message : err
-        );
-      }
-    } catch (err) {
-      console.warn(
-        "[DATA] videos.json error",
-        err && err.message ? err.message : err
-      );
     }
   }
 
@@ -1295,7 +1451,6 @@
     fetchArticlesStatus();
     fetchVideosStatus();
     loadData();
-    loadVideoMetadata();
     watchForSWUpdates();
     updateSwStatusLabel();
     auditLog();
@@ -1317,78 +1472,6 @@
     applyFilter();
     restoreScroll();
   });
-
-  (function(){
-    function initAccordion(){
-      const root = document.querySelector(".accordionCol");
-      if (!root) return;
-
-      const headers = Array.from(root.querySelectorAll(".accHeader"));
-      headers.forEach((btn, index)=>{
-        const item = btn.closest(".accItem");
-        const panel = item?.querySelector(".accContent");
-        if (!panel) return;
-
-        btn.classList.remove("is-open");
-        btn.setAttribute("aria-expanded", "false");
-        panel.hidden = true;
-        panel.style.maxHeight = "0px";
-
-        btn.addEventListener("click", ()=>{
-          const isOpen = btn.classList.toggle("is-open");
-          btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
-
-          if (isOpen){
-            panel.hidden = false;
-            panel.style.maxHeight = "0px";
-            const h = panel.scrollHeight;
-            panel.style.maxHeight = h + "px";
-            panel.classList.add("is-open-overflow");
-            requestAnimationFrame(()=>{
-              panel.style.maxHeight = panel.scrollHeight + "px";
-            });
-          } else {
-            panel.style.maxHeight = panel.scrollHeight + "px";
-            panel.offsetHeight;
-            panel.style.maxHeight = "0px";
-            window.setTimeout(()=>{ panel.hidden = true; }, 300);
-            panel.classList.remove("is-open-overflow");
-          }
-        });
-
-        btn.addEventListener("keydown", (event)=>{
-          const { key } = event;
-          const isArrowDown = key === "ArrowDown" || key === "Down";
-          const isArrowUp = key === "ArrowUp" || key === "Up";
-          if (!isArrowDown && !isArrowUp && key !== "Home" && key !== "End") return;
-          event.preventDefault();
-          let targetIndex = index;
-          if (isArrowDown){
-            targetIndex = (index + 1) % headers.length;
-          } else if (isArrowUp){
-            targetIndex = (index - 1 + headers.length) % headers.length;
-          } else if (key === "Home"){
-            targetIndex = 0;
-          } else if (key === "End"){
-            targetIndex = headers.length - 1;
-          }
-          headers[targetIndex]?.focus();
-        });
-
-        const mo = new MutationObserver(()=>{
-          if (!btn.classList.contains("is-open")) return;
-          panel.style.maxHeight = panel.scrollHeight + "px";
-        });
-        mo.observe(panel, { childList: true, subtree: true, characterData: true });
-      });
-    }
-
-    if (document.readyState === "loading"){
-      document.addEventListener("DOMContentLoaded", initAccordion);
-    } else {
-      initAccordion();
-    }
-  })();
 
   init();
 })();

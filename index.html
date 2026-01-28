@@ -30,6 +30,7 @@
         --gold-accent: #c9a24d;
         --gold-accent-soft: rgba(201,162,77,0.25);
         --topbarStackH: 112px;
+        --chipsLeftAlign: var(--pageGutter);
       }
 
       .container{
@@ -64,11 +65,29 @@
         align-items:center;
         text-decoration:none;
         flex:0 0 auto;
+        position:relative;
+      }
+      .brand::after{
+        content:"";
+        position:absolute;
+        left:0;
+        right:0;
+        bottom:-6px;
+        height:4px;
+        border-radius:2px;
+        background:#2B2F36;
+        pointer-events:none;
       }
       .brandSvg{
         height: 60px;
         width: auto;
         display:block;
+      }
+      #iuLogoSvg text:last-of-type{
+        transform: translateX(8px);
+      }
+      #iuLogoSvg path{
+        display:none;
       }
       @media (max-width: 720px){
         .brandSvg{ height: 48px; }
@@ -254,30 +273,70 @@
         padding-top: var(--topbarStackH) !important;
       }
       .layout .accordionCol{
+        counter-reset: sidebarSections;
         color: var(--sidebar-text);
-        background: linear-gradient(
-          180deg,
-          var(--iu-side-bg-light) 0%,
-          var(--iu-side-bg-main) 35%,
-          var(--iu-side-bg-dark) 100%
-        );
+        background: transparent;
         background-blend-mode: normal;
-        box-shadow:
-          inset 2px 0 0 var(--iu-side-border-soft),
-          inset -2px 0 0 var(--iu-side-shadow-edge);
+        box-shadow: none;
         padding: 12px;
         align-self: stretch;
         min-height: 100%;
+        border: none;
+      }
+      .accordionCol .accItem{
+        counter-increment: sidebarSections;
+      }
+
+      .accordionCol .accHeader{
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 10px;
+        background: rgba(11,27,43,0.08);
+        color: rgba(255,255,255,0.92);
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.2;
+        cursor: pointer;
+        transition: background 200ms ease, color 200ms ease;
+      }
+
+      .accordionCol .accHeader:hover,
+      .accordionCol .accHeader:focus-visible{
+        background: #0B0F14;
+        color: rgba(255,255,255,0.92);
+      }
+
+      .accordionCol .accHeader.is-open{
+        background: #0B0F14;
+        color: rgba(255,255,255,0.92);
+      }
+      .accordionCol .accHeader::before{
+        content: counter(sidebarSections);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 22px;
+        height: 22px;
+        margin-right: 10px;
+        padding: 0 6px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        background: rgba(255,255,255,0.12);
+        color: rgba(255,255,255,0.85);
+        border: 1px solid rgba(255,255,255,0.15);
       }
       .accordionCol .block{
-        background: linear-gradient(
-          to bottom,
-          rgba(255,255,255,0.06),
-          rgba(255,255,255,0.02)
-        ) !important;
-        border: 1px solid rgba(255,255,255,0.08) !important;
-        border-radius: 10px !important;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none;
         color: var(--sidebar-text);
       }
       .accordionCol .block .blockInner,
@@ -757,13 +816,19 @@
         overflow: hidden;
       }
 
+      .iuSubBars .barInner{
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 var(--pageGutter);
+        box-sizing: border-box;
+        width: 100%;
+      }
 
       .iuSubBars .topicsBar{
-        background: linear-gradient(180deg,
-          var(--sidebar-bg) 0%,
-          #0f1d3a 55%,
-          #162c51 100%);
-        border-bottom: 1px solid var(--gold-accent-soft);
+        background: transparent;
+        border-bottom: 0;
+        box-shadow: none;
+        backdrop-filter: none;
         color: var(--sidebar-text);
       }
 
@@ -771,14 +836,15 @@
         display: flex;
         gap: 14px;
         align-items: center;
-        padding: 8px var(--pageGutter);
+        padding: 8px var(--pageGutter) 8px var(--chipsLeftAlign);
         overflow-x: auto;
         overflow-y: hidden;
-        max-width: 100%;
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
         scrollbar-gutter: stable both-edges;
         scrollbar-color: rgba(201,162,77,0.55) rgba(255,255,255,0.06);
+        width: 100%;
+        box-sizing: border-box;
       }
 
       .iuSubBars .topicPill{
@@ -824,60 +890,54 @@
       }
 
       .iuSubBars .filtersBar{
-        background: linear-gradient(180deg,
-          #22303c 0%,
-          var(--sidebar-bg) 100%);
-        border-bottom: 1px solid var(--gold-accent-soft);
-        color: var(--sidebar-text);
+        background: #0B0F14;
+        border-bottom: 1px solid rgba(255,255,255,0.10);
+        box-shadow: none;
+        backdrop-filter: none;
+        color: rgba(255,255,255,0.92);
       }
 
       .iuSubBars .filtersInner{
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 7px var(--pageGutter);
+        padding: 7px var(--pageGutter) 7px var(--chipsLeftAlign);
         min-height: 36px;
+        width: 100%;
+        box-sizing: border-box;
+        background: transparent;
       }
 
-      .iuSubBars .filterBtn{
+      .iuSubBars .filtersInner .filterBtn{
         height: 28px;
         padding: 0 12px;
         border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.10);
-        background: rgba(255,255,255,0.04);
-        color: var(--sidebar-text);
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.08);
+        color: rgba(255,255,255,0.92);
         font-weight: 600;
         font-size: 13px;
         cursor: pointer;
         box-shadow:
-          inset 0 1px 0 rgba(255,255,255,0.06),
-          0 0 0 1px rgba(0,0,0,0.10);
+          inset 0 1px 0 rgba(255,255,255,0.06);
       }
 
-      .iuSubBars .filterBtn:hover{
-        background: rgba(201,162,77,0.10);
-        border-color: rgba(201,162,77,0.22);
+      .iuSubBars .filtersInner .filterBtn:hover,
+      .iuSubBars .filtersInner .filterBtn:focus-visible{
+        background: rgba(255,255,255,0.12);
+        color: rgba(255,255,255,0.92);
+        border-color: rgba(255,255,255,0.14);
       }
 
-      .iuSubBars .filterBtn:focus-visible{
-        outline: 2px solid rgba(201,162,77,0.45);
-        outline-offset: 2px;
+      .iuSubBars .filtersInner .filterBtn:active{
+        background: rgba(255,255,255,0.18);
       }
 
-      .iuSubBars .filtersSpacer{
-        flex: 1 1 auto;
-      }
-
-      .iuSubBars .filtersHint{
-        color: var(--sidebar-muted);
-        font-size: 12px;
-        white-space: nowrap;
-      }
 
       @media (max-width: 520px){
         .iuSubBars .filtersHint{ display: none; }
-        .iuSubBars .topicsScroller{ padding: 8px 10px; }
-        .iuSubBars .filtersInner{ padding: 7px 10px; }
+        .iuSubBars .topicsScroller{ padding: 8px 10px 8px var(--chipsLeftAlign); }
+        .iuSubBars .filtersInner{ padding: 7px 10px 7px var(--chipsLeftAlign); }
       }
       /* ===== /NOVÉ: SUB LIŠTY POD HLAVIČKOU ===== */
       .iuSubBars{
@@ -962,20 +1022,20 @@
             </g>
 
             <!-- Podtržení – jemná prohnutá křivka přes šířku -->
-            <path d="M70 118 C 205 134, 350 134, 470 118"
-                  fill="none"
-                  stroke="#2B2F36"
-                  stroke-width="4"
-                  stroke-linecap="round" />
+          <path d="M70 118 C 205 134, 350 134, 470 118"
+                fill="none"
+                stroke="#2B2F36"
+                stroke-width="4"
+                stroke-linecap="round" />
           </svg>
           <!-- LOGO: INFOUZEL – END -->
         </a>
       </div>
 
-      <form class="searchForm" autocomplete="off">
+      <form class="searchForm" id="searchForm" autocomplete="off">
         <div class="search">
-          <input class="searchInput" type="search" placeholder="Hledat" aria-label="Hledat" />
-          <button class="searchBtn" type="button" aria-label="Hledat">
+          <input class="searchInput" id="searchInput" type="search" placeholder="Hledat" aria-label="Hledat" />
+          <button class="searchBtn" type="submit" aria-label="Hledat">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="11" cy="11" r="6"></circle>
               <path d="M16.5 16.5 L21 21"></path>
@@ -1007,7 +1067,8 @@
     <nav class="iuSubBars" aria-label="Témata a filtry">
       <!-- TÉMATA (rolovací horizontálně) -->
       <div class="topicsBar" role="navigation" aria-label="Témata">
-        <div class="topicsScroller" tabindex="0">
+        <div class="barInner">
+          <div class="topicsScroller" tabindex="0">
           <a class="topicPill topicPill--pill isActive" href="#" aria-current="true">Vše</a>
           <a class="topicPill" href="#">Aktuální</a>
           <a class="topicPill" href="#">Domácí</a>
@@ -1020,12 +1081,14 @@
           <a class="topicPill" href="#">Technologie</a>
           <a class="topicPill" href="#">Kultura</a>
           <a class="topicPill" href="#">Zdraví</a>
+          </div>
         </div>
       </div>
 
       <!-- FILTRY / REGIONY (pevná) -->
       <div class="filtersBar" role="navigation" aria-label="Filtry">
-        <div class="filtersInner">
+        <div class="barInner">
+          <div class="filtersInner">
           <button class="filterBtn" type="button">Filtry</button>
           <button class="filterBtn" id="btnRegions" type="button" aria-haspopup="dialog" aria-controls="overlayRegions">Regiony</button>
           <button class="filterBtn" id="btnSources" type="button" aria-haspopup="dialog" aria-controls="overlaySources">Zdroje</button>
@@ -1033,6 +1096,7 @@
           <div class="filtersSpacer"></div>
 
           <div class="filtersHint" aria-label="Nápověda filtrů">Vyberte téma a případně zpřesněte filtry</div>
+          </div>
         </div>
       </div>
     </nav>
