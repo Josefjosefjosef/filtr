@@ -1288,60 +1288,6 @@
     });
   }
 
-  function renderVideoList(videos){
-    const section = $("videoList");
-    if(!section) return;
-    section.replaceChildren();
-
-    const heading = document.createElement("div");
-    heading.className = "video-list-header";
-    heading.textContent = "Videa";
-    section.appendChild(heading);
-
-    const items = Array.isArray(videos) ? videos : [];
-    if(items.length === 0){
-      const empty = document.createElement("div");
-      empty.className = "video-empty";
-      empty.textContent = "Žádná videa k zobrazení.";
-      section.appendChild(empty);
-      return;
-    }
-
-    const list = document.createElement("div");
-    list.className = "video-items";
-
-    for(const it of items){
-      const card = document.createElement("article");
-      card.className = "video-card";
-
-      const title = document.createElement("h3");
-      const link = document.createElement("a");
-      const href = safeUrl(it?.url);
-      link.href = href || "#";
-      link.textContent = it?.title || "—";
-      link.target = "_blank";
-      link.rel = "noopener";
-      link.setAttribute("aria-label", it?.title || "Video");
-      title.appendChild(link);
-
-      const meta = document.createElement("div");
-      meta.className = "video-meta";
-      const sourceLabel = document.createElement("span");
-      sourceLabel.textContent = it?.source || it?.channel || "Video";
-      const dateLabel = document.createElement("span");
-      const formatted = fmtTime(it?.publishedAt || it?.published_at || "");
-      dateLabel.textContent = formatted || (it?.publishedAt || it?.published_at || "—");
-
-      meta.appendChild(sourceLabel);
-      meta.appendChild(dateLabel);
-
-      card.appendChild(title);
-      card.appendChild(meta);
-      list.appendChild(card);
-    }
-
-    section.appendChild(list);
-  }
 
   /* ===== RENDER (CHUNKED PROTI ZAMRZNUTÍ) ===== */
   let renderInProgress = false;
@@ -1819,7 +1765,6 @@
 
     allItems = combined;
 
-    renderVideoList(allVideos);
     if(!silent){
       applyFilter();
     }
