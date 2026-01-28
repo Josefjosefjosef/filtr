@@ -25,6 +25,7 @@
   const BASE_ROOT = getBaseRoot();
   const DATA_URL = `${BASE_ROOT}data/articles.json`;
   const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
+  const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
   const SECTION_LABELS = {
     vse: "Vše",
     aktualne: "Aktuálně",
@@ -461,6 +462,35 @@
           error: err && err.message ? err.message : String(err),
         });
       }
+    }
+  }
+
+  async function loadVideoMetadata() {
+    try {
+      const res = await fetch(VIDEOS_URL, { cache: "no-store" });
+      if (!res.ok) {
+        if (res.status === 404) {
+          console.warn("[DATA] videos.json not found");
+        } else {
+          console.warn("[DATA] videos.json error", res.status);
+        }
+        return;
+      }
+
+      const text = await res.text();
+      try {
+        JSON.parse(text);
+      } catch (err) {
+        console.warn(
+          "[DATA] videos.json parse error",
+          err && err.message ? err.message : err
+        );
+      }
+    } catch (err) {
+      console.warn(
+        "[DATA] videos.json error",
+        err && err.message ? err.message : err
+      );
     }
   }
 
