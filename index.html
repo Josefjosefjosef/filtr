@@ -221,20 +221,47 @@
     }
 
     .brand{
-      display:flex;
-      align-items: baseline;
-      gap: 0;
-      min-width: 0;
-      flex: 0 1 auto;
+      position:relative;
+      display:inline-flex;
+      align-items:baseline;
+      line-height:1;
+      text-decoration:none;
+      padding-bottom:10px;
+      flex:0 0 auto;
     }
-    .brand .name{
-      font-size: 19px;
-      font-weight: 800;
-      letter-spacing: 0.1px;
-      line-height: 1.0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .brand-info{
+      font-family:"Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-weight:600;
+      font-style:italic;
+      color:#1F3A5F;
+      letter-spacing:.2px;
+    }
+    .brand-uzel{
+      font-family:"Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-weight:800;
+      color:#F39A1D;
+      letter-spacing:.2px;
+    }
+    .brand-cz{
+      font-family:"Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-weight:700;
+      color:#2F3B52;
+      margin-left:2px;
+      font-size:.92em;
+    }
+    .brand::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:4px;
+      border-radius:4px;
+      background:linear-gradient(90deg,#1F4B99 0%,#1FB6A6 45%,#F2C94C 100%);
+    }
+    @media (max-width:520px){
+      .brand{ padding-bottom:9px; }
+      .brand::after{ height:3px; }
     }
 
     /* search = střed, menší, klidnější */
@@ -1423,7 +1450,6 @@
     }
 
     @media (max-width: 420px){
-      .brand .name{ font-size: 18px; }
       .news-row2{ gap: 9px; }
     }
 
@@ -2154,9 +2180,11 @@
           </div>
         </button>
 
-        <div class="brand">
-          <div class="name">infoUzel.cz</div>
-        </div>
+        <a class="brand" href="/">
+          <span class="brand-info">info</span>
+          <span class="brand-uzel">Uzel</span>
+          <span class="brand-cz">.cz</span>
+        </a>
       </div>
 
       <form class="searchForm" id="searchForm" autocomplete="off">
