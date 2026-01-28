@@ -417,14 +417,14 @@
       const newsCards = target.querySelectorAll?.(".news-card")?.length ?? target.children.length;
       console.log("[PERF] renderMs=", Math.round(t1 - t0), "domCards=", newsCards);
       console.log("[SCROLL] y=", window.scrollY);
-      console.log("[RENDER] target=", target?.id || "(no-id)", "children=", target?.children?.length ?? 0);
+      console.log("[RENDER] target=", target.id, "children=", target.children.length);
     });
   }
 
   function renderFeedItemHtml(item) {
     if (!item) return "";
     const type = String(item.contentType || "article").toLowerCase();
-    if (type === "video") return buildVideoHtml(item);
+    if (type === "video") return buildVideoAsArticleCard(item);
     if (type === "ad") return buildAdHtml(item);
     return buildArticleHtml(item);
   }
@@ -478,47 +478,29 @@
     `;
   }
 
-  function buildVideoHtml(it) {
+  function buildVideoAsArticleCard(it) {
     const title = safeText(it.title || "Video");
-    const description = safeText(it.summary || it.description || "");
-    const channel = safeText(it.channel || "YouTube");
+    const augmentedTitle = `VIDEO: ${title}`;
     const publishedAt = fmtDate(it.publishedAt || it.date || it.published || "");
-    const videoId = it.videoId || extractYouTubeVideoId(it.url);
-    if (!videoId) return "";
-    const iframeSrc = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
-    const videoUrl = safeUrl(it.url) || `https://www.youtube.com/watch?v=${videoId}`;
-    let sourceLabel = "YouTube";
-    try {
-      const parsed = new URL(videoUrl);
-      sourceLabel = parsed.hostname;
-    } catch {
-      sourceLabel = "YouTube";
-    }
+    const channel = safeText(it.channel || "YouTube");
+    const url =
+      safeUrl(it.url) ||
+      (it.videoId ? `https://www.youtube.com/watch?v=${it.videoId}` : "");
+    const titleMarkup = url
+      ? `<a class="news-titleLink" href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+          augmentedTitle
+        )}</a>`
+      : `<span class="news-titleLink">${escapeHtml(augmentedTitle)}</span>`;
 
     return `
-      <article class="videoRow" data-kind="video">
-        <div class="videoCardInner">
-          <div class="videoTop">
-            <div class="videoTitle">${escapeHtml(title)}</div>
-            <div class="videoTopRight">
-              <div class="videoBadge" data-video-channel>${escapeHtml(channel)}</div>
-              <div class="videoMeta" data-video-age>${escapeHtml(publishedAt || "—")}</div>
-            </div>
-          </div>
-          <div class="videoFrame">
-            <iframe
-              title="${escapeHtml(title)}"
-              src="${iframeSrc}"
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allowfullscreen></iframe>
-          </div>
-          ${description ? `<div class="videoDesc" data-video-title>${escapeHtml(description)}</div>` : ""}
-          <div class="videoSource">
-            Zdroj:
-            <a href="${videoUrl}" target="_blank" rel="noopener noreferrer" data-video-source>${escapeHtml(sourceLabel)}</a>
-          </div>
+      <article class="news-card">
+        <h2 class="news-title">${titleMarkup}</h2>
+        <div class="news-row2">
+          ${publishedAt ? `<span class="meta-time">${escapeHtml(publishedAt)}</span>` : ""}
+          <span class="news-sourceLabel">Zdroj:</span>
+          <span class="news-sources">
+            <span class="sourceDomain">${escapeHtml(channel)}</span>
+          </span>
         </div>
       </article>
     `;
@@ -1079,74 +1061,66 @@
 
   async function loadData() {
     const startedAt = new Date();
-    const url = makeDataUrl("data/articles.json");
+    const aUrl = makeDataUrl("data/articles.json");
+    console.log("[DATA] articles url=", aUrl);
+    let data = null;
     setStatus("Stav dat: načítám…");
 
     try {
-      const res = await timeoutFetch(url, { cache: "no-store" }, 9000);
+      const res = await timeoutFetch(aUrl, { cache: "no-store" }, 9000);
       if (!res.ok) {
         const body = await res.text().catch(() => "");
         const preview = body ? body.slice(0, 200) : "";
-        throw new Error(`ARTICLES HTTP ${res.status} ${res.statusText} | url=${url} | body=${preview}`);
+        throw new Error(`ARTICLES HTTP ${res.status} ${res.statusText} | url=${aUrl} | body=${preview}`);
       }
 
       const text = await res.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        throw new Error(`Neplatný JSON v ${url}`);
-      }
-
+      data = JSON.parse(text);
       const rawArticles = normalizeItems(data);
-      const sanitized = normalizeArticleList(rawArticles);
-      if (sanitized.length < rawArticles.length) {
-        console.warn("[DATA] filtered invalid items", rawArticles.length, "->", sanitized.length);
+      const sanitizedArticles = normalizeArticleList(rawArticles);
+      if (sanitizedArticles.length < rawArticles.length) {
+        console.warn("[DATA] filtered invalid items", rawArticles.length, "->", sanitizedArticles.length);
       }
 
-      console.log("[DATA] articles url=", url);
-      console.log("[DATA] articles loaded count=", sanitized.length);
-      console.log("[DATA] first=", sanitized[0]?.title, sanitized[0]?.url);
+      console.log("[DATA] articles loaded count=", sanitizedArticles.length);
+      console.log("[DATA] articles first=", sanitizedArticles[0]?.title, sanitizedArticles[0]?.url);
 
+      const vUrl = makeDataUrl("data/videos.json");
+      console.log("[DATA] videos url=", vUrl);
       let videoItems = [];
-      const vurl = makeDataUrl("data/videos.json");
 
       try {
-        const vres = await timeoutFetch(vurl, { cache: "no-store" }, 9000);
-
-        if (vres.ok) {
-          const vtext = await vres.text();
-          try {
-            const vdata = JSON.parse(vtext);
-            const rawSource = Array.isArray(vdata)
-              ? vdata
-              : (Array.isArray(vdata?.videos) ? vdata.videos : []);
-            console.log("[DATA] videos raw count=", rawSource.length, "keys=", Object.keys(vdata || {}));
-            videoItems = normalizeVideoList(vdata);
-          } catch (parseErr) {
-            console.warn("[DATA] videos.json parse error", parseErr?.message || parseErr);
-          }
-        } else if (vres.status === 404) {
-          console.warn("[DATA] videos.json not found (404)");
+        const vRes = await timeoutFetch(vUrl, { cache: "no-store" }, 9000);
+        if (vRes.ok) {
+          const vText = await vRes.text();
+          const vData = JSON.parse(vText);
+          const rawVideos = Array.isArray(vData)
+            ? vData
+            : Array.isArray(vData?.videos)
+              ? vData.videos
+              : [];
+          console.log(
+            "[DATA] videos raw count=",
+            rawVideos.length,
+            "keys=",
+            vData && typeof vData === "object" ? Object.keys(vData) : [],
+          );
+          videoItems = normalizeVideoList(rawVideos);
+          console.log("[DATA] videos loaded count=", videoItems.length);
+          console.log("[DATA] videos first=", videoItems[0]?.title, videoItems[0]?.url);
         } else {
-          const body = await vres.text().catch(() => "");
-          const preview = body ? body.slice(0, 120) : "";
-          console.warn("[DATA] videos.json HTTP", vres.status, vres.statusText, "url=", vurl, "body=", preview);
+          console.warn("[DATA] videos http", vRes.status);
         }
-
-        console.log("[DATA] videos url=", vurl);
-        console.log("[DATA] videos loaded count=", videoItems.length);
-        console.log("[DATA] videos first=", videoItems[0]?.title, videoItems[0]?.url);
       } catch (videoErr) {
-        console.warn("[DATA] videos fetch error", videoErr?.message || videoErr);
+        console.warn("[DATA] videos error", videoErr?.message || videoErr);
       }
 
-      const combinedItems = buildCombinedFeed(sanitized, videoItems);
-      cachedItems = combinedItems;
+      const combined = buildCombinedFeed(sanitizedArticles, videoItems);
+      cachedItems = combined;
       hasLoadedData = true;
-      setStatus(`Stav dat: OK (${sanitized.length} článků, ${videoItems.length} videí)`);
+      setStatus(`Stav dat: OK (${sanitizedArticles.length} článků, ${videoItems.length} videí)`);
       applyFilter();
-      updateLastArticlesInfo(sanitized.length, data?.updatedAt ?? data?.updated_at ?? null);
+      updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 
       console.log("[DATA] combined count=", cachedItems.length);
       console.log("[DATA] combined first type=", cachedItems[0]?.contentType, cachedItems[0]?.title);
@@ -1154,7 +1128,7 @@
       if (isDebugOn()) {
         writeDebug({
           ok: true,
-          url,
+          url: aUrl,
           fetchedAt: new Date().toISOString(),
           durationMs: Date.now() - startedAt.getTime(),
           rawType: Array.isArray(data) ? "array" : typeof data,
@@ -1167,15 +1141,13 @@
     } catch (err) {
       const message = err && err.message ? err.message : String(err);
       persistLastError(message);
-      renderEmpty("DATA ERROR: " + message);
+      renderEmpty("Nepodařilo se načíst data: " + message);
       setStatus("Stav dat: chyba (nelze načíst)");
-      console.log("[DATA] articles url=", url);
-      console.log("[DATA] articles error=", message);
-      scrollToStatusOnce();
+      console.log("[DATA] error=", message);
       if (isDebugOn()) {
         writeDebug({
           ok: false,
-          url,
+          url: aUrl,
           fetchedAt: new Date().toISOString(),
           durationMs: Date.now() - startedAt.getTime(),
           error: message,
