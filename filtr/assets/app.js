@@ -549,6 +549,38 @@
     }
   }
 
+  function persistLastError(message) {
+    try {
+      localStorage.setItem("iu:lastErrorAt", new Date().toISOString());
+      localStorage.setItem("iu:lastError", message);
+    } catch {
+      // ignore
+    }
+    const el = document.getElementById("dataStatusLastError");
+    if (el) {
+      el.textContent = `Poslední chyba: ${message}`;
+    }
+    console.error("[ERR]", message);
+  }
+
+  window.addEventListener("error", (event) => {
+    try {
+      const info = `${event.message} (${event.filename}:${event.lineno})`;
+      persistLastError(info);
+    } catch (err) {
+      console.error("[ERR]", "error handler failed", err);
+    }
+  });
+
+  window.addEventListener("unhandledrejection", (event) => {
+    try {
+      const reason = event.reason ? event.reason.message || String(event.reason) : "unknown";
+      persistLastError(`Promise rejection: ${reason}`);
+    } catch (err) {
+      console.error("[ERR]", "rejection handler failed", err);
+    }
+  });
+
   const SW_RELOAD_KEY = "iu:swReloaded";
 
   function scheduleSWReload(worker) {
