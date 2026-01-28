@@ -282,7 +282,10 @@
 
   function renderItems(items) {
     const target = getFeedTarget();
-    if (!target) return;
+    if (!target) {
+      handleMissingFeedContainer();
+      return;
+    }
     if (emptyBox) {
       emptyBox.style.display = "none";
       emptyBox.innerHTML = "";
@@ -460,11 +463,53 @@
     swWaiting: "no"
   };
 
+  let refreshInProgress = false;
+
+  async function softRefreshData() {
+    if (refreshInProgress) return;
+    refreshInProgress = true;
+    console.log("[REFRESH] start");
+    try {
+      await Promise.all([fetchArticlesStatus(), fetchVideosStatus()]);
+      await loadData();
+    } catch (error) {
+      console.warn("[REFRESH] error", error && error.message ? error.message : error);
+    } finally {
+      refreshInProgress = false;
+      console.log("[REFRESH] done");
+    }
+  }
+
   function logSelfStatus() {
     console.log(`[SELF] build=${selfDiag.build}`);
     console.log(`[SELF] articles=${selfDiag.articlesState} count=${selfDiag.articlesCount}`);
     console.log(`[SELF] videos=${selfDiag.videosState} count=${selfDiag.videosCount}`);
     console.log(`[SELF] swController=${selfDiag.swController} swWaiting=${selfDiag.swWaiting}`);
+  }
+
+  function renderDiagBox() {
+    const isDiag = new URLSearchParams(location.search).get("diag") === "1";
+    if (!isDiag) return;
+    const box = document.createElement("div");
+    box.id = "iuDiagBox";
+    const updatedLabel = document.getElementById("dataStatusUpdated")?.textContent || "Aktualizace: —";
+    const swLabel = document.getElementById("dataStatusSW")?.textContent || "SW: —";
+    const lastError = localStorage.getItem("iu:lastError") || "—";
+    const lastOkAt = localStorage.getItem("iu:lastArticlesOkAt") || "—";
+    const lastOkCount = localStorage.getItem("iu:lastArticlesCount") || "—";
+    box.innerHTML = `
+      <div style="padding:8px;border:1px solid rgba(0,0,0,0.14);background:#fff;margin:6px;">
+        <p><strong>diag</strong></p>
+        <p>build: ${selfDiag.build}</p>
+        <p>articles: ${selfDiag.articlesState} count=${selfDiag.articlesCount}</p>
+        <p>videos: ${selfDiag.videosState} count=${selfDiag.videosCount}</p>
+        <p>${updatedLabel}</p>
+        <p>${swLabel}</p>
+        <p>lastError: ${lastError}</p>
+        <p>last OK: ${lastOkAt} / ${lastOkCount}</p>
+      </div>
+    `;
+    document.body.insertBefore(box, document.body.firstChild);
   }
 
   function addTelemetryEvent(name, detail = "") {
@@ -475,17 +520,40 @@
       arr.push({ t: new Date().toISOString(), name, detail });
       while (arr.length > 10) arr.shift();
       localStorage.setItem("iu:events", JSON.stringify(arr));
+      updateEventsUI();
     } catch {
       // ignore
     }
   }
 
+  function updateEventsUI() {
+    const el = document.getElementById("dataStatusEvents");
+    if (!el) return;
+    try {
+      const raw = localStorage.getItem("iu:events");
+      const arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr) || !arr.length) {
+        el.textContent = "Události: —";
+        return;
+      }
+      const latest = arr.slice(-5);
+      el.innerHTML = "Události:<br />" + latest.map((item) => `${new Date(item.t).toLocaleTimeString("cs-CZ")} ${item.name}`).join("<br />");
+    } catch {
+      el.textContent = "Události: chybné data";
+    }
+  }
+
   function updateLastArticlesInfo(count, updatedAt) {
+    const prevCount = localStorage.getItem("iu:lastArticlesCount");
     const now = new Date().toISOString();
     try {
       localStorage.setItem("iu:lastArticlesOkAt", now);
       localStorage.setItem("iu:lastArticlesCount", String(count));
       localStorage.setItem("iu:lastArticlesUpdatedAt", updatedAt || "");
+      if (prevCount !== null && prevCount !== String(count)) {
+        console.log("[DIFF] articles count", prevCount, "->", count);
+        localStorage.setItem("iu:lastArticlesDiffAt", now);
+      }
     } catch {
       // ignore
     }
@@ -507,7 +575,59 @@
     label.textContent = `Aktualizace: ${updatedText} (last OK: ${lastOkTime}, count: ${count})${ageWarning}`;
   }
 
+  function finalStateReport() {
+    const updatedAt = localStorage.getItem("iu:lastArticlesUpdatedAt") || "—";
+    const updatedDate = new Date(updatedAt);
+    const dataAgeMin = updatedAt && !Number.isNaN(updatedDate.getTime())
+      ? Math.round((Date.now() - updatedDate.getTime()) / 60000)
+      : null;
+    const report = {
+      build: selfDiag.build || "no-build",
+      online: navigator.onLine ? "yes" : "no",
+      articlesStatus: selfDiag.articlesState,
+      articlesCount: selfDiag.articlesCount,
+      videosStatus: selfDiag.videosState,
+      videosCount: selfDiag.videosCount,
+      updatedAt: updatedAt === "" ? "—" : updatedAt,
+      dataAgeMin,
+      swController: selfDiag.swController,
+      swWaiting: selfDiag.swWaiting,
+      lastErrorAt: localStorage.getItem("iu:lastErrorAt") || "—",
+      lastError: localStorage.getItem("iu:lastError") || "—"
+    };
+    console.log("[STATE]", report);
+  }
+
   logSelfStatus();
+
+  function updateBuildStatusLabel() {
+    const build = getBuildStamp() || "no-build";
+    const seen = localStorage.getItem("iu:lastBuildSeen") || "";
+    const label = document.getElementById("dataStatusBuild");
+    if (!label) return;
+    if (seen && seen !== build) {
+      console.warn("[BUILD] mismatch seen/current", seen, build);
+      label.textContent = `Build: ${build} (změna)`;
+    } else {
+      label.textContent = `Build: ${build}`;
+    }
+  }
+
+  function recordBuildSeen() {
+    const build = getBuildStamp();
+    if (!build) return;
+    const prev = localStorage.getItem("iu:lastBuildSeen");
+    const now = new Date().toISOString();
+    try {
+      localStorage.setItem("iu:lastBuildSeen", build);
+      localStorage.setItem("iu:lastBuildSeenAt", now);
+    } catch {
+      // ignore
+    }
+    if (prev && prev !== build) {
+      console.log("[BUILD] changed", prev, "->", build);
+    }
+  }
 
   function timeoutFetch(url, options = {}, ms = 10000) {
     const controller = new AbortController();
@@ -515,7 +635,23 @@
     return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(id));
   }
 
+  function resolveArray(data, fields) {
+    if (Array.isArray(data)) return data;
+    for (const field of fields) {
+      if (Array.isArray(data?.[field])) return data[field];
+    }
+    return null;
+  }
+
   const ARTICLE_RETRY_DELAYS = [2000, 6000];
+
+  function normalizeArticleList(items) {
+    return items.filter((it) => {
+      const hasTitle = Boolean(it?.title || it?.headline || it?.name);
+      const hasLink = Boolean(it?.url || it?.link || it?.href);
+      return hasTitle && hasLink;
+    });
+  }
 
   async function fetchArticlesStatus(attempt = 1) {
     const el = document.getElementById("dataStatusArticles");
@@ -530,23 +666,39 @@
         return;
       }
       const data = await res.json();
-      const items = normalizeItems(data);
+      const items = resolveArray(data, ["items", "articles"]);
+      const validItems = items ? normalizeArticleList(items) : [];
+      if (items && validItems.length < items.length) {
+        console.warn("[DATA] filtered invalid items", items.length, "->", validItems.length);
+      }
+      if (!items) {
+        el.textContent = "Články: chyba formátu";
+        console.warn("[DATA] articles schema unexpected", Object.keys(data || {}));
+        selfDiag.articlesState = "FAIL";
+        selfDiag.articlesCount = "-";
+        logSelfStatus();
+        return;
+      }
       const updatedAtValue = data?.updatedAt ?? data?.updated_at ?? null;
-      if (!items.length) {
+      const count = validItems.length;
+      if (!items.length || !count) {
         el.textContent = "Články: prázdné";
         selfDiag.articlesState = "EMPTY";
         selfDiag.articlesCount = "0";
         logSelfStatus();
-        updateLastArticlesInfo(items.length, updatedAtValue);
-        addTelemetryEvent("articles", `EMPTY count=${items.length}`);
+        updateLastArticlesInfo(count, updatedAtValue);
+        addTelemetryEvent("articles", `EMPTY count=${count}`);
         return;
       }
-      el.textContent = `Články: OK (${items.length})`;
+      el.textContent = `Články: OK (${count})`;
       selfDiag.articlesState = "OK";
-      selfDiag.articlesCount = String(items.length);
+      selfDiag.articlesCount = String(count);
       logSelfStatus();
-      updateLastArticlesInfo(items.length, updatedAtValue);
-      addTelemetryEvent("articles", `OK count=${items.length} updated=${updatedAtValue || "—"}`);
+      updateLastArticlesInfo(count, updatedAtValue);
+      addTelemetryEvent("articles", `OK count=${count} updated=${updatedAtValue || "—"}`);
+      const firstItem = validItems[0] || {};
+      const firstTitle = firstItem.title || firstItem.headline || firstItem.name || "—";
+      console.log("[SELF] firstTitle=", firstTitle);
     } catch (err) {
       el.textContent = "Články: chyba";
       selfDiag.articlesState = "FAIL";
@@ -557,6 +709,10 @@
         console.warn("[RETRY] articles attempt", attempt);
         el.textContent = `Články: retry (${attempt})`;
         setTimeout(() => fetchArticlesStatus(attempt + 1), delay);
+      }
+      if (err?.name === "AbortError") {
+        el.textContent = "Články: timeout";
+        addTelemetryEvent("timeout", "articles");
       }
       addTelemetryEvent("articles", `FAIL attempt=${attempt} err=${err && err.message ? err.message : "timeout"}`);
     }
@@ -584,7 +740,15 @@
         return;
       }
       const data = await res.json();
-      const items = Array.isArray(data) ? data : data?.items || [];
+      const items = resolveArray(data, ["items", "videos"]);
+      if (!items) {
+        el.textContent = "Videa: chyba formátu";
+        console.warn("[DATA] videos schema unexpected", Object.keys(data || {}));
+        selfDiag.videosState = "FAIL";
+        selfDiag.videosCount = "-";
+        logSelfStatus();
+        return;
+      }
       if (!items.length) {
         el.textContent = "Videa: prázdná";
         selfDiag.videosState = "EMPTY";
@@ -598,12 +762,16 @@
       selfDiag.videosCount = String(items.length);
       logSelfStatus();
       addTelemetryEvent("videos", `OK count=${items.length}`);
-    } catch {
+    } catch (err) {
       el.textContent = "Videa: chyba";
       selfDiag.videosState = "FAIL";
       selfDiag.videosCount = "-";
       logSelfStatus();
       addTelemetryEvent("videos", "FAIL timeout");
+      if (err?.name === "AbortError") {
+        el.textContent = "Videa: timeout";
+        addTelemetryEvent("timeout", "videos");
+      }
     }
   }
 
@@ -623,6 +791,11 @@
       }
 
       cachedItems = normalizeItems(data);
+      const sanitized = normalizeArticleList(cachedItems);
+      if (sanitized.length < cachedItems.length) {
+        console.warn("[DATA] filtered invalid items", cachedItems.length, "->", sanitized.length);
+      }
+      cachedItems = sanitized;
       hasLoadedData = true;
       setStatus(`Stav dat: OK (${cachedItems.length} položek)`);
       applyFilter();
@@ -722,6 +895,16 @@
     console.error("[ERR]", message);
   }
 
+  function handleMissingFeedContainer() {
+    const msg = "[DOM] feed container missing";
+    persistLastError(msg);
+    const articlesEl = document.getElementById("dataStatusArticles");
+    if (articlesEl) {
+      articlesEl.textContent = "Články: chyba DOM";
+    }
+    return;
+  }
+
   window.addEventListener("error", (event) => {
     try {
       const info = `${event.message} (${event.filename}:${event.lineno})`;
@@ -789,9 +972,23 @@
       await navigator.clipboard.writeText(text);
       console.log("[REPORT] copied");
     } catch {
-      const fallback = window.prompt("Copy report (Ctrl+C)", text);
-      if (fallback !== null) {
+      try {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "absolute";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        document.body.removeChild(area);
+        console.log("[REPORT] clipboard fallback used");
         console.log("[REPORT] copied");
+      } catch (fallbackErr) {
+        const fallback = window.prompt("Copy report (Ctrl+C)", text);
+        if (fallback !== null) {
+          console.log("[REPORT] copied");
+        }
       }
     }
   }
@@ -803,10 +1000,23 @@
   }
 
   const SW_RELOAD_KEY = "iu:swReloaded";
+  const SW_RELOAD_AT_KEY = "iu:swReloadedAt";
+
+  function clearStaleReloadGuard() {
+    const at = Number(sessionStorage.getItem(SW_RELOAD_AT_KEY) || "0");
+    if (!at) return false;
+    if (Date.now() - at > 10 * 60 * 1000) {
+      sessionStorage.removeItem(SW_RELOAD_KEY);
+      sessionStorage.removeItem(SW_RELOAD_AT_KEY);
+      console.log("[SW] reload guard cleared");
+      return false;
+    }
+    return Boolean(sessionStorage.getItem(SW_RELOAD_KEY));
+  }
 
   function scheduleSWReload(worker) {
     if (!worker || !("sessionStorage" in window)) return;
-    if (sessionStorage.getItem(SW_RELOAD_KEY)) return;
+    if (clearStaleReloadGuard()) return;
     try {
       worker.postMessage({ type: "SKIP_WAITING" });
       addTelemetryEvent("sw", "skip waiting");
@@ -814,6 +1024,7 @@
       console.warn("[SW]", "skip waiting message failed", error);
     }
     sessionStorage.setItem(SW_RELOAD_KEY, "1");
+    sessionStorage.setItem(SW_RELOAD_AT_KEY, Date.now().toString());
     window.location.reload();
   }
 
@@ -928,6 +1139,16 @@
         copyReportToClipboard();
       });
     }
+    const hardBtn = document.getElementById("dataHardRefreshBtn");
+    if (hardBtn) {
+      hardBtn.addEventListener("click", () => {
+        ["iu:swReloaded", "iu:swReloadedAt", "iu:scrolledToStatus"].forEach((key) => sessionStorage.removeItem(key));
+        softRefreshData();
+      });
+    }
+    renderDiagBox();
+    updateBuildStatusLabel();
+    recordBuildSeen();
 
     window.addEventListener("online", updateNetworkStatus);
     window.addEventListener("offline", updateNetworkStatus);
@@ -947,6 +1168,8 @@
     updateSwStatusLabel();
     auditLog();
     fetchFeedHealth();
+    updateEventsUI();
+    finalStateReport();
   }
 
   window.addEventListener("hashchange", () => {
