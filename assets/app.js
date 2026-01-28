@@ -1104,35 +1104,14 @@
         console.warn("[DATA] filtered invalid items", rawArticles.length, "->", sanitized.length);
       }
 
-      cachedItems = sanitized;
-      hasLoadedData = true;
-      setStatus(`Stav dat: OK (${cachedItems.length} článků)`);
-      applyFilter();
-      updateLastArticlesInfo(cachedItems.length, data?.updatedAt ?? data?.updated_at ?? null);
-
       console.log("[DATA] articles url=", url);
-      console.log("[DATA] articles loaded count=", cachedItems.length);
-      console.log("[DATA] first=", cachedItems[0]?.title, cachedItems[0]?.url);
+      console.log("[DATA] articles loaded count=", sanitized.length);
+      console.log("[DATA] first=", sanitized[0]?.title, sanitized[0]?.url);
 
-      if (isDebugOn()) {
-        writeDebug({
-          ok: true,
-          url,
-          fetchedAt: new Date().toISOString(),
-          durationMs: Date.now() - startedAt.getTime(),
-          rawType: Array.isArray(data) ? "array" : typeof data,
-          keys:
-            data && typeof data === "object" && !Array.isArray(data) ? Object.keys(data) : [],
-          itemsCount: cachedItems.length,
-          sample: cachedItems.slice(0, 3),
-        });
-      }
-
-      // ===== videos (zatím jen načíst + logovat; NEKOMBINOVAT do cachedItems) =====
       let videoItems = [];
+      const vurl = makeDataUrl("data/videos.json");
 
       try {
-        const vurl = makeDataUrl("data/videos.json");
         const vres = await timeoutFetch(vurl, { cache: "no-store" }, 9000);
 
         if (vres.ok) {
@@ -1155,11 +1134,35 @@
           console.warn("[DATA] videos.json HTTP", vres.status, vres.statusText, "url=", vurl, "body=", preview);
         }
 
-        console.log("[DATA] videos url=", makeDataUrl("data/videos.json"));
+        console.log("[DATA] videos url=", vurl);
         console.log("[DATA] videos loaded count=", videoItems.length);
         console.log("[DATA] videos first=", videoItems[0]?.title, videoItems[0]?.url);
       } catch (videoErr) {
         console.warn("[DATA] videos fetch error", videoErr?.message || videoErr);
+      }
+
+      const combinedItems = buildCombinedFeed(sanitized, videoItems);
+      cachedItems = combinedItems;
+      hasLoadedData = true;
+      setStatus(`Stav dat: OK (${sanitized.length} článků, ${videoItems.length} videí)`);
+      applyFilter();
+      updateLastArticlesInfo(sanitized.length, data?.updatedAt ?? data?.updated_at ?? null);
+
+      console.log("[DATA] combined count=", cachedItems.length);
+      console.log("[DATA] combined first type=", cachedItems[0]?.contentType, cachedItems[0]?.title);
+
+      if (isDebugOn()) {
+        writeDebug({
+          ok: true,
+          url,
+          fetchedAt: new Date().toISOString(),
+          durationMs: Date.now() - startedAt.getTime(),
+          rawType: Array.isArray(data) ? "array" : typeof data,
+          keys:
+            data && typeof data === "object" && !Array.isArray(data) ? Object.keys(data) : [],
+          itemsCount: cachedItems.length,
+          sample: cachedItems.slice(0, 3),
+        });
       }
     } catch (err) {
       const message = err && err.message ? err.message : String(err);
