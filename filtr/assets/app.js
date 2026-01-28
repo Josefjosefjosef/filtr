@@ -1084,6 +1084,12 @@
   }
 
   function init() {
+    if (sessionStorage.getItem("iu:firstLoadDone")) {
+      console.log("[LOAD] repeat");
+    } else {
+      console.log("[LOAD] first");
+      sessionStorage.setItem("iu:firstLoadDone", "1");
+    }
     renderDebugVisibility();
     renderSectionsBar();
     setSectionsFromHash();
