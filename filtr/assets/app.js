@@ -52,6 +52,15 @@
     }
   }
 
+  function getBuildStamp() {
+    const meta = document.querySelector('meta[name="iu-build"]');
+    const value = meta ? (meta.getAttribute("content") || "").trim() : "";
+    return value || null;
+  }
+
+  const BUILD_STAMP = getBuildStamp();
+  console.log("[BUILD]", BUILD_STAMP || "no-build-stamp");
+
   function freezeScroll() {
     if (freezeScroll.lock) return;
     freezeScroll.lock = { x: window.scrollX, y: window.scrollY };
@@ -494,29 +503,6 @@
     }
   }
 
-  async function loadVideoMetadata() {
-    try {
-      const res = await fetch(VIDEOS_URL, { cache: "no-store" });
-      if (!res.ok) {
-        if (res.status === 404) {
-          console.warn("[DATA] videos.json not found");
-        } else {
-          console.warn("[DATA] videos.json error", res.status);
-        }
-        return;
-      }
-
-      const text = await res.text();
-      try {
-        JSON.parse(text);
-      } catch (err) {
-        console.warn("[DATA] videos.json parse error", err && err.message ? err.message : err);
-      }
-    } catch (err) {
-      console.warn("[DATA] videos.json fetch failed", err && err.message ? err.message : err);
-    }
-  }
-
   function init() {
     renderDebugVisibility();
     renderSectionsBar();
@@ -553,8 +539,8 @@
       });
     }
 
-  loadData();
-  loadVideoMetadata();
+    loadData();
+    loadVideoMetadata();
   }
 
   window.addEventListener("hashchange", () => {

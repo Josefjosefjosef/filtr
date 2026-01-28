@@ -104,6 +104,36 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   const path = url.pathname;
+  const isDataJson = path.startsWith(`${BASE}data/`) && path.endsWith(".json");
+
+  if (isDataJson) {
+    event.respondWith(
+      fetch(event.request, { cache: "no-store" })
+        .then((networkResponse) => {
+          if (!networkResponse.ok) {
+            throw new Error(`Network ${networkResponse.status}`);
+          }
+          return networkResponse;
+        })
+        .catch(async () => {
+          const cached = await caches.match(event.request);
+          if (cached) {
+            const metaCache = await caches.open(DATA_META_CACHE);
+            const metaRes = await metaCache.match(new Request(event.request.url + ".meta"));
+            if (metaRes) {
+              const meta = await metaRes.json();
+              if (isCacheValid(meta)) {
+                return cached;
+              }
+            } else {
+              return cached;
+            }
+          }
+          throw new Error("Network failed and no cache");
+        })
+    );
+    return;
+  }
 
   // ✅ FIX: App Shell: Cache First - detekce relativně vůči BASE
   const isAppShell = path === BASE || 
