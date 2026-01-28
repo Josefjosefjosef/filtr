@@ -452,6 +452,33 @@
     console.log(`[SELF] swController=${selfDiag.swController} swWaiting=${selfDiag.swWaiting}`);
   }
 
+  function updateLastArticlesInfo(count, updatedAt) {
+    const now = new Date().toISOString();
+    try {
+      localStorage.setItem("iu:lastArticlesOkAt", now);
+      localStorage.setItem("iu:lastArticlesCount", String(count));
+      localStorage.setItem("iu:lastArticlesUpdatedAt", updatedAt || "");
+    } catch {
+      // ignore
+    }
+    const label = document.getElementById("dataStatusUpdated");
+    if (!label) return;
+    const lastOkTime = new Date(now).toLocaleTimeString("cs-CZ", { hour: "2-digit", minute: "2-digit" });
+    const updatedText = updatedAt ? fmtTime(updatedAt) : "neznámá";
+    let ageWarning = "";
+    if (updatedAt) {
+      const parsed = new Date(updatedAt);
+      if (!Number.isNaN(parsed.getTime())) {
+        const ageMinutes = Math.floor((Date.now() - parsed.getTime()) / 60000);
+        if (ageMinutes > 360) {
+          const hours = Math.floor(ageMinutes / 60);
+          ageWarning = ` Zastaralé (${hours} h)`;
+        }
+      }
+    }
+    label.textContent = `Aktualizace: ${updatedText} (last OK: ${lastOkTime}, count: ${count})${ageWarning}`;
+  }
+
   logSelfStatus();
 
   function timeoutFetch(url, options = {}, ms = 10000) {
@@ -468,33 +495,39 @@
     try {
       const res = await timeoutFetch(makeDataUrl("data/articles.json"), { cache: "no-store" }, 9000);
       if (!res.ok) {
-      el.textContent = `Články: chyba (${res.status})`;
+        el.textContent = `Články: chyba (${res.status})`;
+        selfDiag.articlesState = "FAIL";
+        selfDiag.articlesCount = "-";
+        logSelfStatus();
         return;
       }
       const data = await res.json();
       const items = normalizeItems(data);
+      const updatedAtValue = data?.updatedAt ?? data?.updated_at ?? null;
       if (!items.length) {
         el.textContent = "Články: prázdné";
-      selfDiag.articlesState = "EMPTY";
-      selfDiag.articlesCount = "0";
-      logSelfStatus();
+        selfDiag.articlesState = "EMPTY";
+        selfDiag.articlesCount = "0";
+        logSelfStatus();
+        updateLastArticlesInfo(items.length, updatedAtValue);
         return;
       }
       el.textContent = `Články: OK (${items.length})`;
-    selfDiag.articlesState = "OK";
-    selfDiag.articlesCount = String(items.length);
-    logSelfStatus();
-    } catch {
+      selfDiag.articlesState = "OK";
+      selfDiag.articlesCount = String(items.length);
+      logSelfStatus();
+      updateLastArticlesInfo(items.length, updatedAtValue);
+    } catch (err) {
       el.textContent = "Články: chyba";
-    selfDiag.articlesState = "FAIL";
-    selfDiag.articlesCount = "-";
-    logSelfStatus();
-    }
-    if (attempt <= ARTICLE_RETRY_DELAYS.length) {
-      console.warn("[RETRY] articles attempt", attempt);
-      el.textContent = `Články: retry (${attempt})`;
-      const delay = ARTICLE_RETRY_DELAYS[attempt - 1];
-      setTimeout(() => fetchArticlesStatus(attempt + 1), delay);
+      selfDiag.articlesState = "FAIL";
+      selfDiag.articlesCount = "-";
+      logSelfStatus();
+      if (attempt <= ARTICLE_RETRY_DELAYS.length) {
+        const delay = ARTICLE_RETRY_DELAYS[attempt - 1];
+        console.warn("[RETRY] articles attempt", attempt);
+        el.textContent = `Články: retry (${attempt})`;
+        setTimeout(() => fetchArticlesStatus(attempt + 1), delay);
+      }
     }
   }
 
@@ -557,6 +590,8 @@
       hasLoadedData = true;
       setStatus(`Stav dat: OK (${cachedItems.length} položek)`);
       applyFilter();
+      const updatedAtValue = data?.updatedAt ?? data?.updated_at ?? null;
+      updateLastArticlesInfo(cachedItems.length, updatedAtValue);
 
       if (isDebugOn()) {
         writeDebug({
@@ -655,6 +690,62 @@
     el.textContent = `Síť: ${navigator.onLine ? "online" : "offline"}`;
   }
 
+  function updateSwStatusLabel() {
+    const el = document.getElementById("dataStatusSW");
+    if (!el) return;
+    if (!("serviceWorker" in navigator)) {
+      el.textContent = "SW: nepodporováno";
+      return;
+    }
+    const controller = navigator.serviceWorker.controller ? "controller=ANO" : "controller=NE";
+    const waiting = selfDiag.swWaiting === "yes" ? " waiting=ANO" : "";
+    el.textContent = `SW: ${controller}${waiting}`;
+  }
+
+  function buildReportText() {
+    const build = selfDiag.build || "no-build";
+    const articles = `${selfDiag.articlesState} count=${selfDiag.articlesCount}`;
+    const videos = `${selfDiag.videosState} count=${selfDiag.videosCount}`;
+    const swController = navigator.serviceWorker?.controller ? "controller=ANO" : "controller=NE";
+    const swWaiting = selfDiag.swWaiting === "yes" ? " waiting=ANO" : "";
+    const updatedEl = document.getElementById("dataStatusUpdated");
+    const updated = updatedEl ? updatedEl.textContent.trim() : "Aktualizace: —";
+    const lastErrorAt = localStorage.getItem("iu:lastErrorAt") || "—";
+    const lastError = localStorage.getItem("iu:lastError") || "—";
+    const lastOkAt = localStorage.getItem("iu:lastArticlesOkAt") || "—";
+    const lastOkCount = localStorage.getItem("iu:lastArticlesCount") || "—";
+    return [
+      `[REPORT] build=${build}`,
+      `[REPORT] articles=${articles}`,
+      `[REPORT] videos=${videos}`,
+      `[REPORT] updated=${updated}`,
+      `[REPORT] sw=${swController}${swWaiting}`,
+      `[REPORT] lastErrorAt=${lastErrorAt}`,
+      `[REPORT] lastError=${lastError}`,
+      `[REPORT] lastOkAt=${lastOkAt}`,
+      `[REPORT] lastOkCount=${lastOkCount}`,
+    ].join("\n");
+  }
+
+  async function copyReportToClipboard() {
+    const text = buildReportText();
+    try {
+      await navigator.clipboard.writeText(text);
+      console.log("[REPORT] copied");
+    } catch {
+      const fallback = window.prompt("Copy report (Ctrl+C)", text);
+      if (fallback !== null) {
+        console.log("[REPORT] copied");
+      }
+    }
+  }
+
+  function refreshDebugPanelText() {
+    const label = document.getElementById("dataDebugLabel");
+    if (!label) return;
+    label.textContent = `Debug: ${isDebugOn() ? "ON" : "OFF"}`;
+  }
+
   const SW_RELOAD_KEY = "iu:swReloaded";
 
   function scheduleSWReload(worker) {
@@ -682,6 +773,7 @@
       }
       selfDiag.swWaiting = "no";
       logSelfStatus();
+    updateSwStatusLabel();
       if (reg.waiting) {
         scheduleSWReload(reg.waiting);
         return;
@@ -761,6 +853,24 @@
       });
     }
 
+    const debugBtn = document.getElementById("dataDebugToggle");
+    if (debugBtn) {
+      debugBtn.addEventListener("click", () => {
+        const current = isDebugOn();
+        setDebug(!current);
+        refreshDebugPanelText();
+        location.reload();
+      });
+      refreshDebugPanelText();
+    }
+
+    const copyBtn = document.getElementById("dataCopyReportBtn");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", () => {
+        copyReportToClipboard();
+      });
+    }
+
     window.addEventListener("online", updateNetworkStatus);
     window.addEventListener("offline", updateNetworkStatus);
     updateNetworkStatus();
@@ -776,6 +886,7 @@
     loadData();
     loadVideoMetadata();
     watchForSWUpdates();
+    updateSwStatusLabel();
     auditLog();
   }
 
