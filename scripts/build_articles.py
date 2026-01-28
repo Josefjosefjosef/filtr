@@ -11,6 +11,7 @@ from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 
 import feedparser
 import requests
+import shutil
 
 
 # =========================
@@ -31,9 +32,13 @@ OUT_PATH = os.path.join(OUTPUT_DIR, "articles.json")
 HEALTH_PATH = os.path.join(OUTPUT_DIR, "feed_health.json")
 BRIEF_PATH = os.path.join(OUTPUT_DIR, "brief.json")
 META_PATH = os.path.join(OUTPUT_DIR, "meta.json")
+ROOT_DATA_DIR = os.path.join(ROOT_DIR, "data")
+os.makedirs(ROOT_DATA_DIR, exist_ok=True)
 
 # ✅ NOVĚ: výstup videí (pro assets/app.js)
 VIDEOS_OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
+ROOT_ARTICLES_PATH = os.path.join(ROOT_DATA_DIR, "articles.json")
+ROOT_VIDEOS_PATH = os.path.join(ROOT_DATA_DIR, "videos.json")
 
 USER_AGENT = "Mozilla/5.0 (compatible; infoUzelBot/1.0; +https://infouzel.cz)"
 REQUEST_TIMEOUT_SEC = 20
@@ -1099,6 +1104,7 @@ def main() -> int:
     # articles.json
     with open(OUT_PATH, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
+    shutil.copy(OUT_PATH, ROOT_ARTICLES_PATH)
 
     # feed_health.json (zachováváme kompatibilitu, ale přidáváme nové klíče)
     health_payload = {
@@ -1169,6 +1175,7 @@ def main() -> int:
     os.makedirs(os.path.dirname(VIDEOS_OUT_PATH), exist_ok=True)
     with open(VIDEOS_OUT_PATH, "w", encoding="utf-8") as f:
         json.dump(videos_payload, f, ensure_ascii=False, indent=2)
+    shutil.copy(VIDEOS_OUT_PATH, ROOT_VIDEOS_PATH)
 
     print("=== FEED REPORT ===")
     print(json.dumps(health_payload, ensure_ascii=False, indent=2))
