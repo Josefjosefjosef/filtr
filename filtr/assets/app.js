@@ -424,6 +424,52 @@
     }
   }
 
+  async function fetchArticlesStatus() {
+    const el = document.getElementById("dataStatusArticles");
+    if (!el) return;
+    try {
+      const res = await fetch(makeDataUrl("data/articles.json"), { cache: "no-store" });
+      if (!res.ok) {
+        el.textContent = `Články: chyba (${res.status})`;
+        return;
+      }
+      const data = await res.json();
+      const items = normalizeItems(data);
+      if (!items.length) {
+        el.textContent = "Články: prázdné";
+        return;
+      }
+      el.textContent = `Články: OK (${items.length})`;
+    } catch {
+      el.textContent = "Články: chyba";
+    }
+  }
+
+  async function fetchVideosStatus() {
+    const el = document.getElementById("dataStatusVideos");
+    if (!el) return;
+    try {
+      const res = await fetch(makeDataUrl("data/videos.json"), { cache: "no-store" });
+      if (res.status === 404) {
+        el.textContent = "Videa: není k dispozici";
+        return;
+      }
+      if (!res.ok) {
+        el.textContent = `Videa: chyba (${res.status})`;
+        return;
+      }
+      const data = await res.json();
+      const items = Array.isArray(data) ? data : data?.items || [];
+      if (!items.length) {
+        el.textContent = "Videa: prázdná";
+        return;
+      }
+      el.textContent = `Videa: OK (${items.length})`;
+    } catch {
+      el.textContent = "Videa: chyba";
+    }
+  }
+
   async function loadData() {
     const startedAt = new Date();
     setStatus("Stav dat: načítám…");
@@ -584,6 +630,8 @@
       });
     }
 
+    fetchArticlesStatus();
+    fetchVideosStatus();
     loadData();
     loadVideoMetadata();
     watchForSWUpdates();
