@@ -255,6 +255,17 @@
     return feedTarget;
   }
 
+  const STATUS_SCROLL_KEY = "iu:scrolledToStatus";
+
+  function scrollToStatusOnce() {
+    if (!("sessionStorage" in window)) return;
+    if (sessionStorage.getItem(STATUS_SCROLL_KEY)) return;
+    const el = document.getElementById("dataStatusArticles");
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    sessionStorage.setItem(STATUS_SCROLL_KEY, "1");
+  }
+
   function renderEmpty(message, extraHtml = "") {
     const target = getFeedTarget();
     if (target) {
@@ -339,8 +350,12 @@
       .join("");
 
     withScrollLock(() => {
+      const t0 = performance.now();
       target.innerHTML = html;
       if (elDataCount) elDataCount.textContent = String(items.length);
+      const t1 = performance.now();
+      const newsCards = target.querySelectorAll?.(".news-card")?.length ?? target.children.length;
+      console.log("[PERF] renderMs=", Math.round(t1 - t0), "domCards=", newsCards);
     });
   }
 
@@ -452,6 +467,19 @@
     console.log(`[SELF] swController=${selfDiag.swController} swWaiting=${selfDiag.swWaiting}`);
   }
 
+  function addTelemetryEvent(name, detail = "") {
+    try {
+      const raw = localStorage.getItem("iu:events");
+      const parsed = raw ? JSON.parse(raw) : [];
+      const arr = Array.isArray(parsed) ? parsed : [];
+      arr.push({ t: new Date().toISOString(), name, detail });
+      while (arr.length > 10) arr.shift();
+      localStorage.setItem("iu:events", JSON.stringify(arr));
+    } catch {
+      // ignore
+    }
+  }
+
   function updateLastArticlesInfo(count, updatedAt) {
     const now = new Date().toISOString();
     try {
@@ -510,6 +538,7 @@
         selfDiag.articlesCount = "0";
         logSelfStatus();
         updateLastArticlesInfo(items.length, updatedAtValue);
+        addTelemetryEvent("articles", `EMPTY count=${items.length}`);
         return;
       }
       el.textContent = `Články: OK (${items.length})`;
@@ -517,6 +546,7 @@
       selfDiag.articlesCount = String(items.length);
       logSelfStatus();
       updateLastArticlesInfo(items.length, updatedAtValue);
+      addTelemetryEvent("articles", `OK count=${items.length} updated=${updatedAtValue || "—"}`);
     } catch (err) {
       el.textContent = "Články: chyba";
       selfDiag.articlesState = "FAIL";
@@ -528,6 +558,7 @@
         el.textContent = `Články: retry (${attempt})`;
         setTimeout(() => fetchArticlesStatus(attempt + 1), delay);
       }
+      addTelemetryEvent("articles", `FAIL attempt=${attempt} err=${err && err.message ? err.message : "timeout"}`);
     }
   }
 
@@ -541,6 +572,7 @@
         selfDiag.videosState = "404";
         selfDiag.videosCount = "-";
         logSelfStatus();
+        addTelemetryEvent("videos", "404");
         return;
       }
       if (!res.ok) {
@@ -548,6 +580,7 @@
         selfDiag.videosState = "FAIL";
         selfDiag.videosCount = "-";
         logSelfStatus();
+        addTelemetryEvent("videos", `FAIL status=${res.status}`);
         return;
       }
       const data = await res.json();
@@ -557,17 +590,20 @@
         selfDiag.videosState = "EMPTY";
         selfDiag.videosCount = "0";
         logSelfStatus();
+        addTelemetryEvent("videos", "EMPTY");
         return;
       }
       el.textContent = `Videa: OK (${items.length})`;
       selfDiag.videosState = "OK";
       selfDiag.videosCount = String(items.length);
       logSelfStatus();
+      addTelemetryEvent("videos", `OK count=${items.length}`);
     } catch {
       el.textContent = "Videa: chyba";
       selfDiag.videosState = "FAIL";
       selfDiag.videosCount = "-";
       logSelfStatus();
+      addTelemetryEvent("videos", "FAIL timeout");
     }
   }
 
@@ -610,6 +646,7 @@
       setStatus("Stav dat: chyba (nelze načíst)");
       if (!hasLoadedData) {
         renderEmpty("Nepodařilo se načíst články. Zkontroluj Stav dat.");
+        scrollToStatusOnce();
       }
       if (isDebugOn()) {
         writeDebug({
@@ -649,6 +686,25 @@
         "[DATA] videos.json error",
         err && err.message ? err.message : err
       );
+    }
+  }
+
+  async function fetchFeedHealth() {
+    try {
+      const res = await timeoutFetch(makeDataUrl("data/feed_health.json"), { cache: "no-store" }, 5000);
+      if (res.status === 404) {
+        console.warn("[HEALTH] feed_health not found");
+        return;
+      }
+      if (!res.ok) {
+        console.warn("[HEALTH] feed_health error", res.status);
+        return;
+      }
+      const data = await res.json();
+      const updated = data?.updatedAt ?? data?.updated_at;
+      console.log("[HEALTH] feed_health OK", updated ? `updatedAt=${updated}` : "updatedAt=—");
+    } catch (err) {
+      console.warn("[HEALTH] feed_health fetch failed", err && err.message ? err.message : err);
     }
   }
 
@@ -753,6 +809,7 @@
     if (sessionStorage.getItem(SW_RELOAD_KEY)) return;
     try {
       worker.postMessage({ type: "SKIP_WAITING" });
+      addTelemetryEvent("sw", "skip waiting");
     } catch (error) {
       console.warn("[SW]", "skip waiting message failed", error);
     }
@@ -766,6 +823,7 @@
       if (!reg) return;
       selfDiag.swController = navigator.serviceWorker?.controller ? "yes" : "no";
       if (reg.waiting) {
+      addTelemetryEvent("sw", "waiting");
         selfDiag.swWaiting = "yes";
         logSelfStatus();
         scheduleSWReload(reg.waiting);
@@ -888,6 +946,7 @@
     watchForSWUpdates();
     updateSwStatusLabel();
     auditLog();
+    fetchFeedHealth();
   }
 
   window.addEventListener("hashchange", () => {
