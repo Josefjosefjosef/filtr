@@ -2163,34 +2163,22 @@
                 <stop offset="100%" stop-color="#142A4A"/>
               </linearGradient>
 
-              <!-- U -->
-              <linearGradient id="gradU" x1="0" y1="0" x2="0" y2="1">
+              <!-- Uzel gradient -->
+              <linearGradient id="gradUzel" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stop-color="#E24A2A"/>
-                <stop offset="100%" stop-color="#F08A2B"/>
-              </linearGradient>
-
-              <!-- z -->
-              <linearGradient id="gradZ" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#F3A42A"/>
-                <stop offset="100%" stop-color="#F1C34B"/>
-              </linearGradient>
-
-              <!-- e -->
-              <linearGradient id="gradE" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#6BB357"/>
-                <stop offset="100%" stop-color="#3F9D55"/>
-              </linearGradient>
-
-              <!-- l -->
-              <linearGradient id="gradL" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#3A8ACB"/>
+                <stop offset="25%" stop-color="#F08A2B"/>
+                <stop offset="45%" stop-color="#F3A42A"/>
+                <stop offset="60%" stop-color="#F1C34B"/>
+                <stop offset="75%" stop-color="#6BB357"/>
+                <stop offset="85%" stop-color="#3F9D55"/>
+                <stop offset="94%" stop-color="#3A8ACB"/>
                 <stop offset="100%" stop-color="#1F5FAE"/>
               </linearGradient>
 
               <!-- underline -->
               <linearGradient id="gradLine" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stop-color="#2B5EA7"/>
-                <stop offset="60%" stop-color="#2FA0A1"/>
+                <stop offset="50%" stop-color="#2FA0A1"/>
                 <stop offset="100%" stop-color="#D6B54A"/>
               </linearGradient>
             </defs>
@@ -2213,11 +2201,9 @@
                     font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif"
                     font-size="96"
                     font-weight="800"
-                    letter-spacing="-1.2">
-                <tspan fill="url(#gradU)">U</tspan>
-                <tspan fill="url(#gradZ)">z</tspan>
-                <tspan fill="url(#gradE)">e</tspan>
-                <tspan fill="url(#gradL)">l</tspan>
+                    letter-spacing="-1.5"
+                    fill="url(#gradUzel)">
+                Uzel
               </text>
 
               <!-- .cz -->
@@ -2231,11 +2217,11 @@
               </text>
 
               <!-- underline curve -->
-              <path d="M 40 118
-                       C 220 140, 420 140, 640 118"
+              <path d="M 40 120
+                       C 220 130, 420 130, 640 120"
                     fill="none"
                     stroke="url(#gradLine)"
-                    stroke-width="9"
+                    stroke-width="6"
                     stroke-linecap="round"
                     opacity="0.95"/>
             </g>
