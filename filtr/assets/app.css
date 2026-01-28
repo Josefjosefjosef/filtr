@@ -1890,3 +1890,13 @@ img{ max-width:100%; height:auto; }
 .sideCol .block > *:first-child{
   margin-top: 0;
 }
+
+/* FIX: E-mailové schránky – odstranit vnitřní rámeček */
+.sideCol .servicesBlock .servicesList,
+.sideCol .servicesBlock .serviceGroup,
+.sideCol .servicesBlock .isFramed{
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background: transparent !important;
+}
