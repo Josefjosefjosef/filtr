@@ -1822,3 +1822,71 @@ img{ max-width:100%; height:auto; }
   overflow:auto;
   background:#fbfbfb;
 }
+
+/* FIX: pravý sloupec – zamezit dvojitým rámečkům (jen .block má rám) */
+.sideCol .block{
+  border: 1px solid var(--divider);
+  border-radius: 12px;
+  background: var(--cardBg);
+  box-shadow: none;
+}
+
+.sideCol .block > *{
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* FIX: typické vnitřní kontejnery, které často nesou druhý rám */
+.sideCol .block .blockInner,
+.sideCol .block .content,
+.sideCol .block .inner,
+.sideCol .block .card,
+.sideCol .block .panel,
+.sideCol .block .box{
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+/* FIX: Služby – žádné vnitřní rámy, rám má jen .block */
+.sideCol .servicesBlock .serviceGroup,
+.sideCol .servicesBlock .serviceGroup.isFramed{
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background: transparent;
+}
+
+/* FIX: Časovač – žádné vnitřní rámy, rám má jen .block */
+.sideCol .block .workTimer,
+.sideCol .block .timerBox,
+.sideCol .block .timerCard,
+.sideCol .block .timerWrap,
+.sideCol .block .timerPanel{
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background: transparent;
+}
+
+/* FIX: žádná extra horní linka uvnitř bloku */
+.sideCol .block h1,
+.sideCol .block h2,
+.sideCol .block h3,
+.sideCol .block header,
+.sideCol .block .blockTitle,
+.sideCol .block .groupTitle{
+  border-top: none !important;
+  box-shadow: none !important;
+}
+
+/* FIN: jednotný vnitřní spacing */
+.sideCol .block{
+  padding: 12px 12px;
+}
+
+.sideCol .block > *:first-child{
+  margin-top: 0;
+}
