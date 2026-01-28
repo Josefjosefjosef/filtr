@@ -61,57 +61,36 @@
         display:none !important;
       }
       .brand{
-        position: relative;
-        display: inline-flex;
-        align-items: baseline;
-        gap: 0;
-        text-decoration: none;
-        line-height: 1;
-        padding-bottom: 10px;
-        background: transparent;
+        display:flex;
+        align-items:center;
+        text-decoration:none;
+        flex:0 0 auto;
+        position:relative;
       }
-
-      .brand, .brand *{
-        text-shadow: none !important;
-        filter: none !important;
-      }
-
-      .brandInfo{
-        color: #111111;
-        font-weight: 400;
-        letter-spacing: 0.2px;
-      }
-
-      .brandUzel{
-        color: #B08D2A;
-        font-weight: 700;
-        letter-spacing: 0.2px;
-      }
-
-      .brandCz{
-        color: #111111;
-        font-weight: 700;
-        letter-spacing: 0.2px;
-      }
-
       .brand::after{
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 2px;
-        height: 2px;
-        border-radius: 2px;
-        background: linear-gradient(90deg, #111111 0%, #111111 55%, #B08D2A 100%);
-        opacity: 0.95;
+        content:"";
+        position:absolute;
+        left:0;
+        right:0;
+        bottom:-6px;
+        height:4px;
+        border-radius:2px;
+        background:#2B2F36;
+        pointer-events:none;
       }
-
-      .brand{
-        font-size: 28px;
+      .brandSvg{
+        height: 60px;
+        width: auto;
+        display:block;
       }
-      @media (max-width: 520px){
-        .brand{ font-size: 24px; padding-bottom: 9px; }
-        .brand::after{ height: 2px; }
+      #iuLogoSvg text:last-of-type{
+        transform: translateX(8px);
+      }
+      #iuLogoSvg path{
+        display:none;
+      }
+      @media (max-width: 720px){
+        .brandSvg{ height: 48px; }
       }
 
       .searchForm{
@@ -1017,7 +996,39 @@
         </button>
 
         <a class="brand iuBrand" href="./" aria-label="infoUzel.cz">
-          <span class="brandInfo">info</span><span class="brandUzel">Uzel</span><span class="brandCz">.cz</span>
+          <!-- LOGO: INFOUZEL – START (NEMĚNIT) -->
+          <svg id="iuLogoSvg" class="iuBrandSvg" data-brand="infoUzel" viewBox="0 0 520 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="infoUzel.cz">
+            <defs>
+              <linearGradient id="iuGold" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#E2C36A"/>
+                <stop offset="55%" stop-color="#B08A2E"/>
+                <stop offset="100%" stop-color="#8A6B1E"/>
+              </linearGradient>
+            </defs>
+            <!-- Text -->
+            <g font-family="'Source Sans 3', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif"
+               font-size="96"
+               dominant-baseline="alphabetic">
+
+              <!-- "info" (tenčí, grafit) -->
+              <text x="70" y="96" fill="#1F2933" font-weight="400" letter-spacing="0" xml:space="preserve">info</text>
+
+              <!-- "Uzel" (tučné, zlaté) -->
+              <!-- x posun je nastaven tak, aby "info" a "Uzel" navazovalo bez mezery -->
+              <text x="220" y="96" fill="url(#iuGold)" font-weight="700" font-size="115" letter-spacing="0" xml:space="preserve">Uzel</text>
+
+              <!-- ".cz" (tenčí, grafit) -->
+              <text x="408" y="96" fill="#1F2933" font-weight="400" letter-spacing="0" xml:space="preserve">.cz</text>
+            </g>
+
+            <!-- Podtržení – jemná prohnutá křivka přes šířku -->
+          <path d="M70 118 C 205 134, 350 134, 470 118"
+                fill="none"
+                stroke="#2B2F36"
+                stroke-width="4"
+                stroke-linecap="round" />
+          </svg>
+          <!-- LOGO: INFOUZEL – END -->
         </a>
       </div>
 

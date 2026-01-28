@@ -1135,6 +1135,10 @@
           const vtext = await vres.text();
           try {
             const vdata = JSON.parse(vtext);
+            const rawSource = Array.isArray(vdata)
+              ? vdata
+              : (Array.isArray(vdata?.videos) ? vdata.videos : []);
+            console.log("[DATA] videos raw count=", rawSource.length, "keys=", Object.keys(vdata || {}));
             videoItems = normalizeVideoList(vdata);
           } catch (parseErr) {
             console.warn("[DATA] videos.json parse error", parseErr?.message || parseErr);
