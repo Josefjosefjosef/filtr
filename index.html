@@ -1063,44 +1063,18 @@
     </div>
   </div>
 
-  <!-- ===== NOVÉ: LIŠTY POD HLAVIČKOU (TÉMATA + FILTRY) ===== -->
-    <nav class="iuSubBars" aria-label="Témata a filtry">
-      <!-- TÉMATA (rolovací horizontálně) -->
-      <div class="topicsBar" role="navigation" aria-label="Témata">
-        <div class="barInner">
-          <div class="topicsScroller" tabindex="0">
-          <a class="topicPill topicPill--pill isActive" href="#" aria-current="true">Vše</a>
-          <a class="topicPill" href="#">Aktuální</a>
-          <a class="topicPill" href="#">Domácí</a>
-          <a class="topicPill" href="#">Zahraničí</a>
-          <a class="topicPill" href="#">Ekonomika</a>
-          <a class="topicPill" href="#">Sport</a>
-          <a class="topicPill" href="#">Doprava</a>
-          <a class="topicPill" href="#">Počasí</a>
-          <a class="topicPill" href="#">TV program</a>
-          <a class="topicPill" href="#">Technologie</a>
-          <a class="topicPill" href="#">Kultura</a>
-          <a class="topicPill" href="#">Zdraví</a>
-          </div>
-        </div>
-      </div>
+  <!-- ===== SUBBAR POD TOPBAR (FILTRY / REGIONY / ZDROJE) ===== -->
+  <div class="iuSubbar" aria-label="Filtry a výběry">
+    <div class="iuSubbar__inner">
+      <button class="iuSubbarBtn" id="btnFilters" type="button">Filtry</button>
+      <button class="iuSubbarBtn" id="btnRegions" type="button" aria-haspopup="dialog" aria-controls="overlayRegions">Regiony</button>
+      <button class="iuSubbarBtn" id="btnSources" type="button" aria-haspopup="dialog" aria-controls="overlaySources">Zdroje</button>
 
-      <!-- FILTRY / REGIONY (pevná) -->
-      <div class="filtersBar" role="navigation" aria-label="Filtry">
-        <div class="barInner">
-          <div class="filtersInner">
-          <button class="filterBtn" type="button">Filtry</button>
-          <button class="filterBtn" id="btnRegions" type="button" aria-haspopup="dialog" aria-controls="overlayRegions">Regiony</button>
-          <button class="filterBtn" id="btnSources" type="button" aria-haspopup="dialog" aria-controls="overlaySources">Zdroje</button>
-
-          <div class="filtersSpacer"></div>
-
-          <div class="filtersHint" aria-label="Nápověda filtrů">Vyberte téma a případně zpřesněte filtry</div>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <!-- ===== /NOVÉ: LIŠTY POD HLAVIČKOU ===== -->
+      <div class="iuSubbar__spacer"></div>
+      <div class="iuSubbar__hint">Vyberte téma a případně zpřesněte filtry</div>
+    </div>
+  </div>
+  <!-- ===== /SUBBAR ===== -->
   </div>
 
   <div id="adBanner" aria-hidden="true">

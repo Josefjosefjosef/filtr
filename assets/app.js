@@ -59,17 +59,14 @@
   }
 
   function getBaseRoot() {
-    // BASE = složka, kde leží tento skript (filtr/assets/app.js -> filtr/)
-    try {
-      const u = new URL(document.currentScript?.src || "", location.href);
-      return u.pathname.replace(/\/assets\/[^/]*$/, "/");
-    } catch {
-      // fallback: relativně k current path
-      let p = location.pathname.replace(/\\/g, "/");
-      if (p.endsWith("index.html")) p = p.slice(0, -10);
-      if (!p.endsWith("/")) p += "/";
-      return p || "/";
+    let p = location.pathname.replace(/\\/g, "/");
+    if (p.endsWith("index.html")) {
+      p = p.slice(0, -10);
     }
+    if (!p.endsWith("/")) {
+      p += "/";
+    }
+    return p || "/";
   }
 
   function getBuildStamp() {
@@ -382,7 +379,7 @@
     const target = getFeedTarget();
     if (!target) {
       handleMissingFeedContainer();
-      renderEmpty("Chyba DOM: chybí #feed i #newsList.");
+      renderEmpty("DATA ERROR: Chyba DOM: chybí #feed i #newsList.");
       return;
     }
     if (emptyBox) {
@@ -407,6 +404,10 @@
     withScrollLock(() => {
       const t0 = performance.now();
       target.innerHTML = html;
+      if (!html || !html.trim()) {
+        renderEmpty("DATA ERROR: Render vyrobil prázdné HTML (items=" + (items?.length || 0) + ")");
+        return;
+      }
       if (elDataCount) elDataCount.textContent = String(items.length);
       const t1 = performance.now();
       const newsCards = target.querySelectorAll?.(".news-card")?.length ?? target.children.length;
@@ -1122,10 +1123,40 @@
           sample: cachedItems.slice(0, 3),
         });
       }
+
+      // ===== videos (zatím jen načíst + logovat; NEKOMBINOVAT do cachedItems) =====
+      let videoItems = [];
+
+      try {
+        const vurl = makeDataUrl("data/videos.json");
+        const vres = await timeoutFetch(vurl, { cache: "no-store" }, 9000);
+
+        if (vres.ok) {
+          const vtext = await vres.text();
+          try {
+            const vdata = JSON.parse(vtext);
+            videoItems = normalizeVideoList(vdata);
+          } catch (parseErr) {
+            console.warn("[DATA] videos.json parse error", parseErr?.message || parseErr);
+          }
+        } else if (vres.status === 404) {
+          console.warn("[DATA] videos.json not found (404)");
+        } else {
+          const body = await vres.text().catch(() => "");
+          const preview = body ? body.slice(0, 120) : "";
+          console.warn("[DATA] videos.json HTTP", vres.status, vres.statusText, "url=", vurl, "body=", preview);
+        }
+
+        console.log("[DATA] videos url=", makeDataUrl("data/videos.json"));
+        console.log("[DATA] videos loaded count=", videoItems.length);
+        console.log("[DATA] videos first=", videoItems[0]?.title, videoItems[0]?.url);
+      } catch (videoErr) {
+        console.warn("[DATA] videos fetch error", videoErr?.message || videoErr);
+      }
     } catch (err) {
       const message = err && err.message ? err.message : String(err);
       persistLastError(message);
-      renderEmpty("Nepodařilo se načíst články: " + message);
+      renderEmpty("DATA ERROR: " + message);
       setStatus("Stav dat: chyba (nelze načíst)");
       console.log("[DATA] articles url=", url);
       console.log("[DATA] articles error=", message);
