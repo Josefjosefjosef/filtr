@@ -25,32 +25,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Ensure filtr/data exists + mirror data
+      - name: Sanity check – required files in repo root
         run: |
-          mkdir -p filtr/data
-          if [ -d "data" ]; then
-            rm -rf filtr/data/*
-            cp -R data/* filtr/data/ || true
-          fi
-          ls -la filtr/data || true
+          test -f index.html || (echo "❌ index.html missing" && exit 1)
+          test -d assets || (echo "❌ assets/ missing" && exit 1)
+          test -d data || (echo "❌ data/ missing" && exit 1)
 
-      - name: Sanity check – required files in filtr/
-        run: |
-          test -f filtr/index.html || (echo "❌ filtr/index.html missing" && exit 1)
-          test -d filtr/assets || (echo "❌ filtr/assets missing" && exit 1)
-          test -d filtr/data || (echo "❌ filtr/data missing" && exit 1)
-
-          if [ ! -f filtr/data/articles.json ]; then
-            echo "⚠️ filtr/data/articles.json not present (allowed – ignored by git)"
+          if [ ! -f data/articles.json ]; then
+            echo "⚠️ data/articles.json not present (allowed – ignored by git)"
           else
-            echo "✅ filtr/data/articles.json found"
+            echo "✅ data/articles.json found"
           fi
 
-          test -f filtr/assets/app-crash-shield.js || (echo "❌ app-crash-shield.js missing" && exit 1)
-          test -f filtr/assets/app-render-optimizer.js || (echo "❌ app-render-optimizer.js missing" && exit 1)
-          test -f filtr/assets/app.js || (echo "❌ app.js missing" && exit 1)
-          test -f filtr/sw.js || (echo "❌ sw.js missing" && exit 1)
-          test -f filtr/.nojekyll || (echo "❌ .nojekyll missing" && exit 1)
+          test -f assets/app-crash-shield.js || (echo "❌ assets/app-crash-shield.js missing" && exit 1)
+          test -f assets/app-render-optimizer.js || (echo "❌ assets/app-render-optimizer.js missing" && exit 1)
+          test -f assets/app.js || (echo "❌ assets/app.js missing" && exit 1)
+          test -f sw.js || (echo "❌ sw.js missing" && exit 1)
+          test -f .nojekyll || (echo "❌ .nojekyll missing" && exit 1)
 
           echo "✅ Sanity check OK"
 
@@ -60,7 +51,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: filtr
+          path: .
 
       - name: Deploy to GitHub Pages
         id: deployment
