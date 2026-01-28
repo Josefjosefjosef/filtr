@@ -261,28 +261,28 @@
       .sideCol,
       aside{
         color: var(--sidebar-text);
-        background:
-          radial-gradient(1200px 700px at 60% 20%,
-            rgba(255,255,255,0.08) 0%,
-            rgba(255,255,255,0.03) 35%,
-            rgba(255,255,255,0.00) 65%),
-          linear-gradient(180deg,
-            var(--side-bg-light) 0%,
-            var(--side-bg-main) 35%,
-            var(--side-bg-dark) 100%);
-        background-blend-mode: overlay, normal;
+        background: linear-gradient(
+          to bottom,
+          var(--side-bg-light) 0%,
+          var(--side-bg-main) 35%,
+          var(--side-bg-dark) 100%
+        ) !important;
+        background-blend-mode: normal;
         box-shadow:
-          inset 1px 0 0 var(--side-border-soft),
-          inset -1px 0 0 var(--side-border-soft);
+          inset 2px 0 0 rgba(255,255,255,0.06),
+          inset -2px 0 0 rgba(0,0,0,0.25) !important;
+        padding: 12px !important;
+        align-self: stretch !important;
+        min-height: 100% !important;
       }
       .accordionCol .block{
         background: linear-gradient(
           to bottom,
           rgba(255,255,255,0.06),
           rgba(255,255,255,0.02)
-        );
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.08);
+        ) !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        border-radius: 10px !important;
         box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
         color: var(--sidebar-text);
       }
