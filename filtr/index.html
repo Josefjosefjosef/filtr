@@ -392,23 +392,59 @@
         margin-top: 0 !important;
         padding-top: 0 !important;
       }
-      .block{
-        border: 1px solid var(--divider);
-        border-radius: 12px;
-        background: var(--cardBg);
+      .accordionCol{
+        color: var(--sidebar-text);
+        background:
+          radial-gradient(1200px 700px at 60% 20%,
+            rgba(255,255,255,0.06) 0%,
+            rgba(255,255,255,0.02) 35%,
+            rgba(0,0,0,0.00) 65%),
+          repeating-linear-gradient(135deg,
+            rgba(255,255,255,0.012) 0px,
+            rgba(255,255,255,0.012) 2px,
+            rgba(0,0,0,0.00) 6px,
+            rgba(0,0,0,0.00) 10px),
+          linear-gradient(180deg,
+            #1f2933 0%,
+            #1c2530 100%);
+        background-blend-mode: overlay, overlay, normal;
       }
-      .block .blockInner,
-      .block .content,
-      .block .servicesList,
-      .block .timerBox,
-      .block .inner,
-      .block .card,
-      .block section,
-      .block article{
+      .accordionCol .block{
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 12px;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      }
+      .accordionCol .block .blockInner,
+      .accordionCol .block .content,
+      .accordionCol .block .servicesList,
+      .accordionCol .block .timerBox,
+      .accordionCol .block .inner,
+      .accordionCol .block .card,
+      .accordionCol .block section,
+      .accordionCol .block article{
         border: none !important;
         outline: none !important;
         box-shadow: none !important;
         background: transparent !important;
+      }
+      .accordionCol .block h3,
+      .accordionCol .block .blockTitle{
+        color: var(--sidebar-text);
+        border-bottom: 1px solid var(--gold-accent-soft);
+      }
+      .accordionCol .block,
+      .accordionCol .block p,
+      .accordionCol .block span{
+        color: var(--sidebar-text);
+      }
+      .accordionCol .muted,
+      .accordionCol small{
+        color: var(--sidebar-muted);
+      }
+      .accordionCol .workTimer{
+        background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%);
+        border: 1px solid rgba(201,162,77,0.25);
       }
 
       /* ===== TIMER COMPACT (vynucené zmenšení rámu) ===== */
