@@ -47,45 +47,63 @@
       .data-status{
         display:none !important;
       }
-      .brand .name{
-        font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-        font-size:22px;
-        line-height:1;
-        display:inline-flex;
-        align-items:baseline;
-        color:#1F3557;
-        white-space:nowrap;
-        gap:0;
-        font-style:normal;
-        transform: skewX(-12deg);
-        transform-origin: left center;
+      .brand{
+        position: relative;
+        display: inline-flex;
+        align-items: baseline;
+        line-height: 1;
+        text-decoration: none;
+        padding-bottom: 10px;
+        flex: 0 0 auto;
+        font-size: 24px;
       }
-
+      .brand-info{
+        font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+        font-weight:600;
+        font-style:italic;
+        color:#1F3A5F;
+        letter-spacing:.2px;
+        line-height:1;
+      }
+      .brand-uzel{
+        font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+        font-weight:800;
+        color:#F39A1D;
+        letter-spacing:.2px;
+        line-height:1;
+      }
+      .brand-cz{
+        font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+        font-weight:700;
+        color:#2F3B52;
+        margin-left:2px;
+        font-size:.92em;
+        letter-spacing:.2px;
+        line-height:1;
+      }
+      .brand::after{
+        content:"";
+        position:absolute;
+        left:0;
+        right:0;
+        bottom:0;
+        height:4px;
+        border-radius:4px;
+        background:linear-gradient(90deg,#1F4B99 0%,#1FB6A6 45%,#F2C94C 100%);
+      }
       @media (max-width: 720px){
-        .brand .name{
-          font-size:20px;
+        .brand{
+          font-size:22px;
+          padding-bottom:9px;
         }
       }
-
-      .brandInfo,
-      .brandCz{
-        font-size:0.85em;
-        font-weight:500;
-        display:inline-block;
-        line-height:1;
-      }
-      .brandUzel{
-        font-size:1.15em;
-        font-weight:700;
-        letter-spacing:-0.4px;
-        display:inline-block;
-        line-height:1;
-        vertical-align:baseline;
-      }
-      .brandUzelInner{
-        display:inline-block;
-        transform: skewX(-5deg);
-        transform-origin: left center;
+      @media (max-width: 520px){
+        .brand{
+          padding-bottom:9px;
+        }
+        .brand::after{
+          height:3px;
+        }
       }
 
       .searchForm{
@@ -825,13 +843,11 @@
           </div>
         </button>
 
-        <div class="brand">
-          <div class="name">
-            <span class="brandInfo">info</span>
-            <span class="brandUzel"><span class="brandUzelInner">Uzel</span></span>
-            <span class="brandCz">.cz</span>
-          </div>
-        </div>
+        <a class="brand" href="/">
+          <span class="brand-info">info</span>
+          <span class="brand-uzel">Uzel</span>
+          <span class="brand-cz">.cz</span>
+        </a>
       </div>
 
       <form class="searchForm" autocomplete="off">
