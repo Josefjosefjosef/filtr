@@ -387,6 +387,11 @@
         align-items:start;
         margin-top: var(--adPeek) !important;
       }
+      /* FIX: po vypnutí reklamního pásu už nechceme horní mezeru */
+      .layout{
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+      }
       .block{
         border: 1px solid var(--divider);
         border-radius: 12px;
@@ -1015,8 +1020,9 @@
         <div class="vipBadge" id="vipBadge">VIP uživatel</div>
       </div>
     </div>
+  </div>
 
-    <!-- ===== NOVÉ: LIŠTY POD HLAVIČKOU (TÉMATA + FILTRY) ===== -->
+  <!-- ===== NOVÉ: LIŠTY POD HLAVIČKOU (TÉMATA + FILTRY) ===== -->
     <nav class="iuSubBars" aria-label="Témata a filtry">
       <!-- TÉMATA (rolovací horizontálně) -->
       <div class="topicsBar" role="navigation" aria-label="Témata">
@@ -1050,7 +1056,6 @@
       </div>
     </nav>
     <!-- ===== /NOVÉ: LIŠTY POD HLAVIČKOU ===== -->
-  </div>
   </div>
 
   <div id="adBanner" aria-hidden="true">
