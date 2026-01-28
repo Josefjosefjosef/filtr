@@ -18,271 +18,251 @@ const TTL = {
   namedays: 86400,    // 24 hodin
   meta: 600,          // 10 minut
   status: 300,        // 5 minut
-  feed_health: 600,   // 10 minut
-  default: 300        // 5 minut (fallback)
 };
 
-// Max počet položek v data cache (prořezávání)
-const MAX_CACHE_ITEMS = 50;
-
-const APP_SHELL = [
-  "/",
-  "/index.html",
-  "/filtr/",
-  "/filtr/index.html",
-  "/assets/app.js",
-  "/filtr/assets/app.js",
-  "/app-crash-shield.js",
-  "/filtr/app-crash-shield.js",
-  "/app-render-optimizer.js",
-  "/filtr/app-render-optimizer.js",
-  "/debug.js",
-  "/filtr/debug.js"
-];
-
-// =========================
-// === UTILITY FUNKCE
-// =========================
-
-function looksLikeHTML(text) {
-  const s = String(text).trim().slice(0, 200).toLowerCase();
-  return s.startsWith("<!doctype") || s.startsWith("<html") || s.includes("<head") || s.includes("<body");
+// ✅ FIX: App Shell soubory (Cache First) - relativní vůči BASE
+// BASE bude definován později, takže použijeme funkci
+function getAppShellUrls() {
+  return [
+    BASE,
+    `${BASE}index.html`,
+    `${BASE}assets/app-crash-shield.js`,
+    `${BASE}assets/app-render-optimizer.js`,
+    `${BASE}assets/app.js`,
+    `${BASE}sw.js`
+  ];
 }
 
-function getTTLForPath(path) {
-  if (path.includes("articles")) return TTL.articles;
-  if (path.includes("videos")) return TTL.videos;
-  if (path.includes("weather")) return TTL.weather;
-  if (path.includes("namedays")) return TTL.namedays;
-  if (path.includes("meta")) return TTL.meta;
-  if (path.includes("status")) return TTL.status;
-  if (path.includes("feed_health")) return TTL.feed_health;
-  return TTL.default;
-}
-
-function getCacheKey(url) {
-  // Normalizuj URL (odstran query string pro cache match)
-  const u = new URL(url);
-  u.search = "";
-  return u.toString();
-}
-
-async function getCacheMetadata(cache, key) {
-  try {
-    const metaKey = `${DATA_META_CACHE}:${key}`;
-    const metaCache = await caches.open(DATA_META_CACHE);
-    const metaRes = await metaCache.match(metaKey);
-    if (metaRes) {
-      const meta = await metaRes.json();
-      return meta;
-    }
-  } catch (e) {
-    // Ignoruj chyby
+// ✅ FIX: BASE je path-only ("/" nebo "/filtr/"), vždy s trailing slash
+function getBaseRoot() {
+  // Pro github.io projektové stránky: BASE = "/filtr/"
+  if (self.location.hostname.endsWith("github.io")) {
+    return "/filtr/";
   }
-  return null;
-}
-
-async function setCacheMetadata(cache, key, metadata) {
-  try {
-    const metaKey = `${DATA_META_CACHE}:${key}`;
-    const metaCache = await caches.open(DATA_META_CACHE);
-    await metaCache.put(metaKey, new Response(JSON.stringify(metadata), {
-      headers: { "Content-Type": "application/json" }
-    }));
-  } catch (e) {
-    // Ignoruj chyby
+  // Jinak detekuj z pathname
+  let p = self.location.pathname;
+  if (p.includes("/filtr/")) {
+    return "/filtr/";
   }
-}
-
-function isCacheStale(metadata, ttl) {
-  if (!metadata || !metadata.cachedAt) return true;
-  const age = (Date.now() - metadata.cachedAt) / 1000;
-  return age > ttl;
-}
-
-async function pruneCache(cache) {
-  try {
-    const keys = await cache.keys();
-    if (keys.length <= MAX_CACHE_ITEMS) return;
-
-    // Získej metadata pro všechny klíče
-    const items = [];
-    for (const key of keys) {
-      const url = key.url || key;
-      const cacheKey = getCacheKey(url);
-      const meta = await getCacheMetadata(cache, cacheKey);
-      items.push({ key, cacheKey, meta, url });
-    }
-
-    // Seřaď podle času uložení (nejstarší první)
-    items.sort((a, b) => {
-      const aTime = a.meta?.cachedAt || 0;
-      const bTime = b.meta?.cachedAt || 0;
-      return aTime - bTime;
-    });
-
-    // Odstraň nejstarší položky
-    const toRemove = items.slice(0, items.length - MAX_CACHE_ITEMS);
-    for (const item of toRemove) {
-      await cache.delete(item.key);
-      // Odstraň i metadata
-      const metaKey = `${DATA_META_CACHE}:${item.cacheKey}`;
-      const metaCache = await caches.open(DATA_META_CACHE);
-      await metaCache.delete(metaKey);
-    }
-
-    console.log(`[SW] Prořezána cache: odstraněno ${toRemove.length} položek`);
-  } catch (e) {
-    console.warn("[SW] Chyba při prořezávání cache", e);
+  if (p.endsWith("sw.js")) {
+    p = p.slice(0, -5); // odstranit "sw.js"
   }
+  if (!p.endsWith("/")) p += "/";
+  return p;
 }
 
-// =========================
-// === INSTALL
-// =========================
+const BASE = getBaseRoot();
 
-self.addEventListener("install", (ev) => {
-  ev.waitUntil(
-    caches.open(APP_SHELL_CACHE).then(cache => {
-      return cache.addAll(APP_SHELL).catch(() => {});
-    }).then(() => {
-      return self.skipWaiting();
+// Normalizace URL pro BASE
+function normalizeUrl(url) {
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+  if (url.startsWith("/")) {
+    return new URL(url, self.location.origin).toString();
+  }
+  return new URL(url, BASE).toString();
+}
+
+// TTL kontrola
+function isCacheValid(meta) {
+  if (!meta || !meta.timestamp) return false;
+  const age = Date.now() - meta.timestamp;
+  return age < (TTL[meta.type] || 300) * 1000;
+}
+
+// Install: cache App Shell
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(APP_SHELL_CACHE).then((cache) => {
+      const urls = getAppShellUrls().map(url => normalizeUrl(url));
+      return cache.addAll(urls).catch((err) => {
+        console.warn("[SW] App Shell cache failed:", err);
+      });
     })
   );
+  self.skipWaiting();
 });
 
-// =========================
-// === ACTIVATE
-// =========================
-
-self.addEventListener("activate", (ev) => {
-  ev.waitUntil(
-    caches.keys().then(keys => {
+// Activate: cleanup old caches
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) => {
       return Promise.all(
-        keys.map(key => {
-          // Smaž staré cache verze (kromě aktuálních)
-          if (key !== APP_SHELL_CACHE && key !== DATA_CACHE && key !== DATA_META_CACHE && key.startsWith("iu-")) {
+        keys.map((key) => {
+          if (key !== APP_SHELL_CACHE && key !== DATA_CACHE && key !== DATA_META_CACHE) {
             return caches.delete(key);
           }
         })
       );
-    }).then(() => {
-      return self.clients.claim();
     })
   );
+  return self.clients.claim();
 });
 
-// =========================
-// === FETCH
-// =========================
-
-self.addEventListener("fetch", (ev) => {
-  const url = new URL(ev.request.url);
+// Fetch: Network First pro data, Cache First pro App Shell
+self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
   const path = url.pathname;
+  const isDataJson = path.startsWith(`${BASE}data/`) && path.endsWith(".json");
 
-  // JSON data: Network First + Cache Fallback s TTL
-  if (path.endsWith(".json") && (path.includes("/data/") || path.includes("articles") || path.includes("videos") || path.includes("meta") || path.includes("status") || path.includes("weather") || path.includes("namedays"))) {
-    ev.respondWith(
-      (async () => {
-        const cacheKey = getCacheKey(ev.request.url);
-        const ttl = getTTLForPath(path);
-        const cache = await caches.open(DATA_CACHE);
-
-        // Zkus network
-        try {
-          const networkRes = await fetch(ev.request);
-          if (networkRes.ok) {
-            // Zkontroluj, že to není HTML (404 stránka)
-            const text = await networkRes.clone().text();
-            if (looksLikeHTML(text)) {
-              throw new Error("HTML místo JSON (pravděpodobně 404)");
-            }
-
-            // OK → ulož do cache s metadata
-            const clone = networkRes.clone();
-            await cache.put(ev.request, clone);
-            
-            // Ulož metadata (timestamp)
-            await setCacheMetadata(cache, cacheKey, {
-              cachedAt: Date.now(),
-              ttl: ttl,
-              url: ev.request.url
-            });
-
-            // Prořež cache pokud je potřeba
-            await pruneCache(cache);
-
-            return networkRes;
+  if (isDataJson) {
+    event.respondWith(
+      fetch(event.request, { cache: "no-store" })
+        .then((networkResponse) => {
+          if (!networkResponse.ok) {
+            throw new Error(`Network ${networkResponse.status}`);
           }
-          throw new Error(`HTTP ${networkRes.status}`);
-        } catch (networkErr) {
-          // Network fail → zkus cache
-          // Použij ignoreSearch pro match (ignoruje query stringy)
-          const cached = await cache.match(ev.request, { ignoreSearch: true });
-          
+          return networkResponse;
+        })
+        .catch(async () => {
+          const cached = await caches.match(event.request);
           if (cached) {
-            // Ověř, že cache není HTML
-            const text = await cached.clone().text();
-            if (looksLikeHTML(text)) {
-              // Cache je HTML → vrať fallback
-              return new Response(JSON.stringify({ error: "offline", items: [] }), {
-                headers: { "Content-Type": "application/json" }
-              });
+            const metaCache = await caches.open(DATA_META_CACHE);
+            const metaRes = await metaCache.match(new Request(event.request.url + ".meta"));
+            if (metaRes) {
+              const meta = await metaRes.json();
+              if (isCacheValid(meta)) {
+                return cached;
+              }
+            } else {
+              return cached;
             }
-
-            // Zkontroluj TTL
-            const meta = await getCacheMetadata(cache, cacheKey);
-            const stale = isCacheStale(meta, ttl);
-
-            if (stale) {
-              // Cache je stale, ale použijeme ji jako fallback
-              return new Response(cached.body, {
-                status: cached.status,
-                statusText: cached.statusText,
-                headers: {
-                  ...Object.fromEntries(cached.headers.entries()),
-                  "X-Cache-Status": "stale"
-                }
-              });
-            }
-
-            // Cache je fresh
-            return cached;
           }
-
-          // Žádná cache → fallback
-          return new Response(JSON.stringify({ error: "offline", items: [] }), {
-            headers: { "Content-Type": "application/json" }
-          });
-        }
-      })()
+          throw new Error("Network failed and no cache");
+        })
     );
     return;
   }
 
-  // App Shell: Cache First
-  if (APP_SHELL.some(p => path === p || path.endsWith(p))) {
-    ev.respondWith(
-      caches.match(ev.request).then(cached => {
+  // ✅ FIX: App Shell: Cache First - detekce relativně vůči BASE
+  const isAppShell = path === BASE || 
+                     path === `${BASE}index.html` || 
+                     path.startsWith(`${BASE}assets/`) && (path.endsWith(".js") || path.endsWith(".css")) ||
+                     path === `${BASE}sw.js`;
+  
+  if (isAppShell) {
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
         if (cached) return cached;
-        return fetch(ev.request).then(res => {
-          if (res.ok) {
-            const clone = res.clone();
-            caches.open(APP_SHELL_CACHE).then(cache => {
-              cache.put(ev.request, clone);
+        return fetch(event.request).then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(APP_SHELL_CACHE).then((cache) => {
+              cache.put(event.request, clone);
             });
           }
-          return res;
+          return response;
         });
       })
     );
     return;
   }
 
+  // ✅ FIX: Funkce pro kontrolu, zda response je JSON (ne HTML)
+  function looksLikeJSON(response) {
+    const contentType = response.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) return true;
+    // Pokud není content-type, zkontroluj první znak
+    return false; // Musíme zkontrolovat tělo
+  }
+
+  // JSON data: Network First + Cache Fallback s TTL
+  if (path.endsWith(".json")) {
+    event.respondWith(
+      fetch(event.request)
+        .then(async (response) => {
+          // ✅ FIX: Nekacherovat 404 nebo HTML místo JSON
+          if (!response.ok || response.status === 404) {
+            // Zkus cache jako fallback
+            const cached = await caches.match(event.request);
+            if (cached) {
+              const text = await cached.clone().text();
+              if (text.trim().startsWith("{") || text.trim().startsWith("[")) {
+                return cached;
+              }
+            }
+            return response; // Vrať chybu, ne cacheuj HTML
+          }
+
+          // ✅ FIX: Ověř, že response je skutečně JSON (ne HTML)
+          const clone = response.clone();
+          const text = await clone.text();
+          const isJSON = text.trim().startsWith("{") || text.trim().startsWith("[");
+          const isHTML = text.trim().toLowerCase().startsWith("<!doctype") || text.trim().toLowerCase().startsWith("<html");
+
+          if (isHTML) {
+            // HTML místo JSON - nekacherovat, zkus cache jako fallback
+            const cached = await caches.match(event.request);
+            if (cached) {
+              const cachedText = await cached.clone().text();
+              if (cachedText.trim().startsWith("{") || cachedText.trim().startsWith("[")) {
+                return cached;
+              }
+            }
+            return new Response(JSON.stringify({ error: "Server returned HTML instead of JSON" }), {
+              status: 503,
+              headers: { "Content-Type": "application/json" }
+            });
+          }
+
+          if (isJSON) {
+            // Validní JSON - cacheuj
+            caches.open(DATA_CACHE).then((cache) => {
+              cache.put(event.request, response.clone());
+              // Ulož metadata pro TTL
+              const meta = {
+                timestamp: Date.now(),
+                type: path.includes("articles") ? "articles" : path.includes("videos") ? "videos" : path.includes("weather") ? "weather" : path.includes("namedays") ? "namedays" : "meta"
+              };
+              caches.open(DATA_META_CACHE).then((metaCache) => {
+                metaCache.put(new Request(event.request.url + ".meta"), new Response(JSON.stringify(meta)));
+              });
+            });
+          }
+
+          return response;
+        })
+        .catch(async () => {
+          // Network failed, zkus cache
+          const cached = await caches.match(event.request);
+          if (cached) {
+            // ✅ FIX: Ověř, že cached response je JSON (ne HTML)
+            const text = await cached.clone().text();
+            if (text.trim().startsWith("{") || text.trim().startsWith("[")) {
+              // Ověř TTL
+              const metaCache = await caches.open(DATA_META_CACHE);
+              const metaRes = await metaCache.match(new Request(event.request.url + ".meta"));
+              if (metaRes) {
+                const meta = await metaRes.json();
+                if (isCacheValid(meta)) {
+                  return cached;
+                }
+              } else {
+                // Pokud není metadata, použij cache (ale jen pokud je JSON)
+                return cached;
+              }
+            }
+          }
+          return new Response(JSON.stringify({ error: "Network failed and no cache" }), {
+            status: 503,
+            headers: { "Content-Type": "application/json" }
+          });
+        })
+    );
+    return;
+  }
+
   // Ostatní: Network First
-  ev.respondWith(
-    fetch(ev.request).catch(() => {
-      return caches.match(ev.request);
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return caches.match(event.request);
     })
   );
+});
+
+self.addEventListener("message", (event) => {
+  if (event?.data?.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });

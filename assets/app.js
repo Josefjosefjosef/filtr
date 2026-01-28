@@ -1,1854 +1,1316 @@
 (() => {
-  /* ===== KONFIG ===== */
-  // ✅ FIX: BASE je path-only ("/" nebo "/filtr/"), vždy s trailing slash
-  function getBaseRoot(){
-    let p = location.pathname;
-    if (p.endsWith("index.html")) p = p.slice(0, -10);
-    if (!p.endsWith("/")) p += "/";
-    return p;
-  }
-  
-  
-  // ✅ FIX: BASE je path-only (ne origin+path) - pro správný SW scope
-  const BASE = getBaseRoot();
-  function getBuildStamp(){
-    const meta = document.querySelector("meta[name=\"iu-build\"]");
-    const stamp = meta ? (meta.getAttribute("content") || "").trim() : "";
-    return stamp || null;
-  }
-  function makeDataUrl(relPath, opts = {}){
-    const url = new URL(relPath, `${location.origin}${BASE}`);
-    if(opts.bust){
-      const stamp = getBuildStamp();
-      const param = stamp || (DEBUG ? String(Date.now()) : null);
-      if(param){
-        url.searchParams.set("v", param);
-      }
-    }
-    return url.toString();
-  }
-  
-  // ✅ FIX: Debug log při ?debug=1
-  const DEBUG = (() => {
+  const $ = (sel) => document.querySelector(sel);
+  function qsSafe(selector) {
     try {
-      const urlDebug = new URLSearchParams(location.search).get("debug") === "1";
-      const storageDebug = localStorage.getItem("iu:debug") === "1";
-      return urlDebug || storageDebug;
-    } catch (e) {
-      return false;
-    }
-  })();
-  
-  if (DEBUG) {
-    console.log("[infoUzel] DEBUG MODE");
-    console.log("[infoUzel] BASE:", BASE);
-    console.log("[infoUzel] ARTICLES_URL:", `${BASE}data/articles.json`);
-    console.log("[infoUzel] VIDEOS_URL:", `${BASE}data/videos.json`);
-    console.log("[infoUzel] window.__iuSafeFetch:", window.__iuSafeFetch);
-    console.log("[infoUzel] window.__iuSafeFetch?.fetchJSON:", typeof window.__iuSafeFetch?.fetchJSON);
-    console.log("[infoUzel] window.__iuSafeFetch?.safeFetchJSON:", typeof window.__iuSafeFetch?.safeFetchJSON);
-  }
-
-  function debugLog(...args) {
-    if (DEBUG) {
-      console.log("[infoUzel]", ...args);
+      const el = document.querySelector(selector);
+      if (!el) {
+        console.warn("[DOM] missing", selector);
+      }
+      return el;
+    } catch (err) {
+      console.warn("[DOM] missing", selector, err);
+      return null;
     }
   }
 
-  function debugWarn(...args) {
-    if (DEBUG) {
-      console.warn("[infoUzel]", ...args);
+  const elStatus = $("#dataStatus");
+  const elDebugPanel = $("#debugPanel");
+  const elDebugOut = $("#debugOut");
+  const elDataCount = $("#dataCount");
+  const btnToggleDebug = $("#toggleDebugBtn");
+  const elNewsList = document.getElementById("newsList");
+  const emptyBox = document.getElementById("emptyBox");
+  const sectionLabel = document.getElementById("sectionLabel");
+  const sectionsBar = document.getElementById("sectionsBar");
+  const searchForm = document.getElementById("searchForm");
+  const searchInput = document.getElementById("searchInput");
+  const searchModal = document.getElementById("searchModal");
+  const modalGoogle = document.getElementById("modalGoogle");
+  const modalCancel = document.getElementById("modalCancel");
+
+  const feedTarget = elNewsList;
+  const LS_KEY = "iu:debug";
+  const SECTION_KEYS = ["vse", "aktualne", "doprava", "pocasi", "sport", "finance", "krimi", "zdravi", "video"];
+  let activeSections = ["vse"];
+  let cachedItems = [];
+  let hasLoadedData = false;
+  const BASE_ROOT = getBaseRoot();
+  const DATA_URL = `${BASE_ROOT}data/articles.json`;
+  const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
+  const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
+  const SECTION_LABELS = {
+    vse: "Vše",
+    aktualne: "Aktuálně",
+    doprava: "Doprava",
+    pocasi: "Počasí",
+    sport: "Sport",
+    finance: "Finance",
+    krimi: "Krimi",
+    zdravi: "Zdraví",
+    video: "Video",
+  };
+
+  function getBaseRoot() {
+    // BASE = složka, kde leží tento skript (filtr/assets/app.js -> filtr/)
+    try {
+      const u = new URL(document.currentScript?.src || "", location.href);
+      return u.pathname.replace(/\/assets\/[^/]*$/, "/");
+    } catch {
+      // fallback: relativně k current path
+      let p = location.pathname.replace(/\\/g, "/");
+      if (p.endsWith("index.html")) p = p.slice(0, -10);
+      if (!p.endsWith("/")) p += "/";
+      return p || "/";
     }
   }
 
-  // ✅ FIX: Odstraněn cache-busting - SW cache může fungovat
-  // URL jsou stabilní, SW zajišťuje aktualizaci přes TTL
-  // BASE už obsahuje trailing slash, takže nepřidáváme další
-  const ARTICLES_URL = `${BASE}data/articles.json`;
-  const VIDEOS_URL = `${BASE}data/videos.json`;
-  const WEATHER_URL = `${BASE}data/weather.json`;
-  const NAMEDAYS_URL = `${BASE}data/namedays.json`;
+  function getBuildStamp() {
+    const meta = document.querySelector('meta[name="iu-build"]');
+    const value = meta ? (meta.getAttribute("content") || "").trim() : "";
+    return value || null;
+  }
 
-  // ✅ FIX: Univerzální unwrap pro různé formáty JSON
-  function unwrapToArray(data){
+  const BUILD_STAMP = getBuildStamp();
+  console.log("[BUILD]", BUILD_STAMP || "no-build-stamp");
+
+  function freezeScroll() {
+    if (freezeScroll.lock) return;
+    freezeScroll.lock = { x: window.scrollX, y: window.scrollY };
+    window.requestAnimationFrame(() => {
+      window.scrollTo(freezeScroll.lock.x, freezeScroll.lock.y);
+      window.requestAnimationFrame(() => window.scrollTo(freezeScroll.lock.x, freezeScroll.lock.y));
+    });
+  }
+  freezeScroll.lock = null;
+
+  function restoreScroll() {
+    if (!freezeScroll.lock || restoreScroll.pending) return;
+    restoreScroll.pending = true;
+    const { x, y } = freezeScroll.lock;
+    window.requestAnimationFrame(() => {
+      window.scrollTo(x, y);
+      window.requestAnimationFrame(() => {
+        window.scrollTo(x, y);
+        freezeScroll.lock = null;
+        restoreScroll.pending = false;
+      });
+    });
+  }
+  restoreScroll.pending = false;
+
+  function withScrollLock(fn) {
+    freezeScroll();
+    try {
+      fn();
+    } finally {
+      restoreScroll();
+    }
+  }
+
+  function isDebugOn() {
+    const qs = new URLSearchParams(location.search);
+    if (qs.get("debug") === "1") return true;
+    return localStorage.getItem(LS_KEY) === "1";
+  }
+
+  function setDebug(on) {
+    localStorage.setItem(LS_KEY, on ? "1" : "0");
+    renderDebugVisibility();
+  }
+
+  function renderDebugVisibility() {
+    const on = isDebugOn();
+    if (elDebugPanel) {
+      elDebugPanel.style.display = on ? "block" : "none";
+    }
+    if (btnToggleDebug) {
+      btnToggleDebug.textContent = on ? "Vypnout debug" : "Zapnout debug";
+    }
+  }
+
+  function setStatus(text) {
+    if (elStatus) {
+      elStatus.textContent = text;
+    }
+  }
+
+  function safeText(value) {
+    if (value == null) return "";
+    return String(value);
+  }
+
+  function safeUrl(value) {
+    if (!value) return null;
+    try {
+      const url = new URL(value, location.origin);
+      if (url.protocol === "http:" || url.protocol === "https:") {
+        return url.href;
+      }
+    } catch {
+      return null;
+    }
+    return null;
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return safeText(iso);
+    return d.toLocaleString("cs-CZ");
+  }
+
+  function normalizeItems(data) {
     if (Array.isArray(data)) return data;
-    if (Array.isArray(data?.items)) return data.items;
-    if (Array.isArray(data?.articles)) return data.articles;
-    if (Array.isArray(data?.arr)) return data.arr;
+    if (data && typeof data === "object") {
+      if (Array.isArray(data.items)) return data.items;
+      if (Array.isArray(data.articles)) return data.articles;
+    }
     return [];
   }
 
-  // ✅ BEZ “Video” sekce — sekce = články + videa dohromady
-  const SECTIONS = [
-    { key: "vse",      label: "Vše" },
-    { key: "aktualne", label: "Aktuálně" },
-    { key: "doprava",  label: "Doprava" },
-    { key: "pocasi",   label: "Počasí" },
-    { key: "sport",    label: "Sport" },
-    { key: "finance",  label: "Finance" },
-    { key: "krimi",    label: "Krimi" },
-    { key: "zdravi",   label: "Zdraví" }
-  ];
-
-  const EMAIL_LINKS = [
-    { name:"Seznam",  url:"https://email.seznam.cz/",          ico:"S" },
-    { name:"Gmail",   url:"https://mail.google.com/",          ico:"G" },
-    { name:"Outlook", url:"https://outlook.live.com/mail/",    ico:"O" },
-    { name:"iCloud",  url:"https://www.icloud.com/mail",       ico:"I" },
-    { name:"Centrum", url:"https://mail.centrum.cz/",          ico:"C" },
-    { name:"Proton",  url:"https://mail.proton.me/",           ico:"P" },
-    { name:"Tuta",    url:"https://mail.tutanota.com/",        ico:"T" },
-    { name:"Yahoo",   url:"https://mail.yahoo.com/",           ico:"Y" }
-  ];
-
-  /* ===== LIMITY ZOBRAZENÍ + "NAČÍST DALŠÍ" =====
-     - Sekce: 60 položek na stránku (start i krok)
-     - Vše: víc než sekce (start i krok)
-     - Pozn.: JSON může mít klidně 1000, UI bude dávkovat tlačítkem
-  */
-  const PAGE_SIZE_SECTION = 60;
-  const PAGE_SIZE_ALL = 120;
-
-  /* ===== VIDEO SLOTY (pevné pozice) =====
-     Chceš ~10 videí stabilně na "Vše".
-     Vkládáme 10 slotů po N-tém článku tak, aby nebyla hned vedle banneru
-     a aby mezi videem a bannerem byly min. 3 články.
-  */
-  const VIDEO_SLOTS_AFTER_ARTICLE = [5, 14, 24, 34, 44, 54, 64, 74, 84, 94];
-
-  /* ===== BANNERY – ZABETONOVAT (pevné pozice po N-tém článku) =====
-     - video NIKDY hned vedle banneru
-     - mezi videem a bannerem min. 3 články
-  */
-  const BANNER_SLOTS_AFTER_ARTICLE = [8, 18, 28, 38, 48, 58, 68, 78, 88, 98];
-
-  function isBannerAfterArticleCount(n){ return BANNER_SLOTS_AFTER_ARTICLE.includes(n); }
-
-  /* ===== VIDEO: povolené kanály + priorita ===== */
-  const VIDEO_ALLOWED_CHANNELS = [
-    "ČT24",
-    "Seznam Zprávy",
-    "DVTV",
-    "CNN Prima NEWS"
-  ];
-
-  function channelPriority(channel){
-    const c = String(channel || "").trim();
-    const i = VIDEO_ALLOWED_CHANNELS.indexOf(c);
-    return (i >= 0) ? (100 - i) : 0;
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
   }
 
-  function isAllowedChannel(channel){
-    const c = String(channel || "").trim();
-    return VIDEO_ALLOWED_CHANNELS.includes(c);
+  function getSectionLabelText(keys) {
+    const names = keys
+      .map((key) => SECTION_LABELS[key] || key)
+      .filter(Boolean);
+    return names.length ? names.join(", ") : SECTION_LABELS.vse;
   }
 
-  /* ===== STAV ===== */
-  // allItems = články + videa (pro vyhledávání / filtry / řazení)
-  let allItems = [];
-  let filtered = [];
-
-  // zvlášť držíme články a videa (pro pevné sloty na "Vše")
-  let allArticles = [];
-  let allVideos = [];
-
-  // displayFeed = finální feed po vložení videí + bannerů (obsahuje article/video/ad)
-  let displayFeed = [];
-  let renderedItems = 0;      // index do displayFeed
-  let renderedLimit = 0;      // kolik max zobrazit (tlačítko "Načíst další")
-
-  // ÚKOL 4t: multi-select sekcí (prázdná množina = "Vše")
-  let activeSections = new Set();
-  let activeQuery = "";
-
-  // pro bezpečný auto-refresh
-  let lastDataSignature = "";
-  let lastVideosSignature = "";
-
-  /* ===== DOM SAFE GET ===== */
-  const $ = (id) => document.getElementById(id);
-
-  /* ===== ESCAPE ===== */
-  function escapeHtml(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+  function updateSectionLabel() {
+    if (!sectionLabel) return;
+    const labelText = getSectionLabelText(activeSections);
+    sectionLabel.textContent = `Sekce: ${labelText}`;
   }
 
-  /* ÚKOL 2m: escapování do HTML atributu (title/aria-label) */
-  function escapeAttr(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  function norm(s){ return String(s ?? "").toLowerCase().trim(); }
-
-  function safeUrl(u){
-    const s = String(u ?? "").trim();
-    if(!s) return "";
-    try{
-      const url = new URL(s, location.origin);
-      if(url.protocol !== "http:" && url.protocol !== "https:") return "";
-      return url.toString();
-    }catch(_){
-      return "";
-    }
-  }
-
-  /* ===== DOMÉNA PRO ZDROJ: "www..." ===== */
-  function domainFromUrl(u){
-    try{
-      const url = new URL(u);
-      let host = (url.hostname || "").toLowerCase();
-      if(!host) return "";
-      if(!host.startsWith("www.")) host = "www." + host;
-      return host;
-    }catch(_){
-      return "";
-    }
-  }
-
-  /* ===== ČAS ===== */
-  function fmtTime(iso){
-    try{
-      const d = new Date(iso);
-      if(Number.isNaN(d.getTime())) return "";
-      // Zobrazujeme UTC čas, aby nedocházelo k posunu kvůli lokálnímu časovému pásmu
-      const dd = String(d.getUTCDate()).padStart(2,"0");
-      const mm = String(d.getUTCMonth()+1).padStart(2,"0");
-      const yyyy = d.getUTCFullYear();
-      const hh = String(d.getUTCHours()).padStart(2,"0");
-      const mi = String(d.getUTCMinutes()).padStart(2,"0");
-      return `${dd}. ${mm}. ${yyyy} ${hh}:${mi}`;
-    }catch(e){
-      return "";
-    }
-  }
-
-  function czDateLabel(d){
-    const days = ["neděle","pondělí","úterý","středa","čtvrtek","pátek","sobota"];
-    const months = ["ledna","února","března","dubna","května","června","července","srpna","září","října","listopadu","prosince"];
-    const dayName = days[d.getDay()];
-    const dd = d.getDate();
-    const mm = months[d.getMonth()];
-    const yyyy = d.getFullYear();
-    return `${dayName} ${dd}. ${mm} ${yyyy}`;
-  }
-
-  function hoursSince(iso){
-    try{
-      const t = new Date(iso).getTime();
-      if(!t || Number.isNaN(t)) return Number.POSITIVE_INFINITY;
-      const diff = Date.now() - t;
-      return diff / 3600000;
-    }catch(_){
-      return Number.POSITIVE_INFINITY;
-    }
-  }
-
-  /* ===== TOPBAR OFFSET ===== */
-  function syncTopbarOffset(){
-    const tb = $("topbarWrap");
-    if(!tb) return;
-    const h = tb.offsetHeight || 0;
-    document.documentElement.style.setProperty("--topbarOffset", h + "px");
-  }
-
-  /* ===== DATA UPDATED AT (UI) ===== */
-  function setDataUpdatedAtLabel(iso){
-    const v = String(iso || "").trim();
-
-    const el = $("dataUpdatedAt");
-    if(!el) return;
-
-    if(!v){
-      el.textContent = "Poslední aktualizace dat: —";
-      return;
-    }
-
-    const t = fmtTime(v);
-    el.textContent = t ? `Poslední aktualizace dat: ${t}` : "Poslední aktualizace dat: —";
-  }
-
-  /* ===== DATA NORMALIZACE ===== */
-  function normalizeSources(src){
-    const arr = Array.isArray(src) ? src : [];
-    const out = [];
-    for(const s of arr){
-      const name = String(s?.name ?? "").trim();
-      const url = safeUrl(s?.url ?? "");
-      if(!name && !url) continue;
-      out.push({ name: name || "Zdroj", url });
-    }
-    return out;
-  }
-
-  function normalizeArticle(a){
-    const section = norm(a?.section) || norm(a?.topic) || "aktualne";
-
-    const ct = norm(a?.contentType) || "article";
-    const contentType = (ct === "video") ? "video" : "article";
-
-    let sources = normalizeSources(a?.sources);
-
-    // VIDEO: vždy jen 1 zdroj (primární)
-    if(contentType === "video" && sources.length > 1){
-      sources = [sources[0]];
-    }
-
-    return {
-      section,
-      topic: section, // topic = section
-      contentType,
-      title: String(a?.title ?? "").trim(),
-      publishedAt: String(a?.publishedAt ?? "").trim(),
-      sources,
-      // video fields (když přijdou)
-      videoId: String(a?.videoId ?? "").trim(),
-      channel: String(a?.channel ?? "").trim(),
-      image: ""
-    };
-  }
-
-  /* ===== VIDEO: parsování ===== */
-  function youtubeIdFromUrl(url){
-    const u = safeUrl(url);
-    if(!u) return "";
-    try{
-      const x = new URL(u);
-      const host = (x.hostname || "").toLowerCase();
-
-      // youtu.be/<id>
-      if(host.endsWith("youtu.be")){
-        const id = (x.pathname || "").replace("/","").trim();
-        return id || "";
-      }
-
-      // youtube.com/…id>
-      if(host.includes("youtube.com")){
-        const v = x.searchParams.get("v");
-        if(v) return v.trim();
-
-        // youtube.com/…id>
-        const parts = (x.pathname || "").split("/").filter(Boolean);
-        const idxShorts = parts.indexOf("shorts");
-        if(idxShorts >= 0 && parts[idxShorts+1]) return parts[idxShorts+1].trim();
-
-        // youtube.com/…id>
-        const idxEmbed = parts.indexOf("embed");
-        if(idxEmbed >= 0 && parts[idxEmbed+1]) return parts[idxEmbed+1].trim();
-      }
-
-      return "";
-    }catch(_){
-      return "";
-    }
-  }
-
-  function ytEmbedUrl(videoId){
-    const id = String(videoId || "").trim();
-    if(!id) return "";
-    return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?rel=0&modestbranding=1&playsinline=1`;
-  }
-
-  function normalizeVideoAsItem(v){
-    const title = String(v?.title ?? "").trim();
-    const url = safeUrl(v?.url ?? v?.link ?? "");
-    const videoId = String(v?.videoId ?? v?.id ?? "").trim() || youtubeIdFromUrl(url);
-
-    const section = norm(v?.section) || norm(v?.topic) || "aktualne";
-    const publishedAt = String(v?.publishedAt ?? v?.published ?? v?.date ?? "").trim();
-    const channel = String(v?.channel ?? v?.source ?? v?.author ?? "").trim();
-
-    const sourceUrl = url || (videoId ? `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}` : "");
-
-    // pokud nemáme datum nebo videoId, nechceme to do feedu
-    if(!publishedAt || !videoId) return null;
-
-    // jen povolené kanály (priority)
-    if(!isAllowedChannel(channel)) return null;
-
-    return {
-      section,
-      topic: section,
-      contentType: "video",
-      title,
-      publishedAt,
-      sources: [
-        {
-          name: channel ? `YouTube / ${channel}` : "YouTube",
-          url: sourceUrl
-        }
-      ],
-      videoId,
-      channel,
-      image: ""
-    };
-  }
-
-  /* ===== ZÁCHRANNÉ SLUČOVÁNÍ (jen stejné title) ===== */
-  function mergeByExactTitle(items){
-    const m = new Map();
-
-    for(const x of items){
-      const it = normalizeArticle(x);
-
-      // VIDEO NIKDY NESLUČUJEME
-      if(it.contentType === "video"){
-        const firstUrl = safeUrl(it?.sources?.[0]?.url || "");
-        const uniq = `video::${norm(it.title)}::${String(it.publishedAt||"")}::${firstUrl}`;
-        m.set(uniq, it);
-        continue;
-      }
-
-      const key = norm(it.title);
-      if(!key) continue;
-
-      if(!m.has(key)){
-        m.set(key, it);
-        continue;
-      }
-
-      const e = m.get(key);
-
-      // sources merge (bez duplicit podle url)
-      const urls = new Set((e.sources||[]).map(s => s?.url));
-      const merged = [...(e.sources||[])];
-      for(const s of it.sources){
-        if(s?.url && !urls.has(s.url)){
-          merged.push(s);
-          urls.add(s.url);
-        }
-      }
-
-      // ponech novější publishedAt
-      let publishedAt = e.publishedAt;
-      try{
-        const t1 = Date.parse(it.publishedAt);
-        const t2 = Date.parse(e.publishedAt);
-        if(Number.isFinite(t1) && Number.isFinite(t2) && t1 > t2){
-          publishedAt = it.publishedAt;
-        }
-      }catch(_){}
-
-      // sekce s vyšší prioritou
-      const prio = { doprava:7, pocasi:6, sport:5, finance:4, krimi:3, zdravi:2, aktualne:1 };
-      const sec = (prio[it.section]||0) > (prio[e.section]||0) ? it.section : e.section;
-
-      m.set(key, {
-        ...e,
-        section: sec,
-        topic: sec,
-        publishedAt,
-        sources: merged,
-        image: ""
-      });
-    }
-
-    return Array.from(m.values());
-  }
-
-  /* ===== ÚKOL 4y: zabránění poskakování stránky ===== */
-  let _freezeScrollY = null;
-
-  function freezeScroll(){
-    _freezeScrollY = window.scrollY || 0;
-  }
-
-  function restoreScroll(){
-    if(_freezeScrollY === null || _freezeScrollY === undefined) return;
-
-    const y = Number(_freezeScrollY) || 0;
-    _freezeScrollY = null;
-
-    requestAnimationFrame(() => {
-      window.scrollTo(0, y);
-      requestAnimationFrame(() => {
-        window.scrollTo(0, y);
-      });
-    });
-  }
-
-  function applyFilterPreserveScroll(){
-    freezeScroll();
-    applyFilter();
-    restoreScroll();
-  }
-
-  /* ===== HASH SEKCE (ÚKOL 4t: multi-select) ===== */
-  function setSectionsFromHash(){
-    const raw = (location.hash || "").replace("#","").trim().toLowerCase();
-    const next = new Set();
-
-    if(!raw){
-      activeSections = next;
-      return;
-    }
-
-    const parts = raw.split(",").map(s => s.trim()).filter(Boolean);
-
-    const allowed = new Set(SECTIONS.map(s => s.key).filter(k => k !== "vse"));
-    for(const p of parts){
-      if(allowed.has(p)) next.add(p);
-    }
-
-    activeSections = next;
-  }
-
-  function hashFromActiveSections(){
-    if(!activeSections || activeSections.size === 0) return "";
-    const allowed = new Set(SECTIONS.map(s => s.key).filter(k => k !== "vse"));
-    const keys = Array.from(activeSections).filter(k => allowed.has(k));
-    keys.sort();
-    return keys.join(",");
-  }
-
-  function setHashFromActiveSections({ preserveScroll = false } = {}){
-    if(preserveScroll) freezeScroll();
-
-    const h = hashFromActiveSections();
-    const newUrl = location.pathname + location.search + (h ? `#${h}` : "");
-
-    try{
-      history.replaceState(null, "", newUrl);
-    }catch(_){
-      if(!h){
-        if(location.hash) location.hash = "";
-      }else{
-        location.hash = `#${h}`;
-      }
-    }
-
-    setSectionsFromHash();
-    if(preserveScroll){
-      applyFilter();
-      restoreScroll();
-    }else{
-      applyFilter();
-    }
-  }
-
-  /* ===== SECTIONS BAR ===== */
-  function buildSectionsBar(){
-    const bar = $("sectionsBar");
-    if(!bar) return;
-
-    bar.innerHTML = SECTIONS.map(s => `
-      <button class="secBtn" type="button" data-key="${escapeHtml(s.key)}" aria-pressed="false">${escapeHtml(s.label)}</button>
-    `).join("");
-
-    bar.addEventListener("click", (ev) => {
-      const btn = ev.target.closest(".secBtn");
-      if(!btn) return;
-
-      const key = (btn.getAttribute("data-key") || "vse").toLowerCase();
-      const allowed = new Set(SECTIONS.map(s => s.key).filter(k => k !== "vse"));
-
-      if(key === "vse"){
-        activeSections = new Set();
-        setHashFromActiveSections({ preserveScroll: true });
-        return;
-      }
-
-      if(!allowed.has(key)) return;
-
-      if(activeSections.has(key)){
-        activeSections.delete(key);
-      }else{
-        activeSections.add(key);
-      }
-
-      setHashFromActiveSections({ preserveScroll: true });
-    });
-
-    updateSectionsBarActive();
-  }
-
-  function updateSectionsBarActive(){
-    const bar = $("sectionsBar");
-    if(!bar) return;
-
-    const noneSelected = !activeSections || activeSections.size === 0;
-
-    bar.querySelectorAll(".secBtn").forEach(btn => {
-      const k = (btn.getAttribute("data-key") || "").toLowerCase();
-
-      const isActive = (k === "vse")
-        ? noneSelected
-        : (!noneSelected && activeSections.has(k));
-
-      btn.classList.toggle("isActive", isActive);
-      btn.setAttribute("aria-current", isActive ? "true" : "false");
-      btn.setAttribute("aria-pressed", isActive ? "true" : "false");
-    });
-
-    updateMenuActive();
-  }
-
-  /* ===== MENU (drawer) ===== */
-  function buildMenu(){
-    const menu = $("menuList");
-    if(!menu) return;
-
-    menu.innerHTML = SECTIONS.map(s => `
-      <div class="menuItem" data-key="${escapeHtml(s.key)}" role="button" tabindex="0" aria-pressed="false">${escapeHtml(s.label)}</div>
-    `).join("");
-
-    menu.addEventListener("click", (ev) => {
-      const el = ev.target.closest(".menuItem");
-      if(!el) return;
-
-      const key = (el.getAttribute("data-key") || "vse").toLowerCase();
-      const allowed = new Set(SECTIONS.map(s => s.key).filter(k => k !== "vse"));
-
-      if(key === "vse"){
-        activeSections = new Set();
-        setHashFromActiveSections({ preserveScroll: true });
-        closeMenu();
-        return;
-      }
-
-      if(!allowed.has(key)) return;
-
-      if(activeSections.has(key)){
-        activeSections.delete(key);
-      }else{
-        activeSections.add(key);
-      }
-
-      setHashFromActiveSections({ preserveScroll: true });
-      closeMenu();
-    });
-
-    menu.addEventListener("keydown", (ev) => {
-      const el = ev.target.closest?.(".menuItem");
-      if(!el) return;
-      if(ev.key === "Enter" || ev.key === " "){
-        ev.preventDefault();
-        el.click();
-      }
-    });
-
-    updateMenuActive();
-  }
-
-  function updateMenuActive(){
-    const menu = $("menuList");
-    if(!menu) return;
-
-    const noneSelected = !activeSections || activeSections.size === 0;
-
-    menu.querySelectorAll(".menuItem").forEach(item => {
-      const k = (item.getAttribute("data-key") || "").toLowerCase();
-
-      const isActive = (k === "vse")
-        ? noneSelected
-        : (!noneSelected && activeSections.has(k));
-
-      item.setAttribute("aria-pressed", isActive ? "true" : "false");
-    });
-  }
-
-  function openMenu(){
-    const o = $("overlay");
-    if(o) o.classList.add("show");
-  }
-
-  function closeMenu(){
-    const o = $("overlay");
-    if(o) o.classList.remove("show");
-  }
-
-  /* ===== EMAIL CHIPS ===== */
-  function buildEmailChips(){
-    const wrap = $("emailChips");
-    if(!wrap) return;
-    wrap.innerHTML = EMAIL_LINKS.map(e => `
-      <a class="chipLink" href="${escapeHtml(e.url)}" target="_blank" rel="noopener noreferrer">
-        <span class="chipIcon">${escapeHtml(e.ico)}</span>
-        <span>${escapeHtml(e.name)}</span>
-      </a>
-    `).join("");
-  }
-
-  /* ===== TOPBAR INFO (datum + svátek) ===== */
-  let todayLabel = "";
-  let todayName  = "";
-
-  function splitFirstName(full){
-    const s = String(full || "").trim();
-    if(!s) return { first:"", rest:"" };
-    const parts = s.split(/\s+/).filter(Boolean);
-    const first = parts.shift() || "";
-    const rest  = parts.join(" ");
-    return { first, rest };
-  }
-
-  function updateTopbarInfo(){
-    const el = $("topbarInfo");
-    if(!el) return;
-
-    if(!todayLabel){
-      el.textContent = "—";
-      return;
-    }
-
-    if(!todayName){
-      el.textContent = `${todayLabel} — dnes má svátek —`;
-      return;
-    }
-
-    const { first, rest } = splitFirstName(todayName);
-    const firstHtml = first ? `<span class="nameFirst">${escapeHtml(first)}</span>` : "—";
-    const restHtml  = rest ? ` ${escapeHtml(rest)}` : "";
-
-    el.innerHTML = `${escapeHtml(todayLabel)} — dnes má svátek ${firstHtml}${restHtml}`;
-  }
-
-  function initHeaderDate(){
-    const now = new Date();
-    todayLabel = czDateLabel(now);
-    updateTopbarInfo();
-  }
-
-  async function loadNamedays(){
-    try{
-      const res = await fetch(NAMEDAYS_URL, { cache: "no-store" });
-      if(!res.ok) return;
-      let nd;
-      try{
-        nd = await res.json();
-      }catch(e){
-        return;
-      }
-      if(!nd || typeof nd !== "object") return;
-
-      const now = new Date();
-      const mm = String(now.getMonth()+1).padStart(2,"0");
-      const dd = String(now.getDate()).padStart(2,"0");
-      const key = `${mm}-${dd}`;
-      const name = nd[key];
-
-      todayName = name ? String(name) : "";
-      updateTopbarInfo();
-    }catch(_){}
-  }
-
-  /* ===== POČASÍ ===== */
-  function mapWeatherIcon(text){
-    const t = norm(text);
-    if(!t) return "⛅";
-    if(t.includes("bouř")) return "⛈️";
-    if(t.includes("déšť") || t.includes("dest") || t.includes("mrhol")) return "🌧️";
-    if(t.includes("sněh") || t.includes("snih")) return "🌨️";
-    if(t.includes("mlha")) return "🌫️";
-    if(t.includes("jas")) return "☀️";
-    if(t.includes("zataž") || t.includes("zataz")) return "☁️";
-    if(t.includes("obla")) return "⛅";
-    return "⛅";
-  }
-
-  function setWeatherUI({ tempText = "—", locText = "—", descText = "", iconText = "⛅" } = {}){
-    const tempEl = $("weatherTemp");
-    const locEl  = $("weatherLoc");
-    const iconEl = $("weatherIcon");
-    const descEl = $("weatherDesc");
-
-    if(tempEl) tempEl.textContent = tempText;
-    if(locEl)  locEl.textContent  = locText;
-    if(iconEl) iconEl.textContent = iconText;
-    if(descEl) descEl.textContent = descText || "—";
-  }
-
-  async function loadWeather(){
-    try{
-      // ✅ FIX: Odstraněn cache:"no-store" - SW cache může fungovat
-      const res = await fetch(WEATHER_URL);
-      if(!res.ok) throw new Error("weather fetch failed");
-      let w;
-      try{
-        w = await res.json();
-      }catch(e){
-        throw new Error("weather json parse failed");
-      }
-
-      const tempRaw =
-        (w?.tempC ?? w?.temp ?? w?.temperature ?? w?.temp_c ?? null);
-
-      const locRaw =
-        (w?.location ?? w?.loc ?? w?.city ?? w?.place ?? w?.name ?? w?.station ?? "");
-
-      const descRaw =
-        (w?.condition ?? w?.status ?? w?.summary ?? w?.text ?? w?.weather ?? "");
-
-      let tempText = "—";
-      if(tempRaw !== null && tempRaw !== undefined && String(tempRaw).trim() !== ""){
-        const num = Number(tempRaw);
-        tempText = Number.isFinite(num) ? `${Math.round(num)}°C` : `${String(tempRaw).trim()}°C`;
-      }
-
-      const locText = String(locRaw || "").trim() || "—";
-      const descText = String(descRaw || "").trim();
-      const iconText = mapWeatherIcon(descText);
-
-      setWeatherUI({ tempText, locText, descText, iconText });
-    }catch(_){
-      setWeatherUI({ tempText: "—", locText: "—", descText: "", iconText: "⛅" });
-    }
-  }
-
-  /* ===== VYHLEDÁVÁNÍ + MODAL ===== */
-  let pendingQuery = "";
-
-  function openGoogleSearch(query){
-    const q = encodeURIComponent(String(query || "").trim());
-    if(!q) return;
-    const url = `https://www.google.com/search?q=${q}`;
-    window.open(url, "_blank", "noopener,noreferrer");
-  }
-
-  function showSearchModal(query){
-    const searchModal  = $("searchModal");
-    if(!searchModal) return;
-
-    pendingQuery = String(query || "").trim();
-
-    const inp = $("searchInput");
-    if(inp) inp.blur();
-
-    setTimeout(() => {
-      searchModal.classList.add("show");
-    }, 180);
-  }
-
-  function hideSearchModal(){
-    const searchModal  = $("searchModal");
-    if(!searchModal) return;
-    searchModal.classList.remove("show");
-    pendingQuery = "";
-  }
-
-  function clearSearchAndResetFeed(){
-    const inp = $("searchInput");
-    if(inp) inp.value = "";
-    activeQuery = "";
-    applyFilter();
-  }
-
-  function setupSearch(){
-    const form = $("searchForm");
-    const inp  = $("searchInput");
-    const searchModal = $("searchModal");
-    const modalGoogle = $("modalGoogle");
-    const modalCancel = $("modalCancel");
-
-    if(form){
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const q = inp ? inp.value.trim() : "";
-        activeQuery = q;
-        applyFilter();
-
-        if(q && displayFeed.length === 0){
-          showSearchModal(q);
-        }
-      });
-    }
-
-    if(searchModal){
-      searchModal.addEventListener("click", (e) => {
-        if(e.target === searchModal){
-          hideSearchModal();
-          clearSearchAndResetFeed();
-        }
-      });
-    }
-
-    if(modalCancel){
-      modalCancel.addEventListener("click", () => {
-        hideSearchModal();
-        clearSearchAndResetFeed();
-      });
-    }
-
-    if(modalGoogle){
-      modalGoogle.addEventListener("click", () => {
-        const q = pendingQuery;
-        hideSearchModal();
-        openGoogleSearch(q);
-        clearSearchAndResetFeed();
-      });
-    }
-
-    window.addEventListener("keydown", (e) => {
-      const sm = $("searchModal");
-      if(e.key === "Escape" && sm && sm.classList.contains("show")){
-        hideSearchModal();
-        clearSearchAndResetFeed();
-      }
-    });
-  }
-
-  /* ===== REKLAMA ===== */
-  function createAdCard(posLabel){
-    const card = document.createElement("article");
-    card.className = "ad-card";
-    card.innerHTML = `
-      <div class="ad-head">
-        <span class="pos">${escapeHtml(String(posLabel || ""))}</span>
-        <span class="ad-label">Partner</span>
-      </div>
-      <h3 class="ad-title">Reklamní prostor (brzy)</h3>
-      <div class="ad-text">
-        Máte zájem o inzerci v tomto prostoru?<br>
-        napište na <span class="ad-email">inzerce@infouzel.cz</span>
-      </div>
-    `;
-    return card;
-  }
-
-  /* ===== VIDEO: render přes template ===== */
-  function cloneTemplate(id){
-    const tpl = $(id);
-    if(!tpl || !("content" in tpl)) return null;
-    return tpl.content.firstElementChild ? tpl.content.firstElementChild.cloneNode(true) : null;
-  }
-
-  function buildFeedPauseNode(){
-    const n = cloneTemplate("tplFeedPause");
-    if(n) return n;
-
-    const div = document.createElement("div");
-    div.className = "feedPause";
-    div.setAttribute("aria-hidden","true");
-    return div;
-  }
-
-  function buildVideoNodeFromItem(item){
-    const n = cloneTemplate("tplVideoBlock");
-    const v = item || null;
-
-    const vid = v ? String(v.videoId || "").trim() : "";
-    const title = v ? String(v.title || "").trim() : "";
-    const srcUrl = v ? safeUrl(v?.sources?.[0]?.url || "") : "";
-    const channel = v ? String(v.channel || "").trim() : "";
-
-    if(n){
-      const iframe = n.querySelector("iframe");
-      const metaEl = n.querySelector("[data-video-age]");
-      const descEl = n.querySelector("[data-video-title]");
-      const srcA   = n.querySelector("[data-video-source]");
-      const badge  = n.querySelector("[data-video-channel]");
-
-      if(iframe){
-        const embedSrc = vid ? ytEmbedUrl(vid) : "";
-        if(embedSrc){
-          iframe.src = embedSrc;
-          iframe.title = title ? `Video: ${title}` : "Video";
-        }else{
-          iframe.style.display = "none";
-          iframe.src = "";
-        }
-      }
-
-      if(metaEl){
-        const ageH = v ? hoursSince(v.publishedAt) : null;
-        if(v && Number.isFinite(ageH)){
-          const mins = Math.round(ageH * 60);
-          metaEl.textContent = mins <= 90 ? `před ${mins} min` : `před ${Math.round(ageH)} h`;
-        }else{
-          metaEl.textContent = "—";
-        }
-      }
-
-      if(descEl){
-        descEl.textContent = title || "—";
-      }
-
-      if(srcA){
-        srcA.href = srcUrl || "#";
-        srcA.textContent = channel ? `YouTube / ${channel}` : "YouTube / oficiální kanál";
-      }
-
-      if(badge){
-        if(channel){
-          badge.textContent = channel;
-          badge.style.display = "inline-flex";
-        }else{
-          badge.style.display = "none";
-        }
-      }
-
-      return n;
-    }
-
-    // fallback
-    const card = document.createElement("article");
-    card.className = "videoRow";
-    card.setAttribute("data-kind","video");
-
-    const iframeSrc = vid ? ytEmbedUrl(vid) : "";
-    const ageH = v ? hoursSince(v.publishedAt) : null;
-    const meta = (v && Number.isFinite(ageH))
-      ? ((Math.round(ageH * 60) <= 90) ? `před ${Math.round(ageH * 60)} min` : `před ${Math.round(ageH)} h`)
-      : "—";
-
-    const iframeHtml = iframeSrc
-      ? `<iframe title="${escapeAttr(title ? `Video: ${title}` : "Video")}"
-                  src="${escapeHtml(iframeSrc)}"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerpolicy="strict-origin-when-cross-origin"
-                  allowfullscreen></iframe>`
-      : `<div style="padding:56.25% 0 0 0;background:rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:center;color:rgba(11,27,43,0.4);font-size:14px;">Video není k dispozici</div>`;
-
-    card.innerHTML = `
-      <div class="videoCardInner">
-        <div class="videoTop">
-          <div class="videoTitle">Video – souvislosti k tématu</div>
-          <div class="videoMeta">${escapeHtml(meta)}</div>
-        </div>
-        <div class="videoFrame">
-          ${iframeHtml}
-        </div>
-        <div class="videoDesc">${escapeHtml(title || "—")}</div>
-        <div class="videoSource">Zdroj: <a href="${escapeHtml(srcUrl || "#")}" target="_blank" rel="noopener noreferrer">${escapeHtml(channel ? `YouTube / ${channel}` : "YouTube / oficiální kanál")}</a></div>
-      </div>
-    `;
-    return card;
-  }
-
-  /* ===== VIDEO: výběr pro sloty (priorita kanálů + nejnovější) ===== */
-  function pickVideosForSlots(videos, n){
-    const vids = Array.isArray(videos) ? videos : [];
-    return vids
-      .slice()
-      .filter(v => norm(v.contentType) === "video" && v.publishedAt && v.videoId && isAllowedChannel(v.channel))
-      .sort((a,b) => {
-        const pa = channelPriority(a.channel);
-        const pb = channelPriority(b.channel);
-        if(pb !== pa) return pb - pa;
-
-        const ta = new Date(a.publishedAt || 0).getTime();
-        const tb = new Date(b.publishedAt || 0).getTime();
-        if(!Number.isFinite(ta) && !Number.isFinite(tb)) return 0;
-        if(!Number.isFinite(ta)) return 1;
-        if(!Number.isFinite(tb)) return -1;
-        return tb - ta;
-      })
-      .slice(0, n);
-  }
-
-  /* ===== LAYOUT FEED: články → video → banner (s pauzou) ===== */
-  function buildDisplayFeedFromBase(baseItems, { injectSlots = false } = {}){
-    const base = Array.isArray(baseItems) ? baseItems : [];
-
-    if(!injectSlots){
-      // bannery po N článcích (stabilně)
-      return injectBannersIntoFeed(base);
-    }
-
-    const videos = Array.isArray(allVideos) ? allVideos : [];
-    const picked = pickVideosForSlots(videos, VIDEO_SLOTS_AFTER_ARTICLE.length);
-
-    const out = [];
-    let articleCount = 0;
-    let vi = 0;
-
-    for(const it of base){
-      const isVideo = norm(it.contentType) === "video";
-      const isArticle = !isVideo;
-
-      out.push(it);
-
-      if(isArticle){
-        articleCount += 1;
-
-        if(VIDEO_SLOTS_AFTER_ARTICLE.includes(articleCount) && picked[vi]){
-          out.push(picked[vi]);
-          vi += 1;
-        }
-      }
-    }
-
-    return injectBannersIntoFeed(out);
-  }
-
-  function injectBannersIntoFeed(items){
-    const src = Array.isArray(items) ? items : [];
-    const out = [];
-
-    let articleCount = 0;
-    let bannerIndex = 0;
-
-    for(let i=0;i<src.length;i++){
-      const it = src[i];
-      out.push(it);
-
-      const isVideo = norm(it?.contentType) === "video";
-      const isArticle = !isVideo && norm(it?.contentType) !== "ad";
-
-      if(isArticle){
-        articleCount += 1;
-
-        if(isBannerAfterArticleCount(articleCount)){
-          bannerIndex += 1;
-          out.push({
-            contentType: "ad",
-            adLabel: `#${bannerIndex}`
-          });
-        }
-      }
-    }
-
-    return out;
-  }
-
-  /* ===== "NAČÍST DALŠÍ" BUTTON ===== */
-  function ensureLoadMoreUI(){
-    const list = $("newsList");
-    if(!list) return;
-
-    let wrap = $("loadMoreWrap");
-    if(!wrap){
-      wrap = document.createElement("div");
-      wrap.id = "loadMoreWrap";
-      wrap.style.maxWidth = "var(--readWidth)";
-      wrap.style.margin = "16px auto 0";
-      wrap.style.display = "grid";
-      wrap.style.placeItems = "center";
-      wrap.style.gap = "10px";
-      wrap.style.padding = "2px 0 0";
-
+  function renderSectionsBar() {
+    if (!sectionsBar) return;
+    sectionsBar.innerHTML = "";
+    SECTION_KEYS.forEach((key) => {
       const btn = document.createElement("button");
-      btn.id = "loadMoreBtn";
       btn.type = "button";
-      btn.textContent = "Načíst další";
-      btn.setAttribute("aria-label","Načíst další položky");
-
-      // výrazné tlačítko (inline styl, aby se nic nerozbilo bez úprav indexu)
-      btn.style.height = "48px";
-      btn.style.padding = "0 18px";
-      btn.style.borderRadius = "16px";
-      btn.style.border = "1px solid rgba(20,40,70,0.14)";
-      btn.style.background = "rgba(255,255,255,0.92)";
-      btn.style.boxShadow = "0 12px 28px rgba(20,40,70,0.08)";
-      btn.style.fontWeight = "800";
-      btn.style.cursor = "pointer";
-      btn.style.webkitTapHighlightColor = "transparent";
-      btn.style.color = "rgba(11,27,43,0.90)";
-      btn.style.letterSpacing = "0.01em";
-
-      btn.addEventListener("mouseenter", () => {
-        btn.style.borderColor = "rgba(31,75,153,0.28)";
-      });
-      btn.addEventListener("mouseleave", () => {
-        btn.style.borderColor = "rgba(20,40,70,0.14)";
-      });
-
-      btn.addEventListener("click", () => {
-        const step = pageStepForCurrentView();
-        renderedLimit = Math.min(displayFeed.length, renderedLimit + step);
-        renderUpToLimit();
-        updateLoadMoreVisibility();
-      });
-
-      const hint = document.createElement("div");
-      hint.id = "loadMoreHint";
-      hint.style.fontSize = "12px";
-      hint.style.fontWeight = "560";
-      hint.style.color = "rgba(11,27,43,0.55)";
-      hint.style.textAlign = "center";
-      hint.textContent = "";
-
-      wrap.appendChild(btn);
-      wrap.appendChild(hint);
-
-      // vložit za seznam
-      list.insertAdjacentElement("afterend", wrap);
-    }
+      btn.className = "secBtn";
+      btn.dataset.section = key;
+      btn.textContent = SECTION_LABELS[key] || key;
+      btn.addEventListener("click", () => handleSectionClick(key));
+      sectionsBar.appendChild(btn);
+    });
+    updateSectionButtons();
   }
 
-  function updateLoadMoreVisibility(){
-    const btn = $("loadMoreBtn");
-    const hint = $("loadMoreHint");
-    const wrap = $("loadMoreWrap");
-    if(!wrap || !btn || !hint) return;
-
-    const hasMore = renderedItems < displayFeed.length;
-
-    wrap.style.display = (displayFeed.length > 0) ? "grid" : "none";
-    btn.style.display = hasMore ? "inline-flex" : "none";
-
-    // text typu "Zobrazeno 120 z 1000"
-    const shown = Math.min(renderedItems, displayFeed.length);
-    hint.textContent = `Zobrazeno ${shown} z ${displayFeed.length}`;
-  }
-
-  function pageStepForCurrentView(){
-    // pokud je "Vše" bez vyhledávání => větší krok
-    const noneSelected = !activeSections || activeSections.size === 0;
-    if(noneSelected && !activeQuery) return PAGE_SIZE_ALL;
-    return PAGE_SIZE_SECTION;
-  }
-
-  function initialLimitForCurrentView(){
-    const noneSelected = !activeSections || activeSections.size === 0;
-    if(noneSelected && !activeQuery) return PAGE_SIZE_ALL;
-    return PAGE_SIZE_SECTION;
-  }
-
-  /* ===== FILTR (ÚKOL 4t: multi-select) ===== */
-  function applyFilter(){
-    const noneSelected = !activeSections || activeSections.size === 0;
-
-    const activeLabels = noneSelected
-      ? ["Vše"]
-      : Array.from(activeSections)
-          .map(k => SECTIONS.find(s => s.key === k)?.label || k)
-          .filter(Boolean);
-
-    const qLabel = activeQuery ? ` · Hledání: „${activeQuery}“` : "";
-
-    const secLabel = $("sectionLabel");
-    if(secLabel){
-      const joined = activeLabels.join(" + ");
-      secLabel.textContent = `Sekce: ${joined}${qLabel}`;
-    }
-
-    updateSectionsBarActive();
-
-    // ZÁKLAD
-    let base = [];
-
-    if(noneSelected){
-      // Default: "Vše"
-      if(!activeQuery){
-        // pevné video sloty mezi články + bannery
-        const articles = Array.isArray(allArticles) ? allArticles : [];
-        base = buildDisplayFeedFromBase(articles.slice(), { injectSlots: true });
-      }else{
-        // při hledání chceme hledat i ve videích i článcích, a pak do toho vložit bannery
-        const items = Array.isArray(allItems) ? allItems : [];
-        base = buildDisplayFeedFromBase([...items], { injectSlots: false });
-      }
-    }else{
-      // vybrané sekce: články + videa dohromady
-      const items = Array.isArray(allItems) ? allItems : [];
-      const picked = items.filter(a => {
-        if(!a || typeof a !== "object") return false;
-        const s = norm(a.section);
-        for(const k of activeSections){
-          if(s === k) return true;
-        }
-        return false;
-      });
-
-      base = buildDisplayFeedFromBase(picked, { injectSlots: false });
-    }
-
-    // Vyhledávání
-    if(activeQuery){
-      const q = norm(activeQuery);
-      filtered = base.filter(a => {
-        const ct  = norm(a?.contentType || "article");
-
-        if(ct === "ad"){
-          // reklamu při hledání necháme (stabilita layoutu)
-          return true;
-        }
-
-        const title = norm(a?.title);
-        const sec = norm(a?.section);
-        const sources = Array.isArray(a?.sources) ? a.sources : [];
-        const sourceNames = sources.map(s => norm(s?.name)).join(" ");
-
-        return title.includes(q) || sec.includes(q) || sourceNames.includes(q) || ct.includes(q);
-      });
-    }else{
-      filtered = base;
-    }
-
-    displayFeed = filtered;
-
-    // reset renderu
-    renderedItems = 0;
-    renderedLimit = Math.min(displayFeed.length, initialLimitForCurrentView());
-
-    const list = $("newsList");
-    // ✅ FIX: Použití replaceChildren() místo innerHTML="" (rychlejší, bez reflow)
-    if(list) {
-      // Zruš probíhající render pokud existuje
-      if(currentRenderCancel) {
-        currentRenderCancel.cancel();
-        currentRenderCancel = null;
-      }
-      list.replaceChildren();
-    }
-
-    const empty = $("emptyBox");
-    if(empty) empty.style.display = (displayFeed.length === 0) ? "block" : "none";
-
-    ensureLoadMoreUI();
-    // ✅ FIX: Render přes requestAnimationFrame (ne synchronně)
-    requestAnimationFrame(() => {
-      renderUpToLimit();
-      updateLoadMoreVisibility();
+  function updateSectionButtons() {
+    if (!sectionsBar) return;
+    sectionsBar.querySelectorAll(".secBtn").forEach((btn) => {
+      const key = btn.dataset.section;
+      btn.classList.toggle("isActive", activeSections.includes(key));
     });
   }
 
-
-  /* ===== RENDER (CHUNKED PROTI ZAMRZNUTÍ) ===== */
-  let renderInProgress = false;
-  let currentRenderCancel = null; // Cancel token pro aktuální render
-
-  function renderUpToLimit(){
-    const list = $("newsList");
-    if(!list) return;
-
-    // ✅ FIX: Zruš probíhající render před spuštěním nového
-    if(renderInProgress && currentRenderCancel) {
-      currentRenderCancel.cancel();
-      currentRenderCancel = null;
-      renderInProgress = false;
+  function handleSectionClick(key) {
+    if (key === "vse") {
+      if (location.hash.replace(/^#/, "") === "vse") {
+        setSectionsFromHash();
+        applyFilter();
+        return;
+      }
+      location.hash = "#vse";
+      return;
     }
 
-    const totalToRender = Math.min(displayFeed.length, renderedLimit);
-    const alreadyRendered = renderedItems;
-    
-    if(alreadyRendered >= totalToRender) return;
-
-    const itemsToRender = totalToRender - alreadyRendered;
-
-    // Pro malé množství (< 50) použij původní rychlý render
-    // Pro větší použij chunked rendering
-    const useChunked = itemsToRender > 50 || (window.__iuRenderOptimizer && window.__iuRenderOptimizer.RENDER_CHUNK_SIZE);
-
-    if(useChunked && window.__iuRenderOptimizer) {
-      renderInProgress = true;
-      
-      // ✅ FIX: Cancel token pro možnost zrušení renderu
-      const cancelToken = { cancelled: false };
-      
-      // Funkce pro render jedné položky
-      function renderSingleItem(index) {
-        const actualIndex = alreadyRendered + index;
-        if(actualIndex >= displayFeed.length || actualIndex >= renderedLimit) return null;
-
-        const a = displayFeed[actualIndex];
-        if(!a || typeof a !== "object") return null;
-
-        const ct = norm(a?.contentType || "article");
-
-        if(ct === "ad"){
-          const pause = buildFeedPauseNode();
-          const ad = createAdCard(a?.adLabel || "Partner");
-          const wrapper = document.createDocumentFragment();
-          wrapper.appendChild(pause);
-          wrapper.appendChild(ad);
-          return wrapper;
-        }
-
-        if(ct === "video"){
-          const pause = buildFeedPauseNode();
-          const video = buildVideoNodeFromItem(a);
-          const wrapper = document.createDocumentFragment();
-          wrapper.appendChild(pause);
-          wrapper.appendChild(video);
-          return wrapper;
-        }
-
-        // ARTICLE
-        const card = document.createElement("article");
-        card.className = "news-card";
-
-        const time = fmtTime(a.publishedAt);
-        const rawTitle = String(a.title || "").trim();
-        const titleText = rawTitle.trim();
-        const titleHtml = escapeHtml(titleText);
-        const sourcesAll = Array.isArray(a.sources) ? a.sources : [];
-        const sources = sourcesAll;
-        const primaryUrl = safeUrl(sources?.[0]?.url || "");
-
-        const domainsHtml = (sources && sources.length)
-          ? sources.map(s => {
-              const u = safeUrl(s?.url || "");
-              const dom = domainFromUrl(u);
-              const label = escapeHtml(dom || "www");
-              const href = escapeHtml(u || "#");
-              return `<a class="sourceDomain" href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
-            }).join(`<span class="srcSep"> · </span>`)
-          : `<span style="color:rgba(11,27,43,0.55);font-weight:600;font-size:11.5px;">—</span>`;
-
-        const titleLinkHref = escapeHtml(primaryUrl || "#");
-        const titleAttr = escapeAttr(titleText || "");
-
-        card.innerHTML = `
-          <h3 class="news-title">
-            <a class="news-titleLink"
-               href="${titleLinkHref}"
-               target="_blank"
-               rel="noopener noreferrer"
-               title="${titleAttr}"
-               aria-label="${titleAttr}">
-              ${titleHtml || "—"}
-            </a>
-          </h3>
-
-          <div class="news-row2">
-            <span class="meta-time">${escapeHtml(time)}</span>
-            <span class="news-sourceLabel">Zdroj:</span>
-            <div class="news-sources">${domainsHtml}</div>
-          </div>
-        `;
-
-        return card;
-      }
-
-      // ✅ FIX: Performance mark pro render
-      if (DEBUG && performance.mark) {
-        performance.mark("render_feed_start");
-      }
-      const renderStart = performance.now();
-
-      // ✅ FIX: Chunked render s cancel tokenem přes requestAnimationFrame
-      currentRenderCancel = window.__iuRenderOptimizer.renderChunked(
-        renderSingleItem,
-        itemsToRender,
-        list,
-        {
-          chunkSize: 25, // ✅ FIX: Menší chunk pro lepší responsivitu
-          cancelToken: cancelToken,
-          onProgress: (current, total) => {
-            if(!cancelToken.cancelled) {
-              renderedItems = alreadyRendered + current;
-              updateLoadMoreVisibility();
-            }
-          },
-          onComplete: (total) => {
-            if(!cancelToken.cancelled) {
-              renderedItems = alreadyRendered + total;
-              renderInProgress = false;
-              currentRenderCancel = null;
-              
-              // ✅ FIX: Performance measure a log
-              const renderDuration = performance.now() - renderStart;
-              if (DEBUG && performance.mark && performance.measure) {
-                performance.mark("render_feed_end");
-                performance.measure("render_feed", "render_feed_start", "render_feed_end");
-                debugLog(`Render feed: ${Math.round(renderDuration)}ms, items: ${total}`);
-              }
-
-              updateLoadMoreVisibility();
-              
-              // Enforce DOM limit
-              if(window.__iuRenderOptimizer) {
-                window.__iuRenderOptimizer.enforceDOMLimit(list);
-              }
-            }
-          }
-        }
-      );
+    const current = new Set(activeSections.filter((k) => k !== "vse"));
+    if (current.has(key)) {
+      current.delete(key);
     } else {
-      // Původní rychlý render pro malé feedy
-      const frag = document.createDocumentFragment();
+      current.add(key);
+    }
+    const next = SECTION_KEYS.filter((k) => current.has(k));
+    const finalSections = next.length ? next : ["vse"];
+    const hashValue = finalSections.join(",");
+    if (location.hash.replace(/^#/, "") === hashValue) {
+      setSectionsFromHash();
+      applyFilter();
+      return;
+    }
+    location.hash = `#${hashValue}`;
+  }
 
-      while(renderedItems < displayFeed.length && renderedItems < renderedLimit){
-        const a = displayFeed[renderedItems];
-        if(!a || typeof a !== "object"){
-          renderedItems += 1;
-          continue;
-        }
-        const ct = norm(a?.contentType || "article");
+  function setSectionsFromHash() {
+    const hash = location.hash.replace(/^#/, "");
+    const parsed = hash
+      .split(",")
+      .map((s) => s.trim().toLowerCase())
+      .filter((s) => s && SECTION_KEYS.includes(s));
 
-        if(ct === "ad"){
-          frag.appendChild(buildFeedPauseNode());
-          frag.appendChild(createAdCard(a?.adLabel || "Partner"));
-          renderedItems += 1;
-          continue;
-        }
+    activeSections = parsed.length ? parsed : ["vse"];
+    updateSectionLabel();
+    updateSectionButtons();
+  }
 
-        if(ct === "video"){
-          frag.appendChild(buildFeedPauseNode());
-          frag.appendChild(buildVideoNodeFromItem(a));
-          renderedItems += 1;
-          continue;
-        }
+  function matchesSections(item) {
+    if (!item) return false;
+    if (activeSections.includes("vse")) return true;
+    if (activeSections.includes("video")) {
+      return String(item.contentType || "").toLowerCase() === "video";
+    }
+    const sectionValue = ((item.section || item.topic) || "").toLowerCase();
+    return activeSections.some((section) => section === sectionValue);
+  }
 
-        // ARTICLE
-        const card = document.createElement("article");
-        card.className = "news-card";
+  function getFeedTarget() {
+    return feedTarget;
+  }
 
-        const time = fmtTime(a.publishedAt);
-        const rawTitle = String(a.title || "").trim();
-        const titleText = rawTitle.trim();
-        const titleHtml = escapeHtml(titleText);
-        const sourcesAll = Array.isArray(a.sources) ? a.sources : [];
-        const sources = sourcesAll;
-        const primaryUrl = safeUrl(sources?.[0]?.url || "");
+  const STATUS_SCROLL_KEY = "iu:scrolledToStatus";
 
-        const domainsHtml = (sources && sources.length)
-          ? sources.map(s => {
-              const u = safeUrl(s?.url || "");
-              const dom = domainFromUrl(u);
-              const label = escapeHtml(dom || "www");
-              const href = escapeHtml(u || "#");
-              return `<a class="sourceDomain" href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
-            }).join(`<span class="srcSep"> · </span>`)
-          : `<span style="color:rgba(11,27,43,0.55);font-weight:600;font-size:11.5px;">—</span>`;
+  function scrollToStatusOnce() {
+    if (!("sessionStorage" in window)) return;
+    if (sessionStorage.getItem(STATUS_SCROLL_KEY)) return;
+    const el = document.getElementById("dataStatusArticles");
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    sessionStorage.setItem(STATUS_SCROLL_KEY, "1");
+  }
 
-        const titleLinkHref = escapeHtml(primaryUrl || "#");
-        const titleAttr = escapeAttr(titleText || "");
+  function renderEmpty(message, extraHtml = "") {
+    const target = getFeedTarget();
+    if (target) {
+      withScrollLock(() => {
+        target.innerHTML = "";
+      });
+    }
+    if (emptyBox) {
+      emptyBox.innerHTML = `<p>${escapeHtml(message)}</p>${extraHtml ? extraHtml : ""}`;
+      emptyBox.style.display = "block";
+    }
+    if (elDataCount) elDataCount.textContent = "0";
+  }
 
-        card.innerHTML = `
-          <h3 class="news-title">
-            <a class="news-titleLink"
-               href="${titleLinkHref}"
-               target="_blank"
-               rel="noopener noreferrer"
-               title="${titleAttr}"
-               aria-label="${titleAttr}">
-              ${titleHtml || "—"}
-            </a>
-          </h3>
+  function renderItems(items) {
+    const target = getFeedTarget();
+    if (!target) {
+      handleMissingFeedContainer();
+      return;
+    }
+    if (emptyBox) {
+      emptyBox.style.display = "none";
+      emptyBox.innerHTML = "";
+    }
+    if (!items || items.length === 0) {
+      renderEmpty("Žádné články k zobrazení. Zkontroluj Stav dat.");
+      writeDebug({
+        ok: true,
+        note: "Žádné položky k zobrazení",
+        itemsCount: 0,
+      });
+      return;
+    }
 
-          <div class="news-row2">
-            <span class="meta-time">${escapeHtml(time)}</span>
-            <span class="news-sourceLabel">Zdroj:</span>
-            <div class="news-sources">${domainsHtml}</div>
-          </div>
+    const html = items
+      .map((it) => {
+        const title = safeText(it.title || it.name || "(bez názvu)");
+        const publishedAt = fmtDate(it.publishedAt || it.date || it.published || "");
+        const rawSources = Array.isArray(it.sources) && it.sources.length
+          ? it.sources
+          : it.source
+            ? [{ name: it.source }]
+            : [];
+        const sourceEntities = rawSources
+          .map((source) => {
+            const name = safeText(source.name || source.title || source);
+            const href = safeUrl(source.url || source.link);
+            return { name, href };
+          })
+          .filter((entry) => entry.name);
+        const sourceMarkup =
+          sourceEntities
+            .map((entry, idx) => {
+              const sep = idx === 0 ? "" : `<span class="srcSep">·</span>`;
+              const link =
+                entry.href
+                  ? `<a class="sourceDomain" href="${entry.href}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+                      entry.name
+                    )}</a>`
+                  : `<span class="sourceDomain">${escapeHtml(entry.name)}</span>`;
+              return `${sep}${link}`;
+            })
+            .join("") || '<span class="sourceDomain">—</span>';
+
+        const linkUrl =
+          safeUrl(it.url) ||
+          safeUrl((it.link && (it.link.href || it.link)) || it.href || "");
+        const titleMarkup = linkUrl
+          ? `<a class="news-titleLink" href="${linkUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+              title
+            )}</a>`
+          : `<span class="news-titleLink">${escapeHtml(title)}</span>`;
+
+        return `
+          <article class="news-card">
+            <h2 class="news-title">${titleMarkup}</h2>
+            <div class="news-row2">
+              ${publishedAt ? `<span class="meta-time">${escapeHtml(publishedAt)}</span>` : ""}
+              <span class="news-sourceLabel">Zdroj:</span>
+              <span class="news-sources">${sourceMarkup}</span>
+            </div>
+          </article>
         `;
+      })
+      .join("");
 
-        frag.appendChild(card);
-        renderedItems += 1;
-      }
+    withScrollLock(() => {
+      const t0 = performance.now();
+      target.innerHTML = html;
+      if (elDataCount) elDataCount.textContent = String(items.length);
+      const t1 = performance.now();
+      const newsCards = target.querySelectorAll?.(".news-card")?.length ?? target.children.length;
+      console.log("[PERF] renderMs=", Math.round(t1 - t0), "domCards=", newsCards);
+      console.log("[SCROLL] y=", window.scrollY);
+    });
+  }
 
-      list.appendChild(frag);
+  function ensureFallbackMessage() {
+    const target = getFeedTarget();
+    if (!target) return;
+    if (target.children.length > 0) return;
+    if (emptyBox && emptyBox.textContent.trim()) return;
+    renderEmpty("Žádná data k zobrazení. Zkontroluj Stav dat.");
+  }
+
+  function writeDebug(obj) {
+    if (!elDebugOut) return;
+    try {
+      elDebugOut.textContent = safeStringify(obj, null, 2);
+    } catch {
+      elDebugOut.textContent = String(obj);
     }
   }
 
-  /* ===== ARTICLES LOAD ===== */
-  function extractArticlesPayload(data){
-    if(Array.isArray(data)){
-      return { arr: data, generatedAt: "" };
-    }
-
-    const gen =
-      (data && typeof data === "object" && (data.generatedAt || data.updatedAt || data.generated_at))
-        ? String(data.generatedAt || data.updatedAt || data.generated_at)
-        : "";
-
-    const arr =
-      (data && typeof data === "object" && Array.isArray(data.articles)) ? data.articles :
-      (data && typeof data === "object" && Array.isArray(data.items)) ? data.items :
-      [];
-
-    return { arr, generatedAt: gen };
+  function openSearchModal() {
+    if (searchModal) searchModal.classList.add("show");
   }
 
-  function signatureOf(arr, generatedAt){
-    try{
-      const n = Array.isArray(arr) ? arr.length : 0;
-      const first = (Array.isArray(arr) && arr[0]) ? arr[0] : null;
-      const t = first?.title ?? "";
-      const p = first?.publishedAt ?? "";
-      const ct = first?.contentType ?? "";
-      return `${generatedAt || ""}::${n}::${String(p)}::${String(ct)}::${String(t).slice(0,60)}`;
-    }catch(_){
-      return `${generatedAt || ""}::0`;
+  function hideSearchModal() {
+    if (searchModal) searchModal.classList.remove("show");
+  }
+
+  function resetSearchAndReload() {
+    if (searchInput) searchInput.value = "";
+    hideSearchModal();
+    applyFilter();
+  }
+
+  function applyFilter() {
+    if (!hasLoadedData) return;
+    const query = (searchInput && searchInput.value.trim()) || "";
+    const normalizedQuery = query.toLowerCase();
+    let filtered = cachedItems.filter(matchesSections);
+    if (normalizedQuery) {
+      filtered = filtered.filter((item) => {
+        const haystack =
+          [
+            item.title,
+            item.name,
+            item.summary,
+            item.section,
+            item.topic,
+            ...(Array.isArray(item.sources) ? item.sources.map((s) => s.name || s.title || s) : []),
+          ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase() || "";
+        return haystack.includes(normalizedQuery);
+      });
+    }
+
+    if (filtered.length === 0) {
+      if (query) {
+        openSearchModal();
+      } else {
+        hideSearchModal();
+        renderEmpty("Žádné články neodpovídají filtrům.");
+      }
+      setStatus(`Stav dat: OK (0 / ${cachedItems.length})`);
+      if (isDebugOn()) {
+        writeDebug({
+          sections: activeSections,
+          hash: location.hash,
+          search: query,
+          totalItems: cachedItems.length,
+          filtered: 0,
+        });
+      }
+      return;
+    }
+
+    hideSearchModal();
+    renderItems(filtered);
+    setStatus(`Stav dat: OK (${filtered.length} / ${cachedItems.length})`);
+    if (isDebugOn()) {
+      writeDebug({
+        sections: activeSections,
+        hash: location.hash,
+        search: query,
+        totalItems: cachedItems.length,
+        filtered: filtered.length,
+      });
     }
   }
 
-  function signatureOfVideos(videosArr, generatedAt){
-    try{
-      const n = Array.isArray(videosArr) ? videosArr.length : 0;
-      const first = (Array.isArray(videosArr) && videosArr[0]) ? videosArr[0] : null;
-      const t = first?.title ?? "";
-      const p = first?.publishedAt ?? "";
-      const id = first?.videoId ?? "";
-      return `${generatedAt || ""}::${n}::${String(p)}::${String(id)}::${String(t).slice(0,60)}`;
-    }catch(_){
-      return `${generatedAt || ""}::0`;
+    ensureFallbackMessage();
+
+
+  let firstLoadQuiet = false;
+
+  function safeNumber(value, fallback = 0) {
+    const num = Number(value);
+    if (Number.isNaN(num)) {
+      console.warn("[SAFE] invalid number", value);
+      return fallback;
+    }
+    return num;
+  }
+
+  const selfDiag = {
+    build: getBuildStamp() || "no-build",
+    articlesState: "INIT",
+    articlesCount: "-",
+    videosState: "INIT",
+    videosCount: "-",
+    swController: "no",
+    swWaiting: "no"
+  };
+
+  let refreshInProgress = false;
+
+  async function softRefreshData() {
+    if (refreshInProgress) return;
+    refreshInProgress = true;
+    console.log("[REFRESH] start");
+    try {
+      await Promise.all([fetchArticlesStatus(), fetchVideosStatus()]);
+      await loadData();
+    } catch (error) {
+      console.warn("[REFRESH] error", error && error.message ? error.message : error);
+    } finally {
+      refreshInProgress = false;
+      console.log("[REFRESH] done");
     }
   }
 
-  async function loadArticlesOnly({ silent = false } = {}){
-    // ✅ FIX: Použití pouze window.__iuSafeFetch.fetchJSON (žádný vlastní fetch)
-    const safeFetch = window.__iuSafeFetch?.fetchJSON || window.__iuSafeFetch?.safeFetchJSON;
-
-    if (!safeFetch) {
-      console.error("[IU] safeFetch missing - crash shield not loaded");
-      if (DEBUG) {
-        debugLog("BASE:", BASE);
-        debugLog("window.__iuSafeFetch:", window.__iuSafeFetch);
+  function safeDateParse(value) {
+    try {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) {
+        console.warn("[DATE] invalid", value);
+        return null;
       }
-      return { changed:false, items:[] };
+      return date;
+    } catch {
+      console.warn("[DATE] invalid", value);
+      return null;
     }
+  }
 
-    const articlesUrl = makeDataUrl("data/articles.json", { bust: true });
+  function logSelfStatus() {
+    console.log(`[SELF] build=${selfDiag.build}`);
+    console.log(`[SELF] articles=${selfDiag.articlesState} count=${selfDiag.articlesCount}`);
+    console.log(`[SELF] videos=${selfDiag.videosState} count=${selfDiag.videosCount}`);
+    console.log(`[SELF] swController=${selfDiag.swController} swWaiting=${selfDiag.swWaiting}`);
+  }
 
-    if (DEBUG) {
-      debugLog("loadArticlesOnly: BASE=", BASE, "safeFetch available:", !!safeFetch);
-    }
+  function renderDiagBox() {
+    const isDiag = new URLSearchParams(location.search).get("diag") === "1";
+    if (!isDiag) return;
+    const box = document.createElement("div");
+    box.id = "iuDiagBox";
+    const updatedLabel = document.getElementById("dataStatusUpdated")?.textContent || "Aktualizace: —";
+    const swLabel = document.getElementById("dataStatusSW")?.textContent || "SW: —";
+    const lastError = localStorage.getItem("iu:lastError") || "—";
+    const lastOkAt = localStorage.getItem("iu:lastArticlesOkAt") || "—";
+    const lastOkCount = localStorage.getItem("iu:lastArticlesCount") || "—";
+    box.innerHTML = `
+      <div style="padding:8px;border:1px solid rgba(0,0,0,0.14);background:#fff;margin:6px;">
+        <p><strong>diag</strong></p>
+        <p>build: ${selfDiag.build}</p>
+        <p>articles: ${selfDiag.articlesState} count=${selfDiag.articlesCount}</p>
+        <p>videos: ${selfDiag.videosState} count=${selfDiag.videosCount}</p>
+        <p>${updatedLabel}</p>
+        <p>${swLabel}</p>
+        <p>lastError: ${lastError}</p>
+        <p>last OK: ${lastOkAt} / ${lastOkCount}</p>
+      </div>
+    `;
+    document.body.insertBefore(box, document.body.firstChild);
+  }
 
-    // ✅ FIX: Performance mark pro observabilitu
-    if (DEBUG && performance.mark) {
-      performance.mark("fetch_articles_start");
-    }
-    const fetchStart = performance.now();
+  const eventThrottleMs = 500;
+  const eventLastTs = new Map();
 
-    const result = await safeFetch("articles", articlesUrl, { silent });
-    
-    // ✅ FIX: result.ok může být false, ale result.data může existovat (cache fallback)
-    if (!result) {
-      console.error("[IU] safeFetch returned null");
-      if (DEBUG) {
-        debugLog(`Fetch articles failed: null result`);
+  function addTelemetryEvent(name, detail = "") {
+    try {
+      const raw = localStorage.getItem("iu:events");
+      const parsed = raw ? JSON.parse(raw) : [];
+      const arr = Array.isArray(parsed) ? parsed : [];
+      const now = Date.now();
+      const last = eventLastTs.get(name) || 0;
+      if (now - last < eventThrottleMs) {
+        console.log("[EVENT] throttled", name);
+        return;
       }
-      if(!silent){
-        setDataUpdatedAtLabel("");
-      }
-      return { changed:false, items:[] };
+      eventLastTs.set(name, now);
+      arr.push({ t: new Date().toISOString(), name, detail });
+      while (arr.length > 10) arr.shift();
+      localStorage.setItem("iu:events", safeStringify(arr));
+      updateEventsUI();
+    } catch {
+      // ignore
     }
-    
-    // ✅ FIX: Pokud není data ani v fallbacku, vrať prázdné pole
-    if (!result.data) {
-      if (DEBUG) {
-        debugLog(`Fetch articles failed: no data, error=`, result?.error || "unknown error");
-      }
-      if(!silent){
-        setDataUpdatedAtLabel("");
-      }
-      return { changed:false, items:[] };
+  }
+
+  function safeStringify(value, replacer = null, space = 0) {
+    try {
+      return JSON.stringify(value, replacer, space);
+    } catch {
+      return "";
     }
+  }
 
-    const data = result.data;
-
-    // ✅ FIX: Performance measure
-    const fetchDuration = performance.now() - fetchStart;
-    if (DEBUG && performance.mark && performance.measure) {
-      performance.mark("fetch_articles_end");
-      performance.measure("fetch_articles", "fetch_articles_start", "fetch_articles_end");
+  function updateEventsUI() {
+    const el = document.getElementById("dataStatusEvents");
+    if (!el) return;
+    try {
+      const raw = localStorage.getItem("iu:events");
+      const arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr) || !arr.length) {
+        el.textContent = "Události: —";
+        return;
+      }
+      const latest = arr.slice(-5);
+      el.innerHTML = "Události:<br />" + latest.map((item) => `${new Date(item.t).toLocaleTimeString("cs-CZ")} ${item.name}`).join("<br />");
+    } catch {
+      el.textContent = "Události: chybné data";
     }
+  }
 
-    // ✅ FIX: Unwrap pomocí univerzální funkce
-    const arr = unwrapToArray(data);
+  function updateLastArticlesInfo(count, updatedAt) {
+    const prevCount = localStorage.getItem("iu:lastArticlesCount");
+    const now = new Date().toISOString();
+    try {
+      localStorage.setItem("iu:lastArticlesOkAt", now);
+      localStorage.setItem("iu:lastArticlesCount", String(count));
+      localStorage.setItem("iu:lastArticlesUpdatedAt", updatedAt || "");
+      if (prevCount !== null && prevCount !== String(count)) {
+        console.log("[DIFF] articles count", prevCount, "->", count);
+        localStorage.setItem("iu:lastArticlesDiffAt", now);
+      }
+    } catch {
+      // ignore
+    }
+    const label = document.getElementById("dataStatusUpdated");
+    if (!label) return;
+    const lastOkTime = new Date(now).toLocaleTimeString("cs-CZ", { hour: "2-digit", minute: "2-digit" });
+    const updatedText = updatedAt ? fmtTime(updatedAt) : "neznámá";
+    let ageWarning = "";
+    if (updatedAt) {
+      const parsed = safeDateParse(updatedAt);
+      if (parsed) {
+        const ageMinutes = Math.floor((Date.now() - parsed.getTime()) / 60000);
+        if (ageMinutes > 360) {
+          const hours = Math.floor(ageMinutes / 60);
+          ageWarning = ` Zastaralé (${hours} h)`;
+        }
+      }
+    }
+    label.textContent = `Aktualizace: ${updatedText} (last OK: ${lastOkTime}, count: ${count})${ageWarning}`;
+  }
 
-    if (DEBUG) {
-      console.log("articles loaded:", arr.length, articlesUrl);
-      debugLog(`Fetch articles: ok=${result.ok}, source=${result?.source || "network"}, items=${arr.length}, error=${result?.error?.message || "none"}`);
-      if(arr.length > 0){
-        debugLog("[DATA] articles first:", {
-          title: arr[0].title,
-          source: (Array.isArray(arr[0]?.sources) && arr[0].sources[0]?.name) || ""
+  function finalStateReport() {
+    const updatedAt = localStorage.getItem("iu:lastArticlesUpdatedAt") || "—";
+    const parsedUpdated = safeDateParse(updatedAt);
+    const dataAgeMin = parsedUpdated
+      ? Math.round((Date.now() - parsedUpdated.getTime()) / 60000)
+      : null;
+    const report = {
+      build: selfDiag.build || "no-build",
+      online: navigator.onLine ? "yes" : "no",
+      articlesStatus: selfDiag.articlesState,
+      articlesCount: selfDiag.articlesCount,
+      videosStatus: selfDiag.videosState,
+      videosCount: selfDiag.videosCount,
+      updatedAt: updatedAt === "" ? "—" : updatedAt,
+      dataAgeMin,
+      swController: selfDiag.swController,
+      swWaiting: selfDiag.swWaiting,
+      lastErrorAt: localStorage.getItem("iu:lastErrorAt") || "—",
+      lastError: localStorage.getItem("iu:lastError") || "—"
+    };
+    console.log("[STATE]", report);
+  }
+
+  logSelfStatus();
+
+  function updateBuildStatusLabel() {
+    const build = getBuildStamp() || "no-build";
+    const seen = localStorage.getItem("iu:lastBuildSeen") || "";
+    const label = document.getElementById("dataStatusBuild");
+    if (!label) return;
+    if (seen && seen !== build) {
+      console.warn("[BUILD] mismatch seen/current", seen, build);
+      label.textContent = `Build: ${build} (změna)`;
+    } else {
+      label.textContent = `Build: ${build}`;
+    }
+  }
+
+  function recordBuildSeen() {
+    const build = getBuildStamp();
+    if (!build) return;
+    const prev = localStorage.getItem("iu:lastBuildSeen");
+    const now = new Date().toISOString();
+    try {
+      localStorage.setItem("iu:lastBuildSeen", build);
+      localStorage.setItem("iu:lastBuildSeenAt", now);
+    } catch {
+      // ignore
+    }
+    if (prev && prev !== build) {
+      console.log("[BUILD] changed", prev, "->", build);
+    }
+  }
+
+  function timeoutFetch(url, options = {}, ms = 10000) {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), ms);
+    return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(id));
+  }
+
+  function resolveArray(data, fields) {
+    if (Array.isArray(data)) return data;
+    for (const field of fields) {
+      if (Array.isArray(data?.[field])) return data[field];
+    }
+    return null;
+  }
+
+  const ARTICLE_RETRY_DELAYS = [2000, 6000];
+
+  let loggedEmptyTitle = false;
+  function normalizeArticleList(items) {
+    return items.filter((it) => {
+      const hasTitle = Boolean(it?.title || it?.headline || it?.name);
+      const link = it?.url || it?.link || it?.href;
+      let validLink = false;
+      if (link) {
+        try {
+          new URL(link, location.origin);
+          validLink = true;
+        } catch {
+          console.warn("[DATA] invalid URL", link);
+        }
+      }
+      if (!hasTitle && !loggedEmptyTitle) {
+        console.warn("[DATA] missing article title, substituting fallback");
+        loggedEmptyTitle = true;
+      }
+      if (!hasTitle) {
+        if (it) {
+          it.title = "Bez názvu";
+        }
+      }
+      return hasTitle && validLink;
+    });
+  }
+
+  async function fetchArticlesStatus(attempt = 1) {
+    const el = document.getElementById("dataStatusArticles");
+    if (!el) return;
+    try {
+      const res = await timeoutFetch(makeDataUrl("data/articles.json"), { cache: "no-store" }, 9000);
+      if (!res.ok) {
+        el.textContent = `Články: chyba (${res.status})`;
+        selfDiag.articlesState = "FAIL";
+        selfDiag.articlesCount = "-";
+        logSelfStatus();
+        return;
+      }
+      const data = await res.json();
+      const size = safeStringify(data).length;
+      console.log("[DATA] size=", size);
+      const items = resolveArray(data, ["items", "articles"]);
+      const validItems = items ? normalizeArticleList(items) : [];
+      if (items && validItems.length < items.length) {
+        console.warn("[DATA] filtered invalid items", items.length, "->", validItems.length);
+      }
+      if (!items) {
+        el.textContent = "Články: chyba formátu";
+        console.warn("[DATA] articles schema unexpected", Object.keys(data || {}));
+        selfDiag.articlesState = "FAIL";
+        selfDiag.articlesCount = "-";
+        logSelfStatus();
+        return;
+      }
+      const updatedAtValue = data?.updatedAt ?? data?.updated_at ?? null;
+      const count = safeNumber(validItems.length);
+      const ageMinutes = updatedAtValue ? Math.floor((Date.now() - new Date(updatedAtValue).getTime()) / 60000) : 0;
+      if (!items.length || !count) {
+        el.textContent = "Články: prázdné";
+        selfDiag.articlesState = "EMPTY";
+        selfDiag.articlesCount = "0";
+        logSelfStatus();
+        updateLastArticlesInfo(count, updatedAtValue);
+        addTelemetryEvent("articles", `EMPTY count=${count}`);
+        return;
+      }
+      if (ageMinutes > 1440 && !firstLoadQuiet) {
+        el.textContent = "Články: zastaralé (24h+)";
+        console.warn("[DATA] articles too old");
+      } else {
+        el.textContent = `Články: OK (${count})`;
+      }
+      selfDiag.articlesState = "OK";
+      selfDiag.articlesCount = String(count);
+      logSelfStatus();
+      updateLastArticlesInfo(count, updatedAtValue);
+      addTelemetryEvent("articles", `OK count=${count} updated=${updatedAtValue || "—"}`);
+      const firstItem = validItems[0] || {};
+      const firstTitle = firstItem.title || firstItem.headline || firstItem.name || "—";
+      console.log("[SELF] firstTitle=", firstTitle);
+      const dates = validItems
+        .map((item) => item.publishedAt || item.date || item.published || "")
+        .map((value) => new Date(value))
+        .filter((d) => !Number.isNaN(d.getTime()))
+        .map((d) => d.getTime());
+      for (let i = 1; i < dates.length; i += 1) {
+        if (dates[i] > dates[i - 1]) {
+          console.warn("[DATA] articles not sorted");
+          break;
+        }
+      }
+    } catch (err) {
+      el.textContent = "Články: chyba";
+      selfDiag.articlesState = "FAIL";
+      selfDiag.articlesCount = "-";
+      logSelfStatus();
+      if (attempt <= ARTICLE_RETRY_DELAYS.length) {
+        const delay = ARTICLE_RETRY_DELAYS[attempt - 1];
+        console.warn("[RETRY] articles attempt", attempt);
+        el.textContent = `Články: retry (${attempt})`;
+        setTimeout(() => fetchArticlesStatus(attempt + 1), delay);
+      }
+      if (err?.name === "AbortError") {
+        addTelemetryEvent("timeout", "articles");
+        if (!firstLoadQuiet) {
+          el.textContent = "Články: timeout";
+        }
+      }
+      addTelemetryEvent("articles", `FAIL attempt=${attempt} err=${err && err.message ? err.message : "timeout"}`);
+    }
+  }
+
+  async function fetchVideosStatus() {
+    const el = document.getElementById("dataStatusVideos");
+    if (!el) return;
+    try {
+      const res = await timeoutFetch(makeDataUrl("data/videos.json"), { cache: "no-store" }, 9000);
+      if (res.status === 404) {
+        el.textContent = "Videa: není k dispozici";
+        selfDiag.videosState = "404";
+        selfDiag.videosCount = "-";
+        logSelfStatus();
+        addTelemetryEvent("videos", "404");
+        return;
+      }
+      if (!res.ok) {
+        el.textContent = `Videa: chyba (${res.status})`;
+        selfDiag.videosState = "FAIL";
+        selfDiag.videosCount = "-";
+        logSelfStatus();
+        addTelemetryEvent("videos", `FAIL status=${res.status}`);
+        return;
+      }
+      const data = await res.json();
+      const size = safeStringify(data).length;
+      console.log("[DATA] size=", size);
+      const items = resolveArray(data, ["items", "videos"]);
+      if (!items) {
+        el.textContent = "Videa: chyba formátu";
+        console.warn("[DATA] videos schema unexpected", Object.keys(data || {}));
+        selfDiag.videosState = "FAIL";
+        selfDiag.videosCount = "-";
+        logSelfStatus();
+        return;
+      }
+      if (!items.length) {
+        el.textContent = "Videa: prázdná";
+        selfDiag.videosState = "EMPTY";
+        selfDiag.videosCount = "0";
+        logSelfStatus();
+        addTelemetryEvent("videos", "EMPTY");
+        return;
+      }
+      el.textContent = `Videa: OK (${items.length})`;
+      selfDiag.videosState = "OK";
+      selfDiag.videosCount = String(items.length);
+      logSelfStatus();
+      addTelemetryEvent("videos", `OK count=${items.length}`);
+    } catch (err) {
+      el.textContent = "Videa: chyba";
+      selfDiag.videosState = "FAIL";
+      selfDiag.videosCount = "-";
+      logSelfStatus();
+      addTelemetryEvent("videos", "FAIL timeout");
+      if (err?.name === "AbortError") {
+        addTelemetryEvent("timeout", "videos");
+        if (!firstLoadQuiet) {
+          el.textContent = "Videa: timeout";
+        }
+      }
+    }
+  }
+
+  async function loadData() {
+    const startedAt = new Date();
+    setStatus("Stav dat: načítám…");
+    try {
+      const res = await timeoutFetch(makeDataUrl("data/articles.json"), { cache: "no-store" }, 9000);
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error("Neplatný JSON v data/articles.json");
+      }
+
+      cachedItems = normalizeItems(data);
+      const sanitized = normalizeArticleList(cachedItems);
+      if (sanitized.length < cachedItems.length) {
+        console.warn("[DATA] filtered invalid items", cachedItems.length, "->", sanitized.length);
+      }
+      cachedItems = sanitized;
+      hasLoadedData = true;
+      setStatus(`Stav dat: OK (${cachedItems.length} položek)`);
+      applyFilter();
+      const updatedAtValue = data?.updatedAt ?? data?.updated_at ?? null;
+      updateLastArticlesInfo(cachedItems.length, updatedAtValue);
+
+      if (isDebugOn()) {
+        writeDebug({
+          ok: true,
+          url: DATA_URL,
+          fetchedAt: new Date().toISOString(),
+          durationMs: Date.now() - startedAt.getTime(),
+          rawType: Array.isArray(data) ? "array" : typeof data,
+          keys:
+            data && typeof data === "object" && !Array.isArray(data) ? Object.keys(data) : [],
+          itemsCount: cachedItems.length,
+          sample: cachedItems.slice(0, 3),
+        });
+      }
+    } catch (err) {
+      setStatus("Stav dat: chyba (nelze načíst)");
+      if (!hasLoadedData) {
+        renderEmpty("Nepodařilo se načíst články. Zkontroluj Stav dat.");
+        scrollToStatusOnce();
+      }
+      if (isDebugOn()) {
+        writeDebug({
+          ok: false,
+          url: DATA_URL,
+          fetchedAt: new Date().toISOString(),
+          durationMs: Date.now() - startedAt.getTime(),
+          error: err && err.message ? err.message : String(err),
         });
       }
     }
-    
-    // Extrahuj generatedAt pokud existuje
-    const generatedAt = data?.generatedAt || data?.updatedAt || data?.generated_at || "";
-    setDataUpdatedAtLabel(generatedAt);
-
-    // Signature check pro detekci změny
-    const sig = signatureOf(arr, generatedAt);
-    if(sig && sig === lastDataSignature){
-      return { changed:false, items: null };
-    }
-    lastDataSignature = sig;
-
-    // Normalizace a merge
-    let out = arr.map(normalizeArticle);
-    out = mergeByExactTitle(out);
-
-    return { changed:true, items: out };
   }
 
-  async function loadVideosOnly(){
-    // ✅ FIX: Použití pouze window.__iuSafeFetch.fetchJSON (žádný vlastní fetch)
-    const safeFetch = window.__iuSafeFetch?.fetchJSON || window.__iuSafeFetch?.safeFetchJSON;
-
-    if (!safeFetch) {
-      console.error("[IU] safeFetch missing - crash shield not loaded");
-      return { changed:false, items:[] };
-    }
-
-    // ✅ FIX: Performance mark pro observabilitu
-    if (DEBUG && performance.mark) {
-      performance.mark("fetch_videos_start");
-    }
-    const fetchStart = performance.now();
-
-    const result = await safeFetch("videos", VIDEOS_URL, { silent: true });
-    
-    // ✅ FIX: result.ok může být false, ale result.data může existovat (cache fallback)
-    if (!result) {
-      console.error("[IU] safeFetch videos returned null/undefined");
-      return { changed:false, items:[] };
-    }
-    
-    // ✅ FIX: Pokud není data ani v fallbacku, vrať prázdné pole
-    if (!result.data) {
-      if (DEBUG) {
-        debugLog(`Fetch videos failed: no data, error=`, result?.error || "unknown error");
+  async function loadVideoMetadata() {
+    try {
+      const res = await timeoutFetch(makeDataUrl("data/videos.json"), { cache: "no-store" }, 9000);
+      if (!res.ok) {
+        if (res.status === 404) {
+          console.warn("[DATA] videos.json not found");
+        } else {
+          console.warn("[DATA] videos.json error", res.status);
+        }
+        return;
       }
-      return { changed:false, items:[] };
+
+      const text = await res.text();
+      try {
+        JSON.parse(text);
+      } catch (err) {
+        console.warn(
+          "[DATA] videos.json parse error",
+          err && err.message ? err.message : err
+        );
+      }
+    } catch (err) {
+      console.warn(
+        "[DATA] videos.json error",
+        err && err.message ? err.message : err
+      );
     }
-
-    const data = result.data;
-
-    // ✅ FIX: Performance measure a log
-    const fetchDuration = performance.now() - fetchStart;
-    if (DEBUG && performance.mark && performance.measure) {
-      performance.mark("fetch_videos_end");
-      performance.measure("fetch_videos", "fetch_videos_start", "fetch_videos_end");
-    }
-
-    // ✅ FIX: Unwrap pomocí univerzální funkce
-    const arr = unwrapToArray(data);
-
-    if (DEBUG) {
-      console.log("videos loaded:", arr.length, VIDEOS_URL);
-    }
-    
-    // ✅ FIX: Debug log výsledku fetch
-    if (DEBUG) {
-      debugLog(`Fetch videos: ok=${result.ok}, source=${result?.source || "network"}, items=${arr.length}, error=${result?.error?.message || "none"}`);
-    }
-    
-    // Extrahuj generatedAt pokud existuje
-    const gen = data?.generatedAt || data?.updatedAt || data?.generated_at || "";
-
-    // Signature check pro detekci změny
-    const sig = signatureOfVideos(arr, gen);
-    if(sig && sig === lastVideosSignature){
-      return { changed:false, items: null };
-    }
-    lastVideosSignature = sig;
-
-    // Normalizace videí
-    const items = [];
-    for(const v of arr){
-      const it = normalizeVideoAsItem(v);
-      if(it) items.push(it);
-    }
-
-    return { changed:true, items };
   }
 
-  async function loadAllItems({ silent = false } = {}){
-    const [aRes, vRes] = await Promise.all([
-      loadArticlesOnly({ silent }),
-      loadVideosOnly()
-    ]);
-
-    if(aRes.changed === false && vRes.changed === false){
-      return false;
+  async function fetchFeedHealth() {
+    try {
+      const res = await timeoutFetch(makeDataUrl("data/feed_health.json"), { cache: "no-store" }, 5000);
+      if (res.status === 404) {
+        console.warn("[HEALTH] feed_health not found");
+        return;
+      }
+      if (!res.ok) {
+        console.warn("[HEALTH] feed_health error", res.status);
+        return;
+      }
+      const data = await res.json();
+      const updated = data?.updatedAt ?? data?.updated_at;
+      console.log("[HEALTH] feed_health OK", updated ? `updatedAt=${updated}` : "updatedAt=—");
+    } catch (err) {
+      console.warn("[HEALTH] feed_health fetch failed", err && err.message ? err.message : err);
     }
+  }
 
-    const articles = (aRes.items !== null) ? aRes.items : null;
-    const videos   = (vRes.items !== null) ? vRes.items : null;
-
-    let currentArticles = [];
-    let currentVideos = [];
-
-    for(const it of (Array.isArray(allItems) ? allItems : [])){
-      if(norm(it.contentType) === "video") currentVideos.push(it);
-      else currentArticles.push(it);
+  function persistLastError(message) {
+    try {
+      localStorage.setItem("iu:lastErrorAt", new Date().toISOString());
+      localStorage.setItem("iu:lastError", message);
+    } catch {
+      // ignore
     }
+    const el = document.getElementById("dataStatusLastError");
+    if (el) {
+      el.textContent = `Poslední chyba: ${message}`;
+    }
+    console.error("[ERR]", message);
+  }
 
-    const nextArticles = (articles !== null) ? articles : currentArticles;
-    const nextVideos   = (videos !== null) ? videos : currentVideos;
+  function handleMissingFeedContainer() {
+    const msg = "[DOM] feed container missing";
+    persistLastError(msg);
+    const articlesEl = document.getElementById("dataStatusArticles");
+    if (articlesEl) {
+      articlesEl.textContent = "Články: chyba DOM";
+    }
+    return;
+  }
 
-    allArticles = nextArticles.slice().filter(x => norm(x.contentType) !== "video");
-    allVideos   = nextVideos.slice().filter(x => norm(x.contentType) === "video");
+  window.addEventListener("error", (event) => {
+    try {
+      const info = `${event.message} (${event.filename}:${event.lineno})`;
+      persistLastError(info);
+    } catch (err) {
+      console.error("[ERR]", "error handler failed", err);
+    }
+  });
 
-    let combined = [...nextArticles, ...nextVideos];
+  window.addEventListener("unhandledrejection", (event) => {
+    try {
+      const reason = event.reason ? event.reason.message || String(event.reason) : "unknown";
+      persistLastError(`Promise rejection: ${reason}`);
+    } catch (err) {
+      console.error("[ERR]", "rejection handler failed", err);
+    }
+  });
 
-    combined.sort((a,b) => {
-      const ta = new Date(a.publishedAt || 0).getTime();
-      const tb = new Date(b.publishedAt || 0).getTime();
-      if(!Number.isFinite(ta) && !Number.isFinite(tb)) return 0;
-      if(!Number.isFinite(ta)) return 1;
-      if(!Number.isFinite(tb)) return -1;
-      return tb - ta;
+  function updateNetworkStatus() {
+    const el = document.getElementById("dataStatusNet");
+    if (!el) return;
+    el.textContent = `Síť: ${navigator.onLine ? "online" : "offline"}`;
+  }
+
+  function initAccordion() {
+    const headers = document.querySelectorAll(".accordionCol .accHeader");
+    headers.forEach((header) => {
+      const targetId = header.getAttribute("aria-controls");
+      const content = targetId ? document.getElementById(targetId) : header.nextElementSibling;
+      if (!content) return;
+      content.style.maxHeight = "0px";
+      content.style.overflow = "hidden";
+      header.setAttribute("aria-expanded", "false");
+      header.addEventListener("click", () => {
+        const isExpanded = header.classList.toggle("is-open");
+        header.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+        if (isExpanded) {
+          content.style.maxHeight = `${content.scrollHeight}px`;
+        } else {
+          content.style.maxHeight = "0px";
+        }
+      });
     });
-
-    allItems = combined;
-
-    if(!silent){
-      applyFilter();
-    }
-
-    return true;
   }
 
-  /* ===== INIT ===== */
-  let initCalled = false;
-  let weatherIntervalId = null;
-  let dataRefreshIntervalId = null;
-
-  async function init(){
-    // ✅ FIX: Ochrana proti duplicitnímu spuštění
-    if (initCalled) {
-      if (DEBUG) console.warn("[infoUzel] init() už byl volán, přeskočeno");
+  function updateSwStatusLabel() {
+    const el = document.getElementById("dataStatusSW");
+    if (!el) return;
+    if (!("serviceWorker" in navigator)) {
+      el.textContent = "SW: nepodporováno";
       return;
     }
-    initCalled = true;
-
-    syncTopbarOffset();
-    window.addEventListener("resize", syncTopbarOffset);
-    window.addEventListener("orientationchange", () => setTimeout(syncTopbarOffset, 50));
-    setTimeout(syncTopbarOffset, 50);
-
-    initHeaderDate();
-    setDataUpdatedAtLabel("");
-
-    buildEmailChips();
-    buildSectionsBar();
-    buildMenu();
-    setupSearch();
-
-    // hamburger menu now handled in index appMenuOverlay (no direct Section toggle here)
-
-    setSectionsFromHash();
-
-    await Promise.all([
-      loadAllItems({ silent:true }),
-      loadWeather(),
-      loadNamedays()
-    ]);
-
-    applyFilter();
-
-    // ✅ FIX: Ochrana proti duplicitnímu spuštění intervalů
-    if (weatherIntervalId === null) {
-      weatherIntervalId = setInterval(loadWeather, 300000);
-    }
-
-    // auto-refresh dat (bez "poskoku": my stejně přerenderujeme od začátku jen při změně)
-    if (dataRefreshIntervalId === null) {
-      dataRefreshIntervalId = setInterval(async () => {
-        if(document.visibilityState !== "visible") return;
-        await loadAllItems({ silent:false });
-      }, 180000);
-    }
-
-    document.addEventListener("visibilitychange", () => {
-      if(document.visibilityState === "visible"){
-        loadWeather();
-        loadAllItems({ silent:false });
-      }
-    });
+    const controller = navigator.serviceWorker.controller ? "controller=ANO" : "controller=NE";
+    const waiting = selfDiag.swWaiting === "yes" ? " waiting=ANO" : "";
+    el.textContent = `SW: ${controller}${waiting}`;
   }
 
-  // Když uživatel ručně změní hash / použije zpět/vpřed:
+  function buildReportText() {
+    const build = selfDiag.build || "no-build";
+    const articles = `${selfDiag.articlesState} count=${selfDiag.articlesCount}`;
+    const videos = `${selfDiag.videosState} count=${selfDiag.videosCount}`;
+    const swController = navigator.serviceWorker?.controller ? "controller=ANO" : "controller=NE";
+    const swWaiting = selfDiag.swWaiting === "yes" ? " waiting=ANO" : "";
+    const updatedEl = document.getElementById("dataStatusUpdated");
+    const updated = updatedEl ? updatedEl.textContent.trim() : "Aktualizace: —";
+    const lastErrorAt = localStorage.getItem("iu:lastErrorAt") || "—";
+    const lastError = localStorage.getItem("iu:lastError") || "—";
+    const lastOkAt = localStorage.getItem("iu:lastArticlesOkAt") || "—";
+    const lastOkCount = localStorage.getItem("iu:lastArticlesCount") || "—";
+    return [
+      `[REPORT] build=${build}`,
+      `[REPORT] articles=${articles}`,
+      `[REPORT] videos=${videos}`,
+      `[REPORT] updated=${updated}`,
+      `[REPORT] sw=${swController}${swWaiting}`,
+      `[REPORT] lastErrorAt=${lastErrorAt}`,
+      `[REPORT] lastError=${lastError}`,
+      `[REPORT] lastOkAt=${lastOkAt}`,
+      `[REPORT] lastOkCount=${lastOkCount}`,
+    ].join("\n");
+  }
+
+  async function copyReportToClipboard() {
+    const text = buildReportText();
+    try {
+      await navigator.clipboard.writeText(text);
+      console.log("[REPORT] copied");
+    } catch {
+      try {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "absolute";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        document.body.removeChild(area);
+        console.log("[REPORT] clipboard fallback used");
+        console.log("[REPORT] copied");
+      } catch (fallbackErr) {
+        const fallback = window.prompt("Copy report (Ctrl+C)", text);
+        if (fallback !== null) {
+          console.log("[REPORT] copied");
+        }
+      }
+    }
+  }
+
+  function refreshDebugPanelText() {
+    const label = document.getElementById("dataDebugLabel");
+    if (!label) return;
+    label.textContent = `Debug: ${isDebugOn() ? "ON" : "OFF"}`;
+  }
+
+  const SW_RELOAD_KEY = "iu:swReloaded";
+  const SW_RELOAD_AT_KEY = "iu:swReloadedAt";
+
+  function clearStaleReloadGuard() {
+    const at = Number(sessionStorage.getItem(SW_RELOAD_AT_KEY) || "0");
+    if (!at) return false;
+    if (Date.now() - at > 10 * 60 * 1000) {
+      sessionStorage.removeItem(SW_RELOAD_KEY);
+      sessionStorage.removeItem(SW_RELOAD_AT_KEY);
+      console.log("[SW] reload guard cleared");
+      return false;
+    }
+    return Boolean(sessionStorage.getItem(SW_RELOAD_KEY));
+  }
+
+  function scheduleSWReload(worker) {
+    if (!worker || !("sessionStorage" in window)) return;
+    if (clearStaleReloadGuard()) return;
+    try {
+      worker.postMessage({ type: "SKIP_WAITING" });
+      addTelemetryEvent("sw", "skip waiting");
+    } catch (error) {
+      console.warn("[SW]", "skip waiting message failed", error);
+    }
+    sessionStorage.setItem(SW_RELOAD_KEY, "1");
+    sessionStorage.setItem(SW_RELOAD_AT_KEY, Date.now().toString());
+    window.location.reload();
+  }
+
+  function watchForSWUpdates() {
+    if (!("serviceWorker" in navigator)) return;
+    const handleRegistration = (reg) => {
+      if (!reg) return;
+      selfDiag.swController = navigator.serviceWorker?.controller ? "yes" : "no";
+      if (reg.waiting) {
+      addTelemetryEvent("sw", "waiting");
+        selfDiag.swWaiting = "yes";
+        logSelfStatus();
+        scheduleSWReload(reg.waiting);
+        return;
+      }
+      selfDiag.swWaiting = "no";
+      logSelfStatus();
+    updateSwStatusLabel();
+      if (reg.waiting) {
+        scheduleSWReload(reg.waiting);
+        return;
+      }
+      const onUpdateFound = () => {
+        const installing = reg.installing;
+        if (!installing) return;
+        installing.addEventListener("statechange", () => {
+          if (installing.state === "installed" && reg.waiting) {
+            scheduleSWReload(reg.waiting);
+          }
+        });
+      };
+      reg.addEventListener("updatefound", onUpdateFound);
+      onUpdateFound();
+    };
+
+    navigator.serviceWorker
+      .getRegistration()
+      .then(handleRegistration)
+      .catch(() => {});
+    navigator.serviceWorker
+      .ready
+      .then(handleRegistration)
+      .catch(() => {});
+  }
+
+  function auditLog() {
+    const loadMoreEl = document.querySelector("[data-load-more], .loadMore");
+    const loadMoreState = loadMoreEl && !loadMoreEl.hidden ? "visible" : "hidden";
+    const swState = selfDiag.swWaiting === "yes"
+      ? "waiting"
+      : (selfDiag.swController === "yes" ? "controller" : "none");
+    console.log(`[AUDIT] build=${selfDiag.build}`);
+    console.log(`[AUDIT] articles=${selfDiag.articlesState} count=${selfDiag.articlesCount}`);
+    console.log(`[AUDIT] videos=${selfDiag.videosState} count=${selfDiag.videosCount}`);
+    console.log(`[AUDIT] loadMore=${loadMoreState}`);
+    console.log(`[AUDIT] sw=${swState}`);
+  }
+
+  function init() {
+    if (sessionStorage.getItem("iu:firstLoadDone")) {
+      console.log("[LOAD] repeat");
+    } else {
+      console.log("[LOAD] first");
+      sessionStorage.setItem("iu:firstLoadDone", "1");
+      firstLoadQuiet = true;
+      setTimeout(() => {
+        firstLoadQuiet = false;
+      }, 5000);
+    }
+    renderDebugVisibility();
+    renderSectionsBar();
+    setSectionsFromHash();
+
+    if (btnToggleDebug) {
+      btnToggleDebug.addEventListener("click", () => {
+        setDebug(!isDebugOn());
+        if (isDebugOn() && (!elDebugOut || !elDebugOut.textContent.trim())) {
+          writeDebug({ note: "Debug aktivní. Pokud data nejdou načíst, uvidíš chybu zde." });
+        }
+      });
+    }
+
+    if (searchForm) {
+      searchForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        applyFilter();
+      });
+    }
+
+    if (modalGoogle) {
+      modalGoogle.addEventListener("click", () => {
+        const query = (searchInput && searchInput.value.trim()) || "";
+        const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        window.open(url, "_blank", "noopener");
+        resetSearchAndReload();
+      });
+    }
+
+    const retryBtn = document.getElementById("dataRetryBtn");
+    if (retryBtn) {
+      retryBtn.addEventListener("click", () => {
+        fetchArticlesStatus();
+        fetchVideosStatus();
+        loadData();
+      });
+    }
+
+    const debugBtn = document.getElementById("dataDebugToggle");
+    if (debugBtn) {
+      debugBtn.addEventListener("click", () => {
+        const current = isDebugOn();
+        setDebug(!current);
+        refreshDebugPanelText();
+        location.reload();
+      });
+      refreshDebugPanelText();
+    }
+
+    const copyBtn = document.getElementById("dataCopyReportBtn");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", () => {
+        copyReportToClipboard();
+      });
+    }
+    const hardBtn = document.getElementById("dataHardRefreshBtn");
+    if (hardBtn) {
+      hardBtn.addEventListener("click", () => {
+        ["iu:swReloaded", "iu:swReloadedAt", "iu:scrolledToStatus"].forEach((key) => sessionStorage.removeItem(key));
+        softRefreshData();
+      });
+    }
+    renderDiagBox();
+    initAccordion();
+    updateBuildStatusLabel();
+    recordBuildSeen();
+
+    window.addEventListener("online", updateNetworkStatus);
+    window.addEventListener("offline", updateNetworkStatus);
+    updateNetworkStatus();
+
+    if (modalCancel) {
+      modalCancel.addEventListener("click", () => {
+        resetSearchAndReload();
+      });
+    }
+
+    fetchArticlesStatus();
+    fetchVideosStatus();
+    loadData();
+    loadVideoMetadata();
+    watchForSWUpdates();
+    updateSwStatusLabel();
+    auditLog();
+    fetchFeedHealth();
+    updateEventsUI();
+    finalStateReport();
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    console.log("[VIS]", document.visibilityState);
+  });
+
+  window.addEventListener("focus", () => console.log("[FOCUS] in"));
+  window.addEventListener("blur", () => console.log("[FOCUS] out"));
+
   window.addEventListener("hashchange", () => {
     freezeScroll();
     setSectionsFromHash();
@@ -1856,11 +1318,77 @@
     restoreScroll();
   });
 
-  // ✅ FIX: Ochrana proti duplicitnímu spuštění - použij pouze jeden způsob
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", init);
-  }else{
-    // Pokud už je DOM ready, spusť init asynchronně, aby se nestalo, že se zavolá 2x
-    setTimeout(init, 0);
-  }
+  (function(){
+    function initAccordion(){
+      const root = document.querySelector(".accordionCol");
+      if (!root) return;
+
+      const headers = Array.from(root.querySelectorAll(".accHeader"));
+      headers.forEach((btn, index)=>{
+        const item = btn.closest(".accItem");
+        const panel = item?.querySelector(".accContent");
+        if (!panel) return;
+
+        btn.classList.remove("is-open");
+        btn.setAttribute("aria-expanded", "false");
+        panel.hidden = true;
+        panel.style.maxHeight = "0px";
+
+        btn.addEventListener("click", ()=>{
+          const isOpen = btn.classList.toggle("is-open");
+          btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+
+          if (isOpen){
+            panel.hidden = false;
+            panel.style.maxHeight = "0px";
+            const h = panel.scrollHeight;
+            panel.style.maxHeight = h + "px";
+            panel.classList.add("is-open-overflow");
+            requestAnimationFrame(()=>{
+              panel.style.maxHeight = panel.scrollHeight + "px";
+            });
+          } else {
+            panel.style.maxHeight = panel.scrollHeight + "px";
+            panel.offsetHeight;
+            panel.style.maxHeight = "0px";
+            window.setTimeout(()=>{ panel.hidden = true; }, 300);
+            panel.classList.remove("is-open-overflow");
+          }
+        });
+
+        btn.addEventListener("keydown", (event)=>{
+          const { key } = event;
+          const isArrowDown = key === "ArrowDown" || key === "Down";
+          const isArrowUp = key === "ArrowUp" || key === "Up";
+          if (!isArrowDown && !isArrowUp && key !== "Home" && key !== "End") return;
+          event.preventDefault();
+          let targetIndex = index;
+          if (isArrowDown){
+            targetIndex = (index + 1) % headers.length;
+          } else if (isArrowUp){
+            targetIndex = (index - 1 + headers.length) % headers.length;
+          } else if (key === "Home"){
+            targetIndex = 0;
+          } else if (key === "End"){
+            targetIndex = headers.length - 1;
+          }
+          headers[targetIndex]?.focus();
+        });
+
+        const mo = new MutationObserver(()=>{
+          if (!btn.classList.contains("is-open")) return;
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        });
+        mo.observe(panel, { childList: true, subtree: true, characterData: true });
+      });
+    }
+
+    if (document.readyState === "loading"){
+      document.addEventListener("DOMContentLoaded", initAccordion);
+    } else {
+      initAccordion();
+    }
+  })();
+
+  init();
 })();

@@ -411,18 +411,8 @@
         log("renderAll info", info);
       }
 
-      const updEl = document.querySelector("#lastUpdate");
-      const st = payload?.status?.data;
-      if (updEl && st && typeof st === "object") {
-        const t = st.generated_at || st.timestamp || "";
-        if (t) updEl.textContent = `Poslední aktualizace: ${t}`;
-      }
-
-      const emptyEl = document.querySelector("#emptyState");
-      const articlesCount = safeArray(a?.items || a).length;
-      if (emptyEl) {
-        emptyEl.style.display = articlesCount > 0 ? "none" : "block";
-      }
+      // ✅ FIX: Odstraněny mrtvé querySelectory (#lastUpdate, #emptyState neexistují v HTML)
+      // app.js používá #dataUpdatedAt a #emptyBox místo toho
 
       const breakMode2 = new URLSearchParams(location.search).get("break");
       if (breakMode2 === "domNull") {
