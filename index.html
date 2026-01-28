@@ -966,13 +966,14 @@
         display: block !important;
       }
 
-      .layout,
-      main,
-      #app,
-      .app,
-      .page,
-      .shell,
-      .container{
+      .layout{
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+      }
+      .mainCol,
+      .sideCol{
         height: auto !important;
         min-height: 0 !important;
         max-height: none !important;
