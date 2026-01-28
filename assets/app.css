@@ -415,10 +415,11 @@ a.brand,
 
 @media (hover:hover) and (pointer:fine){
   .searchBtn:hover{
-    color: var(--accent);
-    border-color: var(--accentBorder);
-    box-shadow: 0 12px 28px rgba(20,40,70,0.08);
-    background: rgba(255,255,255,0.94);
+    background: var(--accentSoft, rgba(31,75,153,0.08));
+    color: var(--accent, #1F3557);
+  }
+  .searchBtn:hover svg{
+    stroke: #1F3557;
   }
 }
 
