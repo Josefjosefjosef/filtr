@@ -1,3 +1,6 @@
+.checkItem input:checked{
+  accent-color: var(--gold-main);
+}
 :root{
   /* ===== jednotné „zlomené bílé“ pozadí pro celý web (včetně topbar) ===== */
   --pageBg: #FFFFFF;
@@ -16,6 +19,11 @@
   --accent: #1F4B99;
   --accentSoft: rgba(31,75,153,0.10);
   --accentBorder: rgba(31,75,153,0.28);
+
+  /* zlaté systémy */
+  --gold-main: #C9A24D;
+  --gold-soft: rgba(201,162,77,0.35);
+  --gold-softer: rgba(201,162,77,0.22);
 
   /* linka mezi články */
   --divider: rgba(11,27,43,0.10);
@@ -88,10 +96,20 @@ body{
   right: 0;
   z-index: 9999;
   background: #FFFFFF;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid var(--gold-soft);
   padding-top: env(safe-area-inset-top);
   will-change: transform;
   transform: translateZ(0);
+}
+
+.iuSubBars .topicPill.isActive{
+  color: var(--gold-main);
+  box-shadow: inset 0 -2px 0 var(--gold-main);
+}
+.filtersBar .filterBtn.isActive,
+.iuSubBars .filterBtn.isActive{
+  color: var(--gold-main);
+  box-shadow: inset 0 -2px 0 var(--gold-main);
 }
 
 .news-card, .videoRow{ contain: content; }
