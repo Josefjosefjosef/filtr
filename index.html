@@ -26,6 +26,11 @@
         --sidebar-text: #e5eaef;
         --sidebar-muted: rgba(229,234,239,0.75);
         --sidebar-border: rgba(255,255,255,0.08);
+        --side-bg-main: #223A54;
+        --side-bg-dark: #1B2F46;
+        --side-bg-light: #2B4A6A;
+        --side-border-soft: rgba(255,255,255,0.06);
+        --side-gold-accent: #C9A24D;
         --gold-accent: #c9a24d;
         --gold-accent-soft: rgba(201,162,77,0.25);
         --topbarStackH: 112px;
@@ -252,7 +257,9 @@
         margin-top: 0 !important;
         padding-top: var(--topbarStackH) !important;
       }
-      .accordionCol{
+      .accordionCol,
+      .sideCol,
+      aside{
         color: var(--sidebar-text);
         background:
           radial-gradient(1200px 700px at 60% 20%,
@@ -260,16 +267,22 @@
             rgba(255,255,255,0.03) 35%,
             rgba(255,255,255,0.00) 65%),
           linear-gradient(180deg,
-            var(--sidebar-bg) 0%,
-            var(--sidebar-bg-soft) 35%,
-            var(--sidebar-bg-lt) 70%,
-            var(--sidebar-bg-light) 100%);
+            var(--side-bg-light) 0%,
+            var(--side-bg-main) 35%,
+            var(--side-bg-dark) 100%);
         background-blend-mode: overlay, normal;
+        box-shadow:
+          inset 1px 0 0 var(--side-border-soft),
+          inset -1px 0 0 var(--side-border-soft);
       }
       .accordionCol .block{
-        background: rgba(255,255,255,0.04);
-        border: 1px solid var(--sidebar-border);
-        border-radius: 12px;
+        background: linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.06),
+          rgba(255,255,255,0.02)
+        );
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.08);
         box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
         color: var(--sidebar-text);
       }
@@ -289,7 +302,7 @@
       .accordionCol .block h3,
       .accordionCol .block .blockTitle{
         color: var(--sidebar-text);
-        border-bottom: 1px solid var(--sidebar-border);
+        border-bottom: 1px solid var(--side-gold-accent);
       }
       .accordionCol .block,
       .accordionCol .block p,
