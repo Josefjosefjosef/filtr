@@ -118,11 +118,12 @@ img{ max-width:100%; height:auto; }
   grid-template-columns: minmax(0, 1fr) var(--sideW, 360px);
   gap: 18px;
   align-items: start;
+  margin-top: calc(60px + var(--topbarOffset));
 }
 .mainCol{ min-width: 0; }
-.accordionCol{ width: var(--sideW, 360px); }
 .accordionCol{
   background: #e9f4ff;
+  width: var(--sideW, 360px);
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -130,7 +131,6 @@ img{ max-width:100%; height:auto; }
   border-radius: 14px;
   min-width: 0;
   align-self: stretch;
-  height: 100%;
 }
 .accItem{
   margin: 0;
@@ -1845,10 +1845,6 @@ img{ max-width:100%; height:auto; }
 .todayText b{
   color: rgba(11,27,43,0.84);
   font-weight: 800;
-}
-
-.layout{
-  margin-top: calc(60px + var(--topbarOffset));
 }
 
 .debug{
