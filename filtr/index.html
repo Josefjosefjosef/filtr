@@ -850,6 +850,9 @@
         border: 1px solid rgba(255,255,255,0.08);
         background: rgba(255,255,255,0.04);
         flex: 0 0 auto;
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.06),
+          0 0 0 1px rgba(0,0,0,0.10);
       }
 
       .topicPill:hover{
@@ -858,9 +861,17 @@
         color: var(--sidebar-text);
       }
 
+      .topicPill:focus-visible{
+        outline: 2px solid rgba(201,162,77,0.45);
+        outline-offset: 2px;
+      }
+
       .topicPill.isActive{
         border-color: rgba(201,162,77,0.35);
-        box-shadow: inset 0 -2px 0 var(--gold-accent);
+        box-shadow:
+          inset 0 -2px 0 var(--gold-accent),
+          inset 0 1px 0 rgba(255,255,255,0.06);
+        color: rgba(201,162,77,0.95);
       }
 
       .filtersBar{
@@ -887,11 +898,19 @@
         font-weight: 600;
         font-size: 13px;
         cursor: pointer;
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.06),
+          0 0 0 1px rgba(0,0,0,0.10);
       }
 
       .filterBtn:hover{
         background: rgba(201,162,77,0.10);
         border-color: rgba(201,162,77,0.22);
+      }
+
+      .filterBtn:focus-visible{
+        outline: 2px solid rgba(201,162,77,0.45);
+        outline-offset: 2px;
       }
 
       .filtersSpacer{
