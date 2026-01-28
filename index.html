@@ -2150,6 +2150,13 @@
         </button>
 
         <a class="brand" href="./" aria-label="infoUzel.cz">
+          <!--
+          LOGO infoUzel.cz
+          Tento inline SVG blok je záměrně řešen jako JEDEN <text> + <tspan>,
+          aby logo bylo opticky kompaktní bez mezer.
+          ⚠️ Neupravovat strukturu <text>/<tspan>, neměnit rozdělení na více <text>.
+          ⚠️ Velikost se smí měnit pouze přes CSS (.brand svg height).
+          -->
           <svg xmlns="http://www.w3.org/2000/svg"
                viewBox="0 0 820 210"
                role="img"
