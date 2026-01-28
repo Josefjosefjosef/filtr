@@ -19,17 +19,13 @@
         --titleLinesDesktop: 2;
         --titleLinesMobile: 3;
         --divider: rgba(11,27,43,0.10);
-        --sidebar-bg: #2e3f55;
-        --sidebar-bg-soft: #3a4f69;
-        --sidebar-bg-lt: #4a637f;
-        --sidebar-bg-light: #5b748e;
+        --iu-side-bg-light: #2B4A6A;
+        --iu-side-bg-main:  #223A54;
+        --iu-side-bg-dark:  #1B2F46;
         --sidebar-text: #e5eaef;
         --sidebar-muted: rgba(229,234,239,0.75);
-        --sidebar-border: rgba(255,255,255,0.08);
-        --side-bg-main: #223A54;
-        --side-bg-dark: #1B2F46;
-        --side-bg-light: #2B4A6A;
-        --side-border-soft: rgba(255,255,255,0.06);
+        --iu-side-border-soft: rgba(255,255,255,0.06);
+        --iu-side-shadow-edge: rgba(0,0,0,0.25);
         --side-gold-accent: #C9A24D;
         --gold-accent: #c9a24d;
         --gold-accent-soft: rgba(201,162,77,0.25);
@@ -260,18 +256,18 @@
       .layout .accordionCol{
         color: var(--sidebar-text);
         background: linear-gradient(
-          to bottom,
-          var(--side-bg-light) 0%,
-          var(--side-bg-main) 35%,
-          var(--side-bg-dark) 100%
-        ) !important;
+          180deg,
+          var(--iu-side-bg-light) 0%,
+          var(--iu-side-bg-main) 35%,
+          var(--iu-side-bg-dark) 100%
+        );
         background-blend-mode: normal;
         box-shadow:
-          inset 2px 0 0 rgba(255,255,255,0.06),
-          inset -2px 0 0 rgba(0,0,0,0.25) !important;
-        padding: 12px !important;
-        align-self: stretch !important;
-        min-height: 100% !important;
+          inset 2px 0 0 var(--iu-side-border-soft),
+          inset -2px 0 0 var(--iu-side-shadow-edge);
+        padding: 12px;
+        align-self: stretch;
+        min-height: 100%;
       }
       .accordionCol .block{
         background: linear-gradient(
