@@ -1900,3 +1900,29 @@ img{ max-width:100%; height:auto; }
   outline: none !important;
   background: transparent !important;
 }
+
+/* ================================
+   NUCLEAR FIX – PRAVÝ SLOUPEC
+   POVOLEN JEN 1 RÁMEČEK
+   ================================ */
+
+/* jediný povolený rámeček */
+.sideCol > .block{
+  border: 1px solid var(--divider);
+  border-radius: 12px;
+  box-shadow: none;
+  outline: none;
+  background: var(--cardBg);
+}
+
+/* VŠECHNO UVNITŘ – BEZ RÁMEČKŮ */
+.sideCol > .block *{
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* výjimka: zachovat kulaté rohy jen na vnějším bloku */
+.sideCol > .block *{
+  border-radius: 0 !important;
+}
