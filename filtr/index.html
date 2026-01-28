@@ -18,6 +18,12 @@
         --titleLinesDesktop: 2;
         --titleLinesMobile: 3;
         --divider: rgba(11,27,43,0.10);
+        --sidebar-bg: #1f2933;
+        --sidebar-bg-soft: #26323f;
+        --sidebar-text: #e5e7eb;
+        --sidebar-muted: #9aa4af;
+        --gold-accent: #c9a24d;
+        --gold-accent-soft: rgba(201,162,77,0.25);
       }
 
       .container{
@@ -804,6 +810,106 @@
           grid-template-columns: repeat(3, minmax(0,1fr)) !important;
         }
       }
+
+      /* ===== NOVÉ: SUB LIŠTY POD HLAVIČKOU ===== */
+
+      .iuSubBars{
+        width: 100%;
+      }
+
+      .topicsBar{
+        background: linear-gradient(180deg, var(--sidebar-bg) 0%, #1c2530 100%);
+        border-bottom: 1px solid var(--gold-accent-soft);
+        color: var(--sidebar-text);
+      }
+
+      .topicsScroller{
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 8px 12px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-gutter: stable both-edges;
+        scrollbar-color: rgba(201,162,77,0.55) rgba(255,255,255,0.06);
+      }
+
+      .topicPill{
+        display: inline-flex;
+        align-items: center;
+        height: 28px;
+        padding: 0 12px;
+        border-radius: 999px;
+        text-decoration: none;
+        color: var(--sidebar-text);
+        font-weight: 600;
+        font-size: 13px;
+        line-height: 1;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.04);
+        flex: 0 0 auto;
+      }
+
+      .topicPill:hover{
+        background: rgba(201,162,77,0.10);
+        border-color: rgba(201,162,77,0.22);
+        color: var(--sidebar-text);
+      }
+
+      .topicPill.isActive{
+        border-color: rgba(201,162,77,0.35);
+        box-shadow: inset 0 -2px 0 var(--gold-accent);
+      }
+
+      .filtersBar{
+        background: linear-gradient(180deg, #22303c 0%, var(--sidebar-bg) 100%);
+        border-bottom: 1px solid var(--gold-accent-soft);
+        color: var(--sidebar-text);
+      }
+
+      .filtersInner{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 12px;
+        min-height: 36px;
+      }
+
+      .filterBtn{
+        height: 28px;
+        padding: 0 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.10);
+        background: rgba(255,255,255,0.04);
+        color: var(--sidebar-text);
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .filterBtn:hover{
+        background: rgba(201,162,77,0.10);
+        border-color: rgba(201,162,77,0.22);
+      }
+
+      .filtersSpacer{
+        flex: 1 1 auto;
+      }
+
+      .filtersHint{
+        color: var(--sidebar-muted);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      @media (max-width: 520px){
+        .filtersHint{ display: none; }
+        .topicsScroller{ padding: 8px 10px; }
+        .filtersInner{ padding: 7px 10px; }
+      }
+      /* ===== /NOVÉ: SUB LIŠTY POD HLAVIČKOU ===== */
     </style>
   </head>
 
@@ -883,6 +989,41 @@
       </div>
     </div>
   </div>
+
+  <!-- ===== NOVÉ: LIŠTY POD HLAVIČKOU (TÉMATA + FILTRY) ===== -->
+  <nav class="iuSubBars" aria-label="Témata a filtry">
+    <!-- TÉMATA (rolovací horizontálně) -->
+    <div class="topicsBar" role="navigation" aria-label="Témata">
+      <div class="topicsScroller" tabindex="0">
+        <a class="topicPill isActive" href="#" aria-current="true">Vše</a>
+        <a class="topicPill" href="#">Aktuální</a>
+        <a class="topicPill" href="#">Domácí</a>
+        <a class="topicPill" href="#">Zahraničí</a>
+        <a class="topicPill" href="#">Ekonomika</a>
+        <a class="topicPill" href="#">Sport</a>
+        <a class="topicPill" href="#">Doprava</a>
+        <a class="topicPill" href="#">Počasí</a>
+        <a class="topicPill" href="#">TV program</a>
+        <a class="topicPill" href="#">Technologie</a>
+        <a class="topicPill" href="#">Kultura</a>
+        <a class="topicPill" href="#">Zdraví</a>
+      </div>
+    </div>
+
+    <!-- FILTRY / REGIONY (pevná) -->
+    <div class="filtersBar" role="navigation" aria-label="Filtry">
+      <div class="filtersInner">
+        <button class="filterBtn" type="button">Filtry</button>
+        <button class="filterBtn" type="button">Regiony</button>
+        <button class="filterBtn" type="button">Zdroje</button>
+
+        <div class="filtersSpacer"></div>
+
+        <div class="filtersHint" aria-label="Nápověda filtrů">Vyberte téma a případně zpřesněte filtry</div>
+      </div>
+    </div>
+  </nav>
+  <!-- ===== /NOVÉ: LIŠTY POD HLAVIČKOU ===== -->
 
   <div id="adBanner" aria-hidden="true">
     <div class="topAdLabel">Reklama</div>
