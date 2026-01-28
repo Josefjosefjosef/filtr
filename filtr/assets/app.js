@@ -454,11 +454,19 @@
 
   logSelfStatus();
 
-  async function fetchArticlesStatus() {
+  function timeoutFetch(url, options = {}, ms = 10000) {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), ms);
+    return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(id));
+  }
+
+  const ARTICLE_RETRY_DELAYS = [2000, 6000];
+
+  async function fetchArticlesStatus(attempt = 1) {
     const el = document.getElementById("dataStatusArticles");
     if (!el) return;
     try {
-      const res = await fetch(makeDataUrl("data/articles.json"), { cache: "no-store" });
+      const res = await timeoutFetch(makeDataUrl("data/articles.json"), { cache: "no-store" }, 9000);
       if (!res.ok) {
       el.textContent = `Články: chyba (${res.status})`;
         return;
@@ -482,13 +490,19 @@
     selfDiag.articlesCount = "-";
     logSelfStatus();
     }
+    if (attempt <= ARTICLE_RETRY_DELAYS.length) {
+      console.warn("[RETRY] articles attempt", attempt);
+      el.textContent = `Články: retry (${attempt})`;
+      const delay = ARTICLE_RETRY_DELAYS[attempt - 1];
+      setTimeout(() => fetchArticlesStatus(attempt + 1), delay);
+    }
   }
 
   async function fetchVideosStatus() {
     const el = document.getElementById("dataStatusVideos");
     if (!el) return;
     try {
-      const res = await fetch(makeDataUrl("data/videos.json"), { cache: "no-store" });
+      const res = await timeoutFetch(makeDataUrl("data/videos.json"), { cache: "no-store" }, 9000);
       if (res.status === 404) {
         el.textContent = "Videa: není k dispozici";
         selfDiag.videosState = "404";
@@ -528,7 +542,7 @@
     const startedAt = new Date();
     setStatus("Stav dat: načítám…");
     try {
-      const res = await fetch(makeDataUrl("data/articles.json"), { cache: "no-store" });
+      const res = await timeoutFetch(makeDataUrl("data/articles.json"), { cache: "no-store" }, 9000);
       if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
 
       const text = await res.text();
@@ -576,7 +590,7 @@
 
   async function loadVideoMetadata() {
     try {
-      const res = await fetch(makeDataUrl("data/videos.json"), { cache: "no-store" });
+      const res = await timeoutFetch(makeDataUrl("data/videos.json"), { cache: "no-store" }, 9000);
       if (!res.ok) {
         if (res.status === 404) {
           console.warn("[DATA] videos.json not found");
@@ -635,6 +649,12 @@
     }
   });
 
+  function updateNetworkStatus() {
+    const el = document.getElementById("dataStatusNet");
+    if (!el) return;
+    el.textContent = `Síť: ${navigator.onLine ? "online" : "offline"}`;
+  }
+
   const SW_RELOAD_KEY = "iu:swReloaded";
 
   function scheduleSWReload(worker) {
@@ -689,6 +709,19 @@
       .catch(() => {});
   }
 
+  function auditLog() {
+    const loadMoreEl = document.querySelector("[data-load-more], .loadMore");
+    const loadMoreState = loadMoreEl && !loadMoreEl.hidden ? "visible" : "hidden";
+    const swState = selfDiag.swWaiting === "yes"
+      ? "waiting"
+      : (selfDiag.swController === "yes" ? "controller" : "none");
+    console.log(`[AUDIT] build=${selfDiag.build}`);
+    console.log(`[AUDIT] articles=${selfDiag.articlesState} count=${selfDiag.articlesCount}`);
+    console.log(`[AUDIT] videos=${selfDiag.videosState} count=${selfDiag.videosCount}`);
+    console.log(`[AUDIT] loadMore=${loadMoreState}`);
+    console.log(`[AUDIT] sw=${swState}`);
+  }
+
   function init() {
     renderDebugVisibility();
     renderSectionsBar();
@@ -719,6 +752,19 @@
       });
     }
 
+    const retryBtn = document.getElementById("dataRetryBtn");
+    if (retryBtn) {
+      retryBtn.addEventListener("click", () => {
+        fetchArticlesStatus();
+        fetchVideosStatus();
+        loadData();
+      });
+    }
+
+    window.addEventListener("online", updateNetworkStatus);
+    window.addEventListener("offline", updateNetworkStatus);
+    updateNetworkStatus();
+
     if (modalCancel) {
       modalCancel.addEventListener("click", () => {
         resetSearchAndReload();
@@ -730,6 +776,7 @@
     loadData();
     loadVideoMetadata();
     watchForSWUpdates();
+    auditLog();
   }
 
   window.addEventListener("hashchange", () => {
