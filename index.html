@@ -6,7 +6,7 @@
     <meta name="iu-build" content="2026-01-29T12:00Z">
     <title>infoUzel.cz</title>
     <meta name="robots" content="noindex,nofollow" />
-    <link rel="stylesheet" href="./assets/app.css?v=2026-01-29T12:00Z.1" />
+    <link rel="stylesheet" href="./assets/app.css?v=2026-01-29T12:15Z.1" />
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;700&display=swap">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -816,19 +816,9 @@
         overflow: hidden;
       }
 
-      .iuSubBars .barInner{
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 0 var(--pageGutter);
-        box-sizing: border-box;
-        width: 100%;
-      }
-
       .iuSubBars .topicsBar{
-        background: transparent;
-        border-bottom: 0;
-        box-shadow: none;
-        backdrop-filter: none;
+        background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f1d3a 55%, #162c51 100%);
+        border-bottom: 1px solid var(--gold-accent-soft);
         color: var(--sidebar-text);
       }
 
@@ -836,14 +826,14 @@
         display: flex;
         gap: 14px;
         align-items: center;
-        padding: 8px var(--pageGutter) 8px var(--chipsLeftAlign);
+        padding: 8px var(--pageGutter);
         overflow-x: auto;
         overflow-y: hidden;
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
         scrollbar-gutter: stable both-edges;
         scrollbar-color: rgba(201,162,77,0.55) rgba(255,255,255,0.06);
-        width: 100%;
+        max-width: 100%;
         box-sizing: border-box;
       }
 
@@ -890,18 +880,16 @@
       }
 
       .iuSubBars .filtersBar{
-        background: #0B0F14;
-        border-bottom: 1px solid rgba(255,255,255,0.10);
-        box-shadow: none;
-        backdrop-filter: none;
-        color: rgba(255,255,255,0.92);
+        background: linear-gradient(180deg, #0f1d3a 0%, #162c51 60%, var(--sidebar-bg) 100%);
+        border-bottom: 1px solid var(--gold-accent-soft);
+        color: var(--sidebar-text);
       }
 
       .iuSubBars .filtersInner{
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 7px var(--pageGutter) 7px var(--chipsLeftAlign);
+        padding: 7px var(--pageGutter);
         min-height: 36px;
         width: 100%;
         box-sizing: border-box;
@@ -912,32 +900,42 @@
         height: 28px;
         padding: 0 12px;
         border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.10);
         background: rgba(255,255,255,0.08);
-        color: rgba(255,255,255,0.92);
+        color: var(--sidebar-text);
         font-weight: 600;
         font-size: 13px;
         cursor: pointer;
         box-shadow:
-          inset 0 1px 0 rgba(255,255,255,0.06);
+          inset 0 1px 0 rgba(255,255,255,0.06),
+          0 1px 3px rgba(0,0,0,0.12);
       }
 
       .iuSubBars .filtersInner .filterBtn:hover,
       .iuSubBars .filtersInner .filterBtn:focus-visible{
-        background: rgba(255,255,255,0.12);
-        color: rgba(255,255,255,0.92);
-        border-color: rgba(255,255,255,0.14);
+        background: rgba(201,162,77,0.12);
+        border-color: rgba(201,162,77,0.25);
       }
 
       .iuSubBars .filtersInner .filterBtn:active{
         background: rgba(255,255,255,0.18);
       }
 
+      .iuSubBars .filtersSpacer{
+        flex: 1 1 auto;
+      }
+
+      .iuSubBars .filtersHint{
+        color: var(--sidebar-muted);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
 
       @media (max-width: 520px){
         .iuSubBars .filtersHint{ display: none; }
-        .iuSubBars .topicsScroller{ padding: 8px 10px 8px var(--chipsLeftAlign); }
-        .iuSubBars .filtersInner{ padding: 7px 10px 7px var(--chipsLeftAlign); }
+        .iuSubBars .topicsScroller{ padding: 8px 10px; }
+        .iuSubBars .filtersInner{ padding: 7px 10px; }
       }
       /* ===== /NOVÉ: SUB LIŠTY POD HLAVIČKOU ===== */
       .iuSubBars{
@@ -969,14 +967,6 @@
       .layout{
         height: auto !important;
         min-height: 0 !important;
-        max-height: none !important;
-        overflow: visible !important;
-      }
-      .mainCol,
-      .sideCol{
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
         overflow: visible !important;
       }
 
@@ -1064,18 +1054,34 @@
     </div>
   </div>
 
-  <!-- ===== SUBBAR POD TOPBAR (FILTRY / REGIONY / ZDROJE) ===== -->
-  <div class="iuSubbar" aria-label="Filtry a výběry">
-    <div class="iuSubbar__inner">
-      <button class="iuSubbarBtn" id="btnFilters" type="button">Filtry</button>
-      <button class="iuSubbarBtn" id="btnRegions" type="button" aria-haspopup="dialog" aria-controls="overlayRegions">Regiony</button>
-      <button class="iuSubbarBtn" id="btnSources" type="button" aria-haspopup="dialog" aria-controls="overlaySources">Zdroje</button>
-
-      <div class="iuSubbar__spacer"></div>
-      <div class="iuSubbar__hint">Vyberte téma a případně zpřesněte filtry</div>
+  <!-- ===== LIŠTY POD HLAVIČKOU (TÉMATA + FILTRY) ===== -->
+  <nav class="iuSubBars" aria-label="Témata a filtry">
+    <div class="topicsBar" role="navigation" aria-label="Témata">
+      <div class="topicsScroller" tabindex="0">
+        <a class="topicPill topicPill--pill isActive" href="#" aria-current="true">Vše</a>
+        <a class="topicPill" href="#">Aktuálně</a>
+        <a class="topicPill" href="#">Domácí</a>
+        <a class="topicPill" href="#">Zahraniční</a>
+        <a class="topicPill" href="#">Ekonomika</a>
+        <a class="topicPill" href="#">Sport</a>
+        <a class="topicPill" href="#">Doprava</a>
+        <a class="topicPill" href="#">Počasí</a>
+        <a class="topicPill" href="#">TV program</a>
+        <a class="topicPill" href="#">Technologie</a>
+        <a class="topicPill" href="#">Kultura</a>
+        <a class="topicPill" href="#">Zdraví</a>
+      </div>
     </div>
-  </div>
-  <!-- ===== /SUBBAR ===== -->
+
+    <div class="filtersBar" role="navigation" aria-label="Filtry">
+      <div class="filtersInner">
+        <button class="filterBtn" id="btnFilters" type="button">Filtry</button>
+        <div class="filtersSpacer"></div>
+        <div class="filtersHint">Vyberte téma a případně zpřesněte filtry</div>
+      </div>
+    </div>
+  </nav>
+  <!-- ===== /LIŠTY POD HLAVIČKOU ===== -->
   </div>
 
   <div id="adBanner" aria-hidden="true">
@@ -1088,6 +1094,32 @@
   <div class="container">
       <div class="layout">
       <div class="mainCol">
+        <section class="feedHead">
+          <div class="feedTopRow">
+            <div class="sec" id="sectionLabel">Sekce: Vše</div>
+            <div class="feedUpdatedAt" id="dataUpdatedAt">Poslední aktualizace dat: —</div>
+          </div>
+
+          <div class="barsWrap" aria-label="Ovládací panel témat a filtrů">
+            <div class="barRow">
+              <div class="barCaption">Témata</div>
+              <nav class="sectionsBar" id="sectionsBar" aria-label="Filtr témat"></nav>
+            </div>
+
+            <div class="filterRow" id="filterRow">
+              <div class="filterRow__label">Filtry</div>
+              <div class="filterRow__actions">
+                <button class="chip chip--ghost" id="btnRegions" type="button" aria-haspopup="dialog" aria-controls="overlayRegions">Regiony</button>
+                <button class="chip chip--ghost" id="btnSources" type="button" aria-haspopup="dialog" aria-controls="overlaySources">Zdroje</button>
+              </div>
+            </div>
+
+            <div class="barRow">
+              <div class="filtersBar" id="filtersBar" aria-label="Filtry"></div>
+            </div>
+          </div>
+        </section>
+
         <section class="news-list" id="newsList" aria-label="Aktuální články">
           <div id="feed"></div>
         </section>
@@ -1447,7 +1479,7 @@
     })();
   </script>
 
-  <script defer src="./assets/app.js?v=2026-01-29T12:00Z"></script>
+  <script defer src="./assets/app.js?v=2026-01-29T12:15Z"></script>
 
   <script>
     (() => {
