@@ -1029,6 +1029,27 @@
     el.textContent = `Síť: ${navigator.onLine ? "online" : "offline"}`;
   }
 
+  function initAccordion() {
+    const headers = document.querySelectorAll(".accordionCol .accHeader");
+    headers.forEach((header) => {
+      const targetId = header.getAttribute("aria-controls");
+      const content = targetId ? document.getElementById(targetId) : header.nextElementSibling;
+      if (!content) return;
+      content.style.maxHeight = "0px";
+      content.style.overflow = "hidden";
+      header.setAttribute("aria-expanded", "false");
+      header.addEventListener("click", () => {
+        const isExpanded = header.classList.toggle("is-open");
+        header.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+        if (isExpanded) {
+          content.style.maxHeight = `${content.scrollHeight}px`;
+        } else {
+          content.style.maxHeight = "0px";
+        }
+      });
+    });
+  }
+
   function updateSwStatusLabel() {
     const el = document.getElementById("dataStatusSW");
     if (!el) return;
@@ -1257,6 +1278,7 @@
       });
     }
     renderDiagBox();
+    initAccordion();
     updateBuildStatusLabel();
     recordBuildSeen();
 

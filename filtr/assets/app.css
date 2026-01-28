@@ -120,8 +120,63 @@ img{ max-width:100%; height:auto; }
   align-items: start;
 }
 .mainCol{ min-width: 0; }
-.sideCol{ min-width: 0; }
+.accordionCol{
+  min-width: 0;
+  background: #e9f4ff;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-self: stretch;
+  height: 100%;
+}
+.accItem{
+  margin: 0;
+}
 
+.accHeader{
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 12px 14px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.accHeader:hover,
+.accHeader:focus-visible{
+  background: rgba(31,75,153,0.12);
+}
+
+.accHeader.is-open{
+  color: var(--accent);
+}
+
+.accContent{
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 280ms ease;
+  padding: 0 8px;
+}
+
+.accContent > *{
+  margin: 0;
+}
+
+.accPlaceholder{
+  color: rgba(11,27,43,0.62);
+  font-size: 13px;
+  line-height: 1.45;
+}
 @media (min-width: 901px){
   .mainCol{ padding-left: 0 !important; }
 }
@@ -448,20 +503,6 @@ img{ max-width:100%; height:auto; }
   padding: 14px 14px 12px;
   position: relative;
   overflow: hidden;
-}
-
-.sideCol .block::before{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  top:0;
-  height: var(--frameBarH);
-  background: var(--frameBarColor);
-  pointer-events:none;
-}
-.sideCol .block{
-  padding-top: calc(14px + var(--frameBarH));
 }
 
 .block + .block{ margin-top: 14px; }
@@ -1821,108 +1862,4 @@ img{ max-width:100%; height:auto; }
   max-height:360px;
   overflow:auto;
   background:#fbfbfb;
-}
-
-/* FIX: pravý sloupec – zamezit dvojitým rámečkům (jen .block má rám) */
-.sideCol .block{
-  border: 1px solid var(--divider);
-  border-radius: 12px;
-  background: var(--cardBg);
-  box-shadow: none;
-}
-
-.sideCol .block > *{
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* FIX: typické vnitřní kontejnery, které často nesou druhý rám */
-.sideCol .block .blockInner,
-.sideCol .block .content,
-.sideCol .block .inner,
-.sideCol .block .card,
-.sideCol .block .panel,
-.sideCol .block .box{
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  background: transparent;
-}
-
-/* FIX: Služby – žádné vnitřní rámy, rám má jen .block */
-.sideCol .servicesBlock .serviceGroup,
-.sideCol .servicesBlock .serviceGroup.isFramed{
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-  background: transparent;
-}
-
-/* FIX: Časovač – žádné vnitřní rámy, rám má jen .block */
-.sideCol .block .workTimer,
-.sideCol .block .timerBox,
-.sideCol .block .timerCard,
-.sideCol .block .timerWrap,
-.sideCol .block .timerPanel{
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-  background: transparent;
-}
-
-/* FIX: žádná extra horní linka uvnitř bloku */
-.sideCol .block h1,
-.sideCol .block h2,
-.sideCol .block h3,
-.sideCol .block header,
-.sideCol .block .blockTitle,
-.sideCol .block .groupTitle{
-  border-top: none !important;
-  box-shadow: none !important;
-}
-
-/* FIN: jednotný vnitřní spacing */
-.sideCol .block{
-  padding: 12px 12px;
-}
-
-.sideCol .block > *:first-child{
-  margin-top: 0;
-}
-
-/* FIX: E-mailové schránky – odstranit vnitřní rámeček */
-.sideCol .servicesBlock .servicesList,
-.sideCol .servicesBlock .serviceGroup,
-.sideCol .servicesBlock .isFramed{
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-  background: transparent !important;
-}
-
-/* ================================
-   NUCLEAR FIX – PRAVÝ SLOUPEC
-   POVOLEN JEN 1 RÁMEČEK
-   ================================ */
-
-/* jediný povolený rámeček */
-.sideCol > .block{
-  border: 1px solid var(--divider);
-  border-radius: 12px;
-  box-shadow: none;
-  outline: none;
-  background: var(--cardBg);
-}
-
-/* VŠECHNO UVNITŘ – BEZ RÁMEČKŮ */
-.sideCol > .block *{
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* výjimka: zachovat kulaté rohy jen na vnějším bloku */
-.sideCol > .block *{
-  border-radius: 0 !important;
 }

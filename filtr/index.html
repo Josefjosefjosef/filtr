@@ -957,12 +957,17 @@
         </section>
       </div>
 
-      <aside class="sideCol" aria-label="Postranní panel">
-        <div class="timerToolsWrap" aria-label="Časovač + rychlé ikony">
-          <section class="block isCompactTimer" aria-label="Osobní časovač pracovní doby">
-            <div class="blockHead">
-              <div class="title">Osobní časovač pracovní doby</div>
-            </div>
+      <aside class="accordionCol" aria-label="Postranní panel">
+        <div class="accItem">
+          <button class="accHeader" type="button" aria-expanded="false" aria-controls="acc-dnes">Dnes se stalo</button>
+          <div class="accContent" id="acc-dnes">
+            <div class="todayText" id="todayHistory">—</div>
+          </div>
+        </div>
+
+        <div class="accItem">
+          <button class="accHeader" type="button" aria-expanded="false" aria-controls="acc-timer">Osobní časovač pracovní doby</button>
+          <div class="accContent" id="acc-timer">
             <div class="timerWrap" id="workTimer">
               <div class="timerRowTop">
                 <div class="timerTitleMini">Konec směny</div>
@@ -991,121 +996,73 @@
                 Bez účtů a cloudu. Stav se ukládá jen do tohoto zařízení.
               </div>
             </div>
-          </section>
-
+          </div>
         </div>
 
-        <section class="block" aria-label="Dnes se stalo">
-          <div class="blockHead">
-            <div class="title">Dnes se stalo</div>
-          </div>
-          <div class="todayText" id="todayHistory">—</div>
-        </section>
-
-        <section class="block servicesBlock" aria-label="Služby">
-          <div class="servicesList">
-            <div class="serviceGroup isFramed">
-              <div class="groupTitle">E-mailové schránky</div>
-              <div class="chips" id="emailChips"></div>
-            </div>
-            <div class="serviceGroup isFramed">
-              <div class="groupTitle">Sociální sítě</div>
-              <div class="chips">
-                <a class="chipLink" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a>
-                <a class="chipLink" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a class="chipLink" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">YouTube</a>
-                <a class="chipLink" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a>
-                <a class="chipLink" href="https://x.com/" target="_blank" rel="noopener noreferrer">X</a>
-                <a class="chipLink" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                <a class="chipLink" href="https://www.reddit.com/" target="_blank" rel="noopener noreferrer">Reddit</a>
-                <a class="chipLink" href="https://www.pinterest.com/" target="_blank" rel="noopener noreferrer">Pinterest</a>
-                <a class="chipLink" href="https://www.snapchat.com/" target="_blank" rel="noopener noreferrer">Snapchat</a>
-                <a class="chipLink" href="https://discord.com/" target="_blank" rel="noopener noreferrer">Discord</a>
+        <div class="accItem">
+          <button class="accHeader" type="button" aria-expanded="false" aria-controls="acc-email">E-mailové schránky</button>
+          <div class="accContent" id="acc-email">
+            <div class="servicesList">
+              <div class="serviceGroup isFramed">
+                <div class="groupTitle">E-mailové schránky</div>
+                <div class="chips" id="emailChips"></div>
               </div>
             </div>
-          </div>
-          <div class="tinyLegal">
-            infoUzel.cz není s uvedenými službami nijak spojen.<br />
-            Odkazy vedou na oficiální weby třetích stran.
-          </div>
-        </section>
-
-        <section class="block" aria-label="Stav dat">
-          <div class="blockHead">
-            <div class="title">Stav dat</div>
-          </div>
-          <div class="statusRow" id="dataStatusArticles">Články: načítání…</div>
-          <div class="statusRow" id="dataStatusVideos">Videa: načítání…</div>
-          <div class="statusRow" id="dataStatusUpdated">Aktualizace: —</div>
-          <div class="statusRow" id="dataStatusLastError">Poslední chyba: —</div>
-          <div class="statusRow">
-            <button class="btn btnLite" id="dataRetryBtn" type="button">Zkusit znovu</button>
-          </div>
-          <div class="statusRow" id="dataStatusNet">Síť: ...</div>
-          <div class="statusRow">
-            <span id="dataDebugLabel">Debug: OFF</span>
-            <button class="btn btnLite" id="dataDebugToggle" type="button" style="margin-left: 6px;">Toggle</button>
-          </div>
-          <div class="statusRow" id="dataStatusSW">SW: ...</div>
-          <div class="statusRow">
-            <button class="btn btnLite" id="dataCopyReportBtn" type="button">Zkopírovat report</button>
-          </div>
-          <div class="statusRow">
-            <button class="btn btnLite" id="dataHardRefreshBtn" type="button">Hard refresh</button>
-          </div>
-          <div class="statusRow" id="dataStatusBuild">Build: …</div>
-          <div class="statusRow" id="dataStatusEvents">Události: …</div>
-        </section>
-
-        <section class="block rcBlock" aria-label="Rozcestník">
-          <div class="blockHead">
-            <div class="title">Rozcestník</div>
-          </div>
-          <div class="rcPanel" aria-label="Rychlé odkazy">
-            <div class="rcGrid">
-              <a class="rcItem" href="#" data-section="reality" aria-label="Reality">
-                <img src="./assets/mascot.png" alt="Reality" />
-                <span>Reality</span>
-              </a>
-              <a class="rcItem" href="#" data-section="automoto" aria-label="AutoMoto">
-                <img src="./assets/mascot.png" alt="AutoMoto" />
-                <span>AutoMoto</span>
-              </a>
-              <a class="rcItem" href="#" data-section="bazar" aria-label="Bazar">
-                <img src="./assets/mascot.png" alt="Bazar" />
-                <span>Bazar</span>
-              </a>
-              <a class="rcItem" href="#" data-section="prace" aria-label="Práce">
-                <img src="./assets/mascot.png" alt="Práce" />
-                <span>Práce</span>
-              </a>
-              <a class="rcItem" href="#" data-section="sluzby" aria-label="Služby">
-                <img src="./assets/mascot.png" alt="Služby" />
-                <span>Služby</span>
-              </a>
-              <a class="rcItem" href="#" data-section="jizdnirady" aria-label="Jízdní řády">
-                <img src="./assets/mascot.png" alt="Jízdní řády" />
-                <span>Jízdní řády</span>
-              </a>
-              <a class="rcItem" href="#" data-section="mapy" aria-label="Mapy">
-                <img src="./assets/mascot.png" alt="Mapy" />
-                <span>Mapy</span>
-              </a>
-              <a class="rcItem" href="#" data-section="cestovani" aria-label="Cestování">
-                <img src="./assets/mascot.png" alt="Cestování" />
-                <span>Cestování</span>
-              </a>
-              <a class="rcItem" href="#" data-section="prekladac" aria-label="Překladač">
-                <img src="./assets/mascot.png" alt="Překladač" />
-                <span>Překladač</span>
-              </a>
-              <a class="rcItem" href="#" data-section="tvprogram" aria-label="TV program">
-                <img src="./assets/mascot.png" alt="TV program" />
-                <span>TV program</span>
-              </a>
+            <div class="tinyLegal">
+              infoUzel.cz není s uvedenými službami nijak spojen.<br />
+              Odkazy vedou na oficiální weby třetích stran.
             </div>
           </div>
-        </section>
+        </div>
+
+        <div class="accItem">
+          <button class="accHeader" type="button" aria-expanded="false" aria-controls="acc-placeholder-1">Další sekce 1</button>
+          <div class="accContent" id="acc-placeholder-1">
+            <p class="accPlaceholder">Obsah bude doplněn.</p>
+          </div>
+        </div>
+
+        <div class="accItem">
+          <button class="accHeader" type="button" aria-expanded="false" aria-controls="acc-placeholder-2">Další sekce 2</button>
+          <div class="accContent" id="acc-placeholder-2">
+            <p class="accPlaceholder">Obsah bude doplněn.</p>
+          </div>
+        </div>
+
+        <div class="accItem">
+          <button class="accHeader" type="button" aria-expanded="false" aria-controls="acc-placeholder-3">Další sekce 3</button>
+          <div class="accContent" id="acc-placeholder-3">
+            <p class="accPlaceholder">Obsah bude doplněn.</p>
+          </div>
+        </div>
+
+        <div class="accItem">
+          <button class="accHeader" type="button" aria-expanded="false" aria-controls="acc-placeholder-4">Další sekce 4</button>
+          <div class="accContent" id="acc-placeholder-4">
+            <p class="accPlaceholder">Obsah bude doplněn.</p>
+          </div>
+        </div>
+
+        <div class="accItem">
+          <button class="accHeader" type="button" aria-expanded="false" aria-controls="acc-placeholder-5">Další sekce 5</button>
+          <div class="accContent" id="acc-placeholder-5">
+            <p class="accPlaceholder">Obsah bude doplněn.</p>
+          </div>
+        </div>
+
+        <div class="accItem">
+          <button class="accHeader" type="button" aria-expanded="false" aria-controls="acc-placeholder-6">Další sekce 6</button>
+          <div class="accContent" id="acc-placeholder-6">
+            <p class="accPlaceholder">Obsah bude doplněn.</p>
+          </div>
+        </div>
+
+        <div class="accItem">
+          <button class="accHeader" type="button" aria-expanded="false" aria-controls="acc-placeholder-7">Další sekce 7</button>
+          <div class="accContent" id="acc-placeholder-7">
+            <p class="accPlaceholder">Obsah bude doplněn.</p>
+          </div>
+        </div>
       </aside>
     </div>
   </div>
