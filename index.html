@@ -982,24 +982,7 @@
         .iuSubBars .topicsScroller{ padding: 8px 10px; }
         .iuSubBars .filtersInner{ padding: 7px 10px; }
       }
-      /* FIX: nesmí se blokovat vertikální scroll celé stránky */
-      html, body{
-        height: auto !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-      }
-      body{
-        position: static !important;
-      }
-      /* FIX: stránka nesmí horizontálně přetékat (horizontální scroll jen v tématech) */
-      html, body{
-        overflow-x: hidden !important;
-      }
       /* ===== /NOVÉ: SUB LIŠTY POD HLAVIČKOU ===== */
-      /* FIX: žádný horizontální scroll stránky (horizontálně scrolují jen témata) */
-      html, body{
-        overflow-x: hidden !important;
-      }
       .iuSubBars{
         max-width: 100%;
         overflow: hidden;
@@ -1012,6 +995,28 @@
         max-width: 100%;
         overflow-x: auto;
         overflow-y: hidden;
+      }
+
+      html, body{
+        height: auto !important;
+        min-height: 100% !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        position: static !important;
+      }
+
+      body{
+        display: block !important;
+      }
+
+      .layout{
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+      }
+
+      *{
+        overscroll-behavior: auto !important;
       }
     </style>
   </head>
@@ -1758,6 +1763,29 @@
         window.scrollTo({ top: target, left: 0, behavior: 'instant' });
         sessionStorage.setItem('iu_ad_peek_done', '1');
       });
+    })();
+  </script>
+
+  <script>
+    (function(){
+      function px(n){ return (n||0) + "px"; }
+
+      function calcTopStack(){
+        const el1 = document.querySelector('.topbar, header, .header');
+        const el2 = document.querySelector('.topicsBar, .sectionsBar, .tabsBar, nav');
+        const el3 = document.querySelector('.filtersBar, .subnav, .filterBar, .chipsRow');
+
+        const h1 = el1 ? el1.getBoundingClientRect().height : 0;
+        const h2 = el2 ? el2.getBoundingClientRect().height : 0;
+        const h3 = el3 ? el3.getBoundingClientRect().height : 0;
+
+        const total = Math.ceil(h1 + h2 + h3 + 2);
+        document.documentElement.style.setProperty('--topbarStackH', px(total));
+      }
+
+      calcTopStack();
+      window.addEventListener('resize', calcTopStack);
+      window.addEventListener('load', calcTopStack);
     })();
   </script>
 </body>
