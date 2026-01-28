@@ -344,6 +344,14 @@
     });
   }
 
+  function ensureFallbackMessage() {
+    const target = getFeedTarget();
+    if (!target) return;
+    if (target.children.length > 0) return;
+    if (emptyBox && emptyBox.textContent.trim()) return;
+    renderEmpty("Žádná data k zobrazení. Zkontroluj Stav dat.");
+  }
+
   function writeDebug(obj) {
     if (!elDebugOut) return;
     try {
@@ -424,24 +432,55 @@
     }
   }
 
+    ensureFallbackMessage();
+
+
+  const selfDiag = {
+    build: getBuildStamp() || "no-build",
+    articlesState: "INIT",
+    articlesCount: "-",
+    videosState: "INIT",
+    videosCount: "-",
+    swController: "no",
+    swWaiting: "no"
+  };
+
+  function logSelfStatus() {
+    console.log(`[SELF] build=${selfDiag.build}`);
+    console.log(`[SELF] articles=${selfDiag.articlesState} count=${selfDiag.articlesCount}`);
+    console.log(`[SELF] videos=${selfDiag.videosState} count=${selfDiag.videosCount}`);
+    console.log(`[SELF] swController=${selfDiag.swController} swWaiting=${selfDiag.swWaiting}`);
+  }
+
+  logSelfStatus();
+
   async function fetchArticlesStatus() {
     const el = document.getElementById("dataStatusArticles");
     if (!el) return;
     try {
       const res = await fetch(makeDataUrl("data/articles.json"), { cache: "no-store" });
       if (!res.ok) {
-        el.textContent = `Články: chyba (${res.status})`;
+      el.textContent = `Články: chyba (${res.status})`;
         return;
       }
       const data = await res.json();
       const items = normalizeItems(data);
       if (!items.length) {
         el.textContent = "Články: prázdné";
+      selfDiag.articlesState = "EMPTY";
+      selfDiag.articlesCount = "0";
+      logSelfStatus();
         return;
       }
       el.textContent = `Články: OK (${items.length})`;
+    selfDiag.articlesState = "OK";
+    selfDiag.articlesCount = String(items.length);
+    logSelfStatus();
     } catch {
       el.textContent = "Články: chyba";
+    selfDiag.articlesState = "FAIL";
+    selfDiag.articlesCount = "-";
+    logSelfStatus();
     }
   }
 
@@ -452,21 +491,36 @@
       const res = await fetch(makeDataUrl("data/videos.json"), { cache: "no-store" });
       if (res.status === 404) {
         el.textContent = "Videa: není k dispozici";
+        selfDiag.videosState = "404";
+        selfDiag.videosCount = "-";
+        logSelfStatus();
         return;
       }
       if (!res.ok) {
         el.textContent = `Videa: chyba (${res.status})`;
+        selfDiag.videosState = "FAIL";
+        selfDiag.videosCount = "-";
+        logSelfStatus();
         return;
       }
       const data = await res.json();
       const items = Array.isArray(data) ? data : data?.items || [];
       if (!items.length) {
         el.textContent = "Videa: prázdná";
+        selfDiag.videosState = "EMPTY";
+        selfDiag.videosCount = "0";
+        logSelfStatus();
         return;
       }
       el.textContent = `Videa: OK (${items.length})`;
+      selfDiag.videosState = "OK";
+      selfDiag.videosCount = String(items.length);
+      logSelfStatus();
     } catch {
       el.textContent = "Videa: chyba";
+      selfDiag.videosState = "FAIL";
+      selfDiag.videosCount = "-";
+      logSelfStatus();
     }
   }
 
@@ -474,7 +528,7 @@
     const startedAt = new Date();
     setStatus("Stav dat: načítám…");
     try {
-      const res = await fetch(DATA_URL, { cache: "no-store" });
+      const res = await fetch(makeDataUrl("data/articles.json"), { cache: "no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
 
       const text = await res.text();
@@ -522,7 +576,7 @@
 
   async function loadVideoMetadata() {
     try {
-      const res = await fetch(VIDEOS_URL, { cache: "no-store" });
+      const res = await fetch(makeDataUrl("data/videos.json"), { cache: "no-store" });
       if (!res.ok) {
         if (res.status === 404) {
           console.warn("[DATA] videos.json not found");
@@ -599,6 +653,15 @@
     if (!("serviceWorker" in navigator)) return;
     const handleRegistration = (reg) => {
       if (!reg) return;
+      selfDiag.swController = navigator.serviceWorker?.controller ? "yes" : "no";
+      if (reg.waiting) {
+        selfDiag.swWaiting = "yes";
+        logSelfStatus();
+        scheduleSWReload(reg.waiting);
+        return;
+      }
+      selfDiag.swWaiting = "no";
+      logSelfStatus();
       if (reg.waiting) {
         scheduleSWReload(reg.waiting);
         return;
