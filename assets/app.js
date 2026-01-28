@@ -188,8 +188,12 @@
     return null;
   }
 
-  function normalizeVideoList(items) {
-    const source = normalizeItems(items);
+  function normalizeVideoList(input) {
+    const source =
+      Array.isArray(input) ? input
+      : (input && Array.isArray(input.videos) ? input.videos
+      : (input && Array.isArray(input.items) ? input.items : []));
+
     return source
       .map((video) => {
         if (!video || typeof video !== "object") return null;
@@ -207,7 +211,7 @@
           publishedAt: published,
           url,
           channel: safeText(video.channel || video.source || ""),
-          section: safeText((video.section || "video").toLowerCase()),
+          section: "video",
           summary: safeText(video.summary || video.description || ""),
         };
       })
