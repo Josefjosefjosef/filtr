@@ -277,6 +277,16 @@ img{ max-width:100%; height:auto; }
   text-overflow: ellipsis;
 }
 
+/* Brand link container */
+.iuBrand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  flex: 0 0 auto;
+  margin-right: 14px;
+}
+
 /* ===== Brand SVG logo (LOCKED) ===== */
 .iuBrandSvg{
   display:block;
@@ -324,6 +334,12 @@ a.brand,
   position: relative;
   min-width: 0;
   width: min(620px, 70%);
+}
+
+.search,
+.searchWrap{
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .search input{

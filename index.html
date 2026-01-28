@@ -1031,13 +1031,9 @@
           </div>
         </button>
 
-        <a class="brand" href="./" aria-label="infoUzel.cz">
-          <!--
-          LOGO infoUzel.cz – FINÁLNÍ KONSTRUKCE (SVG)
-          NEMĚNIT BARVY, PROPORCE ANI KŘIVKU PODTRŽENÍ.
-          Velikost se řídí pouze přes CSS height.
-          -->
-          <svg class="iuBrandSvg" viewBox="0 0 520 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="infoUzel.cz">
+        <a class="brand iuBrand" href="./" aria-label="infoUzel.cz">
+          <!-- LOGO: INFOUZEL – START (NEMĚNIT) -->
+          <svg id="iuLogoSvg" class="iuBrandSvg" data-brand="infoUzel" viewBox="0 0 520 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="infoUzel.cz">
             <!-- Text -->
             <g font-family="'Source Sans 3', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif"
                font-size="96"
@@ -1048,19 +1044,20 @@
 
               <!-- "Uzel" (tučné, zlaté) -->
               <!-- x posun je nastaven tak, aby "info" a "Uzel" navazovalo bez mezery -->
-              <text x="150" y="96" fill="#B08A2E" font-weight="700" letter-spacing="0" xml:space="preserve">Uzel</text>
+              <text x="150" y="96" fill="#B08A2E" font-weight="700" font-size="115" letter-spacing="0" xml:space="preserve">Uzel</text>
 
               <!-- ".cz" (tenčí, grafit) -->
-              <text x="368" y="96" fill="#1F2933" font-weight="400" letter-spacing="0" xml:space="preserve">.cz</text>
+              <text x="422" y="96" fill="#1F2933" font-weight="400" letter-spacing="0" xml:space="preserve">.cz</text>
             </g>
 
             <!-- Podtržení – jemná prohnutá křivka přes šířku -->
-            <path d="M18 118 C 145 132, 375 132, 502 118"
+            <path d="M18 118 C 145 132, 375 132, 520 118"
                   fill="none"
                   stroke="#2B2F36"
                   stroke-width="5"
                   stroke-linecap="round" />
           </svg>
+          <!-- LOGO: INFOUZEL – END -->
         </a>
       </div>
 
