@@ -1004,54 +1004,54 @@
           <button class="btn debug-toggle" id="toggleDebugBtn" type="button">Zapnout debug</button>
         </div>
         <div class="topbarInfo" id="topbarInfo">—</div>
-        <div class="homePinRow" id="homePinRow" tabindex="0" role="button" aria-label="Připnout stránku jako domovskou">
-          <div class="homePinSep" aria-hidden="true"></div>
-          <span class="homePinStar" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 2.5l2.95 6.06 6.69.97-4.84 4.71 1.14 6.66L12 17.9 6.06 20.9l1.14-6.66L2.36 9.53l6.69-.97L12 2.5z"></path>
-            </svg>
-          </span>
-          <div class="homePinText" id="homePinText">Připnout stránku jako domovskou</div>
-          <div class="vipBadge" id="vipBadge">VIP uživatel</div>
+      <div class="homePinRow" id="homePinRow" tabindex="0" role="button" aria-label="Připnout stránku jako domovskou">
+        <div class="homePinSep" aria-hidden="true"></div>
+        <span class="homePinStar" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2.5l2.95 6.06 6.69.97-4.84 4.71 1.14 6.66L12 17.9 6.06 20.9l1.14-6.66L2.36 9.53l6.69-.97L12 2.5z"></path>
+          </svg>
+        </span>
+        <div class="homePinText" id="homePinText">Připnout stránku jako domovskou</div>
+        <div class="vipBadge" id="vipBadge">VIP uživatel</div>
+      </div>
+    </div>
+
+    <!-- ===== NOVÉ: LIŠTY POD HLAVIČKOU (TÉMATA + FILTRY) ===== -->
+    <nav class="iuSubBars" aria-label="Témata a filtry">
+      <!-- TÉMATA (rolovací horizontálně) -->
+      <div class="topicsBar" role="navigation" aria-label="Témata">
+        <div class="topicsScroller" tabindex="0">
+          <a class="topicPill isActive" href="#" aria-current="true">Vše</a>
+          <a class="topicPill" href="#">Aktuální</a>
+          <a class="topicPill" href="#">Domácí</a>
+          <a class="topicPill" href="#">Zahraničí</a>
+          <a class="topicPill" href="#">Ekonomika</a>
+          <a class="topicPill" href="#">Sport</a>
+          <a class="topicPill" href="#">Doprava</a>
+          <a class="topicPill" href="#">Počasí</a>
+          <a class="topicPill" href="#">TV program</a>
+          <a class="topicPill" href="#">Technologie</a>
+          <a class="topicPill" href="#">Kultura</a>
+          <a class="topicPill" href="#">Zdraví</a>
         </div>
       </div>
-    </div>
+
+      <!-- FILTRY / REGIONY (pevná) -->
+      <div class="filtersBar" role="navigation" aria-label="Filtry">
+        <div class="filtersInner">
+          <button class="filterBtn" type="button">Filtry</button>
+          <button class="filterBtn" type="button">Regiony</button>
+          <button class="filterBtn" type="button">Zdroje</button>
+
+          <div class="filtersSpacer"></div>
+
+          <div class="filtersHint" aria-label="Nápověda filtrů">Vyberte téma a případně zpřesněte filtry</div>
+        </div>
+      </div>
+    </nav>
+    <!-- ===== /NOVÉ: LIŠTY POD HLAVIČKOU ===== -->
   </div>
-
-  <!-- ===== NOVÉ: LIŠTY POD HLAVIČKOU (TÉMATA + FILTRY) ===== -->
-  <nav class="iuSubBars" aria-label="Témata a filtry">
-    <!-- TÉMATA (rolovací horizontálně) -->
-    <div class="topicsBar" role="navigation" aria-label="Témata">
-      <div class="topicsScroller" tabindex="0">
-        <a class="topicPill isActive" href="#" aria-current="true">Vše</a>
-        <a class="topicPill" href="#">Aktuální</a>
-        <a class="topicPill" href="#">Domácí</a>
-        <a class="topicPill" href="#">Zahraničí</a>
-        <a class="topicPill" href="#">Ekonomika</a>
-        <a class="topicPill" href="#">Sport</a>
-        <a class="topicPill" href="#">Doprava</a>
-        <a class="topicPill" href="#">Počasí</a>
-        <a class="topicPill" href="#">TV program</a>
-        <a class="topicPill" href="#">Technologie</a>
-        <a class="topicPill" href="#">Kultura</a>
-        <a class="topicPill" href="#">Zdraví</a>
-      </div>
-    </div>
-
-    <!-- FILTRY / REGIONY (pevná) -->
-    <div class="filtersBar" role="navigation" aria-label="Filtry">
-      <div class="filtersInner">
-        <button class="filterBtn" type="button">Filtry</button>
-        <button class="filterBtn" type="button">Regiony</button>
-        <button class="filterBtn" type="button">Zdroje</button>
-
-        <div class="filtersSpacer"></div>
-
-        <div class="filtersHint" aria-label="Nápověda filtrů">Vyberte téma a případně zpřesněte filtry</div>
-      </div>
-    </div>
-  </nav>
-  <!-- ===== /NOVÉ: LIŠTY POD HLAVIČKOU ===== -->
+  </div>
 
   <div id="adBanner" aria-hidden="true">
     <div class="topAdLabel">Reklama</div>
