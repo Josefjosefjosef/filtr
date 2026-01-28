@@ -19,10 +19,13 @@
         --titleLinesDesktop: 2;
         --titleLinesMobile: 3;
         --divider: rgba(11,27,43,0.10);
-        --sidebar-bg: #07172f;
-        --sidebar-bg-soft: #13234e;
-        --sidebar-text: #e5eaef;
-        --sidebar-muted: rgba(229,234,239,0.75);
+        --sidebar-bg: #2e3f55;
+        --sidebar-bg-soft: #3a4f69;
+        --sidebar-bg-lt: #4a637f;
+        --sidebar-bg-light: #5b748e;
+        --iu-text-light: #f2f4f7;
+        --iu-text-muted: rgba(255,255,255,0.65);
+        --iu-border-soft: rgba(255,255,255,0.08);
         --gold-accent: #c9a24d;
         --gold-accent-soft: rgba(201,162,77,0.25);
         --topbarStackH: 112px;
@@ -250,7 +253,7 @@
         padding-top: var(--topbarStackH) !important;
       }
       .accordionCol{
-        color: var(--sidebar-text);
+        color: var(--iu-text-light);
         background:
           radial-gradient(1200px 700px at 60% 20%,
             rgba(255,255,255,0.08) 0%,
@@ -258,16 +261,17 @@
             rgba(255,255,255,0.00) 65%),
           linear-gradient(180deg,
             var(--sidebar-bg) 0%,
-            #0f1f3b 40%,
-            #162d57 75%,
-            #1e395d 100%);
+            var(--sidebar-bg-soft) 35%,
+            var(--sidebar-bg-lt) 70%,
+            var(--sidebar-bg-light) 100%);
         background-blend-mode: overlay, normal;
       }
       .accordionCol .block{
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.07);
+        background: transparent;
+        border: 1px solid var(--iu-border-soft);
         border-radius: 12px;
         box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+        color: var(--iu-text-light);
       }
       .accordionCol .block .blockInner,
       .accordionCol .block .content,
@@ -284,21 +288,21 @@
       }
       .accordionCol .block h3,
       .accordionCol .block .blockTitle{
-        color: var(--sidebar-text);
-        border-bottom: 1px solid var(--gold-accent-soft);
+        color: var(--iu-text-light);
+        border-bottom: 1px solid var(--iu-border-soft);
       }
       .accordionCol .block,
       .accordionCol .block p,
       .accordionCol .block span{
-        color: var(--sidebar-text);
+        color: var(--iu-text-light);
       }
       .accordionCol .muted,
       .accordionCol small{
-        color: var(--sidebar-muted);
+        color: var(--iu-text-muted);
       }
       .accordionCol .workTimer{
-        background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
-        border: 1px solid rgba(201,162,77,0.35);
+        background: linear-gradient(180deg, #344a63 0%, #425c78 100%);
+        border: 1px solid rgba(255,255,255,0.15);
       }
 
       /* ===== TIMER COMPACT (vynucené zmenšení rámu) ===== */
@@ -748,9 +752,9 @@
 
 
       .iuSubBars .topicsBar{
-        background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f1d3a 55%, #162c51 100%);
-        border-bottom: 1px solid var(--gold-accent-soft);
-        color: var(--sidebar-text);
+        background: linear-gradient(180deg, var(--iu-blue-1) 0%, var(--iu-blue-2) 100%);
+        border-bottom: 1px solid var(--iu-border-soft);
+        color: var(--iu-text-light);
       }
 
       .iuSubBars .topicsScroller{
@@ -774,7 +778,7 @@
         padding: 0 10px;
         border-radius: 0;
         text-decoration: none;
-        color: var(--sidebar-text);
+        color: var(--iu-text-light);
         font-weight: 600;
         font-size: 13px;
         line-height: 1;
@@ -787,7 +791,7 @@
       .iuSubBars .topicPill:hover{
         background: transparent;
         opacity: 1;
-        color: var(--sidebar-text);
+        color: var(--iu-text-light);
       }
 
       .iuSubBars .topicPill:focus-visible{
@@ -810,9 +814,9 @@
       }
 
       .iuSubBars .filtersBar{
-        background: linear-gradient(180deg, #0f1d3a 0%, #162c51 60%, var(--sidebar-bg) 100%);
-        border-bottom: 1px solid var(--gold-accent-soft);
-        color: var(--sidebar-text);
+        background: linear-gradient(180deg, var(--iu-blue-1) 0%, var(--iu-blue-2) 35%, var(--iu-blue-3) 70%, var(--iu-blue-4) 100%);
+        border-bottom: 1px solid var(--iu-border-soft);
+        color: var(--iu-text-light);
       }
 
       .iuSubBars .filtersInner{
