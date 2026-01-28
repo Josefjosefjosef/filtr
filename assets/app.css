@@ -277,6 +277,27 @@ img{ max-width:100%; height:auto; }
   text-overflow: ellipsis;
 }
 
+/* ===== Brand SVG logo (LOCKED) ===== */
+.iuBrandSvg{
+  display:block;
+  height:60px;
+  width:auto;
+  overflow:visible;
+}
+
+@media (max-width: 640px){
+  .iuBrandSvg{
+    height:48px;
+  }
+}
+
+/* Zákaz deformace uvnitř hlavičky */
+.header .iuBrandSvg,
+.topbar .iuBrandSvg,
+.brand .iuBrandSvg{
+  flex: 0 0 auto;
+}
+
 .searchForm{
   display:flex;
   align-items:center;
