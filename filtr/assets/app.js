@@ -1,5 +1,17 @@
 (() => {
   const $ = (sel) => document.querySelector(sel);
+  function qsSafe(selector) {
+    try {
+      const el = document.querySelector(selector);
+      if (!el) {
+        console.warn("[DOM] missing", selector);
+      }
+      return el;
+    } catch (err) {
+      console.warn("[DOM] missing", selector, err);
+      return null;
+    }
+  }
 
   const elStatus = $("#dataStatus");
   const elDebugPanel = $("#debugPanel");
@@ -359,6 +371,7 @@
       const t1 = performance.now();
       const newsCards = target.querySelectorAll?.(".news-card")?.length ?? target.children.length;
       console.log("[PERF] renderMs=", Math.round(t1 - t0), "domCards=", newsCards);
+      console.log("[SCROLL] y=", window.scrollY);
     });
   }
 
@@ -373,7 +386,7 @@
   function writeDebug(obj) {
     if (!elDebugOut) return;
     try {
-      elDebugOut.textContent = JSON.stringify(obj, null, 2);
+      elDebugOut.textContent = safeStringify(obj, null, 2);
     } catch {
       elDebugOut.textContent = String(obj);
     }
@@ -491,6 +504,20 @@
     }
   }
 
+  function safeDateParse(value) {
+    try {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) {
+        console.warn("[DATE] invalid", value);
+        return null;
+      }
+      return date;
+    } catch {
+      console.warn("[DATE] invalid", value);
+      return null;
+    }
+  }
+
   function logSelfStatus() {
     console.log(`[SELF] build=${selfDiag.build}`);
     console.log(`[SELF] articles=${selfDiag.articlesState} count=${selfDiag.articlesCount}`);
@@ -523,17 +550,35 @@
     document.body.insertBefore(box, document.body.firstChild);
   }
 
+  const eventThrottleMs = 500;
+  const eventLastTs = new Map();
+
   function addTelemetryEvent(name, detail = "") {
     try {
       const raw = localStorage.getItem("iu:events");
       const parsed = raw ? JSON.parse(raw) : [];
       const arr = Array.isArray(parsed) ? parsed : [];
+      const now = Date.now();
+      const last = eventLastTs.get(name) || 0;
+      if (now - last < eventThrottleMs) {
+        console.log("[EVENT] throttled", name);
+        return;
+      }
+      eventLastTs.set(name, now);
       arr.push({ t: new Date().toISOString(), name, detail });
       while (arr.length > 10) arr.shift();
-      localStorage.setItem("iu:events", JSON.stringify(arr));
+      localStorage.setItem("iu:events", safeStringify(arr));
       updateEventsUI();
     } catch {
       // ignore
+    }
+  }
+
+  function safeStringify(value, replacer = null, space = 0) {
+    try {
+      return JSON.stringify(value, replacer, space);
+    } catch {
+      return "";
     }
   }
 
@@ -574,8 +619,8 @@
     const updatedText = updatedAt ? fmtTime(updatedAt) : "neznámá";
     let ageWarning = "";
     if (updatedAt) {
-      const parsed = new Date(updatedAt);
-      if (!Number.isNaN(parsed.getTime())) {
+      const parsed = safeDateParse(updatedAt);
+      if (parsed) {
         const ageMinutes = Math.floor((Date.now() - parsed.getTime()) / 60000);
         if (ageMinutes > 360) {
           const hours = Math.floor(ageMinutes / 60);
@@ -588,9 +633,9 @@
 
   function finalStateReport() {
     const updatedAt = localStorage.getItem("iu:lastArticlesUpdatedAt") || "—";
-    const updatedDate = new Date(updatedAt);
-    const dataAgeMin = updatedAt && !Number.isNaN(updatedDate.getTime())
-      ? Math.round((Date.now() - updatedDate.getTime()) / 60000)
+    const parsedUpdated = safeDateParse(updatedAt);
+    const dataAgeMin = parsedUpdated
+      ? Math.round((Date.now() - parsedUpdated.getTime()) / 60000)
       : null;
     const report = {
       build: selfDiag.build || "no-build",
@@ -696,6 +741,8 @@
         return;
       }
       const data = await res.json();
+      const size = safeStringify(data).length;
+      console.log("[DATA] size=", size);
       const items = resolveArray(data, ["items", "articles"]);
       const validItems = items ? normalizeArticleList(items) : [];
       if (items && validItems.length < items.length) {
@@ -789,6 +836,8 @@
         return;
       }
       const data = await res.json();
+      const size = safeStringify(data).length;
+      console.log("[DATA] size=", size);
       const items = resolveArray(data, ["items", "videos"]);
       if (!items) {
         el.textContent = "Videa: chyba formátu";
@@ -1232,6 +1281,13 @@
     updateEventsUI();
     finalStateReport();
   }
+
+  document.addEventListener("visibilitychange", () => {
+    console.log("[VIS]", document.visibilityState);
+  });
+
+  window.addEventListener("focus", () => console.log("[FOCUS] in"));
+  window.addEventListener("blur", () => console.log("[FOCUS] out"));
 
   window.addEventListener("hashchange", () => {
     freezeScroll();
