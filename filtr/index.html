@@ -839,9 +839,9 @@
 
       .iuSubBars .topicsScroller{
         display: flex;
-        gap: 10px;
+        gap: 14px;
         align-items: center;
-        padding: 8px 12px;
+        padding: 8px var(--pageGutter);
         overflow-x: auto;
         overflow-y: hidden;
         white-space: nowrap;
@@ -854,24 +854,22 @@
         display: inline-flex;
         align-items: center;
         height: 28px;
-        padding: 0 12px;
-        border-radius: 999px;
+        padding: 0 10px;
+        border-radius: 0;
         text-decoration: none;
         color: var(--sidebar-text);
         font-weight: 600;
         font-size: 13px;
         line-height: 1;
-        border: 1px solid rgba(255,255,255,0.08);
-        background: rgba(255,255,255,0.04);
-        flex: 0 0 auto;
-        box-shadow:
-          inset 0 1px 0 rgba(255,255,255,0.06),
-          0 0 0 1px rgba(0,0,0,0.10);
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        opacity: 0.92;
       }
 
       .iuSubBars .topicPill:hover{
-        background: rgba(201,162,77,0.10);
-        border-color: rgba(201,162,77,0.22);
+        background: transparent;
+        opacity: 1;
         color: var(--sidebar-text);
       }
 
@@ -881,11 +879,17 @@
       }
 
       .iuSubBars .topicPill.isActive{
-        border-color: rgba(201,162,77,0.35);
-        box-shadow:
-          inset 0 -2px 0 var(--gold-accent),
-          inset 0 1px 0 rgba(255,255,255,0.06);
         color: rgba(201,162,77,0.95);
+        box-shadow: inset 0 -2px 0 var(--gold-accent);
+        opacity: 1;
+      }
+
+      .iuSubBars .topicPill.topicPill--pill{
+        border-radius: 999px;
+        padding: 0 12px;
+        border: 1px solid rgba(255,255,255,0.10);
+        background: rgba(255,255,255,0.04);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
       }
 
       .iuSubBars .filtersBar{
@@ -898,7 +902,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 7px 12px;
+        padding: 7px var(--pageGutter);
         min-height: 36px;
       }
 
@@ -941,6 +945,15 @@
         .iuSubBars .filtersHint{ display: none; }
         .iuSubBars .topicsScroller{ padding: 8px 10px; }
         .iuSubBars .filtersInner{ padding: 7px 10px; }
+      }
+      /* FIX: nesmí se blokovat vertikální scroll celé stránky */
+      html, body{
+        height: auto !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+      }
+      body{
+        position: static !important;
       }
       /* ===== /NOVÉ: SUB LIŠTY POD HLAVIČKOU ===== */
     </style>
@@ -1027,7 +1040,7 @@
       <!-- TÉMATA (rolovací horizontálně) -->
       <div class="topicsBar" role="navigation" aria-label="Témata">
         <div class="topicsScroller" tabindex="0">
-          <a class="topicPill isActive" href="#" aria-current="true">Vše</a>
+          <a class="topicPill topicPill--pill isActive" href="#" aria-current="true">Vše</a>
           <a class="topicPill" href="#">Aktuální</a>
           <a class="topicPill" href="#">Domácí</a>
           <a class="topicPill" href="#">Zahraničí</a>
