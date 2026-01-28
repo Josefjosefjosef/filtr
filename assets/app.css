@@ -283,6 +283,12 @@ img{ max-width:100%; height:auto; }
   height:60px;
   width:auto;
   overflow:visible;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  flex: 0 0 auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
 }
 
 @media (max-width: 640px){
@@ -296,6 +302,13 @@ img{ max-width:100%; height:auto; }
 .topbar .iuBrandSvg,
 .brand .iuBrandSvg{
   flex: 0 0 auto;
+}
+
+a.brand,
+.topbar a,
+.header a{
+  display:flex;
+  align-items:center;
 }
 
 .searchForm{
