@@ -453,6 +453,17 @@
     ensureFallbackMessage();
 
 
+  let firstLoadQuiet = false;
+
+  function safeNumber(value, fallback = 0) {
+    const num = Number(value);
+    if (Number.isNaN(num)) {
+      console.warn("[SAFE] invalid number", value);
+      return fallback;
+    }
+    return num;
+  }
+
   const selfDiag = {
     build: getBuildStamp() || "no-build",
     articlesState: "INIT",
@@ -645,11 +656,30 @@
 
   const ARTICLE_RETRY_DELAYS = [2000, 6000];
 
+  let loggedEmptyTitle = false;
   function normalizeArticleList(items) {
     return items.filter((it) => {
       const hasTitle = Boolean(it?.title || it?.headline || it?.name);
-      const hasLink = Boolean(it?.url || it?.link || it?.href);
-      return hasTitle && hasLink;
+      const link = it?.url || it?.link || it?.href;
+      let validLink = false;
+      if (link) {
+        try {
+          new URL(link, location.origin);
+          validLink = true;
+        } catch {
+          console.warn("[DATA] invalid URL", link);
+        }
+      }
+      if (!hasTitle && !loggedEmptyTitle) {
+        console.warn("[DATA] missing article title, substituting fallback");
+        loggedEmptyTitle = true;
+      }
+      if (!hasTitle) {
+        if (it) {
+          it.title = "Bez názvu";
+        }
+      }
+      return hasTitle && validLink;
     });
   }
 
@@ -680,7 +710,8 @@
         return;
       }
       const updatedAtValue = data?.updatedAt ?? data?.updated_at ?? null;
-      const count = validItems.length;
+      const count = safeNumber(validItems.length);
+      const ageMinutes = updatedAtValue ? Math.floor((Date.now() - new Date(updatedAtValue).getTime()) / 60000) : 0;
       if (!items.length || !count) {
         el.textContent = "Články: prázdné";
         selfDiag.articlesState = "EMPTY";
@@ -690,7 +721,12 @@
         addTelemetryEvent("articles", `EMPTY count=${count}`);
         return;
       }
-      el.textContent = `Články: OK (${count})`;
+      if (ageMinutes > 1440 && !firstLoadQuiet) {
+        el.textContent = "Články: zastaralé (24h+)";
+        console.warn("[DATA] articles too old");
+      } else {
+        el.textContent = `Články: OK (${count})`;
+      }
       selfDiag.articlesState = "OK";
       selfDiag.articlesCount = String(count);
       logSelfStatus();
@@ -699,6 +735,17 @@
       const firstItem = validItems[0] || {};
       const firstTitle = firstItem.title || firstItem.headline || firstItem.name || "—";
       console.log("[SELF] firstTitle=", firstTitle);
+      const dates = validItems
+        .map((item) => item.publishedAt || item.date || item.published || "")
+        .map((value) => new Date(value))
+        .filter((d) => !Number.isNaN(d.getTime()))
+        .map((d) => d.getTime());
+      for (let i = 1; i < dates.length; i += 1) {
+        if (dates[i] > dates[i - 1]) {
+          console.warn("[DATA] articles not sorted");
+          break;
+        }
+      }
     } catch (err) {
       el.textContent = "Články: chyba";
       selfDiag.articlesState = "FAIL";
@@ -711,8 +758,10 @@
         setTimeout(() => fetchArticlesStatus(attempt + 1), delay);
       }
       if (err?.name === "AbortError") {
-        el.textContent = "Články: timeout";
         addTelemetryEvent("timeout", "articles");
+        if (!firstLoadQuiet) {
+          el.textContent = "Články: timeout";
+        }
       }
       addTelemetryEvent("articles", `FAIL attempt=${attempt} err=${err && err.message ? err.message : "timeout"}`);
     }
@@ -769,8 +818,10 @@
       logSelfStatus();
       addTelemetryEvent("videos", "FAIL timeout");
       if (err?.name === "AbortError") {
-        el.textContent = "Videa: timeout";
         addTelemetryEvent("timeout", "videos");
+        if (!firstLoadQuiet) {
+          el.textContent = "Videa: timeout";
+        }
       }
     }
   }
@@ -1089,6 +1140,10 @@
     } else {
       console.log("[LOAD] first");
       sessionStorage.setItem("iu:firstLoadDone", "1");
+      firstLoadQuiet = true;
+      setTimeout(() => {
+        firstLoadQuiet = false;
+      }, 5000);
     }
     renderDebugVisibility();
     renderSectionsBar();
