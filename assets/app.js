@@ -29,7 +29,6 @@
   const modalGoogle = document.getElementById("modalGoogle");
   const modalCancel = document.getElementById("modalCancel");
 
-  const feedTarget = elFeed || elNewsList;
   const LS_KEY = "iu:debug";
   const SECTION_KEYS = ["vse", "aktualne", "doprava", "pocasi", "sport", "finance", "krimi", "zdravi", "video"];
   let activeSections = ["vse"];
@@ -331,15 +330,27 @@
     const type = String(item.contentType || "article").toLowerCase();
     if (type === "ad") return true;
     if (activeSections.includes("vse")) return true;
-    if (activeSections.includes("video")) {
-      return type === "video";
-    }
     const sectionValue = ((item.section || item.topic) || "").toLowerCase();
     return activeSections.some((section) => section === sectionValue);
   }
 
+  function ensureFeedTarget() {
+    let feed = document.getElementById("feed");
+    if (feed) return feed;
+
+    const newsList = document.getElementById("newsList");
+    if (newsList) {
+      feed = document.createElement("div");
+      feed.id = "feed";
+      newsList.appendChild(feed);
+      return feed;
+    }
+
+    return null;
+  }
+
   function getFeedTarget() {
-    return feedTarget;
+    return ensureFeedTarget();
   }
 
   const STATUS_SCROLL_KEY = "iu:scrolledToStatus";
@@ -371,6 +382,7 @@
     const target = getFeedTarget();
     if (!target) {
       handleMissingFeedContainer();
+      renderEmpty("Chyba DOM: chybí #feed i #newsList.");
       return;
     }
     if (emptyBox) {
@@ -400,6 +412,7 @@
       const newsCards = target.querySelectorAll?.(".news-card")?.length ?? target.children.length;
       console.log("[PERF] renderMs=", Math.round(t1 - t0), "domCards=", newsCards);
       console.log("[SCROLL] y=", window.scrollY);
+      console.log("[RENDER] target=", target?.id || "(no-id)", "children=", target?.children?.length ?? 0);
     });
   }
 
@@ -1061,22 +1074,23 @@
 
   async function loadData() {
     const startedAt = new Date();
+    const url = makeDataUrl("data/articles.json");
     setStatus("Stav dat: načítám…");
-    let data = null;
-    let sanitizedArticles = [];
-    let articleCount = 0;
-    let updatedAtValue = null;
-    let videoItems = [];
 
     try {
-      const res = await timeoutFetch(makeDataUrl("data/articles.json"), { cache: "no-store" }, 9000);
-      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+      const res = await timeoutFetch(url, { cache: "no-store" }, 9000);
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        const preview = body ? body.slice(0, 200) : "";
+        throw new Error(`ARTICLES HTTP ${res.status} ${res.statusText} | url=${url} | body=${preview}`);
+      }
 
       const text = await res.text();
+      let data;
       try {
         data = JSON.parse(text);
       } catch {
-        throw new Error("Neplatný JSON v data/articles.json");
+        throw new Error(`Neplatný JSON v ${url}`);
       }
 
       const rawArticles = normalizeItems(data);
@@ -1085,48 +1099,20 @@
         console.warn("[DATA] filtered invalid items", rawArticles.length, "->", sanitized.length);
       }
 
-      sanitizedArticles = sanitized;
-      articleCount = sanitized.length;
-      updatedAtValue = data?.updatedAt ?? data?.updated_at ?? null;
-
-      try {
-        const videoRes = await timeoutFetch(makeDataUrl("data/videos.json"), { cache: "no-store" }, 9000);
-        if (videoRes.ok) {
-          const videoText = await videoRes.text();
-          let videoData;
-          try {
-            videoData = JSON.parse(videoText);
-          } catch (parseErr) {
-            console.warn(
-              "[DATA] videos.json parse error",
-              parseErr && parseErr.message ? parseErr.message : parseErr
-            );
-          }
-          if (videoData) {
-            videoItems = normalizeVideoList(videoData);
-          }
-        } else if (videoRes.status === 404) {
-          console.warn("[DATA] videos.json not found");
-        } else {
-          console.warn("[DATA] videos.json error", videoRes.status);
-        }
-      } catch (videoErr) {
-        console.warn(
-          "[DATA] videos.json error",
-          videoErr && videoErr.message ? videoErr.message : videoErr
-        );
-      }
-
-      cachedItems = buildCombinedFeed(sanitizedArticles, videoItems);
+      cachedItems = sanitized;
       hasLoadedData = true;
-      setStatus(`Stav dat: OK (${articleCount} článků, ${videoItems.length} videí)`);
+      setStatus(`Stav dat: OK (${cachedItems.length} článků)`);
       applyFilter();
-      updateLastArticlesInfo(articleCount, updatedAtValue);
+      updateLastArticlesInfo(cachedItems.length, data?.updatedAt ?? data?.updated_at ?? null);
+
+      console.log("[DATA] articles url=", url);
+      console.log("[DATA] articles loaded count=", cachedItems.length);
+      console.log("[DATA] first=", cachedItems[0]?.title, cachedItems[0]?.url);
 
       if (isDebugOn()) {
         writeDebug({
           ok: true,
-          url: DATA_URL,
+          url,
           fetchedAt: new Date().toISOString(),
           durationMs: Date.now() - startedAt.getTime(),
           rawType: Array.isArray(data) ? "array" : typeof data,
@@ -1134,23 +1120,23 @@
             data && typeof data === "object" && !Array.isArray(data) ? Object.keys(data) : [],
           itemsCount: cachedItems.length,
           sample: cachedItems.slice(0, 3),
-          videoCount: videoItems.length,
-          videoSample: videoItems.slice(0, 1),
         });
       }
     } catch (err) {
+      const message = err && err.message ? err.message : String(err);
+      persistLastError(message);
+      renderEmpty("Nepodařilo se načíst články: " + message);
       setStatus("Stav dat: chyba (nelze načíst)");
-      if (!hasLoadedData) {
-        renderEmpty("Nepodařilo se načíst články. Zkontroluj Stav dat.");
-        scrollToStatusOnce();
-      }
+      console.log("[DATA] articles url=", url);
+      console.log("[DATA] articles error=", message);
+      scrollToStatusOnce();
       if (isDebugOn()) {
         writeDebug({
           ok: false,
-          url: DATA_URL,
+          url,
           fetchedAt: new Date().toISOString(),
           durationMs: Date.now() - startedAt.getTime(),
-          error: err && err.message ? err.message : String(err),
+          error: message,
         });
       }
     }
