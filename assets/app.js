@@ -1,3 +1,9 @@
+// === INFOUZEL FEED INVARIANTS (NO-GO ZONE) ===
+// - jediný zdroj pravdy: state.*
+// - jediná render pipeline: loadData → state.cachedItems → applyFilter → renderFeed
+// - render výhradně do #feed (safeTarget)
+// - routování výhradně přes item.contentType
+// Porušení = BUG (ne warning)
 (() => {
   const $ = (sel) => document.querySelector(sel);
   /*
@@ -50,6 +56,7 @@
     loadRequestId: 0,
     stats: { articlesCount: 0, videosCount: 0 },
   };
+  const ALLOWED_CONTENT_TYPES = new Set(["article", "video"]);
   const isDebugLogging = location.search.includes("debug=1");
   function debugLog(...args) {
     if (!isDebugLogging) return;
@@ -433,13 +440,14 @@
     if (elDataCount) elDataCount.textContent = "0";
   }
 
+  // === LOCKED PIPELINE ===
+  // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
+  // Druhá render cesta je zakázaná.
   function renderFeed(target, items) {
     const feedEl = document.getElementById("feed");
-    if (isDebugLogging) {
-      debugLog("[ASSERT] feed exists:", !!feedEl);
-    }
-    if (!feedEl) {
-      throw new Error("FEED CONTAINER #feed NOT FOUND");
+    if (!feedEl || feedEl.id !== "feed") {
+      persistLastError("Invariant breach: invalid render target");
+      return;
     }
     const safeTarget = insideTarget(target, feedEl);
     if (emptyBox) {
@@ -452,17 +460,28 @@
       return;
     }
     const t0 = performance.now();
-    items.forEach((item) => {
-      const kind = String(item.contentType || "article").toLowerCase();
+    for (const item of items) {
+      const kind = String(item.contentType || "").toLowerCase();
+      if (!ALLOWED_CONTENT_TYPES.has(kind)) {
+        persistLastError("Invariant breach: neznámý contentType");
+        renderInlineError("Obsah dočasně nedostupný.");
+        return;
+      }
       const node = kind === "video" ? buildVideoAsArticleCard(item) : buildArticleHtml(item);
-      if (!node) return;
+      if (!node) {
+        persistLastError("Invariant breach: node nevyroben");
+        renderInlineError("Obsah dočasně nedostupný.");
+        return;
+      }
       safeTarget.insertAdjacentHTML("beforeend", node);
-    });
+    }
     if (items?.length > 0 && safeTarget.children.length === 0) {
       safeTarget.insertAdjacentHTML(
         "beforeend",
         `<div class="empty" style="margin-top:10px;color:rgba(11,27,43,0.7);font-weight:600;">Data načtena, ale nic se nevykreslilo. Obnov stránku.<br /><small>${items.length} položek</small></div>`
       );
+      persistLastError("Data existují, ale nic nebylo vykresleno");
+      renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
       setStatus("Stav dat: chyba (viz feed)");
       return;
     }
@@ -486,6 +505,26 @@
     if (safeTarget.children.length > 0 && (rFeed.height < 24 || (rCard && rCard.height < 24))) {
       document.documentElement.classList.add("iu-feedEmergencyVisible");
     }
+    if (!Array.isArray(state.cachedItems)) {
+      persistLastError("Invariant breach: state.cachedItems není pole");
+      renderInlineError("Obsah dočasně nedostupný.");
+      return;
+    }
+    for (const it of state.cachedItems) {
+      if (!it || !it.contentType) {
+        persistLastError("Invariant breach: položka bez contentType");
+        renderInlineError("Obsah dočasně nedostupný.");
+        break;
+      }
+    }
+  }
+
+  function renderInlineError(message) {
+    const inline = document.getElementById("lastErrInline");
+    if (!inline) return;
+    inline.textContent = message;
+    inline.style.display = "block";
+    inline.style.opacity = "1";
   }
 
   function renderItems(items) {
@@ -664,6 +703,9 @@
     applyFilter();
   }
 
+  // === LOCKED PIPELINE ===
+  // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
+  // Druhá render cesta je zakázaná.
   function applyFilter() {
     if (!state.hasLoadedData) return;
     const query = (searchInput && searchInput.value.trim()) || "";
@@ -1181,6 +1223,8 @@
   async function loadData() {
     const startedAt = new Date();
     const requestToken = ++state.loadRequestId;
+    const previousItems = Array.isArray(state.cachedItems) ? [...state.cachedItems] : [];
+    const previousHasLoaded = state.hasLoadedData;
     state.cachedItems = [];
     state.hasLoadedData = false;
     const lastErrInline = document.getElementById("lastErrInline");
@@ -1310,23 +1354,23 @@
     } catch (err) {
       if (!isLatestLoadRequest(requestToken)) {
         debugLog("[DATA] failure ignored, token", requestToken);
-        return;
-      }
-      const message = err && err.message ? err.message : String(err);
-      state.cachedItems = [];
-      state.hasLoadedData = false;
-      persistLastError(message);
-      renderEmpty("Nepodařilo se načíst data: " + message);
-      setStatus("Stav dat: chyba (detail viz Poslední chyba)");
-      debugLog("[DATA] error=", message);
-      if (isDebugOn()) {
-        writeDebug({
-          ok: false,
-          url: aUrl,
-          fetchedAt: new Date().toISOString(),
-          durationMs: Date.now() - startedAt.getTime(),
-          error: message,
-        });
+      } else {
+        const message = err && err.message ? err.message : String(err);
+        state.cachedItems = previousItems;
+        state.hasLoadedData = previousHasLoaded;
+        persistLastError(message);
+        renderEmpty("Nepodařilo se načíst data: " + message);
+        setStatus("Stav dat: chyba (detail viz Poslední chyba)");
+        debugLog("[DATA] error=", message);
+        if (isDebugOn()) {
+          writeDebug({
+            ok: false,
+            url: aUrl,
+            fetchedAt: new Date().toISOString(),
+            durationMs: Date.now() - startedAt.getTime(),
+            error: message,
+          });
+        }
       }
     }
   }

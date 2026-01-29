@@ -2106,16 +2106,6 @@ a.brand,
   text-align: left;
 }
 
-#feed{
-  display: block;
-}
-
-#feed > *{
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-}
-
 .feedGrid,
 .feedCols,
 .feedMasonry{
@@ -2137,4 +2127,15 @@ a.brand,
 .articleCard,
 .videoCard{
   scroll-margin-top: calc(var(--topbarStackH) + 8px);
+}
+
+#feed{
+  display: block !important;
+  width: 100% !important;
+}
+
+#feed > *{
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
