@@ -1403,9 +1403,32 @@
         return;
       }
       const combined = buildCombinedFeed(sanitizedArticles, videoItems);
-      state.stats.articlesCount = sanitizedArticles.length;
-      state.stats.videosCount = videoItems.length;
-      state.cachedItems = combined;
+      const enriched = combined.map((item) => {
+        const published =
+          (item && String(item.publishedAt || item.published || item.date || item.createdAt || item.uploadedAt || item.time)) ||
+          "";
+        return {
+          ...item,
+          _ts: published ? Date.parse(published) || 0 : 0,
+        };
+      });
+      const sorted = enriched.sort((a, b) => (b._ts || 0) - (a._ts || 0));
+      const articlesOnly = sorted.filter((entry) => entry?.contentType === "article");
+      const videosOnly = sorted.filter((entry) => entry?.contentType === "video");
+      const mixed = [];
+      let videoIndex = 0;
+      for (let i = 0; i < articlesOnly.length; i++) {
+        mixed.push(articlesOnly[i]);
+        if ((i + 1) % 10 === 0 && videoIndex < videosOnly.length) {
+          mixed.push(videosOnly[videoIndex++]);
+        }
+      }
+      while (videoIndex < videosOnly.length) {
+        mixed.push(videosOnly[videoIndex++]);
+      }
+      state.stats.articlesCount = articlesOnly.length;
+      state.stats.videosCount = videosOnly.length;
+      state.cachedItems = mixed.length ? mixed : combined; 
       state.hasLoadedData = true;
       if (isDebugLogging) {
         debugLog(
