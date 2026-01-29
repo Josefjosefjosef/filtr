@@ -29,7 +29,6 @@
   const modalGoogle = document.getElementById("modalGoogle");
   const modalCancel = document.getElementById("modalCancel");
 
-  const LS_KEY = "iu:debug";
   const SECTION_KEYS = ["vse", "aktualne", "doprava", "pocasi", "sport", "finance", "krimi", "zdravi", "video"];
   let activeSections = ["vse"];
   const state = {
@@ -118,14 +117,19 @@
   }
 
   function isDebugOn() {
-    const qs = new URLSearchParams(location.search);
-    if (qs.get("debug") === "1") return true;
-    return localStorage.getItem(LS_KEY) === "1";
+    return isDebugLogging;
   }
 
   function setDebug(on) {
-    localStorage.setItem(LS_KEY, on ? "1" : "0");
-    renderDebugVisibility();
+    const params = new URLSearchParams(location.search);
+    if (on) {
+      params.set("debug", "1");
+    } else {
+      params.delete("debug");
+    }
+    const search = params.toString();
+    const next = `${location.pathname}${search ? `?${search}` : ""}`;
+    location.replace(next);
   }
 
   function renderDebugVisibility() {
