@@ -439,6 +439,9 @@
     if (elDataCount) elDataCount.textContent = String(items.length);
     const t1 = performance.now();
     console.log("[ASSERT] feed children after render:", safeTarget.children.length);
+    if (state.cachedItems.length > 0 && safeTarget.children.length === 0) {
+      console.warn("Invariant broken: data exist but nothing rendered");
+    }
     if (isDebugLogging) {
       console.log("[DATA] articles=", state.stats.articlesCount, "videos=", state.stats.videosCount, "merged=", state.cachedItems.length);
       console.log("[DOM] feedChildren=", safeTarget.children.length);
