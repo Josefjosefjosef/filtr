@@ -481,6 +481,7 @@
         )}</a>`
       : `<span class="news-titleLink">${escapeHtml(title)}</span>`;
 
+    console.log("[RENDER ARTICLE]", title);
     return `
       <article class="news-card" data-feed-type="article">
         <h2 class="news-title">${titleMarkup}</h2>
@@ -1103,9 +1104,16 @@
 
       const text = await res.text();
       data = JSON.parse(text);
-      const arr = normalizeFeedJson(data);
-      const rawArticles = normalizeItems(arr);
-      const sanitizedArticles = normalizeArticleList(rawArticles);
+      const articlesArray = normalizeFeedJson(data);
+      console.log("[ARTICLES RAW]", data);
+      console.log("[ARTICLES LENGTH]", Array.isArray(articlesArray) ? articlesArray.length : "NOT ARRAY");
+      const rawArticles = normalizeItems(articlesArray);
+      let sanitizedArticles = normalizeArticleList(rawArticles).map((item) => ({
+        ...item,
+        contentType: "article",
+      }));
+      console.log("[ARTICLES NORMALIZED]", sanitizedArticles.length);
+      renderItems(sanitizedArticles);
       if (sanitizedArticles.length < rawArticles.length) {
         console.warn("[DATA] filtered invalid items", rawArticles.length, "->", sanitizedArticles.length);
       }
