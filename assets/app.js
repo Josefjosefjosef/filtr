@@ -397,9 +397,6 @@
 
   function renderEmpty(message, extraHtml = "") {
     const target = getFeedTarget();
-    if (isDebugLogging) {
-      console.log("[RENDER] target", target, "items", items?.length ?? 0);
-    }
     if (target) {
       withScrollLock(() => {
         target.innerHTML = "";
@@ -427,15 +424,13 @@
       return;
     }
     const t0 = performance.now();
-    items.forEach((item) => {
-      const node =
-        String(item.type || "").toLowerCase() === "video"
-          ? buildVideoAsArticleCard(item)
-          : buildArticleHtml(item);
+    items.forEach((item, i) => {
+      const kind = String(item.contentType || "article").toLowerCase();
+      const node = kind === "video" ? buildVideoAsArticleCard(item) : buildArticleHtml(item);
       if (!node) return;
-      target.insertAdjacentHTML("beforeend", node);
+      safeTarget.insertAdjacentHTML("beforeend", node);
     });
-    const newsCards = target.querySelectorAll?.(".news-card")?.length ?? target.children.length;
+    const newsCards = safeTarget.querySelectorAll?.(".news-card")?.length ?? safeTarget.children.length;
     if (elDataCount) elDataCount.textContent = String(items.length);
     const t1 = performance.now();
     console.log("[ASSERT] feed children after render:", safeTarget.children.length);
@@ -579,7 +574,7 @@
   }
 
   function applyFilter() {
-    if (!hasLoadedData) return;
+    if (!state.hasLoadedData) return;
     const query = (searchInput && searchInput.value.trim()) || "";
     const normalizedQuery = query.toLowerCase();
     const sectionsToUse = activeSections && activeSections.length ? activeSections : ["vse"];
@@ -1089,14 +1084,14 @@
   }
 
   function isLatestLoadRequest(id) {
-    return id === loadRequestId;
+    return id === state.loadRequestId;
   }
 
   async function loadData() {
     const startedAt = new Date();
-    const requestToken = ++loadRequestId;
-    cachedItems = [];
-    hasLoadedData = false;
+    const requestToken = ++state.loadRequestId;
+    state.cachedItems = [];
+    state.hasLoadedData = false;
     if (emptyBox) {
       emptyBox.style.display = "block";
       emptyBox.innerHTML = "<p>Načítám data…</p>";
@@ -1168,7 +1163,7 @@
         return;
       }
       const combined = buildCombinedFeed(sanitizedArticles, videoItems);
-      cachedItems = combined;
+      state.cachedItems = combined;
       if (isDebugLogging) {
         console.log(
           "[CACHE] total",
@@ -1193,16 +1188,13 @@
           })),
         );
       }
-        if (isDebugLogging) {
-        console.log("[CACHE] total", cachedItems.length, "articles", sanitizedArticles.length, "videos", videoItems.length);
-      }
-      hasLoadedData = true;
+      state.hasLoadedData = true;
       setStatus(`Stav dat: OK (${sanitizedArticles.length} článků, ${videoItems.length} videí)`);
       applyFilter();
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 
-      console.log("[DATA] combined count=", cachedItems.length);
-      console.log("[DATA] combined first type=", cachedItems[0]?.contentType, cachedItems[0]?.title);
+      console.log("[DATA] combined count=", state.cachedItems.length);
+      console.log("[DATA] combined first type=", state.cachedItems[0]?.contentType, state.cachedItems[0]?.title);
 
       if (isDebugOn()) {
         writeDebug({
@@ -1213,8 +1205,8 @@
           rawType: Array.isArray(data) ? "array" : typeof data,
           keys:
             data && typeof data === "object" && !Array.isArray(data) ? Object.keys(data) : [],
-          itemsCount: cachedItems.length,
-          sample: cachedItems.slice(0, 3),
+          itemsCount: state.cachedItems.length,
+          sample: state.cachedItems.slice(0, 3),
         });
       }
     } catch (err) {
@@ -1223,8 +1215,8 @@
         return;
       }
       const message = err && err.message ? err.message : String(err);
-      cachedItems = [];
-      hasLoadedData = false;
+      state.cachedItems = [];
+      state.hasLoadedData = false;
       persistLastError(message);
       renderEmpty("Nepodařilo se načíst data: " + message);
       setStatus("Stav dat: chyba (nelze načíst)");
