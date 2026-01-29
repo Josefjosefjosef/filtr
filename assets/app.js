@@ -120,6 +120,83 @@
     return `${candidate}${separator}v=${Date.now()}`;
   }
 
+  const PREFERRED_TTL_MS = 48 * 60 * 60 * 1000;
+  const PREFERRED_STORAGE_KEY = "iu.preferredUrls";
+
+  function loadPreferredPair() {
+    if (typeof localStorage === "undefined") return null;
+    try {
+      const raw = localStorage.getItem(PREFERRED_STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed.articlesUrl !== "string" || typeof parsed.videosUrl !== "string") {
+        return null;
+      }
+      return {
+        articlesUrl: parsed.articlesUrl,
+        videosUrl: parsed.videosUrl,
+        preferredAt: Number(parsed.preferredAt) || 0,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  function savePreferredPair(articlesUrl, videosUrl) {
+    if (!articlesUrl || !videosUrl) return false;
+    if (typeof localStorage === "undefined") return false;
+    try {
+      localStorage.setItem(
+        PREFERRED_STORAGE_KEY,
+        JSON.stringify({ articlesUrl, videosUrl, preferredAt: Date.now() })
+      );
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async function evaluatePreferredPair() {
+    const entry = loadPreferredPair();
+    if (!entry) {
+      return { articlesUrl: null, videosUrl: null, status: "missing" };
+    }
+    if (!entry.preferredAt || Date.now() - entry.preferredAt > PREFERRED_TTL_MS) {
+      return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "expired" };
+    }
+    const [articlesOk, videosOk] = await Promise.all([
+      quickCheckUrl(entry.articlesUrl),
+      quickCheckUrl(entry.videosUrl),
+    ]);
+    if (articlesOk && videosOk) {
+      return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "ok" };
+    }
+    if (!articlesOk) {
+      return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "articles-unreachable" };
+    }
+    return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "videos-unreachable" };
+  }
+
+  function buildCandidateListFromPair(preferredEntry, type, baseSequence) {
+    const seen = new Set();
+    const list = [];
+    const push = (value) => {
+      if (!value) return;
+      if (seen.has(value)) return;
+      seen.add(value);
+      list.push(value);
+    };
+    const preferredUrl = preferredEntry?.[`${type}Url`];
+    if (preferredEntry?.status === "ok" && preferredUrl) {
+      push(preferredUrl);
+    }
+    baseSequence.forEach(push);
+    if (preferredUrl && preferredEntry?.status !== "ok") {
+      push(preferredUrl);
+    }
+    return list;
+  }
+
   async function quickCheckUrl(url) {
     if (!url) return false;
     const testUrl = withCacheBust(url);
@@ -134,6 +211,22 @@
     } catch {
       return false;
     }
+  }
+
+  async function probeRootPaths() {
+    const rootArticlesPath = "/data/articles.json";
+    const rootVideosPath = "/data/videos.json";
+    const [articlesOk, videosOk] = await Promise.all([
+      quickCheckUrl(rootArticlesPath),
+      quickCheckUrl(rootVideosPath),
+    ]);
+    return {
+      ok: articlesOk && videosOk,
+      articlesOk,
+      videosOk,
+      articlesPath: rootArticlesPath,
+      videosPath: rootVideosPath,
+    };
   }
 
   async function tryFetchJson(url, timeoutMs = 9000) {
@@ -1350,52 +1443,35 @@
       emptyBox.style.display = "block";
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
-    const storedUrl = (key) => {
-      try {
-        if (typeof localStorage === "undefined") return null;
-        const value = localStorage.getItem(key);
-        if (!value || typeof value !== "string") return null;
-        return value.trim() || null;
-      } catch {
-        return null;
-      }
-    };
-    const savedArticlesUrl = storedUrl("iu.chosenArticlesUrl");
-    const savedVideosUrl = storedUrl("iu.chosenVideosUrl");
-    const mergeCandidates = (saved, defaults) => {
-      const list = [];
-      const seen = new Set();
-      for (const candidate of saved ? [saved, ...defaults] : defaults) {
-        if (!candidate || seen.has(candidate)) continue;
-        seen.add(candidate);
-        list.push(candidate);
-      }
-      return list;
-    };
-    const verifiedArticlesUrl = savedArticlesUrl
-      ? (await quickCheckUrl(savedArticlesUrl) ? savedArticlesUrl : null)
-      : null;
-    const verifiedVideosUrl = savedVideosUrl
-      ? (await quickCheckUrl(savedVideosUrl) ? savedVideosUrl : null)
-      : null;
+    const preferredEntry = await evaluatePreferredPair();
     const baseArticleUrls = [
-      makeDataUrl("projects/data/articles.json"),
+      "/projects/data/articles.json",
       makeDataUrl("data/articles.json"),
       "/data/articles.json",
       "./data/articles.json",
+      makeDataUrl("projects/data/articles.json"),
       makeDataUrl("filtr/data/articles.json"),
     ].filter(Boolean);
     const baseVideoUrls = [
-      makeDataUrl("projects/data/videos.json"),
+      "/projects/data/videos.json",
       makeDataUrl("data/videos.json"),
       "/data/videos.json",
       "./data/videos.json",
+      makeDataUrl("projects/data/videos.json"),
       makeDataUrl("filtr/data/videos.json"),
     ].filter(Boolean);
-    const articleUrls = mergeCandidates(verifiedArticlesUrl, baseArticleUrls);
-    const videoUrls = mergeCandidates(verifiedVideosUrl, baseVideoUrls);
+    const articleUrls = buildCandidateListFromPair(preferredEntry, "articles", baseArticleUrls);
+    const videoUrls = buildCandidateListFromPair(preferredEntry, "videos", baseVideoUrls);
+    const preferredArticleCandidate = preferredEntry?.status === "ok" ? preferredEntry.articlesUrl : null;
+    const preferredVideoCandidate = preferredEntry?.status === "ok" ? preferredEntry.videosUrl : null;
+    let preferredSaved = false;
+    let preferredSavedReason = "";
+    let preferredUpdatedToRoot = false;
     let chosenArticlesUrl = "";
     let chosenVideosUrl = "";
+    let articleFetchResult = null;
+    let videoFetchResult = null;
+    let normalizedVideoSource = [];
     let articleStatusCode = null;
     let videoStatusCode = null;
     let articleStatusLabel = "404";
@@ -1414,13 +1490,9 @@
         }
         if (result.ok) {
           data = result.json;
+          articleFetchResult = result;
           chosenArticlesUrl = url;
           articleStatusLabel = "OK";
-          try {
-            if (typeof localStorage !== "undefined") {
-              localStorage.setItem("iu.chosenArticlesUrl", url);
-            }
-          } catch {}
           break;
         }
         if (result.status === 404) {
@@ -1484,14 +1556,11 @@
         }
         if (result.ok) {
           const rawVideosJson = normalizeFeedJson(result.json);
+          normalizedVideoSource = rawVideosJson;
           videoItems = normalizeVideoList(rawVideosJson);
           chosenVideosUrl = url;
           videoStatusLabel = "OK";
-          try {
-            if (typeof localStorage !== "undefined") {
-              localStorage.setItem("iu.chosenVideosUrl", url);
-            }
-          } catch {}
+          videoFetchResult = result;
           debugLog(
             "[DATA] videos raw count=",
             videoItems.length,
@@ -1509,6 +1578,28 @@
       }
       if (!chosenVideosUrl) {
         debugWarn("[DATA] videos load failed", lastVideoError);
+      }
+      const articlesJson = articleFetchResult?.json;
+      const videosJson = videoFetchResult?.json;
+      const normalizedArticles = Array.isArray(articlesArray) ? articlesArray : [];
+      const hasArticlesField = Array.isArray(articlesJson?.articles);
+      const hasNormalizedArticles = normalizedArticles.length > 0;
+      const hasVideosField = Array.isArray(videosJson?.videos);
+      const hasNormalizedVideos = Array.isArray(normalizedVideoSource) && normalizedVideoSource.length > 0;
+      if (chosenArticlesUrl && chosenVideosUrl) {
+        if ((hasArticlesField || hasNormalizedArticles) && (hasVideosField || hasNormalizedVideos)) {
+          const storedPair = savePreferredPair(chosenArticlesUrl, chosenVideosUrl);
+          if (storedPair) {
+            preferredSaved = true;
+            preferredSavedReason = "";
+          } else if (!preferredSaved) {
+            preferredSavedReason = "localStorage blocked";
+          }
+        } else if (!preferredSaved) {
+          preferredSavedReason = "missing expected JSON arrays";
+        }
+      } else if (!preferredSaved && !preferredSavedReason) {
+        preferredSavedReason = "no URLs to store";
       }
 
       if (!isLatestLoadRequest(requestToken)) {
@@ -1567,6 +1658,12 @@
           })),
         );
       }
+      const preferredUsed = Boolean(
+        preferredEntry?.status === "ok" &&
+          chosenArticlesUrl === preferredEntry.articlesUrl &&
+          chosenVideosUrl === preferredEntry.videosUrl
+      );
+      const preferredModeUsed = preferredUsed ? "preferred" : "fallback";
       const formatPath = (url) => {
         if (!url) return "";
         try {
@@ -1577,18 +1674,38 @@
       };
       const articleSourcePath = chosenArticlesUrl ? formatPath(chosenArticlesUrl) : "—";
       const videoSourcePath = chosenVideosUrl ? formatPath(chosenVideosUrl) : "—";
-      const sourceSegment = ` • zdroj: articles=${articleSourcePath} videos=${videoSourcePath}`;
+      const sourceSegment = ` • zdroj(${preferredModeUsed}): articles=${articleSourcePath} videos=${videoSourcePath}`;
       const baseStatus = `Načteno: články ${state.stats.articlesCount}, videa ${state.stats.videosCount} • articles: ${articleStatusLabel} • videos: ${videoStatusLabel}${sourceSegment}`;
       const emptyFeed = state.stats.articlesCount === 0 && state.stats.videosCount === 0;
+      let rootProbeOk = false;
+      let rootSegment = " • root: NEOK";
+      if (articleStatusLabel === "OK" && videoStatusLabel === "OK") {
+        const rootProbe = await probeRootPaths();
+        rootProbeOk = rootProbe.ok;
+        rootSegment = ` • root: ${rootProbeOk ? "OK" : "NEOK"}`;
+        if (rootProbeOk) {
+          const rootPairSaved = savePreferredPair("/data/articles.json", "/data/videos.json");
+          preferredUpdatedToRoot = rootPairSaved;
+          if (rootPairSaved) {
+            preferredSaved = true;
+            preferredSavedReason = "";
+          } else if (!preferredSaved) {
+            preferredSavedReason = "localStorage blocked (root update)";
+          }
+        }
+      }
+      const finalStatusText = emptyFeed
+        ? `Obsah se teď nenačetl (nasazení/cesta). Zkus obnovit.${rootSegment}`
+        : `${baseStatus}${rootSegment}`;
       if (chosenArticlesUrl && chosenVideosUrl && emptyFeed) {
         const statusInfo = `codes articles=${articleStatusCode ?? "—"} videos=${videoStatusCode ?? "—"}`;
         persistLastError(
           `Obsah se nenačetl: articles=${chosenArticlesUrl}(${articleStatusLabel}) videos=${chosenVideosUrl}(${videoStatusLabel}) | ${statusInfo}`
         );
         renderInlineError("Obsah se nenačetl (nasazení/cesta). Zkus obnovit.");
-        setStatus("Obsah se teď nenačetl (nasazení/cesta). Zkus obnovit.");
+        setStatus(finalStatusText);
       } else {
-        setStatus(baseStatus);
+        setStatus(finalStatusText);
       }
       applyFilter();
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
