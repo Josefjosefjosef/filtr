@@ -36,6 +36,7 @@
     cachedItems: [],
     hasLoadedData: false,
     loadRequestId: 0,
+    stats: { articlesCount: 0, videosCount: 0 },
   };
   const isDebugLogging = location.search.includes("debug=1");
   const BASE_ROOT = getBaseRoot();
