@@ -35,6 +35,7 @@
   let cachedItems = [];
   let hasLoadedData = false;
   let loadRequestId = 0;
+  const DEBUG_QUERY = location.search.includes("debug=1");
   const BASE_ROOT = getBaseRoot();
   const DATA_URL = `${BASE_ROOT}data/articles.json`;
   const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
@@ -327,13 +328,14 @@
     updateSectionButtons();
   }
 
-  function matchesSections(item) {
+  function matchesSections(item, sections = activeSections) {
     if (!item) return false;
     const type = String(item.contentType || "article").toLowerCase();
     if (type === "ad") return true;
-    if (activeSections.includes("vse")) return true;
+    const effectiveSections = sections && sections.length ? sections : ["vse"];
+    if (effectiveSections.includes("vse")) return true;
     const sectionValue = ((item.section || item.topic) || "").toLowerCase();
-    return activeSections.some((section) => section === sectionValue);
+    return effectiveSections.some((section) => section === sectionValue);
   }
 
   function ensureFeedTarget() {
@@ -555,7 +557,8 @@
     if (!hasLoadedData) return;
     const query = (searchInput && searchInput.value.trim()) || "";
     const normalizedQuery = query.toLowerCase();
-    let filtered = cachedItems.filter(matchesSections);
+    const sectionsToUse = activeSections && activeSections.length ? activeSections : ["vse"];
+    let filtered = cachedItems.filter((item) => matchesSections(item, sectionsToUse));
     if (normalizedQuery) {
       filtered = filtered.filter((item) => {
         const type = String(item.contentType || "article").toLowerCase();
