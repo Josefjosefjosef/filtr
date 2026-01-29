@@ -2129,4 +2129,3 @@
 // Jakýkoli zásah pod tímto bodem je porušením technického standardu infoUzel.cz
 // === MAINTENANCE MODE ACTIVE ===
 // Jakákoli změna nad tímto bodem vyžaduje nový checkpoint
-
