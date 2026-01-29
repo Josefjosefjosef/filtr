@@ -1462,8 +1462,6 @@
     ].filter(Boolean);
     const articleUrls = buildCandidateListFromPair(preferredEntry, "articles", baseArticleUrls);
     const videoUrls = buildCandidateListFromPair(preferredEntry, "videos", baseVideoUrls);
-    const preferredArticleCandidate = preferredEntry?.status === "ok" ? preferredEntry.articlesUrl : null;
-    const preferredVideoCandidate = preferredEntry?.status === "ok" ? preferredEntry.videosUrl : null;
     let preferredSaved = false;
     let preferredSavedReason = "";
     let preferredUpdatedToRoot = false;
