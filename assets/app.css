@@ -2266,3 +2266,55 @@ a.brand,
 .feedList{
   display:block !important;
 }
+
+/* ===== STACK LIŠT: jediný zdroj pravdy ===== */
+:root{
+  --topbarStackH: 112px; /* fallback, přepíše JS */
+}
+
+.layout{
+  padding-top: var(--topbarStackH) !important;
+}
+
+#feed,
+.feedItem,
+.articleCard,
+.videoCard{
+  scroll-margin-top: calc(var(--topbarStackH) + 8px);
+}
+
+/* lišty nesmí být průhledné a musí být nad obsahem */
+.iuBar{
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  background: #fff;
+}
+
+/* ===== FEED MUSÍ BÝT VŽDY JEDNOSLOUPCOVÝ ===== */
+#feed{
+  display: block !important;
+}
+
+#feed > *{
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* pokud existuje grid/masonry wrapper, vypnout */
+.feedGrid,
+.feedCols,
+.feedMasonry{
+  display: block !important;
+  column-count: 1 !important;
+}
+
+/* ===== FEED ITEM OVERRIDE ===== */
+#feed .feedItem,
+#feed .articleCard,
+#feed .videoCard{
+  flex: none !important;
+  flex-basis: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
