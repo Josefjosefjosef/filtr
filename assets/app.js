@@ -380,6 +380,10 @@
     return ensureFeedTarget();
   }
 
+  function insideTarget(target, fallback) {
+    return target || fallback;
+  }
+
   const STATUS_SCROLL_KEY = "iu:scrolledToStatus";
 
   function scrollToStatusOnce() {
@@ -409,11 +413,15 @@
   }
 
   function renderFeed(target, items) {
-    if (!target) {
-      console.error("[RENDER] #feed not found");
-      return;
+    const feedEl = document.getElementById("feed");
+    console.log("[ASSERT] feed exists:", !!feedEl);
+    if (feedEl) {
+      console.log("[ASSERT] feed parent:", feedEl.parentElement?.className);
+    } else {
+      throw new Error("FEED CONTAINER #feed NOT FOUND");
     }
-    target.innerHTML = "";
+    const safeTarget = insideTarget(target, feedEl);
+    safeTarget.innerHTML = "";
     if (!items || items.length === 0) {
       renderEmpty("Žádné články k zobrazení. Zkontroluj Stav dat.");
       return;
@@ -430,9 +438,10 @@
     const newsCards = target.querySelectorAll?.(".news-card")?.length ?? target.children.length;
     if (elDataCount) elDataCount.textContent = String(items.length);
     const t1 = performance.now();
+    console.log("[ASSERT] feed children after render:", safeTarget.children.length);
     if (isDebugLogging) {
       console.log("[DATA] articles=", state.stats.articlesCount, "videos=", state.stats.videosCount, "merged=", state.cachedItems.length);
-      console.log("[DOM] feedChildren=", target.children.length);
+      console.log("[DOM] feedChildren=", safeTarget.children.length);
     }
   }
 
