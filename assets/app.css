@@ -148,9 +148,17 @@ img{ max-width:100%; height:auto; }
   overflow: visible;
   width: 100%;
 }
-.sideCol{
+.sideCol,
+aside.accordionCol{
   min-width: 0;
   order: 2;
+  width: var(--sideW, 360px);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 14px;
+  align-self: stretch;
 }
 .accordionCol{
   background: #e9f4ff;
@@ -1055,6 +1063,32 @@ a.brand,
   }
 }
 
+/* SIDEBAR SKIN: accordionCol acts as right sidebar */
+.layout > aside.accordionCol{
+  background: var(--iu-side-bg-main);
+  color: var(--sidebar-text);
+  border-left: 1px solid var(--iu-side-border-soft);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+}
+.layout > aside.accordionCol .accHeader,
+.layout > aside.accordionCol .accContent,
+.layout > aside.accordionCol .title,
+.layout > aside.accordionCol .groupTitle,
+.layout > aside.accordionCol .tinyLegal,
+.layout > aside.accordionCol .muted,
+.layout > aside.accordionCol small{
+  color: var(--sidebar-text);
+}
+
+.mainCol,
+#newsList{
+  width:100%;
+  min-width:0;
+  text-align:left;
+}
+
 /* =========================
    FEED LAYOUT SAFETY (main)
    ========================= */
@@ -1131,6 +1165,33 @@ a.brand,
 @media (max-width: 900px){
   #feed{
     grid-template-columns: 1fr;
+  }
+}
+
+/* LAYOUT SAFETY: explicit columns placement */
+.layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 360px;
+  gap:18px;
+  align-items:start;
+}
+.layout > .mainCol{
+  grid-column:1;
+  min-width:0;
+}
+.layout > aside.accordionCol{
+  grid-column:2;
+  min-width:0;
+}
+@media (max-width: 900px){
+  .layout{
+    grid-template-columns:1fr;
+  }
+  .layout > .mainCol{
+    grid-column:auto;
+  }
+  .layout > aside.accordionCol{
+    grid-column:auto;
   }
 }
 
