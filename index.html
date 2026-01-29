@@ -62,16 +62,19 @@
       .brandLogo{
         display:flex;
         align-items:center;
-        height:32px;
+        height:40px;
       }
       .brandLogo svg{
-        height:32px;
+        height:40px;
         width:auto;
         display:block;
       }
       .brandLogo svg .brandTld{
-        transform: translateX(10px);
+        transform: translateX(20px);
         transform-origin: left center;
+      }
+      .brandLogo svg .brandDot{
+        display:inline-block;
       }
 
       .debug-toggle{
@@ -887,7 +890,10 @@
               <text x="70" y="96" fill="#1F2933" font-weight="400" letter-spacing="0" xml:space="preserve">info</text>
               <text x="220" y="96" fill="url(#iuGold)" font-weight="700" font-size="115" letter-spacing="0" xml:space="preserve">Uzel</text>
               <g class="brandTld">
-                <text x="408" y="96" fill="#1F2933" font-weight="400" letter-spacing="0" xml:space="preserve">.cz</text>
+                <text x="408" y="96" fill="#1F2933" font-weight="400" letter-spacing="0" xml:space="preserve">
+                  <tspan class="brandDot">.</tspan>
+                  <tspan>cz</tspan>
+                </text>
               </g>
             </g>
             <path d="M70 118 C 205 134, 350 134, 470 118"
