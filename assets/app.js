@@ -112,22 +112,59 @@
     return sanitized ? `${base}${sanitized}` : base;
   }
 
-  async function tryFetchJson(url, timeoutMs = 9000) {
+  function withCacheBust(url) {
+    const candidate = String(url || "");
+    if (!candidate) return "";
+    if (!/(articles|videos)\.json/.test(candidate)) return candidate;
+    const separator = candidate.includes("?") ? "&" : "?";
+    return `${candidate}${separator}v=${Date.now()}`;
+  }
+
+  async function quickCheckUrl(url) {
+    if (!url) return false;
+    const testUrl = withCacheBust(url);
     try {
-      const res = await timeoutFetch(url, { cache: "no-store" }, timeoutMs);
+      const headRes = await timeoutFetch(testUrl, { method: "HEAD", cache: "no-store" }, 2800);
+      if (headRes.ok) return true;
+      if (headRes.status === 405) {
+        const fallback = await timeoutFetch(testUrl, { cache: "no-store" }, 2800);
+        return fallback.ok;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
+  async function tryFetchJson(url, timeoutMs = 9000) {
+    const requestUrl = withCacheBust(url);
+    try {
+      const res = await timeoutFetch(requestUrl, { cache: "no-store" }, timeoutMs);
       const text = await res.text();
       if (!res.ok) {
         const preview = text ? text.slice(0, 200) : "";
-        return { ok: false, url, json: null, error: `HTTP ${res.status} ${preview ? `| ${preview}` : ""}` };
+        return {
+          ok: false,
+          url: requestUrl,
+          json: null,
+          status: res.status,
+          error: `HTTP ${res.status} ${preview ? `| ${preview}` : ""}`,
+        };
       }
       try {
         const json = JSON.parse(text);
-        return { ok: true, url, json, error: null };
+        return { ok: true, url: requestUrl, json, status: res.status, error: null };
       } catch {
-        return { ok: false, url, json: null, error: "Invalid JSON" };
+        return { ok: false, url: requestUrl, json: null, status: res.status, error: "Invalid JSON" };
       }
     } catch (err) {
-      return { ok: false, url, json: null, error: `Fetch failed: ${err && err.message ? err.message : "unknown"}` };
+      return {
+        ok: false,
+        url: requestUrl,
+        json: null,
+        status: 0,
+        error: `Fetch failed: ${err && err.message ? err.message : "unknown"}`,
+      };
     }
   }
 
@@ -555,6 +592,16 @@
       return;
     }
     const rFeed = safeTarget.getBoundingClientRect();
+    if (
+      state.cachedItems.length > 0 &&
+      safeTarget.children.length > 0 &&
+      rFeed.height < 20
+    ) {
+      document.body.classList.add("iu-feedEmergencyVisible");
+      persistLastError("Feed has children but zero height (CSS/layout hidden)");
+      renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
+      return;
+    }
     const firstCard = safeTarget.querySelector(".news-card");
     const rCard = firstCard ? firstCard.getBoundingClientRect() : null;
     if (safeTarget.children.length > 0 && (rFeed.height < 24 || (rCard && rCard.height < 24))) {
@@ -1303,22 +1350,56 @@
       emptyBox.style.display = "block";
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
-    const articleUrls = [
+    const storedUrl = (key) => {
+      try {
+        if (typeof localStorage === "undefined") return null;
+        const value = localStorage.getItem(key);
+        if (!value || typeof value !== "string") return null;
+        return value.trim() || null;
+      } catch {
+        return null;
+      }
+    };
+    const savedArticlesUrl = storedUrl("iu.chosenArticlesUrl");
+    const savedVideosUrl = storedUrl("iu.chosenVideosUrl");
+    const mergeCandidates = (saved, defaults) => {
+      const list = [];
+      const seen = new Set();
+      for (const candidate of saved ? [saved, ...defaults] : defaults) {
+        if (!candidate || seen.has(candidate)) continue;
+        seen.add(candidate);
+        list.push(candidate);
+      }
+      return list;
+    };
+    const verifiedArticlesUrl = savedArticlesUrl
+      ? (await quickCheckUrl(savedArticlesUrl) ? savedArticlesUrl : null)
+      : null;
+    const verifiedVideosUrl = savedVideosUrl
+      ? (await quickCheckUrl(savedVideosUrl) ? savedVideosUrl : null)
+      : null;
+    const baseArticleUrls = [
       makeDataUrl("projects/data/articles.json"),
       makeDataUrl("data/articles.json"),
       "/data/articles.json",
       "./data/articles.json",
       makeDataUrl("filtr/data/articles.json"),
     ].filter(Boolean);
-    const videoUrls = [
+    const baseVideoUrls = [
       makeDataUrl("projects/data/videos.json"),
       makeDataUrl("data/videos.json"),
       "/data/videos.json",
       "./data/videos.json",
       makeDataUrl("filtr/data/videos.json"),
     ].filter(Boolean);
+    const articleUrls = mergeCandidates(verifiedArticlesUrl, baseArticleUrls);
+    const videoUrls = mergeCandidates(verifiedVideosUrl, baseVideoUrls);
     let chosenArticlesUrl = "";
     let chosenVideosUrl = "";
+    let articleStatusCode = null;
+    let videoStatusCode = null;
+    let articleStatusLabel = "404";
+    let videoStatusLabel = "404";
     let data = null;
     setStatus("Stav dat: načítám…");
 
@@ -1326,26 +1407,26 @@
       let lastArticleError = "articles candidates exhausted";
       for (const url of articleUrls) {
         if (!url) continue;
-        try {
-          const res = await timeoutFetch(url, { cache: "no-store" }, 9000);
-          const text = await res.text();
-          if (!res.ok) {
-            const preview = text ? text.slice(0, 200) : "";
-            lastArticleError = `ARTICLES HTTP ${res.status} ${res.statusText}${preview ? ` | ${preview}` : ""} | url=${url}`;
-            continue;
-          }
-          try {
-            data = JSON.parse(text);
-            chosenArticlesUrl = url;
-            break;
-          } catch (jsonErr) {
-            lastArticleError = `ARTICLES invalid JSON | url=${url}`;
-            continue;
-          }
-        } catch (fetchErr) {
-          lastArticleError = `ARTICLES fetch failed: ${fetchErr && fetchErr.message ? fetchErr.message : "unknown"}`;
-          continue;
+        const result = await tryFetchJson(url, 9000);
+        articleStatusCode = result.status ?? articleStatusCode;
+        if (!result.ok && result.status >= 400) {
+          persistLastError(`DATA fetch failed: status=${result.status} url=${result.url}`);
         }
+        if (result.ok) {
+          data = result.json;
+          chosenArticlesUrl = url;
+          articleStatusLabel = "OK";
+          try {
+            if (typeof localStorage !== "undefined") {
+              localStorage.setItem("iu.chosenArticlesUrl", url);
+            }
+          } catch {}
+          break;
+        }
+        if (result.status === 404) {
+          articleStatusLabel = "404";
+        }
+        lastArticleError = result.error || lastArticleError;
       }
       if (!data) {
         throw new Error(lastArticleError);
@@ -1396,37 +1477,35 @@
       let lastVideoError = "videos candidates exhausted";
       for (const url of videoUrls) {
         if (!url) continue;
-        try {
-          const vRes = await timeoutFetch(url, { cache: "no-store" }, 9000);
-          const vText = await vRes.text();
-          if (!vRes.ok) {
-            const preview = vText ? vText.slice(0, 200) : "";
-            lastVideoError = `VIDEOS HTTP ${vRes.status} ${vRes.statusText}${preview ? ` | ${preview}` : ""} | url=${url}`;
-            continue;
-          }
-          let parsed;
-          try {
-            parsed = JSON.parse(vText);
-          } catch {
-            lastVideoError = `VIDEOS invalid JSON | url=${url}`;
-            continue;
-          }
-          const rawVideosJson = normalizeFeedJson(parsed);
+        const result = await tryFetchJson(url, 9000);
+        videoStatusCode = result.status ?? videoStatusCode;
+        if (!result.ok && result.status >= 400) {
+          persistLastError(`DATA fetch failed: status=${result.status} url=${result.url}`);
+        }
+        if (result.ok) {
+          const rawVideosJson = normalizeFeedJson(result.json);
           videoItems = normalizeVideoList(rawVideosJson);
           chosenVideosUrl = url;
+          videoStatusLabel = "OK";
+          try {
+            if (typeof localStorage !== "undefined") {
+              localStorage.setItem("iu.chosenVideosUrl", url);
+            }
+          } catch {}
           debugLog(
             "[DATA] videos raw count=",
             videoItems.length,
             "keys=",
-            parsed && typeof parsed === "object" ? Object.keys(parsed) : [],
+            result.json && typeof result.json === "object" ? Object.keys(result.json) : [],
           );
           debugLog("[DATA] videos loaded count=", videoItems.length);
           debugLog("[DATA] videos first=", videoItems[0]?.title, videoItems[0]?.url);
           break;
-        } catch (videoErr) {
-          lastVideoError = `VIDEOS fetch failed: ${videoErr && videoErr.message ? videoErr.message : "unknown"}`;
-          continue;
         }
+        if (result.status === 404) {
+          videoStatusLabel = "404";
+        }
+        lastVideoError = result.error || lastVideoError;
       }
       if (!chosenVideosUrl) {
         debugWarn("[DATA] videos load failed", lastVideoError);
@@ -1496,11 +1575,21 @@
           return url;
         }
       };
-      const articleSourceLabel = chosenArticlesUrl ? ` • zdroj článků: ${formatPath(chosenArticlesUrl)}` : "";
-      const videoSourceLabel = chosenVideosUrl ? ` • zdroj videí: ${formatPath(chosenVideosUrl)}` : "";
-      setStatus(
-        `Aktualizováno • články ${state.stats.articlesCount} • videa ${state.stats.videosCount}${articleSourceLabel}${videoSourceLabel}`
-      );
+      const articleSourcePath = chosenArticlesUrl ? formatPath(chosenArticlesUrl) : "—";
+      const videoSourcePath = chosenVideosUrl ? formatPath(chosenVideosUrl) : "—";
+      const sourceSegment = ` • zdroj: articles=${articleSourcePath} videos=${videoSourcePath}`;
+      const baseStatus = `Načteno: články ${state.stats.articlesCount}, videa ${state.stats.videosCount} • articles: ${articleStatusLabel} • videos: ${videoStatusLabel}${sourceSegment}`;
+      const emptyFeed = state.stats.articlesCount === 0 && state.stats.videosCount === 0;
+      if (chosenArticlesUrl && chosenVideosUrl && emptyFeed) {
+        const statusInfo = `codes articles=${articleStatusCode ?? "—"} videos=${videoStatusCode ?? "—"}`;
+        persistLastError(
+          `Obsah se nenačetl: articles=${chosenArticlesUrl}(${articleStatusLabel}) videos=${chosenVideosUrl}(${videoStatusLabel}) | ${statusInfo}`
+        );
+        renderInlineError("Obsah se nenačetl (nasazení/cesta). Zkus obnovit.");
+        setStatus("Obsah se teď nenačetl (nasazení/cesta). Zkus obnovit.");
+      } else {
+        setStatus(baseStatus);
+      }
       applyFilter();
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 
@@ -1528,8 +1617,9 @@
         state.cachedItems = previousItems;
         state.hasLoadedData = previousHasLoaded;
         if (previousItems.length === 0) {
-          const urlInfo = `articles=${chosenArticlesUrl || "—"} videos=${chosenVideosUrl || "—"}`;
-          persistLastError(`DATA unavailable: ${urlInfo} | ${message}`);
+          const urlInfo = `articles=${chosenArticlesUrl || "—"}(${articleStatusLabel}) videos=${chosenVideosUrl || "—"}(${videoStatusLabel})`;
+          const statusInfo = `codes articles=${articleStatusCode ?? "—"} videos=${videoStatusCode ?? "—"}`;
+          persistLastError(`DATA unavailable: ${urlInfo} | ${statusInfo} | ${message}`);
           renderInlineError("Obsah dočasně nedostupný. Zkus stránku obnovit.");
           setStatus("Obsah se teď nenačetl (404). Zkus obnovit stránku.");
         } else {
