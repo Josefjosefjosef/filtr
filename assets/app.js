@@ -1304,32 +1304,52 @@
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
     const articleUrls = [
+      makeDataUrl("projects/data/articles.json"),
       makeDataUrl("data/articles.json"),
       "/data/articles.json",
       "./data/articles.json",
-      makeDataUrl("projects/data/articles.json"),
       makeDataUrl("filtr/data/articles.json"),
     ].filter(Boolean);
     const videoUrls = [
+      makeDataUrl("projects/data/videos.json"),
       makeDataUrl("data/videos.json"),
       "/data/videos.json",
       "./data/videos.json",
-      makeDataUrl("projects/data/videos.json"),
       makeDataUrl("filtr/data/videos.json"),
     ].filter(Boolean);
+    let chosenArticlesUrl = "";
+    let chosenVideosUrl = "";
     let data = null;
     setStatus("Stav dat: načítám…");
 
     try {
-      const res = await timeoutFetch(aUrl, { cache: "no-store" }, 9000);
-      if (!res.ok) {
-        const body = await res.text().catch(() => "");
-        const preview = body ? body.slice(0, 200) : "";
-        throw new Error(`ARTICLES HTTP ${res.status} ${res.statusText} | url=${aUrl} | body=${preview}`);
+      let lastArticleError = "articles candidates exhausted";
+      for (const url of articleUrls) {
+        if (!url) continue;
+        try {
+          const res = await timeoutFetch(url, { cache: "no-store" }, 9000);
+          const text = await res.text();
+          if (!res.ok) {
+            const preview = text ? text.slice(0, 200) : "";
+            lastArticleError = `ARTICLES HTTP ${res.status} ${res.statusText}${preview ? ` | ${preview}` : ""} | url=${url}`;
+            continue;
+          }
+          try {
+            data = JSON.parse(text);
+            chosenArticlesUrl = url;
+            break;
+          } catch (jsonErr) {
+            lastArticleError = `ARTICLES invalid JSON | url=${url}`;
+            continue;
+          }
+        } catch (fetchErr) {
+          lastArticleError = `ARTICLES fetch failed: ${fetchErr && fetchErr.message ? fetchErr.message : "unknown"}`;
+          continue;
+        }
       }
-
-      const text = await res.text();
-      data = JSON.parse(text);
+      if (!data) {
+        throw new Error(lastArticleError);
+      }
       const articlesArray = normalizeFeedJson(data);
       debugLog("[ARTICLES RAW]", data);
       debugLog("[ARTICLES LENGTH]", Array.isArray(articlesArray) ? articlesArray.length : "NOT ARRAY");
@@ -1372,30 +1392,44 @@
         debugLog("[ARTICLES] loaded", sanitizedArticles.length, sanitizedArticles.slice(0, 3));
       }
 
-      const vUrl = makeDataUrl("data/videos.json");
-      debugLog("[DATA] videos url=", vUrl);
       let videoItems = [];
-
-      try {
-        const vRes = await timeoutFetch(vUrl, { cache: "no-store" }, 9000);
-        if (vRes.ok) {
-        const vText = await vRes.text();
-        const vData = JSON.parse(vText);
-        const rawVideosJson = normalizeFeedJson(vData);
-        videoItems = normalizeVideoList(rawVideosJson);
-        debugLog(
-          "[DATA] videos raw count=",
-          videoItems.length,
-          "keys=",
-          vData && typeof vData === "object" ? Object.keys(vData) : [],
-        );
-        debugLog("[DATA] videos loaded count=", videoItems.length);
-        debugLog("[DATA] videos first=", videoItems[0]?.title, videoItems[0]?.url);
-        } else {
-          debugWarn("[DATA] videos http", vRes.status);
+      let lastVideoError = "videos candidates exhausted";
+      for (const url of videoUrls) {
+        if (!url) continue;
+        try {
+          const vRes = await timeoutFetch(url, { cache: "no-store" }, 9000);
+          const vText = await vRes.text();
+          if (!vRes.ok) {
+            const preview = vText ? vText.slice(0, 200) : "";
+            lastVideoError = `VIDEOS HTTP ${vRes.status} ${vRes.statusText}${preview ? ` | ${preview}` : ""} | url=${url}`;
+            continue;
+          }
+          let parsed;
+          try {
+            parsed = JSON.parse(vText);
+          } catch {
+            lastVideoError = `VIDEOS invalid JSON | url=${url}`;
+            continue;
+          }
+          const rawVideosJson = normalizeFeedJson(parsed);
+          videoItems = normalizeVideoList(rawVideosJson);
+          chosenVideosUrl = url;
+          debugLog(
+            "[DATA] videos raw count=",
+            videoItems.length,
+            "keys=",
+            parsed && typeof parsed === "object" ? Object.keys(parsed) : [],
+          );
+          debugLog("[DATA] videos loaded count=", videoItems.length);
+          debugLog("[DATA] videos first=", videoItems[0]?.title, videoItems[0]?.url);
+          break;
+        } catch (videoErr) {
+          lastVideoError = `VIDEOS fetch failed: ${videoErr && videoErr.message ? videoErr.message : "unknown"}`;
+          continue;
         }
-      } catch (videoErr) {
-        debugWarn("[DATA] videos error", videoErr?.message || videoErr);
+      }
+      if (!chosenVideosUrl) {
+        debugWarn("[DATA] videos load failed", lastVideoError);
       }
 
       if (!isLatestLoadRequest(requestToken)) {
@@ -1454,9 +1488,18 @@
           })),
         );
       }
-      const totalItems = combined.length;
+      const formatPath = (url) => {
+        if (!url) return "";
+        try {
+          return new URL(url, location.origin).pathname;
+        } catch {
+          return url;
+        }
+      };
+      const articleSourceLabel = chosenArticlesUrl ? ` • zdroj článků: ${formatPath(chosenArticlesUrl)}` : "";
+      const videoSourceLabel = chosenVideosUrl ? ` • zdroj videí: ${formatPath(chosenVideosUrl)}` : "";
       setStatus(
-        `Stav dat: OK (články: ${state.stats.articlesCount}, videa: ${state.stats.videosCount}, celkem: ${totalItems})`
+        `Aktualizováno • články ${state.stats.articlesCount} • videa ${state.stats.videosCount}${articleSourceLabel}${videoSourceLabel}`
       );
       applyFilter();
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
@@ -1467,7 +1510,7 @@
       if (isDebugOn()) {
         writeDebug({
           ok: true,
-          url: aUrl,
+          url: chosenArticlesUrl || articleUrls[0] || "",
           fetchedAt: new Date().toISOString(),
           durationMs: Date.now() - startedAt.getTime(),
           rawType: Array.isArray(data) ? "array" : typeof data,
@@ -1484,14 +1527,21 @@
         const message = err && err.message ? err.message : String(err);
         state.cachedItems = previousItems;
         state.hasLoadedData = previousHasLoaded;
-        persistLastError(message);
-        renderEmpty("Nepodařilo se načíst data: " + message);
-        setStatus("Stav dat: chyba (detail viz Poslední chyba)");
+        if (previousItems.length === 0) {
+          const urlInfo = `articles=${chosenArticlesUrl || "—"} videos=${chosenVideosUrl || "—"}`;
+          persistLastError(`DATA unavailable: ${urlInfo} | ${message}`);
+          renderInlineError("Obsah dočasně nedostupný. Zkus stránku obnovit.");
+          setStatus("Obsah se teď nenačetl (404). Zkus obnovit stránku.");
+        } else {
+          persistLastError(message);
+          renderEmpty("Nepodařilo se načíst data: " + message);
+          setStatus("Stav dat: chyba (detail viz Poslední chyba)");
+        }
         debugLog("[DATA] error=", message);
         if (isDebugOn()) {
           writeDebug({
             ok: false,
-            url: aUrl,
+            url: chosenArticlesUrl || articleUrls[0] || "",
             fetchedAt: new Date().toISOString(),
             durationMs: Date.now() - startedAt.getTime(),
             error: message,
