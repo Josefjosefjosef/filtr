@@ -441,6 +441,15 @@
       console.log("[DATA] articles=", state.stats.articlesCount, "videos=", state.stats.videosCount, "merged=", state.cachedItems.length);
       console.log("[DOM] feedChildren=", safeTarget.children.length);
     }
+    const rFeed = safeTarget.getBoundingClientRect();
+    const firstCard = safeTarget.querySelector(".news-card");
+    const rCard = firstCard ? firstCard.getBoundingClientRect() : null;
+    if (safeTarget.children.length > 0 && (rFeed.height < 24 || (rCard && rCard.height < 24))) {
+      document.documentElement.classList.add("iu-feedEmergencyVisible");
+      if (isDebugLogging) {
+        console.log("[DBG] emergency-visible ON", { rFeed, rCard });
+      }
+    }
   }
 
   function renderFeedItemHtml(item) {

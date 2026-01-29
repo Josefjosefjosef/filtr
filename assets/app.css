@@ -1163,13 +1163,46 @@ a.brand,
   text-decoration-color: rgba(11,27,43,0.85);
 }
 
+/* Emergency: DOM je naplněný, ale vizuálně nic není vidět */
+.iu-feedEmergencyVisible .layout,
+.iu-feedEmergencyVisible .mainCol,
+.iu-feedEmergencyVisible #newsList,
+.iu-feedEmergencyVisible #feed{
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  height: auto !important;
+  min-height: 1px !important;
+  overflow: visible !important;
+}
+
+.iu-feedEmergencyVisible #feed{
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.iu-feedEmergencyVisible #feed .news-card{
+  display: block !important;
+  background: #fff !important;
+  border: 1px solid rgba(11,27,43,0.10) !important;
+  border-radius: 12px !important;
+  padding: 14px 14px !important;
+  margin: 10px 0 !important;
+}
+
+.iu-feedEmergencyVisible #feed .news-titleLink{
+  color: rgba(11,27,43,0.92) !important;
+  text-decoration-color: rgba(31,75,153,0.25) !important;
+}
+
 #feed a:not(.news-titleLink){
   color: rgba(11,27,43,0.92);
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-decoration-color: rgba(11,27,43,0.45);
 }
-
 @media (max-width: 900px){
   #feed{
     grid-template-columns: 1fr;
@@ -1452,6 +1485,15 @@ a.brand,
   background: rgba(11,27,43,0.30);
   display:none;
   padding: 14px;
+}
+.overlay:not([hidden]){
+  pointer-events: auto;
+}
+.overlay[hidden]{
+  pointer-events: none !important;
+  inset: auto !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 .overlay.show{ display:block; }
 
