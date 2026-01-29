@@ -1061,6 +1061,12 @@
 
   async function loadData() {
     const startedAt = new Date();
+    cachedItems = [];
+    hasLoadedData = false;
+    if (emptyBox) {
+      emptyBox.style.display = "block";
+      emptyBox.innerHTML = "<p>Načítám data…</p>";
+    }
     const aUrl = makeDataUrl("data/articles.json");
     console.log("[DATA] articles url=", aUrl);
     let data = null;
@@ -1140,6 +1146,8 @@
       }
     } catch (err) {
       const message = err && err.message ? err.message : String(err);
+      cachedItems = [];
+      hasLoadedData = false;
       persistLastError(message);
       renderEmpty("Nepodařilo se načíst data: " + message);
       setStatus("Stav dat: chyba (nelze načíst)");
