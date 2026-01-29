@@ -1141,6 +1141,27 @@ a.brand,
   text-decoration-color: rgba(11,27,43,0.45);
 }
 
+#feed > *{
+  background: rgba(255,255,255,0.94);
+  border: 1px solid rgba(11,27,43,0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 10px 0;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+  display:block;
+  opacity:1;
+  visibility:visible;
+  min-height: 60px;
+}
+
+#feed a{
+  color: rgba(11,27,43,0.92);
+}
+
+#feed a:hover{
+  text-decoration: underline;
+}
+
 @media (max-width: 680px){
   .news-titleLink{
     -webkit-line-clamp: var(--titleLinesMobile);
