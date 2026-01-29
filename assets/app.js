@@ -408,50 +408,32 @@
     if (elDataCount) elDataCount.textContent = "0";
   }
 
-  function renderItems(items) {
-    const target = getFeedTarget();
+  function renderFeed(target, items) {
     if (!target) {
-      renderEmpty("Chyba DOM: chybí #feed i #newsList.");
-      if (isDebugLogging) {
-        console.log("[RENDER] no target");
-      }
+      console.error("[RENDER] #feed not found");
       return;
     }
-    if (emptyBox) {
-      emptyBox.style.display = "none";
-      emptyBox.innerHTML = "";
-    }
+    target.innerHTML = "";
     if (!items || items.length === 0) {
       renderEmpty("Žádné články k zobrazení. Zkontroluj Stav dat.");
-      writeDebug({
-        ok: true,
-        note: "Žádné položky k zobrazení",
-        itemsCount: 0,
-      });
       return;
     }
-
-    const html = items
-      .map(renderFeedItemHtml)
-      .filter(Boolean)
-      .join("");
-
-    withScrollLock(() => {
-      const t0 = performance.now();
-      target.innerHTML = html;
-      if (!html || !html.trim()) {
-        renderEmpty("DATA ERROR: Render vyrobil prázdné HTML (items=" + (items?.length || 0) + ")");
-        return;
-      }
-      if (elDataCount) elDataCount.textContent = String(items.length);
-      const t1 = performance.now();
-        if (isDebugLogging) {
-        const articleDOMCount = target.querySelectorAll('[data-feed-type="article"]').length;
-        const videoDOMCount = target.querySelectorAll('[data-feed-type="video"]').length;
-        console.log("[PERF] renderMs=", Math.round(t1 - t0), "articleDOMCount=", articleDOMCount, "videoDOMCount=", videoDOMCount);
-        console.log("[RENDER] target=", target.id, "children=", target.children.length);
-      }
+    const t0 = performance.now();
+    items.forEach((item) => {
+      const node =
+        String(item.type || "").toLowerCase() === "video"
+          ? buildVideoAsArticleCard(item)
+          : buildArticleHtml(item);
+      if (!node) return;
+      target.insertAdjacentHTML("beforeend", node);
     });
+    const newsCards = target.querySelectorAll?.(".news-card")?.length ?? target.children.length;
+    if (elDataCount) elDataCount.textContent = String(items.length);
+    const t1 = performance.now();
+    if (isDebugLogging) {
+      console.log("[DATA] articles=", state.stats.articlesCount, "videos=", state.stats.videosCount, "merged=", state.cachedItems.length);
+      console.log("[DOM] feedChildren=", target.children.length);
+    }
   }
 
   function renderFeedItemHtml(item) {
