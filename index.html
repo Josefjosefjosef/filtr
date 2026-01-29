@@ -306,10 +306,48 @@
         transition: background 200ms ease, color 200ms ease;
       }
 
+      .accordionCol .accHeader,
+      .accordionCol .accHeader button,
+      .accordionCol .accHeader a,
+      .accordionCol .chip,
+      .accordionCol .chipLink,
+      .accordionCol .serviceGroup button,
+      .accordionCol .serviceGroup a{
+        color: #000 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .accordionCol .accHeader.is-open,
+      .accordionCol .accHeader.active,
+      .accordionCol .accHeader[aria-current="true"],
+      .accordionCol .chip.isActive,
+      .accordionCol .chip.active,
+      .accordionCol .serviceGroup button.isActive,
+      .accordionCol .serviceGroup a.isActive{
+        color: var(--gold-accent) !important;
+        border-color: var(--gold-accent) !important;
+      }
+      .accordionCol .chipLink:visited,
+      .accordionCol a:visited,
+      .accordionCol .serviceGroup a:visited{
+        color: #000 !important;
+      }
+      .accordionCol .chip:hover,
+      .accordionCol .chipLink:hover,
+      .accordionCol .serviceGroup a:hover,
+      .accordionCol .accHeader button:hover{
+        color: #000 !important;
+        background: transparent !important;
+      }
+      .accordionCol .accHeader:focus-visible{
+        color: #000 !important;
+        background: transparent !important;
+      }
+
       .accordionCol .accHeader:hover,
       .accordionCol .accHeader:focus-visible{
-        background: #0B0F14;
-        color: rgba(255,255,255,0.92);
+        background: transparent;
+        color: #000;
       }
 
       .accordionCol .accHeader.is-open{
@@ -807,149 +845,6 @@
         .rcGrid{
           grid-template-columns: repeat(3, minmax(0,1fr)) !important;
         }
-      }
-
-      /* ===== NOVÉ: SUB LIŠTY POD HLAVIČKOU ===== */
-
-      .iuSubBars{
-        width: 100%;
-        overflow: hidden;
-      }
-
-      .iuSubBars .topicsBar{
-        background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0f1d3a 55%, #162c51 100%);
-        border-bottom: 1px solid var(--gold-accent-soft);
-        color: var(--sidebar-text);
-      }
-
-      .iuSubBars .topicsScroller{
-        display: flex;
-        gap: 14px;
-        align-items: center;
-        padding: 8px var(--pageGutter);
-        overflow-x: auto;
-        overflow-y: hidden;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-gutter: stable both-edges;
-        scrollbar-color: rgba(201,162,77,0.55) rgba(255,255,255,0.06);
-        max-width: 100%;
-        box-sizing: border-box;
-      }
-
-      .iuSubBars .topicPill{
-        display: inline-flex;
-        align-items: center;
-        height: 28px;
-        padding: 0 10px;
-        border-radius: 0;
-        text-decoration: none;
-        color: var(--sidebar-text);
-        font-weight: 600;
-        font-size: 13px;
-        line-height: 1;
-        border: 0;
-        background: transparent;
-        box-shadow: none;
-        opacity: 0.92;
-      }
-
-      .iuSubBars .topicPill:hover{
-        background: transparent;
-        opacity: 1;
-        color: var(--sidebar-text);
-      }
-
-      .iuSubBars .topicPill:focus-visible{
-        outline: 2px solid rgba(201,162,77,0.45);
-        outline-offset: 2px;
-      }
-
-      .iuSubBars .topicPill.isActive{
-        color: rgba(201,162,77,0.95);
-        box-shadow: inset 0 -2px 0 var(--gold-accent);
-        opacity: 1;
-      }
-
-      .iuSubBars .topicPill.topicPill--pill{
-        border-radius: 999px;
-        padding: 0 12px;
-        border: 1px solid rgba(255,255,255,0.10);
-        background: rgba(255,255,255,0.04);
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-      }
-
-      .iuSubBars .filtersBar{
-        background: linear-gradient(180deg, #0f1d3a 0%, #162c51 60%, var(--sidebar-bg) 100%);
-        border-bottom: 1px solid var(--gold-accent-soft);
-        color: var(--sidebar-text);
-      }
-
-      .iuSubBars .filtersInner{
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 7px var(--pageGutter);
-        min-height: 36px;
-        width: 100%;
-        box-sizing: border-box;
-        background: transparent;
-      }
-
-      .iuSubBars .filtersInner .filterBtn{
-        height: 28px;
-        padding: 0 12px;
-        border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.10);
-        background: rgba(255,255,255,0.08);
-        color: var(--sidebar-text);
-        font-weight: 600;
-        font-size: 13px;
-        cursor: pointer;
-        box-shadow:
-          inset 0 1px 0 rgba(255,255,255,0.06),
-          0 1px 3px rgba(0,0,0,0.12);
-      }
-
-      .iuSubBars .filtersInner .filterBtn:hover,
-      .iuSubBars .filtersInner .filterBtn:focus-visible{
-        background: rgba(201,162,77,0.12);
-        border-color: rgba(201,162,77,0.25);
-      }
-
-      .iuSubBars .filtersInner .filterBtn:active{
-        background: rgba(255,255,255,0.18);
-      }
-
-      .iuSubBars .filtersSpacer{
-        flex: 1 1 auto;
-      }
-
-      .iuSubBars .filtersHint{
-        color: var(--sidebar-muted);
-        font-size: 12px;
-        white-space: nowrap;
-      }
-
-
-      @media (max-width: 520px){
-        .iuSubBars .filtersHint{ display: none; }
-        .iuSubBars .topicsScroller{ padding: 8px 10px; }
-        .iuSubBars .filtersInner{ padding: 7px 10px; }
-      }
-      /* ===== /NOVÉ: SUB LIŠTY POD HLAVIČKOU ===== */
-      .iuSubBars{
-        max-width: 100%;
-        overflow: hidden;
-      }
-      .iuSubBars .topicsBar,
-      .iuSubBars .filtersBar{
-        max-width: 100%;
-      }
-      .iuSubBars .topicsScroller{
-        max-width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
       }
 
       html, body{
@@ -1668,15 +1563,9 @@
       function px(n){ return (n||0) + "px"; }
 
       function calcTopStack(){
-        const el1 = document.querySelector('.topbar, header, .header');
-        const el2 = document.querySelector('.topicsBar, .sectionsBar, .tabsBar, nav');
-        const el3 = document.querySelector('.filtersBar, .subnav, .filterBar, .chipsRow');
-
-        const h1 = el1 ? el1.getBoundingClientRect().height : 0;
-        const h2 = el2 ? el2.getBoundingClientRect().height : 0;
-        const h3 = el3 ? el3.getBoundingClientRect().height : 0;
-
-        const total = Math.ceil(h1 + h2 + h3 + 2);
+        const el = document.querySelector('.topbar, header, .header');
+        const h = el ? el.getBoundingClientRect().height : 0;
+        const total = Math.ceil(h + 2);
         document.documentElement.style.setProperty('--topbarStackH', px(total));
       }
 
