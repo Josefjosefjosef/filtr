@@ -70,6 +70,14 @@
     return sanitized ? `${base}${sanitized}` : base;
   }
 
+  function normalizeFeedJson(json) {
+    if (Array.isArray(json)) return json;
+    if (json && Array.isArray(json.articles)) return json.articles;
+    if (json && Array.isArray(json.videos)) return json.videos;
+    if (json && Array.isArray(json.items)) return json.items;
+    return [];
+  }
+
   function getBaseRoot() {
     let p = location.pathname.replace(/\\/g, "/");
     if (p.endsWith("index.html")) {
@@ -1113,7 +1121,8 @@
 
       const text = await res.text();
       data = JSON.parse(text);
-      const rawArticles = normalizeItems(data);
+      const arr = normalizeFeedJson(data);
+      const rawArticles = normalizeItems(arr);
       const sanitizedArticles = normalizeArticleList(rawArticles);
       if (sanitizedArticles.length < rawArticles.length) {
         console.warn("[DATA] filtered invalid items", rawArticles.length, "->", sanitizedArticles.length);
@@ -1132,13 +1141,10 @@
       try {
         const vRes = await timeoutFetch(vUrl, { cache: "no-store" }, 9000);
         if (vRes.ok) {
-          const vText = await vRes.text();
-          const vData = JSON.parse(vText);
-          const rawVideos = Array.isArray(vData)
-            ? vData
-            : Array.isArray(vData?.videos)
-              ? vData.videos
-              : [];
+        const vText = await vRes.text();
+        const vData = JSON.parse(vText);
+        const rawVideosJson = normalizeFeedJson(vData);
+        const rawVideos = normalizeVideoList(rawVideosJson);
           console.log(
             "[DATA] videos raw count=",
             rawVideos.length,
