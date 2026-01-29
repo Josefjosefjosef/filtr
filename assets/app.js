@@ -602,7 +602,7 @@
 
   function iuComputeTopbarStackH(){
     try{
-      const bars = Array.from(document.querySelectorAll(".iuBar"));
+      const bars = Array.from(document.querySelectorAll(".iuBar, .topbar"));
       const visible = bars.filter((el) => {
         const cs = getComputedStyle(el);
         if (cs.display === "none" || cs.visibility === "hidden") return false;

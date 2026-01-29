@@ -41,8 +41,7 @@
   --radius2: 14px;
 
   /* dynamické odsazení pod FIXED topbar (doplňuje JS v app.js) */
-  --topbarOffset: 0px;
-  --topbarStackH: 120px;
+  --topbarStackH: 112px;
 
   /* line-clamp titulků */
   --titleLineHeight: 1.22;
@@ -86,7 +85,6 @@ body{
   font-weight: 400;
   color: var(--text);
   overflow-x: hidden;
-  padding-top: var(--topbarOffset);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
@@ -133,14 +131,6 @@ img{ max-width:100%; height:auto; }
   padding: 14px 14px 40px;
 }
 
-.layout{
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 18px;
-  align-items: start;
-  padding-top: var(--topbarStackH);
-  margin-top: 0;
-}
 .mainCol{
   min-width: 0;
   order: 1;
@@ -236,20 +226,6 @@ aside.accordionCol{
 @media (min-width: 901px){
   .mainCol{ padding-left: 0 !important; }
 }
-@media (max-width: 900px){
-  .layout{
-    grid-template-columns: 1fr;
-    gap:14px;
-  }
-.mainCol{
-  order:1;
-  padding-left:0;
-}
-  .sideCol{
-    order:2;
-  }
-}
-
 .topbar{
   position: relative;
   width: min(1100px, calc(100% - 2 * var(--pageGutter)));
@@ -1025,38 +1001,6 @@ a.brand,
 .sectionBar .secBtn:hover,
 .sectionBar .secBtn:focus-visible{
   color: #ffffff;
-}
-
-.layout{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 360px;
-  gap:18px;
-  align-items:start;
-}
-.layout > .mainCol{
-  grid-column:1;
-  min-width:0;
-}
-.layout > aside.accordionCol{
-  grid-column:2;
-  min-width:0;
-}
-@media (max-width: 900px){
-  .layout{
-    grid-template-columns:1fr;
-  }
-  .layout > .mainCol{
-    grid-column:auto;
-  }
-  .layout > aside.accordionCol{
-    grid-column:auto;
-  }
-}
-
-@media (max-width: 900px) {
-  #feed {
-    grid-template-columns: 1fr;
-  }
 }
 
 .card{
@@ -2115,47 +2059,38 @@ a.brand,
   background:#fbfbfb;
 }
 
-/* === FINAL LAYOUT SAFETY (desktop) === */
-@media (min-width: 821px){
-  .layout{
-    display: grid !important;
-    grid-template-columns: minmax(0,1fr) 360px !important;
-    gap: 18px !important;
-    align-items: start !important;
-  }
-  .layout > .mainCol{
-    grid-column: 1 !important;
-    min-width: 0 !important;
-  }
-  .layout > aside.accordionCol{
-    grid-column: 2 !important;
-    width: 360px !important;
-  }
+/* FINAL LAYOUT */
+.layout{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 18px;
+  align-items: start;
+  padding-top: var(--topbarStackH);
+  margin-top: 0;
+  overflow: visible;
 }
-
-/* === FINAL LAYOUT SAFETY (mobile) === */
-@media (max-width: 820px){
-  .layout{
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-  }
-  .layout > .mainCol{
-    grid-column: 1 !important;
-  }
-  .layout > aside.accordionCol{
-    grid-column: 1 !important;
-    width: 100% !important;
-  }
+.layout > .mainCol{
+  min-width: 0;
+  overflow: visible;
 }
-
-/* SIDEBAR WIDTH LOCK */
 .layout > aside.accordionCol{
+  min-width: 0;
+  overflow: visible;
   width: 360px;
   max-width: 360px;
-  min-width: 360px;
   box-sizing: border-box;
+  background: #e9f4ff;
+  color: var(--text);
+  border: 1px solid rgba(20,40,70,0.10);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
 }
 @media (max-width: 900px){
+  .layout{
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
   .layout > aside.accordionCol{
     width: 100%;
     max-width: none;
@@ -2163,145 +2098,24 @@ a.brand,
   }
 }
 
-/* GRID SAFETY: no overlap / no squeeze */
-.layout{
-  overflow: visible;
-}
-.layout > .mainCol{
-  min-width: 0;
-  overflow: visible;
-}
-.layout > aside.accordionCol{
-  min-width: 0;
-  overflow: visible;
-}
-
-/* FEED SAFETY */
 #newsList,
 #feed{
   width: 100%;
   max-width: none;
   min-width: 0;
-}
-#feed{
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: start;
-  justify-items: stretch;
   text-align: left;
 }
+
+#feed{
+  display: block;
+}
+
 #feed > *{
-  min-width: 0;
   width: 100%;
-  justify-self: stretch;
-  align-self: stretch;
-}
-@media (max-width: 900px){
-  #feed{ grid-template-columns: 1fr; }
+  max-width: 100%;
+  min-width: 0;
 }
 
-/* LAYOUT SAFETY: explicit columns placement */
-.layout{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 360px;
-  gap:18px;
-  align-items:start;
-}
-.layout > .mainCol{
-  grid-column:1;
-  min-width:0;
-}
-.layout > aside.accordionCol{
-  grid-column:2;
-  min-width:0;
-}
-@media (max-width: 900px){
-  .layout{
-    grid-template-columns:1fr;
-  }
-  .layout > .mainCol{
-    grid-column:auto;
-  }
-  .layout > aside.accordionCol{
-    grid-column:auto;
-  }
-}
-
-/* SIDEBAR SKIN: accordionCol acts as right sidebar */
-.layout > aside.accordionCol{
-  background: var(--iu-side-bg-main);
-  color: var(--sidebar-text);
-  border-left: 1px solid var(--iu-side-border-soft);
-  border-radius: 14px;
-  padding: 12px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
-}
-.layout > aside.accordionCol .accHeader,
-.layout > aside.accordionCol .accContent,
-.layout > aside.accordionCol .title,
-.layout > aside.accordionCol .groupTitle,
-.layout > aside.accordionCol .tinyLegal,
-.layout > aside.accordionCol .muted,
-.layout > aside.accordionCol small{
-  color: var(--sidebar-text);
-}
-
-.mainCol,
-#newsList{
-  width:100%;
-  min-width:0;
-  text-align:left;
-}
-
-/* FEED MUSÍ BÝT VŽDY JEDNOSLOUPCOVÝ */
-#feed{
-  display:block !important;
-}
-#feed > *{
-  width:100% !important;
-  max-width:100% !important;
-}
-.feedGrid,
-.feedList{
-  display:block !important;
-}
-
-/* ===== STACK LIŠT: jediný zdroj pravdy ===== */
-:root{
-  --topbarStackH: 112px; /* fallback, přepíše JS */
-}
-
-.layout{
-  padding-top: var(--topbarStackH) !important;
-}
-
-#feed,
-.feedItem,
-.articleCard,
-.videoCard{
-  scroll-margin-top: calc(var(--topbarStackH) + 8px);
-}
-
-/* lišty nesmí být průhledné a musí být nad obsahem */
-.iuBar{
-  position: sticky;
-  top: 0;
-  z-index: 2000;
-  background: #fff;
-}
-
-/* ===== FEED MUSÍ BÝT VŽDY JEDNOSLOUPCOVÝ ===== */
-#feed{
-  display: block !important;
-}
-
-#feed > *{
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
-/* pokud existuje grid/masonry wrapper, vypnout */
 .feedGrid,
 .feedCols,
 .feedMasonry{
@@ -2309,7 +2123,6 @@ a.brand,
   column-count: 1 !important;
 }
 
-/* ===== FEED ITEM OVERRIDE ===== */
 #feed .feedItem,
 #feed .articleCard,
 #feed .videoCard{
@@ -2317,4 +2130,11 @@ a.brand,
   flex-basis: auto !important;
   width: 100% !important;
   max-width: 100% !important;
+}
+
+#feed,
+.feedItem,
+.articleCard,
+.videoCard{
+  scroll-margin-top: calc(var(--topbarStackH) + 8px);
 }
