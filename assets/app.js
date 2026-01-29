@@ -37,7 +37,7 @@
     hasLoadedData: false,
     loadRequestId: 0,
   };
-  const DEBUG_QUERY = location.search.includes("debug=1");
+  const isDebugLogging = location.search.includes("debug=1");
   const BASE_ROOT = getBaseRoot();
   const DATA_URL = `${BASE_ROOT}data/articles.json`;
   const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
@@ -372,7 +372,7 @@
 
   function renderEmpty(message, extraHtml = "") {
     const target = getFeedTarget();
-    if (DEBUG_QUERY) {
+    if (isDebugLogging) {
       console.log("[RENDER] target", target, "items", items?.length ?? 0);
     }
     if (target) {
@@ -391,7 +391,7 @@
     const target = getFeedTarget();
     if (!target) {
       renderEmpty("Chyba DOM: chybí #feed i #newsList.");
-      if (DEBUG_QUERY) {
+      if (isDebugLogging) {
         console.log("[RENDER] no target");
       }
       return;
@@ -424,7 +424,7 @@
       }
       if (elDataCount) elDataCount.textContent = String(items.length);
       const t1 = performance.now();
-      if (DEBUG_QUERY) {
+        if (isDebugLogging) {
         const articleDOMCount = target.querySelectorAll('[data-feed-type="article"]').length;
         const videoDOMCount = target.querySelectorAll('[data-feed-type="video"]').length;
         console.log("[PERF] renderMs=", Math.round(t1 - t0), "articleDOMCount=", articleDOMCount, "videoDOMCount=", videoDOMCount);
@@ -1108,7 +1108,7 @@
 
       console.log("[DATA] articles loaded count=", sanitizedArticles.length);
       console.log("[DATA] articles first=", sanitizedArticles[0]?.title, sanitizedArticles[0]?.url);
-      if (DEBUG_QUERY) {
+      if (isDebugLogging) {
         console.log("[ARTICLES] loaded", sanitizedArticles.length, sanitizedArticles.slice(0, 3));
       }
 
@@ -1148,7 +1148,7 @@
       }
       const combined = buildCombinedFeed(sanitizedArticles, videoItems);
       cachedItems = combined;
-      if (DEBUG_QUERY) {
+      if (isDebugLogging) {
         console.log(
           "[CACHE] total",
           combined.length,
@@ -1172,7 +1172,7 @@
           })),
         );
       }
-      if (DEBUG_QUERY) {
+        if (isDebugLogging) {
         console.log("[CACHE] total", cachedItems.length, "articles", sanitizedArticles.length, "videos", videoItems.length);
       }
       hasLoadedData = true;
