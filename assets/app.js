@@ -38,6 +38,14 @@
     stats: { articlesCount: 0, videosCount: 0 },
   };
   const isDebugLogging = location.search.includes("debug=1");
+  // DEBUG KONTRAKT:
+  // debug se aktivuje pouze location.search.includes("debug=1")
+  // debug je pouze console logging
+  // v UI nesmí existovat #debugPanel ani žádný debug box
+  // debug nesmí blokovat render ani měnit state.*
+  if (isDebugLogging && document.getElementById("debugPanel")) {
+    console.warn("[DEBUG] Unexpected #debugPanel present in DOM (should not exist).");
+  }
   const BASE_ROOT = getBaseRoot();
   const DATA_URL = `${BASE_ROOT}data/articles.json`;
   const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
