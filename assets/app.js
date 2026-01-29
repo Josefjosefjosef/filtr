@@ -370,6 +370,9 @@
 
   function renderEmpty(message, extraHtml = "") {
     const target = getFeedTarget();
+    if (DEBUG_QUERY) {
+      console.log("[RENDER] target", target, "items", items?.length ?? 0);
+    }
     if (target) {
       withScrollLock(() => {
         target.innerHTML = "";
@@ -411,6 +414,9 @@
     withScrollLock(() => {
       const t0 = performance.now();
       target.innerHTML = html;
+      if (DEBUG_QUERY) {
+        console.log("[DOM] feed children", target.children.length);
+      }
       if (!html || !html.trim()) {
         renderEmpty("DATA ERROR: Render vyrobil prázdné HTML (items=" + (items?.length || 0) + ")");
         return;
@@ -1099,6 +1105,9 @@
 
       console.log("[DATA] articles loaded count=", sanitizedArticles.length);
       console.log("[DATA] articles first=", sanitizedArticles[0]?.title, sanitizedArticles[0]?.url);
+      if (DEBUG_QUERY) {
+        console.log("[ARTICLES] loaded", sanitizedArticles.length, sanitizedArticles.slice(0, 3));
+      }
 
       const vUrl = makeDataUrl("data/videos.json");
       console.log("[DATA] videos url=", vUrl);
@@ -1136,6 +1145,9 @@
       }
       const combined = buildCombinedFeed(sanitizedArticles, videoItems);
       cachedItems = combined;
+      if (DEBUG_QUERY) {
+        console.log("[CACHE] total", cachedItems.length, "articles", sanitizedArticles.length, "videos", videoItems.length);
+      }
       hasLoadedData = true;
       setStatus(`Stav dat: OK (${sanitizedArticles.length} článků, ${videoItems.length} videí)`);
       applyFilter();
