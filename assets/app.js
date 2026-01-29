@@ -112,6 +112,39 @@
     return sanitized ? `${base}${sanitized}` : base;
   }
 
+  async function tryFetchJson(url, timeoutMs = 9000) {
+    try {
+      const res = await timeoutFetch(url, { cache: "no-store" }, timeoutMs);
+      const text = await res.text();
+      if (!res.ok) {
+        const preview = text ? text.slice(0, 200) : "";
+        return { ok: false, url, json: null, error: `HTTP ${res.status} ${preview ? `| ${preview}` : ""}` };
+      }
+      try {
+        const json = JSON.parse(text);
+        return { ok: true, url, json, error: null };
+      } catch {
+        return { ok: false, url, json: null, error: "Invalid JSON" };
+      }
+    } catch (err) {
+      return { ok: false, url, json: null, error: `Fetch failed: ${err && err.message ? err.message : "unknown"}` };
+    }
+  }
+
+  async function pickFirstWorkingJson(urls, timeoutMs = 9000) {
+    let lastError = "";
+    for (const url of urls) {
+      if (!url) continue;
+      const result = await tryFetchJson(url, timeoutMs);
+      if (result.ok) {
+        return { url: result.url, json: result.json };
+      }
+      lastError = `[${result.url}] ${result.error}`;
+    }
+    persistLastError(`DATA fetch failed: ${lastError} | tried ${urls.join(", ")}`);
+    return null;
+  }
+
   function normalizeFeedJson(json) {
     if (Array.isArray(json)) return json;
     if (json && Array.isArray(json.articles)) return json.articles;
@@ -591,8 +624,12 @@
         })
         .join("") || '<span class="sourceDomain">—</span>';
     const linkUrl =
-      safeUrl(it.url) ||
-      safeUrl((it.link && (it.link.href || it.link)) || it.href || "");
+      it.url ||
+      (Array.isArray(it.sources) ? (it.sources.find((s) => s && s.url && s.url.trim())?.url || "") : "") ||
+      (it.canonicalUrl || "") ||
+      (typeof it.link === "string"
+        ? it.link
+        : (it.link && typeof it.link === "object" ? (it.link.href || it.link.url || "") : ""));
     if (!linkUrl) {
       persistLastError("Article without URL skipped");
       return "";
@@ -1266,8 +1303,20 @@
       emptyBox.style.display = "block";
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
-    const aUrl = makeDataUrl("data/articles.json");
-    debugLog("[DATA] articles url=", aUrl);
+    const articleUrls = [
+      makeDataUrl("data/articles.json"),
+      "/data/articles.json",
+      "./data/articles.json",
+      makeDataUrl("projects/data/articles.json"),
+      makeDataUrl("filtr/data/articles.json"),
+    ].filter(Boolean);
+    const videoUrls = [
+      makeDataUrl("data/videos.json"),
+      "/data/videos.json",
+      "./data/videos.json",
+      makeDataUrl("projects/data/videos.json"),
+      makeDataUrl("filtr/data/videos.json"),
+    ].filter(Boolean);
     let data = null;
     setStatus("Stav dat: načítám…");
 
@@ -1286,7 +1335,27 @@
       debugLog("[ARTICLES LENGTH]", Array.isArray(articlesArray) ? articlesArray.length : "NOT ARRAY");
       const rawArticles = normalizeItems(articlesArray);
       rawArticles.forEach((item) => {
-        item.url = item.url || item.link || item.canonicalUrl;
+        // canonical candidate
+        let candidate = item.url;
+
+        // legacy link variants
+        const link = item.link;
+        if (!candidate) {
+          if (link && typeof link === "object") candidate = link.href || link.url;
+          else if (typeof link === "string") candidate = link;
+        }
+
+        // sources[].url
+        if (!candidate && Array.isArray(item.sources)) {
+          const first = item.sources.find((s) => s && typeof s.url === "string" && s.url.trim());
+          if (first) candidate = first.url;
+        }
+
+        // canonicalUrl fallback
+        if (!candidate && item.canonicalUrl) candidate = item.canonicalUrl;
+
+        // write back (ensure string)
+        item.url = candidate || "";
       });
       let sanitizedArticles = normalizeArticleList(rawArticles).map((item) => ({
         ...item,
