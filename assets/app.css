@@ -2253,3 +2253,16 @@ a.brand,
   min-width:0;
   text-align:left;
 }
+
+/* FEED MUSÍ BÝT VŽDY JEDNOSLOUPCOVÝ */
+#feed{
+  display:block !important;
+}
+#feed > *{
+  width:100% !important;
+  max-width:100% !important;
+}
+.feedGrid,
+.feedList{
+  display:block !important;
+}
