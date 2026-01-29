@@ -95,11 +95,11 @@ body{
   left: 0;
   right: 0;
   z-index: 9999;
-  background: #FFFFFF;
-  border-bottom: 1px solid var(--gold-soft);
   padding-top: env(safe-area-inset-top);
   will-change: transform;
   transform: translateZ(0);
+  background: transparent;
+  border-bottom: none;
 }
 
 .iuSubBars .topicPill.isActive{
@@ -237,6 +237,7 @@ img{ max-width:100%; height:auto; }
 }
 
 .topbar{
+  width: min(1100px, 100%);
   max-width: 1100px;
   margin: 0 auto;
   padding: 8px 14px;
@@ -245,6 +246,9 @@ img{ max-width:100%; height:auto; }
   gap: 12px;
   min-width: 0;
   min-height: 72px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--gold-soft);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
 }
 
 .leftPack{
