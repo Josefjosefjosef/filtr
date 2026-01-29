@@ -1027,148 +1027,6 @@ a.brand,
   color: #ffffff;
 }
 
-#feed,
-.news-list,
-#newsList{
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  min-width: 0;
-  text-align: left;
-  justify-content: flex-start;
-}
-
-#feed{
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: stretch;
-  justify-items: stretch;
-  width: 100%;
-  margin: 0;
-  min-width: 0;
-  max-width: none;
-}
-
-#feed > *{
-  width: 100%;
-  max-width: none;
-  justify-self: stretch;
-  align-self: stretch;
-}
-
-@media (max-width: 900px){
-  #feed{
-    grid-template-columns: 1fr;
-  }
-}
-
-/* SIDEBAR SKIN: accordionCol acts as right sidebar */
-.layout > aside.accordionCol{
-  background: var(--iu-side-bg-main);
-  color: var(--sidebar-text);
-  border-left: 1px solid var(--iu-side-border-soft);
-  border-radius: 14px;
-  padding: 12px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
-}
-.layout > aside.accordionCol .accHeader,
-.layout > aside.accordionCol .accContent,
-.layout > aside.accordionCol .title,
-.layout > aside.accordionCol .groupTitle,
-.layout > aside.accordionCol .tinyLegal,
-.layout > aside.accordionCol .muted,
-.layout > aside.accordionCol small{
-  color: var(--sidebar-text);
-}
-
-.mainCol,
-#newsList{
-  width:100%;
-  min-width:0;
-  text-align:left;
-}
-
-/* =========================
-   FEED LAYOUT SAFETY (main)
-   ========================= */
-
-.mainCol{
-  width: 100%;
-  max-width: none;
-  min-width: 0;
-}
-
-.news-list,
-#newsList{
-  width: 100%;
-  max-width: none;
-  min-width: 0;
-  margin: 0;
-}
-
-#feed{
-  width: 100%;
-  max-width: none;
-  min-width: 0;
-  margin: 0;
-  text-align: left;
-  justify-content: flex-start;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: stretch;
-  justify-items: stretch;
-}
-
-#feed > *{
-  width: 100%;
-  max-width: none;
-  min-width: 0;
-  justify-self: stretch;
-  align-self: stretch;
-}
-
-@media (max-width: 900px){
-  #feed{
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =========================
-   FEED LAYOUT SAFETY (main) - explicit safety
-   ========================= */
-
-.mainCol,
-#newsList,
-#feed{
-  width: 100%;
-  max-width: none;
-  min-width: 0;
-}
-
-#feed{
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: start;
-}
-
-#feed > *{
-  width: 100%;
-  max-width: none;
-  min-width: 0;
-  justify-self: stretch;
-  align-self: stretch;
-}
-
-@media (max-width: 900px){
-  #feed{
-    grid-template-columns: 1fr;
-  }
-}
-
-/* LAYOUT SAFETY: explicit columns placement */
 .layout{
   display:grid;
   grid-template-columns:minmax(0,1fr) 360px;
@@ -2062,6 +1920,7 @@ a.brand,
   color: rgba(11,27,43,0.72);
   font-weight: 650;
 }
+
 .pollBar{
   height: 10px;
   border-radius: 999px;
@@ -2254,4 +2113,143 @@ a.brand,
   max-height:360px;
   overflow:auto;
   background:#fbfbfb;
+}
+
+/* === FINAL LAYOUT SAFETY (desktop) === */
+@media (min-width: 821px){
+  .layout{
+    display: grid !important;
+    grid-template-columns: minmax(0,1fr) 360px !important;
+    gap: 18px !important;
+    align-items: start !important;
+  }
+  .layout > .mainCol{
+    grid-column: 1 !important;
+    min-width: 0 !important;
+  }
+  .layout > aside.accordionCol{
+    grid-column: 2 !important;
+    width: 360px !important;
+  }
+}
+
+/* === FINAL LAYOUT SAFETY (mobile) === */
+@media (max-width: 820px){
+  .layout{
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+  .layout > .mainCol{
+    grid-column: 1 !important;
+  }
+  .layout > aside.accordionCol{
+    grid-column: 1 !important;
+    width: 100% !important;
+  }
+}
+
+/* SIDEBAR WIDTH LOCK */
+.layout > aside.accordionCol{
+  width: 360px;
+  max-width: 360px;
+  min-width: 360px;
+  box-sizing: border-box;
+}
+@media (max-width: 900px){
+  .layout > aside.accordionCol{
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+}
+
+/* GRID SAFETY: no overlap / no squeeze */
+.layout{
+  overflow: visible;
+}
+.layout > .mainCol{
+  min-width: 0;
+  overflow: visible;
+}
+.layout > aside.accordionCol{
+  min-width: 0;
+  overflow: visible;
+}
+
+/* FEED SAFETY */
+#newsList,
+#feed{
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+#feed{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+  justify-items: stretch;
+  text-align: left;
+}
+#feed > *{
+  min-width: 0;
+  width: 100%;
+  justify-self: stretch;
+  align-self: stretch;
+}
+@media (max-width: 900px){
+  #feed{ grid-template-columns: 1fr; }
+}
+
+/* LAYOUT SAFETY: explicit columns placement */
+.layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 360px;
+  gap:18px;
+  align-items:start;
+}
+.layout > .mainCol{
+  grid-column:1;
+  min-width:0;
+}
+.layout > aside.accordionCol{
+  grid-column:2;
+  min-width:0;
+}
+@media (max-width: 900px){
+  .layout{
+    grid-template-columns:1fr;
+  }
+  .layout > .mainCol{
+    grid-column:auto;
+  }
+  .layout > aside.accordionCol{
+    grid-column:auto;
+  }
+}
+
+/* SIDEBAR SKIN: accordionCol acts as right sidebar */
+.layout > aside.accordionCol{
+  background: var(--iu-side-bg-main);
+  color: var(--sidebar-text);
+  border-left: 1px solid var(--iu-side-border-soft);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+}
+.layout > aside.accordionCol .accHeader,
+.layout > aside.accordionCol .accContent,
+.layout > aside.accordionCol .title,
+.layout > aside.accordionCol .groupTitle,
+.layout > aside.accordionCol .tinyLegal,
+.layout > aside.accordionCol .muted,
+.layout > aside.accordionCol small{
+  color: var(--sidebar-text);
+}
+
+.mainCol,
+#newsList{
+  width:100%;
+  min-width:0;
+  text-align:left;
 }
