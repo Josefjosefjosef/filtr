@@ -1,12 +1,18 @@
 (() => {
   const $ = (sel) => document.querySelector(sel);
   /*
-   * Release notes:
-   * - Rendering now writes strictly into the verified #feed via safeTarget.
-   * - Video/article routing relies on item.contentType with state.* driving all guards.
-   * - Status badge is always visible, persisted errors surface through persistLastError + #lastErrInline.
-   * - Debug mode only emits logging and never blocks rendering.
-   */
+  Release summary (UI/data):
+
+  Render zapisuje pouze do ověřeného #feed přes safeTarget.
+
+  Routing je řízen jen item.contentType ("article"/"video").
+
+  Veškerý stav je ve state.* (bez globálních proměnných).
+
+  Produkce je tichá: diagnostika běží jen při ?debug=1.
+
+  Chyby se propisují přes persistLastError + #lastErrInline, bez potřeby debug režimu.
+  */
   function qsSafe(selector) {
     try {
       const el = document.querySelector(selector);
