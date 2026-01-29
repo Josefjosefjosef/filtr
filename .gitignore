@@ -3,13 +3,13 @@
 *.temp
 *.swp
 *.bak
+*.lock
+temp_*.lock
 # Wheelhouse (offline dependencies)
 .wheelhouse/
 
 # Generated data files (do not commit)
 filtr/data/**
-!filtr/data/articles.json
-!filtr/data/videos.json
 
 # Python cache
 __pycache__/
