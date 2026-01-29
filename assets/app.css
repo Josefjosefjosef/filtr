@@ -1109,24 +1109,29 @@ a.brand,
 }
 
 .news-titleLink{
-  display: -webkit-box;
+  display: inline-block;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: var(--titleLinesDesktop);
-  overflow: hidden;
-  text-overflow: ellipsis;
   line-height: var(--titleLineHeight);
   min-height: calc(var(--titleLineHeight) * var(--titleLinesDesktop) * 1em);
   max-height: calc(var(--titleLineHeight) * var(--titleLinesDesktop) * 1em);
   overflow-wrap: anywhere;
   word-break: break-word;
   hyphens: auto;
-  color: var(--titleGreen);
-  text-decoration: none;
-  transition: color 140ms ease, text-decoration-color 140ms ease;
+  color: rgba(11,27,43,0.92);
+  text-decoration: underline;
   text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-  text-decoration-color: rgba(31,75,153,0.00);
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(11,27,43,0.45);
+  transition: color 140ms ease, text-decoration-color 140ms ease;
   border-radius: 8px;
+}
+.news-titleLink:visited{
+  color: rgba(11,27,43,0.85);
+}
+.news-titleLink:hover,
+.news-titleLink:focus-visible{
+  color: rgba(11,27,43,1);
+  text-decoration-color: rgba(11,27,43,0.85);
 }
 
 @media (max-width: 680px){
