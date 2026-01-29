@@ -442,6 +442,10 @@
       throw new Error("FEED CONTAINER #feed NOT FOUND");
     }
     const safeTarget = insideTarget(target, feedEl);
+    if (emptyBox) {
+      emptyBox.style.display = "none";
+      emptyBox.innerHTML = "";
+    }
     safeTarget.innerHTML = "";
     if (!items || items.length === 0) {
       renderEmpty("Žádné články k zobrazení. Zkontroluj Stav dat.");
@@ -454,6 +458,14 @@
       if (!node) return;
       safeTarget.insertAdjacentHTML("beforeend", node);
     });
+    if (items?.length > 0 && safeTarget.children.length === 0) {
+      safeTarget.insertAdjacentHTML(
+        "beforeend",
+        `<div class="empty" style="margin-top:10px;color:rgba(11,27,43,0.7);font-weight:600;">Data načtena, ale nic se nevykreslilo. Obnov stránku.<br /><small>${items.length} položek</small></div>`
+      );
+      setStatus("Stav dat: chyba (viz feed)");
+      return;
+    }
     const newsCards = safeTarget.querySelectorAll?.(".news-card")?.length ?? safeTarget.children.length;
     if (elDataCount) elDataCount.textContent = String(items.length);
     const t1 = performance.now();
@@ -1162,7 +1174,6 @@
         contentType: "article",
       }));
       debugLog("[ARTICLES NORMALIZED]", sanitizedArticles.length);
-      renderItems(sanitizedArticles);
       if (sanitizedArticles.length < rawArticles.length) {
         debugWarn("[DATA] filtered invalid items", rawArticles.length, "->", sanitizedArticles.length);
       }
@@ -1183,16 +1194,15 @@
         const vText = await vRes.text();
         const vData = JSON.parse(vText);
         const rawVideosJson = normalizeFeedJson(vData);
-        const rawVideos = normalizeVideoList(rawVideosJson);
-          debugLog(
-            "[DATA] videos raw count=",
-            rawVideos.length,
-            "keys=",
-            vData && typeof vData === "object" ? Object.keys(vData) : [],
-          );
-          videoItems = normalizeVideoList(rawVideos);
-          debugLog("[DATA] videos loaded count=", videoItems.length);
-          debugLog("[DATA] videos first=", videoItems[0]?.title, videoItems[0]?.url);
+        videoItems = normalizeVideoList(rawVideosJson);
+        debugLog(
+          "[DATA] videos raw count=",
+          videoItems.length,
+          "keys=",
+          vData && typeof vData === "object" ? Object.keys(vData) : [],
+        );
+        debugLog("[DATA] videos loaded count=", videoItems.length);
+        debugLog("[DATA] videos first=", videoItems[0]?.title, videoItems[0]?.url);
         } else {
           debugWarn("[DATA] videos http", vRes.status);
         }
