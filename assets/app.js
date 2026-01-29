@@ -600,6 +600,47 @@
     renderEmpty("Žádná data k zobrazení. Zkontroluj Stav dat.");
   }
 
+  function iuComputeTopbarStackH(){
+    try{
+      const bars = Array.from(document.querySelectorAll(".iuBar"));
+      const visible = bars.filter((el) => {
+        const cs = getComputedStyle(el);
+        if (cs.display === "none" || cs.visibility === "hidden") return false;
+        const r = el.getBoundingClientRect();
+        return r.height > 0.5;
+      });
+
+      const total = Math.round(
+        visible.reduce((sum, el) => sum + el.getBoundingClientRect().height, 0)
+      );
+
+      document.documentElement.style.setProperty("--topbarStackH", Math.max(total, 0) + "px");
+    }catch(e){}
+  }
+
+  function iuInitTopbarWatcher(){
+    iuComputeTopbarStackH();
+    window.addEventListener("load", iuComputeTopbarStackH, { passive: true });
+
+    let t = 0;
+    window.addEventListener("resize", () => {
+      clearTimeout(t);
+      t = setTimeout(iuComputeTopbarStackH, 120);
+    }, { passive: true });
+
+    const mo = new MutationObserver(() => {
+      clearTimeout(t);
+      t = setTimeout(iuComputeTopbarStackH, 60);
+    });
+
+    mo.observe(document.body, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ["class", "style"],
+    });
+  }
+
   function writeDebug(obj) {
     if (!elDebugOut) return;
     try {
@@ -1551,6 +1592,7 @@
     renderDebugVisibility();
     renderSectionsBar();
     setSectionsFromHash();
+    iuInitTopbarWatcher();
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
