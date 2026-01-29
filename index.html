@@ -44,14 +44,25 @@
         height: auto;
         overflow-y: auto;
       }
+      .topbar-wrap{
+        position:sticky;
+        top:0;
+        left:0;
+        right:0;
+        background:transparent;
+        display:flex;
+        justify-content:center;
+        z-index:100;
+      }
       .topbar{
         border-bottom: none !important;
         width: 100%;
-        padding-left: 0;
-        padding-right: 0;
+        max-width: 1100px;
+        padding-inline: var(--pageGutter);
         border-radius: 0;
         box-shadow: none !important;
         background: transparent !important;
+        box-sizing:border-box;
       }
       .topbar{
         display:flex;
