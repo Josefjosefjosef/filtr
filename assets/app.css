@@ -953,17 +953,32 @@ a.brand,
 .sectionsBar .secBtn,
 .sectionBar .secBtn{
   appearance: none;
-  border: 0;
-  background: transparent;
-  border-radius: 0;
-  padding: 10px 0;
+  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(4,6,11,0.6);
+  border-radius: 999px;
+  padding: 8px 14px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
-  color: rgba(255,255,255,0.88);
+  color: rgba(255,255,255,0.95);
   letter-spacing: 0.04em;
-  transition: color 200ms ease;
+  transition: color 200ms ease, transform 180ms ease;
   -webkit-appearance: none;
+}
+.sectionsBar .secBtn.isActive,
+.sectionBar .secBtn.isActive{
+  color: #F5C16A;
+  border-color: rgba(245,193,106,0.8);
+  border-bottom: 2px solid #F5C16A;
+  transform: translateY(-1px);
+}
+.sectionsBar .secBtn:hover,
+.sectionsBar .secBtn:focus-visible,
+.sectionBar .secBtn:hover,
+.sectionBar .secBtn:focus-visible{
+  color: #ffffff;
+  border-color: rgba(255,255,255,0.65);
+  background: rgba(8,10,16,0.85);
 }
 .sectionsBar .secBtn.isActive,
 .sectionBar .secBtn.isActive{

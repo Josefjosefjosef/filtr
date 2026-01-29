@@ -34,6 +34,7 @@
   let activeSections = ["vse"];
   let cachedItems = [];
   let hasLoadedData = false;
+  let loadRequestId = 0;
   const BASE_ROOT = getBaseRoot();
   const DATA_URL = `${BASE_ROOT}data/articles.json`;
   const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
@@ -1059,8 +1060,13 @@
     }
   }
 
+  function isLatestLoadRequest(id) {
+    return id === loadRequestId;
+  }
+
   async function loadData() {
     const startedAt = new Date();
+    const requestToken = ++loadRequestId;
     cachedItems = [];
     hasLoadedData = false;
     if (emptyBox) {
@@ -1121,6 +1127,10 @@
         console.warn("[DATA] videos error", videoErr?.message || videoErr);
       }
 
+      if (!isLatestLoadRequest(requestToken)) {
+        console.log("[DATA] request canceled, token", requestToken);
+        return;
+      }
       const combined = buildCombinedFeed(sanitizedArticles, videoItems);
       cachedItems = combined;
       hasLoadedData = true;
@@ -1145,6 +1155,10 @@
         });
       }
     } catch (err) {
+      if (!isLatestLoadRequest(requestToken)) {
+        console.log("[DATA] failure ignored, token", requestToken);
+        return;
+      }
       const message = err && err.message ? err.message : String(err);
       cachedItems = [];
       hasLoadedData = false;
