@@ -96,11 +96,13 @@ body{
   top: 0;
   left: 0;
   right: 0;
-  z-index: 9999;
+  z-index: 1000;
   padding-top: env(safe-area-inset-top);
   will-change: transform;
   transform: translateZ(0);
-  background: transparent;
+  background: #fff;
+  background-color: #fff;
+  opacity: 1;
   border-bottom: none;
   display: flex;
   flex-direction: column;
@@ -234,6 +236,9 @@ img{ max-width:100%; height:auto; }
   min-height: 72px;
   background: #ffffff;
   box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+}
+.topbar::before{
+  content: none;
 }
 
 .topbar::after{
