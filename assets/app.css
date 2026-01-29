@@ -141,7 +141,16 @@ img{ max-width:100%; height:auto; }
   padding-top: var(--topbarStackH);
   margin-top: 0;
 }
-.mainCol{ min-width: 0; }
+.mainCol{
+  min-width: 0;
+  order: 1;
+  min-height: 1px;
+  overflow: visible;
+}
+.sideCol{
+  min-width: 0;
+  order: 2;
+}
 .accordionCol{
   background: #e9f4ff;
   width: var(--sideW, 360px);
@@ -219,8 +228,18 @@ img{ max-width:100%; height:auto; }
   .mainCol{ padding-left: 0 !important; }
 }
 @media (max-width: 900px){
-  .layout{ grid-template-columns: 1fr; gap: 14px; }
-  .mainCol{ padding-left: 0; }
+  .layout{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .mainCol{
+    order:1;
+    padding-left:0;
+  }
+  .sideCol{
+    order:2;
+  }
 }
 
 .topbar{
