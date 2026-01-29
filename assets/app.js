@@ -32,9 +32,11 @@
   const LS_KEY = "iu:debug";
   const SECTION_KEYS = ["vse", "aktualne", "doprava", "pocasi", "sport", "finance", "krimi", "zdravi", "video"];
   let activeSections = ["vse"];
-  let cachedItems = [];
-  let hasLoadedData = false;
-  let loadRequestId = 0;
+  const state = {
+    cachedItems: [],
+    hasLoadedData: false,
+    loadRequestId: 0,
+  };
   const DEBUG_QUERY = location.search.includes("debug=1");
   const BASE_ROOT = getBaseRoot();
   const DATA_URL = `${BASE_ROOT}data/articles.json`;
@@ -389,7 +391,9 @@
     const target = getFeedTarget();
     if (!target) {
       renderEmpty("Chyba DOM: chybí #feed i #newsList.");
-      console.log("[RENDER] no target");
+      if (DEBUG_QUERY) {
+        console.log("[RENDER] no target");
+      }
       return;
     }
     if (emptyBox) {
@@ -414,19 +418,18 @@
     withScrollLock(() => {
       const t0 = performance.now();
       target.innerHTML = html;
-      if (DEBUG_QUERY) {
-        console.log("[DOM] feed children", target.children.length);
-      }
       if (!html || !html.trim()) {
         renderEmpty("DATA ERROR: Render vyrobil prázdné HTML (items=" + (items?.length || 0) + ")");
         return;
       }
       if (elDataCount) elDataCount.textContent = String(items.length);
       const t1 = performance.now();
-      const newsCards = target.querySelectorAll?.(".news-card")?.length ?? target.children.length;
-      console.log("[PERF] renderMs=", Math.round(t1 - t0), "domCards=", newsCards);
-      console.log("[SCROLL] y=", window.scrollY);
-      console.log("[RENDER] target=", target.id, "children=", target.children.length);
+      if (DEBUG_QUERY) {
+        const articleDOMCount = target.querySelectorAll('[data-feed-type="article"]').length;
+        const videoDOMCount = target.querySelectorAll('[data-feed-type="video"]').length;
+        console.log("[PERF] renderMs=", Math.round(t1 - t0), "articleDOMCount=", articleDOMCount, "videoDOMCount=", videoDOMCount);
+        console.log("[RENDER] target=", target.id, "children=", target.children.length);
+      }
     });
   }
 
@@ -476,7 +479,7 @@
       : `<span class="news-titleLink">${escapeHtml(title)}</span>`;
 
     return `
-      <article class="news-card">
+      <article class="news-card" data-feed-type="article">
         <h2 class="news-title">${titleMarkup}</h2>
         <div class="news-row2">
           ${publishedAt ? `<span class="meta-time">${escapeHtml(publishedAt)}</span>` : ""}
@@ -502,7 +505,7 @@
       : `<span class="news-titleLink">${escapeHtml(augmentedTitle)}</span>`;
 
     return `
-      <article class="news-card">
+      <article class="news-card" data-feed-type="video">
         <h2 class="news-title">${titleMarkup}</h2>
         <div class="news-row2">
           ${publishedAt ? `<span class="meta-time">${escapeHtml(publishedAt)}</span>` : ""}
@@ -564,7 +567,7 @@
     const query = (searchInput && searchInput.value.trim()) || "";
     const normalizedQuery = query.toLowerCase();
     const sectionsToUse = activeSections && activeSections.length ? activeSections : ["vse"];
-    let filtered = cachedItems.filter((item) => matchesSections(item, sectionsToUse));
+    let filtered = state.cachedItems.filter((item) => matchesSections(item, sectionsToUse));
     if (normalizedQuery) {
       filtered = filtered.filter((item) => {
         const type = String(item.contentType || "article").toLowerCase();
@@ -592,13 +595,13 @@
         hideSearchModal();
         renderEmpty("Žádné články neodpovídají filtrům.");
       }
-      setStatus(`Stav dat: OK (0 / ${cachedItems.length})`);
+      setStatus(`Stav dat: OK (0 / ${state.cachedItems.length})`);
       if (isDebugOn()) {
         writeDebug({
           sections: activeSections,
           hash: location.hash,
           search: query,
-          totalItems: cachedItems.length,
+          totalItems: state.cachedItems.length,
           filtered: 0,
         });
       }
@@ -607,13 +610,13 @@
 
     hideSearchModal();
     renderItems(filtered);
-    setStatus(`Stav dat: OK (${filtered.length} / ${cachedItems.length})`);
+    setStatus(`Stav dat: OK (${filtered.length} / ${state.cachedItems.length})`);
     if (isDebugOn()) {
       writeDebug({
         sections: activeSections,
         hash: location.hash,
         search: query,
-        totalItems: cachedItems.length,
+        totalItems: state.cachedItems.length,
         filtered: filtered.length,
       });
     }
@@ -1145,6 +1148,30 @@
       }
       const combined = buildCombinedFeed(sanitizedArticles, videoItems);
       cachedItems = combined;
+      if (DEBUG_QUERY) {
+        console.log(
+          "[CACHE] total",
+          combined.length,
+          "articles",
+          sanitizedArticles.length,
+          "videos",
+          videoItems.length,
+        );
+        console.log(
+          "[ARTICLES] sample",
+          sanitizedArticles.slice(0, 3).map((item) => ({
+            title: item.title,
+            url: item.url,
+          })),
+        );
+        console.log(
+          "[VIDEOS] sample",
+          videoItems.slice(0, 3).map((item) => ({
+            title: item.title,
+            url: item.url,
+          })),
+        );
+      }
       if (DEBUG_QUERY) {
         console.log("[CACHE] total", cachedItems.length, "articles", sanitizedArticles.length, "videos", videoItems.length);
       }
