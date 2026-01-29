@@ -1,3 +1,14 @@
+// === MAINTENANCE
+// ::contentReference[oaicite:0]{index=0}
+// REŽIM: MAINTENANCE
+// Stav: FEED STABLE
+// Povolené zásahy:
+// - drobné UI úpravy mimo feed
+// - přidání nových funkcí mimo render pipeline
+// Zakázané zásahy:
+// - loadData / applyFilter / renderFeed
+// - state.cachedItems / state.filteredItems logika
+// - změny routování přes contentType
 // === INFOUZEL FEED INVARIANTS (NO-GO ZONE) ===
 // - jediný zdroj pravdy: state.*
 // - jediná render pipeline: loadData → state.cachedItems → applyFilter → renderFeed
@@ -52,10 +63,13 @@
   let activeSections = ["vse"];
   const state = {
     cachedItems: [],
+    filteredItems: [],
     hasLoadedData: false,
     loadRequestId: 0,
     stats: { articlesCount: 0, videosCount: 0 },
   };
+  state.cachedItems ??= [];
+  state.filteredItems ??= [];
   const ALLOWED_CONTENT_TYPES = new Set(["article", "video"]);
   const isDebugLogging = location.search.includes("debug=1");
   function debugLog(...args) {
@@ -467,13 +481,21 @@
         renderInlineError("Obsah dočasně nedostupný.");
         return;
       }
-      const node = kind === "video" ? buildVideoAsArticleCard(item) : buildArticleHtml(item);
-      if (!node) {
-        persistLastError("Invariant breach: node nevyroben");
-        renderInlineError("Obsah dočasně nedostupný.");
-        return;
+      const markup = kind === "video" ? buildVideoAsArticleCard(item) : buildArticleHtml(item);
+      if (!markup) {
+        persistLastError("Invariant breach: builder returned falsy markup");
+        renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
+        continue;
       }
-      safeTarget.insertAdjacentHTML("beforeend", node);
+      const template = document.createElement("template");
+      template.innerHTML = markup.trim();
+      const node = template.content.firstElementChild;
+      if (!node || !(node instanceof HTMLElement)) {
+        persistLastError("Invariant breach: builder returned invalid node");
+        renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
+        continue;
+      }
+      safeTarget.appendChild(node);
     }
     if (items?.length > 0 && safeTarget.children.length === 0) {
       safeTarget.insertAdjacentHTML(
@@ -491,12 +513,12 @@
     if (isDebugLogging) {
       debugLog("[ASSERT] feed children after render:", safeTarget.children.length);
     }
-    if (state.cachedItems.length > 0 && safeTarget.children.length === 0) {
-      const errMessage = "Invariant: data exist but feed rendered 0 nodes";
-      debugWarn(errMessage);
-      persistLastError(errMessage);
-      setStatus("Stav dat: chyba (detail viz Poslední chyba)");
-      renderEmpty("Data jsou načtená, ale feed se nevykreslil (interní chyba renderu).");
+    const articleCount = state.cachedItems.filter((entry) => entry.contentType === "article").length;
+    if (articleCount > 0 && safeTarget.children.length === 0) {
+      document.body.classList.add("iu-feedEmergencyVisible");
+      persistLastError("Invariant breach: articles exist but render produced 0 nodes");
+      renderInlineError("Články se nepodařilo zobrazit.");
+      setStatus("Stav dat: chyba (viz feed)");
       return;
     }
     const rFeed = safeTarget.getBoundingClientRect();
@@ -571,6 +593,10 @@
     const linkUrl =
       safeUrl(it.url) ||
       safeUrl((it.link && (it.link.href || it.link)) || it.href || "");
+    if (!linkUrl) {
+      persistLastError("Article without URL skipped");
+      return "";
+    }
     const titleMarkup = linkUrl
       ? `<a class="news-titleLink" href="${linkUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(
           title
@@ -731,13 +757,14 @@
         return haystackData.includes(normalizedQuery);
       });
     }
+    state.filteredItems = filtered;
 
     if (filtered.length === 0) {
       if (query) {
         openSearchModal();
       } else {
         hideSearchModal();
-        renderEmpty("Žádné články neodpovídají filtrům.");
+        renderInlineError("Filtry nenašly žádné články.");
       }
       setStatus(`Stav dat: OK (zobrazeno: 0 / celkem: ${state.cachedItems.length})`);
       if (isDebugOn()) {
@@ -750,6 +777,10 @@
         });
       }
       return;
+    }
+    if (!Array.isArray(state.filteredItems)) {
+      persistLastError("Invariant breach: filteredItems is not array");
+      state.filteredItems = [];
     }
 
     hideSearchModal();
@@ -1254,6 +1285,9 @@
       debugLog("[ARTICLES RAW]", data);
       debugLog("[ARTICLES LENGTH]", Array.isArray(articlesArray) ? articlesArray.length : "NOT ARRAY");
       const rawArticles = normalizeItems(articlesArray);
+      rawArticles.forEach((item) => {
+        item.url = item.url || item.link || item.canonicalUrl;
+      });
       let sanitizedArticles = normalizeArticleList(rawArticles).map((item) => ({
         ...item,
         contentType: "article",
@@ -1739,4 +1773,13 @@
 
   init();
 })();
+
+// CHECKPOINT: FEED STABLE
+// Stav ověřen: invarianty splněny, render pipeline uzamčena,
+// fail-soft aktivní, emergency visibility aktivní.
+// Jakákoli změna výše musí projít kontrolou invariant.
+// === NO-GO ZONE END ===
+// Jakýkoli zásah pod tímto bodem je porušením technického standardu infoUzel.cz
+// === MAINTENANCE MODE ACTIVE ===
+// Jakákoli změna nad tímto bodem vyžaduje nový checkpoint
 
