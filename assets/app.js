@@ -452,6 +452,11 @@
     }
   }
 
+  function renderItems(items) {
+    const target = getFeedTarget();
+    renderFeed(target, items);
+  }
+
   function renderFeedItemHtml(item) {
     if (!item) return "";
     const type = String(item.contentType || "article").toLowerCase();
