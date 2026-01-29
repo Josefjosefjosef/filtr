@@ -67,7 +67,27 @@
       }
 
       .data-status{
-        display:none !important;
+        display:inline-flex !important;
+        align-items:center;
+        gap:6px;
+        font-size:12px;
+        padding:4px 10px;
+        border-radius:999px;
+        background: rgba(255,255,255,0.92);
+        border:1px solid rgba(11,27,43,0.12);
+        color: rgba(11,27,43,0.92);
+      }
+
+      #lastErrInline{
+        display:none;
+        font-size:12px;
+        line-height:1.35;
+        color: rgba(11,27,43,0.72);
+        margin-top:8px;
+        padding:6px 10px;
+        border-radius:10px;
+        border:1px solid rgba(11,27,43,0.15);
+        background: rgba(255,255,255,0.92);
       }
 
       .searchForm{
@@ -908,6 +928,7 @@
       <div class="mainCol">
         <section class="news-list" id="newsList" aria-label="Aktuální články">
           <div id="feed"></div>
+          <div id="lastErrInline" class="tinyErr" style="display:none;"></div>
         </section>
 
         <div class="empty" id="emptyBox" style="display:none;">Zatím nejsou k dispozici žádné články.</div>

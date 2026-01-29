@@ -1,14 +1,21 @@
 (() => {
   const $ = (sel) => document.querySelector(sel);
+  /*
+   * Release notes:
+   * - Rendering now writes strictly into the verified #feed via safeTarget.
+   * - Video/article routing relies on item.contentType with state.* driving all guards.
+   * - Status badge is always visible, persisted errors surface through persistLastError + #lastErrInline.
+   * - Debug mode only emits logging and never blocks rendering.
+   */
   function qsSafe(selector) {
     try {
       const el = document.querySelector(selector);
       if (!el) {
-        console.warn("[DOM] missing", selector);
+        debugWarn("[DOM] missing", selector);
       }
       return el;
     } catch (err) {
-      console.warn("[DOM] missing", selector, err);
+      debugWarn("[DOM] missing", selector, err);
       return null;
     }
   }
@@ -38,13 +45,21 @@
     stats: { articlesCount: 0, videosCount: 0 },
   };
   const isDebugLogging = location.search.includes("debug=1");
+  function debugLog(...args) {
+    if (!isDebugLogging) return;
+    console.log(...args);
+  }
+  function debugWarn(...args) {
+    if (!isDebugLogging) return;
+    console.warn(...args);
+  }
   // DEBUG KONTRAKT:
   // debug se aktivuje pouze location.search.includes("debug=1")
   // debug je pouze console logging
   // v UI nesmí existovat #debugPanel ani žádný debug box
   // debug nesmí blokovat render ani měnit state.*
   if (isDebugLogging && document.getElementById("debugPanel")) {
-    console.warn("[DEBUG] Unexpected #debugPanel present in DOM (should not exist).");
+    debugWarn("[DEBUG] Unexpected #debugPanel present in DOM (should not exist).");
   }
   const BASE_ROOT = getBaseRoot();
   const DATA_URL = `${BASE_ROOT}data/articles.json`;
@@ -96,7 +111,7 @@
   }
 
   const BUILD_STAMP = getBuildStamp();
-  console.log("[BUILD]", BUILD_STAMP || "no-build-stamp");
+  debugLog("[BUILD]", BUILD_STAMP || "no-build-stamp");
 
   function freezeScroll() {
     if (freezeScroll.lock) return;
@@ -402,6 +417,9 @@
         target.innerHTML = "";
       });
     }
+    if (isDebugLogging) {
+      debugLog("[RENDER EMPTY]", { message, cached: state.cachedItems.length });
+    }
     if (emptyBox) {
       emptyBox.innerHTML = `<p>${escapeHtml(message)}</p>${extraHtml ? extraHtml : ""}`;
       emptyBox.style.display = "block";
@@ -411,10 +429,10 @@
 
   function renderFeed(target, items) {
     const feedEl = document.getElementById("feed");
-    console.log("[ASSERT] feed exists:", !!feedEl);
-    if (feedEl) {
-      console.log("[ASSERT] feed parent:", feedEl.parentElement?.className);
-    } else {
+    if (isDebugLogging) {
+      debugLog("[ASSERT] feed exists:", !!feedEl);
+    }
+    if (!feedEl) {
       throw new Error("FEED CONTAINER #feed NOT FOUND");
     }
     const safeTarget = insideTarget(target, feedEl);
@@ -424,7 +442,7 @@
       return;
     }
     const t0 = performance.now();
-    items.forEach((item, i) => {
+    items.forEach((item) => {
       const kind = String(item.contentType || "article").toLowerCase();
       const node = kind === "video" ? buildVideoAsArticleCard(item) : buildArticleHtml(item);
       if (!node) return;
@@ -433,22 +451,22 @@
     const newsCards = safeTarget.querySelectorAll?.(".news-card")?.length ?? safeTarget.children.length;
     if (elDataCount) elDataCount.textContent = String(items.length);
     const t1 = performance.now();
-    console.log("[ASSERT] feed children after render:", safeTarget.children.length);
-    if (state.cachedItems.length > 0 && safeTarget.children.length === 0) {
-      console.warn("Invariant broken: data exist but nothing rendered");
-    }
     if (isDebugLogging) {
-      console.log("[DATA] articles=", state.stats.articlesCount, "videos=", state.stats.videosCount, "merged=", state.cachedItems.length);
-      console.log("[DOM] feedChildren=", safeTarget.children.length);
+      debugLog("[ASSERT] feed children after render:", safeTarget.children.length);
+    }
+    if (state.cachedItems.length > 0 && safeTarget.children.length === 0) {
+      const errMessage = "Invariant: data exist but feed rendered 0 nodes";
+      debugWarn(errMessage);
+      persistLastError(errMessage);
+      setStatus("Stav dat: chyba (detail viz Poslední chyba)");
+      renderEmpty("Data jsou načtená, ale feed se nevykreslil (interní chyba renderu).");
+      return;
     }
     const rFeed = safeTarget.getBoundingClientRect();
     const firstCard = safeTarget.querySelector(".news-card");
     const rCard = firstCard ? firstCard.getBoundingClientRect() : null;
     if (safeTarget.children.length > 0 && (rFeed.height < 24 || (rCard && rCard.height < 24))) {
       document.documentElement.classList.add("iu-feedEmergencyVisible");
-      if (isDebugLogging) {
-        console.log("[DBG] emergency-visible ON", { rFeed, rCard });
-      }
     }
   }
 
@@ -502,7 +520,7 @@
         )}</a>`
       : `<span class="news-titleLink">${escapeHtml(title)}</span>`;
 
-    console.log("[RENDER ARTICLE]", title);
+    debugLog("[RENDER ARTICLE]", title);
     return `
       <article class="news-card" data-feed-type="article">
         <h2 class="news-title">${titleMarkup}</h2>
@@ -620,7 +638,7 @@
         hideSearchModal();
         renderEmpty("Žádné články neodpovídají filtrům.");
       }
-      setStatus(`Stav dat: OK (0 / ${state.cachedItems.length})`);
+      setStatus(`Stav dat: OK (zobrazeno: 0 / celkem: ${state.cachedItems.length})`);
       if (isDebugOn()) {
         writeDebug({
           sections: activeSections,
@@ -635,7 +653,7 @@
 
     hideSearchModal();
     renderItems(filtered);
-    setStatus(`Stav dat: OK (${filtered.length} / ${state.cachedItems.length})`);
+    setStatus(`Stav dat: OK (zobrazeno: ${filtered.length} / celkem: ${state.cachedItems.length})`);
     if (isDebugOn()) {
       writeDebug({
         sections: activeSections,
@@ -655,7 +673,7 @@
   function safeNumber(value, fallback = 0) {
     const num = Number(value);
     if (Number.isNaN(num)) {
-      console.warn("[SAFE] invalid number", value);
+      debugWarn("[SAFE] invalid number", value);
       return fallback;
     }
     return num;
@@ -676,15 +694,15 @@
   async function softRefreshData() {
     if (refreshInProgress) return;
     refreshInProgress = true;
-    console.log("[REFRESH] start");
+    debugLog("[REFRESH] start");
     try {
       await Promise.all([fetchArticlesStatus(), fetchVideosStatus()]);
       await loadData();
     } catch (error) {
-      console.warn("[REFRESH] error", error && error.message ? error.message : error);
+      debugWarn("[REFRESH] error", error && error.message ? error.message : error);
     } finally {
       refreshInProgress = false;
-      console.log("[REFRESH] done");
+      debugLog("[REFRESH] done");
     }
   }
 
@@ -692,21 +710,21 @@
     try {
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) {
-        console.warn("[DATE] invalid", value);
+        debugWarn("[DATE] invalid", value);
         return null;
       }
       return date;
     } catch {
-      console.warn("[DATE] invalid", value);
+      debugWarn("[DATE] invalid", value);
       return null;
     }
   }
 
   function logSelfStatus() {
-    console.log(`[SELF] build=${selfDiag.build}`);
-    console.log(`[SELF] articles=${selfDiag.articlesState} count=${selfDiag.articlesCount}`);
-    console.log(`[SELF] videos=${selfDiag.videosState} count=${selfDiag.videosCount}`);
-    console.log(`[SELF] swController=${selfDiag.swController} swWaiting=${selfDiag.swWaiting}`);
+    debugLog(`[SELF] build=${selfDiag.build}`);
+    debugLog(`[SELF] articles=${selfDiag.articlesState} count=${selfDiag.articlesCount}`);
+    debugLog(`[SELF] videos=${selfDiag.videosState} count=${selfDiag.videosCount}`);
+    debugLog(`[SELF] swController=${selfDiag.swController} swWaiting=${selfDiag.swWaiting}`);
   }
 
   function renderDiagBox() {
@@ -745,7 +763,7 @@
       const now = Date.now();
       const last = eventLastTs.get(name) || 0;
       if (now - last < eventThrottleMs) {
-        console.log("[EVENT] throttled", name);
+        debugLog("[EVENT] throttled", name);
         return;
       }
       eventLastTs.set(name, now);
@@ -791,7 +809,7 @@
       localStorage.setItem("iu:lastArticlesCount", String(count));
       localStorage.setItem("iu:lastArticlesUpdatedAt", updatedAt || "");
       if (prevCount !== null && prevCount !== String(count)) {
-        console.log("[DIFF] articles count", prevCount, "->", count);
+        debugLog("[DIFF] articles count", prevCount, "->", count);
         localStorage.setItem("iu:lastArticlesDiffAt", now);
       }
     } catch {
@@ -835,7 +853,7 @@
       lastErrorAt: localStorage.getItem("iu:lastErrorAt") || "—",
       lastError: localStorage.getItem("iu:lastError") || "—"
     };
-    console.log("[STATE]", report);
+    debugLog("[STATE]", report);
   }
 
   logSelfStatus();
@@ -846,7 +864,7 @@
     const label = document.getElementById("dataStatusBuild");
     if (!label) return;
     if (seen && seen !== build) {
-      console.warn("[BUILD] mismatch seen/current", seen, build);
+      debugWarn("[BUILD] mismatch seen/current", seen, build);
       label.textContent = `Build: ${build} (změna)`;
     } else {
       label.textContent = `Build: ${build}`;
@@ -865,7 +883,7 @@
       // ignore
     }
     if (prev && prev !== build) {
-      console.log("[BUILD] changed", prev, "->", build);
+      debugLog("[BUILD] changed", prev, "->", build);
     }
   }
 
@@ -876,26 +894,26 @@
     try {
       localStorage.setItem("iu:lastBuildHard", build);
     } catch (_) {}
-    console.warn("[BUILD] change detected -> clearing caches + SW", prev, "->", build);
+    debugWarn("[BUILD] change detected -> clearing caches + SW", prev, "->", build);
 
     try {
       if ("caches" in window) {
         const keys = await caches.keys();
         await Promise.all(keys.map((k) => caches.delete(k)));
-        console.log("[BUILD] caches cleared", keys);
+        debugLog("[BUILD] caches cleared", keys);
       }
     } catch (err) {
-      console.warn("[BUILD] caches clear failed", err);
+      debugWarn("[BUILD] caches clear failed", err);
     }
 
     try {
       if ("serviceWorker" in navigator) {
         const regs = await navigator.serviceWorker.getRegistrations();
         await Promise.all(regs.map((r) => r.unregister()));
-        console.log("[BUILD] service workers unregistered", regs.length);
+        debugLog("[BUILD] service workers unregistered", regs.length);
       }
     } catch (err) {
-      console.warn("[BUILD] sw unregister failed", err);
+      debugWarn("[BUILD] sw unregister failed", err);
     }
 
     try {
@@ -934,11 +952,11 @@
           new URL(link, location.origin);
           validLink = true;
         } catch {
-          console.warn("[DATA] invalid URL", link);
+          debugWarn("[DATA] invalid URL", link);
         }
       }
       if (!hasTitle && !loggedEmptyTitle) {
-        console.warn("[DATA] missing article title, substituting fallback");
+        debugWarn("[DATA] missing article title, substituting fallback");
         loggedEmptyTitle = true;
       }
       if (!hasTitle) {
@@ -964,15 +982,15 @@
       }
       const data = await res.json();
       const size = safeStringify(data).length;
-      console.log("[DATA] size=", size);
+      debugLog("[DATA] size=", size);
       const items = resolveArray(data, ["items", "articles"]);
       const validItems = items ? normalizeArticleList(items) : [];
       if (items && validItems.length < items.length) {
-        console.warn("[DATA] filtered invalid items", items.length, "->", validItems.length);
+        debugWarn("[DATA] filtered invalid items", items.length, "->", validItems.length);
       }
       if (!items) {
         el.textContent = "Články: chyba formátu";
-        console.warn("[DATA] articles schema unexpected", Object.keys(data || {}));
+        debugWarn("[DATA] articles schema unexpected", Object.keys(data || {}));
         selfDiag.articlesState = "FAIL";
         selfDiag.articlesCount = "-";
         logSelfStatus();
@@ -992,7 +1010,7 @@
       }
       if (ageMinutes > 1440 && !firstLoadQuiet) {
         el.textContent = "Články: zastaralé (24h+)";
-        console.warn("[DATA] articles too old");
+        debugWarn("[DATA] articles too old");
       } else {
         el.textContent = `Články: OK (${count})`;
       }
@@ -1003,7 +1021,7 @@
       addTelemetryEvent("articles", `OK count=${count} updated=${updatedAtValue || "—"}`);
       const firstItem = validItems[0] || {};
       const firstTitle = firstItem.title || firstItem.headline || firstItem.name || "—";
-      console.log("[SELF] firstTitle=", firstTitle);
+      debugLog("[SELF] firstTitle=", firstTitle);
       const dates = validItems
         .map((item) => item.publishedAt || item.date || item.published || "")
         .map((value) => new Date(value))
@@ -1011,7 +1029,7 @@
         .map((d) => d.getTime());
       for (let i = 1; i < dates.length; i += 1) {
         if (dates[i] > dates[i - 1]) {
-          console.warn("[DATA] articles not sorted");
+          debugWarn("[DATA] articles not sorted");
           break;
         }
       }
@@ -1022,7 +1040,7 @@
       logSelfStatus();
       if (attempt <= ARTICLE_RETRY_DELAYS.length) {
         const delay = ARTICLE_RETRY_DELAYS[attempt - 1];
-        console.warn("[RETRY] articles attempt", attempt);
+        debugWarn("[RETRY] articles attempt", attempt);
         el.textContent = `Články: retry (${attempt})`;
         setTimeout(() => fetchArticlesStatus(attempt + 1), delay);
       }
@@ -1059,11 +1077,11 @@
       }
       const data = await res.json();
       const size = safeStringify(data).length;
-      console.log("[DATA] size=", size);
+      debugLog("[DATA] size=", size);
       const items = resolveArray(data, ["items", "videos"]);
       if (!items) {
         el.textContent = "Videa: chyba formátu";
-        console.warn("[DATA] videos schema unexpected", Object.keys(data || {}));
+        debugWarn("[DATA] videos schema unexpected", Object.keys(data || {}));
         selfDiag.videosState = "FAIL";
         selfDiag.videosCount = "-";
         logSelfStatus();
@@ -1106,12 +1124,16 @@
     const requestToken = ++state.loadRequestId;
     state.cachedItems = [];
     state.hasLoadedData = false;
+    const lastErrInline = document.getElementById("lastErrInline");
+    if (lastErrInline) {
+      lastErrInline.style.display = "none";
+    }
     if (emptyBox) {
       emptyBox.style.display = "block";
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
     const aUrl = makeDataUrl("data/articles.json");
-    console.log("[DATA] articles url=", aUrl);
+    debugLog("[DATA] articles url=", aUrl);
     let data = null;
     setStatus("Stav dat: načítám…");
 
@@ -1126,27 +1148,27 @@
       const text = await res.text();
       data = JSON.parse(text);
       const articlesArray = normalizeFeedJson(data);
-      console.log("[ARTICLES RAW]", data);
-      console.log("[ARTICLES LENGTH]", Array.isArray(articlesArray) ? articlesArray.length : "NOT ARRAY");
+      debugLog("[ARTICLES RAW]", data);
+      debugLog("[ARTICLES LENGTH]", Array.isArray(articlesArray) ? articlesArray.length : "NOT ARRAY");
       const rawArticles = normalizeItems(articlesArray);
       let sanitizedArticles = normalizeArticleList(rawArticles).map((item) => ({
         ...item,
         contentType: "article",
       }));
-      console.log("[ARTICLES NORMALIZED]", sanitizedArticles.length);
+      debugLog("[ARTICLES NORMALIZED]", sanitizedArticles.length);
       renderItems(sanitizedArticles);
       if (sanitizedArticles.length < rawArticles.length) {
-        console.warn("[DATA] filtered invalid items", rawArticles.length, "->", sanitizedArticles.length);
+        debugWarn("[DATA] filtered invalid items", rawArticles.length, "->", sanitizedArticles.length);
       }
 
-      console.log("[DATA] articles loaded count=", sanitizedArticles.length);
-      console.log("[DATA] articles first=", sanitizedArticles[0]?.title, sanitizedArticles[0]?.url);
+      debugLog("[DATA] articles loaded count=", sanitizedArticles.length);
+      debugLog("[DATA] articles first=", sanitizedArticles[0]?.title, sanitizedArticles[0]?.url);
       if (isDebugLogging) {
-        console.log("[ARTICLES] loaded", sanitizedArticles.length, sanitizedArticles.slice(0, 3));
+        debugLog("[ARTICLES] loaded", sanitizedArticles.length, sanitizedArticles.slice(0, 3));
       }
 
       const vUrl = makeDataUrl("data/videos.json");
-      console.log("[DATA] videos url=", vUrl);
+      debugLog("[DATA] videos url=", vUrl);
       let videoItems = [];
 
       try {
@@ -1156,30 +1178,33 @@
         const vData = JSON.parse(vText);
         const rawVideosJson = normalizeFeedJson(vData);
         const rawVideos = normalizeVideoList(rawVideosJson);
-          console.log(
+          debugLog(
             "[DATA] videos raw count=",
             rawVideos.length,
             "keys=",
             vData && typeof vData === "object" ? Object.keys(vData) : [],
           );
           videoItems = normalizeVideoList(rawVideos);
-          console.log("[DATA] videos loaded count=", videoItems.length);
-          console.log("[DATA] videos first=", videoItems[0]?.title, videoItems[0]?.url);
+          debugLog("[DATA] videos loaded count=", videoItems.length);
+          debugLog("[DATA] videos first=", videoItems[0]?.title, videoItems[0]?.url);
         } else {
-          console.warn("[DATA] videos http", vRes.status);
+          debugWarn("[DATA] videos http", vRes.status);
         }
       } catch (videoErr) {
-        console.warn("[DATA] videos error", videoErr?.message || videoErr);
+        debugWarn("[DATA] videos error", videoErr?.message || videoErr);
       }
 
       if (!isLatestLoadRequest(requestToken)) {
-        console.log("[DATA] request canceled, token", requestToken);
+        debugLog("[DATA] request canceled, token", requestToken);
         return;
       }
       const combined = buildCombinedFeed(sanitizedArticles, videoItems);
+      state.stats.articlesCount = sanitizedArticles.length;
+      state.stats.videosCount = videoItems.length;
       state.cachedItems = combined;
+      state.hasLoadedData = true;
       if (isDebugLogging) {
-        console.log(
+        debugLog(
           "[CACHE] total",
           combined.length,
           "articles",
@@ -1187,14 +1212,14 @@
           "videos",
           videoItems.length,
         );
-        console.log(
+        debugLog(
           "[ARTICLES] sample",
           sanitizedArticles.slice(0, 3).map((item) => ({
             title: item.title,
             url: item.url,
           })),
         );
-        console.log(
+        debugLog(
           "[VIDEOS] sample",
           videoItems.slice(0, 3).map((item) => ({
             title: item.title,
@@ -1202,13 +1227,15 @@
           })),
         );
       }
-      state.hasLoadedData = true;
-      setStatus(`Stav dat: OK (${sanitizedArticles.length} článků, ${videoItems.length} videí)`);
+      const totalItems = combined.length;
+      setStatus(
+        `Stav dat: OK (články: ${state.stats.articlesCount}, videa: ${state.stats.videosCount}, celkem: ${totalItems})`
+      );
       applyFilter();
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 
-      console.log("[DATA] combined count=", state.cachedItems.length);
-      console.log("[DATA] combined first type=", state.cachedItems[0]?.contentType, state.cachedItems[0]?.title);
+      debugLog("[DATA] combined count=", state.cachedItems.length);
+      debugLog("[DATA] combined first type=", state.cachedItems[0]?.contentType, state.cachedItems[0]?.title);
 
       if (isDebugOn()) {
         writeDebug({
@@ -1225,7 +1252,7 @@
       }
     } catch (err) {
       if (!isLatestLoadRequest(requestToken)) {
-        console.log("[DATA] failure ignored, token", requestToken);
+        debugLog("[DATA] failure ignored, token", requestToken);
         return;
       }
       const message = err && err.message ? err.message : String(err);
@@ -1233,8 +1260,8 @@
       state.hasLoadedData = false;
       persistLastError(message);
       renderEmpty("Nepodařilo se načíst data: " + message);
-      setStatus("Stav dat: chyba (nelze načíst)");
-      console.log("[DATA] error=", message);
+      setStatus("Stav dat: chyba (detail viz Poslední chyba)");
+      debugLog("[DATA] error=", message);
       if (isDebugOn()) {
         writeDebug({
           ok: false,
@@ -1251,18 +1278,18 @@
     try {
       const res = await timeoutFetch(makeDataUrl("data/feed_health.json"), { cache: "no-store" }, 5000);
       if (res.status === 404) {
-        console.warn("[HEALTH] feed_health not found");
+        debugWarn("[HEALTH] feed_health not found");
         return;
       }
       if (!res.ok) {
-        console.warn("[HEALTH] feed_health error", res.status);
+        debugWarn("[HEALTH] feed_health error", res.status);
         return;
       }
       const data = await res.json();
       const updated = data?.updatedAt ?? data?.updated_at;
-      console.log("[HEALTH] feed_health OK", updated ? `updatedAt=${updated}` : "updatedAt=—");
+      debugLog("[HEALTH] feed_health OK", updated ? `updatedAt=${updated}` : "updatedAt=—");
     } catch (err) {
-      console.warn("[HEALTH] feed_health fetch failed", err && err.message ? err.message : err);
+      debugWarn("[HEALTH] feed_health fetch failed", err && err.message ? err.message : err);
     }
   }
 
@@ -1276,6 +1303,11 @@
     const el = document.getElementById("dataStatusLastError");
     if (el) {
       el.textContent = `Poslední chyba: ${message}`;
+    }
+    const inline = document.getElementById("lastErrInline");
+    if (inline) {
+      inline.textContent = `Poslední chyba: ${message}`;
+      inline.style.display = "block";
     }
     console.error("[ERR]", message);
   }
@@ -1376,7 +1408,7 @@
     const text = buildReportText();
     try {
       await navigator.clipboard.writeText(text);
-      console.log("[REPORT] copied");
+      debugLog("[REPORT] copied");
     } catch {
       try {
         const area = document.createElement("textarea");
@@ -1388,12 +1420,12 @@
         area.select();
         document.execCommand("copy");
         document.body.removeChild(area);
-        console.log("[REPORT] clipboard fallback used");
-        console.log("[REPORT] copied");
+        debugLog("[REPORT] clipboard fallback used");
+        debugLog("[REPORT] copied");
       } catch (fallbackErr) {
         const fallback = window.prompt("Copy report (Ctrl+C)", text);
         if (fallback !== null) {
-          console.log("[REPORT] copied");
+          debugLog("[REPORT] copied");
         }
       }
     }
@@ -1414,7 +1446,7 @@
     if (Date.now() - at > 10 * 60 * 1000) {
       sessionStorage.removeItem(SW_RELOAD_KEY);
       sessionStorage.removeItem(SW_RELOAD_AT_KEY);
-      console.log("[SW] reload guard cleared");
+      debugLog("[SW] reload guard cleared");
       return false;
     }
     return Boolean(sessionStorage.getItem(SW_RELOAD_KEY));
@@ -1427,7 +1459,7 @@
       worker.postMessage({ type: "SKIP_WAITING" });
       addTelemetryEvent("sw", "skip waiting");
     } catch (error) {
-      console.warn("[SW]", "skip waiting message failed", error);
+      debugWarn("[SW]", "skip waiting message failed", error);
     }
     sessionStorage.setItem(SW_RELOAD_KEY, "1");
     sessionStorage.setItem(SW_RELOAD_AT_KEY, Date.now().toString());
@@ -1482,18 +1514,18 @@
     const swState = selfDiag.swWaiting === "yes"
       ? "waiting"
       : (selfDiag.swController === "yes" ? "controller" : "none");
-    console.log(`[AUDIT] build=${selfDiag.build}`);
-    console.log(`[AUDIT] articles=${selfDiag.articlesState} count=${selfDiag.articlesCount}`);
-    console.log(`[AUDIT] videos=${selfDiag.videosState} count=${selfDiag.videosCount}`);
-    console.log(`[AUDIT] loadMore=${loadMoreState}`);
-    console.log(`[AUDIT] sw=${swState}`);
+    debugLog(`[AUDIT] build=${selfDiag.build}`);
+    debugLog(`[AUDIT] articles=${selfDiag.articlesState} count=${selfDiag.articlesCount}`);
+    debugLog(`[AUDIT] videos=${selfDiag.videosState} count=${selfDiag.videosCount}`);
+    debugLog(`[AUDIT] loadMore=${loadMoreState}`);
+    debugLog(`[AUDIT] sw=${swState}`);
   }
 
   function init() {
     if (sessionStorage.getItem("iu:firstLoadDone")) {
-      console.log("[LOAD] repeat");
+      debugLog("[LOAD] repeat");
     } else {
-      console.log("[LOAD] first");
+      debugLog("[LOAD] first");
       sessionStorage.setItem("iu:firstLoadDone", "1");
       firstLoadQuiet = true;
       setTimeout(() => {
@@ -1590,11 +1622,11 @@
   }
 
   document.addEventListener("visibilitychange", () => {
-    console.log("[VIS]", document.visibilityState);
+    debugLog("[VIS]", document.visibilityState);
   });
 
-  window.addEventListener("focus", () => console.log("[FOCUS] in"));
-  window.addEventListener("blur", () => console.log("[FOCUS] out"));
+  window.addEventListener("focus", () => debugLog("[FOCUS] in"));
+  window.addEventListener("blur", () => debugLog("[FOCUS] out"));
 
   window.addEventListener("hashchange", () => {
     freezeScroll();
@@ -1605,3 +1637,4 @@
 
   init();
 })();
+
