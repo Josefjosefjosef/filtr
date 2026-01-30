@@ -110,10 +110,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (path.includes("/assets/app.js") || path.includes("/projects/data/")) {
-    event.respondWith(fetch(event.request, { cache: "no-store" }));
-    return;
-  }
   const isDataJson = path.startsWith(`${BASE}data/`) && path.endsWith(".json");
 
   if (isDataJson) {
