@@ -1,0 +1,43 @@
+name: CI workflow lint
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: "0 6 * * *"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run actionlint
+        uses: rhysd/actionlint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install yamllint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yamllint
+
+      - name: Run yamllint on workflows
+        run: yamllint -c <(cat <<'EOF'
+extends: default
+risky: true
+EOF
+) .github/workflows
+
+      - name: Validate bash snippets
+        run: |
+          grep -R "run: |" -n .github/workflows | while read -r line; do
+            file=$(echo "$line" | cut -d: -f1)
+            echo "Checking ${file}"
+            awk '/run: \|/ {flag=1; next} flag {print; if (/^[[:space:]]*$/) exit}' "$file" > /tmp/bash-snippet.sh
+            bash -n /tmp/bash-snippet.sh || exit 1
+          done
+
