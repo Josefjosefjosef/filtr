@@ -70,6 +70,7 @@ import os, sys
 print(os.path.realpath(sys.argv[1]))
 PY
 "$src")"
+
             rdst="$(python - <<'PY'
 import os, sys
 print(os.path.realpath(sys.argv[1]))
@@ -87,6 +88,10 @@ PY
 
           copy_if_needed "filtr/data/articles.json" "projects/data/articles.json"
           copy_if_needed "filtr/data/videos.json" "projects/data/videos.json"
+          copy_if_needed "filtr/filtr/data/articles.json" "projects/data/articles.json"
+          copy_if_needed "filtr/filtr/data/videos.json" "projects/data/videos.json"
+          copy_if_needed "filtr/filtr/filtr/data/articles.json" "projects/data/articles.json"
+          copy_if_needed "filtr/filtr/filtr/data/videos.json" "projects/data/videos.json"
           copy_if_needed "data/articles.json" "projects/data/articles.json"
           copy_if_needed "data/videos.json" "projects/data/videos.json"
 
@@ -103,6 +108,14 @@ PY
           fi
           echo "=== Writing publish probe ==="
           echo "probe-ok $(date --utc +%Y-%m-%dT%H:%M:%SZ)" > projects/data/_probe.txt
+
+          echo "[proof] projects/data:"
+          ls -la projects/data || true
+          wc -c projects/data/articles.json projects/data/videos.json || true
+          head -c 120 projects/data/articles.json || true
+          echo
+          head -c 120 projects/data/videos.json || true
+          echo
 
           test -s projects/data/articles.json
           test -s projects/data/videos.json
