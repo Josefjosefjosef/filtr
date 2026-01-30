@@ -93,6 +93,12 @@
   }
   const diagScriptSrc =
     document.querySelector('script[src*="app.js"]')?.getAttribute("src") || "";
+  const diagMeta = {
+    articlesUrl: "",
+    videosUrl: "",
+    articlesStatus: "?",
+    videosStatus: "?",
+  };
   let diagBarEl = null;
   let diagStartInfo = null;
 
@@ -102,7 +108,30 @@
     diagBarEl = document.createElement("div");
     diagBarEl.id = "iuDiagBar";
     diagBarEl.style.cssText =
-      "font-size:12px;padding:6px;background:#f5f5ff;border-bottom:1px solid rgba(0,0,0,0.1);font-family:inherit;";
+      "font-size:12px;padding:6px;background:#f5f5ff;border-bottom:1px solid rgba(0,0,0,0.1);font-family:inherit;display:flex;gap:10px;align-items:center;";
+    const copyBtn = document.createElement("button");
+    copyBtn.type = "button";
+    copyBtn.textContent = "copy";
+    copyBtn.style.cssText =
+      "font-size:12px;padding:2px 8px;background:#1f3557;color:white;border:none;border-radius:2px;cursor:pointer;";
+    copyBtn.addEventListener("click", () => {
+      const text = diagBarEl.textContent || "";
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => {
+          const range = document.createRange();
+          range.selectNodeContents(diagBarEl);
+          window.getSelection().removeAllRanges();
+          window.getSelection().addRange(range);
+        });
+      } else {
+        const range = document.createRange();
+        range.selectNodeContents(diagBarEl);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand("copy");
+      }
+    });
+    diagBarEl.appendChild(copyBtn);
     document.body.prepend(diagBarEl);
     return diagBarEl;
   }
@@ -110,11 +139,22 @@
   function updateDiagBar(text) {
     const bar = ensureDiagBar();
     if (!bar) return;
-    bar.textContent = text;
+    const copyBtn = bar.querySelector("button");
+    if (copyBtn) {
+      bar.textContent = text;
+      bar.appendChild(copyBtn);
+    } else {
+      bar.textContent = text;
+    }
   }
 
   function formatDiagText(itemsLen, typeCounts, feedExists, before, after, renderedCount) {
-    return `DIAG | items=${itemsLen} | a=${typeCounts.article} v=${typeCounts.video} u=${typeCounts.unknown} | feed=${feedExists} | before=${before} after=${after} rendered=${renderedCount} | js=${diagScriptSrc}`;
+    const hrefValue = location.href;
+    const aUrl = diagMeta.articlesUrl || "-";
+    const vUrl = diagMeta.videosUrl || "-";
+    const aSt = diagMeta.articlesStatus || "?";
+    const vSt = diagMeta.videosStatus || "?";
+    return `DIAG | href=${hrefValue} | js=${diagScriptSrc} | aUrl=${aUrl} aSt=${aSt} | vUrl=${vUrl} vSt=${vSt} | items=${itemsLen} | a=${typeCounts.article} v=${typeCounts.video} u=${typeCounts.unknown} | feed=${feedExists} | before=${before} after=${after} rendered=${renderedCount}`;
   }
 
   function diagLog(tag, info) {
@@ -1829,6 +1869,10 @@ function buildVideoAsArticleCard(it) {
       if (!chosenVideosUrl) {
         debugWarn("[DATA] videos load failed", lastVideoError);
       }
+      diagMeta.articlesUrl = chosenArticlesUrl || "";
+      diagMeta.articlesStatus = articleStatusLabel || "404";
+      diagMeta.videosUrl = chosenVideosUrl || "";
+      diagMeta.videosStatus = videoStatusLabel || "404";
       const articlesJson = articleFetchResult?.json;
       const videosJson = videoFetchResult?.json;
       const normalizedArticles = Array.isArray(articlesArray) ? articlesArray : [];
