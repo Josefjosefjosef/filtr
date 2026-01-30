@@ -86,7 +86,39 @@
     if (!isDebugLogging) return;
     console.warn(...args);
   }
+  const DEBUG =
+    location.search.includes("debug=1") || localStorage.getItem("iu_debug") === "1";
+  if (location.search.includes("debug=1")) {
+    localStorage.setItem("iu_debug", "1");
+  }
+  const diagScriptSrc =
+    document.querySelector('script[src*="app.js"]')?.getAttribute("src") || "";
+  let diagBarEl = null;
+  let diagStartInfo = null;
+
+  function ensureDiagBar() {
+    if (!DEBUG) return null;
+    if (diagBarEl) return diagBarEl;
+    diagBarEl = document.createElement("div");
+    diagBarEl.id = "iuDiagBar";
+    diagBarEl.style.cssText =
+      "font-size:12px;padding:6px;background:#f5f5ff;border-bottom:1px solid rgba(0,0,0,0.1);font-family:inherit;";
+    document.body.prepend(diagBarEl);
+    return diagBarEl;
+  }
+
+  function updateDiagBar(text) {
+    const bar = ensureDiagBar();
+    if (!bar) return;
+    bar.textContent = text;
+  }
+
+  function formatDiagText(itemsLen, typeCounts, feedExists, before, after, renderedCount) {
+    return `DIAG | items=${itemsLen} | a=${typeCounts.article} v=${typeCounts.video} u=${typeCounts.unknown} | feed=${feedExists} | before=${before} after=${after} rendered=${renderedCount} | js=${diagScriptSrc}`;
+  }
+
   function diagLog(tag, info) {
+    if (!DEBUG) return;
     console.log("[DIAG]", tag, info);
   }
   // DEBUG KONTRAKT:
@@ -731,6 +763,11 @@
     const feedExists = !!(feedEl && feedEl.id === "feed");
     const feedChildrenBefore = feedEl ? feedEl.childElementCount : 0;
     const targetSelector = feedEl ? "#feed" : "(missing)";
+    diagStartInfo = {
+      itemsLen: items ? items.length : 0,
+      feedExists,
+      childrenBefore: feedChildrenBefore,
+    };
     diagLog("renderFeed:start", {
       itemsLen: items ? items.length : 0,
       target: targetSelector,
@@ -793,6 +830,18 @@
       feedChildrenAfter,
       typeCounts,
     });
+    if (diagStartInfo) {
+      updateDiagBar(
+        formatDiagText(
+          diagStartInfo.itemsLen,
+          typeCounts,
+          diagStartInfo.feedExists,
+          diagStartInfo.childrenBefore,
+          feedChildrenAfter,
+          renderedCount
+        )
+      );
+    }
     if (items.length > 0 && renderedCount === 0) {
       safeTarget.insertAdjacentHTML(
         "beforeend",
