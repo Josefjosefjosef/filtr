@@ -50,10 +50,8 @@ jobs:
           ls -la
           mkdir -p projects/data
 
-          find . -maxdepth 6 -type f \( -name "articles.json" -o -name "videos.json" \) -print
-
-          set -euo pipefail
-          mkdir -p projects/data
+          echo "=== find generated json candidates ==="
+          find . -maxdepth 6 -type f \( -name "articles.json" -o -name "videos.json" \) -print || true
 
           copy_if_needed () {
             local src="$1"
@@ -86,14 +84,15 @@ PY
             cp -f "$src" "$dst"
           }
 
-          copy_if_needed "filtr/data/articles.json" "projects/data/articles.json"
-          copy_if_needed "filtr/data/videos.json" "projects/data/videos.json"
+          copy_if_needed "filtr/data/articles.json"       "projects/data/articles.json"
           copy_if_needed "filtr/filtr/data/articles.json" "projects/data/articles.json"
-          copy_if_needed "filtr/filtr/data/videos.json" "projects/data/videos.json"
           copy_if_needed "filtr/filtr/filtr/data/articles.json" "projects/data/articles.json"
-          copy_if_needed "filtr/filtr/filtr/data/videos.json" "projects/data/videos.json"
-          copy_if_needed "data/articles.json" "projects/data/articles.json"
-          copy_if_needed "data/videos.json" "projects/data/videos.json"
+          copy_if_needed "data/articles.json"             "projects/data/articles.json"
+
+          copy_if_needed "filtr/data/videos.json"         "projects/data/videos.json"
+          copy_if_needed "filtr/filtr/data/videos.json"   "projects/data/videos.json"
+          copy_if_needed "filtr/filtr/filtr/data/videos.json"   "projects/data/videos.json"
+          copy_if_needed "data/videos.json"               "projects/data/videos.json"
 
           if [ -f "projects/data/articles.json" ]; then
             echo "OK: projects/data/articles.json exists"
@@ -101,24 +100,31 @@ PY
             echo "ERROR: projects/data/articles.json missing"
             exit 1
           fi
+
           if [ -f "projects/data/videos.json" ]; then
             echo "OK: projects/data/videos.json exists"
           else
             echo "WARN: projects/data/videos.json missing (may be empty video feed)"
           fi
+
           echo "=== Writing publish probe ==="
           echo "probe-ok $(date --utc +%Y-%m-%dT%H:%M:%SZ)" > projects/data/_probe.txt
 
           echo "[proof] projects/data:"
           ls -la projects/data || true
-          wc -c projects/data/articles.json projects/data/videos.json || true
+          wc -c projects/data/articles.json 2>/dev/null || true
+          wc -c projects/data/videos.json 2>/dev/null || true
           head -c 120 projects/data/articles.json || true
           echo
-          head -c 120 projects/data/videos.json || true
-          echo
+          if [ -f projects/data/videos.json ]; then
+            head -c 120 projects/data/videos.json || true
+            echo
+          fi
 
           test -s projects/data/articles.json
-          test -s projects/data/videos.json
+          if [ -f projects/data/videos.json ]; then
+            test -s projects/data/videos.json || echo "WARN: projects/data/videos.json exists but is empty"
+          fi
 
       - name: Debug generated output (generatedAt + basic stats)
         run: |

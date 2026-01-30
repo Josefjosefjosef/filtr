@@ -582,7 +582,7 @@
           video.videoId = inferredId;
         }
         const id = video.videoId || inferredId;
-        if (!id) {
+        if (!id) return null;
         const published = safeText(video.publishedAt || video.date || video.published || "");
         const url = safeUrl(video.url) || safeUrl(`https://www.youtube.com/watch?v=${id}`);
         if (!url) return null;
@@ -910,6 +910,7 @@
         break;
       }
     }
+  }
 
   function renderInlineError(message) {
     const inline = document.getElementById("lastErrInline");
@@ -990,10 +991,6 @@
     `;
   }
 
-let videoCardsWithoutImgCount = 0;
-
-let videoCardsWithoutImgCount = 0;
-
 function buildVideoAsArticleCard(it) {
     const title = safeText(it.title || "Video");
     const augmentedTitle = `VIDEO: ${title}`;
@@ -1008,22 +1005,6 @@ function buildVideoAsArticleCard(it) {
         )}</a>`
       : `<span class="news-titleLink">${escapeHtml(augmentedTitle)}</span>`;
 
-    const hasImg = /<img\s/i.test(`
-      <article class="news-card" data-feed-type="video">
-        <h2 class="news-title">${titleMarkup}</h2>
-        <div class="news-row2">
-          ${publishedAt ? `<span class="meta-time">${escapeHtml(publishedAt)}</span>` : ""}
-          <span class="news-sourceLabel">Zdroj:</span>
-          <span class="news-sources">
-            <span class="sourceDomain">${escapeHtml(channel)}</span>
-          </span>
-        </div>
-      </article>
-    `;
-    `);
-    if (!hasImg) {
-      videoCardsWithoutImgCount += 1;
-    }
     return `
       <article class="news-card" data-feed-type="video">
         <h2 class="news-title">${titleMarkup}</h2>
