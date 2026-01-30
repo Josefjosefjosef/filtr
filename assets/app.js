@@ -446,17 +446,49 @@
     return [];
   }
 
-  function extractYouTubeVideoId(value) {
-    if (!value) return null;
-    const str = String(value);
+  function iuExtractYouTubeId(item) {
+    if (!item || typeof item !== "object") return null;
+    const candidates = [];
+    const directId = item.videoId;
+    if (typeof directId === "string" && /^[A-Za-z0-9_-]{11}$/.test(directId.trim())) {
+      return directId.trim();
+    }
+    const pushUrl = (value) => {
+      if (!value) return;
+      try {
+        const normalized = new URL(value, location.origin).href;
+        candidates.push(normalized);
+      } catch {
+        candidates.push(String(value));
+      }
+    };
+    if (item.url) pushUrl(item.url);
+    if (item.link) {
+      if (typeof item.link === "string") pushUrl(item.link);
+      else if (item.link.href) pushUrl(item.link.href);
+    }
+    if (item.canonicalUrl) pushUrl(item.canonicalUrl);
+    if (Array.isArray(item.sources)) {
+      for (const source of item.sources) {
+        if (!source) continue;
+        if (typeof source === "string") pushUrl(source);
+        else if (source.url) pushUrl(source.url);
+        else if (source.href) pushUrl(source.href);
+      }
+    }
     const patterns = [
       /(?:v=)([A-Za-z0-9_-]{11})/,
       /(?:\/embed\/)([A-Za-z0-9_-]{11})/,
       /(?:youtu\.be\/)([A-Za-z0-9_-]{11})/,
+      /(?:\/shorts\/)([A-Za-z0-9_-]{11})/,
+      /(?:\/live\/)([A-Za-z0-9_-]{11})/,
     ];
-    for (const pattern of patterns) {
-      const match = str.match(pattern);
-      if (match && match[1]) return match[1];
+    for (const candidate of candidates) {
+      if (!candidate) continue;
+      for (const pattern of patterns) {
+        const match = candidate.match(pattern);
+        if (match && match[1]) return match[1];
+      }
     }
     return null;
   }
@@ -470,8 +502,12 @@
     return source
       .map((video) => {
         if (!video || typeof video !== "object") return null;
-        const id = video.videoId || extractYouTubeVideoId(video.url);
-        if (!id) return null;
+        const inferredId = iuExtractYouTubeId(video);
+        if (!video.videoId && inferredId) {
+          video.videoId = inferredId;
+        }
+        const id = video.videoId || inferredId;
+        if (!id) {
         const published = safeText(video.publishedAt || video.date || video.published || "");
         const url = safeUrl(video.url) || safeUrl(`https://www.youtube.com/watch?v=${id}`);
         if (!url) return null;
@@ -836,7 +872,11 @@
     `;
   }
 
-  function buildVideoAsArticleCard(it) {
+let videoCardsWithoutImgCount = 0;
+
+let videoCardsWithoutImgCount = 0;
+
+function buildVideoAsArticleCard(it) {
     const title = safeText(it.title || "Video");
     const augmentedTitle = `VIDEO: ${title}`;
     const publishedAt = fmtDate(it.publishedAt || it.date || it.published || "");
@@ -850,6 +890,22 @@
         )}</a>`
       : `<span class="news-titleLink">${escapeHtml(augmentedTitle)}</span>`;
 
+    const hasImg = /<img\s/i.test(`
+      <article class="news-card" data-feed-type="video">
+        <h2 class="news-title">${titleMarkup}</h2>
+        <div class="news-row2">
+          ${publishedAt ? `<span class="meta-time">${escapeHtml(publishedAt)}</span>` : ""}
+          <span class="news-sourceLabel">Zdroj:</span>
+          <span class="news-sources">
+            <span class="sourceDomain">${escapeHtml(channel)}</span>
+          </span>
+        </div>
+      </article>
+    `;
+    `);
+    if (!hasImg) {
+      videoCardsWithoutImgCount += 1;
+    }
     return `
       <article class="news-card" data-feed-type="video">
         <h2 class="news-title">${titleMarkup}</h2>
