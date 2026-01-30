@@ -1805,40 +1805,15 @@
         effectiveUpdatedAtArticles,
         effectiveUpdatedAtVideos,
       });
-      const handlePlaceholder = () => {
-        persistLastError("DIAG PLACEHOLDER DETECTED: " + statusLine.slice(0, 180));
-        iuWriteStatus("Stav dat: načítám…");
-      };
       if (iuHasStatusPlaceholders(statusLine)) {
-        handlePlaceholder();
+        persistLastError("DIAG PLACEHOLDER DETECTED: " + statusLine.slice(0, 180));
+        setStatus("Stav dat: načítám…");
       } else {
-        iuWriteStatus(statusLine);
-        const ageMinArticles = (() => {
-          try {
-            if (!state.lastArticlesGeneratedAt) return null;
-            const parsed = Date.parse(state.lastArticlesGeneratedAt);
-            if (Number.isNaN(parsed)) return null;
-            return (Date.now() - parsed) / 60000;
-          } catch {
-            return null;
-          }
-        })();
-        const ageMinVideos = (() => {
-          try {
-            if (!state.lastVideosGeneratedAt) return null;
-            const parsed = Date.parse(state.lastVideosGeneratedAt);
-            if (Number.isNaN(parsed)) return null;
-            return (Date.now() - parsed) / 60000;
-          } catch {
-            return null;
-          }
-        })();
-        if (ageMinArticles !== null && ageMinArticles > 90) {
-          persistLastError("STALE articles generatedAt ageMin=" + Math.round(ageMinArticles));
-        }
-        if (ageMinVideos !== null && ageMinVideos > 90) {
-          persistLastError("STALE videos generatedAt ageMin=" + Math.round(ageMinVideos));
-        }
+        persistLastError(statusLine);
+        const statusText = `Stav dat: články ${countArticles}, videa ${countVideos}${
+          feedChildren ? ` • feed ${feedChildren}` : ""
+        }`;
+        setStatus(statusText);
       }
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 
