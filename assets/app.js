@@ -67,6 +67,8 @@
     hasLoadedData: false,
     loadRequestId: 0,
     stats: { articlesCount: 0, videosCount: 0 },
+    lastArticlesGeneratedAt: null,
+    lastVideosGeneratedAt: null,
   };
   state.cachedItems ??= [];
   state.filteredItems ??= [];
@@ -229,8 +231,20 @@
     };
   }
 
+  function appendDataCacheBust(url) {
+    if (!url) return url;
+    if (!/(articles|videos)\.json/.test(url)) return url;
+    try {
+      const parsed = new URL(url, location.origin);
+      parsed.searchParams.append("iu_ts", Date.now().toString());
+      return parsed.toString();
+    } catch {
+      return url;
+    }
+  }
+
   async function tryFetchJson(url, timeoutMs = 9000) {
-    const requestUrl = withCacheBust(url);
+    const requestUrl = appendDataCacheBust(url);
     try {
       const res = await timeoutFetch(requestUrl, { cache: "no-store" }, timeoutMs);
       const text = await res.text();
@@ -363,10 +377,35 @@
     }
   }
 
+  let iuLastStatusLine = "";
   function setStatus(text) {
     if (elStatus) {
       elStatus.textContent = text;
     }
+  }
+  function iuWriteStatus(line) {
+    iuLastStatusLine = String(line || "");
+    setStatus(iuLastStatusLine);
+  }
+  function iuHasStatusPlaceholders(line) {
+    const s = String(line || "");
+    if (!s) return true;
+    const placeholders = [
+      "YES|NO",
+      "preferred|fallback",
+      "OK|NEOK",
+      "…",
+      "articles=…",
+      "videos=…",
+      "articles=<…>",
+      "videos=<…>",
+      "Načteno: články X, videa Y",
+      "#feed children: N",
+    ];
+    if (placeholders.some((token) => s.includes(token))) return true;
+    if (s.includes("<") || s.includes(">")) return true;
+    if (/\bX\b/.test(s) || /\bY\b/.test(s) || /\bN\b/.test(s)) return true;
+    return false;
   }
 
   function safeText(value) {
@@ -1428,7 +1467,7 @@
     return id === state.loadRequestId;
   }
 
-  function iuBuildRuntimeStatusLine({
+  function iuBuildDiagStatusLine({
     preferredSaved,
     preferredModeUsed,
     articlesOk,
@@ -1438,23 +1477,29 @@
     countArticles,
     countVideos,
     feedChildren,
+    generatedAtArticles,
+    generatedAtVideos,
   }) {
-    const yesNo = preferredSaved ? "YES" : "NO";
-    const mode = preferredModeUsed === "preferred" ? "preferred" : "fallback";
-    const aOk = articlesOk ? "OK" : "NEOK";
-    const vOk = videosOk ? "OK" : "NEOK";
-    const aUrl = chosenArticlesUrl || "—";
-    const vUrl = chosenVideosUrl || "—";
-    const aCount = Number.isFinite(countArticles) ? countArticles : 0;
-    const vCount = Number.isFinite(countVideos) ? countVideos : 0;
-    const kids = Number.isFinite(feedChildren) ? feedChildren : 0;
+    const ps = preferredSaved ? "YES" : "NO";
+    const pm = preferredModeUsed === "preferred" ? "preferred" : "fallback";
+    const as = articlesOk ? "OK" : "NEOK";
+    const vs = videosOk ? "OK" : "NEOK";
+    const au = chosenArticlesUrl || "-";
+    const vu = chosenVideosUrl || "-";
+    const ca = Number.isFinite(countArticles) ? countArticles : 0;
+    const cv = Number.isFinite(countVideos) ? countVideos : 0;
+    const fc = Number.isFinite(feedChildren) ? feedChildren : 0;
+    const ga = generatedAtArticles || "none";
+    const gv = generatedAtVideos || "none";
     return [
-      `preferred saved: ${yesNo}`,
-      `preferred mode used: ${mode}`,
-      `articles status: ${aOk} | videos status: ${vOk}`,
-      `Vybrané URL: articles=${aUrl}, videos=${vUrl}`,
-      `Načteno: články ${aCount}, videa ${vCount}`,
-      `#feed children: ${kids}`,
+      `preferred saved: ${ps}`,
+      `preferred mode used: ${pm}`,
+      `articles status: ${as} | videos status: ${vs}`,
+      `Vybrané URL: articles=${au} , videos=${vu}`,
+      `Načteno: články ${ca}, videa ${cv}`,
+      `#feed children: ${fc}`,
+      `generatedAt articles: ${ga}`,
+      `generatedAt videos: ${gv}`,
     ].join("\n");
   }
 
@@ -1549,6 +1594,8 @@
       if (!data) {
         throw new Error(lastArticleError);
       }
+      const articlesGeneratedAt = data?.generatedAt || data?.meta?.generatedAt || null;
+      state.lastArticlesGeneratedAt = articlesGeneratedAt ? String(articlesGeneratedAt) : null;
       const articlesArray = normalizeFeedJson(data);
       debugLog("[ARTICLES RAW]", data);
       debugLog("[ARTICLES LENGTH]", Array.isArray(articlesArray) ? articlesArray.length : "NOT ARRAY");
@@ -1607,6 +1654,8 @@
           chosenVideosUrl = url;
           videoStatusLabel = "OK";
           videoFetchResult = result;
+          const videosGeneratedAt = result.json?.generatedAt || result.json?.meta?.generatedAt || null;
+          state.lastVideosGeneratedAt = videosGeneratedAt ? String(videosGeneratedAt) : null;
           videosOk = true;
           debugLog(
             "[DATA] videos raw count=",
@@ -1715,7 +1764,7 @@
           chosenVideosUrl === preferredEntry.videosUrl
       );
       const preferredModeUsed = preferredUsed ? "preferred" : "fallback";
-      const statusLine = iuBuildRuntimeStatusLine({
+      const statusLine = iuBuildDiagStatusLine({
         preferredSaved,
         preferredModeUsed,
         articlesOk,
@@ -1725,12 +1774,43 @@
         countArticles,
         countVideos,
         feedChildren,
+        generatedAtArticles: state.lastArticlesGeneratedAt,
+        generatedAtVideos: state.lastVideosGeneratedAt,
       });
+      const handlePlaceholder = () => {
+        persistLastError("DIAG PLACEHOLDER DETECTED: " + statusLine.slice(0, 180));
+        iuWriteStatus("Stav dat: načítám…");
+      };
       if (iuHasStatusPlaceholders(statusLine)) {
-        persistLastError("STATUS PLACEHOLDER DETECTED");
-        setStatus("Stav dat: načítám…");
+        handlePlaceholder();
       } else {
-        setStatus(statusLine);
+        iuWriteStatus(statusLine);
+        const ageMinArticles = (() => {
+          try {
+            if (!state.lastArticlesGeneratedAt) return null;
+            const parsed = Date.parse(state.lastArticlesGeneratedAt);
+            if (Number.isNaN(parsed)) return null;
+            return (Date.now() - parsed) / 60000;
+          } catch {
+            return null;
+          }
+        })();
+        const ageMinVideos = (() => {
+          try {
+            if (!state.lastVideosGeneratedAt) return null;
+            const parsed = Date.parse(state.lastVideosGeneratedAt);
+            if (Number.isNaN(parsed)) return null;
+            return (Date.now() - parsed) / 60000;
+          } catch {
+            return null;
+          }
+        })();
+        if (ageMinArticles !== null && ageMinArticles > 90) {
+          persistLastError("STALE articles generatedAt ageMin=" + Math.round(ageMinArticles));
+        }
+        if (ageMinVideos !== null && ageMinVideos > 90) {
+          persistLastError("STALE videos generatedAt ageMin=" + Math.round(ageMinVideos));
+        }
       }
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 
