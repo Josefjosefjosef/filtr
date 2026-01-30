@@ -142,6 +142,7 @@ PY
 
       - name: Proof data before commit
         run: |
+          echo "=== proof: verifying projects/data ==="
           echo "[proof] projects/data contents"
           ls -la projects/data
           wc -c projects/data/articles.json projects/data/videos.json
