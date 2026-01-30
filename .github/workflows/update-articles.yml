@@ -52,20 +52,43 @@ jobs:
 
           find . -maxdepth 6 -type f \( -name "articles.json" -o -name "videos.json" \) -print
 
-          for candidate in \
-            projects/data \
-            filtr/data \
-            filtr/filtr/data \
-            filtr/filtr/filtr/data \
-            data \
-          ; do
-            if [ -f "$candidate/articles.json" ]; then
-              cp -f "$candidate/articles.json" projects/data/articles.json
+          set -euo pipefail
+          mkdir -p projects/data
+
+          copy_if_needed () {
+            local src="$1"
+            local dst="$2"
+
+            if [ ! -s "$src" ]; then
+              echo "[skip] missing/empty: $src"
+              return 0
             fi
-            if [ -f "$candidate/videos.json" ]; then
-              cp -f "$candidate/videos.json" projects/data/videos.json
+
+            local rsrc rdst
+            rsrc="$(python - <<'PY'
+import os, sys
+print(os.path.realpath(sys.argv[1]))
+PY
+"$src")"
+            rdst="$(python - <<'PY'
+import os, sys
+print(os.path.realpath(sys.argv[1]))
+PY
+"$dst")"
+
+            if [ "$rsrc" = "$rdst" ]; then
+              echo "[skip] same file: $src -> $dst"
+              return 0
             fi
-          done
+
+            echo "[copy] $src -> $dst"
+            cp -f "$src" "$dst"
+          }
+
+          copy_if_needed "filtr/data/articles.json" "projects/data/articles.json"
+          copy_if_needed "filtr/data/videos.json" "projects/data/videos.json"
+          copy_if_needed "data/articles.json" "projects/data/articles.json"
+          copy_if_needed "data/videos.json" "projects/data/videos.json"
 
           if [ -f "projects/data/articles.json" ]; then
             echo "OK: projects/data/articles.json exists"
