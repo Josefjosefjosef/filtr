@@ -1428,6 +1428,51 @@
     return id === state.loadRequestId;
   }
 
+  function iuBuildRuntimeStatusLine({
+    preferredSaved,
+    preferredModeUsed,
+    articlesOk,
+    videosOk,
+    chosenArticlesUrl,
+    chosenVideosUrl,
+    countArticles,
+    countVideos,
+    feedChildren,
+  }) {
+    const yesNo = preferredSaved ? "YES" : "NO";
+    const mode = preferredModeUsed === "preferred" ? "preferred" : "fallback";
+    const aOk = articlesOk ? "OK" : "NEOK";
+    const vOk = videosOk ? "OK" : "NEOK";
+    const aUrl = chosenArticlesUrl || "—";
+    const vUrl = chosenVideosUrl || "—";
+    const aCount = Number.isFinite(countArticles) ? countArticles : 0;
+    const vCount = Number.isFinite(countVideos) ? countVideos : 0;
+    const kids = Number.isFinite(feedChildren) ? feedChildren : 0;
+    return [
+      `preferred saved: ${yesNo}`,
+      `preferred mode used: ${mode}`,
+      `articles status: ${aOk} | videos status: ${vOk}`,
+      `Vybrané URL: articles=${aUrl}, videos=${vUrl}`,
+      `Načteno: články ${aCount}, videa ${vCount}`,
+      `#feed children: ${kids}`,
+    ].join("\n");
+  }
+
+  function iuHasStatusPlaceholders(s) {
+    if (!s) return true;
+    const bad = [
+      "YES|NO",
+      "preferred|fallback",
+      "OK|NEOK",
+      "…",
+      "articles=…",
+      "videos=…",
+      "Načteno: články X, videa Y",
+      "#feed children: N",
+    ];
+    return bad.some((t) => s.includes(t));
+  }
+
   async function loadData() {
     const startedAt = new Date();
     const requestToken = ++state.loadRequestId;
@@ -1474,6 +1519,8 @@
     let videoStatusCode = null;
     let articleStatusLabel = "404";
     let videoStatusLabel = "404";
+    let articlesOk = false;
+    let videosOk = false;
     let data = null;
     setStatus("Stav dat: načítám…");
 
@@ -1491,6 +1538,7 @@
           articleFetchResult = result;
           chosenArticlesUrl = url;
           articleStatusLabel = "OK";
+          articlesOk = true;
           break;
         }
         if (result.status === 404) {
@@ -1559,6 +1607,7 @@
           chosenVideosUrl = url;
           videoStatusLabel = "OK";
           videoFetchResult = result;
+          videosOk = true;
           debugLog(
             "[DATA] videos raw count=",
             videoItems.length,
@@ -1656,56 +1705,33 @@
           })),
         );
       }
+      applyFilter();
+      const countArticles = state.cachedItems.filter((entry) => entry?.contentType === "article").length;
+      const countVideos = state.cachedItems.filter((entry) => entry?.contentType === "video").length;
+      const feedChildren = elFeed?.children?.length ?? 0;
       const preferredUsed = Boolean(
         preferredEntry?.status === "ok" &&
           chosenArticlesUrl === preferredEntry.articlesUrl &&
           chosenVideosUrl === preferredEntry.videosUrl
       );
       const preferredModeUsed = preferredUsed ? "preferred" : "fallback";
-      const formatPath = (url) => {
-        if (!url) return "";
-        try {
-          return new URL(url, location.origin).pathname;
-        } catch {
-          return url;
-        }
-      };
-      const articleSourcePath = chosenArticlesUrl ? formatPath(chosenArticlesUrl) : "—";
-      const videoSourcePath = chosenVideosUrl ? formatPath(chosenVideosUrl) : "—";
-      const sourceSegment = ` • zdroj(${preferredModeUsed}): articles=${articleSourcePath} videos=${videoSourcePath}`;
-      const baseStatus = `Načteno: články ${state.stats.articlesCount}, videa ${state.stats.videosCount} • articles: ${articleStatusLabel} • videos: ${videoStatusLabel}${sourceSegment}`;
-      const emptyFeed = state.stats.articlesCount === 0 && state.stats.videosCount === 0;
-      let rootProbeOk = false;
-      let rootSegment = " • root: NEOK";
-      if (articleStatusLabel === "OK" && videoStatusLabel === "OK") {
-        const rootProbe = await probeRootPaths();
-        rootProbeOk = rootProbe.ok;
-        rootSegment = ` • root: ${rootProbeOk ? "OK" : "NEOK"}`;
-        if (rootProbeOk) {
-          const rootPairSaved = savePreferredPair("/data/articles.json", "/data/videos.json");
-          preferredUpdatedToRoot = rootPairSaved;
-          if (rootPairSaved) {
-            preferredSaved = true;
-            preferredSavedReason = "";
-          } else if (!preferredSaved) {
-            preferredSavedReason = "localStorage blocked (root update)";
-          }
-        }
-      }
-      const finalStatusText = emptyFeed
-        ? `Obsah se teď nenačetl (nasazení/cesta). Zkus obnovit.${rootSegment}`
-        : `${baseStatus}${rootSegment}`;
-      if (chosenArticlesUrl && chosenVideosUrl && emptyFeed) {
-        const statusInfo = `codes articles=${articleStatusCode ?? "—"} videos=${videoStatusCode ?? "—"}`;
-        persistLastError(
-          `Obsah se nenačetl: articles=${chosenArticlesUrl}(${articleStatusLabel}) videos=${chosenVideosUrl}(${videoStatusLabel}) | ${statusInfo}`
-        );
-        renderInlineError("Obsah se nenačetl (nasazení/cesta). Zkus obnovit.");
-        setStatus(finalStatusText);
+      const statusLine = iuBuildRuntimeStatusLine({
+        preferredSaved,
+        preferredModeUsed,
+        articlesOk,
+        videosOk,
+        chosenArticlesUrl,
+        chosenVideosUrl,
+        countArticles,
+        countVideos,
+        feedChildren,
+      });
+      if (iuHasStatusPlaceholders(statusLine)) {
+        persistLastError("STATUS PLACEHOLDER DETECTED");
+        setStatus("Stav dat: načítám…");
       } else {
-        setStatus(finalStatusText);
+        setStatus(statusLine);
       }
-      applyFilter();
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 
       debugLog("[DATA] combined count=", state.cachedItems.length);
