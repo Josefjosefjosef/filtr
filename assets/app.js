@@ -71,6 +71,8 @@
     lastVideosGeneratedAt: null,
     lastArticlesKeys: null,
     lastVideosKeys: null,
+    lastArticlesUpdatedAt: null,
+    lastVideosUpdatedAt: null,
   };
   state.cachedItems ??= [];
   state.filteredItems ??= [];
@@ -1483,6 +1485,8 @@
     generatedAtVideos,
     articlesKeys,
     videosKeys,
+    effectiveUpdatedAtArticles,
+    effectiveUpdatedAtVideos,
   }) {
     const ps = preferredSaved ? "YES" : "NO";
     const pm = preferredModeUsed === "preferred" ? "preferred" : "fallback";
@@ -1504,6 +1508,8 @@
       `#feed children: ${fc}`,
       `generatedAt articles: ${ga}`,
       `generatedAt videos: ${gv}`,
+      `effective updatedAt articles: ${effectiveUpdatedAtArticles}`,
+      `effective updatedAt videos: ${effectiveUpdatedAtVideos}`,
       `articles keys: ${articlesKeys || "none"}`,
       `videos keys: ${videosKeys || "none"}`,
     ].join("\n");
@@ -1604,6 +1610,8 @@
       state.lastArticlesGeneratedAt = articlesGeneratedAt ? String(articlesGeneratedAt) : null;
       const articlesKeys = data && typeof data === "object" ? Object.keys(data).sort().join(",") : "none";
       state.lastArticlesKeys = articlesKeys;
+      const articlesUpdatedAt = typeof data?.updatedAt === "string" ? data.updatedAt : null;
+      state.lastArticlesUpdatedAt = articlesUpdatedAt;
       const articlesArray = normalizeFeedJson(data);
       debugLog("[ARTICLES RAW]", data);
       debugLog("[ARTICLES LENGTH]", Array.isArray(articlesArray) ? articlesArray.length : "NOT ARRAY");
@@ -1658,6 +1666,8 @@
         if (result.ok) {
           const videosKeys = result.json && typeof result.json === "object" ? Object.keys(result.json).sort().join(",") : "none";
           state.lastVideosKeys = videosKeys;
+          const videosUpdatedAt = typeof result.json?.updatedAt === "string" ? result.json.updatedAt : null;
+          state.lastVideosUpdatedAt = videosUpdatedAt;
           const rawVideosJson = normalizeFeedJson(result.json);
           normalizedVideoSource = rawVideosJson;
           videoItems = normalizeVideoList(rawVideosJson);
@@ -1774,6 +1784,10 @@
           chosenVideosUrl === preferredEntry.videosUrl
       );
       const preferredModeUsed = preferredUsed ? "preferred" : "fallback";
+      const effectiveUpdatedAtArticles =
+        state.lastArticlesGeneratedAt || state.lastArticlesUpdatedAt || "none";
+      const effectiveUpdatedAtVideos =
+        state.lastVideosGeneratedAt || state.lastVideosUpdatedAt || "none";
       const statusLine = iuBuildDiagStatusLine({
         preferredSaved,
         preferredModeUsed,
@@ -1788,6 +1802,8 @@
         generatedAtVideos: state.lastVideosGeneratedAt,
         articlesKeys: state.lastArticlesKeys,
         videosKeys: state.lastVideosKeys,
+        effectiveUpdatedAtArticles,
+        effectiveUpdatedAtVideos,
       });
       const handlePlaceholder = () => {
         persistLastError("DIAG PLACEHOLDER DETECTED: " + statusLine.slice(0, 180));
