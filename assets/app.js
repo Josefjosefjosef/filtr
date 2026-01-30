@@ -1889,9 +1889,13 @@ function buildVideoAsArticleCard(it) {
         persistLastError("DIAG PLACEHOLDER DETECTED: " + statusLine.slice(0, 180));
         setStatus("Stav dat: načítám…");
       } else {
-        persistLastError(statusLine);
-        const articlesStamp = getJsonTimestamp(articlesJson) || "";
-        const videosStamp = getJsonTimestamp(videosJson) || "";
+        persistLastError(null);
+        persistLastOk({
+          at: new Date().toISOString(),
+          build: articlesStamp || videosStamp || "",
+          articles: countArticles,
+          videos: countVideos,
+        });
         const feedSegment = feedChildren ? ` • feed ${feedChildren}` : "";
         let statusParts = ["Stav dat: OK"];
         if (articlesStamp && videosStamp && articlesStamp === videosStamp) {
@@ -1974,10 +1978,24 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function persistLastOk(data) {
+    try {
+      localStorage.setItem("iu:lastOkAt", new Date().toISOString());
+      localStorage.setItem("iu:lastOk", JSON.stringify(data));
+    } catch {
+      // ignore
+    }
+  }
+
   function persistLastError(message) {
     try {
-      localStorage.setItem("iu:lastErrorAt", new Date().toISOString());
-      localStorage.setItem("iu:lastError", message);
+      if (!message) {
+        localStorage.removeItem("iu:lastErrorAt");
+        localStorage.removeItem("iu:lastError");
+      } else {
+        localStorage.setItem("iu:lastErrorAt", new Date().toISOString());
+        localStorage.setItem("iu:lastError", message);
+      }
     } catch {
       // ignore
     }
