@@ -78,6 +78,8 @@ jobs:
           else
             echo "WARN: projects/data/videos.json missing (may be empty video feed)"
           fi
+          echo "=== Writing publish probe ==="
+          echo "probe-ok $(date --utc +%Y-%m-%dT%H:%M:%SZ)" > projects/data/_probe.txt
 
           test -s projects/data/articles.json
           test -s projects/data/videos.json
@@ -128,6 +130,7 @@ jobs:
 
           echo "=== Stage ONLY generated publish data (ensures Pages has it) ==="
           git add -A -- 'projects/data/**'
+          git add -A -- 'projects/data/_probe.txt'
           git add -A -- 'filtr/data/**' || true
 
           echo "=== Show staged diff (if any) ==="

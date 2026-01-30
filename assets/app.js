@@ -559,6 +559,30 @@
       .replaceAll("'", "&#39;");
   }
 
+  function formatDateShort(value) {
+    if (!value) return "";
+    let date;
+    if (value instanceof Date) {
+      date = value;
+    } else {
+      date = new Date(value);
+    }
+    if (Number.isNaN(date.getTime())) return "";
+    const iso = date.toISOString();
+    return iso.replace("T", " ").split(".")[0];
+  }
+
+  function getJsonTimestamp(json) {
+    if (!json || typeof json !== "object") return "";
+    const fields = ["updatedAt", "generatedAt", "buildAt"];
+    for (const field of fields) {
+      const value = json[field];
+      const label = formatDateShort(value);
+      if (label) return label;
+    }
+    return "";
+  }
+
   function getSectionLabelText(keys) {
     const names = keys
       .map((key) => SECTION_LABELS[key] || key)
@@ -1866,10 +1890,12 @@ function buildVideoAsArticleCard(it) {
         setStatus("Stav dat: načítám…");
       } else {
         persistLastError(statusLine);
-        const statusText = `Stav dat: články ${countArticles}, videa ${countVideos}${
-          feedChildren ? ` • feed ${feedChildren}` : ""
-        }`;
-        setStatus(statusText);
+        const articlesStamp = getJsonTimestamp(articlesJson) || "";
+        const videosStamp = getJsonTimestamp(videosJson) || "";
+        const articleSegment = `články ${countArticles}${articlesStamp ? ` (build ${articlesStamp})` : ""}`;
+        const videoSegment = `videa ${countVideos}${videosStamp ? ` (build ${videosStamp})` : ""}`;
+        const feedSegment = feedChildren ? ` • feed ${feedChildren}` : "";
+        setStatus(`Stav dat: OK • ${articleSegment} • ${videoSegment}${feedSegment}`);
       }
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 
