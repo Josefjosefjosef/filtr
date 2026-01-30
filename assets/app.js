@@ -86,6 +86,9 @@
     if (!isDebugLogging) return;
     console.warn(...args);
   }
+  function diagLog(tag, info) {
+    console.log("[DIAG]", tag, info);
+  }
   // DEBUG KONTRAKT:
   // debug se aktivuje pouze location.search.includes("debug=1")
   // debug je pouze console logging
@@ -725,6 +728,15 @@
   // Druhá render cesta je zakázaná.
   function renderFeed(target, items) {
     const feedEl = document.getElementById("feed");
+    const feedExists = !!(feedEl && feedEl.id === "feed");
+    const feedChildrenBefore = feedEl ? feedEl.childElementCount : 0;
+    const targetSelector = feedEl ? "#feed" : "(missing)";
+    diagLog("renderFeed:start", {
+      itemsLen: items ? items.length : 0,
+      target: targetSelector,
+      feedExists,
+      feedChildrenBefore,
+    });
     if (!feedEl || feedEl.id !== "feed") {
       persistLastError("Invariant breach: invalid render target");
       return;
@@ -734,12 +746,12 @@
       emptyBox.style.display = "none";
       emptyBox.innerHTML = "";
     }
+    const beforeChildren = safeTarget.childElementCount;
     safeTarget.innerHTML = "";
     if (!items || items.length === 0) {
       renderEmpty("Žádné články k zobrazení. Zkontroluj Stav dat.");
       return;
     }
-    const t0 = performance.now();
     for (const item of items) {
       const kind = String(item.contentType || "").toLowerCase();
       if (!ALLOWED_CONTENT_TYPES.has(kind)) {
@@ -763,46 +775,40 @@
       }
       safeTarget.appendChild(node);
     }
-    if (items?.length > 0 && safeTarget.children.length === 0) {
+    const feedChildrenAfter = safeTarget.childElementCount;
+    const renderedCount = Math.max(feedChildrenAfter - beforeChildren, feedChildrenAfter ? feedChildrenAfter : 0);
+    const typeCounts = items.reduce(
+      (acc, entry) => {
+        const kind = String(entry.contentType || "").toLowerCase();
+        if (kind === "article") acc.article += 1;
+        else if (kind === "video") acc.video += 1;
+        else acc.unknown += 1;
+        return acc;
+      },
+      { article: 0, video: 0, unknown: 0 }
+    );
+    diagLog("renderFeed:end", {
+      itemsCount: items.length,
+      renderedCount,
+      feedChildrenAfter,
+      typeCounts,
+    });
+    if (items.length > 0 && renderedCount === 0) {
       safeTarget.insertAdjacentHTML(
         "beforeend",
         `<div class="empty" style="margin-top:10px;color:rgba(11,27,43,0.7);font-weight:600;">Data načtena, ale nic se nevykreslilo. Obnov stránku.<br /><small>${items.length} položek</small></div>`
       );
+      const preview = items.slice(0, 3).map((it) => `${it.contentType || "unknown"}:${it.title || it.name || "(bez názvu)"}`);
+      diagLog("renderFeed:fallback", {
+        preview,
+        feedChildrenAfter,
+      });
       persistLastError("Data existují, ale nic nebylo vykresleno");
       renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
       setStatus("Stav dat: chyba (viz feed)");
       return;
     }
-    const newsCards = safeTarget.querySelectorAll?.(".news-card")?.length ?? safeTarget.children.length;
     if (elDataCount) elDataCount.textContent = String(items.length);
-    const t1 = performance.now();
-    if (isDebugLogging) {
-      debugLog("[ASSERT] feed children after render:", safeTarget.children.length);
-    }
-    const articleCount = state.cachedItems.filter((entry) => entry.contentType === "article").length;
-    if (articleCount > 0 && safeTarget.children.length === 0) {
-      document.body.classList.add("iu-feedEmergencyVisible");
-      persistLastError("Invariant breach: articles exist but render produced 0 nodes");
-      renderInlineError("Články se nepodařilo zobrazit.");
-      setStatus("Stav dat: chyba (viz feed)");
-      return;
-    }
-    const rFeed = safeTarget.getBoundingClientRect();
-    if (
-      state.cachedItems.length > 0 &&
-      safeTarget.children.length > 0 &&
-      rFeed.height < 20
-    ) {
-      document.body.classList.add("iu-feedEmergencyVisible");
-      persistLastError("Feed has children but zero height (CSS/layout hidden)");
-      renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
-      return;
-    }
-    const firstCard = safeTarget.querySelector(".news-card");
-    const rCard = firstCard ? firstCard.getBoundingClientRect() : null;
-    if (safeTarget.children.length > 0 && (rFeed.height < 24 || (rCard && rCard.height < 24))) {
-      document.documentElement.classList.add("iu-feedEmergencyVisible");
-    }
     if (!Array.isArray(state.cachedItems)) {
       persistLastError("Invariant breach: state.cachedItems není pole");
       renderInlineError("Obsah dočasně nedostupný.");
@@ -815,7 +821,6 @@
         break;
       }
     }
-  }
 
   function renderInlineError(message) {
     const inline = document.getElementById("lastErrInline");
