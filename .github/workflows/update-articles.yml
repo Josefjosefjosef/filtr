@@ -44,76 +44,75 @@ jobs:
       - name: Normalize output paths (ensure publish root)
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           echo "PWD=$(pwd)"
-          echo "List possible outputs:"
+          pwd
           ls -la
-          echo "Find generated articles.json/videos.json:"
+          mkdir -p projects/data
+
           find . -maxdepth 6 -type f \( -name "articles.json" -o -name "videos.json" \) -print
 
-          # Preferovaný publish root:
-          mkdir -p filtr/data
+          for candidate in \
+            projects/data \
+            filtr/data \
+            filtr/filtr/data \
+            filtr/filtr/filtr/data \
+            data \
+          ; do
+            if [ -f "$candidate/articles.json" ]; then
+              cp -f "$candidate/articles.json" projects/data/articles.json
+            fi
+            if [ -f "$candidate/videos.json" ]; then
+              cp -f "$candidate/videos.json" projects/data/videos.json
+            fi
+          done
 
-          # Pokud generátor vytvořil filtr/filtr/data/*, přenes to do filtr/data/*
-          if [ -f "filtr/filtr/data/articles.json" ]; then
-            cp -f "filtr/filtr/data/articles.json" "filtr/data/articles.json"
-          fi
-          if [ -f "filtr/filtr/data/videos.json" ]; then
-            cp -f "filtr/filtr/data/videos.json" "filtr/data/videos.json"
-          fi
-
-          # Pokud generátor vytvořil data/articles.json, přenes to do filtr/data/articles.json
-          if [ -f "data/articles.json" ]; then
-            cp -f "data/articles.json" "filtr/data/articles.json"
-          fi
-          if [ -f "data/videos.json" ]; then
-            cp -f "data/videos.json" "filtr/data/videos.json"
-          fi
-
-          # Pokud generátor vytvořil filtr/data/*, nech to být, ale ujisti se že existuje
-          if [ -f "filtr/data/articles.json" ]; then
-            echo "OK: filtr/data/articles.json exists"
+          if [ -f "projects/data/articles.json" ]; then
+            echo "OK: projects/data/articles.json exists"
           else
-            echo "ERROR: filtr/data/articles.json missing after normalize"
+            echo "ERROR: projects/data/articles.json missing"
             exit 1
           fi
-          if [ -f "filtr/data/videos.json" ]; then
-            echo "OK: filtr/data/videos.json exists"
+          if [ -f "projects/data/videos.json" ]; then
+            echo "OK: projects/data/videos.json exists"
           else
-            echo "WARN: filtr/data/videos.json missing (not fatal if videos optional)"
+            echo "WARN: projects/data/videos.json missing (may be empty video feed)"
           fi
+
+          test -s projects/data/articles.json
+          test -s projects/data/videos.json
 
       - name: Debug generated output (generatedAt + basic stats)
         run: |
-          echo "=== ls -la filtr/data ==="
-          ls -la filtr/data || true
+          echo "=== ls -la projects/data ==="
+          ls -la projects/data || true
 
-          echo "=== generatedAt from filtr/data/articles.json ==="
-          if [ -f filtr/data/articles.json ]; then
-            python -c "import json; d=json.load(open('filtr/data/articles.json','r',encoding='utf-8')); print(d.get('generatedAt',''))"
+          echo "=== generatedAt from projects/data/articles.json ==="
+          if [ -f projects/data/articles.json ]; then
+            python -c "import json; d=json.load(open('projects/data/articles.json','r',encoding='utf-8')); print(d.get('generatedAt',''))"
           else
-            echo "MISSING: filtr/data/articles.json"
+            echo "MISSING: projects/data/articles.json"
           fi
 
-          echo "=== head of filtr/data/articles.json ==="
-          if [ -f filtr/data/articles.json ]; then
-            head -n 20 filtr/data/articles.json || true
+          echo "=== head of projects/data/articles.json ==="
+          if [ -f projects/data/articles.json ]; then
+            head -n 20 projects/data/articles.json || true
           else
-            echo "MISSING: filtr/data/articles.json"
+            echo "MISSING: projects/data/articles.json"
           fi
 
-          echo "=== generatedAt from filtr/data/videos.json ==="
-          if [ -f filtr/data/videos.json ]; then
-            python -c "import json; d=json.load(open('filtr/data/videos.json','r',encoding='utf-8')); print(d.get('generatedAt',''))"
+          echo "=== generatedAt from projects/data/videos.json ==="
+          if [ -f projects/data/videos.json ]; then
+            python -c "import json; d=json.load(open('projects/data/videos.json','r',encoding='utf-8')); print(d.get('generatedAt',''))"
           else
-            echo "MISSING: filtr/data/videos.json"
+            echo "MISSING: projects/data/videos.json"
           fi
 
-          echo "=== head of filtr/data/videos.json ==="
-          if [ -f filtr/data/videos.json ]; then
-            head -n 50 filtr/data/videos.json || true
+          echo "=== head of projects/data/videos.json ==="
+          if [ -f projects/data/videos.json ]; then
+            head -n 50 projects/data/videos.json || true
           else
-            echo "MISSING: filtr/data/videos.json"
+            echo "MISSING: projects/data/videos.json"
           fi
 
       - name: Commit and push if changed
@@ -128,8 +127,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           echo "=== Stage ONLY generated publish data (ensures Pages has it) ==="
-          git add -A -- 'filtr/data/**'
-          git add -A -- 'filtr/filtr/data/**' || true
+          git add -A -- 'projects/data/**'
+          git add -A -- 'filtr/data/**' || true
 
           echo "=== Show staged diff (if any) ==="
           git diff --cached --name-status || true

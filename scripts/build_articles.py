@@ -25,7 +25,7 @@ FEEDS_PATH = os.path.join(ROOT_DIR, "scripts", "feeds.json")
 FEEDS_YOUTUBE_PATH = os.path.join(ROOT_DIR, "scripts", "feeds_youtube.json")
 
 # ✅ FIX: Output directory - použij env OUTPUT_DIR nebo default filtr/data
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", os.path.join(ROOT_DIR, "filtr", "data"))
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", os.path.join(ROOT_DIR, "projects", "data"))
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 OUT_PATH = os.path.join(OUTPUT_DIR, "articles.json")
