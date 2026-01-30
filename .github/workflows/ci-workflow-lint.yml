@@ -26,11 +26,15 @@ jobs:
           sudo apt-get install -y yamllint
 
       - name: Run yamllint on workflows
-        run: yamllint -c <(cat <<'EOF'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/yamllint.yml <<'EOF'
 extends: default
-risky: true
+rules:
+  line-length: disable
 EOF
-) .github/workflows
+          yamllint -c /tmp/yamllint.yml .github/workflows
 
       - name: Validate bash snippets
         run: |

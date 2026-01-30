@@ -19,7 +19,7 @@ jobs:
             echo "Missing projects/data/articles.json"
             exit 1
           fi
-          generated=$(python - <<'PY'
+          generated="$(python - <<'PY'
 import json, datetime, sys
 
 with open("projects/data/articles.json", "r", encoding="utf-8") as fh:
@@ -46,5 +46,6 @@ print(f"generatedAt: {ts} (age minutes: {age.total_seconds()/60:.1f})")
 print(f"{age.total_seconds()/60:.1f}")
 print(age.total_seconds()/60 > 30)
 sys.exit(1 if age.total_seconds()/60 > 30 else 0)
-PY)
+PY
+)"
 

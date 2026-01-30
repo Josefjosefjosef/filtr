@@ -159,39 +159,63 @@ PY
             echo "MISSING: projects/data/videos.json"
           fi
 
-      - name: Proof data before commit
+      - name: PROOF: articles.json exists + generatedAt + count
+        shell: bash
         run: |
-          echo "=== proof: verifying projects/data ==="
-          echo "[proof] projects/data contents"
-          ls -la projects/data
-          wc -c projects/data/articles.json projects/data/videos.json
-          head -c 120 projects/data/articles.json || true
-          echo
-          head -c 120 projects/data/videos.json || true
-          echo
+          set -euo pipefail
+          echo "=== LIST projects/data ==="
+          ls -la projects/data || true
 
-      - name: Commit and push if changed
+          echo "=== STAT articles.json ==="
+          test -f projects/data/articles.json || { echo "ERROR: projects/data/articles.json missing"; exit 1; }
+          wc -c projects/data/articles.json
+          sha256sum projects/data/articles.json | head -n 1
+
+          echo "=== generatedAt ==="
+          python - <<'PY'
+import json, datetime
+
+p = "projects/data/articles.json"
+with open(p, "r", encoding="utf-8") as f:
+    data = json.load(f)
+
+gen = data.get("generatedAt")
+arts = data.get("articles", [])
+print("generatedAt:", gen)
+print("articles_count:", len(arts))
+if arts:
+    print("first_publishedAt:", arts[0].get("publishedAt"))
+    print("first_title:", arts[0].get("title"))
+PY
+
+      - name: PROOF: git status
+        shell: bash
         run: |
-          set -e
+          set -euo pipefail
+          git status --porcelain=v1
+          git diff --name-only
 
-          echo "=== Debug: ignored files (for visibility) ==="
-          git status --ignored || true
+      - name: PROOF: git status
+        shell: bash
+        run: |
+          set -euo pipefail
+          git status --porcelain=v1
+          git status
 
-          echo "=== Configure git identity ==="
+      - name: Commit & push (projects data)
+        shell: bash
+        run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          echo "=== Stage ONLY generated publish data (ensures Pages has it) ==="
-          git add -A -- 'projects/data/**'
-          git add -A -- 'projects/data/_probe.txt'
-          git add -A -- 'filtr/data/**' || true
+          git add -A projects/data/articles.json projects/data/videos.json projects/data/_probe.txt
 
-          echo "=== Show staged diff (if any) ==="
-          git diff --cached --name-status || true
+          if git diff --cached --quiet; then
+            echo "Nothing to commit (projects/data unchanged)."
+            exit 0
+          fi
 
-          echo "=== Guard: no staged changes => exit OK ==="
-          git diff --cached --quiet && echo "Nothing to commit (OK)" && exit 0
-
-          echo "=== Commit & push ==="
-          git commit -m "Update published data (articles/videos)"
+          git status --short
+          git commit -m "data: update articles"
           git push origin HEAD:main

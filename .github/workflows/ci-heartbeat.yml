@@ -21,22 +21,30 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p projects/data
-          NOW="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
           cat > projects/data/ci_heartbeat.json <<'EOF'
 {
-  "generatedAt": "${NOW}",
-  "repo": "${GITHUB_REPOSITORY}",
-  "workflow": "${GITHUB_WORKFLOW}",
-  "runId": "${GITHUB_RUN_ID}",
-  "runNumber": "${GITHUB_RUN_NUMBER}",
-  "attempt": "${GITHUB_RUN_ATTEMPT}",
-  "ref": "${GITHUB_REF}",
-  "sha": "${GITHUB_SHA}",
-  "runUrl": "https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+  "generatedAt": "__NOW__",
+  "repo": "__REPO__",
+  "workflow": "__WORKFLOW__",
+  "runId": "__RUN_ID__",
+  "runNumber": "__RUN_NUMBER__",
+  "attempt": "__RUN_ATTEMPT__"
 }
 EOF
-          echo "Wrote projects/data/ci_heartbeat.json:"
-          cat projects/data/ci_heartbeat.json
+
+          sed -i \
+            -e "s/__NOW__/${NOW}/" \
+            -e "s#__REPO__#${GITHUB_REPOSITORY}#" \
+            -e "s#__WORKFLOW__#${GITHUB_WORKFLOW}#" \
+            -e "s#__RUN_ID__#${GITHUB_RUN_ID}#" \
+            -e "s#__RUN_NUMBER__#${GITHUB_RUN_NUMBER}#" \
+            -e "s#__RUN_ATTEMPT__#${GITHUB_RUN_ATTEMPT}#" \
+            projects/data/ci_heartbeat.json
+
+          ls -la projects/data
+          head -c 200 projects/data/ci_heartbeat.json || true
 
       - name: Commit & push if changed
         shell: bash
