@@ -1892,10 +1892,18 @@ function buildVideoAsArticleCard(it) {
         persistLastError(statusLine);
         const articlesStamp = getJsonTimestamp(articlesJson) || "";
         const videosStamp = getJsonTimestamp(videosJson) || "";
-        const articleSegment = `články ${countArticles}${articlesStamp ? ` (build ${articlesStamp})` : ""}`;
-        const videoSegment = `videa ${countVideos}${videosStamp ? ` (build ${videosStamp})` : ""}`;
         const feedSegment = feedChildren ? ` • feed ${feedChildren}` : "";
-        setStatus(`Stav dat: OK • ${articleSegment} • ${videoSegment}${feedSegment}`);
+        let statusParts = ["Stav dat: OK"];
+        if (articlesStamp && videosStamp && articlesStamp === videosStamp) {
+          statusParts.push(`build ${articlesStamp}`);
+          statusParts.push(`články ${countArticles}`);
+          statusParts.push(`videa ${countVideos}`);
+        } else {
+          statusParts.push(`články ${countArticles}${articlesStamp ? ` (build ${articlesStamp})` : ""}`);
+          statusParts.push(`videa ${countVideos}${videosStamp ? ` (build ${videosStamp})` : ""}`);
+        }
+        if (feedSegment.trim()) statusParts.push(feedSegment.replace(/^ • /, ""));
+        setStatus(statusParts.join(" • "));
       }
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 
