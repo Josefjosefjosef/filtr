@@ -140,6 +140,16 @@ PY
             echo "MISSING: projects/data/videos.json"
           fi
 
+      - name: Proof data before commit
+        run: |
+          echo "[proof] projects/data contents"
+          ls -la projects/data
+          wc -c projects/data/articles.json projects/data/videos.json
+          head -c 120 projects/data/articles.json || true
+          echo
+          head -c 120 projects/data/videos.json || true
+          echo
+
       - name: Commit and push if changed
         run: |
           set -e
