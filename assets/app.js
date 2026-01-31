@@ -277,6 +277,39 @@
     if (Date.now() - t > maxAgeMs) throw new Error("STALE_FEED");
   }
 
+  function isSuspiciousTitle(title) {
+    if (!title || typeof title !== "string") return false;
+
+    const t = title.trim();
+
+    const deathPatterns = [
+      /\bzemřel[ai]\b/i,
+      /\bskonal[ai]\b/i,
+      /\bumřel[ai]\b/i,
+      /\btragick[ýá]\b/i,
+    ];
+
+    const oddSuffixPatterns = [
+      /O'Haraov[áa]/i,
+      /[A-Za-z]\bov[áa]\b/i,
+    ];
+
+    const clickbaitPatterns = [
+      /\bšok\b/i,
+      /\bneuvěřiteln[ěý]\b/i,
+      /\btohle\b/i,
+      /\bnikdo\b.*\bnečekal\b/i,
+    ];
+
+    const hit = (arr) => arr.some((re) => re.test(t));
+
+    if (hit(deathPatterns)) return true;
+    if (hit(oddSuffixPatterns) && hit(clickbaitPatterns)) return true;
+    if (hit(oddSuffixPatterns)) return true;
+
+    return false;
+  }
+
   function parseProbeTimestamp(raw) {
     if (!raw) return null;
     const str = String(raw).trim();
@@ -1114,10 +1147,14 @@
         )}</a>`
       : `<span class="news-titleLink">${escapeHtml(title)}</span>`;
 
+    const suspiciousFlag = it?.suspiciousTitle
+      ? `<span class="iuSuspicious" title="Titulek doporučeno ověřit u zdroje" aria-label="Titulek doporučeno ověřit u zdroje">⚑</span>`
+      : "";
+
     debugLog("[RENDER ARTICLE]", title);
     return `
       <article class="news-card" data-feed-type="article">
-        <h2 class="news-title">${titleMarkup}</h2>
+        <h2 class="news-title">${titleMarkup}${suspiciousFlag}</h2>
         <div class="news-row2">
           ${publishedAt ? `<span class="meta-time">${escapeHtml(publishedAt)}</span>` : ""}
           <span class="news-sourceLabel">Zdroj:</span>
@@ -1151,6 +1188,7 @@ function buildVideoAsArticleCard(it) {
             <span class="sourceDomain">${escapeHtml(channel)}</span>
           </span>
         </div>
+        ${publishedAt ? `<div class="news-row3"><span class="meta-time">Publikováno: ${escapeHtml(publishedAt)}</span></div>` : ""}
       </article>
     `;
   }
@@ -1944,6 +1982,7 @@ function buildVideoAsArticleCard(it) {
       let sanitizedArticles = normalizeArticleList(Array.isArray(safeArticlesArray) ? safeArticlesArray : []).map((item) => ({
         ...item,
         contentType: "article",
+        suspiciousTitle: isSuspiciousTitle(item.title),
       }));
       debugLog("[ARTICLES NORMALIZED]", sanitizedArticles.length);
       if (sanitizedArticles.length < totalArticles) {
