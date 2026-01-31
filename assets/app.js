@@ -74,6 +74,7 @@
     lastArticlesUpdatedAt: null,
     lastVideosUpdatedAt: null,
     lastProbe: null,
+    isLoadingData: false,
   };
   state.cachedItems ??= [];
   state.filteredItems ??= [];
@@ -273,6 +274,18 @@
     const t = Date.parse(data.generatedAt);
     if (!Number.isFinite(t)) return;
     if (Date.now() - t > maxAgeMs) throw new Error("STALE_FEED");
+  }
+
+  function parseProbeTimestamp(raw) {
+    if (!raw) return null;
+    const str = String(raw).trim();
+    const isoMatch = str.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/);
+    if (isoMatch) {
+      const parsed = Date.parse(isoMatch[0]);
+      if (Number.isFinite(parsed)) return parsed;
+    }
+    const fallback = Date.parse(str);
+    return Number.isFinite(fallback) ? fallback : null;
   }
 
   function withBust(url) {
@@ -1809,6 +1822,8 @@ function buildVideoAsArticleCard(it) {
 
   async function loadData() {
     const startedAt = new Date();
+    if (state.isLoadingData) return;
+    state.isLoadingData = true;
     const requestToken = ++state.loadRequestId;
     state.cachedItems = [];
     state.hasLoadedData = false;
@@ -1887,6 +1902,15 @@ function buildVideoAsArticleCard(it) {
       data = articlesData;
 
       const articlesGeneratedAt = articlesData?.generatedAt || articlesData?.meta?.generatedAt || null;
+      const articleGeneratedTs = articlesGeneratedAt ? Date.parse(articlesGeneratedAt) : null;
+      const probeStamp = parseProbeTimestamp(state.lastProbe);
+      if (
+        Number.isFinite(probeStamp) &&
+        Number.isFinite(articleGeneratedTs) &&
+        articleGeneratedTs + 10 * 60 * 1000 < probeStamp
+      ) {
+        throw new Error("PROBE_JSON_MISMATCH");
+      }
       state.lastArticlesGeneratedAt = articlesGeneratedAt ? String(articlesGeneratedAt) : null;
       const articlesKeys = articlesData && typeof articlesData === "object" ? Object.keys(articlesData).sort().join(",") : "none";
       state.lastArticlesKeys = articlesKeys;
@@ -2131,6 +2155,8 @@ function buildVideoAsArticleCard(it) {
           loadData();
         }
       }, 15000);
+    } finally {
+      state.isLoadingData = false;
     }
   }
 
