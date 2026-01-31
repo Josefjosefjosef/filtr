@@ -34,7 +34,12 @@ jobs:
         run: |
           ls -la filtr/data
           head -c 200 filtr/data/weather.json || true
-          test -f filtr/data/weather.json && echo "OK: filtr/data/weather.json exists" || (echo "ERROR: weather.json missing" && exit 1)
+          if [ -f filtr/data/weather.json ]; then
+            echo "OK: filtr/data/weather.json exists"
+          else
+            echo "ERROR: weather.json missing"
+            exit 1
+          fi
 
       - name: Validate generated JSON (publish root)
         run: |
