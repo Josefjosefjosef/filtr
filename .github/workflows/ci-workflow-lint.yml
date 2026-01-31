@@ -8,6 +8,13 @@ on:
   schedule:
     - cron: "0 6 * * *"
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-workflow-lint-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -36,12 +43,81 @@ rules:
 EOF
           yamllint -c /tmp/yamllint.yml .github/workflows
 
-      - name: Validate bash snippets
+      - name: Validate bash snippets (basic)
+        shell: bash
         run: |
-          grep -R "run: |" -n .github/workflows | while read -r line; do
-            file=$(echo "$line" | cut -d: -f1)
-            echo "Checking ${file}"
-            awk '/run: \|/ {flag=1; next} flag {print; if (/^[[:space:]]*$/) exit}' "$file" > /tmp/bash-snippet.sh
-            bash -n /tmp/bash-snippet.sh || exit 1
-          done
+          set -euo pipefail
+          # Validate only inline bash scripts inside YAML blocks with "shell: bash" + "run: |"
+          # This avoids false positives and weird parsing across multiple steps/files.
+          python - <<'PY'
+import pathlib
+import re
+import subprocess
+import sys
+from tempfile import NamedTemporaryFile
 
+root = pathlib.Path(".github/workflows")
+files = sorted(root.glob("*.yml")) + sorted(root.glob("*.yaml"))
+
+block_re = re.compile(r'^[ \t]*run:\s*\|\s*$')
+shell_bash_re = re.compile(r'^[ \t]*shell:\s*bash\s*$')
+indent_re = re.compile(r'^([ \t]+)')
+
+def extract_blocks(text: str):
+    lines = text.splitlines()
+    i = 0
+    blocks = []
+    while i < len(lines):
+        # Look for "shell: bash" near "run: |" (same step)
+        if shell_bash_re.match(lines[i]):
+            # Scan forward a bit for run: |
+            j = i + 1
+            while j < len(lines) and j <= i + 10:
+                if block_re.match(lines[j]):
+                    # Determine indentation of the run block content
+                    j += 1
+                    if j >= len(lines):
+                        break
+                    m = indent_re.match(lines[j])
+                    if not m:
+                        break
+                    base_indent = m.group(1)
+                    script_lines = []
+                    while j < len(lines):
+                        if lines[j].startswith(base_indent) or lines[j].strip() == "":
+                            # strip exactly base_indent if present
+                            if lines[j].startswith(base_indent):
+                                script_lines.append(lines[j][len(base_indent):])
+                            else:
+                                script_lines.append("")
+                            j += 1
+                        else:
+                            break
+                    blocks.append("\n".join(script_lines).rstrip() + "\n")
+                    i = j
+                    break
+                j += 1
+        i += 1
+    return blocks
+
+had_error = False
+
+for fp in files:
+    text = fp.read_text(encoding="utf-8", errors="replace")
+    blocks = extract_blocks(text)
+    if not blocks:
+        continue
+    for idx, script in enumerate(blocks, start=1):
+        with NamedTemporaryFile("w", delete=False, suffix=".sh") as tmp:
+            tmp.write(script)
+            tmp_path = tmp.name
+        proc = subprocess.run(["bash", "-n", tmp_path], capture_output=True, text=True)
+        if proc.returncode != 0:
+            had_error = True
+            sys.stderr.write(f"\nBash syntax error in {fp} (block #{idx}):\n")
+            sys.stderr.write(proc.stderr or proc.stdout)
+            sys.stderr.write("\n")
+if had_error:
+    sys.exit(1)
+print("OK: bash snippets look syntactically valid for blocks with shell: bash + run: |")
+PY
