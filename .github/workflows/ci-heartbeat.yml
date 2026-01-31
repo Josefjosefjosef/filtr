@@ -20,41 +20,54 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Timestamp
+        shell: bash
         run: |
+          set -euo pipefail
           echo "Heartbeat UTC:"
           date -u
 
-      - name: Verify data endpoints reachable
+      - name: Verify data endpoints reachable (articles required, videos optional)
         shell: bash
         run: |
           set -euo pipefail
 
-          REQ_URL="https://infouzel.cz/projects/data/articles.json"
-          OPT_URL="https://infouzel.cz/projects/data/videos.json"
+          req="https://infouzel.cz/projects/data/articles.json"
+          opt="https://infouzel.cz/projects/data/videos.json"
 
           check_required() {
-            local url="$1"
-            code=$(curl -sSL -o /dev/null -w "%{http_code}" "$url")
-            ctype=$(curl -sSLI "$url" | awk -F': ' 'tolower($1)=="content-type"{print tolower($2)}')
+            u="$1"
+            echo "GET required: $u"
+
+            code="$(curl -sS -L -o /dev/null -w "%{http_code}" "$u")"
+            ctype="$(curl -sS -L -I "$u" | tr -d '\r' | awk -F': ' 'tolower($1)=="content-type"{print tolower($2)}')"
+
+            echo "HTTP $code  CT=${ctype:-unknown}"
 
             if [ "$code" -lt 200 ] || [ "$code" -ge 400 ]; then
               echo "FAIL: required endpoint returned $code"
               exit 1
             fi
 
-            case "$ctype" in
-              *json*) ;;
-              *) echo "FAIL: required endpoint is not JSON ($ctype)"; exit 1 ;;
+            case "${ctype:-}" in
+              *json*) : ;;
+              *)
+                echo "FAIL: required endpoint is not JSON (Content-Type=${ctype:-unknown})"
+                exit 1
+                ;;
             esac
           }
 
           check_optional() {
-            local url="$1"
-            code=$(curl -sSL -o /dev/null -w "%{http_code}" "$url")
-            ctype=$(curl -sSLI "$url" | awk -F': 'tolower($1)=="content-type"{print tolower($2)})
+            u="$1"
+            echo "GET optional: $u"
+
+            code="$(curl -sS -L -o /dev/null -w "%{http_code}" "$u")"
+            ctype="$(curl -sS -L -I "$u" | tr -d '\r' | awk -F': 'tolower($1)=="content-type"{print tolower($2)}')"
+
+            echo "HTTP $code  CT=${ctype:-unknown}"
 
             if [ "$code" = "404" ] || [ "$code" = "204" ]; then
-              echo "OK: optional endpoint missing"
+              echo "OK(optional): missing/empty is allowed ($code)"
               return 0
             fi
 
@@ -63,13 +76,16 @@ jobs:
               exit 1
             fi
 
-            case "$ctype" in
-              *json*) ;;
-              *) echo "FAIL: optional endpoint is not JSON ($ctype)"; exit 1 ;;
+            case "${ctype:-}" in
+              *json*) : ;;
+              *)
+                echo "FAIL: optional endpoint is not JSON (Content-Type=${ctype:-unknown})"
+                exit 1
+                ;;
             esac
           }
 
-          check_required "$REQ_URL"
-          check_optional "$OPT_URL"
+          check_required "$req"
+          check_optional "$opt"
 
           echo "OK: heartbeat endpoints reachable"
