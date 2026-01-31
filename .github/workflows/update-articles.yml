@@ -59,42 +59,47 @@ jobs:
           echo "=== find generated json candidates ==="
           find . -maxdepth 6 -type f \( -name "articles.json" -o -name "videos.json" \) -print || true
 
-          copy_if_needed () {
-            local src="$1"
-            local dst="$2"
-
-            if [ ! -s "$src" ]; then
-              echo "[skip] missing/empty: $src"
-              return 0
-            fi
-
-            local rsrc rdst
-            rsrc="$(python -c 'import os, sys; print(os.path.realpath(sys.argv[1]))' "$src")"
-            rdst="$(python -c 'import os, sys; print(os.path.realpath(sys.argv[1]))' "$dst")"
-
-            if [ "$rsrc" = "$rdst" ]; then
-              echo "[skip] same file: $src -> $dst"
-              return 0
-            fi
-
-            echo "[copy] $src -> $dst"
-            cp -f "$src" "$dst"
+          copy_preferred () {
+            local dst="$1"
+            shift
+            local -a srcs=("$@")
+            for src in "${srcs[@]}"; do
+              if [ -s "$src" ]; then
+                echo "[copy] $src -> $dst"
+                cp -f "$src" "$dst"
+                return 0
+              fi
+            done
+            return 1
           }
 
+          ARTICLE_CANDIDATES=(
+            "projects/data/articles.json"
+            "filtr/data/articles.json"
+            "filtr/filtr/data/articles.json"
+            "filtr/filtr/filtr/data/articles.json"
+            "data/articles.json"
+          )
+
           if [ ! -s "projects/data/articles.json" ]; then
-            copy_if_needed "filtr/data/articles.json"             "projects/data/articles.json"
-            copy_if_needed "filtr/filtr/data/articles.json"       "projects/data/articles.json"
-            copy_if_needed "filtr/filtr/filtr/data/articles.json" "projects/data/articles.json"
-            copy_if_needed "data/articles.json"                   "projects/data/articles.json"
+            if ! copy_preferred "projects/data/articles.json" "${ARTICLE_CANDIDATES[@]}"; then
+              echo "ERROR: no articles.json candidate generated"
+              exit 1
+            fi
           else
             echo "[keep] projects/data/articles.json already generated"
           fi
 
+          VIDEO_CANDIDATES=(
+            "projects/data/videos.json"
+            "filtr/data/videos.json"
+            "filtr/filtr/data/videos.json"
+            "filtr/filtr/filtr/data/videos.json"
+            "data/videos.json"
+          )
+
           if [ ! -s "projects/data/videos.json" ]; then
-            copy_if_needed "filtr/data/videos.json"               "projects/data/videos.json"
-            copy_if_needed "filtr/filtr/data/videos.json"         "projects/data/videos.json"
-            copy_if_needed "filtr/filtr/filtr/data/videos.json"   "projects/data/videos.json"
-            copy_if_needed "data/videos.json"                     "projects/data/videos.json"
+            copy_preferred "projects/data/videos.json" "${VIDEO_CANDIDATES[@]}" || echo "WARN: videos source missing"
           else
             echo "[keep] projects/data/videos.json already generated"
           fi
@@ -103,6 +108,10 @@ jobs:
             echo "OK: projects/data/articles.json exists"
           else
             echo "ERROR: projects/data/articles.json missing"
+            exit 1
+          fi
+          if [ "$(stat -c %s projects/data/articles.json)" -eq 0 ]; then
+            echo "ERROR: projects/data/articles.json is empty"
             exit 1
           fi
 
@@ -126,7 +135,6 @@ jobs:
             echo
           fi
 
-          test -s projects/data/articles.json
           if [ -f projects/data/videos.json ]; then
             test -s projects/data/videos.json || echo "WARN: projects/data/videos.json exists but is empty"
           fi
