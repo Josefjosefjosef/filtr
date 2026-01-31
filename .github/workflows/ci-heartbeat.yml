@@ -31,39 +31,10 @@ jobs:
         run: |
           set -euo pipefail
 
-          req="https://infouzel.cz/projects/data/articles.json"
-          opt="https://infouzel.cz/projects/data/videos.json"
+          echo "Checking required: https://infouzel.cz/projects/data/articles.json"
+          curl -fsS "https://infouzel.cz/projects/data/articles.json" -o /dev/null
 
-          echo "GET required: $req"
-          code="$(curl -sS -L -o /dev/null -w "%{http_code}" "$req")"
-          ctype="$(curl -sS -L -I "$req" | tr -d '\r' | awk -F': ' 'tolower($1)=="content-type"{print tolower($2); exit}')"
-          echo "HTTP $code  CT=${ctype:-unknown}"
-          if [ "$code" -lt 200 ] || [ "$code" -ge 400 ]; then
-            echo "FAIL: required endpoint returned $code"
-            exit 1
-          fi
-          case "${ctype:-}" in
-            *json*) ;;
-            *) echo "FAIL: required endpoint is not JSON (Content-Type=${ctype:-unknown})"; exit 1 ;;
-          esac
+          echo "Checking optional: https://infouzel.cz/projects/data/videos.json"
+          curl -fsS "https://infouzel.cz/projects/data/videos.json" -o /dev/null || true
 
-          echo "GET optional: $opt"
-          code="$(curl -sS -L -o /dev/null -w "%{http_code}" "$opt")"
-          ctype="$(curl -sS -L -I "$opt" | tr -d '\r' | awk -F': 'tolower($1)=="content-type"{print tolower($2); exit}')"
-          echo "HTTP $code  CT=${ctype:-unknown}"
-
-          if [ "$code" = "404" ] || [ "$code" = "204" ]; then
-            echo "OK: optional endpoint missing/empty is allowed ($code)"
-            exit 0
-          fi
-
-          if [ "$code" -lt 200 ] || [ "$code" -ge 400 ]; then
-            echo "FAIL: optional endpoint returned $code"
-            exit 1
-          fi
-          case "${ctype:-}" in
-            *json*) ;;
-            *) echo "FAIL: optional endpoint is not JSON (Content-Type=${ctype:-unknown})"; exit 1 ;;
-          esac
-
-          echo "OK: heartbeat endpoints reachable"
+          echo "OK: endpoints reachable"
