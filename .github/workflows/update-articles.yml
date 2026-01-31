@@ -3,7 +3,7 @@ name: Update articles data
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/15 * * * *"
 
 permissions:
   contents: write
@@ -15,6 +15,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,6 +35,17 @@ jobs:
 
       - name: Build articles JSON
         run: python scripts/build_articles.py
+
+      - name: Build videos JSON (optional)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f "scripts/build_videos.py" ]; then
+            python scripts/build_videos.py
+            echo "OK: build_videos.py ran"
+          else
+            echo "SKIP: scripts/build_videos.py not found"
+          fi
 
       - name: Normalize output paths (ensure publish root)
         shell: bash
@@ -155,10 +167,6 @@ jobs:
             exit 0
           fi
 
-          git fetch origin main
-          git pull --ff-only origin main || true
-
-          git status --short
           git commit -m "data: update articles"
 
           for i in 1 2 3; do
@@ -167,8 +175,8 @@ jobs:
               exit 0
             fi
             echo "Push failed, retry $i..."
+            sleep $((i*5))
             git fetch origin main
-            git pull --ff-only origin main || true
           done
 
           echo "ERROR: push failed after retries"
