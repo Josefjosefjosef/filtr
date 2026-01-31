@@ -1332,6 +1332,15 @@ function buildVideoAsArticleCard(it) {
       renderItems(state.filteredItems);
       return;
     }
+
+    debugLog(
+      "[FILTER]",
+      "section:", state.activeSection,
+      "topic:", state.activeTopic,
+      "filter:", state.activeFilter,
+      "cached:", state.cachedItems?.length,
+      "filtered:", state.filteredItems?.length
+    );
     const query = (searchInput && searchInput.value.trim()) || "";
     const normalizedQuery = query.toLowerCase();
     const sectionsToUse = activeSections && activeSections.length ? activeSections : ["vse"];
