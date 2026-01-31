@@ -3,11 +3,9 @@ name: CI - Data Freshness
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/15 * * * *"
   push:
     paths:
-      - "projects/data/articles.json"
-      - "projects/data/videos.json"
       - ".github/workflows/ci-data-freshness.yml"
 
 permissions:
