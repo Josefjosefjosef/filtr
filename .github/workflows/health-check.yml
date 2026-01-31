@@ -21,7 +21,7 @@ jobs:
 
           if [ -f filtr/data/weather.json ]; then
             echo "OK: filtr/data/weather.json"
-            cat filtr/data/weather.json | head -n 30 || true
+            head -n 30 filtr/data/weather.json || true
           else
             echo "MISSING: filtr/data/weather.json"
             missing=1
@@ -29,7 +29,7 @@ jobs:
 
           if [ -f filtr/data/namedays.json ]; then
             echo "OK: filtr/data/namedays.json"
-            cat filtr/data/namedays.json | head -n 30 || true
+            head -n 30 filtr/data/namedays.json || true
           else
             echo "MISSING: filtr/data/namedays.json"
             missing=1
