@@ -1334,6 +1334,9 @@ function buildVideoAsArticleCard(it) {
   // Druhá render cesta je zakázaná.
   function applyFilter() {
     if (!state.hasLoadedData) return;
+    if (DEBUG) {
+      console.log("[applyFilter] cachedItems before filter:", state.cachedItems.length);
+    }
 
     if (isDebugLogging) {
       console.log("[FILTER DEBUG] cachedItems.len=", state.cachedItems?.length ?? 0);
@@ -1395,6 +1398,10 @@ function buildVideoAsArticleCard(it) {
       });
     }
     state.filteredItems = filtered;
+    if (DEBUG) {
+      console.log("[applyFilter] filteredItems after filter:", filtered.length);
+      console.log("[applyFilter] first filtered items:", filtered.slice(0, 3));
+    }
 
     if (isDebugLogging) {
       console.log("[FILTER DEBUG] filteredItems.len=", state.filteredItems?.length ?? 0);
@@ -2183,6 +2190,14 @@ function buildVideoAsArticleCard(it) {
       state.stats.articlesCount = articlesOnly.length;
       state.stats.videosCount = videosOnly.length;
       state.cachedItems = mixed.length ? mixed : combined;
+      if (DEBUG) {
+        console.log("[loadData] cachedItems length:", state.cachedItems.length);
+        console.log("[loadData] first items:", state.cachedItems.slice(0, 3));
+      }
+      if (!state.cachedItems.length) {
+        renderEmpty("Obsah se teď nenačetl (data jsou prázdná). Zkus obnovit stránku.");
+        return;
+      }
       state.hasLoadedData = true;
       if (!Array.isArray(state.cachedItems)) state.cachedItems = [];
       state.consecutiveLoadFailures = 0;
