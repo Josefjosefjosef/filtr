@@ -1320,6 +1320,18 @@ function buildVideoAsArticleCard(it) {
   // Druhá render cesta je zakázaná.
   function applyFilter() {
     if (!state.hasLoadedData) return;
+
+    if (
+      !state.activeSection &&
+      !state.activeTopic &&
+      !state.activeFilter
+    ) {
+      state.filteredItems = Array.isArray(state.cachedItems)
+        ? state.cachedItems.slice()
+        : [];
+      renderItems(state.filteredItems);
+      return;
+    }
     const query = (searchInput && searchInput.value.trim()) || "";
     const normalizedQuery = query.toLowerCase();
     const sectionsToUse = activeSections && activeSections.length ? activeSections : ["vse"];
