@@ -2041,6 +2041,7 @@ function buildVideoAsArticleCard(it) {
       state.stats.videosCount = videosOnly.length;
       state.cachedItems = mixed.length ? mixed : combined;
       state.hasLoadedData = true;
+      if (!Array.isArray(state.cachedItems)) state.cachedItems = [];
       state.consecutiveLoadFailures = 0;
       if (isDebugLogging) {
         debugLog(
