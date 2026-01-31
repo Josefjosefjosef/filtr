@@ -75,6 +75,7 @@
     lastVideosUpdatedAt: null,
     lastProbe: null,
     isLoadingData: false,
+    consecutiveLoadFailures: 0,
   };
   state.cachedItems ??= [];
   state.filteredItems ??= [];
@@ -1900,8 +1901,18 @@ function buildVideoAsArticleCard(it) {
         throw artRes.status === "rejected" ? artRes.reason : (vidRes.status === "rejected" ? vidRes.reason : new Error("DATA_LOAD_FAILED"));
       }
 
-      assertFreshGeneratedAt(articlesData);
-      assertFreshGeneratedAt(videosData);
+      const articlesOk = !!articlesData;
+      const videosOk = !!videosData;
+      if (articlesOk && videosOk) {
+        setStatus("Stav dat: OK");
+      } else if (articlesOk && !videosOk) {
+        setStatus("Stav dat: částečně (videa se teď nenačetla, obnova běží)");
+      } else if (!articlesOk && videosOk) {
+        setStatus("Stav dat: částečně (články se teď nenačetly, obnova běží)");
+      }
+
+      if (articlesData) assertFreshGeneratedAt(articlesData);
+      if (videosData) assertFreshGeneratedAt(videosData);
 
       if (articlesData) {
         articleStatusCode = 200;
@@ -2028,8 +2039,9 @@ function buildVideoAsArticleCard(it) {
       }
       state.stats.articlesCount = articlesOnly.length;
       state.stats.videosCount = videosOnly.length;
-      state.cachedItems = mixed.length ? mixed : combined; 
+      state.cachedItems = mixed.length ? mixed : combined;
       state.hasLoadedData = true;
+      state.consecutiveLoadFailures = 0;
       if (isDebugLogging) {
         debugLog(
           "[CACHE] total",
@@ -2136,6 +2148,8 @@ function buildVideoAsArticleCard(it) {
         return;
       }
 
+      state.consecutiveLoadFailures = (state.consecutiveLoadFailures || 0) + 1;
+
       const hasLast = Array.isArray(state.cachedItems) && state.cachedItems.length > 0;
       const failMsg = "Stav dat: výpadek (automatický pokus o obnovení)";
       setStatus(failMsg);
@@ -2170,7 +2184,10 @@ function buildVideoAsArticleCard(it) {
       }
 
       console.error("loadData failed:", err);
-      const delay = 15000;
+      const delay =
+        state.consecutiveLoadFailures >= 10 ? 180000 :
+        state.consecutiveLoadFailures >= 5 ? 60000 :
+        15000;
       setTimeout(() => {
         if (document.visibilityState === "visible") {
           loadData();
