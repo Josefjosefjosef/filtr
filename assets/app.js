@@ -1015,6 +1015,14 @@
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
   function renderFeed(target, items) {
+    if (DEBUG) {
+      console.log("[renderFeed] items.length:", items.length);
+      console.log("[renderFeed] first rows:", items.slice(0, 3));
+      console.log(
+        "[renderFeed] unique contentTypes:",
+        [...new Set(items.map((i) => i.contentType))]
+      );
+    }
     if (isDebugLogging) {
       const kinds = Array.from(new Set((items || []).map((item) => String(item?.contentType || "unknown"))));
       console.log("[RENDER DEBUG] items.len=", items?.length ?? 0, "samples=", (items || []).slice(0, 3), "types=", kinds);
@@ -2090,6 +2098,13 @@ function buildVideoAsArticleCard(it) {
         contentType: "article",
         suspiciousTitle: isSuspiciousTitle(item.title),
       }));
+      if (DEBUG) {
+        sanitizedArticles.forEach((item) => {
+          if (!item.contentType) {
+            console.warn("[normalize] Missing contentType:", item);
+          }
+        });
+      }
       sanitizedArticles.forEach((item) => {
         if (!item.contentType) {
           debugWarn("Missing contentType", item);
