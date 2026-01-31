@@ -931,6 +931,7 @@
     const hashValue = finalSections.join(",");
     if (location.hash.replace(/^#/, "") === hashValue) {
       setSectionsFromHash();
+      if (isDebugLogging) console.log("[LOAD DEBUG] before applyFilter cached=", state.cachedItems.length);
       applyFilter();
       return;
     }
@@ -1014,6 +1015,10 @@
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
   function renderFeed(target, items) {
+    if (isDebugLogging) {
+      const kinds = Array.from(new Set((items || []).map((item) => String(item?.contentType || "unknown"))));
+      console.log("[RENDER DEBUG] items.len=", items?.length ?? 0, "samples=", (items || []).slice(0, 3), "types=", kinds);
+    }
     const feedEl = document.getElementById("feed");
     const feedExists = !!(feedEl && feedEl.id === "feed");
     const feedChildrenBefore = feedEl ? feedEl.childElementCount : 0;
@@ -1330,6 +1335,10 @@ function buildVideoAsArticleCard(it) {
   function applyFilter() {
     if (!state.hasLoadedData) return;
 
+    if (isDebugLogging) {
+      console.log("[FILTER DEBUG] cachedItems.len=", state.cachedItems?.length ?? 0);
+    }
+
     if (
       !state.activeSection &&
       !state.activeTopic &&
@@ -1386,6 +1395,10 @@ function buildVideoAsArticleCard(it) {
       });
     }
     state.filteredItems = filtered;
+
+    if (isDebugLogging) {
+      console.log("[FILTER DEBUG] filteredItems.len=", state.filteredItems?.length ?? 0);
+    }
 
     if (filtered.length === 0) {
       if (query) {
@@ -2070,6 +2083,11 @@ function buildVideoAsArticleCard(it) {
         contentType: "article",
         suspiciousTitle: isSuspiciousTitle(item.title),
       }));
+      sanitizedArticles.forEach((item) => {
+        if (!item.contentType) {
+          debugWarn("Missing contentType", item);
+        }
+      });
       debugLog("[ARTICLES NORMALIZED]", sanitizedArticles.length);
       if (sanitizedArticles.length < totalArticles) {
         debugWarn("[DATA] filtered invalid items", totalArticles, "->", sanitizedArticles.length);
