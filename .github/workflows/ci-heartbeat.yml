@@ -29,40 +29,61 @@ jobs:
         run: |
           set -euo pipefail
 
-          req_url="https://infouzel.cz/projects/data/articles.json"
-          opt_url="https://infouzel.cz/projects/data/videos.json"
+          REQ_URL="https://infouzel.cz/projects/data/articles.json"
+          OPT_URL="https://infouzel.cz/projects/data/videos.json"
 
-          echo "GET(required) ${req_url}"
-          req_code="$(curl -sS -L -o /dev/null -w "%{http_code}" "${req_url}")"
-          req_ctype="$(curl -sS -L -I "${req_url}" | tr -d '\r' | awk -F': ' 'tolower($1)=="content-type"{print tolower($2); exit}')"
-          echo "HTTP ${req_code}  CT=${req_ctype:-unknown}"
+          check_required() {
+            local url="$1"
+            echo "GET required: $url"
 
-          if [ "${req_code}" -lt 200 ] || [ "${req_code}" -ge 400 ]; then
-            echo "FAIL: required endpoint returned ${req_code}"
-            exit 1
-          fi
-          if [[ "${req_ctype:-}" != *json* ]]; then
-            echo "FAIL: required endpoint is not JSON (Content-Type=${req_ctype:-unknown})"
-            exit 1
-          fi
+            http_code="$(curl -sS -L -o /dev/null -w '%{http_code}' "$url")"
+            content_type="$(curl -sS -L -I "$url" | tr -d '\r' | awk -F': ' 'tolower($1)=="content-type"{print tolower($2); exit}')"
 
-          echo "GET(optional) ${opt_url}"
-          opt_code="$(curl -sS -L -o /dev/null -w "%{http_code}" "${opt_url}")"
-          opt_ctype="$(curl -sS -L -I "${opt_url}" | tr -d '\r' | awk -F': 'tolower($1)=="content-type"{print tolower($2); exit}')"
-          echo "HTTP ${opt_code}  CT=${opt_ctype:-unknown}"
+            echo "HTTP=${http_code} Content-Type=${content_type:-unknown}"
 
-          if [ "${opt_code}" -eq 404 ] || [ "${opt_code}" -eq 204 ]; then
-            echo "OK(optional): missing/empty is allowed (${opt_code})"
-            exit 0
-          fi
+            if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 400 ]; then
+              echo "FAIL: required endpoint returned HTTP $http_code"
+              exit 1
+            fi
 
-          if [ "${opt_code}" -lt 200 ] || [ "${opt_code}" -ge 400 ]; then
-            echo "FAIL: optional endpoint returned ${opt_code}"
-            exit 1
-          fi
-          if [[ "${opt_ctype:-}" != *json* ]]; then
-            echo "FAIL: optional endpoint is not JSON (Content-Type=${opt_ctype:-unknown})"
-            exit 1
-          fi
+            case "$content_type" in
+              *json*) ;;
+              *)
+                echo "FAIL: required endpoint is not JSON"
+                exit 1
+                ;;
+            esac
+          }
+
+          check_optional() {
+            local url="$1"
+            echo "GET optional: $url"
+
+            http_code="$(curl -sS -L -o /dev/null -w '%{http_code}' "$url")"
+            content_type="$(curl -sS -L -I "$url" | tr -d '\r' | awk -F': 'tolower($1)=="content-type"{print tolower($2); exit}')"
+
+            echo "HTTP=${http_code} Content-Type=${content_type:-unknown}"
+
+            if [ "$http_code" -eq 404 ] || [ "$http_code" -eq 204 ]; then
+              echo "OK: optional endpoint missing or empty"
+              return 0
+            fi
+
+            if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 400 ]; then
+              echo "FAIL: optional endpoint returned HTTP $http_code"
+              exit 1
+            fi
+
+            case "$content_type" in
+              *json*) ;;
+              *)
+                echo "FAIL: optional endpoint is not JSON"
+                exit 1
+                ;;
+            esac
+          }
+
+          check_required "$REQ_URL"
+          check_optional "$OPT_URL"
 
           echo "OK: heartbeat endpoints reachable"
