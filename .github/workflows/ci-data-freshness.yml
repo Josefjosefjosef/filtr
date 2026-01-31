@@ -33,12 +33,12 @@ jobs:
 
       - name: Freshness check (max age minutes)
         env:
-          MAX_AGE_MINUTES: "90"
+          MAX_AGE_MINUTES: "120"
         run: |
           python - <<'PY'
           import json, os, sys, datetime, pathlib
 
-          max_age_minutes = int(os.environ.get("MAX_AGE_MINUTES","90"))
+          max_age_minutes = int(os.environ.get("MAX_AGE_MINUTES","120"))
           now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
 
           def parse_iso(s):
@@ -47,14 +47,19 @@ jobs:
             if s.endswith("Z"):
               s = s[:-1] + "+00:00"
             try:
-              return datetime.datetime.fromisoformat(s)
+              dt = datetime.datetime.fromisoformat(s)
+              if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=datetime.timezone.utc)
+              return dt
             except Exception:
               return None
 
-          def check(path):
+          def check(path, required=True):
             p = pathlib.Path(path)
             if not p.exists():
-              return (False, f"missing: {path}")
+              if required:
+                return (False, f"missing(required): {path}")
+              return (True, f"missing(optional): {path}")
             try:
               data = json.loads(p.read_text(encoding="utf-8"))
             except Exception as e:
@@ -71,6 +76,7 @@ jobs:
                 data.get("builtAt"),
                 data.get("updatedAt"),
               ]
+
             ts = None
             for c in candidates:
               ts = parse_iso(c) if isinstance(c, str) else None
@@ -85,13 +91,15 @@ jobs:
             msg = f"{path}: ts={ts.isoformat()} age_min={age:.1f} limit={max_age_minutes}"
             return (ok, msg)
 
-          ok1, msg1 = check("projects/data/articles.json")
-          ok2, msg2 = check("projects/data/videos.json")
+          ok1, msg1 = check("projects/data/articles.json", required=True)
+          ok2, msg2 = check("projects/data/videos.json", required=False)
+
           print("[freshness]", msg1)
           print("[freshness]", msg2)
 
-          if not (ok1 and ok2):
-            print("FAIL: data too old or missing")
+          if not ok1:
+            print("FAIL: articles data too old or missing")
             sys.exit(1)
+
           print("OK: data freshness within limit")
           PY

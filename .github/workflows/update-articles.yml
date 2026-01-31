@@ -3,7 +3,7 @@ name: Update articles data
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "*/30 * * * *"
 
 permissions:
   contents: write
@@ -32,12 +32,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
 
-      - name: Sync with main
-        run: |
-          git fetch origin main
-          git checkout main
-          git pull --rebase origin main
-
       - name: Build articles JSON
         run: python scripts/build_articles.py
 
@@ -46,8 +40,8 @@ jobs:
         run: |
           set -euo pipefail
           echo "PWD=$(pwd)"
-          pwd
           ls -la
+
           mkdir -p projects/data
 
           echo "=== find generated json candidates ==="
@@ -75,15 +69,23 @@ jobs:
             cp -f "$src" "$dst"
           }
 
-          copy_if_needed "filtr/data/articles.json"             "projects/data/articles.json"
-          copy_if_needed "filtr/filtr/data/articles.json"       "projects/data/articles.json"
-          copy_if_needed "filtr/filtr/filtr/data/articles.json" "projects/data/articles.json"
-          copy_if_needed "data/articles.json"                   "projects/data/articles.json"
+          if [ ! -s "projects/data/articles.json" ]; then
+            copy_if_needed "filtr/data/articles.json"             "projects/data/articles.json"
+            copy_if_needed "filtr/filtr/data/articles.json"       "projects/data/articles.json"
+            copy_if_needed "filtr/filtr/filtr/data/articles.json" "projects/data/articles.json"
+            copy_if_needed "data/articles.json"                   "projects/data/articles.json"
+          else
+            echo "[keep] projects/data/articles.json already generated"
+          fi
 
-          copy_if_needed "filtr/data/videos.json"               "projects/data/videos.json"
-          copy_if_needed "filtr/filtr/data/videos.json"         "projects/data/videos.json"
-          copy_if_needed "filtr/filtr/filtr/data/videos.json"   "projects/data/videos.json"
-          copy_if_needed "data/videos.json"                     "projects/data/videos.json"
+          if [ ! -s "projects/data/videos.json" ]; then
+            copy_if_needed "filtr/data/videos.json"               "projects/data/videos.json"
+            copy_if_needed "filtr/filtr/data/videos.json"         "projects/data/videos.json"
+            copy_if_needed "filtr/filtr/filtr/data/videos.json"   "projects/data/videos.json"
+            copy_if_needed "data/videos.json"                     "projects/data/videos.json"
+          else
+            echo "[keep] projects/data/videos.json already generated"
+          fi
 
           if [ -f "projects/data/articles.json" ]; then
             echo "OK: projects/data/articles.json exists"
@@ -117,40 +119,6 @@ jobs:
             test -s projects/data/videos.json || echo "WARN: projects/data/videos.json exists but is empty"
           fi
 
-      - name: Debug generated output (generatedAt + basic stats)
-        shell: bash
-        run: |
-          echo "=== ls -la projects/data ==="
-          ls -la projects/data || true
-
-          echo "=== generatedAt from projects/data/articles.json ==="
-          if [ -f projects/data/articles.json ]; then
-            python -c "import json; d=json.load(open('projects/data/articles.json','r',encoding='utf-8')); print(d.get('generatedAt',''))"
-          else
-            echo "MISSING: projects/data/articles.json"
-          fi
-
-          echo "=== head of projects/data/articles.json ==="
-          if [ -f projects/data/articles.json ]; then
-            head -n 20 projects/data/articles.json || true
-          else
-            echo "MISSING: projects/data/articles.json"
-          fi
-
-          echo "=== generatedAt from projects/data/videos.json ==="
-          if [ -f projects/data/videos.json ]; then
-            python -c "import json; d=json.load(open('projects/data/videos.json','r',encoding='utf-8')); print(d.get('generatedAt',''))"
-          else
-            echo "MISSING: projects/data/videos.json"
-          fi
-
-          echo "=== head of projects/data/videos.json ==="
-          if [ -f projects/data/videos.json ]; then
-            head -n 50 projects/data/videos.json || true
-          else
-            echo "MISSING: projects/data/videos.json"
-          fi
-
       - name: PROOF: articles.json exists + generatedAt + count
         shell: bash
         run: |
@@ -173,13 +141,6 @@ jobs:
           git status --porcelain=v1
           git diff --name-only
 
-      - name: PROOF: git status (full)
-        shell: bash
-        run: |
-          set -euo pipefail
-          git status --porcelain=v1
-          git status
-
       - name: Commit & push (projects data)
         shell: bash
         run: |
@@ -187,7 +148,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # stage entire publish folder (doesn't fail if videos.json is absent)
           git add -A projects/data
 
           if git diff --cached --quiet; then
@@ -195,6 +155,21 @@ jobs:
             exit 0
           fi
 
+          git fetch origin main
+          git pull --ff-only origin main || true
+
           git status --short
           git commit -m "data: update articles"
-          git push origin HEAD:main
+
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Push OK"
+              exit 0
+            fi
+            echo "Push failed, retry $i..."
+            git fetch origin main
+            git pull --ff-only origin main || true
+          done
+
+          echo "ERROR: push failed after retries"
+          exit 1

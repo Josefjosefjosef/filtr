@@ -2,6 +2,8 @@ name: CI - Workflow Lint
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"
   push:
     paths:
       - ".github/workflows/**/*.yml"
@@ -21,14 +23,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install actionlint
+      - name: Install actionlint (stable installer)
+        shell: bash
         run: |
-          set -e
-          curl -sSLo actionlint.tar.gz https://github.com/rhysd/actionlint/releases/latest/download/actionlint_linux_amd64.tar.gz
-          tar -xzf actionlint.tar.gz
-          sudo mv actionlint /usr/local/bin/actionlint
+          set -euo pipefail
+          curl -sSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash
+          sudo mv ./actionlint /usr/local/bin/actionlint
           actionlint -version
 
       - name: Lint workflows
+        shell: bash
         run: |
+          set -euo pipefail
           actionlint -color
