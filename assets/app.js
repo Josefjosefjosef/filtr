@@ -215,6 +215,13 @@
     return `${candidate}${separator}v=${Date.now()}`;
   }
 
+  function withBust(url) {
+    const candidate = String(url || "");
+    if (!candidate) return "";
+    const separator = candidate.includes("?") ? "&" : "?";
+    return `${candidate}${separator}v=${Date.now()}`;
+  }
+
   const PREFERRED_TTL_MS = 48 * 60 * 60 * 1000;
   const PREFERRED_STORAGE_KEY = "iu.preferredUrls";
 
@@ -324,18 +331,6 @@
     };
   }
 
-  function appendDataCacheBust(url) {
-    if (!url) return url;
-    if (!/(articles|videos)\.json/.test(url)) return url;
-    try {
-      const parsed = new URL(url, location.origin);
-      parsed.searchParams.append("iu_ts", Date.now().toString());
-      return parsed.toString();
-    } catch {
-      return url;
-    }
-  }
-
   // === DATA ENDPOINT OVERRIDE (maintenance-safe) ===
   (function(){
     const ARTICLES_ENDPOINT = "/projects/data/articles.json";
@@ -380,9 +375,19 @@
   })();
 
   async function tryFetchJson(url, timeoutMs = 9000) {
-    const requestUrl = appendDataCacheBust(url);
+    const requestUrl = withBust(url);
     try {
-      const res = await timeoutFetch(requestUrl, { cache: "no-store" }, timeoutMs);
+      const res = await timeoutFetch(
+        requestUrl,
+        {
+          cache: "no-store",
+          credentials: "same-origin",
+          headers: {
+            "cache-control": "no-cache",
+          },
+        },
+        timeoutMs,
+      );
       const text = await res.text();
       if (!res.ok) {
         const preview = text ? text.slice(0, 200) : "";

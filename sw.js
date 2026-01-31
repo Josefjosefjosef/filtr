@@ -84,31 +84,25 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// Activate: cleanup old caches
+// Activate: hard reset caches
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== APP_SHELL_CACHE && key !== DATA_CACHE && key !== DATA_META_CACHE) {
-            return caches.delete(key);
-          }
-        })
-      );
-    })
-  );
-  return self.clients.claim();
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.map((key) => caches.delete(key)));
+    await self.clients.claim();
+  })());
 });
 
 // Fetch: Network First pro data, Cache First pro App Shell
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
-  const path = url.pathname;
 
-  if (path.startsWith("/projects/data/") && path.endsWith(".json")) {
+  if (url.pathname.startsWith("/projects/data/")) {
     event.respondWith(fetch(event.request, { cache: "no-store" }));
     return;
   }
+
+  const path = url.pathname;
 
   if (path.includes("/assets/app.js")) {
     event.respondWith(fetch(event.request, { cache: "no-store" }));
