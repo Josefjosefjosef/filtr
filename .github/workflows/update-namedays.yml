@@ -34,7 +34,12 @@ jobs:
         run: |
           ls -la filtr/data
           head -c 200 filtr/data/namedays.json || true
-          test -f filtr/data/namedays.json && echo "OK: filtr/data/namedays.json exists" || (echo "ERROR: namedays.json missing" && exit 1)
+          if [ -f filtr/data/namedays.json ]; then
+            echo "OK: filtr/data/namedays.json exists"
+          else
+            echo "ERROR: namedays.json missing"
+            exit 1
+          fi
 
       - name: Validate generated JSON (publish root)
         run: |
