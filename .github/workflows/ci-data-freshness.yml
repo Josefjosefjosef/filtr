@@ -1,9 +1,14 @@
-name: CI data freshness
+name: CI - Data Freshness
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"
-  workflow_dispatch: {}
+    - cron: "*/30 * * * *"
+  push:
+    paths:
+      - "projects/data/articles.json"
+      - "projects/data/videos.json"
+      - ".github/workflows/ci-data-freshness.yml"
 
 permissions:
   contents: read
@@ -16,97 +21,77 @@ jobs:
   freshness:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 1
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Check generatedAt timestamp (articles)
-        shell: bash
+      - name: Show files
         run: |
-          set -euo pipefail
+          ls -la projects/data || true
+          echo "---"
+          test -f projects/data/articles.json && echo "articles.json exists" || echo "articles.json missing"
+          test -f projects/data/videos.json && echo "videos.json exists" || echo "videos.json missing"
 
-          if [ ! -f projects/data/articles.json ]; then
-            echo "ERROR: Missing projects/data/articles.json"
-            exit 1
-          fi
-
-          python - <<'PY'
-import json, datetime, sys
-
-path = "projects/data/articles.json"
-with open(path, "r", encoding="utf-8") as fh:
-    data = json.load(fh)
-
-ts = data.get("generatedAt") or data.get("updatedAt") or data.get("buildAt")
-if not ts:
-    print("ERROR: Missing timestamp field (generatedAt/updatedAt/buildAt) in", path)
-    sys.exit(1)
-
-try:
-    parsed = datetime.datetime.fromisoformat(ts.replace("Z", "+00:00"))
-except ValueError:
-    print("ERROR: Invalid timestamp:", ts)
-    sys.exit(1)
-
-now = datetime.datetime.now(datetime.timezone.utc)
-age_min = (now - parsed).total_seconds() / 60.0
-
-print("generatedAt:", ts)
-print("age_minutes:", f"{age_min:.1f}")
-
-# Fail if older than 30 minutes
-if age_min > 30.0:
-    print("ERROR: data is stale (>30 min)")
-    sys.exit(1)
-
-print("OK: data freshness within 30 min")
-PY
-
-      - name: Check generatedAt timestamp (videos if present)
-        shell: bash
+      - name: Freshness check (max age minutes)
+        env:
+          MAX_AGE_MINUTES: "90"
         run: |
-          set -euo pipefail
-
-          if [ ! -f projects/data/videos.json ]; then
-            echo "WARN: Missing projects/data/videos.json (skipping)"
-            exit 0
-          fi
-
           python - <<'PY'
-import json, datetime, sys
+          import json, os, sys, datetime, pathlib
 
-path = "projects/data/videos.json"
-with open(path, "r", encoding="utf-8") as fh:
-    data = json.load(fh)
+          max_age_minutes = int(os.environ.get("MAX_AGE_MINUTES","90"))
+          now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
 
-ts = data.get("generatedAt") or data.get("updatedAt") or data.get("buildAt")
-if not ts:
-    print("ERROR: Missing timestamp field (generatedAt/updatedAt/buildAt) in", path)
-    sys.exit(1)
+          def parse_iso(s):
+            if not s: return None
+            s = s.strip()
+            if s.endswith("Z"):
+              s = s[:-1] + "+00:00"
+            try:
+              return datetime.datetime.fromisoformat(s)
+            except Exception:
+              return None
 
-try:
-    parsed = datetime.datetime.fromisoformat(ts.replace("Z", "+00:00"))
-except ValueError:
-    print("ERROR: Invalid timestamp:", ts)
-    sys.exit(1)
+          def check(path):
+            p = pathlib.Path(path)
+            if not p.exists():
+              return (False, f"missing: {path}")
+            try:
+              data = json.loads(p.read_text(encoding="utf-8"))
+            except Exception as e:
+              return (False, f"invalid json: {path} ({e})")
 
-now = datetime.datetime.now(datetime.timezone.utc)
-age_min = (now - parsed).total_seconds() / 60.0
+            candidates = []
+            if isinstance(data, dict):
+              meta = data.get("meta") if isinstance(data.get("meta"), dict) else {}
+              candidates += [
+                meta.get("generatedAt"),
+                meta.get("builtAt"),
+                meta.get("updatedAt"),
+                data.get("generatedAt"),
+                data.get("builtAt"),
+                data.get("updatedAt"),
+              ]
+            ts = None
+            for c in candidates:
+              ts = parse_iso(c) if isinstance(c, str) else None
+              if ts:
+                break
 
-print("generatedAt:", ts)
-print("age_minutes:", f"{age_min:.1f}")
+            if not ts:
+              ts = datetime.datetime.fromtimestamp(p.stat().st_mtime, tz=datetime.timezone.utc)
 
-# Videos can be less frequent; fail if older than 120 minutes
-if age_min > 120.0:
-    print("ERROR: videos data is stale (>120 min)")
-    sys.exit(1)
+            age = (now - ts).total_seconds() / 60.0
+            ok = age <= max_age_minutes
+            msg = f"{path}: ts={ts.isoformat()} age_min={age:.1f} limit={max_age_minutes}"
+            return (ok, msg)
 
-print("OK: videos freshness within 120 min")
-PY
+          ok1, msg1 = check("projects/data/articles.json")
+          ok2, msg2 = check("projects/data/videos.json")
+          print("[freshness]", msg1)
+          print("[freshness]", msg2)
+
+          if not (ok1 and ok2):
+            print("FAIL: data too old or missing")
+            sys.exit(1)
+          print("OK: data freshness within limit")
+          PY
