@@ -27,6 +27,8 @@ jobs:
       - name: Verify data endpoints reachable (articles required, videos optional)
         shell: bash
         run: |
+          #!/usr/bin/env bash
+          # shellcheck shell=bash
           set -euo pipefail
 
           req="https://infouzel.cz/projects/data/articles.json"
