@@ -105,7 +105,12 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   const path = url.pathname;
 
-  if (path.includes("/assets/app.js") || path.includes("/projects/data/")) {
+  if (path.startsWith("/projects/data/") && path.endsWith(".json")) {
+    event.respondWith(fetch(event.request, { cache: "no-store" }));
+    return;
+  }
+
+  if (path.includes("/assets/app.js")) {
     event.respondWith(fetch(event.request, { cache: "no-store" }));
     return;
   }

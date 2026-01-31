@@ -148,6 +148,20 @@
     }
   }
 
+  // === STATUS HELPERS EXTENSION (maintenance-safe) ===
+  window.iuSetDataStatus = function(articlesCount, videosCount){
+    const el = document.getElementById("dataStatus");
+    if (!el) return;
+    el.textContent = `Načteno: ${articlesCount} článků, ${videosCount} videí`;
+  };
+
+  window.iuSetDataError = function(msg){
+    const el = document.getElementById("lastErrInline");
+    if (!el) return;
+    el.style.display = "block";
+    el.textContent = msg;
+  };
+
   function formatDiagText(itemsLen, typeCounts, feedExists, before, after, renderedCount) {
     const hrefValue = location.href;
     const aUrl = diagMeta.articlesUrl || "-";
@@ -321,6 +335,49 @@
       return url;
     }
   }
+
+  // === DATA ENDPOINT OVERRIDE (maintenance-safe) ===
+  (function(){
+    const ARTICLES_ENDPOINT = "/projects/data/articles.json";
+    const VIDEOS_ENDPOINT   = "/projects/data/videos.json";
+    const hasWithCacheBust = typeof window.withCacheBust === "function";
+
+    if (typeof window.makeDataUrl === "function") {
+      const _makeDataUrl = window.makeDataUrl;
+      window.makeDataUrl = function(type, ...rest){
+        if (type === "articles" || type === "article") {
+          return hasWithCacheBust ? window.withCacheBust(ARTICLES_ENDPOINT) : ARTICLES_ENDPOINT;
+        }
+        if (type === "videos" || type === "video") {
+          return hasWithCacheBust ? window.withCacheBust(VIDEOS_ENDPOINT) : VIDEOS_ENDPOINT;
+        }
+        return _makeDataUrl.call(this, type, ...rest);
+      };
+    }
+  })();
+
+  // === PREFLIGHT CHECK FOR DATA ENDPOINTS ===
+  (async function preflightDataEndpoints(){
+    const endpoints = [
+      "/projects/data/articles.json",
+      "/projects/data/videos.json"
+    ];
+
+    for (const url of endpoints) {
+      try {
+        const res = await fetch(url, { method: "HEAD", cache: "no-store" });
+        console.info("[preflight]", url, "→", res.status, res.url);
+        if (!res.ok && typeof window.persistLastError === "function") {
+          window.persistLastError(`Preflight ${url} → ${res.status}`);
+        }
+      } catch (err) {
+        console.error("[preflight error]", url, err);
+        if (typeof window.persistLastError === "function") {
+          window.persistLastError(`Preflight ${url} → network error`);
+        }
+      }
+    }
+  })();
 
   async function tryFetchJson(url, timeoutMs = 9000) {
     const requestUrl = appendDataCacheBust(url);
@@ -1854,6 +1911,14 @@ function buildVideoAsArticleCard(it) {
       diagMeta.articlesStatus = articleStatusLabel || "404";
       diagMeta.videosUrl = chosenVideosUrl || "";
       diagMeta.videosStatus = videoStatusLabel || "404";
+      // === PROOF LOGS (maintenance-safe) ===
+      try {
+        console.info("[proof] articles loaded:", sanitizedArticles.length, chosenArticlesUrl || articleUrls[0] || "");
+        console.info("[proof] videos loaded:", videoItems.length, chosenVideosUrl || videoUrls[0] || "");
+        if (typeof window.iuSetDataStatus === "function") {
+          window.iuSetDataStatus(sanitizedArticles.length, videoItems.length);
+        }
+      } catch (_) {}
       const articlesJson = articleFetchResult?.json;
       const videosJson = videoFetchResult?.json;
       const normalizedArticles = Array.isArray(articlesArray) ? articlesArray : [];
