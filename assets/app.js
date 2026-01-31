@@ -1884,22 +1884,32 @@ function buildVideoAsArticleCard(it) {
         return res.text();
       });
 
-      const [probeText, articlesData, videosData] = await Promise.all([
+      const [probeRes, artRes, vidRes] = await Promise.allSettled([
         probePromise,
         fetchJsonNoCache(articlesUrl),
         fetchJsonNoCache(videosUrl),
       ]);
 
+      const probeText = probeRes.status === "fulfilled" ? probeRes.value : null;
       state.lastProbe = probeText;
+
+      const articlesData = artRes.status === "fulfilled" ? artRes.value : null;
+      const videosData = vidRes.status === "fulfilled" ? vidRes.value : null;
+
+      if (!articlesData && !videosData) {
+        throw artRes.status === "rejected" ? artRes.reason : (vidRes.status === "rejected" ? vidRes.reason : new Error("DATA_LOAD_FAILED"));
+      }
 
       assertFreshGeneratedAt(articlesData);
       assertFreshGeneratedAt(videosData);
 
-      articleStatusCode = 200;
-      articleStatusLabel = "OK";
-      chosenArticlesUrl = articlesUrl;
-      articleFetchResult = { json: articlesData, status: 200 };
-      data = articlesData;
+      if (articlesData) {
+        articleStatusCode = 200;
+        articleStatusLabel = "OK";
+        chosenArticlesUrl = articlesUrl;
+        articleFetchResult = { json: articlesData, status: 200 };
+        data = articlesData;
+      }
 
       const articlesGeneratedAt = articlesData?.generatedAt || articlesData?.meta?.generatedAt || null;
       const articleGeneratedTs = articlesGeneratedAt ? Date.parse(articlesGeneratedAt) : null;
@@ -1909,7 +1919,7 @@ function buildVideoAsArticleCard(it) {
         Number.isFinite(articleGeneratedTs) &&
         articleGeneratedTs + 10 * 60 * 1000 < probeStamp
       ) {
-        throw new Error("PROBE_JSON_MISMATCH");
+        debugWarn("PROBE_JSON_MISMATCH (non-fatal)", { probeStamp, articleGeneratedTs });
       }
       state.lastArticlesGeneratedAt = articlesGeneratedAt ? String(articlesGeneratedAt) : null;
       const articlesKeys = articlesData && typeof articlesData === "object" ? Object.keys(articlesData).sort().join(",") : "none";
@@ -1918,9 +1928,9 @@ function buildVideoAsArticleCard(it) {
       state.lastArticlesUpdatedAt = articlesUpdatedAt;
       state.articlesRaw = articlesData;
 
-      const articlesArray = normalizeFeedJson(data);
-      const totalArticles = Array.isArray(articlesArray) ? articlesArray.length : 0;
-      let sanitizedArticles = normalizeArticleList(Array.isArray(articlesArray) ? articlesArray : []).map((item) => ({
+      const safeArticlesArray = Array.isArray(articlesData) ? articlesData : (articlesData ? normalizeFeedJson(articlesData) : []);
+      const totalArticles = Array.isArray(safeArticlesArray) ? safeArticlesArray.length : 0;
+      let sanitizedArticles = normalizeArticleList(Array.isArray(safeArticlesArray) ? safeArticlesArray : []).map((item) => ({
         ...item,
         contentType: "article",
       }));
@@ -1935,9 +1945,9 @@ function buildVideoAsArticleCard(it) {
         debugLog("[ARTICLES] loaded", sanitizedArticles.length, sanitizedArticles.slice(0, 3));
       }
 
-      let videoItems = [];
-      normalizedVideoSource = normalizeFeedJson(videosData);
-      videoItems = normalizeVideoList(normalizedVideoSource);
+      const safeVideosArray = Array.isArray(videosData) ? videosData : (videosData ? normalizeFeedJson(videosData) : []);
+      normalizedVideoSource = Array.isArray(safeVideosArray) ? safeVideosArray : [];
+      let videoItems = normalizeVideoList(Array.isArray(normalizedVideoSource) ? normalizedVideoSource : []);
 
       const videosKeys =
         videosData && typeof videosData === "object" ? Object.keys(videosData).sort().join(",") : "none";
@@ -2126,35 +2136,46 @@ function buildVideoAsArticleCard(it) {
         return;
       }
 
-      const message = err && err.message ? err.message : String(err);
-      state.items = [];
-      state.cachedItems = null;
-      state.articlesRaw = null;
-      state.videosRaw = null;
-      state.hasLoadedData = false;
+      const hasLast = Array.isArray(state.cachedItems) && state.cachedItems.length > 0;
+      const failMsg = "Stav dat: výpadek (automatický pokus o obnovení)";
+      setStatus(failMsg);
 
-      const feed = document.querySelector("#feed");
-      if (feed) feed.innerHTML = "";
+      if (hasLast) {
+        const box = document.querySelector("#emptyBox") || document.querySelector("#empty");
+        if (box) {
+          box.style.display = "";
+          box.textContent = "Dočasný výpadek načtení dat. Zobrazuji poslední úspěšná data, probíhá obnova.";
+        }
+      } else {
+        state.items = [];
+        state.cachedItems = null;
+        state.articlesRaw = null;
+        state.videosRaw = null;
+        state.hasLoadedData = false;
 
-      const msg = "Obsah se teď nenačetl (chyba načtení dat). Zkus obnovit stránku.";
-      const box = document.querySelector("#emptyBox") || document.querySelector("#empty");
-      if (box) {
-        box.style.display = "";
-        box.textContent = msg;
-      } else if (feed) {
-        const div = document.createElement("div");
-        div.className = "iuErrorBox";
-        div.textContent = msg;
-        feed.appendChild(div);
+        const feed = document.querySelector("#feed");
+        if (feed) feed.innerHTML = "";
+
+        const msg = "Obsah se teď nenačetl (chyba načtení dat). Zkus obnovit stránku.";
+        const box = document.querySelector("#emptyBox") || document.querySelector("#empty");
+        if (box) {
+          box.style.display = "";
+          box.textContent = msg;
+        } else if (feed) {
+          const div = document.createElement("div");
+          div.className = "iuErrorBox";
+          div.textContent = msg;
+          feed.appendChild(div);
+        }
       }
 
       console.error("loadData failed:", err);
-      setStatus("Stav dat: chyba (automatický pokus o obnovení)");
+      const delay = 15000;
       setTimeout(() => {
         if (document.visibilityState === "visible") {
           loadData();
         }
-      }, 15000);
+      }, delay);
     } finally {
       state.isLoadingData = false;
     }
