@@ -1,7 +1,7 @@
 name: Update articles data
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: {}
   schedule:
     - cron: "*/15 * * * *"
 
@@ -33,6 +33,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
 
+      - name: Sync with main
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull --rebase origin main
+
       - name: Build articles JSON
         run: python scripts/build_articles.py
 
@@ -47,145 +53,46 @@ jobs:
             echo "SKIP: scripts/build_videos.py not found"
           fi
 
-      - name: Normalize output paths (ensure publish root)
+      - name: Normalize output paths
         shell: bash
         run: |
           set -euo pipefail
-          echo "PWD=$(pwd)"
-          ls -la
-
           mkdir -p projects/data
 
-          echo "=== find generated json candidates ==="
-          find . -maxdepth 6 -type f \( -name "articles.json" -o -name "videos.json" \) -print || true
-
-          copy_preferred () {
-            local dst="$1"
-            shift
-            local -a srcs=("$@")
-            for src in "${srcs[@]}"; do
-              if [ -s "$src" ]; then
-                echo "[copy] $src -> $dst"
-                cp -f "$src" "$dst"
-                return 0
-              fi
-            done
-            return 1
+          copy_if_needed () {
+            local src="$1"
+            local dst="$2"
+            [ ! -s "$src" ] && return 0
+            cp -f "$src" "$dst"
           }
 
-          ARTICLE_CANDIDATES=(
-            "projects/data/articles.json"
-            "filtr/data/articles.json"
-            "filtr/filtr/data/articles.json"
-            "filtr/filtr/filtr/data/articles.json"
-            "data/articles.json"
-          )
+          copy_if_needed "filtr/data/articles.json" "projects/data/articles.json"
+          copy_if_needed "data/articles.json" "projects/data/articles.json"
 
-          if [ ! -s "projects/data/articles.json" ]; then
-            if ! copy_preferred "projects/data/articles.json" "${ARTICLE_CANDIDATES[@]}"; then
-              echo "ERROR: no articles.json candidate generated"
-              exit 1
-            fi
-          else
-            echo "[keep] projects/data/articles.json already generated"
-          fi
+          copy_if_needed "filtr/data/videos.json" "projects/data/videos.json"
+          copy_if_needed "data/videos.json" "projects/data/videos.json"
 
-          VIDEO_CANDIDATES=(
-            "projects/data/videos.json"
-            "filtr/data/videos.json"
-            "filtr/filtr/data/videos.json"
-            "filtr/filtr/filtr/data/videos.json"
-            "data/videos.json"
-          )
+          echo "probe-ok $(date --utc +%Y-%m-%dT%H:%M:%SZ)" > projects/data/_probe.txt
 
-          if [ ! -s "projects/data/videos.json" ]; then
-            copy_preferred "projects/data/videos.json" "${VIDEO_CANDIDATES[@]}" || echo "WARN: videos source missing"
-          else
-            echo "[keep] projects/data/videos.json already generated"
-          fi
-
-          if [ -f "projects/data/articles.json" ]; then
-            echo "OK: projects/data/articles.json exists"
-          else
-            echo "ERROR: projects/data/articles.json missing"
-            exit 1
-          fi
+          test -s projects/data/articles.json
           if [ "$(stat -c %s projects/data/articles.json)" -eq 0 ]; then
             echo "ERROR: projects/data/articles.json is empty"
             exit 1
           fi
 
-          if [ -f "projects/data/videos.json" ]; then
-            echo "OK: projects/data/videos.json exists"
-          else
-            echo "WARN: projects/data/videos.json missing (may be empty video feed)"
-          fi
-
-          echo "=== Writing publish probe ==="
-          echo "probe-ok $(date --utc +%Y-%m-%dT%H:%M:%SZ)" > projects/data/_probe.txt
-
-          echo "[proof] projects/data:"
-          ls -la projects/data || true
-          wc -c projects/data/articles.json 2>/dev/null || true
-          wc -c projects/data/videos.json 2>/dev/null || true
-          head -c 120 projects/data/articles.json || true
-          echo
-          if [ -f projects/data/videos.json ]; then
-            head -c 120 projects/data/videos.json || true
-            echo
-          fi
-
-          if [ -f projects/data/videos.json ]; then
-            test -s projects/data/videos.json || echo "WARN: projects/data/videos.json exists but is empty"
-          fi
-
-      - name: PROOF: articles.json exists + generatedAt + count
-        shell: bash
-        run: |
-          set -euo pipefail
-          echo "=== LIST projects/data ==="
-          ls -la projects/data || true
-
-          echo "=== STAT articles.json ==="
-          test -f projects/data/articles.json || { echo "ERROR: projects/data/articles.json missing"; exit 1; }
-          wc -c projects/data/articles.json
-          sha256sum projects/data/articles.json | head -n 1
-
-          echo "=== generatedAt ==="
-          python -c "import json; p='projects/data/articles.json'; d=json.load(open(p,'r',encoding='utf-8')); arts=d.get('articles',[]); print('generatedAt:', d.get('generatedAt')); print('articles_count:', len(arts)); print('first_publishedAt:', (arts[0].get('publishedAt') if arts else '')); print('first_title:', (arts[0].get('title') if arts else ''))"
-
-      - name: PROOF: git status
-        shell: bash
-        run: |
-          set -euo pipefail
-          git status --porcelain=v1
-          git diff --name-only
-
-      - name: Commit & push (projects data)
+      - name: Commit & push
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add -A projects/data
+          git add projects/data
 
           if git diff --cached --quiet; then
-            echo "Nothing to commit (projects/data unchanged)."
+            echo "Nothing to commit"
             exit 0
           fi
 
           git commit -m "data: update articles"
-
-          for i in 1 2 3; do
-            if git push origin HEAD:main; then
-              echo "Push OK"
-              exit 0
-            fi
-            echo "Push failed, retry $i..."
-            sleep $((i*5))
-            git fetch origin main
-          done
-
-          echo "ERROR: push failed after retries"
-          exit 1
+          git push origin main
