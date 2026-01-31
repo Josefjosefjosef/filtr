@@ -151,6 +151,42 @@
     }
   }
 
+  function ensureDebugBox() {
+    try {
+      const params = new URLSearchParams(location.search || "");
+      if (params.get("debug") !== "1") return null;
+      let box = document.getElementById("iuDebugBox");
+      if (box) return box;
+      box = document.createElement("div");
+      box.id = "iuDebugBox";
+      box.style.cssText = [
+        "position:fixed",
+        "left:12px",
+        "bottom:12px",
+        "z-index:99999",
+        "max-width:420px",
+        "background:rgba(0,0,0,0.85)",
+        "color:#fff",
+        "padding:10px 12px",
+        "border-radius:10px",
+        "font:12px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Arial",
+        "box-shadow:0 8px 22px rgba(0,0,0,0.35)",
+        "white-space:pre-wrap",
+      ].join(";");
+      box.textContent = "iu debug: init…";
+      document.body.appendChild(box);
+      return box;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function debugBoxSet(msg) {
+    const box = ensureDebugBox();
+    if (!box) return;
+    box.textContent = msg;
+  }
+
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
   window.iuSetDataStatus = function(articlesCount, videosCount){
     const el = document.getElementById("dataStatus");
@@ -1909,11 +1945,16 @@ function buildVideoAsArticleCard(it) {
     let videosOk = false;
     let data = null;
     setStatus("Stav dat: načítám…");
+    debugBoxSet(`iu debug: loading…\nhref=${location.href}\nstatus=loading`);
 
     try {
       const probeUrl = "/projects/data/_probe.txt";
       const articlesUrl = "/projects/data/articles.json";
       const videosUrl = "/projects/data/videos.json";
+
+      debugBoxSet(
+        `iu debug: fetching…\nhref=${location.href}\narticlesUrl=${articlesUrl}\nvideosUrl=${videosUrl}`
+      );
 
       const probePromise = fetch(withTs(probeUrl), {
         cache: "no-store",
@@ -1992,7 +2033,7 @@ function buildVideoAsArticleCard(it) {
       debugLog("[DATA] articles loaded count=", sanitizedArticles.length);
       debugLog("[DATA] articles first=", sanitizedArticles[0]?.title, sanitizedArticles[0]?.url);
       if (isDebugLogging) {
-        debugLog("[ARTICLES] loaded", sanitizedArticles.length, sanitizedArticles.slice(0, 3));
+      debugLog("[ARTICLES] loaded", sanitizedArticles.length, sanitizedArticles.slice(0, 3));
       }
 
       const safeVideosArray = Array.isArray(videosData) ? videosData : (videosData ? normalizeFeedJson(videosData) : []);
@@ -2168,6 +2209,26 @@ function buildVideoAsArticleCard(it) {
 
       debugLog("[DATA] combined count=", state.cachedItems.length);
       debugLog("[DATA] combined first type=", state.cachedItems[0]?.contentType, state.cachedItems[0]?.title);
+
+      debugBoxSet(
+        `iu debug: parsed\narticlesCountRaw=${Array.isArray(articlesData) ? articlesData.length : -1}\nvideosCountRaw=${Array.isArray(videosData) ? videosData.length : -1}\narticlesCountSanitized=${Array.isArray(sanitizedArticles) ? sanitizedArticles.length : -1}\nvideosCountSanitized=${Array.isArray(normalizedVideoSource) ? normalizedVideoSource.length : -1}`
+      );
+
+      setTimeout(() => {
+        const feed = document.getElementById("feed");
+        const cards = feed ? feed.querySelectorAll("article, .card, .newsCard, .iuCard").length : -1;
+        const prev = document.getElementById("iuDebugBox")?.textContent || "";
+        debugBoxSet(`${prev}\niu debug: DOM\nfeedExists=${Boolean(feed)}\ncardsInDom=${cards}`);
+        if (feed) {
+          const hasData = (state.cachedItems?.length || 0) > 0;
+          if (hasData && cards === 0) {
+            const warning = document.createElement("div");
+            warning.style.cssText = "padding:12px;margin:12px 0;border:1px dashed #999;border-radius:10px;";
+            warning.textContent = "IU: DATA JSOU NAČTENÁ, ALE NIC SE NERENDERUJE (debug=1). Zkontroluj konzoli a iuDebugBox.";
+            feed.appendChild(warning);
+          }
+        }
+      }, 0);
 
       if (isDebugOn()) {
         writeDebug({
