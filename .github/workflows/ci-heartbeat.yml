@@ -32,13 +32,13 @@ jobs:
           req_url="https://infouzel.cz/projects/data/articles.json"
           opt_url="https://infouzel.cz/projects/data/videos.json"
 
-          echo "GET(required) $req_url"
-          req_code="$(curl -sS -L -o /dev/null -w "%{http_code}" "$req_url")"
-          req_ctype="$(curl -sS -L -I "$req_url" | tr -d '\r' | awk -F': ' 'tolower($1)=="content-type"{print tolower($2); exit}')"
-          echo "HTTP $req_code  CT=${req_ctype:-unknown}"
+          echo "GET(required) ${req_url}"
+          req_code="$(curl -sS -L -o /dev/null -w "%{http_code}" "${req_url}")"
+          req_ctype="$(curl -sS -L -I "${req_url}" | tr -d '\r' | awk -F': ' 'tolower($1)=="content-type"{print tolower($2); exit}')"
+          echo "HTTP ${req_code}  CT=${req_ctype:-unknown}"
 
-          if [ "$req_code" -lt 200 ] || [ "$req_code" -ge 400 ]; then
-            echo "FAIL: required endpoint returned $req_code"
+          if [ "${req_code}" -lt 200 ] || [ "${req_code}" -ge 400 ]; then
+            echo "FAIL: required endpoint returned ${req_code}"
             exit 1
           fi
           if [[ "${req_ctype:-}" != *json* ]]; then
@@ -46,18 +46,18 @@ jobs:
             exit 1
           fi
 
-          echo "GET(optional) $opt_url"
-          opt_code="$(curl -sS -L -o /dev/null -w "%{http_code}" "$opt_url")"
-          opt_ctype="$(curl -sS -L -I "$opt_url" | tr -d '\r' | awk -F': 'tolower($1)=="content-type"{print tolower($2); exit}')"
-          echo "HTTP $opt_code  CT=${opt_ctype:-unknown}"
+          echo "GET(optional) ${opt_url}"
+          opt_code="$(curl -sS -L -o /dev/null -w "%{http_code}" "${opt_url}")"
+          opt_ctype="$(curl -sS -L -I "${opt_url}" | tr -d '\r' | awk -F': 'tolower($1)=="content-type"{print tolower($2); exit}')"
+          echo "HTTP ${opt_code}  CT=${opt_ctype:-unknown}"
 
-          if [ "$opt_code" -eq 404 ] || [ "$opt_code" -eq 204 ]; then
-            echo "OK(optional): missing/empty is allowed ($opt_code)"
+          if [ "${opt_code}" -eq 404 ] || [ "${opt_code}" -eq 204 ]; then
+            echo "OK(optional): missing/empty is allowed (${opt_code})"
             exit 0
           fi
 
-          if [ "$opt_code" -lt 200 ] || [ "$opt_code" -ge 400 ]; then
-            echo "FAIL: optional endpoint returned $opt_code"
+          if [ "${opt_code}" -lt 200 ] || [ "${opt_code}" -ge 400 ]; then
+            echo "FAIL: optional endpoint returned ${opt_code}"
             exit 1
           fi
           if [[ "${opt_ctype:-}" != *json* ]]; then
