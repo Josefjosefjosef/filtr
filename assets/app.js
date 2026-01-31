@@ -1329,6 +1329,18 @@ function buildVideoAsArticleCard(it) {
       state.filteredItems = Array.isArray(state.cachedItems)
         ? state.cachedItems.slice()
         : [];
+      renderFeed();
+      return;
+    }
+
+    if (
+      !state.activeSection &&
+      !state.activeTopic &&
+      !state.activeFilter
+    ) {
+      state.filteredItems = Array.isArray(state.cachedItems)
+        ? state.cachedItems.slice()
+        : [];
       renderItems(state.filteredItems);
       return;
     }
@@ -1971,8 +1983,10 @@ function buildVideoAsArticleCard(it) {
 
     try {
       const probeUrl = "/projects/data/_probe.txt";
-      const articlesUrl = "/projects/data/articles.json";
-      const videosUrl = "/projects/data/videos.json";
+      const ARTICLES_URL = "https://infouzel.cz/projects/data/articles.json";
+      const VIDEOS_URL = "https://infouzel.cz/projects/data/videos.json";
+      const articlesUrl = ARTICLES_URL;
+      const videosUrl = VIDEOS_URL;
 
       debugBoxSet(
         `iu debug: fetching…\nhref=${location.href}\narticlesUrl=${articlesUrl}\nvideosUrl=${videosUrl}`
