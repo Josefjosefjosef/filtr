@@ -23,13 +23,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Anti-log scan (only dangerous tokens)
+      - name: Anti-log scan (only forbidden tokens)
         shell: bash
         run: |
           set -euo pipefail
 
-          # Only block patterns that we NEVER want to accidentally commit into workflows.
-          # (Do NOT block generic runner errors like "Error: Process completed" — those appear in logs normally.)
           if grep -RIn --line-number --fixed-strings "GET required:" .github/workflows; then
             echo "FAIL: found forbidden token 'GET required:' in workflows"
             exit 1
