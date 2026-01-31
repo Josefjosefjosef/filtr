@@ -12,30 +12,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check required files under filtr/
+      - name: Check required files under projects/data
         run: |
-          echo "=== Checking files in filtr/data ==="
-          ls -la filtr/data || true
+          echo "=== Checking files in projects/data ==="
+          ls -la projects/data || true
 
           missing=0
 
-          if [ -f filtr/data/weather.json ]; then
-            echo "OK: filtr/data/weather.json"
-            head -n 30 filtr/data/weather.json || true
+          if [ -f projects/data/weather.json ]; then
+            echo "OK: projects/data/weather.json"
+            head -n 30 projects/data/weather.json || true
           else
-            echo "MISSING: filtr/data/weather.json"
+            echo "MISSING: projects/data/weather.json"
             missing=1
           fi
 
-          if [ -f filtr/data/namedays.json ]; then
-            echo "OK: filtr/data/namedays.json"
-            head -n 30 filtr/data/namedays.json || true
+          if [ -f projects/data/namedays.json ]; then
+            echo "OK: projects/data/namedays.json"
+            head -n 30 projects/data/namedays.json || true
           else
-            echo "MISSING: filtr/data/namedays.json"
+            echo "MISSING: projects/data/namedays.json"
             missing=1
           fi
 
           if [ "$missing" -eq 1 ]; then
-            echo "Health check FAILED: missing required files under filtr/data"
+            echo "Health check FAILED: missing required files under projects/data"
             exit 1
           fi
