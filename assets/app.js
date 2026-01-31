@@ -16,6 +16,7 @@
 // - routování výhradně přes item.contentType
 // Porušení = BUG (ne warning)
 (() => {
+  document.documentElement.setAttribute("data-iu-js","loaded");
   const $ = (sel) => document.querySelector(sel);
   /*
   Release summary (UI/data):
