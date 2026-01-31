@@ -8,12 +8,18 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: ci-heartbeat
+  cancel-in-progress: true
+
 jobs:
   heartbeat:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Write heartbeat json
@@ -34,8 +40,11 @@ jobs:
 }
 EOF
 
+          # Use an escaping-safe replacement for NOW (no slashes here, but keep it robust)
+          ESC_NOW="$(printf '%s' "$NOW" | sed -e 's/[\/&]/\\&/g')"
+
           sed -i \
-            -e "s/__NOW__/${NOW}/" \
+            -e "s/__NOW__/${ESC_NOW}/" \
             -e "s#__REPO__#${GITHUB_REPOSITORY}#" \
             -e "s#__WORKFLOW__#${GITHUB_WORKFLOW}#" \
             -e "s#__RUN_ID__#${GITHUB_RUN_ID}#" \
@@ -43,8 +52,11 @@ EOF
             -e "s#__RUN_ATTEMPT__#${GITHUB_RUN_ATTEMPT}#" \
             projects/data/ci_heartbeat.json
 
-          ls -la projects/data
-          head -c 200 projects/data/ci_heartbeat.json || true
+          echo "[proof] projects/data:"
+          ls -la projects/data || true
+          echo "[proof] head ci_heartbeat.json:"
+          head -c 240 projects/data/ci_heartbeat.json || true
+          echo
 
       - name: Commit & push if changed
         shell: bash
@@ -54,10 +66,12 @@ EOF
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add -A projects/data/ci_heartbeat.json
+
           if git diff --cached --quiet; then
             echo "Nothing to commit (heartbeat unchanged)."
             exit 0
           fi
 
+          git status --short
           git commit -m "ci: heartbeat"
-          git push
+          git push origin HEAD:main
