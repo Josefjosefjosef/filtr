@@ -283,8 +283,17 @@
         });
         clearTimeout(timer);
 
+        const ct = res.headers.get("content-type") || "";
+        debugBoxSet(`[FETCH] ${url}\nstatus=${res.status}\nct=${ct}`);
+
         if (!res.ok) throw new Error(`HTTP_${res.status}`);
-        return await res.json();
+        try {
+          return await res.json();
+        } catch (err) {
+          const txt = await res.text().catch(() => "");
+          debugWarn("[JSON PARSE FAIL]", url, "head=", txt.slice(0, 120));
+          throw err;
+        }
       } catch (e) {
         clearTimeout(timer);
         lastErr = e;
