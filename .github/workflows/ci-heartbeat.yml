@@ -1,12 +1,15 @@
-name: ci-heartbeat
+name: CI - Heartbeat
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 * * * *"
+    - cron: "*/15 * * * *"
+  push:
+    paths:
+      - ".github/workflows/ci-heartbeat.yml"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: ci-heartbeat
@@ -16,62 +19,24 @@ jobs:
   heartbeat:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Write heartbeat json
-        shell: bash
+      - name: Timestamp
         run: |
-          set -euo pipefail
-          mkdir -p projects/data
-          NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          echo "Heartbeat UTC:"
+          date -u
 
-          cat > projects/data/ci_heartbeat.json <<'EOF'
-{
-  "generatedAt": "__NOW__",
-  "repo": "__REPO__",
-  "workflow": "__WORKFLOW__",
-  "runId": "__RUN_ID__",
-  "runNumber": "__RUN_NUMBER__",
-  "attempt": "__RUN_ATTEMPT__"
-}
-EOF
-
-          # Use an escaping-safe replacement for NOW (no slashes here, but keep it robust)
-          ESC_NOW="$(printf '%s' "$NOW" | sed -e 's/[\/&]/\\&/g')"
-
-          sed -i \
-            -e "s/__NOW__/${ESC_NOW}/" \
-            -e "s#__REPO__#${GITHUB_REPOSITORY}#" \
-            -e "s#__WORKFLOW__#${GITHUB_WORKFLOW}#" \
-            -e "s#__RUN_ID__#${GITHUB_RUN_ID}#" \
-            -e "s#__RUN_NUMBER__#${GITHUB_RUN_NUMBER}#" \
-            -e "s#__RUN_ATTEMPT__#${GITHUB_RUN_ATTEMPT}#" \
-            projects/data/ci_heartbeat.json
-
-          echo "[proof] projects/data:"
-          ls -la projects/data || true
-          echo "[proof] head ci_heartbeat.json:"
-          head -c 240 projects/data/ci_heartbeat.json || true
-          echo
-
-      - name: Commit & push if changed
-        shell: bash
+      - name: Verify data endpoints reachable (HTTP 200)
         run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add -A projects/data/ci_heartbeat.json
-
-          if git diff --cached --quiet; then
-            echo "Nothing to commit (heartbeat unchanged)."
-            exit 0
-          fi
-
-          git status --short
-          git commit -m "ci: heartbeat"
-          git push origin HEAD:main
+          set -e
+          for u in \
+            "https://infoUzel.cz/projects/data/articles.json" \
+            "https://infoUzel.cz/projects/data/videos.json"
+          do
+            echo "GET $u"
+            code=$(curl -sS -o /dev/null -w "%{http_code}" "$u")
+            echo "HTTP $code"
+            if [ "$code" -lt 200 ] || [ "$code" -ge 400 ]; then
+              echo "FAIL: $u returned $code"
+              exit 1
+            fi
+          done
+          echo "OK: endpoints reachable"
