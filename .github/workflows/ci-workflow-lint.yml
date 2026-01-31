@@ -23,6 +23,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Anti-log scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          patterns=(
+            "Error: Process completed"
+            "Run set -euo pipefail"
+            "/home/runner/work/_temp/"
+          )
+          for pattern in "${patterns[@]}"; do
+            if grep -qF "$pattern" .github/workflows/*.yml; then
+              echo "FAIL: forbidden log signature found in workflows: $pattern"
+              exit 1
+            fi
+          done
+
       - name: Install actionlint (stable installer)
         shell: bash
         run: |

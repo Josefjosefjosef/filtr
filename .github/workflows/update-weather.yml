@@ -23,19 +23,19 @@ jobs:
 
       - name: Ensure output folders
         run: |
-          mkdir -p filtr/data
+          mkdir -p projects/data
 
       - name: Run updater (weather)
         env:
-          OUTPUT_DIR: filtr/data
+          OUTPUT_DIR: projects/data
         run: node scripts/update-weather-namedays.js weather
 
       - name: Sanity check
         run: |
-          ls -la filtr/data
-          head -c 200 filtr/data/weather.json || true
-          if [ -f filtr/data/weather.json ]; then
-            echo "OK: filtr/data/weather.json exists"
+          ls -la projects/data
+          head -c 200 projects/data/weather.json || true
+          if [ -f projects/data/weather.json ]; then
+            echo "OK: projects/data/weather.json exists"
           else
             echo "ERROR: weather.json missing"
             exit 1
@@ -43,19 +43,19 @@ jobs:
 
       - name: Validate generated JSON (publish root)
         run: |
-          if python3 -c "import json; json.load(open('filtr/data/weather.json','r',encoding='utf-8'))"; then
+          if python3 -c "import json; json.load(open('projects/data/weather.json','r',encoding='utf-8'))"; then
             echo "OK weather"
           else
-            echo "ERROR: filtr/data/weather.json is not valid JSON"
+            echo "ERROR: projects/data/weather.json is not valid JSON"
             exit 1
           fi
 
-      - name: Commit and push filtr/data/weather.json
+      - name: Commit and push projects/data/weather.json
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add filtr/data/weather.json
+          git add projects/data/weather.json
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
