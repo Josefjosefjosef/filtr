@@ -73,6 +73,7 @@
     lastVideosKeys: null,
     lastArticlesUpdatedAt: null,
     lastVideosUpdatedAt: null,
+    lastProbe: null,
   };
   state.cachedItems ??= [];
   state.filteredItems ??= [];
@@ -221,13 +222,50 @@
     return `${u.pathname}?${u.searchParams.toString()}`;
   }
 
-  async function fetchJsonNoCache(url) {
-    const res = await fetch(withTs(url), {
-      cache: "no-store",
-      headers: { "cache-control": "no-cache" },
-    });
-    if (!res.ok) throw new Error(`HTTP_${res.status}`);
-    return await res.json();
+  async function fetchJsonNoCache(url, opts = {}) {
+    const {
+      timeoutMs = 9000,
+      retries = 2,
+      backoffMs = 600,
+      maxBackoffMs = 2500,
+    } = opts;
+
+    let lastErr = null;
+
+    for (let attempt = 0; attempt <= retries; attempt += 1) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+      try {
+        const res = await fetch(withTs(url), {
+          cache: "no-store",
+          headers: { "cache-control": "no-cache" },
+          signal: controller.signal,
+        });
+        clearTimeout(timer);
+
+        if (!res.ok) throw new Error(`HTTP_${res.status}`);
+        return await res.json();
+      } catch (e) {
+        clearTimeout(timer);
+        lastErr = e;
+
+        const msg = (e && e.message) ? e.message : String(e);
+        const is4xx = msg.startsWith("HTTP_4");
+        const isAbort = msg.includes("AbortError");
+        const is5xx = msg.startsWith("HTTP_5");
+        if (is4xx || (attempt === retries && !is5xx && !isAbort)) {
+          break;
+        }
+
+        if (attempt === retries) break;
+
+        const wait = Math.min(maxBackoffMs, backoffMs * Math.pow(2, attempt));
+        await new Promise((r) => setTimeout(r, wait));
+      }
+    }
+
+    throw lastErr || new Error("FETCH_FAILED");
   }
 
   function assertFreshGeneratedAt(data, maxAgeMs = 60 * 60 * 1000) {
@@ -1819,13 +1857,25 @@ function buildVideoAsArticleCard(it) {
     setStatus("Stav dat: načítám…");
 
     try {
+      const probeUrl = "/projects/data/_probe.txt";
       const articlesUrl = "/projects/data/articles.json";
       const videosUrl = "/projects/data/videos.json";
 
-      const [articlesData, videosData] = await Promise.all([
+      const probePromise = fetch(withTs(probeUrl), {
+        cache: "no-store",
+        headers: { "cache-control": "no-cache" },
+      }).then((res) => {
+        if (!res.ok) throw new Error(`PROBE_HTTP_${res.status}`);
+        return res.text();
+      });
+
+      const [probeText, articlesData, videosData] = await Promise.all([
+        probePromise,
         fetchJsonNoCache(articlesUrl),
         fetchJsonNoCache(videosUrl),
       ]);
+
+      state.lastProbe = probeText;
 
       assertFreshGeneratedAt(articlesData);
       assertFreshGeneratedAt(videosData);
@@ -2023,6 +2073,9 @@ function buildVideoAsArticleCard(it) {
           statusParts.push(`videa ${countVideos}${videosStamp ? ` (build ${videosStamp})` : ""}`);
         }
         if (feedSegment.trim()) statusParts.push(feedSegment.replace(/^ • /, ""));
+        if (state.lastProbe) {
+          statusParts.push(`probe ${state.lastProbe}`);
+        }
         setStatus(statusParts.join(" • "));
       }
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
@@ -2072,7 +2125,22 @@ function buildVideoAsArticleCard(it) {
       }
 
       console.error("loadData failed:", err);
+      setStatus("Stav dat: chyba (automatický pokus o obnovení)");
+      setTimeout(() => {
+        if (document.visibilityState === "visible") {
+          loadData();
+        }
+      }, 15000);
     }
+  }
+
+  let iuRefreshTimer = null;
+  function startAutoRefresh() {
+    if (iuRefreshTimer) clearInterval(iuRefreshTimer);
+    iuRefreshTimer = setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      loadData();
+    }, 7 * 60 * 1000);
   }
 
   async function fetchFeedHealth() {
@@ -2429,6 +2497,7 @@ function buildVideoAsArticleCard(it) {
     fetchArticlesStatus();
     fetchVideosStatus();
     loadData();
+    startAutoRefresh();
     watchForSWUpdates();
     updateSwStatusLabel();
     auditLog();
@@ -2439,6 +2508,13 @@ function buildVideoAsArticleCard(it) {
 
   document.addEventListener("visibilitychange", () => {
     debugLog("[VIS]", document.visibilityState);
+    if (document.visibilityState === "visible") {
+      loadData();
+      startAutoRefresh();
+    } else if (iuRefreshTimer) {
+      clearInterval(iuRefreshTimer);
+      iuRefreshTimer = null;
+    }
   });
 
   window.addEventListener("focus", () => debugLog("[FOCUS] in"));
