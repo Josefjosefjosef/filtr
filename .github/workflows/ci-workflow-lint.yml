@@ -28,17 +28,18 @@ jobs:
         run: |
           set -euo pipefail
 
-          if grep -RIn --line-number --fixed-strings "GET required:" .github/workflows; then
+          # Scan all workflow files EXCEPT this file itself
+          if grep -RIn --line-number --fixed-strings "GET required:" .github/workflows \
+             | grep -v "ci-workflow-lint.yml"; then
             echo "FAIL: found forbidden token 'GET required:' in workflows"
             exit 1
           fi
 
-          if grep -RIn --line-number --fixed-strings "GET optional:" .github/workflows; then
+          if grep -RIn --line-number --fixed-strings "GET optional:" .github/workflows \
+             | grep -v "ci-workflow-lint.yml"; then
             echo "FAIL: found forbidden token 'GET optional:' in workflows"
             exit 1
           fi
-
-          echo "OK: anti-log scan clean"
 
       - name: Install actionlint (stable installer)
         shell: bash
