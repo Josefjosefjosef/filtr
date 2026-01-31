@@ -5,47 +5,108 @@ on:
     - cron: "0 * * * *"
   workflow_dispatch: {}
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-data-freshness
+  cancel-in-progress: true
+
 jobs:
   freshness:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
 
-      - name: Check generatedAt timestamp
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check generatedAt timestamp (articles)
+        shell: bash
         run: |
           set -euo pipefail
+
           if [ ! -f projects/data/articles.json ]; then
-            echo "Missing projects/data/articles.json"
+            echo "ERROR: Missing projects/data/articles.json"
             exit 1
           fi
-          generated="$(python - <<'PY'
+
+          python - <<'PY'
 import json, datetime, sys
 
-with open("projects/data/articles.json", "r", encoding="utf-8") as fh:
+path = "projects/data/articles.json"
+with open(path, "r", encoding="utf-8") as fh:
     data = json.load(fh)
 
-ts = (
-    data.get("generatedAt") or
-    data.get("updatedAt") or
-    data.get("buildAt")
-)
-
+ts = data.get("generatedAt") or data.get("updatedAt") or data.get("buildAt")
 if not ts:
-    print("Missing timestamp")
+    print("ERROR: Missing timestamp field (generatedAt/updatedAt/buildAt) in", path)
     sys.exit(1)
 
 try:
     parsed = datetime.datetime.fromisoformat(ts.replace("Z", "+00:00"))
 except ValueError:
-    print("Invalid timestamp:", ts)
+    print("ERROR: Invalid timestamp:", ts)
     sys.exit(1)
 
-age = datetime.datetime.utcnow() - parsed
-print(f"generatedAt: {ts} (age minutes: {age.total_seconds()/60:.1f})")
-print(f"{age.total_seconds()/60:.1f}")
-print(age.total_seconds()/60 > 30)
-sys.exit(1 if age.total_seconds()/60 > 30 else 0)
-PY
-)"
+now = datetime.datetime.now(datetime.timezone.utc)
+age_min = (now - parsed).total_seconds() / 60.0
 
+print("generatedAt:", ts)
+print("age_minutes:", f"{age_min:.1f}")
+
+# Fail if older than 30 minutes
+if age_min > 30.0:
+    print("ERROR: data is stale (>30 min)")
+    sys.exit(1)
+
+print("OK: data freshness within 30 min")
+PY
+
+      - name: Check generatedAt timestamp (videos if present)
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ ! -f projects/data/videos.json ]; then
+            echo "WARN: Missing projects/data/videos.json (skipping)"
+            exit 0
+          fi
+
+          python - <<'PY'
+import json, datetime, sys
+
+path = "projects/data/videos.json"
+with open(path, "r", encoding="utf-8") as fh:
+    data = json.load(fh)
+
+ts = data.get("generatedAt") or data.get("updatedAt") or data.get("buildAt")
+if not ts:
+    print("ERROR: Missing timestamp field (generatedAt/updatedAt/buildAt) in", path)
+    sys.exit(1)
+
+try:
+    parsed = datetime.datetime.fromisoformat(ts.replace("Z", "+00:00"))
+except ValueError:
+    print("ERROR: Invalid timestamp:", ts)
+    sys.exit(1)
+
+now = datetime.datetime.now(datetime.timezone.utc)
+age_min = (now - parsed).total_seconds() / 60.0
+
+print("generatedAt:", ts)
+print("age_minutes:", f"{age_min:.1f}")
+
+# Videos can be less frequent; fail if older than 120 minutes
+if age_min > 120.0:
+    print("ERROR: videos data is stale (>120 min)")
+    sys.exit(1)
+
+print("OK: videos freshness within 120 min")
+PY
