@@ -29,3 +29,7 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+# allow CI generated data
+!filtr/data/weather.json
+!filtr/data/*.json

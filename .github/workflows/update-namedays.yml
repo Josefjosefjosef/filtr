@@ -43,7 +43,12 @@ jobs:
 
       - name: Validate generated JSON (publish root)
         run: |
-          python3 -c "import json; json.load(open('filtr/data/namedays.json','r',encoding='utf-8')); print('OK namedays')" || (echo "ERROR: filtr/data/namedays.json is not valid JSON" && exit 1)
+          if python3 -c "import json; json.load(open('filtr/data/namedays.json','r',encoding='utf-8'))"; then
+            echo "OK namedays"
+          else
+            echo "ERROR: filtr/data/namedays.json is not valid JSON"
+            exit 1
+          fi
 
       - name: Commit and push filtr/data/namedays.json
         run: |

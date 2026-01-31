@@ -43,7 +43,12 @@ jobs:
 
       - name: Validate generated JSON (publish root)
         run: |
-          python3 -c "import json; json.load(open('filtr/data/weather.json','r',encoding='utf-8')); print('OK weather')" || (echo "ERROR: filtr/data/weather.json is not valid JSON" && exit 1)
+          if python3 -c "import json; json.load(open('filtr/data/weather.json','r',encoding='utf-8'))"; then
+            echo "OK weather"
+          else
+            echo "ERROR: filtr/data/weather.json is not valid JSON"
+            exit 1
+          fi
 
       - name: Commit and push filtr/data/weather.json
         run: |
