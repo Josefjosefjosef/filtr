@@ -65,6 +65,27 @@
           a že funguje
           <a href="/assets/app.js" target="_blank" rel="noopener noreferrer">/assets/app.js</a>.
         </p>
+        <p style="margin:10px 0 0 0;">
+          7) <strong>Rychlá produkční kontrola (1 minuta):</strong><br>
+          Otevři tyto odkazy postupně v novém okně:
+        </p>
+        <ul style="margin:6px 0 10px 18px;">
+          <li>
+            <a href="/projects/data/articles.json" target="_blank" rel="noopener noreferrer">/projects/data/articles.json</a>
+            – pokud <strong>404 / HTML</strong>, feed se nemůže zobrazit (nejsou publikovaná data).
+          </li>
+          <li>
+            <a href="/projects/data/videos.json" target="_blank" rel="noopener noreferrer">/projects/data/videos.json</a>
+            – musí obsahovat pole <code>videos</code>.
+          </li>
+          <li>
+            <a href="/assets/app.js" target="_blank" rel="noopener noreferrer">/assets/app.js</a>
+            – pokud se JS neotevře jako text, aplikace se nespustí.
+          </li>
+        </ul>
+        <p style="margin:0;">
+          Pokud <strong>kterýkoliv</strong> z těchto kroků selže, chyba je v deployi (GitHub Pages), ne ve frontend logice.
+        </p>
       </div>
     </details>
 
