@@ -228,8 +228,6 @@
     debugWarn("[DEBUG] Unexpected #debugPanel present in DOM (should not exist).");
   }
   const BASE_ROOT = getBaseRoot();
-  const DATA_URL = `${BASE_ROOT}data/articles.json`;
-  const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
   const SECTION_LABELS = {
     vse: "Vše",
     aktualne: "Aktuálně",
