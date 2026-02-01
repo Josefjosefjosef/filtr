@@ -2080,12 +2080,14 @@ function buildVideoAsArticleCard(it) {
           ? videosData.videos
           : [];
 
-      if (!articlesData && !videosData) {
-        throw artRes.status === "rejected" ? artRes.reason : (vidRes.status === "rejected" ? vidRes.reason : new Error("DATA_LOAD_FAILED"));
+      const articlesOk = artRes.status === "fulfilled";
+      const videosOk = vidRes.status === "fulfilled";
+      if (artRes.status === "rejected") {
+        debugWarn("[LOADDATA] ARTICLES FAIL", articlesUrl, artRes.reason);
       }
-
-      const articlesOk = !!articlesData;
-      const videosOk = !!videosData;
+      if (vidRes.status === "rejected") {
+        debugWarn("[LOADDATA] VIDEOS FAIL", videosUrl, vidRes.reason);
+      }
       if (articlesOk && videosOk) {
         setStatus("Stav dat: OK");
       } else if (articlesOk && !videosOk) {
@@ -2246,14 +2248,24 @@ function buildVideoAsArticleCard(it) {
         console.log("[loadData] cachedItems length:", state.cachedItems.length);
         console.log("[loadData] first items:", state.cachedItems.slice(0, 3));
       }
-      if (!state.cachedItems.length) {
-        renderEmpty("Obsah se teď nenačetl (data jsou prázdná). Zkus obnovit stránku.");
+      const combined = buildCombinedFeed(sanitizedArticles, videoItems);
+      const combinedSources = [];
+      if (articlesOk) combinedSources.push("articles");
+      if (videosOk) combinedSources.push("videos");
+      if (isDebugLogging) {
+        debugLog("[LOADDATA] combined count", combined.length);
+        debugLog("[LOADDATA] rendering from", combinedSources.length ? combinedSources.join(",") : "none");
+      }
+
+      if (combined.length === 0) {
+        renderEmpty("Obsah se teď nenačetl (žádná data z backendu)");
         return;
       }
-      state.hasLoadedData = true;
+
+      state.cachedItems = combined;
       if (!Array.isArray(state.cachedItems)) state.cachedItems = [];
+      state.hasLoadedData = true;
       state.consecutiveLoadFailures = 0;
-      // SAFETY: první render bez filtrů, aby feed naběhl i když je filtr state prázdný nebo applyFilter někde skončí dřív
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
       renderFeed(state.filteredItems);
       if (isDebugLogging) {
@@ -2383,10 +2395,10 @@ function buildVideoAsArticleCard(it) {
       }
 
       state.consecutiveLoadFailures = (state.consecutiveLoadFailures || 0) + 1;
+      debugWarn("[loadData] error", err);
 
       const hasLast = Array.isArray(state.cachedItems) && state.cachedItems.length > 0;
-      const failMsg = "Stav dat: výpadek (automatický pokus o obnovení)";
-      setStatus(failMsg);
+      setStatus("Stav dat: výpadek (automatický pokus o obnovení)");
 
       if (hasLast) {
         const box = document.querySelector("#emptyBox") || document.querySelector("#empty");
@@ -2395,12 +2407,6 @@ function buildVideoAsArticleCard(it) {
           box.textContent = "Dočasný výpadek načtení dat. Zobrazuji poslední úspěšná data, probíhá obnova.";
         }
       } else {
-        state.items = [];
-        state.cachedItems = null;
-        state.articlesRaw = null;
-        state.videosRaw = null;
-        state.hasLoadedData = false;
-
         const feed = document.querySelector("#feed");
         if (feed) feed.innerHTML = "";
 
@@ -2417,7 +2423,6 @@ function buildVideoAsArticleCard(it) {
         }
       }
 
-      console.error("loadData failed:", err);
       const delay =
         state.consecutiveLoadFailures >= 10 ? 180000 :
         state.consecutiveLoadFailures >= 5 ? 60000 :
