@@ -343,12 +343,12 @@
   
   const BASE = getBaseRoot();
 
-  // BASE už obsahuje trailing slash, takže nepřidáváme další
+  const PROJECTS_DATA_BASE = "/projects/data";
   const DATA = {
-    articlesUrl: `${BASE}data/articles.json`,
-    videosUrl: `${BASE}data/videos.json`,
-    metaUrl: `${BASE}data/meta.json`,
-    statusUrl: `${BASE}data/status.json`  // status.json se generuje v workflow
+    articlesUrl: `${PROJECTS_DATA_BASE}/articles.json`,
+    videosUrl: `${PROJECTS_DATA_BASE}/videos.json`,
+    metaUrl: `${PROJECTS_DATA_BASE}/meta.json`,
+    statusUrl: `${PROJECTS_DATA_BASE}/status.json`  // status.json se generuje v workflow
   };
 
   if (breakMode === "articles404") DATA.articlesUrl = `${BASE}data/articles__404__.json`;

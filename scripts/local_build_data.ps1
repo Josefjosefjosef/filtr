@@ -5,33 +5,16 @@ Write-Host "PWD: $(Get-Location)"
 # 1) Spusť build_articles.py
 python scripts/build_articles.py
 
-# 2) Najdi kandidáty na articles.json
-$candidates = @(
-  "projects/data/articles.json",
-  "filtr/data/articles.json",
-  "filtr/filtr/data/articles.json",
-  "filtr/filtr/filtr/data/articles.json",
-  "data/articles.json"
-) | Where-Object { Test-Path $_ }
-
-Write-Host "Found candidates:"
-$candidates | ForEach-Object {
-  $len = (Get-Item $_).Length
-  Write-Host " - $_ ($len bytes)"
-}
-
+# 2) Ensure projects/data/articles.json exists (built directly)
 if (-not (Test-Path "projects/data")) {
   New-Item -ItemType Directory -Path "projects/data" | Out-Null
 }
 
-# 3) Pokud projects/data/articles.json neexistuje, zkopíruj první nalezený kandidát
 if (-not (Test-Path "projects/data/articles.json")) {
-  if ($candidates.Count -eq 0) { throw "No articles.json generated anywhere." }
-  Copy-Item -Force $candidates[0] "projects/data/articles.json"
-  Write-Host "Copied to projects/data/articles.json from $($candidates[0])"
-} else {
-  Write-Host "projects/data/articles.json already exists (generated directly)."
+  throw "projects/data/articles.json missing; build must produce it directly."
 }
+
+Write-Host "projects/data/articles.json ready"
 
 # 4) PROOF
 $size = (Get-Item "projects/data/articles.json").Length

@@ -57,7 +57,7 @@ function weatherCodeToCz(code) {
 }
 
 function ensureDataDir() {
-  const dir = path.join("data");
+  const dir = path.join("projects", "data");
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
@@ -93,8 +93,8 @@ async function updateWeather() {
 
   ensureDataDir();
 
-  // ✅ FIX: Output to filtr/data/ for web on /filtr/
-  const outputDir = process.env.OUTPUT_DIR || "filtr/data";
+  // ✅ FIX: Output to projects/data/ for the primary site
+  const outputDir = process.env.OUTPUT_DIR || "projects/data";
   const outPath = path.join(outputDir, "weather.json");
   fs.mkdirSync(outputDir, { recursive: true });
   fs.writeFileSync(outPath, JSON.stringify(weather, null, 2) + "\n", "utf8");
@@ -119,8 +119,8 @@ async function updateNamedays() {
 
   ensureDataDir();
 
-  // ✅ FIX: Output to filtr/data/ for web on /filtr/
-  const outputDir = process.env.OUTPUT_DIR || "filtr/data";
+  // ✅ FIX: Output to projects/data/ for the primary site
+  const outputDir = process.env.OUTPUT_DIR || "projects/data";
   const outPath = path.join(outputDir, "namedays.json");
   fs.mkdirSync(outputDir, { recursive: true });
   fs.writeFileSync(outPath, JSON.stringify(namedays, null, 2) + "\n", "utf8");
