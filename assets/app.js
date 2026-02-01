@@ -1342,6 +1342,20 @@ function buildVideoAsArticleCard(it) {
   // Druhá render cesta je zakázaná.
   function applyFilter() {
     if (!state.hasLoadedData) return;
+
+    // START SAFETY: default render při žádném aktivním filtru
+    const noActiveFilter =
+      !state.activeSection &&
+      !state.activeTopic &&
+      !state.activeFilter &&
+      !state.activeQuery;
+
+    if (noActiveFilter && Array.isArray(state.cachedItems)) {
+      state.filteredItems = state.cachedItems.slice();
+      renderFeed(state.filteredItems);
+      return;
+    }
+    // END SAFETY
     if (DEBUG) {
       console.log("[applyFilter] cachedItems before filter:", state.cachedItems.length);
     }
