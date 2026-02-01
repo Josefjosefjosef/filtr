@@ -2165,6 +2165,12 @@ function buildVideoAsArticleCard(it) {
       state.articlesRaw = articlesData;
 
       const safeArticlesArray = Array.isArray(articlesArr) ? articlesArr : [];
+      if (isDebugLogging) {
+        debugLog("[LOADDATA] articlesArr isArray=", Array.isArray(articlesArr), "len=", (articlesArr?.length ?? -1));
+        debugLog("[LOADDATA] videosArr  isArray=", Array.isArray(videosArr),  "len=", (videosArr?.length ?? -1));
+        debugLog("[LOADDATA] safeArticlesArray isArray=", Array.isArray(safeArticlesArray), "len=", safeArticlesArray.length);
+        debugLog("[LOADDATA] safeVideosArray  isArray=", Array.isArray(safeVideosArray),  "len=", safeVideosArray.length);
+      }
       const totalArticles = Array.isArray(safeArticlesArray) ? safeArticlesArray.length : 0;
       let sanitizedArticles = normalizeArticleList(Array.isArray(safeArticlesArray) ? safeArticlesArray : []).map((item) => ({
         ...item,
