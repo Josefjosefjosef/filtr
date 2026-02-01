@@ -1,12 +1,16 @@
 name: Update Weather
 
+concurrency:
+  group: data-writers-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
   schedule:
     - cron: "*/15 * * * *"  # každých 15 minut
-
-permissions:
-  contents: write
 
 jobs:
   update:
@@ -15,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -50,17 +56,42 @@ jobs:
             exit 1
           fi
 
-      - name: Commit and push projects/data/weather.json
+      - name: Commit & push (safe, rebase + retry)
+        shell: bash
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
 
-          git add projects/data/weather.json
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "[DATA] No changes to commit."
             exit 0
           fi
 
-          git commit -m "Update weather"
-          git push
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "[DATA] Nothing staged after add."
+            exit 0
+          fi
+
+          git commit -m "data: update $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || true
+
+          for i in 1 2 3; do
+            echo "[PUSH] Attempt $i/3"
+            git fetch origin "${GITHUB_REF_NAME}"
+
+            git rebase "origin/${GITHUB_REF_NAME}" || (git rebase --abort && exit 1)
+
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              echo "[PUSH] Success."
+              exit 0
+            fi
+
+            echo "[PUSH] Failed, retrying..."
+            sleep 2
+          done
+
+          echo "[PUSH] Failed after retries."
+          exit 1
