@@ -15,8 +15,6 @@
 // - render výhradně do #feed (safeTarget)
 // - routování výhradně přes item.contentType
 // Porušení = BUG (ne warning)
-console.log("[BOOT] app.js loaded", new Date().toISOString());
-
 (() => {
   document.documentElement.setAttribute("data-iu-js","loaded");
   const $ = (sel) => document.querySelector(sel);
@@ -230,6 +228,8 @@ console.log("[BOOT] app.js loaded", new Date().toISOString());
     debugWarn("[DEBUG] Unexpected #debugPanel present in DOM (should not exist).");
   }
   const BASE_ROOT = getBaseRoot();
+  const DATA_URL = `${BASE_ROOT}data/articles.json`;
+  const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
   const SECTION_LABELS = {
     vse: "Vše",
     aktualne: "Aktuálně",
@@ -470,6 +470,22 @@ console.log("[BOOT] app.js loaded", new Date().toISOString());
     } catch {
       return false;
     }
+  }
+
+  async function probeRootPaths() {
+    const rootArticlesPath = "/data/articles.json";
+    const rootVideosPath = "/data/videos.json";
+    const [articlesOk, videosOk] = await Promise.all([
+      quickCheckUrl(rootArticlesPath),
+      quickCheckUrl(rootVideosPath),
+    ]);
+    return {
+      ok: articlesOk && videosOk,
+      articlesOk,
+      videosOk,
+      articlesPath: rootArticlesPath,
+      videosPath: rootVideosPath,
+    };
   }
 
   // === DATA ENDPOINT OVERRIDE (maintenance-safe) ===
@@ -1340,9 +1356,6 @@ function buildVideoAsArticleCard(it) {
 
     if (!hasTopic && !hasSection && !hasFilter && !hasQuery) {
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
-      if (isDebugLogging) {
-        debugLog("[FILTER] rendering", state.filteredItems?.length, { hasTopic, hasSection, hasFilter, hasQuery });
-      }
       renderFeed(state.filteredItems);
       return;
     }
@@ -1362,9 +1375,6 @@ function buildVideoAsArticleCard(it) {
       state.filteredItems = Array.isArray(state.cachedItems)
         ? state.cachedItems.slice()
         : [];
-      if (isDebugLogging) {
-        debugLog("[FILTER] rendering", state.filteredItems?.length, { hasSection: state.activeSection, hasTopic: state.activeTopic, hasFilter: state.activeFilter, hasQuery });
-      }
       renderFeed();
       return;
     }
@@ -1767,7 +1777,7 @@ function buildVideoAsArticleCard(it) {
     const el = document.getElementById("dataStatusArticles");
     if (!el) return;
     try {
-      const res = await timeoutFetch("/projects/data/articles.json", { cache: "no-store" }, 9000);
+      const res = await timeoutFetch(makeDataUrl("data/articles.json"), { cache: "no-store" }, 9000);
       if (!res.ok) {
         el.textContent = `Články: chyba (${res.status})`;
         selfDiag.articlesState = "FAIL";
@@ -1853,7 +1863,7 @@ function buildVideoAsArticleCard(it) {
     const el = document.getElementById("dataStatusVideos");
     if (!el) return;
     try {
-      const res = await timeoutFetch("/projects/data/videos.json", { cache: "no-store" }, 9000);
+      const res = await timeoutFetch(makeDataUrl("data/videos.json"), { cache: "no-store" }, 9000);
       if (res.status === 404) {
         el.textContent = "Videa: není k dispozici";
         selfDiag.videosState = "404";
@@ -1989,8 +1999,22 @@ function buildVideoAsArticleCard(it) {
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
     const preferredEntry = await evaluatePreferredPair();
-    const baseArticleUrls = ["/projects/data/articles.json"];
-    const baseVideoUrls = ["/projects/data/videos.json"];
+    const baseArticleUrls = [
+      "/projects/data/articles.json",
+      makeDataUrl("data/articles.json"),
+      "/data/articles.json",
+      "./data/articles.json",
+      makeDataUrl("projects/data/articles.json"),
+      makeDataUrl("filtr/data/articles.json"),
+    ].filter(Boolean);
+    const baseVideoUrls = [
+      "/projects/data/videos.json",
+      makeDataUrl("data/videos.json"),
+      "/data/videos.json",
+      "./data/videos.json",
+      makeDataUrl("projects/data/videos.json"),
+      makeDataUrl("filtr/data/videos.json"),
+    ].filter(Boolean);
     const articleUrls = buildCandidateListFromPair(preferredEntry, "articles", baseArticleUrls);
     const videoUrls = buildCandidateListFromPair(preferredEntry, "videos", baseVideoUrls);
     let preferredSaved = false;
@@ -2227,6 +2251,9 @@ function buildVideoAsArticleCard(it) {
       state.hasLoadedData = true;
       if (!Array.isArray(state.cachedItems)) state.cachedItems = [];
       state.consecutiveLoadFailures = 0;
+      // SAFETY: první render bez filtrů, aby feed naběhl i když je filtr state prázdný nebo applyFilter někde skončí dřív
+      state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
+      renderFeed(state.filteredItems);
       if (isDebugLogging) {
         debugLog(
           "[CACHE] total",
@@ -2250,9 +2277,6 @@ function buildVideoAsArticleCard(it) {
             url: item.url,
           })),
         );
-      }
-      if (isDebugLogging) {
-        debugLog("[LOAD] cachedItems before applyFilter", state.cachedItems?.length);
       }
       applyFilter();
       const countArticles = state.cachedItems.filter((entry) => entry?.contentType === "article").length;
@@ -2417,7 +2441,7 @@ function buildVideoAsArticleCard(it) {
 
   async function fetchFeedHealth() {
     try {
-      const res = await timeoutFetch("/projects/data/feed_health.json", { cache: "no-store" }, 5000);
+      const res = await timeoutFetch(makeDataUrl("data/feed_health.json"), { cache: "no-store" }, 5000);
       if (res.status === 404) {
         debugWarn("[HEALTH] feed_health not found");
         return;
