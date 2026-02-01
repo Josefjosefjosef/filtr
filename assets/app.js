@@ -1346,63 +1346,19 @@ function buildVideoAsArticleCard(it) {
   // Druhá render cesta je zakázaná.
   function applyFilter() {
     if (!state.hasLoadedData) return;
+    state.searchQuery = (searchInput && searchInput.value.trim()) || "";
 
-    // SAFETY: pokud nejsou aktivní žádné filtry/témata/sekce/hledání, ukaž rovnou celý feed
-    const noFiltersActive =
-      (!state.activeTopic || state.activeTopic === "all") &&
-      (!state.activeSection || state.activeSection === "all") &&
-      (!state.activeFilter || state.activeFilter === "all") &&
-      (!state.searchQuery || String(state.searchQuery).trim() === "");
+    // SAFETY: pokud není aktivní žádné téma/sekce/filtr ani hledání, zobraz rovnou celý cache feed
+    const hasTopic = !!(state && state.activeTopic);
+    const hasSection = !!(state && state.activeSection);
+    const hasFilter = !!(state && state.activeFilter);
+    const hasQuery = !!(state && typeof state.searchQuery === "string" && state.searchQuery.trim().length);
 
-    if (noFiltersActive) {
+    if (!hasTopic && !hasSection && !hasFilter && !hasQuery) {
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
       renderFeed(state.filteredItems);
       return;
     }
-
-    // SAFETY: pokud nejsou aktivní žádné filtry / témata / hledání, zobraz celý feed
-    const searchQuery = (searchInput && searchInput.value.trim()) || "";
-    const noFiltersActive =
-      (!state.activeTopics || state.activeTopics.length === 0) &&
-      (!activeSections || activeSections.length === 0) &&
-      (!state.activeTopic || state.activeTopic.length === 0) &&
-      (!state.activeSection || state.activeSection.length === 0) &&
-      !searchQuery;
-
-    if (noFiltersActive && Array.isArray(state.cachedItems)) {
-      state.filteredItems = state.cachedItems.slice();
-      renderFeed(state.filteredItems);
-      return;
-    }
-
-    // SAFETY: pokud nejsou aktivní žádné filtry / témata / hledání, zobraz celý feed z cache
-    const searchQuery = (searchInput && searchInput.value.trim()) || "";
-    const noFiltersActive =
-      (!state.activeTopics || state.activeTopics.length === 0) &&
-      (!activeSections || activeSections.length === 0) &&
-      (!state.activeTopic || state.activeTopic.length === 0) &&
-      (!state.activeSection || state.activeSection.length === 0) &&
-      !searchQuery;
-
-    if (noFiltersActive && Array.isArray(state.cachedItems)) {
-      state.filteredItems = state.cachedItems.slice();
-      renderFeed(state.filteredItems);
-      return;
-    }
-
-    // START SAFETY: default render při žádném aktivním filtru
-    const noActiveFilter =
-      !state.activeSection &&
-      !state.activeTopic &&
-      !state.activeFilter &&
-      !state.activeQuery;
-
-    if (noActiveFilter && Array.isArray(state.cachedItems)) {
-      state.filteredItems = state.cachedItems.slice();
-      renderFeed(state.filteredItems);
-      return;
-    }
-    // END SAFETY
     if (DEBUG) {
       console.log("[applyFilter] cachedItems before filter:", state.cachedItems.length);
     }
@@ -1443,7 +1399,7 @@ function buildVideoAsArticleCard(it) {
       "cached:", state.cachedItems?.length,
       "filtered:", state.filteredItems?.length
     );
-    const query = (searchInput && searchInput.value.trim()) || "";
+    const query = state.searchQuery || "";
     const normalizedQuery = query.toLowerCase();
     const sectionsToUse = activeSections && activeSections.length ? activeSections : ["vse"];
     let filtered = state.cachedItems.filter((item) => matchesSections(item, sectionsToUse));
@@ -2295,6 +2251,9 @@ function buildVideoAsArticleCard(it) {
       state.hasLoadedData = true;
       if (!Array.isArray(state.cachedItems)) state.cachedItems = [];
       state.consecutiveLoadFailures = 0;
+      // SAFETY: první render bez filtrů, aby feed naběhl i když je filtr state prázdný nebo applyFilter někde skončí dřív
+      state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
+      renderFeed(state.filteredItems);
       if (isDebugLogging) {
         debugLog(
           "[CACHE] total",
