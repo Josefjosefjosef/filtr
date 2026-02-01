@@ -77,6 +77,10 @@
     lastProbe: null,
     isLoadingData: false,
     consecutiveLoadFailures: 0,
+    activeTopic: null,
+    activeSection: null,
+    activeFilter: null,
+    searchQuery: "",
   };
   state.cachedItems ??= [];
   state.filteredItems ??= [];
