@@ -214,12 +214,15 @@ console.log("[BOOT] app.js loaded", new Date().toISOString());
       const contentType = response.headers.get("content-type") || "";
       const text = await response.text();
       const head = text.slice(0, 200).replace(/\s+/g, " ");
+      const length = text.length;
       const infoLine = `[FETCHDIAG] kind=${kind} url=${url} status=${status} ok=${ok} redirected=${redirected} finalUrl=${finalUrl} contentType=${contentType}`;
       const headLine = `[FETCHDIAG] kind=${kind} head=${head}`;
+      const lengthLine = `[FETCHDIAG] kind=${kind} length=${length}`;
       debugLog(infoLine);
       debugLog(headLine);
       appendDebugLine(infoLine);
       appendDebugLine(headLine);
+      appendDebugLine(lengthLine);
       const isLikelyJson =
         contentType.includes("application/json") ||
         text.trim().startsWith("{") ||
