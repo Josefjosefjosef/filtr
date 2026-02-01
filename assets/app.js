@@ -188,10 +188,63 @@ console.log("[BOOT] app.js loaded", new Date().toISOString());
     }
   }
 
+  function appendDebugLine(msg) {
+    const box = ensureDebugBox();
+    if (!box) return;
+    const existing = box.textContent || "";
+    box.textContent = existing ? `${existing}\n${msg}` : msg;
+  }
+
   function debugBoxSet(msg) {
     const box = ensureDebugBox();
     if (!box) return;
     box.textContent = msg;
+  }
+
+  async function fetchDiag(url, kind) {
+    const response = await fetch(url, { cache: "no-store" });
+    const status = response.status;
+    const ok = response.ok;
+    const redirected = response.redirected;
+    const finalUrl = response.url || url;
+    const contentType = response.headers.get("content-type") || "";
+    const text = await response.text();
+    if (isDebugLogging) {
+      const summary = `[FETCHDIAG] kind=${kind} url=${url} status=${status} ok=${ok} redirected=${redirected} finalUrl=${finalUrl} contentType=${contentType}`;
+      console.log(summary);
+      appendDebugLine(summary);
+      const head = text.slice(0, 200);
+      const headMsg = `[FETCHDIAG] kind=${kind} head=${head}`;
+      console.log(headMsg);
+      appendDebugLine(headMsg);
+    }
+    const trimmed = text.trim();
+    const looksLikeJson =
+      contentType.includes("application/json") ||
+      trimmed.startsWith("{") ||
+      trimmed.startsWith("[");
+    if (!looksLikeJson || !ok) {
+      if (isDebugLogging) {
+        const note = `[FETCHDIAG] kind=${kind} invalid response ok=${ok} contentType=${contentType}`;
+        console.log(note);
+        appendDebugLine(note);
+      }
+      return null;
+    }
+    try {
+      return JSON.parse(text);
+    } catch (parseErr) {
+      if (isDebugLogging) {
+        const errMsg = `[FETCHDIAG] kind=${kind} parseError=${parseErr.message}`;
+        const snippet = `[FETCHDIAG] kind=${kind} parseSnippet=${trimmed.slice(0, 200)}`;
+        console.log(errMsg);
+        console.log(snippet);
+        appendDebugLine(errMsg);
+        appendDebugLine(snippet);
+      }
+      debugWarn(`[FETCHDIAG] ${kind} parseError`, parseErr);
+      return null;
+    }
   }
 
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
@@ -2056,17 +2109,14 @@ function buildVideoAsArticleCard(it) {
         return res.text();
       });
 
-      const [probeRes, artRes, vidRes] = await Promise.allSettled([
+      const [probeRes, articlesData, videosData] = await Promise.all([
         probePromise,
-        fetchJsonNoCache(articlesUrl),
-        fetchJsonNoCache(videosUrl),
+        fetchDiag(articlesUrl, "articles"),
+        fetchDiag(videosUrl, "videos"),
       ]);
 
       const probeText = probeRes.status === "fulfilled" ? probeRes.value : null;
       state.lastProbe = probeText;
-
-      const articlesData = artRes.status === "fulfilled" ? artRes.value : null;
-      const videosData = vidRes.status === "fulfilled" ? vidRes.value : null;
 
       const articlesArr = Array.isArray(articlesData)
         ? articlesData
@@ -2080,13 +2130,13 @@ function buildVideoAsArticleCard(it) {
           ? videosData.videos
           : [];
 
-      const articlesOk = artRes.status === "fulfilled";
-      const videosOk = vidRes.status === "fulfilled";
-      if (artRes.status === "rejected") {
-        debugWarn("[LOADDATA] ARTICLES FAIL", articlesUrl, artRes.reason);
+      articlesOk = Boolean(articlesData);
+      videosOk = Boolean(videosData);
+      if (!articlesOk) {
+        debugWarn("[LOADDATA] ARTICLES FAIL", articlesUrl, "empty/null response");
       }
-      if (vidRes.status === "rejected") {
-        debugWarn("[LOADDATA] VIDEOS FAIL", videosUrl, vidRes.reason);
+      if (!videosOk) {
+        debugWarn("[LOADDATA] VIDEOS FAIL", videosUrl, "empty/null response");
       }
       if (articlesOk && videosOk) {
         setStatus("Stav dat: OK");
@@ -2105,6 +2155,10 @@ function buildVideoAsArticleCard(it) {
         chosenArticlesUrl = articlesUrl;
         articleFetchResult = { json: articlesData, status: 200 };
         data = articlesData;
+      }
+      else {
+        articleStatusCode = null;
+        articleStatusLabel = "FAIL";
       }
 
       const articlesGeneratedAt = articlesData?.generatedAt || articlesData?.meta?.generatedAt || null;
@@ -2173,11 +2227,16 @@ function buildVideoAsArticleCard(it) {
       const videosGeneratedAt = videosData?.generatedAt || videosData?.meta?.generatedAt || null;
       state.lastVideosGeneratedAt = videosGeneratedAt ? String(videosGeneratedAt) : null;
 
-      chosenVideosUrl = videosUrl;
-      videoStatusLabel = "OK";
-      videoStatusCode = 200;
-      videoFetchResult = { json: videosData, status: 200 };
-      videosOk = true;
+      if (videosData) {
+        chosenVideosUrl = videosUrl;
+        videoStatusLabel = "OK";
+        videoStatusCode = 200;
+        videoFetchResult = { json: videosData, status: 200 };
+        videosOk = true;
+      } else {
+        videoStatusLabel = "FAIL";
+        videoStatusCode = null;
+      }
       diagMeta.articlesUrl = chosenArticlesUrl || "";
       diagMeta.articlesStatus = articleStatusLabel || "404";
       diagMeta.videosUrl = chosenVideosUrl || "";
