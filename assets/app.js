@@ -201,6 +201,13 @@ console.log("[BOOT] app.js loaded", new Date().toISOString());
     box.textContent += `\n${msg}`;
   }
 
+  const lastFetchDiag = {
+    articles: null,
+    videos: null,
+    health: null,
+    probe: null,
+  };
+
   async function fetchDiag(url, kind) {
     if (!isDebugLogging) {
       return fetchJsonNoCache(url);
@@ -215,6 +222,20 @@ console.log("[BOOT] app.js loaded", new Date().toISOString());
       const text = await response.text();
       const head = text.slice(0, 200).replace(/\s+/g, " ");
       const length = text.length;
+      const diag = {
+        kind,
+        url,
+        finalUrl,
+        status,
+        ok,
+        redirected,
+        contentType,
+        length,
+        head,
+      };
+      if (kind in lastFetchDiag) {
+        lastFetchDiag[kind] = diag;
+      }
       const infoLine = `[FETCHDIAG] kind=${kind} url=${url} status=${status} ok=${ok} redirected=${redirected} finalUrl=${finalUrl} contentType=${contentType}`;
       const headLine = `[FETCHDIAG] kind=${kind} head=${head}`;
       const lengthLine = `[FETCHDIAG] kind=${kind} length=${length}`;
@@ -244,6 +265,12 @@ console.log("[BOOT] app.js loaded", new Date().toISOString());
       appendDebugLine(`[FETCHDIAG] kind=${kind} fetch failed ${err.message || err}`);
       return null;
     }
+  }
+
+  function formatDiagLine(kind) {
+    const diag = lastFetchDiag[kind];
+    if (!diag) return `${kind}: (no diag)`;
+    return `${kind}: status=${diag.status} ok=${diag.ok} ct=${diag.contentType} final=${diag.finalUrl} len=${diag.length} head="${diag.head}"`;
   }
 
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
@@ -2451,14 +2478,19 @@ function buildVideoAsArticleCard(it) {
         if (feed) feed.innerHTML = "";
 
         const msg = "Obsah se teď nenačetl (chyba načtení dat). Zkus obnovit stránku.";
+        const details = [
+          "DETAIL (auto):",
+          formatDiagLine("articles"),
+          formatDiagLine("videos"),
+        ].join("\n");
         const box = document.querySelector("#emptyBox") || document.querySelector("#empty");
         if (box) {
           box.style.display = "";
-          box.textContent = msg;
+          box.textContent = `${msg}\n${details}`;
         } else if (feed) {
           const div = document.createElement("div");
           div.className = "iuErrorBox";
-          div.textContent = msg;
+          div.textContent = `${msg}\n${details}`;
           feed.appendChild(div);
         }
       }
