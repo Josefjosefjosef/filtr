@@ -2110,6 +2110,18 @@ function buildVideoAsArticleCard(it) {
       const articlesData = artRes.status === "fulfilled" ? artRes.value : null;
       const videosData = vidRes.status === "fulfilled" ? vidRes.value : null;
 
+      const articlesArr = Array.isArray(articlesData)
+        ? articlesData
+        : Array.isArray(articlesData?.articles)
+          ? articlesData.articles
+          : [];
+
+      const videosArr = Array.isArray(videosData)
+        ? videosData
+        : Array.isArray(videosData?.videos)
+          ? videosData.videos
+          : [];
+
       if (!articlesData && !videosData) {
         throw artRes.status === "rejected" ? artRes.reason : (vidRes.status === "rejected" ? vidRes.reason : new Error("DATA_LOAD_FAILED"));
       }
@@ -2152,7 +2164,7 @@ function buildVideoAsArticleCard(it) {
       state.lastArticlesUpdatedAt = articlesUpdatedAt;
       state.articlesRaw = articlesData;
 
-      const safeArticlesArray = Array.isArray(articlesData) ? articlesData : (articlesData ? normalizeFeedJson(articlesData) : []);
+      const safeArticlesArray = Array.isArray(articlesArr) ? articlesArr : [];
       const totalArticles = Array.isArray(safeArticlesArray) ? safeArticlesArray.length : 0;
       let sanitizedArticles = normalizeArticleList(Array.isArray(safeArticlesArray) ? safeArticlesArray : []).map((item) => ({
         ...item,
@@ -2182,7 +2194,7 @@ function buildVideoAsArticleCard(it) {
       debugLog("[ARTICLES] loaded", sanitizedArticles.length, sanitizedArticles.slice(0, 3));
       }
 
-      const safeVideosArray = Array.isArray(videosData) ? videosData : (videosData ? normalizeFeedJson(videosData) : []);
+      const safeVideosArray = Array.isArray(videosArr) ? videosArr : [];
       normalizedVideoSource = Array.isArray(safeVideosArray) ? safeVideosArray : [];
       let videoItems = normalizeVideoList(Array.isArray(normalizedVideoSource) ? normalizedVideoSource : []);
 
