@@ -1343,6 +1343,19 @@ function buildVideoAsArticleCard(it) {
   function applyFilter() {
     if (!state.hasLoadedData) return;
 
+    // SAFETY: pokud nejsou aktivní žádné filtry/témata/sekce/hledání, ukaž rovnou celý feed
+    const noFiltersActive =
+      (!state.activeTopic || state.activeTopic === "all") &&
+      (!state.activeSection || state.activeSection === "all") &&
+      (!state.activeFilter || state.activeFilter === "all") &&
+      (!state.searchQuery || String(state.searchQuery).trim() === "");
+
+    if (noFiltersActive) {
+      state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
+      renderFeed(state.filteredItems);
+      return;
+    }
+
     // SAFETY: pokud nejsou aktivní žádné filtry / témata / hledání, zobraz celý feed
     const searchQuery = (searchInput && searchInput.value.trim()) || "";
     const noFiltersActive =
