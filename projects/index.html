@@ -26,6 +26,48 @@
     <div id="dataCount" style="display:none"></div>
     <div id="lastErrInline" style="display:none"></div>
 
+    <details id="iuTroubleshoot" style="margin:10px 0;padding:10px;border:1px solid rgba(0,0,0,0.12);border-radius:10px;background:#fff;">
+      <summary style="cursor:pointer;font-weight:700;">Diagnostika /projects (když se feed nenačte)</summary>
+      <div style="margin-top:10px;line-height:1.45;">
+        <p style="margin:0 0 8px 0;">
+          1) <strong>JS běží?</strong> Pokud se spustil, v konzoli uvidíš <code>[BOOT] app.js loaded</code> a na elementu <code>&lt;html&gt;</code> má být atribut <code>data-iu-js="loaded"</code>.
+        </p>
+
+        <p style="margin:0 0 8px 0;">
+          2) <strong>Data endpointy (musí být JSON, ne HTML):</strong><br>
+          • <a href="/projects/data/articles.json" target="_blank" rel="noopener noreferrer">/projects/data/articles.json</a><br>
+          • <a href="/projects/data/videos.json" target="_blank" rel="noopener noreferrer">/projects/data/videos.json</a><br>
+          • <a href="/projects/data/feed_health.json" target="_blank" rel="noopener noreferrer">/projects/data/feed_health.json</a><br>
+          • <a href="/projects/data/_probe.txt" target="_blank" rel="noopener noreferrer">/projects/data/_probe.txt</a>
+        </p>
+
+        <p style="margin:0 0 8px 0;">
+          3) <strong>Kontrola assetů (musí se otevřít přímo):</strong><br>
+          • <a href="/assets/app.js" target="_blank" rel="noopener noreferrer">/assets/app.js</a><br>
+          • <a href="/assets/app.css" target="_blank" rel="noopener noreferrer">/assets/app.css</a><br>
+          Pokud se některý soubor neotevře nebo vrátí HTML/404, feed se nikdy nespustí (chyba deploye nebo cache).
+        </p>
+
+        <p style="margin:0 0 8px 0;">
+          4) <strong>Když odkazy výše vrací HTML/404:</strong> problém je v publikaci souborů na Pages (data nejsou dostupná na produkci).
+        </p>
+
+        <p style="margin:0 0 8px 0;">
+          5) <strong>Když odkazy vrací JSON, ale feed je prázdný:</strong> nejčastěji cache/SW na zařízení.<br>
+          • Proveď tvrdý refresh (Ctrl+F5 / na mobilu zavřít a znovu otevřít stránku).<br>
+          • Pokud byl někdy aktivní Service Worker: v DevTools → Application → Service Workers → Unregister a pak reload.<br>
+          • Ověř, že se načítá aktuální bundle podle <code>?v=...</code> u <code>/assets/app.js</code> v HTML.
+        </p>
+
+        <p style="margin:0;">
+          6) <strong>Pokud se stránka “nenačte vůbec”:</strong> ověř, že jde otevřít
+          <a href="/projects/index.html" target="_blank" rel="noopener noreferrer">/projects/index.html</a>
+          a že funguje
+          <a href="/assets/app.js" target="_blank" rel="noopener noreferrer">/assets/app.js</a>.
+        </p>
+      </div>
+    </details>
+
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
     <script defer src="/assets/app.js?v=2026-02-01T19:55Z.1"></script>
   </body>
