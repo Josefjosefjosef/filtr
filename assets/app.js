@@ -1338,6 +1338,9 @@ function buildVideoAsArticleCard(it) {
 
     if (!hasTopic && !hasSection && !hasFilter && !hasQuery) {
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
+      if (isDebugLogging) {
+        debugLog("[FILTER] rendering", state.filteredItems?.length, { hasTopic, hasSection, hasFilter, hasQuery });
+      }
       renderFeed(state.filteredItems);
       return;
     }
@@ -1357,6 +1360,9 @@ function buildVideoAsArticleCard(it) {
       state.filteredItems = Array.isArray(state.cachedItems)
         ? state.cachedItems.slice()
         : [];
+      if (isDebugLogging) {
+        debugLog("[FILTER] rendering", state.filteredItems?.length, { hasSection: state.activeSection, hasTopic: state.activeTopic, hasFilter: state.activeFilter, hasQuery });
+      }
       renderFeed();
       return;
     }
@@ -2219,9 +2225,6 @@ function buildVideoAsArticleCard(it) {
       state.hasLoadedData = true;
       if (!Array.isArray(state.cachedItems)) state.cachedItems = [];
       state.consecutiveLoadFailures = 0;
-      // SAFETY: první render bez filtrů, aby feed naběhl i když je filtr state prázdný nebo applyFilter někde skončí dřív
-      state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
-      renderFeed(state.filteredItems);
       if (isDebugLogging) {
         debugLog(
           "[CACHE] total",
@@ -2245,6 +2248,9 @@ function buildVideoAsArticleCard(it) {
             url: item.url,
           })),
         );
+      }
+      if (isDebugLogging) {
+        debugLog("[LOAD] cachedItems before applyFilter", state.cachedItems?.length);
       }
       applyFilter();
       const countArticles = state.cachedItems.filter((entry) => entry?.contentType === "article").length;
