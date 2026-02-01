@@ -17,8 +17,24 @@ console.log("[BOOT] app.js loaded", new Date().toISOString());
 // - render výhradně do #feed (safeTarget)
 // - routování výhradně přes item.contentType
 // Porušení = BUG (ne warning)
+console.log("[BOOT] app.js loaded", new Date().toISOString());
+
+window.addEventListener("error", (e) => {
+  try {
+    console.error("[WINERROR]", e?.message, e?.filename, e?.lineno, e?.colno, e?.error);
+  } catch {}
+});
+
+window.addEventListener("unhandledrejection", (e) => {
+  try {
+    console.error("[UNHANDLED]", e?.reason);
+  } catch {}
+});
+
 (() => {
   document.documentElement.setAttribute("data-iu-js","loaded");
+  try { document.documentElement.setAttribute("data-iu-path", location.pathname + location.search); } catch {}
+  try { document.documentElement.setAttribute("data-iu-buildstamp", document.querySelector('meta[name="iu-build"]')?.content || "no-meta"); } catch {}
   const $ = (sel) => document.querySelector(sel);
   /*
   Release summary (UI/data):
