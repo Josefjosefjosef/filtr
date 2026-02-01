@@ -1,3 +1,5 @@
+console.log("[BOOT] app.js loaded", new Date().toISOString());
+
 // === MAINTENANCE
 // ::contentReference[oaicite:0]{index=0}
 // REŽIM: MAINTENANCE
