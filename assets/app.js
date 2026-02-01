@@ -194,6 +194,55 @@ console.log("[BOOT] app.js loaded", new Date().toISOString());
     box.textContent = msg;
   }
 
+  function appendDebugLine(msg) {
+    if (!isDebugLogging) return;
+    const box = ensureDebugBox();
+    if (!box) return;
+    box.textContent += `\n${msg}`;
+  }
+
+  async function fetchDiag(url, kind) {
+    if (!isDebugLogging) {
+      return fetchJsonNoCache(url);
+    }
+    try {
+      const response = await fetch(url, { cache: "no-store" });
+      const status = response.status;
+      const ok = response.ok;
+      const redirected = response.redirected;
+      const finalUrl = response.url;
+      const contentType = response.headers.get("content-type") || "";
+      const text = await response.text();
+      const head = text.slice(0, 200).replace(/\s+/g, " ");
+      const infoLine = `[FETCHDIAG] kind=${kind} url=${url} status=${status} ok=${ok} redirected=${redirected} finalUrl=${finalUrl} contentType=${contentType}`;
+      const headLine = `[FETCHDIAG] kind=${kind} head=${head}`;
+      debugLog(infoLine);
+      debugLog(headLine);
+      appendDebugLine(infoLine);
+      appendDebugLine(headLine);
+      const isLikelyJson =
+        contentType.includes("application/json") ||
+        text.trim().startsWith("{") ||
+        text.trim().startsWith("[");
+      if (!isLikelyJson) {
+        debugWarn(`[FETCHDIAG] kind=${kind} not JSON`, contentType, head);
+        appendDebugLine(`[FETCHDIAG] kind=${kind} not JSON`);
+        return null;
+      }
+      try {
+        return JSON.parse(text);
+      } catch (parseErr) {
+        debugWarn(`[FETCHDIAG] kind=${kind} parse error`, parseErr);
+        appendDebugLine(`[FETCHDIAG] kind=${kind} parse error ${parseErr.message || parseErr}`);
+        return null;
+      }
+    } catch (err) {
+      debugWarn(`[FETCHDIAG] kind=${kind} fetch failed`, err);
+      appendDebugLine(`[FETCHDIAG] kind=${kind} fetch failed ${err.message || err}`);
+      return null;
+    }
+  }
+
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
   window.iuSetDataStatus = function(articlesCount, videosCount){
     const el = document.getElementById("dataStatus");
@@ -2056,17 +2105,11 @@ function buildVideoAsArticleCard(it) {
         return res.text();
       });
 
-      const [probeRes, artRes, vidRes] = await Promise.allSettled([
-        probePromise,
-        fetchJsonNoCache(articlesUrl),
-        fetchJsonNoCache(videosUrl),
-      ]);
-
-      const probeText = probeRes.status === "fulfilled" ? probeRes.value : null;
+      const probeText = await probePromise.catch(() => null);
       state.lastProbe = probeText;
 
-      const articlesData = artRes.status === "fulfilled" ? artRes.value : null;
-      const videosData = vidRes.status === "fulfilled" ? vidRes.value : null;
+      const articlesData = await fetchDiag(articlesUrl, "articles");
+      const videosData = await fetchDiag(videosUrl, "videos");
 
       const articlesArr = Array.isArray(articlesData)
         ? articlesData
@@ -2080,14 +2123,8 @@ function buildVideoAsArticleCard(it) {
           ? videosData.videos
           : [];
 
-      const articlesOk = artRes.status === "fulfilled";
-      const videosOk = vidRes.status === "fulfilled";
-      if (artRes.status === "rejected") {
-        debugWarn("[LOADDATA] ARTICLES FAIL", articlesUrl, artRes.reason);
-      }
-      if (vidRes.status === "rejected") {
-        debugWarn("[LOADDATA] VIDEOS FAIL", videosUrl, vidRes.reason);
-      }
+      const articlesOk = Boolean(articlesData);
+      const videosOk = Boolean(videosData);
       if (articlesOk && videosOk) {
         setStatus("Stav dat: OK");
       } else if (articlesOk && !videosOk) {
