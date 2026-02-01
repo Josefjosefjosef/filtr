@@ -86,6 +86,30 @@
         <p style="margin:0;">
           Pokud <strong>kterýkoliv</strong> z těchto kroků selže, chyba je v deployi (GitHub Pages), ne ve frontend logice.
         </p>
+        <p style="margin:10px 0 0 0;">
+          8) <strong>Jak poznám čerstvost dat:</strong>
+        </p>
+        <ul style="margin:6px 0 10px 18px;">
+          <li>
+            Otevři <a href="/projects/data/articles.json" target="_blank" rel="noopener noreferrer">articles.json</a>
+            a zkontroluj pole <code>generatedAt</code> nebo <code>updatedAt</code>.
+          </li>
+          <li>
+            Otevři <a href="/projects/data/videos.json" target="_blank" rel="noopener noreferrer">videos.json</a>
+            a zkontroluj pole <code>generatedAt</code> nebo <code>updatedAt</code>.
+          </li>
+          <li>
+            Pokud jsou data <strong>starší než několik hodin</strong>, pipeline pravděpodobně neběží
+            (nebo selhala v GitHub Actions).
+          </li>
+          <li>
+            Pokud JSON existuje, ale <strong>neobsahuje pole <code>articles</code>/<code>videos</code></strong>,
+            frontend nemá co vykreslit a zobrazí prázdný stav.
+          </li>
+        </ul>
+        <p style="margin:0;">
+          Tento krok odlišuje chybu frontend vs. problém v datové pipeline / deployi.
+        </p>
       </div>
     </details>
 
