@@ -1343,6 +1343,36 @@ function buildVideoAsArticleCard(it) {
   function applyFilter() {
     if (!state.hasLoadedData) return;
 
+    // SAFETY: pokud nejsou aktivní žádné filtry / témata / hledání, zobraz celý feed
+    const searchQuery = (searchInput && searchInput.value.trim()) || "";
+    const noFiltersActive =
+      (!state.activeTopics || state.activeTopics.length === 0) &&
+      (!activeSections || activeSections.length === 0) &&
+      (!state.activeTopic || state.activeTopic.length === 0) &&
+      (!state.activeSection || state.activeSection.length === 0) &&
+      !searchQuery;
+
+    if (noFiltersActive && Array.isArray(state.cachedItems)) {
+      state.filteredItems = state.cachedItems.slice();
+      renderFeed(state.filteredItems);
+      return;
+    }
+
+    // SAFETY: pokud nejsou aktivní žádné filtry / témata / hledání, zobraz celý feed z cache
+    const searchQuery = (searchInput && searchInput.value.trim()) || "";
+    const noFiltersActive =
+      (!state.activeTopics || state.activeTopics.length === 0) &&
+      (!activeSections || activeSections.length === 0) &&
+      (!state.activeTopic || state.activeTopic.length === 0) &&
+      (!state.activeSection || state.activeSection.length === 0) &&
+      !searchQuery;
+
+    if (noFiltersActive && Array.isArray(state.cachedItems)) {
+      state.filteredItems = state.cachedItems.slice();
+      renderFeed(state.filteredItems);
+      return;
+    }
+
     // START SAFETY: default render při žádném aktivním filtru
     const noActiveFilter =
       !state.activeSection &&
