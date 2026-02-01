@@ -15,6 +15,8 @@
 // - render výhradně do #feed (safeTarget)
 // - routování výhradně přes item.contentType
 // Porušení = BUG (ne warning)
+console.log("[BOOT] app.js loaded", new Date().toISOString());
+
 (() => {
   document.documentElement.setAttribute("data-iu-js","loaded");
   const $ = (sel) => document.querySelector(sel);
