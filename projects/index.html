@@ -3,21 +3,30 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="iu-build" content="2026-02-01T19:30Z" />
     <title>infoUzel.cz</title>
 
-    <!-- Cache-bust: klidně upravuj pouze hodnotu v= -->
-    <link rel="stylesheet" href="/assets/app.css?v=2026-02-01T18:35Z.1" />
+    <meta name="robots" content="noindex,nofollow" />
 
-    <!-- (volitelně) pokud používáte fonty v root indexu, může být i zde -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;700&display=swap" rel="stylesheet">
+    <!-- IMPORTANT: /projects/ musí načítat root assets -->
+    <link rel="stylesheet" href="/assets/app.css?v=2026-02-01T19:30Z.1" />
   </head>
+
   <body>
     <noscript>Pro zobrazení obsahu je potřeba JavaScript.</noscript>
+
+    <!-- Minimální, jistý render target -->
     <div id="feed"></div>
 
-    <!-- app.js si vytvoří DOM / feed stejně jako na hlavní stránce -->
-    <script defer src="/assets/app.js?v=2026-02-01T18:35Z.1"></script>
+    <!-- UI fallback pro chyby načítání dat -->
+    <div id="emptyBox" style="display:none"></div>
+
+    <!-- Volitelné status prvky (JS je umí používat, když existují) -->
+    <div id="dataStatus" style="display:none"></div>
+    <div id="dataCount" style="display:none"></div>
+    <div id="lastErrInline" style="display:none"></div>
+
+    <!-- IMPORTANT: /projects/ musí načítat root assets -->
+    <script defer src="/assets/app.js?v=2026-02-01T19:30Z.1"></script>
   </body>
 </html>
