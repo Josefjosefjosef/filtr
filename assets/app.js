@@ -470,22 +470,6 @@
     }
   }
 
-  async function probeRootPaths() {
-    const rootArticlesPath = "/data/articles.json";
-    const rootVideosPath = "/data/videos.json";
-    const [articlesOk, videosOk] = await Promise.all([
-      quickCheckUrl(rootArticlesPath),
-      quickCheckUrl(rootVideosPath),
-    ]);
-    return {
-      ok: articlesOk && videosOk,
-      articlesOk,
-      videosOk,
-      articlesPath: rootArticlesPath,
-      videosPath: rootVideosPath,
-    };
-  }
-
   // === DATA ENDPOINT OVERRIDE (maintenance-safe) ===
   (function(){
     const ARTICLES_ENDPOINT = "/projects/data/articles.json";
@@ -1775,7 +1759,7 @@ function buildVideoAsArticleCard(it) {
     const el = document.getElementById("dataStatusArticles");
     if (!el) return;
     try {
-      const res = await timeoutFetch(makeDataUrl("data/articles.json"), { cache: "no-store" }, 9000);
+      const res = await timeoutFetch("/projects/data/articles.json", { cache: "no-store" }, 9000);
       if (!res.ok) {
         el.textContent = `Články: chyba (${res.status})`;
         selfDiag.articlesState = "FAIL";
@@ -1861,7 +1845,7 @@ function buildVideoAsArticleCard(it) {
     const el = document.getElementById("dataStatusVideos");
     if (!el) return;
     try {
-      const res = await timeoutFetch(makeDataUrl("data/videos.json"), { cache: "no-store" }, 9000);
+      const res = await timeoutFetch("/projects/data/videos.json", { cache: "no-store" }, 9000);
       if (res.status === 404) {
         el.textContent = "Videa: není k dispozici";
         selfDiag.videosState = "404";
@@ -1997,22 +1981,8 @@ function buildVideoAsArticleCard(it) {
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
     const preferredEntry = await evaluatePreferredPair();
-    const baseArticleUrls = [
-      "/projects/data/articles.json",
-      makeDataUrl("data/articles.json"),
-      "/data/articles.json",
-      "./data/articles.json",
-      makeDataUrl("projects/data/articles.json"),
-      makeDataUrl("filtr/data/articles.json"),
-    ].filter(Boolean);
-    const baseVideoUrls = [
-      "/projects/data/videos.json",
-      makeDataUrl("data/videos.json"),
-      "/data/videos.json",
-      "./data/videos.json",
-      makeDataUrl("projects/data/videos.json"),
-      makeDataUrl("filtr/data/videos.json"),
-    ].filter(Boolean);
+    const baseArticleUrls = ["/projects/data/articles.json"];
+    const baseVideoUrls = ["/projects/data/videos.json"];
     const articleUrls = buildCandidateListFromPair(preferredEntry, "articles", baseArticleUrls);
     const videoUrls = buildCandidateListFromPair(preferredEntry, "videos", baseVideoUrls);
     let preferredSaved = false;
@@ -2439,7 +2409,7 @@ function buildVideoAsArticleCard(it) {
 
   async function fetchFeedHealth() {
     try {
-      const res = await timeoutFetch(makeDataUrl("data/feed_health.json"), { cache: "no-store" }, 5000);
+      const res = await timeoutFetch("/projects/data/feed_health.json", { cache: "no-store" }, 5000);
       if (res.status === 404) {
         debugWarn("[HEALTH] feed_health not found");
         return;

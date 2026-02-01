@@ -16,7 +16,7 @@ def count_items(path):
 
 def main():
     # ✅ FIX: Použij argument, env OUTPUT_DIR nebo default filtr/data
-    data_dir = sys.argv[1] if len(sys.argv) > 1 else os.getenv("OUTPUT_DIR", "filtr/data")
+    data_dir = sys.argv[1] if len(sys.argv) > 1 else os.getenv("OUTPUT_DIR", "projects/data")
     articles_path = os.path.join(data_dir, "articles.json")
     videos_path = os.path.join(data_dir, "videos.json")
     

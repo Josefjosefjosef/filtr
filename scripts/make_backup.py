@@ -4,9 +4,9 @@ import os, shutil, sys
 def ensure(p): os.makedirs(p, exist_ok=True)
 
 def rotate_backups(base=None):
-    # ✅ FIX: Použij env OUTPUT_DIR nebo default filtr/data
+    # ✅ FIX: Použij env OUTPUT_DIR nebo default projects/data
     if base is None:
-        base = os.getenv("OUTPUT_DIR", "filtr/data")
+        base = os.getenv("OUTPUT_DIR", "projects/data")
     """Zálohuje JSON soubory přímo z data/ (ne z data/current/)"""
     b1 = os.path.join(base, "backup", "1")
     b2 = os.path.join(base, "backup", "2")
@@ -33,8 +33,8 @@ def rotate_backups(base=None):
             shutil.copy2(src, dst)
 
 def main():
-    # ✅ FIX: Použij argument, env OUTPUT_DIR nebo default filtr/data
-    base = sys.argv[1] if len(sys.argv) > 1 else os.getenv("OUTPUT_DIR", "filtr/data")
+    # ✅ FIX: Použij argument, env OUTPUT_DIR nebo default projects/data
+    base = sys.argv[1] if len(sys.argv) > 1 else os.getenv("OUTPUT_DIR", "projects/data")
     rotate_backups(base)
     print("BACKUP_OK")
 
