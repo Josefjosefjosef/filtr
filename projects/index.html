@@ -124,9 +124,11 @@
         </p>
         <div style="margin:10px 0;padding:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);font-size:12px;">
           <strong>FORCE DIAG – zkontroluj JSON:</strong><br>
-          • <a href="/projects/data/articles.json" target="_blank" rel="noopener noreferrer">/projects/data/articles.json</a><br>
-          • <a href="/projects/data/videos.json" target="_blank" rel="noopener noreferrer">/projects/data/videos.json</a><br>
-          Otevři každý JSON a zkontroluj status + že body obsahují pole <code>articles</code>/<code>videos</code>.
+          • <a href="/projects/data/articles.json" target="_blank" rel="noopener noreferrer">/projects/data/articles.json</a>
+            – ověř, že každá položka má <code>title</code> a <code>url</code> (nejen hlavičku objektu).<br>
+          • <a href="/projects/data/videos.json" target="_blank" rel="noopener noreferrer">/projects/data/videos.json</a>
+            – ověř, že každé video má <code>title</code>, <code>url</code> a <code>videoId</code>.<br>
+          Pokud je URL prázdná/neabsolutní/nevalidní nebo chybí title/videoId, normalize položky zahodí a combined zůstane prázdné.
         </div>
       </div>
     </details>
