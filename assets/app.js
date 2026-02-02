@@ -2331,7 +2331,6 @@ function buildVideoAsArticleCard(it) {
         console.log("[loadData] cachedItems length:", state.cachedItems.length);
         console.log("[loadData] first items:", state.cachedItems.slice(0, 3));
       }
-      const combined = buildCombinedFeed(sanitizedArticles, videoItems);
       const combinedSources = [];
       if (articlesOk) combinedSources.push("articles");
       if (videosOk) combinedSources.push("videos");
