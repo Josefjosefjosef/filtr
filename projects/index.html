@@ -715,6 +715,49 @@
     </details>
 
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
+    <script>
+    /* iu-safe fetch rewrite: /data/* -> /projects/data/* (HTML-only, no app.js edits) */
+    (function(){
+      try{
+        if (window.__iuFetchRewriteInstalled) return;
+        window.__iuFetchRewriteInstalled = true;
+
+        var origFetch = window.fetch;
+        if (typeof origFetch !== "function") return;
+
+        function rewriteUrl(u){
+          try{
+            var s = String(u || "");
+            if (s.indexOf("/projects/data/") === 0) return s;
+            if (s.indexOf("/data/") === 0) return ("/projects" + s);
+            return s;
+          }catch(_){
+            return u;
+          }
+        }
+
+        window.fetch = function(input, init){
+          try{
+            if (typeof input === "string") {
+              return origFetch.call(this, rewriteUrl(input), init);
+            }
+            if (input && typeof input === "object" && input.url) {
+              var ru = rewriteUrl(input.url);
+              if (ru !== input.url) {
+                try{
+                  var req = new Request(ru, input);
+                  return origFetch.call(this, req, init);
+                }catch(_){
+                  return origFetch.call(this, ru, init);
+                }
+              }
+            }
+          }catch(_){}
+          return origFetch.call(this, input, init);
+        };
+      }catch(_){}
+    })();
+    </script>
     <script type="module" src="/assets/app.js?v=2026-02-01T19:55Z.1"></script>
     <script>
     (function(){
