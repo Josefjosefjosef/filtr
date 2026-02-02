@@ -467,6 +467,32 @@
         }
         lines.push("#emptyBox exists=" + (!!emptyBox) + " path=" + path(emptyBox));
         lines.push("#dataStatus exists=" + (!!dataStatus) + " text=" + (dataStatus ? (dataStatus.textContent || "").trim().slice(0,60) : ""));
+
+        lines.push("--- ALT TARGETS ---");
+        var altTargets = ["#articlesList","#videosList","#newsList","#items","#list","main","#content"];
+        altTargets.forEach(function(sel){
+          var matched = document.querySelectorAll(sel);
+          var el = matched.length ? matched[0] : null;
+          lines.push(sel + " exists=" + (matched.length > 0) + " count=" + matched.length + " children=" + (el ? el.children.length : -1));
+        });
+
+        lines.push("--- RENDERED ITEMS SEARCH ---");
+        var selectors = ["a[href]","#feed a[href]","article","[data-content-type]",".card",".item",".feed"];
+        selectors.forEach(function(sel){
+          lines.push(sel + " count=" + document.querySelectorAll(sel).length);
+        });
+
+        lines.push("--- EMPTY STATE CHECK ---");
+        if (emptyBox){
+          var cs2 = getComputedStyle(emptyBox);
+          lines.push("#emptyBox styles display=" + cs2.display + " visibility=" + cs2.visibility + " opacity=" + cs2.opacity);
+          lines.push("#emptyBox text=" + (emptyBox.textContent || "").trim().slice(0,80));
+          var rect2 = emptyBox.getBoundingClientRect();
+          lines.push("#emptyBox rect=" + rect2.x.toFixed(0) + "," + rect2.y.toFixed(0) + " " + rect2.width.toFixed(0) + "x" + rect2.height.toFixed(0));
+        } else {
+          lines.push("#emptyBox missing");
+        }
+
         lines.push("---");
         var prev = out.textContent || "";
         out.textContent = prev + (prev ? "\n" : "") + lines.join("\n");
