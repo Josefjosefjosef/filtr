@@ -1080,6 +1080,13 @@ def main() -> int:
             "publishedAt": published,
             "sources": sources
         }
+        # ensure top-level url mirrors first source (if valid http(s))
+        src0 = (sources or [{}])[0]
+        candidate = (src0.get("url", "") or "").strip()
+        if candidate.lower().startswith("http://") or candidate.lower().startswith("https://"):
+            article_out["url"] = candidate
+        else:
+            article_out["url"] = ""
 
         out_articles.append(article_out)
 
