@@ -35,6 +35,7 @@
     </div>
     <script>
     (function(){
+      var s0="", s1="", s2="";
       function set(t){ var el=document.getElementById("iuJsStatus"); if(el) el.textContent=t; }
       function exists(id){ return !!document.getElementById(id); }
       function feedChildren(){
@@ -42,18 +43,41 @@
         if(!f) return "NO_FEED";
         return String(f.children ? f.children.length : 0);
       }
+      function hashSafe(t){
+        try{
+          return String(t)
+            .replace(/\s+/g,"_")
+            .replace(/[^\w\-.:|=,]/g,"")
+            .slice(0,800);
+        }catch(e){ return "ERR"; }
+      }
+
+      function setHashOnce(){
+        try{
+          if (location.hash && location.hash.indexOf("#iu=") === 0) return;
+          var h = "#iu=0|" + hashSafe(s0) + ";1|" + hashSafe(s1) + ";2|" + hashSafe(s2);
+          location.hash = h;
+        }catch(e){}
+      }
 
       var htmlFlag = document.documentElement.getAttribute("data-iu-js") || "MISSING";
-      set("html data-iu-js=" + htmlFlag + " | feed.children=" + feedChildren() + " | fallback=" + (exists("iuNoJsFallback") ? "PRESENT" : "MISSING"));
+      var line0 = "html data-iu-js=" + htmlFlag + " | feed.children=" + feedChildren() + " | fallback=" + (exists("iuNoJsFallback") ? "PRESENT" : "MISSING");
+      set(line0);
+      s0 = line0;
 
       setTimeout(function(){
         var htmlFlag2 = document.documentElement.getAttribute("data-iu-js") || "MISSING";
-        set("AFTER 1200ms: html data-iu-js=" + htmlFlag2 + " | feed.children=" + feedChildren() + " | fallback=" + (exists("iuNoJsFallback") ? "PRESENT" : "MISSING"));
+        var line1 = "AFTER 1200ms: html data-iu-js=" + htmlFlag2 + " | feed.children=" + feedChildren() + " | fallback=" + (exists("iuNoJsFallback") ? "PRESENT" : "MISSING");
+        set(line1);
+        s1 = line1;
       }, 1200);
 
       setTimeout(function(){
         var htmlFlag3 = document.documentElement.getAttribute("data-iu-js") || "MISSING";
-        set("AFTER 3500ms: html data-iu-js=" + htmlFlag3 + " | feed.children=" + feedChildren() + " | fallback=" + (exists("iuNoJsFallback") ? "PRESENT" : "MISSING"));
+        var line2 = "AFTER 3500ms: html data-iu-js=" + htmlFlag3 + " | feed.children=" + feedChildren() + " | fallback=" + (exists("iuNoJsFallback") ? "PRESENT" : "MISSING");
+        set(line2);
+        s2 = line2;
+        setHashOnce();
       }, 3500);
     })();
     </script>
