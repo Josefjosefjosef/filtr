@@ -60,6 +60,12 @@
       var s0="", s1="", s2="";
       var errCount=0;
       var lastErr="(none)";
+      var diagHashValue = "";
+      var initialHash = location.hash || "";
+      if (initialHash && (initialHash.indexOf("#iu=") === 0 || initialHash.indexOf("html_data-iu-js=") !== -1)) {
+        diagHashValue = initialHash;
+        history.replaceState(null, "", location.pathname + location.search);
+      }
       function set(t){ var el=document.getElementById("iuJsStatus"); if(el) el.textContent=t; }
       function exists(id){ return !!document.getElementById(id); }
       function feedChildren(){
@@ -86,17 +92,18 @@
 
       function setHashOnce(){
         try{
-          if (location.hash && location.hash.indexOf("#iu=") === 0) return;
+          if (diagHashValue && diagHashValue.indexOf("#iu=") === 0) return;
           var errSnippet = hashSafeErr((lastErr || "(none)").replace(/\n/g, " "));
           var h = "#iu=0|" + hashSafe(s0) + ";1|" + hashSafe(s1) + ";2|" + hashSafe(s2) + ";e|" + hashSafeErr("errors=" + errCount + "|last=" + errSnippet);
-          location.hash = h;
+          diagHashValue = h;
+          updateHashOut();
         }catch(e){}
       }
 
       function updateHashOut(){
         try{
           var out = document.getElementById("iuHashOut");
-          if (out) out.textContent = location.hash || "(empty)";
+          if (out) out.textContent = diagHashValue || "(empty)";
         }catch(e){}
       }
 
@@ -108,7 +115,7 @@
           btn.dataset.bound = "1";
           btn.addEventListener("click", async function(){
             try{
-              await navigator.clipboard.writeText(location.hash || "");
+              await navigator.clipboard.writeText(diagHashValue || "");
               if (msg) msg.textContent = "✓ zkopírováno";
             }catch(e){
               if (msg) msg.textContent = "✗ nejde zkopírovat";
