@@ -440,5 +440,18 @@
 
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
     <script type="module" src="/assets/app.js?v=2026-02-01T19:55Z.1"></script>
+    <script>
+    (function(){
+      try {
+        document.documentElement.setAttribute("data-iu-html-after-appjs", "reached");
+        var p = document.createElement("div");
+        p.style.cssText = "margin:8px 0;padding:8px;border:1px dashed #c00;font-size:12px;";
+        p.textContent = "DIAG HTML: script AFTER app.js executed";
+        document.body.appendChild(p);
+      } catch(e) {
+        console.error("DIAG HTML after app.js error", e);
+      }
+    })();
+    </script>
   </body>
 </html>
