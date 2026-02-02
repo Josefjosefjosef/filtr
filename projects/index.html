@@ -33,6 +33,14 @@
     <div id="iuJsStatusLine" style="margin:8px 0;padding:8px 10px;border:1px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.12);font-size:12px;">
       <strong>DIAG JS STATUS:</strong> <span id="iuJsStatus">čekám…</span>
     </div>
+    <div id="iuHashBox" style="margin:8px 0;padding:8px 10px;border:1px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.10);font-size:12px;">
+      <strong>DIAG HASH:</strong>
+      <button id="iuHashCopyBtn" type="button" style="margin-left:8px;padding:4px 8px;border:1px solid rgba(255,255,255,0.25);background:rgba(0,0,0,0.12);color:inherit;cursor:pointer;">
+        Zkopírovat hash
+      </button>
+      <span id="iuHashCopyMsg" style="margin-left:8px;opacity:.8;"></span>
+      <pre id="iuHashOut" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;"></pre>
+    </div>
     <script>
     (function(){
       var s0="", s1="", s2="";
@@ -60,10 +68,37 @@
         }catch(e){}
       }
 
+      function updateHashOut(){
+        try{
+          var out = document.getElementById("iuHashOut");
+          if (out) out.textContent = location.hash || "(empty)";
+        }catch(e){}
+      }
+
+      function bindHashCopy(){
+        try{
+          var btn = document.getElementById("iuHashCopyBtn");
+          var msg = document.getElementById("iuHashCopyMsg");
+          if (!btn || btn.dataset.bound) return;
+          btn.dataset.bound = "1";
+          btn.addEventListener("click", async function(){
+            try{
+              await navigator.clipboard.writeText(location.hash || "");
+              if (msg) msg.textContent = "✓ zkopírováno";
+            }catch(e){
+              if (msg) msg.textContent = "✗ nejde zkopírovat";
+            }
+            setTimeout(function(){ if (msg) msg.textContent = ""; }, 2000);
+          });
+        }catch(e){}
+      }
+
       var htmlFlag = document.documentElement.getAttribute("data-iu-js") || "MISSING";
       var line0 = "html data-iu-js=" + htmlFlag + " | feed.children=" + feedChildren() + " | fallback=" + (exists("iuNoJsFallback") ? "PRESENT" : "MISSING");
       set(line0);
       s0 = line0;
+      updateHashOut();
+      bindHashCopy();
 
       setTimeout(function(){
         var htmlFlag2 = document.documentElement.getAttribute("data-iu-js") || "MISSING";
@@ -78,6 +113,7 @@
         set(line2);
         s2 = line2;
         setHashOnce();
+        updateHashOut();
       }, 3500);
     })();
     </script>
