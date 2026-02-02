@@ -422,68 +422,58 @@
       var qs = new URLSearchParams(location.search || "");
       if (!(qs.has("debug") && qs.get("debug") === "1")) return;
 
-      function qsa(sel){ try { return Array.prototype.slice.call(document.querySelectorAll(sel)); } catch(e){ return []; } }
-      function id1(id){ return document.getElementById(id); }
+      function feedCount(){ return document.querySelectorAll("#feed").length; }
+      function idel(id){ return document.getElementById(id); }
       function attr(el, name){ return el ? (el.getAttribute(name) || "") : ""; }
-      function txt(x){ return (x === undefined || x === null) ? "" : String(x); }
-
-      function pathOf(el){
-        if (!el) return "(null)";
+      function path(el){
+        if (!el) return "(missing)";
         var parts = [];
         var cur = el;
-        var guard = 0;
-        while (cur && guard < 10){
-          var s = cur.tagName ? cur.tagName.toLowerCase() : "(node)";
-          if (cur.id) s += "#" + cur.id;
+        var depth = 0;
+        while (cur && depth < 8){
+          var tag = cur.tagName ? cur.tagName.toLowerCase() : "(node)";
+          if (cur.id) tag += "#" + cur.id;
           if (cur.className && typeof cur.className === "string"){
-            var c = cur.className.trim().split(/\s+/).slice(0,3).join(".");
-            if (c) s += "." + c;
+            var cls = cur.className.trim().split(/\s+/).slice(0,2).join(".");
+            if (cls) tag += "." + cls;
           }
-          parts.push(s);
+          parts.push(tag);
           cur = cur.parentElement;
-          guard++;
+          depth++;
         }
-        return parts.join(" ← ");
+        return parts.join(" <- ");
       }
-
       function snap(label){
-        var out = id1("iuDomTargetAuditOut");
+        var out = idel("iuDomTargetAuditOut");
         if (!out) return;
         var html = document.documentElement;
-        var feed = id1("feed");
-        var emptyBox = id1("emptyBox");
-        var dataStatus = id1("dataStatus");
-        var main = id1("main");
-        var layout = qsa(".layout")[0] || null;
-
+        var feedEl = idel("feed");
+        var emptyBox = idel("emptyBox");
+        var dataStatus = idel("dataStatus");
         var lines = [];
-        lines.push("== " + label + " ==");
+        lines.push("[" + label + "]");
         lines.push("url=" + location.href);
-        lines.push("html[data-iu-js]=" + txt(attr(html,"data-iu-js")));
-        lines.push("#feed querySelectorAll count=" + qsa("#feed").length);
-        lines.push("#feed getElementById exists=" + (!!feed) + " path=" + pathOf(feed));
-        lines.push("#feed children=" + (feed ? feed.children.length : -1));
-        lines.push("#feed innerText.len=" + (feed ? (feed.innerText || "").length : -1));
-        lines.push("#emptyBox exists=" + (!!emptyBox) + " path=" + pathOf(emptyBox));
-        lines.push("#dataStatus exists=" + (!!dataStatus) + " path=" + pathOf(dataStatus));
-        lines.push("#main exists=" + (!!main) + " path=" + pathOf(main));
-        lines.push(".layout exists=" + (!!layout) + " path=" + pathOf(layout));
-        lines.push("dup IDs: feed=" + qsa("#feed").length + " | emptyBox=" + qsa("#emptyBox").length + " | dataStatus=" + qsa("#dataStatus").length);
-        try{
-          if (feed){
-            var cs = getComputedStyle(feed);
-            lines.push("#feed styles display=" + cs.display + " visibility=" + cs.visibility + " opacity=" + cs.opacity);
-          }
-        } catch(e){
-          lines.push("#feed styles err=" + (e.message || e));
+        lines.push("html[data-iu-js]=" + attr(html,"data-iu-js"));
+        lines.push("#feed instances=" + feedCount() + " | exists=" + (!!feedEl));
+        if (feedEl){
+          lines.push("#feed parent=" + path(feedEl.parentElement));
+          lines.push("#feed children=" + feedEl.children.length);
+          var cs = getComputedStyle(feedEl);
+          lines.push("#feed styles display=" + cs.display + " visibility=" + cs.visibility + " opacity=" + cs.opacity);
+          var rect = feedEl.getBoundingClientRect();
+          lines.push("#feed rect=" + rect.x.toFixed(0) + "," + rect.y.toFixed(0) + " " + rect.width.toFixed(0) + "x" + rect.height.toFixed(0));
+        } else {
+          lines.push("#feed styles=(missing)");
         }
-        lines.push("");
-        out.textContent += (out.textContent ? "\n" : "") + lines.join("\n");
-        try { console.log("IU DOM TARGET:", lines.join(" | ")); } catch(_) {}
+        lines.push("#emptyBox exists=" + (!!emptyBox) + " path=" + path(emptyBox));
+        lines.push("#dataStatus exists=" + (!!dataStatus) + " text=" + (dataStatus ? (dataStatus.textContent || "").trim().slice(0,60) : ""));
+        lines.push("---");
+        var prev = out.textContent || "";
+        out.textContent = prev + (prev ? "\n" : "") + lines.join("\n");
+        console.log("DOM TARGET AUDIT:", lines.join(" | "));
       }
-
-      [0,500,1500,3500].forEach(function(t){
-        setTimeout(function(){ snap("t+" + t + "ms"); }, t);
+      [0,250,1000,2500].forEach(function(ms){
+        setTimeout(function(){ snap(ms + "ms"); }, ms);
       });
     })();
     </script>
