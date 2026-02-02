@@ -130,6 +130,17 @@
             – ověř, že každé video má <code>title</code>, <code>url</code> a <code>videoId</code>.<br>
           Pokud je URL prázdná/neabsolutní/nevalidní nebo chybí title/videoId, normalize položky zahodí a combined zůstane prázdné.
         </div>
+        <div style="margin:10px 0;padding:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);font-size:12px;">
+          <strong>FORCE DIAG – ověř načtení assetů (JS/CSS)</strong><br>
+          • <a href="/assets/app.js" target="_blank" rel="noopener noreferrer">/assets/app.js</a><br>
+          • <a href="/assets/app.css" target="_blank" rel="noopener noreferrer">/assets/app.css</a><br>
+          • <a href="/projects/" target="_blank" rel="noopener noreferrer">/projects/</a><br>
+          • <a href="/projects/?debug=1" target="_blank" rel="noopener noreferrer">/projects/?debug=1</a><br>
+          • <a href="/projects/data/articles.json" target="_blank" rel="noopener noreferrer">/projects/data/articles.json</a><br>
+          • <a href="/projects/data/videos.json" target="_blank" rel="noopener noreferrer">/projects/data/videos.json</a><br>
+          Každý odkaz otevři v nové kartě. Pokud je cokoliv 404 nebo se otevře HTML chyba místo souboru, web nebude fungovat.<br>
+          U <code>/assets/app.js</code> musí být vidět JS kód a nahoře <code>console.log("[BOOT] app.js loaded")</code>.
+        </div>
       </div>
     </details>
 
