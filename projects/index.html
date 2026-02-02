@@ -62,7 +62,8 @@
       var lastErr="(none)";
       var diagHashValue = "";
       var initialHash = location.hash || "";
-      if (initialHash && (initialHash.indexOf("#iu=") === 0 || initialHash.indexOf("html_data-iu-js=") !== -1)) {
+      // smaž jen diagnostický hash #iu=... (nešahat na #aktualne / #sport / atd.)
+      if (initialHash && initialHash.indexOf("#iu=") === 0) {
         diagHashValue = initialHash;
         history.replaceState(null, "", location.pathname + location.search);
       }
