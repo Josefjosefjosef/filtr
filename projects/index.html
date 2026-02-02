@@ -51,6 +51,8 @@
     <script>
     (function(){
       var s0="", s1="", s2="";
+      var errCount=0;
+      var lastErr="(none)";
       function set(t){ var el=document.getElementById("iuJsStatus"); if(el) el.textContent=t; }
       function exists(id){ return !!document.getElementById(id); }
       function feedChildren(){
@@ -67,10 +69,19 @@
         }catch(e){ return "ERR"; }
       }
 
+      function hashSafeErr(t){
+        try{
+          return hashSafe(String(t).slice(0,200));
+        }catch(e){
+          return "ERR";
+        }
+      }
+
       function setHashOnce(){
         try{
           if (location.hash && location.hash.indexOf("#iu=") === 0) return;
-          var h = "#iu=0|" + hashSafe(s0) + ";1|" + hashSafe(s1) + ";2|" + hashSafe(s2);
+          var errSnippet = hashSafeErr((lastErr || "(none)").replace(/\n/g, " "));
+          var h = "#iu=0|" + hashSafe(s0) + ";1|" + hashSafe(s1) + ";2|" + hashSafe(s2) + ";e|" + hashSafeErr("errors=" + errCount + "|last=" + errSnippet);
           location.hash = h;
         }catch(e){}
       }
@@ -100,18 +111,74 @@
         }catch(e){}
       }
 
+      function updateErrOut(){
+        try{
+          var countEl = document.getElementById("iuErrCount");
+          if (countEl) countEl.textContent = String(errCount);
+          var lastEl = document.getElementById("iuErrLast");
+          if (lastEl) lastEl.textContent = lastErr || "(none)";
+        }catch(e){}
+      }
+
+      function bindCopy2Lines(){
+        try{
+          var btn = document.getElementById("iuCopy2LinesBtn");
+          var msg = document.getElementById("iuCopy2LinesMsg");
+          if (!btn || btn.dataset.bound) return;
+          btn.dataset.bound = "1";
+          btn.addEventListener("click", async function(){
+            var status = document.getElementById("iuJsStatus")?.textContent || "";
+            var line1 = "DIAG JS STATUS: " + status;
+            var line2 = "JS errors captured: " + errCount + (lastErr ? " | last: " + lastErr : "");
+            var payload = line1 + "\n" + line2;
+            try{
+              await navigator.clipboard.writeText(payload);
+              if (msg) msg.textContent = "✓ zkopírováno";
+            }catch(e){
+              if (msg) msg.textContent = "✗ nejde zkopírovat";
+            }
+            setTimeout(() => { if (msg) msg.textContent = ""; }, 2000);
+          });
+        }catch(e){}
+      }
+
+      function recordError(label){
+        errCount++;
+        lastErr = label;
+        updateErrOut();
+        updateHashOut();
+      }
+
+      window.addEventListener("error", function(e){
+        try{
+          var msg = (e && (e.message || (e.error && e.error.message))) || "error";
+          var locationInfo = e && e.filename ? " @ " + e.filename + ":" + (e.lineno || "?") : "";
+          recordError(msg + locationInfo);
+        }catch(_){}
+      });
+      window.addEventListener("unhandledrejection", function(e){
+        try{
+          var reason = e && e.reason ? (e.reason.message || String(e.reason)) : "unhandledrejection";
+          recordError("unhandledrejection: " + reason);
+        }catch(_){}
+      });
+
       var htmlFlag = document.documentElement.getAttribute("data-iu-js") || "MISSING";
       var line0 = "html data-iu-js=" + htmlFlag + " | feed.children=" + feedChildren() + " | fallback=" + (exists("iuNoJsFallback") ? "PRESENT" : "MISSING");
       set(line0);
       s0 = line0;
       updateHashOut();
+      updateErrOut();
       bindHashCopy();
+      bindCopy2Lines();
 
       setTimeout(function(){
         var htmlFlag2 = document.documentElement.getAttribute("data-iu-js") || "MISSING";
         var line1 = "AFTER 1200ms: html data-iu-js=" + htmlFlag2 + " | feed.children=" + feedChildren() + " | fallback=" + (exists("iuNoJsFallback") ? "PRESENT" : "MISSING");
         set(line1);
         s1 = line1;
+        updateHashOut();
+        updateErrOut();
       }, 1200);
 
       setTimeout(function(){
@@ -121,6 +188,7 @@
         s2 = line2;
         setHashOnce();
         updateHashOut();
+        updateErrOut();
       }, 3500);
     })();
     </script>
