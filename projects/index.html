@@ -110,6 +110,18 @@
         <p style="margin:0;">
           Tento krok odlišuje chybu frontend vs. problém v datové pipeline / deployi.
         </p>
+        <p style="margin:10px 0 0 0;">
+          9) <strong>Ověř, že JSON položky mají title + URL/videoId:</strong><br>
+          • Otevři <a href="/projects/data/articles.json" target="_blank" rel="noopener noreferrer">articles.json</a> a v prohlížeči použij Ctrl+F na "title" a "url" – každá položka musí mít oba atributy (nikoli jen hlavička).<br>
+          • Otevři <a href="/projects/data/videos.json" target="_blank" rel="noopener noreferrer">videos.json</a> a ověř, že každé video má <code>videoId</code>, <code>url</code> a <code>title</code> (nejen metadata).<br>
+          • Pokud je URL prázdné, relativní bez schématu nebo nevalidní pro <code>new URL()</code>, nebo chybí title/videoId, normalize je zahodí → combined.length === 0.
+        </p>
+        <p style="margin:0 0 8px 0;">
+          <strong>Typické chyby dat:</strong><br>
+          • URL chybí / je prázdná / není absolutní (např. neobsahuje https://).<br>
+          • Title je prázdné nebo úplně chybí (normálně se doplní "Bez názvu").<br>
+          • U videí chybí <code>videoId</code> a z URL se nedá odvodit (bez ID se položky zahodí).
+        </p>
       </div>
     </details>
 
