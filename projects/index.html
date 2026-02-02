@@ -63,6 +63,10 @@
       <strong>DOM SNAPSHOT (read-only, debug-only)</strong>
       <pre id="iuDomSnapshotOut" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;">waiting for ?debug=1…</pre>
     </div>
+    <div id="iuDomTargetAudit" style="margin-top:12px;padding:10px;border:1px solid rgba(255,255,255,.25);font-size:12px;">
+      <strong>DOM TARGET AUDIT (read-only, debug-only)</strong>
+      <pre id="iuDomTargetAuditOut" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;">waiting for ?debug=1…</pre>
+    </div>
     <div id="iuDomTelemetry" style="margin-top:12px;padding:8px;border:1px dashed rgba(255,255,255,0.25);font-size:12px;">
       <strong>DOM TELEMETRY (read-only)</strong>
       <pre id="iuDomTelemetryOut" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;">waiting for debug=1…</pre>
@@ -413,6 +417,76 @@
       }, 3500);
       })();
       </script>
+    <script>
+    (function(){
+      var qs = new URLSearchParams(location.search || "");
+      if (!(qs.has("debug") && qs.get("debug") === "1")) return;
+
+      function qsa(sel){ try { return Array.prototype.slice.call(document.querySelectorAll(sel)); } catch(e){ return []; } }
+      function id1(id){ return document.getElementById(id); }
+      function attr(el, name){ return el ? (el.getAttribute(name) || "") : ""; }
+      function txt(x){ return (x === undefined || x === null) ? "" : String(x); }
+
+      function pathOf(el){
+        if (!el) return "(null)";
+        var parts = [];
+        var cur = el;
+        var guard = 0;
+        while (cur && guard < 10){
+          var s = cur.tagName ? cur.tagName.toLowerCase() : "(node)";
+          if (cur.id) s += "#" + cur.id;
+          if (cur.className && typeof cur.className === "string"){
+            var c = cur.className.trim().split(/\s+/).slice(0,3).join(".");
+            if (c) s += "." + c;
+          }
+          parts.push(s);
+          cur = cur.parentElement;
+          guard++;
+        }
+        return parts.join(" ← ");
+      }
+
+      function snap(label){
+        var out = id1("iuDomTargetAuditOut");
+        if (!out) return;
+        var html = document.documentElement;
+        var feed = id1("feed");
+        var emptyBox = id1("emptyBox");
+        var dataStatus = id1("dataStatus");
+        var main = id1("main");
+        var layout = qsa(".layout")[0] || null;
+
+        var lines = [];
+        lines.push("== " + label + " ==");
+        lines.push("url=" + location.href);
+        lines.push("html[data-iu-js]=" + txt(attr(html,"data-iu-js")));
+        lines.push("#feed querySelectorAll count=" + qsa("#feed").length);
+        lines.push("#feed getElementById exists=" + (!!feed) + " path=" + pathOf(feed));
+        lines.push("#feed children=" + (feed ? feed.children.length : -1));
+        lines.push("#feed innerText.len=" + (feed ? (feed.innerText || "").length : -1));
+        lines.push("#emptyBox exists=" + (!!emptyBox) + " path=" + pathOf(emptyBox));
+        lines.push("#dataStatus exists=" + (!!dataStatus) + " path=" + pathOf(dataStatus));
+        lines.push("#main exists=" + (!!main) + " path=" + pathOf(main));
+        lines.push(".layout exists=" + (!!layout) + " path=" + pathOf(layout));
+        lines.push("dup IDs: feed=" + qsa("#feed").length + " | emptyBox=" + qsa("#emptyBox").length + " | dataStatus=" + qsa("#dataStatus").length);
+        try{
+          if (feed){
+            var cs = getComputedStyle(feed);
+            lines.push("#feed styles display=" + cs.display + " visibility=" + cs.visibility + " opacity=" + cs.opacity);
+          }
+        } catch(e){
+          lines.push("#feed styles err=" + (e.message || e));
+        }
+        lines.push("");
+        out.textContent += (out.textContent ? "\n" : "") + lines.join("\n");
+        try { console.log("IU DOM TARGET:", lines.join(" | ")); } catch(_) {}
+      }
+
+      [0,500,1500,3500].forEach(function(t){
+        setTimeout(function(){ snap("t+" + t + "ms"); }, t);
+      });
+    })();
+    </script>
     <script>
     (function(){
       var qs = new URLSearchParams(location.search || "");
