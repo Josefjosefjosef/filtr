@@ -99,6 +99,7 @@ window.addEventListener("unhandledrejection", (e) => {
     activeSection: null,
     activeFilter: null,
     searchQuery: "",
+    sections: new Set(activeSections),
   };
   state.cachedItems ??= [];
   state.filteredItems ??= [];
@@ -1047,6 +1048,11 @@ window.addEventListener("unhandledrejection", (e) => {
       .filter((s) => s && SECTION_KEYS.includes(s));
 
     activeSections = parsed.length ? parsed : ["vse"];
+    state.sections = new Set(activeSections);
+    if (!state.sections || state.sections.size === 0) {
+      state.sections = new Set(["aktualne"]);
+      activeSections = ["aktualne"];
+    }
     updateSectionLabel();
     updateSectionButtons();
   }
