@@ -161,6 +161,108 @@
           </div>
         </div>
 
+        <div id="iuDiagBlock2" style="margin:10px 0;padding:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);font-size:12px;">
+          <strong>LIVE DIAG REPORT (copy-paste)</strong><br>
+          <button id="iuDiagCopyBtn" type="button" style="margin:6px 0;padding:6px 10px;border:1px solid rgba(255,255,255,0.25);background:rgba(0,0,0,0.15);color:inherit;cursor:pointer;">
+            Zkopírovat report
+          </button>
+          <span id="iuDiagCopyMsg" style="margin-left:8px;opacity:.8;"></span>
+          <pre id="iuDiagReport" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;border-top:1px solid rgba(255,255,255,0.18);padding-top:8px;"></pre>
+        </div>
+
+        <script>
+        (function(){
+          const errors = [];
+          window.addEventListener("error", (e) => {
+            try { errors.push(`[error] ${e.message} @ ${e.filename}:${e.lineno}:${e.colno}`); } catch {}
+          });
+          window.addEventListener("unhandledrejection", (e) => {
+            try { errors.push(`[unhandledrejection] ${String(e.reason)}`); } catch {}
+          });
+
+          const $ = (id) => document.getElementById(id);
+          const getHtmlAttr = (name) => {
+            try { return document.documentElement.getAttribute(name) || "MISSING"; } catch { return "MISSING"; }
+          };
+          const getMeta = (sel) => {
+            try { const el = document.querySelector(sel); return (el && el.content) ? el.content : "MISSING"; } catch { return "MISSING"; }
+          };
+
+          async function headStatus(path){
+            try {
+              const r = await fetch(path, { method: "GET", cache: "no-store" });
+              return `status=${r.status} ok=${r.ok}`;
+            } catch (e) {
+              return `error=${(e && e.message) ? e.message : String(e)}`;
+            }
+          }
+
+          async function jsonCheck(path, arrayKey){
+            try {
+              const r = await fetch(path, { method: "GET", cache: "no-store" });
+              if (!r.ok) return `status=${r.status} ok=false`;
+              const j = await r.json();
+              const arr = j && j[arrayKey];
+              const len = Array.isArray(arr) ? arr.length : "MISSING";
+              return `status=${r.status} ok=true ${arrayKey}.length=${len}`;
+            } catch (e) {
+              return `error=${(e && e.message) ? e.message : String(e)}`;
+            }
+          }
+
+          function domFlag(selOrId){
+            try {
+              const el = selOrId.startsWith("#") ? document.querySelector(selOrId) : document.getElementById(selOrId);
+              return el ? "FOUND" : "MISSING";
+            } catch { return "MISSING"; }
+          }
+
+          async function buildReport(){
+            const lines = [];
+            lines.push(`URL: ${location.href}`);
+            lines.push(`UA: ${navigator.userAgent}`);
+            lines.push(`data-iu-js: ${getHtmlAttr("data-iu-js")}`);
+            lines.push(`data-iu-buildstamp: ${getHtmlAttr("data-iu-buildstamp")}`);
+            lines.push(`meta iu-build: ${getMeta('meta[name="iu-build"]')}`);
+            lines.push(`DOM #feed: ${domFlag("feed")}`);
+            lines.push(`DOM #dataStatus: ${domFlag("dataStatus")}`);
+
+            lines.push(`FETCH /assets/app.js: ${await headStatus("/assets/app.js")}`);
+            lines.push(`FETCH /assets/app.css: ${await headStatus("/assets/app.css")}`);
+            lines.push(`FETCH /projects/data/articles.json: ${await jsonCheck("/projects/data/articles.json", "articles")}`);
+            lines.push(`FETCH /projects/data/videos.json: ${await jsonCheck("/projects/data/videos.json", "videos")}`);
+
+            const last3 = errors.slice(-3);
+            lines.push(`JS errors captured: ${errors.length}${last3.length ? " | last: " + last3.join(" || ") : ""}`);
+
+            const txt = lines.join("\n");
+            const out = $("iuDiagReport");
+            if (out) out.textContent = txt;
+
+            const btn = $("iuDiagCopyBtn");
+            const msg = $("iuDiagCopyMsg");
+            if (btn && !btn.dataset.bound) {
+              btn.dataset.bound = "1";
+              btn.addEventListener("click", async () => {
+                try {
+                  await navigator.clipboard.writeText(txt);
+                  if (msg) msg.textContent = "✓ zkopírováno";
+                } catch (e) {
+                  if (msg) msg.textContent = "✗ nejde zkopírovat (clipboard blokováno)";
+                }
+                setTimeout(() => { if (msg) msg.textContent = ""; }, 2000);
+              });
+            }
+          }
+
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", buildReport, { once: true });
+          } else {
+            buildReport();
+          }
+        })();
+        </script>
+
         <script>
         (function(){
           try {
