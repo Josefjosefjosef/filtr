@@ -55,13 +55,17 @@
       <span id="iuDataProbeCopyMsg" style="margin-left:8px;opacity:.8;"></span>
       <pre id="iuDataProbeOut" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;"></pre>
     </div>
+    <div id="iuPipelineTelemetry" style="margin-top:10px;padding:10px;border:1px solid rgba(255,255,255,0.18);font-size:12px;background:rgba(0,0,0,0.04);">
+      <strong>PIPELINE TELEMETRY (debug-only)</strong>
+      <pre id="iuPipelineTelemetryOut" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;">waiting for debug=1…</pre>
+    </div>
     <div id="iuDomTelemetry" style="margin-top:12px;padding:8px;border:1px dashed rgba(255,255,255,0.25);font-size:12px;">
       <strong>DOM TELEMETRY (read-only)</strong>
       <pre id="iuDomTelemetryOut" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;">waiting for debug=1…</pre>
     </div>
-      <script>
-      (function(){
-        var s0="", s1="", s2="";
+    <script>
+    (function(){
+      var s0="", s1="", s2="";
       var errCount=0;
       var lastErr="(none)";
       var diagHashValue = "";
@@ -405,6 +409,32 @@
       }, 3500);
       })();
       </script>
+    <script>
+    (function(){
+      var params = new URLSearchParams(location.search || "");
+      if (params.get("debug") !== "1") return;
+      var out = document.getElementById("iuPipelineTelemetryOut");
+      if (!out) return;
+      function logLine(label){
+        var feed = document.getElementById("feed");
+        var emptyBox = document.getElementById("emptyBox");
+        var dataStatus = document.getElementById("dataStatus");
+        var htmlFlag = document.documentElement.getAttribute("data-iu-js") || "(missing)";
+        var text = label +
+          " | feedExists=" + (!!feed) +
+          " children=" + (feed ? feed.children.length : "N/A") +
+          " | emptyBox=" + (!!emptyBox) +
+          " | dataStatus=" + (dataStatus ? (dataStatus.textContent || "(empty)") : "missing") +
+          " | html[data-iu-js]=" + htmlFlag;
+        out.textContent += text + "\n";
+        console.log("[PIPELINE TELEMETRY]", text);
+      }
+      var delays = [0, 500, 1500, 3500];
+      delays.forEach(function(ms){
+        setTimeout(function(){ logLine("T=" + ms + "ms"); }, ms);
+      });
+    })();
+    </script>
     <script>
     (function(){
       try {
