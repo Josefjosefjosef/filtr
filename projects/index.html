@@ -8,6 +8,12 @@
 
     <meta name="robots" content="noindex,nofollow" />
 
+    <style>
+      /* DIAG ONLY: zviditelnění, zda je feed přítomen a není skryt/překryt */
+      #feed { min-height: 200px !important; outline: 2px dashed rgba(255,255,255,0.35) !important; outline-offset: 2px; }
+      #iuNoJsFallback { display: block !important; }
+      body::before, body::after, html::before, html::after { pointer-events: none !important; }
+    </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
     <link rel="stylesheet" href="/assets/app.css?v=2026-02-01T19:55Z.1" />
   </head>
@@ -16,7 +22,41 @@
     <noscript>Pro zobrazení obsahu je potřeba JavaScript.</noscript>
 
     <!-- Minimální, jistý render target -->
-    <div id="feed"></div>
+    <div id="feed">
+      <div id="iuNoJsFallback" style="padding:12px;margin:10px 0;border:1px dashed rgba(255,255,255,0.45);background:rgba(0,0,0,0.18);font-size:13px;line-height:1.35;">
+        <strong>DIAG:</strong> Pokud vidíš tento blok, JS renderer buď neběží, nebo feed nic nevykreslil.
+        <div style="margin-top:6px;opacity:.9;">
+          Zkus otevřít <code>/projects/?debug=1</code> a v Troubleshoot použij „LIVE DIAG REPORT“ a „FORCE DIAG – ověř načtení assetů“.
+        </div>
+      </div>
+    </div>
+    <div id="iuJsStatusLine" style="margin:8px 0;padding:8px 10px;border:1px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.12);font-size:12px;">
+      <strong>DIAG JS STATUS:</strong> <span id="iuJsStatus">čekám…</span>
+    </div>
+    <script>
+    (function(){
+      function set(t){ var el=document.getElementById("iuJsStatus"); if(el) el.textContent=t; }
+      function exists(id){ return !!document.getElementById(id); }
+      function feedChildren(){
+        var f=document.getElementById("feed");
+        if(!f) return "NO_FEED";
+        return String(f.children ? f.children.length : 0);
+      }
+
+      var htmlFlag = document.documentElement.getAttribute("data-iu-js") || "MISSING";
+      set("html data-iu-js=" + htmlFlag + " | feed.children=" + feedChildren() + " | fallback=" + (exists("iuNoJsFallback") ? "PRESENT" : "MISSING"));
+
+      setTimeout(function(){
+        var htmlFlag2 = document.documentElement.getAttribute("data-iu-js") || "MISSING";
+        set("AFTER 1200ms: html data-iu-js=" + htmlFlag2 + " | feed.children=" + feedChildren() + " | fallback=" + (exists("iuNoJsFallback") ? "PRESENT" : "MISSING"));
+      }, 1200);
+
+      setTimeout(function(){
+        var htmlFlag3 = document.documentElement.getAttribute("data-iu-js") || "MISSING";
+        set("AFTER 3500ms: html data-iu-js=" + htmlFlag3 + " | feed.children=" + feedChildren() + " | fallback=" + (exists("iuNoJsFallback") ? "PRESENT" : "MISSING"));
+      }, 3500);
+    })();
+    </script>
 
     <!-- UI fallback pro chyby načítání dat -->
     <div id="emptyBox" style="display:none"></div>
