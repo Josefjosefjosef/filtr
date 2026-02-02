@@ -758,6 +758,73 @@
       }catch(_){}
     })();
     </script>
+    <script>
+    (function(){
+      var SECTION_KEYS = ["vse","aktualne","doprava","pocasi","sport","finance","krimi","zdravi","video"];
+      var SECTION_STORAGE_KEY = "iu:sectionsPreset";
+      var DEFAULT_SECTION = "aktualne";
+      var allowed = {};
+      SECTION_KEYS.forEach(function(key){ allowed[key] = true; });
+
+      function normalize(value){
+        if (!value) return "";
+        var parts = value.split(",");
+        var kept = [];
+        for (var i = 0; i < parts.length; i++){
+          var token = (parts[i] || "").trim().toLowerCase();
+          if (!token) continue;
+          if (allowed[token]){
+            kept.push(token);
+          }
+        }
+        return kept.length ? kept.join(",") : "";
+      }
+
+      function writeStored(value){
+        try{
+          if (!window.localStorage) return;
+          window.localStorage.setItem(SECTION_STORAGE_KEY, value);
+        }catch(_){}
+      }
+
+      function removeStored(){
+        try{
+          if (!window.localStorage) return;
+          window.localStorage.removeItem(SECTION_STORAGE_KEY);
+        }catch(_){}
+      }
+
+      try{
+        var hashValue = normalize((location.hash || "").replace(/^#/, ""));
+        if (hashValue){
+          writeStored(hashValue);
+        } else {
+          var stored = "";
+          try{
+            stored = window.localStorage ? (window.localStorage.getItem(SECTION_STORAGE_KEY) || "") : "";
+          }catch(_){}
+          var normalizedStored = normalize(stored);
+          if (normalizedStored){
+            location.hash = "#" + normalizedStored;
+          } else {
+            location.hash = "#" + DEFAULT_SECTION;
+            writeStored(DEFAULT_SECTION);
+          }
+        }
+      }catch(_){}
+
+      if (window.addEventListener){
+        window.addEventListener("hashchange", function(){
+          var newHash = normalize((location.hash || "").replace(/^#/, ""));
+          if (newHash){
+            writeStored(newHash);
+          } else {
+            removeStored();
+          }
+        }, false);
+      }
+    })();
+    </script>
     <script type="module" src="/assets/app.js?v=2026-02-01T19:55Z.1"></script>
     <script>
     (function(){
