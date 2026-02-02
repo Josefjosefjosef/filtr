@@ -1,6 +1,7 @@
 # Produkční diagnostika (Windows / PowerShell) — správné stahování JSON (UTF-8)
 
 ## Proč tohle existuje
+
 V PowerShellu přesměrování `>` zapisuje text typicky jako UTF-16LE s BOM (začíná bajty `FF FE`), takže pak Python při `read_text(encoding="utf-8")` padá na `UnicodeDecodeError`.
 Řešení: používat `curl.exe -o` nebo `Out-File -Encoding utf8`.
 
