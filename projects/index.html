@@ -490,6 +490,7 @@
           lines.push(sel + " count=" + document.querySelectorAll(sel).length);
         });
 
+        lines.push("=== COPY THIS BLOCK BEGIN " + label + " ===");
         lines.push("--- DOM SKELETON CHECK ---");
         var skeleton = ["#newsList","#articlesList","#videosList","#filtersBar","#topicsBar","main","#content","#page","#app"];
         skeleton.forEach(function(id){
@@ -497,6 +498,7 @@
           lines.push(id + " exists=" + (count > 0) + " count=" + count);
         });
         lines.push("--- EMPTY STATE CHECK ---");
+        lines.push("=== COPY THIS BLOCK END " + label + " ===");
         if (emptyBox){
           var cs2 = getComputedStyle(emptyBox);
           lines.push("#emptyBox styles display=" + cs2.display + " visibility=" + cs2.visibility + " opacity=" + cs2.opacity);
@@ -507,23 +509,43 @@
           lines.push("#emptyBox missing");
         }
 
-        var entries = (performance && performance.getEntriesByType)
-          ? (performance.getEntriesByType("resource") || [])
-          : [];
-        var list = entries.filter(function(entry){
-          var name = entry && entry.name ? entry.name.toLowerCase() : "";
-          return name.indexOf("articles.json") !== -1 ||
-            name.indexOf("videos.json") !== -1;
+        var entries = [];
+        if (typeof performance !== "undefined" && performance && typeof performance.getEntriesByType === "function"){
+          entries = performance.getEntriesByType("resource") || [];
+        }
+        var matches = entries.filter(function(e){
+          var n = (e && e.name) ? String(e.name).toLowerCase() : "";
+          return n.indexOf("articles.json") !== -1 || n.indexOf("videos.json") !== -1;
         });
-        var fetchXhr = entries.filter(function(entry){
-          var t = entry && entry.initiatorType;
-          return t === "fetch" || t === "xmlhttprequest";
+        var fetchXhr = entries.filter(function(e){
+          var it = (e && e.initiatorType) ? String(e.initiatorType) : "";
+          return it === "fetch" || it === "xmlhttprequest";
         }).slice(0, 30);
 
         lines.push("--- PERFORMANCE RESOURCES ---");
         lines.push("resourceEntriesTotal=" + entries.length);
-        lines.push("resourceMatches=" + list.length);
-        list.forEach(function(entry){
+        lines.push("matchesArticlesVideos=" + matches.length);
+        lines.push("fetchXhrEntriesShown=" + fetchXhr.length);
+        lines.push("--- ARTICLES/VIDEOS ENTRIES ---");
+        if (!matches.length){
+          lines.push("(none)");
+        }
+        matches.forEach(function(entry){
+          var name = entry && entry.name
+            ? entry.name.slice(0,120) + (entry.name.length > 120 ? "…" : "")
+            : "(unknown)";
+          lines.push("name=" + name);
+          lines.push("  initiatorType=" + (entry.initiatorType || ""));
+          lines.push("  startTime=" + (entry.startTime ? Math.round(entry.startTime) : "0"));
+          lines.push("  duration=" + (entry.duration ? Math.round(entry.duration) : "0"));
+          lines.push("  transferSize=" + (entry.transferSize !== undefined ? entry.transferSize : ""));
+          lines.push("  nextHopProtocol=" + (entry.nextHopProtocol || ""));
+        });
+        lines.push("--- FETCH/XHR SAMPLE (max 30) ---");
+        if (!fetchXhr.length){
+          lines.push("(none)");
+        }
+        fetchXhr.forEach(function(entry){
           var name = entry && entry.name
             ? entry.name.slice(0,120) + (entry.name.length > 120 ? "…" : "")
             : "(unknown)";
@@ -533,19 +555,6 @@
           lines.push("  transferSize=" + (entry.transferSize !== undefined ? entry.transferSize : ""));
           lines.push("  nextHopProtocol=" + (entry.nextHopProtocol || ""));
         });
-        if (fetchXhr.length){
-          lines.push("--- FETCH/XHR SAMPLE (max 30) ---");
-          fetchXhr.forEach(function(entry){
-            var name = entry && entry.name
-              ? entry.name.slice(0,120) + (entry.name.length > 120 ? "…" : "")
-              : "(unknown)";
-            lines.push("name=" + name);
-            lines.push("  initiatorType=" + (entry.initiatorType || ""));
-            lines.push("  duration=" + (entry.duration ? Math.round(entry.duration) : "0"));
-            lines.push("  transferSize=" + (entry.transferSize !== undefined ? entry.transferSize : ""));
-            lines.push("  nextHopProtocol=" + (entry.nextHopProtocol || ""));
-          });
-        }
 
         lines.push("--- NAV/READY ---");
         lines.push("readyState=" + document.readyState);
