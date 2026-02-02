@@ -142,6 +142,62 @@
         }catch(e){}
       }
 
+      function pickSample(arr){
+        try{
+          if(!Array.isArray(arr) || !arr.length) return null;
+          var it = arr[0] || {};
+          return {
+            title: it.title,
+            url: it.url,
+            videoId: it.videoId,
+            contentType: it.contentType,
+            publishedAt: it.publishedAt || it.published || it.date || it.createdAt || it.uploadedAt || it.time
+          };
+        }catch(e){ return "ERR"; }
+      }
+
+      async function runDataProbe(){
+        var out = document.getElementById("iuDataProbeOut");
+        function write(t){ if(out) { out.textContent = t; } }
+        try{
+          write("Running…");
+          var aUrl = "/projects/data/articles.json";
+          var vUrl = "/projects/data/videos.json";
+
+          var ra = await fetch(aUrl, { cache: "no-store" });
+          var rv = await fetch(vUrl, { cache: "no-store" });
+
+          var aCt = ra.headers.get("content-type") || "";
+          var vCt = rv.headers.get("content-type") || "";
+
+          var aj = await ra.json();
+          var vj = await rv.json();
+
+          var aArr = Array.isArray(aj?.articles) ? aj.articles : (Array.isArray(aj) ? aj : []);
+          var vArr = Array.isArray(vj?.videos) ? vj.videos : (Array.isArray(vj) ? vj : []);
+
+          var lines = [];
+          lines.push("ART status=" + ra.status + " ok=" + ra.ok + " ct=" + aCt);
+          lines.push("VID status=" + rv.status + " ok=" + rv.ok + " ct=" + vCt);
+          lines.push("ART articles.length=" + aArr.length + " sample=" + JSON.stringify(pickSample(aArr)));
+          lines.push("VID videos.length=" + vArr.length + " sample=" + JSON.stringify(pickSample(vArr)));
+          lines.push("NOTE: Pokud jsou délky >0 a vzorek má title+url (u videí i videoId), data jsou OK a problém je v app.js gating/flow, ne v JSON.");
+
+          write(lines.join("\n"));
+        }catch(e){
+          write("ERROR: " + (e && (e.message || String(e))));
+        }
+      }
+
+      function bindDataProbe(){
+        try{
+          var btn = document.getElementById("iuDataProbeBtn");
+          if(!btn || btn.dataset.bound) return;
+          btn.dataset.bound = "1";
+          btn.addEventListener("click", function(){ runDataProbe(); });
+        }catch(e){}
+      }
+
       function recordError(label){
         errCount++;
         lastErr = label;
@@ -171,6 +227,10 @@
       updateErrOut();
       bindHashCopy();
       bindCopy2Lines();
+      bindDataProbe();
+      // AUTO RUN (no-click) — safe HTML-only probe
+      setTimeout(function(){ try{ runDataProbe(); }catch(e){} }, 50);
+      setTimeout(function(){ try{ runDataProbe(); }catch(e){} }, 3600);
 
       setTimeout(function(){
         var htmlFlag2 = document.documentElement.getAttribute("data-iu-js") || "MISSING";
