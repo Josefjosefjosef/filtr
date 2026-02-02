@@ -319,6 +319,25 @@
         }catch(e){}
       }
 
+      function bindDataProbeCopy(){
+        try{
+          var btn = document.getElementById("iuDataProbeCopyBtn");
+          var msg = document.getElementById("iuDataProbeCopyMsg");
+          if(!btn || btn.dataset.bound) return;
+          btn.dataset.bound = "1";
+          btn.addEventListener("click", async function(){
+            try{
+              var out = document.getElementById("iuDataProbeOut")?.textContent || "";
+              await navigator.clipboard.writeText(out);
+              if(msg) msg.textContent = "✓ zkopírováno";
+            }catch(e){
+              if(msg) msg.textContent = "✗ nejde zkopírovat";
+            }
+            setTimeout(function(){ if(msg) msg.textContent = ""; }, 2000);
+          });
+        }catch(e){}
+      }
+
       function recordError(label){
         errCount++;
         lastErr = label;
@@ -349,6 +368,7 @@
       bindHashCopy();
       bindCopy2Lines();
       bindDataProbe();
+      bindDataProbeCopy();
       // AUTO RUN (no-click) — safe HTML-only probe
       setTimeout(function(){ try{ runDataProbe(); }catch(e){} }, 50);
       setTimeout(function(){ try{ runDataProbe(); }catch(e){} }, 3600);
