@@ -38,8 +38,15 @@
       <button id="iuHashCopyBtn" type="button" style="margin-left:8px;padding:4px 8px;border:1px solid rgba(255,255,255,0.25);background:rgba(0,0,0,0.12);color:inherit;cursor:pointer;">
         Zkopírovat hash
       </button>
+      <button id="iuCopy2LinesBtn" type="button" style="margin-left:8px;padding:4px 8px;border:1px solid rgba(255,255,255,0.25);background:rgba(0,0,0,0.12);color:inherit;cursor:pointer;">
+        Zkopírovat 2 řádky
+      </button>
       <span id="iuHashCopyMsg" style="margin-left:8px;opacity:.8;"></span>
+      <span id="iuCopy2LinesMsg" style="margin-left:8px;opacity:.8;"></span>
       <pre id="iuHashOut" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;"></pre>
+      <div style="margin-top:8px;">
+        JS errors captured: <span id="iuErrCount">0</span> | last: <span id="iuErrLast">(none)</span>
+      </div>
     </div>
     <script>
     (function(){
