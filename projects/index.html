@@ -21,13 +21,23 @@
   <body>
     <noscript>Pro zobrazení obsahu je potřeba JavaScript.</noscript>
 
-    <!-- Minimální, jistý render target -->
-    <div id="feed">
-      <div id="iuNoJsFallback" style="padding:12px;margin:10px 0;border:1px dashed rgba(255,255,255,0.45);background:rgba(0,0,0,0.18);font-size:13px;line-height:1.35;">
-        <strong>DIAG:</strong> Pokud vidíš tento blok, JS renderer buď neběží, nebo feed nic nevykreslil.
-        <div style="margin-top:6px;opacity:.9;">
-          Zkus otevřít <code>/projects/?debug=1</code> a v Troubleshoot použij „LIVE DIAG REPORT“ a „FORCE DIAG – ověř načtení assetů“.
-        </div>
+    <div id="app">
+      <div id="page">
+        <main id="content">
+          <div id="newsList">
+            <div id="dataStatus" style="display:none"></div>
+            <div id="emptyBox" style="display:none"></div>
+            <!-- Minimální, jistý render target -->
+            <div id="feed">
+              <div id="iuNoJsFallback" style="padding:12px;margin:10px 0;border:1px dashed rgba(255,255,255,0.45);background:rgba(0,0,0,0.18);font-size:13px;line-height:1.35;">
+                <strong>DIAG:</strong> Pokud vidíš tento blok, JS renderer buď neběží, nebo feed nic nevykreslil.
+                <div style="margin-top:6px;opacity:.9;">
+                  Zkus otevřít <code>/projects/?debug=1</code> a v Troubleshoot použij „LIVE DIAG REPORT“ a „FORCE DIAG – ověř načtení assetů“.
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
     <div id="iuJsStatusLine" style="margin:8px 0;padding:8px 10px;border:1px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.12);font-size:12px;">
@@ -678,11 +688,7 @@
     })();
     </script>
 
-    <!-- UI fallback pro chyby načítání dat -->
-    <div id="emptyBox" style="display:none"></div>
-
     <!-- Volitelné status prvky (JS je umí používat, když existují) -->
-    <div id="dataStatus" style="display:none"></div>
     <div id="dataCount" style="display:none"></div>
     <div id="lastErrInline" style="display:none"></div>
 
