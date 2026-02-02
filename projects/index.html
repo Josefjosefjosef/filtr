@@ -59,6 +59,10 @@
       <strong>PIPELINE TELEMETRY (debug-only)</strong>
       <pre id="iuPipelineTelemetryOut" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;">waiting for debug=1…</pre>
     </div>
+    <div id="iuDomSnapshot" style="margin-top:12px;padding:10px;border:1px solid rgba(255,255,255,.25);font-size:12px;">
+      <strong>DOM SNAPSHOT (read-only, debug-only)</strong>
+      <pre id="iuDomSnapshotOut" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;">waiting for ?debug=1…</pre>
+    </div>
     <div id="iuDomTelemetry" style="margin-top:12px;padding:8px;border:1px dashed rgba(255,255,255,0.25);font-size:12px;">
       <strong>DOM TELEMETRY (read-only)</strong>
       <pre id="iuDomTelemetryOut" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;">waiting for debug=1…</pre>
@@ -409,6 +413,39 @@
       }, 3500);
       })();
       </script>
+    <script>
+    (function(){
+      var qs = new URLSearchParams(location.search || "");
+      if (!(qs.has("debug") && qs.get("debug") === "1")) return;
+
+      function getAttr(el, name){ return el ? (el.getAttribute(name) || "") : ""; }
+      var out = document.getElementById("iuDomSnapshotOut");
+      if (!out) return;
+
+      function line(ms){
+        var html = document.documentElement;
+        var feed = document.getElementById("feed");
+        var emptyBox = document.getElementById("emptyBox");
+        var dataStatus = document.getElementById("dataStatus");
+        var parts = [];
+        parts.push("[" + ms + "ms]");
+        parts.push("href=" + location.href);
+        parts.push("ready=" + document.readyState);
+        parts.push("data-iu-js=" + getAttr(html, "data-iu-js"));
+        parts.push("feed=" + (!!feed));
+        parts.push("feed.children=" + (feed ? feed.children.length : -1));
+        parts.push("emptyBox=" + (!!emptyBox));
+        parts.push("dataStatus=" + (!!dataStatus));
+        var s = parts.join(" | ");
+        if (out) out.textContent += (out.textContent ? "\n" : "") + s;
+        try { console.log("IU DOM SNAPSHOT:", s); } catch(e) {}
+      }
+
+      [0,200,500,1000,1500,2500,3500].forEach(function(t){
+        setTimeout(function(){ line(t); }, t);
+      });
+    })();
+    </script>
     <script>
     (function(){
       var params = new URLSearchParams(location.search || "");
