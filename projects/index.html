@@ -33,7 +33,7 @@
     <div id="iuJsStatusLine" style="margin:8px 0;padding:8px 10px;border:1px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.12);font-size:12px;">
       <strong>DIAG JS STATUS:</strong> <span id="iuJsStatus">čekám…</span>
     </div>
-    <div id="iuHashBox" style="margin:8px 0;padding:8px 10px;border:1px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.10);font-size:12px;">
+    <div id="iuHashBox" style="margin:8px 0;padding:10px;border:1px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.10);font-size:12px;">
       <strong>DIAG HASH:</strong>
       <button id="iuHashCopyBtn" type="button" style="margin-left:8px;padding:4px 8px;border:1px solid rgba(255,255,255,0.25);background:rgba(0,0,0,0.12);color:inherit;cursor:pointer;">
         Zkopírovat hash
@@ -47,6 +47,13 @@
       <div style="margin-top:8px;">
         JS errors captured: <span id="iuErrCount">0</span> | last: <span id="iuErrLast">(none)</span>
       </div>
+    </div>
+    <div id="iuDataProbeBox" style="margin:10px 0;padding:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);font-size:12px;">
+      <strong>DATA PROBE (HTML-only):</strong>
+      <button id="iuDataProbeBtn" type="button" style="margin-left:8px;padding:4px 8px;border:1px solid rgba(255,255,255,0.25);background:rgba(0,0,0,0.12);color:inherit;cursor:pointer;">Ověřit data teď</button>
+      <button id="iuDataProbeCopyBtn" type="button" style="margin-left:8px;padding:4px 8px;border:1px solid rgba(255,255,255,0.25);background:rgba(0,0,0,0.12);color:inherit;cursor:pointer;">Zkopírovat probe</button>
+      <span id="iuDataProbeCopyMsg" style="margin-left:8px;opacity:.8;"></span>
+      <pre id="iuDataProbeOut" style="margin:8px 0 0 0;white-space:pre-wrap;word-break:break-word;"></pre>
     </div>
     <script>
     (function(){
@@ -156,6 +163,110 @@
         }catch(e){ return "ERR"; }
       }
 
+      function truncate(str,len){
+        if(str === null || str === undefined) return "";
+        var s = String(str);
+        if(s.length <= len) return s;
+        return s.slice(0, len-3) + "...";
+      }
+
+      function analyzeArticles(arr){
+        var total = arr.length;
+        var valid = 0;
+        var invalid = 0;
+        var samples = [];
+        arr.forEach(function(item){
+          var title = typeof item?.title === "string" ? item.title.trim() : "";
+          var hasTitle = title.length > 0;
+          var url = typeof item?.url === "string" ? item.url.trim() : "";
+          var hasUrl = url.length > 0;
+          var urlIsHttp = hasUrl && (url.startsWith("http://") || url.startsWith("https://"));
+          var urlParsable = false;
+          if(urlIsHttp){
+            try { new URL(url); urlParsable = true; } catch(_) { urlParsable = false; }
+          }
+          var ok = hasTitle && hasUrl && urlIsHttp && urlParsable;
+          if(ok){
+            valid++;
+          } else {
+            invalid++;
+            if(samples.length < 3){
+              var reasons = [];
+              if(!hasTitle) reasons.push("missing title");
+              if(!hasUrl) reasons.push("missing url");
+              if(hasUrl && !urlIsHttp) reasons.push("url not http(s)");
+              if(hasUrl && urlIsHttp && !urlParsable) reasons.push("url parse fail");
+              samples.push("title=\"" + truncate(title,80) + "\" url=\"" + truncate(url,140) + "\" reason=" + (reasons.join("|") || "unknown"));
+            }
+          }
+        });
+        return { total: total, valid: valid, invalid: invalid, samples: samples };
+      }
+
+      function deriveVideoId(url){
+        if(!url) return "";
+        try {
+          var parsed = new URL(url);
+          var searchId = parsed.searchParams.get("v");
+          if(searchId) return searchId;
+          var hostname = parsed.hostname || "";
+          var pathname = (parsed.pathname || "").split("/").filter(Boolean);
+          if(hostname.includes("youtu.be") && pathname.length){
+            return pathname[pathname.length - 1];
+          }
+          var shortsIndex = pathname.indexOf("shorts");
+          if(shortsIndex !== -1 && pathname.length > shortsIndex + 1){
+            return pathname[shortsIndex + 1];
+          }
+        } catch(_) {
+          return "";
+        }
+        return "";
+      }
+
+      function analyzeVideos(arr){
+        var total = arr.length;
+        var valid = 0;
+        var invalid = 0;
+        var samples = [];
+        arr.forEach(function(item){
+          var title = typeof item?.title === "string" ? item.title.trim() : "";
+          var hasTitle = title.length > 0;
+          var url = typeof item?.url === "string" ? item.url.trim() : "";
+          var hasUrl = url.length > 0;
+          var urlIsHttp = hasUrl && (url.startsWith("http://") || url.startsWith("https://"));
+          var urlParsable = false;
+          if(urlIsHttp){
+            try { new URL(url); urlParsable = true; } catch(_) { urlParsable = false; }
+          }
+          var videoId = typeof item?.videoId === "string" ? item.videoId.trim() : "";
+          var hasVideoId = videoId.length > 0;
+          var derived = canDeriveVideoId(url);
+          var ok = hasTitle && hasUrl && urlIsHttp && urlParsable && (hasVideoId || derived);
+          if(ok){
+            valid++;
+          } else {
+            invalid++;
+            if(samples.length < 3){
+              var reasons = [];
+              if(!hasTitle) reasons.push("missing title");
+              if(!hasUrl) reasons.push("missing url");
+              if(hasUrl && !urlIsHttp) reasons.push("url not http(s)");
+              if(hasUrl && urlIsHttp && !urlParsable) reasons.push("url parse fail");
+              if(hasUrl && urlIsHttp && urlParsable && !hasVideoId && !derived) reasons.push("missing videoId");
+              samples.push("title=\"" + truncate(title,80) + "\" url=\"" + truncate(url,140) + "\" reason=" + (reasons.join("|") || "unknown"));
+            }
+          }
+        });
+        return { total: total, valid: valid, invalid: invalid, samples: samples };
+      }
+
+      function canDeriveVideoId(url){
+        if(!url) return "";
+        var derived = deriveVideoId(url);
+        return derived;
+      }
+
       async function runDataProbe(){
         var out = document.getElementById("iuDataProbeOut");
         function write(t){ if(out) { out.textContent = t; } }
@@ -181,7 +292,17 @@
           lines.push("VID status=" + rv.status + " ok=" + rv.ok + " ct=" + vCt);
           lines.push("ART articles.length=" + aArr.length + " sample=" + JSON.stringify(pickSample(aArr)));
           lines.push("VID videos.length=" + vArr.length + " sample=" + JSON.stringify(pickSample(vArr)));
-          lines.push("NOTE: Pokud jsou délky >0 a vzorek má title+url (u videí i videoId), data jsou OK a problém je v app.js gating/flow, ne v JSON.");
+          var artSummary = analyzeArticles(aArr);
+          var vidSummary = analyzeVideos(vArr);
+          lines.push("ARTICLES: total=" + artSummary.total + " valid=" + artSummary.valid + " invalid=" + artSummary.invalid);
+          artSummary.samples.forEach(function(sample, idx){
+            lines.push("ART invalid sample " + (idx + 1) + ": " + sample);
+          });
+          lines.push("VIDEOS: total=" + vidSummary.total + " valid=" + vidSummary.valid + " invalid=" + vidSummary.invalid);
+          vidSummary.samples.forEach(function(sample, idx){
+            lines.push("VID invalid sample " + (idx + 1) + ": " + sample);
+          });
+          lines.push("NOTE: Pokud jsou valid>0 a vzorek má title+url/videoId, data jsou OK a problém je v app.js gating/flow, ne v JSON.");
 
           write(lines.join("\n"));
         }catch(e){
