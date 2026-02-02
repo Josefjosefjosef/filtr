@@ -570,8 +570,8 @@ window.addEventListener("unhandledrejection", (e) => {
   }
 
   async function probeRootPaths() {
-    const rootArticlesPath = "/data/articles.json";
-    const rootVideosPath = "/data/videos.json";
+    const rootArticlesPath = "/projects/data/articles.json";
+    const rootVideosPath = "/projects/data/videos.json";
     const [articlesOk, videosOk] = await Promise.all([
       quickCheckUrl(rootArticlesPath),
       quickCheckUrl(rootVideosPath),
@@ -2098,17 +2098,17 @@ function buildVideoAsArticleCard(it) {
     const preferredEntry = await evaluatePreferredPair();
     const baseArticleUrls = [
       "/projects/data/articles.json",
-      makeDataUrl("data/articles.json"),
-      "/data/articles.json",
-      "./data/articles.json",
+      makeDataUrl("projects/data/articles.json"),
+      "/projects/data/articles.json",
+      "/projects/data/articles.json",
       makeDataUrl("projects/data/articles.json"),
       makeDataUrl("filtr/data/articles.json"),
     ].filter(Boolean);
     const baseVideoUrls = [
       "/projects/data/videos.json",
-      makeDataUrl("data/videos.json"),
-      "/data/videos.json",
-      "./data/videos.json",
+      makeDataUrl("projects/data/videos.json"),
+      "/projects/data/videos.json",
+      "/projects/data/videos.json",
       makeDataUrl("projects/data/videos.json"),
       makeDataUrl("filtr/data/videos.json"),
     ].filter(Boolean);
