@@ -456,7 +456,15 @@
         lines.push("html[data-iu-js]=" + attr(html,"data-iu-js"));
         lines.push("#feed instances=" + feedCount() + " | exists=" + (!!feedEl));
         if (feedEl){
-          lines.push("#feed parent=" + path(feedEl.parentElement));
+        lines.push("#feed parent=" + path(feedEl.parentElement));
+        var depth = 0;
+        var cursor = feedEl;
+        while (cursor && cursor.parentElement) {
+          depth++;
+          cursor = cursor.parentElement;
+        }
+        lines.push("feedDepth=" + depth);
+        lines.push("feedPath=" + path(feedEl));
           lines.push("#feed children=" + feedEl.children.length);
           var cs = getComputedStyle(feedEl);
           lines.push("#feed styles display=" + cs.display + " visibility=" + cs.visibility + " opacity=" + cs.opacity);
@@ -482,6 +490,12 @@
           lines.push(sel + " count=" + document.querySelectorAll(sel).length);
         });
 
+        lines.push("--- DOM SKELETON CHECK ---");
+        var skeleton = ["#newsList","#articlesList","#videosList","#filtersBar","#topicsBar","main","#content","#page","#app"];
+        skeleton.forEach(function(id){
+          var count = document.querySelectorAll(id).length;
+          lines.push(id + " exists=" + (count > 0) + " count=" + count);
+        });
         lines.push("--- EMPTY STATE CHECK ---");
         if (emptyBox){
           var cs2 = getComputedStyle(emptyBox);
@@ -493,6 +507,59 @@
           lines.push("#emptyBox missing");
         }
 
+        var entries = (performance && performance.getEntriesByType)
+          ? (performance.getEntriesByType("resource") || [])
+          : [];
+        var list = entries.filter(function(entry){
+          var name = entry && entry.name ? entry.name.toLowerCase() : "";
+          return name.indexOf("articles.json") !== -1 ||
+            name.indexOf("videos.json") !== -1;
+        });
+        var fetchXhr = entries.filter(function(entry){
+          var t = entry && entry.initiatorType;
+          return t === "fetch" || t === "xmlhttprequest";
+        }).slice(0, 30);
+
+        lines.push("--- PERFORMANCE RESOURCES ---");
+        lines.push("resourceEntriesTotal=" + entries.length);
+        lines.push("resourceMatches=" + list.length);
+        list.forEach(function(entry){
+          var name = entry && entry.name
+            ? entry.name.slice(0,120) + (entry.name.length > 120 ? "…" : "")
+            : "(unknown)";
+          lines.push("name=" + name);
+          lines.push("  initiatorType=" + (entry.initiatorType || ""));
+          lines.push("  duration=" + (entry.duration ? Math.round(entry.duration) : "0"));
+          lines.push("  transferSize=" + (entry.transferSize !== undefined ? entry.transferSize : ""));
+          lines.push("  nextHopProtocol=" + (entry.nextHopProtocol || ""));
+        });
+        if (fetchXhr.length){
+          lines.push("--- FETCH/XHR SAMPLE (max 30) ---");
+          fetchXhr.forEach(function(entry){
+            var name = entry && entry.name
+              ? entry.name.slice(0,120) + (entry.name.length > 120 ? "…" : "")
+              : "(unknown)";
+            lines.push("name=" + name);
+            lines.push("  initiatorType=" + (entry.initiatorType || ""));
+            lines.push("  duration=" + (entry.duration ? Math.round(entry.duration) : "0"));
+            lines.push("  transferSize=" + (entry.transferSize !== undefined ? entry.transferSize : ""));
+            lines.push("  nextHopProtocol=" + (entry.nextHopProtocol || ""));
+          });
+        }
+
+        lines.push("--- NAV/READY ---");
+        lines.push("readyState=" + document.readyState);
+        lines.push("onLine=" + navigator.onLine);
+        lines.push("timeOrigin=" + (performance && performance.timeOrigin ? Math.round(performance.timeOrigin) : ""));
+        if (performance && performance.getEntriesByType) {
+          var nav = performance.getEntriesByType("navigation") || [];
+          if (nav.length) {
+            var first = nav[0];
+            lines.push("navType=" + (first.type || ""));
+            lines.push("domContentLoaded=" + Math.round(first.domContentLoadedEventEnd || 0));
+            lines.push("loadEventEnd=" + Math.round(first.loadEventEnd || 0));
+          }
+        }
         lines.push("---");
         var prev = out.textContent || "";
         out.textContent = prev + (prev ? "\n" : "") + lines.join("\n");
