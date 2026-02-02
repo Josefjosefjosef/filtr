@@ -141,6 +141,98 @@
           Každý odkaz otevři v nové kartě. Pokud je cokoliv 404 nebo se otevře HTML chyba místo souboru, web nebude fungovat.<br>
           U <code>/assets/app.js</code> musí být vidět JS kód a nahoře <code>console.log("[BOOT] app.js loaded")</code>.
         </div>
+        <div id="iuForceDiagLive" style="margin:10px 0;padding:10px;background:rgba(0,0,0,0.18);border:1px solid rgba(255,255,255,0.22);font-size:12px;line-height:1.35;">
+          <strong>FORCE DIAG LIVE – runtime kontrola (bez zásahu do app.js)</strong><br>
+          <div style="margin-top:6px;">
+            <div><strong>URL:</strong> <span id="iuDiagUrl">…</span></div>
+            <div><strong>iu-build meta:</strong> <span id="iuDiagBuild">…</span></div>
+            <div><strong>data-iu-js:</strong> <span id="iuDiagJsFlag">…</span></div>
+            <div><strong>DOM:</strong> <span id="iuDiagDom">…</span></div>
+          </div>
+
+          <div style="margin-top:8px;">
+            <strong>HTTP status + content-type:</strong>
+            <div id="iuDiagFetch" style="margin-top:6px;white-space:pre-wrap;"></div>
+          </div>
+
+          <div style="margin-top:8px;">
+            <strong>JS chyby na stránce:</strong>
+            <div id="iuDiagErr" style="margin-top:6px;white-space:pre-wrap;"></div>
+          </div>
+        </div>
+
+        <script>
+        (function(){
+          try {
+            function $(id){ return document.getElementById(id); }
+            var elUrl = $("iuDiagUrl");
+            var elBuild = $("iuDiagBuild");
+            var elJsFlag = $("iuDiagJsFlag");
+            var elDom = $("iuDiagDom");
+            var elFetch = $("iuDiagFetch");
+            var elErr = $("iuDiagErr");
+
+            function line(target, s){
+              if (!target) return;
+              target.textContent += (target.textContent ? "\n" : "") + s;
+            }
+
+            function safeText(v){ return (v === null || v === undefined) ? String(v) : String(v); }
+
+            if (elUrl) elUrl.textContent = location.href;
+
+            var buildMeta = document.querySelector('meta[name="iu-build"]');
+            if (elBuild) elBuild.textContent = buildMeta ? (buildMeta.getAttribute("content") || "(no content)") : "(missing)";
+
+            var jsFlag = document.documentElement.getAttribute("data-iu-js");
+            if (elJsFlag) elJsFlag.textContent = jsFlag ? jsFlag : "(missing)";
+
+            var hasFeed = !!document.getElementById("feed");
+            var hasEmpty = !!document.getElementById("emptyBox");
+            var hasStatus = !!document.getElementById("dataStatus");
+            var hasDebugOut = !!document.getElementById("debugOut");
+            if (elDom) elDom.textContent =
+              "feed=" + hasFeed + ", emptyBox=" + hasEmpty + ", dataStatus=" + hasStatus + ", debugOut=" + hasDebugOut;
+
+            window.addEventListener("error", function(e){
+              try { line(elErr, "[error] " + (e && e.message ? e.message : "(no message)") + " @ " + (e && e.filename ? e.filename : "(no file)") + ":" + (e && e.lineno ? e.lineno : "?")); } catch(_){}
+            });
+            window.addEventListener("unhandledrejection", function(e){
+              try { line(elErr, "[unhandledrejection] " + safeText(e && e.reason)); } catch(_){}
+            });
+
+            var checks = [
+              "/assets/app.js",
+              "/assets/app.css",
+              "/projects/data/articles.json",
+              "/projects/data/videos.json",
+              "/projects/?debug=1"
+            ];
+
+            function checkOne(url){
+              return fetch(url, { cache: "no-store" }).then(function(r){
+                var ct = r.headers.get("content-type") || "(no content-type)";
+                line(elFetch, url + " -> " + r.status + " " + r.statusText + " | " + ct);
+                return r;
+              }).catch(function(err){
+                line(elFetch, url + " -> FETCH ERROR: " + safeText(err));
+              });
+            }
+
+            (async function(){
+              for (var i=0;i<checks.length;i++){
+                await checkOne(checks[i]);
+              }
+            })();
+
+          } catch (err) {
+            try {
+              var box = document.getElementById("iuDiagErr");
+              if (box) box.textContent += (box.textContent ? "\n" : "") + "[diag script error] " + String(err);
+            } catch(_){}
+          }
+        })();
+        </script>
       </div>
     </details>
 
