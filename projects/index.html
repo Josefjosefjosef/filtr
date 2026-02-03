@@ -1284,17 +1284,7 @@
         if (hashValue){
           writeStored(hashValue);
         } else {
-          var stored = "";
-          try{
-            stored = window.localStorage ? (window.localStorage.getItem(SECTION_STORAGE_KEY) || "") : "";
-          }catch(_){}
-          var normalizedStored = normalize(stored);
-          if (normalizedStored){
-            location.hash = "#" + normalizedStored;
-          } else {
-            location.hash = "#" + DEFAULT_SECTION;
-            writeStored(DEFAULT_SECTION);
-          }
+          /* Žádné automatické nastavování hash – hash jen čteme, nic nepřepisujeme */
         }
       }catch(_){}
 

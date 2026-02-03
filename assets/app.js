@@ -418,7 +418,7 @@ window.addEventListener("unhandledrejection", (e) => {
     throw lastErr || new Error("FETCH_FAILED");
   }
 
-  function assertFreshGeneratedAt(data, maxAgeMs = 60 * 60 * 1000) {
+  function assertFreshGeneratedAt(data, maxAgeMs = 24 * 60 * 60 * 1000) {
     if (!data || !data.generatedAt) return;
     const t = Date.parse(data.generatedAt);
     if (!Number.isFinite(t)) return;
