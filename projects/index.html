@@ -1429,5 +1429,32 @@
       }
     })();
     </script>
+    <script>
+    (function(){
+      var params = new URLSearchParams(location.search || "");
+      if (params.get("debug") !== "1") return;
+      function diagLog(){
+        try { console.log.apply(console, ["[IU RENDER DIAG]"].concat(Array.prototype.slice.call(arguments))); } catch(_){}
+      }
+      function run(){
+        var feed = document.getElementById("feed");
+        var feedExists = !!(feed && feed.id === "feed");
+        var feedChildren = feed ? feed.children.length : 0;
+        var cachedLen = (typeof window.state !== "undefined" && window.state && window.state.cachedItems) ? window.state.cachedItems.length : "(window.state?.cachedItems nedostupné)";
+        var filteredLen = (typeof window.state !== "undefined" && window.state && window.state.filteredItems) ? window.state.filteredItems.length : "(window.state?.filteredItems nedostupné)";
+        var dataIuJs = document.documentElement ? (document.documentElement.getAttribute("data-iu-js") || "(nenastaveno)") : "(bez html)";
+        diagLog("#feed existuje:", feedExists);
+        diagLog("#feed počet dětí (DOM):", feedChildren);
+        diagLog("cachedItems.length:", cachedLen);
+        diagLog("filteredItems.length:", filteredLen);
+        diagLog("data-iu-js:", dataIuJs);
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", run);
+      } else {
+        run();
+      }
+    })();
+    </script>
   </body>
 </html>
