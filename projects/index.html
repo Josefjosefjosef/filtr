@@ -542,6 +542,61 @@
           lines.push("storageErrorName=" + lsInfo.errorName);
           lines.push("storageErrorMessage=" + lsInfo.errorMessage);
         }
+        lines.push("--- LAST ERROR (persisted) ---");
+        try {
+          var lastErrorKey = "iu:lastError";
+          var lastErrorAtKey = "iu:lastErrorAt";
+          var storagesForError = [
+            { name: "localStorage", store: typeof localStorage !== "undefined" ? localStorage : null },
+            { name: "sessionStorage", store: typeof sessionStorage !== "undefined" ? sessionStorage : null },
+          ];
+          storagesForError.forEach(function(entry){
+            var store = entry.store;
+            lines.push(entry.name + ".exists=" + !!store);
+            if (!store) {
+              return;
+            }
+            var raw = null;
+            var at = null;
+            try {
+              raw = store.getItem(lastErrorKey);
+            } catch (err) {
+              lines.push(entry.name + ".getItemError=" + (err && err.message ? err.message : String(err)));
+            }
+            try {
+              at = store.getItem(lastErrorAtKey);
+            } catch (err) {
+              lines.push(entry.name + ".getAtError=" + (err && err.message ? err.message : String(err)));
+            }
+            lines.push(entry.name + ".lastAt=" + (at ? at : "(none)"));
+            if (!raw) {
+              lines.push(entry.name + ".lastError=(none)");
+              return;
+            }
+            var trimmed = raw.replace(/\\s+/g, " ").trim();
+            if (trimmed.length > 400) trimmed = trimmed.slice(0, 400) + "…";
+            var parsed = null;
+            try {
+              parsed = JSON.parse(raw);
+            } catch (_) {
+              parsed = null;
+            }
+            if (parsed && typeof parsed === "object") {
+              var message = parsed.message || parsed.error || parsed.reason || JSON.stringify(parsed);
+              var name = parsed.name || "(none)";
+              lines.push(entry.name + ".error.name=" + name);
+              lines.push(entry.name + ".error.message=" + (message ? (message + "").replace(/\\s+/g, " ").trim().slice(0, 400) : "(none)"));
+              if (parsed.where) lines.push(entry.name + ".error.where=" + parsed.where);
+              if (parsed.stack) {
+                lines.push(entry.name + ".error.stack=" + parsed.stack.replace(/\\s+/g, " ").trim().slice(0, 400));
+              }
+            } else {
+              lines.push(entry.name + ".lastError=" + (trimmed || "(none)"));
+            }
+          });
+        } catch (err) {
+          lines.push("lastErrorCheckFailed=" + (err && err.message ? err.message : String(err)));
+        }
 
         var entries = [];
         if (typeof performance !== "undefined" && performance && typeof performance.getEntriesByType === "function"){
