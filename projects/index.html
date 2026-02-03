@@ -463,6 +463,7 @@
         var lines = [];
         lines.push("[" + label + "]");
         lines.push("url=" + location.href);
+        lines.push("hash=" + (location.hash || ""));
         lines.push("html[data-iu-js]=" + attr(html,"data-iu-js"));
         lines.push("#feed instances=" + feedCount() + " | exists=" + (!!feedEl));
         if (feedEl){
@@ -572,7 +573,7 @@
               lines.push(entry.name + ".lastError=(none)");
               return;
             }
-            var trimmed = raw.replace(/\\s+/g, " ").trim();
+            var trimmed = raw.replace(/\s+/g, " ").trim();
             if (trimmed.length > 400) trimmed = trimmed.slice(0, 400) + "…";
             var parsed = null;
             try {
@@ -596,7 +597,35 @@
         } catch (err) {
           lines.push("lastErrorCheckFailed=" + (err && err.message ? err.message : String(err)));
         }
-        lines.push("--- LAST ERROR (persisted) ---");
+        lines.push("--- STORAGE SPY (iu:*) ---");
+        try {
+          var spy = window.__iuStorageSpy;
+          if (!spy) {
+            lines.push("storageSpy=missing");
+          } else {
+            var writes = spy.writes || [];
+            var errors = spy.errors || [];
+            lines.push("spyWritesCount=" + writes.length);
+            writes.slice(-10).reverse().forEach(function(w, i){
+              var snip = (w.valueSnippet != null) ? String(w.valueSnippet).replace(/\s+/g, " ").trim().slice(0, 200) : "";
+              lines.push("write " + i + " t=" + (w.t || "") + " op=" + (w.op || "") + " storage=" + (w.storage || "") + " key=" + (w.key || "") + " valueSnippet=" + snip);
+            });
+            lines.push("spyErrorsCount=" + errors.length);
+            errors.slice(-5).reverse().forEach(function(e, i){
+              lines.push("spyError " + i + " " + (e && e.message ? e.message : String(e)));
+            });
+          }
+        } catch (err) {
+          lines.push("storageSpyCheckFailed=" + (err && err.message ? err.message : String(err)));
+        }
+        lines.push("--- LAST ERR INLINE (DOM) ---");
+        try {
+          var lastErrEl = idel("lastErrInline");
+          lines.push("lastErrInline.exists=" + !!lastErrEl);
+          lines.push("lastErrInline.text=" + (lastErrEl ? (lastErrEl.textContent || "").trim().replace(/\s+/g, " ").slice(0, 200) : "(n/a)"));
+        } catch (err) {
+          lines.push("lastErrInlineCheckFailed=" + (err && err.message ? err.message : String(err)));
+        }
         lines.push("=== COPY THIS BLOCK END " + label + " ===");
 
         var entries = [];
@@ -977,6 +1006,7 @@
             <div><strong>iu-build meta:</strong> <span id="iuDiagBuild">…</span></div>
             <div><strong>data-iu-js:</strong> <span id="iuDiagJsFlag">…</span></div>
             <div><strong>DOM:</strong> <span id="iuDiagDom">…</span></div>
+            <div><strong>hashNow:</strong> <span id="iuDiagHash">…</span> <em style="font-size:11px;color:#666;">(jen zobrazení, nic nepřepisuje)</em></div>
           </div>
 
           <div style="margin-top:8px;">
@@ -1111,6 +1141,8 @@
             function safeText(v){ return (v === null || v === undefined) ? String(v) : String(v); }
 
             if (elUrl) elUrl.textContent = location.href;
+            var elHash = $("iuDiagHash");
+            if (elHash) elHash.textContent = (location.hash || "(empty)");
 
             var buildMeta = document.querySelector('meta[name="iu-build"]');
             if (elBuild) elBuild.textContent = buildMeta ? (buildMeta.getAttribute("content") || "(no content)") : "(missing)";
@@ -1276,6 +1308,37 @@
           }
         }, false);
       }
+    })();
+    </script>
+    <script>
+    (function(){
+      var params = new URLSearchParams(location.search || "");
+      if (params.get("debug") !== "1") return;
+      window.__iuStorageSpy = { writes: [], reads: [], removes: [], errors: [] };
+      var spy = window.__iuStorageSpy;
+      function snippet(v){ return String(v == null ? "" : v).replace(/\n/g, " ").trim().slice(0, 200); }
+      function storeName(storage){ return storage === window.localStorage ? "localStorage" : (storage === window.sessionStorage ? "sessionStorage" : "other"); }
+      function matchKey(key){ var k = String(key || ""); return k.indexOf("iu:") === 0 || k.indexOf("iu") !== -1; }
+      try {
+        var proto = Storage.prototype;
+        var origSet = proto.setItem;
+        var origGet = proto.getItem;
+        var origRemove = proto.removeItem;
+        proto.setItem = function(key, value){
+          if (matchKey(key)) try { spy.writes.push({ t: Date.now(), op: "set", storage: storeName(this), key: key, valueSnippet: snippet(value) }); } catch (e) { spy.errors.push(e); }
+          try { return origSet.apply(this, arguments); } catch (e) { spy.errors.push(e); throw e; }
+        };
+        proto.getItem = function(key){
+          var out;
+          try { out = origGet.apply(this, arguments); } catch (e) { spy.errors.push(e); throw e; }
+          if (matchKey(key)) try { spy.reads.push({ t: Date.now(), op: "get", storage: storeName(this), key: key, valueSnippet: snippet(out) }); } catch (e) { spy.errors.push(e); }
+          return out;
+        };
+        proto.removeItem = function(key){
+          if (matchKey(key)) try { spy.removes.push({ t: Date.now(), op: "remove", storage: storeName(this), key: key }); } catch (e) { spy.errors.push(e); }
+          try { return origRemove.apply(this, arguments); } catch (e) { spy.errors.push(e); throw e; }
+        };
+      } catch (e) { spy.errors.push(e); }
     })();
     </script>
     <script type="module" src="/assets/app.js?v=2026-02-01T19:55Z.1"></script>
