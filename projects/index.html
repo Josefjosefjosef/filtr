@@ -1456,6 +1456,14 @@
           ? (document.documentElement.getAttribute("data-iu-html-after-appjs") || "(nenastaveno)")
           : "(bez html)";
 
+        var rect = feed ? feed.getBoundingClientRect() : null;
+        var cs = feed ? window.getComputedStyle(feed) : null;
+        var feedDisp = cs ? cs.display : "(n/a)";
+        var feedVis = cs ? cs.visibility : "(n/a)";
+        var feedH = feed ? feed.offsetHeight : 0;
+        var feedTop = rect ? Math.round(rect.top) : "(n/a)";
+        var feedBottom = rect ? Math.round(rect.bottom) : "(n/a)";
+
         diagLog("#feed existuje:", feedExists);
         diagLog("#feed počet dětí (DOM):", feedChildren);
         diagLog("cachedItems.length:", cachedLen);
@@ -1476,7 +1484,12 @@
           "filtered: " + filteredLen + "\n" +
           "data-iu-js: " + dataIuJs + "\n" +
           "data-iu-html-after-appjs: " + dataIuHtmlAfterAppjs + "\n" +
-          "pass: " + pass;
+          "pass: " + pass + "\n" +
+          "display: " + feedDisp + "\n" +
+          "visibility: " + feedVis + "\n" +
+          "offsetH: " + feedH + "\n" +
+          "rectTop: " + feedTop + "\n" +
+          "rectBottom: " + feedBottom;
       }
 
       function runOnceThenDelayed() {
