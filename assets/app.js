@@ -2218,7 +2218,6 @@ function buildVideoAsArticleCard(it) {
         debugLog("[LOADDATA] articlesArr isArray=", Array.isArray(articlesArr), "len=", (articlesArr?.length ?? -1));
         debugLog("[LOADDATA] videosArr  isArray=", Array.isArray(videosArr),  "len=", (videosArr?.length ?? -1));
         debugLog("[LOADDATA] safeArticlesArray isArray=", Array.isArray(safeArticlesArray), "len=", safeArticlesArray.length);
-        debugLog("[LOADDATA] safeVideosArray  isArray=", Array.isArray(safeVideosArray),  "len=", safeVideosArray.length);
       }
       const totalArticles = Array.isArray(safeArticlesArray) ? safeArticlesArray.length : 0;
       let sanitizedArticles = normalizeArticleList(Array.isArray(safeArticlesArray) ? safeArticlesArray : []).map((item) => ({
@@ -2250,6 +2249,9 @@ function buildVideoAsArticleCard(it) {
       }
 
       const safeVideosArray = Array.isArray(videosArr) ? videosArr : [];
+      if (isDebugLogging) {
+        debugLog("[LOADDATA] safeVideosArray  isArray=", Array.isArray(safeVideosArray), "len=", safeVideosArray.length);
+      }
       normalizedVideoSource = Array.isArray(safeVideosArray) ? safeVideosArray : [];
       let videoItems = normalizeVideoList(Array.isArray(normalizedVideoSource) ? normalizedVideoSource : []);
 
