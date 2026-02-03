@@ -2283,7 +2283,7 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       const articlesJson = articleFetchResult?.json;
       const videosJson = videoFetchResult?.json;
-      const normalizedArticles = Array.isArray(articlesArray) ? articlesArray : [];
+      const normalizedArticles = Array.isArray(articlesArr) ? articlesArr : [];
       const hasArticlesField = Array.isArray(articlesJson?.articles);
       const hasNormalizedArticles = normalizedArticles.length > 0;
       const hasVideosField = Array.isArray(videosJson?.videos);
