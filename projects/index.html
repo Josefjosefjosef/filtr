@@ -1463,6 +1463,10 @@
         var feedH = feed ? feed.offsetHeight : 0;
         var feedTop = rect ? Math.round(rect.top) : "(n/a)";
         var feedBottom = rect ? Math.round(rect.bottom) : "(n/a)";
+        var feedOpacity = cs ? cs.opacity : "(n/a)";
+        var feedPE = cs ? cs.pointerEvents : "(n/a)";
+        var vh = (typeof window !== "undefined" && window.innerHeight) ? window.innerHeight : 0;
+        var inViewport = rect ? (rect.bottom > 0 && rect.top < vh) : "(n/a)";
 
         diagLog("#feed existuje:", feedExists);
         diagLog("#feed počet dětí (DOM):", feedChildren);
@@ -1489,7 +1493,10 @@
           "visibility: " + feedVis + "\n" +
           "offsetH: " + feedH + "\n" +
           "rectTop: " + feedTop + "\n" +
-          "rectBottom: " + feedBottom;
+          "rectBottom: " + feedBottom + "\n" +
+          "opacity: " + feedOpacity + "\n" +
+          "pointerEvents: " + feedPE + "\n" +
+          "inViewport: " + inViewport;
       }
 
       function runOnceThenDelayed() {
