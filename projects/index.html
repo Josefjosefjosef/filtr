@@ -1475,13 +1475,18 @@
           "cached: " + cachedLen + "\n" +
           "filtered: " + filteredLen + "\n" +
           "data-iu-js: " + dataIuJs + "\n" +
-          "data-iu-html-after-appjs: " + dataIuHtmlAfterAppjs;
+          "data-iu-html-after-appjs: " + dataIuHtmlAfterAppjs + "\n" +
+          "pass: " + pass;
       }
 
+      function runOnceThenDelayed() {
+        run(1);
+        setTimeout(function () { run(2); }, 1200);
+      }
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", run);
+        document.addEventListener("DOMContentLoaded", runOnceThenDelayed);
       } else {
-        run();
+        runOnceThenDelayed();
       }
     })();
     </script>
