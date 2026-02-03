@@ -1284,7 +1284,12 @@
         if (hashValue){
           writeStored(hashValue);
         } else {
-          /* Žádné automatické nastavování hash – hash jen čteme, nic nepřepisujeme */
+          var stored = "";
+          try{
+            stored = window.localStorage ? (window.localStorage.getItem(SECTION_STORAGE_KEY) || "") : "";
+          }catch(_){}
+          var normalizedStored = normalize(stored);
+          /* read-only: nic nepřepisovat (ani hash, ani storage) */
         }
       }catch(_){}
 
