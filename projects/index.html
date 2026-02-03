@@ -518,6 +518,30 @@
         } else {
           lines.push("#emptyBox missing");
         }
+        lines.push("--- STORAGE CHECK ---");
+        var lsInfo = { exists: false, set: false, getValue: "(n/a)", remove: false, errorName: "", errorMessage: "" };
+        try {
+          if (typeof localStorage !== "undefined" && localStorage) {
+            lsInfo.exists = true;
+            localStorage.setItem("__iu_ls_test__", "1");
+            lsInfo.set = true;
+            var stored = localStorage.getItem("__iu_ls_test__");
+            lsInfo.getValue = stored === null ? "null" : String(stored);
+            localStorage.removeItem("__iu_ls_test__");
+            lsInfo.remove = true;
+          }
+        } catch (err) {
+          lsInfo.errorName = err && err.name ? err.name : "(unknown)";
+          lsInfo.errorMessage = err && err.message ? err.message : String(err);
+        }
+        lines.push("localStorageExists=" + lsInfo.exists);
+        lines.push("setItemOk=" + lsInfo.set);
+        lines.push("getItemValue=" + lsInfo.getValue);
+        lines.push("removeOk=" + lsInfo.remove);
+        if (lsInfo.errorName || lsInfo.errorMessage) {
+          lines.push("storageErrorName=" + lsInfo.errorName);
+          lines.push("storageErrorMessage=" + lsInfo.errorMessage);
+        }
 
         var entries = [];
         if (typeof performance !== "undefined" && performance && typeof performance.getEntriesByType === "function"){
