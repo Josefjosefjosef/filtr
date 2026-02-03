@@ -597,6 +597,36 @@
         } catch (err) {
           lines.push("lastErrorCheckFailed=" + (err && err.message ? err.message : String(err)));
         }
+        lines.push("--- LAST ERROR (persisted) ---");
+        var quickStorages = [
+          { name: "localStorage", store: typeof localStorage !== "undefined" ? localStorage : null },
+          { name: "sessionStorage", store: typeof sessionStorage !== "undefined" ? sessionStorage : null },
+        ];
+        quickStorages.forEach(function(entry){
+          var store = entry.store;
+          lines.push(entry.name + ".exists=" + !!store);
+          if (!store) {
+            return;
+          }
+          try {
+            var atValue = store.getItem("iu:lastErrorAt");
+            lines.push(entry.name + ".lastAt=" + (atValue ? atValue : "(none)"));
+          } catch (err) {
+            lines.push(entry.name + ".getAtError=" + (err && err.message ? err.message : String(err)));
+          }
+          try {
+            var lastErrorValue = store.getItem("iu:lastError");
+            if (!lastErrorValue) {
+              lines.push(entry.name + ".lastError=(none)");
+            } else {
+              var snippet = lastErrorValue.trim();
+              if (snippet.length > 800) snippet = snippet.slice(0, 800) + "…";
+              lines.push(entry.name + ".lastError=" + snippet.replace(/\n/g, "\\n"));
+            }
+          } catch (err) {
+            lines.push(entry.name + ".getItemError=" + (err && err.message ? err.message : String(err)));
+          }
+        });
 
         var entries = [];
         if (typeof performance !== "undefined" && performance && typeof performance.getEntriesByType === "function"){
