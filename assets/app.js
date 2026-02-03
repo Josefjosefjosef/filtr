@@ -2176,7 +2176,7 @@ function buildVideoAsArticleCard(it) {
           : [];
 
       const articlesOk = Boolean(articlesData);
-      const videosOk = Boolean(videosData);
+      let videosOk = Boolean(videosData);
       if (articlesOk && videosOk) {
         setStatus("Stav dat: OK");
       } else if (articlesOk && !videosOk) {
