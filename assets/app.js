@@ -1459,7 +1459,7 @@ function buildVideoAsArticleCard(it) {
 
     if (!hasTopic && !hasSection && !hasFilter && !hasQuery) {
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
-      renderFeed(state.filteredItems);
+      renderItems(state.filteredItems);
       return;
     }
     if (DEBUG) {
@@ -1478,7 +1478,7 @@ function buildVideoAsArticleCard(it) {
       state.filteredItems = Array.isArray(state.cachedItems)
         ? state.cachedItems.slice()
         : [];
-      renderFeed();
+      renderItems(state.filteredItems);
       return;
     }
 
@@ -2357,7 +2357,7 @@ function buildVideoAsArticleCard(it) {
       state.hasLoadedData = true;
       state.consecutiveLoadFailures = 0;
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
-      renderFeed(state.filteredItems);
+      renderItems(state.filteredItems);
       if (isDebugLogging) {
         debugLog(
           "[CACHE] total",
