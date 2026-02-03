@@ -670,6 +670,93 @@
     </script>
     <script>
     (function(){
+      var params = new URLSearchParams(location.search || "");
+      if (params.get("debug") !== "1") return;
+      var readBtn = document.getElementById("iuReadLastError");
+      var clearBtn = document.getElementById("iuClearLastError");
+      var msg = document.getElementById("iuLastErrorMsg");
+      var out = document.getElementById("iuDomTargetAuditOut");
+      function appendLines(lines){
+        if (!out) return;
+        var prefix = "--- LAST ERROR (manual read) ---";
+        var payload = [prefix].concat(lines);
+        var prev = out.textContent || "";
+        out.textContent = prev + (prev ? "\n" : "") + payload.join("\n");
+      }
+      function readStored(){
+        var entries = [
+          { name: "localStorage", store: typeof localStorage !== "undefined" ? localStorage : null },
+          { name: "sessionStorage", store: typeof sessionStorage !== "undefined" ? sessionStorage : null },
+        ];
+        entries.forEach(function(entry){
+          var store = entry.store;
+          var lines = [];
+          lines.push(entry.name + ".exists=" + !!store);
+          if (!store){
+            appendLines(lines);
+            return;
+          }
+          var raw = null;
+          var at = null;
+          try { raw = store.getItem("iu:lastError"); } catch (err){
+            lines.push(entry.name + ".getItemError=" + (err && err.message ? err.message : String(err)));
+          }
+          try { at = store.getItem("iu:lastErrorAt"); } catch (err){
+            lines.push(entry.name + ".getAtError=" + (err && err.message ? err.message : String(err)));
+          }
+          lines.push(entry.name + ".lastAt=" + (at ? at : "(none)"));
+          if (!raw){
+            lines.push(entry.name + ".lastError=(none)");
+            appendLines(lines);
+            return;
+          }
+          var display = raw.trim();
+          if (display.length > 800) display = display.slice(0, 800) + "…";
+          display = display.replace(/\\n/g, "\\\\n");
+          lines.push(entry.name + ".lastError=" + display);
+          appendLines(lines);
+        });
+      }
+      function clearStored(){
+        var cleared = false;
+        try {
+          if (typeof localStorage !== "undefined" && localStorage){
+            localStorage.removeItem("iu:lastError");
+            localStorage.removeItem("iu:lastErrorAt");
+            cleared = true;
+          }
+        } catch (_){}
+        try {
+          if (typeof sessionStorage !== "undefined" && sessionStorage){
+            sessionStorage.removeItem("iu:lastError");
+            sessionStorage.removeItem("iu:lastErrorAt");
+            cleared = true;
+          }
+        } catch (_){}
+        if (msg){
+          msg.textContent = cleared ? "cleared lastError" : "no storage to clear";
+        }
+        appendLines(["cleared=true", "lastError=(none)"]);
+      }
+      if (readBtn) {
+        readBtn.style.display = "";
+        readBtn.addEventListener("click", function(){
+          readStored();
+        });
+      }
+      if (clearBtn) {
+        clearBtn.style.display = "";
+        clearBtn.addEventListener("click", function(){
+          clearStored();
+        });
+      }
+      if (msg) {
+        msg.textContent = "";
+      }
+    })();
+    </script>
+    <script>
+    (function(){
       var qs = new URLSearchParams(location.search || "");
       if (!(qs.has("debug") && qs.get("debug") === "1")) return;
 
@@ -885,6 +972,11 @@
           • <a href="/projects/data/videos.json" target="_blank" rel="noopener noreferrer">/projects/data/videos.json</a><br>
           Každý odkaz otevři v nové kartě. Pokud je cokoliv 404 nebo se otevře HTML chyba místo souboru, web nebude fungovat.<br>
           U <code>/assets/app.js</code> musí být vidět JS kód a nahoře <code>console.log("[BOOT] app.js loaded")</code>.
+        </div>
+        <div id="iuLastErrorControls" style="margin:10px 0;display:none;">
+          <button id="iuReadLastError" type="button" style="margin-right:8px;padding:6px 10px;border:1px solid rgba(0,0,0,0.2);background:#f5f5f5;color:#000;cursor:pointer;">READ lastError</button>
+          <button id="iuClearLastError" type="button" style="padding:6px 10px;border:1px solid rgba(0,0,0,0.2);background:#f5f5f5;color:#000;cursor:pointer;">CLEAR lastError</button>
+          <span id="iuLastErrorMsg" style="margin-left:10px;font-size:12px;color:#333;"></span>
         </div>
         <div id="iuForceDiagLive" style="margin:10px 0;padding:10px;background:rgba(0,0,0,0.18);border:1px solid rgba(255,255,255,0.22);font-size:12px;line-height:1.35;">
           <strong>FORCE DIAG LIVE – runtime kontrola (bez zásahu do app.js)</strong><br>
