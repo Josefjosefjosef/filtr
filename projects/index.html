@@ -597,6 +597,17 @@
         } catch (err) {
           lines.push("lastErrorCheckFailed=" + (err && err.message ? err.message : String(err)));
         }
+        lines.push("--- RUNTIME ERR (debug-only) ---");
+        try {
+          var raw = "";
+          try { raw = window.localStorage ? (window.localStorage.getItem("iu:debug:lastRuntimeErr") || "") : ""; } catch(_){}
+          lines.push("runtimeErr.exists=" + (!!raw));
+          var trimmed = raw.replace(/\s+/g, " ").trim();
+          if (trimmed.length > 400) trimmed = trimmed.slice(0, 400) + "…";
+          lines.push("runtimeErr.json=" + (trimmed || "(none)"));
+        } catch (err) {
+          lines.push("runtimeErrCheckFailed=" + (err && err.message ? err.message : String(err)));
+        }
         lines.push("--- STORAGE SPY (iu:*) ---");
         try {
           var spy = window.__iuStorageSpy;
@@ -1334,6 +1345,74 @@
           try { return origRemove.apply(this, arguments); } catch (e) { spy.errors.push(e); throw e; }
         };
       } catch (e) { spy.errors.push(e); }
+    })();
+    </script>
+    <script>
+    (function(){
+      var params = new URLSearchParams(location.search || "");
+      if (params.get("debug") !== "1") return;
+
+      var KEY = "iu:debug:lastRuntimeErr";
+
+      function safeStr(v){
+        try { return String(v == null ? "" : v); } catch (_) { return ""; }
+      }
+      function clip(s, n){
+        s = safeStr(s).replace(/\s+/g, " ").trim();
+        if (s.length > n) s = s.slice(0, n) + "…";
+        return s;
+      }
+      function toErrObj(kind, errLike){
+        var msg = "";
+        var stack = "";
+        try {
+          if (errLike && typeof errLike === "object") {
+            msg = safeStr(errLike.message || errLike.reason || errLike.type || "");
+            stack = safeStr(errLike.stack || "");
+          } else {
+            msg = safeStr(errLike);
+          }
+        } catch (_){}
+        return {
+          t: new Date().toISOString(),
+          kind: clip(kind, 60),
+          msg: clip(msg, 300),
+          stack: clip(stack, 600)
+        };
+      }
+      function saveRuntimeErr(kind, errLike){
+        try {
+          var obj = toErrObj(kind, errLike);
+          localStorage.setItem(KEY, JSON.stringify(obj));
+        } catch (_){}
+      }
+
+      try {
+        var origWarn = console.warn ? console.warn.bind(console) : null;
+        var origErr = console.error ? console.error.bind(console) : null;
+
+        if (origWarn) {
+          console.warn = function(){
+            try { saveRuntimeErr("console.warn", { message: Array.prototype.slice.call(arguments).map(safeStr).join(" | ") }); } catch(_){}
+            return origWarn.apply(console, arguments);
+          };
+        }
+        if (origErr) {
+          console.error = function(){
+            try { saveRuntimeErr("console.error", { message: Array.prototype.slice.call(arguments).map(safeStr).join(" | ") }); } catch(_){}
+            return origErr.apply(console, arguments);
+          };
+        }
+      } catch (_){}
+
+      try {
+        window.addEventListener("error", function(e){
+          try { saveRuntimeErr("window.error", e && e.error ? e.error : { message: (e && e.message) ? e.message : "error" }); } catch(_){}
+        });
+        window.addEventListener("unhandledrejection", function(e){
+          try { saveRuntimeErr("unhandledrejection", e && e.reason ? e.reason : { message: "unhandledrejection" }); } catch(_){}
+        });
+      } catch (_){}
     })();
     </script>
     <script type="module" src="/assets/app.js?v=2026-02-01T19:55Z.1"></script>
