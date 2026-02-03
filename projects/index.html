@@ -1438,7 +1438,8 @@
         try { console.log.apply(console, ["[IU RENDER DIAG]"].concat([].slice.call(arguments))); } catch (_) {}
       }
 
-      function run() {
+      function run(pass) {
+        pass = pass || 1;
         var feed = document.getElementById("feed");
         var feedExists = !!(feed && feed.id === "feed");
         var feedChildren = feed ? feed.children.length : 0;
@@ -1451,12 +1452,30 @@
         var dataIuJs = document.documentElement
           ? (document.documentElement.getAttribute("data-iu-js") || "(nenastaveno)")
           : "(bez html)";
+        var dataIuHtmlAfterAppjs = document.documentElement
+          ? (document.documentElement.getAttribute("data-iu-html-after-appjs") || "(nenastaveno)")
+          : "(bez html)";
 
         diagLog("#feed existuje:", feedExists);
         diagLog("#feed počet dětí (DOM):", feedChildren);
         diagLog("cachedItems.length:", cachedLen);
         diagLog("filteredItems.length:", filteredLen);
         diagLog("data-iu-js:", dataIuJs);
+
+        var box = document.getElementById("iuRenderDiagBox");
+        if (!box) {
+          box = document.createElement("div");
+          box.id = "iuRenderDiagBox";
+          box.style.cssText = "position:fixed;right:8px;bottom:8px;z-index:99999;font-family:monospace;font-size:11px;background:#fff;color:#000;border:1px solid #999;padding:8px;max-width:320px;";
+          document.body.appendChild(box);
+        }
+        box.textContent =
+          "#feed: " + feedExists + "\n" +
+          "children: " + feedChildren + "\n" +
+          "cached: " + cachedLen + "\n" +
+          "filtered: " + filteredLen + "\n" +
+          "data-iu-js: " + dataIuJs + "\n" +
+          "data-iu-html-after-appjs: " + dataIuHtmlAfterAppjs;
       }
 
       if (document.readyState === "loading") {
