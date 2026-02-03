@@ -508,7 +508,6 @@
           lines.push(id + " exists=" + (count > 0) + " count=" + count);
         });
         lines.push("--- EMPTY STATE CHECK ---");
-        lines.push("=== COPY THIS BLOCK END " + label + " ===");
         if (emptyBox){
           var cs2 = getComputedStyle(emptyBox);
           lines.push("#emptyBox styles display=" + cs2.display + " visibility=" + cs2.visibility + " opacity=" + cs2.opacity);
@@ -585,10 +584,10 @@
               var message = parsed.message || parsed.error || parsed.reason || JSON.stringify(parsed);
               var name = parsed.name || "(none)";
               lines.push(entry.name + ".error.name=" + name);
-              lines.push(entry.name + ".error.message=" + (message ? (message + "").replace(/\\s+/g, " ").trim().slice(0, 400) : "(none)"));
+              lines.push(entry.name + ".error.message=" + (message ? (message + "").replace(/\s+/g, " ").trim().slice(0, 400) : "(none)"));
               if (parsed.where) lines.push(entry.name + ".error.where=" + parsed.where);
               if (parsed.stack) {
-                lines.push(entry.name + ".error.stack=" + parsed.stack.replace(/\\s+/g, " ").trim().slice(0, 400));
+                lines.push(entry.name + ".error.stack=" + parsed.stack.replace(/\s+/g, " ").trim().slice(0, 400));
               }
             } else {
               lines.push(entry.name + ".lastError=" + (trimmed || "(none)"));
@@ -598,35 +597,7 @@
           lines.push("lastErrorCheckFailed=" + (err && err.message ? err.message : String(err)));
         }
         lines.push("--- LAST ERROR (persisted) ---");
-        var quickStorages = [
-          { name: "localStorage", store: typeof localStorage !== "undefined" ? localStorage : null },
-          { name: "sessionStorage", store: typeof sessionStorage !== "undefined" ? sessionStorage : null },
-        ];
-        quickStorages.forEach(function(entry){
-          var store = entry.store;
-          lines.push(entry.name + ".exists=" + !!store);
-          if (!store) {
-            return;
-          }
-          try {
-            var atValue = store.getItem("iu:lastErrorAt");
-            lines.push(entry.name + ".lastAt=" + (atValue ? atValue : "(none)"));
-          } catch (err) {
-            lines.push(entry.name + ".getAtError=" + (err && err.message ? err.message : String(err)));
-          }
-          try {
-            var lastErrorValue = store.getItem("iu:lastError");
-            if (!lastErrorValue) {
-              lines.push(entry.name + ".lastError=(none)");
-            } else {
-              var snippet = lastErrorValue.trim();
-              if (snippet.length > 800) snippet = snippet.slice(0, 800) + "…";
-              lines.push(entry.name + ".lastError=" + snippet.replace(/\n/g, "\\n"));
-            }
-          } catch (err) {
-            lines.push(entry.name + ".getItemError=" + (err && err.message ? err.message : String(err)));
-          }
-        });
+        lines.push("=== COPY THIS BLOCK END " + label + " ===");
 
         var entries = [];
         if (typeof performance !== "undefined" && performance && typeof performance.getEntriesByType === "function"){
@@ -706,46 +677,42 @@
       var clearBtn = document.getElementById("iuClearLastError");
       var msg = document.getElementById("iuLastErrorMsg");
       var out = document.getElementById("iuDomTargetAuditOut");
-      function appendLines(lines){
+      var controlsBox = document.getElementById("iuLastErrorControls");
+      function appendBlock(prefix, lines){
         if (!out) return;
-        var prefix = "--- LAST ERROR (manual read) ---";
         var payload = [prefix].concat(lines);
         var prev = out.textContent || "";
         out.textContent = prev + (prev ? "\n" : "") + payload.join("\n");
       }
       function readStored(){
-        var entries = [
-          { name: "localStorage", store: typeof localStorage !== "undefined" ? localStorage : null },
-          { name: "sessionStorage", store: typeof sessionStorage !== "undefined" ? sessionStorage : null },
-        ];
-        entries.forEach(function(entry){
-          var store = entry.store;
-          var lines = [];
-          lines.push(entry.name + ".exists=" + !!store);
-          if (!store){
-            appendLines(lines);
+        var lines = [];
+        try {
+          var store = typeof localStorage !== "undefined" ? localStorage : null;
+          if (!store) {
+            lines.push("localStorage.lastAt=(n/a)", "localStorage.lastError=(n/a)");
+            appendBlock("--- LAST ERROR (manual read) ---", lines);
             return;
           }
-          var raw = null;
           var at = null;
-          try { raw = store.getItem("iu:lastError"); } catch (err){
-            lines.push(entry.name + ".getItemError=" + (err && err.message ? err.message : String(err)));
+          var raw = null;
+          try { at = store.getItem("iu:lastErrorAt"); } catch (err) {
+            lines.push("localStorage.getAtError=" + (err && err.message ? err.message : String(err)));
           }
-          try { at = store.getItem("iu:lastErrorAt"); } catch (err){
-            lines.push(entry.name + ".getAtError=" + (err && err.message ? err.message : String(err)));
+          try { raw = store.getItem("iu:lastError"); } catch (err) {
+            lines.push("localStorage.getItemError=" + (err && err.message ? err.message : String(err)));
           }
-          lines.push(entry.name + ".lastAt=" + (at ? at : "(none)"));
-          if (!raw){
-            lines.push(entry.name + ".lastError=(none)");
-            appendLines(lines);
-            return;
+          lines.push("localStorage.lastAt=" + (at ? at : "(none)"));
+          if (!raw) {
+            lines.push("localStorage.lastError=(none)");
+          } else {
+            var display = raw.replace(/\s+/g, " ").trim();
+            if (display.length > 400) display = display.slice(0, 400) + "…";
+            lines.push("localStorage.lastError=" + display);
           }
-          var display = raw.trim();
-          if (display.length > 800) display = display.slice(0, 800) + "…";
-          display = display.replace(/\\n/g, "\\\\n");
-          lines.push(entry.name + ".lastError=" + display);
-          appendLines(lines);
-        });
+        } catch (err) {
+          lines.push("lastErrorReadFailed=" + (err && err.message ? err.message : String(err)));
+        }
+        appendBlock("--- LAST ERROR (manual read) ---", lines);
       }
       function clearStored(){
         var cleared = false;
@@ -766,23 +733,18 @@
         if (msg){
           msg.textContent = cleared ? "cleared lastError" : "no storage to clear";
         }
-        appendLines(["cleared=true", "lastError=(none)"]);
+        appendBlock("--- LAST ERROR (cleared) ---", ["cleared=true", "localStorage.lastError=(none)", "localStorage.lastAt=(none)"]);
       }
+      if (controlsBox) controlsBox.style.display = "";
       if (readBtn) {
         readBtn.style.display = "";
-        readBtn.addEventListener("click", function(){
-          readStored();
-        });
+        readBtn.addEventListener("click", function(){ readStored(); });
       }
       if (clearBtn) {
         clearBtn.style.display = "";
-        clearBtn.addEventListener("click", function(){
-          clearStored();
-        });
+        clearBtn.addEventListener("click", function(){ clearStored(); });
       }
-      if (msg) {
-        msg.textContent = "";
-      }
+      if (msg) msg.textContent = "";
     })();
     </script>
     <script>
