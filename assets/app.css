@@ -2246,6 +2246,16 @@ html[data-iu-debug="1"] #iuDiagPanel {
   display: block;
 }
 
+/* DIAG bar skrytý (vytváří se v JS, zobrazuje DIAG | href=...) */
+#iuDiagBar {
+  display: none !important;
+}
+
+/* dataStatus skrytý (může obsahovat DIAG text) */
+#dataStatus {
+  display: none !important;
+}
+
 #newsList,
 #feed{
   width: 100%;
