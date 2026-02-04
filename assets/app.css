@@ -1346,40 +1346,43 @@ a.brand,
   min-height: 60px;
 }
 
-/* Karty ve feedu - pozice pro fade panel */
+/* Karty ve feedu – připravit vrstvy */
 #feed > .news-card,
 #feed > article{
   position: relative;
   overflow: hidden;
 }
 
-/* Pravý fade panel - efekt obrázku do ztracena */
+/* Obsah karty nad pozadím */
+#feed > .news-card > *,
+#feed > article > *{
+  position: relative;
+  z-index: 1;
+}
+
+/* Jemné pozadí (pod textem), žádné odsazování textu */
 #feed > .news-card::after,
 #feed > article::after{
   content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 42%;
-  height: 100%;
+  inset: 0;
+  z-index: 0;
   pointer-events: none;
+  opacity: 0.35;
   background:
-    radial-gradient(
-      140px 140px at 70% 50%,
-      rgba(31,58,95,0.12),
-      rgba(31,58,95,0.00) 70%
-    ),
-    linear-gradient(
-      90deg,
-      rgba(255,255,255,0.0),
-      rgba(255,255,255,0.88)
-    );
+    radial-gradient(220px 220px at 85% 55%, rgba(31,58,95,0.16), rgba(31,58,95,0.00) 70%),
+    linear-gradient(90deg, rgba(255,255,255,0.0), rgba(255,255,255,0.75));
+  -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%);
 }
 
-/* Odsunutí textu, aby nelezel pod panel */
-#feed .news-title,
+/* Meta řádek jako pill pro čitelnost */
 #feed .iu-meta-line{
-  padding-right: 36%;
+  display: inline-flex;
+  width: fit-content;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.70);
 }
 
 /* Titulky v kartách – max 2 řádky + … (pro klidný layout) */
@@ -1391,6 +1394,7 @@ a.brand,
   line-height: 1.22;
   letter-spacing: -0.01em;
   max-height: calc(1.22em * 2);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.85);
 }
 
 /* TOP článek - první položka v feedu - přes celou šířku */
@@ -1540,15 +1544,10 @@ a.brand,
     overflow: visible;
     text-overflow: unset;
   }
-  /* Fade panel na mobilu vypnout */
+  /* Fade panel na mobilu zjemnit */
   #feed > .news-card::after,
   #feed > article::after{
-    display: none;
-  }
-  /* Text bez odsazení na mobilu */
-  #feed .news-title,
-  #feed .iu-meta-line{
-    padding-right: 0;
+    opacity: 0.22;
   }
 }
 
