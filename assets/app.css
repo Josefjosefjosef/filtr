@@ -1478,15 +1478,16 @@ a.brand,
   display: none;
 }
 
-/* Ostatní položky - grid položky ve 2 sloupcích */
+/* Ostatní položky - jemná oddělovací linka */
 #feed > .news-card:not(:first-child),
 #feed > article:not(:first-child){
-  padding: 12px 14px;
+  padding: 14px 12px 0 12px;
   margin: 0;
-  border: 1px solid rgba(17,17,17,0.06);
-  border-radius: 14px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-  background: #fff;
+  border: none;
+  border-top: 1px solid rgba(17,17,17,0.08);
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
 }
 
 #feed > .news-card:not(:first-child) .news-titleLink,
@@ -1536,7 +1537,7 @@ a.brand,
   /* Ostatní položky na mobilu */
   #feed > .news-card:not(:first-child),
   #feed > article:not(:first-child){
-    padding: 12px 14px;
+    padding: 14px 10px 0 10px;
   }
   /* Meta řádek v feedu na mobilu - může zalomit */
   #feed .iu-meta-line{
