@@ -2596,10 +2596,10 @@ function buildVideoAsArticleCard(it) {
           
           if (isValid) {
             articlesForFeed = grouped;
-            debugLog("[GROUP] articles grouped:", sanitizedArticles.length, "->", grouped.length);
             
-            // Debug telemetrie pro TOP 10 skupin (jen v debug režimu)
+            // Debug telemetrie pro seskupování (jen v debug režimu)
             if (isDebugLogging) {
+              debugLog("[GROUP] articles grouped:", sanitizedArticles.length, "->", grouped.length);
               const groupsWithMeta = grouped.filter(a => a._groupMeta && a._groupMeta.relatedCount > 0);
               const topGroups = groupsWithMeta
                 .sort((a, b) => (b._groupMeta.relatedCount || 0) - (a._groupMeta.relatedCount || 0))
