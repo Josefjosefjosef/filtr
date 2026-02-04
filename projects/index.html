@@ -21,6 +21,44 @@
   <body>
     <noscript>Pro zobrazení obsahu je potřeba JavaScript.</noscript>
 
+    <div class="topbar-wrap" id="topbarWrap">
+      <div class="topbar">
+        <div class="leftPack">
+          <button class="menuBtn" id="menuBtn" aria-label="Sekce">
+            <div class="burger" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+          </button>
+          <div class="brand">
+            <div class="name">infoUzel.cz</div>
+          </div>
+        </div>
+
+        <form class="searchForm" id="searchForm" autocomplete="off">
+          <div class="search">
+            <div class="icon">🔍</div>
+            <input id="searchInput" type="search" placeholder="Hledat" autocomplete="off" />
+          </div>
+          <button class="searchBtn" id="searchBtn" type="submit">Hledat</button>
+        </form>
+
+        <div class="rightMeta">
+          <div class="topbarInfo" id="topbarInfo">—</div>
+
+          <div class="homePinRow" id="homePinRow" tabindex="0" role="button" aria-label="Připnout stránku jako domovskou">
+            <div class="homePinSep" aria-hidden="true"></div>
+            <span class="homePinStar" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2.5l2.95 6.06 6.69.97-4.84 4.71 1.14 6.66L12 17.9 6.06 20.9l1.14-6.66L2.36 9.53l6.69-.97L12 2.5z"></path>
+              </svg>
+            </span>
+            <div class="homePinText" id="homePinText">Připnout stránku jako domovskou</div>
+            <div class="vipBadge" id="vipBadge" style="display:none;">VIP uživatel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="app">
       <div id="page">
         <main id="content">
@@ -35,6 +73,10 @@
                   Zkus otevřít <code>/projects/?debug=1</code> a v Troubleshoot použij „LIVE DIAG REPORT“ a „FORCE DIAG – ověř načtení assetů“.
                 </div>
               </div>
+            </div>
+                </div>
+              </div>
+              <aside class="accordionCol" aria-label="Postranní panel"></aside>
             </div>
           </div>
         </main>
