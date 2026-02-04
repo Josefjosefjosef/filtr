@@ -2153,6 +2153,20 @@ function buildVideoAsArticleCard(it) {
     return normalizedTitle || null;
   }
 
+  function jaccardSimilarity(str1, str2) {
+    if (!str1 || !str2) return 0;
+    const tokens1 = new Set(str1.toLowerCase().split(/\s+/).filter(t => t.length > 2));
+    const tokens2 = new Set(str2.toLowerCase().split(/\s+/).filter(t => t.length > 2));
+    const intersection = new Set([...tokens1].filter(x => tokens2.has(x)));
+    const union = new Set([...tokens1, ...tokens2]);
+    return union.size === 0 ? 0 : intersection.size / union.size;
+  }
+
+  function getTitleTokens(title) {
+    if (!title) return [];
+    return normalizeTitleForKey(title).split(/\s+/).filter(t => t.length > 2);
+  }
+
   function mergeSourcesDedup(sourcesArrayList) {
     const seen = new Set();
     const merged = [];
@@ -2195,13 +2209,20 @@ function buildVideoAsArticleCard(it) {
       return ta - tb; // ASC
     });
     
-    // Krok 2: Seskupit články podle topicKey
+    // Krok 2: Seskupit články podle topicKey s pojistkami
+    const groupedArticles = new Set(); // Sledovat, které články byly seskupeny
+    
     for (const article of sorted) {
       const topicKey = computeTopicKey(article);
       if (!topicKey) {
         // Pokud nelze vypočítat klíč, ponechat článek samostatně
         continue;
       }
+      
+      const articleTitle = article.title || article.headline || article.name || "";
+      const articleTokens = getTitleTokens(articleTitle);
+      const articleTopic = (article.topic || "").toLowerCase().trim();
+      const articleSection = (article.section || "").toLowerCase().trim();
       
       if (!groups.has(topicKey)) {
         // Nová skupina - první článek je hlavní
@@ -2213,15 +2234,42 @@ function buildVideoAsArticleCard(it) {
           related: [],
           firstTime: firstTime,
           timeWindowEnd: firstTime + (hours * 60 * 60 * 1000), // +hours v ms
+          primaryTitle: articleTitle,
+          primaryTokens: articleTokens,
+          primaryTopic: articleTopic,
+          primarySection: articleSection,
         });
+        groupedArticles.add(article);
       } else {
-        // Existující skupina - zkontrolovat časové okno
+        // Existující skupina - zkontrolovat časové okno a podobnost
         const group = groups.get(topicKey);
         const articleTime = new Date(article.publishedAt || article.date || article.published || 0).getTime();
         
         if (articleTime <= group.timeWindowEnd) {
-          // Článek spadá do časového okna - přidat do related
-          group.related.push(article);
+          // Časové okno OK - zkontrolovat tokenovou podobnost
+          const similarity = jaccardSimilarity(group.primaryTitle, articleTitle);
+          const minTokens = 3;
+          const minSimilarity = 0.55;
+          
+          let shouldGroup = false;
+          
+          // Pokud má title málo tokenů (< 3), vyžaduj navíc shodu topic||section
+          if (articleTokens.length < minTokens || group.primaryTokens.length < minTokens) {
+            const topicMatch = articleTopic && group.primaryTopic && articleTopic === group.primaryTopic;
+            const sectionMatch = articleSection && group.primarySection && articleSection === group.primarySection;
+            if (topicMatch || sectionMatch) {
+              shouldGroup = true;
+            }
+          } else if (similarity >= minSimilarity) {
+            // Dostatečná tokenová podobnost
+            shouldGroup = true;
+          }
+          
+          if (shouldGroup) {
+            group.related.push(article);
+            groupedArticles.add(article);
+          }
+          // Pokud nesplní podobnost, článek zůstane samostatně (bude přidán v kroku 4)
         }
         // Pokud je mimo okno, ignorovat (jiná událost, jen podobný title)
       }
@@ -2263,10 +2311,9 @@ function buildVideoAsArticleCard(it) {
       result.push(groupedArticle);
     }
     
-    // Krok 4: Přidat články, které nemají topicKey (nebyly seskupeny)
+    // Krok 4: Přidat články, které nebyly seskupeny (nemají topicKey nebo nesplnily podobnost)
     for (const article of sorted) {
-      const topicKey = computeTopicKey(article);
-      if (!topicKey) {
+      if (!groupedArticles.has(article)) {
         result.push(article);
       }
     }
@@ -2514,6 +2561,19 @@ function buildVideoAsArticleCard(it) {
           if (isValid) {
             articlesForFeed = grouped;
             debugLog("[GROUP] articles grouped:", sanitizedArticles.length, "->", grouped.length);
+            
+            // Debug telemetrie pro prvních 5 největších skupin (jen v debug režimu)
+            if (isDebugLogging) {
+              const groupsWithMeta = grouped.filter(a => a._groupMeta && a._groupMeta.relatedCount > 0);
+              const topGroups = groupsWithMeta
+                .sort((a, b) => (b._groupMeta.relatedCount || 0) - (a._groupMeta.relatedCount || 0))
+                .slice(0, 5);
+              
+              topGroups.forEach((g, idx) => {
+                const sources = Array.isArray(g.sources) ? g.sources.map(s => s.name).filter(Boolean).slice(0, 5) : [];
+                debugLog(`[GROUP] top ${idx + 1}: key="${g._groupMeta.topicKey.substring(0, 50)}", count=${(g._groupMeta.relatedCount || 0) + 1}, sources=[${sources.join(", ")}]`);
+              });
+            }
           } else {
             debugWarn("[GROUP] Validation failed, using original articles");
             articlesForFeed = sanitizedArticles;
