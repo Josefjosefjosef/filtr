@@ -2,10 +2,6 @@ name: Deploy to GitHub Pages
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Update articles data"]
-    types:
-      - completed
 
 permissions:
   contents: read
