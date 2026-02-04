@@ -2154,6 +2154,29 @@ a.brand,
   opacity: 1 !important;
 }
 
+.iu-meta-line{
+  font-size: 12px;
+  line-height: 1.25;
+  opacity: .85;
+  margin-top: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.iu-meta-line .iu-meta-link{
+  text-decoration: none;
+}
+.iu-meta-line .iu-meta-link:hover{
+  text-decoration: underline;
+}
+.iu-meta-line .iu-meta-link-secondary{
+  font-size: 12px;
+}
+.iu-meta-sep{
+  margin: 0 6px;
+  opacity: .6;
+}
+
 /* === MAINTENANCE MODE ACTIVE ===
    Feed a jeho viditelnost jsou uzamčeny */
 /* CHECKPOINT: FEED VISIBILITY LOCKED

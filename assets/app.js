@@ -1268,34 +1268,45 @@ window.addEventListener("unhandledrejection", (e) => {
     return buildArticleHtml(item);
   }
 
+  function renderSourcesMetaLine(it) {
+    const srcRaw = Array.isArray(it.sources) ? it.sources : [];
+    const seen = new Set();
+    const src = [];
+
+    for (const s of srcRaw) {
+      const name = (s?.name || "").trim();
+      const url = (s?.url || "").trim();
+      if (!name || !url) continue;
+
+      const key = (url.toLowerCase() + "||" + name.toLowerCase());
+      if (seen.has(key)) continue;
+      seen.add(key);
+      src.push({ name, url });
+    }
+
+    if (!src.length) return "";
+
+    const primary = src[0];
+    const others = src.slice(1);
+
+    const dateText = fmtDate(it.publishedAt || it.date || it.published || "");
+    const datePart = dateText ? `<span class="iu-meta-date">${escapeHtml(dateText)}</span>` : "";
+    const primaryPart = `<span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primary.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(primary.name)}</a></span>`;
+
+    const othersPart = others.length
+      ? `<span class="iu-meta-others">Píší také: ${others.map(o =>
+          `<a class="iu-meta-link iu-meta-link-secondary" href="${escapeHtml(o.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(o.name)}</a>`
+        ).join(", ")}</span>`
+      : "";
+
+    const sep = datePart ? `<span class="iu-meta-sep"> | </span>` : "";
+    const sep2 = othersPart ? `<span class="iu-meta-sep"> | </span>` : "";
+
+    return `<div class="iu-meta-line">${datePart}${sep}${primaryPart}${sep2}${othersPart}</div>`;
+  }
+
   function buildArticleHtml(it) {
     const title = safeText(it.title || it.name || "(bez názvu)");
-    const publishedAt = fmtDate(it.publishedAt || it.date || it.published || "");
-    const rawSources = Array.isArray(it.sources) && it.sources.length
-      ? it.sources
-      : it.source
-        ? [{ name: it.source }]
-        : [];
-    const sourceEntities = rawSources
-      .map((source) => {
-        const name = safeText(source.name || source.title || source);
-        const href = safeUrl(source.url || source.link);
-        return { name, href };
-      })
-      .filter((entry) => entry.name);
-    const sourceMarkup =
-      sourceEntities
-        .map((entry, idx) => {
-          const sep = idx === 0 ? "" : `<span class="srcSep">·</span>`;
-          const link =
-            entry.href
-              ? `<a class="sourceDomain" href="${entry.href}" target="_blank" rel="noopener noreferrer">${escapeHtml(
-                  entry.name
-                )}</a>`
-              : `<span class="sourceDomain">${escapeHtml(entry.name)}</span>`;
-          return `${sep}${link}`;
-        })
-        .join("") || '<span class="sourceDomain">—</span>';
     const linkUrl =
       it.url ||
       (Array.isArray(it.sources) ? (it.sources.find((s) => s && s.url && s.url.trim())?.url || "") : "") ||
@@ -1317,15 +1328,13 @@ window.addEventListener("unhandledrejection", (e) => {
       ? `<span class="iuSuspicious" title="Titulek doporučeno ověřit u zdroje" aria-label="Titulek doporučeno ověřit u zdroje">⚑</span>`
       : "";
 
+    const sourcesMetaLine = renderSourcesMetaLine(it);
+
     debugLog("[RENDER ARTICLE]", title);
     return `
       <article class="news-card" data-feed-type="article">
         <h2 class="news-title">${titleMarkup}${suspiciousFlag}</h2>
-        <div class="news-row2">
-          ${publishedAt ? `<span class="meta-time">${escapeHtml(publishedAt)}</span>` : ""}
-          <span class="news-sourceLabel">Zdroj:</span>
-          <span class="news-sources">${sourceMarkup}</span>
-        </div>
+        ${sourcesMetaLine}
       </article>
     `;
   }
