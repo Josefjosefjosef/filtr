@@ -2112,6 +2112,14 @@ a.brand,
   }
 }
 
+/* Diagnostika skrytá mimo debug režim */
+#iuDiagPanel {
+  display: none;
+}
+html[data-iu-debug="1"] #iuDiagPanel {
+  display: block;
+}
+
 #newsList,
 #feed{
   width: 100%;
