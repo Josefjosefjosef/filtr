@@ -21,6 +21,7 @@
   <body>
     <noscript>Pro zobrazení obsahu je potřeba JavaScript.</noscript>
 
+
     <div class="topbar-wrap" id="topbarWrap">
       <div class="topbar">
         <div class="leftPack">
@@ -62,20 +63,32 @@
     <div id="app">
       <div id="page">
         <main id="content">
-          <div id="newsList">
-            <div id="dataStatus" style="display:none"></div>
-            <div id="emptyBox" style="display:none"></div>
-            <!-- Minimální, jistý render target -->
-            <div id="feed">
-              <div id="iuNoJsFallback" style="padding:12px;margin:10px 0;border:1px dashed rgba(255,255,255,0.45);background:rgba(0,0,0,0.18);font-size:13px;line-height:1.35;">
-                <strong>DIAG:</strong> Pokud vidíš tento blok, JS renderer buď neběží, nebo feed nic nevykreslil.
-                <div style="margin-top:6px;opacity:.9;">
-                  Zkus otevřít <code>/projects/?debug=1</code> a v Troubleshoot použij „LIVE DIAG REPORT“ a „FORCE DIAG – ověř načtení assetů“.
+          <div class="container">
+            <div class="layout">
+              <div class="mainCol">
+                <section class="feedHead">
+                  <div class="feedTopRow">
+                    <div class="sec" id="sectionLabel">Sekce: Vše</div>
+                    <div class="feedUpdatedAt" id="dataUpdatedAt">Poslední aktualizace dat: —</div>
+                  </div>
+                  <nav class="sectionsBar" id="sectionsBar" aria-label="Filtr sekcí"></nav>
+                </section>
+
+                <div id="newsList">
+                  <div id="dataStatus" style="display:none"></div>
+                  <div id="emptyBox" style="display:none"></div>
+                  <!-- Minimální, jistý render target -->
+                  <div id="feed">
+                    <div id="iuNoJsFallback" style="padding:12px;margin:10px 0;border:1px dashed rgba(255,255,255,0.45);background:rgba(0,0,0,0.18);font-size:13px;line-height:1.35;">
+                      <strong>DIAG:</strong> Pokud vidíš tento blok, JS renderer buď neběží, nebo feed nic nevykreslil.
+                      <div style="margin-top:6px;opacity:.9;">
+                        Zkus otevřít <code>/projects/?debug=1</code> a v Troubleshoot použij „LIVE DIAG REPORT" a „FORCE DIAG – ověř načtení assetů".
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-                </div>
-              </div>
+
               <aside class="accordionCol" aria-label="Postranní panel"></aside>
             </div>
           </div>
@@ -966,7 +979,7 @@
         </p>
 
         <p style="margin:0;">
-          6) <strong>Pokud se stránka “nenačte vůbec”:</strong> ověř, že jde otevřít
+          6) <strong>Pokud se stránka "nenačte vůbec":</strong> ověř, že jde otevřít
           <a href="/projects/index.html" target="_blank" rel="noopener noreferrer">/projects/index.html</a>
           a že funguje
           <a href="/assets/app.js" target="_blank" rel="noopener noreferrer">/assets/app.js</a>.
