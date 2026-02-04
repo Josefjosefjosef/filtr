@@ -1313,16 +1313,18 @@ a.brand,
   }
 }
 
-/* Feed kontejner - grid 2 sloupce na desktopu */
+/* Feed kontejner - responsivní grid */
 #feed{
-  max-width: 760px;
   width: 100%;
-  margin-right: auto;
-  margin-left: 0;
-  padding-right: 14px;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 14px 18px;
+  margin-right: 0;
+  margin-left: 0;
+  padding-right: 8px;
 }
 
 #feed > *{
