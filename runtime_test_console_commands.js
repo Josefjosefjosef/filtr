@@ -1,21 +1,21 @@
 (function() {
   const errors = [];
   const rejections = [];
+  const startTime = performance.now();
   
-  const errorHandler = (e) => {
+  const errorHandler = (event) => {
     errors.push({
-      message: e.message || String(e),
-      source: e.filename || e.sourceURL || 'unknown',
-      line: e.lineno || e.line || 'unknown',
-      col: e.colno || e.column || 'unknown',
-      error: e.error ? String(e.error) : null
+      message: event.message || String(event.error) || 'unknown',
+      source: event.filename || event.sourceURL || 'unknown',
+      line: event.lineno || event.line || 'unknown',
+      col: event.colno || event.column || 'unknown',
+      stack: event.error?.stack || null
     });
   };
   
-  const rejectionHandler = (e) => {
+  const rejectionHandler = (event) => {
     rejections.push({
-      reason: e.reason ? String(e.reason) : 'unknown',
-      promise: e.promise ? 'present' : 'missing'
+      reason: event.reason?.stack || event.reason?.message || String(event.reason || 'unknown')
     });
   };
   
@@ -43,79 +43,44 @@
     const readyState = document.readyState;
     
     const resources = performance.getEntriesByType('resource');
-    const appJs = resources.find(r => r.name.includes('/assets/app.js'));
-    const appCss = resources.find(r => r.name.includes('/assets/app.css'));
-    const articlesJson = resources.find(r => r.name.includes('/projects/data/articles.json'));
+    const appJsResources = resources.filter(r => r.name.includes('/assets/app.js'));
+    const appCssResources = resources.filter(r => r.name.includes('/assets/app.css'));
+    const articlesJsonResources = resources.filter(r => r.name.includes('/projects/data/articles.json'));
+    const videosJsonResources = resources.filter(r => r.name.includes('/projects/data/videos.json'));
     
-    console.log('\n=== RUNTIME TEST REPORT ===\n');
-    console.log('--- ERRORS ---');
-    console.log('Total errors:', errors.length);
-    if (errors.length > 0) {
-      console.log('First 3 errors:');
-      errors.slice(0, 3).forEach((e, i) => {
-        console.log(`  ${i+1}. ${e.message} (${e.source}:${e.line}:${e.col})`);
-      });
-    } else {
-      console.log('Console errors: NONE');
-    }
+    const formatResource = (r) => ({
+      url: r.name,
+      duration_ms: Math.round(r.duration),
+      ttfb_ms: r.responseStart && r.requestStart ? Math.round(r.responseStart - r.requestStart) : null
+    });
     
-    console.log('\n--- REJECTIONS ---');
-    console.log('Total unhandled rejections:', rejections.length);
-    if (rejections.length > 0) {
-      console.log('First 3 rejections:');
-      rejections.slice(0, 3).forEach((r, i) => {
-        console.log(`  ${i+1}. ${r.reason}`);
-      });
-    }
+    const elapsed_ms = Math.round(performance.now() - startTime);
     
-    console.log('\n--- SECTIONS BAR ---');
-    console.log('sectionsBar count:', sectionsBarButtons.length);
-    console.log('sectionsBar textContent (first 120):', sectionsBarText);
+    const reportObject = {
+      at: new Date().toISOString(),
+      readyState: readyState,
+      sectionsBar_count: sectionsBarButtons.length,
+      sectionsBar_text120: sectionsBarText,
+      feed_children: feedChildren,
+      feed_cards: feedCards.length,
+      feed_links: feedLinks.length,
+      first_titles: feedTitles,
+      fallback_exists: fallbackExists,
+      fallback_visible: fallbackVisible,
+      errors_first3: errors.slice(0, 3),
+      rejections_first3: rejections.slice(0, 3),
+      resources: {
+        app_js: appJsResources.map(formatResource),
+        app_css: appCssResources.map(formatResource),
+        articles_json: articlesJsonResources.map(formatResource),
+        videos_json: videosJsonResources.map(formatResource)
+      },
+      elapsed_ms: elapsed_ms
+    };
     
-    console.log('\n--- FEED ---');
-    console.log('feed children:', feedChildren);
-    console.log('feed cards (.news-card):', feedCards.length);
-    console.log('feed links (.news-titleLink):', feedLinks.length);
-    if (feedTitles.length > 0) {
-      console.log('First 5 titles + href:');
-      feedTitles.forEach((t, i) => {
-        console.log(`  ${i+1}. "${t.text}" → ${t.href}`);
-      });
-    }
-    
-    console.log('\n--- FALLBACK ---');
-    console.log('iuNoJsFallback exists:', fallbackExists);
-    console.log('iuNoJsFallback visible:', fallbackVisible);
-    
-    console.log('\n--- DOCUMENT STATE ---');
-    console.log('document.readyState:', readyState);
-    
-    console.log('\n--- RESOURCES ---');
-    if (appJs) {
-      console.log('/assets/app.js duration:', Math.round(appJs.duration), 'ms');
-    } else {
-      console.log('/assets/app.js: NOT FOUND');
-    }
-    if (appCss) {
-      console.log('/assets/app.css duration:', Math.round(appCss.duration), 'ms');
-    } else {
-      console.log('/assets/app.css: NOT FOUND');
-    }
-    if (articlesJson) {
-      console.log('/projects/data/articles.json duration:', Math.round(articlesJson.duration), 'ms');
-    } else {
-      console.log('/projects/data/articles.json: NOT FOUND');
-    }
-    
-    console.log('\n--- PERFORMANCE ---');
-    const navTiming = performance.getEntriesByType('navigation')[0];
-    if (navTiming) {
-      console.log('loadEventEnd:', Math.round(navTiming.loadEventEnd), 'ms');
-      console.log('domContentLoadedEventEnd:', Math.round(navTiming.domContentLoadedEventEnd), 'ms');
-    }
-    console.log('performance.now():', Math.round(performance.now()), 'ms');
-    
-    console.log('\n=== END REPORT ===\n');
+    console.log('=== RUNTIME TEST REPORT ===');
+    console.log(reportObject);
+    console.log('=== END REPORT ===');
     
     window.removeEventListener('error', errorHandler);
     window.removeEventListener('unhandledrejection', rejectionHandler);
