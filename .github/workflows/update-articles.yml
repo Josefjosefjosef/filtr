@@ -84,10 +84,10 @@ jobs:
         run: |
           set -euo pipefail
           if git status --porcelain projects/data/ | grep -q .; then
-            echo "data_changed=true" >> $GITHUB_OUTPUT
+            echo "data_changed=true" >> "$GITHUB_OUTPUT"
             echo "[DEPLOY] data_changed=true"
           else
-            echo "data_changed=false" >> $GITHUB_OUTPUT
+            echo "data_changed=false" >> "$GITHUB_OUTPUT"
             echo "[DEPLOY] data_changed=false"
           fi
 
@@ -102,7 +102,7 @@ jobs:
 
           if git diff --quiet && git diff --cached --quiet; then
             echo "[DATA] No changes to commit."
-            echo "pushed=false" >> $GITHUB_OUTPUT
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -110,7 +110,7 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "[DATA] Nothing staged after add."
-            echo "pushed=false" >> $GITHUB_OUTPUT
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -124,7 +124,7 @@ jobs:
 
             if git push origin "HEAD:${GITHUB_REF_NAME}"; then
               echo "[PUSH] Success."
-              echo "pushed=true" >> $GITHUB_OUTPUT
+              echo "pushed=true" >> "$GITHUB_OUTPUT"
               exit 0
             fi
 
@@ -133,7 +133,7 @@ jobs:
           done
 
           echo "[PUSH] Failed after retries."
-          echo "pushed=false" >> $GITHUB_OUTPUT
+          echo "pushed=false" >> "$GITHUB_OUTPUT"
           exit 1
 
       - name: Trigger Pages deploy (workflow_dispatch)
