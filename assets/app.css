@@ -2425,6 +2425,33 @@ html[data-iu-debug="1"] #iuDiagPanel {
   display: none !important;
 }
 
+/* Fallback hláška – neblikat při refreshi.
+   Ukázat až po ~2s pouze pokud JS neoznačil html[data-iu-js="loaded"]. */
+.iu-js-fallback{
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Pokud JS ještě není "loaded", po 2s fallback odhal */
+html:not([data-iu-js="loaded"]) .iu-js-fallback{
+  animation: iuShowJsFallback 0s linear 2s forwards;
+}
+
+@keyframes iuShowJsFallback{
+  to{
+    opacity: 1;
+    max-height: 200px; /* stačí na 1–2 řádky hlášky */
+    pointer-events: auto;
+  }
+}
+
+/* Jakmile JS běží, fallback je vždy skrytý */
+html[data-iu-js="loaded"] .iu-js-fallback{
+  display: none !important;
+}
+
 #newsList,
 #feed{
   width: 100%;
