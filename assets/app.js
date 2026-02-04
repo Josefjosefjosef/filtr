@@ -2095,6 +2095,185 @@ function buildVideoAsArticleCard(it) {
     return bad.some((t) => s.includes(t));
   }
 
+  // === TOPIC GROUPING FEATURE ===
+  const ENABLE_TOPIC_GROUPING = true;
+  const TOPIC_GROUPING_TIME_WINDOW_HOURS = 12;
+  const TOPIC_GROUPING_MAX_OTHERS = 999; // žádný limit na počet sloučených článků
+
+  function normalizeTitleForKey(title) {
+    if (!title || typeof title !== "string") return "";
+    
+    let normalized = title
+      .toLowerCase()
+      // Odstranění diakritiky (základní)
+      .replace(/[áàä]/g, "a")
+      .replace(/[éèě]/g, "e")
+      .replace(/[íì]/g, "i")
+      .replace(/[óòö]/g, "o")
+      .replace(/[úùůü]/g, "u")
+      .replace(/[ý]/g, "y")
+      .replace(/[č]/g, "c")
+      .replace(/[ď]/g, "d")
+      .replace(/[ň]/g, "n")
+      .replace(/[ř]/g, "r")
+      .replace(/[š]/g, "s")
+      .replace(/[ť]/g, "t")
+      .replace(/[ž]/g, "z")
+      // Odstranění interpunkce a speciálních znaků
+      .replace(/[^\w\s]/g, " ")
+      // Odstranění čísel (konzervativně - jen samostatné)
+      .replace(/\b\d+\b/g, " ")
+      // Redukce whitespace
+      .replace(/\s+/g, " ")
+      .trim();
+    
+    // Odstranění "měkkých" stop slov (konzervativně)
+    const softStopWords = ["video", "zive", "aktualne", "live", "breaking"];
+    const words = normalized.split(/\s+/);
+    const filtered = words.filter(w => w.length > 2 && !softStopWords.includes(w));
+    
+    return filtered.join(" ");
+  }
+
+  function computeTopicKey(article) {
+    if (!article) return null;
+    
+    const title = article.title || article.headline || article.name || "";
+    const normalizedTitle = normalizeTitleForKey(title);
+    
+    // Pokud normalizovaný title je příliš krátký (< 10 znaků), použij fallback
+    if (normalizedTitle.length < 10) {
+      const topic = (article.topic || "").toLowerCase().trim();
+      const section = (article.section || "").toLowerCase().trim();
+      if (topic || section) {
+        return `${topic}||${section}`;
+      }
+    }
+    
+    return normalizedTitle || null;
+  }
+
+  function mergeSourcesDedup(sourcesArrayList) {
+    const seen = new Set();
+    const merged = [];
+    
+    for (const sources of sourcesArrayList) {
+      if (!Array.isArray(sources)) continue;
+      
+      for (const source of sources) {
+        if (!source || typeof source !== "object") continue;
+        
+        const name = String(source.name || source.title || "").trim();
+        const url = String(source.url || source.link || "").trim();
+        
+        if (!name || !url) continue;
+        
+        // Klíč pro deduplikaci: url + name (case-insensitive)
+        const key = `${url.toLowerCase()}||${name.toLowerCase()}`;
+        
+        if (seen.has(key)) continue;
+        seen.add(key);
+        
+        merged.push({ name, url });
+      }
+    }
+    
+    return merged;
+  }
+
+  function groupArticlesByTopic(articles, hours) {
+    if (!Array.isArray(articles) || articles.length === 0) return articles;
+    if (!Number.isFinite(hours) || hours <= 0) return articles;
+    
+    // Mapování: topicKey -> skupina článků
+    const groups = new Map();
+    
+    // Krok 1: Seřadit články podle publishedAt (ASC - nejstarší první)
+    const sorted = [...articles].sort((a, b) => {
+      const ta = new Date(a.publishedAt || a.date || a.published || 0).getTime();
+      const tb = new Date(b.publishedAt || b.date || b.published || 0).getTime();
+      return ta - tb; // ASC
+    });
+    
+    // Krok 2: Seskupit články podle topicKey
+    for (const article of sorted) {
+      const topicKey = computeTopicKey(article);
+      if (!topicKey) {
+        // Pokud nelze vypočítat klíč, ponechat článek samostatně
+        continue;
+      }
+      
+      if (!groups.has(topicKey)) {
+        // Nová skupina - první článek je hlavní
+        const publishedAt = article.publishedAt || article.date || article.published || "";
+        const firstTime = new Date(publishedAt).getTime();
+        
+        groups.set(topicKey, {
+          primary: article,
+          related: [],
+          firstTime: firstTime,
+          timeWindowEnd: firstTime + (hours * 60 * 60 * 1000), // +hours v ms
+        });
+      } else {
+        // Existující skupina - zkontrolovat časové okno
+        const group = groups.get(topicKey);
+        const articleTime = new Date(article.publishedAt || article.date || article.published || 0).getTime();
+        
+        if (articleTime <= group.timeWindowEnd) {
+          // Článek spadá do časového okna - přidat do related
+          group.related.push(article);
+        }
+        // Pokud je mimo okno, ignorovat (jiná událost, jen podobný title)
+      }
+    }
+    
+    // Krok 3: Vytvořit výstupní články ze skupin
+    const result = [];
+    
+    for (const [topicKey, group] of groups.entries()) {
+      const primary = group.primary;
+      
+      // Sloučit sources z primary + related
+      const allSources = [
+        Array.isArray(primary.sources) ? primary.sources : [],
+        ...group.related.map(a => Array.isArray(a.sources) ? a.sources : [])
+      ];
+      const mergedSources = mergeSourcesDedup(allSources);
+      
+      // Validace výstupního článku
+      if (!primary.title || !primary.url || !Array.isArray(mergedSources)) {
+        debugWarn("[GROUP] Invalid grouped article, skipping", { topicKey, primary });
+        // Fallback: přidat primary samostatně
+        result.push(primary);
+        continue;
+      }
+      
+      // Vytvořit seskupený článek
+      const groupedArticle = {
+        ...primary,
+        sources: mergedSources,
+        // Volitelné metadata pro debug
+        _groupMeta: {
+          relatedCount: group.related.length,
+          timeWindow: `${hours}h`,
+          topicKey: topicKey,
+        },
+      };
+      
+      result.push(groupedArticle);
+    }
+    
+    // Krok 4: Přidat články, které nemají topicKey (nebyly seskupeny)
+    for (const article of sorted) {
+      const topicKey = computeTopicKey(article);
+      if (!topicKey) {
+        result.push(article);
+      }
+    }
+    
+    return result;
+  }
+
   async function loadData() {
     const startedAt = new Date();
     if (state.isLoadingData) return;
@@ -2317,7 +2496,35 @@ function buildVideoAsArticleCard(it) {
         debugLog("[DATA] request canceled, token", requestToken);
         return;
       }
-      const combined = buildCombinedFeed(sanitizedArticles, videoItems);
+      
+      // === TOPIC GROUPING ===
+      let articlesForFeed = sanitizedArticles;
+      if (ENABLE_TOPIC_GROUPING) {
+        try {
+          const grouped = groupArticlesByTopic(sanitizedArticles, TOPIC_GROUPING_TIME_WINDOW_HOURS);
+          
+          // Validace výstupu
+          const isValid = Array.isArray(grouped) && grouped.every(item => 
+            item && 
+            typeof item.title === "string" && 
+            typeof item.url === "string" && 
+            Array.isArray(item.sources)
+          );
+          
+          if (isValid) {
+            articlesForFeed = grouped;
+            debugLog("[GROUP] articles grouped:", sanitizedArticles.length, "->", grouped.length);
+          } else {
+            debugWarn("[GROUP] Validation failed, using original articles");
+            articlesForFeed = sanitizedArticles;
+          }
+        } catch (err) {
+          debugWarn("[GROUP] Error during grouping:", err);
+          articlesForFeed = sanitizedArticles; // Fallback na původní
+        }
+      }
+      
+      const combined = buildCombinedFeed(articlesForFeed, videoItems);
       const enriched = combined.map((item) => {
         const published =
           (item && String(item.publishedAt || item.published || item.date || item.createdAt || item.uploadedAt || item.time)) ||
