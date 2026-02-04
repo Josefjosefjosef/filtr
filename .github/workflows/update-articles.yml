@@ -6,6 +6,7 @@ concurrency:
 
 permissions:
   contents: write
+  actions: write
 
 on:
   workflow_dispatch: {}
@@ -116,3 +117,15 @@ jobs:
 
           echo "[PUSH] Failed after retries."
           exit 1
+
+      - name: Trigger Pages deploy (workflow_dispatch)
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl -sS -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/pages.yml/dispatches" \
+            -d '{"ref":"main"}'
