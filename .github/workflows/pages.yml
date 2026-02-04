@@ -27,6 +27,7 @@ jobs:
         run: |
           set -euo pipefail
           
+          # Check articles.json (required)
           if [ ! -f projects/data/articles.json ]; then
             echo "❌ projects/data/articles.json missing"
             exit 1
@@ -37,17 +38,24 @@ jobs:
             exit 1
           fi
           
-          if [ -f projects/data/videos.json ]; then
-            if [ ! -s projects/data/videos.json ]; then
-              echo "❌ projects/data/videos.json exists but is empty"
-              exit 1
-            fi
-            echo "✅ projects/data/videos.json OK"
-          else
-            echo "⚠️ projects/data/videos.json not present (optional)"
+          # Validate articles.json is valid JSON and contains generatedAt
+          if ! python3 -c "import json; data = json.load(open('projects/data/articles.json')); assert 'generatedAt' in data, 'missing generatedAt key'" 2>/dev/null; then
+            echo "❌ projects/data/articles.json is invalid JSON or missing generatedAt key"
+            exit 1
           fi
           
           echo "✅ projects/data/articles.json OK"
+          
+          # Check videos.json (optional)
+          if [ -f projects/data/videos.json ]; then
+            if [ ! -s projects/data/videos.json ]; then
+              echo "⚠️ projects/data/videos.json exists but is empty (warning only, continuing)"
+            else
+              echo "✅ projects/data/videos.json OK"
+            fi
+          else
+            echo "⚠️ projects/data/videos.json not present (optional)"
+          fi
 
       - name: Sanity check – required files in repo root
         run: |
