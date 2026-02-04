@@ -1313,6 +1313,15 @@ a.brand,
   }
 }
 
+/* Feed kontejner - max-width pro čitelnost */
+#feed{
+  max-width: 760px;
+  width: 100%;
+  margin-right: auto;
+  margin-left: 0;
+  padding-right: 14px;
+}
+
 #feed > *{
   background: rgba(255,255,255,0.94);
   border: 1px solid rgba(11,27,43,0.08);
@@ -1324,6 +1333,86 @@ a.brand,
   opacity:1;
   visibility:visible;
   min-height: 60px;
+}
+
+/* TOP článek - první položka v feedu */
+#feed > .news-card:first-child,
+#feed > article:first-child{
+  background: var(--iu-surface);
+  border-left: 3px solid var(--iu-accent);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  width: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 8px;
+}
+
+/* Meta řádek v TOP položce - přesunout nahoru (dědi z #feed .iu-meta-line) */
+#feed > .news-card:first-child .iu-meta-line,
+#feed > article:first-child .iu-meta-line{
+  grid-row: 1;
+}
+
+/* Titulek v TOP položce */
+#feed > .news-card:first-child .news-title,
+#feed > article:first-child .news-title{
+  font-size: 24px;
+  line-height: 1.3;
+  margin-top: 0;
+  grid-row: 2;
+}
+
+#feed > .news-card:first-child .news-titleLink,
+#feed > article:first-child .news-titleLink{
+  text-decoration: none;
+  color: var(--iu-text);
+  font-size: 24px;
+  line-height: 1.3;
+}
+
+#feed > .news-card:first-child .news-titleLink:hover,
+#feed > article:first-child .news-titleLink:hover{
+  text-decoration: none;
+  color: var(--iu-accent);
+}
+
+/* Skrýt pouze velké thumbnaily v TOP položce (pokud by existovaly) */
+/* Poznámka: V aktuální HTML struktuře nejsou žádné obrázky/thumbnaily v článcích,
+   takže tento selektor je preventivní. Pokud by se přidaly thumbnaily s třídou
+   .thumb, .thumbnail, .news-thumb, .article-image apod., použijeme tyto selektory. */
+#feed > .news-card:first-child .thumb img,
+#feed > .news-card:first-child .thumbnail img,
+#feed > .news-card:first-child .news-thumb img,
+#feed > .news-card:first-child .article-image img,
+#feed > article:first-child .thumb img,
+#feed > article:first-child .thumbnail img,
+#feed > article:first-child .news-thumb img,
+#feed > article:first-child .article-image img{
+  display: none;
+}
+
+/* Ostatní položky - jednotný vertikální rytmus */
+#feed > .news-card:not(:first-child),
+#feed > article:not(:first-child){
+  padding: 12px 0;
+  margin: 0;
+  border: none;
+  border-bottom: 1px solid rgba(17,17,17,0.06);
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+#feed > .news-card:not(:first-child) .news-titleLink,
+#feed > article:not(:first-child) .news-titleLink{
+  text-decoration: none;
+}
+
+#feed > .news-card:not(:first-child) .news-titleLink:hover,
+#feed > article:not(:first-child) .news-titleLink:hover{
+  text-decoration: underline;
 }
 
 #feed a{
@@ -1339,6 +1428,35 @@ a.brand,
     -webkit-line-clamp: var(--titleLinesMobile);
     min-height: calc(var(--titleLineHeight) * var(--titleLinesMobile) * 1em);
     max-height: calc(var(--titleLineHeight) * var(--titleLinesMobile) * 1em);
+  }
+  /* TOP položka na mobilu */
+  #feed > .news-card:first-child,
+  #feed > article:first-child{
+    padding: 12px 14px;
+  }
+  #feed > .news-card:first-child .news-title,
+  #feed > article:first-child .news-title{
+    font-size: 20px;
+  }
+  #feed > .news-card:first-child .news-titleLink,
+  #feed > article:first-child .news-titleLink{
+    font-size: 20px;
+  }
+  /* Feed na mobilu */
+  #feed{
+    max-width: 100%;
+    padding-right: 0;
+  }
+  /* Ostatní položky na mobilu */
+  #feed > .news-card:not(:first-child),
+  #feed > article:not(:first-child){
+    padding: 8px 0;
+  }
+  /* Meta řádek v feedu na mobilu - může zalomit */
+  #feed .iu-meta-line{
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
   }
 }
 
@@ -2315,10 +2433,7 @@ html[data-iu-debug="1"] #iuDiagPanel {
   scroll-margin-top: calc(var(--topbarStackH) + 8px);
 }
 
-#feed{
-  display: block !important;
-  width: 100% !important;
-}
+/* #feed display/width je už nastaveno výše (řádky 1317-1323) */
 
 #feed > *{
   display: block !important;
@@ -2326,15 +2441,28 @@ html[data-iu-debug="1"] #iuDiagPanel {
   opacity: 1 !important;
 }
 
+/* Globální meta řádek - jemný, bez omezení (pro MindMenu a další) */
 .iu-meta-line{
   font-size: 12px;
-  line-height: 1.25;
-  opacity: .85;
+  line-height: 1.3;
+  color: var(--iu-meta);
+  font-weight: 400;
   margin-top: 6px;
+  margin-bottom: 0;
+}
+/* Meta řádek v feedu - desktop: nowrap s ellipsis */
+#feed .iu-meta-line{
+  font-size: 12px;
+  color: var(--iu-meta);
+  font-weight: 400;
+  line-height: 1.3;
+  margin-top: 6px;
+  margin-bottom: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .iu-meta-line .iu-meta-link{
   text-decoration: none;
 }
