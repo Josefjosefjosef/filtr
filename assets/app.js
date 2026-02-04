@@ -1268,6 +1268,28 @@ window.addEventListener("unhandledrejection", (e) => {
     return buildArticleHtml(item);
   }
 
+  function normalizeMediaName(name) {
+    if (!name || typeof name !== "string") return "";
+    const normalized = name.toLowerCase().trim();
+    
+    // Mapování variant názvů médií na canonical tvar
+    const mediaMap = {
+      "česká televize": "ct24",
+      "ceska televize": "ct24",
+      "ct24": "ct24",
+      "irozhlas": "irozhlas",
+      "irozhlas.cz": "irozhlas",
+      "irozhlas sport": "irozhlas-sport",
+      "idnes": "idnes",
+      "idnes.cz": "idnes",
+      "seznam zpravy": "seznamzpravy",
+      "seznam zprávy": "seznamzpravy",
+      "seznamzpravy": "seznamzpravy",
+    };
+    
+    return mediaMap[normalized] || normalized;
+  }
+
   function renderSourcesMetaLine(it) {
     const srcRaw = Array.isArray(it.sources) ? it.sources : [];
     const seen = new Set();
@@ -1278,7 +1300,15 @@ window.addEventListener("unhandledrejection", (e) => {
       const url = (s?.url || "").trim();
       if (!name || !url) continue;
 
-      const key = (url.toLowerCase() + "||" + name.toLowerCase());
+      // Normalizace URL: base URL bez query params a hash
+      const urlBase = url.split('?')[0].split('#')[0].toLowerCase();
+      
+      // Normalizace názvu média
+      const canonicalName = normalizeMediaName(name);
+      
+      // Klíč pro deduplikaci: base URL + canonical name
+      const key = `${urlBase}||${canonicalName}`;
+      
       if (seen.has(key)) continue;
       seen.add(key);
       src.push({ name, url });
@@ -2182,8 +2212,14 @@ function buildVideoAsArticleCard(it) {
         
         if (!name || !url) continue;
         
-        // Klíč pro deduplikaci: url + name (case-insensitive)
-        const key = `${url.toLowerCase()}||${name.toLowerCase()}`;
+        // Normalizace URL: base URL bez query params a hash
+        const urlBase = url.split('?')[0].split('#')[0].toLowerCase();
+        
+        // Normalizace názvu média
+        const canonicalName = normalizeMediaName(name);
+        
+        // Klíč pro deduplikaci: base URL + canonical name
+        const key = `${urlBase}||${canonicalName}`;
         
         if (seen.has(key)) continue;
         seen.add(key);
@@ -2562,17 +2598,26 @@ function buildVideoAsArticleCard(it) {
             articlesForFeed = grouped;
             debugLog("[GROUP] articles grouped:", sanitizedArticles.length, "->", grouped.length);
             
-            // Debug telemetrie pro prvních 5 největších skupin (jen v debug režimu)
+            // Debug telemetrie pro TOP 10 skupin (jen v debug režimu)
             if (isDebugLogging) {
               const groupsWithMeta = grouped.filter(a => a._groupMeta && a._groupMeta.relatedCount > 0);
               const topGroups = groupsWithMeta
                 .sort((a, b) => (b._groupMeta.relatedCount || 0) - (a._groupMeta.relatedCount || 0))
-                .slice(0, 5);
+                .slice(0, 10);
               
+              debugLog(`[GROUP] === TOP ${topGroups.length} GROUPS ===`);
               topGroups.forEach((g, idx) => {
-                const sources = Array.isArray(g.sources) ? g.sources.map(s => s.name).filter(Boolean).slice(0, 5) : [];
-                debugLog(`[GROUP] top ${idx + 1}: key="${g._groupMeta.topicKey.substring(0, 50)}", count=${(g._groupMeta.relatedCount || 0) + 1}, sources=[${sources.join(", ")}]`);
+                const sources = Array.isArray(g.sources) ? g.sources.map(s => s.name).filter(Boolean) : [];
+                const primaryTime = g.publishedAt || g.date || g.published || "";
+                const relatedCount = g._groupMeta.relatedCount || 0;
+                const timeWindow = g._groupMeta.timeWindow || "12h";
+                const keyDisplay = g._groupMeta.topicKey.substring(0, 60) + (g._groupMeta.topicKey.length > 60 ? "..." : "");
+                
+                debugLog(`[GROUP] #${idx + 1}: key="${keyDisplay}"`);
+                debugLog(`[GROUP]   count: ${relatedCount + 1} articles, timeWindow: ${timeWindow}, primaryTime: ${primaryTime}`);
+                debugLog(`[GROUP]   sources (${sources.length}): ${sources.slice(0, 8).join(", ")}${sources.length > 8 ? "..." : ""}`);
               });
+              debugLog(`[GROUP] === END TOP GROUPS ===`);
             }
           } else {
             debugWarn("[GROUP] Validation failed, using original articles");
@@ -2672,6 +2717,15 @@ function buildVideoAsArticleCard(it) {
         state.lastArticlesGeneratedAt || state.lastArticlesUpdatedAt || "none";
       const effectiveUpdatedAtVideos =
         state.lastVideosGeneratedAt || state.lastVideosUpdatedAt || "none";
+      
+      // === FIX: Odvodit articlesStamp a videosStamp z generatedAt ===
+      const articlesStamp = state.lastArticlesGeneratedAt 
+        ? state.lastArticlesGeneratedAt.substring(0, 16).replace(/T/, " ")
+        : null;
+      const videosStamp = state.lastVideosGeneratedAt
+        ? state.lastVideosGeneratedAt.substring(0, 16).replace(/T/, " ")
+        : null;
+      
       const statusLine = iuBuildDiagStatusLine({
         preferredSaved,
         preferredModeUsed,
@@ -2764,7 +2818,16 @@ function buildVideoAsArticleCard(it) {
       debugWarn("[loadData] error", err);
 
       const hasLast = Array.isArray(state.cachedItems) && state.cachedItems.length > 0;
-      setStatus("Stav dat: výpadek (automatický pokus o obnovení)");
+      const feedChildren = elFeed?.children?.length ?? 0;
+      
+      // === FIX: Pokud máme data a feed je vykreslen, neukazovat "výpadek" ===
+      if (hasLast && feedChildren > 0) {
+        // Data jsou OK, feed je vykreslen → jen warning, ne "výpadek"
+        debugWarn("[loadData] error during processing, but feed is rendered", err);
+        setStatus("Stav dat: OK (částečná chyba při zpracování)");
+      } else {
+        setStatus("Stav dat: výpadek (automatický pokus o obnovení)");
+      }
 
       if (hasLast) {
         const box = document.querySelector("#emptyBox") || document.querySelector("#empty");
