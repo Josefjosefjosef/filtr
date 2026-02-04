@@ -1340,6 +1340,42 @@ a.brand,
   min-height: 60px;
 }
 
+/* Karty ve feedu - pozice pro fade panel */
+#feed > .news-card,
+#feed > article{
+  position: relative;
+  overflow: hidden;
+}
+
+/* Pravý fade panel - efekt obrázku do ztracena */
+#feed > .news-card::after,
+#feed > article::after{
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 42%;
+  height: 100%;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      140px 140px at 70% 50%,
+      rgba(31,58,95,0.12),
+      rgba(31,58,95,0.00) 70%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,0.0),
+      rgba(255,255,255,0.88)
+    );
+}
+
+/* Odsunutí textu, aby nelezel pod panel */
+#feed .news-title,
+#feed .iu-meta-line{
+  padding-right: 36%;
+}
+
 /* TOP článek - první položka v feedu - přes celou šířku */
 #feed > .news-card:first-child,
 #feed > article:first-child{
@@ -1482,6 +1518,16 @@ a.brand,
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
+  }
+  /* Fade panel na mobilu vypnout */
+  #feed > .news-card::after,
+  #feed > article::after{
+    display: none;
+  }
+  /* Text bez odsazení na mobilu */
+  #feed .news-title,
+  #feed .iu-meta-line{
+    padding-right: 0;
   }
 }
 
