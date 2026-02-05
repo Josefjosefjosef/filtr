@@ -1120,7 +1120,7 @@ a.brand,
 .sectionBar{
   width: 100%;
   margin: 0 0 24px 0;
-  padding: 16px 0;
+  padding: 0 0 16px 0;
   background: transparent;
   border-bottom: none;
   display: flex;
@@ -1174,7 +1174,7 @@ a.brand,
   .sectionsBar,
   .sectionBar{
     gap: 6px;
-    padding: 12px 0;
+    padding: 0 0 12px 0;
   }
   .sectionsBar .secBtn,
   .sectionBar .secBtn{
@@ -2464,6 +2464,12 @@ a.brand,
   width: 100%;
   box-sizing: border-box;
   /* max-width/margin řeší .container výše, zde jen grid */
+}
+
+/* GUARD: feed hned pod topRow – nuluje mezery nad feedem */
+.topRow ~ #app .container{
+  margin-top: 0;
+  padding-top: 0;
 }
 .layout > .mainCol{
   grid-column: 1;
