@@ -2589,6 +2589,11 @@ html[data-iu-js="loaded"] .iu-js-fallback{
   visibility: visible !important;
   opacity: 1 !important;
 }
+/* Exception: keep sections bar as flex even under #feed > * override */
+#feed > #sectionsBar,
+#feed > .sectionsBar {
+  display: flex !important;
+}
 
 /* Globální meta řádek - jemný, bez omezení (pro MindMenu a další) */
 .iu-meta-line{
