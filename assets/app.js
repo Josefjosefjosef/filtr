@@ -990,28 +990,6 @@ window.addEventListener("unhandledrejection", (e) => {
     sectionLabel.textContent = `Sekce: ${labelText}`;
   }
 
-  function renderSectionsBar() {
-    if (!sectionsBar) return;
-    sectionsBar.innerHTML = "";
-    SECTION_KEYS.forEach((key) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "secBtn";
-      btn.dataset.section = key;
-      btn.textContent = SECTION_LABELS[key] || key;
-      btn.addEventListener("click", () => handleSectionClick(key));
-      sectionsBar.appendChild(btn);
-    });
-    updateSectionButtons();
-  }
-
-  function updateSectionButtons() {
-    if (!sectionsBar) return;
-    sectionsBar.querySelectorAll(".secBtn").forEach((btn) => {
-      const key = btn.dataset.section;
-      btn.classList.toggle("isActive", activeSections.includes(key));
-    });
-  }
 
   function handleSectionClick(key) {
     if (key === "vse") {
@@ -1056,7 +1034,7 @@ window.addEventListener("unhandledrejection", (e) => {
       activeSections = ["aktualne"];
     }
     updateSectionLabel();
-    updateSectionButtons();
+      setSectionsFromHash();
   }
 
   function matchesSections(item, sections = activeSections) {
@@ -1161,13 +1139,13 @@ window.addEventListener("unhandledrejection", (e) => {
       emptyBox.innerHTML = "";
     }
     const beforeChildren = safeTarget.childElementCount;
-    // Zachovat #sectionsBar jako reálný DOM node před clear
-    const sectionsBar = document.getElementById("sectionsBar");
-    safeTarget.innerHTML = "";
-    // Vrátit #sectionsBar zpět jako první dítě (zachová původní node a eventy)
-    if (sectionsBar) {
-      safeTarget.insertBefore(sectionsBar, safeTarget.firstChild);
-    }
+    const targetSelector = feedEl ? "#feed" : "(missing)";
+    diagStartInfo = {
+      itemsLen: items ? items.length : 0,
+      feedExists,
+      childrenBefore: feedChildrenBefore,
+    };
+    diagLog("renderFeed:start", {
     if (!items || items.length === 0) {
       renderEmpty("Žádné články k zobrazení. Zkontroluj Stav dat.");
       return;
@@ -3259,7 +3237,7 @@ function buildVideoAsArticleCard(it) {
       }, 5000);
     }
     renderDebugVisibility();
-    renderSectionsBar();
+    const swState = selfDiag.swWaiting === "yes"
     setSectionsFromHash();
     iuInitTopbarWatcher();
 

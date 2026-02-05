@@ -2596,6 +2596,18 @@ html[data-iu-js="loaded"] .iu-js-fallback{
 #feed > #sectionsBar,
 #feed > .sectionsBar {
   display: flex !important;
+
+  /* Full-width in 2-col layouts */
+  width: 100%;
+  max-width: 100%;
+
+  /* If parent is flex-wrap layout */
+  flex: 0 0 100%;
+
+  /* If parent is CSS grid layout */
+  grid-column: 1 / -1;
+
+  margin-bottom: 10px;
 }
 
 /* Globální meta řádek - jemný, bez omezení (pro MindMenu a další) */
