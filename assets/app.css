@@ -13,6 +13,9 @@
   --iu-meta: #6b7280;
   --iu-accent: #1f3a5f;
 
+  /* layout - šířka pravého sloupce (MindMenu + spacer) */
+  --rightColW: 360px;
+
   /* text */
   --text: rgba(11,27,43,0.92);
   --muted: rgba(11,27,43,0.60);
@@ -109,12 +112,14 @@ body{
 /* Horní řádek: topbar + MindMenu vedle sebe */
 .topRow{
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: 1fr var(--rightColW);
   gap: 20px;
   align-items: start;
   position: relative;
   z-index: 1000;
   background: var(--iu-bg);
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .topbar-new{
@@ -250,7 +255,7 @@ img{ max-width:100%; height:auto; }
 aside.accordionCol{
   min-width: 0;
   order: 2;
-  width: var(--sideW, 360px);
+  width: var(--sideW, var(--rightColW));
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -284,7 +289,7 @@ aside.accordionCol{
   margin-top: 0;
   padding-top: 0;
   align-self: start;
-  width: 360px;
+  width: var(--rightColW);
   min-width: 0;
   overflow: visible;
 }
@@ -2438,7 +2443,7 @@ a.brand,
 /* FINAL LAYOUT */
 .layout{
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: 1fr var(--rightColW);
   gap: 20px;
   align-items: start;
   padding-top: 0;
@@ -2452,7 +2457,7 @@ a.brand,
 
 /* Pravý spacer - rezervuje místo pod MindMenu */
 .rightSpacer{
-  width: 360px;
+  width: var(--rightColW);
   min-width: 0;
 }
 .layout > aside.accordionCol{
