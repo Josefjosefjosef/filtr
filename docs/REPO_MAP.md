@@ -35,4 +35,6 @@ Workflows, které commitují data, sdílí concurrency group:
 - `scripts/` – generátory a pomocné skripty pipeline (výstupy míří do `projects/data/`)
 
 ## Diagnostika / provoz
+
 - `docs/PROD_DIAG_WINDOWS.md` – jak na produkční JSONy z Windows/PowerShellu bez UTF-16 BOM
+- `docs/DEBUG_MARKERS_REPORT.md` – Ověření debug markerů v assets/app.css (2026-02-05)
