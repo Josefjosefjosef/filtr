@@ -96,11 +96,26 @@ body{
   -webkit-font-smoothing: antialiased;
 }
 
-.topbar-new{
+/* Horní řádek: topbar + MindMenu vedle sebe */
+.topRow{
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
   position: sticky;
   top: 0;
+  z-index: 1000;
+  background: var(--iu-bg);
+}
+
+.topbar-new{
+  position: relative;
+  top: 0;
   left: 0;
-  right: 0;
+  right: auto;
   z-index: 1000;
   background: var(--iu-bg);
   border-bottom: 1px solid rgba(17,17,17,0.06);
@@ -252,10 +267,20 @@ aside.accordionCol{
   background: #000;
   color: #fff;
   padding: 40px 24px;
-  height: calc(100vh - 68px);
+  height: calc(100vh - 0px);
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+/* MindMenu v horním řádku - zarovnání nahoře */
+.topRightCol{
+  margin-top: 0;
+  padding-top: 0;
+  align-self: start;
+  width: 360px;
+  min-width: 0;
+  overflow: visible;
 }
 .mindMenu-scroll-wrapper{
   position: relative;
@@ -2407,10 +2432,10 @@ a.brand,
 /* FINAL LAYOUT */
 .layout{
   display: grid;
-  grid-template-columns: 68% 32%;
+  grid-template-columns: 1fr;
   gap: 20px;
   align-items: start;
-  padding-top: calc(var(--topbarStackH) + 20px);
+  padding-top: 20px;
   margin-top: 0;
   overflow: visible;
   max-width: 1200px;
@@ -2435,6 +2460,13 @@ a.brand,
   box-shadow: none;
 }
 @media (max-width: 900px){
+  .topRow{
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .topRightCol{
+    display: none;
+  }
   .layout{
     grid-template-columns: 1fr;
     gap: 20px;

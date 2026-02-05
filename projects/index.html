@@ -31,35 +31,55 @@
     })();
     </script>
 
-    <header class="topbar-new" id="topbarWrap">
-      <div class="topbar-new-inner">
-        <div class="topbar-new-main">
-          <div class="topbar-logo">
-            <div class="brand">
-              <div class="name">infoUzel.cz</div>
+    <div class="topRow">
+      <header class="topbar-new" id="topbarWrap">
+        <div class="topbar-new-inner">
+          <div class="topbar-new-main">
+            <div class="topbar-logo">
+              <div class="brand">
+                <div class="name">infoUzel.cz</div>
+              </div>
+            </div>
+            <form class="searchForm" id="searchForm" autocomplete="off">
+              <div class="search">
+                <div class="icon">🔍</div>
+                <input id="searchInput" type="search" placeholder="Hledat" autocomplete="off" />
+              </div>
+              <button class="searchBtn" id="searchBtn" type="submit">Hledat</button>
+            </form>
+            <button class="menuBtn" id="menuBtn" aria-label="Sekce">
+              <div class="burger" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+            </button>
+          </div>
+          <nav class="topbar-links">
+            <a href="#" class="topbar-link">Média</a>
+            <a href="#" class="topbar-link">Inzerce</a>
+            <a href="#" class="topbar-link">Služby</a>
+            <a href="#" class="topbar-link">Smlouvy ke stažení</a>
+          </nav>
+        </div>
+      </header>
+
+      <aside class="accordionCol topRightCol" aria-label="Postranní panel">
+        <div class="mindMenu-scroll-wrapper">
+          <div class="mindMenu">
+            <h2 class="mindMenu-title">MindMenu</h2>
+            <div class="mindMenu-tags">
+              <div class="mindMenu-tag"></div>
+              <div class="mindMenu-tag"></div>
+              <div class="mindMenu-tag"></div>
+              <div class="mindMenu-tag"></div>
+              <div class="mindMenu-tag"></div>
+            </div>
+            <div class="mindMenu-rectangle">
+              <div class="mindMenu-square"></div>
             </div>
           </div>
-          <form class="searchForm" id="searchForm" autocomplete="off">
-            <div class="search">
-              <div class="icon">🔍</div>
-              <input id="searchInput" type="search" placeholder="Hledat" autocomplete="off" />
-            </div>
-            <button class="searchBtn" id="searchBtn" type="submit">Hledat</button>
-          </form>
-          <button class="menuBtn" id="menuBtn" aria-label="Sekce">
-            <div class="burger" aria-hidden="true">
-              <span></span><span></span><span></span>
-            </div>
-          </button>
         </div>
-        <nav class="topbar-links">
-          <a href="#" class="topbar-link">Média</a>
-          <a href="#" class="topbar-link">Inzerce</a>
-          <a href="#" class="topbar-link">Služby</a>
-          <a href="#" class="topbar-link">Smlouvy ke stažení</a>
-        </nav>
-      </div>
-    </header>
+      </aside>
+    </div>
 
     <div id="app">
       <div id="page">
@@ -85,24 +105,6 @@
                   </div>
                 </div>
               </div>
-
-              <aside class="accordionCol" aria-label="Postranní panel">
-                <div class="mindMenu-scroll-wrapper">
-                  <div class="mindMenu">
-                    <h2 class="mindMenu-title">MindMenu</h2>
-                    <div class="mindMenu-tags">
-                      <div class="mindMenu-tag"></div>
-                      <div class="mindMenu-tag"></div>
-                      <div class="mindMenu-tag"></div>
-                      <div class="mindMenu-tag"></div>
-                      <div class="mindMenu-tag"></div>
-                    </div>
-                    <div class="mindMenu-rectangle">
-                      <div class="mindMenu-square"></div>
-                    </div>
-                  </div>
-                </div>
-              </aside>
             </div>
           </div>
         </main>
