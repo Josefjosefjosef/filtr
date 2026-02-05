@@ -1160,7 +1160,13 @@ window.addEventListener("unhandledrejection", (e) => {
       emptyBox.innerHTML = "";
     }
     const beforeChildren = safeTarget.childElementCount;
+    // Zachovat #sectionsBar jako reálný DOM node před clear
+    const sectionsBar = document.getElementById("sectionsBar");
     safeTarget.innerHTML = "";
+    // Vrátit #sectionsBar zpět jako první dítě (zachová původní node a eventy)
+    if (sectionsBar) {
+      safeTarget.insertBefore(sectionsBar, safeTarget.firstChild);
+    }
     if (!items || items.length === 0) {
       renderEmpty("Žádné články k zobrazení. Zkontroluj Stav dat.");
       return;
