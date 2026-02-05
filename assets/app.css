@@ -1432,10 +1432,11 @@ a.brand,
 #feed > .news-card:first-child::before,
 #feed > article:first-child::before{
   content: "Zpráva dne";
-  display: inline-block;
+  display: block;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.02em;
+  line-height: 1;
   color: var(--iu-accent);
   background: #fff;
   border: 1px solid rgba(17,17,17,0.10);
@@ -1443,6 +1444,7 @@ a.brand,
   padding: 4px 10px;
   margin-bottom: 8px;
   width: fit-content;
+  pointer-events: none;
 }
 
 /* Meta řádek v TOP položce - spacing už řeší margin-top z #feed .iu-meta-line */
@@ -1554,11 +1556,14 @@ a.brand,
   #feed > article:not(:first-child){
     padding: 14px 12px;
   }
-  /* Meta řádek v feedu na mobilu - může zalomit */
+  /* Meta řádek v feedu na mobilu - max 2 řádky s line-clamp */
   #feed .iu-meta-line{
     white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   /* REMOVED: Fade panel na mobilu - now using background-image directly */
 }
