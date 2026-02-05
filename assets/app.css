@@ -2436,8 +2436,18 @@ a.brand,
   grid-template-columns: 1fr 360px;
   gap: 20px;
   align-items: start;
+  width: 100%;
+  justify-content: start;
 }
+
+/* layout kotvy – feed vlevo, MindMenu vpravo */
+.layout > .mainCol{
+  grid-column: 1;
+  min-width: 0;
+}
+
 .layout > aside.accordionCol{
+  grid-column: 2;
   min-width: 0;
   overflow: visible;
   box-sizing: border-box;
