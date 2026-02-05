@@ -1389,9 +1389,8 @@ a.brand,
 
 /* REMOVED: FEED grafika přes ::after - now using background-image directly on cards */
 
-/* Meta řádek jako pill pro čitelnost */
+/* Meta řádek - vizuální styling (bez pill display) */
 #feed .iu-meta-line{
-  display: inline-flex;
   width: fit-content;
   padding: 2px 6px;
   border-radius: 999px;
@@ -2603,6 +2602,7 @@ html[data-iu-js="loaded"] .iu-js-fallback{
 }
 /* Meta řádek v feedu - desktop: nowrap s ellipsis */
 #feed .iu-meta-line{
+  display: block;
   font-size: 12px;
   color: var(--iu-meta);
   font-weight: 400;
