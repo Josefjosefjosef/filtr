@@ -334,6 +334,15 @@ aside.accordionCol{
   padding: 6px 0;
 }
 
+/* řádek čtverců do hrany boxu */
+.mindMenu .iu-mindSocialRow{
+  margin-left: -24px;
+  margin-right: -24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  flex-wrap: nowrap;
+}
+
 .iu-socialSquare{
   width: 52px;
   height: 52px;
@@ -349,6 +358,7 @@ aside.accordionCol{
   line-height: 1;
   box-shadow: 0 2px 10px rgba(0,0,0,0.18);
   transition: opacity 140ms ease;
+  flex: 0 0 auto;
 }
 
 .iu-socialSquare:hover{
