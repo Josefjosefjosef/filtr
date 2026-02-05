@@ -2432,10 +2432,10 @@ a.brand,
 /* FINAL LAYOUT */
 .layout{
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 360px;
   gap: 20px;
   align-items: start;
-  padding-top: 20px;
+  padding-top: 0;
   margin-top: 0;
   overflow: visible;
   max-width: 1200px;
@@ -2447,6 +2447,12 @@ a.brand,
 .layout > .mainCol{
   min-width: 0;
   overflow: visible;
+}
+
+/* Pravý spacer - rezervuje místo pod MindMenu */
+.rightSpacer{
+  width: 360px;
+  min-width: 0;
 }
 .layout > aside.accordionCol{
   min-width: 0;
@@ -2470,6 +2476,9 @@ a.brand,
   .layout{
     grid-template-columns: 1fr;
     gap: 20px;
+  }
+  .rightSpacer{
+    display: none;
   }
   .layout > aside.accordionCol{
     width: 100%;
