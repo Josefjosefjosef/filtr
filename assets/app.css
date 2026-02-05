@@ -2653,86 +2653,59 @@ html[data-iu-js="loaded"] .iu-js-fallback{
   }
 }
 
-/* ===== CARD TYPO WATERMARK (ARTICLES ONLY, PROD) =====
-   Jemná typografická textura vpravo v kartě – pouze pro články (ne video). */
+/* ===== CARD WATERMARK (ARTICLES ONLY, SUBTLE, PROD) =====
+   Jemný monogram vpravo pod textem – žádné pruhy, žádné patterny. */
 
+/* Jen články */
 #feed .news-card[data-feed-type="article"],
 #feed article.news-card[data-feed-type="article"]{
-  --iu-cardmark: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='460'%20height='320'%20viewBox='0%200%20460%20320'%3E%3Cdefs%3E%3Cfilter%20id='b'%20x='-20%25'%20y='-20%25'%20width='140%25'%20height='140%25'%3E%3CfeGaussianBlur%20stdDeviation='2.6'/%3E%3C/filter%3E%3C/defs%3E%3Ctext%20x='66%25'%20y='62%25'%20text-anchor='middle'%20dominant-baseline='middle'%20font-family='Source%20Sans%203,%20system-ui,%20Segoe%20UI,%20Arial'%20font-weight='800'%20font-size='220'%20fill='rgba(17,17,17,0.10)'%20filter='url(%23b)'%3EI%3C/text%3E%3C/svg%3E");
-
-  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
-  background-size: 230px 160px, cover, cover, cover, cover;
-  background-position: 92% 58%, 85% 50%, 85% 50%, 85% 50%, 85% 50%;
-
-  /* 1. vrstva = watermark, zbytek = stávající FINÁL gradienty */
-  background-image:
-    var(--iu-cardmark, none),
-    radial-gradient(closest-side at 84% 36%, rgba(31,58,95,0.22), rgba(31,58,95,0.00) 70%),
-    radial-gradient(closest-side at 92% 78%, rgba(17,17,17,0.10), rgba(17,17,17,0.00) 76%),
-    repeating-linear-gradient(135deg,
-      rgba(17,17,17,0.05) 0px,
-      rgba(17,17,17,0.05) 6px,
-      rgba(17,17,17,0.00) 6px,
-      rgba(17,17,17,0.00) 18px
-    ),
-    linear-gradient(to left, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.92) 62%);
+  position: relative; /* pojistka pro ::after */
+  overflow: hidden;   /* aby se watermark nedostal ven */
 }
 
-/* Fallback: pokud by někde chyběl data-feed-type, použij stejný sklad vrstev jako u článků */
-#feed .news-card:not([data-feed-type]),
-#feed article.news-card:not([data-feed-type]){
-  --iu-cardmark: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='460'%20height='320'%20viewBox='0%200%20460%20320'%3E%3Cdefs%3E%3Cfilter%20id='b'%20x='-20%25'%20y='-20%25'%20width='140%25'%20height='140%25'%3E%3CfeGaussianBlur%20stdDeviation='2.6'/%3E%3C/filter%3E%3C/defs%3E%3Ctext%20x='66%25'%20y='62%25'%20text-anchor='middle'%20dominant-baseline='middle'%20font-family='Source%20Sans%203,%20system-ui,%20Segoe%20UI,%20Arial'%20font-weight='800'%20font-size='220'%20fill='rgba(17,17,17,0.10)'%20filter='url(%23b)'%3EI%3C/text%3E%3C/svg%3E");
+/* Overlay monogram */
+#feed .news-card[data-feed-type="article"]::after,
+#feed article.news-card[data-feed-type="article"]::after{
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 150px;
+  height: 105px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.08;
 
-  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
-  background-size: 230px 160px, cover, cover, cover, cover;
-  background-position: 92% 58%, 85% 50%, 85% 50%, 85% 50%, 85% 50%;
-
-  background-image:
-    var(--iu-cardmark, none),
-    radial-gradient(closest-side at 84% 36%, rgba(31,58,95,0.22), rgba(31,58,95,0.00) 70%),
-    radial-gradient(closest-side at 92% 78%, rgba(17,17,17,0.10), rgba(17,17,17,0.00) 76%),
-    repeating-linear-gradient(135deg,
-      rgba(17,17,17,0.05) 0px,
-      rgba(17,17,17,0.05) 6px,
-      rgba(17,17,17,0.00) 6px,
-      rgba(17,17,17,0.00) 18px
-    ),
-    linear-gradient(to left, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.92) 62%);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='340'%20height='240'%20viewBox='0%200%20340%20240'%3E%3Cdefs%3E%3Cfilter%20id='b'%20x='-20%25'%20y='-20%25'%20width='140%25'%20height='140%25'%3E%3CfeGaussianBlur%20stdDeviation='1.6'/%3E%3C/filter%3E%3C/defs%3E%3Ctext%20x='50%25'%20y='58%25'%20text-anchor='middle'%20dominant-baseline='middle'%20font-family='Source%20Sans%203,%20system-ui,%20Segoe%20UI,%20Arial'%20font-weight='800'%20font-size='160'%20fill='rgba(31,58,95,0.20)'%20filter='url(%23b)'%3EIU%3C/text%3E%3C/svg%3E");
 }
 
-/* Video kill-switch: explicitní pojistka, aby video nikdy watermark nedostalo */
-#feed .news-card[data-feed-type="video"],
-#feed article.news-card[data-feed-type="video"]{
-  --iu-cardmark: none !important;
+/* Aby overlay nebyl NAD textem (když by někdo někde změnil z-indexy) */
+#feed .news-card[data-feed-type="article"] > *,
+#feed article.news-card[data-feed-type="article"] > *{
+  position: relative;
+  z-index: 1;
 }
 
-/* Střídání watermark znaků – jen pro články */
-#feed .news-card[data-feed-type="article"]:nth-child(4n+1),
-#feed article.news-card[data-feed-type="article"]:nth-child(4n+1){
-  --iu-cardmark: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='460'%20height='320'%20viewBox='0%200%20460%20320'%3E%3Cdefs%3E%3Cfilter%20id='b'%20x='-20%25'%20y='-20%25'%20width='140%25'%20height='140%25'%3E%3CfeGaussianBlur%20stdDeviation='2.6'/%3E%3C/filter%3E%3C/defs%3E%3Ctext%20x='66%25'%20y='62%25'%20text-anchor='middle'%20dominant-baseline='middle'%20font-family='Source%20Sans%203,%20system-ui,%20Segoe%20UI,%20Arial'%20font-weight='800'%20font-size='220'%20fill='rgba(17,17,17,0.10)'%20filter='url(%23b)'%3EI%3C/text%3E%3C/svg%3E");
+/* Pojistka: overlay nikdy na video */
+#feed .news-card[data-feed-type="video"]::after,
+#feed article.news-card[data-feed-type="video"]::after{
+  display: none !important;
 }
 
-#feed .news-card[data-feed-type="article"]:nth-child(4n+2),
-#feed article.news-card[data-feed-type="article"]:nth-child(4n+2){
-  --iu-cardmark: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='460'%20height='320'%20viewBox='0%200%20460%20320'%3E%3Cdefs%3E%3Cfilter%20id='b'%20x='-20%25'%20y='-20%25'%20width='140%25'%20height='140%25'%3E%3CfeGaussianBlur%20stdDeviation='2.6'/%3E%3C/filter%3E%3C/defs%3E%3Ctext%20x='66%25'%20y='62%25'%20text-anchor='middle'%20dominant-baseline='middle'%20font-family='Source%20Sans%203,%20system-ui,%20Segoe%20UI,%20Arial'%20font-weight='800'%20font-size='220'%20fill='rgba(31,58,95,0.10)'%20filter='url(%23b)'%3EU%3C/text%3E%3C/svg%3E");
+/* Pojistka: overlay vypnout na TOP "Zpráva dne" kartě */
+#feed > .news-card:first-child[data-feed-type="article"]::after,
+#feed > article.news-card:first-child[data-feed-type="article"]::after{
+  display: none;
 }
 
-#feed .news-card[data-feed-type="article"]:nth-child(4n+3),
-#feed article.news-card[data-feed-type="article"]:nth-child(4n+3){
-  --iu-cardmark: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='460'%20height='320'%20viewBox='0%200%20460%20320'%3E%3Cdefs%3E%3Cfilter%20id='b'%20x='-20%25'%20y='-20%25'%20width='140%25'%20height='140%25'%3E%3CfeGaussianBlur%20stdDeviation='2.6'/%3E%3C/filter%3E%3C/defs%3E%3Ctext%20x='66%25'%20y='62%25'%20text-anchor='middle'%20dominant-baseline='middle'%20font-family='Source%20Sans%203,%20system-ui,%20Segoe%20UI,%20Arial'%20font-weight='800'%20font-size='220'%20fill='rgba(17,17,17,0.10)'%20filter='url(%23b)'%3EZ%3C/text%3E%3C/svg%3E");
-}
-
-#feed .news-card[data-feed-type="article"]:nth-child(4n+4),
-#feed article.news-card[data-feed-type="article"]:nth-child(4n+4){
-  --iu-cardmark: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='460'%20height='320'%20viewBox='0%200%20460%20320'%3E%3Cdefs%3E%3Cfilter%20id='b'%20x='-20%25'%20y='-20%25'%20width='140%25'%20height='140%25'%3E%3CfeGaussianBlur%20stdDeviation='2.6'/%3E%3C/filter%3E%3C/defs%3E%3Ctext%20x='66%25'%20y='62%25'%20text-anchor='middle'%20dominant-baseline='middle'%20font-family='Source%20Sans%203,%20system-ui,%20Segoe%20UI,%20Arial'%20font-weight='800'%20font-size='240'%20fill='rgba(17,17,17,0.08)'%20filter='url(%23b)'%3E%E2%80%A2%3C/text%3E%3C/svg%3E");
-}
-
-/* Kill-switch pro malé mobily */
-@media (max-width: 420px){
-  #feed .news-card[data-feed-type="article"],
-  #feed article.news-card[data-feed-type="article"],
-  #feed .news-card:not([data-feed-type]),
-  #feed article.news-card:not([data-feed-type]){
-    --iu-cardmark: none;
+/* Mobily: watermark vypnout */
+@media (max-width: 520px){
+  #feed .news-card[data-feed-type="article"]::after,
+  #feed article.news-card[data-feed-type="article"]::after{
+    display: none;
   }
 }
