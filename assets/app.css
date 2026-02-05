@@ -291,6 +291,60 @@ aside.accordionCol{
   gap: 24px;
 }
 
+/* Horní řádek MindMenu - sociální ikony + hamburger */
+.iu-mindSocialRow{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 6px 0;
+}
+
+.iu-socialSquare{
+  width: 52px;
+  height: 52px;
+  background: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  text-decoration: none !important;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+  transition: opacity 140ms ease;
+}
+
+.iu-socialSquare:hover{
+  opacity: 0.8;
+  text-decoration: none !important;
+}
+
+/* hamburger vpravo – bez čtverečku */
+.iu-mindSocialRow .iu-hamburgerPlain{
+  margin-left: auto;
+  background: transparent;
+  border: 0;
+  padding: 13px 10px;
+  color: #000;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none !important;
+}
+
+/* jemný hover */
+.iu-mindSocialRow .iu-hamburgerPlain:hover{
+  opacity: 0.75;
+}
+
+/* jemný hover */
+.iu-mindSocialRow .iu-hamburgerPlain:hover{
+  opacity: 0.75;
+}
+
 /* MindMenu v horním řádku - zarovnání nahoře */
 .mindMenu-scroll-wrapper{
   position: relative;
