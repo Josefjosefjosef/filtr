@@ -11,7 +11,6 @@
     <style>
       /* DIAG ONLY: zviditelnění, zda je feed přítomen a není skryt/překryt */
       #feed { min-height: 200px !important; outline: 2px dashed rgba(255,255,255,0.35) !important; outline-offset: 2px; }
-      #iuNoJsFallback { display: block !important; }
       body::before, body::after, html::before, html::after { pointer-events: none !important; }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
@@ -75,12 +74,6 @@
                   <div id="emptyBox" style="display:none"></div>
                   <!-- Minimální, jistý render target -->
                   <div id="feed">
-                    <div id="iuNoJsFallback" class="iu-js-fallback" style="padding:12px;margin:10px 0;border:1px dashed rgba(255,255,255,0.45);background:rgba(0,0,0,0.18);font-size:13px;line-height:1.35;">
-                      <strong>DIAG:</strong> Pokud vidíš tento blok, JS renderer buď neběží, nebo feed nic nevykreslil.
-                      <div style="margin-top:6px;opacity:.9;">
-                        Zkus otevřít <code>/projects/?debug=1</code> a v Troubleshoot použij „LIVE DIAG REPORT" a „FORCE DIAG – ověř načtení assetů".
-                      </div>
-                    </div>
                   </div>
                 </div>
                 </div>
