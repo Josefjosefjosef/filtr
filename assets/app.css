@@ -115,13 +115,20 @@ body{
   border-bottom: 1px solid rgba(17,17,17,0.06);
   box-shadow: 0 1px 3px rgba(0,0,0,0.02);
   width: 100%;
+  max-width: 100%;
+  overflow: hidden;
   box-sizing: border-box;
 }
 .topbar-new-inner{
+  position: sticky;
+  top: 0;
   width: 100%;
+  max-width: 100%;
   margin: 0;
   padding: 0 20px;
   box-sizing: border-box;
+  background: var(--iu-bg);
+  z-index: 1000;
 }
 .topbar-new-main{
   display: flex;
