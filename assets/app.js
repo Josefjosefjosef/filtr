@@ -105,6 +105,7 @@ window.addEventListener("unhandledrejection", (e) => {
   state.filteredItems ??= [];
   const ALLOWED_CONTENT_TYPES = new Set(["article", "video"]);
   const PAGE_SIZE = 401;
+  state.visibleCount = PAGE_SIZE;
   const isDebugLogging = location.search.includes("debug=1");
   function debugLog(...args) {
     if (!isDebugLogging) return;
@@ -1160,7 +1161,13 @@ window.addEventListener("unhandledrejection", (e) => {
       emptyBox.innerHTML = "";
     }
     const beforeChildren = safeTarget.childElementCount;
+    // Zachovat #sectionsBar jako reálný DOM node před clear
+    const sectionsBar = document.getElementById("sectionsBar");
     safeTarget.innerHTML = "";
+    // Vrátit #sectionsBar zpět jako první dítě (zachová původní node a eventy)
+    if (sectionsBar) {
+      safeTarget.insertBefore(sectionsBar, safeTarget.firstChild);
+    }
     if (!items || items.length === 0) {
       renderEmpty("Žádné články k zobrazení. Zkontroluj Stav dat.");
       return;
@@ -1306,12 +1313,56 @@ window.addEventListener("unhandledrejection", (e) => {
     }
   }
 
+  function ensureLoadMoreUi() {
+    try {
+      const feedEl = document.getElementById("feed");
+      if (!feedEl || !feedEl.parentElement) return;
+      const newsList = feedEl.parentElement;
+      let loadMoreWrap = document.getElementById("loadMoreWrap");
+      if (!loadMoreWrap) {
+        loadMoreWrap = document.createElement("div");
+        loadMoreWrap.id = "loadMoreWrap";
+        loadMoreWrap.style.cssText = "margin-top: 20px; text-align: center; padding: 16px;";
+        newsList.appendChild(loadMoreWrap);
+        
+        const loadMoreBtn = document.createElement("button");
+        loadMoreBtn.id = "loadMoreBtn";
+        loadMoreBtn.textContent = "Načíst další";
+        loadMoreBtn.style.cssText = "display: inline-block; padding: 10px 20px; background: var(--iu-accent, #1f3a5f); color: #fff; border: none; border-radius: 8px; font-weight: 500; cursor: pointer;";
+        loadMoreBtn.addEventListener("click", function() {
+          state.visibleCount += PAGE_SIZE;
+          renderItems(state.filteredItems);
+        });
+        loadMoreWrap.appendChild(loadMoreBtn);
+      }
+    } catch (e) {
+      // Silent failure - tlačítko je optional, feed musí fungovat
+    }
+  }
+
+  function updateLoadMoreUi(totalCount) {
+    try {
+      const loadMoreWrap = document.getElementById("loadMoreWrap");
+      if (!loadMoreWrap) return;
+      if (state.visibleCount < totalCount) {
+        loadMoreWrap.style.display = "block";
+      } else {
+        loadMoreWrap.style.display = "none";
+      }
+    } catch (e) {
+      // Silent failure
+    }
+  }
+
   function renderItems(items) {
     const target = getFeedTarget();
-    const currentPage = getPageFromUrl();
-    const paginated = paginateItems(items, currentPage);
-    renderFeed(target, paginated.sliceItems);
-    updateFeedPager(items, paginated.page, paginated.totalPages);
+    // Použít visibleCount místo URL paginace
+    const total = Array.isArray(items) ? items.length : 0;
+    const visible = Math.min(state.visibleCount, total);
+    const sliceItems = Array.isArray(items) ? items.slice(0, visible) : [];
+    renderFeed(target, sliceItems);
+    ensureLoadMoreUi();
+    updateLoadMoreUi(total);
   }
 
   function renderFeedItemHtml(item) {
@@ -1542,6 +1593,7 @@ function buildVideoAsArticleCard(it) {
   // Druhá render cesta je zakázaná.
   function applyFilter() {
     if (!state.hasLoadedData) return;
+    state.visibleCount = PAGE_SIZE; // Reset na počáteční limit při změně filtru
     state.searchQuery = (searchInput && searchInput.value.trim()) || "";
 
     // SAFETY: pokud není aktivní žádné téma/sekce/filtr ani hledání, zobraz rovnou celý cache feed
