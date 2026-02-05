@@ -291,6 +291,22 @@ aside.accordionCol{
   gap: 24px;
 }
 
+/* MindMenu – malý nadpis nad hamburgerem */
+.mindMenuHeader{
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+
+.mindMenuLabel{
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #2A2E33;
+  text-align: right;
+}
+
 /* Horní řádek MindMenu - sociální ikony + hamburger */
 .iu-mindSocialRow{
   display: flex;
