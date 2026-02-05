@@ -291,11 +291,12 @@ aside.accordionCol{
   gap: 24px;
 }
 
-/* MindMenu – malý nadpis nad hamburgerem */
+/* MindMenu header: label + hamburger v jednom řádku */
 .mindMenuHeader{
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 4px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
 }
 
 .mindMenuLabel{
@@ -304,13 +305,30 @@ aside.accordionCol{
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #2A2E33;
-  text-align: right;
+  text-align: left;
+  margin: 0;
 }
 
-/* Horní řádek MindMenu - sociální ikony + hamburger */
+/* hamburger v headeru – bez pozadí */
+.mindMenuHeader .iu-hamburgerPlain{
+  background: transparent;
+  border: 0;
+  padding: 6px 6px;
+  color: #000;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none !important;
+}
+.mindMenuHeader .iu-hamburgerPlain:hover{
+  opacity: 0.75;
+}
+
+/* Horní řádek MindMenu - sociální ikony */
 .iu-mindSocialRow{
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
   margin-bottom: 10px;
   padding: 6px 0;
@@ -338,23 +356,6 @@ aside.accordionCol{
   text-decoration: none !important;
 }
 
-/* hamburger vpravo – bez čtverečku */
-.iu-mindSocialRow .iu-hamburgerPlain{
-  margin-left: auto;
-  background: transparent;
-  border: 0;
-  padding: 13px 10px;
-  color: #000;
-  font-size: 26px;
-  line-height: 1;
-  cursor: pointer;
-  text-decoration: none !important;
-}
-
-/* jemný hover */
-.iu-mindSocialRow .iu-hamburgerPlain:hover{
-  opacity: 0.75;
-}
 
 /* jemný hover */
 .iu-mindSocialRow .iu-hamburgerPlain:hover{
