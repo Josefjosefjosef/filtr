@@ -50,6 +50,8 @@
 
   /* dynamické odsazení pod FIXED topbar (doplňuje JS v app.js) */
   --topbarStackH: 68px;
+  /* Celková výška sticky hlavičky: 68px (main) + 28px (links padding) + 1px (border) = 97px */
+  --topbarFullH: 97px;
 
   /* line-clamp titulků */
   --titleLineHeight: 1.22;
@@ -118,6 +120,7 @@ body{
   max-width: 100%;
   overflow: hidden;
   box-sizing: border-box;
+  /* Hlavička je sticky pouze v rámci levého sloupce (.mainCol) */
 }
 .topbar-new-inner{
   position: sticky;
@@ -212,6 +215,11 @@ body{
 }
 .topbar-link:hover{
   color: var(--iu-accent);
+}
+
+/* Kompenzace pro levý obsah pod sticky hlavičkou */
+#leftContent{
+  padding-top: var(--topbarFullH, 97px);
 }
 
 .checkItem input:checked{
