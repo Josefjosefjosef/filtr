@@ -13,8 +13,6 @@
   --iu-meta: #6b7280;
   --iu-accent: #1f3a5f;
 
-  /* layout - šířka pravého sloupce (MindMenu + spacer) */
-  --rightColW: 360px;
 
   /* text */
   --text: rgba(11,27,43,0.92);
@@ -99,27 +97,12 @@ body{
   -webkit-font-smoothing: antialiased;
 }
 
-/* Společný page shell pro topRow a container - sjednocené okraje */
-.topRow,
 .container{
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 20px;
   padding-right: 20px;
-}
-
-/* Horní řádek: topbar + MindMenu vedle sebe */
-.topRow{
-  display: grid;
-  grid-template-columns: 1fr var(--rightColW);
-  gap: 20px;
-  align-items: start;
-  position: relative;
-  z-index: 1000;
-  background: var(--iu-bg);
-  padding-top: 0;
-  padding-bottom: 0;
 }
 
 .topbar-new{
@@ -242,6 +225,9 @@ img{ max-width:100%; height:auto; }
 .container{
   width: 100%;
   box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  display: block; /* pojistka proti nechtěnému flex */
 }
 
 .mainCol{
@@ -255,7 +241,7 @@ img{ max-width:100%; height:auto; }
 aside.accordionCol{
   min-width: 0;
   order: 2;
-  width: var(--sideW, var(--rightColW));
+  width: var(--sideW, 360px);
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -285,14 +271,6 @@ aside.accordionCol{
 }
 
 /* MindMenu v horním řádku - zarovnání nahoře */
-.topRightCol{
-  margin-top: 0;
-  padding-top: 0;
-  align-self: start;
-  width: var(--rightColW);
-  min-width: 0;
-  overflow: visible;
-}
 .mindMenu-scroll-wrapper{
   position: relative;
 }
@@ -2455,34 +2433,9 @@ a.brand,
 /* FINAL LAYOUT */
 .layout{
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--rightColW);
+  grid-template-columns: 1fr 360px;
   gap: 20px;
   align-items: start;
-  padding-top: 0;
-  margin-top: 0;
-  overflow: visible;
-  width: 100%;
-  box-sizing: border-box;
-  /* max-width/margin řeší .container výše, zde jen grid */
-}
-
-/* GUARD: pouze feed container pod topRow – nuluje mezery nad feedem */
-#app .container{
-  margin-top: 0;
-  padding-top: 0;
-}
-
-.layout > .mainCol{
-  grid-column: 1;
-  min-width: 0;
-  overflow: visible;
-}
-
-/* Pravý spacer - rezervuje místo pod MindMenu */
-.layout > .rightSpacer{
-  grid-column: 2;
-  width: var(--rightColW);
-  min-width: 0;
 }
 .layout > aside.accordionCol{
   min-width: 0;
@@ -2496,19 +2449,9 @@ a.brand,
   box-shadow: none;
 }
 @media (max-width: 900px){
-  .topRow{
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-  .topRightCol{
-    display: none;
-  }
   .layout{
     grid-template-columns: 1fr;
     gap: 20px;
-  }
-  .layout > .rightSpacer{
-    display: none;
   }
   .layout > aside.accordionCol{
     width: 100%;
