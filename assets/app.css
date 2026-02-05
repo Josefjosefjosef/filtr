@@ -1389,12 +1389,22 @@ a.brand,
 
 /* REMOVED: FEED grafika přes ::after - now using background-image directly on cards */
 
-/* Meta řádek - vizuální styling (bez pill display) */
-#feed .iu-meta-line{
+/* Meta řádek - pill styling pouze pro TOP kartu */
+#feed > .news-card:first-child .iu-meta-line,
+#feed > article:first-child .iu-meta-line{
   width: fit-content;
   padding: 2px 6px;
   border-radius: 999px;
   background: rgba(255,255,255,0.70);
+}
+
+/* Meta řádek - běžné karty bez pill */
+#feed > .news-card:not(:first-child) .iu-meta-line,
+#feed > article:not(:first-child) .iu-meta-line{
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  width: auto;
 }
 
 /* FEED titulky – bez zkracování + bez hnusného dělení slov */
