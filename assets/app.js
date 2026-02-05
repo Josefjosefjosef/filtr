@@ -104,7 +104,6 @@ window.addEventListener("unhandledrejection", (e) => {
   state.cachedItems ??= [];
   state.filteredItems ??= [];
   const ALLOWED_CONTENT_TYPES = new Set(["article", "video"]);
-  const PAGE_SIZE = 401;
   const isDebugLogging = location.search.includes("debug=1");
   function debugLog(...args) {
     if (!isDebugLogging) return;
@@ -1262,62 +1261,9 @@ window.addEventListener("unhandledrejection", (e) => {
     inline.style.opacity = "1";
   }
 
-  // Pagination helpers
-  function getPageFromUrl() {
-    try {
-      const urlParams = new URLSearchParams(location.search);
-      const page = parseInt(urlParams.get("page") || "1", 10);
-      return Math.max(1, isNaN(page) || page < 1 ? 1 : page);
-    } catch {
-      return 1;
-    }
-  }
-
-  function paginateItems(items, page) {
-    if (!Array.isArray(items) || items.length === 0) {
-      return { page: 1, totalPages: 1, sliceItems: [] };
-    }
-    const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
-    const safePage = Math.min(Math.max(1, page), totalPages);
-    const start = (safePage - 1) * PAGE_SIZE;
-    const end = start + PAGE_SIZE;
-    return {
-      page: safePage,
-      totalPages: totalPages,
-      sliceItems: items.slice(start, end),
-    };
-  }
-
-  function updateFeedPager(allItems, currentPage, totalPages) {
-    try {
-      const feedEl = document.getElementById("feed");
-      if (!feedEl || !feedEl.parentElement) return;
-      const newsList = feedEl.parentElement;
-      let pagerEl = document.getElementById("feedPager");
-      if (!pagerEl) {
-        pagerEl = document.createElement("div");
-        pagerEl.id = "feedPager";
-        pagerEl.style.cssText = "margin-top: 20px; text-align: center; padding: 16px;";
-        newsList.appendChild(pagerEl);
-      }
-      if (!Array.isArray(allItems) || allItems.length === 0 || currentPage >= totalPages) {
-        pagerEl.style.display = "none";
-        return;
-      }
-      const nextPage = currentPage + 1;
-      pagerEl.innerHTML = `<a href="?page=${nextPage}" style="display: inline-block; padding: 10px 20px; background: var(--iu-accent, #1f3a5f); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 500;">Další →</a>`;
-      pagerEl.style.display = "block";
-    } catch (e) {
-      // Silent failure - pager is optional, feed must work
-    }
-  }
-
   function renderItems(items) {
     const target = getFeedTarget();
-    const currentPage = getPageFromUrl();
-    const paginated = paginateItems(items, currentPage);
-    renderFeed(target, paginated.sliceItems);
-    updateFeedPager(items, paginated.page, paginated.totalPages);
+    renderFeed(target, items);
   }
 
   function renderFeedItemHtml(item) {
