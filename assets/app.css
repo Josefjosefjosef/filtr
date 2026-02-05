@@ -228,23 +228,27 @@ body{
   padding-top: var(--topbarFullH, 97px);
 }
 
-/* Informační pás - stavový řádek hlavní stránky */
+/* Informační pás - globální neutrální základ (pro případné budoucí použití) */
 .iu-infoBar{
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 12px;
-  line-height: 1.2;
-  color: rgba(0,0,0,.62);
-  padding: 8px 0;
-  margin: 8px 0 12px 0;
-  border-bottom: 1px solid rgba(0,0,0,.08);
 }
 
-.iu-infoTime{
+/* Informační pás - scopovaný styl pro header */
+.topbar-new-main .iu-infoBar{
+  font-size: 11px;
+  line-height: 1.15;
+  color: rgba(0,0,0,.58);
+  margin: 6px 0 2px 0;
+  padding: 0;
+  border: 0;
+}
+
+.topbar-new-main .iu-infoTime{
   font-weight: 650;
-  color: rgba(0,0,0,.82);
+  color: rgba(0,0,0,.75);
   font-variant-numeric: tabular-nums;
 }
 
@@ -260,7 +264,7 @@ body{
 }
 
 @media (max-width: 520px){
-  .iu-infoBar{
+  .topbar-new-main .iu-infoBar{
     font-size: 11px;
     gap: 6px;
   }
