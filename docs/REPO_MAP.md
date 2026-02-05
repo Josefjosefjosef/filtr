@@ -38,3 +38,4 @@ Workflows, které commitují data, sdílí concurrency group:
 
 - `docs/PROD_DIAG_WINDOWS.md` – jak na produkční JSONy z Windows/PowerShellu bez UTF-16 BOM
 - `docs/DEBUG_MARKERS_REPORT.md` – Ověření debug markerů v assets/app.css (2026-02-05)
+- `docs/WINDOWS_CONSOLE_UTF8.md` – Windows: UTF-8 diakritika, codepage a správné použití git --no-pager
