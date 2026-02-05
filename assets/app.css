@@ -228,6 +228,47 @@ body{
   padding-top: var(--topbarFullH, 97px);
 }
 
+/* Informační pás - stavový řádek hlavní stránky */
+.iu-infoBar{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.2;
+  color: rgba(0,0,0,.62);
+  padding: 8px 0;
+  margin: 8px 0 12px 0;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+
+.iu-infoTime{
+  font-weight: 650;
+  color: rgba(0,0,0,.82);
+  font-variant-numeric: tabular-nums;
+}
+
+.iu-infoItem{
+  display: inline-flex;
+  align-items: center;
+}
+
+.iu-infoItem::before{
+  content: "·";
+  margin: 0 6px 0 2px;
+  color: rgba(0,0,0,.35);
+}
+
+@media (max-width: 520px){
+  .iu-infoBar{
+    font-size: 11px;
+    gap: 6px;
+  }
+  .iu-infoItem::before{
+    margin: 0 5px 0 2px;
+  }
+}
+
 .checkItem input:checked{
   accent-color: var(--gold-main);
 }
