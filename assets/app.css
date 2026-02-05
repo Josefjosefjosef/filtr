@@ -96,17 +96,23 @@ body{
   -webkit-font-smoothing: antialiased;
 }
 
+/* Společný kontejner pro topRow a layout - sjednocené okraje */
+.topRow,
+.layout{
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 /* Horní řádek: topbar + MindMenu vedle sebe */
 .topRow{
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 20px;
   align-items: start;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 1000;
   background: var(--iu-bg);
 }
@@ -2438,11 +2444,6 @@ a.brand,
   padding-top: 0;
   margin-top: 0;
   overflow: visible;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 20px;
-  padding-right: 20px;
 }
 .layout > .mainCol{
   min-width: 0;
