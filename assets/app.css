@@ -1122,50 +1122,52 @@ a.brand,
 .sectionsBar,
 .sectionBar{
   width: 100%;
-  margin: 0 0 12px 0;
-  padding: 0 0 16px 0;
+  margin: 0;
+  padding: 6px 0 8px 0;
   background: transparent;
-  border-bottom: none;
+  border: none;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
   justify-content: flex-start;
-  overflow-x: auto;
-  white-space: nowrap;
-  scrollbar-gutter: stable;
-  -webkit-overflow-scrolling: touch;
+  min-height: 28px;
 }
 .sectionsBar .secBtn,
 .sectionBar .secBtn{
   appearance: none;
   border: none;
   background: transparent;
-  border-radius: 999px;
-  padding: 6px 12px;
+  border-radius: 0;
+  padding: 4px 8px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 400;
   color: var(--iu-text);
   letter-spacing: 0;
-  transition: all 150ms ease;
+  transition: color 150ms ease, text-decoration 150ms ease;
   -webkit-appearance: none;
   text-decoration: none;
   white-space: nowrap;
 }
 .sectionsBar .secBtn.isActive,
 .sectionBar .secBtn.isActive{
-  background: var(--iu-accent);
-  color: #fff;
+  color: var(--iu-accent);
   font-weight: 500;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  background: transparent;
 }
 .sectionsBar .secBtn:hover:not(.isActive),
 .sectionsBar .secBtn:focus-visible:not(.isActive),
 .sectionBar .secBtn:hover:not(.isActive),
 .sectionBar .secBtn:focus-visible:not(.isActive){
   color: var(--iu-accent);
-  background: var(--iu-surface);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  background: transparent;
 }
 .sectionsBar .secBtn:focus-visible,
 .sectionBar .secBtn:focus-visible{
@@ -1177,12 +1179,13 @@ a.brand,
   .sectionsBar,
   .sectionBar{
     gap: 6px;
-    padding: 0 0 12px 0;
+    padding: 6px 0 6px 0;
+    min-height: 26px;
   }
   .sectionsBar .secBtn,
   .sectionBar .secBtn{
     font-size: 13px;
-    padding: 5px 10px;
+    padding: 4px 6px;
   }
 }
 
