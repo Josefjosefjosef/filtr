@@ -2466,8 +2466,8 @@ a.brand,
   /* max-width/margin řeší .container výše, zde jen grid */
 }
 
-/* GUARD: feed hned pod topRow – nuluje mezery nad feedem */
-.topRow ~ #app .container{
+/* GUARD: pouze feed container pod topRow – nuluje mezery nad feedem */
+#app .container{
   margin-top: 0;
   padding-top: 0;
 }
