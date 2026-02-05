@@ -1360,20 +1360,39 @@ a.brand,
   z-index: 1;
 }
 
-/* Jemné pozadí (pod textem), žádné odsazování textu */
+/* FEED – jemná grafika vpravo do ztracena (FINÁL) */
 #feed > .news-card::after,
 #feed > article::after{
   content: "";
   position: absolute;
   inset: 0;
-  z-index: 0;
   pointer-events: none;
-  opacity: 0.35;
-  background:
-    radial-gradient(220px 220px at 85% 55%, rgba(31,58,95,0.16), rgba(31,58,95,0.00) 70%),
-    linear-gradient(90deg, rgba(255,255,255,0.0), rgba(255,255,255,0.75));
-  -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%);
-  mask-image: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%);
+  z-index: 0;
+
+  /* výraznější než předtím, aby to bylo fakt vidět i na světlém pozadí */
+  background-image:
+    radial-gradient(closest-side at 84% 36%, rgba(31,58,95,0.16), rgba(31,58,95,0.00) 70%),
+    radial-gradient(closest-side at 92% 78%, rgba(17,17,17,0.10), rgba(17,17,17,0.00) 76%),
+    repeating-linear-gradient(135deg,
+      rgba(17,17,17,0.05) 0px,
+      rgba(17,17,17,0.05) 6px,
+      rgba(17,17,17,0.00) 6px,
+      rgba(17,17,17,0.00) 18px
+    );
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  /* fade jen doprava (aby se to netlouklo s textem vlevo) */
+  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.92), rgba(0,0,0,0.00) 62%);
+  mask-image: linear-gradient(to left, rgba(0,0,0,0.92), rgba(0,0,0,0.00) 62%);
+
+  opacity: 0.55;
+}
+
+/* TOP "Zpráva dne" – jemnější */
+#feed > .news-card:first-child::after,
+#feed > article:first-child::after{
+  opacity: 0.25;
 }
 
 /* Meta řádek jako pill pro čitelnost */
@@ -1385,15 +1404,20 @@ a.brand,
   background: rgba(255,255,255,0.70);
 }
 
-/* Titulky v kartách – max 2 řádky + … (pro klidný layout) */
+/* FEED titulky – bez zkracování + bez hnusného dělení slov */
+#feed .news-title,
 #feed .news-titleLink{
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  line-height: 1.22;
-  letter-spacing: -0.01em;
-  max-height: calc(1.22em * 2);
+  -webkit-line-clamp: unset !important;
+  max-height: none !important;
+  overflow: visible !important;
+  display: inline !important;
+
+  hyphens: none;
+  -webkit-hyphens: none;
+
+  word-break: normal;
+  overflow-wrap: normal;
+
   text-shadow: 0 1px 0 rgba(255,255,255,0.85);
 }
 
