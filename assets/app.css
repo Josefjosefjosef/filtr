@@ -1122,52 +1122,50 @@ a.brand,
 .sectionsBar,
 .sectionBar{
   width: 100%;
-  margin: 0;
-  padding: 6px 0 8px 0;
+  margin: 0 0 12px 0;
+  padding: 0 0 16px 0;
   background: transparent;
-  border: none;
+  border-bottom: none;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
   align-items: center;
   justify-content: flex-start;
-  min-height: 28px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
 }
 .sectionsBar .secBtn,
 .sectionBar .secBtn{
   appearance: none;
   border: none;
   background: transparent;
-  border-radius: 0;
-  padding: 4px 8px;
+  border-radius: 999px;
+  padding: 6px 12px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 400;
   color: var(--iu-text);
   letter-spacing: 0;
-  transition: color 150ms ease, text-decoration 150ms ease;
+  transition: all 150ms ease;
   -webkit-appearance: none;
   text-decoration: none;
   white-space: nowrap;
 }
 .sectionsBar .secBtn.isActive,
 .sectionBar .secBtn.isActive{
-  color: var(--iu-accent);
+  background: var(--iu-accent);
+  color: #fff;
   font-weight: 500;
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-  background: transparent;
+  text-decoration: none;
 }
 .sectionsBar .secBtn:hover:not(.isActive),
 .sectionsBar .secBtn:focus-visible:not(.isActive),
 .sectionBar .secBtn:hover:not(.isActive),
 .sectionBar .secBtn:focus-visible:not(.isActive){
   color: var(--iu-accent);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-  background: transparent;
+  background: var(--iu-surface);
 }
 .sectionsBar .secBtn:focus-visible,
 .sectionBar .secBtn:focus-visible{
@@ -1179,13 +1177,12 @@ a.brand,
   .sectionsBar,
   .sectionBar{
     gap: 6px;
-    padding: 6px 0 6px 0;
-    min-height: 26px;
+    padding: 0 0 12px 0;
   }
   .sectionsBar .secBtn,
   .sectionBar .secBtn{
     font-size: 13px;
-    padding: 4px 6px;
+    padding: 5px 10px;
   }
 }
 
@@ -2596,18 +2593,6 @@ html[data-iu-js="loaded"] .iu-js-fallback{
 #feed > #sectionsBar,
 #feed > .sectionsBar {
   display: flex !important;
-
-  /* Full-width in 2-col layouts */
-  width: 100%;
-  max-width: 100%;
-
-  /* If parent is flex-wrap layout */
-  flex: 0 0 100%;
-
-  /* If parent is CSS grid layout */
-  grid-column: 1 / -1;
-
-  margin-bottom: 10px;
 }
 
 /* Globální meta řádek - jemný, bez omezení (pro MindMenu a další) */

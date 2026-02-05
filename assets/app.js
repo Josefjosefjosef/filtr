@@ -104,8 +104,6 @@ window.addEventListener("unhandledrejection", (e) => {
   state.cachedItems ??= [];
   state.filteredItems ??= [];
   const ALLOWED_CONTENT_TYPES = new Set(["article", "video"]);
-  const PAGE_SIZE = 401;
-  state.visibleCount = PAGE_SIZE;
   const isDebugLogging = location.search.includes("debug=1");
   function debugLog(...args) {
     if (!isDebugLogging) return;
@@ -990,6 +988,28 @@ window.addEventListener("unhandledrejection", (e) => {
     sectionLabel.textContent = `Sekce: ${labelText}`;
   }
 
+  function renderSectionsBar() {
+    if (!sectionsBar) return;
+    sectionsBar.innerHTML = "";
+    SECTION_KEYS.forEach((key) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "secBtn";
+      btn.dataset.section = key;
+      btn.textContent = SECTION_LABELS[key] || key;
+      btn.addEventListener("click", () => handleSectionClick(key));
+      sectionsBar.appendChild(btn);
+    });
+    updateSectionButtons();
+  }
+
+  function updateSectionButtons() {
+    if (!sectionsBar) return;
+    sectionsBar.querySelectorAll(".secBtn").forEach((btn) => {
+      const key = btn.dataset.section;
+      btn.classList.toggle("isActive", activeSections.includes(key));
+    });
+  }
 
   function handleSectionClick(key) {
     if (key === "vse") {
@@ -1034,7 +1054,7 @@ window.addEventListener("unhandledrejection", (e) => {
       activeSections = ["aktualne"];
     }
     updateSectionLabel();
-      setSectionsFromHash();
+    updateSectionButtons();
   }
 
   function matchesSections(item, sections = activeSections) {
@@ -1139,13 +1159,7 @@ window.addEventListener("unhandledrejection", (e) => {
       emptyBox.innerHTML = "";
     }
     const beforeChildren = safeTarget.childElementCount;
-    const targetSelector = feedEl ? "#feed" : "(missing)";
-    diagStartInfo = {
-      itemsLen: items ? items.length : 0,
-      feedExists,
-      childrenBefore: feedChildrenBefore,
-    };
-    diagLog("renderFeed:start", {
+    safeTarget.innerHTML = "";
     if (!items || items.length === 0) {
       renderEmpty("Žádné články k zobrazení. Zkontroluj Stav dat.");
       return;
@@ -1241,106 +1255,9 @@ window.addEventListener("unhandledrejection", (e) => {
     inline.style.opacity = "1";
   }
 
-  // Pagination helpers
-  function getPageFromUrl() {
-    try {
-      const urlParams = new URLSearchParams(location.search);
-      const page = parseInt(urlParams.get("page") || "1", 10);
-      return Math.max(1, isNaN(page) || page < 1 ? 1 : page);
-    } catch {
-      return 1;
-    }
-  }
-
-  function paginateItems(items, page) {
-    if (!Array.isArray(items) || items.length === 0) {
-      return { page: 1, totalPages: 1, sliceItems: [] };
-    }
-    const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
-    const safePage = Math.min(Math.max(1, page), totalPages);
-    const start = (safePage - 1) * PAGE_SIZE;
-    const end = start + PAGE_SIZE;
-    return {
-      page: safePage,
-      totalPages: totalPages,
-      sliceItems: items.slice(start, end),
-    };
-  }
-
-  function updateFeedPager(allItems, currentPage, totalPages) {
-    try {
-      const feedEl = document.getElementById("feed");
-      if (!feedEl || !feedEl.parentElement) return;
-      const newsList = feedEl.parentElement;
-      let pagerEl = document.getElementById("feedPager");
-      if (!pagerEl) {
-        pagerEl = document.createElement("div");
-        pagerEl.id = "feedPager";
-        pagerEl.style.cssText = "margin-top: 20px; text-align: center; padding: 16px;";
-        newsList.appendChild(pagerEl);
-      }
-      if (!Array.isArray(allItems) || allItems.length === 0 || currentPage >= totalPages) {
-        pagerEl.style.display = "none";
-        return;
-      }
-      const nextPage = currentPage + 1;
-      pagerEl.innerHTML = `<a href="?page=${nextPage}" style="display: inline-block; padding: 10px 20px; background: var(--iu-accent, #1f3a5f); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 500;">Další →</a>`;
-      pagerEl.style.display = "block";
-    } catch (e) {
-      // Silent failure - pager is optional, feed must work
-    }
-  }
-
-  function ensureLoadMoreUi() {
-    try {
-      const feedEl = document.getElementById("feed");
-      if (!feedEl || !feedEl.parentElement) return;
-      const newsList = feedEl.parentElement;
-      let loadMoreWrap = document.getElementById("loadMoreWrap");
-      if (!loadMoreWrap) {
-        loadMoreWrap = document.createElement("div");
-        loadMoreWrap.id = "loadMoreWrap";
-        loadMoreWrap.style.cssText = "margin-top: 20px; text-align: center; padding: 16px;";
-        newsList.appendChild(loadMoreWrap);
-        
-        const loadMoreBtn = document.createElement("button");
-        loadMoreBtn.id = "loadMoreBtn";
-        loadMoreBtn.textContent = "Načíst další";
-        loadMoreBtn.style.cssText = "display: inline-block; padding: 10px 20px; background: var(--iu-accent, #1f3a5f); color: #fff; border: none; border-radius: 8px; font-weight: 500; cursor: pointer;";
-        loadMoreBtn.addEventListener("click", function() {
-          state.visibleCount += PAGE_SIZE;
-          renderItems(state.filteredItems);
-        });
-        loadMoreWrap.appendChild(loadMoreBtn);
-      }
-    } catch (e) {
-      // Silent failure - tlačítko je optional, feed musí fungovat
-    }
-  }
-
-  function updateLoadMoreUi(totalCount) {
-    try {
-      const loadMoreWrap = document.getElementById("loadMoreWrap");
-      if (!loadMoreWrap) return;
-      if (state.visibleCount < totalCount) {
-        loadMoreWrap.style.display = "block";
-      } else {
-        loadMoreWrap.style.display = "none";
-      }
-    } catch (e) {
-      // Silent failure
-    }
-  }
-
   function renderItems(items) {
     const target = getFeedTarget();
-    // Použít visibleCount místo URL paginace
-    const total = Array.isArray(items) ? items.length : 0;
-    const visible = Math.min(state.visibleCount, total);
-    const sliceItems = Array.isArray(items) ? items.slice(0, visible) : [];
-    renderFeed(target, sliceItems);
-    ensureLoadMoreUi();
-    updateLoadMoreUi(total);
+    renderFeed(target, items);
   }
 
   function renderFeedItemHtml(item) {
@@ -1571,7 +1488,6 @@ function buildVideoAsArticleCard(it) {
   // Druhá render cesta je zakázaná.
   function applyFilter() {
     if (!state.hasLoadedData) return;
-    state.visibleCount = PAGE_SIZE; // Reset na počáteční limit při změně filtru
     state.searchQuery = (searchInput && searchInput.value.trim()) || "";
 
     // SAFETY: pokud není aktivní žádné téma/sekce/filtr ani hledání, zobraz rovnou celý cache feed
@@ -3237,7 +3153,7 @@ function buildVideoAsArticleCard(it) {
       }, 5000);
     }
     renderDebugVisibility();
-    const swState = selfDiag.swWaiting === "yes"
+    renderSectionsBar();
     setSectionsFromHash();
     iuInitTopbarWatcher();
 
