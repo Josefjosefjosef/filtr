@@ -164,6 +164,31 @@ body{
   font-weight: 800;
   color: rgba(11,27,43,0.92);
 }
+.topbar-search{
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+.topbar-searchInput{
+  width: 320px;
+  max-width: 42vw;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,.15);
+  background: #fff;
+  font-size: 14px;
+  outline: none;
+}
+.topbar-searchInput:focus{
+  border-color: rgba(0,0,0,.28);
+}
+.topbar-searchInput::placeholder{
+  color: rgba(0,0,0,.40);
+}
+@media (max-width: 640px){
+  .topbar-search{ display: none; }
+}
 .topbar-new .searchForm{
   flex: 1 1 auto;
   display: flex;
