@@ -2694,7 +2694,10 @@ a.brand,
 
 .layout > aside.accordionCol{
   grid-column: 2;
-  min-width: 0;
+  width: 360px;
+  min-width: 360px;
+  max-width: 360px;
+  justify-self: stretch;
   overflow: visible;
   box-sizing: border-box;
   background: #fff;
