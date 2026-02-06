@@ -17,6 +17,9 @@
   --iu-brief-gap-top: 20px; /* desktop: 12px + 8px */
   --iu-brief-gap-bottom: 10px; /* desktop: margin-bottom na .iu-daily-brief (celkem s chips margin-top 10px = 20px) */
 
+  /* šířka hamburgeru pro zarovnání sloupce kostiček */
+  --iu-hamb-w: 34px;
+
   /* text */
   --text: rgba(11,27,43,0.92);
   --muted: rgba(11,27,43,0.60);
@@ -430,18 +433,18 @@ aside.accordionCol{
 /* Horní řada 6 čtverečků */
 /* Rychlý řádek v MindMenu - 3 oválné štítky + hamburger */
 .iu-mindQuickRow{
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr var(--iu-hamb-w);
   align-items: center;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
   max-width: 100%;
   align-self: center;
   margin-bottom: 12px;
 }
 
 .iu-quickChip{
-  flex: 0 1 auto;
+  width: 100%;
+  min-width: 0;
   height: 32px;
   padding: 0 14px;
   border-radius: 999px;
@@ -454,7 +457,7 @@ aside.accordionCol{
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
-  max-width: 100%;
+  justify-self: stretch;
   transition: border-color 150ms ease, background-color 150ms ease;
 }
 
@@ -503,16 +506,39 @@ aside.accordionCol{
 
 /* Dvousloupcový layout: tlačítka vlevo + čtverce vpravo */
 .iu-actionsWithSquares{
-  display: flex;
-  justify-content: flex-start;
-  gap: 12px;
-  align-items: flex-start;
-  width: fit-content;
+  display: grid;
+  grid-template-columns: 1fr var(--iu-hamb-w);
+  column-gap: 10px;
+  row-gap: 10px;
+  align-items: start;
   max-width: 100%;
   align-self: center;
 }
 
-/* Oválná tlačítka v pravém sloupci */
+/* Levý sloupec: oválná tlačítka */
+.iu-actionsCol{
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Pravý sloupec: kostičky - zarovnat doprava a držet pod hamburgerem */
+.iu-squaresCol{
+  width: var(--iu-hamb-w);
+  justify-self: end;
+  display: grid;
+  gap: 10px;
+}
+
+/* Svislé oválné štítky vlevo: ať končí před kostičkami */
+.iu-actionsCol .iu-actionBtn{
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Oválná tlačítka v pravém sloupci (zachovat pro kompatibilitu) */
 .iu-rightActions{
   display: flex;
   flex-direction: column;
@@ -521,7 +547,7 @@ aside.accordionCol{
   min-width: 0;
 }
 
-/* Svislý sloupek 5 čtverečků */
+/* Svislý sloupek 5 čtverečků (zachovat pro kompatibilitu) */
 .iu-railSquares{
   display: flex;
   flex-direction: column;
