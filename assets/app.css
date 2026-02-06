@@ -450,12 +450,13 @@ aside.accordionCol{
 /* summary = hlavička */
 .iu-userHeader{
   display: grid;
-  grid-template-columns: auto 1fr auto; /* vlevo cluster, střed title, vpravo spacer */
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   width: 100%;
 
-  padding-left: var(--iu-side-pad);
-  padding-right: var(--iu-side-pad);
+  /* PEVNÉ ODSAZENÍ OD OKRAJŮ */
+  padding-left: 0.5cm;
+  padding-right: 0.5cm;
   padding-top: 8px;
   padding-bottom: 8px;
 
@@ -467,18 +468,19 @@ aside.accordionCol{
   color: rgba(0,0,0,0.85);
 }
 
-/* střed vždy opravdu uprostřed */
-.iu-userTitleText{
-  justify-self: center;
-  text-align: center;
-  white-space: nowrap;
-}
-
-/* levý cluster: ⭐ + číslo */
 .iu-starCluster{
+  justify-self: start;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  pointer-events: none;
+}
+
+.iu-userTitleText{
+  justify-self: end;
+  text-align: right;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 .iu-starCount{
