@@ -339,6 +339,27 @@ aside.accordionCol{
   gap: 24px;
 }
 
+/* Informační blok v pravém sloupci */
+.iu-rightInfo{
+  font-size: 12px;
+  line-height: 1.25;
+  color: rgba(0,0,0,.65);
+  margin: 0 0 12px 0;
+  padding: 0 0 10px 0;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+
+.iu-rightInfo-time{
+  font-weight: 650;
+  color: rgba(0,0,0,.85);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 4px;
+}
+
+.iu-rightInfo-line{
+  margin-bottom: 2px;
+}
+
 /* Horní řádek MindMenu - sociální ikony */
 .iu-mindSocialRow{
   display: flex;
