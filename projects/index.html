@@ -113,7 +113,14 @@
                     <div class="iu-rightContent" aria-label="Obsah pravého sloupce">
                       <details class="iu-mindDetails" open>
                         <summary class="iu-userHeader iu-userTitleSummary" aria-label="Můj infoUzel.cz">
-                          ⭐ <span>Můj infoUzel.cz</span>
+                          <span class="iu-starCluster" aria-label="Denní hvězdy">
+                            <span class="iu-starIcon" aria-hidden="true">⭐</span>
+                            <span id="iuStarCount" class="iu-starCount" aria-label="Počet hvězd">0</span>
+                          </span>
+
+                          <span class="iu-userTitleText">Můj infoUzel.cz</span>
+
+                          <span class="iu-userHeaderSpacer" aria-hidden="true"></span>
                         </summary>
                         <div class="iu-actionsWithSquares" id="iuMindPanel">
                         <div class="iu-actionsCol">
@@ -1268,6 +1275,45 @@
       } else {
         runOnceThenDelayed();
       }
+    })();
+    </script>
+    <script>
+    (function(){
+      function todayKeyLocal(){
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return y + "-" + m + "-" + day; // lokální den
+      }
+
+      function readInt(key, fallback){
+        const v = localStorage.getItem(key);
+        const n = v === null ? NaN : parseInt(v, 10);
+        return Number.isFinite(n) ? n : fallback;
+      }
+
+      document.addEventListener("DOMContentLoaded", function(){
+        const el = document.getElementById("iuStarCount");
+        if(!el) return;
+
+        const COUNT_KEY = "iu_star_count";
+        const LAST_KEY  = "iu_star_last_day";
+
+        const today = todayKeyLocal();
+        const last = localStorage.getItem(LAST_KEY) || "";
+
+        let count = readInt(COUNT_KEY, 0);
+
+        // +1 maximálně jednou za den
+        if(last !== today){
+          count = count + 1;
+          localStorage.setItem(COUNT_KEY, String(count));
+          localStorage.setItem(LAST_KEY, today);
+        }
+
+        el.textContent = String(count);
+      });
     })();
     </script>
   </body>
