@@ -22,6 +22,7 @@
   --iu-side-pad: 12px;   /* levý/pravý vnitřní okraj */
   --iu-gap: 10px;        /* vodorovná mezera mezi sloupci */
   --iu-row-gap: 10px;    /* svislá mezera mezi řádky */
+  --iu-mind-gap: 10px;   /* jednotná mezera mezi prvky MindMenu */
 
   /* text */
   --text: rgba(11,27,43,0.92);
@@ -637,6 +638,9 @@ aside.accordionCol{
   transition: max-height 220ms ease, opacity 180ms ease;
   opacity: 1;
   max-height: 1200px;
+
+  /* KLÍČOVÉ: mezera mezi linkou a prvním štítkem */
+  padding-top: var(--iu-mind-gap);
 }
 
 .iu-mindDetails:not([open]) #iuMindPanel{
@@ -655,16 +659,18 @@ aside.accordionCol{
 /* Levý sloupec: oválná tlačítka */
 .iu-actionsCol{
   min-width: 0;
-  display: grid;
-  gap: var(--iu-row-gap);
+  display: flex;
+  flex-direction: column;
+  gap: var(--iu-mind-gap);
 }
 
 /* Pravý sloupec: kostičky - zarovnat doprava a držet pod hamburgerem */
 .iu-squaresCol{
   width: var(--iu-hamb-w);
   justify-self: end;
-  display: grid;
-  gap: var(--iu-row-gap);
+  display: flex;
+  flex-direction: column;
+  gap: var(--iu-mind-gap);
 }
 
 /* Svislé oválné štítky vlevo: ať končí před kostičkami */
