@@ -426,19 +426,48 @@ aside.accordionCol{
   text-align: right;
 }
 
-/* Osobní hlavička uživatele */
+/* MindMenu toggle wrapper */
+.iu-mindDetails{
+  width: 100%;
+  height: auto;
+  min-height: 0;
+}
+
+/* summary musí být klikací, bez default markeru */
+.iu-userTitleSummary{
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+.iu-userTitleSummary::-webkit-details-marker{ display:none; }
+
+.iu-userTitleSummary:focus,
+.iu-userTitleSummary:focus-visible{
+  outline: none;
+  box-shadow: none;
+}
+
+/* summary = hlavička */
 .iu-userHeader{
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  width: 100%;
+
   padding-left: var(--iu-side-pad);
   padding-right: var(--iu-side-pad);
   padding-top: 8px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+
+  border-bottom: 1px solid rgba(0,0,0,0.10);
   box-sizing: border-box;
-  height: auto;
-  min-height: 0;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(0,0,0,0.85);
+}
+
+.iu-userHeader span{
+  margin-left: 6px;
 }
 
 .iu-userTitle{
@@ -566,6 +595,27 @@ aside.accordionCol{
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
+}
+
+/* panel animace */
+.iu-mindDetails #iuMindPanel{
+  overflow: hidden;
+  transition: max-height 220ms ease, opacity 180ms ease;
+  opacity: 1;
+  max-height: 1200px;
+}
+
+.iu-mindDetails:not([open]) #iuMindPanel{
+  opacity: 0;
+  max-height: 0;
+}
+
+/* zachovat svislé mezery automaticky – žádné pevné výšky */
+.iu-mindDetails,
+.iu-mindDetails > .iu-userHeader,
+.iu-mindDetails #iuMindPanel{
+  height: auto;
+  min-height: 0;
 }
 
 /* Levý sloupec: oválná tlačítka */
