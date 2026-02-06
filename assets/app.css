@@ -258,7 +258,13 @@ body{
 
 /* Kompenzace pro levý obsah pod sticky hlavičkou */
 #leftContent{
-  padding-top: var(--topbarFullH, 97px);
+  padding-top: 12px; /* desktop: malý odstup pod menu */
+}
+
+@media (max-width: 900px){
+  #leftContent{
+    padding-top: 10px; /* mobil: ještě menší odstup */
+  }
 }
 
 /* Informační pás - globální neutrální základ (pro případné budoucí použití) */
@@ -1642,7 +1648,7 @@ a.brand,
 
 /* Denní přehled – "Dnes je dobré vědět" */
 .iu-daily-brief{
-  margin: 0 0 10px 0; /* nahoře 0 = hned pod navigací */
+  margin: 8px 0 10px 0; /* malý odstup od menu, ne na hranu */
   padding-top: 0;
 }
 
