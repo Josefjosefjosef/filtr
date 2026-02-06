@@ -227,14 +227,16 @@ body{
 }
 .topbar-new .menuBtn{
   flex: 0 0 auto;
-  height: 40px;
-  width: 48px;
+  height: 36px;
+  width: 36px;
+  padding: 0;
   border: 1px solid rgba(0,0,0,0.12);
   border-radius: 8px;
   background: rgba(0,0,0,0.02);
   cursor: pointer;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .topbar-links{
   display: flex;
@@ -626,15 +628,16 @@ aside.accordionCol{
 
 .burger{
   width: 18px;
-  height: 12px;
-  display: grid;
-  gap: 3px;
+  height: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .burger span{
   display:block;
   height:2px;
   background: rgba(11,27,43,0.75);
-  border-radius: 999px;
+  border-radius: 2px;
 }
 
 .brand{
