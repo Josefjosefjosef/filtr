@@ -344,7 +344,7 @@ aside.accordionCol{
   min-width: 0;
   order: 2;
   width: var(--sideW, 360px);
-  padding: 16px;
+  padding: 16px 0 16px 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -366,11 +366,14 @@ aside.accordionCol{
   background: #f5f5f5;
   color: #2A2E33;
   padding: 40px 0 40px 24px;
+  padding-right: 0;
   height: calc(100vh - 0px);
   display: flex;
   flex-direction: column;
   gap: 24px;
   align-items: flex-end;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Informační blok v pravém sloupci */
@@ -380,9 +383,12 @@ aside.accordionCol{
   color: rgba(0,0,0,.65);
   margin: 0 0 12px 0;
   padding: 0 0 10px 0;
+  padding-right: 0;
+  margin-right: 0;
   border-bottom: 1px solid rgba(0,0,0,.08);
   text-align: right;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .iu-rightInfo-time{
@@ -569,8 +575,11 @@ aside.accordionCol{
 .mindMenu-scroll-wrapper{
   position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-end;
   min-height: 68px;
+  width: 100%;
+  box-sizing: border-box;
 }
 .mindMenu-scroll-wrapper::after{
   content: "";
@@ -2774,6 +2783,7 @@ a.brand,
   box-sizing: border-box;
   background: #f5f5f5;
   color: var(--text);
+  padding-right: 0;
   border: none;
   border-radius: 0;
   padding: 0;
