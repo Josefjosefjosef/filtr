@@ -433,14 +433,15 @@ aside.accordionCol{
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 8px;
+  max-width: 100%;
   align-self: center;
   margin-bottom: 12px;
 }
 
 .iu-quickChip{
-  flex: 0 0 auto;
+  flex: 0 1 auto;
   height: 32px;
   padding: 0 14px;
   border-radius: 999px;
@@ -453,6 +454,7 @@ aside.accordionCol{
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
+  max-width: 100%;
   transition: border-color 150ms ease, background-color 150ms ease;
 }
 
@@ -473,6 +475,7 @@ aside.accordionCol{
   background: transparent;
   border: 0;
   padding: 0;
+  margin-left: auto;
   cursor: pointer;
 }
 
