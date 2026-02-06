@@ -19,7 +19,8 @@
 
   /* šířka hamburgeru pro zarovnání sloupce kostiček */
   --iu-hamb-w: 34px;
-  --iu-side-pad: 12px; /* stejná mezera vlevo i vpravo */
+  --iu-side-pad: 12px; /* vzdálenost od okrajů */
+  --iu-gap: 10px;      /* mezera mezi prvky v řádku */
 
   /* text */
   --text: rgba(11,27,43,0.92);
@@ -437,7 +438,7 @@ aside.accordionCol{
   display: grid;
   grid-template-columns: 1fr 1fr var(--iu-hamb-w);
   align-items: center;
-  column-gap: 10px;
+  column-gap: var(--iu-gap);
   padding-left: var(--iu-side-pad);
   padding-right: var(--iu-side-pad);
   box-sizing: border-box;
@@ -495,7 +496,7 @@ aside.accordionCol{
   width: var(--iu-hamb-w);
   height: var(--iu-hamb-w);
   justify-self: end;
-  margin-left: 0;
+  margin: 0;
 }
 
 .iu-quickHamburger span{
