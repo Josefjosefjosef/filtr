@@ -20,6 +20,12 @@
   /* šířka hamburgeru pro zarovnání sloupce kostiček */
   --iu-hamb-w: 34px;
 
+  /* MindMenu nový layout - společná šířka pro pravý "square" sloupec a hamburger */
+  --iu-mind-rightcol: 34px;
+  --iu-mind-gap: 10px;
+  --iu-mind-rowgap: 10px;
+  --iu-mind-chip-h: 32px;
+
   /* text */
   --text: rgba(11,27,43,0.92);
   --muted: rgba(11,27,43,0.60);
@@ -419,6 +425,101 @@ aside.accordionCol{
 .iu-rightInfo-line{
   margin-bottom: 2px;
   text-align: right;
+}
+
+/* MindMenu nový layout: 2 chips + hamburger, pak 5 řádků chip + square */
+.iu-mindGrid{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ŘÁDEK 1: 2 stejně široké chips + hamburger */
+.iu-mindRowTop{
+  display: grid;
+  grid-template-columns: 1fr 1fr var(--iu-mind-rightcol);
+  gap: var(--iu-mind-gap);
+  align-items: center;
+  max-width: 100%;
+}
+
+/* ŘÁDKY 2–6: chip + square */
+.iu-mindRows{
+  display: grid;
+  gap: var(--iu-mind-rowgap);
+}
+
+.iu-mindRow{
+  display: grid;
+  grid-template-columns: 1fr var(--iu-mind-rightcol);
+  column-gap: var(--iu-mind-gap);
+  align-items: center;
+  max-width: 100%;
+}
+
+/* oválný štítek */
+.iu-mindChip{
+  width: 100%;
+  min-width: 0;
+  height: var(--iu-mind-chip-h);
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.14);
+  background: #fff;
+  color: rgba(0,0,0,0.78);
+  font-size: 13px;
+  line-height: var(--iu-mind-chip-h);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.iu-mindChip:hover{
+  border-color: rgba(0,0,0,0.25);
+  background: rgba(0,0,0,0.02);
+}
+
+/* hamburger pouze 3 čárky */
+.iu-mindHamb{
+  width: var(--iu-mind-rightcol);
+  height: var(--iu-mind-rightcol);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  justify-self: end;
+}
+
+.iu-mindHamb span{
+  width: 18px;
+  height: 2px;
+  background: #111;
+  border-radius: 2px;
+  transition: opacity 150ms ease;
+}
+
+.iu-mindHamb:hover span{
+  opacity: 0.7;
+}
+
+/* černá kostička */
+.iu-mindSquare{
+  width: var(--iu-mind-rightcol);
+  height: var(--iu-mind-rightcol);
+  background: #111;
+  border-radius: 8px;
+  justify-self: end;
 }
 
 /* Wrapper: celý obsah pravého sloupce, zarovnání doprava */
