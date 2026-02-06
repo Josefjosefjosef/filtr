@@ -396,11 +396,22 @@ aside.accordionCol{
   text-align: right;
 }
 
+/* Wrapper: tlačítka + L-blok čtverců, zarovnání doprava */
+.iu-rightActionsBlock{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  align-items: flex-start;
+}
+
 /* Oválná tlačítka v pravém sloupci */
 .iu-rightActions{
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .iu-actionBtn{
@@ -417,6 +428,7 @@ aside.accordionCol{
   font-weight: 600;
   color: rgba(0,0,0,.85);
   cursor: pointer;
+  width: 100%;
 }
 
 .iu-actionBtn:hover{
@@ -435,6 +447,63 @@ aside.accordionCol{
   height: 2px;
   background: rgba(0,0,0,.65);
   border-radius: 2px;
+}
+
+/* L-grid: 6 sloupců, nahoře 1 řada, pod hamburgerem 5 řad */
+.iu-squareGrid{
+  display: grid;
+  grid-template-columns: repeat(6, 32px);
+  grid-template-rows: 32px repeat(5, 32px);
+  gap: 10px;
+  align-content: start;
+}
+
+/* Umístění top řady (1×6) */
+.iu-squareGrid-item.is-top[data-pos="t1"]{ grid-column: 1; grid-row: 1; }
+.iu-squareGrid-item.is-top[data-pos="t2"]{ grid-column: 2; grid-row: 1; }
+.iu-squareGrid-item.is-top[data-pos="t3"]{ grid-column: 3; grid-row: 1; }
+.iu-squareGrid-item.is-top[data-pos="t4"]{ grid-column: 4; grid-row: 1; }
+.iu-squareGrid-item.is-top[data-pos="t5"]{ grid-column: 5; grid-row: 1; }
+
+/* Hamburger: 6. sloupec, 1. řada */
+.iu-squareGrid-item.is-hamb{
+  grid-column: 6;
+  grid-row: 1;
+  border: 0;
+  cursor: pointer;
+  background: #000;
+  color: #fff;
+  padding: 0;
+}
+
+/* Rail: 6. sloupec, řádky 2–6 */
+.iu-squareGrid-item.is-rail[data-pos="r1"]{ grid-column: 6; grid-row: 2; }
+.iu-squareGrid-item.is-rail[data-pos="r2"]{ grid-column: 6; grid-row: 3; }
+.iu-squareGrid-item.is-rail[data-pos="r3"]{ grid-column: 6; grid-row: 4; }
+.iu-squareGrid-item.is-rail[data-pos="r4"]{ grid-column: 6; grid-row: 5; }
+.iu-squareGrid-item.is-rail[data-pos="r5"]{ grid-column: 6; grid-row: 6; }
+
+/* Mini hamburger uvnitř čtverce */
+.iu-miniBurger{
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+}
+
+.iu-miniBurger i{
+  display: block;
+  width: 14px;
+  height: 2px;
+  background: rgba(255,255,255,.92);
+  border-radius: 2px;
+}
+
+/* Zajisti, že čtverce v gridu mají správnou velikost */
+.iu-squareGrid .iu-socialSquare{
+  width: 32px;
+  height: 32px;
 }
 
 /* Horní řádek MindMenu - sociální ikony */
