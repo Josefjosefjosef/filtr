@@ -632,15 +632,16 @@ aside.accordionCol{
   max-width: 100%;
 }
 
+#iuMindPanel .iu-actionsWithSquares{
+  padding-top: var(--iu-mind-gap);
+}
+
 /* panel animace */
 .iu-mindDetails #iuMindPanel{
   overflow: hidden;
   transition: max-height 220ms ease, opacity 180ms ease;
   opacity: 1;
   max-height: 1200px;
-
-  /* KLÍČOVÉ: mezera mezi linkou a prvním štítkem */
-  padding-top: var(--iu-mind-gap);
 }
 
 .iu-mindDetails:not([open]) #iuMindPanel{
@@ -668,8 +669,7 @@ aside.accordionCol{
 .iu-squaresCol{
   width: var(--iu-hamb-w);
   justify-self: end;
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: var(--iu-mind-gap);
 }
 
@@ -679,6 +679,7 @@ aside.accordionCol{
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
+  margin: 0;
 }
 
 /* Oválná tlačítka v pravém sloupci (zachovat pro kompatibilitu) */
