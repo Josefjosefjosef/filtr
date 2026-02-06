@@ -1640,6 +1640,35 @@ a.brand,
   }
 }
 
+/* Denní přehled – "Dnes je dobré vědět" */
+.iu-daily-brief{
+  margin: 0 0 10px 0; /* nahoře 0 = hned pod navigací */
+  padding-top: 0;
+}
+
+.iu-daily-brief-inner{
+  background: #f6f4ee;
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 0;
+}
+
+.iu-daily-brief h2{
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.iu-daily-brief ul{
+  margin: 0;
+  padding-left: 18px;
+}
+
+.iu-daily-brief li{
+  margin: 4px 0;
+}
+
 /* Filter chips - řádek štítků nad feedem */
 .iu-filterChips{
   display: flex;
