@@ -1,4 +1,4 @@
-.checkItem input:checked{
+﻿.checkItem input:checked{
   accent-color: var(--gold-main);
 }
 :root{
@@ -1641,6 +1641,42 @@ a.brand,
 }
 
 /* Filter chips - řádek štítků nad feedem */
+
+/* ============================= */
+/* Denní přehled – "Dnes je dobré vědět" */
+/* ============================= */
+
+.iu-daily-brief {
+  margin: 10px 0 10px 0; /* o chlup kompaktnější než původně */
+}
+
+.iu-daily-brief-inner {
+  background: #f6f4ee;
+  border: 1px solid rgba(0, 0, 0, 0.05); /* jemnější */
+  border-radius: 10px; /* víc "profi" než 8px */
+  padding: 10px 14px;
+}
+
+.iu-daily-brief h2 {
+  margin: 0 0 6px 0;
+  font-size: 13px; /* o chlup menší, víc "štítkový" */
+  font-weight: 700; /* jasný nadpis */
+  letter-spacing: 0.2px; /* jemná elegance */
+  color: rgba(0, 0, 0, 0.78);
+}
+
+.iu-daily-brief ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.iu-daily-brief li {
+  font-size: 13px;
+  line-height: 1.45; /* mírně vzdušnější */
+  color: rgba(0, 0, 0, 0.80);
+  margin: 2px 0;
+}
+
 .iu-filterChips{
   display: flex;
   align-items: center;
