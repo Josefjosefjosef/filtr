@@ -1275,5 +1275,42 @@
       }
     })();
     </script>
+    <div id="iuGapDiag" style="display:none;margin:12px 0 0 0;padding:10px;border:1px dashed rgba(0,0,0,0.25);font:12px/1.35 system-ui;white-space:pre-wrap;"></div>
+    <script>
+    (function(){
+      try{
+        var u = new URL(location.href);
+        var debug = (u.searchParams.get("debug") === "1");
+        if(!debug) return;
+
+        var out = document.getElementById("iuGapDiag");
+        if(!out) return;
+        out.style.display = "block";
+
+        var leftContent = document.getElementById("leftContent");
+        var topbarLinks = document.querySelector(".topbar-links");
+        var daily = document.querySelector(".iu-daily-brief");
+
+        function rect(el){
+          if(!el) return null;
+          var r = el.getBoundingClientRect();
+          return {top: r.top, bottom: r.bottom, height: r.height};
+        }
+
+        var lcPT = leftContent ? getComputedStyle(leftContent).paddingTop : "MISSING";
+        var tl = rect(topbarLinks);
+        var db = rect(daily);
+
+        var gap = (tl && db) ? Math.round((db.top - tl.bottom) * 10) / 10 : "N/A";
+
+        out.textContent =
+          "GAP DIAG (?debug=1)\n" +
+          "leftContent padding-top (computed): " + lcPT + "\n" +
+          ".topbar-links rect: " + (tl ? JSON.stringify(tl) : "MISSING") + "\n" +
+          ".iu-daily-brief rect: " + (db ? JSON.stringify(db) : "MISSING") + "\n" +
+          "GAP between topbar-links bottom and daily-brief top (px): " + gap + "\n";
+      }catch(e){}
+    })();
+    </script>
   </body>
 </html>

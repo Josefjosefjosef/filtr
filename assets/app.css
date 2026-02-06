@@ -258,7 +258,7 @@ body{
 
 /* Kompenzace pro levý obsah pod sticky hlavičkou */
 #leftContent{
-  padding-top: var(--topbarFullH, 97px);
+  padding-top: calc(var(--topbarFullH, 97px) - 24px);
 }
 
 /* Informační pás - globální neutrální základ (pro případné budoucí použití) */
