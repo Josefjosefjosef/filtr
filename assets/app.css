@@ -386,13 +386,15 @@ aside.accordionCol{
   color: #2A2E33;
   padding: 40px 0 40px 24px;
   padding-right: 0;
-  height: calc(100vh - 0px);
+  height: auto;
+  max-height: none;
   display: flex;
   flex-direction: column;
   gap: 24px;
   align-items: flex-end;
   width: 100%;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 /* Informační blok v pravém sloupci */
@@ -430,7 +432,9 @@ aside.accordionCol{
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  row-gap: var(--iu-row-gap);
+  height: auto;
+  min-height: 0;
 }
 
 /* Horní řada 6 čtverečků */
@@ -444,7 +448,6 @@ aside.accordionCol{
   padding-right: var(--iu-side-pad);
   box-sizing: border-box;
   width: 100%;
-  margin-bottom: 12px;
 }
 
 .iu-quickChip{
@@ -714,12 +717,14 @@ aside.accordionCol{
   min-height: 68px;
   width: 100%;
   box-sizing: border-box;
+  height: auto;
+  max-height: none;
 }
 .mindMenu-scroll-wrapper::after{
   content: "";
   display: block;
-  background: #fff;
-  min-height: 400px;
+  background: transparent;
+  min-height: 0;
 }
 .mindMenu-title{
   font-size: 24px;
