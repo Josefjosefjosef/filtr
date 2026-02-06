@@ -19,8 +19,9 @@
 
   /* šířka hamburgeru pro zarovnání sloupce kostiček */
   --iu-hamb-w: 34px;
-  --iu-side-pad: 12px; /* vzdálenost od okrajů */
-  --iu-gap: 10px;      /* mezera mezi prvky v řádku */
+  --iu-side-pad: 12px;   /* levý/pravý vnitřní okraj */
+  --iu-gap: 10px;        /* vodorovná mezera mezi sloupci */
+  --iu-row-gap: 10px;    /* svislá mezera mezi řádky */
 
   /* text */
   --text: rgba(11,27,43,0.92);
@@ -525,19 +526,21 @@ aside.accordionCol{
 .iu-actionsWithSquares{
   display: grid;
   grid-template-columns: 1fr var(--iu-hamb-w);
-  column-gap: 10px;
-  row-gap: 10px;
   align-items: start;
+  column-gap: var(--iu-gap);
+  row-gap: var(--iu-row-gap);
+  padding-left: var(--iu-side-pad);
+  padding-right: var(--iu-side-pad);
+  box-sizing: border-box;
+  width: 100%;
   max-width: 100%;
-  align-self: center;
 }
 
 /* Levý sloupec: oválná tlačítka */
 .iu-actionsCol{
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  gap: var(--iu-row-gap);
 }
 
 /* Pravý sloupec: kostičky - zarovnat doprava a držet pod hamburgerem */
@@ -545,7 +548,7 @@ aside.accordionCol{
   width: var(--iu-hamb-w);
   justify-self: end;
   display: grid;
-  gap: 10px;
+  gap: var(--iu-row-gap);
 }
 
 /* Svislé oválné štítky vlevo: ať končí před kostičkami */
@@ -553,6 +556,7 @@ aside.accordionCol{
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  box-sizing: border-box;
 }
 
 /* Oválná tlačítka v pravém sloupci (zachovat pro kompatibilitu) */
