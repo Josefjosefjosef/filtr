@@ -1,4 +1,4 @@
-﻿.checkItem input:checked{
+.checkItem input:checked{
   accent-color: var(--gold-main);
 }
 :root{
@@ -1646,8 +1646,24 @@ a.brand,
 /* Denní přehled – "Dnes je dobré vědět" */
 /* ============================= */
 
+/* TIGHTEN: prostor mezi horní lištou (Média/Inzerce/Služby) a Denním přehledem */
+#sectionLabel[style*="display:none"] {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+}
+
+#dataUpdatedAt[style*="display:none"] {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+}
+
+/* posun karty lehce nahoru (jen horní mezera) */
 .iu-daily-brief {
-  margin: 10px 0 10px 0; /* o chlup kompaktnější než původně */
+  margin: 2px 0 4px 0; /* margin-top zmenšen z 10px na 2px */
 }
 
 .iu-daily-brief-inner {
