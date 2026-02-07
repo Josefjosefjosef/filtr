@@ -1,7 +1,7 @@
 /**
  * Update data/weather.json and data/namedays.json
  * - Weather: Open-Meteo (no API key), fixed location: Praha
- * - Nameday: svatky.adresa.info (no API key), writes today's MM-DD key only
+ * - Nameday: offline dataset from scripts/data/namedays-cz.json (no external requests)
  *
  * Runs in GitHub Actions.
  */
@@ -151,89 +151,26 @@ async function updateWeather() {
   });
 }
 
-async function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 async function updateNamedays() {
-  const now = new Date();
-  const tz = "Europe/Prague";
-  const namedays = {};
-  let requestCount = 0;
-  const maxRequests = 400;
-  const delayMs = 80; // Rate limiting mezi requesty
-
-  // Generujeme mapu pro 365 dní dopředu od dneška
-  const startDate = new Date(now);
-  startDate.setHours(0, 0, 0, 0);
-
   try {
-    for (let dayOffset = 0; dayOffset < 365; dayOffset++) {
-      if (requestCount >= maxRequests) {
-        console.warn(`[namedays] Reached max requests limit (${maxRequests}), stopping`);
-        break;
-      }
-
-      const targetDate = new Date(startDate);
-      targetDate.setDate(startDate.getDate() + dayOffset);
-
-      // Formát DDMM pro API
-      const fmt = new Intl.DateTimeFormat("cs-CZ", {
-        timeZone: tz,
-        day: "2-digit",
-        month: "2-digit"
-      });
-      const parts = fmt.formatToParts(targetDate);
-      const dd = parts.find(p => p.type === "day")?.value;
-      const mm = parts.find(p => p.type === "month")?.value;
-      
-      if (!dd || !mm) continue;
-
-      const apiDate = dd + mm; // DDMM formát
-      const mapKey = `${mm}-${dd}`; // MM-DD pro výstupní mapu
-
-      // Rate limiting: čekáme před každým requestem (kromě prvního)
-      if (requestCount > 0) {
-        await sleep(delayMs);
-      }
-
-      try {
-        const url = `https://svatky.adresa.info/json?date=${apiDate}`;
-        const data = await fetchJson(url);
-        requestCount++;
-
-        // API vrací pole objektů [{date: "DDMM", name: "Jméno"}]
-        let name = "";
-        if (Array.isArray(data) && data.length > 0) {
-          name = data[0]?.name || "";
-        } else if (data?.name) {
-          name = data.name;
-        } else if (data?.svatek) {
-          name = data.svatek;
-        }
-
-        if (name && name.trim()) {
-          namedays[mapKey] = String(name).trim();
-        }
-      } catch (reqErr) {
-        const errorMsg = String(reqErr);
-        if (errorMsg.includes("402") || errorMsg.includes("HTTP 402")) {
-          console.warn(`[namedays] HTTP 402 at ${mapKey} – stopping early`);
-          // Pokud narazíme na 402, přerušíme a vrátíme false
-          return false;
-        }
-        // Ostatní chyby ignorujeme pro jednotlivé dny a pokračujeme
-        console.warn(`[namedays] Error fetching ${mapKey}:`, errorMsg);
-        requestCount++;
-        continue;
-      }
+    // Načtení offline datasetu
+    const datasetPath = path.join(__dirname, "data", "namedays-cz.json");
+    
+    if (!fs.existsSync(datasetPath)) {
+      throw new Error(`Dataset file not found: ${datasetPath}`);
     }
 
-    // Ověření, že máme dostatek dat
+    const datasetContent = fs.readFileSync(datasetPath, "utf8");
+    const namedays = JSON.parse(datasetContent);
+
+    // Validace: musí být objekt s alespoň 300 položkami
+    if (typeof namedays !== "object" || namedays === null || Array.isArray(namedays)) {
+      throw new Error("Dataset must be an object");
+    }
+
     const keyCount = Object.keys(namedays).length;
-    if (keyCount < 50) {
-      console.warn(`[namedays] Generated only ${keyCount} entries, expected >300`);
-      return false; // Příliš málo dat, nepřepisujeme soubor
+    if (keyCount < 300) {
+      throw new Error(`Dataset has only ${keyCount} entries, expected >=300`);
     }
 
     ensureDataDir();
@@ -243,15 +180,11 @@ async function updateNamedays() {
     const outPath = path.join(outputDir, "namedays.json");
     fs.mkdirSync(outputDir, { recursive: true });
     fs.writeFileSync(outPath, JSON.stringify(namedays, null, 2) + "\n", "utf8");
-    console.log(`✅ Updated ${outPath} with ${keyCount} entries`);
+    console.log(`✅ Updated ${outPath} with ${keyCount} entries (offline dataset)`);
     return true;
   } catch (e) {
-    const errorMsg = String(e);
-    if (errorMsg.includes("402") || errorMsg.includes("HTTP 402")) {
-      console.warn("[namedays] Source returned HTTP 402 – keeping previous data");
-      return false; // DŮLEŽITÉ: žádný throw
-    }
-    throw e; // Ostatní chyby propagujeme dál
+    console.error("[namedays] Failed to update from offline dataset:", e.message);
+    throw e; // Propagujeme chybu dál
   }
 }
 
@@ -263,20 +196,12 @@ async function main() {
     return;
   }
   if (mode === "namedays") {
-    const ok = await updateNamedays();
-    if (ok === false) {
-      console.log("[namedays] Skipped update, keeping existing file");
-      process.exit(0); // Úspěšné ukončení bez změn
-    }
+    await updateNamedays();
     return;
   }
 
   await updateWeather();
-  const ok = await updateNamedays();
-  if (ok === false) {
-    console.log("[namedays] Skipped update, keeping existing file");
-    // Pokračujeme - weather byl úspěšný, namedays jsme přeskočili
-  }
+  await updateNamedays();
 }
 
 main().catch((e) => {
