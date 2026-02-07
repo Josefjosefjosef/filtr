@@ -3670,6 +3670,8 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 .iu-parcels-modal-content{
+  width: min(100vw - 32px, 640px);
+  max-width: 640px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
