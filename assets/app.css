@@ -3357,30 +3357,28 @@ a.brand,
     flex: 0 0 auto;
   }
   
-  /* C – moje schránky (mobilní kopie): jeden řádek + scroll */
+  /* C – moje schránky (mobilní kopie): VERTIKÁLNĚ, bez scrollu */
   .iu-mobileMail .iu-actionsCol{
     display: flex;
-    flex-direction: row;       /* pojistka proti column */
+    flex-direction: column;
     flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
     gap: 10px;
-    white-space: nowrap;
     padding: 8px 12px;
-    align-items: center;
+
+    overflow: visible;
+    white-space: normal;
   }
 
-  /* tlačítka nesmí být full-width */
+  /* tlačítka jako seznam pod sebou */
   .iu-mobileMail .iu-actionBtn{
+    width: 100%;
+    max-width: 100%;
     flex: 0 0 auto;
-    width: auto;               /* pojistka proti width:100% */
-    max-width: none;
-    white-space: nowrap;
-    margin: 0;                 /* přepis margin: 0 0 10px 0 z .iu-mmMailSection .iu-actionBtn */
+
+    margin: 0; /* necháme řídit gapem */
   }
 
-  /* text uvnitř tlačítka se nesmí lámat */
+  /* text uvnitř tlačítka – klidně bez zalamování, ale není potřeba scroll */
   .iu-mobileMail .iu-actionText{
     white-space: nowrap;
   }
