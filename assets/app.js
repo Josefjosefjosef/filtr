@@ -3281,3 +3281,285 @@ function buildVideoAsArticleCard(it) {
 // Jakýkoli zásah pod tímto bodem je porušením technického standardu infoUzel.cz
 // === MAINTENANCE MODE ACTIVE ===
 // Jakákoli změna nad tímto bodem vyžaduje nový checkpoint
+
+// === POPOVER PRO SLEDOVÁNÍ ZÁSILEK (IZOLOVANÁ FUNKCIONALITA) ===
+(function(){
+  'use strict';
+  
+  const $ = (sel) => document.querySelector(sel);
+  const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+  
+  const popover = $('#iuParcelsPopover');
+  const overlay = document.createElement('div');
+  overlay.className = 'iu-parcels-popover-overlay';
+  document.body.appendChild(overlay);
+  
+  const carriers = {
+    packeta: {
+      name: 'Zásilkovna',
+      baseUrl: 'https://tracking.app.packeta.com/cs/',
+      deepUrl: (code) => `https://tracking.app.packeta.com/cs/${encodeURIComponent(code)}`,
+      urlFallback: (code) => `https://tracking.packeta.com/cs/${encodeURIComponent(code)}`
+    },
+    balikovna: {
+      name: 'Balíkovna / Česká pošta',
+      baseUrl: 'https://www.balikovna.cz/cs/sledovat-balik',
+      deepUrl: (code) => `https://www.balikovna.cz/cs/sledovat-balik/-/balik/${encodeURIComponent(code)}`
+    },
+    ppl: {
+      name: 'PPL',
+      baseUrl: 'https://www.ppl.cz/vyhledat-zasilku',
+      useClipboard: true
+    },
+    dpd: {
+      name: 'DPD',
+      baseUrl: 'https://tracking.dpd.de/status/cs_CZ/',
+      deepUrl: (code) => `https://tracking.dpd.de/status/cs_CZ/parcel/${encodeURIComponent(code)}`,
+      useClipboard: true
+    },
+    gls: {
+      name: 'GLS',
+      baseUrl: 'https://gls-group.com/CZ/cs/sledovani-zasilek',
+      useClipboard: true
+    },
+    wedo: {
+      name: 'WE|DO',
+      baseUrl: 'https://trace.wedo.cz/',
+      deepUrl: (code) => `https://trace.wedo.cz/?orderNumber=${encodeURIComponent(code)}`,
+      urlFallback: () => 'https://trace.wedo.cz/'
+    },
+    dhl: {
+      name: 'DHL',
+      baseUrl: 'https://www.dhl.com/cz-en/home/tracking.html',
+      useClipboard: true
+    },
+    messenger: {
+      name: 'Messenger',
+      baseUrl: 'https://www.msng.cz/',
+      useClipboard: true
+    }
+  };
+  
+  function computePopoverTop(){
+    // Najdi sekci "Rychlé odkazy" v pravém sloupci
+    const quickLinksSection = $('.iu-mmQuickLinks');
+    if(!quickLinksSection) return 0;
+    
+    // Spočítej výšku sekce včetně marginů
+    const rect = quickLinksSection.getBoundingClientRect();
+    const computedStyle = window.getComputedStyle(quickLinksSection);
+    const marginBottom = parseFloat(computedStyle.marginBottom) || 0;
+    const paddingBottom = parseFloat(computedStyle.paddingBottom) || 0;
+    
+    const totalHeight = rect.height + marginBottom + paddingBottom;
+    
+    // Přidej malý spacing (8px)
+    return totalHeight + 8;
+  }
+  
+  function openPopover(){
+    // Vypočítej dynamický top offset
+    const topOffset = computePopoverTop();
+    popover.style.top = topOffset + 'px';
+    popover.style.maxHeight = `calc(70vh - ${topOffset}px)`;
+    
+    popover.classList.add('is-open');
+    overlay.classList.add('is-open');
+    popover.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closePopover(){
+    popover.classList.remove('is-open');
+    overlay.classList.remove('is-open');
+    popover.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    // Reset top a max-height pro příští otevření
+    popover.style.top = '';
+    popover.style.maxHeight = '';
+  }
+  
+  function addParcelRow(carrierId){
+    const rowsContainer = $(`.iu-parcelRows[data-carrier="${carrierId}"]`);
+    if(!rowsContainer) return;
+    
+    const row = document.createElement('div');
+    row.className = 'iu-parcel-row';
+    row.innerHTML = `
+      <div class="iu-parcel-row-inputs">
+        <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="${carrierId}">
+        <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
+      </div>
+    `;
+    
+    const searchBtn = row.querySelector('.iu-parcel-search-btn');
+    searchBtn.addEventListener('click', () => handleSearch(carrierId, row.querySelector('.iu-parcel-input')));
+    
+    rowsContainer.appendChild(row);
+  }
+  
+  async function copyToClipboard(text){
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch(err){
+      console.warn('[PARCELS] Clipboard copy failed:', err);
+      return false;
+    }
+  }
+  
+  function showCopiedFeedback(row, message, isError){
+    let feedback = row.querySelector('.iu-parcel-copied');
+    if(!feedback){
+      feedback = document.createElement('span');
+      feedback.className = 'iu-parcel-copied';
+      row.appendChild(feedback);
+    }
+    feedback.textContent = message || 'Zkopírováno ✅';
+    if(isError){
+      feedback.classList.add('error');
+    } else {
+      feedback.classList.remove('error');
+    }
+    feedback.classList.add('show');
+    setTimeout(() => {
+      feedback.classList.remove('show');
+    }, 1500);
+  }
+  
+  function openCarrierUrl(url){
+    try {
+      const w = window.open(url, '_blank', 'noopener,noreferrer');
+      if(!w){
+        // Pop-up blokován, otevři v aktuální kartě
+        window.location.href = url;
+        return false;
+      }
+      return true;
+    } catch(err){
+      // Fallback při jakékoli chybě
+      window.location.href = url;
+      return false;
+    }
+  }
+  
+  function getFirstFilledCode(carrierId){
+    const inputs = $$(`.iu-parcel-input[data-carrier="${carrierId}"]`);
+    for(const input of inputs){
+      const code = (input.value || '').trim();
+      if(code) return code;
+    }
+    return null;
+  }
+  
+  function shakeInput(input){
+    input.style.animation = 'none';
+    setTimeout(() => {
+      input.style.animation = 'shake 0.3s ease';
+    }, 10);
+  }
+  
+  async function handleSearch(carrierId, input){
+    const code = (input.value || '').trim();
+    const carrier = carriers[carrierId];
+    if(!carrier || !carrier.baseUrl) return;
+    
+    // Pokud je input prázdný, udělej shake, ale pokračuj
+    if(!code){
+      shakeInput(input);
+    }
+    
+    // VŽDY otevři tracking stránku (baseUrl)
+    let urlToOpen = carrier.baseUrl;
+    
+    // Pokud je číslo vyplněné, zkus použít deepUrl (pokud existuje)
+    if(code && carrier.deepUrl){
+      urlToOpen = carrier.deepUrl(code);
+    }
+    
+    // Otevři stránku (s fallbackem při blokaci pop-upů)
+    openCarrierUrl(urlToOpen);
+    
+    // Pro dopravce bez jistého deep-linku zkopíruj číslo do schránky
+    if(code && carrier.useClipboard){
+      const row = input.closest('.iu-parcel-row');
+      const copied = await copyToClipboard(code);
+      if(copied){
+        if(row) showCopiedFeedback(row, 'Zkopírováno ✅', false);
+      } else {
+        // Selhalo kopírování - zobraz varování
+        if(row) showCopiedFeedback(row, 'Nelze zkopírovat – zkopírujte číslo ručně.', true);
+      }
+    }
+  }
+  
+  function handleFallback(carrierId){
+    const code = getFirstFilledCode(carrierId);
+    if(!code){
+      const firstInput = $(`.iu-parcel-input[data-carrier="${carrierId}"]`);
+      if(firstInput) shakeInput(firstInput);
+      return;
+    }
+    
+    const carrier = carriers[carrierId];
+    if(!carrier || !carrier.urlFallback) return;
+    
+    const fallbackUrl = carrier.urlFallback(code);
+    window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
+  }
+  
+  function init(){
+    const btn = $('#iuParcelsBtn');
+    if(!btn || !popover) return;
+    
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if(popover.classList.contains('is-open')){
+        closePopover();
+      } else {
+        openPopover();
+      }
+    });
+    
+    const closeBtn = popover.querySelector('.iu-parcels-popover-close');
+    if(closeBtn){
+      closeBtn.addEventListener('click', closePopover);
+    }
+    
+    overlay.addEventListener('click', closePopover);
+    
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape' && popover.classList.contains('is-open')){
+        closePopover();
+      }
+    });
+    
+    $$('.iu-parcel-add-btn').forEach(btn => {
+      const carrierId = btn.getAttribute('data-carrier');
+      btn.addEventListener('click', () => addParcelRow(carrierId));
+    });
+    
+    $$('.iu-parcel-search-btn').forEach(btn => {
+      const row = btn.closest('.iu-parcel-row');
+      const input = row?.querySelector('.iu-parcel-input');
+      const carrierId = input?.getAttribute('data-carrier');
+      if(carrierId){
+        btn.addEventListener('click', () => handleSearch(carrierId, input));
+      }
+    });
+    
+    $$('.iu-parcel-fallback-btn').forEach(btn => {
+      const carrierId = btn.getAttribute('data-carrier');
+      if(carrierId){
+        btn.addEventListener('click', () => handleFallback(carrierId));
+      }
+    });
+  }
+  
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

@@ -401,6 +401,7 @@ aside.accordionCol{
   gap: 10px;
   border-radius: 14px;
   align-self: stretch;
+  position: relative;
 }
 .accordionCol{
   background: #f5f5f5;
@@ -558,6 +559,14 @@ aside.accordionCol{
   text-decoration: none;
   color: inherit;
   box-sizing: border-box;
+}
+
+button.iu-mmQuickItem{
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
 }
 
 .iu-mmQuickItem:hover{
@@ -3501,3 +3510,241 @@ html[data-iu-debug="1"] #feed > * { outline: 2px dashed blue; }
 html[data-iu-debug="1"] #feed > article,
 html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
+/* Popover pro sledování zásilek */
+.iu-parcels-popover{
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: 70vh;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.15);
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  z-index: 10000;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.iu-parcels-popover.is-open{
+  display: flex;
+}
+
+.iu-parcels-popover-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  flex-shrink: 0;
+}
+
+.iu-parcels-popover-title{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(0,0,0,.85);
+}
+
+.iu-parcels-popover-close{
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: rgba(0,0,0,.6);
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.iu-parcels-popover-close:hover{
+  background: rgba(0,0,0,.05);
+  color: rgba(0,0,0,.85);
+}
+
+.iu-parcels-popover-content{
+  padding: 16px 20px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.iu-parcel-carrier{
+  margin-bottom: 24px;
+}
+
+.iu-parcel-carrier:last-child{
+  margin-bottom: 0;
+}
+
+.iu-parcel-carrier-name{
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(0,0,0,.85);
+}
+
+.iu-parcelRows{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.iu-parcel-row{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: stretch;
+  position: relative;
+}
+
+.iu-parcel-row-inputs{
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.iu-parcel-input{
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.iu-parcel-input:focus{
+  outline: none;
+  border-color: rgba(0,123,255,.5);
+  box-shadow: 0 0 0 2px rgba(0,123,255,.1);
+}
+
+.iu-parcel-search-btn{
+  padding: 8px 16px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0,0,0,.85);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.iu-parcel-search-btn:hover{
+  background: rgba(0,0,0,.02);
+  border-color: rgba(0,0,0,.35);
+}
+
+.iu-parcel-search-btn:active{
+  background: rgba(0,0,0,.05);
+}
+
+.iu-parcel-add-btn{
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px dashed rgba(0,0,0,.2);
+  border-radius: 6px;
+  font-size: 12px;
+  color: rgba(0,0,0,.65);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.iu-parcel-add-btn:hover{
+  background: rgba(0,0,0,.02);
+  border-color: rgba(0,0,0,.3);
+  color: rgba(0,0,0,.85);
+}
+
+.iu-parcel-fallback-btn{
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  color: rgba(0,0,0,.5);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(0,0,0,.2);
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.iu-parcel-fallback-btn:hover{
+  color: rgba(0,0,0,.75);
+  text-decoration-color: rgba(0,0,0,.4);
+}
+
+.iu-parcel-fallback-btn:focus-visible{
+  outline: 2px solid rgba(0,123,255,.5);
+  outline-offset: 2px;
+  color: rgba(0,0,0,.75);
+}
+
+.iu-parcel-copied{
+  display: block;
+  font-size: 11px;
+  margin-top: 4px;
+  color: var(--iu-meta, rgba(0,0,0,.55));
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  line-height: 1.3;
+}
+
+.iu-parcel-copied.show{
+  opacity: 1;
+}
+
+.iu-parcel-copied.error{
+  color: rgba(220, 53, 69, 0.85);
+  font-weight: 500;
+}
+
+.iu-parcels-popover-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,.3);
+  z-index: 9999;
+  display: none;
+}
+
+.iu-parcels-popover-overlay.is-open{
+  display: block;
+}
+
+@media (max-width: 768px){
+  .iu-parcels-popover{
+    max-height: 80vh;
+  }
+  
+  .iu-parcels-popover-header,
+  .iu-parcels-popover-content{
+    padding: 12px 16px;
+  }
+}
