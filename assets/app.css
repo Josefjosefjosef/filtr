@@ -471,12 +471,13 @@ aside.accordionCol{
   margin-top: 0 !important;
 }
 
+/* REFERENČNÍ RYTMUS – Rychlé odkazy */
 .iu-mmQuickLinks{
   order: 0;
   width: 100%;
   margin-top: 0 !important;
   padding-top: 0 !important;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(0,0,0,.08);
 }
@@ -488,12 +489,13 @@ aside.accordionCol{
   margin-bottom: 10px;
 }
 
-/* MindMenu: hlavička sekce Moje schránky – stejný styl jako Rychlé odkazy */
+/* Moje schránky – MUSÍ odpovídat Rychlým odkazům */
 .iu-mmMailHead{
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 6px 0 12px 0;
+  margin-top: 0 !important;
+  margin-bottom: 12px !important;
   width: 100%;
 }
 
@@ -503,8 +505,24 @@ aside.accordionCol{
   align-items: center;
   gap: 10px;
   width: 100%;
-  margin: 0;
+  margin: 0 !important;
   grid-column: 1 / -1; /* Překryje celý grid */
+}
+
+/* Moje schránky – zrušení nadbytečného spacingu z rodičů */
+.iu-userHeader .iu-mmMailHead,
+.iu-userTitleSummary .iu-mmMailHead{
+  margin-top: 0 !important;
+}
+
+.iu-userHeader:has(.iu-mmMailHead){
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+.iu-userTitleSummary:has(.iu-mmMailHead){
+  padding-top: 0 !important;
+  margin-top: 0 !important;
 }
 
 .iu-mmSectionTitle{
