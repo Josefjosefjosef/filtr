@@ -476,7 +476,7 @@ aside.accordionCol{
   width: 100%;
   margin-top: 0 !important;
   padding-top: 0 !important;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(0,0,0,.08);
 }
@@ -490,13 +490,18 @@ aside.accordionCol{
 
 /* MindMenu: hlavička sekce Moje schránky – stejný styl jako Rychlé odkazy */
 .iu-mmMailHead{
-  margin: 10px 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 12px 0;
   width: 100%;
 }
 
 /* Uprava pro header v summary - aby vypadal správně */
 .iu-userHeader .iu-mmMailHead{
   display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
   margin: 0;
   grid-column: 1 / -1; /* Překryje celý grid */
