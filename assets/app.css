@@ -254,13 +254,41 @@ body{
   gap: 24px;
   padding: 14px 0;
   border-top: 1px solid rgba(17,17,17,0.06);
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  position: relative;
 }
+
+.topbar-links::-webkit-scrollbar{
+  display: none;
+}
+
+/* Pravostranný fade efekt - indikace scrollu */
+.topbar-links::after{
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  background: linear-gradient(to right, transparent, var(--iu-bg) 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
 .topbar-link{
   font-size: 14px;
   color: var(--iu-text);
   text-decoration: none;
   transition: color 150ms ease;
   font-weight: 400;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 2;
 }
 .topbar-link:hover{
   color: var(--iu-accent);
