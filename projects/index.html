@@ -1594,8 +1594,14 @@
     </div>
     <script>
     (() => {
-      const TZ = "Europe/Prague";
       const isDebug = new URLSearchParams(location.search).get("debug") === "1";
+      try {
+      const TZ = "Europe/Prague";
+
+      if (isDebug) console.log("[iuDailyPanel] boot", { 
+        hasTime: !!document.getElementById("iuDailyTime"), 
+        hasDate: !!document.getElementById("iuDailyDate") 
+      });
 
       const elTime = document.getElementById("iuDailyTime");
       const elDate = document.getElementById("iuDailyDate");
@@ -1631,9 +1637,13 @@
       }
 
       function tick(){
-        const now = new Date();
-        if (elTime) elTime.textContent = fmtTime(now);
-        if (elDate) elDate.textContent = fmtDate(now);
+        try {
+          const now = new Date();
+          if (elTime) elTime.textContent = fmtTime(now);
+          if (elDate) elDate.textContent = fmtDate(now);
+        } catch (e) {
+          if (isDebug) console.warn("[iuDailyPanel] tick error", e);
+        }
       }
       tick();
       setInterval(tick, 60000);
@@ -1814,5 +1824,27 @@
           }
         }
       })();
+      } catch (e) {
+        if (isDebug) console.warn("[iuDailyPanel] IIFE error", e);
+        // Zajisti, že se čas a datum nastaví i při chybě
+        try {
+          const elTime = document.getElementById("iuDailyTime");
+          const elDate = document.getElementById("iuDailyDate");
+          if (elTime || elDate) {
+            const now = new Date();
+            const TZ = "Europe/Prague";
+            function fmtTime(d){
+              return new Intl.DateTimeFormat("cs-CZ",{hour:"2-digit",minute:"2-digit",timeZone:TZ}).format(d);
+            }
+            function fmtDate(d){
+              return new Intl.DateTimeFormat("cs-CZ",{weekday:"long",day:"numeric",month:"long",timeZone:TZ}).format(d);
+            }
+            if (elTime) elTime.textContent = fmtTime(now);
+            if (elDate) elDate.textContent = fmtDate(now);
+          }
+        } catch (fallbackErr) {
+          if (isDebug) console.warn("[iuDailyPanel] fallback error", fallbackErr);
+        }
+      }
     })();
     </script>
