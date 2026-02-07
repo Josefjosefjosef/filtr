@@ -3597,25 +3597,22 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   pointer-events: auto;
 }
 
-/* Modal box */
+/* Sledování zásilek – Varianta A (čistý nástroj) */
 .iu-parcels-modal{
   position: fixed;
   inset: 24px;
-  margin: auto;
-  display: none;
-  flex-direction: column;
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid rgba(0,0,0,.15);
-  box-shadow: 0 8px 32px rgba(0,0,0,.2);
-  z-index: 10000;
-  overflow: hidden;
-  box-sizing: border-box;
-  
-  /* HRANICE ŠÍŘKY */
-  width: 100%;
+  width: auto;
   max-width: calc(var(--mainW, 1100px) + var(--sideW, 360px));
   max-height: calc(100vh - 48px);
+  margin: auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  z-index: 10000;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .iu-parcels-modal.is-open{
@@ -3626,57 +3623,34 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
-  border-bottom: 1px solid rgba(0,0,0,.1);
-  flex-shrink: 0;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0,0,0,.10);
 }
 
 .iu-parcels-modal-title{
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: rgba(0,0,0,.85);
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .iu-parcels-modal-close{
-  background: none;
   border: none;
-  font-size: 24px;
+  background: transparent;
+  font-size: 22px;
   line-height: 1;
-  color: rgba(0,0,0,.6);
   cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 4px 8px;
+  opacity: .7;
 }
 
 .iu-parcels-modal-close:hover{
-  background: rgba(0,0,0,.05);
-  color: rgba(0,0,0,.85);
-}
-
-.iu-parcels-modal-grid{
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 24px;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
+  opacity: 1;
 }
 
 .iu-parcels-modal-content{
-  width: min(100vw - 32px, 640px);
-  max-width: 640px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  padding: 12px 16px 16px;
+  overflow: auto;
   min-height: 0;
-  padding: 24px;
 }
 
 .iu-parcels-content-inner{
@@ -3694,37 +3668,24 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   box-sizing: border-box;
 }
 
-.iu-parcels-ad-slot{
-  min-height: 250px;
-  border: 1px dashed rgba(0,0,0,.15);
-  border-radius: 12px;
-  background: rgba(0,0,0,.02);
-}
+/* Ad-sloty odstraněny v Variantě A */
 
-.iu-ad-slot-top{
-  margin-bottom: 24px;
-}
-
-.iu-ad-slot-sidebar{
-  padding: 24px;
-  overflow-y: auto;
-  min-height: 0;
-}
-
+/* Dopravci – jemné dělení, žádné „karty" */
 .iu-parcel-carrier{
   width: 100%;
-  margin-bottom: 24px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0,0,0,.08);
 }
 
 .iu-parcel-carrier:last-child{
-  margin-bottom: 0;
+  border-bottom: none;
 }
 
 .iu-parcel-carrier-name{
-  margin: 0 0 12px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: rgba(0,0,0,.85);
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--iu-text, #111);
 }
 
 .iu-parcelRows{
@@ -3734,12 +3695,18 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   margin-bottom: 8px;
 }
 
+/* Řádky input + tlačítko – zachovat současné chování (50% input na desktopu + mobile rules) */
 .iu-parcel-row{
   display: flex;
   flex-direction: column;
   gap: 4px;
   align-items: stretch;
   position: relative;
+  margin-bottom: 10px;
+}
+
+.iu-parcelRows .iu-parcel-row:last-child{
+  margin-bottom: 0;
 }
 
 .iu-parcel-row-inputs{
@@ -3789,21 +3756,21 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   background: rgba(0,0,0,.05);
 }
 
+/* + Přidat další – jednoduchý link-button styl */
 .iu-parcel-add-btn{
-  padding: 6px 12px;
+  margin-top: 8px;
   background: transparent;
-  border: 1px dashed rgba(0,0,0,.2);
-  border-radius: 6px;
-  font-size: 12px;
-  color: rgba(0,0,0,.65);
+  border: none;
+  padding: 0;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  font-size: 12px;
+  color: var(--iu-link, #1f3a5f);
+  text-decoration: underline;
+  text-decoration-color: rgba(31,58,95,.35);
 }
 
 .iu-parcel-add-btn:hover{
-  background: rgba(0,0,0,.02);
-  border-color: rgba(0,0,0,.3);
-  color: rgba(0,0,0,.85);
+  text-decoration-color: rgba(31,58,95,.75);
 }
 
 .iu-parcel-fallback-btn{
@@ -3831,33 +3798,11 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   color: rgba(0,0,0,.75);
 }
 
-@media (max-width: 1024px){
-  .iu-parcels-modal-grid{
-    grid-template-columns: 1fr;
-  }
-  
-  .iu-ad-slot-sidebar{
-    order: -1;
-    margin-bottom: 24px;
-  }
-}
-
+/* Mobil */
 @media (max-width: 768px){
   .iu-parcels-modal{
     inset: 12px;
     max-height: calc(100vh - 24px);
-  }
-  
-  .iu-parcels-modal-header{
-    padding: 16px 20px;
-  }
-  
-  .iu-parcels-modal-content{
-    padding: 20px;
-  }
-  
-  .iu-ad-slot-sidebar{
-    padding: 20px;
   }
 }
 
