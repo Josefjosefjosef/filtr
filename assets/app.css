@@ -472,6 +472,86 @@ aside.accordionCol{
   margin-top: 0 !important;
 }
 
+/* ===== IU Daily Panel ===== */
+.iuDailyPanel{
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+  background: linear-gradient(180deg,#eaf1f8 0%,#dde7f2 100%);
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(31,58,95,0.08);
+}
+
+.iuDailyTop{
+  display:flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.iuDailyTime{
+  font-size:20px;
+  font-weight:600;
+}
+
+.iuDailyDate{
+  font-size:14px;
+  opacity:.85;
+  white-space:nowrap;
+}
+
+.iuDailyNameday{
+  font-size:13px;
+  opacity:.8;
+}
+
+/* Weather */
+.iuWxNowRow{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.iuWxIcon{font-size:28px;}
+
+.iuWxNowMeta{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.iuWxNowLine{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.iuWxTemp{font-size:26px;font-weight:600;}
+
+.iuWxMinMax{font-size:12px;opacity:.8;}
+
+.iuDailyErr{
+  font-size:12px;
+  opacity:.7;
+  margin-top:8px;
+}
+
+.iuWxHours{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  margin-top:10px;
+}
+
+.iuWxHours::-webkit-scrollbar{display:none;}
+
+.iuWxHour{
+  min-width:48px;
+  text-align:center;
+}
+
+.iuWxHourTemp{font-weight:500;}
+
 /* REFERENČNÍ RYTMUS – Rychlé odkazy */
 .iu-mmQuickLinks{
   order: 0;

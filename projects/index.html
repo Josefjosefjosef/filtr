@@ -192,6 +192,36 @@
               <aside class="accordionCol" aria-label="Postranní panel">
                 <div class="mindMenu-scroll-wrapper">
                   <div class="mindMenu">
+                    <!-- IU: Denní panel -->
+                    <section class="iuDailyPanel" aria-label="Denní panel">
+
+                      <div class="iuDailyTop">
+                        <span class="iuDailyTime" id="iuDailyTime">--:--</span>
+                        <span class="iuDailyDate" id="iuDailyDate">—</span>
+                      </div>
+
+                      <div class="iuDailyNameday" id="iuDailyNameday">Svátek má —</div>
+
+                      <div class="iuDailyWeather" id="iuDailyWeather" hidden>
+                        <div class="iuWxNowRow">
+                          <span class="iuWxIcon" id="iuWxIcon">🌤</span>
+                          <div class="iuWxNowMeta">
+                            <div class="iuWxNowLine">
+                              <span class="iuWxPlace" id="iuWxPlace">—</span>
+                              <span class="iuWxTemp" id="iuWxTemp">—°C</span>
+                            </div>
+                            <div class="iuWxMinMax" id="iuWxMinMax">Max —° · Min —°</div>
+                          </div>
+                        </div>
+
+                        <div class="iuWxHours" id="iuWxHours"></div>
+                      </div>
+
+                      <div class="iuDailyErr" id="iuDailyErr" hidden>
+                        Počasí momentálně není dostupné
+                      </div>
+
+                    </section>
                     <!-- Rychlé odkazy -->
                     <section class="iu-mmQuickLinks" aria-label="Rychlé odkazy">
                       <div class="iu-mmSectionHead">
@@ -1562,3 +1592,107 @@
         </div>
       </div>
     </div>
+    <script>
+    (() => {
+      const TZ = "Europe/Prague";
+
+      const elTime = document.getElementById("iuDailyTime");
+      const elDate = document.getElementById("iuDailyDate");
+      const elNameday = document.getElementById("iuDailyNameday");
+
+      const elWeather = document.getElementById("iuDailyWeather");
+      const elErr = document.getElementById("iuDailyErr");
+      const elPlace = document.getElementById("iuWxPlace");
+      const elIcon = document.getElementById("iuWxIcon");
+      const elTemp = document.getElementById("iuWxTemp");
+      const elMinMax = document.getElementById("iuWxMinMax");
+      const elHours = document.getElementById("iuWxHours");
+
+      function fmtTime(d){
+        return new Intl.DateTimeFormat("cs-CZ",{hour:"2-digit",minute:"2-digit",timeZone:TZ}).format(d);
+      }
+      function fmtDate(d){
+        return new Intl.DateTimeFormat("cs-CZ",{weekday:"long",day:"numeric",month:"long",timeZone:TZ}).format(d);
+      }
+      function fmtHour(d){
+        return new Intl.DateTimeFormat("cs-CZ",{hour:"numeric",hour12:false,timeZone:TZ}).format(d) + "h";
+      }
+
+      function tick(){
+        const now = new Date();
+        if (elTime) elTime.textContent = fmtTime(now);
+        if (elDate) elDate.textContent = fmtDate(now);
+      }
+      tick();
+      setInterval(tick, 60000);
+
+      async function loadJson(url){
+        const r = await fetch(url, { cache: "no-store" });
+        if (!r.ok) throw new Error(r.status);
+        return r.json();
+      }
+
+      function iconFrom(text){
+        const t = (text || "").toLowerCase();
+        if (t.includes("bouř")) return "⛈";
+        if (t.includes("sně")) return "❄️";
+        if (t.includes("déšť") || t.includes("dešt")) return "🌧";
+        if (t.includes("obla")) return "☁️";
+        if (t.includes("jasn")) return "☀️";
+        return "🌤";
+      }
+
+      (async () => {
+        try{
+          // Vynucení "čistého" URL pro data (bez ohledu na rewrite)
+          const base = new URL(".", location.href);              // .../projects/
+          const ndUrl = new URL("data/namedays.json", base).toString();
+          const wxUrl = new URL("data/weather.json", base).toString();
+
+          // nameday
+          const nd = await loadJson(ndUrl);
+          console.log("[iuDailyPanel] namedays url", ndUrl, nd);
+          if (nd && typeof nd.today === "string" && nd.today.trim() && elNameday){
+            elNameday.textContent = "Svátek má " + nd.today.trim();
+          } else {
+            console.warn("[iuDailyPanel] unexpected namedays.json structure", nd);
+          }
+
+          // weather
+          const wx = await loadJson(wxUrl);
+          console.log("[iuDailyPanel] weather url", wxUrl);
+          console.log("[iuDailyPanel] weather sample", wx, Array.isArray(wx.hours) ? wx.hours.slice(0,2) : wx.hours);
+          if (!wx || !wx.current || typeof wx.current.temp !== "number" || !wx.today) {
+            console.warn("[iuDailyPanel] unexpected weather.json structure", wx);
+            throw new Error("bad weather structure");
+          }
+          if (!Array.isArray(wx.hours)) {
+            console.warn("[iuDailyPanel] weather hours missing/invalid", wx.hours);
+          }
+
+          elPlace.textContent = wx.place || "—";
+          elTemp.textContent = Math.round(wx.current.temp) + "°C";
+          elMinMax.textContent = "Max " + Math.round(wx.today.max) + "° · Min " + Math.round(wx.today.min) + "°";
+          elIcon.textContent = iconFrom(wx.current.desc);
+
+          elHours.innerHTML = "";
+          (wx.hours || []).slice(0,8).forEach(h => {
+            const d = new Date(h.time);
+            const div = document.createElement("div");
+            div.className = "iuWxHour";
+            div.innerHTML = `
+              <div>${fmtHour(d)}</div>
+              <div class="iuWxHourTemp">${Math.round(h.temp)}°</div>
+              <div>${iconFrom(h.desc)}</div>
+            `;
+            elHours.appendChild(div);
+          });
+
+          elWeather.hidden = false;
+        }catch(e){
+          console.warn("[iuDailyPanel] failed to render", e);
+          elErr.hidden = false;
+        }
+      })();
+    })();
+    </script>
