@@ -488,6 +488,20 @@ aside.accordionCol{
   margin-bottom: 10px;
 }
 
+/* MindMenu: hlavička sekce Moje schránky – stejný styl jako Rychlé odkazy */
+.iu-mmMailHead{
+  margin: 10px 0 12px 0;
+  width: 100%;
+}
+
+/* Uprava pro header v summary - aby vypadal správně */
+.iu-userHeader .iu-mmMailHead{
+  display: flex;
+  width: 100%;
+  margin: 0;
+  grid-column: 1 / -1; /* Překryje celý grid */
+}
+
 .iu-mmSectionTitle{
   font-size: 12px;
   font-weight: 600;
@@ -851,6 +865,17 @@ aside.accordionCol{
   min-width: 0;
   box-sizing: border-box;
   margin: 0;
+}
+
+/* MindMenu: Moje schránky – sjednocení mezer mezi řádky */
+.iu-mmMailSection{
+  gap: 0;
+}
+.iu-mmMailSection .iu-actionBtn{
+  margin: 0 0 10px 0;
+}
+.iu-mmMailSection .iu-actionBtn:last-child{
+  margin-bottom: 0;
 }
 
 /* Oválná tlačítka v pravém sloupci (zachovat pro kompatibilitu) */
