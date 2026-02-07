@@ -3672,17 +3672,26 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 .iu-parcels-modal-content{
   width: min(100vw - 32px, 640px);
   max-width: 640px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   min-height: 0;
   padding: 24px;
 }
 
 .iu-parcels-content-inner{
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  overflow-y: auto;
+  max-height: 100%;
+  min-height: 0;
+}
+
+.iu-parcels-content-inner *{
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .iu-parcels-ad-slot{
@@ -3703,6 +3712,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 .iu-parcel-carrier{
+  width: 100%;
   margin-bottom: 24px;
 }
 
