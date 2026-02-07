@@ -72,10 +72,13 @@ async function updateWeather() {
     "https://api.open-meteo.com/v1/forecast" +
     `?latitude=${latitude}&longitude=${longitude}` +
     "&current=temperature_2m,weather_code" +
+    "&hourly=temperature_2m,weather_code" +
+    "&daily=temperature_2m_max,temperature_2m_min" +
     "&timezone=Europe%2FPrague";
 
   const data = await fetchJson(url);
 
+  // Current weather
   const temp = data?.current?.temperature_2m;
   const code = data?.current?.weather_code;
 
@@ -83,12 +86,54 @@ async function updateWeather() {
     throw new Error("Open-Meteo: missing current.temperature_2m");
   }
 
-  const condition = weatherCodeToCz(code);
+  const currentDesc = weatherCodeToCz(code);
+
+  // Daily forecast (today)
+  const dailyMax = data?.daily?.temperature_2m_max?.[0];
+  const dailyMin = data?.daily?.temperature_2m_min?.[0];
+
+  // Hourly forecast - vezmeme nejbližších 12 hodin od teď
+  const hourlyTimes = data?.hourly?.time || [];
+  const hourlyTemps = data?.hourly?.temperature_2m || [];
+  const hourlyCodes = data?.hourly?.weather_code || [];
+
+  const now = new Date();
+  const hours = [];
+
+  // Projít všechny hodiny a vybrat budoucí
+  for (let i = 0; i < hourlyTimes.length; i++) {
+    const timeStr = hourlyTimes[i];
+    if (!timeStr) continue;
+
+    const timeDate = new Date(timeStr);
+    // Přeskočit minulé hodiny
+    if (timeDate < now) continue;
+
+    const temp = hourlyTemps[i];
+    const code = hourlyCodes[i];
+    const desc = weatherCodeToCz(code);
+
+    hours.push({
+      time: timeStr,
+      temp: temp !== undefined && temp !== null ? Math.round(Number(temp) * 10) / 10 : null,
+      desc: desc || "—"
+    });
+
+    // Máme dostatek hodin (min. 12 pro Denní panel)
+    if (hours.length >= 12) break;
+  }
 
   const weather = {
-    tempC: Math.round(Number(temp) * 10) / 10,
-    location: "Praha",
-    condition
+    place: "Praha",
+    current: {
+      temp: Math.round(Number(temp) * 10) / 10,
+      desc: currentDesc || "—"
+    },
+    today: {
+      max: dailyMax !== undefined && dailyMax !== null ? Math.round(Number(dailyMax) * 10) / 10 : null,
+      min: dailyMin !== undefined && dailyMin !== null ? Math.round(Number(dailyMin) * 10) / 10 : null
+    },
+    hours: hours
   };
 
   ensureDataDir();
@@ -98,7 +143,12 @@ async function updateWeather() {
   const outPath = path.join(outputDir, "weather.json");
   fs.mkdirSync(outputDir, { recursive: true });
   fs.writeFileSync(outPath, JSON.stringify(weather, null, 2) + "\n", "utf8");
-  console.log("✅ Updated", outPath, weather);
+  console.log("✅ Updated", outPath, {
+    place: weather.place,
+    current: weather.current,
+    today: weather.today,
+    hoursCount: weather.hours.length
+  });
 }
 
 async function updateNamedays() {

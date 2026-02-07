@@ -483,11 +483,16 @@ aside.accordionCol{
   max-width: 100%;
   padding: 14px;
   margin-bottom: 0;
+  min-height: 140px;
   box-sizing: border-box;
   background: linear-gradient(180deg,#eaf1f8 0%,#dde7f2 100%);
   border-radius: 14px;
   box-shadow: 0 6px 18px rgba(31,58,95,0.08);
   align-self: stretch;
+}
+
+.iuDailyPanel [hidden]{
+  display: none !important;
 }
 
 .iuDailyTop{
@@ -510,6 +515,10 @@ aside.accordionCol{
 .iuDailyNameday{
   font-size:13px;
   opacity:.8;
+}
+
+.iuDailyWeather{
+  margin-top: 10px;
 }
 
 /* Weather */
