@@ -35,8 +35,8 @@
       <div id="page">
         <main id="content">
           <div class="container">
-            <div class="iuShell">
-              <div class="iuLeft">
+            <div class="layout">
+              <div class="mainCol">
                 <div id="leftStickyHeader">
                   <header class="topbar-new" id="topbarWrap">
                     <div class="topbar-new-inner">
@@ -160,7 +160,6 @@
                 <div id="leftContent">
                   <div class="sec" id="sectionLabel" style="display:none;">Sekce: Vše</div>
                   <div class="feedUpdatedAt" id="dataUpdatedAt" style="display:none;">Poslední aktualizace dat: —</div>
-                  <div class="iuCard iuCard--wide">
                   <section class="iu-daily-brief" aria-label="Denní přehled">
                     <div class="iu-daily-brief-inner">
                       <h2>Dnes je dobré vědět</h2>
@@ -171,11 +170,9 @@
                       </ul>
                     </div>
                   </section>
-                  </div>
                   <div id="newsList">
                   <div id="dataStatus" style="display:none"></div>
                   <div id="emptyBox" class="iu-loadingMsg" aria-live="polite" style="display:none"></div>
-                  <div class="iuCard iuCard--wide">
                   <div class="iu-filterChips" aria-label="Filtry obsahu">
                     <button class="iu-chip is-active" type="button" data-iu-filter="all">Vše</button>
                     <button class="iu-chip" type="button" data-iu-filter="news">Zprávy</button>
@@ -186,18 +183,16 @@
                     <button class="iu-chip" type="button" data-iu-filter="health">Zdraví</button>
                     <button class="iu-chip" type="button" data-iu-filter="video">Video</button>
                   </div>
-                  </div>
                   <!-- Minimální, jistý render target -->
                   <div id="feed">
                   </div>
                 </div>
                 </div>
               </div>
-              <aside class="iuRight" aria-label="Postranní panel">
+              <aside class="accordionCol" aria-label="Postranní panel">
                 <div class="mindMenu-scroll-wrapper">
                   <div class="mindMenu">
                     <!-- IU: Denní panel -->
-                    <div class="iuCard iuCard--soft iuWeatherCard">
                     <section class="iuDailyPanel" aria-label="Denní panel">
 
                       <div class="iuDailyTop">
@@ -227,9 +222,7 @@
                       </div>
 
                     </section>
-                    </div>
                     <!-- Rychlé odkazy -->
-                    <div class="iuCard iuCard--soft">
                     <section class="iu-mmQuickLinks" aria-label="Rychlé odkazy">
                       <div class="iu-mmSectionHead">
                         <div class="iu-mmSectionTitle">Rychlé odkazy</div>
@@ -268,8 +261,6 @@
                         </a>
                       </div>
                     </section>
-                    </div>
-                    <div class="iuCard iuCard--soft">
                     <div class="iu-rightContent" aria-label="Obsah pravého sloupce">
                       <details class="iu-mindDetails" open>
                         <summary class="iu-userHeader iu-userTitleSummary" aria-label="Moje schránky">
@@ -310,7 +301,6 @@
                         </div>
                       </div>
                       </details>
-                    </div>
                     </div>
               </aside>
             </div>

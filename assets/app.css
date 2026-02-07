@@ -89,37 +89,15 @@
 
   /* ===== VIP ===== */
   --vipGold: #C9A227;
-
-  /* ===== MARBLE DESIGN: SVG texture (data URI) ===== */
-  /* SANITY CHECK: --iu-marble-svg musí být definovaná pouze jednou */
-  --iu-marble-svg: url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='marble1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23a8c5e0' stop-opacity='0.4'/%3E%3Cstop offset='50%25' stop-color='%23b8d0e8' stop-opacity='0.2'/%3E%3Cstop offset='100%25' stop-color='%2398b5d0' stop-opacity='0.3'/%3E%3C/linearGradient%3E%3ClinearGradient id='marble2' x1='100%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23c0d8f0' stop-opacity='0.25'/%3E%3Cstop offset='50%25' stop-color='%23a0c0e0' stop-opacity='0.15'/%3E%3Cstop offset='100%25' stop-color='%23d0e0f0' stop-opacity='0.2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0,0 Q100,50 200,0 T400,0 L400,200 Q300,150 200,200 T0,200 Z' fill='url(%23marble1)'/%3E%3Cpath d='M0,200 Q150,250 300,200 L300,400 Q200,350 100,400 T0,300 Z' fill='url(%23marble2)'/%3E%3Cpath d='M200,0 Q250,100 300,200 Q250,300 200,400 Q150,300 100,200 Q150,100 200,0' fill='%23a8c5e0' fill-opacity='0.08'/%3E%3C/svg%3E");
-
-  /* ===== MARBLE DESIGN: System Variables (Single Source of Truth) ===== */
-  --iu-bg-page: linear-gradient(135deg, #e8f0f8 0%, #e0eaf5 50%, #d8e4f2 100%);
-  --iu-bg-card: rgba(255, 255, 255, 0.94);
-  --iu-bg-card-soft: rgba(255, 255, 255, 0.92);
-  --iu-shadow-card: 0 2px 12px rgba(20, 40, 70, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
-  --iu-radius-card: 14px;
 }
 
 *{ box-sizing:border-box; }
 html{ scroll-padding-top: var(--topbarStackH); }
 html,body{ height:100%; }
 
-/* =========================================================
-   DESIGN CONTRACT – INFOUZEL MARBLE LAYOUT
-   ---------------------------------------------------------
-   Pravidla:
-   - Pozadí stránky = mramor (body + body::before)
-   - Veškerý obsah MUSÍ být na kartách (iuCard nebo potomci)
-   - Nikdy nepokládat text přímo na mramorované pozadí
-   - Nové sekce musí používat systémové proměnné (--iu-bg-*)
-   - Všechny karty používají --iu-bg-card, --iu-shadow-card, --iu-radius-card
-   ========================================================= */
-
 body{
   margin:0;
-  background: var(--iu-bg-page);
+  background: #FFFFFF;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
   font-size: 14px;
   line-height: 1.48;
@@ -129,31 +107,6 @@ body{
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  position: relative;
-}
-
-/* Mramorované pozadí - viditelná textura přes SVG data URI */
-body::before{
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-  opacity: 0.16;
-  mix-blend-mode: soft-light;
-  background-image: var(--iu-marble-svg);
-  background-size: 800px 800px;
-  background-position: 0 0;
-  background-repeat: repeat;
-  pointer-events: none;
-}
-
-/* Zajistit, že obsah je nad mramorem - pouze jeden wrapper */
-.container{
-  position: relative;
-  z-index: 1;
 }
 
 .container{
@@ -164,106 +117,40 @@ body::before{
   padding-right: 20px;
 }
 
-/* ===== MARBLE DESIGN: Layout Shell ===== */
-.iuShell{
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 20px;
-  align-items: start;
-  width: 100%;
-}
-
-@media (max-width: 900px){
-  .iuShell{
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  
-  .iuRight{
-    display: none;
-  }
-}
-
-/* ===== MARBLE DESIGN: Cards ===== */
-/* SANITY CHECK: .iuCard musí být definovaná pouze jednou, žádné slepence */
-
-.iuCard{
-  background: var(--iu-bg-card);
-  border-radius: var(--iu-radius-card);
-  padding: 16px;
-  box-shadow: var(--iu-shadow-card);
-  margin-bottom: 14px;
-  border: none;
-}
-
-/* SANITY CHECK: .iuCard--soft musí být definovaná pouze jednou, žádné slepence */
-
-.iuCard--soft{
-  background: var(--iu-bg-card-soft);
-  padding: 14px;
-}
-
-.iuCard--wide{
-  width: 100%;
-}
-
-/* Karty v levém sloupci */
-.iuLeft .iuCard{
-  margin-bottom: 14px;
-}
-
-/* Karty v pravém sloupci */
-.iuRight .iuCard{
-  margin-bottom: 14px;
-}
-
-/* ===== MARBLE DESIGN: Dark Premium Topbar (jen nad levým sloupcem) ===== */
-.iuLeft #leftStickyHeader{
-  background: linear-gradient(135deg, #1a3d6b 0%, #1f4b99 50%, #1a3d6b 100%);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  width: 100%;
+/* Sticky wrapper pro hlavičku v levém sloupci */
+#leftStickyHeader{
   position: sticky;
   top: 0;
   z-index: 1000;
+  width: 100%;
+  background: var(--iu-bg);
   display: flex;
   align-items: center;
   min-height: 68px;
 }
 
-.iuLeft .topbar-new{
+.topbar-new{
   position: relative;
   top: 0;
   left: 0;
   right: auto;
   z-index: 1000;
-  background: transparent !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: none !important;
+  background: var(--iu-bg);
+  border-bottom: 1px solid rgba(17,17,17,0.06);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
   width: 100%;
   max-width: 100%;
   overflow: hidden;
   box-sizing: border-box;
 }
-
-/* Topbar styly scopované na .iuLeft */
-.iuLeft .topbar-new-main .brand .name{
-  color: #ffffff !important;
-  font-weight: 600;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.iuLeft .menuBtn .burger span{
-  background: #ffffff !important;
-}
-
-.iuLeft .topbar-new-inner{
+.topbar-new-inner{
   position: relative;
   width: 100%;
   max-width: 100%;
   margin: 0;
   padding: 0 20px;
   box-sizing: border-box;
-  background: transparent;
+  background: var(--iu-bg);
   z-index: 1000;
 }
 .topbar-new-main{
@@ -287,12 +174,6 @@ body::before{
   font-weight: 800;
   color: rgba(11,27,43,0.92);
 }
-
-/* Override pro tmavou lištu */
-.iuLeft .topbar-logo .brand .name{
-  color: #ffffff !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
 .topbar-search{
   margin-left: auto;
   display: flex;
@@ -304,24 +185,12 @@ body::before{
   padding: 0 14px;
   border-radius: 999px;
   border: 1px solid rgba(0,0,0,.15);
+  background: #fff;
+  font-size: 14px;
+  line-height: 36px;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
 }
-
-/* Override pro tmavou lištu */
-.iuLeft .topbar-searchInput{
-  background: rgba(255, 255, 255, 0.95) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  color: #111 !important;
-}
-
-.iuLeft .topbar-searchInput::placeholder{
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-.iuLeft .topbar-searchInput:focus{
-  border-color: rgba(255, 255, 255, 0.5) !important;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2) !important;
-}
-
 .topbar-searchInput::placeholder{
   color: rgba(0,0,0,.45);
 }
@@ -393,11 +262,6 @@ body::before{
   position: relative;
 }
 
-/* Override pro tmavou lištu */
-.iuLeft .topbar-links{
-  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
 .topbar-links::-webkit-scrollbar{
   display: none;
 }
@@ -429,19 +293,8 @@ body::before{
   line-height: 1.4;
   padding: 2px 0;
 }
-
 .topbar-link:hover{
   color: var(--iu-accent);
-}
-
-/* Override pro tmavou lištu */
-.iuLeft .topbar-link{
-  color: rgba(255, 255, 255, 0.9) !important;
-}
-
-.iuLeft .topbar-link:hover{
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Kompenzace pro levý obsah pod sticky hlavičkou */
@@ -537,132 +390,22 @@ img{ max-width:100%; height:auto; }
   overflow: visible;
   width: 100%;
 }
-
-/* MARBLE DESIGN: Levý sloupec */
-.iuLeft{
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-/* DEFAULT CONTENT SAFETY NET - automatická ochrana pro nové bloky */
-/* SANITY CHECK: Tento selektor musí být syntakticky čistý, žádné slepence */
-
-.iuLeft > *:not(.iuCard):not(#leftStickyHeader):not(#leftContent):not(script):not(style){
-  background: var(--iu-bg-card);
-  border-radius: var(--iu-radius-card);
-  padding: 16px;
-  box-shadow: var(--iu-shadow-card);
-  margin-bottom: 14px;
-}
-
-/* ZAKÁZÁNÍ "HOLÉHO POZADÍ" PRO OBSAH - text smí být jen uvnitř karty */
-/* SANITY CHECK: Pokud je text přímo pod .iuLeft, je to chyba - má být v kartě */
-
-.iuLeft > p,
-.iuLeft > h1,
-.iuLeft > h2,
-.iuLeft > h3,
-.iuLeft > ul,
-.iuLeft > ol{
-  background: transparent;
-}
-
 .sideCol,
-aside.accordionCol,
-aside.iuRight{
+aside.accordionCol{
   min-width: 0;
   order: 2;
-  width: 100%;
-  padding: 0;
+  width: var(--sideW, 360px);
+  padding: 0 0 16px 16px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
+  border-radius: 14px;
   align-self: stretch;
   position: relative;
 }
-
-.accordionCol,
-.iuRight{
-  background: transparent;
-  width: 100%;
-}
-
-/* MARBLE DESIGN: Pravý sloupec - odstranit padding, protože karty už mají vlastní */
-.iuRight .mindMenu{
-  gap: 14px;
-}
-
-/* POJISTKA PRO PRAVÝ SLOUPEC - automatická ochrana pro reklamy, widgety, nové panely */
-/* SANITY CHECK: Tento selektor musí být syntakticky čistý, žádné slepence */
-
-.iuRight > *:not(.iuCard):not(script):not(style){
-  background: var(--iu-bg-card-soft);
-  border-radius: var(--iu-radius-card);
-  padding: 14px;
-  box-shadow: var(--iu-shadow-card);
-  margin-bottom: 14px;
-}
-
-/* MARBLE DESIGN: Počasí karta */
-.iuWeatherCard{
-  background: rgba(255, 255, 255, 0.92);
-}
-
-.iuWeatherCard .iuDailyPanel{
-  background: transparent;
-  padding: 0;
-  margin: 0;
-}
-
-/* MARBLE DESIGN: Reklamní kapsle */
-.adSlot{
-  background: var(--iu-bg-card);
-  border-radius: var(--iu-radius-card);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 12px;
-  margin-bottom: 14px;
-  min-height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(0, 0, 0, 0.4);
-  font-size: 12px;
-  position: relative;
-}
-
-/* DATA-ATRIBUT POJISTKA - pro budoucí automatické testy/lint */
-[data-iu-surface="card"]{
-  background: var(--iu-bg-card);
-  border-radius: var(--iu-radius-card);
-  box-shadow: var(--iu-shadow-card);
-}
-
-[data-iu-surface="card-soft"]{
-  background: var(--iu-bg-card-soft);
-  border-radius: var(--iu-radius-card);
-  box-shadow: var(--iu-shadow-card);
-}
-
-.adSlot::before{
-  content: "Reklama";
-  position: absolute;
-  top: 8px;
-  left: 12px;
-  font-size: 10px;
-  font-weight: 600;
-  color: rgba(0, 0, 0, 0.3);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.adSlot--sidebar{
-  padding: 10px;
-  margin-bottom: 14px;
-}
-
 .accordionCol{
+  background: #f5f5f5;
+  width: 100%;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -674,20 +417,21 @@ aside.iuRight{
   min-height: 0;
 }
 .mindMenu{
-  background: transparent;
+  background: #f5f5f5;
   color: #2A2E33;
-  padding-left: 0;
-  padding-right: 0;
-  padding-bottom: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 40px;
   padding-top: 0;
   height: auto;
   max-height: none;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 24px;
   align-items: stretch;
   width: 100%;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 /* Informační blok v pravém sloupci */
@@ -897,12 +641,7 @@ aside.iuRight{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  margin-top: 0;
-}
-
-/* V kartě nemá margin-top */
-.iuCard .iu-mmQuickGrid{
-  margin-top: 0;
+  margin-top: 10px;
 }
 
 .iu-mmQuickItem{
@@ -992,6 +731,14 @@ button.iu-mmQuickItem{
   }
 }
 
+/* Debug: diagnostické obrysy (pouze pro vývoj) */
+.iu-mmQuickLinks{
+  /* outline: 1px dashed rgba(255,0,0,.3); */
+}
+
+.iu-mmQuickItem{
+  /* outline: 1px dashed rgba(0,0,255,.3); */
+}
 
 /* MindMenu toggle wrapper */
 .iu-mindDetails{
@@ -2467,22 +2214,17 @@ a.brand,
 
 /* Denní přehled – "Dnes je dobré vědět" */
 .iu-daily-brief{
-  margin: 0 0 0 0; /* Karta už má margin-bottom */
+  margin: 8px 0 var(--iu-brief-gap-bottom, 10px) 0; /* spodní vzdálenost dorovnána na horní mezeru */
   padding-top: 0;
   display: flow-root; /* prevence margin-collapse */
 }
 
 .iu-daily-brief-inner{
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
+  background: #f6f4ee;
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 12px;
+  padding: 12px 14px;
   margin-top: 0;
-}
-
-/* Karta už má pozadí, takže inner je transparentní */
-.iuCard .iu-daily-brief-inner{
-  padding: 0;
 }
 
 .iu-daily-brief h2{
@@ -2505,17 +2247,11 @@ a.brand,
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0;
+  margin: 10px 0 14px 0;
   padding: 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-}
-
-/* V kartě mají filtry padding */
-.iuCard .iu-filterChips{
-  margin: 0;
-  padding: 0;
 }
 .iu-filterChips::-webkit-scrollbar{ display:none; }
 
@@ -2540,21 +2276,9 @@ a.brand,
 }
 
 .iu-chip.is-active{
-  background: #1f4b99;
-  border-color: #1f4b99;
+  background: rgba(0,0,0,.92);
+  border-color: rgba(0,0,0,.92);
   color: #fff;
-  font-weight: 500;
-}
-
-.iu-chip:not(.is-active){
-  background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(0, 0, 0, 0.12);
-  color: rgba(11, 27, 43, 0.75);
-}
-
-.iu-chip:not(.is-active):hover{
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(0, 0, 0, 0.2);
 }
 
 /* Feed – default 1 sloupec (pro čitelnost) */
@@ -2565,28 +2289,9 @@ a.brand,
   min-width: 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
+  gap: 14px 18px;
   margin: 0;
-}
-
-/* MARBLE DESIGN: Články jako karty */
-#feed > .news-card,
-#feed > article{
-  background: rgba(255, 255, 255, 0.94);
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: 0 2px 12px rgba(20, 40, 70, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: none;
-  border-top: none;
-  margin: 0;
-}
-
-/* První článek - "Zpráva dne" s akcentní linkou */
-#feed > .news-card:first-child,
-#feed > article:first-child{
-  border-left: 3px solid #1f4b99;
-  padding-left: 20px;
-  padding-right: 16px;
+  padding-right: 8px;
 }
 
 /* 2 sloupce jen na opravdu širokém desktopu */
@@ -2596,11 +2301,17 @@ a.brand,
   }
 }
 
-/* MARBLE DESIGN: Feed items jsou už stylované jako karty výše, tento blok jen pro non-card elementy */
-#feed > *:not(.news-card):not(article){
+#feed > *{
+  background-color: rgba(255,255,255,0.94);
+  border: 1px solid rgba(11,27,43,0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 10px 0;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.05);
   display:block;
   opacity:1;
   visibility:visible;
+  min-height: 60px;
 }
 
 /* Karty ve feedu musí být anchor pro absolutní pseudo-element */
@@ -2724,36 +2435,15 @@ a.brand,
   display: none;
 }
 
-/* MARBLE DESIGN: Skrýt fotky u všech článků */
-#feed > .news-card .thumb img,
-#feed > .news-card .thumbnail img,
-#feed > .news-card .news-thumb img,
-#feed > .news-card .article-image img,
-#feed > article .thumb img,
-#feed > article .thumbnail img,
-#feed > article .news-thumb img,
-#feed > article .article-image img{
-  display: none;
-}
-
-#feed > .news-card .thumb,
-#feed > .news-card .thumbnail,
-#feed > .news-card .news-thumb,
-#feed > .news-card .article-image,
-#feed > article .thumb,
-#feed > article .thumbnail,
-#feed > article .news-thumb,
-#feed > article .article-image{
-  display: none;
-}
-
 /* Ostatní položky - jemná oddělovací linka */
 #feed > .news-card:not(:first-child),
 #feed > article:not(:first-child){
-  padding: 16px;
+  padding: 16px 14px;
   margin: 0;
   border: none;
-  border-top: none;
+  border-top: 1px solid rgba(17,17,17,0.08);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 
@@ -2800,21 +2490,7 @@ a.brand,
   /* Ostatní položky na mobilu */
   #feed > .news-card:not(:first-child),
   #feed > article:not(:first-child){
-    padding: 14px;
-  }
-  
-  /* MARBLE DESIGN: Mobilní karty */
-  /* MOBILE OVERRIDE – úprava padding/radius pro malé displeje */
-
-  .iuCard{
-    padding: 14px;
-    margin-bottom: 12px;
-  }
-  
-  /* MOBILE OVERRIDE – úprava padding/radius pro malé displeje */
-
-  .iuCard--soft{
-    padding: 12px;
+    padding: 14px 12px;
   }
   /* Meta řádek v feedu na mobilu - max 2 řádky s line-clamp */
   #feed .iu-meta-line{
@@ -3696,20 +3372,40 @@ a.brand,
   background:#fbfbfb;
 }
 
-/* FINAL LAYOUT - DEPRECATED: .layout už není v HTML, styly jsou neutralizované */
-/* Bezpečná neutralizace bez vedlejších efektů display: contents */
+/* FINAL LAYOUT */
 .layout{
-  display: block;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
   width: 100%;
-  /* Žádné layout vlastnosti - grid/flex řídí pouze .iuShell */
+  justify-content: start;
 }
 
-.layout > .mainCol,
-.layout > aside.accordionCol,
-.layout > aside.iuRight{
-  display: block;
-  width: 100%;
-  /* Žádné layout vlastnosti */
+/* layout anchors - feed left, MindMenu right */
+.layout > .mainCol{
+  grid-column: 1;
+  min-width: 0;
+}
+
+.layout > aside.accordionCol{
+  grid-column: 2;
+  width: 360px;
+  min-width: 360px;
+  max-width: 360px;
+  justify-self: stretch;
+  overflow: visible;
+  box-sizing: border-box;
+  background: #f5f5f5;
+  color: var(--text);
+  padding-right: 0;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  margin-top: 0;
+  padding-top: 0;
+  align-self: start;
 }
 
 /* Desktop: mobilní kopii schovat */
@@ -3718,17 +3414,17 @@ a.brand,
 }
 @media (max-width: 768px){
   .layout{
-    /* DEPRECATED - layout je nyní .iuShell */
-    display: block;
-    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
   }
   /* Mobil: používáme stack v mainCol */
   .iu-mobileStack{
     display: block;
   }
   /* Mobil: původní pravý sloupec schovat (aby nebyl duplicitně) */
-  aside.accordionCol,
-  aside.iuRight{
+  aside.accordionCol{
     display: none;
   }
   /* A – hlavní lišta */
@@ -3870,8 +3566,7 @@ html[data-iu-debug="1"] #iuDiagPanel {
 
 /* #feed display/width je už nastaveno výše (řádky 1317-1323) */
 
-/* MARBLE DESIGN: Feed karty jsou stylované výše, tento blok jen pro non-card elementy */
-#feed > *:not(.news-card):not(article){
+#feed > *{
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -3935,6 +3630,11 @@ html[data-iu-debug="1"] #iuDiagPanel {
 
 /* 2) Obsah vždy nad pozadím */
 #feed > article.news-card > *,
+#feed > .news-card > *{
+  position: relative;
+  z-index: 1;
+}
+
 /* REMOVED: FEED grafika přes ::after override - now using background-image directly */
 
 /* === MAINTENANCE MODE ACTIVE ===
