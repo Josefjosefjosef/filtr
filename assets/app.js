@@ -3398,49 +3398,8 @@ function buildVideoAsArticleCard(it) {
     rowsContainer.appendChild(row);
   }
   
-  async function copyToClipboard(text){
-    try {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch(err){
-      console.warn('[PARCELS] Clipboard copy failed:', err);
-      return false;
-    }
-  }
-  
-  function showCopiedFeedback(row, message, isError){
-    let feedback = row.querySelector('.iu-parcel-copied');
-    if(!feedback){
-      feedback = document.createElement('span');
-      feedback.className = 'iu-parcel-copied';
-      row.appendChild(feedback);
-    }
-    feedback.textContent = message || 'Zkopírováno ✅';
-    if(isError){
-      feedback.classList.add('error');
-    } else {
-      feedback.classList.remove('error');
-    }
-    feedback.classList.add('show');
-    setTimeout(() => {
-      feedback.classList.remove('show');
-    }, 1500);
-  }
-  
   function openCarrierUrl(url){
-    try {
-      const w = window.open(url, '_blank', 'noopener,noreferrer');
-      if(!w){
-        // Pop-up blokován, otevři v aktuální kartě
-        window.location.href = url;
-        return false;
-      }
-      return true;
-    } catch(err){
-      // Fallback při jakékoli chybě
-      window.location.href = url;
-      return false;
-    }
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
   
   function getFirstFilledCode(carrierId){
@@ -3452,60 +3411,29 @@ function buildVideoAsArticleCard(it) {
     return null;
   }
   
-  function shakeInput(input){
-    input.style.animation = 'none';
-    setTimeout(() => {
-      input.style.animation = 'shake 0.3s ease';
-    }, 10);
-  }
-  
-  async function handleSearch(carrierId, input){
+  function handleSearch(carrierId, input){
     const code = (input.value || '').trim();
     const carrier = carriers[carrierId];
     if(!carrier || !carrier.baseUrl) return;
     
-    // Pokud je input prázdný, udělej shake, ale pokračuj
-    if(!code){
-      shakeInput(input);
-    }
-    
-    // VŽDY otevři tracking stránku (baseUrl)
     let urlToOpen = carrier.baseUrl;
     
-    // Pokud je číslo vyplněné, zkus použít deepUrl (pokud existuje)
     if(code && carrier.deepUrl){
       urlToOpen = carrier.deepUrl(code);
     }
     
-    // Otevři stránku (s fallbackem při blokaci pop-upů)
     openCarrierUrl(urlToOpen);
-    
-    // Pro dopravce bez jistého deep-linku zkopíruj číslo do schránky
-    if(code && carrier.useClipboard){
-      const row = input.closest('.iu-parcel-row');
-      const copied = await copyToClipboard(code);
-      if(copied){
-        if(row) showCopiedFeedback(row, 'Zkopírováno ✅', false);
-      } else {
-        // Selhalo kopírování - zobraz varování
-        if(row) showCopiedFeedback(row, 'Nelze zkopírovat – zkopírujte číslo ručně.', true);
-      }
-    }
   }
   
   function handleFallback(carrierId){
     const code = getFirstFilledCode(carrierId);
-    if(!code){
-      const firstInput = $(`.iu-parcel-input[data-carrier="${carrierId}"]`);
-      if(firstInput) shakeInput(firstInput);
-      return;
-    }
+    if(!code) return;
     
     const carrier = carriers[carrierId];
     if(!carrier || !carrier.urlFallback) return;
     
     const fallbackUrl = carrier.urlFallback(code);
-    window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
+    openCarrierUrl(fallbackUrl);
   }
   
   function init(){
