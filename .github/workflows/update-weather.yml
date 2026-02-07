@@ -20,12 +20,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      - name: Debug script version
+        run: |
+          echo "Current commit: $(git rev-parse HEAD)"
+          echo "Current branch: $(git branch --show-current)"
+          node -e "const fs=require('fs'); const s=fs.readFileSync('scripts/update-weather-namedays.js','utf8'); console.log(s.includes('place:') && s.includes('current:') ? 'SCRIPT=NEW' : 'SCRIPT=OLD');"
 
       - name: Ensure output folders
         run: |
@@ -42,6 +49,14 @@ jobs:
           head -c 200 projects/data/weather.json || true
           if [ -f projects/data/weather.json ]; then
             echo "OK: projects/data/weather.json exists"
+            # Verify schema
+            if grep -q '"place"' projects/data/weather.json && grep -q '"current"' projects/data/weather.json; then
+              echo "OK: weather.json has NEW schema (place/current)"
+            elif grep -q '"tempC"' projects/data/weather.json; then
+              echo "WARNING: weather.json has OLD schema (tempC/location)"
+            else
+              echo "WARNING: weather.json schema unclear"
+            fi
           else
             echo "ERROR: weather.json missing"
             exit 1
