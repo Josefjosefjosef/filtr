@@ -458,8 +458,13 @@ aside.accordionCol{
   text-align: right;
 }
 
-/* Rychlé odkazy */
+/* PRAVÝ SLOUPEC – autorita rychlých odkazů */
+.mindMenu > *{
+  order: 10;
+}
+
 .iu-mmQuickLinks{
+  order: 0;
   width: 100%;
   margin-bottom: 12px;
   padding-bottom: 10px;
