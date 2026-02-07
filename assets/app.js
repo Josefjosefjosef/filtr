@@ -3290,6 +3290,7 @@ function buildVideoAsArticleCard(it) {
   const $$ = (sel) => Array.from(document.querySelectorAll(sel));
   
   const parcelsBtn = document.getElementById('iuParcelsBtn');
+  const parcelsBtnMobile = document.getElementById('iuParcelsBtnMobile');
   const modal = document.getElementById('iuParcelsPopover');
   const overlay = document.querySelector('.iu-parcels-overlay');
   
@@ -3417,16 +3418,26 @@ function buildVideoAsArticleCard(it) {
   }
   
   function initParcelsModal(){
-    if(!parcelsBtn || !modal || !overlay) return;
+    if(!modal || !overlay) return;
     
     if(location.search.includes("debug=1")){
-      console.log('[ParcelsModal] Initialized - parcelsBtn:', !!parcelsBtn, 'modal:', !!modal, 'overlay:', !!overlay);
+      console.log('[ParcelsModal] Initialized - parcelsBtn:', !!parcelsBtn, 'parcelsBtnMobile:', !!parcelsBtnMobile, 'modal:', !!modal, 'overlay:', !!overlay);
     }
 
-    parcelsBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      openParcels();
-    });
+    if(parcelsBtn){
+      parcelsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openParcels();
+      });
+    }
+    if(parcelsBtnMobile){
+      parcelsBtnMobile.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openParcels();
+      });
+    }
 
     overlay.addEventListener('click', closeParcels);
 
