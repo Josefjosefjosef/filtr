@@ -2026,14 +2026,6 @@ a.brand,
 #feed > article{
   position: relative;
   overflow: hidden;
-  padding-left: 28px;
-  border-left: 2px solid rgba(31,58,95,0.35);  /* FIX: použito border-left místo ::before (overflow: hidden ořezává ::before) */
-}
-
-/* FEATURED: silnější akcent (border-left přepíše obecný) */
-#feed > .news-card:first-child,
-#feed > article:first-child{
-  border-left: 5px solid #1f3a5f;
 }
 
 /* Obsah karty nad pozadím */
@@ -2084,9 +2076,9 @@ a.brand,
 #feed > .news-card:first-child,
 #feed > article:first-child{
   background-color: #ffffff;
-  border-left: 5px solid #1f3a5f;
+  border-left: 3px solid var(--iu-accent);
   border-radius: 14px;
-  padding: 34px 16px 16px 30px;  /* navýšen padding-top pro štítek */
+  padding: 34px 16px 16px 16px;  /* navýšen padding-top pro štítek, padding-left vrácen na původní */
   margin-bottom: 0;
   width: 100%;
   display: block;
@@ -2153,12 +2145,10 @@ a.brand,
 /* Ostatní položky - jemná oddělovací linka */
 #feed > .news-card:not(:first-child),
 #feed > article:not(:first-child){
-  padding: 16px 14px 16px 26px;
+  padding: 16px 14px;
   margin: 0;
-  border-right: none;
-  border-bottom: none;
+  border: none;
   border-top: 1px solid rgba(17,17,17,0.08);
-  border-left: 2px solid rgba(31,58,95,0.35);  /* FIX: zachovat border-left (border: none ho přepisoval) */
   border-radius: 0;
   box-shadow: none;
 }
