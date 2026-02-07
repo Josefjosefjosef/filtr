@@ -2027,25 +2027,13 @@ a.brand,
   position: relative;
   overflow: hidden;
   padding-left: 28px;
+  border-left: 2px solid rgba(31,58,95,0.35);  /* FIX: použito border-left místo ::before (overflow: hidden ořezává ::before) */
 }
 
-/* Levý modrý akcent pro všechny karty */
-#feed > .news-card::before,
-#feed > article::before{
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 10px;
-  bottom: 10px;
-  width: 2px;
-  background: rgba(31,58,95,0.35);
-  pointer-events: none;
-}
-
-/* FEATURED: vypni ::before akcent (má border-left místo toho) */
-#feed > .news-card:first-child::before,
-#feed > article:first-child::before{
-  content: none;
+/* FEATURED: silnější akcent (border-left přepíše obecný) */
+#feed > .news-card:first-child,
+#feed > article:first-child{
+  border-left: 5px solid #1f3a5f;
 }
 
 /* Obsah karty nad pozadím */
@@ -2167,8 +2155,10 @@ a.brand,
 #feed > article:not(:first-child){
   padding: 16px 14px 16px 26px;
   margin: 0;
-  border: none;
+  border-right: none;
+  border-bottom: none;
   border-top: 1px solid rgba(17,17,17,0.08);
+  border-left: 2px solid rgba(31,58,95,0.35);  /* FIX: zachovat border-left (border: none ho přepisoval) */
   border-radius: 0;
   box-shadow: none;
 }
@@ -3326,4 +3316,10 @@ html[data-iu-debug="1"] #iuDiagPanel {
   white-space: nowrap !important;
   border: 0 !important;
 }
+
+/* DEBUG: Feed struktura (pouze pod html[data-iu-debug="1"]) */
+html[data-iu-debug="1"] #feed { outline: 2px solid red; }
+html[data-iu-debug="1"] #feed > * { outline: 2px dashed blue; }
+html[data-iu-debug="1"] #feed > article,
+html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
