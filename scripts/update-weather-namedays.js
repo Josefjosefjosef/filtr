@@ -151,30 +151,108 @@ async function updateWeather() {
   });
 }
 
+async function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function updateNamedays() {
-  const { key } = pragueToday();
+  const now = new Date();
+  const tz = "Europe/Prague";
+  const namedays = {};
+  let requestCount = 0;
+  const maxRequests = 400;
+  const delayMs = 80; // Rate limiting mezi requesty
 
-  const url = "https://svatky.adresa.info/json";
-  const data = await fetchJson(url);
+  // Generujeme mapu pro 365 dní dopředu od dneška
+  const startDate = new Date(now);
+  startDate.setHours(0, 0, 0, 0);
 
-  // robust field picking
-  const name =
-    data?.name ||
-    data?.svatek ||
-    data?.today ||
-    data?.[0]?.name ||
-    "";
+  try {
+    for (let dayOffset = 0; dayOffset < 365; dayOffset++) {
+      if (requestCount >= maxRequests) {
+        console.warn(`[namedays] Reached max requests limit (${maxRequests}), stopping`);
+        break;
+      }
 
-  const namedays = { [key]: String(name || "").trim() };
+      const targetDate = new Date(startDate);
+      targetDate.setDate(startDate.getDate() + dayOffset);
 
-  ensureDataDir();
+      // Formát DDMM pro API
+      const fmt = new Intl.DateTimeFormat("cs-CZ", {
+        timeZone: tz,
+        day: "2-digit",
+        month: "2-digit"
+      });
+      const parts = fmt.formatToParts(targetDate);
+      const dd = parts.find(p => p.type === "day")?.value;
+      const mm = parts.find(p => p.type === "month")?.value;
+      
+      if (!dd || !mm) continue;
 
-  // ✅ FIX: Output to projects/data/ for the primary site
-  const outputDir = process.env.OUTPUT_DIR || "projects/data";
-  const outPath = path.join(outputDir, "namedays.json");
-  fs.mkdirSync(outputDir, { recursive: true });
-  fs.writeFileSync(outPath, JSON.stringify(namedays, null, 2) + "\n", "utf8");
-  console.log("✅ Updated", outPath, namedays);
+      const apiDate = dd + mm; // DDMM formát
+      const mapKey = `${mm}-${dd}`; // MM-DD pro výstupní mapu
+
+      // Rate limiting: čekáme před každým requestem (kromě prvního)
+      if (requestCount > 0) {
+        await sleep(delayMs);
+      }
+
+      try {
+        const url = `https://svatky.adresa.info/json?date=${apiDate}`;
+        const data = await fetchJson(url);
+        requestCount++;
+
+        // API vrací pole objektů [{date: "DDMM", name: "Jméno"}]
+        let name = "";
+        if (Array.isArray(data) && data.length > 0) {
+          name = data[0]?.name || "";
+        } else if (data?.name) {
+          name = data.name;
+        } else if (data?.svatek) {
+          name = data.svatek;
+        }
+
+        if (name && name.trim()) {
+          namedays[mapKey] = String(name).trim();
+        }
+      } catch (reqErr) {
+        const errorMsg = String(reqErr);
+        if (errorMsg.includes("402") || errorMsg.includes("HTTP 402")) {
+          console.warn(`[namedays] HTTP 402 at ${mapKey} – stopping early`);
+          // Pokud narazíme na 402, přerušíme a vrátíme false
+          return false;
+        }
+        // Ostatní chyby ignorujeme pro jednotlivé dny a pokračujeme
+        console.warn(`[namedays] Error fetching ${mapKey}:`, errorMsg);
+        requestCount++;
+        continue;
+      }
+    }
+
+    // Ověření, že máme dostatek dat
+    const keyCount = Object.keys(namedays).length;
+    if (keyCount < 50) {
+      console.warn(`[namedays] Generated only ${keyCount} entries, expected >300`);
+      return false; // Příliš málo dat, nepřepisujeme soubor
+    }
+
+    ensureDataDir();
+
+    // ✅ FIX: Output to projects/data/ for the primary site
+    const outputDir = process.env.OUTPUT_DIR || "projects/data";
+    const outPath = path.join(outputDir, "namedays.json");
+    fs.mkdirSync(outputDir, { recursive: true });
+    fs.writeFileSync(outPath, JSON.stringify(namedays, null, 2) + "\n", "utf8");
+    console.log(`✅ Updated ${outPath} with ${keyCount} entries`);
+    return true;
+  } catch (e) {
+    const errorMsg = String(e);
+    if (errorMsg.includes("402") || errorMsg.includes("HTTP 402")) {
+      console.warn("[namedays] Source returned HTTP 402 – keeping previous data");
+      return false; // DŮLEŽITÉ: žádný throw
+    }
+    throw e; // Ostatní chyby propagujeme dál
+  }
 }
 
 async function main() {
@@ -185,12 +263,20 @@ async function main() {
     return;
   }
   if (mode === "namedays") {
-    await updateNamedays();
+    const ok = await updateNamedays();
+    if (ok === false) {
+      console.log("[namedays] Skipped update, keeping existing file");
+      process.exit(0); // Úspěšné ukončení bez změn
+    }
     return;
   }
 
   await updateWeather();
-  await updateNamedays();
+  const ok = await updateNamedays();
+  if (ok === false) {
+    console.log("[namedays] Skipped update, keeping existing file");
+    // Pokračujeme - weather byl úspěšný, namedays jsme přeskočili
+  }
 }
 
 main().catch((e) => {

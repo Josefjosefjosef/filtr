@@ -20,6 +20,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -78,13 +79,14 @@ jobs:
 
           git commit -m "data: update $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || true
 
+          BRANCH="main"
           for i in 1 2 3; do
             echo "[PUSH] Attempt $i/3"
-            git fetch origin "${GITHUB_REF_NAME}"
+            git fetch origin "${BRANCH}"
 
-            git rebase "origin/${GITHUB_REF_NAME}" || (git rebase --abort && exit 1)
+            git rebase "origin/${BRANCH}" || (git rebase --abort && exit 1)
 
-            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+            if git push origin "HEAD:${BRANCH}"; then
               echo "[PUSH] Success."
               exit 0
             fi
