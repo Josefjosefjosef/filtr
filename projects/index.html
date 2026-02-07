@@ -1595,6 +1595,7 @@
     <script>
     (() => {
       const TZ = "Europe/Prague";
+      const isDebug = new URLSearchParams(location.search).get("debug") === "1";
 
       const elTime = document.getElementById("iuDailyTime");
       const elDate = document.getElementById("iuDailyDate");
@@ -1616,6 +1617,13 @@
       }
       function fmtHour(d){
         return new Intl.DateTimeFormat("cs-CZ",{hour:"numeric",hour12:false,timeZone:TZ}).format(d) + "h";
+      }
+      function hourInTZ(d){
+        return parseInt(new Intl.DateTimeFormat("cs-CZ",{hour:"numeric",hour12:false,timeZone:TZ}).format(d), 10);
+      }
+      function distToTargetHour(d, target){
+        const h = hourInTZ(d);
+        return Math.abs(h - target);
       }
 
       function tick(){
@@ -1651,7 +1659,7 @@
 
           // nameday
           const nd = await loadJson(ndUrl);
-          console.log("[iuDailyPanel] namedays url", ndUrl, nd);
+          if (isDebug) console.log("[iuDailyPanel] namedays url", ndUrl, nd);
           if (nd && typeof nd.today === "string" && nd.today.trim() && elNameday){
             elNameday.textContent = "Svátek má " + nd.today.trim();
           } else {
@@ -1660,8 +1668,9 @@
 
           // weather
           const wx = await loadJson(wxUrl);
-          console.log("[iuDailyPanel] weather url", wxUrl);
-          console.log("[iuDailyPanel] weather sample", wx, Array.isArray(wx.hours) ? wx.hours.slice(0,2) : wx.hours);
+          if (isDebug) console.log("[iuDailyPanel] weather url", wxUrl);
+          if (isDebug) console.log("[iuDailyPanel] weather keys", Object.keys(wx || {}));
+          if (isDebug) console.log("[iuDailyPanel] weather hours[0..1]", Array.isArray(wx.hours) ? wx.hours.slice(0,2) : wx.hours);
           if (!wx || !wx.current || typeof wx.current.temp !== "number" || !wx.today) {
             console.warn("[iuDailyPanel] unexpected weather.json structure", wx);
             throw new Error("bad weather structure");
@@ -1675,22 +1684,81 @@
           elMinMax.textContent = "Max " + Math.round(wx.today.max) + "° · Min " + Math.round(wx.today.min) + "°";
           elIcon.textContent = iconFrom(wx.current.desc);
 
+          // Výběr hodin: vždy se snažit zahrnout 8h a 15h (pokud existují v datech)
+          // a doplnit nejbližšími hodinami okolo tak, aby bylo celkem 8 položek.
+          const all = (wx.hours || [])
+            .map(h => ({ ...h, _d: new Date(h.time) }))
+            .filter(x => x._d && !isNaN(x._d.getTime()))
+            .sort((a,b) => a._d - b._d);
+
+          // unikátní podle času
+          const uniqueByTime = (arr) => {
+            const seen = new Set();
+            const out = [];
+            for (const item of arr){
+              const key = item._d.getTime();
+              if (seen.has(key)) continue;
+              seen.add(key);
+              out.push(item);
+            }
+            return out;
+          };
+
+          const byHour = (target) => all.filter(x => hourInTZ(x._d) === target);
+
+          // kandidáti pro 8h a 15h (může být více dní — vezmeme nejbližší v čase k „teď")
+          const now = new Date();
+          function pickClosestInTime(arr){
+            if (!arr.length) return null;
+            let best = arr[0], bestDist = Math.abs(arr[0]._d - now);
+            for (const x of arr){
+              const d = Math.abs(x._d - now);
+              if (d < bestDist){ best = x; bestDist = d; }
+            }
+            return best;
+          }
+
+          const h8  = pickClosestInTime(byHour(8));
+          const h15 = pickClosestInTime(byHour(15));
+
+          let seed = [];
+          if (h8) seed.push(h8);
+          if (h15) seed.push(h15);
+
+          seed = uniqueByTime(seed);
+
+          // doplnění: seřaď zbytek podle „blízkosti" k 8 nebo 15 (min z obou vzdáleností),
+          // a jako druhé kritérium nejbližší v čase k now
+          const rest = all.filter(x => !seed.some(s => s._d.getTime() === x._d.getTime()));
+
+          rest.sort((a,b) => {
+            const da = Math.min(distToTargetHour(a._d, 8), distToTargetHour(a._d, 15));
+            const db = Math.min(distToTargetHour(b._d, 8), distToTargetHour(b._d, 15));
+            if (da !== db) return da - db;
+            return Math.abs(a._d - now) - Math.abs(b._d - now);
+          });
+
+          const selected = uniqueByTime([...seed, ...rest]).slice(0, 8)
+            .sort((a,b) => a._d - b._d);
+
           elHours.innerHTML = "";
-          (wx.hours || []).slice(0,8).forEach(h => {
-            const d = new Date(h.time);
+          selected.forEach(it => {
             const div = document.createElement("div");
             div.className = "iuWxHour";
             div.innerHTML = `
-              <div>${fmtHour(d)}</div>
-              <div class="iuWxHourTemp">${Math.round(h.temp)}°</div>
-              <div>${iconFrom(h.desc)}</div>
+              <div>${fmtHour(it._d)}</div>
+              <div class="iuWxHourTemp">${Math.round(it.temp)}°</div>
+              <div>${iconFrom(it.desc)}</div>
             `;
             elHours.appendChild(div);
           });
 
+          // Zajistit zobrazení počasí po úspěšném renderu
           elWeather.hidden = false;
+          elErr.hidden = true;
         }catch(e){
           console.warn("[iuDailyPanel] failed to render", e);
+          elWeather.hidden = true;
           elErr.hidden = false;
         }
       })();
