@@ -458,6 +458,145 @@ aside.accordionCol{
   text-align: right;
 }
 
+/* Rychlé odkazy */
+.iu-mmQuickLinks{
+  width: 100%;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+
+.iu-mmSectionHead{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.iu-mmSectionTitle{
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0,0,0,.85);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.iu-mmSectionLine{
+  flex: 1;
+  height: 1px;
+  background: rgba(0,0,0,.15);
+  min-width: 0;
+}
+
+.iu-mmQuickGrid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.iu-mmQuickItem{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 60px;
+  padding: 8px;
+  border-radius: 6px;
+  background: rgba(0,0,0,.03);
+  text-decoration: none;
+  color: rgba(0,0,0,.75);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-sizing: border-box;
+}
+
+.iu-mmQuickItem:hover{
+  background: rgba(0,0,0,.08);
+  transform: translateY(-1px);
+}
+
+.iu-mmQuickItem:active{
+  background: rgba(0,0,0,.12);
+  transform: translateY(0);
+}
+
+.iu-mmQuickItem:focus-visible{
+  outline: 2px solid rgba(0,123,255,.5);
+  outline-offset: 2px;
+}
+
+.iu-mmQuickItem i{
+  display: block;
+  font-size: 24px;
+  line-height: 1;
+  transform: scale(1);
+  transition: transform 0.2s ease;
+}
+
+.iu-mmQuickItem:hover i{
+  transform: scale(1.1);
+}
+
+.iu-mmQuickItem span{
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Barvy ikon */
+.iu-mmQuickItem[aria-label="ChatGPT"] i{
+  color: #10a37f;
+}
+
+.iu-mmQuickItem[aria-label="DeepL"] i{
+  color: #0d2e4c;
+}
+
+.iu-mmQuickItem[aria-label="Balíky"] i{
+  color: #e60012;
+}
+
+.iu-mmQuickItem[aria-label="Google"] i{
+  color: #4285f4;
+}
+
+.iu-mmQuickItem[aria-label="Seznam.cz"] i{
+  color: #0066cc;
+}
+
+.iu-mmQuickItem[aria-label="YouTube"] i{
+  color: #ff0000;
+}
+
+/* Responzivní úpravy */
+@media (max-width: 768px){
+  .iu-mmQuickItem{
+    min-height: 50px;
+    padding: 6px;
+  }
+
+  .iu-mmQuickItem i{
+    font-size: 20px;
+  }
+
+  .iu-mmQuickItem span{
+    font-size: 10px;
+  }
+}
+
+/* Debug: diagnostické obrysy (pouze pro vývoj) */
+.iu-mmQuickLinks{
+  /* outline: 1px dashed rgba(255,0,0,.3); */
+}
+
+.iu-mmQuickItem{
+  /* outline: 1px dashed rgba(0,0,255,.3); */
+}
+
 /* MindMenu toggle wrapper */
 .iu-mindDetails{
   width: 100%;
