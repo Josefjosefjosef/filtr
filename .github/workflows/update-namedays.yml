@@ -32,6 +32,12 @@ jobs:
         run: |
           mkdir -p projects/data
 
+      - name: Debug script version
+        run: |
+          echo "Current commit: $(git rev-parse HEAD)"
+          echo "Current branch: $(git branch --show-current)"
+          node -e "const fs=require('fs'); const s=fs.readFileSync('scripts/update-weather-namedays.js','utf8'); console.log(s.includes('namedays-cz.json') && !s.includes('svatky.adresa.info') ? 'SCRIPT=NEW (offline)' : 'SCRIPT=OLD (has external URL)');"
+
       - name: Run updater (namedays)
         env:
           OUTPUT_DIR: projects/data
@@ -40,9 +46,15 @@ jobs:
       - name: Sanity check
         run: |
           ls -la projects/data
-          head -c 200 projects/data/namedays.json || true
+          head -n 5 projects/data/namedays.json || true
           if [ -f projects/data/namedays.json ]; then
             echo "OK: projects/data/namedays.json exists"
+            KEY_COUNT=$(python3 -c "import json; print(len(json.load(open('projects/data/namedays.json','r',encoding='utf-8'))))")
+            echo "KEYS: $KEY_COUNT"
+            if [ "$KEY_COUNT" -lt 300 ]; then
+              echo "WARNING: Only $KEY_COUNT keys, expected >=300"
+              exit 1
+            fi
           else
             echo "ERROR: namedays.json missing"
             exit 1
