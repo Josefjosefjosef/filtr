@@ -192,130 +192,14 @@
                       </div>
                       </details>
                     </div>
-                  </div>
-                </div>
-                <!-- Popover pro sledování zásilek -->
-                <div id="iuParcelsPopover" class="iu-parcels-popover" role="dialog" aria-label="Sledování zásilek" aria-hidden="true">
-                <div class="iu-parcels-popover-header">
-                  <h3 class="iu-parcels-popover-title">Sledování zásilek</h3>
-                  <button class="iu-parcels-popover-close" aria-label="Zavřít" type="button">×</button>
-                </div>
-                <div class="iu-parcels-popover-content">
-                  <!-- Zásilkovna -->
-                  <div class="iu-parcel-carrier" data-carrier="packeta">
-                    <h4 class="iu-parcel-carrier-name">Zásilkovna</h4>
-                    <div class="iu-parcelRows" data-carrier="packeta">
-                      <div class="iu-parcel-row">
-                        <div class="iu-parcel-row-inputs">
-                          <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="packeta">
-                          <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
-                        </div>
-                      </div>
-                    </div>
-                    <button class="iu-parcel-add-btn" type="button" data-carrier="packeta">+ Přidat další zásilku</button>
-                    <button class="iu-parcel-fallback-btn" type="button" data-carrier="packeta">Otevřít starý tracking (fallback)</button>
-                  </div>
-
-                  <!-- Balíkovna / Česká pošta -->
-                  <div class="iu-parcel-carrier" data-carrier="balikovna">
-                    <h4 class="iu-parcel-carrier-name">Balíkovna / Česká pošta</h4>
-                    <div class="iu-parcelRows" data-carrier="balikovna">
-                      <div class="iu-parcel-row">
-                        <div class="iu-parcel-row-inputs">
-                          <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="balikovna">
-                          <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
-                        </div>
-                      </div>
-                    </div>
-                    <button class="iu-parcel-add-btn" type="button" data-carrier="balikovna">+ Přidat další zásilku</button>
-                  </div>
-
-                  <!-- PPL -->
-                  <div class="iu-parcel-carrier" data-carrier="ppl">
-                    <h4 class="iu-parcel-carrier-name">PPL</h4>
-                    <div class="iu-parcelRows" data-carrier="ppl">
-                      <div class="iu-parcel-row">
-                        <div class="iu-parcel-row-inputs">
-                          <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="ppl">
-                          <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
-                        </div>
-                      </div>
-                    </div>
-                    <button class="iu-parcel-add-btn" type="button" data-carrier="ppl">+ Přidat další zásilku</button>
-                  </div>
-
-                  <!-- DPD -->
-                  <div class="iu-parcel-carrier" data-carrier="dpd">
-                    <h4 class="iu-parcel-carrier-name">DPD</h4>
-                    <div class="iu-parcelRows" data-carrier="dpd">
-                      <div class="iu-parcel-row">
-                        <div class="iu-parcel-row-inputs">
-                          <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="dpd">
-                          <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
-                        </div>
-                      </div>
-                    </div>
-                    <button class="iu-parcel-add-btn" type="button" data-carrier="dpd">+ Přidat další zásilku</button>
-                  </div>
-
-                  <!-- GLS -->
-                  <div class="iu-parcel-carrier" data-carrier="gls">
-                    <h4 class="iu-parcel-carrier-name">GLS</h4>
-                    <div class="iu-parcelRows" data-carrier="gls">
-                      <div class="iu-parcel-row">
-                        <div class="iu-parcel-row-inputs">
-                          <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="gls">
-                          <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
-                        </div>
-                      </div>
-                    </div>
-                    <button class="iu-parcel-add-btn" type="button" data-carrier="gls">+ Přidat další zásilku</button>
-                  </div>
-
-                  <!-- WE|DO -->
-                  <div class="iu-parcel-carrier" data-carrier="wedo">
-                    <h4 class="iu-parcel-carrier-name">WE|DO</h4>
-                    <div class="iu-parcelRows" data-carrier="wedo">
-                      <div class="iu-parcel-row">
-                        <div class="iu-parcel-row-inputs">
-                          <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="wedo">
-                          <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
-                        </div>
-                      </div>
-                    </div>
-                    <button class="iu-parcel-add-btn" type="button" data-carrier="wedo">+ Přidat další zásilku</button>
-                  </div>
-
-                  <!-- DHL -->
-                  <div class="iu-parcel-carrier" data-carrier="dhl">
-                    <h4 class="iu-parcel-carrier-name">DHL</h4>
-                    <div class="iu-parcelRows" data-carrier="dhl">
-                      <div class="iu-parcel-row">
-                        <div class="iu-parcel-row-inputs">
-                          <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="dhl">
-                          <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
-                        </div>
-                      </div>
-                    </div>
-                    <button class="iu-parcel-add-btn" type="button" data-carrier="dhl">+ Přidat další zásilku</button>
-                  </div>
-
-                  <!-- Messenger -->
-                  <div class="iu-parcel-carrier" data-carrier="messenger">
-                    <h4 class="iu-parcel-carrier-name">Messenger</h4>
-                    <div class="iu-parcelRows" data-carrier="messenger">
-                      <div class="iu-parcel-row">
-                        <div class="iu-parcel-row-inputs">
-                          <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="messenger">
-                          <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
-                        </div>
-                      </div>
-                    </div>
-                    <button class="iu-parcel-add-btn" type="button" data-carrier="messenger">+ Přidat další zásilku</button>
-                  </div>
-                </div>
-              </div>
               </aside>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script>
+    (function(){
             </div>
           </div>
         </main>
@@ -1474,5 +1358,131 @@
       });
     })();
     </script>
-  </body>
-</html>
+    <!-- Popover pro sledování zásilek -->
+    <div class="iu-parcels-overlay" aria-hidden="true"></div>
+    <div id="iuParcelsPopover" class="iu-parcels-modal" role="dialog" aria-label="Sledování zásilek" aria-hidden="true">
+      <div class="iu-parcels-modal-header">
+        <h3 class="iu-parcels-modal-title">Sledování zásilek</h3>
+        <button class="iu-parcels-modal-close" aria-label="Zavřít" type="button">×</button>
+      </div>
+      <div class="iu-parcels-modal-grid">
+        <div class="iu-parcels-modal-content">
+          <div class="iu-parcels-ad-slot iu-ad-slot-top"></div>
+          <div class="iu-parcels-content-inner">
+            <!-- Zásilkovna -->
+            <div class="iu-parcel-carrier" data-carrier="packeta">
+              <h4 class="iu-parcel-carrier-name">Zásilkovna</h4>
+              <div class="iu-parcelRows" data-carrier="packeta">
+                <div class="iu-parcel-row">
+                  <div class="iu-parcel-row-inputs">
+                    <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="packeta">
+                    <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
+                  </div>
+                </div>
+              </div>
+              <button class="iu-parcel-add-btn" type="button" data-carrier="packeta">+ Přidat další zásilku</button>
+              <button class="iu-parcel-fallback-btn" type="button" data-carrier="packeta">Otevřít starý tracking (fallback)</button>
+            </div>
+
+            <!-- Balíkovna / Česká pošta -->
+            <div class="iu-parcel-carrier" data-carrier="balikovna">
+              <h4 class="iu-parcel-carrier-name">Balíkovna / Česká pošta</h4>
+              <div class="iu-parcelRows" data-carrier="balikovna">
+                <div class="iu-parcel-row">
+                  <div class="iu-parcel-row-inputs">
+                    <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="balikovna">
+                    <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
+                  </div>
+                </div>
+              </div>
+              <button class="iu-parcel-add-btn" type="button" data-carrier="balikovna">+ Přidat další zásilku</button>
+            </div>
+
+            <!-- PPL -->
+            <div class="iu-parcel-carrier" data-carrier="ppl">
+              <h4 class="iu-parcel-carrier-name">PPL</h4>
+              <div class="iu-parcelRows" data-carrier="ppl">
+                <div class="iu-parcel-row">
+                  <div class="iu-parcel-row-inputs">
+                    <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="ppl">
+                    <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
+                  </div>
+                </div>
+              </div>
+              <button class="iu-parcel-add-btn" type="button" data-carrier="ppl">+ Přidat další zásilku</button>
+            </div>
+
+            <!-- DPD -->
+            <div class="iu-parcel-carrier" data-carrier="dpd">
+              <h4 class="iu-parcel-carrier-name">DPD</h4>
+              <div class="iu-parcelRows" data-carrier="dpd">
+                <div class="iu-parcel-row">
+                  <div class="iu-parcel-row-inputs">
+                    <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="dpd">
+                    <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
+                  </div>
+                </div>
+              </div>
+              <button class="iu-parcel-add-btn" type="button" data-carrier="dpd">+ Přidat další zásilku</button>
+            </div>
+
+            <!-- GLS -->
+            <div class="iu-parcel-carrier" data-carrier="gls">
+              <h4 class="iu-parcel-carrier-name">GLS</h4>
+              <div class="iu-parcelRows" data-carrier="gls">
+                <div class="iu-parcel-row">
+                  <div class="iu-parcel-row-inputs">
+                    <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="gls">
+                    <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
+                  </div>
+                </div>
+              </div>
+              <button class="iu-parcel-add-btn" type="button" data-carrier="gls">+ Přidat další zásilku</button>
+            </div>
+
+            <!-- WE|DO -->
+            <div class="iu-parcel-carrier" data-carrier="wedo">
+              <h4 class="iu-parcel-carrier-name">WE|DO</h4>
+              <div class="iu-parcelRows" data-carrier="wedo">
+                <div class="iu-parcel-row">
+                  <div class="iu-parcel-row-inputs">
+                    <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="wedo">
+                    <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
+                  </div>
+                </div>
+              </div>
+              <button class="iu-parcel-add-btn" type="button" data-carrier="wedo">+ Přidat další zásilku</button>
+            </div>
+
+            <!-- DHL -->
+            <div class="iu-parcel-carrier" data-carrier="dhl">
+              <h4 class="iu-parcel-carrier-name">DHL</h4>
+              <div class="iu-parcelRows" data-carrier="dhl">
+                <div class="iu-parcel-row">
+                  <div class="iu-parcel-row-inputs">
+                    <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="dhl">
+                    <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
+                  </div>
+                </div>
+              </div>
+              <button class="iu-parcel-add-btn" type="button" data-carrier="dhl">+ Přidat další zásilku</button>
+            </div>
+
+            <!-- Messenger -->
+            <div class="iu-parcel-carrier" data-carrier="messenger">
+              <h4 class="iu-parcel-carrier-name">Messenger</h4>
+              <div class="iu-parcelRows" data-carrier="messenger">
+                <div class="iu-parcel-row">
+                  <div class="iu-parcel-row-inputs">
+                    <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="messenger">
+                    <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
+                  </div>
+                </div>
+              </div>
+              <button class="iu-parcel-add-btn" type="button" data-carrier="messenger">+ Přidat další zásilku</button>
+            </div>
+          </div>
+        </div>
+        <div class="iu-parcels-ad-slot iu-ad-slot-sidebar"></div>
+      </div>
+    </div>

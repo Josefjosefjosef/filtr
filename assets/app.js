@@ -3290,9 +3290,7 @@ function buildVideoAsArticleCard(it) {
   const $$ = (sel) => Array.from(document.querySelectorAll(sel));
   
   const popover = $('#iuParcelsPopover');
-  const overlay = document.createElement('div');
-  overlay.className = 'iu-parcels-popover-overlay';
-  document.body.appendChild(overlay);
+  const overlay = $('.iu-parcels-overlay');
   
   const carriers = {
     packeta: {
@@ -3340,43 +3338,18 @@ function buildVideoAsArticleCard(it) {
     }
   };
   
-  function computePopoverTop(){
-    // Najdi sekci "Rychlé odkazy" v pravém sloupci
-    const quickLinksSection = $('.iu-mmQuickLinks');
-    if(!quickLinksSection) return 0;
-    
-    // Spočítej výšku sekce včetně marginů
-    const rect = quickLinksSection.getBoundingClientRect();
-    const computedStyle = window.getComputedStyle(quickLinksSection);
-    const marginBottom = parseFloat(computedStyle.marginBottom) || 0;
-    const paddingBottom = parseFloat(computedStyle.paddingBottom) || 0;
-    
-    const totalHeight = rect.height + marginBottom + paddingBottom;
-    
-    // Přidej malý spacing (8px)
-    return totalHeight + 8;
-  }
-  
   function openPopover(){
-    // Vypočítej dynamický top offset
-    const topOffset = computePopoverTop();
-    popover.style.top = topOffset + 'px';
-    popover.style.maxHeight = `calc(70vh - ${topOffset}px)`;
-    
     popover.classList.add('is-open');
-    overlay.classList.add('is-open');
+    if(overlay) overlay.classList.add('is-open');
     popover.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   }
   
   function closePopover(){
     popover.classList.remove('is-open');
-    overlay.classList.remove('is-open');
+    if(overlay) overlay.classList.remove('is-open');
     popover.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    // Reset top a max-height pro příští otevření
-    popover.style.top = '';
-    popover.style.maxHeight = '';
   }
   
   function addParcelRow(carrierId){
@@ -3450,12 +3423,14 @@ function buildVideoAsArticleCard(it) {
       }
     });
     
-    const closeBtn = popover.querySelector('.iu-parcels-popover-close');
+    const closeBtn = popover.querySelector('.iu-parcels-modal-close');
     if(closeBtn){
       closeBtn.addEventListener('click', closePopover);
     }
     
-    overlay.addEventListener('click', closePopover);
+    if(overlay){
+      overlay.addEventListener('click', closePopover);
+    }
     
     document.addEventListener('keydown', (e) => {
       if(e.key === 'Escape' && popover.classList.contains('is-open')){
