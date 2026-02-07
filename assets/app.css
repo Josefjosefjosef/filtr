@@ -2021,11 +2021,31 @@ a.brand,
   min-height: 60px;
 }
 
-/* Karty ve feedu – připravit vrstvy */
+/* Karty ve feedu musí být anchor pro absolutní pseudo-element */
 #feed > .news-card,
 #feed > article{
   position: relative;
   overflow: hidden;
+  padding-left: 28px;
+}
+
+/* Levý modrý akcent pro všechny karty */
+#feed > .news-card::before,
+#feed > article::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: rgba(31,58,95,0.35);
+  pointer-events: none;
+}
+
+/* FEATURED: vypni ::before akcent (má border-left místo toho) */
+#feed > .news-card:first-child::before,
+#feed > article:first-child::before{
+  content: none;
 }
 
 /* Obsah karty nad pozadím */
@@ -2076,9 +2096,9 @@ a.brand,
 #feed > .news-card:first-child,
 #feed > article:first-child{
   background-color: #ffffff;
-  border-left: 3px solid var(--iu-accent);
+  border-left: 5px solid #1f3a5f;
   border-radius: 14px;
-  padding: 16px 16px;
+  padding: 34px 16px 16px 30px;  /* navýšen padding-top pro štítek */
   margin-bottom: 0;
   width: 100%;
   display: block;
@@ -2086,9 +2106,9 @@ a.brand,
   grid-column: 1 / -1;
 }
 
-/* Štítek "Zpráva dne" nad TOP článkem */
-#feed > .news-card:first-child::before,
-#feed > article:first-child::before{
+/* Štítek "Zpráva dne" přes ::after (NOVĚ, bez kolize s akcentem) */
+#feed > .news-card:first-child::after,
+#feed > article:first-child::after{
   content: "Zpráva dne";
   display: block;
   font-size: 12px;
@@ -2100,9 +2120,11 @@ a.brand,
   border: 1px solid rgba(17,17,17,0.10);
   border-radius: 999px;
   padding: 4px 10px;
-  margin-bottom: 8px;
-  width: fit-content;
+  position: absolute;
+  left: 14px;
+  top: 12px;
   pointer-events: none;
+  z-index: 3;
 }
 
 /* Meta řádek v TOP položce - spacing už řeší margin-top z #feed .iu-meta-line */
@@ -2143,7 +2165,7 @@ a.brand,
 /* Ostatní položky - jemná oddělovací linka */
 #feed > .news-card:not(:first-child),
 #feed > article:not(:first-child){
-  padding: 16px 14px;
+  padding: 16px 14px 16px 26px;
   margin: 0;
   border: none;
   border-top: 1px solid rgba(17,17,17,0.08);
