@@ -3612,9 +3612,6 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   overflow: hidden;
   box-sizing: border-box;
   
-  /* HRANICE ŠÍŘKY */
-  width: 100%;
-  max-width: calc(var(--mainW, 1100px) + var(--sideW, 360px));
   max-height: calc(100vh - 48px);
 }
 
@@ -3661,15 +3658,15 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 .iu-parcels-modal-grid{
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 24px;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .iu-parcels-modal-content{
+  width: min(100vw - 32px, 800px);
+  max-width: 800px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -3683,21 +3680,17 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   gap: 24px;
 }
 
-.iu-parcels-ad-slot{
-  min-height: 250px;
-  border: 1px dashed rgba(0,0,0,.15);
-  border-radius: 12px;
-  background: rgba(0,0,0,.02);
-}
-
-.iu-ad-slot-top{
-  margin-bottom: 24px;
-}
-
+/* Pojistka: ad-sloty jsou skryté, i kdyby se objevily v HTML */
+.iu-parcels-ad-slot,
+.iu-ad-slot-top,
 .iu-ad-slot-sidebar{
-  padding: 24px;
-  overflow-y: auto;
-  min-height: 0;
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .iu-parcel-carrier{
@@ -3819,14 +3812,10 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   color: rgba(0,0,0,.75);
 }
 
+
 @media (max-width: 1024px){
-  .iu-parcels-modal-grid{
-    grid-template-columns: 1fr;
-  }
-  
-  .iu-ad-slot-sidebar{
-    order: -1;
-    margin-bottom: 24px;
+  .iu-parcels-modal-content{
+    width: min(100vw - 24px, 800px);
   }
 }
 
@@ -3835,17 +3824,14 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
     inset: 12px;
     max-height: calc(100vh - 24px);
   }
-  
+
   .iu-parcels-modal-header{
     padding: 16px 20px;
   }
-  
+
   .iu-parcels-modal-content{
     padding: 20px;
-  }
-  
-  .iu-ad-slot-sidebar{
-    padding: 20px;
+    width: min(100vw - 24px, 800px);
   }
 }
 
