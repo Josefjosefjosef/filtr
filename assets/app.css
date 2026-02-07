@@ -3695,14 +3695,13 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   margin-bottom: 8px;
 }
 
-/* Řádky input + tlačítko – zachovat současné chování (50% input na desktopu + mobile rules) */
+/* Řádky input + tlačítko */
 .iu-parcel-row{
   display: flex;
   flex-direction: column;
   gap: 4px;
   align-items: stretch;
   position: relative;
-  margin-bottom: 10px;
 }
 
 .iu-parcelRows .iu-parcel-row:last-child{
@@ -3761,7 +3760,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   margin-top: 8px;
   background: transparent;
   border: none;
-  padding: 0;
+  padding: 6px 12px;
   cursor: pointer;
   font-size: 12px;
   color: var(--iu-link, #1f3a5f);
