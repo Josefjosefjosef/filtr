@@ -3350,11 +3350,22 @@ a.brand,
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    gap: 10px;
+    gap: 14px; /* zvětšeno z 10px kvůli scale(1.2) */
     white-space: nowrap;
   }
   .iu-mobileQuickLinks .iu-mmQuickGrid > *{
     flex: 0 0 auto;
+  }
+  
+  /* B – Rychlé odkazy (mobil): zvětšení ikon + popisků o ~20 % */
+  .iu-mobileQuickLinks .iu-mmQuickItem{
+    transform: scale(1.2);
+    transform-origin: center;
+  }
+  
+  /* mírně větší popisek */
+  .iu-mobileQuickLinks .iu-mmQuickItem span{
+    font-size: 1.1em;
   }
   
   /* C – moje schránky (mobilní kopie): VERTIKÁLNĚ, bez scrollu */
