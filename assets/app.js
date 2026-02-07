@@ -3289,8 +3289,9 @@ function buildVideoAsArticleCard(it) {
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => Array.from(document.querySelectorAll(sel));
   
-  const popover = $('#iuParcelsPopover');
-  const overlay = $('.iu-parcels-overlay');
+  const parcelsBtn = document.getElementById('iuParcelsBtn');
+  const modal = document.getElementById('iuParcelsPopover');
+  const overlay = document.querySelector('.iu-parcels-overlay');
   
   const carriers = {
     packeta: {
@@ -3338,18 +3339,24 @@ function buildVideoAsArticleCard(it) {
     }
   };
   
-  function openPopover(){
-    popover.classList.add('is-open');
-    if(overlay) overlay.classList.add('is-open');
-    popover.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+  function openParcels(){
+    if(!modal || !overlay) return;
+    overlay.classList.add('is-open');
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    if(location.search.includes("debug=1")){
+      console.log('[ParcelsModal] Opened - overlay.has(.is-open):', overlay.classList.contains('is-open'), 'modal.has(.is-open):', modal.classList.contains('is-open'));
+    }
   }
   
-  function closePopover(){
-    popover.classList.remove('is-open');
-    if(overlay) overlay.classList.remove('is-open');
-    popover.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+  function closeParcels(){
+    if(!modal || !overlay) return;
+    overlay.classList.remove('is-open');
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    if(location.search.includes("debug=1")){
+      console.log('[ParcelsModal] Closed - overlay.has(.is-open):', overlay.classList.contains('is-open'), 'modal.has(.is-open):', modal.classList.contains('is-open'));
+    }
   }
   
   function addParcelRow(carrierId){
@@ -3409,33 +3416,25 @@ function buildVideoAsArticleCard(it) {
     openCarrierUrl(fallbackUrl);
   }
   
-  function init(){
-    const btn = $('#iuParcelsBtn');
-    if(!btn || !popover) return;
+  function initParcelsModal(){
+    if(!parcelsBtn || !modal || !overlay) return;
     
-    btn.addEventListener('click', (e) => {
+    if(location.search.includes("debug=1")){
+      console.log('[ParcelsModal] Initialized - parcelsBtn:', !!parcelsBtn, 'modal:', !!modal, 'overlay:', !!overlay);
+    }
+
+    parcelsBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      e.stopPropagation();
-      if(popover.classList.contains('is-open')){
-        closePopover();
-      } else {
-        openPopover();
-      }
+      openParcels();
     });
-    
-    const closeBtn = popover.querySelector('.iu-parcels-modal-close');
-    if(closeBtn){
-      closeBtn.addEventListener('click', closePopover);
-    }
-    
-    if(overlay){
-      overlay.addEventListener('click', closePopover);
-    }
-    
+
+    overlay.addEventListener('click', closeParcels);
+
+    const closeBtn = modal.querySelector('.iu-parcels-modal-close');
+    if(closeBtn) closeBtn.addEventListener('click', closeParcels);
+
     document.addEventListener('keydown', (e) => {
-      if(e.key === 'Escape' && popover.classList.contains('is-open')){
-        closePopover();
-      }
+      if(e.key === 'Escape') closeParcels();
     });
     
     $$('.iu-parcel-add-btn').forEach(btn => {
@@ -3460,9 +3459,5 @@ function buildVideoAsArticleCard(it) {
     });
   }
   
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  initParcelsModal();
 })();
