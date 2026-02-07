@@ -286,9 +286,12 @@ body{
   transition: color 150ms ease;
   font-weight: 400;
   white-space: nowrap;
+  overflow: hidden;
   flex: 0 0 auto;
   position: relative;
   z-index: 2;
+  line-height: 1.4;
+  padding: 2px 0;
 }
 .topbar-link:hover{
   color: var(--iu-accent);
