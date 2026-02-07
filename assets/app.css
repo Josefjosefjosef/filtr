@@ -490,11 +490,9 @@ aside.accordionCol{
 
 .iu-mmQuickGrid{
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 10px;
 }
 
 .iu-mmQuickItem{
@@ -502,14 +500,11 @@ aside.accordionCol{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  min-height: 60px;
-  padding: 8px;
-  border-radius: 6px;
-  background: rgba(0,0,0,.03);
+  padding: 10px 6px;
+  text-align: center;
+  border-radius: 10px;
   text-decoration: none;
-  color: rgba(0,0,0,.75);
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  color: inherit;
   box-sizing: border-box;
 }
 
@@ -529,22 +524,13 @@ aside.accordionCol{
 }
 
 .iu-mmQuickItem i{
-  display: block;
-  font-size: 24px;
-  line-height: 1;
-  transform: scale(1);
-  transition: transform 0.2s ease;
-}
-
-.iu-mmQuickItem:hover i{
-  transform: scale(1.1);
+  font-size: 20px;
+  margin-bottom: 4px;
 }
 
 .iu-mmQuickItem span{
-  font-size: 11px;
-  font-weight: 500;
-  text-align: center;
-  white-space: nowrap;
+  font-size: 12px;
+  line-height: 1.1;
 }
 
 /* Barvy ikon */
