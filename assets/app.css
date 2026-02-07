@@ -395,7 +395,7 @@ aside.accordionCol{
   min-width: 0;
   order: 2;
   width: var(--sideW, 360px);
-  padding: 16px 0 16px 16px;
+  padding: 0 0 16px 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -416,7 +416,7 @@ aside.accordionCol{
 .mindMenu{
   background: #f5f5f5;
   color: #2A2E33;
-  padding: 40px 0 40px 24px;
+  padding: 0 0 40px 24px;
   padding-right: 0;
   height: auto;
   max-height: none;
@@ -463,9 +463,19 @@ aside.accordionCol{
   order: 10;
 }
 
+/* PRAVÝ SLOUPEC – žádný prostor nahoře */
+.accordionCol,
+.mindMenu-scroll-wrapper,
+.mindMenu{
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
 .iu-mmQuickLinks{
   order: 0;
   width: 100%;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
   margin-bottom: 12px;
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(0,0,0,.08);
