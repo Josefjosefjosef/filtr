@@ -2319,6 +2319,23 @@ a.brand,
   margin: 4px 0;
 }
 
+.iu-todayGrid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px; /* jemná mezera pod H2 */
+}
+
+.iu-todayBox ul{
+  margin: 0;
+}
+
+@media (max-width: 768px){
+  .iu-todayGrid{
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Filter chips - řádek štítků nad feedem */
 .iu-filterChips{
   display: flex;
