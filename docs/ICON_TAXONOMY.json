@@ -4,9 +4,9 @@
   "description": "Taxonomie ikon pro články - deterministická pravidla přiřazení",
   "icons": [
     {
-      "id": "world",
-      "label": "Svět",
-      "svg": "world.svg",
+      "id": "time",
+      "label": "Aktuálně",
+      "svg": "time.svg",
       "rules": [
         {
           "priority": 1,
@@ -16,9 +16,43 @@
             "value": "aktualne",
             "fallback": "section"
           },
-          "confidence": 0.5,
-          "note": "Aktuální události jsou příliš obecné - potřebujeme další indikátor"
+          "confidence": 1.0,
+          "note": "Přímá shoda topic='aktualne' - aktuálnost, průběh, breaking news"
         },
+        {
+          "priority": 2,
+          "condition": {
+            "field": "sources",
+            "operator": "source_has_topic",
+            "source_index": 0,
+            "topic": "aktualne",
+            "config_path": "config/sources.json"
+          },
+          "confidence": 0.99,
+          "note": "Zdroj má garantovanou rubriku 'aktualne'"
+        }
+      ],
+      "examples": {
+        "show": [
+          {
+            "topic": "aktualne",
+            "section": "aktualne",
+            "reason": "Přímá shoda topic='aktualne'"
+          },
+          {
+            "sources": [{"name": "ČT24", "url": "..."}],
+            "topic": "aktualne",
+            "reason": "Zdroj má topic='aktualne' v config"
+          }
+        ],
+        "suppress": []
+      }
+    },
+    {
+      "id": "world",
+      "label": "Svět",
+      "svg": "world.svg",
+      "rules": [
         {
           "priority": 3,
           "condition": {

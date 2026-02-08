@@ -337,6 +337,51 @@ git diff --name-only
 
 **Poznámka**: Chyba `Get-ChildItem : ArgumentException` je post-run wrapper z Cursor terminálu, ne skutečná chyba příkazů. Příkazy fungují správně navzdory této chybě.
 
+## Mapování topic → ikona (závazné)
+
+| topic | ikona | poznámka |
+|-------|-------|----------|
+| `aktualne` | `time.svg` | Aktuálnost, průběh, breaking news |
+| `sport` | `sport.svg` | Sportovní události |
+| `finance` | `finance.svg` | Finanční zprávy |
+| `zdravi` | `health.svg` | Zdravotnictví |
+| `krimi` | `crime.svg` | Kriminalita |
+| `doprava` | `traffic.svg` | Doprava |
+| `pocasi` | `weather.svg` | Počasí |
+
+**Důležité**: `aktualne` má vlastní ikonu `time.svg` (čas, aktuálnost). Není to geografická kategorie (CZ/WORLD), ale stav (aktuální události).
+
+## Význam ikon
+
+### time.svg (Aktuálně)
+- **Význam**: Aktuální události, průběh, breaking news
+- **Použití**: `topic="aktualne"`
+- **Proč ne CZ/WORLD**: "Aktuálně" není místo, ale stav. Velké weby (BBC, Guardian, Reuters) mají breaking/now jako samostatný vizuální signál.
+
+### sport.svg (Sport)
+- **Význam**: Sportovní události, výsledky, sportovní zprávy
+- **Použití**: `topic="sport"`
+
+### finance.svg (Finance)
+- **Význam**: Finanční zprávy, ekonomika, trhy
+- **Použití**: `topic="finance"`
+
+### health.svg (Zdraví)
+- **Význam**: Zdravotnictví, zdraví, medicína
+- **Použití**: `topic="zdravi"`
+
+### crime.svg (Kriminalita)
+- **Význam**: Kriminalita, soudy, bezpečnost
+- **Použití**: `topic="krimi"`
+
+### traffic.svg (Doprava)
+- **Význam**: Doprava, dopravní situace, dopravní nehody
+- **Použití**: `topic="doprava"`
+
+### weather.svg (Počasí)
+- **Význam**: Počasí, předpověď počasí
+- **Použití**: `topic="pocasi"`
+
 ## Poznámky
 
 - Systém je **read-only** pro data (`projects/data/articles.json`)
