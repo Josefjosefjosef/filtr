@@ -2456,6 +2456,12 @@ a.brand,
   grid-column: 1 / -1;
 }
 
+/* Všechny karty pod "Zprávou dne" - stejné zakulacení rohů jako "Zpráva dne" */
+#feed > .news-card:not(:first-child),
+#feed > article:not(:first-child){
+  border-radius: 14px;
+}
+
 /* Štítek "Zpráva dne" přes ::after (NOVĚ, bez kolize s akcentem) */
 #feed > .news-card:first-child::after,
 #feed > article:first-child::after{
