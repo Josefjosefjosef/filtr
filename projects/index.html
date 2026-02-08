@@ -284,87 +284,89 @@
                         </a>
                       </div>
                     </section>
-                    <!-- AI Panel -->
-                    <div id="iu-aiPanel" class="iu-aiPanel" hidden role="dialog" aria-label="AI asistenti">
-                      <div class="iu-aiPanelHeader">
-                        <span>AI asistenti</span>
-                        <button class="iu-aiClose" aria-label="Zavřít">✕</button>
-                      </div>
+                    <!-- AI Panel (Modal) -->
+                    <div id="iu-aiOverlay" class="iu-aiOverlay" hidden></div>
 
-                      <div class="iu-aiPanelBody">
-
-                        <div class="iu-aiItem">
-                          <div>
-                            <strong>ChatGPT</strong>
-                            <p>Univerzální AI na psaní, nápady, obrázky i práci s daty</p>
-                          </div>
-                          <a href="https://chat.openai.com" target="_blank" rel="noopener">Otevřít</a>
+                    <div id="iu-aiPanel" class="iu-aiPanel" hidden role="dialog" aria-modal="true" aria-label="AI asistenti">
+                      <div class="iu-aiModal">
+                        <div class="iu-aiPanelHeader">
+                          <span>AI asistenti</span>
+                          <button class="iu-aiClose" type="button" aria-label="Zavřít">✕</button>
                         </div>
 
-                        <div class="iu-aiItem">
-                          <div>
-                            <strong>Google Gemini</strong>
-                            <p>AI propojená s Googlem, mapami, vyhledáváním a Gmailem</p>
+                        <div class="iu-aiPanelBody">
+                          <div class="iu-aiItem">
+                            <div>
+                              <strong>ChatGPT</strong>
+                              <p>Univerzální AI na psaní, nápady, obrázky i práci s daty</p>
+                            </div>
+                            <a href="https://chat.openai.com" target="_blank" rel="noopener">Otevřít</a>
                           </div>
-                          <a href="https://gemini.google.com" target="_blank" rel="noopener">Otevřít</a>
-                        </div>
 
-                        <div class="iu-aiItem">
-                          <div>
-                            <strong>Microsoft Copilot</strong>
-                            <p>AI pro práci ve Windows, Office a psaní e-mailů</p>
+                          <div class="iu-aiItem">
+                            <div>
+                              <strong>Google Gemini</strong>
+                              <p>AI propojená s Googlem, mapami, vyhledáváním a Gmailem</p>
+                            </div>
+                            <a href="https://gemini.google.com" target="_blank" rel="noopener">Otevřít</a>
                           </div>
-                          <a href="https://copilot.microsoft.com" target="_blank" rel="noopener">Otevřít</a>
-                        </div>
 
-                        <div class="iu-aiItem">
-                          <div>
-                            <strong>Claude</strong>
-                            <p>Velmi přirozená a čtivá čeština pro texty a myšlenky</p>
+                          <div class="iu-aiItem">
+                            <div>
+                              <strong>Microsoft Copilot</strong>
+                              <p>AI pro práci ve Windows, Office a psaní e-mailů</p>
+                            </div>
+                            <a href="https://copilot.microsoft.com" target="_blank" rel="noopener">Otevřít</a>
                           </div>
-                          <a href="https://claude.ai" target="_blank" rel="noopener">Otevřít</a>
-                        </div>
 
-                        <div class="iu-aiItem">
-                          <div>
-                            <strong>Perplexity AI</strong>
-                            <p>Odpovídá jako vyhledávač a uvádí zdroje informací</p>
+                          <div class="iu-aiItem">
+                            <div>
+                              <strong>Claude</strong>
+                              <p>Velmi přirozená a čtivá čeština pro texty a myšlenky</p>
+                            </div>
+                            <a href="https://claude.ai" target="_blank" rel="noopener">Otevřít</a>
                           </div>
-                          <a href="https://www.perplexity.ai" target="_blank" rel="noopener">Otevřít</a>
-                        </div>
 
-                        <div class="iu-aiItem">
-                          <div>
-                            <strong>DeepSeek</strong>
-                            <p>Silná AI na programování, logiku a matematiku</p>
+                          <div class="iu-aiItem">
+                            <div>
+                              <strong>Perplexity AI</strong>
+                              <p>Odpovídá jako vyhledávač a uvádí zdroje informací</p>
+                            </div>
+                            <a href="https://www.perplexity.ai" target="_blank" rel="noopener">Otevřít</a>
                           </div>
-                          <a href="https://chat.deepseek.com" target="_blank" rel="noopener">Otevřít</a>
-                        </div>
 
-                        <div class="iu-aiItem">
-                          <div>
-                            <strong>Grok</strong>
-                            <p>AI zaměřená na aktuální dění a trendy na síti X</p>
+                          <div class="iu-aiItem">
+                            <div>
+                              <strong>DeepSeek</strong>
+                              <p>Silná AI na programování, logiku a matematiku</p>
+                            </div>
+                            <a href="https://chat.deepseek.com" target="_blank" rel="noopener">Otevřít</a>
                           </div>
-                          <a href="https://x.ai" target="_blank" rel="noopener">Otevřít</a>
-                        </div>
 
-                        <div class="iu-aiItem">
-                          <div>
-                            <strong>Mistral AI</strong>
-                            <p>Evropská AI s důrazem na soukromí a efektivitu</p>
+                          <div class="iu-aiItem">
+                            <div>
+                              <strong>Grok</strong>
+                              <p>AI zaměřená na aktuální dění a trendy na síti X</p>
+                            </div>
+                            <a href="https://x.ai" target="_blank" rel="noopener">Otevřít</a>
                           </div>
-                          <a href="https://chat.mistral.ai" target="_blank" rel="noopener">Otevřít</a>
-                        </div>
 
-                        <div class="iu-aiItem">
-                          <div>
-                            <strong>Editee</strong>
-                            <p>Česká AI pro marketing, podnikání a obsah</p>
+                          <div class="iu-aiItem">
+                            <div>
+                              <strong>Mistral AI</strong>
+                              <p>Evropská AI s důrazem na soukromí a efektivitu</p>
+                            </div>
+                            <a href="https://chat.mistral.ai" target="_blank" rel="noopener">Otevřít</a>
                           </div>
-                          <a href="https://www.editee.com" target="_blank" rel="noopener">Otevřít</a>
-                        </div>
 
+                          <div class="iu-aiItem">
+                            <div>
+                              <strong>Editee</strong>
+                              <p>Česká AI pro marketing, podnikání a obsah</p>
+                            </div>
+                            <a href="https://www.editee.com" target="_blank" rel="noopener">Otevřít</a>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div class="iu-rightContent" aria-label="Obsah pravého sloupce">

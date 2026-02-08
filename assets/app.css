@@ -2337,22 +2337,38 @@ a.brand,
   }
 }
 
-/* === AI Panel (Quick Links) === */
+/* === AI Panel (Modal) === */
+.iu-aiOverlay[hidden],
 .iu-aiPanel[hidden]{
   display: none !important;
 }
 
+.iu-aiOverlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  z-index: 9998;
+}
+
 .iu-aiPanel{
-  position: absolute;
-  right: 0;
-  top: 100%;
-  margin-top: 8px;
-  width: 340px;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 24px 48px rgba(0,0,0,.18);
+  position: fixed;
+  inset: 0;
   z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.iu-aiModal{
+  width: min(560px, calc(100vw - 36px));
+  max-height: min(80vh, calc(100vh - 36px));
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 24px 48px rgba(0,0,0,.22);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .iu-aiPanelHeader{
@@ -2379,6 +2395,7 @@ a.brand,
 
 .iu-aiPanelBody{
   padding: 8px;
+  overflow: auto;
 }
 
 .iu-aiItem{

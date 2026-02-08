@@ -3473,7 +3473,7 @@ function buildVideoAsArticleCard(it) {
   initParcelsModal();
 })();
 
-// === AI PANEL (Quick Links) — robust (delegation + DOM ready) ===
+// === AI PANEL (Quick Links) — centered modal (like Parcels) ===
 (function(){
   'use strict';
 
@@ -3481,6 +3481,8 @@ function buildVideoAsArticleCard(it) {
     const aiPanel = document.getElementById('iu-aiPanel');
     if (!aiPanel) return;
 
+    const aiOverlay = document.getElementById('iu-aiOverlay');
+    const aiModal = aiPanel.querySelector('.iu-aiModal');
     const aiClose = aiPanel.querySelector('.iu-aiClose');
 
     function getBtns(){
@@ -3491,58 +3493,81 @@ function buildVideoAsArticleCard(it) {
       getBtns().forEach(btn => btn.setAttribute('aria-expanded', String(isOpen)));
     }
 
+    function lockScroll(lock){
+      document.documentElement.style.overflow = lock ? 'hidden' : '';
+    }
+
     function openPanel(){
       aiPanel.hidden = false;
+      if (aiOverlay) aiOverlay.hidden = false;
+      lockScroll(true);
+      aiPanel.dataset.open = '1';
       setExpanded(true);
     }
 
     function closePanel(){
       aiPanel.hidden = true;
+      if (aiOverlay) aiOverlay.hidden = true;
+      lockScroll(false);
+      aiPanel.dataset.open = '0';
       setExpanded(false);
     }
 
     function togglePanel(){
-      console.log('AI panel toggle', { hidden: aiPanel.hidden });
       if (aiPanel.hidden) openPanel();
       else closePanel();
     }
 
-    // 1) Delegovaný klik (funguje i když se tlačítka rendrují později)
+    // 1) Klik na tlačítko (delegace)
     document.addEventListener('click', e => {
       const btn = e.target.closest('[data-action="ai-panel"]');
-      if (btn){
-        e.preventDefault();
-        e.stopPropagation();
-        togglePanel();
-        return;
-      }
-
-      // klik na ✕
-      if (aiClose && (e.target === aiClose || e.target.closest('.iu-aiClose'))){
-        e.preventDefault();
-        closePanel();
-        return;
-      }
-
-      // klik mimo panel zavře
-      if (!aiPanel.hidden){
-        const clickedInsidePanel = aiPanel.contains(e.target);
-        if (!clickedInsidePanel) closePanel();
-      }
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      togglePanel();
     }, true);
 
-    // 2) ESC zavře
+    // 2) Zavření: ✕
+    if (aiClose){
+      aiClose.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        closePanel();
+      });
+    }
+
+    // 3) Zavření: klik mimo (overlay)
+    if (aiOverlay){
+      aiOverlay.addEventListener('click', closePanel);
+    }
+
+    // 4) Zavření: klik na backdrop (panel wrapper mimo modal)
+    aiPanel.addEventListener('click', e => {
+      if (e.target === aiPanel) closePanel();
+    });
+
+    // 5) Klik uvnitř modalu nemá zavírat
+    if (aiModal){
+      aiModal.addEventListener('click', e => {
+        e.stopPropagation();
+      });
+    }
+
+    // 6) ESC zavře
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') closePanel();
     });
 
-    // 3) Klik na "Otevřít" zavře (UX jako Balíky)
+    // 7) Klik na "Otevřít" zavře
     aiPanel.addEventListener('click', e => {
       const a = e.target.closest('a');
       if (a) closePanel();
     });
 
-    // 4) Výchozí ARIA stav
+    // init
+    aiPanel.hidden = true;
+    if (aiOverlay) aiOverlay.hidden = true;
+    aiPanel.dataset.open = '0';
     setExpanded(false);
   }
 
