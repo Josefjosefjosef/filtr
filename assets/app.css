@@ -2456,12 +2456,6 @@ a.brand,
   grid-column: 1 / -1;
 }
 
-/* Všechny karty pod "Zprávou dne" - stejné zakulacení rohů jako "Zpráva dne" */
-#feed > .news-card:not(:first-child),
-#feed > article:not(:first-child){
-  border-radius: 14px;
-}
-
 /* Štítek "Zpráva dne" přes ::after (NOVĚ, bez kolize s akcentem) */
 #feed > .news-card:first-child::after,
 #feed > article:first-child::after{
@@ -2525,7 +2519,7 @@ a.brand,
   margin: 0;
   border: none;
   border-top: 1px solid rgba(17,17,17,0.08);
-  border-radius: 0;
+  border-radius: 14px; /* Stejné zakulacení jako "Zpráva dne" */
   box-shadow: none;
 }
 
@@ -2699,7 +2693,7 @@ a.brand,
 .videoRow{
   background: transparent;
   border: none;
-  border-radius: 0;
+  border-radius: 14px; /* Stejné zakulacení jako "Zpráva dne" */
   box-shadow: none;
   padding: 18px 0;
   margin: 0;
