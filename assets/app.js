@@ -1341,6 +1341,17 @@ window.addEventListener("unhandledrejection", (e) => {
     return `<div class="iu-meta-line">${datePart}${sep}${primaryPart}${sep2}${othersPart}</div>`;
   }
 
+  // Mapování topic → ikona (deterministické)
+  const TOPIC_ICON_MAP = {
+    aktualne: "time",
+    sport: "sport",
+    finance: "finance",
+    zdravi: "health",
+    krimi: "crime",
+    doprava: "traffic",
+    pocasi: "weather"
+  };
+
   function buildArticleHtml(it) {
     const title = safeText(it.title || it.name || "(bez názvu)");
     const linkUrl =
@@ -1354,11 +1365,23 @@ window.addEventListener("unhandledrejection", (e) => {
       persistLastError("Article without URL skipped");
       return "";
     }
+    
+    // Určení ikony podle topic
+    const topic = (it.topic || "").trim();
+    const iconName = TOPIC_ICON_MAP[topic];
+    const iconMarkup = iconName
+      ? `<img src="../assets/icons/${iconName}.svg" class="iu-ico" aria-hidden="true" alt="" />`
+      : "";
+    
+    // Sestavení titulku s ikonou
+    const titleText = `<span class="news-titleText">${escapeHtml(title)}</span>`;
+    const titleContent = iconMarkup
+      ? `<span class="iu-icoWrap">${iconMarkup}${titleText}</span>`
+      : titleText;
+    
     const titleMarkup = linkUrl
-      ? `<a class="news-titleLink" href="${linkUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(
-          title
-        )}</a>`
-      : `<span class="news-titleLink">${escapeHtml(title)}</span>`;
+      ? `<a class="news-titleLink" href="${linkUrl}" target="_blank" rel="noopener noreferrer">${titleContent}</a>`
+      : `<span class="news-titleLink">${titleContent}</span>`;
 
     const suspiciousFlag = it?.suspiciousTitle
       ? `<span class="iuSuspicious" title="Titulek doporučeno ověřit u zdroje" aria-label="Titulek doporučeno ověřit u zdroje">⚑</span>`
