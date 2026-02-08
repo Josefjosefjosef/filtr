@@ -4042,3 +4042,20 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
     gap: 6px; /* Odsazení mezi ikonou a textem (mobile) */
   }
 }
+
+/* ===== ICON PREVIEW (dočasné - izolované styly) ===== */
+#iuIconPreview{
+  margin: 16px auto;
+  max-width: 1100px;
+  padding: 12px;
+  border: 1px dashed rgba(0,0,0,.15);
+  font-size: 12px;
+  color: #666;
+}
+
+#iuIconPreview img{
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
