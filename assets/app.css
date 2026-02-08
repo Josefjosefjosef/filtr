@@ -135,9 +135,9 @@ body{
   left: 0;
   right: auto;
   z-index: 1000;
-  background: var(--iu-bg);
-  border-bottom: 1px solid rgba(17,17,17,0.06);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  background: #1F3A5F;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   width: 100%;
   max-width: 100%;
   overflow: hidden;
@@ -150,7 +150,7 @@ body{
   margin: 0;
   padding: 0 20px;
   box-sizing: border-box;
-  background: var(--iu-bg);
+  background: #1F3A5F;
   z-index: 1000;
 }
 .topbar-new-main{
@@ -172,7 +172,7 @@ body{
 .topbar-logo .brand .name{
   font-size: 20px;
   font-weight: 800;
-  color: rgba(11,27,43,0.92);
+  color: #FFFFFF;
 }
 .topbar-search{
   margin-left: auto;
@@ -184,19 +184,21 @@ body{
   width: 220px;
   padding: 0 14px;
   border-radius: 999px;
-  border: 1px solid rgba(0,0,0,.15);
-  background: #fff;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.15);
+  color: #FFFFFF;
   font-size: 14px;
   line-height: 36px;
   outline: none;
-  transition: border-color .15s ease, box-shadow .15s ease;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
 }
 .topbar-searchInput::placeholder{
-  color: rgba(0,0,0,.45);
+  color: rgba(255,255,255,0.65);
 }
 .topbar-searchInput:focus{
-  border-color: rgba(0,0,0,.35);
-  box-shadow: 0 0 0 2px rgba(0,0,0,.04);
+  border-color: rgba(255,255,255,.45);
+  background: rgba(255,255,255,.25);
+  box-shadow: 0 0 0 2px rgba(127,179,255,.2);
 }
 @media (max-width: 640px){
   .topbar-search{ display: none; }
@@ -240,20 +242,26 @@ body{
   height: 36px;
   width: 36px;
   padding: 0;
-  border: 1px solid rgba(0,0,0,0.12);
+  border: 1px solid rgba(255,255,255,.25);
   border-radius: 8px;
-  background: rgba(0,0,0,0.02);
+  background: rgba(255,255,255,.1);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: border-color .15s ease, background .15s ease;
+}
+.topbar-new .menuBtn:hover{
+  border-color: rgba(255,255,255,.4);
+  background: rgba(255,255,255,.2);
 }
 .topbar-links{
   display: flex;
   align-items: center;
   gap: 24px;
   padding: 14px 0;
-  border-top: 1px solid rgba(17,17,17,0.06);
+  border-top: 1px solid rgba(255,255,255,.15);
+  background: #24486F;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
@@ -274,17 +282,17 @@ body{
   top: 0;
   bottom: 0;
   width: 40px;
-  background: linear-gradient(to right, transparent, var(--iu-bg) 70%);
+  background: linear-gradient(to right, transparent, #24486F 70%);
   pointer-events: none;
   z-index: 1;
 }
 
 .topbar-link{
   font-size: 14px;
-  color: var(--iu-text);
+  color: #FFFFFF;
   text-decoration: none;
-  transition: color 150ms ease;
-  font-weight: 400;
+  transition: border-color 150ms ease, font-weight 150ms ease;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   flex: 0 0 auto;
@@ -292,9 +300,17 @@ body{
   z-index: 2;
   line-height: 1.4;
   padding: 2px 0;
+  border-bottom: 2px solid transparent;
 }
 .topbar-link:hover{
-  color: var(--iu-accent);
+  color: #FFFFFF;
+  border-bottom: 2px solid #7FB3FF;
+}
+.topbar-link:active,
+.topbar-link.is-active{
+  color: #FFFFFF;
+  font-weight: 600;
+  border-bottom: 2px solid #FFFFFF;
 }
 
 /* Kompenzace pro levý obsah pod sticky hlavičkou */
@@ -324,7 +340,7 @@ body{
 .topbar-new-main .iu-infoBar{
   font-size: 11px;
   line-height: 1.15;
-  color: rgba(0,0,0,.58);
+  color: rgba(255,255,255,.75);
   margin: 6px 0 2px 0;
   padding: 0;
   border: 0;
@@ -332,7 +348,7 @@ body{
 
 .topbar-new-main .iu-infoTime{
   font-weight: 650;
-  color: rgba(0,0,0,.75);
+  color: rgba(255,255,255,.9);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1343,6 +1359,9 @@ button.iu-mmQuickItem{
   height:2px;
   background: rgba(11,27,43,0.75);
   border-radius: 2px;
+}
+.topbar-new .burger span{
+  background: #FFFFFF;
 }
 
 .brand{
