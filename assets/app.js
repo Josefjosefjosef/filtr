@@ -3471,3 +3471,66 @@ function buildVideoAsArticleCard(it) {
   
   initParcelsModal();
 })();
+
+// === AI PANEL (Quick Links) ===
+(function(){
+  'use strict';
+
+  const aiBtns = Array.from(document.querySelectorAll('[data-action="ai-panel"]'));
+  const aiPanel = document.getElementById('iu-aiPanel');
+  if (!aiPanel || aiBtns.length === 0) return;
+
+  const aiClose = aiPanel.querySelector('.iu-aiClose');
+
+  function setExpanded(isOpen){
+    aiBtns.forEach(btn => btn.setAttribute('aria-expanded', String(isOpen)));
+  }
+
+  function openPanel(){
+    aiPanel.hidden = false;
+    setExpanded(true);
+  }
+
+  function closePanel(){
+    aiPanel.hidden = true;
+    setExpanded(false);
+  }
+
+  function togglePanel(){
+    if (aiPanel.hidden) openPanel();
+    else closePanel();
+  }
+
+  aiBtns.forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      togglePanel();
+    });
+  });
+
+  if (aiClose){
+    aiClose.addEventListener('click', e => {
+      e.preventDefault();
+      closePanel();
+    });
+  }
+
+  // Klik mimo zavře
+  document.addEventListener('click', e => {
+    const clickedOnBtn = aiBtns.some(btn => btn.contains(e.target));
+    if (!clickedOnBtn && !aiPanel.contains(e.target)) closePanel();
+  });
+
+  // ESC zavře
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePanel();
+  });
+
+  // Po kliknutí na "Otevřít" zavřít (UX jako Balíky)
+  aiPanel.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (a) closePanel();
+  });
+
+})();
