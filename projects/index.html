@@ -2035,51 +2035,5 @@
       });
     })();
     </script>
-    <script>
-    (function(){
-      var params = new URLSearchParams(location.search || "");
-      if (params.get("debug") !== "1") return;
-      
-      var buildStamp = "NOICONS_20260208_01";
-      var pageHref = location.href;
-      
-      // Najdi všechny script tagy s app.js (prefix match)
-      var appJsLinks = document.querySelectorAll('script[type="module"][src^="/assets/app.js"]');
-      var count = appJsLinks.length;
-      
-      var lines = [];
-      lines.push("iu-build: " + buildStamp);
-      lines.push("");
-      lines.push("page href: " + pageHref);
-      lines.push("");
-      lines.push("app.js COUNT: " + count);
-      
-      if (count === 0) {
-        lines.push("ERROR: No app.js script tag found!");
-      } else if (count > 1) {
-        lines.push("WARNING: Multiple app.js script tags found!");
-      }
-      
-      lines.push("");
-      appJsLinks.forEach(function(link, idx) {
-        var rawSrc = link.getAttribute("src") || "(no src)";
-        var resolvedUrl = "";
-        try {
-          resolvedUrl = new URL(rawSrc, location.href).href;
-        } catch(e) {
-          resolvedUrl = "(URL parse error)";
-        }
-        lines.push("[" + (idx + 1) + "] raw src: " + rawSrc);
-        lines.push("    resolved: " + resolvedUrl);
-        if (idx < count - 1) lines.push("");
-      });
-      
-      var box = document.createElement("div");
-      box.style.cssText = "position:fixed;top:8px;right:8px;z-index:2147483647;font-family:monospace;font-size:11px;background:#fff;color:#000;border:2px solid #f00;padding:12px;max-width:500px;white-space:pre-wrap;box-shadow:0 4px 12px rgba(0,0,0,0.3);";
-      box.innerHTML = lines.join("\n");
-      
-      document.body.appendChild(box);
-    })();
-    </script>
   </body>
 </html>
