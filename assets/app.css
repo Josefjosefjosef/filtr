@@ -2338,6 +2338,10 @@ a.brand,
 }
 
 /* === AI Panel (Quick Links) === */
+.iu-aiPanel[hidden]{
+  display: none !important;
+}
+
 .iu-aiPanel{
   position: absolute;
   right: 0;
@@ -2347,7 +2351,7 @@ a.brand,
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 24px 48px rgba(0,0,0,.18);
-  z-index: 1000;
+  z-index: 9999;
   overflow: hidden;
 }
 
