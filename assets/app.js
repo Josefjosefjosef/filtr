@@ -3272,6 +3272,7 @@ function buildVideoAsArticleCard(it) {
   init();
 })();
 
+
 // CHECKPOINT: FEED STABLE
 // Stav ověřen: invarianty splněny, render pipeline uzamčena,
 // fail-soft aktivní, emergency visibility aktivní.
@@ -3472,65 +3473,83 @@ function buildVideoAsArticleCard(it) {
   initParcelsModal();
 })();
 
-// === AI PANEL (Quick Links) ===
+// === AI PANEL (Quick Links) — robust (delegation + DOM ready) ===
 (function(){
   'use strict';
 
-  const aiBtns = Array.from(document.querySelectorAll('[data-action="ai-panel"]'));
-  const aiPanel = document.getElementById('iu-aiPanel');
-  if (!aiPanel || aiBtns.length === 0) return;
+  function initAiPanel(){
+    const aiPanel = document.getElementById('iu-aiPanel');
+    if (!aiPanel) return;
 
-  const aiClose = aiPanel.querySelector('.iu-aiClose');
+    const aiClose = aiPanel.querySelector('.iu-aiClose');
 
-  function setExpanded(isOpen){
-    aiBtns.forEach(btn => btn.setAttribute('aria-expanded', String(isOpen)));
-  }
+    function getBtns(){
+      return Array.from(document.querySelectorAll('[data-action="ai-panel"]'));
+    }
 
-  function openPanel(){
-    aiPanel.hidden = false;
-    setExpanded(true);
-  }
+    function setExpanded(isOpen){
+      getBtns().forEach(btn => btn.setAttribute('aria-expanded', String(isOpen)));
+    }
 
-  function closePanel(){
-    aiPanel.hidden = true;
+    function openPanel(){
+      aiPanel.hidden = false;
+      setExpanded(true);
+    }
+
+    function closePanel(){
+      aiPanel.hidden = true;
+      setExpanded(false);
+    }
+
+    function togglePanel(){
+      console.log('AI panel toggle', { hidden: aiPanel.hidden });
+      if (aiPanel.hidden) openPanel();
+      else closePanel();
+    }
+
+    // 1) Delegovaný klik (funguje i když se tlačítka rendrují později)
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-action="ai-panel"]');
+      if (btn){
+        e.preventDefault();
+        e.stopPropagation();
+        togglePanel();
+        return;
+      }
+
+      // klik na ✕
+      if (aiClose && (e.target === aiClose || e.target.closest('.iu-aiClose'))){
+        e.preventDefault();
+        closePanel();
+        return;
+      }
+
+      // klik mimo panel zavře
+      if (!aiPanel.hidden){
+        const clickedInsidePanel = aiPanel.contains(e.target);
+        if (!clickedInsidePanel) closePanel();
+      }
+    }, true);
+
+    // 2) ESC zavře
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closePanel();
+    });
+
+    // 3) Klik na "Otevřít" zavře (UX jako Balíky)
+    aiPanel.addEventListener('click', e => {
+      const a = e.target.closest('a');
+      if (a) closePanel();
+    });
+
+    // 4) Výchozí ARIA stav
     setExpanded(false);
   }
 
-  function togglePanel(){
-    if (aiPanel.hidden) openPanel();
-    else closePanel();
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initAiPanel);
+  } else {
+    initAiPanel();
   }
-
-  aiBtns.forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      e.stopPropagation();
-      togglePanel();
-    });
-  });
-
-  if (aiClose){
-    aiClose.addEventListener('click', e => {
-      e.preventDefault();
-      closePanel();
-    });
-  }
-
-  // Klik mimo zavře
-  document.addEventListener('click', e => {
-    const clickedOnBtn = aiBtns.some(btn => btn.contains(e.target));
-    if (!clickedOnBtn && !aiPanel.contains(e.target)) closePanel();
-  });
-
-  // ESC zavře
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closePanel();
-  });
-
-  // Po kliknutí na "Otevřít" zavřít (UX jako Balíky)
-  aiPanel.addEventListener('click', e => {
-    const a = e.target.closest('a');
-    if (a) closePanel();
-  });
 
 })();
