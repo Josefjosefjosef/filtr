@@ -255,36 +255,40 @@ body{
   border-color: rgba(255,255,255,.4);
   background: rgba(255,255,255,.2);
 }
+.topbar-links-wrapper{
+  position: relative;
+  border-top: 1px solid rgba(255,255,255,.1);
+  background: #1F3A5F;
+}
+
+/* Navigační lišta: padding-left/right 0 je default, JS přidává 56px přes has-left-arrow/has-right-arrow jako safe area proti překrytí textu šipkami */
 .topbar-links{
   display: flex;
   align-items: center;
   gap: 24px;
   padding: 14px 0;
-  border-top: 1px solid rgba(255,255,255,.1);
-  background: #1F3A5F;
+  padding-left: 0;
+  padding-right: 0;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   position: relative;
+  transition: padding-left 150ms ease, padding-right 150ms ease;
+}
+
+/* Safe area padding: 56px = šířka šipky (48px) + rezerva, JS přidává třídy dynamicky */
+.topbar-links-wrapper.has-left-arrow .topbar-links{
+  padding-left: 56px;
+}
+
+.topbar-links-wrapper.has-right-arrow .topbar-links{
+  padding-right: 56px;
 }
 
 .topbar-links::-webkit-scrollbar{
   display: none;
-}
-
-/* Pravostranný fade efekt - indikace scrollu */
-.topbar-links::after{
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 40px;
-  background: linear-gradient(to right, transparent, #1F3A5F 70%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .topbar-link{
@@ -294,13 +298,15 @@ body{
   transition: border-color 150ms ease, font-weight 150ms ease;
   font-weight: 500;
   white-space: nowrap;
-  overflow: hidden;
   flex: 0 0 auto;
   position: relative;
   z-index: 2;
   line-height: 1.4;
   padding: 2px 0;
   border-bottom: 2px solid transparent;
+  /* Zajistit, že text není ořezán - žádný overflow:hidden ani text-overflow:ellipsis */
+  overflow: visible;
+  text-overflow: clip;
 }
 .topbar-link:hover{
   color: #FFFFFF;
@@ -311,6 +317,56 @@ body{
   color: #FFFFFF;
   font-weight: 600;
   border-bottom: 2px solid #FFFFFF;
+}
+
+/* Šipky pro horizontální scroll navigační lišty */
+/* Šipky scroll: base třída NEMÁ background (gradient je schválně jen na --left/--right pro symetrický fade) */
+.topbar-links-arrow{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 48px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0.75;
+  transition: opacity 150ms ease;
+  pointer-events: auto;
+}
+
+.topbar-links-arrow:hover{
+  opacity: 1;
+}
+
+.topbar-links-arrow:active{
+  opacity: 0.9;
+}
+
+/* Gradient pouze na variantách: --left fade doprava, --right fade doleva (symetrické) */
+.topbar-links-arrow--left{
+  left: 0;
+  background: linear-gradient(to right, #1F3A5F 0%, rgba(31,58,95,0.8) 50%, transparent 100%);
+}
+
+.topbar-links-arrow--right{
+  right: 0;
+  background: linear-gradient(to left, #1F3A5F 0%, rgba(31,58,95,0.8) 50%, transparent 100%);
+}
+
+.topbar-links-arrow svg{
+  width: 20px;
+  height: 20px;
+  color: #FFFFFF;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.topbar-links-arrow[hidden]{
+  display: none;
 }
 
 /* Kompenzace pro levý obsah pod sticky hlavičkou */
