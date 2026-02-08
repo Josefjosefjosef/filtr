@@ -2298,7 +2298,8 @@ a.brand,
 .iu-daily-brief-inner{
   background: #f6f4ee;
   border: 1px solid rgba(0,0,0,0.10);
-  border-radius: 12px;
+  /* Dnes je dobré vědět – bez zaoblení rohů */
+  border-radius: 0;
   padding: 12px 14px;
   margin-top: 0;
 }
