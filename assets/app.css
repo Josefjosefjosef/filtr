@@ -110,6 +110,43 @@ img, svg, video, iframe{
 
 /* 3) Všechny obrázky, které mají mít pevný poměr stran, dostanou aspect-ratio přes třídy (viz níže) */
 
+/* ==== GLOBAL BACKGROUND LOCK (page + columns only) ==== */
+:root{
+  --iu-bg-lock: #000000; /* TODO: replace with exact daily panel bg from DevTools */
+}
+
+/* Celé pozadí stránky */
+html, body{
+  background: var(--iu-bg-lock);
+}
+
+/* Pozadí layoutu / sloupců (jen kontejnery, ne karty) */
+#feed,
+#feedWrap,
+#feedColumn,
+#leftFeed,
+#main,
+#mainColumn,
+#content,
+#contentWrap,
+#rightColumn,
+#rightSidebar,
+#side,
+#sidebar,
+.iu-main,
+.iu-mainCol,
+.iu-left,
+.iu-feed,
+.iu-right,
+.iu-sidebar,
+.iu-shell,
+.iu-layout,
+.iu-wrap,
+.page,
+.container{
+  background: var(--iu-bg-lock);
+}
+
 html,body{ height:100%; }
 
 body{
@@ -2144,7 +2181,6 @@ a.brand,
   justify-content: flex-start;
   overflow-x: auto;
   white-space: nowrap;
-  scrollbar-gutter: stable;
   -webkit-overflow-scrolling: touch;
 }
 .sectionsBar .secBtn,
