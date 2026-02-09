@@ -110,6 +110,12 @@ body{
   -webkit-font-smoothing: antialiased;
 }
 
+/* CLS mitigation: keep daily panel slots reserved before JS toggles text */
+html:not([data-iu-js]) .iuDailyNameday,
+html:not([data-iu-js]) .iuDailyWeather{
+  visibility: hidden;
+}
+
 .container{
   max-width: 1200px;
   margin-left: auto;
@@ -630,6 +636,10 @@ aside.accordionCol{
   gap:10px;
   overflow-x:auto;
   margin-top:10px;
+}
+
+.iuWxHours--skeleton .iuWxHour{
+  visibility: hidden;
 }
 
 .iuWxHours::-webkit-scrollbar{display:none;}

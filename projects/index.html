@@ -236,9 +236,9 @@
                         <span class="iuDailyDate" id="iuDailyDate">—</span>
                       </div>
 
-                      <div class="iuDailyNameday" id="iuDailyNameday" hidden>Svátek má —</div>
+                      <div class="iuDailyNameday" id="iuDailyNameday">Svátek má —</div>
 
-                      <div class="iuDailyWeather" id="iuDailyWeather" hidden>
+                      <div class="iuDailyWeather" id="iuDailyWeather">
                         <div class="iuWxNowRow">
                           <span class="iuWxIcon" id="iuWxIcon">🌤</span>
                           <div class="iuWxNowMeta">
@@ -250,7 +250,17 @@
                           </div>
                         </div>
 
-                        <div class="iuWxHours" id="iuWxHours"></div>
+                        <!-- Stabilizace CLS: skeleton sloty (neposkakuje při doplnění hodin JS) -->
+                        <div class="iuWxHours iuWxHours--skeleton" id="iuWxHours">
+                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                        </div>
                       </div>
 
                       <div class="iuDailyErr" id="iuDailyErr" hidden>
@@ -1473,6 +1483,56 @@
           try { saveRuntimeErr("unhandledrejection", e && e.reason ? e.reason : { message: "unhandledrejection" }); } catch(_){}
         });
       } catch (_){}
+    })();
+    </script>
+    <script>
+    (function(){
+      var params = new URLSearchParams(location.search || "");
+      if (params.get("debug") !== "1") return;
+      if (typeof PerformanceObserver === "undefined") return;
+
+      try{
+        var box = document.getElementById("iuLayoutShiftBox");
+        if (!box) {
+          box = document.createElement("pre");
+          box.id = "iuLayoutShiftBox";
+          box.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:2147483647;font-family:monospace;font-size:11px;background:rgba(255,255,255,0.92);color:#000;border:1px solid #999;padding:8px;max-width:520px;max-height:40vh;overflow:auto;white-space:pre-wrap;";
+          box.textContent = "CLS observer (debug=1)…\\n";
+          document.body.appendChild(box);
+        }
+
+        function nodeLabel(node){
+          try{
+            if (!node) return "(null)";
+            var tag = node.tagName ? node.tagName.toLowerCase() : "(node)";
+            var id = node.id ? ("#" + node.id) : "";
+            var cls = (node.className && typeof node.className === "string")
+              ? ("." + node.className.trim().split(/\\s+/).slice(0,3).join("."))
+              : "";
+            return tag + id + cls;
+          }catch(_){ return "(err)"; }
+        }
+
+        var total = 0;
+        var lastLines = [];
+        var obs = new PerformanceObserver(function(list){
+          try{
+            list.getEntries().forEach(function(entry){
+              if (entry.hadRecentInput) return;
+              total += (entry.value || 0);
+              var sources = (entry.sources || []).map(function(s){
+                return nodeLabel(s && s.node);
+              });
+              var line = "shift=" + (entry.value || 0).toFixed(4) + " total=" + total.toFixed(4) + " nodes=" + (sources.join(", ") || "(none)");
+              lastLines.push(line);
+              if (lastLines.length > 12) lastLines = lastLines.slice(-12);
+              box.textContent = "CLS observer (debug=1)\\n" + lastLines.join("\\n");
+              try { console.log("[IU][CLS]", line); } catch(_){}
+            });
+          }catch(_){}
+        });
+        obs.observe({ type: "layout-shift", buffered: true });
+      }catch(_){}
     })();
     </script>
     <script type="module" src="/assets/app.js?v=ff57115"></script>
