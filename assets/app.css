@@ -625,6 +625,29 @@ aside.accordionCol{
   margin-top:8px;
 }
 
+/* ===== IU DateTime Card (diagnostic hard fix) ===== */
+.iu-sideCard--datetime{
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+
+.iu-dt-time{
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.iu-dt-date{
+  font-size: 14px;
+  opacity: .8;
+}
+
+.iu-dt-nameday,
+.iu-dt-weather{
+  font-size: 13px;
+  margin-top: 4px;
+}
+
 .iuWxHours{
   display:flex;
   gap:10px;
