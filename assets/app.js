@@ -3146,75 +3146,153 @@ function buildVideoAsArticleCard(it) {
     debugLog(`[AUDIT] sw=${swState}`);
   }
 
-  // === IU DateTime Card (right sidebar) — hard enable ===
-  window.iuDateTimeCardInit = function iuDateTimeCardInit(){
-    function iuInitDateTime(){
-      const timeEl = document.getElementById('iuTime');
-      const dateEl = document.getElementById('iuDate');
-      if(!timeEl || !dateEl) return;
+  // === IU Daily Panel (right sidebar top) — time/date + nameday + weather + hours ===
+  window.iuDailyPanelInit = function iuDailyPanelInit(){
+    const TZ = "Europe/Prague";
 
+    const elTime = document.getElementById("iuDailyTime");
+    const elDate = document.getElementById("iuDailyDate");
+    const elNameday = document.getElementById("iuDailyNameday");
+
+    const elWeather = document.getElementById("iuDailyWeather");
+    const elErr = document.getElementById("iuDailyErr");
+
+    const elPlace = document.getElementById("iuWxPlace");
+    const elIcon = document.getElementById("iuWxIcon");
+    const elTemp = document.getElementById("iuWxTemp");
+    const elMinMax = document.getElementById("iuWxMinMax");
+    const elHours = document.getElementById("iuWxHours");
+
+    if (!elTime && !elDate && !elWeather && !elErr) return;
+
+    function fmtTime(d){
+      return new Intl.DateTimeFormat("cs-CZ",{hour:"2-digit",minute:"2-digit",timeZone:TZ}).format(d);
+    }
+    function fmtDate(d){
+      return new Intl.DateTimeFormat("cs-CZ",{weekday:"long",day:"numeric",month:"long",timeZone:TZ}).format(d);
+    }
+    function fmtHour(d){
+      return new Intl.DateTimeFormat("cs-CZ",{hour:"numeric",hour12:false,timeZone:TZ}).format(d) + "h";
+    }
+    function fmtDeg(n){
+      if (typeof n !== "number" || !isFinite(n)) return "—";
+      return Math.round(n) + "°";
+    }
+    function iconFromCode(code){
+      if (code === 0) return "☀️";
+      if (code === 1 || code === 2) return "🌤";
+      if (code === 3) return "☁️";
+      if (code >= 45 && code <= 48) return "🌫";
+      if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return "🌧";
+      if (code >= 71 && code <= 77) return "❄️";
+      if (code >= 95) return "⛈";
+      return "🌤";
+    }
+
+    // TIME/DATE tick (idempotent)
+    function tick(){
       const now = new Date();
-      timeEl.textContent = now.toLocaleTimeString('cs-CZ', { hour:'2-digit', minute:'2-digit' });
-      dateEl.textContent = now.toLocaleDateString('cs-CZ', { weekday:'long', day:'numeric', month:'long' });
+      if (elTime) elTime.textContent = fmtTime(now);
+      if (elDate) elDate.textContent = fmtDate(now);
     }
+    tick();
+    if (window.__iu_daily_timer) clearInterval(window.__iu_daily_timer);
+    window.__iu_daily_timer = setInterval(tick, 60000);
 
-    function iuInitNameday(){
-      const el = document.getElementById('iuNameday');
-      if(!el) return;
-      el.textContent = 'Svatek: načítám…';
-
-      fetch('https://svatky.adresa.info/json')
-        .then(r => r.json())
-        .then(d => { el.textContent = `Svatek: ${d.name}`; })
-        .catch(() => { el.textContent = 'Svatek: —'; });
-    }
-
-    function iuInitWeather(){
-      const el = document.getElementById('iuWeather');
-      if(!el) return;
-      // Default: Praha (později můžeš napojit na user volbu)
-      const lat = 50.0755;
-      const lon = 14.4378;
-
-      el.textContent = 'Počasí: načítám…';
-
-      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=Europe%2FPrague`)
+    // NAME DAY (Svátky)
+    if (elNameday){
+      elNameday.hidden = false;
+      elNameday.textContent = "Svátek má načítám…";
+      fetch("https://svatky.adresa.info/json", { cache: "no-store" })
         .then(r => r.json())
         .then(d => {
-          const cur = d && d.current;
-          if(!cur) throw new Error('no current');
-
-          const t = Math.round(cur.temperature_2m);
-          const feel = Math.round(cur.apparent_temperature);
-          const wind = Math.round(cur.wind_speed_10m);
-
-          // hrubý popis podle weather_code
-          const code = cur.weather_code;
-          const desc =
-            (code === 0) ? 'jasno' :
-            (code === 1 || code === 2) ? 'polojasno' :
-            (code === 3) ? 'zataženo' :
-            (code >= 45 && code <= 48) ? 'mlha' :
-            (code >= 51 && code <= 67) ? 'déšť' :
-            (code >= 71 && code <= 77) ? 'sněžení' :
-            (code >= 80 && code <= 82) ? 'přeháňky' :
-            (code >= 95) ? 'bouřky' :
-            'počasí';
-
-          el.textContent = `Počasí: Praha ${t}°C (pocit ${feel}°C), ${desc}, vítr ${wind} km/h`;
+          if (d && d.name) {
+            elNameday.textContent = "Svátek má " + String(d.name);
+            elNameday.hidden = false;
+          } else {
+            elNameday.hidden = true;
+          }
         })
         .catch(() => {
-          el.textContent = 'Počasí: —';
+          elNameday.hidden = true;
         });
     }
 
-    iuInitDateTime();
-    iuInitNameday();
-    iuInitWeather();
-    if (window.__iu_dt_time_timer) {
-      clearInterval(window.__iu_dt_time_timer);
-    }
-    window.__iu_dt_time_timer = setInterval(iuInitDateTime, 60000);
+    // WEATHER (Open-Meteo) + hourly strip + min/max
+    // Default Praha (později lze udělat volbu města)
+    const placeName = "Praha";
+    const lat = 50.0755;
+    const lon = 14.4378;
+
+    if (elErr) elErr.hidden = true;
+    if (elWeather) elWeather.hidden = false;
+
+    if (elPlace) elPlace.textContent = placeName;
+    if (elTemp) elTemp.textContent = "—°C";
+    if (elMinMax) elMinMax.textContent = "Max —° · Min —°";
+    if (elIcon) elIcon.textContent = "🌤";
+    if (elHours) { elHours.innerHTML = ""; }
+
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=Europe%2FPrague`;
+
+    fetch(url, { cache: "no-store" })
+      .then(r => r.json())
+      .then(d => {
+        const cur = d && d.current;
+        const hourly = d && d.hourly;
+        const daily = d && d.daily;
+
+        if (!cur || typeof cur.temperature_2m !== "number") throw new Error("bad current");
+
+        const t = Math.round(cur.temperature_2m);
+        const code = cur.weather_code;
+
+        if (elTemp) elTemp.textContent = `${t}°C`;
+        if (elIcon) elIcon.textContent = iconFromCode(code);
+
+        // min/max
+        const max0 = daily && Array.isArray(daily.temperature_2m_max) ? daily.temperature_2m_max[0] : null;
+        const min0 = daily && Array.isArray(daily.temperature_2m_min) ? daily.temperature_2m_min[0] : null;
+        if (elMinMax) {
+          elMinMax.textContent = `Max ${fmtDeg(max0)} · Min ${fmtDeg(min0)}`;
+        }
+
+        // hourly strip: vyber 8 hodin od "teď" dopředu
+        if (elHours && hourly && Array.isArray(hourly.time) && Array.isArray(hourly.temperature_2m) && Array.isArray(hourly.weather_code)) {
+          const now = new Date();
+          const items = [];
+          for (let i = 0; i < hourly.time.length; i++){
+            const dt = new Date(hourly.time[i]);
+            if (isNaN(dt.getTime())) continue;
+            if (dt < now) continue;
+            items.push({
+              d: dt,
+              temp: hourly.temperature_2m[i],
+              code: hourly.weather_code[i],
+            });
+            if (items.length >= 8) break;
+          }
+
+          elHours.innerHTML = "";
+          items.forEach(it => {
+            const div = document.createElement("div");
+            div.className = "iuWxHour";
+            div.innerHTML = `
+              <div>${fmtHour(it.d)}</div>
+              <div class="iuWxHourTemp">${fmtDeg(it.temp)}</div>
+              <div>${iconFromCode(it.code)}</div>
+            `;
+            elHours.appendChild(div);
+          });
+        }
+
+        if (elWeather) elWeather.hidden = false;
+        if (elErr) elErr.hidden = true;
+      })
+      .catch(() => {
+        if (elWeather) elWeather.hidden = true;
+        if (elErr) elErr.hidden = false;
+      });
   };
 
   function init() {
@@ -3233,14 +3311,12 @@ function buildVideoAsArticleCard(it) {
     setSectionsFromHash();
     iuInitTopbarWatcher();
 
-    if (typeof window.iuDateTimeCardInit === 'function') {
-      window.iuDateTimeCardInit();
+    if (typeof window.iuDailyPanelInit === "function") {
+      window.iuDailyPanelInit();
     }
-
-    // HARD FIX: znovu inicializuj po layoutu (grid/flex settle)
     setTimeout(() => {
-      if (typeof window.iuDateTimeCardInit === 'function') {
-        window.iuDateTimeCardInit();
+      if (typeof window.iuDailyPanelInit === "function") {
+        window.iuDailyPanelInit();
       }
     }, 300);
 

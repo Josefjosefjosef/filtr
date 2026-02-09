@@ -231,11 +231,30 @@
                   <div class="mindMenu">
                     <!-- IU: Denní panel -->
                     <section class="iuDailyPanel" aria-label="Denní panel">
-                      <div class="iu-topInfo" id="iuDateTimeCard">
-                        <div class="iu-dt-time" id="iuTime">--:--</div>
-                        <div class="iu-dt-date" id="iuDate">--</div>
-                        <div class="iu-dt-nameday" id="iuNameday">Svatek: --</div>
-                        <div class="iu-dt-weather" id="iuWeather">Počasí: --</div>
+                      <div class="iuDailyTop">
+                        <span class="iuDailyTime" id="iuDailyTime">--:--</span>
+                        <span class="iuDailyDate" id="iuDailyDate">—</span>
+                      </div>
+
+                      <div class="iuDailyNameday" id="iuDailyNameday" hidden>Svátek má —</div>
+
+                      <div class="iuDailyWeather" id="iuDailyWeather" hidden>
+                        <div class="iuWxNowRow">
+                          <span class="iuWxIcon" id="iuWxIcon">🌤</span>
+                          <div class="iuWxNowMeta">
+                            <div class="iuWxNowLine">
+                              <span class="iuWxPlace" id="iuWxPlace">—</span>
+                              <span class="iuWxTemp" id="iuWxTemp">—°C</span>
+                            </div>
+                            <div class="iuWxMinMax" id="iuWxMinMax">Max —° · Min —°</div>
+                          </div>
+                        </div>
+
+                        <div class="iuWxHours" id="iuWxHours"></div>
+                      </div>
+
+                      <div class="iuDailyErr" id="iuDailyErr" hidden>
+                        Počasí momentálně není dostupné
                       </div>
                     </section>
                     <!-- Rychlé odkazy -->
@@ -1706,7 +1725,7 @@
         </div>
       </div>
     </div>
-    <!-- iuDailyPanel logic moved to assets/app.js DateTime init -->
+    <!-- iuDailyPanel logic moved to assets/app.js (iuDailyPanelInit) -->
     <script>
     /* Navigační lišta - šipky pro horizontální scroll: izolované pouze pro topbar-links nav, žádné zásahy do feed/state */
     (() => {

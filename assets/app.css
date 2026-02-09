@@ -468,7 +468,7 @@ aside.accordionCol{
   min-width: 0;
   order: 2;
   width: var(--sideW, 360px);
-  padding: 0 0 16px 16px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -554,7 +554,7 @@ aside.accordionCol{
   order: 0;
   width: 100%;
   max-width: 100%;
-  padding: 0;
+  padding: 14px;
   margin-bottom: 0;
   min-height: 140px;
   box-sizing: border-box;
@@ -566,13 +566,6 @@ aside.accordionCol{
 
 .iuDailyPanel [hidden]{
   display: none !important;
-}
-
-.iu-topInfo{
-  padding: 14px 14px 10px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 }
 
 .iuDailyTop{
@@ -630,23 +623,6 @@ aside.accordionCol{
   font-size:12px;
   opacity:.7;
   margin-top:8px;
-}
-
-.iu-dt-time{
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.iu-dt-date{
-  font-size: 14px;
-  opacity: .85;
-}
-
-.iu-dt-nameday,
-.iu-dt-weather{
-  font-size: 13px;
-  margin-top: 0;
-  opacity: .9;
 }
 
 .iuWxHours{
@@ -3658,13 +3634,10 @@ a.brand,
   box-sizing: border-box;
   background: #f5f5f5;
   color: var(--text);
-  padding-right: 0;
   border: none;
   border-radius: 0;
-  padding: 0;
   box-shadow: none;
   margin-top: 0;
-  padding-top: 0;
   align-self: start;
 }
 
