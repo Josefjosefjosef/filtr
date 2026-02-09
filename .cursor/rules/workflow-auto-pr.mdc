@@ -1,0 +1,34 @@
+---
+description: Enforce automated branch/commit/PR workflow (no manual PR text)
+alwaysApply: true
+---
+
+# Automated workflow (Cursor must follow)
+
+## Goal
+
+Maximize automation: after a code change, the user should **not type PR title/body**. The only expected manual step is an intentional **“Merge pull request” click** (do not try to bypass branch protection).
+
+## Branch + commit discipline
+
+- Always work on a new branch named `fix/...`, `style/...`, `chore/...` (never commit directly to `main`).
+- Keep changes minimal and scoped to the requested goal.
+- Commit messages use a conventional prefix: `fix: ...`, `style: ...`, `chore: ...`, `docs: ...`.
+
+## PR creation (no manual text)
+
+- Never open “compare” URLs or ask the user to copy/paste a PR body.
+- PR title should come from the commit message.
+- PR description must come from `.github/pull_request_template.md`.
+
+Preferred PR creation methods:
+
+1) **GitHub Desktop**: use “Preview Pull Request” → “Create Pull Request”.
+2) If GitHub CLI is available: `gh pr create --fill` (auto title/body).
+
+## Safety boundaries (do NOT do)
+
+- Do not disable branch protection.
+- Do not enable auto-merge that bypasses CI.
+- Do not merge into `main` automatically.
+
