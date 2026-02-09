@@ -5,6 +5,7 @@
   /* ===== jednotné „zlomené bílé“ pozadí pro celý web (včetně topbar) ===== */
   --pageBg: #FFFFFF;
   --cardBg: #FFFFFF;
+  --iu-page-bg: linear-gradient(180deg,#eaf1f8 0%,#dde7f2 100%);
 
   /* světlý moderní design */
   --iu-bg: #ffffff;
@@ -110,41 +111,24 @@ img, svg, video, iframe{
 
 /* 3) Všechny obrázky, které mají mít pevný poměr stran, dostanou aspect-ratio přes třídy (viz níže) */
 
-/* ==== GLOBAL BACKGROUND LOCK (page + columns only) ==== */
-:root{
-  --iu-bg-lock: #000000; /* TODO: replace with exact daily panel bg from DevTools */
-}
-
-/* Celé pozadí stránky */
 html, body{
-  background: var(--iu-bg-lock);
+  background: var(--iu-page-bg);
 }
 
-/* Pozadí layoutu / sloupců (jen kontejnery, ne karty) */
+/* sjednocení pozadí pod levým feedem i pravým sloupcem (bez zásahu do karet) */
+.layout,
+.iu-layout,
+#layout,
+main,
 #feed,
-#feedWrap,
-#feedColumn,
-#leftFeed,
-#main,
-#mainColumn,
-#content,
-#contentWrap,
-#rightColumn,
-#rightSidebar,
-#side,
-#sidebar,
-.iu-main,
-.iu-mainCol,
-.iu-left,
 .iu-feed,
 .iu-right,
+.iu-right-col,
+.iu-right-column,
 .iu-sidebar,
-.iu-shell,
-.iu-layout,
-.iu-wrap,
-.page,
-.container{
-  background: var(--iu-bg-lock);
+.iu-mainMenu,
+.iu-main-menu{
+  background: var(--iu-page-bg);
 }
 
 html,body{ height:100%; }
@@ -152,7 +136,6 @@ html,body{ height:100%; }
 body{
   margin:0;
   /* TEMP DEBUG BACKGROUND */
-  background: #f2f2f2;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
   font-size: 14px;
   line-height: 1.48;
