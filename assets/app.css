@@ -921,7 +921,18 @@ button.iu-mmQuickItem{
 .iu-right-tools{
   display: flex;
   gap: 10px;
-  margin: 10px 0 14px;
+  margin: 6px 0 10px;
+
+  /* Zrušit oddělovací čáru lícující s horní hranou ikon */
+  border-top: 0 !important;
+}
+
+.iu-right-tools::before{
+  content: none !important;
+}
+
+.iu-mindDetails summary + .iu-right-tools{
+  border-top: 0 !important;
 }
 
 .iu-right-tool{
@@ -930,13 +941,20 @@ button.iu-mmQuickItem{
   border-radius: 10px;
   border: 1px solid rgba(0,0,0,0.08);
   background: #fff;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  padding: 0;
+  line-height: 1;
 }
 
 .iu-right-tool i{
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  line-height: 1.25em;
+  text-align: center;
   font-size: 18px;
 }
 
