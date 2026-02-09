@@ -3177,7 +3177,10 @@ function buildVideoAsArticleCard(it) {
     iuInitDateTime();
     iuInitNameday();
     iuInitWeather();
-    setInterval(iuInitDateTime, 60000);
+    if (window.__iu_dt_time_timer) {
+      clearInterval(window.__iu_dt_time_timer);
+    }
+    window.__iu_dt_time_timer = setInterval(iuInitDateTime, 60000);
   };
 
   function init() {
@@ -3203,6 +3206,13 @@ function buildVideoAsArticleCard(it) {
     if (typeof window.iuDateTimeCardInit === 'function') {
       window.iuDateTimeCardInit();
     }
+
+    // HARD FIX: znovu inicializuj po layoutu (grid/flex settle)
+    setTimeout(() => {
+      if (typeof window.iuDateTimeCardInit === 'function') {
+        window.iuDateTimeCardInit();
+      }
+    }, 300);
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(regs => {
@@ -3316,6 +3326,16 @@ function buildVideoAsArticleCard(it) {
     fetchFeedHealth();
     updateEventsUI();
     finalStateReport();
+
+    // HARD FIX: kill legacy Service Workers (diagnostic)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        regs.forEach(reg => {
+          // jen diagnosticky – odregistrujeme staré SW
+          reg.unregister();
+        });
+      }).catch(()=>{});
+    }
   }
 
   document.addEventListener("visibilitychange", () => {
