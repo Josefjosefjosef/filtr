@@ -218,6 +218,108 @@ window.addEventListener("unhandledrejection", (e) => {
     box.textContent += `\n${msg}`;
   }
 
+  // ===== CLS / Layout Shift Debug (debug=1 only) =====
+  function installCLSObserver() {
+    try {
+      if (!isDebugLogging) return;
+      if (window.__iuCLSObserverInstalled) return;
+      window.__iuCLSObserverInstalled = true;
+
+      if (typeof PerformanceObserver === "undefined") {
+        debugWarn("[CLS] PerformanceObserver not available");
+        return;
+      }
+
+      const MAX = 10;
+      window.__iuCLSLog = Array.isArray(window.__iuCLSLog) ? window.__iuCLSLog : [];
+
+      function rectToObj(r) {
+        if (!r) return null;
+        return {
+          x: Math.round(r.x || 0),
+          y: Math.round(r.y || 0),
+          width: Math.round(r.width || 0),
+          height: Math.round(r.height || 0),
+          top: Math.round(r.top || 0),
+          left: Math.round(r.left || 0),
+          bottom: Math.round(r.bottom || 0),
+          right: Math.round(r.right || 0),
+        };
+      }
+
+      function nodeLabel(node) {
+        try {
+          if (!node) return "(null)";
+          if (!(node instanceof Element)) return "(non-element)";
+          const tag = (node.tagName || "").toLowerCase() || "(tag)";
+          const id = node.id ? `#${node.id}` : "";
+          const cls =
+            node.classList && node.classList.length
+              ? `.${Array.from(node.classList).slice(0, 4).join(".")}`
+              : "";
+
+          // best-effort data-* hints (keep short)
+          const attrs = [];
+          if (node.attributes) {
+            for (let i = 0; i < node.attributes.length; i++) {
+              const a = node.attributes[i];
+              if (!a || !a.name) continue;
+              if (a.name.indexOf("data-") !== 0) continue;
+              attrs.push(
+                `${a.name}=${JSON.stringify(String(a.value || "").slice(0, 40))}`
+              );
+              if (attrs.length >= 3) break;
+            }
+          }
+          const data = attrs.length ? ` [${attrs.join(" ")}]` : "";
+          return `${tag}${id}${cls}${data}`;
+        } catch (_) {
+          return "(err)";
+        }
+      }
+
+      function pushLog(entry) {
+        window.__iuCLSLog.push(entry);
+        if (window.__iuCLSLog.length > MAX) {
+          window.__iuCLSLog.splice(0, window.__iuCLSLog.length - MAX);
+        }
+      }
+
+      const observer = new PerformanceObserver((list) => {
+        try {
+          const entries = list.getEntries() || [];
+          for (const e of entries) {
+            const sources = Array.isArray(e.sources) ? e.sources : [];
+            const rec = {
+              t: new Date().toISOString(),
+              value: typeof e.value === "number" ? e.value : 0,
+              hadRecentInput: !!e.hadRecentInput,
+              sourceCount: sources.length,
+              sources: sources.map((s) => ({
+                node: nodeLabel(s && s.node),
+                previousRect: rectToObj(s && s.previousRect),
+                currentRect: rectToObj(s && s.currentRect),
+              })),
+            };
+            pushLog(rec);
+
+            try {
+              console.groupCollapsed(
+                `[IU][CLS] shift=${rec.value.toFixed(4)} sources=${rec.sourceCount} recentInput=${rec.hadRecentInput}`
+              );
+              console.log("record:", rec);
+              console.log("window.__iuCLSLog (last 10):", window.__iuCLSLog);
+              console.groupEnd();
+            } catch (_) {}
+          }
+        } catch (_) {}
+      });
+
+      observer.observe({ type: "layout-shift", buffered: true });
+      debugLog("[CLS] observer installed");
+    } catch (_) {}
+  }
+
   const lastFetchDiag = {
     articles: null,
     videos: null,
@@ -3336,6 +3438,7 @@ function buildVideoAsArticleCard(it) {
       }, 5000);
     }
     renderDebugVisibility();
+    installCLSObserver();
     renderSectionsBar();
     setSectionsFromHash();
     iuInitTopbarWatcher();

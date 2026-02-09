@@ -5,6 +5,7 @@
   /* ===== jednotné „zlomené bílé“ pozadí pro celý web (včetně topbar) ===== */
   --pageBg: #FFFFFF;
   --cardBg: #FFFFFF;
+  --iu-page-bg: linear-gradient(180deg,#eaf1f8 0%,#dde7f2 100%);
 
   /* světlý moderní design */
   --iu-bg: #ffffff;
@@ -112,12 +113,12 @@ img, svg, video, iframe{
 
 /* ==== GLOBAL BACKGROUND LOCK (page + columns only) ==== */
 :root{
-  --iu-bg-lock: linear-gradient(180deg,#eaf1f8 0%,#dde7f2 100%);
+  --iu-bg-lock: var(--iu-page-bg);
 }
 
 /* Celé pozadí stránky */
 html, body{
-  background: var(--iu-bg-lock);
+  background: var(--iu-page-bg);
 }
 
 /* Pozadí layoutu / sloupců (jen kontejnery, ne karty) */
@@ -144,7 +145,7 @@ html, body{
 .iu-wrap,
 .page,
 .container{
-  background: var(--iu-bg-lock);
+  background: var(--iu-page-bg);
 }
 
 html,body{ height:100%; }
@@ -152,7 +153,7 @@ html,body{ height:100%; }
 body{
   margin:0;
   /* TEMP DEBUG BACKGROUND */
-  background: var(--iu-bg-lock);
+  background: var(--iu-page-bg);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
   font-size: 14px;
   line-height: 1.48;
@@ -537,7 +538,7 @@ aside.accordionCol{
   position: relative;
 }
 .accordionCol{
-  background: var(--iu-bg-lock);
+  background: var(--iu-page-bg);
   width: 100%;
   padding: 0;
   display: flex;
@@ -550,7 +551,7 @@ aside.accordionCol{
   min-height: 0;
 }
 .mindMenu{
-  background: var(--iu-bg-lock);
+  background: var(--iu-page-bg);
   color: #2A2E33;
   padding-left: 16px;
   padding-right: 16px;
