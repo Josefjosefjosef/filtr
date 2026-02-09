@@ -3231,7 +3231,11 @@ function buildVideoAsArticleCard(it) {
     if (elTemp) elTemp.textContent = "—°C";
     if (elMinMax) elMinMax.textContent = "Max —° · Min —°";
     if (elIcon) elIcon.textContent = "🌤";
-    if (elHours) { elHours.innerHTML = ""; }
+    // CLS mitigation: hodiny mají předrenderované "sloty" v HTML (skeleton),
+    // takže je tady nemažeme (mazání + pozdější append = layout shift).
+    if (elHours) {
+      try { elHours.classList.add("iuWxHours--skeleton"); } catch(_){}
+    }
 
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=Europe%2FPrague`;
 
@@ -3257,7 +3261,7 @@ function buildVideoAsArticleCard(it) {
           elMinMax.textContent = `Max ${fmtDeg(max0)} · Min ${fmtDeg(min0)}`;
         }
 
-        // hourly strip: vyber 8 hodin od "teď" dopředu
+        // hourly strip: vyber 8 hodin od "teď" dopředu (stabilní sloty)
         if (elHours && hourly && Array.isArray(hourly.time) && Array.isArray(hourly.temperature_2m) && Array.isArray(hourly.weather_code)) {
           const now = new Date();
           const items = [];
@@ -3273,17 +3277,36 @@ function buildVideoAsArticleCard(it) {
             if (items.length >= 8) break;
           }
 
-          elHours.innerHTML = "";
-          items.forEach(it => {
+          // Update existujících slotů (případně doplň chybějící) – bez změny výšky kontejneru
+          const slots = Array.from(elHours.querySelectorAll(".iuWxHour"));
+          while (slots.length < 8) {
             const div = document.createElement("div");
             div.className = "iuWxHour";
-            div.innerHTML = `
-              <div>${fmtHour(it.d)}</div>
-              <div class="iuWxHourTemp">${fmtDeg(it.temp)}</div>
-              <div>${iconFromCode(it.code)}</div>
-            `;
+            div.innerHTML = `<div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div>`;
+            div.setAttribute("aria-hidden", "true");
             elHours.appendChild(div);
-          });
+            slots.push(div);
+          }
+
+          for (let i = 0; i < 8; i++){
+            const slot = slots[i];
+            const it = items[i];
+            if (!slot) continue;
+            if (it) {
+              slot.innerHTML = `
+                <div>${fmtHour(it.d)}</div>
+                <div class="iuWxHourTemp">${fmtDeg(it.temp)}</div>
+                <div>${iconFromCode(it.code)}</div>
+              `;
+              slot.removeAttribute("aria-hidden");
+            } else {
+              // keep stable height even if fewer items
+              slot.innerHTML = `<div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div>`;
+              slot.setAttribute("aria-hidden", "true");
+            }
+          }
+
+          try { elHours.classList.remove("iuWxHours--skeleton"); } catch(_){}
         }
 
         if (elWeather) elWeather.hidden = false;
