@@ -1046,17 +1046,17 @@ button.iu-mmQuickItem{
   padding-top: var(--iu-mind-gap);
 }
 
-/* Moje schránky: panel bez výškových limitů (auto-expand podle obsahu) */
+/* Moje schránky: panel – zachovat animaci, ale neomezovat rozšíření pravého sloupce */
 .iu-mindDetails #iuMindPanel{
-  overflow: visible;
-  max-height: none;
-  transition: none;
+  overflow: hidden;
+  transition: max-height 220ms ease, opacity 180ms ease;
   opacity: 1;
+  max-height: 9999px; /* velký strop – aby se panel neusekával, ale animace fungovala */
 }
 
 .iu-mindDetails:not([open]) #iuMindPanel{
-  display: none;
   opacity: 0;
+  max-height: 0;
 }
 
 /* zachovat svislé mezery automaticky – žádné pevné výšky */
