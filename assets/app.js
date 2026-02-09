@@ -3327,13 +3327,10 @@ function buildVideoAsArticleCard(it) {
     updateEventsUI();
     finalStateReport();
 
-    // HARD FIX: kill legacy Service Workers (diagnostic)
-    if ('serviceWorker' in navigator) {
+    // CLEANUP: SW hard reset jen pro konkrétní diagnostický build
+    if (window.__iu_build === 'cc31ef0' && 'serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(regs => {
-        regs.forEach(reg => {
-          // jen diagnosticky – odregistrujeme staré SW
-          reg.unregister();
-        });
+        regs.forEach(reg => reg.unregister());
       }).catch(()=>{});
     }
   }

@@ -653,6 +653,11 @@ aside.accordionCol{
   opacity: .65;
   margin-top: 6px;
   word-break: break-word;
+  display: none;
+}
+
+html[data-iu-debug="1"] .iu-dt-build{
+  display: block;
 }
 
 /* HARD FIX: pravý sloupec nesmí skrývat horní kartu */
@@ -661,8 +666,6 @@ aside.accordionCol{
 .sidebar,
 aside.accordionCol{
   overflow: visible !important;
-  height: auto !important;
-  min-height: 0 !important;
 }
 
 /* HARD FIX: DateTime karta musí být vždy viditelná */
