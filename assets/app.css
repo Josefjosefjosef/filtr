@@ -917,6 +917,29 @@ button.iu-mmQuickItem{
   min-height: 0;
 }
 
+/* Pravý sloupec – rychlé nástroje */
+.iu-right-tools{
+  display: flex;
+  gap: 10px;
+  margin: 10px 0 14px;
+}
+
+.iu-right-tool{
+  flex: 1 1 0;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.iu-right-tool i{
+  font-size: 18px;
+}
+
 /* Horní řada 6 čtverečků */
 /* Rychlý řádek v MindMenu - 3 oválné štítky + hamburger */
 .iu-mindQuickRow{
@@ -1023,17 +1046,17 @@ button.iu-mmQuickItem{
   padding-top: var(--iu-mind-gap);
 }
 
-/* panel animace */
+/* Moje schránky: panel bez výškových limitů (auto-expand podle obsahu) */
 .iu-mindDetails #iuMindPanel{
-  overflow: hidden;
-  transition: max-height 220ms ease, opacity 180ms ease;
+  overflow: visible;
+  max-height: none;
+  transition: none;
   opacity: 1;
-  max-height: 1200px;
 }
 
 .iu-mindDetails:not([open]) #iuMindPanel{
+  display: none;
   opacity: 0;
-  max-height: 0;
 }
 
 /* zachovat svislé mezery automaticky – žádné pevné výšky */
