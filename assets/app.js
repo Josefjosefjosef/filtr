@@ -3146,6 +3146,40 @@ function buildVideoAsArticleCard(it) {
     debugLog(`[AUDIT] sw=${swState}`);
   }
 
+  // === IU DateTime Card (right sidebar) — hard enable ===
+  window.iuDateTimeCardInit = function iuDateTimeCardInit(){
+    function iuInitDateTime(){
+      const timeEl = document.getElementById('iuTime');
+      const dateEl = document.getElementById('iuDate');
+      if(!timeEl || !dateEl) return;
+
+      const now = new Date();
+      timeEl.textContent = now.toLocaleTimeString('cs-CZ', { hour:'2-digit', minute:'2-digit' });
+      dateEl.textContent = now.toLocaleDateString('cs-CZ', { weekday:'long', day:'numeric', month:'long' });
+    }
+
+    function iuInitNameday(){
+      const el = document.getElementById('iuNameday');
+      if(!el) return;
+
+      fetch('https://svatky.adresa.info/json')
+        .then(r => r.json())
+        .then(d => { el.textContent = `Svatek: ${d.name}`; })
+        .catch(() => { el.textContent = 'Svatek: —'; });
+    }
+
+    function iuInitWeather(){
+      const el = document.getElementById('iuWeather');
+      if(!el) return;
+      el.textContent = 'Počasí: CZ';
+    }
+
+    iuInitDateTime();
+    iuInitNameday();
+    iuInitWeather();
+    setInterval(iuInitDateTime, 60000);
+  };
+
   function init() {
     if (sessionStorage.getItem("iu:firstLoadDone")) {
       debugLog("[LOAD] repeat");
@@ -3161,6 +3195,9 @@ function buildVideoAsArticleCard(it) {
     renderSectionsBar();
     setSectionsFromHash();
     iuInitTopbarWatcher();
+    if (typeof window.iuDateTimeCardInit === 'function') {
+      window.iuDateTimeCardInit();
+    }
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
@@ -3270,65 +3307,6 @@ function buildVideoAsArticleCard(it) {
   });
 
   init();
-})();
-
-// === IU DateTime Card (right sidebar) — hard enable ===
-(function(){
-  'use strict';
-
-  function iuInitDateTime(){
-    const timeEl = document.getElementById('iuTime');
-    const dateEl = document.getElementById('iuDate');
-
-    if(!timeEl || !dateEl) return;
-
-    const now = new Date();
-
-    timeEl.textContent = now.toLocaleTimeString('cs-CZ', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-
-    dateEl.textContent = now.toLocaleDateString('cs-CZ', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long'
-    });
-  }
-
-  function iuInitNameday(){
-    const el = document.getElementById('iuNameday');
-    if(!el) return;
-
-    fetch('https://svatky.adresa.info/json')
-      .then(r => r.json())
-      .then(d => {
-        el.textContent = `Svatek: ${d.name}`;
-      })
-      .catch(() => {
-        el.textContent = 'Svatek: —';
-      });
-  }
-
-  function iuInitWeather(){
-    const el = document.getElementById('iuWeather');
-    if(!el) return;
-
-    el.textContent = 'Počasí: CZ';
-  }
-
-  function runInit(){
-    iuInitDateTime();
-    iuInitNameday();
-    iuInitWeather();
-    setInterval(iuInitDateTime, 60000);
-  }
-
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', runInit);
-  } else {
-    runInit();
-  }
 })();
 
 
