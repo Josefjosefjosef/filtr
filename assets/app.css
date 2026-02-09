@@ -554,7 +554,7 @@ aside.accordionCol{
   order: 0;
   width: 100%;
   max-width: 100%;
-  padding: 14px;
+  padding: 0;
   margin-bottom: 0;
   min-height: 140px;
   box-sizing: border-box;
@@ -566,6 +566,13 @@ aside.accordionCol{
 
 .iuDailyPanel [hidden]{
   display: none !important;
+}
+
+.iu-topInfo{
+  padding: 14px 14px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .iuDailyTop{
@@ -625,56 +632,21 @@ aside.accordionCol{
   margin-top:8px;
 }
 
-/* ===== IU DateTime Card (diagnostic hard fix) ===== */
-.iu-sideCard--datetime{
-  display: block;
-  opacity: 1;
-  visibility: visible;
-}
-
 .iu-dt-time{
   font-size: 28px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .iu-dt-date{
   font-size: 14px;
-  opacity: .8;
+  opacity: .85;
 }
 
 .iu-dt-nameday,
 .iu-dt-weather{
   font-size: 13px;
-  margin-top: 4px;
-}
-
-.iu-dt-build{
-  font-size: 11px;
-  opacity: .65;
-  margin-top: 6px;
-  word-break: break-word;
-  display: none;
-}
-
-html[data-iu-debug="1"] .iu-dt-build{
-  display: block;
-}
-
-/* HARD FIX: pravý sloupec nesmí skrývat horní kartu */
-.iu-rightCol,
-.rightColumn,
-.sidebar,
-aside.accordionCol{
-  overflow: visible !important;
-}
-
-/* HARD FIX: DateTime karta musí být vždy viditelná */
-#iuDateTimeCard{
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  position: relative !important;
-  z-index: 2;
+  margin-top: 0;
+  opacity: .9;
 }
 
 .iuWxHours{

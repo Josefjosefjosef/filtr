@@ -3161,6 +3161,7 @@ function buildVideoAsArticleCard(it) {
     function iuInitNameday(){
       const el = document.getElementById('iuNameday');
       if(!el) return;
+      el.textContent = 'Svatek: načítám…';
 
       fetch('https://svatky.adresa.info/json')
         .then(r => r.json())
@@ -3171,7 +3172,40 @@ function buildVideoAsArticleCard(it) {
     function iuInitWeather(){
       const el = document.getElementById('iuWeather');
       if(!el) return;
-      el.textContent = 'Počasí: CZ';
+      // Default: Praha (později můžeš napojit na user volbu)
+      const lat = 50.0755;
+      const lon = 14.4378;
+
+      el.textContent = 'Počasí: načítám…';
+
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=Europe%2FPrague`)
+        .then(r => r.json())
+        .then(d => {
+          const cur = d && d.current;
+          if(!cur) throw new Error('no current');
+
+          const t = Math.round(cur.temperature_2m);
+          const feel = Math.round(cur.apparent_temperature);
+          const wind = Math.round(cur.wind_speed_10m);
+
+          // hrubý popis podle weather_code
+          const code = cur.weather_code;
+          const desc =
+            (code === 0) ? 'jasno' :
+            (code === 1 || code === 2) ? 'polojasno' :
+            (code === 3) ? 'zataženo' :
+            (code >= 45 && code <= 48) ? 'mlha' :
+            (code >= 51 && code <= 67) ? 'déšť' :
+            (code >= 71 && code <= 77) ? 'sněžení' :
+            (code >= 80 && code <= 82) ? 'přeháňky' :
+            (code >= 95) ? 'bouřky' :
+            'počasí';
+
+          el.textContent = `Počasí: Praha ${t}°C (pocit ${feel}°C), ${desc}, vítr ${wind} km/h`;
+        })
+        .catch(() => {
+          el.textContent = 'Počasí: —';
+        });
     }
 
     iuInitDateTime();
@@ -3198,10 +3232,6 @@ function buildVideoAsArticleCard(it) {
     renderSectionsBar();
     setSectionsFromHash();
     iuInitTopbarWatcher();
-    window.__iu_build = 'cc31ef0';
-
-    const buildEl = document.getElementById('iuBuildStamp');
-    if (buildEl) buildEl.textContent = 'build: ' + window.__iu_build;
 
     if (typeof window.iuDateTimeCardInit === 'function') {
       window.iuDateTimeCardInit();
@@ -3213,34 +3243,6 @@ function buildVideoAsArticleCard(it) {
         window.iuDateTimeCardInit();
       }
     }, 300);
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(regs => {
-        if (!regs || !regs.length) return;
-
-        // přidáme malé klikátko do build řádku: "refresh (no-sw)"
-        const buildEl2 = document.getElementById('iuBuildStamp');
-        if (!buildEl2) return;
-
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.textContent = 'refresh (no-sw)';
-        btn.style.marginLeft = '8px';
-        btn.style.fontSize = '11px';
-        btn.style.border = 'none';
-        btn.style.background = 'transparent';
-        btn.style.cursor = 'pointer';
-        btn.style.textDecoration = 'underline';
-        btn.addEventListener('click', () => {
-          // přepneme na URL s cache-bust parametrem
-          const u = new URL(location.href);
-          u.searchParams.set('v', window.__iu_build || String(Date.now()));
-          location.replace(u.toString());
-        });
-
-        buildEl2.appendChild(btn);
-      }).catch(()=>{});
-    }
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
@@ -3327,12 +3329,6 @@ function buildVideoAsArticleCard(it) {
     updateEventsUI();
     finalStateReport();
 
-    // CLEANUP: SW hard reset jen pro konkrétní diagnostický build
-    if (window.__iu_build === 'cc31ef0' && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(regs => {
-        regs.forEach(reg => reg.unregister());
-      }).catch(()=>{});
-    }
   }
 
   document.addEventListener("visibilitychange", () => {
