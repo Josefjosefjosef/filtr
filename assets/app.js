@@ -1161,15 +1161,14 @@ window.addEventListener("unhandledrejection", (e) => {
     const beforeChildren = safeTarget.childElementCount;
     // Zachovat #sectionsBar jako reálný DOM node před clear
     const sectionsBar = document.getElementById("sectionsBar");
-    safeTarget.innerHTML = "";
-    // Vrátit #sectionsBar zpět jako první dítě (zachová původní node a eventy)
-    if (sectionsBar) {
-      safeTarget.insertBefore(sectionsBar, safeTarget.firstChild);
-    }
     if (!items || items.length === 0) {
       renderEmpty("Žádné články k zobrazení. Zkontroluj Stav dat.");
       return;
     }
+
+    // CLS mitigation: žádný mezistav "prázdný feed" (clear + append v cyklu).
+    // Postav nový obsah mimo DOM a jednorázově ho vyměň přes replaceChildren().
+    const nextNodes = [];
     for (const item of items) {
       const kind = String(item.contentType || "").toLowerCase();
       if (!ALLOWED_CONTENT_TYPES.has(kind)) {
@@ -1191,10 +1190,17 @@ window.addEventListener("unhandledrejection", (e) => {
         renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
         continue;
       }
-      safeTarget.appendChild(node);
+      nextNodes.push(node);
     }
+
+    if (sectionsBar) {
+      safeTarget.replaceChildren(sectionsBar, ...nextNodes);
+    } else {
+      safeTarget.replaceChildren(...nextNodes);
+    }
+
     const feedChildrenAfter = safeTarget.childElementCount;
-    const renderedCount = Math.max(feedChildrenAfter - beforeChildren, feedChildrenAfter ? feedChildrenAfter : 0);
+    const renderedCount = nextNodes.length;
     const typeCounts = items.reduce(
       (acc, entry) => {
         const kind = String(entry.contentType || "").toLowerCase();
