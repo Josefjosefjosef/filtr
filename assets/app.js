@@ -3195,8 +3195,41 @@ function buildVideoAsArticleCard(it) {
     renderSectionsBar();
     setSectionsFromHash();
     iuInitTopbarWatcher();
+    window.__iu_build = 'cc31ef0';
+
+    const buildEl = document.getElementById('iuBuildStamp');
+    if (buildEl) buildEl.textContent = 'build: ' + window.__iu_build;
+
     if (typeof window.iuDateTimeCardInit === 'function') {
       window.iuDateTimeCardInit();
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        if (!regs || !regs.length) return;
+
+        // přidáme malé klikátko do build řádku: "refresh (no-sw)"
+        const buildEl2 = document.getElementById('iuBuildStamp');
+        if (!buildEl2) return;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = 'refresh (no-sw)';
+        btn.style.marginLeft = '8px';
+        btn.style.fontSize = '11px';
+        btn.style.border = 'none';
+        btn.style.background = 'transparent';
+        btn.style.cursor = 'pointer';
+        btn.style.textDecoration = 'underline';
+        btn.addEventListener('click', () => {
+          // přepneme na URL s cache-bust parametrem
+          const u = new URL(location.href);
+          u.searchParams.set('v', window.__iu_build || String(Date.now()));
+          location.replace(u.toString());
+        });
+
+        buildEl2.appendChild(btn);
+      }).catch(()=>{});
     }
 
     if (btnToggleDebug) {
