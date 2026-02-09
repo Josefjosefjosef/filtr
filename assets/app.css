@@ -92,7 +92,24 @@
 }
 
 *{ box-sizing:border-box; }
-html{ scroll-padding-top: var(--topbarStackH); }
+
+/* ==== GLOBAL CLS GUARDS ==== */
+
+/* 1) Stabilní scrollbar – eliminuje vodorovné „cuknutí“ při objevení scrollbaru */
+html{
+  scroll-padding-top: var(--topbarStackH);
+  scrollbar-gutter: stable;
+}
+
+/* 2) Média nikdy nemají měnit rozměr po načtení */
+img, svg, video, iframe{
+  display:block;
+  max-width:100%;
+  height:auto;
+}
+
+/* 3) Všechny obrázky, které mají mít pevný poměr stran, dostanou aspect-ratio přes třídy (viz níže) */
+
 html,body{ height:100%; }
 
 body{
@@ -2679,6 +2696,33 @@ a.brand,
 #feed > article:first-child .news-thumb img,
 #feed > article:first-child .article-image img{
   display: none;
+}
+
+/* Feed thumbnails – rezervace místa ještě před načtením obrázku (pokud se přidají) */
+#feed .iu-article-thumb,
+#feed .iu-card-thumb,
+#feed .article-thumb,
+#feed .thumb,
+#feed .thumbnail,
+#feed .news-thumb,
+#feed .article-image{
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.06);
+}
+
+#feed .iu-article-thumb img,
+#feed .iu-card-thumb img,
+#feed .article-thumb img,
+#feed .thumb img,
+#feed .thumbnail img,
+#feed .news-thumb img,
+#feed .article-image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Ostatní položky - jemná oddělovací linka */
