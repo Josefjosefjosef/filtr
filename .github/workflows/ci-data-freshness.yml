@@ -7,11 +7,6 @@ on:
       - "Update articles data"
     types:
       - completed
-  push:
-    paths:
-      - "projects/data/articles.json"
-      - "projects/data/videos.json"
-      - "projects/data/_probe.txt"
 
 permissions:
   contents: read
