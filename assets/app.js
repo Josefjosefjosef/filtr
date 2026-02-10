@@ -1240,7 +1240,19 @@ window.addEventListener("unhandledrejection", (e) => {
     return { el, prevMinHeight, appliedMinHeight, setRefreshing: true, dailyEl, dailyPrevMinHeight, dailyAppliedMinHeight };
   }
 
-  function unlockRightColHeight(handle, reason){
+  const IU_UNLOCK_SETTLE_MS = 120;
+  function iuNextFrame(){
+    return new Promise((resolve) => {
+      try { requestAnimationFrame(() => resolve()); } catch (_) { resolve(); }
+    });
+  }
+  function iuDelay(ms){
+    return new Promise((resolve) => {
+      try { setTimeout(resolve, ms); } catch (_) { resolve(); }
+    });
+  }
+
+  function __unlockRightColHeightNow(handle, reason){
     if (!handle) { iuDbg("[IU][RIGHT_UNLOCK_SKIP]", { reason }); return; }
     const el = handle.el;
     if (!el) { iuDbg("[IU][RIGHT_UNLOCK_SKIP]", { reason }); return; }
@@ -1252,6 +1264,32 @@ window.addEventListener("unhandledrejection", (e) => {
       try { document.documentElement.classList.remove("iu-refreshing"); } catch (_) {}
     }
     iuDbg("[IU][RIGHT_UNLOCK]", { reason, restored: true, dailyRestored: !!handle.dailyEl });
+  }
+
+  // Delay unlock until layout settles (prevents late Daily panel/weather height changes causing a visible jump).
+  function unlockRightColHeight(handle, reason){
+    if (!handle) { iuDbg("[IU][RIGHT_UNLOCK_SKIP]", { reason }); return; }
+    if (!handle.el) { iuDbg("[IU][RIGHT_UNLOCK_SKIP]", { reason }); return; }
+    if (handle.__iuUnlockScheduled) return;
+    handle.__iuUnlockScheduled = true;
+
+    (async () => {
+      await iuNextFrame();
+      await iuNextFrame();
+      const hasDaily = Boolean(handle.dailyEl || (typeof getDailyBoxEl === "function" ? getDailyBoxEl() : null));
+      if (hasDaily) {
+        await iuDelay(IU_UNLOCK_SETTLE_MS);
+      }
+      __unlockRightColHeightNow(handle, reason);
+      if (__iuDebug && !handle.__iuUnlockSettledLogged) {
+        try {
+          handle.__iuUnlockSettledLogged = true;
+          iuDbg("[IU][RIGHT_UNLOCK_SETTLED]", { reason, settleMs: hasDaily ? IU_UNLOCK_SETTLE_MS : 0, hasDaily });
+        } catch (_) {}
+      }
+    })().catch(() => {
+      try { __unlockRightColHeightNow(handle, reason); } catch (_) {}
+    });
   }
 
   function insideTarget(target, fallback) {
