@@ -102,14 +102,18 @@ function Get-RepoBranch(){
   return $b.Trim()
 }
 
-function Require-CleanWorkingTree(){
-  $st = & "C:\Program Files\Git\cmd\git.exe" status --porcelain
+function Require-CleanWorkingTree([switch]$IgnoreUntracked){
+  if ($IgnoreUntracked) {
+    $st = & "C:\Program Files\Git\cmd\git.exe" status --porcelain --untracked-files=no
+  } else {
+    $st = & "C:\Program Files\Git\cmd\git.exe" status --porcelain
+  }
   if ($st) { Fail "Working tree not clean. Commit/stash first." }
 }
 
-function Switch-Branch([string]$branch){
+function Switch-Branch([string]$branch, [switch]$IgnoreUntracked){
   Write-Step ("Switch branch: " + $branch)
-  Require-CleanWorkingTree
+  Require-CleanWorkingTree -IgnoreUntracked:$IgnoreUntracked
   Git @("switch",$branch)
 }
 
@@ -131,7 +135,7 @@ function SelfCheck(){
   }
 }
 
-function Preflight(){
+function Preflight([switch]$IgnoreUntracked){
   Write-Step "Preflight: repo path"
   if (-not (Test-Path $RepoPath)) { Fail "RepoPath not found: $RepoPath" }
   Set-Location $RepoPath
@@ -144,7 +148,7 @@ function Preflight(){
   Git @("fetch","origin","--prune")
 
   Write-Step "Preflight: status clean"
-  Require-CleanWorkingTree
+  Require-CleanWorkingTree -IgnoreUntracked:$IgnoreUntracked
 
   Write-Step "Preflight: remote origin"
   $remote = & "C:\Program Files\Git\cmd\git.exe" remote get-url origin
@@ -217,18 +221,18 @@ function EnsureGhPr(){
   if ($LASTEXITCODE -ne 0) { Fail "ensure-gh-and-pr.ps1 failed" }
 }
 
-function RunEnsureGhPrForBranch([string]$branch){
-  Preflight
+function RunEnsureGhPrForBranch([string]$branch, [switch]$NightMode){
+  Preflight -IgnoreUntracked:$NightMode
 
   Write-Step "Fetch (task requirement)"
   Git @("fetch","origin","--prune")
 
   $tmpScript = Export-EnsureGhAndPrToTemp
 
-  Switch-Branch $branch
+  Switch-Branch $branch -IgnoreUntracked:$NightMode
 
   Write-Step "Run ensure-gh-and-pr.ps1"
-  RunEnsureTemp -tmpScript $tmpScript | Out-Null
+  RunEnsureTemp -tmpScript $tmpScript -NightMode:$NightMode | Out-Null
   if ($LASTEXITCODE -ne 0) { Fail "ensure-gh-and-pr.ps1 failed" }
 }
 
@@ -262,62 +266,43 @@ function Night(){
       return
     }
 
-    # Always sleep at the end of the loop, even on errors/skip.
-    $shouldSleep = $true
-
     try {
-      Set-Location $RepoPath
-      # Skip cycle if there are tracked changes (allow untracked logs/).
-      $trackedDirty = & "C:\Program Files\Git\cmd\git.exe" status --porcelain --untracked-files=no
-      if ($trackedDirty) {
-        Night-Log $logFile "working tree has tracked changes; skip cycle (no stash/pull)" "WARN"
-        $shouldSleep = $true
-      } else {
-        Night-Log $logFile "cycle start"
+      Night-Log $logFile "cycle start"
 
-        # fetch only (no pull/rebase)
-        & "C:\Program Files\Git\cmd\git.exe" fetch origin --prune | Out-Null
-
-        $tmpEnsure = Export-EnsureGhAndPrToTemp
-
-        # cls-test flow (night mode: no interactive install/auth loops)
-        try {
-          Night-Log $logFile "run cls-test"
-          & "C:\Program Files\Git\cmd\git.exe" switch "fix/cls-daily-weather-lock" | Out-Null
-          [void](Night-RunEnsureAndLog -logFile $logFile -tmpEnsure $tmpEnsure)
-        } catch {
-          Night-Log $logFile ("cls-test error: " + $_.Exception.Message) "ERROR"
-        }
-
-        # pr-run-standard flow (optional, safe)
-        try {
-          Night-Log $logFile "run pr-run-standard"
-          & "C:\Program Files\Git\cmd\git.exe" switch "chore/one-shot-runner-standard" | Out-Null
-          [void](Night-RunEnsureAndLog -logFile $logFile -tmpEnsure $tmpEnsure)
-        } catch {
-          Night-Log $logFile ("pr-run-standard error: " + $_.Exception.Message) "ERROR"
-        }
-
-        # restore
-        if ($origBranch) {
-          try {
-            Night-Log $logFile ("restore branch: " + $origBranch)
-            & "C:\Program Files\Git\cmd\git.exe" switch $origBranch | Out-Null
-          } catch {
-            Night-Log $logFile "restore branch failed" "WARN"
-          }
-        }
-
-        Night-Log $logFile "cycle end"
+      # Preflight for night: ignore untracked (logs) and never hard-fail the whole run.
+      try {
+        Preflight -IgnoreUntracked
+      } catch {
+        Night-Log $logFile ("preflight error: " + $_.Exception.Message) "ERROR"
+        throw
       }
+
+      # cls-test (same core logic, but in NightMode to avoid interactive auth/install)
+      try {
+        Night-Log $logFile "run cls-test"
+        RunEnsureGhPrForBranch "fix/cls-daily-weather-lock" -NightMode
+        Night-Log $logFile "DONE"
+      } catch {
+        Night-Log $logFile ("cls-test error: " + $_.Exception.Message) "ERROR"
+      }
+
+      # restore
+      if ($origBranch) {
+        try {
+          Night-Log $logFile ("restore branch: " + $origBranch)
+          Switch-Branch $origBranch -IgnoreUntracked
+        } catch {
+          Night-Log $logFile "restore branch failed" "WARN"
+        }
+      }
+
+      Night-Log $logFile "cycle end"
     } catch {
       Night-Log $logFile ("cycle runtime error: " + $_.Exception.Message) "ERROR"
     }
 
-    if ($shouldSleep) {
-      if ($IntervalMinutes -lt 1) { $IntervalMinutes = 1 }
-      Start-Sleep -Seconds ($IntervalMinutes * 60)
-    }
+    if ($IntervalMinutes -lt 1) { $IntervalMinutes = 1 }
+    Start-Sleep -Seconds ($IntervalMinutes * 60)
   }
 }
 

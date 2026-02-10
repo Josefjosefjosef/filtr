@@ -20,6 +20,9 @@ $script:GhExe = $null
 $script:DidAuthLogin = $false
 
 function Get-GhExe(){
+  $preferred = Join-Path $env:LOCALAPPDATA "filtr-tools\\gh\\2.86.0\\bin\\gh.exe"
+  if (Test-Path $preferred) { return $preferred }
+
   $localRoot = Join-Path $env:LOCALAPPDATA "filtr-tools\\gh"
   if (Test-Path $localRoot) {
     $dirs = Get-ChildItem -Directory $localRoot -ErrorAction SilentlyContinue
