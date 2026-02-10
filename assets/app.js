@@ -1207,7 +1207,11 @@ window.addEventListener("unhandledrejection", (e) => {
     const target = getFeedTarget();
     if (target) {
       withScrollLock(() => {
-        target.innerHTML = "";
+        // CLS mitigation: avoid mezistav "prázdný feed" (clear a až pak další DOM).
+        // Zachovat #sectionsBar jako reálný DOM node, stejně jako v renderFeed().
+        const sectionsBar = document.getElementById("sectionsBar");
+        if (sectionsBar) target.replaceChildren(sectionsBar);
+        else target.replaceChildren();
       });
     }
     if (isDebugLogging) {
@@ -2950,7 +2954,6 @@ function buildVideoAsArticleCard(it) {
         }
       } else {
         const feed = document.querySelector("#feed");
-        if (feed) feed.innerHTML = "";
 
         const msg = "Obsah se teď nenačetl (chyba načtení dat). Zkus obnovit stránku.";
         const details = [
@@ -2963,10 +2966,13 @@ function buildVideoAsArticleCard(it) {
           box.style.display = "";
           box.textContent = `${msg}\n${details}`;
         } else if (feed) {
+          // CLS mitigation: postav nový obsah mimo DOM a jednorázově ho vyměň.
           const div = document.createElement("div");
           div.className = "iuErrorBox";
           div.textContent = `${msg}\n${details}`;
-          feed.appendChild(div);
+          const sectionsBar = document.getElementById("sectionsBar");
+          if (sectionsBar) feed.replaceChildren(sectionsBar, div);
+          else feed.replaceChildren(div);
         }
       }
 
