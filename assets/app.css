@@ -112,6 +112,19 @@ img, svg, video, iframe{
 
 /* 3) Všechny obrázky, které mají mít pevný poměr stran, dostanou aspect-ratio přes třídy (viz níže) */
 
+/* 4) PRELOAD: vypnout layout-ovlivňující animace jen během prvního paintu */
+html.iu-preload .iu-mindDetails #iuMindPanel,
+html.iu-preload .accordionCol .accContent{
+  transition: none !important;
+}
+
+/* Desktop: rezervace prostoru pro pravý „Mind“ panel, aby při prvním renderu neskákal */
+@media (min-width: 901px){
+  .iu-rightContent{
+    min-height: 360px;
+  }
+}
+
 /* ==== GLOBAL BACKGROUND LOCK (page + columns only) ==== */
 :root{
   --iu-bg-lock: var(--iu-page-bg);

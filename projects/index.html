@@ -9,6 +9,32 @@
 
     <meta name="robots" content="noindex,nofollow" />
 
+    <script>
+    (function(){
+      // CLS stability: disable layout-affecting transitions during first paint.
+      // Must run before CSS is loaded.
+      try{
+        var root = document.documentElement;
+        if (!root) return;
+        root.classList.add("iu-preload");
+        var cleared = false;
+        function clear(){
+          if (cleared) return;
+          cleared = true;
+          try { root.classList.remove("iu-preload"); } catch(_){}
+        }
+        requestAnimationFrame(function(){
+          requestAnimationFrame(function(){
+            setTimeout(clear, 0);
+          });
+        });
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", function(){ setTimeout(clear, 0); }, { once: true });
+        }
+      }catch(_){}
+    })();
+    </script>
+
     <style>
       /* DIAG ONLY: zviditelnění, zda je feed přítomen a není skryt/překryt */
       #feed { min-height: 200px !important; outline: 2px dashed rgba(255,255,255,0.35) !important; outline-offset: 2px; }
@@ -1532,6 +1558,45 @@
           }catch(_){}
         });
         obs.observe({ type: "layout-shift", buffered: true });
+
+        // Extra diagnostics: log size changes for right column + feed.
+        // Debug-only (debug=1). No extra DOM nodes.
+        try{
+          if (typeof ResizeObserver === "undefined") return;
+          function roWatch(name, el){
+            try{
+              if (!el) {
+                console.log("[IU][RO]", name, "MISSING");
+                return;
+              }
+              var last = null;
+              var ro = new ResizeObserver(function(entries){
+                try{
+                  var cr = (entries && entries[0] && entries[0].contentRect) ? entries[0].contentRect : null;
+                  if (!cr) return;
+                  var h = Math.round(cr.height || 0);
+                  if (last === null) {
+                    last = h;
+                    console.log("[IU][RO]", name, "init_h=" + h);
+                    return;
+                  }
+                  var d = h - last;
+                  if (Math.abs(d) < 2) return;
+                  last = h;
+                  console.log("[IU][RO]", name, "h=" + h, "delta=" + d);
+                }catch(_){}
+              });
+              ro.observe(el);
+            }catch(_){}
+          }
+
+          roWatch("aside.accordionCol", document.querySelector("aside.accordionCol"));
+          roWatch(".mindMenu", document.querySelector(".mindMenu"));
+          roWatch(".iu-rightContent", document.querySelector(".iu-rightContent"));
+          roWatch("#iuMindPanel", document.getElementById("iuMindPanel"));
+          roWatch("#feed", document.getElementById("feed"));
+          roWatch("#newsList", document.getElementById("newsList"));
+        }catch(_){}
       }catch(_){}
     })();
     </script>
