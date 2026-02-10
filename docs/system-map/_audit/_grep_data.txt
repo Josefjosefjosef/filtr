@@ -1,0 +1,194 @@
+﻿command: git grep -n -E projects/data|articles\.json|videos\.json|brief\.json|meta\.json|feed_health\.json|weather\.json|namedays\.json|_probe\.txt -- assets scripts .github projects tools
+exitCode: 0
+---
+.github/workflows/ci-data-freshness.yml:27:          ls -la projects/data || true
+.github/workflows/ci-data-freshness.yml:29:          test -f projects/data/articles.json && echo "articles.json exists" || echo "articles.json missing"
+.github/workflows/ci-data-freshness.yml:30:          test -f projects/data/videos.json && echo "videos.json exists" || echo "videos.json missing"
+.github/workflows/ci-data-freshness.yml:92:          ok1, msg1 = check("projects/data/articles.json", required=True)
+.github/workflows/ci-data-freshness.yml:93:          ok2, msg2 = check("projects/data/videos.json", required=False)
+.github/workflows/ci-heartbeat.yml:34:          echo "Checking required: https://infouzel.cz/projects/data/articles.json"
+.github/workflows/ci-heartbeat.yml:35:          curl -fsS "https://infouzel.cz/projects/data/articles.json" -o /dev/null
+.github/workflows/ci-heartbeat.yml:37:          echo "Checking optional: https://infouzel.cz/projects/data/videos.json"
+.github/workflows/ci-heartbeat.yml:38:          curl -fsS "https://infouzel.cz/projects/data/videos.json" -o /dev/null || true
+.github/workflows/health-check.yml:15:      - name: Check required files under projects/data
+.github/workflows/health-check.yml:17:          echo "=== Checking files in projects/data ==="
+.github/workflows/health-check.yml:18:          ls -la projects/data || true
+.github/workflows/health-check.yml:22:          if [ -f projects/data/weather.json ]; then
+.github/workflows/health-check.yml:23:            echo "OK: projects/data/weather.json"
+.github/workflows/health-check.yml:24:            head -n 30 projects/data/weather.json || true
+.github/workflows/health-check.yml:26:            echo "MISSING: projects/data/weather.json"
+.github/workflows/health-check.yml:30:          if [ -f projects/data/namedays.json ]; then
+.github/workflows/health-check.yml:31:            echo "OK: projects/data/namedays.json"
+.github/workflows/health-check.yml:32:            head -n 30 projects/data/namedays.json || true
+.github/workflows/health-check.yml:34:            echo "MISSING: projects/data/namedays.json"
+.github/workflows/health-check.yml:39:            echo "Health check FAILED: missing required files under projects/data"
+.github/workflows/pages.yml:30:          # Check articles.json (required)
+.github/workflows/pages.yml:31:          if [ ! -f projects/data/articles.json ]; then
+.github/workflows/pages.yml:32:            echo "ÔŁî projects/data/articles.json missing"
+.github/workflows/pages.yml:36:          if [ ! -s projects/data/articles.json ]; then
+.github/workflows/pages.yml:37:            echo "ÔŁî projects/data/articles.json is empty"
+.github/workflows/pages.yml:41:          # Validate articles.json is valid JSON and contains generatedAt
+.github/workflows/pages.yml:42:          if ! python3 -c "import json; data = json.load(open('projects/data/articles.json')); assert 'generatedAt' in data, 'missing generatedAt key'" 2>/dev/null; then
+.github/workflows/pages.yml:43:            echo "ÔŁî projects/data/articles.json is invalid JSON or missing generatedAt key"
+.github/workflows/pages.yml:47:          echo "Ôťů projects/data/articles.json OK"
+.github/workflows/pages.yml:49:          # Check videos.json (optional)
+.github/workflows/pages.yml:50:          if [ -f projects/data/videos.json ]; then
+.github/workflows/pages.yml:51:            if [ ! -s projects/data/videos.json ]; then
+.github/workflows/pages.yml:52:              echo "ÔÜá´ŞĆ projects/data/videos.json exists but is empty (warning only, continuing)"
+.github/workflows/pages.yml:54:              echo "Ôťů projects/data/videos.json OK"
+.github/workflows/pages.yml:57:            echo "ÔÜá´ŞĆ projects/data/videos.json not present (optional)"
+.github/workflows/pages.yml:66:          if [ ! -f data/articles.json ]; then
+.github/workflows/pages.yml:67:            echo "ÔÜá´ŞĆ data/articles.json not present (allowed ÔÇô ignored by git)"
+.github/workflows/pages.yml:69:            echo "Ôťů data/articles.json found"
+.github/workflows/update-articles.yml:61:          mkdir -p projects/data
+.github/workflows/update-articles.yml:63:          if [ ! -f projects/data/articles.json ]; then
+.github/workflows/update-articles.yml:64:            echo "ERROR: projects/data/articles.json missing"
+.github/workflows/update-articles.yml:68:          echo "probe-ok $(date --utc +%Y-%m-%dT%H:%M:%SZ)" > projects/data/_probe.txt
+.github/workflows/update-articles.yml:70:          test -s projects/data/articles.json
+.github/workflows/update-articles.yml:71:          if [ "$(stat -c %s projects/data/articles.json)" -eq 0 ]; then
+.github/workflows/update-articles.yml:72:            echo "ERROR: projects/data/articles.json is empty"
+.github/workflows/update-articles.yml:76:          if [ -f projects/data/videos.json ] && [ "$(stat -c %s projects/data/videos.json)" -eq 0 ]; then
+.github/workflows/update-articles.yml:77:            echo "ERROR: projects/data/videos.json is empty"
+.github/workflows/update-articles.yml:86:          if git status --porcelain projects/data/ | grep -q .; then
+.github/workflows/update-namedays.yml:33:          mkdir -p projects/data
+.github/workflows/update-namedays.yml:43:          OUTPUT_DIR: projects/data
+.github/workflows/update-namedays.yml:48:          ls -la projects/data
+.github/workflows/update-namedays.yml:49:          head -n 5 projects/data/namedays.json || true
+.github/workflows/update-namedays.yml:50:          if [ -f projects/data/namedays.json ]; then
+.github/workflows/update-namedays.yml:51:            echo "OK: projects/data/namedays.json exists"
+.github/workflows/update-namedays.yml:52:            KEY_COUNT=$(python3 -c "import json; print(len(json.load(open('projects/data/namedays.json','r',encoding='utf-8'))))")
+.github/workflows/update-namedays.yml:59:            echo "ERROR: namedays.json missing"
+.github/workflows/update-namedays.yml:65:          if python3 -c "import json; json.load(open('projects/data/namedays.json','r',encoding='utf-8'))"; then
+.github/workflows/update-namedays.yml:68:            echo "ERROR: projects/data/namedays.json is not valid JSON"
+.github/workflows/update-weather.yml:39:          mkdir -p projects/data
+.github/workflows/update-weather.yml:43:          OUTPUT_DIR: projects/data
+.github/workflows/update-weather.yml:48:          ls -la projects/data
+.github/workflows/update-weather.yml:49:          head -c 200 projects/data/weather.json || true
+.github/workflows/update-weather.yml:50:          if [ -f projects/data/weather.json ]; then
+.github/workflows/update-weather.yml:51:            echo "OK: projects/data/weather.json exists"
+.github/workflows/update-weather.yml:53:            if grep -q '"place"' projects/data/weather.json && grep -q '"current"' projects/data/weather.json; then
+.github/workflows/update-weather.yml:54:              echo "OK: weather.json has NEW schema (place/current)"
+.github/workflows/update-weather.yml:55:            elif grep -q '"tempC"' projects/data/weather.json; then
+.github/workflows/update-weather.yml:56:              echo "WARNING: weather.json has OLD schema (tempC/location)"
+.github/workflows/update-weather.yml:58:              echo "WARNING: weather.json schema unclear"
+.github/workflows/update-weather.yml:61:            echo "ERROR: weather.json missing"
+.github/workflows/update-weather.yml:67:          if python3 -c "import json; json.load(open('projects/data/weather.json','r',encoding='utf-8'))"; then
+.github/workflows/update-weather.yml:70:            echo "ERROR: projects/data/weather.json is not valid JSON"
+assets/app-crash-shield.js:346:  const PROJECTS_DATA_BASE = "/projects/data";
+assets/app-crash-shield.js:348:    articlesUrl: `${PROJECTS_DATA_BASE}/articles.json`,
+assets/app-crash-shield.js:349:    videosUrl: `${PROJECTS_DATA_BASE}/videos.json`,
+assets/app-crash-shield.js:350:    metaUrl: `${PROJECTS_DATA_BASE}/meta.json`,
+assets/app.js:431:  const DATA_URL = `${BASE_ROOT}data/articles.json`;
+assets/app.js:432:  const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
+assets/app.js:676:    const rootArticlesPath = "/projects/data/articles.json";
+assets/app.js:677:    const rootVideosPath = "/projects/data/videos.json";
+assets/app.js:693:    const ARTICLES_ENDPOINT = "/projects/data/articles.json";
+assets/app.js:694:    const VIDEOS_ENDPOINT   = "/projects/data/videos.json";
+assets/app.js:714:      "/projects/data/articles.json",
+assets/app.js:715:      "/projects/data/videos.json"
+assets/app.js:2039:      const res = await timeoutFetch(makeDataUrl("data/articles.json"), { cache: "no-store" }, 9000);
+assets/app.js:2125:      const res = await timeoutFetch(makeDataUrl("data/videos.json"), { cache: "no-store" }, 9000);
+assets/app.js:2494:      "/projects/data/articles.json",
+assets/app.js:2495:      makeDataUrl("projects/data/articles.json"),
+assets/app.js:2496:      "/projects/data/articles.json",
+assets/app.js:2497:      "/projects/data/articles.json",
+assets/app.js:2498:      makeDataUrl("projects/data/articles.json"),
+assets/app.js:2499:      makeDataUrl("filtr/data/articles.json"),
+assets/app.js:2502:      "/projects/data/videos.json",
+assets/app.js:2503:      makeDataUrl("projects/data/videos.json"),
+assets/app.js:2504:      "/projects/data/videos.json",
+assets/app.js:2505:      "/projects/data/videos.json",
+assets/app.js:2506:      makeDataUrl("projects/data/videos.json"),
+assets/app.js:2507:      makeDataUrl("filtr/data/videos.json"),
+assets/app.js:2530:      const probeUrl = "/projects/data/_probe.txt";
+assets/app.js:2531:      const ARTICLES_URL = "https://infouzel.cz/projects/data/articles.json";
+assets/app.js:2532:      const VIDEOS_URL = "https://infouzel.cz/projects/data/videos.json";
+assets/app.js:3004:      const res = await timeoutFetch(makeDataUrl("data/feed_health.json"), { cache: "no-store" }, 5000);
+projects/index.html:699:          var aUrl = "/projects/data/articles.json";
+projects/index.html:700:          var vUrl = "/projects/data/videos.json";
+projects/index.html:1038:          return n.indexOf("articles.json") !== -1 || n.indexOf("videos.json") !== -1;
+projects/index.html:1285:    /* iu-safe fetch rewrite: /data/* -> /projects/data/* (HTML-only, no app.js edits) */
+projects/index.html:1297:            if (s.indexOf("/projects/data/") === 0) return s;
+scripts/analysis/grouping_audit.js:4: * Analyzuje re├íln├í data z articles.json a simuluje topic grouping
+scripts/analysis/grouping_audit.js:297:const articlesPath = path.join(__dirname, '../../projects/data/articles.json');
+scripts/analysis/grouping_audit.py:4:Analyzuje re├íln├í data z articles.json a simuluje topic grouping
+scripts/analysis/grouping_audit.py:307:    articles_path = Path(__file__).parent.parent.parent / "projects" / "data" / "articles.json"
+scripts/audit-topics.ps1:1:# Audit topic a section hodnot v articles.json
+scripts/audit-topics.ps1:2:$data = Get-Content "projects\data\articles.json" -Raw -Encoding UTF8 | ConvertFrom-Json
+scripts/audit-topics.ps1:81:# Audit topic a section hodnot v articles.json
+scripts/build_articles.py:30:OUT_PATH = os.path.join(OUTPUT_DIR, "articles.json")
+scripts/build_articles.py:31:HEALTH_PATH = os.path.join(OUTPUT_DIR, "feed_health.json")
+scripts/build_articles.py:32:BRIEF_PATH = os.path.join(OUTPUT_DIR, "brief.json")
+scripts/build_articles.py:33:META_PATH = os.path.join(OUTPUT_DIR, "meta.json")
+scripts/build_articles.py:36:VIDEOS_OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
+scripts/build_articles.py:44:# YouTube videa: kolik nejv├Ż┼íe ulo┼żit do videos.json (frontend si vybere ─Źerstv├ę)
+scripts/build_articles.py:518:            "channel": channel,   # Ôťů ─Źist├Ż n├ízev kan├ílu pro videos.json
+scripts/build_articles.py:894:    # Ôťů sb─Ťr YouTube vide├ş (p┼»jde do data/videos.json)
+scripts/build_articles.py:981:            # Ôťů YouTube polo┼żky: ukl├íd├íme v├Żhradn─Ť do videos.json (ne do articles.json)
+scripts/build_articles.py:1106:    # articles.json
+scripts/build_articles.py:1110:    # feed_health.json (zachov├ív├íme kompatibilitu, ale p┼Öid├ív├íme nov├ę kl├ş─Źe)
+scripts/build_articles.py:1136:    # meta.json
+scripts/build_articles.py:1141:    # brief.json
+scripts/build_articles.py:1146:    # Ôťů videos.json (jen YouTube playlisty)
+scripts/build_articles_v2.py:628:            # YouTube polo┼żky Ôćĺ videos.json
+scripts/build_articles_v2.py:800:    data_layer.write_next("articles.json", articles_payload)
+scripts/build_articles_v2.py:801:    data_layer.write_next("videos.json", videos_payload)
+scripts/build_articles_v2.py:802:    data_layer.write_next("meta.json", meta_payload)
+scripts/build_articles_v2.py:803:    data_layer.write_next("brief.json", brief_payload)
+scripts/build_articles_v2.py:804:    data_layer.write_next("feed_health.json", feed_health_payload)
+scripts/build_articles_v2.py:814:    articles_valid = validate_file("articles.json", articles_payload)
+scripts/build_articles_v2.py:815:    videos_valid = validate_file("videos.json", videos_payload)
+scripts/build_articles_v2.py:816:    meta_valid = validate_file("meta.json", meta_payload)
+scripts/build_articles_v2.py:838:            ["articles.json", "videos.json", "meta.json", "brief.json", "feed_health.json"],
+scripts/build_articles_v2.py:847:        data_layer.rollback_to_lkg(["articles.json", "videos.json", "meta.json", "brief.json", "feed_health.json"])
+scripts/build_articles_v2.py:883:    latest_release = data_layer.get_latest_release_path("articles.json")
+scripts/data_layer.py:149:            self._atomic_write(self.emergency_dir / "articles.json", emergency_articles)
+scripts/data_layer.py:150:            self._atomic_write(self.emergency_dir / "videos.json", emergency_videos)
+scripts/json_validator.py:4:JSON Schema Validator pro articles.json, videos.json, meta.json, health.json
+scripts/json_validator.py:19:        Validace articles.json.
+scripts/json_validator.py:78:        Validace videos.json.
+scripts/json_validator.py:124:        """Validace meta.json."""
+scripts/json_validator.py:159:        if filename == "articles.json":
+scripts/json_validator.py:161:        elif filename == "videos.json":
+scripts/json_validator.py:163:        elif filename == "meta.json":
+scripts/json_validator.py:165:        elif filename == "feed_health.json" or filename == "health.json":
+scripts/local_build_data.ps1:8:# 2) Ensure projects/data/articles.json exists (built directly)
+scripts/local_build_data.ps1:9:if (-not (Test-Path "projects/data")) {
+scripts/local_build_data.ps1:10:  New-Item -ItemType Directory -Path "projects/data" | Out-Null
+scripts/local_build_data.ps1:13:if (-not (Test-Path "projects/data/articles.json")) {
+scripts/local_build_data.ps1:14:  throw "projects/data/articles.json missing; build must produce it directly."
+scripts/local_build_data.ps1:17:Write-Host "projects/data/articles.json ready"
+scripts/local_build_data.ps1:20:$size = (Get-Item "projects/data/articles.json").Length
+scripts/local_build_data.ps1:25:p="projects/data/articles.json"
+scripts/make_backup.py:7:    # Ôťů FIX: Pou┼żij env OUTPUT_DIR nebo default projects/data
+scripts/make_backup.py:9:        base = os.getenv("OUTPUT_DIR", "projects/data")
+scripts/make_backup.py:27:    json_files = ["articles.json", "videos.json", "meta.json", "brief.json", "feed_health.json", "status.json"]
+scripts/make_backup.py:36:    # Ôťů FIX: Pou┼żij argument, env OUTPUT_DIR nebo default projects/data
+scripts/make_backup.py:37:    base = sys.argv[1] if len(sys.argv) > 1 else os.getenv("OUTPUT_DIR", "projects/data")
+scripts/normalize_articles_json.py:67:        print("Pou┼żit├ş: scripts/normalize_articles_json.py data/articles.json", file=sys.stderr)
+scripts/ps/verify_task40.ps1:62:$raw = "https://raw.githubusercontent.com/Josefjosefjosef/filtr/main/projects/data/articles.json"
+scripts/ps/verify_task40.ps1:63:$pages = "https://josefjosefjosef.github.io/filtr/projects/data/articles.json?ts=$ts"
+scripts/repo_guard.py:66:        issues.append("assets/app.js references /data/ instead of /projects/data/")
+scripts/repo_guard.py:68:        issues.append("assets/app.js references /filtr/data/ instead of /projects/data/")
+scripts/repo_guard.py:90:    issues += validate_json(data_dir / "articles.json", "articles")
+scripts/repo_guard.py:91:    issues += validate_json(data_dir / "videos.json", "videos")
+scripts/update-articles.js:2:// Minimalni generator articles.json ÔÇô bez tahani perexu.
+scripts/update-articles.js:8:const outPath = path.join(process.cwd(), "data", "articles.json");
+scripts/update-weather-namedays.js:2: * Update data/weather.json and data/namedays.json
+scripts/update-weather-namedays.js:141:  // Ôťů FIX: Output to projects/data/ for the primary site
+scripts/update-weather-namedays.js:142:  const outputDir = process.env.OUTPUT_DIR || "projects/data";
+scripts/update-weather-namedays.js:143:  const outPath = path.join(outputDir, "weather.json");
+scripts/update-weather-namedays.js:178:    // Ôťů FIX: Output to projects/data/ for the primary site
+scripts/update-weather-namedays.js:179:    const outputDir = process.env.OUTPUT_DIR || "projects/data";
+scripts/update-weather-namedays.js:180:    const outPath = path.join(outputDir, "namedays.json");
+scripts/validate_json.py:71:    articles_path = os.path.join(data_dir, "articles.json")
+scripts/validate_json.py:72:    videos_path = os.path.join(data_dir, "videos.json")
+scripts/validate_json.py:73:    meta_path = os.path.join(data_dir, "meta.json")
+scripts/write_status.py:19:    data_dir = sys.argv[1] if len(sys.argv) > 1 else os.getenv("OUTPUT_DIR", "projects/data")
+scripts/write_status.py:20:    articles_path = os.path.join(data_dir, "articles.json")
+scripts/write_status.py:21:    videos_path = os.path.join(data_dir, "videos.json")
+tools/doctor.py:10:    PROD_DIR / "articles.json",
+tools/verify_paths.py:31:        ("next", "articles.json"),
+tools/verify_paths.py:32:        ("prod", "articles.json"),
+tools/verify_paths.py:33:        ("lkg", "articles.json"),
+

@@ -2,7 +2,7 @@
 
 ## Workflow soubory
 
-V repu jsou tyto workflow soubory v `.github/workflows/`:
+V repu jsou tyto workflow soubory v `.github/workflows/` (doloženo `git ls-files .github/workflows`):
 
 - `pages.yml`
 - `update-articles.yml`
@@ -16,56 +16,85 @@ V repu jsou tyto workflow soubory v `.github/workflows/`:
 
 ## Co který workflow dělá
 
-### Deploy
+### `pages.yml`
 
-- **`pages.yml`**
-  - **trigger**: `workflow_dispatch`
-  - **účel**: deploy repa na GitHub Pages
-  - **guardrails**: sanity check `projects/data/articles.json` (required, non-empty, valid JSON + `generatedAt`), `videos.json` optional
-  - **artefakt**: uploaduje celý repo obsah jako Pages artefakt
+- **triggers**: `workflow_dispatch`
+- **jobs**: `deploy`
+- **hlavní kroky**:
+  - sanity check `projects/data/articles.json` (required, non-empty, valid JSON + `generatedAt`) a `projects/data/videos.json` (optional)
+  - sanity check kořene repa (`index.html`, `assets/`, `data/`, `sw.js`, `.nojekyll`, atd.)
+  - upload artefaktu `path: .` a deploy přes `actions/deploy-pages@v4`
 
-### Data pipeline (writers)
+### `update-articles.yml`
 
-- **`update-articles.yml`**
-  - **trigger**: `schedule` každých 15 minut + `workflow_dispatch`
-  - **spouští**: Python pipeline (`scripts/build_articles.py`)
-  - **mění**: `projects/data/*` (včetně `_probe.txt`)
-  - **publikace**: commit/push do `main`
+- **triggers**: `workflow_dispatch`, `schedule` (`*/15 * * * *`)
+- **jobs**: `build`
+- **hlavní kroky**:
+  - `actions/setup-python@v5` (3.11) + `pip install -r scripts/requirements.txt`
+  - spustí `python scripts/build_articles.py`
+  - normalizace/validace výstupů v `projects/data/` a zápis `_probe.txt`
+  - commit & push změn do `main` (safe rebase + retry)
 
-- **`update-weather.yml`**
-  - **trigger**: `schedule` každých 15 minut + `workflow_dispatch`
-  - **spouští**: Node updater (`scripts/update-weather-namedays.js weather`)
-  - **mění**: `projects/data/weather.json`
-  - **publikace**: commit/push do `main`
+### `update-weather.yml`
 
-- **`update-namedays.yml`**
-  - **trigger**: denně + `workflow_dispatch`
-  - **spouští**: Node updater (`scripts/update-weather-namedays.js namedays`)
-  - **mění**: `projects/data/namedays.json`
-  - **publikace**: commit/push do `main`
+- **triggers**: `workflow_dispatch`, `schedule` (`*/15 * * * *`)
+- **jobs**: `update`
+- **hlavní kroky**:
+  - `actions/setup-node@v4` (node 20)
+  - spustí `node scripts/update-weather-namedays.js weather` s `OUTPUT_DIR=projects/data`
+  - sanity check + JSON validate (python `json.load`)
+  - commit & push změn do `main` (safe rebase + retry)
 
-### Guard / CI
+### `update-namedays.yml`
 
-- **`repo-guard.yml`**
-  - **trigger**: `push` na `main`, `pull_request`, `workflow_dispatch`
-  - **spouští**: `python scripts/repo_guard.py`
-  - **účel**: detekce duplicit, integrita dat, pravidla pro cache-bust a strukturu
+- **triggers**: `workflow_dispatch`, `schedule` (`5 23 * * *`)
+- **jobs**: `update`
+- **hlavní kroky**:
+  - `actions/setup-node@v4` (node 20)
+  - spustí `node scripts/update-weather-namedays.js namedays` s `OUTPUT_DIR=projects/data`
+  - sanity check (počet klíčů >= 300) + JSON validate
+  - commit & push změn do `main` (safe rebase + retry)
 
-- **`health-check.yml`**
-  - **trigger**: `schedule` každých 15 minut + `workflow_dispatch`
-  - **účel**: kontrola existence `projects/data/weather.json` a `projects/data/namedays.json`
+### `repo-guard.yml`
 
-- **`ci-heartbeat.yml`**
-  - **trigger**: `schedule` každých 15 minut + `workflow_dispatch` + `push` (jen na změny workflow souboru)
-  - **účel**: ověří, že endpoints `https://infouzel.cz/projects/data/articles.json` (required) a `videos.json` (optional) jsou dostupné
+- **triggers**: `push` (jen `main`), `pull_request`, `workflow_dispatch`
+- **jobs**: `guard`
+- **hlavní kroky**:
+  - `actions/setup-python@v5` (3.11)
+  - spustí `python scripts/repo_guard.py`
 
-- **`ci-data-freshness.yml`**
-  - **trigger**: `schedule` každých 15 minut + `workflow_dispatch` + `push` (jen na změny workflow souboru)
-  - **účel**: kontrola „stáří“ dat (default max age 120 min) podle timestampů v JSON nebo fallback podle mtime
+### `health-check.yml`
 
-- **`ci-workflow-lint.yml`**
-  - **trigger**: `schedule` + `workflow_dispatch` + `push` (konkrétní cesty)
-  - **účel**: lint/validace workflow definic (viz soubor pro detaily)
+- **triggers**: `workflow_dispatch`, `schedule` (`*/15 * * * *`)
+- **jobs**: `check`
+- **hlavní kroky**:
+  - ověřuje existenci `projects/data/weather.json` a `projects/data/namedays.json`
+
+### `ci-heartbeat.yml`
+
+- **triggers**: `workflow_dispatch`, `schedule` (`*/15 * * * *`), `push` (jen změna tohoto workflow souboru)
+- **jobs**: `heartbeat`
+- **hlavní kroky**:
+  - `curl` na produkční endpointy:
+    - required: `https://infouzel.cz/projects/data/articles.json`
+    - optional: `https://infouzel.cz/projects/data/videos.json`
+
+### `ci-data-freshness.yml`
+
+- **triggers**: `workflow_dispatch`, `schedule` (`*/15 * * * *`), `push` (jen změna tohoto workflow souboru)
+- **jobs**: `freshness`
+- **hlavní kroky**:
+  - čte `projects/data/articles.json` (required) a `projects/data/videos.json` (optional)
+  - kontroluje stáří podle timestampů v JSON (`generatedAt`/`builtAt`/`updatedAt`) nebo fallback na `mtime`
+
+### `ci-workflow-lint.yml`
+
+- **triggers**: `workflow_dispatch`, `schedule` (`17 3 * * *`), `push` (změny v `.github/workflows/**/*.yml|yaml`)
+- **jobs**: `actionlint`
+- **hlavní kroky**:
+  - anti-log scan na forbidden tokeny v `.github/workflows/` (grep)
+  - instalace `actionlint` přes upstream download script
+  - `actionlint -color`
 
 ## Operational poznámky
 

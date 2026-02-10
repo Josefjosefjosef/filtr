@@ -1,0 +1,52 @@
+﻿command: git grep -n -E iuDaily|iu-aiPanel|iuParcels|iuMindPanel|iu-actionsWithSquares|iu-mmQuickItem|iu-parcels -- projects/index.html assets/app.js
+exitCode: 0
+---
+assets/app.js:3264:  window.iuDailyPanelInit = function iuDailyPanelInit(){
+assets/app.js:3267:    const elTime = document.getElementById("iuDailyTime");
+assets/app.js:3268:    const elDate = document.getElementById("iuDailyDate");
+assets/app.js:3269:    const elNameday = document.getElementById("iuDailyNameday");
+assets/app.js:3271:    const elWeather = document.getElementById("iuDailyWeather");
+assets/app.js:3272:    const elErr = document.getElementById("iuDailyErr");
+assets/app.js:3452:    if (typeof window.iuDailyPanelInit === "function") {
+assets/app.js:3453:      window.iuDailyPanelInit();
+assets/app.js:3456:      if (typeof window.iuDailyPanelInit === "function") {
+assets/app.js:3457:        window.iuDailyPanelInit();
+assets/app.js:3589:  const parcelsBtn = document.getElementById('iuParcelsBtn');
+assets/app.js:3590:  const parcelsBtnMobile = document.getElementById('iuParcelsBtnMobile');
+assets/app.js:3591:  const modal = document.getElementById('iuParcelsPopover');
+assets/app.js:3592:  const overlay = document.querySelector('.iu-parcels-overlay');
+assets/app.js:3741:    const closeBtn = modal.querySelector('.iu-parcels-modal-close');
+assets/app.js:3778:    const aiPanel = document.getElementById('iu-aiPanel');
+projects/index.html:104:                        <button class="iu-mmQuickItem" type="button" data-action="ai-panel" aria-haspopup="dialog" aria-expanded="false" aria-controls="iu-aiPanel" aria-label="AI asistenti">
+projects/index.html:108:                        <a class="iu-mmQuickItem" role="listitem" href="https://www.deepl.com/" target="_blank" rel="noopener noreferrer" aria-label="DeepL">
+projects/index.html:112:                        <button class="iu-mmQuickItem" type="button" aria-label="Bal├şky" data-iu-action="parcels" id="iuParcelsBtnMobile">
+projects/index.html:116:                        <a class="iu-mmQuickItem" role="listitem" href="https://www.google.com/" target="_blank" rel="noopener noreferrer" aria-label="Google">
+projects/index.html:120:                        <a class="iu-mmQuickItem" role="listitem" href="https://www.seznam.cz/" target="_blank" rel="noopener noreferrer" aria-label="Seznam.cz">
+projects/index.html:124:                        <a class="iu-mmQuickItem" role="listitem" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+projects/index.html:153:                      <div class="iu-actionsWithSquares">
+projects/index.html:233:                    <section class="iuDailyPanel" aria-label="Denn├ş panel">
+projects/index.html:234:                      <div class="iuDailyTop">
+projects/index.html:235:                        <span class="iuDailyTime" id="iuDailyTime">--:--</span>
+projects/index.html:236:                        <span class="iuDailyDate" id="iuDailyDate">ÔÇö</span>
+projects/index.html:239:                      <div class="iuDailyNameday" id="iuDailyNameday">Sv├ítek m├í ÔÇö</div>
+projects/index.html:241:                      <div class="iuDailyWeather" id="iuDailyWeather">
+projects/index.html:266:                      <div class="iuDailyErr" id="iuDailyErr" hidden>
+projects/index.html:278:                        <button class="iu-mmQuickItem" type="button" data-action="ai-panel" aria-haspopup="dialog" aria-expanded="false" aria-controls="iu-aiPanel" aria-label="AI asistenti">
+projects/index.html:283:                        <a class="iu-mmQuickItem" role="listitem" href="https://www.deepl.com/" target="_blank" rel="noopener noreferrer" aria-label="DeepL">
+projects/index.html:288:                        <button class="iu-mmQuickItem" type="button" aria-label="Bal├şky" data-iu-action="parcels" id="iuParcelsBtn">
+projects/index.html:293:                        <a class="iu-mmQuickItem" role="listitem" href="https://www.google.com/" target="_blank" rel="noopener noreferrer" aria-label="Google">
+projects/index.html:298:                        <a class="iu-mmQuickItem" role="listitem" href="https://www.seznam.cz/" target="_blank" rel="noopener noreferrer" aria-label="Seznam.cz">
+projects/index.html:303:                        <a class="iu-mmQuickItem" role="listitem" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+projects/index.html:312:                    <div id="iu-aiPanel" class="iu-aiPanel" hidden role="dialog" aria-modal="true" aria-label="AI asistenti">
+projects/index.html:314:                        <div class="iu-aiPanelHeader">
+projects/index.html:319:                        <div class="iu-aiPanelBody">
+projects/index.html:415:                        <div class="iu-actionsWithSquares" id="iuMindPanel">
+projects/index.html:1665:    <div class="iu-parcels-overlay" aria-hidden="true"></div>
+projects/index.html:1666:    <div id="iuParcelsPopover" class="iu-parcels-modal" role="dialog" aria-label="Sledov├ín├ş z├ísilek" aria-hidden="true">
+projects/index.html:1667:      <div class="iu-parcels-modal-header">
+projects/index.html:1668:        <h3 class="iu-parcels-modal-title">Sledov├ín├ş z├ísilek</h3>
+projects/index.html:1669:        <button class="iu-parcels-modal-close" aria-label="Zav┼Ö├şt" type="button">├Ś</button>
+projects/index.html:1671:      <div class="iu-parcels-modal-content">
+projects/index.html:1672:        <div class="iu-parcels-content-inner">
+projects/index.html:1788:    <!-- iuDailyPanel logic moved to assets/app.js (iuDailyPanelInit) -->
+

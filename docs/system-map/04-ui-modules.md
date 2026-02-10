@@ -9,11 +9,11 @@ Zdroj pravdy:
 
 | Modul | HTML hooky (id/class) | Ovládání | Stav / JS poznámky | Data zdroje | Rizika |
 |---|---|---|---|---|---|
-| Feed (hlavní seznam) | `#feed`, `#newsList` (viz runtime/diagnostika) | sekce menu, filtry | renderuje `loadData()` | `projects/data/articles.json`, volitelně `videos.json` | CLS při „clear→append“, dočasné prázdno při refresh |
-| Denní přehled | `.iu-daily-brief` (HTML v `projects/index.html`) | (závisí na runtime) | existují runtime timer hooky (`window.__iu_daily_timer`) | `projects/data/brief.json` (build pipeline) | CLS při pozdním naplnění obsahu |
-| MindMenu (pravý sloupec) | `#iuMindPanel`, `.iu-mindDetails` (CSS cílení) | details/summary (accordion) | CSS a JS musí držet výšku stabilní | mix (část statická, část dynamická) | CLS kvůli `max-height` tranzicím a lazy renderu |
-| Debug panel | `#iuDebugPanel` | tlačítka Copy/Clear/Close | pouze když `?debug=1` (`debug.js`) | diagnostika fetchů + SW | překryvy, z-index |
-| CLS observer (debug) | inline script v `projects/index.html` | `?debug=1` | loguje layout-shift entries | PerformanceObserver | přidává DOM box (jen debug) |
+| Feed (hlavní seznam) | `#feed` (`projects/index.html:14` pro debug CSS) | (řízení v JS) | renderuje `loadData()` (`assets/app.js:2477`) | `https://infouzel.cz/projects/data/articles.json` (`assets/app.js:2531`) + `videos.json` (`assets/app.js:2532`) | CLS při „clear→append“, dočasné prázdno při refresh |
+| Denní panel (čas/svátek/počasí) | `.iuDailyPanel` (`projects/index.html:233`), `#iuDailyWeather` (`projects/index.html:241`), `#iuDailyNameday` (`projects/index.html:239`) | (bez tlačítek) | init: `window.iuDailyPanelInit` (`assets/app.js:3264`) | nameday: `assets/app.js:3320` (externí fetch), počasí: `assets/app.js:3354+` | CLS při pozdním naplnění obsahu, stabilita výšek |
+| AI panel (modal) | `#iu-aiPanel` (`projects/index.html:312`), quick button `[data-action="ai-panel"]` (`projects/index.html:104`) | otevření přes quick button, zavření ESC/klik | init: `initAiPanel()` (`assets/app.js:3777-3875`) | statické odkazy (HTML) | CLS/overlay (z-index), focus/scroll lock |
+| Balíky (popover) | `#iuParcelsPopover` (`projects/index.html:1666`), `.iu-parcels-overlay` (`projects/index.html:1665`), `#iuParcelsBtn` (`projects/index.html:288`), `#iuParcelsBtnMobile` (`projects/index.html:112`) | tlačítko „Balíky“ (desktop/mobile) | izolovaný modul (`assets/app.js:3582+`) | externí tracking URL dle dopravce (v JS mapě) | overlay + reflow při otevření |
+| Mind panel (pravý sloupec) | `#iuMindPanel` (`projects/index.html:415`) | (dle HTML/CSS) | hook je v HTML, další logika dle `assets/app.js`/CSS | mix (část statická, část dynamická) | CLS kvůli výškám a přechodům |
 
 Pozn.: konkrétní názvy dalších panelů („Rychlé odkazy“, apod.) jsou v HTML snapshotu a CSS, ale System Map drží jen ověřené hooky (viz grep výstupy).
 
@@ -27,8 +27,8 @@ V `assets/app.css` je guard:
 
 Ověř vždy příkazem:
 
-```bash
-git grep -n "scrollbar-gutter" -- assets/app.css
+```powershell
+git grep -n 'scrollbar-gutter' -- assets/app.css
 ```
 
 ### Globální pravidla pro sizing médií
@@ -39,8 +39,10 @@ Základní globální pravidla jsou např. na:
 
 Ověř vždy příkazem:
 
-```bash
-git grep -n -E "img\\s*\\{|video\\s*\\{|max-width:\\s*100%|height:\\s*auto" -- assets/app.css
+```powershell
+git grep -n 'max-width' -- assets/app.css
+git grep -n 'height:auto' -- assets/app.css
+git grep -n 'height: auto' -- assets/app.css
 ```
 
 ## Spouštěče (trigger points)

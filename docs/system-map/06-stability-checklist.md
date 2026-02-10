@@ -10,30 +10,36 @@ Tento checklist je povinný před jakoukoli změnou (kód, data, CSS, workflows)
 
 ## Audit proti duplicitám (povinné grep/search)
 
-Pozn.: pokud není `rg` v PATH, použij ekvivalent přes `git grep`.
-
 - [ ] SW registrace / kill switch / cache:
 
-```bash
-git grep -n -E "serviceWorker|navigator\.serviceWorker|register\(" -- .
+```powershell
+git grep -n -E 'serviceWorker|navigator\.serviceWorker|serviceWorker\.register|getRegistration|getRegistrations|unregister|caches\.' -- .
 ```
 
 - [ ] data endpointy / paths:
 
-```bash
-git grep -n -E "projects/data|articles\.json|videos\.json|weather\.json|namedays\.json" -- .
+```powershell
+git grep -n -E 'projects/data|articles\.json|videos\.json|brief\.json|meta\.json|feed_health\.json|weather\.json|namedays\.json|_probe\.txt' -- .
 ```
 
 - [ ] feed render orchestrace (anti „clear→append“):
 
-```bash
-git grep -n -E "loadData\(|buildCombinedFeed\(|replaceChildren\(|innerHTML\s*=\s*\"\"" -- assets/app.js
+```powershell
+git grep -n -E 'loadData\(|buildCombinedFeed\(|replaceChildren\(' -- assets/app.js
+git grep -n 'innerHTML' -- assets/app.js
 ```
 
 - [ ] CLS guards / layout stabilizace:
 
-```bash
-git grep -n -E "scrollbar-gutter|min-height|contain|content-visibility|transition:\s*none" -- assets/app.css
+```powershell
+git grep -n -E 'scrollbar-gutter|min-height|content-visibility|contain:|transition:' -- assets/app.css
+```
+
+- [ ] init hooky (DOMContentLoaded / load / readyState):
+
+```powershell
+git grep -n -E 'DOMContentLoaded|document\.readyState' -- assets/app.js projects/index.html
+git grep -n 'addEventListener("load"' -- assets/app.js projects/index.html
 ```
 
 ## Runtime sanity (před odesláním PR)

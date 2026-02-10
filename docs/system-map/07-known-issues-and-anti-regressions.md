@@ -12,6 +12,12 @@ Tento dokument drží:
 - pozdní vložení obsahu (feed/daily/mind panel) bez rezervované výšky
 - „clear → append“ render pattern (krátké prázdno v DOM)
 
+### Evidence: `scrollbar-gutter`
+
+Výskyty v repu (doloženo `git grep`):
+
+- `assets/app.css:103` → `scrollbar-gutter: stable;`
+
 ### Anti-regrese
 
 - při reload/refresh:
@@ -25,7 +31,7 @@ Riziko: během refresh může dojít k vyprázdnění DOM a následnému doplně
 Anti-regrese:
 - preferuj atomické DOM update operace (`replaceChildren`/fragment) místo `innerHTML=""` + postupné append
 - v debug režimu `?debug=1` sleduj:
-  - „Položek v feedu“ vs „Vykresleno v DOM“ v debug overlay (`debug.js`)
+  - debug box / logy v `assets/app.js` (např. `debugBoxSet(...)` kolem `assets/app.js:2527+`)
 
 ## 3) Service Worker cache a build změny
 
@@ -63,7 +69,7 @@ Tahle sekce se má aktualizovat vždy z `git log`/PR historie, ne odhadem. Aktu�
 
 Minimální postup ověření:
 
-```bash
+```powershell
 git log -20 --oneline
 git show --name-only HEAD
 ```

@@ -2,23 +2,26 @@
 
 ## Entrypointy
 
-- **Hlavní entry HTML**: `projects/index.html`
-  - načítá CSS: `/assets/app.css?v=...`
-  - načítá JS: `/assets/app.js?v=...` (module)
-- **Root `index.html`**: pouze redirect na `/projects/` (bez načítání assetů)
-- **Service Worker**: `sw.js`
-- **Diagnostics overlay**: `debug.js` (zapíná se `?debug=1`)
+- **Hlavní entry HTML (produkce)**: `projects/index.html`
+  - CSS: `projects/index.html:18` → `/assets/app.css?v=NOICONS_20260208_01`
+  - JS: `projects/index.html:1538` → `/assets/app.js?v=ff57115` (`type="module"`)
+- **Root entry + redirect**: `index.html`
+  - meta refresh: `index.html:6` → `content="0; url=/projects/"`
+  - JS redirect: `index.html:17` → `location.replace("/projects/");`
+- **Service Worker skript (soubor)**: `sw.js`
+  - cache versioning + TTL jsou definované v `sw.js` (např. `sw.js:8` a `sw.js:14`)
+  - registrace SW je implementovaná v `assets/app-crash-shield.js`, ale aktuálně je v té funkci early-return (viz `assets/app-crash-shield.js:449-454`)
 
 ## Startovní tok (high-level)
 
 1. Prohlížeč otevře `/projects/index.html`.
-2. HTML nastaví `debug` režim (podle query `?debug=1`) a vykreslí skeleton layoutu.
+2. HTML nastaví debug flag podle `?debug=1` (`projects/index.html:24-33`) a vykreslí skeleton layoutu.
 3. Na konci HTML se načte `/assets/app.js` jako `type="module"` (bundle runtime logiky).
 4. `assets/app.js`:
    - načte build stamp (`<meta name="iu-build" ...>`) a ukládá ho do storage
    - při změně buildu provede „hard“ reset caches + odregistruje SW a reloadne stránku
    - fetchuje JSON data a renderuje feed + UI panely
-5. (Volitelně) `debug.js` vytváří overlay panel a sbírá diagnostiku (SW stav, poslední fetch, metriky feedu).
+5. Diagnostické logy pro načítání dat a runtime jsou v `assets/app.js` (např. `assets/app.js:2527+` používá `debugBoxSet(...)`).
 
 ## Kde je definovaný init webu (DOMContentLoaded / readyState)
 
@@ -106,17 +109,20 @@ Data endpointy v runtime jsou typicky pod `projects/data/*.json` (viz `03-data-p
 
 ### `sw.js` strategie
 
-`sw.js` definuje:
+`sw.js` definuje (doloženo v kódu):
 
-- cache versioning (`CACHE_VERSION`)
-- app shell caching (Cache First)
-- JSON data caching s TTL per typ (articles/videos/weather/namedays/...)
-
-Konkrétní TTL a cache názvy jsou v `sw.js` (řádky ~8–21).
+- cache versioning: `sw.js:8` → `const CACHE_VERSION = ...`
+- cache names: `sw.js:9-11` → `APP_SHELL_CACHE`, `DATA_CACHE`, `DATA_META_CACHE`
+- TTL per typ: `sw.js:14-21` → `const TTL = { ... }`
+- install caching app shell: `sw.js:74-85`
+- activate „hard reset“ caches: `sw.js:87-94`
+- fetch handling (data/app-shell/JSON): `sw.js:96+` (větvení podle pathname a `.json`)
 
 ### Debug režim `?debug=1`
 
-`debug.js` v `?debug=1`:
-- ukazuje metriky feedu (`#newsList` children vs `window.allItems`)
-- zjišťuje stav SW přes `navigator.serviceWorker.getRegistration()` a vykreslí ho v overlay
+Aktuální entrypoint (`projects/index.html`) nastavuje `data-iu-debug` podle `?debug=1` (`projects/index.html:24-33`).
+
+`assets/app.js` má SW diagnostiku přes `navigator.serviceWorker.getRegistration()` a `.ready`:
+
+- `assets/app.js:3240-3247`
 

@@ -108,8 +108,27 @@ C:.
 |   |   
 |   +---diag
 |   +---system-map
-|   |       _tree.txt
-|   |       
+|   |   |   01-repo-structure.md
+|   |   |   02-runtime-architecture.md
+|   |   |   03-data-pipeline.md
+|   |   |   04-ui-modules.md
+|   |   |   05-automation-actions.md
+|   |   |   06-stability-checklist.md
+|   |   |   07-known-issues-and-anti-regressions.md
+|   |   |   08-change-log-of-system-map.md
+|   |   |   README.md
+|   |   |   _tree.txt
+|   |   |   
+|   |   \---_audit
+|   |           _git_head.txt
+|   |           _grep_cls.txt
+|   |           _grep_data.txt
+|   |           _grep_init.txt
+|   |           _grep_sw.txt
+|   |           _grep_ui.txt
+|   |           _workflows_extract.txt
+|   |           _workflows_list.txt
+|   |           
 |   \---ui-snapshots
 |           index.html.baseline
 |           
@@ -206,5 +225,6 @@ C:.
         fix_sources_legal_mode.py
         hash_manifest.py
         list_recent_files.py
+        system_map_update.ps1
         verify_paths.py
         

@@ -1,0 +1,48 @@
+﻿command: git grep -n -E navigator\.serviceWorker|serviceWorker\.register|getRegistration|getRegistrations|unregister|caches\. -- .
+exitCode: 0
+---
+FIX_EMPTY_FEED_SUMMARY.md:75:    const regs = await navigator.serviceWorker.getRegistrations();
+FIX_EMPTY_FEED_SUMMARY.md:77:      await reg.unregister();
+FIX_INFINITE_LOADING_SUMMARY.txt:135:  return caches.match(event.request).then((cached) => {
+FIX_INFINITE_LOADING_SUMMARY.txt:143:  const cached = await caches.match(event.request);
+assets/app-crash-shield.js:465:          const regs = await navigator.serviceWorker.getRegistrations();
+assets/app-crash-shield.js:467:            await reg.unregister();
+assets/app-crash-shield.js:478:      const reg = await navigator.serviceWorker.register(swPath, { scope });
+assets/app.js:1965:        const keys = await caches.keys();
+assets/app.js:1966:        await Promise.all(keys.map((k) => caches.delete(k)));
+assets/app.js:1975:        const regs = await navigator.serviceWorker.getRegistrations();
+assets/app.js:1976:        await Promise.all(regs.map((r) => r.unregister()));
+assets/app.js:1977:        debugLog("[BUILD] service workers unregistered", regs.length);
+assets/app.js:1980:      debugWarn("[BUILD] sw unregister failed", err);
+assets/app.js:3116:    const controller = navigator.serviceWorker.controller ? "controller=ANO" : "controller=NE";
+assets/app.js:3125:    const swController = navigator.serviceWorker?.controller ? "controller=ANO" : "controller=NE";
+assets/app.js:3212:      selfDiag.swController = navigator.serviceWorker?.controller ? "yes" : "no";
+assets/app.js:3240:    navigator.serviceWorker
+assets/app.js:3241:      .getRegistration()
+assets/app.js:3244:    navigator.serviceWorker
+debug.js:58:      navigator.serviceWorker.getRegistration().then(reg => {
+docs/MAINTENANCE.md:13:- Disable the service worker (use `?nosw=1` if needed) or run the crash shield loader to unregister old workers.  
+docs/STRUCTURE.md:73:4. **SW impact:** `assets/app.js` monitors the service worker via `nukeCachesAndSwOnBuildChange()`, `watchForSWUpdates()`, and status badges. Crash shield loads before `assets/app.js` and can unregister/kill the SW for emergency rendering.
+docs/system-map/02-runtime-architecture.md:88:        const keys = await caches.keys();
+docs/system-map/02-runtime-architecture.md:89:        await Promise.all(keys.map((k) => caches.delete(k)));
+docs/system-map/02-runtime-architecture.md:98:        const regs = await navigator.serviceWorker.getRegistrations();
+docs/system-map/02-runtime-architecture.md:99:        await Promise.all(regs.map((r) => r.unregister()));
+docs/system-map/02-runtime-architecture.md:100:        debugLog("[BUILD] service workers unregistered", regs.length);
+docs/system-map/02-runtime-architecture.md:103:      debugWarn("[BUILD] sw unregister failed", err);
+docs/system-map/02-runtime-architecture.md:125:`assets/app.js` m├í SW diagnostiku p┼Öes `navigator.serviceWorker.getRegistration()` a `.ready`:
+docs/system-map/06-stability-checklist.md:16:git grep -n -E 'serviceWorker|navigator\.serviceWorker|serviceWorker\.register|getRegistration|getRegistrations|unregister|caches\.' -- .
+sw.js:77:    caches.open(APP_SHELL_CACHE).then((cache) => {
+sw.js:90:    const keys = await caches.keys();
+sw.js:91:    await Promise.all(keys.map((key) => caches.delete(key)));
+sw.js:133:          const cached = await caches.match(event.request);
+sw.js:135:            const metaCache = await caches.open(DATA_META_CACHE);
+sw.js:160:      caches.match(event.request).then((cached) => {
+sw.js:165:            caches.open(APP_SHELL_CACHE).then((cache) => {
+sw.js:192:            const cached = await caches.match(event.request);
+sw.js:210:            const cached = await caches.match(event.request);
+sw.js:225:            caches.open(DATA_CACHE).then((cache) => {
+sw.js:232:              caches.open(DATA_META_CACHE).then((metaCache) => {
+sw.js:242:          const cached = await caches.match(event.request);
+sw.js:248:              const metaCache = await caches.open(DATA_META_CACHE);
+sw.js:273:      return caches.match(event.request);
+

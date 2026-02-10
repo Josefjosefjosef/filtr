@@ -1,0 +1,19 @@
+﻿command: git grep -n -E DOMContentLoaded|document\.readyState|iuDailyPanelInit|initAiPanel -- assets/app.js projects/index.html
+exitCode: 0
+---
+assets/app.js:3264:  window.iuDailyPanelInit = function iuDailyPanelInit(){
+assets/app.js:3452:    if (typeof window.iuDailyPanelInit === "function") {
+assets/app.js:3453:      window.iuDailyPanelInit();
+assets/app.js:3456:      if (typeof window.iuDailyPanelInit === "function") {
+assets/app.js:3457:        window.iuDailyPanelInit();
+assets/app.js:3777:  function initAiPanel(){
+assets/app.js:3871:  if (document.readyState === 'loading'){
+assets/app.js:3872:    document.addEventListener('DOMContentLoaded', initAiPanel);
+assets/app.js:3874:    initAiPanel();
+projects/index.html:1080:        lines.push("readyState=" + document.readyState);
+projects/index.html:1197:        parts.push("ready=" + document.readyState);
+projects/index.html:1618:      if (document.readyState === "loading") {
+projects/index.html:1619:        document.addEventListener("DOMContentLoaded", runOnceThenDelayed);
+projects/index.html:1641:      document.addEventListener("DOMContentLoaded", function(){
+projects/index.html:1788:    <!-- iuDailyPanel logic moved to assets/app.js (iuDailyPanelInit) -->
+

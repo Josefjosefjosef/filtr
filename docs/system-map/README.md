@@ -7,8 +7,9 @@ Cíl: před každým zásahem rychle ověřit aktuální stav, neduplikovat logi
 
 - **Repo**: `C:\projects\filtr`
 - **Branch**: `docs/system-map`
-- **Commit**: `5c4a974`
 - **Updated**: 2026-02-10
+
+Pozn.: aktuální „pravdivý snapshot“ se zapisuje do `docs/system-map/_audit/_git_head.txt` (generuje update skript).
 
 ## Obsah
 
@@ -23,23 +24,42 @@ Cíl: před každým zásahem rychle ověřit aktuální stav, neduplikovat logi
 
 ## Jak aktualizovat mapu
 
-Minimální auditní sada (PowerShell, repo root):
+Jedním příkazem (PowerShell, repo root):
 
 ```powershell
 Set-Location C:\projects\filtr
-git status --porcelain
-git rev-parse --abbrev-ref HEAD
-git log -1 --oneline
-
-tree /F /A > docs/system-map/_tree.txt
-
-# Pokud není ripgrep (rg) v PATH, použij git grep -n -E ...
-git grep -n -E "serviceWorker|navigator\.serviceWorker|register\(" -- .
-git grep -n -E "projects/data|articles\.json|videos\.json" -- .
-git grep -n -E "loadData\(|buildCombinedFeed\(|normalizeArticleList\(" -- assets/app.js
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/system_map_update.ps1
 ```
 
 ## Artefakty auditu
 
 - `_tree.txt`: `docs/system-map/_tree.txt` (vygenerováno příkazem `tree /F /A`)
+- `_audit/`: `docs/system-map/_audit/*` (git head + grep výstupy + workflow list)
+
+## Před každým dalším úkolem (povinná rutina)
+
+1) **Repo pre-flight**
+
+```powershell
+Set-Location C:\projects\filtr
+git status --porcelain
+git log -1 --oneline
+```
+
+2) **Aktualizuj audit (jedním během)**
+
+```powershell
+Set-Location C:\projects\filtr
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/system_map_update.ps1
+```
+
+3) **Ověř runtime chování webu (manuálně v prohlížeči)**
+
+- otevři `https://infouzel.cz/projects/?debug=1`
+- ověř:
+  - feed je vidět a „nemizí“ při refresh
+  - Denní panel (`#iuDailyWeather`, `#iuDailyNameday`) se naplní nebo bezpečně skryje err bez skoků
+  - tlačítko Balíky (`#iuParcelsBtn` / `#iuParcelsBtnMobile`) otevře `#iuParcelsPopover`
+  - AI tlačítko (`[data-action="ai-panel"]`) otevře `#iu-aiPanel`
+  - konzole bez chyb
 

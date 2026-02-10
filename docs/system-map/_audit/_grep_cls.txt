@@ -1,0 +1,81 @@
+﻿command: git grep -n -E scrollbar-gutter|layout-shift|LayoutShift|replaceChildren|innerHTML|min-height|transition: -- assets/app.css assets/app.js projects/index.html
+exitCode: 0
+---
+assets/app.css:103:  scrollbar-gutter: stable;
+assets/app.css:192:  min-height: 68px;
+assets/app.css:224:  min-height: 68px;
+assets/app.css:256:  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+assets/app.css:315:  transition: border-color .15s ease, background .15s ease;
+assets/app.css:341:  transition: padding-left 150ms ease, padding-right 150ms ease;
+assets/app.css:361:  transition: border-color 150ms ease, font-weight 150ms ease;
+assets/app.css:400:  transition: opacity 150ms ease;
+assets/app.css:503:    transition: none !important;
+assets/app.css:524:  min-height: 1px;
+assets/app.css:552:  min-height: 0;
+assets/app.css:621:  min-height: 140px;
+assets/app.css:657:  min-height: 110px;
+assets/app.css:862:    min-height: 50px;
+assets/app.css:888:  min-height: 0;
+assets/app.css:984:  min-height: 0;
+assets/app.css:1057:  transition: border-color 150ms ease, background-color 150ms ease;
+assets/app.css:1099:  transition: opacity 150ms ease;
+assets/app.css:1137:  transition: max-height 220ms ease, opacity 180ms ease;
+assets/app.css:1152:  min-height: 0;
+assets/app.css:1320:  transition: opacity 140ms ease;
+assets/app.css:1343:  min-height: 68px;
+assets/app.css:1353:  min-height: 0;
+assets/app.css:1392:  min-height: 44px;
+assets/app.css:1406:  transition: background 200ms ease, color 200ms ease;
+assets/app.css:1423:  transition: max-height 300ms ease;
+assets/app.css:1461:  min-height: 72px;
+assets/app.css:1500:  transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+assets/app.css:1630:  transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+assets/app.css:1663:  transition: box-shadow 140ms ease, border-color 140ms ease, color 140ms ease, background 140ms ease;
+assets/app.css:1731:  transition: color 140ms ease;
+assets/app.css:1825:  transition: border-color 140ms ease, box-shadow 140ms ease, color 140ms ease, background 140ms ease;
+assets/app.css:1887:  transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+assets/app.css:2201:  transition: all 150ms ease;
+assets/app.css:2247:  transition: none;
+assets/app.css:2328:  min-height: calc(var(--titleLineHeight) * var(--titleLinesDesktop) * 1em);
+assets/app.css:2337:  transition: color 140ms ease, text-decoration-color 140ms ease;
+assets/app.css:2364:  min-height: 1px !important;
+assets/app.css:2616:  min-height: 60px;
+assets/app.css:2794:    min-height: calc(var(--titleLineHeight) * var(--titleLinesMobile) * 1em);
+assets/app.css:2898:  transition: color 140ms ease, border-bottom-color 140ms ease;
+assets/app.css:3065:  transition: color 140ms ease, border-bottom-color 140ms ease;
+assets/app.css:3136:  transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+assets/app.css:3217:  transition: box-shadow 140ms ease, border-color 140ms ease, color 140ms ease, background 140ms ease;
+assets/app.css:3364:  transition: box-shadow 140ms ease, border-color 140ms ease, color 140ms ease, background 140ms ease;
+assets/app.css:3442:  transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease, color 140ms ease;
+assets/app.css:3477:  transition: border-color 140ms ease, box-shadow 140ms ease, color 140ms ease, background 140ms ease;
+assets/app.css:3559:  transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease, color 140ms ease;
+assets/app.css:3588:  transition: transform 140ms ease, opacity 140ms ease;
+assets/app.css:3648:  transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease, color 140ms ease;
+assets/app.css:4075:  min-height: 0;
+assets/app.css:4085:  min-height: 0;
+assets/app.css:4168:  transition: background-color 0.2s ease, border-color 0.2s ease;
+assets/app.css:4208:  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+assets/app.js:318:      observer.observe({ type: "layout-shift", buffered: true });
+assets/app.js:1095:    sectionsBar.innerHTML = "";
+assets/app.js:1213:        if (sectionsBar) target.replaceChildren(sectionsBar);
+assets/app.js:1214:        else target.replaceChildren();
+assets/app.js:1221:      emptyBox.innerHTML = `<p>${escapeHtml(message)}</p>${extraHtml ? extraHtml : ""}`;
+assets/app.js:1265:      emptyBox.innerHTML = "";
+assets/app.js:1276:    // Postav nov├Ż obsah mimo DOM a jednor├ízov─Ť ho vym─Ť┼ł p┼Öes replaceChildren().
+assets/app.js:1292:      template.innerHTML = markup.trim();
+assets/app.js:1303:      safeTarget.replaceChildren(sectionsBar, ...nextNodes);
+assets/app.js:1305:      safeTarget.replaceChildren(...nextNodes);
+assets/app.js:1804:    box.innerHTML = `
+assets/app.js:1862:      el.innerHTML = "Ud├ílosti:<br />" + latest.map((item) => `${new Date(item.t).toLocaleTimeString("cs-CZ")} ${item.name}`).join("<br />");
+assets/app.js:2490:      emptyBox.innerHTML = "<p>Na─Ź├şt├ím dataÔÇŽ</p>";
+assets/app.js:2974:          if (sectionsBar) feed.replaceChildren(sectionsBar, div);
+assets/app.js:2975:          else feed.replaceChildren(div);
+assets/app.js:3399:            div.innerHTML = `<div>--h</div><div class="iuWxHourTemp">ÔÇö</div><div>­čîĄ</div>`;
+assets/app.js:3410:              slot.innerHTML = `
+assets/app.js:3418:              slot.innerHTML = `<div>--h</div><div class="iuWxHourTemp">ÔÇö</div><div>­čîĄ</div>`;
+assets/app.js:3666:    row.innerHTML = `
+projects/index.html:14:      #feed { min-height: 200px !important; outline: 2px dashed rgba(255,255,255,0.35) !important; outline-offset: 2px; }
+projects/index.html:1495:        var box = document.getElementById("iuLayoutShiftBox");
+projects/index.html:1498:          box.id = "iuLayoutShiftBox";
+projects/index.html:1534:        obs.observe({ type: "layout-shift", buffered: true });
+
