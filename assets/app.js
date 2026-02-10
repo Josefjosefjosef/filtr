@@ -1280,6 +1280,29 @@ window.addEventListener("unhandledrejection", (e) => {
       if (hasDaily) {
         await iuDelay(IU_UNLOCK_SETTLE_MS);
       }
+      // Patch K: stability unlock — wait until right column height stops changing.
+      const rightEl = handle.el;
+      if (rightEl && rightEl.getBoundingClientRect) {
+        const MAX_LOOPS = 6;
+        let attemptsDone = 0;
+        let lastDelta = 0;
+      
+        for (let i = 0; i < MAX_LOOPS; i++) {
+          const h1 = rightEl.getBoundingClientRect().height || 0;
+          await iuNextFrame();
+          const h2 = rightEl.getBoundingClientRect().height || 0;
+          lastDelta = Math.abs(h2 - h1);
+          attemptsDone = i + 1;
+          if (lastDelta <= 1) break;
+        }
+      
+        if (__iuDebug && !handle.__iuUnlockStableLogged) {
+          try {
+            handle.__iuUnlockStableLogged = true;
+            iuDbg("[IU][RIGHT_UNLOCK_STABLE]", { reason, loops: attemptsDone, lastDelta });
+          } catch (_) {}
+        }
+      }
       __unlockRightColHeightNow(handle, reason);
       if (__iuDebug && !handle.__iuUnlockSettledLogged) {
         try {
