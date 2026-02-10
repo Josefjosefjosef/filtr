@@ -17,6 +17,41 @@ function Write-Step($msg){ Write-Host ("`n==> " + $msg) }
 $script:GhExe = $null
 $script:DidAuthLogin = $false
 
+function Get-GhExe(){
+  $localRoot = Join-Path $env:LOCALAPPDATA "filtr-tools\\gh"
+  if (Test-Path $localRoot) {
+    $dirs = Get-ChildItem -Directory $localRoot -ErrorAction SilentlyContinue
+    $candidates = @()
+    foreach ($d in $dirs) {
+      $v = $null
+      if ([System.Version]::TryParse($d.Name, [ref]$v)) {
+        $candidates += [pscustomobject]@{ Version = $v; Path = (Join-Path $d.FullName "bin\\gh.exe") }
+      }
+    }
+    foreach ($c in ($candidates | Sort-Object Version -Descending)) {
+      if (Test-Path $c.Path) { return $c.Path }
+    }
+  }
+
+  $cmd = Get-Command "gh" -CommandType Application -ErrorAction SilentlyContinue
+  if ($cmd) {
+    if ($cmd.Path) { return $cmd.Path }
+    if ($cmd.Source) { return $cmd.Source }
+  }
+
+  return $null
+}
+
+function Init-GhExe(){
+  $script:GhExe = Get-GhExe
+  if (-not $script:GhExe) { return }
+
+  $dir = Split-Path -Parent $script:GhExe
+  if ($dir -and ($env:PATH -notlike "*$dir*")) {
+    $env:PATH = ($dir + ";" + $env:PATH)
+  }
+}
+
 function Gh([string[]]$GhArgs){
   if (-not $script:GhExe) { Fail "Internal error: gh executable not set" }
   & $script:GhExe @GhArgs
@@ -50,11 +85,7 @@ function Git([string[]]$GitArgs){
 }
 
 function Ensure-GhInstalled(){
-  $cmd = Get-Command "gh" -CommandType Application -ErrorAction SilentlyContinue
-  if ($cmd) {
-    if ($cmd.Path) { $script:GhExe = $cmd.Path; return }
-    if ($cmd.Source) { $script:GhExe = $cmd.Source; return }
-  }
+  if ($script:GhExe) { return }
 
   Write-Step "Install GitHub CLI (gh) locally (no admin)"
   $version = "2.86.0"
@@ -88,6 +119,7 @@ function Ensure-GhInstalled(){
   }
 
   $script:GhExe = $ghPath
+  Init-GhExe
 }
 
 function Is-GhAuthed(){
@@ -146,6 +178,7 @@ try {
   Require-Command "git"
 
   Write-Step "Ensure gh"
+  Init-GhExe
   Ensure-GhInstalled
   Ensure-GhAuth
 

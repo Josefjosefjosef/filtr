@@ -17,6 +17,43 @@ $ErrorActionPreference = "Stop"
 
 function Write-Step($msg){ Write-Host ("`n==> " + $msg) }
 
+$script:GhExe = $null
+
+function Get-GhExe(){
+  $localRoot = Join-Path $env:LOCALAPPDATA "filtr-tools\\gh"
+  if (Test-Path $localRoot) {
+    $dirs = Get-ChildItem -Directory $localRoot -ErrorAction SilentlyContinue
+    $candidates = @()
+    foreach ($d in $dirs) {
+      $v = $null
+      if ([System.Version]::TryParse($d.Name, [ref]$v)) {
+        $candidates += [pscustomobject]@{ Version = $v; Path = (Join-Path $d.FullName "bin\\gh.exe") }
+      }
+    }
+    foreach ($c in ($candidates | Sort-Object Version -Descending)) {
+      if (Test-Path $c.Path) { return $c.Path }
+    }
+  }
+
+  $cmd = Get-Command "gh" -CommandType Application -ErrorAction SilentlyContinue
+  if ($cmd) {
+    if ($cmd.Path) { return $cmd.Path }
+    if ($cmd.Source) { return $cmd.Source }
+  }
+
+  return $null
+}
+
+function Init-GhExe(){
+  $script:GhExe = Get-GhExe
+  if (-not $script:GhExe) { return }
+
+  $dir = Split-Path -Parent $script:GhExe
+  if ($dir -and ($env:PATH -notlike "*$dir*")) {
+    $env:PATH = ($dir + ";" + $env:PATH)
+  }
+}
+
 function Write-NextStepBlock(
   [string]$NextStep,
   [string]$Why,
@@ -97,6 +134,7 @@ function Preflight(){
   Set-Location $RepoPath
 
   Require-Command "git"
+  Init-GhExe
   SelfCheck
 
   Write-Step "Preflight: fetch"
