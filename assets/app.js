@@ -1194,6 +1194,12 @@ window.addEventListener("unhandledrejection", (e) => {
 
   function getRightColEl(){ return document.querySelector("aside.accordionCol") || document.querySelector(".iu-rightContent") || document.querySelector("aside"); }
 
+  function getDailyBoxEl(){
+    // Prefer exact Daily Panel container (right sidebar top) if present.
+    return document.querySelector("#iuDailyPanel, .iuDailyPanel") ||
+      document.querySelector(".iu-daily-brief, .iu-daily-brief-inner, #iuDailyBrief, #dailyBrief, [data-iu='daily-brief']");
+  }
+
   function lockRightColHeight(reason){
     const el = getRightColEl(); if(!el) return null;
     const html = document.documentElement;
@@ -1213,10 +1219,25 @@ window.addEventListener("unhandledrejection", (e) => {
       el.style.minHeight = prevMinHeight;
     }
 
+    const dailyEl = getDailyBoxEl();
+    let dailyPrevMinHeight = null;
+    let dailyAppliedMinHeight = null;
+    if (dailyEl) {
+      dailyPrevMinHeight = dailyEl.style.minHeight;
+      const dh = Math.ceil(dailyEl.getBoundingClientRect().height || 0);
+      if (dh > 0) {
+        dailyAppliedMinHeight = dh + "px";
+        dailyEl.style.minHeight = dailyAppliedMinHeight;
+      } else {
+        dailyAppliedMinHeight = dailyPrevMinHeight || "";
+      }
+    }
+
     try { html.classList.add("iu-refreshing"); } catch (_) {}
     const appliedMinHeight = el.style.minHeight;
-    iuDbg("[IU][RIGHT_LOCK]", { reason, h, prevMinHeight, appliedMinHeight });
-    return { el, prevMinHeight, appliedMinHeight, setRefreshing: true };
+    const dailyH = dailyEl ? Math.round(dailyEl.getBoundingClientRect().height || 0) : 0;
+    iuDbg("[IU][RIGHT_LOCK]", { reason, h, prevMinHeight, appliedMinHeight, dailyH, dailyAppliedMinHeight });
+    return { el, prevMinHeight, appliedMinHeight, setRefreshing: true, dailyEl, dailyPrevMinHeight, dailyAppliedMinHeight };
   }
 
   function unlockRightColHeight(handle, reason){
@@ -1224,10 +1245,13 @@ window.addEventListener("unhandledrejection", (e) => {
     const el = handle.el;
     if (!el) { iuDbg("[IU][RIGHT_UNLOCK_SKIP]", { reason }); return; }
     el.style.minHeight = handle.prevMinHeight;
+    if (handle.dailyEl) {
+      handle.dailyEl.style.minHeight = handle.dailyPrevMinHeight || "";
+    }
     if (handle.setRefreshing === true) {
       try { document.documentElement.classList.remove("iu-refreshing"); } catch (_) {}
     }
-    iuDbg("[IU][RIGHT_UNLOCK]", { reason, restored: true });
+    iuDbg("[IU][RIGHT_UNLOCK]", { reason, restored: true, dailyRestored: !!handle.dailyEl });
   }
 
   function insideTarget(target, fallback) {
