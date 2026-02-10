@@ -1954,6 +1954,9 @@ function buildVideoAsArticleCard(it) {
   async function nukeCachesAndSwOnBuildChange() {
     const build = getBuildStamp() || "no-build";
     const prev = localStorage.getItem("iu:lastBuildHard") || "";
+    if (isDebugLogging) {
+      try { console.log("[IU][BUILD_HARD]", { build, prev, willReload: prev !== build }); } catch (_) {}
+    }
     if (prev === build) return;
     try {
       localStorage.setItem("iu:lastBuildHard", build);
@@ -2481,8 +2484,9 @@ function buildVideoAsArticleCard(it) {
     const requestToken = ++state.loadRequestId;
     const loadParams = new URLSearchParams(location.search || "");
     const isLoadDebug = loadParams.get("debug") === "1";
-    const hadLast = Array.isArray(state.cachedItems) && state.cachedItems.length > 0;
-    const hadLastLen = hadLast ? state.cachedItems.length : 0;
+    const lastItems = Array.isArray(state.cachedItems) ? state.cachedItems : [];
+    const hadLast = lastItems.length > 0;
+    const hadLastLen = lastItems.length;
     if (isLoadDebug) {
       try { console.log("[IU][LOAD]", { phase: "start", hadLast, hadLastLen }); } catch (_) {}
     }
@@ -2792,7 +2796,7 @@ function buildVideoAsArticleCard(it) {
 
       if (combined.length === 0) {
         if (isLoadDebug) {
-          try { console.log("[IU][LOAD]", { phase: "empty", hadLast, hadLastLen, combinedLen: 0 }); } catch (_) {}
+          try { console.log("[IU][LOAD]", { phase: hadLast ? "empty_keep" : "empty", hadLast, hadLastLen, combinedLen: 0 }); } catch (_) {}
         }
         // Keep last good feed if we have it (avoid flicker/clear on transient empty refresh).
         if (hadLast) {
@@ -2949,12 +2953,18 @@ function buildVideoAsArticleCard(it) {
       if (isLoadDebug) {
         try {
           const msg = err && err.message ? String(err.message) : String(err || "error");
-          console.log("[IU][LOAD]", { phase: "fail", hadLast: Array.isArray(state.cachedItems) && state.cachedItems.length > 0, msg });
+          console.log("[IU][LOAD]", { phase: hadLast ? "fail_keep" : "fail", hadLast, hadLastLen, msg });
         } catch (_) {}
       }
 
       state.consecutiveLoadFailures = (state.consecutiveLoadFailures || 0) + 1;
       debugWarn("[loadData] error", err);
+
+      // Keep last good feed if we have it (avoid flicker/clear on transient failures).
+      if (hadLast) {
+        setStatus("Stav dat: OK (dočasně chyba při načítání, zachován poslední feed)");
+        return;
+      }
 
       const hasLast = Array.isArray(state.cachedItems) && state.cachedItems.length > 0;
       const feedChildren = elFeed?.children?.length ?? 0;
@@ -3270,6 +3280,9 @@ function buildVideoAsArticleCard(it) {
   function scheduleSWReload(worker) {
     if (!worker || !("sessionStorage" in window)) return;
     if (clearStaleReloadGuard()) return;
+    if (isDebugLogging) {
+      try { console.log("[IU][SW_RELOAD]", { reason: "waiting" }); } catch (_) {}
+    }
     try {
       worker.postMessage({ type: "SKIP_WAITING" });
       addTelemetryEvent("sw", "skip waiting");
