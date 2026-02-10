@@ -117,13 +117,22 @@ function Preflight(){
   Write-Host ("origin=" + $remote)
 }
 
+function Export-EnsureGhAndPrToTemp(){
+  # Export the ensure script from the current HEAD to a temp file, so we can run it
+  # even after switching to a branch that doesn't have it in the working tree yet.
+  $tmp = Join-Path $env:TEMP ("filtr-ensure-gh-and-pr-" + $PID + ".ps1")
+  $content = & "C:\Program Files\Git\cmd\git.exe" show "HEAD:tools/ensure-gh-and-pr.ps1"
+  if ($LASTEXITCODE -ne 0) { Fail "git show HEAD:tools/ensure-gh-and-pr.ps1 failed" }
+  if (-not $content) { Fail "ensure-gh-and-pr.ps1 content empty from HEAD" }
+  Set-Content -Path $tmp -Value $content -Encoding UTF8
+  return $tmp
+}
+
 function EnsureGhPr(){
   Preflight
   Write-Step "Run ensure-gh-and-pr.ps1"
-  $script = Join-Path (Get-Location) "tools\ensure-gh-and-pr.ps1"
-  if (-not (Test-Path $script)) { Fail "Missing tools\ensure-gh-and-pr.ps1 (pull main first)" }
-
-  powershell -ExecutionPolicy Bypass -File $script
+  $tmpScript = Export-EnsureGhAndPrToTemp
+  powershell -ExecutionPolicy Bypass -File $tmpScript
   if ($LASTEXITCODE -ne 0) { Fail "ensure-gh-and-pr.ps1 failed" }
 }
 
@@ -133,13 +142,12 @@ function RunEnsureGhPrForBranch([string]$branch){
   Write-Step "Fetch (task requirement)"
   Git @("fetch","origin","--prune")
 
+  $tmpScript = Export-EnsureGhAndPrToTemp
+
   Switch-Branch $branch
 
   Write-Step "Run ensure-gh-and-pr.ps1"
-  $script = Join-Path (Get-Location) "tools\ensure-gh-and-pr.ps1"
-  if (-not (Test-Path $script)) { Fail "Missing tools\ensure-gh-and-pr.ps1 (pull main first)" }
-
-  powershell -ExecutionPolicy Bypass -File $script
+  powershell -ExecutionPolicy Bypass -File $tmpScript
   if ($LASTEXITCODE -ne 0) { Fail "ensure-gh-and-pr.ps1 failed" }
 }
 
