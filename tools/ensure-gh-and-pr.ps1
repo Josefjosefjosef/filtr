@@ -47,10 +47,10 @@ function Git([string[]]$GitArgs){
 }
 
 function Ensure-GhInstalled(){
-  $cmd = Get-Command "gh" -ErrorAction SilentlyContinue
+  $cmd = Get-Command "gh" -CommandType Application -ErrorAction SilentlyContinue
   if ($cmd) {
-    $script:GhExe = $cmd.Source
-    return
+    if ($cmd.Path) { $script:GhExe = $cmd.Path; return }
+    if ($cmd.Source) { $script:GhExe = $cmd.Source; return }
   }
 
   Write-Step "Install GitHub CLI (gh) locally (no admin)"
@@ -59,9 +59,10 @@ function Ensure-GhInstalled(){
 
   $installRoot = Join-Path $env:LOCALAPPDATA "filtr-tools\\gh\\$version"
   $extractDir = Join-Path $installRoot "gh_${version}_windows_amd64"
-  $ghPath = Join-Path $extractDir "bin\\gh.exe"
+  $ghPath1 = Join-Path $installRoot "bin\\gh.exe"
+  $ghPath2 = Join-Path $extractDir "bin\\gh.exe"
 
-  if (-not (Test-Path $ghPath)) {
+  if (-not ((Test-Path $ghPath1) -or (Test-Path $ghPath2))) {
     New-Item -ItemType Directory -Force -Path $installRoot | Out-Null
 
     $zipPath = Join-Path $installRoot "gh_${version}_windows_amd64.zip"
@@ -73,8 +74,13 @@ function Ensure-GhInstalled(){
     Expand-Archive -Force -Path $zipPath -DestinationPath $installRoot
   }
 
-  if (-not (Test-Path $ghPath)) {
-    Fail "Failed to install gh locally." ("powershell -ExecutionPolicy Bypass -Command \"Invoke-WebRequest -Uri '$zipUrl' -OutFile '$installRoot\\gh.zip'\"")
+  $ghPath = $null
+  if (Test-Path $ghPath1) { $ghPath = $ghPath1 }
+  elseif (Test-Path $ghPath2) { $ghPath = $ghPath2 }
+
+  if (-not $ghPath) {
+    $next = "powershell -ExecutionPolicy Bypass -Command `"Invoke-WebRequest -Uri '$zipUrl' -OutFile '$installRoot\\gh.zip'`""
+    Fail "Failed to install gh locally." $next
   }
 
   $script:GhExe = $ghPath
