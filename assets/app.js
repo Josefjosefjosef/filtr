@@ -1092,7 +1092,8 @@ window.addEventListener("unhandledrejection", (e) => {
 
   function renderSectionsBar() {
     if (!sectionsBar) return;
-    sectionsBar.innerHTML = "";
+    // Postav nové tlačítka mimo DOM a jednorázově je vyměň, aby nevznikal mezistav "prázdno".
+    const frag = document.createDocumentFragment();
     SECTION_KEYS.forEach((key) => {
       const btn = document.createElement("button");
       btn.type = "button";
@@ -1100,8 +1101,9 @@ window.addEventListener("unhandledrejection", (e) => {
       btn.dataset.section = key;
       btn.textContent = SECTION_LABELS[key] || key;
       btn.addEventListener("click", () => handleSectionClick(key));
-      sectionsBar.appendChild(btn);
+      frag.appendChild(btn);
     });
+    sectionsBar.replaceChildren(frag);
     updateSectionButtons();
   }
 
