@@ -117,6 +117,20 @@ img, svg, video, iframe{
   --iu-bg-lock: var(--iu-page-bg);
 }
 
+/* ==== RIGHT COLUMN LOAD GUARDS (CLS) ==== */
+/* Before JS marks the page as loaded, disable height transitions in right column to prevent visible jumps. */
+html:not([data-iu-js="loaded"]) .accordionCol .accContent,
+html:not([data-iu-js="loaded"]) .iu-mindDetails #iuMindPanel{
+  transition: none !important;
+}
+
+/* Reserve conservative space for right column on desktop to avoid first-load jumps. */
+@media (min-width: 901px){
+  .mindMenu{
+    min-height: 360px;
+  }
+}
+
 /* Celé pozadí stránky */
 html, body{
   background: var(--iu-page-bg);
