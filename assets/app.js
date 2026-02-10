@@ -2479,8 +2479,13 @@ function buildVideoAsArticleCard(it) {
     if (state.isLoadingData) return;
     state.isLoadingData = true;
     const requestToken = ++state.loadRequestId;
-    state.cachedItems = [];
-    state.hasLoadedData = false;
+    const loadParams = new URLSearchParams(location.search || "");
+    const isLoadDebug = loadParams.get("debug") === "1";
+    const hadLast = Array.isArray(state.cachedItems) && state.cachedItems.length > 0;
+    const hadLastLen = hadLast ? state.cachedItems.length : 0;
+    if (isLoadDebug) {
+      try { console.log("[IU][LOAD]", { phase: "start", hadLast, hadLastLen }); } catch (_) {}
+    }
     const lastErrInline = document.getElementById("lastErrInline");
     if (lastErrInline) {
       lastErrInline.style.display = "none";
@@ -2786,6 +2791,14 @@ function buildVideoAsArticleCard(it) {
       }
 
       if (combined.length === 0) {
+        if (isLoadDebug) {
+          try { console.log("[IU][LOAD]", { phase: "empty", hadLast, hadLastLen, combinedLen: 0 }); } catch (_) {}
+        }
+        // Keep last good feed if we have it (avoid flicker/clear on transient empty refresh).
+        if (hadLast) {
+          setStatus("Stav dat: OK (dočasně bez nových dat)");
+          return;
+        }
         renderEmpty("Obsah se teď nenačetl (žádná data z backendu)");
         return;
       }
@@ -2796,6 +2809,9 @@ function buildVideoAsArticleCard(it) {
       state.consecutiveLoadFailures = 0;
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
       renderItems(state.filteredItems);
+      if (isLoadDebug) {
+        try { console.log("[IU][LOAD]", { phase: "ok", hadLast, hadLastLen, combinedLen: combined.length }); } catch (_) {}
+      }
       if (isDebugLogging) {
         debugLog(
           "[CACHE] total",
@@ -2929,6 +2945,12 @@ function buildVideoAsArticleCard(it) {
       if (!isLatestLoadRequest(requestToken)) {
         debugLog("[DATA] failure ignored, token", requestToken);
         return;
+      }
+      if (isLoadDebug) {
+        try {
+          const msg = err && err.message ? String(err.message) : String(err || "error");
+          console.log("[IU][LOAD]", { phase: "fail", hadLast: Array.isArray(state.cachedItems) && state.cachedItems.length > 0, msg });
+        } catch (_) {}
       }
 
       state.consecutiveLoadFailures = (state.consecutiveLoadFailures || 0) + 1;
