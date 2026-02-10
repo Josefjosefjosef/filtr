@@ -2,7 +2,7 @@
 
 Generated: 2026-02-10
 
-## PRs #8–#12
+## PRs #8–#14
 
 - **#8** https://github.com/Josefjosefjosef/filtr/pull/8  
   state: MERGED  
@@ -29,6 +29,16 @@ Generated: 2026-02-10
   mergedAt: 2026-02-10T09:52:48Z  
   checks: PASS (guard) — https://github.com/Josefjosefjosef/filtr/actions/runs/21849622276/job/63053070641
 
+- **#13** https://github.com/Josefjosefjosef/filtr/pull/13  
+  state: OPEN  
+  mergedAt: null  
+  checks: PASS (guard) — https://github.com/Josefjosefjosef/filtr/actions/runs/21860413139/job/63087770180
+
+- **#14** https://github.com/Josefjosefjosef/filtr/pull/14  
+  state: OPEN  
+  mergedAt: null  
+  checks: PASS (guard) — https://github.com/Josefjosefjosef/filtr/actions/runs/21860468734/job/63087967561
+
 ## Deploy / GitHub Actions
 
 Latest Pages deploy run:
@@ -41,9 +51,12 @@ Latest repo guard runs (main merges):
 
 ## Co ověřit ráno v prohlížeči
 
-- Cold reload (Ctrl+F5) a sleduj: žádné prázdné “bliknutí” feedu/sekcí během prvního renderu.
-- Sleduj pravý sloupec: mindMenu/accordion nesmí “vyskočit” při doběhu dynamiky.
-- Sleduj pozadí (header + layout): žádný “flash” mezi panely při reloadu.
+1) Otevři web.
+2) Ctrl+F5 (cold reload).
+3) Sleduj: feed nesmí zmizet ani na moment.
+4) Sleduj: pravý sloupec nesmí poskočit.
+5) Udělej 3× reload.
+6) Mobilní šířka (DevTools ~390px) reload – bez bílých děr.
 
 ## Pokud stále CLS → přesný sběr důkazů (debug=1)
 
