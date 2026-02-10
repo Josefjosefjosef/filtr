@@ -9,6 +9,8 @@ NEVER merges.
 param()
 
 $ErrorActionPreference = "Stop"
+# Avoid PowerShell treating native non-zero exits as terminating errors.
+try { $PSNativeCommandUseErrorActionPreference = $false } catch {}
 
 function Write-Step($msg){ Write-Host ("`n==> " + $msg) }
 
