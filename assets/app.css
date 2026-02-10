@@ -122,6 +122,21 @@ html.iu-preload .accordionCol .accContent{
 @media (min-width: 901px){
   .iu-rightContent{
     min-height: 360px;
+    contain: layout paint;
+  }
+
+  /* Refresh height lock: nenechat feed ani pravý sloupec propadnout na nulu */
+  #feed{
+    min-height: calc(100vh - 260px);
+    contain: layout paint;
+  }
+
+  aside.accordionCol{
+    min-height: calc(100vh - 260px);
+  }
+
+  .accordionCol{
+    min-height: calc(100vh - 260px);
   }
 }
 
