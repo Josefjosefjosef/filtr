@@ -51,9 +51,9 @@ function Require-Command($name){
   if (-not (Get-Command $name -ErrorAction SilentlyContinue)) { Fail "Missing command: $name" }
 }
 
-function Git([string[]]$args){
-  & "C:\Program Files\Git\cmd\git.exe" @args
-  if ($LASTEXITCODE -ne 0) { Fail ("git failed: " + ($args -join " ")) }
+function Git([string[]]$GitArgs){
+  & "C:\Program Files\Git\cmd\git.exe" @GitArgs
+  if ($LASTEXITCODE -ne 0) { Fail ("git failed: " + ($GitArgs -join " ")) }
 }
 
 function Get-RepoBranch(){
