@@ -244,53 +244,62 @@ function Night(){
       return
     }
 
+    # Always sleep at the end of the loop, even on errors/skip.
+    $shouldSleep = $true
+
     try {
-      # Only strict preflight if clean; otherwise skip cycle.
       Set-Location $RepoPath
-      $st = & "C:\Program Files\Git\cmd\git.exe" status --porcelain
-      if ($st) {
-        Night-Log $logFile "working tree not clean; skip cycle" "WARN"
-        goto Sleep
+      # Skip cycle if there are tracked changes (allow untracked logs/).
+      $trackedDirty = & "C:\Program Files\Git\cmd\git.exe" status --porcelain --untracked-files=no
+      if ($trackedDirty) {
+        Night-Log $logFile "working tree has tracked changes; skip cycle (no stash/pull)" "WARN"
+        $shouldSleep = $true
+      } else {
+        Night-Log $logFile "cycle start"
+
+        # fetch only (no pull/rebase)
+        & "C:\Program Files\Git\cmd\git.exe" fetch origin --prune | Out-Null
+
+        $tmpEnsure = Export-EnsureGhAndPrToTemp
+
+        # cls-test flow (night mode: no interactive install/auth loops)
+        try {
+          Night-Log $logFile "run cls-test"
+          & "C:\Program Files\Git\cmd\git.exe" switch "fix/cls-daily-weather-lock" | Out-Null
+          RunEnsureTemp -tmpScript $tmpEnsure -NightMode | Out-Null
+        } catch {
+          Night-Log $logFile ("cls-test error: " + $_.Exception.Message) "ERROR"
+        }
+
+        # pr-run-standard flow (optional, safe)
+        try {
+          Night-Log $logFile "run pr-run-standard"
+          & "C:\Program Files\Git\cmd\git.exe" switch "chore/one-shot-runner-standard" | Out-Null
+          RunEnsureTemp -tmpScript $tmpEnsure -NightMode | Out-Null
+        } catch {
+          Night-Log $logFile ("pr-run-standard error: " + $_.Exception.Message) "ERROR"
+        }
+
+        # restore
+        if ($origBranch) {
+          try {
+            Night-Log $logFile ("restore branch: " + $origBranch)
+            & "C:\Program Files\Git\cmd\git.exe" switch $origBranch | Out-Null
+          } catch {
+            Night-Log $logFile "restore branch failed" "WARN"
+          }
+        }
+
+        Night-Log $logFile "cycle end"
       }
-
-      Night-Log $logFile "cycle start"
-
-      # fetch only (no pull/rebase)
-      & "C:\Program Files\Git\cmd\git.exe" fetch origin --prune | Out-Null
-
-      $tmpEnsure = Export-EnsureGhAndPrToTemp
-
-      # cls-test flow (night mode: no interactive install/auth loops)
-      try {
-        Night-Log $logFile "run cls-test"
-        Switch-Branch "fix/cls-daily-weather-lock"
-        RunEnsureTemp -tmpScript $tmpEnsure -NightMode | Out-Null
-      } catch {
-        Night-Log $logFile ("cls-test error: " + $_.Exception.Message) "ERROR"
-      }
-
-      # pr-run-standard flow (optional, safe)
-      try {
-        Night-Log $logFile "run pr-run-standard"
-        Switch-Branch "chore/one-shot-runner-standard"
-        RunEnsureTemp -tmpScript $tmpEnsure -NightMode | Out-Null
-      } catch {
-        Night-Log $logFile ("pr-run-standard error: " + $_.Exception.Message) "ERROR"
-      }
-
-      # restore
-      if ($origBranch) {
-        try { Switch-Branch $origBranch } catch { Night-Log $logFile "restore branch failed" "WARN" }
-      }
-
-      Night-Log $logFile "cycle end"
     } catch {
       Night-Log $logFile ("cycle runtime error: " + $_.Exception.Message) "ERROR"
     }
 
-    :Sleep
-    if ($IntervalMinutes -lt 1) { $IntervalMinutes = 1 }
-    Start-Sleep -Seconds ($IntervalMinutes * 60)
+    if ($shouldSleep) {
+      if ($IntervalMinutes -lt 1) { $IntervalMinutes = 1 }
+      Start-Sleep -Seconds ($IntervalMinutes * 60)
+    }
   }
 }
 
