@@ -1196,18 +1196,30 @@ window.addEventListener("unhandledrejection", (e) => {
 
   function lockRightColHeight(reason){
     const el = getRightColEl(); if(!el) return null;
-    try { document.documentElement.classList.add("iu-refreshing"); } catch (_) {}
+    const html = document.documentElement;
+    if (html && html.classList && html.classList.contains("iu-refreshing")) {
+      iuDbg("[IU][RIGHT_LOCK_SKIP]", { reason });
+      return null;
+    }
+    let setRefreshing = false;
+    try { html.classList.add("iu-refreshing"); setRefreshing = true; } catch (_) {}
+    const prevMinHeight = el.style.minHeight || "";
     const h = Math.max(0, Math.round(el.getBoundingClientRect().height));
-    if (h > 0) { el.style.minHeight = h + "px"; }
+    let appliedMinHeight = "";
+    if (h > 0) { appliedMinHeight = h + "px"; el.style.minHeight = appliedMinHeight; }
     iuDbg("[IU][RIGHT_LOCK]", { reason, h });
-    return h;
+    return { el, prevMinHeight, appliedMinHeight, setRefreshing };
   }
 
-  function unlockRightColHeight(reason){
-    const el = getRightColEl(); if(!el) return;
-    el.style.minHeight = "";
-    try { document.documentElement.classList.remove("iu-refreshing"); } catch (_) {}
-    iuDbg("[IU][RIGHT_UNLOCK]", { reason });
+  function unlockRightColHeight(handle, reason){
+    if (!handle) { iuDbg("[IU][RIGHT_UNLOCK_SKIP]", { reason }); return; }
+    const el = handle.el;
+    if (!el) { iuDbg("[IU][RIGHT_UNLOCK_SKIP]", { reason }); return; }
+    el.style.minHeight = handle.prevMinHeight || "";
+    if (handle.setRefreshing) {
+      try { document.documentElement.classList.remove("iu-refreshing"); } catch (_) {}
+    }
+    iuDbg("[IU][RIGHT_UNLOCK]", { reason, restored: true });
   }
 
   function insideTarget(target, fallback) {
@@ -2514,7 +2526,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   async function loadData() {
-    const __iuRightLocked = lockRightColHeight("load_start");
+    const __iuRightHandle = lockRightColHeight("load_start");
     if (__iuDebug) {
       try {
         const cardsDom0 = document.querySelectorAll("#feed article, #feed .news-card").length;
@@ -2523,7 +2535,7 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
     }
     const startedAt = new Date();
-    if (state.isLoadingData) { unlockRightColHeight("load_skip_already_loading"); return; }
+    if (state.isLoadingData) { unlockRightColHeight(__iuRightHandle, "load_skip_already_loading"); return; }
     state.isLoadingData = true;
     const requestToken = ++state.loadRequestId;
     const loadParams = new URLSearchParams(location.search || "");
@@ -2747,7 +2759,7 @@ function buildVideoAsArticleCard(it) {
 
       if (!isLatestLoadRequest(requestToken)) {
         debugLog("[DATA] request canceled, token", requestToken);
-        unlockRightColHeight("load_cancel");
+        unlockRightColHeight(__iuRightHandle, "load_cancel");
         return;
       }
       
@@ -2849,11 +2861,11 @@ function buildVideoAsArticleCard(it) {
         // Keep last good feed if we have it (avoid flicker/clear on transient empty refresh).
         if (hadLast) {
           setStatus("Stav dat: OK (dočasně bez nových dat)");
-          unlockRightColHeight("load_empty");
+          unlockRightColHeight(__iuRightHandle, "load_empty");
           return;
         }
         renderEmpty("Obsah se teď nenačetl (žádná data z backendu)");
-        unlockRightColHeight("load_empty");
+        unlockRightColHeight(__iuRightHandle, "load_empty");
         return;
       }
 
@@ -3001,11 +3013,11 @@ function buildVideoAsArticleCard(it) {
           sample: state.cachedItems.slice(0, 3),
         });
       }
-      unlockRightColHeight("load_ok");
+      unlockRightColHeight(__iuRightHandle, "load_ok");
     } catch (err) {
       if (!isLatestLoadRequest(requestToken)) {
         debugLog("[DATA] failure ignored, token", requestToken);
-        unlockRightColHeight("load_cancel");
+        unlockRightColHeight(__iuRightHandle, "load_cancel");
         return;
       }
       if (isLoadDebug) {
@@ -3022,7 +3034,7 @@ function buildVideoAsArticleCard(it) {
       // Keep last good feed if we have it (avoid flicker/clear on transient failures).
       if (hadLast) {
         setStatus("Stav dat: OK (dočasně chyba při načítání, zachován poslední feed)");
-        unlockRightColHeight("load_fail");
+        unlockRightColHeight(__iuRightHandle, "load_fail");
         return;
       }
 
@@ -3077,7 +3089,7 @@ function buildVideoAsArticleCard(it) {
           loadData();
         }
       }, delay);
-      unlockRightColHeight("load_fail");
+      unlockRightColHeight(__iuRightHandle, "load_fail");
     } finally {
       state.isLoadingData = false;
     }
