@@ -118,6 +118,18 @@ html.iu-preload .accordionCol .accContent{
   transition: none !important;
 }
 
+/* Debug overlays (debug=1): keep fixed and non-layout-affecting */
+#iuDebugBox,
+#iuLayoutShiftBox{
+  position: fixed !important;
+  pointer-events: none !important;
+  contain: layout paint;
+}
+#iuDebugBox{
+  max-height: 40vh;
+  overflow: auto;
+}
+
 /* Desktop: rezervace prostoru pro pravý „Mind“ panel, aby při prvním renderu neskákal */
 @media (min-width: 901px){
   .iu-rightContent{
@@ -126,6 +138,10 @@ html.iu-preload .accordionCol .accContent{
   }
 
   /* Refresh height lock: nenechat feed ani pravý sloupec propadnout na nulu */
+  #newsList{
+    min-height: calc(100vh - 260px);
+    contain: layout paint;
+  }
   #feed{
     min-height: calc(100vh - 260px);
     contain: layout paint;
