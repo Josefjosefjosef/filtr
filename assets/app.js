@@ -3522,20 +3522,80 @@ function buildVideoAsArticleCard(it) {
     // NAME DAY (Svátky)
     if (elNameday){
       elNameday.hidden = false;
-      elNameday.textContent = "Svátek má načítám…";
-      fetch("https://svatky.adresa.info/json", { cache: "no-store" })
-        .then(r => r.json())
-        .then(d => {
-          if (d && d.name) {
-            elNameday.textContent = "Svátek má " + String(d.name);
-            elNameday.hidden = false;
-          } else {
-            elNameday.hidden = true;
+
+      const prevText = String(elNameday.textContent || "").trim();
+      const hasPrevValue = Boolean(prevText && prevText !== "—" && prevText !== "Svátek má —");
+      if (!hasPrevValue) {
+        // Keep a stable placeholder (avoid layout shift).
+        elNameday.textContent = "Svátek má —";
+      }
+
+      // Optional: skip async fetch when tab is not visible (reduces reflow noise on reload).
+      if (document.visibilityState !== "visible") {
+        return;
+      }
+
+      const endpoints = [
+        "https://svatky.vanio.cz/api/",
+        "https://svatky.steelants.cz/api/",
+      ];
+
+      function normalizeNamedayJson(j){
+        // vanio/steelants: typicky { name: "..." }
+        if (j && typeof j === "object") {
+          if (typeof j.name === "string" && j.name.trim()) return j.name.trim();
+          if (typeof j.nameday === "string" && j.nameday.trim()) return j.nameday.trim();
+          if (typeof j.svatek === "string" && j.svatek.trim()) return j.svatek.trim();
+          if (typeof j.svatky === "string" && j.svatky.trim()) return j.svatky.trim();
+        }
+        // některé zdroje vrací pole
+        if (Array.isArray(j) && j.length) {
+          const first = j[0];
+          if (first && typeof first === "object") {
+            if (typeof first.name === "string" && first.name.trim()) return first.name.trim();
+            if (typeof first.svatek === "string" && first.svatek.trim()) return first.svatek.trim();
           }
-        })
-        .catch(() => {
-          elNameday.hidden = true;
-        });
+          if (typeof first === "string" && first.trim()) return first.trim();
+        }
+        return null;
+      }
+
+      (async () => {
+        let nameday = null;
+        let lastErr = null;
+
+        for (const url of endpoints) {
+          try {
+            const r = await fetch(url, {
+              method: "GET",
+              mode: "cors",
+              cache: "no-store",
+              headers: { "Accept": "application/json" },
+            });
+            if (!r.ok) throw new Error("HTTP_" + r.status);
+            const j = await r.json();
+            const v = normalizeNamedayJson(j);
+            if (v) { nameday = v; break; }
+            throw new Error("NO_NAME_IN_JSON");
+          } catch (e) {
+            lastErr = e;
+          }
+        }
+
+        if (!nameday) {
+          // Silent fallback: keep last value if present; otherwise keep placeholder.
+          if (__iuDebug && !window.__iu_nameday_fail_logged) {
+            try {
+              window.__iu_nameday_fail_logged = true;
+              iuDbg("[IU][DAILY_NAMEDAY_FAIL]", { err: String(lastErr) });
+            } catch (_) {}
+          }
+          return;
+        }
+
+        elNameday.textContent = "Svátek má " + String(nameday);
+        elNameday.hidden = false;
+      })().catch(() => {});
     }
 
     // WEATHER (Open-Meteo) + hourly strip + min/max
