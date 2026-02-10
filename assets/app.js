@@ -2523,7 +2523,7 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
     }
     const startedAt = new Date();
-    if (state.isLoadingData) return;
+    if (state.isLoadingData) { unlockRightColHeight("load_skip_already_loading"); return; }
     state.isLoadingData = true;
     const requestToken = ++state.loadRequestId;
     const loadParams = new URLSearchParams(location.search || "");
