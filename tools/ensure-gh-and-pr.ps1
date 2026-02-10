@@ -6,7 +6,9 @@ NEVER merges.
 #>
 
 [CmdletBinding()]
-param()
+param(
+  [switch]$Night
+)
 
 $ErrorActionPreference = "Stop"
 # Avoid PowerShell treating native non-zero exits as terminating errors.
@@ -85,6 +87,7 @@ function Git([string[]]$GitArgs){
 }
 
 function Ensure-GhInstalled(){
+  if ($Night) { return }
   if ($script:GhExe) { return }
 
   Write-Step "Install GitHub CLI (gh) locally (no admin)"
@@ -130,6 +133,10 @@ function Is-GhAuthed(){
 function Ensure-GhAuth(){
   Write-Step "GitHub auth (gh)"
   if (Is-GhAuthed) { return }
+  if ($Night) {
+    Write-Host "NOT AUTHENTICATED"
+    exit 0
+  }
 
   if ($script:DidAuthLogin) {
     Fail "gh auth still not ready after login attempt." "powershell -ExecutionPolicy Bypass -File .\\tools\\ensure-gh-and-pr.ps1"
@@ -179,7 +186,14 @@ try {
 
   Write-Step "Ensure gh"
   Init-GhExe
-  Ensure-GhInstalled
+  if (-not $script:GhExe) {
+    Ensure-GhInstalled
+    Init-GhExe
+  }
+  if (-not $script:GhExe) {
+    Write-Host "GH NOT AVAILABLE"
+    exit 0
+  }
   Ensure-GhAuth
 
   Write-Step "PR"

@@ -7,10 +7,13 @@ Idempotent, fail-fast. NEVER merges.
 [CmdletBinding()]
 param(
   [Parameter(Mandatory=$true)]
-  [ValidateSet("preflight","ensure-gh-pr","cls-pr","pr-run-standard","cls-test")]
+  [ValidateSet("preflight","ensure-gh-pr","cls-pr","pr-run-standard","cls-test","night")]
   [string]$Task,
 
-  [string]$RepoPath = "C:\projects\filtr"
+  [string]$RepoPath = "C:\projects\filtr",
+
+  [int]$IntervalMinutes = 10,
+  [int]$MaxHours = 8
 )
 
 $ErrorActionPreference = "Stop"
@@ -166,11 +169,33 @@ function Export-EnsureGhAndPrToTemp(){
   return $tmp
 }
 
+function New-NightLogFile(){
+  $logDir = Join-Path $RepoPath "logs"
+  New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+  $name = "night-" + (Get-Date).ToString("yyyyMMdd-HHmmss") + ".log"
+  return (Join-Path $logDir $name)
+}
+
+function Night-Log([string]$logFile, [string]$msg, [string]$level="INFO"){
+  $line = ("[{0}] [{1}] {2}" -f (Get-Date).ToString("yyyy-MM-dd HH:mm:ss"), $level, $msg)
+  Write-Host $line
+  Add-Content -Path $logFile -Value $line
+}
+
+function RunEnsureTemp([string]$tmpScript, [switch]$NightMode){
+  if ($NightMode) {
+    powershell -ExecutionPolicy Bypass -File $tmpScript -Night
+  } else {
+    powershell -ExecutionPolicy Bypass -File $tmpScript
+  }
+  return $LASTEXITCODE
+}
+
 function EnsureGhPr(){
   Preflight
   Write-Step "Run ensure-gh-and-pr.ps1"
   $tmpScript = Export-EnsureGhAndPrToTemp
-  powershell -ExecutionPolicy Bypass -File $tmpScript
+  RunEnsureTemp -tmpScript $tmpScript | Out-Null
   if ($LASTEXITCODE -ne 0) { Fail "ensure-gh-and-pr.ps1 failed" }
 }
 
@@ -185,7 +210,7 @@ function RunEnsureGhPrForBranch([string]$branch){
   Switch-Branch $branch
 
   Write-Step "Run ensure-gh-and-pr.ps1"
-  powershell -ExecutionPolicy Bypass -File $tmpScript
+  RunEnsureTemp -tmpScript $tmpScript | Out-Null
   if ($LASTEXITCODE -ne 0) { Fail "ensure-gh-and-pr.ps1 failed" }
 }
 
@@ -203,6 +228,72 @@ function ClsTest(){
   Write-Host "DONE"
 }
 
+function Night(){
+  $logFile = New-NightLogFile
+  Night-Log $logFile ("night started; intervalMinutes=$IntervalMinutes; maxHours=$MaxHours; repo=$RepoPath")
+
+  $startTime = Get-Date
+  $origBranch = $null
+  try { $origBranch = Get-RepoBranch } catch { $origBranch = $null }
+  if ($origBranch) { Night-Log $logFile ("origBranch=" + $origBranch) }
+
+  while ($true) {
+    $elapsedHours = ((Get-Date) - $startTime).TotalHours
+    if ($MaxHours -gt 0 -and $elapsedHours -ge $MaxHours) {
+      Night-Log $logFile ("maxHours reached (" + [math]::Round($elapsedHours,2) + "); exiting")
+      return
+    }
+
+    try {
+      # Only strict preflight if clean; otherwise skip cycle.
+      Set-Location $RepoPath
+      $st = & "C:\Program Files\Git\cmd\git.exe" status --porcelain
+      if ($st) {
+        Night-Log $logFile "working tree not clean; skip cycle" "WARN"
+        goto Sleep
+      }
+
+      Night-Log $logFile "cycle start"
+
+      # fetch only (no pull/rebase)
+      & "C:\Program Files\Git\cmd\git.exe" fetch origin --prune | Out-Null
+
+      $tmpEnsure = Export-EnsureGhAndPrToTemp
+
+      # cls-test flow (night mode: no interactive install/auth loops)
+      try {
+        Night-Log $logFile "run cls-test"
+        Switch-Branch "fix/cls-daily-weather-lock"
+        RunEnsureTemp -tmpScript $tmpEnsure -NightMode | Out-Null
+      } catch {
+        Night-Log $logFile ("cls-test error: " + $_.Exception.Message) "ERROR"
+      }
+
+      # pr-run-standard flow (optional, safe)
+      try {
+        Night-Log $logFile "run pr-run-standard"
+        Switch-Branch "chore/one-shot-runner-standard"
+        RunEnsureTemp -tmpScript $tmpEnsure -NightMode | Out-Null
+      } catch {
+        Night-Log $logFile ("pr-run-standard error: " + $_.Exception.Message) "ERROR"
+      }
+
+      # restore
+      if ($origBranch) {
+        try { Switch-Branch $origBranch } catch { Night-Log $logFile "restore branch failed" "WARN" }
+      }
+
+      Night-Log $logFile "cycle end"
+    } catch {
+      Night-Log $logFile ("cycle runtime error: " + $_.Exception.Message) "ERROR"
+    }
+
+    :Sleep
+    if ($IntervalMinutes -lt 1) { $IntervalMinutes = 1 }
+    Start-Sleep -Seconds ($IntervalMinutes * 60)
+  }
+}
+
 try {
   switch ($Task) {
     "preflight" { Preflight }
@@ -210,6 +301,7 @@ try {
     "cls-pr" { ClsPr }
     "pr-run-standard" { PrRunStandard }
     "cls-test" { ClsTest }
+    "night" { Night }
     default { Fail "Unknown Task: $Task" }
   }
 } catch {
