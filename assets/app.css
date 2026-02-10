@@ -118,6 +118,12 @@ html.iu-preload .accordionCol .accContent{
   transition: none !important;
 }
 
+/* Refresh window: during JS right-column height lock, do not animate max-height. */
+html.iu-refreshing .accContent,
+html.iu-refreshing #iuMindPanel{
+  transition: none !important;
+}
+
 /* Debug overlays (debug=1): keep fixed and non-layout-affecting */
 #iuDebugBox,
 #iuLayoutShiftBox{

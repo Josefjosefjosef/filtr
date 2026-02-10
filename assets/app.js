@@ -1192,6 +1192,24 @@ window.addEventListener("unhandledrejection", (e) => {
     return ensureFeedTarget();
   }
 
+  function getRightColEl(){ return document.querySelector("aside.accordionCol"); }
+
+  function lockRightColHeight(reason){
+    const el = getRightColEl(); if(!el) return null;
+    try { document.documentElement.classList.add("iu-refreshing"); } catch (_) {}
+    const h = Math.max(0, Math.round(el.getBoundingClientRect().height));
+    if (h > 0) { el.style.minHeight = h + "px"; }
+    iuDbg("[IU][RIGHT_LOCK]", { reason, h });
+    return h;
+  }
+
+  function unlockRightColHeight(reason){
+    const el = getRightColEl(); if(!el) return;
+    el.style.minHeight = "";
+    try { document.documentElement.classList.remove("iu-refreshing"); } catch (_) {}
+    iuDbg("[IU][RIGHT_UNLOCK]", { reason });
+  }
+
   function insideTarget(target, fallback) {
     return target || fallback;
   }
@@ -2500,10 +2518,12 @@ function buildVideoAsArticleCard(it) {
     if (state.isLoadingData) return;
     state.isLoadingData = true;
     const requestToken = ++state.loadRequestId;
+    const __iuRightLocked = lockRightColHeight("load_start");
     if (__iuDebug) {
       try {
         const cardsDom0 = document.querySelectorAll("#feed article, #feed .news-card").length;
-        iuDbg("[IU][LOAD_DOM]", { phase: "start", cardsDom: cardsDom0 });
+        const rightH = Math.round(getRightColEl()?.getBoundingClientRect().height || 0);
+        iuDbg("[IU][LOAD_DOM]", { phase: "start", cardsDom: cardsDom0, rightH });
       } catch (_) {}
     }
     const loadParams = new URLSearchParams(location.search || "");
@@ -2727,6 +2747,7 @@ function buildVideoAsArticleCard(it) {
 
       if (!isLatestLoadRequest(requestToken)) {
         debugLog("[DATA] request canceled, token", requestToken);
+        unlockRightColHeight("load_cancel");
         return;
       }
       
@@ -2828,9 +2849,11 @@ function buildVideoAsArticleCard(it) {
         // Keep last good feed if we have it (avoid flicker/clear on transient empty refresh).
         if (hadLast) {
           setStatus("Stav dat: OK (dočasně bez nových dat)");
+          unlockRightColHeight("load_empty");
           return;
         }
         renderEmpty("Obsah se teď nenačetl (žádná data z backendu)");
+        unlockRightColHeight("load_empty");
         return;
       }
 
@@ -2840,6 +2863,12 @@ function buildVideoAsArticleCard(it) {
       state.consecutiveLoadFailures = 0;
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
       renderItems(state.filteredItems);
+      if (__iuDebug) {
+        try {
+          const rightH = Math.round(getRightColEl()?.getBoundingClientRect().height || 0);
+          iuDbg("[IU][RIGHT_AFTER_RENDER]", { rightH });
+        } catch (_) {}
+      }
       if (isLoadDebug) {
         try { console.log("[IU][LOAD]", { phase: "ok", hadLast, hadLastLen, combinedLen: combined.length }); } catch (_) {}
       }
@@ -2972,9 +3001,11 @@ function buildVideoAsArticleCard(it) {
           sample: state.cachedItems.slice(0, 3),
         });
       }
+      unlockRightColHeight("load_ok");
     } catch (err) {
       if (!isLatestLoadRequest(requestToken)) {
         debugLog("[DATA] failure ignored, token", requestToken);
+        unlockRightColHeight("load_cancel");
         return;
       }
       if (isLoadDebug) {
@@ -2991,6 +3022,7 @@ function buildVideoAsArticleCard(it) {
       // Keep last good feed if we have it (avoid flicker/clear on transient failures).
       if (hadLast) {
         setStatus("Stav dat: OK (dočasně chyba při načítání, zachován poslední feed)");
+        unlockRightColHeight("load_fail");
         return;
       }
 
@@ -3045,6 +3077,7 @@ function buildVideoAsArticleCard(it) {
           loadData();
         }
       }, delay);
+      unlockRightColHeight("load_fail");
     } finally {
       state.isLoadingData = false;
     }
