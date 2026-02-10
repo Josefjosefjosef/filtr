@@ -9,7 +9,6 @@ on:
       - completed
   push:
     paths:
-      - ".github/workflows/ci-data-freshness.yml"
       - "projects/data/articles.json"
       - "projects/data/videos.json"
       - "projects/data/_probe.txt"
