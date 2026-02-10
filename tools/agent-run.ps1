@@ -7,7 +7,7 @@ Idempotent, fail-fast. NEVER merges.
 [CmdletBinding()]
 param(
   [Parameter(Mandatory=$true)]
-  [ValidateSet("preflight","ensure-gh-pr","cls-pr","pr-run-standard")]
+  [ValidateSet("preflight","ensure-gh-pr","cls-pr","pr-run-standard","cls-test")]
   [string]$Task,
 
   [string]$RepoPath = "C:\projects\filtr"
@@ -197,12 +197,19 @@ function PrRunStandard(){
   RunEnsureGhPrForBranch "chore/one-shot-runner-standard"
 }
 
+function ClsTest(){
+  RunEnsureGhPrForBranch "fix/cls-daily-weather-lock"
+  Write-Host ""
+  Write-Host "DONE"
+}
+
 try {
   switch ($Task) {
     "preflight" { Preflight }
     "ensure-gh-pr" { EnsureGhPr }
     "cls-pr" { ClsPr }
     "pr-run-standard" { PrRunStandard }
+    "cls-test" { ClsTest }
     default { Fail "Unknown Task: $Task" }
   }
 } catch {

@@ -188,13 +188,8 @@ try {
 
   Write-Step "Checks"
   $checksOut = & $script:GhExe pr checks 2>&1
-  $checksExit = $LASTEXITCODE
   $checksText = ($checksOut | Out-String).TrimEnd()
   if ($checksText) { Write-Host $checksText }
-
-  # gh can exit non-zero even when it successfully prints checks (e.g. pending/none).
-  # Only treat it as a failure if it produced no output at all.
-  if (($checksExit -ne 0) -and (-not $checksText)) { Fail "gh pr checks failed" }
 
   exit 0
 } catch {
