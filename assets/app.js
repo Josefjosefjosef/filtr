@@ -2514,10 +2514,6 @@ function buildVideoAsArticleCard(it) {
   }
 
   async function loadData() {
-    const startedAt = new Date();
-    if (state.isLoadingData) return;
-    state.isLoadingData = true;
-    const requestToken = ++state.loadRequestId;
     const __iuRightLocked = lockRightColHeight("load_start");
     if (__iuDebug) {
       try {
@@ -2526,6 +2522,10 @@ function buildVideoAsArticleCard(it) {
         iuDbg("[IU][LOAD_DOM]", { phase: "start", cardsDom: cardsDom0, rightH });
       } catch (_) {}
     }
+    const startedAt = new Date();
+    if (state.isLoadingData) return;
+    state.isLoadingData = true;
+    const requestToken = ++state.loadRequestId;
     const loadParams = new URLSearchParams(location.search || "");
     const isLoadDebug = loadParams.get("debug") === "1";
     const lastItems = Array.isArray(state.cachedItems) ? state.cachedItems : [];
