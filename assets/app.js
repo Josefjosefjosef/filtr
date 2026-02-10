@@ -1197,26 +1197,34 @@ window.addEventListener("unhandledrejection", (e) => {
   function lockRightColHeight(reason){
     const el = getRightColEl(); if(!el) return null;
     const html = document.documentElement;
+
+    // Idempotence: if already refreshing, do not touch DOM.
     if (html && html.classList && html.classList.contains("iu-refreshing")) {
-      iuDbg("[IU][RIGHT_LOCK_SKIP]", { reason });
+      iuDbg("[IU][RIGHT_LOCK_SKIP]", { reason, alreadyRefreshing: true });
       return null;
     }
-    let setRefreshing = false;
-    try { html.classList.add("iu-refreshing"); setRefreshing = true; } catch (_) {}
-    const prevMinHeight = el.style.minHeight || "";
-    const h = Math.max(0, Math.round(el.getBoundingClientRect().height));
-    let appliedMinHeight = "";
-    if (h > 0) { appliedMinHeight = h + "px"; el.style.minHeight = appliedMinHeight; }
-    iuDbg("[IU][RIGHT_LOCK]", { reason, h });
-    return { el, prevMinHeight, appliedMinHeight, setRefreshing };
+
+    const prevMinHeight = el.style.minHeight;
+    const h = Math.ceil(el.getBoundingClientRect().height || 0);
+    if (h > 0) {
+      el.style.minHeight = h + "px";
+    } else {
+      // If height is 0, do not force "0px" (keep previous inline minHeight).
+      el.style.minHeight = prevMinHeight;
+    }
+
+    try { html.classList.add("iu-refreshing"); } catch (_) {}
+    const appliedMinHeight = el.style.minHeight;
+    iuDbg("[IU][RIGHT_LOCK]", { reason, h, prevMinHeight, appliedMinHeight });
+    return { el, prevMinHeight, appliedMinHeight, setRefreshing: true };
   }
 
   function unlockRightColHeight(handle, reason){
     if (!handle) { iuDbg("[IU][RIGHT_UNLOCK_SKIP]", { reason }); return; }
     const el = handle.el;
     if (!el) { iuDbg("[IU][RIGHT_UNLOCK_SKIP]", { reason }); return; }
-    el.style.minHeight = handle.prevMinHeight || "";
-    if (handle.setRefreshing) {
+    el.style.minHeight = handle.prevMinHeight;
+    if (handle.setRefreshing === true) {
       try { document.documentElement.classList.remove("iu-refreshing"); } catch (_) {}
     }
     iuDbg("[IU][RIGHT_UNLOCK]", { reason, restored: true });
