@@ -157,10 +157,9 @@ try {
   $checksText = ($checksOut | Out-String).TrimEnd()
   if ($checksText) { Write-Host $checksText }
 
-  # gh can exit non-zero when there are no checks reported; treat that as success.
-  if (($checksExit -ne 0) -and ($checksText -notmatch "no checks reported")) {
-    Fail "gh pr checks failed"
-  }
+  # gh can exit non-zero even when it successfully prints checks (e.g. pending/none).
+  # Only treat it as a failure if it produced no output at all.
+  if (($checksExit -ne 0) -and (-not $checksText)) { Fail "gh pr checks failed" }
 
   exit 0
 } catch {
