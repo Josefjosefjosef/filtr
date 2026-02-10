@@ -9,6 +9,8 @@ alwaysApply: true
 
 Maximize automation: after a code change, the user should **not type PR title/body**. The only expected manual step is an intentional **“Merge pull request” click** (do not try to bypass branch protection).
 
+One-shot runner standard (minimize RUN): for any multi-step operation, always create/update `tools/agent-run.ps1` and give the user exactly one command to run; never provide long sequences of terminal commands that require multiple RUN confirmations.
+
 ## Branch + commit discipline
 
 - Always work on a new branch named `fix/...`, `style/...`, `chore/...` (never commit directly to `main`).
