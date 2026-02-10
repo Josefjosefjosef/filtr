@@ -191,6 +191,24 @@ function RunEnsureTemp([string]$tmpScript, [switch]$NightMode){
   return $LASTEXITCODE
 }
 
+function Night-WriteRaw([string]$logFile, [string]$text){
+  if (-not $text) { return }
+  $lines = ($text | Out-String).TrimEnd().Split("`n")
+  foreach ($l in $lines) {
+    $line = $l.TrimEnd("`r")
+    if ($line -eq "") { continue }
+    Write-Host $line
+    Add-Content -Path $logFile -Value $line
+  }
+}
+
+function Night-RunEnsureAndLog([string]$logFile, [string]$tmpEnsure){
+  $out = powershell -ExecutionPolicy Bypass -File $tmpEnsure -Night 2>&1
+  $code = $LASTEXITCODE
+  Night-WriteRaw -logFile $logFile -text ($out | Out-String)
+  return $code
+}
+
 function EnsureGhPr(){
   Preflight
   Write-Step "Run ensure-gh-and-pr.ps1"
@@ -266,7 +284,7 @@ function Night(){
         try {
           Night-Log $logFile "run cls-test"
           & "C:\Program Files\Git\cmd\git.exe" switch "fix/cls-daily-weather-lock" | Out-Null
-          RunEnsureTemp -tmpScript $tmpEnsure -NightMode | Out-Null
+          [void](Night-RunEnsureAndLog -logFile $logFile -tmpEnsure $tmpEnsure)
         } catch {
           Night-Log $logFile ("cls-test error: " + $_.Exception.Message) "ERROR"
         }
@@ -275,7 +293,7 @@ function Night(){
         try {
           Night-Log $logFile "run pr-run-standard"
           & "C:\Program Files\Git\cmd\git.exe" switch "chore/one-shot-runner-standard" | Out-Null
-          RunEnsureTemp -tmpScript $tmpEnsure -NightMode | Out-Null
+          [void](Night-RunEnsureAndLog -logFile $logFile -tmpEnsure $tmpEnsure)
         } catch {
           Night-Log $logFile ("pr-run-standard error: " + $_.Exception.Message) "ERROR"
         }
