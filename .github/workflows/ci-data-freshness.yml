@@ -2,6 +2,9 @@ name: CI - Data Freshness
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/ci-data-freshness.yml"
   workflow_run:
     workflows:
       - "Update articles data"
@@ -16,9 +19,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pr_ok:
+    name: PR ok (no freshness)
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: PR lint ok
+        run: |
+          echo "OK: CI - Data Freshness is not evaluated on PR commits."
+
   freshness:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name != 'pull_request' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
