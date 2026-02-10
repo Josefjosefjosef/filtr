@@ -8,7 +8,8 @@
   --iu-page-bg: linear-gradient(180deg,#eaf1f8 0%,#dde7f2 100%);
 
   /* světlý moderní design */
-  --iu-bg: #ffffff;
+  /* unify sticky header background with app background to prevent flash */
+  --iu-bg: var(--iu-page-bg);
   --iu-surface: #f7f8fa;
   --iu-text: #111111;
   --iu-meta: #6b7280;
