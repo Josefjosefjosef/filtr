@@ -558,6 +558,8 @@ aside.accordionCol{
   padding-bottom: 40px;
   padding-top: 0;
   height: auto;
+  /* CLS mitigation: reserve enough space for first paint + async module content */
+  min-height: 420px;
   max-height: none;
   display: flex;
   flex-direction: column;
