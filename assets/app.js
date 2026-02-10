@@ -1192,7 +1192,7 @@ window.addEventListener("unhandledrejection", (e) => {
     return ensureFeedTarget();
   }
 
-  function getRightColEl(){ return document.querySelector("aside.accordionCol"); }
+  function getRightColEl(){ return document.querySelector("aside.accordionCol") || document.querySelector(".iu-rightContent") || document.querySelector("aside"); }
 
   function lockRightColHeight(reason){
     const el = getRightColEl(); if(!el) return null;
@@ -2535,11 +2535,12 @@ function buildVideoAsArticleCard(it) {
 
   async function loadData() {
     const __iuRightHandle = lockRightColHeight("load_start");
+    const domCards0 = document.querySelectorAll("#feed article, #feed .news-card").length;
+    const hasDomFeed0 = domCards0 > 0;
     if (__iuDebug) {
       try {
-        const cardsDom0 = document.querySelectorAll("#feed article, #feed .news-card").length;
         const rightH = Math.round(getRightColEl()?.getBoundingClientRect().height || 0);
-        iuDbg("[IU][LOAD_DOM]", { phase: "start", cardsDom: cardsDom0, rightH });
+        iuDbg("[IU][LOAD_DOM]", { phase: "start", cardsDom: domCards0, domCards0, rightH });
       } catch (_) {}
     }
     const startedAt = new Date();
@@ -2866,14 +2867,19 @@ function buildVideoAsArticleCard(it) {
         if (isLoadDebug) {
           try { console.log("[IU][LOAD]", { phase: hadLast ? "empty_keep" : "empty", hadLast, hadLastLen, combinedLen: 0 }); } catch (_) {}
         }
-        // Keep last good feed if we have it (avoid flicker/clear on transient empty refresh).
-        if (hadLast) {
-          setStatus("Stav dat: OK (dočasně bez nových dat)");
-          unlockRightColHeight(__iuRightHandle, "load_empty");
+        // Keep last good feed if we have it OR if DOM already shows feed cards (avoid flicker/clear on transient empty refresh).
+        if (hadLast || hasDomFeed0) {
+          if (hadLast) {
+            setStatus("Stav dat: OK (dočasně bez nových dat)");
+          }
+          if (__iuDebug) { try { iuDbg("[IU][LOAD_DOM]", { phase: "empty_keep_dom", hadLast, domCards0 }); } catch (_) {} }
+          unlockRightColHeight(__iuRightHandle, "load_empty_keep_dom");
+          state.isLoadingData = false;
           return;
         }
         renderEmpty("Obsah se teď nenačetl (žádná data z backendu)");
         unlockRightColHeight(__iuRightHandle, "load_empty");
+        state.isLoadingData = false;
         return;
       }
 
@@ -3028,9 +3034,9 @@ function buildVideoAsArticleCard(it) {
         unlockRightColHeight(__iuRightHandle, "load_cancel");
         return;
       }
+      const msg = err && err.message ? String(err.message) : String(err || "error");
       if (isLoadDebug) {
         try {
-          const msg = err && err.message ? String(err.message) : String(err || "error");
           console.log("[IU][LOAD]", { phase: hadLast ? "fail_keep" : "fail", hadLast, hadLastLen, msg });
           try { iuDbg("[IU][LOAD_DOM]", { phase: "catch", msg }); } catch (_) {}
         } catch (_) {}
@@ -3043,6 +3049,15 @@ function buildVideoAsArticleCard(it) {
       if (hadLast) {
         setStatus("Stav dat: OK (dočasně chyba při načítání, zachován poslední feed)");
         unlockRightColHeight(__iuRightHandle, "load_fail");
+        return;
+      }
+
+      const domCardsCatch = document.querySelectorAll("#feed article, #feed .news-card").length;
+      const hasDomFeedCatch = domCardsCatch > 0;
+      if (hasDomFeedCatch) {
+        if (__iuDebug) { try { iuDbg("[IU][LOAD_DOM]", { phase: "fail_keep_dom", msg, hadLast, domCardsCatch }); } catch (_) {} }
+        unlockRightColHeight(__iuRightHandle, "load_fail_keep_dom");
+        state.isLoadingData = false;
         return;
       }
 
