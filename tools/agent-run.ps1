@@ -16,7 +16,36 @@ param(
 $ErrorActionPreference = "Stop"
 
 function Write-Step($msg){ Write-Host ("`n==> " + $msg) }
-function Fail($msg){ Write-Error $msg; exit 1 }
+
+function Write-NextStepBlock(
+  [string]$NextStep,
+  [string]$Why,
+  [string]$CopyPasteOutput = "Only if the NEXT_STEP fails: paste the entire console output (first line to last line)."
+){
+  Write-Host ""
+  Write-Host "NEXT_STEP: $NextStep"
+  Write-Host ""
+  Write-Host "WHY: $Why"
+  Write-Host ""
+  Write-Host "COPY_PASTE_OUTPUT: $CopyPasteOutput"
+  Write-Host ""
+}
+
+function Throw-NextStep(
+  [string]$NextStep,
+  [string]$Why,
+  [string]$CopyPasteOutput = "Only if the NEXT_STEP fails: paste the entire console output (first line to last line)."
+){
+  $ex = New-Object System.Exception($Why)
+  $ex.Data["NEXT_STEP"] = $NextStep
+  $ex.Data["WHY"] = $Why
+  $ex.Data["COPY_PASTE_OUTPUT"] = $CopyPasteOutput
+  throw $ex
+}
+
+function Fail($msg){
+  Throw-NextStep -NextStep ("powershell -ExecutionPolicy Bypass -File .\tools\agent-run.ps1 -Task " + $Task) -Why $msg
+}
 
 function Require-Command($name){
   if (-not (Get-Command $name -ErrorAction SilentlyContinue)) { Fail "Missing command: $name" }
@@ -44,12 +73,31 @@ function Switch-Branch([string]$branch){
   Git @("switch",$branch)
 }
 
+function SelfCheck(){
+  Write-Step "Self-check: required files"
+
+  $ensure = Join-Path $RepoPath "tools\ensure-gh-and-pr.ps1"
+  if (-not (Test-Path $ensure)) {
+    Throw-NextStep `
+      -NextStep ("powershell -ExecutionPolicy Bypass -Command ""Set-Location '" + $RepoPath + "'; git fetch origin; git switch main; git pull --rebase origin main; git switch chore/one-shot-runner-standard""") `
+      -Why "Missing tools\\ensure-gh-and-pr.ps1 in working tree."
+  }
+
+  $tpl = Join-Path $RepoPath ".github\pull_request_template.md"
+  if (-not (Test-Path $tpl)) {
+    Throw-NextStep `
+      -NextStep ("powershell -ExecutionPolicy Bypass -Command ""Set-Location '" + $RepoPath + "'; git fetch origin; git switch main; git pull --rebase origin main""") `
+      -Why "Missing .github\\pull_request_template.md in working tree."
+  }
+}
+
 function Preflight(){
   Write-Step "Preflight: repo path"
   if (-not (Test-Path $RepoPath)) { Fail "RepoPath not found: $RepoPath" }
   Set-Location $RepoPath
 
   Require-Command "git"
+  SelfCheck
 
   Write-Step "Preflight: fetch"
   Git @("fetch","origin","--prune")
@@ -69,70 +117,14 @@ function Preflight(){
   Write-Host ("origin=" + $remote)
 }
 
-function Ensure-GhInstalled(){
-  if (Get-Command "gh" -ErrorAction SilentlyContinue) { return }
-
-  Write-Step "Install GitHub CLI (gh)"
-  if (Get-Command "winget" -ErrorAction SilentlyContinue) {
-    winget install --id GitHub.cli -e --source winget
-    if ($LASTEXITCODE -ne 0) { Fail "winget failed installing gh" }
-  } elseif (Get-Command "choco" -ErrorAction SilentlyContinue) {
-    choco install gh -y
-    if ($LASTEXITCODE -ne 0) { Fail "choco failed installing gh" }
-  } else {
-    Fail "Missing gh and no installer found (winget/choco). Install GitHub CLI and rerun."
-  }
-
-  if (-not (Get-Command "gh" -ErrorAction SilentlyContinue)) { Fail "gh still missing after install attempt" }
-}
-
-function Ensure-GhAuth(){
-  Write-Step "GitHub auth (gh)"
-  gh auth status -h github.com | Out-Null
-  if ($LASTEXITCODE -eq 0) { return }
-
-  gh auth login -h github.com -p https -w
-  if ($LASTEXITCODE -ne 0) { Fail "gh auth login failed" }
-
-  gh auth status -h github.com | Out-Null
-  if ($LASTEXITCODE -ne 0) { Fail "gh auth status failed after login" }
-}
-
-function Ensure-PrForCurrentBranch(){
-  $branch = Get-RepoBranch
-
-  Write-Step "Find existing open PR (idempotent)"
-  $existing = (gh pr list --head $branch --state open --json url --jq ".[0].url" 2>$null)
-  if ($LASTEXITCODE -ne 0) { Fail "gh pr list failed" }
-  $existing = ($existing | Out-String).Trim()
-  if ($existing) { return $existing }
-
-  Write-Step "Create PR (gh pr create --fill)"
-  gh pr create --fill --head $branch --base main
-  if ($LASTEXITCODE -ne 0) { Fail "gh pr create failed" }
-
-  $url = (gh pr view --json url --jq ".url" 2>$null)
-  if ($LASTEXITCODE -ne 0) { Fail "gh pr view failed after create" }
-  $url = ($url | Out-String).Trim()
-  if (-not $url) { Fail "PR URL missing after create" }
-  return $url
-}
-
-function EnsureGhAndPr(){
-  Preflight
-  Ensure-GhInstalled
-  Ensure-GhAuth
-
-  $url = Ensure-PrForCurrentBranch
-  Write-Host ("`nPR URL: " + $url)
-
-  Write-Step "Checks"
-  gh pr checks
-  if ($LASTEXITCODE -ne 0) { Fail "gh pr checks failed" }
-}
-
 function EnsureGhPr(){
-  EnsureGhAndPr
+  Preflight
+  Write-Step "Run ensure-gh-and-pr.ps1"
+  $script = Join-Path (Get-Location) "tools\ensure-gh-and-pr.ps1"
+  if (-not (Test-Path $script)) { Fail "Missing tools\ensure-gh-and-pr.ps1 (pull main first)" }
+
+  powershell -ExecutionPolicy Bypass -File $script
+  if ($LASTEXITCODE -ne 0) { Fail "ensure-gh-and-pr.ps1 failed" }
 }
 
 function RunEnsureGhPrForBranch([string]$branch){
@@ -143,7 +135,12 @@ function RunEnsureGhPrForBranch([string]$branch){
 
   Switch-Branch $branch
 
-  EnsureGhAndPr
+  Write-Step "Run ensure-gh-and-pr.ps1"
+  $script = Join-Path (Get-Location) "tools\ensure-gh-and-pr.ps1"
+  if (-not (Test-Path $script)) { Fail "Missing tools\ensure-gh-and-pr.ps1 (pull main first)" }
+
+  powershell -ExecutionPolicy Bypass -File $script
+  if ($LASTEXITCODE -ne 0) { Fail "ensure-gh-and-pr.ps1 failed" }
 }
 
 function ClsPr(){
@@ -154,10 +151,28 @@ function PrRunStandard(){
   RunEnsureGhPrForBranch "chore/one-shot-runner-standard"
 }
 
-switch ($Task) {
-  "preflight" { Preflight }
-  "ensure-gh-pr" { EnsureGhPr }
-  "cls-pr" { ClsPr }
-  "pr-run-standard" { PrRunStandard }
-  default { Fail "Unknown Task: $Task" }
+try {
+  switch ($Task) {
+    "preflight" { Preflight }
+    "ensure-gh-pr" { EnsureGhPr }
+    "cls-pr" { ClsPr }
+    "pr-run-standard" { PrRunStandard }
+    default { Fail "Unknown Task: $Task" }
+  }
+} catch {
+  $ex = $_.Exception
+  $next = $ex.Data["NEXT_STEP"]
+  $why = $ex.Data["WHY"]
+  $copy = $ex.Data["COPY_PASTE_OUTPUT"]
+
+  if ($next -and $why) {
+    Write-NextStepBlock -NextStep $next -Why $why -CopyPasteOutput $copy
+    exit 1
+  }
+
+  Write-NextStepBlock `
+    -NextStep ("powershell -ExecutionPolicy Bypass -File .\tools\agent-run.ps1 -Task " + $Task) `
+    -Why ("Unhandled error: " + ($ex.Message)) `
+    -CopyPasteOutput "Paste the entire console output (first line to last line)."
+  exit 1
 }
