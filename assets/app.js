@@ -113,6 +113,10 @@ window.addEventListener("unhandledrejection", (e) => {
     if (!isDebugLogging) return;
     console.warn(...args);
   }
+  // Debug-only helper for CLS root-cause tracing (does not affect prod behavior).
+  const __iuParams = new URLSearchParams(location.search || "");
+  const __iuDebug = __iuParams.get("debug") === "1";
+  function iuDbg(tag, payload){ if(!__iuDebug) return; try{ console.log(tag, payload||{}); }catch(_){}}
   const DEBUG =
     location.search.includes("debug=1") || localStorage.getItem("iu_debug") === "1";
   if (location.search.includes("debug=1")) {
@@ -1204,6 +1208,12 @@ window.addEventListener("unhandledrejection", (e) => {
   }
 
   function renderEmpty(message, extraHtml = "") {
+    if (__iuDebug) {
+      try {
+        const cards = document.querySelectorAll("#feed article, #feed .news-card").length;
+        iuDbg("[IU][FEED_CLEAR]", { msg: message, cardsBefore: cards });
+      } catch (_) {}
+    }
     const target = getFeedTarget();
     if (target) {
       withScrollLock(() => {
@@ -1228,6 +1238,7 @@ window.addEventListener("unhandledrejection", (e) => {
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
   function renderFeed(target, items) {
+    iuDbg("[IU][FEED_RENDER]", { items: Array.isArray(items) ? items.length : null });
     if (DEBUG) {
       console.log("[renderFeed] items.length:", items.length);
       console.log("[renderFeed] first rows:", items.slice(0, 3));
@@ -1303,6 +1314,12 @@ window.addEventListener("unhandledrejection", (e) => {
       safeTarget.replaceChildren(sectionsBar, ...nextNodes);
     } else {
       safeTarget.replaceChildren(...nextNodes);
+    }
+    if (__iuDebug) {
+      try {
+        const cardsAfter = document.querySelectorAll("#feed article, #feed .news-card").length;
+        iuDbg("[IU][FEED_RENDER_DONE]", { cardsAfter });
+      } catch (_) {}
     }
 
     const feedChildrenAfter = safeTarget.childElementCount;
@@ -1989,6 +2006,7 @@ function buildVideoAsArticleCard(it) {
       sessionStorage.removeItem("iu:scrolledToStatus");
     } catch (_) {}
 
+    iuDbg("[IU][RELOAD_CALL]", { kind: "BUILD_HARD", build, prev });
     window.location.reload();
   }
 
@@ -2482,6 +2500,12 @@ function buildVideoAsArticleCard(it) {
     if (state.isLoadingData) return;
     state.isLoadingData = true;
     const requestToken = ++state.loadRequestId;
+    if (__iuDebug) {
+      try {
+        const cardsDom0 = document.querySelectorAll("#feed article, #feed .news-card").length;
+        iuDbg("[IU][LOAD_DOM]", { phase: "start", cardsDom: cardsDom0 });
+      } catch (_) {}
+    }
     const loadParams = new URLSearchParams(location.search || "");
     const isLoadDebug = loadParams.get("debug") === "1";
     const lastItems = Array.isArray(state.cachedItems) ? state.cachedItems : [];
@@ -2794,6 +2818,9 @@ function buildVideoAsArticleCard(it) {
         debugLog("[LOADDATA] rendering from", combinedSources.length ? combinedSources.join(",") : "none");
       }
 
+      if (__iuDebug) {
+        try { iuDbg("[IU][LOAD_DOM]", { phase: "pre-empty-check", combinedLen: combined.length }); } catch (_) {}
+      }
       if (combined.length === 0) {
         if (isLoadDebug) {
           try { console.log("[IU][LOAD]", { phase: hadLast ? "empty_keep" : "empty", hadLast, hadLastLen, combinedLen: 0 }); } catch (_) {}
@@ -2954,6 +2981,7 @@ function buildVideoAsArticleCard(it) {
         try {
           const msg = err && err.message ? String(err.message) : String(err || "error");
           console.log("[IU][LOAD]", { phase: hadLast ? "fail_keep" : "fail", hadLast, hadLastLen, msg });
+          try { iuDbg("[IU][LOAD_DOM]", { phase: "catch", msg }); } catch (_) {}
         } catch (_) {}
       }
 
@@ -3291,6 +3319,7 @@ function buildVideoAsArticleCard(it) {
     }
     sessionStorage.setItem(SW_RELOAD_KEY, "1");
     sessionStorage.setItem(SW_RELOAD_AT_KEY, Date.now().toString());
+    iuDbg("[IU][RELOAD_CALL]", { kind: "SW_RELOAD" });
     window.location.reload();
   }
 
