@@ -3086,14 +3086,68 @@ function buildVideoAsArticleCard(it) {
   }
 
   function initAccordion() {
+    const isPreload = document.documentElement.classList.contains("iu-preload");
+    const params = new URLSearchParams(location.search || "");
+    const isDebug = params.get("debug") === "1";
     const headers = document.querySelectorAll(".accordionCol .accHeader");
-    headers.forEach((header) => {
+    headers.forEach((header, idx) => {
       const targetId = header.getAttribute("aria-controls");
       const content = targetId ? document.getElementById(targetId) : header.nextElementSibling;
       if (!content) return;
-      content.style.maxHeight = "0px";
+
+      const expandedAttr = header.getAttribute("aria-expanded");
+      const isExpandedInitial =
+        expandedAttr === "true" ||
+        header.classList.contains("is-open");
+
+      // Stabilize first paint: set deterministic maxHeight without animation.
+      const prevTransition = content.style.transition;
+      content.style.transition = "none";
       content.style.overflow = "hidden";
-      header.setAttribute("aria-expanded", "false");
+
+      let before = null;
+      if (isDebug) {
+        try {
+          before = {
+            idx,
+            isPreload,
+            ariaExpanded: expandedAttr,
+            classOpen: header.classList.contains("is-open"),
+            offsetH: content.offsetHeight,
+            scrollH: content.scrollHeight,
+            maxH: content.style.maxHeight,
+          };
+        } catch (_) {}
+      }
+
+      // Respect current state (do not toggle here).
+      header.setAttribute("aria-expanded", isExpandedInitial ? "true" : "false");
+      if (isExpandedInitial) {
+        content.style.maxHeight = `${content.scrollHeight}px`;
+      } else {
+        content.style.maxHeight = "0px";
+      }
+
+      if (isDebug) {
+        try {
+          const after = {
+            idx,
+            offsetH: content.offsetHeight,
+            scrollH: content.scrollHeight,
+            maxH: content.style.maxHeight,
+          };
+          console.log("[IU][ACC_INIT]", { before, after });
+        } catch (_) {}
+      }
+
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          try {
+            content.style.transition = prevTransition;
+          } catch (_) {}
+        }, 0);
+      });
+
       header.addEventListener("click", () => {
         const isExpanded = header.classList.toggle("is-open");
         header.setAttribute("aria-expanded", isExpanded ? "true" : "false");
