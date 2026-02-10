@@ -2479,15 +2479,29 @@ function buildVideoAsArticleCard(it) {
     if (state.isLoadingData) return;
     state.isLoadingData = true;
     const requestToken = ++state.loadRequestId;
-    state.cachedItems = [];
-    state.hasLoadedData = false;
+    const prevCachedItems = Array.isArray(state.cachedItems) ? state.cachedItems : [];
+    const hadCachedItems = prevCachedItems.length > 0;
+    const feedEl = document.getElementById("feed");
+    const hadFeedDom = !!(feedEl && feedEl.childElementCount > 0);
+    const isRefresh = hadCachedItems || hadFeedDom || !!state.hasLoadedData;
+    state.isRefreshing = isRefresh;
+    // Refresh: keep old feed + cached items visible until new content is ready (no blank flicker).
+    if (!isRefresh) {
+      state.cachedItems = [];
+      state.hasLoadedData = false;
+    }
     const lastErrInline = document.getElementById("lastErrInline");
     if (lastErrInline) {
       lastErrInline.style.display = "none";
     }
     if (emptyBox) {
-      emptyBox.style.display = "block";
-      emptyBox.innerHTML = "<p>Načítám data…</p>";
+      if (isRefresh) {
+        // Keep UI stable during refresh; no overlay/blank state.
+        emptyBox.style.display = "none";
+      } else {
+        emptyBox.style.display = "block";
+        emptyBox.innerHTML = "<p>Načítám data…</p>";
+      }
     }
     const preferredEntry = await evaluatePreferredPair();
     const baseArticleUrls = [
@@ -2987,6 +3001,7 @@ function buildVideoAsArticleCard(it) {
       }, delay);
     } finally {
       state.isLoadingData = false;
+      state.isRefreshing = false;
     }
   }
 
