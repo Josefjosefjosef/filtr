@@ -7,6 +7,7 @@ Cíl: před každým zásahem rychle ověřit aktuální stav, neduplikovat logi
 
 - **Repo**: `C:\projects\filtr`
 - **Branch**: `docs/system-map`
+- **Commit**: `5c4a974`
 - **Updated**: 2026-02-10
 
 ## Obsah
