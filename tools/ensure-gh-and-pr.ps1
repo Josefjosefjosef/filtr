@@ -13,6 +13,7 @@ $ErrorActionPreference = "Stop"
 function Write-Step($msg){ Write-Host ("`n==> " + $msg) }
 
 $script:GhExe = $null
+$script:DidAuthLogin = $false
 
 function Gh([string[]]$GhArgs){
   if (-not $script:GhExe) { Fail "Internal error: gh executable not set" }
@@ -79,24 +80,38 @@ function Ensure-GhInstalled(){
   elseif (Test-Path $ghPath2) { $ghPath = $ghPath2 }
 
   if (-not $ghPath) {
-    $next = "powershell -ExecutionPolicy Bypass -Command `"Invoke-WebRequest -Uri '$zipUrl' -OutFile '$installRoot\\gh.zip'`""
+    $zipPath = Join-Path $installRoot "gh_${version}_windows_amd64.zip"
+    $next = "New-Item -ItemType Directory -Force -Path `"$installRoot`" | Out-Null; Invoke-WebRequest -Uri `"$zipUrl`" -OutFile `"$zipPath`""
     Fail "Failed to install gh locally." $next
   }
 
   $script:GhExe = $ghPath
 }
 
+function Is-GhAuthed(){
+  Gh @("auth","status","--hostname","github.com") | Out-Null
+  return ($LASTEXITCODE -eq 0)
+}
+
 function Ensure-GhAuth(){
   Write-Step "GitHub auth (gh)"
-  Gh @("auth","status","-h","github.com") | Out-Null
-  if ($LASTEXITCODE -eq 0) { return }
+  if (Is-GhAuthed) { return }
 
-  Write-Step "Login (may open browser / device code)"
-  Gh @("auth","login","-h","github.com","-p","https","-w") | Out-Null
+  if ($script:DidAuthLogin) {
+    Fail "gh auth still not ready after login attempt." "powershell -ExecutionPolicy Bypass -File .\\tools\\ensure-gh-and-pr.ps1"
+  }
+  $script:DidAuthLogin = $true
+
+  Gh @("auth","login","--hostname","github.com","--git-protocol","https","--web") | Out-Null
   if ($LASTEXITCODE -ne 0) { Fail "gh auth login failed" }
 
-  Gh @("auth","status","-h","github.com") | Out-Null
-  if ($LASTEXITCODE -ne 0) { Fail "gh auth status failed after login" }
+  $deadline = (Get-Date).AddSeconds(120)
+  while ((Get-Date) -lt $deadline) {
+    Start-Sleep -Seconds 5
+    if (Is-GhAuthed) { return }
+  }
+
+  Fail "gh auth not completed within 120s." "powershell -ExecutionPolicy Bypass -File .\\tools\\ensure-gh-and-pr.ps1"
 }
 
 function Get-RepoBranch(){
