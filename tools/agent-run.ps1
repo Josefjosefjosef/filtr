@@ -69,14 +69,70 @@ function Preflight(){
   Write-Host ("origin=" + $remote)
 }
 
-function EnsureGhPr(){
-  Preflight
-  Write-Step "Run ensure-gh-and-pr.ps1"
-  $script = Join-Path (Get-Location) "tools\ensure-gh-and-pr.ps1"
-  if (-not (Test-Path $script)) { Fail "Missing tools\ensure-gh-and-pr.ps1 (pull main first)" }
+function Ensure-GhInstalled(){
+  if (Get-Command "gh" -ErrorAction SilentlyContinue) { return }
 
-  powershell -ExecutionPolicy Bypass -File $script
-  if ($LASTEXITCODE -ne 0) { Fail "ensure-gh-and-pr.ps1 failed" }
+  Write-Step "Install GitHub CLI (gh)"
+  if (Get-Command "winget" -ErrorAction SilentlyContinue) {
+    winget install --id GitHub.cli -e --source winget
+    if ($LASTEXITCODE -ne 0) { Fail "winget failed installing gh" }
+  } elseif (Get-Command "choco" -ErrorAction SilentlyContinue) {
+    choco install gh -y
+    if ($LASTEXITCODE -ne 0) { Fail "choco failed installing gh" }
+  } else {
+    Fail "Missing gh and no installer found (winget/choco). Install GitHub CLI and rerun."
+  }
+
+  if (-not (Get-Command "gh" -ErrorAction SilentlyContinue)) { Fail "gh still missing after install attempt" }
+}
+
+function Ensure-GhAuth(){
+  Write-Step "GitHub auth (gh)"
+  gh auth status -h github.com | Out-Null
+  if ($LASTEXITCODE -eq 0) { return }
+
+  gh auth login -h github.com -p https -w
+  if ($LASTEXITCODE -ne 0) { Fail "gh auth login failed" }
+
+  gh auth status -h github.com | Out-Null
+  if ($LASTEXITCODE -ne 0) { Fail "gh auth status failed after login" }
+}
+
+function Ensure-PrForCurrentBranch(){
+  $branch = Get-RepoBranch
+
+  Write-Step "Find existing open PR (idempotent)"
+  $existing = (gh pr list --head $branch --state open --json url --jq ".[0].url" 2>$null)
+  if ($LASTEXITCODE -ne 0) { Fail "gh pr list failed" }
+  $existing = ($existing | Out-String).Trim()
+  if ($existing) { return $existing }
+
+  Write-Step "Create PR (gh pr create --fill)"
+  gh pr create --fill --head $branch --base main
+  if ($LASTEXITCODE -ne 0) { Fail "gh pr create failed" }
+
+  $url = (gh pr view --json url --jq ".url" 2>$null)
+  if ($LASTEXITCODE -ne 0) { Fail "gh pr view failed after create" }
+  $url = ($url | Out-String).Trim()
+  if (-not $url) { Fail "PR URL missing after create" }
+  return $url
+}
+
+function EnsureGhAndPr(){
+  Preflight
+  Ensure-GhInstalled
+  Ensure-GhAuth
+
+  $url = Ensure-PrForCurrentBranch
+  Write-Host ("`nPR URL: " + $url)
+
+  Write-Step "Checks"
+  gh pr checks
+  if ($LASTEXITCODE -ne 0) { Fail "gh pr checks failed" }
+}
+
+function EnsureGhPr(){
+  EnsureGhAndPr
 }
 
 function RunEnsureGhPrForBranch([string]$branch){
@@ -87,12 +143,7 @@ function RunEnsureGhPrForBranch([string]$branch){
 
   Switch-Branch $branch
 
-  Write-Step "Run ensure-gh-and-pr.ps1"
-  $script = Join-Path (Get-Location) "tools\ensure-gh-and-pr.ps1"
-  if (-not (Test-Path $script)) { Fail "Missing tools\ensure-gh-and-pr.ps1 (pull main first)" }
-
-  powershell -ExecutionPolicy Bypass -File $script
-  if ($LASTEXITCODE -ne 0) { Fail "ensure-gh-and-pr.ps1 failed" }
+  EnsureGhAndPr
 }
 
 function ClsPr(){

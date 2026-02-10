@@ -25,8 +25,9 @@ One-shot runner standard (minimize RUN): for any multi-step operation, always cr
 
 Preferred PR creation methods:
 
-1) **GitHub Desktop**: use “Preview Pull Request” → “Create Pull Request”.
-2) If GitHub CLI is available: `gh pr create --fill` (auto title/body).
+PR se zakládá výhradně přes one-shot skript (tools/agent-run.ps1 / tools/ensure-gh-and-pr.ps1), ne přes GitHub Desktop.
+
+1) One-shot script: `powershell -ExecutionPolicy Bypass -File .\tools\agent-run.ps1 -Task ensure-gh-pr` (auto title/body).
 
 ## Safety boundaries (do NOT do)
 
