@@ -1,0 +1,210 @@
+Folder PATH listing for volume OS
+Volume serial number is 66ED-89E1
+C:.
+|   .actionlint.yaml
+|   .gitattributes
+|   .gitignore
+|   .nojekyll
+|   AUDIT_CODE_SNIPPETS.md
+|   CNAME
+|   CRASH_SHIELD_README.md
+|   debug.js
+|   DEBUG.md
+|   doprava.html
+|   FIX_DATA_GENERATORS_SUMMARY.txt
+|   FIX_EMPTY_FEED_SUMMARY.md
+|   FIX_INFINITE_LOADING_SUMMARY.txt
+|   index.html
+|   modify_gitignore.py
+|   modify_gitignore2.py
+|   OPTIMIZATION_SUMMARY.md
+|   PAGES_DEPLOY_FIX.md
+|   PERFORMANCE_OPTIMIZATIONS.md
+|   RECOVERY.md
+|   requirements.txt
+|   robots.txt
+|   runtime_test_console_commands.js
+|   runtime_test_instructions.md
+|   run_infoUzel_pipeline.cmd
+|   sitemap.xml
+|   STABILIZACE_WEBU_CI_SUMMARY.txt
+|   structure.txt
+|   STRUKTURA_WEBU.txt
+|   STRUKTURA_WEBU_FULL.txt
+|   sw.js
+|   SYSTEM_AUDIT.md
+|   temp_index.lock
+|   tmp_scan_build_articles.py
+|   tmp_search_articles.py
+|   tmp_stats.py
+|   zpravy.html
+|   
++---.cursor
+|   \---rules
+|           workflow-auto-pr.mdc
+|           
++---.github
+|   |   pull_request_template.md
+|   |   
+|   \---workflows
+|           ci-data-freshness.yml
+|           ci-heartbeat.yml
+|           ci-workflow-lint.yml
+|           health-check.yml
+|           pages.yml
+|           repo-guard.yml
+|           update-articles.yml
+|           update-namedays.yml
+|           update-weather.yml
+|           
++---assets
+|   |   .gitkeep
+|   |   app-crash-shield.js
+|   |   app-render-optimizer.js
+|   |   app.css
+|   |   app.js
+|   |   masc
+|   |   mascot.png
+|   |   
+|   \---icons
++---config
+|       pipeline_config.json
+|       sources.json
+|       sources.json.tmp
+|       
++---data
+|       brief.json
+|       feed_health.json
+|       media.json
+|       meta.json
+|       namedays.json
+|       quizdata.json
+|       weather.json
+|       
++---docs
+|   |   CHANGELOG.md
+|   |   CHANGES_REPORT.md
+|   |   DEBUG_MARKERS_REPORT.md
+|   |   DOM_SKELETON_REPORT.md
+|   |   FINAL_VERIFICATION_REPORT.md
+|   |   IMPLEMENTATION_STATUS.md
+|   |   IMPLEMENTATION_SUMMARY.md
+|   |   INTEGRATION_PLAN_P0.md
+|   |   MAINTENANCE.md
+|   |   MANUAL_RUN_INSTRUCTIONS.md
+|   |   OPS_TROUBLESHOOT_PROJECTS.md
+|   |   P0_FINAL_REPORT.md
+|   |   P0_IMPLEMENTATION_REPORT.md
+|   |   PROD_DIAG_WINDOWS.md
+|   |   REPO_MAP.md
+|   |   STATUS_VERIFICATION.md
+|   |   STRUCTURE.md
+|   |   TOOLS.md
+|   |   TOPIC_GROUPING_PATCH.md
+|   |   UI_FILES.md
+|   |   VERIFICATION_REPORT.md
+|   |   WINDOWS_CONSOLE_UTF8.md
+|   |   _topic_audit.md
+|   |   
+|   +---diag
+|   +---system-map
+|   |       _tree.txt
+|   |       
+|   \---ui-snapshots
+|           index.html.baseline
+|           
++---filtr
+|   \---data
+|           namedays.json
+|           weather.json
+|           
++---partials
+|       .gitkeep
+|       date.html
+|       email.html
+|       news.html
+|       search.html
+|       traffic.html
+|       weather.html
+|       
++---programovani
+|   |   .gitkeep
+|   |   
+|   +---01-barva-pozadi
+|   |       index.js
+|   |       
+|   +---02-vzor-pozadi
+|   |       index.js
+|   |       
+|   +---03-styl-pisma
+|   |       index.js
+|   |       
+|   +---04-barva-pisma
+|   |       index.js
+|   |       
+|   +---05-nazev-stranky
+|   |       index.js
+|   |       
+|   +---06-logo
+|   |       index.js
+|   |       
+|   \---web
+|           .gitkeep
+|           style.css
+|           
++---projects
+|   |   404.html
+|   |   index.html
+|   |   
+|   \---data
+|           articles.json
+|           articles.json.bak
+|           brief.json
+|           feed_health.json
+|           meta.json
+|           namedays.json
+|           videos.json
+|           weather.json
+|           _probe.txt
+|           
++---scripts
+|   |   audit-topics.ps1
+|   |   build_articles.py
+|   |   build_articles_v2.py
+|   |   data_layer.py
+|   |   feeds.json
+|   |   feeds_youtube.json
+|   |   fetch_engine.py
+|   |   health_reporter.py
+|   |   json_validator.py
+|   |   local_build_data.ps1
+|   |   make_backup.py
+|   |   normalize_articles_json.py
+|   |   repo_guard.py
+|   |   requirements.txt
+|   |   run_articles_pipeline.py
+|   |   update-articles.js
+|   |   update-weather-namedays.js
+|   |   validate_json.py
+|   |   write_status.py
+|   |   
+|   +---analysis
+|   |       grouping_audit.js
+|   |       grouping_audit.py
+|   |       
+|   +---data
+|   |       namedays-cz.json
+|   |       
+|   \---ps
+|           iu.ps1
+|           verify_task40.ps1
+|           
+\---tools
+        deps_install_offline.py
+        deps_wheelhouse.py
+        doctor.py
+        fix_sources_legal_mode.py
+        hash_manifest.py
+        list_recent_files.py
+        verify_paths.py
+        
