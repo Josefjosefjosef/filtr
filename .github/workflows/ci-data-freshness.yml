@@ -2,8 +2,6 @@ name: CI - Data Freshness
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "*/15 * * * *"
   workflow_run:
     workflows:
       - "Update articles data"
@@ -40,7 +38,7 @@ jobs:
 
       - name: Freshness check (max age minutes)
         env:
-          MAX_AGE_MINUTES: "420"
+          MAX_AGE_MINUTES: "120"
         run: |
           python - <<'PY'
           import json, os, sys, datetime, pathlib
