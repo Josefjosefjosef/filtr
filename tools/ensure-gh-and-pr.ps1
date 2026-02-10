@@ -152,8 +152,15 @@ try {
   Write-Host ("`nPR URL: " + $url)
 
   Write-Step "Checks"
-  & $script:GhExe pr checks
-  if ($LASTEXITCODE -ne 0) { Fail "gh pr checks failed" }
+  $checksOut = & $script:GhExe pr checks 2>&1
+  $checksExit = $LASTEXITCODE
+  $checksText = ($checksOut | Out-String).TrimEnd()
+  if ($checksText) { Write-Host $checksText }
+
+  # gh can exit non-zero when there are no checks reported; treat that as success.
+  if (($checksExit -ne 0) -and ($checksText -notmatch "no checks reported")) {
+    Fail "gh pr checks failed"
+  }
 
   exit 0
 } catch {
