@@ -337,8 +337,31 @@ window.addEventListener("unhandledrejection", (e) => {
           } catch (_) {}
         });
 
+        const btnReal = document.createElement("button");
+        btnReal.type = "button";
+        btnReal.textContent = "Copy REAL CLS (top10)";
+        btnReal.style.cssText = btnDump.style.cssText;
+        btnReal.addEventListener("click", () => {
+          try {
+            const dump = typeof window.__iuDumpCLS === "function" ? window.__iuDumpCLS() : null;
+            const payload = dump
+              ? {
+                  ts: dump.ts,
+                  href: dump.href,
+                  realTotal: dump.realTotal,
+                  realTopShifts: dump.realTopShifts || [],
+                }
+              : {
+                  realTotal: window.__iuCLSRealTotal || 0,
+                  realTopShifts: [],
+                };
+            iuCopyTextToClipboard(JSON.stringify(payload, null, 2));
+          } catch (_) {}
+        });
+
         actions.appendChild(btnDump);
         actions.appendChild(btnLines);
+        actions.appendChild(btnReal);
 
         const pre = document.createElement("pre");
         pre.setAttribute("data-iu-debug-text", "1");
@@ -585,6 +608,7 @@ window.addEventListener("unhandledrejection", (e) => {
                       ? round1(cur.y - prev.y)
                       : null;
                   return {
+                    node: nodeLabel(s && s.node),
                     selector: selectorForNode(s && s.node),
                     previousRect: prev,
                     currentRect: cur,
@@ -705,6 +729,17 @@ window.addEventListener("unhandledrejection", (e) => {
                   startTime: e?.startTime,
                   sources: Array.isArray(e?.sources) ? e.sources : [],
                 }));
+              const realTopShifts = kept
+                .filter((e) => e && !e.debugOnly && !e.hadRecentInput)
+                .slice()
+                .sort((a, b) => (b?.value || 0) - (a?.value || 0))
+                .slice(0, 10)
+                .map((e) => ({
+                  value: e?.value || 0,
+                  t: e?.t || null,
+                  startTime: e?.startTime,
+                  sources: Array.isArray(e?.sources) ? e.sources : [],
+                }));
               const withSources = kept.filter((e) => (e?.sources || []).length > 0).length;
               const withoutSources = kept.length - withSources;
 
@@ -755,6 +790,7 @@ window.addEventListener("unhandledrejection", (e) => {
                 log,
                 debugBoxTail,
                 topShifts,
+                realTopShifts,
                 counts: {
                   entriesTotal:
                     typeof window.__iuCLSShiftEntriesTotal === "number"
