@@ -1200,6 +1200,30 @@ window.addEventListener("unhandledrejection", (e) => {
       document.querySelector(".iu-daily-brief, .iu-daily-brief-inner, #iuDailyBrief, #dailyBrief, [data-iu='daily-brief']");
   }
 
+  // UI-only: add "Osobní" label above the right tools row (Kalendář/Poznámky/To-do).
+  // Requirements: idempotent, no parent innerHTML rewrites, no display toggles/animations, should run during init.
+  function ensureRightToolsPersonalLabel(){
+    const boxes = document.querySelectorAll(".iu-right-tools");
+    if (!boxes || boxes.length === 0) return;
+
+    boxes.forEach((box) => {
+      if (!box) return;
+      if (box.querySelector(".iu-right-subtitle--personal")) return;
+
+      const h = document.createElement("div");
+      h.className = "iu-right-subtitle iu-right-subtitle--personal";
+      h.textContent = "Osobní";
+      // Minimal inline style (reuse existing CSS where possible; avoid introducing a new CSS file).
+      h.style.fontSize = "12px";
+      h.style.fontWeight = "600";
+      h.style.color = "rgba(0,0,0,0.55)";
+      h.style.letterSpacing = "0.02em";
+      h.style.margin = "0 0 6px 0";
+
+      box.prepend(h);
+    });
+  }
+
   function lockRightColHeight(reason){
     const el = getRightColEl(); if(!el) return null;
     const html = document.documentElement;
@@ -3770,6 +3794,8 @@ function buildVideoAsArticleCard(it) {
         firstLoadQuiet = false;
       }, 5000);
     }
+    // Ensure the right column "Osobní" label exists from the start (before any data fetch/render work).
+    ensureRightToolsPersonalLabel();
     renderDebugVisibility();
     installCLSObserver();
     renderSectionsBar();
