@@ -73,6 +73,16 @@ WHAT TO PASTE BACK INTO CHATGPT
 - Paste DEBUG JSON
 - Paste PROD JSON
 - Then check Console filter: [IU][CLS][real-total] and report YES/NO + count
+
+PASTE DEBUG JSON HERE
+--- BEGIN DEBUG JSON ---
+--- END DEBUG JSON ---
+
+PASTE PROD JSON HERE
+--- BEGIN PROD JSON ---
+--- END PROD JSON ---
+
+prodRealTotalSeen: YES/NO (count:X)
 "@
 
 # Normalize in-memory content (single source of truth)
