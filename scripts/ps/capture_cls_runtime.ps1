@@ -76,6 +76,15 @@ WHAT TO PASTE BACK INTO CHATGPT
 "@
 
 Set-Content -Encoding UTF8 -Path $outPath -Value $content
+
+# Safety net – normalize helper names in generated output (must be __iu*)
+$raw = Get-Content -Raw -Encoding UTF8 $outPath
+$raw = $raw -replace "window\.iuDumpCLS", "window.__iuDumpCLS"
+$raw = $raw -replace "window\._iuDumpCLS", "window.__iuDumpCLS"
+$raw = $raw -replace "window\.iuClearCLS", "window.__iuClearCLS"
+$raw = $raw -replace "window\._iuClearCLS", "window.__iuClearCLS"
+Set-Content -Encoding UTF8 -Path $outPath -Value $raw
+
 Write-Host ("Wrote " + $outPath)
 
 try { Start-Process notepad.exe $outPath } catch {}
