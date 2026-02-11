@@ -85,6 +85,12 @@ $raw = $raw -replace "window\.iuClearCLS", "window.__iuClearCLS"
 $raw = $raw -replace "window\._iuClearCLS", "window.__iuClearCLS"
 Set-Content -Encoding UTF8 -Path $outPath -Value $raw
 
+# Post-check (must be clean)
+$check = Get-Content -Raw -Encoding UTF8 $outPath
+if ($check -match "window\.(?:_)?iu(DumpCLS|ClearCLS)") {
+  Write-Warning "capture output still contains iu*/_iu* helper names (unexpected)."
+}
+
 Write-Host ("Wrote " + $outPath)
 
 try { Start-Process notepad.exe $outPath } catch {}
