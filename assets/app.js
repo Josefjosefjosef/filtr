@@ -2790,12 +2790,13 @@ function buildVideoAsArticleCard(it) {
         return;
       }
 
-      state.cachedItems = combined;
+      // Single authoritative assignment: keep mixed (10 articles + 1 video) when available; fallback to combined.
+      // Do not reassign cachedItems again in this loadData() run.
       if (!Array.isArray(state.cachedItems)) state.cachedItems = [];
       state.hasLoadedData = true;
       state.consecutiveLoadFailures = 0;
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
-      renderItems(state.filteredItems);
+      // Single render pass: let applyFilter() decide the final filtered set and render once.
       if (isDebugLogging) {
         debugLog(
           "[CACHE] total",
