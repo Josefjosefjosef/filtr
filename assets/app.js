@@ -1224,6 +1224,65 @@ window.addEventListener("unhandledrejection", (e) => {
     });
   }
 
+  // MindMenu: URLs for extra quick buttons (easy to change).
+  const IU_MIND_URL_DATOVA_SCHRANKA = "https://www.mojedatovaschranka.cz/";
+  const IU_MIND_URL_BAKALARI = "https://bakalari.cz/";
+
+  // UI-only: add two extra buttons under "Další možnosti" (MindMenu).
+  // Requirements: idempotent, inserted during init (not after async fetch), no parent replaceChildren/innerHTML rewrites.
+  function ensureMindMenuExtraRow(){
+    const cols = document.querySelectorAll(".iu-mindDetails .iu-actionsCol.iu-mmMailSection");
+    if (!cols || cols.length === 0) return;
+
+    cols.forEach((col) => {
+      if (!col) return;
+      if (col.querySelector('[data-iu="mind-extra-row"]')) return;
+
+      const btns = Array.from(col.querySelectorAll(".iu-actionBtn"));
+      const anchorBtn = btns.find((b) => {
+        const t = (b && (b.querySelector(".iu-actionText") ? b.querySelector(".iu-actionText").textContent : b.textContent)) || "";
+        return String(t).trim() === "Další možnosti";
+      });
+      if (!anchorBtn) return;
+
+      const row = document.createElement("div");
+      row.className = "iu-mindExtraRow";
+      row.setAttribute("data-iu", "mind-extra-row");
+
+      function mkLink(href, iconClass, text){
+        const a = document.createElement("a");
+        a.className = "iu-actionBtn iu-mindExtraBtn";
+        a.href = href;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.setAttribute("aria-label", text);
+
+        const span = document.createElement("span");
+        span.className = "iu-actionText";
+
+        const i = document.createElement("i");
+        i.className = iconClass;
+        i.setAttribute("aria-hidden", "true");
+
+        const txt = document.createElement("span");
+        txt.textContent = text;
+
+        span.appendChild(i);
+        span.appendChild(txt);
+        a.appendChild(span);
+        return a;
+      }
+
+      // Icons: use ones already present in the repo to avoid FA availability risk.
+      const aDatovka = mkLink(IU_MIND_URL_DATOVA_SCHRANKA, "fa-solid fa-box", "Datová schránka");
+      const aBakalari = mkLink(IU_MIND_URL_BAKALARI, "fa-regular fa-note-sticky", "Bakaláři");
+      row.appendChild(aDatovka);
+      row.appendChild(aBakalari);
+
+      anchorBtn.insertAdjacentElement("afterend", row);
+    });
+  }
+
   function lockRightColHeight(reason){
     const el = getRightColEl(); if(!el) return null;
     const html = document.documentElement;
@@ -3796,6 +3855,8 @@ function buildVideoAsArticleCard(it) {
     }
     // Ensure the right column "Osobní" label exists from the start (before any data fetch/render work).
     ensureRightToolsPersonalLabel();
+    // Ensure MindMenu extra row exists from the start (no async injection).
+    ensureMindMenuExtraRow();
     renderDebugVisibility();
     installCLSObserver();
     renderSectionsBar();

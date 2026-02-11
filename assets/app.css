@@ -1238,6 +1238,33 @@ button.iu-mmQuickItem{
   margin-bottom: 0;
 }
 
+/* MindMenu: extra 2-button row under "Další možnosti" */
+.iu-mindExtraRow{
+  display: flex;
+  gap: var(--iu-mind-gap);
+  margin-top: 10px; /* match existing spacing between MindMenu rows */
+}
+.iu-mindExtraRow .iu-actionBtn{
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  justify-content: flex-start;
+  margin: 0 !important; /* override .iu-mmMailSection .iu-actionBtn margins + :last-child quirks */
+  text-decoration: none;
+}
+.iu-mindExtraRow .iu-actionText{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.iu-mindExtraRow .iu-actionText i{
+  flex: 0 0 auto;
+}
+
 /* Oválná tlačítka v pravém sloupci (zachovat pro kompatibilitu) */
 .iu-rightActions{
   display: flex;
