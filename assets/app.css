@@ -4003,6 +4003,35 @@ html[data-iu-debug="1"] #feed > * { outline: 2px dashed blue; }
 html[data-iu-debug="1"] #feed > article,
 html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
+/* DEBUG overlays: keep out of layout and avoid viewport/scrollbar side-effects */
+#iuDebugBox,
+#iuLayoutShiftBox{
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  contain: layout style paint !important;
+  pointer-events: none !important;
+  transform: translateZ(0) !important;
+  box-sizing: border-box !important;
+  overflow: auto !important;
+  overscroll-behavior: contain !important;
+  max-inline-size: 100% !important;
+  word-break: break-word !important;
+}
+
+#iuDebugBox{
+  left: 12px !important;
+  bottom: 12px !important;
+  max-width: min(420px, calc(100vw - 24px)) !important;
+  max-height: min(50vh, calc(100vh - 24px)) !important;
+}
+
+#iuLayoutShiftBox{
+  left: 8px !important;
+  bottom: 8px !important;
+  max-width: min(520px, calc(100vw - 16px)) !important;
+  max-height: min(40vh, calc(100vh - 16px)) !important;
+}
+
 /* Popover pro sledování zásilek */
 /* Overlay pro modal */
 .iu-parcels-overlay{

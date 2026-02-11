@@ -285,16 +285,30 @@ window.addEventListener("unhandledrejection", (e) => {
         }
       }
 
+      function isDebugOverlayNode(node) {
+        try {
+          if (!node) return false;
+          if (!(node instanceof Element)) return false;
+          return node.id === "iuDebugBox" || node.id === "iuLayoutShiftBox";
+        } catch (_) {
+          return false;
+        }
+      }
+
       const observer = new PerformanceObserver((list) => {
         try {
           const entries = list.getEntries() || [];
           for (const e of entries) {
             const sources = Array.isArray(e.sources) ? e.sources : [];
+            const debugOnly =
+              sources.length > 0 &&
+              sources.every((s) => isDebugOverlayNode(s && s.node));
             const rec = {
               t: new Date().toISOString(),
               value: typeof e.value === "number" ? e.value : 0,
               hadRecentInput: !!e.hadRecentInput,
               sourceCount: sources.length,
+              debugOnly,
               sources: sources.map((s) => ({
                 node: nodeLabel(s && s.node),
                 previousRect: rectToObj(s && s.previousRect),
@@ -304,8 +318,9 @@ window.addEventListener("unhandledrejection", (e) => {
             pushLog(rec);
 
             try {
+              const prefix = debugOnly ? "[IU][CLS][debug-only]" : "[IU][CLS]";
               console.groupCollapsed(
-                `[IU][CLS] shift=${rec.value.toFixed(4)} sources=${rec.sourceCount} recentInput=${rec.hadRecentInput}`
+                `${prefix} shift=${rec.value.toFixed(4)} sources=${rec.sourceCount} recentInput=${rec.hadRecentInput}`
               );
               console.log("record:", rec);
               console.log("window.__iuCLSLog (last 10):", window.__iuCLSLog);

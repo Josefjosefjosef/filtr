@@ -1518,16 +1518,25 @@
         var obs = new PerformanceObserver(function(list){
           try{
             list.getEntries().forEach(function(entry){
+              var src = (entry.sources || []);
+              var debugOnly = src.length > 0;
+              for (var i = 0; i < src.length; i++) {
+                var n = src[i] && src[i].node;
+                var id = n && n.id ? String(n.id) : "";
+                if (id !== "iuDebugBox" && id !== "iuLayoutShiftBox") { debugOnly = false; break; }
+              }
               if (entry.hadRecentInput) return;
-              total += (entry.value || 0);
-              var sources = (entry.sources || []).map(function(s){
+              if (!debugOnly) {
+                total += (entry.value || 0);
+              }
+              var sources = src.map(function(s){
                 return nodeLabel(s && s.node);
               });
-              var line = "shift=" + (entry.value || 0).toFixed(4) + " total=" + total.toFixed(4) + " nodes=" + (sources.join(", ") || "(none)");
+              var line = "shift=" + (entry.value || 0).toFixed(4) + " total=" + total.toFixed(4) + " debugOnly=" + (debugOnly ? "1" : "0") + " nodes=" + (sources.join(", ") || "(none)");
               lastLines.push(line);
               if (lastLines.length > 12) lastLines = lastLines.slice(-12);
               box.textContent = "CLS observer (debug=1)\\n" + lastLines.join("\\n");
-              try { console.log("[IU][CLS]", line); } catch(_){}
+              try { console.log(debugOnly ? "[IU][CLS][debug-only]" : "[IU][CLS]", line); } catch(_){}
             });
           }catch(_){}
         });
@@ -1801,6 +1810,24 @@
       let lastRight = null;
       const EPS = 2; // Hysteresis threshold pro stabilní přepínání
       const isDebug = new URLSearchParams(location.search).has("debug");
+      const overlapLogState = {
+        right: { t: 0, diff: null },
+        left: { t: 0, diff: null },
+      };
+      function warnOverlap(side, msg, data) {
+        try {
+          const now = Date.now();
+          const diff = Math.round(Number(data && data.diff) || 0);
+          const prev = overlapLogState[side] || { t: 0, diff: null };
+          const changedEnough =
+            prev.diff === null || Math.abs(diff - prev.diff) > 8;
+          const oldEnough = now - (prev.t || 0) > 2000;
+          if (changedEnough || oldEnough) {
+            overlapLogState[side] = { t: now, diff };
+            console.warn(msg, data);
+          }
+        } catch (e) {}
+      }
       
       /* raf throttle je chráněn try/finally: rafId = null MUSÍ být v finally, žádné returny před finally nesmí přeskočit reset */
       function updateArrows() {
@@ -1895,7 +1922,7 @@
                       const arrowRightRect = arrowRight.getBoundingClientRect();
                       
                       if (lastLinkRect.right > arrowRightRect.left - 4) {
-                        console.warn("[IU][topbar-links] Potential text overlap detected: last visible link may be under right arrow", {
+                        warnOverlap("right", "[IU][topbar-links] Potential text overlap detected: last visible link may be under right arrow", {
                           lastLinkRight: lastLinkRect.right,
                           arrowRightLeft: arrowRightRect.left,
                           diff: lastLinkRect.right - arrowRightRect.left
@@ -1912,7 +1939,7 @@
                       const arrowLeftRect = arrowLeft.getBoundingClientRect();
                       
                       if (firstLinkRect.left < arrowLeftRect.right + 4) {
-                        console.warn("[IU][topbar-links] Potential text overlap detected: first visible link may be under left arrow", {
+                        warnOverlap("left", "[IU][topbar-links] Potential text overlap detected: first visible link may be under left arrow", {
                           firstLinkLeft: firstLinkRect.left,
                           arrowLeftRight: arrowLeftRect.right,
                           diff: arrowLeftRect.right - firstLinkRect.left
