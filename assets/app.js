@@ -375,6 +375,38 @@ window.addEventListener("unhandledrejection", (e) => {
       observer.observe({ type: "layout-shift", buffered: true });
       window.__iuCLSObserverInstalled = true;
       window.__iuCLSObserverInstalling = false;
+
+      // Debug-only helper for one-shot runtime capture (no prod impact).
+      try {
+        if (iuIsDebug && typeof window.__iuDumpCLS !== "function") {
+          window.__iuDumpCLS = function () {
+            try {
+              const fullLog = Array.isArray(window.__iuCLSLog) ? window.__iuCLSLog : [];
+              const log = fullLog.slice(Math.max(0, fullLog.length - 30));
+              let debugBoxTail = [];
+              try {
+                const el = document.getElementById("iuDebugBox");
+                const txt = el && el.textContent ? String(el.textContent) : "";
+                debugBoxTail = txt ? txt.split("\n").slice(-30) : [];
+              } catch (_) {}
+              return {
+                ts: new Date().toISOString(),
+                href: String(location.href || ""),
+                observerInstalled: !!window.__iuCLSObserverInstalled,
+                realTotal:
+                  typeof window.__iuCLSRealTotal === "number"
+                    ? window.__iuCLSRealTotal
+                    : window.__iuCLSRealTotal || 0,
+                log,
+                debugBoxTail,
+              };
+            } catch (err) {
+              return { error: String((err && err.message) || err) };
+            }
+          };
+        }
+      } catch (_) {}
+
       debugLog("[CLS] observer installed");
     } catch (_) {
       try {
