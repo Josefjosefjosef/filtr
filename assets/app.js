@@ -221,14 +221,17 @@ window.addEventListener("unhandledrejection", (e) => {
   // ===== CLS / Layout Shift Debug (debug=1 only) =====
   function installCLSObserver() {
     try {
-      if (!isDebugLogging) return;
+      const iuIsDebug = !!isDebugLogging;
+      if (!iuIsDebug) return;
       if (window.__iuCLSObserverInstalled) return;
-      window.__iuCLSObserverInstalled = true;
+      if (window.__iuCLSObserverInstalling) return;
 
       if (typeof PerformanceObserver === "undefined") {
         debugWarn("[CLS] PerformanceObserver not available");
         return;
       }
+
+      window.__iuCLSObserverInstalling = true;
 
       const MAX = 10;
       window.__iuCLSLog = Array.isArray(window.__iuCLSLog) ? window.__iuCLSLog : [];
@@ -295,6 +298,13 @@ window.addEventListener("unhandledrejection", (e) => {
         }
       }
 
+      // Debug-only: aggregate "real" CLS total (excluding debug overlays and recent input)
+      let realTotal = 0;
+      let lastRealLogAt = 0;
+      let lastRealTotalLogged = -1;
+      let lastRealValue = 0;
+      let lastRealSources = [];
+
       const observer = new PerformanceObserver((list) => {
         try {
           const entries = list.getEntries() || [];
@@ -326,13 +336,51 @@ window.addEventListener("unhandledrejection", (e) => {
               console.log("window.__iuCLSLog (last 10):", window.__iuCLSLog);
               console.groupEnd();
             } catch (_) {}
+
+            // Update real-only total and log occasionally when it changes.
+            try {
+              if (iuIsDebug) {
+                const isRealShift = !rec.hadRecentInput && !rec.debugOnly;
+                if (isRealShift) {
+                  realTotal += rec.value || 0;
+                  window.__iuCLSRealTotal = realTotal;
+                  lastRealValue = rec.value || 0;
+                  lastRealSources = (rec.sources || [])
+                    .map((s) => s && s.node)
+                    .filter(
+                      (lbl) =>
+                        lbl &&
+                        lbl.indexOf("iuDebugBox") === -1 &&
+                        lbl.indexOf("iuLayoutShiftBox") === -1
+                    )
+                    .slice(0, 2);
+                }
+
+                const now = Date.now();
+                const shouldLog =
+                  now - lastRealLogAt > 500 && realTotal !== lastRealTotalLogged;
+                if (shouldLog) {
+                  lastRealLogAt = now;
+                  lastRealTotalLogged = realTotal;
+                  console.log(
+                    `[IU][CLS][real-total] total=${realTotal.toFixed(4)} last=${lastRealValue.toFixed(4)} sources=${lastRealSources.join(", ") || "(none)"}`
+                  );
+                }
+              }
+            } catch (_) {}
           }
         } catch (_) {}
       });
 
       observer.observe({ type: "layout-shift", buffered: true });
+      window.__iuCLSObserverInstalled = true;
+      window.__iuCLSObserverInstalling = false;
       debugLog("[CLS] observer installed");
-    } catch (_) {}
+    } catch (_) {
+      try {
+        window.__iuCLSObserverInstalling = false;
+      } catch (_) {}
+    }
   }
 
   const lastFetchDiag = {
