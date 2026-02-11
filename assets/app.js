@@ -3866,11 +3866,6 @@ function buildVideoAsArticleCard(it) {
     if (typeof window.iuDailyPanelInit === "function") {
       window.iuDailyPanelInit();
     }
-    setTimeout(() => {
-      if (typeof window.iuDailyPanelInit === "function") {
-        window.iuDailyPanelInit();
-      }
-    }, 300);
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
