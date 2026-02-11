@@ -3764,13 +3764,16 @@ function buildVideoAsArticleCard(it) {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=Europe%2FPrague`;
 
     fetch(url, { cache: "no-store" })
-      .then(r => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error("WX_HTTP_" + r.status);
+        return r.json();
+      })
       .then(d => {
         const cur = d && d.current;
         const hourly = d && d.hourly;
         const daily = d && d.daily;
 
-        if (!cur || typeof cur.temperature_2m !== "number") throw new Error("bad current");
+        if (!cur || typeof cur.temperature_2m !== "number") throw new Error("WX_BAD_CURRENT");
 
         const t = Math.round(cur.temperature_2m);
         const code = cur.weather_code;
