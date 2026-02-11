@@ -1690,8 +1690,9 @@ window.addEventListener("unhandledrejection", (e) => {
       return "";
     }
     
+    const safeHref = safeUrl(linkUrl) || "#";
     const titleMarkup = linkUrl
-      ? `<a class="news-titleLink" href="${linkUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>`
+      ? `<a class="news-titleLink" href="${safeHref}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>`
       : `<span class="news-titleLink">${escapeHtml(title)}</span>`;
 
     const suspiciousFlag = it?.suspiciousTitle
