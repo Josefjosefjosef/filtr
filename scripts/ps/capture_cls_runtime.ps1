@@ -84,11 +84,17 @@ if ($content -match "window\.(?:_)?iu(DumpCLS|ClearCLS)") {
   throw "BUG: capture instructions content still contains iu*/_iu* helper names before write"
 }
 
+# Forensics DBG (content vs final)
+Write-Host "DBG: content contains iuDumpCLS? " ($content -match "window\.(?:_)?iuDumpCLS")
+Write-Host "DBG: content contains iuClearCLS? " ($content -match "window\.(?:_)?iuClearCLS")
+
 # Single write
 Set-Content -Encoding UTF8 -Path $outPath -Value $content
 
 # Fail-fast AFTER write
 $final = Get-Content -Raw -Encoding UTF8 $outPath
+Write-Host "DBG: final contains iuDumpCLS? " ($final -match "window\.(?:_)?iuDumpCLS")
+Write-Host "DBG: final contains iuClearCLS? " ($final -match "window\.(?:_)?iuClearCLS")
 if ($final -match "window\.(?:_)?iu(DumpCLS|ClearCLS)") {
   throw "BUG: capture output still contains iu*/_iu* after write"
 }
