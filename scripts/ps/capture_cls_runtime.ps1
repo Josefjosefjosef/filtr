@@ -13,26 +13,6 @@ function Get-RepoRoot {
   }
 }
 
-function Write-NormalizedUtf8File {
-  param(
-    [Parameter(Mandatory=$true)][string]$Path,
-    [Parameter(Mandatory=$true)][string]$Text
-  )
-
-  # Normalize helper names (must be __iu*)
-  $raw = $Text
-  $raw = $raw -replace "window\.(?:_)?iuDumpCLS", "window.__iuDumpCLS"
-  $raw = $raw -replace "window\.(?:_)?iuClearCLS", "window.__iuClearCLS"
-
-  # Fail-fast validation
-  if ($raw -match "window\.(?:_)?iu(DumpCLS|ClearCLS)") {
-    throw "capture output still contains iu*/_iu* helper names after normalization"
-  }
-
-  # Single write
-  Set-Content -Encoding UTF8 -Path $Path -Value $raw
-}
-
 Write-Host "Opening URLs..."
 Start-Process $urlDebug
 Start-Process $urlProd
@@ -95,7 +75,23 @@ WHAT TO PASTE BACK INTO CHATGPT
 - Then check Console filter: [IU][CLS][real-total] and report YES/NO + count
 "@
 
-Write-NormalizedUtf8File -Path $outPath -Text $content
+# Normalize in-memory content (single source of truth)
+$content = $content -replace "window\.(?:_)?iuDumpCLS", "window.__iuDumpCLS"
+$content = $content -replace "window\.(?:_)?iuClearCLS", "window.__iuClearCLS"
+
+# Fail-fast BEFORE write
+if ($content -match "window\.(?:_)?iu(DumpCLS|ClearCLS)") {
+  throw "BUG: capture instructions content still contains iu*/_iu* helper names before write"
+}
+
+# Single write
+Set-Content -Encoding UTF8 -Path $outPath -Value $content
+
+# Fail-fast AFTER write
+$final = Get-Content -Raw -Encoding UTF8 $outPath
+if ($final -match "window\.(?:_)?iu(DumpCLS|ClearCLS)") {
+  throw "BUG: capture output still contains iu*/_iu* after write"
+}
 
 Write-Host ("Wrote " + $outPath)
 
