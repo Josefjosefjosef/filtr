@@ -4008,7 +4008,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 #iuLayoutShiftBox{
   position: fixed !important;
   z-index: 2147483647 !important;
-  contain: layout style paint !important;
+  contain: layout paint !important;
   pointer-events: none !important;
   transform: translateZ(0) !important;
   box-sizing: border-box !important;
@@ -4021,15 +4021,16 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 #iuDebugBox{
   left: 12px !important;
   bottom: 12px !important;
+  height: min(260px, 40vh) !important;
   max-width: min(420px, calc(100vw - 24px)) !important;
-  max-height: min(50vh, calc(100vh - 24px)) !important;
+  pointer-events: auto !important;
 }
 
 #iuLayoutShiftBox{
   left: 8px !important;
   bottom: 8px !important;
+  height: min(260px, 40vh) !important;
   max-width: min(520px, calc(100vw - 16px)) !important;
-  max-height: min(40vh, calc(100vh - 16px)) !important;
 }
 
 /* Popover pro sledování zásilek */
