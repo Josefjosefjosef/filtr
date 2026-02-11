@@ -205,17 +205,175 @@ window.addEventListener("unhandledrejection", (e) => {
     }
   }
 
+  function iuCopyTextToClipboard(text) {
+    try {
+      const s = String(text ?? "");
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(s).catch(() => {
+          try {
+            const ta = document.createElement("textarea");
+            ta.value = s;
+            ta.setAttribute("readonly", "readonly");
+            ta.style.position = "fixed";
+            ta.style.left = "-9999px";
+            ta.style.top = "-9999px";
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+          } catch (_) {}
+        });
+      }
+      const ta = document.createElement("textarea");
+      ta.value = s;
+      ta.setAttribute("readonly", "readonly");
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      ta.style.top = "-9999px";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      return Promise.resolve();
+    } catch (_) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = String(text ?? "");
+        ta.setAttribute("readonly", "readonly");
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        ta.style.top = "-9999px";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      } catch (_) {}
+      return Promise.resolve();
+    }
+  }
+
+  function ensureDebugBoxUi(box) {
+    try {
+      if (!box) return null;
+      const hasUi = box.querySelector("[data-iu-debug-actions]") && box.querySelector("[data-iu-debug-text]");
+      if (!hasUi) {
+        const existingText = String(box.textContent || "");
+        box.textContent = "";
+
+        const actions = document.createElement("div");
+        actions.setAttribute("data-iu-debug-actions", "1");
+        actions.style.cssText = [
+          "display:flex",
+          "gap:8px",
+          "align-items:center",
+          "margin-bottom:8px",
+          "flex-wrap:wrap",
+        ].join(";");
+
+        const btnDump = document.createElement("button");
+        btnDump.type = "button";
+        btnDump.textContent = "Copy CLS dump";
+        btnDump.style.cssText = [
+          "font-size:12px",
+          "padding:4px 8px",
+          "background:#1f3557",
+          "color:#fff",
+          "border:none",
+          "border-radius:6px",
+          "cursor:pointer",
+        ].join(";");
+        btnDump.addEventListener("click", () => {
+          try {
+            const payload =
+              typeof window.__iuDumpCLS === "function"
+                ? window.__iuDumpCLS()
+                : {
+                    realTotal: window.__iuCLSRealTotal || 0,
+                    log: window.__iuCLSLog || [],
+                  };
+            const json = JSON.stringify(payload, null, 2);
+            iuCopyTextToClipboard(json);
+          } catch (_) {}
+        });
+
+        const btnLines = document.createElement("button");
+        btnLines.type = "button";
+        btnLines.textContent = "Copy last [IU] lines";
+        btnLines.style.cssText = btnDump.style.cssText;
+        btnLines.addEventListener("click", () => {
+          try {
+            const full = Array.isArray(window.__iuCLSLog) ? window.__iuCLSLog : [];
+            const tail = full.slice(Math.max(0, full.length - 50));
+            const realTotal =
+              typeof window.__iuCLSRealTotal === "number"
+                ? window.__iuCLSRealTotal
+                : window.__iuCLSRealTotal || 0;
+            const header = [
+              `[IU] href=${String(location.href || "")}`,
+              `[IU] __iuCLSRealTotal=${String(realTotal)}`,
+              `[IU] __iuCLSLog.len=${String(full.length)}`,
+            ].join("\n");
+            const lines = tail.map((r) => {
+              try {
+                const t = r && r.t ? String(r.t) : "";
+                const v = typeof r?.value === "number" ? r.value : 0;
+                const recent = r?.hadRecentInput ? "1" : "0";
+                const debugOnly = r?.debugOnly ? "1" : "0";
+                const sc = typeof r?.sourceCount === "number" ? r.sourceCount : (Array.isArray(r?.sources) ? r.sources.length : 0);
+                const nodes = (Array.isArray(r?.sources) ? r.sources : [])
+                  .map((s) => (s && s.node ? String(s.node) : ""))
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .join(", ");
+                return `[IU][CLS] t=${t} shift=${v.toFixed(4)} recentInput=${recent} debugOnly=${debugOnly} sources=${sc} nodes=${nodes || "(none)"}`;
+              } catch (_) {
+                return "[IU][CLS] (unparseable entry)";
+              }
+            });
+            iuCopyTextToClipboard([header, ...lines].join("\n"));
+          } catch (_) {}
+        });
+
+        actions.appendChild(btnDump);
+        actions.appendChild(btnLines);
+
+        const pre = document.createElement("pre");
+        pre.setAttribute("data-iu-debug-text", "1");
+        pre.style.cssText = [
+          "margin:0",
+          "white-space:pre-wrap",
+          "max-height:260px",
+          "overflow:auto",
+        ].join(";");
+        pre.textContent = existingText || "";
+
+        box.appendChild(actions);
+        box.appendChild(pre);
+      }
+      return box.querySelector("[data-iu-debug-text]");
+    } catch (_) {
+      return null;
+    }
+  }
+
   function debugBoxSet(msg) {
     const box = ensureDebugBox();
     if (!box) return;
-    box.textContent = msg;
+    const textEl = ensureDebugBoxUi(box);
+    if (textEl) textEl.textContent = String(msg ?? "");
+    else box.textContent = String(msg ?? "");
   }
 
   function appendDebugLine(msg) {
     if (!isDebugLogging) return;
     const box = ensureDebugBox();
     if (!box) return;
-    box.textContent += `\n${msg}`;
+    const textEl = ensureDebugBoxUi(box);
+    if (textEl) textEl.textContent += `\n${String(msg ?? "")}`;
+    else box.textContent += `\n${String(msg ?? "")}`;
   }
 
   // ===== CLS / Layout Shift Debug (debug=1 only) =====
