@@ -41,14 +41,14 @@ DEBUG (/projects/?debug=1)
 - Open DevTools -> Console
 - Hard reload: Ctrl+F5
 
-DevTools Console (line-by-line, no &&):
+DevTools Console:
 if (window.__iuClearCLS) window.__iuClearCLS();
 location.reload();
 
 (after reload)
 window.__iuDumpCLS()
 
-Clipboard variant:
+clipboard variant:
 copy(JSON.stringify(window.__iuDumpCLS(), null, 2))
 
 Paste DEBUG JSON below:
@@ -62,7 +62,7 @@ PROD (/projects/)
 DevTools Console:
 window.__iuDumpCLS ? window.__iuDumpCLS() : { note: "__iuDumpCLS not present (expected in prod)" }
 
-Clipboard variant:
+clipboard variant:
 copy(JSON.stringify(window.__iuDumpCLS ? window.__iuDumpCLS() : { note: "__iuDumpCLS not present (expected in prod)" }, null, 2))
 
 Paste PROD JSON below:
