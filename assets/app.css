@@ -654,7 +654,8 @@ aside.accordionCol{
 
 .iuDailyWeather{
   margin-top: 10px;
-  min-height: 110px;
+  min-height: 200px;
+  contain: layout paint;
 }
 
 /* Weather */
@@ -670,6 +671,17 @@ aside.accordionCol{
   display:flex;
   flex-direction:column;
   gap:4px;
+}
+
+@media (min-width: 900px){
+  .iuDailyDate{
+    display: inline-block;
+    min-width: 160px;
+  }
+  .iuWxNowMeta{
+    white-space: nowrap;
+    min-width: 145px;
+  }
 }
 
 .iuWxNowLine{
