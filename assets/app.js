@@ -3856,10 +3856,13 @@ function buildVideoAsArticleCard(it) {
         firstLoadQuiet = false;
       }, 5000);
     }
+    // Right column init: perform DOM writes under height lock to avoid visible jump.
+    const h = lockRightColHeight("right_init");
     // Ensure the right column "Osobní" label exists from the start (before any data fetch/render work).
     ensureRightToolsPersonalLabel();
     // Ensure MindMenu extra row exists from the start (no async injection).
     ensureMindMenuExtraRow();
+    unlockRightColHeight(h, "right_init_done");
     renderDebugVisibility();
     installCLSObserver();
     renderSectionsBar();
