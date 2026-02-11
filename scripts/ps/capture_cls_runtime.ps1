@@ -25,7 +25,7 @@ try {
 $tmpDir = Join-Path (Get-Location).Path "tmp"
 New-Item -ItemType Directory -Force $tmpDir | Out-Null
 
-$outPath = Join-Path $tmpDir "cls_runtime_main.txt"
+$outPath = Join-Path $tmpDir "cls_runtime_capture.txt"
 $ts = (Get-Date).ToString("s")
 
 $content = @"
@@ -35,23 +35,44 @@ prodUrl: $urlProd
 
 Opened both URLs in the default browser.
 
+NOTE: THE COMMANDS BELOW MUST BE RUN IN BROWSER DEVTOOLS CONSOLE (JS), NOT IN POWERSHELL
+
 DEBUG (/projects/?debug=1)
 - Open DevTools -> Console
-- Reload (Ctrl+F5 then F5)
-- Run:
-  copy(JSON.stringify(window.__iuDumpCLS(), null, 2))
-- Paste the clipboard JSON below:
+- Hard reload: Ctrl+F5
+
+DevTools Console (line-by-line, no &&):
+if (window.__iuClearCLS) window.__iuClearCLS();
+location.reload();
+
+(after reload)
+window.__iuDumpCLS()
+
+Clipboard variant:
+copy(JSON.stringify(window.__iuDumpCLS(), null, 2))
+
+Paste DEBUG JSON below:
 --- BEGIN DEBUG DUMP ---
 --- END DEBUG DUMP ---
 
 PROD (/projects/)
 - Open DevTools -> Console
-- Reload (Ctrl+F5 then F5)
-- Optional (expected to be absent in prod):
-  copy(JSON.stringify(window.__iuDumpCLS ? window.__iuDumpCLS() : { note: '__iuDumpCLS not present (expected in prod)' }, null, 2))
-- Paste below:
+- Hard reload: Ctrl+F5
+
+DevTools Console:
+window.__iuDumpCLS ? window.__iuDumpCLS() : { note: "__iuDumpCLS not present (expected in prod)" }
+
+Clipboard variant:
+copy(JSON.stringify(window.__iuDumpCLS ? window.__iuDumpCLS() : { note: "__iuDumpCLS not present (expected in prod)" }, null, 2))
+
+Paste PROD JSON below:
 --- BEGIN PROD DUMP ---
 --- END PROD DUMP ---
+
+WHAT TO PASTE BACK INTO CHATGPT
+- Paste DEBUG JSON
+- Paste PROD JSON
+- Then check Console filter: [IU][CLS][real-total] and report YES/NO + count
 "@
 
 Set-Content -Encoding UTF8 -Path $outPath -Value $content
