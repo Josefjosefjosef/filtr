@@ -298,6 +298,99 @@ window.addEventListener("unhandledrejection", (e) => {
         }
       }
 
+      // Debug-only: keep layout-shift attribution evidence for post-mortem.
+      window.__iuCLSShiftEntries = Array.isArray(window.__iuCLSShiftEntries)
+        ? window.__iuCLSShiftEntries
+        : [];
+      window.__iuCLSShiftEntriesTotal =
+        typeof window.__iuCLSShiftEntriesTotal === "number"
+          ? window.__iuCLSShiftEntriesTotal
+          : 0;
+      const MAX_SHIFT_ENTRIES = 200;
+
+      function round1(n) {
+        const x = typeof n === "number" ? n : 0;
+        return Math.round(x * 10) / 10;
+      }
+
+      function rectToObj1(r) {
+        if (!r) return null;
+        return {
+          x: round1(r.x || 0),
+          y: round1(r.y || 0),
+          width: round1(r.width || 0),
+          height: round1(r.height || 0),
+          top: round1(r.top || 0),
+          left: round1(r.left || 0),
+          bottom: round1(r.bottom || 0),
+          right: round1(r.right || 0),
+        };
+      }
+
+      function safeCssIdent(s) {
+        return String(s || "")
+          .replace(/[^a-zA-Z0-9_-]/g, "")
+          .slice(0, 64);
+      }
+
+      function selectorForNode(node) {
+        try {
+          if (!node) return "__unresolved__";
+          if (!(node instanceof Element)) return "__unresolved__";
+          if (node.id) return `#${safeCssIdent(node.id)}`;
+
+          const parts = [];
+          let el = node;
+          let depth = 0;
+          while (el && el instanceof Element && depth < 6) {
+            const tag = (el.tagName || "").toLowerCase() || "div";
+            if (el.id) {
+              parts.unshift(`#${safeCssIdent(el.id)}`);
+              break;
+            }
+            const classes =
+              el.classList && el.classList.length
+                ? Array.from(el.classList)
+                    .map((c) => safeCssIdent(c))
+                    .filter(Boolean)
+                    .slice(0, 3)
+                : [];
+            let part = tag;
+            if (classes.length) part += `.${classes.join(".")}`;
+
+            let nth = 1;
+            try {
+              const parent = el.parentElement;
+              if (parent) {
+                const sibs = Array.from(parent.children || []).filter(
+                  (c) =>
+                    c &&
+                    c.tagName &&
+                    String(c.tagName).toLowerCase() === tag
+                );
+                if (sibs.length > 1) {
+                  nth = sibs.indexOf(el) + 1;
+                } else {
+                  nth = 0;
+                }
+              }
+            } catch (_) {
+              nth = 0;
+            }
+            if (nth > 0) part += `:nth-of-type(${nth})`;
+
+            parts.unshift(part);
+            if (tag === "body" || tag === "html") break;
+            el = el.parentElement;
+            depth++;
+          }
+
+          return parts.join(" > ") || "__unresolved__";
+        } catch (_) {
+          return "__unresolved__";
+        }
+      }
+
       // Debug-only: aggregate "real" CLS total (excluding debug overlays and recent input)
       let realTotal = 0;
       let lastRealLogAt = 0;
@@ -313,6 +406,48 @@ window.addEventListener("unhandledrejection", (e) => {
             const debugOnly =
               sources.length > 0 &&
               sources.every((s) => isDebugOverlayNode(s && s.node));
+
+            // Debug-only evidence: store layout shift entries + attribution sources.
+            try {
+              const shiftEntry = {
+                t: new Date().toISOString(),
+                value: typeof e.value === "number" ? e.value : 0,
+                hadRecentInput: !!e.hadRecentInput,
+                startTime: typeof e.startTime === "number" ? e.startTime : null,
+                debugOnly,
+                sources: sources.map((s) => {
+                  const prev = rectToObj1(s && s.previousRect);
+                  const cur = rectToObj1(s && s.currentRect);
+                  const dx =
+                    prev && cur && typeof prev.x === "number" && typeof cur.x === "number"
+                      ? round1(cur.x - prev.x)
+                      : null;
+                  const dy =
+                    prev && cur && typeof prev.y === "number" && typeof cur.y === "number"
+                      ? round1(cur.y - prev.y)
+                      : null;
+                  return {
+                    selector: selectorForNode(s && s.node),
+                    previousRect: prev,
+                    currentRect: cur,
+                    deltaX: dx,
+                    deltaY: dy,
+                  };
+                }),
+              };
+              window.__iuCLSShiftEntriesTotal =
+                (typeof window.__iuCLSShiftEntriesTotal === "number"
+                  ? window.__iuCLSShiftEntriesTotal
+                  : 0) + 1;
+              window.__iuCLSShiftEntries.push(shiftEntry);
+              if (window.__iuCLSShiftEntries.length > MAX_SHIFT_ENTRIES) {
+                window.__iuCLSShiftEntries.splice(
+                  0,
+                  window.__iuCLSShiftEntries.length - MAX_SHIFT_ENTRIES
+                );
+              }
+            } catch (_) {}
+
             const rec = {
               t: new Date().toISOString(),
               value: typeof e.value === "number" ? e.value : 0,
@@ -379,10 +514,66 @@ window.addEventListener("unhandledrejection", (e) => {
       // Debug-only helper for one-shot runtime capture (no prod impact).
       try {
         if (iuIsDebug && typeof window.__iuDumpCLS !== "function") {
+          window.__iuClearCLS = function () {
+            try {
+              window.__iuCLSShiftEntries = [];
+              window.__iuCLSShiftEntriesTotal = 0;
+              window.__iuCLSLog = [];
+              realTotal = 0;
+              lastRealLogAt = 0;
+              lastRealTotalLogged = -1;
+              lastRealValue = 0;
+              lastRealSources = [];
+              window.__iuCLSRealTotal = 0;
+              return { ok: true };
+            } catch (err) {
+              return { ok: false, error: String((err && err.message) || err) };
+            }
+          };
           window.__iuDumpCLS = function () {
             try {
               const fullLog = Array.isArray(window.__iuCLSLog) ? window.__iuCLSLog : [];
               const log = fullLog.slice(Math.max(0, fullLog.length - 30));
+              const fullShift = Array.isArray(window.__iuCLSShiftEntries)
+                ? window.__iuCLSShiftEntries
+                : [];
+              const kept = fullShift.slice(Math.max(0, fullShift.length - 200));
+              const topShifts = kept
+                .slice()
+                .sort((a, b) => (b?.value || 0) - (a?.value || 0))
+                .slice(0, 20)
+                .map((e) => ({
+                  value: e?.value || 0,
+                  startTime: e?.startTime,
+                  sources: Array.isArray(e?.sources) ? e.sources : [],
+                }));
+              const withSources = kept.filter((e) => (e?.sources || []).length > 0).length;
+              const withoutSources = kept.length - withSources;
+
+              function probeRightHeight() {
+                try {
+                  const el =
+                    document.getElementById("iuRight") ||
+                    document.querySelector(".iu-rightContent") ||
+                    document.querySelector("aside.accordionCol");
+                  if (!el || !el.getBoundingClientRect) return null;
+                  return round1(el.getBoundingClientRect().height || 0);
+                } catch (_) {
+                  return null;
+                }
+              }
+
+              function probeFeedCount() {
+                try {
+                  const feed = document.getElementById("feed");
+                  const scope = feed || document;
+                  const n = scope.querySelectorAll(".news-card").length;
+                  return typeof n === "number" ? n : null;
+                } catch (_) {
+                  return null;
+                }
+              }
+
               let debugBoxTail = [];
               try {
                 const el = document.getElementById("iuDebugBox");
@@ -392,6 +583,12 @@ window.addEventListener("unhandledrejection", (e) => {
               return {
                 ts: new Date().toISOString(),
                 href: String(location.href || ""),
+                context: {
+                  url: String(location.href || ""),
+                  vw: typeof innerWidth === "number" ? innerWidth : null,
+                  vh: typeof innerHeight === "number" ? innerHeight : null,
+                  dpr: typeof devicePixelRatio === "number" ? devicePixelRatio : null,
+                },
                 observerInstalled: !!window.__iuCLSObserverInstalled,
                 realTotal:
                   typeof window.__iuCLSRealTotal === "number"
@@ -399,6 +596,20 @@ window.addEventListener("unhandledrejection", (e) => {
                     : window.__iuCLSRealTotal || 0,
                 log,
                 debugBoxTail,
+                topShifts,
+                counts: {
+                  entriesTotal:
+                    typeof window.__iuCLSShiftEntriesTotal === "number"
+                      ? window.__iuCLSShiftEntriesTotal
+                      : kept.length,
+                  entriesKept: kept.length,
+                  withSources,
+                  withoutSources,
+                },
+                layoutProbes: {
+                  rightHeight: probeRightHeight(),
+                  feedItemCount: probeFeedCount(),
+                },
               };
             } catch (err) {
               return { error: String((err && err.message) || err) };
