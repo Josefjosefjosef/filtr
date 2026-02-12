@@ -4373,3 +4373,141 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 .iuDailyPanel .iuDailyValue{
   font-weight: 500 !important;
 }
+
+/* ==============================
+   IU FRAME + LEFT HEX RAIL (UI-only)
+   - NO JS changes
+   - NO feed pipeline changes (render target #feed stays)
+   ============================== */
+:root{
+  --iu-frame-bg: #1b2430;
+}
+
+/* Frame color: topbar + right column shell + left rail */
+#leftStickyHeader,
+.topbar-new,
+.topbar-new-inner{
+  background: var(--iu-frame-bg) !important;
+}
+
+/* Right column outer shell only (keep inner cards intact) */
+.layout > aside.accordionCol{
+  background: var(--iu-frame-bg) !important;
+}
+
+/* 3 visible columns without touching feed render:
+   [LEFT rail] + [#feed] live inside #newsList, right column stays as-is */
+#newsList{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 14px 20px; /* row-gap / column-gap */
+}
+
+/* Keep non-feed rows full-width above the rail+feed row */
+#newsList > #dataStatus,
+#newsList > #emptyBox,
+#newsList > .iu-filterChips{
+  flex: 0 0 100%;
+  width: 100%;
+}
+
+.iu-leftRail{
+  flex: 0 0 120px;
+  width: 120px;
+  min-width: 120px;
+  background: var(--iu-frame-bg);
+  align-self: stretch; /* extend background alongside feed height */
+  border-radius: 0;
+}
+
+/* FEED must adapt to remaining width (critical) */
+#newsList > #feed{
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto !important; /* override #feed{width:100%} so it can sit next to left rail */
+}
+
+/* Responsive: hide left rail below 1100px (no JS) */
+@media (max-width: 1100px){
+  .iu-leftRail{ display: none; }
+  #newsList > #feed{
+    flex: 0 0 100%;
+    width: 100% !important;
+    min-width: 0;
+  }
+}
+
+/* ==============================
+   HEX NAV
+   ============================== */
+.iu-hexNav{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 14px;
+  padding: 12px 8px;
+}
+
+.iu-hex{
+  width: 100%;
+  max-width: 104px; /* 120px rail minus padding */
+  height: 94px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#fff;
+  clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0% 50%);
+  box-sizing:border-box;
+}
+
+.iu-hex:focus-visible{
+  outline: 2px solid rgba(255,255,255,0.65);
+  outline-offset: 3px;
+}
+
+.iu-hexNum{
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0.92;
+  margin-bottom: 6px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.iu-hexIcon{
+  width: 28px;
+  height: 28px;
+  display:block;
+  margin-bottom: 6px;
+}
+
+.iu-hexIcon svg{
+  width: 100%;
+  height: 100%;
+  display: block;
+  color: #fff;
+}
+
+.iu-hexLabel{
+  font-size: 12.5px;
+  font-weight: 750;
+  line-height: 1.1;
+  text-align:center;
+  padding: 0 6px;
+}
+
+/* Muted, professional palette (no neon) */
+.iu-hexNav .iu-hex:nth-child(1){ background:#2f5e7a; }
+.iu-hexNav .iu-hex:nth-child(2){ background:#2f6b5a; }
+.iu-hexNav .iu-hex:nth-child(3){ background:#5a4f86; }
+.iu-hexNav .iu-hex:nth-child(4){ background:#8b5a2b; }
+.iu-hexNav .iu-hex:nth-child(5){ background:#2f6a74; }
+.iu-hexNav .iu-hex:nth-child(6){ background:#6b4a55; }
+.iu-hexNav .iu-hex:nth-child(7){ background:#3e6d9a; }
+.iu-hexNav .iu-hex:nth-child(8){ background:#6c6a2e; }
+.iu-hexNav .iu-hex:nth-child(9){ background:#4b5f86; }
+.iu-hexNav .iu-hex:nth-child(10){ background:#7a4f4f; }
+.iu-hexNav .iu-hex:nth-child(11){ background:#3b5a80; }
