@@ -4416,9 +4416,12 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   flex: 0 0 120px;
   width: 120px;
   min-width: 120px;
-  background: var(--iu-frame-bg);
+  /* Match center feed background (no panel effect) */
+  background: var(--iu-page-bg);
   align-self: stretch; /* extend background alongside feed height */
   border-radius: 0;
+  box-shadow: none;
+  border-right: none;
 }
 
 /* FEED must adapt to remaining width (critical) */
@@ -4445,14 +4448,18 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 :root{
   --iu-frame-bg: #1b2430;
   --iu-rail-active: #2D6CDF; /* aktivní linka */
-  --iu-rail-muted: rgba(255,255,255,0.78);
-  --iu-rail-muted2: rgba(255,255,255,0.62);
+  /* Rail now matches feed background, so use dark text */
+  --iu-rail-muted: rgba(11,27,43,0.82);
+  --iu-rail-muted2: rgba(11,27,43,0.68);
 }
 
 .iu-leftRail{
-  background: var(--iu-frame-bg) !important;
+  /* Match center feed background (no panel effect) */
+  background: var(--iu-page-bg);
   margin-top: 0 !important;
   padding-top: 0 !important;
+  box-shadow: none;
+  border-right: none;
 }
 
 .iu-leftNav{
@@ -4462,6 +4469,9 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   padding: 8px 6px 12px 6px;
   gap: 6px;
   box-sizing: border-box;
+  background: inherit;
+  box-shadow: none;
+  border-right: none;
 }
 
 .iu-leftNavItem{
@@ -4491,7 +4501,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   height: 22px;
   display: block;
   margin-bottom: 6px;
-  color: #fff; /* Feather stroke přes currentColor */
+  color: var(--text); /* Feather stroke přes currentColor */
 }
 
 .iu-leftNavIcon svg{
@@ -4521,7 +4531,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
 .iu-leftNavItem.is-active{
   background: rgba(255,255,255,0.08);
-  color: #fff;
+  color: var(--text);
 }
 
 .iu-leftNavItem.is-active::before{
