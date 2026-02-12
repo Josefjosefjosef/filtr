@@ -4351,3 +4351,30 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
     width: 100%;
   }
 }
+
+/* CLS FIX v6: shrink and stabilize Daily Panel */
+.iuDailyPanel{
+  padding: 8px 10px !important;
+  min-height: 110px !important;
+  font-size: 13px !important;
+  overflow-anchor: none;
+}
+
+.iuDailyPanel h3,
+.iuDailyPanel .iuDailyTitle{
+  font-size: 14px !important;
+  margin-bottom: 4px !important;
+}
+
+.iuDailyPanel .iuDailyRow{
+  gap: 6px !important;
+  margin-bottom: 2px !important;
+}
+
+.iuDailyPanel small{
+  font-size: 12px !important;
+}
+
+.iuDailyPanel .iuDailyValue{
+  font-weight: 500 !important;
+}
