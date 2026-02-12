@@ -4511,3 +4511,17 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 .iu-hexNav .iu-hex:nth-child(9){ background:#4b5f86; }
 .iu-hexNav .iu-hex:nth-child(10){ background:#7a4f4f; }
 .iu-hexNav .iu-hex:nth-child(11){ background:#3b5a80; }
+
+/* =========================================
+   FIX: left rail must touch topbar bottom edge
+   Only affects LEFT rail, not feed/right
+   ========================================= */
+.iu-leftRail{
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* keep side/bottom padding, remove only top gap */
+.iu-hexNav{
+  padding: 0 8px 12px 8px !important;
+}
