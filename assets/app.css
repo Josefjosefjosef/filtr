@@ -673,6 +673,12 @@ aside.accordionCol{
   visibility: hidden !important;
 }
 
+/* UX/CLS experiment: remove nameday line entirely (no more hide/show toggling) */
+#iuDailyNameday,
+.iuDailyNameday{
+  display: none !important;
+}
+
 .iuDailyWeather{
   margin-top: 10px;
   min-height: 200px;
@@ -682,6 +688,9 @@ aside.accordionCol{
 /* CLS FIX (post PR#38): stabilize right column weather slot + prevent anchor jumps */
 #iuDailyWeather.iuDailyWeather{
   overflow-anchor: none;    /* zabrání skokům při dynamickém dočítání */
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  min-height: 200px !important; /* zmenšeno (dřív se to chovalo kolem 300px) */
 }
 
 /* Weather */
@@ -697,6 +706,8 @@ aside.accordionCol{
   grid-template-columns: 40px 1fr;
   column-gap: 10px;
   align-items: center;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .iuWxIcon{font-size:28px;}
@@ -760,7 +771,7 @@ aside.accordionCol{
   display:flex;
   gap:10px;
   overflow-x:auto;
-  margin-top:10px;
+  margin-top: 6px !important;
 }
 
 .iuWxHours--skeleton .iuWxHour{
