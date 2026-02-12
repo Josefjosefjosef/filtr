@@ -4564,6 +4564,42 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 /* ==============================
+   LEFT RAIL BUTTONS (grey)
+   UI-only, no layout changes
+   ============================== */
+
+.iu-leftNav .iu-leftNavItem{
+  /* tlačítkový vzhled bez zásahu do pozadí railu */
+  background: #2B3138;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 2px 8px rgba(0,0,0,0.18);
+}
+
+/* bílé ikonky + text uvnitř */
+.iu-leftNav .iu-leftNavItem,
+.iu-leftNav .iu-leftNavItem *{
+  color: #FFFFFF;
+}
+
+/* hover – jen změna barvy, žádná změna rozměrů */
+.iu-leftNav .iu-leftNavItem:hover{
+  background: #323A42;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.12) inset,
+    0 4px 12px rgba(0,0,0,0.22);
+}
+
+/* active – zvýraznění bez posunu */
+.iu-leftNav .iu-leftNavItem.is-active{
+  background: #3A4652;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.18) inset,
+    0 4px 12px rgba(0,0,0,0.24);
+}
+
+/* ==============================
    IU ICON SYSTEM (shared)
    ============================== */
 
