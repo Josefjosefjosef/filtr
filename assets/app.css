@@ -654,6 +654,17 @@ aside.accordionCol{
 .iuDailyNameday{
   font-size:13px;
   opacity:.8;
+  line-height: 18px;
+  min-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* CLS stabilization: keep nameday line height stable even on fetch failure */
+.iuDailyPanel #iuDailyNameday[hidden]{
+  display: block !important;
+  visibility: hidden !important;
 }
 
 .iuDailyWeather{
