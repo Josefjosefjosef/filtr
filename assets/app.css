@@ -216,6 +216,29 @@ html:not([data-iu-js]) .iuDailyWeather{
   background: #1F3A5F;
   z-index: 1000;
 }
+
+/* ==============================
+   TOP BAR – match left rail buttons
+   - same grey background
+   - bottom corners radius only
+   ============================== */
+
+.topbar-new{
+  background: #2B3138;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+
+  /* jemná hrana jako u tlačítek (bez box-model změn) */
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 2px 10px rgba(0,0,0,0.18);
+}
+
+.topbar-new-inner{
+  background: #2B3138;
+}
 .topbar-new-main{
   display: flex;
   align-items: center;
