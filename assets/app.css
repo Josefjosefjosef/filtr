@@ -694,6 +694,17 @@ aside.accordionCol{
 
 .iuWxIcon{font-size:28px;}
 
+/* CLS FIX v3: stabilize icon box (prevents meta deltaX nudge) */
+#iuDailyWeather .iuWxIcon{
+  width: 40px;
+  min-width: 40px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 40px;
+}
+
 .iuWxNowMeta{
   display:flex;
   flex-direction:column;
@@ -1396,6 +1407,7 @@ button.iu-mmQuickItem{
   box-sizing: border-box;
   height: auto;
   max-height: none;
+  overflow-anchor: none;
 }
 .mindMenu-scroll-wrapper::after{
   content: "";
