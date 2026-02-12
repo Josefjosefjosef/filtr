@@ -4587,39 +4587,80 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 /* ==============================
-   LEFT RAIL BUTTONS (grey)
+   LEFT RAIL BUTTONS (soft)
    UI-only, no layout changes
    ============================== */
 
+/* Local button palette only (rail background unchanged) */
+.iu-leftNav{
+  --iuLeftBtnBgTop: #353d46;
+  --iuLeftBtnBgBottom: #2b3138;
+  --iuLeftBtnBorder: rgba(255,255,255,0.10);
+  --iuLeftBtnShadow: 0 10px 22px rgba(0,0,0,0.22);
+  --iuLeftBtnActiveAccent: var(--iu-rail-active);
+}
+
 .iu-leftNav .iu-leftNavItem{
-  /* tlačítkový vzhled bez zásahu do pozadí railu */
-  background: #2B3138;
+  /* soft depth: subtle gradient + inner border */
+  background: linear-gradient(to bottom, var(--iuLeftBtnBgTop), var(--iuLeftBtnBgBottom));
   border-radius: 14px;
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.08) inset,
-    0 2px 8px rgba(0,0,0,0.18);
+    0 0 0 1px var(--iuLeftBtnBorder) inset,
+    var(--iuLeftBtnShadow);
+  overflow: hidden; /* needed for inner highlight */
+  transition: transform 240ms ease, filter 240ms ease, box-shadow 240ms ease;
+  will-change: transform;
+  color: rgba(255,255,255,0.96);
 }
 
-/* bílé ikonky + text uvnitř */
-.iu-leftNav .iu-leftNavItem,
-.iu-leftNav .iu-leftNavItem *{
-  color: #FFFFFF;
+/* Inner highlight (soft light from top) */
+.iu-leftNav .iu-leftNavItem::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.12),
+    rgba(255,255,255,0.00) 55%
+  );
+  pointer-events: none;
 }
 
-/* hover – jen změna barvy, žádná změna rozměrů */
+/* White icon + label, slightly softened */
+.iu-leftNav .iu-leftNavIcon{
+  color: rgba(255,255,255,0.96);
+}
+.iu-leftNav .iu-leftNavLabel{
+  color: rgba(255,255,255,0.92);
+}
+
+/* Hover (gentle lift + brighten) */
 .iu-leftNav .iu-leftNavItem:hover{
-  background: #323A42;
+  transform: translateY(-1px);
+  filter: brightness(1.06);
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.12) inset,
-    0 4px 12px rgba(0,0,0,0.22);
+    0 0 0 1px rgba(255,255,255,0.14) inset,
+    0 14px 26px rgba(0,0,0,0.24);
 }
 
-/* active – zvýraznění bez posunu */
+/* Active: slightly brighter + left accent bar */
 .iu-leftNav .iu-leftNavItem.is-active{
-  background: #3A4652;
+  filter: brightness(1.08);
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.18) inset,
-    0 4px 12px rgba(0,0,0,0.24);
+    0 0 0 1px rgba(255,255,255,0.16) inset,
+    0 16px 28px rgba(0,0,0,0.26);
+}
+
+.iu-leftNav .iu-leftNavItem.is-active::after{
+  content:"";
+  position:absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--iuLeftBtnActiveAccent);
+  box-shadow: 0 0 10px rgba(45,108,223,0.25);
 }
 
 /* ==============================
