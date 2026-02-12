@@ -4534,3 +4534,77 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   border-radius: 3px;
   background: var(--iu-rail-active);
 }
+
+/* ==============================
+   IU ICON SYSTEM (shared)
+   ============================== */
+
+.iuIconTile{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  line-height: 1;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.iuIconTile > i,
+.iuIconTile > svg{
+  display: block;
+}
+
+/* === Left rail (existing vibe, stronger) === */
+.iu-leftNav .iuIconTile{
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(31,47,58,0.98), rgba(38,56,70,0.98));
+  box-shadow: 0 6px 14px rgba(0,0,0,0.28);
+}
+
+.iu-leftNav .iuIconTile > i{
+  font-size: 20px;
+}
+
+/* === MindMenu QuickLinks (softer, smaller) === */
+.iu-mmQuickLinks .iuIconTile{
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+
+  /* jemnější pozadí + lehký „glass“ */
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,0.10),
+    rgba(255,255,255,0.04)
+  );
+
+  /* jemnější hrana + stín */
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.iu-mmQuickLinks .iuIconTile > i{
+  font-size: 14px;
+  margin: 0 !important; /* neutralize legacy .iu-mmQuickItem i margin */
+  opacity: 0.92;
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Hover/focus (jemné, bez posunu layoutu) */
+.iu-mmQuickLinks a:hover .iuIconTile,
+.iu-mmQuickLinks button:hover .iuIconTile{
+  box-shadow: 0 4px 12px rgba(0,0,0,0.22);
+  border-color: rgba(255,255,255,0.16);
+}
+
+.iu-mmQuickLinks a:focus-visible .iuIconTile,
+.iu-mmQuickLinks button:focus-visible .iuIconTile{
+  outline: 2px solid rgba(255,255,255,0.28);
+  outline-offset: 2px;
+}
