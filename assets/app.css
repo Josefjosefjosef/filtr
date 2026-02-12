@@ -4439,89 +4439,98 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 /* ==============================
-   HEX NAV
+   LEFT RAIL ICON NAV (refactor)
    ============================== */
-.iu-hexNav{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap: 14px;
-  padding: 12px 8px;
+
+:root{
+  --iu-frame-bg: #1b2430;
+  --iu-rail-active: #2D6CDF; /* aktivní linka */
+  --iu-rail-muted: rgba(255,255,255,0.78);
+  --iu-rail-muted2: rgba(255,255,255,0.62);
 }
 
-.iu-hex{
-  width: 100%;
-  max-width: 104px; /* 120px rail minus padding */
-  height: 94px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  color:#fff;
-  clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0% 50%);
-  box-sizing:border-box;
-}
-
-.iu-hex:focus-visible{
-  outline: 2px solid rgba(255,255,255,0.65);
-  outline-offset: 3px;
-}
-
-.iu-hexNum{
-  font-size: 12px;
-  line-height: 1;
-  opacity: 0.92;
-  margin-bottom: 6px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-}
-
-.iu-hexIcon{
-  width: 28px;
-  height: 28px;
-  display:block;
-  margin-bottom: 6px;
-}
-
-.iu-hexIcon svg{
-  width: 100%;
-  height: 100%;
-  display: block;
-  color: #fff;
-}
-
-.iu-hexLabel{
-  font-size: 12.5px;
-  font-weight: 750;
-  line-height: 1.1;
-  text-align:center;
-  padding: 0 6px;
-}
-
-/* Muted, professional palette (no neon) */
-.iu-hexNav .iu-hex:nth-child(1){ background:#2f5e7a; }
-.iu-hexNav .iu-hex:nth-child(2){ background:#2f6b5a; }
-.iu-hexNav .iu-hex:nth-child(3){ background:#5a4f86; }
-.iu-hexNav .iu-hex:nth-child(4){ background:#8b5a2b; }
-.iu-hexNav .iu-hex:nth-child(5){ background:#2f6a74; }
-.iu-hexNav .iu-hex:nth-child(6){ background:#6b4a55; }
-.iu-hexNav .iu-hex:nth-child(7){ background:#3e6d9a; }
-.iu-hexNav .iu-hex:nth-child(8){ background:#6c6a2e; }
-.iu-hexNav .iu-hex:nth-child(9){ background:#4b5f86; }
-.iu-hexNav .iu-hex:nth-child(10){ background:#7a4f4f; }
-.iu-hexNav .iu-hex:nth-child(11){ background:#3b5a80; }
-
-/* =========================================
-   FIX: left rail must touch topbar bottom edge
-   Only affects LEFT rail, not feed/right
-   ========================================= */
 .iu-leftRail{
+  background: var(--iu-frame-bg) !important;
   margin-top: 0 !important;
   padding-top: 0 !important;
 }
 
-/* keep side/bottom padding, remove only top gap */
-.iu-hexNav{
-  padding: 0 8px 12px 8px !important;
+.iu-leftNav{
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 8px 6px 12px 6px;
+  gap: 6px;
+  box-sizing: border-box;
+}
+
+.iu-leftNavItem{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  height: 64px; /* moderní, kompaktní */
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--iu-rail-muted);
+  box-sizing: border-box;
+
+  /* jemné oddělení bez “karet” */
+  background: rgba(255,255,255,0.04);
+}
+
+.iu-leftNavItem:focus-visible{
+  outline: 2px solid rgba(255,255,255,0.55);
+  outline-offset: 2px;
+}
+
+.iu-leftNavIcon{
+  width: 22px;
+  height: 22px;
+  display: block;
+  margin-bottom: 6px;
+  color: #fff; /* Feather stroke přes currentColor */
+}
+
+.iu-leftNavIcon svg{
+  width: 100%;
+  height: 100%;
+  display: block;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iu-leftNavLabel{
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.05;
+  text-align: center;
+  color: var(--iu-rail-muted2);
+  padding: 0 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.iu-leftNavItem.is-active{
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.iu-leftNavItem.is-active::before{
+  content:"";
+  position:absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--iu-rail-active);
 }
