@@ -105,6 +105,10 @@ window.addEventListener("unhandledrejection", (e) => {
   state.filteredItems ??= [];
   const ALLOWED_CONTENT_TYPES = new Set(["article", "video"]);
   const isDebugLogging = location.search.includes("debug=1");
+
+  // Feature flags
+  const IU_ENABLE_NAMEDAY = false; // hard off: no request, no DOM update
+
   function debugLog(...args) {
     if (!isDebugLogging) return;
     console.log(...args);
@@ -3814,7 +3818,10 @@ function buildVideoAsArticleCard(it) {
     window.__iu_daily_timer = setInterval(tick, 60000);
 
     // NAME DAY (Svátky)
-    if (elNameday){
+    function updateNameday(){
+      if (!IU_ENABLE_NAMEDAY) return;
+      if (!elNameday) return;
+
       elNameday.hidden = false;
       elNameday.textContent = "Svátek má načítám…";
       fetch("https://svatky.adresa.info/json", { cache: "no-store" })
@@ -3831,6 +3838,7 @@ function buildVideoAsArticleCard(it) {
           elNameday.hidden = true;
         });
     }
+    updateNameday();
 
     // WEATHER (Open-Meteo) + hourly strip + min/max
     // Default Praha (později lze udělat volbu města)
