@@ -4521,7 +4521,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 .iu-leftNavItem:focus-visible{
-  outline: 2px solid rgba(255,255,255,0.55);
+  outline: 2px solid var(--iu-rail-active);
   outline-offset: 2px;
 }
 
@@ -4584,6 +4584,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   width: 3px;
   border-radius: 3px;
   background: var(--iu-rail-active);
+  pointer-events: none;
 }
 
 /* ==============================
@@ -4660,7 +4661,8 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   width: 3px;
   border-radius: 3px;
   background: var(--iuLeftBtnActiveAccent);
-  box-shadow: 0 0 10px rgba(45,108,223,0.25);
+  box-shadow: 0 0 6px rgba(45,108,223,0.14);
+  pointer-events: none;
 }
 
 /* ==============================
