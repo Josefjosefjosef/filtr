@@ -4448,9 +4448,9 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 :root{
   --iu-frame-bg: #1b2430;
   --iu-rail-active: #2D6CDF; /* aktivní linka */
-  /* Rail now matches feed background, so use dark text */
-  --iu-rail-muted: rgba(11,27,43,0.82);
-  --iu-rail-muted2: rgba(11,27,43,0.68);
+  /* Keep rail palette stable; contrast is handled locally under .iu-leftNav */
+  --iu-rail-muted: rgba(255,255,255,0.78);
+  --iu-rail-muted2: rgba(255,255,255,0.62);
 }
 
 .iu-leftRail{
@@ -4469,9 +4469,10 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   padding: 8px 6px 12px 6px;
   gap: 6px;
   box-sizing: border-box;
-  background: inherit;
+  background: var(--iu-page-bg);
   box-shadow: none;
   border-right: none;
+  color: var(--text);
 }
 
 .iu-leftNavItem{
@@ -4491,6 +4492,11 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   background: rgba(255,255,255,0.04);
 }
 
+/* Local contrast: rail now sits on feed background */
+.iu-leftNav .iu-leftNavItem{
+  color: var(--text);
+}
+
 .iu-leftNavItem:focus-visible{
   outline: 2px solid rgba(255,255,255,0.55);
   outline-offset: 2px;
@@ -4501,7 +4507,11 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   height: 22px;
   display: block;
   margin-bottom: 6px;
-  color: var(--text); /* Feather stroke přes currentColor */
+  color: currentColor; /* Feather stroke přes currentColor */
+}
+
+.iu-leftNav .iu-leftNavIcon{
+  color: var(--text);
 }
 
 .iu-leftNavIcon svg{
@@ -4529,9 +4539,17 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   overflow: hidden;
 }
 
+.iu-leftNav .iu-leftNavLabel{
+  color: rgba(11,27,43,0.82);
+}
+
 .iu-leftNavItem.is-active{
   background: rgba(255,255,255,0.08);
   color: var(--text);
+}
+
+.iu-leftNav .iu-leftNavItem:not(.is-active) i{
+  opacity: 0.86;
 }
 
 .iu-leftNavItem.is-active::before{
