@@ -667,6 +667,12 @@ aside.accordionCol{
   visibility: hidden !important;
 }
 
+/* CLS FIX v4: nameday must never collapse height (even if hidden=true) */
+#iuDailyNameday[hidden]{
+  display: block !important;
+  visibility: hidden !important;
+}
+
 .iuDailyWeather{
   margin-top: 10px;
   min-height: 200px;
@@ -675,7 +681,6 @@ aside.accordionCol{
 
 /* CLS FIX (post PR#38): stabilize right column weather slot + prevent anchor jumps */
 #iuDailyWeather.iuDailyWeather{
-  min-height: 300px;        /* dump: height ~300; dřív min-height 200 je podstřeleno */
   overflow-anchor: none;    /* zabrání skokům při dynamickém dočítání */
 }
 
@@ -688,8 +693,10 @@ aside.accordionCol{
 
 /* CLS FIX v2: keep weather row layout stable */
 #iuDailyWeather .iuWxNowRow{
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  column-gap: 10px;
+  align-items: center;
 }
 
 .iuWxIcon{font-size:28px;}
@@ -713,10 +720,9 @@ aside.accordionCol{
 
 /* CLS FIX: prevent horizontal nudge of weather meta block (dump: width ~217.5px, deltaX ~15.7px) */
 #iuDailyWeather .iuWxNowMeta{
-  flex: 0 0 218px;
-  width: 218px;
-  max-width: 218px;
   box-sizing: border-box;
+  min-width: 145px;
+  white-space: nowrap;
 }
 #iuDailyWeather .iuWxNowMeta > *{
   overflow: hidden;
