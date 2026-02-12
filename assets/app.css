@@ -4511,3 +4511,15 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 .iu-hexNav .iu-hex:nth-child(9){ background:#4b5f86; }
 .iu-hexNav .iu-hex:nth-child(10){ background:#7a4f4f; }
 .iu-hexNav .iu-hex:nth-child(11){ background:#3b5a80; }
+
+/* =========================================
+   UI REMOVE: "Dnes je dobré vědět" + filter chips
+   UI-only (no JS / no feed pipeline changes)
+   ========================================= */
+.iu-daily-brief{
+  display: none !important;
+}
+
+.iu-filterChips{
+  display: none !important;
+}
