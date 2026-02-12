@@ -2676,12 +2676,7 @@ a.brand,
   padding-right: 8px;
 }
 
-/* 2 sloupce jen na opravdu širokém desktopu */
-@media (min-width: 1200px){
-  #feed{
-    grid-template-columns: 1fr 1fr;
-  }
-}
+/* UI: feed má být vždy 1 sloupec (žádné 2 vedle sebe na desktopu) */
 
 #feed > *{
   background-color: rgba(255,255,255,0.94);
