@@ -658,6 +658,12 @@ aside.accordionCol{
   contain: layout paint;
 }
 
+/* CLS FIX (post PR#38): stabilize right column weather slot + prevent anchor jumps */
+#iuDailyWeather.iuDailyWeather{
+  min-height: 300px;        /* dump: height ~300; dřív min-height 200 je podstřeleno */
+  overflow-anchor: none;    /* zabrání skokům při dynamickém dočítání */
+}
+
 /* Weather */
 .iuWxNowRow{
   display:flex;
@@ -671,6 +677,17 @@ aside.accordionCol{
   display:flex;
   flex-direction:column;
   gap:4px;
+}
+
+/* CLS FIX: prevent horizontal nudge of weather meta block (dump: width ~217.5px, deltaX ~15.7px) */
+#iuDailyWeather .iuWxNowMeta{
+  width: 218px;
+  max-width: 218px;
+  box-sizing: border-box;
+}
+#iuDailyWeather .iuWxNowMeta > *{
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (min-width: 900px){
