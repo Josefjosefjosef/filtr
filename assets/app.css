@@ -644,7 +644,11 @@ aside.accordionCol{
 .iuDailyDate{
   font-size:14px;
   opacity:.85;
+  line-height: 20px;
+  min-height: 20px;          /* 1 řádek natvrdo */
   white-space:nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .iuDailyNameday{
@@ -671,6 +675,12 @@ aside.accordionCol{
   margin-top:10px;
 }
 
+/* CLS FIX v2: keep weather row layout stable */
+#iuDailyWeather .iuWxNowRow{
+  display: flex;
+  align-items: flex-start;
+}
+
 .iuWxIcon{font-size:28px;}
 
 .iuWxNowMeta{
@@ -681,6 +691,7 @@ aside.accordionCol{
 
 /* CLS FIX: prevent horizontal nudge of weather meta block (dump: width ~217.5px, deltaX ~15.7px) */
 #iuDailyWeather .iuWxNowMeta{
+  flex: 0 0 218px;
   width: 218px;
   max-width: 218px;
   box-sizing: border-box;
