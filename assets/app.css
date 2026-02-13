@@ -2771,6 +2771,9 @@ a.brand,
   cursor: pointer;
   user-select: none;
   list-style: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 .iuWishAccSummary::-webkit-details-marker{ display:none; }
 .iuWishAccTitle{
@@ -2797,40 +2800,75 @@ a.brand,
   margin-top: 12px;
 }
 
-/* Wish accordion header hover — sync with radio chips hover */
-#iuRadioWish{
-  transition: background-color 150ms ease, color 150ms ease;
-}
-#iuRadioWish:not([open]):hover{
+/* Wish accordion header hover/focus — sync with radio chips hover */
+#iuRadioWish:not([open]) .iuWishAccSummary:hover{
   background-color: var(--iu-accent-radio);
   color: #fff;
 }
-#iuRadioWish:not([open]):hover .iuWishAccTitle{
+#iuRadioWish:not([open]) .iuWishAccSummary:hover .iuWishAccTitle{
   color: #fff;
   opacity: 1;
 }
-#iuRadioWish:not([open]):hover .iuWishAccCaret{
+#iuRadioWish:not([open]) .iuWishAccSummary:hover .iuWishAccCaret{
   border-right-color: #fff;
   border-bottom-color: #fff;
 }
-#iuRadioWish summary:focus-visible{
+#iuRadioWish .iuWishAccSummary:focus-visible{
   background-color: var(--iu-accent-radio);
   color: #fff;
   outline: 2px solid color-mix(in srgb, var(--iu-accent-radio) 70%, white);
   outline-offset: 2px;
 }
-#iuRadioWish summary:focus-visible .iuWishAccTitle{
+#iuRadioWish .iuWishAccSummary:focus-visible .iuWishAccTitle{
   color: #fff;
   opacity: 1;
 }
-#iuRadioWish summary:focus-visible .iuWishAccCaret{
+#iuRadioWish .iuWishAccSummary:focus-visible .iuWishAccCaret{
   border-right-color: #fff;
   border-bottom-color: #fff;
 }
 
-/* Open state — subtle, not overdone (keeps caret rotation as indicator) */
+/* Open state: keep the whole panel purple (header + body) */
 #iuRadioWish[open]{
-  border-color: rgba(139, 92, 246, 0.28);
+  background-color: var(--iu-accent-radio);
+  border-color: rgba(139, 92, 246, 0.35);
+}
+#iuRadioWish[open] .iuWishAccTitle{
+  color: #fff;
+  opacity: 1;
+}
+#iuRadioWish[open] .iuWishAccCaret{
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
+
+/* Open state: form contrast — labels white, controls white, text dark */
+#iuRadioWish[open] .iuWishCard{
+  background: transparent;
+  border-color: rgba(255,255,255,0.22);
+}
+#iuRadioWish[open] .iuLabel{
+  color: #fff;
+}
+#iuRadioWish[open] .iuHint{
+  color: rgba(255,255,255,0.86);
+}
+#iuRadioWish[open] .iuErr{
+  color: #fff;
+}
+#iuRadioWish[open] .iuCtrl{
+  background: #fff;
+  color: #111;
+  border-color: rgba(0,0,0,0.18);
+}
+#iuRadioWish[open] .iuCtrl:focus-visible{
+  outline: 2px solid rgba(255,255,255,0.75);
+  outline-offset: 2px;
+}
+#iuRadioWish[open] .iuErrBlock{
+  background: rgba(0,0,0,0.18);
+  border-color: rgba(255,255,255,0.25);
+  color: #fff;
 }
 /* Layout V2 uses .iuWishRows/.iuWishRow; keep legacy grid visible if ever used */
 .iuWishGrid{
