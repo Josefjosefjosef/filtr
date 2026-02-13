@@ -123,16 +123,23 @@ html, body{
 }
 
 /* ==== LAYOUT BACKGROUND OVERRIDE (news-style white) ==== */
+/* Only containers (no cards). Must override gradients/transparency. */
 body,
 .iuFrame,
 .iuLayout,
-.iuLeftRail,
+#content,
+.container,
+.layout,
+.mainCol,
+#newsList,
+#leftContent,
 #iuLeftRail,
 .iu-leftRail,
+.iu-rightContent,
 #feed,
-.iu-rightContent{
-  background-color: #ffffff !important;
-  background: #ffffff !important;
+#feedWrap{
+  background: #fff !important;
+  background-image: none !important;
 }
 
 /* Pozadí layoutu / sloupců (jen kontejnery, ne karty) */
