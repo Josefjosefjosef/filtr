@@ -2751,6 +2751,194 @@ a.brand,
   opacity: 0.35;
   border-radius: 999px;
 }
+
+/* ==============================
+   RADIO — "Přání do rádia" (MVP, whitelist-only)
+   ============================== */
+.iuRadioWish{
+  margin: 14px 0 18px 0;
+  padding: 16px 16px;
+  border-radius: 14px;
+  background-color: rgba(255,255,255,0.94);
+  border: 1px solid rgba(11,27,43,0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+}
+.iuRadioWishHead{
+  margin-bottom: 12px;
+}
+.iuRadioWishTitle{
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: rgba(11,27,43,0.92);
+}
+.iuRadioWishSub{
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.25;
+  color: rgba(11,27,43,0.70);
+}
+.iuWishGrid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.iuField{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.iuLabel{
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(11,27,43,0.78);
+}
+.iuCtrl{
+  min-height: 46px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(11,27,43,0.12);
+  background: #fff;
+  color: rgba(11,27,43,0.92);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.2;
+  box-sizing: border-box;
+}
+.iuCtrl:focus-visible{
+  outline: 2px solid rgba(11,58,102,0.35);
+  outline-offset: 2px;
+}
+select.iuCtrl{
+  appearance: auto;
+}
+.iuHint{
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.25;
+  color: rgba(11,27,43,0.72);
+}
+.iuErr{
+  font-size: 12px;
+  color: rgba(185, 28, 28, 0.92);
+}
+.iuErrBlock{
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(185, 28, 28, 0.08);
+  border: 1px solid rgba(185, 28, 28, 0.18);
+}
+.iuSpan2{
+  grid-column: span 2;
+}
+.iuWishActions{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+.iuBtn{
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(11,27,43,0.14);
+  background: #2b3138;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+.iuBtn:hover{
+  filter: brightness(1.05);
+}
+.iuBtnGhost{
+  background: transparent;
+  color: rgba(11,27,43,0.92);
+}
+.iuTA{
+  min-height: 150px;
+  resize: vertical;
+}
+.iuWishOut{
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.iuWishOutHead{
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(11,27,43,0.78);
+  margin-bottom: 6px;
+}
+.iuWishBtnRow{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+.iuCopied{
+  font-size: 12px;
+  color: rgba(11,27,43,0.72);
+}
+
+/* Autocomplete panel */
+.iuAc{
+  position: relative;
+  min-width: 0;
+}
+.iuAcPanel{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  max-height: 240px;
+  overflow: auto;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,0.14);
+  border-radius: 12px;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.12);
+  padding: 6px;
+  z-index: 20;
+}
+.iuAcItem{
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 10px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  color: rgba(11,27,43,0.92);
+}
+.iuAcItem:hover,
+.iuAcItem.is-active{
+  background: rgba(11,27,43,0.06);
+}
+
+@media (max-width: 980px){
+  .iuWishGrid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .iuSpan2{
+    grid-column: span 2;
+  }
+  .iuWishOut{
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 520px){
+  .iuWishGrid{
+    grid-template-columns: 1fr;
+  }
+  .iuSpan2{
+    grid-column: span 1;
+  }
+}
 .iuRadioChip{
   display: flex;
   flex-direction: column;

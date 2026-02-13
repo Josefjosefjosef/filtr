@@ -1,0 +1,33 @@
+{
+  "radios": [
+    {
+      "id": "impuls",
+      "label": "Rádio Impuls",
+      "method": "email",
+      "emailTo": "impuls@impuls.cz",
+      "note": "Ověřený veřejný e-mail pro MVP (mailto)."
+    },
+    {
+      "id": "frekvence1",
+      "label": "Frekvence 1",
+      "method": "form",
+      "url": "https://www.frekvence1.cz/napiste-nam",
+      "hintText": "Doporučená kategorie ve formuláři: „Vysílání rádia“."
+    },
+    {
+      "id": "evropa2",
+      "label": "Evropa 2",
+      "method": "form",
+      "url": "https://www.evropa2.cz/kontakt",
+      "hintText": "Pokud není explicitní e-mail pro přání, použijte webový kontakt."
+    },
+    {
+      "id": "cro_pisnicky_na_prani",
+      "label": "Český rozhlas – Písničky na přání",
+      "method": "form_or_sms",
+      "url": "https://program.rozhlas.cz/pisnicky-na-prani-7232426/o-poradu",
+      "smsHint": "Instrukce SMS jsou na stránce pořadu. V MVP jen zobrazení nápovědy – bez odesílání."
+    }
+  ]
+}
+
