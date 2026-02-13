@@ -2781,6 +2781,16 @@ a.brand,
   background-color: var(--iu-surface, #fff);
   color: rgba(11,27,43,0.92);
 }
+.iuWishAccSummary::marker{ content: ""; }
+
+/* Ensure summary hit-area covers full card width (no dead zone in padding/border) */
+#iuRadioWish > summary.iuWishAccSummary{
+  width: calc(100% + 42px);
+  margin-left: -21px;
+  margin-right: -21px;
+  padding-inline-start: 0;
+  border-radius: 14px;
+}
 .iuWishAccSummary::-webkit-details-marker{ display:none; }
 .iuWishAccTitle{
   font-size: 18px;
