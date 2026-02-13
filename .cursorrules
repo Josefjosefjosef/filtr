@@ -1,0 +1,60 @@
+ONE-SHOT EXECUTION RULES (INFOUZEL.cz)
+
+Nevykládej. Dodávej jen: Kroky → Příkazy → Diff/paths → Commit/PR → Gate proof.
+
+Pokud narazíš na chybu, nezkoušej 10 podobných pokusů. Udělej max 2 pokusy a pak dej Variant A/B/C s jasným dopadem.
+
+PowerShell only (žádné &&, žádné heredoc). Příkazy vždy po řádcích.
+
+Scope gate: před commitem vždy git status --short a po commitu vždy git show --name-only -1.
+
+Když úkol říká „UI-only“, saháš jen na uvedené soubory. Ostatní změny musí být stash/restore.
+
+Když úkol obsahuje „NO-GO“, je to absolutní zákaz.
+
+Když máš dodat „důkaz“, musíš dát konkrétní výstupy (JSON/log/grep), ne pocit.
+
+POVINNÝ FORMÁT VÝSTUPU (Cursor musí vracet vždy toto)
+
+Každý výstup musí mít přesně tyhle sekce:
+
+Co jsem změnil (1–3 věty max)
+
+Příkazy, které jsem spustil (PowerShell, po řádcích)
+
+Scope proof (git show --name-only -1, případně PR files JSON)
+
+Gate proof (konkrétní měření / výstup)
+
+Co zůstalo rozdělané (pokud něco zůstalo ve stash, napiš přesně stash name)
+
+STOP PODMÍNKA (aby se to netočilo)
+
+Když se stejná chyba objeví podruhé, Cursor musí přestat iterovat a místo toho napsat:
+
+PŘÍČINA (nejpravděpodobnější)
+
+VARIANTA A (nejrychlejší)
+
+VARIANTA B (nejbezpečnější)
+
+VARIANTA C (nejčistší, ale delší)
+
+Bez dalšího zkoušení.
+
+RYCHLÝ „TASK TEMPLATE“, který mi budeš posílat ty
+
+Od teď mi piš zadání pro Cursor takhle (kopíruj-vložit):
+
+CÍL:
+
+SOUBORY (whitelist):
+
+NO-GO:
+
+KROKY (max 7):
+
+GATE (co musí vypsat / změřit):
+
+COMMIT MESSAGE:   ........
+
