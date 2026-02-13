@@ -4405,10 +4405,7 @@ function buildVideoAsArticleCard(it) {
   ];
 
   // Unified navigation router (UI-only)
-  const VIEW_MAP = {
-    media: 'media',
-    radio: 'radio'
-  };
+  const VIEW_MAP = { media: 'media', radio: 'radio' };
 
   function escapeHtml(s){
     return String(s ?? "")
@@ -4469,6 +4466,28 @@ function buildVideoAsArticleCard(it) {
     if(key === 'radio' && viewEl) viewEl.hidden = false;
   }
 
+  function normalizeSection(raw){
+    const k = String(raw || '').trim().toLowerCase();
+    return k === 'radio' ? 'radio' : 'media';
+  }
+
+  function getInitialSection(){
+    try{
+      const params = new URLSearchParams(window.location.search);
+      return normalizeSection(params.get('section') || 'media');
+    }catch{
+      return 'media';
+    }
+  }
+
+  function persistSection(section){
+    try{
+      const url = new URL(window.location.href);
+      url.searchParams.set('section', section);
+      history.replaceState(null, '', url);
+    }catch{}
+  }
+
   function initNavRouter(){
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
@@ -4476,23 +4495,21 @@ function buildVideoAsArticleCard(it) {
 
     renderRadioView(viewEl);
 
-    // Start: media is default (or currently marked active)
-    const initialAccent =
-      (document.querySelector('.iu-leftNav .iu-leftNavItem[aria-current="page"]')?.getAttribute('data-accent') ||
-       document.querySelector('.iu-leftNav .iu-leftNavItem.is-active')?.getAttribute('data-accent') ||
-       'media');
-    const initKey = String(initialAccent || 'media').trim().toLowerCase();
-    setLeftNavActive(initKey);
-    showView(VIEW_MAP[initKey] ?? 'media');
+    // Start: derive from URL (?section=radio|media). Unknown -> media.
+    const initial = getInitialSection();
+    persistSection(initial);
+    setLeftNavActive(initial);
+    showView(VIEW_MAP[initial] ?? 'media');
 
     // Delegated: any click in left rail routes to exactly one view + exactly one active item.
     document.addEventListener('click', (e) => {
       const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
       if (!item) return;
       const accent = (item.getAttribute('data-accent') || item.dataset?.accent || "").trim().toLowerCase();
-      setLeftNavActive(accent);
-      const view = VIEW_MAP[accent] ?? 'media';
-      showView(view);
+      const section = normalizeSection(accent);
+      persistSection(section);
+      setLeftNavActive(section);
+      showView(VIEW_MAP[section] ?? 'media');
     });
   }
 
