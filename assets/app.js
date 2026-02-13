@@ -4498,12 +4498,12 @@ function buildVideoAsArticleCard(it) {
       };
 
       const [radiosJson, calendarNamesJson, artistsJson, iamJson, legacyNamesJson] = await Promise.allSettled([
-        fetchJson("data/radio_requests.json", 4500),
-        fetchJson("data/calendar_first_names.json", 4500),
-        fetchJson("data/artists_whitelist.json", 4500),
-        fetchJson("data/iam_whitelist.json", 4500),
+        fetchJson("/projects/data/radio_requests.json", 4500),
+        fetchJson("/projects/data/calendar_first_names.json", 4500),
+        fetchJson("/projects/data/artists_whitelist.json", 4500),
+        fetchJson("/projects/data/iam_whitelist.json", 4500),
         // legacy fallback (older versions)
-        fetchJson("data/names_whitelist.json", 4500)
+        fetchJson("/projects/data/names_whitelist.json", 4500)
       ]);
 
       if (radiosJson.status === "fulfilled" && radiosJson.value && Array.isArray(radiosJson.value.radios)) {
@@ -4539,6 +4539,14 @@ function buildVideoAsArticleCard(it) {
     }catch{}
 
     wishData = out;
+    try{
+      // Store in a non-feed bucket (UI-only) for debugging/inspection.
+      if (window.state && typeof window.state === "object") {
+        window.state.radioWish = { ...out, loadedAt: Date.now() };
+      } else if (typeof state !== "undefined") {
+        state.radioWish = { ...out, loadedAt: Date.now() };
+      }
+    }catch{}
     return out;
   }
 
@@ -4591,7 +4599,7 @@ function buildVideoAsArticleCard(it) {
                 <select class="iuCtrl" id="iuWishSong">
                   <option value="">— vyberte —</option>
                 </select>
-                <div class="iuErr" id="iuWishSongErr" hidden>Vyberte písničku ze seznamu.</div>
+                <div class="iuErr" id="iuWishSongErr" hidden>Vyberte interpreta.</div>
               </div>
             </div>
           </div>
@@ -4604,7 +4612,7 @@ function buildVideoAsArticleCard(it) {
                 <select class="iuCtrl" id="iuWishTo">
                   <option value="">— vyberte —</option>
                 </select>
-                <div class="iuErr" id="iuWishToErr" hidden>Vyberte jméno ze seznamu.</div>
+                <div class="iuErr" id="iuWishToErr" hidden>Vyberte jméno Pro koho.</div>
               </div>
             </div>
 
@@ -4614,7 +4622,7 @@ function buildVideoAsArticleCard(it) {
                 <select class="iuCtrl" id="iuWishFrom">
                   <option value="">— vyberte —</option>
                 </select>
-                <div class="iuErr" id="iuWishFromErr" hidden>Vyberte jméno ze seznamu.</div>
+                <div class="iuErr" id="iuWishFromErr" hidden>Vyberte jméno Od koho.</div>
               </div>
             </div>
 
@@ -4987,9 +4995,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (!d.type) errs.push("Vyberte typ požadavku.");
       if (!d.radioId) errs.push("Vyberte rádio.");
       const { toOk, fromOk, songOk } = hardValidateSelected(true);
-      if (!toOk) errs.push("Vyberte jméno „Pro koho“ ze seznamu.");
-      if (!fromOk) errs.push("Vyberte jméno „Od koho“ ze seznamu.");
-      if (!songOk) errs.push("Vyberte písničku ze seznamu.");
+      if (!toOk) errs.push("Vyberte jméno Pro koho.");
+      if (!fromOk) errs.push("Vyberte jméno Od koho.");
+      if (!songOk) errs.push("Vyberte interpreta.");
       if (d.emailSender && !isValidEmail(d.emailSender)) errs.push("E-mail odesílatele není platný.");
       if (d.emailRecipient && !isValidEmail(d.emailRecipient)) errs.push("E-mail příjemce není platný.");
       return { ok: errs.length === 0, errs, d: sanitizeDraft(d) };
