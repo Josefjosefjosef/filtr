@@ -33,3 +33,9 @@ Thumbs.db
 # allow CI generated data
 !filtr/data/weather.json
 !filtr/data/namedays.json
+
+# Local evidence dumps (do not commit)
+tmp/_gitattributes_head.txt
+
+# Local CDP/Edge profiles (do not commit)
+tmp/cdp-edge-profile-*/
