@@ -4529,10 +4529,10 @@ function buildVideoAsArticleCard(it) {
             <span class="iuLabel">Typ požadavku *</span>
             <select class="iuCtrl" id="iuWishType">
               <option value="">— vyberte —</option>
-              <option value="narozeninám">Narozeninám</option>
-              <option value="svátku">Svátek</option>
-              <option value="výročí">Výročí</option>
-              <option value="úspěchu">Úspěch / gratulace</option>
+              <option value="narozeniny">Narozeninám</option>
+              <option value="svatek">Svátek</option>
+              <option value="vyroci">Výročí</option>
+              <option value="uspech">Úspěch / gratulace</option>
             </select>
           </label>
 
@@ -4887,7 +4887,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     function sanitizeDraft(d){
-      const allowedTypes = new Set(["narozeninám","svátku","výročí","úspěchu"]);
+      const allowedTypes = new Set(["narozeniny","svatek","vyroci","uspech"]);
       const allowedRelations = new Set(["","kamarád","kamarádka","maminka","tatínek","kolega","kolegové","partner","partnerka"]);
       const safe = {
         type: allowedTypes.has(d?.type) ? d.type : "",
@@ -5000,7 +5000,13 @@ function buildVideoAsArticleCard(it) {
     function buildTexts(d){
       const radio = radiosById.get(d.radioId);
       const radioLabel = radio ? radio.label : "rádio";
-      const typ = d.type;
+      const typeLabelMap = {
+        narozeniny: "narozeninám",
+        svatek: "svátku",
+        vyroci: "výročí",
+        uspech: "úspěchu"
+      };
+      const typ = typeLabelMap[d.type] || "";
       const proKoho = d.to;
       const odKoho = d.from;
       const pisnickaClause = d.song ? ` a případně zahrání písně ${d.song}` : "";
