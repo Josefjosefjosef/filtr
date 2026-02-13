@@ -2778,14 +2778,15 @@ a.brand,
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: 0;
-  color: rgba(11,27,43,0.92);
+  color: var(--iu-accent-radio);
+  opacity: 0.92;
 }
 .iuWishAccCaret{
   width: 10px;
   height: 10px;
   flex: 0 0 auto;
-  border-right: 2px solid rgba(11,27,43,0.55);
-  border-bottom: 2px solid rgba(11,27,43,0.55);
+  border-right: 2px solid var(--iu-accent-radio);
+  border-bottom: 2px solid var(--iu-accent-radio);
   transform: rotate(45deg);
   transition: transform 150ms ease;
 }
@@ -2794,6 +2795,42 @@ a.brand,
 }
 .iuWishAccBody{
   margin-top: 12px;
+}
+
+/* Wish accordion header hover — sync with radio chips hover */
+#iuRadioWish{
+  transition: background-color 150ms ease, color 150ms ease;
+}
+#iuRadioWish:not([open]):hover{
+  background-color: var(--iu-accent-radio);
+  color: #fff;
+}
+#iuRadioWish:not([open]):hover .iuWishAccTitle{
+  color: #fff;
+  opacity: 1;
+}
+#iuRadioWish:not([open]):hover .iuWishAccCaret{
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
+#iuRadioWish summary:focus-visible{
+  background-color: var(--iu-accent-radio);
+  color: #fff;
+  outline: 2px solid color-mix(in srgb, var(--iu-accent-radio) 70%, white);
+  outline-offset: 2px;
+}
+#iuRadioWish summary:focus-visible .iuWishAccTitle{
+  color: #fff;
+  opacity: 1;
+}
+#iuRadioWish summary:focus-visible .iuWishAccCaret{
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
+
+/* Open state — subtle, not overdone (keeps caret rotation as indicator) */
+#iuRadioWish[open]{
+  border-color: rgba(139, 92, 246, 0.28);
 }
 /* Layout V2 uses .iuWishRows/.iuWishRow; keep legacy grid visible if ever used */
 .iuWishGrid{
