@@ -4470,14 +4470,40 @@ function buildVideoAsArticleCard(it) {
     };
 
     try{
-      // Use existing infra if available in this scope.
+      // Self-contained fetch (do not depend on outer helpers).
+      // Relative URLs resolve under /projects/ (same origin).
+      const withTs = (rel) => {
+        try{
+          const u = new URL(String(rel || ""), window.location.href);
+          u.searchParams.set("ts", String(Date.now()));
+          return u.toString();
+        }catch{
+          return String(rel || "");
+        }
+      };
+      const fetchJson = async (rel, timeoutMs = 4500) => {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try{
+          const res = await fetch(withTs(rel), {
+            cache: "no-store",
+            headers: { "cache-control": "no-cache" },
+            signal: controller.signal,
+          });
+          if (!res.ok) throw new Error(`HTTP_${res.status}`);
+          return await res.json();
+        } finally {
+          clearTimeout(timer);
+        }
+      };
+
       const [radiosJson, calendarNamesJson, artistsJson, iamJson, legacyNamesJson] = await Promise.allSettled([
-        fetchJsonNoCache(makeDataUrl("data/radio_requests.json"), { timeoutMs: 4500, retries: 1 }),
-        fetchJsonNoCache(makeDataUrl("data/calendar_first_names.json"), { timeoutMs: 4500, retries: 1 }),
-        fetchJsonNoCache(makeDataUrl("data/artists_whitelist.json"), { timeoutMs: 4500, retries: 1 }),
-        fetchJsonNoCache(makeDataUrl("data/iam_whitelist.json"), { timeoutMs: 4500, retries: 1 }),
+        fetchJson("data/radio_requests.json", 4500),
+        fetchJson("data/calendar_first_names.json", 4500),
+        fetchJson("data/artists_whitelist.json", 4500),
+        fetchJson("data/iam_whitelist.json", 4500),
         // legacy fallback (older versions)
-        fetchJsonNoCache(makeDataUrl("data/names_whitelist.json"), { timeoutMs: 4500, retries: 1 })
+        fetchJson("data/names_whitelist.json", 4500)
       ]);
 
       if (radiosJson.status === "fulfilled" && radiosJson.value && Array.isArray(radiosJson.value.radios)) {
@@ -4513,9 +4539,6 @@ function buildVideoAsArticleCard(it) {
     }catch{}
 
     wishData = out;
-    try{
-      state.radioWish = { ...out, loadedAt: Date.now() };
-    }catch{}
     return out;
   }
 
