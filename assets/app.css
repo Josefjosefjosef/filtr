@@ -2763,21 +2763,37 @@ a.brand,
   border: 1px solid rgba(11,27,43,0.08);
   box-shadow: 0 12px 30px rgba(0,0,0,0.05);
 }
-.iuRadioWishHead{
-  margin-bottom: 12px;
+.iuWishAccSummary{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
 }
-.iuRadioWishTitle{
+.iuWishAccSummary::-webkit-details-marker{ display:none; }
+.iuWishAccTitle{
   font-size: 18px;
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: 0;
   color: rgba(11,27,43,0.92);
 }
-.iuRadioWishSub{
-  margin-top: 4px;
-  font-size: 12px;
-  line-height: 1.25;
-  color: rgba(11,27,43,0.70);
+.iuWishAccCaret{
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+  border-right: 2px solid rgba(11,27,43,0.55);
+  border-bottom: 2px solid rgba(11,27,43,0.55);
+  transform: rotate(45deg);
+  transition: transform 150ms ease;
+}
+#iuRadioWish[open] .iuWishAccCaret{
+  transform: rotate(-135deg);
+}
+.iuWishAccBody{
+  margin-top: 12px;
 }
 /* Layout V2 uses .iuWishRows/.iuWishRow; keep legacy grid visible if ever used */
 .iuWishGrid{
@@ -2852,9 +2868,7 @@ select.iuCtrl{
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .iuWishCard{
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  display: block;
   padding: 12px 12px;
   border-radius: 14px;
   border: 1px solid rgba(11,27,43,0.10);
@@ -2862,22 +2876,6 @@ select.iuCtrl{
   box-shadow: 0 12px 30px rgba(0,0,0,0.05);
   min-height: 92px;
   box-sizing: border-box;
-}
-.iuWishIcon{
-  width: 28px;
-  height: 28px;
-  flex: 0 0 28px;
-  color: rgba(11,27,43,0.72);
-}
-.iuWishIcon svg{
-  width: 100%;
-  height: 100%;
-  display: block;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 .iuWishCardBody{
   display: flex;
