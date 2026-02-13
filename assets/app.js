@@ -4524,104 +4524,132 @@ function buildVideoAsArticleCard(it) {
           <div class="iuRadioWishSub">Bez backendu. Vše vyklikávací (whitelist) pro bezpečný MVP.</div>
         </div>
 
-        <div class="iuWishGrid" role="group" aria-label="Formulář přání">
-          <label class="iuField">
-            <span class="iuLabel">Typ požadavku *</span>
-            <select class="iuCtrl" id="iuWishType">
-              <option value="">— vyberte —</option>
-              <option value="narozeniny">Narozeninám</option>
-              <option value="svatek">Svátek</option>
-              <option value="vyroci">Výročí</option>
-              <option value="uspech">Úspěch / gratulace</option>
-            </select>
-          </label>
-
-          <label class="iuField">
-            <span class="iuLabel">Rádio *</span>
-            <select class="iuCtrl" id="iuWishRadio">
-              <option value="">— vyberte —</option>
-            </select>
-            <div class="iuHint" id="iuWishRadioHint" hidden></div>
-          </label>
-
-          <div class="iuField">
-            <span class="iuLabel">Pro koho *</span>
-            <div class="iuAc">
-              <input class="iuCtrl iuAcInput" id="iuWishTo" type="text" autocomplete="off" inputmode="search" placeholder="Začněte psát (např. PE…)" />
-              <div class="iuAcPanel" id="iuWishToPanel" hidden></div>
+        <div class="iuWishRows" role="group" aria-label="Formulář přání">
+          <!-- Row 1: 3 equal blocks -->
+          <div class="iuWishRow iuWishRow--3" aria-label="Základní volby">
+            <div class="iuWishCard">
+              <span class="iuWishIcon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M7 2v3M17 2v3M3 7h18v14H3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 11h18" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              </span>
+              <label class="iuWishCardBody">
+                <span class="iuLabel">Typ požadavku *</span>
+                <select class="iuCtrl" id="iuWishType">
+                  <option value="">— vyberte —</option>
+                  <option value="narozeniny">Narozeninám</option>
+                  <option value="svatek">Svátek</option>
+                  <option value="vyroci">Výročí</option>
+                  <option value="uspech">Úspěch / gratulace</option>
+                  <option value="jen_tak">Jen tak pro radost</option>
+                </select>
+              </label>
             </div>
-            <div class="iuErr" id="iuWishToErr" hidden>Vyberte jméno ze seznamu.</div>
+
+            <div class="iuWishCard">
+              <span class="iuWishIcon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M3 11v8h18v-8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 11l10-4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="15" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              </span>
+              <div class="iuWishCardBody">
+                <label class="iuLabel" for="iuWishRadio">Rádio *</label>
+                <select class="iuCtrl" id="iuWishRadio">
+                  <option value="">— vyberte —</option>
+                </select>
+                <div class="iuHint" id="iuWishRadioHint" hidden></div>
+              </div>
+            </div>
+
+            <div class="iuWishCard">
+              <span class="iuWishIcon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M9 18V5l12-2v13" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="7" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="19" cy="16" r="3" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              </span>
+              <div class="iuWishCardBody">
+                <span class="iuLabel">Písnička *</span>
+                <div class="iuAc">
+                  <input class="iuCtrl iuAcInput" id="iuWishSong" type="text" autocomplete="off" inputmode="search" placeholder="Vyhledejte skladbu…" />
+                  <div class="iuAcPanel" id="iuWishSongPanel" hidden></div>
+                </div>
+                <div class="iuErr" id="iuWishSongErr" hidden>Vyberte písničku ze seznamu.</div>
+              </div>
+            </div>
           </div>
 
-          <div class="iuField">
-            <span class="iuLabel">Od koho *</span>
-            <div class="iuAc">
-              <input class="iuCtrl iuAcInput" id="iuWishFrom" type="text" autocomplete="off" inputmode="search" placeholder="Začněte psát (např. JA…)" />
-              <div class="iuAcPanel" id="iuWishFromPanel" hidden></div>
+          <!-- Row 2: 3 equal blocks -->
+          <div class="iuWishRow iuWishRow--3" aria-label="Jména a vztah">
+            <div class="iuWishCard">
+              <span class="iuWishIcon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              </span>
+              <div class="iuWishCardBody">
+                <span class="iuLabel">Pro koho *</span>
+                <div class="iuAc">
+                  <input class="iuCtrl iuAcInput" id="iuWishTo" type="text" autocomplete="off" inputmode="search" placeholder="Vyberte jméno…" />
+                  <div class="iuAcPanel" id="iuWishToPanel" hidden></div>
+                </div>
+                <div class="iuErr" id="iuWishToErr" hidden>Vyberte jméno ze seznamu.</div>
+              </div>
             </div>
-            <div class="iuErr" id="iuWishFromErr" hidden>Vyberte jméno ze seznamu.</div>
+
+            <div class="iuWishCard">
+              <span class="iuWishIcon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M20 21v-2a4 4 0 0 0-3-3.87" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21v-2a4 4 0 0 1 4-4h4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              </span>
+              <div class="iuWishCardBody">
+                <span class="iuLabel">Od koho *</span>
+                <div class="iuAc">
+                  <input class="iuCtrl iuAcInput" id="iuWishFrom" type="text" autocomplete="off" inputmode="search" placeholder="Vyberte jméno…" />
+                  <div class="iuAcPanel" id="iuWishFromPanel" hidden></div>
+                </div>
+                <div class="iuErr" id="iuWishFromErr" hidden>Vyberte jméno ze seznamu.</div>
+              </div>
+            </div>
+
+            <div class="iuWishCard">
+              <span class="iuWishIcon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              </span>
+              <label class="iuWishCardBody">
+                <span class="iuLabel">Oslovení / vztah</span>
+                <select class="iuCtrl" id="iuWishRelation">
+                  <option value="">—</option>
+                  <option value="kamarád">Kamarád</option>
+                  <option value="kamarádka">Kamarádka</option>
+                  <option value="maminka">Maminka</option>
+                  <option value="tatínek">Tatínek</option>
+                  <option value="kolega">Kolega</option>
+                  <option value="kolegové">Kolegové</option>
+                  <option value="partner">Partner</option>
+                  <option value="partnerka">Partnerka</option>
+                </select>
+              </label>
+            </div>
           </div>
 
-          <div class="iuField iuSpan2">
-            <span class="iuLabel">Písnička (volitelné)</span>
-            <div class="iuAc">
-              <input class="iuCtrl iuAcInput" id="iuWishSong" type="text" autocomplete="off" inputmode="search" placeholder="Vyhledejte skladbu (volitelné)…" />
-              <div class="iuAcPanel" id="iuWishSongPanel" hidden></div>
+          <!-- Row 3: emails -->
+          <div class="iuWishRow iuWishRow--2" aria-label="E-maily (volitelné)">
+            <div class="iuWishCard">
+              <span class="iuWishIcon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22 6l-10 7L2 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              </span>
+              <label class="iuWishCardBody">
+                <span class="iuLabel">E-mail odesílatele</span>
+                <input class="iuCtrl" id="iuWishEmailSender" type="email" autocomplete="email" inputmode="email" placeholder="např. jmeno@domena.cz" />
+              </label>
             </div>
-            <div class="iuErr" id="iuWishSongErr" hidden>Vyberte písničku ze seznamu.</div>
+            <div class="iuWishCard">
+              <span class="iuWishIcon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22 6l-10 7L2 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              </span>
+              <label class="iuWishCardBody">
+                <span class="iuLabel">E-mail příjemce</span>
+                <input class="iuCtrl" id="iuWishEmailRecipient" type="email" autocomplete="email" inputmode="email" placeholder="např. oslavenec@domena.cz" />
+              </label>
+            </div>
           </div>
-
-          <label class="iuField">
-            <span class="iuLabel">Oslovení / vztah (volitelné)</span>
-            <select class="iuCtrl" id="iuWishRelation">
-              <option value="">—</option>
-              <option value="kamarád">Kamarád</option>
-              <option value="kamarádka">Kamarádka</option>
-              <option value="maminka">Maminka</option>
-              <option value="tatínek">Tatínek</option>
-              <option value="kolega">Kolega</option>
-              <option value="kolegové">Kolegové</option>
-              <option value="partner">Partner</option>
-              <option value="partnerka">Partnerka</option>
-            </select>
-          </label>
-
-          <label class="iuField">
-            <span class="iuLabel">E-mail odesílatele (volitelné)</span>
-            <input class="iuCtrl" id="iuWishEmailSender" type="email" autocomplete="email" inputmode="email" placeholder="např. jmeno@domena.cz" />
-          </label>
-
-          <label class="iuField">
-            <span class="iuLabel">E-mail příjemce (volitelné)</span>
-            <input class="iuCtrl" id="iuWishEmailRecipient" type="email" autocomplete="email" inputmode="email" placeholder="např. oslavenec@domena.cz" />
-          </label>
         </div>
 
         <div class="iuWishActions">
-          <button class="iuBtn" id="iuWishGenerate" type="button">Vytvořit žádost</button>
+          <button class="iuBtn" id="iuWishSendRadio" type="button">Odeslat rádiu</button>
+          <div class="iuWishStatus" id="iuWishStatus" aria-live="polite"></div>
           <div class="iuErr iuErrBlock" id="iuWishErrors" hidden></div>
-        </div>
-
-        <div class="iuWishOut" aria-label="Náhledy zpráv">
-          <div class="iuWishOutCol">
-            <div class="iuWishOutHead">Zpráva pro rádio</div>
-            <textarea class="iuCtrl iuTA" id="iuWishRadioMsg" readonly rows="7" placeholder="Zde se vygeneruje zpráva…"></textarea>
-            <div class="iuWishBtnRow">
-              <button class="iuBtn" id="iuWishSendRadio" type="button">Odeslat rádiu</button>
-              <button class="iuBtn iuBtnGhost" id="iuWishCopyRadio" type="button">Kopírovat text</button>
-              <span class="iuCopied" id="iuWishCopiedRadio" hidden>Zkopírováno</span>
-            </div>
-          </div>
-
-          <div class="iuWishOutCol">
-            <div class="iuWishOutHead">Zpráva pro příjemce</div>
-            <textarea class="iuCtrl iuTA" id="iuWishRecipientMsg" readonly rows="7" placeholder="Zde se vygeneruje zpráva…"></textarea>
-            <div class="iuWishBtnRow">
-              <button class="iuBtn" id="iuWishSendRecipient" type="button">Odeslat příjemci</button>
-              <button class="iuBtn iuBtnGhost" id="iuWishCopyRecipient" type="button">Kopírovat text</button>
-              <span class="iuCopied" id="iuWishCopiedRecipient" hidden>Zkopírováno</span>
-            </div>
-          </div>
         </div>
       </section>
     `;
@@ -4712,18 +4740,11 @@ function buildVideoAsArticleCard(it) {
     const elRelation = document.getElementById("iuWishRelation");
     const elEmailSender = document.getElementById("iuWishEmailSender");
     const elEmailRecipient = document.getElementById("iuWishEmailRecipient");
-    const elGenerate = document.getElementById("iuWishGenerate");
     const elErrors = document.getElementById("iuWishErrors");
-    const elRadioMsg = document.getElementById("iuWishRadioMsg");
-    const elRecipientMsg = document.getElementById("iuWishRecipientMsg");
+    const elStatus = document.getElementById("iuWishStatus");
     const btnSendRadio = document.getElementById("iuWishSendRadio");
-    const btnCopyRadio = document.getElementById("iuWishCopyRadio");
-    const btnSendRecipient = document.getElementById("iuWishSendRecipient");
-    const btnCopyRecipient = document.getElementById("iuWishCopyRecipient");
-    const elCopiedRadio = document.getElementById("iuWishCopiedRadio");
-    const elCopiedRecipient = document.getElementById("iuWishCopiedRecipient");
 
-    if (!viewEl || !elType || !elRadio || !elTo || !elFrom || !elSong || !elGenerate || !elRadioMsg || !elRecipientMsg) {
+    if (!viewEl || !elType || !elRadio || !elTo || !elFrom || !elSong || !btnSendRadio) {
       return { setData: () => {} };
     }
 
@@ -4889,7 +4910,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     function sanitizeDraft(d){
-      const allowedTypes = new Set(["narozeniny","svatek","vyroci","uspech"]);
+      const allowedTypes = new Set(["narozeniny","svatek","vyroci","uspech","jen_tak"]);
       const allowedRelations = new Set(["","kamarád","kamarádka","maminka","tatínek","kolega","kolegové","partner","partnerka"]);
       const safe = {
         type: allowedTypes.has(d?.type) ? d.type : "",
@@ -4971,17 +4992,20 @@ function buildVideoAsArticleCard(it) {
       elErrors.hidden = false;
       elErrors.textContent = msg;
     }
+    function setStatus(msg){
+      if (!elStatus) return;
+      elStatus.textContent = msg || "";
+    }
 
     function hardValidateSelected(showErrors){
       // Ensure typed-but-not-selected cannot pass (must be selectedValue AND exist in whitelist)
       const toOk = !!elTo.dataset.selectedValue && namesSet.has(String(elTo.dataset.selectedValue));
       const fromOk = !!elFrom.dataset.selectedValue && namesSet.has(String(elFrom.dataset.selectedValue));
-      const songVal = String(elSong.value || "").trim();
-      const songOk = !songVal || (!!elSong.dataset.selectedValue && songsSet.has(String(elSong.dataset.selectedValue)));
+      const songOk = !!elSong.dataset.selectedValue && songsSet.has(String(elSong.dataset.selectedValue));
       if (showErrors){
         setErr(elToErr, !toOk && !!String(elTo.value || "").trim());
         setErr(elFromErr, !fromOk && !!String(elFrom.value || "").trim());
-        setErr(elSongErr, !songOk && !!songVal);
+        setErr(elSongErr, !songOk);
       } else {
         setErr(elToErr, false);
         setErr(elFromErr, false);
@@ -4997,7 +5021,8 @@ function buildVideoAsArticleCard(it) {
         narozeniny: "narozeninám",
         svatek: "svátku",
         vyroci: "výročí",
-        uspech: "úspěchu"
+        uspech: "úspěchu",
+        jen_tak: "jen tak pro radost"
       };
       const typ = typeLabelMap[d.type] || "";
       const proKoho = d.toSelected;
@@ -5007,17 +5032,19 @@ function buildVideoAsArticleCard(it) {
       const emailClause = d.emailSender ? `, kontakt: ${d.emailSender}` : "";
 
       const subjectRadio = `Písnička / přání – ${proKoho} – žádost z infoUzel.cz`;
+      const typClause = d.type === "jen_tak" ? typ : `k ${typ}`;
       const bodyRadio =
 `Dobrý den,
-píšu přes infoUzel.cz jménem posluchače ${odKoho}. Rád/a by popřál/a ${proKoho} k ${typ}.
+píšu přes infoUzel.cz jménem posluchače ${odKoho}. Rád/a by popřál/a ${proKoho} ${typClause}.
 Pokud je to možné, prosím o pozdrav ve vysílání${pisnickaClause}.
 Děkuji a přeji hezký den.
 — infoUzel.cz (odeslal/a: ${odKoho}${emailClause})`;
 
       const subjectRec = `Máš rádiové přání od ${odKoho} 🙂`;
+      const typClause2 = d.type === "jen_tak" ? typ : `k ${typ}`;
       const bodyRec =
 `Ahoj ${proKoho},
-${odKoho} právě požádal/a rádio ${radioLabel} o přání k ${typ}${pisnickaClause2}.
+${odKoho} právě požádal/a rádio ${radioLabel} o přání ${typClause2}${pisnickaClause2}.
 Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová 🙂
 — infoUzel.cz`;
 
@@ -5064,27 +5091,41 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const { toOk, fromOk, songOk } = hardValidateSelected(true);
       if (!toOk) errs.push("Vyberte jméno „Pro koho“ ze seznamu.");
       if (!fromOk) errs.push("Vyberte jméno „Od koho“ ze seznamu.");
-      if (!songOk) errs.push("Písničku (pokud je vyplněná) vyberte ze seznamu.");
+      if (!songOk) errs.push("Vyberte písničku ze seznamu.");
       if (d.emailSender && !isValidEmail(d.emailSender)) errs.push("E-mail odesílatele není platný.");
       if (d.emailRecipient && !isValidEmail(d.emailRecipient)) errs.push("E-mail příjemce není platný.");
       return { ok: errs.length === 0, errs, d: sanitizeDraft(d) };
     }
 
-    let lastBuilt = null;
-    function buildAndShow(){
+    function buildAndSend(){
       const v = validateRequired();
       if (!v.ok) {
         setBlockErr(v.errs.join(" "));
+        setStatus("");
         return;
       }
       setBlockErr("");
-      lastBuilt = buildTexts(v.d);
-      elRadioMsg.value = `Předmět: ${lastBuilt.subjectRadio}\n\n${lastBuilt.bodyRadio}`;
-      elRecipientMsg.value = `Předmět: ${lastBuilt.subjectRec}\n\n${lastBuilt.bodyRec}`;
+      const built = buildTexts(v.d);
       scheduleSave();
+      const r = built.radio;
+      if (!r) return;
+
+      if (r.method === "email" && r.emailTo) {
+        setStatus("Otevírám e-mail klient (mailto)…");
+        openMailto(r.emailTo, built.subjectRadio, built.bodyRadio);
+        return;
+      }
+
+      // form / form_or_sms
+      if (r.url) {
+        try { window.open(r.url, "_blank", "noopener,noreferrer"); } catch {}
+      }
+      copyToClipboard(`${built.subjectRadio}\n\n${built.bodyRadio}`).then((ok) => {
+        setStatus(ok ? "Text pro rádio zkopírován do schránky." : "Text se nepodařilo zkopírovat (zkus to znovu).");
+      });
     }
 
-    elGenerate.addEventListener("click", buildAndShow);
+    btnSendRadio.addEventListener("click", buildAndSend);
     elRadio.addEventListener("change", () => { showHintForRadio(); scheduleSave(); });
     elType.addEventListener("change", scheduleSave);
     elRelation?.addEventListener("change", scheduleSave);
@@ -5096,40 +5137,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       closePanels();
     });
 
-    btnCopyRadio?.addEventListener("click", async () => {
-      const text = String(elRadioMsg.value || "").trim();
-      if (!text) return;
-      if (await copyToClipboard(text)) flash(elCopiedRadio);
-    });
-    btnCopyRecipient?.addEventListener("click", async () => {
-      const text = String(elRecipientMsg.value || "").trim();
-      if (!text) return;
-      if (await copyToClipboard(text)) flash(elCopiedRecipient);
-    });
-
-    btnSendRadio?.addEventListener("click", () => {
-      if (!lastBuilt) buildAndShow();
-      if (!lastBuilt) return;
-      const r = lastBuilt.radio;
-      if (!r) return;
-      if (r.method === "email" && r.emailTo) {
-        openMailto(r.emailTo, lastBuilt.subjectRadio, lastBuilt.bodyRadio);
-      } else if (r.url) {
-        window.open(r.url, "_blank", "noopener,noreferrer");
-      }
-    });
-
-    btnSendRecipient?.addEventListener("click", () => {
-      if (!lastBuilt) buildAndShow();
-      if (!lastBuilt) return;
-      const to = String(elEmailRecipient?.value || "").trim();
-      if (!isValidEmail(to)) {
-        setBlockErr("Pro odeslání příjemci vyplňte platný e-mail příjemce.");
-        return;
-      }
-      setBlockErr("");
-      openMailto(to, lastBuilt.subjectRec, lastBuilt.bodyRec);
-    });
+    setStatus("");
 
     // initial
     populateRadioSelect();
