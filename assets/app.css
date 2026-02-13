@@ -2758,13 +2758,36 @@ a.brand,
   padding: 10px 12px;
   border-radius: 12px;
   text-decoration: none;
-  background-color: rgba(255,255,255,0.94);
+  background: transparent;
   border: 1px solid rgba(11,27,43,0.08);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.05);
   color: rgba(11,27,43,0.92);
+  transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
 }
 .iuRadioChip:hover{
-  border-color: rgba(11,27,43,0.14);
+  /* fallback first, then modern color-mix() */
+  background-color: var(--iu-accent-radio);
+  background-color: color-mix(in srgb, var(--iu-accent-radio) 85%, transparent);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,.22);
+  transform: translateY(-1px);
+}
+.iuRadioChip:hover .iuRadioChipTitle,
+.iuRadioChip:hover .iuRadioChipDesc{
+  color: #fff;
+}
+.iuRadioChip:focus-visible{
+  /* same visual intent as hover, plus focus ring */
+  background-color: var(--iu-accent-radio);
+  background-color: color-mix(in srgb, var(--iu-accent-radio) 85%, transparent);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,.22);
+  transform: translateY(-1px);
+  outline: 2px solid color-mix(in srgb, var(--iu-accent-radio) 70%, white);
+  outline-offset: 2px;
+}
+.iuRadioChip:focus-visible .iuRadioChipTitle,
+.iuRadioChip:focus-visible .iuRadioChipDesc{
+  color: #fff;
 }
 .iuRadioChipTitle{
   font-weight: 800;
@@ -2774,6 +2797,15 @@ a.brand,
   font-size: 12px;
   opacity: .8;
   line-height: 1.2;
+}
+@media (prefers-reduced-motion: reduce){
+  .iuRadioChip{
+    transition: none;
+  }
+  .iuRadioChip:hover,
+  .iuRadioChip:focus-visible{
+    transform: none;
+  }
 }
 @media (max-width:520px){
   .iuRadioGrid{
