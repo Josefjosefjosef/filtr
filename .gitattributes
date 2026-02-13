@@ -1,8 +1,6 @@
-# Normalize line endings
 * text=auto
 
 # Enforce LF in source-like files (prevents accidental CRLF diffs on Windows)
-.gitattributes text eol=lf
 *.js   text eol=lf
 *.css  text eol=lf
 *.html text eol=lf
@@ -10,3 +8,5 @@
 *.yaml text eol=lf
 *.json text eol=lf
 *.ps1  text eol=lf
+
+.gitattributes text eol=lf
