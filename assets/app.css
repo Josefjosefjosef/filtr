@@ -2714,6 +2714,10 @@ a.brand,
 .iuRadioView[hidden]{
   display: none !important;
 }
+/* Exclusive view safety: if feed is hidden, remove from layout */
+#feed[hidden]{
+  display: none !important;
+}
 .iuRadioView{
   width: 100%;
   max-width: 100%;
