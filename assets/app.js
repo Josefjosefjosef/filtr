@@ -4488,6 +4488,12 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  function applySectionFromURL(){
+    const section = getInitialSection(); // already normalized + fallback->media
+    setLeftNavActive(section);
+    showView(VIEW_MAP[section] ?? 'media');
+  }
+
   function initNavRouter(){
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
@@ -4496,10 +4502,9 @@ function buildVideoAsArticleCard(it) {
     renderRadioView(viewEl);
 
     // Start: derive from URL (?section=radio|media). Unknown -> media.
-    const initial = getInitialSection();
-    persistSection(initial);
-    setLeftNavActive(initial);
-    showView(VIEW_MAP[initial] ?? 'media');
+    // Ensure default is written into the URL (replaceState, no pushState).
+    persistSection(getInitialSection());
+    applySectionFromURL();
 
     // Delegated: any click in left rail routes to exactly one view + exactly one active item.
     document.addEventListener('click', (e) => {
@@ -4508,9 +4513,13 @@ function buildVideoAsArticleCard(it) {
       const accent = (item.getAttribute('data-accent') || item.dataset?.accent || "").trim().toLowerCase();
       const section = normalizeSection(accent);
       persistSection(section);
-      setLeftNavActive(section);
-      showView(VIEW_MAP[section] ?? 'media');
+      applySectionFromURL();
     });
+
+    // Back/Forward navigation must update view according to ?section=... without reload.
+    window.addEventListener('popstate', applySectionFromURL);
+    // Fallback: left nav uses href="#" which may create hash-only history entries in some browsers.
+    window.addEventListener('hashchange', applySectionFromURL);
   }
 
   if (document.readyState === 'loading'){
