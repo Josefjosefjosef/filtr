@@ -5024,7 +5024,7 @@ function buildVideoAsArticleCard(it) {
         uspech: "úspěchu",
         jen_tak: "jen tak pro radost"
       };
-      const typ = typeLabelMap[d.type] || "";
+      const typ = typeLabelMap[d.type] ?? String(d.type || "");
       const proKoho = d.toSelected;
       const odKoho = d.fromSelected;
       const pisnickaClause = d.songSelected ? ` a případně zahrání písně ${d.songSelected}` : "";
@@ -5120,9 +5120,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (r.url) {
         try { window.open(r.url, "_blank", "noopener,noreferrer"); } catch {}
       }
-      copyToClipboard(`${built.subjectRadio}\n\n${built.bodyRadio}`).then((ok) => {
-        setStatus(ok ? "Text pro rádio zkopírován do schránky." : "Text se nepodařilo zkopírovat (zkus to znovu).");
-      });
+      setStatus("Otevírám stránku rádia…");
     }
 
     btnSendRadio.addEventListener("click", buildAndSend);

@@ -2779,8 +2779,11 @@ a.brand,
   line-height: 1.25;
   color: rgba(11,27,43,0.70);
 }
+/* Layout V2 uses .iuWishRows/.iuWishRow; keep legacy grid visible if ever used */
 .iuWishGrid{
-  display: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
 }
 .iuField{
   display: flex;
@@ -2837,14 +2840,15 @@ select.iuCtrl{
   width: 100%;
 }
 .iuWishRow{
-  display: grid;
   gap: 16px;
   width: 100%;
 }
 .iuWishRow--3{
+  display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 .iuWishRow--2{
+  display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .iuWishCard{
@@ -2951,18 +2955,8 @@ select.iuCtrl{
   background: rgba(11,27,43,0.06);
 }
 
-@media (max-width: 980px){
-  .iuWishRow--3{
-    grid-template-columns: 1fr;
-  }
-  .iuWishRow--2{
-    grid-template-columns: 1fr;
-  }
-}
 @media (max-width: 520px){
-  .iuWishRow--3{
-    grid-template-columns: 1fr;
-  }
+  .iuWishRow--3,
   .iuWishRow--2{
     grid-template-columns: 1fr;
   }
