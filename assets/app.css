@@ -2729,30 +2729,8 @@ a.brand,
 }
 .iuRadioGrid{
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px 18px;
-}
-.iuRadioGrid > *{
-  background-color: rgba(255,255,255,0.94);
-  border: 1px solid rgba(11,27,43,0.08);
-  border-radius: 14px;
-  padding: 14px 16px;
-  margin: 10px 0;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.05);
-  display:block;
-  opacity:1;
-  visibility:visible;
-  min-height: 60px;
-}
-.iuRadioGrid > .news-card,
-.iuRadioGrid > article{
-  position: relative;
-  overflow: hidden;
-}
-.iuRadioGrid > .news-card > *,
-.iuRadioGrid > article > *{
-  position: relative;
-  z-index: 1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 .iuRadioHead{
   display: flex;
@@ -2773,18 +2751,34 @@ a.brand,
   opacity: 0.35;
   border-radius: 999px;
 }
-.iuRadioDesc{
-  margin-top: 6px;
-  color: rgba(11,27,43,0.74);
-  font-size: 13px;
-  line-height: 1.35;
+.iuRadioChip{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  background-color: rgba(255,255,255,0.94);
+  border: 1px solid rgba(11,27,43,0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+  color: rgba(11,27,43,0.92);
 }
-.iuRadioView .news-title,
-.iuRadioView .news-titleLink{
-  -webkit-line-clamp: unset !important;
-  max-height: none !important;
-  overflow: visible !important;
-  display: inline !important;
+.iuRadioChip:hover{
+  border-color: rgba(11,27,43,0.14);
+}
+.iuRadioChipTitle{
+  font-weight: 800;
+  line-height: 1.15;
+}
+.iuRadioChipDesc{
+  font-size: 12px;
+  opacity: .8;
+  line-height: 1.2;
+}
+@media (max-width:520px){
+  .iuRadioGrid{
+    grid-template-columns: 1fr;
+  }
 }
 
 /* UI: feed má být vždy 1 sloupec (žádné 2 vedle sebe na desktopu) */
