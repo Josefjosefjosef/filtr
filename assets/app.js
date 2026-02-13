@@ -4744,7 +4744,9 @@ function buildVideoAsArticleCard(it) {
       songsSet = new Set(songs);
       radiosById = new Map(radios.map((r) => [String(r.id), r]));
       populateRadioSelect();
-      applyPendingSelections();
+      showHintForRadio();
+      // Safe restore after data is available (prevents typed-but-not-selected restore).
+      if (!restoredOnce) restoreFromSession();
       // if current selections are no longer valid, clear them (quietly)
       hardValidateSelected(false);
     }
@@ -4877,9 +4879,9 @@ function buildVideoAsArticleCard(it) {
       return {
         type: String(elType.value || ""),
         radioId: String(elRadio.value || ""),
-        to: String(elTo.dataset.selectedValue || ""),
-        from: String(elFrom.dataset.selectedValue || ""),
-        song: String(elSong.dataset.selectedValue || ""),
+        toSelected: String(elTo.dataset.selectedValue || ""),
+        fromSelected: String(elFrom.dataset.selectedValue || ""),
+        songSelected: String(elSong.dataset.selectedValue || ""),
         relation: String(elRelation?.value || ""),
         emailSender: String(elEmailSender?.value || "").trim(),
         emailRecipient: String(elEmailRecipient?.value || "").trim()
@@ -4892,9 +4894,9 @@ function buildVideoAsArticleCard(it) {
       const safe = {
         type: allowedTypes.has(d?.type) ? d.type : "",
         radioId: radiosById.has(String(d?.radioId || "")) ? String(d.radioId) : "",
-        to: namesSet.has(String(d?.to || "")) ? String(d.to) : "",
-        from: namesSet.has(String(d?.from || "")) ? String(d.from) : "",
-        song: d?.song ? (songsSet.has(String(d.song)) ? String(d.song) : "") : "",
+        toSelected: namesSet.has(String(d?.toSelected || "")) ? String(d.toSelected) : "",
+        fromSelected: namesSet.has(String(d?.fromSelected || "")) ? String(d.fromSelected) : "",
+        songSelected: d?.songSelected ? (songsSet.has(String(d.songSelected)) ? String(d.songSelected) : "") : "",
         relation: allowedRelations.has(String(d?.relation || "")) ? String(d.relation) : "",
         emailSender: isValidEmail(d?.emailSender) ? String(d.emailSender).trim() : "",
         emailRecipient: isValidEmail(d?.emailRecipient) ? String(d.emailRecipient).trim() : ""
@@ -4912,19 +4914,29 @@ function buildVideoAsArticleCard(it) {
         if (d.type) elType.value = d.type;
         if (d.radioId) elRadio.value = d.radioId;
 
-        if (parsed?.to) {
-          elTo.value = String(parsed.to);
-          elTo.dataset.pendingValue = String(parsed.to);
+        // Strict safe restore: restore ONLY whitelisted selected values.
+        // Never restore typed-but-not-selected input.value.
+        if (d.toSelected) {
+          elTo.value = d.toSelected;
+          elTo.dataset.selectedValue = d.toSelected;
+        } else {
+          elTo.value = "";
+          delete elTo.dataset.selectedValue;
         }
-        if (parsed?.from) {
-          elFrom.value = String(parsed.from);
-          elFrom.dataset.pendingValue = String(parsed.from);
+        if (d.fromSelected) {
+          elFrom.value = d.fromSelected;
+          elFrom.dataset.selectedValue = d.fromSelected;
+        } else {
+          elFrom.value = "";
+          delete elFrom.dataset.selectedValue;
         }
-        if (parsed?.song) {
-          elSong.value = String(parsed.song);
-          elSong.dataset.pendingValue = String(parsed.song);
+        if (d.songSelected) {
+          elSong.value = d.songSelected;
+          elSong.dataset.selectedValue = d.songSelected;
+        } else {
+          elSong.value = "";
+          delete elSong.dataset.selectedValue;
         }
-        applyPendingSelections();
         if (elRelation && d.relation) elRelation.value = d.relation;
         if (elEmailSender && d.emailSender) elEmailSender.value = d.emailSender;
         if (elEmailRecipient && d.emailRecipient) elEmailRecipient.value = d.emailRecipient;
@@ -4932,25 +4944,6 @@ function buildVideoAsArticleCard(it) {
         showHintForRadio();
         restoredOnce = true;
       }catch{}
-    }
-
-    function applyPendingSelections(){
-      // Promote pending values to selectedValue only if they pass current whitelists.
-      const pTo = String(elTo.dataset.pendingValue || "");
-      if (pTo && namesSet.has(pTo)) {
-        elTo.dataset.selectedValue = pTo;
-        delete elTo.dataset.pendingValue;
-      }
-      const pFrom = String(elFrom.dataset.pendingValue || "");
-      if (pFrom && namesSet.has(pFrom)) {
-        elFrom.dataset.selectedValue = pFrom;
-        delete elFrom.dataset.pendingValue;
-      }
-      const pSong = String(elSong.dataset.pendingValue || "");
-      if (pSong && songsSet.has(pSong)) {
-        elSong.dataset.selectedValue = pSong;
-        delete elSong.dataset.pendingValue;
-      }
     }
 
     let saveTimer = 0;
@@ -5007,10 +5000,10 @@ function buildVideoAsArticleCard(it) {
         uspech: "úspěchu"
       };
       const typ = typeLabelMap[d.type] || "";
-      const proKoho = d.to;
-      const odKoho = d.from;
-      const pisnickaClause = d.song ? ` a případně zahrání písně ${d.song}` : "";
-      const pisnickaClause2 = d.song ? ` a případně písničku ${d.song}` : "";
+      const proKoho = d.toSelected;
+      const odKoho = d.fromSelected;
+      const pisnickaClause = d.songSelected ? ` a případně zahrání písně ${d.songSelected}` : "";
+      const pisnickaClause2 = d.songSelected ? ` a případně písničku ${d.songSelected}` : "";
       const emailClause = d.emailSender ? `, kontakt: ${d.emailSender}` : "";
 
       const subjectRadio = `Písnička / přání – ${proKoho} – žádost z infoUzel.cz`;
@@ -5141,7 +5134,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     // initial
     populateRadioSelect();
     showHintForRadio();
-    restoreFromSession();
+    // Restore is intentionally delayed until after wish data is loaded via setData()
+    // to guarantee whitelist-based safe restore (avoid races).
     hardValidateSelected(false);
 
     return { setData };
