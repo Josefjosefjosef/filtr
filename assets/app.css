@@ -2955,6 +2955,48 @@ select.iuCtrl{
   background: rgba(11,27,43,0.06);
 }
 
+/* ==============================
+   RADIO — "Přání do rádia" (layout v2) — compact UI
+   ============================== */
+#iuRadioWish .iuLabel{
+  font-size: 13px;
+  font-weight: 500;
+}
+#iuRadioWish .iuCtrl{
+  font-size: 14px;
+  height: 36px;
+  min-height: 36px;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+#iuRadioWish .iuAcItem{
+  font-size: 14px;
+  padding: 6px 10px;
+}
+#iuRadioWish .iuWishCard{
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.08);
+  min-height: 74px;
+}
+.iuWishRow--3,
+.iuWishRow--2{
+  gap: 12px;
+}
+#iuRadioWish .iuWishRow{
+  margin-bottom: 14px;
+}
+#iuRadioWish .iuWishRow:last-child{
+  margin-bottom: 0;
+}
+#iuRadioWish #iuWishSendRadio{
+  height: 38px;
+  min-height: 38px;
+  font-size: 14px;
+  padding: 0 18px;
+  border-radius: 8px;
+}
+
 @media (max-width: 520px){
   .iuWishRow--3,
   .iuWishRow--2{
