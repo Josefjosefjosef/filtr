@@ -4541,11 +4541,11 @@ function buildVideoAsArticleCard(it) {
     wishData = out;
     try{
       // Store in a non-feed bucket (UI-only) for debugging/inspection.
-      if (window.state && typeof window.state === "object") {
-        window.state.radioWish = { ...out, loadedAt: Date.now() };
-      } else if (typeof state !== "undefined") {
-        state.radioWish = { ...out, loadedAt: Date.now() };
+      // We intentionally use window.state (not the feed's internal state closure).
+      if (!window.state || typeof window.state !== "object") {
+        window.state = {};
       }
+      window.state.radioWish = { ...out, loadedAt: Date.now() };
     }catch{}
     return out;
   }
