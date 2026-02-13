@@ -4532,7 +4532,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 .iu-leftNavItem:focus-visible{
-  outline: 2px solid var(--iu-rail-active);
+  outline: 2px solid var(--iuNavAccent, var(--iu-rail-active));
   outline-offset: 2px;
 }
 
@@ -4586,22 +4586,27 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   opacity: 0.86;
 }
 
-.iu-leftNavItem.is-active::before{
-  content:"";
-  position:absolute;
-  left: 0;
-  top: 10px;
-  bottom: 10px;
-  width: 3px;
-  border-radius: 3px;
-  background: var(--iu-rail-active);
-  pointer-events: none;
-}
-
 /* ==============================
-   LEFT RAIL BUTTONS (soft)
+   LEFT NAV — Accent System
+   Future-proof implementation
    UI-only, no layout changes
    ============================== */
+
+/* Accent palette (optional mapping via data-accent) */
+:root{
+  --iuNavAccent-media:  #3B82F6;
+  --iuNavAccent-radio:  #8B5CF6;
+  --iuNavAccent-tv:     #EF4444;
+  --iuNavAccent-jr:     #F97316;
+  --iuNavAccent-mapy:   #22C55E;
+  --iuNavAccent-travel: #06B6D4;
+  --iuNavAccent-pocasi: #38BDF8;
+  /* Existing items (fallbacks) */
+  --iuNavAccent-namedays: #F59E0B;
+  --iuNavAccent-tvprogram: #10B981;
+  --iuNavAccent-culture: #6366F1;
+  --iuNavAccent-ads: #94A3B8;
+}
 
 /* Local button palette only (rail background unchanged) */
 .iu-leftNav{
@@ -4609,10 +4614,10 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   --iuLeftBtnBgBottom: #2b3138;
   --iuLeftBtnBorder: rgba(255,255,255,0.10);
   --iuLeftBtnShadow: 0 10px 22px rgba(0,0,0,0.22);
-  --iuLeftBtnActiveAccent: var(--iu-rail-active);
 }
 
 .iu-leftNav .iu-leftNavItem{
+  --iuNavAccent: #3B82F6; /* default fallback accent */
   /* soft depth: subtle gradient + inner border */
   background: linear-gradient(to bottom, var(--iuLeftBtnBgTop), var(--iuLeftBtnBgBottom));
   border-radius: 14px;
@@ -4620,60 +4625,89 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
     0 0 0 1px var(--iuLeftBtnBorder) inset,
     var(--iuLeftBtnShadow);
   overflow: hidden; /* needed for inner highlight */
-  transition: transform 240ms ease, filter 240ms ease, box-shadow 240ms ease;
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    transform 240ms ease,
+    filter 240ms ease,
+    box-shadow 240ms ease;
   will-change: transform;
-  color: rgba(255,255,255,0.96);
+  color: rgba(255,255,255,0.94);
 }
 
-/* Inner highlight (soft light from top) */
+/* Stripe vlevo */
 .iu-leftNav .iu-leftNavItem::before{
   content: "";
   position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.12),
-    rgba(255,255,255,0.00) 55%
-  );
-  pointer-events: none;
-}
-
-/* White icon + label, slightly softened */
-.iu-leftNav .iu-leftNavIcon{
-  color: rgba(255,255,255,0.96);
-}
-.iu-leftNav .iu-leftNavLabel{
-  color: rgba(255,255,255,0.92);
-}
-
-/* Hover (gentle lift + brighten) */
-.iu-leftNav .iu-leftNavItem:hover{
-  transform: translateY(-1px);
-  filter: brightness(1.06);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.14) inset,
-    0 14px 26px rgba(0,0,0,0.24);
-}
-
-/* Active: slightly brighter + left accent bar */
-.iu-leftNav .iu-leftNavItem.is-active{
-  filter: brightness(1.08);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.16) inset,
-    0 16px 28px rgba(0,0,0,0.26);
-}
-
-.iu-leftNav .iu-leftNavItem.is-active::after{
-  content:"";
-  position:absolute;
   left: 0;
-  top: 10px;
-  bottom: 10px;
+  top: 6px;
+  bottom: 6px;
   width: 3px;
-  border-radius: 3px;
-  background: var(--iuLeftBtnActiveAccent);
-  box-shadow: 0 0 6px rgba(45,108,223,0.14);
+  border-radius: 2px;
+  background: var(--iuNavAccent);
+  transition: width 220ms ease, opacity 220ms ease;
   pointer-events: none;
+}
+
+/* Inner highlight (soft light from top) */
+.iu-leftNav .iu-leftNavItem::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.00) 55%);
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+/* Default typography/weights (keep white but less harsh) */
+.iu-leftNav .iu-leftNavIcon{ opacity: 0.96; }
+.iu-leftNav .iu-leftNavLabel{ opacity: 0.92; }
+
+/* Hover */
+.iu-leftNav .iu-leftNavItem:hover{
+  background-color: rgba(255,255,255,.05);
+  filter: brightness(1.06);
+}
+.iu-leftNav .iu-leftNavItem:hover::before{
+  width: 5px;
+}
+.iu-leftNav .iu-leftNavItem:hover,
+.iu-leftNav .iu-leftNavItem:hover *{
+  color: var(--iuNavAccent);
+}
+
+/* Active */
+.iu-leftNav .iu-leftNavItem.is-active{
+  background-color: rgba(255,255,255,.06);
+  filter: brightness(1.08);
+}
+.iu-leftNav .iu-leftNavItem.is-active::before{
+  width: 5px;
+}
+.iu-leftNav .iu-leftNavItem.is-active,
+.iu-leftNav .iu-leftNavItem.is-active *{
+  color: var(--iuNavAccent);
+}
+
+/* Accent mapping */
+.iu-leftNav .iu-leftNavItem[data-accent="media"]{ --iuNavAccent: var(--iuNavAccent-media); }
+.iu-leftNav .iu-leftNavItem[data-accent="radio"]{ --iuNavAccent: var(--iuNavAccent-radio); }
+.iu-leftNav .iu-leftNavItem[data-accent="tv"]{ --iuNavAccent: var(--iuNavAccent-tv); }
+.iu-leftNav .iu-leftNavItem[data-accent="jr"]{ --iuNavAccent: var(--iuNavAccent-jr); }
+.iu-leftNav .iu-leftNavItem[data-accent="mapy"]{ --iuNavAccent: var(--iuNavAccent-mapy); }
+.iu-leftNav .iu-leftNavItem[data-accent="travel"]{ --iuNavAccent: var(--iuNavAccent-travel); }
+.iu-leftNav .iu-leftNavItem[data-accent="pocasi"]{ --iuNavAccent: var(--iuNavAccent-pocasi); }
+.iu-leftNav .iu-leftNavItem[data-accent="namedays"]{ --iuNavAccent: var(--iuNavAccent-namedays); }
+.iu-leftNav .iu-leftNavItem[data-accent="tvprogram"]{ --iuNavAccent: var(--iuNavAccent-tvprogram); }
+.iu-leftNav .iu-leftNavItem[data-accent="culture"]{ --iuNavAccent: var(--iuNavAccent-culture); }
+.iu-leftNav .iu-leftNavItem[data-accent="ads"]{ --iuNavAccent: var(--iuNavAccent-ads); }
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce){
+  .iu-leftNav .iu-leftNavItem,
+  .iu-leftNav .iu-leftNavItem::before{
+    transition: none;
+  }
 }
 
 /* ==============================
