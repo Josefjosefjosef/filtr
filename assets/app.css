@@ -2821,6 +2821,14 @@ a.brand,
   margin-top: 0;
 }
 
+/* Media section: first article title uses Media accent (CSS-only) */
+body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > .news-card:first-child .news-title,
+body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > .news-card:first-child .news-title,
+body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > article:first-child .news-title,
+body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > article:first-child .news-title{
+  color: var(--iu-accent-media);
+}
+
 #feed > .news-card:first-child .news-titleLink,
 #feed > article:first-child .news-titleLink{
   font-size: 22px;
@@ -2829,6 +2837,17 @@ a.brand,
   -webkit-line-clamp: unset;
   max-height: none;
   letter-spacing: normal;
+}
+
+body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > .news-card:first-child .news-titleLink,
+body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > .news-card:first-child .news-titleLink,
+body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > article:first-child .news-titleLink,
+body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > article:first-child .news-titleLink,
+body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > .news-card:first-child .news-titleLink:visited,
+body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > .news-card:first-child .news-titleLink:visited,
+body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > article:first-child .news-titleLink:visited,
+body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > article:first-child .news-titleLink:visited{
+  color: var(--iu-accent-media);
 }
 
 /* Skrýt pouze velké thumbnaily v TOP položce (pokud by existovaly) */
@@ -4606,6 +4625,9 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   --iuNavAccent-tvprogram: #10B981;
   --iuNavAccent-culture: #6366F1;
   --iuNavAccent-ads: #94A3B8;
+
+  /* Section accents (content hooks) */
+  --iu-accent-media: var(--iuNavAccent-media, #3B82F6);
 }
 
 /* Local button palette only (rail background unchanged) */
