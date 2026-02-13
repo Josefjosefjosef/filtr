@@ -122,6 +122,19 @@ html, body{
   background: var(--iu-page-bg);
 }
 
+/* ==== LAYOUT BACKGROUND OVERRIDE (news-style white) ==== */
+body,
+.iuFrame,
+.iuLayout,
+.iuLeftRail,
+#iuLeftRail,
+.iu-leftRail,
+#feed,
+.iu-rightContent{
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
 /* Pozadí layoutu / sloupců (jen kontejnery, ne karty) */
 #feed,
 #feedWrap,
