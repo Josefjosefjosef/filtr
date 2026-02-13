@@ -2961,11 +2961,12 @@ select.iuCtrl{
 #iuRadioWish .iuLabel{
   font-size: 13px;
   font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
 }
 #iuRadioWish .iuCtrl{
   font-size: 14px;
-  height: 36px;
-  min-height: 36px;
+  min-height: 40px;
   padding: 6px 10px;
   border-radius: 8px;
 }
@@ -2977,7 +2978,14 @@ select.iuCtrl{
   padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid rgba(0,0,0,0.08);
-  min-height: 74px;
+  min-height: auto;
+  box-shadow: none;
+}
+#iuRadioWish .iuWishCardBody{
+  gap: 4px;
+}
+.iuRadioWish#iuRadioWish{
+  padding: 18px 20px;
 }
 .iuWishRow--3,
 .iuWishRow--2{
@@ -2990,8 +2998,7 @@ select.iuCtrl{
   margin-bottom: 0;
 }
 #iuRadioWish #iuWishSendRadio{
-  height: 38px;
-  min-height: 38px;
+  min-height: 40px;
   font-size: 14px;
   padding: 0 18px;
   border-radius: 8px;
