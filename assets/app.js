@@ -4383,3 +4383,95 @@ function buildVideoAsArticleCard(it) {
   }
 
 })();
+
+// === RADIO VIEW (left rail) — middle column toggle (UI-only) ===
+// Requirements:
+// - NO changes to loadData / applyFilter / renderFeed (feed pipeline untouched)
+// - Toggle visibility only: #feed <-> #iuRadioView
+// - Static link cards only (no audio/streams)
+(function(){
+  'use strict';
+
+  const RADIO_ITEMS = [
+    { title: "Český rozhlas – Radiožurnál", url: "https://radiozurnal.rozhlas.cz/", desc: "Zprávy a publicistika." },
+    { title: "Český rozhlas – Dvojka", url: "https://dvojka.rozhlas.cz/", desc: "Mluvené slovo, zábava, rozhovory." },
+    { title: "Český rozhlas – Vltava", url: "https://vltava.rozhlas.cz/", desc: "Kultura, literatura, hudba." },
+    { title: "Evropa 2", url: "https://www.evropa2.cz/", desc: "Pop a zábava." },
+    { title: "Rádio Impuls", url: "https://www.impuls.cz/", desc: "Hity a info servis." },
+    { title: "Fajn rádio", url: "https://fajnradio.cz/", desc: "Aktuální hity." },
+    { title: "Kiss", url: "https://kiss.cz/", desc: "Hudba a zábava." },
+    { title: "Rádio Beat", url: "https://www.radiobeat.cz/", desc: "Rockové rádio." },
+    { title: "Blaník", url: "https://www.radioblanik.cz/", desc: "České hity." }
+  ];
+
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function renderRadioView(viewEl){
+    const head = `
+      <div class="iuRadioHead" aria-label="Rádia">
+        <div class="iuRadioTitle">Rádia</div>
+        <div class="iuRadioLine" aria-hidden="true"></div>
+      </div>
+    `;
+
+    const cards = RADIO_ITEMS.map((it) => {
+      const title = escapeHtml(it.title);
+      const url = escapeHtml(it.url);
+      const desc = escapeHtml(it.desc || "");
+      const descHtml = desc ? `<div class="iuRadioDesc">${desc}</div>` : "";
+      return `
+        <article class="news-card iuRadioCard" data-iu-view="radio">
+          <h2 class="news-title">
+            <a class="news-titleLink" href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>
+          </h2>
+          ${descHtml}
+        </article>
+      `;
+    }).join("");
+
+    viewEl.innerHTML = head + `<div class="iuRadioGrid" role="list">${cards}</div>`;
+  }
+
+  function initRadioView(){
+    const feedEl = document.getElementById('feed');
+    const viewEl = document.getElementById('iuRadioView');
+    if (!feedEl || !viewEl) return;
+
+    renderRadioView(viewEl);
+
+    function showRadio(){
+      feedEl.hidden = true;
+      viewEl.hidden = false;
+    }
+
+    function hideRadio(){
+      viewEl.hidden = true;
+      feedEl.hidden = false;
+    }
+
+    // default: keep feed visible
+    hideRadio();
+
+    // Delegated: clicking "Rádia" shows radio view; any other left rail item returns to feed.
+    document.addEventListener('click', (e) => {
+      const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
+      if (!item) return;
+      const accent = (item.getAttribute('data-accent') || item.dataset?.accent || "").trim().toLowerCase();
+      if (accent === "radio") showRadio();
+      else hideRadio();
+    });
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initRadioView);
+  } else {
+    initRadioView();
+  }
+})();

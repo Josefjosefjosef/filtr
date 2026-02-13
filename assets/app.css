@@ -2710,6 +2710,79 @@ a.brand,
   padding-right: 8px;
 }
 
+/* Radio view – matches feed look & feel (middle column only) */
+.iuRadioView[hidden]{
+  display: none !important;
+}
+.iuRadioView{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  /* wrapper only; inner .iuRadioGrid owns the grid */
+  margin: 0;
+  padding-right: 8px;
+}
+.iuRadioGrid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px 18px;
+}
+.iuRadioGrid > *{
+  background-color: rgba(255,255,255,0.94);
+  border: 1px solid rgba(11,27,43,0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 10px 0;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+  display:block;
+  opacity:1;
+  visibility:visible;
+  min-height: 60px;
+}
+.iuRadioGrid > .news-card,
+.iuRadioGrid > article{
+  position: relative;
+  overflow: hidden;
+}
+.iuRadioGrid > .news-card > *,
+.iuRadioGrid > article > *{
+  position: relative;
+  z-index: 1;
+}
+.iuRadioHead{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: auto;
+}
+.iuRadioTitle{
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  color: var(--iu-accent-radio);
+  opacity: 0.92;
+}
+.iuRadioLine{
+  height: 2px;
+  flex: 1 1 auto;
+  background: linear-gradient(to right, var(--iu-accent-radio), rgba(0,0,0,0));
+  opacity: 0.35;
+  border-radius: 999px;
+}
+.iuRadioDesc{
+  margin-top: 6px;
+  color: rgba(11,27,43,0.74);
+  font-size: 13px;
+  line-height: 1.35;
+}
+.iuRadioView .news-title,
+.iuRadioView .news-titleLink{
+  -webkit-line-clamp: unset !important;
+  max-height: none !important;
+  overflow: visible !important;
+  display: inline !important;
+}
+
 /* UI: feed má být vždy 1 sloupec (žádné 2 vedle sebe na desktopu) */
 
 #feed > *{
@@ -4484,10 +4557,22 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   width: auto !important; /* override #feed{width:100%} so it can sit next to left rail */
 }
 
+/* Radio view must adapt like #feed (same middle column footprint) */
+#newsList > #iuRadioView{
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto !important;
+}
+
 /* Responsive: hide left rail below 1100px (no JS) */
 @media (max-width: 1100px){
   .iu-leftRail{ display: none; }
   #newsList > #feed{
+    flex: 0 0 100%;
+    width: 100% !important;
+    min-width: 0;
+  }
+  #newsList > #iuRadioView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
@@ -4628,6 +4713,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
   /* Section accents (content hooks) */
   --iu-accent-media: var(--iuNavAccent-media, #3B82F6);
+  --iu-accent-radio: var(--iuNavAccent-radio, #8B5CF6);
 }
 
 /* Local button palette only (rail background unchanged) */
