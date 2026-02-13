@@ -4407,6 +4407,7 @@ function buildVideoAsArticleCard(it) {
   // Unified navigation router (UI-only)
   const VIEW_MAP = { media: 'media', radio: 'radio' };
   const STORAGE_KEY_WISH = "iuRadioWishDraftV1";
+  const STORAGE_KEY_WISH_OPEN = "iuRadioWishOpenV1";
 
   // === RADIO WISH — fallback data (safe MVP, no backend) ===
   const FALLBACK_WISH = {
@@ -4416,13 +4417,12 @@ function buildVideoAsArticleCard(it) {
       { id: "evropa2", label: "Evropa 2", method: "form", url: "https://www.evropa2.cz/kontakt" },
       { id: "cro_pisnicky_na_prani", label: "Český rozhlas – Písničky na přání", method: "form_or_sms", url: "https://program.rozhlas.cz/pisnicky-na-prani-7232426/o-poradu", smsHint: "Instrukce SMS jsou na stránce pořadu (MVP jen nápověda)." }
     ],
+    // calendar first names (fallback subset)
     names: ["Jana","Jan","Petr","Petra","Pavel","Lucie","Marie","Tomáš","Veronika","David","Daniel","Andrea","Eliška","Karel","Jiří","Josef","Anna","Tereza","Marek","Kristýna"],
-    songs: [
-      "Queen – Bohemian Rhapsody","ABBA – Dancing Queen","The Beatles – Hey Jude","Eagles – Hotel California","Michael Jackson – Billie Jean",
-      "Whitney Houston – I Will Always Love You","Ed Sheeran – Perfect","Adele – Someone Like You","Coldplay – Viva la Vida","Avicii – Wake Me Up",
-      "Lucie – Medvídek","Kabát – Pohoda","Chinaski – Tabáček","Kryštof – Cesta","Karel Gott – Lady Carneval",
-      "Marie Rottrová – Lásko, voníš deštěm","Olympic – Želva","Čechomor – Proměny","Toto – Africa","Frank Sinatra – My Way"
-    ]
+    // exactly 100 artists on prod via projects/data/artists_whitelist.json
+    artists: ["Queen","ABBA","The Beatles","Michael Jackson","Adele","Ed Sheeran","Coldplay","Avicii","Lucie","Kabát"],
+    // optional "Já jsem" roles
+    iam: ["kamarád/ka","partner/ka","manžel/ka","přítel/přítelkyně","kolega/kolegyně","bratr/sestra","syn/dcera","maminka/tatínek","babička/dědeček"]
   };
 
   let wishData = { ...FALLBACK_WISH };
@@ -4465,15 +4465,19 @@ function buildVideoAsArticleCard(it) {
     const out = {
       radios: Array.isArray(FALLBACK_WISH.radios) ? [...FALLBACK_WISH.radios] : [],
       names: Array.isArray(FALLBACK_WISH.names) ? [...FALLBACK_WISH.names] : [],
-      songs: Array.isArray(FALLBACK_WISH.songs) ? [...FALLBACK_WISH.songs] : []
+      artists: Array.isArray(FALLBACK_WISH.artists) ? [...FALLBACK_WISH.artists] : [],
+      iam: Array.isArray(FALLBACK_WISH.iam) ? [...FALLBACK_WISH.iam] : []
     };
 
     try{
       // Use existing infra if available in this scope.
-      const [radiosJson, namesJson, songsJson] = await Promise.allSettled([
+      const [radiosJson, calendarNamesJson, artistsJson, iamJson, legacyNamesJson] = await Promise.allSettled([
         fetchJsonNoCache(makeDataUrl("data/radio_requests.json"), { timeoutMs: 4500, retries: 1 }),
-        fetchJsonNoCache(makeDataUrl("data/names_whitelist.json"), { timeoutMs: 4500, retries: 1 }),
-        fetchJsonNoCache(makeDataUrl("data/songs_whitelist.json"), { timeoutMs: 4500, retries: 1 })
+        fetchJsonNoCache(makeDataUrl("data/calendar_first_names.json"), { timeoutMs: 4500, retries: 1 }),
+        fetchJsonNoCache(makeDataUrl("data/artists_whitelist.json"), { timeoutMs: 4500, retries: 1 }),
+        fetchJsonNoCache(makeDataUrl("data/iam_whitelist.json"), { timeoutMs: 4500, retries: 1 }),
+        // legacy fallback (older versions)
+        fetchJsonNoCache(makeDataUrl("data/names_whitelist.json"), { timeoutMs: 4500, retries: 1 })
       ]);
 
       if (radiosJson.status === "fulfilled" && radiosJson.value && Array.isArray(radiosJson.value.radios)) {
@@ -4490,15 +4494,21 @@ function buildVideoAsArticleCard(it) {
           }));
       }
 
-      if (namesJson.status === "fulfilled" && namesJson.value && Array.isArray(namesJson.value.names)) {
-        out.names = toPlainStringList(namesJson.value.names);
+      if (calendarNamesJson.status === "fulfilled" && calendarNamesJson.value && Array.isArray(calendarNamesJson.value.names)) {
+        out.names = toPlainStringList(calendarNamesJson.value.names);
+      } else if (legacyNamesJson.status === "fulfilled" && legacyNamesJson.value && Array.isArray(legacyNamesJson.value.names)) {
+        out.names = toPlainStringList(legacyNamesJson.value.names);
       }
 
-      if (songsJson.status === "fulfilled" && songsJson.value && Array.isArray(songsJson.value.songs)) {
-        // Accept {label,value} objects; store labels as the whitelist string
-        out.songs = songsJson.value.songs
-          .map((s) => (s && (s.value || s.label) ? String(s.value || s.label).trim() : ""))
-          .filter(Boolean);
+      if (artistsJson.status === "fulfilled" && artistsJson.value && Array.isArray(artistsJson.value.artists)) {
+        // enforce unique + first 100 (spec: exactly 100 on prod via file contents)
+        out.artists = toPlainStringList(artistsJson.value.artists)
+          .filter((x, i, arr) => arr.indexOf(x) === i)
+          .slice(0, 100);
+      }
+
+      if (iamJson.status === "fulfilled" && iamJson.value && Array.isArray(iamJson.value.iam)) {
+        out.iam = toPlainStringList(iamJson.value.iam);
       }
     }catch{}
 
@@ -4518,13 +4528,14 @@ function buildVideoAsArticleCard(it) {
     `;
 
     const wishForm = `
-      <section class="iuRadioWish" id="iuRadioWish" aria-label="Přání do rádia">
-        <div class="iuRadioWishHead">
-          <div class="iuRadioWishTitle">Přání do rádia</div>
-          <div class="iuRadioWishSub">Bez backendu. Vše vyklikávací (whitelist) pro bezpečný MVP.</div>
-        </div>
+      <details class="iuRadioWish iuWishAcc" id="iuRadioWish" aria-label="Přání do rádia">
+        <summary class="iuWishAccSummary">
+          <span class="iuWishAccTitle">Přání do rádia</span>
+          <span class="iuWishAccCaret" aria-hidden="true"></span>
+        </summary>
 
-        <div class="iuWishRows" role="group" aria-label="Formulář přání">
+        <div class="iuWishAccBody">
+          <div class="iuWishRows" role="group" aria-label="Formulář přání">
           <!-- Row 1: 3 equal blocks -->
           <div class="iuWishRow iuWishRow--3" aria-label="Základní volby">
             <div class="iuWishCard">
@@ -4589,14 +4600,6 @@ function buildVideoAsArticleCard(it) {
                 <span class="iuLabel">Já jsem</span>
                 <select class="iuCtrl" id="iuWishRelation">
                   <option value="">— vyberte —</option>
-                  <option value="kamarád">Kamarád</option>
-                  <option value="kamarádka">Kamarádka</option>
-                  <option value="maminka">Maminka</option>
-                  <option value="tatínek">Tatínek</option>
-                  <option value="kolega">Kolega</option>
-                  <option value="kolegové">Kolegové</option>
-                  <option value="partner">Partner</option>
-                  <option value="partnerka">Partnerka</option>
                 </select>
               </label>
             </div>
@@ -4617,14 +4620,15 @@ function buildVideoAsArticleCard(it) {
               </label>
             </div>
           </div>
-        </div>
+          </div>
 
-        <div class="iuWishActions">
-          <button class="iuBtn" id="iuWishSendRadio" type="button">Odeslat rádiu</button>
-          <div class="iuWishStatus" id="iuWishStatus" aria-live="polite"></div>
-          <div class="iuErr iuErrBlock" id="iuWishErrors" hidden></div>
+          <div class="iuWishActions">
+            <button class="iuBtn" id="iuWishSendRadio" type="button">Odeslat rádiu</button>
+            <div class="iuWishStatus" id="iuWishStatus" aria-live="polite"></div>
+            <div class="iuErr iuErrBlock" id="iuWishErrors" hidden></div>
+          </div>
         </div>
-      </section>
+      </details>
     `;
 
     const chips = RADIO_ITEMS.map((it) => {
@@ -4698,6 +4702,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function initRadioWish(viewEl){
+    const accEl = document.getElementById("iuRadioWish");
     const elType = document.getElementById("iuWishType");
     const elRadio = document.getElementById("iuWishRadio");
     const elRadioHint = document.getElementById("iuWishRadioHint");
@@ -4718,53 +4723,44 @@ function buildVideoAsArticleCard(it) {
       return { setData: () => {} };
     }
 
+    // Accordion open/close persistence (default: closed)
+    if (accEl && String(accEl.tagName || "").toUpperCase() === "DETAILS") {
+      try{
+        const v = sessionStorage.getItem(STORAGE_KEY_WISH_OPEN);
+        accEl.open = v === "1";
+      }catch{}
+      accEl.addEventListener("toggle", () => {
+        try{
+          sessionStorage.setItem(STORAGE_KEY_WISH_OPEN, accEl.open ? "1" : "0");
+        }catch{}
+      });
+    }
+
     let radios = Array.isArray(wishData.radios) ? wishData.radios : [];
     let names = Array.isArray(wishData.names) ? wishData.names : [];
-    let songs = Array.isArray(wishData.songs) ? wishData.songs : [];
+    let artists = Array.isArray(wishData.artists) ? wishData.artists : [];
+    let iam = Array.isArray(wishData.iam) ? wishData.iam : [];
 
     let namesSet = new Set(names);
-    let artists = [];
     let artistsSet = new Set(artists);
+    let iamSet = new Set(iam);
     let radiosById = new Map(radios.map((r) => [String(r.id), r]));
     let restoredOnce = false;
-
-    function deriveArtistLabel(raw){
-      const s = String(raw || "").trim();
-      if (!s) return "";
-      // common separators used in our whitelist labels
-      const parts = s.split(" – ");
-      if (parts.length >= 2) return parts[0].trim();
-      const parts2 = s.split(" - ");
-      if (parts2.length >= 2) return parts2[0].trim();
-      return s;
-    }
-
-    function buildArtistsFromSongs(list){
-      const seen = new Set();
-      const out = [];
-      for (const it of (Array.isArray(list) ? list : [])){
-        const a = deriveArtistLabel(it);
-        if (!a) continue;
-        if (seen.has(a)) continue;
-        seen.add(a);
-        out.push(a);
-        if (out.length >= 100) break; // spec: only top 100
-      }
-      return out;
-    }
 
     function setData(next){
       radios = Array.isArray(next?.radios) ? next.radios : radios;
       names = Array.isArray(next?.names) ? next.names : names;
-      songs = Array.isArray(next?.songs) ? next.songs : songs;
+      artists = Array.isArray(next?.artists) ? next.artists : artists;
+      iam = Array.isArray(next?.iam) ? next.iam : iam;
       namesSet = new Set(names);
-      artists = buildArtistsFromSongs(songs);
       artistsSet = new Set(artists);
+      iamSet = new Set(iam);
       radiosById = new Map(radios.map((r) => [String(r.id), r]));
       populateRadioSelect();
       populateNameSelect(elTo, names, "— vyberte —");
       populateNameSelect(elFrom, names, "— vyberte —");
       populateArtistSelect();
+      populateIamSelect();
       showHintForRadio();
       // Safe restore after data is available (prevents typed-but-not-selected restore).
       if (!restoredOnce) restoreFromSession();
@@ -4797,6 +4793,15 @@ function buildVideoAsArticleCard(it) {
       if (prev && artistsSet.has(prev)) elSong.value = prev;
     }
 
+    function populateIamSelect(){
+      if (!elRelation) return;
+      const prev = String(elRelation.value || "");
+      elRelation.innerHTML = `<option value="">— vyberte —</option>` + iam
+        .map((x) => `<option value="${escapeHtml(x)}">${escapeHtml(x)}</option>`)
+        .join("");
+      if (prev && iamSet.has(prev)) elRelation.value = prev;
+    }
+
     function showHintForRadio(){
       if (!elRadioHint) return;
       const id = String(elRadio.value || "");
@@ -4817,7 +4822,7 @@ function buildVideoAsArticleCard(it) {
         radioId: String(elRadio.value || ""),
         to: String(elTo.value || ""),
         from: String(elFrom.value || ""),
-        songArtist: String(elSong.value || ""),
+        artist: String(elSong.value || ""),
         relation: String(elRelation?.value || ""),
         emailSender: String(elEmailSender?.value || "").trim(),
         emailRecipient: String(elEmailRecipient?.value || "").trim()
@@ -4826,17 +4831,16 @@ function buildVideoAsArticleCard(it) {
 
     function sanitizeDraft(d){
       const allowedTypes = new Set(["narozeniny","svatek","vyroci","uspech","jen_tak"]);
-      const allowedRelations = new Set(["","kamarád","kamarádka","maminka","tatínek","kolega","kolegové","partner","partnerka"]);
       const legacyTo = String(d?.to || d?.toSelected || "");
       const legacyFrom = String(d?.from || d?.fromSelected || "");
-      const legacySong = String(d?.songArtist || d?.songSelected || "");
-      const legacySongArtist = artistsSet.has(legacySong) ? legacySong : deriveArtistLabel(legacySong);
+      const legacyArtist = String(d?.artist || d?.songArtist || d?.songSelected || "");
+      const allowedRelations = new Set(["", ...Array.from(iamSet)]);
       const safe = {
         type: allowedTypes.has(d?.type) ? d.type : "",
         radioId: radiosById.has(String(d?.radioId || "")) ? String(d.radioId) : "",
         to: namesSet.has(legacyTo) ? legacyTo : "",
         from: namesSet.has(legacyFrom) ? legacyFrom : "",
-        songArtist: artistsSet.has(legacySongArtist) ? legacySongArtist : "",
+        artist: artistsSet.has(legacyArtist) ? legacyArtist : "",
         relation: allowedRelations.has(String(d?.relation || "")) ? String(d.relation) : "",
         emailSender: isValidEmail(d?.emailSender) ? String(d.emailSender).trim() : "",
         emailRecipient: isValidEmail(d?.emailRecipient) ? String(d.emailRecipient).trim() : ""
@@ -4856,7 +4860,7 @@ function buildVideoAsArticleCard(it) {
 
         elTo.value = d.to || "";
         elFrom.value = d.from || "";
-        elSong.value = d.songArtist || "";
+        elSong.value = d.artist || "";
         if (elRelation && d.relation) elRelation.value = d.relation;
         if (elEmailSender && d.emailSender) elEmailSender.value = d.emailSender;
         if (elEmailRecipient && d.emailRecipient) elEmailRecipient.value = d.emailRecipient;
@@ -4925,8 +4929,8 @@ function buildVideoAsArticleCard(it) {
       const typ = typeLabelMap[d.type] ?? String(d.type || "");
       const proKoho = d.to;
       const odKoho = d.from;
-      const pisnickaClause = d.songArtist ? ` a případně písničku od ${d.songArtist}` : "";
-      const pisnickaClause2 = d.songArtist ? ` a případně písničku od ${d.songArtist}` : "";
+      const pisnickaClause = d.artist ? ` a případně písničku od ${d.artist}` : "";
+      const pisnickaClause2 = d.artist ? ` a případně písničku od ${d.artist}` : "";
       const emailClause = d.emailSender ? `, kontakt: ${d.emailSender}` : "";
 
       const subjectRadio = `Písnička / přání – ${proKoho} – žádost z infoUzel.cz`;
@@ -5011,6 +5015,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     populateNameSelect(elTo, names, "— vyberte —");
     populateNameSelect(elFrom, names, "— vyberte —");
     populateArtistSelect();
+    populateIamSelect();
     showHintForRadio();
     // Restore is intentionally delayed until after wish data is loaded via setData()
     // to guarantee whitelist-based safe restore (avoid races).
