@@ -4564,7 +4564,7 @@ function buildVideoAsArticleCard(it) {
           <div class="iuWishRow iuWishRow--3" aria-label="Základní volby">
             <div class="iuWishCard">
               <label class="iuWishCardBody">
-                <span class="iuLabel">Typ požadavku *</span>
+                <span class="iuLabel">Typ požadavku</span>
                 <select class="iuCtrl" id="iuWishType">
                   <option value="">— vyberte —</option>
                   <option value="narozeniny">Narozeninám</option>
@@ -4572,6 +4572,7 @@ function buildVideoAsArticleCard(it) {
                   <option value="vyroci">Výročí</option>
                   <option value="uspech">Úspěch / gratulace</option>
                   <option value="jen_tak">Jen tak pro radost</option>
+                  <option value="jiny">Jiný</option>
                 </select>
               </label>
             </div>
@@ -4579,7 +4580,7 @@ function buildVideoAsArticleCard(it) {
             <div class="iuWishCard">
               <div class="iuWishCardBody">
                 <label class="iuLabel" for="iuWishRadio">Rádio *</label>
-                <select class="iuCtrl" id="iuWishRadio">
+                <select class="iuCtrl" id="iuWishRadio" required>
                   <option value="">— vyberte —</option>
                 </select>
                 <div class="iuHint" id="iuWishRadioHint" hidden></div>
@@ -4588,43 +4589,36 @@ function buildVideoAsArticleCard(it) {
 
             <div class="iuWishCard">
               <div class="iuWishCardBody">
-                <span class="iuLabel">Písnička od *</span>
+                <span class="iuLabel">Písnička od</span>
                 <select class="iuCtrl" id="iuWishSong">
                   <option value="">— vyberte —</option>
                 </select>
-                <div class="iuErr" id="iuWishSongErr" hidden>Vyberte interpreta.</div>
               </div>
             </div>
           </div>
 
           <!-- Row 2: 3 equal blocks -->
-          <div class="iuWishRow iuWishRow--3" aria-label="Jména a vztah">
+          <div class="iuWishRow iuWishRow--3" aria-label="Adresáti a text přání">
             <div class="iuWishCard">
               <div class="iuWishCardBody">
                 <span class="iuLabel">Pro koho *</span>
-                <select class="iuCtrl" id="iuWishTo">
-                  <option value="">— vyberte —</option>
-                </select>
-                <div class="iuErr" id="iuWishToErr" hidden>Vyberte jméno Pro koho.</div>
+                <input class="iuCtrl" id="iuWishTo" type="text" required placeholder="Komu je přání určeno" />
+                <div class="iuErr" id="iuWishToErr" hidden>Vyplňte pole Pro koho.</div>
               </div>
             </div>
 
             <div class="iuWishCard">
               <div class="iuWishCardBody">
                 <span class="iuLabel">Od koho *</span>
-                <select class="iuCtrl" id="iuWishFrom">
-                  <option value="">— vyberte —</option>
-                </select>
-                <div class="iuErr" id="iuWishFromErr" hidden>Vyberte jméno Od koho.</div>
+                <input class="iuCtrl" id="iuWishFrom" type="text" required placeholder="Kdo přání posílá" />
+                <div class="iuErr" id="iuWishFromErr" hidden>Vyplňte pole Od koho.</div>
               </div>
             </div>
 
             <div class="iuWishCard">
               <label class="iuWishCardBody">
-                <span class="iuLabel">Já jsem</span>
-                <select class="iuCtrl" id="iuWishRelation">
-                  <option value="">— vyberte —</option>
-                </select>
+                <span class="iuLabel">Text přání</span>
+                <textarea class="iuCtrl" id="iuWishText" placeholder="Zde můžete napsat text přání (nepovinné)"></textarea>
               </label>
             </div>
           </div>
@@ -4633,14 +4627,14 @@ function buildVideoAsArticleCard(it) {
           <div class="iuWishRow iuWishRow--2" aria-label="E-maily (volitelné)">
             <div class="iuWishCard">
               <label class="iuWishCardBody">
-                <span class="iuLabel">E-mail odesílatele</span>
-                <input class="iuCtrl" id="iuWishEmailSender" type="email" autocomplete="email" inputmode="email" placeholder="např. jmeno@domena.cz" />
+                <span class="iuLabel">Email komu přeji</span>
+                <input class="iuCtrl" id="iuWishEmailTo" type="email" autocomplete="email" inputmode="email" placeholder="např. jmeno@domena.cz" />
               </label>
             </div>
             <div class="iuWishCard">
               <label class="iuWishCardBody">
-                <span class="iuLabel">E-mail příjemce</span>
-                <input class="iuCtrl" id="iuWishEmailRecipient" type="email" autocomplete="email" inputmode="email" placeholder="např. oslavenec@domena.cz" />
+                <span class="iuLabel">Telefon komu přeji</span>
+                <input class="iuCtrl" id="iuWishPhoneTo" type="tel" autocomplete="tel" inputmode="tel" placeholder="např. 777 123 456" />
               </label>
             </div>
           </div>
@@ -4735,10 +4729,9 @@ function buildVideoAsArticleCard(it) {
     const elFrom = document.getElementById("iuWishFrom");
     const elFromErr = document.getElementById("iuWishFromErr");
     const elSong = document.getElementById("iuWishSong");
-    const elSongErr = document.getElementById("iuWishSongErr");
-    const elRelation = document.getElementById("iuWishRelation");
-    const elEmailSender = document.getElementById("iuWishEmailSender");
-    const elEmailRecipient = document.getElementById("iuWishEmailRecipient");
+    const elText = document.getElementById("iuWishText");
+    const elEmailTo = document.getElementById("iuWishEmailTo");
+    const elPhoneTo = document.getElementById("iuWishPhoneTo");
     const elErrors = document.getElementById("iuWishErrors");
     const elStatus = document.getElementById("iuWishStatus");
     const btnSendRadio = document.getElementById("iuWishSendRadio");
@@ -4761,30 +4754,19 @@ function buildVideoAsArticleCard(it) {
     }
 
     let radios = Array.isArray(wishData.radios) ? wishData.radios : [];
-    let names = Array.isArray(wishData.names) ? wishData.names : [];
     let artists = Array.isArray(wishData.artists) ? wishData.artists : [];
-    let iam = Array.isArray(wishData.iam) ? wishData.iam : [];
 
-    let namesSet = new Set(names);
     let artistsSet = new Set(artists);
-    let iamSet = new Set(iam);
     let radiosById = new Map(radios.map((r) => [String(r.id), r]));
     let restoredOnce = false;
 
     function setData(next){
       radios = Array.isArray(next?.radios) ? next.radios : radios;
-      names = Array.isArray(next?.names) ? next.names : names;
       artists = Array.isArray(next?.artists) ? next.artists : artists;
-      iam = Array.isArray(next?.iam) ? next.iam : iam;
-      namesSet = new Set(names);
       artistsSet = new Set(artists);
-      iamSet = new Set(iam);
       radiosById = new Map(radios.map((r) => [String(r.id), r]));
       populateRadioSelect();
-      populateNameSelect(elTo, names, "— vyberte —");
-      populateNameSelect(elFrom, names, "— vyberte —");
       populateArtistSelect();
-      populateIamSelect();
       showHintForRadio();
       // Safe restore after data is available (prevents typed-but-not-selected restore).
       if (!restoredOnce) restoreFromSession();
@@ -4800,30 +4782,15 @@ function buildVideoAsArticleCard(it) {
       if (prev && radiosById.has(prev)) elRadio.value = prev;
     }
 
-    function populateNameSelect(selEl, list, placeholder){
-      if (!selEl) return;
-      const prev = String(selEl.value || "");
-      selEl.innerHTML = `<option value="">${escapeHtml(placeholder || "— vyberte —")}</option>` + (Array.isArray(list) ? list : [])
-        .map((n) => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`)
-        .join("");
-      if (prev && namesSet.has(prev)) selEl.value = prev;
-    }
-
     function populateArtistSelect(){
       const prev = String(elSong.value || "");
-      elSong.innerHTML = `<option value="">— vyberte —</option>` + artists
+      const sorted = (Array.isArray(artists) ? artists : [])
+        .slice()
+        .sort((a, b) => String(a).localeCompare(String(b), "cs", { sensitivity: "base" }));
+      elSong.innerHTML = `<option value="">— vyberte —</option>` + sorted
         .map((a) => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`)
         .join("");
       if (prev && artistsSet.has(prev)) elSong.value = prev;
-    }
-
-    function populateIamSelect(){
-      if (!elRelation) return;
-      const prev = String(elRelation.value || "");
-      elRelation.innerHTML = `<option value="">— vyberte —</option>` + iam
-        .map((x) => `<option value="${escapeHtml(x)}">${escapeHtml(x)}</option>`)
-        .join("");
-      if (prev && iamSet.has(prev)) elRelation.value = prev;
     }
 
     function showHintForRadio(){
@@ -4844,30 +4811,31 @@ function buildVideoAsArticleCard(it) {
       return {
         type: String(elType.value || ""),
         radioId: String(elRadio.value || ""),
-        to: String(elTo.value || ""),
-        from: String(elFrom.value || ""),
+        to: String(elTo.value || "").trim(),
+        from: String(elFrom.value || "").trim(),
         artist: String(elSong.value || ""),
-        relation: String(elRelation?.value || ""),
-        emailSender: String(elEmailSender?.value || "").trim(),
-        emailRecipient: String(elEmailRecipient?.value || "").trim()
+        wishText: String(elText?.value || "").trim(),
+        emailTo: String(elEmailTo?.value || "").trim(),
+        phoneTo: String(elPhoneTo?.value || "").trim()
       };
     }
 
     function sanitizeDraft(d){
-      const allowedTypes = new Set(["narozeniny","svatek","vyroci","uspech","jen_tak"]);
+      const allowedTypes = new Set(["narozeniny","svatek","vyroci","uspech","jen_tak","jiny"]);
       const legacyTo = String(d?.to || d?.toSelected || "");
       const legacyFrom = String(d?.from || d?.fromSelected || "");
       const legacyArtist = String(d?.artist || d?.songArtist || d?.songSelected || "");
-      const allowedRelations = new Set(["", ...Array.from(iamSet)]);
+      const wishText = String(d?.wishText || d?.text || d?.message || "").trim();
+      const phoneTo = String(d?.phoneTo || d?.tel || d?.phone || "").trim();
       const safe = {
         type: allowedTypes.has(d?.type) ? d.type : "",
         radioId: radiosById.has(String(d?.radioId || "")) ? String(d.radioId) : "",
-        to: namesSet.has(legacyTo) ? legacyTo : "",
-        from: namesSet.has(legacyFrom) ? legacyFrom : "",
+        to: legacyTo.trim().slice(0, 80),
+        from: legacyFrom.trim().slice(0, 80),
         artist: artistsSet.has(legacyArtist) ? legacyArtist : "",
-        relation: allowedRelations.has(String(d?.relation || "")) ? String(d.relation) : "",
-        emailSender: isValidEmail(d?.emailSender) ? String(d.emailSender).trim() : "",
-        emailRecipient: isValidEmail(d?.emailRecipient) ? String(d.emailRecipient).trim() : ""
+        wishText: wishText.slice(0, 500),
+        emailTo: isValidEmail(d?.emailTo) ? String(d.emailTo).trim() : "",
+        phoneTo: phoneTo.slice(0, 40)
       };
       return safe;
     }
@@ -4885,9 +4853,9 @@ function buildVideoAsArticleCard(it) {
         elTo.value = d.to || "";
         elFrom.value = d.from || "";
         elSong.value = d.artist || "";
-        if (elRelation && d.relation) elRelation.value = d.relation;
-        if (elEmailSender && d.emailSender) elEmailSender.value = d.emailSender;
-        if (elEmailRecipient && d.emailRecipient) elEmailRecipient.value = d.emailRecipient;
+        if (elText && d.wishText) elText.value = d.wishText;
+        if (elEmailTo && d.emailTo) elEmailTo.value = d.emailTo;
+        if (elPhoneTo && d.phoneTo) elPhoneTo.value = d.phoneTo;
 
         showHintForRadio();
         restoredOnce = true;
@@ -4925,17 +4893,16 @@ function buildVideoAsArticleCard(it) {
     }
 
     function hardValidateSelected(showErrors){
-      const toOk = !!elTo.value && namesSet.has(String(elTo.value));
-      const fromOk = !!elFrom.value && namesSet.has(String(elFrom.value));
-      const songOk = !!elSong.value && artistsSet.has(String(elSong.value));
+      const toOk = !!String(elTo.value || "").trim();
+      const fromOk = !!String(elFrom.value || "").trim();
+      // optional: if selected, must exist in whitelist
+      const songOk = !String(elSong.value || "") || artistsSet.has(String(elSong.value));
       if (showErrors){
         setErr(elToErr, !toOk);
         setErr(elFromErr, !fromOk);
-        setErr(elSongErr, !songOk);
       } else {
         setErr(elToErr, false);
         setErr(elFromErr, false);
-        setErr(elSongErr, false);
       }
       return { toOk, fromOk, songOk };
     }
@@ -4948,29 +4915,35 @@ function buildVideoAsArticleCard(it) {
         svatek: "svátku",
         vyroci: "výročí",
         uspech: "úspěchu",
-        jen_tak: "jen tak pro radost"
+        jen_tak: "jen tak pro radost",
+        jiny: "jiné příležitosti"
       };
       const typ = typeLabelMap[d.type] ?? String(d.type || "");
       const proKoho = d.to;
       const odKoho = d.from;
       const pisnickaClause = d.artist ? ` a případně písničku od ${d.artist}` : "";
       const pisnickaClause2 = d.artist ? ` a případně písničku od ${d.artist}` : "";
-      const emailClause = d.emailSender ? `, kontakt: ${d.emailSender}` : "";
+      const contactBits = [
+        d.emailTo ? `email: ${d.emailTo}` : "",
+        d.phoneTo ? `telefon: ${d.phoneTo}` : ""
+      ].filter(Boolean);
+      const contactClause = contactBits.length ? `, kontakt: ${contactBits.join(", ")}` : "";
+      const wishTextClause = d.wishText ? `\n\nText přání:\n${d.wishText}` : "";
 
       const subjectRadio = `Písnička / přání – ${proKoho} – žádost z infoUzel.cz`;
-      const typClause = d.type === "jen_tak" ? typ : `k ${typ}`;
+      const typClause = typ ? (d.type === "jen_tak" ? typ : `k ${typ}`) : "";
       const bodyRadio =
 `Dobrý den,
-píšu přes infoUzel.cz jménem posluchače ${odKoho}. Rád/a by popřál/a ${proKoho} ${typClause}.
+píšu přes infoUzel.cz jménem posluchače ${odKoho}. Rád/a by popřál/a ${proKoho}${typClause ? " " + typClause : ""}.
 Pokud je to možné, prosím o pozdrav ve vysílání${pisnickaClause}.
 Děkuji a přeji hezký den.
-— infoUzel.cz (odeslal/a: ${odKoho}${emailClause})`;
+— infoUzel.cz (odeslal/a: ${odKoho}${contactClause})${wishTextClause}`;
 
       const subjectRec = `Máš rádiové přání od ${odKoho} 🙂`;
-      const typClause2 = d.type === "jen_tak" ? typ : `k ${typ}`;
+      const typClause2 = typ ? (d.type === "jen_tak" ? typ : `k ${typ}`) : "";
       const bodyRec =
 `Ahoj ${proKoho},
-${odKoho} právě požádal/a rádio ${radioLabel} o přání ${typClause2}${pisnickaClause2}.
+${odKoho} právě požádal/a rádio ${radioLabel} o přání${typClause2 ? " " + typClause2 : ""}${pisnickaClause2}.
 Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová 🙂
 — infoUzel.cz`;
 
@@ -4985,14 +4958,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     function validateRequired(){
       const d = getDraft();
       const errs = [];
-      if (!d.type) errs.push("Vyberte typ požadavku.");
       if (!d.radioId) errs.push("Vyberte rádio.");
       const { toOk, fromOk, songOk } = hardValidateSelected(true);
-      if (!toOk) errs.push("Vyberte jméno Pro koho.");
-      if (!fromOk) errs.push("Vyberte jméno Od koho.");
-      if (!songOk) errs.push("Vyberte interpreta.");
-      if (d.emailSender && !isValidEmail(d.emailSender)) errs.push("E-mail odesílatele není platný.");
-      if (d.emailRecipient && !isValidEmail(d.emailRecipient)) errs.push("E-mail příjemce není platný.");
+      if (!toOk) errs.push("Vyplňte pole Pro koho.");
+      if (!fromOk) errs.push("Vyplňte pole Od koho.");
+      if (!songOk) errs.push("Vybraný interpret není platný.");
+      if (d.emailTo && !isValidEmail(d.emailTo)) errs.push("Email komu přeji není platný.");
       return { ok: errs.length === 0, errs, d: sanitizeDraft(d) };
     }
 
@@ -5026,20 +4997,17 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     elRadio.addEventListener("change", () => { showHintForRadio(); scheduleSave(); });
     elType.addEventListener("change", scheduleSave);
     elSong.addEventListener("change", scheduleSave);
-    elTo.addEventListener("change", scheduleSave);
-    elFrom.addEventListener("change", scheduleSave);
-    elRelation?.addEventListener("change", scheduleSave);
-    elEmailSender?.addEventListener("input", scheduleSave);
-    elEmailRecipient?.addEventListener("input", scheduleSave);
+    elTo.addEventListener("input", scheduleSave);
+    elFrom.addEventListener("input", scheduleSave);
+    elText?.addEventListener("input", scheduleSave);
+    elEmailTo?.addEventListener("input", scheduleSave);
+    elPhoneTo?.addEventListener("input", scheduleSave);
 
     setStatus("");
 
     // initial
     populateRadioSelect();
-    populateNameSelect(elTo, names, "— vyberte —");
-    populateNameSelect(elFrom, names, "— vyberte —");
     populateArtistSelect();
-    populateIamSelect();
     showHintForRadio();
     // Restore is intentionally delayed until after wish data is loaded via setData()
     // to guarantee whitelist-based safe restore (avoid races).
