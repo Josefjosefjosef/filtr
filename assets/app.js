@@ -4406,6 +4406,26 @@ function buildVideoAsArticleCard(it) {
 
   // Unified navigation router (UI-only)
   const VIEW_MAP = { media: 'media', radio: 'radio' };
+  const STORAGE_KEY_WISH = "iuRadioWishDraftV1";
+
+  // === RADIO WISH — fallback data (safe MVP, no backend) ===
+  const FALLBACK_WISH = {
+    radios: [
+      { id: "impuls", label: "Rádio Impuls", method: "email", emailTo: "impuls@impuls.cz" },
+      { id: "frekvence1", label: "Frekvence 1", method: "form", url: "https://www.frekvence1.cz/napiste-nam", hintText: "Kategorie ve formuláři: „Vysílání rádia“." },
+      { id: "evropa2", label: "Evropa 2", method: "form", url: "https://www.evropa2.cz/kontakt" },
+      { id: "cro_pisnicky_na_prani", label: "Český rozhlas – Písničky na přání", method: "form_or_sms", url: "https://program.rozhlas.cz/pisnicky-na-prani-7232426/o-poradu", smsHint: "Instrukce SMS jsou na stránce pořadu (MVP jen nápověda)." }
+    ],
+    names: ["Jana","Jan","Petr","Petra","Pavel","Lucie","Marie","Tomáš","Veronika","David","Daniel","Andrea","Eliška","Karel","Jiří","Josef","Anna","Tereza","Marek","Kristýna"],
+    songs: [
+      "Queen – Bohemian Rhapsody","ABBA – Dancing Queen","The Beatles – Hey Jude","Eagles – Hotel California","Michael Jackson – Billie Jean",
+      "Whitney Houston – I Will Always Love You","Ed Sheeran – Perfect","Adele – Someone Like You","Coldplay – Viva la Vida","Avicii – Wake Me Up",
+      "Lucie – Medvídek","Kabát – Pohoda","Chinaski – Tabáček","Kryštof – Cesta","Karel Gott – Lady Carneval",
+      "Marie Rottrová – Lásko, voníš deštěm","Olympic – Želva","Čechomor – Proměny","Toto – Africa","Frank Sinatra – My Way"
+    ]
+  };
+
+  let wishData = { ...FALLBACK_WISH };
 
   function escapeHtml(s){
     return String(s ?? "")
@@ -4416,12 +4436,194 @@ function buildVideoAsArticleCard(it) {
       .replace(/'/g, "&#039;");
   }
 
+  function toPlainStringList(list){
+    if (!Array.isArray(list)) return [];
+    return list.map((x) => String(x || "").trim()).filter(Boolean);
+  }
+
+  function normalizeForSearch(s){
+    try{
+      return String(s || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+    }catch{
+      return String(s || "").toLowerCase().trim();
+    }
+  }
+
+  function isValidEmail(v){
+    const s = String(v || "").trim();
+    if (!s) return false;
+    if (/\s/.test(s)) return false;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+  }
+
+  async function loadWishDataIntoState(){
+    // NOTE: do not touch feed pipeline state; add a new safe bucket only
+    const out = {
+      radios: Array.isArray(FALLBACK_WISH.radios) ? [...FALLBACK_WISH.radios] : [],
+      names: Array.isArray(FALLBACK_WISH.names) ? [...FALLBACK_WISH.names] : [],
+      songs: Array.isArray(FALLBACK_WISH.songs) ? [...FALLBACK_WISH.songs] : []
+    };
+
+    try{
+      // Use existing infra if available in this scope.
+      const [radiosJson, namesJson, songsJson] = await Promise.allSettled([
+        fetchJsonNoCache(makeDataUrl("data/radio_requests.json"), { timeoutMs: 4500, retries: 1 }),
+        fetchJsonNoCache(makeDataUrl("data/names_whitelist.json"), { timeoutMs: 4500, retries: 1 }),
+        fetchJsonNoCache(makeDataUrl("data/songs_whitelist.json"), { timeoutMs: 4500, retries: 1 })
+      ]);
+
+      if (radiosJson.status === "fulfilled" && radiosJson.value && Array.isArray(radiosJson.value.radios)) {
+        out.radios = radiosJson.value.radios
+          .filter((r) => r && r.id && r.label && r.method)
+          .map((r) => ({
+            id: String(r.id),
+            label: String(r.label),
+            method: String(r.method),
+            emailTo: r.emailTo ? String(r.emailTo) : undefined,
+            url: r.url ? String(r.url) : undefined,
+            hintText: r.hintText ? String(r.hintText) : undefined,
+            smsHint: r.smsHint ? String(r.smsHint) : undefined
+          }));
+      }
+
+      if (namesJson.status === "fulfilled" && namesJson.value && Array.isArray(namesJson.value.names)) {
+        out.names = toPlainStringList(namesJson.value.names);
+      }
+
+      if (songsJson.status === "fulfilled" && songsJson.value && Array.isArray(songsJson.value.songs)) {
+        // Accept {label,value} objects; store labels as the whitelist string
+        out.songs = songsJson.value.songs
+          .map((s) => (s && (s.value || s.label) ? String(s.value || s.label).trim() : ""))
+          .filter(Boolean);
+      }
+    }catch{}
+
+    wishData = out;
+    try{
+      state.radioWish = { ...out, loadedAt: Date.now() };
+    }catch{}
+    return out;
+  }
+
   function renderRadioView(viewEl){
     const head = `
       <div class="iuRadioHead" aria-label="Rádia">
         <div class="iuRadioTitle">Rádia</div>
         <div class="iuRadioLine" aria-hidden="true"></div>
       </div>
+    `;
+
+    const wishForm = `
+      <section class="iuRadioWish" id="iuRadioWish" aria-label="Přání do rádia">
+        <div class="iuRadioWishHead">
+          <div class="iuRadioWishTitle">Přání do rádia</div>
+          <div class="iuRadioWishSub">Bez backendu. Vše vyklikávací (whitelist) pro bezpečný MVP.</div>
+        </div>
+
+        <div class="iuWishGrid" role="group" aria-label="Formulář přání">
+          <label class="iuField">
+            <span class="iuLabel">Typ požadavku *</span>
+            <select class="iuCtrl" id="iuWishType">
+              <option value="">— vyberte —</option>
+              <option value="narozeninám">Narozeninám</option>
+              <option value="svátku">Svátek</option>
+              <option value="výročí">Výročí</option>
+              <option value="úspěchu">Úspěch / gratulace</option>
+            </select>
+          </label>
+
+          <label class="iuField">
+            <span class="iuLabel">Rádio *</span>
+            <select class="iuCtrl" id="iuWishRadio">
+              <option value="">— vyberte —</option>
+            </select>
+            <div class="iuHint" id="iuWishRadioHint" hidden></div>
+          </label>
+
+          <div class="iuField">
+            <span class="iuLabel">Pro koho *</span>
+            <div class="iuAc">
+              <input class="iuCtrl iuAcInput" id="iuWishTo" type="text" autocomplete="off" inputmode="search" placeholder="Začněte psát (např. PE…)" />
+              <div class="iuAcPanel" id="iuWishToPanel" hidden></div>
+            </div>
+            <div class="iuErr" id="iuWishToErr" hidden>Vyberte jméno ze seznamu.</div>
+          </div>
+
+          <div class="iuField">
+            <span class="iuLabel">Od koho *</span>
+            <div class="iuAc">
+              <input class="iuCtrl iuAcInput" id="iuWishFrom" type="text" autocomplete="off" inputmode="search" placeholder="Začněte psát (např. JA…)" />
+              <div class="iuAcPanel" id="iuWishFromPanel" hidden></div>
+            </div>
+            <div class="iuErr" id="iuWishFromErr" hidden>Vyberte jméno ze seznamu.</div>
+          </div>
+
+          <div class="iuField iuSpan2">
+            <span class="iuLabel">Písnička (volitelné)</span>
+            <div class="iuAc">
+              <input class="iuCtrl iuAcInput" id="iuWishSong" type="text" autocomplete="off" inputmode="search" placeholder="Vyhledejte skladbu (volitelné)…" />
+              <div class="iuAcPanel" id="iuWishSongPanel" hidden></div>
+            </div>
+            <div class="iuErr" id="iuWishSongErr" hidden>Vyberte písničku ze seznamu.</div>
+          </div>
+
+          <label class="iuField">
+            <span class="iuLabel">Oslovení / vztah (volitelné)</span>
+            <select class="iuCtrl" id="iuWishRelation">
+              <option value="">—</option>
+              <option value="kamarád">Kamarád</option>
+              <option value="kamarádka">Kamarádka</option>
+              <option value="maminka">Maminka</option>
+              <option value="tatínek">Tatínek</option>
+              <option value="kolega">Kolega</option>
+              <option value="kolegové">Kolegové</option>
+              <option value="partner">Partner</option>
+              <option value="partnerka">Partnerka</option>
+            </select>
+          </label>
+
+          <label class="iuField">
+            <span class="iuLabel">E-mail odesílatele (volitelné)</span>
+            <input class="iuCtrl" id="iuWishEmailSender" type="email" autocomplete="email" inputmode="email" placeholder="např. jmeno@domena.cz" />
+          </label>
+
+          <label class="iuField">
+            <span class="iuLabel">E-mail příjemce (volitelné)</span>
+            <input class="iuCtrl" id="iuWishEmailRecipient" type="email" autocomplete="email" inputmode="email" placeholder="např. oslavenec@domena.cz" />
+          </label>
+        </div>
+
+        <div class="iuWishActions">
+          <button class="iuBtn" id="iuWishGenerate" type="button">Vytvořit žádost</button>
+          <div class="iuErr iuErrBlock" id="iuWishErrors" hidden></div>
+        </div>
+
+        <div class="iuWishOut" aria-label="Náhledy zpráv">
+          <div class="iuWishOutCol">
+            <div class="iuWishOutHead">Zpráva pro rádio</div>
+            <textarea class="iuCtrl iuTA" id="iuWishRadioMsg" readonly rows="7" placeholder="Zde se vygeneruje zpráva…"></textarea>
+            <div class="iuWishBtnRow">
+              <button class="iuBtn" id="iuWishSendRadio" type="button">Odeslat rádiu</button>
+              <button class="iuBtn iuBtnGhost" id="iuWishCopyRadio" type="button">Kopírovat text</button>
+              <span class="iuCopied" id="iuWishCopiedRadio" hidden>Zkopírováno</span>
+            </div>
+          </div>
+
+          <div class="iuWishOutCol">
+            <div class="iuWishOutHead">Zpráva pro příjemce</div>
+            <textarea class="iuCtrl iuTA" id="iuWishRecipientMsg" readonly rows="7" placeholder="Zde se vygeneruje zpráva…"></textarea>
+            <div class="iuWishBtnRow">
+              <button class="iuBtn" id="iuWishSendRecipient" type="button">Odeslat příjemci</button>
+              <button class="iuBtn iuBtnGhost" id="iuWishCopyRecipient" type="button">Kopírovat text</button>
+              <span class="iuCopied" id="iuWishCopiedRecipient" hidden>Zkopírováno</span>
+            </div>
+          </div>
+        </div>
+      </section>
     `;
 
     const chips = RADIO_ITEMS.map((it) => {
@@ -4437,7 +4639,7 @@ function buildVideoAsArticleCard(it) {
       `;
     }).join("");
 
-    viewEl.innerHTML = head + `<div class="iuRadioGrid" role="list">${chips}</div>`;
+    viewEl.innerHTML = head + wishForm + `<div class="iuRadioGrid" role="list" aria-label="Odkazy na rádia">${chips}</div>`;
   }
 
   function setLeftNavActive(key){
@@ -4494,12 +4696,460 @@ function buildVideoAsArticleCard(it) {
     showView(VIEW_MAP[section] ?? 'media');
   }
 
+  function initRadioWish(viewEl){
+    const elType = document.getElementById("iuWishType");
+    const elRadio = document.getElementById("iuWishRadio");
+    const elRadioHint = document.getElementById("iuWishRadioHint");
+    const elTo = document.getElementById("iuWishTo");
+    const elToPanel = document.getElementById("iuWishToPanel");
+    const elToErr = document.getElementById("iuWishToErr");
+    const elFrom = document.getElementById("iuWishFrom");
+    const elFromPanel = document.getElementById("iuWishFromPanel");
+    const elFromErr = document.getElementById("iuWishFromErr");
+    const elSong = document.getElementById("iuWishSong");
+    const elSongPanel = document.getElementById("iuWishSongPanel");
+    const elSongErr = document.getElementById("iuWishSongErr");
+    const elRelation = document.getElementById("iuWishRelation");
+    const elEmailSender = document.getElementById("iuWishEmailSender");
+    const elEmailRecipient = document.getElementById("iuWishEmailRecipient");
+    const elGenerate = document.getElementById("iuWishGenerate");
+    const elErrors = document.getElementById("iuWishErrors");
+    const elRadioMsg = document.getElementById("iuWishRadioMsg");
+    const elRecipientMsg = document.getElementById("iuWishRecipientMsg");
+    const btnSendRadio = document.getElementById("iuWishSendRadio");
+    const btnCopyRadio = document.getElementById("iuWishCopyRadio");
+    const btnSendRecipient = document.getElementById("iuWishSendRecipient");
+    const btnCopyRecipient = document.getElementById("iuWishCopyRecipient");
+    const elCopiedRadio = document.getElementById("iuWishCopiedRadio");
+    const elCopiedRecipient = document.getElementById("iuWishCopiedRecipient");
+
+    if (!viewEl || !elType || !elRadio || !elTo || !elFrom || !elSong || !elGenerate || !elRadioMsg || !elRecipientMsg) {
+      return { setData: () => {} };
+    }
+
+    let radios = Array.isArray(wishData.radios) ? wishData.radios : [];
+    let names = Array.isArray(wishData.names) ? wishData.names : [];
+    let songs = Array.isArray(wishData.songs) ? wishData.songs : [];
+
+    let namesSet = new Set(names);
+    let songsSet = new Set(songs);
+    let radiosById = new Map(radios.map((r) => [String(r.id), r]));
+    let restoredOnce = false;
+
+    function setData(next){
+      radios = Array.isArray(next?.radios) ? next.radios : radios;
+      names = Array.isArray(next?.names) ? next.names : names;
+      songs = Array.isArray(next?.songs) ? next.songs : songs;
+      namesSet = new Set(names);
+      songsSet = new Set(songs);
+      radiosById = new Map(radios.map((r) => [String(r.id), r]));
+      populateRadioSelect();
+      applyPendingSelections();
+      // if current selections are no longer valid, clear them (quietly)
+      hardValidateSelected(false);
+    }
+
+    function populateRadioSelect(){
+      const prev = String(elRadio.value || "");
+      elRadio.innerHTML = `<option value="">— vyberte —</option>` + radios
+        .map((r) => `<option value="${escapeHtml(r.id)}">${escapeHtml(r.label)}</option>`)
+        .join("");
+      if (prev && radiosById.has(prev)) elRadio.value = prev;
+    }
+
+    function showHintForRadio(){
+      if (!elRadioHint) return;
+      const id = String(elRadio.value || "");
+      const r = radiosById.get(id);
+      const hint = r ? (r.hintText || r.smsHint || r.url || (r.method === "email" ? r.emailTo : "")) : "";
+      if (hint) {
+        elRadioHint.hidden = false;
+        elRadioHint.textContent = hint;
+      } else {
+        elRadioHint.hidden = true;
+        elRadioHint.textContent = "";
+      }
+    }
+
+    function closePanels(){
+      if (elToPanel) elToPanel.hidden = true;
+      if (elFromPanel) elFromPanel.hidden = true;
+      if (elSongPanel) elSongPanel.hidden = true;
+    }
+
+    function renderPanel(panelEl, items, onPick){
+      if (!panelEl) return;
+      const max = 14;
+      const slice = items.slice(0, max);
+      panelEl.innerHTML = slice.map((label, idx) =>
+        `<button type="button" class="iuAcItem" data-idx="${idx}">${escapeHtml(label)}</button>`
+      ).join("");
+      panelEl.hidden = slice.length === 0;
+      panelEl.querySelectorAll(".iuAcItem").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const i = Number(btn.getAttribute("data-idx"));
+          const val = slice[i];
+          if (val) onPick(val);
+        });
+      });
+    }
+
+    function mountAutocomplete(inputEl, panelEl, getList){
+      let open = false;
+      let activeIdx = -1;
+
+      function pick(val){
+        inputEl.value = val;
+        inputEl.dataset.selectedValue = val;
+        panelEl.hidden = true;
+        open = false;
+        activeIdx = -1;
+        scheduleSave();
+      }
+
+      function update(){
+        const q = normalizeForSearch(inputEl.value);
+        if (!q) {
+          panelEl.hidden = true;
+          open = false;
+          activeIdx = -1;
+          return;
+        }
+        const list = getList();
+        const hits = [];
+        for (const item of list){
+          if (hits.length >= 60) break;
+          if (normalizeForSearch(item).includes(q)) hits.push(item);
+        }
+        renderPanel(panelEl, hits, pick);
+        open = !panelEl.hidden;
+        activeIdx = -1;
+      }
+
+      inputEl.addEventListener("input", () => {
+        // any typing clears selection until user picks from list
+        delete inputEl.dataset.selectedValue;
+        update();
+        scheduleSave();
+      });
+
+      inputEl.addEventListener("focus", update);
+
+      inputEl.addEventListener("keydown", (e) => {
+        if (panelEl.hidden) return;
+        const items = Array.from(panelEl.querySelectorAll(".iuAcItem"));
+        if (!items.length) return;
+
+        if (e.key === "Escape"){
+          panelEl.hidden = true;
+          open = false;
+          activeIdx = -1;
+          return;
+        }
+        if (e.key === "ArrowDown"){
+          e.preventDefault();
+          activeIdx = Math.min(activeIdx + 1, items.length - 1);
+        } else if (e.key === "ArrowUp"){
+          e.preventDefault();
+          activeIdx = Math.max(activeIdx - 1, 0);
+        } else if (e.key === "Enter"){
+          e.preventDefault();
+          const idx = activeIdx >= 0 ? activeIdx : 0;
+          const btn = items[idx];
+          btn?.click();
+          return;
+        } else {
+          return;
+        }
+
+        items.forEach((it, i) => it.classList.toggle("is-active", i === activeIdx));
+        if (activeIdx >= 0) items[activeIdx].scrollIntoView({ block: "nearest" });
+      });
+
+      return { pick, update };
+    }
+
+    const acTo = mountAutocomplete(elTo, elToPanel, () => names);
+    const acFrom = mountAutocomplete(elFrom, elFromPanel, () => names);
+    const acSong = mountAutocomplete(elSong, elSongPanel, () => songs);
+
+    function getDraft(){
+      return {
+        type: String(elType.value || ""),
+        radioId: String(elRadio.value || ""),
+        to: String(elTo.dataset.selectedValue || ""),
+        from: String(elFrom.dataset.selectedValue || ""),
+        song: String(elSong.dataset.selectedValue || ""),
+        relation: String(elRelation?.value || ""),
+        emailSender: String(elEmailSender?.value || "").trim(),
+        emailRecipient: String(elEmailRecipient?.value || "").trim()
+      };
+    }
+
+    function sanitizeDraft(d){
+      const allowedTypes = new Set(["narozeninám","svátku","výročí","úspěchu"]);
+      const allowedRelations = new Set(["","kamarád","kamarádka","maminka","tatínek","kolega","kolegové","partner","partnerka"]);
+      const safe = {
+        type: allowedTypes.has(d?.type) ? d.type : "",
+        radioId: radiosById.has(String(d?.radioId || "")) ? String(d.radioId) : "",
+        to: namesSet.has(String(d?.to || "")) ? String(d.to) : "",
+        from: namesSet.has(String(d?.from || "")) ? String(d.from) : "",
+        song: d?.song ? (songsSet.has(String(d.song)) ? String(d.song) : "") : "",
+        relation: allowedRelations.has(String(d?.relation || "")) ? String(d.relation) : "",
+        emailSender: isValidEmail(d?.emailSender) ? String(d.emailSender).trim() : "",
+        emailRecipient: isValidEmail(d?.emailRecipient) ? String(d.emailRecipient).trim() : ""
+      };
+      return safe;
+    }
+
+    function restoreFromSession(){
+      try{
+        const raw = sessionStorage.getItem(STORAGE_KEY_WISH);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        const d = sanitizeDraft(parsed);
+
+        if (d.type) elType.value = d.type;
+        if (d.radioId) elRadio.value = d.radioId;
+
+        if (parsed?.to) {
+          elTo.value = String(parsed.to);
+          elTo.dataset.pendingValue = String(parsed.to);
+        }
+        if (parsed?.from) {
+          elFrom.value = String(parsed.from);
+          elFrom.dataset.pendingValue = String(parsed.from);
+        }
+        if (parsed?.song) {
+          elSong.value = String(parsed.song);
+          elSong.dataset.pendingValue = String(parsed.song);
+        }
+        applyPendingSelections();
+        if (elRelation && d.relation) elRelation.value = d.relation;
+        if (elEmailSender && d.emailSender) elEmailSender.value = d.emailSender;
+        if (elEmailRecipient && d.emailRecipient) elEmailRecipient.value = d.emailRecipient;
+
+        showHintForRadio();
+        restoredOnce = true;
+      }catch{}
+    }
+
+    function applyPendingSelections(){
+      // Promote pending values to selectedValue only if they pass current whitelists.
+      const pTo = String(elTo.dataset.pendingValue || "");
+      if (pTo && namesSet.has(pTo)) {
+        elTo.dataset.selectedValue = pTo;
+        delete elTo.dataset.pendingValue;
+      }
+      const pFrom = String(elFrom.dataset.pendingValue || "");
+      if (pFrom && namesSet.has(pFrom)) {
+        elFrom.dataset.selectedValue = pFrom;
+        delete elFrom.dataset.pendingValue;
+      }
+      const pSong = String(elSong.dataset.pendingValue || "");
+      if (pSong && songsSet.has(pSong)) {
+        elSong.dataset.selectedValue = pSong;
+        delete elSong.dataset.pendingValue;
+      }
+    }
+
+    let saveTimer = 0;
+    function scheduleSave(){
+      if (saveTimer) clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        try{
+          const d = sanitizeDraft(getDraft());
+          sessionStorage.setItem(STORAGE_KEY_WISH, JSON.stringify(d));
+        }catch{}
+      }, 200);
+    }
+
+    function setErr(el, on){
+      if (!el) return;
+      el.hidden = !on;
+    }
+    function setBlockErr(msg){
+      if (!elErrors) return;
+      if (!msg) {
+        elErrors.hidden = true;
+        elErrors.textContent = "";
+        return;
+      }
+      elErrors.hidden = false;
+      elErrors.textContent = msg;
+    }
+
+    function hardValidateSelected(showErrors){
+      // Ensure typed-but-not-selected cannot pass (must be selectedValue AND exist in whitelist)
+      const toOk = !!elTo.dataset.selectedValue && namesSet.has(String(elTo.dataset.selectedValue));
+      const fromOk = !!elFrom.dataset.selectedValue && namesSet.has(String(elFrom.dataset.selectedValue));
+      const songVal = String(elSong.value || "").trim();
+      const songOk = !songVal || (!!elSong.dataset.selectedValue && songsSet.has(String(elSong.dataset.selectedValue)));
+      if (showErrors){
+        setErr(elToErr, !toOk && !!String(elTo.value || "").trim());
+        setErr(elFromErr, !fromOk && !!String(elFrom.value || "").trim());
+        setErr(elSongErr, !songOk && !!songVal);
+      } else {
+        setErr(elToErr, false);
+        setErr(elFromErr, false);
+        setErr(elSongErr, false);
+      }
+      return { toOk, fromOk, songOk };
+    }
+
+    function buildTexts(d){
+      const radio = radiosById.get(d.radioId);
+      const radioLabel = radio ? radio.label : "rádio";
+      const typ = d.type;
+      const proKoho = d.to;
+      const odKoho = d.from;
+      const pisnickaClause = d.song ? ` a případně zahrání písně ${d.song}` : "";
+      const pisnickaClause2 = d.song ? ` a případně písničku ${d.song}` : "";
+      const emailClause = d.emailSender ? `, kontakt: ${d.emailSender}` : "";
+
+      const subjectRadio = `Písnička / přání – ${proKoho} – žádost z infoUzel.cz`;
+      const bodyRadio =
+`Dobrý den,
+píšu přes infoUzel.cz jménem posluchače ${odKoho}. Rád/a by popřál/a ${proKoho} k ${typ}.
+Pokud je to možné, prosím o pozdrav ve vysílání${pisnickaClause}.
+Děkuji a přeji hezký den.
+— infoUzel.cz (odeslal/a: ${odKoho}${emailClause})`;
+
+      const subjectRec = `Máš rádiové přání od ${odKoho} 🙂`;
+      const bodyRec =
+`Ahoj ${proKoho},
+${odKoho} právě požádal/a rádio ${radioLabel} o přání k ${typ}${pisnickaClause2}.
+Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová 🙂
+— infoUzel.cz`;
+
+      return { subjectRadio, bodyRadio, subjectRec, bodyRec, radio };
+    }
+
+    function openMailto(to, subject, body){
+      const href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = href;
+    }
+
+    async function copyToClipboard(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        return true;
+      }catch{
+        try{
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.left = "-9999px";
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+          return true;
+        }catch{
+          return false;
+        }
+      }
+    }
+
+    function flash(el){
+      if (!el) return;
+      el.hidden = false;
+      setTimeout(() => { try{ el.hidden = true; }catch{} }, 1200);
+    }
+
+    function validateRequired(){
+      const d = getDraft();
+      const errs = [];
+      if (!d.type) errs.push("Vyberte typ požadavku.");
+      if (!d.radioId) errs.push("Vyberte rádio.");
+      const { toOk, fromOk, songOk } = hardValidateSelected(true);
+      if (!toOk) errs.push("Vyberte jméno „Pro koho“ ze seznamu.");
+      if (!fromOk) errs.push("Vyberte jméno „Od koho“ ze seznamu.");
+      if (!songOk) errs.push("Písničku (pokud je vyplněná) vyberte ze seznamu.");
+      if (d.emailSender && !isValidEmail(d.emailSender)) errs.push("E-mail odesílatele není platný.");
+      if (d.emailRecipient && !isValidEmail(d.emailRecipient)) errs.push("E-mail příjemce není platný.");
+      return { ok: errs.length === 0, errs, d: sanitizeDraft(d) };
+    }
+
+    let lastBuilt = null;
+    function buildAndShow(){
+      const v = validateRequired();
+      if (!v.ok) {
+        setBlockErr(v.errs.join(" "));
+        return;
+      }
+      setBlockErr("");
+      lastBuilt = buildTexts(v.d);
+      elRadioMsg.value = `Předmět: ${lastBuilt.subjectRadio}\n\n${lastBuilt.bodyRadio}`;
+      elRecipientMsg.value = `Předmět: ${lastBuilt.subjectRec}\n\n${lastBuilt.bodyRec}`;
+      scheduleSave();
+    }
+
+    elGenerate.addEventListener("click", buildAndShow);
+    elRadio.addEventListener("change", () => { showHintForRadio(); scheduleSave(); });
+    elType.addEventListener("change", scheduleSave);
+    elRelation?.addEventListener("change", scheduleSave);
+    elEmailSender?.addEventListener("input", scheduleSave);
+    elEmailRecipient?.addEventListener("input", scheduleSave);
+
+    document.addEventListener("click", (e) => {
+      if (e.target && e.target.closest && e.target.closest("#iuRadioWish")) return;
+      closePanels();
+    });
+
+    btnCopyRadio?.addEventListener("click", async () => {
+      const text = String(elRadioMsg.value || "").trim();
+      if (!text) return;
+      if (await copyToClipboard(text)) flash(elCopiedRadio);
+    });
+    btnCopyRecipient?.addEventListener("click", async () => {
+      const text = String(elRecipientMsg.value || "").trim();
+      if (!text) return;
+      if (await copyToClipboard(text)) flash(elCopiedRecipient);
+    });
+
+    btnSendRadio?.addEventListener("click", () => {
+      if (!lastBuilt) buildAndShow();
+      if (!lastBuilt) return;
+      const r = lastBuilt.radio;
+      if (!r) return;
+      if (r.method === "email" && r.emailTo) {
+        openMailto(r.emailTo, lastBuilt.subjectRadio, lastBuilt.bodyRadio);
+      } else if (r.url) {
+        window.open(r.url, "_blank", "noopener,noreferrer");
+      }
+    });
+
+    btnSendRecipient?.addEventListener("click", () => {
+      if (!lastBuilt) buildAndShow();
+      if (!lastBuilt) return;
+      const to = String(elEmailRecipient?.value || "").trim();
+      if (!isValidEmail(to)) {
+        setBlockErr("Pro odeslání příjemci vyplňte platný e-mail příjemce.");
+        return;
+      }
+      setBlockErr("");
+      openMailto(to, lastBuilt.subjectRec, lastBuilt.bodyRec);
+    });
+
+    // initial
+    populateRadioSelect();
+    showHintForRadio();
+    restoreFromSession();
+    hardValidateSelected(false);
+
+    return { setData };
+  }
+
   function initNavRouter(){
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
     if (!feedEl || !viewEl) return;
 
     renderRadioView(viewEl);
+    const wishCtl = initRadioWish(viewEl);
+    // async load (no backend); fallback keeps UI usable even if fetch fails
+    loadWishDataIntoState().then((d) => { try{ wishCtl.setData(d); }catch{} });
 
     // Start: derive from URL (?section=radio|media). Unknown -> media.
     // Ensure default is written into the URL (replaceState, no pushState).
