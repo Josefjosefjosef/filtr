@@ -4528,9 +4528,6 @@ function buildVideoAsArticleCard(it) {
           <!-- Row 1: 3 equal blocks -->
           <div class="iuWishRow iuWishRow--3" aria-label="Základní volby">
             <div class="iuWishCard">
-              <span class="iuWishIcon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false"><path d="M7 2v3M17 2v3M3 7h18v14H3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 11h18" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-              </span>
               <label class="iuWishCardBody">
                 <span class="iuLabel">Typ požadavku *</span>
                 <select class="iuCtrl" id="iuWishType">
@@ -4545,9 +4542,6 @@ function buildVideoAsArticleCard(it) {
             </div>
 
             <div class="iuWishCard">
-              <span class="iuWishIcon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false"><path d="M3 11v8h18v-8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 11l10-4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="15" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-              </span>
               <div class="iuWishCardBody">
                 <label class="iuLabel" for="iuWishRadio">Rádio *</label>
                 <select class="iuCtrl" id="iuWishRadio">
@@ -4558,15 +4552,11 @@ function buildVideoAsArticleCard(it) {
             </div>
 
             <div class="iuWishCard">
-              <span class="iuWishIcon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false"><path d="M9 18V5l12-2v13" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="7" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="19" cy="16" r="3" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-              </span>
               <div class="iuWishCardBody">
-                <span class="iuLabel">Písnička *</span>
-                <div class="iuAc">
-                  <input class="iuCtrl iuAcInput" id="iuWishSong" type="text" autocomplete="off" inputmode="search" placeholder="Vyhledejte skladbu…" />
-                  <div class="iuAcPanel" id="iuWishSongPanel" hidden></div>
-                </div>
+                <span class="iuLabel">Písnička od *</span>
+                <select class="iuCtrl" id="iuWishSong">
+                  <option value="">— vyberte —</option>
+                </select>
                 <div class="iuErr" id="iuWishSongErr" hidden>Vyberte písničku ze seznamu.</div>
               </div>
             </div>
@@ -4575,41 +4565,30 @@ function buildVideoAsArticleCard(it) {
           <!-- Row 2: 3 equal blocks -->
           <div class="iuWishRow iuWishRow--3" aria-label="Jména a vztah">
             <div class="iuWishCard">
-              <span class="iuWishIcon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-              </span>
               <div class="iuWishCardBody">
                 <span class="iuLabel">Pro koho *</span>
-                <div class="iuAc">
-                  <input class="iuCtrl iuAcInput" id="iuWishTo" type="text" autocomplete="off" inputmode="search" placeholder="Vyberte jméno…" />
-                  <div class="iuAcPanel" id="iuWishToPanel" hidden></div>
-                </div>
+                <select class="iuCtrl" id="iuWishTo">
+                  <option value="">— vyberte —</option>
+                </select>
                 <div class="iuErr" id="iuWishToErr" hidden>Vyberte jméno ze seznamu.</div>
               </div>
             </div>
 
             <div class="iuWishCard">
-              <span class="iuWishIcon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false"><path d="M20 21v-2a4 4 0 0 0-3-3.87" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21v-2a4 4 0 0 1 4-4h4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-              </span>
               <div class="iuWishCardBody">
                 <span class="iuLabel">Od koho *</span>
-                <div class="iuAc">
-                  <input class="iuCtrl iuAcInput" id="iuWishFrom" type="text" autocomplete="off" inputmode="search" placeholder="Vyberte jméno…" />
-                  <div class="iuAcPanel" id="iuWishFromPanel" hidden></div>
-                </div>
+                <select class="iuCtrl" id="iuWishFrom">
+                  <option value="">— vyberte —</option>
+                </select>
                 <div class="iuErr" id="iuWishFromErr" hidden>Vyberte jméno ze seznamu.</div>
               </div>
             </div>
 
             <div class="iuWishCard">
-              <span class="iuWishIcon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false"><path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-              </span>
               <label class="iuWishCardBody">
-                <span class="iuLabel">Oslovení / vztah</span>
+                <span class="iuLabel">Já jsem</span>
                 <select class="iuCtrl" id="iuWishRelation">
-                  <option value="">—</option>
+                  <option value="">— vyberte —</option>
                   <option value="kamarád">Kamarád</option>
                   <option value="kamarádka">Kamarádka</option>
                   <option value="maminka">Maminka</option>
@@ -4626,18 +4605,12 @@ function buildVideoAsArticleCard(it) {
           <!-- Row 3: emails -->
           <div class="iuWishRow iuWishRow--2" aria-label="E-maily (volitelné)">
             <div class="iuWishCard">
-              <span class="iuWishIcon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false"><path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22 6l-10 7L2 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-              </span>
               <label class="iuWishCardBody">
                 <span class="iuLabel">E-mail odesílatele</span>
                 <input class="iuCtrl" id="iuWishEmailSender" type="email" autocomplete="email" inputmode="email" placeholder="např. jmeno@domena.cz" />
               </label>
             </div>
             <div class="iuWishCard">
-              <span class="iuWishIcon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false"><path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22 6l-10 7L2 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-              </span>
               <label class="iuWishCardBody">
                 <span class="iuLabel">E-mail příjemce</span>
                 <input class="iuCtrl" id="iuWishEmailRecipient" type="email" autocomplete="email" inputmode="email" placeholder="např. oslavenec@domena.cz" />
@@ -4729,13 +4702,10 @@ function buildVideoAsArticleCard(it) {
     const elRadio = document.getElementById("iuWishRadio");
     const elRadioHint = document.getElementById("iuWishRadioHint");
     const elTo = document.getElementById("iuWishTo");
-    const elToPanel = document.getElementById("iuWishToPanel");
     const elToErr = document.getElementById("iuWishToErr");
     const elFrom = document.getElementById("iuWishFrom");
-    const elFromPanel = document.getElementById("iuWishFromPanel");
     const elFromErr = document.getElementById("iuWishFromErr");
     const elSong = document.getElementById("iuWishSong");
-    const elSongPanel = document.getElementById("iuWishSongPanel");
     const elSongErr = document.getElementById("iuWishSongErr");
     const elRelation = document.getElementById("iuWishRelation");
     const elEmailSender = document.getElementById("iuWishEmailSender");
@@ -4753,18 +4723,48 @@ function buildVideoAsArticleCard(it) {
     let songs = Array.isArray(wishData.songs) ? wishData.songs : [];
 
     let namesSet = new Set(names);
-    let songsSet = new Set(songs);
+    let artists = [];
+    let artistsSet = new Set(artists);
     let radiosById = new Map(radios.map((r) => [String(r.id), r]));
     let restoredOnce = false;
+
+    function deriveArtistLabel(raw){
+      const s = String(raw || "").trim();
+      if (!s) return "";
+      // common separators used in our whitelist labels
+      const parts = s.split(" – ");
+      if (parts.length >= 2) return parts[0].trim();
+      const parts2 = s.split(" - ");
+      if (parts2.length >= 2) return parts2[0].trim();
+      return s;
+    }
+
+    function buildArtistsFromSongs(list){
+      const seen = new Set();
+      const out = [];
+      for (const it of (Array.isArray(list) ? list : [])){
+        const a = deriveArtistLabel(it);
+        if (!a) continue;
+        if (seen.has(a)) continue;
+        seen.add(a);
+        out.push(a);
+        if (out.length >= 100) break; // spec: only top 100
+      }
+      return out;
+    }
 
     function setData(next){
       radios = Array.isArray(next?.radios) ? next.radios : radios;
       names = Array.isArray(next?.names) ? next.names : names;
       songs = Array.isArray(next?.songs) ? next.songs : songs;
       namesSet = new Set(names);
-      songsSet = new Set(songs);
+      artists = buildArtistsFromSongs(songs);
+      artistsSet = new Set(artists);
       radiosById = new Map(radios.map((r) => [String(r.id), r]));
       populateRadioSelect();
+      populateNameSelect(elTo, names, "— vyberte —");
+      populateNameSelect(elFrom, names, "— vyberte —");
+      populateArtistSelect();
       showHintForRadio();
       // Safe restore after data is available (prevents typed-but-not-selected restore).
       if (!restoredOnce) restoreFromSession();
@@ -4778,6 +4778,23 @@ function buildVideoAsArticleCard(it) {
         .map((r) => `<option value="${escapeHtml(r.id)}">${escapeHtml(r.label)}</option>`)
         .join("");
       if (prev && radiosById.has(prev)) elRadio.value = prev;
+    }
+
+    function populateNameSelect(selEl, list, placeholder){
+      if (!selEl) return;
+      const prev = String(selEl.value || "");
+      selEl.innerHTML = `<option value="">${escapeHtml(placeholder || "— vyberte —")}</option>` + (Array.isArray(list) ? list : [])
+        .map((n) => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`)
+        .join("");
+      if (prev && namesSet.has(prev)) selEl.value = prev;
+    }
+
+    function populateArtistSelect(){
+      const prev = String(elSong.value || "");
+      elSong.innerHTML = `<option value="">— vyberte —</option>` + artists
+        .map((a) => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`)
+        .join("");
+      if (prev && artistsSet.has(prev)) elSong.value = prev;
     }
 
     function showHintForRadio(){
@@ -4794,115 +4811,13 @@ function buildVideoAsArticleCard(it) {
       }
     }
 
-    function closePanels(){
-      if (elToPanel) elToPanel.hidden = true;
-      if (elFromPanel) elFromPanel.hidden = true;
-      if (elSongPanel) elSongPanel.hidden = true;
-    }
-
-    function renderPanel(panelEl, items, onPick){
-      if (!panelEl) return;
-      const max = 14;
-      const slice = items.slice(0, max);
-      panelEl.innerHTML = slice.map((label, idx) =>
-        `<button type="button" class="iuAcItem" data-idx="${idx}">${escapeHtml(label)}</button>`
-      ).join("");
-      panelEl.hidden = slice.length === 0;
-      panelEl.querySelectorAll(".iuAcItem").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const i = Number(btn.getAttribute("data-idx"));
-          const val = slice[i];
-          if (val) onPick(val);
-        });
-      });
-    }
-
-    function mountAutocomplete(inputEl, panelEl, getList){
-      let open = false;
-      let activeIdx = -1;
-
-      function pick(val){
-        inputEl.value = val;
-        inputEl.dataset.selectedValue = val;
-        panelEl.hidden = true;
-        open = false;
-        activeIdx = -1;
-        scheduleSave();
-      }
-
-      function update(){
-        const q = normalizeForSearch(inputEl.value);
-        if (!q) {
-          panelEl.hidden = true;
-          open = false;
-          activeIdx = -1;
-          return;
-        }
-        const list = getList();
-        const hits = [];
-        for (const item of list){
-          if (hits.length >= 60) break;
-          if (normalizeForSearch(item).includes(q)) hits.push(item);
-        }
-        renderPanel(panelEl, hits, pick);
-        open = !panelEl.hidden;
-        activeIdx = -1;
-      }
-
-      inputEl.addEventListener("input", () => {
-        // any typing clears selection until user picks from list
-        delete inputEl.dataset.selectedValue;
-        update();
-        scheduleSave();
-      });
-
-      inputEl.addEventListener("focus", update);
-
-      inputEl.addEventListener("keydown", (e) => {
-        if (panelEl.hidden) return;
-        const items = Array.from(panelEl.querySelectorAll(".iuAcItem"));
-        if (!items.length) return;
-
-        if (e.key === "Escape"){
-          panelEl.hidden = true;
-          open = false;
-          activeIdx = -1;
-          return;
-        }
-        if (e.key === "ArrowDown"){
-          e.preventDefault();
-          activeIdx = Math.min(activeIdx + 1, items.length - 1);
-        } else if (e.key === "ArrowUp"){
-          e.preventDefault();
-          activeIdx = Math.max(activeIdx - 1, 0);
-        } else if (e.key === "Enter"){
-          e.preventDefault();
-          const idx = activeIdx >= 0 ? activeIdx : 0;
-          const btn = items[idx];
-          btn?.click();
-          return;
-        } else {
-          return;
-        }
-
-        items.forEach((it, i) => it.classList.toggle("is-active", i === activeIdx));
-        if (activeIdx >= 0) items[activeIdx].scrollIntoView({ block: "nearest" });
-      });
-
-      return { pick, update };
-    }
-
-    const acTo = mountAutocomplete(elTo, elToPanel, () => names);
-    const acFrom = mountAutocomplete(elFrom, elFromPanel, () => names);
-    const acSong = mountAutocomplete(elSong, elSongPanel, () => songs);
-
     function getDraft(){
       return {
         type: String(elType.value || ""),
         radioId: String(elRadio.value || ""),
-        toSelected: String(elTo.dataset.selectedValue || ""),
-        fromSelected: String(elFrom.dataset.selectedValue || ""),
-        songSelected: String(elSong.dataset.selectedValue || ""),
+        to: String(elTo.value || ""),
+        from: String(elFrom.value || ""),
+        songArtist: String(elSong.value || ""),
         relation: String(elRelation?.value || ""),
         emailSender: String(elEmailSender?.value || "").trim(),
         emailRecipient: String(elEmailRecipient?.value || "").trim()
@@ -4912,12 +4827,16 @@ function buildVideoAsArticleCard(it) {
     function sanitizeDraft(d){
       const allowedTypes = new Set(["narozeniny","svatek","vyroci","uspech","jen_tak"]);
       const allowedRelations = new Set(["","kamarád","kamarádka","maminka","tatínek","kolega","kolegové","partner","partnerka"]);
+      const legacyTo = String(d?.to || d?.toSelected || "");
+      const legacyFrom = String(d?.from || d?.fromSelected || "");
+      const legacySong = String(d?.songArtist || d?.songSelected || "");
+      const legacySongArtist = artistsSet.has(legacySong) ? legacySong : deriveArtistLabel(legacySong);
       const safe = {
         type: allowedTypes.has(d?.type) ? d.type : "",
         radioId: radiosById.has(String(d?.radioId || "")) ? String(d.radioId) : "",
-        toSelected: namesSet.has(String(d?.toSelected || "")) ? String(d.toSelected) : "",
-        fromSelected: namesSet.has(String(d?.fromSelected || "")) ? String(d.fromSelected) : "",
-        songSelected: d?.songSelected ? (songsSet.has(String(d.songSelected)) ? String(d.songSelected) : "") : "",
+        to: namesSet.has(legacyTo) ? legacyTo : "",
+        from: namesSet.has(legacyFrom) ? legacyFrom : "",
+        songArtist: artistsSet.has(legacySongArtist) ? legacySongArtist : "",
         relation: allowedRelations.has(String(d?.relation || "")) ? String(d.relation) : "",
         emailSender: isValidEmail(d?.emailSender) ? String(d.emailSender).trim() : "",
         emailRecipient: isValidEmail(d?.emailRecipient) ? String(d.emailRecipient).trim() : ""
@@ -4935,29 +4854,9 @@ function buildVideoAsArticleCard(it) {
         if (d.type) elType.value = d.type;
         if (d.radioId) elRadio.value = d.radioId;
 
-        // Strict safe restore: restore ONLY whitelisted selected values.
-        // Never restore typed-but-not-selected input.value.
-        if (d.toSelected) {
-          elTo.value = d.toSelected;
-          elTo.dataset.selectedValue = d.toSelected;
-        } else {
-          elTo.value = "";
-          delete elTo.dataset.selectedValue;
-        }
-        if (d.fromSelected) {
-          elFrom.value = d.fromSelected;
-          elFrom.dataset.selectedValue = d.fromSelected;
-        } else {
-          elFrom.value = "";
-          delete elFrom.dataset.selectedValue;
-        }
-        if (d.songSelected) {
-          elSong.value = d.songSelected;
-          elSong.dataset.selectedValue = d.songSelected;
-        } else {
-          elSong.value = "";
-          delete elSong.dataset.selectedValue;
-        }
+        elTo.value = d.to || "";
+        elFrom.value = d.from || "";
+        elSong.value = d.songArtist || "";
         if (elRelation && d.relation) elRelation.value = d.relation;
         if (elEmailSender && d.emailSender) elEmailSender.value = d.emailSender;
         if (elEmailRecipient && d.emailRecipient) elEmailRecipient.value = d.emailRecipient;
@@ -4998,13 +4897,12 @@ function buildVideoAsArticleCard(it) {
     }
 
     function hardValidateSelected(showErrors){
-      // Ensure typed-but-not-selected cannot pass (must be selectedValue AND exist in whitelist)
-      const toOk = !!elTo.dataset.selectedValue && namesSet.has(String(elTo.dataset.selectedValue));
-      const fromOk = !!elFrom.dataset.selectedValue && namesSet.has(String(elFrom.dataset.selectedValue));
-      const songOk = !!elSong.dataset.selectedValue && songsSet.has(String(elSong.dataset.selectedValue));
+      const toOk = !!elTo.value && namesSet.has(String(elTo.value));
+      const fromOk = !!elFrom.value && namesSet.has(String(elFrom.value));
+      const songOk = !!elSong.value && artistsSet.has(String(elSong.value));
       if (showErrors){
-        setErr(elToErr, !toOk && !!String(elTo.value || "").trim());
-        setErr(elFromErr, !fromOk && !!String(elFrom.value || "").trim());
+        setErr(elToErr, !toOk);
+        setErr(elFromErr, !fromOk);
         setErr(elSongErr, !songOk);
       } else {
         setErr(elToErr, false);
@@ -5025,10 +4923,10 @@ function buildVideoAsArticleCard(it) {
         jen_tak: "jen tak pro radost"
       };
       const typ = typeLabelMap[d.type] ?? String(d.type || "");
-      const proKoho = d.toSelected;
-      const odKoho = d.fromSelected;
-      const pisnickaClause = d.songSelected ? ` a případně zahrání písně ${d.songSelected}` : "";
-      const pisnickaClause2 = d.songSelected ? ` a případně písničku ${d.songSelected}` : "";
+      const proKoho = d.to;
+      const odKoho = d.from;
+      const pisnickaClause = d.songArtist ? ` a případně písničku od ${d.songArtist}` : "";
+      const pisnickaClause2 = d.songArtist ? ` a případně písničku od ${d.songArtist}` : "";
       const emailClause = d.emailSender ? `, kontakt: ${d.emailSender}` : "";
 
       const subjectRadio = `Písnička / přání – ${proKoho} – žádost z infoUzel.cz`;
@@ -5054,33 +4952,6 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     function openMailto(to, subject, body){
       const href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.location.href = href;
-    }
-
-    async function copyToClipboard(text){
-      try{
-        await navigator.clipboard.writeText(text);
-        return true;
-      }catch{
-        try{
-          const ta = document.createElement("textarea");
-          ta.value = text;
-          ta.style.position = "fixed";
-          ta.style.left = "-9999px";
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand("copy");
-          ta.remove();
-          return true;
-        }catch{
-          return false;
-        }
-      }
-    }
-
-    function flash(el){
-      if (!el) return;
-      el.hidden = false;
-      setTimeout(() => { try{ el.hidden = true; }catch{} }, 1200);
     }
 
     function validateRequired(){
@@ -5126,19 +4997,20 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     btnSendRadio.addEventListener("click", buildAndSend);
     elRadio.addEventListener("change", () => { showHintForRadio(); scheduleSave(); });
     elType.addEventListener("change", scheduleSave);
+    elSong.addEventListener("change", scheduleSave);
+    elTo.addEventListener("change", scheduleSave);
+    elFrom.addEventListener("change", scheduleSave);
     elRelation?.addEventListener("change", scheduleSave);
     elEmailSender?.addEventListener("input", scheduleSave);
     elEmailRecipient?.addEventListener("input", scheduleSave);
-
-    document.addEventListener("click", (e) => {
-      if (e.target && e.target.closest && e.target.closest("#iuRadioWish")) return;
-      closePanels();
-    });
 
     setStatus("");
 
     // initial
     populateRadioSelect();
+    populateNameSelect(elTo, names, "— vyberte —");
+    populateNameSelect(elFrom, names, "— vyberte —");
+    populateArtistSelect();
     showHintForRadio();
     // Restore is intentionally delayed until after wish data is loaded via setData()
     // to guarantee whitelist-based safe restore (avoid races).
