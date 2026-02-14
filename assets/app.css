@@ -214,8 +214,13 @@ html:not([data-iu-js]) .iuDailyWeather{
   left: 0;
   right: auto;
   z-index: 1000;
-  background: #1F3A5F;
-  border-bottom: 1px solid rgba(255,255,255,.1);
+  background: linear-gradient(
+      to bottom,
+      #2E4A6B 0%,
+      #243B55 100%
+  );
+  color: #fff;
+  border-bottom: 0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   width: 100%;
   max-width: 100%;
@@ -229,7 +234,7 @@ html:not([data-iu-js]) .iuDailyWeather{
   margin: 0;
   padding: 0 20px;
   box-sizing: border-box;
-  background: #1F3A5F;
+  background: transparent;
   z-index: 1000;
 }
 
@@ -245,6 +250,30 @@ html:not([data-iu-js]) .iuDailyWeather{
   border: 0;
 }
 
+.topbar-new::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:1px;
+  background: rgba(192,198,207,0.18);
+  pointer-events: none;
+}
+
+.topbar-new::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-1px;
+  height:10px;
+  background:#fff;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  pointer-events: none;
+}
+
 .topbar-new-inner{
   /* local vars (match LEFT RAIL BUTTONS soft) */
   --iuLeftBtnRadius: 14px;
@@ -256,10 +285,11 @@ html:not([data-iu-js]) .iuDailyWeather{
   border-radius: inherit;
   overflow: hidden;
 
-  /* 1:1 feel with left buttons (paint happens here) */
-  background:
-    linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.00) 55%),
-    linear-gradient(to bottom, var(--iuLeftBtnBgTop), var(--iuLeftBtnBgBottom));
+  background: linear-gradient(
+      to bottom,
+      #2E4A6B 0%,
+      #243B55 100%
+  );
 
   /* inset edge + ambient shadow (no box-model change) */
   box-shadow: none;
@@ -372,7 +402,7 @@ html:not([data-iu-js]) .iuDailyWeather{
 .topbar-links-wrapper{
   position: relative;
   border-top: 1px solid rgba(255,255,255,.1);
-  background: #1F3A5F;
+  background: #243B55;
 }
 
 /* Navigační lišta: padding-left/right 0 je default, JS přidává 56px přes has-left-arrow/has-right-arrow jako safe area proti překrytí textu šipkami */
@@ -463,12 +493,12 @@ html:not([data-iu-js]) .iuDailyWeather{
 /* Gradient pouze na variantách: --left fade doprava, --right fade doleva (symetrické) */
 .topbar-links-arrow--left{
   left: 0;
-  background: linear-gradient(to right, #1F3A5F 0%, rgba(31,58,95,0.8) 50%, transparent 100%);
+  background: linear-gradient(to right, #243B55 0%, rgba(36,59,85,0.8) 50%, transparent 100%);
 }
 
 .topbar-links-arrow--right{
   right: 0;
-  background: linear-gradient(to left, #1F3A5F 0%, rgba(31,58,95,0.8) 50%, transparent 100%);
+  background: linear-gradient(to left, #243B55 0%, rgba(36,59,85,0.8) 50%, transparent 100%);
 }
 
 .topbar-links-arrow svg{
@@ -4898,7 +4928,11 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 /* Frame color: topbar (pill only) */
 .topbar-new,
 .topbar-new-inner{
-  background: #000 !important;
+  background: linear-gradient(
+      to bottom,
+      #2E4A6B 0%,
+      #243B55 100%
+  ) !important;
 }
 
 /* Sticky header background must NOT match topbar,
@@ -5182,7 +5216,8 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 .iu-leftNav .iu-leftNavItem{
   --iuNavAccent: #3B82F6; /* default fallback accent */
   /* soft depth: subtle gradient + inner border */
-  background: linear-gradient(to bottom, var(--iuLeftBtnBgTop), var(--iuLeftBtnBgBottom));
+  background-image: linear-gradient(to bottom, #243B55, #243B55);
+  background-color: #243B55;
   border-radius: 14px;
   box-shadow:
     0 0 0 1px var(--iuLeftBtnBorder) inset,
@@ -5195,7 +5230,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
     filter 240ms ease,
     box-shadow 240ms ease;
   will-change: transform;
-  color: rgba(255,255,255,0.94);
+  color: #fff;
 }
 
 /* Stripe vlevo */
