@@ -3445,80 +3445,119 @@ body.iu-home .iu-leftRail{
   padding: 16px 14px;
 }
 
-/* WEATHER panel (fixed height, skeleton; no CLS) */
+/* HOME Weather panel — pixel-perfect + no CLS */
 .iuHomeWeather{
   height: 160px;
-  flex: 0 0 auto;
-  display: flex;
-  align-items: stretch;
-}
-.iuHomeWeatherCard{
   width: 100%;
-  border-radius: 14px;
-  background: linear-gradient(180deg,#eaf1f8 0%,#dde7f2 100%);
-  box-shadow: 0 10px 28px rgba(20,40,70,0.07);
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  flex: 0 0 160px;
 }
-.iuHomeWeatherTop{
+@media (max-width: 640px){
+  .iuHomeWeather{
+    height: 140px;
+    flex: 0 0 140px;
+  }
+}
+.iuHomeWeatherShell{
+  height: 100%;
+  width: 100%;
+  position: relative;
+  border-radius: 14px;
+  background: var(--iu-side-bg-main, #243B55);
+  border: 1px solid var(--iu-border-soft, rgba(255,255,255,0.18));
+  color: #fff;
+  overflow: hidden;
+  padding: 14px;
+  box-sizing: border-box;
+}
+.iuHomeWeatherSkeleton{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  color: rgba(255,255,255,0.9);
+  background: transparent;
+}
+.iuHomeWeatherContent{
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto; /* 2 rows (mobile-friendly) */
+  gap: 10px;
+}
+.iuHomeWeatherTopRow{
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 6px 12px;
+  column-gap: 14px;
+  row-gap: 8px;
   align-items: start;
 }
-.iuHomeWeatherPlace{
-  font-size: 12px;
-  font-weight: 650;
-  color: rgba(11,27,43,0.72);
+.iuHomeWeatherMeta{
+  min-width: 0;
 }
-.iuHomeWeatherMinMax{
-  justify-self: end;
+.iuHomeWeatherCity{
   font-size: 12px;
-  color: rgba(11,27,43,0.62);
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.iuHomeWeatherNow{
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-}
-.iuHomeWeatherTemp{
-  font-size: 34px;
-  font-weight: 750;
-  color: rgba(11,27,43,0.92);
-  font-variant-numeric: tabular-nums;
-  min-width: 72px;
+.iuHomeWeatherDate{
+  font-size: 12px;
+  color: rgba(255,255,255,0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .iuHomeWeatherDesc{
-  font-size: 14px;
-  color: rgba(11,27,43,0.72);
-  min-height: 20px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.84);
+  min-height: 18px; /* CLS guard */
 }
-.iuHomeWeatherHours{
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
+.iuHomeWeatherNow{
+  display: inline-flex;
+  align-items: center;
   gap: 10px;
-  margin-top: 10px;
+  justify-self: end;
 }
-.iuHomeWxHour{
-  border-radius: 12px;
-  background: rgba(255,255,255,0.65);
-  padding: 8px 8px;
+.iuHomeWeatherTemp{
+  font-size: 38px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.iuHomeWeatherIcon{
+  font-size: 30px;
+  line-height: 1;
+  width: 32px;
   text-align: center;
+  flex: 0 0 32px;
+}
+.iuHomeWeatherForecast{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.iuHomeWxChip{
+  border-radius: 12px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.14);
+  padding: 8px 10px;
+  text-align: center;
+  min-height: 44px; /* CLS guard */
+}
+.iuHomeWxChipT{
   font-size: 12px;
-  color: rgba(11,27,43,0.78);
-  min-height: 44px;
+  color: rgba(255,255,255,0.78);
 }
-.iuHomeWxHourTemp{
-  font-weight: 700;
-  color: rgba(11,27,43,0.90);
+.iuHomeWxChipV{
+  font-size: 14px;
+  font-weight: 750;
   margin-top: 2px;
-}
-.iuHomeWeatherHours--skeleton .iuHomeWxHour{
-  opacity: 0.65;
+  color: rgba(255,255,255,0.94);
 }
 
 /* PERFECT REGULAR HEXAGONS + HONEYCOMB */
