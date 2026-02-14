@@ -268,9 +268,9 @@ html:not([data-iu-js]) .iuDailyWeather{
   --iuLeftBtnShadow: 0 10px 22px rgba(0,0,0,0.22);
 
   border-radius: 0; /* NO rounding on panel itself */
-  /* Pill silhouette without border-radius (no layout change) */
-  clip-path: inset(0 round var(--iuTopbarPillR));
-  -webkit-clip-path: inset(0 round var(--iuTopbarPillR));
+  /* Pill silhouette (stable across browsers) */
+  border-radius: var(--iuTopbarPillR);
+  overflow: hidden;
   --iuTopbarPillEnabled: 1; /* marker for gate */
 
   /* inset edge + ambient shadow (no box-model change) */
@@ -3610,14 +3610,7 @@ body.iu-home .iu-leftRail{
   cursor: pointer;
   padding: 16px 14px;
 
-  clip-path: polygon(
-    25% 6.6987%,
-    75% 6.6987%,
-    100% 50%,
-    75% 93.3013%,
-    25% 93.3013%,
-    0% 50%
-  );
+  border-radius: 18px;
 
   display: flex;
   flex-direction: column;
@@ -3716,12 +3709,7 @@ body.iu-home .iu-leftRail{
   position: relative; /* safety for inner elements */
   overflow: hidden;   /* safety: nothing can overflow the hex */
 
-  clip-path: polygon(
-    25% 6%, 75% 6%,
-    100% 50%,
-    75% 94%, 25% 94%,
-    0 50%
-  );
+  border-radius: 18px;
 
   display: flex;
   flex-direction: column;
