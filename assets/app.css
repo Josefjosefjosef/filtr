@@ -3451,37 +3451,105 @@ body.iu-home .iu-leftRail{
   height: 90px; /* stable placeholder */
 }
 .iuHomeHexGrid{
+  /* Perfect regular hex geometry (flat top/bottom) */
+  --iuHexW: 200px;        /* DO NOT CHANGE */
+  --iuHexH: 173.205px;    /* 200 * sqrt(3) / 2  (DO NOT CHANGE) */
+  --iuHexGapX: 24px;      /* desktop */
+  --iuHexGapY: 20px;      /* desktop */
+  --iuHexOffsetX: 112px;  /* 200/2 + 24/2 */
+
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 14px;
-  padding: 8px 0 18px;
+  grid-template-columns: repeat(3, var(--iuHexW));
+  grid-auto-rows: var(--iuHexH);
+  column-gap: var(--iuHexGapX);
+  row-gap: var(--iuHexGapY);
+  justify-content: center; /* center whole honeycomb block */
+  align-content: start;
+  padding: 12px 0 18px;
 }
 @media (max-width: 640px){
   .iuHomeHexGrid{
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    --iuHexGapM: 16px;
+    --iuHexOffsetM: 108px; /* 200/2 + 16/2 */
+    grid-template-columns: repeat(2, var(--iuHexW));
+    column-gap: var(--iuHexGapM);
+    row-gap: var(--iuHexGapM);
   }
 }
 .iuHomeHex{
   appearance: none;
   -webkit-appearance: none;
   border: 0;
-  background: var(--iuHexBg, #243B55);
+  background: var(--iuHexBg, #3B82F6);
   color: #fff;
-  font-weight: 650;
+  font-size: 16px;
+  font-weight: 600;
   text-align: center;
   cursor: pointer;
-  padding: 18px 14px;
-  min-height: 120px;
-  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-  box-shadow: 0 10px 22px rgba(0,0,0,0.10);
+  width: var(--iuHexW);
+  height: var(--iuHexH);
+  padding: 16px 14px;
+  /* exact regular-hex geometry (required) */
+  clip-path: polygon(
+    25% 6.6987%,
+    75% 6.6987%,
+    100% 50%,
+    75% 93.3013%,
+    25% 93.3013%,
+    0% 50%
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 12px 26px rgba(0,0,0,0.14);
+  filter: brightness(1);
+  transform: translateX(var(--iuHexRowShift, 0px)) scale(1);
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+.iuHomeHex:hover{
+  transform: translateX(var(--iuHexRowShift, 0px)) scale(1.05);
+  filter: brightness(1.05);
+  box-shadow: 0 18px 38px rgba(0,0,0,0.18);
 }
 .iuHomeHex:focus-visible{
   outline: 2px solid rgba(31,75,153,0.22);
   outline-offset: 3px;
 }
+.iuHomeHexIcon{
+  line-height: 0;
+  color: #fff;
+}
+.iuHomeHexIcon svg{
+  width: 48px;
+  height: 48px;
+  display: block;
+  color: currentColor;
+}
 .iuHomeHexLabel{
-  display: inline-block;
   line-height: 1.15;
+  max-width: 170px; /* keep label inside fixed hex */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+/* Honeycomb offsets (desktop: 3 per row; next row shifted by 112px) */
+.iuHomeHexGrid > .iuHomeHex:nth-child(6n+4),
+.iuHomeHexGrid > .iuHomeHex:nth-child(6n+5),
+.iuHomeHexGrid > .iuHomeHex:nth-child(6n+6){
+  --iuHexRowShift: var(--iuHexOffsetX);
+}
+
+/* Honeycomb offsets (mobile: 2 per row; next row shifted automatically) */
+@media (max-width: 640px){
+  .iuHomeHexGrid > .iuHomeHex:nth-child(4n+3),
+  .iuHomeHexGrid > .iuHomeHex:nth-child(4n+4){
+    --iuHexRowShift: var(--iuHexOffsetM);
+  }
 }
 
 
@@ -5323,6 +5391,10 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   /* Section accents (content hooks) */
   --iu-accent-media: var(--iuNavAccent-media, #3B82F6);
   --iu-accent-radio: var(--iuNavAccent-radio, #8B5CF6);
+  --iu-accent-tv: var(--iuNavAccent-tv, #EF4444);
+  --iu-accent-maps: var(--iuNavAccent-mapy, #22C55E);
+  --iu-accent-timetable: var(--iuNavAccent-jr, #F97316);
+  --iu-accent-travel: var(--iuNavAccent-travel, #06B6D4);
 }
 
 /* Local button palette only (rail background unchanged) */

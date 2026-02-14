@@ -4939,12 +4939,23 @@ function buildVideoAsArticleCard(it) {
       const labelEl = it.querySelector('.iu-leftNavLabel');
       const label = (labelEl ? labelEl.textContent : it.textContent || '').trim();
 
-      let color = '';
+      // Icon SVG: reuse exact markup from left rail.
+      let svgHtml = '';
       try{
-        const cs = getComputedStyle(it);
-        color = String(cs.getPropertyValue('--iuNavAccent') || '').trim();
+        const svg = it.querySelector('.iu-leftNavIcon svg');
+        svgHtml = svg ? svg.outerHTML : '';
       }catch{}
-      sections.push({ key, label, color });
+
+      // Section accent: use stable CSS variables (required), fallback to blue.
+      const varKey = (k) => {
+        if (k === 'mapy') return 'maps';
+        if (k === 'jr') return 'timetable';
+        return k;
+      };
+      const accentVar = `--iu-accent-${varKey(key)}`;
+      const accentExpr = `var(${accentVar}, #3B82F6)`;
+
+      sections.push({ key, label, svgHtml, accentExpr });
     }
 
     for (const s of sections) {
@@ -4952,8 +4963,10 @@ function buildVideoAsArticleCard(it) {
       btn.type = 'button';
       btn.className = 'iuHomeHex';
       btn.setAttribute('data-section', s.key);
-      if (s.color) btn.style.setProperty('--iuHexBg', s.color);
-      btn.innerHTML = `<span class="iuHomeHexLabel">${escapeHtml(s.label || s.key)}</span>`;
+      btn.setAttribute('aria-label', String(s.label || s.key));
+      btn.style.setProperty('--iuHexBg', s.accentExpr || '#3B82F6');
+      const iconHtml = s.svgHtml ? `<span class="iuHomeHexIcon" aria-hidden="true">${s.svgHtml}</span>` : '';
+      btn.innerHTML = `${iconHtml}<span class="iuHomeHexLabel">${escapeHtml(s.label || s.key)}</span>`;
       btn.addEventListener('click', () => {
         persistSection(s.key);
         applySectionFromURL();
