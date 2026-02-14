@@ -4906,22 +4906,26 @@ function buildVideoAsArticleCard(it) {
     el.innerHTML = `
       <div class="iuHomeCanvas" role="region" aria-label="Domů">
         <section class="iuHomeWeather" aria-label="Počasí">
-          <div class="iuHomeWeatherCard" role="group" aria-label="Počasí dnes">
-            <div class="iuHomeWeatherTop">
-              <div class="iuHomeWeatherPlace" id="iuHomeWxPlace">—</div>
-              <div class="iuHomeWeatherNow">
-                <div class="iuHomeWeatherTemp" id="iuHomeWxTemp">—°</div>
-                <div class="iuHomeWeatherDesc" id="iuHomeWxDesc">Načítám počasí…</div>
+          <div class="iuHomeWeatherShell" role="group" aria-label="Počasí dnes">
+            <div class="iuHomeWeatherSkeleton" id="iuHomeWeatherSkeleton">loading weather…</div>
+            <div class="iuHomeWeatherContent" id="iuHomeWeatherContent" hidden>
+              <div class="iuHomeWeatherTopRow">
+                <div class="iuHomeWeatherMeta">
+                  <div class="iuHomeWeatherCity" id="iuHomeWxCity">—</div>
+                  <div class="iuHomeWeatherDate" id="iuHomeWxDate">—</div>
+                  <div class="iuHomeWeatherDesc" id="iuHomeWxDesc">—</div>
+                </div>
+                <div class="iuHomeWeatherNow">
+                  <div class="iuHomeWeatherTemp" id="iuHomeWxTemp">—°</div>
+                  <div class="iuHomeWeatherIcon" id="iuHomeWxIcon" aria-hidden="true">🌤</div>
+                </div>
               </div>
-              <div class="iuHomeWeatherMinMax" id="iuHomeWxMinMax">Max —° · Min —°</div>
-            </div>
-            <div class="iuHomeWeatherHours iuHomeWeatherHours--skeleton" id="iuHomeWxHours" aria-label="Hodiny">
-              <div class="iuHomeWxHour" aria-hidden="true"><div>--h</div><div class="iuHomeWxHourTemp">—</div></div>
-              <div class="iuHomeWxHour" aria-hidden="true"><div>--h</div><div class="iuHomeWxHourTemp">—</div></div>
-              <div class="iuHomeWxHour" aria-hidden="true"><div>--h</div><div class="iuHomeWxHourTemp">—</div></div>
-              <div class="iuHomeWxHour" aria-hidden="true"><div>--h</div><div class="iuHomeWxHourTemp">—</div></div>
-              <div class="iuHomeWxHour" aria-hidden="true"><div>--h</div><div class="iuHomeWxHourTemp">—</div></div>
-              <div class="iuHomeWxHour" aria-hidden="true"><div>--h</div><div class="iuHomeWxHourTemp">—</div></div>
+
+              <div class="iuHomeWeatherForecast" id="iuHomeWxForecast" aria-label="Předpověď (3 hodiny)">
+                <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+              </div>
             </div>
           </div>
         </section>
@@ -4956,13 +4960,16 @@ function buildVideoAsArticleCard(it) {
     return el;
   }
 
-  function initHomeWeather(){
-    const placeEl = document.getElementById('iuHomeWxPlace');
+  function renderHomeWeather(){
+    const skeletonEl = document.getElementById('iuHomeWeatherSkeleton');
+    const contentEl = document.getElementById('iuHomeWeatherContent');
+    const cityEl = document.getElementById('iuHomeWxCity');
+    const dateEl = document.getElementById('iuHomeWxDate');
     const tempEl = document.getElementById('iuHomeWxTemp');
+    const iconEl = document.getElementById('iuHomeWxIcon');
     const descEl = document.getElementById('iuHomeWxDesc');
-    const mmEl = document.getElementById('iuHomeWxMinMax');
-    const hoursEl = document.getElementById('iuHomeWxHours');
-    if (!placeEl && !tempEl && !descEl && !mmEl && !hoursEl) return;
+    const forecastEl = document.getElementById('iuHomeWxForecast');
+    if (!skeletonEl && !contentEl && !cityEl && !dateEl && !tempEl && !iconEl && !descEl && !forecastEl) return;
 
     // idempotent: prevent parallel fetches
     try{
@@ -4984,12 +4991,29 @@ function buildVideoAsArticleCard(it) {
         return '--h';
       }
     };
+    const fmtDate = () => {
+      try{
+        const TZ = "Europe/Prague";
+        return new Intl.DateTimeFormat("cs-CZ",{weekday:"long",day:"numeric",month:"long",timeZone:TZ}).format(new Date());
+      }catch{
+        return "";
+      }
+    };
+    const iconFromDesc = (desc) => {
+      const s = String(desc || "").toLowerCase();
+      if (s.includes("slun")) return "☀️";
+      if (s.includes("jas")) return "☀️";
+      if (s.includes("obla")) return "☁️";
+      if (s.includes("zamra")) return "☁️";
+      if (s.includes("déšť") || s.includes("dest") || s.includes("mrhol")) return "🌧";
+      if (s.includes("sníh") || s.includes("snih")) return "❄️";
+      if (s.includes("bouř")) return "⛈";
+      return "🌤";
+    };
 
-    // Keep placeholders stable (no CLS)
-    if (descEl) descEl.textContent = (descEl.textContent && descEl.textContent.trim()) ? descEl.textContent : 'Načítám počasí…';
-    if (hoursEl) {
-      try{ hoursEl.classList.add('iuHomeWeatherHours--skeleton'); }catch{}
-    }
+    // Skeleton first (no CLS)
+    try{ if (skeletonEl) skeletonEl.hidden = false; }catch{}
+    try{ if (contentEl) contentEl.hidden = true; }catch{}
 
     const withTs = (rel) => {
       try{
@@ -5005,31 +5029,38 @@ function buildVideoAsArticleCard(it) {
       .then((r) => r.json())
       .then((d) => {
         if (!d || typeof d !== 'object') throw new Error('bad weather');
-        if (placeEl) placeEl.textContent = String(d.place || '—');
+        const city = String(d.place || '—');
+        const desc = String(d?.current?.desc || '—');
+        if (cityEl) cityEl.textContent = city;
+        if (dateEl) dateEl.textContent = fmtDate();
         if (tempEl) tempEl.textContent = fmtDeg(d?.current?.temp);
-        if (descEl) descEl.textContent = String(d?.current?.desc || '—');
-        if (mmEl) mmEl.textContent = `Max ${fmtDeg(d?.today?.max)} · Min ${fmtDeg(d?.today?.min)}`;
+        if (descEl) descEl.textContent = desc;
+        if (iconEl) iconEl.textContent = iconFromDesc(desc);
 
-        if (hoursEl) {
-          const hours = Array.isArray(d.hours) ? d.hours.slice(0, 6) : [];
-          const slots = Array.from(hoursEl.querySelectorAll('.iuHomeWxHour'));
-          for (let i = 0; i < 6; i++){
-            const slot = slots[i];
+        if (forecastEl) {
+          const hours = Array.isArray(d.hours) ? d.hours.slice(0, 3) : [];
+          const chips = Array.from(forecastEl.querySelectorAll('.iuHomeWxChip'));
+          for (let i = 0; i < 3; i++){
+            const chip = chips[i];
             const it = hours[i];
-            if (!slot) continue;
+            if (!chip) continue;
             if (it) {
-              slot.innerHTML = `<div>${escapeHtml(fmtHour(it.time))}</div><div class="iuHomeWxHourTemp">${escapeHtml(fmtDeg(it.temp))}</div>`;
-              slot.removeAttribute('aria-hidden');
+              chip.innerHTML = `<div class="iuHomeWxChipT">${escapeHtml(fmtHour(it.time))}</div><div class="iuHomeWxChipV">${escapeHtml(fmtDeg(it.temp))}</div>`;
+              chip.removeAttribute('aria-hidden');
             } else {
-              slot.innerHTML = `<div>--h</div><div class="iuHomeWxHourTemp">—</div>`;
-              slot.setAttribute('aria-hidden', 'true');
+              chip.innerHTML = `<div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div>`;
+              chip.setAttribute('aria-hidden', 'true');
             }
           }
-          try{ hoursEl.classList.remove('iuHomeWeatherHours--skeleton'); }catch{}
         }
+
+        try{ if (skeletonEl) skeletonEl.hidden = true; }catch{}
+        try{ if (contentEl) contentEl.hidden = false; }catch{}
       })
       .catch(() => {
-        if (descEl) descEl.textContent = 'Počasí nedostupné';
+        try{
+          if (skeletonEl) skeletonEl.textContent = 'Počasí nedostupné';
+        }catch{}
       })
       .finally(() => {
         try{ window.__iuHomeWxLoading = false; }catch{}
@@ -5167,7 +5198,7 @@ function buildVideoAsArticleCard(it) {
     if (section === 'home') {
       ensureHomeView();
       buildHomeHexGrid();
-      initHomeWeather();
+      renderHomeWeather();
       // stop any periodic data refresh while on Home
       try{ window.__iuStopAutoRefresh && window.__iuStopAutoRefresh(); }catch{}
     }
