@@ -4998,6 +4998,17 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   color: var(--text);
 }
 
+/* ==== LEFT COLUMN BACKGROUND SYNC ==== */
+/* Must match global page background (html/body). Color only. */
+.iuLeftRail,
+.iu-leftRail,
+#iuLeftRail,
+.iu-leftNav{
+  background: #fff;
+  background-color: #fff;
+  background-image: none;
+}
+
 .iu-leftNavItem{
   position: relative;
   display: flex;
@@ -5034,7 +5045,10 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 .iu-leftNav .iu-leftNavIcon{
-  color: var(--text);
+  /* ==== LEFT COLUMN ICON LIGHTEN 30% ==== */
+  /* Default only; hover/active are handled by existing rules with higher specificity. */
+  color: #545f6b;
+  color: color-mix(in srgb, var(--text) 70%, white 30%);
 }
 
 .iu-leftNavIcon svg{
