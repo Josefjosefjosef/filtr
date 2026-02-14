@@ -5044,11 +5044,10 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   color: currentColor; /* Feather stroke přes currentColor */
 }
 
-.iu-leftNav .iu-leftNavIcon{
-  /* ==== LEFT COLUMN ICON LIGHTEN 30% ==== */
-  /* Default only; hover/active are handled by existing rules with higher specificity. */
-  color: #545f6b;
-  color: color-mix(in srgb, var(--text) 70%, white 30%);
+/* ==== LEFT COLUMN ICON LIGHTEN 50% (inactive only) ==== */
+/* Only inactive icons; do not touch hover/active/focus rules. */
+.iu-leftNavItem:not(.is-active) .iu-leftNavIcon{
+  color: color-mix(in srgb, var(--text) 50%, white 50%);
 }
 
 .iu-leftNavIcon svg{
