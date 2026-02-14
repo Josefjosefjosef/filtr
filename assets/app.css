@@ -3673,9 +3673,10 @@ body.iu-home .iu-leftRail{
   align-items: center;
   position: relative;
   z-index: 2; /* hex grid must always stay above modules */
+  row-gap: 6px; /* pixel-perfect vertical rhythm */
 
   /* mezera mezi hexagony (skutečná mezera mezi hranami) */
-  --iuHexGap: 10px;
+  --iuHexGap: 12px;
   /* šířka hexu: adaptivně podle šířky stránky (menší než dřív) */
   --iuHexW: clamp(92px, 12vw, 140px);
   --iuHexH: calc(var(--iuHexW) * 0.866);
@@ -3696,7 +3697,7 @@ body.iu-home .iu-leftRail{
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--iuHexGap);
+  gap: 12px;
   width: 100%;
   margin-top: calc(var(--iuHexGap) * -0.2);
   flex-wrap: nowrap;
@@ -3733,11 +3734,26 @@ body.iu-home .iu-leftRail{
   font-weight: 700;
   text-align: center;
   box-shadow: 0 10px 22px rgba(0,0,0,.18);
-  transition: transform .15s ease, filter .15s ease;
+  transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
 }
 .iuHomeHex434 .iuHex:hover{
-  transform: translateY(-3px);
-  filter: brightness(1.06);
+  transform: translateY(-4px) scale(1.04);
+  filter: brightness(1.08);
+  box-shadow: 0 10px 24px rgba(0,0,0,.22);
+}
+
+.iuHomeHex434 .iuHexBadge{
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.9);
+  color: #000;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  pointer-events: none;
 }
 
 .iuHomeHex434 .iuHex__icon{
@@ -3764,8 +3780,16 @@ body.iu-home .iu-leftRail{
 
 @media (max-width: 520px){
   .iuHomeHex434{
-    --iuHexGap: 8px;
+    --iuHexGap: 12px;
     --iuHexW: clamp(76px, 20vw, 110px);
+  }
+  .iuHomeHex434 .iuHexRow--4{
+    transform: scale(.9);
+    transform-origin: top center;
+  }
+  .iuHomeHex434 .iuHexRow--3{
+    transform: translateX(calc((var(--iuHexW) + var(--iuHexGap)) / 2)) scale(.9);
+    transform-origin: top center;
   }
   .iuHomeHex434 .iuHex__label{
     font-size: 14px;
@@ -3773,6 +3797,15 @@ body.iu-home .iu-leftRail{
   .iuHomeHex434 .iuHex__icon svg{
     width: 28px;
     height: 28px;
+  }
+}
+
+@media (max-width: 380px){
+  .iuHomeHex434{
+    --iuHexGap: 6px;
+  }
+  .iuHomeHex434 .iuHexRow{
+    gap: 6px;
   }
 }
 
