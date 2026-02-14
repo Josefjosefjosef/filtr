@@ -3425,6 +3425,16 @@ body[data-section="media"] #feed > article:not(:first-child){
   color: rgba(11,27,43,0.55);
 }
 
+/* MEDIA: center "Load more" within the middle feed column (UI-only) */
+body[data-section="media"] #feed .iuLoadMoreWrap{
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
 
 #feed a{
   color: rgba(11,27,43,0.92);
