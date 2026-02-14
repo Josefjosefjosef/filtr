@@ -895,12 +895,13 @@ aside.accordionCol{
   margin-top: 0 !important;
 }
 
-.iu-userHeader:has(.iu-mmMailHead){
+/* Avoid relational selectors for broad browser compatibility */
+.iu-userHeader{
   padding-top: 0 !important;
   margin-top: 0 !important;
 }
 
-.iu-userTitleSummary:has(.iu-mmMailHead){
+.iu-userTitleSummary{
   padding-top: 0 !important;
   margin-top: 0 !important;
 }
@@ -3293,18 +3294,14 @@ select.iuCtrl{
 }
 
 /* Media section: first article title uses Media accent (CSS-only) */
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > .news-card:first-child .news-title,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > .news-card:first-child .news-title,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > article:first-child .news-title,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > article:first-child .news-title{
+body[data-section="media"] #feed > .news-card:first-child .news-title,
+body[data-section="media"] #feed > article:first-child .news-title{
   color: var(--iu-accent-media);
 }
 
 /* MEDIA – sjednocení všech běžných titulků podle "Zpráva dne" (natvrdo, bez var/inherit) */
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > .news-card:not(:first-child) .news-title,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > .news-card:not(:first-child) .news-title,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > article:not(:first-child) .news-title,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > article:not(:first-child) .news-title{
+body[data-section="media"] #feed > .news-card:not(:first-child) .news-title,
+body[data-section="media"] #feed > article:not(:first-child) .news-title{
   color: #0B2A4A;   /* = --iuNavAccent-media */
   font-size: 22px; /* = "Zpráva dne" title */
   line-height: 1.3;
@@ -3320,25 +3317,17 @@ body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) 
   letter-spacing: normal;
 }
 
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > .news-card:first-child .news-titleLink,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > .news-card:first-child .news-titleLink,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > article:first-child .news-titleLink,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > article:first-child .news-titleLink,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > .news-card:first-child .news-titleLink:visited,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > .news-card:first-child .news-titleLink:visited,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > article:first-child .news-titleLink:visited,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > article:first-child .news-titleLink:visited{
+body[data-section="media"] #feed > .news-card:first-child .news-titleLink,
+body[data-section="media"] #feed > article:first-child .news-titleLink,
+body[data-section="media"] #feed > .news-card:first-child .news-titleLink:visited,
+body[data-section="media"] #feed > article:first-child .news-titleLink:visited{
   color: var(--iu-accent-media);
 }
 
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > .news-card:not(:first-child) .news-titleLink,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > .news-card:not(:first-child) .news-titleLink,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > article:not(:first-child) .news-titleLink,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > article:not(:first-child) .news-titleLink,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > .news-card:not(:first-child) .news-titleLink:visited,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > .news-card:not(:first-child) .news-titleLink:visited,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > article:not(:first-child) .news-titleLink:visited,
-body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > article:not(:first-child) .news-titleLink:visited{
+body[data-section="media"] #feed > .news-card:not(:first-child) .news-titleLink,
+body[data-section="media"] #feed > article:not(:first-child) .news-titleLink,
+body[data-section="media"] #feed > .news-card:not(:first-child) .news-titleLink:visited,
+body[data-section="media"] #feed > article:not(:first-child) .news-titleLink:visited{
   color: #0B2A4A;   /* = --iuNavAccent-media */
   font-size: 22px; /* = "Zpráva dne" title */
   line-height: 1.3;
@@ -3433,14 +3422,10 @@ body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) 
   }
 
   /* MEDIA – běžné titulky na mobilu musí odpovídat "Zpráva dne" */
-  body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > .news-card:not(:first-child) .news-title,
-  body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > .news-card:not(:first-child) .news-title,
-  body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > article:not(:first-child) .news-title,
-  body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > article:not(:first-child) .news-title,
-  body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > .news-card:not(:first-child) .news-titleLink,
-  body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > .news-card:not(:first-child) .news-titleLink,
-  body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"].is-active) #feed > article:not(:first-child) .news-titleLink,
-  body:has(.iu-leftNav .iu-leftNavItem[data-accent="media"][aria-current="page"]) #feed > article:not(:first-child) .news-titleLink{
+  body[data-section="media"] #feed > .news-card:not(:first-child) .news-title,
+  body[data-section="media"] #feed > article:not(:first-child) .news-title,
+  body[data-section="media"] #feed > .news-card:not(:first-child) .news-titleLink,
+  body[data-section="media"] #feed > article:not(:first-child) .news-titleLink{
     font-size: 18px;
     line-height: 1.28;
   }
