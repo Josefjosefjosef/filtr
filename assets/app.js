@@ -3701,6 +3701,7 @@ function buildVideoAsArticleCard(it) {
     if (iuRefreshTimer) clearInterval(iuRefreshTimer);
     iuRefreshTimer = setInterval(() => {
       if (document.visibilityState !== "visible") return;
+      if (document.body && document.body.classList && document.body.classList.contains("iu-home")) return;
       loadData();
     }, 7 * 60 * 1000);
   }
@@ -4244,8 +4245,17 @@ function buildVideoAsArticleCard(it) {
 
     fetchArticlesStatus();
     fetchVideosStatus();
-    loadData();
-    startAutoRefresh();
+    // Home view must not run feed pipeline on entry (UI-only).
+    // If user navigates to a feed section later, data will load via visibility/focus/refresh.
+    let initialIsHome = false;
+    try{
+      const params = new URLSearchParams(window.location.search);
+      initialIsHome = String(params.get("section") || "").trim().toLowerCase() === "home";
+    }catch{}
+    if (!initialIsHome) {
+      loadData();
+      startAutoRefresh();
+    }
     watchForSWUpdates();
     updateSwStatusLabel();
     auditLog();
@@ -4258,8 +4268,10 @@ function buildVideoAsArticleCard(it) {
   document.addEventListener("visibilitychange", () => {
     debugLog("[VIS]", document.visibilityState);
     if (document.visibilityState === "visible") {
-      loadData();
-      startAutoRefresh();
+      if (!(document.body && document.body.classList && document.body.classList.contains("iu-home"))) {
+        loadData();
+        startAutoRefresh();
+      }
     } else if (iuRefreshTimer) {
       clearInterval(iuRefreshTimer);
       iuRefreshTimer = null;
@@ -4607,7 +4619,8 @@ function buildVideoAsArticleCard(it) {
   ];
 
   // Unified navigation router (UI-only)
-  const VIEW_MAP = { media: 'media', radio: 'radio' };
+  // NOTE: non-radio sections still use the normal feed view.
+  const VIEW_MAP = { home: 'home', media: 'media', radio: 'radio' };
   const STORAGE_KEY_WISH = "iuRadioWishDraftV1";
   const STORAGE_KEY_WISH_OPEN = "iuRadioWishOpenV1";
 
@@ -4867,6 +4880,75 @@ function buildVideoAsArticleCard(it) {
     viewEl.innerHTML = wishForm + `<div class="iuRadioGrid" role="list" aria-label="Odkazy na rádia">${chips}</div>`;
   }
 
+  function ensureHomeView(){
+    const existing = document.getElementById('iuHomeView');
+    if (existing) return existing;
+    const newsList = document.getElementById('newsList');
+    if (!newsList) return null;
+
+    const el = document.createElement('div');
+    el.id = 'iuHomeView';
+    el.className = 'iuHomeView';
+    el.hidden = true;
+    el.innerHTML = `
+      <div class="iuHomeCanvas" role="region" aria-label="Domů">
+        <div class="iuHomeWeather" aria-hidden="true"></div>
+        <div class="iuHomeHexGrid" id="iuHomeHexGrid" aria-label="Sekce"></div>
+        <div class="iuHomeText" aria-hidden="true"></div>
+      </div>
+    `.trim();
+
+    // Insert into the same middle column container as #feed (inside #newsList).
+    // Keep #feed as the render target for normal sections.
+    const feed = document.getElementById('feed');
+    if (feed && feed.parentElement === newsList) {
+      newsList.insertBefore(el, feed);
+    } else {
+      newsList.appendChild(el);
+    }
+    return el;
+  }
+
+  function buildHomeHexGrid(){
+    const grid = document.getElementById('iuHomeHexGrid');
+    if (!grid) return;
+    grid.replaceChildren();
+
+    const navItems = Array.from(document.querySelectorAll('.iu-leftNav .iu-leftNavItem[data-accent]'));
+    const sections = [];
+    const seen = new Set();
+    for (const it of navItems) {
+      const key = String(it.getAttribute('data-accent') || '').trim().toLowerCase();
+      if (!key || key === 'home') continue;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      const labelEl = it.querySelector('.iu-leftNavLabel');
+      const label = (labelEl ? labelEl.textContent : it.textContent || '').trim();
+
+      let color = '';
+      try{
+        const cs = getComputedStyle(it);
+        color = String(cs.getPropertyValue('--iuNavAccent') || '').trim();
+      }catch{}
+      sections.push({ key, label, color });
+    }
+
+    for (const s of sections) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'iuHomeHex';
+      btn.setAttribute('data-section', s.key);
+      if (s.color) btn.style.setProperty('--iuHexBg', s.color);
+      btn.innerHTML = `<span class="iuHomeHexLabel">${escapeHtml(s.label || s.key)}</span>`;
+      btn.addEventListener('click', () => {
+        persistSection(s.key);
+        applySectionFromURL();
+      });
+      grid.appendChild(btn);
+    }
+  }
+
   function setLeftNavActive(key){
     const k = String(key || '').trim().toLowerCase();
     const items = document.querySelectorAll('.iu-leftNav .iu-leftNavItem');
@@ -4885,17 +4967,25 @@ function buildVideoAsArticleCard(it) {
   function showView(key){
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
+    const homeEl = document.getElementById('iuHomeView');
 
     if (feedEl) feedEl.hidden = true;
     if (viewEl) viewEl.hidden = true;
+    if (homeEl) homeEl.hidden = true;
 
-    if(key === 'media' && feedEl) feedEl.hidden = false;
+    if(key === 'home' && homeEl) homeEl.hidden = false;
     if(key === 'radio' && viewEl) viewEl.hidden = false;
+    // default feed view for all other sections
+    if(key !== 'home' && key !== 'radio' && feedEl) feedEl.hidden = false;
   }
 
   function normalizeSection(raw){
     const k = String(raw || '').trim().toLowerCase();
-    return k === 'radio' ? 'radio' : 'media';
+    if (k === 'home') return 'home';
+    if (k === 'radio') return 'radio';
+    // allow other left-rail sections to roundtrip via URL without changing feed pipeline
+    const allowed = new Set(['media','tv','jr','mapy','travel','pocasi','namedays','tvprogram','culture','ads']);
+    return allowed.has(k) ? k : 'media';
   }
 
   function getInitialSection(){
@@ -4919,10 +5009,33 @@ function buildVideoAsArticleCard(it) {
     const section = getInitialSection(); // already normalized + fallback->media
     // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
     try{ document.body && (document.body.dataset.section = section); }catch{}
+    // home layout marker
+    try{ document.body && document.body.classList.toggle('iu-home', section === 'home'); }catch{}
+    // ensure home view exists and hexes reflect current menu
+    if (section === 'home') {
+      ensureHomeView();
+      buildHomeHexGrid();
+      // stop any periodic data refresh while on Home
+      try{ if (typeof iuRefreshTimer !== 'undefined' && iuRefreshTimer) { clearInterval(iuRefreshTimer); iuRefreshTimer = null; } }catch{}
+    }
     // feed paging must reset on section change
     try{ state.page = 1; }catch{}
     setLeftNavActive(section);
     showView(VIEW_MAP[section] ?? 'media');
+
+    // leaving Home: ensure feed data and auto-refresh are running (without touching pipeline internals)
+    if (section !== 'home') {
+      try{
+        if (typeof state !== 'undefined' && !state.hasLoadedData && !state.isLoadingData) {
+          loadData();
+        }
+      }catch{}
+      try{
+        if (typeof startAutoRefresh === 'function') {
+          startAutoRefresh();
+        }
+      }catch{}
+    }
   }
 
   function initRadioWish(viewEl){
@@ -5227,7 +5340,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const viewEl = document.getElementById('iuRadioView');
     if (!feedEl || !viewEl) return;
 
+    ensureHomeView();
     renderRadioView(viewEl);
+    buildHomeHexGrid();
     const wishCtl = initRadioWish(viewEl);
     // async load (no backend); fallback keeps UI usable even if fetch fails
     loadWishDataIntoState().then((d) => { try{ wishCtl.setData(d); }catch{} });
