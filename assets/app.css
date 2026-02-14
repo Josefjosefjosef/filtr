@@ -264,28 +264,41 @@ html:not([data-iu-js]) .iuDailyWeather{
   --iuLeftBtnBorder: rgba(255,255,255,0.10);
   --iuLeftBtnShadow: 0 10px 22px rgba(0,0,0,0.22);
 
-  position: relative;            /* for cutout masks */
-  border-radius: 999px;          /* pill */
-  overflow: visible;             /* masks extend slightly */
+  /* Optical edge rounding via page-bg masks (match search pill) */
+  --iuMainMaskEnabled: 1;
+  --iuMainMaskD: 36px; /* searchHeight */
+  --iuMainMaskR: calc(var(--iuMainMaskD) / 2);
+  --iuPageBg: var(--pageBg);
+
+  position: relative; /* for cutout masks */
+  border-radius: var(--iuMainMaskR);
+  overflow: visible; /* masks extend slightly */
 
   /* inset edge + ambient shadow (no box-model change) */
   box-shadow: none;
 }
 
-/* “CUTOUT” MASKS: hide ends with page background */
+/* “CUTOUT” MASKS: cut corners using page background */
 .topbar-new-inner::before,
 .topbar-new-inner::after{
   content: "";
   position: absolute;
   top: 0;
-  bottom: 0;
-  width: 14px;
-  background: #fff;
+  width: var(--iuMainMaskD);
+  height: var(--iuMainMaskD);
+  background: var(--iuPageBg);
   border-radius: 999px;
   pointer-events: none;
+  z-index: 2;
 }
-.topbar-new-inner::before{ left: -1px; }
-.topbar-new-inner::after{ right: -1px; }
+.topbar-new-inner::before{
+  left: 0;
+  transform: translate(calc(-1 * var(--iuMainMaskR)), calc(-1 * var(--iuMainMaskR)));
+}
+.topbar-new-inner::after{
+  right: 0;
+  transform: translate(var(--iuMainMaskR), calc(-1 * var(--iuMainMaskR)));
+}
 .topbar-new-main{
   display: flex;
   align-items: center;
