@@ -3651,6 +3651,123 @@ body.iu-home .iu-leftRail{
   overflow: hidden;
 }
 
+/* ==============================
+   IU HOME HEX — 4-3-4 TESSELLATION
+   UI-only, no feed pipeline changes
+   ============================== */
+
+.iuHomeHex434{
+  width: min(100%, 1100px);
+  margin: 24px auto 18px;
+  padding: 0 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* mezera mezi hexagony (skutečná mezera mezi hranami) */
+  --iuHexGap: 10px;
+  /* šířka hexu: adaptivně podle šířky stránky (menší než dřív) */
+  --iuHexW: clamp(92px, 12vw, 140px);
+  --iuHexH: calc(var(--iuHexW) * 0.866);
+  --iuHexRowStep: calc(var(--iuHexH) * 0.75);
+}
+
+.iuHomeHex434 .iuHexRow{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--iuHexGap);
+  width: 100%;
+  margin-top: calc(var(--iuHexGap) * -0.2);
+  flex-wrap: nowrap;
+}
+.iuHomeHex434 .iuHexRow + .iuHexRow{
+  margin-top: calc(var(--iuHexRowStep) - var(--iuHexH));
+}
+.iuHomeHex434 .iuHexRow--3{
+  transform: translateX(calc((var(--iuHexW) + var(--iuHexGap)) / 2));
+}
+
+.iuHomeHex434 .iuHex{
+  width: var(--iuHexW);
+  height: var(--iuHexH);
+  flex: 0 0 var(--iuHexW); /* CLS guard */
+
+  clip-path: polygon(
+    25% 6%, 75% 6%,
+    100% 50%,
+    75% 94%, 25% 94%,
+    0 50%
+  );
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+
+  text-decoration: none;
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 10px 22px rgba(0,0,0,.18);
+  transition: transform .15s ease, filter .15s ease;
+}
+.iuHomeHex434 .iuHex:hover{
+  transform: translateY(-3px);
+  filter: brightness(1.06);
+}
+
+.iuHomeHex434 .iuHex__icon{
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  opacity: .95;
+}
+.iuHomeHex434 .iuHex__icon svg{
+  width: 34px;
+  height: 34px;
+  display: block;
+  color: currentColor;
+  flex-shrink: 0;
+}
+
+.iuHomeHex434 .iuHex__label{
+  display: block;
+  font-size: 16px;
+  line-height: 1.15;
+  padding: 0 10px;
+  color: #fff;
+}
+
+@media (max-width: 520px){
+  .iuHomeHex434{
+    --iuHexGap: 8px;
+    --iuHexW: clamp(76px, 20vw, 110px);
+  }
+  .iuHomeHex434 .iuHex__label{
+    font-size: 14px;
+  }
+  .iuHomeHex434 .iuHex__icon svg{
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* SECTION COLORS (use existing IU tokens if present) */
+.iuHomeHex434 .iuHex--pocasi{    background: var(--iuNavAccent-pocasi, #2563EB); }
+.iuHomeHex434 .iuHex--namedays{  background: var(--iuNavAccent-namedays, #7C3AED); }
+.iuHomeHex434 .iuHex--tv{        background: var(--iuNavAccent-tv, #DC2626); }
+.iuHomeHex434 .iuHex--mapy{      background: var(--iuNavAccent-mapy, #16A34A); }
+.iuHomeHex434 .iuHex--culture{   background: var(--iuNavAccent-culture, #EA580C); }
+.iuHomeHex434 .iuHex--radio{     background: var(--iuNavAccent-radio, #6D28D9); }
+.iuHomeHex434 .iuHex--ads{       background: var(--iuNavAccent-ads, #0EA5A4); }
+.iuHomeHex434 .iuHex--media{     background: var(--iuNavAccent-media, #111827); }
+.iuHomeHex434 .iuHex--travel{    background: var(--iuNavAccent-travel, #0284C7); }
+.iuHomeHex434 .iuHex--jr{        background: var(--iuNavAccent-jr, #B45309); }
+.iuHomeHex434 .iuHex--tvprogram{ background: var(--iuNavAccent-tvprogram, #334155); }
+
 /* Honeycomb offsets */
 .iuHomeHexGrid > .iuHomeHex:nth-child(6n+4),
 .iuHomeHexGrid > .iuHomeHex:nth-child(6n+5),
