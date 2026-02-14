@@ -15,6 +15,11 @@
   --iu-meta: #6b7280;
   --iu-accent: #1f3a5f;
 
+  /* Topbar optical side rounding (match search pill) */
+  --iuTopbarMaskD: 36px; /* computed searchHeight */
+  --iuTopbarMaskR: calc(var(--iuTopbarMaskD) / 2);
+  --iuPageBg: var(--pageBg);
+
   /* spacing kolem denního přehledu - odpovídá horní mezeře (padding-top #leftContent + margin-top .iu-daily-brief) */
   --iu-brief-gap-top: 20px; /* desktop: 12px + 8px */
   --iu-brief-gap-bottom: 10px; /* desktop: margin-bottom na .iu-daily-brief (celkem s chips margin-top 10px = 20px) */
@@ -264,40 +269,37 @@ html:not([data-iu-js]) .iuDailyWeather{
   --iuLeftBtnBorder: rgba(255,255,255,0.10);
   --iuLeftBtnShadow: 0 10px 22px rgba(0,0,0,0.22);
 
-  /* Optical edge rounding via page-bg masks (match search pill) */
-  --iuMainMaskEnabled: 1;
-  --iuMainMaskD: 36px; /* searchHeight */
-  --iuMainMaskR: calc(var(--iuMainMaskD) / 2);
-  --iuPageBg: var(--pageBg);
+  --iuTopbarMaskEnabled: 1; /* marker for gate */
 
-  position: relative; /* for cutout masks */
-  border-radius: var(--iuMainMaskR);
-  overflow: visible; /* masks extend slightly */
+  position: relative; /* for side masks */
+  border-radius: 0; /* NO rounding on panel itself */
+  overflow: visible; /* masks live outside */
 
   /* inset edge + ambient shadow (no box-model change) */
   box-shadow: none;
 }
 
-/* “CUTOUT” MASKS: cut corners using page background */
+/* Side masks: optical rounding only on left/right edges */
 .topbar-new-inner::before,
 .topbar-new-inner::after{
   content: "";
   position: absolute;
-  top: 0;
-  width: var(--iuMainMaskD);
-  height: var(--iuMainMaskD);
+  top: 50%;
+  width: var(--iuTopbarMaskD);
+  height: var(--iuTopbarMaskD);
   background: var(--iuPageBg);
   border-radius: 999px;
   pointer-events: none;
   z-index: 2;
+  transform: translateY(-50%);
 }
 .topbar-new-inner::before{
   left: 0;
-  transform: translate(calc(-1 * var(--iuMainMaskR)), calc(-1 * var(--iuMainMaskR)));
+  transform: translate(calc(-1 * var(--iuTopbarMaskR)), -50%);
 }
 .topbar-new-inner::after{
   right: 0;
-  transform: translate(var(--iuMainMaskR), calc(-1 * var(--iuMainMaskR)));
+  transform: translate(var(--iuTopbarMaskR), -50%);
 }
 .topbar-new-main{
   display: flex;
