@@ -5277,43 +5277,37 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   outline-offset: 2px;
 }
 
-/* === WHITE MODE BASE: keep full page white (incl. MEDIA) === */
-/* Media section targeting (CDP): html[data-iu-path] contains "section=media" */
-html[data-iu-path*="section=media"]{
-  --iu-page-bg: #fff;
-  --iu-bg: #fff;
-  --iu-bg-lock: #fff;
-}
-
-html[data-iu-path*="section=media"],
-html[data-iu-path*="section=media"] body{
+/* === WHITE BACKGROUND BASE (site-wide) === */
+/* Keep full page white across sections (incl. Media). */
+html, body{
   background: #fff !important;
   background-color: #fff !important;
   background-image: none !important;
 }
 
 /* Layout carriers must stay white */
-html[data-iu-path*="section=media"] .container,
-html[data-iu-path*="section=media"] main#content,
-html[data-iu-path*="section=media"] #content,
-html[data-iu-path*="section=media"] #feed,
-html[data-iu-path*="section=media"] #feedWrap,
-html[data-iu-path*="section=media"] #iuLeftRail,
-html[data-iu-path*="section=media"] .iu-leftRail,
-html[data-iu-path*="section=media"] .iu-rightContent,
-html[data-iu-path*="section=media"] .iu-hexNav,
-html[data-iu-path*="section=media"] .iu-daily-brief,
-html[data-iu-path*="section=media"] .iu-todayGrid,
-html[data-iu-path*="section=media"] .iu-todayBox,
-html[data-iu-path*="section=media"] .news-card{
+.container,
+main#content,
+#content,
+#feed,
+#feedWrap,
+#iuLeftRail,
+.iu-leftRail,
+.iu-rightContent,
+.mindMenu,
+.iu-hexNav,
+.iu-daily-brief,
+.iu-todayGrid,
+.iu-todayBox,
+.news-card{
   background: #fff !important;
   background-color: #fff !important;
   background-image: none !important;
 }
 
 /* If there are iframes in media list, keep their surroundings white */
-html[data-iu-path*="section=media"] #feed iframe,
-html[data-iu-path*="section=media"] .news-card iframe{
+#feed iframe,
+.news-card iframe{
   background: #fff !important;
   background-color: #fff !important;
   display: block;
