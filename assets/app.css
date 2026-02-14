@@ -214,17 +214,13 @@ html:not([data-iu-js]) .iuDailyWeather{
   left: 0;
   right: auto;
   z-index: 1000;
-  background: linear-gradient(
-      to bottom,
-      #2E4A6B 0%,
-      #243B55 100%
-  );
+  background: #243B55;
   color: #fff;
-  border-bottom: 0;
+  border-bottom: none;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   width: 100%;
   max-width: 100%;
-  overflow: hidden;
+  overflow: visible;
   box-sizing: border-box;
 }
 .topbar-new-inner{
@@ -244,38 +240,18 @@ html:not([data-iu-js]) .iuDailyWeather{
    ============================== */
 
 .topbar-new{
-  border-radius: 999px; /* match .topbar-searchInput */
-  border-bottom-left-radius: 14px;
-  border-bottom-right-radius: 14px;
-  overflow: hidden; /* critical: ensure radius is actually visible */
+  border-radius: 0; /* stable bar: no bending */
+  overflow: visible;
   box-shadow: none;
   border: 0;
 }
 
 .topbar-new::before{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:1px;
-  background: rgba(192,198,207,0.18);
-  pointer-events: none;
+  content: none !important; /* remove bottom line */
 }
 
 .topbar-new::after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:-1px;
-  height:10px;
-  background:#fff;
-  border-top-left-radius: 14px;
-  border-top-right-radius: 14px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  pointer-events: none;
+  content: none !important; /* remove bottom bend */
 }
 
 .topbar-new-inner{
@@ -4932,11 +4908,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 /* Frame color: topbar (pill only) */
 .topbar-new,
 .topbar-new-inner{
-  background: linear-gradient(
-      to bottom,
-      #2E4A6B 0%,
-      #243B55 100%
-  ) !important;
+  background: #243B55 !important;
 }
 
 /* Sticky header background must NOT match topbar,
