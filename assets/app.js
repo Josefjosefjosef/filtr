@@ -100,6 +100,9 @@ window.addEventListener("unhandledrejection", (e) => {
     activeFilter: null,
     searchQuery: "",
     sections: new Set(activeSections),
+    // FEED pagination (render-only; no pipeline touch)
+    pageSize: 200,
+    page: 1,
   };
   state.cachedItems ??= [];
   state.filteredItems ??= [];
@@ -1776,10 +1779,19 @@ window.addEventListener("unhandledrejection", (e) => {
       return;
     }
 
+    // Render-only paging: show at most pageSize*page items, no other slicing elsewhere
+    const pageSize = Number(state.pageSize) > 0 ? Number(state.pageSize) : 200;
+    const page = Number(state.page) >= 1 ? Number(state.page) : 1;
+    const visibleCount = page * pageSize;
+    const visibleItems = items.slice(0, visibleCount);
+    const hasMore = visibleItems.length < items.length;
+    // debug/gate-friendly snapshot (read-only)
+    try{ window.__iuFeedPaging = { pageSize, page, visibleCount, totalCount: items.length, visibleCountRendered: visibleItems.length, hasMore }; }catch{}
+
     // CLS mitigation: žádný mezistav "prázdný feed" (clear + append v cyklu).
     // Postav nový obsah mimo DOM a jednorázově ho vyměň přes replaceChildren().
     const nextNodes = [];
-    for (const item of items) {
+    for (const item of visibleItems) {
       const kind = String(item.contentType || "").toLowerCase();
       if (!ALLOWED_CONTENT_TYPES.has(kind)) {
         persistLastError("Invariant breach: neznámý contentType");
@@ -1803,15 +1815,31 @@ window.addEventListener("unhandledrejection", (e) => {
       nextNodes.push(node);
     }
 
+    // "Load more" button (no infinite auto-load)
+    let loadMoreWrap = null;
+    if (hasMore) {
+      const wrap = document.createElement("div");
+      wrap.className = "iuLoadMoreWrap";
+      wrap.innerHTML = `
+        <button type="button" class="iuLoadMoreBtn" aria-label="Načíst další stránku">
+          Načíst další stránku
+        </button>
+        <div class="iuLoadMoreMeta">${visibleItems.length} / ${items.length}</div>
+      `.trim();
+      loadMoreWrap = wrap;
+    }
+
     if (sectionsBar) {
-      safeTarget.replaceChildren(sectionsBar, ...nextNodes);
+      if (loadMoreWrap) safeTarget.replaceChildren(sectionsBar, ...nextNodes, loadMoreWrap);
+      else safeTarget.replaceChildren(sectionsBar, ...nextNodes);
     } else {
-      safeTarget.replaceChildren(...nextNodes);
+      if (loadMoreWrap) safeTarget.replaceChildren(...nextNodes, loadMoreWrap);
+      else safeTarget.replaceChildren(...nextNodes);
     }
 
     const feedChildrenAfter = safeTarget.childElementCount;
     const renderedCount = nextNodes.length;
-    const typeCounts = items.reduce(
+    const typeCounts = visibleItems.reduce(
       (acc, entry) => {
         const kind = String(entry.contentType || "").toLowerCase();
         if (kind === "article") acc.article += 1;
@@ -1823,9 +1851,13 @@ window.addEventListener("unhandledrejection", (e) => {
     );
     diagLog("renderFeed:end", {
       itemsCount: items.length,
+      visibleCount: visibleItems.length,
+      pageSize,
+      page,
       renderedCount,
       feedChildrenAfter,
       typeCounts,
+      hasMore,
     });
     if (diagStartInfo) {
       updateDiagBar(
@@ -1855,6 +1887,17 @@ window.addEventListener("unhandledrejection", (e) => {
       return;
     }
     if (elDataCount) elDataCount.textContent = String(items.length);
+
+    // wire load more click (new node each render, safe)
+    if (loadMoreWrap) {
+      const btn = loadMoreWrap.querySelector(".iuLoadMoreBtn");
+      if (btn) {
+        btn.addEventListener("click", () => {
+          state.page = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
+          renderFeed(safeTarget, state.filteredItems);
+        });
+      }
+    }
     if (!Array.isArray(state.cachedItems)) {
       persistLastError("Invariant breach: state.cachedItems není pole");
       renderInlineError("Obsah dočasně nedostupný.");
@@ -2110,6 +2153,8 @@ function buildVideoAsArticleCard(it) {
   function applyFilter() {
     if (!state.hasLoadedData) return;
     state.searchQuery = (searchInput && searchInput.value.trim()) || "";
+    // paging reset on any filter/search change (render-only)
+    state.page = 1;
 
     // SAFETY: pokud není aktivní žádné téma/sekce/filtr ani hledání, zobraz rovnou celý cache feed
     const hasTopic = !!(state && state.activeTopic);
@@ -4717,6 +4762,8 @@ function buildVideoAsArticleCard(it) {
     const section = getInitialSection(); // already normalized + fallback->media
     // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
     try{ document.body && (document.body.dataset.section = section); }catch{}
+    // feed paging must reset on section change
+    try{ state.page = 1; }catch{}
     setLeftNavActive(section);
     showView(VIEW_MAP[section] ?? 'media');
   }
