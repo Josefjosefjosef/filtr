@@ -286,6 +286,163 @@
                       </a>
                     </nav>
                   </aside>
+                  <!-- IU HOME (static 4-3-4 tessellation; hidden unless section=home) -->
+                  <div id="iuHomeView" class="iuHomeView" hidden>
+                    <div class="iuHomeCanvas" role="region" aria-label="Domů">
+                      <section class="iuHomeWeather" aria-label="Počasí">
+                        <div class="iuHomeWeatherShell" role="group" aria-label="Počasí dnes">
+                          <div class="iuHomeWeatherSkeleton" id="iuHomeWeatherSkeleton">loading weather…</div>
+                          <div class="iuHomeWeatherContent" id="iuHomeWeatherContent" hidden>
+                            <div class="iuHomeWeatherTopRow">
+                              <div class="iuHomeWeatherMeta">
+                                <div class="iuHomeWeatherCity" id="iuHomeWxCity">—</div>
+                                <div class="iuHomeWeatherDate" id="iuHomeWxDate">—</div>
+                                <div class="iuHomeWeatherDesc" id="iuHomeWxDesc">—</div>
+                              </div>
+                              <div class="iuHomeWeatherNow">
+                                <div class="iuHomeWeatherTemp" id="iuHomeWxTemp">—°</div>
+                                <div class="iuHomeWeatherIcon" id="iuHomeWxIcon" aria-hidden="true">🌤</div>
+                              </div>
+                            </div>
+
+                            <div class="iuHomeWeatherForecast" id="iuHomeWxForecast" aria-label="Předpověď (3 hodiny)">
+                              <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                              <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                              <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+
+                      <!-- 4-3-4 tessellation (11 sections, excluding Home) -->
+                      <section class="iuHomeHex434" aria-label="Rozcestník">
+                        <div class="iuHexRow iuHexRow--4">
+                          <a class="iuHex iuHex--pocasi" href="?section=pocasi">
+                            <span class="iuHex__icon" aria-hidden="true">
+                              <svg viewBox="0 0 24 24" role="img" focusable="false">
+                                <path d="M7 18h11a4 4 0 0 0 0-8 5.5 5.5 0 0 0-10.6-1.6A4.5 4.5 0 0 0 7 18z" fill="none" stroke="currentColor" stroke-width="2"/>
+                              </svg>
+                            </span>
+                            <span class="iuHex__label">Počasí</span>
+                          </a>
+                          <a class="iuHex iuHex--namedays" href="?section=namedays">
+                            <span class="iuHex__icon" aria-hidden="true">
+                              <svg viewBox="0 0 24 24" role="img" focusable="false">
+                                <path d="M7 2v3M17 2v3M3 7h18v14H3z" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <path d="M3 11h18" fill="none" stroke="currentColor" stroke-width="2"/>
+                              </svg>
+                            </span>
+                            <span class="iuHex__label">Svátky</span>
+                          </a>
+                          <a class="iuHex iuHex--tv" href="?section=tv">
+                            <span class="iuHex__icon" aria-hidden="true">
+                              <svg viewBox="0 0 24 24" role="img" focusable="false">
+                                <rect x="4" y="6" width="16" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <path d="M10 20h4" fill="none" stroke="currentColor" stroke-width="2"/>
+                              </svg>
+                            </span>
+                            <span class="iuHex__label">TV online</span>
+                          </a>
+                          <a class="iuHex iuHex--mapy" href="?section=mapy">
+                            <span class="iuHex__icon" aria-hidden="true">
+                              <svg viewBox="0 0 24 24" role="img" focusable="false">
+                                <path d="M12 21s7-6 7-12a7 7 0 0 0-14 0c0 6 7 12 7 12z" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="12" cy="9" r="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                              </svg>
+                            </span>
+                            <span class="iuHex__label">Mapy</span>
+                          </a>
+                        </div>
+
+                        <div class="iuHexRow iuHexRow--3">
+                          <a class="iuHex iuHex--culture" href="?section=culture">
+                            <span class="iuHex__icon" aria-hidden="true">
+                              <svg viewBox="0 0 24 24" role="img" focusable="false">
+                                <path d="M4 8h16v10H4z" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <path d="M8 8V6h8v2" fill="none" stroke="currentColor" stroke-width="2"/>
+                              </svg>
+                            </span>
+                            <span class="iuHex__label">Kultura / Akce</span>
+                          </a>
+                          <a class="iuHex iuHex--radio" href="?section=radio">
+                            <span class="iuHex__icon" aria-hidden="true">
+                              <svg viewBox="0 0 24 24" role="img" focusable="false">
+                                <path d="M3 11v8h18v-8" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <path d="M7 11l10-4" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="17" cy="15" r="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                              </svg>
+                            </span>
+                            <span class="iuHex__label">Rádia</span>
+                          </a>
+                          <a class="iuHex iuHex--ads" href="?section=ads">
+                            <span class="iuHex__icon" aria-hidden="true">
+                              <svg viewBox="0 0 24 24" role="img" focusable="false">
+                                <path d="M4 12h3l8-6v12l-8-6H4z" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <path d="M19 10a3 3 0 0 1 0 4" fill="none" stroke="currentColor" stroke-width="2"/>
+                              </svg>
+                            </span>
+                            <span class="iuHex__label">Inzerce</span>
+                          </a>
+                        </div>
+
+                        <div class="iuHexRow iuHexRow--4">
+                          <a class="iuHex iuHex--media" href="?section=media">
+                            <span class="iuHex__icon" aria-hidden="true">
+                              <svg viewBox="0 0 24 24" role="img" focusable="false">
+                                <path d="M4 6h16v14H4z" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <path d="M8 10h8M8 14h8" fill="none" stroke="currentColor" stroke-width="2"/>
+                              </svg>
+                            </span>
+                            <span class="iuHex__label">Média</span>
+                          </a>
+                          <a class="iuHex iuHex--travel" href="?section=travel">
+                            <span class="iuHex__icon" aria-hidden="true">
+                              <svg viewBox="0 0 24 24" role="img" focusable="false">
+                                <path d="M2 16l20-5-20-5 5 5 0 5z" fill="none" stroke="currentColor" stroke-width="2"/>
+                              </svg>
+                            </span>
+                            <span class="iuHex__label">Cestování</span>
+                          </a>
+                          <a class="iuHex iuHex--jr" href="?section=jr">
+                            <span class="iuHex__icon" aria-hidden="true">
+                              <svg viewBox="0 0 24 24" role="img" focusable="false">
+                                <path d="M7 3h10a4 4 0 0 1 4 4v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7a4 4 0 0 1 4-4z" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="8" cy="15" r="1" fill="currentColor"/>
+                                <circle cx="16" cy="15" r="1" fill="currentColor"/>
+                              </svg>
+                            </span>
+                            <span class="iuHex__label">Jízdní řády</span>
+                          </a>
+                          <a class="iuHex iuHex--tvprogram" href="?section=tvprogram">
+                            <span class="iuHex__icon" aria-hidden="true">
+                              <svg viewBox="0 0 24 24" role="img" focusable="false">
+                                <rect x="4" y="6" width="16" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <path d="M8 10h8M8 14h6" fill="none" stroke="currentColor" stroke-width="2"/>
+                              </svg>
+                            </span>
+                            <span class="iuHex__label">TV program</span>
+                          </a>
+                        </div>
+                      </section>
+
+                      <section class="iuHomeText" aria-label="O infoUzel.cz">
+                        <div class="iuHomeTextInner">
+                          <h2 class="iuHomeTextTitle">infoUzel.cz</h2>
+                          <p class="iuHomeTextBody">
+                            Rychlý přehled zpráv, rádia, TV, mapy a cestování na jednom místě. Domů je rozcestník — vyberte sekci a pokračujte.
+                          </p>
+                        </div>
+                      </section>
+
+                      <section class="iuHomeFav" aria-label="Oblíbené moduly">
+                        <div class="iuHomeFavHead">
+                          <h2 class="iuHomeFavTitle">Oblíbené</h2>
+                          <button class="iuHomeFavAdd" type="button" aria-label="Přidat modul">+ Přidat modul</button>
+                        </div>
+                        <div class="iuHomeFavGrid" aria-hidden="true"></div>
+                      </section>
+                    </div>
+                  </div>
                   <div id="feed">
                   </div>
                   <div id="iuRadioView" class="iuRadioView" hidden></div>
