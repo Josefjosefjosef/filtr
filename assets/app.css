@@ -15,10 +15,8 @@
   --iu-meta: #6b7280;
   --iu-accent: #1f3a5f;
 
-  /* Topbar optical side rounding (match search pill) */
-  --iuTopbarMaskD: 36px; /* computed searchHeight */
-  --iuTopbarMaskR: calc(var(--iuTopbarMaskD) / 2);
-  --iuPageBg: rgb(255, 255, 255); /* gate source-of-truth (pageBgRgb) */
+  /* Topbar pill shape (match search input) */
+  --iuTopbarPillR: 18px; /* match searchHeight/2; keep in sync with measured search */
 
   /* spacing kolem denního přehledu - odpovídá horní mezeře (padding-top #leftContent + margin-top .iu-daily-brief) */
   --iu-brief-gap-top: 20px; /* desktop: 12px + 8px */
@@ -269,41 +267,14 @@ html:not([data-iu-js]) .iuDailyWeather{
   --iuLeftBtnBorder: rgba(255,255,255,0.10);
   --iuLeftBtnShadow: 0 10px 22px rgba(0,0,0,0.22);
 
-  --iuTopbarMaskEnabled: 1; /* marker for gate */
-
-  position: relative; /* for side masks */
   border-radius: 0; /* NO rounding on panel itself */
-  overflow: visible; /* masks live outside */
+  /* Pill silhouette without border-radius (no layout change) */
+  clip-path: inset(0 round var(--iuTopbarPillR));
+  -webkit-clip-path: inset(0 round var(--iuTopbarPillR));
+  --iuTopbarPillEnabled: 1; /* marker for gate */
 
   /* inset edge + ambient shadow (no box-model change) */
   box-shadow: none;
-}
-
-/* Side masks: optical rounding only on left/right edges */
-.topbar-new-inner::before,
-.topbar-new-inner::after{
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: var(--iuTopbarMaskD);
-  height: var(--iuTopbarMaskD);
-  background: var(--iuPageBg);
-  border-radius: 999px;
-  pointer-events: none;
-  z-index: 2;
-  transform: translateY(-50%);
-}
-.topbar-new-inner::before{
-  left: 0;
-  /* paint only the half that actually cuts the panel (avoid visible overflow blobs) */
-  clip-path: inset(0 0 0 var(--iuTopbarMaskR));
-  transform: translate(calc(-1 * var(--iuTopbarMaskR)), -50%);
-}
-.topbar-new-inner::after{
-  right: 0;
-  /* paint only the half that actually cuts the panel (avoid visible overflow blobs) */
-  clip-path: inset(0 var(--iuTopbarMaskR) 0 0);
-  transform: translate(var(--iuTopbarMaskR), -50%);
 }
 .topbar-new-main{
   display: flex;
