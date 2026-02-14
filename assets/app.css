@@ -3673,14 +3673,25 @@ body.iu-home .iu-leftRail{
   align-items: center;
   position: relative;
   z-index: 2; /* hex grid must always stay above modules */
-  row-gap: 6px; /* pixel-perfect vertical rhythm */
+  gap: 0; /* spacing between rows is computed via margin-top */
 
-  /* mezera mezi hexagony (skutečná mezera mezi hranami) */
-  --iuHexGap: 12px;
+  /* --- HOME HEX 4-3-4: tessellation geometry (single source of truth) --- */
+  /* šířka hexu už existuje jako --iuHexW (clamp), NEPŘEPISOVAT ji */
+  /* X: vodorovná mezera mezi hexy v řadě */
+  --iuHexGap: 16px;
+  /* X pitch = šířka hexu + gap */
+  --iuHexPitchX: calc(var(--iuHexW) + var(--iuHexGap));
+  /* ½ X pitch = přesný posun prostřední řady (3 hexy) */
+  --iuHexShiftX: calc(var(--iuHexPitchX) / 2);
+  /* Y: výška hexu */
+  --iuHexH: calc(var(--iuHexW) * 0.866);
+  /* Y pitch (honeycomb): řady se překrývají → krok je 3/4 výšky */
+  --iuHexPitchY: calc(var(--iuHexH) * 0.75);
+  /* Y “zvednutí” = (výška - pitchY) */
+  --iuHexRiseY: calc(var(--iuHexH) - var(--iuHexPitchY));
+
   /* šířka hexu: adaptivně podle šířky stránky (menší než dřív) */
   --iuHexW: clamp(92px, 12vw, 140px);
-  --iuHexH: calc(var(--iuHexW) * 0.866);
-  --iuHexRowStep: calc(var(--iuHexH) * 0.75);
 }
 
 .iuHomeModules{
@@ -3697,16 +3708,19 @@ body.iu-home .iu-leftRail{
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: var(--iuHexGap);
   width: 100%;
-  margin-top: calc(var(--iuHexGap) * -0.2);
+  margin-top: 0;
   flex-wrap: nowrap;
 }
 .iuHomeHex434 .iuHexRow + .iuHexRow{
-  margin-top: calc(var(--iuHexRowStep) - var(--iuHexH));
+  margin-top: calc(-1 * var(--iuHexRiseY));
+}
+.iuHomeHex434 .iuHexRow--4{
+  transform: none;
 }
 .iuHomeHex434 .iuHexRow--3{
-  transform: translateX(calc((var(--iuHexW) + var(--iuHexGap)) / 2));
+  transform: translateX(calc(-1 * var(--iuHexShiftX)));
 }
 
 .iuHomeHex434 .iuHex{
