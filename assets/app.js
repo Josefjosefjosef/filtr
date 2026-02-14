@@ -4715,6 +4715,8 @@ function buildVideoAsArticleCard(it) {
 
   function applySectionFromURL(){
     const section = getInitialSection(); // already normalized + fallback->media
+    // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
+    try{ document.body && (document.body.dataset.section = section); }catch{}
     setLeftNavActive(section);
     showView(VIEW_MAP[section] ?? 'media');
   }
