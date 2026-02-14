@@ -235,12 +235,11 @@ html:not([data-iu-js]) .iuDailyWeather{
 
 /* ==============================
    TOP BAR — match LEFT RAIL BUTTONS (soft)
-   CSS-only: bottom radius visible, top corners unchanged
+   CSS-only: match topbar radius to search box
    ============================== */
 
 .topbar-new{
-  border-bottom-left-radius: 14px;
-  border-bottom-right-radius: 14px;
+  border-radius: 999px; /* match .topbar-searchInput */
   overflow: hidden; /* critical: ensure radius is actually visible */
 }
 
@@ -252,8 +251,7 @@ html:not([data-iu-js]) .iuDailyWeather{
   --iuLeftBtnBorder: rgba(255,255,255,0.10);
   --iuLeftBtnShadow: 0 10px 22px rgba(0,0,0,0.22);
 
-  border-bottom-left-radius: var(--iuLeftBtnRadius);
-  border-bottom-right-radius: var(--iuLeftBtnRadius);
+  border-radius: inherit;
   overflow: hidden;
 
   /* 1:1 feel with left buttons (paint happens here) */
@@ -294,7 +292,7 @@ html:not([data-iu-js]) .iuDailyWeather{
 }
 .topbar-searchInput{
   height: 36px;
-  width: 220px;
+  width: 440px;
   padding: 0 14px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,.25);
