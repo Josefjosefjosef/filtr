@@ -206,6 +206,8 @@ html:not([data-iu-js]) .iuDailyWeather{
   display: flex;
   align-items: center;
   min-height: 68px;
+  border-radius: 999px;
+  overflow: hidden;
 }
 
 .topbar-new{
@@ -241,8 +243,8 @@ html:not([data-iu-js]) .iuDailyWeather{
 .topbar-new{
   border-radius: 999px; /* match .topbar-searchInput */
   overflow: hidden; /* critical: ensure radius is actually visible */
-  box-shadow: 0 0 0 1px rgba(255,255,255,.08);
-  background-clip: padding-box;
+  box-shadow: none;
+  border: 0;
 }
 
 .topbar-new-inner{
@@ -262,9 +264,7 @@ html:not([data-iu-js]) .iuDailyWeather{
     linear-gradient(to bottom, var(--iuLeftBtnBgTop), var(--iuLeftBtnBgBottom));
 
   /* inset edge + ambient shadow (no box-model change) */
-  box-shadow:
-    0 0 0 1px var(--iuLeftBtnBorder) inset,
-    var(--iuLeftBtnShadow);
+  box-shadow: none;
 }
 .topbar-new-main{
   display: flex;
@@ -4901,7 +4901,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 #leftStickyHeader,
 .topbar-new,
 .topbar-new-inner{
-  background: var(--iu-frame-bg) !important;
+  background: #000 !important;
 }
 
 /* Right column outer shell only (keep inner cards intact) */
