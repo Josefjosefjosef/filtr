@@ -5114,6 +5114,11 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   color: color-mix(in srgb, var(--text) 50%, white 50%);
 }
 
+/* Keep label color in sync with inactive icon color */
+.iu-leftNavItem:not(.is-active) .iu-leftNavLabel{
+  color: color-mix(in srgb, var(--text) 50%, white 50%);
+}
+
 .iu-leftNavIcon svg{
   width: 100%;
   height: 100%;
