@@ -3435,6 +3435,55 @@ body[data-section="media"] #feed .iuLoadMoreWrap{
   text-align: center;
 }
 
+/* HOME layout: hide left rail, expand center across left+center */
+body.iu-home .iu-leftRail{
+  display: none !important;
+}
+
+/* HOME canvas + hex grid (UI-only) */
+.iuHomeCanvas{
+  padding: 16px 14px;
+}
+.iuHomeWeather{
+  height: 84px; /* stable placeholder */
+}
+.iuHomeText{
+  height: 90px; /* stable placeholder */
+}
+.iuHomeHexGrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  padding: 8px 0 18px;
+}
+@media (max-width: 640px){
+  .iuHomeHexGrid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.iuHomeHex{
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  background: var(--iuHexBg, #243B55);
+  color: #fff;
+  font-weight: 650;
+  text-align: center;
+  cursor: pointer;
+  padding: 18px 14px;
+  min-height: 120px;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.10);
+}
+.iuHomeHex:focus-visible{
+  outline: 2px solid rgba(31,75,153,0.22);
+  outline-offset: 3px;
+}
+.iuHomeHexLabel{
+  display: inline-block;
+  line-height: 1.15;
+}
+
 
 #feed a{
   color: rgba(11,27,43,0.92);
@@ -5045,6 +5094,13 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   width: auto !important;
 }
 
+/* Home view must adapt like #feed (same middle column footprint) */
+#newsList > #iuHomeView{
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto !important;
+}
+
 /* Responsive: hide left rail below 1100px (no JS) */
 @media (max-width: 1100px){
   .iu-leftRail{ display: none; }
@@ -5054,6 +5110,11 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
     min-width: 0;
   }
   #newsList > #iuRadioView{
+    flex: 0 0 100%;
+    width: 100% !important;
+    min-width: 0;
+  }
+  #newsList > #iuHomeView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
