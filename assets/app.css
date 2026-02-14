@@ -3386,6 +3386,12 @@ body[data-section="media"] #feed > article:not(:first-child) .news-titleLink:vis
   box-shadow: none;
 }
 
+/* MEDIA: soften horizontal dividers between articles (do not change radius/layout) */
+body[data-section="media"] #feed > .news-card:not(:first-child),
+body[data-section="media"] #feed > article:not(:first-child){
+  border-top-color: rgba(11, 42, 74, 0.14); /* lighter / less distracting than full accent */
+}
+
 
 #feed a{
   color: rgba(11,27,43,0.92);
