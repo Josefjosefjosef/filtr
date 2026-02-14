@@ -245,6 +245,8 @@ html:not([data-iu-js]) .iuDailyWeather{
 
 .topbar-new{
   border-radius: 999px; /* match .topbar-searchInput */
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
   overflow: hidden; /* critical: ensure radius is actually visible */
   box-shadow: none;
   border: 0;
@@ -269,8 +271,10 @@ html:not([data-iu-js]) .iuDailyWeather{
   bottom:-1px;
   height:10px;
   background:#fff;
-  border-top-left-radius: inherit;
-  border-top-right-radius: inherit;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
   pointer-events: none;
 }
 
