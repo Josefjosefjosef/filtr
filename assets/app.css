@@ -5049,9 +5049,12 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   flex-direction: column;   /* icon above label */
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  text-align: center;       /* fallback */
+  gap: 6px;
   height: auto;             /* override base height:48px without affecting widths */
-  min-height: 72px;         /* compact, but fits 2 lines */
+  min-height: 74px;         /* fits 1–2 lines without “autobus” */
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .iu-leftNavItem:focus-visible{
@@ -5103,19 +5106,33 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 /* Vertical layout tweaks (icon top, label bottom) */
-.iu-leftNav .iu-leftNavIcon{ margin: 0; flex: 0 0 auto; }
+.iu-leftNav .iu-leftNavIcon{
+  margin: 0;                 /* remove offsets */
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
 .iu-leftNav .iu-leftNavLabel{
   display: -webkit-box; /* 2-line wrap without truncation */
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
   text-align: center;
   white-space: normal;
-  line-height: 1.1;
+  line-height: 1.15;
   overflow: hidden;
   text-overflow: clip;
   overflow-wrap: anywhere;
+  word-break: normal;
+
+  /* slightly smaller to avoid awkward wraps (e.g. "Kultura / Akce") */
+  font-size: 0.92em;
 }
 
 .iu-leftNavItem.is-active{
