@@ -5108,6 +5108,12 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   color: currentColor; /* Feather stroke přes currentColor */
 }
 
+/* Safety: keep icon + label color synced via inheritance */
+.iu-leftNav .iu-leftNavIcon,
+.iu-leftNav .iu-leftNavLabel{
+  color: inherit;
+}
+
 /* ==== LEFT COLUMN ICON LIGHTEN 50% (inactive only) ==== */
 /* Only inactive icons; do not touch hover/active/focus rules. */
 .iu-leftNavItem:not(.is-active) .iu-leftNavIcon{
