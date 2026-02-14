@@ -4,6 +4,7 @@
 import json
 import os
 import re
+import hashlib
 import sys
 import time
 from datetime import datetime, timezone
@@ -31,6 +32,10 @@ OUT_PATH = os.path.join(OUTPUT_DIR, "articles.json")
 HEALTH_PATH = os.path.join(OUTPUT_DIR, "feed_health.json")
 BRIEF_PATH = os.path.join(OUTPUT_DIR, "brief.json")
 META_PATH = os.path.join(OUTPUT_DIR, "meta.json")
+
+# ✅ Retention storage (sharded by day; append-only with dedup)
+ARTICLES_SHARD_DIR = os.path.join(OUTPUT_DIR, "articles")
+ARTICLES_INDEX_PATH = os.path.join(ARTICLES_SHARD_DIR, "index.json")
 
 # ✅ NOVĚ: výstup videí (pro assets/app.js)
 VIDEOS_OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
@@ -138,6 +143,49 @@ def canonicalize_url(url: str) -> str:
         return urlunparse((p.scheme, p.netloc, p.path, p.params, query, fragment))
     except Exception:
         return url
+
+
+def _safe_read_json(path: str):
+    try:
+        if not path or not os.path.exists(path):
+            return None
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
+def _atomic_write_json(path: str, payload) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    os.replace(tmp, path)
+
+
+def _retention_key(it: dict) -> str:
+    """
+    Dedup key for retention:
+    - primary: canonical URL
+    - fallback: sha1(sourceHost + publishedAt + title)
+    """
+    try:
+        url = (it.get("url") or "").strip()
+        if url:
+            return "url:" + canonicalize_url(url)
+        sources = it.get("sources")
+        src0 = (sources or [{}])[0] if isinstance(sources, list) else {}
+        src_url = (src0.get("url") or "").strip() if isinstance(src0, dict) else ""
+        if src_url:
+            return "url:" + canonicalize_url(src_url)
+        host = (urlparse(src_url).netloc or "").lower()
+        pub = (it.get("publishedAt") or "").strip()
+        title = (it.get("title") or "").strip()
+        raw = (host + "|" + pub + "|" + title).encode("utf-8", errors="ignore")
+        return "h:" + hashlib.sha1(raw).hexdigest()
+    except Exception:
+        return "h:" + hashlib.sha1(repr(it).encode("utf-8", errors="ignore")).hexdigest()
 
 
 def normalize_media_name(name: str) -> str:
@@ -1090,22 +1138,100 @@ def main() -> int:
 
         out_articles.append(article_out)
 
-    # ===== FINÁLNÍ LIMIT (ARTICLES) =====
+    # ===== SORT (ARTICLES) =====
     out_articles = sorted(out_articles, key=lambda a: a["publishedAt"], reverse=True)
-    final = out_articles[:MAX_OUTPUT_ARTICLES]
 
+    # Timestamp shared by all outputs in this run
     generated_at = iso_now_z()
+
+    # ===== RETENTION (ARTICLES) =====
+    # Store ALL articles by day under projects/data/articles/YYYY-MM-DD.json (+ index.json).
+    # Keep legacy projects/data/articles.json as a fast, limited payload for initial page load.
+    try:
+        os.makedirs(ARTICLES_SHARD_DIR, exist_ok=True)
+
+        existing_index = _safe_read_json(ARTICLES_INDEX_PATH) or {}
+        prev_days = existing_index.get("days") if isinstance(existing_index, dict) else None
+        prev_days = prev_days if isinstance(prev_days, list) else []
+
+        prev_counts = {}
+        prev_order = []
+        for d in prev_days:
+            if not isinstance(d, dict):
+                continue
+            date = str(d.get("date") or "").strip()
+            if not date:
+                continue
+            prev_order.append(date)
+            try:
+                prev_counts[date] = int(d.get("count") or 0)
+            except Exception:
+                prev_counts[date] = 0
+
+        days_in_new = set()
+        by_day_new = {}
+        for it in out_articles:
+            pub = str(it.get("publishedAt") or "").strip()
+            if len(pub) < 10:
+                continue
+            day = pub[:10]
+            days_in_new.add(day)
+            by_day_new.setdefault(day, []).append(it)
+
+        # Update only days that appear in new output; keep other shard files untouched.
+        new_counts = dict(prev_counts)
+        all_days = set(prev_order)
+
+        for day in sorted(days_in_new):
+            all_days.add(day)
+            day_path = os.path.join(ARTICLES_SHARD_DIR, f"{day}.json")
+            day_payload = _safe_read_json(day_path) or {}
+
+            existing_items = []
+            if isinstance(day_payload, dict):
+                if isinstance(day_payload.get("items"), list):
+                    existing_items = day_payload.get("items")
+                elif isinstance(day_payload.get("articles"), list):
+                    existing_items = day_payload.get("articles")
+            elif isinstance(day_payload, list):
+                existing_items = day_payload
+
+            merged = []
+            seen = set()
+            for src in (by_day_new.get(day) or []) + (existing_items or []):
+                if not isinstance(src, dict):
+                    continue
+                k = _retention_key(src)
+                if k in seen:
+                    continue
+                seen.add(k)
+                merged.append(src)
+
+            merged.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+            _atomic_write_json(day_path, {"date": day, "generatedAt": generated_at, "items": merged})
+            new_counts[day] = len(merged)
+
+        # Write/refresh index (append-only)
+        ordered_days = sorted(all_days, reverse=True)
+        index_payload = {
+            "generatedAt": generated_at,
+            "days": [{"date": d, "count": int(new_counts.get(d, 0) or 0)} for d in ordered_days],
+        }
+        _atomic_write_json(ARTICLES_INDEX_PATH, index_payload)
+    except Exception as e:
+        # Retention must never break the main output.
+        print("WARN: retention shards failed:", str(e))
+
+    # ===== FAST OUTPUT (ARTICLES) =====
+    final = out_articles[:MAX_OUTPUT_ARTICLES]
 
     payload = {
         "generatedAt": generated_at,
         "articles": final
     }
 
-    os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
-
     # articles.json
-    with open(OUT_PATH, "w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
+    _atomic_write_json(OUT_PATH, payload)
 
     # feed_health.json (zachováváme kompatibilitu, ale přidáváme nové klíče)
     health_payload = {
@@ -1130,18 +1256,15 @@ def main() -> int:
             } for r in per_feed_report
         }
     }
-    with open(HEALTH_PATH, "w", encoding="utf-8") as f:
-        json.dump(health_payload, f, ensure_ascii=False, indent=2)
+    _atomic_write_json(HEALTH_PATH, health_payload)
 
     # meta.json
     meta_payload = build_meta(generated_at, final)
-    with open(META_PATH, "w", encoding="utf-8") as f:
-        json.dump(meta_payload, f, ensure_ascii=False, indent=2)
+    _atomic_write_json(META_PATH, meta_payload)
 
     # brief.json
     brief_payload = build_brief(generated_at, final)
-    with open(BRIEF_PATH, "w", encoding="utf-8") as f:
-        json.dump(brief_payload, f, ensure_ascii=False, indent=2)
+    _atomic_write_json(BRIEF_PATH, brief_payload)
 
     # ✅ videos.json (jen YouTube playlisty)
     # dedup podle videoId, řazení od nejnovějších
@@ -1173,9 +1296,7 @@ def main() -> int:
         "videos": out_vid
     }
 
-    os.makedirs(os.path.dirname(VIDEOS_OUT_PATH), exist_ok=True)
-    with open(VIDEOS_OUT_PATH, "w", encoding="utf-8") as f:
-        json.dump(videos_payload, f, ensure_ascii=False, indent=2)
+    _atomic_write_json(VIDEOS_OUT_PATH, videos_payload)
     print("=== FEED REPORT ===")
     print(json.dumps(health_payload, ensure_ascii=False, indent=2))
     print(f"=== OUTPUT === wrote {len(final)} items to {OUT_PATH}")

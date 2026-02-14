@@ -103,6 +103,11 @@ window.addEventListener("unhandledrejection", (e) => {
     // FEED pagination (render-only; no pipeline touch)
     pageSize: 200,
     page: 1,
+    // DATA retention (optional sharded history under /projects/data/articles/)
+    retentionDays: [],
+    retentionCursor: 0,
+    retentionLoadedDays: new Set(),
+    retentionIsLoading: false,
   };
   state.cachedItems ??= [];
   state.filteredItems ??= [];
@@ -1302,6 +1307,133 @@ window.addEventListener("unhandledrejection", (e) => {
     return [];
   }
 
+  // === DATA RETENTION (sharded articles history) ===
+  function dayKeyFromPublished(it){
+    const s = String(it?.publishedAt || it?.published || it?.date || it?.time || "").trim();
+    return s.length >= 10 ? s.slice(0, 10) : "";
+  }
+
+  function canonicalizeUrlForKey(url){
+    try{
+      const u = new URL(String(url || ""), location.href);
+      u.hash = "";
+      // remove tracking params
+      const drop = new Set(["fbclid","gclid","yclid","cmpid","pk_campaign","pk_source"]);
+      for (const [k] of Array.from(u.searchParams.entries())){
+        const lk = String(k || "").toLowerCase();
+        if (lk.startsWith("utm_") || drop.has(lk)) {
+          u.searchParams.delete(k);
+        }
+      }
+      // keep pathname + sanitized query
+      return u.toString();
+    }catch{
+      return String(url || "");
+    }
+  }
+
+  function retentionKey(it){
+    const url = String(it?.url || "").trim();
+    if (url) return "url:" + canonicalizeUrlForKey(url);
+    const src0 = Array.isArray(it?.sources) ? (it.sources[0] || null) : null;
+    const su = String(src0?.url || "").trim();
+    if (su) return "url:" + canonicalizeUrlForKey(su);
+    const host = (() => { try { return new URL(su).hostname || ""; } catch { return ""; } })();
+    const pub = String(it?.publishedAt || "").trim();
+    const title = String(it?.title || "").trim();
+    return "h:" + [host, pub, title].join("|");
+  }
+
+  async function initRetentionIndex(){
+    if (state.retentionIsLoading) return;
+    state.retentionIsLoading = true;
+    try{
+      // mark already-loaded days from current cache
+      try{
+        state.retentionLoadedDays = new Set(
+          (Array.isArray(state.cachedItems) ? state.cachedItems : [])
+            .filter((x) => x && String(x.contentType || "article").toLowerCase() === "article")
+            .map(dayKeyFromPublished)
+            .filter(Boolean)
+        );
+      }catch{
+        state.retentionLoadedDays = new Set();
+      }
+
+      const indexUrl = "/projects/data/articles/index.json";
+      const idx = await fetchDiag(indexUrl, "articles");
+      const days = Array.isArray(idx?.days) ? idx.days : [];
+      const dates = days
+        .map((d) => String(d?.date || "").trim())
+        .filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d));
+
+      state.retentionDays = dates;
+      // advance cursor past already loaded days
+      let c = 0;
+      while (c < state.retentionDays.length && state.retentionLoadedDays.has(state.retentionDays[c])) c++;
+      state.retentionCursor = c;
+    }catch{
+      state.retentionDays = [];
+      state.retentionCursor = 0;
+    }finally{
+      state.retentionIsLoading = false;
+    }
+  }
+
+  async function loadRetentionUntilVisibleCount(targetVisibleCount){
+    if (!Array.isArray(state.retentionDays) || state.retentionDays.length === 0) return false;
+    if (state.retentionIsLoading) return false;
+    state.retentionIsLoading = true;
+    try{
+      const seen = new Set(
+        (Array.isArray(state.cachedItems) ? state.cachedItems : [])
+          .filter((x) => x && String(x.contentType || "article").toLowerCase() === "article")
+          .map(retentionKey)
+      );
+
+      while (state.retentionCursor < state.retentionDays.length) {
+        // Stop early if we already have enough after filtering
+        const curLen = Array.isArray(state.filteredItems) ? state.filteredItems.length : 0;
+        if (curLen >= targetVisibleCount) break;
+
+        const day = state.retentionDays[state.retentionCursor++];
+        if (!day) continue;
+        if (state.retentionLoadedDays.has(day)) continue;
+        state.retentionLoadedDays.add(day);
+
+        const dayUrl = `/projects/data/articles/${day}.json`;
+        const dayJson = await fetchDiag(dayUrl, "articles");
+        const dayItems = normalizeFeedJson(dayJson);
+        if (!Array.isArray(dayItems) || dayItems.length === 0) continue;
+
+        for (const it of dayItems) {
+          if (!it || typeof it !== "object") continue;
+          // ensure contentType stays stable
+          if (!it.contentType) it.contentType = "article";
+          const k = retentionKey(it);
+          if (seen.has(k)) continue;
+          seen.add(k);
+          state.cachedItems.push(it);
+        }
+
+        // keep cachedItems sorted by time desc (matches existing behavior)
+        state.cachedItems = (state.cachedItems || []).map((item) => {
+          const published =
+            (item && String(item.publishedAt || item.published || item.date || item.createdAt || item.uploadedAt || item.time)) ||
+            "";
+          return { ...item, _ts: published ? Date.parse(published) || 0 : 0 };
+        }).sort((a, b) => (b._ts || 0) - (a._ts || 0));
+
+        // recompute filteredItems without resetting page and without rendering
+        applyFilter({ resetPage: false, render: false });
+      }
+
+      return true;
+    } finally {
+      state.retentionIsLoading = false;
+    }
+  }
+
   function getBaseRoot() {
     let p = location.pathname.replace(/\\/g, "/");
     if (p.endsWith("index.html")) {
@@ -1817,14 +1949,17 @@ window.addEventListener("unhandledrejection", (e) => {
 
     // "Load more" button (no infinite auto-load)
     let loadMoreWrap = null;
-    if (hasMore) {
+    const canLoadRetention =
+      Boolean(state.retentionIsLoading) ||
+      (Array.isArray(state.retentionDays) && state.retentionCursor < state.retentionDays.length);
+    if (hasMore || canLoadRetention) {
       const wrap = document.createElement("div");
       wrap.className = "iuLoadMoreWrap";
       wrap.innerHTML = `
         <button type="button" class="iuLoadMoreBtn" aria-label="Načíst další stránku">
           Načíst další stránku
         </button>
-        <div class="iuLoadMoreMeta">${visibleItems.length} / ${items.length}</div>
+        <div class="iuLoadMoreMeta">${visibleItems.length} / ${items.length}${canLoadRetention ? "+" : ""}</div>
       `.trim();
       loadMoreWrap = wrap;
     }
@@ -1893,8 +2028,23 @@ window.addEventListener("unhandledrejection", (e) => {
       const btn = loadMoreWrap.querySelector(".iuLoadMoreBtn");
       if (btn) {
         btn.addEventListener("click", () => {
-          state.page = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
-          renderFeed(safeTarget, state.filteredItems);
+          const nextPage = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
+          state.page = nextPage;
+          const desiredVisible = nextPage * pageSize;
+          (async () => {
+            // If we need older data beyond the current cache, fetch day-shards lazily (no auto-load).
+            if (desiredVisible > (state.filteredItems?.length ?? 0)) {
+              const prevText = btn.textContent;
+              try{
+                btn.disabled = true;
+                btn.textContent = "Načítám…";
+                await loadRetentionUntilVisibleCount(desiredVisible);
+              }catch{}
+              btn.disabled = false;
+              btn.textContent = prevText;
+            }
+            renderFeed(safeTarget, state.filteredItems);
+          })();
         });
       }
     }
@@ -2150,11 +2300,14 @@ function buildVideoAsArticleCard(it) {
   // === LOCKED PIPELINE ===
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
-  function applyFilter() {
+  function applyFilter(opts) {
+    const options = opts && typeof opts === "object" ? opts : {};
+    const resetPage = options.resetPage !== false; // default: reset
+    const doRender = options.render !== false;     // default: render
     if (!state.hasLoadedData) return;
     state.searchQuery = (searchInput && searchInput.value.trim()) || "";
     // paging reset on any filter/search change (render-only)
-    state.page = 1;
+    if (resetPage) state.page = 1;
 
     // SAFETY: pokud není aktivní žádné téma/sekce/filtr ani hledání, zobraz rovnou celý cache feed
     const hasTopic = !!(state && state.activeTopic);
@@ -2164,7 +2317,7 @@ function buildVideoAsArticleCard(it) {
 
     if (!hasTopic && !hasSection && !hasFilter && !hasQuery) {
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
-      renderItems(state.filteredItems);
+      if (doRender) renderItems(state.filteredItems);
       return;
     }
     if (DEBUG) {
@@ -2183,7 +2336,7 @@ function buildVideoAsArticleCard(it) {
       state.filteredItems = Array.isArray(state.cachedItems)
         ? state.cachedItems.slice()
         : [];
-      renderItems(state.filteredItems);
+      if (doRender) renderItems(state.filteredItems);
       return;
     }
 
@@ -2195,7 +2348,7 @@ function buildVideoAsArticleCard(it) {
       state.filteredItems = Array.isArray(state.cachedItems)
         ? state.cachedItems.slice()
         : [];
-      renderItems(state.filteredItems);
+      if (doRender) renderItems(state.filteredItems);
       return;
     }
 
@@ -2242,12 +2395,12 @@ function buildVideoAsArticleCard(it) {
 
     if (filtered.length === 0) {
       if (query) {
-        openSearchModal();
+        if (doRender) openSearchModal();
       } else {
-        hideSearchModal();
+        if (doRender) hideSearchModal();
         renderInlineError("Filtry nenašly žádné články.");
       }
-      setStatus(`Stav dat: OK (zobrazeno: 0 / celkem: ${state.cachedItems.length})`);
+      if (doRender) setStatus(`Stav dat: OK (zobrazeno: 0 / celkem: ${state.cachedItems.length})`);
       if (isDebugOn()) {
         writeDebug({
           sections: activeSections,
@@ -2264,9 +2417,11 @@ function buildVideoAsArticleCard(it) {
       state.filteredItems = [];
     }
 
-    hideSearchModal();
-    renderItems(filtered);
-    setStatus(`Stav dat: OK (zobrazeno: ${filtered.length} / celkem: ${state.cachedItems.length})`);
+    if (doRender) {
+      hideSearchModal();
+      renderItems(filtered);
+      setStatus(`Stav dat: OK (zobrazeno: ${filtered.length} / celkem: ${state.cachedItems.length})`);
+    }
     if (isDebugOn()) {
       writeDebug({
         sections: activeSections,
@@ -3369,6 +3524,8 @@ function buildVideoAsArticleCard(it) {
           })),
         );
       }
+      // Non-blocking: load retention index for historical day-shards
+      initRetentionIndex();
       applyFilter();
       const countArticles = state.cachedItems.filter((entry) => entry?.contentType === "article").length;
       const countVideos = state.cachedItems.filter((entry) => entry?.contentType === "video").length;
