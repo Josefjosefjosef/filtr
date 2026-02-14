@@ -3445,6 +3445,14 @@ body.iu-home .iu-leftRail{
   padding: 16px 14px;
 }
 
+/* Ensure Home is a stable vertical stack (no overlaps) */
+.iuHomeView .iuHomeCanvas{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
 /* HOME Weather panel — pixel-perfect + no CLS */
 .iuHomeWeather{
   height: 160px;
@@ -3663,6 +3671,8 @@ body.iu-home .iu-leftRail{
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  z-index: 2; /* hex grid must always stay above modules */
 
   /* mezera mezi hexagony (skutečná mezera mezi hranami) */
   --iuHexGap: 10px;
@@ -3670,6 +3680,16 @@ body.iu-home .iu-leftRail{
   --iuHexW: clamp(92px, 12vw, 140px);
   --iuHexH: calc(var(--iuHexW) * 0.866);
   --iuHexRowStep: calc(var(--iuHexH) * 0.75);
+}
+
+.iuHomeModules{
+  width: min(100%, 1100px);
+  padding: 0 14px 24px;
+  position: relative;
+  z-index: 1; /* modules under hex grid */
+}
+.iuHomeModules *{
+  max-width: 100%;
 }
 
 .iuHomeHex434 .iuHexRow{
