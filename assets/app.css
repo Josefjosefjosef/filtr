@@ -4939,6 +4939,22 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   border-radius: 0;
   box-shadow: none;
   border-right: none;
+  position: relative; /* required for ::before anchor */
+  z-index: 0;
+}
+
+/* === LEFT RAIL: extend background to viewport-left WITHOUT changing layout width === */
+/* This draws background under the rail and extends to the left edge of the viewport */
+.iu-leftRail::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: calc(50% - 50vw);
+  background: #fff;
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* FEED must adapt to remaining width (critical) */
@@ -5018,11 +5034,14 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 .iu-leftNavItem{
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 12px;
 
-  height: 64px; /* moderní, kompaktní */
+  height: 48px;
+  width: 100%;
+  padding: 0 14px;
   border-radius: 10px;
   text-decoration: none;
   color: var(--iu-rail-muted);
@@ -5083,6 +5102,17 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
 .iu-leftNav .iu-leftNavLabel{
   color: rgba(11,27,43,0.82);
+}
+
+/* Horizontal layout tweaks (icon left, label right) */
+.iu-leftNav .iu-leftNavIcon{ margin-bottom: 0; flex: 0 0 auto; }
+.iu-leftNav .iu-leftNavLabel{
+  display: block;
+  flex: 1 1 auto;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .iu-leftNavItem.is-active{
