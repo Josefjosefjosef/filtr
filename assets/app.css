@@ -3660,38 +3660,87 @@ body.iu-home .iu-leftRail{
 }
 
 /* ==============================
-   IU HOME HEX — 4-3-4 TESSELLATION
-   UI-only, no feed pipeline changes
+   IU HOME HEX 4-3-4 (responsive honeycomb)
+   - UI-only
+   - no feed pipeline changes
    ============================== */
 
 .iuHomeHex434{
+  /* Šířka wrapperu (držet stejně jako layout) */
   width: min(100%, 1100px);
-  margin: 24px auto 18px;
+  margin: 18px auto 0;
   padding: 0 14px;
+
+  /* === SINGLE SOURCE OF TRUTH ===
+     4 hexy se musí vejít na řádek:
+     W = (containerWidth - 3*gap) / 4
+  */
+  --iuHexGap: 16px;
+  --iuHexW: clamp(72px, calc((100% - (3 * var(--iuHexGap))) / 4), 150px);
+
+  /* pravidelný hex (flat-top) — výška je ~0.866 * šířka */
+  --iuHexH: calc(var(--iuHexW) * 0.866);
+
+  /* pitchX = W + gap, shiftX = 1/2 pitchX */
+  --iuHexPitchX: calc(var(--iuHexW) + var(--iuHexGap));
+  --iuHexShiftX: calc(var(--iuHexPitchX) / 2);
+
+  /* honeycomb pitchY = 3/4 výšky, riseY = H - pitchY = 1/4 H */
+  --iuHexPitchY: calc(var(--iuHexH) * 0.75);
+  --iuHexRiseY:  calc(var(--iuHexH) - var(--iuHexPitchY)); /* = 0.25H */
+}
+
+/* řady: flex, centrované */
+.iuHomeHex434 .iuHexRow{
+  display: flex;
+  justify-content: center;
+  gap: var(--iuHexGap);
+  margin: 0;
+  padding: 0;
+}
+
+/* 2. a 3. řada se zvednou, aby do sebe zaklaply */
+.iuHomeHex434 .iuHexRow + .iuHexRow{
+  margin-top: calc(-1 * var(--iuHexRiseY));
+}
+
+/* X posun: pouze prostřední řada (3 hexy) vlevo o 1/2 rozteče */
+.iuHomeHex434 .iuHexRow--3{
+  transform: translateX(calc(-1 * var(--iuHexShiftX)));
+}
+
+/* 1. a 3. řada: žádný X posun */
+.iuHomeHex434 .iuHexRow--4{
+  transform: none;
+}
+
+/* --- samotný hex --- */
+.iuHomeHex434 .iuHex{
+  width: var(--iuHexW);
+  height: var(--iuHexH);
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+
+  /* pojistky proti “obřím ikonám” */
+  position: relative;
+  overflow: hidden;
+
+  /* tvar hexu */
+  clip-path: polygon(
+    25% 0%,
+    75% 0%,
+    100% 50%,
+    75% 100%,
+    25% 100%,
+    0% 50%
+  );
+}
+
+.iuHomeHex434{
   position: relative;
   z-index: 2; /* hex grid must always stay above modules */
-  gap: 0; /* spacing between rows is computed via margin-top */
-
-  /* --- HOME HEX 4-3-4: tessellation geometry (single source of truth) --- */
-  /* šířka hexu už existuje jako --iuHexW (clamp), NEPŘEPISOVAT ji */
-  /* X: vodorovná mezera mezi hexy v řadě */
-  --iuHexGap: 16px;
-  /* X pitch = šířka hexu + gap */
-  --iuHexPitchX: calc(var(--iuHexW) + var(--iuHexGap));
-  /* ½ X pitch = přesný posun prostřední řady (3 hexy) */
-  --iuHexShiftX: calc(var(--iuHexPitchX) / 2);
-  /* Y: výška hexu */
-  --iuHexH: calc(var(--iuHexW) * 0.866);
-  /* Y pitch (honeycomb): řady se překrývají → krok je 3/4 výšky */
-  --iuHexPitchY: calc(var(--iuHexH) * 0.75);
-  /* Y “zvednutí” = (výška - pitchY) */
-  --iuHexRiseY: calc(var(--iuHexH) - var(--iuHexPitchY));
-
-  /* šířka hexu: adaptivně podle šířky stránky (menší než dřív) */
-  --iuHexW: clamp(92px, 12vw, 140px);
 }
 
 .iuHomeModules{
@@ -3704,45 +3753,9 @@ body.iu-home .iu-leftRail{
   max-width: 100%;
 }
 
-.iuHomeHex434 .iuHexRow{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--iuHexGap);
-  width: 100%;
-  margin-top: 0;
-  flex-wrap: nowrap;
-}
-.iuHomeHex434 .iuHexRow + .iuHexRow{
-  margin-top: calc(-1 * var(--iuHexRiseY));
-}
-.iuHomeHex434 .iuHexRow--4{
-  transform: none;
-}
-.iuHomeHex434 .iuHexRow--3{
-  transform: translateX(calc(-1 * var(--iuHexShiftX)));
-}
-
 .iuHomeHex434 .iuHex{
-  width: var(--iuHexW);
-  height: var(--iuHexH);
   flex: 0 0 var(--iuHexW); /* CLS guard */
-  position: relative; /* safety for inner elements */
-  overflow: hidden;   /* safety: nothing can overflow the hex */
-
-  clip-path: polygon(
-    25% 6%, 75% 6%,
-    100% 50%,
-    75% 94%, 25% 94%,
-    0 50%
-  );
-
-  display: flex;
-  flex-direction: column;
   gap: 10px;
-  align-items: center;
-  justify-content: center;
-
   text-decoration: none;
   color: #fff;
   font-weight: 700;
@@ -3790,37 +3803,6 @@ body.iu-home .iu-leftRail{
   line-height: 1.15;
   padding: 0 10px;
   color: #fff;
-}
-
-@media (max-width: 520px){
-  .iuHomeHex434{
-    --iuHexGap: 12px;
-    --iuHexW: clamp(76px, 20vw, 110px);
-  }
-  .iuHomeHex434 .iuHexRow--4{
-    transform: scale(.9);
-    transform-origin: top center;
-  }
-  .iuHomeHex434 .iuHexRow--3{
-    transform: translateX(calc((var(--iuHexW) + var(--iuHexGap)) / 2)) scale(.9);
-    transform-origin: top center;
-  }
-  .iuHomeHex434 .iuHex__label{
-    font-size: 14px;
-  }
-  .iuHomeHex434 .iuHex__icon svg{
-    width: 28px;
-    height: 28px;
-  }
-}
-
-@media (max-width: 380px){
-  .iuHomeHex434{
-    --iuHexGap: 6px;
-  }
-  .iuHomeHex434 .iuHexRow{
-    gap: 6px;
-  }
 }
 
 /* SECTION COLORS (use existing IU tokens if present) */
