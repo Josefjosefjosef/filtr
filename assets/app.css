@@ -5140,7 +5140,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 .iu-leftNav .iu-leftNavLabel{
-  color: rgba(11,27,43,0.82);
+  color: inherit; /* label must match icon/currentColor */
 }
 
 /* Vertical layout tweaks (icon top, label bottom) */
@@ -5191,7 +5191,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
 /* Accent palette (optional mapping via data-accent) */
 :root{
-  --iuNavAccent-media:  #3B82F6;
+  --iuNavAccent-media:  #0B2A4A; /* darker journalist-style navy */
   --iuNavAccent-radio:  #8B5CF6;
   --iuNavAccent-tv:     #EF4444;
   --iuNavAccent-jr:     #F97316;
