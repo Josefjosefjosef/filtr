@@ -3568,36 +3568,41 @@ body.iu-home .iu-leftRail{
   color: rgba(255,255,255,0.94);
 }
 
-/* PERFECT REGULAR HEXAGONS + HONEYCOMB */
+/* ==============================
+   HOME TILES (RECT) — stable grid
+   (Replaces old layout experiments)
+   ============================== */
+
 .iuHomeHexGrid{
-  /* Regular hex geometry (flat top/bottom) */
-  --iuHexW: 200px;        /* DO NOT CHANGE */
-  --iuHexH: 173.205px;    /* DO NOT CHANGE */
-  --iuHexGapX: 24px;
-  --iuHexGapY: 20px;
-  --iuHexOffset: calc(var(--iuHexW)/2 + var(--iuHexGapX)/2);
+  --iuHomeTileGap: clamp(10px, 1.2vw, 18px);
+  --iuHomeTileMaxW: 240px;
+  --iuHomeTileColsDesktop: 4;
 
   display: grid;
-  grid-template-columns: repeat(3, var(--iuHexW));
-  grid-auto-rows: var(--iuHexH);
-  column-gap: var(--iuHexGapX);
-  row-gap: var(--iuHexGapY);
+  grid-template-columns: repeat(var(--iuHomeTileColsDesktop), minmax(0, var(--iuHomeTileMaxW)));
+  gap: var(--iuHomeTileGap);
   justify-content: center;
   align-content: start;
   padding: 12px 0 18px;
 }
-@media (max-width: 640px){
+@media (max-width: 1100px){
   .iuHomeHexGrid{
-    --iuHexGapX: 16px;
-    --iuHexGapY: 16px;
-    --iuHexOffset: calc(var(--iuHexW)/2 + var(--iuHexGapX)/2);
-    grid-template-columns: repeat(2, var(--iuHexW));
+    grid-template-columns: repeat(2, minmax(0, var(--iuHomeTileMaxW)));
   }
 }
+@media (max-width: 640px){
+  .iuHomeHexGrid{
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+  }
+  .iuHomeHex{
+    max-width: none;
+  }
+}
+
 .iuHomeHex{
-  width: var(--iuHexW);
-  height: var(--iuHexH);
-  flex: 0 0 var(--iuHexW); /* CLS guard */
+  width: 100%;
+  max-width: var(--iuHomeTileMaxW);
 
   appearance: none;
   -webkit-appearance: none;
@@ -3610,7 +3615,10 @@ body.iu-home .iu-leftRail{
   cursor: pointer;
   padding: 16px 14px;
 
-  border-radius: 18px;
+  clip-path: none !important;
+  -webkit-clip-path: none !important;
+  border-radius: 14px;
+  overflow: hidden;
 
   display: flex;
   flex-direction: column;
@@ -3619,11 +3627,11 @@ body.iu-home .iu-leftRail{
   gap: 10px;
   box-shadow: 0 12px 26px rgba(0,0,0,0.14);
   filter: brightness(1);
-  transform: translateX(var(--iuHexRowShift, 0px)) scale(1);
+  transform: none;
   transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
 }
 .iuHomeHex:hover{
-  transform: translateX(var(--iuHexRowShift, 0px)) scale(1.05);
+  transform: translateY(-3px);
   filter: brightness(1.05);
   box-shadow: 0 18px 38px rgba(0,0,0,0.18);
 }
@@ -3653,27 +3661,40 @@ body.iu-home .iu-leftRail{
 }
 
 /* ==============================
-   IU HOME HEX — 4-3-4 TESSELLATION
-   UI-only, no feed pipeline changes
+   HOME TILES (RECT) — stable grid
+   (Replaces old layout experiments)
    ============================== */
 
-.iuHomeHex434{
+.iuHomeHex434{ /* ponecháme název kvůli existujícímu HTML, ale chování je RECT grid */
   width: min(100%, 1100px);
-  margin: 24px auto 18px;
+  margin: 18px auto 0;
   padding: 0 14px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  z-index: 2; /* hex grid must always stay above modules */
-  row-gap: 6px; /* pixel-perfect vertical rhythm */
 
-  /* mezera mezi hexagony (skutečná mezera mezi hranami) */
-  --iuHexGap: 12px;
-  /* šířka hexu: adaptivně podle šířky stránky (menší než dřív) */
-  --iuHexW: clamp(92px, 12vw, 140px);
-  --iuHexH: calc(var(--iuHexW) * 0.866);
-  --iuHexRowStep: calc(var(--iuHexH) * 0.75);
+  --iuHomeTileGap: clamp(10px, 1.2vw, 18px);
+  --iuHomeTileMaxW: 240px; /* jen max šířka dlaždice */
+  --iuHomeTileColsDesktop: 4;
+
+  display: grid;
+  grid-template-columns: repeat(var(--iuHomeTileColsDesktop), minmax(0, var(--iuHomeTileMaxW)));
+  gap: var(--iuHomeTileGap);
+  justify-content: center;
+  align-content: start;
+
+  position: relative;
+  z-index: 2; /* home tiles above modules */
+}
+
+@media (max-width: 1100px){
+  .iuHomeHex434{
+    grid-template-columns: repeat(2, minmax(0, var(--iuHomeTileMaxW)));
+  }
+}
+
+@media (max-width: 640px){
+  .iuHomeHex434{
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+  }
 }
 
 .iuHomeModules{
@@ -3687,35 +3708,25 @@ body.iu-home .iu-leftRail{
 }
 
 .iuHomeHex434 .iuHexRow{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  margin-top: calc(var(--iuHexGap) * -0.2);
-  flex-wrap: nowrap;
-}
-.iuHomeHex434 .iuHexRow + .iuHexRow{
-  margin-top: calc(var(--iuHexRowStep) - var(--iuHexH));
-}
-.iuHomeHex434 .iuHexRow--3{
-  transform: translateX(calc((var(--iuHexW) + var(--iuHexGap)) / 2));
+  display: contents; /* keep HTML rows but flatten for grid layout */
 }
 
 .iuHomeHex434 .iuHex{
-  width: var(--iuHexW);
-  height: var(--iuHexH);
-  flex: 0 0 var(--iuHexW); /* CLS guard */
+  width: 100%;
+  max-width: var(--iuHomeTileMaxW);
   position: relative; /* safety for inner elements */
-  overflow: hidden;   /* safety: nothing can overflow the hex */
+  overflow: hidden;   /* safety: nothing can overflow the tile */
 
-  border-radius: 18px;
+  clip-path: none !important;
+  -webkit-clip-path: none !important;
+  border-radius: 14px;
 
   display: flex;
   flex-direction: column;
   gap: 10px;
   align-items: center;
   justify-content: center;
+  padding: 16px 14px;
 
   text-decoration: none;
   color: #fff;
@@ -3725,9 +3736,13 @@ body.iu-home .iu-leftRail{
   transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
 }
 .iuHomeHex434 .iuHex:hover{
-  transform: translateY(-4px) scale(1.04);
-  filter: brightness(1.08);
+  transform: translateY(-3px);
+  filter: brightness(1.06);
   box-shadow: 0 10px 24px rgba(0,0,0,.22);
+}
+.iuHomeHex434 .iuHex:focus-visible{
+  outline: 2px solid rgba(31,75,153,0.22);
+  outline-offset: 3px;
 }
 
 .iuHomeHex434 .iuHexBadge{
@@ -3766,18 +3781,9 @@ body.iu-home .iu-leftRail{
   color: #fff;
 }
 
-@media (max-width: 520px){
-  .iuHomeHex434{
-    --iuHexGap: 12px;
-    --iuHexW: clamp(76px, 20vw, 110px);
-  }
-  .iuHomeHex434 .iuHexRow--4{
-    transform: scale(.9);
-    transform-origin: top center;
-  }
-  .iuHomeHex434 .iuHexRow--3{
-    transform: translateX(calc((var(--iuHexW) + var(--iuHexGap)) / 2)) scale(.9);
-    transform-origin: top center;
+@media (max-width: 640px){
+  .iuHomeHex434 .iuHex{
+    max-width: none; /* allow full-width tiles on mobile */
   }
   .iuHomeHex434 .iuHex__label{
     font-size: 14px;
@@ -3785,15 +3791,6 @@ body.iu-home .iu-leftRail{
   .iuHomeHex434 .iuHex__icon svg{
     width: 28px;
     height: 28px;
-  }
-}
-
-@media (max-width: 380px){
-  .iuHomeHex434{
-    --iuHexGap: 6px;
-  }
-  .iuHomeHex434 .iuHexRow{
-    gap: 6px;
   }
 }
 
@@ -3809,19 +3806,6 @@ body.iu-home .iu-leftRail{
 .iuHomeHex434 .iuHex--travel{    background: var(--iuNavAccent-travel, #0284C7); }
 .iuHomeHex434 .iuHex--jr{        background: var(--iuNavAccent-jr, #B45309); }
 .iuHomeHex434 .iuHex--tvprogram{ background: var(--iuNavAccent-tvprogram, #334155); }
-
-/* Honeycomb offsets */
-.iuHomeHexGrid > .iuHomeHex:nth-child(6n+4),
-.iuHomeHexGrid > .iuHomeHex:nth-child(6n+5),
-.iuHomeHexGrid > .iuHomeHex:nth-child(6n+6){
-  --iuHexRowShift: var(--iuHexOffset);
-}
-@media (max-width: 640px){
-  .iuHomeHexGrid > .iuHomeHex:nth-child(4n+3),
-  .iuHomeHexGrid > .iuHomeHex:nth-child(4n+4){
-    --iuHexRowShift: var(--iuHexOffset);
-  }
-}
 
 /* TEXT block (no CLS) */
 .iuHomeText{
