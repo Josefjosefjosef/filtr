@@ -241,6 +241,8 @@ html:not([data-iu-js]) .iuDailyWeather{
 .topbar-new{
   border-radius: 999px; /* match .topbar-searchInput */
   overflow: hidden; /* critical: ensure radius is actually visible */
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08);
+  background-clip: padding-box;
 }
 
 .topbar-new-inner{
