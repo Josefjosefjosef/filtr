@@ -4939,11 +4939,23 @@ function buildVideoAsArticleCard(it) {
       const labelEl = it.querySelector('.iu-leftNavLabel');
       const label = (labelEl ? labelEl.textContent : it.textContent || '').trim();
 
-      // Icon SVG: reuse exact markup from left rail.
+      // Icon SVG: reuse exact markup from left rail (sanitized: drop any on* attributes).
       let svgHtml = '';
       try{
         const svg = it.querySelector('.iu-leftNavIcon svg');
-        svgHtml = svg ? svg.outerHTML : '';
+        if (svg) {
+          const clone = svg.cloneNode(true);
+          const nodes = [clone, ...Array.from(clone.querySelectorAll('*'))];
+          nodes.forEach((n) => {
+            try{
+              Array.from(n.attributes || []).forEach((a) => {
+                if (!a || !a.name) return;
+                if (/^on/i.test(a.name)) n.removeAttribute(a.name);
+              });
+            }catch{}
+          });
+          svgHtml = clone.outerHTML;
+        }
       }catch{}
 
       // Section accent: use stable CSS variables (required), fallback to blue.
