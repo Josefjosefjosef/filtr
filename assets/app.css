@@ -15,6 +15,13 @@
   --iu-meta: #6b7280;
   --iu-accent: #1f3a5f;
 
+  /* ===== INFOUZEL BRAND (UI-only) ===== */
+  --iu-brand-rail-bg: #1B2430;
+  --iu-brand-btn-bg: #2B3138;
+  --iu-brand-btn-hover: #343C45;
+  --iu-brand-accent: #4F6FA3;
+  --iu-brand-topbar: #16202A;
+
   /* spacing kolem denního přehledu - odpovídá horní mezeře (padding-top #leftContent + margin-top .iu-daily-brief) */
   --iu-brief-gap-top: 20px; /* desktop: 12px + 8px */
   --iu-brief-gap-bottom: 10px; /* desktop: margin-bottom na .iu-daily-brief (celkem s chips margin-top 10px = 20px) */
@@ -214,7 +221,7 @@ html:not([data-iu-js]) .iuDailyWeather{
   left: 0;
   right: auto;
   z-index: 1000;
-  background: #1F3A5F;
+  background: var(--iu-brand-topbar);
   border-bottom: 1px solid rgba(255,255,255,.1);
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   width: 100%;
@@ -229,7 +236,7 @@ html:not([data-iu-js]) .iuDailyWeather{
   margin: 0;
   padding: 0 20px;
   box-sizing: border-box;
-  background: #1F3A5F;
+  background: var(--iu-brand-topbar);
   z-index: 1000;
 }
 
@@ -372,7 +379,7 @@ html:not([data-iu-js]) .iuDailyWeather{
 .topbar-links-wrapper{
   position: relative;
   border-top: 1px solid rgba(255,255,255,.1);
-  background: #1F3A5F;
+  background: var(--iu-brand-topbar);
 }
 
 /* Navigační lišta: padding-left/right 0 je default, JS přidává 56px přes has-left-arrow/has-right-arrow jako safe area proti překrytí textu šipkami */
@@ -463,12 +470,22 @@ html:not([data-iu-js]) .iuDailyWeather{
 /* Gradient pouze na variantách: --left fade doprava, --right fade doleva (symetrické) */
 .topbar-links-arrow--left{
   left: 0;
-  background: linear-gradient(to right, #1F3A5F 0%, rgba(31,58,95,0.8) 50%, transparent 100%);
+  background: linear-gradient(
+    to right,
+    var(--iu-brand-topbar) 0%,
+    color-mix(in srgb, var(--iu-brand-topbar) 80%, transparent) 50%,
+    transparent 100%
+  );
 }
 
 .topbar-links-arrow--right{
   right: 0;
-  background: linear-gradient(to left, #1F3A5F 0%, rgba(31,58,95,0.8) 50%, transparent 100%);
+  background: linear-gradient(
+    to left,
+    var(--iu-brand-topbar) 0%,
+    color-mix(in srgb, var(--iu-brand-topbar) 80%, transparent) 50%,
+    transparent 100%
+  );
 }
 
 .topbar-links-arrow svg{
@@ -4898,7 +4915,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 /* Frame color: topbar (pill only) */
 .topbar-new,
 .topbar-new-inner{
-  background: #000 !important;
+  background: var(--iu-brand-topbar) !important;
 }
 
 /* Sticky header background must NOT match topbar,
@@ -4934,7 +4951,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   width: 120px;
   min-width: 120px;
   /* Match center feed background (no panel effect) */
-  background: var(--iu-page-bg);
+  background: var(--iu-brand-rail-bg);
   align-self: stretch; /* extend background alongside feed height */
   border-radius: 0;
   box-shadow: none;
@@ -4952,7 +4969,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   bottom: 0;
   right: 0;
   left: calc(50% - 50vw);
-  background: #fff;
+  background: var(--iu-brand-rail-bg);
   z-index: -1;
   pointer-events: none;
 }
@@ -5000,7 +5017,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
 .iu-leftRail{
   /* Match center feed background (no panel effect) */
-  background: var(--iu-page-bg);
+  background: var(--iu-brand-rail-bg);
   margin-top: 0 !important;
   padding-top: 0 !important;
   box-shadow: none;
@@ -5014,7 +5031,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   padding: 8px 6px 12px 6px;
   gap: 6px;
   box-sizing: border-box;
-  background: var(--iu-page-bg);
+  background: var(--iu-brand-rail-bg);
   box-shadow: none;
   border-right: none;
   color: var(--text);
@@ -5026,8 +5043,8 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 .iu-leftRail,
 #iuLeftRail,
 .iu-leftNav{
-  background: #fff;
-  background-color: #fff;
+  background: var(--iu-brand-rail-bg);
+  background-color: var(--iu-brand-rail-bg);
   background-image: none;
 }
 
@@ -5048,7 +5065,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   box-sizing: border-box;
 
   /* jemné oddělení bez “karet” */
-  background: rgba(255,255,255,0.04);
+  background: var(--iu-brand-btn-bg);
 }
 
 /* Local contrast: rail now sits on feed background */
@@ -5101,7 +5118,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 .iu-leftNav .iu-leftNavLabel{
-  color: rgba(11,27,43,0.82);
+  color: var(--iu-rail-muted2);
 }
 
 /* Horizontal layout tweaks (icon left, label right) */
@@ -5152,8 +5169,8 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
 /* Local button palette only (rail background unchanged) */
 .iu-leftNav{
-  --iuLeftBtnBgTop: #353d46;
-  --iuLeftBtnBgBottom: #2b3138;
+  --iuLeftBtnBgTop: var(--iu-brand-btn-bg);
+  --iuLeftBtnBgBottom: var(--iu-brand-btn-bg);
   --iuLeftBtnBorder: rgba(255,255,255,0.10);
   --iuLeftBtnShadow: 0 10px 22px rgba(0,0,0,0.22);
 }
@@ -5186,7 +5203,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   bottom: 6px;
   width: 3px;
   border-radius: 2px;
-  background: var(--iuNavAccent);
+  background: var(--iu-brand-accent);
   transition: width 220ms ease, opacity 220ms ease;
   pointer-events: none;
 }
@@ -5207,7 +5224,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
 /* Hover */
 .iu-leftNav .iu-leftNavItem:hover{
-  background-color: rgba(255,255,255,.05);
+  background-color: var(--iu-brand-btn-hover);
   filter: brightness(1.06);
 }
 .iu-leftNav .iu-leftNavItem:hover::before{
