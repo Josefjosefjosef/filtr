@@ -18,7 +18,7 @@
   /* Topbar optical side rounding (match search pill) */
   --iuTopbarMaskD: 36px; /* computed searchHeight */
   --iuTopbarMaskR: calc(var(--iuTopbarMaskD) / 2);
-  --iuPageBg: var(--pageBg);
+  --iuPageBg: rgb(255, 255, 255); /* gate source-of-truth (pageBgRgb) */
 
   /* spacing kolem denního přehledu - odpovídá horní mezeře (padding-top #leftContent + margin-top .iu-daily-brief) */
   --iu-brief-gap-top: 20px; /* desktop: 12px + 8px */
@@ -295,10 +295,14 @@ html:not([data-iu-js]) .iuDailyWeather{
 }
 .topbar-new-inner::before{
   left: 0;
+  /* paint only the half that actually cuts the panel (avoid visible overflow blobs) */
+  clip-path: inset(0 0 0 var(--iuTopbarMaskR));
   transform: translate(calc(-1 * var(--iuTopbarMaskR)), -50%);
 }
 .topbar-new-inner::after{
   right: 0;
+  /* paint only the half that actually cuts the panel (avoid visible overflow blobs) */
+  clip-path: inset(0 var(--iuTopbarMaskR) 0 0);
   transform: translate(var(--iuTopbarMaskR), -50%);
 }
 .topbar-new-main{
