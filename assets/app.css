@@ -206,8 +206,6 @@ html:not([data-iu-js]) .iuDailyWeather{
   display: flex;
   align-items: center;
   min-height: 68px;
-  border-radius: 999px;
-  overflow: hidden;
 }
 
 .topbar-new{
@@ -4897,11 +4895,16 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   --iu-frame-bg: #1b2430;
 }
 
-/* Frame color: topbar + right column shell + left rail */
-#leftStickyHeader,
+/* Frame color: topbar (pill only) */
 .topbar-new,
 .topbar-new-inner{
   background: #000 !important;
+}
+
+/* Sticky header background must NOT match topbar,
+   otherwise pill silhouette disappears */
+#leftStickyHeader{
+  background: transparent !important;
 }
 
 /* Right column outer shell only (keep inner cards intact) */
