@@ -5357,24 +5357,17 @@ main#content,
 #content,
 #feed,
 #feedWrap,
+#iuLeftRail,
+.iu-leftRail,
 .iu-rightContent,
+.mindMenu,
+.iu-hexNav,
 .iu-daily-brief,
 .iu-todayGrid,
 .iu-todayBox,
 .news-card{
   background: #fff !important;
   background-color: #fff !important;
-  background-image: none !important;
-}
-
-/* Left rail carriers must NOT be forced white (brand palette) */
-.iuLeftRail,
-#iuLeftRail,
-.iu-leftRail,
-.mindMenu,
-.iu-hexNav{
-  background: var(--iu-brand-rail-bg) !important;
-  background-color: var(--iu-brand-rail-bg) !important;
   background-image: none !important;
 }
 
