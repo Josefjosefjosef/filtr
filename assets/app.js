@@ -4905,9 +4905,43 @@ function buildVideoAsArticleCard(it) {
     el.hidden = true;
     el.innerHTML = `
       <div class="iuHomeCanvas" role="region" aria-label="Domů">
-        <div class="iuHomeWeather" aria-hidden="true"></div>
+        <section class="iuHomeWeather" aria-label="Počasí">
+          <div class="iuHomeWeatherCard" role="group" aria-label="Počasí dnes">
+            <div class="iuHomeWeatherTop">
+              <div class="iuHomeWeatherPlace" id="iuHomeWxPlace">—</div>
+              <div class="iuHomeWeatherNow">
+                <div class="iuHomeWeatherTemp" id="iuHomeWxTemp">—°</div>
+                <div class="iuHomeWeatherDesc" id="iuHomeWxDesc">Načítám počasí…</div>
+              </div>
+              <div class="iuHomeWeatherMinMax" id="iuHomeWxMinMax">Max —° · Min —°</div>
+            </div>
+            <div class="iuHomeWeatherHours iuHomeWeatherHours--skeleton" id="iuHomeWxHours" aria-label="Hodiny">
+              <div class="iuHomeWxHour" aria-hidden="true"><div>--h</div><div class="iuHomeWxHourTemp">—</div></div>
+              <div class="iuHomeWxHour" aria-hidden="true"><div>--h</div><div class="iuHomeWxHourTemp">—</div></div>
+              <div class="iuHomeWxHour" aria-hidden="true"><div>--h</div><div class="iuHomeWxHourTemp">—</div></div>
+              <div class="iuHomeWxHour" aria-hidden="true"><div>--h</div><div class="iuHomeWxHourTemp">—</div></div>
+              <div class="iuHomeWxHour" aria-hidden="true"><div>--h</div><div class="iuHomeWxHourTemp">—</div></div>
+              <div class="iuHomeWxHour" aria-hidden="true"><div>--h</div><div class="iuHomeWxHourTemp">—</div></div>
+            </div>
+          </div>
+        </section>
         <div class="iuHomeHexGrid" id="iuHomeHexGrid" aria-label="Sekce"></div>
-        <div class="iuHomeText" aria-hidden="true"></div>
+        <section class="iuHomeText" aria-label="O infoUzel.cz">
+          <div class="iuHomeTextInner">
+            <h2 class="iuHomeTextTitle">infoUzel.cz</h2>
+            <p class="iuHomeTextBody">
+              Rychlý přehled zpráv, rádia, TV, mapy a cestování na jednom místě. Domů je rozcestník — vyberte sekci a pokračujte.
+            </p>
+          </div>
+        </section>
+
+        <section class="iuHomeFav" aria-label="Oblíbené moduly">
+          <div class="iuHomeFavHead">
+            <h2 class="iuHomeFavTitle">Oblíbené</h2>
+            <button class="iuHomeFavAdd" type="button" aria-label="Přidat modul">+ Přidat modul</button>
+          </div>
+          <div class="iuHomeFavGrid" aria-hidden="true"></div>
+        </section>
       </div>
     `.trim();
 
@@ -4920,6 +4954,86 @@ function buildVideoAsArticleCard(it) {
       newsList.appendChild(el);
     }
     return el;
+  }
+
+  function initHomeWeather(){
+    const placeEl = document.getElementById('iuHomeWxPlace');
+    const tempEl = document.getElementById('iuHomeWxTemp');
+    const descEl = document.getElementById('iuHomeWxDesc');
+    const mmEl = document.getElementById('iuHomeWxMinMax');
+    const hoursEl = document.getElementById('iuHomeWxHours');
+    if (!placeEl && !tempEl && !descEl && !mmEl && !hoursEl) return;
+
+    // idempotent: prevent parallel fetches
+    try{
+      if (window.__iuHomeWxLoading) return;
+      window.__iuHomeWxLoading = true;
+    }catch{}
+
+    const fmtDeg = (n) => {
+      if (typeof n !== 'number' || !isFinite(n)) return '—';
+      return Math.round(n) + '°';
+    };
+    const fmtHour = (s) => {
+      try{
+        const d = new Date(String(s || ''));
+        if (isNaN(d.getTime())) return '--h';
+        const h = d.getHours();
+        return String(h) + 'h';
+      }catch{
+        return '--h';
+      }
+    };
+
+    // Keep placeholders stable (no CLS)
+    if (descEl) descEl.textContent = (descEl.textContent && descEl.textContent.trim()) ? descEl.textContent : 'Načítám počasí…';
+    if (hoursEl) {
+      try{ hoursEl.classList.add('iuHomeWeatherHours--skeleton'); }catch{}
+    }
+
+    const withTs = (rel) => {
+      try{
+        const u = new URL(String(rel || ''), window.location.href);
+        u.searchParams.set('ts', String(Date.now()));
+        return u.toString();
+      }catch{
+        return String(rel || '');
+      }
+    };
+
+    fetch(withTs('/projects/data/weather.json'), { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((d) => {
+        if (!d || typeof d !== 'object') throw new Error('bad weather');
+        if (placeEl) placeEl.textContent = String(d.place || '—');
+        if (tempEl) tempEl.textContent = fmtDeg(d?.current?.temp);
+        if (descEl) descEl.textContent = String(d?.current?.desc || '—');
+        if (mmEl) mmEl.textContent = `Max ${fmtDeg(d?.today?.max)} · Min ${fmtDeg(d?.today?.min)}`;
+
+        if (hoursEl) {
+          const hours = Array.isArray(d.hours) ? d.hours.slice(0, 6) : [];
+          const slots = Array.from(hoursEl.querySelectorAll('.iuHomeWxHour'));
+          for (let i = 0; i < 6; i++){
+            const slot = slots[i];
+            const it = hours[i];
+            if (!slot) continue;
+            if (it) {
+              slot.innerHTML = `<div>${escapeHtml(fmtHour(it.time))}</div><div class="iuHomeWxHourTemp">${escapeHtml(fmtDeg(it.temp))}</div>`;
+              slot.removeAttribute('aria-hidden');
+            } else {
+              slot.innerHTML = `<div>--h</div><div class="iuHomeWxHourTemp">—</div>`;
+              slot.setAttribute('aria-hidden', 'true');
+            }
+          }
+          try{ hoursEl.classList.remove('iuHomeWeatherHours--skeleton'); }catch{}
+        }
+      })
+      .catch(() => {
+        if (descEl) descEl.textContent = 'Počasí nedostupné';
+      })
+      .finally(() => {
+        try{ window.__iuHomeWxLoading = false; }catch{}
+      });
   }
 
   function buildHomeHexGrid(){
@@ -4939,12 +5053,35 @@ function buildVideoAsArticleCard(it) {
       const labelEl = it.querySelector('.iu-leftNavLabel');
       const label = (labelEl ? labelEl.textContent : it.textContent || '').trim();
 
-      let color = '';
+      // Icon SVG: reuse exact markup from left rail (sanitized: drop any on* attributes).
+      let svgHtml = '';
       try{
-        const cs = getComputedStyle(it);
-        color = String(cs.getPropertyValue('--iuNavAccent') || '').trim();
+        const svg = it.querySelector('.iu-leftNavIcon svg');
+        if (svg) {
+          const clone = svg.cloneNode(true);
+          const nodes = [clone, ...Array.from(clone.querySelectorAll('*'))];
+          nodes.forEach((n) => {
+            try{
+              Array.from(n.attributes || []).forEach((a) => {
+                if (!a || !a.name) return;
+                if (/^on/i.test(a.name)) n.removeAttribute(a.name);
+              });
+            }catch{}
+          });
+          svgHtml = clone.outerHTML;
+        }
       }catch{}
-      sections.push({ key, label, color });
+
+      // Section accent: use stable CSS variables (required), fallback to blue.
+      const varKey = (k) => {
+        if (k === 'mapy') return 'maps';
+        if (k === 'jr') return 'timetable';
+        return k;
+      };
+      const accentVar = `--iu-accent-${varKey(key)}`;
+      const accentExpr = `var(${accentVar}, #3B82F6)`;
+
+      sections.push({ key, label, svgHtml, accentExpr });
     }
 
     for (const s of sections) {
@@ -4952,8 +5089,10 @@ function buildVideoAsArticleCard(it) {
       btn.type = 'button';
       btn.className = 'iuHomeHex';
       btn.setAttribute('data-section', s.key);
-      if (s.color) btn.style.setProperty('--iuHexBg', s.color);
-      btn.innerHTML = `<span class="iuHomeHexLabel">${escapeHtml(s.label || s.key)}</span>`;
+      btn.setAttribute('aria-label', String(s.label || s.key));
+      btn.style.setProperty('--iuHexBg', s.accentExpr || '#3B82F6');
+      const iconHtml = s.svgHtml ? `<span class="iuHomeHexIcon" aria-hidden="true">${s.svgHtml}</span>` : '';
+      btn.innerHTML = `${iconHtml}<span class="iuHomeHexLabel">${escapeHtml(s.label || s.key)}</span>`;
       btn.addEventListener('click', () => {
         persistSection(s.key);
         applySectionFromURL();
@@ -5028,6 +5167,7 @@ function buildVideoAsArticleCard(it) {
     if (section === 'home') {
       ensureHomeView();
       buildHomeHexGrid();
+      initHomeWeather();
       // stop any periodic data refresh while on Home
       try{ window.__iuStopAutoRefresh && window.__iuStopAutoRefresh(); }catch{}
     }
