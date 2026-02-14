@@ -5046,6 +5046,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 /* Local contrast: rail now sits on feed background */
 .iu-leftNav .iu-leftNavItem{
   color: var(--text);
+  min-height: 54px; /* allow 2-line labels without huge buttons */
 }
 
 .iu-leftNavItem:focus-visible{
@@ -5099,12 +5100,17 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 /* Horizontal layout tweaks (icon left, label right) */
 .iu-leftNav .iu-leftNavIcon{ margin-bottom: 0; flex: 0 0 auto; }
 .iu-leftNav .iu-leftNavLabel{
-  display: block;
+  display: -webkit-box; /* 2-line wrap without truncation */
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
   flex: 1 1 auto;
   text-align: left;
-  white-space: nowrap;
+  white-space: normal;
+  line-height: 1.15;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
 }
 
 .iu-leftNavItem.is-active{
