@@ -3706,6 +3706,19 @@ function buildVideoAsArticleCard(it) {
     }, 7 * 60 * 1000);
   }
 
+  // Safe public shims for UI-only routers (do not expose pipeline internals).
+  // These are used to guarantee that navigating from Home -> any feed section triggers data load immediately.
+  try{
+    window.__iuLoadData = function(){ try{ return loadData(); }catch{} };
+    window.__iuStartAutoRefresh = function(){ try{ return startAutoRefresh(); }catch{} };
+    window.__iuStopAutoRefresh = function(){
+      try{
+        if (iuRefreshTimer) clearInterval(iuRefreshTimer);
+        iuRefreshTimer = null;
+      }catch{}
+    };
+  }catch{}
+
   async function fetchFeedHealth() {
     try {
       const res = await timeoutFetch(makeDataUrl("data/feed_health.json"), { cache: "no-store" }, 5000);
@@ -5016,25 +5029,17 @@ function buildVideoAsArticleCard(it) {
       ensureHomeView();
       buildHomeHexGrid();
       // stop any periodic data refresh while on Home
-      try{ if (typeof iuRefreshTimer !== 'undefined' && iuRefreshTimer) { clearInterval(iuRefreshTimer); iuRefreshTimer = null; } }catch{}
+      try{ window.__iuStopAutoRefresh && window.__iuStopAutoRefresh(); }catch{}
     }
     // feed paging must reset on section change
     try{ state.page = 1; }catch{}
     setLeftNavActive(section);
     showView(VIEW_MAP[section] ?? 'media');
 
-    // leaving Home: ensure feed data and auto-refresh are running (without touching pipeline internals)
+    // leaving Home: ALWAYS load feed data immediately (idempotent) + ensure auto-refresh is running
     if (section !== 'home') {
-      try{
-        if (typeof state !== 'undefined' && !state.hasLoadedData && !state.isLoadingData) {
-          loadData();
-        }
-      }catch{}
-      try{
-        if (typeof startAutoRefresh === 'function') {
-          startAutoRefresh();
-        }
-      }catch{}
+      try{ window.__iuLoadData && window.__iuLoadData(); }catch{}
+      try{ window.__iuStartAutoRefresh && window.__iuStartAutoRefresh(); }catch{}
     }
   }
 
