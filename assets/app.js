@@ -4633,7 +4633,7 @@ function buildVideoAsArticleCard(it) {
 
   // Unified navigation router (UI-only)
   // NOTE: non-radio sections still use the normal feed view.
-  const VIEW_MAP = { home: 'home', media: 'media', radio: 'radio', jr: 'jr' };
+  const VIEW_MAP = { home: 'home', media: 'media', radio: 'radio' };
   const STORAGE_KEY_WISH = "iuRadioWishDraftV1";
   const STORAGE_KEY_WISH_OPEN = "iuRadioWishOpenV1";
 
@@ -5106,7 +5106,6 @@ function buildVideoAsArticleCard(it) {
       // Section accent: use stable CSS variables (required), fallback to blue.
       const varKey = (k) => {
         if (k === 'mapy') return 'maps';
-        if (k === 'jr') return 'timetable';
         return k;
       };
       const accentVar = `--iu-accent-${varKey(key)}`;
@@ -5275,26 +5274,24 @@ function buildVideoAsArticleCard(it) {
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
     const homeEl = document.getElementById('iuHomeView');
-    const jrEl = document.getElementById('iuJrMount');
 
     if (feedEl) feedEl.hidden = true;
     if (viewEl) viewEl.hidden = true;
     if (homeEl) homeEl.hidden = true;
-    if (jrEl) jrEl.hidden = true;
 
     if(key === 'home' && homeEl) homeEl.hidden = false;
     if(key === 'radio' && viewEl) viewEl.hidden = false;
-    if(key === 'jr' && jrEl) jrEl.hidden = false;
     // default feed view for all other sections
-    if(key !== 'home' && key !== 'radio' && key !== 'jr' && feedEl) feedEl.hidden = false;
+    if(key !== 'home' && key !== 'radio' && feedEl) feedEl.hidden = false;
   }
 
   function normalizeSection(raw){
     const k = String(raw || '').trim().toLowerCase();
     if (k === 'home') return 'home';
     if (k === 'radio') return 'radio';
+    if (k === 'jr') return 'home'; // safe fallback for legacy links (?section=jr)
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
-    const allowed = new Set(['media','tv','tvonline','jr','mapy','travel','pocasi','namedays','tvprogram','culture','ads']);
+    const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','namedays','tvprogram','culture','ads']);
     return allowed.has(k) ? k : 'media';
   }
 
