@@ -3953,6 +3953,67 @@ body[data-section="home"] .iuHomeCanvas{
   color: rgba(255,255,255,0.74);
 }
 
+/* JR section header (same layout idea as TV/Rádio headers: title + line) */
+.iuSectionHeader{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin: 0 0 12px 0;
+}
+.iuSectionHeader h2{
+  margin:0;
+  font-weight:900;
+  letter-spacing:-0.01em;
+  opacity:0.92;
+  font-size:18px;
+}
+.iuSectionHeaderLine{
+  height:2px;
+  flex:1 1 auto;
+  border-radius:999px;
+  opacity:0.35;
+}
+
+/* JR section header */
+.iuSectionHeader--jr h2{
+  color: var(--iuNavAccent-jr);
+}
+.iuSectionHeader--jr .iuSectionHeaderLine{
+  background: linear-gradient(to right, var(--iuNavAccent-jr), rgba(0,0,0,0));
+}
+
+/* JR quick links grid (reuse Radio/TV chips; enforce 2 columns + stable height) */
+.iuJRGrid{
+  grid-template-columns: repeat(2, 1fr);
+}
+.iuJRGrid .iuRadioChip{
+  box-sizing: border-box;
+  height: 110px;
+  overflow: hidden;
+}
+
+/* Hover/focus in JR accent (do not affect Radio/TV) */
+.iuJRGrid .iuRadioChip:hover{
+  border-color: var(--iuNavAccent-jr);
+  background-color: color-mix(in srgb, var(--iuNavAccent-jr) 12%, transparent);
+  color: rgba(11,27,43,0.92);
+}
+.iuJRGrid .iuRadioChip:hover .iuRadioChipTitle,
+.iuJRGrid .iuRadioChip:hover .iuRadioChipDesc{
+  color: rgba(11,27,43,0.92);
+}
+.iuJRGrid .iuRadioChip:focus-visible{
+  border-color: var(--iuNavAccent-jr);
+  background-color: color-mix(in srgb, var(--iuNavAccent-jr) 12%, transparent);
+  color: rgba(11,27,43,0.92);
+  outline: 2px solid color-mix(in srgb, var(--iuNavAccent-jr) 70%, white);
+  outline-offset: 2px;
+}
+.iuJRGrid .iuRadioChip:focus-visible .iuRadioChipTitle,
+.iuJRGrid .iuRadioChip:focus-visible .iuRadioChipDesc{
+  color: rgba(11,27,43,0.92);
+}
+
 /* TEXT block (no CLS) */
 .iuHomeText{
   flex: 0 0 auto;
