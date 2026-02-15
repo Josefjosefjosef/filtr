@@ -5522,6 +5522,13 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   width: auto !important;
 }
 
+/* TV online view must adapt like #feed (same middle column footprint) */
+#newsList > #iuTvOnlineView{
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto !important;
+}
+
 /* Home view must adapt like #feed (same middle column footprint) */
 #newsList > #iuHomeView{
   flex: 1 1 0;
@@ -5538,6 +5545,11 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
     min-width: 0;
   }
   #newsList > #iuRadioView{
+    flex: 0 0 100%;
+    width: 100% !important;
+    min-width: 0;
+  }
+  #newsList > #iuTvOnlineView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
