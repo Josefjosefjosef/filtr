@@ -5620,12 +5620,12 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 /* ==== LEFT COLUMN ICON LIGHTEN 50% (inactive only) ==== */
 /* Only inactive icons; do not touch hover/active/focus rules. */
 .iu-leftNavItem:not(.is-active) .iu-leftNavIcon{
-  color: color-mix(in srgb, var(--text) 50%, white 50%);
+  color: inherit;
 }
 
 /* Keep label color in sync with inactive icon color */
 .iu-leftNavItem:not(.is-active) .iu-leftNavLabel{
-  color: color-mix(in srgb, var(--text) 50%, white 50%);
+  color: inherit;
 }
 
 .iu-leftNavIcon svg{
@@ -5737,22 +5737,19 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
 .iu-leftNav .iu-leftNavItem{
   --iuNavAccent: #3B82F6; /* default fallback accent */
-  /* soft depth: subtle gradient + inner border */
-  background-image: linear-gradient(to bottom, #243B55, #243B55);
-  background-color: #243B55;
+  /* stripe-only: no fill, no border, no brighten */
   border-radius: 14px;
-  box-shadow:
-    0 0 0 1px var(--iuLeftBtnBorder) inset,
-    var(--iuLeftBtnShadow);
-  overflow: hidden; /* needed for inner highlight */
-  transition:
-    background-color 220ms ease,
-    color 220ms ease,
-    transform 240ms ease,
-    filter 240ms ease,
-    box-shadow 240ms ease;
+  background: transparent;
+  background-image: none;
+  background-color: transparent;
+  border: 0;
+  box-shadow: none;
+  filter: none;
+  transition: transform 240ms ease, color 220ms ease;
   will-change: transform;
-  color: #fff;
+
+  /* same gray as article meta time (.meta-time) */
+  color: rgba(11,27,43,0.55);
 }
 
 /* Stripe vlevo */
@@ -5760,10 +5757,11 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   content: "";
   position: absolute;
   left: 0;
-  top: 6px;
-  bottom: 6px;
+  top: 0;
+  bottom: 0;
   width: 3px;
-  border-radius: 2px;
+  /* curved over top/bottom left corner (like rounded cards) */
+  border-radius: 14px 0 0 14px;
   background: var(--iuNavAccent);
   transition: width 220ms ease, opacity 220ms ease;
   pointer-events: none;
@@ -5771,12 +5769,8 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
 /* Inner highlight (soft light from top) */
 .iu-leftNav .iu-leftNavItem::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.00) 55%);
-  pointer-events: none;
-  opacity: 0.95;
+  content: none;
+  display: none;
 }
 
 /* Default typography/weights (keep white but less harsh) */
@@ -5785,28 +5779,32 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
 /* Hover */
 .iu-leftNav .iu-leftNavItem:hover{
-  background-color: rgba(255,255,255,.05);
-  filter: brightness(1.06);
+  background: transparent;
+  background-color: transparent;
+  filter: none;
 }
 .iu-leftNav .iu-leftNavItem:hover::before{
   width: 5px;
 }
 .iu-leftNav .iu-leftNavItem:hover,
 .iu-leftNav .iu-leftNavItem:hover *{
-  color: var(--iuNavAccent);
+  color: rgba(11,27,43,0.55);
+  filter: none;
 }
 
 /* Active */
 .iu-leftNav .iu-leftNavItem.is-active{
-  background-color: rgba(255,255,255,.06);
-  filter: brightness(1.08);
+  background: transparent;
+  background-color: transparent;
+  filter: none;
 }
 .iu-leftNav .iu-leftNavItem.is-active::before{
   width: 5px;
 }
 .iu-leftNav .iu-leftNavItem.is-active,
 .iu-leftNav .iu-leftNavItem.is-active *{
-  color: var(--iuNavAccent);
+  color: rgba(11,27,43,0.55);
+  filter: none;
 }
 
 /* Accent mapping */
