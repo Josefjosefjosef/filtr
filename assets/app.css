@@ -3703,6 +3703,14 @@ body.iu-home .iu-leftRail{
   position: relative;
   z-index: 1; /* modules under hex grid */
 }
+body[data-section="home"] .iuHomeModules{
+  display: flex;
+  flex-direction: column;
+}
+body[data-section="home"] .iuHomeCanvas{
+  display: flex;
+  flex-direction: column;
+}
 .iuHomeModules *{
   max-width: 100%;
 }
