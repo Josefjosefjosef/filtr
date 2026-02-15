@@ -5752,23 +5752,6 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   color: rgba(11,27,43,0.55);
 }
 
-/* Accent stripe (top) */
-.iu-leftNav .iu-leftNavItem::before{
-  content: "";
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  top: 6px;
-  height: 3px;                 /* thin */
-  border-radius: 999px;        /* rounded */
-  background: var(--iuNavAccent);
-  opacity: 0.95;
-  transform: scaleX(0.35);
-  transform-origin: left center;
-  transition: height 160ms ease, transform 180ms ease, opacity 160ms ease;
-  pointer-events: none;
-}
-
 /* Inner highlight (soft light from top) */
 .iu-leftNav .iu-leftNavItem::after{
   content: none;
@@ -5785,24 +5768,19 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   background-color: transparent;
   filter: none;
 }
-.iu-leftNav .iu-leftNavItem:hover::before{
-  height: 8px;               /* noticeably thicker */
-  transform: scaleX(1);      /* noticeably wider */
-  opacity: 1;
-}
 .iu-leftNav .iu-leftNavItem:hover,
 .iu-leftNav .iu-leftNavItem:hover *{
   color: var(--iuNavAccent);
   filter: none;
 }
 .iu-leftNav .iu-leftNavItem:hover .iu-leftNavLabel{
-  font-weight: 600;
+  font-weight: 700;
 }
 .iu-leftNav .iu-leftNavItem:hover .iu-leftNavIcon{
-  transform: scale(1.06);
+  transform: scale(1.14);
 }
 .iu-leftNav .iu-leftNavItem:hover .iu-leftNavIcon svg{
-  stroke-width: 2.25;
+  stroke-width: 2.6;
 }
 
 /* Active */
@@ -5810,11 +5788,6 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   background: transparent;
   background-color: transparent;
   filter: none;
-}
-.iu-leftNav .iu-leftNavItem.is-active::before{
-  height: 8px;
-  transform: scaleX(1);
-  opacity: 1;
 }
 .iu-leftNav .iu-leftNavItem.is-active,
 .iu-leftNav .iu-leftNavItem.is-active *{
@@ -5828,27 +5801,22 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   color: var(--iuNavAccent);
   filter: none;
 }
-.iu-leftNav .iu-leftNavItem:focus::before,
-.iu-leftNav .iu-leftNavItem:focus-visible::before{
-  height: 8px;
-  transform: scaleX(1);
-  opacity: 1;
-}
 .iu-leftNav .iu-leftNavItem:focus-visible .iu-leftNavLabel{
-  font-weight: 600;
+  font-weight: 700;
 }
 .iu-leftNav .iu-leftNavItem:focus-visible .iu-leftNavIcon{
-  transform: scale(1.06);
+  transform: scale(1.14);
 }
 .iu-leftNav .iu-leftNavItem:focus-visible .iu-leftNavIcon svg{
-  stroke-width: 2.25;
+  stroke-width: 2.6;
 }
 
 .iu-leftNav .iu-leftNavIcon{
   transition: transform 160ms ease, color 160ms ease;
 }
 .iu-leftNav .iu-leftNavLabel{
-  transition: color 160ms ease;
+  font-weight: 400; /* quiet default */
+  transition: color 160ms ease, font-weight 160ms ease;
 }
 
 /* Accent mapping */
@@ -5866,8 +5834,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce){
-  .iu-leftNav .iu-leftNavItem,
-  .iu-leftNav .iu-leftNavItem::before{
+  .iu-leftNav .iu-leftNavItem{
     transition: none;
   }
 }
