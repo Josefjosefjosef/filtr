@@ -2757,6 +2757,25 @@ a.brand,
   margin: 0;
   padding-right: 8px;
 }
+
+/* TV online view – reuse Radio tile system (2 cols + same hover), hide feed only here */
+#iuTvOnlineView{
+  display: none;
+  /* make radio tiles use TV online accent (red) inside this view only */
+  --iu-accent-radio: var(--iu-accent-tvonline, var(--iuNavAccent-tvonline, #DC2626));
+}
+body[data-section="tvonline"] #iuTvOnlineView{
+  display: block !important;
+}
+body[data-section="tvonline"] #feed{
+  display: none !important;
+}
+.iuTvOnlineGroup{
+  margin: 0 0 18px 0;
+}
+.iuTvOnlineGroup:last-child{
+  margin-bottom: 0;
+}
 .iuRadioGrid{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3811,7 +3830,7 @@ body[data-section="home"] .iuHomeCanvas{
 /* SECTION COLORS (use existing IU tokens if present) */
 .iuHomeHex434 .iuHex--pocasi{    background: var(--iuNavAccent-pocasi, #2563EB); }
 .iuHomeHex434 .iuHex--namedays{  background: var(--iuNavAccent-namedays, #7C3AED); }
-.iuHomeHex434 .iuHex--tv{        background: var(--iuNavAccent-tv, #DC2626); }
+.iuHomeHex434 .iuHex--tvonline{  background: var(--iuNavAccent-tvonline, #DC2626); }
 .iuHomeHex434 .iuHex--mapy{      background: var(--iuNavAccent-mapy, #16A34A); }
 .iuHomeHex434 .iuHex--culture{   background: var(--iuNavAccent-culture, #EA580C); }
 .iuHomeHex434 .iuHex--radio{     background: var(--iuNavAccent-radio, #6D28D9); }
@@ -5708,6 +5727,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   --iuNavAccent-media:  #0B2A4A; /* darker journalist-style navy */
   --iuNavAccent-radio:  #8B5CF6;
   --iuNavAccent-tv:     #EF4444;
+  --iuNavAccent-tvonline: var(--iuNavAccent-tv, #DC2626);
   --iuNavAccent-jr:     #F97316;
   --iuNavAccent-mapy:   #22C55E;
   --iuNavAccent-travel: #06B6D4;
@@ -5722,6 +5742,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   --iu-accent-media: var(--iuNavAccent-media, #3B82F6);
   --iu-accent-radio: var(--iuNavAccent-radio, #8B5CF6);
   --iu-accent-tv: var(--iuNavAccent-tv, #EF4444);
+  --iu-accent-tvonline: var(--iuNavAccent-tvonline, #DC2626);
   --iu-accent-maps: var(--iuNavAccent-mapy, #22C55E);
   --iu-accent-timetable: var(--iuNavAccent-jr, #F97316);
   --iu-accent-travel: var(--iuNavAccent-travel, #06B6D4);
@@ -5810,6 +5831,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 .iu-leftNav .iu-leftNavItem[data-accent="media"]{ --iuNavAccent: var(--iuNavAccent-media); }
 .iu-leftNav .iu-leftNavItem[data-accent="radio"]{ --iuNavAccent: var(--iuNavAccent-radio); }
 .iu-leftNav .iu-leftNavItem[data-accent="tv"]{ --iuNavAccent: var(--iuNavAccent-tv); }
+.iu-leftNav .iu-leftNavItem[data-accent="tvonline"]{ --iuNavAccent: var(--iuNavAccent-tvonline); }
 .iu-leftNav .iu-leftNavItem[data-accent="jr"]{ --iuNavAccent: var(--iuNavAccent-jr); }
 .iu-leftNav .iu-leftNavItem[data-accent="mapy"]{ --iuNavAccent: var(--iuNavAccent-mapy); }
 .iu-leftNav .iu-leftNavItem[data-accent="travel"]{ --iuNavAccent: var(--iuNavAccent-travel); }
