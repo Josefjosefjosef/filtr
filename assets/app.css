@@ -5634,14 +5634,14 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   display: block;
   stroke: currentColor;
   fill: none;
-  stroke-width: 2;
+  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .iu-leftNavLabel{
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.05;
   text-align: center;
   color: var(--iu-rail-muted2);
@@ -5745,8 +5745,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   border: 0;
   box-shadow: none;
   filter: none;
-  transition: transform 240ms ease, color 220ms ease;
-  will-change: transform;
+  transition: color 220ms ease;
 
   /* same gray as article meta time (.meta-time) */
   color: rgba(11,27,43,0.55);
@@ -5758,65 +5757,53 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   display: none;
 }
 
-/* Default typography/weights (keep white but less harsh) */
+/* Default typography/weights */
 .iu-leftNav .iu-leftNavIcon{ opacity: 0.96; }
 .iu-leftNav .iu-leftNavLabel{ opacity: 0.92; }
 
-/* Hover */
-.iu-leftNav .iu-leftNavItem:hover{
-  background: transparent;
-  background-color: transparent;
-  filter: none;
-}
-.iu-leftNav .iu-leftNavItem:hover,
-.iu-leftNav .iu-leftNavItem:hover *{
-  color: var(--iuNavAccent);
-  filter: none;
-}
-.iu-leftNav .iu-leftNavItem:hover .iu-leftNavLabel{
-  font-weight: 700;
-}
-.iu-leftNav .iu-leftNavItem:hover .iu-leftNavIcon{
-  transform: scale(1.14);
-}
-.iu-leftNav .iu-leftNavItem:hover .iu-leftNavIcon svg{
-  stroke-width: 2.6;
+/* LEFT RAIL — quiet default (meta-time gray) */
+.iu-leftNav .iu-leftNavItem{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none;
+  filter: none !important;
+  color: rgba(11,27,43,0.55); /* 1:1 as .meta-time */
 }
 
-/* Active */
-.iu-leftNav .iu-leftNavItem.is-active{
-  background: transparent;
-  background-color: transparent;
-  filter: none;
-}
-.iu-leftNav .iu-leftNavItem.is-active,
-.iu-leftNav .iu-leftNavItem.is-active *{
-  color: var(--iuNavAccent);
-  filter: none;
-}
-
-/* Focus-visible (keyboard): accent + bolder (no brightness) */
-.iu-leftNav .iu-leftNavItem:focus,
-.iu-leftNav .iu-leftNavItem:focus-visible{
-  color: var(--iuNavAccent);
-  filter: none;
-}
-.iu-leftNav .iu-leftNavItem:focus-visible .iu-leftNavLabel{
-  font-weight: 700;
-}
-.iu-leftNav .iu-leftNavItem:focus-visible .iu-leftNavIcon{
-  transform: scale(1.14);
-}
-.iu-leftNav .iu-leftNavItem:focus-visible .iu-leftNavIcon svg{
-  stroke-width: 2.6;
-}
-
-.iu-leftNav .iu-leftNavIcon{
-  transition: transform 160ms ease, color 160ms ease;
-}
+.iu-leftNav .iu-leftNavIcon,
 .iu-leftNav .iu-leftNavLabel{
-  font-weight: 400; /* quiet default */
-  transition: color 160ms ease, font-weight 160ms ease;
+  color: inherit;
+  font-weight: 400;
+}
+
+/* LEFT RAIL — strong highlight (hover/focus/active all same) */
+.iu-leftNav .iu-leftNavItem:hover,
+.iu-leftNav .iu-leftNavItem:focus-visible,
+.iu-leftNav .iu-leftNavItem.is-active{
+  color: var(--iuNavAccent, currentColor);
+}
+
+.iu-leftNav .iu-leftNavItem:hover .iu-leftNavIcon,
+.iu-leftNav .iu-leftNavItem:hover .iu-leftNavLabel,
+.iu-leftNav .iu-leftNavItem:focus-visible .iu-leftNavIcon,
+.iu-leftNav .iu-leftNavItem:focus-visible .iu-leftNavLabel,
+.iu-leftNav .iu-leftNavItem.is-active .iu-leftNavIcon,
+.iu-leftNav .iu-leftNavItem.is-active .iu-leftNavLabel{
+  color: var(--iuNavAccent, currentColor);
+  font-weight: 700;
+}
+
+.iu-leftNav .iu-leftNavItem:hover .iu-leftNavIcon svg,
+.iu-leftNav .iu-leftNavItem:focus-visible .iu-leftNavIcon svg,
+.iu-leftNav .iu-leftNavItem.is-active .iu-leftNavIcon svg{
+  stroke-width: 2.6;
+}
+
+/* Guard: no scale/brightness/filters in left rail */
+.iu-leftNav .iu-leftNavIcon,
+.iu-leftNav .iu-leftNavItem{
+  transform: none !important;
+  filter: none !important;
 }
 
 /* Accent mapping */
