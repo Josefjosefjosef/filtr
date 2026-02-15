@@ -2781,6 +2781,15 @@ body[data-section="tvonline"] #iuTvOnlineView,
 html[data-section="tvonline"] #iuTvOnlineView{
   display: block !important;
 }
+
+/* TV online view: section heads span both columns */
+.iuTvOnlineGrid .iuRadioHead{
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+.iuTvOnlineGrid .iuRadioHead:first-child{
+  margin-top: 0;
+}
 .iuTvOnlineGroup{
   margin: 0 0 18px 0;
 }
