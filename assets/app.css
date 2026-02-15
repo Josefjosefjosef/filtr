@@ -3982,36 +3982,41 @@ body[data-section="home"] .iuHomeCanvas{
   background: linear-gradient(to right, var(--iuNavAccent-jr), rgba(0,0,0,0));
 }
 
-/* JR quick links grid (reuse Radio/TV chips; enforce 2 columns + stable height) */
-.iuJRGrid{
-  grid-template-columns: repeat(2, 1fr);
+/* JR quick links grid: match Radio sizing + full-width 2 columns */
+.iuJrEmptyView .iuJRGrid{
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-.iuJRGrid .iuRadioChip{
+
+/* Match Radio chip sizing (height) */
+.iuJrEmptyView .iuJRGrid .iuRadioChip{
   box-sizing: border-box;
   height: 110px;
   overflow: hidden;
 }
 
-/* Hover/focus in JR accent (do not affect Radio/TV) */
-.iuJRGrid .iuRadioChip:hover{
+/* JR hover = full fill in JR accent color (orange) */
+.iuJrEmptyView .iuJRGrid .iuRadioChip:hover,
+.iuJrEmptyView .iuJRGrid .iuRadioChip:focus-visible{
+  background-color: var(--iuNavAccent-jr);
   border-color: var(--iuNavAccent-jr);
-  background-color: color-mix(in srgb, var(--iuNavAccent-jr) 12%, transparent);
-  color: rgba(11,27,43,0.92);
+  color: #fff;
 }
-.iuJRGrid .iuRadioChip:hover .iuRadioChipTitle,
-.iuJRGrid .iuRadioChip:hover .iuRadioChipDesc{
-  color: rgba(11,27,43,0.92);
+
+/* Ensure text stays readable on orange */
+.iuJrEmptyView .iuJRGrid .iuRadioChip:hover .iuRadioChipTitle,
+.iuJrEmptyView .iuJRGrid .iuRadioChip:hover .iuRadioChipDesc,
+.iuJrEmptyView .iuJRGrid .iuRadioChip:focus-visible .iuRadioChipTitle,
+.iuJrEmptyView .iuJRGrid .iuRadioChip:focus-visible .iuRadioChipDesc{
+  color: #fff;
 }
-.iuJRGrid .iuRadioChip:focus-visible{
-  border-color: var(--iuNavAccent-jr);
-  background-color: color-mix(in srgb, var(--iuNavAccent-jr) 12%, transparent);
-  color: rgba(11,27,43,0.92);
+
+.iuJrEmptyView .iuJRGrid .iuRadioChip:focus-visible{
   outline: 2px solid color-mix(in srgb, var(--iuNavAccent-jr) 70%, white);
   outline-offset: 2px;
-}
-.iuJRGrid .iuRadioChip:focus-visible .iuRadioChipTitle,
-.iuJRGrid .iuRadioChip:focus-visible .iuRadioChipDesc{
-  color: rgba(11,27,43,0.92);
 }
 
 /* TEXT block (no CLS) */
