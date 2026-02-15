@@ -2864,13 +2864,58 @@ html[data-section="tvonline"] #iuTvOnlineView{
   background-color: var(--iu-accent-radio);
   color: #fff;
 }
+
+/* ČT tile přes celou šířku feedu (jen tato dlaždice) */
+.iuTvOnlineGrid .iu-tvTileCTFull{
+  grid-column:1 / -1;
+  height:auto;
+  min-height:140px; /* CLS guard */
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:6px;
+  background-color: var(--iu-accent-radio);
+  color:#fff;
+  border:0;
+}
+.iuTvOnlineGrid .iu-tvCTGrid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  grid-template-rows:auto auto;
+  column-gap:6px;
+  row-gap:6px;
+  align-items:center;
+  text-align:center;
+  overflow:hidden;
+}
+
+/* spodní odkazy */
+.iuTvOnlineGrid .iu-tvCTExtras{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  margin-top:6px;
+  font-size:12px;
+}
+.iuTvOnlineGrid .iu-tvCTExtras a{
+  color:#fff;
+  opacity:.85;
+  text-decoration:none;
+}
+.iuTvOnlineGrid .iu-tvCTExtras a:hover{
+  opacity:1;
+}
+
+/* When CT tile is full-width, grid-row placement belongs to inner grid */
+.iuTvOnlineGrid .iu-tvTileCTFull .iu-tvCTLink{
+  grid-row:auto;
+}
 .iuTvOnlineGrid .iu-tvCTLink{
   display:block;
   text-decoration:none;
   color:inherit;
   border-radius:10px;
   padding:6px 4px;
-  grid-row:1 / 2;
 }
 .iuTvOnlineGrid .iu-tvCTLink:hover,
 .iuTvOnlineGrid .iu-tvCTLink:focus-visible{
