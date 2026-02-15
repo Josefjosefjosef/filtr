@@ -38,6 +38,9 @@
   /* barva článků (titulky + běžný text) */
   --titleGreen: rgba(11,27,43,0.92);
 
+  /* Media title typography (single source of truth) */
+  --iuMediaTitleFontSize: 18px;
+
   /* ===== JEDEN AKCENT PRO CELÝ WEB ===== */
   --accent: #1F4B99;
   --accentSoft: rgba(31,75,153,0.10);
@@ -2458,7 +2461,7 @@ a.brand,
 
 .news-title{
   margin: 0;
-  font-size: 18px;
+  font-size: var(--iuMediaTitleFontSize, 18px);
   font-weight: 650;
   line-height: 1.28;
   letter-spacing: 0;
@@ -2848,10 +2851,35 @@ html[data-section="tvonline"] #iuTvOnlineView{
   height:110px;
   overflow:hidden;
 }
+
+/* TV online title typography = Media title */
+body[data-section="tvonline"] .iuTvOnlineGrid .iuRadioChipTitle,
+html[data-section="tvonline"] .iuTvOnlineGrid .iuRadioChipTitle{
+  font-size: var(--iuMediaTitleFontSize);
+}
 .iuRadioGrid{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+}
+
+/* Radio section: match TV online chip grid (2 cols + gap 12) and fixed height (CLS=0) */
+body[data-section="radio"] #iuRadioView .iuRadioGrid,
+html[data-section="radio"] #iuRadioView .iuRadioGrid{
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
+body[data-section="radio"] #iuRadioView .iuRadioChip,
+html[data-section="radio"] #iuRadioView .iuRadioChip{
+  box-sizing:border-box;
+  height:110px;
+  overflow:hidden;
+}
+
+/* Radio title typography = Media title */
+body[data-section="radio"] #iuRadioView .iuRadioChipTitle,
+html[data-section="radio"] #iuRadioView .iuRadioChipTitle{
+  font-size: var(--iuMediaTitleFontSize);
 }
 .iuRadioHead{
   display: flex;
