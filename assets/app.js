@@ -4633,7 +4633,7 @@ function buildVideoAsArticleCard(it) {
 
   // Unified navigation router (UI-only)
   // NOTE: non-radio sections still use the normal feed view.
-  const VIEW_MAP = { home: 'home', media: 'media', radio: 'radio' };
+  const VIEW_MAP = { home: 'home', media: 'media', radio: 'radio', jr: 'jr' };
   const STORAGE_KEY_WISH = "iuRadioWishDraftV1";
   const STORAGE_KEY_WISH_OPEN = "iuRadioWishOpenV1";
 
@@ -5275,15 +5275,18 @@ function buildVideoAsArticleCard(it) {
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
     const homeEl = document.getElementById('iuHomeView');
+    const jrEl = document.getElementById('iuJrMount');
 
     if (feedEl) feedEl.hidden = true;
     if (viewEl) viewEl.hidden = true;
     if (homeEl) homeEl.hidden = true;
+    if (jrEl) jrEl.hidden = true;
 
     if(key === 'home' && homeEl) homeEl.hidden = false;
     if(key === 'radio' && viewEl) viewEl.hidden = false;
+    if(key === 'jr' && jrEl) jrEl.hidden = false;
     // default feed view for all other sections
-    if(key !== 'home' && key !== 'radio' && feedEl) feedEl.hidden = false;
+    if(key !== 'home' && key !== 'radio' && key !== 'jr' && feedEl) feedEl.hidden = false;
   }
 
   function normalizeSection(raw){
