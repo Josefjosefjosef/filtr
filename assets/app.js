@@ -5130,7 +5130,80 @@ function buildVideoAsArticleCard(it) {
       });
       grid.appendChild(btn);
     }
+
+    iuHomeApplyRailOrder();
+    requestAnimationFrame(iuHomeApplyRailOrder);
+    setTimeout(iuHomeApplyRailOrder, 200);
   }
+
+  function iuHomeApplyRailOrder() {
+    try {
+      if ((document.body?.dataset?.section || '') !== 'home') return;
+
+      const railKeys = Array.from(
+        document.querySelectorAll('.iu-leftNav .iu-leftNavItem[data-accent]')
+      )
+        .map(el => String(el.getAttribute('data-accent') || '').trim().toLowerCase())
+        .filter(k => k && k !== 'home');
+
+      const tiles = Array.from(
+        document.querySelectorAll('.iuHomeHex434 .iuHex, #iuHomeHexGrid .iuHomeHex')
+      );
+      if (!railKeys.length || !tiles.length) return;
+
+      const tileKey = (el) => {
+        const ds = String(el.getAttribute('data-section') || '').trim().toLowerCase();
+        if (ds) return ds;
+        const cls = Array.from(el.classList).find(c => c.startsWith('iuHex--'));
+        return cls ? cls.slice('iuHex--'.length).toLowerCase() : '';
+      };
+
+      const map = new Map();
+      tiles.forEach(el => {
+        const k = tileKey(el);
+        if (k) map.set(k, el);
+      });
+
+      railKeys.forEach((k, i) => {
+        const el = map.get(k);
+        if (el) el.style.order = String(i + 1);
+      });
+
+      const railSet = new Set(railKeys);
+      tiles.forEach(el => {
+        const k = tileKey(el);
+        if (!k || !railSet.has(k)) el.style.order = '999';
+      });
+
+    } catch (e) {
+      console.warn('[HOME ORDER] failed', e);
+    }
+  }
+
+  window.iuHomeOrderProof = function () {
+    const rail = [...document.querySelectorAll('.iu-leftNav .iu-leftNavItem[data-accent]')]
+      .map(el => String(el.getAttribute('data-accent') || '').trim().toLowerCase())
+      .filter(k => k && k !== 'home');
+
+    const tiles = [...document.querySelectorAll('.iuHomeHex434 .iuHex, #iuHomeHexGrid .iuHomeHex')].map(el => {
+      const ds = String(el.getAttribute('data-section') || '').trim().toLowerCase();
+      const cls = [...el.classList].find(c => c.startsWith('iuHex--'));
+      const key = ds || (cls ? cls.slice('iuHex--'.length).toLowerCase() : '');
+      return {
+        key,
+        order: Number(getComputedStyle(el).order)
+      };
+    });
+
+    console.log('rail=', rail);
+    console.table(tiles);
+
+    const mismatches = rail
+      .map((k,i)=>({k,expected:i+1,got:tiles.find(t=>t.key===k)?.order}))
+      .filter(x=>x.expected!==x.got);
+
+    console.log('mismatches=', mismatches);
+  };
 
   function setLeftNavActive(key){
     const k = String(key || '').trim().toLowerCase();
