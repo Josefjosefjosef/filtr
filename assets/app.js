@@ -4905,7 +4905,7 @@ function buildVideoAsArticleCard(it) {
     el.hidden = true;
     el.innerHTML = `
       <div class="iuHomeCanvas" role="region" aria-label="Domů">
-        <section class="iuHomeWeather" aria-label="Počasí">
+        <section class="iuHomeWeather" data-home-key="pocasi" aria-label="Počasí">
           <div class="iuHomeWeatherShell" role="group" aria-label="Počasí dnes">
             <div class="iuHomeWeatherSkeleton" id="iuHomeWeatherSkeleton">loading weather…</div>
             <div class="iuHomeWeatherContent" id="iuHomeWeatherContent" hidden>
@@ -5134,6 +5134,10 @@ function buildVideoAsArticleCard(it) {
     iuHomeApplyRailOrder();
     requestAnimationFrame(iuHomeApplyRailOrder);
     setTimeout(iuHomeApplyRailOrder, 200);
+
+    iuHomeApplyRailSectionOrder();
+    requestAnimationFrame(iuHomeApplyRailSectionOrder);
+    setTimeout(iuHomeApplyRailSectionOrder, 200);
   }
 
   function iuHomeApplyRailOrder() {
@@ -5180,6 +5184,40 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuHomeApplyRailSectionOrder() {
+    try {
+      if ((document.body?.dataset?.section || '') !== 'home') return;
+
+      const railKeys = Array.from(
+        document.querySelectorAll('.iu-leftNav .iu-leftNavItem[data-accent]')
+      )
+        .map(el => String(el.getAttribute('data-accent') || '').trim().toLowerCase())
+        .filter(k => k && k !== 'home');
+
+      const homeRoot = document.getElementById('iuHomeView') || document.body;
+      const sections = Array.from(homeRoot.querySelectorAll('section[data-home-key]'));
+
+      if (!railKeys.length || !sections.length) return;
+
+      const railIndex = new Map(railKeys.map((k,i)=>[k, i+1]));
+      const missingInRail = [];
+
+      for (const s of sections) {
+        const key = String(s.getAttribute('data-home-key') || '').trim().toLowerCase();
+        const ord = railIndex.get(key);
+        if (ord) s.style.order = String(ord);
+        else { s.style.order = '999'; if (key) missingInRail.push(key); }
+      }
+
+      if (!window.__iuHomeSectionOrderLogged) {
+        window.__iuHomeSectionOrderLogged = true;
+        if (missingInRail.length) console.warn('[HOME SECTION ORDER] Section keys not in rail:', Array.from(new Set(missingInRail)));
+      }
+    } catch (e) {
+      console.warn('[HOME SECTION ORDER] failed', e);
+    }
+  }
+
   window.iuHomeOrderProof = function () {
     const rail = [...document.querySelectorAll('.iu-leftNav .iu-leftNavItem[data-accent]')]
       .map(el => String(el.getAttribute('data-accent') || '').trim().toLowerCase())
@@ -5203,6 +5241,19 @@ function buildVideoAsArticleCard(it) {
       .filter(x=>x.expected!==x.got);
 
     console.log('mismatches=', mismatches);
+
+    const sec = [...document.querySelectorAll('section[data-home-key]')].map(s => ({
+      key: String(s.getAttribute('data-home-key') || '').trim().toLowerCase(),
+      order: Number(getComputedStyle(s).order || 0),
+      class: s.className
+    }));
+    console.table(sec);
+
+    const secMap = new Map(sec.map(x => [x.key, x]));
+    const sectionMismatches = rail
+      .map((k,i)=>({k,expected:i+1,got:secMap.get(k)?.order}))
+      .filter(x=>typeof x.got === 'number' && x.got !== 0 && x.expected !== x.got);
+    console.log('section_mismatches=', sectionMismatches);
   };
 
   function setLeftNavActive(key){
@@ -5272,6 +5323,9 @@ function buildVideoAsArticleCard(it) {
       ensureHomeView();
       buildHomeHexGrid();
       renderHomeWeather();
+      iuHomeApplyRailSectionOrder();
+      requestAnimationFrame(iuHomeApplyRailSectionOrder);
+      setTimeout(iuHomeApplyRailSectionOrder, 200);
       // stop any periodic data refresh while on Home
       try{ window.__iuStopAutoRefresh && window.__iuStopAutoRefresh(); }catch{}
     }
