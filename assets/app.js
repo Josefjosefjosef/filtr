@@ -5314,9 +5314,6 @@ function buildVideoAsArticleCard(it) {
   // IDOS departures prefill support is NOT verified yet.
   // Default to safe planner fallback (never lands on a blank departures page).
   const JR_DEPARTURES_SUPPORTS_PREFILL = false;
-  // Enterprise guards (future-proof)
-  const JR_MAX_INDEXED_STOPS = 100000; // if bigger, do NOT build full indexes
-  const JR_LAZY_LIMIT = 20; // max results in lazy mode
   const JR_SUGGEST_LIMIT = 15;
   // Autocomplete dataset:
   // - display[] = original stop names (what we render)
@@ -5349,27 +5346,10 @@ function buildVideoAsArticleCard(it) {
     try{
       const res = await fetch(JR_STOPS_URL, { cache: 'force-cache' });
       if (!res.ok) throw new Error('stops http ' + res.status);
-      const data = await res.json();
-      const total = Array.isArray(data) ? data.length : 0;
-
-      if (total > JR_MAX_INDEXED_STOPS){
-        // Lazy fallback mode (memory/perf guard): keep only raw list, no global norm/index arrays.
-        try{
-          window.__iuJRMode = 'lazy';
-          window.__iuJRStopsRaw = Array.isArray(data) ? data : [];
-        }catch{}
-        __iuJRDisplay = null;
-        __iuJRNorm = null;
-        __iuJRIndex = null;
-        return [];
-      }
-
-      const list = (Array.isArray(data) ? data : [])
+      const arr = await res.json();
+      const list = (Array.isArray(arr) ? arr : [])
         .map((raw) => String(raw || '').trim())
         .filter(Boolean);
-
-      try{ window.__iuJRMode = 'indexed'; }catch{}
-      try{ window.__iuJRStopsRaw = null; }catch{}
 
       // Keep deterministic order as provided by dataset (already cs-sorted).
       __iuJRDisplay = list;
@@ -5394,7 +5374,6 @@ function buildVideoAsArticleCard(it) {
       return __iuJRDisplay;
     }catch(e){
       console.warn('[JR] stops load failed', e);
-      try{ window.__iuJRMode = 'disabled'; }catch{}
       __iuJRDisplay = [];
       __iuJRNorm = [];
       __iuJRIndex = new Map();
@@ -5478,25 +5457,6 @@ function buildVideoAsArticleCard(it) {
   function iuJRGetSuggestions(q){
     const qNorm = iuJRNormalize(q);
     if (!qNorm || qNorm.length < 1) return [];
-
-    // Memory guard path: lazy search on raw stops (no buckets, no global norm array).
-    try{
-      if (window.__iuJRMode === 'lazy' && Array.isArray(window.__iuJRStopsRaw)){
-        const raw = window.__iuJRStopsRaw;
-        const out = [];
-        for (let i = 0; i < raw.length; i++){
-          const label = String(raw[i] || '').trim();
-          if (!label) continue;
-          const norm = iuJRNormalize(label);
-          if (norm.includes(qNorm)){
-            out.push(label);
-            if (out.length >= JR_LAZY_LIMIT) break;
-          }
-        }
-        return out;
-      }
-    }catch{}
-
     const tokens = iuJRTokenize(qNorm);
     const first = qNorm[0] || '';
     const baseIdx = (__iuJRIndex && __iuJRIndex.get(first)) ? __iuJRIndex.get(first) : [];

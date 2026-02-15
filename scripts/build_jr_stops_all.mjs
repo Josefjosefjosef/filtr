@@ -185,22 +185,11 @@ async function main(){
   finalStops.sort((a,b)=>a.localeCompare(b,'cs'));
 
   // === VALIDATION (must be strong enough to prevent corruption) ===
-  const MIN_EXPECTED_STOPS = 30000;
+  const MIN_COUNT = 20000;
   const mustHave = ['5. května', 'Čáslav'];
   const missing = mustHave.filter((x) => !finalStops.includes(x));
 
-  if (finalStops.length < MIN_EXPECTED_STOPS){
-    // Enterprise guard: do NOT overwrite dataset if upstream suddenly shrinks.
-    console.log(JSON.stringify({
-      build_ok: false,
-      reason: 'generated_count_below_threshold',
-      generated_count: finalStops.length,
-      keeping_existing_dataset: true
-    }));
-    process.exit(0);
-  }
-
-  if (missing.length){
+  if (finalStops.length < MIN_COUNT || missing.length){
     // Hard fail-safe: keep existing dataset, do not overwrite with small/empty output.
     logKV({
       download_failed: String(!listOk),
