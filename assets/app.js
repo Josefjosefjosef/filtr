@@ -5291,7 +5291,7 @@ function buildVideoAsArticleCard(it) {
     if (k === 'home') return 'home';
     if (k === 'radio') return 'radio';
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
-    const allowed = new Set(['media','tv','jr','mapy','travel','pocasi','namedays','tvprogram','culture','ads']);
+    const allowed = new Set(['media','tv','tvonline','jr','mapy','travel','pocasi','namedays','tvprogram','culture','ads']);
     return allowed.has(k) ? k : 'media';
   }
 
