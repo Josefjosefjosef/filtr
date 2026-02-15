@@ -4633,7 +4633,7 @@ function buildVideoAsArticleCard(it) {
 
   // Unified navigation router (UI-only)
   // NOTE: non-radio sections still use the normal feed view.
-  const VIEW_MAP = { home: 'home', media: 'media', radio: 'radio' };
+  const VIEW_MAP = { home: 'home', media: 'media', radio: 'radio', jizdnirady: 'jizdnirady' };
   const STORAGE_KEY_WISH = "iuRadioWishDraftV1";
   const STORAGE_KEY_WISH_OPEN = "iuRadioWishOpenV1";
 
@@ -5125,7 +5125,9 @@ function buildVideoAsArticleCard(it) {
       const iconHtml = s.svgHtml ? `<span class="iuHomeHexIcon" aria-hidden="true">${s.svgHtml}</span>` : '';
       btn.innerHTML = `${iconHtml}<span class="iuHomeHexLabel">${escapeHtml(s.label || s.key)}</span>`;
       btn.addEventListener('click', () => {
-        persistSection(s.key);
+        // keep tile key stable for ordering (data-section = left-rail accent key),
+        // but always persist normalized URL section (e.g. jr -> jizdnirady).
+        persistSection(normalizeSection(s.key));
         applySectionFromURL();
       });
       grid.appendChild(btn);
@@ -5257,7 +5259,8 @@ function buildVideoAsArticleCard(it) {
   };
 
   function setLeftNavActive(key){
-    const k = String(key || '').trim().toLowerCase();
+    const rawKey = String(key || '').trim().toLowerCase();
+    const k = rawKey === 'jizdnirady' ? 'jr' : rawKey;
     const items = document.querySelectorAll('.iu-leftNav .iu-leftNavItem');
     items.forEach(el=>{
       el.classList.remove('is-active');
@@ -5275,24 +5278,379 @@ function buildVideoAsArticleCard(it) {
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
     const homeEl = document.getElementById('iuHomeView');
+    const jrEl = document.getElementById('iuJizdniRadyView');
 
     if (feedEl) feedEl.hidden = true;
     if (viewEl) viewEl.hidden = true;
     if (homeEl) homeEl.hidden = true;
+    if (jrEl) jrEl.hidden = true;
 
     if(key === 'home' && homeEl) homeEl.hidden = false;
     if(key === 'radio' && viewEl) viewEl.hidden = false;
+    if(key === 'jizdnirady' && jrEl) jrEl.hidden = false;
     // default feed view for all other sections
-    if(key !== 'home' && key !== 'radio' && feedEl) feedEl.hidden = false;
+    if(key !== 'home' && key !== 'radio' && key !== 'jizdnirady' && feedEl) feedEl.hidden = false;
   }
 
   function normalizeSection(raw){
     const k = String(raw || '').trim().toLowerCase();
     if (k === 'home') return 'home';
     if (k === 'radio') return 'radio';
+    if (k === 'jr') return 'jizdnirady'; // legacy alias (left rail accent key)
+    if (k === 'jizdnirady') return 'jizdnirady';
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
-    const allowed = new Set(['media','tv','tvonline','jr','mapy','travel','pocasi','namedays','tvprogram','culture','ads']);
+    const allowed = new Set(['media','tv','tvonline','jizdnirady','mapy','travel','pocasi','namedays','tvprogram','culture','ads']);
     return allowed.has(k) ? k : 'media';
+  }
+
+  // ==============================
+  // JÍZDNÍ ŘÁDY (JR) — UI-only view
+  // - Local dataset for suggestions
+  // - Deep-link results to IDOS (no scraping)
+  // ==============================
+  const JR_STOPS_URL = '/projects/data/jr_stops_min.json';
+  const JR_FAVS_KEY = 'iuJR:favs';
+  const JR_SUGGEST_LIMIT = 15;
+  let __iuJRStops = null; // [{ raw, norm, first }]
+  let __iuJRBucket = null; // Map firstChar -> array
+  let __iuJRInited = false;
+
+  function iuJRNormalize(s){
+    try{
+      return String(s || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }catch{
+      return String(s || '').toLowerCase().trim();
+    }
+  }
+
+  function iuJRTokenize(qNorm){
+    return String(qNorm || '').split(' ').map(x => x.trim()).filter(Boolean);
+  }
+
+  async function iuJRLoadStopsOnce(){
+    if (__iuJRStops) return __iuJRStops;
+    try{
+      const res = await fetch(JR_STOPS_URL, { cache: 'force-cache' });
+      if (!res.ok) throw new Error('stops http ' + res.status);
+      const arr = await res.json();
+      const list = Array.isArray(arr) ? arr : [];
+      __iuJRStops = list
+        .map((raw) => String(raw || '').trim())
+        .filter(Boolean)
+        .map((raw) => {
+          const norm = iuJRNormalize(raw);
+          const first = norm ? norm[0] : '';
+          return { raw, norm, first };
+        });
+
+      __iuJRBucket = new Map();
+      for (const it of __iuJRStops){
+        const k = it.first || '';
+        if (!__iuJRBucket.has(k)) __iuJRBucket.set(k, []);
+        __iuJRBucket.get(k).push(it);
+      }
+      // If user already typed while loading, refresh suggestions.
+      try{
+        const a = document.activeElement;
+        const sec = String(document.body?.dataset?.section || '').trim().toLowerCase();
+        if (sec === 'jizdnirady' && a && (a.id === 'iuJrFrom' || a.id === 'iuJrTo')) {
+          a.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }catch{}
+      return __iuJRStops;
+    }catch(e){
+      console.warn('[JR] stops load failed', e);
+      __iuJRStops = [];
+      __iuJRBucket = new Map();
+      return __iuJRStops;
+    }
+  }
+
+  const JR_TOP = new Set(['praha','brno','ostrava','plzen','hradec kralove','pardubice','olomouc','liberec','usti nad labem']);
+
+  function iuJRRank(items, qNorm, tokens){
+    const out = [];
+    for (const it of items){
+      if (!it || !it.norm) continue;
+      let ok = true;
+      for (const t of tokens){
+        if (!it.norm.includes(t)) { ok = false; break; }
+      }
+      if (!ok) continue;
+      const starts = it.norm.startsWith(qNorm);
+      const contains = !starts && it.norm.includes(qNorm);
+      if (!starts && !contains) continue;
+
+      let score = starts ? 0 : 10;
+      if (JR_TOP.has(it.norm)) score -= 1;
+      score += Math.min(6, Math.max(0, it.raw.length - 5) / 10);
+      out.push({ it, score });
+    }
+    out.sort((a,b) => (a.score - b.score) || a.it.raw.localeCompare(b.it.raw, 'cs', { sensitivity: 'base' }));
+    return out.slice(0, JR_SUGGEST_LIMIT).map(x => x.it.raw);
+  }
+
+  function iuJRGetSuggestions(q){
+    const qNorm = iuJRNormalize(q);
+    if (!qNorm || qNorm.length < 1) return [];
+    const tokens = iuJRTokenize(qNorm);
+    const first = qNorm[0] || '';
+    const base = (__iuJRBucket && __iuJRBucket.get(first)) ? __iuJRBucket.get(first) : (__iuJRStops || []);
+    return iuJRRank(base, qNorm, tokens);
+  }
+
+  function iuJRFormatDateDMY(iso){
+    // input[type=date] => yyyy-mm-dd
+    const m = String(iso || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return '';
+    return `${Number(m[3])}.${Number(m[2])}.${m[1]}`;
+  }
+
+  function iuJRFormatTimeHM(hhmm){
+    const m = String(hhmm || '').match(/^(\d{1,2}):(\d{2})/);
+    if (!m) return '';
+    return `${Number(m[1])}:${m[2]}`;
+  }
+
+  function iuJRBuildIdosUrl(opts){
+    const f = encodeURIComponent(String(opts.from || '').trim());
+    const t = encodeURIComponent(String(opts.to || '').trim());
+    const date = encodeURIComponent(String(opts.date || ''));
+    const time = encodeURIComponent(String(opts.time || ''));
+    const byarr = opts.byarr ? 'true' : 'false';
+    const direct = opts.direct ? 'true' : 'false';
+    return `https://idos.idnes.cz/vlakyautobusymhdvse/spojeni/?f=${f}&t=${t}&date=${date}&time=${time}&byarr=${byarr}&direct=${direct}&submit=true`;
+  }
+
+  function iuJROpenIdos(opts){
+    const url = iuJRBuildIdosUrl(opts);
+    try{
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }catch{
+      try{ window.location.href = url; }catch{}
+    }
+  }
+
+  function iuJRGetFavs(){
+    try{
+      const raw = localStorage.getItem(JR_FAVS_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    }catch{
+      return [];
+    }
+  }
+  function iuJRSetFavs(arr){
+    try{ localStorage.setItem(JR_FAVS_KEY, JSON.stringify(arr)); }catch{}
+  }
+
+  function iuJRRenderFavs(container, onPick){
+    if (!container) return;
+    container.replaceChildren();
+    const favs = iuJRGetFavs();
+    for (const f of favs){
+      const from = String(f?.from || '').trim();
+      const to = String(f?.to || '').trim();
+      if (!from || !to) continue;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'iuJrChip';
+      btn.textContent = `${from} → ${to}`;
+      btn.addEventListener('click', () => { try{ onPick(from, to); }catch{} });
+      container.appendChild(btn);
+    }
+  }
+
+  function iuJRBindSuggest(inputEl, wrapEl, listEl){
+    if (!inputEl || !wrapEl || !listEl) return;
+    let open = false;
+    let active = -1;
+    let lastItems = [];
+    let t = 0;
+
+    const close = () => {
+      open = false;
+      active = -1;
+      lastItems = [];
+      try{ wrapEl.hidden = true; }catch{}
+      try{ inputEl.setAttribute('aria-expanded','false'); }catch{}
+      try{ inputEl.removeAttribute('aria-activedescendant'); }catch{}
+      try{ listEl.replaceChildren(); }catch{}
+    };
+
+    const render = (items) => {
+      lastItems = items;
+      listEl.replaceChildren();
+      active = items.length ? 0 : -1;
+      items.forEach((label, i) => {
+        const opt = document.createElement('div');
+        opt.className = 'iuJrOpt';
+        opt.id = `${listEl.id}-opt-${i}`;
+        opt.setAttribute('role','option');
+        opt.setAttribute('aria-selected', i === active ? 'true' : 'false');
+        opt.dataset.value = label;
+        opt.textContent = label;
+        opt.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          inputEl.value = label;
+          close();
+          inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+        listEl.appendChild(opt);
+      });
+      if (items.length){
+        wrapEl.hidden = false;
+        inputEl.setAttribute('aria-expanded','true');
+        inputEl.setAttribute('aria-activedescendant', `${listEl.id}-opt-${active}`);
+        open = true;
+      } else {
+        close();
+      }
+    };
+
+    const move = (dir) => {
+      if (!open || !lastItems.length) return;
+      active = Math.max(0, Math.min(lastItems.length - 1, active + dir));
+      Array.from(listEl.children).forEach((c, idx) => {
+        try{ c.setAttribute('aria-selected', idx === active ? 'true' : 'false'); }catch{}
+      });
+      inputEl.setAttribute('aria-activedescendant', `${listEl.id}-opt-${active}`);
+    };
+
+    const pickActive = () => {
+      if (!open || active < 0 || active >= lastItems.length) return false;
+      inputEl.value = lastItems[active];
+      close();
+      inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+      return true;
+    };
+
+    const update = () => {
+      const q = inputEl.value || '';
+      if (String(q).trim().length < 1){ close(); return; }
+      const items = iuJRGetSuggestions(q);
+      render(items);
+    };
+
+    inputEl.addEventListener('input', () => {
+      if (t) clearTimeout(t);
+      t = setTimeout(update, 70);
+    });
+    inputEl.addEventListener('focus', () => { update(); });
+    inputEl.addEventListener('blur', () => { setTimeout(close, 140); });
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown'){ e.preventDefault(); if (!open) update(); move(1); }
+      else if (e.key === 'ArrowUp'){ e.preventDefault(); if (!open) update(); move(-1); }
+      else if (e.key === 'Enter'){
+        if (open){
+          if (pickActive()) e.preventDefault();
+        }
+      }
+      else if (e.key === 'Escape'){ if (open){ e.preventDefault(); close(); } }
+    });
+  }
+
+  function iuJRInitView(){
+    if (__iuJRInited) return;
+    const view = document.getElementById('iuJizdniRadyView');
+    if (!view) return;
+    __iuJRInited = true;
+
+    const elForm = document.getElementById('iuJrForm');
+    const elFrom = document.getElementById('iuJrFrom');
+    const elTo = document.getElementById('iuJrTo');
+    const elDate = document.getElementById('iuJrDate');
+    const elTime = document.getElementById('iuJrTime');
+    const elDirect = document.getElementById('iuJrDirect');
+    const elSubmit = document.getElementById('iuJrSubmit');
+    const elSave = document.getElementById('iuJrSaveFav');
+    const elErrFrom = document.getElementById('iuJrErrFrom');
+    const elErrTo = document.getElementById('iuJrErrTo');
+    const favWrap = document.getElementById('iuJrFavChips');
+
+    const setDefaults = () => {
+      try{
+        const now = new Date();
+        if (elDate && !elDate.value){
+          const y = now.getFullYear();
+          const m = String(now.getMonth()+1).padStart(2,'0');
+          const d = String(now.getDate()).padStart(2,'0');
+          elDate.value = `${y}-${m}-${d}`;
+        }
+        if (elTime && !elTime.value){
+          const ms = now.getTime();
+          const step = 5 * 60 * 1000;
+          const rounded = new Date(Math.ceil(ms / step) * step);
+          const hh = String(rounded.getHours()).padStart(2,'0');
+          const mm = String(rounded.getMinutes()).padStart(2,'0');
+          elTime.value = `${hh}:${mm}`;
+        }
+      }catch{}
+    };
+    setDefaults();
+
+    const syncButtons = () => {
+      const hasFrom = !!String(elFrom?.value || '').trim();
+      const hasTo = !!String(elTo?.value || '').trim();
+      if (elSubmit) elSubmit.disabled = !(hasFrom && hasTo);
+      if (elSave) elSave.disabled = !(hasFrom && hasTo);
+      if (elErrFrom) elErrFrom.hidden = true;
+      if (elErrTo) elErrTo.hidden = true;
+    };
+    if (elFrom) elFrom.addEventListener('input', syncButtons);
+    if (elTo) elTo.addEventListener('input', syncButtons);
+    syncButtons();
+
+    iuJRBindSuggest(elFrom, document.getElementById('iuJrFromWrap'), document.getElementById('iuJrFromList'));
+    iuJRBindSuggest(elTo, document.getElementById('iuJrToWrap'), document.getElementById('iuJrToList'));
+
+    iuJRRenderFavs(favWrap, (from, to) => {
+      if (elFrom) elFrom.value = from;
+      if (elTo) elTo.value = to;
+      syncButtons();
+      try{ elFrom && elFrom.focus(); }catch{}
+    });
+
+    if (elSave){
+      elSave.addEventListener('click', () => {
+        const from = String(elFrom?.value || '').trim();
+        const to = String(elTo?.value || '').trim();
+        if (!from || !to) return;
+        const favs = iuJRGetFavs();
+        const next = [{ from, to }, ...favs.filter(x => iuJRNormalize(x?.from) !== iuJRNormalize(from) || iuJRNormalize(x?.to) !== iuJRNormalize(to))].slice(0, 12);
+        iuJRSetFavs(next);
+        iuJRRenderFavs(favWrap, (f,t) => {
+          if (elFrom) elFrom.value = f;
+          if (elTo) elTo.value = t;
+          syncButtons();
+        });
+      });
+    }
+
+    if (elForm){
+      elForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const from = String(elFrom?.value || '').trim();
+        const to = String(elTo?.value || '').trim();
+        if (!from){ if (elErrFrom) elErrFrom.hidden = false; try{ elFrom && elFrom.focus(); }catch{}; return; }
+        if (!to){ if (elErrTo) elErrTo.hidden = false; try{ elTo && elTo.focus(); }catch{}; return; }
+        const date = iuJRFormatDateDMY(elDate?.value);
+        const time = iuJRFormatTimeHM(elTime?.value);
+        const byarr = (() => {
+          try{
+            const r = elForm.querySelector('input[name="byarr"]:checked');
+            return String(r?.value || '0') === '1';
+          }catch{ return false; }
+        })();
+        const direct = !!(elDirect && elDirect.checked);
+        iuJROpenIdos({ from, to, date, time, byarr, direct });
+      });
+    }
   }
 
   function getInitialSection(){
@@ -5333,6 +5691,11 @@ function buildVideoAsArticleCard(it) {
     try{ state.page = 1; }catch{}
     setLeftNavActive(section);
     showView(VIEW_MAP[section] ?? 'media');
+
+    if (section === 'jizdnirady') {
+      iuJRInitView();
+      iuJRLoadStopsOnce();
+    }
 
     // leaving Home: ALWAYS load feed data immediately (idempotent) + ensure auto-refresh is running
     if (section !== 'home') {

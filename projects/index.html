@@ -381,7 +381,7 @@
                             </span>
                             <span class="iuHex__label">Cestování</span>
                           </a>
-                          <a class="iuHex iuHex--jr" href="?section=jr">
+                          <a class="iuHex iuHex--jr" href="?section=jizdnirady">
                             <span class="iuHex__icon" aria-hidden="true">
                               <svg viewBox="0 0 24 24" role="img" focusable="false">
                                 <path d="M7 3h10a4 4 0 0 1 4 4v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7a4 4 0 0 1 4-4z" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -450,6 +450,77 @@
                     </div>
                   </div>
                   <div id="feed">
+                  </div>
+                  <div id="iuJizdniRadyView" class="iuJizdniRadyView" hidden>
+                    <div class="iuJrShell" role="region" aria-label="Jízdní řády">
+                      <div class="iuJrHead">
+                        <h2 class="iuJrTitle">Jízdní řády</h2>
+                        <div class="iuJrHeadLine" aria-hidden="true"></div>
+                      </div>
+
+                      <form class="iuJrForm" id="iuJrForm" autocomplete="off" novalidate>
+                        <div class="iuJrRow iuJrRow--2">
+                          <div class="iuJrField">
+                            <label class="iuJrLabel" for="iuJrFrom">Odkud</label>
+                            <input class="iuJrInput" id="iuJrFrom" name="from" type="text" inputmode="text" placeholder="Praha…" aria-describedby="iuJrHintFrom" aria-autocomplete="list" aria-expanded="false" aria-controls="iuJrFromList" />
+                            <div class="iuJrHint" id="iuJrHintFrom">Piš město nebo zastávku (např. Praha hl.n.)</div>
+                            <div class="iuJrErr" id="iuJrErrFrom" hidden>Vyplňte „Odkud“.</div>
+                            <div class="iuJrSuggest" id="iuJrFromWrap" hidden>
+                              <div class="iuJrList" id="iuJrFromList" role="listbox" aria-label="Našeptávání: Odkud"></div>
+                            </div>
+                          </div>
+
+                          <div class="iuJrField">
+                            <label class="iuJrLabel" for="iuJrTo">Kam</label>
+                            <input class="iuJrInput" id="iuJrTo" name="to" type="text" inputmode="text" placeholder="Brno…" aria-describedby="iuJrHintTo" aria-autocomplete="list" aria-expanded="false" aria-controls="iuJrToList" />
+                            <div class="iuJrHint" id="iuJrHintTo">Piš město nebo zastávku (např. Brno hl.n.)</div>
+                            <div class="iuJrErr" id="iuJrErrTo" hidden>Vyplňte „Kam“.</div>
+                            <div class="iuJrSuggest" id="iuJrToWrap" hidden>
+                              <div class="iuJrList" id="iuJrToList" role="listbox" aria-label="Našeptávání: Kam"></div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="iuJrRow iuJrRow--3">
+                          <div class="iuJrField">
+                            <label class="iuJrLabel" for="iuJrDate">Datum</label>
+                            <input class="iuJrInput" id="iuJrDate" name="date" type="date" />
+                          </div>
+                          <div class="iuJrField">
+                            <label class="iuJrLabel" for="iuJrTime">Čas</label>
+                            <input class="iuJrInput" id="iuJrTime" name="time" type="time" step="300" />
+                          </div>
+                          <div class="iuJrField">
+                            <div class="iuJrLabel">Typ</div>
+                            <div class="iuJrToggle" role="group" aria-label="Odjezd nebo příjezd">
+                              <label class="iuJrToggleOpt"><input type="radio" name="byarr" value="0" checked /> Odjezd</label>
+                              <label class="iuJrToggleOpt"><input type="radio" name="byarr" value="1" /> Příjezd</label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="iuJrRow iuJrRow--actions">
+                          <label class="iuJrCheck"><input id="iuJrDirect" type="checkbox" /> Pouze přímé</label>
+                          <button class="iuJrBtn" id="iuJrSubmit" type="submit" disabled>Najít spojení</button>
+                          <button class="iuJrBtn iuJrBtn--ghost" id="iuJrSaveFav" type="button" disabled>Uložit</button>
+                        </div>
+
+                        <div class="iuJrLegal">
+                          Vyhledávání a výsledky poskytuje IDOS. Otevře se externí stránka.
+                          <a href="https://idos.idnes.cz/" target="_blank" rel="noopener noreferrer">IDOS</a>
+                          <span aria-hidden="true">·</span>
+                          <a href="https://idos.idnes.cz/smluvni-podminky/" target="_blank" rel="noopener noreferrer">Smluvní podmínky</a>
+                        </div>
+                      </form>
+
+                      <section class="iuJrFav" aria-label="Moje trasy">
+                        <div class="iuJrFavHead">
+                          <h3 class="iuJrFavTitle">Moje trasy</h3>
+                          <div class="iuJrFavNote">Uložené v tomto zařízení</div>
+                        </div>
+                        <div class="iuJrFavChips" id="iuJrFavChips" aria-label="Uložené trasy"></div>
+                      </section>
+                    </div>
                   </div>
                   <div id="iuRadioView" class="iuRadioView" hidden></div>
                   <div id="iuTvOnlineView" class="iuRadioView iuTvOnlineView" hidden>
