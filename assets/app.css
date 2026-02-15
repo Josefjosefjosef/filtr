@@ -2790,6 +2790,13 @@ html[data-section="tvonline"] #iuTvOnlineView{
 .iuTvOnlineGrid .iuRadioHead:first-child{
   margin-top: 0;
 }
+
+/* TV ONLINE GRID = 2 sloupce (stejný princip jako rádia) */
+.iuTvOnlineGrid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
 .iuTvOnlineGroup{
   margin: 0 0 18px 0;
 }
@@ -2840,117 +2847,6 @@ html[data-section="tvonline"] #iuTvOnlineView{
   box-sizing: border-box;
   height:110px;
   overflow:hidden;
-}
-.iuTvOnlineGrid .iu-tvTileCT{
-  height:110px;
-  padding:10px;
-  display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  grid-template-rows:auto auto;
-  column-gap:6px;
-  row-gap:6px;
-  align-items:center;
-  text-align:center;
-  overflow:hidden; /* CLS/overflow guard */
-  border-radius:12px;
-  background: transparent;
-  border: 1px solid rgba(11,27,43,0.08);
-  color: rgba(11,27,43,0.92);
-  box-sizing:border-box;
-  transition: background-color 150ms ease, color 150ms ease;
-}
-.iuTvOnlineGrid .iu-tvTileCT:hover,
-.iuTvOnlineGrid .iu-tvTileCT:focus-within{
-  background-color: var(--iu-accent-radio);
-  color: #fff;
-}
-
-/* ČT tile přes celou šířku feedu (jen tato dlaždice) */
-.iuTvOnlineGrid .iu-tvTileCTFull{
-  grid-column:1 / -1;
-  height:auto;
-  min-height:140px; /* CLS guard */
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:6px;
-  background-color: var(--iu-accent-radio);
-  color:#fff;
-  border:0;
-}
-.iuTvOnlineGrid .iu-tvCTGrid{
-  display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  grid-template-rows:auto auto;
-  column-gap:6px;
-  row-gap:6px;
-  align-items:center;
-  text-align:center;
-  overflow:hidden;
-}
-
-/* spodní odkazy */
-.iuTvOnlineGrid .iu-tvCTExtras{
-  display:flex;
-  justify-content:center;
-  gap:14px;
-  flex-wrap:wrap;
-  margin-top:6px;
-  font-size:12px;
-}
-.iuTvOnlineGrid .iu-tvCTExtras a{
-  color:#fff;
-  opacity:.85;
-  text-decoration:none;
-}
-.iuTvOnlineGrid .iu-tvCTExtras a:hover{
-  opacity:1;
-}
-
-/* When CT tile is full-width, grid-row placement belongs to inner grid */
-.iuTvOnlineGrid .iu-tvTileCTFull .iu-tvCTLink{
-  grid-row:auto;
-}
-.iuTvOnlineGrid .iu-tvCTLink{
-  display:block;
-  text-decoration:none;
-  color:inherit;
-  border-radius:10px;
-  padding:6px 4px;
-}
-.iuTvOnlineGrid .iu-tvCTLink:hover,
-.iuTvOnlineGrid .iu-tvCTLink:focus-visible{
-  background-color: rgba(255,255,255,0.18);
-  color: #fff;
-  outline: 2px solid color-mix(in srgb, var(--iu-accent-radio) 70%, white);
-  outline-offset: 1px;
-}
-.iuTvOnlineGrid .iu-tvCTTop{
-  display:block;
-  font-weight:650;
-  font-size:13px;
-  line-height:1.05;
-  white-space:nowrap;
-}
-.iuTvOnlineGrid .iu-tvCTMeta{
-  font-size:11px;
-  line-height:1;
-  opacity:.8;
-  white-space:nowrap;
-  align-self:start;
-}
-.iuTvOnlineGrid .iu-tvCTMetaLiveLeft{
-  grid-column:1 / 2;
-  grid-row:2 / 3;
-}
-.iuTvOnlineGrid .iu-tvCTMetaBroadcast{
-  grid-column:2 / 4;
-  grid-row:2 / 3;
-  text-align:center;
-}
-.iuTvOnlineGrid .iu-tvCTMetaLiveRight{
-  grid-column:4 / 5;
-  grid-row:2 / 3;
 }
 .iuRadioGrid{
   display: grid;
