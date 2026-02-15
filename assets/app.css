@@ -2841,12 +2841,47 @@ html[data-section="jizdnirady"] #iuJizdniRadyView{
   border-radius: 999px;
 }
 
+.iuJrSeg{
+  display: inline-flex;
+  gap: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(11,27,43,0.14);
+  background: #fff;
+  padding: 4px;
+  margin: 0 0 12px 0;
+  overflow: hidden;
+}
+.iuJrSegBtn{
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  color: rgba(11,27,43,0.70);
+  transition: background-color 160ms ease, color 160ms ease;
+}
+.iuJrSegBtn[aria-selected="true"]{
+  background: rgba(245,158,11,0.14);
+  color: rgba(11,27,43,0.92);
+}
+.iuJrSegBtn:focus-visible{
+  outline: 2px solid var(--iuJrOutline);
+  outline-offset: 2px;
+}
+
 .iuJrForm{
   background-color: rgba(255,255,255,0.94);
   border: 1px solid rgba(11,27,43,0.08);
   border-radius: 14px;
   padding: 14px 14px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+}
+.iuJrPanel[hidden]{
+  display: none !important;
 }
 .iuJrRow{
   display: grid;
@@ -2872,6 +2907,19 @@ html[data-section="jizdnirady"] #iuJizdniRadyView{
 .iuJrField{
   position: relative; /* anchor suggestions */
   min-width: 0;
+}
+
+.iuJrInline{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.iuJrInline .iuJrInput{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.iuJrInline .iuJrBtn{
+  white-space: nowrap;
 }
 .iuJrLabel{
   display: block;
