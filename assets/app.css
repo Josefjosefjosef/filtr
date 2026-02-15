@@ -2787,6 +2787,43 @@ html[data-section="tvonline"] #iuTvOnlineView{
 .iuTvOnlineGroup:last-child{
   margin-bottom: 0;
 }
+
+/* TV online — grouped tile (CLS-safe) */
+.iu-tvTileGroup{
+  height:160px;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  border-radius:12px;
+  border:1px solid rgba(11,27,43,0.08);
+  box-sizing:border-box;
+  background: var(--iu-accent-tvonline, var(--iuNavAccent-tvonline, #DC2626));
+}
+.iu-tvGroupTitle{
+  font-weight:600;
+  margin-bottom:6px;
+  color:#fff;
+  text-align:center;
+}
+.iu-tvGroupList{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:6px;
+}
+.iu-tvGroupList a{
+  display:flex;
+  justify-content:space-between;
+  padding:6px 8px;
+  border-radius:8px;
+  background:#1b2430;
+  color:#fff;
+  font-size:14px;
+  text-decoration:none;
+}
+.iu-tvGroupList a:hover{
+  background: var(--iuNavAccent-tv, var(--iuNavAccent-tvonline, #DC2626));
+}
 .iuRadioGrid{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
