@@ -2740,6 +2740,19 @@ a.brand,
   padding-right: 8px;
 }
 
+/* ==============================
+   FEED VISIBILITY — only in Media
+   (UI-only; uses routing hook data-section on body/html)
+   ============================== */
+html[data-section]:not([data-section="media"]) #feed,
+body[data-section]:not([data-section="media"]) #feed{
+  display: none !important;
+}
+html[data-section="media"] #feed,
+body[data-section="media"] #feed{
+  display: grid !important; /* match #feed default display */
+}
+
 /* Radio view – matches feed look & feel (middle column only) */
 .iuRadioView[hidden]{
   display: none !important;
@@ -2764,11 +2777,9 @@ a.brand,
   /* make radio tiles use TV online accent (red) inside this view only */
   --iu-accent-radio: var(--iu-accent-tvonline, var(--iuNavAccent-tvonline, #DC2626));
 }
-body[data-section="tvonline"] #iuTvOnlineView{
+body[data-section="tvonline"] #iuTvOnlineView,
+html[data-section="tvonline"] #iuTvOnlineView{
   display: block !important;
-}
-body[data-section="tvonline"] #feed{
-  display: none !important;
 }
 .iuTvOnlineGroup{
   margin: 0 0 18px 0;
