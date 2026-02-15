@@ -458,13 +458,7 @@
                         <div class="iuJrHeadLine" aria-hidden="true"></div>
                       </div>
 
-                      <div class="iuJrSeg" role="tablist" aria-label="Režim">
-                        <button class="iuJrSegBtn" id="iuJrModeRoutes" type="button" role="tab" aria-selected="true">Trasy</button>
-                        <button class="iuJrSegBtn" id="iuJrModeDepartures" type="button" role="tab" aria-selected="false">Odjezdy</button>
-                      </div>
-
                       <form class="iuJrForm" id="iuJrForm" autocomplete="off" novalidate>
-                        <div class="iuJrPanel" id="iuJrPanelRoutes">
                         <div class="iuJrRow iuJrRow--2">
                           <div class="iuJrField">
                             <label class="iuJrLabel" for="iuJrFrom">Odkud</label>
@@ -509,34 +503,6 @@
                           <label class="iuJrCheck"><input id="iuJrDirect" type="checkbox" /> Pouze přímé</label>
                           <button class="iuJrBtn" id="iuJrSubmit" type="submit" disabled>Najít spojení</button>
                           <button class="iuJrBtn iuJrBtn--ghost" id="iuJrSaveFav" type="button" disabled>Uložit</button>
-                        </div>
-                        </div>
-
-                        <div class="iuJrPanel" id="iuJrPanelDepartures" hidden>
-                          <div class="iuJrRow iuJrRow--2">
-                            <div class="iuJrField">
-                              <label class="iuJrLabel" for="iuJrStop">Zastávka</label>
-                              <input class="iuJrInput" id="iuJrStop" name="stop" type="text" inputmode="text" placeholder="Praha hl.n.…" aria-describedby="iuJrHintStop" aria-autocomplete="list" aria-expanded="false" aria-controls="iuJrStopList" />
-                              <div class="iuJrHint" id="iuJrHintStop">Piš město nebo zastávku (např. Praha hl.n.)</div>
-                              <div class="iuJrErr" id="iuJrErrStop" hidden>Vyplňte „Zastávka“.</div>
-                              <div class="iuJrSuggest" id="iuJrStopWrap" hidden>
-                                <div class="iuJrList" id="iuJrStopList" role="listbox" aria-label="Našeptávání: Zastávka"></div>
-                              </div>
-                            </div>
-                            <div class="iuJrField">
-                              <label class="iuJrLabel" for="iuJrDepTime">Čas</label>
-                              <div class="iuJrInline">
-                                <input class="iuJrInput" id="iuJrDepTime" name="deptime" type="time" step="300" />
-                                <button class="iuJrBtn iuJrBtn--ghost" id="iuJrNow" type="button">Odjezd nyní</button>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="iuJrRow iuJrRow--actions">
-                            <div></div>
-                            <button class="iuJrBtn" id="iuJrDepartSubmit" type="button" disabled>Zobrazit odjezdy</button>
-                            <div></div>
-                          </div>
                         </div>
 
                         <div class="iuJrLegal">

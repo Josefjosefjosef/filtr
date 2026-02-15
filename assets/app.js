@@ -5310,7 +5310,6 @@ function buildVideoAsArticleCard(it) {
   // ==============================
   const JR_STOPS_URL = '/projects/data/jr_stops_min.json';
   const JR_FAVS_KEY = 'iuJR:favs';
-  const JR_MODE_KEY = 'iuJR:mode';
   const JR_SUGGEST_LIMIT = 15;
   let __iuJRStops = null; // [{ raw, norm, first }]
   let __iuJRBucket = null; // Map firstChar -> array
@@ -5428,17 +5427,6 @@ function buildVideoAsArticleCard(it) {
     return `https://idos.idnes.cz/vlakyautobusymhdvse/spojeni/?f=${f}&t=${t}&date=${date}&time=${time}&byarr=${byarr}&direct=${direct}&submit=true`;
   }
 
-  function iuJRBuildIdosDeparturesUrl(opts){
-    const f = encodeURIComponent(String(opts.stop || '').trim());
-    const date = encodeURIComponent(String(opts.date || ''));
-    const time = encodeURIComponent(String(opts.time || ''));
-    // NOTE: official parameters are not documented publicly; this endpoint exists.
-    // We still keep a safe fallback to the standard planner.
-    const base = 'https://idos.idnes.cz/vlakyautobusymhdvse/odjezdy/';
-    const qs = `?f=${f}${date ? `&date=${date}` : ''}${time ? `&time=${time}` : ''}&submit=true`;
-    return base + qs;
-  }
-
   function iuJROpenIdos(opts){
     const url = iuJRBuildIdosUrl(opts);
     try{
@@ -5446,18 +5434,6 @@ function buildVideoAsArticleCard(it) {
     }catch{
       try{ window.location.href = url; }catch{}
     }
-  }
-
-  function iuJROpenIdosDepartures(opts){
-    try{
-      const url = iuJRBuildIdosDeparturesUrl(opts);
-      window.open(url, '_blank', 'noopener,noreferrer');
-      return;
-    }catch{}
-    // fallback: open planner with from=stop (never fails; user can confirm departures on IDOS)
-    try{
-      iuJROpenIdos({ from: String(opts.stop || ''), to: '', date: String(opts.date || ''), time: String(opts.time || ''), byarr: false, direct: false });
-    }catch{}
   }
 
   function iuJRGetFavs(){
@@ -5586,11 +5562,6 @@ function buildVideoAsArticleCard(it) {
     __iuJRInited = true;
 
     const elForm = document.getElementById('iuJrForm');
-    const elModeRoutes = document.getElementById('iuJrModeRoutes');
-    const elModeDeps = document.getElementById('iuJrModeDepartures');
-    const panelRoutes = document.getElementById('iuJrPanelRoutes');
-    const panelDeps = document.getElementById('iuJrPanelDepartures');
-
     const elFrom = document.getElementById('iuJrFrom');
     const elTo = document.getElementById('iuJrTo');
     const elDate = document.getElementById('iuJrDate');
@@ -5601,12 +5572,6 @@ function buildVideoAsArticleCard(it) {
     const elErrFrom = document.getElementById('iuJrErrFrom');
     const elErrTo = document.getElementById('iuJrErrTo');
     const favWrap = document.getElementById('iuJrFavChips');
-
-    const elStop = document.getElementById('iuJrStop');
-    const elDepTime = document.getElementById('iuJrDepTime');
-    const elNow = document.getElementById('iuJrNow');
-    const elDepSubmit = document.getElementById('iuJrDepartSubmit');
-    const elErrStop = document.getElementById('iuJrErrStop');
 
     const setDefaults = () => {
       try{
@@ -5625,51 +5590,9 @@ function buildVideoAsArticleCard(it) {
           const mm = String(rounded.getMinutes()).padStart(2,'0');
           elTime.value = `${hh}:${mm}`;
         }
-        if (elDepTime && !elDepTime.value){
-          const ms = now.getTime();
-          const step = 5 * 60 * 1000;
-          const rounded = new Date(Math.ceil(ms / step) * step);
-          const hh = String(rounded.getHours()).padStart(2,'0');
-          const mm = String(rounded.getMinutes()).padStart(2,'0');
-          elDepTime.value = `${hh}:${mm}`;
-        }
       }catch{}
     };
     setDefaults();
-
-    const getMode = () => {
-      try{
-        const v = String(localStorage.getItem(JR_MODE_KEY) || '').trim().toLowerCase();
-        return (v === 'departures' || v === 'routes') ? v : 'routes';
-      }catch{
-        return 'routes';
-      }
-    };
-    const setMode = (mode) => {
-      const m = (mode === 'departures') ? 'departures' : 'routes';
-      try{ localStorage.setItem(JR_MODE_KEY, m); }catch{}
-      if (elModeRoutes) elModeRoutes.setAttribute('aria-selected', m === 'routes' ? 'true' : 'false');
-      if (elModeDeps) elModeDeps.setAttribute('aria-selected', m === 'departures' ? 'true' : 'false');
-      if (panelRoutes) panelRoutes.hidden = (m !== 'routes');
-      if (panelDeps) panelDeps.hidden = (m !== 'departures');
-    };
-    setMode(getMode());
-
-    // Minimal runtime gate helper (manual console proof).
-    try{
-      window.iuJRModeProof = function(){
-        const section = String(document.body?.dataset?.section || '').trim().toLowerCase();
-        const mode = String(localStorage.getItem(JR_MODE_KEY) || '').trim().toLowerCase();
-        const r = document.getElementById('iuJrPanelRoutes');
-        const d = document.getElementById('iuJrPanelDepartures');
-        return {
-          section,
-          mode,
-          routes_visible: !!(r && !r.hidden),
-          departures_visible: !!(d && !d.hidden)
-        };
-      };
-    }catch{}
 
     const syncButtons = () => {
       const hasFrom = !!String(elFrom?.value || '').trim();
@@ -5678,19 +5601,13 @@ function buildVideoAsArticleCard(it) {
       if (elSave) elSave.disabled = !(hasFrom && hasTo);
       if (elErrFrom) elErrFrom.hidden = true;
       if (elErrTo) elErrTo.hidden = true;
-
-      const hasStop = !!String(elStop?.value || '').trim();
-      if (elDepSubmit) elDepSubmit.disabled = !hasStop;
-      if (elErrStop) elErrStop.hidden = true;
     };
     if (elFrom) elFrom.addEventListener('input', syncButtons);
     if (elTo) elTo.addEventListener('input', syncButtons);
-    if (elStop) elStop.addEventListener('input', syncButtons);
     syncButtons();
 
     iuJRBindSuggest(elFrom, document.getElementById('iuJrFromWrap'), document.getElementById('iuJrFromList'));
     iuJRBindSuggest(elTo, document.getElementById('iuJrToWrap'), document.getElementById('iuJrToList'));
-    iuJRBindSuggest(elStop, document.getElementById('iuJrStopWrap'), document.getElementById('iuJrStopList'));
 
     iuJRRenderFavs(favWrap, (from, to) => {
       if (elFrom) elFrom.value = from;
@@ -5698,32 +5615,6 @@ function buildVideoAsArticleCard(it) {
       syncButtons();
       try{ elFrom && elFrom.focus(); }catch{}
     });
-
-    if (elModeRoutes) elModeRoutes.addEventListener('click', () => { setMode('routes'); });
-    if (elModeDeps) elModeDeps.addEventListener('click', () => { setMode('departures'); });
-
-    if (elNow){
-      elNow.addEventListener('click', () => {
-        try{
-          const now = new Date();
-          const step = 5 * 60 * 1000;
-          const rounded = new Date(Math.ceil(now.getTime() / step) * step);
-          const hh = String(rounded.getHours()).padStart(2,'0');
-          const mm = String(rounded.getMinutes()).padStart(2,'0');
-          if (elDepTime) elDepTime.value = `${hh}:${mm}`;
-        }catch{}
-      });
-    }
-
-    if (elDepSubmit){
-      elDepSubmit.addEventListener('click', () => {
-        const stop = String(elStop?.value || '').trim();
-        if (!stop){ if (elErrStop) elErrStop.hidden = false; try{ elStop && elStop.focus(); }catch{}; return; }
-        const date = iuJRFormatDateDMY(elDate?.value);
-        const time = iuJRFormatTimeHM(elDepTime?.value);
-        iuJROpenIdosDepartures({ stop, date, time });
-      });
-    }
 
     if (elSave){
       elSave.addEventListener('click', () => {
