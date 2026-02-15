@@ -3023,7 +3023,7 @@ select.iuCtrl{
   cursor: pointer;
 }
 .iuBtn:hover{
-  filter: brightness(1.05);
+  filter: none;
 }
 .iuBtnGhost{
   background: transparent;
@@ -3626,13 +3626,13 @@ body.iu-home .iu-leftRail{
   justify-content: center;
   gap: 10px;
   box-shadow: 0 12px 26px rgba(0,0,0,0.14);
-  filter: brightness(1);
+  filter: none;
   transform: none;
   transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
 }
 .iuHomeHex:hover{
   transform: translateY(-3px);
-  filter: brightness(1.05);
+  filter: none;
   box-shadow: 0 18px 38px rgba(0,0,0,0.18);
 }
 .iuHomeHex:focus-visible{
@@ -3745,7 +3745,7 @@ body[data-section="home"] .iuHomeCanvas{
 }
 .iuHomeHex434 .iuHex:hover{
   transform: translateY(-3px);
-  filter: brightness(1.06);
+  filter: none;
   box-shadow: 0 10px 24px rgba(0,0,0,.22);
 }
 .iuHomeHex434 .iuHex:focus-visible{
@@ -5752,18 +5752,20 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   color: rgba(11,27,43,0.55);
 }
 
-/* Stripe vlevo */
+/* Accent stripe (top) */
 .iu-leftNav .iu-leftNavItem::before{
   content: "";
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  /* curved over top/bottom left corner (like rounded cards) */
-  border-radius: 14px 0 0 14px;
+  left: 10px;
+  right: 10px;
+  top: 6px;
+  height: 3px;                 /* thin */
+  border-radius: 999px;        /* rounded */
   background: var(--iuNavAccent);
-  transition: width 220ms ease, opacity 220ms ease;
+  opacity: 0.95;
+  transform: scaleX(0.35);
+  transform-origin: left center;
+  transition: height 160ms ease, transform 180ms ease, opacity 160ms ease;
   pointer-events: none;
 }
 
@@ -5784,12 +5786,23 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   filter: none;
 }
 .iu-leftNav .iu-leftNavItem:hover::before{
-  width: 5px;
+  height: 8px;               /* noticeably thicker */
+  transform: scaleX(1);      /* noticeably wider */
+  opacity: 1;
 }
 .iu-leftNav .iu-leftNavItem:hover,
 .iu-leftNav .iu-leftNavItem:hover *{
-  color: rgba(11,27,43,0.55);
+  color: var(--iuNavAccent);
   filter: none;
+}
+.iu-leftNav .iu-leftNavItem:hover .iu-leftNavLabel{
+  font-weight: 600;
+}
+.iu-leftNav .iu-leftNavItem:hover .iu-leftNavIcon{
+  transform: scale(1.06);
+}
+.iu-leftNav .iu-leftNavItem:hover .iu-leftNavIcon svg{
+  stroke-width: 2.25;
 }
 
 /* Active */
@@ -5799,12 +5812,43 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   filter: none;
 }
 .iu-leftNav .iu-leftNavItem.is-active::before{
-  width: 5px;
+  height: 8px;
+  transform: scaleX(1);
+  opacity: 1;
 }
 .iu-leftNav .iu-leftNavItem.is-active,
 .iu-leftNav .iu-leftNavItem.is-active *{
-  color: rgba(11,27,43,0.55);
+  color: var(--iuNavAccent);
   filter: none;
+}
+
+/* Focus-visible (keyboard): accent + bolder (no brightness) */
+.iu-leftNav .iu-leftNavItem:focus,
+.iu-leftNav .iu-leftNavItem:focus-visible{
+  color: var(--iuNavAccent);
+  filter: none;
+}
+.iu-leftNav .iu-leftNavItem:focus::before,
+.iu-leftNav .iu-leftNavItem:focus-visible::before{
+  height: 8px;
+  transform: scaleX(1);
+  opacity: 1;
+}
+.iu-leftNav .iu-leftNavItem:focus-visible .iu-leftNavLabel{
+  font-weight: 600;
+}
+.iu-leftNav .iu-leftNavItem:focus-visible .iu-leftNavIcon{
+  transform: scale(1.06);
+}
+.iu-leftNav .iu-leftNavItem:focus-visible .iu-leftNavIcon svg{
+  stroke-width: 2.25;
+}
+
+.iu-leftNav .iu-leftNavIcon{
+  transition: transform 160ms ease, color 160ms ease;
+}
+.iu-leftNav .iu-leftNavLabel{
+  transition: color 160ms ease;
 }
 
 /* Accent mapping */
