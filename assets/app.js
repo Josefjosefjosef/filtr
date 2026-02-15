@@ -5308,7 +5308,7 @@ function buildVideoAsArticleCard(it) {
   // - Local dataset for suggestions
   // - Deep-link results to IDOS (no scraping)
   // ==============================
-  const JR_STOPS_URL = '/projects/data/jr_stops_min.json';
+  const JR_STOPS_URL = '/projects/data/jr_stops_all_min.json';
   const JR_FAVS_KEY = 'iuJR:favs';
   const JR_MODE_KEY = 'iuJR:mode';
   // IDOS departures prefill support is NOT verified yet.
@@ -5378,25 +5378,67 @@ function buildVideoAsArticleCard(it) {
   const JR_TOP = new Set(['praha','brno','ostrava','plzen','hradec kralove','pardubice','olomouc','liberec','usti nad labem']);
 
   function iuJRRank(items, qNorm, tokens){
-    const out = [];
+    const pref = [];
+    const word = [];
+    const cont = [];
+    const pushLimited = (arr, v, max) => { if (arr.length < max) arr.push(v); };
+    const cap = Math.max(60, JR_SUGGEST_LIMIT * 4);
+
     for (const it of items){
       if (!it || !it.norm) continue;
+
+      // AND match for multi-token queries
       let ok = true;
       for (const t of tokens){
         if (!it.norm.includes(t)) { ok = false; break; }
       }
       if (!ok) continue;
-      const starts = it.norm.startsWith(qNorm);
-      const contains = !starts && it.norm.includes(qNorm);
-      if (!starts && !contains) continue;
 
-      let score = starts ? 0 : 10;
-      if (JR_TOP.has(it.norm)) score -= 1;
-      score += Math.min(6, Math.max(0, it.raw.length - 5) / 10);
-      out.push({ it, score });
+      if (it.norm.startsWith(qNorm)){
+        pushLimited(pref, it, cap);
+        continue;
+      }
+
+      // word-start match (after space/comma/dash/dot)
+      const ws = it.norm.split(/[\s,.\-]+/g).some(w => w && w.startsWith(qNorm));
+      if (ws){
+        pushLimited(word, it, cap);
+        continue;
+      }
+
+      if (it.norm.includes(qNorm)){
+        pushLimited(cont, it, cap);
+      }
     }
-    out.sort((a,b) => (a.score - b.score) || a.it.raw.localeCompare(b.it.raw, 'cs', { sensitivity: 'base' }));
-    return out.slice(0, JR_SUGGEST_LIMIT).map(x => x.it.raw);
+
+    const sortCs = (a,b) => a.raw.localeCompare(b.raw, 'cs', { sensitivity: 'base' });
+    pref.sort(sortCs);
+    word.sort(sortCs);
+    cont.sort(sortCs);
+
+    // optional: boost top cities by stable pre-order within each group
+    const boost = (arr) => {
+      const top = [];
+      const rest = [];
+      for (const it of arr){
+        if (JR_TOP.has(it.norm)) top.push(it);
+        else rest.push(it);
+      }
+      return top.concat(rest);
+    };
+
+    const merged = boost(pref).concat(boost(word)).concat(boost(cont));
+    const out = [];
+    const seen = new Set();
+    for (const it of merged){
+      if (!it || !it.raw) continue;
+      const k = it.norm;
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(it.raw);
+      if (out.length >= JR_SUGGEST_LIMIT) break;
+    }
+    return out;
   }
 
   function iuJRGetSuggestions(q){
