@@ -459,12 +459,12 @@
                       </div>
 
                       <div class="iuJrSeg" role="tablist" aria-label="Režim">
-                        <button class="iuJrSegBtn" id="iuJrModeRoutes" type="button" role="tab" aria-selected="true" aria-controls="iuJrPanelRoutes" tabindex="0">Trasy</button>
-                        <button class="iuJrSegBtn" id="iuJrModeDepartures" type="button" role="tab" aria-selected="false" aria-controls="iuJrPanelDepartures" tabindex="-1">Odjezdy</button>
+                        <button class="iuJrSegBtn" id="iuJrModeRoutes" type="button" role="tab" aria-selected="true">Trasy</button>
+                        <button class="iuJrSegBtn" id="iuJrModeDepartures" type="button" role="tab" aria-selected="false">Odjezdy</button>
                       </div>
 
                       <form class="iuJrForm" id="iuJrForm" autocomplete="off" novalidate>
-                        <div class="iuJrPanel" id="iuJrPanelRoutes" role="tabpanel" aria-labelledby="iuJrModeRoutes">
+                        <div class="iuJrPanel" id="iuJrPanelRoutes">
                         <div class="iuJrRow iuJrRow--2">
                           <div class="iuJrField">
                             <label class="iuJrLabel" for="iuJrFrom">Odkud</label>
@@ -512,7 +512,7 @@
                         </div>
                         </div>
 
-                        <div class="iuJrPanel" id="iuJrPanelDepartures" role="tabpanel" aria-labelledby="iuJrModeDepartures" hidden>
+                        <div class="iuJrPanel" id="iuJrPanelDepartures" hidden>
                           <div class="iuJrRow iuJrRow--2">
                             <div class="iuJrField">
                               <label class="iuJrLabel" for="iuJrStop">Zastávka</label>
@@ -526,11 +526,8 @@
                             <div class="iuJrField">
                               <label class="iuJrLabel" for="iuJrDepTime">Čas</label>
                               <div class="iuJrInline">
-                                <div class="iuJrTimeWrap" id="iuJrDepTimeWrap">
-                                  <input class="iuJrInput" id="iuJrDepTime" name="deptime" type="time" step="300" />
-                                  <button class="iuJrTimeOverlay" id="iuJrDepTimeEnable" type="button" aria-label="Změnit čas" hidden></button>
-                                </div>
-                                <button class="iuJrBtn iuJrBtn--ghost" id="iuJrNow" type="button" aria-pressed="true">Odjezd nyní</button>
+                                <input class="iuJrInput" id="iuJrDepTime" name="deptime" type="time" step="300" />
+                                <button class="iuJrBtn iuJrBtn--ghost" id="iuJrNow" type="button">Odjezd nyní</button>
                               </div>
                             </div>
                           </div>

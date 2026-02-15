@@ -5311,9 +5311,6 @@ function buildVideoAsArticleCard(it) {
   const JR_STOPS_URL = '/projects/data/jr_stops_min.json';
   const JR_FAVS_KEY = 'iuJR:favs';
   const JR_MODE_KEY = 'iuJR:mode';
-  // IDOS departures prefill support is NOT verified yet.
-  // Default to safe planner fallback (never lands on a blank departures page).
-  const JR_DEPARTURES_SUPPORTS_PREFILL = false;
   const JR_SUGGEST_LIMIT = 15;
   let __iuJRStops = null; // [{ raw, norm, first }]
   let __iuJRBucket = null; // Map firstChar -> array
@@ -5362,7 +5359,7 @@ function buildVideoAsArticleCard(it) {
       try{
         const a = document.activeElement;
         const sec = String(document.body?.dataset?.section || '').trim().toLowerCase();
-        if (sec === 'jizdnirady' && a && (a.id === 'iuJrFrom' || a.id === 'iuJrTo' || a.id === 'iuJrStop')) {
+        if (sec === 'jizdnirady' && a && (a.id === 'iuJrFrom' || a.id === 'iuJrTo')) {
           a.dispatchEvent(new Event('input', { bubbles: true }));
         }
       }catch{}
@@ -5432,11 +5429,11 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuJRBuildIdosDeparturesUrl(opts){
-    // If prefill is unverified, treat /odjezdy/ as a landing page (no params).
-    if (!JR_DEPARTURES_SUPPORTS_PREFILL) return 'https://idos.idnes.cz/vlakyautobusymhdvse/odjezdy/';
     const f = encodeURIComponent(String(opts.stop || '').trim());
     const date = encodeURIComponent(String(opts.date || ''));
     const time = encodeURIComponent(String(opts.time || ''));
+    // NOTE: official parameters are not documented publicly; this endpoint exists.
+    // We still keep a safe fallback to the standard planner.
     const base = 'https://idos.idnes.cz/vlakyautobusymhdvse/odjezdy/';
     const qs = `?f=${f}${date ? `&date=${date}` : ''}${time ? `&time=${time}` : ''}&submit=true`;
     return base + qs;
@@ -5452,18 +5449,15 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuJROpenIdosDepartures(opts){
-    // Fallback-by-design:
-    // - If departures prefill is verified, open /odjezdy/ with params.
-    // - Otherwise ALWAYS open planner with f=<stop>&submit=true, so user never lands on a blank page.
-    const stop = String(opts?.stop || '').trim();
-    const date = String(opts?.date || '');
-    const time = String(opts?.time || '');
-    if (JR_DEPARTURES_SUPPORTS_PREFILL) {
-      const url = iuJRBuildIdosDeparturesUrl({ stop, date, time });
+    try{
+      const url = iuJRBuildIdosDeparturesUrl(opts);
       window.open(url, '_blank', 'noopener,noreferrer');
       return;
-    }
-    iuJROpenIdos({ from: stop, to: '', date, time, byarr: false, direct: false });
+    }catch{}
+    // fallback: open planner with from=stop (never fails; user can confirm departures on IDOS)
+    try{
+      iuJROpenIdos({ from: String(opts.stop || ''), to: '', date: String(opts.date || ''), time: String(opts.time || ''), byarr: false, direct: false });
+    }catch{}
   }
 
   function iuJRGetFavs(){
@@ -5610,8 +5604,6 @@ function buildVideoAsArticleCard(it) {
 
     const elStop = document.getElementById('iuJrStop');
     const elDepTime = document.getElementById('iuJrDepTime');
-    const elDepTimeWrap = document.getElementById('iuJrDepTimeWrap');
-    const elDepTimeEnable = document.getElementById('iuJrDepTimeEnable');
     const elNow = document.getElementById('iuJrNow');
     const elDepSubmit = document.getElementById('iuJrDepartSubmit');
     const elErrStop = document.getElementById('iuJrErrStop');
@@ -5656,14 +5648,8 @@ function buildVideoAsArticleCard(it) {
     const setMode = (mode) => {
       const m = (mode === 'departures') ? 'departures' : 'routes';
       try{ localStorage.setItem(JR_MODE_KEY, m); }catch{}
-      if (elModeRoutes) {
-        elModeRoutes.setAttribute('aria-selected', m === 'routes' ? 'true' : 'false');
-        elModeRoutes.setAttribute('tabindex', m === 'routes' ? '0' : '-1');
-      }
-      if (elModeDeps) {
-        elModeDeps.setAttribute('aria-selected', m === 'departures' ? 'true' : 'false');
-        elModeDeps.setAttribute('tabindex', m === 'departures' ? '0' : '-1');
-      }
+      if (elModeRoutes) elModeRoutes.setAttribute('aria-selected', m === 'routes' ? 'true' : 'false');
+      if (elModeDeps) elModeDeps.setAttribute('aria-selected', m === 'departures' ? 'true' : 'false');
       if (panelRoutes) panelRoutes.hidden = (m !== 'routes');
       if (panelDeps) panelDeps.hidden = (m !== 'departures');
     };
@@ -5679,7 +5665,6 @@ function buildVideoAsArticleCard(it) {
         return {
           section,
           mode,
-          departures_supports_prefill: JR_DEPARTURES_SUPPORTS_PREFILL,
           routes_visible: !!(r && !r.hidden),
           departures_visible: !!(d && !d.hidden)
         };
@@ -5717,63 +5702,17 @@ function buildVideoAsArticleCard(it) {
     if (elModeRoutes) elModeRoutes.addEventListener('click', () => { setMode('routes'); });
     if (elModeDeps) elModeDeps.addEventListener('click', () => { setMode('departures'); });
 
-    // ARIA tabs keyboard: Left/Right switches, Enter/Space activates focused tab.
-    const tabKey = (e) => {
-      const isRoutes = e.currentTarget === elModeRoutes;
-      const isDeps = e.currentTarget === elModeDeps;
-      if (!isRoutes && !isDeps) return;
-      const curMode = getMode();
-      const focusedMode = isDeps ? 'departures' : 'routes';
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight'){
-        e.preventDefault();
-        const next = (e.key === 'ArrowLeft') ? 'routes' : 'departures';
-        setMode(next);
-        try{ (next === 'routes' ? elModeRoutes : elModeDeps)?.focus(); }catch{}
-      } else if (e.key === 'Enter' || e.key === ' '){
-        if (curMode !== focusedMode){
-          e.preventDefault();
-          setMode(focusedMode);
-        }
-      }
-    };
-    if (elModeRoutes) elModeRoutes.addEventListener('keydown', tabKey);
-    if (elModeDeps) elModeDeps.addEventListener('keydown', tabKey);
-
-    const setNowMode = (on) => {
-      const enabled = !!on;
-      if (elNow) elNow.setAttribute('aria-pressed', enabled ? 'true' : 'false');
-      if (elDepTime) elDepTime.disabled = enabled;
-      if (elDepTimeWrap) elDepTimeWrap.classList.toggle('is-now', enabled);
-      if (elDepTimeEnable) elDepTimeEnable.hidden = !enabled;
-      if (enabled && elDepTime){
+    if (elNow){
+      elNow.addEventListener('click', () => {
         try{
           const now = new Date();
           const step = 5 * 60 * 1000;
           const rounded = new Date(Math.ceil(now.getTime() / step) * step);
           const hh = String(rounded.getHours()).padStart(2,'0');
           const mm = String(rounded.getMinutes()).padStart(2,'0');
-          elDepTime.value = `${hh}:${mm}`;
+          if (elDepTime) elDepTime.value = `${hh}:${mm}`;
         }catch{}
-      }
-    };
-    // default = "Odjezd nyní" on
-    setNowMode(true);
-
-    if (elNow){
-      elNow.addEventListener('click', () => {
-        setNowMode(true);
       });
-    }
-    if (elDepTimeEnable){
-      elDepTimeEnable.addEventListener('click', () => {
-        setNowMode(false);
-        try{ elDepTime && elDepTime.focus(); }catch{}
-      });
-    }
-    if (elDepTime){
-      elDepTime.addEventListener('focus', () => { setNowMode(false); });
-      elDepTime.addEventListener('input', () => { setNowMode(false); });
-      elDepTime.addEventListener('change', () => { setNowMode(false); });
     }
 
     if (elDepSubmit){

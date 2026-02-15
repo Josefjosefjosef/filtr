@@ -2921,29 +2921,6 @@ html[data-section="jizdnirady"] #iuJizdniRadyView{
 .iuJrInline .iuJrBtn{
   white-space: nowrap;
 }
-
-.iuJrTimeWrap{
-  position: relative;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.iuJrTimeWrap .iuJrInput{
-  width: 100%;
-}
-.iuJrTimeOverlay{
-  position: absolute;
-  inset: 0;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  margin: 0;
-  cursor: text;
-}
-.iuJrTimeOverlay:focus-visible{
-  outline: 2px solid var(--iuJrOutline);
-  outline-offset: 2px;
-  border-radius: 10px;
-}
 .iuJrLabel{
   display: block;
   font-size: 13px;
