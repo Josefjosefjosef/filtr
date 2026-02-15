@@ -5315,13 +5315,8 @@ function buildVideoAsArticleCard(it) {
   // Default to safe planner fallback (never lands on a blank departures page).
   const JR_DEPARTURES_SUPPORTS_PREFILL = false;
   const JR_SUGGEST_LIMIT = 15;
-  // Autocomplete dataset:
-  // - display[] = original stop names (what we render)
-  // - norm[] = normalized for search (lowercase, no diacritics, normalized spaces)
-  // - index = first-char bucket on norm[] for performance on large datasets
-  let __iuJRDisplay = null; // string[]
-  let __iuJRNorm = null; // string[]
-  let __iuJRIndex = null; // Map<string, number[]>
+  let __iuJRStops = null; // [{ raw, norm, first }]
+  let __iuJRBucket = null; // Map firstChar -> array
   let __iuJRInited = false;
 
   function iuJRNormalize(s){
@@ -5342,27 +5337,27 @@ function buildVideoAsArticleCard(it) {
   }
 
   async function iuJRLoadStopsOnce(){
-    if (__iuJRDisplay) return __iuJRDisplay;
+    if (__iuJRStops) return __iuJRStops;
     try{
       const res = await fetch(JR_STOPS_URL, { cache: 'force-cache' });
       if (!res.ok) throw new Error('stops http ' + res.status);
       const arr = await res.json();
-      const list = (Array.isArray(arr) ? arr : [])
+      const list = Array.isArray(arr) ? arr : [];
+      __iuJRStops = list
         .map((raw) => String(raw || '').trim())
-        .filter(Boolean);
+        .filter(Boolean)
+        .map((raw) => {
+          const norm = iuJRNormalize(raw);
+          const first = norm ? norm[0] : '';
+          return { raw, norm, first };
+        });
 
-      // Keep deterministic order as provided by dataset (already cs-sorted).
-      __iuJRDisplay = list;
-      __iuJRNorm = list.map(iuJRNormalize);
-      __iuJRIndex = new Map();
-
-      for (let i = 0; i < __iuJRNorm.length; i++){
-        const n = __iuJRNorm[i] || '';
-        const k = n ? n[0] : '';
-        if (!__iuJRIndex.has(k)) __iuJRIndex.set(k, []);
-        __iuJRIndex.get(k).push(i);
+      __iuJRBucket = new Map();
+      for (const it of __iuJRStops){
+        const k = it.first || '';
+        if (!__iuJRBucket.has(k)) __iuJRBucket.set(k, []);
+        __iuJRBucket.get(k).push(it);
       }
-
       // If user already typed while loading, refresh suggestions.
       try{
         const a = document.activeElement;
@@ -5371,70 +5366,63 @@ function buildVideoAsArticleCard(it) {
           a.dispatchEvent(new Event('input', { bubbles: true }));
         }
       }catch{}
-      return __iuJRDisplay;
+      return __iuJRStops;
     }catch(e){
       console.warn('[JR] stops load failed', e);
-      __iuJRDisplay = [];
-      __iuJRNorm = [];
-      __iuJRIndex = new Map();
-      return __iuJRDisplay;
+      __iuJRStops = [];
+      __iuJRBucket = new Map();
+      return __iuJRStops;
     }
   }
 
   const JR_TOP = new Set(['praha','brno','ostrava','plzen','hradec kralove','pardubice','olomouc','liberec','usti nad labem']);
 
-  function iuJRRank(indices, qNorm, tokens){
+  function iuJRRank(items, qNorm, tokens){
     const pref = [];
     const word = [];
     const cont = [];
-    const cap = Math.max(80, JR_SUGGEST_LIMIT * 5);
+    const pushLimited = (arr, v, max) => { if (arr.length < max) arr.push(v); };
+    const cap = Math.max(60, JR_SUGGEST_LIMIT * 4);
 
-    const pushLimited = (arr, idx) => { if (arr.length < cap) arr.push(idx); };
-    const getNorm = (idx) => (__iuJRNorm && __iuJRNorm[idx]) ? __iuJRNorm[idx] : '';
-
-    for (const idx of indices){
-      const norm = getNorm(idx);
-      if (!norm) continue;
+    for (const it of items){
+      if (!it || !it.norm) continue;
 
       // AND match for multi-token queries
       let ok = true;
       for (const t of tokens){
-        if (!norm.includes(t)) { ok = false; break; }
+        if (!it.norm.includes(t)) { ok = false; break; }
       }
       if (!ok) continue;
 
-      if (norm.startsWith(qNorm)){
-        pushLimited(pref, idx);
+      if (it.norm.startsWith(qNorm)){
+        pushLimited(pref, it, cap);
         continue;
       }
 
-      const ws = norm.split(/[\s,.\-]+/g).some(w => w && w.startsWith(qNorm));
+      // word-start match (after space/comma/dash/dot)
+      const ws = it.norm.split(/[\s,.\-]+/g).some(w => w && w.startsWith(qNorm));
       if (ws){
-        pushLimited(word, idx);
+        pushLimited(word, it, cap);
         continue;
       }
 
-      if (norm.includes(qNorm)){
-        pushLimited(cont, idx);
+      if (it.norm.includes(qNorm)){
+        pushLimited(cont, it, cap);
       }
     }
 
-    const sortCs = (a,b) => {
-      const da = (__iuJRDisplay && __iuJRDisplay[a]) ? __iuJRDisplay[a] : '';
-      const db = (__iuJRDisplay && __iuJRDisplay[b]) ? __iuJRDisplay[b] : '';
-      return da.localeCompare(db, 'cs', { sensitivity: 'base' });
-    };
+    const sortCs = (a,b) => a.raw.localeCompare(b.raw, 'cs', { sensitivity: 'base' });
     pref.sort(sortCs);
     word.sort(sortCs);
     cont.sort(sortCs);
 
+    // optional: boost top cities by stable pre-order within each group
     const boost = (arr) => {
       const top = [];
       const rest = [];
-      for (const idx of arr){
-        const norm = getNorm(idx);
-        if (JR_TOP.has(norm)) top.push(idx);
-        else rest.push(idx);
+      for (const it of arr){
+        if (JR_TOP.has(it.norm)) top.push(it);
+        else rest.push(it);
       }
       return top.concat(rest);
     };
@@ -5442,13 +5430,12 @@ function buildVideoAsArticleCard(it) {
     const merged = boost(pref).concat(boost(word)).concat(boost(cont));
     const out = [];
     const seen = new Set();
-    for (const idx of merged){
-      const label = (__iuJRDisplay && __iuJRDisplay[idx]) ? __iuJRDisplay[idx] : '';
-      const norm = getNorm(idx);
-      if (!label || !norm) continue;
-      if (seen.has(norm)) continue;
-      seen.add(norm);
-      out.push(label);
+    for (const it of merged){
+      if (!it || !it.raw) continue;
+      const k = it.norm;
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(it.raw);
       if (out.length >= JR_SUGGEST_LIMIT) break;
     }
     return out;
@@ -5459,10 +5446,8 @@ function buildVideoAsArticleCard(it) {
     if (!qNorm || qNorm.length < 1) return [];
     const tokens = iuJRTokenize(qNorm);
     const first = qNorm[0] || '';
-    const baseIdx = (__iuJRIndex && __iuJRIndex.get(first)) ? __iuJRIndex.get(first) : [];
-    // Hard guard: if index missing (load failed), do nothing (free-text still works).
-    if (!baseIdx || !baseIdx.length) return [];
-    return iuJRRank(baseIdx, qNorm, tokens);
+    const base = (__iuJRBucket && __iuJRBucket.get(first)) ? __iuJRBucket.get(first) : (__iuJRStops || []);
+    return iuJRRank(base, qNorm, tokens);
   }
 
   function iuJRFormatDateDMY(iso){

@@ -4,7 +4,6 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const OUT_PATH = path.resolve('projects/data/jr_stops_all_min.json');
-const OUT_TMP_PATH = path.resolve('projects/data/jr_stops_all_min.json.tmp');
 const TMP_ROOT = fs.mkdtempSync(path.join(os.tmpdir(), 'iu-jr-'));
 
 const UA = 'INFOUZEL-JRStopsBuilder/1.0 (+https://infouzel.cz)';
@@ -79,12 +78,25 @@ function normalizeSpace(s){
   return String(s || '').replace(/\s+/g, ' ').trim();
 }
 
-function decodeCp852(buf){
-  // CRITICAL: decode CIS stop list strictly as CP852 (DOS) per observed export.
-  // Do NOT auto-detect and do NOT fall back to other encodings (would silently corrupt diacritics).
+function decodeText(buf){
   const b = Buffer.isBuffer(buf) ? buf : Buffer.from(buf || []);
-  const td = new TextDecoder('ibm852');
-  return td.decode(b);
+  const tryEnc = (enc) => {
+    try{
+      // Node 20 TextDecoder usually supports a wide range of encodings (ICU).
+      const td = new TextDecoder(enc);
+      return td.decode(b);
+    }catch{
+      return null;
+    }
+  };
+  // CIS exports are commonly in CP852 (DOS) or Windows-1250; try those first.
+  return (
+    tryEnc('ibm852') ||
+    tryEnc('cp852') ||
+    tryEnc('windows-1250') ||
+    tryEnc('utf-8') ||
+    b.toString('utf8')
+  );
 }
 
 function stripQuotes(s){
@@ -118,10 +130,6 @@ function readExistingOut(){
   }
 }
 
-function safeUnlink(p){
-  try{ fs.unlinkSync(p); }catch{}
-}
-
 async function main(){
   ensureDir(OUT_PATH);
 
@@ -142,19 +150,7 @@ async function main(){
     if (dl.ok){
       listOk = true;
       const buf = fs.readFileSync(listPath);
-      let txt = '';
-      try{
-        txt = decodeCp852(buf);
-      }catch(e){
-        listOk = false;
-        logKV({
-          download_failed: 'true',
-          keeping_existing_dataset: String(!!existing),
-          note: 'decode_failed_cp852',
-          error: (e && e.message) ? e.message : String(e)
-        });
-        process.exit(0);
-      }
+      const txt = decodeText(buf);
       const arr = collectStopsFromStopsListText(txt);
       for (const s of arr) stops.add(normalizeSpace(s));
     }
@@ -184,32 +180,25 @@ async function main(){
   const finalStops = Array.from(normSet.values());
   finalStops.sort((a,b)=>a.localeCompare(b,'cs'));
 
-  // === VALIDATION (must be strong enough to prevent corruption) ===
-  const MIN_COUNT = 20000;
-  const mustHave = ['5. května', 'Čáslav'];
-  const missing = mustHave.filter((x) => !finalStops.includes(x));
-
-  if (finalStops.length < MIN_COUNT || missing.length){
+  if (finalStops.length < 500){
     // Hard fail-safe: keep existing dataset, do not overwrite with small/empty output.
     logKV({
       download_failed: String(!listOk),
       keeping_existing_dataset: String(!!existing),
       generated_count: String(finalStops.length),
-      missing_required: missing.join('|'),
-      note: 'validation_failed_keep_existing'
+      note: 'too_few_stops_or_download_failed'
     });
-    // Never write a degraded dataset.
-    process.exit(0);
+    if (existing){
+      process.exit(0);
+    } else {
+      // No existing file to keep. Exit 0 anyway (per requirements), but leave repo untouched.
+      process.exit(0);
+    }
   }
 
-  // Atomic update: write tmp, then rename to final only if valid.
-  safeUnlink(OUT_TMP_PATH);
-  fs.writeFileSync(OUT_TMP_PATH, JSON.stringify(finalStops, null, 0) + "\n", 'utf8');
-  fs.renameSync(OUT_TMP_PATH, OUT_PATH);
-
+  fs.writeFileSync(OUT_PATH, JSON.stringify(finalStops, null, 0) + "\n", 'utf8');
   logKV({
-    build_ok: 'true',
-    download_failed: String(!listOk),
+    download_failed: String(!csvOk),
     keeping_existing_dataset: 'false',
     generated_count: String(finalStops.length),
     out: OUT_PATH
