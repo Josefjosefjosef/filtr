@@ -3937,7 +3937,21 @@ body[data-section="home"] .iuHomeCanvas{
 .iuHomeHex434 .iuHex--ads{       background: var(--iuNavAccent-ads, #0EA5A4); }
 .iuHomeHex434 .iuHex--media{     background: var(--iuNavAccent-media, #111827); }
 .iuHomeHex434 .iuHex--travel{    background: var(--iuNavAccent-travel, #0284C7); }
+.iuHomeHex434 .iuHex--jr{        background: #475569; }
 .iuHomeHex434 .iuHex--tvprogram{ background: var(--iuNavAccent-tvprogram, #334155); }
+
+/* JR empty middle view (placeholder only) */
+.iuJrEmptyView{
+  padding: 18px 12px;
+}
+.iuJrEmptyView .iuSectionTitle{
+  font-weight: 800;
+  font-size: 18px;
+  margin: 0 0 6px 0;
+}
+.iuJrEmptyView .iuSectionNote{
+  color: rgba(255,255,255,0.74);
+}
 
 /* TEXT block (no CLS) */
 .iuHomeText{
