@@ -2794,8 +2794,8 @@ html[data-section="tvonline"] #iuTvOnlineView{
 
 /* Chip accent per view (JR/Radio/TV/Mapy) */
 #iuRadioView{ --iuSectionAccent: var(--iuNavAccent-radio, #6D28D9); --iu-accent-radio: var(--iuSectionAccent); }
-#iuMapyView{ --iuSectionAccent: var(--iuNavAccent-mapy, #22C55E); --iu-accent-radio: var(--iuSectionAccent); }
-#iuJrEmptyView{ --iuSectionAccent: var(--iuNavAccent-jr); --iu-accent-radio: var(--iuSectionAccent); }
+#iuMapyView{ --iuSectionAccent: var(--iuNavAccent-mapy, #22C55E); }
+#iuJrEmptyView{ --iuSectionAccent: var(--iuNavAccent-jr); }
 
 /* TV online view: section heads span both columns */
 .iuTvOnlineGrid .iuRadioHead{
@@ -3997,11 +3997,26 @@ body[data-section="home"] .iuHomeCanvas{
 /* Mapy subtitles (scoped; avoid global h3 styling) */
 body[data-section="mapy"] #iuMapyView .iuSectionSubTitle,
 html[data-section="mapy"] #iuMapyView .iuSectionSubTitle{
-  margin: 16px 0 10px 0;
+  margin: 0;
   font-size: 14px;
   font-weight: 900;
   letter-spacing: -0.01em;
   opacity: 0.9;
+  color: var(--iuSectionAccent, currentColor);
+}
+
+/* Mapy subsections: heading + line (match SectionHeader pattern) */
+body[data-section="mapy"] #iuMapyView .iuSubSectionHeader,
+html[data-section="mapy"] #iuMapyView .iuSubSectionHeader{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 10px 0;
+  color: var(--iuSectionAccent, currentColor);
+}
+body[data-section="mapy"] #iuMapyView .iuSubSectionHeader .iuSectionHeaderLine,
+html[data-section="mapy"] #iuMapyView .iuSubSectionHeader .iuSectionHeaderLine{
+  opacity: 0.35;
 }
 
 /* Mapy grids: full-width 2 columns like JR */
