@@ -6972,3 +6972,8 @@ body.iuRailHidden #newsList > #iuHomeView{
   width: 100% !important;
   min-width: 0;
 }
+
+/* Home is deprecated (UI-only): never show the Home view container */
+#iuHomeView{
+  display: none !important;
+}
