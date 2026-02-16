@@ -2347,7 +2347,10 @@ function buildVideoAsArticleCard(it) {
         try{
           const dateStr = fmtDateNow();
           const namedayStr = readNamedayFromUI();
-          dayInfo.textContent = namedayStr ? `${dateStr} · ${namedayStr}` : dateStr;
+          const full = namedayStr ? `${dateStr} · ${namedayStr}` : dateStr;
+          dayInfo.textContent = full;
+          // tooltip: always keep full text available even when CSS truncates
+          try{ dayInfo.setAttribute("title", full); }catch{}
         }catch{}
       }
 
