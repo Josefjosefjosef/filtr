@@ -2850,13 +2850,6 @@ html[data-section="tvonline"] #iuTvOnlineView{
 }
 
 /* === TV ONLINE: Česká televize tile (4+3 layout) === */
-.iuTvOnlineGrid .iuRadioChip{
-  /* Ensure CT tile can be exactly same height as other TV tiles (CLS=0) */
-  box-sizing: border-box;
-  height: var(--iuChipH, 110px);
-  overflow:hidden;
-}
-
 .iuRadioGrid{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2869,13 +2862,6 @@ html[data-section="radio"] #iuRadioView .iuRadioGrid{
   grid-template-columns:repeat(2, minmax(0, 1fr));
   gap:12px;
 }
-body[data-section="radio"] #iuRadioView .iuRadioChip,
-html[data-section="radio"] #iuRadioView .iuRadioChip{
-  box-sizing:border-box;
-  height: var(--iuChipH, 110px);
-  overflow:hidden;
-}
-
 .iuRadioHead{
   display: flex;
   align-items: center;
@@ -3241,6 +3227,7 @@ select.iuCtrl{
   }
 }
 .iuRadioChip{
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -3248,6 +3235,8 @@ select.iuCtrl{
   text-align: center;
   gap: 4px;
   padding: 16px var(--iuChipPadX, 12px);
+  height: var(--iuChipH, 110px);
+  overflow: hidden;
   border-radius: 12px;
   text-decoration: none;
   background: transparent;
@@ -4023,14 +4012,6 @@ html[data-section="mapy"] #iuMapyView .iuMapyGrid{
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-/* Mapy chips: match fixed tile height (CLS=0) like Radio/TV/JR */
-body[data-section="mapy"] #iuMapyView .iuRadioChip,
-html[data-section="mapy"] #iuMapyView .iuRadioChip{
-  box-sizing: border-box;
-  height: var(--iuChipH, 110px);
-  overflow: hidden;
-}
-
 /* JR quick links grid: match Radio sizing + full-width 2 columns */
 body[data-section="jr"] #iuJrEmptyView .iuJRGrid,
 html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
@@ -4039,14 +4020,6 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
   margin-left: 0;
   margin-right: 0;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-/* Match Radio chip sizing (height) */
-body[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip,
-html[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip{
-  box-sizing: border-box;
-  height: var(--iuChipH, 110px);
-  overflow: hidden;
 }
 
 /* JR: same hover mechanism as Radio (just swap accent var locally) */
