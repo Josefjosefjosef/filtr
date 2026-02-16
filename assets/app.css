@@ -3838,6 +3838,9 @@ body[data-section="home"] .iuHomeCanvas{
   clip-path: none !important;
   -webkit-clip-path: none !important;
   border-radius: 14px;
+  /* Normalize tile footprint (no special-casing last row / counts) */
+  aspect-ratio: 16 / 9;
+  min-height: 132px;
 
   display: flex;
   flex-direction: column;
@@ -4008,6 +4011,29 @@ html[data-section="pocasi"] #iuWeatherView .iuSubSectionHeader{
 body[data-section="pocasi"] #iuWeatherView .iuSubSectionHeader .iuSectionHeaderLine,
 html[data-section="pocasi"] #iuWeatherView .iuSubSectionHeader .iuSectionHeaderLine{
   opacity: 0.35;
+}
+
+/* Weather accent: tint the "now" panel + hourly strip ONLY in Weather view */
+body[data-section="pocasi"] #iuWeatherView .iuHomeWeatherShell,
+html[data-section="pocasi"] #iuWeatherView .iuHomeWeatherShell{
+  background: color-mix(in srgb, rgba(10,22,35,0.92) 80%, var(--iuSectionAccent) 20%);
+  border: 1px solid color-mix(in srgb, var(--iuSectionAccent) 35%, rgba(255,255,255,0.12));
+}
+body[data-section="pocasi"] #iuWeatherView #iuWxHours .iuWxHour,
+html[data-section="pocasi"] #iuWeatherView #iuWxHours .iuWxHour{
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--iuSectionAccent) 28%, rgba(255,255,255,0.18));
+  background: rgba(255,255,255,0.08);
+  padding: 8px 10px;
+  min-width: 58px;
+  box-sizing: border-box;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherQuickChip:focus-visible,
+body[data-section="pocasi"] #iuWeatherView .iuWeatherLinksGrid .iuRadioChip:focus-visible,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherQuickChip:focus-visible,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherLinksGrid .iuRadioChip:focus-visible{
+  outline: 2px solid color-mix(in srgb, var(--iuSectionAccent) 70%, white);
+  outline-offset: 3px;
 }
 
 /* Weather hourly chips: make the (12h) strip scrollable */
