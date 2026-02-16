@@ -3971,12 +3971,63 @@ body[data-section="home"] .iuHomeCanvas{
 .iuSectionHeader--mapy{ --iuSectionAccent: var(--iuNavAccent-mapy, #22C55E); }
 .iuSectionHeader--radio{ --iuSectionAccent: var(--iuNavAccent-radio, #6D28D9); }
 .iuSectionHeader--tvonline{ --iuSectionAccent: var(--iuNavAccent-tvonline, #DC2626); }
+.iuSectionHeader--travel{ --iuSectionAccent: var(--iuNavAccent-travel, #06B6D4); }
 
 .iuSectionHeader--jr h2,
 .iuSectionHeader--mapy h2,
 .iuSectionHeader--radio h2,
-.iuSectionHeader--tvonline h2{
+.iuSectionHeader--tvonline h2,
+.iuSectionHeader--travel h2{
   color: var(--iuSectionAccent, currentColor);
+}
+
+/* TRAVEL view (UI-only): static link chips (no feed pipeline) */
+.iuTravelView{
+  padding: 18px 12px;
+  --iuSectionAccent: var(--iuNavAccent-travel, #06B6D4);
+}
+/* Travel uses a dedicated middle view; keep feed hidden just for this section */
+body[data-section="travel"] #iuTravelView,
+html[data-section="travel"] #iuTravelView{
+  display: block !important;
+}
+body[data-section="travel"] #feed,
+html[data-section="travel"] #feed{
+  display: none !important;
+}
+
+/* Travel subtitles (scoped; avoid global h3 styling) */
+body[data-section="travel"] #iuTravelView .iuSectionSubTitle,
+html[data-section="travel"] #iuTravelView .iuSectionSubTitle{
+  margin: 0;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  opacity: 0.9;
+  color: var(--iuSectionAccent, currentColor);
+}
+/* Travel subsections: heading + line (match SectionHeader pattern) */
+body[data-section="travel"] #iuTravelView .iuSubSectionHeader,
+html[data-section="travel"] #iuTravelView .iuSubSectionHeader{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 10px 0;
+  color: var(--iuSectionAccent, currentColor);
+}
+body[data-section="travel"] #iuTravelView .iuSubSectionHeader .iuSectionHeaderLine,
+html[data-section="travel"] #iuTravelView .iuSubSectionHeader .iuSectionHeaderLine{
+  opacity: 0.35;
+}
+/* Travel grids: full-width 2 columns like JR/Mapy */
+body[data-section="travel"] #iuTravelView .iuTravelGrid,
+html[data-section="travel"] #iuTravelView .iuTravelGrid{
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 /* MAPY view (UI-only): structured link chips */

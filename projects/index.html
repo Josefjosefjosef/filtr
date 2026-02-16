@@ -31,6 +31,19 @@
       }
     })();
     </script>
+    <script>
+    (function(){
+      // UI-only alias: allow Czech section name in URL without touching feed pipeline
+      try{
+        const u = new URL(window.location.href);
+        const section = String(u.searchParams.get("section") || "").trim().toLowerCase();
+        if (section === "cestovani") {
+          u.searchParams.set("section", "travel");
+          history.replaceState(null, "", u.toString());
+        }
+      }catch{}
+    })();
+    </script>
 
     <div id="app">
       <div id="page">
@@ -488,6 +501,121 @@
                       <a class="iuRadioChip" role="listitem" href="https://www.pid.cz" target="_blank" rel="noopener noreferrer">
                         <span class="iuRadioChipTitle">PID</span>
                       </a>
+                    </div>
+                  </div>
+                  <div id="iuTravelView" class="iuTravelView" hidden>
+                    <div class="iuSectionHeader iuSectionHeader--travel">
+                      <h2>Cestování</h2>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+
+                    <p class="iuSectionSubtitle">
+                      Plánování dovolené, levné letenky, ubytování, cestovní pojištění,
+                      cestovní kanceláře, bezpečnost na cestách a rady co dělat při problémech.
+                      Rychlé odkazy na ověřené služby pro cestování v ČR i zahraničí.
+                    </p>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">✈️ Letenky a plánování trasy</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuRadioGrid iuTravelGrid" role="list" aria-label="Letenky a plánování trasy (odkazy)">
+                      <a class="iuRadioChip" role="listitem" href="https://www.kiwi.com" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Kiwi.com</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.skyscanner.cz" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Skyscanner</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.rome2rio.com/map" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Rome2rio</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.omio.com" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Omio</span></a>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">🚌 Doprava po Evropě</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuRadioGrid iuTravelGrid" role="list" aria-label="Doprava po Evropě (odkazy)">
+                      <a class="iuRadioChip" role="listitem" href="https://www.flixbus.cz" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">FlixBus</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://support.blablacar.com/" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">BlaBlaCar</span></a>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">🏨 Ubytování</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuRadioGrid iuTravelGrid" role="list" aria-label="Ubytování (odkazy)">
+                      <a class="iuRadioChip" role="listitem" href="https://www.booking.com/homes" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Booking.com</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.airbnb.com" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Airbnb</span></a>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">🚗 Půjčovny aut</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuRadioGrid iuTravelGrid" role="list" aria-label="Půjčovny aut (odkazy)">
+                      <a class="iuRadioChip" role="listitem" href="https://www.rentalcars.com" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Rentalcars.com</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.discovercars.com" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">DiscoverCars.com</span></a>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">🛡️ Cestovní pojištění (komerční)</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuRadioGrid iuTravelGrid" role="list" aria-label="Cestovní pojištění (komerční) (odkazy)">
+                      <a class="iuRadioChip" role="listitem" href="https://www.allianz.cz/cs_CZ/pojisteni/cestovani/cestovni-pojisteni-kratkodobe.html" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Allianz</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.axa-assistance.cz/cestovni-pojisteni" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">AXA Assistance</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.koop.cz/pojisteni/cestovni-pojisteni" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Kooperativa</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.generaliceska.cz/cestovni-pojisteni" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Generali Česká</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.slavia-pojistovna.cz/cestovni-pojisteni" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Slavia pojišťovna</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.epojisteni.cz/cestovni-pojisteni" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">ePojištění</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.top-pojisteni.cz/cestovni-pojisteni" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Top-Pojištění</span></a>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">🌍 Cestovní kanceláře</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuRadioGrid iuTravelGrid" role="list" aria-label="Cestovní kanceláře (odkazy)">
+                      <a class="iuRadioChip" role="listitem" href="https://www.invia.cz" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Invia</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.dovolena.cz" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Dovolená.cz</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.cedok.cz" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Čedok</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.fischer.cz/sitemap.xml" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Fischer</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.eximtours.cz/sitemap.xml" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Exim tours</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.blue-style.cz/sitemap.xml" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Blue Style</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.alexandria.cz" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Alexandria</span></a>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">💰 Peníze a kurzy</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuRadioGrid iuTravelGrid" role="list" aria-label="Peníze a kurzy (odkazy)">
+                      <a class="iuRadioChip" role="listitem" href="https://www.xe.com" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">XE</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://wise.com" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Wise</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.revolut.com" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Revolut</span></a>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">🛂 Bezpečnost a pomoc</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuRadioGrid iuTravelGrid" role="list" aria-label="Bezpečnost a pomoc (odkazy)">
+                      <a class="iuRadioChip" role="listitem" href="https://www.mzv.cz/cestujeme" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">MZV – Cestujeme</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.mzv.cz/jnp/cz/cestujeme/pomoc_v_nouzi/index.html" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">MZV – Pomoc v nouzi</span></a>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">✈️ Práva cestujících</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuRadioGrid iuTravelGrid" role="list" aria-label="Práva cestujících (odkazy)">
+                      <a class="iuRadioChip" role="listitem" href="https://europa.eu/youreurope/citizens/travel/passenger-rights/air/index_cs.htm" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">EU – práva cestujících (letecky)</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://eur-lex.europa.eu/legal-content/CS/TXT/?uri=CELEX%3A32004R0261" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Nařízení (ES) 261/2004</span></a>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">🧾 Reklamace a problémy</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuRadioGrid iuTravelGrid" role="list" aria-label="Reklamace a problémy (odkazy)">
+                      <a class="iuRadioChip" role="listitem" href="https://www.coi.cz" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">ČOI</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.mpo.cz" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">MPO</span></a>
                     </div>
                   </div>
                   <div id="iuMapyView" class="iuMapyView" hidden>
