@@ -7314,3 +7314,52 @@ html.iuRailHidden #iuRailToggleBtn::before{
 html.iuRailHidden #iuRailToggleBtn:hover::before{
   color: #dc2626 !important;
 }
+
+/* ============================================================
+   FINAL FIX — topbar professional size + hamburger smaller
+   UI-only / CLS-safe
+   ============================================================ */
+
+/* 1. menší výška topbaru */
+.topbar-new,
+.topbar-new-inner {
+  min-height: 56px !important;     /* původně ~70 */
+  height: 56px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+/* 2. hamburger menší a čistší */
+.topbar-new .iuHamburger,
+.topbar-new .hamburger,
+.topbar-new .menuBtn,
+.topbar-new button[aria-label="Menu"],
+.topbar-new button[aria-label="Sekce"] {
+  width: 34px !important;
+  height: 34px !important;
+  padding: 4px !important;
+}
+
+/* ikona uvnitř */
+.topbar-new .iuHamburger svg,
+.topbar-new .hamburger svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* burger spans (current markup) */
+.topbar-new .menuBtn .burger{
+  width: 18px !important;
+  height: 14px !important;
+}
+.topbar-new .menuBtn .burger span{
+  height: 2px !important;
+}
+
+/* hover decentní */
+.topbar-new .iuHamburger:hover,
+.topbar-new .hamburger:hover,
+.topbar-new .menuBtn:hover {
+  background: rgba(0,0,0,0.06);
+  border-radius: 8px;
+}
