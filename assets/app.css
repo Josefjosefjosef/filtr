@@ -2784,8 +2784,6 @@ body[data-section="media"] #feed{
   display: none;
   /* chip accent is scoped to the view (no long body[...] selectors) */
   --iuSectionAccent: var(--iuNavAccent-tvonline, #DC2626);
-  /* legacy alias (used by .iuRadioTitle/.iuRadioLine and wish UI) */
-  --iu-accent-radio: var(--iuSectionAccent);
 }
 body[data-section="tvonline"] #iuTvOnlineView,
 html[data-section="tvonline"] #iuTvOnlineView{
@@ -2878,13 +2876,13 @@ html[data-section="radio"] #iuRadioView .iuRadioGrid{
 .iuRadioTitle{
   font-weight: 900;
   letter-spacing: -0.01em;
-  color: var(--iu-accent-radio);
+  color: var(--iuSectionAccent, var(--iu-accent-radio, var(--iuNavAccent-radio, #8B5CF6)));
   opacity: 0.92;
 }
 .iuRadioLine{
   height: 2px;
   flex: 1 1 auto;
-  background: linear-gradient(to right, var(--iu-accent-radio), rgba(0,0,0,0));
+  background: linear-gradient(to right, var(--iuSectionAccent, var(--iu-accent-radio, var(--iuNavAccent-radio, #8B5CF6))), rgba(0,0,0,0));
   opacity: 0.35;
   border-radius: 999px;
 }
@@ -3252,8 +3250,8 @@ select.iuCtrl{
   transition: background-color 150ms ease, color 150ms ease;
 }
 .iuRadioChip:hover{
-  background-color: var(--iuSectionAccent, var(--iu-accent-radio));
-  border-color: var(--iuSectionAccent, var(--iu-accent-radio));
+  background-color: var(--iuSectionAccent, var(--iuNavAccent-radio, #8B5CF6));
+  border-color: var(--iuSectionAccent, var(--iuNavAccent-radio, #8B5CF6));
   color: #fff;
 }
 .iuRadioChip:hover .iuRadioChipTitle,
@@ -3261,10 +3259,10 @@ select.iuCtrl{
   color: #fff;
 }
 .iuRadioChip:focus-visible{
-  background-color: var(--iuSectionAccent, var(--iu-accent-radio));
-  border-color: var(--iuSectionAccent, var(--iu-accent-radio));
+  background-color: var(--iuSectionAccent, var(--iuNavAccent-radio, #8B5CF6));
+  border-color: var(--iuSectionAccent, var(--iuNavAccent-radio, #8B5CF6));
   color: #fff;
-  outline: 2px solid color-mix(in srgb, var(--iuSectionAccent, var(--iu-accent-radio)) 70%, white);
+  outline: 2px solid color-mix(in srgb, var(--iuSectionAccent, var(--iuNavAccent-radio, #8B5CF6)) 70%, white);
   outline-offset: 2px;
 }
 .iuRadioChip:focus-visible .iuRadioChipTitle,
@@ -5982,7 +5980,6 @@ html[data-section="mapy"] #newsList > #iuMapyView{
 
   /* Section accents (content hooks) */
   --iu-accent-media: var(--iuNavAccent-media, #3B82F6);
-  --iu-accent-radio: var(--iuNavAccent-radio, #8B5CF6);
   --iu-accent-tv: var(--iuNavAccent-tv, #EF4444);
   --iu-accent-tvonline: var(--iuNavAccent-tvonline, #DC2626);
   --iu-accent-maps: var(--iuNavAccent-mapy, #22C55E);
