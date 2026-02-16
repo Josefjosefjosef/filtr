@@ -3983,7 +3983,8 @@ body[data-section="home"] .iuHomeCanvas{
 }
 
 /* JR quick links grid: match Radio sizing + full-width 2 columns */
-.iuJrEmptyView .iuJRGrid{
+body[data-section="jr"] #iuJrEmptyView .iuJRGrid,
+html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
   width: 100%;
   max-width: none;
   margin-left: 0;
@@ -3992,32 +3993,28 @@ body[data-section="home"] .iuHomeCanvas{
 }
 
 /* Match Radio chip sizing (height) */
-.iuJrEmptyView .iuJRGrid .iuRadioChip{
+body[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip,
+html[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip{
   box-sizing: border-box;
   height: 110px;
   overflow: hidden;
 }
 
-/* JR hover = full fill in JR accent color (orange) */
-.iuJrEmptyView .iuJRGrid .iuRadioChip:hover,
-.iuJrEmptyView .iuJRGrid .iuRadioChip:focus-visible{
-  background-color: var(--iuNavAccent-jr);
+/* JR: same hover mechanism as Radio (just swap accent var locally) */
+body[data-section="jr"] #iuJrEmptyView,
+html[data-section="jr"] #iuJrEmptyView{
+  --iu-accent-radio: var(--iuNavAccent-jr);
+}
+
+/* Border should match JR accent on hover/focus */
+body[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip:hover,
+html[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip:hover,
+body[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip:focus-visible,
+html[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip:focus-visible{
   border-color: var(--iuNavAccent-jr);
-  color: #fff;
 }
 
-/* Ensure text stays readable on orange */
-.iuJrEmptyView .iuJRGrid .iuRadioChip:hover .iuRadioChipTitle,
-.iuJrEmptyView .iuJRGrid .iuRadioChip:hover .iuRadioChipDesc,
-.iuJrEmptyView .iuJRGrid .iuRadioChip:focus-visible .iuRadioChipTitle,
-.iuJrEmptyView .iuJRGrid .iuRadioChip:focus-visible .iuRadioChipDesc{
-  color: #fff;
-}
-
-.iuJrEmptyView .iuJRGrid .iuRadioChip:focus-visible{
-  outline: 2px solid color-mix(in srgb, var(--iuNavAccent-jr) 70%, white);
-  outline-offset: 2px;
-}
+/* (Text/background/outline are inherited from the shared .iuRadioChip:hover/:focus-visible rules via --iu-accent-radio) */
 
 /* TEXT block (no CLS) */
 .iuHomeText{
