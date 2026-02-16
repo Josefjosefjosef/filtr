@@ -4633,7 +4633,7 @@ function buildVideoAsArticleCard(it) {
 
   // Unified navigation router (UI-only)
   // NOTE: non-radio sections still use the normal feed view.
-  const VIEW_MAP = { home: 'home', media: 'media', radio: 'radio', jr: 'jr' };
+  const VIEW_MAP = { home: 'home', media: 'media', radio: 'radio', jr: 'jr', mapy: 'mapy' };
   const STORAGE_KEY_WISH = "iuRadioWishDraftV1";
   const STORAGE_KEY_WISH_OPEN = "iuRadioWishOpenV1";
 
@@ -5275,17 +5275,20 @@ function buildVideoAsArticleCard(it) {
     const viewEl = document.getElementById('iuRadioView');
     const homeEl = document.getElementById('iuHomeView');
     const jrEmptyEl = document.getElementById('iuJrEmptyView');
+    const mapyEl = document.getElementById('iuMapyView');
 
     if (feedEl) feedEl.hidden = true;
     if (viewEl) viewEl.hidden = true;
     if (homeEl) homeEl.hidden = true;
     if (jrEmptyEl) jrEmptyEl.hidden = true;
+    if (mapyEl) mapyEl.hidden = true;
 
     if(key === 'home' && homeEl) homeEl.hidden = false;
     if(key === 'radio' && viewEl) viewEl.hidden = false;
     if(key === 'jr' && jrEmptyEl) jrEmptyEl.hidden = false;
+    if(key === 'mapy' && mapyEl) mapyEl.hidden = false;
     // default feed view for all other sections
-    if(key !== 'home' && key !== 'radio' && key !== 'jr' && feedEl) feedEl.hidden = false;
+    if(key !== 'home' && key !== 'radio' && key !== 'jr' && key !== 'mapy' && feedEl) feedEl.hidden = false;
   }
 
   function normalizeSection(raw){
