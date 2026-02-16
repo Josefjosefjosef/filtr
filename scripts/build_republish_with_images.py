@@ -78,26 +78,38 @@ BANNED_PROVIDER_SUBSTRINGS = [
     "associated press",
     "shutterstock",
     "alamy",
+    "afp",
+    "bloomberg",
 ]
 
 BANNED_PROVIDER_REGEX = re.compile(
-    r"(?i)(getty|reuters|associated\s+press|\bap\b|shutterstock|alamy)"
+    r"(?i)(getty|reuters|associated\s+press|\bap\b|shutterstock|alamy|afp|bloomberg)"
 )
 
 MEDIAWIKI_IMAGE_BLACKLIST = [
-    "wiki_loves_",
-    "wikinews",
+    "wikiloves",
+    "wiki_loves",
+    "wiki-loves",
     "commons-logo",
     "commons_logo",
     "pictogram",
     "icon",
-    "banner",
+    "icons",
     "sports_icon",
     "_icon.",
+    "banner",
+    "logo",
+    "portal",
+    "portlet",
+    "navbox",
+    "badge",
+    "button",
+    "placeholder",
+    "sprite",
 ]
 
-MIN_MW_WIDTH = 350
-MIN_MW_HEIGHT = 200
+MIN_MW_WIDTH = 600
+MIN_MW_HEIGHT = 350
 
 MW_RASTER_EXT_ALLOW = (".jpg", ".jpeg", ".png", ".webp")
 
@@ -538,33 +550,28 @@ def extract_commons_extmeta(meta: Dict[str, Any]) -> Dict[str, str]:
     except Exception:
         return {}
 
-def ensure_license_url(license_text: str, license_url: str) -> str:
+def derive_license_url_strict(license_text: str, license_url: str) -> str:
     """
     Hard requirement: PASS must include non-empty license_url.
-    If Commons extmetadata doesn't provide it, try to infer canonical URL.
+    We only accept:
+    - explicit LicenseUrl from extmetadata, OR
+    - a small set of exact, safe mappings (no guessing).
     """
     u = (license_url or "").strip()
     if u:
         return u
-    t = (license_text or "").strip()
-    tl = t.lower()
-    # CC BY / BY-SA with version
-    m = re.search(r"cc\s*by-sa\s*([0-9.]+)", tl)
-    if m:
-        return f"https://creativecommons.org/licenses/by-sa/{m.group(1).strip('/')}/"
-    m = re.search(r"cc\s*by\s*([0-9.]+)", tl)
-    if m:
-        return f"https://creativecommons.org/licenses/by/{m.group(1).strip('/')}/"
-    # locale variants like "CC BY 3.0 au"
-    m = re.search(r"cc\s*by\s*([0-9.]+)\s*([a-z]{2})", tl)
-    if m:
-        return f"https://creativecommons.org/licenses/by/{m.group(1).strip('/')}/{m.group(2)}/"
-    # Public domain
-    if "public domain" in tl:
-        return "https://creativecommons.org/publicdomain/mark/1.0/"
-    if "cc0" in tl or "cc zero" in tl:
-        return "https://creativecommons.org/publicdomain/zero/1.0/"
-    return ""
+    t = normalize_license_text(license_text)
+    safe_map = {
+        "cc by 4.0": "https://creativecommons.org/licenses/by/4.0/",
+        "cc-by 4.0": "https://creativecommons.org/licenses/by/4.0/",
+        "cc by-sa 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "cc-by-sa 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "public domain mark": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "public domain": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "cc0": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "cc zero": "https://creativecommons.org/publicdomain/zero/1.0/",
+    }
+    return safe_map.get(t, "")
 
 def mw_extract_title(article_url: str, mw_article_base: str) -> Optional[str]:
     """
@@ -581,12 +588,14 @@ def mw_extract_title(article_url: str, mw_article_base: str) -> Optional[str]:
     except Exception:
         return None
 
-def mw_api_get_page_images(mw_api_base: str, title: str, no_cache: bool, limiter: RateLimiter) -> List[str]:
+def mw_api_get_page_images(mw_api_base: str, title: str, no_cache: bool, limiter: RateLimiter) -> Dict[str, Any]:
     params = {
         "action": "query",
         "format": "json",
         "titles": title,
-        "prop": "images",
+        "prop": "pageimages|images",
+        "piprop": "thumbnail|name|original",
+        "pithumbsize": "1200",
         "imlimit": "50",
     }
     url = mw_api_base + "?" + urlencode(params)
@@ -594,15 +603,20 @@ def mw_api_get_page_images(mw_api_base: str, title: str, no_cache: bool, limiter
     data = json.loads(fr.body.decode("utf-8", errors="replace"))
     pages = data.get("query", {}).get("pages", {})
     if not isinstance(pages, dict) or not pages:
-        return []
+        return {"images": []}
     page = next(iter(pages.values()))
     imgs = page.get("images") or []
-    out = []
+    out_imgs = []
     for it in imgs:
         t = (it.get("title") or "").strip()
         if t:
-            out.append(t)
-    return out
+            out_imgs.append(t)
+    return {
+        "images": out_imgs,
+        "pageimage": (page.get("pageimage") or "").strip(),
+        "original": page.get("original") or {},
+        "thumbnail": page.get("thumbnail") or {},
+    }
 
 def mw_api_get_file_info(mw_api_base: str, file_title: str, no_cache: bool, limiter: RateLimiter) -> Optional[Dict[str, Any]]:
     params = {
@@ -610,7 +624,7 @@ def mw_api_get_file_info(mw_api_base: str, file_title: str, no_cache: bool, limi
         "format": "json",
         "titles": file_title,
         "prop": "imageinfo",
-        "iiprop": "url|size|extmetadata",
+        "iiprop": "url|size|mime",
     }
     url = mw_api_base + "?" + urlencode(params)
     fr = http_fetch(url, accept="application/json", no_cache=no_cache, limiter=limiter)
@@ -627,7 +641,7 @@ def mw_api_get_file_info(mw_api_base: str, file_title: str, no_cache: bool, limi
         "url": (i0.get("url") or "").strip(),
         "width": int(i0.get("width") or 0),
         "height": int(i0.get("height") or 0),
-        "extmetadata": i0.get("extmetadata") or {},
+        "mime": (i0.get("mime") or "").strip(),
     }
 
 def is_mediawiki_junk(file_title: str, url: str) -> bool:
@@ -635,6 +649,34 @@ def is_mediawiki_junk(file_title: str, url: str) -> bool:
     for sub in MEDIAWIKI_IMAGE_BLACKLIST:
         if sub.lower() in s:
             return True
+    return False
+
+def is_allowed_raster_url(url: str) -> bool:
+    ul = (url or "").lower()
+    if not ul:
+        return False
+    if ul.endswith(".svg") or ul.endswith(".gif") or ul.endswith(".tif") or ul.endswith(".tiff") or ul.endswith(".pdf"):
+        return False
+    return ul.endswith(MW_RASTER_EXT_ALLOW)
+
+def normalize_mediawiki_filename(name: str) -> str:
+    n = (name or "").strip()
+    n = unquote(n)
+    n = n.replace(" ", "_")
+    return n
+
+def mw_filetitle_from_filename(filename: str) -> str:
+    return "File:" + normalize_mediawiki_filename(filename)
+
+def mw_file_in_images(file_title: str, images: List[str]) -> bool:
+    ft = normalize_mediawiki_filename(file_title)
+    if not ft.lower().startswith("file:"):
+        return False
+    ft = ft[5:]
+    for t in images:
+        if (t or "").lower().startswith("file:"):
+            if normalize_mediawiki_filename(t)[5:] == ft:
+                return True
     return False
 
 def pick_mediawiki_image(
@@ -652,11 +694,35 @@ def pick_mediawiki_image(
     title = mw_extract_title(article_url, mw_article_base)
     if not title:
         return (None, None, None, "missing_image")
-    file_titles = mw_api_get_page_images(mw_api_base, title, no_cache=no_cache, limiter=limiter)
+    page = mw_api_get_page_images(mw_api_base, title, no_cache=no_cache, limiter=limiter)
+    page_images = list(page.get("images") or [])
+    pageimage_name = (page.get("pageimage") or "").strip()
+    rejected_junk = False
+
+    # (A) Prefer prop=pageimages when it is a real raster image and is actually used on the page.
+    if pageimage_name:
+        # Prefer original URL if available; fallback to thumbnail.
+        orig = page.get("original") or {}
+        thumb = page.get("thumbnail") or {}
+        url = (orig.get("source") or thumb.get("source") or "").strip()
+        w = int(orig.get("width") or thumb.get("width") or 0)
+        h = int(orig.get("height") or thumb.get("height") or 0)
+        ft = mw_filetitle_from_filename(pageimage_name)
+        if not url:
+            rejected_junk = True
+        elif (not is_allowed_raster_url(url)) or (w < MIN_MW_WIDTH or h < MIN_MW_HEIGHT):
+            rejected_junk = True
+        elif is_mediawiki_junk(ft, url):
+            rejected_junk = True
+        elif not mw_file_in_images(ft, page_images):
+            rejected_junk = True
+        else:
+            return (url, ft, {"url": url, "width": w, "height": h}, "")
+
     # Filter junk early
     filtered: List[str] = []
     raw_files: List[str] = []
-    for ft in file_titles:
+    for ft in page_images:
         low = ft.lower()
         if not low.startswith("file:"):
             continue
@@ -670,7 +736,6 @@ def pick_mediawiki_image(
     best_area = -1
     best_info = None
     best_url = None
-    rejected_junk = False
     # Try up to 50 candidates; prefer largest raster image
     for ft in filtered:
         info = mw_api_get_file_info(mw_api_base, ft, no_cache=no_cache, limiter=limiter)
@@ -679,16 +744,16 @@ def pick_mediawiki_image(
         url = info.get("url") or ""
         w = int(info.get("width") or 0)
         h = int(info.get("height") or 0)
+        mime = (info.get("mime") or "").lower()
         if not url:
             continue
         if is_mediawiki_junk(ft, url):
             rejected_junk = True
             continue
-        # exclude svg
-        if url.lower().endswith(".svg") or ft.lower().endswith(".svg"):
+        # only raster, avoid risky formats
+        if not is_allowed_raster_url(url):
             continue
-        # exclude non-raster / risky formats (pdf, etc.)
-        if not url.lower().endswith(MW_RASTER_EXT_ALLOW):
+        if mime and (not mime.startswith("image/")):
             continue
         # extra junk guard on URL path too
         if any(sub in url.lower() for sub in MEDIAWIKI_IMAGE_BLACKLIST):
@@ -1060,7 +1125,7 @@ def main() -> int:
                         meta = commons_api_query(filename, no_cache=bool(args.no_cache), limiter=limiter)
                     ext = extract_commons_extmeta(meta)
                     lic_text = ext.get("LicenseShortName") or ext.get("License") or ""
-                    lic_url = ensure_license_url(lic_text, ext.get("LicenseUrl") or "")
+                    lic_url = derive_license_url_strict(lic_text, ext.get("LicenseUrl") or "")
                     author_credit = (ext.get("Artist") or "").strip()
                     if not author_credit:
                         author_credit = (ext.get("Credit") or "").strip()
@@ -1192,7 +1257,7 @@ def main() -> int:
                             source_domain=source_domain,
                             license_type=lic_text,
                             license_text=lic_text,
-                            license_page_url=(lic_url or f"https://commons.wikimedia.org/wiki/File:{filename}"),
+                            license_page_url=lic_url,
                             author_credit=author_credit,
                             timestamp_iso=ts,
                             hash_image=hash_img,
@@ -1200,6 +1265,8 @@ def main() -> int:
                             extmeta=ext,
                             edge_path=edge_path,
                         )
+                        if (not proof_html_path.exists()) or (not proof_png_path.exists()):
+                            raise RuntimeError("proof_files_missing_after_write")
                     except Exception:
                         append_provenance(
                             provenance_path,
@@ -1221,7 +1288,7 @@ def main() -> int:
                         source_name=sname or sid,
                         source_url=article_url,
                         license_type=lic_text,
-                        license_url=lic_url or "",
+                        license_url=lic_url,
                         author_credit=author_credit,
                     )
 
@@ -1233,7 +1300,7 @@ def main() -> int:
                             "published_at": published_at,
                             "image_url": image_url,
                             "image_license_type": lic_text,
-                            "license_url": lic_url or "",
+                            "license_url": lic_url,
                             "attribution_html": attribution_html,
                             "proof_path_html": str(proof_html_path.relative_to(ROOT)).replace("\\", "/"),
                             "proof_path_png": str(proof_png_path.relative_to(ROOT)).replace("\\", "/"),
@@ -1248,7 +1315,7 @@ def main() -> int:
                             "article_url": article_url,
                             "image_url": image_url,
                             "license_type": lic_text,
-                            "license_url": lic_url or "",
+                            "license_url": lic_url,
                             "result": "PASS",
                             "drop_reason": "",
                         },

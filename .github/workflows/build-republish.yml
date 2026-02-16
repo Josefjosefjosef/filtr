@@ -53,28 +53,41 @@ jobs:
       - name: Gate - banned providers must be absent
         shell: pwsh
         run: |
-          $m = Select-String -Path .\projects\data\republish_with_images.json -Pattern "GETTY|REUTERS|SHUTTERSTOCK|ALAMY|ASSOCIATED PRESS|\bAP\b" -CaseSensitive:$false
+          $m = Select-String -Path .\projects\data\republish_with_images.json -Pattern "GETTY|REUTERS|SHUTTERSTOCK|ALAMY|ASSOCIATED PRESS|\bAP\b|AFP|BLOOMBERG" -CaseSensitive:$false
           if ($m) { Write-Error "BANNED_PROVIDER_STRING_FOUND"; exit 1 }
 
       - name: Gate - proof files must exist per item
         shell: pwsh
         run: |
           $code = @'
-          import json, sys, pathlib
+          import json, sys, pathlib, re
           from urllib.parse import urlparse
           root = pathlib.Path(".")
           data = json.loads((root / "projects/data/republish_with_images.json").read_text(encoding="utf-8"))
           items = data.get("items") or []
           allow = json.loads((root / "projects/data/image_allowlist.json").read_text(encoding="utf-8")).get("allowed_domains") or []
           allow = set([str(x).lower() for x in allow])
+          banned = re.compile(r"(?i)(getty|reuters|shutterstock|alamy|associated\\s+press|\\bap\\b|afp|bloomberg)")
+          junk_tokens = [
+              "icon","icons","sports_icon","_icon.","banner","logo","pictogram","commons-logo",
+              "wikiloves","wiki_loves","portal","portlet","navbox","badge","button","placeholder","sprite"
+          ]
           req = ("proof_path_html","proof_path_png","image_url","source_url","attribution_html","image_license_type","license_url")
           for idx, it in enumerate(items):
               for k in req:
                   if not it.get(k):
                       raise SystemExit(f"missing_field {idx} {k}")
+              if not str(it["license_url"]).strip():
+                  raise SystemExit(f"empty_license_url {idx}")
               host = (urlparse(it["image_url"]).hostname or "").lower()
               if host not in allow:
                   raise SystemExit(f"image_host_not_allowlisted {idx} {host}")
+              img_url_l = str(it["image_url"]).lower()
+              if banned.search(str(it.get("image_url","")) + " " + str(it.get("attribution_html",""))):
+                  raise SystemExit(f"banned_provider_string_found {idx}")
+              for tok in junk_tokens:
+                  if tok in img_url_l:
+                      raise SystemExit(f"junk_token_found {idx} {tok}")
               htmlp = root / it["proof_path_html"]
               pngp  = root / it["proof_path_png"]
               if not htmlp.exists():
