@@ -2257,6 +2257,10 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuInitTopbarWatcher(){
+    try{
+      if (window.__iu_topbarWatcherInit) return;
+      window.__iu_topbarWatcherInit = 1;
+    }catch{}
     iuComputeTopbarStackH();
     window.addEventListener("load", iuComputeTopbarStackH, { passive: true });
 
@@ -2285,6 +2289,10 @@ function buildVideoAsArticleCard(it) {
   // - Only call existing applyFilter() and read state.filteredItems for not-found evidence
   function iuInitTopbarSearchToggle(){
     try{
+      try{
+        if (window.__iu_topbarSearchToggleInit) return;
+        window.__iu_topbarSearchToggleInit = 1;
+      }catch{}
       const dayInfo = document.getElementById("iuTopbarDayInfo");
       const btn = document.getElementById("iuTopbarSearchBtn");
       const overlay = document.getElementById("iuTopbarSearchOverlay");
