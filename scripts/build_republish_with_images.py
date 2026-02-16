@@ -108,6 +108,8 @@ MEDIAWIKI_IMAGE_BLACKLIST = [
     "sprite",
 ]
 
+JUNK_TOKENS = list(dict.fromkeys([t.lower() for t in MEDIAWIKI_IMAGE_BLACKLIST]))
+
 MIN_MW_WIDTH = 600
 MIN_MW_HEIGHT = 350
 
@@ -407,6 +409,20 @@ def detect_banned_provider(text: str) -> Optional[str]:
     return "banned_provider"
 
 
+def detect_junk_token(*parts: str) -> Optional[str]:
+    """
+    Hard DROP if any junk token appears in URL or filename (case-insensitive).
+    Returns the matched token (for provenance only; do not print into public outputs).
+    """
+    s = " ".join([(p or "") for p in parts]).lower()
+    if not s.strip():
+        return None
+    for tok in JUNK_TOKENS:
+        if tok and tok in s:
+            return tok
+    return None
+
+
 def prune_old_proofs_and_provenance(now: datetime) -> None:
     """
     Retention policy to prevent repo bloat:
@@ -550,7 +566,7 @@ def extract_commons_extmeta(meta: Dict[str, Any]) -> Dict[str, str]:
     except Exception:
         return {}
 
-def derive_license_url_strict(license_text: str, license_url: str) -> str:
+def derive_license_url_strict(license_text: str, license_url: str) -> Tuple[str, str]:
     """
     Hard requirement: PASS must include non-empty license_url.
     We only accept:
@@ -558,8 +574,6 @@ def derive_license_url_strict(license_text: str, license_url: str) -> str:
     - a small set of exact, safe mappings (no guessing).
     """
     u = (license_url or "").strip()
-    if u:
-        return u
     t = normalize_license_text(license_text)
     safe_map = {
         "cc by 4.0": "https://creativecommons.org/licenses/by/4.0/",
@@ -570,8 +584,88 @@ def derive_license_url_strict(license_text: str, license_url: str) -> str:
         "public domain": "https://creativecommons.org/publicdomain/mark/1.0/",
         "cc0": "https://creativecommons.org/publicdomain/zero/1.0/",
         "cc zero": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "pd mark": "https://creativecommons.org/publicdomain/mark/1.0/",
     }
-    return safe_map.get(t, "")
+    mapped = safe_map.get(t, "") or ""
+
+    # Prefer explicit URL if it canonicalizes.
+    if u:
+        cu = canonicalize_license_url(u)
+        if cu:
+            return (cu, "")
+
+    # Fallback to safe mappings from license text.
+    if mapped:
+        cm = canonicalize_license_url(mapped) or mapped
+        if cm:
+            return (cm, "")
+
+    # Decide drop reason deterministically.
+    if u:
+        return ("", "invalid_license_url")
+    return ("", "missing_license_url")
+
+
+def canonicalize_license_url(s: str) -> str:
+    """
+    Canonicalize and enforce safe license_url:
+    - normalize known short labels to canonical CC URLs
+    - rewrite http:// -> https://
+    - forbid /deed.* in final stored URL (strip when safe)
+    """
+    raw = (s or "").strip()
+    if not raw:
+        return ""
+
+    # Handle common label forms too (passed via extmetadata sometimes)
+    t = normalize_license_text(raw)
+    label_map = {
+        "cc by 4.0": "https://creativecommons.org/licenses/by/4.0/",
+        "cc by-sa 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "cc0": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "pd mark": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "public domain mark": "https://creativecommons.org/publicdomain/mark/1.0/",
+    }
+    if t in label_map:
+        raw = label_map[t]
+
+    try:
+        p = urlparse(raw)
+    except Exception:
+        return ""
+
+    scheme = (p.scheme or "").lower()
+    host = (p.hostname or "").lower()
+    path = p.path or ""
+
+    # Disallow non-http(s)
+    if scheme and scheme not in ("http", "https"):
+        return ""
+
+    if scheme == "http":
+        scheme = "https"
+    elif scheme == "":
+        # Not a URL
+        return ""
+
+    # Strip query/fragment always
+    path_only = path
+
+    # Strip /deed(.xx)? suffix (safe canonicalization)
+    # E.g. /licenses/by/4.0/deed.en -> /licenses/by/4.0/
+    path_only = re.sub(r"/deed(\.[a-z-]+)?/?$", "/", path_only, flags=re.IGNORECASE)
+
+    # Ensure trailing slash for canonical CC URLs
+    if host.endswith("creativecommons.org"):
+        # Ensure trailing slash for canonical CC URLs
+        if not path_only.endswith("/"):
+            path_only = path_only + "/"
+
+    # Final guard: no /deed.* in stored URL
+    if re.search(r"/deed(\.|/|$)", path_only, flags=re.IGNORECASE):
+        return ""
+
+    return f"{scheme}://{host}{path_only}"
 
 def mw_extract_title(article_url: str, mw_article_base: str) -> Optional[str]:
     """
@@ -973,6 +1067,21 @@ def main() -> int:
                 published_at = (it.get("published_at") or "").strip()
                 if not article_url:
                     continue
+                if not title:
+                    append_provenance(
+                        provenance_path,
+                        {
+                            "timestamp": now_iso(),
+                            "source_id": sid,
+                            "article_url": article_url,
+                            "image_url": "",
+                            "license_type": "",
+                            "license_url": "",
+                            "result": "FAIL",
+                            "drop_reason": "missing_title",
+                        },
+                    )
+                    continue
 
                 ts = now_iso()
                 source_domain = host_of(article_url)
@@ -1042,6 +1151,29 @@ def main() -> int:
                                 "license_url": "",
                                 "result": "FAIL",
                                 "drop_reason": "missing_image",
+                            },
+                        )
+                        continue
+
+                    # Hard DROP on junk tokens (url or filename-like last segment).
+                    inferred_filename = ""
+                    try:
+                        inferred_filename = unquote((urlparse(image_url).path or "").rsplit("/", 1)[-1] or "")
+                    except Exception:
+                        inferred_filename = ""
+                    junk_hit = detect_junk_token(image_url, inferred_filename)
+                    if junk_hit:
+                        append_provenance(
+                            provenance_path,
+                            {
+                                "timestamp": ts,
+                                "source_id": sid,
+                                "article_url": article_url,
+                                "image_url": "",
+                                "license_type": "",
+                                "license_url": "",
+                                "result": "FAIL",
+                                "drop_reason": "junk_token_detected",
                             },
                         )
                         continue
@@ -1118,6 +1250,24 @@ def main() -> int:
                         )
                         continue
 
+                    # Hard DROP on junk tokens in filename or url (explicit requirement).
+                    junk_hit2 = detect_junk_token(filename, image_url)
+                    if junk_hit2:
+                        append_provenance(
+                            provenance_path,
+                            {
+                                "timestamp": ts,
+                                "source_id": sid,
+                                "article_url": article_url,
+                                "image_url": "",
+                                "license_type": "",
+                                "license_url": "",
+                                "result": "FAIL",
+                                "drop_reason": "junk_token_detected",
+                            },
+                        )
+                        continue
+
                     # License verification ALWAYS through Commons extmetadata
                     if file_title and file_title.lower().startswith("file:"):
                         meta = commons_api_query_title(file_title, no_cache=bool(args.no_cache), limiter=limiter)
@@ -1125,7 +1275,7 @@ def main() -> int:
                         meta = commons_api_query(filename, no_cache=bool(args.no_cache), limiter=limiter)
                     ext = extract_commons_extmeta(meta)
                     lic_text = ext.get("LicenseShortName") or ext.get("License") or ""
-                    lic_url = derive_license_url_strict(lic_text, ext.get("LicenseUrl") or "")
+                    lic_url, lic_url_reason = derive_license_url_strict(lic_text, ext.get("LicenseUrl") or "")
                     author_credit = (ext.get("Artist") or "").strip()
                     if not author_credit:
                         author_credit = (ext.get("Credit") or "").strip()
@@ -1174,7 +1324,7 @@ def main() -> int:
                                 "license_type": lic_text,
                                 "license_url": "",
                                 "result": "FAIL",
-                                "drop_reason": "missing_license_url",
+                                "drop_reason": lic_url_reason or "invalid_license_url",
                             },
                         )
                         continue
@@ -1294,6 +1444,7 @@ def main() -> int:
 
                     republish_items.append(
                         {
+                            "source_id": sid,
                             "title": title,
                             "source_url": article_url,
                             "source_name": sname or sid,

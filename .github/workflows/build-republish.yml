@@ -31,73 +31,57 @@ jobs:
         env:
           EDGE_PATH: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
         run: |
+          Write-Host "Running generator WITHOUT --source-id (ALL sources)."
           python .\scripts\build_republish_with_images.py --items-per-feed 200 --edge-path "$env:EDGE_PATH"
 
       - name: Gate - republish json exists and valid
         shell: pwsh
         run: |
-          $code = @'
-          import json, sys, pathlib
-          p = pathlib.Path("projects/data/republish_with_images.json")
-          if (not p.exists()) or p.stat().st_size == 0:
-              raise SystemExit("missing republish_with_images.json")
-          data = json.loads(p.read_text(encoding="utf-8"))
-          items = data.get("items")
-          if not isinstance(items, list):
-              raise SystemExit("items is not a list")
-          print(f"items={len(items)} ok")
-          '@
-          $code | Set-Content -Encoding utf8 .\_gate_republish_valid.py
-          python .\_gate_republish_valid.py
+          python -c "import json,pathlib; p=pathlib.Path('projects/data/republish_with_images.json'); (p.exists() and p.stat().st_size>0) or (_ for _ in ()).throw(SystemExit('missing republish_with_images.json')); data=json.loads(p.read_text(encoding='utf-8')); items=data.get('items'); isinstance(items,list) or (_ for _ in ()).throw(SystemExit('items is not a list')); print(f'items={len(items)} ok')"
 
-      - name: Gate - banned providers must be absent
+      - name: Gate - banned providers grep (OK/FAIL)
         shell: pwsh
         run: |
           $m = Select-String -Path .\projects\data\republish_with_images.json -Pattern "GETTY|REUTERS|SHUTTERSTOCK|ALAMY|ASSOCIATED PRESS|\bAP\b|AFP|BLOOMBERG" -CaseSensitive:$false
-          if ($m) { Write-Error "BANNED_PROVIDER_STRING_FOUND"; exit 1 }
+          if ($m) { Write-Error "FAIL banned_provider_strings_found>0"; exit 1 } else { Write-Host "OK banned_provider_strings_found=0" }
 
-      - name: Gate - proof files must exist per item
+      - name: Gate - junk tokens grep (OK/FAIL)
         shell: pwsh
         run: |
-          $code = @'
-          import json, sys, pathlib, re
-          from urllib.parse import urlparse
-          root = pathlib.Path(".")
-          data = json.loads((root / "projects/data/republish_with_images.json").read_text(encoding="utf-8"))
-          items = data.get("items") or []
-          allow = json.loads((root / "projects/data/image_allowlist.json").read_text(encoding="utf-8")).get("allowed_domains") or []
-          allow = set([str(x).lower() for x in allow])
-          banned = re.compile(r"(?i)(getty|reuters|shutterstock|alamy|associated\\s+press|\\bap\\b|afp|bloomberg)")
-          junk_tokens = [
-              "icon","icons","sports_icon","_icon.","banner","logo","pictogram","commons-logo",
-              "wikiloves","wiki_loves","portal","portlet","navbox","badge","button","placeholder","sprite"
-          ]
-          req = ("proof_path_html","proof_path_png","image_url","source_url","attribution_html","image_license_type","license_url")
-          for idx, it in enumerate(items):
-              for k in req:
-                  if not it.get(k):
-                      raise SystemExit(f"missing_field {idx} {k}")
-              if not str(it["license_url"]).strip():
-                  raise SystemExit(f"empty_license_url {idx}")
-              host = (urlparse(it["image_url"]).hostname or "").lower()
-              if host not in allow:
-                  raise SystemExit(f"image_host_not_allowlisted {idx} {host}")
-              img_url_l = str(it["image_url"]).lower()
-              if banned.search(str(it.get("image_url","")) + " " + str(it.get("attribution_html",""))):
-                  raise SystemExit(f"banned_provider_string_found {idx}")
-              for tok in junk_tokens:
-                  if tok in img_url_l:
-                      raise SystemExit(f"junk_token_found {idx} {tok}")
-              htmlp = root / it["proof_path_html"]
-              pngp  = root / it["proof_path_png"]
-              if not htmlp.exists():
-                  raise SystemExit(f"missing_proof_html {htmlp}")
-              if not pngp.exists():
-                  raise SystemExit(f"missing_proof_png {pngp}")
-          print(f"proofs_ok items={len(items)}")
-          '@
-          $code | Set-Content -Encoding utf8 .\_gate_republish_proofs.py
-          python .\_gate_republish_proofs.py
+          $pat = "(?i)(wikiloves|wiki_loves|wiki-loves|commons-logo|commons_logo|pictogram|\bicon\b|icons|sports_icon|_icon\.|banner|logo|portal|portlet|navbox|badge|button|placeholder|sprite)"
+          $m = Select-String -Path .\projects\data\republish_with_images.json -Pattern $pat
+          if ($m) { Write-Error "FAIL junk_tokens_found>0"; exit 1 } else { Write-Host "OK junk_tokens_found=0" }
+
+      - name: Gate - license_url empty grep (OK/FAIL)
+        shell: pwsh
+        run: |
+          $m = Select-String -Path .\projects\data\republish_with_images.json -Pattern '"license_url"\s*:\s*""'
+          if ($m) { Write-Error "FAIL license_url_empty>0"; exit 1 } else { Write-Host "OK license_url_empty=0" }
+
+      - name: Gate - strict item validation (title/license/allowlist/proofs/source_id)
+        shell: pwsh
+        run: |
+          python -c "code = r'''import json, pathlib, re\nfrom urllib.parse import urlparse\nroot = pathlib.Path('.')\ndata = json.loads((root / 'projects/data/republish_with_images.json').read_text(encoding='utf-8'))\nitems = data.get('items') or []\nallow = json.loads((root / 'projects/data/image_allowlist.json').read_text(encoding='utf-8')).get('allowed_domains') or []\nallow = [str(x).lower() for x in allow]\n\ndef is_allowed(host: str) -> bool:\n    h = (host or '').lower()\n    for d in allow:\n        d = (d or '').lower()\n        if not d:\n            continue\n        if h == d or h.endswith('.' + d):\n            return True\n    return False\n\nbanned = re.compile(r'(?i)(getty|reuters|shutterstock|alamy|associated\\s+press|\\bap\\b|afp|bloomberg)')\njunk = [ 'wikiloves','wiki_loves','wiki-loves','commons-logo','commons_logo','pictogram','icon','icons','sports_icon','_icon.','banner','logo','portal','portlet','navbox','badge','button','placeholder','sprite' ]\nreq = ('source_id','title','proof_path_html','proof_path_png','image_url','source_url','attribution_html','image_license_type','license_url')\n\nfor idx, it in enumerate(items):\n    for k in req:\n        if not it.get(k):\n            raise SystemExit(f'missing_field {idx} {k}')\n    if not str(it.get('title','')).strip():\n        raise SystemExit(f'empty_title {idx}')\n    lu = str(it.get('license_url','')).strip()\n    if not lu:\n        raise SystemExit(f'empty_license_url {idx}')\n    if lu.lower().startswith('http://'):\n        raise SystemExit(f'license_url_http_forbidden {idx}')\n    if '/deed' in lu.lower():\n        raise SystemExit(f'license_url_deed_forbidden {idx}')\n    host = (urlparse(str(it.get('image_url',''))).hostname or '').lower()\n    if not is_allowed(host):\n        raise SystemExit(f'image_host_not_allowlisted {idx} {host}')\n    txt = str(it.get('image_url','')) + ' ' + str(it.get('attribution_html',''))\n    if banned.search(txt):\n        raise SystemExit(f'banned_provider_string_found {idx}')\n    img_l = str(it.get('image_url','')).lower()\n    for tok in junk:\n        if tok in img_l:\n            raise SystemExit(f'junk_token_found {idx} {tok}')\n    htmlp = root / str(it.get('proof_path_html'))\n    pngp  = root / str(it.get('proof_path_png'))\n    if not htmlp.exists():\n        raise SystemExit(f'missing_proof_html {htmlp}')\n    if not pngp.exists():\n        raise SystemExit(f'missing_proof_png {pngp}')\n\nprint(f'ALL_OK items={len(items)}')\n'''\nexec(code)"
+
+      - name: Log - count_by_source_id (hard numbers)
+        shell: pwsh
+        run: |
+          python -c "import json,collections; data=json.loads(open('projects/data/republish_with_images.json',encoding='utf-8').read()); c=collections.Counter([str(it.get('source_id') or '') for it in (data.get('items') or [])]); pairs=sorted(c.items(), key=lambda kv: (-kv[1], kv[0])); s=', '.join([f'{k}={v}' for k,v in pairs]); print('count_by_source_id: ' + s)"
+
+      - name: Gate - PROD sanity (iuHomeRepublishGrid present)
+        shell: pwsh
+        run: |
+          python -c "p='projects/index.html'; s=open(p,encoding='utf-8').read(); ok=('iuHomeRepublishGrid' in s); print(f'iuHomeRepublishGrid present = {ok}'); import sys; sys.exit(0 if ok else 1)"
+
+      - name: Log - 2 sample items (TITLE + SOURCE_URL + IMAGE_URL + LICENSE_URL)
+        shell: pwsh
+        run: |
+          python -c "import json; data=json.loads(open('projects/data/republish_with_images.json',encoding='utf-8').read()); items=data.get('items') or []; sample=items[:2]; out=[{'title':it.get('title'),'source_url':it.get('source_url'),'image_url':it.get('image_url'),'license_url':it.get('license_url'),'source_id':it.get('source_id')} for it in sample]; print('sample_items='+json.dumps(out,ensure_ascii=False,indent=2))"
+
+      - name: Log - ALL_OK
+        shell: pwsh
+        run: |
+          Write-Host "ALL_OK"
 
       - name: Commit and push (if changed)
         shell: pwsh
