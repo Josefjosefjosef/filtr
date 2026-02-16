@@ -108,10 +108,25 @@ MEDIAWIKI_IMAGE_BLACKLIST = [
     "sprite",
 ]
 
-JUNK_TOKENS = list(dict.fromkeys([t.lower() for t in MEDIAWIKI_IMAGE_BLACKLIST]))
+JUNK_TOKENS = list(
+    dict.fromkeys(
+        [
+            *[t.lower() for t in MEDIAWIKI_IMAGE_BLACKLIST],
+            "ads",
+            "advert",
+            "sponsor",
+            "promo",
+            "pixel",
+            "tracking",
+            "doubleclick",
+        ]
+    )
+)
 
-MIN_MW_WIDTH = 600
-MIN_MW_HEIGHT = 350
+MIN_MW_WIDTH_JPG_WEBP = 600
+MIN_MW_HEIGHT_JPG_WEBP = 350
+MIN_MW_WIDTH_PNG = 900
+MIN_MW_HEIGHT_PNG = 500
 
 MW_RASTER_EXT_ALLOW = (".jpg", ".jpeg", ".png", ".webp")
 
@@ -422,6 +437,19 @@ def detect_junk_token(*parts: str) -> Optional[str]:
             return tok
     return None
 
+
+def has_junk_token(s: str) -> bool:
+    sl = (s or "").lower()
+    if not sl.strip():
+        return False
+    return any((tok in sl) for tok in JUNK_TOKENS if tok)
+
+
+def mw_min_dims_for_url(url: str) -> Tuple[int, int]:
+    ul = (url or "").lower()
+    if ul.endswith(".png"):
+        return (MIN_MW_WIDTH_PNG, MIN_MW_HEIGHT_PNG)
+    return (MIN_MW_WIDTH_JPG_WEBP, MIN_MW_HEIGHT_JPG_WEBP)
 
 def prune_old_proofs_and_provenance(now: datetime) -> None:
     """
@@ -802,9 +830,10 @@ def pick_mediawiki_image(
         w = int(orig.get("width") or thumb.get("width") or 0)
         h = int(orig.get("height") or thumb.get("height") or 0)
         ft = mw_filetitle_from_filename(pageimage_name)
+        min_w, min_h = mw_min_dims_for_url(url or "")
         if not url:
             rejected_junk = True
-        elif (not is_allowed_raster_url(url)) or (w < MIN_MW_WIDTH or h < MIN_MW_HEIGHT):
+        elif (not is_allowed_raster_url(url)) or (w < min_w or h < min_h):
             rejected_junk = True
         elif is_mediawiki_junk(ft, url):
             rejected_junk = True
@@ -853,7 +882,8 @@ def pick_mediawiki_image(
         if any(sub in url.lower() for sub in MEDIAWIKI_IMAGE_BLACKLIST):
             rejected_junk = True
             continue
-        if w < MIN_MW_WIDTH or h < MIN_MW_HEIGHT:
+        min_w, min_h = mw_min_dims_for_url(url)
+        if w < min_w or h < min_h:
             continue
         area = w * h
         if area > best_area:
@@ -1034,7 +1064,7 @@ def main() -> int:
                     {
                         "timestamp": now_iso(),
                         "source_id": sid,
-                        "article_url": "",
+                        "source_url": "",
                         "image_url": "",
                         "license_type": "",
                         "license_url": "",
@@ -1051,7 +1081,7 @@ def main() -> int:
                     {
                         "timestamp": now_iso(),
                         "source_id": sid,
-                        "article_url": "",
+                        "source_url": "",
                         "image_url": "",
                         "license_type": "",
                         "license_url": "",
@@ -1073,7 +1103,7 @@ def main() -> int:
                         {
                             "timestamp": now_iso(),
                             "source_id": sid,
-                            "article_url": article_url,
+                            "source_url": article_url,
                             "image_url": "",
                             "license_type": "",
                             "license_url": "",
@@ -1109,7 +1139,7 @@ def main() -> int:
                                 {
                                     "timestamp": ts,
                                     "source_id": sid,
-                                    "article_url": article_url,
+                                    "source_url": article_url,
                                     "image_url": "",
                                     "license_type": "",
                                     "license_url": "",
@@ -1127,7 +1157,7 @@ def main() -> int:
                                 {
                                     "timestamp": ts,
                                     "source_id": sid,
-                                    "article_url": article_url,
+                                    "source_url": article_url,
                                     "image_url": "",
                                     "license_type": "",
                                     "license_url": "",
@@ -1145,7 +1175,7 @@ def main() -> int:
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                            "source_url": article_url,
                                 "image_url": "",
                                 "license_type": "",
                                 "license_url": "",
@@ -1161,14 +1191,13 @@ def main() -> int:
                         inferred_filename = unquote((urlparse(image_url).path or "").rsplit("/", 1)[-1] or "")
                     except Exception:
                         inferred_filename = ""
-                    junk_hit = detect_junk_token(image_url, inferred_filename)
-                    if junk_hit:
+                    if has_junk_token(image_url) or has_junk_token(inferred_filename):
                         append_provenance(
                             provenance_path,
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                                "source_url": article_url,
                                 "image_url": "",
                                 "license_type": "",
                                 "license_url": "",
@@ -1185,12 +1214,12 @@ def main() -> int:
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                                "source_url": article_url,
                                 "image_url": "",
                                 "license_type": "",
                                 "license_url": "",
                                 "result": "FAIL",
-                                "drop_reason": "banned_provider_detected",
+                                "drop_reason": "banned_provider",
                             },
                         )
                         continue
@@ -1202,7 +1231,7 @@ def main() -> int:
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                            "source_url": article_url,
                                 "image_url": image_url,
                                 "license_type": "",
                                 "license_url": "",
@@ -1218,7 +1247,7 @@ def main() -> int:
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                            "source_url": article_url,
                                 "image_url": image_url,
                                 "license_type": "",
                                 "license_url": "",
@@ -1240,7 +1269,7 @@ def main() -> int:
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                            "source_url": article_url,
                                 "image_url": image_url,
                                 "license_type": "",
                                 "license_url": "",
@@ -1251,14 +1280,13 @@ def main() -> int:
                         continue
 
                     # Hard DROP on junk tokens in filename or url (explicit requirement).
-                    junk_hit2 = detect_junk_token(filename, image_url)
-                    if junk_hit2:
+                    if has_junk_token(filename) or has_junk_token(image_url):
                         append_provenance(
                             provenance_path,
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                                "source_url": article_url,
                                 "image_url": "",
                                 "license_type": "",
                                 "license_url": "",
@@ -1287,12 +1315,12 @@ def main() -> int:
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                                "source_url": article_url,
                                 "image_url": "",
                                 "license_type": "",
                                 "license_url": "",
                                 "result": "FAIL",
-                                "drop_reason": "banned_provider_detected",
+                                "drop_reason": "banned_provider",
                             },
                         )
                         continue
@@ -1303,7 +1331,7 @@ def main() -> int:
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                            "source_url": article_url,
                                 "image_url": image_url,
                                 "license_type": "",
                                 "license_url": "",
@@ -1319,7 +1347,7 @@ def main() -> int:
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                            "source_url": article_url,
                                 "image_url": image_url,
                                 "license_type": lic_text,
                                 "license_url": "",
@@ -1335,7 +1363,7 @@ def main() -> int:
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                            "source_url": article_url,
                                 "image_url": image_url,
                                 "license_type": lic_text,
                                 "license_url": lic_url,
@@ -1359,7 +1387,7 @@ def main() -> int:
                                 {
                                     "timestamp": ts,
                                     "source_id": sid,
-                                    "article_url": article_url,
+                            "source_url": article_url,
                                     "image_url": image_url,
                                     "license_type": lic_text,
                                     "license_url": lic_url,
@@ -1375,7 +1403,7 @@ def main() -> int:
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                            "source_url": article_url,
                                 "image_url": image_url,
                                 "license_type": lic_text,
                                 "license_url": lic_url,
@@ -1389,7 +1417,7 @@ def main() -> int:
                     try:
                         license_blob = json.dumps(
                             {
-                                "article_url": article_url,
+                                "source_url": article_url,
                                 "image_url": image_url,
                                 "license_text": lic_text,
                                 "license_url": lic_url,
@@ -1423,12 +1451,12 @@ def main() -> int:
                             {
                                 "timestamp": ts,
                                 "source_id": sid,
-                                "article_url": article_url,
+                                "source_url": article_url,
                                 "image_url": image_url,
                                 "license_type": lic_text,
                                 "license_url": lic_url,
                                 "result": "FAIL",
-                                "drop_reason": "proof_archive_failed",
+                                "drop_reason": "missing_proof",
                             },
                         )
                         continue
@@ -1463,7 +1491,7 @@ def main() -> int:
                         {
                             "timestamp": ts,
                             "source_id": sid,
-                            "article_url": article_url,
+                            "source_url": article_url,
                             "image_url": image_url,
                             "license_type": lic_text,
                             "license_url": lic_url,
@@ -1478,7 +1506,7 @@ def main() -> int:
                         {
                             "timestamp": ts,
                             "source_id": sid,
-                            "article_url": article_url,
+                            "source_url": article_url,
                             "image_url": "",
                             "license_type": "",
                             "license_url": "",

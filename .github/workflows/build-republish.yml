@@ -51,7 +51,7 @@ jobs:
       - name: Gate - junk tokens grep (OK/FAIL)
         shell: pwsh
         run: |
-          $pat = "(?i)(wikiloves|wiki_loves|wiki-loves|commons-logo|commons_logo|pictogram|\bicon\b|icons|sports_icon|_icon\.|banner|logo|portal|portlet|navbox|badge|button|placeholder|sprite)"
+          $pat = "(?i)(wikiloves|wiki_loves|wiki-loves|commons-logo|commons_logo|pictogram|\bicon\b|icons|sports_icon|_icon\.|banner|logo|portal|portlet|navbox|badge|button|placeholder|sprite|ads|advert|sponsor|promo|pixel|tracking|doubleclick)"
           $m = Select-String -Path .\projects\data\republish_with_images.json -Pattern $pat
           if ($m) { Write-Error "FAIL junk_tokens_found>0"; exit 1 } else { Write-Host "OK junk_tokens_found=0" }
 
@@ -84,7 +84,7 @@ jobs:
             '    return False',
             '',
             'banned = re.compile(r"(?i)(getty|reuters|shutterstock|alamy|associated\\s+press|\\bap\\b|afp|bloomberg)")',
-            'junk = [ "wikiloves","wiki_loves","wiki-loves","commons-logo","commons_logo","pictogram","icon","icons","sports_icon","_icon.","banner","logo","portal","portlet","navbox","badge","button","placeholder","sprite" ]',
+            'junk = [ "wikiloves","wiki_loves","wiki-loves","commons-logo","commons_logo","pictogram","icon","icons","sports_icon","_icon.","banner","logo","portal","portlet","navbox","badge","button","placeholder","sprite","ads","advert","sponsor","promo","pixel","tracking","doubleclick" ]',
             'req = ("source_id","title","proof_path_html","proof_path_png","image_url","source_url","attribution_html","image_license_type","license_url")',
             '',
             'for idx, it in enumerate(items):',
@@ -127,6 +127,42 @@ jobs:
         run: |
           python -c "import json,collections; data=json.loads(open('projects/data/republish_with_images.json',encoding='utf-8').read()); c=collections.Counter([str(it.get('source_id') or '') for it in (data.get('items') or [])]); pairs=sorted(c.items(), key=lambda kv: (-kv[1], kv[0])); s=', '.join([f'{k}={v}' for k,v in pairs]); print('count_by_source_id: ' + s)"
 
+      - name: Log - drop_stats_by_source_id (from provenance)
+        shell: pwsh
+        run: |
+          $lines = @(
+            'import json, collections, datetime, pathlib',
+            'root = pathlib.Path(".")',
+            'd = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")',
+            'p = root / f"projects/data/provenance/{d}.jsonl"',
+            'if not p.exists():',
+            '    raise SystemExit(f"missing_provenance {p}")',
+            'by = collections.defaultdict(collections.Counter)',
+            'tot = collections.Counter()',
+            'for line in p.read_text(encoding="utf-8").splitlines():',
+            '    if not line.strip():',
+            '        continue',
+            '    try:',
+            '        row = json.loads(line)',
+            '    except Exception:',
+            '        continue',
+            '    if str(row.get("result") or "").upper() != "FAIL":',
+            '        continue',
+            '    sid = str(row.get("source_id") or "").strip() or "unknown"',
+            '    reason = str(row.get("drop_reason") or "").strip() or "unknown"',
+            '    by[sid][reason] += 1',
+            '    tot[sid] += 1',
+            'pairs = sorted(tot.items(), key=lambda kv: (-kv[1], kv[0]))',
+            'chunks = []',
+            'for sid, _n in pairs:',
+            '    reasons = by[sid]',
+            '    rparts = [f"{k}={v}" for k, v in sorted(reasons.items(), key=lambda kv: (-kv[1], kv[0]))[:8]]',
+            '    chunks.append(f"{sid} " + "; ".join(rparts))',
+            'print("drop_stats_by_source_id: " + " | ".join(chunks))'
+          )
+          $lines | Set-Content -Encoding utf8 .\_log_drop_stats.py
+          python .\_log_drop_stats.py
+
       - name: Gate - PROD sanity (iuHomeRepublishGrid present)
         shell: pwsh
         run: |
@@ -145,6 +181,12 @@ jobs:
       - name: Commit and push (if changed)
         shell: pwsh
         run: |
+          $newCount = python -c "import json; d=json.loads(open('projects/data/republish_with_images.json',encoding='utf-8').read()); print(len(d.get('items') or []))"
+          $oldCount = python -c "import json,subprocess; raw=subprocess.check_output(['git','show','HEAD:projects/data/republish_with_images.json']); d=json.loads(raw.decode('utf-8')); print(len(d.get('items') or []))"
+          if (($newCount -eq 0) -and ($oldCount -gt 0)) {
+            Write-Host "Skipping commit: would regress republish items to 0 (old=$oldCount new=$newCount)."
+            exit 0
+          }
           $s = git status --porcelain
           if (-not $s) {
             Write-Host "No changes to commit."
