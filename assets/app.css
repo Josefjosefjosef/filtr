@@ -2783,7 +2783,7 @@ body[data-section="media"] #feed{
 #iuTvOnlineView{
   display: none;
   /* chip accent is scoped to the view (no long body[...] selectors) */
-  --iuSectionAccent: var(--iuNavAccent-tvonline, #DC2626);
+  --iuSectionAccent: var(--iuAccentTVOnline);
 }
 body[data-section="tvonline"] #iuTvOnlineView,
 html[data-section="tvonline"] #iuTvOnlineView{
@@ -2827,7 +2827,7 @@ html[data-section="tvonline"] #iuTvOnlineView{
   border-radius:12px;
   border:1px solid rgba(11,27,43,0.08);
   box-sizing:border-box;
-  background: var(--iu-accent-tvonline, var(--iuNavAccent-tvonline, #DC2626));
+  background: var(--iuAccentTVOnline);
 }
 .iu-tvGroupTitle{
   font-weight:600;
@@ -2851,7 +2851,7 @@ html[data-section="tvonline"] #iuTvOnlineView{
   text-decoration:none;
 }
 .iu-tvGroupList a:hover{
-  background: var(--iuNavAccent-tv, var(--iuNavAccent-tvonline, #DC2626));
+  background: var(--iuAccentTVOnline);
 }
 
 /* === TV ONLINE: Česká televize tile (4+3 layout) === */
@@ -3980,7 +3980,7 @@ body[data-section="home"] .iuHomeCanvas{
   --iuSectionAccent: var(--iuNavAccent-radio, #6D28D9);
 }
 .iuSectionHeader--tvonline{
-  --iuSectionAccent: var(--iuNavAccent-tvonline, #DC2626);
+  --iuSectionAccent: var(--iuAccentTVOnline);
 }
 .iuSectionHeader--tvprogram{
   --iuSectionAccent: var(--iuNavAccent-tvprogram, #10B981);
@@ -6711,10 +6711,14 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
 
 /* Accent palette (optional mapping via data-accent) */
 :root{
+  /* Unified accents (single-shade) */
+  --iuAccentTVOnline: #3B82F6; /* was rail/home-like blue */
+  --iuAccentRailToggle: var(--iuNavAccent-tv, #EF4444); /* reuse single red shade */
+
   --iuNavAccent-media:  #0B2A4A; /* darker journalist-style navy */
   --iuNavAccent-radio:  #8B5CF6;
   --iuNavAccent-tv:     #EF4444;
-  --iuNavAccent-tvonline: var(--iuNavAccent-tv, #DC2626);
+  --iuNavAccent-tvonline: var(--iuAccentTVOnline);
   --iuNavAccent-jr:     #F97316;
   --iuNavAccent-mapy:   #22C55E;
   --iuNavAccent-travel: #06B6D4;
@@ -6728,7 +6732,7 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
   /* Section accents (content hooks) */
   --iu-accent-media: var(--iuNavAccent-media, #3B82F6);
   --iu-accent-tv: var(--iuNavAccent-tv, #EF4444);
-  --iu-accent-tvonline: var(--iuNavAccent-tvonline, #DC2626);
+  --iu-accent-tvonline: var(--iuNavAccent-tvonline);
   --iu-accent-maps: var(--iuNavAccent-mapy, #22C55E);
   --iu-accent-travel: var(--iuNavAccent-travel, #06B6D4);
 }
@@ -7102,4 +7106,26 @@ body.iuRailHidden #iuRailToggleBtn:focus-visible{
 html.iuRailHidden #iuRailToggleBtn .iu-leftNavLabel,
 body.iuRailHidden #iuRailToggleBtn .iu-leftNavLabel{
   display: none !important;
+}
+
+/* === rail toggle unified red chip === */
+
+html.iuRailHidden #iuRailToggleBtn{
+  border: 1px solid var(--iuAccentRailToggle) !important;
+  color: var(--iuAccentRailToggle) !important;
+  background: transparent !important;
+  opacity: .75;
+}
+
+html.iuRailHidden #iuRailToggleBtn svg,
+html.iuRailHidden #iuRailToggleBtn i{
+  color: var(--iuAccentRailToggle) !important;
+  stroke: var(--iuAccentRailToggle) !important;
+}
+
+html.iuRailHidden #iuRailToggleBtn:hover,
+html.iuRailHidden #iuRailToggleBtn:focus{
+  border-width: 2px !important;
+  opacity: 1;
+  background: color-mix(in srgb, var(--iuAccentRailToggle) 8%, transparent);
 }
