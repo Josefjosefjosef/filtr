@@ -7518,3 +7518,32 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   background: rgba(255,255,255,.06);
 }
 
+/* ============================================================
+   FINAL UI — topbar right order: day/nameday BEFORE search icon
+   ============================================================ */
+
+/* right cluster: text vlevo, lupa úplně vpravo */
+#iuTopbarRight{
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* zajistit konkrétní pořadí i kdyby někdo hnul DOMem */
+#iuTopbarDayInfo{ order: 1 !important; }
+#iuTopbarSearchBtn{ order: 2 !important; }
+
+/* text se nesmí přetlačit přes lupu */
+#iuTopbarDayInfo{
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* lupa vždy fixní šířka a úplně vpravo */
+#iuTopbarSearchBtn{
+  flex: 0 0 auto !important;
+  margin-left: 10px !important;
+}
+
