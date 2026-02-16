@@ -3974,6 +3974,7 @@ body[data-section="home"] .iuHomeCanvas{
 .iuSectionHeader--mapy{ --iuSectionAccent: var(--iuNavAccent-mapy, #22C55E); }
 .iuSectionHeader--radio{ --iuSectionAccent: var(--iuNavAccent-radio, #6D28D9); }
 .iuSectionHeader--tvonline{ --iuSectionAccent: var(--iuNavAccent-tvonline, #DC2626); }
+.iuSectionHeader--tvprogram{ --iuSectionAccent: var(--iuNavAccent-tvprogram, #10B981); }
 .iuSectionHeader--travel{ --iuSectionAccent: var(--iuNavAccent-travel, #06B6D4); }
 .iuSectionHeader--weather{ --iuSectionAccent: var(--iuNavAccent-pocasi, #38BDF8); }
 .iuSectionHeader--namedays{ --iuSectionAccent: var(--iuNavAccent-namedays, #F59E0B); }
@@ -3982,6 +3983,7 @@ body[data-section="home"] .iuHomeCanvas{
 .iuSectionHeader--mapy h2,
 .iuSectionHeader--radio h2,
 .iuSectionHeader--tvonline h2,
+.iuSectionHeader--tvprogram h2,
 .iuSectionHeader--travel h2,
 .iuSectionHeader--weather h2,
 .iuSectionHeader--namedays h2{
@@ -4014,6 +4016,200 @@ html[data-section="namedays"] #iuHolidaysView{
 body[data-section="namedays"] #feed,
 html[data-section="namedays"] #feed{
   display: none !important;
+}
+
+/* TV PROGRAM view (UI-only): center feed-only */
+.iuTvProgramView{
+  padding: 18px 12px;
+  --iuSectionAccent: var(--iuNavAccent-tvprogram, #10B981);
+}
+body[data-section="tvprogram"] #iuTvProgramView,
+html[data-section="tvprogram"] #iuTvProgramView{
+  display: block !important;
+}
+body[data-section="tvprogram"] #feed,
+html[data-section="tvprogram"] #feed{
+  display: none !important;
+}
+
+/* ==============================
+   TV PROGRAM (CENTER FEED ONLY) - UI-only
+   Scope: #iuTvProgramView
+   ============================== */
+
+#iuTvProgramView .iuViewBody{ display:block; }
+
+/* střední sloupec footprint jako feed (pojistka) */
+body[data-section="tvprogram"] #newsList > #iuTvProgramView,
+html[data-section="tvprogram"] #newsList > #iuTvProgramView{
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* řádkové odkazy */
+#iuTvProgramView .iuTvNowList{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+#iuTvProgramView .iuTvRow{
+  display:flex;
+  gap: 12px;
+  align-items:center;
+  text-decoration:none;
+  border-radius: 14px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.02);
+  position: relative;
+  overflow:hidden;
+}
+
+#iuTvProgramView .iuTvRow::before{
+  content:"";
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width: 4px;
+  background: var(--iuSectionAccent);
+  opacity: 0.95;
+}
+
+#iuTvProgramView .iuTvRowLeft{
+  font-weight: 800;
+  margin-left: 8px;
+  min-width: 110px;
+}
+
+#iuTvProgramView .iuTvRowRight{
+  opacity: 0.85;
+}
+
+#iuTvProgramView .iuTvRow:hover,
+#iuTvProgramView .iuTvRow:focus-visible{
+  outline:none;
+  border-color: color-mix(in srgb, var(--iuSectionAccent) 55%, rgba(255,255,255,0.10));
+}
+
+/* karty */
+#iuTvProgramView .iuTvCards{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 900px){
+  #iuTvProgramView .iuTvCards{ grid-template-columns: 1.2fr 0.8fr; }
+}
+
+#iuTvProgramView .iuTvCard{
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+  padding: 12px;
+}
+
+#iuTvProgramView .iuTvCard--soft{
+  background: rgba(255,255,255,0.02);
+}
+
+#iuTvProgramView .iuTvCardTop{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  opacity:0.9;
+  font-size: 13px;
+}
+
+#iuTvProgramView .iuTvTitle{
+  margin-top: 8px;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+#iuTvProgramView .iuTvSub{
+  margin-top: 8px;
+  opacity: 0.78;
+  font-size: 13px;
+}
+
+#iuTvProgramView .iuTvTags{
+  margin-top: 10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+}
+
+#iuTvProgramView .iuTvTag{
+  display:inline-flex;
+  align-items:center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.02);
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+#iuTvProgramView .iuTvActions{
+  margin-top: 10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+}
+
+/* filtry + odkazy */
+#iuTvProgramView .iuTvFilters{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+}
+
+#iuTvProgramView .iuTvLinksGrid{
+  margin-top: 10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+}
+
+#iuTvProgramView .iuTvKidsGrid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 900px){
+  #iuTvProgramView .iuTvKidsGrid{ grid-template-columns: 1fr 1fr; }
+}
+
+#iuTvProgramView .iuTvKidBox{
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.02);
+  padding: 12px;
+}
+
+#iuTvProgramView .iuTvKidTitle{
+  font-weight: 800;
+  font-size: 16px;
+}
+
+#iuTvProgramView .iuTvKidSub{
+  margin-top: 6px;
+  opacity: 0.78;
+  font-size: 13px;
+}
+
+#iuTvProgramView .iuTvNote{
+  margin-top: 10px;
+  opacity: 0.75;
+  font-size: 13px;
+}
+
+/* pojistka: chips accent přes --iuSectionAccent (scoped) */
+#iuTvProgramView .iuChip--accent{
+  --iuChipAccent: var(--iuSectionAccent);
 }
 
 /* ==============================

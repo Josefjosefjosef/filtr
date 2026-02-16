@@ -715,6 +715,174 @@
                     </div>
                   </section>
 
+                  <section id="iuTvProgramView" class="iuView iuTvProgramView" data-section="tvprogram" aria-label="TV program" hidden>
+                    <div class="iuSectionHeader iuSectionHeader--tvprogram">
+                      <h2>TV program</h2>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                      <p>Rychle: co běží teď, prime time, filmy, sport, děti + kompletní programy.</p>
+                    </div>
+  
+                    <div class="iuViewBody">
+  
+                      <!-- 1) TEĎ BĚŽÍ -->
+                      <div class="iuSubSection">
+                        <div class="iuSubSectionHeader">
+                          <h3>Teď běží</h3>
+                          <div class="iuSubLine" aria-hidden="true"></div>
+                        </div>
+  
+                        <div class="iuTvNowList" role="list" aria-label="Teď běží – rychlé odkazy">
+                          <a class="iuTvRow" href="https://www.ceskatelevize.cz/tv-program/" target="_blank" rel="noopener" role="listitem">
+                            <div class="iuTvRowLeft">ČT (vše)</div>
+                            <div class="iuTvRowRight">Otevřít TV program ČT</div>
+                          </a>
+                          <a class="iuTvRow" href="https://tv.nova.cz/program" target="_blank" rel="noopener" role="listitem">
+                            <div class="iuTvRowLeft">Nova (vše)</div>
+                            <div class="iuTvRowRight">Otevřít TV program Nova</div>
+                          </a>
+                          <a class="iuTvRow" href="https://www.iprima.cz/tv-program" target="_blank" rel="noopener" role="listitem">
+                            <div class="iuTvRowLeft">Prima (vše)</div>
+                            <div class="iuTvRowRight">Otevřít TV program Prima</div>
+                          </a>
+                          <a class="iuTvRow" href="https://sport.ceskatelevize.cz/program" target="_blank" rel="noopener" role="listitem">
+                            <div class="iuTvRowLeft">ČT sport</div>
+                            <div class="iuTvRowRight">Program + přímé přenosy</div>
+                          </a>
+                        </div>
+  
+                        <div class="iuTvNote">
+                          Pozn.: V první verzi je „Teď běží“ řešené jako ověřené odkazy (bez scrapingu). Později lze doplnit data, ale UI už je připravené.
+                        </div>
+                      </div>
+  
+                      <!-- 2) DNES VEČER -->
+                      <div class="iuSubSection">
+                        <div class="iuSubSectionHeader">
+                          <h3>Dnes večer (20:00–23:00)</h3>
+                          <div class="iuSubLine" aria-hidden="true"></div>
+                        </div>
+  
+                        <div class="iuTvCards" aria-label="Dnes večer – výběr">
+                          <div class="iuTvCard">
+                            <div class="iuTvCardTop">
+                              <div class="iuTvTime">20:00+</div>
+                              <div class="iuTvChan">ČT / Nova / Prima</div>
+                            </div>
+                            <div class="iuTvTitle">Prime time – rychlý výběr</div>
+                            <div class="iuTvTags">
+                              <span class="iuTvTag">FILM</span>
+                              <span class="iuTvTag">SERIÁL</span>
+                              <span class="iuTvTag">SPORT</span>
+                              <span class="iuTvTag">ZPRÁVY</span>
+                            </div>
+                            <div class="iuTvActions">
+                              <a class="iuChip iuChip--accent" href="https://tv.seznam.cz/" target="_blank" rel="noopener">TV program dnes (Seznam)</a>
+                            </div>
+                          </div>
+  
+                          <div class="iuTvCard iuTvCard--soft">
+                            <div class="iuTvTitle">Chceš celý seznam?</div>
+                            <div class="iuTvSub">Použij odkazy níže v „Kompletní program“ (oficiální + agregátory + sport).</div>
+                          </div>
+                        </div>
+                      </div>
+  
+                      <!-- 3) FILMY -->
+                      <div class="iuSubSection">
+                        <div class="iuSubSectionHeader">
+                          <h3>Filmy dnes</h3>
+                          <div class="iuSubLine" aria-hidden="true"></div>
+                        </div>
+  
+                        <div class="iuTvFilters" aria-label="Filtry">
+                          <span class="iuChip iuChip--accent" role="button" tabindex="0">Film</span>
+                          <span class="iuChip iuChip--accent" role="button" tabindex="0">Seriál</span>
+                          <span class="iuChip iuChip--accent" role="button" tabindex="0">Dokument</span>
+                          <span class="iuChip iuChip--accent" role="button" tabindex="0">Děti</span>
+                        </div>
+  
+                        <div class="iuTvLinksGrid" aria-label="Filmy – ověřené zdroje">
+                          <a class="iuChip iuChip--accent" href="https://tv.seznam.cz/" target="_blank" rel="noopener">Filmy dnes (výběr v TV programu)</a>
+                        </div>
+                      </div>
+  
+                      <!-- 4) SPORT -->
+                      <div class="iuSubSection">
+                        <div class="iuSubSectionHeader">
+                          <h3>Sport dnes</h3>
+                          <div class="iuSubLine" aria-hidden="true"></div>
+                        </div>
+  
+                        <div class="iuTvFilters" aria-label="Filtry sport">
+                          <span class="iuChip iuChip--accent" role="button" tabindex="0">Fotbal</span>
+                          <span class="iuChip iuChip--accent" role="button" tabindex="0">Hokej</span>
+                          <span class="iuChip iuChip--accent" role="button" tabindex="0">Tenis</span>
+                          <span class="iuChip iuChip--accent" role="button" tabindex="0">Motorsport</span>
+                        </div>
+  
+                        <div class="iuTvLinksGrid" aria-label="Sport – ověřené zdroje">
+                          <a class="iuChip iuChip--accent" href="https://www.livesport.cz/tv/" target="_blank" rel="noopener">Sport v TV (Livesport)</a>
+                          <a class="iuChip iuChip--accent" href="https://sport.ceskatelevize.cz/program" target="_blank" rel="noopener">ČT sport – program</a>
+                          <a class="iuChip iuChip--accent" href="https://tv.seznam.cz/sekce/stanice-sportovni-100005" target="_blank" rel="noopener">Sportovní stanice (Seznam TV)</a>
+                        </div>
+                      </div>
+  
+                      <!-- 5) DĚTI -->
+                      <div class="iuSubSection">
+                        <div class="iuSubSectionHeader">
+                          <h3>Děti</h3>
+                          <div class="iuSubLine" aria-hidden="true"></div>
+                        </div>
+  
+                        <div class="iuTvKidsGrid" aria-label="Děti – rychlé bloky">
+                          <div class="iuTvKidBox">
+                            <div class="iuTvKidTitle">Ráno (6–10)</div>
+                            <div class="iuTvKidSub">Rychlý přehled na dětské stanice / programy.</div>
+                            <div class="iuTvActions">
+                              <a class="iuChip iuChip--accent" href="https://www.ceskatelevize.cz/tv-program/" target="_blank" rel="noopener">ČT :D v programu ČT</a>
+                              <a class="iuChip iuChip--accent" href="https://tv.seznam.cz/" target="_blank" rel="noopener">Dětské pořady (Seznam)</a>
+                            </div>
+                          </div>
+  
+                          <div class="iuTvKidBox">
+                            <div class="iuTvKidTitle">Odpo (15–19)</div>
+                            <div class="iuTvKidSub">Ideální okno pro pohádky a dětské bloky.</div>
+                            <div class="iuTvActions">
+                              <a class="iuChip iuChip--accent" href="https://www.ceskatelevize.cz/ivysilani/" target="_blank" rel="noopener">iVysílání (ČT)</a>
+                              <a class="iuChip iuChip--accent" href="https://www.iprima.cz/" target="_blank" rel="noopener">Prima+ (dětské)</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+  
+                      <!-- 6) KOMPLETNÍ TV PROGRAM (povinné) -->
+                      <div class="iuSubSection">
+                        <div class="iuSubSectionHeader">
+                          <h3>Kompletní program</h3>
+                          <div class="iuSubLine" aria-hidden="true"></div>
+                        </div>
+  
+                        <div class="iuTvLinksGrid" aria-label="Kompletní TV program – ověřené odkazy">
+                          <!-- Oficiální -->
+                          <a class="iuChip iuChip--accent" href="https://www.ceskatelevize.cz/tv-program/" target="_blank" rel="noopener">Program ČT</a>
+                          <a class="iuChip iuChip--accent" href="https://tv.nova.cz/program" target="_blank" rel="noopener">Program Nova</a>
+                          <a class="iuChip iuChip--accent" href="https://www.iprima.cz/tv-program" target="_blank" rel="noopener">Program Prima</a>
+  
+                          <!-- Agregátory -->
+                          <a class="iuChip iuChip--accent" href="https://tv.seznam.cz/" target="_blank" rel="noopener">TV program dnes (Seznam)</a>
+  
+                          <!-- Sport -->
+                          <a class="iuChip iuChip--accent" href="https://www.livesport.cz/tv/" target="_blank" rel="noopener">Sport v TV (Livesport)</a>
+                        </div>
+  
+                        <div class="iuTvNote">
+                          Odkazy jsou záměrně jen „chips“ – nulová údržba, bez scrapingu, stabilní UX.
+                        </div>
+                      </div>
+  
+                    </div>
+                  </section>
+
                   <div id="iuTravelView" class="iuTravelView" hidden>
                     <div class="iuSectionHeader iuSectionHeader--travel">
                       <h2>Cestování</h2>
