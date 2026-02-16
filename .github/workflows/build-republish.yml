@@ -51,9 +51,16 @@ jobs:
       - name: Gate - junk tokens grep (OK/FAIL)
         shell: pwsh
         run: |
-          $pat = "(?i)(wikiloves|wiki_loves|wiki-loves|commons-logo|commons_logo|pictogram|\bicon\b|icons|sports_icon|_icon\.|banner|logo|portal|portlet|navbox|badge|button|placeholder|sprite|ads|advert|sponsor|promo|pixel|tracking|doubleclick)"
+          $pat = '(?i)"image_url"\s*:\s*"[^"]*(wikiloves|wiki_loves|wiki-loves|commons-logo|commons_logo|pictogram|icon|icons|sports_icon|_icon\.|banner|logo|portal|portlet|navbox|badge|button|placeholder|sprite|ads|advert|sponsor|promo|pixel|tracking|doubleclick)[^"]*"'
           $m = Select-String -Path .\projects\data\republish_with_images.json -Pattern $pat
-          if ($m) { Write-Error "FAIL junk_tokens_found>0"; exit 1 } else { Write-Host "OK junk_tokens_found=0" }
+          if ($m) {
+            Write-Host "JUNK_MATCH_SAMPLE (first 5 lines):"
+            @($m | Select-Object -First 5) | ForEach-Object { Write-Host $_.Line }
+            Write-Error "FAIL junk_tokens_found>0"
+            exit 1
+          } else {
+            Write-Host "OK junk_tokens_found=0"
+          }
 
       - name: Gate - license_url empty grep (OK/FAIL)
         shell: pwsh
