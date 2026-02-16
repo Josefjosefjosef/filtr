@@ -33,7 +33,7 @@
     </script>
     <script>
     (function(){
-      // UI-only alias: allow Czech section name in URL without touching feed pipeline
+      // UI-only URL canonicalization (no feed pipeline changes)
       try{
         const u = new URL(window.location.href);
         const section = String(u.searchParams.get("section") || "").trim().toLowerCase();
@@ -43,10 +43,6 @@
         }
         if (section === "weather") {
           u.searchParams.set("section", "pocasi");
-          history.replaceState(null, "", u.toString());
-        }
-        if (section === "svatky") {
-          u.searchParams.set("section", "namedays");
           history.replaceState(null, "", u.toString());
         }
       }catch{}
@@ -600,7 +596,7 @@
                     </div>
                   </div>
 
-                  <section id="iuHolidaysView" class="iuView iuHolidaysView" data-section="svatky" aria-label="Svátky" hidden>
+                  <section id="iuHolidaysView" class="iuView iuHolidaysView" data-section="namedays" aria-label="Svátky" hidden>
                     <div class="iuSectionHeader iuSectionHeader--namedays">
                       <h2>Svátky</h2>
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
