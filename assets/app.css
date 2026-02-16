@@ -5680,6 +5680,14 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   width: auto !important; /* override #feed{width:100%} so it can sit next to left rail */
 }
 
+/* JR view must adapt like #feed (same middle column footprint) */
+body[data-section="jr"] #newsList > #iuJrEmptyView,
+html[data-section="jr"] #newsList > #iuJrEmptyView{
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto !important;
+}
+
 /* Radio view must adapt like #feed (same middle column footprint) */
 #newsList > #iuRadioView{
   flex: 1 1 0;
@@ -5705,6 +5713,12 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 @media (max-width: 1100px){
   .iu-leftRail{ display: none; }
   #newsList > #feed{
+    flex: 0 0 100%;
+    width: 100% !important;
+    min-width: 0;
+  }
+  body[data-section="jr"] #newsList > #iuJrEmptyView,
+  html[data-section="jr"] #newsList > #iuJrEmptyView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
