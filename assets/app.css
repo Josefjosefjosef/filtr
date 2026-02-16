@@ -4030,6 +4030,66 @@ html[data-section="travel"] #iuTravelView .iuTravelGrid{
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* Travel crisis boxes: compact 2x2 grid (CLS=0) */
+body[data-section="travel"] #iuTravelView .iuTravelCrisisGrid,
+html[data-section="travel"] #iuTravelView .iuTravelCrisisGrid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin: 0 0 14px 0;
+}
+body[data-section="travel"] #iuTravelView .iuTravelCrisisBox,
+html[data-section="travel"] #iuTravelView .iuTravelCrisisBox{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+body[data-section="travel"] #iuTravelView .iuTravelCrisisChip,
+html[data-section="travel"] #iuTravelView .iuTravelCrisisChip{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-height: 88px; /* stable height across cards (avoid jumping) */
+  padding: 12px 12px;
+  box-sizing: border-box;
+}
+body[data-section="travel"] #iuTravelView .iuTravelChipDesc,
+html[data-section="travel"] #iuTravelView .iuTravelChipDesc{
+  display: block;
+  font-size: 12px;
+  line-height: 1.25;
+  opacity: 0.86;
+  max-width: 62ch;
+}
+body[data-section="travel"] #iuTravelView .iuTravelCrisisLinks,
+html[data-section="travel"] #iuTravelView .iuTravelCrisisLinks{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  font-size: 12px;
+}
+body[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a,
+html[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a{
+  color: var(--iuSectionAccent, currentColor);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--iuSectionAccent, currentColor) 55%, transparent);
+}
+body[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a:hover,
+body[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a:focus-visible,
+html[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a:hover,
+html[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a:focus-visible{
+  border-bottom-color: var(--iuSectionAccent, currentColor);
+}
+@media (max-width: 640px){
+  body[data-section="travel"] #iuTravelView .iuTravelCrisisGrid,
+  html[data-section="travel"] #iuTravelView .iuTravelCrisisGrid{
+    grid-template-columns: 1fr;
+  }
+}
+
 /* MAPY view (UI-only): structured link chips */
 .iuMapyView{
   padding: 18px 12px;
@@ -5771,6 +5831,14 @@ html[data-section="mapy"] #newsList > #iuMapyView{
   width: auto !important;
 }
 
+/* Travel view must adapt like #feed (same middle column footprint) */
+body[data-section="travel"] #newsList > #iuTravelView,
+html[data-section="travel"] #newsList > #iuTravelView{
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto !important;
+}
+
 /* Radio view must adapt like #feed (same middle column footprint) */
 #newsList > #iuRadioView{
   flex: 1 1 0;
@@ -5808,6 +5876,12 @@ html[data-section="mapy"] #newsList > #iuMapyView{
   }
   body[data-section="mapy"] #newsList > #iuMapyView,
   html[data-section="mapy"] #newsList > #iuMapyView{
+    flex: 0 0 100%;
+    width: 100% !important;
+    min-width: 0;
+  }
+  body[data-section="travel"] #newsList > #iuTravelView,
+  html[data-section="travel"] #newsList > #iuTravelView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
