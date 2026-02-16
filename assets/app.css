@@ -41,6 +41,11 @@
   /* Media title typography (single source of truth) */
   --iuMediaTitleFontSize: 18px;
 
+  /* Section chips (JR/Radio/TV/Mapy) */
+  --iuChipH: 110px;
+  --iuChipPadX: 12px;
+  --iuChipTitleSize: var(--iuMediaTitleFontSize, 18px);
+
   /* ===== JEDEN AKCENT PRO CELÝ WEB ===== */
   --accent: #1F4B99;
   --accentSoft: rgba(31,75,153,0.10);
@@ -2848,15 +2853,10 @@ html[data-section="tvonline"] #iuTvOnlineView{
 .iuTvOnlineGrid .iuRadioChip{
   /* Ensure CT tile can be exactly same height as other TV tiles (CLS=0) */
   box-sizing: border-box;
-  height:110px;
+  height: var(--iuChipH, 110px);
   overflow:hidden;
 }
 
-/* TV online title typography = Media title */
-body[data-section="tvonline"] .iuTvOnlineGrid .iuRadioChipTitle,
-html[data-section="tvonline"] .iuTvOnlineGrid .iuRadioChipTitle{
-  font-size: var(--iuMediaTitleFontSize);
-}
 .iuRadioGrid{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2872,15 +2872,10 @@ html[data-section="radio"] #iuRadioView .iuRadioGrid{
 body[data-section="radio"] #iuRadioView .iuRadioChip,
 html[data-section="radio"] #iuRadioView .iuRadioChip{
   box-sizing:border-box;
-  height:110px;
+  height: var(--iuChipH, 110px);
   overflow:hidden;
 }
 
-/* Radio title typography = Media title */
-body[data-section="radio"] #iuRadioView .iuRadioChipTitle,
-html[data-section="radio"] #iuRadioView .iuRadioChipTitle{
-  font-size: var(--iuMediaTitleFontSize);
-}
 .iuRadioHead{
   display: flex;
   align-items: center;
@@ -3252,7 +3247,7 @@ select.iuCtrl{
   align-items: center;
   text-align: center;
   gap: 4px;
-  padding: 16px 12px;
+  padding: 16px var(--iuChipPadX, 12px);
   border-radius: 12px;
   text-decoration: none;
   background: transparent;
@@ -3281,7 +3276,7 @@ select.iuCtrl{
 .iuRadioChipTitle{
   /* Match .news-title typographic system exactly */
   margin: 0;
-  font-size: 18px;
+  font-size: var(--iuChipTitleSize, 18px);
   font-weight: 650;
   line-height: 1.28;
   letter-spacing: 0;
@@ -4019,18 +4014,6 @@ body[data-section="home"] .iuHomeCanvas{
   background: linear-gradient(to right, var(--iuNavAccent-tvonline, #DC2626), rgba(0,0,0,0));
 }
 
-/* Radio top header wrapper (static HTML; shown only in radio section) */
-#iuRadioTop{ display: none; }
-
-/* HOTFIX (#170): keep Radio header above content (prevent wrap pushing view below fold) */
-body[data-section="radio"] #iuRadioTop,
-html[data-section="radio"] #iuRadioTop{
-  display: block !important;
-  order: -1;
-  flex: 0 0 100%;
-  width: 100%;
-}
-
 /* Mapy: same hover mechanism as Radio (swap accent var locally) */
 body[data-section="mapy"] #iuMapyView,
 html[data-section="mapy"] #iuMapyView{
@@ -4058,6 +4041,14 @@ html[data-section="mapy"] #iuMapyView .iuMapyGrid{
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* Mapy chips: match fixed tile height (CLS=0) like Radio/TV/JR */
+body[data-section="mapy"] #iuMapyView .iuRadioChip,
+html[data-section="mapy"] #iuMapyView .iuRadioChip{
+  box-sizing: border-box;
+  height: var(--iuChipH, 110px);
+  overflow: hidden;
+}
+
 /* JR quick links grid: match Radio sizing + full-width 2 columns */
 body[data-section="jr"] #iuJrEmptyView .iuJRGrid,
 html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
@@ -4072,7 +4063,7 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
 body[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip,
 html[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip{
   box-sizing: border-box;
-  height: 110px;
+  height: var(--iuChipH, 110px);
   overflow: hidden;
 }
 

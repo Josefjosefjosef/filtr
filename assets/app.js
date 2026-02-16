@@ -4779,6 +4779,12 @@ function buildVideoAsArticleCard(it) {
   }
 
   function renderRadioView(viewEl){
+    const mount = viewEl && typeof viewEl.querySelector === "function"
+      ? viewEl.querySelector(".iuRadioMount")
+      : null;
+    const target = mount || viewEl;
+    if (!target) return;
+
     const wishForm = `
       <details class="iuRadioWish iuWishAcc" id="iuRadioWish" aria-label="Přání do rádia">
         <summary class="iuWishAccSummary">
@@ -4890,7 +4896,7 @@ function buildVideoAsArticleCard(it) {
       `;
     }).join("");
 
-    viewEl.innerHTML = wishForm + `<div class="iuRadioGrid" role="list" aria-label="Odkazy na rádia">${chips}</div>`;
+    target.innerHTML = wishForm + `<div class="iuRadioGrid" role="list" aria-label="Odkazy na rádia">${chips}</div>`;
   }
 
   function ensureHomeView(){
