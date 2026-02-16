@@ -7048,12 +7048,18 @@ body.iuRailHidden .iu-leftNav .iu-leftNavItem:not(.iuRailToggle){
   display: none !important;
 }
 
-/* 3) Make the toggle a fixed overlay button when rail is hidden */
+/* 3) Make the toggle a fixed "handle" parked at the far-left edge (outside the layout) */
 html.iuRailHidden #iuRailToggleBtn,
 body.iuRailHidden #iuRailToggleBtn{
   position: fixed !important;
-  left: 10px !important;
-  top: 92px !important;        /* if it collides with topbar, adjust to 72/84/96 */
+
+  /* park it at the very left edge, pushed partially off-canvas */
+  left: 0 !important;
+  top: 92px !important; /* když koliduje s topbarem, dej 84/96 */
+
+  /* push it left so it sits outside; keep a small visible grip */
+  transform: translateX(-34px) !important;
+
   z-index: 10000 !important;
 }
 
@@ -7066,6 +7072,16 @@ body.iuRailHidden #iuRailToggleBtn.iu-leftNavItem{
   padding: 10px 12px !important;
   border-radius: 12px !important;
   box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+
+/* optional: on hover/focus pull it fully into view (nice UX, still CSS-only) */
+html.iuRailHidden #iuRailToggleBtn:hover,
+html.iuRailHidden #iuRailToggleBtn:focus,
+html.iuRailHidden #iuRailToggleBtn:focus-visible,
+body.iuRailHidden #iuRailToggleBtn:hover,
+body.iuRailHidden #iuRailToggleBtn:focus,
+body.iuRailHidden #iuRailToggleBtn:focus-visible{
+  transform: translateX(0) !important;
 }
 
 /* Optional: make label always visible in collapsed mode */
