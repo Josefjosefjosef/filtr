@@ -3970,14 +3970,30 @@ body[data-section="home"] .iuHomeCanvas{
 }
 
 /* Section header accent (modifiers: only color, no layout changes) */
-.iuSectionHeader--jr{ --iuSectionAccent: var(--iuNavAccent-jr); }
-.iuSectionHeader--mapy{ --iuSectionAccent: var(--iuNavAccent-mapy, #22C55E); }
-.iuSectionHeader--radio{ --iuSectionAccent: var(--iuNavAccent-radio, #6D28D9); }
-.iuSectionHeader--tvonline{ --iuSectionAccent: var(--iuNavAccent-tvonline, #DC2626); }
-.iuSectionHeader--tvprogram{ --iuSectionAccent: var(--iuNavAccent-tvprogram, #10B981); }
-.iuSectionHeader--travel{ --iuSectionAccent: var(--iuNavAccent-travel, #06B6D4); }
-.iuSectionHeader--weather{ --iuSectionAccent: var(--iuNavAccent-pocasi, #38BDF8); }
-.iuSectionHeader--namedays{ --iuSectionAccent: var(--iuNavAccent-namedays, #F59E0B); }
+.iuSectionHeader--jr{
+  --iuSectionAccent: var(--iuNavAccent-jr);
+}
+.iuSectionHeader--mapy{
+  --iuSectionAccent: var(--iuNavAccent-mapy, #22C55E);
+}
+.iuSectionHeader--radio{
+  --iuSectionAccent: var(--iuNavAccent-radio, #6D28D9);
+}
+.iuSectionHeader--tvonline{
+  --iuSectionAccent: var(--iuNavAccent-tvonline, #DC2626);
+}
+.iuSectionHeader--tvprogram{
+  --iuSectionAccent: var(--iuNavAccent-tvprogram, #10B981);
+}
+.iuSectionHeader--travel{
+  --iuSectionAccent: var(--iuNavAccent-travel, #06B6D4);
+}
+.iuSectionHeader--weather{
+  --iuSectionAccent: var(--iuNavAccent-pocasi, #38BDF8);
+}
+.iuSectionHeader--namedays{
+  --iuSectionAccent: var(--iuNavAccent-namedays, #F59E0B);
+}
 
 .iuSectionHeader--jr h2,
 .iuSectionHeader--mapy h2,
