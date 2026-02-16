@@ -7252,3 +7252,65 @@ html.iuRailHidden #iuRailToggleBtn{
   background:#fff;
   border:1px solid #9ca3af;
 }
+
+/* ============================================================
+   FINAL FIX — rail toggle position + professional behavior
+   ============================================================ */
+
+/* ---------- 1. normální stav (rail viditelný) ---------- */
+
+html:not(.iuRailHidden) #iuRailToggleBtn{
+  position: relative !important;
+  margin: 6px auto 10px auto !important;   /* NAD Média */
+  left: 0 !important;
+  transform: none !important;
+  width: 44px !important;
+  height: 44px !important;
+  border: 1px solid #9ca3af !important;    /* šedý okraj */
+  border-radius: 10px !important;
+  background: transparent !important;
+}
+
+/* ---------- 2. šipka základ ---------- */
+
+#iuRailToggleBtn::before{
+  border-width: 0 2px 2px 0 !important;
+  width: 10px !important;
+  height: 10px !important;
+  color: #6b7280 !important;              /* šedá */
+  opacity: .9;
+}
+
+/* ---------- 3. hover / focus ---------- */
+
+#iuRailToggleBtn:hover,
+#iuRailToggleBtn:focus-visible{
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 1px #dc2626 inset !important;
+}
+
+#iuRailToggleBtn:hover::before,
+#iuRailToggleBtn:focus-visible::before{
+  color: #dc2626 !important;
+  transform: scale(1.25) rotate(45deg) !important;
+}
+
+/* ---------- 4. rail skrytý – malý handle vlevo ---------- */
+
+html.iuRailHidden #iuRailToggleBtn{
+  position: fixed !important;
+  top: calc(var(--iuTopbarStackH, 64px) + 10px) !important;
+  left: -10px !important;
+  z-index: 2000 !important;
+  background: white !important;
+}
+
+/* hidden stav – pořád šedý */
+html.iuRailHidden #iuRailToggleBtn::before{
+  color: #6b7280 !important;
+}
+
+/* hover v hidden – červený */
+html.iuRailHidden #iuRailToggleBtn:hover::before{
+  color: #dc2626 !important;
+}
