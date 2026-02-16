@@ -1,7 +1,34 @@
 {
   "sources": [
     { "id": "globalvoices", "name": "Global Voices", "rss": ["https://globalvoices.org/feed/"] },
-    { "id": "wikinews_en", "name": "Wikinews (EN)", "rss": ["https://en.wikinews.org/w/index.php?title=Special:NewsFeed&feed=rss"] },
+    {
+      "id": "wikinews_en",
+      "name": "Wikinews (EN)",
+      "rss": ["https://en.wikinews.org/w/index.php?title=Special:NewsFeed&feed=rss"],
+      "mw_api_base": "https://en.wikinews.org/w/api.php",
+      "mw_article_base": "https://en.wikinews.org/wiki/"
+    },
+    {
+      "id": "wikinews_de",
+      "name": "Wikinews (DE)",
+      "rss": ["https://de.wikinews.org/w/index.php?title=Spezial:Nachrichtenfeed&feed=rss"],
+      "mw_api_base": "https://de.wikinews.org/w/api.php",
+      "mw_article_base": "https://de.wikinews.org/wiki/"
+    },
+    {
+      "id": "wikinews_fr",
+      "name": "Wikinews (FR)",
+      "rss": ["https://fr.wikinews.org/w/index.php?title=Sp%C3%A9cial:NewsFeed&feed=rss"],
+      "mw_api_base": "https://fr.wikinews.org/w/api.php",
+      "mw_article_base": "https://fr.wikinews.org/wiki/"
+    },
+    {
+      "id": "wikinews_es",
+      "name": "Wikinews (ES)",
+      "rss": ["https://es.wikinews.org/w/index.php?title=Especial:NewsFeed&feed=rss"],
+      "mw_api_base": "https://es.wikinews.org/w/api.php",
+      "mw_article_base": "https://es.wikinews.org/wiki/"
+    },
     { "id": "mongabay", "name": "Mongabay", "rss": ["https://news.mongabay.com/feed/"] },
     { "id": "propublica", "name": "ProPublica", "rss": ["https://www.propublica.org/feeds/propublica/main"] },
     { "id": "jr", "name": "Journalist's Resource", "rss": ["https://journalistsresource.org/feed/"] },
