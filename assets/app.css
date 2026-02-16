@@ -6977,3 +6977,27 @@ body.iuRailHidden #newsList > #iuHomeView{
 #iuHomeView{
   display: none !important;
 }
+
+/* === FIX: debug box must not cause CLS === */
+
+/* default: debug box outside debug mode must not exist in layout */
+html:not([data-iu-debug="1"]) #iuDebugBox{
+  display: none !important;
+}
+
+/* debug mode: fixed overlay (no layout impact) */
+html[data-iu-debug="1"] #iuDebugBox{
+  position: fixed !important;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 35vh;
+  overflow: auto;
+  z-index: 9999;
+}
+
+html[data-iu-debug="1"] #iuDebugBox pre{
+  white-space: pre-wrap;
+  max-height: 25vh;
+  overflow: auto;
+}
