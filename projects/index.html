@@ -45,6 +45,10 @@
           u.searchParams.set("section", "pocasi");
           history.replaceState(null, "", u.toString());
         }
+        if (section === "svatky") {
+          u.searchParams.set("section", "namedays");
+          history.replaceState(null, "", u.toString());
+        }
       }catch{}
     })();
     </script>
@@ -595,6 +599,126 @@
                       <a class="iuRadioChip" role="listitem" href="https://www.meteoblue.com/" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Meteoblue</span><span class="iuRadioChipDesc">modely</span></a>
                     </div>
                   </div>
+
+                  <section id="iuHolidaysView" class="iuView iuHolidaysView" data-section="svatky" aria-label="Svátky" hidden>
+                    <div class="iuSectionHeader iuSectionHeader--namedays">
+                      <h2>Svátky</h2>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <p class="iuSectionSubtitle">
+                      Rychlý přehled svátků v kalendáři, tipy na přání a odkazy na další kalendáře.
+                    </p>
+
+                    <div class="iuViewBody">
+
+                      <!-- 1) DNES -->
+                      <div class="iuSubSection">
+                        <div class="iuSubSectionHeader">
+                          <h3>Dnes</h3>
+                          <div class="iuSubLine" aria-hidden="true"></div>
+                        </div>
+
+                        <div class="iuHolidaysTodayGrid" role="group" aria-label="Svátky dnes a okolí">
+                          <div class="iuHolidaysCard" role="group" aria-label="Dnes má svátek">
+                            <div class="iuHolidaysCardTop">
+                              <div class="iuHolidaysCardKicker">Dnes má svátek</div>
+                              <div class="iuHolidaysCardTitle" id="iuHolidayTodayName">—</div>
+                            </div>
+                            <div class="iuHolidaysMeta">
+                              <div class="iuHolidaysMetaRow"><span class="iuMetaLabel">Zítra:</span> <span id="iuHolidayTomorrowName">—</span></div>
+                              <div class="iuHolidaysMetaRow"><span class="iuMetaLabel">Včera:</span> <span id="iuHolidayYesterdayName">—</span></div>
+                            </div>
+                            <div class="iuHolidaysActions" aria-label="Rychlé akce">
+                              <a class="iuChip iuChip--accent" href="https://www.google.com/search?q=p%C5%99%C3%A1n%C3%AD+ke+sv%C3%A1tku" target="_blank" rel="noopener">Pošli přání</a>
+                              <a class="iuChip iuChip--accent" href="https://www.google.com/search?q=kv%C4%9Btiny+doru%C4%8Den%C3%AD+dnes" target="_blank" rel="noopener">Kup květiny</a>
+                              <a class="iuChip iuChip--accent" href="https://www.google.com/search?q=d%C3%A1rek+na+posledn%C3%AD+chv%C3%ADli" target="_blank" rel="noopener">Najdi dárek</a>
+                            </div>
+                          </div>
+
+                          <div class="iuHolidaysCard iuHolidaysCard--info" role="group" aria-label="Tipy a připomínky">
+                            <div class="iuHolidaysCardTop">
+                              <div class="iuHolidaysCardKicker">Tip</div>
+                              <div class="iuHolidaysCardTitle">Zapomněl jsem na svátek</div>
+                            </div>
+                            <div class="iuHolidaysCrisisGrid" aria-label="Rychlá řešení">
+                              <a class="iuCrisisBox" href="https://www.google.com/search?q=sms+p%C5%99%C3%A1n%C3%AD+ke+sv%C3%A1tku" target="_blank" rel="noopener">
+                                <div class="iuCrisisTitle">Rychlá SMS</div>
+                                <div class="iuCrisisSub">Okamžitě pošli přání</div>
+                              </a>
+                              <a class="iuCrisisBox" href="https://www.google.com/search?q=kv%C4%9Btiny+doru%C4%8Den%C3%AD+do+2+hodin" target="_blank" rel="noopener">
+                                <div class="iuCrisisTitle">Květiny dnes</div>
+                                <div class="iuCrisisSub">Doručení ve stejný den</div>
+                              </a>
+                              <a class="iuCrisisBox" href="https://www.google.com/search?q=elektronick%C3%BD+vzkaz+ke+sv%C3%A1tku" target="_blank" rel="noopener">
+                                <div class="iuCrisisTitle">E-přání</div>
+                                <div class="iuCrisisSub">Hotové texty a obrázky</div>
+                              </a>
+                              <a class="iuCrisisBox" href="https://www.google.com/search?q=p%C5%99ipom%C3%ADnka+sv%C3%A1tek+do+kalend%C3%A1%C5%99e" target="_blank" rel="noopener">
+                                <div class="iuCrisisTitle">Připomeň mi</div>
+                                <div class="iuCrisisSub">Nastav připomínku</div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 2) KALENDÁŘ + HLEDÁNÍ -->
+                      <div class="iuSubSection">
+                        <div class="iuSubSectionHeader">
+                          <h3>Kalendář a hledání</h3>
+                          <div class="iuSubLine" aria-hidden="true"></div>
+                        </div>
+
+                        <div class="iuHolidaysSearchRow" role="search">
+                          <label class="iuSrOnly" for="iuHolidaySearch">Hledat jméno</label>
+                          <input id="iuHolidaySearch" class="iuInput" type="search" placeholder="Hledat jméno (např. Jana, Petr…)" autocomplete="off" />
+                          <a class="iuChip iuChip--accent" href="https://www.google.com/search?q=kdy+m%C3%A1+sv%C3%A1tek" target="_blank" rel="noopener">Hledat na webu</a>
+                        </div>
+
+                        <div class="iuHolidaysMonthGrid" aria-label="Svátky v měsíci (odkazy)">
+                          <a class="iuChip iuChip--accent" href="https://www.kurzy.cz/kalendar/svatky/" target="_blank" rel="noopener">Kalendář svátků (měsíčně)</a>
+                          <a class="iuChip iuChip--accent" href="https://cs.wikipedia.org/wiki/Jmeniny" target="_blank" rel="noopener">Jmenné svátky – přehled</a>
+                          <a class="iuChip iuChip--accent" href="https://cs.wikipedia.org/wiki/Jmeniny_v_%C4%8Cesku" target="_blank" rel="noopener">Seznam jmen v ČR</a>
+                          <a class="iuChip iuChip--accent" href="https://www.google.com/search?q=sv%C3%A1tky+%C4%8Desko+kalend%C3%A1%C5%99" target="_blank" rel="noopener">Další přehledy</a>
+                        </div>
+
+                        <div class="iuHolidaysHint">
+                          Tip: Ulož si oblíbená jména (rodina, práce) – později sem napojíme „Moje jména“ panel.
+                        </div>
+                      </div>
+
+                      <!-- 3) DALŠÍ KALENDÁŘE (jen odkazy) -->
+                      <div class="iuSubSection">
+                        <div class="iuSubSectionHeader">
+                          <h3>Další kalendáře</h3>
+                          <div class="iuSubLine" aria-hidden="true"></div>
+                        </div>
+
+                        <div class="iuHolidaysLinksGrid" aria-label="Další kalendáře – odkazy">
+                          <!-- Státní/školní -->
+                          <a class="iuChip iuChip--accent" href="https://cs.wikipedia.org/wiki/St%C3%A1tn%C3%AD_sv%C3%A1tky_%C4%8Ceska" target="_blank" rel="noopener">Státní svátky ČR</a>
+                          <a class="iuChip iuChip--accent" href="https://www.google.com/search?q=organizace+%C5%A1koln%C3%ADho+roku+M%C5%A0MT" target="_blank" rel="noopener">Organizace školního roku</a>
+                          <a class="iuChip iuChip--accent" href="https://cs.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener">ISO týdny</a>
+
+                          <!-- Mezinárodní dny -->
+                          <a class="iuChip iuChip--accent" href="https://cs.wikipedia.org/wiki/Mezin%C3%A1rodn%C3%AD_dny_a_roky" target="_blank" rel="noopener">Mezinárodní dny (OSN)</a>
+
+                          <!-- Lunární -->
+                          <a class="iuChip iuChip--accent" href="https://cs.wikipedia.org/wiki/F%C3%A1ze_M%C4%9Bs%C3%ADce" target="_blank" rel="noopener">Fáze Měsíce</a>
+
+                          <!-- Profesní / termíny -->
+                          <a class="iuChip iuChip--accent" href="https://financnisprava.gov.cz/cs/dane/danovy-kalendar" target="_blank" rel="noopener">Daňový kalendář</a>
+                          <a class="iuChip iuChip--accent" href="https://www.cssz.cz/" target="_blank" rel="noopener">ČSSZ – termíny</a>
+                        </div>
+
+                        <div class="iuHolidaysNote">
+                          Pozn.: Odkazy jsou záměrně „jen chips“ – nulová údržba a stabilní UX.
+                        </div>
+                      </div>
+
+                    </div>
+                  </section>
+
                   <div id="iuTravelView" class="iuTravelView" hidden>
                     <div class="iuSectionHeader iuSectionHeader--travel">
                       <h2>Cestování</h2>

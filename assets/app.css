@@ -3976,13 +3976,15 @@ body[data-section="home"] .iuHomeCanvas{
 .iuSectionHeader--tvonline{ --iuSectionAccent: var(--iuNavAccent-tvonline, #DC2626); }
 .iuSectionHeader--travel{ --iuSectionAccent: var(--iuNavAccent-travel, #06B6D4); }
 .iuSectionHeader--weather{ --iuSectionAccent: var(--iuNavAccent-pocasi, #38BDF8); }
+.iuSectionHeader--namedays{ --iuSectionAccent: var(--iuNavAccent-namedays, #F59E0B); }
 
 .iuSectionHeader--jr h2,
 .iuSectionHeader--mapy h2,
 .iuSectionHeader--radio h2,
 .iuSectionHeader--tvonline h2,
 .iuSectionHeader--travel h2,
-.iuSectionHeader--weather h2{
+.iuSectionHeader--weather h2,
+.iuSectionHeader--namedays h2{
   color: var(--iuSectionAccent, currentColor);
 }
 
@@ -3998,6 +4000,214 @@ html[data-section="pocasi"] #iuWeatherView{
 body[data-section="pocasi"] #feed,
 html[data-section="pocasi"] #feed{
   display: none !important;
+}
+
+/* SVÁTKY view (UI-only): center feed-only */
+.iuHolidaysView{
+  padding: 18px 12px;
+  --iuSectionAccent: var(--iuNavAccent-namedays, #F59E0B);
+}
+body[data-section="namedays"] #iuHolidaysView,
+html[data-section="namedays"] #iuHolidaysView{
+  display: block !important;
+}
+body[data-section="namedays"] #feed,
+html[data-section="namedays"] #feed{
+  display: none !important;
+}
+
+/* ==============================
+   SVÁTKY (CENTER FEED ONLY) - UI-only
+   Scope: #iuHolidaysView
+   ============================== */
+
+#iuHolidaysView .iuViewBody{ display:block; }
+
+#iuHolidaysView .iuSubSectionHeader{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 10px 0;
+  color: var(--iuSectionAccent, currentColor);
+}
+#iuHolidaysView .iuSubSectionHeader h3{
+  margin: 0;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+#iuHolidaysView .iuSubLine{
+  height: 2px;
+  flex: 1 1 auto;
+  border-radius: 999px;
+  opacity: 0.35;
+  background: linear-gradient(to right, var(--iuSectionAccent, currentColor), rgba(0,0,0,0));
+}
+
+#iuHolidaysView .iuHolidaysTodayGrid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 900px){
+  #iuHolidaysView .iuHolidaysTodayGrid{
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+}
+
+#iuHolidaysView .iuHolidaysCard{
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+  padding: 12px;
+}
+
+#iuHolidaysView .iuHolidaysCardTop{ display:flex; flex-direction:column; gap:6px; }
+
+#iuHolidaysView .iuHolidaysCardKicker{
+  font-size: 12px;
+  opacity: 0.85;
+  letter-spacing: 0.02em;
+}
+
+#iuHolidaysView .iuHolidaysCardTitle{
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+#iuHolidaysView .iuHolidaysMeta{
+  margin-top: 10px;
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+  opacity: 0.92;
+}
+
+#iuHolidaysView .iuHolidaysMetaRow{ display:flex; gap:8px; align-items:baseline; }
+#iuHolidaysView .iuMetaLabel{ opacity:0.75; }
+
+#iuHolidaysView .iuHolidaysActions{
+  margin-top: 12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+}
+
+/* krizové boxy (stejná linka barvy sekce) */
+#iuHolidaysView .iuHolidaysCrisisGrid{
+  margin-top: 10px;
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 700px){
+  #iuHolidaysView .iuHolidaysCrisisGrid{ grid-template-columns: 1fr 1fr; }
+}
+
+#iuHolidaysView .iuCrisisBox{
+  display:block;
+  text-decoration:none;
+  border-radius: 14px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.02);
+  position: relative;
+  overflow: hidden;
+}
+
+#iuHolidaysView .iuCrisisBox::before{
+  content:"";
+  position:absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--iuSectionAccent);
+  opacity: 0.95;
+}
+
+#iuHolidaysView .iuCrisisTitle{ font-weight: 800; margin-left: 8px; }
+#iuHolidaysView .iuCrisisSub{ opacity: 0.78; margin-left: 8px; margin-top: 4px; font-size: 13px; }
+
+#iuHolidaysView .iuCrisisBox:hover,
+#iuHolidaysView .iuCrisisBox:focus-visible{
+  outline: none;
+  border-color: color-mix(in srgb, var(--iuSectionAccent) 55%, rgba(255,255,255,0.10));
+}
+
+/* search row */
+#iuHolidaysView .iuHolidaysSearchRow{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+  flex-wrap: wrap;
+}
+
+#iuHolidaysView .iuSrOnly{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#iuHolidaysView .iuInput{
+  flex: 1 1 320px;
+  min-height: 40px;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(0,0,0,0.15);
+  color: inherit;
+  box-sizing: border-box;
+}
+
+#iuHolidaysView .iuHolidaysMonthGrid,
+#iuHolidaysView .iuHolidaysLinksGrid{
+  margin-top: 10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+}
+
+#iuHolidaysView .iuHolidaysHint,
+#iuHolidaysView .iuHolidaysNote{
+  margin-top: 10px;
+  opacity: 0.75;
+  font-size: 13px;
+}
+
+/* chips (scoped only) */
+#iuHolidaysView .iuChip{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+  color: inherit;
+  box-sizing: border-box;
+}
+#iuHolidaysView .iuChip--accent{
+  --iuChipAccent: var(--iuSectionAccent);
+  border-color: color-mix(in srgb, var(--iuChipAccent) 28%, rgba(255,255,255,0.12));
+  background: color-mix(in srgb, rgba(255,255,255,0.04) 80%, var(--iuChipAccent) 20%);
+}
+#iuHolidaysView .iuChip:hover,
+#iuHolidaysView .iuChip:focus-visible{
+  outline: none;
+  border-color: color-mix(in srgb, var(--iuSectionAccent) 55%, rgba(255,255,255,0.10));
 }
 
 body[data-section="pocasi"] #iuWeatherView .iuSubSectionHeader,
@@ -6019,6 +6229,14 @@ html[data-section="pocasi"] #newsList > #iuWeatherView{
   width: auto !important;
 }
 
+/* Holidays view must adapt like #feed (same middle column footprint) */
+body[data-section="namedays"] #newsList > #iuHolidaysView,
+html[data-section="namedays"] #newsList > #iuHolidaysView{
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto !important;
+}
+
 /* Radio view must adapt like #feed (same middle column footprint) */
 #newsList > #iuRadioView{
   flex: 1 1 0;
@@ -6068,6 +6286,12 @@ html[data-section="pocasi"] #newsList > #iuWeatherView{
   }
   body[data-section="pocasi"] #newsList > #iuWeatherView,
   html[data-section="pocasi"] #newsList > #iuWeatherView{
+    flex: 0 0 100%;
+    width: 100% !important;
+    min-width: 0;
+  }
+  body[data-section="namedays"] #newsList > #iuHolidaysView,
+  html[data-section="namedays"] #newsList > #iuHolidaysView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
