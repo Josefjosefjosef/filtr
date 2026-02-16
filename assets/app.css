@@ -3972,13 +3972,159 @@ body[data-section="home"] .iuHomeCanvas{
 .iuSectionHeader--radio{ --iuSectionAccent: var(--iuNavAccent-radio, #6D28D9); }
 .iuSectionHeader--tvonline{ --iuSectionAccent: var(--iuNavAccent-tvonline, #DC2626); }
 .iuSectionHeader--travel{ --iuSectionAccent: var(--iuNavAccent-travel, #06B6D4); }
+.iuSectionHeader--weather{ --iuSectionAccent: var(--iuNavAccent-pocasi, #38BDF8); }
 
 .iuSectionHeader--jr h2,
 .iuSectionHeader--mapy h2,
 .iuSectionHeader--radio h2,
 .iuSectionHeader--tvonline h2,
-.iuSectionHeader--travel h2{
+.iuSectionHeader--travel h2,
+.iuSectionHeader--weather h2{
   color: var(--iuSectionAccent, currentColor);
+}
+
+/* WEATHER view (UI-only): middle-column view + embeds + link chips */
+.iuWeatherView{
+  padding: 18px 12px;
+  --iuSectionAccent: var(--iuNavAccent-pocasi, #38BDF8);
+}
+body[data-section="pocasi"] #iuWeatherView,
+html[data-section="pocasi"] #iuWeatherView{
+  display: block !important;
+}
+body[data-section="pocasi"] #feed,
+html[data-section="pocasi"] #feed{
+  display: none !important;
+}
+
+body[data-section="pocasi"] #iuWeatherView .iuSubSectionHeader,
+html[data-section="pocasi"] #iuWeatherView .iuSubSectionHeader{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 10px 0;
+  color: var(--iuSectionAccent, currentColor);
+}
+body[data-section="pocasi"] #iuWeatherView .iuSubSectionHeader .iuSectionHeaderLine,
+html[data-section="pocasi"] #iuWeatherView .iuSubSectionHeader .iuSectionHeaderLine{
+  opacity: 0.35;
+}
+
+/* Weather hourly chips: make the (12h) strip scrollable */
+body[data-section="pocasi"] #iuWeatherView .iuHomeWeatherForecast,
+html[data-section="pocasi"] #iuWeatherView .iuHomeWeatherForecast{
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+body[data-section="pocasi"] #iuWeatherView .iuHomeWeatherForecast::-webkit-scrollbar,
+html[data-section="pocasi"] #iuWeatherView .iuHomeWeatherForecast::-webkit-scrollbar{
+  display: none;
+}
+body[data-section="pocasi"] #iuWeatherView .iuHomeWxChip,
+html[data-section="pocasi"] #iuWeatherView .iuHomeWxChip{
+  flex: 0 0 auto;
+  min-width: 64px;
+}
+
+/* Weather quick grid: compact, no CLS */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 10px 0 14px 0;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherQuickChip,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherQuickChip{
+  min-height: 62px;
+  padding: 12px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Weather radar + week embeds (stable sizing, rounded, no overflow) */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherRadar,
+body[data-section="pocasi"] #iuWeatherView .iuWeatherWeek,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherRadar,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherWeek{
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.08);
+  min-height: 360px; /* CLS=0 for iframe loads */
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherRadarFrame,
+body[data-section="pocasi"] #iuWeatherView .iuWeatherWeekFrame,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherRadarFrame,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherWeekFrame{
+  width: 100%;
+  height: 520px;
+  border: 0;
+  display: block;
+}
+@media (max-width: 640px){
+  body[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid,
+  html[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid{
+    grid-template-columns: 1fr;
+  }
+  body[data-section="pocasi"] #iuWeatherView .iuWeatherRadarFrame,
+  body[data-section="pocasi"] #iuWeatherView .iuWeatherWeekFrame,
+  html[data-section="pocasi"] #iuWeatherView .iuWeatherRadarFrame,
+  html[data-section="pocasi"] #iuWeatherView .iuWeatherWeekFrame{
+    height: 440px;
+  }
+}
+
+/* Weather alerts card (high priority) */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherAlerts,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherAlerts{
+  border-radius: 14px;
+  padding: 12px 12px;
+  background: color-mix(in srgb, #EF4444 14%, white);
+  border: 1px solid color-mix(in srgb, #EF4444 35%, rgba(0,0,0,0.08));
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertTitle,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertTitle{
+  font-weight: 900;
+  color: #B91C1C;
+  margin-bottom: 6px;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertLinks,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertLinks{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  font-size: 12px;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertLinks a,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertLinks a{
+  color: #B91C1C;
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, #B91C1C 50%, transparent);
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertLinks a:hover,
+body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertLinks a:focus-visible,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertLinks a:hover,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertLinks a:focus-visible{
+  border-bottom-color: #B91C1C;
+}
+
+/* Weather links grid: full-width 2 columns (like Travel/JR) */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherLinksGrid,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherLinksGrid{
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 /* TRAVEL view (UI-only): static link chips (no feed pipeline) */
@@ -5839,6 +5985,14 @@ html[data-section="travel"] #newsList > #iuTravelView{
   width: auto !important;
 }
 
+/* Weather view must adapt like #feed (same middle column footprint) */
+body[data-section="pocasi"] #newsList > #iuWeatherView,
+html[data-section="pocasi"] #newsList > #iuWeatherView{
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto !important;
+}
+
 /* Radio view must adapt like #feed (same middle column footprint) */
 #newsList > #iuRadioView{
   flex: 1 1 0;
@@ -5882,6 +6036,12 @@ html[data-section="travel"] #newsList > #iuTravelView{
   }
   body[data-section="travel"] #newsList > #iuTravelView,
   html[data-section="travel"] #newsList > #iuTravelView{
+    flex: 0 0 100%;
+    width: 100% !important;
+    min-width: 0;
+  }
+  body[data-section="pocasi"] #newsList > #iuWeatherView,
+  html[data-section="pocasi"] #newsList > #iuWeatherView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;

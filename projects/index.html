@@ -41,7 +41,116 @@
           u.searchParams.set("section", "travel");
           history.replaceState(null, "", u.toString());
         }
+        if (section === "weather") {
+          u.searchParams.set("section", "pocasi");
+          history.replaceState(null, "", u.toString());
+        }
       }catch{}
+    })();
+    </script>
+    <script>
+    (function(){
+      // UI-only Weather render: use /projects/data/weather.json (no feed pipeline touch)
+      const skeletonEl = document.getElementById('iuHomeWeatherSkeleton');
+      const contentEl = document.getElementById('iuHomeWeatherContent');
+      const cityEl = document.getElementById('iuHomeWxCity');
+      const dateEl = document.getElementById('iuHomeWxDate');
+      const tempEl = document.getElementById('iuHomeWxTemp');
+      const iconEl = document.getElementById('iuHomeWxIcon');
+      const descEl = document.getElementById('iuHomeWxDesc');
+      const forecastEl = document.getElementById('iuHomeWxForecast');
+      if (!skeletonEl && !contentEl && !cityEl && !dateEl && !tempEl && !iconEl && !descEl && !forecastEl) return;
+
+      try{
+        if (window.__iuWeatherJsonLoading) return;
+        window.__iuWeatherJsonLoading = true;
+      }catch{}
+
+      const fmtDeg = (n) => {
+        if (typeof n !== 'number' || !isFinite(n)) return '—';
+        return Math.round(n) + '°';
+      };
+      const fmtHour = (s) => {
+        try{
+          const d = new Date(String(s || ''));
+          if (isNaN(d.getTime())) return '--h';
+          return String(d.getHours()) + 'h';
+        }catch{
+          return '--h';
+        }
+      };
+      const fmtDate = () => {
+        try{
+          const TZ = "Europe/Prague";
+          return new Intl.DateTimeFormat("cs-CZ",{weekday:"long",day:"numeric",month:"long",timeZone:TZ}).format(new Date());
+        }catch{
+          return "";
+        }
+      };
+      const iconFromDesc = (desc) => {
+        const s = String(desc || "").toLowerCase();
+        if (s.includes("slun")) return "☀️";
+        if (s.includes("jas")) return "☀️";
+        if (s.includes("obla")) return "☁️";
+        if (s.includes("zamra")) return "☁️";
+        if (s.includes("déšť") || s.includes("dest") || s.includes("mrhol")) return "🌧";
+        if (s.includes("sníh") || s.includes("snih")) return "❄️";
+        if (s.includes("bouř")) return "⛈";
+        return "🌤";
+      };
+      const withTs = (rel) => {
+        try{
+          const u = new URL(String(rel || ''), window.location.href);
+          u.searchParams.set('ts', String(Date.now()));
+          return u.toString();
+        }catch{
+          return String(rel || '');
+        }
+      };
+
+      try{ if (skeletonEl) skeletonEl.hidden = false; }catch{}
+      try{ if (contentEl) contentEl.hidden = true; }catch{}
+
+      fetch(withTs('/projects/data/weather.json'), { cache: 'no-store' })
+        .then((r) => r.json())
+        .then((d) => {
+          if (!d || typeof d !== 'object') throw new Error('bad weather');
+          const city = String(d.place || '—');
+          const desc = String(d?.current?.desc || '—');
+          if (cityEl) cityEl.textContent = city;
+          if (dateEl) dateEl.textContent = fmtDate();
+          if (tempEl) tempEl.textContent = fmtDeg(d?.current?.temp);
+          if (descEl) descEl.textContent = desc;
+          if (iconEl) iconEl.textContent = iconFromDesc(desc);
+
+          if (forecastEl) {
+            const hours = Array.isArray(d.hours) ? d.hours.slice(0, 12) : [];
+            const chips = Array.from(forecastEl.querySelectorAll('.iuHomeWxChip'));
+            for (let i = 0; i < chips.length; i++){
+              const chip = chips[i];
+              const it = hours[i];
+              if (!chip) continue;
+              if (it) {
+                chip.innerHTML = `<div class="iuHomeWxChipT">${fmtHour(it.time)}</div><div class="iuHomeWxChipV">${fmtDeg(it.temp)}</div>`;
+                chip.removeAttribute('aria-hidden');
+              } else {
+                chip.innerHTML = `<div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div>`;
+                chip.setAttribute('aria-hidden', 'true');
+              }
+            }
+          }
+
+          try{ if (skeletonEl) skeletonEl.hidden = true; }catch{}
+          try{ if (contentEl) contentEl.hidden = false; }catch{}
+        })
+        .catch(() => {
+          try{
+            if (skeletonEl) skeletonEl.textContent = 'Počasí nedostupné';
+          }catch{}
+        })
+        .finally(() => {
+          try{ window.__iuWeatherJsonLoading = false; }catch{}
+        });
     })();
     </script>
 
@@ -305,15 +414,6 @@
                       <!-- 4-3-4 tessellation (11 sections, excluding Home) -->
                       <div class="iuHomeHex434" aria-label="Rozcestník">
                         <div class="iuHexRow iuHexRow--4">
-                          <a class="iuHex iuHex--pocasi" href="?section=pocasi">
-                            <span class="iuHexBadge">LIVE</span>
-                            <span class="iuHex__icon" aria-hidden="true">
-                              <svg viewBox="0 0 24 24" role="img" focusable="false">
-                                <path d="M7 18h11a4 4 0 0 0 0-8 5.5 5.5 0 0 0-10.6-1.6A4.5 4.5 0 0 0 7 18z" fill="none" stroke="currentColor" stroke-width="2"/>
-                              </svg>
-                            </span>
-                            <span class="iuHex__label">Počasí</span>
-                          </a>
                           <a class="iuHex iuHex--namedays" href="?section=namedays">
                             <span class="iuHex__icon" aria-hidden="true">
                               <svg viewBox="0 0 24 24" role="img" focusable="false">
@@ -418,31 +518,6 @@
 
                       <!-- HOME MODULES (under hex grid; must not overlap) -->
                       <div class="iuHomeModules">
-                        <section class="iuHomeWeather" data-home-key="pocasi" aria-label="Počasí">
-                          <div class="iuHomeWeatherShell" role="group" aria-label="Počasí dnes">
-                            <div class="iuHomeWeatherSkeleton" id="iuHomeWeatherSkeleton">loading weather…</div>
-                            <div class="iuHomeWeatherContent" id="iuHomeWeatherContent" hidden>
-                              <div class="iuHomeWeatherTopRow">
-                                <div class="iuHomeWeatherMeta">
-                                  <div class="iuHomeWeatherCity" id="iuHomeWxCity">—</div>
-                                  <div class="iuHomeWeatherDate" id="iuHomeWxDate">—</div>
-                                  <div class="iuHomeWeatherDesc" id="iuHomeWxDesc">—</div>
-                                </div>
-                                <div class="iuHomeWeatherNow">
-                                  <div class="iuHomeWeatherTemp" id="iuHomeWxTemp">—°</div>
-                                  <div class="iuHomeWeatherIcon" id="iuHomeWxIcon" aria-hidden="true">🌤</div>
-                                </div>
-                              </div>
-
-                              <div class="iuHomeWeatherForecast" id="iuHomeWxForecast" aria-label="Předpověď (3 hodiny)">
-                                <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                                <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                                <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                              </div>
-                            </div>
-                          </div>
-                        </section>
-
                         <section class="iuHomeText" aria-label="O infoUzel.cz">
                           <div class="iuHomeTextInner">
                             <h2 class="iuHomeTextTitle">infoUzel.cz</h2>
@@ -501,6 +576,113 @@
                       <a class="iuRadioChip" role="listitem" href="https://www.pid.cz" target="_blank" rel="noopener noreferrer">
                         <span class="iuRadioChipTitle">PID</span>
                       </a>
+                    </div>
+                  </div>
+                  <div id="iuWeatherView" class="iuWeatherView" hidden>
+                    <div class="iuSectionHeader iuSectionHeader--weather">
+                      <h2>Počasí</h2>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <p class="iuSectionSubtitle">
+                      Okamžitý přehled počasí, radar srážek a ověřené odkazy na spolehlivé služby.
+                    </p>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">Počasí právě teď</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <section class="iuHomeWeather iuWeatherNow" aria-label="Počasí právě teď">
+                      <div class="iuHomeWeatherShell" role="group" aria-label="Počasí právě teď (rychlý přehled)">
+                        <div class="iuHomeWeatherSkeleton" id="iuHomeWeatherSkeleton">loading weather…</div>
+                        <div class="iuHomeWeatherContent" id="iuHomeWeatherContent" hidden>
+                          <div class="iuHomeWeatherTopRow">
+                            <div class="iuHomeWeatherMeta">
+                              <div class="iuHomeWeatherCity" id="iuHomeWxCity">—</div>
+                              <div class="iuHomeWeatherDate" id="iuHomeWxDate">—</div>
+                              <div class="iuHomeWeatherDesc" id="iuHomeWxDesc">—</div>
+                            </div>
+                            <div class="iuHomeWeatherNow">
+                              <div class="iuHomeWeatherTemp" id="iuHomeWxTemp">—°</div>
+                              <div class="iuHomeWeatherIcon" id="iuHomeWxIcon" aria-hidden="true">🌤</div>
+                            </div>
+                          </div>
+
+                          <div class="iuHomeWeatherForecast" id="iuHomeWxForecast" aria-label="Hodinová předpověď (12 hodin)">
+                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+
+                    <div class="iuWeatherQuickGrid" role="list" aria-label="Rychlé vrstvy">
+                      <a class="iuRadioChip iuWeatherQuickChip" role="listitem" href="https://www.windy.com/?rain,50.075,14.438,8" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">💧 Srážky</span><span class="iuRadioChipDesc">vrstva (Windy)</span></a>
+                      <a class="iuRadioChip iuWeatherQuickChip" role="listitem" href="https://www.windy.com/?wind,50.075,14.438,8" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">💨 Vítr</span><span class="iuRadioChipDesc">vrstva (Windy)</span></a>
+                      <a class="iuRadioChip iuWeatherQuickChip" role="listitem" href="https://www.windy.com/?pressure,50.075,14.438,8" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">🧭 Tlak</span><span class="iuRadioChipDesc">vrstva (Windy)</span></a>
+                      <a class="iuRadioChip iuWeatherQuickChip" role="listitem" href="https://www.windy.com/?fog,50.075,14.438,8" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">🌫 Mlha</span><span class="iuRadioChipDesc">viditelnost</span></a>
+                      <a class="iuRadioChip iuWeatherQuickChip" role="listitem" href="https://www.windy.com/?uvindex,50.075,14.438,8" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">🌞 UV</span><span class="iuRadioChipDesc">UV index</span></a>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">Radar srážek</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuWeatherRadar" role="group" aria-label="Radar srážek">
+                      <iframe
+                        class="iuWeatherRadarFrame"
+                        title="Radar srážek (Ventusky)"
+                        src="https://www.ventusky.com/?p=49.8;18.3;7&l=rain-3h"
+                        loading="lazy"
+                        referrerpolicy="no-referrer"
+                      ></iframe>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">7denní předpověď</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuWeatherWeek" role="group" aria-label="7denní předpověď">
+                      <iframe
+                        class="iuWeatherWeekFrame"
+                        title="7denní předpověď (Meteoblue)"
+                        src="https://www.meteoblue.com/en/weather/widget/daily/prague_czechia_3067696?geoloc=fixed&days=7&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=light"
+                        loading="lazy"
+                        referrerpolicy="no-referrer"
+                      ></iframe>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">Výstrahy</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuWeatherAlerts" role="region" aria-label="Výstrahy a varování">
+                      <div class="iuWeatherAlertTitle">Sledujte výstrahy</div>
+                      <div class="iuWeatherAlertLinks">
+                        <a href="https://vystrahy.chmi.cz/" target="_blank" rel="noopener noreferrer">ČHMÚ – výstrahy</a>
+                        <a href="https://www.meteoalarm.org/en/live/" target="_blank" rel="noopener noreferrer">EU – Meteoalarm</a>
+                      </div>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">Počasí online</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuRadioGrid iuWeatherLinksGrid" role="list" aria-label="Počasí online (odkazy)">
+                      <a class="iuRadioChip" role="listitem" href="https://hydro.chmi.cz/hppsoldv/main_rain.php?lng=CZE" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">ČHMÚ – srážky</span><span class="iuRadioChipDesc">hydro</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.ventusky.com/?p=49.8;18.3;7&l=rain-3h" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Ventusky</span><span class="iuRadioChipDesc">radar</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.windy.com/" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Windy</span><span class="iuRadioChipDesc">mapy</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.yr.no/en" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Yr.no</span><span class="iuRadioChipDesc">předpověď</span></a>
+                      <a class="iuRadioChip" role="listitem" href="https://www.meteoblue.com/" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Meteoblue</span><span class="iuRadioChipDesc">modely</span></a>
                     </div>
                   </div>
                   <div id="iuTravelView" class="iuTravelView" hidden>
@@ -831,35 +1013,6 @@
                       </div>
 
                       <div class="iuDailyNameday" id="iuDailyNameday">Svátek má —</div>
-
-                      <div class="iuDailyWeather" id="iuDailyWeather">
-                        <div class="iuWxNowRow">
-                          <span class="iuWxIcon" id="iuWxIcon">🌤</span>
-                          <div class="iuWxNowMeta">
-                            <div class="iuWxNowLine">
-                              <span class="iuWxPlace" id="iuWxPlace">—</span>
-                              <span class="iuWxTemp" id="iuWxTemp">—°C</span>
-                            </div>
-                            <div class="iuWxMinMax" id="iuWxMinMax">Max —° · Min —°</div>
-                          </div>
-                        </div>
-
-                        <!-- Stabilizace CLS: skeleton sloty (neposkakuje při doplnění hodin JS) -->
-                        <div class="iuWxHours iuWxHours--skeleton" id="iuWxHours">
-                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                          <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                        </div>
-                      </div>
-
-                      <div class="iuDailyErr" id="iuDailyErr" hidden>
-                        Počasí momentálně není dostupné
-                      </div>
                     </section>
                     <!-- Rychlé odkazy -->
                     <section class="iu-mmQuickLinks" aria-label="Rychlé odkazy">
