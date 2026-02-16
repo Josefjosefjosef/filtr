@@ -85,13 +85,25 @@
                             <div class="name">infoUzel.cz</div>
                           </div>
                         </div>
-                        <div class="topbar-search" aria-label="Vyhledávání">
-                          <input
-                            type="search"
-                            class="topbar-searchInput"
-                            placeholder="Hledat…"
-                            aria-label="Hledat"
-                          />
+                        <div class="iuTopbarRight" id="iuTopbarRight">
+                          <div class="iuTopbarDayInfo" id="iuTopbarDayInfo" aria-live="polite"></div>
+
+                          <button class="iuTopbarSearchBtn" id="iuTopbarSearchBtn" type="button" aria-label="Hledat">
+                            <svg class="iuIcon" viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M10 18a8 8 0 1 1 0-16a8 8 0 0 1 0 16zm11 3l-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                          </button>
+
+                          <div class="iuTopbarSearchOverlay" id="iuTopbarSearchOverlay" hidden>
+                            <form class="iuTopbarSearchForm" id="iuTopbarSearchForm" autocomplete="off">
+                              <input class="iuTopbarSearchInput" id="iuTopbarSearchInput" type="search" placeholder="Hledat…" />
+                            </form>
+
+                            <div class="iuTopbarSearchNotFound" id="iuTopbarSearchNotFound" hidden>
+                              <div class="iuTopbarSearchNotFoundText">Na infoUzel nenalezeno. Přejete si hledat Googlem?</div>
+                              <button class="iuTopbarSearchGoogleBtn" id="iuTopbarSearchGoogleBtn" type="button">Hledat Google</button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

@@ -72,8 +72,13 @@ window.addEventListener("unhandledrejection", (e) => {
   const emptyBox = document.getElementById("emptyBox");
   const sectionLabel = document.getElementById("sectionLabel");
   const sectionsBar = document.getElementById("sectionsBar");
-  const searchForm = document.getElementById("searchForm");
-  const searchInput = document.getElementById("searchInput");
+  // UI-only: allow alternate topbar search form/input (no feed pipeline changes)
+  const searchForm =
+    document.getElementById("searchForm") ||
+    document.getElementById("iuTopbarSearchForm");
+  const searchInput =
+    document.getElementById("searchInput") ||
+    document.getElementById("iuTopbarSearchInput");
   const searchModal = document.getElementById("searchModal");
   const modalGoogle = document.getElementById("modalGoogle");
   const modalCancel = document.getElementById("modalCancel");
@@ -2274,6 +2279,160 @@ function buildVideoAsArticleCard(it) {
     });
   }
 
+  // === UI: Topbar icon-search toggle + day/nameday text + Google fallback ===
+  // Requirements:
+  // - NO changes to loadData / applyFilter / renderFeed logic (feed pipeline untouched)
+  // - Only call existing applyFilter() and read state.filteredItems for not-found evidence
+  function iuInitTopbarSearchToggle(){
+    try{
+      const dayInfo = document.getElementById("iuTopbarDayInfo");
+      const btn = document.getElementById("iuTopbarSearchBtn");
+      const overlay = document.getElementById("iuTopbarSearchOverlay");
+      const form = document.getElementById("iuTopbarSearchForm");
+      const input = document.getElementById("iuTopbarSearchInput");
+      const notFound = document.getElementById("iuTopbarSearchNotFound");
+      const googleBtn = document.getElementById("iuTopbarSearchGoogleBtn");
+
+      if (!btn || !overlay || !form || !input || !dayInfo) return;
+
+      let isOpen = false;
+      let scrollHidden = false;
+      let scrollTimer = 0;
+
+      function setDayHidden(hidden){
+        try{ dayInfo.classList.toggle("iuTopbarDayInfo--hidden", !!hidden); }catch{}
+      }
+
+      function openOverlay(){
+        try{ overlay.hidden = false; }catch{}
+        isOpen = true;
+        setDayHidden(true);
+        try{ if (notFound) notFound.hidden = true; }catch{}
+        try{
+          input.focus({ preventScroll: true });
+          if (typeof input.select === "function") input.select();
+        }catch{}
+      }
+
+      function closeOverlay(){
+        try{ overlay.hidden = true; }catch{}
+        isOpen = false;
+        try{ if (notFound) notFound.hidden = true; }catch{}
+        if (!scrollHidden) setDayHidden(false);
+      }
+
+      function fmtDateNow(){
+        try{
+          const TZ = "Europe/Prague";
+          return new Intl.DateTimeFormat("cs-CZ", { weekday: "long", day: "numeric", month: "long", timeZone: TZ }).format(new Date());
+        }catch{
+          return String(new Date().toLocaleDateString("cs-CZ"));
+        }
+      }
+
+      function readNamedayFromUI(){
+        try{
+          const el = document.getElementById("iuDailyNameday");
+          if (!el) return "";
+          // daily panel may hide it; if hidden, treat as unavailable
+          if (el.hidden) return "";
+          const t = String(el.textContent || "").trim();
+          return t;
+        }catch{
+          return "";
+        }
+      }
+
+      function updateDayInfo(){
+        try{
+          const dateStr = fmtDateNow();
+          const namedayStr = readNamedayFromUI();
+          dayInfo.textContent = namedayStr ? `${dateStr} · ${namedayStr}` : dateStr;
+        }catch{}
+      }
+
+      // initial + delayed updates (nameday/weather can arrive later)
+      updateDayInfo();
+      setTimeout(updateDayInfo, 400);
+      setTimeout(updateDayInfo, 1500);
+
+      btn.addEventListener("click", () => {
+        if (!isOpen) openOverlay();
+        else closeOverlay();
+      });
+
+      // ESC closes overlay
+      document.addEventListener("keydown", (e) => {
+        try{
+          if (!isOpen) return;
+          if (!e || e.key !== "Escape") return;
+          e.preventDefault();
+          closeOverlay();
+        }catch{}
+      });
+
+      // click outside closes overlay
+      document.addEventListener("click", (e) => {
+        try{
+          if (!isOpen) return;
+          const t = e && e.target;
+          if (t && (btn.contains(t) || overlay.contains(t))) return;
+          closeOverlay();
+        }catch{}
+      });
+
+      // hide not-found prompt when user edits query
+      input.addEventListener("input", () => {
+        try{ if (notFound) notFound.hidden = true; }catch{}
+      });
+
+      // Scroll hide after 5s (only when overlay is closed)
+      window.addEventListener("scroll", () => {
+        try{
+          if (isOpen) return;
+          clearTimeout(scrollTimer);
+          scrollTimer = setTimeout(() => {
+            if (isOpen) return;
+            scrollHidden = true;
+            setDayHidden(true);
+          }, 5000);
+        }catch{}
+      }, { passive: true });
+
+      form.addEventListener("submit", (e) => {
+        try{ e.preventDefault(); }catch{}
+        const q = String(input.value || "").trim();
+        try{ if (notFound) notFound.hidden = true; }catch{}
+
+        // Ensure the feed pipeline reads the correct query (applyFilter reads searchInput).
+        try{
+          if (searchInput && searchInput !== input) {
+            searchInput.value = q;
+          }
+        }catch{}
+
+        try{ applyFilter(); }catch{}
+
+        // Evidence: filteredItems length (no DOM probing, no pipeline changes)
+        try{
+          const n = Array.isArray(state.filteredItems) ? state.filteredItems.length : null;
+          if (q && n === 0 && notFound) {
+            notFound.hidden = false;
+          }
+        }catch{}
+      });
+
+      if (googleBtn) {
+        googleBtn.addEventListener("click", () => {
+          const q = String(input.value || "").trim();
+          if (!q) return;
+          const url = `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+          window.open(url, "_blank", "noopener");
+        });
+      }
+    }catch{}
+  }
+
   function writeDebug(obj) {
     if (!elDebugOut) return;
     try {
@@ -4172,6 +4331,7 @@ function buildVideoAsArticleCard(it) {
     renderSectionsBar();
     setSectionsFromHash();
     iuInitTopbarWatcher();
+    iuInitTopbarSearchToggle();
 
     if (typeof window.iuDailyPanelInit === "function") {
       window.iuDailyPanelInit();
@@ -4191,7 +4351,8 @@ function buildVideoAsArticleCard(it) {
       });
     }
 
-    if (searchForm) {
+    // Legacy search form submit handler (if present)
+    if (searchForm && searchForm.id !== "iuTopbarSearchForm") {
       searchForm.addEventListener("submit", (event) => {
         event.preventDefault();
         applyFilter();
