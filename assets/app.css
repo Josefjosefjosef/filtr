@@ -7174,3 +7174,81 @@ html.iuRailHidden #iuRailToggleBtn::before{
 #iuRailToggleBtn:focus-visible::before{
   opacity: 1;
 }
+
+/* ============================================================
+   FINAL UI — rail toggle professional chevron
+   ============================================================ */
+
+/* ===== základ klikací plocha ===== */
+#iuRailToggleBtn{
+  width:44px !important;
+  height:44px !important;
+  min-width:44px !important;
+  min-height:44px !important;
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  border-radius:10px;
+  border:1px solid #9ca3af;
+  background:transparent;
+  transition:
+    border-color .15s ease,
+    border-width .15s ease,
+    transform .15s ease;
+}
+
+/* schovej hamburger/text */
+#iuRailToggleBtn svg,
+#iuRailToggleBtn .iu-leftNavLabel,
+#iuRailToggleBtn .iu-leftNavIcon{
+  display:none !important;
+}
+
+/* ===== outline chevron ===== */
+#iuRailToggleBtn::before{
+  content:"";
+  width:10px;
+  height:10px;
+  border-right:2px solid #6b7280;
+  border-bottom:2px solid #6b7280;
+  transform:rotate(135deg);
+  display:block;
+  transition:
+    border-color .15s ease,
+    border-width .15s ease,
+    transform .15s ease;
+}
+
+/* ===== hidden rail → šipka doprava ===== */
+html.iuRailHidden #iuRailToggleBtn::before{
+  transform:rotate(-45deg);
+}
+
+/* ===== hover/focus ===== */
+#iuRailToggleBtn:hover,
+#iuRailToggleBtn:focus-visible{
+  border-color:#ef4444 !important;
+  border-width:2px !important;
+}
+
+#iuRailToggleBtn:hover::before,
+#iuRailToggleBtn:focus-visible::before{
+  border-color:#ef4444 !important;
+  border-width:3px !important;
+  transform:scale(1.08) rotate(135deg);
+}
+
+html.iuRailHidden #iuRailToggleBtn:hover::before{
+  transform:scale(1.08) rotate(-45deg);
+}
+
+/* ===== hidden rail — malý handle vlevo ===== */
+html.iuRailHidden #iuRailToggleBtn{
+  position:fixed !important;
+  left:-10px !important;
+  top:calc(var(--iuTopbarStackH,72px) + 10px);
+  z-index:999;
+  background:#fff;
+  border:1px solid #9ca3af;
+}
