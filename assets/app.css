@@ -2782,13 +2782,20 @@ body[data-section="media"] #feed{
 /* TV online view – reuse Radio tile system (2 cols + same hover), hide feed only here */
 #iuTvOnlineView{
   display: none;
-  /* make radio tiles use TV online accent (red) inside this view only */
-  --iu-accent-radio: var(--iu-accent-tvonline, var(--iuNavAccent-tvonline, #DC2626));
+  /* chip accent is scoped to the view (no long body[...] selectors) */
+  --iuSectionAccent: var(--iuNavAccent-tvonline, #DC2626);
+  /* legacy alias (used by .iuRadioTitle/.iuRadioLine and wish UI) */
+  --iu-accent-radio: var(--iuSectionAccent);
 }
 body[data-section="tvonline"] #iuTvOnlineView,
 html[data-section="tvonline"] #iuTvOnlineView{
   display: block !important;
 }
+
+/* Chip accent per view (JR/Radio/TV/Mapy) */
+#iuRadioView{ --iuSectionAccent: var(--iuNavAccent-radio, #6D28D9); --iu-accent-radio: var(--iuSectionAccent); }
+#iuMapyView{ --iuSectionAccent: var(--iuNavAccent-mapy, #22C55E); --iu-accent-radio: var(--iuSectionAccent); }
+#iuJrEmptyView{ --iuSectionAccent: var(--iuNavAccent-jr); --iu-accent-radio: var(--iuSectionAccent); }
 
 /* TV online view: section heads span both columns */
 .iuTvOnlineGrid .iuRadioHead{
@@ -3245,7 +3252,8 @@ select.iuCtrl{
   transition: background-color 150ms ease, color 150ms ease;
 }
 .iuRadioChip:hover{
-  background-color: var(--iu-accent-radio);
+  background-color: var(--iuSectionAccent, var(--iu-accent-radio));
+  border-color: var(--iuSectionAccent, var(--iu-accent-radio));
   color: #fff;
 }
 .iuRadioChip:hover .iuRadioChipTitle,
@@ -3253,9 +3261,10 @@ select.iuCtrl{
   color: #fff;
 }
 .iuRadioChip:focus-visible{
-  background-color: var(--iu-accent-radio);
+  background-color: var(--iuSectionAccent, var(--iu-accent-radio));
+  border-color: var(--iuSectionAccent, var(--iu-accent-radio));
   color: #fff;
-  outline: 2px solid color-mix(in srgb, var(--iu-accent-radio) 70%, white);
+  outline: 2px solid color-mix(in srgb, var(--iuSectionAccent, var(--iu-accent-radio)) 70%, white);
   outline-offset: 2px;
 }
 .iuRadioChip:focus-visible .iuRadioChipTitle,
@@ -3985,12 +3994,6 @@ body[data-section="home"] .iuHomeCanvas{
   opacity: .82;
 }
 
-/* Mapy: same hover mechanism as Radio (swap accent var locally) */
-body[data-section="mapy"] #iuMapyView,
-html[data-section="mapy"] #iuMapyView{
-  --iu-accent-radio: var(--iuNavAccent-mapy, #22C55E);
-}
-
 /* Mapy subtitles (scoped; avoid global h3 styling) */
 body[data-section="mapy"] #iuMapyView .iuSectionSubTitle,
 html[data-section="mapy"] #iuMapyView .iuSectionSubTitle{
@@ -4022,21 +4025,7 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-/* JR: same hover mechanism as Radio (just swap accent var locally) */
-body[data-section="jr"] #iuJrEmptyView,
-html[data-section="jr"] #iuJrEmptyView{
-  --iu-accent-radio: var(--iuNavAccent-jr);
-}
-
-/* Border should match JR accent on hover/focus */
-body[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip:hover,
-html[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip:hover,
-body[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip:focus-visible,
-html[data-section="jr"] #iuJrEmptyView .iuJRGrid .iuRadioChip:focus-visible{
-  border-color: var(--iuNavAccent-jr);
-}
-
-/* (Text/background/outline are inherited from the shared .iuRadioChip:hover/:focus-visible rules via --iu-accent-radio) */
+/* (Chip hover/focus uses --iuSectionAccent scoped per view.) */
 
 /* TEXT block (no CLS) */
 .iuHomeText{
