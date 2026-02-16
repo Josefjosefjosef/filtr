@@ -72,11 +72,11 @@ window.addEventListener("unhandledrejection", (e) => {
   const emptyBox = document.getElementById("emptyBox");
   const sectionLabel = document.getElementById("sectionLabel");
   const sectionsBar = document.getElementById("sectionsBar");
-  // UI-only: allow alternate topbar search form/input (no feed pipeline changes)
-  const searchForm =
+  // hotfix topbar search toggle: canonical search form/input binding (no feed pipeline change)
+  const searchFormEl =
     document.getElementById("searchForm") ||
     document.getElementById("iuTopbarSearchForm");
-  const searchInput =
+  const searchInputEl =
     document.getElementById("searchInput") ||
     document.getElementById("iuTopbarSearchInput");
   const searchModal = document.getElementById("searchModal");
@@ -2404,10 +2404,10 @@ function buildVideoAsArticleCard(it) {
         const q = String(input.value || "").trim();
         try{ if (notFound) notFound.hidden = true; }catch{}
 
-        // Ensure the feed pipeline reads the correct query (applyFilter reads searchInput).
+        // Ensure the feed pipeline reads the correct query (applyFilter reads searchInputEl).
         try{
-          if (searchInput && searchInput !== input) {
-            searchInput.value = q;
+          if (searchInputEl && searchInputEl !== input) {
+            searchInputEl.value = q;
           }
         }catch{}
 
@@ -2451,7 +2451,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function resetSearchAndReload() {
-    if (searchInput) searchInput.value = "";
+    if (searchInputEl) searchInputEl.value = "";
     hideSearchModal();
     applyFilter();
   }
@@ -2464,7 +2464,7 @@ function buildVideoAsArticleCard(it) {
     const resetPage = options.resetPage !== false; // default: reset
     const doRender = options.render !== false;     // default: render
     if (!state.hasLoadedData) return;
-    state.searchQuery = (searchInput && searchInput.value.trim()) || "";
+    state.searchQuery = (searchInputEl && searchInputEl.value.trim()) || "";
     // paging reset on any filter/search change (render-only)
     if (resetPage) state.page = 1;
 
@@ -4352,8 +4352,8 @@ function buildVideoAsArticleCard(it) {
     }
 
     // Legacy search form submit handler (if present)
-    if (searchForm && searchForm.id !== "iuTopbarSearchForm") {
-      searchForm.addEventListener("submit", (event) => {
+    if (searchFormEl && searchFormEl.id !== "iuTopbarSearchForm") {
+      searchFormEl.addEventListener("submit", (event) => {
         event.preventDefault();
         applyFilter();
       });
@@ -4361,7 +4361,7 @@ function buildVideoAsArticleCard(it) {
 
     if (modalGoogle) {
       modalGoogle.addEventListener("click", () => {
-        const query = (searchInput && searchInput.value.trim()) || "";
+        const query = (searchInputEl && searchInputEl.value.trim()) || "";
         const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
         window.open(url, "_blank", "noopener");
         resetSearchAndReload();
