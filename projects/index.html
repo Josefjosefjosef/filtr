@@ -48,111 +48,6 @@
       }catch{}
     })();
     </script>
-    <script>
-    (function(){
-      // UI-only Weather render: use /projects/data/weather.json (no feed pipeline touch)
-      const skeletonEl = document.getElementById('iuHomeWeatherSkeleton');
-      const contentEl = document.getElementById('iuHomeWeatherContent');
-      const cityEl = document.getElementById('iuHomeWxCity');
-      const dateEl = document.getElementById('iuHomeWxDate');
-      const tempEl = document.getElementById('iuHomeWxTemp');
-      const iconEl = document.getElementById('iuHomeWxIcon');
-      const descEl = document.getElementById('iuHomeWxDesc');
-      const forecastEl = document.getElementById('iuHomeWxForecast');
-      if (!skeletonEl && !contentEl && !cityEl && !dateEl && !tempEl && !iconEl && !descEl && !forecastEl) return;
-
-      try{
-        if (window.__iuWeatherJsonLoading) return;
-        window.__iuWeatherJsonLoading = true;
-      }catch{}
-
-      const fmtDeg = (n) => {
-        if (typeof n !== 'number' || !isFinite(n)) return '—';
-        return Math.round(n) + '°';
-      };
-      const fmtHour = (s) => {
-        try{
-          const d = new Date(String(s || ''));
-          if (isNaN(d.getTime())) return '--h';
-          return String(d.getHours()) + 'h';
-        }catch{
-          return '--h';
-        }
-      };
-      const fmtDate = () => {
-        try{
-          const TZ = "Europe/Prague";
-          return new Intl.DateTimeFormat("cs-CZ",{weekday:"long",day:"numeric",month:"long",timeZone:TZ}).format(new Date());
-        }catch{
-          return "";
-        }
-      };
-      const iconFromDesc = (desc) => {
-        const s = String(desc || "").toLowerCase();
-        if (s.includes("slun")) return "☀️";
-        if (s.includes("jas")) return "☀️";
-        if (s.includes("obla")) return "☁️";
-        if (s.includes("zamra")) return "☁️";
-        if (s.includes("déšť") || s.includes("dest") || s.includes("mrhol")) return "🌧";
-        if (s.includes("sníh") || s.includes("snih")) return "❄️";
-        if (s.includes("bouř")) return "⛈";
-        return "🌤";
-      };
-      const withTs = (rel) => {
-        try{
-          const u = new URL(String(rel || ''), window.location.href);
-          u.searchParams.set('ts', String(Date.now()));
-          return u.toString();
-        }catch{
-          return String(rel || '');
-        }
-      };
-
-      try{ if (skeletonEl) skeletonEl.hidden = false; }catch{}
-      try{ if (contentEl) contentEl.hidden = true; }catch{}
-
-      fetch(withTs('/projects/data/weather.json'), { cache: 'no-store' })
-        .then((r) => r.json())
-        .then((d) => {
-          if (!d || typeof d !== 'object') throw new Error('bad weather');
-          const city = String(d.place || '—');
-          const desc = String(d?.current?.desc || '—');
-          if (cityEl) cityEl.textContent = city;
-          if (dateEl) dateEl.textContent = fmtDate();
-          if (tempEl) tempEl.textContent = fmtDeg(d?.current?.temp);
-          if (descEl) descEl.textContent = desc;
-          if (iconEl) iconEl.textContent = iconFromDesc(desc);
-
-          if (forecastEl) {
-            const hours = Array.isArray(d.hours) ? d.hours.slice(0, 12) : [];
-            const chips = Array.from(forecastEl.querySelectorAll('.iuHomeWxChip'));
-            for (let i = 0; i < chips.length; i++){
-              const chip = chips[i];
-              const it = hours[i];
-              if (!chip) continue;
-              if (it) {
-                chip.innerHTML = `<div class="iuHomeWxChipT">${fmtHour(it.time)}</div><div class="iuHomeWxChipV">${fmtDeg(it.temp)}</div>`;
-                chip.removeAttribute('aria-hidden');
-              } else {
-                chip.innerHTML = `<div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div>`;
-                chip.setAttribute('aria-hidden', 'true');
-              }
-            }
-          }
-
-          try{ if (skeletonEl) skeletonEl.hidden = true; }catch{}
-          try{ if (contentEl) contentEl.hidden = false; }catch{}
-        })
-        .catch(() => {
-          try{
-            if (skeletonEl) skeletonEl.textContent = 'Počasí nedostupné';
-          }catch{}
-        })
-        .finally(() => {
-          try{ window.__iuWeatherJsonLoading = false; }catch{}
-        });
-    })();
-    </script>
 
     <div id="app">
       <div id="page">
@@ -592,36 +487,42 @@
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
                     </div>
                     <section class="iuHomeWeather iuWeatherNow" aria-label="Počasí právě teď">
-                      <div class="iuHomeWeatherShell" role="group" aria-label="Počasí právě teď (rychlý přehled)">
-                        <div class="iuHomeWeatherSkeleton" id="iuHomeWeatherSkeleton">loading weather…</div>
-                        <div class="iuHomeWeatherContent" id="iuHomeWeatherContent" hidden>
-                          <div class="iuHomeWeatherTopRow">
-                            <div class="iuHomeWeatherMeta">
-                              <div class="iuHomeWeatherCity" id="iuHomeWxCity">—</div>
-                              <div class="iuHomeWeatherDate" id="iuHomeWxDate">—</div>
-                              <div class="iuHomeWeatherDesc" id="iuHomeWxDesc">—</div>
+                      <div class="iuDailyWeather" id="iuDailyWeather">
+                        <div class="iuHomeWeatherShell" role="group" aria-label="Počasí právě teď (rychlý přehled)">
+                          <div class="iuHomeWeatherContent">
+                            <div class="iuHomeWeatherTopRow">
+                              <div class="iuHomeWeatherMeta">
+                                <div class="iuHomeWeatherCity" id="iuWxPlace">—</div>
+                                <div class="iuHomeWeatherDesc iuWxMinMax" id="iuWxMinMax">Max —° · Min —°</div>
+                              </div>
+                              <div class="iuHomeWeatherNow">
+                                <div class="iuHomeWeatherTemp" id="iuWxTemp">—°C</div>
+                                <div class="iuHomeWeatherIcon" id="iuWxIcon" aria-hidden="true">🌤</div>
+                              </div>
                             </div>
-                            <div class="iuHomeWeatherNow">
-                              <div class="iuHomeWeatherTemp" id="iuHomeWxTemp">—°</div>
-                              <div class="iuHomeWeatherIcon" id="iuHomeWxIcon" aria-hidden="true">🌤</div>
-                            </div>
-                          </div>
 
-                          <div class="iuHomeWeatherForecast" id="iuHomeWxForecast" aria-label="Hodinová předpověď (12 hodin)">
-                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
-                            <div class="iuHomeWxChip" aria-hidden="true"><div class="iuHomeWxChipT">--h</div><div class="iuHomeWxChipV">—</div></div>
+                            <!-- Stabilizace CLS: skeleton sloty (neposkakuje při doplnění hodin JS) -->
+                            <div class="iuWxHours iuWxHours--skeleton" id="iuWxHours" aria-label="Hodinová předpověď (strip)">
+                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                            </div>
                           </div>
                         </div>
+                      </div>
+                      <div class="iuDailyErr" id="iuDailyErr" hidden>
+                        Počasí momentálně není dostupné
+                      </div>
+
+                      <!-- Sanity markers (existence only; not rendered) -->
+                      <div hidden aria-hidden="true">
+                        <span id="iuHomeWxTemp">—°</span>
+                        <div id="iuHomeWxForecast"></div>
                       </div>
                     </section>
 
