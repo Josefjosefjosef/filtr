@@ -21,7 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
 
       - name: Setup Python
@@ -34,13 +34,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
 
-      - name: Sync with main
+      - name: Sync with branch
         run: |
-          git fetch origin main
-          git checkout main
-          git pull --rebase origin main
+          git fetch origin "${GITHUB_REF_NAME}"
+          git checkout "${GITHUB_REF_NAME}"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
 
       - name: Build articles JSON
+        env:
+          RETENTION_DAYS: "45"
         run: python scripts/build_articles.py
 
       - name: Build videos JSON (optional)

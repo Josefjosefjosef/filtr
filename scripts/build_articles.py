@@ -7,7 +7,7 @@ import re
 import hashlib
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 
 import feedparser
@@ -45,6 +45,15 @@ REQUEST_TIMEOUT_SEC = 20
 
 MAX_ITEMS_PER_FEED = 40
 MAX_OUTPUT_ARTICLES = 220  # aby web zůstal svižný
+
+# Retence denních shardů v projects/data/articles (počet dnů dozadu včetně dneška)
+# Safe default: 45 dní (dost historie, ale repo neroste do nekonečna).
+try:
+    RETENTION_DAYS = int(os.getenv("RETENTION_DAYS", "45") or "45")
+except Exception:
+    RETENTION_DAYS = 45
+if RETENTION_DAYS < 1:
+    RETENTION_DAYS = 1
 
 # YouTube videa: kolik nejvýše uložit do videos.json (frontend si vybere čerstvé)
 MAX_OUTPUT_VIDEOS = 120
@@ -329,6 +338,16 @@ def stable_section(section: str) -> str:
     if s not in VALID_SECTIONS:
         return "aktualne"
     return s
+
+
+def _parse_day_yyyy_mm_dd(day: str):
+    try:
+        s = str(day or "").strip()
+        if not re.match(r"^\d{4}-\d{2}-\d{2}$", s):
+            return None
+        return datetime.strptime(s, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    except Exception:
+        return None
 
 
 def choose_neutral_title(cluster_titles: list, section: str) -> str:
@@ -1213,9 +1232,39 @@ def main() -> int:
 
         # Write/refresh index (append-only)
         ordered_days = sorted(all_days, reverse=True)
+
+        # Retention: keep only last N days (including today, UTC).
+        cutoff = (datetime.now(timezone.utc).date() - timedelta(days=RETENTION_DAYS - 1))
+        keep_days = []
+        for d in ordered_days:
+            dt_day = _parse_day_yyyy_mm_dd(d)
+            if not dt_day:
+                continue
+            if dt_day.date() >= cutoff:
+                keep_days.append(d)
+
+        keep_set = set(keep_days)
+
+        # Delete old shard files not in keep_set.
+        try:
+            for fn in os.listdir(ARTICLES_SHARD_DIR):
+                if fn == "index.json":
+                    continue
+                if not re.match(r"^\d{4}-\d{2}-\d{2}\.json$", fn):
+                    continue
+                day = fn[:-5]
+                if day in keep_set:
+                    continue
+                try:
+                    os.remove(os.path.join(ARTICLES_SHARD_DIR, fn))
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
         index_payload = {
             "generatedAt": generated_at,
-            "days": [{"date": d, "count": int(new_counts.get(d, 0) or 0)} for d in ordered_days],
+            "days": [{"date": d, "count": int(new_counts.get(d, 0) or 0)} for d in keep_days],
         }
         _atomic_write_json(ARTICLES_INDEX_PATH, index_payload)
     except Exception as e:
