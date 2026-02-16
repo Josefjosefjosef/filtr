@@ -5671,6 +5671,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     document.addEventListener('click', (e) => {
       const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
       if (!item) return;
+      // UI-only: rail hide/show toggle must not trigger router/view switching
+      if (item.id === "iuRailToggleBtn") return;
+      const action = (item.getAttribute("data-action") || item.dataset?.action || "").trim().toLowerCase();
+      if (action === "toggle-rail") return;
       const accent = (item.getAttribute('data-accent') || item.dataset?.accent || "").trim().toLowerCase();
       const section = normalizeSection(accent);
       persistSection(section);
@@ -5688,4 +5692,37 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   } else {
     initNavRouter();
   }
+})();
+
+// === UI: Left rail hide/show toggle (no feed pipeline changes) ===
+(function () {
+  const btn = document.getElementById('iuRailToggleBtn');
+  if (!btn) return;
+
+  function setHidden(isHidden) {
+    try { document.body.classList.toggle('iuRailHidden', isHidden); } catch (e) {}
+    try { document.documentElement.classList.toggle('iuRailHidden', isHidden); } catch (e) {}
+
+    const label = btn.querySelector('.iu-leftNavLabel');
+    const text = isHidden ? 'Zobrazit sloupec' : 'Skrýt sloupec';
+
+    if (label) label.textContent = text;
+    btn.setAttribute('aria-label', text);
+    btn.setAttribute('title', text);
+
+    try {
+      localStorage.setItem('iuRailHidden', isHidden ? '1' : '0');
+    } catch (e) {}
+  }
+
+  // restore
+  let initial = false;
+  try { initial = localStorage.getItem('iuRailHidden') === '1'; } catch (e) {}
+  setHidden(initial);
+
+  btn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setHidden(!document.body.classList.contains('iuRailHidden'));
+  });
 })();

@@ -48,6 +48,17 @@
       }catch{}
     })();
     </script>
+    <script>
+    (function(){
+      // UI-only: restore left rail hidden state early (avoid layout jump on load)
+      try{
+        if (localStorage.getItem("iuRailHidden") === "1") {
+          document.body.classList.add("iuRailHidden");
+          document.documentElement.classList.add("iuRailHidden");
+        }
+      }catch{}
+    })();
+    </script>
 
     <div id="app">
       <div id="page">
@@ -183,13 +194,16 @@
                   <!-- Minimální, jistý render target -->
                   <aside id="iuLeftRail" class="iu-leftRail" aria-label="Hlavní sekce">
                     <nav class="iu-leftNav" aria-label="Sekce">
-                      <a class="iu-leftNavItem" href="#" data-rail="home" data-accent="home">
+                      <a class="iu-leftNavItem iuRailToggle"
+                         href="#"
+                         id="iuRailToggleBtn"
+                         data-action="toggle-rail"
+                         aria-label="Skrýt sloupec"
+                         title="Skrýt sloupec">
                         <span class="iu-leftNavIcon" aria-hidden="true">
-                          <svg viewBox="0 0 24 24" role="img" focusable="false">
-                            <path d="M4 11.5 12 5l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2"/>
-                          </svg>
+                          ☰
                         </span>
-                        <span class="iu-leftNavLabel">Domů</span>
+                        <span class="iu-leftNavLabel">Skrýt sloupec</span>
                       </a>
 
                       <a class="iu-leftNavItem is-active" href="#" data-rail="media" data-accent="media" aria-current="page">
