@@ -4026,6 +4026,11 @@ body[data-section="home"] .iuHomeCanvas{
 body[data-section="radio"] #iuRadioTop,
 html[data-section="radio"] #iuRadioTop{
   display: block !important;
+  /* IMPORTANT: keep rail + radio content on the first row.
+     Without this, #iuRadioTop wraps and pushes #iuRadioView below the fold. */
+  order: -1;
+  flex: 0 0 100%;
+  width: 100%;
 }
 
 /* Mapy: same hover mechanism as Radio (swap accent var locally) */
