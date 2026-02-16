@@ -7363,3 +7363,28 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   background: rgba(0,0,0,0.06);
   border-radius: 8px;
 }
+
+/* ============================================================
+   FINAL FIX — remove duplicate (legacy) topbar layer
+   Keep only the rounded pill topbar (.topbar-new-inner)
+   ============================================================ */
+
+/* The sticky wrapper must not paint a full-width bar behind the pill */
+#leftStickyHeader{
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  align-items: stretch !important;
+}
+
+/* Ensure the pill is the only visible topbar surface */
+.topbar-new{
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
