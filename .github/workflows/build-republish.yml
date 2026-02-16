@@ -72,7 +72,7 @@ jobs:
         shell: pwsh
         run: |
           $lines = @(
-            'import json, pathlib, re',
+            'import json, pathlib, re, html as html_lib',
             'from urllib.parse import urlparse',
             'root = pathlib.Path(".")',
             'data = json.loads((root / "projects/data/republish_with_images.json").read_text(encoding="utf-8"))',
@@ -123,6 +123,15 @@ jobs:
             '        raise SystemExit(f"missing_proof_html {htmlp}")',
             '    if not pngp.exists():',
             '        raise SystemExit(f"missing_proof_png {pngp}")',
+            '    try:',
+            '        html_txt = htmlp.read_text(encoding="utf-8", errors="replace")',
+            '    except Exception:',
+            '        html_txt = ""',
+            '    t = str(it.get("title","")).strip()',
+            '    if not t:',
+            '        raise SystemExit(f"empty_title {idx}")',
+            '    if html_lib.escape(t) not in html_txt:',
+            '        raise SystemExit(f"proof_missing_title {idx}")',
             '',
             'print(f"ALL_OK items={len(items)}")'
           )
@@ -185,13 +194,19 @@ jobs:
         run: |
           Write-Host "ALL_OK"
 
+      - name: Log - WARNING items=0 (non-fatal)
+        shell: pwsh
+        run: |
+          $newCount = python -c "import json; d=json.loads(open('projects/data/republish_with_images.json',encoding='utf-8').read()); print(len(d.get('items') or []))"
+          if ($newCount -eq 0) { Write-Host "WARNING items=0" }
+
       - name: Commit and push (if changed)
         shell: pwsh
         run: |
           $newCount = python -c "import json; d=json.loads(open('projects/data/republish_with_images.json',encoding='utf-8').read()); print(len(d.get('items') or []))"
           $oldCount = python -c "import json,subprocess; raw=subprocess.check_output(['git','show','HEAD:projects/data/republish_with_images.json']); d=json.loads(raw.decode('utf-8')); print(len(d.get('items') or []))"
-          if (($newCount -eq 0) -and ($oldCount -gt 0)) {
-            Write-Host "Skipping commit: would regress republish items to 0 (old=$oldCount new=$newCount)."
+          if ($newCount -eq 0) {
+            Write-Host "Skipping commit: items=0 (old=$oldCount new=$newCount)."
             exit 0
           }
           $s = git status --porcelain
