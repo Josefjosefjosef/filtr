@@ -203,5 +203,15 @@ jobs:
           git add -f projects/data/provenance/
           git add -f projects/data/license_proofs/
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "data: refresh republish_with_images (verified)"
+          git pull --rebase origin main
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "WARNING: git pull --rebase failed; aborting rebase and skipping push (will retry next run)."
+            git rebase --abort
+            exit 0
+          }
           git push origin HEAD:main
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "WARNING: git push failed; skipping (will retry next run)."
+            exit 0
+          }
 
