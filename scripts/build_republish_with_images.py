@@ -46,7 +46,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode, urljoin, urlparse, unquote
+from urllib.parse import urlencode, urljoin, urlparse, unquote, quote
 from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
 
@@ -100,6 +100,9 @@ MEDIAWIKI_IMAGE_BLACKLIST = [
     "_icon.",
     "banner",
     "logo",
+    "wikiobituaries",
+    "scale_of_justice",
+    "wikinews.svg",
     "portal",
     "portlet",
     "navbox",
@@ -491,8 +494,20 @@ def wikimedia_filename_from_upload(url: str) -> Optional[str]:
     path = p.path or ""
     if "/wikipedia/commons/" not in path:
         return None
-    name = path.rsplit("/", 1)[-1]
-    name = unquote(name).strip()
+    # Handle thumbs:
+    # /wikipedia/commons/thumb/<h1>/<h2>/<filename>/<size>px-<filename>
+    if "/wikipedia/commons/thumb/" in path:
+        try:
+            after = path.split("/wikipedia/commons/thumb/", 1)[1]
+            seg = [s for s in after.split("/") if s]
+            if len(seg) >= 3:
+                name = unquote(seg[2]).strip()
+                return name or None
+        except Exception:
+            pass
+    # Direct:
+    # /wikipedia/commons/<h1>/<h2>/<filename>
+    name = unquote(path.rsplit("/", 1)[-1]).strip()
     return name or None
 
 
@@ -504,27 +519,19 @@ def commons_filename_from_file_page(url: str) -> Optional[str]:
     return unquote(m.group(1)).strip() or None
 
 
-def commons_api_query(filename: str, no_cache: bool, limiter: RateLimiter) -> Dict[str, Any]:
+def commons_api_query_file(file_title: str, no_cache: bool, limiter: RateLimiter) -> Dict[str, Any]:
+    """
+    Commons file extmetadata + URL/mime/size for machine verification.
+    """
+    ft = (file_title or "").strip()
+    if ft and (not ft.lower().startswith("file:")):
+        ft = "File:" + ft
     params = {
         "action": "query",
-        "titles": f"File:{filename}",
+        "titles": ft,
         "prop": "imageinfo",
-        "iiprop": "extmetadata",
-        "format": "json",
-    }
-    url = "https://commons.wikimedia.org/w/api.php?" + urlencode(params)
-    fr = http_fetch(url, accept="application/json", no_cache=no_cache, limiter=limiter)
-    try:
-        return json.loads(fr.body.decode("utf-8", errors="replace"))
-    except Exception:
-        return {}
-
-def commons_api_query_title(file_title: str, no_cache: bool, limiter: RateLimiter) -> Dict[str, Any]:
-    params = {
-        "action": "query",
-        "titles": file_title,
-        "prop": "imageinfo",
-        "iiprop": "extmetadata",
+        "iiprop": "extmetadata|url|mime|size",
+        "redirects": "1",
         "format": "json",
     }
     url = "https://commons.wikimedia.org/w/api.php?" + urlencode(params)
@@ -588,6 +595,7 @@ def extract_commons_extmeta(meta: Dict[str, Any]) -> Dict[str, str]:
             "LicenseShortName": val("LicenseShortName"),
             "License": val("License"),
             "LicenseUrl": val("LicenseUrl"),
+            "Attribution": val("Attribution"),
             "Artist": val("Artist"),
             "Credit": val("Credit"),
             "ImageDescription": val("ImageDescription"),
@@ -604,18 +612,16 @@ def derive_license_url_strict(license_text: str, license_url: str) -> Tuple[str,
     """
     u = (license_url or "").strip()
     t = normalize_license_text(license_text)
-    safe_map = {
-        "cc by 4.0": "https://creativecommons.org/licenses/by/4.0/",
-        "cc-by 4.0": "https://creativecommons.org/licenses/by/4.0/",
-        "cc by-sa 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
-        "cc-by-sa 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
-        "public domain mark": "https://creativecommons.org/publicdomain/mark/1.0/",
-        "public domain": "https://creativecommons.org/publicdomain/mark/1.0/",
-        "cc0": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "cc zero": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "pd mark": "https://creativecommons.org/publicdomain/mark/1.0/",
-    }
-    mapped = safe_map.get(t, "") or ""
+    mapped = ""
+    # Stable mappings when LicenseUrl is missing.
+    if re.search(r"\bcc\s*by\s*[- ]?\s*4\.0\b", t) or re.search(r"\bcc[- ]?by[- ]?4\.0\b", t):
+        mapped = "https://creativecommons.org/licenses/by/4.0/"
+    elif re.search(r"\bcc\s*by[- ]?sa\s*[- ]?4\.0\b", t) or re.search(r"\bcc[- ]?by[- ]?sa[- ]?4\.0\b", t):
+        mapped = "https://creativecommons.org/licenses/by-sa/4.0/"
+    elif re.search(r"\bcc0\b", t) or "cc zero" in t or "public domain dedication" in t:
+        mapped = "https://creativecommons.org/publicdomain/zero/1.0/"
+    elif "public domain mark" in t or re.search(r"\bpd\s*mark\b", t) or re.search(r"\bpublic\s+domain\b", t):
+        mapped = "https://creativecommons.org/publicdomain/mark/1.0/"
 
     # Prefer explicit URL if it canonicalizes.
     if u:
@@ -695,6 +701,14 @@ def canonicalize_license_url(s: str) -> str:
         return ""
 
     return f"{scheme}://{host}{path_only}"
+
+
+def commons_file_page_url(file_title: str) -> str:
+    ft = (file_title or "").strip()
+    if not ft.lower().startswith("file:"):
+        ft = "File:" + ft
+    name = ft[5:]
+    return "https://commons.wikimedia.org/wiki/File:" + quote(name)
 
 def mw_extract_title(article_url: str, mw_article_base: str) -> Optional[str]:
     """
@@ -904,8 +918,10 @@ def safe_slug(article_url: str) -> str:
 
 def write_proof_files(
     *,
+    title: str,
     article_url: str,
     image_url: str,
+    file_page_url: str,
     source_domain: str,
     license_type: str,
     license_text: str,
@@ -943,11 +959,14 @@ def write_proof_files(
     </style>
   </head>
   <body>
-    <h1>License proof (republish image)</h1>
+    <h1>Republish proof (verified image license)</h1>
+    <h2 style="margin:10px 0 18px 0;font-size:22px">{html_lib.escape((title or '').strip())}</h2>
     <div class="grid">
+      <div class="k">title</div><div class="v"><strong>{html_lib.escape((title or '').strip())}</strong></div>
       <div class="k">timestamp_download</div><div class="v"><code>{html_lib.escape(timestamp_iso)}</code></div>
       <div class="k">article_url</div><div class="v"><code>{html_lib.escape(article_url)}</code></div>
       <div class="k">image_url</div><div class="v"><code>{html_lib.escape(image_url)}</code></div>
+      <div class="k">file_page_url</div><div class="v"><code>{html_lib.escape(file_page_url)}</code></div>
       <div class="k">source_domain</div><div class="v"><code>{html_lib.escape(source_domain)}</code></div>
       <div class="k">license_type</div><div class="v"><code>{html_lib.escape(license_type)}</code></div>
       <div class="k">license_text</div><div class="v">{html_lib.escape(license_text)}</div>
@@ -1264,6 +1283,9 @@ def main() -> int:
                     elif image_domain == "commons.wikimedia.org":
                         filename = commons_filename_from_file_page(image_url)
 
+                    if not filename and (file_title and str(file_title).lower().startswith("file:")):
+                        filename = str(file_title)[5:]
+
                     if not filename:
                         append_provenance(
                             provenance_path,
@@ -1297,17 +1319,19 @@ def main() -> int:
                         )
                         continue
 
+                    file_title_for_commons = "File:" + normalize_mediawiki_filename(filename)
+                    file_page_url = commons_file_page_url(file_title_for_commons)
+
                     # License verification ALWAYS through Commons extmetadata
-                    if file_title and file_title.lower().startswith("file:"):
-                        meta = commons_api_query_title(file_title, no_cache=bool(args.no_cache), limiter=limiter)
-                    else:
-                        meta = commons_api_query(filename, no_cache=bool(args.no_cache), limiter=limiter)
+                    meta = commons_api_query_file(file_title_for_commons, no_cache=bool(args.no_cache), limiter=limiter)
                     ext = extract_commons_extmeta(meta)
                     lic_text = ext.get("LicenseShortName") or ext.get("License") or ""
                     lic_url, lic_url_reason = derive_license_url_strict(lic_text, ext.get("LicenseUrl") or "")
                     author_credit = (ext.get("Artist") or "").strip()
                     if not author_credit:
                         author_credit = (ext.get("Credit") or "").strip()
+                    if not author_credit:
+                        author_credit = (ext.get("Attribution") or "").strip()
 
                     # Banned provider detection in credits/metadata too (hard drop + redaction).
                     if detect_banned_provider(author_credit) or detect_banned_provider(ext.get("Credit", "")) or detect_banned_provider(ext.get("ImageDescription", "")):
@@ -1431,8 +1455,10 @@ def main() -> int:
                         hash_license_html = sha256_hex_bytes(license_blob)
 
                         proof_html_path, proof_png_path = write_proof_files(
+                            title=title,
                             article_url=article_url,
                             image_url=image_url,
+                            file_page_url=file_page_url,
                             source_domain=source_domain,
                             license_type=lic_text,
                             license_text=lic_text,
