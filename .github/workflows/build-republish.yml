@@ -1,0 +1,96 @@
+name: Build republish (verified images)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *" # every 60 minutes
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-republish
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate republish feed + proofs
+        shell: pwsh
+        env:
+          EDGE_PATH: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+        run: |
+          python .\scripts\build_republish_with_images.py --items-per-feed 200 --edge-path "$env:EDGE_PATH"
+
+      - name: Gate - republish json exists and valid
+        shell: pwsh
+        run: |
+          $code = @'
+          import json, sys, pathlib
+          p = pathlib.Path("projects/data/republish_with_images.json")
+          if (not p.exists()) or p.stat().st_size == 0:
+              raise SystemExit("missing republish_with_images.json")
+          data = json.loads(p.read_text(encoding="utf-8"))
+          items = data.get("items")
+          if not isinstance(items, list):
+              raise SystemExit("items is not a list")
+          print(f"items={len(items)} ok")
+          '@
+          $code | Set-Content -Encoding utf8 .\_gate_republish_valid.py
+          python .\_gate_republish_valid.py
+
+      - name: Gate - banned providers must be absent
+        shell: pwsh
+        run: |
+          $m = Select-String -Path .\projects\data\republish_with_images.json -Pattern "GETTY|REUTERS|SHUTTERSTOCK|ALAMY|ASSOCIATED PRESS|\bAP\b" -CaseSensitive:$false
+          if ($m) { Write-Error "BANNED_PROVIDER_STRING_FOUND"; exit 1 }
+
+      - name: Gate - proof files must exist per item
+        shell: pwsh
+        run: |
+          $code = @'
+          import json, sys, pathlib
+          root = pathlib.Path(".")
+          data = json.loads((root / "projects/data/republish_with_images.json").read_text(encoding="utf-8"))
+          items = data.get("items") or []
+          req = ("proof_path_html","proof_path_png","image_url","source_url","attribution_html","image_license_type")
+          for idx, it in enumerate(items):
+              for k in req:
+                  if not it.get(k):
+                      raise SystemExit(f"missing_field {idx} {k}")
+              htmlp = root / it["proof_path_html"]
+              pngp  = root / it["proof_path_png"]
+              if not htmlp.exists():
+                  raise SystemExit(f"missing_proof_html {htmlp}")
+              if not pngp.exists():
+                  raise SystemExit(f"missing_proof_png {pngp}")
+          print(f"proofs_ok items={len(items)}")
+          '@
+          $code | Set-Content -Encoding utf8 .\_gate_republish_proofs.py
+          python .\_gate_republish_proofs.py
+
+      - name: Commit and push (if changed)
+        shell: pwsh
+        run: |
+          $s = git status --porcelain
+          if (-not $s) {
+            Write-Host "No changes to commit."
+            exit 0
+          }
+          git add -f projects/data/republish_with_images.json
+          git add -f projects/data/provenance/
+          git add -f projects/data/license_proofs/
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "data: refresh republish_with_images (verified)"
+          git push origin HEAD:main
+

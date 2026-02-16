@@ -78,6 +78,13 @@ BANNED_PROVIDER_SUBSTRINGS = [
     "alamy",
 ]
 
+BANNED_PROVIDER_REGEX = re.compile(
+    r"(?i)(getty|reuters|associated\s+press|\bap\b|shutterstock|alamy)"
+)
+
+RETENTION_PROOFS_DAYS = 14
+RETENTION_PROVENANCE_DAYS = 30
+
 
 def sha1_hex(s: str) -> str:
     return hashlib.sha1(s.encode("utf-8")).hexdigest()
@@ -369,11 +376,50 @@ def is_allowed_domain(host: str, allowed: List[str]) -> bool:
 
 
 def detect_banned_provider(text: str) -> Optional[str]:
-    t = (text or "").lower()
-    for s in BANNED_PROVIDER_SUBSTRINGS:
-        if s in t:
-            return s
-    return None
+    """
+    Detect banned providers case-insensitively.
+    Includes \bAP\b only as standalone word (to avoid false positives like "map").
+    """
+    t = (text or "")
+    m = BANNED_PROVIDER_REGEX.search(t)
+    if not m:
+        return None
+    # Do NOT return the matched string (avoid leaking banned terms into logs/outputs).
+    return "banned_provider"
+
+
+def prune_old_proofs_and_provenance(now: datetime) -> None:
+    """
+    Retention policy to prevent repo bloat:
+    - license_proofs: keep last RETENTION_PROOFS_DAYS
+    - provenance: keep last RETENTION_PROVENANCE_DAYS
+    """
+    # Proofs: folder structure YYYY/MM/DD/*.html|*.png
+    if PROOFS_DIR.exists():
+        cutoff = now.timestamp() - (RETENTION_PROOFS_DAYS * 86400)
+        for p in PROOFS_DIR.rglob("*"):
+            try:
+                if p.is_file() and p.stat().st_mtime < cutoff:
+                    p.unlink()
+            except Exception:
+                pass
+        # cleanup empty dirs bottom-up
+        for d in sorted([x for x in PROOFS_DIR.rglob("*") if x.is_dir()], key=lambda x: len(str(x)), reverse=True):
+            try:
+                if not any(d.iterdir()):
+                    d.rmdir()
+            except Exception:
+                pass
+
+    # Provenance: files YYYY-MM-DD.jsonl
+    if PROVENANCE_DIR.exists():
+        cutoff = now.timestamp() - (RETENTION_PROVENANCE_DAYS * 86400)
+        for p in PROVENANCE_DIR.glob("*.jsonl"):
+            try:
+                if p.is_file() and p.stat().st_mtime < cutoff:
+                    p.unlink()
+            except Exception:
+                pass
 
 
 def wikimedia_filename_from_upload(url: str) -> Optional[str]:
@@ -676,166 +722,158 @@ def main() -> int:
                 ts = now_iso()
                 source_domain = host_of(article_url)
 
-                # Fetch article HTML
                 try:
-                    afr = http_fetch(article_url, accept="text/html,*/*;q=0.8", no_cache=bool(args.no_cache), limiter=limiter)
-                except Exception:
-                    append_provenance(
-                        provenance_path,
-                        {
-                            "timestamp": ts,
-                            "source_id": sid,
-                            "article_url": article_url,
-                            "image_url": "",
-                            "license_type": "",
-                            "license_url": "",
-                            "result": "FAIL",
-                            "drop_reason": "article_fetch_failed",
-                        },
-                    )
-                    continue
+                    # Fetch article HTML
+                    try:
+                        afr = http_fetch(article_url, accept="text/html,*/*;q=0.8", no_cache=bool(args.no_cache), limiter=limiter)
+                    except Exception:
+                        append_provenance(
+                            provenance_path,
+                            {
+                                "timestamp": ts,
+                                "source_id": sid,
+                                "article_url": article_url,
+                                "image_url": "",
+                                "license_type": "",
+                                "license_url": "",
+                                "result": "FAIL",
+                                "drop_reason": "article_fetch_failed",
+                            },
+                        )
+                        continue
 
-                html_text = afr.body.decode("utf-8", errors="replace")
-                image_url, pick = pick_image_from_html(html_text, afr.final_url or article_url)
-                if not image_url:
-                    append_provenance(
-                        provenance_path,
-                        {
-                            "timestamp": ts,
-                            "source_id": sid,
-                            "article_url": article_url,
-                            "image_url": "",
-                            "license_type": "",
-                            "license_url": "",
-                            "result": "FAIL",
-                            "drop_reason": "missing_image",
-                        },
-                    )
-                    continue
+                    html_text = afr.body.decode("utf-8", errors="replace")
+                    image_url, pick = pick_image_from_html(html_text, afr.final_url or article_url)
+                    if not image_url:
+                        append_provenance(
+                            provenance_path,
+                            {
+                                "timestamp": ts,
+                                "source_id": sid,
+                                "article_url": article_url,
+                                "image_url": "",
+                                "license_type": "",
+                                "license_url": "",
+                                "result": "FAIL",
+                                "drop_reason": "missing_image",
+                            },
+                        )
+                        continue
 
-                banned_hit = detect_banned_provider(image_url)
-                if banned_hit:
-                    # Redact image_url in logs by design.
-                    append_provenance(
-                        provenance_path,
-                        {
-                            "timestamp": ts,
-                            "source_id": sid,
-                            "article_url": article_url,
-                            "image_url": "",
-                            "license_type": "",
-                            "license_url": "",
-                            "result": "FAIL",
-                            "drop_reason": "banned_provider_detected",
-                        },
-                    )
-                    continue
+                    # Banned providers can appear in url or credits/metadata => hard drop + redaction.
+                    if detect_banned_provider(image_url):
+                        append_provenance(
+                            provenance_path,
+                            {
+                                "timestamp": ts,
+                                "source_id": sid,
+                                "article_url": article_url,
+                                "image_url": "",
+                                "license_type": "",
+                                "license_url": "",
+                                "result": "FAIL",
+                                "drop_reason": "banned_provider_detected",
+                            },
+                        )
+                        continue
 
-                image_domain = host_of(image_url)
-                if not is_allowed_domain(image_domain, list(allowed_domains)):
-                    append_provenance(
-                        provenance_path,
-                        {
-                            "timestamp": ts,
-                            "source_id": sid,
-                            "article_url": article_url,
-                            "image_url": image_url,
-                            "license_type": "",
-                            "license_url": "",
-                            "result": "FAIL",
-                            "drop_reason": "image_domain_not_allowlisted",
-                        },
-                    )
-                    continue
+                    image_domain = host_of(image_url)
+                    if not is_allowed_domain(image_domain, list(allowed_domains)):
+                        append_provenance(
+                            provenance_path,
+                            {
+                                "timestamp": ts,
+                                "source_id": sid,
+                                "article_url": article_url,
+                                "image_url": image_url,
+                                "license_type": "",
+                                "license_url": "",
+                                "result": "FAIL",
+                                "drop_reason": "image_domain_not_allowlisted",
+                            },
+                        )
+                        continue
 
-                if image_domain == "audiovisual.ec.europa.eu":
-                    append_provenance(
-                        provenance_path,
-                        {
-                            "timestamp": ts,
-                            "source_id": sid,
-                            "article_url": article_url,
-                            "image_url": image_url,
-                            "license_type": "",
-                            "license_url": "",
-                            "result": "FAIL",
-                            "drop_reason": "eu_avs_not_implemented",
-                        },
-                    )
-                    continue
+                    if image_domain == "audiovisual.ec.europa.eu":
+                        append_provenance(
+                            provenance_path,
+                            {
+                                "timestamp": ts,
+                                "source_id": sid,
+                                "article_url": article_url,
+                                "image_url": image_url,
+                                "license_type": "",
+                                "license_url": "",
+                                "result": "FAIL",
+                                "drop_reason": "eu_avs_not_implemented",
+                            },
+                        )
+                        continue
 
-                filename = None
-                if image_domain == "upload.wikimedia.org":
-                    filename = wikimedia_filename_from_upload(image_url)
-                elif image_domain == "commons.wikimedia.org":
-                    filename = commons_filename_from_file_page(image_url)
-
-                if not filename:
-                    append_provenance(
-                        provenance_path,
-                        {
-                            "timestamp": ts,
-                            "source_id": sid,
-                            "article_url": article_url,
-                            "image_url": image_url,
-                            "license_type": "",
-                            "license_url": "",
-                            "result": "FAIL",
-                            "drop_reason": "image_license_unknown",
-                        },
-                    )
-                    continue
-
-                meta = commons_api_query(filename, no_cache=bool(args.no_cache), limiter=limiter)
-                ext = extract_commons_extmeta(meta)
-                lic_text = ext.get("LicenseShortName") or ext.get("License") or ""
-                lic_url = ext.get("LicenseUrl") or ""
-                author_credit = (ext.get("Artist") or "").strip()
-                if not author_credit:
-                    author_credit = (ext.get("Credit") or "").strip()
-
-                if not lic_text:
-                    append_provenance(
-                        provenance_path,
-                        {
-                            "timestamp": ts,
-                            "source_id": sid,
-                            "article_url": article_url,
-                            "image_url": image_url,
-                            "license_type": "",
-                            "license_url": "",
-                            "result": "FAIL",
-                            "drop_reason": "image_license_unknown",
-                        },
-                    )
-                    continue
-
-                if not is_license_allowed(lic_text):
-                    append_provenance(
-                        provenance_path,
-                        {
-                            "timestamp": ts,
-                            "source_id": sid,
-                            "article_url": article_url,
-                            "image_url": image_url,
-                            "license_type": lic_text,
-                            "license_url": lic_url,
-                            "result": "FAIL",
-                            "drop_reason": "image_license_not_allowed",
-                        },
-                    )
-                    continue
-
-                # Fetch image bytes + hash
-                try:
+                    filename = None
                     if image_domain == "upload.wikimedia.org":
-                        img_fr = http_fetch(image_url, accept="image/*,*/*;q=0.5", no_cache=bool(args.no_cache), limiter=limiter)
-                        img_bytes = img_fr.body
-                    else:
-                        # For commons file page images: we don't have guaranteed direct bytes.
-                        img_bytes = b""
-                    if not img_bytes:
-                        # strict: if we can't hash the image bytes, do not pass
+                        filename = wikimedia_filename_from_upload(image_url)
+                    elif image_domain == "commons.wikimedia.org":
+                        filename = commons_filename_from_file_page(image_url)
+
+                    if not filename:
+                        append_provenance(
+                            provenance_path,
+                            {
+                                "timestamp": ts,
+                                "source_id": sid,
+                                "article_url": article_url,
+                                "image_url": image_url,
+                                "license_type": "",
+                                "license_url": "",
+                                "result": "FAIL",
+                                "drop_reason": "image_license_unknown",
+                            },
+                        )
+                        continue
+
+                    meta = commons_api_query(filename, no_cache=bool(args.no_cache), limiter=limiter)
+                    ext = extract_commons_extmeta(meta)
+                    lic_text = ext.get("LicenseShortName") or ext.get("License") or ""
+                    lic_url = ext.get("LicenseUrl") or ""
+                    author_credit = (ext.get("Artist") or "").strip()
+                    if not author_credit:
+                        author_credit = (ext.get("Credit") or "").strip()
+
+                    # Banned provider detection in credits/metadata too (hard drop + redaction).
+                    if detect_banned_provider(author_credit) or detect_banned_provider(ext.get("Credit", "")) or detect_banned_provider(ext.get("ImageDescription", "")):
+                        append_provenance(
+                            provenance_path,
+                            {
+                                "timestamp": ts,
+                                "source_id": sid,
+                                "article_url": article_url,
+                                "image_url": "",
+                                "license_type": "",
+                                "license_url": "",
+                                "result": "FAIL",
+                                "drop_reason": "banned_provider_detected",
+                            },
+                        )
+                        continue
+
+                    if not lic_text:
+                        append_provenance(
+                            provenance_path,
+                            {
+                                "timestamp": ts,
+                                "source_id": sid,
+                                "article_url": article_url,
+                                "image_url": image_url,
+                                "license_type": "",
+                                "license_url": "",
+                                "result": "FAIL",
+                                "drop_reason": "image_license_unknown",
+                            },
+                        )
+                        continue
+
+                    if not is_license_allowed(lic_text):
                         append_provenance(
                             provenance_path,
                             {
@@ -846,61 +884,121 @@ def main() -> int:
                                 "license_type": lic_text,
                                 "license_url": lic_url,
                                 "result": "FAIL",
-                                "drop_reason": "image_hash_unavailable",
+                                "drop_reason": "image_license_not_allowed",
                             },
                         )
                         continue
-                    hash_img = sha256_hex_bytes(img_bytes)
-                except Exception:
-                    append_provenance(
-                        provenance_path,
-                        {
-                            "timestamp": ts,
-                            "source_id": sid,
-                            "article_url": article_url,
-                            "image_url": image_url,
-                            "license_type": lic_text,
-                            "license_url": lic_url,
-                            "result": "FAIL",
-                            "drop_reason": "image_fetch_failed",
-                        },
-                    )
-                    continue
 
-                # Proof archive (HTML+PNG) required
-                try:
-                    # compute hash of proof html later (after written) - but we need value in html.
-                    # We'll embed a placeholder first, compute hash, rewrite with correct hash, then screenshot.
-                    # For simplicity: hash the extmetadata JSON snapshot + core fields.
-                    license_blob = json.dumps(
-                        {
-                            "article_url": article_url,
-                            "image_url": image_url,
-                            "license_text": lic_text,
-                            "license_url": lic_url,
-                            "author_credit": author_credit,
-                            "extmetadata": ext,
-                        },
-                        ensure_ascii=False,
-                        sort_keys=True,
-                    ).encode("utf-8")
-                    hash_license_html = sha256_hex_bytes(license_blob)
+                    # Fetch image bytes + hash
+                    try:
+                        if image_domain == "upload.wikimedia.org":
+                            img_fr = http_fetch(image_url, accept="image/*,*/*;q=0.5", no_cache=bool(args.no_cache), limiter=limiter)
+                            img_bytes = img_fr.body
+                        else:
+                            # strict: only allow hashing when we can fetch bytes reliably
+                            img_bytes = b""
+                        if not img_bytes:
+                            append_provenance(
+                                provenance_path,
+                                {
+                                    "timestamp": ts,
+                                    "source_id": sid,
+                                    "article_url": article_url,
+                                    "image_url": image_url,
+                                    "license_type": lic_text,
+                                    "license_url": lic_url,
+                                    "result": "FAIL",
+                                    "drop_reason": "image_hash_unavailable",
+                                },
+                            )
+                            continue
+                        hash_img = sha256_hex_bytes(img_bytes)
+                    except Exception:
+                        append_provenance(
+                            provenance_path,
+                            {
+                                "timestamp": ts,
+                                "source_id": sid,
+                                "article_url": article_url,
+                                "image_url": image_url,
+                                "license_type": lic_text,
+                                "license_url": lic_url,
+                                "result": "FAIL",
+                                "drop_reason": "image_fetch_failed",
+                            },
+                        )
+                        continue
 
-                    proof_html_path, proof_png_path = write_proof_files(
-                        article_url=article_url,
-                        image_url=image_url,
-                        source_domain=source_domain,
+                    # Proof archive (HTML+PNG) required
+                    try:
+                        license_blob = json.dumps(
+                            {
+                                "article_url": article_url,
+                                "image_url": image_url,
+                                "license_text": lic_text,
+                                "license_url": lic_url,
+                                "author_credit": author_credit,
+                                "extmetadata": ext,
+                            },
+                            ensure_ascii=False,
+                            sort_keys=True,
+                        ).encode("utf-8")
+                        hash_license_html = sha256_hex_bytes(license_blob)
+
+                        proof_html_path, proof_png_path = write_proof_files(
+                            article_url=article_url,
+                            image_url=image_url,
+                            source_domain=source_domain,
+                            license_type=lic_text,
+                            license_text=lic_text,
+                            license_page_url=(lic_url or f"https://commons.wikimedia.org/wiki/File:{filename}"),
+                            author_credit=author_credit,
+                            timestamp_iso=ts,
+                            hash_image=hash_img,
+                            hash_license_html=hash_license_html,
+                            extmeta=ext,
+                            edge_path=edge_path,
+                        )
+                    except Exception:
+                        append_provenance(
+                            provenance_path,
+                            {
+                                "timestamp": ts,
+                                "source_id": sid,
+                                "article_url": article_url,
+                                "image_url": image_url,
+                                "license_type": lic_text,
+                                "license_url": lic_url,
+                                "result": "FAIL",
+                                "drop_reason": "proof_archive_failed",
+                            },
+                        )
+                        continue
+
+                    # PASS item
+                    attribution_html = build_attribution_html(
+                        source_name=sname or sid,
+                        source_url=article_url,
                         license_type=lic_text,
-                        license_text=lic_text,
-                        license_page_url=(lic_url or f"https://commons.wikimedia.org/wiki/File:{filename}"),
+                        license_url=lic_url or "",
                         author_credit=author_credit,
-                        timestamp_iso=ts,
-                        hash_image=hash_img,
-                        hash_license_html=hash_license_html,
-                        extmeta=ext,
-                        edge_path=edge_path,
                     )
-                except Exception:
+
+                    republish_items.append(
+                        {
+                            "title": title,
+                            "source_url": article_url,
+                            "source_name": sname or sid,
+                            "published_at": published_at,
+                            "image_url": image_url,
+                            "image_license_type": lic_text,
+                            "license_url": lic_url or "",
+                            "attribution_html": attribution_html,
+                            "proof_path_html": str(proof_html_path.relative_to(ROOT)).replace("\\", "/"),
+                            "proof_path_png": str(proof_png_path.relative_to(ROOT)).replace("\\", "/"),
+                        }
+                    )
+
                     append_provenance(
                         provenance_path,
                         {
@@ -909,50 +1007,27 @@ def main() -> int:
                             "article_url": article_url,
                             "image_url": image_url,
                             "license_type": lic_text,
-                            "license_url": lic_url,
+                            "license_url": lic_url or "",
+                            "result": "PASS",
+                            "drop_reason": "",
+                        },
+                    )
+                except Exception:
+                    # Never crash on a single item.
+                    append_provenance(
+                        provenance_path,
+                        {
+                            "timestamp": ts,
+                            "source_id": sid,
+                            "article_url": article_url,
+                            "image_url": "",
+                            "license_type": "",
+                            "license_url": "",
                             "result": "FAIL",
-                            "drop_reason": "proof_archive_failed",
+                            "drop_reason": "item_exception",
                         },
                     )
                     continue
-
-                # PASS item
-                attribution_html = build_attribution_html(
-                    source_name=sname or sid,
-                    source_url=article_url,
-                    license_type=lic_text,
-                    license_url=lic_url or "",
-                    author_credit=author_credit,
-                )
-
-                republish_items.append(
-                    {
-                        "title": title,
-                        "source_url": article_url,
-                        "source_name": sname or sid,
-                        "published_at": published_at,
-                        "image_url": image_url,
-                        "image_license_type": lic_text,
-                        "license_url": lic_url or "",
-                        "attribution_html": attribution_html,
-                        "proof_path_html": str(proof_html_path.relative_to(ROOT)).replace("\\", "/"),
-                        "proof_path_png": str(proof_png_path.relative_to(ROOT)).replace("\\", "/"),
-                    }
-                )
-
-                append_provenance(
-                    provenance_path,
-                    {
-                        "timestamp": ts,
-                        "source_id": sid,
-                        "article_url": article_url,
-                        "image_url": image_url,
-                        "license_type": lic_text,
-                        "license_url": lic_url or "",
-                        "result": "PASS",
-                        "drop_reason": "",
-                    },
-                )
 
     # Persist republish data (PASS only; strict: must have image_url)
     republish_items = [it for it in republish_items if it.get("image_url")]
@@ -962,6 +1037,9 @@ def main() -> int:
         "items": republish_items,
     }
     write_json(OUT_REPUBLISH, payload)
+
+    # Retention cleanup after successful write.
+    prune_old_proofs_and_provenance(datetime.now(timezone.utc))
 
     print(f"PASS items: {len(republish_items)}")
     print(f"Wrote: {OUT_REPUBLISH}")
