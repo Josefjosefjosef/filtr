@@ -7035,6 +7035,9 @@ body.iuRailHidden #iuLeftRail{
   width: 0 !important;
   min-width: 0 !important;
   max-width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
   padding: 0 !important;
   margin: 0 !important;
   border: 0 !important;
@@ -7046,6 +7049,7 @@ body.iuRailHidden #iuLeftRail{
   /* důležité: fixed prvek uvnitř nesmí být uvězněn parentem */
   transform: none !important;
   filter: none !important;
+  will-change: auto !important;
   perspective: none !important;
 
   overflow: hidden !important; /* ostatní položky railu pryč */
@@ -7063,49 +7067,35 @@ html.iuRailHidden #iuRailToggleBtn,
 body.iuRailHidden #iuRailToggleBtn{
   position: fixed !important;
 
-  /* pod topbarem, ať to neleze do brand/search */
-  top: calc(var(--iuTopbarStackH, 64px) + 12px) !important;
-  left: 0 !important;
+  left: -10px !important;
+  right: auto !important;
 
-  /* malý „úchyt“ — ne lišta */
+  top: calc(var(--iuTopbarStackH, 64px) + 10px) !important;
+  bottom: auto !important;
+
   width: 44px !important;
   height: 44px !important;
-  min-width: 44px !important;
-  max-width: 44px !important;
-
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
 
   padding: 0 !important;
   margin: 0 !important;
 
-  /* lehce „zaparkovaný“ mimo stránku */
-  transform: translateX(-10px) !important;
+  display: grid !important;
+  place-items: center !important;
 
   z-index: 9999 !important;
-  border-radius: 12px !important;
 
-  /* ať to nevytváří rozměrové překvapení */
-  box-sizing: border-box !important;
-
-  /* vizuálně jako malý tab, ne blok přes šířku */
-  background: rgba(255,255,255,0.92) !important;
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(0,0,0,0.10) !important;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12) !important;
-
-  /* jistota proti zděděným layout stylům */
-  float: none !important;
-  clear: none !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 /* Vyjetí při hover/focus — jen o kousek dovnitř */
 html.iuRailHidden #iuRailToggleBtn:hover,
+html.iuRailHidden #iuRailToggleBtn:focus,
 html.iuRailHidden #iuRailToggleBtn:focus-visible,
 body.iuRailHidden #iuRailToggleBtn:hover,
+body.iuRailHidden #iuRailToggleBtn:focus,
 body.iuRailHidden #iuRailToggleBtn:focus-visible{
-  transform: translateX(6px) !important;
+  transform: translateX(10px) !important;
 }
 
 /* V hidden režimu na toggle schovej text „Skrýt/Zobrazit sloupec“, nech jen ikonku */
