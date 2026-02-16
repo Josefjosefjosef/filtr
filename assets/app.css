@@ -3967,27 +3967,25 @@ body[data-section="home"] .iuHomeCanvas{
   flex:1 1 auto;
   border-radius:999px;
   opacity:0.35;
+  background: linear-gradient(to right, var(--iuSectionAccent, currentColor), rgba(0,0,0,0));
 }
 
-/* JR section header */
-.iuSectionHeader--jr h2{
-  color: var(--iuNavAccent-jr);
-}
-.iuSectionHeader--jr .iuSectionHeaderLine{
-  background: linear-gradient(to right, var(--iuNavAccent-jr), rgba(0,0,0,0));
+/* Section header accent (modifiers: only color, no layout changes) */
+.iuSectionHeader--jr{ --iuSectionAccent: var(--iuNavAccent-jr); }
+.iuSectionHeader--mapy{ --iuSectionAccent: var(--iuNavAccent-mapy, #22C55E); }
+.iuSectionHeader--radio{ --iuSectionAccent: var(--iuNavAccent-radio, #6D28D9); }
+.iuSectionHeader--tvonline{ --iuSectionAccent: var(--iuNavAccent-tvonline, #DC2626); }
+
+.iuSectionHeader--jr h2,
+.iuSectionHeader--mapy h2,
+.iuSectionHeader--radio h2,
+.iuSectionHeader--tvonline h2{
+  color: var(--iuSectionAccent, currentColor);
 }
 
 /* MAPY view (UI-only): structured link chips */
 .iuMapyView{
   padding: 18px 12px;
-}
-
-/* Mapy section header */
-.iuSectionHeader--mapy h2{
-  color: var(--iuNavAccent-mapy, #22C55E);
-}
-.iuSectionHeader--mapy .iuSectionHeaderLine{
-  background: linear-gradient(to right, var(--iuNavAccent-mapy, #22C55E), rgba(0,0,0,0));
 }
 
 /* Shared section subtitle (SEO-friendly, no hard-coded colors) */
@@ -3996,22 +3994,6 @@ body[data-section="home"] .iuHomeCanvas{
   font-size: 13px;
   line-height: 1.35;
   opacity: .82;
-}
-
-/* Radio section header */
-.iuSectionHeader--radio h2{
-  color: var(--iuNavAccent-radio, #6D28D9);
-}
-.iuSectionHeader--radio .iuSectionHeaderLine{
-  background: linear-gradient(to right, var(--iuNavAccent-radio, #6D28D9), rgba(0,0,0,0));
-}
-
-/* TV online section header */
-.iuSectionHeader--tvonline h2{
-  color: var(--iuNavAccent-tvonline, #DC2626);
-}
-.iuSectionHeader--tvonline .iuSectionHeaderLine{
-  background: linear-gradient(to right, var(--iuNavAccent-tvonline, #DC2626), rgba(0,0,0,0));
 }
 
 /* Mapy: same hover mechanism as Radio (swap accent var locally) */
