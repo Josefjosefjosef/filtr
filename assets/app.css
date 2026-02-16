@@ -7388,3 +7388,34 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   border: 0 !important;
 }
 
+/* ============================================================
+   FINAL UI — topbar vertical centering (keep current look)
+   topbar vertical centering
+   ============================================================ */
+
+/* hlavní řádek topbaru: vertikálně centrovat všechny děti */
+#topbarWrap .topbar-new-inner,
+#topbarWrap .topbar-new-main{
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* pojistka: děti a jejich vnitřní obsah nesmí dělat offsety */
+#topbarWrap .topbar-new-main > *{
+  align-self: center !important;
+}
+
+/* pokud má logo nebo search vlastní line-height/padding, sjednotit bez změny výšky lišty */
+#topbarWrap .topbar-new-main a,
+#topbarWrap .topbar-new-main button,
+#topbarWrap .topbar-new-main input{
+  vertical-align: middle;
+}
+
+/* pokud search wrapper má top/bottom padding, srovnat (jen kdyby byl posunutý) */
+#topbarWrap .topbar-new-main .topbar-search,
+#topbarWrap .topbar-new-main .topbar-new-search,
+#topbarWrap .topbar-new-main .topbarSearch{
+  align-self: center !important;
+}
+
