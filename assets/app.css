@@ -7024,3 +7024,52 @@ html[data-iu-debug="1"] #iuDebugBox > div > button{
   flex: 0 0 auto;
   white-space: nowrap;
 }
+
+/* === FIX: rail toggle must stay visible when rail is hidden === */
+
+/* 1) When hidden: do NOT display:none the rail (it would hide the toggle button).
+      Instead collapse the rail to zero footprint. */
+html.iuRailHidden #iuLeftRail,
+body.iuRailHidden #iuLeftRail{
+  display: block !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  overflow: visible !important; /* allow the fixed toggle to exist */
+  flex: 0 0 0 !important;       /* if #newsList is flex */
+}
+
+/* 2) Hide all nav items except the toggle when rail is hidden */
+html.iuRailHidden .iu-leftNav .iu-leftNavItem:not(.iuRailToggle),
+body.iuRailHidden .iu-leftNav .iu-leftNavItem:not(.iuRailToggle){
+  display: none !important;
+}
+
+/* 3) Make the toggle a fixed overlay button when rail is hidden */
+html.iuRailHidden #iuRailToggleBtn,
+body.iuRailHidden #iuRailToggleBtn{
+  position: fixed !important;
+  left: 10px !important;
+  top: 92px !important;        /* if it collides with topbar, adjust to 72/84/96 */
+  z-index: 10000 !important;
+}
+
+/* 4) Ensure toggle has a visible clickable shape even when pulled out */
+html.iuRailHidden #iuRailToggleBtn.iu-leftNavItem,
+body.iuRailHidden #iuRailToggleBtn.iu-leftNavItem{
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+
+/* Optional: make label always visible in collapsed mode */
+html.iuRailHidden #iuRailToggleBtn .iu-leftNavLabel,
+body.iuRailHidden #iuRailToggleBtn .iu-leftNavLabel{
+  display: inline !important;
+}
