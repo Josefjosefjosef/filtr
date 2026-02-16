@@ -4633,7 +4633,7 @@ function buildVideoAsArticleCard(it) {
 
   // Unified navigation router (UI-only)
   // NOTE: non-radio sections still use the normal feed view.
-  const VIEW_MAP = { home: 'home', media: 'media', radio: 'radio', jr: 'jr', mapy: 'mapy' };
+  const VIEW_MAP = { media: 'media', radio: 'radio', jr: 'jr', mapy: 'mapy' };
   const STORAGE_KEY_WISH = "iuRadioWishDraftV1";
   const STORAGE_KEY_WISH_OPEN = "iuRadioWishOpenV1";
 
@@ -5279,31 +5279,28 @@ function buildVideoAsArticleCard(it) {
   function showView(key){
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
-    const homeEl = document.getElementById('iuHomeView');
     const jrEmptyEl = document.getElementById('iuJrEmptyView');
     const mapyEl = document.getElementById('iuMapyView');
 
     if (feedEl) feedEl.hidden = true;
     if (viewEl) viewEl.hidden = true;
-    if (homeEl) homeEl.hidden = true;
     if (jrEmptyEl) jrEmptyEl.hidden = true;
     if (mapyEl) mapyEl.hidden = true;
 
-    if(key === 'home' && homeEl) homeEl.hidden = false;
     if(key === 'radio' && viewEl) viewEl.hidden = false;
     if(key === 'jr' && jrEmptyEl) jrEmptyEl.hidden = false;
     if(key === 'mapy' && mapyEl) mapyEl.hidden = false;
     // default feed view for all other sections
-    if(key !== 'home' && key !== 'radio' && key !== 'jr' && key !== 'mapy' && feedEl) feedEl.hidden = false;
+    if(key !== 'radio' && key !== 'jr' && key !== 'mapy' && feedEl) feedEl.hidden = false;
   }
 
   function normalizeSection(raw){
     const k = String(raw || '').trim().toLowerCase();
-    if (k === 'home') return 'home';
     if (k === 'radio') return 'radio';
     if (k === 'jr') return 'jr';
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
     const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','namedays','tvprogram','culture','ads','jr']);
+    if (k === 'home') return 'media';
     return allowed.has(k) ? k : 'media';
   }
 
@@ -5328,29 +5325,13 @@ function buildVideoAsArticleCard(it) {
     const section = getInitialSection(); // already normalized + fallback->media
     // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
     try{ document.body && (document.body.dataset.section = section); }catch{}
-    // home layout marker
-    try{ document.body && document.body.classList.toggle('iu-home', section === 'home'); }catch{}
-    // ensure home view exists and hexes reflect current menu
-    if (section === 'home') {
-      ensureHomeView();
-      buildHomeHexGrid();
-      renderHomeWeather();
-      iuHomeApplyRailSectionOrder();
-      requestAnimationFrame(iuHomeApplyRailSectionOrder);
-      setTimeout(iuHomeApplyRailSectionOrder, 200);
-      // stop any periodic data refresh while on Home
-      try{ window.__iuStopAutoRefresh && window.__iuStopAutoRefresh(); }catch{}
-    }
     // feed paging must reset on section change
     try{ state.page = 1; }catch{}
     setLeftNavActive(section);
     showView(VIEW_MAP[section] ?? 'media');
-
-    // leaving Home: ALWAYS load feed data immediately (idempotent) + ensure auto-refresh is running
-    if (section !== 'home') {
-      try{ window.__iuLoadData && window.__iuLoadData(); }catch{}
-      try{ window.__iuStartAutoRefresh && window.__iuStartAutoRefresh(); }catch{}
-    }
+    // Always: keep feed data loaded + auto-refresh running (idempotent, UI-only)
+    try{ window.__iuLoadData && window.__iuLoadData(); }catch{}
+    try{ window.__iuStartAutoRefresh && window.__iuStartAutoRefresh(); }catch{}
   }
 
   function initRadioWish(viewEl){
@@ -5655,9 +5636,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const viewEl = document.getElementById('iuRadioView');
     if (!feedEl || !viewEl) return;
 
-    ensureHomeView();
     renderRadioView(viewEl);
-    buildHomeHexGrid();
     const wishCtl = initRadioWish(viewEl);
     // async load (no backend); fallback keeps UI usable even if fetch fails
     loadWishDataIntoState().then((d) => { try{ wishCtl.setData(d); }catch{} });
@@ -5671,6 +5650,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     document.addEventListener('click', (e) => {
       const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
       if (!item) return;
+      if (item && item.classList && item.classList.contains('iuRailToggle')) return;
       // UI-only: rail hide/show toggle must not trigger router/view switching
       if (item.id === "iuRailToggleBtn") return;
       const action = (item.getAttribute("data-action") || item.dataset?.action || "").trim().toLowerCase();

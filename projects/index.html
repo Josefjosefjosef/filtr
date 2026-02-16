@@ -37,6 +37,11 @@
       try{
         const u = new URL(window.location.href);
         const section = String(u.searchParams.get("section") || "").trim().toLowerCase();
+        if (section === "home") {
+          // Home is deprecated: default to Media feed
+          u.searchParams.set("section", "media");
+          history.replaceState(null, "", u.toString());
+        }
         if (section === "cestovani") {
           u.searchParams.set("section", "travel");
           history.replaceState(null, "", u.toString());
