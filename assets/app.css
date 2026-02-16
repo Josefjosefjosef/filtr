@@ -3995,6 +3995,39 @@ body[data-section="home"] .iuHomeCanvas{
   background: linear-gradient(to right, var(--iuNavAccent-mapy, #22C55E), rgba(0,0,0,0));
 }
 
+/* Shared section subtitle (SEO-friendly, no hard-coded colors) */
+.iuSectionSubtitle{
+  margin: 6px 0 14px;
+  font-size: 13px;
+  line-height: 1.35;
+  opacity: .82;
+}
+
+/* Radio section header */
+.iuSectionHeader--radio h2{
+  color: var(--iuNavAccent-radio, #6D28D9);
+}
+.iuSectionHeader--radio .iuSectionHeaderLine{
+  background: linear-gradient(to right, var(--iuNavAccent-radio, #6D28D9), rgba(0,0,0,0));
+}
+
+/* TV online section header */
+.iuSectionHeader--tvonline h2{
+  color: var(--iuNavAccent-tvonline, #DC2626);
+}
+.iuSectionHeader--tvonline .iuSectionHeaderLine{
+  background: linear-gradient(to right, var(--iuNavAccent-tvonline, #DC2626), rgba(0,0,0,0));
+}
+
+/* Radio top header wrapper (static HTML; shown only in radio section) */
+#iuRadioTop{
+  display: none;
+}
+body[data-section="radio"] #iuRadioTop,
+html[data-section="radio"] #iuRadioTop{
+  display: block !important;
+}
+
 /* Mapy: same hover mechanism as Radio (swap accent var locally) */
 body[data-section="mapy"] #iuMapyView,
 html[data-section="mapy"] #iuMapyView{
