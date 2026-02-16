@@ -7129,3 +7129,48 @@ html.iuRailHidden #iuRailToggleBtn:focus{
   opacity: 1;
   background: color-mix(in srgb, var(--iuAccentRailToggle) 8%, transparent);
 }
+
+/* === UI: rail toggle uses thin chevron arrows (no text, no hamburger) === */
+
+#iuRailToggleBtn{
+  width: 44px !important;
+  height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* schovej původní ikonky/obsah (bez zásahu do layoutu) */
+#iuRailToggleBtn svg,
+#iuRailToggleBtn [class*="Icon"],
+#iuRailToggleBtn [class*="Hamburger"],
+#iuRailToggleBtn .iu-leftNavLabel,
+#iuRailToggleBtn .iu-leftNavText{
+  display: none !important;
+}
+
+#iuRailToggleBtn::after{
+  display: none !important;
+}
+
+/* tenká "kreslená" šipka (chevron) */
+#iuRailToggleBtn::before{
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(135deg); /* default: ← */
+  opacity: 0.85;
+}
+
+/* hidden rail = šipka doprava */
+html.iuRailHidden #iuRailToggleBtn::before{
+  transform: rotate(-45deg); /* → */
+}
+
+/* hover/focus jen lehce zesílí */
+#iuRailToggleBtn:hover::before,
+#iuRailToggleBtn:focus-visible::before{
+  opacity: 1;
+}
