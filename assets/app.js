@@ -121,6 +121,9 @@ window.addEventListener("unhandledrejection", (e) => {
 
   // Feature flags
   const IU_ENABLE_NAMEDAY = false; // hard off: no request, no DOM update
+  // FEED VIDEO EVERY 8 (YouTube preview card, lazy embed)
+  const IU_FEED_VIDEO_ENABLED = true;
+  const IU_FEED_VIDEO_EVERY = 8;
 
   function debugLog(...args) {
     if (!isDebugLogging) return;
@@ -1585,6 +1588,23 @@ window.addEventListener("unhandledrejection", (e) => {
   }
 
   function iuExtractYouTubeId(item) {
+    // Accept either a URL string or a metadata object.
+    if (typeof item === "string") {
+      const s = item.trim();
+      if (!s) return null;
+      const patterns = [
+        /(?:v=)([A-Za-z0-9_-]{11})/,
+        /(?:\/embed\/)([A-Za-z0-9_-]{11})/,
+        /(?:youtu\.be\/)([A-Za-z0-9_-]{11})/,
+        /(?:\/shorts\/)([A-Za-z0-9_-]{11})/,
+        /(?:\/live\/)([A-Za-z0-9_-]{11})/,
+      ];
+      for (const pattern of patterns) {
+        const match = s.match(pattern);
+        if (match && match[1]) return match[1];
+      }
+      return null;
+    }
     if (!item || typeof item !== "object") return null;
     const candidates = [];
     const directId = item.videoId;
@@ -1629,6 +1649,18 @@ window.addEventListener("unhandledrejection", (e) => {
       }
     }
     return null;
+  }
+
+  function iuBuildYouTubeThumb(id) {
+    const vid = String(id || "").trim();
+    if (!vid) return "";
+    return `https://i.ytimg.com/vi/${vid}/hqdefault.jpg`;
+  }
+
+  function iuBuildYouTubeEmbedUrl(id) {
+    const vid = String(id || "").trim();
+    if (!vid) return "";
+    return `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0`;
   }
 
   function normalizeVideoList(input) {
@@ -1928,7 +1960,21 @@ window.addEventListener("unhandledrejection", (e) => {
     // CLS mitigation: žádný mezistav "prázdný feed" (clear + append v cyklu).
     // Postav nový obsah mimo DOM a jednorázově ho vyměň přes replaceChildren().
     const nextNodes = [];
-    for (const item of visibleItems) {
+    const isMainAll =
+      Array.isArray(activeSections) &&
+      activeSections.length === 1 &&
+      String(activeSections[0]) === "vse";
+    const shouldInjectVideos =
+      Boolean(IU_FEED_VIDEO_ENABLED) &&
+      Number(IU_FEED_VIDEO_EVERY) > 0 &&
+      isMainAll;
+    const videoPool = shouldInjectVideos ? normalizeVideoList(state.videosRaw || {}) : [];
+    let injectedVideosCount = 0;
+    let renderedArticlesCount = 0;
+    let injectedCursor = 0;
+
+    for (let i = 0; i < visibleItems.length; i++) {
+      const item = visibleItems[i];
       const kind = String(item.contentType || "").toLowerCase();
       if (!ALLOWED_CONTENT_TYPES.has(kind)) {
         persistLastError("Invariant breach: neznámý contentType");
@@ -1950,6 +1996,25 @@ window.addEventListener("unhandledrejection", (e) => {
         continue;
       }
       nextNodes.push(node);
+
+      // Inject YouTube preview cards after every N articles (main feed only).
+      if (shouldInjectVideos && kind === "article") {
+        renderedArticlesCount += 1;
+        if (renderedArticlesCount % Number(IU_FEED_VIDEO_EVERY) === 0 && videoPool.length) {
+          const v = videoPool[injectedCursor % videoPool.length];
+          injectedCursor += 1;
+          const vMarkup = buildYouTubeVideoPreviewCard(v);
+          if (vMarkup) {
+            const t2 = document.createElement("template");
+            t2.innerHTML = vMarkup.trim();
+            const vNode = t2.content.firstElementChild;
+            if (vNode && vNode instanceof HTMLElement) {
+              nextNodes.push(vNode);
+              injectedVideosCount += 1;
+            }
+          }
+        }
+      }
     }
 
     // "Load more" button (no infinite auto-load)
@@ -1995,6 +2060,7 @@ window.addEventListener("unhandledrejection", (e) => {
       pageSize,
       page,
       renderedCount,
+      injectedVideosCount,
       feedChildrenAfter,
       typeCounts,
       hasMore,
@@ -2215,6 +2281,40 @@ function buildVideoAsArticleCard(it) {
         ${publishedAt ? `<div class="news-row3"><span class="meta-time">Publikováno: ${escapeHtml(publishedAt)}</span></div>` : ""}
       </article>
     `;
+  }
+
+  function buildYouTubeVideoPreviewCard(it) {
+    try {
+      const id = (it && it.videoId) ? String(it.videoId).trim() : (iuExtractYouTubeId(it) || iuExtractYouTubeId(it?.url || "") || "");
+      if (!id) return "";
+      const title = safeText(it?.title || "Video");
+      const channel = safeText(it?.channel || "YouTube");
+      const publishedAt = fmtDate(it?.publishedAt || it?.date || it?.published || "");
+      const thumb = iuBuildYouTubeThumb(id);
+      const aria = `Přehrát video: ${title}`;
+      return `
+        <article class="news-card iuVideoCard" data-feed-type="video-preview" data-ytid="${escapeHtml(id)}">
+          <div class="iuVideoFrame">
+            <button type="button" class="iuVideoPoster" style="--iuVideoThumb: url('${escapeHtml(thumb)}');" aria-label="${escapeHtml(aria)}">
+              <span class="iuVideoPlay" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
+                  <path d="M9 7.5v9l8-4.5-8-4.5z" fill="currentColor"></path>
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div class="iuVideoMeta">
+            <div class="iuVideoTitle">${escapeHtml(title)}</div>
+            <div class="iuVideoSub">
+              <span class="iuVideoChannel">${escapeHtml(channel)}</span>
+              ${publishedAt ? `<span class="iuVideoDot">•</span><span class="iuVideoTime">${escapeHtml(publishedAt)}</span>` : ""}
+            </div>
+          </div>
+        </article>
+      `;
+    } catch {
+      return "";
+    }
   }
 
   function buildAdHtml(it) {
@@ -4343,6 +4443,7 @@ function buildVideoAsArticleCard(it) {
     setSectionsFromHash();
     iuInitTopbarWatcher();
     iuInitTopbarSearchToggle();
+    iuInitFeedVideoPreviewEmbeds();
 
     if (typeof window.iuDailyPanelInit === "function") {
       window.iuDailyPanelInit();
@@ -4448,6 +4549,46 @@ function buildVideoAsArticleCard(it) {
     updateEventsUI();
     finalStateReport();
 
+  }
+
+  function iuInitFeedVideoPreviewEmbeds() {
+    try {
+      if (window.__iu_feedVideoPreviewInit) return;
+      window.__iu_feedVideoPreviewInit = 1;
+    } catch {}
+
+    document.addEventListener("click", (e) => {
+      try {
+        const t = e && e.target;
+        const btn = t && t.closest ? t.closest(".iuVideoPoster") : null;
+        if (!btn) return;
+        const card = btn.closest(".iuVideoCard");
+        const frame = btn.closest(".iuVideoFrame");
+        if (!card || !frame) return;
+        const id = (card.getAttribute("data-ytid") || "").trim();
+        if (!id) return;
+        if (card.getAttribute("data-iu-loaded") === "1") return;
+        e.preventDefault();
+
+        const src = iuBuildYouTubeEmbedUrl(id);
+        if (!src) return;
+
+        const iframe = document.createElement("iframe");
+        iframe.src = src;
+        iframe.loading = "lazy";
+        iframe.setAttribute("title", "YouTube video");
+        iframe.setAttribute(
+          "allow",
+          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        );
+        iframe.referrerPolicy = "strict-origin-when-cross-origin";
+        iframe.allowFullscreen = true;
+        iframe.className = "iuVideoIframe";
+
+        frame.replaceChildren(iframe);
+        card.setAttribute("data-iu-loaded", "1");
+      } catch {}
+    }, { passive: false });
   }
 
   document.addEventListener("visibilitychange", () => {
