@@ -6978,26 +6978,49 @@ body.iuRailHidden #newsList > #iuHomeView{
   display: none !important;
 }
 
-/* === FIX: debug box must not cause CLS === */
+/* === FIX: debug box must not cause CLS (fixed height + contain) === */
 
-/* default: debug box outside debug mode must not exist in layout */
+/* outside debug: never render */
 html:not([data-iu-debug="1"]) #iuDebugBox{
   display: none !important;
 }
 
-/* debug mode: fixed overlay (no layout impact) */
+/* debug: fixed overlay with fixed height (no auto sizing) */
 html[data-iu-debug="1"] #iuDebugBox{
   position: fixed !important;
-  bottom: 0;
   left: 0;
   right: 0;
-  max-height: 35vh;
-  overflow: auto;
+  bottom: 0;
+
+  /* FIXED HEIGHT to prevent reflow/CLS */
+  height: 220px;
+  max-height: none !important;
+
   z-index: 9999;
+
+  /* isolate internal layout changes */
+  contain: layout paint size;
+  overflow: hidden; /* no outer scroll */
 }
 
-html[data-iu-debug="1"] #iuDebugBox pre{
-  white-space: pre-wrap;
-  max-height: 25vh;
+/* internal scrolling only */
+html[data-iu-debug="1"] #iuDebugBox > pre{
+  margin: 0;
+  height: 140px;      /* fixed */
+  max-height: none !important;
   overflow: auto;
+  white-space: pre-wrap;
+}
+
+/* keep buttons stable (no wrap-induced height change) */
+html[data-iu-debug="1"] #iuDebugBox > div{
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;   /* if too many buttons, scroll horizontally */
+  padding: 8px;
+}
+html[data-iu-debug="1"] #iuDebugBox > div > button{
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
