@@ -68,6 +68,7 @@ TIMEOUT_S = 15
 RETRIES = 2
 SLEEP_MIN_S = 0.3
 SLEEP_MAX_S = 0.6
+EDGE_SCREENSHOT_TIMEOUT_S = 45
 
 DEFAULT_EDGE_PATH = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 
@@ -977,7 +978,7 @@ def write_proof_files(
         file_url,
     ]
     try:
-        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=EDGE_SCREENSHOT_TIMEOUT_S)
     except Exception as e:
         # ensure we don't accidentally pass without png
         if png_path.exists():
