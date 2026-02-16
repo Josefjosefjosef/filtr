@@ -6942,3 +6942,33 @@ main#content,
   background-color: #fff !important;
   display: block;
 }
+
+/* === iu: rail toggle === */
+html.iuRailHidden #iuLeftRail,
+body.iuRailHidden #iuLeftRail{
+  display: none !important;
+}
+
+/* Flex layout: ensure middle column fills available width */
+html.iuRailHidden #newsList > #feed,
+body.iuRailHidden #newsList > #feed,
+html.iuRailHidden #newsList > #iuRadioView,
+body.iuRailHidden #newsList > #iuRadioView,
+html.iuRailHidden #newsList > #iuJrEmptyView,
+body.iuRailHidden #newsList > #iuJrEmptyView,
+html.iuRailHidden #newsList > #iuMapyView,
+body.iuRailHidden #newsList > #iuMapyView,
+html.iuRailHidden #newsList > #iuTravelView,
+body.iuRailHidden #newsList > #iuTravelView,
+html.iuRailHidden #newsList > #iuWeatherView,
+body.iuRailHidden #newsList > #iuWeatherView,
+html.iuRailHidden #newsList > #iuHolidaysView,
+body.iuRailHidden #newsList > #iuHolidaysView,
+html.iuRailHidden #newsList > #iuTvOnlineView,
+body.iuRailHidden #newsList > #iuTvOnlineView,
+html.iuRailHidden #newsList > #iuHomeView,
+body.iuRailHidden #newsList > #iuHomeView{
+  flex: 0 0 100%;
+  width: 100% !important;
+  min-width: 0;
+}
