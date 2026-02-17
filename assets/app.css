@@ -8215,3 +8215,122 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   border-left: 4px solid var(--iuSectionAccent, #b9bcc2);
 }
 
+/* ======================================================================
+   FINAL UI — SOLID CHIPS only in MAIN SECTION VIEWS (NOT MindMenu)
+   ====================================================================== */
+
+/* Helper: solid chip style (no tints/blends) */
+#newsList .iuRadioChip{
+  filter: none !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
+}
+#newsList .iuRadioChip::before,
+#newsList .iuRadioChip::after{
+  content: none !important;
+  display: none !important;
+}
+
+/* Apply SOLID fill only inside selected section views */
+#newsList #iuRadioView .iuRadioChip,
+#newsList #iuTvOnlineView .iuRadioChip,
+#newsList #iuWeatherView .iuRadioChip,
+#newsList #iuMapyView .iuRadioChip,
+#newsList #iuMapsView .iuRadioChip,
+#newsList #iuTravelView .iuRadioChip,
+#newsList #iuTvProgramView .iuRadioChip,
+#newsList #iuCultureView .iuRadioChip,
+#newsList #iuAdsView .iuRadioChip{
+  background: var(--iuSectionAccent, #b9bcc2) !important;
+  border: 0 !important;
+  border-left: 0 !important;
+}
+
+/* Text readable on solid bg (only in those views) */
+#newsList #iuRadioView .iuRadioChipTitle,
+#newsList #iuRadioView .iuRadioChipDesc,
+#newsList #iuTvOnlineView .iuRadioChipTitle,
+#newsList #iuTvOnlineView .iuRadioChipDesc,
+#newsList #iuWeatherView .iuRadioChipTitle,
+#newsList #iuWeatherView .iuRadioChipDesc,
+#newsList #iuMapyView .iuRadioChipTitle,
+#newsList #iuMapyView .iuRadioChipDesc,
+#newsList #iuMapsView .iuRadioChipTitle,
+#newsList #iuMapsView .iuRadioChipDesc,
+#newsList #iuTravelView .iuRadioChipTitle,
+#newsList #iuTravelView .iuRadioChipDesc,
+#newsList #iuTvProgramView .iuRadioChipTitle,
+#newsList #iuTvProgramView .iuRadioChipDesc,
+#newsList #iuCultureView .iuRadioChipTitle,
+#newsList #iuCultureView .iuRadioChipDesc,
+#newsList #iuAdsView .iuRadioChipTitle,
+#newsList #iuAdsView .iuRadioChipDesc{
+  color: #0b1b2b !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+
+/* Hover/active: keep same background (no shade). Focus: ring only */
+#newsList #iuRadioView .iuRadioChip:hover,
+#newsList #iuTvOnlineView .iuRadioChip:hover,
+#newsList #iuWeatherView .iuRadioChip:hover,
+#newsList #iuMapyView .iuRadioChip:hover,
+#newsList #iuMapsView .iuRadioChip:hover,
+#newsList #iuTravelView .iuRadioChip:hover,
+#newsList #iuTvProgramView .iuRadioChip:hover,
+#newsList #iuCultureView .iuRadioChip:hover,
+#newsList #iuAdsView .iuRadioChip:hover,
+#newsList #iuRadioView .iuRadioChip:active,
+#newsList #iuTvOnlineView .iuRadioChip:active,
+#newsList #iuWeatherView .iuRadioChip:active,
+#newsList #iuMapyView .iuRadioChip:active,
+#newsList #iuMapsView .iuRadioChip:active,
+#newsList #iuTravelView .iuRadioChip:active,
+#newsList #iuTvProgramView .iuRadioChip:active,
+#newsList #iuCultureView .iuRadioChip:active,
+#newsList #iuAdsView .iuRadioChip:active{
+  background: var(--iuSectionAccent, #b9bcc2) !important;
+  box-shadow: none !important;
+}
+
+#newsList #iuRadioView .iuRadioChip:focus-visible,
+#newsList #iuTvOnlineView .iuRadioChip:focus-visible,
+#newsList #iuWeatherView .iuRadioChip:focus-visible,
+#newsList #iuMapyView .iuRadioChip:focus-visible,
+#newsList #iuMapsView .iuRadioChip:focus-visible,
+#newsList #iuTravelView .iuRadioChip:focus-visible,
+#newsList #iuTvProgramView .iuRadioChip:focus-visible,
+#newsList #iuCultureView .iuRadioChip:focus-visible,
+#newsList #iuAdsView .iuRadioChip:focus-visible{
+  outline: 3px solid #0b1b2b !important;
+  outline-offset: 2px !important;
+}
+
+/* ======================================================================
+   FINAL UI — MyUzel: NO fill until user sets a custom color
+   When colored: solid fill (no tints)
+   ====================================================================== */
+
+/* Default (unset): transparent, no fill */
+#newsList .iuMyUzelView .iuRadioChip{
+  background: transparent !important;
+  border: 1px solid rgba(11,27,43,0.18) !important; /* neutrál, ne “odstín sekce” */
+  border-left: 1px solid rgba(11,27,43,0.18) !important;
+}
+
+/* Colored only when JS flags it */
+#newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChip{
+  background: var(--iuMyUzelAccent, #b9bcc2) !important;
+  border: 0 !important;
+  border-left: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+#newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChipTitle,
+#newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChipDesc{
+  color: #0b1b2b !important;
+  opacity: 1 !important;
+}
+
