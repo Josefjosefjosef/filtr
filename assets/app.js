@@ -4549,6 +4549,8 @@ function buildVideoAsArticleCard(it) {
       if (window.__iu_mobileFocusInit) return;
       window.__iu_mobileFocusInit = 1;
 
+      const mindMenuTarget = ".iu-rightContent";
+
       const railToTarget = {
         media: "#feed",
         radio: "#iuRadioView",
@@ -4564,7 +4566,7 @@ function buildVideoAsArticleCard(it) {
       function readSectionsFromLeftRail() {
         const out = [];
         // 1) MindMenu is always first
-        out.push({ label: "MindMenu", action: "mindmenu", accent: "mindmenu" });
+        out.push({ label: "MindMenu", target: mindMenuTarget, accent: "mindmenu" });
 
         // 2) Others in the same order as PC left rail
         const items = Array.from(document.querySelectorAll(".iu-leftNavItem[data-rail][data-accent]"));
@@ -4698,17 +4700,9 @@ function buildVideoAsArticleCard(it) {
         const t = e && e.target;
         const btn = t && t.closest ? t.closest(".iuMobileFocusBtn") : null;
         if (!btn || !root.contains(btn)) return;
-        const action = String(btn.getAttribute("data-action") || "").trim();
         const target = String(btn.getAttribute("data-target") || "").trim();
         const accent = String(btn.getAttribute("data-accent") || "").trim();
         const label = String(btn.textContent || "").trim();
-        if (action === "mindmenu") {
-          try {
-            const menuBtn = document.getElementById("menuBtn");
-            if (menuBtn) menuBtn.click();
-          } catch {}
-          return;
-        }
         if (!target) return;
 
         if (root.classList.contains("is-open")) {

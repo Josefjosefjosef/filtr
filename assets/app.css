@@ -7581,6 +7581,10 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   #topbarWrap{
     height: var(--iuMobileBtnH);
   }
+  .topbar-new,
+  .topbar-new-inner{
+    height: var(--iuMobileBtnH);
+  }
   #topbarWrap .topbar-new-inner,
   #topbarWrap .topbar-new-main{
     height: 100%;
@@ -7589,9 +7593,23 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     align-items: center;
   }
 
+  /* Default mobile screen: ONLY focus buttons (no content) */
+  #leftContent{
+    display: none !important;
+  }
+  .iu-mobileStack{
+    display: none !important;
+  }
+  .iu-rightContent{
+    display: none !important;
+  }
+  .iuMobileFocus.is-open .iuMobileFocusPanel .iu-rightContent{
+    display: block !important;
+  }
+
   .iuMobileFocus{
     width: 100%;
-    padding: 0 12px 0 12px;
+    padding: 0;
   }
 
   .iuMobileFocusList,
@@ -7603,27 +7621,19 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     width: 100%;
     height: var(--iuMobileBtnH);
     border: 0;
-    border-radius: 14px;
-    padding: 0 16px;
+    border-radius: 0;
+    padding: 0 12px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    font-weight: 700;
+    justify-content: center;
+    text-align: center;
+    font-weight: 600;
+    font-size: 18px;
     color: rgba(255,255,255,.98);
     background: var(--iuMobileFocusAccent, var(--iuNavAccent-media, #0B2A4A));
-    box-shadow: 0 10px 26px rgba(0,0,0,.18);
+    box-shadow: none;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-  }
-
-  .iuMobileFocusBtn::after{
-    content: "▾";
-    font-weight: 900;
-    opacity: .92;
-  }
-
-  .iuMobileFocusBtn.iuMobileFocusBtn--active::after{
-    content: "✕";
   }
 
   .iuMobileFocusPanel{
