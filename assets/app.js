@@ -7946,6 +7946,15 @@ function buildVideoAsArticleCard(it) {
             try { railItem.style.setProperty("--iuMyUzelAccent", c); } catch {}
           }
 
+          // Apply to any matching rail nodes (future-proof; avoids regressions on duplicates)
+          try{
+            const railItems = document.querySelectorAll(`.iuMyUzelItem[data-slot="${i+1}"], .iuMyUzelItem[data-myuzel-slot="${i+1}"]`);
+            railItems.forEach((el) => {
+              try { el.style.setProperty("--iuNavAccent", c); } catch {}
+              try { el.style.setProperty("--iuMyUzelAccent", c); } catch {}
+            });
+          }catch{}
+
           // --- APPLY COLOR TO VIEW WRAPPER ---
           const viewEl = document.getElementById(`iuMyUzelView${i+1}`);
           if (viewEl) {
@@ -8024,6 +8033,16 @@ function buildVideoAsArticleCard(it) {
       );
     }
     btnWrap.innerHTML = rows.join("") + `<div class="iuMyUzelInlineMsg" id="iuMyUzelMsg${s}" hidden></div>`;
+
+    // FINAL: apply chip accent inline (belt + suspenders)
+    try{
+      const c = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
+      const chips = btnWrap.querySelectorAll(".iuMyUzelChip");
+      chips.forEach((chip) => {
+        try { chip.style.borderLeft = `4px solid ${c}`; } catch {}
+        try { chip.style.setProperty("--iuSectionAccent", c); } catch {}
+      });
+    }catch{}
   }
 
   function iuMyUzelApplyViewVisibility(sectionKey){

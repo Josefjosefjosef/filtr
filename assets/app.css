@@ -8206,3 +8206,12 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   color:#ff7a00;
 }
 
+/* FINAL FIX — MyUzel section color */
+.iuMyUzelItem{
+  color: var(--iuNavAccent, var(--iuMyUzelAccent, var(--iuMyUzelIcon))) !important;
+}
+
+.iuMyUzelView .iuRadioChip{
+  border-left: 4px solid var(--iuSectionAccent, #b9bcc2);
+}
+
