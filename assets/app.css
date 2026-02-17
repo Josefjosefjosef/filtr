@@ -7569,6 +7569,86 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
    ============================================================ */
 
 /* ============================================================
+   MOBILE — Focus Accordion (active section under topbar)
+   ============================================================ */
+
+@media (max-width: 900px){
+  .iuMobileFocus{
+    width: 100%;
+    padding: 10px 12px 0 12px;
+  }
+
+  .iuMobileFocusList,
+  .iuMobileFocusActive{
+    width: 100%;
+  }
+
+  .iuMobileFocusBtn{
+    width: 100%;
+    min-height: 60px;
+    border: 0;
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 800;
+    letter-spacing: .2px;
+    color: rgba(255,255,255,.98);
+    background: var(--iuMobileFocusAccent, var(--iuNavAccent-media, #0B2A4A));
+    box-shadow: 0 10px 26px rgba(0,0,0,.18);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .iuMobileFocusBtn:active{
+    transform: translateY(1px);
+  }
+
+  .iuMobileFocusBtn::after{
+    content: "▾";
+    font-weight: 900;
+    opacity: .92;
+  }
+
+  .iuMobileFocusBtn.iuMobileFocusBtn--active::after{
+    content: "✕";
+  }
+
+  .iuMobileFocusPanel{
+    margin-top: 10px;
+    padding: 10px 0 0 0;
+  }
+
+  .iuMobileFocus.is-open .iuMobileFocusList{
+    display: none;
+  }
+
+  .iuMobileFocus.is-open .iuMobileFocusActive{
+    display: block;
+  }
+
+  .iuMobileFocusList{
+    display: block;
+  }
+
+  .iuMobileFocusActive{
+    display: none;
+  }
+
+  /* Accent mapping (match desktop palette vars) */
+  .iuMobileFocusBtn[data-accent="media"]{     --iuMobileFocusAccent: var(--iuNavAccent-media, #0B2A4A); }
+  .iuMobileFocusBtn[data-accent="radio"]{     --iuMobileFocusAccent: var(--iuNavAccent-radio, #6D28D9); }
+  .iuMobileFocusBtn[data-accent="pocasi"]{    --iuMobileFocusAccent: var(--iuNavAccent-pocasi, #2563EB); }
+  .iuMobileFocusBtn[data-accent="namedays"]{  --iuMobileFocusAccent: var(--iuNavAccent-namedays, #7C3AED); }
+  .iuMobileFocusBtn[data-accent="tvonline"]{  --iuMobileFocusAccent: var(--iuNavAccent-tvonline, #DC2626); }
+  .iuMobileFocusBtn[data-accent="tvprogram"]{ --iuMobileFocusAccent: var(--iuNavAccent-tvonline, #DC2626); }
+  .iuMobileFocusBtn[data-accent="travel"]{    --iuMobileFocusAccent: var(--iuNavAccent-culture, #EA580C); }
+  .iuMobileFocusBtn[data-accent="mapy"]{      --iuMobileFocusAccent: var(--iuNavAccent-mapy, #16A34A); }
+  .iuMobileFocusBtn[data-accent="mindmenu"]{  --iuMobileFocusAccent: #111827; }
+}
+
+/* ============================================================
    FIX — video poster nesmí blokovat iframe
    ============================================================ */
 
