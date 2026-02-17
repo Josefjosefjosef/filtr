@@ -7926,6 +7926,34 @@ function buildVideoAsArticleCard(it) {
     try{
       const st = iuMyUzelValidateState(state);
       localStorage.setItem(MYUZEL_STORAGE_KEY, JSON.stringify(st));
+
+      // FINAL: always apply saved colors to rail + views (stable even after reload)
+      try{
+        const items = Array.from(document.querySelectorAll('.iuMyUzelItem'));
+        for (let i = 0; i < 5; i++) {
+          const sec = st.sections && st.sections[i] ? st.sections[i] : null;
+          if (!sec) continue;
+          const c = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
+
+          // --- APPLY COLOR TO RAIL ITEM ---
+          const railItem =
+            document.querySelector(`.iuMyUzelItem[data-slot="${i+1}"]`) ||
+            document.querySelector(`.iuMyUzelItem[data-myuzel-slot="${i+1}"]`) ||
+            items[i];
+
+          if (railItem) {
+            try { railItem.style.setProperty("--iuNavAccent", c); } catch {}
+            try { railItem.style.setProperty("--iuMyUzelAccent", c); } catch {}
+          }
+
+          // --- APPLY COLOR TO VIEW WRAPPER ---
+          const viewEl = document.getElementById(`iuMyUzelView${i+1}`);
+          if (viewEl) {
+            try { viewEl.style.setProperty("--iuMyUzelAccent", c); } catch {}
+          }
+        }
+      }catch{}
+
       return st;
     }catch{
       return iuMyUzelValidateState(state);
