@@ -125,9 +125,10 @@ window.addEventListener("unhandledrejection", (e) => {
   const IU_FEED_VIDEO_ENABLED = true;
   const IU_FEED_VIDEO_EVERY = 8;
   const IU_FEED_VIDEO_MAX_PER_PAGE = 25;
-  const IU_VIDEO_PICK_WINDOW = 40;
+  const IU_VIDEO_PICK_WINDOW = 240;
   const IU_VIDEO_QUEUE_PREFIX = "iu_video_queue_v1:";
   const IU_VIDEO_SEEN_KEY_V1 = "iu_video_seen_v1";
+  const AGE_STEPS_H = [48, 72, 96, 168, 336]; // progressive fill (max 14 dní)
 
   function debugLog(...args) {
     if (!isDebugLogging) return;
@@ -1855,7 +1856,7 @@ window.addEventListener("unhandledrejection", (e) => {
   }
 
   function iuUpdateVideoQueue(sectionKey, slotCount, videoPool, cfg) {
-    const debug = Boolean(location.search.includes("debug=1"));
+    const iuDebug = Boolean(location.search.includes("debug=1"));
     const n = Math.max(0, Math.min(25, Number(slotCount) || 0));
     if (n <= 0) return iuInitQueue(0);
 
@@ -1869,6 +1870,9 @@ window.addEventListener("unhandledrejection", (e) => {
     const pool = Array.isArray(videoPool) ? videoPool : [];
     if (!pool.length) return queue0;
 
+    const dropped = [];
+    const poolRawLen = pool.length;
+
     const seen = iuGetVideoSeenMapV1();
     iuPruneVideoSeen(seen, Number(cfg?.dedupeDays) || 30);
 
@@ -1878,24 +1882,98 @@ window.addEventListener("unhandledrejection", (e) => {
     const headMs = headDt ? headDt.getTime() : 0;
 
     const queueIdSet = new Set(beforeIds);
-    const candidates = pool.filter((v) => {
+    const cfgTitleBlock = Array.isArray(state?.videosRaw?.titleBlocklist) ? state.videosRaw.titleBlocklist : [];
+    const durMinSec = Number(state?.videosRaw?.durationMinSec) || 0;
+    const durMaxSec = Number(state?.videosRaw?.durationMaxSec) || 0;
+
+    function titleBlocked(t) {
+      try {
+        const s = String(t || "").toLowerCase();
+        for (const token of cfgTitleBlock) {
+          const x = String(token || "").trim().toLowerCase();
+          if (!x) continue;
+          if (s.includes(x.toLowerCase())) return true;
+        }
+      } catch {}
+      return false;
+    }
+
+    function isAllowedBase(v) {
       const id = String(v?.videoId || "").trim();
-      if (!id) return false;
+      if (!id) {
+        if (iuDebug && dropped.length < 10) dropped.push({ id: "", reason: "no_id" });
+        return false;
+      }
       const dt = iuSafeParseDate(v?.publishedAt || "");
-      if (!dt) return false;
+      if (!dt) {
+        if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "bad_publishedAt" });
+        return false;
+      }
+      const title = String(v?.title || "");
+      if (cfgTitleBlock.length && title && titleBlocked(title)) {
+        if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "title_blocklist" });
+        return false;
+      }
+      const dur = Number(v?.durationSec || 0) || 0;
+      if (durMinSec > 0 && dur > 0 && dur < durMinSec) {
+        if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "duration_too_short" });
+        return false;
+      }
+      if (durMaxSec > 0 && dur > 0 && dur > durMaxSec) {
+        if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "duration_too_long" });
+        return false;
+      }
       return true;
-    });
+    }
+
+    function filterByAgeHours(videos, ageH) {
+      const out = [];
+      const cutoff = Date.now() - Number(ageH) * 3600 * 1000;
+      for (const v of videos) {
+        if (!isAllowedBase(v)) continue;
+        const dt = iuSafeParseDate(v?.publishedAt || "");
+        const ms = dt ? dt.getTime() : 0;
+        if (!ms || ms < cutoff) {
+          if (iuDebug && dropped.length < 10) {
+            const id = String(v?.videoId || "").trim();
+            dropped.push({ id, reason: `age_gt_${ageH}h` });
+          }
+          continue;
+        }
+        out.push(v);
+      }
+      return out;
+    }
+
+    // Progressive fill: start strict (48h) and widen until we can fill slots.
+    let usedAgeH = AGE_STEPS_H[AGE_STEPS_H.length - 1];
+    let candidates = [];
+    for (const ageH of AGE_STEPS_H) {
+      usedAgeH = ageH;
+      candidates = filterByAgeHours(pool, ageH);
+      if (candidates.length >= effectiveSlots + 20) break;
+    }
+
+    const poolAfterAgeLen = candidates.length;
+    const poolAfterDedupeLen = candidates.filter((v) => !seen[String(v?.videoId || "").trim()]).length;
+
+    // If queue has empty slots, allow filling from newest candidates (not only "newer than head").
+    const hasEmptySlots = (queue0?.slots || []).some((s) => !s || !String(s.videoId || "").trim());
+    const fillMode = hasEmptySlots || beforeIds.length < effectiveSlots;
 
     const newOnly = candidates.filter((v) => {
       const id = String(v?.videoId || "").trim();
       const dt = iuSafeParseDate(v?.publishedAt || "");
       const ms = dt ? dt.getTime() : 0;
-      return !queueIdSet.has(id) && (headMs === 0 ? true : ms > headMs);
+      if (!id || !ms) return false;
+      if (queueIdSet.has(id)) return false;
+      if (fillMode) return true;
+      return headMs === 0 ? true : ms > headMs;
     });
 
     // Build newHead from newest window only (diversity inside the window).
-    const pickWindow = Number(IU_VIDEO_PICK_WINDOW) > 0 ? Number(IU_VIDEO_PICK_WINDOW) : 40;
-    const windowSizes = [pickWindow, 80];
+    const pickWindow = Number(IU_VIDEO_PICK_WINDOW) > 0 ? Number(IU_VIDEO_PICK_WINDOW) : 240;
+    const windowSizes = [pickWindow, 320];
     const newHead = [];
     const headMax = effectiveSlots;
 
@@ -1903,7 +1981,10 @@ window.addEventListener("unhandledrejection", (e) => {
       const id = String(cand?.videoId || "").trim();
       if (!id) return false;
       // dedupe only for newHead additions (do NOT evict existing queue slots)
-      if (seen[id]) return false;
+      if (seen[id]) {
+        if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "seen_dedupe" });
+        return false;
+      }
       // simple diversity inside head build
       const lang = String(cand?.lang || "").toLowerCase() === "cz" ? "cz" : "en";
       const cat = String(cand?.category || "").trim() || "other";
@@ -1917,9 +1998,18 @@ window.addEventListener("unhandledrejection", (e) => {
       const maxCat = Number(cfg?.maxSameCategoryStreak) || 2;
       const gap = Number(cfg?.minGapSameSource) || 5;
 
-      if (maxLang >= 2 && lastLangs.length >= (maxLang - 1) && lastLangs.every((x) => x === lang)) return false;
-      if (maxCat >= 2 && lastCats.length >= (maxCat - 1) && lastCats.every((x) => x === cat)) return false;
-      if (gap > 0 && lastSources.slice(-gap).includes(src)) return false;
+      if (maxLang >= 2 && lastLangs.length >= (maxLang - 1) && lastLangs.every((x) => x === lang)) {
+        if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "diversity_lang_streak" });
+        return false;
+      }
+      if (maxCat >= 2 && lastCats.length >= (maxCat - 1) && lastCats.every((x) => x === cat)) {
+        if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "diversity_cat_streak" });
+        return false;
+      }
+      if (gap > 0 && lastSources.slice(-gap).includes(src)) {
+        if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "diversity_source_gap" });
+        return false;
+      }
       return true;
     }
 
@@ -1938,11 +2028,7 @@ window.addEventListener("unhandledrejection", (e) => {
       if (newHead.length) break;
     }
 
-    // If no new arrivals, keep queue stable.
-    if (!newHead.length) {
-      iuSaveVideoSeenMapV1(seen);
-      return queue0;
-    }
+    // If no new arrivals but we still have empty slots, we'll fill tail from the newest pool.
 
     const oldSlotsNonEmpty = (queue0.slots || []).filter((s) => s && s.videoId);
     const oldAsVideos = oldSlotsNonEmpty.map((s) => ({
@@ -1953,21 +2039,67 @@ window.addEventListener("unhandledrejection", (e) => {
       category: s.cat,
     }));
 
-    // newQueue = unique(newHead + oldQueueSlots), then slice to slotCount
-    const combined = iuUniqueQueueSlots([
+    // newQueue = unique(newHead + oldQueueSlots), then fill tail from newest candidates if needed.
+    let combined = iuUniqueQueueSlots([
       ...newHead.map((v, idx) => iuBuildQueueSlotFromVideo(v, idx + 1)),
       ...oldAsVideos.map((v, idx) => iuBuildQueueSlotFromVideo(v, newHead.length + idx + 1)),
     ]);
 
-    const normalizedSlots = combined
-      .slice(0, effectiveSlots)
-      .map((s, i) => ({ ...s, slot: i + 1 }));
+    const combinedIds = new Set(combined.map((s) => String(s?.videoId || "").trim()).filter(Boolean));
+    const buffer = Math.max(20, effectiveSlots);
+    const eligibleWindow = candidates.slice(0, effectiveSlots + buffer);
+
+    // Tail fill pass 1: prefer unseen (but do not evict existing seen slots)
+    for (const v of eligibleWindow) {
+      if (combined.length >= effectiveSlots) break;
+      const id = String(v?.videoId || "").trim();
+      if (!id || combinedIds.has(id)) continue;
+      if (seen[id]) continue;
+      combined.push(iuBuildQueueSlotFromVideo(v, combined.length + 1));
+      combinedIds.add(id);
+    }
+    // Tail fill pass 2: allow seen (still newest-first)
+    for (const v of eligibleWindow) {
+      if (combined.length >= effectiveSlots) break;
+      const id = String(v?.videoId || "").trim();
+      if (!id || combinedIds.has(id)) continue;
+      combined.push(iuBuildQueueSlotFromVideo(v, combined.length + 1));
+      combinedIds.add(id);
+    }
+
+    const normalizedSlots = iuNormalizeQueue(
+      { updatedAt: Date.now(), slots: combined.slice(0, effectiveSlots) },
+      effectiveSlots
+    ).slots;
 
     const queue1 = { updatedAt: Date.now(), slots: normalizedSlots };
     iuWriteQueue(sectionKey, queue1);
     iuSaveVideoSeenMapV1(seen);
 
-    if (debug) {
+    const poolEligibleLen = combined.length;
+    if (iuDebug) {
+      try {
+        console.info(
+          "[iuVideoDiag] articlesTotal=%d insertEvery=%d slotCount=%d maxVideosPerPage=%d",
+          Number(cfg?.articleTotal) || -1,
+          insertEveryN,
+          effectiveSlots,
+          maxVideosPerPage
+        );
+        console.info(
+          "[iuVideoDiag] poolRaw=%d poolAfterAge=%d poolAfterDedupe=%d poolEligible=%d",
+          poolRawLen,
+          poolAfterAgeLen,
+          poolAfterDedupeLen,
+          poolEligibleLen
+        );
+        console.info("[iuVideoDiag] queueSlots=%d", (queue1 && queue1.slots ? queue1.slots.length : -1));
+        console.info("[iuVideoDiag] droppedSample=%o", dropped);
+        console.info("[iuVideoDiag] ageStepUsedH=%d", usedAgeH);
+      } catch {}
+    }
+
+    if (iuDebug) {
       try {
         console.info("[iuVideoQueue] before=", beforeIds.slice(0, effectiveSlots));
         console.info("[iuVideoQueue] after =", iuQueueIds(queue1).slice(0, effectiveSlots));
@@ -2532,7 +2664,7 @@ window.addEventListener("unhandledrejection", (e) => {
       !isHome &&
       !hasVideoSection;
     const videoPool = shouldInjectVideos ? normalizeVideoList(state.videosRaw || {}) : [];
-    const insertEveryN = Number(state?.videosRaw?.insertEveryN) || Number(IU_FEED_VIDEO_EVERY) || 8;
+    const insertEveryN = Number(IU_FEED_VIDEO_EVERY) || 8;
     const maxVideosPerPage = Number(state?.videosRaw?.maxVideosPerPage) || Number(IU_FEED_VIDEO_MAX_PER_PAGE) || 25;
     const videoCfg = {
       primaryDays: Number(state?.videosRaw?.freshDaysPrimary) || Number(state?.videosRaw?.freshness?.primaryDays) || 14,
@@ -2556,14 +2688,27 @@ window.addEventListener("unhandledrejection", (e) => {
       0
     );
     const slotCount = shouldInjectVideos
-      ? Math.min(maxVideosPerPage, Math.floor(totalArticlesVisible / insertEveryN))
+      ? Math.min(maxVideosPerPage, Math.floor(totalArticlesVisible / (Number(IU_FEED_VIDEO_EVERY) || insertEveryN)))
       : 0;
+    const iuDebug = Boolean(location.search.includes("debug=1"));
+    if (iuDebug) {
+      try {
+        console.info(
+          "[iuVideoDiag] articlesTotal=%d insertEvery=%d slotCount=%d maxVideosPerPage=%d",
+          totalArticlesVisible,
+          Number(IU_FEED_VIDEO_EVERY) || insertEveryN,
+          slotCount,
+          maxVideosPerPage
+        );
+      } catch {}
+    }
     const sectionKey =
       Array.isArray(activeSections) && activeSections.length === 1 ? String(activeSections[0]) : "vse";
     const queue = shouldInjectVideos
       ? iuUpdateVideoQueue(sectionKey, slotCount, videoPool, {
           insertEveryN,
           maxVideosPerPage,
+          articleTotal: totalArticlesVisible,
           dedupeDays: videoCfg.dedupeDays,
           minGapSameSource: videoCfg.minGapSameSource,
           maxSameLangStreak: videoCfg.maxSameLangStreak,
