@@ -6190,6 +6190,29 @@ function buildVideoAsArticleCard(it) {
       } catch {}
     }
 
+    function iuVideoDebugSnapshot(tag) {
+      try {
+        const el0 = document.querySelector(".iuVideoCard");
+        const s0 = el0 ? String(el0.outerHTML || "") : "";
+        const el1 = document.querySelector('.iuVideoCard[data-feed-type="video-preview"]');
+        const s1 = el1 ? String(el1.outerHTML || "") : "";
+        const el2 = document.querySelector(".iuVideoPoster");
+        const s2 = el2 ? String(el2.outerHTML || "") : "";
+        return {
+          tag,
+          ts: new Date().toISOString(),
+          cardsTotal: document.querySelectorAll(".iuVideoCard").length,
+          postersTotal: document.querySelectorAll(".iuVideoPoster").length,
+          videoPreviewCards: document.querySelectorAll('.iuVideoCard[data-feed-type="video-preview"]').length,
+          firstVideoCardHtml: s0 ? s0.slice(0, 400) : null,
+          firstPreviewCardHtml: s1 ? s1.slice(0, 400) : null,
+          firstPosterHtml: s2 ? s2.slice(0, 400) : null,
+        };
+      } catch {
+        return { tag, ts: new Date().toISOString() };
+      }
+    }
+
     function iuVideoDebugAutoTest() {
       if (!iuDebugEnabled()) return;
       try {
@@ -6197,57 +6220,63 @@ function buildVideoAsArticleCard(it) {
         window.__iu_videoDebugAutoTestDone = 1;
       } catch {}
 
-      setTimeout(() => {
-        try {
-          const ts = new Date().toISOString();
-          const poster = document.querySelector('.iuVideoCard[data-feed-type="video-preview"] .iuVideoPoster');
-          const cardsCount = (document.querySelectorAll(".iuVideoCard") || []).length;
-          const postersCount = (document.querySelectorAll(".iuVideoPoster") || []).length;
-
-          if (!poster) {
-            iuEnsureVideoDebugPanel();
-            iuVideoDebugUpdate({
-              ts,
-              auto: true,
-              status: "NO_VIDEO_POSTER_FOUND",
-              cards: cardsCount,
-              posters: postersCount,
-            });
-            return;
-          }
-
-          const card = poster.closest(".iuVideoCard");
-          iuVideoDebugUpdate({
-            ts,
-            auto: true,
-            status: "CLICKING",
-            ytid: card ? (card.getAttribute("data-ytid") || null) : null,
-          });
-
-          try { poster.click(); } catch {}
-
-          setTimeout(() => {
-            try {
-              const ts2 = new Date().toISOString();
-              const card2 = poster.closest(".iuVideoCard");
-              const frame2 = poster.closest(".iuVideoFrame");
-              const iframe2 = frame2 ? frame2.querySelector("iframe") : null;
+      function attempt(attemptNo, delayMs) {
+        setTimeout(() => {
+          try {
+            const poster = document.querySelector('.iuVideoCard[data-feed-type="video-preview"] .iuVideoPoster');
+            if (!poster) {
+              iuEnsureVideoDebugPanel();
               iuVideoDebugUpdate({
-                ts: ts2,
                 auto: true,
-                status: "AFTER_CLICK",
-                ytid: card2 ? (card2.getAttribute("data-ytid") || null) : null,
-                loaded: card2 ? (card2.getAttribute("data-iu-loaded") || null) : null,
-                hasFrame: !!frame2,
-                hasIframe: !!iframe2,
-                iframeSrc: iframe2 ? (iframe2.getAttribute("src") || null) : null,
-                fallback: false,
-                error: null,
+                status: "NO_VIDEO_POSTER_FOUND",
+                attempt: attemptNo,
+                afterDelayMs: delayMs,
+                ...iuVideoDebugSnapshot(`attempt${attemptNo}`),
               });
-            } catch {}
-          }, 300);
-        } catch {}
-      }, 600);
+              return;
+            }
+
+            const card = poster.closest(".iuVideoCard");
+            const frame = poster.closest(".iuVideoFrame");
+            iuVideoDebugUpdate({
+              auto: true,
+              status: "FOUND_POSTER",
+              attempt: attemptNo,
+              afterDelayMs: delayMs,
+              ytid: card ? (card.getAttribute("data-ytid") || null) : null,
+              ...iuVideoDebugSnapshot(`found_attempt${attemptNo}`),
+            });
+
+            try { poster.click(); } catch {}
+
+            setTimeout(() => {
+              try {
+                const card2 = poster.closest(".iuVideoCard");
+                const frame2 = frame || poster.closest(".iuVideoFrame");
+                const iframe2 = frame2 ? frame2.querySelector("iframe") : null;
+                iuVideoDebugUpdate({
+                  ts: new Date().toISOString(),
+                  auto: true,
+                  status: "AFTER_CLICK",
+                  attempt: attemptNo,
+                  afterDelayMs: delayMs,
+                  ytid: card2 ? (card2.getAttribute("data-ytid") || null) : null,
+                  loaded: card2 ? (card2.getAttribute("data-iu-loaded") || null) : null,
+                  hasFrame: !!frame2,
+                  hasIframe: !!iframe2,
+                  iframeSrc: iframe2 ? (iframe2.getAttribute("src") || null) : null,
+                  fallback: false,
+                  error: null,
+                });
+              } catch {}
+            }, 300);
+          } catch {}
+        }, delayMs);
+      }
+
+      attempt(1, 600);
+      attempt(2, 800);
+      attempt(3, 2000);
     }
 
     document.addEventListener("click", (e) => {
