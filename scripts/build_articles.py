@@ -1511,6 +1511,12 @@ def main() -> int:
         reverse=True
     )
 
+    # NOTE: YouTube allowlist videos are generated in scripts/build_videos.py.
+    # build_articles.py may still see legacy YouTube playlist feeds (feeds_youtube.json).
+    # Keep this section robust even when allowlist meta isn't present.
+    allow_meta = {}
+    allow_cfg = {}
+
     cfg_version = int(allow_meta.get("version") or (allow_cfg.get("version") if isinstance(allow_cfg, dict) else 1) or 1)
     primary_days = int(allow_meta.get("freshDaysPrimary") or 14)
     fallback_days = int(allow_meta.get("freshDaysFallback") or 60)
