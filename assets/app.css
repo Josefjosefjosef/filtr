@@ -4085,9 +4085,19 @@ body[data-section="home"] .iuHomeCanvas{
 }
 
 /* Radio-like chips inside MyUzel view (same size/layout as Rádio) */
+.iuMyUzelView{
+  --iuMyUzelAccent: var(--iuSectionAccent, #b9bcc2);
+}
 .iuMyUzelView .iuRadioChip{
   background: color-mix(in srgb, rgba(255,255,255,0.94) 92%, var(--iuSectionAccent, var(--iuMyUzelAccent, #94A3B8)) 8%);
   border-color: color-mix(in srgb, var(--iuSectionAccent, var(--iuMyUzelAccent, #94A3B8)) 28%, rgba(11,27,43,0.12));
+  border-left: 4px solid var(--iuMyUzelAccent, #b9bcc2);
+}
+
+.iuMyUzelView .iuRadioChip:hover,
+.iuMyUzelView .iuRadioChip:focus-visible{
+  outline: 2px solid var(--iuMyUzelAccent, #b9bcc2);
+  outline-offset: 2px;
 }
 
 .iuMyUzelInlineMsg{
@@ -6879,7 +6889,8 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
 
 .iuMyUzelItem:hover,
 .iuMyUzelItem:focus-visible{
-  color: #d7d9de;
+  /* Use existing rail accent (set inline from localStorage color) */
+  color: var(--iuNavAccent, var(--iuMyUzelAccent, var(--iuMyUzelIcon)));
 }
 
 .iu-leftNavIcon{
