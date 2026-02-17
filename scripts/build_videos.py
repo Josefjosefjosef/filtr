@@ -326,7 +326,7 @@ def _ts_ms(iso: str) -> int:
         return 0
 
 def _norm_topics(topics) -> list:
-    allowed = {"science_tech", "practical", "finance", "interviews", "history", "explainers"}
+    allowed = {"science_tech", "practical", "finance", "interviews", "history", "explainer"}
     if not isinstance(topics, list):
         return []
     out = []
@@ -357,10 +357,10 @@ def _topic_from_category(cat: str) -> str:
         "history_culture": "history",
         "transport_infra": "practical",
         "health_psychology": "practical",
-        "law_politics_explained": "explainers",
-        "smart_fun_short": "explainers",
+        "law_politics_explained": "explainer",
+        "smart_fun_short": "explainer",
     }
-    return m.get(c) or "explainers"
+    return m.get(c) or "explainer"
 
 
 def _infer_source_key(url: str, resolved: dict) -> str:
@@ -466,7 +466,19 @@ def main() -> int:
             if not isinstance(s, dict):
                 continue
             src_url = str(s.get("url") or "").strip()
-            default_lang = str(s.get("defaultLang") or s.get("langDefault") or s.get("lang") or "").strip().lower()
+            official = bool(s.get("official") is True)
+            if not official:
+                # Hard allowlist: only explicitly marked official sources.
+                continue
+            # Hard URL allowlist format (no search/topic/unknown pages).
+            if not (
+                re.search(r"^https://www\.youtube\.com/@[0-9A-Za-z_.-]+/?$", src_url)
+                or re.search(r"^https://www\.youtube\.com/channel/UC[0-9A-Za-z_-]{22}/?$", src_url)
+                or re.search(r"^https://www\.youtube\.com/playlist\?list=[0-9A-Za-z_-]+$", src_url)
+            ):
+                print(f"WARN: allowlist url not allowed format: {src_url}")
+                continue
+            default_lang = str(s.get("langDefault") or s.get("defaultLang") or s.get("lang") or "").strip().lower()
             if default_lang not in {"cz", "en", "bilingual"}:
                 default_lang = "en"
             region = str(s.get("region") or "").strip().lower()
@@ -505,11 +517,12 @@ def main() -> int:
                 "channelId": channel_id,
                 "feedUrl": feed_url,
                 "region": region,
-                "defaultLang": default_lang,
+                "langDefault": default_lang,
                 "assumeCzSubs": assume_cz_subs,
                 "topics": topics,
                 "weight": src_weight,
                 "maxPerDay": max_per_day,
+                "official": True,
             }
             sources_meta.append(meta)
             enriched_sources.append(meta)
@@ -524,7 +537,7 @@ def main() -> int:
                     "topics": topics,
                     "weight": src_weight,
                     "maxPerDay": max_per_day,
-                    "defaultLang": default_lang,
+                    "langDefault": default_lang,
                     "assumeCzSubs": assume_cz_subs,
                     "category": cat_name,
                     "categoryWeight": weight,
@@ -573,7 +586,7 @@ def main() -> int:
                 published = e.get("publishedAt") or ""
                 published_ts = _ts_ms(published)
 
-                default_lang = str(job.get("defaultLang") or "en").strip().lower()
+                default_lang = str(job.get("langDefault") or job.get("defaultLang") or "en").strip().lower()
                 assume_cz_subs = bool(job.get("assumeCzSubs"))
                 if default_lang == "cz":
                     lang_class = "cz"
