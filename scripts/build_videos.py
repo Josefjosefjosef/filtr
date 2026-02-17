@@ -50,6 +50,52 @@ USER_AGENT = (
 )
 REQUEST_TIMEOUT_SEC = 20
 
+# === EMBEDABILITY FILTER (build-side) ===
+# Goal: exclude videos that cannot be embedded ("Video unavailable") or are non-embeddable.
+_EMBED_CACHE = {}
+
+
+def iu_is_embeddable(video_id: str) -> bool:
+    try:
+        vid = str(video_id or "").strip()
+        if not vid:
+            return False
+        key = ("oembed", vid)
+        if key in _EMBED_CACHE:
+            return bool(_EMBED_CACHE[key])
+        url = f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={vid}&format=json"
+        r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=5)
+        ok = bool(r.status_code == 200)
+        _EMBED_CACHE[key] = ok
+        return ok
+    except Exception:
+        try:
+            _EMBED_CACHE[("oembed", str(video_id or "").strip())] = False
+        except Exception:
+            pass
+        return False
+
+
+def iu_not_region_blocked(video_id: str) -> bool:
+    try:
+        vid = str(video_id or "").strip()
+        if not vid:
+            return False
+        key = ("embed", vid)
+        if key in _EMBED_CACHE:
+            return bool(_EMBED_CACHE[key])
+        url = f"https://www.youtube.com/embed/{vid}"
+        r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=5)
+        ok = bool(r.status_code == 200 and ("Video unavailable" not in (r.text or "")))
+        _EMBED_CACHE[key] = ok
+        return ok
+    except Exception:
+        try:
+            _EMBED_CACHE[("embed", str(video_id or "").strip())] = False
+        except Exception:
+            pass
+        return False
+
 # === DAILY WINDOW + CZ QUOTA (build-side) ===
 # Requirements:
 # - Never include videos older than 24h in output.
@@ -672,10 +718,49 @@ def main() -> int:
     cz_pool.sort(key=_sort_key_published_desc, reverse=True)
     en_pool.sort(key=_sort_key_published_desc, reverse=True)
 
-    out_cz = cz_pool[: max(0, TARGET_CZ)]
+    # Filter out non-embeddable / blocked videos, but only for candidates needed to fill output.
+    def take_embeddable(pool: list, need: int) -> list:
+        out2 = []
+        checked = 0
+        for it in pool:
+            if len(out2) >= need:
+                break
+            vid = str(it.get("videoId") or "").strip()
+            if not vid:
+                continue
+            checked += 1
+            if iu_is_embeddable(vid) and iu_not_region_blocked(vid):
+                out2.append(it)
+            # Hard limit of checks per pool to keep build time bounded.
+            if checked >= 80:
+                break
+        return out2
+
+    out_cz = take_embeddable(cz_pool, max(0, TARGET_CZ))
     remaining = max(0, MAX_VIDEOS_OUT - len(out_cz))
-    out_en = en_pool[:remaining]
+    out_en = take_embeddable(en_pool, remaining)
     out = out_cz + out_en
+
+    # If we still don't have enough, fill from the rest of 24h pool (newest-first), embeddable only.
+    if len(out) < MAX_VIDEOS_OUT:
+        try:
+            used = set(str(it.get("videoId") or "").strip() for it in out if it.get("videoId"))
+            filler = sorted(pool_24h, key=_sort_key_published_desc, reverse=True)
+            checked = 0
+            for it in filler:
+                if len(out) >= MAX_VIDEOS_OUT:
+                    break
+                vid = str(it.get("videoId") or "").strip()
+                if not vid or vid in used:
+                    continue
+                checked += 1
+                if iu_is_embeddable(vid) and iu_not_region_blocked(vid):
+                    out.append(it)
+                    used.add(vid)
+                if checked >= 120:
+                    break
+        except Exception:
+            pass
 
     # Keep output strictly newest-first (does not change quota counts).
     out.sort(key=_sort_key_published_desc, reverse=True)
