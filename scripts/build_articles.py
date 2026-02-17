@@ -24,6 +24,9 @@ FEEDS_PATH = os.path.join(ROOT_DIR, "scripts", "feeds.json")
 # ✅ YouTube playlisty – samostatný soubor
 FEEDS_YOUTUBE_PATH = os.path.join(ROOT_DIR, "scripts", "feeds_youtube.json")
 
+# ✅ Allowlist pro YouTube zdroje (CZ + svět) – kanály/handly + kategorie + váhy
+VIDEOS_ALLOWLIST_PATH = os.path.join(ROOT_DIR, "projects", "data", "videos_allowlist.json")
+
 # ✅ FIX: Output directory - použij env OUTPUT_DIR nebo default filtr/data
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", os.path.join(ROOT_DIR, "projects", "data"))
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -477,6 +480,12 @@ def youtube_video_id_from_url(url: str) -> str:
     except Exception:
         return ""
 
+def youtube_thumb_from_id(vid: str) -> str:
+    v = (vid or "").strip()
+    if not v:
+        return ""
+    return f"https://i.ytimg.com/vi/{v}/hqdefault.jpg"
+
 
 # =========================
 # Načtení feeds.json (robustní)
@@ -542,6 +551,168 @@ def _youtube_feed_url_from_playlist_id(pid: str) -> str:
         return ""
     return f"https://www.youtube.com/feeds/videos.xml?playlist_id={pid}"
 
+def _youtube_feed_url_from_channel_id(cid: str) -> str:
+    cid = (cid or "").strip()
+    if not cid:
+        return ""
+    return f"https://www.youtube.com/feeds/videos.xml?channel_id={cid}"
+
+
+def _extract_uc_channel_id_from_youtube_html(html: str) -> str:
+    try:
+        if not html:
+            return ""
+        # Common patterns in modern YouTube HTML payloads
+        m = re.search(r'"channelId"\s*:\s*"(UC[0-9A-Za-z_-]{22})"', html)
+        if m:
+            return m.group(1)
+        m = re.search(r'"externalId"\s*:\s*"(UC[0-9A-Za-z_-]{22})"', html)
+        if m:
+            return m.group(1)
+        m = re.search(r'channel_id=(UC[0-9A-Za-z_-]{22})', html)
+        if m:
+            return m.group(1)
+        return ""
+    except Exception:
+        return ""
+
+
+def resolve_youtube_source_to_feed_url(source_url: str) -> str:
+    """
+    Resolver allowlist zdrojů → YouTube Atom feed:
+    - videos.xml?channel_id=UC... nebo videos.xml?playlist_id=...
+    - /channel/UC...
+    - /@handle (fetch HTML a najdi UC id)
+    """
+    try:
+        raw = (source_url or "").strip()
+        if not raw:
+            return ""
+        # already a feed url
+        if "youtube.com/feeds/videos.xml" in raw:
+            return raw
+
+        # normalize
+        try:
+            u = urlparse(raw)
+        except Exception:
+            u = urlparse("https://www.youtube.com/")
+        host = (u.netloc or "").lower()
+        path = (u.path or "").strip()
+
+        if "youtube.com" not in host and "youtu.be" not in host:
+            return ""
+
+        # /channel/UC...
+        m = re.search(r"/channel/(UC[0-9A-Za-z_-]{22})", path)
+        if m:
+            return _youtube_feed_url_from_channel_id(m.group(1))
+
+        # /@handle
+        m = re.search(r"/@([0-9A-Za-z_.-]+)", path)
+        if m:
+            handle = m.group(1)
+            url = f"https://www.youtube.com/@{handle}"
+            try:
+                r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT_SEC)
+                if r.status_code != 200:
+                    print(f"WARN: allowlist resolver handle failed status={r.status_code} url={url}")
+                    return ""
+                cid = _extract_uc_channel_id_from_youtube_html(r.text or "")
+                if not cid:
+                    print(f"WARN: allowlist resolver handle missing channelId url={url}")
+                    return ""
+                return _youtube_feed_url_from_channel_id(cid)
+            except Exception as e:
+                print(f"WARN: allowlist resolver handle exception url={url} err={e}")
+                return ""
+
+        return ""
+    except Exception:
+        return ""
+
+
+def load_videos_allowlist(path: str) -> dict:
+    try:
+        if not path or not os.path.exists(path):
+            return {}
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def load_allowlist_youtube_feeds(path: str) -> tuple[list, dict]:
+    """
+    Allowlist JSON → list feedů pro loop ve fetch/pipeline.
+    Vrací: (feeds, cfg_meta)
+    """
+    cfg = load_videos_allowlist(path)
+    version = int(cfg.get("version") or 1) if isinstance(cfg.get("version"), (int, float, str)) else 1
+    fresh_primary = int(cfg.get("freshDaysPrimary") or 14)
+    fresh_fallback = int(cfg.get("freshDaysFallback") or 60)
+    fresh_target = float(cfg.get("freshTargetShare") or 0.7)
+    dedupe_days = int(cfg.get("dedupeDays") or 30)
+    max_per_source = int(cfg.get("maxPerSource") or 25)
+    max_total = int(cfg.get("maxTotal") or 240)
+    if fresh_primary < 1: fresh_primary = 14
+    if fresh_fallback < fresh_primary: fresh_fallback = max(60, fresh_primary)
+    if fresh_target <= 0 or fresh_target > 1: fresh_target = 0.7
+    if dedupe_days < 1: dedupe_days = 30
+    if max_per_source < 1: max_per_source = 25
+    if max_total < 1: max_total = 240
+
+    cats_in = cfg.get("categories")
+    cats_in = cats_in if isinstance(cats_in, list) else []
+    feeds = []
+    categories_out = []
+    for cat in cats_in:
+        if not isinstance(cat, dict):
+            continue
+        name = str(cat.get("name") or "").strip()
+        if not name:
+            continue
+        try:
+            weight = int(cat.get("weight") or 1)
+        except Exception:
+            weight = 1
+        sources = cat.get("sources")
+        sources = sources if isinstance(sources, list) else []
+        categories_out.append({"name": name, "weight": weight, "sources": sources})
+        for src in sources:
+            s = str(src or "").strip()
+            if not s:
+                continue
+            feed_url = resolve_youtube_source_to_feed_url(s)
+            if not feed_url:
+                print(f"WARN: allowlist resolver unsupported source: {s}")
+                continue
+            # meta for YouTube feed items (handled in the main loop)
+            meta = {
+                "topic": "aktualne",
+                "source": "YouTube – allowlist",
+                "type": "youtube",
+                "channel": s,               # fallback label (handle/url)
+                "sourceKey": feed_url,      # for maxPerSource (stable per feed)
+                "category": name,
+                "categoryWeight": weight,
+                "allowlistVersion": version,
+            }
+            feeds.append((feed_url, meta))
+
+    cfg_meta = {
+        "version": version,
+        "freshDaysPrimary": fresh_primary,
+        "freshDaysFallback": fresh_fallback,
+        "freshTargetShare": fresh_target,
+        "dedupeDays": dedupe_days,
+        "maxPerSource": max_per_source,
+        "maxTotal": max_total,
+        "categories": categories_out,
+    }
+    return feeds, cfg_meta
+
 
 def load_youtube_feeds(path: str) -> list:
     """
@@ -594,8 +765,11 @@ def load_all_feeds() -> list:
     if os.path.exists(FEEDS_PATH):
         feeds.extend(load_feeds(FEEDS_PATH))
 
-    # ✅ přidáme YouTube playlisty
-    if os.path.exists(FEEDS_YOUTUBE_PATH):
+    # ✅ YouTube zdroje: preferuj allowlist (CZ+svět). Fallback na legacy feeds_youtube.json.
+    allowlist_feeds, _cfg = load_allowlist_youtube_feeds(VIDEOS_ALLOWLIST_PATH)
+    if allowlist_feeds:
+        feeds.extend(allowlist_feeds)
+    elif os.path.exists(FEEDS_YOUTUBE_PATH):
         feeds.extend(load_youtube_feeds(FEEDS_YOUTUBE_PATH))
 
     return feeds
@@ -954,6 +1128,8 @@ def main() -> int:
         return 2
 
     feed_items = load_all_feeds()
+    allow_cfg = load_videos_allowlist(VIDEOS_ALLOWLIST_PATH) if os.path.exists(VIDEOS_ALLOWLIST_PATH) else {}
+    _allowlist_feeds, allow_meta = load_allowlist_youtube_feeds(VIDEOS_ALLOWLIST_PATH)
 
     all_items = []
     per_feed_report = []
@@ -1033,6 +1209,17 @@ def main() -> int:
             # fallback: když není channel v meta, vytáhneme z "YouTube – X"
             m = re.match(r"^\s*YouTube\s*[–-]\s*(.+?)\s*$", str(source), flags=re.IGNORECASE)
             channel_name = (m.group(1).strip() if m else "YouTube")
+        # If meta channel is just a URL/handle, prefer the feed title (Uploads from X).
+        try:
+            if is_youtube_feed and ("youtube.com" in channel_name or channel_name.startswith("http")):
+                feed_title = fix_cz_mojibake(str(getattr(d, "feed", {}).get("title", "") or "").strip())
+                if feed_title:
+                    feed_title = re.sub(r"^\s*Uploads\s+from\s+", "", feed_title, flags=re.IGNORECASE).strip()
+                    feed_title = re.sub(r"^\s*Videos\s+from\s+", "", feed_title, flags=re.IGNORECASE).strip()
+                    if feed_title:
+                        channel_name = feed_title
+        except Exception:
+            pass
 
         for entry in entries[:MAX_ITEMS_PER_FEED]:
             link = canonicalize_url(getattr(entry, "link", "") or "")
@@ -1061,6 +1248,11 @@ def main() -> int:
                     "publishedAt": dt.isoformat().replace("+00:00", "Z"),
                     "section": section,
                     "channel": channel_name or "YouTube",
+                    "category": (meta.get("category") or "") if isinstance(meta, dict) else "",
+                    "categoryWeight": (meta.get("categoryWeight") or 0) if isinstance(meta, dict) else 0,
+                    "sourceKey": (meta.get("sourceKey") or channel_name or "YouTube") if isinstance(meta, dict) else (channel_name or "YouTube"),
+                    "allowlistVersion": (meta.get("allowlistVersion") or 1) if isinstance(meta, dict) else 1,
+                    "thumb": youtube_thumb_from_id(vid),
                     "_dt": dt,  # interně pro řazení
                 })
                 accepted += 1
@@ -1315,37 +1507,124 @@ def main() -> int:
     brief_payload = build_brief(generated_at, final)
     _atomic_write_json(BRIEF_PATH, brief_payload)
 
-    # ✅ videos.json (jen YouTube playlisty)
-    # dedup podle videoId, řazení od nejnovějších
+    # ✅ videos.json (YouTube allowlist / legacy)
+    # dedup podle videoId + maxPerSource + maxTotal + freshness-first
     yt_sorted = sorted(
         yt_videos,
-        key=lambda v: v.get("_dt") or datetime.now(timezone.utc),
+        key=lambda v: (v.get("_dt") or datetime.now(timezone.utc), int(v.get("categoryWeight") or 0)),
         reverse=True
     )
+
+    cfg_version = int(allow_meta.get("version") or (allow_cfg.get("version") if isinstance(allow_cfg, dict) else 1) or 1)
+    primary_days = int(allow_meta.get("freshDaysPrimary") or 14)
+    fallback_days = int(allow_meta.get("freshDaysFallback") or 60)
+    target_share = float(allow_meta.get("freshTargetShare") or 0.7)
+    max_per_source = int(allow_meta.get("maxPerSource") or 25)
+    max_total = int(allow_meta.get("maxTotal") or 240)
+    if primary_days < 1: primary_days = 14
+    if fallback_days < primary_days: fallback_days = max(60, primary_days)
+    if target_share <= 0 or target_share > 1: target_share = 0.7
+    if max_per_source < 1: max_per_source = 25
+    if max_total < 1: max_total = 240
+
+    def _age_days(dt_any) -> int:
+        try:
+            if isinstance(dt_any, datetime):
+                d = dt_any
+            else:
+                d = datetime.fromisoformat(str(dt_any).replace("Z", "+00:00"))
+            return int((datetime.now(timezone.utc) - d).total_seconds() // 86400)
+        except Exception:
+            return 999999
+
     seen_vid = set()
-    out_vid = []
+    per_source = {}
+    primary = []
+    fallback = []
+    older = []
     for v in yt_sorted:
         vid = (v.get("videoId") or "").strip()
         if not vid or vid in seen_vid:
             continue
-        seen_vid.add(vid)
-        out_vid.append({
+        src_key = str(v.get("sourceKey") or v.get("channel") or "YouTube")
+        if per_source.get(src_key, 0) >= max_per_source:
+            continue
+        age = _age_days(v.get("_dt") or v.get("publishedAt") or "")
+        row = {
             "title": v.get("title") or "",
             "url": v.get("url") or "",
             "videoId": vid,
             "publishedAt": v.get("publishedAt") or "",
-            "section": stable_section(v.get("section") or "aktualne"),
             "channel": (v.get("channel") or "YouTube").strip() or "YouTube",
-        })
-        if len(out_vid) >= MAX_OUTPUT_VIDEOS:
-            break
+            "category": (v.get("category") or "").strip(),
+            "thumb": v.get("thumb") or youtube_thumb_from_id(vid),
+        }
+        if age <= primary_days:
+            primary.append(row)
+        elif age <= fallback_days:
+            fallback.append(row)
+        else:
+            older.append(row)
+        # mark for global/per-source limits at the end of selection (not here)
+
+    target_primary = int((max_total * target_share) + 0.9999)  # ceil
+    out_vid = []
+    used_sources = {}
+    def _take_from(bucket: list, limit: int = None):
+        nonlocal out_vid, seen_vid, used_sources
+        for row in bucket:
+            if limit is not None and len(out_vid) >= limit:
+                break
+            if len(out_vid) >= max_total:
+                break
+            vid = (row.get("videoId") or "").strip()
+            if not vid or vid in seen_vid:
+                continue
+            src_key = str(row.get("channel") or "YouTube")
+            if used_sources.get(src_key, 0) >= max_per_source:
+                continue
+            seen_vid.add(vid)
+            used_sources[src_key] = used_sources.get(src_key, 0) + 1
+            out_vid.append(row)
+
+    # Fill primary first to reach the target share, then fallback, then older.
+    _take_from(primary, limit=min(max_total, target_primary))
+    _take_from(fallback)
+    _take_from(older)
+
+    primary_count = 0
+    fallback_count = 0
+    older_count = 0
+    for row in out_vid:
+        age = _age_days(row.get("publishedAt") or "")
+        if age <= primary_days:
+            primary_count += 1
+        elif age <= fallback_days:
+            fallback_count += 1
+        else:
+            older_count += 1
 
     videos_payload = {
         "generatedAt": generated_at,
-        "videos": out_vid
+        "allowlistVersion": cfg_version,
+        "freshTargetShare": target_share,
+        "dedupeDays": int(allow_meta.get("dedupeDays") or 30),
+        "maxPerSource": max_per_source,
+        "maxTotal": max_total,
+        "freshness": {
+            "primaryDays": primary_days,
+            "fallbackDays": fallback_days,
+            "primaryCount": primary_count,
+            "fallbackCount": fallback_count,
+            "olderCount": older_count,
+            "total": len(out_vid),
+        },
+        "categories": allow_meta.get("categories") if isinstance(allow_meta.get("categories"), list) else [],
+        "videos": out_vid,
     }
 
     _atomic_write_json(VIDEOS_OUT_PATH, videos_payload)
+    print(f"VIDEOS_FRESHNESS primary14={primary_count} fallback60={fallback_count} older={older_count} total={len(out_vid)}")
     print("=== FEED REPORT ===")
     print(json.dumps(health_payload, ensure_ascii=False, indent=2))
     print(f"=== OUTPUT === wrote {len(final)} items to {OUT_PATH}")

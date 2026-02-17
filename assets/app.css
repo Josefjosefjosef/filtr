@@ -7606,6 +7606,20 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   background: rgba(255,255,255,.98);
 }
 
+.iuVideoBadge{
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(14,42,74,.88);
+  color: rgba(255,255,255,.96);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.18);
+}
+
 .iuVideoIframe{
   width: 100%;
   height: 100%;
