@@ -6828,14 +6828,18 @@ function buildVideoAsArticleCard(it) {
         }
 
         const iframe = document.createElement("iframe");
+
         iframe.src = src;
-        iframe.loading = "lazy";
-        iframe.setAttribute("title", "YouTube video");
-        iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
-        iframe.setAttribute("allowfullscreen", "");
-        iframe.referrerPolicy = "strict-origin-when-cross-origin";
-        iframe.allowFullscreen = true;
         iframe.className = "iuVideoIframe";
+        iframe.loading = "lazy";
+        iframe.referrerPolicy = "strict-origin-when-cross-origin";
+
+        iframe.allow =
+          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
+
+        // ⚠️ důležité – žádný sandbox
+        iframe.removeAttribute("sandbox");
 
         try { frame.style.pointerEvents = "auto"; } catch {}
         try { iframe.style.pointerEvents = "auto"; } catch {}
