@@ -23,6 +23,7 @@ Requirements:
 
 Token log:
   VIDEOS_FRESHNESS primary14=<N> fallback60=<N> older=<N> total=<N>
+  VIDEOS_WINDOW_24H cz=<N> en=<N> out_cz=<N> out_en=<N> out_total=<N>
 """
 
 import json
@@ -41,8 +42,22 @@ ALLOWLIST_PATH = os.path.join(ROOT_DIR, "projects", "data", "videos_allowlist.js
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", os.path.join(ROOT_DIR, "projects", "data"))
 OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
 
-USER_AGENT = "Mozilla/5.0 (compatible; infoUzelBot/1.0; +https://infouzel.cz)"
+# Use a browser-like UA: some YouTube HTML endpoints return consent redirects or 404 for bot UAs.
+USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/121.0.0.0 Safari/537.36"
+)
 REQUEST_TIMEOUT_SEC = 20
+
+# === DAILY WINDOW + CZ QUOTA (build-side) ===
+# Requirements:
+# - Never include videos older than 24h in output.
+# - Output up to 25 videos total.
+# - Target 12 CZ (if available in last 24h), rest EN up to 25.
+VIDEO_WINDOW_HOURS = 24
+MAX_VIDEOS_OUT = 25
+TARGET_CZ = 12
 
 
 def iso_now_z() -> str:
@@ -143,7 +158,8 @@ def resolve_source_to_feed(url: str) -> dict:
     m = re.search(r"/@([0-9A-Za-z_.-]+)", path)
     if m:
         handle = m.group(1)
-        page = f"https://www.youtube.com/@{handle}"
+        # Avoid consent redirect: ucbcb=1 keeps server-side fetch on youtube.com domain.
+        page = f"https://www.youtube.com/@{handle}?ucbcb=1"
         try:
             r = requests.get(page, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT_SEC)
             if r.status_code != 200:
@@ -633,38 +649,50 @@ def main() -> int:
     # Strict global ordering (newest first)
     items.sort(key=_sort_key_published_desc, reverse=True)
 
-    # Freshness-first selection for output (pool)
-    primary = [it for it in items if _age_days(it.get("publishedAt") or "") <= fresh_primary]
-    fallback = [it for it in items if fresh_primary < _age_days(it.get("publishedAt") or "") <= fresh_fallback]
-    older = [it for it in items if _age_days(it.get("publishedAt") or "") > fresh_fallback]
+    # === DAILY MODE: strict 24h window + CZ quota ===
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=VIDEO_WINDOW_HOURS)
+    pool_24h = []
+    for it in items:
+        dt = _safe_dt(str(it.get("publishedAt") or ""))
+        if not dt:
+            continue
+        if dt < cutoff:
+            continue
+        pool_24h.append(it)
 
-    target_primary = int((max_total * fresh_target) + 0.9999)  # ceil
-    out = []
-    out_seen = set()
+    def is_cz(it: dict) -> bool:
+        try:
+            return str(it.get("lang") or "").strip().lower() in {"cz", "cs"} or str(it.get("region") or "").strip().lower() == "cz"
+        except Exception:
+            return False
 
-    def take(bucket: list, limit: int = None):
-        nonlocal out
-        for it in bucket:
-            if len(out) >= max_total:
-                break
-            vid = it.get("videoId") or ""
-            if not vid or vid in out_seen:
-                continue
-            if limit is not None and len(out) >= limit:
-                break
-            out.append(it)
-            out_seen.add(vid)
+    cz_pool = [it for it in pool_24h if is_cz(it)]
+    en_pool = [it for it in pool_24h if not is_cz(it)]
 
-    take(primary, limit=min(max_total, target_primary))
-    take(fallback)
-    take(older)
+    cz_pool.sort(key=_sort_key_published_desc, reverse=True)
+    en_pool.sort(key=_sort_key_published_desc, reverse=True)
 
-    # Ensure final pool is strictly newest-first (DESC).
+    out_cz = cz_pool[: max(0, TARGET_CZ)]
+    remaining = max(0, MAX_VIDEOS_OUT - len(out_cz))
+    out_en = en_pool[:remaining]
+    out = out_cz + out_en
+
+    # Keep output strictly newest-first (does not change quota counts).
     out.sort(key=_sort_key_published_desc, reverse=True)
 
-    primary_count = sum(1 for it in out if _age_days(it.get("publishedAt") or "") <= fresh_primary)
-    fallback_count = sum(1 for it in out if fresh_primary < _age_days(it.get("publishedAt") or "") <= fresh_fallback)
-    older_count = max(0, len(out) - primary_count - fallback_count)
+    pool_cz_n = len(cz_pool)
+    pool_en_n = len(en_pool)
+    out_cz_n = sum(1 for it in out if is_cz(it))
+    out_en_n = max(0, len(out) - out_cz_n)
+
+    print(
+        f"VIDEOS_WINDOW_24H cz={pool_cz_n} en={pool_en_n} out_cz={out_cz_n} out_en={out_en_n} out_total={len(out)}"
+    )
+
+    # Keep legacy freshness token (monitoring compatibility).
+    primary_count = len(out)
+    fallback_count = 0
+    older_count = 0
 
     payload = {
         "generatedAt": iso_now_z(),
@@ -682,7 +710,7 @@ def main() -> int:
         "maxSameLangStreak": max_lang_streak,
         "maxSameCategoryStreak": max_cat_streak,
         "maxPerSource": max_per_source,
-        "maxTotal": max_total,
+        "maxTotal": MAX_VIDEOS_OUT,
         "freshness": {
             "primaryDays": fresh_primary,
             "fallbackDays": fresh_fallback,
@@ -690,6 +718,11 @@ def main() -> int:
             "fallbackCount": fallback_count,
             "olderCount": older_count,
             "total": len(out),
+        },
+        "meta": {
+            "windowHours": VIDEO_WINDOW_HOURS,
+            "targetCz": TARGET_CZ,
+            "outTotal": MAX_VIDEOS_OUT,
         },
         "sourcesMeta": sources_meta,
         "categories": cats_out,
