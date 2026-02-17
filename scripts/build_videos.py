@@ -7,6 +7,10 @@ Build YouTube videos pool for infoUzel.cz (no downloads; Atom feed only).
 Output: projects/data/videos.json
 Input:  projects/data/videos_allowlist.json
 
+Windows usage (recommended):
+  py -3 --version
+  py -3 scripts\\build_videos.py
+
 Requirements:
 - allowlist only (CZ+world; categories+weights; per-source lang)
 - freshness-first selection:
@@ -26,7 +30,7 @@ import os
 import re
 import sys
 from datetime import datetime, timezone, timedelta
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 
 import requests
 import xml.etree.ElementTree as ET
@@ -85,14 +89,23 @@ def _feed_url_from_channel_id(cid: str) -> str:
         return ""
     return f"https://www.youtube.com/feeds/videos.xml?channel_id={cid}"
 
+def _feed_url_from_playlist_id(pid: str) -> str:
+    pid = (pid or "").strip()
+    if not pid:
+        return ""
+    return f"https://www.youtube.com/feeds/videos.xml?playlist_id={pid}"
+
 
 def resolve_source_to_feed(url: str) -> dict:
     """
     Allowlist source → Atom feed URL.
     Supports:
     - videos.xml?channel_id=UC...
+    - videos.xml?playlist_id=PL...
     - /channel/UC...
     - /@handle  (HTML fetch → UC id)
+    - /user/<name> or /c/<name> (HTML fetch → UC id)
+    - /playlist?list=PL... or any URL with ?list=PL... (playlist feed)
     """
     raw = (url or "").strip()
     if not raw:
@@ -100,7 +113,11 @@ def resolve_source_to_feed(url: str) -> dict:
     if "youtube.com/feeds/videos.xml" in raw:
         m = re.search(r"channel_id=(UC[0-9A-Za-z_-]{22})", raw)
         cid = m.group(1) if m else ""
-        return {"feedUrl": raw, "channelId": cid}
+        m2 = re.search(r"playlist_id=([0-9A-Za-z_-]+)", raw)
+        pid = m2.group(1) if m2 else ""
+        if pid:
+            return {"feedUrl": raw, "playlistId": pid, "type": "playlist"}
+        return {"feedUrl": raw, "channelId": cid, "type": "channel"}
     try:
         u = urlparse(raw)
     except Exception:
@@ -110,10 +127,18 @@ def resolve_source_to_feed(url: str) -> dict:
     if "youtube.com" not in host:
         return {}
 
+    # Playlist feed (URL with list=...)
+    try:
+        pid = (parse_qs(u.query or "").get("list") or [""])[0]
+        if pid and re.match(r"^[0-9A-Za-z_-]+$", pid):
+            return {"feedUrl": _feed_url_from_playlist_id(pid), "playlistId": pid, "type": "playlist"}
+    except Exception:
+        pass
+
     m = re.search(r"/channel/(UC[0-9A-Za-z_-]{22})", path)
     if m:
         cid = m.group(1)
-        return {"feedUrl": _feed_url_from_channel_id(cid), "channelId": cid}
+        return {"feedUrl": _feed_url_from_channel_id(cid), "channelId": cid, "type": "channel"}
 
     m = re.search(r"/@([0-9A-Za-z_.-]+)", path)
     if m:
@@ -128,9 +153,28 @@ def resolve_source_to_feed(url: str) -> dict:
             if not cid:
                 print(f"WARN: resolver handle missing channelId url={page}")
                 return {}
-            return {"feedUrl": _feed_url_from_channel_id(cid), "channelId": cid, "handle": handle}
+            return {"feedUrl": _feed_url_from_channel_id(cid), "channelId": cid, "handle": handle, "type": "channel"}
         except Exception as e:
             print(f"WARN: resolver handle exception url={page} err={e}")
+            return {}
+
+    m = re.search(r"/(user|c)/([0-9A-Za-z_.-]+)", path)
+    if m:
+        kind = m.group(1)
+        name = m.group(2)
+        page = f"https://www.youtube.com/{kind}/{name}"
+        try:
+            r = requests.get(page, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT_SEC)
+            if r.status_code != 200:
+                print(f"WARN: resolver {kind} failed status={r.status_code} url={page}")
+                return {}
+            cid = _extract_uc_channel_id_from_youtube_html(r.text or "")
+            if not cid:
+                print(f"WARN: resolver {kind} missing channelId url={page}")
+                return {}
+            return {"feedUrl": _feed_url_from_channel_id(cid), "channelId": cid, kind: name, "type": "channel"}
+        except Exception as e:
+            print(f"WARN: resolver {kind} exception url={page} err={e}")
             return {}
 
     return {}
@@ -251,11 +295,40 @@ def _sort_key_published_desc(item: dict):
     except Exception:
         return datetime.fromtimestamp(0, tz=timezone.utc)
 
+def _ts_ms(iso: str) -> int:
+    try:
+        dt = _safe_dt(iso)
+        if not dt:
+            return 0
+        return int(dt.timestamp() * 1000)
+    except Exception:
+        return 0
+
+def _norm_topics(topics) -> list:
+    allowed = {"science_tech", "practical", "finance", "interviews", "history", "explainers"}
+    if not isinstance(topics, list):
+        return []
+    out = []
+    for t in topics:
+        x = str(t or "").strip().lower()
+        if not x:
+            continue
+        if x in allowed:
+            out.append(x)
+    seen = set()
+    uniq = []
+    for x in out:
+        if x in seen:
+            continue
+        seen.add(x)
+        uniq.append(x)
+    return uniq
+
 def _topic_from_category(cat: str) -> str:
     c = str(cat or "").strip().lower()
     # Map existing allowlist categories → required 6 themes.
     m = {
-        "science_tech_ai": "tech_science",
+        "science_tech_ai": "science_tech",
         "practical_life_city_travel": "practical",
         "finance_economy": "finance",
         "business_startups": "finance",
@@ -267,6 +340,36 @@ def _topic_from_category(cat: str) -> str:
         "smart_fun_short": "explainers",
     }
     return m.get(c) or "explainers"
+
+
+def _infer_source_key(url: str, resolved: dict) -> str:
+    try:
+        pid = str(resolved.get("playlistId") or "").strip()
+        if pid:
+            return f"yt:playlist:{pid}"
+        cid = str(resolved.get("channelId") or "").strip()
+        if cid:
+            return f"yt:channel:{cid}"
+    except Exception:
+        pass
+    return f"yt:url:{(url or '').strip()}"
+
+
+def _infer_source_title_simple(url: str, resolved: dict) -> str:
+    try:
+        handle = str(resolved.get("handle") or "").strip()
+        if handle:
+            return f"@{handle}"
+    except Exception:
+        pass
+    try:
+        u = urlparse(url or "")
+        p = (u.path or "").strip("/")
+        if p:
+            return p
+    except Exception:
+        pass
+    return (url or "").strip()
 
 
 def _infer_source_title(src_url: str, handle: str = "", channel_id: str = "") -> str:
@@ -342,12 +445,14 @@ def main() -> int:
             if not isinstance(s, dict):
                 continue
             src_url = str(s.get("url") or "").strip()
-            lang = str(s.get("lang") or "").strip().lower()
-            if lang not in {"cz", "en"}:
-                lang = "en"
+            default_lang = str(s.get("defaultLang") or s.get("langDefault") or s.get("lang") or "").strip().lower()
+            if default_lang not in {"cz", "en", "bilingual"}:
+                default_lang = "en"
             region = str(s.get("region") or "").strip().lower()
             if region not in {"cz", "world"}:
-                region = "cz" if lang == "cz" else "world"
+                region = "cz" if default_lang == "cz" else "world"
+            topics = _norm_topics(s.get("topics")) or [topic]
+            assume_cz_subs = bool(s.get("assumeCzSubs") or s.get("assumeCzSubtitles") or s.get("hasCzSubtitlesAssumed"))
             try:
                 src_weight = float(s.get("weight") or 1.0)
             except Exception:
@@ -365,20 +470,23 @@ def main() -> int:
             if not feed_url:
                 print(f"WARN: resolver unsupported source: {src_url}")
                 continue
-            source_id = str(s.get("id") or "").strip()
-            if not source_id:
-                source_id = f"yt:channel:{channel_id}" if channel_id else f"yt:url:{src_url}"
-            source_title = str(s.get("title") or "").strip() or _infer_source_title(src_url, handle=handle, channel_id=channel_id)
+            stype = str(s.get("type") or resolved.get("type") or "channel").strip().lower()
+            if stype not in {"channel", "playlist"}:
+                stype = "channel"
+            source_key = str(s.get("sourceKey") or s.get("source_key") or "").strip() or _infer_source_key(src_url, resolved)
+            source_title = str(s.get("title") or "").strip() or _infer_source_title_simple(src_url, resolved)
 
             meta = {
-                "id": source_id,
+                "sourceKey": source_key,
                 "title": source_title,
+                "type": stype,
                 "url": src_url,
                 "channelId": channel_id,
                 "feedUrl": feed_url,
-                "lang": "cs" if lang == "cz" else "en",
                 "region": region,
-                "topics": [topic],
+                "defaultLang": default_lang,
+                "assumeCzSubs": assume_cz_subs,
+                "topics": topics,
                 "weight": src_weight,
                 "maxPerDay": max_per_day,
             }
@@ -388,14 +496,15 @@ def main() -> int:
                 {
                     "feedUrl": feed_url,
                     "sourceUrl": src_url,
-                    "sourceId": source_id,
+                    "sourceKey": source_key,
                     "sourceTitle": source_title,
                     "channelId": channel_id,
                     "region": region,
-                    "topics": [topic],
+                    "topics": topics,
                     "weight": src_weight,
                     "maxPerDay": max_per_day,
-                    "lang": lang,
+                    "defaultLang": default_lang,
+                    "assumeCzSubs": assume_cz_subs,
                     "category": cat_name,
                     "categoryWeight": weight,
                 }
@@ -436,28 +545,46 @@ def main() -> int:
                     continue
                 if isinstance(dur, int) and dur > 0 and dur_max and dur > dur_max:
                     continue
-                src_key = job["feedUrl"]
+                src_key = str(job.get("sourceKey") or job.get("feedUrl") or "").strip() or job["feedUrl"]
                 per_source_count[src_key] = per_source_count.get(src_key, 0) + 1
                 if per_source_count[src_key] > max_per_source:
                     continue
                 published = e.get("publishedAt") or ""
+                published_ts = _ts_ms(published)
+
+                default_lang = str(job.get("defaultLang") or "en").strip().lower()
+                assume_cz_subs = bool(job.get("assumeCzSubs"))
+                if default_lang == "cz":
+                    lang_class = "cz"
+                    lang = "cz"
+                    has_cz_subs = False
+                elif default_lang == "bilingual" or assume_cz_subs:
+                    lang_class = "bilingual"
+                    lang = "en"
+                    has_cz_subs = True
+                else:
+                    lang_class = "en"
+                    lang = "en"
+                    has_cz_subs = False
                 items.append(
                     {
                         "videoId": vid,
                         "title": title,
                         "url": f"https://www.youtube.com/watch?v={vid}",
                         "publishedAt": published,
+                        "publishedAtTs": published_ts,
                         "channel": channel_name,
                         "sourceUrl": job["sourceUrl"],
                         "sourceKey": src_key,
-                        "sourceId": job.get("sourceId") or "",
                         "sourceTitle": job.get("sourceTitle") or "",
                         "channelId": job.get("channelId") or "",
                         "region": job.get("region") or "",
                         "topics": job.get("topics") or [],
                         "weight": job.get("weight") or 1.0,
                         "maxPerDay": job.get("maxPerDay") or 2,
-                        "lang": job["lang"],
+                        "lang": lang,
+                        "langClass": lang_class,
+                        "hasCzSubtitles": has_cz_subs,
                         "category": job["category"],
                         "categoryWeight": int(job.get("categoryWeight") or 0),
                         "thumb": youtube_thumb_from_id(vid),

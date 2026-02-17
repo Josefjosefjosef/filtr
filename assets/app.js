@@ -2562,11 +2562,21 @@ window.addEventListener("unhandledrejection", (e) => {
         const id = video.videoId || inferredId;
         if (!id) return null;
         const published = safeText(video.publishedAt || video.date || video.published || "");
+        const publishedDt = iuSafeParseDate(published);
+        const publishedAtTs =
+          Number(video.publishedAtTs || video.published_at_ts || 0) ||
+          (publishedDt ? publishedDt.getTime() : 0);
         const url = safeUrl(video.url) || safeUrl(`https://www.youtube.com/watch?v=${id}`);
         if (!url) return null;
         const title = safeText(video.title || video.name || video.headline || "Video");
         const rawLang = safeText(video.lang || "");
         const langNorm = rawLang.toLowerCase() === "cz" || rawLang.toLowerCase() === "cs" ? "cz" : "en";
+        const hasCzSubtitles = Boolean(video.hasCzSubtitles || video.has_cz_subtitles || false);
+        const rawLangClass = safeText(video.langClass || video.lang_class || "").toLowerCase();
+        const langClass =
+          rawLangClass === "cz" || rawLangClass === "en" || rawLangClass === "bilingual"
+            ? rawLangClass
+            : (langNorm === "cz" ? "cz" : (hasCzSubtitles ? "bilingual" : "en"));
         const region = safeText(video.region || (langNorm === "cz" ? "cz" : "world"));
         const topics = Array.isArray(video.topics) ? video.topics.map((t) => safeText(t)).filter(Boolean) : [];
         const topic0 = topics[0] || safeText(video.topic || "") || "";
@@ -2576,6 +2586,7 @@ window.addEventListener("unhandledrejection", (e) => {
           videoId: id,
           title,
           publishedAt: published,
+          publishedAtTs,
           url,
           channel: safeText(video.channel || video.source || ""),
           sourceUrl: safeText(video.sourceUrl || video.source_url || ""),
@@ -2584,6 +2595,8 @@ window.addEventListener("unhandledrejection", (e) => {
           sourceTitle: safeText(video.sourceTitle || video.source_title || ""),
           channelId: safeText(video.channelId || video.channel_id || ""),
           lang: langNorm,
+          langClass,
+          hasCzSubtitles,
           region,
           topics,
           topic: topic0,
@@ -2604,26 +2617,30 @@ window.addEventListener("unhandledrejection", (e) => {
     const n = Math.max(0, Number(N) || 0);
     const czTarget = Math.round(n * 0.5);
     const worldTarget = n - czTarget;
-    const tech_science = Math.round(n * 0.30);
+    const science_tech = Math.round(n * 0.30);
     const practical = Math.round(n * 0.20);
     const finance = Math.round(n * 0.15);
     const interviews = Math.round(n * 0.15);
     const history = Math.round(n * 0.10);
-    const used = tech_science + practical + finance + interviews + history;
+    const used = science_tech + practical + finance + interviews + history;
     const explainers = Math.max(0, n - used);
     return {
       N: n,
       region: { cz: czTarget, world: worldTarget },
-      topics: { tech_science, practical, finance, interviews, history, explainers },
+      topics: { science_tech, practical, finance, interviews, history, explainers },
     };
   }
 
   function iuGetVideoTopic(it) {
     const t0 = String(it?.topic || (Array.isArray(it?.topics) ? it.topics[0] : "") || "").trim();
-    if (t0) return t0;
+    if (t0) {
+      const x = t0.toLowerCase();
+      if (x === "tech_science") return "science_tech";
+      if (x === "science_tech" || x === "practical" || x === "finance" || x === "interviews" || x === "history" || x === "explainers") return x;
+    }
     const cat = String(it?.category || "").trim().toLowerCase();
     const m = {
-      science_tech_ai: "tech_science",
+      science_tech_ai: "science_tech",
       practical_life_city_travel: "practical",
       finance_economy: "finance",
       business_startups: "finance",
@@ -2656,104 +2673,114 @@ window.addEventListener("unhandledrejection", (e) => {
   }
 
   function iuPickVideosForSlots(videoPool, slotCount, cfg) {
-    const pool = Array.isArray(videoPool) ? videoPool : [];
+    const pool0 = Array.isArray(videoPool) ? videoPool : [];
     const N = Math.max(0, Math.min(25, Number(slotCount) || 0));
-    if (!pool.length || N <= 0) return [];
+    if (!pool0.length || N <= 0) return [];
 
+    const iuDebug = Boolean(location.search.includes("debug=1"));
+    const seen = cfg && cfg.seen ? cfg.seen : null;
+
+    function tsOf(it) {
+      const ts = Number(it?.publishedAtTs || 0) || 0;
+      if (ts > 0) return ts;
+      const d = iuSafeParseDate(it?.publishedAt || "");
+      return d ? d.getTime() : 0;
+    }
+
+    function langClassOf(it) {
+      const lc = String(it?.langClass || "").trim().toLowerCase();
+      if (lc === "cz" || lc === "en" || lc === "bilingual") return lc;
+      const lang = String(it?.lang || "").trim().toLowerCase();
+      if (lang === "cz" || lang === "cs") return "cz";
+      return Boolean(it?.hasCzSubtitles) ? "bilingual" : "en";
+    }
+
+    function expectedLang(slotIdx) {
+      return (Number(slotIdx) || 0) % 2 === 0 ? "cz" : "en";
+    }
+
+    function matchesExpected(it, expected) {
+      const lc = langClassOf(it);
+      if (expected === "cz") return lc === "cz" || lc === "bilingual";
+      return lc === "en" || lc === "bilingual";
+    }
+
+    const pool = [...pool0].sort((a, b) => tsOf(b) - tsOf(a));
     const targets = iuComputeMixTargets(N);
     const picked = [];
     const usedIds = new Set();
 
     const counts = {
       region: { cz: 0, world: 0 },
-      topics: { tech_science: 0, practical: 0, finance: 0, interviews: 0, history: 0, explainers: 0 },
+      topics: { science_tech: 0, practical: 0, finance: 0, interviews: 0, history: 0, explainers: 0 },
       perSource: {},
-      lang: { cz: 0, en: 0 },
     };
 
     function wouldExceedRegion(region) {
-      return counts.region[region] >= targets.region[region];
+      return (counts.region[region] || 0) >= (targets.region[region] || 0);
     }
     function wouldExceedTopic(topic) {
-      return counts.topics[topic] >= targets.topics[topic];
+      return (counts.topics[topic] || 0) >= (targets.topics[topic] || 0);
     }
     function perSourceLimit(src, maxPerDay) {
       const lim = Math.max(1, Number(maxPerDay) || 2);
       return (counts.perSource[src] || 0) >= lim;
     }
-    function langOf(it) {
-      return String(it?.lang || "").toLowerCase() === "cz" ? "cz" : "en";
-    }
 
-    function streakMax(arr) {
-      let max = 0, cur = 0, last = "";
-      for (const x of arr) {
-        if (x === last) cur += 1;
-        else { last = x; cur = 1; }
-        if (cur > max) max = cur;
-      }
-      return max;
-    }
+    let capTs = 0;
+    let lastPickedTs = Number.POSITIVE_INFINITY;
+    let slot0_not_cz_or_bilingual = 0;
+    let bad_alternation = 0;
+    let newer_than_first = 0;
 
     for (let i = 0; i < N; i++) {
+      const expected = expectedLang(i);
       const last = picked[picked.length - 1] || null;
       const lastSource = last ? iuGetVideoSourceId(last) : "";
-      const lastTopic = last ? iuGetVideoTopic(last) : "";
-      const lastLang = last ? langOf(last) : "";
 
-      // staged fallback: relax constraints gradually
       const stages = [
-        { allowSameTopicAdj: false, maxLangStreak: 2, relaxTopicQuota: false, relaxRegionQuota: false },
-        { allowSameTopicAdj: true,  maxLangStreak: 2, relaxTopicQuota: false, relaxRegionQuota: false },
-        { allowSameTopicAdj: true,  maxLangStreak: 3, relaxTopicQuota: false, relaxRegionQuota: false },
-        { allowSameTopicAdj: true,  maxLangStreak: 3, relaxTopicQuota: true,  relaxRegionQuota: false },
-        { allowSameTopicAdj: true,  maxLangStreak: 3, relaxTopicQuota: true,  relaxRegionQuota: true  },
+        { enforceExpectedLang: true, relaxQuotas: false, allowAnyLang: false, reason: "" },
+        { enforceExpectedLang: true, relaxQuotas: true, allowAnyLang: false, reason: "" },
+        { enforceExpectedLang: false, relaxQuotas: true, allowAnyLang: true, reason: "allow_any_lang" },
       ];
 
       let chosen = null;
-
+      let chosenReason = "";
       for (const st of stages) {
+        if (i === 0 && st.allowAnyLang) continue; // slot0 must be CZ or bilingual
         for (const cand of pool) {
           if (!cand) continue;
           const id = String(cand.videoId || "").trim();
           if (!id || usedIds.has(id)) continue;
+          if (seen && seen[id]) continue;
 
-          // validity (publishedAt)
-          const dt = iuSafeParseDate(cand.publishedAt || "");
-          if (!dt) continue;
-
-          // dedupe for NEW head only (seen map passed via cfg)
-          try {
-            const seen = cfg && cfg.seen ? cfg.seen : null;
-            if (seen && seen[id]) continue;
-          } catch {}
+          const ts = tsOf(cand);
+          if (!ts) continue;
+          if (capTs && ts > capTs) continue; // never newer than first
+          if (ts > lastPickedTs) continue; // monotonic newest-first (non-increasing)
 
           const src = iuGetVideoSourceId(cand);
           if (src && lastSource && src === lastSource) continue; // never 2 same source in a row
 
           const topic = iuGetVideoTopic(cand);
           const region = iuGetVideoRegion(cand);
-          const lang = langOf(cand);
 
           // maxPerDay per source (within this pick window)
           if (perSourceLimit(src, cand.maxPerDay || (cfg && cfg.maxPerDay))) continue;
 
-          // topic adjacency (only if alternative exists -> handled by stage relax)
-          if (!st.allowSameTopicAdj && topic && lastTopic && topic === lastTopic) continue;
-
-          // lang streak
-          if (st.maxLangStreak > 0 && lastLang) {
-            const prev = picked.slice(- (st.maxLangStreak - 1)).map((x) => langOf(x));
-            if (prev.length >= (st.maxLangStreak - 1) && prev.every((x) => x === lang) && lang === lastLang) {
-              continue;
-            }
+          if (i === 0) {
+            if (!matchesExpected(cand, "cz")) continue;
+          } else if (st.enforceExpectedLang) {
+            if (!matchesExpected(cand, expected)) continue;
           }
 
-          // quotas
-          if (!st.relaxRegionQuota && wouldExceedRegion(region)) continue;
-          if (!st.relaxTopicQuota && wouldExceedTopic(topic)) continue;
+          if (!st.relaxQuotas) {
+            if (wouldExceedRegion(region)) continue;
+            if (wouldExceedTopic(topic)) continue;
+          }
 
           chosen = cand;
+          chosenReason = st.reason || "";
           break;
         }
         if (chosen) break;
@@ -2761,51 +2788,71 @@ window.addEventListener("unhandledrejection", (e) => {
 
       if (!chosen) break;
 
+      const chosenTs = tsOf(chosen);
+      if (i === 0) {
+        capTs = chosenTs;
+        lastPickedTs = chosenTs;
+      } else {
+        lastPickedTs = chosenTs;
+      }
+
       const id = String(chosen.videoId || "").trim();
       usedIds.add(id);
       picked.push(chosen);
 
       const region = iuGetVideoRegion(chosen);
       const topic = iuGetVideoTopic(chosen);
-      const lang = langOf(chosen);
       const src = iuGetVideoSourceId(chosen);
 
       counts.region[region] = (counts.region[region] || 0) + 1;
       counts.topics[topic] = (counts.topics[topic] || 0) + 1;
-      counts.lang[lang] = (counts.lang[lang] || 0) + 1;
       counts.perSource[src] = (counts.perSource[src] || 0) + 1;
+
+      const expectedNow = expectedLang(i);
+      const isAltOk = matchesExpected(chosen, expectedNow);
+      if (i === 0 && !matchesExpected(chosen, "cz")) slot0_not_cz_or_bilingual += 1;
+      if (!isAltOk) {
+        bad_alternation += 1;
+        if (iuDebug) console.warn("[iuVideoMix] WARN fallback_slot=%d reason=%s", i, chosenReason || "bad_alternation");
+      }
+      if (capTs && chosenTs > capTs) newer_than_first += 1;
     }
 
-    if (Boolean(location.search.includes("debug=1"))) {
+    if (iuDebug) {
       try {
-        const langs = picked.map((x) => langOf(x));
-        const sources = picked.map((x) => iuGetVideoSourceId(x));
-        const topics = picked.map((x) => iuGetVideoTopic(x));
-        const first10 = picked.slice(0, 10).map((x) => ({
-          publishedAt: x.publishedAt,
-          sourceId: iuGetVideoSourceId(x),
-          lang: langOf(x),
-          topic: iuGetVideoTopic(x),
-          videoId: x.videoId,
+        const first10 = picked.slice(0, 10).map((x, idx) => ({
+          slot: idx,
+          expected: expectedLang(idx),
+          pickedLangClass: langClassOf(x),
+          hasCzSubtitles: Boolean(x?.hasCzSubtitles),
+          region: iuGetVideoRegion(x),
+          topic0: iuGetVideoTopic(x),
+          sourceKey: String(x?.sourceKey || ""),
+          publishedAtTs: tsOf(x),
+          videoId: x?.videoId,
         }));
+
         console.info(
-          "[iuVideoMix] slots=%d cz=%d world=%d topicCounts=%o maxLangStreak=%d maxSourceStreak=%d",
+          "[iuVideoMix] slots=%d capTs=%d slot0_not_cz_or_bilingual=%d bad_alternation=%d newer_than_first=%d topicCounts=%o",
           N,
-          counts.region.cz || 0,
-          counts.region.world || 0,
-          counts.topics,
-          streakMax(langs),
-          streakMax(sources)
+          capTs || 0,
+          slot0_not_cz_or_bilingual,
+          bad_alternation,
+          newer_than_first,
+          counts.topics
         );
         console.info("[iuVideoMix] first10=%o", first10);
-        // sanity: monotonic newest-first (non-increasing)
-        let bad = 0;
+
+        // monotonic sanity check (non-increasing)
+        let non_monotonic = 0;
         for (let i = 1; i < picked.length; i++) {
-          const a = iuSafeParseDate(picked[i - 1].publishedAt || "");
-          const b = iuSafeParseDate(picked[i].publishedAt || "");
-          if (a && b && b.getTime() > a.getTime()) bad += 1;
+          if (tsOf(picked[i]) > tsOf(picked[i - 1])) non_monotonic += 1;
         }
-        if (bad) console.warn("[iuVideoMix] WARN non_monotonic=%d", bad);
+        if (non_monotonic) console.warn("[iuVideoMix] WARN non_monotonic=%d", non_monotonic);
+
+        if (slot0_not_cz_or_bilingual) console.warn("[iuVideoMix] WARN slot0_not_cz_or_bilingual=%d", slot0_not_cz_or_bilingual);
+        if (bad_alternation) console.warn("[iuVideoMix] WARN bad_alternation=%d", bad_alternation);
+        if (newer_than_first) console.warn("[iuVideoMix] WARN newer_than_first=%d", newer_than_first);
       } catch {}
     }
 
