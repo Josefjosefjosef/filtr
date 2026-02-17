@@ -7641,6 +7641,38 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   pointer-events: none !important;
 }
 
+/* ============================================================
+   FINAL FIX — video iframe must be on top (stacking context kill)
+   ============================================================ */
+
+/* izoluj video kartu od layoutu */
+.iuVideoCard[data-iu-loaded="1"]{
+  position: relative !important;
+  isolation: isolate !important;
+  z-index: 9999 !important;
+}
+
+/* iframe MUSÍ být nad vším */
+.iuVideoCard[data-iu-loaded="1"] iframe,
+.iuVideoCard[data-iu-loaded="1"] .iuVideoFrame{
+  position: relative !important;
+  z-index: 10000 !important;
+  pointer-events: auto !important;
+}
+
+/* zabij všechny pseudo overlaye */
+.iuVideoCard[data-iu-loaded="1"]::before,
+.iuVideoCard[data-iu-loaded="1"]::after{
+  display: none !important;
+}
+
+/* zabij overlaye z news-card layoutu */
+.news-card.iuVideoCard[data-iu-loaded="1"] *{
+  transform: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
 .iuVideoFrame{
   width: 100%;
   aspect-ratio: 16 / 9;
