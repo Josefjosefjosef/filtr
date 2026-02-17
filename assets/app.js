@@ -6139,6 +6139,57 @@ function buildVideoAsArticleCard(it) {
       window.__iu_feedVideoPreviewInit = 1;
     } catch {}
 
+    function iuDebugEnabled() {
+      try { return Boolean(location.search && location.search.includes("debug=1")); } catch { return false; }
+    }
+
+    function iuEnsureVideoDebugPanel() {
+      if (!iuDebugEnabled()) return null;
+      try {
+        let box = document.getElementById("iuVideoDebugPanel");
+        if (box) return box;
+        box = document.createElement("div");
+        box.id = "iuVideoDebugPanel";
+        box.style.cssText = [
+          "position:fixed",
+          "right:12px",
+          "bottom:12px",
+          "max-width:460px",
+          "max-height:45vh",
+          "overflow:auto",
+          "z-index:2147483647",
+          "background:rgba(0,0,0,0.86)",
+          "color:#fff",
+          "border-radius:12px",
+          "padding:10px 12px",
+          "box-shadow:0 14px 34px rgba(0,0,0,0.35)",
+          "font:12px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace",
+        ].join(";");
+        const pre = document.createElement("pre");
+        pre.id = "iuVideoDebugText";
+        pre.style.cssText = "margin:0;white-space:pre-wrap;word-break:break-word;";
+        pre.textContent = "[iuVideoPlay] debug panel ready";
+        box.appendChild(pre);
+        document.body.appendChild(box);
+        return box;
+      } catch {
+        return null;
+      }
+    }
+
+    function iuVideoDebugUpdate(obj) {
+      if (!iuDebugEnabled()) return;
+      try {
+        iuEnsureVideoDebugPanel();
+        const pre = document.getElementById("iuVideoDebugText");
+        if (!pre) return;
+        let text = "";
+        try { text = JSON.stringify(obj, null, 2); } catch { text = String(obj); }
+        if (text.length > 2048) text = text.slice(0, 2048) + "…";
+        pre.textContent = text;
+      } catch {}
+    }
+
     document.addEventListener("click", (e) => {
       const t = e && e.target;
       const card = t && t.closest ? t.closest(".iuVideoCard") : null;
@@ -6148,6 +6199,7 @@ function buildVideoAsArticleCard(it) {
       // Some cards may temporarily miss data-ytid; try to infer from thumb URL.
       const isValidYtId = (x) => /^[A-Za-z0-9_-]{11}$/.test(String(x || "").trim());
       let id = (card.getAttribute("data-ytid") || "").trim();
+      let inferredFromThumb = false;
       if (!isValidYtId(id)) {
         try {
           const poster =
@@ -6155,13 +6207,24 @@ function buildVideoAsArticleCard(it) {
             (card.querySelector ? card.querySelector(".iuVideoPoster") : null);
           const thumbVar = poster && poster.style ? String(poster.style.getPropertyValue("--iuVideoThumb") || "") : "";
           const m = thumbVar.match(/\/vi\/([A-Za-z0-9_-]{11})\//);
-          if (m && m[1]) id = String(m[1]).trim();
+          if (m && m[1]) { id = String(m[1]).trim(); inferredFromThumb = true; }
           if (isValidYtId(id) && !String(card.getAttribute("data-ytid") || "").trim()) {
             try { card.setAttribute("data-ytid", id); } catch {}
           }
         } catch {}
       }
       if (!isValidYtId(id)) {
+        iuVideoDebugUpdate({
+          ts: new Date().toISOString(),
+          ytid: id || null,
+          inferred: inferredFromThumb || false,
+          loaded: card.getAttribute("data-iu-loaded") || null,
+          hasFrame: false,
+          hasIframe: false,
+          iframeSrc: null,
+          fallback: false,
+          error: "missing ytid",
+        });
         try { console.warn("[iuVideoPlay] missing ytid, cannot embed"); } catch {}
         return;
       }
@@ -6186,11 +6249,34 @@ function buildVideoAsArticleCard(it) {
       const a = t && t.closest ? t.closest('a[href]') : null;
       if (a && card.contains(a)) return;
 
+      iuVideoDebugUpdate({
+        ts: new Date().toISOString(),
+        ytid: id || null,
+        inferred: inferredFromThumb || false,
+        loaded: card.getAttribute("data-iu-loaded") || null,
+        hasFrame: !!frame,
+        hasIframe: !!(frame && frame.querySelector("iframe")),
+        iframeSrc: frame && frame.querySelector("iframe") ? frame.querySelector("iframe").getAttribute("src") : null,
+        fallback: false,
+        error: null,
+      });
+
       try { e.preventDefault(); } catch {}
 
       const watchUrl = `https://www.youtube.com/watch?v=${id}`;
       const src = iuBuildYouTubeEmbedUrl(id);
       if (!src) {
+        iuVideoDebugUpdate({
+          ts: new Date().toISOString(),
+          ytid: id || null,
+          inferred: inferredFromThumb || false,
+          loaded: card.getAttribute("data-iu-loaded") || null,
+          hasFrame: !!frame,
+          hasIframe: !!(frame && frame.querySelector("iframe")),
+          iframeSrc: frame && frame.querySelector("iframe") ? frame.querySelector("iframe").getAttribute("src") : null,
+          fallback: true,
+          error: "missing embed src",
+        });
         try { window.open(watchUrl, "_blank", "noopener"); } catch {}
         return;
       }
@@ -6213,9 +6299,31 @@ function buildVideoAsArticleCard(it) {
         iframe.className = "iuVideoIframe";
 
         frame.replaceChildren(iframe);
+        iuVideoDebugUpdate({
+          ts: new Date().toISOString(),
+          ytid: id || null,
+          inferred: inferredFromThumb || false,
+          loaded: card.getAttribute("data-iu-loaded") || null,
+          hasFrame: !!frame,
+          hasIframe: !!(frame && frame.querySelector("iframe")),
+          iframeSrc: frame && frame.querySelector("iframe") ? frame.querySelector("iframe").getAttribute("src") : null,
+          fallback: false,
+          error: null,
+        });
       } catch (err) {
         // Safe fallback: if inline embed fails for any reason, open YouTube in a new tab.
         try { console.warn("[iuVideoPlay] inline embed failed, falling back to watch URL", err); } catch {}
+        iuVideoDebugUpdate({
+          ts: new Date().toISOString(),
+          ytid: id || null,
+          inferred: inferredFromThumb || false,
+          loaded: card.getAttribute("data-iu-loaded") || null,
+          hasFrame: !!frame,
+          hasIframe: !!(frame && frame.querySelector("iframe")),
+          iframeSrc: frame && frame.querySelector("iframe") ? frame.querySelector("iframe").getAttribute("src") : null,
+          fallback: true,
+          error: String(err && (err.message || err)),
+        });
         try { window.open(watchUrl, "_blank", "noopener"); } catch {}
       }
     }, { passive: false });
