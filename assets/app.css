@@ -6651,6 +6651,36 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
   width: auto !important;
 }
 
+#newsList > #iuMyUzelView1,
+#newsList > #iuMyUzelView2,
+#newsList > #iuMyUzelView3,
+#newsList > #iuMyUzelView4,
+#newsList > #iuMyUzelView5{
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto !important;
+  max-width: none;
+}
+
+#newsList > #iuMyUzelView1 .iuRadioGrid,
+#newsList > #iuMyUzelView2 .iuRadioGrid,
+#newsList > #iuMyUzelView3 .iuRadioGrid,
+#newsList > #iuMyUzelView4 .iuRadioGrid,
+#newsList > #iuMyUzelView5 .iuRadioGrid{
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#newsList > #iuMyUzelView1 .iuRadioChip,
+#newsList > #iuMyUzelView2 .iuRadioChip,
+#newsList > #iuMyUzelView3 .iuRadioChip,
+#newsList > #iuMyUzelView4 .iuRadioChip,
+#newsList > #iuMyUzelView5 .iuRadioChip{
+  width: 100%;
+}
+
 /* Home view must adapt like #feed (same middle column footprint) */
 #newsList > #iuHomeView{
   flex: 1 1 0;
@@ -6813,7 +6843,7 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
   width: 60%;
   height: 2px;
   margin: 2px auto 8px auto;
-  background: rgba(255,255,255,0.22);
+  background: rgba(11,27,43,0.14);
   border-radius: 999px;
   display: block;
   pointer-events: none;
@@ -6825,7 +6855,7 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
   font-size: 10px;
   letter-spacing: .2px;
   text-transform: lowercase;
-  color: rgba(255,255,255,0.78);
+  color: rgba(11,27,43,0.62);
   margin: 0 0 6px 0;
   display: block;
   pointer-events: none;
