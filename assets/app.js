@@ -1971,57 +1971,56 @@ window.addEventListener("unhandledrejection", (e) => {
       return headMs === 0 ? true : ms > headMs;
     });
 
-    // Pick newHead: newest-first + quotas + anti-cluster (within newest window).
-    const pickWindow = Number(IU_VIDEO_PICK_WINDOW) > 0 ? Number(IU_VIDEO_PICK_WINDOW) : 240;
-    const slice = newOnly.slice(0, pickWindow);
-    const headMax = effectiveSlots;
-    const newHead = iuPickVideosForSlots(slice, headMax, { seen });
-    // mark seen when it enters queue head (do NOT evict existing queue slots)
-    for (const v of newHead) {
-      try { seen[String(v.videoId)] = Date.now(); } catch {}
+    // Build a single newest-first candidate stream and pick all slots once.
+    // This avoids mixing "old tail" items that could be newer than some newly-picked head items.
+    const poolById = new Map();
+    for (const v of pool) {
+      try {
+        const id = String(v?.videoId || "").trim();
+        if (id && !poolById.has(id)) poolById.set(id, v);
+      } catch {}
     }
 
-    // If no new arrivals but we still have empty slots, we'll fill tail from the newest pool.
-
     const oldSlotsNonEmpty = (queue0.slots || []).filter((s) => s && s.videoId);
-    const oldAsVideos = oldSlotsNonEmpty.map((s) => ({
-      videoId: s.videoId,
-      publishedAt: s.publishedAt,
-      sourceUrl: s.source,
-      lang: s.lang,
-      category: s.cat,
-    }));
+    const oldAsVideos = oldSlotsNonEmpty.map((s) => {
+      const id = String(s?.videoId || "").trim();
+      return (
+        poolById.get(id) || {
+          videoId: id,
+          publishedAt: s.publishedAt,
+          sourceUrl: s.source,
+          lang: s.lang,
+          category: s.cat,
+        }
+      );
+    });
 
-    // newQueue = unique(newHead + oldQueueSlots), then fill tail from newest candidates if needed.
-    let combined = iuUniqueQueueSlots([
-      ...newHead.map((v, idx) => iuBuildQueueSlotFromVideo(v, idx + 1)),
-      ...oldAsVideos.map((v, idx) => iuBuildQueueSlotFromVideo(v, newHead.length + idx + 1)),
-    ]);
-
-    const combinedIds = new Set(combined.map((s) => String(s?.videoId || "").trim()).filter(Boolean));
     const buffer = Math.max(20, effectiveSlots);
     const eligibleWindow = candidates.slice(0, effectiveSlots + buffer);
 
-    // Tail fill pass 1: prefer unseen (but do not evict existing seen slots)
-    for (const v of eligibleWindow) {
-      if (combined.length >= effectiveSlots) break;
+    const streamRaw = [...newOnly, ...oldAsVideos, ...eligibleWindow];
+    const stream = [];
+    const streamIds = new Set();
+    for (const v of streamRaw) {
       const id = String(v?.videoId || "").trim();
-      if (!id || combinedIds.has(id)) continue;
-      if (seen[id]) continue;
-      combined.push(iuBuildQueueSlotFromVideo(v, combined.length + 1));
-      combinedIds.add(id);
+      if (!id || streamIds.has(id)) continue;
+      streamIds.add(id);
+      stream.push(v);
     }
-    // Tail fill pass 2: allow seen (still newest-first)
-    for (const v of eligibleWindow) {
-      if (combined.length >= effectiveSlots) break;
-      const id = String(v?.videoId || "").trim();
-      if (!id || combinedIds.has(id)) continue;
-      combined.push(iuBuildQueueSlotFromVideo(v, combined.length + 1));
-      combinedIds.add(id);
+
+    const forceAllowIds = new Set(beforeIds);
+    const pickedVideos = iuPickVideosForSlots(stream, effectiveSlots, { seen, forceAllowIds });
+
+    // Mark seen for any video entering the queue.
+    for (const v of pickedVideos) {
+      try {
+        const id = String(v?.videoId || "").trim();
+        if (id) seen[id] = Date.now();
+      } catch {}
     }
 
     const normalizedSlots = iuNormalizeQueue(
-      { updatedAt: Date.now(), slots: combined.slice(0, effectiveSlots) },
+      { updatedAt: Date.now(), slots: pickedVideos.map((v, idx) => iuBuildQueueSlotFromVideo(v, idx + 1)) },
       effectiveSlots
     ).slots;
 
@@ -2029,7 +2028,7 @@ window.addEventListener("unhandledrejection", (e) => {
     iuWriteQueue(sectionKey, queue1);
     iuSaveVideoSeenMapV1(seen);
 
-    const poolEligibleLen = combined.length;
+    const poolEligibleLen = stream.length;
     if (iuDebug) {
       try {
         console.info(
@@ -2623,11 +2622,11 @@ window.addEventListener("unhandledrejection", (e) => {
     const interviews = Math.round(n * 0.15);
     const history = Math.round(n * 0.10);
     const used = science_tech + practical + finance + interviews + history;
-    const explainers = Math.max(0, n - used);
+    const explainer = Math.max(0, n - used);
     return {
       N: n,
       region: { cz: czTarget, world: worldTarget },
-      topics: { science_tech, practical, finance, interviews, history, explainers },
+      topics: { science_tech, practical, finance, interviews, history, explainer },
     };
   }
 
@@ -2636,7 +2635,8 @@ window.addEventListener("unhandledrejection", (e) => {
     if (t0) {
       const x = t0.toLowerCase();
       if (x === "tech_science") return "science_tech";
-      if (x === "science_tech" || x === "practical" || x === "finance" || x === "interviews" || x === "history" || x === "explainers") return x;
+      if (x === "explainers") return "explainer";
+      if (x === "science_tech" || x === "practical" || x === "finance" || x === "interviews" || x === "history" || x === "explainer") return x;
     }
     const cat = String(it?.category || "").trim().toLowerCase();
     const m = {
@@ -2648,10 +2648,10 @@ window.addEventListener("unhandledrejection", (e) => {
       history_culture: "history",
       transport_infra: "practical",
       health_psychology: "practical",
-      law_politics_explained: "explainers",
-      smart_fun_short: "explainers",
+      law_politics_explained: "explainer",
+      smart_fun_short: "explainer",
     };
-    return m[cat] || "explainers";
+    return m[cat] || "explainer";
   }
 
   function iuGetVideoRegion(it) {
@@ -2712,16 +2712,9 @@ window.addEventListener("unhandledrejection", (e) => {
 
     const counts = {
       region: { cz: 0, world: 0 },
-      topics: { science_tech: 0, practical: 0, finance: 0, interviews: 0, history: 0, explainers: 0 },
+      topics: { science_tech: 0, practical: 0, finance: 0, interviews: 0, history: 0, explainer: 0 },
       perSource: {},
     };
-
-    function wouldExceedRegion(region) {
-      return (counts.region[region] || 0) >= (targets.region[region] || 0);
-    }
-    function wouldExceedTopic(topic) {
-      return (counts.topics[topic] || 0) >= (targets.topics[topic] || 0);
-    }
     function perSourceLimit(src, maxPerDay) {
       const lim = Math.max(1, Number(maxPerDay) || 2);
       return (counts.perSource[src] || 0) >= lim;
@@ -2733,10 +2726,38 @@ window.addEventListener("unhandledrejection", (e) => {
     let bad_alternation = 0;
     let newer_than_first = 0;
 
+    function scoreCandidate(cand, expected, st, lastLang) {
+      let score = 0;
+      try {
+        const topic = iuGetVideoTopic(cand);
+        const region = iuGetVideoRegion(cand);
+        const lc = langClassOf(cand);
+
+        // Prefer matching the expected language even in fallback.
+        if (matchesExpected(cand, expected)) score += 2;
+        else score -= 2;
+
+        // Soft quotas: reward filling deficits; mild penalty for exceeding.
+        if ((counts.region[region] || 0) < (targets.region[region] || 0)) score += 2;
+        else score -= 0.5;
+
+        if ((counts.topics[topic] || 0) < (targets.topics[topic] || 0)) score += 2;
+        else score -= 0.25;
+
+        // Slightly prefer bilingual as a universal filler when quotas are tight.
+        if (lc === "bilingual") score += 0.25;
+
+        // In strict stages, don't over-favor quota at the expense of recency.
+        if (!st.relaxQuotas) score += 0.1;
+      } catch {}
+      return score;
+    }
+
     for (let i = 0; i < N; i++) {
       const expected = expectedLang(i);
       const last = picked[picked.length - 1] || null;
       const lastSource = last ? iuGetVideoSourceId(last) : "";
+      const lastLang = last ? langClassOf(last) : "";
 
       const stages = [
         { enforceExpectedLang: true, relaxQuotas: false, allowAnyLang: false, reason: "" },
@@ -2748,11 +2769,16 @@ window.addEventListener("unhandledrejection", (e) => {
       let chosenReason = "";
       for (const st of stages) {
         if (i === 0 && st.allowAnyLang) continue; // slot0 must be CZ or bilingual
-        for (const cand of pool) {
+        let bestScore = Number.NEGATIVE_INFINITY;
+        let bestTs = 0;
+        const pickWindow = 240;
+        const scan = pool.slice(0, pickWindow);
+        for (const cand of scan) {
           if (!cand) continue;
           const id = String(cand.videoId || "").trim();
           if (!id || usedIds.has(id)) continue;
-          if (seen && seen[id]) continue;
+          const forceAllow = Boolean(cfg && cfg.forceAllowIds && cfg.forceAllowIds.has(id));
+          if (!forceAllow && seen && seen[id]) continue;
 
           const ts = tsOf(cand);
           if (!ts) continue;
@@ -2774,14 +2800,27 @@ window.addEventListener("unhandledrejection", (e) => {
             if (!matchesExpected(cand, expected)) continue;
           }
 
-          if (!st.relaxQuotas) {
-            if (wouldExceedRegion(region)) continue;
-            if (wouldExceedTopic(topic)) continue;
+          // In allowAnyLang fallback, enforce maxLangStreak=2.
+          if (st.allowAnyLang && lastLang) {
+            const curLang = langClassOf(cand);
+            if (curLang !== "bilingual" && lastLang !== "bilingual" && curLang === lastLang) {
+              const prev = picked.slice(-1)[0];
+              const prev2 = picked.slice(-2)[0];
+              if (prev && prev2) {
+                const l1 = langClassOf(prev);
+                const l2 = langClassOf(prev2);
+                if (l1 === curLang && l2 === curLang) continue;
+              }
+            }
           }
 
-          chosen = cand;
-          chosenReason = st.reason || "";
-          break;
+          const sc = scoreCandidate(cand, expected, st, lastLang);
+          if (sc > bestScore || (sc === bestScore && ts > bestTs)) {
+            bestScore = sc;
+            bestTs = ts;
+            chosen = cand;
+            chosenReason = st.reason || "";
+          }
         }
         if (chosen) break;
       }
@@ -2832,13 +2871,26 @@ window.addEventListener("unhandledrejection", (e) => {
           videoId: x?.videoId,
         }));
 
+        // max source streak sanity (should be 1 with anti-cluster)
+        let maxSourceStreak = 0;
+        let cur = 0;
+        let lastSrc = "";
+        for (const x of picked) {
+          const s = iuGetVideoSourceId(x);
+          if (s && s === lastSrc) cur += 1;
+          else { lastSrc = s; cur = 1; }
+          if (cur > maxSourceStreak) maxSourceStreak = cur;
+        }
+
         console.info(
-          "[iuVideoMix] slots=%d capTs=%d slot0_not_cz_or_bilingual=%d bad_alternation=%d newer_than_first=%d topicCounts=%o",
+          "[iuVideoMix] slots=%d capTs=%d slot0_not_cz_or_bilingual=%d bad_alternation=%d newer_than_first=%d newerThanCapCount=%d maxSourceStreak=%d topicCounts=%o",
           N,
           capTs || 0,
           slot0_not_cz_or_bilingual,
           bad_alternation,
           newer_than_first,
+          newer_than_first,
+          maxSourceStreak,
           counts.topics
         );
         console.info("[iuVideoMix] first10=%o", first10);
