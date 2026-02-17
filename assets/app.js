@@ -7845,6 +7845,69 @@ function buildVideoAsArticleCard(it) {
       .replace(/'/g, "&#039;");
   }
 
+  function iuHexToRgb(hex){
+    const h = String(hex || "").trim().replace("#", "");
+    if (h.length === 3){
+      const r = parseInt(h[0] + h[0], 16), g = parseInt(h[1] + h[1], 16), b = parseInt(h[2] + h[2], 16);
+      if (Number.isFinite(r) && Number.isFinite(g) && Number.isFinite(b)) return { r, g, b };
+      return null;
+    }
+    if (h.length === 6){
+      const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+      if (Number.isFinite(r) && Number.isFinite(g) && Number.isFinite(b)) return { r, g, b };
+      return null;
+    }
+    return null;
+  }
+
+  function iuRelLuminance(rgb){
+    const r = rgb && Number.isFinite(rgb.r) ? rgb.r : 0;
+    const g = rgb && Number.isFinite(rgb.g) ? rgb.g : 0;
+    const b = rgb && Number.isFinite(rgb.b) ? rgb.b : 0;
+    const sr = r / 255, sg = g / 255, sb = b / 255;
+    const lin = (c) => (c <= 0.03928) ? (c / 12.92) : Math.pow((c + 0.055) / 1.055, 2.4);
+    const R = lin(sr), G = lin(sg), B = lin(sb);
+    return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+  }
+
+  function iuContrastRatio(l1, l2){
+    const L1 = Math.max(l1, l2);
+    const L2 = Math.min(l1, l2);
+    return (L1 + 0.05) / (L2 + 0.05);
+  }
+
+  function iuSetChipTextContrast(chipEl, bgHex){
+    if (!chipEl) return;
+    const rgb = iuHexToRgb(bgHex);
+    if (!rgb) {
+      chipEl.removeAttribute("data-iu-text");
+      return;
+    }
+    const Lbg = iuRelLuminance(rgb);
+    const Lwhite = 1.0;
+    const Ldark = iuRelLuminance({ r: 11, g: 27, b: 43 }); // #0b1b2b
+    const cWhite = iuContrastRatio(Lbg, Lwhite);
+    const cDark  = iuContrastRatio(Lbg, Ldark);
+    if (cWhite < 4.5 && cDark > cWhite) chipEl.setAttribute("data-iu-text", "dark");
+    else chipEl.removeAttribute("data-iu-text");
+  }
+
+  function iuApplySolidChipTextContrastInView(viewEl){
+    try{
+      if (!viewEl) return;
+      const chips = Array.from(viewEl.querySelectorAll('.iuRadioChip'));
+      for (const chip of chips){
+        const bg = getComputedStyle(chip).backgroundColor;
+        const m = bg && bg.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+        if (!m) { chip.removeAttribute("data-iu-text"); continue; }
+        const r = Number(m[1]), g = Number(m[2]), b = Number(m[3]);
+        if (!Number.isFinite(r) || !Number.isFinite(g) || !Number.isFinite(b)) { chip.removeAttribute("data-iu-text"); continue; }
+        const hex = "#" + [r,g,b].map(v => v.toString(16).padStart(2,"0")).join("");
+        iuSetChipTextContrast(chip, hex);
+      }
+    }catch{}
+  }
+
   // ============================================================
   // MŮJ INFO UZEL — 5 custom sections (UI-only, localStorage)
   // ============================================================
@@ -8091,6 +8154,15 @@ function buildVideoAsArticleCard(it) {
       );
     }
     btnWrap.innerHTML = rows.join("") + `<div class="iuMyUzelInlineMsg" id="iuMyUzelMsg${s}" hidden></div>`;
+
+    // Chip text contrast (only when colored -> solid bg)
+    try{
+      const chips = btnWrap.querySelectorAll(".iuMyUzelChip");
+      chips.forEach((chip) => {
+        if (isColored) iuSetChipTextContrast(chip, rawC);
+        else chip.removeAttribute("data-iu-text");
+      });
+    }catch{}
 
     // Notes block (per-section)
     try{
@@ -9157,6 +9229,22 @@ function buildVideoAsArticleCard(it) {
     try{ state.page = 1; }catch{}
     setLeftNavActive(section);
     showView(VIEW_MAP[section] ?? 'media');
+
+    // SOLID chips: runtime contrast for default WHITE text (MindMenu unaffected)
+    try{
+      const views = [
+        document.getElementById("iuRadioView"),
+        document.getElementById("iuTvOnlineView"),
+        document.getElementById("iuWeatherView"),
+        document.getElementById("iuMapsView") || document.getElementById("iuMapyView"),
+        document.getElementById("iuTravelView"),
+        document.getElementById("iuTvProgramView"),
+        document.getElementById("iuCultureView"),
+        document.getElementById("iuAdsView"),
+      ];
+      views.forEach(v => iuApplySolidChipTextContrastInView(v));
+    }catch{}
+
     // Custom views (UI-only)
     try{
       if (String(section || "").toLowerCase().startsWith("myuzel-")) {
