@@ -6145,8 +6145,26 @@ function buildVideoAsArticleCard(it) {
       if (!card) return;
 
       // Only handle our YouTube preview cards (fixed slots).
-      const id = (card.getAttribute("data-ytid") || "").trim();
-      if (!id) return;
+      // Some cards may temporarily miss data-ytid; try to infer from thumb URL.
+      const isValidYtId = (x) => /^[A-Za-z0-9_-]{11}$/.test(String(x || "").trim());
+      let id = (card.getAttribute("data-ytid") || "").trim();
+      if (!isValidYtId(id)) {
+        try {
+          const poster =
+            (t && t.closest ? t.closest(".iuVideoPoster") : null) ||
+            (card.querySelector ? card.querySelector(".iuVideoPoster") : null);
+          const thumbVar = poster && poster.style ? String(poster.style.getPropertyValue("--iuVideoThumb") || "") : "";
+          const m = thumbVar.match(/\/vi\/([A-Za-z0-9_-]{11})\//);
+          if (m && m[1]) id = String(m[1]).trim();
+          if (isValidYtId(id) && !String(card.getAttribute("data-ytid") || "").trim()) {
+            try { card.setAttribute("data-ytid", id); } catch {}
+          }
+        } catch {}
+      }
+      if (!isValidYtId(id)) {
+        try { console.warn("[iuVideoPlay] missing ytid, cannot embed"); } catch {}
+        return;
+      }
       if (card.getAttribute("data-iu-loaded") === "1") return;
 
       // Guard: don't hijack "open in new tab" or non-primary clicks.
