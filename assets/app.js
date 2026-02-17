@@ -6224,8 +6224,9 @@ function buildVideoAsArticleCard(it) {
 
       // Normalize: set data-ytid once we inferred it.
       try {
-        if (card && isValidYtId(id) && !String(card.getAttribute("data-ytid") || "").trim()) {
-          card.setAttribute("data-ytid", id);
+        if (card && isValidYtId(id)) {
+          const cur = String(card.getAttribute("data-ytid") || "").trim();
+          if (cur !== id) card.setAttribute("data-ytid", id);
         }
       } catch {}
 
@@ -6302,19 +6303,18 @@ function buildVideoAsArticleCard(it) {
 
             setTimeout(() => {
               try {
-                const card2 = document.querySelector('.iuVideoCard[data-feed-type="video-preview"]') || card;
-                const frame2 = card2 && card2.querySelector ? card2.querySelector(".iuVideoFrame") : (frame || null);
-                const dbgCardYtid = card2 ? (card2.getAttribute("data-ytid") || null) : null;
-                const dbgLoaded = card2 ? (card2.getAttribute("data-iu-loaded") || null) : null;
+                const frame2 = card && card.querySelector ? card.querySelector(".iuVideoFrame") : (frame || null);
+                const dbgCardYtid = card ? (card.getAttribute("data-ytid") || null) : null;
+                const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
                 const dbgIframe = frame2 ? frame2.querySelector("iframe") : null;
                 const dbgIframeSrc = dbgIframe ? (dbgIframe.getAttribute("src") || null) : null;
                 const cardsPreview = Array.from(document.querySelectorAll('.iuVideoCard[data-feed-type="video-preview"]'));
-                const idx = card2 ? cardsPreview.indexOf(card2) : -1;
-                const cardIdentity = card2 ? {
+                const idx = card ? cardsPreview.indexOf(card) : -1;
+                const cardIdentity = card ? {
                   idx,
-                  tag: card2.tagName,
-                  cls: card2.className || null,
-                  slot: card2.getAttribute("data-slot") || null,
+                  tag: card.tagName,
+                  cls: card.className || null,
+                  slot: card.getAttribute("data-slot") || null,
                   ytidAttr: dbgCardYtid,
                   loadedAttr: dbgLoaded,
                 } : null;
@@ -6363,8 +6363,11 @@ function buildVideoAsArticleCard(it) {
 
       // Only handle our YouTube preview cards (fixed slots).
       const resolved = iuResolveYtIdFromCard(card);
-      const id = resolved.id;
-      if (!id) {
+      const id2 = (resolved && resolved.id) ? String(resolved.id).trim() : "";
+      if (id2) {
+        try { card.setAttribute("data-ytid", id2); } catch {}
+      }
+      if (!id2) {
         const dbgCardYtid = card ? (card.getAttribute("data-ytid") || null) : null;
         const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
         const dbgIframe = null;
@@ -6420,8 +6423,8 @@ function buildVideoAsArticleCard(it) {
 
       try { e.preventDefault(); } catch {}
 
-      const watchUrl = `https://www.youtube.com/watch?v=${id}`;
-      const src = iuBuildYouTubeEmbedUrl(id);
+      const watchUrl = `https://www.youtube.com/watch?v=${id2}`;
+      const src = iuBuildYouTubeEmbedUrl(id2);
       if (!src) {
         const dbgCardYtid = card ? (card.getAttribute("data-ytid") || null) : null;
         const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
