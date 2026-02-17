@@ -7850,9 +7850,19 @@ function buildVideoAsArticleCard(it) {
   // ============================================================
 
   const MYUZEL_STORAGE_KEY = "iu_myuzel_v1";
+  const MYUZEL_BUTTONS_MAX = 4;
+
+  function iuAutosizeTextarea(ta){
+    try{
+      if (!ta) return;
+      ta.style.height = "auto";
+      ta.style.overflow = "hidden";
+      ta.style.height = (ta.scrollHeight + 2) + "px";
+    }catch{}
+  }
 
   function iuMyUzelDefaultState(){
-    const mkBtns = () => Array.from({ length: 6 }).map((_, i) => ({
+    const mkBtns = () => Array.from({ length: MYUZEL_BUTTONS_MAX }).map((_, i) => ({
       title: `Tlačítko ${i + 1}`,
       url: "",
     }));
@@ -7861,6 +7871,7 @@ function buildVideoAsArticleCard(it) {
         name: `Sekce ${i + 1}`,
         color: "#b9bcc2",
         buttons: mkBtns(),
+        notes: "",
       })),
       activeSection: 1,
     };
@@ -7883,14 +7894,15 @@ function buildVideoAsArticleCard(it) {
       const color = String(src.color || def.sections[i].color || "#b9bcc2").trim() || "#b9bcc2";
       const btns = Array.isArray(src.buttons) ? src.buttons : [];
       const fixedBtns = [];
-      for (let j = 0; j < 6; j++) {
+      for (let j = 0; j < MYUZEL_BUTTONS_MAX; j++) {
         const b = btns[j] && typeof btns[j] === "object" ? btns[j] : {};
         fixedBtns.push({
           title: iuMyUzelClampName(b.title) || `Tlačítko ${j + 1}`,
           url: String(b.url || "").trim(),
         });
       }
-      fixedSections.push({ name, color, buttons: fixedBtns });
+      const notes = (typeof src.notes === "string") ? src.notes : "";
+      fixedSections.push({ name, color, buttons: fixedBtns, notes });
     }
 
     let activeSection = 1;
@@ -7925,6 +7937,17 @@ function buildVideoAsArticleCard(it) {
   function iuMyUzelSave(state){
     try{
       const st = iuMyUzelValidateState(state);
+
+      // sanitize legacy storage (drop buttons 5/6 permanently)
+      try{
+        for (const sec of st.sections || []) {
+          if (Array.isArray(sec.buttons) && sec.buttons.length > MYUZEL_BUTTONS_MAX) {
+            sec.buttons = sec.buttons.slice(0, MYUZEL_BUTTONS_MAX);
+          }
+          if (typeof sec.notes !== "string") sec.notes = "";
+        }
+      }catch{}
+
       localStorage.setItem(MYUZEL_STORAGE_KEY, JSON.stringify(st));
 
       // FINAL: always apply saved colors to rail + views (stable even after reload)
@@ -8050,8 +8073,9 @@ function buildVideoAsArticleCard(it) {
     try { btnWrap.classList.add("iuRadioGrid"); } catch {}
 
     const rows = [];
-    for (let i = 0; i < 6; i++) {
-      const b = sec.buttons[i] || {};
+    const btns = Array.isArray(sec.buttons) ? sec.buttons.slice(0, MYUZEL_BUTTONS_MAX) : [];
+    for (let i = 0; i < btns.length; i++) {
+      const b = btns[i] || {};
       rows.push(
         `<div class="iuMyUzelBtnWrap">` +
           `<button type="button" class="iuMyUzelBtnGear" data-myuzel-slot="${s}" data-myuzel-btn="${i}" aria-label="Nastavení tlačítka">` +
@@ -8067,6 +8091,89 @@ function buildVideoAsArticleCard(it) {
       );
     }
     btnWrap.innerHTML = rows.join("") + `<div class="iuMyUzelInlineMsg" id="iuMyUzelMsg${s}" hidden></div>`;
+
+    // Notes block (per-section)
+    try{
+      if (!view) return;
+      const existing = view.querySelector(".iuMyUzelNotes");
+      if (existing) existing.remove();
+
+      const wrap = document.createElement("div");
+      wrap.className = "iuMyUzelNotes";
+      wrap.setAttribute("data-myuzel-slot", String(s));
+      wrap.innerHTML =
+        `<div class="iuMyUzelNotesTop">` +
+          `<div class="iuMyUzelNotesTitle">Poznámky</div>` +
+          `<div class="iuMyUzelNotesActions">` +
+            `<button type="button" class="iuBtn iuBtn--ghost iuMyUzelNotesShare">Sdílet</button>` +
+            `<button type="button" class="iuBtn iuBtn--ghost iuMyUzelNotesEmail">Email</button>` +
+            `<button type="button" class="iuBtn iuBtn--ghost iuMyUzelNotesWhatsApp">WhatsApp</button>` +
+          `</div>` +
+        `</div>` +
+        `<textarea class="iuMyUzelNotesInput" placeholder="Piš poznámky…"></textarea>`;
+
+      const ta = wrap.querySelector(".iuMyUzelNotesInput");
+      if (ta) {
+        ta.value = String(sec.notes || "");
+        iuAutosizeTextarea(ta);
+        ta.addEventListener("input", () => {
+          try{
+            const st2 = iuMyUzelLoad();
+            const sec2 = st2.sections && st2.sections[s - 1] ? st2.sections[s - 1] : null;
+            if (sec2) sec2.notes = String(ta.value || "");
+            iuAutosizeTextarea(ta);
+            try { iuMyUzelSave(st2); } catch {}
+            try { ta.scrollIntoView({ block: "nearest", inline: "nearest" }); } catch {}
+          }catch{}
+        });
+      }
+
+      const shareBtn = wrap.querySelector(".iuMyUzelNotesShare");
+      const emailBtn = wrap.querySelector(".iuMyUzelNotesEmail");
+      const waBtn = wrap.querySelector(".iuMyUzelNotesWhatsApp");
+
+      const getPayload = () => {
+        const st2 = iuMyUzelLoad();
+        const sec2 = st2.sections && st2.sections[s - 1] ? st2.sections[s - 1] : {};
+        const name2 = String(sec2.name || `Sekce ${s}`).trim();
+        const text2 = String((ta && ta.value) || sec2.notes || "").trim();
+        return { name: name2, text: text2 };
+      };
+
+      if (shareBtn) shareBtn.addEventListener("click", async () => {
+        try{
+          const p = getPayload();
+          if (!p.text) return;
+          const payload = { title: `Poznámky — ${p.name}`, text: p.text };
+          if (navigator.share) {
+            try { await navigator.share(payload); return; } catch {}
+          }
+          try { await navigator.clipboard.writeText(p.text); } catch {}
+          alert("Poznámky zkopírovány do schránky.");
+        }catch{}
+      });
+
+      if (emailBtn) emailBtn.addEventListener("click", () => {
+        try{
+          const p = getPayload();
+          if (!p.text) return;
+          const subject = encodeURIComponent(`Poznámky — ${p.name}`);
+          const body = encodeURIComponent(p.text);
+          window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }catch{}
+      });
+
+      if (waBtn) waBtn.addEventListener("click", () => {
+        try{
+          const p = getPayload();
+          if (!p.text) return;
+          const msg = encodeURIComponent(p.text);
+          window.open(`https://wa.me/?text=${msg}`, "_blank", "noopener,noreferrer");
+        }catch{}
+      });
+
+      btnWrap.insertAdjacentElement("afterend", wrap);
+    }catch{}
   }
 
   function iuMyUzelApplyViewVisibility(sectionKey){
@@ -8174,7 +8281,7 @@ function buildVideoAsArticleCard(it) {
     const s = parseInt(slot, 10);
     const i = parseInt(btnIndex, 10);
     if (!Number.isFinite(s) || s < 1 || s > 5) return;
-    if (!Number.isFinite(i) || i < 0 || i > 5) return;
+    if (!Number.isFinite(i) || i < 0 || i >= MYUZEL_BUTTONS_MAX) return;
     const st = iuMyUzelLoad();
     const sec = st.sections[s - 1];
     const b = sec.buttons[i] || {};
@@ -8287,6 +8394,7 @@ function buildVideoAsArticleCard(it) {
         iuMyUzelShowErr("");
         const slot = parseInt(confirmBtn.getAttribute("data-myuzel-confirm-btn-slot") || "0", 10);
         const idx = parseInt(confirmBtn.getAttribute("data-myuzel-confirm-btn-idx") || "0", 10);
+        if (!Number.isFinite(idx) || idx < 0 || idx >= MYUZEL_BUTTONS_MAX) return;
         const urlEl = document.getElementById("iuMyUzelBtnUrl");
         const titleEl = document.getElementById("iuMyUzelBtnTitle");
         const title = iuMyUzelClampName(titleEl ? titleEl.value : "") || `Tlačítko ${idx + 1}`;
@@ -8295,6 +8403,8 @@ function buildVideoAsArticleCard(it) {
 
         const st = iuMyUzelLoad();
         try{
+          if (!st.sections || !st.sections[slot - 1] || !Array.isArray(st.sections[slot - 1].buttons)) throw new Error("Bad section");
+          if (!st.sections[slot - 1].buttons[idx]) st.sections[slot - 1].buttons[idx] = { title: "", url: "" };
           st.sections[slot - 1].buttons[idx].title = title;
           st.sections[slot - 1].buttons[idx].url = norm.url;
           iuMyUzelSave(st);
@@ -8322,6 +8432,7 @@ function buildVideoAsArticleCard(it) {
         e.stopPropagation();
         const slot = parseInt(btnGear.getAttribute("data-myuzel-slot") || "0", 10);
         const idx = parseInt(btnGear.getAttribute("data-myuzel-btn") || "0", 10);
+        if (!Number.isFinite(idx) || idx < 0 || idx >= MYUZEL_BUTTONS_MAX) return;
         iuMyUzelOpenButtonSettings(slot, idx);
         return;
       }
@@ -8333,6 +8444,7 @@ function buildVideoAsArticleCard(it) {
         e.stopPropagation();
         const slot = parseInt(btn.getAttribute("data-myuzel-slot") || "0", 10);
         const idx = parseInt(btn.getAttribute("data-myuzel-open") || "0", 10);
+        if (!Number.isFinite(idx) || idx < 0 || idx >= MYUZEL_BUTTONS_MAX) return;
         const st = iuMyUzelLoad();
         const url = String(st?.sections?.[slot - 1]?.buttons?.[idx]?.url || "").trim();
         if (!url) {
