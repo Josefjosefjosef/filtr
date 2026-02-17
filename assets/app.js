@@ -7933,7 +7933,8 @@ function buildVideoAsArticleCard(it) {
         for (let i = 0; i < 5; i++) {
           const sec = st.sections && st.sections[i] ? st.sections[i] : null;
           if (!sec) continue;
-          const c = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
+          const rawC = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
+          const isColored = (rawC.toLowerCase() !== "#b9bcc2");
 
           // --- APPLY COLOR TO RAIL ITEM ---
           const railItem =
@@ -7942,23 +7943,43 @@ function buildVideoAsArticleCard(it) {
             items[i];
 
           if (railItem) {
-            try { railItem.style.setProperty("--iuNavAccent", c); } catch {}
-            try { railItem.style.setProperty("--iuMyUzelAccent", c); } catch {}
+            if (isColored) {
+              try { railItem.style.setProperty("--iuNavAccent", rawC); } catch {}
+              try { railItem.style.setProperty("--iuMyUzelAccent", rawC); } catch {}
+              try { railItem.setAttribute("data-myuzel-colored", "1"); } catch {}
+            } else {
+              try { railItem.style.removeProperty("--iuNavAccent"); } catch {}
+              try { railItem.style.removeProperty("--iuMyUzelAccent"); } catch {}
+              try { railItem.setAttribute("data-myuzel-colored", "0"); } catch {}
+            }
           }
 
           // Apply to any matching rail nodes (future-proof; avoids regressions on duplicates)
           try{
             const railItems = document.querySelectorAll(`.iuMyUzelItem[data-slot="${i+1}"], .iuMyUzelItem[data-myuzel-slot="${i+1}"]`);
             railItems.forEach((el) => {
-              try { el.style.setProperty("--iuNavAccent", c); } catch {}
-              try { el.style.setProperty("--iuMyUzelAccent", c); } catch {}
+              if (isColored) {
+                try { el.style.setProperty("--iuNavAccent", rawC); } catch {}
+                try { el.style.setProperty("--iuMyUzelAccent", rawC); } catch {}
+                try { el.setAttribute("data-myuzel-colored", "1"); } catch {}
+              } else {
+                try { el.style.removeProperty("--iuNavAccent"); } catch {}
+                try { el.style.removeProperty("--iuMyUzelAccent"); } catch {}
+                try { el.setAttribute("data-myuzel-colored", "0"); } catch {}
+              }
             });
           }catch{}
 
           // --- APPLY COLOR TO VIEW WRAPPER ---
           const viewEl = document.getElementById(`iuMyUzelView${i+1}`);
           if (viewEl) {
-            try { viewEl.style.setProperty("--iuMyUzelAccent", c); } catch {}
+            if (isColored) {
+              try { viewEl.style.setProperty("--iuMyUzelAccent", rawC); } catch {}
+              try { viewEl.setAttribute("data-myuzel-colored", "1"); } catch {}
+            } else {
+              try { viewEl.style.removeProperty("--iuMyUzelAccent"); } catch {}
+              try { viewEl.setAttribute("data-myuzel-colored", "0"); } catch {}
+            }
           }
         }
       }catch{}
@@ -7986,11 +8007,19 @@ function buildVideoAsArticleCard(it) {
         const sec = st.sections[i - 1];
         const label = it.querySelector(".iu-leftNavLabel");
         if (label) label.textContent = String(sec.name || `Sekce ${i}`).trim();
-        const c = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
-        // Rail color must propagate via both MyUzel vars and existing rail accent system.
-        try { it.style.setProperty("--iuMyUzelIcon", c); } catch {}
-        try { it.style.setProperty("--iuMyUzelAccent", c); } catch {}
-        try { it.style.setProperty("--iuNavAccent", c); } catch {}
+        const rawC = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
+        const isColored = (rawC.toLowerCase() !== "#b9bcc2");
+        // Rail: keep neutral until user sets a custom color.
+        try { it.style.setProperty("--iuMyUzelIcon", rawC); } catch {}
+        if (isColored) {
+          try { it.style.setProperty("--iuMyUzelAccent", rawC); } catch {}
+          try { it.style.setProperty("--iuNavAccent", rawC); } catch {}
+          try { it.setAttribute("data-myuzel-colored", "1"); } catch {}
+        } else {
+          try { it.style.removeProperty("--iuMyUzelAccent"); } catch {}
+          try { it.style.removeProperty("--iuNavAccent"); } catch {}
+          try { it.setAttribute("data-myuzel-colored", "0"); } catch {}
+        }
       }
     }catch{}
   }
@@ -8000,16 +8029,21 @@ function buildVideoAsArticleCard(it) {
     if (!Number.isFinite(s) || s < 1 || s > 5) return;
     const st = iuMyUzelLoad();
     const sec = st.sections[s - 1];
+    const rawC = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
+    const isColored = (rawC.toLowerCase() !== "#b9bcc2");
 
     const view = document.getElementById(`iuMyUzelView${s}`);
     const title = document.getElementById(`iuMyUzelTitle${s}`);
     const btnWrap = view ? view.querySelector(`.iuMyUzelButtons[data-myuzel-slot="${s}"]`) : null;
     if (title) title.textContent = String(sec.name || `Sekce ${s}`).trim();
     if (view) {
-      const c = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
-      // Use shared section accent var so we can reuse existing chip styles (Radio/Weather/etc).
-      try { view.style.setProperty("--iuMyUzelAccent", c); } catch {}
-      try { view.style.setProperty("--iuSectionAccent", c); } catch {}
+      if (isColored) {
+        try { view.style.setProperty("--iuMyUzelAccent", rawC); } catch {}
+        try { view.setAttribute("data-myuzel-colored", "1"); } catch {}
+      } else {
+        try { view.style.removeProperty("--iuMyUzelAccent"); } catch {}
+        try { view.setAttribute("data-myuzel-colored", "0"); } catch {}
+      }
     }
     if (!btnWrap) return;
 
@@ -8033,16 +8067,6 @@ function buildVideoAsArticleCard(it) {
       );
     }
     btnWrap.innerHTML = rows.join("") + `<div class="iuMyUzelInlineMsg" id="iuMyUzelMsg${s}" hidden></div>`;
-
-    // FINAL: apply chip accent inline (belt + suspenders)
-    try{
-      const c = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
-      const chips = btnWrap.querySelectorAll(".iuMyUzelChip");
-      chips.forEach((chip) => {
-        try { chip.style.borderLeft = `4px solid ${c}`; } catch {}
-        try { chip.style.setProperty("--iuSectionAccent", c); } catch {}
-      });
-    }catch{}
   }
 
   function iuMyUzelApplyViewVisibility(sectionKey){
