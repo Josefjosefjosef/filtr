@@ -7612,9 +7612,34 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     padding: 0;
   }
 
-  .iuMobileFocusList,
   .iuMobileFocusActive{
     width: 100%;
+  }
+
+  .iuMobileFocusTiles{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .iuMobileTile{
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    border: 0;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    color: #fff;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1.15;
+    background: var(--iuMobileFocusAccent, var(--iuNavAccent-media, #0B2A4A));
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .iuMobileFocusBtn{
@@ -7640,13 +7665,10 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     padding: 10px 0 0 0;
   }
 
-  .iuMobileFocus.is-open .iuMobileFocusList{
+  .iuMobileFocus.is-open .iuMobileFocusTiles{
     display: none;
   }
   .iuMobileFocus.is-open .iuMobileFocusActive{
-    display: block;
-  }
-  .iuMobileFocusList{
     display: block;
   }
   .iuMobileFocusActive{
@@ -7661,9 +7683,29 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   .iuMobileFocusBtn[data-accent="mapy"]{      --iuMobileFocusAccent: var(--iuNavAccent-mapy, #16A34A); }
   .iuMobileFocusBtn[data-accent="travel"]{    --iuMobileFocusAccent: var(--iuNavAccent-travel, #EA580C); }
   .iuMobileFocusBtn[data-accent="pocasi"]{    --iuMobileFocusAccent: var(--iuNavAccent-pocasi, #2563EB); }
-  .iuMobileFocusBtn[data-accent="namedays"]{  --iuMobileFocusAccent: var(--iuNavAccent-namedays, #7C3AED); }
   .iuMobileFocusBtn[data-accent="tvprogram"]{ --iuMobileFocusAccent: var(--iuNavAccent-tvprogram, #DC2626); }
+  .iuMobileFocusBtn[data-accent="culture"]{   --iuMobileFocusAccent: var(--iuNavAccent-culture, #EA580C); }
+  .iuMobileFocusBtn[data-accent="ads"]{       --iuMobileFocusAccent: var(--iuNavAccent-ads, #111827); }
   .iuMobileFocusBtn[data-accent="mindmenu"]{  --iuMobileFocusAccent: #000; }
+
+  .iuMobileTile[data-accent="media"]{     --iuMobileFocusAccent: var(--iuNavAccent-media, #0B2A4A); }
+  .iuMobileTile[data-accent="radio"]{     --iuMobileFocusAccent: var(--iuNavAccent-radio, #6D28D9); }
+  .iuMobileTile[data-accent="tvonline"]{  --iuMobileFocusAccent: var(--iuNavAccent-tvonline, #DC2626); }
+  .iuMobileTile[data-accent="jr"]{        --iuMobileFocusAccent: var(--iuNavAccent-jr, #0EA5A4); }
+  .iuMobileTile[data-accent="mapy"]{      --iuMobileFocusAccent: var(--iuNavAccent-mapy, #16A34A); }
+  .iuMobileTile[data-accent="travel"]{    --iuMobileFocusAccent: var(--iuNavAccent-travel, #EA580C); }
+  .iuMobileTile[data-accent="pocasi"]{    --iuMobileFocusAccent: var(--iuNavAccent-pocasi, #2563EB); }
+  .iuMobileTile[data-accent="tvprogram"]{ --iuMobileFocusAccent: var(--iuNavAccent-tvprogram, #DC2626); }
+  .iuMobileTile[data-accent="culture"]{   --iuMobileFocusAccent: var(--iuNavAccent-culture, #EA580C); }
+  .iuMobileTile[data-accent="ads"]{       --iuMobileFocusAccent: var(--iuNavAccent-ads, #111827); }
+  .iuMobileTile[data-accent="mindmenu"]{  --iuMobileFocusAccent: #000; }
+
+  .iuMobileFocusPlaceholder{
+    padding: 18px 12px;
+    color: #111;
+    text-align: center;
+    font-weight: 700;
+  }
 }
 
 /* ============================================================

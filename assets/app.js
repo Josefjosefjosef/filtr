@@ -4539,8 +4539,8 @@ function buildVideoAsArticleCard(it) {
       if (!root) return;
 
       const elActive = root.querySelector(".iuMobileFocusActive");
-      const elList = root.querySelector(".iuMobileFocusList");
-      if (!elActive || !elList) return;
+      const elTiles = root.querySelector(".iuMobileFocusTiles");
+      if (!elActive || !elTiles) return;
 
       const mq = window.matchMedia ? window.matchMedia("(max-width: 900px)") : null;
       const isMobile = () => (mq ? Boolean(mq.matches) : (window.innerWidth <= 900));
@@ -4559,7 +4559,6 @@ function buildVideoAsArticleCard(it) {
         maps: "#iuMapyView",
         travel: "#iuTravelView",
         weather: "#iuWeatherView",
-        namedays: "#iuHolidaysView",
         tvprogram: "#iuTvProgramView",
       };
 
@@ -4576,12 +4575,27 @@ function buildVideoAsArticleCard(it) {
             const accent = String(it.getAttribute("data-accent") || "").trim();
             const labelEl = it.querySelector(".iu-leftNavLabel");
             const label = String(labelEl ? labelEl.textContent : it.textContent || "").trim();
-            const target = railToTarget[rail];
-            if (!target) continue;
             if (!label) continue;
-            out.push({ label, target, accent: accent || rail });
+            const target = railToTarget[rail];
+            if (target) {
+              out.push({ label, target, accent: accent || rail });
+              continue;
+            }
+            // Culture / Ads: tiles exist but view not yet implemented → placeholder panel
+            if (rail === "culture" || rail === "ads") {
+              out.push({ label, placeholder: true, accent: accent || rail });
+              continue;
+            }
           } catch {}
         }
+
+        // Ensure Culture + Ads tiles exist even if rail changes.
+        try{
+          const have = new Set(out.map((s) => String(s && s.accent || "")));
+          if (!have.has("culture")) out.push({ label: "Kultura / Akce", placeholder: true, accent: "culture" });
+          if (!have.has("ads")) out.push({ label: "Inzerce", placeholder: true, accent: "ads" });
+        }catch{}
+
         return out;
       }
 
@@ -4606,28 +4620,28 @@ function buildVideoAsArticleCard(it) {
       }
 
       function render() {
-        const listHtml = sections.map((s) => {
-          const hasAction = Boolean(s && s.action);
-          const disabled = hasAction ? "" : (resolveTarget(s.target) ? "" : " disabled");
-          const dataTarget = hasAction ? "" : ` data-target="${escapeHtml(s.target)}"`;
-          const dataAction = hasAction ? ` data-action="${escapeHtml(s.action)}"` : "";
-          return `<button type="button" class="iuMobileFocusBtn" ${dataAction}${dataTarget} data-accent="${escapeHtml(s.accent)}" aria-expanded="false"${disabled}>${escapeHtml(s.label)}</button>`;
+        const tilesHtml = sections.map((s) => {
+          const isPlaceholder = !!(s && s.placeholder);
+          const target = String((s && s.target) || "");
+          const hasTarget = !isPlaceholder && !!resolveTarget(target);
+          const disabled = isPlaceholder ? "" : (hasTarget ? "" : " disabled");
+          const dataTarget = isPlaceholder ? "" : ` data-target="${escapeHtml(target)}"`;
+          const dataPlaceholder = isPlaceholder ? ` data-placeholder="1"` : "";
+          return `<button type="button" class="iuMobileTile"${dataTarget}${dataPlaceholder} data-accent="${escapeHtml(s.accent)}" aria-expanded="false"${disabled}>${escapeHtml(s.label)}</button>`;
         }).join("");
 
-        elList.innerHTML = listHtml;
+        elTiles.innerHTML = tilesHtml;
 
         if (!state.active) {
           elActive.innerHTML = "";
           return;
         }
 
-        const activeBtn = `<button type="button" class="iuMobileFocusBtn iuMobileFocusBtn--active" data-target="${escapeHtml(state.active.target || "")}" data-accent="${escapeHtml(state.active.accent)}" data-action="${escapeHtml(state.active.action || "")}" aria-expanded="true">${escapeHtml(state.active.label)}</button>`;
+        const activeBtn = `<button type="button" class="iuMobileFocusBtn iuMobileFocusBtn--active" data-target="${escapeHtml(state.active.target || "")}" data-placeholder="${state.active.placeholder ? "1" : ""}" data-accent="${escapeHtml(state.active.accent)}" aria-expanded="true">${escapeHtml(state.active.label)}</button>`;
         elActive.innerHTML = `${activeBtn}<div class="iuMobileFocusPanel" id="iuMobileFocusPanel"></div>`;
       }
 
       function openSection(s) {
-        const el = resolveTarget(s.target);
-        if (!el) return;
         state.isOpen = true;
         state.active = s;
         root.classList.add("is-open");
@@ -4636,27 +4650,26 @@ function buildVideoAsArticleCard(it) {
         const panel = document.getElementById("iuMobileFocusPanel");
         if (!panel) return;
 
-        // Hide all other views to avoid duplicate content on mobile.
-        try {
-          const map = new Map();
-          for (const sec of sections) {
-            if (!sec || !sec.target) continue;
-            const v = resolveTarget(sec.target);
-            if (!v) continue;
-            map.set(sec.target, Boolean(v.hidden));
-            if (sec.target !== s.target) {
-              v.hidden = true;
-            } else {
-              v.hidden = false;
-            }
-          }
-          state.hiddenBefore = map;
-        } catch {}
+        // Placeholder sections (culture/ads) — no view yet.
+        if (s && s.placeholder) {
+          try{
+            const ph = document.createElement("div");
+            ph.className = "iuMobileFocusPlaceholder";
+            ph.textContent = "Připravujeme";
+            panel.appendChild(ph);
+            state.placeholderEl = ph;
+          }catch{}
+          return;
+        }
+
+        const el = resolveTarget(s.target);
+        if (!el) return;
 
         // Move the target DOM under the active button (safe reparent with restore).
         state.movedEl = el;
         state.movedFrom = el.parentElement;
         state.movedNext = el.nextSibling;
+        try { state.movedWasHidden = Boolean(el.hidden); } catch {}
         try { panel.appendChild(el); } catch {}
         try { el.hidden = false; } catch {}
       }
@@ -4664,6 +4677,11 @@ function buildVideoAsArticleCard(it) {
       function closeSection() {
         root.classList.remove("is-open");
         state.isOpen = false;
+
+        // Remove placeholder if used.
+        try{
+          if (state.placeholderEl && state.placeholderEl.remove) state.placeholderEl.remove();
+        }catch{}
 
         // Restore moved view back to original parent/position.
         try {
@@ -4674,17 +4692,7 @@ function buildVideoAsArticleCard(it) {
             } else {
               state.movedFrom.appendChild(el);
             }
-          }
-        } catch {}
-
-        // Restore hidden flags.
-        try {
-          const map = state.hiddenBefore;
-          if (map && typeof map.forEach === "function") {
-            map.forEach((wasHidden, sel) => {
-              const v = resolveTarget(sel);
-              if (v) v.hidden = Boolean(wasHidden);
-            });
+            try { el.hidden = !!state.movedWasHidden; } catch {}
           }
         } catch {}
 
@@ -4693,31 +4701,52 @@ function buildVideoAsArticleCard(it) {
         state.movedFrom = null;
         state.movedNext = null;
         state.hiddenBefore = null;
+        state.placeholderEl = null;
+        state.movedWasHidden = null;
         render();
       }
 
       function onClick(e) {
         const t = e && e.target;
-        const btn = t && t.closest ? t.closest(".iuMobileFocusBtn") : null;
-        if (!btn || !root.contains(btn)) return;
-        const target = String(btn.getAttribute("data-target") || "").trim();
-        const accent = String(btn.getAttribute("data-accent") || "").trim();
-        const label = String(btn.textContent || "").trim();
-        if (!target) return;
-
-        if (root.classList.contains("is-open")) {
+        const focusBtn = t && t.closest ? t.closest(".iuMobileFocusBtn") : null;
+        if (focusBtn && root.contains(focusBtn)) {
           // second click on active button closes
           closeSection();
           return;
         }
 
+        const tile = t && t.closest ? t.closest(".iuMobileTile") : null;
+        if (!tile || !root.contains(tile)) return;
+        const target = String(tile.getAttribute("data-target") || "").trim();
+        const isPlaceholder = String(tile.getAttribute("data-placeholder") || "") === "1";
+        const accent = String(tile.getAttribute("data-accent") || "").trim();
+        const label = String(tile.textContent || "").trim();
+
+        if (root.classList.contains("is-open")) return;
+        if (isPlaceholder) {
+          openSection({ label, placeholder: true, accent });
+          return;
+        }
+        if (!target) return;
         openSection({ label, target, accent });
       }
 
       render();
       root.addEventListener("click", onClick);
 
-      // If viewport changes to desktop, do nothing (desktop unchanged).
+      // On breakpoint change, always restore DOM to avoid desktop breakage.
+      try{
+        const onMq = () => {
+          if (!isMobile()) {
+            try{ closeSection(); }catch{}
+            return;
+          }
+          // entering mobile: reset to tiles (no content)
+          try{ closeSection(); }catch{}
+        };
+        if (mq && typeof mq.addEventListener === "function") mq.addEventListener("change", onMq);
+        else if (mq && typeof mq.addListener === "function") mq.addListener(onMq);
+      }catch{}
     } catch {}
   }
 
@@ -8441,7 +8470,7 @@ function buildVideoAsArticleCard(it) {
     if (k === 'radio') return 'radio';
     if (k === 'jr') return 'jr';
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
-    const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','namedays','tvprogram','culture','ads','jr']);
+    const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','tvprogram','culture','ads','jr']);
     if (k === 'home') return 'media';
     return allowed.has(k) ? k : 'media';
   }
