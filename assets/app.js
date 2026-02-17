@@ -2546,10 +2546,11 @@ window.addEventListener("unhandledrejection", (e) => {
       maxSameCategoryStreak: Number(state?.videosRaw?.maxSameCategoryStreak) || 2,
     };
     let injectedVideosCount = 0;
-    let renderedArticlesCount = 0;
+    let articleCounter = 0;
     let videosInserted = 0;
 
     // Fixed slot queue (v1): stable positions, newest-only head replacement.
+    // Sloty se počítají jen podle počtu článků (ne podle indexu pole).
     const totalArticlesVisible = visibleItems.reduce(
       (acc, it) => acc + (String(it?.contentType || "").toLowerCase() === "article" ? 1 : 0),
       0
@@ -2578,6 +2579,13 @@ window.addEventListener("unhandledrejection", (e) => {
         renderInlineError("Obsah dočasně nedostupný.");
         return;
       }
+
+      // Ve standardním feedu jsou video karty povolené pouze přes pevné sloty po 8 článcích.
+      // Pipeline contentType=video položky tedy nesmí být renderované "kdekoliv" (jinak by video nebylo přesně po 8).
+      if (shouldInjectVideos && kind === "video") {
+        continue;
+      }
+
       const markup = kind === "video" ? buildVideoAsArticleCard(item) : buildArticleHtml(item);
       if (!markup) {
         persistLastError("Invariant breach: builder returned falsy markup");
@@ -2596,12 +2604,18 @@ window.addEventListener("unhandledrejection", (e) => {
 
       // Inject YouTube preview cards after every N articles (standard feed only).
       if (shouldInjectVideos && kind === "article") {
-        renderedArticlesCount += 1;
+        articleCounter += 1;
         if (videosInserted >= maxVideosPerPage) continue;
-        if (renderedArticlesCount % insertEveryN === 0 && slotCount > 0) {
-          const slotIndex = Math.floor(renderedArticlesCount / insertEveryN); // 1-based
-          const slot = queue?.slots?.[slotIndex - 1];
-          if (!slot || !slot.videoId) continue;
+        if (articleCounter % insertEveryN === 0 && slotCount > 0) {
+          const slotIndex = (articleCounter / insertEveryN) - 1; // 0-based
+          const slot = queue?.slots?.[slotIndex];
+          const hasSlotVideo = Boolean(slot && slot.videoId);
+          if (isDebugLogging) {
+            try {
+              console.info("[iuVideoAnchor] article=%d slot=%d inserted=%s", articleCounter, slotIndex, String(hasSlotVideo));
+            } catch {}
+          }
+          if (!hasSlotVideo) continue;
           const vMarkup = buildYouTubeVideoPreviewCard({
             videoId: slot.videoId,
             publishedAt: slot.publishedAt,
