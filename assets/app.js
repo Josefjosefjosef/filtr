@@ -3015,6 +3015,246 @@ window.addEventListener("unhandledrejection", (e) => {
     if (elDataCount) elDataCount.textContent = "0";
   }
 
+  // ============================================================
+  // ALERT TITLES — only middle feed (#feed)
+  // ============================================================
+  function iuEscapeRegexLiteral(s) {
+    return String(s || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function iuRegexFromPhrases(phrases) {
+    const parts = (Array.isArray(phrases) ? phrases : [])
+      .map((p) => String(p || "").trim())
+      .filter(Boolean)
+      .map((p) => iuEscapeRegexLiteral(p).replace(/\s+/g, "\\s+"));
+    if (!parts.length) return /$^/i;
+    return new RegExp(`(?:${parts.join("|")})`, "i");
+  }
+
+  const IU_ALERT_PHRASES = [
+    // 🚨 bezpečnost / policie
+    "policie varuje",
+    "policie pátrá",
+    "policie hleda svedky",
+    "policie hledá svědky",
+    "vyhlásila pátrání",
+    "ozbrojený pachatel",
+    "střelba",
+    "bombová hrozba",
+    "evakuace",
+    "pachatel na útěku",
+    // 🚗 doprava
+    "silničáři varují",
+    "dálnice uzavřena",
+    "tunel uzavřen",
+    "most uzavřen",
+    "dopravní kolaps",
+    "hromadná nehoda",
+    "nehoda s oběťmi",
+    "vlak vykolejil",
+    "metro zastaveno",
+    // 🏥 zdravotnictví
+    "zdravotníci varují",
+    "záchranná služba varuje",
+    "epidemie",
+    "nebezpečný virus",
+    "kontaminace vody",
+    "stažení potravin",
+    "otrava",
+    "nebezpečný lék",
+    // 🌧 počasí
+    "čhmú varuje",
+    "meteorologové varují",
+    "extrémní bouře",
+    "povodně",
+    "ledovka",
+    "sněhová kalamita",
+    "tornádo",
+    "extrémní horko",
+    "silný vítr",
+    // ⚡ energie / stát
+    "výpadek elektřiny",
+    "blackout",
+    "odstávka plynu",
+    "omezení vody",
+    "nouzový stav",
+    "kyberútok",
+    "evakuační plán",
+    // 🛒 potraviny
+    "nebezpečná potravina",
+    "stažení výrobku",
+    "salmonela",
+    "listerie",
+    "kontaminace",
+    // 💰 podvody
+    "podvodníci",
+    "banka varuje",
+    "nový scam",
+    "phishing",
+    "hack účtů",
+    "unik dat",
+    "únik dat",
+    // 🧒 školy / děti
+    "nebezpečná hračka",
+    "stažení léků",
+    "uzavření škol",
+    "závadná voda ve škole",
+  ];
+
+  const IU_WARN_PHRASES = ["doporučení", "pozor na", "omezení dopravy", "možné omezení", "hrozí zpoždění"];
+
+  const IU_ALERT_REGEX = iuRegexFromPhrases(IU_ALERT_PHRASES);
+  const IU_WARN_REGEX = iuRegexFromPhrases(IU_WARN_PHRASES);
+
+  // EXTRA (only if source is official)
+  const IU_ALERT_EXTRA_TITLE_REGEX = iuRegexFromPhrases(["varování", "výstraha", "nouzový stav", "evakuace"]);
+  const IU_ALERT_EXTRA_SOURCE_REGEX = iuRegexFromPhrases(["policie", "hasiči", "čhmú", "ministerstvo", "krajský úřad"]);
+
+  // Not allowed to be red (sports/celebrity/bulvar/political commentaries)
+  const IU_ALERT_EXCLUDE_REGEX = iuRegexFromPhrases([
+    "sport",
+    "fotbal",
+    "hokej",
+    "tenis",
+    "bulvár",
+    "bulvar",
+    "celebrity",
+    "showbiz",
+    "komentář",
+    "komentar",
+    "glosa",
+    "názor",
+    "nazor",
+    "opinion",
+  ]);
+
+  // Icon buckets (optional, stable — applied before DOM insertion)
+  const IU_ICON_SECURITY_REGEX = iuRegexFromPhrases([
+    "policie varuje",
+    "policie pátrá",
+    "policie hleda svedky",
+    "policie hledá svědky",
+    "vyhlásila pátrání",
+    "ozbrojený pachatel",
+    "střelba",
+    "bombová hrozba",
+    "evakuace",
+    "pachatel na útěku",
+  ]);
+  const IU_ICON_WEATHER_REGEX = iuRegexFromPhrases([
+    "čhmú varuje",
+    "meteorologové varují",
+    "extrémní bouře",
+    "povodně",
+    "ledovka",
+    "sněhová kalamita",
+    "tornádo",
+    "extrémní horko",
+    "silný vítr",
+  ]);
+  const IU_ICON_TRANSPORT_REGEX = iuRegexFromPhrases([
+    "silničáři varují",
+    "dálnice uzavřena",
+    "tunel uzavřen",
+    "most uzavřen",
+    "dopravní kolaps",
+    "hromadná nehoda",
+    "nehoda s oběťmi",
+    "vlak vykolejil",
+    "metro zastaveno",
+    "omezení dopravy",
+    "hrozí zpoždění",
+  ]);
+  const IU_ICON_ENERGY_REGEX = iuRegexFromPhrases([
+    "výpadek elektřiny",
+    "blackout",
+    "odstávka plynu",
+    "omezení vody",
+    "nouzový stav",
+    "kyberútok",
+    "evakuační plán",
+  ]);
+  const IU_ICON_FRAUD_REGEX = iuRegexFromPhrases(["podvodníci", "banka varuje", "nový scam", "phishing", "hack účtů", "unik dat", "únik dat"]);
+
+  function iuExtractSourcesText(item) {
+    try {
+      const src = Array.isArray(item?.sources) ? item.sources : [];
+      const names = src.map((s) => String(s?.name || "")).filter(Boolean).join(" ");
+      const urls = src.map((s) => String(s?.url || "")).filter(Boolean).join(" ");
+      return `${names} ${urls}`.trim();
+    } catch {
+      return "";
+    }
+  }
+
+  function iuShouldSkipAlertForItem(item) {
+    try {
+      const section = String(item?.section || item?.category || "").trim();
+      const srcText = iuExtractSourcesText(item);
+      const hay = `${section} ${srcText}`.trim();
+      if (!hay) return false;
+      return IU_ALERT_EXCLUDE_REGEX.test(hay);
+    } catch {
+      return false;
+    }
+  }
+
+  function iuPickAlertIcon(titleLc) {
+    if (!titleLc) return "";
+    if (IU_ICON_SECURITY_REGEX.test(titleLc)) return "🚨";
+    if (IU_ICON_WEATHER_REGEX.test(titleLc)) return "🌧";
+    if (IU_ICON_TRANSPORT_REGEX.test(titleLc)) return "🚗";
+    if (IU_ICON_ENERGY_REGEX.test(titleLc)) return "⚡";
+    if (IU_ICON_FRAUD_REGEX.test(titleLc)) return "💰";
+    return "";
+  }
+
+  function iuApplyAlertTitle(card, item) {
+    try {
+      if (!card || !(card instanceof HTMLElement)) return;
+      // Only middle feed: #feed .news-card[data-feed-type="article"]
+      if (!card.matches('.news-card[data-feed-type="article"]')) return;
+
+      const titleEl = card.querySelector(".iuCardTitle") || card.querySelector(".news-titleLink");
+      if (!titleEl) return;
+
+      const titleRaw = String(titleEl.textContent || "");
+      const titleLc = titleRaw.toLowerCase();
+      if (!titleLc) return;
+
+      // Never colorize excluded categories/sources.
+      if (iuShouldSkipAlertForItem(item)) return;
+
+      const sourcesText = iuExtractSourcesText(item).toLowerCase();
+
+      const isExtraOfficialAlert =
+        IU_ALERT_EXTRA_TITLE_REGEX.test(titleLc) && IU_ALERT_EXTRA_SOURCE_REGEX.test(sourcesText);
+      const isAlertByKeywords = IU_ALERT_REGEX.test(titleLc);
+      const isWarnByKeywords = IU_WARN_REGEX.test(titleLc);
+
+      // Priority:
+      // - EXTRA official alert always wins (red)
+      // - Otherwise, if WARN matches too, treat it as WARN (orange) to avoid over-alerting
+      //   for mild phrasing like "Pozor na ..." (even if it contains alert tokens).
+      const level = isExtraOfficialAlert ? "alert" : (isWarnByKeywords ? "warn" : (isAlertByKeywords ? "alert" : ""));
+
+      if (level === "alert") {
+        titleEl.classList.add("iuTitle--alert");
+        // optional icon (no CLS: applied before insert)
+        const icon = iuPickAlertIcon(titleLc);
+        if (icon && !titleEl.querySelector(".iuTitleIcon")) {
+          const span = document.createElement("span");
+          span.className = "iuTitleIcon";
+          span.setAttribute("aria-hidden", "true");
+          span.textContent = icon + " ";
+          titleEl.insertBefore(span, titleEl.firstChild);
+        }
+      } else if (level === "warn") {
+        titleEl.classList.add("iuTitle--warn");
+      }
+    } catch {}
+  }
+
   // === LOCKED PIPELINE ===
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
@@ -3075,6 +3315,7 @@ window.addEventListener("unhandledrejection", (e) => {
     // CLS mitigation: žádný mezistav "prázdný feed" (clear + append v cyklu).
     // Postav nový obsah mimo DOM a jednorázově ho vyměň přes replaceChildren().
     const nextNodes = [];
+    const iuAlertDemo = Boolean(location.search.includes("debug=1") && location.search.includes("alertDemo=1"));
     const isHome = Boolean(document.body && document.body.classList && document.body.classList.contains("iu-home"));
     const hasVideoSection = Array.isArray(activeSections) && activeSections.includes("video");
     const shouldInjectVideos =
@@ -3133,6 +3374,45 @@ window.addEventListener("unhandledrejection", (e) => {
         })
       : iuInitQueue(0);
 
+    // Optional visual gate: inject 3 demo alert titles only in debug mode (never in normal prod view)
+    if (iuAlertDemo) {
+      const demos = [
+        {
+          contentType: "article",
+          title: "Policie varuje: pachatel na útěku",
+          url: "https://example.com/demo-policie",
+          publishedAt: new Date().toISOString(),
+          sources: [{ name: "Policie ČR", url: "https://www.policie.cz/" }],
+        },
+        {
+          contentType: "article",
+          title: "ČHMÚ varuje: silný vítr",
+          url: "https://example.com/demo-chmu",
+          publishedAt: new Date().toISOString(),
+          sources: [{ name: "ČHMÚ", url: "https://www.chmi.cz/" }],
+        },
+        {
+          contentType: "article",
+          title: "Pozor na ledovku",
+          url: "https://example.com/demo-ledovka",
+          publishedAt: new Date().toISOString(),
+          sources: [{ name: "Dopravní podnik", url: "https://example.com/" }],
+        },
+      ];
+      for (const demo of demos) {
+        try {
+          const markup = buildArticleHtml(demo);
+          if (!markup) continue;
+          const template = document.createElement("template");
+          template.innerHTML = markup.trim();
+          const node = template.content.firstElementChild;
+          if (!node || !(node instanceof HTMLElement)) continue;
+          iuApplyAlertTitle(node, demo);
+          nextNodes.push(node);
+        } catch {}
+      }
+    }
+
     for (let i = 0; i < visibleItems.length; i++) {
       const item = visibleItems[i];
       const kind = String(item.contentType || "").toLowerCase();
@@ -3162,6 +3442,13 @@ window.addEventListener("unhandledrejection", (e) => {
         renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
         continue;
       }
+
+      // ALERT TITLES: only for middle feed (#feed), only for article cards.
+      // Apply before insertion to avoid CLS.
+      try {
+        if (safeTarget && safeTarget.id === "feed") iuApplyAlertTitle(node, item);
+      } catch {}
+
       nextNodes.push(node);
     }
 
@@ -3393,8 +3680,8 @@ window.addEventListener("unhandledrejection", (e) => {
     }
     
     const titleMarkup = linkUrl
-      ? `<a class="news-titleLink" href="${linkUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>`
-      : `<span class="news-titleLink">${escapeHtml(title)}</span>`;
+      ? `<a class="news-titleLink iuCardTitle" href="${linkUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>`
+      : `<span class="news-titleLink iuCardTitle">${escapeHtml(title)}</span>`;
 
     const suspiciousFlag = it?.suspiciousTitle
       ? `<span class="iuSuspicious" title="Titulek doporučeno ověřit u zdroje" aria-label="Titulek doporučeno ověřit u zdroje">⚑</span>`
