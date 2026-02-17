@@ -6149,6 +6149,12 @@ function buildVideoAsArticleCard(it) {
       if (!id) return;
       if (card.getAttribute("data-iu-loaded") === "1") return;
 
+      // Guard: don't hijack "open in new tab" or non-primary clicks.
+      // (Ctrl/Meta/Shift/Alt-click, or middle-click should behave as navigation, not inline embed.)
+      try {
+        if (e && (e.button === 1 || e.button === 2 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) return;
+      } catch {}
+
       // Make the whole card clickable (not only the poster button),
       // so "click → play" works even if user clicks on meta/title.
       const btn = t && t.closest ? t.closest(".iuVideoPoster") : null;
@@ -6172,6 +6178,10 @@ function buildVideoAsArticleCard(it) {
       }
 
       try {
+        // Anti-double-click: mark as loaded BEFORE constructing/replacing iframe.
+        // If inline embed throws, we still fall back to opening YouTube.
+        card.setAttribute("data-iu-loaded", "1");
+
         const iframe = document.createElement("iframe");
         iframe.src = src;
         iframe.loading = "lazy";
@@ -6185,7 +6195,6 @@ function buildVideoAsArticleCard(it) {
         iframe.className = "iuVideoIframe";
 
         frame.replaceChildren(iframe);
-        card.setAttribute("data-iu-loaded", "1");
       } catch (err) {
         // Safe fallback: if inline embed fails for any reason, open YouTube in a new tab.
         try { console.warn("[iuVideoPlay] inline embed failed, falling back to watch URL", err); } catch {}
