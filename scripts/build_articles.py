@@ -765,11 +765,9 @@ def load_all_feeds() -> list:
     if os.path.exists(FEEDS_PATH):
         feeds.extend(load_feeds(FEEDS_PATH))
 
-    # ✅ YouTube zdroje: preferuj allowlist (CZ+svět). Fallback na legacy feeds_youtube.json.
-    allowlist_feeds, _cfg = load_allowlist_youtube_feeds(VIDEOS_ALLOWLIST_PATH)
-    if allowlist_feeds:
-        feeds.extend(allowlist_feeds)
-    elif os.path.exists(FEEDS_YOUTUBE_PATH):
+    # YouTube videa se generují samostatně v scripts/build_videos.py.
+    # (Zde necháváme pouze RSS články; jinak by build_articles tahal desítky YT feedů.)
+    if os.path.exists(FEEDS_YOUTUBE_PATH):
         feeds.extend(load_youtube_feeds(FEEDS_YOUTUBE_PATH))
 
     return feeds
@@ -1128,8 +1126,6 @@ def main() -> int:
         return 2
 
     feed_items = load_all_feeds()
-    allow_cfg = load_videos_allowlist(VIDEOS_ALLOWLIST_PATH) if os.path.exists(VIDEOS_ALLOWLIST_PATH) else {}
-    _allowlist_feeds, allow_meta = load_allowlist_youtube_feeds(VIDEOS_ALLOWLIST_PATH)
 
     all_items = []
     per_feed_report = []
