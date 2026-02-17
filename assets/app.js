@@ -6585,6 +6585,93 @@ function buildVideoAsArticleCard(it) {
       try { return Boolean(location.search && location.search.includes("debug=1")); } catch { return false; }
     }
 
+    function iuGetNextVideoFromPool(currentId) {
+      try {
+        const cur = String(currentId || "").trim();
+        const pool = Array.isArray(state?.videosRaw?.videos) ? state.videosRaw.videos : [];
+        if (!pool.length) return null;
+
+        // Avoid duplicates already present on page.
+        const used = new Set();
+        try {
+          for (const el of Array.from(document.querySelectorAll(".iuVideoCard[data-slot], .iuVideoCard[data-feed-type=\"video-preview\"]"))) {
+            const id = String(el.getAttribute("data-ytid") || "").trim();
+            if (id) used.add(id);
+          }
+        } catch {}
+        if (cur) used.add(cur);
+
+        const cursorKey = "__iuVideoReplaceCursor";
+        let idx = Number(window[cursorKey] || 0);
+        if (!Number.isFinite(idx) || idx < 0) idx = 0;
+
+        for (let i = 0; i < pool.length; i++) {
+          const j = (idx + i) % pool.length;
+          const it = pool[j];
+          const vid = String(it?.videoId || "").trim();
+          if (!vid) continue;
+          if (used.has(vid)) continue;
+          window[cursorKey] = j + 1;
+          return it;
+        }
+
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
+    function iuReplaceVideoCardContent(card, next) {
+      try {
+        if (!card || !(card instanceof HTMLElement) || !next) return false;
+        const slot = card.getAttribute("data-slot");
+        const feedType = card.getAttribute("data-feed-type") || "video-preview";
+
+        const markup = buildYouTubeVideoPreviewCard(next);
+        if (!markup) return false;
+
+        const t = document.createElement("template");
+        t.innerHTML = String(markup).trim();
+        const node = t.content.firstElementChild;
+        if (!node || !(node instanceof HTMLElement)) return false;
+
+        // Keep slot identity stable.
+        if (slot) node.setAttribute("data-slot", String(slot));
+        node.setAttribute("data-feed-type", String(feedType));
+
+        // Replace in-place to keep references stable where possible.
+        card.className = node.className;
+        // Copy dataset/attributes we care about.
+        try { card.setAttribute("data-ytid", String(node.getAttribute("data-ytid") || "")); } catch {}
+        try { card.removeAttribute("data-iu-loaded"); } catch {}
+        try { card.removeAttribute("data-iu-frozen"); } catch {}
+        try { card.removeAttribute("data-iu-placeholder"); } catch {}
+
+        card.innerHTML = node.innerHTML;
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function iuHandleVideoError(card) {
+      try {
+        console.warn("[iuVideo] replacing broken video", card?.dataset?.ytid);
+      } catch {}
+      try {
+        const cur = card ? (card.getAttribute("data-ytid") || "") : "";
+        const next = iuGetNextVideoFromPool(cur);
+        if (!next) return;
+        try { card.setAttribute("data-ytid", String(next.videoId || "")); } catch {}
+        // Allow retry: mark as not loaded/frozen, restore poster card.
+        try { card.removeAttribute("data-iu-loaded"); } catch {}
+        try { card.removeAttribute("data-iu-frozen"); } catch {}
+        iuReplaceVideoCardContent(card, next);
+      } catch (e) {
+        try { console.error("[iuVideo] replace failed", e); } catch {}
+      }
+    }
+
     function iuDebugConsoleCaptureInit() {
       if (!iuDebugEnabled()) return;
       try {
@@ -7043,6 +7130,10 @@ function buildVideoAsArticleCard(it) {
         iframe.removeAttribute("sandbox");
 
         try {
+          iframe.onerror = () => iuHandleVideoError(card);
+        } catch {}
+
+        try {
           iframe.addEventListener("load", () => {
             try {
               iuVideoDebugUpdate({
@@ -7051,6 +7142,10 @@ function buildVideoAsArticleCard(it) {
                 iframeSrc: iframe ? (iframe.getAttribute("src") || null) : null,
                 domSnapshot: iuVideoDebugDomSnapshot(),
               });
+            } catch {}
+            try {
+              card.setAttribute("data-iu-loaded", "1");
+              card.setAttribute("data-iu-frozen", "1");
             } catch {}
           });
         } catch {}
@@ -7064,6 +7159,7 @@ function buildVideoAsArticleCard(it) {
                 domSnapshot: iuVideoDebugDomSnapshot(),
               });
             } catch {}
+            try { iuHandleVideoError(card); } catch {}
           });
         } catch {}
 
