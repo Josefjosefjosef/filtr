@@ -6190,6 +6190,66 @@ function buildVideoAsArticleCard(it) {
       } catch {}
     }
 
+    function iuVideoDebugAutoTest() {
+      if (!iuDebugEnabled()) return;
+      try {
+        if (window.__iu_videoDebugAutoTestDone) return;
+        window.__iu_videoDebugAutoTestDone = 1;
+      } catch {}
+
+      setTimeout(() => {
+        try {
+          const ts = new Date().toISOString();
+          const poster = document.querySelector('.iuVideoCard[data-feed-type="video-preview"] .iuVideoPoster');
+          const cardsCount = (document.querySelectorAll(".iuVideoCard") || []).length;
+          const postersCount = (document.querySelectorAll(".iuVideoPoster") || []).length;
+
+          if (!poster) {
+            iuEnsureVideoDebugPanel();
+            iuVideoDebugUpdate({
+              ts,
+              auto: true,
+              status: "NO_VIDEO_POSTER_FOUND",
+              cards: cardsCount,
+              posters: postersCount,
+            });
+            return;
+          }
+
+          const card = poster.closest(".iuVideoCard");
+          iuVideoDebugUpdate({
+            ts,
+            auto: true,
+            status: "CLICKING",
+            ytid: card ? (card.getAttribute("data-ytid") || null) : null,
+          });
+
+          try { poster.click(); } catch {}
+
+          setTimeout(() => {
+            try {
+              const ts2 = new Date().toISOString();
+              const card2 = poster.closest(".iuVideoCard");
+              const frame2 = poster.closest(".iuVideoFrame");
+              const iframe2 = frame2 ? frame2.querySelector("iframe") : null;
+              iuVideoDebugUpdate({
+                ts: ts2,
+                auto: true,
+                status: "AFTER_CLICK",
+                ytid: card2 ? (card2.getAttribute("data-ytid") || null) : null,
+                loaded: card2 ? (card2.getAttribute("data-iu-loaded") || null) : null,
+                hasFrame: !!frame2,
+                hasIframe: !!iframe2,
+                iframeSrc: iframe2 ? (iframe2.getAttribute("src") || null) : null,
+                fallback: false,
+                error: null,
+              });
+            } catch {}
+          }, 300);
+        } catch {}
+      }, 600);
+    }
+
     document.addEventListener("click", (e) => {
       const t = e && e.target;
       const card = t && t.closest ? t.closest(".iuVideoCard") : null;
@@ -6327,6 +6387,8 @@ function buildVideoAsArticleCard(it) {
         try { window.open(watchUrl, "_blank", "noopener"); } catch {}
       }
     }, { passive: false });
+
+    try { iuVideoDebugAutoTest(); } catch {}
   }
 
   document.addEventListener("visibilitychange", () => {
