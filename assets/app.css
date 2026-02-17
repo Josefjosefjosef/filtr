@@ -8246,7 +8246,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   border-left: 0 !important;
 }
 
-/* Text readable on solid bg (only in those views) */
+/* Text readable on solid bg (default WHITE) */
 #newsList #iuRadioView .iuRadioChipTitle,
 #newsList #iuRadioView .iuRadioChipDesc,
 #newsList #iuTvOnlineView .iuRadioChipTitle,
@@ -8265,9 +8265,15 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #newsList #iuCultureView .iuRadioChipDesc,
 #newsList #iuAdsView .iuRadioChipTitle,
 #newsList #iuAdsView .iuRadioChipDesc{
-  color: #0b1b2b !important;
+  color: #ffffff !important;
   text-shadow: none !important;
   opacity: 1 !important;
+}
+
+/* Fallback: if chip declares dark text via data attribute */
+#newsList .iuRadioChip[data-iu-text="dark"] .iuRadioChipTitle,
+#newsList .iuRadioChip[data-iu-text="dark"] .iuRadioChipDesc{
+  color: #0b1b2b !important;
 }
 
 /* Hover/active: keep same background (no shade). Focus: ring only */
@@ -8330,8 +8336,14 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 
 #newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChipTitle,
 #newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChipDesc{
-  color: #0b1b2b !important;
+  color: #ffffff !important;
   opacity: 1 !important;
+}
+
+/* MyUzel fallback: dark text when needed */
+#newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChip[data-iu-text="dark"] .iuRadioChipTitle,
+#newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChip[data-iu-text="dark"] .iuRadioChipDesc{
+  color: #0b1b2b !important;
 }
 
 /* ======================================================================
