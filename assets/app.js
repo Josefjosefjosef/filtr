@@ -6308,6 +6308,25 @@ function buildVideoAsArticleCard(it) {
                 const dbgLoaded = card2 ? (card2.getAttribute("data-iu-loaded") || null) : null;
                 const dbgIframe = frame2 ? frame2.querySelector("iframe") : null;
                 const dbgIframeSrc = dbgIframe ? (dbgIframe.getAttribute("src") || null) : null;
+                const cardsPreview = Array.from(document.querySelectorAll('.iuVideoCard[data-feed-type="video-preview"]'));
+                const idx = card2 ? cardsPreview.indexOf(card2) : -1;
+                const cardIdentity = card2 ? {
+                  idx,
+                  tag: card2.tagName,
+                  cls: card2.className || null,
+                  slot: card2.getAttribute("data-slot") || null,
+                  ytidAttr: dbgCardYtid,
+                  loadedAttr: dbgLoaded,
+                } : null;
+                const last = (iuDebugEnabled() ? window.__iu_lastVideoCard : null);
+                const lastFrame = last ? last.querySelector(".iuVideoFrame") : null;
+                const lastIframe = lastFrame ? lastFrame.querySelector("iframe") : null;
+                const lastTruth = last ? {
+                  ytid: last.getAttribute("data-ytid") || null,
+                  loaded: last.getAttribute("data-iu-loaded") || null,
+                  hasIframe: !!lastIframe,
+                  iframeSrc: lastIframe ? (lastIframe.getAttribute("src") || null) : null,
+                } : null;
                 iuVideoDebugUpdate({
                   ts: new Date().toISOString(),
                   auto: true,
@@ -6319,6 +6338,10 @@ function buildVideoAsArticleCard(it) {
                   hasFrame: !!frame2,
                   hasIframe: !!dbgIframe,
                   iframeSrc: dbgIframeSrc,
+                  cardsPreviewCount: cardsPreview.length,
+                  cardIdentity,
+                  truthFromCard: { ytid: dbgCardYtid, loaded: dbgLoaded, hasIframe: !!dbgIframe, iframeSrc: dbgIframeSrc },
+                  truthFromLastCard: lastTruth,
                   fallback: false,
                   error: null,
                 });
@@ -6444,6 +6467,25 @@ function buildVideoAsArticleCard(it) {
         const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
         const dbgIframe = frame ? frame.querySelector("iframe") : null;
         const dbgIframeSrc = dbgIframe ? (dbgIframe.getAttribute("src") || null) : null;
+        const cardsPreview = Array.from(document.querySelectorAll('.iuVideoCard[data-feed-type="video-preview"]'));
+        const idx = card ? cardsPreview.indexOf(card) : -1;
+        const cardIdentity = card ? {
+          idx,
+          tag: card.tagName,
+          cls: card.className || null,
+          slot: card.getAttribute("data-slot") || null,
+          ytidAttr: dbgCardYtid,
+          loadedAttr: dbgLoaded,
+        } : null;
+        const last = (iuDebugEnabled() ? window.__iu_lastVideoCard : null);
+        const lastFrame = last ? last.querySelector(".iuVideoFrame") : null;
+        const lastIframe = lastFrame ? lastFrame.querySelector("iframe") : null;
+        const lastTruth = last ? {
+          ytid: last.getAttribute("data-ytid") || null,
+          loaded: last.getAttribute("data-iu-loaded") || null,
+          hasIframe: !!lastIframe,
+          iframeSrc: lastIframe ? (lastIframe.getAttribute("src") || null) : null,
+        } : null;
         iuVideoDebugUpdate({
           ts: new Date().toISOString(),
           ytid: dbgCardYtid,
@@ -6452,6 +6494,10 @@ function buildVideoAsArticleCard(it) {
           hasFrame: !!frame,
           hasIframe: !!dbgIframe,
           iframeSrc: dbgIframeSrc,
+          cardsPreviewCount: cardsPreview.length,
+          cardIdentity,
+          truthFromCard: { ytid: dbgCardYtid, loaded: dbgLoaded, hasIframe: !!dbgIframe, iframeSrc: dbgIframeSrc },
+          truthFromLastCard: lastTruth,
           fallback: false,
           error: null,
         });
