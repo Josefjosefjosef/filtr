@@ -124,6 +124,7 @@ window.addEventListener("unhandledrejection", (e) => {
   // FEED VIDEO EVERY 8 (YouTube preview card, lazy embed)
   const IU_FEED_VIDEO_ENABLED = true;
   const IU_FEED_VIDEO_EVERY = 8;
+  const IU_FEED_VIDEO_MAX_PER_PAGE = 25;
 
   function debugLog(...args) {
     if (!isDebugLogging) return;
@@ -1729,12 +1730,88 @@ window.addEventListener("unhandledrejection", (e) => {
       const fallbackDays = Number(cfg?.fallbackDays) > 0 ? Number(cfg.fallbackDays) : 60;
       const targetShare = Number(cfg?.targetShare) > 0 ? Number(cfg.targetShare) : 0.7;
       const dedupeDays = Number(cfg?.dedupeDays) > 0 ? Number(cfg.dedupeDays) : 30;
+      const langTargetCz = Number(cfg?.langTargetCz) > 0 ? Number(cfg.langTargetCz) : 0.5;
+      const langTargetEn = Number(cfg?.langTargetEn) > 0 ? Number(cfg.langTargetEn) : 0.5;
+      const minGapSameSource = Number(cfg?.minGapSameSource) > 0 ? Number(cfg.minGapSameSource) : 5;
+      const maxSameLangStreak = Number(cfg?.maxSameLangStreak) > 0 ? Number(cfg.maxSameLangStreak) : 2;
+      const maxSameCategoryStreak = Number(cfg?.maxSameCategoryStreak) > 0 ? Number(cfg.maxSameCategoryStreak) : 2;
 
       const seen = iuGetVideoSeenMap();
       iuPruneVideoSeen(seen, dedupeDays);
 
       const stats = (window.__iuVideoPickStats =
-        window.__iuVideoPickStats || { total: 0, primary: 0, fallback: 0, older: 0 });
+        window.__iuVideoPickStats || { total: 0, primary: 0, fallback: 0, older: 0, cz: 0, en: 0 });
+
+      const seq = (window.__iuVideoSeq =
+        window.__iuVideoSeq || { lastLangs: [], lastCats: [], lastSources: [] });
+
+      function normLang(v) {
+        const x = String(v?.lang || "").toLowerCase();
+        return x === "cz" ? "cz" : "en";
+      }
+      function normCat(v) {
+        return String(v?.category || "").trim() || "other";
+      }
+      function normSrc(v) {
+        return String(v?.sourceUrl || v?.sourceKey || v?.channel || "").trim() || "unknown";
+      }
+      function wouldBreakStreak(arr, value, maxStreak) {
+        const tail = arr.slice(-Math.max(0, maxStreak - 1));
+        return tail.length === (maxStreak - 1) && tail.every((x) => x === value);
+      }
+      function hasRecentSource(src) {
+        return seq.lastSources.slice(-minGapSameSource).includes(src);
+      }
+      function preferLang() {
+        // keep close to 50/50 (targets provided)
+        const cz = Number(stats.cz) || 0;
+        const en = Number(stats.en) || 0;
+        const total = cz + en;
+        if (total <= 0) return "cz";
+        const curCzShare = cz / total;
+        const targetCz = langTargetCz;
+        return curCzShare > targetCz ? "en" : "cz";
+      }
+
+      function pickFromList(list, bucketName) {
+        if (!Array.isArray(list) || !list.length) return null;
+        const preferred = preferLang();
+        let best = null;
+        let bestScore = 1e9;
+        for (const cand of list) {
+          if (!cand || !cand.videoId) continue;
+          const lang = normLang(cand);
+          const cat = normCat(cand);
+          const src = normSrc(cand);
+
+          if (wouldBreakStreak(seq.lastLangs, lang, maxSameLangStreak)) continue;
+          if (wouldBreakStreak(seq.lastCats, cat, maxSameCategoryStreak)) continue;
+          if (hasRecentSource(src)) continue;
+
+          // score: prefer desired language, then newer, then weight
+          const age = iuVideoAgeDays(cand);
+          const w = Number(cand?.categoryWeight) || 0;
+          const langPenalty = lang === preferred ? 0 : 40;
+          const score = langPenalty + Math.min(60, age) - (w / 10);
+          if (score < bestScore) {
+            bestScore = score;
+            best = cand;
+          }
+        }
+        if (best) {
+          try {
+            const lang = normLang(best);
+            const cat = normCat(best);
+            const src = normSrc(best);
+            seq.lastLangs = [...seq.lastLangs.slice(-1), lang];
+            seq.lastCats = [...seq.lastCats.slice(-1), cat];
+            seq.lastSources = [...seq.lastSources, src].slice(-Math.max(10, minGapSameSource));
+            if (lang === "cz") stats.cz += 1;
+            else stats.en += 1;
+          } catch {}
+        }
+        return best;
+      }
 
       const unseen = pool.filter((v) => v && v.videoId && !seen[String(v.videoId)]);
       const primary = unseen.filter((v) => iuVideoAgeDays(v) <= primaryDays);
@@ -1749,18 +1826,21 @@ window.addEventListener("unhandledrejection", (e) => {
 
       let bucket = "";
       let pick = null;
-      if (wantPrimary && primary.length) {
-        bucket = "primary";
-        pick = primary[0];
-      } else if (fallback.length) {
-        bucket = "fallback";
-        pick = fallback[0];
-      } else if (primary.length) {
-        bucket = "primary";
-        pick = primary[0];
-      } else if (older.length) {
-        bucket = "older";
-        pick = older[0];
+      if (wantPrimary) {
+        pick = pickFromList(primary, "primary");
+        if (pick) bucket = "primary";
+      }
+      if (!pick) {
+        pick = pickFromList(fallback, "fallback");
+        if (pick) bucket = "fallback";
+      }
+      if (!pick) {
+        pick = pickFromList(primary, "primary");
+        if (pick) bucket = "primary";
+      }
+      if (!pick) {
+        pick = pickFromList(older, "older");
+        if (pick) bucket = "older";
       }
 
       // If nothing unseen, prune and retry once (spec requirement).
@@ -1775,10 +1855,23 @@ window.addEventListener("unhandledrejection", (e) => {
           return a > primaryDays && a <= fallbackDays;
         });
         const o2 = unseen2.filter((v) => iuVideoAgeDays(v) > fallbackDays);
-        if (p2.length) { bucket = "primary"; pick = p2[0]; }
-        else if (f2.length) { bucket = "fallback"; pick = f2[0]; }
-        else if (o2.length) { bucket = "older"; pick = o2[0]; }
-        else { bucket = "older"; pick = unseen2[0]; }
+        pick = pickFromList(p2, "primary");
+        if (pick) {
+          bucket = "primary";
+        } else {
+          pick = pickFromList(f2, "fallback");
+          if (pick) {
+            bucket = "fallback";
+          } else {
+            pick = pickFromList(o2, "older");
+            if (pick) {
+              bucket = "older";
+            } else {
+              pick = unseen2[0] || null;
+              bucket = "older";
+            }
+          }
+        }
       }
 
       if (!pick || !pick.videoId) return null;
@@ -1795,7 +1888,10 @@ window.addEventListener("unhandledrejection", (e) => {
       else stats.older += 1;
 
       try {
-        console.info(`[iuVideoPick] bucket=${bucket} id=${id} ageDays=${ageDays}`);
+        const lang = String(pick?.lang || "en");
+        const cat = String(pick?.category || "");
+        const src = String(pick?.sourceUrl || pick?.sourceKey || pick?.channel || "");
+        console.info(`[iuVideoPick] bucket=${bucket} lang=${lang} cat=${cat} src=${src} id=${id} ageDays=${ageDays}`);
       } catch {}
 
       return pick;
@@ -1831,6 +1927,13 @@ window.addEventListener("unhandledrejection", (e) => {
           publishedAt: published,
           url,
           channel: safeText(video.channel || video.source || ""),
+          sourceUrl: safeText(video.sourceUrl || video.source_url || ""),
+          sourceKey: safeText(video.sourceKey || video.source_key || ""),
+          lang: safeText(video.lang || ""),
+          category: safeText(video.category || ""),
+          categoryWeight: Number(video.categoryWeight || 0) || 0,
+          thumb: safeText(video.thumb || ""),
+          durationSec: Number(video.durationSec || 0) || 0,
           section: "video",
           summary: safeText(video.summary || video.description || ""),
         };
@@ -2109,14 +2212,22 @@ window.addEventListener("unhandledrejection", (e) => {
       !isHome &&
       !hasVideoSection;
     const videoPool = shouldInjectVideos ? normalizeVideoList(state.videosRaw || {}) : [];
+    const insertEveryN = Number(state?.videosRaw?.insertEveryN) || Number(IU_FEED_VIDEO_EVERY) || 8;
+    const maxVideosPerPage = Number(state?.videosRaw?.maxVideosPerPage) || Number(IU_FEED_VIDEO_MAX_PER_PAGE) || 25;
     const videoCfg = {
-      primaryDays: Number(state?.videosRaw?.freshness?.primaryDays) || 14,
-      fallbackDays: Number(state?.videosRaw?.freshness?.fallbackDays) || 60,
+      primaryDays: Number(state?.videosRaw?.freshDaysPrimary) || Number(state?.videosRaw?.freshness?.primaryDays) || 14,
+      fallbackDays: Number(state?.videosRaw?.freshDaysFallback) || Number(state?.videosRaw?.freshness?.fallbackDays) || 60,
       targetShare: Number(state?.videosRaw?.freshTargetShare) || 0.7,
       dedupeDays: Number(state?.videosRaw?.dedupeDays) || 30,
+      langTargetCz: Number(state?.videosRaw?.langTargetCz) || 0.5,
+      langTargetEn: Number(state?.videosRaw?.langTargetEn) || 0.5,
+      minGapSameSource: Number(state?.videosRaw?.minGapSameSource) || 5,
+      maxSameLangStreak: Number(state?.videosRaw?.maxSameLangStreak) || 2,
+      maxSameCategoryStreak: Number(state?.videosRaw?.maxSameCategoryStreak) || 2,
     };
     let injectedVideosCount = 0;
     let renderedArticlesCount = 0;
+    let videosInserted = 0;
 
     for (let i = 0; i < visibleItems.length; i++) {
       const item = visibleItems[i];
@@ -2145,7 +2256,8 @@ window.addEventListener("unhandledrejection", (e) => {
       // Inject YouTube preview cards after every N articles (standard feed only).
       if (shouldInjectVideos && kind === "article") {
         renderedArticlesCount += 1;
-        if (renderedArticlesCount % Number(IU_FEED_VIDEO_EVERY) === 0 && videoPool.length) {
+        if (videosInserted >= maxVideosPerPage) continue;
+        if (renderedArticlesCount % insertEveryN === 0 && videoPool.length) {
           const v = iuPickVideoForSlot(videoPool, videoCfg);
           if (!v) continue;
           const vMarkup = buildYouTubeVideoPreviewCard(v);
@@ -2156,6 +2268,7 @@ window.addEventListener("unhandledrejection", (e) => {
             if (vNode && vNode instanceof HTMLElement) {
               nextNodes.push(vNode);
               injectedVideosCount += 1;
+              videosInserted += 1;
             }
           }
         }
