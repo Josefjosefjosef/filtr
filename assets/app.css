@@ -7573,9 +7573,25 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
    ============================================================ */
 
 @media (max-width: 900px){
+  :root{
+    --iuMobileBtnH: 60px;
+  }
+
+  /* Topbar must match button height */
+  #topbarWrap{
+    height: var(--iuMobileBtnH);
+  }
+  #topbarWrap .topbar-new-inner,
+  #topbarWrap .topbar-new-main{
+    height: 100%;
+  }
+  #topbarWrap .topbar-new-main{
+    align-items: center;
+  }
+
   .iuMobileFocus{
     width: 100%;
-    padding: 10px 12px 0 12px;
+    padding: 0 12px 0 12px;
   }
 
   .iuMobileFocusList,
@@ -7585,24 +7601,19 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 
   .iuMobileFocusBtn{
     width: 100%;
-    min-height: 60px;
+    height: var(--iuMobileBtnH);
     border: 0;
     border-radius: 14px;
-    padding: 14px 16px;
+    padding: 0 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-weight: 800;
-    letter-spacing: .2px;
+    font-weight: 700;
     color: rgba(255,255,255,.98);
     background: var(--iuMobileFocusAccent, var(--iuNavAccent-media, #0B2A4A));
     box-shadow: 0 10px 26px rgba(0,0,0,.18);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-  }
-
-  .iuMobileFocusBtn:active{
-    transform: translateY(1px);
   }
 
   .iuMobileFocusBtn::after{
@@ -7616,22 +7627,18 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   }
 
   .iuMobileFocusPanel{
-    margin-top: 10px;
     padding: 10px 0 0 0;
   }
 
   .iuMobileFocus.is-open .iuMobileFocusList{
     display: none;
   }
-
   .iuMobileFocus.is-open .iuMobileFocusActive{
     display: block;
   }
-
   .iuMobileFocusList{
     display: block;
   }
-
   .iuMobileFocusActive{
     display: none;
   }
@@ -7639,13 +7646,14 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   /* Accent mapping (match desktop palette vars) */
   .iuMobileFocusBtn[data-accent="media"]{     --iuMobileFocusAccent: var(--iuNavAccent-media, #0B2A4A); }
   .iuMobileFocusBtn[data-accent="radio"]{     --iuMobileFocusAccent: var(--iuNavAccent-radio, #6D28D9); }
+  .iuMobileFocusBtn[data-accent="tvonline"]{  --iuMobileFocusAccent: var(--iuNavAccent-tvonline, #DC2626); }
+  .iuMobileFocusBtn[data-accent="jr"]{        --iuMobileFocusAccent: var(--iuNavAccent-jr, #0EA5A4); }
+  .iuMobileFocusBtn[data-accent="mapy"]{      --iuMobileFocusAccent: var(--iuNavAccent-mapy, #16A34A); }
+  .iuMobileFocusBtn[data-accent="travel"]{    --iuMobileFocusAccent: var(--iuNavAccent-travel, #EA580C); }
   .iuMobileFocusBtn[data-accent="pocasi"]{    --iuMobileFocusAccent: var(--iuNavAccent-pocasi, #2563EB); }
   .iuMobileFocusBtn[data-accent="namedays"]{  --iuMobileFocusAccent: var(--iuNavAccent-namedays, #7C3AED); }
-  .iuMobileFocusBtn[data-accent="tvonline"]{  --iuMobileFocusAccent: var(--iuNavAccent-tvonline, #DC2626); }
-  .iuMobileFocusBtn[data-accent="tvprogram"]{ --iuMobileFocusAccent: var(--iuNavAccent-tvonline, #DC2626); }
-  .iuMobileFocusBtn[data-accent="travel"]{    --iuMobileFocusAccent: var(--iuNavAccent-culture, #EA580C); }
-  .iuMobileFocusBtn[data-accent="mapy"]{      --iuMobileFocusAccent: var(--iuNavAccent-mapy, #16A34A); }
-  .iuMobileFocusBtn[data-accent="mindmenu"]{  --iuMobileFocusAccent: #111827; }
+  .iuMobileFocusBtn[data-accent="tvprogram"]{ --iuMobileFocusAccent: var(--iuNavAccent-tvprogram, #DC2626); }
+  .iuMobileFocusBtn[data-accent="mindmenu"]{  --iuMobileFocusAccent: #000; }
 }
 
 /* ============================================================

@@ -4538,6 +4538,10 @@ function buildVideoAsArticleCard(it) {
       const root = document.getElementById("iuMobileFocus");
       if (!root) return;
 
+      const elActive = root.querySelector(".iuMobileFocusActive");
+      const elList = root.querySelector(".iuMobileFocusList");
+      if (!elActive || !elList) return;
+
       const mq = window.matchMedia ? window.matchMedia("(max-width: 900px)") : null;
       const isMobile = () => (mq ? Boolean(mq.matches) : (window.innerWidth <= 900));
       if (!isMobile()) return;
@@ -4545,17 +4549,41 @@ function buildVideoAsArticleCard(it) {
       if (window.__iu_mobileFocusInit) return;
       window.__iu_mobileFocusInit = 1;
 
-      const sections = [
-        { label: "Sekce", action: "mindmenu", accent: "mindmenu" },
-        { label: "Média", target: "#feed", accent: "media" },
-        { label: "Rádia", target: "#iuRadioView", accent: "radio" },
-        { label: "Počasí", target: "#iuWeatherView", accent: "pocasi" },
-        { label: "Svátky", target: "#iuHolidaysView", accent: "namedays" },
-        { label: "TV online", target: "#iuTvOnlineView", accent: "tvonline" },
-        { label: "TV program", target: "#iuTvProgramView", accent: "tvprogram" },
-        { label: "Cestování", target: "#iuTravelView", accent: "travel" },
-        { label: "Mapy", target: "#iuMapyView", accent: "mapy" },
-      ];
+      const railToTarget = {
+        media: "#feed",
+        radio: "#iuRadioView",
+        tvonline: "#iuTvOnlineView",
+        jr: "#iuJrEmptyView",
+        maps: "#iuMapyView",
+        travel: "#iuTravelView",
+        weather: "#iuWeatherView",
+        namedays: "#iuHolidaysView",
+        tvprogram: "#iuTvProgramView",
+      };
+
+      function readSectionsFromLeftRail() {
+        const out = [];
+        // 1) MindMenu is always first
+        out.push({ label: "MindMenu", action: "mindmenu", accent: "mindmenu" });
+
+        // 2) Others in the same order as PC left rail
+        const items = Array.from(document.querySelectorAll(".iu-leftNavItem[data-rail][data-accent]"));
+        for (const it of items) {
+          try {
+            const rail = String(it.getAttribute("data-rail") || "").trim();
+            const accent = String(it.getAttribute("data-accent") || "").trim();
+            const labelEl = it.querySelector(".iu-leftNavLabel");
+            const label = String(labelEl ? labelEl.textContent : it.textContent || "").trim();
+            const target = railToTarget[rail];
+            if (!target) continue;
+            if (!label) continue;
+            out.push({ label, target, accent: accent || rail });
+          } catch {}
+        }
+        return out;
+      }
+
+      const sections = readSectionsFromLeftRail();
 
       const state = {
         isOpen: false,
@@ -4576,27 +4604,23 @@ function buildVideoAsArticleCard(it) {
       }
 
       function render() {
-        const listHtml = sections
-          .map((s) => {
-            const hasAction = Boolean(s && s.action);
-            const disabled = hasAction ? "" : (resolveTarget(s.target) ? "" : " disabled");
-            const dataTarget = hasAction ? "" : ` data-target="${escapeHtml(s.target)}"`;
-            const dataAction = hasAction ? ` data-action="${escapeHtml(s.action)}"` : "";
-            return `<button type="button" class="iuMobileFocusBtn" ${dataAction}${dataTarget} data-accent="${escapeHtml(s.accent)}" aria-expanded="false"${disabled}>${escapeHtml(s.label)}</button>`;
-          })
-          .join("");
+        const listHtml = sections.map((s) => {
+          const hasAction = Boolean(s && s.action);
+          const disabled = hasAction ? "" : (resolveTarget(s.target) ? "" : " disabled");
+          const dataTarget = hasAction ? "" : ` data-target="${escapeHtml(s.target)}"`;
+          const dataAction = hasAction ? ` data-action="${escapeHtml(s.action)}"` : "";
+          return `<button type="button" class="iuMobileFocusBtn" ${dataAction}${dataTarget} data-accent="${escapeHtml(s.accent)}" aria-expanded="false"${disabled}>${escapeHtml(s.label)}</button>`;
+        }).join("");
 
-        const activeBtn = state.active
-          ? `<button type="button" class="iuMobileFocusBtn iuMobileFocusBtn--active" data-target="${escapeHtml(state.active.target)}" data-accent="${escapeHtml(state.active.accent)}" aria-expanded="true">${escapeHtml(state.active.label)}</button>`
-          : "";
+        elList.innerHTML = listHtml;
 
-        root.innerHTML = `
-          <div class="iuMobileFocusList">${listHtml}</div>
-          <div class="iuMobileFocusActive">
-            ${activeBtn}
-            <div class="iuMobileFocusPanel" id="iuMobileFocusPanel"></div>
-          </div>
-        `.trim();
+        if (!state.active) {
+          elActive.innerHTML = "";
+          return;
+        }
+
+        const activeBtn = `<button type="button" class="iuMobileFocusBtn iuMobileFocusBtn--active" data-target="${escapeHtml(state.active.target || "")}" data-accent="${escapeHtml(state.active.accent)}" data-action="${escapeHtml(state.active.action || "")}" aria-expanded="true">${escapeHtml(state.active.label)}</button>`;
+        elActive.innerHTML = `${activeBtn}<div class="iuMobileFocusPanel" id="iuMobileFocusPanel"></div>`;
       }
 
       function openSection(s) {
