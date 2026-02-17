@@ -9298,7 +9298,15 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (item.id === "iuRailToggleBtn") return;
       const action = (item.getAttribute("data-action") || item.dataset?.action || "").trim().toLowerCase();
       if (action === "toggle-rail") return;
-      try{ e.preventDefault(); }catch{}
+      // Prevent only for internal router items (href="#" / internal data-rail).
+      // External links must keep default behavior.
+      try{
+        const href = String(item.getAttribute("href") || "").trim();
+        const rail = String(item.getAttribute("data-rail") || "").trim().toLowerCase();
+        const isExternal = href && /^https?:\/\//i.test(href);
+        const isInternal = !isExternal && (href === "#" || href === "" || !!rail);
+        if (isInternal) e.preventDefault();
+      }catch{}
       const accent = (item.getAttribute('data-accent') || item.dataset?.accent || "").trim().toLowerCase();
       const section = normalizeSection(accent);
       persistSection(section);
