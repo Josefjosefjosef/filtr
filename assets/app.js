@@ -1944,7 +1944,7 @@ window.addEventListener("unhandledrejection", (e) => {
   function iuBuildYouTubeEmbedUrl(id) {
     const vid = String(id || "").trim();
     if (!vid) return "";
-    return `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0`;
+    return `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0&playsinline=1&mute=1`;
   }
 
   function iuSafeParseDate(value) {
@@ -6814,6 +6814,15 @@ function buildVideoAsArticleCard(it) {
         // Anti-double-click: mark as loaded BEFORE constructing/replacing iframe.
         // If inline embed throws, we still fall back to opening YouTube.
         card.setAttribute("data-iu-loaded", "1");
+        // HARD UX FIX: remove poster/overlay from DOM so it can never block iframe clicks.
+        try {
+          const poster = card.querySelector(".iuVideoPoster");
+          if (poster) poster.remove();
+        } catch {}
+        try {
+          const overlay = card.querySelector(".iuVideoOverlay");
+          if (overlay) overlay.remove();
+        } catch {}
         if (iuDebugEnabled()) {
           try { window.__iu_lastVideoCard = card; } catch {}
         }
@@ -6822,14 +6831,14 @@ function buildVideoAsArticleCard(it) {
         iframe.src = src;
         iframe.loading = "lazy";
         iframe.setAttribute("title", "YouTube video");
-        iframe.setAttribute(
-          "allow",
-          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        );
+        iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+        iframe.setAttribute("allowfullscreen", "");
         iframe.referrerPolicy = "strict-origin-when-cross-origin";
         iframe.allowFullscreen = true;
         iframe.className = "iuVideoIframe";
 
+        try { frame.style.pointerEvents = "auto"; } catch {}
+        try { iframe.style.pointerEvents = "auto"; } catch {}
         frame.replaceChildren(iframe);
         const dbgCardYtid = card ? (card.getAttribute("data-ytid") || null) : null;
         const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
