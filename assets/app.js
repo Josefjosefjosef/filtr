@@ -2108,6 +2108,150 @@ window.addEventListener("unhandledrejection", (e) => {
     return queue1;
   }
 
+  // ============================================================
+  // FEED VIDEO EVERY 8 — DOM re-anchor pass (incremental renders)
+  // ============================================================
+  function iuEnsureVideoAnchors(sectionKey) {
+    const iuDebug = Boolean(location.search.includes("debug=1"));
+    const container = document.getElementById("feed");
+    if (!container) return;
+
+    const isHome = Boolean(document.body && document.body.classList && document.body.classList.contains("iu-home"));
+    const hasVideoSection = Array.isArray(activeSections) && activeSections.includes("video");
+    const shouldInjectVideos =
+      Boolean(IU_FEED_VIDEO_ENABLED) && Number(IU_FEED_VIDEO_EVERY) > 0 && !isHome && !hasVideoSection;
+
+    // In standard feed, video cards are allowed ONLY via fixed slots (.iuVideoCard[data-slot]).
+    if (!shouldInjectVideos) {
+      // Clean up any leftover anchored cards if we are not in the standard feed.
+      try {
+        for (const el of Array.from(container.querySelectorAll(".iuVideoCard[data-slot]"))) {
+          el.remove();
+        }
+      } catch {}
+      return;
+    }
+
+    // Article selector must match ONLY real articles (exclude video-preview cards).
+    const ARTICLE_SELECTOR = '.news-card[data-feed-type="article"]';
+    const articles = Array.from(container.querySelectorAll(ARTICLE_SELECTOR));
+
+    const insertEveryN = Number(IU_FEED_VIDEO_EVERY) || 8;
+    const maxVideosPerPage =
+      Number(state?.videosRaw?.maxVideosPerPage) || Number(IU_FEED_VIDEO_MAX_PER_PAGE) || 25;
+    const slotCount = Math.min(maxVideosPerPage, Math.floor(articles.length / insertEveryN));
+
+    // Ensure queue is updated to the current slotCount (important for incremental append).
+    const videoPool = normalizeVideoList(state.videosRaw || {});
+    const queue = iuUpdateVideoQueue(sectionKey || "vse", slotCount, videoPool, {
+      insertEveryN,
+      maxVideosPerPage,
+      articleTotal: articles.length,
+      dedupeDays: Number(state?.videosRaw?.dedupeDays) || 30,
+      minGapSameSource: Number(state?.videosRaw?.minGapSameSource) || 5,
+      maxSameLangStreak: Number(state?.videosRaw?.maxSameLangStreak) || 2,
+      maxSameCategoryStreak: Number(state?.videosRaw?.maxSameCategoryStreak) || 2,
+    });
+
+    // Remove any stray non-anchored video cards in standard feed.
+    try {
+      for (const el of Array.from(container.querySelectorAll(".iuVideoCard:not([data-slot])"))) {
+        el.remove();
+      }
+    } catch {}
+
+    // Anchor/move cards to exact 8/16/24... article positions.
+    try {
+      window.__iuVideoAnchorPassRunning = true;
+
+      for (let slotIndex = 0; slotIndex < slotCount; slotIndex++) {
+        const anchorArticleIndex = (slotIndex + 1) * insertEveryN - 1; // 0-based
+        const anchorEl = articles[anchorArticleIndex];
+        if (!anchorEl) continue;
+
+        const slot = queue?.slots?.[slotIndex];
+        const hasSlotVideo = Boolean(slot && String(slot.videoId || "").trim());
+
+        let card = container.querySelector(`.iuVideoCard[data-slot="${slotIndex}"]`);
+        if (!hasSlotVideo) {
+          if (card) card.remove();
+          continue;
+        }
+
+        if (!card) {
+          const vMarkup = buildYouTubeVideoPreviewCard({
+            videoId: slot.videoId,
+            publishedAt: slot.publishedAt,
+            sourceUrl: slot.source,
+            lang: slot.lang,
+            category: slot.cat,
+          });
+          if (!vMarkup) continue;
+          const t = document.createElement("template");
+          t.innerHTML = vMarkup.trim();
+          const node = t.content.firstElementChild;
+          if (!node || !(node instanceof HTMLElement)) continue;
+          node.setAttribute("data-slot", String(slotIndex));
+          card = node;
+        } else {
+          card.setAttribute("data-slot", String(slotIndex));
+        }
+
+        // DOM move/insert: immediately after the anchor article.
+        anchorEl.insertAdjacentElement("afterend", card);
+      }
+
+      // Remove extra anchored cards outside of slotCount.
+      for (const el of Array.from(container.querySelectorAll(".iuVideoCard[data-slot]"))) {
+        const n = Number(el.getAttribute("data-slot"));
+        if (!Number.isFinite(n) || n < 0 || n >= slotCount) el.remove();
+      }
+    } catch {} finally {
+      try { window.__iuVideoAnchorPassRunning = false; } catch {}
+    }
+
+    if (iuDebug) {
+      try {
+        console.info(
+          "[iuVideoAnchorDOM] articles=%d slotCount=%d videosInDom=%d",
+          articles.length,
+          slotCount,
+          container.querySelectorAll(".iuVideoCard").length
+        );
+        const n = Math.min(slotCount, 5);
+        for (let slotIndex = 0; slotIndex < n; slotIndex++) {
+          console.info("[iuVideoAnchorDOM] slot=%d afterArticle=%d", slotIndex, (slotIndex + 1) * insertEveryN);
+        }
+      } catch {}
+    }
+  }
+
+  function iuInitVideoAnchorObserver() {
+    if (window.__iu_videoAnchorObsInit) return;
+    window.__iu_videoAnchorObsInit = true;
+
+    const container = document.getElementById("feed");
+    if (!container || !("MutationObserver" in window)) return;
+
+    let t = 0;
+    const obs = new MutationObserver(() => {
+      try {
+        if (window.__iuVideoAnchorPassRunning) return;
+      } catch {}
+      if (t) return;
+      t = window.setTimeout(() => {
+        t = 0;
+        const key = String(window.__iuVideoAnchorSectionKey || "");
+        iuEnsureVideoAnchors(key || "vse");
+      }, 50);
+    });
+
+    try {
+      obs.observe(container, { childList: true, subtree: false });
+      window.__iu_videoAnchorObs = obs;
+    } catch {}
+  }
+
   function iuVideoAgeDays(item) {
     try {
       const d = iuSafeParseDate(item?.publishedAt || item?.published || item?.date || "");
@@ -2678,8 +2822,6 @@ window.addEventListener("unhandledrejection", (e) => {
       maxSameCategoryStreak: Number(state?.videosRaw?.maxSameCategoryStreak) || 2,
     };
     let injectedVideosCount = 0;
-    let articleCounter = 0;
-    let videosInserted = 0;
 
     // Fixed slot queue (v1): stable positions, newest-only head replacement.
     // Sloty se počítají jen podle počtu článků (ne podle indexu pole).
@@ -2746,40 +2888,6 @@ window.addEventListener("unhandledrejection", (e) => {
         continue;
       }
       nextNodes.push(node);
-
-      // Inject YouTube preview cards after every N articles (standard feed only).
-      if (shouldInjectVideos && kind === "article") {
-        articleCounter += 1;
-        if (videosInserted >= maxVideosPerPage) continue;
-        if (articleCounter % insertEveryN === 0 && slotCount > 0) {
-          const slotIndex = (articleCounter / insertEveryN) - 1; // 0-based
-          const slot = queue?.slots?.[slotIndex];
-          const hasSlotVideo = Boolean(slot && slot.videoId);
-          if (isDebugLogging) {
-            try {
-              console.info("[iuVideoAnchor] article=%d slot=%d inserted=%s", articleCounter, slotIndex, String(hasSlotVideo));
-            } catch {}
-          }
-          if (!hasSlotVideo) continue;
-          const vMarkup = buildYouTubeVideoPreviewCard({
-            videoId: slot.videoId,
-            publishedAt: slot.publishedAt,
-            sourceUrl: slot.source,
-            lang: slot.lang,
-            category: slot.cat,
-          });
-          if (vMarkup) {
-            const t2 = document.createElement("template");
-            t2.innerHTML = vMarkup.trim();
-            const vNode = t2.content.firstElementChild;
-            if (vNode && vNode instanceof HTMLElement) {
-              nextNodes.push(vNode);
-              injectedVideosCount += 1;
-              videosInserted += 1;
-            }
-          }
-        }
-      }
     }
 
     // "Load more" button (no infinite auto-load)
@@ -2806,6 +2914,15 @@ window.addEventListener("unhandledrejection", (e) => {
       if (loadMoreWrap) safeTarget.replaceChildren(...nextNodes, loadMoreWrap);
       else safeTarget.replaceChildren(...nextNodes);
     }
+
+    // DOM re-anchor pass: ensure video cards are exactly after 8/16/24... rendered articles.
+    try {
+      window.__iuVideoAnchorSectionKey = sectionKey;
+      iuInitVideoAnchorObserver();
+      iuEnsureVideoAnchors(sectionKey);
+      // keep diag count roughly aligned (best-effort)
+      injectedVideosCount = safeTarget.querySelectorAll(".iuVideoCard[data-slot]").length;
+    } catch {}
 
     const feedChildrenAfter = safeTarget.childElementCount;
     const renderedCount = nextNodes.length;
