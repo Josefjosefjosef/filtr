@@ -1971,61 +1971,14 @@ window.addEventListener("unhandledrejection", (e) => {
       return headMs === 0 ? true : ms > headMs;
     });
 
-    // Build newHead from newest window only (diversity inside the window).
+    // Pick newHead: newest-first + quotas + anti-cluster (within newest window).
     const pickWindow = Number(IU_VIDEO_PICK_WINDOW) > 0 ? Number(IU_VIDEO_PICK_WINDOW) : 240;
-    const windowSizes = [pickWindow, 320];
-    const newHead = [];
+    const slice = newOnly.slice(0, pickWindow);
     const headMax = effectiveSlots;
-
-    function canPlace(cand) {
-      const id = String(cand?.videoId || "").trim();
-      if (!id) return false;
-      // dedupe only for newHead additions (do NOT evict existing queue slots)
-      if (seen[id]) {
-        if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "seen_dedupe" });
-        return false;
-      }
-      // simple diversity inside head build
-      const lang = String(cand?.lang || "").toLowerCase() === "cz" ? "cz" : "en";
-      const cat = String(cand?.category || "").trim() || "other";
-      const src = String(cand?.sourceUrl || cand?.sourceKey || cand?.channel || "").trim() || "unknown";
-
-      const lastLangs = newHead.slice(-2).map((x) => String(x?.lang || "").toLowerCase() === "cz" ? "cz" : "en");
-      const lastCats = newHead.slice(-2).map((x) => String(x?.category || "").trim() || "other");
-      const lastSources = newHead.slice(-Math.max(0, Number(cfg?.minGapSameSource) || 5)).map((x) => String(x?._src || ""));
-
-      const maxLang = Number(cfg?.maxSameLangStreak) || 2;
-      const maxCat = Number(cfg?.maxSameCategoryStreak) || 2;
-      const gap = Number(cfg?.minGapSameSource) || 5;
-
-      if (maxLang >= 2 && lastLangs.length >= (maxLang - 1) && lastLangs.every((x) => x === lang)) {
-        if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "diversity_lang_streak" });
-        return false;
-      }
-      if (maxCat >= 2 && lastCats.length >= (maxCat - 1) && lastCats.every((x) => x === cat)) {
-        if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "diversity_cat_streak" });
-        return false;
-      }
-      if (gap > 0 && lastSources.slice(-gap).includes(src)) {
-        if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "diversity_source_gap" });
-        return false;
-      }
-      return true;
-    }
-
-    let usedWindow = pickWindow;
-    for (const w of windowSizes) {
-      usedWindow = w;
-      const slice = newOnly.slice(0, w);
-      for (const cand of slice) {
-        if (newHead.length >= headMax) break;
-        if (!canPlace(cand)) continue;
-        // mark seen when it enters queue head
-        try { seen[String(cand.videoId)] = Date.now(); } catch {}
-        // keep small internal fields for diversity (not stored)
-        newHead.push({ ...cand, _src: String(cand?.sourceUrl || cand?.sourceKey || cand?.channel || "") });
-      }
-      if (newHead.length) break;
+    const newHead = iuPickVideosForSlots(slice, headMax, { seen });
+    // mark seen when it enters queue head (do NOT evict existing queue slots)
+    for (const v of newHead) {
+      try { seen[String(v.videoId)] = Date.now(); } catch {}
     }
 
     // If no new arrivals but we still have empty slots, we'll fill tail from the newest pool.
@@ -2612,6 +2565,11 @@ window.addEventListener("unhandledrejection", (e) => {
         const url = safeUrl(video.url) || safeUrl(`https://www.youtube.com/watch?v=${id}`);
         if (!url) return null;
         const title = safeText(video.title || video.name || video.headline || "Video");
+        const rawLang = safeText(video.lang || "");
+        const langNorm = rawLang.toLowerCase() === "cz" || rawLang.toLowerCase() === "cs" ? "cz" : "en";
+        const region = safeText(video.region || (langNorm === "cz" ? "cz" : "world"));
+        const topics = Array.isArray(video.topics) ? video.topics.map((t) => safeText(t)).filter(Boolean) : [];
+        const topic0 = topics[0] || safeText(video.topic || "") || "";
         return {
           ...video,
           contentType: "video",
@@ -2622,7 +2580,15 @@ window.addEventListener("unhandledrejection", (e) => {
           channel: safeText(video.channel || video.source || ""),
           sourceUrl: safeText(video.sourceUrl || video.source_url || ""),
           sourceKey: safeText(video.sourceKey || video.source_key || ""),
-          lang: safeText(video.lang || ""),
+          sourceId: safeText(video.sourceId || video.source_id || ""),
+          sourceTitle: safeText(video.sourceTitle || video.source_title || ""),
+          channelId: safeText(video.channelId || video.channel_id || ""),
+          lang: langNorm,
+          region,
+          topics,
+          topic: topic0,
+          weight: Number(video.weight || 1) || 1,
+          maxPerDay: Number(video.maxPerDay || 2) || 2,
           category: safeText(video.category || ""),
           categoryWeight: Number(video.categoryWeight || 0) || 0,
           thumb: safeText(video.thumb || ""),
@@ -2632,6 +2598,218 @@ window.addEventListener("unhandledrejection", (e) => {
         };
       })
       .filter(Boolean);
+  }
+
+  function iuComputeMixTargets(N) {
+    const n = Math.max(0, Number(N) || 0);
+    const czTarget = Math.round(n * 0.5);
+    const worldTarget = n - czTarget;
+    const tech_science = Math.round(n * 0.30);
+    const practical = Math.round(n * 0.20);
+    const finance = Math.round(n * 0.15);
+    const interviews = Math.round(n * 0.15);
+    const history = Math.round(n * 0.10);
+    const used = tech_science + practical + finance + interviews + history;
+    const explainers = Math.max(0, n - used);
+    return {
+      N: n,
+      region: { cz: czTarget, world: worldTarget },
+      topics: { tech_science, practical, finance, interviews, history, explainers },
+    };
+  }
+
+  function iuGetVideoTopic(it) {
+    const t0 = String(it?.topic || (Array.isArray(it?.topics) ? it.topics[0] : "") || "").trim();
+    if (t0) return t0;
+    const cat = String(it?.category || "").trim().toLowerCase();
+    const m = {
+      science_tech_ai: "tech_science",
+      practical_life_city_travel: "practical",
+      finance_economy: "finance",
+      business_startups: "finance",
+      interviews_people: "interviews",
+      history_culture: "history",
+      transport_infra: "practical",
+      health_psychology: "practical",
+      law_politics_explained: "explainers",
+      smart_fun_short: "explainers",
+    };
+    return m[cat] || "explainers";
+  }
+
+  function iuGetVideoRegion(it) {
+    const r = String(it?.region || "").trim().toLowerCase();
+    if (r === "cz" || r === "world") return r;
+    const lang = String(it?.lang || "").trim().toLowerCase();
+    return (lang === "cz" || lang === "cs") ? "cz" : "world";
+  }
+
+  function iuGetVideoSourceId(it) {
+    return (
+      String(it?.sourceId || "").trim() ||
+      String(it?.sourceKey || "").trim() ||
+      String(it?.sourceUrl || "").trim() ||
+      String(it?.channelId || "").trim() ||
+      String(it?.channel || "").trim() ||
+      "unknown"
+    );
+  }
+
+  function iuPickVideosForSlots(videoPool, slotCount, cfg) {
+    const pool = Array.isArray(videoPool) ? videoPool : [];
+    const N = Math.max(0, Math.min(25, Number(slotCount) || 0));
+    if (!pool.length || N <= 0) return [];
+
+    const targets = iuComputeMixTargets(N);
+    const picked = [];
+    const usedIds = new Set();
+
+    const counts = {
+      region: { cz: 0, world: 0 },
+      topics: { tech_science: 0, practical: 0, finance: 0, interviews: 0, history: 0, explainers: 0 },
+      perSource: {},
+      lang: { cz: 0, en: 0 },
+    };
+
+    function wouldExceedRegion(region) {
+      return counts.region[region] >= targets.region[region];
+    }
+    function wouldExceedTopic(topic) {
+      return counts.topics[topic] >= targets.topics[topic];
+    }
+    function perSourceLimit(src, maxPerDay) {
+      const lim = Math.max(1, Number(maxPerDay) || 2);
+      return (counts.perSource[src] || 0) >= lim;
+    }
+    function langOf(it) {
+      return String(it?.lang || "").toLowerCase() === "cz" ? "cz" : "en";
+    }
+
+    function streakMax(arr) {
+      let max = 0, cur = 0, last = "";
+      for (const x of arr) {
+        if (x === last) cur += 1;
+        else { last = x; cur = 1; }
+        if (cur > max) max = cur;
+      }
+      return max;
+    }
+
+    for (let i = 0; i < N; i++) {
+      const last = picked[picked.length - 1] || null;
+      const lastSource = last ? iuGetVideoSourceId(last) : "";
+      const lastTopic = last ? iuGetVideoTopic(last) : "";
+      const lastLang = last ? langOf(last) : "";
+
+      // staged fallback: relax constraints gradually
+      const stages = [
+        { allowSameTopicAdj: false, maxLangStreak: 2, relaxTopicQuota: false, relaxRegionQuota: false },
+        { allowSameTopicAdj: true,  maxLangStreak: 2, relaxTopicQuota: false, relaxRegionQuota: false },
+        { allowSameTopicAdj: true,  maxLangStreak: 3, relaxTopicQuota: false, relaxRegionQuota: false },
+        { allowSameTopicAdj: true,  maxLangStreak: 3, relaxTopicQuota: true,  relaxRegionQuota: false },
+        { allowSameTopicAdj: true,  maxLangStreak: 3, relaxTopicQuota: true,  relaxRegionQuota: true  },
+      ];
+
+      let chosen = null;
+
+      for (const st of stages) {
+        for (const cand of pool) {
+          if (!cand) continue;
+          const id = String(cand.videoId || "").trim();
+          if (!id || usedIds.has(id)) continue;
+
+          // validity (publishedAt)
+          const dt = iuSafeParseDate(cand.publishedAt || "");
+          if (!dt) continue;
+
+          // dedupe for NEW head only (seen map passed via cfg)
+          try {
+            const seen = cfg && cfg.seen ? cfg.seen : null;
+            if (seen && seen[id]) continue;
+          } catch {}
+
+          const src = iuGetVideoSourceId(cand);
+          if (src && lastSource && src === lastSource) continue; // never 2 same source in a row
+
+          const topic = iuGetVideoTopic(cand);
+          const region = iuGetVideoRegion(cand);
+          const lang = langOf(cand);
+
+          // maxPerDay per source (within this pick window)
+          if (perSourceLimit(src, cand.maxPerDay || (cfg && cfg.maxPerDay))) continue;
+
+          // topic adjacency (only if alternative exists -> handled by stage relax)
+          if (!st.allowSameTopicAdj && topic && lastTopic && topic === lastTopic) continue;
+
+          // lang streak
+          if (st.maxLangStreak > 0 && lastLang) {
+            const prev = picked.slice(- (st.maxLangStreak - 1)).map((x) => langOf(x));
+            if (prev.length >= (st.maxLangStreak - 1) && prev.every((x) => x === lang) && lang === lastLang) {
+              continue;
+            }
+          }
+
+          // quotas
+          if (!st.relaxRegionQuota && wouldExceedRegion(region)) continue;
+          if (!st.relaxTopicQuota && wouldExceedTopic(topic)) continue;
+
+          chosen = cand;
+          break;
+        }
+        if (chosen) break;
+      }
+
+      if (!chosen) break;
+
+      const id = String(chosen.videoId || "").trim();
+      usedIds.add(id);
+      picked.push(chosen);
+
+      const region = iuGetVideoRegion(chosen);
+      const topic = iuGetVideoTopic(chosen);
+      const lang = langOf(chosen);
+      const src = iuGetVideoSourceId(chosen);
+
+      counts.region[region] = (counts.region[region] || 0) + 1;
+      counts.topics[topic] = (counts.topics[topic] || 0) + 1;
+      counts.lang[lang] = (counts.lang[lang] || 0) + 1;
+      counts.perSource[src] = (counts.perSource[src] || 0) + 1;
+    }
+
+    if (Boolean(location.search.includes("debug=1"))) {
+      try {
+        const langs = picked.map((x) => langOf(x));
+        const sources = picked.map((x) => iuGetVideoSourceId(x));
+        const topics = picked.map((x) => iuGetVideoTopic(x));
+        const first10 = picked.slice(0, 10).map((x) => ({
+          publishedAt: x.publishedAt,
+          sourceId: iuGetVideoSourceId(x),
+          lang: langOf(x),
+          topic: iuGetVideoTopic(x),
+          videoId: x.videoId,
+        }));
+        console.info(
+          "[iuVideoMix] slots=%d cz=%d world=%d topicCounts=%o maxLangStreak=%d maxSourceStreak=%d",
+          N,
+          counts.region.cz || 0,
+          counts.region.world || 0,
+          counts.topics,
+          streakMax(langs),
+          streakMax(sources)
+        );
+        console.info("[iuVideoMix] first10=%o", first10);
+        // sanity: monotonic newest-first (non-increasing)
+        let bad = 0;
+        for (let i = 1; i < picked.length; i++) {
+          const a = iuSafeParseDate(picked[i - 1].publishedAt || "");
+          const b = iuSafeParseDate(picked[i].publishedAt || "");
+          if (a && b && b.getTime() > a.getTime()) bad += 1;
+        }
+        if (bad) console.warn("[iuVideoMix] WARN non_monotonic=%d", bad);
+      } catch {}
+    }
+
+    return picked.slice(0, N);
   }
 
   function buildCombinedFeed(articles, videos) {
