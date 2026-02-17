@@ -3205,6 +3205,26 @@ window.addEventListener("unhandledrejection", (e) => {
   const IU_ALERT_REGEX = iuRegexFromPhrases(IU_ALERT_PHRASES);
   const IU_WARN_REGEX = iuRegexFromPhrases(IU_WARN_PHRASES);
 
+  function iuStripDiacritics(s) {
+    try {
+      return String(s || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    } catch {
+      return String(s || "");
+    }
+  }
+
+  // Authority + phrase matching (robust, diacritics-insensitive; only for middle feed articles).
+  const IU_ALERT_AUTHORITY =
+    /\b(policie|pcr|policie\s*cr|hzs|hasici|zachranka|zzs|zdravotnicka\s*zachranna\s*sluzba|chmu|cesky\s*hydrometeorologicky\s*ustav|silnicari|rsd|reditelstvi\s*silnic\s*a\s*d(alnic)?|mdcr|mzcr|mvcr|szpi|szu|sukl|hygien(a|ici)|krajska\s*hygien(a|e))\b/i;
+
+  const IU_ALERT_PHRASE =
+    /\b(varuje|vyhlasu(j|je)\s*vystrah|vystrah(a|y|u)|evakuac(e|i)|zakaz|uzavirk(a|y)|patran(i|i)|hleda\s*se|pohresovan(a|y|i)|ohrozen(i|i)|nebezpec(i|i)|akutn(i|e)|jedovat(e|y)|kontaminac(e|i)|stahuje\s*z\s*prodeje|stazeni\s*z\s*prodeje|epidemi(e|i)|vybuch|pozar|strelb(a|y)|utok|povod(e|en)|extremn(i|e)\s*vitr|tornado)\b/i;
+
+  const IU_WARN_PHRASE =
+    /\b(upozornuje|upozorneni|apeluje|vyzyva|doporucuje|prosime|pozor|riziko|ledovk(a|y)|namraz(a|y)|kluzk(o|y)|mlh(a|y)|kolon(y|a)|zdrzen(i|i)|omezen(i|i)|komplikac(e|i))\b/i;
+
   // EXTRA (only if source is official)
   const IU_ALERT_EXTRA_TITLE_REGEX = iuRegexFromPhrases(["varování", "výstraha", "nouzový stav", "evakuace"]);
   const IU_ALERT_EXTRA_SOURCE_REGEX = iuRegexFromPhrases(["policie", "hasiči", "čhmú", "ministerstvo", "krajský úřad"]);
@@ -3313,12 +3333,14 @@ window.addEventListener("unhandledrejection", (e) => {
       if (!card || !(card instanceof HTMLElement)) return;
       // Only middle feed: #feed .news-card[data-feed-type="article"]
       if (!card.matches('.news-card[data-feed-type="article"]')) return;
+      if (String(item?.contentType || "").toLowerCase() !== "article") return;
 
       const titleEl = card.querySelector(".iuCardTitle") || card.querySelector(".news-titleLink");
       if (!titleEl) return;
 
-      const titleRaw = String(titleEl.textContent || "");
+      const titleRaw = String(item?.title || titleEl.textContent || "");
       const titleLc = titleRaw.toLowerCase();
+      const titleNoDia = iuStripDiacritics(titleLc);
       if (!titleLc) return;
 
       // Never colorize excluded categories/sources.
@@ -3331,11 +3353,31 @@ window.addEventListener("unhandledrejection", (e) => {
       const isAlertByKeywords = IU_ALERT_REGEX.test(titleLc);
       const isWarnByKeywords = IU_WARN_REGEX.test(titleLc);
 
+      const startsWithAuthorityColon = /^\s*(policie|pcr|hzs|hasici|zachranka|zzs|chmu|rsd|silnicari)\s*:\s*/i.test(titleNoDia);
+      const authority = IU_ALERT_AUTHORITY.test(titleNoDia) || startsWithAuthorityColon;
+      const alertPhrase = IU_ALERT_PHRASE.test(titleNoDia);
+      const warnPhrase = IU_WARN_PHRASE.test(titleNoDia);
+
+      const isAlertByAuthority = alertPhrase && authority;
+      const isWarnByAuthority = (warnPhrase && authority) || (startsWithAuthorityColon && !alertPhrase);
+
       // Priority:
       // - EXTRA official alert always wins (red)
       // - Otherwise, if WARN matches too, treat it as WARN (orange) to avoid over-alerting
       //   for mild phrasing like "Pozor na ..." (even if it contains alert tokens).
-      const level = isExtraOfficialAlert ? "alert" : (isWarnByKeywords ? "warn" : (isAlertByKeywords ? "alert" : ""));
+      const level = isExtraOfficialAlert
+        ? "alert"
+        : (isAlertByAuthority ? "alert"
+        : (isWarnByAuthority ? "warn"
+        : (isWarnByKeywords ? "warn" : (isAlertByKeywords ? "alert" : ""))));
+
+      // Debug visibility for demo items.
+      try {
+        const iuDebug = Boolean(location.search.includes("debug=1"));
+        if (iuDebug && item && item.__iuAlertDemo) {
+          console.info("[iuAlertDemo] title=%o authority=%s startsWithAuthorityColon=%s alertPhrase=%s warnPhrase=%s level=%s", titleRaw, authority, startsWithAuthorityColon, alertPhrase, warnPhrase, level);
+        }
+      } catch {}
 
       if (level === "alert") {
         titleEl.classList.add("iuTitle--alert");
@@ -3478,24 +3520,43 @@ window.addEventListener("unhandledrejection", (e) => {
       const demos = [
         {
           contentType: "article",
-          title: "Policie varuje: pachatel na útěku",
+          title: "Policie: Upozornění pro veřejnost",
           url: "https://example.com/demo-policie",
           publishedAt: new Date().toISOString(),
           sources: [{ name: "Policie ČR", url: "https://www.policie.cz/" }],
+          __iuAlertDemo: true,
         },
         {
           contentType: "article",
-          title: "ČHMÚ varuje: silný vítr",
+          title: "Varování policie: pachatel na útěku",
+          url: "https://example.com/demo-varovani-policie",
+          publishedAt: new Date().toISOString(),
+          sources: [{ name: "Policie ČR", url: "https://www.policie.cz/" }],
+          __iuAlertDemo: true,
+        },
+        {
+          contentType: "article",
+          title: "Silničáři varují před ledovkou",
+          url: "https://example.com/demo-silnicari",
+          publishedAt: new Date().toISOString(),
+          sources: [{ name: "ŘSD", url: "https://www.rsd.cz/" }],
+          __iuAlertDemo: true,
+        },
+        {
+          contentType: "article",
+          title: "ČHMÚ vydal výstrahu před silným větrem",
           url: "https://example.com/demo-chmu",
           publishedAt: new Date().toISOString(),
           sources: [{ name: "ČHMÚ", url: "https://www.chmi.cz/" }],
+          __iuAlertDemo: true,
         },
         {
           contentType: "article",
-          title: "Pozor na ledovku",
-          url: "https://example.com/demo-ledovka",
+          title: "Záchranka vyzývá: uvolněte cestu záchranářům",
+          url: "https://example.com/demo-zzs",
           publishedAt: new Date().toISOString(),
-          sources: [{ name: "Dopravní podnik", url: "https://example.com/" }],
+          sources: [{ name: "ZZS", url: "https://example.com/" }],
+          __iuAlertDemo: true,
         },
       ];
       for (const demo of demos) {
