@@ -126,6 +126,8 @@ window.addEventListener("unhandledrejection", (e) => {
   const IU_FEED_VIDEO_EVERY = 8;
   const IU_FEED_VIDEO_MAX_PER_PAGE = 25;
   const IU_VIDEO_PICK_WINDOW = 40;
+  const IU_VIDEO_QUEUE_PREFIX = "iu_video_queue_v1:";
+  const IU_VIDEO_SEEN_KEY_V1 = "iu_video_seen_v1";
 
   function debugLog(...args) {
     if (!isDebugLogging) return;
@@ -1678,6 +1680,7 @@ window.addEventListener("unhandledrejection", (e) => {
 
   function iuGetVideoSeenMap() {
     try {
+      // legacy key (migration fallback)
       const raw = localStorage.getItem("iuVideoSeen");
       if (!raw) return {};
       const obj = JSON.parse(raw);
@@ -1688,9 +1691,34 @@ window.addEventListener("unhandledrejection", (e) => {
     }
   }
 
+  function iuGetVideoSeenMapV1() {
+    try {
+      const raw = localStorage.getItem(IU_VIDEO_SEEN_KEY_V1);
+      if (raw) {
+        const obj = JSON.parse(raw);
+        if (obj && typeof obj === "object") return obj;
+      }
+    } catch {}
+    // migrate from legacy map
+    try {
+      const legacy = iuGetVideoSeenMap();
+      if (legacy && typeof legacy === "object" && Object.keys(legacy).length) {
+        localStorage.setItem(IU_VIDEO_SEEN_KEY_V1, JSON.stringify(legacy));
+        return legacy;
+      }
+    } catch {}
+    return {};
+  }
+
   function iuSaveVideoSeenMap(map) {
     try {
       localStorage.setItem("iuVideoSeen", JSON.stringify(map || {}));
+    } catch {}
+  }
+
+  function iuSaveVideoSeenMapV1(map) {
+    try {
+      localStorage.setItem(IU_VIDEO_SEEN_KEY_V1, JSON.stringify(map || {}));
     } catch {}
   }
 
@@ -1710,6 +1738,242 @@ window.addEventListener("unhandledrejection", (e) => {
     } catch {
       return false;
     }
+  }
+
+  function iuQueueKey(sectionKey) {
+    const key = String(sectionKey || "vse").trim() || "vse";
+    return IU_VIDEO_QUEUE_PREFIX + key;
+  }
+
+  function iuReadQueue(sectionKey) {
+    try {
+      const raw = localStorage.getItem(iuQueueKey(sectionKey));
+      if (!raw) return null;
+      const obj = JSON.parse(raw);
+      if (!obj || typeof obj !== "object") return null;
+      if (!Array.isArray(obj.slots)) return null;
+      return obj;
+    } catch {
+      return null;
+    }
+  }
+
+  function iuInitQueue(slotCount) {
+    const n = Math.max(0, Math.min(25, Number(slotCount) || 0));
+    return {
+      updatedAt: Date.now(),
+      slots: Array.from({ length: n }).map((_, i) => ({
+        slot: i + 1,
+        videoId: "",
+        publishedAt: "",
+        source: "",
+        lang: "",
+        cat: "",
+      })),
+    };
+  }
+
+  function iuNormalizeQueue(queue, slotCount) {
+    const n = Math.max(0, Math.min(25, Number(slotCount) || 0));
+    const q = queue && typeof queue === "object" ? queue : {};
+    const slots = Array.isArray(q.slots) ? q.slots.slice(0, n) : [];
+    while (slots.length < n) {
+      slots.push({
+        slot: slots.length + 1,
+        videoId: "",
+        publishedAt: "",
+        source: "",
+        lang: "",
+        cat: "",
+      });
+    }
+    // normalize slot numbers
+    for (let i = 0; i < slots.length; i++) {
+      if (!slots[i] || typeof slots[i] !== "object") {
+        slots[i] = {
+          slot: i + 1,
+          videoId: "",
+          publishedAt: "",
+          source: "",
+          lang: "",
+          cat: "",
+        };
+      }
+      slots[i].slot = i + 1;
+    }
+    return { updatedAt: Number(q.updatedAt) || Date.now(), slots };
+  }
+
+  function iuWriteQueue(sectionKey, queue) {
+    try {
+      localStorage.setItem(iuQueueKey(sectionKey), JSON.stringify(queue || {}));
+    } catch {}
+  }
+
+  function iuQueueIds(queue) {
+    try {
+      return (queue?.slots || [])
+        .map((s) => String(s?.videoId || "").trim())
+        .filter(Boolean);
+    } catch {
+      return [];
+    }
+  }
+
+  function iuSafeIso(value) {
+    try {
+      const d = iuSafeParseDate(value);
+      return d ? d.toISOString() : "";
+    } catch {
+      return "";
+    }
+  }
+
+  function iuBuildQueueSlotFromVideo(v, slotNumber) {
+    const id = String(v?.videoId || "").trim();
+    return {
+      slot: Number(slotNumber) || 0,
+      videoId: id,
+      publishedAt: iuSafeIso(v?.publishedAt || ""),
+      source: String(v?.sourceUrl || v?.sourceKey || v?.channel || "").trim(),
+      lang: String(v?.lang || "").trim(),
+      cat: String(v?.category || "").trim(),
+    };
+  }
+
+  function iuUniqueQueueSlots(slots) {
+    const out = [];
+    const seen = new Set();
+    for (const s of slots || []) {
+      const id = String(s?.videoId || "").trim();
+      if (!id) continue;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      out.push(s);
+    }
+    return out;
+  }
+
+  function iuUpdateVideoQueue(sectionKey, slotCount, videoPool, cfg) {
+    const debug = Boolean(location.search.includes("debug=1"));
+    const n = Math.max(0, Math.min(25, Number(slotCount) || 0));
+    if (n <= 0) return iuInitQueue(0);
+
+    const insertEveryN = Number(cfg?.insertEveryN) > 0 ? Number(cfg.insertEveryN) : 8;
+    const maxVideosPerPage = Number(cfg?.maxVideosPerPage) > 0 ? Number(cfg.maxVideosPerPage) : 25;
+    const effectiveSlots = Math.min(n, maxVideosPerPage);
+
+    const queue0 = iuNormalizeQueue(iuReadQueue(sectionKey) || iuInitQueue(effectiveSlots), effectiveSlots);
+    const beforeIds = iuQueueIds(queue0);
+
+    const pool = Array.isArray(videoPool) ? videoPool : [];
+    if (!pool.length) return queue0;
+
+    const seen = iuGetVideoSeenMapV1();
+    iuPruneVideoSeen(seen, Number(cfg?.dedupeDays) || 30);
+
+    // Determine "new arrivals": videos newer than current head (slot #1).
+    const headIso = String(queue0?.slots?.[0]?.publishedAt || "").trim();
+    const headDt = iuSafeParseDate(headIso);
+    const headMs = headDt ? headDt.getTime() : 0;
+
+    const queueIdSet = new Set(beforeIds);
+    const candidates = pool.filter((v) => {
+      const id = String(v?.videoId || "").trim();
+      if (!id) return false;
+      const dt = iuSafeParseDate(v?.publishedAt || "");
+      if (!dt) return false;
+      return true;
+    });
+
+    const newOnly = candidates.filter((v) => {
+      const id = String(v?.videoId || "").trim();
+      const dt = iuSafeParseDate(v?.publishedAt || "");
+      const ms = dt ? dt.getTime() : 0;
+      return !queueIdSet.has(id) && (headMs === 0 ? true : ms > headMs);
+    });
+
+    // Build newHead from newest window only (diversity inside the window).
+    const pickWindow = Number(IU_VIDEO_PICK_WINDOW) > 0 ? Number(IU_VIDEO_PICK_WINDOW) : 40;
+    const windowSizes = [pickWindow, 80];
+    const newHead = [];
+    const headMax = effectiveSlots;
+
+    function canPlace(cand) {
+      const id = String(cand?.videoId || "").trim();
+      if (!id) return false;
+      // dedupe only for newHead additions (do NOT evict existing queue slots)
+      if (seen[id]) return false;
+      // simple diversity inside head build
+      const lang = String(cand?.lang || "").toLowerCase() === "cz" ? "cz" : "en";
+      const cat = String(cand?.category || "").trim() || "other";
+      const src = String(cand?.sourceUrl || cand?.sourceKey || cand?.channel || "").trim() || "unknown";
+
+      const lastLangs = newHead.slice(-2).map((x) => String(x?.lang || "").toLowerCase() === "cz" ? "cz" : "en");
+      const lastCats = newHead.slice(-2).map((x) => String(x?.category || "").trim() || "other");
+      const lastSources = newHead.slice(-Math.max(0, Number(cfg?.minGapSameSource) || 5)).map((x) => String(x?._src || ""));
+
+      const maxLang = Number(cfg?.maxSameLangStreak) || 2;
+      const maxCat = Number(cfg?.maxSameCategoryStreak) || 2;
+      const gap = Number(cfg?.minGapSameSource) || 5;
+
+      if (maxLang >= 2 && lastLangs.length >= (maxLang - 1) && lastLangs.every((x) => x === lang)) return false;
+      if (maxCat >= 2 && lastCats.length >= (maxCat - 1) && lastCats.every((x) => x === cat)) return false;
+      if (gap > 0 && lastSources.slice(-gap).includes(src)) return false;
+      return true;
+    }
+
+    let usedWindow = pickWindow;
+    for (const w of windowSizes) {
+      usedWindow = w;
+      const slice = newOnly.slice(0, w);
+      for (const cand of slice) {
+        if (newHead.length >= headMax) break;
+        if (!canPlace(cand)) continue;
+        // mark seen when it enters queue head
+        try { seen[String(cand.videoId)] = Date.now(); } catch {}
+        // keep small internal fields for diversity (not stored)
+        newHead.push({ ...cand, _src: String(cand?.sourceUrl || cand?.sourceKey || cand?.channel || "") });
+      }
+      if (newHead.length) break;
+    }
+
+    // If no new arrivals, keep queue stable.
+    if (!newHead.length) {
+      iuSaveVideoSeenMapV1(seen);
+      return queue0;
+    }
+
+    const oldSlotsNonEmpty = (queue0.slots || []).filter((s) => s && s.videoId);
+    const oldAsVideos = oldSlotsNonEmpty.map((s) => ({
+      videoId: s.videoId,
+      publishedAt: s.publishedAt,
+      sourceUrl: s.source,
+      lang: s.lang,
+      category: s.cat,
+    }));
+
+    // newQueue = unique(newHead + oldQueueSlots), then slice to slotCount
+    const combined = iuUniqueQueueSlots([
+      ...newHead.map((v, idx) => iuBuildQueueSlotFromVideo(v, idx + 1)),
+      ...oldAsVideos.map((v, idx) => iuBuildQueueSlotFromVideo(v, newHead.length + idx + 1)),
+    ]);
+
+    const normalizedSlots = combined
+      .slice(0, effectiveSlots)
+      .map((s, i) => ({ ...s, slot: i + 1 }));
+
+    const queue1 = { updatedAt: Date.now(), slots: normalizedSlots };
+    iuWriteQueue(sectionKey, queue1);
+    iuSaveVideoSeenMapV1(seen);
+
+    if (debug) {
+      try {
+        console.info("[iuVideoQueue] before=", beforeIds.slice(0, effectiveSlots));
+        console.info("[iuVideoQueue] after =", iuQueueIds(queue1).slice(0, effectiveSlots));
+      } catch {}
+    }
+    return queue1;
   }
 
   function iuVideoAgeDays(item) {
@@ -2285,6 +2549,27 @@ window.addEventListener("unhandledrejection", (e) => {
     let renderedArticlesCount = 0;
     let videosInserted = 0;
 
+    // Fixed slot queue (v1): stable positions, newest-only head replacement.
+    const totalArticlesVisible = visibleItems.reduce(
+      (acc, it) => acc + (String(it?.contentType || "").toLowerCase() === "article" ? 1 : 0),
+      0
+    );
+    const slotCount = shouldInjectVideos
+      ? Math.min(maxVideosPerPage, Math.floor(totalArticlesVisible / insertEveryN))
+      : 0;
+    const sectionKey =
+      Array.isArray(activeSections) && activeSections.length === 1 ? String(activeSections[0]) : "vse";
+    const queue = shouldInjectVideos
+      ? iuUpdateVideoQueue(sectionKey, slotCount, videoPool, {
+          insertEveryN,
+          maxVideosPerPage,
+          dedupeDays: videoCfg.dedupeDays,
+          minGapSameSource: videoCfg.minGapSameSource,
+          maxSameLangStreak: videoCfg.maxSameLangStreak,
+          maxSameCategoryStreak: videoCfg.maxSameCategoryStreak,
+        })
+      : iuInitQueue(0);
+
     for (let i = 0; i < visibleItems.length; i++) {
       const item = visibleItems[i];
       const kind = String(item.contentType || "").toLowerCase();
@@ -2313,10 +2598,17 @@ window.addEventListener("unhandledrejection", (e) => {
       if (shouldInjectVideos && kind === "article") {
         renderedArticlesCount += 1;
         if (videosInserted >= maxVideosPerPage) continue;
-        if (renderedArticlesCount % insertEveryN === 0 && videoPool.length) {
-          const v = iuPickVideoForSlot(videoPool, videoCfg);
-          if (!v) continue;
-          const vMarkup = buildYouTubeVideoPreviewCard(v);
+        if (renderedArticlesCount % insertEveryN === 0 && slotCount > 0) {
+          const slotIndex = Math.floor(renderedArticlesCount / insertEveryN); // 1-based
+          const slot = queue?.slots?.[slotIndex - 1];
+          if (!slot || !slot.videoId) continue;
+          const vMarkup = buildYouTubeVideoPreviewCard({
+            videoId: slot.videoId,
+            publishedAt: slot.publishedAt,
+            sourceUrl: slot.source,
+            lang: slot.lang,
+            category: slot.cat,
+          });
           if (vMarkup) {
             const t2 = document.createElement("template");
             t2.innerHTML = vMarkup.trim();
