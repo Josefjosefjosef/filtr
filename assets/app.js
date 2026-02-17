@@ -2349,6 +2349,24 @@ window.addEventListener("unhandledrejection", (e) => {
   // ============================================================
   // FEED VIDEO EVERY 8 — DOM re-anchor pass (incremental renders)
   // ============================================================
+  function iuIsVideoCardLoaded(card) {
+    try {
+      if (!card || !(card instanceof HTMLElement)) return false;
+      if (card.getAttribute("data-iu-loaded") === "1") return true;
+      const iframe = card.querySelector("iframe.iuVideoIframe, .iuVideoFrame iframe");
+      return !!iframe;
+    } catch {
+      return false;
+    }
+  }
+
+  function iuMarkVideoCardFrozen(card) {
+    try {
+      if (!card || !(card instanceof HTMLElement)) return;
+      card.setAttribute("data-iu-frozen", "1");
+    } catch {}
+  }
+
   function iuEnsureVideoAnchors(sectionKey) {
     const iuDebug = Boolean(location.search.includes("debug=1"));
     const container = document.getElementById("feed");
@@ -2427,6 +2445,11 @@ window.addEventListener("unhandledrejection", (e) => {
     // Remove any stray non-anchored video cards in standard feed.
     try {
       for (const el of Array.from(container.querySelectorAll(".iuVideoCard:not([data-slot])"))) {
+        // Never remove a loaded card: keep it stable for iOS/YT.
+        if (iuIsVideoCardLoaded(el) || String(el.getAttribute("data-iu-frozen") || "") === "1") {
+          iuMarkVideoCardFrozen(el);
+          continue;
+        }
         el.remove();
       }
     } catch {}
@@ -2480,13 +2503,22 @@ window.addEventListener("unhandledrejection", (e) => {
           card = buildPlaceholderCard(slotIndex);
           videosCreated += 1;
         } else {
-          card.setAttribute("data-slot", String(slotIndex));
+          // Never re-slot a frozen/loaded card.
+          if (!iuIsVideoCardLoaded(card) && String(card.getAttribute("data-iu-frozen") || "") !== "1") {
+            card.setAttribute("data-slot", String(slotIndex));
+          } else {
+            iuMarkVideoCardFrozen(card);
+          }
         }
 
         // Try to fill/refresh content from queue slot (but never skip creating/moving the card).
         if (hasSlotVideo) {
+          const isFrozen = iuIsVideoCardLoaded(card) || String(card.getAttribute("data-iu-frozen") || "") === "1";
+          if (isFrozen) {
+            iuMarkVideoCardFrozen(card);
+          }
           const currentId = String(card.getAttribute("data-ytid") || "").trim();
-          if (currentId !== String(slot.videoId || "").trim()) {
+          if (!isFrozen && currentId !== String(slot.videoId || "").trim()) {
             const vMarkup = buildYouTubeVideoPreviewCard({
               videoId: slot.videoId,
               publishedAt: slot.publishedAt,
@@ -2513,14 +2545,28 @@ window.addEventListener("unhandledrejection", (e) => {
 
         // DOM move/insert: immediately after the anchor article (counts as "moved"/positioned).
         try {
-          anchorEl.insertAdjacentElement("afterend", card);
-          videosMoved += 1;
+          // HARD rule: loaded/frozen cards must never move/reparent (iOS/YT stability).
+          if (iuIsVideoCardLoaded(card) || String(card.getAttribute("data-iu-frozen") || "") === "1") {
+            iuMarkVideoCardFrozen(card);
+          } else {
+            // Avoid no-op moves: only move when not already right after anchor.
+            const alreadyPlaced =
+              card.parentElement === container && card.previousElementSibling === anchorEl;
+            if (!alreadyPlaced) {
+              anchorEl.insertAdjacentElement("afterend", card);
+              videosMoved += 1;
+            }
+          }
         } catch {}
       }
 
       // Remove extra anchored cards outside of slotCount.
       for (const el of Array.from(container.querySelectorAll(".iuVideoCard[data-slot]"))) {
         const n = Number(el.getAttribute("data-slot"));
+        if (iuIsVideoCardLoaded(el) || String(el.getAttribute("data-iu-frozen") || "") === "1") {
+          iuMarkVideoCardFrozen(el);
+          continue;
+        }
         if (!Number.isFinite(n) || n < 0 || n >= slotCount) el.remove();
       }
     } catch {} finally {
@@ -2569,10 +2615,40 @@ window.addEventListener("unhandledrejection", (e) => {
     if (!container || !("MutationObserver" in window)) return;
 
     let t = 0;
-    const obs = new MutationObserver(() => {
+    const obs = new MutationObserver((mutations) => {
       try {
         if (window.__iuVideoAnchorPassRunning) return;
       } catch {}
+
+      // Ignore DOM mutations that happen fully inside a video card (e.g. iframe embed).
+      // Prevents reruns triggered by user click embed changes.
+      try {
+        const muts = Array.isArray(mutations) ? mutations : [];
+        if (muts.length) {
+          let inVideo = 0;
+          for (const m of muts) {
+            try {
+              const tgt = m && m.target ? m.target : null;
+              const el = (tgt instanceof Element) ? tgt : (tgt && tgt.parentElement ? tgt.parentElement : null);
+              if (el && el.closest && el.closest(".iuVideoCard")) inVideo += 1;
+            } catch {}
+          }
+          if (inVideo === muts.length) {
+            if (Boolean(location.search.includes("debug=1"))) {
+              try {
+                const now = Date.now();
+                const last = Number(window.__iuVideoAnchorSkipLogAt || 0);
+                if (!last || now - last > 2500) {
+                  window.__iuVideoAnchorSkipLogAt = now;
+                  console.info("[iuVideoAnchors] skip observer mutations inside video card");
+                }
+              } catch {}
+            }
+            return;
+          }
+        }
+      } catch {}
+
       if (t) return;
       t = window.setTimeout(() => {
         t = 0;
@@ -2582,7 +2658,7 @@ window.addEventListener("unhandledrejection", (e) => {
     });
 
     try {
-      obs.observe(container, { childList: true, subtree: false });
+      obs.observe(container, { childList: true, subtree: true });
       window.__iu_videoAnchorObs = obs;
     } catch {}
   }
@@ -6937,6 +7013,7 @@ function buildVideoAsArticleCard(it) {
         // Anti-double-click: mark as loaded BEFORE constructing/replacing iframe.
         // If inline embed throws, we still fall back to opening YouTube.
         card.setAttribute("data-iu-loaded", "1");
+        try { iuMarkVideoCardFrozen(card); } catch {}
         // HARD UX FIX: remove poster/overlay from DOM so it can never block iframe clicks.
         try {
           const poster = card.querySelector(".iuVideoPoster");
