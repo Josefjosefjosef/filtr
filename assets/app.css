@@ -7568,6 +7568,28 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
    FEED VIDEO EVERY 8 — YouTube preview card (lazy embed, CLS=0)
    ============================================================ */
 
+/* ============================================================
+   FIX — video poster nesmí blokovat iframe
+   ============================================================ */
+
+/* po načtení videa poster zmizí */
+.iuVideoCard[data-iu-loaded="1"] .iuVideoPoster,
+.iuVideoCard[data-iu-loaded="1"] .iuVideoOverlay{
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* iframe vždy nahoře */
+.iuVideoFrame iframe{
+  position: relative;
+  z-index: 2;
+}
+
+/* poster pod iframe */
+.iuVideoPoster{
+  z-index: 1;
+}
+
 .iuVideoFrame{
   width: 100%;
   aspect-ratio: 16 / 9;
