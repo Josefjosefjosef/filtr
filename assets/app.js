@@ -1944,7 +1944,8 @@ window.addEventListener("unhandledrejection", (e) => {
   function iuBuildYouTubeEmbedUrl(id) {
     const vid = String(id || "").trim();
     if (!vid) return "";
-    return `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0&playsinline=1&mute=1`;
+    const origin = encodeURIComponent(window.location.origin);
+    return `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0&playsinline=1&mute=1&controls=1&enablejsapi=1&origin=${origin}`;
   }
 
   function iuSafeParseDate(value) {
@@ -6837,6 +6838,7 @@ function buildVideoAsArticleCard(it) {
         iframe.allow =
           "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
         iframe.allowFullscreen = true;
+        iframe.setAttribute("playsinline", "1");
 
         // ⚠️ důležité – žádný sandbox
         iframe.removeAttribute("sandbox");
