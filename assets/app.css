@@ -8233,6 +8233,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 
 /* Apply SOLID fill only inside selected section views */
 #newsList #iuRadioView .iuRadioChip,
+#newsList #iuJrEmptyView .iuRadioChip,
 #newsList #iuTvOnlineView .iuRadioChip,
 #newsList #iuWeatherView .iuRadioChip,
 #newsList #iuMapyView .iuRadioChip,
@@ -8249,6 +8250,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 /* Text readable on solid bg (default WHITE) */
 #newsList #iuRadioView .iuRadioChipTitle,
 #newsList #iuRadioView .iuRadioChipDesc,
+#newsList #iuJrEmptyView .iuRadioChipTitle,
+#newsList #iuJrEmptyView .iuRadioChipDesc,
 #newsList #iuTvOnlineView .iuRadioChipTitle,
 #newsList #iuTvOnlineView .iuRadioChipDesc,
 #newsList #iuWeatherView .iuRadioChipTitle,
@@ -8278,6 +8281,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 
 /* Hover/active: keep same background (no shade). Focus: ring only */
 #newsList #iuRadioView .iuRadioChip:hover,
+#newsList #iuJrEmptyView .iuRadioChip:hover,
 #newsList #iuTvOnlineView .iuRadioChip:hover,
 #newsList #iuWeatherView .iuRadioChip:hover,
 #newsList #iuMapyView .iuRadioChip:hover,
@@ -8287,6 +8291,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #newsList #iuCultureView .iuRadioChip:hover,
 #newsList #iuAdsView .iuRadioChip:hover,
 #newsList #iuRadioView .iuRadioChip:active,
+#newsList #iuJrEmptyView .iuRadioChip:active,
 #newsList #iuTvOnlineView .iuRadioChip:active,
 #newsList #iuWeatherView .iuRadioChip:active,
 #newsList #iuMapyView .iuRadioChip:active,
@@ -8300,6 +8305,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 }
 
 #newsList #iuRadioView .iuRadioChip:focus-visible,
+#newsList #iuJrEmptyView .iuRadioChip:focus-visible,
 #newsList #iuTvOnlineView .iuRadioChip:focus-visible,
 #newsList #iuWeatherView .iuRadioChip:focus-visible,
 #newsList #iuMapyView .iuRadioChip:focus-visible,
