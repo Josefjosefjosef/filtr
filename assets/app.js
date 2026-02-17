@@ -6280,13 +6280,21 @@ function buildVideoAsArticleCard(it) {
 
             const frame = card.querySelector ? card.querySelector(".iuVideoFrame") : null;
             const resolved = iuResolveYtIdFromCard(card);
+            const dbgCardYtid = card ? (card.getAttribute("data-ytid") || null) : null;
+            const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
+            const dbgIframe = frame ? frame.querySelector("iframe") : null;
+            const dbgIframeSrc = dbgIframe ? (dbgIframe.getAttribute("src") || null) : null;
             iuVideoDebugUpdate({
               auto: true,
               status: "FOUND_POSTER",
               attempt: attemptNo,
               afterDelayMs: delayMs,
-              ytid: resolved.id || null,
+              ytid: dbgCardYtid,
+              loaded: dbgLoaded,
               inferred: Boolean(resolved.inferredFromThumb || resolved.inferredFromIframe),
+              hasFrame: !!frame,
+              hasIframe: !!dbgIframe,
+              iframeSrc: dbgIframeSrc,
               ...iuVideoDebugSnapshot(`found_attempt${attemptNo}`),
             });
 
@@ -6294,20 +6302,23 @@ function buildVideoAsArticleCard(it) {
 
             setTimeout(() => {
               try {
-                const card2 = card;
-                const frame2 = frame || (card2 && card2.querySelector ? card2.querySelector(".iuVideoFrame") : null);
-                const iframe2 = frame2 ? frame2.querySelector("iframe") : null;
+                const card2 = document.querySelector('.iuVideoCard[data-feed-type="video-preview"]') || card;
+                const frame2 = card2 && card2.querySelector ? card2.querySelector(".iuVideoFrame") : (frame || null);
+                const dbgCardYtid = card2 ? (card2.getAttribute("data-ytid") || null) : null;
+                const dbgLoaded = card2 ? (card2.getAttribute("data-iu-loaded") || null) : null;
+                const dbgIframe = frame2 ? frame2.querySelector("iframe") : null;
+                const dbgIframeSrc = dbgIframe ? (dbgIframe.getAttribute("src") || null) : null;
                 iuVideoDebugUpdate({
                   ts: new Date().toISOString(),
                   auto: true,
                   status: "AFTER_CLICK",
                   attempt: attemptNo,
                   afterDelayMs: delayMs,
-                  ytid: resolved.id || (card2 ? (card2.getAttribute("data-ytid") || null) : null),
-                  loaded: card2 ? (card2.getAttribute("data-iu-loaded") || null) : null,
+                  ytid: dbgCardYtid,
+                  loaded: dbgLoaded,
                   hasFrame: !!frame2,
-                  hasIframe: !!iframe2,
-                  iframeSrc: iframe2 ? (iframe2.getAttribute("src") || null) : null,
+                  hasIframe: !!dbgIframe,
+                  iframeSrc: dbgIframeSrc,
                   fallback: false,
                   error: null,
                 });
@@ -6331,14 +6342,18 @@ function buildVideoAsArticleCard(it) {
       const resolved = iuResolveYtIdFromCard(card);
       const id = resolved.id;
       if (!id) {
+        const dbgCardYtid = card ? (card.getAttribute("data-ytid") || null) : null;
+        const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
+        const dbgIframe = null;
+        const dbgIframeSrc = null;
         iuVideoDebugUpdate({
           ts: new Date().toISOString(),
-          ytid: null,
+          ytid: dbgCardYtid,
           inferred: false,
-          loaded: card.getAttribute("data-iu-loaded") || null,
+          loaded: dbgLoaded,
           hasFrame: false,
-          hasIframe: false,
-          iframeSrc: null,
+          hasIframe: !!dbgIframe,
+          iframeSrc: dbgIframeSrc,
           fallback: false,
           error: "missing ytid",
         });
@@ -6364,14 +6379,18 @@ function buildVideoAsArticleCard(it) {
       const a = t && t.closest ? t.closest('a[href]') : null;
       if (a && card.contains(a)) return;
 
+      const dbgCardYtid = card ? (card.getAttribute("data-ytid") || null) : null;
+      const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
+      const dbgIframe = frame ? frame.querySelector("iframe") : null;
+      const dbgIframeSrc = dbgIframe ? (dbgIframe.getAttribute("src") || null) : null;
       iuVideoDebugUpdate({
         ts: new Date().toISOString(),
-        ytid: id || null,
+        ytid: dbgCardYtid,
         inferred: Boolean(resolved.inferredFromThumb || resolved.inferredFromIframe),
-        loaded: card.getAttribute("data-iu-loaded") || null,
+        loaded: dbgLoaded,
         hasFrame: !!frame,
-        hasIframe: !!(frame && frame.querySelector("iframe")),
-        iframeSrc: frame && frame.querySelector("iframe") ? frame.querySelector("iframe").getAttribute("src") : null,
+        hasIframe: !!dbgIframe,
+        iframeSrc: dbgIframeSrc,
         fallback: false,
         error: null,
       });
@@ -6381,14 +6400,18 @@ function buildVideoAsArticleCard(it) {
       const watchUrl = `https://www.youtube.com/watch?v=${id}`;
       const src = iuBuildYouTubeEmbedUrl(id);
       if (!src) {
+        const dbgCardYtid = card ? (card.getAttribute("data-ytid") || null) : null;
+        const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
+        const dbgIframe = frame ? frame.querySelector("iframe") : null;
+        const dbgIframeSrc = dbgIframe ? (dbgIframe.getAttribute("src") || null) : null;
         iuVideoDebugUpdate({
           ts: new Date().toISOString(),
-          ytid: id || null,
-          inferred: inferredFromThumb || false,
-          loaded: card.getAttribute("data-iu-loaded") || null,
+          ytid: dbgCardYtid,
+          inferred: Boolean(resolved.inferredFromThumb || resolved.inferredFromIframe),
+          loaded: dbgLoaded,
           hasFrame: !!frame,
-          hasIframe: !!(frame && frame.querySelector("iframe")),
-          iframeSrc: frame && frame.querySelector("iframe") ? frame.querySelector("iframe").getAttribute("src") : null,
+          hasIframe: !!dbgIframe,
+          iframeSrc: dbgIframeSrc,
           fallback: true,
           error: "missing embed src",
         });
@@ -6400,6 +6423,9 @@ function buildVideoAsArticleCard(it) {
         // Anti-double-click: mark as loaded BEFORE constructing/replacing iframe.
         // If inline embed throws, we still fall back to opening YouTube.
         card.setAttribute("data-iu-loaded", "1");
+        if (iuDebugEnabled()) {
+          try { window.__iu_lastVideoCard = card; } catch {}
+        }
 
         const iframe = document.createElement("iframe");
         iframe.src = src;
@@ -6414,28 +6440,36 @@ function buildVideoAsArticleCard(it) {
         iframe.className = "iuVideoIframe";
 
         frame.replaceChildren(iframe);
+        const dbgCardYtid = card ? (card.getAttribute("data-ytid") || null) : null;
+        const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
+        const dbgIframe = frame ? frame.querySelector("iframe") : null;
+        const dbgIframeSrc = dbgIframe ? (dbgIframe.getAttribute("src") || null) : null;
         iuVideoDebugUpdate({
           ts: new Date().toISOString(),
-          ytid: id || null,
-          inferred: inferredFromThumb || false,
-          loaded: card.getAttribute("data-iu-loaded") || null,
+          ytid: dbgCardYtid,
+          inferred: Boolean(resolved.inferredFromThumb || resolved.inferredFromIframe),
+          loaded: dbgLoaded,
           hasFrame: !!frame,
-          hasIframe: !!(frame && frame.querySelector("iframe")),
-          iframeSrc: frame && frame.querySelector("iframe") ? frame.querySelector("iframe").getAttribute("src") : null,
+          hasIframe: !!dbgIframe,
+          iframeSrc: dbgIframeSrc,
           fallback: false,
           error: null,
         });
       } catch (err) {
         // Safe fallback: if inline embed fails for any reason, open YouTube in a new tab.
         try { console.warn("[iuVideoPlay] inline embed failed, falling back to watch URL", err); } catch {}
+        const dbgCardYtid = card ? (card.getAttribute("data-ytid") || null) : null;
+        const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
+        const dbgIframe = frame ? frame.querySelector("iframe") : null;
+        const dbgIframeSrc = dbgIframe ? (dbgIframe.getAttribute("src") || null) : null;
         iuVideoDebugUpdate({
           ts: new Date().toISOString(),
-          ytid: id || null,
-          inferred: inferredFromThumb || false,
-          loaded: card.getAttribute("data-iu-loaded") || null,
+          ytid: dbgCardYtid,
+          inferred: Boolean(resolved.inferredFromThumb || resolved.inferredFromIframe),
+          loaded: dbgLoaded,
           hasFrame: !!frame,
-          hasIframe: !!(frame && frame.querySelector("iframe")),
-          iframeSrc: frame && frame.querySelector("iframe") ? frame.querySelector("iframe").getAttribute("src") : null,
+          hasIframe: !!dbgIframe,
+          iframeSrc: dbgIframeSrc,
           fallback: true,
           error: String(err && (err.message || err)),
         });
