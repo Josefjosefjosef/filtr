@@ -7804,7 +7804,17 @@ function buildVideoAsArticleCard(it) {
 
   // Unified navigation router (UI-only)
   // NOTE: non-radio sections still use the normal feed view.
-  const VIEW_MAP = { media: 'media', radio: 'radio', jr: 'jr', mapy: 'mapy' };
+  const VIEW_MAP = {
+    media: 'media',
+    radio: 'radio',
+    jr: 'jr',
+    mapy: 'mapy',
+    'myuzel-1': 'myuzel-1',
+    'myuzel-2': 'myuzel-2',
+    'myuzel-3': 'myuzel-3',
+    'myuzel-4': 'myuzel-4',
+    'myuzel-5': 'myuzel-5',
+  };
   const STORAGE_KEY_WISH = "iuRadioWishDraftV1";
   const STORAGE_KEY_WISH_OPEN = "iuRadioWishOpenV1";
 
@@ -7834,6 +7844,432 @@ function buildVideoAsArticleCard(it) {
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
   }
+
+  // ============================================================
+  // MŮJ INFO UZEL — 5 custom sections (UI-only, localStorage)
+  // ============================================================
+
+  const MYUZEL_STORAGE_KEY = "iu_myuzel_v1";
+
+  function iuMyUzelDefaultState(){
+    const mkBtns = () => Array.from({ length: 6 }).map((_, i) => ({
+      title: `Tlačítko ${i + 1}`,
+      url: "",
+    }));
+    return {
+      sections: Array.from({ length: 5 }).map((_, i) => ({
+        name: `Sekce ${i + 1}`,
+        color: "#b9bcc2",
+        buttons: mkBtns(),
+      })),
+      activeSection: 1,
+    };
+  }
+
+  function iuMyUzelClampName(s){
+    const t = String(s || "").trim().slice(0, 14);
+    return t || "";
+  }
+
+  function iuMyUzelValidateState(raw){
+    const def = iuMyUzelDefaultState();
+    const out = (raw && typeof raw === "object") ? raw : {};
+    const sections = Array.isArray(out.sections) ? out.sections : [];
+    const fixedSections = [];
+
+    for (let i = 0; i < 5; i++) {
+      const src = sections[i] && typeof sections[i] === "object" ? sections[i] : {};
+      const name = iuMyUzelClampName(src.name) || def.sections[i].name;
+      const color = String(src.color || def.sections[i].color || "#b9bcc2").trim() || "#b9bcc2";
+      const btns = Array.isArray(src.buttons) ? src.buttons : [];
+      const fixedBtns = [];
+      for (let j = 0; j < 6; j++) {
+        const b = btns[j] && typeof btns[j] === "object" ? btns[j] : {};
+        fixedBtns.push({
+          title: iuMyUzelClampName(b.title) || `Tlačítko ${j + 1}`,
+          url: String(b.url || "").trim(),
+        });
+      }
+      fixedSections.push({ name, color, buttons: fixedBtns });
+    }
+
+    let activeSection = 1;
+    try{
+      const n = parseInt(out.activeSection, 10);
+      if (Number.isFinite(n) && n >= 1 && n <= 5) activeSection = n;
+    }catch{}
+
+    return { sections: fixedSections, activeSection };
+  }
+
+  function iuMyUzelLoad(){
+    try{
+      const txt = localStorage.getItem(MYUZEL_STORAGE_KEY);
+      if (!txt) {
+        const st = iuMyUzelDefaultState();
+        try { localStorage.setItem(MYUZEL_STORAGE_KEY, JSON.stringify(st)); } catch {}
+        return st;
+      }
+      const parsed = JSON.parse(txt);
+      const st = iuMyUzelValidateState(parsed);
+      // repair storage silently if needed
+      try { localStorage.setItem(MYUZEL_STORAGE_KEY, JSON.stringify(st)); } catch {}
+      return st;
+    }catch{
+      const st = iuMyUzelDefaultState();
+      try { localStorage.setItem(MYUZEL_STORAGE_KEY, JSON.stringify(st)); } catch {}
+      return st;
+    }
+  }
+
+  function iuMyUzelSave(state){
+    try{
+      const st = iuMyUzelValidateState(state);
+      localStorage.setItem(MYUZEL_STORAGE_KEY, JSON.stringify(st));
+      return st;
+    }catch{
+      return iuMyUzelValidateState(state);
+    }
+  }
+
+  function iuMyUzelGetRailItem(slot){
+    try{
+      return document.querySelector(`.iu-leftNav .iuMyUzelItem[data-myuzel-slot="${slot}"]`);
+    }catch{
+      return null;
+    }
+  }
+
+  function iuMyUzelApplyRailState(){
+    try{
+      const st = iuMyUzelLoad();
+      for (let i = 1; i <= 5; i++) {
+        const it = iuMyUzelGetRailItem(i);
+        if (!it) continue;
+        const sec = st.sections[i - 1];
+        const label = it.querySelector(".iu-leftNavLabel");
+        if (label) label.textContent = String(sec.name || `Sekce ${i}`).trim();
+        try { it.style.setProperty("--iuMyUzelIcon", String(sec.color || "#b9bcc2")); } catch {}
+      }
+    }catch{}
+  }
+
+  function iuMyUzelRenderSection(slot){
+    const s = parseInt(slot, 10);
+    if (!Number.isFinite(s) || s < 1 || s > 5) return;
+    const st = iuMyUzelLoad();
+    const sec = st.sections[s - 1];
+
+    const view = document.getElementById(`iuMyUzelView${s}`);
+    const title = document.getElementById(`iuMyUzelTitle${s}`);
+    const btnWrap = view ? view.querySelector(`.iuMyUzelButtons[data-myuzel-slot="${s}"]`) : null;
+    if (title) title.textContent = String(sec.name || `Sekce ${s}`).trim();
+    if (view) {
+      try { view.style.setProperty("--iuMyUzelAccent", String(sec.color || "#b9bcc2")); } catch {}
+    }
+    if (!btnWrap) return;
+
+    const rows = [];
+    for (let i = 0; i < 6; i++) {
+      const b = sec.buttons[i] || {};
+      rows.push(
+        `<div class="iuMyUzelBtnWrap">` +
+          `<button type="button" class="iuMyUzelBtnGear" data-myuzel-slot="${s}" data-myuzel-btn="${i}" aria-label="Nastavení tlačítka">` +
+            `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">` +
+              `<path d="M12 15.5a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z" fill="none" stroke="currentColor" stroke-width="2"/>` +
+              `<path d="M19.4 15a7.9 7.9 0 0 0 .1-2l2-1.6l-2-3.5l-2.4.8a7.6 7.6 0 0 0-1.7-1L15 3h-4l-.4 2.7a7.6 7.6 0 0 0-1.7 1L6.5 5.9l-2 3.5L6.5 11a7.9 7.9 0 0 0 0 2l-2 1.6l2 3.5l2.4-.8a7.6 7.6 0 0 0 1.7 1L11 21h4l.4-2.7a7.6 7.6 0 0 0 1.7-1l2.4.8l2-3.5L19.4 15z" fill="none" stroke="currentColor" stroke-width="2"/>` +
+            `</svg>` +
+          `</button>` +
+          `<button type="button" class="iuMyUzelBtn" data-myuzel-slot="${s}" data-myuzel-open="${i}">${escapeHtml(b.title || `Tlačítko ${i + 1}`)}</button>` +
+        `</div>`
+      );
+    }
+    btnWrap.innerHTML = rows.join("") + `<div class="iuMyUzelInlineMsg" id="iuMyUzelMsg${s}" hidden></div>`;
+  }
+
+  function iuMyUzelApplyViewVisibility(sectionKey){
+    try{
+      const k = String(sectionKey || "").toLowerCase();
+      if (!k.startsWith("myuzel-")) return;
+      const slot = parseInt(k.split("-")[1], 10);
+      if (!Number.isFinite(slot) || slot < 1 || slot > 5) return;
+      iuMyUzelApplyRailState();
+      iuMyUzelRenderSection(slot);
+    }catch{}
+  }
+
+  function iuMyUzelNormalizeUrl(raw){
+    const s0 = String(raw || "").trim();
+    if (!s0) return { ok: true, url: "" };
+    let s = s0;
+    if (!/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(s)) {
+      s = "https://" + s.replace(/^\/+/, "");
+    }
+    try{
+      const u = new URL(s);
+      const p = String(u.protocol || "").toLowerCase();
+      if (p !== "http:" && p !== "https:") {
+        return { ok: false, url: "", err: "Povoleno je jen http/https URL." };
+      }
+      return { ok: true, url: u.toString() };
+    }catch{
+      return { ok: false, url: "", err: "Neplatná URL." };
+    }
+  }
+
+  function iuMyUzelModalEls(){
+    return {
+      overlay: document.getElementById("iuMyUzelModalOverlay"),
+      modal: document.getElementById("iuMyUzelModal"),
+      close: document.getElementById("iuMyUzelModalClose"),
+      title: document.getElementById("iuMyUzelModalTitle"),
+      body: document.getElementById("iuMyUzelModalBody"),
+      card: document.querySelector("#iuMyUzelModal .iuMyUzelModalCard"),
+    };
+  }
+
+  function iuMyUzelCloseModal(){
+    try{
+      const { overlay, modal, body } = iuMyUzelModalEls();
+      if (overlay) overlay.hidden = true;
+      if (modal) modal.hidden = true;
+      if (body) body.innerHTML = "";
+      try { document.documentElement.style.overflow = ""; } catch {}
+    }catch{}
+  }
+
+  function iuMyUzelOpenModal(opts){
+    try{
+      const { overlay, modal, title, body } = iuMyUzelModalEls();
+      if (!overlay || !modal || !title || !body) return;
+      title.textContent = String((opts && opts.title) || "Nastavení");
+      body.innerHTML = String((opts && opts.html) || "");
+      overlay.hidden = false;
+      modal.hidden = false;
+      try { document.documentElement.style.overflow = "hidden"; } catch {}
+
+      // focus first input
+      try{
+        const first = modal.querySelector("input, button, select, textarea, [tabindex]:not([tabindex='-1'])");
+        if (first && first.focus) first.focus();
+      }catch{}
+    }catch{}
+  }
+
+  function iuMyUzelOpenSectionSettings(slot){
+    const s = parseInt(slot, 10);
+    if (!Number.isFinite(s) || s < 1 || s > 5) return;
+    const st = iuMyUzelLoad();
+    const sec = st.sections[s - 1];
+    const name = iuMyUzelClampName(sec.name) || `Sekce ${s}`;
+    const color = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
+
+    iuMyUzelOpenModal({
+      title: "Nastavení sekce",
+      html:
+        `<div class="iuMyUzelField">` +
+          `<label for="iuMyUzelSectionName">uveďte název sekce</label>` +
+          `<input class="iuMyUzelInput" id="iuMyUzelSectionName" maxlength="14" value="${escapeHtml(name)}" />` +
+        `</div>` +
+        `<div class="iuMyUzelField">` +
+          `<label for="iuMyUzelSectionColor">barva</label>` +
+          `<input class="iuMyUzelInput" id="iuMyUzelSectionColor" type="color" value="${escapeHtml(color)}" />` +
+        `</div>` +
+        `<div class="iuMyUzelActions">` +
+          `<button type="button" class="iuMyUzelPrimaryBtn" id="iuMyUzelConfirmSection" style="--iuMyUzelAccent:${escapeHtml(color)}">Potvrdit</button>` +
+        `</div>` +
+        `<div class="iuMyUzelErr" id="iuMyUzelErr" hidden></div>`
+    });
+
+    // bind confirm (single-shot via delegation below)
+    try{
+      const el = document.getElementById("iuMyUzelConfirmSection");
+      if (el) el.setAttribute("data-myuzel-confirm-section", String(s));
+    }catch{}
+  }
+
+  function iuMyUzelOpenButtonSettings(slot, btnIndex){
+    const s = parseInt(slot, 10);
+    const i = parseInt(btnIndex, 10);
+    if (!Number.isFinite(s) || s < 1 || s > 5) return;
+    if (!Number.isFinite(i) || i < 0 || i > 5) return;
+    const st = iuMyUzelLoad();
+    const sec = st.sections[s - 1];
+    const b = sec.buttons[i] || {};
+    const title = iuMyUzelClampName(b.title) || `Tlačítko ${i + 1}`;
+    const url = String(b.url || "").trim();
+    const color = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
+
+    iuMyUzelOpenModal({
+      title: "Nastavení tlačítka",
+      html:
+        `<div class="iuMyUzelField">` +
+          `<label for="iuMyUzelBtnUrl">vložte www</label>` +
+          `<input class="iuMyUzelInput" id="iuMyUzelBtnUrl" placeholder="např. www.infouzel.cz" value="${escapeHtml(url)}" />` +
+        `</div>` +
+        `<div class="iuMyUzelField">` +
+          `<label for="iuMyUzelBtnTitle">název tlačítka</label>` +
+          `<input class="iuMyUzelInput" id="iuMyUzelBtnTitle" maxlength="14" value="${escapeHtml(title)}" />` +
+        `</div>` +
+        `<div class="iuMyUzelActions">` +
+          `<button type="button" class="iuMyUzelPrimaryBtn" id="iuMyUzelConfirmBtn" style="--iuMyUzelAccent:${escapeHtml(color)}">Potvrdit</button>` +
+        `</div>` +
+        `<div class="iuMyUzelErr" id="iuMyUzelErr" hidden></div>`
+    });
+
+    try{
+      const el = document.getElementById("iuMyUzelConfirmBtn");
+      if (el) {
+        el.setAttribute("data-myuzel-confirm-btn-slot", String(s));
+        el.setAttribute("data-myuzel-confirm-btn-idx", String(i));
+      }
+    }catch{}
+  }
+
+  function iuMyUzelActivate(slot){
+    const s = parseInt(slot, 10);
+    if (!Number.isFinite(s) || s < 1 || s > 5) return;
+    try{
+      const st = iuMyUzelLoad();
+      st.activeSection = s;
+      iuMyUzelSave(st);
+    }catch{}
+    try{
+      persistSection(`myuzel-${s}`);
+      applySectionFromURL();
+    }catch{}
+  }
+
+  function iuMyUzelShowErr(msg){
+    try{
+      const el = document.getElementById("iuMyUzelErr");
+      if (!el) return;
+      el.textContent = String(msg || "");
+      el.hidden = !el.textContent;
+    }catch{}
+  }
+
+  // Global delegation (small, safe; avoids many listeners)
+  document.addEventListener("click", (e) => {
+    try{
+      const t = e && e.target;
+      if (!t) return;
+
+      // Modal close
+      if (t.id === "iuMyUzelModalOverlay" || t.id === "iuMyUzelModalClose" || t.closest?.("#iuMyUzelModalClose")) {
+        e.preventDefault();
+        e.stopPropagation();
+        iuMyUzelCloseModal();
+        return;
+      }
+
+      // Section settings confirm
+      const confirmSection = t.closest?.("[data-myuzel-confirm-section]");
+      if (confirmSection) {
+        e.preventDefault();
+        e.stopPropagation();
+        iuMyUzelShowErr("");
+        const slot = parseInt(confirmSection.getAttribute("data-myuzel-confirm-section") || "0", 10);
+        const nameEl = document.getElementById("iuMyUzelSectionName");
+        const colorEl = document.getElementById("iuMyUzelSectionColor");
+        const name = iuMyUzelClampName(nameEl ? nameEl.value : "");
+        const color = String(colorEl ? colorEl.value : "").trim() || "#b9bcc2";
+        if (!name) { iuMyUzelShowErr("Název sekce je prázdný."); return; }
+
+        const st = iuMyUzelLoad();
+        if (st.sections && st.sections[slot - 1]) {
+          st.sections[slot - 1].name = name;
+          st.sections[slot - 1].color = color;
+          iuMyUzelSave(st);
+        }
+        iuMyUzelApplyRailState();
+        iuMyUzelRenderSection(slot);
+        iuMyUzelCloseModal();
+        return;
+      }
+
+      // Button settings confirm
+      const confirmBtn = t.closest?.("[data-myuzel-confirm-btn-slot]");
+      if (confirmBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        iuMyUzelShowErr("");
+        const slot = parseInt(confirmBtn.getAttribute("data-myuzel-confirm-btn-slot") || "0", 10);
+        const idx = parseInt(confirmBtn.getAttribute("data-myuzel-confirm-btn-idx") || "0", 10);
+        const urlEl = document.getElementById("iuMyUzelBtnUrl");
+        const titleEl = document.getElementById("iuMyUzelBtnTitle");
+        const title = iuMyUzelClampName(titleEl ? titleEl.value : "");
+        const norm = iuMyUzelNormalizeUrl(urlEl ? urlEl.value : "");
+        if (!title) { iuMyUzelShowErr("Název tlačítka je prázdný."); return; }
+        if (!norm.ok) { iuMyUzelShowErr(norm.err || "Neplatná URL."); return; }
+
+        const st = iuMyUzelLoad();
+        try{
+          st.sections[slot - 1].buttons[idx].title = title;
+          st.sections[slot - 1].buttons[idx].url = norm.url;
+          iuMyUzelSave(st);
+        }catch{}
+        iuMyUzelApplyRailState();
+        iuMyUzelRenderSection(slot);
+        iuMyUzelCloseModal();
+        return;
+      }
+
+      // Open section settings (gear)
+      const gear = t.closest?.(".iuMyUzelSectionGear");
+      if (gear) {
+        e.preventDefault();
+        e.stopPropagation();
+        const slot = parseInt(gear.getAttribute("data-myuzel-slot") || "0", 10);
+        iuMyUzelOpenSectionSettings(slot);
+        return;
+      }
+
+      // Open button settings (gear)
+      const btnGear = t.closest?.(".iuMyUzelBtnGear");
+      if (btnGear) {
+        e.preventDefault();
+        e.stopPropagation();
+        const slot = parseInt(btnGear.getAttribute("data-myuzel-slot") || "0", 10);
+        const idx = parseInt(btnGear.getAttribute("data-myuzel-btn") || "0", 10);
+        iuMyUzelOpenButtonSettings(slot, idx);
+        return;
+      }
+
+      // Open button URL (or settings if empty)
+      const btn = t.closest?.(".iuMyUzelBtn");
+      if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const slot = parseInt(btn.getAttribute("data-myuzel-slot") || "0", 10);
+        const idx = parseInt(btn.getAttribute("data-myuzel-open") || "0", 10);
+        const st = iuMyUzelLoad();
+        const url = String(st?.sections?.[slot - 1]?.buttons?.[idx]?.url || "").trim();
+        if (!url) {
+          iuMyUzelOpenButtonSettings(slot, idx);
+          return;
+        }
+        const norm = iuMyUzelNormalizeUrl(url);
+        if (!norm.ok || !norm.url) {
+          iuMyUzelOpenButtonSettings(slot, idx);
+          return;
+        }
+        window.open(norm.url, "_blank", "noopener,noreferrer");
+        return;
+      }
+    }catch{}
+  }, true);
+
+  document.addEventListener("keydown", (e) => {
+    try{
+      const { modal } = iuMyUzelModalEls();
+      if (!modal || modal.hidden) return;
+      if (e && e.key === "Escape") {
+        e.preventDefault();
+        iuMyUzelCloseModal();
+      }
+    }catch{}
+  });
 
   function toPlainStringList(list){
     if (!Array.isArray(list)) return [];
@@ -8452,11 +8888,30 @@ function buildVideoAsArticleCard(it) {
     const viewEl = document.getElementById('iuRadioView');
     const jrEmptyEl = document.getElementById('iuJrEmptyView');
     const mapyEl = document.getElementById('iuMapyView');
+    const my1 = document.getElementById('iuMyUzelView1');
+    const my2 = document.getElementById('iuMyUzelView2');
+    const my3 = document.getElementById('iuMyUzelView3');
+    const my4 = document.getElementById('iuMyUzelView4');
+    const my5 = document.getElementById('iuMyUzelView5');
 
     if (feedEl) feedEl.hidden = true;
     if (viewEl) viewEl.hidden = true;
     if (jrEmptyEl) jrEmptyEl.hidden = true;
     if (mapyEl) mapyEl.hidden = true;
+    if (my1) my1.hidden = true;
+    if (my2) my2.hidden = true;
+    if (my3) my3.hidden = true;
+    if (my4) my4.hidden = true;
+    if (my5) my5.hidden = true;
+
+    if (String(key || '').toLowerCase().startsWith('myuzel-')) {
+      if (key === 'myuzel-1' && my1) my1.hidden = false;
+      if (key === 'myuzel-2' && my2) my2.hidden = false;
+      if (key === 'myuzel-3' && my3) my3.hidden = false;
+      if (key === 'myuzel-4' && my4) my4.hidden = false;
+      if (key === 'myuzel-5' && my5) my5.hidden = false;
+      return;
+    }
 
     if(key === 'radio' && viewEl) viewEl.hidden = false;
     if(key === 'jr' && jrEmptyEl) jrEmptyEl.hidden = false;
@@ -8470,7 +8925,7 @@ function buildVideoAsArticleCard(it) {
     if (k === 'radio') return 'radio';
     if (k === 'jr') return 'jr';
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
-    const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','tvprogram','culture','ads','jr']);
+    const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','tvprogram','culture','ads','jr','myuzel-1','myuzel-2','myuzel-3','myuzel-4','myuzel-5']);
     if (k === 'home') return 'media';
     return allowed.has(k) ? k : 'media';
   }
@@ -8500,6 +8955,20 @@ function buildVideoAsArticleCard(it) {
     try{ state.page = 1; }catch{}
     setLeftNavActive(section);
     showView(VIEW_MAP[section] ?? 'media');
+    // Custom views (UI-only)
+    try{
+      if (String(section || "").toLowerCase().startsWith("myuzel-")) {
+        const slot = parseInt(String(section).split("-")[1], 10);
+        if (Number.isFinite(slot) && slot >= 1 && slot <= 5) {
+          try{
+            const st = iuMyUzelLoad();
+            st.activeSection = slot;
+            iuMyUzelSave(st);
+          }catch{}
+          iuMyUzelApplyViewVisibility(section);
+        }
+      }
+    }catch{}
     // Always: keep feed data loaded + auto-refresh running (idempotent, UI-only)
     try{ window.__iuLoadData && window.__iuLoadData(); }catch{}
     try{ window.__iuStartAutoRefresh && window.__iuStartAutoRefresh(); }catch{}
@@ -8812,6 +9281,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     // async load (no backend); fallback keeps UI usable even if fetch fails
     loadWishDataIntoState().then((d) => { try{ wishCtl.setData(d); }catch{} });
 
+    // Custom sections (UI-only)
+    try{ iuMyUzelApplyRailState(); }catch{}
+
     // Start: derive from URL (?section=radio|media). Unknown -> media.
     // Ensure default is written into the URL (replaceState, no pushState).
     persistSection(getInitialSection());
@@ -8826,6 +9298,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (item.id === "iuRailToggleBtn") return;
       const action = (item.getAttribute("data-action") || item.dataset?.action || "").trim().toLowerCase();
       if (action === "toggle-rail") return;
+      try{ e.preventDefault(); }catch{}
       const accent = (item.getAttribute('data-accent') || item.dataset?.accent || "").trim().toLowerCase();
       const section = normalizeSection(accent);
       persistSection(section);

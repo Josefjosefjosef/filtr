@@ -4006,6 +4006,10 @@ body[data-section="home"] .iuHomeCanvas{
   --iuSectionAccent: var(--iuNavAccent-namedays, #F59E0B);
 }
 
+.iuSectionHeader--myuzel{
+  --iuSectionAccent: var(--iuMyUzelAccent, #94A3B8);
+}
+
 .iuSectionHeader--jr h2,
 .iuSectionHeader--mapy h2,
 .iuSectionHeader--radio h2,
@@ -4013,8 +4017,190 @@ body[data-section="home"] .iuHomeCanvas{
 .iuSectionHeader--tvprogram h2,
 .iuSectionHeader--travel h2,
 .iuSectionHeader--weather h2,
-.iuSectionHeader--namedays h2{
+.iuSectionHeader--namedays h2,
+.iuSectionHeader--myuzel h2{
   color: var(--iuSectionAccent, currentColor);
+}
+
+/* ============================================================
+   MŮJ INFO UZEL — views (middle column)
+   ============================================================ */
+
+.iuMyUzelView{
+  padding: 18px 12px;
+}
+
+.iuMyUzelSectionGear{
+  margin-left: auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(0,0,0,0.18);
+  color: rgba(255,255,255,0.9);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.iuMyUzelSectionGear svg{
+  width: 18px;
+  height: 18px;
+  display: block;
+  stroke: currentColor;
+  fill: none;
+}
+
+.iuMyUzelButtons{
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.iuMyUzelBtnWrap{
+  position: relative;
+}
+
+.iuMyUzelBtnGear{
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(0,0,0,0.22);
+  color: rgba(255,255,255,0.92);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+}
+.iuMyUzelBtnGear svg{
+  width: 16px;
+  height: 16px;
+  display: block;
+  stroke: currentColor;
+  fill: none;
+}
+
+.iuMyUzelBtn{
+  width: 100%;
+  min-height: 52px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: var(--iuMyUzelAccent, #64748B);
+  background: color-mix(in oklab, var(--iuMyUzelAccent, #64748B) 55%, rgba(0,0,0,0.25));
+  color: rgba(255,255,255,0.96);
+  font-weight: 800;
+  padding: 14px 14px;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.16);
+}
+.iuMyUzelBtn:focus-visible{
+  outline: 2px solid color-mix(in oklab, var(--iuMyUzelAccent, #64748B) 70%, #fff);
+  outline-offset: 2px;
+}
+
+.iuMyUzelInlineMsg{
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.74);
+}
+
+/* ============================================================
+   MŮJ INFO UZEL — modal
+   ============================================================ */
+
+.iuMyUzelModalOverlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 10050;
+}
+.iuMyUzelModal{
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 12px;
+  z-index: 10060;
+}
+.iuMyUzelModalCard{
+  width: min(520px, 100%);
+  background: rgba(18, 18, 22, 0.98);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+  color: rgba(255,255,255,0.92);
+  overflow: hidden;
+}
+.iuMyUzelModalHeader{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+.iuMyUzelModalTitle{
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+.iuMyUzelModalClose{
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(0,0,0,0.18);
+  color: rgba(255,255,255,0.92);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+.iuMyUzelModalBody{
+  padding: 14px;
+}
+.iuMyUzelField{
+  display: grid;
+  gap: 6px;
+  margin: 0 0 12px 0;
+}
+.iuMyUzelField label{
+  font-size: 12px;
+  color: rgba(255,255,255,0.78);
+}
+.iuMyUzelInput{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.92);
+}
+.iuMyUzelActions{
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.iuMyUzelPrimaryBtn{
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 900;
+  color: #fff;
+  background: var(--iuMyUzelAccent, #64748B);
+  cursor: pointer;
+}
+.iuMyUzelErr{
+  margin-top: 8px;
+  font-size: 12px;
+  color: #FCA5A5;
 }
 
 /* WEATHER view (UI-only): middle-column view + embeds + link chips */
@@ -6613,11 +6799,57 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
   min-height: 74px;         /* fits 1–2 lines without “autobus” */
   padding: 10px;
   box-sizing: border-box;
+  position: relative;
 }
 
 .iu-leftNavItem:focus-visible{
   outline: 2px solid var(--iuNavAccent, var(--iu-rail-active));
   outline-offset: 2px;
+}
+
+/* ============================================================
+   MŮJ INFO UZEL — left rail block (under Inzerce)
+   ============================================================ */
+
+
+.iuMyUzelBlock{
+  width: 100%;
+  padding: 10px 6px 6px 6px;
+  box-sizing: border-box;
+}
+
+.iuMyUzelDivider{
+  width: 60%;
+  height: 2px;
+  margin: 2px auto 8px auto;
+  background: rgba(255,255,255,0.14);
+  border-radius: 999px;
+}
+
+.iuMyUzelLabel{
+  width: 100%;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: .2px;
+  text-transform: lowercase;
+  color: rgba(255,255,255,0.65);
+  margin: 0 0 6px 0;
+}
+
+.iuMyUzelItem{
+  --iuMyUzelIcon: #b9bcc2;
+  color: var(--iuMyUzelIcon);
+  background: transparent;
+}
+
+.iuMyUzelItem.is-active{
+  color: var(--iuMyUzelIcon);
+  background: rgba(255,255,255,0.10);
+}
+
+.iuMyUzelItem:hover,
+.iuMyUzelItem:focus-visible{
+  color: #d7d9de;
 }
 
 .iu-leftNavIcon{
