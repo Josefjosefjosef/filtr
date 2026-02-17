@@ -6140,21 +6140,38 @@ function buildVideoAsArticleCard(it) {
     } catch {}
 
     document.addEventListener("click", (e) => {
+      const t = e && e.target;
+      const card = t && t.closest ? t.closest(".iuVideoCard") : null;
+      if (!card) return;
+
+      // Only handle our YouTube preview cards (fixed slots).
+      const id = (card.getAttribute("data-ytid") || "").trim();
+      if (!id) return;
+      if (card.getAttribute("data-iu-loaded") === "1") return;
+
+      // Make the whole card clickable (not only the poster button),
+      // so "click → play" works even if user clicks on meta/title.
+      const btn = t && t.closest ? t.closest(".iuVideoPoster") : null;
+      const frame =
+        (btn && btn.closest ? btn.closest(".iuVideoFrame") : null) ||
+        (card.querySelector ? card.querySelector(".iuVideoFrame") : null);
+      if (!frame) return;
+
+      // If the click is on a real link inside the card, do not override it.
+      // (Keeps safe fallback behavior if a link is introduced later.)
+      const a = t && t.closest ? t.closest('a[href]') : null;
+      if (a && card.contains(a)) return;
+
+      try { e.preventDefault(); } catch {}
+
+      const watchUrl = `https://www.youtube.com/watch?v=${id}`;
+      const src = iuBuildYouTubeEmbedUrl(id);
+      if (!src) {
+        try { window.open(watchUrl, "_blank", "noopener"); } catch {}
+        return;
+      }
+
       try {
-        const t = e && e.target;
-        const btn = t && t.closest ? t.closest(".iuVideoPoster") : null;
-        if (!btn) return;
-        const card = btn.closest(".iuVideoCard");
-        const frame = btn.closest(".iuVideoFrame");
-        if (!card || !frame) return;
-        const id = (card.getAttribute("data-ytid") || "").trim();
-        if (!id) return;
-        if (card.getAttribute("data-iu-loaded") === "1") return;
-        e.preventDefault();
-
-        const src = iuBuildYouTubeEmbedUrl(id);
-        if (!src) return;
-
         const iframe = document.createElement("iframe");
         iframe.src = src;
         iframe.loading = "lazy";
@@ -6169,7 +6186,11 @@ function buildVideoAsArticleCard(it) {
 
         frame.replaceChildren(iframe);
         card.setAttribute("data-iu-loaded", "1");
-      } catch {}
+      } catch (err) {
+        // Safe fallback: if inline embed fails for any reason, open YouTube in a new tab.
+        try { console.warn("[iuVideoPlay] inline embed failed, falling back to watch URL", err); } catch {}
+        try { window.open(watchUrl, "_blank", "noopener"); } catch {}
+      }
     }, { passive: false });
   }
 
