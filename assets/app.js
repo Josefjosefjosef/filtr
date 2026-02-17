@@ -4533,6 +4533,176 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  function iuInitMobileFocusAccordion() {
+    try {
+      const root = document.getElementById("iuMobileFocus");
+      if (!root) return;
+
+      const mq = window.matchMedia ? window.matchMedia("(max-width: 900px)") : null;
+      const isMobile = () => (mq ? Boolean(mq.matches) : (window.innerWidth <= 900));
+      if (!isMobile()) return;
+
+      if (window.__iu_mobileFocusInit) return;
+      window.__iu_mobileFocusInit = 1;
+
+      const sections = [
+        { label: "Sekce", action: "mindmenu", accent: "mindmenu" },
+        { label: "Média", target: "#feed", accent: "media" },
+        { label: "Rádia", target: "#iuRadioView", accent: "radio" },
+        { label: "Počasí", target: "#iuWeatherView", accent: "pocasi" },
+        { label: "Svátky", target: "#iuHolidaysView", accent: "namedays" },
+        { label: "TV online", target: "#iuTvOnlineView", accent: "tvonline" },
+        { label: "TV program", target: "#iuTvProgramView", accent: "tvprogram" },
+        { label: "Cestování", target: "#iuTravelView", accent: "travel" },
+        { label: "Mapy", target: "#iuMapyView", accent: "mapy" },
+      ];
+
+      const state = {
+        isOpen: false,
+        active: null,
+        movedEl: null,
+        movedFrom: null,
+        movedNext: null,
+        hiddenBefore: null,
+      };
+
+      function resolveTarget(sel) {
+        try {
+          const el = document.querySelector(sel);
+          return (el && el instanceof HTMLElement) ? el : null;
+        } catch {
+          return null;
+        }
+      }
+
+      function render() {
+        const listHtml = sections
+          .map((s) => {
+            const hasAction = Boolean(s && s.action);
+            const disabled = hasAction ? "" : (resolveTarget(s.target) ? "" : " disabled");
+            const dataTarget = hasAction ? "" : ` data-target="${escapeHtml(s.target)}"`;
+            const dataAction = hasAction ? ` data-action="${escapeHtml(s.action)}"` : "";
+            return `<button type="button" class="iuMobileFocusBtn" ${dataAction}${dataTarget} data-accent="${escapeHtml(s.accent)}" aria-expanded="false"${disabled}>${escapeHtml(s.label)}</button>`;
+          })
+          .join("");
+
+        const activeBtn = state.active
+          ? `<button type="button" class="iuMobileFocusBtn iuMobileFocusBtn--active" data-target="${escapeHtml(state.active.target)}" data-accent="${escapeHtml(state.active.accent)}" aria-expanded="true">${escapeHtml(state.active.label)}</button>`
+          : "";
+
+        root.innerHTML = `
+          <div class="iuMobileFocusList">${listHtml}</div>
+          <div class="iuMobileFocusActive">
+            ${activeBtn}
+            <div class="iuMobileFocusPanel" id="iuMobileFocusPanel"></div>
+          </div>
+        `.trim();
+      }
+
+      function openSection(s) {
+        const el = resolveTarget(s.target);
+        if (!el) return;
+        state.isOpen = true;
+        state.active = s;
+        root.classList.add("is-open");
+        render();
+
+        const panel = document.getElementById("iuMobileFocusPanel");
+        if (!panel) return;
+
+        // Hide all other views to avoid duplicate content on mobile.
+        try {
+          const map = new Map();
+          for (const sec of sections) {
+            if (!sec || !sec.target) continue;
+            const v = resolveTarget(sec.target);
+            if (!v) continue;
+            map.set(sec.target, Boolean(v.hidden));
+            if (sec.target !== s.target) {
+              v.hidden = true;
+            } else {
+              v.hidden = false;
+            }
+          }
+          state.hiddenBefore = map;
+        } catch {}
+
+        // Move the target DOM under the active button (safe reparent with restore).
+        state.movedEl = el;
+        state.movedFrom = el.parentElement;
+        state.movedNext = el.nextSibling;
+        try { panel.appendChild(el); } catch {}
+        try { el.hidden = false; } catch {}
+      }
+
+      function closeSection() {
+        root.classList.remove("is-open");
+        state.isOpen = false;
+
+        // Restore moved view back to original parent/position.
+        try {
+          const el = state.movedEl;
+          if (el && state.movedFrom) {
+            if (state.movedNext && state.movedNext.parentNode === state.movedFrom) {
+              state.movedFrom.insertBefore(el, state.movedNext);
+            } else {
+              state.movedFrom.appendChild(el);
+            }
+          }
+        } catch {}
+
+        // Restore hidden flags.
+        try {
+          const map = state.hiddenBefore;
+          if (map && typeof map.forEach === "function") {
+            map.forEach((wasHidden, sel) => {
+              const v = resolveTarget(sel);
+              if (v) v.hidden = Boolean(wasHidden);
+            });
+          }
+        } catch {}
+
+        state.active = null;
+        state.movedEl = null;
+        state.movedFrom = null;
+        state.movedNext = null;
+        state.hiddenBefore = null;
+        render();
+      }
+
+      function onClick(e) {
+        const t = e && e.target;
+        const btn = t && t.closest ? t.closest(".iuMobileFocusBtn") : null;
+        if (!btn || !root.contains(btn)) return;
+        const action = String(btn.getAttribute("data-action") || "").trim();
+        const target = String(btn.getAttribute("data-target") || "").trim();
+        const accent = String(btn.getAttribute("data-accent") || "").trim();
+        const label = String(btn.textContent || "").trim();
+        if (action === "mindmenu") {
+          try {
+            const menuBtn = document.getElementById("menuBtn");
+            if (menuBtn) menuBtn.click();
+          } catch {}
+          return;
+        }
+        if (!target) return;
+
+        if (root.classList.contains("is-open")) {
+          // second click on active button closes
+          closeSection();
+          return;
+        }
+
+        openSection({ label, target, accent });
+      }
+
+      render();
+      root.addEventListener("click", onClick);
+
+      // If viewport changes to desktop, do nothing (desktop unchanged).
+    } catch {}
+  }
+
   function writeDebug(obj) {
     if (!elDebugOut) return;
     try {
@@ -6467,6 +6637,7 @@ function buildVideoAsArticleCard(it) {
     setSectionsFromHash();
     iuInitTopbarWatcher();
     iuInitTopbarSearchToggle();
+    iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
 
     if (typeof window.iuDailyPanelInit === "function") {
