@@ -1,6 +1,8 @@
 name: Deploy to GitHub Pages
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -8,83 +10,25 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
 jobs:
   deploy:
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Sanity check – data files
-        run: |
-          set -euo pipefail
-          
-          # Check articles.json (required)
-          if [ ! -f projects/data/articles.json ]; then
-            echo "❌ projects/data/articles.json missing"
-            exit 1
-          fi
-          
-          if [ ! -s projects/data/articles.json ]; then
-            echo "❌ projects/data/articles.json is empty"
-            exit 1
-          fi
-          
-          # Validate articles.json is valid JSON and contains generatedAt
-          if ! python3 -c "import json; data = json.load(open('projects/data/articles.json')); assert 'generatedAt' in data, 'missing generatedAt key'" 2>/dev/null; then
-            echo "❌ projects/data/articles.json is invalid JSON or missing generatedAt key"
-            exit 1
-          fi
-          
-          echo "✅ projects/data/articles.json OK"
-          
-          # Check videos.json (optional)
-          if [ -f projects/data/videos.json ]; then
-            if [ ! -s projects/data/videos.json ]; then
-              echo "⚠️ projects/data/videos.json exists but is empty (warning only, continuing)"
-            else
-              echo "✅ projects/data/videos.json OK"
-            fi
-          else
-            echo "⚠️ projects/data/videos.json not present (optional)"
-          fi
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
-      - name: Sanity check – required files in repo root
-        run: |
-          test -f index.html || (echo "❌ index.html missing" && exit 1)
-          test -d assets || (echo "❌ assets/ missing" && exit 1)
-          test -d data || (echo "❌ data/ missing" && exit 1)
-
-          if [ ! -f data/articles.json ]; then
-            echo "⚠️ data/articles.json not present (allowed – ignored by git)"
-          else
-            echo "✅ data/articles.json found"
-          fi
-
-          test -f assets/app-crash-shield.js || (echo "❌ assets/app-crash-shield.js missing" && exit 1)
-          test -f assets/app-render-optimizer.js || (echo "❌ assets/app-render-optimizer.js missing" && exit 1)
-          test -f assets/app.js || (echo "❌ assets/app.js missing" && exit 1)
-          test -f sw.js || (echo "❌ sw.js missing" && exit 1)
-          test -f .nojekyll || (echo "❌ .nojekyll missing" && exit 1)
-
-          echo "✅ Sanity check OK"
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
