@@ -7615,6 +7615,32 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   min-height: 240px;
 }
 
+/* ============================================================
+   FINAL FIX — loaded video must be clickable (force pointer-events)
+   ============================================================ */
+
+/* Po embedu musí být player 100% klikací/tapovatelný i když někde globálně
+   existuje pointer-events: none (často s !important). */
+.iuVideoCard[data-iu-loaded="1"],
+.iuVideoCard[data-iu-loaded="1"] *{
+  pointer-events: auto !important;
+}
+
+/* Konkrétně iframe musí být vždy interaktivní */
+.iuVideoCard[data-iu-loaded="1"] .iuVideoFrame,
+.iuVideoCard[data-iu-loaded="1"] .iuVideoFrame iframe,
+.iuVideoCard[data-iu-loaded="1"] iframe{
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Aby se nic “nelepilo” přes player (případné pseudo overlay) */
+.iuVideoCard[data-iu-loaded="1"]::before,
+.iuVideoCard[data-iu-loaded="1"]::after{
+  pointer-events: none !important;
+}
+
 .iuVideoFrame{
   width: 100%;
   aspect-ratio: 16 / 9;
