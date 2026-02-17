@@ -119,6 +119,111 @@ window.addEventListener("unhandledrejection", (e) => {
   const ALLOWED_CONTENT_TYPES = new Set(["article", "video"]);
   const isDebugLogging = location.search.includes("debug=1");
 
+  // ============================================================
+  // DEBUG (forensic) — VIDEO PIPELINE COUNTERS (?debug=1 only)
+  // ============================================================
+  function iuDbg(){
+    try { return /[?&]debug=1\b/.test(location.search); } catch { return false; }
+  }
+  function iuDbgInc(map, key){
+    try { map[key] = (map[key] || 0) + 1; } catch {}
+  }
+  const IU_VIDEO_DBG = { counts:{}, drops:{}, posters:{}, samples:[], posterSamples:[] };
+  try { if (iuDbg()) window.IU_VIDEO_DBG = IU_VIDEO_DBG; } catch {}
+  function iuDbgVideoSample(v, reason, idOverride){
+    if (!iuDbg()) return;
+    try{
+      iuDbgInc(IU_VIDEO_DBG.drops, String(reason || "unknown"));
+      if (!Array.isArray(IU_VIDEO_DBG.samples)) IU_VIDEO_DBG.samples = [];
+      if (IU_VIDEO_DBG.samples.length >= 30) return;
+      const id = String(idOverride || v?.videoId || v?.id || "").trim();
+      IU_VIDEO_DBG.samples.push({
+        id: id || null,
+        reason: String(reason || "unknown"),
+        title: String(v?.title || v?.name || "").slice(0, 140) || null,
+        lang: String(v?.lang || v?.langClass || "").trim() || null,
+        channel: String(v?.channel || v?.sourceTitle || v?.channelTitle || "").trim() || null,
+      });
+    }catch{}
+  }
+
+  function iuDbgPosterInc(reason, url){
+    if (!iuDbg()) return;
+    try{
+      iuDbgInc(IU_VIDEO_DBG.posters, String(reason || "poster_unknown"));
+      if (!Array.isArray(IU_VIDEO_DBG.posterSamples)) IU_VIDEO_DBG.posterSamples = [];
+      if (IU_VIDEO_DBG.posterSamples.length >= 20) return;
+      IU_VIDEO_DBG.posterSamples.push({ reason: String(reason || "poster_unknown"), url: String(url || "") });
+    }catch{}
+  }
+
+  async function iuDbgCheckPoster(url){
+    const u = String(url || "").trim();
+    if (!u) return { ok: false, status: 0, reason: "poster_missing" };
+    try{
+      const r = await timeoutFetch(u, { method: "HEAD", cache: "no-store" }, 4500);
+      if (r && r.ok) return { ok: true, status: r.status, reason: "poster_ok_head" };
+      return { ok: false, status: r ? r.status : 0, reason: "poster_head_not_ok" };
+    }catch(e){
+      try{
+        const r2 = await timeoutFetch(u, { cache: "no-store" }, 4500);
+        if (r2 && r2.ok) return { ok: true, status: r2.status, reason: "poster_ok_get" };
+        return { ok: false, status: r2 ? r2.status : 0, reason: "poster_get_not_ok" };
+      }catch(e2){
+        // Fallback without CORS: <img> onload/onerror.
+        try{
+          const ok = await new Promise((resolve) => {
+            const img = new Image();
+            let done = 0;
+            const finish = (val) => { if (done) return; done = 1; resolve(Boolean(val)); };
+            const t = setTimeout(() => finish(false), 5000);
+            img.onload = () => { clearTimeout(t); finish(true); };
+            img.onerror = () => { clearTimeout(t); finish(false); };
+            img.referrerPolicy = "no-referrer";
+            img.src = u;
+          });
+          return { ok, status: 0, reason: ok ? "poster_ok_img" : "poster_img_error" };
+        }catch{
+          return { ok: false, status: 0, reason: "poster_network" };
+        }
+      }
+    }
+  }
+
+  function iuDbgPosterUrlFromVideo(v){
+    try{
+      const t = String(v?.thumb || "").trim();
+      if (t) return t;
+      const id = String(v?.videoId || "").trim();
+      if (id && /^[A-Za-z0-9_-]{11}$/.test(id)) return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+      return "";
+    }catch{
+      return "";
+    }
+  }
+
+  function iuDbgRunPosterAudit(videoItems){
+    if (!iuDbg()) return;
+    try{
+      if (window.__iu_videoPosterAuditDone) return;
+      window.__iu_videoPosterAuditDone = 1;
+    }catch{}
+    const list = Array.isArray(videoItems) ? videoItems.slice(0, 30) : [];
+    (async () => {
+      try{
+        IU_VIDEO_DBG.counts.posterAuditPlanned = list.length;
+      }catch{}
+      for (const v of list) {
+        const url = iuDbgPosterUrlFromVideo(v);
+        const res = await iuDbgCheckPoster(url);
+        iuDbgPosterInc(res.reason, url);
+      }
+      try{
+        console.log("[IU_VIDEO_DBG posters]", IU_VIDEO_DBG.posters);
+      }catch{}
+    })();
+  }
+
   // Feature flags
   const IU_ENABLE_NAMEDAY = false; // hard off: no request, no DOM update
   // FEED VIDEO EVERY 8 (YouTube preview card, lazy embed)
@@ -1901,25 +2006,30 @@ window.addEventListener("unhandledrejection", (e) => {
     function isAllowedBase(v) {
       const id = String(v?.videoId || "").trim();
       if (!id) {
+        iuDbgVideoSample(v, "missing_id");
         if (iuDebug && dropped.length < 10) dropped.push({ id: "", reason: "no_id" });
         return false;
       }
       const dt = iuSafeParseDate(v?.publishedAt || "");
       if (!dt) {
+        iuDbgVideoSample(v, "bad_publishedAt", id);
         if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "bad_publishedAt" });
         return false;
       }
       const title = String(v?.title || "");
       if (cfgTitleBlock.length && title && titleBlocked(title)) {
+        iuDbgVideoSample(v, "title_blocklist", id);
         if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "title_blocklist" });
         return false;
       }
       const dur = Number(v?.durationSec || 0) || 0;
       if (durMinSec > 0 && dur > 0 && dur < durMinSec) {
+        iuDbgVideoSample(v, "duration_too_short", id);
         if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "duration_too_short" });
         return false;
       }
       if (durMaxSec > 0 && dur > 0 && dur > durMaxSec) {
+        iuDbgVideoSample(v, "duration_too_long", id);
         if (iuDebug && dropped.length < 10) dropped.push({ id, reason: "duration_too_long" });
         return false;
       }
@@ -1938,6 +2048,7 @@ window.addEventListener("unhandledrejection", (e) => {
             const id = String(v?.videoId || "").trim();
             dropped.push({ id, reason: `age_gt_${ageH}h` });
           }
+          iuDbgVideoSample(v, `age_gt_${ageH}h`, String(v?.videoId || "").trim());
           continue;
         }
         out.push(v);
@@ -2553,22 +2664,34 @@ window.addEventListener("unhandledrejection", (e) => {
 
     return source
       .map((video) => {
-        if (!video || typeof video !== "object") return null;
+        if (!video || typeof video !== "object") {
+          iuDbgVideoSample(video, "invalid_item");
+          return null;
+        }
         const inferredId = iuExtractYouTubeId(video);
         if (!video.videoId && inferredId) {
           video.videoId = inferredId;
         }
         const id = video.videoId || inferredId;
-        if (!id) return null;
+        if (!id) {
+          iuDbgVideoSample(video, "missing_id");
+          return null;
+        }
         const published = safeText(video.publishedAt || video.date || video.published || "");
         const publishedDt = iuSafeParseDate(published);
         const publishedAtTs =
           Number(video.publishedAtTs || video.published_at_ts || 0) ||
           (publishedDt ? publishedDt.getTime() : 0);
         const url = safeUrl(video.url) || safeUrl(`https://www.youtube.com/watch?v=${id}`);
-        if (!url) return null;
+        if (!url) {
+          iuDbgVideoSample(video, "missing_url", id);
+          return null;
+        }
+        const hadTitle = Boolean(video.title || video.name || video.headline);
         const title = safeText(video.title || video.name || video.headline || "Video");
+        if (!hadTitle) iuDbgVideoSample(video, "missing_title", id);
         const rawLang = safeText(video.lang || "");
+        if (!rawLang) iuDbgVideoSample(video, "lang_miss", id);
         const langNorm = rawLang.toLowerCase() === "cz" || rawLang.toLowerCase() === "cs" ? "cz" : "en";
         const hasCzSubtitles = Boolean(video.hasCzSubtitles || video.has_cz_subtitles || false);
         const rawLangClass = safeText(video.langClass || video.lang_class || "").toLowerCase();
@@ -2579,6 +2702,7 @@ window.addEventListener("unhandledrejection", (e) => {
         const region = safeText(video.region || (langNorm === "cz" ? "cz" : "world"));
         const topics = Array.isArray(video.topics) ? video.topics.map((t) => safeText(t)).filter(Boolean) : [];
         const topic0 = topics[0] || safeText(video.topic || "") || "";
+        if (!topic0) iuDbgVideoSample(video, "topic_miss", id);
         return {
           ...video,
           contentType: "video",
@@ -3428,6 +3552,7 @@ window.addEventListener("unhandledrejection", (e) => {
       feedChildrenBefore,
     });
     if (!feedEl || feedEl.id !== "feed") {
+      if (iuDbg()) { try { iuDbgInc(IU_VIDEO_DBG.drops, "render_target_missing"); } catch {} }
       persistLastError("Invariant breach: invalid render target");
       return;
     }
@@ -3514,6 +3639,18 @@ window.addEventListener("unhandledrejection", (e) => {
           maxSameCategoryStreak: videoCfg.maxSameCategoryStreak,
         })
       : iuInitQueue(0);
+    if (iuDbg()) {
+      try{
+        IU_VIDEO_DBG.counts.ui = IU_VIDEO_DBG.counts.ui || {};
+        IU_VIDEO_DBG.counts.ui.activeSections = Array.isArray(activeSections) ? activeSections.slice() : [];
+        IU_VIDEO_DBG.counts.ui.hasVideoSection = hasVideoSection ? 1 : 0;
+        IU_VIDEO_DBG.counts.ui.isHome = isHome ? 1 : 0;
+        IU_VIDEO_DBG.counts.ui.shouldInjectVideos = shouldInjectVideos ? 1 : 0;
+        IU_VIDEO_DBG.counts.ui.videoPool = Array.isArray(videoPool) ? videoPool.length : 0;
+        IU_VIDEO_DBG.counts.ui.slotCount = slotCount;
+        IU_VIDEO_DBG.counts.ui.queueSlots = Array.isArray(queue?.slots) ? queue.slots.length : 0;
+      }catch{}
+    }
 
     // Optional visual gate: inject 3 demo alert titles only in debug mode (never in normal prod view)
     if (iuAlertDemo) {
@@ -3697,6 +3834,24 @@ window.addEventListener("unhandledrejection", (e) => {
       return;
     }
     if (elDataCount) elDataCount.textContent = String(items.length);
+
+    // Forensic video pipeline report (debug-only): emit aggregated object.
+    if (iuDbg()) {
+      try{
+        IU_VIDEO_DBG.counts.rendered = renderedCount;
+        IU_VIDEO_DBG.counts.injectedVideosCount = injectedVideosCount;
+        IU_VIDEO_DBG.counts.visibleItems = visibleItems.length;
+        IU_VIDEO_DBG.counts.totalItems = items.length;
+        IU_VIDEO_DBG.counts.typeCounts = typeCounts;
+        IU_VIDEO_DBG.counts.totalArticlesVisible = totalArticlesVisible;
+        IU_VIDEO_DBG.counts.slotCount = slotCount;
+        IU_VIDEO_DBG.counts.domVideoCardsTotal = safeTarget ? safeTarget.querySelectorAll(".iuVideoCard").length : 0;
+        IU_VIDEO_DBG.counts.domVideoCardsSlots = safeTarget ? safeTarget.querySelectorAll(".iuVideoCard[data-slot]").length : 0;
+        IU_VIDEO_DBG.counts.domVideoPosters = safeTarget ? safeTarget.querySelectorAll(".iuVideoPoster").length : 0;
+        console.log("[IU_VIDEO_DBG]", IU_VIDEO_DBG);
+        try { console.table(IU_VIDEO_DBG.samples || []); } catch {}
+      }catch{}
+    }
 
     // wire load more click (new node each render, safe)
     if (loadMoreWrap) {
@@ -5197,7 +5352,34 @@ function buildVideoAsArticleCard(it) {
         debugLog("[LOADDATA] safeVideosArray  isArray=", Array.isArray(safeVideosArray), "len=", safeVideosArray.length);
       }
       normalizedVideoSource = Array.isArray(safeVideosArray) ? safeVideosArray : [];
+      if (iuDbg()) {
+        try{
+          IU_VIDEO_DBG.counts.loaded_count = normalizedVideoSource.length;
+        }catch{}
+      }
       let videoItems = normalizeVideoList(Array.isArray(normalizedVideoSource) ? normalizedVideoSource : []);
+      if (iuDbg()) {
+        try{
+          IU_VIDEO_DBG.counts.normalized_count = Array.isArray(videoItems) ? videoItems.length : 0;
+          IU_VIDEO_DBG.counts.normalized_cz = Array.isArray(videoItems)
+            ? videoItems.filter((v) => String(v?.lang || "").toLowerCase() === "cz" || String(v?.region || "").toLowerCase() === "cz").length
+            : 0;
+          IU_VIDEO_DBG.counts.normalized_world = Math.max(0, (IU_VIDEO_DBG.counts.normalized_count || 0) - (IU_VIDEO_DBG.counts.normalized_cz || 0));
+          IU_VIDEO_DBG.counts.normalized_thumb_missing = Array.isArray(videoItems) ? videoItems.filter((v) => !String(v?.thumb || "").trim()).length : 0;
+
+          // duplicate ids in normalized list
+          const seen = new Set();
+          let dup = 0;
+          for (const v of (Array.isArray(videoItems) ? videoItems : [])) {
+            const id = String(v?.videoId || "").trim();
+            if (!id) continue;
+            if (seen.has(id)) { dup += 1; iuDbgVideoSample(v, "duplicate", id); }
+            else seen.add(id);
+          }
+          IU_VIDEO_DBG.counts.duplicate = dup;
+        }catch{}
+      }
+      try { iuDbgRunPosterAudit(videoItems); } catch {}
 
       const videosKeys =
         videosData && typeof videosData === "object" ? Object.keys(videosData).sort().join(",") : "none";
@@ -5205,6 +5387,14 @@ function buildVideoAsArticleCard(it) {
       const videosUpdatedAt = typeof videosData?.updatedAt === "string" ? videosData.updatedAt : null;
       state.lastVideosUpdatedAt = videosUpdatedAt;
       state.videosRaw = videosData;
+      if (iuDbg()) {
+        try{
+          IU_VIDEO_DBG.counts.videos_keys = state.lastVideosKeys || null;
+          IU_VIDEO_DBG.counts.videos_generatedAt = videosData?.generatedAt || videosData?.meta?.generatedAt || null;
+          IU_VIDEO_DBG.counts.videos_sourcesMeta = Array.isArray(videosData?.sourcesMeta) ? videosData.sourcesMeta.length : 0;
+          IU_VIDEO_DBG.counts.videos_categories = Array.isArray(videosData?.categories) ? videosData.categories.length : 0;
+        }catch{}
+      }
       const videosGeneratedAt = videosData?.generatedAt || videosData?.meta?.generatedAt || null;
       state.lastVideosGeneratedAt = videosGeneratedAt ? String(videosGeneratedAt) : null;
 
