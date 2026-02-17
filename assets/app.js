@@ -8193,9 +8193,8 @@ function buildVideoAsArticleCard(it) {
         const slot = parseInt(confirmSection.getAttribute("data-myuzel-confirm-section") || "0", 10);
         const nameEl = document.getElementById("iuMyUzelSectionName");
         const colorEl = document.getElementById("iuMyUzelSectionColor");
-        const name = iuMyUzelClampName(nameEl ? nameEl.value : "");
+        const name = iuMyUzelClampName(nameEl ? nameEl.value : "") || `Sekce ${slot || ""}`.trim();
         const color = String(colorEl ? colorEl.value : "").trim() || "#b9bcc2";
-        if (!name) { iuMyUzelShowErr("Název sekce je prázdný."); return; }
 
         const st = iuMyUzelLoad();
         if (st.sections && st.sections[slot - 1]) {
@@ -8219,9 +8218,8 @@ function buildVideoAsArticleCard(it) {
         const idx = parseInt(confirmBtn.getAttribute("data-myuzel-confirm-btn-idx") || "0", 10);
         const urlEl = document.getElementById("iuMyUzelBtnUrl");
         const titleEl = document.getElementById("iuMyUzelBtnTitle");
-        const title = iuMyUzelClampName(titleEl ? titleEl.value : "");
+        const title = iuMyUzelClampName(titleEl ? titleEl.value : "") || `Tlačítko ${idx + 1}`;
         const norm = iuMyUzelNormalizeUrl(urlEl ? urlEl.value : "");
-        if (!title) { iuMyUzelShowErr("Název tlačítka je prázdný."); return; }
         if (!norm.ok) { iuMyUzelShowErr(norm.err || "Neplatná URL."); return; }
 
         const st = iuMyUzelLoad();
