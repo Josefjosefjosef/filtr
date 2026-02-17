@@ -177,6 +177,27 @@ def resolve_source_to_feed(url: str) -> dict:
             print(f"WARN: resolver {kind} exception url={page} err={e}")
             return {}
 
+    # Custom channel URLs like https://www.youtube.com/PolicieCZ (single-segment path).
+    # YouTube commonly redirects these, so we resolve via HTML channelId extraction.
+    m = re.match(r"^/([0-9A-Za-z_.-]+)$", path)
+    if m:
+        name = m.group(1)
+        if name.lower() not in {"watch", "playlist", "shorts", "feed", "results"}:
+            page = f"https://www.youtube.com/{name}"
+            try:
+                r = requests.get(page, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT_SEC)
+                if r.status_code != 200:
+                    print(f"WARN: resolver custom failed status={r.status_code} url={page}")
+                    return {}
+                cid = _extract_uc_channel_id_from_youtube_html(r.text or "")
+                if not cid:
+                    print(f"WARN: resolver custom missing channelId url={page}")
+                    return {}
+                return {"feedUrl": _feed_url_from_channel_id(cid), "channelId": cid, "custom": name, "type": "channel"}
+            except Exception as e:
+                print(f"WARN: resolver custom exception url={page} err={e}")
+                return {}
+
     return {}
 
 
