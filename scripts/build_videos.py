@@ -240,6 +240,14 @@ def _age_days(iso: str) -> int:
         return 999999
     return int((datetime.now(timezone.utc) - d).total_seconds() // 86400)
 
+def _sort_key_published_desc(item: dict):
+    # Invalid/missing timestamps go last.
+    try:
+        dt = _safe_dt(str(item.get("publishedAt") or ""))
+        return dt if dt else datetime.fromtimestamp(0, tz=timezone.utc)
+    except Exception:
+        return datetime.fromtimestamp(0, tz=timezone.utc)
+
 
 def main() -> int:
     cfg = read_allowlist(ALLOWLIST_PATH)
@@ -374,8 +382,8 @@ def main() -> int:
             print(f"WARN: feed exception url={feed_url} err={e}")
             continue
 
-    # Sort newest first
-    items.sort(key=lambda x: (_safe_dt(x.get("publishedAt") or "") or datetime.fromtimestamp(0, tz=timezone.utc)), reverse=True)
+    # Strict global ordering (newest first)
+    items.sort(key=_sort_key_published_desc, reverse=True)
 
     # Freshness-first selection for output (pool)
     primary = [it for it in items if _age_days(it.get("publishedAt") or "") <= fresh_primary]
@@ -403,6 +411,9 @@ def main() -> int:
     take(fallback)
     take(older)
 
+    # Ensure final pool is strictly newest-first (DESC).
+    out.sort(key=_sort_key_published_desc, reverse=True)
+
     primary_count = sum(1 for it in out if _age_days(it.get("publishedAt") or "") <= fresh_primary)
     fallback_count = sum(1 for it in out if fresh_primary < _age_days(it.get("publishedAt") or "") <= fresh_fallback)
     older_count = max(0, len(out) - primary_count - fallback_count)
@@ -410,6 +421,7 @@ def main() -> int:
     payload = {
         "generatedAt": iso_now_z(),
         "allowlistVersion": version,
+        "sortedBy": "publishedAt_desc",
         "insertEveryN": insert_every,
         "maxVideosPerPage": max_per_page,
         "freshDaysPrimary": fresh_primary,

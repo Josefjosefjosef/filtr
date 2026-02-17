@@ -125,6 +125,7 @@ window.addEventListener("unhandledrejection", (e) => {
   const IU_FEED_VIDEO_ENABLED = true;
   const IU_FEED_VIDEO_EVERY = 8;
   const IU_FEED_VIDEO_MAX_PER_PAGE = 25;
+  const IU_VIDEO_PICK_WINDOW = 40;
 
   function debugLog(...args) {
     if (!isDebugLogging) return;
@@ -1736,6 +1737,23 @@ window.addEventListener("unhandledrejection", (e) => {
       const maxSameLangStreak = Number(cfg?.maxSameLangStreak) > 0 ? Number(cfg.maxSameLangStreak) : 2;
       const maxSameCategoryStreak = Number(cfg?.maxSameCategoryStreak) > 0 ? Number(cfg.maxSameCategoryStreak) : 2;
 
+      // strict newest-first: keep a stable cursor per bucket & dataset
+      const datasetKey =
+        String(state?.videosRaw?.generatedAt || state?.videosRaw?.generated_at || "nogenerated") +
+        "|" +
+        String(pool.length);
+
+      const pickState = (window.__iuVideoPickState =
+        window.__iuVideoPickState || { key: "", cursors: { primary: 0, fallback: 0, older: 0 } });
+      if (pickState.key !== datasetKey) {
+        pickState.key = datasetKey;
+        pickState.cursors = { primary: 0, fallback: 0, older: 0 };
+        try { window.__iuVideoSeq = { lastLangs: [], lastCats: [], lastSources: [] }; } catch {}
+        try {
+          window.__iuVideoPickStats = { total: 0, primary: 0, fallback: 0, older: 0, cz: 0, en: 0 };
+        } catch {}
+      }
+
       const seen = iuGetVideoSeenMap();
       iuPruneVideoSeen(seen, dedupeDays);
 
@@ -1773,12 +1791,27 @@ window.addEventListener("unhandledrejection", (e) => {
         return curCzShare > targetCz ? "en" : "cz";
       }
 
-      function pickFromList(list, bucketName) {
-        if (!Array.isArray(list) || !list.length) return null;
+      function commitPickToHistory(best) {
+        try {
+          const lang = normLang(best);
+          const cat = normCat(best);
+          const src = normSrc(best);
+          seq.lastLangs = [...seq.lastLangs.slice(-1), lang];
+          seq.lastCats = [...seq.lastCats.slice(-1), cat];
+          seq.lastSources = [...seq.lastSources, src].slice(-Math.max(10, minGapSameSource));
+          if (lang === "cz") stats.cz += 1;
+          else stats.en += 1;
+        } catch {}
+      }
+
+      function pickWithinWindow(list, bucketName, windowSize, ignoreGap) {
+        const start = Number(pickState?.cursors?.[bucketName] || 0);
+        const slice = list.slice(start, start + windowSize);
+        if (!slice.length) return null;
+
         const preferred = preferLang();
-        let best = null;
-        let bestScore = 1e9;
-        for (const cand of list) {
+        for (let i = 0; i < slice.length; i++) {
+          const cand = slice[i];
           if (!cand || !cand.videoId) continue;
           const lang = normLang(cand);
           const cat = normCat(cand);
@@ -1786,33 +1819,23 @@ window.addEventListener("unhandledrejection", (e) => {
 
           if (wouldBreakStreak(seq.lastLangs, lang, maxSameLangStreak)) continue;
           if (wouldBreakStreak(seq.lastCats, cat, maxSameCategoryStreak)) continue;
-          if (hasRecentSource(src)) continue;
+          if (!ignoreGap && hasRecentSource(src)) continue;
 
-          // score: prefer desired language, then newer, then weight
-          const age = iuVideoAgeDays(cand);
-          const w = Number(cand?.categoryWeight) || 0;
-          const langPenalty = lang === preferred ? 0 : 40;
-          const score = langPenalty + Math.min(60, age) - (w / 10);
-          if (score < bestScore) {
-            bestScore = score;
-            best = cand;
-          }
+          // newest-first rule: select first passing candidate in time order,
+          // with only a small preference for desired language inside the window.
+          // If the first passing isn't preferred language, we still accept it (no jumping).
+          // (preference handled by scanning; we do not reorder)
+          const chosenIndex = i;
+          const chosen = cand;
+          const ageDays = iuVideoAgeDays(chosen);
+          pickState.cursors[bucketName] = start + chosenIndex + 1;
+          commitPickToHistory(chosen);
+          return { chosen, chosenIndex, window: windowSize, ageDays };
         }
-        if (best) {
-          try {
-            const lang = normLang(best);
-            const cat = normCat(best);
-            const src = normSrc(best);
-            seq.lastLangs = [...seq.lastLangs.slice(-1), lang];
-            seq.lastCats = [...seq.lastCats.slice(-1), cat];
-            seq.lastSources = [...seq.lastSources, src].slice(-Math.max(10, minGapSameSource));
-            if (lang === "cz") stats.cz += 1;
-            else stats.en += 1;
-          } catch {}
-        }
-        return best;
+        return null;
       }
 
+      // Pool must already be sorted newest-first from dataset.
       const unseen = pool.filter((v) => v && v.videoId && !seen[String(v.videoId)]);
       const primary = unseen.filter((v) => iuVideoAgeDays(v) <= primaryDays);
       const fallback = unseen.filter((v) => {
@@ -1824,23 +1847,52 @@ window.addEventListener("unhandledrejection", (e) => {
       const primaryShare = stats.total > 0 ? stats.primary / stats.total : 0;
       const wantPrimary = primaryShare < targetShare;
 
+      function pickFromBucket(bucketName, list) {
+        // Window pick (strict newest-first): only within the newest window.
+        const w1 = Number(IU_VIDEO_PICK_WINDOW) > 0 ? Number(IU_VIDEO_PICK_WINDOW) : 40;
+        const w2 = 80;
+
+        // 1) window 40 (or configured), full rules
+        let res = pickWithinWindow(list, bucketName, w1, false);
+        if (res) return res;
+
+        // 2) window 80, full rules
+        res = pickWithinWindow(list, bucketName, w2, false);
+        if (res) return res;
+
+        // 3) window 80, ignore only minGapSameSource
+        res = pickWithinWindow(list, bucketName, w2, true);
+        if (res) return res;
+
+        // 4) last resort: pick newest available (first element from cursor)
+        const start = Number(pickState?.cursors?.[bucketName] || 0);
+        const cand = list[start] || null;
+        if (!cand || !cand.videoId) return null;
+        const chosenIndex = 0;
+        const chosen = cand;
+        const ageDays = iuVideoAgeDays(chosen);
+        pickState.cursors[bucketName] = start + 1;
+        commitPickToHistory(chosen);
+        return { chosen, chosenIndex, window: w2, ageDays };
+      }
+
       let bucket = "";
       let pick = null;
-      if (wantPrimary) {
-        pick = pickFromList(primary, "primary");
-        if (pick) bucket = "primary";
-      }
-      if (!pick) {
-        pick = pickFromList(fallback, "fallback");
-        if (pick) bucket = "fallback";
-      }
-      if (!pick) {
-        pick = pickFromList(primary, "primary");
-        if (pick) bucket = "primary";
-      }
-      if (!pick) {
-        pick = pickFromList(older, "older");
-        if (pick) bucket = "older";
+      let meta = null;
+
+      // Rule: never switch to older bucket if primary still has candidates (even beyond window).
+      if (primary.length > Number(pickState?.cursors?.primary || 0)) {
+        bucket = "primary";
+        meta = pickFromBucket("primary", primary);
+        pick = meta?.chosen || null;
+      } else if (fallback.length > Number(pickState?.cursors?.fallback || 0)) {
+        bucket = "fallback";
+        meta = pickFromBucket("fallback", fallback);
+        pick = meta?.chosen || null;
+      } else if (older.length > Number(pickState?.cursors?.older || 0)) {
+        bucket = "older";
+        meta = pickFromBucket("older", older);
+        pick = meta?.chosen || null;
       }
 
       // If nothing unseen, prune and retry once (spec requirement).
@@ -1855,28 +1907,30 @@ window.addEventListener("unhandledrejection", (e) => {
           return a > primaryDays && a <= fallbackDays;
         });
         const o2 = unseen2.filter((v) => iuVideoAgeDays(v) > fallbackDays);
-        pick = pickFromList(p2, "primary");
-        if (pick) {
+        // Reset cursors for retry (keep strict newest-first).
+        try { pickState.cursors = { primary: 0, fallback: 0, older: 0 }; } catch {}
+        if (p2.length) {
           bucket = "primary";
+          meta = pickFromBucket("primary", p2);
+          pick = meta?.chosen || null;
+        } else if (f2.length) {
+          bucket = "fallback";
+          meta = pickFromBucket("fallback", f2);
+          pick = meta?.chosen || null;
+        } else if (o2.length) {
+          bucket = "older";
+          meta = pickFromBucket("older", o2);
+          pick = meta?.chosen || null;
         } else {
-          pick = pickFromList(f2, "fallback");
-          if (pick) {
-            bucket = "fallback";
-          } else {
-            pick = pickFromList(o2, "older");
-            if (pick) {
-              bucket = "older";
-            } else {
-              pick = unseen2[0] || null;
-              bucket = "older";
-            }
-          }
+          bucket = "older";
+          pick = unseen2[0] || null;
+          meta = { window: Number(IU_VIDEO_PICK_WINDOW) || 40, chosenIndex: 0, ageDays: iuVideoAgeDays(pick) };
         }
       }
 
       if (!pick || !pick.videoId) return null;
       const id = String(pick.videoId);
-      const ageDays = iuVideoAgeDays(pick);
+      const ageDays = Number(meta?.ageDays) >= 0 ? Number(meta.ageDays) : iuVideoAgeDays(pick);
 
       // mark seen immediately (dedupe window)
       seen[id] = Date.now();
@@ -1891,7 +1945,9 @@ window.addEventListener("unhandledrejection", (e) => {
         const lang = String(pick?.lang || "en");
         const cat = String(pick?.category || "");
         const src = String(pick?.sourceUrl || pick?.sourceKey || pick?.channel || "");
-        console.info(`[iuVideoPick] bucket=${bucket} lang=${lang} cat=${cat} src=${src} id=${id} ageDays=${ageDays}`);
+        const w = Number(meta?.window) || Number(IU_VIDEO_PICK_WINDOW) || 40;
+        const ci = Number.isFinite(Number(meta?.chosenIndex)) ? Number(meta.chosenIndex) : 0;
+        console.info(`[iuVideoPick] bucket=${bucket} window=${w} chosenIndex=${ci} lang=${lang} cat=${cat} src=${src} id=${id} ageDays=${ageDays}`);
       } catch {}
 
       return pick;
