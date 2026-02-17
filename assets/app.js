@@ -1663,6 +1663,147 @@ window.addEventListener("unhandledrejection", (e) => {
     return `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0`;
   }
 
+  function iuSafeParseDate(value) {
+    try {
+      if (!value) return null;
+      const d = value instanceof Date ? value : new Date(value);
+      if (Number.isNaN(d.getTime())) return null;
+      return d;
+    } catch {
+      return null;
+    }
+  }
+
+  function iuGetVideoSeenMap() {
+    try {
+      const raw = localStorage.getItem("iuVideoSeen");
+      if (!raw) return {};
+      const obj = JSON.parse(raw);
+      if (!obj || typeof obj !== "object") return {};
+      return obj;
+    } catch {
+      return {};
+    }
+  }
+
+  function iuSaveVideoSeenMap(map) {
+    try {
+      localStorage.setItem("iuVideoSeen", JSON.stringify(map || {}));
+    } catch {}
+  }
+
+  function iuPruneVideoSeen(map, dedupeDays) {
+    try {
+      const days = Number(dedupeDays) > 0 ? Number(dedupeDays) : 30;
+      const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+      let changed = false;
+      for (const k of Object.keys(map || {})) {
+        const ts = Number(map[k] || 0);
+        if (!Number.isFinite(ts) || ts <= 0 || ts < cutoff) {
+          delete map[k];
+          changed = true;
+        }
+      }
+      return changed;
+    } catch {
+      return false;
+    }
+  }
+
+  function iuVideoAgeDays(item) {
+    try {
+      const d = iuSafeParseDate(item?.publishedAt || item?.published || item?.date || "");
+      if (!d) return 999999;
+      return Math.floor((Date.now() - d.getTime()) / 86400000);
+    } catch {
+      return 999999;
+    }
+  }
+
+  function iuPickVideoForSlot(videoPool, cfg) {
+    try {
+      const pool = Array.isArray(videoPool) ? videoPool : [];
+      if (!pool.length) return null;
+
+      const primaryDays = Number(cfg?.primaryDays) > 0 ? Number(cfg.primaryDays) : 14;
+      const fallbackDays = Number(cfg?.fallbackDays) > 0 ? Number(cfg.fallbackDays) : 60;
+      const targetShare = Number(cfg?.targetShare) > 0 ? Number(cfg.targetShare) : 0.7;
+      const dedupeDays = Number(cfg?.dedupeDays) > 0 ? Number(cfg.dedupeDays) : 30;
+
+      const seen = iuGetVideoSeenMap();
+      iuPruneVideoSeen(seen, dedupeDays);
+
+      const stats = (window.__iuVideoPickStats =
+        window.__iuVideoPickStats || { total: 0, primary: 0, fallback: 0, older: 0 });
+
+      const unseen = pool.filter((v) => v && v.videoId && !seen[String(v.videoId)]);
+      const primary = unseen.filter((v) => iuVideoAgeDays(v) <= primaryDays);
+      const fallback = unseen.filter((v) => {
+        const a = iuVideoAgeDays(v);
+        return a > primaryDays && a <= fallbackDays;
+      });
+      const older = unseen.filter((v) => iuVideoAgeDays(v) > fallbackDays);
+
+      const primaryShare = stats.total > 0 ? stats.primary / stats.total : 0;
+      const wantPrimary = primaryShare < targetShare;
+
+      let bucket = "";
+      let pick = null;
+      if (wantPrimary && primary.length) {
+        bucket = "primary";
+        pick = primary[0];
+      } else if (fallback.length) {
+        bucket = "fallback";
+        pick = fallback[0];
+      } else if (primary.length) {
+        bucket = "primary";
+        pick = primary[0];
+      } else if (older.length) {
+        bucket = "older";
+        pick = older[0];
+      }
+
+      // If nothing unseen, prune and retry once (spec requirement).
+      if (!pick) {
+        const changed = iuPruneVideoSeen(seen, dedupeDays);
+        if (changed) iuSaveVideoSeenMap(seen);
+        const unseen2 = pool.filter((v) => v && v.videoId && !seen[String(v.videoId)]);
+        if (!unseen2.length) return null;
+        const p2 = unseen2.filter((v) => iuVideoAgeDays(v) <= primaryDays);
+        const f2 = unseen2.filter((v) => {
+          const a = iuVideoAgeDays(v);
+          return a > primaryDays && a <= fallbackDays;
+        });
+        const o2 = unseen2.filter((v) => iuVideoAgeDays(v) > fallbackDays);
+        if (p2.length) { bucket = "primary"; pick = p2[0]; }
+        else if (f2.length) { bucket = "fallback"; pick = f2[0]; }
+        else if (o2.length) { bucket = "older"; pick = o2[0]; }
+        else { bucket = "older"; pick = unseen2[0]; }
+      }
+
+      if (!pick || !pick.videoId) return null;
+      const id = String(pick.videoId);
+      const ageDays = iuVideoAgeDays(pick);
+
+      // mark seen immediately (dedupe window)
+      seen[id] = Date.now();
+      iuSaveVideoSeenMap(seen);
+
+      stats.total += 1;
+      if (bucket === "primary") stats.primary += 1;
+      else if (bucket === "fallback") stats.fallback += 1;
+      else stats.older += 1;
+
+      try {
+        console.info(`[iuVideoPick] bucket=${bucket} id=${id} ageDays=${ageDays}`);
+      } catch {}
+
+      return pick;
+    } catch {
+      return null;
+    }
+  }
+
   function normalizeVideoList(input) {
     const source =
       Array.isArray(input) ? input
@@ -1960,18 +2101,22 @@ window.addEventListener("unhandledrejection", (e) => {
     // CLS mitigation: žádný mezistav "prázdný feed" (clear + append v cyklu).
     // Postav nový obsah mimo DOM a jednorázově ho vyměň přes replaceChildren().
     const nextNodes = [];
-    const isMainAll =
-      Array.isArray(activeSections) &&
-      activeSections.length === 1 &&
-      String(activeSections[0]) === "vse";
+    const isHome = Boolean(document.body && document.body.classList && document.body.classList.contains("iu-home"));
+    const hasVideoSection = Array.isArray(activeSections) && activeSections.includes("video");
     const shouldInjectVideos =
       Boolean(IU_FEED_VIDEO_ENABLED) &&
       Number(IU_FEED_VIDEO_EVERY) > 0 &&
-      isMainAll;
+      !isHome &&
+      !hasVideoSection;
     const videoPool = shouldInjectVideos ? normalizeVideoList(state.videosRaw || {}) : [];
+    const videoCfg = {
+      primaryDays: Number(state?.videosRaw?.freshness?.primaryDays) || 14,
+      fallbackDays: Number(state?.videosRaw?.freshness?.fallbackDays) || 60,
+      targetShare: Number(state?.videosRaw?.freshTargetShare) || 0.7,
+      dedupeDays: Number(state?.videosRaw?.dedupeDays) || 30,
+    };
     let injectedVideosCount = 0;
     let renderedArticlesCount = 0;
-    let injectedCursor = 0;
 
     for (let i = 0; i < visibleItems.length; i++) {
       const item = visibleItems[i];
@@ -1997,12 +2142,12 @@ window.addEventListener("unhandledrejection", (e) => {
       }
       nextNodes.push(node);
 
-      // Inject YouTube preview cards after every N articles (main feed only).
+      // Inject YouTube preview cards after every N articles (standard feed only).
       if (shouldInjectVideos && kind === "article") {
         renderedArticlesCount += 1;
         if (renderedArticlesCount % Number(IU_FEED_VIDEO_EVERY) === 0 && videoPool.length) {
-          const v = videoPool[injectedCursor % videoPool.length];
-          injectedCursor += 1;
+          const v = iuPickVideoForSlot(videoPool, videoCfg);
+          if (!v) continue;
           const vMarkup = buildYouTubeVideoPreviewCard(v);
           if (vMarkup) {
             const t2 = document.createElement("template");
@@ -2255,32 +2400,8 @@ window.addEventListener("unhandledrejection", (e) => {
   }
 
 function buildVideoAsArticleCard(it) {
-    const title = safeText(it.title || "Video");
-    const augmentedTitle = `VIDEO: ${title}`;
-    const publishedAt = fmtDate(it.publishedAt || it.date || it.published || "");
-    const channel = safeText(it.channel || "YouTube");
-    const url =
-      safeUrl(it.url) ||
-      (it.videoId ? `https://www.youtube.com/watch?v=${it.videoId}` : "");
-    const titleMarkup = url
-      ? `<a class="news-titleLink" href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(
-          augmentedTitle
-        )}</a>`
-      : `<span class="news-titleLink">${escapeHtml(augmentedTitle)}</span>`;
-
-    return `
-      <article class="news-card" data-feed-type="video">
-        <h2 class="news-title">${titleMarkup}</h2>
-        <div class="news-row2">
-          ${publishedAt ? `<span class="meta-time">${escapeHtml(publishedAt)}</span>` : ""}
-          <span class="news-sourceLabel">Zdroj:</span>
-          <span class="news-sources">
-            <span class="sourceDomain">${escapeHtml(channel)}</span>
-          </span>
-        </div>
-        ${publishedAt ? `<div class="news-row3"><span class="meta-time">Publikováno: ${escapeHtml(publishedAt)}</span></div>` : ""}
-      </article>
-    `;
+    // Render video as the same preview card (not just a link).
+    return buildYouTubeVideoPreviewCard(it);
   }
 
   function buildYouTubeVideoPreviewCard(it) {
@@ -2290,7 +2411,8 @@ function buildVideoAsArticleCard(it) {
       const title = safeText(it?.title || "Video");
       const channel = safeText(it?.channel || "YouTube");
       const publishedAt = fmtDate(it?.publishedAt || it?.date || it?.published || "");
-      const thumb = iuBuildYouTubeThumb(id);
+      const category = safeText(it?.category || "");
+      const thumb = safeText(it?.thumb || "") || iuBuildYouTubeThumb(id);
       const aria = `Přehrát video: ${title}`;
       return `
         <article class="news-card iuVideoCard" data-feed-type="video-preview" data-ytid="${escapeHtml(id)}">
@@ -2301,6 +2423,7 @@ function buildVideoAsArticleCard(it) {
                   <path d="M9 7.5v9l8-4.5-8-4.5z" fill="currentColor"></path>
                 </svg>
               </span>
+              ${category ? `<span class="iuVideoBadge" aria-hidden="true">${escapeHtml(category)}</span>` : ""}
             </button>
           </div>
           <div class="iuVideoMeta">
