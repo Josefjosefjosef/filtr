@@ -86,7 +86,7 @@ def _feed_url_from_channel_id(cid: str) -> str:
     return f"https://www.youtube.com/feeds/videos.xml?channel_id={cid}"
 
 
-def resolve_source_to_feed_url(url: str) -> str:
+def resolve_source_to_feed(url: str) -> dict:
     """
     Allowlist source → Atom feed URL.
     Supports:
@@ -96,21 +96,24 @@ def resolve_source_to_feed_url(url: str) -> str:
     """
     raw = (url or "").strip()
     if not raw:
-        return ""
+        return {}
     if "youtube.com/feeds/videos.xml" in raw:
-        return raw
+        m = re.search(r"channel_id=(UC[0-9A-Za-z_-]{22})", raw)
+        cid = m.group(1) if m else ""
+        return {"feedUrl": raw, "channelId": cid}
     try:
         u = urlparse(raw)
     except Exception:
-        return ""
+        return {}
     host = (u.netloc or "").lower()
     path = (u.path or "")
     if "youtube.com" not in host:
-        return ""
+        return {}
 
     m = re.search(r"/channel/(UC[0-9A-Za-z_-]{22})", path)
     if m:
-        return _feed_url_from_channel_id(m.group(1))
+        cid = m.group(1)
+        return {"feedUrl": _feed_url_from_channel_id(cid), "channelId": cid}
 
     m = re.search(r"/@([0-9A-Za-z_.-]+)", path)
     if m:
@@ -120,17 +123,17 @@ def resolve_source_to_feed_url(url: str) -> str:
             r = requests.get(page, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT_SEC)
             if r.status_code != 200:
                 print(f"WARN: resolver handle failed status={r.status_code} url={page}")
-                return ""
+                return {}
             cid = _extract_uc_channel_id_from_youtube_html(r.text or "")
             if not cid:
                 print(f"WARN: resolver handle missing channelId url={page}")
-                return ""
-            return _feed_url_from_channel_id(cid)
+                return {}
+            return {"feedUrl": _feed_url_from_channel_id(cid), "channelId": cid, "handle": handle}
         except Exception as e:
             print(f"WARN: resolver handle exception url={page} err={e}")
-            return ""
+            return {}
 
-    return ""
+    return {}
 
 
 def read_allowlist(path: str) -> dict:
@@ -248,6 +251,39 @@ def _sort_key_published_desc(item: dict):
     except Exception:
         return datetime.fromtimestamp(0, tz=timezone.utc)
 
+def _topic_from_category(cat: str) -> str:
+    c = str(cat or "").strip().lower()
+    # Map existing allowlist categories → required 6 themes.
+    m = {
+        "science_tech_ai": "tech_science",
+        "practical_life_city_travel": "practical",
+        "finance_economy": "finance",
+        "business_startups": "finance",
+        "interviews_people": "interviews",
+        "history_culture": "history",
+        "transport_infra": "practical",
+        "health_psychology": "practical",
+        "law_politics_explained": "explainers",
+        "smart_fun_short": "explainers",
+    }
+    return m.get(c) or "explainers"
+
+
+def _infer_source_title(src_url: str, handle: str = "", channel_id: str = "") -> str:
+    # Best-effort stable title for source meta (no extra network fetch).
+    if handle:
+        return f"@{handle}"
+    if channel_id:
+        return channel_id
+    try:
+        u = urlparse(src_url or "")
+        p = (u.path or "").strip("/")
+        if p:
+            return p
+    except Exception:
+        pass
+    return (src_url or "").strip()
+
 
 def main() -> int:
     cfg = read_allowlist(ALLOWLIST_PATH)
@@ -287,6 +323,7 @@ def main() -> int:
     # Resolve allowlist sources → feeds
     feed_jobs = []
     cats_out = []
+    sources_meta = []
     for cat in categories:
         if not isinstance(cat, dict):
             continue
@@ -298,7 +335,9 @@ def main() -> int:
         except Exception:
             weight = 1
         sources = cat.get("sources") if isinstance(cat.get("sources"), list) else []
-        cats_out.append({"name": cat_name, "weight": weight, "sources": sources})
+        # Enrich sources in output with stable metadata.
+        enriched_sources = []
+        topic = _topic_from_category(cat_name)
         for s in sources:
             if not isinstance(s, dict):
                 continue
@@ -306,21 +345,62 @@ def main() -> int:
             lang = str(s.get("lang") or "").strip().lower()
             if lang not in {"cz", "en"}:
                 lang = "en"
+            region = str(s.get("region") or "").strip().lower()
+            if region not in {"cz", "world"}:
+                region = "cz" if lang == "cz" else "world"
+            try:
+                src_weight = float(s.get("weight") or 1.0)
+            except Exception:
+                src_weight = 1.0
+            try:
+                max_per_day = int(s.get("maxPerDay") or 2)
+            except Exception:
+                max_per_day = 2
             if not src_url:
                 continue
-            feed_url = resolve_source_to_feed_url(src_url)
+            resolved = resolve_source_to_feed(src_url)
+            feed_url = str(resolved.get("feedUrl") or "").strip()
+            channel_id = str(resolved.get("channelId") or "").strip()
+            handle = str(resolved.get("handle") or "").strip()
             if not feed_url:
                 print(f"WARN: resolver unsupported source: {src_url}")
                 continue
+            source_id = str(s.get("id") or "").strip()
+            if not source_id:
+                source_id = f"yt:channel:{channel_id}" if channel_id else f"yt:url:{src_url}"
+            source_title = str(s.get("title") or "").strip() or _infer_source_title(src_url, handle=handle, channel_id=channel_id)
+
+            meta = {
+                "id": source_id,
+                "title": source_title,
+                "url": src_url,
+                "channelId": channel_id,
+                "feedUrl": feed_url,
+                "lang": "cs" if lang == "cz" else "en",
+                "region": region,
+                "topics": [topic],
+                "weight": src_weight,
+                "maxPerDay": max_per_day,
+            }
+            sources_meta.append(meta)
+            enriched_sources.append(meta)
             feed_jobs.append(
                 {
                     "feedUrl": feed_url,
                     "sourceUrl": src_url,
+                    "sourceId": source_id,
+                    "sourceTitle": source_title,
+                    "channelId": channel_id,
+                    "region": region,
+                    "topics": [topic],
+                    "weight": src_weight,
+                    "maxPerDay": max_per_day,
                     "lang": lang,
                     "category": cat_name,
                     "categoryWeight": weight,
                 }
             )
+        cats_out.append({"name": cat_name, "weight": weight, "sources": enriched_sources})
 
     # Fetch + parse
     items = []
@@ -370,6 +450,13 @@ def main() -> int:
                         "channel": channel_name,
                         "sourceUrl": job["sourceUrl"],
                         "sourceKey": src_key,
+                        "sourceId": job.get("sourceId") or "",
+                        "sourceTitle": job.get("sourceTitle") or "",
+                        "channelId": job.get("channelId") or "",
+                        "region": job.get("region") or "",
+                        "topics": job.get("topics") or [],
+                        "weight": job.get("weight") or 1.0,
+                        "maxPerDay": job.get("maxPerDay") or 2,
                         "lang": job["lang"],
                         "category": job["category"],
                         "categoryWeight": int(job.get("categoryWeight") or 0),
@@ -443,6 +530,7 @@ def main() -> int:
             "olderCount": older_count,
             "total": len(out),
         },
+        "sourcesMeta": sources_meta,
         "categories": cats_out,
         "videos": out,
     }
