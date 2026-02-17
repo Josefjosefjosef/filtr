@@ -7949,7 +7949,11 @@ function buildVideoAsArticleCard(it) {
         const sec = st.sections[i - 1];
         const label = it.querySelector(".iu-leftNavLabel");
         if (label) label.textContent = String(sec.name || `Sekce ${i}`).trim();
-        try { it.style.setProperty("--iuMyUzelIcon", String(sec.color || "#b9bcc2")); } catch {}
+        const c = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
+        // Rail color must propagate via both MyUzel vars and existing rail accent system.
+        try { it.style.setProperty("--iuMyUzelIcon", c); } catch {}
+        try { it.style.setProperty("--iuMyUzelAccent", c); } catch {}
+        try { it.style.setProperty("--iuNavAccent", c); } catch {}
       }
     }catch{}
   }
@@ -7965,9 +7969,14 @@ function buildVideoAsArticleCard(it) {
     const btnWrap = view ? view.querySelector(`.iuMyUzelButtons[data-myuzel-slot="${s}"]`) : null;
     if (title) title.textContent = String(sec.name || `Sekce ${s}`).trim();
     if (view) {
-      try { view.style.setProperty("--iuMyUzelAccent", String(sec.color || "#b9bcc2")); } catch {}
+      const c = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
+      // Use shared section accent var so we can reuse existing chip styles (Radio/Weather/etc).
+      try { view.style.setProperty("--iuMyUzelAccent", c); } catch {}
+      try { view.style.setProperty("--iuSectionAccent", c); } catch {}
     }
     if (!btnWrap) return;
+
+    try { btnWrap.classList.add("iuRadioGrid"); } catch {}
 
     const rows = [];
     for (let i = 0; i < 6; i++) {
@@ -7980,7 +7989,9 @@ function buildVideoAsArticleCard(it) {
               `<path d="M19.4 15a7.9 7.9 0 0 0 .1-2l2-1.6l-2-3.5l-2.4.8a7.6 7.6 0 0 0-1.7-1L15 3h-4l-.4 2.7a7.6 7.6 0 0 0-1.7 1L6.5 5.9l-2 3.5L6.5 11a7.9 7.9 0 0 0 0 2l-2 1.6l2 3.5l2.4-.8a7.6 7.6 0 0 0 1.7 1L11 21h4l.4-2.7a7.6 7.6 0 0 0 1.7-1l2.4.8l2-3.5L19.4 15z" fill="none" stroke="currentColor" stroke-width="2"/>` +
             `</svg>` +
           `</button>` +
-          `<button type="button" class="iuMyUzelBtn" data-myuzel-slot="${s}" data-myuzel-open="${i}">${escapeHtml(b.title || `Tlačítko ${i + 1}`)}</button>` +
+          `<button type="button" class="iuRadioChip iuMyUzelChip" data-myuzel-slot="${s}" data-myuzel-open="${i}">` +
+            `<div class="iuRadioChipTitle">${escapeHtml(b.title || `Tlačítko ${i + 1}`)}</div>` +
+          `</button>` +
         `</div>`
       );
     }
@@ -8138,6 +8149,16 @@ function buildVideoAsArticleCard(it) {
       persistSection(`myuzel-${s}`);
       applySectionFromURL();
     }catch{}
+    // UX: always bring user to the top of the section buttons.
+    try{
+      requestAnimationFrame(() => {
+        try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch { try { window.scrollTo(0, 0); } catch {} }
+        try {
+          const sc = document.getElementById("newsList");
+          if (sc && typeof sc.scrollTop === "number") sc.scrollTop = 0;
+        } catch {}
+      });
+    }catch{}
   }
 
   function iuMyUzelShowErr(msg){
@@ -8237,7 +8258,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       // Open button URL (or settings if empty)
-      const btn = t.closest?.(".iuMyUzelBtn");
+      const btn = t.closest?.(".iuMyUzelChip");
       if (btn) {
         e.preventDefault();
         e.stopPropagation();
@@ -8966,6 +8987,16 @@ function buildVideoAsArticleCard(it) {
             iuMyUzelSave(st);
           }catch{}
           iuMyUzelApplyViewVisibility(section);
+          // UX: after switching into myuzel, bring header + chips into view.
+          try{
+            requestAnimationFrame(() => {
+              try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch { try { window.scrollTo(0, 0); } catch {} }
+              try {
+                const sc = document.getElementById("newsList");
+                if (sc && typeof sc.scrollTop === "number") sc.scrollTop = 0;
+              } catch {}
+            });
+          }catch{}
         }
       }
     }catch{}

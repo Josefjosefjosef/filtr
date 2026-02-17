@@ -4053,9 +4053,7 @@ body[data-section="home"] .iuHomeCanvas{
 
 .iuMyUzelButtons{
   margin-top: 14px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  /* Grid is reused from .iuRadioGrid (added via JS) */
 }
 
 .iuMyUzelBtnWrap{
@@ -4086,23 +4084,10 @@ body[data-section="home"] .iuHomeCanvas{
   fill: none;
 }
 
-.iuMyUzelBtn{
-  width: 100%;
-  min-height: 52px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: var(--iuMyUzelAccent, #64748B);
-  background: color-mix(in oklab, var(--iuMyUzelAccent, #64748B) 55%, rgba(0,0,0,0.25));
-  color: rgba(255,255,255,0.96);
-  font-weight: 800;
-  padding: 14px 14px;
-  cursor: pointer;
-  text-align: left;
-  box-shadow: 0 10px 22px rgba(0,0,0,0.16);
-}
-.iuMyUzelBtn:focus-visible{
-  outline: 2px solid color-mix(in oklab, var(--iuMyUzelAccent, #64748B) 70%, #fff);
-  outline-offset: 2px;
+/* Radio-like chips inside MyUzel view (same size/layout as Rádio) */
+.iuMyUzelView .iuRadioChip{
+  background: color-mix(in srgb, rgba(255,255,255,0.94) 92%, var(--iuSectionAccent, var(--iuMyUzelAccent, #94A3B8)) 8%);
+  border-color: color-mix(in srgb, var(--iuSectionAccent, var(--iuMyUzelAccent, #94A3B8)) 28%, rgba(11,27,43,0.12));
 }
 
 .iuMyUzelInlineMsg{
@@ -6848,13 +6833,18 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
 
 .iuMyUzelItem{
   --iuMyUzelIcon: #b9bcc2;
-  color: var(--iuMyUzelIcon);
+  color: var(--iuMyUzelAccent, var(--iuMyUzelIcon));
   background: transparent;
 }
 
 .iuMyUzelItem.is-active{
-  color: var(--iuMyUzelIcon);
+  color: var(--iuMyUzelAccent, var(--iuMyUzelIcon));
   background: rgba(255,255,255,0.10);
+}
+
+/* Bridge into existing rail accent system */
+.iu-leftNav .iu-leftNavItem[data-rail^="myuzel-"]{
+  --iuNavAccent: var(--iuMyUzelAccent, var(--iuMyUzelIcon, #b9bcc2));
 }
 
 .iuMyUzelItem:hover,
