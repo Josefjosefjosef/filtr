@@ -2132,9 +2132,42 @@ window.addEventListener("unhandledrejection", (e) => {
       return;
     }
 
-    // Article selector must match ONLY real articles (exclude video-preview cards).
-    const ARTICLE_SELECTOR = '.news-card[data-feed-type="article"]';
-    const articles = Array.from(container.querySelectorAll(ARTICLE_SELECTOR));
+    function pickArticleElements() {
+      // Prefer explicit typed articles.
+      const primarySel = '.news-card[data-feed-type="article"]';
+      const primary = Array.from(container.querySelectorAll(primarySel));
+      if (primary.length >= 20) return { selectorUsed: primarySel, articles: primary };
+
+      // Fallback: any .news-card that looks like a real article card (has a[href], not a video card).
+      const fallbackSel = ".news-card";
+      const all = Array.from(container.querySelectorAll(fallbackSel));
+      const filtered = all.filter((el) => {
+        try {
+          if (!el || !(el instanceof HTMLElement)) return false;
+          if (el.classList.contains("iuVideoCard")) return false;
+          const t = String(el.getAttribute("data-feed-type") || "").toLowerCase();
+          if (t === "video" || t === "video-preview") return false;
+          // must have at least one link (article target)
+          const a = el.querySelector('a[href]');
+          if (!a) return false;
+          // avoid placeholders/empty boxes
+          const text = String(el.textContent || "").trim();
+          if (!text || text.length < 8) return false;
+          return true;
+        } catch {
+          return false;
+        }
+      });
+      // Prefer the larger set (helps when data-feed-type is missing).
+      if (filtered.length > primary.length) {
+        return { selectorUsed: `${fallbackSel} (filtered: not .iuVideoCard + has a[href])`, articles: filtered };
+      }
+      return { selectorUsed: primarySel, articles: primary };
+    }
+
+    const picked = pickArticleElements();
+    const articleSelectorUsed = picked.selectorUsed;
+    const articles = picked.articles;
 
     const insertEveryN = Number(IU_FEED_VIDEO_EVERY) || 8;
     const maxVideosPerPage =
@@ -2160,7 +2193,39 @@ window.addEventListener("unhandledrejection", (e) => {
       }
     } catch {}
 
+    function buildPlaceholderCard(slotIndex) {
+      const el = document.createElement("article");
+      el.className = "news-card iuVideoCard";
+      el.setAttribute("data-feed-type", "video-preview");
+      el.setAttribute("data-slot", String(slotIndex));
+      el.setAttribute("data-iu-placeholder", "1");
+      el.removeAttribute("data-ytid");
+      el.innerHTML = `
+        <div class="iuVideoFrame">
+          <button type="button" class="iuVideoPoster" disabled aria-label="Načítám video…">
+            <span class="iuVideoPlay" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
+                <path d="M9 7.5v9l8-4.5-8-4.5z" fill="currentColor"></path>
+              </svg>
+            </span>
+            <span class="iuVideoBadge" aria-hidden="true">Video</span>
+          </button>
+        </div>
+        <div class="iuVideoMeta">
+          <div class="iuVideoTitle">Načítám video…</div>
+          <div class="iuVideoSub">
+            <span class="iuVideoChannel">Video se načítá…</span>
+          </div>
+        </div>
+      `.trim();
+      return el;
+    }
+
     // Anchor/move cards to exact 8/16/24... article positions.
+    const videosExistingBefore = container.querySelectorAll(".iuVideoCard[data-slot]").length;
+    let videosCreated = 0;
+    let videosMoved = 0;
+    const missingVideoSlots = [];
     try {
       window.__iuVideoAnchorPassRunning = true;
 
@@ -2173,32 +2238,46 @@ window.addEventListener("unhandledrejection", (e) => {
         const hasSlotVideo = Boolean(slot && String(slot.videoId || "").trim());
 
         let card = container.querySelector(`.iuVideoCard[data-slot="${slotIndex}"]`);
-        if (!hasSlotVideo) {
-          if (card) card.remove();
-          continue;
-        }
-
         if (!card) {
-          const vMarkup = buildYouTubeVideoPreviewCard({
-            videoId: slot.videoId,
-            publishedAt: slot.publishedAt,
-            sourceUrl: slot.source,
-            lang: slot.lang,
-            category: slot.cat,
-          });
-          if (!vMarkup) continue;
-          const t = document.createElement("template");
-          t.innerHTML = vMarkup.trim();
-          const node = t.content.firstElementChild;
-          if (!node || !(node instanceof HTMLElement)) continue;
-          node.setAttribute("data-slot", String(slotIndex));
-          card = node;
+          card = buildPlaceholderCard(slotIndex);
+          videosCreated += 1;
         } else {
           card.setAttribute("data-slot", String(slotIndex));
         }
 
-        // DOM move/insert: immediately after the anchor article.
-        anchorEl.insertAdjacentElement("afterend", card);
+        // Try to fill/refresh content from queue slot (but never skip creating/moving the card).
+        if (hasSlotVideo) {
+          const currentId = String(card.getAttribute("data-ytid") || "").trim();
+          if (currentId !== String(slot.videoId || "").trim()) {
+            const vMarkup = buildYouTubeVideoPreviewCard({
+              videoId: slot.videoId,
+              publishedAt: slot.publishedAt,
+              sourceUrl: slot.source,
+              lang: slot.lang,
+              category: slot.cat,
+            });
+            if (vMarkup) {
+              const t = document.createElement("template");
+              t.innerHTML = vMarkup.trim();
+              const node = t.content.firstElementChild;
+              if (node && node instanceof HTMLElement) {
+                node.setAttribute("data-slot", String(slotIndex));
+                // Keep position stable: replace card node, then re-insert after anchor.
+                try { card.replaceWith(node); } catch {}
+                card = node;
+              }
+            }
+          }
+          try { card.removeAttribute("data-iu-placeholder"); } catch {}
+        } else {
+          if (iuDebug && missingVideoSlots.length < 10) missingVideoSlots.push(slotIndex);
+        }
+
+        // DOM move/insert: immediately after the anchor article (counts as "moved"/positioned).
+        try {
+          anchorEl.insertAdjacentElement("afterend", card);
+          videosMoved += 1;
+        } catch {}
       }
 
       // Remove extra anchored cards outside of slotCount.
@@ -2212,12 +2291,30 @@ window.addEventListener("unhandledrejection", (e) => {
 
     if (iuDebug) {
       try {
+        const sample = articles.slice(0, 5).map((el, idx) => {
+          try {
+            const a = el.querySelector('a[href]');
+            const href = a ? String(a.getAttribute("href") || "") : "";
+            const titleEl = el.querySelector(".news-title") || el.querySelector("h2") || a;
+            const title = titleEl ? String(titleEl.textContent || "").trim().slice(0, 120) : "";
+            return { idx, title, href };
+          } catch {
+            return { idx, title: "", href: "" };
+          }
+        });
+
         console.info(
-          "[iuVideoAnchorDOM] articles=%d slotCount=%d videosInDom=%d",
+          "[iuVideoAnchorDOM] articlesFound=%d insertEveryN=%d slotCount=%d videosExistingBefore=%d videosCreated=%d videosMoved=%d missingVideoSlots=%o articleSelectorUsed=%s",
           articles.length,
+          insertEveryN,
           slotCount,
-          container.querySelectorAll(".iuVideoCard").length
+          videosExistingBefore,
+          videosCreated,
+          videosMoved,
+          missingVideoSlots,
+          articleSelectorUsed
         );
+        console.info("[iuVideoAnchorDOM] articlesSample=%o", sample);
         const n = Math.min(slotCount, 5);
         for (let slotIndex = 0; slotIndex < n; slotIndex++) {
           console.info("[iuVideoAnchorDOM] slot=%d afterArticle=%d", slotIndex, (slotIndex + 1) * insertEveryN);
