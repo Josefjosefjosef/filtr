@@ -7908,6 +7908,29 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  function iuScrollMainToTopSmooth(){
+    try{
+      // Prefer: scroll within the main feed container if it exists and scrolls.
+      const feed = document.getElementById("newsList") || document.getElementById("feed");
+      if (feed && feed.scrollHeight > feed.clientHeight){
+        try{
+          if (typeof feed.scrollTo === "function") feed.scrollTo({ top: 0, behavior: "smooth" });
+          else feed.scrollTop = 0;
+        }catch{
+          try{ feed.scrollTop = 0; }catch{}
+        }
+        return;
+      }
+    }catch{}
+
+    try{
+      // Fallback: window scroll
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }catch{
+      try{ window.scrollTo(0, 0); }catch{}
+    }
+  }
+
   // ============================================================
   // MŮJ INFO UZEL — 5 custom sections (UI-only, localStorage)
   // ============================================================
@@ -9611,6 +9634,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const section = normalizeSection(accent);
       persistSection(section);
       applySectionFromURL();
+      // UX: after switching section, keep main content at the top.
+      try{
+        requestAnimationFrame(() => requestAnimationFrame(() => iuScrollMainToTopSmooth()));
+      }catch{
+        try{ iuScrollMainToTopSmooth(); }catch{}
+      }
     });
 
     // Back/Forward navigation must update view according to ?section=... without reload.
