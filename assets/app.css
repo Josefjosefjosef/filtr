@@ -41,6 +41,9 @@
   /* Media title typography (single source of truth) */
   --iuMediaTitleFontSize: 18px;
 
+  /* BĚŽNÉ TITULKY ČLÁNKŮ — sjednocená tloušťka (match: "Výbor dal doporučení…") */
+  --iuArticleTitleWeight: 650;
+
   /* Section chips (JR/Radio/TV/Mapy) */
   --iuChipH: 110px;
   --iuChipPadX: 12px;
@@ -3401,6 +3404,14 @@ select.iuCtrl{
   font-size: 22px;
   line-height: 1.3;
   margin-top: 0;
+}
+
+/* BĚŽNÉ TITULKY ČLÁNKŮ — sjednocená tloušťka (NE: "Zpráva dne") */
+#feed > .news-card:not(:first-child) .news-title,
+#feed > article:not(:first-child) .news-title,
+#feed > .news-card:not(:first-child) .news-titleLink,
+#feed > article:not(:first-child) .news-titleLink{
+  font-weight: var(--iuArticleTitleWeight);
 }
 
 /* Media section: first article title uses Media accent (CSS-only) */
