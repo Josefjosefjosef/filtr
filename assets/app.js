@@ -6190,6 +6190,48 @@ function buildVideoAsArticleCard(it) {
       } catch {}
     }
 
+    function iuResolveYtIdFromCard(card) {
+      const isValidYtId = (x) => /^[A-Za-z0-9_-]{11}$/.test(String(x || "").trim());
+      let id = (card && card.getAttribute ? String(card.getAttribute("data-ytid") || "").trim() : "");
+      let inferredFromThumb = false;
+      let inferredFromIframe = false;
+
+      if (!isValidYtId(id)) {
+        // Try to infer from thumb CSS var (--iuVideoThumb: url('https://i.ytimg.com/vi/<id>/...')).
+        try {
+          const poster = card && card.querySelector ? card.querySelector(".iuVideoPoster") : null;
+          const thumbVar = poster && poster.style ? String(poster.style.getPropertyValue("--iuVideoThumb") || "") : "";
+          const m = thumbVar.match(/\/vi\/([A-Za-z0-9_-]{11})\//);
+          if (m && m[1] && isValidYtId(m[1])) {
+            id = String(m[1]).trim();
+            inferredFromThumb = true;
+          }
+        } catch {}
+      }
+
+      if (!isValidYtId(id)) {
+        // Fallback: infer from existing iframe src (already loaded).
+        try {
+          const iframe = card && card.querySelector ? card.querySelector("iframe") : null;
+          const src = iframe ? String(iframe.getAttribute("src") || "") : "";
+          const m = src.match(/\/embed\/([A-Za-z0-9_-]{11})/);
+          if (m && m[1] && isValidYtId(m[1])) {
+            id = String(m[1]).trim();
+            inferredFromIframe = true;
+          }
+        } catch {}
+      }
+
+      // Normalize: set data-ytid once we inferred it.
+      try {
+        if (card && isValidYtId(id) && !String(card.getAttribute("data-ytid") || "").trim()) {
+          card.setAttribute("data-ytid", id);
+        }
+      } catch {}
+
+      return { id: isValidYtId(id) ? id : "", inferredFromThumb, inferredFromIframe };
+    }
+
     function iuVideoDebugSnapshot(tag) {
       try {
         const el0 = document.querySelector(".iuVideoCard");
@@ -6223,8 +6265,8 @@ function buildVideoAsArticleCard(it) {
       function attempt(attemptNo, delayMs) {
         setTimeout(() => {
           try {
-            const poster = document.querySelector('.iuVideoCard[data-feed-type="video-preview"] .iuVideoPoster');
-            if (!poster) {
+            const card = document.querySelector('.iuVideoCard[data-feed-type="video-preview"]');
+            if (!card) {
               iuEnsureVideoDebugPanel();
               iuVideoDebugUpdate({
                 auto: true,
@@ -6236,23 +6278,24 @@ function buildVideoAsArticleCard(it) {
               return;
             }
 
-            const card = poster.closest(".iuVideoCard");
-            const frame = poster.closest(".iuVideoFrame");
+            const frame = card.querySelector ? card.querySelector(".iuVideoFrame") : null;
+            const resolved = iuResolveYtIdFromCard(card);
             iuVideoDebugUpdate({
               auto: true,
               status: "FOUND_POSTER",
               attempt: attemptNo,
               afterDelayMs: delayMs,
-              ytid: card ? (card.getAttribute("data-ytid") || null) : null,
+              ytid: resolved.id || null,
+              inferred: Boolean(resolved.inferredFromThumb || resolved.inferredFromIframe),
               ...iuVideoDebugSnapshot(`found_attempt${attemptNo}`),
             });
 
-            try { poster.click(); } catch {}
+            try { card.click(); } catch {}
 
             setTimeout(() => {
               try {
-                const card2 = poster.closest(".iuVideoCard");
-                const frame2 = frame || poster.closest(".iuVideoFrame");
+                const card2 = card;
+                const frame2 = frame || (card2 && card2.querySelector ? card2.querySelector(".iuVideoFrame") : null);
                 const iframe2 = frame2 ? frame2.querySelector("iframe") : null;
                 iuVideoDebugUpdate({
                   ts: new Date().toISOString(),
@@ -6260,7 +6303,7 @@ function buildVideoAsArticleCard(it) {
                   status: "AFTER_CLICK",
                   attempt: attemptNo,
                   afterDelayMs: delayMs,
-                  ytid: card2 ? (card2.getAttribute("data-ytid") || null) : null,
+                  ytid: resolved.id || (card2 ? (card2.getAttribute("data-ytid") || null) : null),
                   loaded: card2 ? (card2.getAttribute("data-iu-loaded") || null) : null,
                   hasFrame: !!frame2,
                   hasIframe: !!iframe2,
@@ -6285,28 +6328,13 @@ function buildVideoAsArticleCard(it) {
       if (!card) return;
 
       // Only handle our YouTube preview cards (fixed slots).
-      // Some cards may temporarily miss data-ytid; try to infer from thumb URL.
-      const isValidYtId = (x) => /^[A-Za-z0-9_-]{11}$/.test(String(x || "").trim());
-      let id = (card.getAttribute("data-ytid") || "").trim();
-      let inferredFromThumb = false;
-      if (!isValidYtId(id)) {
-        try {
-          const poster =
-            (t && t.closest ? t.closest(".iuVideoPoster") : null) ||
-            (card.querySelector ? card.querySelector(".iuVideoPoster") : null);
-          const thumbVar = poster && poster.style ? String(poster.style.getPropertyValue("--iuVideoThumb") || "") : "";
-          const m = thumbVar.match(/\/vi\/([A-Za-z0-9_-]{11})\//);
-          if (m && m[1]) { id = String(m[1]).trim(); inferredFromThumb = true; }
-          if (isValidYtId(id) && !String(card.getAttribute("data-ytid") || "").trim()) {
-            try { card.setAttribute("data-ytid", id); } catch {}
-          }
-        } catch {}
-      }
-      if (!isValidYtId(id)) {
+      const resolved = iuResolveYtIdFromCard(card);
+      const id = resolved.id;
+      if (!id) {
         iuVideoDebugUpdate({
           ts: new Date().toISOString(),
-          ytid: id || null,
-          inferred: inferredFromThumb || false,
+          ytid: null,
+          inferred: false,
           loaded: card.getAttribute("data-iu-loaded") || null,
           hasFrame: false,
           hasIframe: false,
@@ -6314,7 +6342,9 @@ function buildVideoAsArticleCard(it) {
           fallback: false,
           error: "missing ytid",
         });
-        try { console.warn("[iuVideoPlay] missing ytid, cannot embed"); } catch {}
+        if (iuDebugEnabled()) {
+          try { console.warn("[iuVideoPlay] missing ytid, cannot embed"); } catch {}
+        }
         return;
       }
       if (card.getAttribute("data-iu-loaded") === "1") return;
@@ -6325,12 +6355,8 @@ function buildVideoAsArticleCard(it) {
         if (e && (e.button === 1 || e.button === 2 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) return;
       } catch {}
 
-      // Make the whole card clickable (not only the poster button),
-      // so "click → play" works even if user clicks on meta/title.
-      const btn = t && t.closest ? t.closest(".iuVideoPoster") : null;
-      const frame =
-        (btn && btn.closest ? btn.closest(".iuVideoFrame") : null) ||
-        (card.querySelector ? card.querySelector(".iuVideoFrame") : null);
+      // Always resolve frame from the card (click target can be poster/frame/iframe/overlay).
+      const frame = card.querySelector ? card.querySelector(".iuVideoFrame") : null;
       if (!frame) return;
 
       // If the click is on a real link inside the card, do not override it.
@@ -6341,7 +6367,7 @@ function buildVideoAsArticleCard(it) {
       iuVideoDebugUpdate({
         ts: new Date().toISOString(),
         ytid: id || null,
-        inferred: inferredFromThumb || false,
+        inferred: Boolean(resolved.inferredFromThumb || resolved.inferredFromIframe),
         loaded: card.getAttribute("data-iu-loaded") || null,
         hasFrame: !!frame,
         hasIframe: !!(frame && frame.querySelector("iframe")),
