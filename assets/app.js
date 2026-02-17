@@ -224,6 +224,180 @@ window.addEventListener("unhandledrejection", (e) => {
     })();
   }
 
+  function iuDbgPrettyJson(obj){
+    try { return JSON.stringify(obj, null, 2); } catch { return String(obj); }
+  }
+
+  function iuDbgSelectPre(preEl){
+    try{
+      if (!preEl) return;
+      const sel = window.getSelection ? window.getSelection() : null;
+      if (!sel || !document.createRange) return;
+      const range = document.createRange();
+      range.selectNodeContents(preEl);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }catch{}
+  }
+
+  function iuDbgEnsureVideoDumpPanel(){
+    if (!iuDbg()) return null;
+    try{
+      const existing = document.getElementById("iuVideoDbgDump");
+      if (existing) return existing;
+
+      const wrap = document.createElement("div");
+      wrap.id = "iuVideoDbgDump";
+      wrap.style.cssText = [
+        "position:fixed",
+        "right:12px",
+        "bottom:12px",
+        "z-index:2147483647",
+        "max-width:min(560px, calc(100vw - 24px))",
+        "width:560px",
+        "font:12px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace",
+        "background:rgba(6,10,18,0.92)",
+        "color:#e8eefc",
+        "border:1px solid rgba(255,255,255,0.14)",
+        "border-radius:10px",
+        "box-shadow:0 10px 30px rgba(0,0,0,0.35)",
+      ].join(";");
+
+      const head = document.createElement("div");
+      head.style.cssText = [
+        "display:flex",
+        "gap:8px",
+        "align-items:center",
+        "justify-content:space-between",
+        "padding:10px 10px 8px 10px",
+        "border-bottom:1px solid rgba(255,255,255,0.10)",
+      ].join(";");
+
+      const title = document.createElement("div");
+      title.textContent = "DEBUG ?debug=1 — IU_VIDEO_DBG";
+      title.style.cssText = "font-weight:700;letter-spacing:0.2px;opacity:0.95;";
+
+      const btnRow = document.createElement("div");
+      btnRow.style.cssText = "display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;";
+
+      function mkBtn(label){
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = label;
+        b.style.cssText = [
+          "cursor:pointer",
+          "border:1px solid rgba(255,255,255,0.18)",
+          "background:rgba(255,255,255,0.06)",
+          "color:inherit",
+          "padding:4px 8px",
+          "border-radius:8px",
+          "font:inherit",
+        ].join(";");
+        b.onmouseenter = () => { b.style.background = "rgba(255,255,255,0.10)"; };
+        b.onmouseleave = () => { b.style.background = "rgba(255,255,255,0.06)"; };
+        return b;
+      }
+
+      const btnSelectSummary = mkBtn("Select summary");
+      const btnSelectFull = mkBtn("Select full");
+      const btnHide = mkBtn("Hide");
+
+      btnRow.appendChild(btnSelectSummary);
+      btnRow.appendChild(btnSelectFull);
+      btnRow.appendChild(btnHide);
+
+      head.appendChild(title);
+      head.appendChild(btnRow);
+
+      const body = document.createElement("div");
+      body.style.cssText = "padding:10px;max-height:40vh;overflow:auto;";
+
+      const secSummaryLabel = document.createElement("div");
+      secSummaryLabel.textContent = "SUMMARY";
+      secSummaryLabel.style.cssText = "font-weight:800;margin:0 0 6px 0;opacity:0.9;";
+
+      const preSummary = document.createElement("pre");
+      preSummary.id = "iuVideoDbgDumpSummary";
+      preSummary.style.cssText = [
+        "white-space:pre",
+        "margin:0 0 10px 0",
+        "padding:8px",
+        "background:rgba(255,255,255,0.06)",
+        "border:1px solid rgba(255,255,255,0.12)",
+        "border-radius:10px",
+        "overflow:auto",
+      ].join(";");
+      preSummary.textContent = "{\n  \"pending\": true\n}";
+      preSummary.addEventListener("click", () => iuDbgSelectPre(preSummary));
+
+      const secFullLabel = document.createElement("div");
+      secFullLabel.textContent = "FULL IU_VIDEO_DBG";
+      secFullLabel.style.cssText = "font-weight:800;margin:0 0 6px 0;opacity:0.9;";
+
+      const preFull = document.createElement("pre");
+      preFull.id = "iuVideoDbgDumpFull";
+      preFull.style.cssText = [
+        "white-space:pre",
+        "margin:0",
+        "padding:8px",
+        "background:rgba(255,255,255,0.04)",
+        "border:1px solid rgba(255,255,255,0.12)",
+        "border-radius:10px",
+        "overflow:auto",
+      ].join(";");
+      preFull.textContent = "{\n  \"pending\": true\n}";
+      preFull.addEventListener("click", () => iuDbgSelectPre(preFull));
+
+      body.appendChild(secSummaryLabel);
+      body.appendChild(preSummary);
+      body.appendChild(secFullLabel);
+      body.appendChild(preFull);
+
+      wrap.appendChild(head);
+      wrap.appendChild(body);
+
+      btnSelectSummary.addEventListener("click", () => iuDbgSelectPre(preSummary));
+      btnSelectFull.addEventListener("click", () => iuDbgSelectPre(preFull));
+      btnHide.addEventListener("click", () => { try { wrap.style.display = "none"; } catch {} });
+
+      document.body.appendChild(wrap);
+      return wrap;
+    }catch{
+      return null;
+    }
+  }
+
+  function iuDbgUpdateVideoDumpPanel(){
+    if (!iuDbg()) return;
+    try{
+      const panel = iuDbgEnsureVideoDumpPanel();
+      if (!panel) return;
+      // If user hid it, don't force-show; just update if visible.
+      if (String(panel.style.display || "") === "none") return;
+
+      const summary = {
+        loaded_count: IU_VIDEO_DBG?.counts?.loaded_count ?? null,
+        normalized_count: IU_VIDEO_DBG?.counts?.normalized_count ?? null,
+        slotCount: IU_VIDEO_DBG?.counts?.slotCount ?? null,
+        injectedVideosCount: IU_VIDEO_DBG?.counts?.injectedVideosCount ?? null,
+        domVideoCardsTotal: IU_VIDEO_DBG?.counts?.domVideoCardsTotal ?? null,
+        domVideoCardsSlots: IU_VIDEO_DBG?.counts?.domVideoCardsSlots ?? null,
+        visibleItems: IU_VIDEO_DBG?.counts?.visibleItems ?? null,
+        totalItems: IU_VIDEO_DBG?.counts?.totalItems ?? null,
+        hasVideoSection: IU_VIDEO_DBG?.counts?.ui?.hasVideoSection ?? null,
+        drops: IU_VIDEO_DBG?.drops ?? null,
+        posters: IU_VIDEO_DBG?.posters ?? null,
+        posterSamples: Array.isArray(IU_VIDEO_DBG?.posterSamples) ? IU_VIDEO_DBG.posterSamples.slice(0,10) : null,
+        samples: Array.isArray(IU_VIDEO_DBG?.samples) ? IU_VIDEO_DBG.samples.slice(0,10) : null,
+      };
+
+      const preSummary = document.getElementById("iuVideoDbgDumpSummary");
+      const preFull = document.getElementById("iuVideoDbgDumpFull");
+      if (preSummary) preSummary.textContent = iuDbgPrettyJson(summary);
+      if (preFull) preFull.textContent = iuDbgPrettyJson(IU_VIDEO_DBG);
+    }catch{}
+  }
+
   // Feature flags
   const IU_ENABLE_NAMEDAY = false; // hard off: no request, no DOM update
   // FEED VIDEO EVERY 8 (YouTube preview card, lazy embed)
@@ -3850,6 +4024,7 @@ window.addEventListener("unhandledrejection", (e) => {
         IU_VIDEO_DBG.counts.domVideoPosters = safeTarget ? safeTarget.querySelectorAll(".iuVideoPoster").length : 0;
         console.log("[IU_VIDEO_DBG]", IU_VIDEO_DBG);
         try { console.table(IU_VIDEO_DBG.samples || []); } catch {}
+        try { iuDbgUpdateVideoDumpPanel(); } catch {}
       }catch{}
     }
 
