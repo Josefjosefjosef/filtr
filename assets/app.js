@@ -6509,6 +6509,87 @@ function buildVideoAsArticleCard(it) {
       try { return Boolean(location.search && location.search.includes("debug=1")); } catch { return false; }
     }
 
+    function iuDebugConsoleCaptureInit() {
+      if (!iuDebugEnabled()) return;
+      try {
+        if (window.__iu_dbgConsoleCaptureInit) return;
+        window.__iu_dbgConsoleCaptureInit = 1;
+      } catch {}
+
+      const MAX_ITEMS = 20;
+      const MAX_MSG = 300;
+      const MAX_STACK = 500;
+
+      function trunc(s, maxLen) {
+        try {
+          const t = String(s == null ? "" : s);
+          if (!maxLen || t.length <= maxLen) return t;
+          return t.slice(0, maxLen) + "…";
+        } catch {
+          return "";
+        }
+      }
+
+      function push(entry) {
+        try {
+          const arr = Array.isArray(window.__iu_dbgErrors) ? window.__iu_dbgErrors : [];
+          arr.push(entry);
+          while (arr.length > MAX_ITEMS) arr.shift();
+          window.__iu_dbgErrors = arr;
+        } catch {}
+      }
+
+      try {
+        window.addEventListener("error", (ev) => {
+          try {
+            const err = (ev && ev.error) ? ev.error : null;
+            push({
+              type: "error",
+              ts: new Date().toISOString(),
+              message: trunc(ev && ev.message, MAX_MSG),
+              filename: trunc(ev && ev.filename, 180),
+              lineno: (ev && typeof ev.lineno === "number") ? ev.lineno : null,
+              colno: (ev && typeof ev.colno === "number") ? ev.colno : null,
+              stack: trunc(err && err.stack, MAX_STACK),
+            });
+          } catch {}
+        });
+      } catch {}
+
+      try {
+        window.addEventListener("unhandledrejection", (ev) => {
+          try {
+            const reason = ev ? ev.reason : null;
+            push({
+              type: "unhandledrejection",
+              ts: new Date().toISOString(),
+              message: trunc((reason && reason.message) ? reason.message : String(reason), MAX_MSG),
+              stack: trunc(reason && reason.stack, MAX_STACK),
+            });
+          } catch {}
+        });
+      } catch {}
+
+      try {
+        document.addEventListener("securitypolicyviolation", (ev) => {
+          try {
+            push({
+              type: "csp",
+              ts: new Date().toISOString(),
+              message: trunc(`CSP ${String(ev && (ev.effectiveDirective || ev.violatedDirective) || "")} blocked ${String(ev && ev.blockedURI || "")}`, MAX_MSG),
+              violatedDirective: trunc(ev && ev.violatedDirective, 120),
+              effectiveDirective: trunc(ev && ev.effectiveDirective, 120),
+              blockedURI: trunc(ev && ev.blockedURI, 220),
+              sourceFile: trunc(ev && ev.sourceFile, 220),
+              lineNumber: (ev && typeof ev.lineNumber === "number") ? ev.lineNumber : null,
+              columnNumber: (ev && typeof ev.columnNumber === "number") ? ev.columnNumber : null,
+              disposition: trunc(ev && ev.disposition, 40),
+            });
+          } catch {}
+        });
+      } catch {}
+    }
+
     function iuEnsureVideoDebugPanel() {
       if (!iuDebugEnabled()) return null;
       try {
@@ -6549,11 +6630,47 @@ function buildVideoAsArticleCard(it) {
         iuEnsureVideoDebugPanel();
         const pre = document.getElementById("iuVideoDebugText");
         if (!pre) return;
+        let outObj = obj;
+        try {
+          // Add latest captured "red errors" to every debug payload (ring buffer).
+          outObj = { ...(obj || {}), dbgErrors: (Array.isArray(window.__iu_dbgErrors) ? window.__iu_dbgErrors : []) };
+        } catch {}
         let text = "";
-        try { text = JSON.stringify(obj, null, 2); } catch { text = String(obj); }
-        if (text.length > 2048) text = text.slice(0, 2048) + "…";
+        try { text = JSON.stringify(outObj, null, 2); } catch { text = String(outObj); }
+        if (text.length > 4096) text = text.slice(0, 4096) + "…";
         pre.textContent = text;
       } catch {}
+    }
+
+    function iuVideoDebugDomSnapshot() {
+      try {
+        const card = document.querySelector('.iuVideoCard[data-iu-loaded="1"]') || document.querySelector(".iuVideoCard");
+        const iframe = card ? card.querySelector("iframe") : null;
+        const r = iframe ? iframe.getBoundingClientRect() : null;
+        const activeEl = document.activeElement;
+        const activeElStr = activeEl ? (
+          activeEl.tagName
+          + (activeEl.id ? ("#" + activeEl.id) : "")
+          + (activeEl.className ? ("." + String(activeEl.className).split(/\s+/).slice(0, 3).join(".")) : "")
+        ) : null;
+        return {
+          cardFound: !!card,
+          loaded: card ? (card.getAttribute("data-iu-loaded") || null) : null,
+          iframeFound: !!iframe,
+          iframeSrc: iframe ? (iframe.src || null) : null,
+          iframeRect: r ? { x: r.x, y: r.y, w: r.width, h: r.height } : null,
+          activeEl: activeElStr,
+        };
+      } catch {
+        return {
+          cardFound: false,
+          loaded: null,
+          iframeFound: false,
+          iframeSrc: null,
+          iframeRect: null,
+          activeEl: null,
+        };
+      }
     }
 
     function iuResolveYtIdFromCard(card) {
@@ -6704,6 +6821,7 @@ function buildVideoAsArticleCard(it) {
                   hasFrame: !!frame2,
                   hasIframe: !!dbgIframe,
                   iframeSrc: dbgIframeSrc,
+                  domSnapshot: iuVideoDebugDomSnapshot(),
                   cardsPreviewCount: cardsPreview.length,
                   cardIdentity,
                   truthFromCard: { ytid: dbgCardYtid, loaded: dbgLoaded, hasIframe: !!dbgIframe, iframeSrc: dbgIframeSrc },
@@ -6721,6 +6839,9 @@ function buildVideoAsArticleCard(it) {
       attempt(2, 800);
       attempt(3, 2000);
     }
+
+    // Init console/CSP capture as early as possible (debug-only).
+    try { iuDebugConsoleCaptureInit(); } catch {}
 
     document.addEventListener("click", (e) => {
       const t = e && e.target;
@@ -6783,6 +6904,7 @@ function buildVideoAsArticleCard(it) {
         hasFrame: !!frame,
         hasIframe: !!dbgIframe,
         iframeSrc: dbgIframeSrc,
+        domSnapshot: iuVideoDebugDomSnapshot(),
         fallback: false,
         error: null,
       });
@@ -6843,6 +6965,31 @@ function buildVideoAsArticleCard(it) {
         // ⚠️ důležité – žádný sandbox
         iframe.removeAttribute("sandbox");
 
+        try {
+          iframe.addEventListener("load", () => {
+            try {
+              iuVideoDebugUpdate({
+                ts: new Date().toISOString(),
+                status: "IFRAME_LOAD",
+                iframeSrc: iframe ? (iframe.getAttribute("src") || null) : null,
+                domSnapshot: iuVideoDebugDomSnapshot(),
+              });
+            } catch {}
+          });
+        } catch {}
+        try {
+          iframe.addEventListener("error", () => {
+            try {
+              iuVideoDebugUpdate({
+                ts: new Date().toISOString(),
+                status: "IFRAME_ERROR",
+                iframeSrc: iframe ? (iframe.getAttribute("src") || null) : null,
+                domSnapshot: iuVideoDebugDomSnapshot(),
+              });
+            } catch {}
+          });
+        } catch {}
+
         try { frame.style.pointerEvents = "auto"; } catch {}
         try { iframe.style.pointerEvents = "auto"; } catch {}
         frame.replaceChildren(iframe);
@@ -6871,12 +7018,14 @@ function buildVideoAsArticleCard(it) {
         } : null;
         iuVideoDebugUpdate({
           ts: new Date().toISOString(),
+          status: "AFTER_CLICK",
           ytid: dbgCardYtid,
           inferred: Boolean(resolved.inferredFromThumb || resolved.inferredFromIframe),
           loaded: dbgLoaded,
           hasFrame: !!frame,
           hasIframe: !!dbgIframe,
           iframeSrc: dbgIframeSrc,
+          domSnapshot: iuVideoDebugDomSnapshot(),
           cardsPreviewCount: cardsPreview.length,
           cardIdentity,
           truthFromCard: { ytid: dbgCardYtid, loaded: dbgLoaded, hasIframe: !!dbgIframe, iframeSrc: dbgIframeSrc },
