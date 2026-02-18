@@ -8421,6 +8421,89 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   outline-offset: 2px;
 }
 
+/* ======================================================================
+   FINAL UI — Notes in main section views (border = section accent)
+   ====================================================================== */
+
+#newsList .iuSectionNotes{
+  margin-top: 12px;
+  padding: 10px 10px;
+  border: 2px solid var(--iuSectionAccent, #b9bcc2);
+  border-radius: 12px;
+  background: transparent;
+}
+
+#newsList .iuSectionNotesTop{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+#newsList .iuSectionNotesTitle{
+  font-weight: 700;
+  font-size: 14px;
+  color: #0b1b2b;
+}
+
+#newsList .iuSectionNotesActions{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+#newsList .iuSectionNotesActions .iuBtn{
+  appearance: none;
+  border: 1px solid rgba(11,27,43,0.18);
+  background: rgba(255,255,255,0.72);
+  color: #0b1b2b;
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.1;
+  cursor: pointer;
+}
+
+#newsList .iuSectionNotesActions .iuBtn:focus-visible{
+  outline: 3px solid #0b1b2b;
+  outline-offset: 2px;
+}
+
+#newsList .iuSectionNotesInput{
+  width: 100%;
+  min-height: 44px;
+  resize: none;
+  overflow: hidden;
+  border: 1px solid rgba(11,27,43,0.18);
+  border-radius: 10px;
+  padding: 10px 10px;
+  font-size: 14px;
+  line-height: 1.35;
+  color: #0b1b2b;
+  background: #ffffff;
+}
+
+#newsList .iuSectionNotesInput:focus-visible{
+  outline: 3px solid #0b1b2b;
+  outline-offset: 2px;
+}
+
+/* ======================================================================
+   FINAL UI — MyUzel notes border: neutral until user sets color, then accent
+   ====================================================================== */
+
+/* default (unset) */
+#newsList .iuMyUzelView .iuMyUzelNotes{
+  border: 2px solid rgba(11,27,43,0.14);
+}
+
+/* colored only when user set color */
+#newsList .iuMyUzelView[data-myuzel-colored="1"] .iuMyUzelNotes{
+  border-color: var(--iuMyUzelAccent, #b9bcc2);
+}
+
 /* FINAL UI — left rail MyUzel title 2 lines */
 .iuMyUzelTitleLine1,
 .iuMyUzelTitleLine2{
