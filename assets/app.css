@@ -9653,3 +9653,72 @@ aside#iuLeftRail{
 .layout > aside.accordionCol{
   top: var(--iuTopbarHeight) !important;
 }
+
+/* ============================================================
+   ULTRA RAIL — micro-highlight + subtle badge (UI-only)
+   ============================================================ */
+
+/* ULTRA: micro-highlight base */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem{
+  position: relative;
+}
+
+/* ACTIVE = aria-current / active / is-active (keep all 3) */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"]::before,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active::before,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::before{
+  content:"";
+  position:absolute;
+  left:-6px;
+  top:8px;
+  bottom:8px;
+  width:3px;
+  border-radius:999px;
+  background: rgba(27,36,48,.45);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.6);
+  pointer-events: none;
+}
+
+/* ULTRA: micro-highlight hover (subtle) */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:hover:not([aria-current="page"]):not(.active):not(.is-active)::before{
+  content:"";
+  position:absolute;
+  left:-6px;
+  top:10px;
+  bottom:10px;
+  width:2px;
+  border-radius:999px;
+  background: rgba(27,36,48,.18);
+  pointer-events: none;
+}
+
+/* ULTRA: subtle gradient icon badge (enterprise, no rainbow) */
+aside#iuLeftRail.iu-leftRail .iu-leftNav .iu-leftNavIcon{
+  box-sizing: border-box;
+  border: 1px solid rgba(27,36,48,.14) !important;
+  border-radius: 12px;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,.92) 0%,
+    rgba(27,36,48,.06) 100%
+  ) !important;
+  box-shadow:
+    0 10px 18px rgba(0,0,0,.06),
+    inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+
+/* ULTRA: active badge emphasis (subtle) */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active .iu-leftNavIcon,
+aside#iuLeftRail.iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNavIcon{
+  border-color: rgba(27,36,48,.22) !important;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,.96) 0%,
+    rgba(27,36,48,.09) 100%
+  ) !important;
+}
+
+/* ULTRA: focus-visible (premium, not disruptive) */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
+  outline: 3px solid rgba(27,36,48,.22);
+  outline-offset: 2px;
+}
