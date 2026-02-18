@@ -387,6 +387,8 @@ def build_weather_history(api_key: str, cfg: dict, existing: dict) -> dict:
 
     merged_by_id = dict(existing_by_id)
     for it in new_items:
+        if len(merged_by_id) >= MAX_TOTAL_ITEMS:
+            break
         vid = str(it.get("id") or "").strip()
         if not vid:
             continue
@@ -410,6 +412,7 @@ def build_weather_history(api_key: str, cfg: dict, existing: dict) -> dict:
 
     merged_items.sort(key=_sort_key)
 
+    # If dataset was already oversized, cap without deleting "old" due to new inserts.
     if len(merged_items) > MAX_TOTAL_ITEMS:
         merged_items = merged_items[:MAX_TOTAL_ITEMS]
 
@@ -430,11 +433,6 @@ def main() -> int:
     ap.add_argument("--api-key", default="", help="YouTube Data API key (or env YOUTUBE_API_KEY)")
     args = ap.parse_args()
 
-    api_key = (str(args.api_key or "").strip() or str(os.getenv("YOUTUBE_API_KEY") or "").strip())
-    if not api_key:
-        print("WARN: missing YOUTUBE_API_KEY; skipping update (dataset unchanged)")
-        return 0
-
     # strict JSON reads
     try:
         cfg = _read_json_strict(SOURCES_PATH)
@@ -442,11 +440,29 @@ def main() -> int:
         print(f"ERROR: sources JSON error: {e}", file=sys.stderr)
         return 1
 
+    # strict dataset read; if missing, bootstrap with seed (dataset must never be empty)
     try:
-        existing = _read_json_strict(DATASET_PATH)
+        if os.path.exists(DATASET_PATH):
+            existing = _read_json_strict(DATASET_PATH)
+        else:
+            existing = {"version": 1, "title": "Návrat do historie počasí", "items": list(SEED_ITEMS)}
+            _atomic_write_json(DATASET_PATH, existing)
     except Exception as e:
         print(f"ERROR: dataset JSON error: {e}", file=sys.stderr)
         return 1
+
+    api_key = (str(args.api_key or "").strip() or str(os.getenv("YOUTUBE_API_KEY") or "").strip())
+    if not api_key:
+        print("WARN: missing YOUTUBE_API_KEY; skipping update (dataset unchanged)")
+        # Ensure dataset is never empty.
+        try:
+            items = existing.get("items") if isinstance(existing, dict) else None
+            if not isinstance(items, list) or len(items) == 0:
+                existing = {"version": 1, "title": "Návrat do historie počasí", "items": list(SEED_ITEMS)}
+                _atomic_write_json(DATASET_PATH, existing)
+        except Exception:
+            pass
+        return 0
 
     try:
         out = build_weather_history(api_key, cfg, existing)
