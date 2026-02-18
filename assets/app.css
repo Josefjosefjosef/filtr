@@ -520,25 +520,14 @@ html:not([data-iu-js]) .iuDailyWeather{
 
 /* Kompenzace pro levý obsah pod sticky hlavičkou */
 #leftContent{
-  --iuLeftContentPadTop: 12px; /* desktop: malý odstup pod menu */
-  padding-top: var(--iuLeftContentPadTop);
+  padding-top: 0; /* premium fixed topbar uses global layout offset */
 }
 
 @media (max-width: 900px){
-  #leftContent{
-    --iuLeftContentPadTop: 10px; /* mobil: ještě menší odstup */
-    padding-top: var(--iuLeftContentPadTop);
-  }
   :root{
     --iu-brief-gap-top: 18px; /* mobil: 10px + 8px */
     --iu-brief-gap-bottom: 8px; /* mobil: margin-bottom na .iu-daily-brief (celkem s chips margin-top 10px = 18px) */
   }
-}
-
-/* FIX — left rail starts exactly under topbar */
-#iuLeftRail,
-.iu-leftRail{
-  margin-top: calc(-1 * var(--iuLeftContentPadTop, 12px)) !important;
 }
 
 /* Informační pás - globální neutrální základ (pro případné budoucí použití) */
@@ -9349,4 +9338,127 @@ html, body {
   top: 0 !important;
   padding-top: 0 !important;    /* remove visible gap above pill */
   padding-bottom: 0 !important; /* keep bar tight without changing layout flow */
+}
+
+/* ============================================================
+   PREMIUM TOPBAR FINAL v2 (infoUzel.cz)
+   UI-only + small JS theme/toggle, CLS=0
+   ============================================================ */
+
+:root{
+  --iuTopbarHeight: 72px;
+  --iuTopbarBg: #ffffff;
+  --iuTopbarStackH: var(--iuTopbarHeight);
+}
+
+/* Keep existing stack var consumers stable */
+:root{
+  --topbarStackH: var(--iuTopbarHeight);
+}
+
+.iuTopbar{
+  height: var(--iuTopbarHeight) !important;
+  min-height: var(--iuTopbarHeight) !important;
+
+  background: var(--iuTopbarBg) !important;
+  color: #1b2430 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  padding: 0 18px !important;
+
+  border-radius: 0 18px 18px 0 !important;
+  box-shadow: 0 4px 18px rgba(0,0,0,.08) !important;
+  border: 0 !important;
+
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000 !important;
+}
+
+/* inner wrappers must not create a pill or change height */
+.iuTopbar .topbar-new-inner{
+  height: 100% !important;
+  min-height: 100% !important;
+  background: transparent !important;
+  border-radius: inherit !important;
+  overflow: visible !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+.iuTopbar .topbar-new-main{
+  height: 100% !important;
+  min-height: 100% !important;
+  width: 100%;
+  padding: 0 !important;
+}
+
+/* AUTO OFFSET — shift 3-column layout under fixed topbar */
+.layout{
+  padding-top: var(--iuTopbarHeight) !important;
+}
+
+/* Right cluster */
+.iuTopbarRight{
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+/* Theme button */
+.iuThemeBtn{
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 0;
+  background: rgba(0,0,0,.05);
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Today info */
+#iuTodayInfo{
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: .85;
+  transition: opacity .2s ease;
+}
+.iuSearchOpen #iuTodayInfo{
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+@media (max-width: 900px){
+  #iuTodayInfo{ display: none; }
+}
+
+/* Search circle */
+.iuSearchBtn{
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(0,0,0,.06);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure left cluster is readable on white */
+.iuTopbar .menuBtn{
+  background: rgba(0,0,0,.04) !important;
+  border: 0 !important;
+}
+.iuTopbar .menuBtn .burger span{
+  background: currentColor !important;
+}
+.iuTopbar .topbar-logo .brand .name{
+  color: currentColor !important;
+}
+.iuTopbar .iuTopbarSearchBtn,
+.iuTopbar .iuThemeBtn{
+  color: currentColor !important;
 }
