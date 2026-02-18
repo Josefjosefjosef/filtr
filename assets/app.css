@@ -8356,7 +8356,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
    FINAL UI — Notes (unified component across the whole web)
    ====================================================================== */
 
-#newsList .iuNotes{
+.iuNotesHost .iuNotes{
   margin-top: 12px;
   padding: 10px 10px;
   border: 2px solid var(--iuNotesAccent, var(--iuSectionAccent, var(--iuMyUzelAccent, #b9bcc2)));
@@ -8364,7 +8364,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   background: var(--iuNotesAccent, var(--iuSectionAccent, var(--iuMyUzelAccent, #b9bcc2)));
 }
 
-#newsList .iuNotesTop{
+.iuNotesHost .iuNotesTop{
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -8372,19 +8372,19 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   margin-bottom: 8px;
 }
 
-#newsList .iuNotesTitle{
+.iuNotesHost .iuNotesTitle{
   font-weight: 700;
   font-size: 14px;
   color: #ffffff;
 }
 
-#newsList .iuNotesActions{
+.iuNotesHost .iuNotesActions{
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-#newsList .iuNotesActions .iuBtn{
+.iuNotesHost .iuNotesActions .iuBtn{
   appearance: none;
   border: none;
   background: var(--iuNotesAccent, var(--iuSectionAccent, var(--iuMyUzelAccent, #b9bcc2)));
@@ -8398,16 +8398,16 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
 }
 
-#newsList .iuNotesActions .iuBtn:hover{
+.iuNotesHost .iuNotesActions .iuBtn:hover{
   filter: brightness(0.92);
 }
 
-#newsList .iuNotesActions .iuBtn:focus-visible{
+.iuNotesHost .iuNotesActions .iuBtn:focus-visible{
   outline: 3px solid #ffffff;
   outline-offset: 2px;
 }
 
-#newsList .iuNotesInput{
+.iuNotesHost .iuNotesInput{
   width: 100%;
   min-height: 44px;
   resize: none;          /* autosize v JS */
@@ -8421,7 +8421,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   background: #ffffff;
 }
 
-#newsList .iuNotesInput:focus-visible{
+.iuNotesHost .iuNotesInput:focus-visible{
   outline: 3px solid #ffffff;
   outline-offset: 2px;
 }
