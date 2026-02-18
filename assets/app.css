@@ -4702,6 +4702,71 @@ html[data-section="pocasi"] #iuWeatherView #iuWeatherAlertText{
   }
 }
 
+/* Weather NOW hours: cells in section accent (white text) */
+body[data-section="pocasi"] #iuWeatherView #iuWxHours .iuWxHour,
+html[data-section="pocasi"] #iuWeatherView #iuWxHours .iuWxHour{
+  background: var(--iuSectionAccent, #38BDF8);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.55);
+}
+body[data-section="pocasi"] #iuWeatherView #iuWxHours .iuWxHour > div,
+html[data-section="pocasi"] #iuWeatherView #iuWxHours .iuWxHour > div{
+  color: inherit;
+}
+body[data-section="pocasi"] #iuWxHours img,
+body[data-section="pocasi"] #iuWxHours svg,
+html[data-section="pocasi"] #iuWxHours img,
+html[data-section="pocasi"] #iuWxHours svg{
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* 7-day: full-day names, left day / right temps */
+body[data-section="pocasi"] #iuWeatherView #iuWx7Day,
+html[data-section="pocasi"] #iuWeatherView #iuWx7Day{
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWx7Row,
+html[data-section="pocasi"] #iuWeatherView .iuWx7Row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWx7DayName,
+html[data-section="pocasi"] #iuWeatherView .iuWx7DayName{
+  font-weight: 900;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWx7Icon,
+html[data-section="pocasi"] #iuWeatherView .iuWx7Icon{
+  width: 34px;
+  text-align: center;
+  flex: 0 0 34px;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWx7Temps,
+html[data-section="pocasi"] #iuWeatherView .iuWx7Temps{
+  margin-left: auto;
+  text-align: right;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+/* Notes (Počasí): container in section accent + white border; textarea white */
+body[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotes,
+html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotes{
+  background: var(--iuSectionAccent, #38BDF8);
+  border: 1px solid #fff;
+  color: #fff;
+}
+body[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput,
+html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
+  background: #fff !important;
+  color: #111 !important;
+  border: 1px solid rgba(0,0,0,0.18) !important;
+}
+
 /* City picker bottom-sheet (no libraries) */
 .iuWeatherSheetOverlay{
   position: fixed;

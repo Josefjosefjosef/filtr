@@ -4431,9 +4431,11 @@ function buildVideoAsArticleCard(it) {
         try{
           const el = document.getElementById("iuDailyNameday");
           if (!el) return "";
-          // daily panel may hide it; if hidden, treat as unavailable
-          if (el.hidden) return "";
           const t = String(el.textContent || "").trim();
+          if (!t) return "";
+          if (t === "—") return "";
+          if (/^svátek\s+má\s*[—-]?\s*$/i.test(t)) return "";
+          if (/^svátek\s+má\s+načítám/i.test(t)) return "";
           return t;
         }catch{
           return "";
@@ -6495,23 +6497,33 @@ function buildVideoAsArticleCard(it) {
   // WEATHER (mobile funnel + "Moje město") — UI/UX only
   // ============================================================
 
-  const IU_WEATHER_CITY_KEY = "iuWeatherCity"; // JSON: { name, lat, lon }
+  const IU_WEATHER_CITY_KEY = "iuWeatherCity"; // legacy JSON: { name, lat, lon }
   const IU_WEATHER_CITY_PIN_KEY = "iuWeatherCityPinned"; // "1" | "0"
+  const IU_WEATHER_CITY_SELECTED_KEY = "iuWeatherCitySelectedV1"; // JSON: { name, lat, lon }
 
   const IU_WEATHER_DEFAULT_CITY = { name: "Praha", lat: 50.0755, lon: 14.4378 };
-  const IU_WEATHER_CITIES = [
-    { name: "Praha", lat: 50.0755, lon: 14.4378 },
-    { name: "Brno", lat: 49.1951, lon: 16.6068 },
-    { name: "Ostrava", lat: 49.8209, lon: 18.2625 },
-    { name: "Plzeň", lat: 49.7384, lon: 13.3736 },
-    { name: "Liberec", lat: 50.7671, lon: 15.0562 },
-    { name: "Olomouc", lat: 49.5938, lon: 17.2509 },
-    { name: "České Budějovice", lat: 48.9747, lon: 14.4747 },
-    { name: "Hradec Králové", lat: 50.2092, lon: 15.8328 },
-    { name: "Ústí nad Labem", lat: 50.6606, lon: 14.0323 },
-    { name: "Pardubice", lat: 50.0343, lon: 15.7812 },
-    { name: "Zlín", lat: 49.2265, lon: 17.6689 },
+
+  const IU_CITY_FALLBACK = [
+    ["Praha","Hlavní město Praha",50.0755,14.4378],
+    ["Brno","Brno-město",49.1951,16.6068],
+    ["Ostrava","Ostrava-město",49.8209,18.2625],
+    ["Plzeň","Plzeň-město",49.7384,13.3736],
   ];
+
+  async function iuLoadCitiesSafe(){
+    try{
+      const r = await fetch("projects/data/cz_cities_min.json", { cache: "force-cache" });
+      if (r.ok) {
+        const d = await r.json();
+        if (Array.isArray(d) && d.length) return d;
+      }
+    }catch{}
+    return IU_CITY_FALLBACK;
+  }
+
+  function iuCityLabel(c){ return c && c[1] ? `${c[0]} (${c[1]})` : String(c && c[0] || ""); }
+
+  const IU_DAYS_FULL = ["Neděle","Pondělí","Úterý","Středa","Čtvrtek","Pátek","Sobota"];
 
   function iuWeatherNorm(s){
     try{
@@ -6529,7 +6541,43 @@ function buildVideoAsArticleCard(it) {
     try{
       const pinned = String(localStorage.getItem(IU_WEATHER_CITY_PIN_KEY) || "0");
       if (pinned !== "1") return null;
-      const raw = localStorage.getItem(IU_WEATHER_CITY_KEY);
+      // preferred: new selected key
+      try{
+        const rawNew = localStorage.getItem(IU_WEATHER_CITY_SELECTED_KEY);
+        if (rawNew) {
+          const o = JSON.parse(rawNew);
+          const name = String(o && o.name || "").trim();
+          const lat = Number(o && o.lat);
+          const lon = Number(o && o.lon);
+          if (name && isFinite(lat) && isFinite(lon)) return { name, lat, lon };
+        }
+      }catch{}
+
+      // legacy: pinned payload in IU_WEATHER_CITY_KEY
+      try{
+        const raw = localStorage.getItem(IU_WEATHER_CITY_KEY);
+        if (!raw) return null;
+        const obj = JSON.parse(raw);
+        const name = String(obj && obj.name || "").trim();
+        const lat = Number(obj && obj.lat);
+        const lon = Number(obj && obj.lon);
+        if (!name || !isFinite(lat) || !isFinite(lon)) return null;
+        return { name, lat, lon };
+      }catch{}
+
+      return null;
+    }catch{
+      return null;
+    }
+  }
+
+  function iuWeatherWritePinned(pinned){
+    try{ localStorage.setItem(IU_WEATHER_CITY_PIN_KEY, pinned ? "1" : "0"); }catch{}
+  }
+
+  function iuWeatherReadSelected(){
+    try{
+      const raw = localStorage.getItem(IU_WEATHER_CITY_SELECTED_KEY);
       if (!raw) return null;
       const obj = JSON.parse(raw);
       const name = String(obj && obj.name || "").trim();
@@ -6542,11 +6590,14 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  function iuWeatherWritePinned(city, pinned){
-    try{ localStorage.setItem(IU_WEATHER_CITY_PIN_KEY, pinned ? "1" : "0"); }catch{}
-    if (pinned) {
-      try{ localStorage.setItem(IU_WEATHER_CITY_KEY, JSON.stringify(city)); }catch{}
-    }
+  function iuWeatherWriteSelected(city){
+    try{
+      localStorage.setItem(IU_WEATHER_CITY_SELECTED_KEY, JSON.stringify({
+        name: String(city && city.name || "").trim(),
+        lat: Number(city && city.lat),
+        lon: Number(city && city.lon),
+      }));
+    }catch{}
   }
 
   function iuWeatherGetRuntime(){
@@ -6560,7 +6611,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuWeatherGetActiveCity(){
-    return iuWeatherGetRuntime() || iuWeatherReadPinned() || IU_WEATHER_DEFAULT_CITY;
+    return iuWeatherGetRuntime() || iuWeatherReadPinned() || iuWeatherReadSelected() || IU_WEATHER_DEFAULT_CITY;
   }
 
   function iuWeatherSetRuntime(city){
@@ -6664,7 +6715,8 @@ function buildVideoAsArticleCard(it) {
       try{
         const dt = new Date(String(t || ""));
         if (!isNaN(dt.getTime())) {
-          dayName = new Intl.DateTimeFormat("cs-CZ",{weekday:"short",day:"numeric",month:"numeric",timeZone:"Europe/Prague"}).format(dt);
+          const wd = dt.getDay();
+          dayName = IU_DAYS_FULL[wd] || IU_DAYS_FULL[0];
         }
       }catch{}
       const icon = iuWxIconFromCode(code);
@@ -6734,19 +6786,46 @@ function buildVideoAsArticleCard(it) {
     function close(){
       try{ overlay.hidden = true; }catch{}
     }
-    function open(){
+    async function open(){
       try{ overlay.hidden = false; }catch{}
       try{ if (input) input.focus(); }catch{}
+      try{
+        if (!window.__iuWeatherCitiesData) {
+          if (list) list.innerHTML = `<div class="iuWeatherSheetEmpty">Načítání měst…</div>`;
+          window.__iuWeatherCitiesData = await iuLoadCitiesSafe();
+        }
+      }catch{
+        window.__iuWeatherCitiesData = IU_CITY_FALLBACK;
+      }
       renderList();
     }
     function renderList(){
       if (!list) return;
       const q = iuWeatherNorm(input && input.value);
-      const items = IU_WEATHER_CITIES.filter((c) => !q || iuWeatherNorm(c.name).includes(q));
-      list.innerHTML = items.map((c) => {
-        const name = escapeHtml(c.name);
-        return `<button type="button" class="iuWeatherSheetItem" role="listitem" data-city="${name}">${name}</button>`;
-      }).join("") || `<div class="iuWeatherSheetEmpty">Nic nenalezeno</div>`;
+      const data = Array.isArray(window.__iuWeatherCitiesData) && window.__iuWeatherCitiesData.length
+        ? window.__iuWeatherCitiesData
+        : IU_CITY_FALLBACK;
+
+      const out = [];
+      for (let i = 0; i < data.length; i++){
+        const c = data[i];
+        const nm = c && c[0] ? String(c[0]) : "";
+        const okr = c && c[1] ? String(c[1]) : "";
+        if (!nm) continue;
+        if (q) {
+          const hay = iuWeatherNorm(nm + " " + okr);
+          if (!hay.includes(q)) continue;
+        }
+        out.push({ idx: i, label: iuCityLabel(c) });
+        if (out.length >= 20) break;
+      }
+
+      list.innerHTML = out.length
+        ? out.map((it) => {
+          const label = escapeHtml(it.label || "");
+          return `<button type="button" class="iuWeatherSheetItem" role="listitem" data-idx="${String(it.idx)}">${label}</button>`;
+        }).join("")
+        : `<div class="iuWeatherSheetEmpty">Nic nenalezeno</div>`;
     }
 
     overlay.addEventListener("click", (e) => {
@@ -6760,17 +6839,28 @@ function buildVideoAsArticleCard(it) {
       try{
         const btn = e.target && e.target.closest ? e.target.closest(".iuWeatherSheetItem") : null;
         if (!btn) return;
-        const name = String(btn.getAttribute("data-city") || "").trim();
-        const city = IU_WEATHER_CITIES.find((c) => String(c.name) === name);
-        if (!city) return;
+        const idx = Number(btn.getAttribute("data-idx"));
+        const data = Array.isArray(window.__iuWeatherCitiesData) && window.__iuWeatherCitiesData.length
+          ? window.__iuWeatherCitiesData
+          : IU_CITY_FALLBACK;
+        const c = data[idx];
+        if (!c) return;
+        const name = String(c[0] || "").trim();
+        const lat = Number(c[2]);
+        const lon = Number(c[3]);
+        if (!name || !isFinite(lat) || !isFinite(lon)) return;
+        const city = { name, lat, lon };
         iuWeatherSetRuntime(city);
+        iuWeatherWriteSelected(city);
         iuWeatherSyncCityLabels(city);
         try{ if (document.getElementById("iuWxPlace")) document.getElementById("iuWxPlace").textContent = String(city.name); }catch{}
         try{
           const pin = document.getElementById("iuWeatherCityPinned");
           if (pin && pin.checked) {
-            iuWeatherWritePinned(city, true);
+            iuWeatherWritePinned(true);
             iuWeatherSyncPinnedToggle();
+          } else {
+            iuWeatherWritePinned(false);
           }
         }catch{}
         iuWeatherLoadAndRender();
@@ -6828,25 +6918,12 @@ function buildVideoAsArticleCard(it) {
         document.getElementById("iuDailyNameday");
       if (!el) return;
 
-      const tRaw = String(el.textContent || "");
-      const t = tRaw.replace(/\s+/g, " ").trim();
-      const isEmpty =
-        (!t) ||
-        (t === "—") ||
-        (t === "Svátek: —") ||
-        (/^svátek\:\s*[—-]?\s*$/i.test(t)) ||
-        (/^svátek\s+má\s+[—-]?\s*$/i.test(t)) ||
-        (/^svátek\s+má\s+načítám…$/i.test(t));
+      const t = (el.textContent || "").trim();
 
-      if (isEmpty) {
+      if (!t || t === "—" || /Svátek/i.test(t)){
         el.textContent = "";
         el.hidden = true;
         el.setAttribute("aria-hidden","true");
-        el.classList.add("is-empty");
-      } else {
-        el.hidden = false;
-        el.removeAttribute("aria-hidden");
-        el.classList.remove("is-empty");
       }
     }catch{}
   }
@@ -6921,12 +6998,21 @@ function buildVideoAsArticleCard(it) {
         try{ overlay.__iuWeatherOpen(); }catch{}
       });
 
+      try{
+        const params = new URLSearchParams(location.search || "");
+        if (params.get("cityPicker") === "1") {
+          const overlay = iuWeatherEnsureCitySheet();
+          try{ overlay.__iuWeatherOpen(); }catch{}
+        }
+      }catch{}
+
       const pin = document.getElementById("iuWeatherCityPinned");
       if (pin) pin.addEventListener("change", () => {
         try{
           const city = iuWeatherGetActiveCity();
           const pinned = Boolean(pin.checked);
-          iuWeatherWritePinned(city, pinned);
+          iuWeatherWritePinned(pinned);
+          if (pinned) iuWeatherWriteSelected(city);
           iuWeatherSyncPinnedToggle();
         }catch{}
       });
@@ -7003,29 +7089,17 @@ function buildVideoAsArticleCard(it) {
       if (!IU_ENABLE_NAMEDAY) return;
       if (!elNameday && !elWxStickyNameday) return;
 
-      const sec = String((document.body && document.body.dataset && document.body.dataset.section) || "");
-      const inWeather = sec === "pocasi";
-
       if (elWxStickyNameday) {
         elWxStickyNameday.textContent = "";
         elWxStickyNameday.hidden = true;
         elWxStickyNameday.setAttribute("aria-hidden","true");
-        elWxStickyNameday.classList.add("is-empty");
       }
 
       if (elNameday) {
-        if (inWeather) {
-          // Weather view: show only when valid name is present (no loading placeholder).
-          elNameday.textContent = "";
-          elNameday.hidden = true;
-          elNameday.setAttribute("aria-hidden","true");
-          elNameday.classList.add("is-empty");
-        } else {
-          elNameday.hidden = false;
-          elNameday.removeAttribute("aria-hidden");
-          elNameday.classList.remove("is-empty");
-          elNameday.textContent = "Svátek má načítám…";
-        }
+        // Nameday is displayed only in TOPBAR; the panel element stays hidden (no flash / no placeholders).
+        elNameday.textContent = "";
+        elNameday.hidden = true;
+        elNameday.setAttribute("aria-hidden","true");
       }
       try{ iuWeatherHideEmptyNameday(); }catch{}
       fetch("https://svatky.adresa.info/json", { cache: "no-store" })
@@ -7036,28 +7110,14 @@ function buildVideoAsArticleCard(it) {
           if (ok) {
             if (elNameday) {
               elNameday.textContent = "Svátek: " + nm;
-              elNameday.hidden = false;
-              elNameday.removeAttribute("aria-hidden");
-              elNameday.classList.remove("is-empty");
-            }
-            if (elWxStickyNameday) {
-              elWxStickyNameday.textContent = "Svátek: " + nm;
-              elWxStickyNameday.hidden = false;
-              elWxStickyNameday.removeAttribute("aria-hidden");
-              elWxStickyNameday.classList.remove("is-empty");
+              elNameday.hidden = true;
+              elNameday.setAttribute("aria-hidden","true");
             }
           } else {
             if (elNameday) {
               elNameday.textContent = "";
               elNameday.hidden = true;
               elNameday.setAttribute("aria-hidden","true");
-              elNameday.classList.add("is-empty");
-            }
-            if (elWxStickyNameday) {
-              elWxStickyNameday.textContent = "";
-              elWxStickyNameday.hidden = true;
-              elWxStickyNameday.setAttribute("aria-hidden","true");
-              elWxStickyNameday.classList.add("is-empty");
             }
           }
           try{ iuWeatherHideEmptyNameday(); }catch{}
@@ -7067,13 +7127,6 @@ function buildVideoAsArticleCard(it) {
             elNameday.textContent = "";
             elNameday.hidden = true;
             elNameday.setAttribute("aria-hidden","true");
-            elNameday.classList.add("is-empty");
-          }
-          if (elWxStickyNameday) {
-            elWxStickyNameday.textContent = "";
-            elWxStickyNameday.hidden = true;
-            elWxStickyNameday.setAttribute("aria-hidden","true");
-            elWxStickyNameday.classList.add("is-empty");
           }
           try{ iuWeatherHideEmptyNameday(); }catch{}
         });
