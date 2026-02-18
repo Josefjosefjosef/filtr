@@ -9484,28 +9484,29 @@ body.iuTopbarFlushRight{
   --iuTopbarRadiusRight: 0px;
 }
 
-.iuTopbar{
+/* Topbar wrapper (real selector from grep: header#topbarWrap.topbar-new.iuTopbar) */
+header#topbarWrap.topbar-new.iuTopbar{
   height: var(--iuTopbarHeight) !important;
   min-height: var(--iuTopbarHeight) !important;
 
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 2000 !important;
+
   background: var(--iuTopbarBg) !important;
   color: var(--iuTopbarFg) !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-
-  padding:0 18px !important;
 
   border-radius: var(--iuTopbarRadiusLeft) var(--iuTopbarRadiusRight) var(--iuTopbarRadiusRight) var(--iuTopbarRadiusLeft) !important;
 
   box-shadow: var(--iuShadow) !important;
 
-  position:fixed !important;
-  top:0 !important;
-  left:0 !important;
-  right:0 !important;
-  z-index:1000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  padding: 0 18px !important;
 }
 
 /* ============================================================
@@ -9523,23 +9524,23 @@ main#content .layout{
    ============================================================ */
 
 .iuTopbarToday{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  white-space:nowrap;
-  font-size:14px;
-  color: rgba(27,36,48,.75);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  font-size: 14px;
+  color: var(--iuTopbarMuted);
   transition: opacity .2s ease;
 }
 
 .iuTopbarTime{
-  font-weight:700;
-  color:#1b2430;
-  letter-spacing:.2px;
+  font-weight: 700;
+  color: var(--iuTopbarFg);
+  letter-spacing: .2px;
 }
 
 .iuTopbarSep{
-  opacity:.55;
+  opacity: .55;
 }
 
 .iuSearchOpen #iuTopbarToday{
@@ -9580,9 +9581,12 @@ main#content .layout{
 /* ============================================================
    MindMenu (right panel) — clean card (v3)
    UI-only, keep content+behavior
+   Real selectors from grep: .iu-rightContent + aside.accordionCol
    ============================================================ */
 
-.layout > aside.accordionCol{
+.layout > aside.accordionCol,
+.iu-rightContent,
+.iuRightPanel{
   background: rgba(255,255,255,.86) !important;
   backdrop-filter: blur(6px);
   border: 1px solid var(--iuHairline) !important;
@@ -9591,10 +9595,12 @@ main#content .layout{
   overflow: hidden !important;
 }
 
-.iu-rightContent{
-  background: transparent !important;
-  border-left-color: var(--iuHairline);
-  border-right-color: var(--iuHairline);
+/* ztlumit „tlusté“ svislé rámy (pokud nějaký vnitřní wrapper přidává vlastní border) */
+.layout > aside.accordionCol,
+.iu-rightContent,
+.iuRightPanel{
+  border-left-color: var(--iuHairline) !important;
+  border-right-color: var(--iuHairline) !important;
 }
 
 /* ============================================================
