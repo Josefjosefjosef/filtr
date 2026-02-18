@@ -4767,6 +4767,89 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   border: 1px solid rgba(0,0,0,0.18) !important;
 }
 
+/* ============================================================
+   Weather — History (daily YouTube thumbnail + in-site preview)
+   ============================================================ */
+
+#iuWeatherView .iuWeatherHistory{
+  margin-top: 14px;
+}
+
+#iuWeatherView .iuWeatherHistoryCard{
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.03);
+}
+
+#iuWeatherView .iuWeatherHistoryPlay{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 12px;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 12px;
+  cursor: pointer;
+}
+
+#iuWeatherView .iuWeatherHistoryThumb{
+  width: 180px;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border-radius: 10px;
+  display: block;
+  object-fit: cover;
+  background: rgba(255,255,255,0.06);
+}
+
+#iuWeatherView .iuWeatherHistoryMeta{
+  min-width: 0;
+}
+
+#iuWeatherView .iuWeatherHistoryTitle{
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+
+#iuWeatherView .iuWeatherHistoryLine{
+  opacity: 0.85;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+}
+
+#iuWeatherView .iuWeatherHistoryNote{
+  opacity: 0.8;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+#iuWeatherView .iuWeatherHistoryHint{
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+#iuWeatherView .iuWeatherHistoryPlayerHost{
+  padding: 0 12px 12px 12px;
+}
+
+#iuWeatherView .iuWeatherHistoryFallback{
+  opacity: 0.85;
+  padding: 10px 2px;
+}
+
+@media (max-width: 520px){
+  #iuWeatherView .iuWeatherHistoryPlay{
+    grid-template-columns: 1fr;
+  }
+  #iuWeatherView .iuWeatherHistoryThumb{
+    width: 100%;
+  }
+}
+
 /* City picker bottom-sheet (no libraries) */
 .iuWeatherSheetOverlay{
   position: fixed;

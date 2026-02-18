@@ -6525,6 +6525,232 @@ function buildVideoAsArticleCard(it) {
 
   const IU_DAYS_FULL = ["Neděle","Pondělí","Úterý","Středa","Čtvrtek","Pátek","Sobota"];
 
+  // ============================================================
+  // WEATHER — History (daily deterministic YouTube pick, no API)
+  // ============================================================
+
+  function iuPad2(n){ return String(Number(n) || 0).padStart(2,"0"); }
+
+  function iuDayKeyLocal(){
+    const d = new Date();
+    return `${d.getFullYear()}-${iuPad2(d.getMonth() + 1)}-${iuPad2(d.getDate())}`;
+  }
+
+  function iuHashStr(s){
+    let h = 0;
+    const t = String(s || "");
+    for (let i = 0; i < t.length; i++){
+      h = (((h << 5) - h) + t.charCodeAt(i)) | 0;
+    }
+    return h;
+  }
+
+  function iuValidYtId(id){
+    return typeof id === "string" && /^[A-Za-z0-9_-]{11}$/.test(id);
+  }
+
+  function iuMsToNextMidnightLocal(){
+    const now = new Date();
+    const next = new Date(now);
+    next.setHours(24, 0, 0, 0);
+    return Math.max(1000, next.getTime() - now.getTime());
+  }
+
+  async function iuLoadWeatherHistorySafe(){
+    try{
+      const r = await fetch("projects/data/weather_history_videos.json", { cache: "force-cache" });
+      if (!r.ok) return null;
+      const d = await r.json();
+      if (!d || typeof d !== "object") return null;
+      const items = Array.isArray(d.items) ? d.items : [];
+      if (!items.length) return { title: String(d.title || ""), items: [] };
+      const usable = items.filter((x) => x && iuValidYtId(String(x.id || "").trim()));
+      return { title: String(d.title || ""), items: usable };
+    }catch{
+      return null;
+    }
+  }
+
+  function iuWeatherHistoryPick(items){
+    try{
+      if (!Array.isArray(items) || !items.length) return null;
+      const key = iuDayKeyLocal();
+      const idx = Math.abs(iuHashStr(key)) % items.length;
+      return items[idx] || items[0] || null;
+    }catch{
+      return null;
+    }
+  }
+
+  function iuWeatherHistoryRenderPick(pick){
+    const card = document.getElementById("iuWeatherHistoryCard");
+    const fallback = document.getElementById("iuWeatherHistoryFallback");
+    const host = document.getElementById("iuWeatherHistoryPlayerHost");
+    if (!card || !fallback || !host) return;
+
+    if (!pick || !iuValidYtId(String(pick.id || "").trim())) {
+      card.hidden = true;
+      fallback.hidden = false;
+      return;
+    }
+
+    const img = document.getElementById("iuWeatherHistoryThumb");
+    const t = document.getElementById("iuWeatherHistoryTitle");
+    const line = document.getElementById("iuWeatherHistoryLine");
+    const note = document.getElementById("iuWeatherHistoryNote");
+
+    if (!img || !t || !line || !note){
+      card.hidden = true;
+      fallback.hidden = false;
+      return;
+    }
+
+    const id = String(pick.id || "").trim();
+    const year = (typeof pick.year === "number" && isFinite(pick.year)) ? pick.year : null;
+    const source = pick.source ? String(pick.source) : "";
+    const title = pick.title ? String(pick.title) : "Historická předpověď počasí";
+    const noteTxt = pick.note ? String(pick.note) : "";
+
+    img.src = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+    img.onerror = () => {
+      try{
+        img.onerror = null;
+        img.src = `https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
+      }catch{}
+    };
+
+    t.textContent = title;
+    line.textContent = [year ? `Rok ${year}` : "", source].filter(Boolean).join(" • ");
+    note.textContent = noteTxt;
+
+    // Reset player host on every render (prevents stale embeds).
+    try{ host.replaceChildren(); }catch{}
+    try{ host.hidden = true; }catch{}
+
+    card.hidden = false;
+    fallback.hidden = true;
+  }
+
+  function iuWeatherHistoryOpenPreview(pick){
+    const host = document.getElementById("iuWeatherHistoryPlayerHost");
+    if (!host) return;
+    if (!pick || !iuValidYtId(String(pick.id || "").trim())) return;
+
+    try{ host.replaceChildren(); }catch{}
+
+    try{
+      const markup = buildYouTubeVideoPreviewCard({
+        videoId: String(pick.id || "").trim(),
+        title: String(pick.title || "Historická předpověď počasí"),
+        channel: String(pick.source || "YouTube"),
+        publishedAt: "",
+        category: "",
+        thumb: `https://i.ytimg.com/vi/${String(pick.id || "").trim()}/hqdefault.jpg`,
+      });
+      const t = document.createElement("template");
+      t.innerHTML = String(markup || "").trim();
+      const node = t.content.firstElementChild;
+      if (!node || !(node instanceof HTMLElement)) throw new Error("bad preview node");
+      host.appendChild(node);
+      host.hidden = false;
+
+      // Trigger existing Media-like inline embed handler.
+      const poster = node.querySelector(".iuVideoPoster");
+      if (poster) {
+        try{ poster.click(); }catch{}
+      }
+    }catch{
+      try{ host.hidden = true; }catch{}
+    }
+  }
+
+  function iuInitWeatherHistory(){
+    // Init only when Weather section is active (keeps minimal load for other sections).
+    try{
+      const sec = String((document.body && document.body.dataset && document.body.dataset.section) || "");
+      if (sec !== "pocasi") return;
+    }catch{
+      return;
+    }
+    try{
+      if (window.__iu_weatherHistoryInit) return;
+      window.__iu_weatherHistoryInit = 1;
+    }catch{}
+
+    const card = document.getElementById("iuWeatherHistoryCard");
+    const fallback = document.getElementById("iuWeatherHistoryFallback");
+    const btn = document.getElementById("iuWeatherHistoryPlay");
+    const host = document.getElementById("iuWeatherHistoryPlayerHost");
+    if (!card || !fallback || !btn || !host) return;
+
+    let usable = [];
+    let currentPick = null;
+    let midnightTimer = 0;
+
+    function scheduleMidnight(){
+      try{ if (midnightTimer) clearTimeout(midnightTimer); }catch{}
+      midnightTimer = setTimeout(() => {
+        try{
+          if (!usable.length) return;
+          currentPick = iuWeatherHistoryPick(usable);
+          try{ host.replaceChildren(); }catch{}
+          try{ host.hidden = true; }catch{}
+          iuWeatherHistoryRenderPick(currentPick);
+
+          // optional: auto-open only when explicit URL param is set (no surprises)
+          try{
+            const params = new URLSearchParams(location.search || "");
+            if (params.get("weatherHistoryPlay") === "1") {
+              iuWeatherHistoryOpenPreview(currentPick);
+            }
+          }catch{}
+        }catch{
+          // do not break Weather view
+        }finally{
+          scheduleMidnight();
+        }
+      }, iuMsToNextMidnightLocal());
+    }
+
+    (async () => {
+      try{
+        const d = await iuLoadWeatherHistorySafe();
+        const items = d && Array.isArray(d.items) ? d.items : [];
+        usable = items;
+        if (!usable.length) {
+          card.hidden = true;
+          fallback.hidden = false;
+          return;
+        }
+
+        currentPick = iuWeatherHistoryPick(usable);
+        iuWeatherHistoryRenderPick(currentPick);
+
+        btn.addEventListener("click", () => {
+          try{
+            if (!currentPick) return;
+            iuWeatherHistoryOpenPreview(currentPick);
+          }catch{
+            try{ host.hidden = true; }catch{}
+          }
+        });
+
+        // auto-play for headless proof only
+        try{
+          const params = new URLSearchParams(location.search || "");
+          if (params.get("weatherHistoryPlay") === "1") {
+            iuWeatherHistoryOpenPreview(currentPick);
+          }
+        }catch{}
+
+        scheduleMidnight();
+      }catch{
+        card.hidden = true;
+        fallback.hidden = false;
+      }
+    })();
+  }
+
   function iuWeatherNorm(s){
     try{
       return String(s || "")
@@ -7022,6 +7248,7 @@ function buildVideoAsArticleCard(it) {
         iuWeatherRadarEnsure();
       });
 
+      try{ iuInitWeatherHistory(); }catch{}
       iuWeatherLoadAndRender();
     }catch{}
   }
@@ -7832,7 +8059,10 @@ function buildVideoAsArticleCard(it) {
           fallback: true,
           error: "missing embed src",
         });
-        try { window.open(watchUrl, "_blank", "noopener"); } catch {}
+        try{
+          const isWeatherHistory = !!(card && card.closest && card.closest("#iuWeatherHistoryPlayerHost"));
+          if (!isWeatherHistory) window.open(watchUrl, "_blank", "noopener");
+        }catch{}
         return;
       }
 
@@ -7964,7 +8194,10 @@ function buildVideoAsArticleCard(it) {
           fallback: true,
           error: String(err && (err.message || err)),
         });
-        try { window.open(watchUrl, "_blank", "noopener"); } catch {}
+        try{
+          const isWeatherHistory = !!(card && card.closest && card.closest("#iuWeatherHistoryPlayerHost"));
+          if (!isWeatherHistory) window.open(watchUrl, "_blank", "noopener");
+        }catch{}
       }
     }, { passive: false });
 
@@ -10070,6 +10303,7 @@ function buildVideoAsArticleCard(it) {
         requestAnimationFrame(() => {
           try{ iuWeatherLoadAndRender(); }catch{}
           try{ iuWeatherHideEmptyNameday(); }catch{}
+          try{ iuInitWeatherHistory(); }catch{}
           try{
             const params = new URLSearchParams(location.search || "");
             if (params.get("radarOpen") === "1") {
