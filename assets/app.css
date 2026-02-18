@@ -520,17 +520,25 @@ html:not([data-iu-js]) .iuDailyWeather{
 
 /* Kompenzace pro levý obsah pod sticky hlavičkou */
 #leftContent{
-  padding-top: 12px; /* desktop: malý odstup pod menu */
+  --iuLeftContentPadTop: 12px; /* desktop: malý odstup pod menu */
+  padding-top: var(--iuLeftContentPadTop);
 }
 
 @media (max-width: 900px){
   #leftContent{
-    padding-top: 10px; /* mobil: ještě menší odstup */
+    --iuLeftContentPadTop: 10px; /* mobil: ještě menší odstup */
+    padding-top: var(--iuLeftContentPadTop);
   }
   :root{
     --iu-brief-gap-top: 18px; /* mobil: 10px + 8px */
     --iu-brief-gap-bottom: 8px; /* mobil: margin-bottom na .iu-daily-brief (celkem s chips margin-top 10px = 18px) */
   }
+}
+
+/* FIX — left rail starts exactly under topbar */
+#iuLeftRail,
+.iu-leftRail{
+  margin-top: calc(-1 * var(--iuLeftContentPadTop, 12px)) !important;
 }
 
 /* Informační pás - globální neutrální základ (pro případné budoucí použití) */
