@@ -8097,7 +8097,6 @@ function buildVideoAsArticleCard(it) {
         tvonline:{ key: "tvonline", view: () => document.getElementById("iuTvOnlineView"),accentVar: "--iuNavAccent-tvonline", label: "TV online" },
         jr:      { key: "jr",       view: () => document.getElementById("iuJrEmptyView"), accentVar: "--iuNavAccent-jr",       label: "Jízdní řády" },
         mapy:    { key: "mapy",     view: () => document.getElementById("iuMapyView") || document.getElementById("iuMapsView"), accentVar: "--iuNavAccent-mapy", label: "Mapy & Navigace" },
-        travel:  { key: "travel",   view: () => document.getElementById("iuTravelView"),  accentVar: "--iuNavAccent-travel",   label: "Cestování" },
         pocasi:  { key: "weather",  view: () => document.getElementById("iuWeatherView"), accentVar: "--iuNavAccent-pocasi",   label: "Počasí" },
         tvprogram:{ key:"tvprogram",view: () => document.getElementById("iuTvProgramView"),accentVar:"--iuNavAccent-tvprogram", label:"TV program" },
         culture: { key: "culture",  view: () => document.getElementById("iuCultureView") || document.getElementById("feed"), accentVar: "--iuNavAccent-culture", label: "Kultura / Akce" },
@@ -8109,6 +8108,86 @@ function buildVideoAsArticleCard(it) {
       iuEnsureSectionNotesMounted(cfg.key, cfg.view(), { accentVar: cfg.accentVar, shareLabel: cfg.label });
     }catch{}
   }
+
+  const IU_TRAVEL_SUBSECTIONS = [
+    "Doprava po Evropě",
+    "Ubytování",
+    "Půjčovny aut",
+    "Cestovní pojištění (komerční)",
+    "Cestovní kanceláře",
+    "Peníze a kurzy",
+    "Bezpečnost a pomoc",
+    "Když se něco pokazí",
+    "Práva cestujících",
+    "Reklamace a problémy"
+  ];
+
+  function iuSlug(s){
+    return String(s || "")
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+  }
+
+  const IU_NOTES_PREFIX = "iu_travel_notes_v1_";
+
+  function iuNotesKey(name){
+    return IU_NOTES_PREFIX + iuSlug(name);
+  }
+
+  function iuRenderTravelNotes(){
+    try{
+      const els = document.querySelectorAll(".iuTravelNotes");
+      els.forEach((el) => {
+        try{
+          const name = String(el.dataset?.iuNotesSubsection || "").trim();
+          if (!name) return;
+          const key = iuNotesKey(name);
+          const saved = String(localStorage.getItem(key) || "");
+
+          // Avoid injecting user text into HTML. Build DOM, set textarea.value explicitly.
+          el.innerHTML =
+            `<div class="iuNotesBox">` +
+              `<div class="iuNotesHeader">` +
+                `<span>Poznámky – ${escapeHtml(name)}</span>` +
+                `<button class="iuNotesClear" type="button" data-key="${escapeHtml(key)}">Vymazat</button>` +
+              `</div>` +
+              `<textarea class="iuNotesArea" data-key="${escapeHtml(key)}" placeholder="Vaše poznámky…"></textarea>` +
+            `</div>`;
+
+          const ta = el.querySelector("textarea.iuNotesArea");
+          if (ta) {
+            ta.value = saved;
+            try { iuAutosizeTextarea(ta); } catch {}
+          }
+        }catch{}
+      });
+    }catch{}
+  }
+
+  document.addEventListener("input", (e) => {
+    try{
+      const t = e && e.target;
+      if (!t || !t.classList || !t.classList.contains("iuNotesArea")) return;
+      const key = String(t.dataset?.key || "").trim();
+      if (!key) return;
+      localStorage.setItem(key, String(t.value || ""));
+      try { iuAutosizeTextarea(t); } catch {}
+    }catch{}
+  });
+
+  document.addEventListener("click", (e) => {
+    try{
+      const t = e && e.target;
+      if (!t || !t.classList || !t.classList.contains("iuNotesClear")) return;
+      const key = String(t.dataset?.key || "").trim();
+      if (!key) return;
+      if (confirm("Opravdu vymazat poznámky?")) {
+        localStorage.removeItem(key);
+        iuRenderTravelNotes();
+      }
+    }catch{}
+  });
 
   // ============================================================
   // MŮJ INFO UZEL — 5 custom sections (UI-only, localStorage)
@@ -9455,6 +9534,15 @@ function buildVideoAsArticleCard(it) {
     }catch{
       try{ iuMountNotesForCurrentSection(); }catch{}
     }
+
+    // Travel: per-subsection notes placeholders (persistent, no auto delete)
+    try{
+      if (section === "travel") {
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          try{ iuRenderTravelNotes(); }catch{}
+        }));
+      }
+    }catch{}
 
     // Custom views (UI-only)
     try{
