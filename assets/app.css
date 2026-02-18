@@ -4594,6 +4594,114 @@ html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotesI
   color: #fff;
 }
 
+/* HOTFIX (Weather): cards = white bg + black text; quick layers 2-col on mobile */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed{
+  --iuWxCardBg: #fff;
+  --iuWxCardText: #111;
+  --iuWxCardBorder: rgba(0,0,0,0.12);
+  --iuWxCardHoverBg: rgba(0,0,0,0.06);
+  --iuWxCardHoverBorder: rgba(0,0,0,0.18);
+  --iuWxAlertRed: #d61f1f;
+}
+
+/* Core cards/blocks */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherSticky,
+body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCity,
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuHomeWeatherShell,
+body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertsBox,
+body[data-section="pocasi"] #iuWeatherView .iuWeatherEmbed,
+body[data-section="pocasi"] #iuWeatherView .iuWx7DayWrap,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherSticky,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherMyCity,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuHomeWeatherShell,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertsBox,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherEmbed,
+html[data-section="pocasi"] #iuWeatherView .iuWx7DayWrap{
+  background: var(--iuWxCardBg, #fff);
+  color: var(--iuWxCardText, #111);
+  border: 1px solid var(--iuWxCardBorder, rgba(0,0,0,0.12));
+}
+
+/* Hourly strip cells */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed #iuWxHours .iuWxHour,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed #iuWxHours .iuWxHour{
+  background: var(--iuWxCardBg, #fff);
+  color: var(--iuWxCardText, #111);
+  border: 1px solid var(--iuWxCardBorder, rgba(0,0,0,0.12));
+}
+
+/* 7-day rows */
+body[data-section="pocasi"] #iuWeatherView .iuWx7Row,
+html[data-section="pocasi"] #iuWeatherView .iuWx7Row{
+  background: rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.10);
+  color: var(--iuWxCardText, #111);
+}
+body[data-section="pocasi"] #iuWeatherView .iuWx7Source a,
+html[data-section="pocasi"] #iuWeatherView .iuWx7Source a{
+  color: var(--iuWxCardText, #111);
+}
+
+/* Notes inside Weather feed */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotes,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotes{
+  background: var(--iuWxCardBg, #fff);
+  color: var(--iuWxCardText, #111);
+  border: 1px solid var(--iuWxCardBorder, rgba(0,0,0,0.12));
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotesInput,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotesInput{
+  background: #fff;
+  color: var(--iuWxCardText, #111);
+  border: 1px solid rgba(0,0,0,0.14);
+}
+
+/* Links + buttons/chips in feed default to dark on white */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed a,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed a{
+  color: var(--iuWxCardText, #111);
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuBtn,
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuBtn,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip{
+  background: #fff;
+  color: var(--iuWxCardText, #111);
+  border: 1px solid var(--iuWxCardBorder, rgba(0,0,0,0.12));
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuBtn:hover,
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip:hover,
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuBtn:focus-visible,
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip:focus-visible,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuBtn:hover,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip:hover,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuBtn:focus-visible,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip:focus-visible{
+  background: var(--iuWxCardHoverBg, rgba(0,0,0,0.06));
+  color: var(--iuWxCardText, #111);
+  border-color: var(--iuWxCardHoverBorder, rgba(0,0,0,0.18));
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip *,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip *{
+  color: inherit;
+}
+
+/* Alerts: red text exception */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertTitle,
+body[data-section="pocasi"] #iuWeatherView #iuWeatherAlertText,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertTitle,
+html[data-section="pocasi"] #iuWeatherView #iuWeatherAlertText{
+  color: var(--iuWxAlertRed, #d61f1f);
+}
+
+/* Quick layers: 2 columns on mobile */
+@media (max-width: 900px){
+  body[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid,
+  html[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* City picker bottom-sheet (no libraries) */
 .iuWeatherSheetOverlay{
   position: fixed;
