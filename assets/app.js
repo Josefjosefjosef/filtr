@@ -6783,7 +6783,7 @@ function buildVideoAsArticleCard(it) {
     return overlay;
   }
 
-  function iuWeatherLoadRadar(){
+  function iuWeatherRadarEnsure(){
     const root = document.getElementById("iuWxRadar");
     const frame = document.getElementById("iuWxRadarFrame");
     const sk = document.getElementById("iuWxRadarSkeleton");
@@ -6844,8 +6844,8 @@ function buildVideoAsArticleCard(it) {
 
       try{
         const params = new URLSearchParams(location.search || "");
-        if (params.get("debug") === "1" && params.get("radarOpen") === "1") {
-          iuWeatherLoadRadar();
+        if (params.get("radarOpen") === "1") {
+          iuWeatherRadarEnsure();
         }
       }catch{}
     }catch{
@@ -6883,7 +6883,7 @@ function buildVideoAsArticleCard(it) {
 
       const radarBtn = document.getElementById("iuWxRadarOpen");
       if (radarBtn) radarBtn.addEventListener("click", () => {
-        iuWeatherLoadRadar();
+        iuWeatherRadarEnsure();
       });
 
       iuWeatherLoadAndRender();
@@ -6951,28 +6951,52 @@ function buildVideoAsArticleCard(it) {
     // NAME DAY (Svátky)
     function updateNameday(){
       if (!IU_ENABLE_NAMEDAY) return;
-      if (!elNameday) return;
+      if (!elNameday && !elWxStickyNameday) return;
 
-      elNameday.hidden = false;
-      elNameday.textContent = "Svátek má načítám…";
+      if (elNameday) {
+        elNameday.hidden = false;
+        elNameday.classList.remove("is-empty");
+        elNameday.textContent = "Svátek má načítám…";
+      }
+      if (elWxStickyNameday) {
+        elWxStickyNameday.textContent = "";
+        elWxStickyNameday.classList.add("is-empty");
+      }
       fetch("https://svatky.adresa.info/json", { cache: "no-store" })
         .then(r => r.json())
         .then(d => {
-          if (d && d.name) {
-            const nm = String(d.name);
-            elNameday.textContent = "Svátek: " + nm;
-            elNameday.hidden = false;
-            try{
-              if (elWxStickyNameday) {
-                elWxStickyNameday.textContent = "Svátek: " + nm;
-              }
-            }catch{}
+          const nm = d && d.name ? String(d.name).trim() : "";
+          const ok = Boolean(nm) && nm !== "—" && nm !== "-";
+          if (ok) {
+            if (elNameday) {
+              elNameday.textContent = "Svátek: " + nm;
+              elNameday.hidden = false;
+              elNameday.classList.remove("is-empty");
+            }
+            if (elWxStickyNameday) {
+              elWxStickyNameday.textContent = "Svátek: " + nm;
+              elWxStickyNameday.classList.remove("is-empty");
+            }
           } else {
-            elNameday.hidden = true;
+            if (elNameday) {
+              elNameday.hidden = true;
+              elNameday.classList.add("is-empty");
+            }
+            if (elWxStickyNameday) {
+              elWxStickyNameday.textContent = "";
+              elWxStickyNameday.classList.add("is-empty");
+            }
           }
         })
         .catch(() => {
-          elNameday.hidden = true;
+          if (elNameday) {
+            elNameday.hidden = true;
+            elNameday.classList.add("is-empty");
+          }
+          if (elWxStickyNameday) {
+            elWxStickyNameday.textContent = "";
+            elWxStickyNameday.classList.add("is-empty");
+          }
         });
     }
     updateNameday();
