@@ -9509,6 +9509,11 @@ header#topbarWrap.topbar-new.iuTopbar{
   padding: 0 18px !important;
 }
 
+/* Alias for forensic gate grep (HTML: <aside id="iuLeftRail" ...>) */
+aside#iuLeftRail{
+  display: block;
+}
+
 /* ============================================================
    AUTO OFFSET — rail + feed + MindMenu under fixed topbar
    (real wrappers in this repo)
