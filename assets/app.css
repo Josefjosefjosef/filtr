@@ -9411,7 +9411,7 @@ html, body {
 
 /* Theme button */
 .iuThemeBtn{
-  padding: 6px 8px;
+  padding: 6px 10px;
   border-radius: 10px;
   border: 0;
   background: rgba(0,0,0,.05);
@@ -9647,4 +9647,9 @@ main#content .layout{
 /* Left rail starts exactly under topbar (offset is on main#content .layout) */
 aside#iuLeftRail{
   margin-top: 0 !important;
+}
+
+/* Right panel must never overlap the fixed topbar (only affects sticky/fixed) */
+.layout > aside.accordionCol{
+  top: var(--iuTopbarHeight) !important;
 }
