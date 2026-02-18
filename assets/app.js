@@ -7807,8 +7807,10 @@ function buildVideoAsArticleCard(it) {
   const VIEW_MAP = {
     media: 'media',
     radio: 'radio',
+    tvonline: 'tvonline',
     jr: 'jr',
     mapy: 'mapy',
+    travel: 'travel',
     'myuzel-1': 'myuzel-1',
     'myuzel-2': 'myuzel-2',
     'myuzel-3': 'myuzel-3',
@@ -7966,9 +7968,18 @@ function buildVideoAsArticleCard(it) {
       .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
   }
 
+  function iuKeyPart(s){
+    return String(s || "")
+      .toLowerCase()
+      .trim()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/[^a-z0-9_]+/g,"_")
+      .replace(/^_+|_+$/g,"");
+  }
+
   function iuNotesKey(scope, name){
-    const sc = iuSlug(scope);
-    const nm = iuSlug(name);
+    const sc = iuKeyPart(scope);
+    const nm = iuKeyPart(name);
     if (!sc || !nm) return "";
     return IU_NOTES_PREFIX + sc + "_" + nm;
   }
@@ -7984,7 +7995,9 @@ function buildVideoAsArticleCard(it) {
 
       const scSlug = iuSlug(scope);
       const nmSlug = iuSlug(name);
-      const key = iuNotesKey(scope, name);
+
+      const explicitKey = iuKeyPart(el.dataset?.iuNotesKey || "");
+      const key = explicitKey ? (IU_NOTES_PREFIX + explicitKey) : iuNotesKey(scope, name);
       if (!key) return;
 
       // Lazy migrations
@@ -7999,6 +8012,18 @@ function buildVideoAsArticleCard(it) {
               try { localStorage.setItem(key, String(legacyVal || "")); } catch {}
               // Keep legacy entry as-is (never auto-delete).
             }
+          }
+        }
+      }catch{}
+
+      // Migration from old key format (hyphen slug, derived from UI text)
+      try{
+        const cur = String(localStorage.getItem(key) || "");
+        if (!cur) {
+          const oldDerived = IU_NOTES_PREFIX + iuSlug(scope) + "_" + iuSlug(name);
+          if (oldDerived && oldDerived !== key) {
+            const v = String(localStorage.getItem(oldDerived) || "");
+            if (v) { try { localStorage.setItem(key, v); } catch {} }
           }
         }
       }catch{}
@@ -8055,6 +8080,7 @@ function buildVideoAsArticleCard(it) {
             `<button type="button" class="iuBtn iuBtn--ghost iuNotesShare">Sdílet</button>` +
             `<button type="button" class="iuBtn iuBtn--ghost iuNotesEmail">Email</button>` +
             `<button type="button" class="iuBtn iuBtn--ghost iuNotesWhatsApp">WhatsApp</button>` +
+            `<button type="button" class="iuBtn iuBtn--ghost iuNotesClear">Vymazat</button>` +
           `</div>` +
         `</div>` +
         `<textarea class="iuNotesInput" placeholder="Piš poznámky…"></textarea>`;
@@ -8091,6 +8117,17 @@ function buildVideoAsArticleCard(it) {
       const shareBtn = wrap.querySelector(".iuNotesShare");
       const emailBtn = wrap.querySelector(".iuNotesEmail");
       const waBtn = wrap.querySelector(".iuNotesWhatsApp");
+      const clearBtn = wrap.querySelector(".iuNotesClear");
+
+      const openMailto = () => {
+        try{
+          const text = getText();
+          if (!text) return;
+          const subject = encodeURIComponent(shareTitle);
+          const body = encodeURIComponent(getShareText());
+          window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }catch{}
+      };
 
       if (shareBtn) shareBtn.addEventListener("click", async () => {
         try{
@@ -8100,20 +8137,12 @@ function buildVideoAsArticleCard(it) {
           if (navigator.share) {
             try { await navigator.share(payload); return; } catch {}
           }
-          try { await navigator.clipboard.writeText(getShareText()); } catch {}
-          alert("Poznámky zkopírovány do schránky.");
+          // Fallback: use Email (always available)
+          openMailto();
         }catch{}
       });
 
-      if (emailBtn) emailBtn.addEventListener("click", () => {
-        try{
-          const text = getText();
-          if (!text) return;
-          const subject = encodeURIComponent(shareTitle);
-          const body = encodeURIComponent(getShareText());
-          window.location.href = `mailto:?subject=${subject}&body=${body}`;
-        }catch{}
-      });
+      if (emailBtn) emailBtn.addEventListener("click", openMailto);
 
       if (waBtn) waBtn.addEventListener("click", () => {
         try{
@@ -8124,18 +8153,34 @@ function buildVideoAsArticleCard(it) {
         }catch{}
       });
 
+      if (clearBtn) clearBtn.addEventListener("click", () => {
+        try{
+          if (!confirm("Opravdu vymazat poznámky?")) return;
+          try { localStorage.removeItem(key); } catch {}
+          if (ta) {
+            ta.value = "";
+            try { iuAutosizeTextarea(ta); } catch {}
+          }
+        }catch{}
+      });
+
       el.innerHTML = "";
       el.appendChild(wrap);
       try { if (el.dataset) el.dataset.iuNotesRendered = "1"; } catch {}
     }catch{}
   }
 
-  function iuInitNotes(){
+  function iuInitNotesInView(rootEl){
     try{
-      document.querySelectorAll(".iuNotesHost").forEach((el) => {
+      const root = rootEl || document;
+      root.querySelectorAll(".iuNotesHost").forEach((el) => {
         try{ iuRenderNotesHost(el, {}); }catch{}
       });
     }catch{}
+  }
+
+  function iuInitNotes(){
+    try{ iuInitNotesInView(document); }catch{}
   }
 
   function iuMountNotesForCurrentSection(){
@@ -8170,6 +8215,7 @@ function buildVideoAsArticleCard(it) {
         host = document.createElement("div");
         host.className = "iuNotesHost";
         host.dataset.iuNotesScope = "section";
+        host.dataset.iuNotesKey = `section_${String(cfg.key || "")}`;
         host.dataset.iuNotesName = String(cfg.key || "");
         host.dataset.iuNotesTitle = String(cfg.label || cfg.key || "");
 
@@ -8463,15 +8509,22 @@ function buildVideoAsArticleCard(it) {
       const host = document.createElement("div");
       host.className = "iuNotesHost";
       host.dataset.iuNotesScope = "myuzel";
+      host.dataset.iuNotesKey = `myuzel_slot_${s}`;
       host.dataset.iuNotesName = `slot-${s}`;
       host.dataset.iuNotesTitle = String(sec.name || `Sekce ${s}`).trim();
 
       // Migration: keep existing notes saved inside iu_myuzel_v1
       try{
-        const key = iuNotesKey("myuzel", `slot-${s}`);
+        const key = iuNotesKey("myuzel", `slot_${s}`);
         const cur = String(localStorage.getItem(key) || "");
         const legacy = String(sec.notes || "");
         if (!cur && legacy) localStorage.setItem(key, legacy);
+        // Also copy from the older derived key format if it exists.
+        if (!cur) {
+          const oldKey = IU_NOTES_PREFIX + "myuzel_" + ("slot-" + String(s));
+          const v2 = String(localStorage.getItem(oldKey) || "");
+          if (v2) { try { localStorage.setItem(key, v2); } catch {} }
+        }
       }catch{}
 
       // stable share URL for this MyUzel section
@@ -9401,8 +9454,10 @@ function buildVideoAsArticleCard(it) {
   function showView(key){
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
+    const tvonlineEl = document.getElementById('iuTvOnlineView');
     const jrEmptyEl = document.getElementById('iuJrEmptyView');
     const mapyEl = document.getElementById('iuMapyView');
+    const travelEl = document.getElementById('iuTravelView');
     const my1 = document.getElementById('iuMyUzelView1');
     const my2 = document.getElementById('iuMyUzelView2');
     const my3 = document.getElementById('iuMyUzelView3');
@@ -9411,28 +9466,44 @@ function buildVideoAsArticleCard(it) {
 
     if (feedEl) feedEl.hidden = true;
     if (viewEl) viewEl.hidden = true;
+    if (tvonlineEl) tvonlineEl.hidden = true;
     if (jrEmptyEl) jrEmptyEl.hidden = true;
     if (mapyEl) mapyEl.hidden = true;
+    if (travelEl) travelEl.hidden = true;
     if (my1) my1.hidden = true;
     if (my2) my2.hidden = true;
     if (my3) my3.hidden = true;
     if (my4) my4.hidden = true;
     if (my5) my5.hidden = true;
 
+    let activeEl = null;
     if (String(key || '').toLowerCase().startsWith('myuzel-')) {
       if (key === 'myuzel-1' && my1) my1.hidden = false;
       if (key === 'myuzel-2' && my2) my2.hidden = false;
       if (key === 'myuzel-3' && my3) my3.hidden = false;
       if (key === 'myuzel-4' && my4) my4.hidden = false;
       if (key === 'myuzel-5' && my5) my5.hidden = false;
-      return;
+      activeEl = my1 && key === 'myuzel-1' ? my1 :
+                 my2 && key === 'myuzel-2' ? my2 :
+                 my3 && key === 'myuzel-3' ? my3 :
+                 my4 && key === 'myuzel-4' ? my4 :
+                 my5 && key === 'myuzel-5' ? my5 : null;
+    } else {
+      if(key === 'radio' && viewEl) { viewEl.hidden = false; activeEl = viewEl; }
+      if(key === 'tvonline' && tvonlineEl) { tvonlineEl.hidden = false; activeEl = tvonlineEl; }
+      if(key === 'jr' && jrEmptyEl) { jrEmptyEl.hidden = false; activeEl = jrEmptyEl; }
+      if(key === 'mapy' && mapyEl) { mapyEl.hidden = false; activeEl = mapyEl; }
+      if(key === 'travel' && travelEl) { travelEl.hidden = false; activeEl = travelEl; }
+      // default feed view for all other sections
+      if(key !== 'radio' && key !== 'tvonline' && key !== 'jr' && key !== 'mapy' && key !== 'travel' && feedEl) { feedEl.hidden = false; activeEl = feedEl; }
     }
 
-    if(key === 'radio' && viewEl) viewEl.hidden = false;
-    if(key === 'jr' && jrEmptyEl) jrEmptyEl.hidden = false;
-    if(key === 'mapy' && mapyEl) mapyEl.hidden = false;
-    // default feed view for all other sections
-    if(key !== 'radio' && key !== 'jr' && key !== 'mapy' && feedEl) feedEl.hidden = false;
+    // Notes: re-init within the active view on every switch (idempotent).
+    try{
+      if (activeEl) requestAnimationFrame(() => { try{ iuInitNotesInView(activeEl); }catch{} });
+    }catch{
+      try{ if (activeEl) iuInitNotesInView(activeEl); }catch{}
+    }
   }
 
   function normalizeSection(raw){
@@ -9490,11 +9561,23 @@ function buildVideoAsArticleCard(it) {
     try{
       requestAnimationFrame(() => requestAnimationFrame(() => {
         try{ iuMountNotesForCurrentSection(); }catch{}
-        try{ iuInitNotes(); }catch{}
+        try{
+          let root = document.getElementById("feed");
+          if (section === "radio") root = document.getElementById("iuRadioView");
+          else if (section === "tvonline") root = document.getElementById("iuTvOnlineView");
+          else if (section === "jr") root = document.getElementById("iuJrEmptyView");
+          else if (section === "mapy") root = document.getElementById("iuMapyView") || document.getElementById("iuMapsView");
+          else if (section === "travel") root = document.getElementById("iuTravelView");
+          else if (String(section || "").toLowerCase().startsWith("myuzel-")) {
+            const slot = parseInt(String(section).split("-")[1], 10);
+            if (Number.isFinite(slot)) root = document.getElementById(`iuMyUzelView${slot}`);
+          }
+          iuInitNotesInView(root || document);
+        }catch{}
       }));
     }catch{
       try{ iuMountNotesForCurrentSection(); }catch{}
-      try{ iuInitNotes(); }catch{}
+      try{ iuInitNotesInView(document); }catch{}
     }
 
     // Custom views (UI-only)
