@@ -9621,3 +9621,30 @@ main#content .layout{
   margin: 0 !important;
   border-radius: 0 !important;
 }
+
+/* ============================================================
+   FINAL CHECKLIST — premium topbar v3 gates
+   (mobile hide today, search overlay absolute, rail alignment)
+   ============================================================ */
+
+@media (max-width: 900px){
+  #iuTopbarToday{
+    display: none;
+  }
+}
+
+/* Search overlay must not change topbar height */
+.iuTopbarSearchOverlay,
+#iuTopbarSearchOverlay{
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: none !important;
+  width: auto !important;
+}
+
+/* Left rail starts exactly under topbar (offset is on main#content .layout) */
+aside#iuLeftRail{
+  margin-top: 0 !important;
+}
