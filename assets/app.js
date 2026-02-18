@@ -6560,14 +6560,32 @@ function buildVideoAsArticleCard(it) {
 
   async function iuLoadWeatherHistorySafe(){
     try{
-      const r = await fetch("projects/data/weather_history_videos.json", { cache: "force-cache" });
-      if (!r.ok) return null;
-      const d = await r.json();
-      if (!d || typeof d !== "object") return null;
-      const items = Array.isArray(d.items) ? d.items : [];
-      if (!items.length) return { title: String(d.title || ""), items: [] };
+      // IMPORTANT: This page lives under /projects/ so the dataset URL must work there.
+      // Try multiple deterministic candidates (no runtime API; repo file only).
+      const urls = [
+        "data/weather_history_videos.json",          // /projects/ + data/... (expected)
+        "projects/data/weather_history_videos.json", // fallback if served from /
+        "./projects/data/weather_history_videos.json",
+      ];
+      let lastOk = null;
+      for (const u of urls){
+        try{
+          const r = await fetch(String(u), { cache: "force-cache" });
+          if (!r || !r.ok) continue;
+          const d = await r.json();
+          if (!d || typeof d !== "object") continue;
+          lastOk = d;
+          break;
+        }catch{
+          // keep trying
+        }
+      }
+      if (!lastOk) return null;
+
+      const items = Array.isArray(lastOk.items) ? lastOk.items : [];
+      if (!items.length) return { title: String(lastOk.title || ""), items: [] };
       const usable = items.filter((x) => x && iuValidYtId(String(x.id || "").trim()));
-      return { title: String(d.title || ""), items: usable };
+      return { title: String(lastOk.title || ""), items: usable };
     }catch{
       return null;
     }
@@ -6664,6 +6682,7 @@ function buildVideoAsArticleCard(it) {
       if (poster) {
         try{ poster.click(); }catch{}
       }
+      // no debug logs in production
     }catch{
       try{ host.hidden = true; }catch{}
     }
@@ -6757,6 +6776,9 @@ function buildVideoAsArticleCard(it) {
       }
     })();
   }
+
+  // Expose init for router/diagnostics (safe: function remains idempotent).
+  try{ window.iuInitWeatherHistory = iuInitWeatherHistory; }catch{}
 
   function iuWeatherNorm(s){
     try{
@@ -7216,7 +7238,14 @@ function buildVideoAsArticleCard(it) {
         if (elErr) elErr.hidden = false;
       }catch{}
     }
+
+    // Weather History init must be reliable: run after Weather render attempt.
+    // The init has its own section guard + idempotent runtime guard.
+    try{ iuInitWeatherHistory(); }catch{}
   }
+
+  // Expose Weather render for router/diagnostics.
+  try{ window.iuWeatherLoadAndRender = iuWeatherLoadAndRender; }catch{}
 
   function iuWeatherInit(){
     try{
@@ -10318,17 +10347,17 @@ function buildVideoAsArticleCard(it) {
     // Weather (UI-only): ensure render + radarOpen works after view switch.
     try{
       if (section === "pocasi") {
-        requestAnimationFrame(() => {
-          try{ iuWeatherLoadAndRender(); }catch{}
-          try{ iuWeatherHideEmptyNameday(); }catch{}
-          try{ iuInitWeatherHistory(); }catch{}
-          try{
-            const params = new URLSearchParams(location.search || "");
-            if (params.get("radarOpen") === "1") {
-              iuWeatherRadarEnsure();
-            }
-          }catch{}
-        });
+        try{
+          const fn = (typeof window !== "undefined" && window.iuWeatherLoadAndRender);
+          if (typeof fn === "function") fn();
+        }catch{}
+        try{ iuWeatherHideEmptyNameday(); }catch{}
+        try{
+          const params = new URLSearchParams(location.search || "");
+          if (params.get("radarOpen") === "1") {
+            iuWeatherRadarEnsure();
+          }
+        }catch{}
       }
     }catch{}
 
