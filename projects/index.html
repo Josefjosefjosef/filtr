@@ -771,6 +771,41 @@ style-src 'self' 'unsafe-inline' https:;
                       <a class="iuRadioChip" role="listitem" href="https://www.meteoblue.com/" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Meteoblue</span><span class="iuRadioChipDesc">modely</span></a>
                       <a class="iuRadioChip" role="listitem" href="https://www.meteoalarm.org/en/live/" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Meteoalarm</span><span class="iuRadioChipDesc">EU</span></a>
                     </div>
+
+                    <section class="iuWeatherHistory" aria-label="Návrat do historie počasí">
+                      <div class="iuSectionHeader iuSectionHeader--weatherHistory">
+                        <h2>Návrat do historie počasí</h2>
+                        <p class="iuSectionSub">
+                          Každý den se pokusíme dohledat historické video předpovědi počasí a vrátit se tak do minulosti
+                          (přehrání jako náhled u nás na webu).
+                        </p>
+                      </div>
+
+                      <div id="iuWeatherHistoryCard" class="iuWeatherHistoryCard" hidden>
+                        <button id="iuWeatherHistoryPlay"
+                                class="iuWeatherHistoryPlay"
+                                type="button"
+                                aria-label="Přehrát historickou předpověď počasí">
+                          <img id="iuWeatherHistoryThumb"
+                               class="iuWeatherHistoryThumb"
+                               alt="Náhled historické předpovědi počasí"
+                               loading="lazy"
+                               decoding="async">
+                          <div class="iuWeatherHistoryMeta">
+                            <div id="iuWeatherHistoryTitle" class="iuWeatherHistoryTitle"></div>
+                            <div id="iuWeatherHistoryLine" class="iuWeatherHistoryLine"></div>
+                            <div id="iuWeatherHistoryNote" class="iuWeatherHistoryNote"></div>
+                            <div class="iuWeatherHistoryHint">Přehraje se jako náhled u nás (stejně jako v sekci Média).</div>
+                          </div>
+                        </button>
+
+                        <div id="iuWeatherHistoryPlayerHost" class="iuWeatherHistoryPlayerHost" hidden></div>
+                      </div>
+
+                      <div id="iuWeatherHistoryFallback" class="iuWeatherHistoryFallback" hidden>
+                        <p>Historické video dnes není k dispozici.</p>
+                      </div>
+                    </section>
                     </div>
                   </div>
 
