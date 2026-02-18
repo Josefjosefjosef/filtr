@@ -7559,6 +7559,13 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
   box-shadow: none;
   border-right: none;
   color: var(--text);
+  --iuRailIconFg: var(--iuRailBtnFg, rgba(11,27,43,0.88));
+}
+
+@supports (color: color-contrast(white vs black)) {
+  .iu-leftNav{
+    --iuRailIconFg: color-contrast(var(--iuRailBg, #fff) vs #111, #fff);
+  }
 }
 
 /* ==== LEFT COLUMN BACKGROUND SYNC ==== */
@@ -7581,15 +7588,16 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
   padding:10px 10px 8px;
   align-items:center;
   justify-content:flex-start;
+  color: var(--iuRailIconFg);
 }
 
 .iuRailThemeBtn{
   width:34px;
   height:34px;
   border-radius:10px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.06);
-  color:inherit;
+  border:1px solid color-mix(in srgb, currentColor 26%, transparent);
+  background:color-mix(in srgb, currentColor 10%, transparent);
+  color: var(--iuRailIconFg);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -7597,12 +7605,17 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
 }
 
 .iuRailThemeBtn:hover{
-  background:rgba(255,255,255,.12);
+  background:color-mix(in srgb, currentColor 16%, transparent);
 }
 
 .iuRailThemeIcon{
   font-size:16px;
   line-height:1;
+}
+
+.iuRailThemeBtn svg{
+  fill: currentColor;
+  stroke: currentColor;
 }
 
 /* ensure row doesn't affect rail collapse/CLS */
@@ -7659,12 +7672,16 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
   width: 100%;
   padding: 10px 6px 6px 6px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px; /* unified rhythm for MyUzel items */
 }
 
 .iuMyUzelDivider{
   width: 60%;
   height: 2px;
-  margin: 2px auto 8px auto;
+  margin: 0 auto;
   background: rgba(11,27,43,0.14);
   border-radius: 999px;
   display: block;
@@ -7674,13 +7691,18 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
 .iuMyUzelLabel{
   width: 100%;
   text-align: center;
-  font-size: 10px;
-  letter-spacing: .2px;
-  text-transform: lowercase;
-  color: rgba(11,27,43,0.62);
-  margin: 0 0 6px 0;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--iuRailBtnFg, rgba(11,27,43,0.72));
+  margin: 0;
   display: block;
   pointer-events: none;
+}
+
+.iuMyUzelTitle{
+  font-size: 14px;     /* bigger than nav labels */
+  font-weight: 600;    /* slightly stronger, not heavy bold */
 }
 
 .iuMyUzelItem{
@@ -8298,7 +8320,7 @@ html.iuRailHidden #iuRailToggleBtn::before{
   align-items:center;
   justify-content:center;
   position:relative;
-  border-radius:10px;
+  border-radius:999px;
   border:1px solid #9ca3af;
   background:transparent;
   transition:
@@ -8376,7 +8398,7 @@ html:not(.iuRailHidden) #iuRailToggleBtn{
   width: 44px !important;
   height: 44px !important;
   border: 1px solid #9ca3af !important;    /* šedý okraj */
-  border-radius: 10px !important;
+  border-radius: 999px !important;
   background: transparent !important;
 }
 
