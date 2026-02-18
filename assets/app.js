@@ -7931,6 +7931,185 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  const IU_SECTION_NOTES_KEY = "iu_section_notes_v1";
+
+  function iuLoadSectionNotes(){
+    try{
+      const raw = localStorage.getItem(IU_SECTION_NOTES_KEY);
+      if (!raw) return {};
+      const obj = JSON.parse(raw);
+      if (!obj || typeof obj !== "object" || Array.isArray(obj)) return {};
+      return obj;
+    }catch{
+      return {};
+    }
+  }
+
+  function iuSaveSectionNotes(obj){
+    try{
+      if (!obj || typeof obj !== "object") return;
+      localStorage.setItem(IU_SECTION_NOTES_KEY, JSON.stringify(obj));
+    }catch{}
+  }
+
+  function iuGetSectionNote(sectionKey){
+    try{
+      const k = String(sectionKey || "").trim().toLowerCase();
+      if (!k) return "";
+      const st = iuLoadSectionNotes();
+      const v = st && typeof st[k] === "string" ? st[k] : "";
+      return String(v || "");
+    }catch{
+      return "";
+    }
+  }
+
+  function iuSetSectionNote(sectionKey, text){
+    try{
+      const k = String(sectionKey || "").trim().toLowerCase();
+      if (!k) return;
+      const st = iuLoadSectionNotes();
+      st[k] = String(text || "");
+      iuSaveSectionNotes(st);
+    }catch{}
+  }
+
+  function iuCreateNotesBlock(opts){
+    const titleText = String(opts && opts.titleText || "Poznámky");
+    const getText = (opts && typeof opts.getText === "function") ? opts.getText : (() => "");
+    const setText = (opts && typeof opts.setText === "function") ? opts.setText : (() => {});
+    const getShareTitle = (opts && typeof opts.getShareTitle === "function") ? opts.getShareTitle : (() => "Poznámky");
+
+    const wrap = document.createElement("div");
+    wrap.className = "iuSectionNotes";
+    wrap.innerHTML =
+      `<div class="iuSectionNotesTop">` +
+        `<div class="iuSectionNotesTitle">${escapeHtml(titleText)}</div>` +
+        `<div class="iuSectionNotesActions">` +
+          `<button type="button" class="iuBtn iuBtn--ghost iuSectionNotesShare">Sdílet</button>` +
+          `<button type="button" class="iuBtn iuBtn--ghost iuSectionNotesEmail">Email</button>` +
+          `<button type="button" class="iuBtn iuBtn--ghost iuSectionNotesWhatsApp">WhatsApp</button>` +
+        `</div>` +
+      `</div>` +
+      `<textarea class="iuSectionNotesInput" placeholder="Piš poznámky…"></textarea>`;
+
+    const ta = wrap.querySelector("textarea");
+    if (ta) {
+      try { ta.value = String(getText() || ""); } catch { ta.value = ""; }
+      iuAutosizeTextarea(ta);
+      ta.addEventListener("input", () => {
+        try{
+          setText(String(ta.value || ""));
+          iuAutosizeTextarea(ta);
+          try { ta.scrollIntoView({ block: "nearest", inline: "nearest" }); } catch {}
+        }catch{}
+      });
+    }
+
+    const getPayload = () => {
+      const text = String((ta && ta.value) || "").trim();
+      const title = String(getShareTitle() || "Poznámky");
+      return { title, text };
+    };
+
+    const shareBtn = wrap.querySelector(".iuSectionNotesShare");
+    const emailBtn = wrap.querySelector(".iuSectionNotesEmail");
+    const waBtn = wrap.querySelector(".iuSectionNotesWhatsApp");
+
+    if (shareBtn) shareBtn.addEventListener("click", async () => {
+      try{
+        const p = getPayload();
+        if (!p.text) return;
+        const payload = { title: p.title, text: p.text };
+        if (navigator.share) {
+          try { await navigator.share(payload); return; } catch {}
+        }
+        try { await navigator.clipboard.writeText(p.text); } catch {}
+        alert("Poznámky zkopírovány do schránky.");
+      }catch{}
+    });
+
+    if (emailBtn) emailBtn.addEventListener("click", () => {
+      try{
+        const p = getPayload();
+        if (!p.text) return;
+        const subject = encodeURIComponent(p.title);
+        const body = encodeURIComponent(p.text);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+      }catch{}
+    });
+
+    if (waBtn) waBtn.addEventListener("click", () => {
+      try{
+        const p = getPayload();
+        if (!p.text) return;
+        const msg = encodeURIComponent(p.text);
+        window.open(`https://wa.me/?text=${msg}`, "_blank", "noopener,noreferrer");
+      }catch{}
+    });
+
+    return wrap;
+  }
+
+  function iuEnsureSectionNotesMounted(sectionKey, viewEl, opts){
+    try{
+      if (!viewEl) return;
+      if (viewEl.querySelector(".iuSectionNotes")) return;
+      const key = String(sectionKey || "").trim().toLowerCase();
+      if (!key) return;
+
+      const notesEl = iuCreateNotesBlock({
+        titleText: "Poznámky",
+        getText: () => iuGetSectionNote(key),
+        setText: (t) => iuSetSectionNote(key, t),
+        getShareTitle: () => `Poznámky — ${String((opts && opts.shareLabel) || key)}`
+      });
+
+      // Make sure border accent resolves even if mounted outside a dedicated view wrapper.
+      try{
+        const accentVar = String((opts && opts.accentVar) || "").trim();
+        if (accentVar) notesEl.style.setProperty("--iuSectionAccent", `var(${accentVar})`);
+      }catch{}
+
+      const firstChip = viewEl.querySelector(".iuRadioChip");
+      let anchor = null;
+      if (firstChip) {
+        anchor =
+          firstChip.closest(".iuRadioGrid, .iuChipGrid, .iuRadioChips, .iuSectionBody") ||
+          firstChip.parentElement;
+      }
+      if (anchor && anchor.parentNode) anchor.insertAdjacentElement("afterend", notesEl);
+      else viewEl.appendChild(notesEl);
+
+      const ta = notesEl.querySelector("textarea");
+      iuAutosizeTextarea(ta);
+    }catch{}
+  }
+
+  function iuMountNotesForCurrentSection(){
+    try{
+      const section = String(document.body?.dataset?.section || "").trim().toLowerCase();
+      if (!section) return;
+
+      // map URL section -> storage key + view element
+      const map = {
+        radio:   { key: "radio",    view: () => document.getElementById("iuRadioView"),    accentVar: "--iuNavAccent-radio",    label: "Rádia" },
+        tvonline:{ key: "tvonline", view: () => document.getElementById("iuTvOnlineView"),accentVar: "--iuNavAccent-tvonline", label: "TV online" },
+        jr:      { key: "jr",       view: () => document.getElementById("iuJrEmptyView"), accentVar: "--iuNavAccent-jr",       label: "Jízdní řády" },
+        mapy:    { key: "mapy",     view: () => document.getElementById("iuMapyView") || document.getElementById("iuMapsView"), accentVar: "--iuNavAccent-mapy", label: "Mapy & Navigace" },
+        travel:  { key: "travel",   view: () => document.getElementById("iuTravelView"),  accentVar: "--iuNavAccent-travel",   label: "Cestování" },
+        pocasi:  { key: "weather",  view: () => document.getElementById("iuWeatherView"), accentVar: "--iuNavAccent-pocasi",   label: "Počasí" },
+        tvprogram:{ key:"tvprogram",view: () => document.getElementById("iuTvProgramView"),accentVar:"--iuNavAccent-tvprogram", label:"TV program" },
+        culture: { key: "culture",  view: () => document.getElementById("iuCultureView") || document.getElementById("feed"), accentVar: "--iuNavAccent-culture", label: "Kultura / Akce" },
+        ads:     { key: "ads",      view: () => document.getElementById("iuAdsView") || document.getElementById("feed"),     accentVar: "--iuNavAccent-ads",     label: "Inzerce" },
+      };
+
+      const cfg = map[section];
+      if (!cfg) return;
+      iuEnsureSectionNotesMounted(cfg.key, cfg.view(), { accentVar: cfg.accentVar, shareLabel: cfg.label });
+    }catch{}
+  }
+
   // ============================================================
   // MŮJ INFO UZEL — 5 custom sections (UI-only, localStorage)
   // ============================================================
@@ -9267,6 +9446,15 @@ function buildVideoAsArticleCard(it) {
       ];
       views.forEach(v => iuApplySolidChipTextContrastInView(v));
     }catch{}
+
+    // Notes blocks: mount for current section (no MindMenu impact)
+    try{
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        try{ iuMountNotesForCurrentSection(); }catch{}
+      }));
+    }catch{
+      try{ iuMountNotesForCurrentSection(); }catch{}
+    }
 
     // Custom views (UI-only)
     try{
