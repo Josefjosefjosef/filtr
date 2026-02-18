@@ -8504,6 +8504,46 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   border-color: var(--iuMyUzelAccent, #b9bcc2);
 }
 
+/* ======================================================================
+   FINAL UI — Travel per-subsection notes (persistent)
+   ====================================================================== */
+
+#iuTravelView .iuTravelNotes{ margin-top:14px; }
+#iuTravelView .iuNotesBox{
+  border:1px solid #2e3a4d;
+  border-radius:10px;
+  padding:10px;
+  background:#0f1620;
+}
+#iuTravelView .iuNotesHeader{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  color:#9fb3c8;
+  margin-bottom:6px;
+  gap: 10px;
+  align-items: center;
+}
+#iuTravelView .iuNotesClear{
+  background:#8b1e1e;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  padding:3px 8px;
+  cursor:pointer;
+}
+#iuTravelView .iuNotesArea{
+  width:100%;
+  min-height:90px;
+  resize:vertical;
+  background:#0b1119;
+  color:#d8e3ef;
+  border:1px solid #243244;
+  border-radius:6px;
+  padding:6px;
+  font-size:13px;
+}
+
 /* FINAL UI — left rail MyUzel title 2 lines */
 .iuMyUzelTitleLine1,
 .iuMyUzelTitleLine2{
