@@ -56,7 +56,9 @@ window.addEventListener("unhandledrejection", (e) => {
         {"--iuTopbarBg":"#f8fafc"},
         {"--iuTopbarBg":"#fffdf5"},
       ];
-      const raw = localStorage.getItem("iuTheme");
+      const raw =
+        localStorage.getItem("iuThemeIndex") ??
+        localStorage.getItem("iuTheme");
       const i = Math.max(0, Math.min(themes.length - 1, parseInt(String(raw || "0"), 10) || 0));
       const theme = themes[i] || themes[0];
       Object.entries(theme).forEach(([k,v]) => {
@@ -4419,48 +4421,12 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuComputeTopbarStackH(){
-    try{
-      const bars = Array.from(document.querySelectorAll(".iuBar, .topbar, .topbar-new, #topbarWrap"));
-      const visible = bars.filter((el) => {
-        const cs = getComputedStyle(el);
-        if (cs.display === "none" || cs.visibility === "hidden") return false;
-        const r = el.getBoundingClientRect();
-        return r.height > 0.5;
-      });
-
-      const total = Math.round(
-        visible.reduce((sum, el) => sum + el.getBoundingClientRect().height, 0)
-      );
-
-      document.documentElement.style.setProperty("--topbarStackH", Math.max(total, 0) + "px");
-    }catch(e){}
+    // CLS hard rule: do not measure DOM and set layout-affecting CSS at runtime.
+    // `--topbarStackH` is driven purely by CSS (`--iuTopbarHeight`).
   }
 
   function iuInitTopbarWatcher(){
-    try{
-      if (window.__iu_topbarWatcherInit) return;
-      window.__iu_topbarWatcherInit = 1;
-    }catch{}
-    iuComputeTopbarStackH();
-    window.addEventListener("load", iuComputeTopbarStackH, { passive: true });
-
-    let t = 0;
-    window.addEventListener("resize", () => {
-      clearTimeout(t);
-      t = setTimeout(iuComputeTopbarStackH, 120);
-    }, { passive: true });
-
-    const mo = new MutationObserver(() => {
-      clearTimeout(t);
-      t = setTimeout(iuComputeTopbarStackH, 60);
-    });
-
-    mo.observe(document.body, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      attributeFilter: ["class", "style"],
-    });
+    // Intentionally disabled (see `iuComputeTopbarStackH`).
   }
 
   // === UI: Topbar icon-search toggle + day/nameday text + Google fallback ===
@@ -4474,6 +4440,7 @@ function buildVideoAsArticleCard(it) {
         window.__iu_topbarSearchToggleInit = 1;
       }catch{}
       const dayInfo =
+        document.getElementById("iuTopbarToday") ||
         document.getElementById("iuTodayInfo") ||
         document.getElementById("iuTopbarDayInfo");
       const btn = document.getElementById("iuTopbarSearchBtn");
@@ -4493,10 +4460,14 @@ function buildVideoAsArticleCard(it) {
         try{ dayInfo.classList.toggle("iuTopbarDayInfo--hidden", !!hidden); }catch{}
       }
 
+      function setSearchOpen(open){
+        try{ document.body.classList.toggle("iuSearchOpen", !!open); }catch{}
+      }
+
       function openOverlay(){
         try{ overlay.hidden = false; }catch{}
         isOpen = true;
-        try{ document.body.classList.add("iuSearchOpen"); }catch{}
+        setSearchOpen(true);
         setDayHidden(true);
         try{ if (notFound) notFound.hidden = true; }catch{}
         try{
@@ -4508,7 +4479,7 @@ function buildVideoAsArticleCard(it) {
       function closeOverlay(){
         try{ overlay.hidden = true; }catch{}
         isOpen = false;
-        try{ document.body.classList.remove("iuSearchOpen"); }catch{}
+        setSearchOpen(false);
         try{ if (notFound) notFound.hidden = true; }catch{}
         if (!scrollHidden) setDayHidden(false);
       }
@@ -4539,6 +4510,8 @@ function buildVideoAsArticleCard(it) {
 
       function updateDayInfo(){
         try{
+          // v3: topbar today is a structured component; keep its children intact.
+          if (dayInfo && dayInfo.id === "iuTopbarToday") return;
           const dateStr = fmtDateNow();
           const namedayStr = readNamedayFromUI();
           const full = namedayStr ? `${dateStr} · ${namedayStr}` : dateStr;
@@ -4641,15 +4614,94 @@ function buildVideoAsArticleCard(it) {
       ];
       btn.addEventListener("click", () => {
         let i = 0;
-        try{ i = (parseInt(String(localStorage.getItem("iuTheme") || "0"), 10) || 0) + 1; }catch{ i = 1; }
+        try{
+          const raw =
+            localStorage.getItem("iuThemeIndex") ??
+            localStorage.getItem("iuTheme") ??
+            "0";
+          i = (parseInt(String(raw), 10) || 0) + 1;
+        }catch{ i = 1; }
         i = i % themes.length;
-        try{ localStorage.setItem("iuTheme", String(i)); }catch{}
+        try{ localStorage.setItem("iuThemeIndex", String(i)); }catch{}
+        try{ localStorage.setItem("iuTheme", String(i)); }catch{} /* legacy */
         try{
           Object.entries(themes[i]).forEach(([k,v]) => {
             try{ document.documentElement.style.setProperty(k, String(v)); }catch{}
           });
         }catch{}
       });
+    }catch{}
+  }
+
+  function iuMirrorTodayToTopbar(){
+    try{
+      const elTime = document.getElementById("iuTopbarTime");
+      const elDate = document.getElementById("iuTopbarDate");
+      const elName = document.getElementById("iuTopbarNameday");
+      const elWrap = document.getElementById("iuTopbarToday");
+      if(!elTime || !elDate || !elName || !elWrap) return;
+
+      // Source of truth (existing right panel daily box)
+      const srcTime = document.getElementById("iuDailyTime");
+      const srcDate = document.getElementById("iuDailyDate");
+      const srcName = document.getElementById("iuDailyNameday");
+
+      function fmtTimeNow(){
+        const d = new Date();
+        const hh = String(d.getHours()).padStart(2,"0");
+        const mm = String(d.getMinutes()).padStart(2,"0");
+        return `${hh}:${mm}`;
+      }
+
+      function fmtDateNow(){
+        try{
+          const TZ = "Europe/Prague";
+          return new Intl.DateTimeFormat("cs-CZ", { weekday: "long", day: "numeric", month: "long", timeZone: TZ }).format(new Date());
+        }catch{
+          return String(new Date().toLocaleDateString("cs-CZ"));
+        }
+      }
+
+      function normalizeNameday(t){
+        const s = String(t || "").trim();
+        if(!s || s === "—") return "";
+        const m = s.match(/svátek\s+má\s+(.+)/i);
+        if (m && m[1]) return `Svátek: ${String(m[1]).trim()}`;
+        if (/^svátek\s*:/i.test(s)) return s;
+        return `Svátek: ${s}`;
+      }
+
+      function sync(){
+        try{
+          const t = (srcTime && String(srcTime.textContent || "").trim()) || "";
+          elTime.textContent = t && t !== "--:--" ? t : fmtTimeNow();
+        }catch{}
+        try{
+          const d = (srcDate && String(srcDate.textContent || "").trim()) || "";
+          elDate.textContent = d && d !== "—" ? d : fmtDateNow();
+        }catch{}
+        try{
+          const nRaw = (srcName && String(srcName.textContent || "").trim()) || "";
+          const n = normalizeNameday(nRaw);
+          if (n) elName.textContent = n;
+        }catch{}
+
+        try{
+          const full = `${elTime.textContent} • ${elDate.textContent} • ${elName.textContent}`;
+          elWrap.setAttribute("title", full);
+        }catch{}
+      }
+
+      sync();
+
+      try{
+        const obs = new MutationObserver(sync);
+        if (srcTime) obs.observe(srcTime, { childList:true, characterData:true, subtree:true });
+        if (srcDate) obs.observe(srcDate, { childList:true, characterData:true, subtree:true });
+        if (srcName) obs.observe(srcName, { childList:true, characterData:true, subtree:true });
+      }catch{}
+
+      setInterval(sync, 60000);
     }catch{}
   }
 
@@ -7577,9 +7629,10 @@ function buildVideoAsArticleCard(it) {
     installCLSObserver();
     renderSectionsBar();
     setSectionsFromHash();
-    iuInitTopbarWatcher();
+    try{ document.body.classList.add("iuTopbarFlushRight"); }catch{}
     iuInitTopbarSearchToggle();
     iuInitTopbarThemeButton();
+    iuMirrorTodayToTopbar();
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
 
