@@ -1,16 +1,36 @@
 {
-  "channels": [
-    "UCW3lG9F5M1r7m3v1aBBCWeather",
-    "UC16niRr50-MSBwiO3YDb3RA",
-    "UCWeatherChannelOfficial"
+  "sources": [
+    {
+      "name": "TWC Classics",
+      "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=UCzJFj9ninK3fjd7gX_fJ-pQ",
+      "sourceLabel": "TWC"
+    },
+    {
+      "name": "Classic Weather Clips",
+      "rss": "https://www.youtube.com/feeds/videos.xml?playlist_id=PL30BB1BA36FD5B9D2",
+      "sourceLabel": "Classic"
+    },
+    {
+      "name": "CzechWeather",
+      "rss": "https://www.youtube.com/feeds/videos.xml?user=CzechWeather",
+      "sourceLabel": "CZ"
+    }
   ],
-  "keywords": [
-    "weather forecast",
-    "retro weather",
-    "archiv počasí",
-    "BBC Weather",
-    "ČT počasí"
+  "keywords_any": [
+    "weather",
+    "forecast",
+    "předpověď",
+    "počasí",
+    "meteo"
   ],
-  "year_max": 2010
+  "keywords_none": [
+    "song",
+    "music",
+    "podcast",
+    "lesson",
+    "vocabulary"
+  ],
+  "year_max": 2012,
+  "max_add_per_run": 10,
+  "max_total_items": 500
 }
-

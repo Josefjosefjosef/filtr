@@ -1,27 +1,25 @@
-name: Update Weather History dataset
+name: Update Weather History
 
 concurrency:
-  group: data-writers-${{ github.ref }}
+  group: weather-history-writer
   cancel-in-progress: false
 
 permissions:
   contents: write
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: {}
   schedule:
     - cron: "0 3 * * *"
 
 jobs:
-  update:
+  build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: main
           fetch-depth: 0
 
       - name: Setup Python
@@ -34,47 +32,95 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
 
-      - name: Ensure output folder
-        run: |
-          mkdir -p projects/data
+      - name: Build weather history dataset (RSS + oEmbed)
+        run: python scripts/build_weather_history.py
 
-      - name: Build weather history dataset (safe)
+      - name: Detect changes
+        id: detect_changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- projects/data/weather_history_videos.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "[DATA] No changes."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "[DATA] Changed."
+          fi
+
+      - name: Commit & push (only if changed)
+        if: ${{ steps.detect_changes.outputs.changed == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add projects/data/weather_history_videos.json
+          git commit -m "auto: update weather history dataset [skip ci]" || exit 0
+          git push
+
+name: Update weather history dataset
+
+concurrency:
+  group: data-writers-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 3 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
+      - name: Sync with branch
+        run: |
+          git fetch origin "${GITHUB_REF_NAME}"
+          git checkout "${GITHUB_REF_NAME}"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+
+      - name: Build weather history dataset (retro YouTube)
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: python scripts/build_weather_history.py
 
-      - name: Validate dataset JSON + gates
+      - name: Detect data changes
+        id: detect_changes
+        shell: bash
         run: |
-          python - <<'PY'
-          import json, sys
-          p = "projects/data/weather_history_videos.json"
-          with open(p, "r", encoding="utf-8") as f:
-            d = json.load(f)
-          items = d.get("items") if isinstance(d, dict) else None
-          if not isinstance(items, list):
-            print("ERROR: items not list")
-            sys.exit(1)
-          if len(items) <= 0:
-            print("ERROR: dataset empty")
-            sys.exit(1)
-          if len(items) > 500:
-            print("ERROR: dataset > 500")
-            sys.exit(1)
-          seen = set()
-          for it in items:
-            if not isinstance(it, dict):
-              continue
-            vid = str(it.get("id") or "").strip()
-            if not vid:
-              continue
-            if vid in seen:
-              print("ERROR: duplicate id", vid)
-              sys.exit(1)
-            seen.add(vid)
-          print("OK: dataset valid items=", len(items))
-          PY
+          set -euo pipefail
+          if git status --porcelain projects/data/weather_history_videos.json | grep -q .; then
+            echo "data_changed=true" >> "$GITHUB_OUTPUT"
+            echo "[DATA] data_changed=true"
+          else
+            echo "data_changed=false" >> "$GITHUB_OUTPUT"
+            echo "[DATA] data_changed=false"
+          fi
 
       - name: Commit & push (safe, rebase + retry)
+        id: commit_push
         shell: bash
         run: |
           set -euo pipefail
@@ -84,6 +130,7 @@ jobs:
 
           if git diff --quiet && git diff --cached --quiet; then
             echo "[DATA] No changes to commit."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -91,20 +138,21 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "[DATA] Nothing staged after add."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           git commit -m "auto: update weather history dataset" || true
 
-          BRANCH="main"
           for i in 1 2 3; do
             echo "[PUSH] Attempt $i/3"
-            git fetch origin "${BRANCH}"
+            git fetch origin "${GITHUB_REF_NAME}"
 
-            git rebase "origin/${BRANCH}" || (git rebase --abort && exit 1)
+            git rebase "origin/${GITHUB_REF_NAME}" || (git rebase --abort && exit 1)
 
-            if git push origin "HEAD:${BRANCH}"; then
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
               echo "[PUSH] Success."
+              echo "pushed=true" >> "$GITHUB_OUTPUT"
               exit 0
             fi
 
@@ -113,5 +161,6 @@ jobs:
           done
 
           echo "[PUSH] Failed after retries."
+          echo "pushed=false" >> "$GITHUB_OUTPUT"
           exit 1
 
