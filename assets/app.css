@@ -9722,3 +9722,124 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
   outline: 3px solid rgba(27,36,48,.22);
   outline-offset: 2px;
 }
+
+/* ============================================================
+   RAIL MAX LEVEL v2 — stretch + badges + micro-highlight + micro-glow
+   UI-only, CLS-safe (no width/height/margin/padding changes on hover/active)
+   ============================================================ */
+
+:root{
+  --iuRailInk: #1b2430;
+  --iuRailHair: rgba(27,36,48,.14);
+  --iuRailMuted: rgba(27,36,48,.70);
+  --iuRailGlow: rgba(27,36,48,.18);
+}
+
+/* ============================================================
+   RAIL — stretch to viewport under topbar (CLS-safe)
+   BG_OWNER: aside#iuLeftRail.iu-leftRail .iu-leftNav
+   ============================================================ */
+
+main#content .layout{
+  min-height: calc(100vh - var(--iuTopbarHeight)) !important;
+}
+
+aside#iuLeftRail.iu-leftRail{
+  align-self: stretch !important;
+  min-height: calc(100vh - var(--iuTopbarHeight)) !important;
+}
+
+aside#iuLeftRail.iu-leftRail .iu-leftNav{
+  min-height: calc(100vh - var(--iuTopbarHeight)) !important;
+}
+
+/* unify icon rendering */
+aside#iuLeftRail.iu-leftRail svg,
+aside#iuLeftRail.iu-leftRail img{
+  display:block;
+}
+
+/* ============================================================
+   RAIL — subtle gradient badge (corporate)
+   ICON_WRAP: .iu-leftNavIcon
+   ============================================================ */
+
+aside#iuLeftRail.iu-leftRail .iu-leftNavIcon{
+  background: linear-gradient(180deg,
+    rgba(255,255,255,.92) 0%,
+    rgba(27,36,48,.06) 100%
+  ) !important;
+
+  border: 1px solid var(--iuRailHair) !important;
+  border-radius: 14px !important;
+
+  box-shadow:
+    0 10px 18px rgba(0,0,0,.06),
+    inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+
+/* item must be anchor for pseudo-elements */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem{
+  position: relative;
+  isolation: isolate;
+}
+
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavIcon,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel{
+  position: relative;
+  z-index: 2;
+}
+
+/* ACTIVE micro-highlight */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"]::before,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active::before,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::before{
+  content:"";
+  position:absolute;
+  left:-6px;
+  top:8px;
+  bottom:8px;
+  width:3px;
+  border-radius:999px;
+  background: rgba(27,36,48,.45);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.6);
+  pointer-events:none;
+  z-index: 1;
+}
+
+/* active badge mild emphasis */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active .iu-leftNavIcon,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNavIcon{
+  border-color: color-mix(in srgb, var(--iuRailInk) 22%, transparent) !important;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,.96) 0%,
+    rgba(27,36,48,.09) 100%
+  ) !important;
+}
+
+/* MAX LEVEL — active micro-glow (no layout move) */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"]::after,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active::after,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::after{
+  content:"";
+  position:absolute;
+  left:8px;
+  right:8px;
+  top:6px;
+  bottom:6px;
+  border-radius: 14px;
+  pointer-events:none;
+  z-index: 0;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.55),
+    inset 0 14px 22px rgba(255,255,255,.18),
+    0 10px 22px rgba(0,0,0,.08);
+}
+
+/* FOCUS-VISIBLE (keyboard premium) */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
+  outline: 3px solid rgba(27,36,48,.22);
+  outline-offset: 2px;
+}
+
