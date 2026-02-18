@@ -9749,7 +9749,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::before{
 }
 
 /* MICRO-HIGHLIGHT — HOVER (subtle) */
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:hover::before{
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:hover:not([aria-current="page"]):not(.active):not(.is-active)::before{
   content:"";
   position:absolute;
   left:-6px;
