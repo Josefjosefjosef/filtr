@@ -8353,18 +8353,18 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 }
 
 /* ======================================================================
-   FINAL UI — MyUzel notes (per section)
+   FINAL UI — Notes (unified component across the whole web)
    ====================================================================== */
 
-#newsList .iuMyUzelNotes{
+#newsList .iuNotes{
   margin-top: 12px;
   padding: 10px 10px;
-  border: 1px solid rgba(11,27,43,0.14);
+  border: 2px solid var(--iuNotesAccent, var(--iuSectionAccent, var(--iuMyUzelAccent, #b9bcc2)));
   border-radius: 12px;
-  background: transparent;
+  background: var(--iuNotesAccent, var(--iuSectionAccent, var(--iuMyUzelAccent, #b9bcc2)));
 }
 
-#newsList .iuMyUzelNotesTop{
+#newsList .iuNotesTop{
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -8372,37 +8372,42 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   margin-bottom: 8px;
 }
 
-#newsList .iuMyUzelNotesTitle{
+#newsList .iuNotesTitle{
   font-weight: 700;
   font-size: 14px;
-  color: #0b1b2b;
+  color: #ffffff;
 }
 
-#newsList .iuMyUzelNotesActions{
+#newsList .iuNotesActions{
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-#newsList .iuMyUzelNotesActions .iuBtn{
+#newsList .iuNotesActions .iuBtn{
   appearance: none;
-  border: 1px solid rgba(11,27,43,0.18);
-  background: rgba(255,255,255,0.72);
-  color: #0b1b2b;
+  border: none;
+  background: var(--iuNotesAccent, var(--iuSectionAccent, var(--iuMyUzelAccent, #b9bcc2)));
+  color: #ffffff;
   border-radius: 10px;
   padding: 6px 10px;
   font-size: 13px;
   font-weight: 600;
   line-height: 1.1;
   cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
 }
 
-#newsList .iuMyUzelNotesActions .iuBtn:focus-visible{
-  outline: 3px solid #0b1b2b;
+#newsList .iuNotesActions .iuBtn:hover{
+  filter: brightness(0.92);
+}
+
+#newsList .iuNotesActions .iuBtn:focus-visible{
+  outline: 3px solid #ffffff;
   outline-offset: 2px;
 }
 
-#newsList .iuMyUzelNotesInput{
+#newsList .iuNotesInput{
   width: 100%;
   min-height: 44px;
   resize: none;          /* autosize v JS */
@@ -8412,165 +8417,14 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   padding: 10px 10px;
   font-size: 14px;
   line-height: 1.35;
-  color: #0b1b2b;
-  background: #ffffff;
-}
-
-#newsList .iuMyUzelNotesInput:focus-visible{
-  outline: 3px solid #0b1b2b;
-  outline-offset: 2px;
-}
-
-/* ======================================================================
-   FINAL UI — Notes in main section views (border + background = section accent)
-   ====================================================================== */
-
-#newsList .iuSectionNotes{
-  margin-top: 12px;
-  padding: 10px 10px;
-  border: 2px solid var(--iuSectionAccent, #b9bcc2);
-  border-radius: 12px;
-  background: var(--iuSectionAccent, #b9bcc2);
-}
-
-#newsList .iuSectionNotesTop{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-#newsList .iuSectionNotesTitle{
-  font-weight: 700;
-  font-size: 14px;
-  color: #ffffff;
-}
-
-#newsList .iuSectionNotesActions{
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-#newsList .iuSectionNotesActions .iuBtn{
-  appearance: none;
-  border: none;
-  background: var(--iuSectionAccent, #b9bcc2);
-  color: #ffffff;
-  border-radius: 10px;
-  padding: 6px 10px;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.1;
-  cursor: pointer;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
-}
-
-#newsList .iuSectionNotesActions .iuBtn:focus-visible{
-  outline: 3px solid #ffffff;
-  outline-offset: 2px;
-}
-
-#newsList .iuSectionNotesActions .iuBtn:hover{
-  filter: brightness(0.92);
-}
-
-#newsList .iuSectionNotesInput{
-  width: 100%;
-  min-height: 44px;
-  resize: none;
-  overflow: hidden;
-  border: 1px solid rgba(11,27,43,0.18);
-  border-radius: 10px;
-  padding: 10px 10px;
-  font-size: 14px;
-  line-height: 1.35;
   color: #000;
   background: #ffffff;
 }
 
-#newsList .iuSectionNotesInput:focus-visible{
+#newsList .iuNotesInput:focus-visible{
   outline: 3px solid #ffffff;
   outline-offset: 2px;
 }
-
-/* ======================================================================
-   FINAL UI — MyUzel notes box uses user accent color
-   ====================================================================== */
-
-/* Wrapper */
-#newsList .iuMyUzelNotes{
-  border: 2px solid var(--iuMyUzelAccent, #b9bcc2);
-  background: var(--iuMyUzelAccent, #b9bcc2);
-}
-#newsList .iuMyUzelNotesTitle{
-  color: #ffffff;
-}
-#newsList .iuMyUzelNotesActions .iuBtn{
-  border: none;
-  background: var(--iuMyUzelAccent, #b9bcc2);
-  color: #ffffff;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
-}
-#newsList .iuMyUzelNotesActions .iuBtn:hover{
-  filter: brightness(0.92);
-}
-#newsList .iuMyUzelNotesActions .iuBtn:focus-visible{
-  outline: 3px solid #ffffff;
-  outline-offset: 2px;
-}
-#newsList .iuMyUzelNotesInput{
-  background: #ffffff;
-  color: #000;
-}
-
-/* ======================================================================
-   FINAL UI — Travel per-subsection notes (persistent, section accent)
-   ====================================================================== */
-
-#iuTravelView .iuTravelNotes{ margin-top:14px; }
-#iuTravelView .iuNotesBox{
-  border:2px solid var(--iuSectionAccent, #b9bcc2);
-  border-radius:14px;
-  padding:14px;
-  background:var(--iuSectionAccent, #b9bcc2);
-}
-#iuTravelView .iuNotesHeader{
-  display:flex;
-  justify-content:space-between;
-  font-size:13px;
-  color:#ffffff;
-  margin-bottom:6px;
-  gap: 10px;
-  align-items: center;
-}
-#iuTravelView .iuNotesClear{
-  background:var(--iuSectionAccent, #b9bcc2);
-  color:#fff;
-  border:none;
-  border-radius:10px;
-  padding:6px 12px;
-  cursor:pointer;
-  font-weight: 600;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
-}
-#iuTravelView .iuNotesClear:hover{
-  filter: brightness(0.92);
-}
-#iuTravelView .iuNotesArea{
-  width:100%;
-  min-height:90px;
-  resize:vertical;
-  background:#fff;
-  color:#000;
-  border:1px solid rgba(11,27,43,0.18);
-  border-radius:10px;
-  padding:10px 10px;
-  font-size:13px;
-}
-
-.iuMapsNotes{ margin-top:14px; }
 
 /* FINAL UI — left rail MyUzel title 2 lines */
 .iuMyUzelTitleLine1,
