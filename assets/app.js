@@ -8184,10 +8184,52 @@ function buildVideoAsArticleCard(it) {
       if (!key) return;
       if (confirm("Opravdu vymazat poznámky?")) {
         localStorage.removeItem(key);
-        iuRenderTravelNotes();
+        try { iuRenderTravelNotes(); } catch {}
+        try { iuRenderMapsNotes && iuRenderMapsNotes(); } catch {}
       }
     }catch{}
   });
+
+  const IU_MAPS_SUBSECTIONS = [
+    "Navigace",
+    "Auto & Mobilita",
+    "Výlety & Outdoor"
+  ];
+
+  const IU_MAPS_NOTES_PREFIX = "iu_maps_notes_v1_";
+
+  function iuMapsNotesKey(name){
+    return IU_MAPS_NOTES_PREFIX + iuSlug(name);
+  }
+
+  function iuRenderMapsNotes(){
+    try{
+      document.querySelectorAll(".iuMapsNotes").forEach((el) => {
+        try{
+          const name = String(el.dataset?.iuNotesSubsection || "").trim();
+          if (!name) return;
+
+          const key = iuMapsNotesKey(name);
+          const saved = String(localStorage.getItem(key) || "");
+
+          el.innerHTML =
+            `<div class="iuNotesBox">` +
+              `<div class="iuNotesHeader">` +
+                `<span>Poznámky – ${escapeHtml(name)}</span>` +
+                `<button class="iuNotesClear" type="button" data-key="${escapeHtml(key)}">Vymazat</button>` +
+              `</div>` +
+              `<textarea class="iuNotesArea" data-key="${escapeHtml(key)}" placeholder="Vaše poznámky…"></textarea>` +
+            `</div>`;
+
+          const ta = el.querySelector("textarea.iuNotesArea");
+          if (ta) {
+            ta.value = saved;
+            try { iuAutosizeTextarea(ta); } catch {}
+          }
+        }catch{}
+      });
+    }catch{}
+  }
 
   // ============================================================
   // MŮJ INFO UZEL — 5 custom sections (UI-only, localStorage)
@@ -9540,6 +9582,15 @@ function buildVideoAsArticleCard(it) {
       if (section === "travel") {
         requestAnimationFrame(() => requestAnimationFrame(() => {
           try{ iuRenderTravelNotes(); }catch{}
+        }));
+      }
+    }catch{}
+
+    // Mapy: per-subsection notes placeholders (persistent, no auto delete)
+    try{
+      if (section === "mapy") {
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          try{ iuRenderMapsNotes(); }catch{}
         }));
       }
     }catch{}
