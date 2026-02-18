@@ -7,6 +7,11 @@
   --cardBg: #FFFFFF;
   --iu-page-bg: linear-gradient(180deg,#eaf1f8 0%,#dde7f2 100%);
 
+  /* Rail theme (runtime; defaults must match current look) */
+  --iuRailBg: #fff;
+  --iuRailBtnBg: transparent;
+  --iuRailBtnFg: rgba(11,27,43,0.55);
+
   /* světlý moderní design */
   /* unify sticky header background with app background to prevent flash */
   --iu-bg: var(--iu-page-bg);
@@ -149,6 +154,13 @@ html, body,
 #feedWrap{
   background: #fff !important;
   background-color: #fff !important;
+  background-image: none !important;
+}
+
+/* Rail theme: only left rail background is user-tunable. */
+#iuLeftRail{
+  background: var(--iuRailBg, #fff) !important;
+  background-color: var(--iuRailBg, #fff) !important;
   background-image: none !important;
 }
 
@@ -7347,7 +7359,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   width: 120px;
   min-width: 120px;
   /* Match center feed background (no panel effect) */
-  background: var(--iu-page-bg);
+  background: var(--iuRailBg, var(--iu-page-bg));
   align-self: stretch; /* extend background alongside feed height */
   border-radius: 0;
   box-shadow: none;
@@ -7529,7 +7541,7 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
 
 .iu-leftRail{
   /* Match center feed background (no panel effect) */
-  background: var(--iu-page-bg);
+  background: var(--iuRailBg, var(--iu-page-bg));
   margin-top: 0 !important;
   padding-top: 0 !important;
   box-shadow: none;
@@ -7543,7 +7555,7 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
   padding: 8px 6px 12px 6px;
   gap: 6px;
   box-sizing: border-box;
-  background: var(--iu-page-bg);
+  background: var(--iuRailBg, var(--iu-page-bg));
   box-shadow: none;
   border-right: none;
   color: var(--text);
@@ -7555,9 +7567,47 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
 .iu-leftRail,
 #iuLeftRail,
 .iu-leftNav{
-  background: #fff;
-  background-color: #fff;
+  background: var(--iuRailBg, #fff);
+  background-color: var(--iuRailBg, #fff);
   background-image: none;
+}
+
+/* ============================================================
+   Rail — Theme controls (3 icons under topbar)
+   ============================================================ */
+.iuRailThemeRow{
+  display:flex;
+  gap:8px;
+  padding:10px 10px 8px;
+  align-items:center;
+  justify-content:flex-start;
+}
+
+.iuRailThemeBtn{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06);
+  color:inherit;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.iuRailThemeBtn:hover{
+  background:rgba(255,255,255,.12);
+}
+
+.iuRailThemeIcon{
+  font-size:16px;
+  line-height:1;
+}
+
+/* ensure row doesn't affect rail collapse/CLS */
+@media (max-width: 520px){
+  .iuRailThemeRow{ padding-left:8px; padding-right:8px; }
 }
 
 .iu-leftNavItem{
@@ -7826,6 +7876,12 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
   color: rgba(11,27,43,0.55); /* 1:1 as .meta-time */
 }
 
+/* Rail theme: affect only DEFAULT state (no hover/focus/active/section colors). */
+.iu-leftNav .iu-leftNavItem:not(.is-active):not(:hover):not(:focus-visible){
+  background: var(--iuRailBtnBg) !important;
+  color: var(--iuRailBtnFg);
+}
+
 .iu-leftNav .iu-leftNavIcon,
 .iu-leftNav .iu-leftNavLabel{
   color: inherit;
@@ -7982,6 +8038,13 @@ main#content,
 .news-card{
   background: #fff !important;
   background-color: #fff !important;
+  background-image: none !important;
+}
+
+/* Rail theme: override the global white carriers rule (rail only). */
+#iuLeftRail{
+  background: var(--iuRailBg, #fff) !important;
+  background-color: var(--iuRailBg, #fff) !important;
   background-image: none !important;
 }
 

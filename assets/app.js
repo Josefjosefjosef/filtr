@@ -36,6 +36,78 @@ window.addEventListener("unhandledrejection", (e) => {
   try { document.documentElement.setAttribute("data-iu-path", location.pathname + location.search); } catch {}
   try { document.documentElement.setAttribute("data-iu-buildstamp", document.querySelector('meta[name="iu-build"]')?.content || "no-meta"); } catch {}
   const $ = (sel) => document.querySelector(sel);
+
+  function iuRailApplyTheme(){
+    try{
+      const root = document.documentElement;
+      const bg = localStorage.getItem("iuRailBg");
+      const btnBg = localStorage.getItem("iuRailBtnBg");
+      const btnFg = localStorage.getItem("iuRailBtnFg");
+      if(bg) root.style.setProperty("--iuRailBg", bg);
+      if(btnBg) root.style.setProperty("--iuRailBtnBg", btnBg);
+      if(btnFg) root.style.setProperty("--iuRailBtnFg", btnFg);
+    }catch{}
+  }
+
+  function iuPickColor(initial, onPick){
+    const inp = document.createElement("input");
+    inp.type = "color";
+    try{
+      const v = String(initial || "").trim();
+      if (/^#[0-9a-f]{6}$/i.test(v)) inp.value = v;
+    }catch{}
+    inp.style.position = "fixed";
+    inp.style.left = "-9999px";
+    document.body.appendChild(inp);
+    inp.addEventListener("input", () => { try{ onPick(inp.value); }catch{} });
+    inp.addEventListener("change", () => { try{ onPick(inp.value); }catch{} setTimeout(()=>{ try{ inp.remove(); }catch{} }, 0); });
+    try{ inp.click(); }catch{ try{ inp.remove(); }catch{} }
+  }
+
+  function iuInitRailThemeControls(){
+    const bgBtn = document.getElementById("iuRailBgBtn");
+    const btnBgBtn = document.getElementById("iuRailBtnBgBtn");
+    const btnFgBtn = document.getElementById("iuRailBtnFgBtn");
+    if(!bgBtn || !btnBgBtn || !btnFgBtn) return;
+
+    function normHex(cur, fallback){
+      const t = String(cur || "").trim();
+      if (/^#[0-9a-f]{6}$/i.test(t)) return t;
+      if (/^#[0-9a-f]{3}$/i.test(t)) return ("#" + t[1] + t[1] + t[2] + t[2] + t[3] + t[3]).toLowerCase();
+      return String(fallback || "#000000");
+    }
+
+    bgBtn.addEventListener("click", () => {
+      const cur = getComputedStyle(document.documentElement).getPropertyValue("--iuRailBg").trim();
+      iuPickColor(normHex(cur || "#121826", "#121826"), (hex)=>{
+        try{ localStorage.setItem("iuRailBg", hex); }catch{}
+        iuRailApplyTheme();
+      });
+    });
+
+    btnBgBtn.addEventListener("click", () => {
+      const cur = getComputedStyle(document.documentElement).getPropertyValue("--iuRailBtnBg").trim();
+      iuPickColor(normHex(cur || "#1f2937", "#1f2937"), (hex)=>{
+        try{ localStorage.setItem("iuRailBtnBg", hex); }catch{}
+        iuRailApplyTheme();
+      });
+    });
+
+    btnFgBtn.addEventListener("click", () => {
+      const cur = getComputedStyle(document.documentElement).getPropertyValue("--iuRailBtnFg").trim();
+      iuPickColor(normHex(cur || "#ffffff", "#ffffff"), (hex)=>{
+        try{ localStorage.setItem("iuRailBtnFg", hex); }catch{}
+        iuRailApplyTheme();
+      });
+    });
+  }
+
+  // Apply saved rail theme ASAP (before layout paint).
+  iuRailApplyTheme();
+  try{
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iuInitRailThemeControls);
+    else iuInitRailThemeControls();
+  }catch{}
   /*
   Release summary (UI/data):
 
