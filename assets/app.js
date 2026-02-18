@@ -49,6 +49,22 @@ window.addEventListener("unhandledrejection", (e) => {
     }catch{}
   }
 
+  function iuTopbarApplyTheme(){
+    try{
+      const themes = [
+        {"--iuTopbarBg":"#ffffff"},
+        {"--iuTopbarBg":"#f8fafc"},
+        {"--iuTopbarBg":"#fffdf5"},
+      ];
+      const raw = localStorage.getItem("iuTheme");
+      const i = Math.max(0, Math.min(themes.length - 1, parseInt(String(raw || "0"), 10) || 0));
+      const theme = themes[i] || themes[0];
+      Object.entries(theme).forEach(([k,v]) => {
+        try{ document.documentElement.style.setProperty(k, String(v)); }catch{}
+      });
+    }catch{}
+  }
+
   function iuPickColor(initial, onPick){
     const inp = document.createElement("input");
     inp.type = "color";
@@ -104,6 +120,7 @@ window.addEventListener("unhandledrejection", (e) => {
 
   // Apply saved rail theme ASAP (before layout paint).
   iuRailApplyTheme();
+  iuTopbarApplyTheme();
   try{
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iuInitRailThemeControls);
     else iuInitRailThemeControls();
@@ -4403,7 +4420,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuComputeTopbarStackH(){
     try{
-      const bars = Array.from(document.querySelectorAll(".iuBar, .topbar"));
+      const bars = Array.from(document.querySelectorAll(".iuBar, .topbar, .topbar-new, #topbarWrap"));
       const visible = bars.filter((el) => {
         const cs = getComputedStyle(el);
         if (cs.display === "none" || cs.visibility === "hidden") return false;
@@ -4456,7 +4473,9 @@ function buildVideoAsArticleCard(it) {
         if (window.__iu_topbarSearchToggleInit) return;
         window.__iu_topbarSearchToggleInit = 1;
       }catch{}
-      const dayInfo = document.getElementById("iuTopbarDayInfo");
+      const dayInfo =
+        document.getElementById("iuTodayInfo") ||
+        document.getElementById("iuTopbarDayInfo");
       const btn = document.getElementById("iuTopbarSearchBtn");
       const overlay = document.getElementById("iuTopbarSearchOverlay");
       const form = document.getElementById("iuTopbarSearchForm");
@@ -4477,6 +4496,7 @@ function buildVideoAsArticleCard(it) {
       function openOverlay(){
         try{ overlay.hidden = false; }catch{}
         isOpen = true;
+        try{ document.body.classList.add("iuSearchOpen"); }catch{}
         setDayHidden(true);
         try{ if (notFound) notFound.hidden = true; }catch{}
         try{
@@ -4488,6 +4508,7 @@ function buildVideoAsArticleCard(it) {
       function closeOverlay(){
         try{ overlay.hidden = true; }catch{}
         isOpen = false;
+        try{ document.body.classList.remove("iuSearchOpen"); }catch{}
         try{ if (notFound) notFound.hidden = true; }catch{}
         if (!scrollHidden) setDayHidden(false);
       }
@@ -4606,6 +4627,29 @@ function buildVideoAsArticleCard(it) {
           window.open(url, "_blank", "noopener");
         });
       }
+    }catch{}
+  }
+
+  function iuInitTopbarThemeButton(){
+    try{
+      const btn = document.getElementById("iuThemeBtn") || document.querySelector(".iuThemeBtn");
+      if(!btn) return;
+      const themes = [
+        {"--iuTopbarBg":"#ffffff"},
+        {"--iuTopbarBg":"#f8fafc"},
+        {"--iuTopbarBg":"#fffdf5"},
+      ];
+      btn.addEventListener("click", () => {
+        let i = 0;
+        try{ i = (parseInt(String(localStorage.getItem("iuTheme") || "0"), 10) || 0) + 1; }catch{ i = 1; }
+        i = i % themes.length;
+        try{ localStorage.setItem("iuTheme", String(i)); }catch{}
+        try{
+          Object.entries(themes[i]).forEach(([k,v]) => {
+            try{ document.documentElement.style.setProperty(k, String(v)); }catch{}
+          });
+        }catch{}
+      });
     }catch{}
   }
 
@@ -7535,6 +7579,7 @@ function buildVideoAsArticleCard(it) {
     setSectionsFromHash();
     iuInitTopbarWatcher();
     iuInitTopbarSearchToggle();
+    iuInitTopbarThemeButton();
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
 

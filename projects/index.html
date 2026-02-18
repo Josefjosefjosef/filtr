@@ -81,7 +81,7 @@ style-src 'self' 'unsafe-inline' https:;
             <div class="layout">
               <div class="mainCol">
                 <div id="leftStickyHeader">
-                  <header class="topbar-new" id="topbarWrap">
+                  <header class="topbar-new iuTopbar" id="topbarWrap">
                     <div class="topbar-new-inner">
                       <div class="topbar-new-main">
                         <button class="menuBtn" id="menuBtn" aria-label="Sekce">
@@ -95,9 +95,11 @@ style-src 'self' 'unsafe-inline' https:;
                           </div>
                         </div>
                         <div class="iuTopbarRight" id="iuTopbarRight">
-                          <div class="iuTopbarDayInfo" id="iuTopbarDayInfo" aria-live="polite" title=""></div>
+                          <button class="iuThemeBtn" id="iuThemeBtn" type="button" aria-label="Nastavení barev" title="Nastavení barev">🎨</button>
 
-                          <button class="iuTopbarSearchBtn" id="iuTopbarSearchBtn" type="button" aria-label="Hledat">
+                          <div class="iuTopbarDayInfo" id="iuTodayInfo" aria-live="polite" title=""></div>
+
+                          <button class="iuTopbarSearchBtn iuSearchBtn" id="iuTopbarSearchBtn" type="button" aria-label="Vyhledat">
                             <svg class="iuIcon" viewBox="0 0 24 24" aria-hidden="true">
                               <path d="M10 18a8 8 0 1 1 0-16a8 8 0 0 1 0 16zm11 3l-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                             </svg>
@@ -105,7 +107,7 @@ style-src 'self' 'unsafe-inline' https:;
 
                           <div class="iuTopbarSearchOverlay" id="iuTopbarSearchOverlay" hidden>
                             <form class="iuTopbarSearchForm" id="iuTopbarSearchForm" autocomplete="off">
-                              <input class="iuTopbarSearchInput" id="iuTopbarSearchInput" type="search" placeholder="Hledat…" />
+                              <input class="iuTopbarSearchInput" id="iuTopbarSearchInput" type="search" placeholder="Hledat…" aria-label="Hledat" />
                             </form>
 
                             <div class="iuTopbarSearchNotFound" id="iuTopbarSearchNotFound" hidden>
