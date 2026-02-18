@@ -6818,6 +6818,39 @@ function buildVideoAsArticleCard(it) {
     frame.appendChild(ifr);
   }
 
+  function iuWeatherHideEmptyNameday(){
+    try{
+      const sec = String((document.body && document.body.dataset && document.body.dataset.section) || "");
+      if (sec !== "pocasi") return;
+
+      const el =
+        document.getElementById("iuWxStickyNameday") ||
+        document.getElementById("iuDailyNameday");
+      if (!el) return;
+
+      const tRaw = String(el.textContent || "");
+      const t = tRaw.replace(/\s+/g, " ").trim();
+      const isEmpty =
+        (!t) ||
+        (t === "—") ||
+        (t === "Svátek: —") ||
+        (/^svátek\:\s*[—-]?\s*$/i.test(t)) ||
+        (/^svátek\s+má\s+[—-]?\s*$/i.test(t)) ||
+        (/^svátek\s+má\s+načítám…$/i.test(t));
+
+      if (isEmpty) {
+        el.textContent = "";
+        el.hidden = true;
+        el.setAttribute("aria-hidden","true");
+        el.classList.add("is-empty");
+      } else {
+        el.hidden = false;
+        el.removeAttribute("aria-hidden");
+        el.classList.remove("is-empty");
+      }
+    }catch{}
+  }
+
   async function iuWeatherLoadAndRender(){
     try{
       const city = iuWeatherGetActiveCity();
@@ -6864,6 +6897,7 @@ function buildVideoAsArticleCard(it) {
           iuWeatherRadarEnsure();
         }
       }catch{}
+      try{ iuWeatherHideEmptyNameday(); }catch{}
     }catch{
       try{
         const elErr = document.getElementById("iuDailyErr");
@@ -6969,15 +7003,31 @@ function buildVideoAsArticleCard(it) {
       if (!IU_ENABLE_NAMEDAY) return;
       if (!elNameday && !elWxStickyNameday) return;
 
-      if (elNameday) {
-        elNameday.hidden = false;
-        elNameday.classList.remove("is-empty");
-        elNameday.textContent = "Svátek má načítám…";
-      }
+      const sec = String((document.body && document.body.dataset && document.body.dataset.section) || "");
+      const inWeather = sec === "pocasi";
+
       if (elWxStickyNameday) {
         elWxStickyNameday.textContent = "";
+        elWxStickyNameday.hidden = true;
+        elWxStickyNameday.setAttribute("aria-hidden","true");
         elWxStickyNameday.classList.add("is-empty");
       }
+
+      if (elNameday) {
+        if (inWeather) {
+          // Weather view: show only when valid name is present (no loading placeholder).
+          elNameday.textContent = "";
+          elNameday.hidden = true;
+          elNameday.setAttribute("aria-hidden","true");
+          elNameday.classList.add("is-empty");
+        } else {
+          elNameday.hidden = false;
+          elNameday.removeAttribute("aria-hidden");
+          elNameday.classList.remove("is-empty");
+          elNameday.textContent = "Svátek má načítám…";
+        }
+      }
+      try{ iuWeatherHideEmptyNameday(); }catch{}
       fetch("https://svatky.adresa.info/json", { cache: "no-store" })
         .then(r => r.json())
         .then(d => {
@@ -6987,32 +7037,45 @@ function buildVideoAsArticleCard(it) {
             if (elNameday) {
               elNameday.textContent = "Svátek: " + nm;
               elNameday.hidden = false;
+              elNameday.removeAttribute("aria-hidden");
               elNameday.classList.remove("is-empty");
             }
             if (elWxStickyNameday) {
               elWxStickyNameday.textContent = "Svátek: " + nm;
+              elWxStickyNameday.hidden = false;
+              elWxStickyNameday.removeAttribute("aria-hidden");
               elWxStickyNameday.classList.remove("is-empty");
             }
           } else {
             if (elNameday) {
+              elNameday.textContent = "";
               elNameday.hidden = true;
+              elNameday.setAttribute("aria-hidden","true");
               elNameday.classList.add("is-empty");
             }
             if (elWxStickyNameday) {
               elWxStickyNameday.textContent = "";
+              elWxStickyNameday.hidden = true;
+              elWxStickyNameday.setAttribute("aria-hidden","true");
               elWxStickyNameday.classList.add("is-empty");
             }
           }
+          try{ iuWeatherHideEmptyNameday(); }catch{}
         })
         .catch(() => {
           if (elNameday) {
+            elNameday.textContent = "";
             elNameday.hidden = true;
+            elNameday.setAttribute("aria-hidden","true");
             elNameday.classList.add("is-empty");
           }
           if (elWxStickyNameday) {
             elWxStickyNameday.textContent = "";
+            elWxStickyNameday.hidden = true;
+            elWxStickyNameday.setAttribute("aria-hidden","true");
             elWxStickyNameday.classList.add("is-empty");
           }
+          try{ iuWeatherHideEmptyNameday(); }catch{}
         });
     }
     updateNameday();
@@ -9953,6 +10016,7 @@ function buildVideoAsArticleCard(it) {
       if (section === "pocasi") {
         requestAnimationFrame(() => {
           try{ iuWeatherLoadAndRender(); }catch{}
+          try{ iuWeatherHideEmptyNameday(); }catch{}
           try{
             const params = new URLSearchParams(location.search || "");
             if (params.get("radarOpen") === "1") {
