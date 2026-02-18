@@ -7931,9 +7931,15 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  // ============================================================
+  // NOTES — unified component across the whole web
+  // (persistent localStorage, no TTL/cleanup, share via Web Share API)
+  // ============================================================
+
+  // Legacy (migration only): main-section notes used to live under this JSON object key.
   const IU_SECTION_NOTES_KEY = "iu_section_notes_v1";
 
-  function iuLoadSectionNotes(){
+  function iuLoadLegacySectionNotes(){
     try{
       const raw = localStorage.getItem(IU_SECTION_NOTES_KEY);
       if (!raw) return {};
@@ -7945,144 +7951,164 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  function iuSaveSectionNotes(obj){
+  function iuSaveLegacySectionNotes(obj){
     try{
       if (!obj || typeof obj !== "object") return;
       localStorage.setItem(IU_SECTION_NOTES_KEY, JSON.stringify(obj));
     }catch{}
   }
 
-  function iuGetSectionNote(sectionKey){
-    try{
-      const k = String(sectionKey || "").trim().toLowerCase();
-      if (!k) return "";
-      const st = iuLoadSectionNotes();
-      const v = st && typeof st[k] === "string" ? st[k] : "";
-      return String(v || "");
-    }catch{
-      return "";
-    }
+  function iuSlug(s){
+    return String(s || "")
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
   }
 
-  function iuSetSectionNote(sectionKey, text){
+  function iuNotesKey(scope, name){
+    const sc = iuSlug(scope);
+    const nm = iuSlug(name);
+    if (!sc || !nm) return "";
+
+    // Backward compatible prefixes (keep existing Travel/Maps notes intact).
+    if (sc === "travel") return "iu_travel_notes_v1_" + nm;
+    if (sc === "maps" || sc === "mapy") return "iu_maps_notes_v1_" + nm;
+
+    // New unified keys.
+    if (sc === "section") return "iu_notes_v1_section_" + nm;
+    if (sc === "myuzel") return "iu_notes_v1_myuzel_" + nm;
+
+    return "iu_notes_v1_" + sc + "_" + nm;
+  }
+
+  function iuRenderNotesHost(hostEl, opts){
     try{
-      const k = String(sectionKey || "").trim().toLowerCase();
-      if (!k) return;
-      const st = iuLoadSectionNotes();
-      st[k] = String(text || "");
-      iuSaveSectionNotes(st);
+      const el = hostEl;
+      if (!el) return;
+      const scope = String((opts && opts.scope) || el.dataset?.iuNotesScope || "").trim();
+      const title = String((opts && opts.title) || el.dataset?.iuNotesTitle || "").trim();
+      const name = String(el.dataset?.iuNotesName || title || "").trim();
+      if (!scope || !name) return;
+
+      const key = iuNotesKey(scope, name);
+      if (!key) return;
+
+      // Lazy migrations
+      try{
+        if (String(scope).trim().toLowerCase() === "section") {
+          const cur = String(localStorage.getItem(key) || "");
+          if (!cur) {
+            const legacy = iuLoadLegacySectionNotes();
+            const legacyKey = String(name || "").trim().toLowerCase();
+            const legacyVal = (legacy && typeof legacy[legacyKey] === "string") ? legacy[legacyKey] : "";
+            if (legacyVal) {
+              try { localStorage.setItem(key, String(legacyVal || "")); } catch {}
+              try { delete legacy[legacyKey]; iuSaveLegacySectionNotes(legacy); } catch {}
+            }
+          }
+        }
+      }catch{}
+
+      // idempotent: avoid duplicate render
+      try{
+        if (el.dataset && el.dataset.iuNotesRendered === "1" && el.querySelector(".iuNotes")) return;
+      }catch{}
+
+      const shareUrl =
+        String((opts && opts.shareUrl) || el.dataset?.iuNotesShareUrl || "").trim() ||
+        (typeof window !== "undefined" ? String(window.location.href || "") : "");
+
+      const shareTitle = `Poznámky — ${String(title || name || "Poznámky")}`.trim();
+
+      const wrap = document.createElement("div");
+      wrap.className = "iuNotes";
+      wrap.innerHTML =
+        `<div class="iuNotesTop">` +
+          `<div class="iuNotesTitle">Poznámky</div>` +
+          `<div class="iuNotesActions">` +
+            `<button type="button" class="iuBtn iuBtn--ghost iuNotesShare">Sdílet</button>` +
+            `<button type="button" class="iuBtn iuBtn--ghost iuNotesEmail">Email</button>` +
+            `<button type="button" class="iuBtn iuBtn--ghost iuNotesWhatsApp">WhatsApp</button>` +
+          `</div>` +
+        `</div>` +
+        `<textarea class="iuNotesInput" placeholder="Piš poznámky…"></textarea>`;
+
+      // Accent (optional)
+      try{
+        const accentVar = String((opts && opts.accentVar) || "").trim();
+        const accent = String((opts && opts.accent) || "").trim();
+        if (accentVar) wrap.style.setProperty("--iuNotesAccent", `var(${accentVar})`);
+        else if (accent) wrap.style.setProperty("--iuNotesAccent", accent);
+      }catch{}
+
+      const ta = wrap.querySelector("textarea.iuNotesInput");
+      if (ta) {
+        try { ta.value = String(localStorage.getItem(key) || ""); } catch { ta.value = ""; }
+        iuAutosizeTextarea(ta);
+        ta.addEventListener("input", () => {
+          try{
+            localStorage.setItem(key, String(ta.value || ""));
+            iuAutosizeTextarea(ta);
+            try { ta.scrollIntoView({ block: "nearest", inline: "nearest" }); } catch {}
+          }catch{}
+        });
+      }
+
+      const getText = () => String((ta && ta.value) || "").trim();
+      const getShareText = () => {
+        const t = getText();
+        if (!t) return "";
+        const u = String(shareUrl || "").trim();
+        return u ? (t + "\n\n" + u) : t;
+      };
+
+      const shareBtn = wrap.querySelector(".iuNotesShare");
+      const emailBtn = wrap.querySelector(".iuNotesEmail");
+      const waBtn = wrap.querySelector(".iuNotesWhatsApp");
+
+      if (shareBtn) shareBtn.addEventListener("click", async () => {
+        try{
+          const text = getText();
+          if (!text) return;
+          const payload = { title: shareTitle, text, url: shareUrl || undefined };
+          if (navigator.share) {
+            try { await navigator.share(payload); return; } catch {}
+          }
+          try { await navigator.clipboard.writeText(getShareText()); } catch {}
+          alert("Poznámky zkopírovány do schránky.");
+        }catch{}
+      });
+
+      if (emailBtn) emailBtn.addEventListener("click", () => {
+        try{
+          const text = getText();
+          if (!text) return;
+          const subject = encodeURIComponent(shareTitle);
+          const body = encodeURIComponent(getShareText());
+          window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }catch{}
+      });
+
+      if (waBtn) waBtn.addEventListener("click", () => {
+        try{
+          const text = getText();
+          if (!text) return;
+          const msg = encodeURIComponent(getShareText());
+          window.open(`https://wa.me/?text=${msg}`, "_blank", "noopener,noreferrer");
+        }catch{}
+      });
+
+      el.innerHTML = "";
+      el.appendChild(wrap);
+      try { if (el.dataset) el.dataset.iuNotesRendered = "1"; } catch {}
     }catch{}
   }
 
-  function iuCreateNotesBlock(opts){
-    const titleText = String(opts && opts.titleText || "Poznámky");
-    const getText = (opts && typeof opts.getText === "function") ? opts.getText : (() => "");
-    const setText = (opts && typeof opts.setText === "function") ? opts.setText : (() => {});
-    const getShareTitle = (opts && typeof opts.getShareTitle === "function") ? opts.getShareTitle : (() => "Poznámky");
-
-    const wrap = document.createElement("div");
-    wrap.className = "iuSectionNotes";
-    wrap.innerHTML =
-      `<div class="iuSectionNotesTop">` +
-        `<div class="iuSectionNotesTitle">${escapeHtml(titleText)}</div>` +
-        `<div class="iuSectionNotesActions">` +
-          `<button type="button" class="iuBtn iuBtn--ghost iuSectionNotesShare">Sdílet</button>` +
-          `<button type="button" class="iuBtn iuBtn--ghost iuSectionNotesEmail">Email</button>` +
-          `<button type="button" class="iuBtn iuBtn--ghost iuSectionNotesWhatsApp">WhatsApp</button>` +
-        `</div>` +
-      `</div>` +
-      `<textarea class="iuSectionNotesInput" placeholder="Piš poznámky…"></textarea>`;
-
-    const ta = wrap.querySelector("textarea");
-    if (ta) {
-      try { ta.value = String(getText() || ""); } catch { ta.value = ""; }
-      iuAutosizeTextarea(ta);
-      ta.addEventListener("input", () => {
-        try{
-          setText(String(ta.value || ""));
-          iuAutosizeTextarea(ta);
-          try { ta.scrollIntoView({ block: "nearest", inline: "nearest" }); } catch {}
-        }catch{}
-      });
-    }
-
-    const getPayload = () => {
-      const text = String((ta && ta.value) || "").trim();
-      const title = String(getShareTitle() || "Poznámky");
-      return { title, text };
-    };
-
-    const shareBtn = wrap.querySelector(".iuSectionNotesShare");
-    const emailBtn = wrap.querySelector(".iuSectionNotesEmail");
-    const waBtn = wrap.querySelector(".iuSectionNotesWhatsApp");
-
-    if (shareBtn) shareBtn.addEventListener("click", async () => {
-      try{
-        const p = getPayload();
-        if (!p.text) return;
-        const payload = { title: p.title, text: p.text };
-        if (navigator.share) {
-          try { await navigator.share(payload); return; } catch {}
-        }
-        try { await navigator.clipboard.writeText(p.text); } catch {}
-        alert("Poznámky zkopírovány do schránky.");
-      }catch{}
-    });
-
-    if (emailBtn) emailBtn.addEventListener("click", () => {
-      try{
-        const p = getPayload();
-        if (!p.text) return;
-        const subject = encodeURIComponent(p.title);
-        const body = encodeURIComponent(p.text);
-        window.location.href = `mailto:?subject=${subject}&body=${body}`;
-      }catch{}
-    });
-
-    if (waBtn) waBtn.addEventListener("click", () => {
-      try{
-        const p = getPayload();
-        if (!p.text) return;
-        const msg = encodeURIComponent(p.text);
-        window.open(`https://wa.me/?text=${msg}`, "_blank", "noopener,noreferrer");
-      }catch{}
-    });
-
-    return wrap;
-  }
-
-  function iuEnsureSectionNotesMounted(sectionKey, viewEl, opts){
+  function iuInitNotes(){
     try{
-      if (!viewEl) return;
-      if (viewEl.querySelector(".iuSectionNotes")) return;
-      const key = String(sectionKey || "").trim().toLowerCase();
-      if (!key) return;
-
-      const notesEl = iuCreateNotesBlock({
-        titleText: "Poznámky",
-        getText: () => iuGetSectionNote(key),
-        setText: (t) => iuSetSectionNote(key, t),
-        getShareTitle: () => `Poznámky — ${String((opts && opts.shareLabel) || key)}`
+      document.querySelectorAll(".iuNotesHost").forEach((el) => {
+        try{ iuRenderNotesHost(el, {}); }catch{}
       });
-
-      // Make sure border accent resolves even if mounted outside a dedicated view wrapper.
-      try{
-        const accentVar = String((opts && opts.accentVar) || "").trim();
-        if (accentVar) notesEl.style.setProperty("--iuSectionAccent", `var(${accentVar})`);
-      }catch{}
-
-      const firstChip = viewEl.querySelector(".iuRadioChip");
-      let anchor = null;
-      if (firstChip) {
-        anchor =
-          firstChip.closest(".iuRadioGrid, .iuChipGrid, .iuRadioChips, .iuSectionBody") ||
-          firstChip.parentElement;
-      }
-      if (anchor && anchor.parentNode) anchor.insertAdjacentElement("afterend", notesEl);
-      else viewEl.appendChild(notesEl);
-
-      const ta = notesEl.querySelector("textarea");
-      iuAutosizeTextarea(ta);
     }catch{}
   }
 
@@ -8105,129 +8131,44 @@ function buildVideoAsArticleCard(it) {
 
       const cfg = map[section];
       if (!cfg) return;
-      iuEnsureSectionNotesMounted(cfg.key, cfg.view(), { accentVar: cfg.accentVar, shareLabel: cfg.label });
-    }catch{}
-  }
+      const viewEl = cfg.view && cfg.view();
+      if (!viewEl) return;
 
-  const IU_TRAVEL_SUBSECTIONS = [
-    "Doprava po Evropě",
-    "Ubytování",
-    "Půjčovny aut",
-    "Cestovní pojištění (komerční)",
-    "Cestovní kanceláře",
-    "Peníze a kurzy",
-    "Bezpečnost a pomoc",
-    "Když se něco pokazí",
-    "Práva cestujících",
-    "Reklamace a problémy"
-  ];
+      // host is inserted once per view
+      let host = null;
+      try{
+        const all = Array.from(viewEl.querySelectorAll(`.iuNotesHost[data-iu-notes-scope="section"]`));
+        host = all.find((h) => String(h?.dataset?.iuNotesName || "") === String(cfg.key || "")) || null;
+      }catch{}
+      if (!host) {
+        host = document.createElement("div");
+        host.className = "iuNotesHost";
+        host.dataset.iuNotesScope = "section";
+        host.dataset.iuNotesName = String(cfg.key || "");
+        host.dataset.iuNotesTitle = String(cfg.label || cfg.key || "");
 
-  function iuSlug(s){
-    return String(s || "")
-      .toLowerCase()
-      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-      .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
-  }
-
-  const IU_NOTES_PREFIX = "iu_travel_notes_v1_";
-
-  function iuNotesKey(name){
-    return IU_NOTES_PREFIX + iuSlug(name);
-  }
-
-  function iuRenderTravelNotes(){
-    try{
-      const els = document.querySelectorAll(".iuTravelNotes");
-      els.forEach((el) => {
-        try{
-          const name = String(el.dataset?.iuNotesSubsection || "").trim();
-          if (!name) return;
-          const key = iuNotesKey(name);
-          const saved = String(localStorage.getItem(key) || "");
-
-          // Avoid injecting user text into HTML. Build DOM, set textarea.value explicitly.
-          el.innerHTML =
-            `<div class="iuNotesBox">` +
-              `<div class="iuNotesHeader">` +
-                `<span>Poznámky – ${escapeHtml(name)}</span>` +
-                `<button class="iuNotesClear" type="button" data-key="${escapeHtml(key)}">Vymazat</button>` +
-              `</div>` +
-              `<textarea class="iuNotesArea" data-key="${escapeHtml(key)}" placeholder="Vaše poznámky…"></textarea>` +
-            `</div>`;
-
-          const ta = el.querySelector("textarea.iuNotesArea");
-          if (ta) {
-            ta.value = saved;
-            try { iuAutosizeTextarea(ta); } catch {}
-          }
-        }catch{}
-      });
-    }catch{}
-  }
-
-  document.addEventListener("input", (e) => {
-    try{
-      const t = e && e.target;
-      if (!t || !t.classList || !t.classList.contains("iuNotesArea")) return;
-      const key = String(t.dataset?.key || "").trim();
-      if (!key) return;
-      localStorage.setItem(key, String(t.value || ""));
-      try { iuAutosizeTextarea(t); } catch {}
-    }catch{}
-  });
-
-  document.addEventListener("click", (e) => {
-    try{
-      const t = e && e.target;
-      if (!t || !t.classList || !t.classList.contains("iuNotesClear")) return;
-      const key = String(t.dataset?.key || "").trim();
-      if (!key) return;
-      if (confirm("Opravdu vymazat poznámky?")) {
-        localStorage.removeItem(key);
-        try { iuRenderTravelNotes(); } catch {}
-        try { iuRenderMapsNotes && iuRenderMapsNotes(); } catch {}
+        const firstChip = viewEl.querySelector(".iuRadioChip");
+        let anchor = null;
+        if (firstChip) {
+          anchor =
+            firstChip.closest(".iuRadioGrid, .iuChipGrid, .iuRadioChips, .iuSectionBody") ||
+            firstChip.parentElement;
+        }
+        if (anchor && anchor.parentNode) anchor.insertAdjacentElement("afterend", host);
+        else viewEl.appendChild(host);
       }
-    }catch{}
-  });
 
-  const IU_MAPS_SUBSECTIONS = [
-    "Navigace",
-    "Auto & Mobilita",
-    "Výlety & Outdoor"
-  ];
+      // stable share URL for the section
+      let shareUrl = "";
+      try{
+        const u = new URL(window.location.href);
+        u.searchParams.set("section", section);
+        shareUrl = u.toString();
+      }catch{
+        shareUrl = String(window.location.href || "");
+      }
 
-  const IU_MAPS_NOTES_PREFIX = "iu_maps_notes_v1_";
-
-  function iuMapsNotesKey(name){
-    return IU_MAPS_NOTES_PREFIX + iuSlug(name);
-  }
-
-  function iuRenderMapsNotes(){
-    try{
-      document.querySelectorAll(".iuMapsNotes").forEach((el) => {
-        try{
-          const name = String(el.dataset?.iuNotesSubsection || "").trim();
-          if (!name) return;
-
-          const key = iuMapsNotesKey(name);
-          const saved = String(localStorage.getItem(key) || "");
-
-          el.innerHTML =
-            `<div class="iuNotesBox">` +
-              `<div class="iuNotesHeader">` +
-                `<span>Poznámky – ${escapeHtml(name)}</span>` +
-                `<button class="iuNotesClear" type="button" data-key="${escapeHtml(key)}">Vymazat</button>` +
-              `</div>` +
-              `<textarea class="iuNotesArea" data-key="${escapeHtml(key)}" placeholder="Vaše poznámky…"></textarea>` +
-            `</div>`;
-
-          const ta = el.querySelector("textarea.iuNotesArea");
-          if (ta) {
-            ta.value = saved;
-            try { iuAutosizeTextarea(ta); } catch {}
-          }
-        }catch{}
-      });
+      iuRenderNotesHost(host, { scope: "section", title: cfg.label, shareUrl, accentVar: cfg.accentVar });
     }catch{}
   }
 
@@ -8487,87 +8428,38 @@ function buildVideoAsArticleCard(it) {
       });
     }catch{}
 
-    // Notes block (per-section)
+    // Notes block (per-section) — unified Notes component
     try{
       if (!view) return;
-      const existing = view.querySelector(".iuMyUzelNotes");
-      if (existing) existing.remove();
+      const existingHost = view.querySelector(`.iuNotesHost[data-iu-notes-scope="myuzel"]`);
+      if (existingHost) existingHost.remove();
 
-      const wrap = document.createElement("div");
-      wrap.className = "iuMyUzelNotes";
-      wrap.setAttribute("data-myuzel-slot", String(s));
-      wrap.innerHTML =
-        `<div class="iuMyUzelNotesTop">` +
-          `<div class="iuMyUzelNotesTitle">Poznámky</div>` +
-          `<div class="iuMyUzelNotesActions">` +
-            `<button type="button" class="iuBtn iuBtn--ghost iuMyUzelNotesShare">Sdílet</button>` +
-            `<button type="button" class="iuBtn iuBtn--ghost iuMyUzelNotesEmail">Email</button>` +
-            `<button type="button" class="iuBtn iuBtn--ghost iuMyUzelNotesWhatsApp">WhatsApp</button>` +
-          `</div>` +
-        `</div>` +
-        `<textarea class="iuMyUzelNotesInput" placeholder="Piš poznámky…"></textarea>`;
+      const host = document.createElement("div");
+      host.className = "iuNotesHost";
+      host.dataset.iuNotesScope = "myuzel";
+      host.dataset.iuNotesName = `slot-${s}`;
+      host.dataset.iuNotesTitle = String(sec.name || `Sekce ${s}`).trim();
 
-      const ta = wrap.querySelector(".iuMyUzelNotesInput");
-      if (ta) {
-        ta.value = String(sec.notes || "");
-        iuAutosizeTextarea(ta);
-        ta.addEventListener("input", () => {
-          try{
-            const st2 = iuMyUzelLoad();
-            const sec2 = st2.sections && st2.sections[s - 1] ? st2.sections[s - 1] : null;
-            if (sec2) sec2.notes = String(ta.value || "");
-            iuAutosizeTextarea(ta);
-            try { iuMyUzelSave(st2); } catch {}
-            try { ta.scrollIntoView({ block: "nearest", inline: "nearest" }); } catch {}
-          }catch{}
-        });
+      // Migration: keep existing notes saved inside iu_myuzel_v1
+      try{
+        const key = iuNotesKey("myuzel", `slot-${s}`);
+        const cur = String(localStorage.getItem(key) || "");
+        const legacy = String(sec.notes || "");
+        if (!cur && legacy) localStorage.setItem(key, legacy);
+      }catch{}
+
+      // stable share URL for this MyUzel section
+      let shareUrl = "";
+      try{
+        const u = new URL(window.location.href);
+        u.searchParams.set("section", `myuzel-${s}`);
+        shareUrl = u.toString();
+      }catch{
+        shareUrl = String(window.location.href || "");
       }
 
-      const shareBtn = wrap.querySelector(".iuMyUzelNotesShare");
-      const emailBtn = wrap.querySelector(".iuMyUzelNotesEmail");
-      const waBtn = wrap.querySelector(".iuMyUzelNotesWhatsApp");
-
-      const getPayload = () => {
-        const st2 = iuMyUzelLoad();
-        const sec2 = st2.sections && st2.sections[s - 1] ? st2.sections[s - 1] : {};
-        const name2 = String(sec2.name || `Sekce ${s}`).trim();
-        const text2 = String((ta && ta.value) || sec2.notes || "").trim();
-        return { name: name2, text: text2 };
-      };
-
-      if (shareBtn) shareBtn.addEventListener("click", async () => {
-        try{
-          const p = getPayload();
-          if (!p.text) return;
-          const payload = { title: `Poznámky — ${p.name}`, text: p.text };
-          if (navigator.share) {
-            try { await navigator.share(payload); return; } catch {}
-          }
-          try { await navigator.clipboard.writeText(p.text); } catch {}
-          alert("Poznámky zkopírovány do schránky.");
-        }catch{}
-      });
-
-      if (emailBtn) emailBtn.addEventListener("click", () => {
-        try{
-          const p = getPayload();
-          if (!p.text) return;
-          const subject = encodeURIComponent(`Poznámky — ${p.name}`);
-          const body = encodeURIComponent(p.text);
-          window.location.href = `mailto:?subject=${subject}&body=${body}`;
-        }catch{}
-      });
-
-      if (waBtn) waBtn.addEventListener("click", () => {
-        try{
-          const p = getPayload();
-          if (!p.text) return;
-          const msg = encodeURIComponent(p.text);
-          window.open(`https://wa.me/?text=${msg}`, "_blank", "noopener,noreferrer");
-        }catch{}
-      });
-
-      btnWrap.insertAdjacentElement("afterend", wrap);
+      btnWrap.insertAdjacentElement("afterend", host);
+      iuRenderNotesHost(host, { scope: "myuzel", title: host.dataset.iuNotesTitle, shareUrl, accent: "var(--iuMyUzelAccent, #b9bcc2)" });
     }catch{}
   }
 
@@ -9568,32 +9460,16 @@ function buildVideoAsArticleCard(it) {
       views.forEach(v => iuApplySolidChipTextContrastInView(v));
     }catch{}
 
-    // Notes blocks: mount for current section (no MindMenu impact)
+    // Notes: mount for current section + render all declared notes hosts (no MindMenu impact)
     try{
       requestAnimationFrame(() => requestAnimationFrame(() => {
         try{ iuMountNotesForCurrentSection(); }catch{}
+        try{ iuInitNotes(); }catch{}
       }));
     }catch{
       try{ iuMountNotesForCurrentSection(); }catch{}
+      try{ iuInitNotes(); }catch{}
     }
-
-    // Travel: per-subsection notes placeholders (persistent, no auto delete)
-    try{
-      if (section === "travel") {
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          try{ iuRenderTravelNotes(); }catch{}
-        }));
-      }
-    }catch{}
-
-    // Mapy: per-subsection notes placeholders (persistent, no auto delete)
-    try{
-      if (section === "mapy") {
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          try{ iuRenderMapsNotes(); }catch{}
-        }));
-      }
-    }catch{}
 
     // Custom views (UI-only)
     try{
