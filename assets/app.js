@@ -6651,6 +6651,7 @@ function buildVideoAsArticleCard(it) {
       t.innerHTML = String(markup || "").trim();
       const node = t.content.firstElementChild;
       if (!node || !(node instanceof HTMLElement)) throw new Error("bad preview node");
+      try{ node.setAttribute("data-iu-no-external-open", "1"); }catch{}
       host.appendChild(node);
       host.hidden = false;
 
@@ -6702,6 +6703,7 @@ function buildVideoAsArticleCard(it) {
             const params = new URLSearchParams(location.search || "");
             if (params.get("weatherHistoryPlay") === "1") {
               iuWeatherHistoryOpenPreview(currentPick);
+              try{ history.replaceState({}, "", location.pathname + "?section=pocasi"); }catch{}
             }
           }catch{}
         }catch{
@@ -6740,6 +6742,7 @@ function buildVideoAsArticleCard(it) {
           const params = new URLSearchParams(location.search || "");
           if (params.get("weatherHistoryPlay") === "1") {
             iuWeatherHistoryOpenPreview(currentPick);
+          try{ history.replaceState({}, "", location.pathname + "?section=pocasi"); }catch{}
           }
         }catch{}
 
@@ -7247,9 +7250,6 @@ function buildVideoAsArticleCard(it) {
       if (radarBtn) radarBtn.addEventListener("click", () => {
         iuWeatherRadarEnsure();
       });
-
-      try{ iuInitWeatherHistory(); }catch{}
-      iuWeatherLoadAndRender();
     }catch{}
   }
 
@@ -8060,8 +8060,15 @@ function buildVideoAsArticleCard(it) {
           error: "missing embed src",
         });
         try{
-          const isWeatherHistory = !!(card && card.closest && card.closest("#iuWeatherHistoryPlayerHost"));
-          if (!isWeatherHistory) window.open(watchUrl, "_blank", "noopener");
+          const opts = { noExternalOpen: false };
+          try{
+            opts.noExternalOpen = String(card && card.getAttribute ? (card.getAttribute("data-iu-no-external-open") || "") : "") === "1";
+          }catch{}
+          if (opts && opts.noExternalOpen) {
+            try{ console.warn("Weather History embed blocked external open"); }catch{}
+            return;
+          }
+          window.open(watchUrl, "_blank", "noopener");
         }catch{}
         return;
       }
@@ -8195,8 +8202,15 @@ function buildVideoAsArticleCard(it) {
           error: String(err && (err.message || err)),
         });
         try{
-          const isWeatherHistory = !!(card && card.closest && card.closest("#iuWeatherHistoryPlayerHost"));
-          if (!isWeatherHistory) window.open(watchUrl, "_blank", "noopener");
+          const opts = { noExternalOpen: false };
+          try{
+            opts.noExternalOpen = String(card && card.getAttribute ? (card.getAttribute("data-iu-no-external-open") || "") : "") === "1";
+          }catch{}
+          if (opts && opts.noExternalOpen) {
+            try{ console.warn("Weather History embed blocked external open"); }catch{}
+            return;
+          }
+          window.open(watchUrl, "_blank", "noopener");
         }catch{}
       }
     }, { passive: false });
