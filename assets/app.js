@@ -6491,6 +6491,405 @@ function buildVideoAsArticleCard(it) {
     debugLog(`[AUDIT] sw=${swState}`);
   }
 
+  // ============================================================
+  // WEATHER (mobile funnel + "Moje město") — UI/UX only
+  // ============================================================
+
+  const IU_WEATHER_CITY_KEY = "iuWeatherCity"; // JSON: { name, lat, lon }
+  const IU_WEATHER_CITY_PIN_KEY = "iuWeatherCityPinned"; // "1" | "0"
+
+  const IU_WEATHER_DEFAULT_CITY = { name: "Praha", lat: 50.0755, lon: 14.4378 };
+  const IU_WEATHER_CITIES = [
+    { name: "Praha", lat: 50.0755, lon: 14.4378 },
+    { name: "Brno", lat: 49.1951, lon: 16.6068 },
+    { name: "Ostrava", lat: 49.8209, lon: 18.2625 },
+    { name: "Plzeň", lat: 49.7384, lon: 13.3736 },
+    { name: "Liberec", lat: 50.7671, lon: 15.0562 },
+    { name: "Olomouc", lat: 49.5938, lon: 17.2509 },
+    { name: "České Budějovice", lat: 48.9747, lon: 14.4747 },
+    { name: "Hradec Králové", lat: 50.2092, lon: 15.8328 },
+    { name: "Ústí nad Labem", lat: 50.6606, lon: 14.0323 },
+    { name: "Pardubice", lat: 50.0343, lon: 15.7812 },
+    { name: "Zlín", lat: 49.2265, lon: 17.6689 },
+  ];
+
+  function iuWeatherNorm(s){
+    try{
+      return String(s || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+    }catch{
+      return String(s || "").toLowerCase().trim();
+    }
+  }
+
+  function iuWeatherReadPinned(){
+    try{
+      const pinned = String(localStorage.getItem(IU_WEATHER_CITY_PIN_KEY) || "0");
+      if (pinned !== "1") return null;
+      const raw = localStorage.getItem(IU_WEATHER_CITY_KEY);
+      if (!raw) return null;
+      const obj = JSON.parse(raw);
+      const name = String(obj && obj.name || "").trim();
+      const lat = Number(obj && obj.lat);
+      const lon = Number(obj && obj.lon);
+      if (!name || !isFinite(lat) || !isFinite(lon)) return null;
+      return { name, lat, lon };
+    }catch{
+      return null;
+    }
+  }
+
+  function iuWeatherWritePinned(city, pinned){
+    try{ localStorage.setItem(IU_WEATHER_CITY_PIN_KEY, pinned ? "1" : "0"); }catch{}
+    if (pinned) {
+      try{ localStorage.setItem(IU_WEATHER_CITY_KEY, JSON.stringify(city)); }catch{}
+    }
+  }
+
+  function iuWeatherGetRuntime(){
+    try{
+      const c = window.__iuWeatherRuntimeCity;
+      if (c && typeof c === "object" && c.name && isFinite(Number(c.lat)) && isFinite(Number(c.lon))) {
+        return { name: String(c.name), lat: Number(c.lat), lon: Number(c.lon) };
+      }
+    }catch{}
+    return null;
+  }
+
+  function iuWeatherGetActiveCity(){
+    return iuWeatherGetRuntime() || iuWeatherReadPinned() || IU_WEATHER_DEFAULT_CITY;
+  }
+
+  function iuWeatherSetRuntime(city){
+    try{ window.__iuWeatherRuntimeCity = { name: city.name, lat: city.lat, lon: city.lon }; }catch{}
+  }
+
+  const __iuOpenMeteoCache = new Map(); // key -> { t, data, p }
+  function iuOpenMeteoUrl(lat, lon){
+    const la = Number(lat);
+    const lo = Number(lon);
+    return (
+      "https://api.open-meteo.com/v1/forecast" +
+      `?latitude=${encodeURIComponent(String(la))}&longitude=${encodeURIComponent(String(lo))}` +
+      "&current=temperature_2m,weather_code" +
+      "&hourly=temperature_2m,weather_code" +
+      "&daily=temperature_2m_max,temperature_2m_min,weather_code" +
+      "&timezone=Europe%2FPrague"
+    );
+  }
+  async function iuFetchOpenMeteo(lat, lon){
+    const key = `${Number(lat)},${Number(lon)}`;
+    const now = Date.now();
+    const cached = __iuOpenMeteoCache.get(key);
+    if (cached && cached.data && (now - cached.t) < 5 * 60 * 1000) return cached.data;
+    if (cached && cached.p) return await cached.p;
+    const url = iuOpenMeteoUrl(lat, lon);
+    const p = fetch(url, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => {
+        __iuOpenMeteoCache.set(key, { t: Date.now(), data: d });
+        return d;
+      })
+      .finally(() => {
+        const cur = __iuOpenMeteoCache.get(key);
+        if (cur && cur.p) __iuOpenMeteoCache.set(key, { t: cur.t || now, data: cur.data || null });
+      });
+    __iuOpenMeteoCache.set(key, { t: now, p });
+    return await p;
+  }
+
+  function iuWxIconFromCode(code){
+    const c = Number(code);
+    if (c === 0) return "☀️";
+    if (c === 1 || c === 2) return "🌤";
+    if (c === 3) return "☁️";
+    if (c >= 45 && c <= 48) return "🌫";
+    if ((c >= 51 && c <= 67) || (c >= 80 && c <= 82)) return "🌧";
+    if (c >= 71 && c <= 77) return "❄️";
+    if (c >= 95) return "⛈";
+    return "🌤";
+  }
+
+  function iuFmtDegShort(n){
+    if (typeof n !== "number" || !isFinite(n)) return "—";
+    return Math.round(n) + "°";
+  }
+
+  function iuFmtDateShort(d){
+    try{
+      const TZ = "Europe/Prague";
+      return new Intl.DateTimeFormat("cs-CZ",{weekday:"short",day:"numeric",month:"numeric",timeZone:TZ}).format(d);
+    }catch{
+      return "";
+    }
+  }
+
+  function iuWeatherSyncCityLabels(city){
+    try{
+      const h1 = document.getElementById("iuWeatherCityH1");
+      const my = document.getElementById("iuWeatherMyCityName");
+      if (h1) h1.textContent = city && city.name ? String(city.name) : "Praha";
+      if (my) my.textContent = city && city.name ? String(city.name) : "Praha";
+    }catch{}
+  }
+
+  function iuWeatherSyncPinnedToggle(){
+    try{
+      const el = document.getElementById("iuWeatherCityPinned");
+      if (!el) return;
+      const pinned = String(localStorage.getItem(IU_WEATHER_CITY_PIN_KEY) || "0") === "1";
+      el.checked = pinned;
+    }catch{}
+  }
+
+  function iuWeatherRender7Day(daily){
+    const host = document.getElementById("iuWx7Day");
+    if (!host) return;
+    const rows = Array.from(host.querySelectorAll(".iuWx7Row"));
+    const times = daily && Array.isArray(daily.time) ? daily.time : [];
+    const maxs = daily && Array.isArray(daily.temperature_2m_max) ? daily.temperature_2m_max : [];
+    const mins = daily && Array.isArray(daily.temperature_2m_min) ? daily.temperature_2m_min : [];
+    const codes = daily && Array.isArray(daily.weather_code) ? daily.weather_code : [];
+    for (let i = 0; i < 7; i++){
+      const row = rows[i];
+      if (!row) continue;
+      const t = times[i];
+      const max = maxs[i];
+      const min = mins[i];
+      const code = codes[i];
+      let dayName = "—";
+      try{
+        const dt = new Date(String(t || ""));
+        if (!isNaN(dt.getTime())) {
+          dayName = new Intl.DateTimeFormat("cs-CZ",{weekday:"short",day:"numeric",month:"numeric",timeZone:"Europe/Prague"}).format(dt);
+        }
+      }catch{}
+      const icon = iuWxIconFromCode(code);
+      const temps = `${iuFmtDegShort(max)} / ${iuFmtDegShort(min)}`;
+      row.innerHTML = `<div class="iuWx7DayName">${escapeHtml(dayName)}</div><div class="iuWx7Icon">${escapeHtml(icon)}</div><div class="iuWx7Temps">${escapeHtml(temps)}</div>`;
+      row.removeAttribute("aria-hidden");
+    }
+  }
+
+  function iuWeatherUpdateHours(hourly){
+    const elHours = document.getElementById("iuWxHours");
+    if (!elHours) return;
+    const slots = Array.from(elHours.querySelectorAll(".iuWxHour"));
+    const now = new Date();
+    const times = hourly && Array.isArray(hourly.time) ? hourly.time : [];
+    const temps = hourly && Array.isArray(hourly.temperature_2m) ? hourly.temperature_2m : [];
+    const codes = hourly && Array.isArray(hourly.weather_code) ? hourly.weather_code : [];
+    const items = [];
+    for (let i = 0; i < times.length; i++){
+      const dt = new Date(times[i]);
+      if (isNaN(dt.getTime())) continue;
+      if (dt < now) continue;
+      items.push({ d: dt, temp: temps[i], code: codes[i] });
+      if (items.length >= 6) break;
+    }
+    for (let i = 0; i < slots.length; i++){
+      const slot = slots[i];
+      const it = items[i];
+      if (!slot) continue;
+      if (it) {
+        let hh = "--h";
+        try{ hh = new Intl.DateTimeFormat("cs-CZ",{hour:"numeric",hour12:false,timeZone:"Europe/Prague"}).format(it.d) + "h"; }catch{}
+        slot.innerHTML = `<div>${escapeHtml(hh)}</div><div class="iuWxHourTemp">${escapeHtml(iuFmtDegShort(it.temp))}</div><div>${escapeHtml(iuWxIconFromCode(it.code))}</div>`;
+        slot.removeAttribute("aria-hidden");
+      } else {
+        slot.innerHTML = `<div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div>`;
+        slot.setAttribute("aria-hidden", "true");
+      }
+    }
+    try{ elHours.classList.remove("iuWxHours--skeleton"); }catch{}
+  }
+
+  function iuWeatherEnsureCitySheet(){
+    let overlay = document.getElementById("iuWeatherSheetOverlay");
+    if (overlay) return overlay;
+    overlay = document.createElement("div");
+    overlay.id = "iuWeatherSheetOverlay";
+    overlay.hidden = true;
+    overlay.className = "iuWeatherSheetOverlay";
+    overlay.innerHTML = `
+      <div class="iuWeatherSheet" role="dialog" aria-modal="true" aria-label="Vybrat město">
+        <div class="iuWeatherSheetHead">
+          <div class="iuWeatherSheetTitle">Moje město</div>
+          <button class="iuWeatherSheetClose" type="button" aria-label="Zavřít">✕</button>
+        </div>
+        <input class="iuWeatherSheetSearch" type="search" inputmode="search" autocomplete="off" placeholder="Hledat město…" />
+        <div class="iuWeatherSheetList" role="list"></div>
+      </div>
+    `.trim();
+    document.body.appendChild(overlay);
+
+    const sheet = overlay.querySelector(".iuWeatherSheet");
+    const closeBtn = overlay.querySelector(".iuWeatherSheetClose");
+    const input = overlay.querySelector(".iuWeatherSheetSearch");
+    const list = overlay.querySelector(".iuWeatherSheetList");
+
+    function close(){
+      try{ overlay.hidden = true; }catch{}
+    }
+    function open(){
+      try{ overlay.hidden = false; }catch{}
+      try{ if (input) input.focus(); }catch{}
+      renderList();
+    }
+    function renderList(){
+      if (!list) return;
+      const q = iuWeatherNorm(input && input.value);
+      const items = IU_WEATHER_CITIES.filter((c) => !q || iuWeatherNorm(c.name).includes(q));
+      list.innerHTML = items.map((c) => {
+        const name = escapeHtml(c.name);
+        return `<button type="button" class="iuWeatherSheetItem" role="listitem" data-city="${name}">${name}</button>`;
+      }).join("") || `<div class="iuWeatherSheetEmpty">Nic nenalezeno</div>`;
+    }
+
+    overlay.addEventListener("click", (e) => {
+      try{
+        if (e && e.target === overlay) close();
+      }catch{}
+    });
+    if (closeBtn) closeBtn.addEventListener("click", close);
+    if (input) input.addEventListener("input", renderList);
+    if (list) list.addEventListener("click", (e) => {
+      try{
+        const btn = e.target && e.target.closest ? e.target.closest(".iuWeatherSheetItem") : null;
+        if (!btn) return;
+        const name = String(btn.getAttribute("data-city") || "").trim();
+        const city = IU_WEATHER_CITIES.find((c) => String(c.name) === name);
+        if (!city) return;
+        iuWeatherSetRuntime(city);
+        iuWeatherSyncCityLabels(city);
+        try{ if (document.getElementById("iuWxPlace")) document.getElementById("iuWxPlace").textContent = String(city.name); }catch{}
+        try{
+          const pin = document.getElementById("iuWeatherCityPinned");
+          if (pin && pin.checked) {
+            iuWeatherWritePinned(city, true);
+            iuWeatherSyncPinnedToggle();
+          }
+        }catch{}
+        iuWeatherLoadAndRender();
+        close();
+      }catch{}
+    });
+
+    overlay.__iuWeatherOpen = open;
+    overlay.__iuWeatherClose = close;
+    return overlay;
+  }
+
+  function iuWeatherLoadRadar(){
+    const root = document.getElementById("iuWxRadar");
+    const frame = document.getElementById("iuWxRadarFrame");
+    const sk = document.getElementById("iuWxRadarSkeleton");
+    if (!root || !frame) return;
+    if (frame.querySelector("iframe")) return;
+    const src = String(root.getAttribute("data-src") || "").trim();
+    if (!src) return;
+    const ifr = document.createElement("iframe");
+    ifr.className = "iuWeatherRadarFrame";
+    ifr.title = "Radar srážek";
+    ifr.loading = "lazy";
+    ifr.referrerPolicy = "no-referrer";
+    ifr.src = src;
+    frame.setAttribute("aria-hidden", "false");
+    frame.appendChild(ifr);
+    try{ if (sk) sk.style.display = "none"; }catch{}
+  }
+
+  async function iuWeatherLoadAndRender(){
+    try{
+      const city = iuWeatherGetActiveCity();
+      iuWeatherSyncCityLabels(city);
+      iuWeatherSyncPinnedToggle();
+
+      const elErr = document.getElementById("iuDailyErr");
+      const elWeather = document.getElementById("iuDailyWeather");
+      const elPlace = document.getElementById("iuWxPlace");
+      const elIcon = document.getElementById("iuWxIcon");
+      const elTemp = document.getElementById("iuWxTemp");
+      const elMinMax = document.getElementById("iuWxMinMax");
+
+      if (elErr) elErr.hidden = true;
+      if (elWeather) elWeather.hidden = false;
+      if (elPlace) elPlace.textContent = String(city.name || "Praha");
+      if (elTemp) elTemp.textContent = "—°C";
+      if (elMinMax) elMinMax.textContent = "Max —° · Min —°";
+      if (elIcon) elIcon.textContent = "🌤";
+      try{ const elHours = document.getElementById("iuWxHours"); if (elHours) elHours.classList.add("iuWxHours--skeleton"); }catch{}
+
+      const d = await iuFetchOpenMeteo(city.lat, city.lon);
+      const cur = d && d.current;
+      const hourly = d && d.hourly;
+      const daily = d && d.daily;
+      if (!cur || typeof cur.temperature_2m !== "number") throw new Error("bad current");
+
+      if (elTemp) elTemp.textContent = `${Math.round(cur.temperature_2m)}°C`;
+      if (elIcon) elIcon.textContent = iuWxIconFromCode(cur.weather_code);
+
+      const max0 = daily && Array.isArray(daily.temperature_2m_max) ? daily.temperature_2m_max[0] : null;
+      const min0 = daily && Array.isArray(daily.temperature_2m_min) ? daily.temperature_2m_min[0] : null;
+      if (elMinMax) elMinMax.textContent = `Max ${iuFmtDegShort(max0)} · Min ${iuFmtDegShort(min0)}`;
+
+      iuWeatherUpdateHours(hourly);
+      iuWeatherRender7Day(daily);
+
+      if (elWeather) elWeather.hidden = false;
+      if (elErr) elErr.hidden = true;
+
+      try{
+        const params = new URLSearchParams(location.search || "");
+        if (params.get("debug") === "1" && params.get("radarOpen") === "1") {
+          iuWeatherLoadRadar();
+        }
+      }catch{}
+    }catch{
+      try{
+        const elErr = document.getElementById("iuDailyErr");
+        const elWeather = document.getElementById("iuDailyWeather");
+        if (elWeather) elWeather.hidden = true;
+        if (elErr) elErr.hidden = false;
+      }catch{}
+    }
+  }
+
+  function iuWeatherInit(){
+    try{
+      if (window.__iuWeatherInitDone) return;
+      window.__iuWeatherInitDone = 1;
+
+      iuWeatherSyncPinnedToggle();
+
+      const btn = document.getElementById("iuWeatherCityChange");
+      if (btn) btn.addEventListener("click", () => {
+        const overlay = iuWeatherEnsureCitySheet();
+        try{ overlay.__iuWeatherOpen(); }catch{}
+      });
+
+      const pin = document.getElementById("iuWeatherCityPinned");
+      if (pin) pin.addEventListener("change", () => {
+        try{
+          const city = iuWeatherGetActiveCity();
+          const pinned = Boolean(pin.checked);
+          iuWeatherWritePinned(city, pinned);
+          iuWeatherSyncPinnedToggle();
+        }catch{}
+      });
+
+      const radarBtn = document.getElementById("iuWxRadarOpen");
+      if (radarBtn) radarBtn.addEventListener("click", () => {
+        iuWeatherLoadRadar();
+      });
+
+      iuWeatherLoadAndRender();
+    }catch{}
+  }
+
   // === IU Daily Panel (right sidebar top) — time/date + nameday + weather + hours ===
   window.iuDailyPanelInit = function iuDailyPanelInit(){
     const TZ = "Europe/Prague";
@@ -6498,6 +6897,9 @@ function buildVideoAsArticleCard(it) {
     const elTime = document.getElementById("iuDailyTime");
     const elDate = document.getElementById("iuDailyDate");
     const elNameday = document.getElementById("iuDailyNameday");
+    const elWxStickyTime = document.getElementById("iuWxStickyTime");
+    const elWxStickyDate = document.getElementById("iuWxStickyDate");
+    const elWxStickyNameday = document.getElementById("iuWxStickyNameday");
 
     const elWeather = document.getElementById("iuDailyWeather");
     const elErr = document.getElementById("iuDailyErr");
@@ -6539,6 +6941,8 @@ function buildVideoAsArticleCard(it) {
       const now = new Date();
       if (elTime) elTime.textContent = fmtTime(now);
       if (elDate) elDate.textContent = fmtDate(now);
+      if (elWxStickyTime) elWxStickyTime.textContent = fmtTime(now);
+      if (elWxStickyDate) elWxStickyDate.textContent = iuFmtDateShort(now);
     }
     tick();
     if (window.__iu_daily_timer) clearInterval(window.__iu_daily_timer);
@@ -6555,8 +6959,14 @@ function buildVideoAsArticleCard(it) {
         .then(r => r.json())
         .then(d => {
           if (d && d.name) {
-            elNameday.textContent = "Svátek má " + String(d.name);
+            const nm = String(d.name);
+            elNameday.textContent = "Svátek: " + nm;
             elNameday.hidden = false;
+            try{
+              if (elWxStickyNameday) {
+                elWxStickyNameday.textContent = "Svátek: " + nm;
+              }
+            }catch{}
           } else {
             elNameday.hidden = true;
           }
@@ -6568,10 +6978,10 @@ function buildVideoAsArticleCard(it) {
     updateNameday();
 
     // WEATHER (Open-Meteo) + hourly strip + min/max
-    // Default Praha (později lze udělat volbu města)
-    const placeName = "Praha";
-    const lat = 50.0755;
-    const lon = 14.4378;
+    const city = iuWeatherGetActiveCity();
+    const placeName = String(city && city.name ? city.name : "Praha");
+    const lat = Number(city && city.lat);
+    const lon = Number(city && city.lon);
 
     if (elErr) elErr.hidden = true;
     if (elWeather) elWeather.hidden = false;
@@ -6586,10 +6996,7 @@ function buildVideoAsArticleCard(it) {
       try { elHours.classList.add("iuWxHours--skeleton"); } catch(_){}
     }
 
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=Europe%2FPrague`;
-
-    fetch(url, { cache: "no-store" })
-      .then(r => r.json())
+    iuFetchOpenMeteo(lat, lon)
       .then(d => {
         const cur = d && d.current;
         const hourly = d && d.hourly;
@@ -6610,53 +7017,9 @@ function buildVideoAsArticleCard(it) {
           elMinMax.textContent = `Max ${fmtDeg(max0)} · Min ${fmtDeg(min0)}`;
         }
 
-        // hourly strip: vyber 8 hodin od "teď" dopředu (stabilní sloty)
-        if (elHours && hourly && Array.isArray(hourly.time) && Array.isArray(hourly.temperature_2m) && Array.isArray(hourly.weather_code)) {
-          const now = new Date();
-          const items = [];
-          for (let i = 0; i < hourly.time.length; i++){
-            const dt = new Date(hourly.time[i]);
-            if (isNaN(dt.getTime())) continue;
-            if (dt < now) continue;
-            items.push({
-              d: dt,
-              temp: hourly.temperature_2m[i],
-              code: hourly.weather_code[i],
-            });
-            if (items.length >= 8) break;
-          }
-
-          // Update existujících slotů (případně doplň chybějící) – bez změny výšky kontejneru
-          const slots = Array.from(elHours.querySelectorAll(".iuWxHour"));
-          while (slots.length < 8) {
-            const div = document.createElement("div");
-            div.className = "iuWxHour";
-            div.innerHTML = `<div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div>`;
-            div.setAttribute("aria-hidden", "true");
-            elHours.appendChild(div);
-            slots.push(div);
-          }
-
-          for (let i = 0; i < 8; i++){
-            const slot = slots[i];
-            const it = items[i];
-            if (!slot) continue;
-            if (it) {
-              slot.innerHTML = `
-                <div>${fmtHour(it.d)}</div>
-                <div class="iuWxHourTemp">${fmtDeg(it.temp)}</div>
-                <div>${iconFromCode(it.code)}</div>
-              `;
-              slot.removeAttribute("aria-hidden");
-            } else {
-              // keep stable height even if fewer items
-              slot.innerHTML = `<div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div>`;
-              slot.setAttribute("aria-hidden", "true");
-            }
-          }
-
-          try { elHours.classList.remove("iuWxHours--skeleton"); } catch(_){}
-        }
+        // hourly strip: update stable slots (count depends on HTML; Weather view uses 6)
+        try{ iuWeatherUpdateHours(hourly); }catch{}
+        try{ iuWeatherRender7Day(daily); }catch{}
 
         if (elWeather) elWeather.hidden = false;
         if (elErr) elErr.hidden = true;
@@ -6695,6 +7058,9 @@ function buildVideoAsArticleCard(it) {
         window.iuDailyPanelInit();
       }
     }, 300);
+
+    // Weather funnel init (idempotent; only acts if Weather view exists)
+    iuWeatherInit();
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
