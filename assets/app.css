@@ -747,10 +747,24 @@ aside.accordionCol{
   visibility: hidden !important;
 }
 
-/* UX/CLS experiment: remove nameday line entirely (no more hide/show toggling) */
-#iuDailyNameday,
-.iuDailyNameday{
-  display: none !important;
+/* Nameday visibility:
+   - Desktop: can stay hidden (if right rail gets too dense)
+   - Mobile: must be visible (1 line, ellipsis) */
+@media (min-width: 901px){
+  #iuDailyNameday,
+  .iuDailyNameday{
+    display: none !important;
+  }
+}
+@media (max-width: 900px){
+  #iuDailyNameday,
+  .iuDailyNameday{
+    display: block !important;
+    visibility: visible !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .iuDailyWeather{
@@ -3965,6 +3979,7 @@ body[data-section="home"] .iuHomeCanvas{
   gap:10px;
   margin: 0 0 12px 0;
 }
+.iuSectionHeader h1,
 .iuSectionHeader h2{
   margin:0;
   font-weight:900;
@@ -4016,6 +4031,7 @@ body[data-section="home"] .iuHomeCanvas{
 .iuSectionHeader--tvonline h2,
 .iuSectionHeader--tvprogram h2,
 .iuSectionHeader--travel h2,
+.iuSectionHeader--weather h1,
 .iuSectionHeader--weather h2,
 .iuSectionHeader--namedays h2,
 .iuSectionHeader--myuzel h2{
@@ -4208,6 +4224,319 @@ body[data-section="home"] .iuHomeCanvas{
 .iuWeatherView{
   padding: 18px 12px;
   --iuSectionAccent: var(--iuNavAccent-pocasi, #38BDF8);
+}
+
+/* Weather view — mobile funnel layout (CLS=0) */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherSticky,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherSticky{
+  margin: 10px 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.06);
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherStickyRow,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherStickyRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  min-height: 20px; /* CLS guard */
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherStickyTime,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherStickyTime{
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherStickyNameday,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherStickyNameday{
+  margin-top: 6px;
+  min-height: 18px; /* CLS guard */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.9;
+}
+@media (max-width: 900px){
+  body[data-section="pocasi"] #iuWeatherView .iuWeatherSticky,
+  html[data-section="pocasi"] #iuWeatherView .iuWeatherSticky{
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCity,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherMyCity{
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.04);
+  margin: 0 0 14px;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityTop,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityTop{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  min-height: 32px; /* CLS guard */
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityLabel,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityLabel{
+  opacity: 0.85;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityName,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityName{
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityPin,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityPin{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* Now card + hours strip: fixed rhythm */
+body[data-section="pocasi"] #iuWeatherView .iuDailyWeather,
+html[data-section="pocasi"] #iuWeatherView .iuDailyWeather{
+  min-height: 210px; /* CLS guard */
+}
+body[data-section="pocasi"] #iuWeatherView .iuWxHours,
+html[data-section="pocasi"] #iuWeatherView .iuWxHours{
+  gap: 8px;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWxHour,
+html[data-section="pocasi"] #iuWeatherView .iuWxHour{
+  min-width: 52px;
+}
+
+/* Alerts box must never collapse */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertsBox,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertsBox{
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.04);
+  min-height: 86px; /* CLS guard */
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertText,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertText{
+  margin-top: 6px;
+  opacity: 0.9;
+  min-height: 18px; /* CLS guard */
+}
+
+/* Radar embed: fixed 16/9 + lazy iframe on click */
+body[data-section="pocasi"] #iuWeatherView .iuWeatherEmbed,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherEmbed{
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.02);
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  min-height: 180px; /* fallback if aspect-ratio unsupported */
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherEmbedInner,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherEmbedInner{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherEmbedSkeleton,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherEmbedSkeleton{
+  position:absolute;
+  inset: 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: rgba(255,255,255,0.92);
+  background: rgba(255,255,255,0.04);
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherEmbedFrame,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherEmbedFrame{
+  position:absolute;
+  inset: 0;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherEmbedFrame iframe,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherEmbedFrame iframe{
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display:block;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWeatherEmbedBtn,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherEmbedBtn{
+  position:absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 2;
+}
+
+/* 7-day list: stable rows */
+body[data-section="pocasi"] #iuWeatherView .iuWx7DayWrap,
+html[data-section="pocasi"] #iuWeatherView .iuWx7DayWrap{
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.02);
+}
+body[data-section="pocasi"] #iuWeatherView .iuWx7Day,
+html[data-section="pocasi"] #iuWeatherView .iuWx7Day{
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+  min-height: 286px; /* 7 rows + gaps (CLS guard) */
+}
+body[data-section="pocasi"] #iuWeatherView .iuWx7Row,
+html[data-section="pocasi"] #iuWeatherView .iuWx7Row{
+  display:grid;
+  grid-template-columns: 1fr 40px auto;
+  align-items:center;
+  gap: 10px;
+  min-height: 34px; /* CLS guard */
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+}
+body[data-section="pocasi"] #iuWeatherView .iuWx7DayName,
+html[data-section="pocasi"] #iuWeatherView .iuWx7DayName{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 750;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWx7Icon,
+html[data-section="pocasi"] #iuWeatherView .iuWx7Icon{
+  text-align:center;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWx7Temps,
+html[data-section="pocasi"] #iuWeatherView .iuWx7Temps{
+  font-variant-numeric: tabular-nums;
+  opacity: 0.92;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWx7Source,
+html[data-section="pocasi"] #iuWeatherView .iuWx7Source{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+body[data-section="pocasi"] #iuWeatherView .iuWx7Source a,
+html[data-section="pocasi"] #iuWeatherView .iuWx7Source a{
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Quick layers: mobile 2-col grid */
+@media (max-width: 900px){
+  body[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid,
+  html[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid{
+    display:grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  body[data-section="pocasi"] #iuWeatherView .iuWeatherQuickChip,
+  html[data-section="pocasi"] #iuWeatherView .iuWeatherQuickChip{
+    width: 100%;
+  }
+}
+
+/* City picker bottom-sheet (no libraries) */
+.iuWeatherSheetOverlay{
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+.iuWeatherSheetOverlay[hidden]{
+  display: none !important;
+}
+.iuWeatherSheet{
+  width: 100%;
+  max-width: 560px;
+  border-radius: 16px;
+  background: rgba(18,28,41,0.98);
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 20px 70px rgba(0,0,0,0.55);
+  overflow: hidden;
+}
+.iuWeatherSheetHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+.iuWeatherSheetTitle{
+  font-weight: 900;
+}
+.iuWeatherSheetClose{
+  appearance:none;
+  border:0;
+  background: transparent;
+  color: rgba(255,255,255,0.92);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+.iuWeatherSheetClose:focus-visible{
+  outline: 3px solid #fff;
+}
+.iuWeatherSheetSearch{
+  width: calc(100% - 28px);
+  margin: 12px 14px 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  box-sizing: border-box;
+}
+.iuWeatherSheetSearch::placeholder{ color: rgba(255,255,255,0.65); }
+.iuWeatherSheetList{
+  max-height: min(55vh, 520px);
+  overflow: auto;
+  padding: 0 14px 14px;
+  box-sizing: border-box;
+}
+.iuWeatherSheetItem{
+  width: 100%;
+  text-align: left;
+  appearance:none;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.94);
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: 800;
+}
+.iuWeatherSheetItem:hover{ filter: brightness(1.05); }
+.iuWeatherSheetItem:focus-visible{ outline: 3px solid #fff; }
+.iuWeatherSheetEmpty{
+  padding: 14px 2px;
+  opacity: 0.85;
 }
 body[data-section="pocasi"] #iuWeatherView,
 html[data-section="pocasi"] #iuWeatherView{
