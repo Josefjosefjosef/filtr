@@ -4031,10 +4031,14 @@ body[data-section="home"] .iuHomeCanvas{
 .iuSectionHeader--tvonline h2,
 .iuSectionHeader--tvprogram h2,
 .iuSectionHeader--travel h2,
-.iuSectionHeader--weather h1,
 .iuSectionHeader--weather h2,
 .iuSectionHeader--namedays h2,
 .iuSectionHeader--myuzel h2{
+  color: var(--iuSectionAccent, currentColor);
+}
+
+/* Weather view uses <h1> in section header */
+.iuSectionHeader--weather h1{
   color: var(--iuSectionAccent, currentColor);
 }
 
