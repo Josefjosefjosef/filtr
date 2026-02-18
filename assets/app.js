@@ -7938,6 +7938,7 @@ function buildVideoAsArticleCard(it) {
 
   // Legacy (migration only): main-section notes used to live under this JSON object key.
   const IU_SECTION_NOTES_KEY = "iu_section_notes_v1";
+  const IU_NOTES_PREFIX = "iu_notes_v1_";
 
   function iuLoadLegacySectionNotes(){
     try{
@@ -7969,16 +7970,7 @@ function buildVideoAsArticleCard(it) {
     const sc = iuSlug(scope);
     const nm = iuSlug(name);
     if (!sc || !nm) return "";
-
-    // Backward compatible prefixes (keep existing Travel/Maps notes intact).
-    if (sc === "travel") return "iu_travel_notes_v1_" + nm;
-    if (sc === "maps" || sc === "mapy") return "iu_maps_notes_v1_" + nm;
-
-    // New unified keys.
-    if (sc === "section") return "iu_notes_v1_section_" + nm;
-    if (sc === "myuzel") return "iu_notes_v1_myuzel_" + nm;
-
-    return "iu_notes_v1_" + sc + "_" + nm;
+    return IU_NOTES_PREFIX + sc + "_" + nm;
   }
 
   function iuRenderNotesHost(hostEl, opts){
@@ -7990,12 +7982,14 @@ function buildVideoAsArticleCard(it) {
       const name = String(el.dataset?.iuNotesName || title || "").trim();
       if (!scope || !name) return;
 
+      const scSlug = iuSlug(scope);
+      const nmSlug = iuSlug(name);
       const key = iuNotesKey(scope, name);
       if (!key) return;
 
       // Lazy migrations
       try{
-        if (String(scope).trim().toLowerCase() === "section") {
+        if (scSlug === "section") {
           const cur = String(localStorage.getItem(key) || "");
           if (!cur) {
             const legacy = iuLoadLegacySectionNotes();
@@ -8003,7 +7997,23 @@ function buildVideoAsArticleCard(it) {
             const legacyVal = (legacy && typeof legacy[legacyKey] === "string") ? legacy[legacyKey] : "";
             if (legacyVal) {
               try { localStorage.setItem(key, String(legacyVal || "")); } catch {}
-              try { delete legacy[legacyKey]; iuSaveLegacySectionNotes(legacy); } catch {}
+              // Keep legacy entry as-is (never auto-delete).
+            }
+          }
+        }
+      }catch{}
+
+      // Travel/Maps legacy key migration (copy, never delete)
+      try{
+        const cur = String(localStorage.getItem(key) || "");
+        if (!cur) {
+          let legacyKey2 = "";
+          if (scSlug === "travel") legacyKey2 = "iu_travel_notes_v1_" + nmSlug;
+          if (scSlug === "maps" || scSlug === "mapy") legacyKey2 = "iu_maps_notes_v1_" + nmSlug;
+          if (legacyKey2) {
+            const legacyVal2 = String(localStorage.getItem(legacyKey2) || "");
+            if (legacyVal2) {
+              try { localStorage.setItem(key, legacyVal2); } catch {}
             }
           }
         }
@@ -8014,9 +8024,25 @@ function buildVideoAsArticleCard(it) {
         if (el.dataset && el.dataset.iuNotesRendered === "1" && el.querySelector(".iuNotes")) return;
       }catch{}
 
-      const shareUrl =
-        String((opts && opts.shareUrl) || el.dataset?.iuNotesShareUrl || "").trim() ||
-        (typeof window !== "undefined" ? String(window.location.href || "") : "");
+      const anchorId = ("iu-notes-" + (scSlug || "notes") + "-" + (nmSlug || "item")).replace(/[^a-z0-9\-]/g,"");
+      try{ if (!el.id) el.id = anchorId; }catch{}
+
+      let shareUrl =
+        String((opts && opts.shareUrl) || el.dataset?.iuNotesShareUrl || "").trim();
+      if (!shareUrl) {
+        try{
+          const u = new URL(String(window.location.href || ""));
+          // Keep section param stable if we know it
+          try{
+            const curSection = String(document.body?.dataset?.section || "").trim().toLowerCase();
+            if (curSection) u.searchParams.set("section", curSection);
+          }catch{}
+          u.hash = anchorId;
+          shareUrl = u.toString();
+        }catch{
+          shareUrl = (typeof window !== "undefined" ? String(window.location.href || "") : "");
+        }
+      }
 
       const shareTitle = `Poznámky — ${String(title || name || "Poznámky")}`.trim();
 

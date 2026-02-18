@@ -8426,6 +8426,12 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   outline-offset: 2px;
 }
 
+/* Notes spacing inside Maps view subsections */
+#iuMapyView .iuNotesHost,
+#iuMapsView .iuNotesHost{
+  margin-top: 14px;
+}
+
 /* FINAL UI — left rail MyUzel title 2 lines */
 .iuMyUzelTitleLine1,
 .iuMyUzelTitleLine2{
