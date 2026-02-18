@@ -6797,9 +6797,25 @@ function buildVideoAsArticleCard(it) {
     ifr.loading = "lazy";
     ifr.referrerPolicy = "no-referrer";
     ifr.src = src;
-    frame.setAttribute("aria-hidden", "false");
+    try{ frame.removeAttribute("aria-hidden"); }catch{}
+    try{
+      if (sk) {
+        sk.textContent = "Načítání radaru…";
+        sk.style.display = "";
+      }
+    }catch{}
+    ifr.addEventListener("load", () => {
+      try{ if (sk) sk.style.display = "none"; }catch{}
+    });
+    ifr.addEventListener("error", () => {
+      try{
+        if (sk) {
+          sk.textContent = "Radar nelze vložit — otevřete externě.";
+          sk.style.display = "";
+        }
+      }catch{}
+    });
     frame.appendChild(ifr);
-    try{ if (sk) sk.style.display = "none"; }catch{}
   }
 
   async function iuWeatherLoadAndRender(){
@@ -9931,6 +9947,21 @@ function buildVideoAsArticleCard(it) {
     try{ state.page = 1; }catch{}
     setLeftNavActive(section);
     showView(VIEW_MAP[section] ?? 'media');
+
+    // Weather (UI-only): ensure render + radarOpen works after view switch.
+    try{
+      if (section === "pocasi") {
+        requestAnimationFrame(() => {
+          try{ iuWeatherLoadAndRender(); }catch{}
+          try{
+            const params = new URLSearchParams(location.search || "");
+            if (params.get("radarOpen") === "1") {
+              iuWeatherRadarEnsure();
+            }
+          }catch{}
+        });
+      }
+    }catch{}
 
     // SOLID chips: runtime contrast for default WHITE text (MindMenu unaffected)
     try{
