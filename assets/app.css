@@ -9986,3 +9986,80 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
     0 0 0 1px rgba(140,190,255,.08) !important;
 }
 
+/* ============================================================
+   FINAL — Left rail flush-left + center icons (infoUzel.cz)
+   UI-only, CLS-safe
+   ============================================================ */
+
+/* 1) Rail always glued to viewport-left */
+.iu-leftRail{
+  left: 0 !important;
+  margin-left: 0 !important;
+  transform: none !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+/* Premium blue must beat #iuLeftRail !important rules */
+aside#iuLeftRail.iu-leftRail{
+  background: linear-gradient(180deg,
+    var(--iuRailBlueTop) 0%,
+    var(--iuRailBlueMid) 45%,
+    var(--iuRailBlueBot) 100%) !important;
+  background-color: var(--iuRailBlueMid) !important;
+  background-image: linear-gradient(180deg,
+    var(--iuRailBlueTop) 0%,
+    var(--iuRailBlueMid) 45%,
+    var(--iuRailBlueBot) 100%) !important;
+}
+
+aside#iuLeftRail.iu-leftRail > .iu-leftNav{
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* 2) Take rail out of centered container flow */
+.iu-leftRail{
+  position: fixed !important;
+  top: var(--iuTopbarHeight, 72px) !important;
+  bottom: 0 !important;
+  z-index: 30 !important;
+  width: 120px !important;
+}
+
+/* 3) Ensure hidden-rail handle still sits flush-left */
+html.iuRailHidden #iuRailToggleBtn,
+body.iuRailHidden #iuRailToggleBtn{
+  left: 0 !important;
+  transform: none !important;
+}
+
+/* 4) Hard-center each rail item */
+.iu-leftRail .iu-leftNav > a.iu-leftNavItem{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* 5) Center icon badge exactly */
+.iu-leftRail .iu-leftNavIcon{
+  display: grid !important;
+  place-items: center;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* 6) Center label under icon */
+.iu-leftRail .iu-leftNavLabel{
+  text-align: center !important;
+  width: 100%;
+}
+
+/* FINAL — Left rail width 136px (premium) */
+.iu-leftRail{
+  width:136px !important;
+}
+
