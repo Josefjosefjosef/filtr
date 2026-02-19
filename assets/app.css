@@ -10204,69 +10204,41 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 }
 
 /* ============================================================
-FINAL — Topbar left cluster: hamburger → rail toggle → logo
-CLS-safe, no root isolation hacks, MindMenu untouched
+FINAL — Topbar toggle only
+(no hamburger, no logo, right side untouched)
+Aligned above Media icon (rail center)
+CLS-safe
 ============================================================ */
 
+header#topbarWrap.topbar-new.iuTopbar{
+  position: relative;
+}
+
 :root{
-  --iuRailWidth: 136px;
-  --iuTopbarGap: var(--iu-gap, 10px);
-  --iuTopbarBurgerW: 34px; /* matches .topbar-new button[aria-label="Sekce"] */
-  --iuTopbarToggleSize: 34px;
+  --iuRailWidth: 136px;      /* uprav jen pokud je rail jinak široký */
+  --iuRailToggleSize: 34px;
 }
 
-#iuTopbarLeftCluster,
-.iuTopbarLeftCluster{
-  display: inline-flex;
-  align-items: center;
-  gap: var(--iuTopbarGap);
-  height: 100%;
-  flex: 0 0 auto;
-}
+#iuRailToggleBtn{
+  position: absolute !important;
 
-/* Toggle lives in topbar (never fixed/overlay). Override all hidden/visible state rules. */
-#iuTopbarLeftCluster #iuRailToggleBtn,
-.iuTopbarLeftCluster #iuRailToggleBtn{
-  position: relative !important;
-  top: auto !important;
-  left: auto !important;
-  right: auto !important;
-  bottom: auto !important;
-  inset: auto !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+
+  left: calc(var(--iuRailWidth) / 2) !important;
+
+  width: var(--iuRailToggleSize) !important;
+  height: var(--iuRailToggleSize) !important;
 
   margin: 0 !important;
-  z-index: auto !important;
-  transform: none !important;
-
-  width: var(--iuTopbarToggleSize) !important;
-  height: var(--iuTopbarToggleSize) !important;
-  min-width: var(--iuTopbarToggleSize) !important;
-  min-height: var(--iuTopbarToggleSize) !important;
+  z-index: 5 !important;
 
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+
+  border-radius: 999px !important;
 }
 
-html.iuRailHidden #iuTopbarLeftCluster #iuRailToggleBtn,
-body.iuRailHidden #iuTopbarLeftCluster #iuRailToggleBtn,
-html.iuRailHidden .iuTopbarLeftCluster #iuRailToggleBtn,
-body.iuRailHidden .iuTopbarLeftCluster #iuRailToggleBtn{
-  position: relative !important;
-  top: auto !important;
-  left: auto !important;
-  right: auto !important;
-  bottom: auto !important;
-  inset: auto !important;
-  transform: none !important;
-}
-
-/* Desktop: align TOGGLE center to rail center (hamburger → [toggle centered to rail] → logo) */
-@media (min-width: 980px){
-  #iuTopbarLeftCluster #iuRailToggleBtn,
-  .iuTopbarLeftCluster #iuRailToggleBtn{
-    margin-left: calc(
-      (var(--iuRailWidth) / 2) - var(--iuTopbarBurgerW) - var(--iuTopbarGap) - (var(--iuTopbarToggleSize) / 2)
-    ) !important;
-  }
-}
+#iuRailToggleBtn{ pointer-events:auto !important; }
+#iuRailToggleBtn *{ pointer-events:none !important; }
