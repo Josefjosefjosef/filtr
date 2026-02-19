@@ -26,8 +26,10 @@ if (!/#newsList\s*\{[\s\S]*?grid-template-columns\s*:\s*136px\s+minmax\(0,\s*1fr
 }
 
 // 3) Ensure rail is not forced fixed via ID selector (avoid overlay regressions).
-// This intentionally does NOT flag unrelated fixed elements (e.g. topbar).
-if (/(^|[,{;\s])#iuLeftRail\s*\{[\s\S]*?position\s*:\s*fixed\b/i.test(css)) {
+// This intentionally does NOT flag unrelated fixed elements (e.g. topbar),
+// and does not try to interpret comma-separated selectors.
+const idBlockMatch = css.match(/#iuLeftRail\s*\{([^}]*)\}/i);
+if (idBlockMatch && /position\s*:\s*fixed\b/i.test(idBlockMatch[1])) {
   fail('❌ Left rail fixed detected via #iuLeftRail{ position: fixed }');
 }
 
