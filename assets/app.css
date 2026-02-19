@@ -10108,3 +10108,32 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
     min-width: 0 !important;
   }
 }
+
+/* ============================================================
+   FINAL — Hide left rail → feed expands (infoUzel.cz)
+   - right column untouched
+   - no CLS
+   - works with display:none or .iuRailHidden
+   ============================================================ */
+
+@media (min-width:980px){
+
+  /* pokud je rail skrytý */
+  aside#iuLeftRail:where([style*="display:none"], .iuRailHidden){
+    display:none !important;
+  }
+
+  /* grid bez levého sloupce */
+  #newsList:has(aside#iuLeftRail[style*="display:none"]),
+  #newsList:has(aside#iuLeftRail.iuRailHidden){
+    grid-template-columns: 1fr !important;
+    column-gap: 0 !important;
+  }
+
+  /* fallback bez :has() — jen CSS hook */
+  html.iuRailHidden #newsList,
+  body.iuRailHidden #newsList{
+    grid-template-columns: 1fr !important;
+    column-gap: 0 !important;
+  }
+}
