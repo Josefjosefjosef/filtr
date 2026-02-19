@@ -10613,3 +10613,50 @@ aside#iuLeftRail.iu-leftRail *,
     overflow:visible !important;
   }
 }
+
+/* ============================================================
+   HARDEN — rail toggle always clickable (desktop)
+   Fixes: button exists but is unclickable due to overlay/stacking
+   ============================================================ */
+
+@media (min-width:980px){
+  #iuRailToggleBtn{
+    position:fixed !important;
+    left:8px !important;
+    top:calc(var(--iuTopbarHeight, 56px) + 8px) !important;
+    z-index:2147483647 !important;   /* above everything */
+    pointer-events:auto !important;
+    transform:translateZ(0);         /* force own layer */
+  }
+
+  /* prevent any overlay elements from intercepting clicks near the left edge */
+  .layout, #newsList, #feed, aside.accordionCol, aside#iuLeftRail{
+    overflow:visible !important;
+  }
+}
+
+/* ============================================================
+   HARDEN — right column must never overlay feed (desktop)
+   ============================================================ */
+
+@media (min-width:980px){
+
+  /* ensure .layout is the true grid container */
+  .layout{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) 360px !important;
+    column-gap:0 !important;
+  }
+
+  /* right column: strictly in-flow, no fixed/absolute */
+  aside.accordionCol,
+  .iu-rightContent{
+    position:relative !important;
+    inset:auto !important;
+    float:none !important;
+  }
+
+  /* guard against accidental stacking above feed */
+  aside.accordionCol{ z-index:1 !important; }
+  #newsList{ z-index:2 !important; }
+}
