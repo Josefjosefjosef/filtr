@@ -10110,30 +10110,26 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 }
 
 /* ============================================================
-   FINAL — Hide left rail → feed expands (infoUzel.cz)
-   - right column untouched
-   - no CLS
-   - works with display:none or .iuRailHidden
+   FINAL — Hide left rail → feed expand LEFT (infoUzel.cz)
+   Safe for all monitors, no CLS
    ============================================================ */
 
 @media (min-width:980px){
 
-  /* pokud je rail skrytý */
-  aside#iuLeftRail:where([style*="display:none"], .iuRailHidden){
+  /* když je rail skrytý */
+  body.iuRailHidden #newsList,
+  #newsList:has(aside#iuLeftRail[hidden]){
+    grid-template-columns: minmax(0,1fr) !important;
+  }
+
+  body.iuRailHidden aside#iuLeftRail,
+  aside#iuLeftRail[hidden]{
     display:none !important;
   }
 
-  /* grid bez levého sloupce */
-  #newsList:has(aside#iuLeftRail[style*="display:none"]),
-  #newsList:has(aside#iuLeftRail.iuRailHidden){
-    grid-template-columns: 1fr !important;
-    column-gap: 0 !important;
-  }
-
-  /* fallback bez :has() — jen CSS hook */
-  html.iuRailHidden #newsList,
-  body.iuRailHidden #newsList{
-    grid-template-columns: 1fr !important;
-    column-gap: 0 !important;
+  /* feed musí mít full šířku */
+  body.iuRailHidden #feed{
+    width:auto !important;
+    max-width:none !important;
   }
 }
