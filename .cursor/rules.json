@@ -1,21 +1,47 @@
 {
   "allow": [
+
     "git *",
     "gh *",
-    "npm *",
-    "node *",
-    "python *",
-    "pip *",
-    "curl *",
+
+    "git status *",
+    "git diff *",
+    "git grep *",
+    "git fetch *",
+    "git pull *",
+    "git push *",
+    "git switch *",
+    "git checkout *",
+    "git stash *",
+    "git log *",
+    "git add *",
+    "git commit *",
+    "git merge *",
+    "git branch *",
+
     "Set-Location *",
-    "$ErrorActionPreference=*",
     "cd *",
-    "ls *",
+
+    "$ErrorActionPreference=*",
+    "$ErrorActionPreference *",
+    "$ErrorActionPreference='*'",
+    "$ErrorActionPreference=\"*\"",
+
+    "pwsh *",
+    "powershell *",
+    "cmd *",
+
     "dir *",
+    "ls *",
     "type *",
     "cat *",
     "echo *",
     "findstr *",
-    "grep *"
+    "grep *",
+    "curl *",
+    "node *",
+    "npm *",
+    "python *",
+    "pip *"
   ]
 }
