@@ -10133,3 +10133,70 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
     max-width:none !important;
   }
 }
+
+/* ============================================================
+   FIX — Left rail toggle always visible (infoUzel.cz)
+   UI-only, CLS-safe
+   ============================================================ */
+
+@media (min-width:980px){
+
+  /* When hidden: do NOT display:none the rail (it would hide the toggle inside).
+     Instead, keep it present but collapsed to zero footprint. */
+  html.iuRailHidden aside#iuLeftRail,
+  body.iuRailHidden aside#iuLeftRail,
+  aside#iuLeftRail[hidden],
+  aside#iuLeftRail[style*="display:none"]{
+    display: block !important;
+
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+
+    background: transparent !important;
+    box-shadow: none !important;
+
+    transform: none !important;
+    filter: none !important;
+    will-change: auto !important;
+    perspective: none !important;
+
+    overflow: hidden !important;
+    flex: 0 0 0 !important;
+  }
+
+  /* Collapse grid to a single track when rail is hidden */
+  html.iuRailHidden #newsList,
+  body.iuRailHidden #newsList,
+  #newsList:has(aside#iuLeftRail[hidden]),
+  #newsList:has(aside#iuLeftRail[style*="display:none"]),
+  #newsList:has(aside#iuLeftRail.iuRailHidden){
+    grid-template-columns: minmax(0, 1fr) !important;
+    column-gap: 0 !important;
+  }
+
+  /* Ensure toggle becomes a fixed handle even if rail is hidden via [hidden]/inline styles */
+  aside#iuLeftRail[hidden] #iuRailToggleBtn,
+  aside#iuLeftRail[style*="display:none"] #iuRailToggleBtn,
+  aside#iuLeftRail.iuRailHidden #iuRailToggleBtn{
+    position: fixed !important;
+    left: -10px !important;
+    right: auto !important;
+    top: calc(var(--iuTopbarStackH, 64px) + 10px) !important;
+    bottom: auto !important;
+    width: 44px !important;
+    height: 44px !important;
+    display: grid !important;
+    place-items: center !important;
+    z-index: 9999 !important;
+    transform: none !important;
+  }
+}
