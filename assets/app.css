@@ -10184,6 +10184,48 @@ aside#iuLeftRail.iu-leftRail *,
   width:100%;
 }
 
+
+/* ============================================================
+   HOTFIX — rail missing
+   Force rail visible in 3-column layout
+   ============================================================ */
+
+@media (min-width:980px){
+
+  /* ensure wrapper has 3 columns */
+  #newsList,
+  .layout{
+    display:grid !important;
+    grid-template-columns:136px minmax(0,1fr) 360px !important;
+  }
+
+  /* rail visible */
+  aside#iuLeftRail{
+    display:block !important;
+    visibility:visible !important;
+    opacity:1 !important;
+    grid-column:1 !important;
+    position:relative !important;
+  }
+
+  /* feed */
+  #feed{
+    grid-column:2 !important;
+    min-width:0;
+  }
+
+  /* right column */
+  .iu-rightContent,
+  aside.accordionCol{
+    grid-column:3 !important;
+    width:360px;
+  }
+
+}
+
+html.iuRailHidden aside#iuLeftRail{
+  display:block !important;
+}
 /* ============================================================
    FINAL FIX — left rail scroll (desktop)
    Works with 3-column layout, CLS-safe
