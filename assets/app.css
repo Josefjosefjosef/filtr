@@ -10204,168 +10204,69 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 }
 
 /* ============================================================
-   FINAL — Left rail toggle anchored to TOPBAR (premium pill)
-   - always visible (even when rail hidden)
-   - never under first article
-   - CSS-only, CLS-safe
-   - right column untouched
-   ============================================================ */
-
-@media (min-width:980px){
-
-  :root{
-    --iuRailToggleSize: 34px;
-    --iuRailToggleTop: 10px;          /* distance from top edge */
-    --iuRailToggleLeft: 10px;         /* distance from viewport left */
-    --iuRailToggleZ: 2147483000;      /* above content safely */
-  }
-
-  /* 1) base: make toggle independent from document flow */
-  #iuRailToggleBtn{
-    position: fixed !important;
-    top: calc(var(--iuRailToggleTop) + env(safe-area-inset-top)) !important;
-    left: var(--iuRailToggleLeft) !important;
-
-    width: var(--iuRailToggleSize) !important;
-    height: var(--iuRailToggleSize) !important;
-
-    z-index: var(--iuRailToggleZ) !important;
-
-    margin: 0 !important;
-    transform: none !important;
-
-    border-radius: 999px !important;
-    background: rgba(10, 16, 28, 0.62) !important;
-    backdrop-filter: blur(10px) saturate(140%) !important;
-    -webkit-backdrop-filter: blur(10px) saturate(140%) !important;
-
-    border: 1px solid rgba(255,255,255,0.14) !important;
-
-    box-shadow:
-      0 10px 22px rgba(0,0,0,0.35),
-      0 0 0 1px rgba(140, 190, 255, 0.10),
-      0 0 18px rgba(110, 175, 255, 0.22) !important;
-
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    cursor: pointer !important;
-    user-select: none !important;
-    -webkit-tap-highlight-color: transparent !important;
-  }
-
-  /* 2) “attached to topbar” illusion: subtle underline + notch */
-  #iuRailToggleBtn::after{
-    content: "" !important;
-    position: absolute !important;
-    inset: -6px -6px auto -6px !important;
-    height: 10px !important;
-    border-radius: 999px !important;
-
-    background: linear-gradient(
-      to bottom,
-      rgba(140, 190, 255, 0.28),
-      rgba(140, 190, 255, 0.00)
-    ) !important;
-
-    pointer-events: none !important;
-    opacity: 0.9 !important;
-  }
-
-  /* 3) hover/active — premium feedback */
-  #iuRailToggleBtn:hover{
-    box-shadow:
-      0 12px 26px rgba(0,0,0,0.40),
-      0 0 0 1px rgba(140, 190, 255, 0.16),
-      0 0 22px rgba(110, 175, 255, 0.30) !important;
-    border-color: rgba(255,255,255,0.18) !important;
-  }
-  #iuRailToggleBtn:active{
-    transform: translateY(1px) !important;
-  }
-
-  /* 4) when rail is visible, align toggle near rail edge (still topbar) */
-  html.iuRailHidden #iuRailToggleBtn,
-  body.iuRailHidden #iuRailToggleBtn{
-    left: var(--iuRailToggleLeft) !important;
-  }
-
-  html:not(.iuRailHidden) #iuRailToggleBtn,
-  body:not(.iuRailHidden) #iuRailToggleBtn{
-    left: calc(136px + 12px) !important; /* rail + gap */
-  }
-}
-
-/* ============================================================
-FINAL HOTFIX — Rail toggle MUST be above articles (CSS-only)
-- fixed on ALL widths (no @media gating)
-- forced visible (display/opacity/visibility/pointer-events)
-- very high z-index + isolation to win stacking contexts
-- CLS safe (overlay only)
+FINAL — Topbar left cluster: hamburger → rail toggle → logo
+CLS-safe, no root isolation hacks, MindMenu untouched
 ============================================================ */
 
-/* ensure page root does not trap stacking contexts above us */
-html, body {
-  isolation: isolate;
+:root{
+  --iuRailWidth: 136px;
+  --iuTopbarGap: var(--iu-gap, 10px);
+  --iuTopbarBurgerW: 34px; /* matches .topbar-new button[aria-label="Sekce"] */
+  --iuTopbarToggleSize: 34px;
 }
 
-/* strongest possible overlay rule */
-#iuRailToggleBtn{
-  position: fixed !important;
+#iuTopbarLeftCluster,
+.iuTopbarLeftCluster{
+  display: inline-flex;
+  align-items: center;
+  gap: var(--iuTopbarGap);
+  height: 100%;
+  flex: 0 0 auto;
+}
 
-  /* anchor near topbar; safe-area aware */
-  top: calc(env(safe-area-inset-top) + 10px) !important;
-  left: 10px !important;
-
-  /* force visibility even if earlier rules hide it */
-  display: inline-flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-
-  /* kill any layout-driven offsets that could drop it into flow */
-  margin: 0 !important;
-  inset: auto auto auto auto !important; /* prevents weird inset overrides */
+/* Toggle lives in topbar (never fixed/overlay). Override all hidden/visible state rules. */
+#iuTopbarLeftCluster #iuRailToggleBtn,
+.iuTopbarLeftCluster #iuRailToggleBtn{
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
   right: auto !important;
   bottom: auto !important;
+  inset: auto !important;
 
-  /* win against any feed/card stacking contexts */
-  z-index: 2147483647 !important;
-  isolation: isolate !important;
+  margin: 0 !important;
+  z-index: auto !important;
+  transform: none !important;
 
-  /* premium pill (keep it consistent) */
-  width: 34px !important;
-  height: 34px !important;
-  border-radius: 999px !important;
-  border: 1px solid rgba(255,255,255,0.14) !important;
-  background: rgba(10, 16, 28, 0.62) !important;
-  backdrop-filter: blur(10px) saturate(140%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(140%) !important;
-  box-shadow:
-    0 10px 22px rgba(0,0,0,0.35),
-    0 0 0 1px rgba(140, 190, 255, 0.10),
-    0 0 18px rgba(110, 175, 255, 0.22) !important;
+  width: var(--iuTopbarToggleSize) !important;
+  height: var(--iuTopbarToggleSize) !important;
+  min-width: var(--iuTopbarToggleSize) !important;
+  min-height: var(--iuTopbarToggleSize) !important;
 
+  display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  cursor: pointer !important;
-  user-select: none !important;
-  -webkit-tap-highlight-color: transparent !important;
 }
 
-#iuRailToggleBtn:hover{
-  box-shadow:
-    0 12px 26px rgba(0,0,0,0.40),
-    0 0 0 1px rgba(140, 190, 255, 0.16),
-    0 0 22px rgba(110, 175, 255, 0.30) !important;
+html.iuRailHidden #iuTopbarLeftCluster #iuRailToggleBtn,
+body.iuRailHidden #iuTopbarLeftCluster #iuRailToggleBtn,
+html.iuRailHidden .iuTopbarLeftCluster #iuRailToggleBtn,
+body.iuRailHidden .iuTopbarLeftCluster #iuRailToggleBtn{
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  inset: auto !important;
+  transform: none !important;
 }
 
-/* absolutely prevent children from swallowing clicks */
-#iuRailToggleBtn *{ pointer-events: none !important; }
-
-/* If hidden-state selectors exist, keep same coordinates (no surprises) */
-html.iuRailHidden #iuRailToggleBtn,
-body.iuRailHidden #iuRailToggleBtn{
-  left: 10px !important;
+/* Desktop: align TOGGLE center to rail center (hamburger → [toggle centered to rail] → logo) */
+@media (min-width: 980px){
+  #iuTopbarLeftCluster #iuRailToggleBtn,
+  .iuTopbarLeftCluster #iuRailToggleBtn{
+    margin-left: calc(
+      (var(--iuRailWidth) / 2) - var(--iuTopbarBurgerW) - var(--iuTopbarGap) - (var(--iuTopbarToggleSize) / 2)
+    ) !important;
+  }
 }
