@@ -10117,3 +10117,76 @@ body.iuRailHidden #iuRailToggleBtn{
   }
 
 }
+
+/* ============================================================
+   FINAL — Desktop rail flush-left (0px) without touching .container
+   - keep right column as-is
+   - left rail = 136px
+   - symmetric gaps
+   - single page scroll
+   Reason:
+   .container centers content (max-width + margin:auto + padding).
+   We do NOT change it.
+   We only extend the LEFT side of #newsList to viewport edge while
+   keeping its RIGHT edge aligned (so right column stays unchanged).
+   ============================================================ */
+
+@media (min-width:980px){
+
+  :root{
+    --iuColGap: 20px;     /* professional normal gap */
+    --iuLeftComp: 20px;   /* desktop .container padding-left */
+
+    /* viewport width excluding scrollbar (matches margin:auto centering math) */
+    --iuViewportW: calc(100vw - (100vw - 100%));
+
+    /* shift = container margin-left + container padding-left */
+    --iuLeftShift: calc(max(0px, (var(--iuViewportW) - 1200px) / 2) + var(--iuLeftComp));
+  }
+
+  /* one page scroll only */
+  html, body{
+    height:auto !important;
+    overflow-y:auto !important;
+  }
+
+  .layout,
+  #newsList,
+  #feed,
+  aside#iuLeftRail,
+  aside.accordionCol{
+    overflow:visible !important;
+    height:auto !important;
+    max-height:none !important;
+  }
+
+  /* keep rail exact width (in-flow) */
+  aside#iuLeftRail{
+    width:136px !important;
+    min-width:136px !important;
+    max-width:136px !important;
+    position:relative !important;
+  }
+
+  /* rail + feed grid (gap rail↔feed) */
+  #newsList{
+    display:grid !important;
+    grid-template-columns:136px minmax(0,1fr) !important;
+    column-gap:var(--iuColGap) !important;
+    min-width:0 !important;
+
+    /* extend only to the left, keep right edge aligned */
+    margin-left:calc(-1 * var(--iuLeftShift)) !important;
+    width:calc(100% + var(--iuLeftShift)) !important;
+
+    padding-left:0 !important;
+  }
+
+  /* OUTER gap to right column (gap feed↔right) */
+  .layout{
+    column-gap:var(--iuColGap) !important;
+    min-width:0 !important;
+  }
+
+  #feed{ min-width:0 !important; }
+}
