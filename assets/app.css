@@ -10185,6 +10185,44 @@ aside#iuLeftRail.iu-leftRail *,
 }
 
 /* ============================================================
+   FINAL FIX — left rail scroll (desktop)
+   Works with 3-column layout, CLS-safe
+   ============================================================ */
+
+@media (min-width: 980px){
+
+  /* 1) Rail itself: must be allowed to scroll */
+  aside#iuLeftRail.iu-leftRail,
+  aside#iuLeftRail{
+    /* keep it in the normal flow (grid item), but allow inner scroll */
+    align-self: start;
+    max-height: calc(100dvh - var(--iuTopbarHeight, 56px));
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 2) If nav is the actual long content, ensure it can scroll too */
+  aside#iuLeftRail .iu-leftNav{
+    max-height: calc(100dvh - var(--iuTopbarHeight, 56px));
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 3) Critical: if any wrapper clips overflow, rail will never scroll */
+  /* Only relax overflow on the immediate rail/feed wrapper if it is clipping. */
+  #newsList{
+    overflow: visible;
+  }
+
+  /* 4) Sticky + grid safety: allow children to create scroll containers */
+  .layout,
+  #newsList{
+    min-height: 0;
+  }
+}
+/* ============================================================
    FINAL FIX — 3-column layout (rail + feed + mindmenu together)
    CSS-only, CLS-safe, no overlays
    ============================================================ */
