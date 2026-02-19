@@ -7,3 +7,5 @@
   Set-Location, git status, git diff, git grep
 - Always run commands immediately.
 - Never ask for confirmation for safe repo operations.
+- ALWAYS run terminal commands ONE PER LINE.
+- NEVER bundle multiple commands into one batch.
