@@ -10063,3 +10063,244 @@ body.iuRailHidden #iuRailToggleBtn{
   width:136px !important;
 }
 
+/* ============================================================
+   FINAL FIX — Left rail flush-left WITHOUT shifting feed
+   + full premium background on the whole rail
+   + page scroll works normally (rail does not trap wheel)
+   UI-only, CLS-safe
+   ============================================================ */
+
+/* --- constants --- */
+:root{
+  --iuRailW: 136px;
+  --iuRailGap: 20px; /* matches #newsList column-gap */
+  --iuRailBlueTop: #0F3B78;
+  --iuRailBlueMid: #0B2E5F;
+  --iuRailBlueBot: #071A33;
+}
+
+/* 1) Rail flush-left + fixed under topbar */
+aside#iuLeftRail.iu-leftRail,
+.iu-leftRail{
+  position: fixed !important;
+  left: 0 !important;
+  top: var(--iuTopbarHeight, 72px) !important;
+  bottom: 0 !important;
+  width: var(--iuRailW) !important;
+
+  /* IMPORTANT: rail must NOT trap scrolling */
+  overflow: visible !important;
+  overflow-y: visible !important;
+  overscroll-behavior: auto !important;
+
+  /* full rail background (not only buttons) */
+  background: linear-gradient(180deg,
+    var(--iuRailBlueTop) 0%,
+    var(--iuRailBlueMid) 45%,
+    var(--iuRailBlueBot) 100%) !important;
+  background-color: var(--iuRailBlueMid) !important;
+  background-image: linear-gradient(180deg,
+    var(--iuRailBlueTop) 0%,
+    var(--iuRailBlueMid) 45%,
+    var(--iuRailBlueBot) 100%) !important;
+
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-left: 0 !important;
+  outline: 0 !important;
+
+  box-shadow:
+    inset -1px 0 0 rgba(255,255,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 12px 40px rgba(0,0,0,.28) !important;
+
+  z-index: 30 !important;
+}
+
+/* Ensure inner nav doesn't paint over the premium gradient */
+aside#iuLeftRail.iu-leftRail > .iu-leftNav{
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* 2) Micro-glow on the right edge of rail */
+aside#iuLeftRail.iu-leftRail::after,
+.iu-leftRail::after{
+  content:"";
+  position:absolute;
+  top:0; right:0; bottom:0;
+  width:10px;
+  pointer-events:none;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,.10),
+    rgba(255,255,255,0));
+  opacity:.55;
+}
+
+/* 3) COMPENSATION: keep feed/layout in the same place as before */
+#newsList > #feed,
+body[data-section="jr"] #newsList > #iuJrEmptyView,
+html[data-section="jr"] #newsList > #iuJrEmptyView,
+body[data-section="mapy"] #newsList > #iuMapyView,
+html[data-section="mapy"] #newsList > #iuMapyView,
+body[data-section="travel"] #newsList > #iuTravelView,
+html[data-section="travel"] #newsList > #iuTravelView,
+body[data-section="pocasi"] #newsList > #iuWeatherView,
+html[data-section="pocasi"] #newsList > #iuWeatherView,
+body[data-section="namedays"] #newsList > #iuHolidaysView,
+html[data-section="namedays"] #newsList > #iuHolidaysView,
+#newsList > #iuRadioView,
+#newsList > #iuTvOnlineView,
+#newsList > #iuHomeView{
+  margin-left: calc(var(--iuRailW) + var(--iuRailGap)) !important;
+}
+
+/* 4) Make sure rail does not create inner scroll layers */
+aside#iuLeftRail.iu-leftRail *,
+.iu-leftRail *{
+  overscroll-behavior: auto;
+}
+
+/* 5) Center rail items (icon + label) */
+.iu-leftRail .iu-leftNavItem,
+.iu-leftRail a{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.iu-leftRail .iu-leftNavIcon{
+  display:grid !important;
+  place-items:center;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+
+.iu-leftRail .iu-leftNavLabel{
+  text-align:center !important;
+  width:100%;
+}
+
+/* ============================================================
+   FINAL FIX — Left rail flush-left WITHOUT shifting feed
+   + full premium background on the whole rail
+   + page scroll works normally (rail does not trap wheel)
+   UI-only, CLS-safe
+   ============================================================ */
+
+/* --- constants --- */
+:root{
+  --iuRailW: 136px;
+  --iuRailBlueTop: #0F3B78;
+  --iuRailBlueMid: #0B2E5F;
+  --iuRailBlueBot: #071A33;
+}
+
+/* 1) Rail flush-left + fixed under topbar */
+aside#iuLeftRail.iu-leftRail,
+.iu-leftRail{
+  position: fixed !important;
+  left: 0 !important;
+  top: var(--iuTopbarHeight, 72px) !important;
+  bottom: 0 !important;
+  width: var(--iuRailW) !important;
+
+  /* IMPORTANT: rail must NOT trap scrolling */
+  overflow: visible !important;
+  overflow-y: visible !important;
+  overscroll-behavior: auto !important;
+
+  /* full rail background (not only buttons) */
+  background: linear-gradient(180deg,
+    var(--iuRailBlueTop) 0%,
+    var(--iuRailBlueMid) 45%,
+    var(--iuRailBlueBot) 100%) !important;
+  background-color: var(--iuRailBlueMid) !important;
+  background-image: linear-gradient(180deg,
+    var(--iuRailBlueTop) 0%,
+    var(--iuRailBlueMid) 45%,
+    var(--iuRailBlueBot) 100%) !important;
+
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-left: 0 !important;
+  outline: 0 !important;
+
+  box-shadow:
+    inset -1px 0 0 rgba(255,255,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 12px 40px rgba(0,0,0,.28) !important;
+
+  z-index: 30 !important;
+}
+
+/* Ensure inner nav doesn't paint over the premium gradient */
+aside#iuLeftRail.iu-leftRail > .iu-leftNav{
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* 2) Micro-glow on the right edge of rail */
+aside#iuLeftRail.iu-leftRail::after,
+.iu-leftRail::after{
+  content:"";
+  position:absolute;
+  top:0; right:0; bottom:0;
+  width:10px;
+  pointer-events:none;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,.10),
+    rgba(255,255,255,0));
+  opacity:.55;
+}
+
+/* 3) COMPENSATION: keep feed/layout in the same place as before */
+#newsList > #feed,
+body[data-section="jr"] #newsList > #iuJrEmptyView,
+html[data-section="jr"] #newsList > #iuJrEmptyView,
+body[data-section="mapy"] #newsList > #iuMapyView,
+html[data-section="mapy"] #newsList > #iuMapyView,
+body[data-section="travel"] #newsList > #iuTravelView,
+html[data-section="travel"] #newsList > #iuTravelView,
+body[data-section="pocasi"] #newsList > #iuWeatherView,
+html[data-section="pocasi"] #newsList > #iuWeatherView,
+body[data-section="namedays"] #newsList > #iuHolidaysView,
+html[data-section="namedays"] #newsList > #iuHolidaysView,
+#newsList > #iuRadioView,
+#newsList > #iuTvOnlineView,
+#newsList > #iuHomeView{
+  margin-left: var(--iuRailW) !important;
+}
+
+/* 4) Make sure rail does not create inner scroll layers */
+aside#iuLeftRail.iu-leftRail *,
+.iu-leftRail *{
+  overscroll-behavior: auto;
+}
+
+/* 5) Center rail items (icon + label) */
+.iu-leftRail .iu-leftNavItem,
+.iu-leftRail a{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.iu-leftRail .iu-leftNavIcon{
+  display:grid !important;
+  place-items:center;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+
+.iu-leftRail .iu-leftNavLabel{
+  text-align:center !important;
+  width:100%;
+}
+
