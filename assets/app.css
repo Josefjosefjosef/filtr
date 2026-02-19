@@ -10108,3 +10108,28 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
     min-width: 0 !important;
   }
 }
+
+/* ============================================================
+   FINAL — Hide left rail → feed expand LEFT (infoUzel.cz)
+   Safe for all monitors, no CLS
+   ============================================================ */
+
+@media (min-width:980px){
+
+  /* když je rail skrytý */
+  body.iuRailHidden #newsList,
+  #newsList:has(aside#iuLeftRail[hidden]){
+    grid-template-columns: minmax(0,1fr) !important;
+  }
+
+  body.iuRailHidden aside#iuLeftRail,
+  aside#iuLeftRail[hidden]{
+    display:none !important;
+  }
+
+  /* feed musí mít full šířku */
+  body.iuRailHidden #feed{
+    width:auto !important;
+    max-width:none !important;
+  }
+}
