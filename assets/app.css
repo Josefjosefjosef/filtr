@@ -10183,8 +10183,6 @@ aside#iuLeftRail.iu-leftRail *,
   text-align:center !important;
   width:100%;
 }
-
-
 /* ============================================================
    HOTFIX — rail missing
    Force rail visible in 3-column layout
@@ -10515,3 +10513,103 @@ aside#iuLeftRail.iu-leftRail *,
   width:100%;
 }
 
+/* ============================================================
+   FINAL FIX — desktop 3 areas in normal flow (no overlay)
+   + single page scroll
+   Wrappers:
+   .layout = outer (main + right)
+   #newsList = inner (rail + feed)
+   ============================================================ */
+
+@media (min-width:980px){
+
+  /* ---------- One page scroll only ---------- */
+  html, body{
+    height:auto !important;
+    overflow-y:auto !important;
+  }
+
+  .layout,
+  #newsList,
+  #feed,
+  aside#iuLeftRail,
+  aside.accordionCol,
+  .iu-rightContent{
+    overflow:visible !important;
+    height:auto !important;
+    max-height:none !important;
+  }
+
+  /* ---------- OUTER: main + right column (reserve space, no overlay) ---------- */
+  .layout{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) 360px !important;
+    align-items:start !important;
+  }
+
+  /* right column must NOT be fixed/absolute (that causes feed underlap) */
+  aside.accordionCol,
+  .iu-rightContent{
+    position:relative !important;
+    width:360px !important;
+    min-width:360px !important;
+    top:auto !important;
+    right:auto !important;
+    bottom:auto !important;
+    left:auto !important;
+    z-index:1 !important;
+  }
+
+  /* ---------- INNER: rail + feed ---------- */
+  #newsList{
+    display:grid !important;
+    grid-template-columns:136px minmax(0,1fr) !important;
+    align-items:start !important;
+    min-width:0 !important;
+    z-index:2 !important;
+  }
+
+  #feed{
+    min-width:0 !important;
+  }
+
+  /* ---------- Left rail: always visible on desktop (even if iuRailHidden set) ---------- */
+  aside#iuLeftRail,
+  #newsList > aside#iuLeftRail{
+    display:block !important;
+    visibility:visible !important;
+    opacity:1 !important;
+    position:relative !important;
+    z-index:3 !important;
+  }
+
+  html.iuRailHidden #iuLeftRail,
+  body.iuRailHidden #iuLeftRail{
+    display:block !important;
+    visibility:visible !important;
+    opacity:1 !important;
+  }
+}
+
+/* ============================================================
+   FINAL FIX — rail toggle always reachable (desktop)
+   ============================================================ */
+
+@media (min-width:980px){
+
+  /* toggle must sit above everything */
+  #iuRailToggleBtn{
+    position:fixed !important;
+    left:8px !important;
+    top:calc(var(--iuTopbarHeight, 56px) + 8px) !important;
+    right:auto !important;
+    bottom:auto !important;
+    z-index:9999 !important;
+    pointer-events:auto !important;
+  }
+
+  /* ensure no parent clips it */
+  .layout, #newsList, #feed, aside.accordionCol, aside#iuLeftRail{
+    overflow:visible !important;
+  }
+}
