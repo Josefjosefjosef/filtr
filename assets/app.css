@@ -10110,43 +10110,17 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 }
 
 /* ============================================================
-   FINAL — Hide left rail → feed expand LEFT (infoUzel.cz)
-   Safe for all monitors, no CLS
+   INFOUZEL FINAL — left rail toggle always visible + feed expand LEFT
+   PRO SAFE / CLS SAFE
+   - no selector hacks
+   - right column untouched
    ============================================================ */
 
 @media (min-width:980px){
 
-  /* když je rail skrytý */
-  body.iuRailHidden #newsList,
-  #newsList:has(aside#iuLeftRail[hidden]){
-    grid-template-columns: minmax(0,1fr) !important;
-  }
-
-  body.iuRailHidden aside#iuLeftRail,
-  aside#iuLeftRail[hidden]{
-    display:none !important;
-  }
-
-  /* feed musí mít full šířku */
-  body.iuRailHidden #feed{
-    width:auto !important;
-    max-width:none !important;
-  }
-}
-
-/* ============================================================
-   FIX — Left rail toggle always visible (infoUzel.cz)
-   UI-only, CLS-safe
-   ============================================================ */
-
-@media (min-width:980px){
-
-  /* When hidden: do NOT display:none the rail (it would hide the toggle inside).
-     Instead, keep it present but collapsed to zero footprint. */
+  /* When hidden: keep rail in DOM (toggle lives inside), but collapse its footprint */
   html.iuRailHidden aside#iuLeftRail,
-  body.iuRailHidden aside#iuLeftRail,
-  aside#iuLeftRail[hidden],
-  aside#iuLeftRail[style*="display:none"]{
+  body.iuRailHidden aside#iuLeftRail{
     display: block !important;
 
     width: 0 !important;
@@ -10173,30 +10147,58 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
     flex: 0 0 0 !important;
   }
 
-  /* Collapse grid to a single track when rail is hidden */
+  /* Feed expands LEFT (single middle track) */
   html.iuRailHidden #newsList,
-  body.iuRailHidden #newsList,
-  #newsList:has(aside#iuLeftRail[hidden]),
-  #newsList:has(aside#iuLeftRail[style*="display:none"]),
-  #newsList:has(aside#iuLeftRail.iuRailHidden){
+  body.iuRailHidden #newsList{
     grid-template-columns: minmax(0, 1fr) !important;
     column-gap: 0 !important;
   }
 
-  /* Ensure toggle becomes a fixed handle even if rail is hidden via [hidden]/inline styles */
-  aside#iuLeftRail[hidden] #iuRailToggleBtn,
-  aside#iuLeftRail[style*="display:none"] #iuRailToggleBtn,
-  aside#iuLeftRail.iuRailHidden #iuRailToggleBtn{
+  html.iuRailHidden #feed,
+  body.iuRailHidden #feed{
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  /* Toggle button – always visible (fixed handle) */
+  #iuRailToggle,
+  #iuRailToggleBtn{
     position: fixed !important;
-    left: -10px !important;
-    right: auto !important;
-    top: calc(var(--iuTopbarStackH, 64px) + 10px) !important;
-    bottom: auto !important;
-    width: 44px !important;
-    height: 44px !important;
-    display: grid !important;
-    place-items: center !important;
+    top: calc(var(--iuTopbarStackH, 64px) + 12px) !important;
+    left: 12px !important;
     z-index: 9999 !important;
+
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 12px !important;
+
+    background: linear-gradient(180deg,#0d2a44,#081a2c) !important;
+    box-shadow:
+      0 6px 20px rgba(0,0,0,.35),
+      inset 0 1px 0 rgba(255,255,255,.15) !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+
+    transition: transform .15s ease, box-shadow .15s ease !important;
     transform: none !important;
+  }
+
+  #iuRailToggle:hover,
+  #iuRailToggleBtn:hover{
+    transform: translateY(-1px) !important;
+    box-shadow:
+      0 10px 26px rgba(0,0,0,.45),
+      inset 0 1px 0 rgba(255,255,255,.2) !important;
+  }
+
+  /* Rail visible => nudge inside by rail width + gap */
+  html:not(.iuRailHidden) #iuRailToggle,
+  body:not(.iuRailHidden) #iuRailToggle,
+  html:not(.iuRailHidden) #iuRailToggleBtn,
+  body:not(.iuRailHidden) #iuRailToggleBtn{
+    left: 148px !important; /* 136px rail + 12px gap */
   }
 }
