@@ -10185,6 +10185,137 @@ aside#iuLeftRail.iu-leftRail *,
 }
 
 /* ============================================================
+   FINAL FIX — 3-column layout (rail + feed + mindmenu together)
+   CSS-only, CLS-safe, no overlays
+   ============================================================ */
+
+@media (min-width: 980px){
+  /* Left side: rail + content must be part of layout (no margin compensation) */
+  #newsList{
+    display: grid !important;
+    grid-template-columns: 136px minmax(0, 1fr);
+    column-gap: 16px;
+    align-items: start;
+  }
+
+  /* Keep non-feed rows full-width inside left side */
+  #newsList > #dataStatus,
+  #newsList > #emptyBox,
+  #newsList > .iu-filterChips{
+    grid-column: 1 / -1;
+  }
+
+  /* Rail is a normal grid item (never overlay) */
+  aside#iuLeftRail,
+  #iuLeftRail,
+  .iu-leftRail{
+    grid-column: 1;
+    width: 136px !important;
+    min-width: 136px !important;
+    max-width: 136px !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+
+  /* Feed (and section views) live in the middle column */
+  #newsList > #feed,
+  body[data-section="jr"] #newsList > #iuJrEmptyView,
+  html[data-section="jr"] #newsList > #iuJrEmptyView,
+  body[data-section="mapy"] #newsList > #iuMapyView,
+  html[data-section="mapy"] #newsList > #iuMapyView,
+  body[data-section="travel"] #newsList > #iuTravelView,
+  html[data-section="travel"] #newsList > #iuTravelView,
+  body[data-section="pocasi"] #newsList > #iuWeatherView,
+  html[data-section="pocasi"] #newsList > #iuWeatherView,
+  body[data-section="namedays"] #newsList > #iuHolidaysView,
+  html[data-section="namedays"] #newsList > #iuHolidaysView,
+  #newsList > #iuRadioView,
+  #newsList > #iuTvOnlineView,
+  #newsList > #iuMyUzelView1,
+  #newsList > #iuMyUzelView2,
+  #newsList > #iuMyUzelView3,
+  #newsList > #iuMyUzelView4,
+  #newsList > #iuMyUzelView5,
+  #newsList > #iuHomeView{
+    grid-column: 2;
+    min-width: 0;
+    margin-left: 0 !important; /* kill fixed-rail compensation */
+    padding-left: 0 !important;
+    left: auto !important;
+  }
+
+  /* MindMenu (right column) stays stable width for CLS */
+  .layout > aside.accordionCol{
+    width: 360px;
+    min-width: 360px;
+    max-width: 360px;
+  }
+
+  /* CLS/stability: isolate column layout reflows */
+  aside#iuLeftRail,
+  .layout > aside.accordionCol{
+    contain: layout paint;
+  }
+
+  /* If rail is hidden (toggle), collapse left grid to 1 column */
+  html.iuRailHidden #newsList,
+  body.iuRailHidden #newsList{
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  html.iuRailHidden #newsList > #feed,
+  body.iuRailHidden #newsList > #feed,
+  html.iuRailHidden #newsList > #iuRadioView,
+  body.iuRailHidden #newsList > #iuRadioView,
+  html.iuRailHidden #newsList > #iuJrEmptyView,
+  body.iuRailHidden #newsList > #iuJrEmptyView,
+  html.iuRailHidden #newsList > #iuMapyView,
+  body.iuRailHidden #newsList > #iuMapyView,
+  html.iuRailHidden #newsList > #iuTravelView,
+  body.iuRailHidden #newsList > #iuTravelView,
+  html.iuRailHidden #newsList > #iuWeatherView,
+  body.iuRailHidden #newsList > #iuWeatherView,
+  html.iuRailHidden #newsList > #iuHolidaysView,
+  body.iuRailHidden #newsList > #iuHolidaysView,
+  html.iuRailHidden #newsList > #iuTvOnlineView,
+  body.iuRailHidden #newsList > #iuTvOnlineView,
+  html.iuRailHidden #newsList > #iuHomeView,
+  body.iuRailHidden #newsList > #iuHomeView{
+    grid-column: 1 !important;
+  }
+}
+
+/* Preserve existing behavior when rail is intentionally hidden < 1100px */
+@media (min-width: 980px) and (max-width: 1100px){
+  #newsList{
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  #newsList > #feed,
+  body[data-section="jr"] #newsList > #iuJrEmptyView,
+  html[data-section="jr"] #newsList > #iuJrEmptyView,
+  body[data-section="mapy"] #newsList > #iuMapyView,
+  html[data-section="mapy"] #newsList > #iuMapyView,
+  body[data-section="travel"] #newsList > #iuTravelView,
+  html[data-section="travel"] #newsList > #iuTravelView,
+  body[data-section="pocasi"] #newsList > #iuWeatherView,
+  html[data-section="pocasi"] #newsList > #iuWeatherView,
+  body[data-section="namedays"] #newsList > #iuHolidaysView,
+  html[data-section="namedays"] #newsList > #iuHolidaysView,
+  #newsList > #iuRadioView,
+  #newsList > #iuTvOnlineView,
+  #newsList > #iuMyUzelView1,
+  #newsList > #iuMyUzelView2,
+  #newsList > #iuMyUzelView3,
+  #newsList > #iuMyUzelView4,
+  #newsList > #iuMyUzelView5,
+  #newsList > #iuHomeView{
+    grid-column: 1 !important;
+  }
+}
+/* ============================================================
    FINAL FIX — Left rail flush-left WITHOUT shifting feed
    + full premium background on the whole rail
    + page scroll works normally (rail does not trap wheel)
