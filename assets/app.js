@@ -10917,11 +10917,6 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     document.addEventListener('click', (e) => {
       const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
       if (!item) return;
-      if (item && item.classList && item.classList.contains('iuRailToggle')) return;
-      // UI-only: rail hide/show toggle must not trigger router/view switching
-      if (item.id === "iuRailToggleBtn") return;
-      const action = (item.getAttribute("data-action") || item.dataset?.action || "").trim().toLowerCase();
-      if (action === "toggle-rail") return;
       // Prevent only for internal router items (href="#" / internal data-rail).
       // External links must keep default behavior.
       try{
@@ -10956,35 +10951,28 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 })();
 
-// === UI: Left rail hide/show toggle (no feed pipeline changes) ===
-(function () {
-  const btn = document.getElementById('iuRailToggleBtn');
+// === UI: New rail toggle in topbar (stable, no DOM relocation) ===
+(function iuInitRailToggleTopbar(){
+  const btn = document.getElementById("iuRailToggleTopbarBtn");
   if (!btn) return;
 
-  function setHidden(isHidden) {
-    try { document.body.classList.toggle('iuRailHidden', isHidden); } catch (e) {}
-    try { document.documentElement.classList.toggle('iuRailHidden', isHidden); } catch (e) {}
+  function setHidden(isHidden){
+    try { document.body.classList.toggle("iuRailHidden", isHidden); } catch (e) {}
+    try { document.documentElement.classList.toggle("iuRailHidden", isHidden); } catch (e) {}
+    try { localStorage.setItem("iuRailHidden", isHidden ? "1" : "0"); } catch (e) {}
 
-    const label = btn.querySelector('.iu-leftNavLabel');
-    const text = isHidden ? 'Zobrazit sloupec' : 'Skrýt sloupec';
-
-    if (label) label.textContent = text;
-    btn.setAttribute('aria-label', text);
-    btn.setAttribute('title', text);
-
-    try {
-      localStorage.setItem('iuRailHidden', isHidden ? '1' : '0');
-    } catch (e) {}
+    // Keep a11y label consistent with state (no layout impact)
+    try{
+      const text = isHidden ? "Zobrazit sloupec" : "Skrýt sloupec";
+      btn.setAttribute("aria-label", text);
+      btn.setAttribute("title", text);
+    }catch{}
   }
 
-  // restore
-  let initial = false;
-  try { initial = localStorage.getItem('iuRailHidden') === '1'; } catch (e) {}
-  setHidden(initial);
+  // sync to current state (early HTML script may have already restored it)
+  try { setHidden(document.body.classList.contains("iuRailHidden")); } catch {}
 
-  btn.addEventListener('click', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    setHidden(!document.body.classList.contains('iuRailHidden'));
+  btn.addEventListener("click", () => {
+    setHidden(!document.body.classList.contains("iuRailHidden"));
   });
 })();
