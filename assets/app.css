@@ -10058,92 +10058,418 @@ body.iuRailHidden #iuRailToggleBtn{
   width: 100%;
 }
 
+/* FINAL — Left rail width 136px (premium) */
+.iu-leftRail{
+  width:136px !important;
+}
+
 /* ============================================================
-   FINAL — Desktop layout stability (single scroll, no overlay)
-   - .layout = outer (main + right)
-   - #newsList = inner (rail + feed)
-   - #iuRailToggleBtn always clickable & reachable
+   FINAL FIX — Left rail flush-left WITHOUT shifting feed
+   + full premium background on the whole rail
+   + page scroll works normally (rail does not trap wheel)
+   UI-only, CLS-safe
    ============================================================ */
 
-@media (min-width:980px){
+/* --- constants --- */
+:root{
+  --iuRailW: 136px;
+  --iuRailGap: 20px; /* matches #newsList column-gap */
+  --iuRailBlueTop: #0F3B78;
+  --iuRailBlueMid: #0B2E5F;
+  --iuRailBlueBot: #071A33;
+}
 
-  /* 1) SINGLE PAGE SCROLL ONLY */
-  html, body{
-    height:auto !important;
-    overflow-y:auto !important;
+/* 1) Rail flush-left + fixed under topbar */
+aside#iuLeftRail.iu-leftRail,
+.iu-leftRail{
+  position: fixed !important;
+  left: 0 !important;
+  top: var(--iuTopbarHeight, 72px) !important;
+  bottom: 0 !important;
+  width: var(--iuRailW) !important;
+
+  /* IMPORTANT: rail must NOT trap scrolling */
+  overflow: visible !important;
+  overflow-y: visible !important;
+  overscroll-behavior: auto !important;
+
+  /* full rail background (not only buttons) */
+  background: linear-gradient(180deg,
+    var(--iuRailBlueTop) 0%,
+    var(--iuRailBlueMid) 45%,
+    var(--iuRailBlueBot) 100%) !important;
+  background-color: var(--iuRailBlueMid) !important;
+  background-image: linear-gradient(180deg,
+    var(--iuRailBlueTop) 0%,
+    var(--iuRailBlueMid) 45%,
+    var(--iuRailBlueBot) 100%) !important;
+
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-left: 0 !important;
+  outline: 0 !important;
+
+  box-shadow:
+    inset -1px 0 0 rgba(255,255,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 12px 40px rgba(0,0,0,.28) !important;
+
+  z-index: 30 !important;
+}
+
+/* Ensure inner nav doesn't paint over the premium gradient */
+aside#iuLeftRail.iu-leftRail > .iu-leftNav{
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* 2) Micro-glow on the right edge of rail */
+aside#iuLeftRail.iu-leftRail::after,
+.iu-leftRail::after{
+  content:"";
+  position:absolute;
+  top:0; right:0; bottom:0;
+  width:10px;
+  pointer-events:none;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,.10),
+    rgba(255,255,255,0));
+  opacity:.55;
+}
+
+/* 3) COMPENSATION: keep feed/layout in the same place as before */
+#newsList > #feed,
+body[data-section="jr"] #newsList > #iuJrEmptyView,
+html[data-section="jr"] #newsList > #iuJrEmptyView,
+body[data-section="mapy"] #newsList > #iuMapyView,
+html[data-section="mapy"] #newsList > #iuMapyView,
+body[data-section="travel"] #newsList > #iuTravelView,
+html[data-section="travel"] #newsList > #iuTravelView,
+body[data-section="pocasi"] #newsList > #iuWeatherView,
+html[data-section="pocasi"] #newsList > #iuWeatherView,
+body[data-section="namedays"] #newsList > #iuHolidaysView,
+html[data-section="namedays"] #newsList > #iuHolidaysView,
+#newsList > #iuRadioView,
+#newsList > #iuTvOnlineView,
+#newsList > #iuHomeView{
+  margin-left: calc(var(--iuRailW) + var(--iuRailGap)) !important;
+}
+
+/* 4) Make sure rail does not create inner scroll layers */
+aside#iuLeftRail.iu-leftRail *,
+.iu-leftRail *{
+  overscroll-behavior: auto;
+}
+
+/* 5) Center rail items (icon + label) */
+.iu-leftRail .iu-leftNavItem,
+.iu-leftRail a{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.iu-leftRail .iu-leftNavIcon{
+  display:grid !important;
+  place-items:center;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+
+.iu-leftRail .iu-leftNavLabel{
+  text-align:center !important;
+  width:100%;
+}
+
+/* ============================================================
+   FINAL FIX — left rail scroll (desktop)
+   Works with 3-column layout, CLS-safe
+   ============================================================ */
+
+@media (min-width: 980px){
+
+  /* 1) Rail itself: must be allowed to scroll */
+  aside#iuLeftRail.iu-leftRail,
+  aside#iuLeftRail{
+    /* keep it in the normal flow (grid item), but allow inner scroll */
+    align-self: start;
+    max-height: calc(100dvh - var(--iuTopbarHeight, 56px));
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .layout,
-  #newsList,
-  #feed,
-  aside#iuLeftRail,
-  aside.accordionCol,
-  .iu-rightContent{
-    overflow:visible !important;
-    height:auto !important;
-    max-height:none !important;
+  /* 2) If nav is the actual long content, ensure it can scroll too */
+  aside#iuLeftRail .iu-leftNav{
+    max-height: calc(100dvh - var(--iuTopbarHeight, 56px));
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
-  /* 2) OUTER GRID: reserve space for right column (prevents underlap) */
-  .layout{
-    display:grid !important;
-    grid-template-columns:minmax(0,1fr) 360px !important;
-    align-items:start !important;
-    min-width:0 !important;
-  }
-
-  /* 3) RIGHT COLUMN: strictly in-flow (never fixed/absolute overlay) */
-  aside.accordionCol,
-  .iu-rightContent{
-    position:relative !important;
-    inset:auto !important;
-    top:auto !important;
-    right:auto !important;
-    bottom:auto !important;
-    left:auto !important;
-    width:360px !important;
-    min-width:360px !important;
-    float:none !important;
-    z-index:1 !important;
-  }
-
-  /* 4) INNER GRID: rail + feed */
+  /* 3) Critical: if any wrapper clips overflow, rail will never scroll */
+  /* Only relax overflow on the immediate rail/feed wrapper if it is clipping. */
   #newsList{
-    display:grid !important;
-    grid-template-columns:136px minmax(0,1fr) !important;
-    align-items:start !important;
-    min-width:0 !important;
-    z-index:2 !important;
+    overflow: visible;
   }
 
-  #feed{
-    min-width:0 !important;
-  }
-
-  /* 5) RAIL VISIBILITY ON DESKTOP (even if iuRailHidden is set) */
-  aside#iuLeftRail,
-  #newsList > aside#iuLeftRail{
-    display:block !important;
-    visibility:visible !important;
-    opacity:1 !important;
-    position:relative !important;
-    z-index:3 !important;
-  }
-
-  html.iuRailHidden #iuLeftRail,
-  body.iuRailHidden #iuLeftRail{
-    display:block !important;
-    visibility:visible !important;
-    opacity:1 !important;
-  }
-
-  /* 6) TOGGLE: always reachable and clickable (even if something overlaps) */
-  #iuRailToggleBtn{
-    position:fixed !important;
-    left:8px !important;
-    top:calc(var(--iuTopbarHeight, 56px) + 8px) !important;
-    z-index:2147483647 !important;
-    pointer-events:auto !important;
-    transform:translateZ(0);
+  /* 4) Sticky + grid safety: allow children to create scroll containers */
+  .layout,
+  #newsList{
+    min-height: 0;
   }
 }
+/* ============================================================
+   FINAL FIX — 3-column layout (rail + feed + mindmenu together)
+   CSS-only, CLS-safe, no overlays
+   ============================================================ */
+
+@media (min-width: 980px){
+  /* Left side: rail + content must be part of layout (no margin compensation) */
+  #newsList{
+    display: grid !important;
+    grid-template-columns: 136px minmax(0, 1fr);
+    column-gap: 16px;
+    align-items: start;
+  }
+
+  /* Keep non-feed rows full-width inside left side */
+  #newsList > #dataStatus,
+  #newsList > #emptyBox,
+  #newsList > .iu-filterChips{
+    grid-column: 1 / -1;
+  }
+
+  /* Rail is a normal grid item (never overlay) */
+  aside#iuLeftRail,
+  #iuLeftRail,
+  .iu-leftRail{
+    grid-column: 1;
+    width: 136px !important;
+    min-width: 136px !important;
+    max-width: 136px !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+
+  /* Feed (and section views) live in the middle column */
+  #newsList > #feed,
+  body[data-section="jr"] #newsList > #iuJrEmptyView,
+  html[data-section="jr"] #newsList > #iuJrEmptyView,
+  body[data-section="mapy"] #newsList > #iuMapyView,
+  html[data-section="mapy"] #newsList > #iuMapyView,
+  body[data-section="travel"] #newsList > #iuTravelView,
+  html[data-section="travel"] #newsList > #iuTravelView,
+  body[data-section="pocasi"] #newsList > #iuWeatherView,
+  html[data-section="pocasi"] #newsList > #iuWeatherView,
+  body[data-section="namedays"] #newsList > #iuHolidaysView,
+  html[data-section="namedays"] #newsList > #iuHolidaysView,
+  #newsList > #iuRadioView,
+  #newsList > #iuTvOnlineView,
+  #newsList > #iuMyUzelView1,
+  #newsList > #iuMyUzelView2,
+  #newsList > #iuMyUzelView3,
+  #newsList > #iuMyUzelView4,
+  #newsList > #iuMyUzelView5,
+  #newsList > #iuHomeView{
+    grid-column: 2;
+    min-width: 0;
+    margin-left: 0 !important; /* kill fixed-rail compensation */
+    padding-left: 0 !important;
+    left: auto !important;
+  }
+
+  /* MindMenu (right column) stays stable width for CLS */
+  .layout > aside.accordionCol{
+    width: 360px;
+    min-width: 360px;
+    max-width: 360px;
+  }
+
+  /* CLS/stability: isolate column layout reflows */
+  aside#iuLeftRail,
+  .layout > aside.accordionCol{
+    contain: layout paint;
+  }
+
+  /* If rail is hidden (toggle), collapse left grid to 1 column */
+  html.iuRailHidden #newsList,
+  body.iuRailHidden #newsList{
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  html.iuRailHidden #newsList > #feed,
+  body.iuRailHidden #newsList > #feed,
+  html.iuRailHidden #newsList > #iuRadioView,
+  body.iuRailHidden #newsList > #iuRadioView,
+  html.iuRailHidden #newsList > #iuJrEmptyView,
+  body.iuRailHidden #newsList > #iuJrEmptyView,
+  html.iuRailHidden #newsList > #iuMapyView,
+  body.iuRailHidden #newsList > #iuMapyView,
+  html.iuRailHidden #newsList > #iuTravelView,
+  body.iuRailHidden #newsList > #iuTravelView,
+  html.iuRailHidden #newsList > #iuWeatherView,
+  body.iuRailHidden #newsList > #iuWeatherView,
+  html.iuRailHidden #newsList > #iuHolidaysView,
+  body.iuRailHidden #newsList > #iuHolidaysView,
+  html.iuRailHidden #newsList > #iuTvOnlineView,
+  body.iuRailHidden #newsList > #iuTvOnlineView,
+  html.iuRailHidden #newsList > #iuHomeView,
+  body.iuRailHidden #newsList > #iuHomeView{
+    grid-column: 1 !important;
+  }
+}
+
+/* Preserve existing behavior when rail is intentionally hidden < 1100px */
+@media (min-width: 980px) and (max-width: 1100px){
+  #newsList{
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  #newsList > #feed,
+  body[data-section="jr"] #newsList > #iuJrEmptyView,
+  html[data-section="jr"] #newsList > #iuJrEmptyView,
+  body[data-section="mapy"] #newsList > #iuMapyView,
+  html[data-section="mapy"] #newsList > #iuMapyView,
+  body[data-section="travel"] #newsList > #iuTravelView,
+  html[data-section="travel"] #newsList > #iuTravelView,
+  body[data-section="pocasi"] #newsList > #iuWeatherView,
+  html[data-section="pocasi"] #newsList > #iuWeatherView,
+  body[data-section="namedays"] #newsList > #iuHolidaysView,
+  html[data-section="namedays"] #newsList > #iuHolidaysView,
+  #newsList > #iuRadioView,
+  #newsList > #iuTvOnlineView,
+  #newsList > #iuMyUzelView1,
+  #newsList > #iuMyUzelView2,
+  #newsList > #iuMyUzelView3,
+  #newsList > #iuMyUzelView4,
+  #newsList > #iuMyUzelView5,
+  #newsList > #iuHomeView{
+    grid-column: 1 !important;
+  }
+}
+/* ============================================================
+   FINAL FIX — Left rail flush-left WITHOUT shifting feed
+   + full premium background on the whole rail
+   + page scroll works normally (rail does not trap wheel)
+   UI-only, CLS-safe
+   ============================================================ */
+
+/* --- constants --- */
+:root{
+  --iuRailW: 136px;
+  --iuRailBlueTop: #0F3B78;
+  --iuRailBlueMid: #0B2E5F;
+  --iuRailBlueBot: #071A33;
+}
+
+/* 1) Rail flush-left + fixed under topbar */
+aside#iuLeftRail.iu-leftRail,
+.iu-leftRail{
+  position: fixed !important;
+  left: 0 !important;
+  top: var(--iuTopbarHeight, 72px) !important;
+  bottom: 0 !important;
+  width: var(--iuRailW) !important;
+
+  /* IMPORTANT: rail must NOT trap scrolling */
+  overflow: visible !important;
+  overflow-y: visible !important;
+  overscroll-behavior: auto !important;
+
+  /* full rail background (not only buttons) */
+  background: linear-gradient(180deg,
+    var(--iuRailBlueTop) 0%,
+    var(--iuRailBlueMid) 45%,
+    var(--iuRailBlueBot) 100%) !important;
+  background-color: var(--iuRailBlueMid) !important;
+  background-image: linear-gradient(180deg,
+    var(--iuRailBlueTop) 0%,
+    var(--iuRailBlueMid) 45%,
+    var(--iuRailBlueBot) 100%) !important;
+
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-left: 0 !important;
+  outline: 0 !important;
+
+  box-shadow:
+    inset -1px 0 0 rgba(255,255,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 12px 40px rgba(0,0,0,.28) !important;
+
+  z-index: 30 !important;
+}
+
+/* Ensure inner nav doesn't paint over the premium gradient */
+aside#iuLeftRail.iu-leftRail > .iu-leftNav{
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* 2) Micro-glow on the right edge of rail */
+aside#iuLeftRail.iu-leftRail::after,
+.iu-leftRail::after{
+  content:"";
+  position:absolute;
+  top:0; right:0; bottom:0;
+  width:10px;
+  pointer-events:none;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,.10),
+    rgba(255,255,255,0));
+  opacity:.55;
+}
+
+/* 3) COMPENSATION: keep feed/layout in the same place as before */
+#newsList > #feed,
+body[data-section="jr"] #newsList > #iuJrEmptyView,
+html[data-section="jr"] #newsList > #iuJrEmptyView,
+body[data-section="mapy"] #newsList > #iuMapyView,
+html[data-section="mapy"] #newsList > #iuMapyView,
+body[data-section="travel"] #newsList > #iuTravelView,
+html[data-section="travel"] #newsList > #iuTravelView,
+body[data-section="pocasi"] #newsList > #iuWeatherView,
+html[data-section="pocasi"] #newsList > #iuWeatherView,
+body[data-section="namedays"] #newsList > #iuHolidaysView,
+html[data-section="namedays"] #newsList > #iuHolidaysView,
+#newsList > #iuRadioView,
+#newsList > #iuTvOnlineView,
+#newsList > #iuHomeView{
+  margin-left: var(--iuRailW) !important;
+}
+
+/* 4) Make sure rail does not create inner scroll layers */
+aside#iuLeftRail.iu-leftRail *,
+.iu-leftRail *{
+  overscroll-behavior: auto;
+}
+
+/* 5) Center rail items (icon + label) */
+.iu-leftRail .iu-leftNavItem,
+.iu-leftRail a{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.iu-leftRail .iu-leftNavIcon{
+  display:grid !important;
+  place-items:center;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+
+.iu-leftRail .iu-leftNavLabel{
+  text-align:center !important;
+  width:100%;
+}
+
