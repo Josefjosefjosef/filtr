@@ -10659,19 +10659,23 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta:last-child{
   }
 }
 
-.topbar::before{
-content:"";
-position:absolute;
-top:0;
-left:0;
-right:0;
-height:8px;
-background:linear-gradient(90deg,#0B1F33,#132F4D);
-border-top-left-radius:16px;
-pointer-events:none;
+/* TOPBAR — gradient line 8px (real DOM: header#topbarWrap.topbar-new.iuTopbar)
+   NOTE: .topbar-new::before is disabled earlier in the file (content/display none !important),
+   so we must override with higher specificity + !important. */
+header#topbarWrap.topbar-new.iuTopbar{
+  position:relative;
 }
 
-.topbar{
-position:relative;
-overflow:hidden;
+header#topbarWrap.topbar-new.iuTopbar::before{
+  content:"" !important;
+  display:block !important;
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:8px;
+  background:linear-gradient(90deg,#0B1F33,#132F4D);
+  border-top-left-radius:16px;
+  pointer-events:none;
+  z-index:1;
 }
