@@ -10583,3 +10583,13 @@ body #iuLeftRail .iu-leftNavItem{
 .accordionCol .mindMenu .iu-mmQuickLinks:first-child .iu-mmSectionHead{
   margin-top: 10px;
 }
+
+/* ============================================================
+   HOTFIX (root-cause): mindMenu top gap after removing iuDailyPanel
+   The :first-child selector above may not match due to whitespace nodes.
+   Keep spacing premium, but avoid "reserved" empty space above QuickLinks.
+   ============================================================ */
+
+.accordionCol .mindMenu > section.iu-mmQuickLinks .iu-mmSectionHead{
+  margin-top: 10px !important;
+}
