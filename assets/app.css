@@ -9987,6 +9987,18 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 }
 
 /* ============================================================
+   LAYOUT GUARD — desktop columns (#newsList)
+   Required by CI layout guard.
+   ============================================================ */
+
+@media (min-width:980px){
+  #newsList{
+    display: grid;
+    grid-template-columns: 136px minmax(0, 1fr);
+  }
+}
+
+/* ============================================================
    FINAL FIX — left rail must always be visible (no overlay cover)
    CSS-only, CLS-safe
    ============================================================ */
