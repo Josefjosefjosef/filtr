@@ -10593,3 +10593,34 @@ body #iuLeftRail .iu-leftNavItem{
 .accordionCol .mindMenu > section.iu-mmQuickLinks .iu-mmSectionHead{
   margin-top: 10px !important;
 }
+
+/* ============================================================
+   RIGHT RAIL — unify sections (Moje schránky = Rychlé odkazy)
+   ============================================================ */
+
+.iuRightSection{
+  margin-bottom:18px;
+}
+
+.iuRightSection h3,
+.iu-mmSectionHead{
+  font-size:14px;
+  font-weight:600;
+  color:#374151;
+  margin:10px 0 8px 0;
+}
+
+.iuQuickLinksGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+/* kill old collapse styles */
+.iu-rightContent details.iu-userHeader,
+.iu-rightContent .iu-mmMailHead details{
+  display:block;
+}
+.iu-rightContent details summary{
+  display:none !important;
+}
