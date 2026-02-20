@@ -10335,3 +10335,91 @@ body #iuLeftRail .iu-leftNavItem{
   outline: 2px solid rgba(209,213,219,0.35);
   outline-offset: 2px;
 }
+
+/* ============================================================
+   Left Rail — Section accent colors (icons + divider only)
+   Text labels stay silver. CLS-safe.
+   ============================================================ */
+
+:root{
+  --iuRailAccent-quick: #38BDF8; /* RYCHLÝ SERVIS */
+  --iuRailAccent-day:   #A78BFA; /* PŘEHLED DNE */
+  --iuRailAccent-fun:   #F59E0B; /* ZÁBAVA & ENGAGEMENT */
+  --iuRailAccent-me:    #34D399; /* Můj infoUzel.cz */
+}
+
+/* Base: keep label text silver (explicit, to avoid accidental inherit) */
+#iuLeftRail .iu-leftNavItem span{
+  color:#D1D5DB !important;
+}
+
+/* Divider under section title uses a CSS var we can override per section */
+#iuLeftRail .iuLeftRailSectionTitle{
+  --iuRailSectionAccent: rgba(209,213,219,0.28);
+  background-image: linear-gradient(
+    to right,
+    rgba(209,213,219,0),
+    var(--iuRailSectionAccent),
+    rgba(209,213,219,0)
+  ) !important;
+}
+
+/* Icon targeting helper: icon elements inside nav items */
+#iuLeftRail .iu-leftNavItem :is(i, svg){
+  color: inherit;
+  fill: currentColor;
+}
+
+/* === RYCHLÝ SERVIS ===
+   Apply to icons after the "RYCHLÝ SERVIS" title until the next title.
+   This relies on DOM order: title -> items -> next title -> items ...
+*/
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg){
+  color: var(--iuRailAccent-quick) !important;
+}
+
+/* First section title divider accent (assumes RYCHLÝ SERVIS is first) */
+#iuLeftRail .iuLeftRailSectionTitle:first-of-type{
+  --iuRailSectionAccent: color-mix(in srgb, var(--iuRailAccent-quick) 55%, transparent) !important;
+}
+
+/* === PŘEHLED DNE ===
+   Apply to icons after the SECOND section title.
+*/
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2){
+  --iuRailSectionAccent: color-mix(in srgb, var(--iuRailAccent-day) 55%, transparent) !important;
+}
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg){
+  color: var(--iuRailAccent-day) !important;
+}
+
+/* === ZÁBAVA & ENGAGEMENT === (third title) */
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(3){
+  --iuRailSectionAccent: color-mix(in srgb, var(--iuRailAccent-fun) 55%, transparent) !important;
+}
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(3) + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(3) + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(3) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(3) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg){
+  color: var(--iuRailAccent-fun) !important;
+}
+
+/* === Můj infoUzel.cz === (label, not necessarily section title) */
+#iuLeftRail .iuMyUzelLabel{
+  color:#D1D5DB !important; /* keep title silver */
+}
+#iuLeftRail .iuMyUzelLabel{
+  --iuRailSectionAccent: color-mix(in srgb, var(--iuRailAccent-me) 55%, transparent) !important;
+}
