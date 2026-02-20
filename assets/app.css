@@ -10423,3 +10423,93 @@ body #iuLeftRail .iu-leftNavItem{
 #iuLeftRail .iuMyUzelLabel{
   --iuRailSectionAccent: color-mix(in srgb, var(--iuRailAccent-me) 55%, transparent) !important;
 }
+
+/* ============================================================
+   Left Rail — Color ONLY the icon glyph (not the silver icon tile)
+   ============================================================ */
+
+:root{
+  --iuRailAccent-quick: #38BDF8; /* RYCHLÝ SERVIS */
+  --iuRailAccent-day:   #A78BFA; /* PŘEHLED DNE */
+  --iuRailAccent-fun:   #F59E0B; /* ZÁBAVA & ENGAGEMENT */
+  --iuRailAccent-me:    #34D399; /* Můj infoUzel.cz */
+}
+
+/* 0) Hard safety: keep item text + wrapper color silver so icon tile stays silver */
+#iuLeftRail .iu-leftNavItem{
+  color:#D1D5DB !important; /* ensures wrappers using currentColor stay silver */
+}
+
+#iuLeftRail .iu-leftNavItem span{
+  color:#D1D5DB !important;
+}
+
+/* 1) Make sure ONLY glyph is colorable (FA <i> / SVG) */
+#iuLeftRail .iu-leftNavItem i{
+  color: inherit; /* will be overridden per section below */
+}
+
+#iuLeftRail .iu-leftNavItem svg{
+  color: inherit;
+}
+
+#iuLeftRail .iu-leftNavItem svg *{
+  fill: currentColor !important; /* glyph only */
+  stroke: currentColor !important;
+}
+
+/* 2) Section colors — apply ONLY to glyph element (i/svg), NOT the parent */
+
+/* ===== RYCHLÝ SERVIS ===== */
+#iuLeftRail .iu-leftNavItem[data-rail="weather"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="weather"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="maps"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="maps"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="jr"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="jr"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="tvonline"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="tvonline"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="radio"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="radio"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="svatky"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="svatky"] svg{
+  color: var(--iuRailAccent-quick) !important;
+}
+
+/* ===== PŘEHLED DNE ===== */
+#iuLeftRail .iu-leftNavItem[data-rail="media"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="media"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="sport"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="sport"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="tech"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="tech"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="finance"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="finance"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="home"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="home"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="zdravi"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="zdravi"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="travel"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="travel"] svg{
+  color: var(--iuRailAccent-day) !important;
+}
+
+/* ===== ZÁBAVA & ENGAGEMENT ===== */
+#iuLeftRail .iu-leftNavItem[data-rail="hry"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="hry"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="culture"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="culture"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="veda"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="veda"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="vzdelavani"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="vzdelavani"] svg{
+  color: var(--iuRailAccent-fun) !important;
+}
+
+/* ===== Můj infoUzel.cz (pokud existuje jako tlačítko) ===== */
+#iuLeftRail .iu-leftNavItem[data-rail^="myuzel-"] i,
+#iuLeftRail .iu-leftNavItem[data-rail^="myuzel-"] svg{
+  color: var(--iuRailAccent-me) !important;
+}
