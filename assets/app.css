@@ -10116,3 +10116,45 @@ body #iuLeftRail .iu-leftNavItem{
   background: linear-gradient(180deg,#0B1F33 0%,#132F4D 100%) !important;
   border-right: 1px solid #D1D5DB !important;
 }
+
+/* ============================================================
+   INFOUZEL LEFT RAIL PREMIUM v2
+   Matné stříbro + enterprise boxy
+   UI ONLY – CLS SAFE
+   ============================================================ */
+
+/* --- 1. Jemnější oddělovací linka --- */
+#iuLeftRail,
+.iu-leftNav {
+  border-right: 1px solid rgba(209,213,219,0.25) !important;
+}
+
+/* --- 2. Tlačítka méně "plastová" --- */
+.iu-leftNavItem,
+.iu-leftNavItem a {
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* --- 3. Ikonky matné stříbro --- */
+.iu-leftNavItem i,
+.iu-leftNavItem svg,
+.iu-leftNav .iuNavIcon {
+  color: #D1D5DB !important;
+  fill: #D1D5DB !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+/* --- 4. Jemný premium hover --- */
+.iu-leftNavItem:hover {
+  background: linear-gradient(180deg,#10263E 0%,#173B5C 100%) !important;
+  transform: none !important;
+}
+
+/* --- 5. Active stav čistý --- */
+.iu-leftNavItem.is-active {
+  outline: 1px solid rgba(209,213,219,0.35);
+  outline-offset: -1px;
+}
