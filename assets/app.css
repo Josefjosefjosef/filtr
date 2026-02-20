@@ -10625,3 +10625,19 @@ body #iuLeftRail .iu-leftNavItem{
   box-shadow:none !important;
   padding:0 !important;
 }
+
+/* ============================================================
+   RIGHT RAIL — remove frame (border + shadow) for content box
+   Keep glass background + radius
+   ============================================================ */
+
+.iu-rightContent{
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* pokud by rámeček držel i parent aside (podle stejného group bloku), zruš jen border/shadow i tam */
+.layout > aside.accordionCol{
+  border: 0 !important;
+  box-shadow: none !important;
+}
