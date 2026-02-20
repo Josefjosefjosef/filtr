@@ -10527,3 +10527,59 @@ body #iuLeftRail .iu-leftNavItem{
 #iuLeftRail .iu-leftNavItem:hover :is(svg, i, .iuNavIcon){
   filter: none !important;
 }
+
+/* ============================================================
+   MindMenu (Right column) — centered section titles + divider under
+   Bigger typography, premium spacing. CLS-safe.
+   ============================================================ */
+
+/* Right column wrapper: mindMenu inside aside.accordionCol */
+.accordionCol .mindMenu{
+  /* nothing layout-critical here, keep auto sizing */
+}
+
+/* Section head: stack title + line vertically and center */
+.accordionCol .mindMenu .iu-mmSectionHead,
+.accordionCol .mindMenu .iu-mmSectionHead.iu-mmMailHead,
+.accordionCol .mindMenu .iu-userHeader .iu-mmMailHead{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  margin: 16px 0 10px 0;
+  width: 100%;
+}
+
+/* Title typography */
+.accordionCol .mindMenu .iu-mmSectionTitle{
+  display: block;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.2;
+  color: #111827;
+  margin: 0;
+  padding: 0;
+}
+
+/* Divider UNDER the title (reuse existing .iu-mmSectionLine element) */
+.accordionCol .mindMenu .iu-mmSectionLine{
+  flex: 0 0 auto;
+  height: 1px;
+  width: 72%;
+  margin: 10px auto 0 auto;
+  background: rgba(17,24,39,0.12);
+  border-radius: 1px;
+  min-width: 0;
+}
+
+/* Ensure content below has breathing room and column grows naturally downward */
+.accordionCol .mindMenu .iu-mmSectionHead + .iu-mmQuickGrid{
+  margin-top: 12px;
+}
+
+/* Optional: slightly tighten the first section so it doesn't start too low */
+.accordionCol .mindMenu .iu-mmQuickLinks:first-child .iu-mmSectionHead{
+  margin-top: 10px;
+}
