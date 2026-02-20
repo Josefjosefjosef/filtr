@@ -10603,9 +10603,9 @@ aside.accordionCol > .iuRightTopCtas{
   display:flex;
   gap:0;
 
-  /* zarovnání s vnitřním obsahem panelu */
-  padding:12px 12px 0 12px;
-  margin:0;
+  /* zarovnání s vnitřním obsahem panelu, ale bez "propadu" dolů */
+  padding: 0 12px 0 12px;   /* TOP = 0 => CTA jde nahoru */
+  margin: 0 0 12px 0;       /* udržet odstup pod CTA */
 }
 
 aside.accordionCol > .iuRightTopCtas > .iuRightCta{
