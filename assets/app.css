@@ -10065,3 +10065,38 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
   fill: currentColor !important;
   opacity: 1 !important;
 }
+
+/* ============================================================
+   INFOUZEL BRAND — LEFT RAIL NAVY + SILVER FINAL
+   Scope: pouze levý sloupec + jeho tlačítka
+   CLS SAFE – UI ONLY
+   ============================================================ */
+
+/* --- LEFT RAIL BACKGROUND --- */
+.iu-leftNav,
+#iuLeftNav,
+[data-rail-container] {
+  background: linear-gradient(180deg, #0B1F33 0%, #132F4D 100%) !important;
+  border-right: 1px solid #D1D5DB !important;
+}
+
+/* --- LEFT RAIL BUTTONS --- */
+.iu-leftNavItem,
+.iu-leftNavItem a,
+.iu-leftNavItem button,
+.iu-leftNav .iuRailBtn {
+  background: linear-gradient(180deg, #0B1F33 0%, #132F4D 100%) !important;
+}
+
+/* --- LEFT RAIL TEXT + ICONS (SILVER) --- */
+.iu-leftNavItem,
+.iu-leftNavItem span,
+.iu-leftNavItem i,
+.iu-leftNavItem svg,
+.iu-leftNav .iuNavIcon,
+.iu-leftNav a {
+  color: #D1D5DB !important;
+  fill: #D1D5DB !important;
+}
+
+/* nic jiného neměnit */
