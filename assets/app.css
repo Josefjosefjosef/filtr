@@ -10666,7 +10666,7 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta:last-child{
 
 .topbar-new-main::before{
   content:"";
-  position:absolute;
+  position:fixed;
   top:0;
   left:0;
   right:0;
@@ -10674,4 +10674,5 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta:last-child{
   background:linear-gradient(90deg,#0B1F33,#132F4D);
   border-top-left-radius:16px;
   pointer-events:none;
+  z-index:9999;
 }
