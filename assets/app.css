@@ -7352,9 +7352,9 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 .iu-leftRail{
-  flex: 0 0 120px;
-  width: 120px;
-  min-width: 120px;
+  flex: 0 0 136px;
+  width: 136px;
+  min-width: 136px;
   /* Match center feed background (no panel effect) */
   background: var(--iuRailBg, var(--iu-page-bg));
   align-self: stretch; /* extend background alongside feed height */
@@ -7883,7 +7883,7 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
 }
 
 /* Default typography/weights */
-.iu-leftNav .iu-leftNavIcon{ opacity: 0.96; }
+.iu-leftNav .iu-leftNavIcon{ opacity: 1; }
 .iu-leftNav .iu-leftNavLabel{ opacity: 1; }
 
 /* LEFT RAIL — quiet default (meta-time gray) */
