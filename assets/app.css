@@ -10042,3 +10042,11 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
   margin-top: 0 !important;
   padding-top: 0 !important;
 }
+
+/* ============================================================
+   FINAL ADDON — rail top offset under topbar (sticky/fixed safe)
+   ============================================================ */
+
+#iuLeftRail{
+  top: var(--iuTopbarHeight, 72px) !important;
+}
