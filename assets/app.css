@@ -9986,3 +9986,54 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
     0 0 0 1px rgba(140,190,255,.08) !important;
 }
 
+/* ============================================================
+   LAYOUT GUARD — desktop columns (#newsList)
+   Required by CI layout guard.
+   ============================================================ */
+
+@media (min-width:980px){
+  #newsList{
+    display: grid;
+    grid-template-columns: 136px minmax(0, 1fr);
+  }
+}
+
+/* ============================================================
+   FINAL FIX — left rail must always be visible (no overlay cover)
+   CSS-only, CLS-safe
+   ============================================================ */
+
+/* Rail must win stacking context against any layout overlays */
+#iuLeftRail{
+  position: relative;               /* creates stacking context anchor */
+  z-index: 50;                      /* above typical layout overlays */
+  isolation: isolate;               /* prevent blending/overlay bleeding */
+  visibility: visible !important;
+  opacity: 1 !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  transform: none !important;
+
+  /* keep a stable rail background (do NOT force fully opaque globally) */
+  background: var(--iuRailBg, rgba(0,0,0,0.35)) !important;
+  background-image: none !important;
+}
+
+/* Kill any pseudo overlays directly on the rail */
+#iuLeftRail::before,
+#iuLeftRail::after{
+  content: none !important;
+  display: none !important;
+}
+
+/* If rail container is clipped by ancestor overflow, neutralize ONLY the immediate wrapper when present */
+#leftContent{
+  overflow: visible !important;
+}
+
+/* Align rail start under topbar (if rail is sticky/fixed elsewhere, this still prevents accidental top-gap) */
+#iuLeftRail{
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
