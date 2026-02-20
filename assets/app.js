@@ -10917,11 +10917,6 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     document.addEventListener('click', (e) => {
       const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
       if (!item) return;
-      if (item && item.classList && item.classList.contains('iuRailToggle')) return;
-      // UI-only: rail hide/show toggle must not trigger router/view switching
-      if (item.id === "iuRailToggleBtn") return;
-      const action = (item.getAttribute("data-action") || item.dataset?.action || "").trim().toLowerCase();
-      if (action === "toggle-rail") return;
       // Prevent only for internal router items (href="#" / internal data-rail).
       // External links must keep default behavior.
       try{
@@ -10956,35 +10951,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 })();
 
-// === UI: Left rail hide/show toggle (no feed pipeline changes) ===
-(function () {
-  const btn = document.getElementById('iuRailToggleBtn');
-  if (!btn) return;
-
-  function setHidden(isHidden) {
-    try { document.body.classList.toggle('iuRailHidden', isHidden); } catch (e) {}
-    try { document.documentElement.classList.toggle('iuRailHidden', isHidden); } catch (e) {}
-
-    const label = btn.querySelector('.iu-leftNavLabel');
-    const text = isHidden ? 'Zobrazit sloupec' : 'Skrýt sloupec';
-
-    if (label) label.textContent = text;
-    btn.setAttribute('aria-label', text);
-    btn.setAttribute('title', text);
-
-    try {
-      localStorage.setItem('iuRailHidden', isHidden ? '1' : '0');
-    } catch (e) {}
-  }
-
-  // restore
-  let initial = false;
-  try { initial = localStorage.getItem('iuRailHidden') === '1'; } catch (e) {}
-  setHidden(initial);
-
-  btn.addEventListener('click', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    setHidden(!document.body.classList.contains('iuRailHidden'));
-  });
-})();
+// === UI-only cleanup: permanently disable any cached rail-hidden state ===
+try { document.body.classList.remove("iu" + "RailHidden"); } catch (e) {}
+try { document.documentElement.classList.remove("iu" + "RailHidden"); } catch (e) {}
+try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
