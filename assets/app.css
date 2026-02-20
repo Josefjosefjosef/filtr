@@ -10005,7 +10005,8 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 
 #iuLeftRail{
   /* win stacking against any layout overlays */
-  position: relative !important;
+  position: sticky !important;
+  top: var(--iuTopbarHeight, 72px) !important;
   z-index: 999 !important;
   isolation: isolate !important;
 
@@ -10041,12 +10042,4 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 #iuLeftRail{
   margin-top: 0 !important;
   padding-top: 0 !important;
-}
-
-/* ============================================================
-   FINAL ADDON — rail top offset under topbar (sticky/fixed safe)
-   ============================================================ */
-
-#iuLeftRail{
-  top: var(--iuTopbarHeight, 72px) !important;
 }
