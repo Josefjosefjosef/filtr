@@ -9805,8 +9805,8 @@ FINAL — Topbar left controls: hamburger + media-circle
 ============================================================ */
 
 :root{
-  --iuRailWidth: 136px;         /* used on desktop: aside#iuLeftRail width */
-  --iuTopbarCtrlH: 40px;        /* measured: #iuTopbarSearchInput height */
+  --iuRailWidth: 136px;         /* použij existující hodnotu / proměnnou pokud už je */
+  --iuTopbarCtrlH: 40px;        /* SEM dosaď reálnou výšku search inputu (krok 1C) */
   --iuTopbarCtrlGap: 10px;
   --iuTopbarCtrlLeftPad: 10px;
 }
