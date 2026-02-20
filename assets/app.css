@@ -10596,17 +10596,22 @@ body #iuLeftRail .iu-leftNavItem{
 
 /* ============================================================
    RIGHT RAIL — Top CTA buttons ABOVE MindMenu (outside .mindMenu)
-   Full width, 2-up, premium, stable height (CLS-safe)
+   Premium integrated look (no double shadows), CLS-safe
    ============================================================ */
 
 aside.accordionCol > .iuRightTopCtas{
   display:flex;
   gap:10px;
-  margin: 0 0 12px 0;
+
+  /* zarovnání na vnitřní obsah pravého panelu */
+  padding: 12px 12px 0 12px;
+  margin: 0;
 }
 
 aside.accordionCol > .iuRightTopCtas > .iuRightCta{
   flex:1 1 0;
+  min-width:0;
+
   display:flex;
   align-items:center;
   justify-content:center;
@@ -10622,17 +10627,23 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta{
 
   border-radius:14px;
   border:1px solid var(--iuHairline);
-  background: rgba(255,255,255,.86);
+
+  /* sjednocení s "glass" panelem, ale bez dvojitého karty efektu */
+  background: rgba(255,255,255,.72);
   backdrop-filter: blur(6px);
 
   color:#111827;
 
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.08),
-    0 1px 0 rgba(255,255,255,.35) inset;
+  /* pryč agresivní shadow (parent panel už má vlastní) */
+  box-shadow: none;
+
+  /* dlouhé texty se nesmí rozbít layout */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* jemné rozlišení tlačítek (bez agresivních barev) */
+/* jemné rozlišení tlačítek jen přes border (bez barevného "křiku") */
 aside.accordionCol > .iuRightTopCtas > .iuRightCta--services{
   border-color: rgba(59,130,246,.22);
 }
@@ -10641,12 +10652,10 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta--submit{
   border-color: rgba(16,185,129,.22);
 }
 
-/* hover pouze decentní (žádné layout změny) */
+/* hover pouze decentní, bez layout změn */
 @media (hover:hover){
   aside.accordionCol > .iuRightTopCtas > .iuRightCta:hover{
     transform: translateY(-1px);
-    box-shadow:
-      0 14px 32px rgba(0,0,0,.10),
-      0 1px 0 rgba(255,255,255,.40) inset;
+    background: rgba(255,255,255,.80);
   }
 }
