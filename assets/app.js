@@ -37,6 +37,18 @@ window.addEventListener("unhandledrejection", (e) => {
   try { document.documentElement.setAttribute("data-iu-buildstamp", document.querySelector('meta[name="iu-build"]')?.content || "no-meta"); } catch {}
   const $ = (sel) => document.querySelector(sel);
 
+  function iuGetMindMenuRoot(){
+    try{
+      return (
+        document.querySelector(".mindMenu") ||
+        document.querySelector("aside.accordionCol") ||
+        null
+      );
+    }catch{
+      return null;
+    }
+  }
+
   function iuRailApplyTheme(){
     try{
       const root = document.documentElement;
@@ -1142,8 +1154,7 @@ window.addEventListener("unhandledrejection", (e) => {
                 try {
                   const el =
                     document.getElementById("iuRight") ||
-                    document.querySelector(".iu-rightContent") ||
-                    document.querySelector("aside.accordionCol");
+                    iuGetMindMenuRoot();
                   if (!el || !el.getBoundingClientRect) return null;
                   return round1(el.getBoundingClientRect().height || 0);
                 } catch (_) {
@@ -4721,7 +4732,8 @@ function buildVideoAsArticleCard(it) {
       if (window.__iu_mobileFocusInit) return;
       window.__iu_mobileFocusInit = 1;
 
-      const mindMenuTarget = ".iu-rightContent";
+      const mindMenuEl = iuGetMindMenuRoot();
+      const mindMenuTargetKey = "__iu_mindmenu__";
 
       const railToTarget = {
         media: "#feed",
@@ -4737,7 +4749,7 @@ function buildVideoAsArticleCard(it) {
       function readSectionsFromLeftRail() {
         const out = [];
         // 1) MindMenu is always first
-        out.push({ label: "MindMenu", target: mindMenuTarget, accent: "mindmenu" });
+        out.push({ label: "MindMenu", target: mindMenuTargetKey, accent: "mindmenu" });
 
         // 2) Others in the same order as PC left rail
         const items = Array.from(document.querySelectorAll(".iu-leftNavItem[data-rail][data-accent]"));
@@ -4784,6 +4796,7 @@ function buildVideoAsArticleCard(it) {
 
       function resolveTarget(sel) {
         try {
+          if (sel === mindMenuTargetKey) return (mindMenuEl && mindMenuEl instanceof HTMLElement) ? mindMenuEl : null;
           const el = document.querySelector(sel);
           return (el && el instanceof HTMLElement) ? el : null;
         } catch {
