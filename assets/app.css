@@ -10100,3 +10100,19 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 }
 
 /* nic jiného neměnit */
+
+/* FORCE INFOUZEL LEFT RAIL COLOR */
+body .iu-leftNav,
+body .iu-leftNavWrapper,
+body .iu-leftRail,
+body [data-rail],
+body [data-rail-container]{
+  background: linear-gradient(180deg,#0B1F33 0%,#132F4D 100%) !important;
+}
+
+/* FORCE ID ROOT (specificity beats wrappers) */
+body #iuLeftRail,
+body #iuLeftRail .iu-leftNavItem{
+  background: linear-gradient(180deg,#0B1F33 0%,#132F4D 100%) !important;
+  border-right: 1px solid #D1D5DB !important;
+}
