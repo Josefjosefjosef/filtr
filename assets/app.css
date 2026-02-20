@@ -10659,19 +10659,19 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta:last-child{
   }
 }
 
-.topbar::before{
-content:"";
-position:absolute;
-top:0;
-left:0;
-right:0;
-height:8px;
-background:linear-gradient(90deg,#0B1F33,#132F4D);
-border-top-left-radius:16px;
-pointer-events:none;
+/* TOPBAR — gradient line 8px (real DOM: .topbar-new-main) */
+.topbar-new-main{
+  position: relative;
 }
 
-.topbar{
-position:relative;
-overflow:hidden;
+.topbar-new-main::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:8px;
+  background:linear-gradient(90deg,#0B1F33,#132F4D);
+  border-top-left-radius:16px;
+  pointer-events:none;
 }
