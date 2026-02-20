@@ -10158,3 +10158,43 @@ body #iuLeftRail .iu-leftNavItem{
   outline: 1px solid rgba(209,213,219,0.35);
   outline-offset: -1px;
 }
+
+/* ============================================================
+   INFOUZEL LEFT RAIL — FLAT SILVER ICONS FINAL
+   odstranění plastového vzhledu ikon
+   UI ONLY – CLS SAFE
+   ============================================================ */
+
+/* --- 1. odstranění lesku ikon --- */
+.iu-leftNavItem img,
+.iu-leftNavItem svg,
+.iu-leftNavItem i,
+.iu-leftNavItem .iuNavIcon {
+
+  filter: grayscale(100%) brightness(1.6) contrast(0.9) !important;
+  mix-blend-mode: normal !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* --- 2. sjednocení barvy --- */
+.iu-leftNavItem svg path,
+.iu-leftNavItem svg rect,
+.iu-leftNavItem svg circle {
+  fill: #D1D5DB !important;
+  stroke: #D1D5DB !important;
+}
+
+/* --- 3. odstranění pozadí ikon --- */
+.iu-leftNavItem .icon-bg,
+.iu-leftNavItem .iuIconBg {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* --- 4. jemný hover místo plastu --- */
+.iu-leftNavItem:hover img,
+.iu-leftNavItem:hover svg,
+.iu-leftNavItem:hover i {
+  filter: grayscale(100%) brightness(1.8) !important;
+}
