@@ -10616,8 +10616,12 @@ body #iuLeftRail .iu-leftNavItem{
   gap:12px;
 }
 
-/* kill old collapse styles */
-.iu-rightContent details.iu-userHeader,
-.iu-rightContent .iu-mmMailHead details{
-  display:block;
+/* RIGHT RAIL — remove old mail card */
+.iuUserCard,
+.iu-userHeader,
+.iu-userSummary{
+  background:none !important;
+  border:none !important;
+  box-shadow:none !important;
+  padding:0 !important;
 }
