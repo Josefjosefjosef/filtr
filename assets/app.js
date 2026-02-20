@@ -10955,3 +10955,15 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 try { document.body.classList.remove("iu" + "RailHidden"); } catch (e) {}
 try { document.documentElement.classList.remove("iu" + "RailHidden"); } catch (e) {}
 try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
+
+(function iuInitTopbarButtons(){
+  const h = document.getElementById("iuHamburgerBtn");
+  const m = document.getElementById("iuMediaCircleBtn");
+
+  if(h){
+    h.addEventListener("click", ()=>console.log("hamburger click"));
+  }
+  if(m){
+    m.addEventListener("click", ()=>console.log("media circle click"));
+  }
+})();
