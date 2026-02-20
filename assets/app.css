@@ -9832,3 +9832,42 @@ CLS-safe, right topbar untouched
   height:var(--iuTopbarControlHeight);
   border-radius:999px;
 }
+
+/* ===== FINAL TOPBAR BUTTON STYLE ===== */
+
+:root{
+  --iuTopbarControlHeight: 40px;   /* dle search */
+  --iuRailWidth: 136px;
+}
+
+/* hamburger */
+#iuHamburgerBtn{
+  position:absolute;
+  left:12px;
+  top:50%;
+  transform:translateY(-50%);
+  width:var(--iuTopbarControlHeight);
+  height:var(--iuTopbarControlHeight);
+  border-radius:10px;
+  border:1px solid rgba(0,0,0,.15);
+  background:white;
+}
+
+/* hamburger icon */
+#iuHamburgerBtn::before{
+  content:"≡";
+  font-size:20px;
+}
+
+/* kolečko nad Média */
+#iuMediaCircleBtn{
+  position:absolute;
+  left:calc(var(--iuRailWidth)/2);
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:var(--iuTopbarControlHeight);
+  height:var(--iuTopbarControlHeight);
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.15);
+  background:white;
+}
