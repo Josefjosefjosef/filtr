@@ -10198,3 +10198,27 @@ body #iuLeftRail .iu-leftNavItem{
 .iu-leftNavItem:hover i {
   filter: grayscale(100%) brightness(1.8) !important;
 }
+
+/* ============================================================
+   INFOUZEL RIGHT TOOLS — FLAT ICON STYLE
+   pouze pravý sloupec
+   ============================================================ */
+
+.iu-rightContent .iuToolIcon,
+.iu-rightContent i,
+.iu-rightContent svg {
+  color: #374151 !important;
+  fill: #374151 !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+.iu-rightContent .iuToolItem {
+  background: #F3F4F6 !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 12px !important;
+}
+
+.iu-rightContent .iuToolItem:hover {
+  background: #E5E7EB !important;
+}
