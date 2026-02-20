@@ -6503,6 +6503,10 @@ function buildVideoAsArticleCard(it) {
 
   function initAccordion() {
     const headers = document.querySelectorAll(".accordionCol .accHeader");
+    if (!headers || headers.length === 0) {
+      // No accordion markup in DOM — skip init safely
+      return;
+    }
     headers.forEach((header) => {
       const targetId = header.getAttribute("aria-controls");
       const content = targetId ? document.getElementById(targetId) : header.nextElementSibling;
