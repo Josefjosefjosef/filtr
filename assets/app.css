@@ -10595,17 +10595,17 @@ body #iuLeftRail .iu-leftNavItem{
 }
 
 /* ============================================================
-   RIGHT RAIL — Top CTA buttons ABOVE MindMenu (outside .mindMenu)
-   Premium integrated look (no double shadows), CLS-safe
+   RIGHT RAIL — CTA bar (single integrated strip)
+   Premium integrated look, CLS-safe
    ============================================================ */
 
 aside.accordionCol > .iuRightTopCtas{
   display:flex;
-  gap:10px;
+  gap:0;
 
-  /* zarovnání na vnitřní obsah pravého panelu */
-  padding: 12px 12px 0 12px;
-  margin: 0;
+  /* zarovnání s vnitřním obsahem panelu */
+  padding:12px 12px 0 12px;
+  margin:0;
 }
 
 aside.accordionCol > .iuRightTopCtas > .iuRightCta{
@@ -10618,44 +10618,43 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta{
 
   height:44px;                 /* stabilní výška => CLS-safe */
   line-height:44px;
-  padding:0 14px;
+  padding:0 12px;
 
   font-size:14px;
   font-weight:700;
   letter-spacing:0.2px;
   text-decoration:none;
 
-  border-radius:14px;
-  border:1px solid var(--iuHairline);
-
-  /* sjednocení s "glass" panelem, ale bez dvojitého karty efektu */
-  background: rgba(255,255,255,.72);
-  backdrop-filter: blur(6px);
-
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(6px);
   color:#111827;
 
-  /* pryč agresivní shadow (parent panel už má vlastní) */
-  box-shadow: none;
+  border:1px solid var(--iuHairline);
+  border-right:none;
+  border-radius:0;
+  box-shadow:none;
 
-  /* dlouhé texty se nesmí rozbít layout */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
-/* jemné rozlišení tlačítek jen přes border (bez barevného "křiku") */
-aside.accordionCol > .iuRightTopCtas > .iuRightCta--services{
-  border-color: rgba(59,130,246,.22);
+/* levé tlačítko — zaoblení vlevo */
+aside.accordionCol > .iuRightTopCtas > .iuRightCta:first-child{
+  border-top-left-radius:14px;
+  border-bottom-left-radius:14px;
 }
 
-aside.accordionCol > .iuRightTopCtas > .iuRightCta--submit{
-  border-color: rgba(16,185,129,.22);
+/* pravé tlačítko — divider + zaoblení vpravo */
+aside.accordionCol > .iuRightTopCtas > .iuRightCta:last-child{
+  border-right:1px solid var(--iuHairline);
+  border-top-right-radius:14px;
+  border-bottom-right-radius:14px;
 }
 
-/* hover pouze decentní, bez layout změn */
+/* hover jen decentní */
 @media (hover:hover){
   aside.accordionCol > .iuRightTopCtas > .iuRightCta:hover{
-    transform: translateY(-1px);
-    background: rgba(255,255,255,.80);
+    background:rgba(255,255,255,.82);
   }
 }
