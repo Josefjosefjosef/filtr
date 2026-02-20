@@ -10045,30 +10045,14 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 }
 
 /* ============================================================
-   FINAL — left rail colors (infoUzel premium Slate-800)
-   Sidebar BG: #1e293b
-   Icons/Text: silver
+   FINAL — Left rail Slate-800 exact colors
+   Sidebar + buttons same color
+   Icons/Text silver
    ============================================================ */
 
-#iuLeftRail{
-  background: #1e293b !important;          /* Slate-800 */
-  border-right: 1px solid rgba(255,255,255,0.08);
-}
-
-/* rail buttons */
+#iuLeftRail,
 #iuLeftRail .iu-leftNavItem{
-  background: rgba(255,255,255,0.04);
-  border-radius: 12px;
-}
-
-/* hover */
-#iuLeftRail .iu-leftNavItem:hover{
-  background: rgba(255,255,255,0.08);
-}
-
-/* active */
-#iuLeftRail .iu-leftNavItem.is-active{
-  background: rgba(255,255,255,0.12);
+  background: #1E293B !important;
 }
 
 /* icons + text silver */
@@ -10077,7 +10061,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 #iuLeftRail .iu-leftNavIcon svg,
 #iuLeftRail .iu-leftNavIcon i,
 #iuLeftRail .iu-leftNavLabel{
-  color: #cbd5e1 !important;     /* Tailwind Slate-300 = silver */
+  color: #CBD5E1 !important;
   fill: currentColor !important;
   opacity: 1 !important;
 }
