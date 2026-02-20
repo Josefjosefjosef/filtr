@@ -10513,3 +10513,17 @@ body #iuLeftRail .iu-leftNavItem{
 #iuLeftRail .iu-leftNavItem[data-rail^="myuzel-"] svg{
   color: var(--iuRailAccent-me) !important;
 }
+
+/* ============================================================
+   HOTFIX (diagnosed): Left rail icon color was neutralized by
+   `.iu-leftNavItem svg/i/.iuNavIcon { filter: grayscale(...) !important; }`
+   Disable that filter for LEFT RAIL glyph only.
+   ============================================================ */
+
+#iuLeftRail .iu-leftNavItem :is(svg, i, .iuNavIcon){
+  filter: none !important;
+}
+
+#iuLeftRail .iu-leftNavItem:hover :is(svg, i, .iuNavIcon){
+  filter: none !important;
+}
