@@ -10222,3 +10222,30 @@ body #iuLeftRail .iu-leftNavItem{
 .iu-rightContent .iuToolItem:hover {
   background: #E5E7EB !important;
 }
+
+/* ============================================================
+   INFOUZEL RIGHT TOOLS — SPACING + FONT PREMIUM FIX
+   pouze pravý sloupec
+   UI ONLY – CLS SAFE
+   ============================================================ */
+
+/* text pod ikonou */
+.iu-rightContent .iuToolItem span,
+.iu-rightContent .iuToolLabel {
+  display: block;
+  margin-top: 10px !important;
+  font-size: 14px !important;
+  color: #374151 !important;
+  line-height: 1.25;
+}
+
+/* mezera mezi jednotlivými tool položkami */
+.iu-rightContent .iuToolItem {
+  padding: 14px 10px !important;
+}
+
+/* lehké zvětšení ikon pro lepší balanc */
+.iu-rightContent .iuToolItem i,
+.iu-rightContent .iuToolItem svg {
+  font-size: 18px !important;
+}
