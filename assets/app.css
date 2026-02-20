@@ -9795,3 +9795,87 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 }
 
 /* (removed) rail toggle + rail hidden layouts */
+
+/* ============================================================
+FINAL — Topbar left controls: hamburger + media-circle
+- height matches topbar search input (measured)
+- circle aligned above Media icon (rail center)
+- right topbar untouched
+- CLS-safe (absolute inside topbar)
+============================================================ */
+
+:root{
+  --iuRailWidth: 136px;         /* used on desktop: aside#iuLeftRail width */
+  --iuTopbarCtrlH: 40px;        /* measured: #iuTopbarSearchInput height */
+  --iuTopbarCtrlGap: 10px;
+  --iuTopbarCtrlLeftPad: 10px;
+}
+
+/* topbar must be positioning context; do NOT touch flex/justify of right part */
+header#topbarWrap.topbar-new.iuTopbar{
+  position: relative;
+}
+
+/* Hamburger (left edge) */
+#iuTopbarHamburgerBtn{
+  position: absolute;
+  left: var(--iuTopbarCtrlLeftPad);
+  top: 50%;
+  transform: translateY(-50%);
+  height: var(--iuTopbarCtrlH);
+  width: var(--iuTopbarCtrlH);
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(0,0,0,0.10);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 2;
+}
+
+/* simple hamburger icon */
+#iuTopbarHamburgerBtn .iuHamburgerIcon{
+  width: 18px;
+  height: 12px;
+  position: relative;
+  display: block;
+}
+#iuTopbarHamburgerBtn .iuHamburgerIcon::before,
+#iuTopbarHamburgerBtn .iuHamburgerIcon::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(0,0,0,0.70);
+  border-radius: 2px;
+}
+#iuTopbarHamburgerBtn .iuHamburgerIcon::before{ top: 0; }
+#iuTopbarHamburgerBtn .iuHamburgerIcon::after{ bottom: 0; }
+
+/* Circle button aligned above Media (rail center) */
+#iuTopbarMediaCircleBtn{
+  position: absolute;
+  left: calc(var(--iuRailWidth) / 2); /* STŘED railu = nad “Média” */
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: var(--iuTopbarCtrlH);
+  width: var(--iuTopbarCtrlH);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(0,0,0,0.10);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 2;
+}
+
+/* prevent inner span eating clicks */
+#iuTopbarMediaCircleBtn *{ pointer-events: none; }
+#iuTopbarHamburgerBtn *{ pointer-events: none; }
