@@ -26,6 +26,8 @@ function getAppShellUrls() {
   return [
     BASE,
     `${BASE}index.html`,
+    // CSS/JS musí být updatovatelný i se stabilním ?v=... (viz fetch handler níž)
+    `${BASE}assets/app.css`,
     `${BASE}assets/app-crash-shield.js`,
     `${BASE}assets/app-render-optimizer.js`,
     `${BASE}assets/app.js`,
@@ -100,8 +102,7 @@ self.addEventListener("fetch", (event) => {
   if (
     url.origin === self.location.origin &&
     (url.pathname.startsWith("/projects/data/") ||
-      url.pathname.startsWith("/projects/assets/") ||
-      url.pathname.startsWith("/assets/"))
+      url.pathname.startsWith("/projects/assets/"))
   ) {
     return;
   }
@@ -112,6 +113,46 @@ self.addEventListener("fetch", (event) => {
   }
 
   const path = url.pathname;
+
+  // CSS/JS assets: stale-while-revalidate, cache key bez query stringu.
+  // Důvod: stabilní ?v=... + Cache First by jinak mohl držet staré CSS/JS donekonečna.
+  if (
+    url.origin === self.location.origin &&
+    path.includes("/assets/") &&
+    (path.endsWith(".css") || path.endsWith(".js"))
+  ) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(APP_SHELL_CACHE);
+        const cacheKey = new Request(url.origin + url.pathname);
+
+        const cached = await cache.match(cacheKey);
+        const updatePromise = fetch(event.request, { cache: "no-store" })
+          .then((response) => {
+            if (response && response.ok) {
+              cache.put(cacheKey, response.clone());
+              console.info("[SW] asset updated:", url.pathname);
+            }
+            return response;
+          })
+          .catch(() => null);
+
+        // Update cache in background even when serving cached.
+        event.waitUntil(updatePromise);
+
+        if (cached) return cached;
+
+        const fresh = await updatePromise;
+        if (fresh) return fresh;
+
+        // As a last resort, try cache again (race) then fall back.
+        const cachedAfter = await cache.match(cacheKey);
+        if (cachedAfter) return cachedAfter;
+        return fetch(event.request);
+      })()
+    );
+    return;
+  }
 
   if (path.includes("/assets/app.js")) {
     event.respondWith(fetch(event.request, { cache: "no-store" }));
