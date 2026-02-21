@@ -136,53 +136,34 @@ window.addEventListener("unhandledrejection", (e) => {
   iuRailApplyTheme();
   iuTopbarApplyTheme();
   (function iuTopbarLeftFill(){
+
     const topbar = document.querySelector('header#topbarWrap.topbar-new.iuTopbar');
     const rail   = document.querySelector('aside#iuLeftRail.iu-leftRail');
-    if(!topbar) return;
 
-    const mqMobile = window.matchMedia('(max-width: 899px)');
-    let rafPending = false;
-
-    const set0 = () => {
-      topbar.style.setProperty('--iuTopbarLeftFillW', '0px');
-    };
+    if(!topbar || !rail) return;
 
     const update = () => {
-      // Mobile/tablet safe default (rail may be hidden in these breakpoints).
-      if (mqMobile.matches) { set0(); return; }
-
-      if (!rail) { set0(); return; }
-      const rr = rail.getBoundingClientRect();
-      if (rr.width < 10 || rr.height < 10) { set0(); return; }
 
       const tr = topbar.getBoundingClientRect();
-      const w = Math.round(rr.right - tr.left);
-      const wClamped = Math.max(0, w);
-      topbar.style.setProperty('--iuTopbarLeftFillW', `${wClamped}px`);
-    };
+      const rr = rail.getBoundingClientRect();
 
-    const schedule = () => {
-      if (rafPending) return;
-      rafPending = true;
-      requestAnimationFrame(() => { rafPending = false; update(); });
-    };
-
-    requestAnimationFrame(() => { update(); requestAnimationFrame(update); });
-    window.addEventListener('resize', schedule, { passive: true });
-    window.addEventListener('orientationchange', schedule, { passive: true });
-    try{
-      if (typeof mqMobile.addEventListener === 'function') mqMobile.addEventListener('change', schedule);
-      else if (typeof mqMobile.addListener === 'function') mqMobile.addListener(schedule);
-    }catch{}
-
-    // Zoom / mobile browser UI changes (safer than window scroll listener).
-    try{
-      const vv = window.visualViewport;
-      if (vv && typeof vv.addEventListener === 'function') {
-        vv.addEventListener('resize', schedule, { passive: true });
-        vv.addEventListener('scroll', schedule, { passive: true });
+      // mobile / hidden rail guard
+      if(rr.width < 10 || rr.height < 10 ||
+         window.matchMedia('(max-width: 899px)').matches){
+        topbar.style.setProperty('--iuTopbarLeftFillW','0px');
+        return;
       }
-    }catch{}
+
+      const w = Math.max(0, Math.round(rr.right - tr.left));
+      topbar.style.setProperty('--iuTopbarLeftFillW', w + 'px');
+    };
+
+    requestAnimationFrame(()=>{ update(); requestAnimationFrame(update); });
+
+    window.addEventListener('resize', update, {passive:true});
+    window.visualViewport?.addEventListener('resize', update, {passive:true});
+    window.visualViewport?.addEventListener('scroll', update, {passive:true});
+
   })();
   try{
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iuInitRailThemeControls);
