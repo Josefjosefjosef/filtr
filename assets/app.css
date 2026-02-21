@@ -10659,19 +10659,40 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta:last-child{
   }
 }
 
-/* TOPBAR — gradient line 8px (real DOM: .topbar-new-main) */
-.topbar-new-main{
-  position: relative;
+/* =============================== */
+/* TOPBAR — FINAL UI CONTRACT      */
+/* =============================== */
+
+/* CLS guard — keep layout viewport width stable when scrollbar appears */
+html{
+  scrollbar-gutter: stable;
 }
 
-.topbar-new-main::before{
+/* TOPBAR gradient line — full viewport, CLS-safe, 5px */
+body::before{
   content:"";
-  position:absolute;
+  position:fixed;
   top:0;
   left:0;
   right:0;
-  height:8px;
+  height:5px;
   background:linear-gradient(90deg,#0B1F33,#132F4D);
   border-top-left-radius:16px;
   pointer-events:none;
+  z-index:1; /* malé číslo */
+}
+
+/* TOPBAR RIGHT — layout contract (prevents CLS from dynamic time/date/namday) */
+#iuTopbarRight{
+  flex: 0 0 320px;
+  min-width: 320px;
+  max-width: 320px;
+
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
