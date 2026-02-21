@@ -63,19 +63,9 @@ window.addEventListener("unhandledrejection", (e) => {
 
   function iuTopbarApplyTheme(){
     try{
-      const themes = [
-        {"--iuTopbarBg":"#ffffff"},
-        {"--iuTopbarBg":"#f8fafc"},
-        {"--iuTopbarBg":"#fffdf5"},
-      ];
-      const raw =
-        localStorage.getItem("iuThemeIndex") ??
-        localStorage.getItem("iuTheme");
-      const i = Math.max(0, Math.min(themes.length - 1, parseInt(String(raw || "0"), 10) || 0));
-      const theme = themes[i] || themes[0];
-      Object.entries(theme).forEach(([k,v]) => {
-        try{ document.documentElement.style.setProperty(k, String(v)); }catch{}
-      });
+      // Final stabilization: lock topbar palette (no layout impact).
+      document.documentElement.style.setProperty("--iuTopbarBg", "#0B1F33");
+      document.documentElement.style.setProperty("--iuTopbarFg", "#ffffff");
     }catch{}
   }
 
