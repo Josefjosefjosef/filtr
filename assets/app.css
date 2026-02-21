@@ -10676,20 +10676,21 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta:last-child{
   pointer-events:none;
 }
 
-/* ============================= */
-/* TOPBAR RIGHT — CLS HARD FIX   */
-/* ============================= */
+/* ===================================== */
+/* TOPBAR RIGHT — CLS FINAL HARD FIX     */
+/* ===================================== */
 
 .topbar-new-main{
   display:flex;
   align-items:center;
 }
 
-/* pravý blok musí mít stabilní šířku */
+/* pravý blok má pevnou šířku = žádné CLS */
 #iuTopbarRight{
-  flex: 0 0 260px;     /* pevná šířka – zabrání CLS */
-  max-width: 260px;
-  min-width: 260px;
+  flex: 0 0 320px;   /* rezervace pro datum + svatek + ikony */
+  width: 320px;
+  min-width: 320px;
+  max-width: 320px;
 
   white-space: nowrap;
   overflow: hidden;
