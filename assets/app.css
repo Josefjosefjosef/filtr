@@ -498,12 +498,14 @@ html:not([data-iu-js]) .iuDailyWeather{
 /* Gradient pouze na variantách: --left fade doprava, --right fade doleva (symetrické) */
 .topbar-links-arrow--left{
   left: 0;
-  background: linear-gradient(to right, #243B55 0%, rgba(36,59,85,0.8) 50%, transparent 100%);
+  background:#0B1F33 !important;
+  background-image:none !important;
 }
 
 .topbar-links-arrow--right{
   right: 0;
-  background: linear-gradient(to left, #243B55 0%, rgba(36,59,85,0.8) 50%, transparent 100%);
+  background:#0B1F33 !important;
+  background-image:none !important;
 }
 
 .topbar-links-arrow svg{
