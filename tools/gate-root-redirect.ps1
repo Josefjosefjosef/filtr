@@ -82,13 +82,10 @@ try{
   $out | ConvertTo-Json -Compress
 
   if($out.href -notmatch '/projects/'){
-    if($out.bodyTextLen -ne 0){
-      throw "ROOT flash gate failed: bodyTextLen=$($out.bodyTextLen)"
-    }
     throw "ROOT redirect gate failed: href=$($out.href)"
   }
 
-  "OK: root redirect no-flash + target=/projects/"
+  "OK: root redirect target=/projects/"
 }finally{
   try{ $ws.CloseAsync([System.Net.WebSockets.WebSocketCloseStatus]::NormalClosure,'bye',$ct).Wait(1000) | Out-Null }catch{}
   try{ Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue }catch{}
