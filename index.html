@@ -1,20 +1,40 @@
 <!doctype html>
 <html lang="cs">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta http-equiv="refresh" content="0; url=/projects/" />
-    <title>infoUzel.cz</title>
-    <meta name="robots" content="noindex,nofollow" />
-  </head>
-  <body>
-    <noscript>
-      Pokračuj na <a href="/projects/">/projects/</a>.
-    </noscript>
-    <p>Pokračuji na <a href="/projects/">/projects/</a>…</p>
-    <script>
-      // fallback redirect (bez načítání jakýchkoli assetů)
-      location.replace("/projects/");
-    </script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>infoUzel.cz</title>
+  <meta name="robots" content="noindex,nofollow" />
+
+  <!-- okamžitý fallback redirect (bez viditelného obsahu) -->
+  <meta http-equiv="refresh" content="0; url=/projects/" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #0B1F33;
+      color: transparent;
+      font-size: 0;
+      line-height: 0;
+      overflow: hidden;
+    }
+  </style>
+
+  <script>
+    // primary redirect (bez historie back-flashe)
+    (function(){
+      try {
+        var target = "/projects/";
+        if (location.pathname !== target) location.replace(target);
+      } catch(e) {}
+    })();
+  </script>
+</head>
+<body>
+  <!-- noscript fallback: schovaný (color transparent + font-size 0) -->
+  <noscript>Pokračuji…</noscript>
+</body>
 </html>
