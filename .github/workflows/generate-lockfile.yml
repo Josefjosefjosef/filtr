@@ -1,6 +1,9 @@
 # One-time: generate package-lock.json. Run manually with branch input.
 name: Generate package-lock.json
 
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
     inputs:
