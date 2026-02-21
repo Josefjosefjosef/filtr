@@ -140,13 +140,51 @@ window.addEventListener("unhandledrejection", (e) => {
     const rail = document.querySelector('aside#iuLeftRail.iu-leftRail');
     if(!topbar || !rail) return;
 
+    const mq = window.matchMedia('(min-width: 980px)');
+    let onResize = null;
+
+    const set0 = () => {
+      topbar.style.setProperty('--iuTopbarLeftFillW', '0px');
+    };
+
     const update = () => {
       const r = rail.getBoundingClientRect();
+      // round → pixel-perfect (stable) and avoids fractional width jitter
       topbar.style.setProperty('--iuTopbarLeftFillW', `${Math.round(r.right)}px`);
     };
 
-    update();
-    window.addEventListener('resize', update, {passive:true});
+    const enable = () => {
+      // initial update
+      update();
+      // bind resize once
+      if(!onResize){
+        onResize = () => update();
+        window.addEventListener('resize', onResize, { passive: true });
+      }
+    };
+
+    const disable = () => {
+      set0();
+      if(onResize){
+        window.removeEventListener('resize', onResize);
+        onResize = null;
+      }
+    };
+
+    const apply = () => {
+      if(mq.matches) enable();
+      else disable();
+    };
+
+    // initial
+    apply();
+
+    // breakpoint changes (modern + fallback)
+    if(typeof mq.addEventListener === 'function'){
+      mq.addEventListener('change', apply);
+    }else if(typeof mq.addListener === 'function'){
+      mq.addListener(apply);
+    }
   })();
   try{
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iuInitRailThemeControls);

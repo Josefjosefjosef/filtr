@@ -9400,16 +9400,27 @@ html, body {
   padding: 0 !important;
 }
 
-/* === TOPBAR LEFT FILL – FINAL SAFE LAYER === */
+/* ============================================================
+   Desktop+Mobile SAFE: TOPBAR LEFT FILL rendered on .topbar-new-main
+   - Desktop: gradient visible & width driven by --iuTopbarLeftFillW
+   - Mobile: fill width forced to 0 (no overlay, no overflow)
+   ============================================================ */
+
+header#topbarWrap.topbar-new.iuTopbar::before{
+  content: none !important; /* disable legacy layer if present */
+}
+
+/* Default (mobile-safe): fill OFF */
+:root{
+  --iuTopbarLeftFillW: 0px;
+}
+
 div.topbar-new-main{
+  /* Keep base background as-is; fill layered as first background layer */
   background:
     linear-gradient(90deg, #0B1F33 0%, #132F4D 100%) 0 0 /
     var(--iuTopbarLeftFillW, 0px) 100% no-repeat,
     var(--iuTopbarBg, #fff) !important;
-}
-
-header#topbarWrap.topbar-new.iuTopbar::before{
-  content: none !important;
 }
 
 /* AUTO OFFSET — shift 3-column layout under fixed topbar */
