@@ -29,6 +29,9 @@ jobs:
       - name: Python compile gate
         run: python -m py_compile scripts/health_report.py
 
+      - name: Health report selftest
+        run: python3 scripts/health_report.py --selftest
+
       - name: Node syntax gate
         run: node -c scripts/check_site.js
 

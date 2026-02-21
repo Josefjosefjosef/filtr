@@ -4,8 +4,10 @@
 infoUzel.cz – Nightly Health Report (ALL-IN-ONE)
 Read-only: structure, duplicates, broken, performance, layout, guards.
 Input: reports/check_site.json from scripts/check_site.js
+Config: config/health_report.json
 """
 
+import argparse
 import json
 import os
 import re
@@ -19,8 +21,28 @@ REPORTS_DIR = ROOT / "reports"
 CHECK_SITE_JSON = REPORTS_DIR / "check_site.json"
 DATA_DIR = ROOT / "projects" / "data"
 ASSETS_DIR = ROOT / "assets"
+CONFIG_PATH = ROOT / "config" / "health_report.json"
 MAX_URLS_PER_CHECK = 25
 NETWORK_TIMEOUT = 10
+
+
+def load_config() -> Dict[str, Any]:
+    """Load config/health_report.json. Returns defaults if missing."""
+    defaults: Dict[str, Any] = {
+        "version": 1,
+        "timeouts": {"http_sec": 10, "stream_sec": 5},
+        "limits": {"css_kb_warn": 400, "js_kb_warn": 600, "repo_mb_warn": 50, "feed_age_hours_warn": 24},
+        "sampling": {"radio_streams_sample": 8, "affiliate_links_sample": 20},
+        "critical_workflows_regex": ["^pages\\.yml$", "^update-articles\\.yml$", "^update-weather\\.yml$", "^update-namedays\\.yml$"],
+        "report_sections": ["uptime", "feeds", "workflows", "pages_assets", "broken_links", "radios", "affiliates", "performance", "repo_size", "duplicates"],
+    }
+    if not CONFIG_PATH.exists():
+        return defaults
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+        return {**defaults, **cfg}
+    except (json.JSONDecodeError, OSError):
+        return defaults
 
 
 def now_iso() -> str:
@@ -29,6 +51,72 @@ def now_iso() -> str:
 
 def date_str() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+
+# --- Auto-discovery ---
+def discover_feeds() -> Dict[str, Any]:
+    """Discover data/*.json feeds: valid JSON, size > 0, timestamp if exists."""
+    out: Dict[str, Any] = {"count": 0, "files": [], "errors": []}
+    if not DATA_DIR.exists():
+        return out
+    for p in sorted(DATA_DIR.rglob("*.json")):
+        try:
+            data = json.loads(p.read_text(encoding="utf-8"))
+            sz = p.stat().st_size
+            if sz <= 0:
+                continue
+            rel = str(p.relative_to(ROOT))
+            out["files"].append({"path": rel, "size": sz, "timestamp": data.get("generatedAt") if isinstance(data, dict) else None})
+            out["count"] += 1
+        except (json.JSONDecodeError, OSError) as e:
+            out["errors"].append(f"{p.name}: {str(e)[:50]}")
+    return out
+
+
+def discover_workflows() -> Dict[str, Any]:
+    """Discover .github/workflows/*.yml."""
+    out: Dict[str, Any] = {"count": 0, "files": []}
+    wf_dir = ROOT / ".github" / "workflows"
+    if not wf_dir.exists():
+        return out
+    for p in sorted(wf_dir.glob("*.yml")):
+        out["files"].append(p.name)
+        out["count"] += 1
+    return out
+
+
+def discover_links() -> Dict[str, Any]:
+    """Load links from sources.json, pipeline_config.json, fallback projects/index.html."""
+    out: Dict[str, Any] = {"count": 0, "sources": []}
+    sources_path = ROOT / "config" / "sources.json"
+    if sources_path.exists():
+        try:
+            data = json.loads(sources_path.read_text(encoding="utf-8"))
+            srcs = data.get("sources", []) if isinstance(data, dict) else []
+            for s in srcs:
+                if isinstance(s, dict) and s.get("url"):
+                    out["sources"].append(s.get("url", "")[:80])
+                    out["count"] += 1
+        except (json.JSONDecodeError, OSError):
+            pass
+    return out
+
+
+def discover_radios() -> Dict[str, Any]:
+    """Discover radio entries from radio_requests.json or app.js RADIO_ITEMS."""
+    out: Dict[str, Any] = {"count": 0, "streams": []}
+    radio_path = DATA_DIR / "radio_requests.json"
+    if radio_path.exists():
+        try:
+            data = json.loads(radio_path.read_text(encoding="utf-8"))
+            radios = data.get("radios", []) if isinstance(data, dict) else []
+            for r in radios:
+                if isinstance(r, dict) and (r.get("url") or r.get("emailTo")):
+                    out["streams"].append(r.get("label", r.get("id", "?")))
+                    out["count"] += 1
+        except (json.JSONDecodeError, OSError):
+            pass
+    return out
 
 
 def load_check_site() -> Optional[Dict[str, Any]]:
@@ -297,7 +385,9 @@ def check_guards(check: Optional[Dict[str, Any]]) -> Dict[str, Any]:
 
 
 # --- 7. Report assembly ---
-def build_report() -> Dict[str, Any]:
+def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    if config is None:
+        config = load_config()
     check = load_check_site()
     structure = collect_structure()
     diff = diff_from_yesterday()
@@ -307,6 +397,10 @@ def build_report() -> Dict[str, Any]:
     dup_yt = find_duplicate_youtube_ids()
     broken = check_404_links()
     json_errs = check_json_errors()
+    feeds = discover_feeds()
+    workflows = discover_workflows()
+    links = discover_links()
+    radios = discover_radios()
     perf = get_performance(check)
     layout = get_layout(check)
     guards = check_guards(check)
@@ -379,6 +473,7 @@ def build_report() -> Dict[str, Any]:
         "performance": perf,
         "layout": layout,
         "guards": guards,
+        "discovery": {"feeds": feeds["count"], "workflows": workflows["count"], "links": links["count"], "radios": radios["count"]},
     }
     return report
 
@@ -478,10 +573,50 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
         f.write("## 6. Critical guards\n\n")
         for k, v in report["guards"].items():
             f.write(f"- {k}: {v}\n")
+        disc = report.get("discovery", {})
+        if disc:
+            f.write("\n## 7. Auto-discovery\n\n")
+            f.write(f"- Feeds: {disc.get('feeds', 0)}\n")
+            f.write(f"- Workflows: {disc.get('workflows', 0)}\n")
+            f.write(f"- Links: {disc.get('links', 0)}\n")
+            f.write(f"- Radios: {disc.get('radios', 0)}\n")
         f.write("\n")
 
 
+def run_selftest() -> bool:
+    """Validate config, folders, regex. Returns True if OK."""
+    errors: List[str] = []
+    config = load_config()
+    if not isinstance(config.get("version"), (int, float)):
+        errors.append("config: version must be number")
+    for rx in config.get("critical_workflows_regex", []):
+        try:
+            re.compile(rx)
+        except re.error as e:
+            errors.append(f"config: invalid regex {rx!r}: {e}")
+    if not ROOT.exists():
+        errors.append("ROOT does not exist")
+    if not DATA_DIR.exists():
+        errors.append("DATA_DIR does not exist")
+    if not (ROOT / ".github" / "workflows").exists():
+        errors.append(".github/workflows does not exist")
+    if not CONFIG_PATH.exists():
+        errors.append("config/health_report.json does not exist")
+    if errors:
+        for e in errors:
+            print(f"SELFTEST FAIL: {e}")
+        return False
+    print("SELFTEST OK: config valid, folders exist, regex valid")
+    return True
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--selftest", action="store_true", help="Validate config and exit")
+    args = parser.parse_args()
+    if args.selftest:
+        ok = run_selftest()
+        raise SystemExit(0 if ok else 1)
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     report = build_report()
     out_path = REPORTS_DIR / f"health-{date_str()}.md"
