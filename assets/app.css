@@ -9348,15 +9348,18 @@ html, body {
 @property --iuTopbarLeftFillW { syntax: '<length>'; inherits: true; initial-value: 0px; }
 @property --iuTopbarLeftGutter { syntax: '<length>'; inherits: true; initial-value: 0px; }
 
-:root{  --iuTopbarHeight: 72px;  --iuTopbarBg: #ffffff;  --iuTopbarStackH: var(--iuTopbarHeight);  /* Desktop geometry (used for topbar left fill width) */  --iuContainerMax: 1200px;  --iuContainerPad: 20px;  --iuLeftRailW: 136px;}/* Keep existing stack var consumers stable */:root{  --topbarStackH: var(--iuTopbarHeight);}/* ============================================================   Desktop: TOPBAR LEFT FILL (gradient to right edge of left rail)   - No HTML changes   - No layout changes under topbar   ============================================================ */@media (min-width: 980px){  :root{    /* gutter = max((100vw - containerMax)/2, 0) */    --iuTopbarLeftGutter: clamp(0px, calc((100vw - var(--iuContainerMax)) / 2), 100vw);    --iuTopbarLeftFillW: calc(var(--iuTopbarLeftGutter) + var(--iuContainerPad) + var(--iuLeftRailW));  }  header#topbarWrap.topbar-new.iuTopbar{    isolation: isolate; /* ensure ::before stays behind content */  }  header#topbarWrap.topbar-new.iuTopbar::before{    content: "";    position: absolute;    left: 0;    top: 0;    height: 100%;    width: var(--iuTopbarLeftFillW, 0px);    background: linear-gradient(90deg, #0B1F33 0%, #132F4D 100%);    pointer-events: none;    z-index: 0;  }  /* keep actual topbar content above the fill */  header#topbarWrap.topbar-new.iuTopbar > *{    position: relative;    z-index: 1;  }}
-
-@media (min-width: 980px){
-  /* Use dvw to match layout viewport (avoid scrollbar vw mismatch).
-     This keeps the fill end aligned to #iuLeftRail computed right edge. */
-  header#topbarWrap.topbar-new.iuTopbar{
-    --iuTopbarLeftGutter: clamp(0px, calc((100dvw - var(--iuContainerMax)) / 2), 100dvw);
-    --iuTopbarLeftFillW: calc(var(--iuTopbarLeftGutter) + var(--iuContainerPad) + var(--iuLeftRailW));
-  }
+:root{
+  --iuTopbarHeight: 72px;
+  --iuTopbarBg: #ffffff;
+  --iuTopbarStackH: var(--iuTopbarHeight);
+  /* Desktop geometry (used for topbar left fill width) */
+  --iuContainerMax: 1200px;
+  --iuContainerPad: 20px;
+  --iuLeftRailW: 136px;
+}
+/* Keep existing stack var consumers stable */
+:root{
+  --topbarStackH: var(--iuTopbarHeight);
 }
 
 .iuTopbar{
@@ -9400,14 +9403,13 @@ html, body {
   padding: 0 !important;
 }
 
-/* ============================================================
-   Desktop+Mobile SAFE: TOPBAR LEFT FILL rendered on .topbar-new-main
-   - Desktop: gradient visible & width driven by --iuTopbarLeftFillW
-   - Mobile: fill width forced to 0 (no overlay, no overflow)
-   ============================================================ */
+/* =========================================================
+   TOPBAR LEFT FILL — robust layered background
+   Safe for mobile + future content
+========================================================= */
 
 header#topbarWrap.topbar-new.iuTopbar::before{
-  content: none !important; /* disable legacy layer if present */
+  content: none !important;
 }
 
 /* Default (mobile-safe): fill OFF */
@@ -9416,10 +9418,17 @@ header#topbarWrap.topbar-new.iuTopbar::before{
 }
 
 div.topbar-new-main{
-  /* Keep base background as-is; fill layered as first background layer */
   background:
-    linear-gradient(90deg, #0B1F33 0%, #132F4D 100%) 0 0 /
-    var(--iuTopbarLeftFillW, 0px) 100% no-repeat,
+    linear-gradient(90deg, #0B1F33 0%, #132F4D 100%)
+      0 0 / var(--iuTopbarLeftFillW, 0px) 100% no-repeat,
+    var(--iuTopbarBg, #fff) !important;
+}
+
+/* fallback */
+header#topbarWrap.topbar-new.iuTopbar{
+  background:
+    linear-gradient(90deg, #0B1F33 0%, #132F4D 100%)
+      0 0 / var(--iuTopbarLeftFillW, 0px) 100% no-repeat,
     var(--iuTopbarBg, #fff) !important;
 }
 
