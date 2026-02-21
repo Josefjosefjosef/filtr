@@ -10691,6 +10691,7 @@ body::before{
   display:flex;
   align-items:center;
   justify-content:flex-end;
+  margin-left: auto; /* hard-anchor to the right, prevents micro flex rounding shifts */
 
   /* keep digits same width to prevent micro reflow when time renders/updates */
   font-variant-numeric: tabular-nums;
