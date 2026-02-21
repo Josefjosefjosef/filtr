@@ -4,9 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>infoUzel.cz</title>
-  <meta name="robots" content="noindex,nofollow" />
 
-  <!-- okamžitý fallback redirect (bez viditelného obsahu) -->
+  <!-- fallback redirect -->
   <meta http-equiv="refresh" content="0; url=/projects/" />
 
   <style>
@@ -21,20 +20,20 @@
       line-height: 0;
       overflow: hidden;
     }
+    /* pojistka: i kdyby se někdo pokusil něco vložit */
+    body * { display: none !important; }
   </style>
 
   <script>
-    // primary redirect (bez historie back-flashe)
-    (function(){
+    (function () {
       try {
         var target = "/projects/";
         if (location.pathname !== target) location.replace(target);
-      } catch(e) {}
+      } catch (e) {}
     })();
   </script>
 </head>
 <body>
-  <!-- noscript fallback: schovaný (color transparent + font-size 0) -->
-  <noscript>Pokračuji…</noscript>
+  <noscript></noscript>
 </body>
 </html>
