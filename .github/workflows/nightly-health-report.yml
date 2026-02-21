@@ -90,5 +90,5 @@ jobs:
           subject: "infoUzel Health Report ${{ github.run_id }}"
           to: ${{ secrets.HEALTH_EMAIL_TO }}
           from: ${{ secrets.HEALTH_EMAIL_FROM }}
-          body: file://reports/latest.md
-          attachments: reports/health-${{ steps.date.outputs.date }}.md,reports/latest.md
+          body: "file://reports/latest.md"
+          attachments: reports/latest.md
