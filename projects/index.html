@@ -18,6 +18,42 @@ script-src 'self' 'unsafe-inline' https:;
 style-src 'self' 'unsafe-inline' https:;
 ">
 
+    <script>
+    (function(){
+      // P0: Kill zombie Service Workers (stability-first: SW OFF).
+      // Must never block rendering or throw.
+      try{
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.getRegistrations()
+            .then(function(regs){
+              try{
+                (regs || []).forEach(function(reg){
+                  try{ reg.unregister(); }catch(_){}
+                });
+              }catch(_){}
+            })
+            .catch(function(){});
+        }
+      }catch(_){}
+      try{
+        // Clear only our own SW caches (avoid deleting unrelated CacheStorage keys).
+        if ("caches" in window) {
+          caches.keys()
+            .then(function(keys){
+              try{
+                (keys || []).forEach(function(k){
+                  if (/^iu-/.test(String(k || ""))) {
+                    try{ caches.delete(k); }catch(_){}
+                  }
+                });
+              }catch(_){}
+            })
+            .catch(function(){});
+        }
+      }catch(_){}
+    })();
+    </script>
+
     <style>
       /* DIAG ONLY: zviditelnění, zda je feed přítomen a není skryt/překryt */
       #feed { min-height: 200px !important; outline: 2px dashed rgba(255,255,255,0.35) !important; outline-offset: 2px; }
