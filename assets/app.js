@@ -135,6 +135,19 @@ window.addEventListener("unhandledrejection", (e) => {
   // Apply saved rail theme ASAP (before layout paint).
   iuRailApplyTheme();
   iuTopbarApplyTheme();
+  (function iuTopbarLeftFill(){
+    const topbar = document.querySelector('header#topbarWrap.topbar-new.iuTopbar');
+    const rail = document.querySelector('aside#iuLeftRail.iu-leftRail');
+    if(!topbar || !rail) return;
+
+    const update = () => {
+      const r = rail.getBoundingClientRect();
+      topbar.style.setProperty('--iuTopbarLeftFillW', `${Math.round(r.right)}px`);
+    };
+
+    update();
+    window.addEventListener('resize', update, {passive:true});
+  })();
   try{
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iuInitRailThemeControls);
     else iuInitRailThemeControls();
