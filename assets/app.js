@@ -125,36 +125,6 @@ window.addEventListener("unhandledrejection", (e) => {
   // Apply saved rail theme ASAP (before layout paint).
   iuRailApplyTheme();
   iuTopbarApplyTheme();
-  (function iuTopbarLeftFill(){
-
-    const topbar = document.querySelector('header#topbarWrap.topbar-new.iuTopbar');
-    const rail   = document.querySelector('aside#iuLeftRail.iu-leftRail');
-
-    if(!topbar || !rail) return;
-
-    const update = () => {
-
-      const tr = topbar.getBoundingClientRect();
-      const rr = rail.getBoundingClientRect();
-
-      // mobile / hidden rail guard
-      if(rr.width < 10 || rr.height < 10 ||
-         window.matchMedia('(max-width: 899px)').matches){
-        topbar.style.setProperty('--iuTopbarLeftFillW','0px');
-        return;
-      }
-
-      const w = Math.max(0, Math.round(rr.right - tr.left));
-      topbar.style.setProperty('--iuTopbarLeftFillW', w + 'px');
-    };
-
-    requestAnimationFrame(()=>{ update(); requestAnimationFrame(update); });
-
-    window.addEventListener('resize', update, {passive:true});
-    window.visualViewport?.addEventListener('resize', update, {passive:true});
-    window.visualViewport?.addEventListener('scroll', update, {passive:true});
-
-  })();
   try{
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iuInitRailThemeControls);
     else iuInitRailThemeControls();

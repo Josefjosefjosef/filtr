@@ -498,12 +498,14 @@ html:not([data-iu-js]) .iuDailyWeather{
 /* Gradient pouze na variantách: --left fade doprava, --right fade doleva (symetrické) */
 .topbar-links-arrow--left{
   left: 0;
-  background: linear-gradient(to right, #243B55 0%, rgba(36,59,85,0.8) 50%, transparent 100%);
+  background:#0B1F33 !important;
+  background-image:none !important;
 }
 
 .topbar-links-arrow--right{
   right: 0;
-  background: linear-gradient(to left, #243B55 0%, rgba(36,59,85,0.8) 50%, transparent 100%);
+  background:#0B1F33 !important;
+  background-image:none !important;
 }
 
 .topbar-links-arrow svg{
@@ -9345,14 +9347,13 @@ html, body {
    UI-only + small JS theme/toggle, CLS=0
    ============================================================ */
 
-@property --iuTopbarLeftFillW { syntax: '<length>'; inherits: true; initial-value: 0px; }
 @property --iuTopbarLeftGutter { syntax: '<length>'; inherits: true; initial-value: 0px; }
 
 :root{
   --iuTopbarHeight: 72px;
   --iuTopbarBg: #0B1F33;
   --iuTopbarStackH: var(--iuTopbarHeight);
-  /* Desktop geometry (used for topbar left fill width) */
+  /* Desktop geometry */
   --iuContainerMax: 1200px;
   --iuContainerPad: 20px;
   --iuLeftRailW: 136px;
@@ -9402,42 +9403,6 @@ html, body {
   width: 100%;
   padding: 0 !important;
   position: relative; /* position context for absolute .iuTopbarContent */
-}
-
-/* =========================================================
-   TOPBAR LEFT FILL — pixel-perfect ::before (desktop-safe + mobile-safe via JS var)
-========================================================= */
-
-header#topbarWrap.topbar-new.iuTopbar{
-  isolation: isolate;
-  background: #0B1F33 !important;
-}
-
-header#topbarWrap.topbar-new.iuTopbar::before{
-  content: " " !important;
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: var(--iuTopbarLeftFillW, 0px);
-  background: #0B1F33 !important;
-  pointer-events: none;
-  z-index: 0;
-}
-
-header#topbarWrap.topbar-new.iuTopbar > *{
-  position: relative;
-  z-index: 1;
-}
-
-/* Default (mobile-safe): fill OFF */
-:root{
-  --iuTopbarLeftFillW: 0px;
-}
-
-header#topbarWrap.topbar-new.iuTopbar .topbar-new-main{
-  background: #0B1F33 !important;
 }
 
 /* =========================================================
@@ -10770,4 +10735,15 @@ html{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* =========================================================
+   FINAL TOPBAR – SOLID COLOR (infoUzel.cz)
+   Simple, stable, CLS-safe
+========================================================= */
+
+header#topbarWrap.topbar-new.iuTopbar,
+#topbarWrap .topbar-new-main{
+  background:#0B1F33 !important;
+  color:#ffffff !important;
 }
