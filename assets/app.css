@@ -9400,6 +9400,18 @@ html, body {
   padding: 0 !important;
 }
 
+/* === TOPBAR LEFT FILL – FINAL SAFE LAYER === */
+div.topbar-new-main{
+  background:
+    linear-gradient(90deg, #0B1F33 0%, #132F4D 100%) 0 0 /
+    var(--iuTopbarLeftFillW, 0px) 100% no-repeat,
+    var(--iuTopbarBg, #fff) !important;
+}
+
+header#topbarWrap.topbar-new.iuTopbar::before{
+  content: none !important;
+}
+
 /* AUTO OFFSET — shift 3-column layout under fixed topbar */
 .layout{
   padding-top: var(--iuTopbarHeight) !important;
