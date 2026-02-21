@@ -137,54 +137,30 @@ window.addEventListener("unhandledrejection", (e) => {
   iuTopbarApplyTheme();
   (function iuTopbarLeftFill(){
     const topbar = document.querySelector('header#topbarWrap.topbar-new.iuTopbar');
-    const rail = document.querySelector('aside#iuLeftRail.iu-leftRail');
-    if(!topbar || !rail) return;
+    const host   = document.querySelector('div.topbar-new-main') || topbar;
+    const rail   = document.querySelector('aside#iuLeftRail.iu-leftRail');
+    if(!host) return;
 
-    const mq = window.matchMedia('(min-width: 980px)');
-    let onResize = null;
-
-    const set0 = () => {
-      topbar.style.setProperty('--iuTopbarLeftFillW', '0px');
+    const isVisible = (el)=>{
+      if(!el) return false;
+      const cs = getComputedStyle(el);
+      if(cs.display==='none'||cs.visibility==='hidden'||cs.opacity==='0') return false;
+      const r = el.getBoundingClientRect();
+      return r.width>1 && r.height>1;
     };
 
-    const update = () => {
+    const update = ()=>{
+      if(!isVisible(rail)){
+        host.style.setProperty('--iuTopbarLeftFillW','0px');
+        return;
+      }
       const r = rail.getBoundingClientRect();
-      // round → pixel-perfect (stable) and avoids fractional width jitter
-      topbar.style.setProperty('--iuTopbarLeftFillW', `${Math.round(r.right)}px`);
+      host.style.setProperty('--iuTopbarLeftFillW',Math.round(r.right)+'px');
     };
 
-    const enable = () => {
-      // initial update
-      update();
-      // bind resize once
-      if(!onResize){
-        onResize = () => update();
-        window.addEventListener('resize', onResize, { passive: true });
-      }
-    };
-
-    const disable = () => {
-      set0();
-      if(onResize){
-        window.removeEventListener('resize', onResize);
-        onResize = null;
-      }
-    };
-
-    const apply = () => {
-      if(mq.matches) enable();
-      else disable();
-    };
-
-    // initial
-    apply();
-
-    // breakpoint changes (modern + fallback)
-    if(typeof mq.addEventListener === 'function'){
-      mq.addEventListener('change', apply);
-    }else if(typeof mq.addListener === 'function'){
-      mq.addListener(apply);
-    }
+    requestAnimationFrame(()=>{ update(); requestAnimationFrame(update); });
+    window.addEventListener('resize',update,{passive:true});
+    window.addEventListener('orientationchange',update,{passive:true});
   })();
   try{
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iuInitRailThemeControls);
