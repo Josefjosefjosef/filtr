@@ -1,0 +1,115 @@
+# Schedule: 04:00 UTC (05:00 CET winter)
+name: Nightly Health Report
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *"
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Python compile gate
+        run: python -m py_compile scripts/health_report.py
+
+      - name: Node syntax gate
+        run: node -c scripts/check_site.js
+
+      - name: Verify lockfile exists
+        run: test -f package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Puppeteer browsers
+        run: npx puppeteer browsers install chrome
+
+      - name: Set report date
+        id: date
+        run: echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Run check_site.js
+        env:
+          SITE_URL: "https://infouzel.cz/projects/?debug=1&nosw=1&section=media"
+        run: node scripts/check_site.js
+
+      - name: Run health_report.py
+        run: python3 scripts/health_report.py
+
+      - name: Report output gates
+        run: |
+          test -f reports/check_site.json
+          test -f reports/latest.md
+          grep -n "INFOUZEL HEALTH REPORT" reports/latest.md
+          grep -n "^Critical:" reports/latest.md
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-report-${{ github.run_id }}
+          path: |
+            reports/latest.md
+            reports/health-*.md
+            reports/health-*.json
+            reports/check_site.json
+          if-no-files-found: error
+
+      - name: Summary
+        run: |
+          {
+            echo "## Nightly Health Report"
+            echo ""
+            if [ -f reports/latest.md ]; then
+              head -40 reports/latest.md
+            else
+              echo "Report not generated (check logs)"
+            fi
+            echo ""
+            echo "### Artifact"
+            echo "Download artifact \`health-report-${{ github.run_id }}\` for full reports."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Compute email flags
+        shell: bash
+        run: |
+          if [ -n "${{ secrets.HEALTH_EMAIL_TO }}" ]; then
+            echo "HEALTH_EMAIL_CONFIGURED=true" >> "$GITHUB_ENV"
+          else
+            echo "HEALTH_EMAIL_CONFIGURED=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Email not configured
+        if: env.HEALTH_EMAIL_CONFIGURED != 'true'
+        run: echo "Email not configured (missing HEALTH_EMAIL_TO secret)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Send email
+        if: env.HEALTH_EMAIL_CONFIGURED == 'true'
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.HEALTH_SMTP_SERVER }}
+          server_port: ${{ secrets.HEALTH_SMTP_PORT }}
+          username: ${{ secrets.HEALTH_SMTP_USERNAME }}
+          password: ${{ secrets.HEALTH_SMTP_PASSWORD }}
+          subject: "infoUzel Health Report — ${{ github.run_id }}"
+          to: ${{ secrets.HEALTH_EMAIL_TO }}
+          from: ${{ secrets.HEALTH_EMAIL_FROM }}
+          body: file://reports/latest.md
+          attachments: reports/latest.md

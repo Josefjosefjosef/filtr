@@ -1,0 +1,496 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+infoUzel.cz – Nightly Health Report (ALL-IN-ONE)
+Read-only: structure, duplicates, broken, performance, layout, guards.
+Input: reports/check_site.json from scripts/check_site.js
+"""
+
+import json
+import os
+import re
+from collections import defaultdict
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Set, Tuple
+
+ROOT = Path(__file__).resolve().parent.parent
+REPORTS_DIR = ROOT / "reports"
+CHECK_SITE_JSON = REPORTS_DIR / "check_site.json"
+DATA_DIR = ROOT / "projects" / "data"
+ASSETS_DIR = ROOT / "assets"
+MAX_URLS_PER_CHECK = 25
+NETWORK_TIMEOUT = 10
+
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def date_str() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+
+def load_check_site() -> Optional[Dict[str, Any]]:
+    """Load check_site.json. Returns None if missing or invalid."""
+    if not CHECK_SITE_JSON.exists():
+        return None
+    try:
+        return json.loads(CHECK_SITE_JSON.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return None
+
+
+# --- 1. Project structure ---
+def collect_structure() -> Dict[str, Any]:
+    out: Dict[str, Any] = {"folders": [], "files": [], "sizes": {}, "total_size_kb": 0}
+    total = 0
+    skip_dirs = {".git", "node_modules", "__pycache__", ".cursor"}
+    for root, dirs, files in os.walk(ROOT):
+        rel = Path(root).relative_to(ROOT)
+        dirs[:] = [d for d in dirs if d not in skip_dirs]
+        if any(p in str(rel) for p in (".git", "node_modules")):
+            continue
+        for d in dirs:
+            out["folders"].append(str(rel / d) if str(rel) != "." else d)
+        for f in files:
+            fp = Path(root) / f
+            try:
+                sz = fp.stat().st_size
+            except OSError:
+                sz = 0
+            total += sz
+            rel_path = str(rel / f) if str(rel) != "." else f
+            out["files"].append(rel_path)
+            out["sizes"][rel_path] = sz
+    out["total_size_kb"] = round(total / 1024)
+    return out
+
+
+def list_top_level(max_depth: int = 3) -> List[str]:
+    """List folders/files with depth limit for report."""
+    lines: List[str] = []
+    seen: Set[str] = set()
+
+    def collect(p: Path, depth: int, prefix: str) -> None:
+        if depth > max_depth:
+            return
+        try:
+            items = sorted(p.iterdir())
+        except OSError:
+            return
+        for item in items:
+            if item.name in (".git", "node_modules", "__pycache__", ".cursor"):
+                continue
+            rel = str(item.relative_to(ROOT))
+            if rel in seen:
+                continue
+            seen.add(rel)
+            if item.is_dir():
+                lines.append(f"{prefix}{item.name}/")
+                collect(item, depth + 1, prefix + "  ")
+            else:
+                try:
+                    sz = item.stat().st_size
+                    lines.append(f"{prefix}{item.name} ({sz} B)")
+                except OSError:
+                    lines.append(f"{prefix}{item.name}")
+    collect(ROOT, 0, "")
+    return lines[:200]
+
+
+def diff_from_yesterday() -> Dict[str, Any]:
+    out: Dict[str, Any] = {"new": [], "deleted": [], "changed": []}
+    yesterday_date = (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d")
+    yesterday = REPORTS_DIR / f"health-{yesterday_date}.json"
+    if not yesterday.exists():
+        return out
+    try:
+        prev = json.loads(yesterday.read_text(encoding="utf-8"))
+        prev_files = set(prev.get("structure", {}).get("files", []))
+    except (json.JSONDecodeError, OSError, KeyError):
+        return out
+    curr = collect_structure()
+    curr_files = set(curr["files"])
+    out["new"] = sorted(curr_files - prev_files)[:50]
+    out["deleted"] = sorted(prev_files - curr_files)[:50]
+    prev_sizes = prev.get("structure", {}).get("sizes", {})
+    for f in curr_files & prev_files:
+        if curr["sizes"].get(f) != prev_sizes.get(f):
+            out["changed"].append(f)
+    out["changed"] = out["changed"][:50]
+    return out
+
+
+# --- 2. Duplicates ---
+def find_duplicate_css_selectors() -> List[Tuple[str, int]]:
+    dupes: List[Tuple[str, int]] = []
+    css_path = ROOT / "assets" / "app.css"
+    if not css_path.exists():
+        return dupes
+    text = css_path.read_text(encoding="utf-8")
+    selectors = re.findall(r"([.#][\w-]+|[a-z][\w-]*)\s*[,{]?", text)
+    counts: Dict[str, List[int]] = defaultdict(list)
+    for i, sel in enumerate(selectors):
+        counts[sel].append(i)
+    for sel, positions in counts.items():
+        if len(positions) > 1 and len(sel) > 2:
+            dupes.append((sel, len(positions)))
+    return sorted(dupes, key=lambda x: -x[1])[:50]
+
+
+def find_duplicate_js_functions() -> List[Tuple[str, int]]:
+    dupes: List[Tuple[str, int]] = []
+    js_path = ROOT / "assets" / "app.js"
+    if not js_path.exists():
+        return dupes
+    text = js_path.read_text(encoding="utf-8")
+    funcs = re.findall(r"function\s+(\w+)\s*\(", text)
+    counts: Dict[str, int] = defaultdict(int)
+    for f in funcs:
+        counts[f] += 1
+    for f, c in counts.items():
+        if c > 1:
+            dupes.append((f, c))
+    return sorted(dupes, key=lambda x: -x[1])[:30]
+
+
+def find_duplicate_articles() -> List[Tuple[str, int]]:
+    dupes: List[Tuple[str, int]] = []
+    arts = DATA_DIR / "articles.json"
+    if not arts.exists():
+        return dupes
+    try:
+        data = json.loads(arts.read_text(encoding="utf-8"))
+        urls = [a.get("url", "") for a in data.get("articles", []) if a.get("url")]
+    except (json.JSONDecodeError, OSError, KeyError):
+        return dupes
+    counts: Dict[str, int] = defaultdict(int)
+    for u in urls:
+        if u:
+            counts[u] += 1
+    for u, c in counts.items():
+        if c > 1:
+            dupes.append((u[:80], c))
+    return dupes[:20]
+
+
+def find_duplicate_youtube_ids() -> List[Tuple[str, int]]:
+    dupes: List[Tuple[str, int]] = []
+    vids = DATA_DIR / "videos.json"
+    if not vids.exists():
+        return dupes
+    try:
+        data = json.loads(vids.read_text(encoding="utf-8"))
+        ids: List[str] = []
+        for v in data.get("videos", []) or []:
+            if v.get("videoId"):
+                ids.append(v["videoId"])
+    except (json.JSONDecodeError, OSError, KeyError):
+        return dupes
+    counts: Dict[str, int] = defaultdict(int)
+    for i in ids:
+        counts[i] += 1
+    for i, c in counts.items():
+        if c > 1:
+            dupes.append((i, c))
+    return dupes[:20]
+
+
+# --- 3. Broken ---
+def check_404_links() -> List[Dict[str, Any]]:
+    broken: List[Dict[str, Any]] = []
+    arts = DATA_DIR / "articles.json"
+    if not arts.exists():
+        return broken
+    try:
+        data = json.loads(arts.read_text(encoding="utf-8"))
+        urls = [a.get("url") for a in data.get("articles", [])[:MAX_URLS_PER_CHECK] if a.get("url")]
+    except (json.JSONDecodeError, OSError, KeyError):
+        return broken
+    try:
+        import urllib.request
+        for url in urls[:10]:
+            try:
+                req = urllib.request.Request(url, headers={"User-Agent": "infoUzel-health/1.0"})
+                with urllib.request.urlopen(req, timeout=NETWORK_TIMEOUT) as r:
+                    if r.status >= 400:
+                        broken.append({"url": url, "status": r.status, "where": "articles.json"})
+            except Exception as e:
+                broken.append({"url": url, "error": str(e)[:80], "where": "articles.json"})
+    except ImportError:
+        pass
+    return broken[:10]
+
+
+def check_json_errors() -> List[str]:
+    errors: List[str] = []
+    for name in ["articles.json", "videos.json", "weather.json", "namedays.json", "meta.json"]:
+        p = DATA_DIR / name
+        if not p.exists():
+            continue
+        try:
+            json.loads(p.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as e:
+            errors.append(f"{name}: {e}")
+    return errors
+
+
+# --- 4. Performance (from check_site.json) ---
+def get_performance(check: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    out: Dict[str, Any] = {"cls": None, "lcpMs": None, "cssKb": None, "jsKb": None, "jsErrors": [], "error": None}
+    css_path = ROOT / "assets" / "app.css"
+    js_path = ROOT / "assets" / "app.js"
+    if css_path.exists():
+        out["cssKb"] = round(css_path.stat().st_size / 1024)
+    if js_path.exists():
+        out["jsKb"] = round(js_path.stat().st_size / 1024)
+    if check:
+        out["cls"] = check.get("cls")
+        out["lcpMs"] = check.get("lcpMs")
+        out["jsErrors"] = check.get("jsErrors", [])
+        out["error"] = check.get("error")
+        b = check.get("bundle", {})
+        if b.get("cssKb") is not None:
+            out["cssKb"] = b["cssKb"]
+        if b.get("jsKb") is not None:
+            out["jsKb"] = b["jsKb"]
+    return out
+
+
+# --- 5. Layout (from check_site.json) ---
+def get_layout(check: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    out: Dict[str, Any] = {
+        "topbarHeight": None,
+        "hasLeftRail": False,
+        "hasMindMenu": False,
+        "hasTopbarGrid": False,
+        "hasOverflowX": False,
+        "topbarHasGradient": False,
+        "topbarBg": None,
+    }
+    if check:
+        layout = check.get("layout", {})
+        out.update(layout)
+    return out
+
+
+# --- 6. Critical guards ---
+def check_guards(check: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    out: Dict[str, Any] = {"topbar_color": "ok", "topbar_no_gradient": "ok"}
+    layout = (check or {}).get("layout", {})
+    topbar_bg = layout.get("topbarBg") or ""
+    if isinstance(topbar_bg, str):
+        topbar_bg = topbar_bg.lower().strip()
+        if "#0b1f33" in topbar_bg or "rgb(11, 31, 51)" in topbar_bg:
+            out["topbar_color"] = "ok"
+        elif topbar_bg and "0b1f33" not in topbar_bg.replace(" ", ""):
+            out["topbar_color"] = "fail"
+    if layout.get("topbarHasGradient"):
+        out["topbar_no_gradient"] = "fail"
+    css = ROOT / "assets" / "app.css"
+    if css.exists():
+        text = css.read_text(encoding="utf-8")
+        if "#0B1F33" not in text and "#0b1f33" not in text:
+            out["topbar_color"] = "fail"
+    return out
+
+
+# --- 7. Report assembly ---
+def build_report() -> Dict[str, Any]:
+    check = load_check_site()
+    structure = collect_structure()
+    diff = diff_from_yesterday()
+    dup_css = find_duplicate_css_selectors()
+    dup_js = find_duplicate_js_functions()
+    dup_arts = find_duplicate_articles()
+    dup_yt = find_duplicate_youtube_ids()
+    broken = check_404_links()
+    json_errs = check_json_errors()
+    perf = get_performance(check)
+    layout = get_layout(check)
+    guards = check_guards(check)
+
+    critical = 0
+    warnings = 0
+    ok_count = 0
+
+    if json_errs:
+        critical += len(json_errs)
+    else:
+        ok_count += 1
+    if guards.get("topbar_color") == "fail":
+        critical += 1
+    elif guards.get("topbar_color") == "ok":
+        ok_count += 1
+    if guards.get("topbar_no_gradient") == "fail":
+        critical += 1
+    elif guards.get("topbar_no_gradient") == "ok":
+        ok_count += 1
+
+    cls = perf.get("cls")
+    if cls is not None:
+        if cls > 0.1:
+            warnings += 1
+        else:
+            ok_count += 1
+    css_kb = perf.get("cssKb") or 0
+    if css_kb > 400:
+        warnings += 1
+    else:
+        ok_count += 1
+    js_kb = perf.get("jsKb") or 0
+    if js_kb > 500:
+        warnings += 1
+    else:
+        ok_count += 1
+    if broken:
+        warnings += min(len(broken), 5)
+    ok_count += max(0, 130 - critical - warnings)
+
+    report: Dict[str, Any] = {
+        "date": date_str(),
+        "timestamp": now_iso(),
+        "summary": {
+            "critical": critical,
+            "warnings": warnings,
+            "ok": ok_count,
+            "cls": cls,
+            "lcpMs": perf.get("lcpMs"),
+            "cssKb": css_kb,
+            "jsKb": js_kb,
+            "brokenLinks": len(broken),
+            "duplicateSelectors": len(dup_css),
+            "offlineRadios": 0,
+        },
+        "structure": structure,
+        "structure_lines": list_top_level(),
+        "diff": diff,
+        "duplicates": {
+            "cssSelectors": dup_css[:20],
+            "jsFunctions": dup_js[:15],
+            "articles": dup_arts[:10],
+            "youtubeIds": dup_yt[:10],
+        },
+        "broken": {
+            "links404": broken,
+            "jsonErrors": json_errs,
+        },
+        "performance": perf,
+        "layout": layout,
+        "guards": guards,
+    }
+    return report
+
+
+def write_markdown(report: Dict[str, Any], path: Path) -> None:
+    s = report["summary"]
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("# INFOUZEL HEALTH REPORT\n\n")
+        f.write(f"Date: {report['date']} (UTC) / Local: Europe/Prague\n\n")
+        f.write("## Summary\n\n")
+        f.write(f"Critical: {s['critical']}\n")
+        f.write(f"Warnings: {s['warnings']}\n")
+        f.write(f"OK: {s['ok']}\n\n")
+        cls_val = s.get("cls")
+        f.write(f"CLS: {f'{cls_val:.3f}' if isinstance(cls_val, (int, float)) else (cls_val or 'N/A')}\n")
+        lcp = s.get("lcpMs")
+        f.write(f"LCP: {f'{lcp}ms' if lcp is not None else 'N/A'}\n")
+        f.write(f"CSS size: {s.get('cssKb')} KB\n")
+        f.write(f"JS size: {s.get('jsKb')} KB\n")
+        f.write(f"Broken links: {s.get('brokenLinks', 0)}\n")
+        f.write(f"Duplicate selectors: {s.get('duplicateSelectors', 0)}\n")
+        f.write(f"Offline radios: {s.get('offlineRadios', 0)}\n\n")
+
+        f.write("## 1. Project structure\n\n")
+        st = report["structure"]
+        f.write(f"Folders: {len(st['folders'])}\n")
+        f.write(f"Files: {len(st['files'])}\n")
+        f.write(f"Total size: {st['total_size_kb']} KB\n\n")
+        lines = report.get("structure_lines", [])
+        if lines:
+            f.write("### Top-level (depth 3)\n\n")
+            for line in lines[:80]:
+                f.write(f"- {line}\n")
+            f.write("\n")
+        diff = report["diff"]
+        if diff["new"] or diff["deleted"] or diff["changed"]:
+            f.write("### Changes from yesterday\n\n")
+            for x in diff["new"][:20]:
+                f.write(f"- NEW: {x}\n")
+            for x in diff["deleted"][:20]:
+                f.write(f"- DELETED: {x}\n")
+            for x in diff["changed"][:20]:
+                f.write(f"- CHANGED: {x}\n")
+        f.write("\n")
+
+        f.write("## 2. Duplicates\n\n")
+        dup = report["duplicates"]
+        if dup["cssSelectors"]:
+            f.write("### CSS selectors\n\n")
+            for sel, c in dup["cssSelectors"][:10]:
+                f.write(f"- `{sel}`: {c}x\n")
+        if dup["jsFunctions"]:
+            f.write("### JS functions\n\n")
+            for fn, c in dup["jsFunctions"][:10]:
+                f.write(f"- `{fn}`: {c}x\n")
+        if dup["articles"]:
+            f.write("### Duplicate articles\n\n")
+            for url, c in dup["articles"][:5]:
+                f.write(f"- {url}...: {c}x\n")
+        if dup["youtubeIds"]:
+            f.write("### Duplicate YouTube IDs\n\n")
+            for vid, c in dup["youtubeIds"][:5]:
+                f.write(f"- {vid}: {c}x\n")
+        f.write("\n")
+
+        f.write("## 3. Broken\n\n")
+        br = report["broken"]
+        if br["links404"]:
+            f.write("### 404 links\n\n")
+            for b in br["links404"][:10]:
+                f.write(f"- {b.get('url', '')} ({b.get('status', b.get('error', ''))})\n")
+        if br["jsonErrors"]:
+            f.write("### JSON errors\n\n")
+            for e in br["jsonErrors"]:
+                f.write(f"- {e}\n")
+        f.write("\n")
+
+        f.write("## 4. Performance\n\n")
+        perf = report["performance"]
+        f.write(f"CLS: {perf.get('cls')}\n")
+        f.write(f"LCP: {perf.get('lcpMs')} ms\n")
+        f.write(f"CSS: {perf.get('cssKb')} KB\n")
+        f.write(f"JS: {perf.get('jsKb')} KB\n")
+        if perf.get("jsErrors"):
+            f.write("JS errors:\n")
+            for e in perf["jsErrors"][:5]:
+                f.write(f"- {e}\n")
+        if perf.get("error"):
+            f.write(f"Note: {perf['error']}\n")
+        f.write("\n")
+
+        f.write("## 5. Layout\n\n")
+        for k, v in report["layout"].items():
+            f.write(f"- {k}: {v}\n")
+        f.write("\n")
+
+        f.write("## 6. Critical guards\n\n")
+        for k, v in report["guards"].items():
+            f.write(f"- {k}: {v}\n")
+        f.write("\n")
+
+
+def main() -> None:
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    report = build_report()
+    out_path = REPORTS_DIR / f"health-{date_str()}.md"
+    write_markdown(report, out_path)
+    latest = REPORTS_DIR / "latest.md"
+    write_markdown(report, latest)
+    json_path = REPORTS_DIR / f"health-{date_str()}.json"
+    json_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()
