@@ -137,30 +137,52 @@ window.addEventListener("unhandledrejection", (e) => {
   iuTopbarApplyTheme();
   (function iuTopbarLeftFill(){
     const topbar = document.querySelector('header#topbarWrap.topbar-new.iuTopbar');
-    const host   = document.querySelector('div.topbar-new-main') || topbar;
     const rail   = document.querySelector('aside#iuLeftRail.iu-leftRail');
-    if(!host) return;
+    if(!topbar) return;
 
-    const isVisible = (el)=>{
-      if(!el) return false;
-      const cs = getComputedStyle(el);
-      if(cs.display==='none'||cs.visibility==='hidden'||cs.opacity==='0') return false;
-      const r = el.getBoundingClientRect();
-      return r.width>1 && r.height>1;
+    const mqMobile = window.matchMedia('(max-width: 899px)');
+    let rafPending = false;
+
+    const set0 = () => {
+      topbar.style.setProperty('--iuTopbarLeftFillW', '0px');
     };
 
-    const update = ()=>{
-      if(!isVisible(rail)){
-        host.style.setProperty('--iuTopbarLeftFillW','0px');
-        return;
+    const update = () => {
+      // Mobile/tablet safe default (rail may be hidden in these breakpoints).
+      if (mqMobile.matches) { set0(); return; }
+
+      if (!rail) { set0(); return; }
+      const rr = rail.getBoundingClientRect();
+      if (rr.width < 10 || rr.height < 10) { set0(); return; }
+
+      const tr = topbar.getBoundingClientRect();
+      const w = Math.round(rr.right - tr.left);
+      const wClamped = Math.max(0, w);
+      topbar.style.setProperty('--iuTopbarLeftFillW', `${wClamped}px`);
+    };
+
+    const schedule = () => {
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => { rafPending = false; update(); });
+    };
+
+    requestAnimationFrame(() => { update(); requestAnimationFrame(update); });
+    window.addEventListener('resize', schedule, { passive: true });
+    window.addEventListener('orientationchange', schedule, { passive: true });
+    try{
+      if (typeof mqMobile.addEventListener === 'function') mqMobile.addEventListener('change', schedule);
+      else if (typeof mqMobile.addListener === 'function') mqMobile.addListener(schedule);
+    }catch{}
+
+    // Zoom / mobile browser UI changes (safer than window scroll listener).
+    try{
+      const vv = window.visualViewport;
+      if (vv && typeof vv.addEventListener === 'function') {
+        vv.addEventListener('resize', schedule, { passive: true });
+        vv.addEventListener('scroll', schedule, { passive: true });
       }
-      const r = rail.getBoundingClientRect();
-      host.style.setProperty('--iuTopbarLeftFillW',Math.round(r.right)+'px');
-    };
-
-    requestAnimationFrame(()=>{ update(); requestAnimationFrame(update); });
-    window.addEventListener('resize',update,{passive:true});
-    window.addEventListener('orientationchange',update,{passive:true});
+    }catch{}
   })();
   try{
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iuInitRailThemeControls);

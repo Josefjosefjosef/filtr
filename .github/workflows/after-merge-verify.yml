@@ -51,13 +51,17 @@ jobs:
             css="$(curl -fsSL \
               -H "Cache-Control: no-cache" \
               -H "Pragma: no-cache" \
-              "$url")"
+              "$url" || true)"
 
-            if printf '%s' "$css" | grep -q "$MARKER"; then
+            tmp="$(mktemp)"
+            printf '%s' "$css" > "$tmp"
+            if grep -Fq "$MARKER" "$tmp"; then
+              rm -f "$tmp"
               echo "OK: marker found in production CSS."
               found="true"
               break
             fi
+            rm -f "$tmp"
 
             echo "NOT YET: marker missing. Waiting ${RETRY_SLEEP}s..."
             sleep "$RETRY_SLEEP"
@@ -170,8 +174,11 @@ jobs:
           while [ "$attempt" -le "$RETRY_MAX" ]; do
             echo "--- post-deploy attempt $attempt/$RETRY_MAX ---"
             url="${PROD_CSS_URL}?verify=post-${GITHUB_SHA::7}-${GITHUB_RUN_ID}-${attempt}"
-            css="$(curl -fsSL -H "Cache-Control: no-cache" -H "Pragma: no-cache" "$url")"
-            if printf '%s' "$css" | grep -q "$MARKER"; then
+            css="$(curl -fsSL -H "Cache-Control: no-cache" -H "Pragma: no-cache" "$url" || true)"
+            tmp="$(mktemp)"
+            printf '%s' "$css" > "$tmp"
+            if grep -Fq "$MARKER" "$tmp"; then
+              rm -f "$tmp"
               echo "OK: marker found after deploy."
               {
                 echo "## After-merge verify (post-deploy)"
@@ -181,6 +188,7 @@ jobs:
               } >> "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
+            rm -f "$tmp"
             echo "Still missing; waiting ${RETRY_SLEEP}s..."
             sleep "$RETRY_SLEEP"
             attempt=$((attempt + 1))
