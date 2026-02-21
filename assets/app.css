@@ -10692,6 +10692,10 @@ body::before{
   align-items:center;
   justify-content:flex-end;
 
+  /* keep digits same width to prevent micro reflow when time renders/updates */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
