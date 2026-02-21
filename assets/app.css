@@ -9410,6 +9410,7 @@ html, body {
 
 header#topbarWrap.topbar-new.iuTopbar{
   isolation: isolate;
+  background: #0B1F33 !important;
 }
 
 header#topbarWrap.topbar-new.iuTopbar::before{
@@ -9420,7 +9421,7 @@ header#topbarWrap.topbar-new.iuTopbar::before{
   top: 0;
   bottom: 0;
   width: var(--iuTopbarLeftFillW, 0px);
-  background: #0B1F33;
+  background: #0B1F33 !important;
   pointer-events: none;
   z-index: 0;
 }
@@ -9435,8 +9436,8 @@ header#topbarWrap.topbar-new.iuTopbar > *{
   --iuTopbarLeftFillW: 0px;
 }
 
-div.topbar-new-main{
-  background: transparent !important;
+header#topbarWrap.topbar-new.iuTopbar .topbar-new-main{
+  background: #0B1F33 !important;
 }
 
 /* =========================================================
