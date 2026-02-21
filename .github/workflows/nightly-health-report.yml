@@ -31,9 +31,11 @@ jobs:
           python -m py_compile scripts/health_report.py
           node -c scripts/check_site.js
 
+      - name: Verify lockfile
+        run: test -f package-lock.json || (echo "::error::package-lock.json missing. Run 'npm install' locally and commit." && exit 1)
+
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+        run: npm ci
 
       - name: Install Puppeteer browsers
         run: npx puppeteer browsers install chrome
@@ -52,6 +54,7 @@ jobs:
 
       - name: Report gates
         run: |
+          test -f reports/check_site.json
           test -f reports/latest.md
           grep -n "INFOUZEL HEALTH REPORT" reports/latest.md
           grep -n "^Critical: " reports/latest.md || true
@@ -80,7 +83,21 @@ jobs:
           echo "### Artifact" >> "$GITHUB_STEP_SUMMARY"
           echo "Download artifact \`health-report-${{ github.run_id }}\` for full reports." >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Compute email flags
+        shell: bash
+        run: |
+          if [ -n "${{ secrets.HEALTH_EMAIL_TO }}" ]; then
+            echo "HEALTH_EMAIL_CONFIGURED=true" >> $GITHUB_ENV
+          else
+            echo "HEALTH_EMAIL_CONFIGURED=false" >> $GITHUB_ENV
+          fi
+
+      - name: Email not configured
+        if: env.HEALTH_EMAIL_CONFIGURED != 'true'
+        run: echo "Email not configured (HEALTH_EMAIL_TO secret not set)" >> $GITHUB_STEP_SUMMARY
+
       - name: Send email
+        if: env.HEALTH_EMAIL_CONFIGURED == 'true'
         continue-on-error: true
         uses: dawidd6/action-send-mail@v3
         with:
@@ -88,8 +105,8 @@ jobs:
           server_port: ${{ secrets.HEALTH_SMTP_PORT }}
           username: ${{ secrets.HEALTH_SMTP_USERNAME }}
           password: ${{ secrets.HEALTH_SMTP_PASSWORD }}
-          subject: "infoUzel Health Report ${{ github.run_id }}"
+          subject: "infoUzel Health Report — ${{ github.run_id }}"
           to: ${{ secrets.HEALTH_EMAIL_TO }}
           from: ${{ secrets.HEALTH_EMAIL_FROM }}
-          body: "file://reports/latest.md"
+          body: file://reports/latest.md
           attachments: reports/latest.md
