@@ -5,7 +5,7 @@
 */
 
 // Verze cache (měnit při každé významné změně)
-const CACHE_VERSION = "v2026-01-25-3";
+const CACHE_VERSION = "v2026-02-21-1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
