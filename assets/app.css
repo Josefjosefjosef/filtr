@@ -9350,7 +9350,7 @@ html, body {
 
 :root{
   --iuTopbarHeight: 72px;
-  --iuTopbarBg: #ffffff;
+  --iuTopbarBg: #0B1F33;
   --iuTopbarStackH: var(--iuTopbarHeight);
   /* Desktop geometry (used for topbar left fill width) */
   --iuContainerMax: 1200px;
@@ -9420,7 +9420,7 @@ header#topbarWrap.topbar-new.iuTopbar::before{
   top: 0;
   bottom: 0;
   width: var(--iuTopbarLeftFillW, 0px);
-  background: linear-gradient(90deg, #0B1F33 0%, #132F4D 100%);
+  background: #0B1F33;
   pointer-events: none;
   z-index: 0;
 }
@@ -9553,7 +9553,7 @@ div.topbar-new-main{
 
 :root{
   --iuTopbarHeight: 72px;
-  --iuTopbarBg: #ffffff;
+  --iuTopbarBg: #0B1F33;
   --iuTopbarFg: #1b2430;
   --iuTopbarMuted: rgba(27,36,48,.75);
   --iuHairline: rgba(27,36,48,.10);
@@ -10159,7 +10159,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 .iu-leftNav,
 #iuLeftNav,
 [data-rail-container] {
-  background: linear-gradient(180deg, #0B1F33 0%, #132F4D 100%) !important;
+  background: linear-gradient(180deg, #0B1F33 0%, rgb(19, 47, 77) 100%) !important;
   border-right: 1px solid #D1D5DB !important;
 }
 
@@ -10168,7 +10168,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 .iu-leftNavItem a,
 .iu-leftNavItem button,
 .iu-leftNav .iuRailBtn {
-  background: linear-gradient(180deg, #0B1F33 0%, #132F4D 100%) !important;
+  background: linear-gradient(180deg, #0B1F33 0%, rgb(19, 47, 77) 100%) !important;
 }
 
 /* --- LEFT RAIL TEXT + ICONS (SILVER) --- */
@@ -10190,13 +10190,13 @@ body .iu-leftNavWrapper,
 body .iu-leftRail,
 body [data-rail],
 body [data-rail-container]{
-  background: linear-gradient(180deg,#0B1F33 0%,#132F4D 100%) !important;
+  background: linear-gradient(180deg,#0B1F33 0%,rgb(19, 47, 77) 100%) !important;
 }
 
 /* FORCE ID ROOT (specificity beats wrappers) */
 body #iuLeftRail,
 body #iuLeftRail .iu-leftNavItem{
-  background: linear-gradient(180deg,#0B1F33 0%,#132F4D 100%) !important;
+  background: linear-gradient(180deg,#0B1F33 0%,rgb(19, 47, 77) 100%) !important;
   border-right: 1px solid #D1D5DB !important;
 }
 
