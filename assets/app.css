@@ -9405,12 +9405,29 @@ html, body {
 }
 
 /* =========================================================
-   TOPBAR LEFT FILL — robust layered background
-   Safe for mobile + future content
+   TOPBAR LEFT FILL — pixel-perfect ::before (desktop-safe + mobile-safe via JS var)
 ========================================================= */
 
+header#topbarWrap.topbar-new.iuTopbar{
+  isolation: isolate;
+}
+
 header#topbarWrap.topbar-new.iuTopbar::before{
-  content: none !important;
+  content: " " !important;
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--iuTopbarLeftFillW, 0px);
+  background: linear-gradient(90deg, #0B1F33 0%, #132F4D 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+header#topbarWrap.topbar-new.iuTopbar > *{
+  position: relative;
+  z-index: 1;
 }
 
 /* Default (mobile-safe): fill OFF */
@@ -9419,18 +9436,7 @@ header#topbarWrap.topbar-new.iuTopbar::before{
 }
 
 div.topbar-new-main{
-  background:
-    linear-gradient(90deg, #0B1F33 0%, #132F4D 100%)
-      0 0 / var(--iuTopbarLeftFillW, 0px) 100% no-repeat,
-    var(--iuTopbarBg, #fff) !important;
-}
-
-/* fallback */
-header#topbarWrap.topbar-new.iuTopbar{
-  background:
-    linear-gradient(90deg, #0B1F33 0%, #132F4D 100%)
-      0 0 / var(--iuTopbarLeftFillW, 0px) 100% no-repeat,
-    var(--iuTopbarBg, #fff) !important;
+  background: transparent !important;
 }
 
 /* =========================================================
