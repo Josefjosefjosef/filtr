@@ -19,19 +19,24 @@ jobs:
 
     env:
       PROD_CSS_URL: https://josefjosefjosef.github.io/filtr/assets/app.css
-      MARKER: TOPBAR LEFT FILL
+      MARKERS: |
+        TOPBAR CONTENT GRID
+        FINAL TOPBAR – SOLID COLOR (infoUzel.cz)
       RETRY_MAX: "36"     # 36 * 10s = 6 minutes
       RETRY_SLEEP: "10"   # seconds
 
     steps:
-      - name: Verify production app.css contains marker (retry)
+      - name: Verify production app.css contains markers (retry)
         id: verify
         shell: bash
         run: |
           set -euo pipefail
 
           echo "Prod CSS: $PROD_CSS_URL"
-          echo "Marker: $MARKER"
+          echo "Markers:"
+          printf '%s\n' "$MARKERS"
+
+          mapfile -t markers <<<"$MARKERS"
 
           found="false"
           attempt=1
@@ -55,15 +60,23 @@ jobs:
 
             tmp="$(mktemp)"
             printf '%s' "$css" > "$tmp"
-            if grep -Fq "$MARKER" "$tmp"; then
+            missing=()
+            for m in "${markers[@]}"; do
+              if [ -n "$m" ] && ! grep -Fq "$m" "$tmp"; then
+                missing+=("$m")
+              fi
+            done
+            if [ "${#missing[@]}" -eq 0 ]; then
               rm -f "$tmp"
-              echo "OK: marker found in production CSS."
+              echo "OK: all markers found in production CSS."
               found="true"
               break
             fi
             rm -f "$tmp"
 
-            echo "NOT YET: marker missing. Waiting ${RETRY_SLEEP}s..."
+            echo "NOT YET: missing markers:"
+            printf '  - %s\n' "${missing[@]}"
+            echo "Waiting ${RETRY_SLEEP}s..."
             sleep "$RETRY_SLEEP"
             attempt=$((attempt + 1))
           done
@@ -73,13 +86,19 @@ jobs:
           if [ "$found" = "true" ]; then
             {
               echo "## After-merge verify"
-              echo "- ✅ Marker found in production: \`$MARKER\`"
+              echo "- ✅ All markers found in production:"
+              while IFS= read -r m; do
+                [ -n "$m" ] && echo "  - \`$m\`"
+              done <<<"$MARKERS"
               echo "- URL: \`$PROD_CSS_URL\`"
             } >> "$GITHUB_STEP_SUMMARY"
           else
             {
               echo "## After-merge verify"
-              echo "- ❌ Marker NOT found in production after retries: \`$MARKER\`"
+              echo "- ❌ Missing markers in production after retries:"
+              while IFS= read -r m; do
+                [ -n "$m" ] && echo "  - \`$m\`"
+              done <<<"$MARKERS"
               echo "- URL: \`$PROD_CSS_URL\`"
               echo "- Action: will dispatch Pages deploy workflow"
             } >> "$GITHUB_STEP_SUMMARY"
@@ -168,7 +187,10 @@ jobs:
 
           echo "Re-verify after Pages deploy run: ${RUN_URL:-unknown}"
           echo "Prod CSS: $PROD_CSS_URL"
-          echo "Marker: $MARKER"
+          echo "Markers:"
+          printf '%s\n' "$MARKERS"
+
+          mapfile -t markers <<<"$MARKERS"
 
           attempt=1
           while [ "$attempt" -le "$RETRY_MAX" ]; do
@@ -177,23 +199,34 @@ jobs:
             css="$(curl -fsSL -H "Cache-Control: no-cache" -H "Pragma: no-cache" "$url" || true)"
             tmp="$(mktemp)"
             printf '%s' "$css" > "$tmp"
-            if grep -Fq "$MARKER" "$tmp"; then
+            missing=()
+            for m in "${markers[@]}"; do
+              if [ -n "$m" ] && ! grep -Fq "$m" "$tmp"; then
+                missing+=("$m")
+              fi
+            done
+            if [ "${#missing[@]}" -eq 0 ]; then
               rm -f "$tmp"
-              echo "OK: marker found after deploy."
+              echo "OK: all markers found after deploy."
               {
                 echo "## After-merge verify (post-deploy)"
-                echo "- ✅ Marker found in production after deploy: \`$MARKER\`"
+                echo "- ✅ All markers found in production after deploy:"
+                while IFS= read -r m; do
+                  [ -n "$m" ] && echo "  - \`$m\`"
+                done <<<"$MARKERS"
                 echo "- URL: \`$PROD_CSS_URL\`"
                 echo "- Deploy run: \`${{ steps.wait.outputs.run_url }}\`"
               } >> "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
             rm -f "$tmp"
-            echo "Still missing; waiting ${RETRY_SLEEP}s..."
+            echo "Still missing markers:"
+            printf '  - %s\n' "${missing[@]}"
+            echo "Waiting ${RETRY_SLEEP}s..."
             sleep "$RETRY_SLEEP"
             attempt=$((attempt + 1))
           done
 
-          echo "ERROR: marker still missing after deploy + retries."
+          echo "ERROR: markers still missing after deploy + retries."
           exit 1
 
