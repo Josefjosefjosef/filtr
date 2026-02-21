@@ -10675,3 +10675,28 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta:last-child{
   border-top-left-radius:16px;
   pointer-events:none;
 }
+
+/* ============================= */
+/* TOPBAR RIGHT — CLS HARD FIX   */
+/* ============================= */
+
+.topbar-new-main{
+  display:flex;
+  align-items:center;
+}
+
+/* pravý blok musí mít stabilní šířku */
+#iuTopbarRight{
+  flex: 0 0 260px;     /* pevná šířka – zabrání CLS */
+  max-width: 260px;
+  min-width: 260px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* levá část může růst */
+.topbar-new-main > :not(#iuTopbarRight){
+  flex: 1 1 auto;
+}
