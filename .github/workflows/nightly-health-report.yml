@@ -1,0 +1,59 @@
+name: Nightly Health Report
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 5 * * *"
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Puppeteer browsers
+        run: npx puppeteer browsers install chrome
+
+      - name: Run health report
+        env:
+          SITE_URL: "https://infouzel.cz/projects/?debug=1&nosw=1&section=media"
+        run: |
+          python3 scripts/health_report.py
+        continue-on-error: true
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-report-${{ github.run_id }}
+          path: |
+            reports/health-*.md
+            reports/health-*.json
+            reports/latest.md
+            reports/report.json
+          if-no-files-found: ignore
+
+      - name: Summary
+        run: |
+          echo "## Nightly Health Report" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f reports/latest.md ]; then
+            head -30 reports/latest.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Report not generated (check logs)" >> "$GITHUB_STEP_SUMMARY"
+          fi
