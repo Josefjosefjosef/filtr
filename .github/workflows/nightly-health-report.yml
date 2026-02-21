@@ -3,7 +3,7 @@ name: Nightly Health Report
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 5 * * *"
+    - cron: "0 4 * * *"
 
 jobs:
   report:
@@ -20,40 +20,75 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      - name: Install dependencies
-        run: npm install
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
+      - name: Compile gates
+        run: |
+          python -m py_compile scripts/health_report.py
+          node -c scripts/check_site.js
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
       - name: Install Puppeteer browsers
         run: npx puppeteer browsers install chrome
 
-      - name: Run health report
+      - name: Set report date
+        id: date
+        run: echo "date=$(date -u +%Y-%m-%d)" >> $GITHUB_OUTPUT
+
+      - name: Run check_site.js
         env:
           SITE_URL: "https://infouzel.cz/projects/?debug=1&nosw=1&section=media"
+        run: node scripts/check_site.js
+
+      - name: Run health_report.py
+        run: python3 scripts/health_report.py
+
+      - name: Report gates
         run: |
-          python3 scripts/health_report.py
-        continue-on-error: true
+          test -f reports/latest.md
+          grep -n "INFOUZEL HEALTH REPORT" reports/latest.md
+          grep -n "^Critical: " reports/latest.md || true
 
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
         with:
           name: health-report-${{ github.run_id }}
           path: |
+            reports/latest.md
             reports/health-*.md
             reports/health-*.json
-            reports/latest.md
-            reports/report.json
-          if-no-files-found: ignore
+            reports/check_site.json
+          if-no-files-found: error
 
       - name: Summary
         run: |
           echo "## Nightly Health Report" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
           if [ -f reports/latest.md ]; then
-            head -30 reports/latest.md >> "$GITHUB_STEP_SUMMARY"
+            head -40 reports/latest.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Report not generated (check logs)" >> "$GITHUB_STEP_SUMMARY"
           fi
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Artifact" >> "$GITHUB_STEP_SUMMARY"
+          echo "Download artifact \`health-report-${{ github.run_id }}\` for full reports." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Send email
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.HEALTH_SMTP_SERVER }}
+          server_port: ${{ secrets.HEALTH_SMTP_PORT }}
+          username: ${{ secrets.HEALTH_SMTP_USERNAME }}
+          password: ${{ secrets.HEALTH_SMTP_PASSWORD }}
+          subject: "infoUzel Health Report ${{ github.run_id }}"
+          to: ${{ secrets.HEALTH_EMAIL_TO }}
+          from: ${{ secrets.HEALTH_EMAIL_FROM }}
+          body: file://reports/latest.md
+          attachments: reports/health-${{ steps.date.outputs.date }}.md,reports/latest.md

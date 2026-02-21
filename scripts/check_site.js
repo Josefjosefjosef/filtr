@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * check_site.js - Headless site checks for infoUzel health report
- * Measures: CLS, LCP, JS errors, bundle sizes
- * Output: JSON to stdout for health_report.py
+ * Output: reports/check_site.json (stable input for health_report.py)
+ * Schema: url, cls, lcpMs, jsErrors, layout, bundle
  */
 
 const fs = require('fs');
@@ -11,10 +11,15 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CSS_PATH = path.join(ROOT, 'assets/app.css');
 const JS_PATH = path.join(ROOT, 'assets/app.js');
+const REPORTS_DIR = path.join(ROOT, 'reports');
+const OUTPUT_PATH = path.join(REPORTS_DIR, 'check_site.json');
 const SITE_URL = process.env.SITE_URL || 'https://infouzel.cz/projects/?debug=1&nosw=1&section=media';
 
-async function getBundleSizes() {
-  const result = { cssKb: null, jsKb: null };
+const SETTLE_MS = 3000;
+const PAGE_TIMEOUT_MS = 25000;
+
+function getBundleSizes() {
+  const result = { cssKb: 0, jsKb: 0 };
   try {
     if (fs.existsSync(CSS_PATH)) {
       result.cssKb = Math.round(fs.statSync(CSS_PATH).size / 1024);
@@ -31,9 +36,17 @@ async function getBundleSizes() {
 async function runHeadlessChecks() {
   const result = {
     cls: null,
-    lcp: null,
+    lcpMs: null,
     jsErrors: [],
-    success: false,
+    layout: {
+      topbarHeight: null,
+      hasLeftRail: false,
+      hasMindMenu: false,
+      hasTopbarGrid: false,
+      hasOverflowX: false,
+      topbarHasGradient: false,
+      topbarBg: null,
+    },
     error: null,
   };
 
@@ -56,7 +69,7 @@ async function runHeadlessChecks() {
     const jsErrors = [];
     page.on('pageerror', (err) => jsErrors.push(String(err.message || err)));
 
-    await page.goto(SITE_URL, { waitUntil: 'networkidle0', timeout: 30000 });
+    await page.goto(SITE_URL, { waitUntil: 'domcontentloaded', timeout: PAGE_TIMEOUT_MS });
 
     await page.evaluate(() => {
       return new Promise((resolve) => {
@@ -68,27 +81,74 @@ async function runHeadlessChecks() {
       });
     });
 
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, SETTLE_MS));
 
     const metrics = await page.evaluate(() => {
-      return new Promise((resolve) => {
-        try {
-          let cls = typeof window.__iuCLSRealTotal === 'number' ? window.__iuCLSRealTotal : null;
-          if (cls === null && typeof window.__iuDumpCLS === 'function') {
-            const dump = window.__iuDumpCLS();
-            cls = dump && typeof dump.realTotal === 'number' ? dump.realTotal : null;
-          }
-          resolve({ cls, lcp: null });
-        } catch (e) {
-          resolve({ cls: null, lcp: null, error: String(e) });
+      const out = {
+        cls: null,
+        lcpMs: null,
+        layout: {
+          topbarHeight: null,
+          hasLeftRail: false,
+          hasMindMenu: false,
+          hasTopbarGrid: false,
+          hasOverflowX: false,
+          topbarHasGradient: false,
+          topbarBg: null,
+        },
+      };
+
+      try {
+        if (typeof window.__iuDumpCLS === 'function') {
+          const dump = window.__iuDumpCLS();
+          out.cls = dump && typeof dump.realTotal === 'number' ? dump.realTotal : null;
         }
-      });
+        if (out.cls === null && typeof window.__iuCLSRealTotal === 'number') {
+          out.cls = window.__iuCLSRealTotal;
+        }
+        if (out.cls === null) {
+          const entries = performance.getEntriesByType ? performance.getEntriesByType('layout-shift') : [];
+          out.cls = entries.reduce((sum, e) => sum + (e.value || 0), 0);
+        }
+      } catch (e) {
+        out.clsError = String(e);
+      }
+
+      try {
+        const lcpEntries = performance.getEntriesByType ? performance.getEntriesByType('largest-contentful-paint') : [];
+        const last = lcpEntries[lcpEntries.length - 1];
+        out.lcpMs = last && last.startTime ? Math.round(last.startTime) : null;
+      } catch (e) {
+        out.lcpError = String(e);
+      }
+
+      try {
+        const topbar = document.querySelector('#topbarWrap, .iuTopbar, .topbar-new');
+        if (topbar) {
+          const style = window.getComputedStyle(topbar);
+          out.layout.topbarHeight = topbar.getBoundingClientRect().height;
+          out.layout.topbarBg = style.backgroundColor || style.background || null;
+          const bg = (style.background || style.backgroundColor || '').toLowerCase();
+          out.layout.topbarHasGradient = bg.includes('linear-gradient') || bg.includes('gradient');
+        }
+
+        out.layout.hasLeftRail = !!document.querySelector('.accordionCol, aside.accordionCol, [class*="accordionCol"]');
+        out.layout.hasMindMenu = !!document.querySelector('.iu-mmQuickLinks, [class*="iu-mm"], .iu-mmSectionHead');
+        out.layout.hasTopbarGrid = !!document.querySelector('.iuTopbarContent, .iuTopbarSlot');
+
+        const doc = document.documentElement;
+        out.layout.hasOverflowX = doc.scrollWidth > doc.clientWidth;
+      } catch (e) {
+        out.layoutError = String(e);
+      }
+
+      return out;
     });
 
     result.cls = metrics.cls;
-    result.lcp = metrics.lcp;
+    result.lcpMs = metrics.lcpMs;
     result.jsErrors = jsErrors;
-    result.success = true;
+    result.layout = metrics.layout || result.layout;
   } catch (e) {
     result.error = String(e.message || e);
   } finally {
@@ -98,22 +158,51 @@ async function runHeadlessChecks() {
 }
 
 async function main() {
-  const [bundles, headless] = await Promise.all([
-    getBundleSizes(),
+  const [bundle, headless] = await Promise.all([
+    Promise.resolve(getBundleSizes()),
     runHeadlessChecks(),
   ]);
 
   const output = {
-    timestamp: new Date().toISOString(),
     url: SITE_URL,
-    bundles,
-    headless,
+    timestamp: new Date().toISOString(),
+    cls: headless.cls,
+    lcpMs: headless.lcpMs,
+    jsErrors: headless.jsErrors || [],
+    layout: headless.layout || {
+      topbarHeight: null,
+      hasLeftRail: false,
+      hasMindMenu: false,
+      hasTopbarGrid: false,
+      hasOverflowX: false,
+      topbarHasGradient: false,
+      topbarBg: null,
+    },
+    bundle: {
+      cssKb: bundle.cssKb ?? headless.bundle?.cssKb ?? 0,
+      jsKb: bundle.jsKb ?? headless.bundle?.jsKb ?? 0,
+    },
   };
 
-  console.log(JSON.stringify(output, null, 0));
+  if (headless.error) {
+    output.error = headless.error;
+  }
+
+  fs.mkdirSync(REPORTS_DIR, { recursive: true });
+  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2), 'utf8');
 }
 
 main().catch((e) => {
-  console.error(JSON.stringify({ error: String(e.message || e) }));
-  process.exit(1);
+  const fallback = {
+    url: SITE_URL,
+    timestamp: new Date().toISOString(),
+    cls: null,
+    lcpMs: null,
+    jsErrors: [],
+    layout: { topbarHeight: null, hasLeftRail: false, hasMindMenu: false, hasTopbarGrid: false, hasOverflowX: false, topbarHasGradient: false, topbarBg: null },
+    bundle: getBundleSizes(),
+    error: String(e.message || e),
+  };
+  fs.mkdirSync(REPORTS_DIR, { recursive: true });
+  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(fallback, null, 2), 'utf8');
 });
