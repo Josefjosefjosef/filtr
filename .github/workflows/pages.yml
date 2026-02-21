@@ -32,7 +32,7 @@ jobs:
           enablement: true
 
       - name: Set asset version (short SHA)
-        run: echo "ASSET_VER=${GITHUB_SHA::8}" >> $GITHUB_ENV
+        run: echo "ASSET_VER=${GITHUB_SHA::8}" >> "$GITHUB_ENV"
 
       - name: Cache-bust asset query in deployed HTML (deploy artifact only)
         shell: bash
