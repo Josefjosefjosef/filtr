@@ -10668,20 +10668,6 @@ html{
   scrollbar-gutter: stable;
 }
 
-/* TOPBAR gradient line — full viewport, CLS-safe, 5px */
-body::before{
-  content:"";
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  height:5px;
-  background:linear-gradient(90deg,#0B1F33,#132F4D);
-  border-top-left-radius:16px;
-  pointer-events:none;
-  z-index:1; /* malé číslo */
-}
-
 /* TOPBAR RIGHT — layout contract (prevents CLS from dynamic time/date/namday) */
 #iuTopbarRight{
   flex: 0 0 320px;
