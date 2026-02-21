@@ -1,4 +1,6 @@
+# Ignore third-party action warning for dawidd6/action-send-mail (used for health report email)
 paths:
   .github/workflows/nightly-health-report.yml:
     ignore:
-      - '.*'
+      - '".+" is potentially untrusted'
+      - '".+" is not verified'
