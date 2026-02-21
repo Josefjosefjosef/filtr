@@ -31,6 +31,27 @@ jobs:
         with:
           enablement: true
 
+      - name: Set asset version (short SHA)
+        run: echo "ASSET_VER=${GITHUB_SHA::8}" >> $GITHUB_ENV
+
+      - name: Cache-bust asset query in deployed HTML (deploy artifact only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          SITE_DIR="."
+          echo "Using ASSET_VER=${ASSET_VER}"
+
+          # Rewrite only in the deploy artifact (no repo commits).
+          # Reason: stable ?v= + SW/CDN cache can keep old bytes after deploy.
+          find "$SITE_DIR" -name "*.html" -print0 | xargs -0 sed -i \
+            -e "s#/assets/app\.css?v=[A-Za-z0-9_-]\\+#/assets/app.css?v=${ASSET_VER}#g" \
+            -e "s#/assets/app\.js?v=[A-Za-z0-9_-]\\+#/assets/app.js?v=${ASSET_VER}#g"
+
+          echo "--- app.css refs after rewrite (first 20) ---"
+          grep -R --line-number "/assets/app.css?v=" "$SITE_DIR" | head -n 20 || true
+          echo "--- app.js refs after rewrite (first 20) ---"
+          grep -R --line-number "/assets/app.js?v=" "$SITE_DIR" | head -n 20 || true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -39,3 +60,12 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Post-deploy proof (best-effort)
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE_URL="${{ steps.deployment.outputs.page_url }}"
+          echo "Base URL: ${BASE_URL}"
+          curl -sL "${BASE_URL}projects/" | grep -oE "/assets/app\\.css\\?v=[^\"']+" | head -n 1 || true
