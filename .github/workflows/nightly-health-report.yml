@@ -42,7 +42,7 @@ jobs:
 
       - name: Set report date
         id: date
-        run: echo "date=$(date -u +%Y-%m-%d)" >> $GITHUB_OUTPUT
+        run: echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
 
       - name: Run check_site.js
         env:
@@ -72,29 +72,31 @@ jobs:
 
       - name: Summary
         run: |
-          echo "## Nightly Health Report" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          if [ -f reports/latest.md ]; then
-            head -40 reports/latest.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Report not generated (check logs)" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "### Artifact" >> "$GITHUB_STEP_SUMMARY"
-          echo "Download artifact \`health-report-${{ github.run_id }}\` for full reports." >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "## Nightly Health Report"
+            echo ""
+            if [ -f reports/latest.md ]; then
+              head -40 reports/latest.md
+            else
+              echo "Report not generated (check logs)"
+            fi
+            echo ""
+            echo "### Artifact"
+            echo "Download artifact \`health-report-${{ github.run_id }}\` for full reports."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Compute email flags
         shell: bash
         run: |
           if [ -n "${{ secrets.HEALTH_EMAIL_TO }}" ]; then
-            echo "HEALTH_EMAIL_CONFIGURED=true" >> $GITHUB_ENV
+            echo "HEALTH_EMAIL_CONFIGURED=true" >> "$GITHUB_ENV"
           else
-            echo "HEALTH_EMAIL_CONFIGURED=false" >> $GITHUB_ENV
+            echo "HEALTH_EMAIL_CONFIGURED=false" >> "$GITHUB_ENV"
           fi
 
       - name: Email not configured
         if: env.HEALTH_EMAIL_CONFIGURED != 'true'
-        run: echo "Email not configured (HEALTH_EMAIL_TO secret not set)" >> $GITHUB_STEP_SUMMARY
+        run: echo "Email not configured (HEALTH_EMAIL_TO secret not set)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Send email
         if: env.HEALTH_EMAIL_CONFIGURED == 'true'
