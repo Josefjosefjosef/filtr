@@ -4598,7 +4598,41 @@ function buildVideoAsArticleCard(it) {
   function iuInitLeftEdgeOverlayToggle(){
     const overlay = document.getElementById("iuLeftEdgeOverlay");
     const rail = document.getElementById("iuLeftRail");
+    const tip = document.getElementById("iuLeftEdgeTooltip");
     if(!overlay || !rail) return;
+
+    function isCollapsed(){
+      return document.body.classList.contains("iu-leftRail-collapsed");
+    }
+    function setTipText(){
+      if(!tip) return;
+      tip.textContent = isCollapsed() ? "Zobrazit navigaci" : "Skrýt navigaci";
+      tip.setAttribute("aria-hidden", "false");
+    }
+    function showTip(){
+      if(!tip) return;
+      tip.classList.add("is-visible");
+    }
+    function hideTip(){
+      if(!tip) return;
+      tip.classList.remove("is-visible");
+      tip.setAttribute("aria-hidden", "true");
+    }
+    function positionTip(clientX, clientY){
+      if(!tip) return;
+      const pad = 12;
+      let x = clientX + pad;
+      let y = clientY + pad;
+      const w = tip.offsetWidth || 120;
+      const h = tip.offsetHeight || 28;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      if(x + w > vw) x = vw - w - 4;
+      if(y + h > vh) y = vh - h - 4;
+      if(x < 4) x = 4;
+      if(y < 4) y = 4;
+      tip.style.transform = "translate(" + x + "px, " + y + "px)";
+    }
 
     function updateWidth(){
       const rect = rail.getBoundingClientRect();
@@ -4610,9 +4644,20 @@ function buildVideoAsArticleCard(it) {
     window.addEventListener("load", updateWidth);
     setTimeout(updateWidth, 500);
 
+    overlay.addEventListener("mouseenter", (e) => {
+      setTipText();
+      positionTip(e.clientX, e.clientY);
+      showTip();
+    });
+    overlay.addEventListener("mouseleave", hideTip);
+    overlay.addEventListener("mousemove", (e) => {
+      positionTip(e.clientX, e.clientY);
+    });
+
     overlay.addEventListener("click", () => {
       document.body.classList.toggle("iu-leftRail-collapsed");
-      overlay.setAttribute("aria-pressed", document.body.classList.contains("iu-leftRail-collapsed") ? "true" : "false");
+      overlay.setAttribute("aria-pressed", isCollapsed() ? "true" : "false");
+      setTipText();
     });
   }
 

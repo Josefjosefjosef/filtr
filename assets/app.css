@@ -9369,17 +9369,55 @@ body.iu-leftRail-collapsed{
   left: 0;
   top: var(--iuTopbarHeight, 56px);
   bottom: 0;
-  width: 0px;
+  width: 0px; /* nastavuje JS */
   z-index: 9999;
   cursor: pointer;
   user-select: none;
-  background: linear-gradient(90deg, #0B1F33, #132F4D);
+  background: #0B1F33; /* SOLID, BEZ GRADIENTU */
 }
 body.iu-leftRail-collapsed .iuLeftEdgeOverlay{
   background: #FFFFFF;
+  box-shadow: inset -1px 0 rgba(11,31,51,0.18); /* jemná dělící linka jen když je rail pryč */
 }
 @media (max-width: 980px){
   .iuLeftEdgeOverlay{ display: none !important; }
+}
+
+/* Left rail: solid bg (jen kontejner, tlačítka beze změny) */
+#iuLeftRail{
+  background: #0B1F33 !important;
+  background-color: #0B1F33 !important;
+  background-image: none !important;
+}
+/* Nav visible: žádná dělící linka mezi overlay a railem */
+body:not(.iu-leftRail-collapsed) #iuLeftRail{
+  border-left: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Tooltip u kurzoru */
+.iuLeftEdgeTooltip{
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform: translate(-9999px, -9999px);
+  z-index: 10000;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.2;
+  background: rgba(11,31,51,0.92);
+  color: #D1D5DB;
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .08s linear;
+}
+.iuLeftEdgeTooltip.is-visible{ opacity: 1; }
+@media (max-width: 980px){
+  .iuLeftEdgeTooltip{ display: none !important; }
 }
 /* Keep existing stack var consumers stable */
 :root{
