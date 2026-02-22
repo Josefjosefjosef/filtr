@@ -5061,8 +5061,8 @@ html[data-section="tvprogram"] #feed{
 #iuTvProgramView .iuViewBody{ display:block; }
 
 /* střední sloupec footprint jako feed (pojistka) */
-body[data-section="tvprogram"] #newsList > #iuTvProgramView,
-html[data-section="tvprogram"] #newsList > #iuTvProgramView{
+body[data-section="tvprogram"] #iuCenterStage #iuTvProgramView,
+html[data-section="tvprogram"] #iuCenterStage #iuTvProgramView{
   flex: 1 1 0;
   min-width: 0;
 }
@@ -7425,86 +7425,86 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 /* #feed is inside #iuCenterStage .iuArticlesStage */
 
 /* JR view must adapt like #feed (same middle column footprint) */
-body[data-section="jr"] #newsList > #iuJrEmptyView,
-html[data-section="jr"] #newsList > #iuJrEmptyView{
+body[data-section="jr"] #iuCenterStage #iuJrEmptyView,
+html[data-section="jr"] #iuCenterStage #iuJrEmptyView{
   flex: 1 1 0;
   min-width: 0;
   width: auto !important;
 }
 
 /* Mapy view must adapt like #feed (same middle column footprint) */
-body[data-section="mapy"] #newsList > #iuMapyView,
-html[data-section="mapy"] #newsList > #iuMapyView{
+body[data-section="mapy"] #iuCenterStage #iuMapyView,
+html[data-section="mapy"] #iuCenterStage #iuMapyView{
   flex: 1 1 0;
   min-width: 0;
   width: auto !important;
 }
 
 /* Travel view must adapt like #feed (same middle column footprint) */
-body[data-section="travel"] #newsList > #iuTravelView,
-html[data-section="travel"] #newsList > #iuTravelView{
+body[data-section="travel"] #iuCenterStage #iuTravelView,
+html[data-section="travel"] #iuCenterStage #iuTravelView{
   flex: 1 1 0;
   min-width: 0;
   width: auto !important;
 }
 
 /* Weather view must adapt like #feed (same middle column footprint) */
-body[data-section="pocasi"] #newsList > #iuWeatherView,
-html[data-section="pocasi"] #newsList > #iuWeatherView{
+body[data-section="pocasi"] #iuCenterStage #iuWeatherView,
+html[data-section="pocasi"] #iuCenterStage #iuWeatherView{
   flex: 1 1 0;
   min-width: 0;
   width: auto !important;
 }
 
 /* Holidays view must adapt like #feed (same middle column footprint) */
-body[data-section="namedays"] #newsList > #iuHolidaysView,
-html[data-section="namedays"] #newsList > #iuHolidaysView{
+body[data-section="namedays"] #iuCenterStage #iuHolidaysView,
+html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   flex: 1 1 0;
   min-width: 0;
   width: auto !important;
 }
 
 /* Radio view must adapt like #feed (same middle column footprint) */
-#newsList > #iuRadioView{
+#iuCenterStage #iuRadioView{
   flex: 1 1 0;
   min-width: 0;
   width: auto !important;
 }
 
 /* TV online view must adapt like #feed (same middle column footprint) */
-#newsList > #iuTvOnlineView{
+#iuCenterStage #iuTvOnlineView{
   flex: 1 1 0;
   min-width: 0;
   width: auto !important;
 }
 
-#newsList > #iuMyUzelView1,
-#newsList > #iuMyUzelView2,
-#newsList > #iuMyUzelView3,
-#newsList > #iuMyUzelView4,
-#newsList > #iuMyUzelView5{
+#iuCenterStage #iuMyUzelView1,
+#iuCenterStage #iuMyUzelView2,
+#iuCenterStage #iuMyUzelView3,
+#iuCenterStage #iuMyUzelView4,
+#iuCenterStage #iuMyUzelView5{
   flex: 1 1 0;
   min-width: 0;
   width: auto !important;
   max-width: none;
 }
 
-#newsList > #iuMyUzelView1 .iuRadioGrid,
-#newsList > #iuMyUzelView2 .iuRadioGrid,
-#newsList > #iuMyUzelView3 .iuRadioGrid,
-#newsList > #iuMyUzelView4 .iuRadioGrid,
-#newsList > #iuMyUzelView5 .iuRadioGrid{
+#iuCenterStage #iuMyUzelView1 .iuRadioGrid,
+#iuCenterStage #iuMyUzelView2 .iuRadioGrid,
+#iuCenterStage #iuMyUzelView3 .iuRadioGrid,
+#iuCenterStage #iuMyUzelView4 .iuRadioGrid,
+#iuCenterStage #iuMyUzelView5 .iuRadioGrid{
   width: 100%;
   max-width: none;
   margin-left: 0;
   margin-right: 0;
 }
 
-#newsList > #iuMyUzelView1 .iuRadioChip,
-#newsList > #iuMyUzelView2 .iuRadioChip,
-#newsList > #iuMyUzelView3 .iuRadioChip,
-#newsList > #iuMyUzelView4 .iuRadioChip,
-#newsList > #iuMyUzelView5 .iuRadioChip{
+#iuCenterStage #iuMyUzelView1 .iuRadioChip,
+#iuCenterStage #iuMyUzelView2 .iuRadioChip,
+#iuCenterStage #iuMyUzelView3 .iuRadioChip,
+#iuCenterStage #iuMyUzelView4 .iuRadioChip,
+#iuCenterStage #iuMyUzelView5 .iuRadioChip{
   width: 100%;
 }
 
@@ -7523,42 +7523,42 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
     width: 100% !important;
     min-width: 0;
   }
-  body[data-section="jr"] #newsList > #iuJrEmptyView,
-  html[data-section="jr"] #newsList > #iuJrEmptyView{
+  body[data-section="jr"] #iuCenterStage #iuJrEmptyView,
+  html[data-section="jr"] #iuCenterStage #iuJrEmptyView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
   }
-  body[data-section="mapy"] #newsList > #iuMapyView,
-  html[data-section="mapy"] #newsList > #iuMapyView{
+  body[data-section="mapy"] #iuCenterStage #iuMapyView,
+  html[data-section="mapy"] #iuCenterStage #iuMapyView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
   }
-  body[data-section="travel"] #newsList > #iuTravelView,
-  html[data-section="travel"] #newsList > #iuTravelView{
+  body[data-section="travel"] #iuCenterStage #iuTravelView,
+  html[data-section="travel"] #iuCenterStage #iuTravelView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
   }
-  body[data-section="pocasi"] #newsList > #iuWeatherView,
-  html[data-section="pocasi"] #newsList > #iuWeatherView{
+  body[data-section="pocasi"] #iuCenterStage #iuWeatherView,
+  html[data-section="pocasi"] #iuCenterStage #iuWeatherView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
   }
-  body[data-section="namedays"] #newsList > #iuHolidaysView,
-  html[data-section="namedays"] #newsList > #iuHolidaysView{
+  body[data-section="namedays"] #iuCenterStage #iuHolidaysView,
+  html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
   }
-  #newsList > #iuRadioView{
+  #iuCenterStage #iuRadioView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
   }
-  #newsList > #iuTvOnlineView{
+  #iuCenterStage #iuTvOnlineView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
@@ -8129,21 +8129,7 @@ body.iuRailHidden #iuLeftRail{
 
 /* Flex layout: ensure middle column fills available width */
 html.iuRailHidden #newsList > #iuCenterStage,
-body.iuRailHidden #newsList > #iuCenterStage,
-html.iuRailHidden #newsList > #iuRadioView,
-body.iuRailHidden #newsList > #iuRadioView,
-html.iuRailHidden #newsList > #iuJrEmptyView,
-body.iuRailHidden #newsList > #iuJrEmptyView,
-html.iuRailHidden #newsList > #iuMapyView,
-body.iuRailHidden #newsList > #iuMapyView,
-html.iuRailHidden #newsList > #iuTravelView,
-body.iuRailHidden #newsList > #iuTravelView,
-html.iuRailHidden #newsList > #iuWeatherView,
-body.iuRailHidden #newsList > #iuWeatherView,
-html.iuRailHidden #newsList > #iuHolidaysView,
-body.iuRailHidden #newsList > #iuHolidaysView,
-html.iuRailHidden #newsList > #iuTvOnlineView,
-body.iuRailHidden #newsList > #iuTvOnlineView{
+body.iuRailHidden #newsList > #iuCenterStage{
   flex: 0 0 100%;
   width: 100% !important;
   min-width: 0;

@@ -10359,12 +10359,15 @@ function buildVideoAsArticleCard(it) {
       </div>
     `.trim();
 
-    // Insert into the same middle column container as #feed (inside #newsList).
-    // Keep #feed as the render target for normal sections.
+    // Insert into center column: .iuArticlesStage (same container as #feed).
+    const centerStage = document.getElementById('iuCenterStage');
+    const articlesStage = centerStage && centerStage.querySelector('.iuArticlesStage');
     const feed = document.getElementById('feed');
-    if (feed && feed.parentElement === newsList) {
-      newsList.insertBefore(el, feed);
-    } else {
+    if (articlesStage && feed && feed.parentElement === articlesStage) {
+      articlesStage.insertBefore(el, feed);
+    } else if (centerStage) {
+      centerStage.appendChild(el);
+    } else if (newsList) {
       newsList.appendChild(el);
     }
     return el;
