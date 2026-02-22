@@ -11419,6 +11419,27 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   min-height: 110px;
 }
 
+/* Překladač poznámky — reuse .iuNotesHost styly, footer */
+#iuQuickFeed .iuNotesHost{
+  margin-top: 16px;
+}
+#iuQuickFeed .iuNotesHost .iuNotes{
+  --iuNotesAccent: #b9bcc2;
+}
+#iuQuickFeed .iuTrNotesFooter{
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: rgba(11,27,43,0.45);
+  line-height: 1.3;
+}
+#iuQuickFeed .iuTrNotesFooter a{
+  color: rgba(31,75,153,0.75);
+  text-decoration: none;
+}
+#iuQuickFeed .iuTrNotesFooter a:hover{
+  text-decoration: underline;
+}
+
 /* =============================== */
 /* TOPBAR — FINAL UI CONTRACT      */
 /* =============================== */
