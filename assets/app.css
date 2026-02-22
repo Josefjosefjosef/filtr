@@ -10966,6 +10966,22 @@ body #iuLeftRail{
   opacity: 0.9;
 }
 
+.iuMailboxControls{
+  margin-top:6px;
+  font-size:13px;
+  color:#8a8f98;
+  user-select:none;
+}
+
+.iuMailboxControls span{
+  cursor:pointer;
+  margin-right:10px;
+}
+
+.iuMailboxControls span:hover{
+  text-decoration:underline;
+}
+
 /* ============================================================
    RIGHT RAIL — CTA bar (single integrated strip)
    Premium integrated look, CLS-safe
