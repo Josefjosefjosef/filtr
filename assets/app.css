@@ -11163,3 +11163,20 @@ header#topbarWrap.topbar-new.iuTopbar,
     font-weight: 550;
   }
 }
+
+/* ===== infoUzel: right column aligned with first article ===== */
+@media (min-width: 900px){
+  /* wrapper 3 sloupců – zarovnat obsah nahoru */
+  .layout,
+  .container{
+    align-items: start;
+  }
+
+  /* pravý sloupec musí začínat nahoře */
+  .layout > aside.accordionCol,
+  .mindMenu-scroll-wrapper,
+  .mindMenu{
+    align-self: start;
+    margin-top: 0 !important;
+  }
+}
