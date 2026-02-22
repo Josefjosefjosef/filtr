@@ -11175,7 +11175,7 @@ header#topbarWrap.topbar-new.iuTopbar,
   .layout > aside.accordionCol{
     position: static !important; /* top pak nemá efekt */
     top: auto !important;
-    margin-top: 0 !important;
+    margin-top: 12px !important; /* nudge down to align with first feed card */
     padding-top: 0 !important;
     align-self: start;
   }
