@@ -2156,7 +2156,6 @@ style-src 'self' 'unsafe-inline' https:;
         lines.push("---");
         var prev = out.textContent || "";
         out.textContent = prev + (prev ? "\n" : "") + lines.join("\n");
-        console.log("DOM TARGET AUDIT:", lines.join(" | "));
       }
       [0,250,1000,2500].forEach(function(ms){
         setTimeout(function(){ snap(ms + "ms"); }, ms);
@@ -2266,7 +2265,6 @@ style-src 'self' 'unsafe-inline' https:;
         parts.push("dataStatus=" + (!!dataStatus));
         var s = parts.join(" | ");
         if (out) out.textContent += (out.textContent ? "\n" : "") + s;
-        try { console.log("IU DOM SNAPSHOT:", s); } catch(e) {}
       }
 
       [0,200,500,1000,1500,2500,3500].forEach(function(t){
@@ -2292,7 +2290,6 @@ style-src 'self' 'unsafe-inline' https:;
           " | dataStatus=" + (dataStatus ? (dataStatus.textContent || "(empty)") : "missing") +
           " | html[data-iu-js]=" + htmlFlag;
         out.textContent += text + "\n";
-        console.log("[PIPELINE TELEMETRY]", text);
       }
       var delays = [0, 500, 1500, 3500];
       delays.forEach(function(ms){
@@ -2335,7 +2332,7 @@ style-src 'self' 'unsafe-inline' https:;
         });
         mo.observe(feedEl, { childList: true, subtree: false });
       } catch (err){
-        console.warn("DOM telemetry error", err);
+        /* DOM telemetry: silent */
       }
     })();
     </script>
@@ -2528,13 +2525,11 @@ style-src 'self' 'unsafe-inline' https:;
         if (origWarn) {
           console.warn = function(){
             try { saveRuntimeErr("console.warn", { message: Array.prototype.slice.call(arguments).map(safeStr).join(" | ") }); } catch(_){}
-            return origWarn.apply(console, arguments);
           };
         }
         if (origErr) {
           console.error = function(){
             try { saveRuntimeErr("console.error", { message: Array.prototype.slice.call(arguments).map(safeStr).join(" | ") }); } catch(_){}
-            return origErr.apply(console, arguments);
           };
         }
       } catch (_){}
@@ -2600,7 +2595,6 @@ style-src 'self' 'unsafe-inline' https:;
               lastLines.push(line);
               if (lastLines.length > 12) lastLines = lastLines.slice(-12);
               box.textContent = "CLS observer (debug=1)\\n" + lastLines.join("\\n");
-              try { console.log(debugOnly ? "[IU][CLS][debug-only]" : "[IU][CLS]", line); } catch(_){}
             });
           }catch(_){}
         });
@@ -2622,7 +2616,7 @@ style-src 'self' 'unsafe-inline' https:;
       if (params.get("debug") !== "1") return;
 
       function diagLog() {
-        try { console.log.apply(console, ["[IU RENDER DIAG]"].concat([].slice.call(arguments))); } catch (_) {}
+        // Output via iuDebugBox only, not console
       }
 
       function run(pass) {
