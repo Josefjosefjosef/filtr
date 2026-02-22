@@ -4595,25 +4595,6 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  function iuInitLeftGapToggle(){
-    const wrap = document.getElementById("leftContent");
-    const rail = document.getElementById("iuLeftRail");
-    if(!wrap || !rail) return;
-
-    function updateHint(){
-      const collapsed = document.body.classList.contains("iu-leftRail-collapsed");
-      wrap.dataset.navhint = collapsed ? "Zobrazit navigaci" : "Skrýt navigaci";
-    }
-
-    wrap.addEventListener("click", (e) => {
-      if(e.offsetX >= 0) return; /* only gap (::before to the left) */
-      document.body.classList.toggle("iu-leftRail-collapsed");
-      updateHint();
-    }, { passive: true });
-
-    updateHint();
-  }
-
   function iuMirrorTodayToTopbar(){
     try{
       const elTime = document.getElementById("iuTopbarTime");
@@ -7618,7 +7599,6 @@ function buildVideoAsArticleCard(it) {
     setSectionsFromHash();
     try{ document.body.classList.add("iuTopbarFlushRight"); }catch{}
     iuInitTopbarSearchToggle();
-    iuInitLeftGapToggle();
     iuMirrorTodayToTopbar();
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
