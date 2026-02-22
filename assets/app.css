@@ -10896,6 +10896,70 @@ body #iuLeftRail{
   margin-top: 10px !important;
 }
 
+/* ===== Moje schránky (levý sloupec / mindMenu) =====
+   Lícuje s ikonami Rychlých odkazů — mindMenu padding-left: 16px
+   ============================================================ */
+.accordionCol .mindMenu .iu-mailboxes{
+  order: -1; /* above Rychlé odkazy (iu-mmQuickLinks has order: 0) */
+  width: 100%;
+  margin-top: 0 !important;
+  margin-bottom: 0;
+  padding-top: 0 !important;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+
+.accordionCol .mindMenu .iu-mailboxes .iu-mmSectionHead{
+  margin-top: 10px !important;
+}
+
+.accordionCol .mindMenu .iu-mailbox-list{
+  margin-top: 12px;
+}
+
+.accordionCol .mindMenu .iu-mailbox-row{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.accordionCol .mindMenu .iu-mailbox-pill{
+  width: 150px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(20,40,70,0.18);
+  background: rgba(255,255,255,0.85);
+  font-size: 11px;
+  line-height: 14px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: rgba(11,27,43,0.85);
+  cursor: pointer;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.accordionCol .mindMenu .iu-mailbox-gear{
+  width: 24px;
+  height: 24px;
+  border-radius: 10px;
+  border: 1px solid rgba(20,40,70,0.12);
+  background: rgba(255,255,255,0.75);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0;
+}
+
+.accordionCol .mindMenu .iu-mailbox-gear i{
+  font-size: 12px;
+  opacity: 0.75;
+}
+
 /* ============================================================
    RIGHT RAIL — CTA bar (single integrated strip)
    Premium integrated look, CLS-safe
