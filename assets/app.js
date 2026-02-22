@@ -41,6 +41,17 @@ window.addEventListener("unhandledrejection", (e) => {
   try { document.documentElement.setAttribute("data-iu-buildstamp", document.querySelector('meta[name="iu-build"]')?.content || "no-meta"); } catch {}
   const $ = (sel) => document.querySelector(sel);
 
+  function iuBasePath() {
+    const p = location.pathname.toLowerCase();
+    if (p.includes("/filtr/")) return "/filtr/projects/";
+    if (p.includes("/projects/")) return "/projects/";
+    return "/projects/";
+  }
+
+  function iuDataUrl(file) {
+    return iuBasePath() + "data/" + file;
+  }
+
   function iuGetMindMenuRoot(){
     try{
       return (
@@ -1302,9 +1313,9 @@ window.addEventListener("unhandledrejection", (e) => {
   if (isDebugLogging && document.getElementById("debugPanel")) {
     debugWarn("[DEBUG] Unexpected #debugPanel present in DOM (should not exist).");
   }
-  const BASE_ROOT = getBaseRoot();
-  const DATA_URL = `${BASE_ROOT}data/articles.json`;
-  const VIDEOS_URL = `${BASE_ROOT}data/videos.json`;
+  const BASE_ROOT = iuBasePath();
+  const DATA_URL = iuDataUrl("articles.json");
+  const VIDEOS_URL = iuDataUrl("videos.json");
   const SECTION_LABELS = {
     vse: "Vše",
     aktualne: "Aktuálně",
@@ -1548,8 +1559,8 @@ window.addEventListener("unhandledrejection", (e) => {
   }
 
   async function probeRootPaths() {
-    const rootArticlesPath = "/projects/data/articles.json";
-    const rootVideosPath = "/projects/data/videos.json";
+    const rootArticlesPath = iuDataUrl("articles.json");
+    const rootVideosPath = iuDataUrl("videos.json");
     const [articlesOk, videosOk] = await Promise.all([
       quickCheckUrl(rootArticlesPath),
       quickCheckUrl(rootVideosPath),
@@ -1565,8 +1576,8 @@ window.addEventListener("unhandledrejection", (e) => {
 
   // === DATA ENDPOINT OVERRIDE (maintenance-safe) ===
   (function(){
-    const ARTICLES_ENDPOINT = "/projects/data/articles.json";
-    const VIDEOS_ENDPOINT   = "/projects/data/videos.json";
+    const ARTICLES_ENDPOINT = iuDataUrl("articles.json");
+    const VIDEOS_ENDPOINT   = iuDataUrl("videos.json");
     const hasWithCacheBust = typeof window.withCacheBust === "function";
 
     if (typeof window.makeDataUrl === "function") {
@@ -1586,8 +1597,8 @@ window.addEventListener("unhandledrejection", (e) => {
   // === PREFLIGHT CHECK FOR DATA ENDPOINTS ===
   (async function preflightDataEndpoints(){
     const endpoints = [
-      "/projects/data/articles.json",
-      "/projects/data/videos.json"
+      iuDataUrl("articles.json"),
+      iuDataUrl("videos.json")
     ];
 
     for (const url of endpoints) {
@@ -1722,7 +1733,7 @@ window.addEventListener("unhandledrejection", (e) => {
         state.retentionLoadedDays = new Set();
       }
 
-      const indexUrl = "/projects/data/articles/index.json";
+      const indexUrl = iuDataUrl("articles/index.json");
       const idx = await fetchDiag(indexUrl, "articles");
       const days = Array.isArray(idx?.days) ? idx.days : [];
       const dates = days
@@ -1763,7 +1774,7 @@ window.addEventListener("unhandledrejection", (e) => {
         if (state.retentionLoadedDays.has(day)) continue;
         state.retentionLoadedDays.add(day);
 
-        const dayUrl = `/projects/data/articles/${day}.json`;
+        const dayUrl = iuDataUrl(`articles/${day}.json`);
         const dayJson = await fetchDiag(dayUrl, "articles");
         const dayItems = normalizeFeedJson(dayJson);
         if (!Array.isArray(dayItems) || dayItems.length === 0) continue;
@@ -5274,7 +5285,7 @@ function buildVideoAsArticleCard(it) {
     const el = document.getElementById("dataStatusArticles");
     if (!el) return;
     try {
-      const res = await timeoutFetch(makeDataUrl("data/articles.json"), { cache: "no-store" }, 9000);
+      const res = await timeoutFetch(iuDataUrl("articles.json"), { cache: "no-store" }, 9000);
       if (!res.ok) {
         el.textContent = `Články: chyba (${res.status})`;
         selfDiag.articlesState = "FAIL";
@@ -5360,7 +5371,7 @@ function buildVideoAsArticleCard(it) {
     const el = document.getElementById("dataStatusVideos");
     if (!el) return;
     try {
-      const res = await timeoutFetch(makeDataUrl("data/videos.json"), { cache: "no-store" }, 9000);
+      const res = await timeoutFetch(iuDataUrl("videos.json"), { cache: "no-store" }, 9000);
       if (res.status === 404) {
         el.textContent = "Videa: není k dispozici";
         selfDiag.videosState = "404";
@@ -5728,22 +5739,8 @@ function buildVideoAsArticleCard(it) {
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
     const preferredEntry = await evaluatePreferredPair();
-    const baseArticleUrls = [
-      "/projects/data/articles.json",
-      makeDataUrl("projects/data/articles.json"),
-      "/projects/data/articles.json",
-      "/projects/data/articles.json",
-      makeDataUrl("projects/data/articles.json"),
-      makeDataUrl("filtr/data/articles.json"),
-    ].filter(Boolean);
-    const baseVideoUrls = [
-      "/projects/data/videos.json",
-      makeDataUrl("projects/data/videos.json"),
-      "/projects/data/videos.json",
-      "/projects/data/videos.json",
-      makeDataUrl("projects/data/videos.json"),
-      makeDataUrl("filtr/data/videos.json"),
-    ].filter(Boolean);
+    const baseArticleUrls = [iuDataUrl("articles.json")];
+    const baseVideoUrls = [iuDataUrl("videos.json")];
     const articleUrls = buildCandidateListFromPair(preferredEntry, "articles", baseArticleUrls);
     const videoUrls = buildCandidateListFromPair(preferredEntry, "videos", baseVideoUrls);
     let preferredSaved = false;
@@ -5765,9 +5762,9 @@ function buildVideoAsArticleCard(it) {
     debugBoxSet(`iu debug: loading…\nhref=${location.href}\nstatus=loading`);
 
     try {
-      const probeUrl = "/projects/data/_probe.txt";
-      const ARTICLES_URL = "https://infouzel.cz/projects/data/articles.json";
-      const VIDEOS_URL = "https://infouzel.cz/projects/data/videos.json";
+      const probeUrl = iuDataUrl("_probe.txt");
+      const ARTICLES_URL = iuDataUrl("articles.json");
+      const VIDEOS_URL = iuDataUrl("videos.json");
       const articlesUrl = ARTICLES_URL;
       const videosUrl = VIDEOS_URL;
 
@@ -6284,7 +6281,7 @@ function buildVideoAsArticleCard(it) {
 
   async function fetchFeedHealth() {
     try {
-      const res = await timeoutFetch(makeDataUrl("data/feed_health.json"), { cache: "no-store" }, 5000);
+      const res = await timeoutFetch(iuDataUrl("feed_health.json"), { cache: "no-store" }, 5000);
       if (res.status === 404) {
         debugWarn("[HEALTH] feed_health not found");
         return;
@@ -6569,7 +6566,7 @@ function buildVideoAsArticleCard(it) {
 
   async function iuLoadCitiesSafe(){
     try{
-      const r = await fetch("projects/data/cz_cities_min.json", { cache: "force-cache" });
+      const r = await fetch(iuDataUrl("cz_cities_min.json"), { cache: "force-cache" });
       if (r.ok) {
         const d = await r.json();
         if (Array.isArray(d) && d.length) return d;
@@ -6617,11 +6614,7 @@ function buildVideoAsArticleCard(it) {
     try{
       // IMPORTANT: This page lives under /projects/ so the dataset URL must work there.
       // Try multiple deterministic candidates (no runtime API; repo file only).
-      const urls = [
-        "data/weather_history_videos.json",          // /projects/ + data/... (expected)
-        "projects/data/weather_history_videos.json", // fallback if served from /
-        "./projects/data/weather_history_videos.json",
-      ];
+      const urls = [iuDataUrl("weather_history_videos.json")];
       let lastOk = null;
       for (const u of urls){
         try{
@@ -9876,12 +9869,12 @@ function buildVideoAsArticleCard(it) {
       };
 
       const [radiosJson, calendarNamesJson, artistsJson, iamJson, legacyNamesJson] = await Promise.allSettled([
-        fetchJson("/projects/data/radio_requests.json", 4500),
-        fetchJson("/projects/data/calendar_first_names.json", 4500),
-        fetchJson("/projects/data/artists_whitelist.json", 4500),
-        fetchJson("/projects/data/iam_whitelist.json", 4500),
+        fetchJson(iuDataUrl("radio_requests.json"), 4500),
+        fetchJson(iuDataUrl("calendar_first_names.json"), 4500),
+        fetchJson(iuDataUrl("artists_whitelist.json"), 4500),
+        fetchJson(iuDataUrl("iam_whitelist.json"), 4500),
         // legacy fallback (older versions)
-        fetchJson("/projects/data/names_whitelist.json", 4500)
+        fetchJson(iuDataUrl("names_whitelist.json"), 4500)
       ]);
 
       if (radiosJson.status === "fulfilled" && radiosJson.value && Array.isArray(radiosJson.value.radios)) {
@@ -10181,7 +10174,7 @@ function buildVideoAsArticleCard(it) {
       }
     };
 
-    fetch(withTs('/projects/data/weather.json'), { cache: 'no-store' })
+    fetch(withTs(iuDataUrl('weather.json')), { cache: 'no-store' })
       .then((r) => r.json())
       .then((d) => {
         if (!d || typeof d !== 'object') throw new Error('bad weather');
