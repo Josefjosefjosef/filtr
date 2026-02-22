@@ -7295,9 +7295,12 @@ function buildVideoAsArticleCard(it) {
   // Expose Weather render for router/diagnostics.
   try{ window.iuWeatherLoadAndRender = iuWeatherLoadAndRender; }catch{}
 
-  // === MOJE SCHRÁNKY (MindMenu): 4 placeholders + CTA always last ===
+  // === MOJE SCHRÁNKY (MindMenu): 4 base + max 2 extra (6 total) ===
   const MAILBOX_STORAGE_KEY = "iu_mailboxes_v1";
   const MAILBOX_PLACEHOLDERS = ["Např.: e-mail 1", "Např.: e-mail 2", "Např.: pracovní web", "Např.: oblíbený web"];
+  const IU_MAILBOX_BASE = 4;
+  const IU_MAILBOX_MAX_EXTRA = 2;
+  const IU_MAILBOX_MAX = IU_MAILBOX_BASE + IU_MAILBOX_MAX_EXTRA;
 
   function iuMailboxLoad(){
     try{
@@ -7309,11 +7312,15 @@ function buildVideoAsArticleCard(it) {
       }
       const parsed = JSON.parse(txt);
       const items = Array.isArray(parsed?.items) ? parsed.items : [];
-      const fixed = items.slice(0, 100).map((it, i) => ({
+      const raw = items.slice(0, IU_MAILBOX_MAX);
+      let fixed = raw.map((it, i) => ({
         label: String(it?.label ?? "").trim() || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : ""),
         url: String(it?.url ?? "").trim(),
         index: i
       }));
+      if (items.length > IU_MAILBOX_MAX) {
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url }) => ({ label, url })) })); }catch{}
+      }
       if (fixed.length < 4) {
         for (let i = fixed.length; i < 4; i++) {
           fixed.push({ label: MAILBOX_PLACEHOLDERS[i], url: "", index: i });
@@ -7333,6 +7340,14 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  function iuUpdateMailboxControls(count){
+    const add = document.getElementById("iuMailboxAdd");
+    const rem = document.getElementById("iuMailboxRemove");
+    if (!add || !rem) return;
+    add.style.display = count < IU_MAILBOX_MAX ? "inline" : "none";
+    rem.style.display = count > IU_MAILBOX_BASE ? "inline" : "none";
+  }
+
   function iuMailboxRender(){
     const list = document.getElementById("iuMailboxList");
     if (!list) return;
@@ -7346,10 +7361,6 @@ function buildVideoAsArticleCard(it) {
         `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><i class="fa-solid fa-gear" aria-hidden="true"></i></button>`;
       frag.appendChild(row);
     });
-    const ctaRow = document.createElement("div");
-    ctaRow.className = "iu-mailbox-row iu-mailbox-cta-row";
-    ctaRow.innerHTML = `<button class="iu-mailbox-pill iu-mailbox-cta" type="button" data-action="add" aria-label="Přidat další tlačítko">+ Přidat další tlačítko</button>`;
-    frag.appendChild(ctaRow);
     list.innerHTML = "";
     list.appendChild(frag);
   }
@@ -7360,16 +7371,30 @@ function buildVideoAsArticleCard(it) {
     const list = document.getElementById("iuMailboxList");
     if (!list) return;
     iuMailboxRender();
+    let mailboxCount = iuMailboxLoad().length;
+    iuUpdateMailboxControls(mailboxCount);
+
+    document.getElementById("iuMailboxAdd")?.addEventListener("click", () => {
+      if (mailboxCount >= IU_MAILBOX_MAX) return;
+      const items = iuMailboxLoad();
+      items.push({ label: "", url: "", index: items.length });
+      iuMailboxSave(items);
+      iuMailboxRender();
+      mailboxCount = items.length;
+      iuUpdateMailboxControls(mailboxCount);
+    });
+
+    document.getElementById("iuMailboxRemove")?.addEventListener("click", () => {
+      if (mailboxCount <= IU_MAILBOX_BASE) return;
+      const items = iuMailboxLoad();
+      items.pop();
+      iuMailboxSave(items);
+      iuMailboxRender();
+      mailboxCount = items.length;
+      iuUpdateMailboxControls(mailboxCount);
+    });
+
     list.addEventListener("click", (e) => {
-      const addBtn = e.target.closest?.("[data-action=add]");
-      if (addBtn) {
-        e.preventDefault();
-        const items = iuMailboxLoad();
-        items.push({ label: "", url: "", index: items.length });
-        iuMailboxSave(items);
-        iuMailboxRender();
-        return;
-      }
       const gearBtn = e.target.closest?.("[data-mailbox-gear]");
       if (gearBtn) {
         e.preventDefault();
