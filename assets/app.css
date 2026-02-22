@@ -523,7 +523,6 @@ html:not([data-iu-js]) .iuDailyWeather{
 /* Kompenzace pro levý obsah pod sticky hlavičkou */
 #leftContent{
   padding-top: 0; /* premium fixed topbar uses global layout offset */
-  padding-left: var(--iuLeftEdgeW, 14px); /* space for left edge handle */
 }
 
 @media (max-width: 900px){
@@ -7355,9 +7354,9 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 .iu-leftRail{
-  flex: 0 0 var(--iuLeftRailW);
-  width: var(--iuLeftRailW);
-  min-width: var(--iuLeftRailW);
+  flex: 0 0 136px;
+  width: 136px;
+  min-width: 136px;
   /* Match center feed background (no panel effect) */
   background: var(--iuRailBg, var(--iu-page-bg));
   align-self: stretch; /* extend background alongside feed height */
@@ -9359,36 +9358,10 @@ html, body {
   --iuContainerMax: 1200px;
   --iuContainerPad: 20px;
   --iuLeftRailW: 136px;
-  --iuLeftEdgeW: 14px;
-}
-body.iu-leftRail-collapsed{
-  --iuLeftRailW: 0px;
 }
 /* Keep existing stack var consumers stable */
 :root{
   --topbarStackH: var(--iuTopbarHeight);
-}
-
-/* === Left edge handle (gradient) === */
-.iuLeftEdgeHandle{
-  position: fixed;
-  left: 0;
-  top: var(--iuTopbarHeight, 56px);
-  bottom: 0;
-  width: 14px;
-  background: linear-gradient(90deg, #0B1F33 0%, #132F4D 100%);
-  z-index: 9999;
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.iuLeftEdgeHandle::after{
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 22px;
 }
 
 .iuTopbar{
@@ -10077,15 +10050,8 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 @media (min-width:980px){
   #newsList{
     display: grid;
-    grid-template-columns: var(--iuLeftRailW) minmax(0, 1fr);
+    grid-template-columns: 136px minmax(0, 1fr);
   }
-}
-
-/* Collapsed: hide rail content, feed expands */
-body.iu-leftRail-collapsed #iuLeftRail,
-body.iu-leftRail-collapsed aside#iuLeftRail{
-  overflow: hidden !important;
-  pointer-events: none !important;
 }
 
 /* ============================================================
