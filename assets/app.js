@@ -8848,17 +8848,21 @@ function buildVideoAsArticleCard(it) {
     try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) { window.scrollTo(0, 0); }
   }
 
-  function iuHideQuickFeed(){
+  function iuEnsureArticlesView(){
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
+    if (stage) stage.setAttribute("data-iu-view", "articles");
     if (quick) {
       quick.hidden = true;
       quick.innerHTML = "";
     }
-    if (stage) {
-      stage.setAttribute("data-iu-view", "articles");
-    }
   }
+
+  function iuHideQuickFeed(){
+    iuEnsureArticlesView();
+  }
+
+  try { window.iuEnsureArticlesView = iuEnsureArticlesView; } catch (e) {}
 
   function iuQuickFeedInit(){
     document.addEventListener("click", (e) => {
@@ -10754,6 +10758,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function applySectionFromURL(accentOverride){
+    if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
     const section = getInitialSection(); // already normalized + fallback->media
     const accentKey = (accentOverride && String(accentOverride).trim().toLowerCase()) || section;
     // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
