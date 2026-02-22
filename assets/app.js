@@ -7654,42 +7654,58 @@ function buildVideoAsArticleCard(it) {
 
     iuWeatherInit();
     iuMailboxesInit();
-    iuNakupDomuInit();
     initAccordion();
   }
 
   async function iuLoadNakupDomu(){
+    const scriptEl = document.querySelector('script[src*="app.js"]');
+    const base = scriptEl ? new URL(scriptEl.src).href.replace(/\/[^/]*$/, "/") : location.origin + "/assets/";
+    const url = new URL("data/services-shopping.json", base).href;
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(`services-shopping.json HTTP ${res.status}`);
+    const data = await res.json();
+    const box = document.getElementById("iuNakupList");
+    if (!box) return;
+    const items = Array.isArray(data) ? data : [];
+    box.innerHTML = items.map(s => `
+      <a href="${escapeHtml(String(s?.url || "#"))}" target="_blank" rel="noopener noreferrer">
+        <i class="fa-solid ${escapeHtml(String(s?.icon || "fa-store"))}" style="color:${escapeHtml(String(s?.accent || "#333"))}"></i>
+        ${escapeHtml(String(s?.name || ""))}
+      </a>
+    `).join("");
+  }
+
+  async function iuOpenNakupDomu(){
+    const modal = document.getElementById("iuNakupModal");
+    const box = document.getElementById("iuNakupList");
+    if (!modal || !box) return;
+    modal.hidden = false;
+    box.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
     try {
-      const scriptEl = document.querySelector('script[src*="app.js"]');
-      const base = scriptEl ? new URL(scriptEl.src).href.replace(/\/[^/]*$/, "/") : location.origin + "/assets/";
-      const url = base + "data/services-shopping.json";
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) return;
-      const data = await res.json();
-      const box = document.getElementById("iuNakupList");
-      if (!box) return;
-      box.innerHTML = (Array.isArray(data) ? data : []).map(s => `
-        <a href="${escapeHtml(String(s?.url || "#"))}" target="_blank" rel="noopener noreferrer">
-          <i class="fa-solid ${escapeHtml(String(s?.icon || "fa-store"))}" style="color:${escapeHtml(String(s?.accent || "#333"))}"></i>
-          ${escapeHtml(String(s?.name || ""))}
-        </a>
-      `).join("");
-    } catch {}
+      await iuLoadNakupDomu();
+    } catch (err) {
+      console.error("[iuNakupDomu] load failed", err);
+      box.innerHTML = '<div class="iuModalMsg">Odkazy se nepodařilo načíst. Zkuste obnovit stránku.</div>';
+    }
   }
 
   function iuNakupDomuInit(){
-    const openBtn = document.getElementById("iuOpenNakupDomu");
-    const modal = document.getElementById("iuNakupModal");
-    const closeBtn = document.getElementById("iuNakupClose");
-    if (!openBtn || !modal) return;
-    openBtn.addEventListener("click", () => {
-      modal.hidden = false;
-      iuLoadNakupDomu();
+    document.getElementById("iuOpenNakupDomu")?.addEventListener("click", (e) => {
+      e.preventDefault?.();
+      iuOpenNakupDomu();
     });
-    closeBtn?.addEventListener("click", () => { modal.hidden = true; });
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) modal.hidden = true;
+    document.getElementById("iuNakupClose")?.addEventListener("click", () => {
+      document.getElementById("iuNakupModal").hidden = true;
     });
+    document.getElementById("iuNakupModal")?.addEventListener("click", (e) => {
+      if (e.target && e.target.id === "iuNakupModal") e.currentTarget.hidden = true;
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iuNakupDomuInit);
+  } else {
+    iuNakupDomuInit();
   }
 
   function init() {

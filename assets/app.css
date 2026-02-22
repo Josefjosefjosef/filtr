@@ -11142,38 +11142,6 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 /* === infoUzel CTA FINAL LOCK v1 — 2026-02-22 === */
 /* Nákup domů modal */
 
-.accordionCol .mindMenu .iuQuickBtn{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  width: 100%;
-  margin-top: 12px;
-  padding: 10px 6px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
-  text-align: center;
-  box-sizing: border-box;
-}
-
-.accordionCol .mindMenu .iuQuickBtn i{
-  font-size: 20px;
-}
-
-.accordionCol .mindMenu .iuQuickBtn span{
-  font-size: 12px;
-  line-height: 1.1;
-}
-
-.iuQuickBtn--nakup{
-  background: linear-gradient(180deg, #ffffff, #f4f7fb);
-  border: 1px solid rgba(20,40,70,.12);
-}
-
 .iuModal{
   position: fixed;
   inset: 0;
@@ -11224,10 +11192,10 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   background: #f3f6fb;
 }
 
-@media (max-width: 979px){
-  .accordionCol .mindMenu .iuQuickBtn--nakup{
-    display: none;
-  }
+.iuModalMsg{
+  padding: 10px 6px;
+  color: rgba(11,27,43,.72);
+  font-size: 14px;
 }
 
 /* =============================== */
