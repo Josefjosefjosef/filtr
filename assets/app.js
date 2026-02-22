@@ -135,6 +135,39 @@ window.addEventListener("unhandledrejection", (e) => {
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iuInitRailThemeControls);
     else iuInitRailThemeControls();
   }catch{}
+
+  // === PERSIST SCROLL (reload keeps position) ===
+  window.addEventListener("scroll", () => {
+    try { localStorage.setItem("iuScroll", String(window.scrollY)); } catch {}
+  });
+  window.addEventListener("load", () => {
+    try {
+      const y = parseInt(localStorage.getItem("iuScroll") || "0", 10);
+      if (y > 0) setTimeout(() => window.scrollTo(0, y), 50);
+    } catch {}
+  });
+  const _iuPersistScrollDone = new Set();
+  function persistScroll(el, key) {
+    if (!el || !key || _iuPersistScrollDone.has(key)) return;
+    _iuPersistScrollDone.add(key);
+    el.addEventListener("scroll", () => {
+      try { localStorage.setItem(key, String(el.scrollTop)); } catch {}
+    });
+    try {
+      const y = parseInt(localStorage.getItem(key) || "0", 10);
+      if (y > 0) el.scrollTop = y;
+    } catch {}
+  }
+  function iuPersistScrollPanels() {
+    persistScroll(document.querySelector(".iu-aiPanelBody"), "iuAiScroll");
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iuPersistScrollPanels);
+  } else {
+    iuPersistScrollPanels();
+  }
+  try { window.iuPersistScrollPanels = iuPersistScrollPanels; } catch {}
+
   /*
   Release summary (UI/data):
 
@@ -9253,6 +9286,12 @@ function buildVideoAsArticleCard(it) {
       lockScroll(true);
       aiPanel.dataset.open = '1';
       setExpanded(true);
+      try {
+        const body = aiPanel.querySelector('.iu-aiPanelBody');
+        if (body && typeof window.iuPersistScrollPanels === 'function') {
+          requestAnimationFrame(() => window.iuPersistScrollPanels());
+        }
+      } catch {}
     }
 
     function closePanel(){
