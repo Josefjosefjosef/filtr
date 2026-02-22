@@ -9383,15 +9383,26 @@ body.iu-leftRail-collapsed .iuLeftEdgeOverlay{
   .iuLeftEdgeOverlay{ display: none !important; }
 }
 
-/* Left rail: solid bg (jen kontejner, tlačítka beze změny) */
+/* Left rail: solid bg (jen kontejner, tlačítka beze změny) + natáhnout do spodku viewportu */
 #iuLeftRail{
   background: #0B1F33 !important;
   background-color: #0B1F33 !important;
   background-image: none !important;
+  min-height: calc(100vh - var(--iuTopbarHeight, 56px));
+  align-self: stretch;
 }
 /* Nav visible: žádná dělící linka mezi overlay a railem */
 body:not(.iu-leftRail-collapsed) #iuLeftRail{
   border-left: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+/* Collapsed: rail nesmí kreslit divider (jen overlay) – zdroj druhé linky */
+body.iu-leftRail-collapsed #iuLeftRail,
+body.iu-leftRail-collapsed #iuLeftRail .iu-leftNav,
+body.iu-leftRail-collapsed #iuLeftRail [data-rail-container]{
+  border-left: 0 !important;
+  border-right: 0 !important;
   outline: 0 !important;
   box-shadow: none !important;
 }
@@ -10250,6 +10261,12 @@ body #iuLeftRail .iu-leftNavItem{
 #iuLeftRail,
 .iu-leftNav {
   border-right: 1px solid rgba(209,213,219,0.25) !important;
+}
+
+/* V5: rail jednolitě #0B1F33 až dolů (bez gradientu/prosvítání) */
+body #iuLeftRail{
+  background: #0B1F33 !important;
+  background-image: none !important;
 }
 
 /* --- 2. Tlačítka méně "plastová" --- */
