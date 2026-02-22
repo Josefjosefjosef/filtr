@@ -7456,6 +7456,105 @@ function buildVideoAsArticleCard(it) {
   // Expose Weather render for router/diagnostics.
   try{ window.iuWeatherLoadAndRender = iuWeatherLoadAndRender; }catch{}
 
+  // === MOJE SCHRÁNKY (MindMenu): 4 placeholders + CTA always last ===
+  const MAILBOX_STORAGE_KEY = "iu_mailboxes_v1";
+  const MAILBOX_PLACEHOLDERS = ["Např.: e-mail 1", "Např.: e-mail 2", "Např.: pracovní web", "Např.: oblíbený web"];
+
+  function iuMailboxLoad(){
+    try{
+      const txt = localStorage.getItem(MAILBOX_STORAGE_KEY);
+      if (!txt) {
+        const items = MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", index: i }));
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items })); }catch{}
+        return items;
+      }
+      const parsed = JSON.parse(txt);
+      const items = Array.isArray(parsed?.items) ? parsed.items : [];
+      const fixed = items.slice(0, 100).map((it, i) => ({
+        label: String(it?.label ?? "").trim() || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : ""),
+        url: String(it?.url ?? "").trim(),
+        index: i
+      }));
+      if (fixed.length < 4) {
+        for (let i = fixed.length; i < 4; i++) {
+          fixed.push({ label: MAILBOX_PLACEHOLDERS[i], url: "", index: i });
+        }
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed })); }catch{}
+      }
+      return fixed;
+    }catch{
+      return MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", index: i }));
+    }
+  }
+
+  function iuMailboxSave(items){
+    try{
+      const toSave = items.map(({ label, url }) => ({ label, url }));
+      localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: toSave }));
+    }catch{}
+  }
+
+  function iuMailboxRender(){
+    const list = document.getElementById("iuMailboxList");
+    if (!list) return;
+    const items = iuMailboxLoad();
+    const frag = document.createDocumentFragment();
+    items.forEach((it, i) => {
+      const row = document.createElement("div");
+      row.className = "iu-mailbox-row";
+      const label = it.label || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : `Schránka ${i + 1}`);
+      row.innerHTML = `<button class="iu-mailbox-pill" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
+        `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><i class="fa-solid fa-gear" aria-hidden="true"></i></button>`;
+      frag.appendChild(row);
+    });
+    const ctaRow = document.createElement("div");
+    ctaRow.className = "iu-mailbox-row iu-mailbox-cta-row";
+    ctaRow.innerHTML = `<button class="iu-mailbox-pill iu-mailbox-cta" type="button" data-action="add" aria-label="Přidat další tlačítko">+ Přidat další tlačítko</button>`;
+    frag.appendChild(ctaRow);
+    list.innerHTML = "";
+    list.appendChild(frag);
+  }
+
+  function iuMailboxesInit(){
+    if (window.__iuMailboxesInitDone) return;
+    window.__iuMailboxesInitDone = 1;
+    const list = document.getElementById("iuMailboxList");
+    if (!list) return;
+    iuMailboxRender();
+    list.addEventListener("click", (e) => {
+      const addBtn = e.target.closest?.("[data-action=add]");
+      if (addBtn) {
+        e.preventDefault();
+        const items = iuMailboxLoad();
+        items.push({ label: "", url: "", index: items.length });
+        iuMailboxSave(items);
+        iuMailboxRender();
+        return;
+      }
+      const gearBtn = e.target.closest?.("[data-mailbox-gear]");
+      if (gearBtn) {
+        e.preventDefault();
+        const idx = parseInt(gearBtn.getAttribute("data-mailbox-gear") || "0", 10);
+        const items = iuMailboxLoad();
+        const it = items[idx];
+        if (!it) return;
+        const label = window.prompt("Název tlačítka:", it.label || "") || it.label || "";
+        const url = window.prompt("URL (www):", it.url || "") || it.url || "";
+        items[idx] = { ...it, label: String(label).trim(), url: String(url).trim() };
+        iuMailboxSave(items);
+        iuMailboxRender();
+        return;
+      }
+      const pillBtn = e.target.closest?.("[data-mailbox-open]");
+      if (pillBtn) {
+        const idx = parseInt(pillBtn.getAttribute("data-mailbox-index") || "0", 10);
+        const items = iuMailboxLoad();
+        const it = items[idx];
+        if (it?.url) window.open(it.url, "_blank", "noopener");
+      }
+    });
+  }
+
   function iuWeatherInit(){
     try{
       if (window.__iuWeatherInitDone) return;
@@ -7691,6 +7790,9 @@ function buildVideoAsArticleCard(it) {
 
     // Weather funnel init (idempotent; only acts if Weather view exists)
     iuWeatherInit();
+
+    // MOJE SCHRÁNKY: 4 placeholders + CTA always last (MindMenu right column)
+    iuMailboxesInit();
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
