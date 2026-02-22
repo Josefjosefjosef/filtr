@@ -11142,6 +11142,11 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 /* === infoUzel CTA FINAL LOCK v1 — 2026-02-22 === */
 /* Nákup domů modal */
 
+/* HARD LOCK: modal must never show when hidden */
+.iuModal[hidden]{
+  display: none !important;
+}
+
 .iuModal{
   position: fixed;
   inset: 0;
