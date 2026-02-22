@@ -9869,58 +9869,35 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem{
   position: relative;
 }
 
-/* ACTIVE = aria-current / active / is-active (keep all 3) */
+/* ACTIVE ::before — disabled (no oval tiles) */
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"]::before,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active::before,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::before{
-  content:"";
-  position:absolute;
-  left:-6px;
-  top:8px;
-  bottom:8px;
-  width:3px;
-  border-radius:999px;
-  background: rgba(27,36,48,.45);
-  box-shadow: 0 0 0 1px rgba(255,255,255,.6);
-  pointer-events: none;
+  content: none !important;
+  display: none !important;
 }
 
-/* ULTRA: micro-highlight hover (subtle) */
+/* ULTRA: micro-highlight hover — disabled (no oval tiles) */
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:hover:not([aria-current="page"]):not(.active):not(.is-active)::before{
-  content:"";
-  position:absolute;
-  left:-6px;
-  top:10px;
-  bottom:10px;
-  width:2px;
-  border-radius:999px;
-  background: rgba(27,36,48,.18);
-  pointer-events: none;
+  content: none !important;
+  display: none !important;
 }
 
-/* ULTRA: subtle gradient icon badge (enterprise, no rainbow) */
+/* ULTRA: icon badge — no background/border (SVG sprite + glow only) */
 aside#iuLeftRail.iu-leftRail .iu-leftNav .iu-leftNavIcon{
   box-sizing: border-box;
-  border: 1px solid rgba(27,36,48,.14) !important;
-  border-radius: 12px;
-  background: linear-gradient(180deg,
-    rgba(255,255,255,.92) 0%,
-    rgba(27,36,48,.06) 100%
-  ) !important;
-  box-shadow:
-    0 10px 18px rgba(0,0,0,.06),
-    inset 0 1px 0 rgba(255,255,255,.9) !important;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
 }
 
-/* ULTRA: active badge emphasis (subtle) */
+/* ULTRA: active badge — disabled (glow only via #iuLeftRail block) */
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active .iu-leftNavIcon,
-aside#iuLeftRail.iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNavIcon{
-  border-color: rgba(27,36,48,.22) !important;
-  background: linear-gradient(180deg,
-    rgba(255,255,255,.96) 0%,
-    rgba(27,36,48,.09) 100%
-  ) !important;
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNavIcon{
+  border: none !important;
+  background: none !important;
+  background-image: none !important;
 }
 
 /* ULTRA: focus-visible (premium, not disruptive) */
@@ -9971,17 +9948,9 @@ aside#iuLeftRail.iu-leftRail img{
    ============================================================ */
 
 aside#iuLeftRail.iu-leftRail .iu-leftNavIcon{
-  background: linear-gradient(180deg,
-    rgba(255,255,255,.92) 0%,
-    rgba(27,36,48,.06) 100%
-  ) !important;
-
-  border: 1px solid var(--iuRailHair) !important;
-  border-radius: 14px !important;
-
-  box-shadow:
-    0 10px 18px rgba(0,0,0,.06),
-    inset 0 1px 0 rgba(255,255,255,.9) !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* item must be anchor for pseudo-elements */
@@ -9996,49 +9965,29 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel{
   z-index: 2;
 }
 
-/* ACTIVE micro-highlight */
+/* ACTIVE micro-highlight — disabled (no oval tiles) */
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"]::before,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active::before,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::before{
-  content:"";
-  position:absolute;
-  left:-6px;
-  top:8px;
-  bottom:8px;
-  width:3px;
-  border-radius:999px;
-  background: rgba(27,36,48,.45);
-  box-shadow: 0 0 0 1px rgba(255,255,255,.6);
-  pointer-events:none;
-  z-index: 1;
+  content: none !important;
+  display: none !important;
 }
 
-/* active badge: pill vybarvený akcentem ikonky (--iuPillAccent = section accent) */
+/* active badge — disabled (glow only via #iuLeftRail block) */
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active .iu-leftNavIcon,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNavIcon{
-  background: var(--iuPillAccent, var(--iuRailAccent-quick)) !important;
+  background: none !important;
   background-image: none !important;
-  border-color: color-mix(in srgb, var(--iuPillAccent, var(--iuRailAccent-quick)) 35%, rgba(255,255,255,.2)) !important;
+  border: none !important;
 }
 
-/* MAX LEVEL — active micro-glow (no layout move) */
+/* MAX LEVEL — active micro-glow — disabled (no oval tiles) */
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"]::after,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active::after,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::after{
-  content:"";
-  position:absolute;
-  left:8px;
-  right:8px;
-  top:6px;
-  bottom:6px;
-  border-radius: 14px;
-  pointer-events:none;
-  z-index: 0;
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.55),
-    inset 0 14px 22px rgba(255,255,255,.18),
-    0 10px 22px rgba(0,0,0,.08);
+  content: none !important;
+  display: none !important;
 }
 
 /* FOCUS-VISIBLE (keyboard premium) */
@@ -10124,7 +10073,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
   display:block;
 }
 
-/* Icon badge — glass (no ugly solid silver ring) */
+/* Icon badge — no background (SVG sprite + glow only) */
 .iu-leftRail .iu-leftNavIcon{
   width: var(--iuRailIconCircle) !important;
   height: var(--iuRailIconCircle) !important;
@@ -10132,17 +10081,9 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
   display: grid !important;
   place-items: center;
   box-sizing: border-box;
-
-  background: radial-gradient(circle at 30% 20%,
-    rgba(255,255,255,.16),
-    rgba(255,255,255,.06) 45%,
-    rgba(0,0,0,.10) 100%) !important;
-
-  border: 1px solid rgba(235,241,255,.18) !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.12),
-    0 6px 18px rgba(0,0,0,.25) !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* Glyph inside */
@@ -10161,43 +10102,37 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
   color: var(--iuRailSilverMuted) !important;
 }
 
-/* Hover/active premium ring + glow (no layout move) */
+/* Hover/active — no ring (glow only via #iuLeftRail block) */
 .iu-leftRail .iu-leftNav > a.iu-leftNavItem:hover .iu-leftNavIcon,
 .iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible .iu-leftNavIcon{
-  border-color: rgba(235,241,255,.32) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    0 8px 22px rgba(0,0,0,.30),
-    0 0 0 3px rgba(140,190,255,.10) !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-/* Active pill: vybarvený akcentem ikonky (celý levý sloupec) */
+/* Active pill — disabled (glow only) */
 .iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
 .iu-leftRail .iu-leftNav > a.iu-leftNavItem.active .iu-leftNavIcon,
 .iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNavIcon{
-  background: var(--iuPillAccent, var(--iuRailAccent-quick)) !important;
+  background: none !important;
   background-image: none !important;
-  border-color: color-mix(in srgb, var(--iuPillAccent, var(--iuRailAccent-quick)) 35%, rgba(255,255,255,.2)) !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,.25) !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-/* Micro-highlight tuned for dark rail */
+/* Micro-highlight — disabled (no oval tiles) */
 .iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"]::before,
 .iu-leftRail .iu-leftNav > a.iu-leftNavItem.active::before,
 .iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::before{
-  background: rgba(235,241,255,.70) !important;
-  box-shadow: 0 0 0 1px rgba(7,26,51,.55) !important;
+  content: none !important;
+  display: none !important;
 }
 
-/* Active micro-glow tuned for dark rail (keeps existing geometry) */
+/* Active micro-glow — disabled (no oval tiles) */
 .iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"]::after,
 .iu-leftRail .iu-leftNav > a.iu-leftNavItem.active::after,
 .iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::after{
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.22),
-    inset 0 14px 22px rgba(255,255,255,.10),
-    0 10px 22px rgba(0,0,0,.22),
-    0 0 0 1px rgba(140,190,255,.08) !important;
+  content: none !important;
+  display: none !important;
 }
 
 /* ============================================================
