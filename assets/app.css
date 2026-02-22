@@ -9934,15 +9934,13 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::before{
   z-index: 1;
 }
 
-/* active badge mild emphasis */
+/* active badge: pill vybarvený akcentem ikonky (--iuPillAccent = section accent) */
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active .iu-leftNavIcon,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNavIcon{
-  border-color: color-mix(in srgb, var(--iuRailInk) 22%, transparent) !important;
-  background: linear-gradient(180deg,
-    rgba(255,255,255,.96) 0%,
-    rgba(27,36,48,.09) 100%
-  ) !important;
+  background: var(--iuPillAccent, var(--iuRailAccent-quick)) !important;
+  background-image: none !important;
+  border-color: color-mix(in srgb, var(--iuPillAccent, var(--iuRailAccent-quick)) 35%, rgba(255,255,255,.2)) !important;
 }
 
 /* MAX LEVEL — active micro-glow (no layout move) */
@@ -10092,6 +10090,16 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
     inset 0 1px 0 rgba(255,255,255,.16),
     0 8px 22px rgba(0,0,0,.30),
     0 0 0 3px rgba(140,190,255,.10) !important;
+}
+
+/* Active pill: vybarvený akcentem ikonky (celý levý sloupec) */
+.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
+.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active .iu-leftNavIcon,
+.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNavIcon{
+  background: var(--iuPillAccent, var(--iuRailAccent-quick)) !important;
+  background-image: none !important;
+  border-color: color-mix(in srgb, var(--iuPillAccent, var(--iuRailAccent-quick)) 35%, rgba(255,255,255,.2)) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,.25) !important;
 }
 
 /* Micro-highlight tuned for dark rail */
@@ -10514,6 +10522,15 @@ body #iuLeftRail{
    Apply to icons after the "RYCHLÝ SERVIS" title until the next title.
    This relies on DOM order: title -> items -> next title -> items ...
 */
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem{
+  --iuPillAccent: var(--iuRailAccent-quick);
+}
 #iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem :is(i, svg),
 #iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
 #iuLeftRail .iuLeftRailSectionTitle + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
@@ -10535,6 +10552,15 @@ body #iuLeftRail{
 #iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2){
   --iuRailSectionAccent: color-mix(in srgb, var(--iuRailAccent-day) 55%, transparent) !important;
 }
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem{
+  --iuPillAccent: var(--iuRailAccent-day);
+}
 #iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem :is(i, svg),
 #iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
 #iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
@@ -10548,6 +10574,12 @@ body #iuLeftRail{
 /* === ZÁBAVA & ENGAGEMENT === (third title) */
 #iuLeftRail .iuLeftRailSectionTitle:nth-of-type(3){
   --iuRailSectionAccent: color-mix(in srgb, var(--iuRailAccent-fun) 55%, transparent) !important;
+}
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(3) + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(3) + .iu-leftNavItem + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(3) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem,
+#iuLeftRail .iuLeftRailSectionTitle:nth-of-type(3) + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem + .iu-leftNavItem{
+  --iuPillAccent: var(--iuRailAccent-fun);
 }
 #iuLeftRail .iuLeftRailSectionTitle:nth-of-type(3) + .iu-leftNavItem :is(i, svg),
 #iuLeftRail .iuLeftRailSectionTitle:nth-of-type(3) + .iu-leftNavItem + .iu-leftNavItem :is(i, svg),
@@ -10649,6 +10681,9 @@ body #iuLeftRail{
 }
 
 /* ===== Můj infoUzel.cz (pokud existuje jako tlačítko) ===== */
+#iuLeftRail .iu-leftNavItem[data-rail^="myuzel-"]{
+  --iuPillAccent: var(--iuRailAccent-me);
+}
 #iuLeftRail .iu-leftNavItem[data-rail^="myuzel-"] i,
 #iuLeftRail .iu-leftNavItem[data-rail^="myuzel-"] svg{
   color: var(--iuRailAccent-me) !important;
