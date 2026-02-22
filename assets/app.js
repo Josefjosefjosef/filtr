@@ -7757,6 +7757,24 @@ function buildVideoAsArticleCard(it) {
       });
   };
 
+  function initRightPanel() {
+    const root = document.querySelector(".mindMenu") || document.querySelector("aside.accordionCol") || null;
+    if (!root) return;
+
+    if (typeof window.iuDailyPanelInit === "function") {
+      window.iuDailyPanelInit();
+    }
+    setTimeout(() => {
+      if (typeof window.iuDailyPanelInit === "function") {
+        window.iuDailyPanelInit();
+      }
+    }, 300);
+
+    iuWeatherInit();
+    iuMailboxesInit();
+    initAccordion();
+  }
+
   function init() {
     if (sessionStorage.getItem("iu:firstLoadDone")) {
       debugLog("[LOAD] repeat");
@@ -7779,20 +7797,7 @@ function buildVideoAsArticleCard(it) {
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
 
-    if (typeof window.iuDailyPanelInit === "function") {
-      window.iuDailyPanelInit();
-    }
-    setTimeout(() => {
-      if (typeof window.iuDailyPanelInit === "function") {
-        window.iuDailyPanelInit();
-      }
-    }, 300);
-
-    // Weather funnel init (idempotent; only acts if Weather view exists)
-    iuWeatherInit();
-
-    // MOJE SCHRÁNKY: 4 placeholders + CTA always last (MindMenu right column)
-    iuMailboxesInit();
+    try { initRightPanel(); } catch (e) { console.error("RightPanel init failed", e); }
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
@@ -7854,7 +7859,6 @@ function buildVideoAsArticleCard(it) {
       });
     }
     renderDiagBox();
-    initAccordion();
     updateBuildStatusLabel();
     recordBuildSeen();
     nukeCachesAndSwOnBuildChange();
