@@ -4595,6 +4595,29 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  function iuInitLeftEdgeToggle(){
+    const btn = document.getElementById("iuLeftEdgeHandle");
+    if(!btn) return;
+
+    const applyAria = () => {
+      const collapsed = document.body.classList.contains("iu-leftRail-collapsed");
+      btn.setAttribute("aria-pressed", collapsed ? "true" : "false");
+    };
+
+    const toggle = () => {
+      document.body.classList.toggle("iu-leftRail-collapsed");
+      applyAria();
+    };
+
+    btn.addEventListener("click", toggle, { passive: true });
+
+    btn.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); toggle(); }
+    });
+
+    applyAria();
+  }
+
   function iuMirrorTodayToTopbar(){
     try{
       const elTime = document.getElementById("iuTopbarTime");
@@ -7599,6 +7622,7 @@ function buildVideoAsArticleCard(it) {
     setSectionsFromHash();
     try{ document.body.classList.add("iuTopbarFlushRight"); }catch{}
     iuInitTopbarSearchToggle();
+    iuInitLeftEdgeToggle();
     iuMirrorTodayToTopbar();
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
