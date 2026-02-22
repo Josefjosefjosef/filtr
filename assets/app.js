@@ -7657,48 +7657,78 @@ function buildVideoAsArticleCard(it) {
     initAccordion();
   }
 
+  const IU_NAKUP_JSON_PATH = "/assets/data/services-shopping.json";
+
+  function iuNakupEls(){
+    return {
+      modal: document.getElementById("iuNakupModal"),
+      list: document.getElementById("iuNakupList"),
+      openBtn: document.getElementById("iuOpenNakupDomu"),
+      closeBtn: document.getElementById("iuNakupClose"),
+    };
+  }
+
+  function iuNakupClose(){
+    const { modal } = iuNakupEls();
+    if (!modal) return;
+    modal.hidden = true;
+    modal.setAttribute("aria-hidden", "true");
+  }
+
   async function iuLoadNakupDomu(){
-    const scriptEl = document.querySelector('script[src*="app.js"]');
-    const base = scriptEl ? new URL(scriptEl.src).href.replace(/\/[^/]*$/, "/") : location.origin + "/assets/";
-    const url = new URL("data/services-shopping.json", base).href;
-    const res = await fetch(url, { cache: "no-store" });
+    const url = new URL(IU_NAKUP_JSON_PATH, window.location.origin).toString();
+    const res = await fetch(url, {
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    });
     if (!res.ok) throw new Error(`services-shopping.json HTTP ${res.status}`);
     const data = await res.json();
-    const box = document.getElementById("iuNakupList");
-    if (!box) return;
-    const items = Array.isArray(data) ? data : [];
-    box.innerHTML = items.map(s => `
-      <a href="${escapeHtml(String(s?.url || "#"))}" target="_blank" rel="noopener noreferrer">
-        <i class="fa-solid ${escapeHtml(String(s?.icon || "fa-store"))}" style="color:${escapeHtml(String(s?.accent || "#333"))}"></i>
-        ${escapeHtml(String(s?.name || ""))}
+    const { list } = iuNakupEls();
+    if (!list) return;
+    if (!Array.isArray(data) || !data.length) {
+      throw new Error("services-shopping.json invalid/empty");
+    }
+    list.innerHTML = data.map(s => `
+      <a href="${escapeHtml(String(s?.url || ""))}" target="_blank" rel="noopener noreferrer">
+        <i class="fa-solid ${escapeHtml(String(s?.icon || "fa-bag-shopping"))}"
+           style="color:${escapeHtml(String(s?.accent || "#1F4B99"))}"></i>
+        ${escapeHtml(String(s?.name || "Odkaz"))}
       </a>
     `).join("");
   }
 
   async function iuOpenNakupDomu(){
-    const modal = document.getElementById("iuNakupModal");
-    const box = document.getElementById("iuNakupList");
-    if (!modal || !box) return;
+    const { modal, list } = iuNakupEls();
+    if (!modal || !list) return;
     modal.hidden = false;
-    box.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
+    modal.setAttribute("aria-hidden", "false");
+    list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
     try {
       await iuLoadNakupDomu();
     } catch (err) {
       console.error("[iuNakupDomu] load failed", err);
-      box.innerHTML = '<div class="iuModalMsg">Odkazy se nepodařilo načíst. Zkuste obnovit stránku.</div>';
+      list.innerHTML = '<div class="iuModalMsg">Odkazy se nepodařilo načíst. Zkuste obnovit stránku.</div>';
     }
   }
 
   function iuNakupDomuInit(){
-    document.getElementById("iuOpenNakupDomu")?.addEventListener("click", (e) => {
+    const { modal, openBtn, closeBtn } = iuNakupEls();
+    openBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
       iuOpenNakupDomu();
     });
-    document.getElementById("iuNakupClose")?.addEventListener("click", () => {
-      document.getElementById("iuNakupModal").hidden = true;
+    closeBtn?.addEventListener("click", (e) => {
+      e.preventDefault?.();
+      iuNakupClose();
     });
-    document.getElementById("iuNakupModal")?.addEventListener("click", (e) => {
-      if (e.target && e.target.id === "iuNakupModal") e.currentTarget.hidden = true;
+    modal?.addEventListener("click", (e) => {
+      if (e.target === modal) iuNakupClose();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        const m = iuNakupEls().modal;
+        if (m && !m.hidden) iuNakupClose();
+      }
     });
   }
 
@@ -7706,6 +7736,22 @@ function buildVideoAsArticleCard(it) {
     document.addEventListener("DOMContentLoaded", iuNakupDomuInit);
   } else {
     iuNakupDomuInit();
+  }
+
+  async function iuDiagNakupDomuOnce(){
+    try {
+      const url = new URL(IU_NAKUP_JSON_PATH, window.location.origin).toString();
+      const res = await fetch(url, { cache: "no-store" });
+      console.info("[iuDiagNakupDomu] json", url, "status", res.status);
+    } catch (err) {
+      console.warn("[iuDiagNakupDomu] json fetch failed", err);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iuDiagNakupDomuOnce);
+  } else {
+    iuDiagNakupDomuOnce();
   }
 
   function init() {
