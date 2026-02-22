@@ -7408,11 +7408,18 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 /* FEED must adapt to remaining width (critical) */
-#newsList > #feed{
+#newsList > #iuCenterStage{
+  display: flex;
   flex: 1 1 0;
   min-width: 0;
-  width: auto !important; /* override #feed{width:100%} so it can sit next to left rail */
 }
+
+#iuCenterStage .iuArticlesStage{
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* #feed is inside #iuCenterStage .iuArticlesStage; center flex handled by #iuCenterStage */
 
 /* JR view must adapt like #feed (same middle column footprint) */
 body[data-section="jr"] #newsList > #iuJrEmptyView,
@@ -7499,7 +7506,7 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
 }
 
 /* Home view must adapt like #feed (same middle column footprint) */
-#newsList > #iuHomeView{
+#iuCenterStage #iuHomeView{
   flex: 1 1 0;
   min-width: 0;
   width: auto !important;
@@ -7508,7 +7515,7 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
 /* Responsive: hide left rail below 1100px (no JS) */
 @media (max-width: 1100px){
   .iu-leftRail{ display: none; }
-  #newsList > #feed{
+  #newsList > #iuCenterStage{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
@@ -7553,7 +7560,7 @@ html[data-section="namedays"] #newsList > #iuHolidaysView{
     width: 100% !important;
     min-width: 0;
   }
-  #newsList > #iuHomeView{
+  #iuCenterStage #iuHomeView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
@@ -8118,8 +8125,8 @@ body.iuRailHidden #iuLeftRail{
 }
 
 /* Flex layout: ensure middle column fills available width */
-html.iuRailHidden #newsList > #feed,
-body.iuRailHidden #newsList > #feed,
+html.iuRailHidden #newsList > #iuCenterStage,
+body.iuRailHidden #newsList > #iuCenterStage,
 html.iuRailHidden #newsList > #iuRadioView,
 body.iuRailHidden #newsList > #iuRadioView,
 html.iuRailHidden #newsList > #iuJrEmptyView,
@@ -8133,9 +8140,7 @@ body.iuRailHidden #newsList > #iuWeatherView,
 html.iuRailHidden #newsList > #iuHolidaysView,
 body.iuRailHidden #newsList > #iuHolidaysView,
 html.iuRailHidden #newsList > #iuTvOnlineView,
-body.iuRailHidden #newsList > #iuTvOnlineView,
-html.iuRailHidden #newsList > #iuHomeView,
-body.iuRailHidden #newsList > #iuHomeView{
+body.iuRailHidden #newsList > #iuTvOnlineView{
   flex: 0 0 100%;
   width: 100% !important;
   min-width: 0;
@@ -11204,6 +11209,21 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 }
 
 /* === Center Quick Feed (Rychlé odkazy detail view) === */
+/* Center stage view switch */
+#iuCenterStage[data-iu-view="quick"] .iuArticlesStage{
+  display: none !important;
+}
+
+#iuCenterStage[data-iu-view="quick"] #iuQuickFeed{
+  display: block !important;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+#iuCenterStage[data-iu-view="articles"] #iuQuickFeed{
+  display: none !important;
+}
+
 .iuQuickFeed[hidden]{
   display: none !important;
 }
