@@ -4054,6 +4054,40 @@ body[data-section="home"] .iuHomeCanvas{
 }
 
 /* ============================================================
+   CONTENT ACCENT — unique color per section (JS sets --iuContentAccent on body)
+   ============================================================ */
+
+/* Section titles + header line in content (not rail) */
+#newsList .iuSectionHeader{
+  --iuSectionAccent: var(--iuContentAccent, var(--iuSectionAccent));
+}
+#newsList .iuSectionHeader h1,
+#newsList .iuSectionHeader h2,
+#newsList .iuSectionTitle{
+  color: var(--iuContentAccent, var(--iuSectionAccent, currentColor));
+}
+
+/* Buttons in content */
+#newsList .iuBtn,
+#newsList button.iuBtn{
+  border-color: var(--iuContentAccent, rgba(11,27,43,0.14));
+}
+#newsList .iuBtnPrimary{
+  box-shadow: 0 0 0 1px var(--iuContentAccent, currentColor);
+}
+
+/* Notes block in content */
+#newsList .iuNotesHost .iuNotes{
+  border-color: var(--iuContentAccent, var(--iuNotesAccent, var(--iuSectionAccent, #b9bcc2)));
+}
+#newsList .iuNotesHost .iuNotesTitle{
+  color: var(--iuContentAccent, var(--iuSectionAccent, #ffffff));
+}
+#newsList .iuNotesHost .iuNotesActions .iuBtn{
+  background: var(--iuContentAccent, var(--iuNotesAccent, var(--iuSectionAccent, #b9bcc2)));
+}
+
+/* ============================================================
    MŮJ INFO UZEL — views (middle column)
    ============================================================ */
 

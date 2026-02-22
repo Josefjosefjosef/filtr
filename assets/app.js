@@ -8820,6 +8820,27 @@ function buildVideoAsArticleCard(it) {
 
   // Unified navigation router (UI-only)
   // NOTE: non-radio sections still use the normal feed view.
+  const IU_CONTENT_ACCENTS = {
+    pocasi: "#38D9FF",
+    mapy: "#4BE3C1",
+    jr: "#57A8FF",
+    tvprogram: "#2FD39A",
+    tvonline: "#00C2FF",
+    radio: "#9B8CFF",
+    svatky: "#34E7A1",
+    media: "#B38BFF",
+    sport: "#FF6FD8",
+    tech: "#6AA8FF",
+    finance: "#FFD34D",
+    home: "#FF9B5E",
+    zdravi: "#4CFFB3",
+    travel: "#42D3FF",
+    hry: "#FF6B3D",
+    culture: "#FF4D8A",
+    veda: "#7CFF6B",
+    vzdelavani: "#55FFA6"
+  };
+
   const VIEW_MAP = {
     media: 'media',
     radio: 'radio',
@@ -10549,10 +10570,15 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  function applySectionFromURL(){
+  function applySectionFromURL(accentOverride){
     const section = getInitialSection(); // already normalized + fallback->media
+    const accentKey = (accentOverride && String(accentOverride).trim().toLowerCase()) || section;
     // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
     try{ document.body && (document.body.dataset.section = section); }catch{}
+    try{
+      const color = IU_CONTENT_ACCENTS[accentKey] || "";
+      document.body && document.body.style.setProperty("--iuContentAccent", color);
+    }catch{}
     // feed paging must reset on section change
     try{ state.page = 1; }catch{}
     setLeftNavActive(section);
@@ -10973,7 +10999,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const accent = (item.getAttribute('data-accent') || item.dataset?.accent || "").trim().toLowerCase();
       const section = normalizeSection(accent);
       persistSection(section);
-      applySectionFromURL();
+      applySectionFromURL(accent);
       // UX: after switching section, keep main content at the top.
       try{
         requestAnimationFrame(() => requestAnimationFrame(() => iuScrollMainToTopSmooth()));
