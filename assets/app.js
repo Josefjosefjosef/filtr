@@ -8716,6 +8716,7 @@ function buildVideoAsArticleCard(it) {
     
     if(parcelsBtn){
       parcelsBtn.addEventListener('click', (e) => {
+        if (e.target.closest && e.target.closest('[data-iuq]')) return;
         e.preventDefault();
         e.stopPropagation();
         openParcels();
@@ -8723,6 +8724,7 @@ function buildVideoAsArticleCard(it) {
     }
     if(parcelsBtnMobile){
       parcelsBtnMobile.addEventListener('click', (e) => {
+        if (e.target.closest && e.target.closest('[data-iuq]')) return;
         e.preventDefault();
         e.stopPropagation();
         openParcels();
@@ -8864,6 +8866,7 @@ function buildVideoAsArticleCard(it) {
       if (!el) return;
       e.preventDefault();
       e.stopPropagation();
+      if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
       const key = el.getAttribute("data-iuq");
       if (key) iuShowQuickFeed(key);
     }, true);
@@ -8921,8 +8924,9 @@ function buildVideoAsArticleCard(it) {
       else closePanel();
     }
 
-    // 1) Klik na tlačítko (delegace)
+    // 1) Klik na tlačítko (delegace) — legacy modal guard: quicklinks now use center QuickFeed only
     document.addEventListener('click', e => {
+      if (e.target.closest && e.target.closest('[data-iuq]')) return;
       const btn = e.target.closest('[data-action="ai-panel"]');
       if (!btn) return;
       e.preventDefault();
