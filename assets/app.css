@@ -9255,7 +9255,9 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
    FINAL UI — Notes (unified component across the whole web)
    ====================================================================== */
 
-.iuNotesHost .iuNotes{
+.iuNotesHost .iuNotes,
+.iuNotesHost [data-iu-notes],
+[data-iu-notes].iuNotes{
   margin-top: 12px;
   padding: 10px 10px;
   border: 2px solid var(--iuNotesAccent, var(--iuSectionAccent, var(--iuMyUzelAccent, #b9bcc2)));
@@ -9263,7 +9265,9 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   background: var(--iuNotesAccent, var(--iuSectionAccent, var(--iuMyUzelAccent, #b9bcc2)));
 }
 
-.iuNotesHost .iuNotesTop{
+.iuNotesHost .iuNotesTop,
+.iuNotesHost .iuNotesHead,
+[data-iu-notes] .iuNotesHead{
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -9271,19 +9275,23 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   margin-bottom: 8px;
 }
 
-.iuNotesHost .iuNotesTitle{
+.iuNotesHost .iuNotesTitle,
+[data-iu-notes] .iuNotesTitle{
   font-weight: 700;
   font-size: 14px;
   color: #ffffff;
 }
 
-.iuNotesHost .iuNotesActions{
+.iuNotesHost .iuNotesActions,
+[data-iu-notes] .iuNotesActions{
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.iuNotesHost .iuNotesActions .iuBtn{
+.iuNotesHost .iuNotesActions .iuBtn,
+.iuNotesHost .iuNotesActions .iuNotesBtn,
+[data-iu-notes] .iuNotesActions .iuNotesBtn{
   appearance: none;
   border: none;
   background: var(--iuNotesAccent, var(--iuSectionAccent, var(--iuMyUzelAccent, #b9bcc2)));
@@ -9297,16 +9305,26 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
 }
 
-.iuNotesHost .iuNotesActions .iuBtn:hover{
+.iuNotesHost .iuNotesActions .iuBtn:hover,
+.iuNotesHost .iuNotesActions .iuNotesBtn:hover,
+[data-iu-notes] .iuNotesActions .iuNotesBtn:hover{
   filter: brightness(0.92);
 }
 
-.iuNotesHost .iuNotesActions .iuBtn:focus-visible{
+.iuNotesHost .iuNotesActions .iuBtn:focus-visible,
+.iuNotesHost .iuNotesActions .iuNotesBtn:focus-visible,
+[data-iu-notes] .iuNotesActions .iuNotesBtn:focus-visible{
   outline: 3px solid #ffffff;
   outline-offset: 2px;
 }
 
-.iuNotesHost .iuNotesInput{
+.iuNotesBtnPrimary{
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.8) !important;
+}
+
+.iuNotesHost .iuNotesInput,
+.iuNotesHost .iuNotesText,
+[data-iu-notes] .iuNotesText{
   width: 100%;
   min-height: 44px;
   resize: none;          /* autosize v JS */
@@ -9320,9 +9338,15 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   background: #ffffff;
 }
 
-.iuNotesHost .iuNotesInput:focus-visible{
+.iuNotesHost .iuNotesInput:focus-visible,
+.iuNotesHost .iuNotesText:focus-visible,
+[data-iu-notes] .iuNotesText:focus-visible{
   outline: 3px solid #ffffff;
   outline-offset: 2px;
+}
+
+.iuNotesStatus[hidden]{
+  display: none;
 }
 
 /* Notes spacing inside Maps view subsections */
@@ -11340,14 +11364,13 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   font-size: 14px;
 }
 
-/* Překladač toolbox — izolované pod #iuQuickFeed */
-#iuQuickFeed .iuTrPanel{
-  background: #fff;
-  border: 1px solid rgba(20,40,70,0.10);
-  border-radius: 18px;
-  padding: 14px 16px;
+/* Překladač toolbox — izolované pod #iuQuickFeed (bez rámečku) */
+#iuQuickFeed .iuTrArea{
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
   margin-bottom: 16px;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
 }
 #iuQuickFeed .iuTrTitle{
   margin: 0 0 8px;
@@ -11419,25 +11442,13 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   min-height: 110px;
 }
 
-/* Překladač poznámky — reuse .iuNotesHost styly, footer */
-#iuQuickFeed .iuNotesHost{
+/* Překladač poznámky — pod kartami (card) */
+#iuQuickFeed .iuNotes[data-iu-notes]{
   margin-top: 16px;
-}
-#iuQuickFeed .iuNotesHost .iuNotes{
-  --iuNotesAccent: #b9bcc2;
-}
-#iuQuickFeed .iuTrNotesFooter{
-  margin: 8px 0 0;
-  font-size: 11px;
-  color: rgba(11,27,43,0.45);
-  line-height: 1.3;
-}
-#iuQuickFeed .iuTrNotesFooter a{
-  color: rgba(31,75,153,0.75);
-  text-decoration: none;
-}
-#iuQuickFeed .iuTrNotesFooter a:hover{
-  text-decoration: underline;
+  padding: 10px 10px;
+  border: 2px solid var(--iuNotesAccent, #b9bcc2);
+  border-radius: 12px;
+  background: var(--iuNotesAccent, #b9bcc2);
 }
 
 /* =============================== */
