@@ -9349,6 +9349,38 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   display: none;
 }
 
+/* Sendbar — fallback volby (WhatsApp / E-mail / Kopírovat) */
+.iuNotesSendBar{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.4);
+}
+.iuNotesSendBar[hidden]{
+  display: none !important;
+}
+.iuNotesSendOpt{
+  appearance: none;
+  border: none;
+  background: rgba(255,255,255,0.9);
+  color: #0b1b2b;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.iuNotesSendOpt:hover{
+  background: #fff;
+}
+.iuNotesSendOpt:focus-visible{
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
 /* Notes spacing inside Maps view subsections */
 #iuMapyView .iuNotesHost,
 #iuMapsView .iuNotesHost{
