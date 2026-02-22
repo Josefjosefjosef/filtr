@@ -1374,44 +1374,13 @@ style-src 'self' 'unsafe-inline' https:;
                 </div>
                 <div class="mindMenu-scroll-wrapper">
                   <div class="mindMenu">
-                    <!-- Moje schránky -->
+                    <!-- Moje schránky (JS-rendered: 4 placeholders + CTA always last) -->
                     <section class="iu-mailboxes" aria-label="Moje schránky">
                       <div class="iu-mmSectionHead">
                         <div class="iu-mmSectionTitle">MOJE SCHRÁNKY</div>
                         <div class="iu-mmSectionLine" aria-hidden="true"></div>
                       </div>
-                      <div class="iu-mailbox-list">
-                        <div class="iu-mailbox-row">
-                          <button class="iu-mailbox-pill" type="button">Schránka 1</button>
-                          <button class="iu-mailbox-gear" type="button" aria-label="Nastavení schránky 1" title="Nastavení">
-                            <i class="fa-solid fa-gear" aria-hidden="true"></i>
-                          </button>
-                        </div>
-                        <div class="iu-mailbox-row">
-                          <button class="iu-mailbox-pill" type="button">Schránka 2</button>
-                          <button class="iu-mailbox-gear" type="button" aria-label="Nastavení schránky 2" title="Nastavení">
-                            <i class="fa-solid fa-gear" aria-hidden="true"></i>
-                          </button>
-                        </div>
-                        <div class="iu-mailbox-row">
-                          <button class="iu-mailbox-pill" type="button">Schránka 3</button>
-                          <button class="iu-mailbox-gear" type="button" aria-label="Nastavení schránky 3" title="Nastavení">
-                            <i class="fa-solid fa-gear" aria-hidden="true"></i>
-                          </button>
-                        </div>
-                        <div class="iu-mailbox-row">
-                          <button class="iu-mailbox-pill" type="button">Schránka 4</button>
-                          <button class="iu-mailbox-gear" type="button" aria-label="Nastavení schránky 4" title="Nastavení">
-                            <i class="fa-solid fa-gear" aria-hidden="true"></i>
-                          </button>
-                        </div>
-                        <div class="iu-mailbox-row">
-                          <button class="iu-mailbox-pill" type="button">Schránka 5</button>
-                          <button class="iu-mailbox-gear" type="button" aria-label="Nastavení schránky 5" title="Nastavení">
-                            <i class="fa-solid fa-gear" aria-hidden="true"></i>
-                          </button>
-                        </div>
-                      </div>
+                      <div class="iu-mailbox-list" id="iuMailboxList"></div>
                     </section>
                     <!-- Rychlé odkazy -->
                     <section class="iu-mmQuickLinks" aria-label="Rychlé odkazy">

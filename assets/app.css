@@ -10915,6 +10915,7 @@ body #iuLeftRail{
 
 .accordionCol .mindMenu .iu-mailbox-list{
   margin-top: 12px;
+  min-height: 220px; /* CLS guard: reserve space for 4 items + CTA */
 }
 
 .accordionCol .mindMenu .iu-mailbox-row{
@@ -10958,6 +10959,11 @@ body #iuLeftRail{
 .accordionCol .mindMenu .iu-mailbox-gear i{
   font-size: 12px;
   opacity: 0.75;
+}
+
+.accordionCol .mindMenu .iu-mailbox-cta{
+  border-style: dashed;
+  opacity: 0.9;
 }
 
 /* ============================================================
