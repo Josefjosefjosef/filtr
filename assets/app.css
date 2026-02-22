@@ -10915,17 +10915,15 @@ body #iuLeftRail{
 
 .accordionCol .mindMenu .iu-mailbox-list{
   margin-top: 12px;
-  min-height: 260px; /* CLS guard: 4 items + CTA */
+  min-height: 220px; /* CLS guard: reserve space for 4 items + CTA */
 }
 
-.accordionCol .mindMenu .iu-mailbox-row,
-.accordionCol .mindMenu .iuMailboxItem{
+.accordionCol .mindMenu .iu-mailbox-row{
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   margin: 8px 0;
-  min-height: 36px;
 }
 
 .accordionCol .mindMenu .iu-mailbox-pill{
@@ -10934,13 +10932,14 @@ body #iuLeftRail{
   border-radius: 999px;
   border: 1px solid rgba(20,40,70,0.18);
   background: rgba(255,255,255,0.85);
+
   font-size: 14px;
   line-height: 28px;
   padding: 0 14px;
+
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: flex-start;
   box-sizing: border-box;
 }
 
@@ -10959,58 +10958,12 @@ body #iuLeftRail{
 
 .accordionCol .mindMenu .iu-mailbox-gear i{
   font-size: 12px;
-  color: rgba(11,27,43,0.45);
+  opacity: 0.75;
 }
 
-.accordionCol .mindMenu .iu-mailbox-gear:hover i{
-  color: rgba(11,27,43,0.65);
-}
-
-.accordionCol .mindMenu .iu-mailbox-minus,
-.accordionCol .mindMenu .iuMailboxMinus{
-  width: 20px;
-  height: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  color: rgba(11,27,43,0.45);
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.accordionCol .mindMenu .iu-mailbox-minus:hover,
-.accordionCol .mindMenu .iuMailboxMinus:hover{
-  color: rgba(11,27,43,0.65);
-}
-
-.accordionCol .mindMenu .iuMailboxAdd{
-  color: rgba(11,27,43,0.45);
-  font-size: 13px;
-  text-align: center;
-  cursor: pointer;
-  margin-top: 8px;
-}
-
-.accordionCol .mindMenu .iuMailboxAdd button{
-  background: none;
-  border: none;
-  color: inherit;
-  font-size: inherit;
-  cursor: inherit;
-  padding: 0;
-}
-
-.accordionCol .mindMenu .iuMailboxAdd:hover,
-.accordionCol .mindMenu .iuMailboxAdd:hover button{
-  color: rgba(11,27,43,0.65);
-}
-
-.accordionCol .mindMenu .iuMailboxAddDisabled{
-  color: rgba(11,27,43,0.35);
-  font-size: 12px;
+.accordionCol .mindMenu .iu-mailbox-cta{
+  border-style: dashed;
+  opacity: 0.9;
 }
 
 /* ============================================================
