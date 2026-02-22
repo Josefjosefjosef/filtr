@@ -8882,6 +8882,11 @@ function buildVideoAsArticleCard(it) {
             <button type="button" class="iuNotesBtn" data-iu-notes-clear>Vyčistit</button>
             <button type="button" class="iuNotesBtn iuNotesBtnPrimary" data-iu-notes-send>Odeslat</button>
           </div>
+          <div class="iuNotesSendBar" data-iu-notes-sendbar hidden>
+            <button type="button" class="iuNotesSendOpt" data-iu-notes-send-wa>WhatsApp</button>
+            <button type="button" class="iuNotesSendOpt" data-iu-notes-send-mail>E-mail</button>
+            <button type="button" class="iuNotesSendOpt" data-iu-notes-send-copy>Kopírovat</button>
+          </div>
           <div class="iuNotesStatus" data-iu-notes-status hidden></div>
         </div>
       `;
@@ -9004,21 +9009,33 @@ function buildVideoAsArticleCard(it) {
     });
   }
 
+  function iuNotesGetBlock(el){ return el && el.closest("[data-iu-notes]"); }
+  function iuNotesGetText(block){ const ta = block && block.querySelector("[data-iu-notes-text]"); return ta ? String(ta.value || "").trim() : ""; }
+  function iuNotesBuildPayload(raw){
+    const t = (raw || "").trim();
+    const sig = "\n\n— infoUzel.cz\nhttps://infouzel.cz/";
+    return t ? (t + sig) : "";
+  }
+
   function iuNotesGlobalDelegation(){
-    const SIG = "\n\n— infoUzel.cz\nhttps://infouzel.cz/";
     document.addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-iu-notes-copy], [data-iu-notes-clear], [data-iu-notes-send]");
+      const btn = e.target.closest("[data-iu-notes-copy], [data-iu-notes-clear], [data-iu-notes-send], [data-iu-notes-send-wa], [data-iu-notes-send-mail], [data-iu-notes-send-copy]");
       if (!btn) return;
       const block = btn.closest("[data-iu-notes]");
       if (!block) return;
       const ta = block.querySelector("[data-iu-notes-text]");
       const status = block.querySelector("[data-iu-notes-status]");
+      const sendbar = block.querySelector("[data-iu-notes-sendbar]");
       const showStatus = (msg) => {
         if (status) { status.textContent = msg; status.hidden = false; setTimeout(() => { status.textContent = ""; status.hidden = true; }, 2500); }
       };
+      const hideOtherSendbars = () => {
+        try { document.querySelectorAll("[data-iu-notes-sendbar]").forEach((sb) => { if (sb.closest("[data-iu-notes]") !== block) sb.hidden = true; }); } catch {}
+      };
+
       if (btn.matches("[data-iu-notes-copy]")) {
         const t = ta ? (ta.value || "") : "";
-        try { navigator.clipboard.writeText(t); showStatus("Zkopírováno"); } catch { showStatus("Zkopírování selhalo"); }
+        try { navigator.clipboard.writeText(t); showStatus("Zkopírováno"); } catch { showStatus("Nepovedlo se zkopírovat – dej Ctrl+C"); }
         return;
       }
       if (btn.matches("[data-iu-notes-clear]")) {
@@ -9028,13 +9045,69 @@ function buildVideoAsArticleCard(it) {
         if (trKey === "translator") try { localStorage.removeItem(IU_TR_NOTES_KEY); } catch {}
         else if (storageKey) try { localStorage.removeItem(storageKey); } catch {}
         showStatus("Vyčištěno");
+        if (sendbar) sendbar.hidden = true;
         return;
       }
+
       if (btn.matches("[data-iu-notes-send]")) {
-        const text = ta ? (ta.value || "").trim() : "";
+        const text = iuNotesGetText(block);
         if (!text) { showStatus("Nejdřív napiš poznámku"); return; }
-        const body = text + SIG;
-        window.location.href = `mailto:?subject=${encodeURIComponent("Poznámka z infoUzel.cz")}&body=${encodeURIComponent(body)}`;
+        const payload = iuNotesBuildPayload(text);
+        if (typeof navigator !== "undefined" && navigator.share) {
+          navigator.share({ text: payload, title: "infoUzel.cz" }).then(() => {}).catch(() => {
+            hideOtherSendbars();
+            if (sendbar) sendbar.hidden = false;
+          });
+        } else {
+          hideOtherSendbars();
+          if (sendbar) sendbar.hidden = false;
+        }
+        return;
+      }
+
+      if (btn.matches("[data-iu-notes-send-wa]")) {
+        const text = iuNotesGetText(block);
+        if (!text) { showStatus("Nejdřív napiš poznámku"); return; }
+        const payload = iuNotesBuildPayload(text);
+        window.open(`https://wa.me/?text=${encodeURIComponent(payload)}`, "_blank", "noopener,noreferrer");
+        showStatus("Otevřeno ve WhatsApp");
+        if (sendbar) sendbar.hidden = true;
+        return;
+      }
+      if (btn.matches("[data-iu-notes-send-mail]")) {
+        const text = iuNotesGetText(block);
+        if (!text) { showStatus("Nejdřív napiš poznámku"); return; }
+        const payload = iuNotesBuildPayload(text);
+        window.location.href = `mailto:?subject=${encodeURIComponent("Poznámka z infoUzel.cz")}&body=${encodeURIComponent(payload)}`;
+        if (sendbar) sendbar.hidden = true;
+        return;
+      }
+      if (btn.matches("[data-iu-notes-send-copy]")) {
+        const text = iuNotesGetText(block);
+        if (!text) { showStatus("Nejdřív napiš poznámku"); return; }
+        const payload = iuNotesBuildPayload(text);
+        try {
+          navigator.clipboard.writeText(payload);
+          showStatus("Zkopírováno");
+        } catch {
+          let ok = false;
+          try {
+            const tmp = document.createElement("textarea");
+            tmp.value = payload;
+            tmp.style.cssText = "position:fixed;left:-9999px;top:0";
+            document.body.appendChild(tmp);
+            tmp.select();
+            ok = document.execCommand("copy");
+            document.body.removeChild(tmp);
+          } catch {}
+          if (ok) showStatus("Zkopírováno");
+          else {
+            if (ta) { ta.focus(); ta.select(); ta.setSelectionRange(0, (ta.value || "").length); }
+            showStatus("Nepovedlo se zkopírovat – dej Ctrl+C");
+          }
+        }
+        if (sendbar) sendbar.hidden = true;
+        return;
       }
     });
   }
@@ -9508,6 +9581,11 @@ function buildVideoAsArticleCard(it) {
           `</div>` +
         `</div>` +
         `<textarea class="iuNotesText iuNotesInput" data-iu-notes-text placeholder="Piš poznámky…"></textarea>` +
+        `<div class="iuNotesSendBar" data-iu-notes-sendbar hidden>` +
+          `<button type="button" class="iuNotesSendOpt" data-iu-notes-send-wa>WhatsApp</button>` +
+          `<button type="button" class="iuNotesSendOpt" data-iu-notes-send-mail>E-mail</button>` +
+          `<button type="button" class="iuNotesSendOpt" data-iu-notes-send-copy>Kopírovat</button>` +
+        `</div>` +
         `<div class="iuNotesStatus" data-iu-notes-status hidden></div>`;
 
       // Accent (optional)
