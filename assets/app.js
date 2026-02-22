@@ -1,5 +1,3 @@
-console.log("[BOOT] app.js loaded", new Date().toISOString());
-
 // === MAINTENANCE
 // ::contentReference[oaicite:0]{index=0}
 // REŽIM: MAINTENANCE
@@ -17,17 +15,21 @@ console.log("[BOOT] app.js loaded", new Date().toISOString());
 // - render výhradně do #feed (safeTarget)
 // - routování výhradně přes item.contentType
 // Porušení = BUG (ne warning)
-console.log("[BOOT] app.js loaded", new Date().toISOString());
 
 window.addEventListener("error", (e) => {
   try {
-    console.error("[WINERROR]", e?.message, e?.filename, e?.lineno, e?.colno, e?.error);
+    if (typeof window.persistLastError === "function") {
+      window.persistLastError(`${e?.message || "error"} (${e?.filename || ""}:${e?.lineno || ""})`);
+    }
   } catch {}
 });
 
 window.addEventListener("unhandledrejection", (e) => {
   try {
-    console.error("[UNHANDLED]", e?.reason);
+    if (typeof window.persistLastError === "function") {
+      const r = e?.reason;
+      window.persistLastError(`Promise: ${r?.message || String(r || "unknown")}`);
+    }
   } catch {}
 });
 
@@ -302,9 +304,6 @@ window.addEventListener("unhandledrejection", (e) => {
         const res = await iuDbgCheckPoster(url);
         iuDbgPosterInc(res.reason, url);
       }
-      try{
-        console.log("[IU_VIDEO_DBG posters]", IU_VIDEO_DBG.posters);
-      }catch{}
     })();
   }
 
@@ -495,11 +494,11 @@ window.addEventListener("unhandledrejection", (e) => {
 
   function debugLog(...args) {
     if (!isDebugLogging) return;
-    console.log(...args);
+    // Output only to iuDebugBox (debugBoxSet), not console
   }
   function debugWarn(...args) {
     if (!isDebugLogging) return;
-    console.warn(...args);
+    // Output only to iuDebugBox, not console
   }
   const DEBUG =
     location.search.includes("debug=1") || localStorage.getItem("iu_debug") === "1";
@@ -1032,16 +1031,6 @@ window.addEventListener("unhandledrejection", (e) => {
             };
             pushLog(rec);
 
-            try {
-              const prefix = debugOnly ? "[IU][CLS][debug-only]" : "[IU][CLS]";
-              console.groupCollapsed(
-                `${prefix} shift=${rec.value.toFixed(4)} sources=${rec.sourceCount} recentInput=${rec.hadRecentInput}`
-              );
-              console.log("record:", rec);
-              console.log("window.__iuCLSLog (last 10):", window.__iuCLSLog);
-              console.groupEnd();
-            } catch (_) {}
-
             // Update real-only total and log occasionally when it changes.
             try {
               if (iuIsDebug) {
@@ -1067,9 +1056,6 @@ window.addEventListener("unhandledrejection", (e) => {
                 if (shouldLog) {
                   lastRealLogAt = now;
                   lastRealTotalLogged = realTotal;
-                  console.log(
-                    `[IU][CLS][real-total] total=${realTotal.toFixed(4)} last=${lastRealValue.toFixed(4)} sources=${lastRealSources.join(", ") || "(none)"}`
-                  );
                 }
               }
             } catch (_) {}
@@ -1304,7 +1290,7 @@ window.addEventListener("unhandledrejection", (e) => {
 
   function diagLog(tag, info) {
     if (!DEBUG) return;
-    console.log("[DIAG]", tag, info);
+    // Diagnostic output via iuDebugBox only
   }
   // DEBUG KONTRAKT:
   // debug se aktivuje pouze location.search.includes("debug=1")
@@ -1605,12 +1591,10 @@ window.addEventListener("unhandledrejection", (e) => {
     for (const url of endpoints) {
       try {
         const res = await fetch(url, { method: "HEAD", cache: "no-store" });
-        console.info("[preflight]", url, "→", res.status, res.url);
         if (!res.ok && typeof window.persistLastError === "function") {
           window.persistLastError(`Preflight ${url} → ${res.status}`);
         }
       } catch (err) {
-        console.error("[preflight error]", url, err);
         if (typeof window.persistLastError === "function") {
           window.persistLastError(`Preflight ${url} → network error`);
         }
@@ -2398,34 +2382,6 @@ window.addEventListener("unhandledrejection", (e) => {
     iuSaveVideoSeenMapV1(seen);
 
     const poolEligibleLen = stream.length;
-    if (iuDebug) {
-      try {
-        console.info(
-          "[iuVideoDiag] articlesTotal=%d insertEvery=%d slotCount=%d maxVideosPerPage=%d",
-          Number(cfg?.articleTotal) || -1,
-          insertEveryN,
-          effectiveSlots,
-          maxVideosPerPage
-        );
-        console.info(
-          "[iuVideoDiag] poolRaw=%d poolAfterAge=%d poolAfterDedupe=%d poolEligible=%d",
-          poolRawLen,
-          poolAfterAgeLen,
-          poolAfterDedupeLen,
-          poolEligibleLen
-        );
-        console.info("[iuVideoDiag] queueSlots=%d", (queue1 && queue1.slots ? queue1.slots.length : -1));
-        console.info("[iuVideoDiag] droppedSample=%o", dropped);
-        console.info("[iuVideoDiag] ageStepUsedH=%d", usedAgeH);
-      } catch {}
-    }
-
-    if (iuDebug) {
-      try {
-        console.info("[iuVideoQueue] before=", beforeIds.slice(0, effectiveSlots));
-        console.info("[iuVideoQueue] after =", iuQueueIds(queue1).slice(0, effectiveSlots));
-      } catch {}
-    }
     return queue1;
   }
 
@@ -2656,38 +2612,6 @@ window.addEventListener("unhandledrejection", (e) => {
       try { window.__iuVideoAnchorPassRunning = false; } catch {}
     }
 
-    if (iuDebug) {
-      try {
-        const sample = articles.slice(0, 5).map((el, idx) => {
-          try {
-            const a = el.querySelector('a[href]');
-            const href = a ? String(a.getAttribute("href") || "") : "";
-            const titleEl = el.querySelector(".news-title") || el.querySelector("h2") || a;
-            const title = titleEl ? String(titleEl.textContent || "").trim().slice(0, 120) : "";
-            return { idx, title, href };
-          } catch {
-            return { idx, title: "", href: "" };
-          }
-        });
-
-        console.info(
-          "[iuVideoAnchorDOM] articlesFound=%d insertEveryN=%d slotCount=%d videosExistingBefore=%d videosCreated=%d videosMoved=%d missingVideoSlots=%o articleSelectorUsed=%s",
-          articles.length,
-          insertEveryN,
-          slotCount,
-          videosExistingBefore,
-          videosCreated,
-          videosMoved,
-          missingVideoSlots,
-          articleSelectorUsed
-        );
-        console.info("[iuVideoAnchorDOM] articlesSample=%o", sample);
-        const n = Math.min(slotCount, 5);
-        for (let slotIndex = 0; slotIndex < n; slotIndex++) {
-          console.info("[iuVideoAnchorDOM] slot=%d afterArticle=%d", slotIndex, (slotIndex + 1) * insertEveryN);
-        }
-      } catch {}
-    }
   }
 
   function iuInitVideoAnchorObserver() {
@@ -2716,19 +2640,7 @@ window.addEventListener("unhandledrejection", (e) => {
               if (el && el.closest && el.closest(".iuVideoCard")) inVideo += 1;
             } catch {}
           }
-          if (inVideo === muts.length) {
-            if (Boolean(location.search.includes("debug=1"))) {
-              try {
-                const now = Date.now();
-                const last = Number(window.__iuVideoAnchorSkipLogAt || 0);
-                if (!last || now - last > 2500) {
-                  window.__iuVideoAnchorSkipLogAt = now;
-                  console.info("[iuVideoAnchors] skip observer mutations inside video card");
-                }
-              } catch {}
-            }
-            return;
-          }
+          if (inVideo === muts.length) return;
         }
       } catch {}
 
@@ -2980,8 +2892,6 @@ window.addEventListener("unhandledrejection", (e) => {
         const cat = String(pick?.category || "");
         const src = String(pick?.sourceUrl || pick?.sourceKey || pick?.channel || "");
         const w = Number(meta?.window) || Number(IU_VIDEO_PICK_WINDOW) || 40;
-        const ci = Number.isFinite(Number(meta?.chosenIndex)) ? Number(meta.chosenIndex) : 0;
-        console.info(`[iuVideoPick] bucket=${bucket} window=${w} chosenIndex=${ci} lang=${lang} cat=${cat} src=${src} id=${id} ageDays=${ageDays}`);
       } catch {}
 
       return pick;
@@ -3310,7 +3220,7 @@ window.addEventListener("unhandledrejection", (e) => {
       if (i === 0 && !matchesExpected(chosen, "cz")) slot0_not_cz_or_bilingual += 1;
       if (!isAltOk) {
         bad_alternation += 1;
-        if (iuDebug) console.warn("[iuVideoMix] WARN fallback_slot=%d reason=%s", i, chosenReason || "bad_alternation");
+        if (iuDebug) { /* debug: fallback_slot */ }
       }
       if (capTs && chosenTs > capTs) newer_than_first += 1;
     }
@@ -3340,29 +3250,15 @@ window.addEventListener("unhandledrejection", (e) => {
           if (cur > maxSourceStreak) maxSourceStreak = cur;
         }
 
-        console.info(
-          "[iuVideoMix] slots=%d capTs=%d slot0_not_cz_or_bilingual=%d bad_alternation=%d newer_than_first=%d newerThanCapCount=%d maxSourceStreak=%d topicCounts=%o",
-          N,
-          capTs || 0,
-          slot0_not_cz_or_bilingual,
-          bad_alternation,
-          newer_than_first,
-          newer_than_first,
-          maxSourceStreak,
-          counts.topics
-        );
-        console.info("[iuVideoMix] first10=%o", first10);
-
         // monotonic sanity check (non-increasing)
         let non_monotonic = 0;
         for (let i = 1; i < picked.length; i++) {
           if (tsOf(picked[i]) > tsOf(picked[i - 1])) non_monotonic += 1;
         }
-        if (non_monotonic) console.warn("[iuVideoMix] WARN non_monotonic=%d", non_monotonic);
-
-        if (slot0_not_cz_or_bilingual) console.warn("[iuVideoMix] WARN slot0_not_cz_or_bilingual=%d", slot0_not_cz_or_bilingual);
-        if (bad_alternation) console.warn("[iuVideoMix] WARN bad_alternation=%d", bad_alternation);
-        if (newer_than_first) console.warn("[iuVideoMix] WARN newer_than_first=%d", newer_than_first);
+        if (non_monotonic) { /* debug: non_monotonic */ }
+        if (slot0_not_cz_or_bilingual) { /* debug: slot0_not_cz_or_bilingual */ }
+        if (bad_alternation) { /* debug: bad_alternation */ }
+        if (newer_than_first) { /* debug: newer_than_first */ }
       } catch {}
     }
 
@@ -3483,7 +3379,6 @@ window.addEventListener("unhandledrejection", (e) => {
     const hashValue = finalSections.join(",");
     if (location.hash.replace(/^#/, "") === hashValue) {
       setSectionsFromHash();
-      if (isDebugLogging) console.log("[LOAD DEBUG] before applyFilter cached=", state.cachedItems.length);
       applyFilter();
       return;
     }
@@ -3829,14 +3724,6 @@ window.addEventListener("unhandledrejection", (e) => {
         : (isWarnByAuthority ? "warn"
         : (isWarnByKeywords ? "warn" : (isAlertByKeywords ? "alert" : ""))));
 
-      // Debug visibility for demo items.
-      try {
-        const iuDebug = Boolean(location.search.includes("debug=1"));
-        if (iuDebug && item && item.__iuAlertDemo) {
-          console.info("[iuAlertDemo] title=%o authority=%s startsWithAuthorityColon=%s alertPhrase=%s warnPhrase=%s level=%s", titleRaw, authority, startsWithAuthorityColon, alertPhrase, warnPhrase, level);
-        }
-      } catch {}
-
       if (level === "alert") {
         titleEl.classList.add("iuTitle--alert");
         // optional icon (no CLS: applied before insert)
@@ -3858,18 +3745,6 @@ window.addEventListener("unhandledrejection", (e) => {
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
   function renderFeed(target, items) {
-    if (DEBUG) {
-      console.log("[renderFeed] items.length:", items.length);
-      console.log("[renderFeed] first rows:", items.slice(0, 3));
-      console.log(
-        "[renderFeed] unique contentTypes:",
-        [...new Set(items.map((i) => i.contentType))]
-      );
-    }
-    if (isDebugLogging) {
-      const kinds = Array.from(new Set((items || []).map((item) => String(item?.contentType || "unknown"))));
-      console.log("[RENDER DEBUG] items.len=", items?.length ?? 0, "samples=", (items || []).slice(0, 3), "types=", kinds);
-    }
     const feedEl = document.getElementById("feed");
     const feedExists = !!(feedEl && feedEl.id === "feed");
     const feedChildrenBefore = feedEl ? feedEl.childElementCount : 0;
@@ -3948,18 +3823,6 @@ window.addEventListener("unhandledrejection", (e) => {
     const slotCount = shouldInjectVideos
       ? Math.min(maxVideosPerPage, Math.floor(totalArticlesVisible / (Number(IU_FEED_VIDEO_EVERY) || insertEveryN)))
       : 0;
-    const iuDebug = Boolean(location.search.includes("debug=1"));
-    if (iuDebug) {
-      try {
-        console.info(
-          "[iuVideoDiag] articlesTotal=%d insertEvery=%d slotCount=%d maxVideosPerPage=%d",
-          totalArticlesVisible,
-          Number(IU_FEED_VIDEO_EVERY) || insertEveryN,
-          slotCount,
-          maxVideosPerPage
-        );
-      } catch {}
-    }
     const sectionKey =
       Array.isArray(activeSections) && activeSections.length === 1 ? String(activeSections[0]) : "vse";
     const queue = shouldInjectVideos
@@ -4182,8 +4045,6 @@ window.addEventListener("unhandledrejection", (e) => {
         IU_VIDEO_DBG.counts.domVideoCardsTotal = safeTarget ? safeTarget.querySelectorAll(".iuVideoCard").length : 0;
         IU_VIDEO_DBG.counts.domVideoCardsSlots = safeTarget ? safeTarget.querySelectorAll(".iuVideoCard[data-slot]").length : 0;
         IU_VIDEO_DBG.counts.domVideoPosters = safeTarget ? safeTarget.querySelectorAll(".iuVideoPoster").length : 0;
-        console.log("[IU_VIDEO_DBG]", IU_VIDEO_DBG);
-        try { console.table(IU_VIDEO_DBG.samples || []); } catch {}
         try { iuDbgUpdateVideoDumpPanel(); } catch {}
       }catch{}
     }
@@ -5005,13 +4866,6 @@ function buildVideoAsArticleCard(it) {
       if (doRender) renderItems(state.filteredItems);
       return;
     }
-    if (DEBUG) {
-      console.log("[applyFilter] cachedItems before filter:", state.cachedItems.length);
-    }
-
-    if (isDebugLogging) {
-      console.log("[FILTER DEBUG] cachedItems.len=", state.cachedItems?.length ?? 0);
-    }
 
     if (
       !state.activeSection &&
@@ -5069,14 +4923,6 @@ function buildVideoAsArticleCard(it) {
       });
     }
     state.filteredItems = filtered;
-    if (DEBUG) {
-      console.log("[applyFilter] filteredItems after filter:", filtered.length);
-      console.log("[applyFilter] first filtered items:", filtered.slice(0, 3));
-    }
-
-    if (isDebugLogging) {
-      console.log("[FILTER DEBUG] filteredItems.len=", state.filteredItems?.length ?? 0);
-    }
 
     if (filtered.length === 0) {
       if (query) {
@@ -6004,9 +5850,7 @@ function buildVideoAsArticleCard(it) {
       }));
       if (DEBUG) {
         sanitizedArticles.forEach((item) => {
-          if (!item.contentType) {
-            console.warn("[normalize] Missing contentType:", item);
-          }
+          if (!item.contentType) { /* debug: missing contentType */ }
         });
       }
       sanitizedArticles.forEach((item) => {
@@ -6085,10 +5929,7 @@ function buildVideoAsArticleCard(it) {
       diagMeta.articlesStatus = articleStatusLabel || "404";
       diagMeta.videosUrl = chosenVideosUrl || "";
       diagMeta.videosStatus = videoStatusLabel || "404";
-      // === PROOF LOGS (maintenance-safe) ===
       try {
-        console.info("[proof] articles loaded:", sanitizedArticles.length, chosenArticlesUrl || articleUrls[0] || "");
-        console.info("[proof] videos loaded:", videoItems.length, chosenVideosUrl || videoUrls[0] || "");
         if (typeof window.iuSetDataStatus === "function") {
           window.iuSetDataStatus(sanitizedArticles.length, videoItems.length);
         }
@@ -6197,10 +6038,6 @@ function buildVideoAsArticleCard(it) {
       state.stats.articlesCount = articlesOnly.length;
       state.stats.videosCount = videosOnly.length;
       state.cachedItems = mixed.length ? mixed : combined;
-      if (DEBUG) {
-        console.log("[loadData] cachedItems length:", state.cachedItems.length);
-        console.log("[loadData] first items:", state.cachedItems.slice(0, 3));
-      }
       const combinedSources = [];
       if (articlesOk) combinedSources.push("articles");
       if (videosOk) combinedSources.push("videos");
@@ -6488,8 +6325,8 @@ function buildVideoAsArticleCard(it) {
       inline.textContent = `Poslední chyba: ${message}`;
       inline.style.display = "block";
     }
-    console.error("[ERR]", message);
   }
+  try { window.persistLastError = persistLastError; } catch {}
 
   function handleMissingFeedContainer() {
     const msg = "[DOM] feed container missing";
@@ -6505,18 +6342,14 @@ function buildVideoAsArticleCard(it) {
     try {
       const info = `${event.message} (${event.filename}:${event.lineno})`;
       persistLastError(info);
-    } catch (err) {
-      console.error("[ERR]", "error handler failed", err);
-    }
+    } catch (_) {}
   });
 
   window.addEventListener("unhandledrejection", (event) => {
     try {
       const reason = event.reason ? event.reason.message || String(event.reason) : "unknown";
       persistLastError(`Promise rejection: ${reason}`);
-    } catch (err) {
-      console.error("[ERR]", "rejection handler failed", err);
-    }
+    } catch (_) {}
   });
 
   function updateNetworkStatus() {
@@ -7797,7 +7630,7 @@ function buildVideoAsArticleCard(it) {
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
 
-    try { initRightPanel(); } catch (e) { console.error("RightPanel init failed", e); }
+    try { initRightPanel(); } catch (e) { if (typeof persistLastError === "function") persistLastError("RightPanel init failed"); }
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
@@ -7975,9 +7808,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     function iuHandleVideoError(card) {
-      try {
-        console.warn("[iuVideo] replacing broken video", card?.dataset?.ytid);
-      } catch {}
+      try { /* debug: replacing broken video */ } catch {}
       try {
         const cur = card ? (card.getAttribute("data-ytid") || "") : "";
         const next = iuGetNextVideoFromPool(cur);
@@ -7988,7 +7819,7 @@ function buildVideoAsArticleCard(it) {
         try { card.removeAttribute("data-iu-frozen"); } catch {}
         iuReplaceVideoCardContent(card, next);
       } catch (e) {
-        try { console.error("[iuVideo] replace failed", e); } catch {}
+        try { if (typeof persistLastError === "function") persistLastError("[iuVideo] replace failed"); } catch {}
       }
     }
 
@@ -8353,9 +8184,7 @@ function buildVideoAsArticleCard(it) {
           fallback: false,
           error: "missing ytid",
         });
-        if (iuDebugEnabled()) {
-          try { console.warn("[iuVideoPlay] missing ytid, cannot embed"); } catch {}
-        }
+        if (iuDebugEnabled()) { try { /* debug: missing ytid */ } catch {} }
         return;
       }
       if (card.getAttribute("data-iu-loaded") === "1") return;
@@ -8418,7 +8247,7 @@ function buildVideoAsArticleCard(it) {
             opts.noExternalOpen = String(card && card.getAttribute ? (card.getAttribute("data-iu-no-external-open") || "") : "") === "1";
           }catch{}
           if (opts && opts.noExternalOpen){
-            try{ console.warn("Weather History embed blocked external open"); }catch{}
+            try{ /* Weather History: external open blocked */ }catch{}
             return;
           }
           window.open(watchUrl, "_blank", "noopener");
@@ -8538,7 +8367,7 @@ function buildVideoAsArticleCard(it) {
         });
       } catch (err) {
         // Safe fallback: if inline embed fails for any reason, open YouTube in a new tab.
-        try { console.warn("[iuVideoPlay] inline embed failed, falling back to watch URL", err); } catch {}
+        try { /* debug: inline embed fallback */ } catch {}
         const dbgCardYtid = card ? (card.getAttribute("data-ytid") || null) : null;
         const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
         const dbgIframe = frame ? frame.querySelector("iframe") : null;
@@ -8560,7 +8389,7 @@ function buildVideoAsArticleCard(it) {
             opts.noExternalOpen = String(card && card.getAttribute ? (card.getAttribute("data-iu-no-external-open") || "") : "") === "1";
           }catch{}
           if (opts && opts.noExternalOpen){
-            try{ console.warn("Weather History embed blocked external open"); }catch{}
+            try{ /* Weather History: external open blocked */ }catch{}
             return;
           }
           window.open(watchUrl, "_blank", "noopener");
@@ -8670,9 +8499,6 @@ function buildVideoAsArticleCard(it) {
     overlay.classList.add('is-open');
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
-    if(location.search.includes("debug=1")){
-      console.log('[ParcelsModal] Opened - overlay.has(.is-open):', overlay.classList.contains('is-open'), 'modal.has(.is-open):', modal.classList.contains('is-open'));
-    }
   }
   
   function closeParcels(){
@@ -8680,9 +8506,6 @@ function buildVideoAsArticleCard(it) {
     overlay.classList.remove('is-open');
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
-    if(location.search.includes("debug=1")){
-      console.log('[ParcelsModal] Closed - overlay.has(.is-open):', overlay.classList.contains('is-open'), 'modal.has(.is-open):', modal.classList.contains('is-open'));
-    }
   }
   
   function addParcelRow(carrierId){
@@ -8745,10 +8568,6 @@ function buildVideoAsArticleCard(it) {
   function initParcelsModal(){
     if(!modal || !overlay) return;
     
-    if(location.search.includes("debug=1")){
-      console.log('[ParcelsModal] Initialized - parcelsBtn:', !!parcelsBtn, 'parcelsBtnMobile:', !!parcelsBtnMobile, 'modal:', !!modal, 'overlay:', !!overlay);
-    }
-
     if(parcelsBtn){
       parcelsBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -10503,7 +10322,7 @@ function buildVideoAsArticleCard(it) {
       });
 
     } catch (e) {
-      console.warn('[HOME ORDER] failed', e);
+      if (typeof debugWarn === "function") debugWarn("[HOME ORDER] failed", e);
     }
   }
 
@@ -10534,10 +10353,10 @@ function buildVideoAsArticleCard(it) {
 
       if (!window.__iuHomeSectionOrderLogged) {
         window.__iuHomeSectionOrderLogged = true;
-        if (missingInRail.length) console.warn('[HOME SECTION ORDER] Section keys not in rail:', Array.from(new Set(missingInRail)));
+        if (missingInRail.length && typeof debugWarn === "function") debugWarn("[HOME SECTION ORDER] Section keys not in rail:", Array.from(new Set(missingInRail)));
       }
     } catch (e) {
-      console.warn('[HOME SECTION ORDER] failed', e);
+      if (typeof debugWarn === "function") debugWarn("[HOME SECTION ORDER] failed", e);
     }
   }
 
@@ -10556,27 +10375,20 @@ function buildVideoAsArticleCard(it) {
       };
     });
 
-    console.log('rail=', rail);
-    console.table(tiles);
-
     const mismatches = rail
       .map((k,i)=>({k,expected:i+1,got:tiles.find(t=>t.key===k)?.order}))
       .filter(x=>x.expected!==x.got);
-
-    console.log('mismatches=', mismatches);
 
     const sec = [...document.querySelectorAll('section[data-home-key]')].map(s => ({
       key: String(s.getAttribute('data-home-key') || '').trim().toLowerCase(),
       order: Number(getComputedStyle(s).order || 0),
       class: s.className
     }));
-    console.table(sec);
 
     const secMap = new Map(sec.map(x => [x.key, x]));
     const sectionMismatches = rail
       .map((k,i)=>({k,expected:i+1,got:secMap.get(k)?.order}))
       .filter(x=>typeof x.got === 'number' && x.got !== 0 && x.expected !== x.got);
-    console.log('section_mismatches=', sectionMismatches);
   };
 
   function setLeftNavActive(key){
