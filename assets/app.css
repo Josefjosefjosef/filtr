@@ -7354,9 +7354,9 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 .iu-leftRail{
-  flex: 0 0 136px;
-  width: 136px;
-  min-width: 136px;
+  flex: 0 0 var(--iuLeftRailW);
+  width: var(--iuLeftRailW);
+  min-width: var(--iuLeftRailW);
   /* Match center feed background (no panel effect) */
   background: var(--iuRailBg, var(--iu-page-bg));
   align-self: stretch; /* extend background alongside feed height */
@@ -9359,6 +9359,28 @@ html, body {
   --iuContainerPad: 20px;
   --iuLeftRailW: 136px;
 }
+body.iu-leftRail-collapsed{
+  --iuLeftRailW: 0px;
+}
+
+/* === Left page edge overlay === */
+.iuLeftEdgeOverlay{
+  position: fixed;
+  left: 0;
+  top: var(--iuTopbarHeight, 56px);
+  bottom: 0;
+  width: 0px;
+  z-index: 9999;
+  cursor: pointer;
+  user-select: none;
+  background: linear-gradient(90deg, #0B1F33, #132F4D);
+}
+body.iu-leftRail-collapsed .iuLeftEdgeOverlay{
+  background: #FFFFFF;
+}
+@media (max-width: 980px){
+  .iuLeftEdgeOverlay{ display: none !important; }
+}
 /* Keep existing stack var consumers stable */
 :root{
   --topbarStackH: var(--iuTopbarHeight);
@@ -10050,8 +10072,15 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 @media (min-width:980px){
   #newsList{
     display: grid;
-    grid-template-columns: 136px minmax(0, 1fr);
+    grid-template-columns: var(--iuLeftRailW) minmax(0, 1fr);
   }
+}
+
+/* Collapsed: hide rail content, feed expands */
+body.iu-leftRail-collapsed #iuLeftRail,
+body.iu-leftRail-collapsed aside#iuLeftRail{
+  overflow: hidden !important;
+  pointer-events: none !important;
 }
 
 /* ============================================================
