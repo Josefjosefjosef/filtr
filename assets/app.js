@@ -4435,6 +4435,7 @@ function buildVideoAsArticleCard(it) {
         document.getElementById("iuTopbarToday") ||
         document.getElementById("iuTodayInfo") ||
         document.getElementById("iuTopbarDayInfo");
+      const searchContainer = document.getElementById("iuTopSearch");
       const btn = document.getElementById("iuTopbarSearchBtn");
       const overlay = document.getElementById("iuTopbarSearchOverlay");
       const form = document.getElementById("iuTopbarSearchForm");
@@ -4458,6 +4459,7 @@ function buildVideoAsArticleCard(it) {
 
       function openOverlay(){
         try{ overlay.hidden = false; }catch{}
+        try{ if (searchContainer) searchContainer.classList.add("is-open"); }catch{}
         isOpen = true;
         setSearchOpen(true);
         setDayHidden(true);
@@ -4470,6 +4472,7 @@ function buildVideoAsArticleCard(it) {
 
       function closeOverlay(){
         try{ overlay.hidden = true; }catch{}
+        try{ if (searchContainer) searchContainer.classList.remove("is-open"); }catch{}
         isOpen = false;
         setSearchOpen(false);
         try{ if (notFound) notFound.hidden = true; }catch{}
@@ -4538,6 +4541,7 @@ function buildVideoAsArticleCard(it) {
         try{
           if (!isOpen) return;
           const t = e && e.target;
+          if (t && searchContainer && searchContainer.contains(t)) return;
           if (t && (btn.contains(t) || overlay.contains(t))) return;
           closeOverlay();
         }catch{}
@@ -4663,28 +4667,28 @@ function buildVideoAsArticleCard(it) {
 
   function iuMirrorTodayToTopbar(){
     try{
-      const elTime = document.getElementById("iuTopbarTime");
+      const elDay = document.getElementById("iuTopbarDay");
       const elDate = document.getElementById("iuTopbarDate");
       const elName = document.getElementById("iuTopbarNameday");
       const elWrap = document.getElementById("iuTopbarToday");
-      if(!elTime || !elDate || !elName || !elWrap) return;
+      if(!elDay || !elDate || !elName || !elWrap) return;
 
-      // Source of truth (existing right panel daily box)
-      const srcTime = document.getElementById("iuDailyTime");
-      const srcDate = document.getElementById("iuDailyDate");
       const srcName = document.getElementById("iuDailyNameday");
 
-      function fmtTimeNow(){
-        const d = new Date();
-        const hh = String(d.getHours()).padStart(2,"0");
-        const mm = String(d.getMinutes()).padStart(2,"0");
-        return `${hh}:${mm}`;
+      function fmtDayNow(){
+        try{
+          const TZ = "Europe/Prague";
+          const day = new Intl.DateTimeFormat("cs-CZ", { weekday: "long", timeZone: TZ }).format(new Date());
+          return day.charAt(0).toUpperCase() + day.slice(1);
+        }catch{
+          return "";
+        }
       }
 
       function fmtDateNow(){
         try{
           const TZ = "Europe/Prague";
-          return new Intl.DateTimeFormat("cs-CZ", { weekday: "long", day: "numeric", month: "long", timeZone: TZ }).format(new Date());
+          return new Intl.DateTimeFormat("cs-CZ", { day: "numeric", month: "long", year: "numeric", timeZone: TZ }).format(new Date());
         }catch{
           return String(new Date().toLocaleDateString("cs-CZ"));
         }
@@ -4694,41 +4698,29 @@ function buildVideoAsArticleCard(it) {
         const s = String(t || "").trim();
         if(!s || s === "—") return "";
         const m = s.match(/svátek\s+má\s+(.+)/i);
-        if (m && m[1]) return `Svátek: ${String(m[1]).trim()}`;
-        if (/^svátek\s*:/i.test(s)) return s;
-        return `Svátek: ${s}`;
+        if (m && m[1]) return "Svátek má " + String(m[1]).trim();
+        const m2 = s.match(/svátek\s*:\s*(.+)/i);
+        if (m2 && m2[1]) return "Svátek má " + String(m2[1]).trim();
+        if (/^svátek\s+má\s*$/i.test(s)) return "";
+        return "Svátek má " + s;
       }
 
       function sync(){
-        try{
-          const t = (srcTime && String(srcTime.textContent || "").trim()) || "";
-          elTime.textContent = t && t !== "--:--" ? t : fmtTimeNow();
-        }catch{}
-        try{
-          const d = (srcDate && String(srcDate.textContent || "").trim()) || "";
-          elDate.textContent = d && d !== "—" ? d : fmtDateNow();
-        }catch{}
+        try{ elDay.textContent = fmtDayNow(); }catch{}
+        try{ elDate.textContent = fmtDateNow(); }catch{}
         try{
           const nRaw = (srcName && String(srcName.textContent || "").trim()) || "";
           const n = normalizeNameday(nRaw);
           if (n) elName.textContent = n;
         }catch{}
-
         try{
-          const full = `${elTime.textContent} • ${elDate.textContent} • ${elName.textContent}`;
+          const full = `${elDay.textContent} ${elDate.textContent}${elName.textContent ? " • " + elName.textContent : ""}`;
           elWrap.setAttribute("title", full);
         }catch{}
       }
 
       sync();
-
-      try{
-        const obs = new MutationObserver(sync);
-        if (srcTime) obs.observe(srcTime, { childList:true, characterData:true, subtree:true });
-        if (srcDate) obs.observe(srcDate, { childList:true, characterData:true, subtree:true });
-        if (srcName) obs.observe(srcName, { childList:true, characterData:true, subtree:true });
-      }catch{}
-
+      try{ if (srcName) new MutationObserver(sync).observe(srcName, { childList:true, characterData:true, subtree:true }); }catch{}
       setInterval(sync, 60000);
     }catch{}
   }

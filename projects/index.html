@@ -73,31 +73,37 @@ style-src 'self' 'unsafe-inline' https:;
                   <header class="topbar-new iuTopbar" id="topbarWrap">
                     <div class="topbar-new-inner">
                       <div class="topbar-new-main">
-                        <div class="iuTopbarRight" id="iuTopbarRight">
-
-                          <div id="iuTopbarToday" class="iuTopbarToday" aria-label="Dnešní čas, datum a svátek" title="">
-                            <span id="iuTopbarTime" class="iuTopbarTime">--:--</span>
-                            <span class="iuTopbarSep" aria-hidden="true">•</span>
-                            <span id="iuTopbarDate" class="iuTopbarDate">----</span>
-                            <span class="iuTopbarSep" aria-hidden="true">•</span>
-                            <span id="iuTopbarNameday" class="iuTopbarNameday">Svátek: ---</span>
-                          </div>
-
-                          <button class="iuTopbarSearchBtn iuSearchBtn" id="iuTopbarSearchBtn" type="button" aria-label="Vyhledat">
-                            <svg class="iuIcon" viewBox="0 0 24 24" aria-hidden="true">
-                              <path d="M10 18a8 8 0 1 1 0-16a8 8 0 0 1 0 16zm11 3l-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
+                        <div class="iuTopbarLeft">
+                          <button class="iuHamburger" type="button" aria-label="Menu" aria-expanded="false">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                           </button>
-
-                          <div class="iuTopbarSearchOverlay" id="iuTopbarSearchOverlay" hidden>
-                            <form class="iuTopbarSearchForm" id="iuTopbarSearchForm" autocomplete="off">
-                              <input class="iuTopbarSearchInput" id="iuTopbarSearchInput" type="search" placeholder="Hledat…" aria-label="Hledat" />
-                            </form>
-
-                            <div class="iuTopbarSearchNotFound" id="iuTopbarSearchNotFound" hidden>
-                              <div class="iuTopbarSearchNotFoundText">Na infoUzel nenalezeno. Přejete si hledat Googlem?</div>
-                              <button class="iuTopbarSearchGoogleBtn" id="iuTopbarSearchGoogleBtn" type="button">Hledat Google</button>
+                          <a class="iuBrand" href="/projects/" aria-label="infoUzel.cz – homepage">
+                            <span class="iuBrand__info">info</span><span class="iuBrand__uzel">Uzel</span><span class="iuBrand__cz">.cz</span>
+                          </a>
+                        </div>
+                        <div class="iuTopbarRight" id="iuTopbarRight">
+                          <div class="iuTopSearch" id="iuTopSearch">
+                            <button class="iuTopSearch__btn iuTopbarSearchBtn" id="iuTopbarSearchBtn" type="button" aria-label="Vyhledat">
+                              <svg class="iuIcon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M10 18a8 8 0 1 1 0-16a8 8 0 0 1 0 16zm11 3l-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                              </svg>
+                            </button>
+                            <div class="iuTopSearch__panel" id="iuTopbarSearchOverlay" hidden>
+                              <form class="iuTopbarSearchForm" id="iuTopbarSearchForm" autocomplete="off">
+                                <input class="iuTopbarSearchInput" id="iuTopbarSearchInput" type="search" placeholder="Hledat…" aria-label="Hledat" />
+                              </form>
+                              <div class="iuTopbarSearchNotFound" id="iuTopbarSearchNotFound" hidden>
+                                <div class="iuTopbarSearchNotFoundText">Na infoUzel nenalezeno. Přejete si hledat Googlem?</div>
+                                <button class="iuTopbarSearchGoogleBtn" id="iuTopbarSearchGoogleBtn" type="button">Hledat Google</button>
+                              </div>
                             </div>
+                          </div>
+                          <span class="iuTopbar__gap80" aria-hidden="true"></span>
+                          <div id="iuTopbarToday" class="iuTopbarToday" aria-label="Dnešní datum a svátek" title="">
+                            <span id="iuTopbarDay" class="iuTopbarDay">----</span><span class="iuTopbarSep" aria-hidden="true">, </span>
+                            <span id="iuTopbarDate" class="iuTopbarDate">----</span>
+                            <span class="iuTopbarSep" aria-hidden="true"> • </span>
+                            <span id="iuTopbarNameday" class="iuTopbarNameday">Svátek má ---</span>
                           </div>
                         </div>
                         <div class="iuTopbarContent" aria-label="Topbar content"></div>
