@@ -11198,26 +11198,14 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 }
 
 /* === Center Quick Feed (Rychlé odkazy detail view) === */
-/* Center stage view switch — explicit both sides */
-#iuCenterStage[data-iu-view="quick"] .iuArticlesStage{
-  display: none !important;
-}
+/* QuickFeed mode: show ONLY QuickFeed in the center */
+#iuCenterStage[data-iu-view="quick"] .iuArticlesStage{ display:none !important; }
+#iuCenterStage[data-iu-view="quick"] [id^="iu"][id$="View"]{ display:none !important; }
+#iuCenterStage[data-iu-view="quick"] #iuQuickFeed{ display:block !important; }
 
-/* QuickFeed mode must show ONLY QuickFeed in center */
-#iuCenterStage[data-iu-view="quick"] [id^="iu"][id$="View"]{
-  display: none !important;
-}
-#iuCenterStage[data-iu-view="quick"] #iuQuickFeed{
-  display: block !important;
-}
-
-#iuCenterStage[data-iu-view="articles"] .iuArticlesStage{
-  display: block !important;
-}
-
-#iuCenterStage[data-iu-view="articles"] #iuQuickFeed{
-  display: none !important;
-}
+/* Articles mode: hide QuickFeed (sections managed by existing nav logic) */
+#iuCenterStage[data-iu-view="articles"] .iuArticlesStage{ display:block !important; }
+#iuCenterStage[data-iu-view="articles"] #iuQuickFeed{ display:none !important; }
 
 .iuQuickFeed[hidden]{
   display: none !important;
