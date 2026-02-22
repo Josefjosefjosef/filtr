@@ -10961,6 +10961,40 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta:last-child{
   }
 }
 
+/* === Right column CTA buttons (premium) === */
+aside.accordionCol > .iuRightTopCtas > .iuRightCta{
+  transition: transform .15s ease, background .15s ease, box-shadow .15s ease, border-color .15s ease;
+  will-change: transform;
+}
+aside.accordionCol > .iuRightTopCtas > .iuRightCta:hover{
+  transform: translateY(-1px);
+}
+aside.accordionCol > .iuRightTopCtas > .iuRightCta:focus-visible{
+  outline: 2px solid rgba(31, 75, 153, .55);
+  outline-offset: 2px;
+}
+
+/* Inzerce / Služby — Silver-Blue (sekundární) */
+aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--services{
+  background: #E7EDF7 !important;
+  color: #1F3B6D !important;
+  border-color: #D3DEEF !important;
+}
+aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--services:hover{
+  background: #DCE6F4 !important;
+}
+
+/* Vložit inzerát — Gold CTA (primární monetizační) */
+aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit{
+  background: linear-gradient(180deg, #FFD873, #E5B94A) !important;
+  color: #1B2A4A !important;
+  border-color: #D4A73B !important;
+  box-shadow: 0 4px 10px rgba(229, 185, 74, .35);
+}
+aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
+  background: linear-gradient(180deg, #FFE08A, #F1C25C) !important;
+}
+
 /* =============================== */
 /* TOPBAR — FINAL UI CONTRACT      */
 /* =============================== */
