@@ -4665,6 +4665,21 @@ function buildVideoAsArticleCard(it) {
     });
   }
 
+  function iuSetTopbarNameday(name){
+    try{
+      const el = document.getElementById("iuTopbarNameday");
+      if (!el) return;
+      const clean = (name ?? "").toString().trim();
+      if (clean) {
+        el.textContent = "Svátek má " + clean;
+        el.hidden = false;
+      } else {
+        el.textContent = "Svátek má —";
+        el.hidden = false;
+      }
+    }catch{}
+  }
+
   function iuMirrorTodayToTopbar(){
     try{
       const elDay = document.getElementById("iuTopbarDay");
@@ -7563,16 +7578,18 @@ function buildVideoAsArticleCard(it) {
           const ok = Boolean(nm) && nm !== "—" && nm !== "-";
           if (ok) {
             if (elNameday) {
-              elNameday.textContent = "Svátek: " + nm;
+              elNameday.textContent = "Svátek má " + nm;
               elNameday.hidden = true;
               elNameday.setAttribute("aria-hidden","true");
             }
+            try{ iuSetTopbarNameday(nm); }catch{}
           } else {
             if (elNameday) {
               elNameday.textContent = "";
               elNameday.hidden = true;
               elNameday.setAttribute("aria-hidden","true");
             }
+            try{ iuSetTopbarNameday(""); }catch{}
           }
           try{ iuWeatherHideEmptyNameday(); }catch{}
         })
@@ -7582,6 +7599,7 @@ function buildVideoAsArticleCard(it) {
             elNameday.hidden = true;
             elNameday.setAttribute("aria-hidden","true");
           }
+          try{ if (typeof iuSetTopbarNameday === "function") iuSetTopbarNameday(""); }catch{}
           try{ iuWeatherHideEmptyNameday(); }catch{}
         });
     }
