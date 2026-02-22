@@ -7408,18 +7408,21 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 /* FEED must adapt to remaining width (critical) */
+/* HOTFIX: center stage must not change column layout — block wrapper, no flex */
 #newsList > #iuCenterStage{
-  display: flex;
+  display: block !important;
   flex: 1 1 0;
   min-width: 0;
+  width: 100%;
 }
 
 #iuCenterStage .iuArticlesStage{
-  flex: 1 1 0;
+  display: block !important;
+  width: 100%;
   min-width: 0;
 }
 
-/* #feed is inside #iuCenterStage .iuArticlesStage; center flex handled by #iuCenterStage */
+/* #feed is inside #iuCenterStage .iuArticlesStage */
 
 /* JR view must adapt like #feed (same middle column footprint) */
 body[data-section="jr"] #newsList > #iuJrEmptyView,
@@ -11209,15 +11212,17 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 }
 
 /* === Center Quick Feed (Rychlé odkazy detail view) === */
-/* Center stage view switch */
+/* Center stage view switch — explicit both sides */
 #iuCenterStage[data-iu-view="quick"] .iuArticlesStage{
   display: none !important;
 }
 
 #iuCenterStage[data-iu-view="quick"] #iuQuickFeed{
   display: block !important;
-  flex: 1 1 0;
-  min-width: 0;
+}
+
+#iuCenterStage[data-iu-view="articles"] .iuArticlesStage{
+  display: block !important;
 }
 
 #iuCenterStage[data-iu-view="articles"] #iuQuickFeed{
