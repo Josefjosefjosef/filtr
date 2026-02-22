@@ -8817,13 +8817,10 @@ function buildVideoAsArticleCard(it) {
   function iuShowQuickFeed(key){
     const data = (window.IU_QUICK_FEEDS || {})[key];
     if (!data) return;
+    const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
-    if (!quick) return;
-    const normal = document.getElementById("feed");
-    if (normal && normal !== quick) {
-      normal.setAttribute("data-iu-hidden-by-quickfeed", "1");
-      normal.style.display = "none";
-    }
+    if (!stage || !quick) return;
+    stage.setAttribute("data-iu-view", "quick");
     quick.hidden = false;
     quick.innerHTML = `
       <div class="iuQHead">
@@ -8850,15 +8847,14 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuHideQuickFeed(){
+    const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
     if (quick) {
       quick.hidden = true;
       quick.innerHTML = "";
     }
-    const normal = document.querySelector('[data-iu-hidden-by-quickfeed="1"]');
-    if (normal) {
-      normal.style.display = "";
-      normal.removeAttribute("data-iu-hidden-by-quickfeed");
+    if (stage) {
+      stage.setAttribute("data-iu-view", "articles");
     }
   }
 
