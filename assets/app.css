@@ -11105,16 +11105,44 @@ header#topbarWrap.topbar-new.iuTopbar,
   }
 }
 
-/* ===== infoUzel premium feed videos (real shrink + left align) ===== */
+/* ===== infoUzel: desktop video-preview (65% left) but player fills frame ===== */
 @media (min-width: 900px){
-  /* skutečné zmenšení videa */
-  #feed article.news-card.iuVideoCard[data-feed-type="video-preview"] .iuVideoFrame,
-  #feed article.news-card.iuVideoCard[data-feed-type="video-preview"] iframe{
+  /* 1) Zmenšení + zarovnání vlevo: pouze OBAL videa */
+  #feed article.news-card.iuVideoCard[data-feed-type="video-preview"] .iuVideoFrame{
     width: 65%;
     max-width: 65%;
     margin-left: 0;
     margin-right: auto;
     display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* 2) Uvnitř musí být video vždy 100 % rámu (žádné 65 %) */
+  #feed article.news-card.iuVideoCard[data-feed-type="video-preview"] .iuVideoFrame iframe{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 0;
+  }
+
+  /* 3) Poster (náhled) musí taky vyplnit rám */
+  #feed article.news-card.iuVideoCard[data-feed-type="video-preview"] .iuVideoPoster{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* text pod videem sedí na 65 % */
+  #feed article.news-card.iuVideoCard[data-feed-type="video-preview"] .iuVideoMeta{
+    width: 65%;
+    max-width: 65%;
+    margin-left: 0;
+    margin-right: auto;
   }
 
   /* tight premium titulky */
