@@ -1434,6 +1434,10 @@ style-src 'self' 'unsafe-inline' https:;
                           <span>YouTube</span>
                         </a>
                       </div>
+                      <button class="iuQuickBtn iuQuickBtn--nakup" id="iuOpenNakupDomu" type="button" aria-label="Nákup domů">
+                        <i class="fa-solid fa-truck-ramp-box"></i>
+                        <span>Nákup domů</span>
+                      </button>
                     </section>
                     <!-- AI Panel (Modal) -->
                     <div id="iu-aiOverlay" class="iu-aiOverlay" hidden></div>
@@ -2879,5 +2883,15 @@ style-src 'self' 'unsafe-inline' https:;
          aria-label="Toggle navigation"
          aria-pressed="false"></div>
     <div id="iuLeftEdgeTooltip" class="iuLeftEdgeTooltip" aria-hidden="true"></div>
+
+    <div class="iuModal" id="iuNakupModal" hidden aria-modal="true" aria-labelledby="iuNakupModalTitle">
+      <div class="iuModalCard">
+        <div class="iuModalHead">
+          <span id="iuNakupModalTitle">Nákup domů</span>
+          <button id="iuNakupClose" type="button" aria-label="Zavřít">×</button>
+        </div>
+        <div class="iuModalBody" id="iuNakupList"></div>
+      </div>
+    </div>
   </body>
 </html>
