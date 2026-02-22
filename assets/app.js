@@ -8893,6 +8893,30 @@ function buildVideoAsArticleCard(it) {
       iuTrInit(quick, data);
       iuTrNotesBootstrap(quick);
     } else {
+      const aiSeoBlock = (key || "").toLowerCase() === "ai" ? `
+        <div class="iuFeedSeoBlock iuFeedSeoAI">
+          <h2>AI asistenti – přehled nástrojů ChatGPT, Gemini, Copilot a další</h2>
+          <p>
+            Sekce AI asistenti na infoUzel.cz nabízí přehled známých nástrojů
+            pro psaní textů, práci s daty, programování a vyhledávání informací.
+            Najdete zde například ChatGPT, Google Gemini, Microsoft Copilot,
+            Claude, Perplexity AI, DeepSeek, Grok, Mistral AI a Editee.
+          </p>
+          <p>
+            infoUzel.cz funguje jako rozcestník – po kliknutí se otevře
+            oficiální stránka AI nástroje v nové kartě.
+            Můžete tak rychle vyzkoušet různé AI služby na jednom místě.
+          </p>
+          <h3>Co v této sekci najdete</h3>
+          <ul>
+            <li>AI pro psaní textů – ChatGPT, Claude</li>
+            <li>AI od Googlu – Gemini</li>
+            <li>AI ve Windows a Office – Microsoft Copilot</li>
+            <li>AI pro vyhledávání – Perplexity</li>
+            <li>Další nástroje – DeepSeek, Grok, Mistral AI, Editee</li>
+          </ul>
+        </div>
+      ` : "";
       quick.innerHTML = `
         <div class="iuQHead">
           <div class="iuQTitle">${iuQfEscape(data.title)}</div>
@@ -8921,6 +8945,7 @@ function buildVideoAsArticleCard(it) {
             }).join("")}
           </div>
         </div>
+        ${aiSeoBlock}
       `;
     }
     const back = document.getElementById("iuQBackBtn");
