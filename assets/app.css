@@ -8558,13 +8558,18 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   border: 1px solid #0E2A4A; /* tmavě modrá */
 }
 
-/* 2) pravý blok v topbaru */
+/* 2) pravý blok v topbaru: search | gap 80px | den+datum+svátek */
 #iuTopbarRight{
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 18px;
   position: relative;
+}
+.iuTopbar__gap80{
+  display: inline-block;
+  width: 80px;
+  flex-shrink: 0;
 }
 
 /* 3) „den + datum + svátek“ text (default viditelný) */
@@ -8577,55 +8582,80 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   text-overflow: ellipsis;
   transition: opacity .2s ease;
 }
-#iuTopbarDayInfo.iuTopbarDayInfo--hidden{
+#iuTopbarDayInfo.iuTopbarDayInfo--hidden,
+#iuTopbarToday.iuTopbarDayInfo--hidden{
   opacity: 0;
   pointer-events: none;
 }
 
-/* 4) kolečko s lupou (vpravo) */
-#iuTopbarSearchBtn{
+/* 4) Search: stříbrné kolečko + rozbalovací panel doleva */
+.iuTopSearch{
+  position: relative;
+  flex-shrink: 0;
+}
+#iuTopbarSearchBtn,
+.iuTopSearch__btn{
   width: 38px;
   height: 38px;
   border-radius: 999px;
-  border: 1px solid rgba(14,42,74,.55);
+  border: 1px solid rgba(180,190,205,.85);
   background: transparent;
+  box-shadow: 0 0 0 3px rgba(180,190,205,.15);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  color: #D1D5DB;
 }
-#iuTopbarSearchBtn .iuIcon{
+#iuTopbarSearchBtn .iuIcon,
+.iuTopSearch__btn .iuIcon{
   width: 18px;
   height: 18px;
-  stroke: #D1D5DB;
+  stroke: currentColor;
 }
-#iuTopbarSearchBtn:hover{
-  background: rgba(255,255,255,.06);
+#iuTopbarSearchBtn:hover,
+.iuTopSearch__btn:hover{
+  background: rgba(255,255,255,.08);
+  border-color: rgba(200,210,225,.9);
 }
 
-/* 5) overlay vyhledávání přes topbar (šířka jako dnešní search – plná dostupná v topbaru) */
+/* 5) panel rozbaluje se doleva od tlačítka */
+.iuTopSearch__panel,
 #iuTopbarSearchOverlay{
   position: absolute;
-  right: 0;
+  right: calc(100% + 12px);
   top: 50%;
   transform: translateY(-50%);
-  width: min(720px, calc(100vw - 140px));
+  width: min(320px, min(70vw, 420px));
+  max-width: min(320px, 70vw);
   z-index: 60;
+  background: #fff;
+  border: 1px solid rgba(180,190,205,.55);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+  padding: 8px;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.iuTopSearch:not(.is-open) .iuTopSearch__panel[hidden],
+.iuTopSearch:not(.is-open) #iuTopbarSearchOverlay[hidden]{
+  display: none !important;
 }
 
-/* 6) vyhledávací pole: barva jako pozadí topbaru + tmavě modrá linka */
+/* 6) vyhledávací pole v panelu */
 #iuTopbarSearchInput{
   width: 100%;
   height: 40px;
-  border-radius: 999px;
-  border: 1px solid #0E2A4A;
-  background: transparent;             /* stejné jako topbar */
-  color: inherit;
+  border-radius: 10px;
+  border: 1px solid rgba(180,190,205,.5);
+  background: #fff;
+  color: #1b2430;
   padding: 0 14px;
   outline: none;
+  font-size: 15px;
 }
 #iuTopbarSearchInput:focus{
-  box-shadow: 0 0 0 2px rgba(14,42,74,.25);
+  border-color: rgba(14,42,74,.4);
+  box-shadow: 0 0 0 2px rgba(14,42,74,.12);
 }
 
 /* 7) not-found prompt (pod inputem, v rámci overlay) */
@@ -8649,22 +8679,13 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   background: rgba(255,255,255,.06);
 }
 
-/* ============================================================
-   FINAL UI — topbar right order: day/nameday BEFORE search icon
-   ============================================================ */
-
-/* right cluster: text vlevo, lupa úplně vpravo */
+/* right cluster: search | gap | day+date+svátek */
 #iuTopbarRight{
   display: flex !important;
   align-items: center !important;
 }
 
-/* zajistit konkrétní pořadí i kdyby někdo hnul DOMem */
-#iuTopbarDayInfo{ order: 1 !important; }
-#iuTopbarSearchBtn{ order: 2 !important; }
-
-/* text se nesmí přetlačit přes lupu */
-#iuTopbarDayInfo{
+#iuTopbarToday{
   min-width: 0 !important;
   flex: 1 1 auto !important;
   overflow: hidden !important;
@@ -8672,16 +8693,9 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   white-space: nowrap !important;
 }
 
-/* lupa vždy fixní šířka a úplně vpravo */
-#iuTopbarSearchBtn{
-  flex: 0 0 auto !important;
-  margin-left: 10px !important;
-}
-
 @media (max-width: 900px){
-  #iuTopbarDayInfo{
-    max-width: 120px;
-  }
+  .iuTopbar__gap80{ width: 24px; }
+  #iuTopbarToday{ max-width: 140px; }
 }
 
 /* ============================================================
@@ -9474,8 +9488,54 @@ body.iu-leftRail-collapsed #iuLeftRail [data-rail-container]{
   min-height: 100% !important;
   width: 100%;
   padding: 0 !important;
-  position: relative; /* position context for absolute .iuTopbarContent */
+  position: relative;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px;
 }
+
+/* Left cluster: hamburger + brand */
+.iuTopbarLeft{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.iuHamburger{
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #D1D5DB;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.iuHamburger:hover{
+  background: rgba(255,255,255,.08);
+}
+.iuHamburger svg{
+  width: 20px;
+  height: 20px;
+}
+.iuBrand{
+  color: #D1D5DB !important;
+  text-decoration: none !important;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.25px;
+  -webkit-font-smoothing: antialiased;
+}
+.iuBrand:hover{
+  color: #fff !important;
+}
+.iuBrand__info,
+.iuBrand__cz{ font-weight: 400; }
+.iuBrand__uzel{ font-weight: 700; }
 
 /* =========================================================
    TOPBAR CONTENT GRID — safe infrastructure
@@ -9659,14 +9719,14 @@ main#content .layout{
   transition: opacity .2s ease;
 }
 
-.iuTopbarTime,
+.iuTopbarDay,
 .iuTopbarDate,
 .iuTopbarNameday{
   color: #D1D5DB !important;
 }
 
-.iuTopbarTime{
-  font-weight: 700;
+.iuTopbarDay{
+  font-weight: 600;
   letter-spacing: .2px;
 }
 
@@ -9760,15 +9820,14 @@ main#content .layout{
   }
 }
 
-/* Search overlay must not change topbar height */
-.iuTopbarSearchOverlay,
-#iuTopbarSearchOverlay{
+/* Search panel: rozbalení doleva (override pro .iuTopSearch) */
+.iuTopSearch .iuTopSearch__panel,
+.iuTopSearch #iuTopbarSearchOverlay{
   position: absolute !important;
-  top: 100% !important;
-  left: 0 !important;
-  right: 0 !important;
-  transform: none !important;
-  width: auto !important;
+  right: calc(100% + 12px) !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  left: auto !important;
 }
 
 /* Left rail starts exactly under topbar (offset is on main#content .layout) */
