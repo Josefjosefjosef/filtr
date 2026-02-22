@@ -11738,18 +11738,31 @@ header#topbarWrap.topbar-new.iuTopbar,
 }
 
 /* ============================================================
-   AI assistants — premium brand accents (no gray)
+   AI assistants — full brand background
    ============================================================ */
 
 #iu-aiPanel .iu-aiItem{
   position: relative;
   border-left: 4px solid var(--aiColor, #1F4B99);
-  background: linear-gradient(90deg, rgba(31,75,153,0.035), rgba(255,255,255,0));
+
+  /* nové jemné vybarvení celé karty */
+  background: linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--aiColor) 8%, white),
+      color-mix(in srgb, var(--aiColor) 8%, white)
+  );
+
+  transition: box-shadow .18s ease, transform .18s ease, background .18s ease;
 }
 
 #iu-aiPanel .iu-aiItem:hover{
-  background: linear-gradient(90deg, rgba(31,75,153,0.06), #fff);
-  box-shadow: 0 10px 22px rgba(31,75,153,0.10);
+  background: linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--aiColor) 14%, white),
+      color-mix(in srgb, var(--aiColor) 14%, white)
+  );
+
+  box-shadow: 0 10px 24px rgba(31,75,153,0.12);
   transform: translateY(-1px);
 }
 
@@ -11761,11 +11774,20 @@ header#topbarWrap.topbar-new.iuTopbar,
 .iuQuickFeed .iuAiCard{
   position: relative;
   border-left: 4px solid var(--aiColor, #1F4B99);
-  background: linear-gradient(90deg, rgba(31,75,153,0.035), #fff) !important;
+  background: linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--aiColor) 8%, white),
+      color-mix(in srgb, var(--aiColor) 8%, white)
+  ) !important;
 }
 
 .iuQuickFeed .iuAiCard:hover,
 .iuQuickFeed .iuAiCard:focus-visible{
+  background: linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--aiColor) 14%, white),
+      color-mix(in srgb, var(--aiColor) 14%, white)
+  ) !important;
   box-shadow: 0 12px 28px rgba(31,75,153,0.12) !important;
   transform: translateY(-1px);
 }
