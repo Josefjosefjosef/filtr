@@ -11228,3 +11228,10 @@ header#topbarWrap.topbar-new.iuTopbar,
 #iuLeftRail .iuLeftRailSectionTitle{
   font-size: 14px !important; /* match .iuMyUzelTitle */
 }
+
+/* === Left rail section headings center align === */
+#iuLeftRail .iuLeftRailSectionTitle,
+#iuLeftRail .iuMyUzelLabel{
+  text-align: center !important;
+  width: 100%;
+}
