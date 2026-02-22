@@ -10201,6 +10201,34 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 }
 
 /* ============================================================
+   LEFT RAIL: Remove icon tiles / oval squares completely
+   Kill-switch for ::before/::after, backgrounds, borders.
+   ============================================================ */
+
+#iuLeftRail .iu-leftNavIcon{
+  background: none !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+}
+
+#iuLeftRail .iu-leftNavItem::before,
+#iuLeftRail .iu-leftNavItem::after,
+#iuLeftRail .iu-leftNavIcon::before,
+#iuLeftRail .iu-leftNavIcon::after{
+  content: none !important;
+  display: none !important;
+}
+
+#iuLeftRail .iu-leftNavItem.is-active,
+#iuLeftRail .iu-leftNavItem.active,
+#iuLeftRail .iu-leftNavItem[aria-current="page"]{
+  background: none !important;
+  background-image: none !important;
+}
+
+/* ============================================================
    LEFT RAIL: SVG icons via sprite (10/10, CLS-safe)
    Scope: #iuLeftRail only. No order/name/link changes.
    ============================================================ */
