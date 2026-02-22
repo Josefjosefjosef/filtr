@@ -11203,6 +11203,10 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   display: none !important;
 }
 
+/* QuickFeed mode must show ONLY QuickFeed in center */
+#iuCenterStage[data-iu-view="quick"] [id^="iu"][id$="View"]{
+  display: none !important;
+}
 #iuCenterStage[data-iu-view="quick"] #iuQuickFeed{
   display: block !important;
 }
