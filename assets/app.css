@@ -11150,3 +11150,16 @@ header#topbarWrap.topbar-new.iuTopbar,
     line-height: 1.30;
   }
 }
+
+/* ===== infoUzel premium feed title weights ===== */
+@media (min-width: 900px){
+  /* 1. článek výraznější */
+  #feed > article.news-card:first-child .news-titleLink.iuCardTitle{
+    font-weight: 600;
+  }
+
+  /* ostatní články jemnější */
+  #feed > article.news-card:not(:first-child) .news-titleLink.iuCardTitle{
+    font-weight: 550;
+  }
+}
