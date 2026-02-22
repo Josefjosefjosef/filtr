@@ -10232,31 +10232,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 }
 
 /* ============================================================
-   LEFT RAIL: Weather icon only (PNG), responsive, CLS-safe
-   ============================================================ */
-
-#iuLeftRail .iuLeftRailWeatherIcon{
-  display: block !important;
-  width: 56% !important;
-  aspect-ratio: 1 / 1 !important;
-  height: auto !important;
-  object-fit: contain !important;
-  margin: 0 auto 10% !important;
-}
-
-#iuLeftRail .iuLeftRail--weather{
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-#iuLeftRail .iuLeftRail--weather .iu-leftNavLabel{
-  text-align: center !important;
-  margin: 0 !important;
-}
-
-/* ============================================================
    LAYOUT GUARD — desktop columns (#newsList)
    Required by CI layout guard.
    ============================================================ */
