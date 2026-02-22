@@ -9152,9 +9152,56 @@ function buildVideoAsArticleCard(it) {
 (function(){
   'use strict';
 
+  const AI_FALLBACK = [
+    { name: "ChatGPT", url: "https://chat.openai.com", desc: "Univerzální AI na psaní, nápady, obrázky i práci s daty" },
+    { name: "Google Gemini", url: "https://gemini.google.com", desc: "AI propojená s Googlem, mapami, vyhledáváním a Gmailem" },
+    { name: "Microsoft Copilot", url: "https://copilot.microsoft.com", desc: "AI pro práci ve Windows, Office a psaní e-mailů" },
+    { name: "Claude", url: "https://claude.ai", desc: "Velmi přirozená a čtivá čeština pro texty a myšlenky" },
+    { name: "Perplexity AI", url: "https://www.perplexity.ai", desc: "Odpovídá jako vyhledávač a uvádí zdroje informací" },
+    { name: "DeepSeek", url: "https://chat.deepseek.com", desc: "Silná AI na programování, logiku a matematiku" },
+    { name: "Grok", url: "https://x.ai", desc: "AI zaměřená na aktuální dění a trendy na síti X" },
+    { name: "Mistral AI", url: "https://chat.mistral.ai", desc: "Evropská AI s důrazem na soukromí a efektivitu" },
+    { name: "Editee", url: "https://www.editee.com", desc: "Česká AI pro marketing, podnikání a obsah" }
+  ];
+
+  function renderAiCards(container, items){
+    if (!container || !Array.isArray(items) || items.length === 0) return;
+    const esc = (s) => String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    container.innerHTML = `<h2 class="iuSeoTitle">AI asistenti – přehled nástrojů pro psaní, práci a programování</h2>` +
+      items.map(it => `<div class="iu-aiItem">
+        <div>
+          <strong>${esc(it.name)}</strong>
+          <p>${esc(it.desc || "")}</p>
+        </div>
+        <a href="${esc(it.url || "#")}" target="_blank" rel="noopener">Otevřít</a>
+      </div>`).join("");
+  }
+
+  function loadAiAssistants(){
+    const container = document.getElementById('iu-aiPanelCards');
+    const body = document.querySelector('#iu-aiPanel .iu-aiPanelBody');
+    if (!container || !body) return;
+    const base = (typeof location !== "undefined" && location.pathname || "").toLowerCase().includes("/filtr/") ? "/filtr/projects/" : "/projects/";
+    const url = base + "data/services-ai.json";
+    fetch(url, { cache: "no-store" })
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(data => { renderAiCards(container, Array.isArray(data) ? data : AI_FALLBACK); })
+      .catch(err => {
+        console.error("AI assistants load failed", err);
+        const fallback = (window.IU_QUICK_FEEDS && window.IU_QUICK_FEEDS.ai && window.IU_QUICK_FEEDS.ai.items) || AI_FALLBACK;
+        if (Array.isArray(fallback) && fallback.length > 0) {
+          renderAiCards(container, fallback);
+        } else {
+          container.innerHTML = `<div class="iuErrorBox">AI asistenti se nepodařilo načíst. Zkuste reload.</div>`;
+        }
+      });
+  }
+
   function initAiPanel(){
     const aiPanel = document.getElementById('iu-aiPanel');
     if (!aiPanel) return;
+
+    loadAiAssistants();
 
     const aiOverlay = document.getElementById('iu-aiOverlay');
     const aiModal = aiPanel.querySelector('.iu-aiModal');
