@@ -9167,8 +9167,7 @@ function buildVideoAsArticleCard(it) {
   function renderAiCards(container, items){
     if (!container || !Array.isArray(items) || items.length === 0) return;
     const esc = (s) => String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-    container.innerHTML = `<h2 class="iuSeoTitle">AI asistenti – přehled nástrojů pro psaní, práci a programování</h2>` +
-      items.map(it => `<div class="iu-aiItem">
+    container.innerHTML = items.map(it => `<div class="iu-aiItem">
         <div>
           <strong>${esc(it.name)}</strong>
           <p>${esc(it.desc || "")}</p>
