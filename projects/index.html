@@ -2332,7 +2332,7 @@ style-src 'self' 'unsafe-inline' https:;
         });
         mo.observe(feedEl, { childList: true, subtree: false });
       } catch (err){
-        /* DOM telemetry: silent */
+        console.warn("DOM telemetry error", err);
       }
     })();
     </script>
@@ -2525,11 +2525,13 @@ style-src 'self' 'unsafe-inline' https:;
         if (origWarn) {
           console.warn = function(){
             try { saveRuntimeErr("console.warn", { message: Array.prototype.slice.call(arguments).map(safeStr).join(" | ") }); } catch(_){}
+            return origWarn.apply(console, arguments);
           };
         }
         if (origErr) {
           console.error = function(){
             try { saveRuntimeErr("console.error", { message: Array.prototype.slice.call(arguments).map(safeStr).join(" | ") }); } catch(_){}
+            return origErr.apply(console, arguments);
           };
         }
       } catch (_){}

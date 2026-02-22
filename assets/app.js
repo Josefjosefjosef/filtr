@@ -18,6 +18,7 @@
 
 window.addEventListener("error", (e) => {
   try {
+    console.error("[WINERROR]", e?.message, e?.filename, e?.lineno, e?.colno, e?.error);
     if (typeof window.persistLastError === "function") {
       window.persistLastError(`${e?.message || "error"} (${e?.filename || ""}:${e?.lineno || ""})`);
     }
@@ -26,6 +27,7 @@ window.addEventListener("error", (e) => {
 
 window.addEventListener("unhandledrejection", (e) => {
   try {
+    console.error("[UNHANDLED]", e?.reason);
     if (typeof window.persistLastError === "function") {
       const r = e?.reason;
       window.persistLastError(`Promise: ${r?.message || String(r || "unknown")}`);
@@ -1595,6 +1597,7 @@ window.addEventListener("unhandledrejection", (e) => {
           window.persistLastError(`Preflight ${url} → ${res.status}`);
         }
       } catch (err) {
+        console.error("[preflight error]", url, err);
         if (typeof window.persistLastError === "function") {
           window.persistLastError(`Preflight ${url} → network error`);
         }
@@ -3220,7 +3223,7 @@ window.addEventListener("unhandledrejection", (e) => {
       if (i === 0 && !matchesExpected(chosen, "cz")) slot0_not_cz_or_bilingual += 1;
       if (!isAltOk) {
         bad_alternation += 1;
-        if (iuDebug) { /* debug: fallback_slot */ }
+        if (iuDebug) console.warn("[iuVideoMix] WARN fallback_slot=%d reason=%s", i, chosenReason || "bad_alternation");
       }
       if (capTs && chosenTs > capTs) newer_than_first += 1;
     }
@@ -3255,10 +3258,10 @@ window.addEventListener("unhandledrejection", (e) => {
         for (let i = 1; i < picked.length; i++) {
           if (tsOf(picked[i]) > tsOf(picked[i - 1])) non_monotonic += 1;
         }
-        if (non_monotonic) { /* debug: non_monotonic */ }
-        if (slot0_not_cz_or_bilingual) { /* debug: slot0_not_cz_or_bilingual */ }
-        if (bad_alternation) { /* debug: bad_alternation */ }
-        if (newer_than_first) { /* debug: newer_than_first */ }
+        if (non_monotonic) console.warn("[iuVideoMix] WARN non_monotonic=%d", non_monotonic);
+        if (slot0_not_cz_or_bilingual) console.warn("[iuVideoMix] WARN slot0_not_cz_or_bilingual=%d", slot0_not_cz_or_bilingual);
+        if (bad_alternation) console.warn("[iuVideoMix] WARN bad_alternation=%d", bad_alternation);
+        if (newer_than_first) console.warn("[iuVideoMix] WARN newer_than_first=%d", newer_than_first);
       } catch {}
     }
 
@@ -5850,7 +5853,10 @@ function buildVideoAsArticleCard(it) {
       }));
       if (DEBUG) {
         sanitizedArticles.forEach((item) => {
-          if (!item.contentType) { /* debug: missing contentType */ }
+          if (!item.contentType) {
+            console.warn("[normalize] Missing contentType:", item);
+            debugWarn("[normalize] Missing contentType:", item);
+          }
         });
       }
       sanitizedArticles.forEach((item) => {
@@ -6325,6 +6331,7 @@ function buildVideoAsArticleCard(it) {
       inline.textContent = `Poslední chyba: ${message}`;
       inline.style.display = "block";
     }
+    if (message) console.error("[ERR]", message);
   }
   try { window.persistLastError = persistLastError; } catch {}
 
@@ -6341,15 +6348,21 @@ function buildVideoAsArticleCard(it) {
   window.addEventListener("error", (event) => {
     try {
       const info = `${event.message} (${event.filename}:${event.lineno})`;
+      console.error("[ERR]", info);
       persistLastError(info);
-    } catch (_) {}
+    } catch (err) {
+      console.error("[ERR]", "error handler failed", err);
+    }
   });
 
   window.addEventListener("unhandledrejection", (event) => {
     try {
       const reason = event.reason ? event.reason.message || String(event.reason) : "unknown";
+      console.error("[ERR]", "Promise rejection:", reason);
       persistLastError(`Promise rejection: ${reason}`);
-    } catch (_) {}
+    } catch (err) {
+      console.error("[ERR]", "rejection handler failed", err);
+    }
   });
 
   function updateNetworkStatus() {
@@ -7630,7 +7643,7 @@ function buildVideoAsArticleCard(it) {
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
 
-    try { initRightPanel(); } catch (e) { if (typeof persistLastError === "function") persistLastError("RightPanel init failed"); }
+    try { initRightPanel(); } catch (e) { console.error("RightPanel init failed", e); if (typeof persistLastError === "function") persistLastError("RightPanel init failed"); }
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
@@ -7808,7 +7821,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     function iuHandleVideoError(card) {
-      try { /* debug: replacing broken video */ } catch {}
+      try { console.warn("[iuVideo] replacing broken video", card?.dataset?.ytid); debugWarn("[iuVideo] replacing broken video", card?.dataset?.ytid); } catch {}
       try {
         const cur = card ? (card.getAttribute("data-ytid") || "") : "";
         const next = iuGetNextVideoFromPool(cur);
@@ -7819,7 +7832,7 @@ function buildVideoAsArticleCard(it) {
         try { card.removeAttribute("data-iu-frozen"); } catch {}
         iuReplaceVideoCardContent(card, next);
       } catch (e) {
-        try { if (typeof persistLastError === "function") persistLastError("[iuVideo] replace failed"); } catch {}
+        try { console.error("[iuVideo] replace failed", e); if (typeof persistLastError === "function") persistLastError("[iuVideo] replace failed"); } catch {}
       }
     }
 
@@ -8184,7 +8197,7 @@ function buildVideoAsArticleCard(it) {
           fallback: false,
           error: "missing ytid",
         });
-        if (iuDebugEnabled()) { try { /* debug: missing ytid */ } catch {} }
+        if (iuDebugEnabled()) { try { console.warn("[iuVideoPlay] missing ytid, cannot embed"); debugWarn("[iuVideoPlay] missing ytid, cannot embed"); } catch {} }
         return;
       }
       if (card.getAttribute("data-iu-loaded") === "1") return;
@@ -8247,7 +8260,7 @@ function buildVideoAsArticleCard(it) {
             opts.noExternalOpen = String(card && card.getAttribute ? (card.getAttribute("data-iu-no-external-open") || "") : "") === "1";
           }catch{}
           if (opts && opts.noExternalOpen){
-            try{ /* Weather History: external open blocked */ }catch{}
+            try{ console.warn("Weather History embed blocked external open"); debugWarn("Weather History embed blocked external open"); }catch{}
             return;
           }
           window.open(watchUrl, "_blank", "noopener");
@@ -8367,7 +8380,7 @@ function buildVideoAsArticleCard(it) {
         });
       } catch (err) {
         // Safe fallback: if inline embed fails for any reason, open YouTube in a new tab.
-        try { /* debug: inline embed fallback */ } catch {}
+        try { console.warn("[iuVideoPlay] inline embed failed, falling back to watch URL", err); debugWarn("[iuVideoPlay] inline embed failed", err); } catch {}
         const dbgCardYtid = card ? (card.getAttribute("data-ytid") || null) : null;
         const dbgLoaded = card ? (card.getAttribute("data-iu-loaded") || null) : null;
         const dbgIframe = frame ? frame.querySelector("iframe") : null;
@@ -8389,7 +8402,7 @@ function buildVideoAsArticleCard(it) {
             opts.noExternalOpen = String(card && card.getAttribute ? (card.getAttribute("data-iu-no-external-open") || "") : "") === "1";
           }catch{}
           if (opts && opts.noExternalOpen){
-            try{ /* Weather History: external open blocked */ }catch{}
+            try{ console.warn("Weather History embed blocked external open"); debugWarn("Weather History embed blocked external open"); }catch{}
             return;
           }
           window.open(watchUrl, "_blank", "noopener");
@@ -10322,6 +10335,7 @@ function buildVideoAsArticleCard(it) {
       });
 
     } catch (e) {
+      console.warn("[HOME ORDER] failed", e);
       if (typeof debugWarn === "function") debugWarn("[HOME ORDER] failed", e);
     }
   }
@@ -10353,9 +10367,10 @@ function buildVideoAsArticleCard(it) {
 
       if (!window.__iuHomeSectionOrderLogged) {
         window.__iuHomeSectionOrderLogged = true;
-        if (missingInRail.length && typeof debugWarn === "function") debugWarn("[HOME SECTION ORDER] Section keys not in rail:", Array.from(new Set(missingInRail)));
+        if (missingInRail.length) { console.warn("[HOME SECTION ORDER] Section keys not in rail:", Array.from(new Set(missingInRail))); if (typeof debugWarn === "function") debugWarn("[HOME SECTION ORDER] Section keys not in rail:", Array.from(new Set(missingInRail))); }
       }
     } catch (e) {
+      console.warn("[HOME SECTION ORDER] failed", e);
       if (typeof debugWarn === "function") debugWarn("[HOME SECTION ORDER] failed", e);
     }
   }
