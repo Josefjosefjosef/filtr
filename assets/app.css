@@ -8597,6 +8597,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #iuTopbarSearchBtn .iuIcon{
   width: 18px;
   height: 18px;
+  stroke: #D1D5DB;
 }
 #iuTopbarSearchBtn:hover{
   background: rgba(255,255,255,.06);
@@ -9507,9 +9508,9 @@ html, body {
 .iuTopbar .topbar-logo .brand .name{
   color: currentColor !important;
 }
-.iuTopbar .iuTopbarSearchBtn,
-.iuTopbar .iuThemeBtn{
-  color: currentColor !important;
+.iuTopbar .iuTopbarSearchBtn{
+  color: #D1D5DB !important;
+  fill: #D1D5DB !important;
 }
 
 /* ============================================================
@@ -9520,8 +9521,8 @@ html, body {
 :root{
   --iuTopbarHeight: 72px;
   --iuTopbarBg: #0B1F33;
-  --iuTopbarFg: #ffffff;
-  --iuTopbarMuted: rgba(27,36,48,.75);
+  --iuTopbarFg: #D1D5DB;
+  --iuTopbarMuted: #D1D5DB;
   --iuHairline: rgba(27,36,48,.10);
   --iuShadow: 0 6px 22px rgba(0,0,0,.10);
 
@@ -9545,7 +9546,7 @@ header#topbarWrap.topbar-new.iuTopbar{
   z-index: 2000 !important;
 
   background: #0B1F33 !important;
-  color: #ffffff !important;
+  color: #D1D5DB !important;
 
   border-radius: var(--iuTopbarRadiusLeft) var(--iuTopbarRadiusRight) var(--iuTopbarRadiusRight) var(--iuTopbarRadiusLeft) !important;
 
@@ -9583,18 +9584,24 @@ main#content .layout{
   gap: 10px;
   white-space: nowrap;
   font-size: 14px;
-  color: var(--iuTopbarMuted);
+  color: #D1D5DB !important;
   transition: opacity .2s ease;
+}
+
+.iuTopbarTime,
+.iuTopbarDate,
+.iuTopbarNameday{
+  color: #D1D5DB !important;
 }
 
 .iuTopbarTime{
   font-weight: 700;
-  color: var(--iuTopbarFg);
   letter-spacing: .2px;
 }
 
 .iuTopbarSep{
   opacity: .55;
+  color: #D1D5DB !important;
 }
 
 .iuSearchOpen #iuTopbarToday{

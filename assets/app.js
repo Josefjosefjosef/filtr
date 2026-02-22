@@ -61,14 +61,6 @@ window.addEventListener("unhandledrejection", (e) => {
     }catch{}
   }
 
-  function iuTopbarApplyTheme(){
-    try{
-      // Final stabilization: lock topbar palette (no layout impact).
-      document.documentElement.style.setProperty("--iuTopbarBg", "#0B1F33");
-      document.documentElement.style.setProperty("--iuTopbarFg", "#ffffff");
-    }catch{}
-  }
-
   function iuPickColor(initial, onPick){
     const inp = document.createElement("input");
     inp.type = "color";
@@ -124,7 +116,6 @@ window.addEventListener("unhandledrejection", (e) => {
 
   // Apply saved rail theme ASAP (before layout paint).
   iuRailApplyTheme();
-  iuTopbarApplyTheme();
   try{
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iuInitRailThemeControls);
     else iuInitRailThemeControls();
@@ -4604,36 +4595,6 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  function iuInitTopbarThemeButton(){
-    try{
-      const btn = document.getElementById("iuThemeBtn") || document.querySelector(".iuThemeBtn");
-      if(!btn) return;
-      const themes = [
-        {"--iuTopbarBg":"#ffffff"},
-        {"--iuTopbarBg":"#f8fafc"},
-        {"--iuTopbarBg":"#fffdf5"},
-      ];
-      btn.addEventListener("click", () => {
-        let i = 0;
-        try{
-          const raw =
-            localStorage.getItem("iuThemeIndex") ??
-            localStorage.getItem("iuTheme") ??
-            "0";
-          i = (parseInt(String(raw), 10) || 0) + 1;
-        }catch{ i = 1; }
-        i = i % themes.length;
-        try{ localStorage.setItem("iuThemeIndex", String(i)); }catch{}
-        try{ localStorage.setItem("iuTheme", String(i)); }catch{} /* legacy */
-        try{
-          Object.entries(themes[i]).forEach(([k,v]) => {
-            try{ document.documentElement.style.setProperty(k, String(v)); }catch{}
-          });
-        }catch{}
-      });
-    }catch{}
-  }
-
   function iuMirrorTodayToTopbar(){
     try{
       const elTime = document.getElementById("iuTopbarTime");
@@ -7638,7 +7599,6 @@ function buildVideoAsArticleCard(it) {
     setSectionsFromHash();
     try{ document.body.classList.add("iuTopbarFlushRight"); }catch{}
     iuInitTopbarSearchToggle();
-    iuInitTopbarThemeButton();
     iuMirrorTodayToTopbar();
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
