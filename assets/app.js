@@ -8824,6 +8824,7 @@ function buildVideoAsArticleCard(it) {
     if (!stage || !quick) return;
     stage.setAttribute("data-iu-view", "quick");
     quick.hidden = false;
+    const isAi = String(key || "").toLowerCase() === "ai";
     quick.innerHTML = `
       <div class="iuQHead">
         <div class="iuQTitle">${iuQfEscape(data.title)}</div>
@@ -8831,15 +8832,25 @@ function buildVideoAsArticleCard(it) {
       </div>
       <div class="iuQCard">
         <div class="iuQGrid">
-          ${(data.items || []).map(it => `
-            <div class="iuQItem">
+          ${(data.items || []).map(it => {
+            const url = iuQfEscape(it.url || "#");
+            const ext = it.external ? 'target="_blank" rel="noopener noreferrer"' : "";
+            if (isAi) {
+              return `<a class="iuAiCard" href="${url}" ${ext}>
+                <div class="iuAiInner">
+                  <div class="iuAiName">${iuQfEscape(it.name)}</div>
+                  ${it.desc ? `<div class="iuAiDesc">${iuQfEscape(it.desc)}</div>` : ""}
+                </div>
+              </a>`;
+            }
+            return `<div class="iuQItem">
               <div class="iuQMeta">
                 <div class="iuQName">${iuQfEscape(it.name)}</div>
                 ${it.desc ? `<div class="iuQDesc">${iuQfEscape(it.desc)}</div>` : ""}
               </div>
-              <a class="iuQBtn" href="${iuQfEscape(it.url || "#")}" ${it.external ? 'target="_blank" rel="noopener noreferrer"' : ""}>Otevřít</a>
-            </div>
-          `).join("")}
+              <a class="iuQBtn" href="${url}" ${ext}>Otevřít</a>
+            </div>`;
+          }).join("")}
         </div>
       </div>
     `;
