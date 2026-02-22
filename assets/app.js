@@ -8789,11 +8789,11 @@ function buildVideoAsArticleCard(it) {
     deepl: {
       title: "Překladač",
       items: [
-        { name: "DeepL", url: "https://www.deepl.com/translator", desc: "Nejvyšší kvalita překladů", external: true },
-        { name: "Google Translate", url: "https://translate.google.com/", desc: "Univerzální rychlý překladač", external: true },
-        { name: "Microsoft Translator", url: "https://www.bing.com/translator", desc: "Microsoft / Bing překladač", external: true },
-        { name: "Seznam Slovník", url: "https://slovnik.seznam.cz/", desc: "Český slovník a překlady", external: true },
-        { name: "Linguee", url: "https://www.linguee.com/", desc: "Překlady s kontextem vět", external: true }
+        { id: "deepl", name: "DeepL", baseUrl: "https://www.deepl.com/translator", desc: "Nejvyšší kvalita překladů", supportsPrefill: true, makeUrl: (t,sl,tl) => `https://www.deepl.com/translator#${sl}/${tl}/${encodeURIComponent(t)}` },
+        { id: "google", name: "Google Translate", baseUrl: "https://translate.google.com/", desc: "Univerzální rychlý překladač", supportsPrefill: true, makeUrl: (t,sl,tl) => `https://translate.google.com/?sl=${sl}&tl=${tl}&text=${encodeURIComponent(t)}` },
+        { id: "microsoft", name: "Microsoft Translator", baseUrl: "https://www.bing.com/translator", desc: "Microsoft / Bing překladač", supportsPrefill: true, makeUrl: (t,sl,tl) => `https://www.bing.com/translator?from=${sl}&to=${tl}&text=${encodeURIComponent(t)}` },
+        { id: "seznam", name: "Seznam Slovník", baseUrl: "https://slovnik.seznam.cz/", desc: "Český slovník a překlady", supportsPrefill: false },
+        { id: "linguee", name: "Linguee", baseUrl: "https://www.linguee.com/", desc: "Překlady s kontextem vět", supportsPrefill: false }
       ]
     },
     baliky: {
@@ -8825,6 +8825,12 @@ function buildVideoAsArticleCard(it) {
     }
   };
 
+  const IU_TR_LANG_NAMES = { eng:"Angličtina (EN)", ces:"Čeština (CS)", deu:"Němčina (DE)", fra:"Francouzština (FR)", spa:"Španělština (ES)", ita:"Italština (IT)", pol:"Polština (PL)", slk:"Slovenština (SK)", ukr:"Ukrajinština (UK)", rus:"Ruština (RU)", por:"Portugalština (PT)", nld:"Nizozemština (NL)", swe:"Švédština (SV)", und:"Neznámý" };
+  const IU_TR_ISO_TO_URL = { ces:"cs", eng:"en", deu:"de", fra:"fr", spa:"es", ita:"it", pol:"pl", slk:"sk", ukr:"uk", rus:"ru" };
+
+  function iuTrLangName(code){ return IU_TR_LANG_NAMES[code] || (code ? "(" + code + ")" : "—"); }
+  function iuTrIsoToUrl(iso){ return IU_TR_ISO_TO_URL[iso] || iso.slice(0,2); }
+
   function iuShowQuickFeed(key){
     const data = (window.IU_QUICK_FEEDS || {})[key];
     if (!data) return;
@@ -8833,39 +8839,155 @@ function buildVideoAsArticleCard(it) {
     if (!stage || !quick) return;
     stage.setAttribute("data-iu-view", "quick");
     quick.hidden = false;
+    const isTranslator = String(key || "").toLowerCase() === "deepl";
     const useFullCard = ["ai", "deepl"].includes(String(key || "").toLowerCase());
-    quick.innerHTML = `
-      <div class="iuQHead">
-        <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-        <button class="iuQBack" type="button" id="iuQBackBtn">← Zpět</button>
-      </div>
-      <div class="iuQCard">
-        <div class="iuQGrid">
-          ${(data.items || []).map(it => {
-            const url = iuQfEscape(it.url || "#");
-            const ext = it.external ? 'target="_blank" rel="noopener noreferrer"' : "";
-            if (useFullCard) {
-              return `<a class="iuAiCard" href="${url}" ${ext}>
-                <div class="iuAiInner">
-                  <div class="iuAiName">${iuQfEscape(it.name)}</div>
-                  ${it.desc ? `<div class="iuAiDesc">${iuQfEscape(it.desc)}</div>` : ""}
-                </div>
-              </a>`;
-            }
-            return `<div class="iuQItem">
-              <div class="iuQMeta">
-                <div class="iuQName">${iuQfEscape(it.name)}</div>
-                ${it.desc ? `<div class="iuQDesc">${iuQfEscape(it.desc)}</div>` : ""}
-              </div>
-              <a class="iuQBtn" href="${url}" ${ext}>Otevřít</a>
-            </div>`;
-          }).join("")}
+
+    if (isTranslator) {
+      quick.innerHTML = `
+        <div class="iuQHead">
+          <div class="iuQTitle">${iuQfEscape(data.title)}</div>
+          <button class="iuQBack" type="button" id="iuQBackBtn">← Zpět</button>
         </div>
-      </div>
-    `;
+        <div class="iuTrPanel">
+          <textarea id="iuTrText" class="iuTrText" placeholder="Vlož text k překladu" rows="4"></textarea>
+          <div class="iuTrBar">
+            <span id="iuTrLang" class="iuTrStatus">Jazyk: —</span>
+            <span id="iuTrCount" class="iuTrCount">0 znaků</span>
+          </div>
+          <div class="iuTrUtils">
+            <select id="iuTrFrom" class="iuTrSelect" aria-label="Z jakého jazyka"><option value="auto">Auto</option><option value="cs">Čeština</option><option value="en">Angličtina</option><option value="de">Němčina</option><option value="fr">Francouzština</option><option value="es">Španělština</option><option value="it">Italština</option><option value="pl">Polština</option><option value="sk">Slovenština</option><option value="uk">Ukrajinština</option><option value="ru">Ruština</option></select>
+            <span class="iuTrArrow">→</span>
+            <select id="iuTrTo" class="iuTrSelect" aria-label="Do jakého jazyka"><option value="cs" selected>Čeština</option><option value="en">Angličtina</option><option value="de">Němčina</option><option value="fr">Francouzština</option><option value="es">Španělština</option><option value="it">Italština</option><option value="pl">Polština</option><option value="sk">Slovenština</option><option value="uk">Ukrajinština</option><option value="ru">Ruština</option></select>
+            <button type="button" id="iuTrCopy" class="iuTrPill">Zkopírovat</button>
+            <button type="button" id="iuTrClear" class="iuTrPill">Vyčistit</button>
+            <button type="button" id="iuTrSwap" class="iuTrPill">Otočit směr</button>
+          </div>
+          <p class="iuTrHint">Klikni na překladač. Pokud služba neumí vložit text automaticky, text zkopírujeme do schránky.</p>
+        </div>
+        <div class="iuQCard">
+          <div class="iuQGrid">
+            ${(data.items || []).map(it => `<a class="iuAiCard iuTrCard" data-tr-id="${iuQfEscape(it.id || it.name || "")}" href="${iuQfEscape(it.baseUrl || it.url || "#")}" target="_blank" rel="noopener noreferrer">
+              <div class="iuAiInner">
+                <div class="iuAiName">${iuQfEscape(it.name)}</div>
+                ${it.desc ? `<div class="iuAiDesc">${iuQfEscape(it.desc)}</div>` : ""}
+              </div>
+            </a>`).join("")}
+          </div>
+        </div>
+      `;
+      iuTrInit(quick, data);
+    } else {
+      quick.innerHTML = `
+        <div class="iuQHead">
+          <div class="iuQTitle">${iuQfEscape(data.title)}</div>
+          <button class="iuQBack" type="button" id="iuQBackBtn">← Zpět</button>
+        </div>
+        <div class="iuQCard">
+          <div class="iuQGrid">
+            ${(data.items || []).map(it => {
+              const url = iuQfEscape(it.url || it.baseUrl || "#");
+              const ext = (it.external !== false) ? 'target="_blank" rel="noopener noreferrer"' : "";
+              if (useFullCard) {
+                return `<a class="iuAiCard" href="${url}" ${ext}>
+                  <div class="iuAiInner">
+                    <div class="iuAiName">${iuQfEscape(it.name)}</div>
+                    ${it.desc ? `<div class="iuAiDesc">${iuQfEscape(it.desc)}</div>` : ""}
+                  </div>
+                </a>`;
+              }
+              return `<div class="iuQItem">
+                <div class="iuQMeta">
+                  <div class="iuQName">${iuQfEscape(it.name)}</div>
+                  ${it.desc ? `<div class="iuQDesc">${iuQfEscape(it.desc)}</div>` : ""}
+                </div>
+                <a class="iuQBtn" href="${url}" ${ext}>Otevřít</a>
+              </div>`;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
     const back = document.getElementById("iuQBackBtn");
     if (back) back.addEventListener("click", iuHideQuickFeed, { once: true });
     try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) { window.scrollTo(0, 0); }
+  }
+
+  const IU_TR_PREFILL_LIMIT = 1500;
+
+  function iuTrInit(quick, data){
+    const textarea = document.getElementById("iuTrText");
+    const langEl = document.getElementById("iuTrLang");
+    const countEl = document.getElementById("iuTrCount");
+    const fromSel = document.getElementById("iuTrFrom");
+    const toSel = document.getElementById("iuTrTo");
+    const copyBtn = document.getElementById("iuTrCopy");
+    const clearBtn = document.getElementById("iuTrClear");
+    const swapBtn = document.getElementById("iuTrSwap");
+    if (!textarea || !langEl || !countEl) return;
+
+    function getFrom(){ return fromSel ? fromSel.value : "auto"; }
+    function getTo(){ return toSel ? toSel.value : "cs"; }
+
+    function updateCount(){ const n = (textarea.value || "").length; countEl.textContent = n + " znaků"; }
+    function updateLang(){
+      const text = (textarea.value || "").trim();
+      const from = getFrom();
+      if (text.length < 20) { langEl.textContent = "Jazyk: —"; return; }
+      if (from !== "auto") { const names = { cs:"Čeština", en:"Angličtina", de:"Němčina", fr:"Francouzština", es:"Španělština", it:"Italština", pl:"Polština", sk:"Slovenština", uk:"Ukrajinština", ru:"Ruština" }; langEl.textContent = "Zvolený jazyk: " + (names[from] || from); return; }
+      try {
+        const code = (typeof window.franc === "function") ? window.franc(text) : "und";
+        langEl.textContent = "Jazyk: " + iuTrLangName(code || "und");
+      } catch(e){ langEl.textContent = "Jazyk: Neznámý"; }
+    }
+    function showStatus(msg){ langEl.textContent = msg; setTimeout(updateLang, 2000); }
+
+    textarea.addEventListener("input", () => { updateCount(); updateLang(); });
+    if (fromSel) fromSel.addEventListener("change", updateLang);
+    if (toSel) toSel.addEventListener("change", () => {});
+    updateCount(); updateLang();
+
+    if (copyBtn) copyBtn.addEventListener("click", async () => {
+      const t = textarea.value || "";
+      try {
+        await navigator.clipboard.writeText(t);
+        showStatus("Zkopírováno");
+      } catch(e){ showStatus("Zkopíruj ručně (Ctrl+C)"); }
+    });
+    if (clearBtn) clearBtn.addEventListener("click", () => {
+      textarea.value = "";
+      if (fromSel) fromSel.value = "auto";
+      if (toSel) toSel.value = "cs";
+      updateCount(); updateLang();
+    });
+    if (swapBtn) swapBtn.addEventListener("click", () => {
+      const from = getFrom(), to = getTo();
+      if (from === "auto") { if (fromSel) fromSel.value = to; if (toSel) toSel.value = "cs"; } else { if (fromSel) fromSel.value = to; if (toSel) toSel.value = from; }
+      updateLang();
+    });
+
+    quick.addEventListener("click", async (e) => {
+      const card = e.target.closest(".iuTrCard");
+      if (!card) return;
+      e.preventDefault();
+      const trId = card.getAttribute("data-tr-id");
+      const item = (data.items || []).find(it => (it.id || it.name) === trId);
+      if (!item) { window.open(card.href, "_blank", "noopener,noreferrer"); return; }
+      const text = (textarea.value || "").trim();
+      const baseUrl = item.baseUrl || item.url || "#";
+      if (!text) { window.open(baseUrl, "_blank", "noopener,noreferrer"); return; }
+      let from = getFrom(), to = getTo();
+      if (from === "auto" && typeof window.franc === "function") {
+        try { const iso = window.franc(text); from = (iso && iso !== "und") ? iuTrIsoToUrl(iso) : "en"; } catch(_){ from = "en"; }
+      }
+      let usePrefill = item.supportsPrefill && text.length <= IU_TR_PREFILL_LIMIT && typeof item.makeUrl === "function";
+      if (usePrefill) {
+        try { const url = item.makeUrl(text, from, to); window.open(url, "_blank", "noopener,noreferrer"); } catch(err){ usePrefill = false; }
+      }
+      if (!usePrefill) {
+        try { await navigator.clipboard.writeText(text); showStatus("Text zkopírován – vlož do překladače"); } catch(err){ showStatus("Zkopíruj ručně (Ctrl+C)"); }
+        window.open(baseUrl, "_blank", "noopener,noreferrer");
+      }
+    });
   }
 
   function iuEnsureArticlesView(){
