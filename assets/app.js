@@ -8885,7 +8885,7 @@ function buildVideoAsArticleCard(it) {
           <div class="iuNotesSendBar" data-iu-notes-sendbar hidden>
             <button type="button" class="iuNotesSendOpt" data-iu-notes-send-wa>WhatsApp</button>
             <button type="button" class="iuNotesSendOpt" data-iu-notes-send-mail>E-mail</button>
-            <button type="button" class="iuNotesSendOpt" data-iu-notes-send-copy>Kopírovat</button>
+            <button type="button" class="iuNotesSendOpt" data-iu-notes-send-copy>Kopírovat pro odeslání</button>
           </div>
           <div class="iuNotesStatus" data-iu-notes-status hidden></div>
         </div>
@@ -9584,7 +9584,7 @@ function buildVideoAsArticleCard(it) {
         `<div class="iuNotesSendBar" data-iu-notes-sendbar hidden>` +
           `<button type="button" class="iuNotesSendOpt" data-iu-notes-send-wa>WhatsApp</button>` +
           `<button type="button" class="iuNotesSendOpt" data-iu-notes-send-mail>E-mail</button>` +
-          `<button type="button" class="iuNotesSendOpt" data-iu-notes-send-copy>Kopírovat</button>` +
+          `<button type="button" class="iuNotesSendOpt" data-iu-notes-send-copy>Kopírovat pro odeslání</button>` +
         `</div>` +
         `<div class="iuNotesStatus" data-iu-notes-status hidden></div>`;
 
