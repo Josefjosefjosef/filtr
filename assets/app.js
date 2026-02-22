@@ -8775,15 +8775,15 @@ function buildVideoAsArticleCard(it) {
     ai: {
       title: "AI asistenti",
       items: [
-        { name: "ChatGPT", url: "https://chat.openai.com", desc: "Univerzální AI na psaní, nápady, obrázky i práci s daty", external: true },
-        { name: "Google Gemini", url: "https://gemini.google.com", desc: "AI propojená s Googlem, mapami, vyhledáváním a Gmailem", external: true },
-        { name: "Microsoft Copilot", url: "https://copilot.microsoft.com", desc: "AI pro práci ve Windows, Office a psaní e-mailů", external: true },
-        { name: "Claude", url: "https://claude.ai", desc: "Velmi přirozená a čtivá čeština pro texty a myšlenky", external: true },
-        { name: "Perplexity AI", url: "https://www.perplexity.ai", desc: "Odpovídá jako vyhledávač a uvádí zdroje informací", external: true },
-        { name: "DeepSeek", url: "https://chat.deepseek.com", desc: "Silná AI na programování, logiku a matematiku", external: true },
-        { name: "Grok", url: "https://x.ai", desc: "AI zaměřená na aktuální dění a trendy na síti X", external: true },
-        { name: "Mistral AI", url: "https://chat.mistral.ai", desc: "Evropská AI s důrazem na soukromí a efektivitu", external: true },
-        { name: "Editee", url: "https://www.editee.com", desc: "Česká AI pro marketing, podnikání a obsah", external: true }
+        { name: "ChatGPT", url: "https://chat.openai.com", desc: "Univerzální AI na psaní, nápady, obrázky i práci s daty", external: true, color: "#10A37F" },
+        { name: "Google Gemini", url: "https://gemini.google.com", desc: "AI propojená s Googlem, mapami, vyhledáváním a Gmailem", external: true, color: "#4285F4" },
+        { name: "Microsoft Copilot", url: "https://copilot.microsoft.com", desc: "AI pro práci ve Windows, Office a psaní e-mailů", external: true, color: "#7B61FF" },
+        { name: "Claude", url: "https://claude.ai", desc: "Velmi přirozená a čtivá čeština pro texty a myšlenky", external: true, color: "#D97706" },
+        { name: "Perplexity AI", url: "https://www.perplexity.ai", desc: "Odpovídá jako vyhledávač a uvádí zdroje informací", external: true, color: "#0EA5E9" },
+        { name: "DeepSeek", url: "https://chat.deepseek.com", desc: "Silná AI na programování, logiku a matematiku", external: true, color: "#6366F1" },
+        { name: "Grok", url: "https://x.ai", desc: "AI zaměřená na aktuální dění a trendy na síti X", external: true, color: "#111827" },
+        { name: "Mistral AI", url: "https://chat.mistral.ai", desc: "Evropská AI s důrazem na soukromí a efektivitu", external: true, color: "#F97316" },
+        { name: "Editee", url: "https://www.editee.com", desc: "Česká AI pro marketing, podnikání a obsah", external: true, color: "#EC4899" }
       ]
     },
     deepl: {
@@ -8927,8 +8927,9 @@ function buildVideoAsArticleCard(it) {
             ${(data.items || []).map(it => {
               const url = iuQfEscape(it.url || it.baseUrl || "#");
               const ext = (it.external !== false) ? 'target="_blank" rel="noopener noreferrer"' : "";
+              const c = it.color || "#1F4B99";
               if (useFullCard) {
-                return `<a class="iuAiCard" href="${url}" ${ext}>
+                return `<a class="iuAiCard" href="${url}" ${ext} style="--aiColor:${c}">
                   <div class="iuAiInner">
                     <div class="iuAiName">${iuQfEscape(it.name)}</div>
                     ${it.desc ? `<div class="iuAiDesc">${iuQfEscape(it.desc)}</div>` : ""}
@@ -9192,13 +9193,16 @@ function buildVideoAsArticleCard(it) {
   function renderAiCards(container, items){
     if (!container || !Array.isArray(items) || items.length === 0) return;
     const esc = (s) => String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-    container.innerHTML = items.map(it => `<div class="iu-aiItem">
+    container.innerHTML = items.map(it => {
+      const c = it.color || "#1F4B99";
+      return `<div class="iu-aiItem" style="--aiColor:${c}">
         <div>
           <strong>${esc(it.name)}</strong>
           <p>${esc(it.desc || "")}</p>
         </div>
         <a href="${esc(it.url || "#")}" target="_blank" rel="noopener">Otevřít</a>
-      </div>`).join("");
+      </div>`;
+    }).join("");
   }
 
   function loadAiAssistants(){
