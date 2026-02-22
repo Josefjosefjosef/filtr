@@ -6319,7 +6319,7 @@ function buildVideoAsArticleCard(it) {
       debugLog("[DATA] combined first type=", state.cachedItems[0]?.contentType, state.cachedItems[0]?.title);
 
       debugBoxSet(
-        `iu debug: parsed\narticlesCountRaw=${Array.isArray(articlesData) ? articlesData.length : -1}\nvideosCountRaw=${Array.isArray(videosData) ? videosData.length : -1}\narticlesCountSanitized=${Array.isArray(sanitizedArticles) ? sanitizedArticles.length : -1}\nvideosCountSanitized=${Array.isArray(normalizedVideoSource) ? normalizedVideoSource.length : -1}`
+        `iu debug: parsed\narticlesCountRaw=${Array.isArray(articlesData?.articles) ? articlesData.articles.length : -1}\nvideosCountRaw=${Array.isArray(videosData?.videos) ? videosData.videos.length : -1}\narticlesCountSanitized=${Array.isArray(sanitizedArticles) ? sanitizedArticles.length : -1}\nvideosCountSanitized=${Array.isArray(normalizedVideoSource) ? normalizedVideoSource.length : -1}`
       );
 
       setTimeout(() => {
