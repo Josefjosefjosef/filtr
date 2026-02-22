@@ -8763,6 +8763,123 @@ function buildVideoAsArticleCard(it) {
   initParcelsModal();
 })();
 
+// === Center Quick Feed (Rychlé odkazy → detail view in middle) ===
+(function(){
+  function iuQfEscape(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  window.IU_QUICK_FEEDS = {
+    ai: {
+      title: "AI asistenti",
+      items: [
+        { name: "ChatGPT", url: "https://chat.openai.com", desc: "Univerzální AI na psaní, nápady, obrázky i práci s daty", external: true },
+        { name: "Google Gemini", url: "https://gemini.google.com", desc: "AI propojená s Googlem, mapami, vyhledáváním a Gmailem", external: true },
+        { name: "Microsoft Copilot", url: "https://copilot.microsoft.com", desc: "AI pro práci ve Windows, Office a psaní e-mailů", external: true },
+        { name: "Claude", url: "https://claude.ai", desc: "Velmi přirozená a čtivá čeština pro texty a myšlenky", external: true },
+        { name: "Perplexity AI", url: "https://www.perplexity.ai", desc: "Odpovídá jako vyhledávač a uvádí zdroje informací", external: true },
+        { name: "DeepSeek", url: "https://chat.deepseek.com", desc: "Silná AI na programování, logiku a matematiku", external: true },
+        { name: "Grok", url: "https://x.ai", desc: "AI zaměřená na aktuální dění a trendy na síti X", external: true },
+        { name: "Mistral AI", url: "https://chat.mistral.ai", desc: "Evropská AI s důrazem na soukromí a efektivitu", external: true },
+        { name: "Editee", url: "https://www.editee.com", desc: "Česká AI pro marketing, podnikání a obsah", external: true }
+      ]
+    },
+    deepl: { title: "DeepL", items: [{ name: "DeepL", url: "https://www.deepl.com", desc: "Překladač textu s vysokou kvalitou překladu", external: true }] },
+    baliky: {
+      title: "Balíky",
+      items: [
+        { name: "Zásilkovna", url: "https://tracking.app.packeta.com/cs/", desc: "Sledování zásilek Zásilkovna", external: true },
+        { name: "Balíkovna / Česká pošta", url: "https://www.balikovna.cz/cs/sledovat-balik", desc: "Sledování balíků České pošty", external: true },
+        { name: "PPL", url: "https://www.ppl.cz/vyhledat-zasilku", desc: "Sledování zásilek PPL", external: true },
+        { name: "DPD", url: "https://tracking.dpd.de/status/cs_CZ/", desc: "Sledování zásilek DPD", external: true },
+        { name: "GLS", url: "https://gls-group.com/CZ/cs/sledovani-zasilek", desc: "Sledování zásilek GLS", external: true },
+        { name: "DHL", url: "https://www.dhl.com/cz-en/home/tracking.html", desc: "Sledování zásilek DHL", external: true },
+        { name: "Messenger", url: "https://www.msng.cz/", desc: "Sledování zásilek Messenger", external: true }
+      ]
+    },
+    google: { title: "Google", items: [{ name: "Google", url: "https://www.google.com", desc: "Vyhledávač Google", external: true }] },
+    seznam: { title: "Seznam", items: [{ name: "Seznam.cz", url: "https://www.seznam.cz/", desc: "Vyhledávač a portál Seznam", external: true }] },
+    youtube: { title: "YouTube", items: [{ name: "YouTube", url: "https://www.youtube.com/", desc: "Videa a streamy", external: true }] },
+    sms: { title: "Poslat SMS zdarma", items: [{ name: "SMS zdarma", url: "https://www.smszdarma.cz", desc: "Posílání SMS zdarma", external: true }] },
+    convert: { title: "Převod na Word, PDF", items: [{ name: "iLovePDF", url: "https://www.ilovepdf.com", desc: "Převod a úprava PDF, Word a dalších formátů", external: true }] },
+    nakup: {
+      title: "Nákup domů",
+      items: [
+        { name: "Rohlík.cz", url: "https://www.rohlik.cz", desc: "Online nákup potravin s dovozem", external: true },
+        { name: "Košík.cz", url: "https://www.kosik.cz", desc: "Online nákup potravin", external: true },
+        { name: "Tesco Online", url: "https://nakup.itesco.cz", desc: "Online nákup Tesco", external: true },
+        { name: "Albert Online", url: "https://www.albert.cz", desc: "Online nákup Albert", external: true },
+        { name: "Wolt Market", url: "https://wolt.com", desc: "Rychlé donášky jídla a zboží", external: true }
+      ]
+    }
+  };
+
+  function iuShowQuickFeed(key){
+    const data = (window.IU_QUICK_FEEDS || {})[key];
+    if (!data) return;
+    const quick = document.getElementById("iuQuickFeed");
+    if (!quick) return;
+    const normal = document.getElementById("feed");
+    if (normal && normal !== quick) {
+      normal.setAttribute("data-iu-hidden-by-quickfeed", "1");
+      normal.style.display = "none";
+    }
+    quick.hidden = false;
+    quick.innerHTML = `
+      <div class="iuQHead">
+        <div class="iuQTitle">${iuQfEscape(data.title)}</div>
+        <button class="iuQBack" type="button" id="iuQBackBtn">← Zpět</button>
+      </div>
+      <div class="iuQCard">
+        <div class="iuQGrid">
+          ${(data.items || []).map(it => `
+            <div class="iuQItem">
+              <div class="iuQMeta">
+                <div class="iuQName">${iuQfEscape(it.name)}</div>
+                ${it.desc ? `<div class="iuQDesc">${iuQfEscape(it.desc)}</div>` : ""}
+              </div>
+              <a class="iuQBtn" href="${iuQfEscape(it.url || "#")}" ${it.external ? 'target="_blank" rel="noopener noreferrer"' : ""}>Otevřít</a>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+    const back = document.getElementById("iuQBackBtn");
+    if (back) back.addEventListener("click", iuHideQuickFeed, { once: true });
+    try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) { window.scrollTo(0, 0); }
+  }
+
+  function iuHideQuickFeed(){
+    const quick = document.getElementById("iuQuickFeed");
+    if (quick) {
+      quick.hidden = true;
+      quick.innerHTML = "";
+    }
+    const normal = document.querySelector('[data-iu-hidden-by-quickfeed="1"]');
+    if (normal) {
+      normal.style.display = "";
+      normal.removeAttribute("data-iu-hidden-by-quickfeed");
+    }
+  }
+
+  function iuQuickFeedInit(){
+    document.addEventListener("click", (e) => {
+      const el = e.target.closest("[data-iuq]");
+      if (!el) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const key = el.getAttribute("data-iuq");
+      if (key) iuShowQuickFeed(key);
+    }, true);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iuQuickFeedInit);
+  } else {
+    iuQuickFeedInit();
+  }
+})();
+
 // === AI PANEL (Quick Links) — centered modal (like Parcels) ===
 (function(){
   'use strict';
