@@ -11736,3 +11736,36 @@ header#topbarWrap.topbar-new.iuTopbar,
   text-align: center !important;
   width: 100%;
 }
+
+/* ============================================================
+   AI assistants — premium brand accents (no gray)
+   ============================================================ */
+
+#iu-aiPanel .iu-aiItem{
+  position: relative;
+  border-left: 4px solid var(--aiColor, #1F4B99);
+  background: linear-gradient(90deg, rgba(31,75,153,0.035), rgba(255,255,255,0));
+}
+
+#iu-aiPanel .iu-aiItem:hover{
+  background: linear-gradient(90deg, rgba(31,75,153,0.06), #fff);
+  box-shadow: 0 10px 22px rgba(31,75,153,0.10);
+  transform: translateY(-1px);
+}
+
+#iu-aiPanel .iu-aiItem *{
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+.iuQuickFeed .iuAiCard{
+  position: relative;
+  border-left: 4px solid var(--aiColor, #1F4B99);
+  background: linear-gradient(90deg, rgba(31,75,153,0.035), #fff) !important;
+}
+
+.iuQuickFeed .iuAiCard:hover,
+.iuQuickFeed .iuAiCard:focus-visible{
+  box-shadow: 0 12px 28px rgba(31,75,153,0.12) !important;
+  transform: translateY(-1px);
+}
