@@ -8849,20 +8849,18 @@ function buildVideoAsArticleCard(it) {
           <button class="iuQBack" type="button" id="iuQBackBtn">← Zpět</button>
         </div>
         <div class="iuTrPanel">
-          <textarea id="iuTrText" class="iuTrText" placeholder="Vlož text k překladu" rows="4"></textarea>
+          <h3 class="iuTrTitle">Vlož text</h3>
+          <textarea id="iuTrText" class="iuTrText" placeholder="Sem vlož text k překladu… (Ctrl+V)" rows="3"></textarea>
           <div class="iuTrBar">
-            <span id="iuTrLang" class="iuTrStatus">Jazyk: —</span>
+            <span id="iuTrLang" class="iuTrStatus">Odhad jazyka: —</span>
+            <span class="iuTrHintMid">Klikni na překladač níže</span>
             <span id="iuTrCount" class="iuTrCount">0 znaků</span>
           </div>
           <div class="iuTrUtils">
-            <select id="iuTrFrom" class="iuTrSelect" aria-label="Z jakého jazyka"><option value="auto">Auto</option><option value="cs">Čeština</option><option value="en">Angličtina</option><option value="de">Němčina</option><option value="fr">Francouzština</option><option value="es">Španělština</option><option value="it">Italština</option><option value="pl">Polština</option><option value="sk">Slovenština</option><option value="uk">Ukrajinština</option><option value="ru">Ruština</option></select>
-            <span class="iuTrArrow">→</span>
-            <select id="iuTrTo" class="iuTrSelect" aria-label="Do jakého jazyka"><option value="cs" selected>Čeština</option><option value="en">Angličtina</option><option value="de">Němčina</option><option value="fr">Francouzština</option><option value="es">Španělština</option><option value="it">Italština</option><option value="pl">Polština</option><option value="sk">Slovenština</option><option value="uk">Ukrajinština</option><option value="ru">Ruština</option></select>
             <button type="button" id="iuTrCopy" class="iuTrPill">Zkopírovat</button>
             <button type="button" id="iuTrClear" class="iuTrPill">Vyčistit</button>
-            <button type="button" id="iuTrSwap" class="iuTrPill">Otočit směr</button>
           </div>
-          <p class="iuTrHint">Klikni na překladač. Pokud služba neumí vložit text automaticky, text zkopírujeme do schránky.</p>
+          <p id="iuTrToast" class="iuTrToast" aria-live="polite"></p>
         </div>
         <div class="iuQCard">
           <div class="iuQGrid">
@@ -8912,57 +8910,42 @@ function buildVideoAsArticleCard(it) {
     try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) { window.scrollTo(0, 0); }
   }
 
-  const IU_TR_PREFILL_LIMIT = 1500;
+  const IU_TR_PREFILL_LIMIT = 900;
+  const IU_TR_DETECT_MIN = 40;
 
   function iuTrInit(quick, data){
     const textarea = document.getElementById("iuTrText");
     const langEl = document.getElementById("iuTrLang");
     const countEl = document.getElementById("iuTrCount");
-    const fromSel = document.getElementById("iuTrFrom");
-    const toSel = document.getElementById("iuTrTo");
+    const toastEl = document.getElementById("iuTrToast");
     const copyBtn = document.getElementById("iuTrCopy");
     const clearBtn = document.getElementById("iuTrClear");
-    const swapBtn = document.getElementById("iuTrSwap");
     if (!textarea || !langEl || !countEl) return;
-
-    function getFrom(){ return fromSel ? fromSel.value : "auto"; }
-    function getTo(){ return toSel ? toSel.value : "cs"; }
 
     function updateCount(){ const n = (textarea.value || "").length; countEl.textContent = n + " znaků"; }
     function updateLang(){
       const text = (textarea.value || "").trim();
-      const from = getFrom();
-      if (text.length < 20) { langEl.textContent = "Jazyk: —"; return; }
-      if (from !== "auto") { const names = { cs:"Čeština", en:"Angličtina", de:"Němčina", fr:"Francouzština", es:"Španělština", it:"Italština", pl:"Polština", sk:"Slovenština", uk:"Ukrajinština", ru:"Ruština" }; langEl.textContent = "Zvolený jazyk: " + (names[from] || from); return; }
+      if (text.length < IU_TR_DETECT_MIN) { langEl.textContent = "Odhad jazyka: —"; return; }
       try {
         const code = (typeof window.franc === "function") ? window.franc(text) : "und";
-        langEl.textContent = "Jazyk: " + iuTrLangName(code || "und");
-      } catch(e){ langEl.textContent = "Jazyk: Neznámý"; }
+        langEl.textContent = "Odhad jazyka: " + (code && code !== "und" ? iuTrLangName(code) : "—");
+      } catch(e){ langEl.textContent = "Odhad jazyka: —"; }
     }
-    function showStatus(msg){ langEl.textContent = msg; setTimeout(updateLang, 2000); }
+    function showToast(msg){ if (toastEl) { toastEl.textContent = msg; toastEl.classList.add("iuTrToastVisible"); setTimeout(() => { toastEl.textContent = ""; toastEl.classList.remove("iuTrToastVisible"); }, 3000); } }
 
     textarea.addEventListener("input", () => { updateCount(); updateLang(); });
-    if (fromSel) fromSel.addEventListener("change", updateLang);
-    if (toSel) toSel.addEventListener("change", () => {});
     updateCount(); updateLang();
 
     if (copyBtn) copyBtn.addEventListener("click", async () => {
       const t = textarea.value || "";
       try {
         await navigator.clipboard.writeText(t);
-        showStatus("Zkopírováno");
-      } catch(e){ showStatus("Zkopíruj ručně (Ctrl+C)"); }
+        showToast("Text zkopírován – vlož ho do překladače (Ctrl+V)");
+      } catch(e){ showToast("Nepovedlo se zkopírovat – vyber text a dej Ctrl+C"); }
     });
     if (clearBtn) clearBtn.addEventListener("click", () => {
       textarea.value = "";
-      if (fromSel) fromSel.value = "auto";
-      if (toSel) toSel.value = "cs";
       updateCount(); updateLang();
-    });
-    if (swapBtn) swapBtn.addEventListener("click", () => {
-      const from = getFrom(), to = getTo();
-      if (from === "auto") { if (fromSel) fromSel.value = to; if (toSel) toSel.value = "cs"; } else { if (fromSel) fromSel.value = to; if (toSel) toSel.value = from; }
-      updateLang();
     });
 
     quick.addEventListener("click", async (e) => {
@@ -8975,8 +8958,8 @@ function buildVideoAsArticleCard(it) {
       const text = (textarea.value || "").trim();
       const baseUrl = item.baseUrl || item.url || "#";
       if (!text) { window.open(baseUrl, "_blank", "noopener,noreferrer"); return; }
-      let from = getFrom(), to = getTo();
-      if (from === "auto" && typeof window.franc === "function") {
+      let from = "auto", to = "cs";
+      if (typeof window.franc === "function") {
         try { const iso = window.franc(text); from = (iso && iso !== "und") ? iuTrIsoToUrl(iso) : "en"; } catch(_){ from = "en"; }
       }
       let usePrefill = item.supportsPrefill && text.length <= IU_TR_PREFILL_LIMIT && typeof item.makeUrl === "function";
@@ -8984,7 +8967,7 @@ function buildVideoAsArticleCard(it) {
         try { const url = item.makeUrl(text, from, to); window.open(url, "_blank", "noopener,noreferrer"); } catch(err){ usePrefill = false; }
       }
       if (!usePrefill) {
-        try { await navigator.clipboard.writeText(text); showStatus("Text zkopírován – vlož do překladače"); } catch(err){ showStatus("Zkopíruj ručně (Ctrl+C)"); }
+        try { await navigator.clipboard.writeText(text); showToast("Text zkopírován – vlož ho do překladače (Ctrl+V)"); } catch(err){ showToast("Nepovedlo se zkopírovat – vyber text a dej Ctrl+C"); }
         window.open(baseUrl, "_blank", "noopener,noreferrer");
       }
     });
