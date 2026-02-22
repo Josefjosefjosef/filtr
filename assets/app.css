@@ -3479,13 +3479,6 @@ body[data-section="media"] #feed > article:not(:first-child) .news-titleLink:vis
   line-height: 1.3;
 }
 
-/* ===== infoUzel premium feed titles ===== */
-@media (min-width: 900px){
-  #feed .iuCardTitle{
-    font-weight: 550;
-  }
-}
-
 /* Skrýt pouze velké thumbnaily v TOP položce (pokud by existovaly) */
 /* Poznámka: V aktuální HTML struktuře nejsou žádné obrázky/thumbnaily v článcích,
    takže tento selektor je preventivní. Pokud by se přidaly thumbnaily s třídou
@@ -11095,4 +11088,14 @@ header#topbarWrap.topbar-new.iuTopbar,
 #iuLeftRail .iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
 #iuLeftRail .iu-leftNavItem.is-active .iu-leftNavIcon{
   filter: drop-shadow(0 0 18px rgba(31,182,166,0.35)) !important;
+}
+
+/* ===== infoUzel: desktop feed titles weight 550 (hard, feed-only) ===== */
+@media (min-width: 900px){
+  #feed a.news-titleLink.iuCardTitle,
+  #feed .iuCardTitle a.news-titleLink,
+  #feed > .news-card .news-titleLink.iuCardTitle,
+  #feed > article .news-titleLink.iuCardTitle{
+    font-weight: 550;
+  }
 }
