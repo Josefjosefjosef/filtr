@@ -11090,12 +11090,17 @@ header#topbarWrap.topbar-new.iuTopbar,
   filter: drop-shadow(0 0 18px rgba(31,182,166,0.35)) !important;
 }
 
-/* ===== infoUzel: desktop feed titles weight 550 (hard, feed-only) ===== */
+/* ===== infoUzel feed title weights (clean unified rule) ===== */
 @media (min-width: 900px){
-  #feed a.news-titleLink.iuCardTitle,
-  #feed .iuCardTitle a.news-titleLink,
-  #feed > .news-card .news-titleLink.iuCardTitle,
-  #feed > article .news-titleLink.iuCardTitle{
+  /* první článek výraznější */
+  #feed > .news-card:first-child .news-titleLink.iuCardTitle,
+  #feed > article:first-child .news-titleLink.iuCardTitle{
+    font-weight: 600;
+  }
+
+  /* ostatní články */
+  #feed > .news-card:not(:first-child) .news-titleLink.iuCardTitle,
+  #feed > article:not(:first-child) .news-titleLink.iuCardTitle{
     font-weight: 550;
   }
 }
