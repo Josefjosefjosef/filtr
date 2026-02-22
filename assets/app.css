@@ -10201,6 +10201,37 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 }
 
 /* ============================================================
+   LEFT RAIL: TEXT-ONLY (no icons, no icon tiles)
+   Scope: #iuLeftRail only. No order/name/link changes. CLS-safe.
+   ============================================================ */
+
+#iuLeftRail .iu-leftNavIcon,
+#iuLeftRail .iu-leftNavItem .iu-leftNavIcon{
+  display: none !important;
+}
+
+#iuLeftRail .iu-leftNavIcon{
+  background: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  filter: none !important;
+}
+
+#iuLeftRail .iu-leftNavItem,
+#iuLeftRail .iu-leftNav > a.iu-leftNavItem{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 12px 10px !important;
+  gap: 0 !important;
+}
+
+#iuLeftRail .iu-leftNavLabel{
+  margin: 0 !important;
+  text-align: center !important;
+}
+
+/* ============================================================
    LAYOUT GUARD — desktop columns (#newsList)
    Required by CI layout guard.
    ============================================================ */
