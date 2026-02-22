@@ -11086,3 +11086,37 @@ header#topbarWrap.topbar-new.iuTopbar,
   white-space: nowrap;
   opacity: 0.9;
 }
+
+/* =====================================================
+   LEFT RAIL – REMOVE OVAL BACKGROUND TILES (FINAL)
+   Must be at end for maximum override. CLS-safe.
+   ===================================================== */
+
+#iuLeftRail .iu-leftNavItem,
+#iuLeftRail .iu-leftNavItem.is-active,
+#iuLeftRail .iu-leftNavItem.active,
+#iuLeftRail .iu-leftNavItem.selected,
+#iuLeftRail .iu-leftNavItem[aria-current="page"]{
+  background: none !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+#iuLeftRail .iu-leftNavItem::before,
+#iuLeftRail .iu-leftNavItem::after{
+  content: none !important;
+  display: none !important;
+}
+
+#iuLeftRail .iu-leftNavIcon,
+#iuLeftRail .iuRail__icon{
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+#iuLeftRail .iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNavItem.is-active .iu-leftNavIcon{
+  filter: drop-shadow(0 0 18px rgba(31,182,166,0.35)) !important;
+}
