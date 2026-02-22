@@ -8786,7 +8786,16 @@ function buildVideoAsArticleCard(it) {
         { name: "Editee", url: "https://www.editee.com", desc: "Česká AI pro marketing, podnikání a obsah", external: true }
       ]
     },
-    deepl: { title: "DeepL", items: [{ name: "DeepL", url: "https://www.deepl.com", desc: "Překladač textu s vysokou kvalitou překladu", external: true }] },
+    deepl: {
+      title: "Překladač",
+      items: [
+        { name: "DeepL", url: "https://www.deepl.com/translator", desc: "Nejlepší kvalita překladů", external: true },
+        { name: "Google Translate", url: "https://translate.google.com/", desc: "Rychlý univerzální překladač", external: true },
+        { name: "Microsoft Translator", url: "https://www.bing.com/translator", desc: "Bing / Microsoft překladač", external: true },
+        { name: "Seznam Slovník", url: "https://slovnik.seznam.cz/prekladac", desc: "CZ slovník a překlady", external: true },
+        { name: "Linguee", url: "https://www.linguee.cz/", desc: "Překlady s kontextem ve větách", external: true }
+      ]
+    },
     baliky: {
       title: "Balíky",
       items: [
@@ -8824,7 +8833,7 @@ function buildVideoAsArticleCard(it) {
     if (!stage || !quick) return;
     stage.setAttribute("data-iu-view", "quick");
     quick.hidden = false;
-    const isAi = String(key || "").toLowerCase() === "ai";
+    const useFullCard = ["ai", "deepl"].includes(String(key || "").toLowerCase());
     quick.innerHTML = `
       <div class="iuQHead">
         <div class="iuQTitle">${iuQfEscape(data.title)}</div>
@@ -8835,7 +8844,7 @@ function buildVideoAsArticleCard(it) {
           ${(data.items || []).map(it => {
             const url = iuQfEscape(it.url || "#");
             const ext = it.external ? 'target="_blank" rel="noopener noreferrer"' : "";
-            if (isAi) {
+            if (useFullCard) {
               return `<a class="iuAiCard" href="${url}" ${ext}>
                 <div class="iuAiInner">
                   <div class="iuAiName">${iuQfEscape(it.name)}</div>
