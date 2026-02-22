@@ -4711,7 +4711,7 @@ function buildVideoAsArticleCard(it) {
         try{
           const nRaw = (srcName && String(srcName.textContent || "").trim()) || "";
           const n = normalizeNameday(nRaw);
-          if (n) elName.textContent = n;
+          elName.textContent = n || "Svátek má —";
         }catch{}
         try{
           const full = `${elDay.textContent} ${elDate.textContent}${elName.textContent ? " • " + elName.textContent : ""}`;
