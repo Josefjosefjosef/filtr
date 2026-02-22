@@ -11301,6 +11301,53 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   color: inherit;
 }
 
+/* AI asistenti – full button cards (match Mapy .iuRadioChip height 110px) */
+.iuQuickFeed .iuAiCard{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 110px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 18px;
+  border: 1px solid rgba(20,40,70,0.12);
+  background: #fff;
+  transition: all 0.18s ease;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+  color: inherit;
+}
+
+.iuQuickFeed .iuAiCard:hover,
+.iuQuickFeed .iuAiCard:focus-visible{
+  background: rgba(31,75,153,0.06);
+  border-color: rgba(31,75,153,0.25);
+  box-shadow: 0 12px 28px rgba(31,75,153,0.12);
+}
+
+.iuQuickFeed .iuAiCard:focus-visible{
+  outline: 2px solid rgba(31,75,153,0.5);
+  outline-offset: 2px;
+}
+
+.iuQuickFeed .iuAiInner{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.iuQuickFeed .iuAiName{
+  font-weight: 800;
+}
+
+.iuQuickFeed .iuAiDesc{
+  color: rgba(11,27,43,0.60);
+  font-size: 14px;
+}
+
 /* =============================== */
 /* TOPBAR — FINAL UI CONTRACT      */
 /* =============================== */
