@@ -11340,6 +11340,79 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   font-size: 14px;
 }
 
+/* Překladač toolbox — izolované pod #iuQuickFeed */
+#iuQuickFeed .iuTrPanel{
+  background: #fff;
+  border: 1px solid rgba(20,40,70,0.10);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+}
+#iuQuickFeed .iuTrText{
+  width: 100%;
+  min-height: 100px;
+  padding: 12px 14px;
+  border: 1px solid rgba(20,40,70,0.18);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+}
+#iuQuickFeed .iuTrText:focus{
+  outline: 2px solid rgba(31,75,153,0.5);
+  outline-offset: 2px;
+}
+#iuQuickFeed .iuTrBar{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 13px;
+  color: rgba(11,27,43,0.55);
+}
+#iuQuickFeed .iuTrUtils{
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+#iuQuickFeed .iuTrSelect{
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(20,40,70,0.18);
+  font-size: 13px;
+  font-family: inherit;
+}
+#iuQuickFeed .iuTrArrow{
+  color: rgba(11,27,43,0.5);
+  font-size: 14px;
+}
+#iuQuickFeed .iuTrPill{
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(20,40,70,0.18);
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+#iuQuickFeed .iuTrPill:hover{
+  background: rgba(31,75,153,0.06);
+}
+#iuQuickFeed .iuTrHint{
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: rgba(11,27,43,0.55);
+  line-height: 1.4;
+}
+#iuQuickFeed .iuTrCard{
+  min-height: 110px;
+}
+
 /* =============================== */
 /* TOPBAR — FINAL UI CONTRACT      */
 /* =============================== */
