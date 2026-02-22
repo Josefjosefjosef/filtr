@@ -7456,39 +7456,34 @@ function buildVideoAsArticleCard(it) {
   // Expose Weather render for router/diagnostics.
   try{ window.iuWeatherLoadAndRender = iuWeatherLoadAndRender; }catch{}
 
-  // === MOJE SCHRÁNKY (MindMenu): 4 placeholders + CTA always last, max 6 ===
+  // === MOJE SCHRÁNKY (MindMenu): 4 placeholders + CTA always last ===
   const MAILBOX_STORAGE_KEY = "iu_mailboxes_v1";
   const MAILBOX_PLACEHOLDERS = ["Např.: e-mail 1", "Např.: e-mail 2", "Např.: pracovní web", "Např.: oblíbený web"];
-  const MAILBOX_MAX = 6;
 
   function iuMailboxLoad(){
     try{
       const txt = localStorage.getItem(MAILBOX_STORAGE_KEY);
       if (!txt) {
-        const items = MAILBOX_PLACEHOLDERS.map((label) => ({ label, url: "" }));
+        const items = MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", index: i }));
         try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items })); }catch{}
         return items;
       }
       const parsed = JSON.parse(txt);
-      let items = Array.isArray(parsed?.items) ? parsed.items.slice(0, MAILBOX_MAX) : [];
-      const fixed = [];
-      for (let i = 0; i < 4; i++) {
-        const it = items[i] && typeof items[i] === "object" ? items[i] : {};
-        fixed.push({
-          label: String(it?.label ?? "").trim() || MAILBOX_PLACEHOLDERS[i],
-          url: String(it?.url ?? "").trim()
-        });
-      }
-      for (let i = 4; i < items.length; i++) {
-        const it = items[i] && typeof items[i] === "object" ? items[i] : {};
-        fixed.push({
-          label: String(it?.label ?? "").trim() || (i === 4 ? "Tlačítko 5" : "Tlačítko 6"),
-          url: String(it?.url ?? "").trim()
-        });
+      const items = Array.isArray(parsed?.items) ? parsed.items : [];
+      const fixed = items.slice(0, 100).map((it, i) => ({
+        label: String(it?.label ?? "").trim() || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : ""),
+        url: String(it?.url ?? "").trim(),
+        index: i
+      }));
+      if (fixed.length < 4) {
+        for (let i = fixed.length; i < 4; i++) {
+          fixed.push({ label: MAILBOX_PLACEHOLDERS[i], url: "", index: i });
+        }
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed })); }catch{}
       }
       return fixed;
     }catch{
-      return MAILBOX_PLACEHOLDERS.map((label) => ({ label, url: "" }));
+      return MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", index: i }));
     }
   }
 
@@ -7506,22 +7501,15 @@ function buildVideoAsArticleCard(it) {
     const frag = document.createDocumentFragment();
     items.forEach((it, i) => {
       const row = document.createElement("div");
-      row.className = "iu-mailbox-row iuMailboxItem";
-      const label = it.label || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : (i === 4 ? "Tlačítko 5" : "Tlačítko 6"));
-      const hasConfig = !!(String(it.label || "").trim() || String(it.url || "").trim());
-      const minusHtml = hasConfig ? `<button class="iu-mailbox-minus iuMailboxMinus" type="button" data-mailbox-minus="${i}" aria-label="Odebrat">−</button>` : "";
-      row.innerHTML = minusHtml +
-        `<button class="iu-mailbox-pill" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
+      row.className = "iu-mailbox-row";
+      const label = it.label || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : `Schránka ${i + 1}`);
+      row.innerHTML = `<button class="iu-mailbox-pill" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
         `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><i class="fa-solid fa-gear" aria-hidden="true"></i></button>`;
       frag.appendChild(row);
     });
     const ctaRow = document.createElement("div");
-    ctaRow.className = "iuMailboxAdd";
-    if (items.length < MAILBOX_MAX) {
-      ctaRow.innerHTML = `<button type="button" data-action="add" aria-label="Přidat další tlačítko">+ Přidat další tlačítko</button>`;
-    } else {
-      ctaRow.innerHTML = `<span class="iuMailboxAddDisabled">Limit 6 tlačítek</span>`;
-    }
+    ctaRow.className = "iu-mailbox-row iu-mailbox-cta-row";
+    ctaRow.innerHTML = `<button class="iu-mailbox-pill iu-mailbox-cta" type="button" data-action="add" aria-label="Přidat další tlačítko">+ Přidat další tlačítko</button>`;
     frag.appendChild(ctaRow);
     list.innerHTML = "";
     list.appendChild(frag);
@@ -7538,27 +7526,9 @@ function buildVideoAsArticleCard(it) {
       if (addBtn) {
         e.preventDefault();
         const items = iuMailboxLoad();
-        if (items.length >= MAILBOX_MAX) return;
-        items.push({ label: "", url: "" });
+        items.push({ label: "", url: "", index: items.length });
         iuMailboxSave(items);
         iuMailboxRender();
-        return;
-      }
-      const minusBtn = e.target.closest?.("[data-mailbox-minus]");
-      if (minusBtn) {
-        e.preventDefault();
-        const idx = parseInt(minusBtn.getAttribute("data-mailbox-minus") || "0", 10);
-        if (!window.confirm("Odebrat tlačítko?")) return;
-        const items = iuMailboxLoad();
-        if (idx >= 0 && idx < items.length) {
-          if (idx < 4) {
-            items[idx] = { label: "", url: "" };
-          } else {
-            items.splice(idx, 1);
-          }
-          iuMailboxSave(items);
-          iuMailboxRender();
-        }
         return;
       }
       const gearBtn = e.target.closest?.("[data-mailbox-gear]");
@@ -7568,9 +7538,9 @@ function buildVideoAsArticleCard(it) {
         const items = iuMailboxLoad();
         const it = items[idx];
         if (!it) return;
-        const label = window.prompt("Název tlačítka:", it.label || "") ?? it.label || "";
-        const url = window.prompt("URL (www):", it.url || "") ?? it.url || "";
-        items[idx] = { label: String(label).trim(), url: String(url).trim() };
+        const label = window.prompt("Název tlačítka:", it.label || "") || it.label || "";
+        const url = window.prompt("URL (www):", it.url || "") || it.url || "";
+        items[idx] = { ...it, label: String(label).trim(), url: String(url).trim() };
         iuMailboxSave(items);
         iuMailboxRender();
         return;
