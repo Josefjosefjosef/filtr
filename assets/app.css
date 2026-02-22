@@ -10952,3 +10952,58 @@ header#topbarWrap.topbar-new.iuTopbar,
   background:#0B1F33 !important;
   color:#ffffff !important;
 }
+
+/* === HOTFIX v3: topbar search panel MUST open to the LEFT === */
+.iuTopSearch{ position: relative; }
+
+.iuTopSearch .iuTopSearch__panel,
+.iuTopSearch #iuTopbarSearchOverlay{
+  position: absolute !important;
+  top: 50% !important;
+  right: calc(100% + 12px) !important;
+  left: auto !important;
+  transform: translateY(-50%) !important;
+  transform-origin: right center !important;
+  z-index: 9999 !important;
+  width: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.iuTopSearch.is-open .iuTopSearch__panel,
+.iuTopSearch.is-open #iuTopbarSearchOverlay{
+  width: min(320px, 70vw) !important;
+  max-width: min(320px, 70vw) !important;
+  pointer-events: auto;
+  overflow: visible;
+}
+
+.iuTopSearch.is-open .iuTopSearch__panel[hidden],
+.iuTopSearch.is-open #iuTopbarSearchOverlay[hidden]{
+  display: block !important;
+}
+
+/* === HOTFIX v3: topbar search panel must be WHITE === */
+.iuTopSearch .iuTopSearch__panel,
+.iuTopSearch #iuTopbarSearchOverlay{
+  background: #fff !important;
+}
+
+.iuTopSearch .iuTopSearch__panel *,
+.iuTopSearch #iuTopbarSearchOverlay *{
+  color: rgba(11,27,43,0.92);
+}
+
+.iuTopSearch .iuTopSearch__panel input,
+.iuTopSearch #iuTopbarSearchOverlay input{
+  background: #fff !important;
+  color: rgba(11,27,43,0.92) !important;
+}
+
+/* === HOTFIX v3: nameday must not shrink === */
+#iuTopbarNameday,
+.iuTopbarNameday{
+  flex: 0 0 auto;
+  white-space: nowrap;
+  opacity: 0.9;
+}
