@@ -1774,7 +1774,7 @@ window.addEventListener("unhandledrejection", (e) => {
         if (state.retentionLoadedDays.has(day)) continue;
         state.retentionLoadedDays.add(day);
 
-        const dayUrl = iuDataUrl(`articles/${day}.json`);
+        const dayUrl = iuDataUrl("articles/" + day + ".json");
         const dayJson = await fetchDiag(dayUrl, "articles");
         const dayItems = normalizeFeedJson(dayJson);
         if (!Array.isArray(dayItems) || dayItems.length === 0) continue;
