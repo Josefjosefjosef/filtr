@@ -7295,12 +7295,11 @@ function buildVideoAsArticleCard(it) {
   // Expose Weather render for router/diagnostics.
   try{ window.iuWeatherLoadAndRender = iuWeatherLoadAndRender; }catch{}
 
-  // === MOJE SCHRÁNKY (MindMenu): 4 base + max 2 extra (6 total) ===
+  // === MOJE SCHRÁNKY (MindMenu): min 1, max 6, controls follow last pill ===
   const MAILBOX_STORAGE_KEY = "iu_mailboxes_v1";
   const MAILBOX_PLACEHOLDERS = ["Např.: e-mail 1", "Např.: e-mail 2", "Např.: pracovní web", "Např.: oblíbený web"];
-  const IU_MAILBOX_BASE = 4;
-  const IU_MAILBOX_MAX_EXTRA = 2;
-  const IU_MAILBOX_MAX = IU_MAILBOX_BASE + IU_MAILBOX_MAX_EXTRA;
+  const IU_MAILBOX_MIN = 1;
+  const IU_MAILBOX_MAX = 6;
 
   function iuMailboxLoad(){
     try{
@@ -7321,9 +7320,9 @@ function buildVideoAsArticleCard(it) {
       if (items.length > IU_MAILBOX_MAX) {
         try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url }) => ({ label, url })) })); }catch{}
       }
-      if (fixed.length < 4) {
-        for (let i = fixed.length; i < 4; i++) {
-          fixed.push({ label: MAILBOX_PLACEHOLDERS[i], url: "", index: i });
+      if (fixed.length < IU_MAILBOX_MIN) {
+        for (let i = fixed.length; i < IU_MAILBOX_MIN; i++) {
+          fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || `Schránka ${i + 1}`, url: "", index: i });
         }
         try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed })); }catch{}
       }
@@ -7345,12 +7344,27 @@ function buildVideoAsArticleCard(it) {
     const rem = document.getElementById("iuMailboxRemove");
     if (!add || !rem) return;
     add.style.display = count < IU_MAILBOX_MAX ? "inline" : "none";
-    rem.style.display = count > IU_MAILBOX_BASE ? "inline" : "none";
+    rem.style.display = count > IU_MAILBOX_MIN ? "inline" : "none";
+  }
+
+  function iuPositionMailboxControls(controlsEl){
+    const controls = controlsEl || document.getElementById("iuMailboxControls");
+    const list = document.getElementById("iuMailboxList");
+    if (!controls || !list) return;
+    const items = Array.from(list.querySelectorAll(".iu-mailbox-row"));
+    const last = items.length ? items[items.length - 1] : null;
+    if (last && last.parentNode) {
+      last.insertAdjacentElement("afterend", controls);
+    } else {
+      list.appendChild(controls);
+    }
   }
 
   function iuMailboxRender(){
     const list = document.getElementById("iuMailboxList");
     if (!list) return;
+    const controls = document.getElementById("iuMailboxControls");
+    if (controls && controls.parentNode) controls.remove();
     const items = iuMailboxLoad();
     const frag = document.createDocumentFragment();
     items.forEach((it, i) => {
@@ -7363,6 +7377,7 @@ function buildVideoAsArticleCard(it) {
     });
     list.innerHTML = "";
     list.appendChild(frag);
+    if (controls) iuPositionMailboxControls(controls);
   }
 
   function iuMailboxesInit(){
@@ -7373,6 +7388,7 @@ function buildVideoAsArticleCard(it) {
     iuMailboxRender();
     let mailboxCount = iuMailboxLoad().length;
     iuUpdateMailboxControls(mailboxCount);
+    iuPositionMailboxControls();
 
     document.getElementById("iuMailboxAdd")?.addEventListener("click", () => {
       if (mailboxCount >= IU_MAILBOX_MAX) return;
@@ -7382,16 +7398,18 @@ function buildVideoAsArticleCard(it) {
       iuMailboxRender();
       mailboxCount = items.length;
       iuUpdateMailboxControls(mailboxCount);
+      iuPositionMailboxControls();
     });
 
     document.getElementById("iuMailboxRemove")?.addEventListener("click", () => {
-      if (mailboxCount <= IU_MAILBOX_BASE) return;
+      if (mailboxCount <= IU_MAILBOX_MIN) return;
       const items = iuMailboxLoad();
       items.pop();
       iuMailboxSave(items);
       iuMailboxRender();
       mailboxCount = items.length;
       iuUpdateMailboxControls(mailboxCount);
+      iuPositionMailboxControls();
     });
 
     list.addEventListener("click", (e) => {
