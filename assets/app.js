@@ -4176,11 +4176,11 @@ window.addEventListener("unhandledrejection", (e) => {
 
     const dateText = fmtDate(it.publishedAt || it.date || it.published || "");
     const datePart = dateText ? `<span class="iu-meta-date">${escapeHtml(dateText)}</span>` : "";
-    const primaryPart = `<span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primary.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(primary.name)}</a></span>`;
+    const primaryPart = `<span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primary.url)}" target="_blank" rel="nofollow noopener noreferrer">${escapeHtml(primary.name)}</a></span>`;
 
     const othersPart = others.length
       ? `<span class="iu-meta-others">Píší také: ${others.map(o =>
-          `<a class="iu-meta-link iu-meta-link-secondary" href="${escapeHtml(o.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(o.name)}</a>`
+          `<a class="iu-meta-link iu-meta-link-secondary" href="${escapeHtml(o.url)}" target="_blank" rel="nofollow noopener noreferrer">${escapeHtml(o.name)}</a>`
         ).join(", ")}</span>`
       : "";
 
@@ -4205,7 +4205,7 @@ window.addEventListener("unhandledrejection", (e) => {
     }
     
     const titleMarkup = linkUrl
-      ? `<a class="news-titleLink iuCardTitle" href="${linkUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>`
+      ? `<a class="news-titleLink iuCardTitle" href="${linkUrl}" target="_blank" rel="nofollow noopener noreferrer">${escapeHtml(title)}</a>`
       : `<span class="news-titleLink iuCardTitle">${escapeHtml(title)}</span>`;
 
     const suspiciousFlag = it?.suspiciousTitle
@@ -7689,7 +7689,7 @@ function buildVideoAsArticleCard(it) {
       throw new Error("services-shopping.json invalid/empty");
     }
     list.innerHTML = data.map(s => `
-      <a href="${escapeHtml(String(s?.url || ""))}" target="_blank" rel="noopener noreferrer">
+      <a href="${escapeHtml(String(s?.url || ""))}" target="_blank" rel="nofollow noopener noreferrer">
         <i class="fa-solid ${escapeHtml(String(s?.icon || "fa-bag-shopping"))}"
            style="color:${escapeHtml(String(s?.accent || "#1F4B99"))}"></i>
         ${escapeHtml(String(s?.name || "Odkaz"))}
@@ -8864,7 +8864,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuQCard">
           <div class="iuQGrid">
-            ${(data.items || []).map(it => `<a class="iuAiCard iuTrCard" data-tr-id="${iuQfEscape(it.id || it.name || "")}" href="${iuQfEscape(it.baseUrl || it.url || "#")}" target="_blank" rel="noopener noreferrer">
+            ${(data.items || []).map(it => `<a class="iuAiCard iuTrCard" data-tr-id="${iuQfEscape(it.id || it.name || "")}" href="${iuQfEscape(it.baseUrl || it.url || "#")}" target="_blank" rel="nofollow noopener noreferrer">
               <div class="iuAiInner">
                 <div class="iuAiName">${iuQfEscape(it.name)}</div>
                 ${it.desc ? `<div class="iuAiDesc">${iuQfEscape(it.desc)}</div>` : ""}
@@ -8926,7 +8926,7 @@ function buildVideoAsArticleCard(it) {
           <div class="iuQGrid">
             ${(data.items || []).map(it => {
               const url = iuQfEscape(it.url || it.baseUrl || "#");
-              const ext = (it.external !== false) ? 'target="_blank" rel="noopener noreferrer"' : "";
+              const ext = (it.external !== false) ? 'target="_blank" rel="nofollow noopener noreferrer"' : "";
               const c = it.color || "#1F4B99";
               if (useFullCard) {
                 return `<a class="iuAiCard" href="${url}" ${ext} style="--aiColor:${c}">
@@ -9200,7 +9200,7 @@ function buildVideoAsArticleCard(it) {
           <strong>${esc(it.name)}</strong>
           <p>${esc(it.desc || "")}</p>
         </div>
-        <a href="${esc(it.url || "#")}" target="_blank" rel="noopener">Otevřít</a>
+        <a href="${esc(it.url || "#")}" target="_blank" rel="nofollow noopener noreferrer">Otevřít</a>
       </div>`;
     }).join("");
   }
@@ -10626,7 +10626,7 @@ function buildVideoAsArticleCard(it) {
       const desc = escapeHtml(it.desc || "");
       const descHtml = desc ? `<span class="iuRadioChipDesc">${desc}</span>` : "";
       return `
-        <a class="iuRadioChip" href="${url}" target="_blank" rel="noopener noreferrer">
+        <a class="iuRadioChip" href="${url}" target="_blank" rel="nofollow noopener noreferrer">
           <span class="iuRadioChipTitle">${title}</span>
           ${descHtml}
         </a>
