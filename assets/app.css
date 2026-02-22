@@ -11165,15 +11165,22 @@ header#topbarWrap.topbar-new.iuTopbar,
 }
 
 /* ===== infoUzel: right column aligned with first article ===== */
+/* Root cause: .layout > aside.accordionCol has top: var(--iuTopbarHeight) (line 9893)
+   which shifts it down. Layout already has padding-top for topbar, so both columns
+   start below it. Override top:0 so right column aligns with feed. */
 @media (min-width: 900px){
-  /* wrapper 3 sloupců – zarovnat obsah nahoru */
-  .layout,
-  .container{
+  /* wrapper – zarovnat obsah nahoru */
+  .layout{
     align-items: start;
   }
 
-  /* pravý sloupec musí začínat nahoře */
-  .layout > aside.accordionCol,
+  /* pravý sloupec: zrušit top offset (layout padding-top stačí pro oba sloupce) */
+  .layout > aside.accordionCol{
+    align-self: start;
+    margin-top: 0 !important;
+    top: 0 !important;
+  }
+
   .mindMenu-scroll-wrapper,
   .mindMenu{
     align-self: start;
