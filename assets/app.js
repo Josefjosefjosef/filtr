@@ -8789,11 +8789,11 @@ function buildVideoAsArticleCard(it) {
     deepl: {
       title: "Překladač",
       items: [
-        { name: "DeepL", url: "https://www.deepl.com/translator", desc: "Nejlepší kvalita překladů", external: true },
-        { name: "Google Translate", url: "https://translate.google.com/", desc: "Rychlý univerzální překladač", external: true },
-        { name: "Microsoft Translator", url: "https://www.bing.com/translator", desc: "Bing / Microsoft překladač", external: true },
-        { name: "Seznam Slovník", url: "https://slovnik.seznam.cz/prekladac", desc: "CZ slovník a překlady", external: true },
-        { name: "Linguee", url: "https://www.linguee.cz/", desc: "Překlady s kontextem ve větách", external: true }
+        { name: "DeepL", url: "https://www.deepl.com/translator", desc: "Nejvyšší kvalita překladů", external: true },
+        { name: "Google Translate", url: "https://translate.google.com/", desc: "Univerzální rychlý překladač", external: true },
+        { name: "Microsoft Translator", url: "https://www.bing.com/translator", desc: "Microsoft / Bing překladač", external: true },
+        { name: "Seznam Slovník", url: "https://slovnik.seznam.cz/", desc: "Český slovník a překlady", external: true },
+        { name: "Linguee", url: "https://www.linguee.com/", desc: "Překlady s kontextem vět", external: true }
       ]
     },
     baliky: {
