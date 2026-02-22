@@ -11105,22 +11105,19 @@ header#topbarWrap.topbar-new.iuTopbar,
   }
 }
 
-/* ===== infoUzel premium feed videos + tight titles ===== */
+/* ===== infoUzel premium feed videos (real shrink + left align) ===== */
 @media (min-width: 900px){
-  /* VIDEO MENŠÍ O 35 % */
-  #feed .news-card[data-feed-type="video-preview"],
-  #feed .news-card.iuVideoCard,
-  #feed .iuVideoCard{
-    transform: scale(0.65);
-    transform-origin: top center;
+  /* skutečné zmenšení videa */
+  #feed article.news-card.iuVideoCard[data-feed-type="video-preview"] .iuVideoFrame,
+  #feed article.news-card.iuVideoCard[data-feed-type="video-preview"] iframe{
+    width: 65%;
+    max-width: 65%;
+    margin-left: 0;
+    margin-right: auto;
+    display: block;
   }
 
-  #feed .news-card.iuVideoCard,
-  #feed .iuVideoCard{
-    margin-bottom: 24px;
-  }
-
-  /* TIGHT PREMIUM TITULKY */
+  /* tight premium titulky */
   #feed .news-titleLink.iuCardTitle{
     line-height: 1.30;
   }
