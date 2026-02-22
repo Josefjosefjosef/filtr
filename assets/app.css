@@ -10201,34 +10201,54 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 }
 
 /* ============================================================
-   LEFT RAIL: TEXT-ONLY (no icons, no icon tiles)
-   Scope: #iuLeftRail only. No order/name/link changes. CLS-safe.
+   LEFT RAIL: SVG icons via sprite (10/10, CLS-safe)
+   Scope: #iuLeftRail only. No order/name/link changes.
    ============================================================ */
 
-#iuLeftRail .iu-leftNavIcon,
-#iuLeftRail .iu-leftNavItem .iu-leftNavIcon{
-  display: none !important;
+#iuLeftRail .iu-leftNavIcon{
+  display: block !important;
+  width: clamp(28px, 3.2vw, 46px) !important;
+  height: clamp(28px, 3.2vw, 46px) !important;
+  margin: 0 auto 10px !important;
+  color: #1FB6A6 !important;
+  filter: drop-shadow(0 0 10px rgba(31,182,166,0.20)) !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-#iuLeftRail .iu-leftNavIcon{
-  background: none !important;
-  box-shadow: none !important;
-  border: 0 !important;
-  filter: none !important;
+#iuLeftRail .iuSvgIcon{
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+#iuLeftRail .iu-leftNavLabel{
+  text-align: center !important;
+  font-weight: 700 !important;
+  letter-spacing: .2px !important;
+  line-height: 1.15 !important;
+  font-size: clamp(11px, 0.85vw, 14px) !important;
+  margin: 0 !important;
 }
 
 #iuLeftRail .iu-leftNavItem,
 #iuLeftRail .iu-leftNav > a.iu-leftNavItem{
   display: flex !important;
+  flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
   padding: 12px 10px !important;
   gap: 0 !important;
 }
 
-#iuLeftRail .iu-leftNavLabel{
-  margin: 0 !important;
-  text-align: center !important;
+#iuLeftRail .iu-leftNavItem:hover .iu-leftNavIcon{
+  filter: drop-shadow(0 0 14px rgba(31,182,166,0.28)) !important;
+}
+
+#iuLeftRail .iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNavItem.is-active .iu-leftNavIcon{
+  filter: drop-shadow(0 0 18px rgba(31,182,166,0.35)) !important;
 }
 
 /* ============================================================
