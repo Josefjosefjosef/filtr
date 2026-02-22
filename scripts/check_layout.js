@@ -20,9 +20,9 @@ if (!/\.layout\s*\{[\s\S]*?grid-template-columns\s*:\s*[^;]+;/i.test(css)) {
 if (!/#newsList\s*\{[\s\S]*?display\s*:\s*grid\b/i.test(css)) {
   fail('❌ Missing grid layout on #newsList (rail + feed wrapper)');
 }
-// Expect at least 2 columns with rail (136px or var(--iuLeftRailW)) + flexible middle.
-if (!/#newsList\s*\{[\s\S]*?grid-template-columns\s*:\s*(?:136px|var\s*\(\s*--iuLeftRailW\s*\))\s+minmax\(0,\s*1fr\)/i.test(css)) {
-  fail('❌ Missing expected rail + minmax(0,1fr) columns on #newsList');
+// Expect at least 2 columns with 136px rail + flexible middle.
+if (!/#newsList\s*\{[\s\S]*?grid-template-columns\s*:\s*136px\s+minmax\(0,\s*1fr\)/i.test(css)) {
+  fail('❌ Missing expected 136px + minmax(0,1fr) columns on #newsList');
 }
 
 // 3) Ensure rail is not forced fixed via ID selector (avoid overlay regressions).
