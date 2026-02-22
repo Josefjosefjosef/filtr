@@ -10971,11 +10971,14 @@ body #iuLeftRail{
   font-size:13px;
   color:#8a8f98;
   user-select:none;
+  text-align:center;        /* ⭐ centrum */
+  width:100%;
 }
 
 .iuMailboxControls span{
   cursor:pointer;
-  margin-right:10px;
+  margin:0 8px;
+  display:inline-block;
 }
 
 .iuMailboxControls span:hover{
