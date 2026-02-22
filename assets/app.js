@@ -8848,7 +8848,7 @@ function buildVideoAsArticleCard(it) {
           <div class="iuQTitle">${iuQfEscape(data.title)}</div>
           <button class="iuQBack" type="button" id="iuQBackBtn">← Zpět</button>
         </div>
-        <div class="iuTrPanel">
+        <div class="iuTrArea">
           <h3 class="iuTrTitle">Vlož text</h3>
           <textarea id="iuTrText" class="iuTrText" placeholder="Sem vlož text k překladu… (Ctrl+V)" rows="3"></textarea>
           <div class="iuTrBar">
@@ -8872,23 +8872,21 @@ function buildVideoAsArticleCard(it) {
             </a>`).join("")}
           </div>
         </div>
-        <div class="iuNotesHost" id="iuTrNotesHost">
-          <div class="iuNotes">
-            <div class="iuNotesTop">
-              <div class="iuNotesTitle">Poznámky</div>
-              <div class="iuNotesActions">
-                <button type="button" id="iuTrNotesCopy" class="iuBtn iuBtn--ghost">Zkopírovat</button>
-                <button type="button" id="iuTrNotesClear" class="iuBtn iuBtn--ghost">Vyčistit</button>
-                <button type="button" id="iuTrNotesSend" class="iuBtn iuBtn--ghost">Odeslat</button>
-              </div>
-            </div>
-            <textarea id="iuTrNotesText" class="iuNotesInput" placeholder="Piš poznámky…"></textarea>
-            <p class="iuTrNotesFooter">Odesláno z <a href="https://infouzel.cz/" target="_blank" rel="noopener noreferrer">infoUzel.cz</a></p>
+        <div class="iuNotes" data-iu-notes data-iu-notes-key="translator">
+          <div class="iuNotesHead">
+            <div class="iuNotesTitle">Poznámky</div>
           </div>
+          <textarea class="iuNotesText" data-iu-notes-text placeholder="Sem si napiš poznámku…"></textarea>
+          <div class="iuNotesActions">
+            <button type="button" class="iuNotesBtn" data-iu-notes-copy>Zkopírovat</button>
+            <button type="button" class="iuNotesBtn" data-iu-notes-clear>Vyčistit</button>
+            <button type="button" class="iuNotesBtn iuNotesBtnPrimary" data-iu-notes-send>Odeslat</button>
+          </div>
+          <div class="iuNotesStatus" data-iu-notes-status hidden></div>
         </div>
       `;
       iuTrInit(quick, data);
-      iuTrNotesInit(quick);
+      iuTrNotesBootstrap(quick);
     } else {
       quick.innerHTML = `
         <div class="iuQHead">
@@ -8994,11 +8992,9 @@ function buildVideoAsArticleCard(it) {
     try { if (!ta) return; ta.style.height = "auto"; ta.style.overflow = "hidden"; ta.style.height = (ta.scrollHeight + 2) + "px"; } catch {}
   }
 
-  function iuTrNotesInit(quick){
-    const ta = document.getElementById("iuTrNotesText");
-    const copyBtn = document.getElementById("iuTrNotesCopy");
-    const clearBtn = document.getElementById("iuTrNotesClear");
-    const sendBtn = document.getElementById("iuTrNotesSend");
+  function iuTrNotesBootstrap(quick){
+    const block = quick && quick.querySelector('[data-iu-notes][data-iu-notes-key="translator"]');
+    const ta = block && block.querySelector('[data-iu-notes-text]');
     if (!ta) return;
     try { ta.value = String(localStorage.getItem(IU_TR_NOTES_KEY) || ""); } catch { ta.value = ""; }
     iuTrNotesAutosize(ta);
@@ -9006,26 +9002,43 @@ function buildVideoAsArticleCard(it) {
       try { localStorage.setItem(IU_TR_NOTES_KEY, String(ta.value || "")); } catch {}
       iuTrNotesAutosize(ta);
     });
-    if (copyBtn) copyBtn.addEventListener("click", async () => {
-      const t = ta.value || "";
-      try { await navigator.clipboard.writeText(t); } catch {}
-    });
-    if (clearBtn) clearBtn.addEventListener("click", () => {
-      ta.value = "";
-      try { localStorage.removeItem(IU_TR_NOTES_KEY); } catch {}
-      iuTrNotesAutosize(ta);
-    });
-    if (sendBtn) sendBtn.addEventListener("click", () => {
-      const text = ta.value.trim();
-      if (!text) {
-        const toast = quick.querySelector("#iuTrToast");
-        if (toast) { toast.textContent = "Nejdřív napiš poznámku"; toast.classList.add("iuTrToastVisible"); setTimeout(() => { toast.textContent = ""; toast.classList.remove("iuTrToastVisible"); }, 2500); }
+  }
+
+  function iuNotesGlobalDelegation(){
+    const SIG = "\n\n— infoUzel.cz\nhttps://infouzel.cz/";
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-iu-notes-copy], [data-iu-notes-clear], [data-iu-notes-send]");
+      if (!btn) return;
+      const block = btn.closest("[data-iu-notes]");
+      if (!block) return;
+      const ta = block.querySelector("[data-iu-notes-text]");
+      const status = block.querySelector("[data-iu-notes-status]");
+      const showStatus = (msg) => {
+        if (status) { status.textContent = msg; status.hidden = false; setTimeout(() => { status.textContent = ""; status.hidden = true; }, 2500); }
+      };
+      if (btn.matches("[data-iu-notes-copy]")) {
+        const t = ta ? (ta.value || "") : "";
+        try { navigator.clipboard.writeText(t); showStatus("Zkopírováno"); } catch { showStatus("Zkopírování selhalo"); }
         return;
       }
-      const body = text + "\n\n— infoUzel.cz\nhttps://infouzel.cz/";
-      window.location.href = `mailto:?subject=${encodeURIComponent("Poznámka z infoUzel.cz")}&body=${encodeURIComponent(body)}`;
+      if (btn.matches("[data-iu-notes-clear]")) {
+        if (ta) ta.value = "";
+        const storageKey = block.getAttribute("data-iu-notes-storage-key");
+        const trKey = block.getAttribute("data-iu-notes-key");
+        if (trKey === "translator") try { localStorage.removeItem(IU_TR_NOTES_KEY); } catch {}
+        else if (storageKey) try { localStorage.removeItem(storageKey); } catch {}
+        showStatus("Vyčištěno");
+        return;
+      }
+      if (btn.matches("[data-iu-notes-send]")) {
+        const text = ta ? (ta.value || "").trim() : "";
+        if (!text) { showStatus("Nejdřív napiš poznámku"); return; }
+        const body = text + SIG;
+        window.location.href = `mailto:?subject=${encodeURIComponent("Poznámka z infoUzel.cz")}&body=${encodeURIComponent(body)}`;
+      }
     });
   }
+  iuNotesGlobalDelegation();
 
   function iuEnsureArticlesView(){
     const stage = document.getElementById("iuCenterStage");
@@ -9481,17 +9494,21 @@ function buildVideoAsArticleCard(it) {
 
       const wrap = document.createElement("div");
       wrap.className = "iuNotes";
+      wrap.setAttribute("data-iu-notes", "");
+      wrap.setAttribute("data-iu-notes-storage-key", key);
       wrap.innerHTML =
-        `<div class="iuNotesTop">` +
-          `<div class="iuNotesTitle">Poznámky</div>` +
+        `<div class="iuNotesHead">` +
+          `<div class="iuNotesTitle">${escapeHtml(title || "Poznámky")}</div>` +
           `<div class="iuNotesActions">` +
+            `<button type="button" class="iuNotesBtn" data-iu-notes-copy>Zkopírovat</button>` +
+            `<button type="button" class="iuNotesBtn" data-iu-notes-clear>Vyčistit</button>` +
+            `<button type="button" class="iuNotesBtn iuNotesBtnPrimary" data-iu-notes-send>Odeslat</button>` +
             `<button type="button" class="iuBtn iuBtn--ghost iuNotesShare">Sdílet</button>` +
-            `<button type="button" class="iuBtn iuBtn--ghost iuNotesEmail">Email</button>` +
             `<button type="button" class="iuBtn iuBtn--ghost iuNotesWhatsApp">WhatsApp</button>` +
-            `<button type="button" class="iuBtn iuBtn--ghost iuNotesClear">Vymazat</button>` +
           `</div>` +
         `</div>` +
-        `<textarea class="iuNotesInput" placeholder="Piš poznámky…"></textarea>`;
+        `<textarea class="iuNotesText iuNotesInput" data-iu-notes-text placeholder="Piš poznámky…"></textarea>` +
+        `<div class="iuNotesStatus" data-iu-notes-status hidden></div>`;
 
       // Accent (optional)
       try{
@@ -9523,9 +9540,7 @@ function buildVideoAsArticleCard(it) {
       };
 
       const shareBtn = wrap.querySelector(".iuNotesShare");
-      const emailBtn = wrap.querySelector(".iuNotesEmail");
       const waBtn = wrap.querySelector(".iuNotesWhatsApp");
-      const clearBtn = wrap.querySelector(".iuNotesClear");
 
       const openMailto = () => {
         try{
@@ -9545,12 +9560,9 @@ function buildVideoAsArticleCard(it) {
           if (navigator.share) {
             try { await navigator.share(payload); return; } catch {}
           }
-          // Fallback: use Email (always available)
           openMailto();
         }catch{}
       });
-
-      if (emailBtn) emailBtn.addEventListener("click", openMailto);
 
       if (waBtn) waBtn.addEventListener("click", () => {
         try{
@@ -9558,17 +9570,6 @@ function buildVideoAsArticleCard(it) {
           if (!text) return;
           const msg = encodeURIComponent(getShareText());
           window.open(`https://wa.me/?text=${msg}`, "_blank", "noopener,noreferrer");
-        }catch{}
-      });
-
-      if (clearBtn) clearBtn.addEventListener("click", () => {
-        try{
-          if (!confirm("Opravdu vymazat poznámky?")) return;
-          try { localStorage.removeItem(key); } catch {}
-          if (ta) {
-            ta.value = "";
-            try { iuAutosizeTextarea(ta); } catch {}
-          }
         }catch{}
       });
 
