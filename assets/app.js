@@ -11334,6 +11334,17 @@ function buildVideoAsArticleCard(it) {
     } catch (e) { try{ console.warn('[iu] safeOpenPanel error', e); }catch{} }
   }
 
+  function iuHideAllOverlaysNow(){
+    try {
+      document.querySelectorAll('.iuModal, #iu-aiPanel, #iu-aiOverlay, [data-iu-backdrop], .iuBackdrop, .iu-overlay, .iu-backdrop').forEach(el => {
+        el.hidden = true;
+        try { el.style.display = 'none'; } catch {}
+      });
+      document.body.classList.remove('iu-modal-open');
+      document.body.style.overflow = '';
+    } catch {}
+  }
+
   let __iuPanelRouting = false;
   function applyPanelFromUrl(){
     if (__iuPanelRouting) return;
@@ -11341,16 +11352,10 @@ function buildVideoAsArticleCard(it) {
     try {
       const panel = parsePanelFromUrl();
       if (panel === null && __iuCurrentPanel !== null) {
+        iuHideAllOverlaysNow();
         const prev = __iuCurrentPanel;
         try { window.dispatchEvent(new CustomEvent('iu-close-panel', { detail: prev })); } catch {}
         __iuCurrentPanel = null;
-        requestAnimationFrame(function(){
-          try {
-            document.querySelectorAll('.iuModal, #iu-aiPanel, #iu-aiOverlay, [data-iu-backdrop]').forEach(el => { el.hidden = true; });
-            document.body.classList.remove('iu-modal-open');
-            document.body.style.overflow = '';
-          } catch {}
-        });
         return;
       }
       if (panel !== null) safeOpenPanel(panel);
@@ -11791,6 +11796,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       }catch{}
       const accent = (item.getAttribute('data-accent') || item.dataset?.accent || "").trim().toLowerCase();
       const section = normalizeSection(accent);
+      iuHideAllOverlaysNow();
       persistSection(section);
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
       applySectionFromURL(accent);
@@ -11802,11 +11808,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       }
     });
     function onUrlChange(){
-      try {
-        document.querySelectorAll('.iuModal, #iu-aiPanel, #iu-aiOverlay, [data-iu-backdrop]').forEach(el => { el.hidden = true; });
-        document.body.classList.remove('iu-modal-open');
-        document.body.style.overflow = '';
-      } catch {}
+      iuHideAllOverlaysNow();
       applySectionFromURL();
       applyPanelFromUrl();
     }
