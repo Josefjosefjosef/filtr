@@ -8867,9 +8867,9 @@ function buildVideoAsArticleCard(it) {
         { name: "Microsoft Copilot", url: "https://copilot.microsoft.com", desc: "AI pro práci ve Windows, Office a psaní e-mailů", external: true, color: "#7B61FF", video: "mO1f7b0f8C0" },
         { name: "Claude", url: "https://claude.ai", desc: "Velmi přirozená a čtivá čeština pro texty a myšlenky", external: true, color: "#D97706", video: "X1FOhLxFQqo" },
         { name: "Perplexity AI", url: "https://www.perplexity.ai", desc: "Odpovídá jako vyhledávač a uvádí zdroje informací", external: true, color: "#0EA5E9", video: "bL_0vD2i4-o" },
-        { name: "DeepSeek", url: "https://chat.deepseek.com", desc: "Silná AI na programování, logiku a matematiku", external: true, color: "#6366F1" },
-        { name: "Grok", url: "https://x.ai", desc: "AI zaměřená na aktuální dění a trendy na síti X", external: true, color: "#111827" },
-        { name: "Mistral AI", url: "https://chat.mistral.ai", desc: "Evropská AI s důrazem na soukromí a efektivitu", external: true, color: "#F97316" },
+        { name: "DeepSeek", url: "https://chat.deepseek.com", desc: "Silná AI na programování, logiku a matematiku", external: true, color: "#6366F1", video: "i9kTrcf-gDQ" },
+        { name: "Grok", url: "https://x.ai", desc: "AI zaměřená na aktuální dění a trendy na síti X", external: true, color: "#111827", video: "Hy46FSmgkmg" },
+        { name: "Mistral AI", url: "https://chat.mistral.ai", desc: "Evropská AI s důrazem na soukromí a efektivitu", external: true, color: "#F97316", video: "tcBYaZqdc4A" },
         { name: "Editee", url: "https://www.editee.com", desc: "Česká AI pro marketing, podnikání a obsah", external: true, color: "#EC4899" }
       ]
     },
@@ -8958,23 +8958,18 @@ function buildVideoAsArticleCard(it) {
     section.hidden = false;
     el.innerHTML = withVideo.map(it => {
       const id = it._ytId;
-      return `<button class="iuAiVideo" type="button" data-id="${iuQfEscape(id)}" aria-label="Přehrát ${iuQfEscape(it.name)}">
-        <img alt="" loading="lazy" decoding="async" src="https://i.ytimg.com/vi/${iuQfEscape(id)}/hqdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${iuQfEscape(id)}/mqdefault.jpg';">
-        <span>${iuQfEscape(it.name)}</span>
-      </button>`;
+      return `<div class="iuAiVideo">
+  <iframe
+    src="https://www.youtube.com/embed/${iuQfEscape(id)}"
+    title="AI asistenti – představení ${iuQfEscape(it.name)}"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+</div>`;
     }).join("");
   }
 
-  document.addEventListener("click", e => {
-    const btn = e.target && e.target.closest ? e.target.closest(".iuAiVideo") : null;
-    if (!btn) return;
-    const id = iuNormalizeYouTubeId(btn.dataset && btn.dataset.id);
-    const modal = document.getElementById("iuVideoModal");
-    const frame = document.getElementById("iuVideoFrame");
-    if (!modal || !frame || !id) return;
-    frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
-    modal.hidden = false;
-  });
   document.addEventListener("click", e => {
     const modal = document.getElementById("iuVideoModal");
     const frame = document.getElementById("iuVideoFrame");
