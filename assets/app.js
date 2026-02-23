@@ -8891,21 +8891,35 @@ function buildVideoAsArticleCard(it) {
     "Editee": "#B45309"
   };
 
+  function iuNormalizeYouTubeId(v){
+    const s = (v || "").trim();
+    if (/^[a-zA-Z0-9_-]{11}$/.test(s)) return s;
+    const m1 = s.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+    if (m1) return m1[1];
+    const m2 = s.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+    if (m2) return m2[1];
+    const m3 = s.match(/shorts\/([a-zA-Z0-9_-]{11})/);
+    if (m3) return m3[1];
+    return "";
+  }
+
   function renderAiVideos(root, services){
     const el = root && root.querySelector ? root.querySelector(".iuAiVideoGrid") : null;
     const section = root && root.querySelector ? root.querySelector(".iuAiVideos") : null;
     if (!el || !section) return;
-    const withVideo = (services || []).filter(it => it.video);
+    const withVideo = (services || []).map(it => {
+      const id = iuNormalizeYouTubeId(it.video);
+      return id ? { ...it, _ytId: id } : null;
+    }).filter(Boolean);
     if (withVideo.length === 0) {
       section.hidden = true;
       return;
     }
     section.hidden = false;
     el.innerHTML = withVideo.map(it => {
-      const id = (it.video || "").trim();
-      if (!id) return "";
+      const id = it._ytId;
       return `<button class="iuAiVideo" type="button" data-id="${iuQfEscape(id)}" aria-label="Přehrát ${iuQfEscape(it.name)}">
-        <img alt="" loading="lazy" decoding="async" src="https://img.youtube.com/vi/${iuQfEscape(id)}/hqdefault.jpg">
+        <img alt="" loading="lazy" decoding="async" src="https://i.ytimg.com/vi/${iuQfEscape(id)}/hqdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${iuQfEscape(id)}/mqdefault.jpg';">
         <span>${iuQfEscape(it.name)}</span>
       </button>`;
     }).join("");
@@ -8914,11 +8928,11 @@ function buildVideoAsArticleCard(it) {
   document.addEventListener("click", e => {
     const btn = e.target && e.target.closest ? e.target.closest(".iuAiVideo") : null;
     if (!btn) return;
-    const id = btn.dataset && btn.dataset.id;
+    const id = iuNormalizeYouTubeId(btn.dataset && btn.dataset.id);
     const modal = document.getElementById("iuVideoModal");
     const frame = document.getElementById("iuVideoFrame");
     if (!modal || !frame || !id) return;
-    frame.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+    frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
     modal.hidden = false;
   });
   document.addEventListener("click", e => {
