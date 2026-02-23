@@ -2,7 +2,7 @@ import { chromium } from "playwright";
 import fs from "node:fs";
 
 const OUT_DIR = "tools/_artifacts";
-const URL = "https://infouzel.cz/projects/?panel=ai&section=jr";
+const BASE_URL = "https://infouzel.cz/projects/?panel=ai&section=jr";
 const LEFT_CLICK_TEXT = /Mapy|Navigace/i;
 
 const write = (name, content) => {
@@ -50,7 +50,7 @@ const main = async () => {
     page.setDefaultNavigationTimeout(90000);
     page.setDefaultTimeout(90000);
 
-    const hardUrl = new URL(URL);
+    const hardUrl = new URL(BASE_URL);
     hardUrl.searchParams.set("__v", String(Date.now()));
     await page.goto(hardUrl.toString(), { waitUntil: "domcontentloaded" });
 
@@ -93,7 +93,7 @@ const main = async () => {
     write("prod_final_url.txt", finalUrl);
     write(
       "verdict.txt",
-      `FIRST CLICK OVERLAY: ${verdict}${verdict === "FAIL" ? ` — ${URL} — ${(errors[0] || "unknown error").replace(/\n/g, " ")}` : ""}`
+      `FIRST CLICK OVERLAY: ${verdict}${verdict === "FAIL" ? ` — ${BASE_URL} — ${(errors[0] || "unknown error").replace(/\n/g, " ")}` : ""}`
     );
     console.log(fs.readFileSync(`${OUT_DIR}/verdict.txt`, "utf8"));
   }
