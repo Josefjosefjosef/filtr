@@ -22,8 +22,9 @@ __pycache__/
 .venv/
 venv/
 
-# IDE
-.vscode/
+# IDE (allow workspace settings for OOM prevention)
+.vscode/*
+!.vscode/settings.json
 .idea/
 .cursorignore
 
