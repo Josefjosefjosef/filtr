@@ -7752,7 +7752,11 @@ function buildVideoAsArticleCard(it) {
     modal.hidden = true;
     modal.setAttribute("aria-hidden", "true");
   }
-  try { window.__iuCloseNakupDomu = iuNakupClose; } catch {}
+
+  try {
+    window.addEventListener('iu-open-panel', function(e){ if (e.detail === 'shopping') iuOpenNakupDomu(); });
+    window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'shopping') iuNakupClose(); });
+  } catch {}
 
   async function iuLoadNakupDomu(){
     const url = new URL(IU_NAKUP_JSON_PATH, window.location.origin).toString();
@@ -7781,7 +7785,6 @@ function buildVideoAsArticleCard(it) {
     if (!modal || !list) return;
     modal.hidden = false;
     modal.setAttribute("aria-hidden", "false");
-    try { if (typeof window.__iuSetCurrentPanel === 'function') window.__iuSetCurrentPanel('shopping'); } catch {}
     list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
     try {
       await iuLoadNakupDomu();
@@ -7796,17 +7799,14 @@ function buildVideoAsArticleCard(it) {
     openBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl('shopping'); } catch {}
-      try { if (typeof window.applyPanelFromUrl === 'function') window.applyPanelFromUrl(); } catch {}
     });
     closeBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
-      try { if (typeof window.applyPanelFromUrl === 'function') window.applyPanelFromUrl(); } catch {}
     });
     modal?.addEventListener("click", (e) => {
       if (e.target === modal) {
         try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
-        try { if (typeof window.applyPanelFromUrl === 'function') window.applyPanelFromUrl(); } catch {}
       }
     });
     document.addEventListener("keydown", (e) => {
@@ -7814,7 +7814,6 @@ function buildVideoAsArticleCard(it) {
         const m = iuNakupEls().modal;
         if (m && !m.hidden) {
           try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
-          try { if (typeof window.applyPanelFromUrl === 'function') window.applyPanelFromUrl(); } catch {}
         }
       }
     });
@@ -9458,7 +9457,6 @@ function buildVideoAsArticleCard(it) {
           requestAnimationFrame(() => window.iuPersistScrollPanels());
         }
       } catch {}
-      try { if (typeof window.__iuSetCurrentPanel === 'function') window.__iuSetCurrentPanel('ai'); } catch {}
     }
 
     function closePanel(){
@@ -9469,13 +9467,11 @@ function buildVideoAsArticleCard(it) {
       setExpanded(false);
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
     }
-    try { window.__iuCloseAiPanel = closePanel; } catch {}
-    try { window.__iuOpenAiPanel = openPanel; } catch {}
 
-    function togglePanel(){
-      if (aiPanel.hidden) openPanel();
-      else closePanel();
-    }
+    try {
+      window.addEventListener('iu-open-panel', function(e){ if (e.detail === 'ai') openPanel(); });
+      window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'ai') closePanel(); });
+    } catch {}
 
     // 1) Klik na tlačítko – přes URL (bez zásahu do href)
     document.addEventListener('click', e => {
@@ -9484,13 +9480,9 @@ function buildVideoAsArticleCard(it) {
       if (!btn) return;
       e.preventDefault();
       e.stopPropagation();
-      if (aiPanel.hidden) {
-        try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl('ai'); } catch {}
-        try { if (typeof window.applyPanelFromUrl === 'function') window.applyPanelFromUrl(); } catch {}
-      } else {
-        try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
-        try { if (typeof window.applyPanelFromUrl === 'function') window.applyPanelFromUrl(); } catch {}
-      }
+      try {
+        if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(aiPanel.hidden ? 'ai' : '');
+      } catch {}
     }, true);
 
     // 2) Zavření: ✕
@@ -11345,12 +11337,7 @@ function buildVideoAsArticleCard(it) {
     const panel = parsePanelFromUrl();
     if (panel === null && __iuCurrentPanel !== null) {
       const prev = __iuCurrentPanel;
-      try {
-        if (prev === 'ai' && typeof window.__iuCloseAiPanel === 'function') window.__iuCloseAiPanel();
-        else if (prev === 'shopping' && typeof window.__iuCloseNakupDomu === 'function') window.__iuCloseNakupDomu();
-        else if (prev === 'services' && typeof window.__iuCloseServicesPanel === 'function') window.__iuCloseServicesPanel();
-        else { try { console.warn('[iu] no close for panel', prev); } catch {} }
-      } catch (e) { try { console.warn('[iu] panel close failed', e); } catch {} }
+      try { window.dispatchEvent(new CustomEvent('iu-close-panel', { detail: prev })); } catch {}
       __iuCurrentPanel = null;
       return;
     }
@@ -11363,24 +11350,10 @@ function buildVideoAsArticleCard(it) {
       const u = new URL(window.location.href);
       if (panelOrNull) u.searchParams.set('panel', panelOrNull); else u.searchParams.delete('panel');
       history.replaceState(null, '', u.toString());
+      try { window.dispatchEvent(new CustomEvent('iu-panel-url-changed')); } catch {}
     }catch{}
   }
   try { window.iuSetPanelInUrl = setPanelInUrl; } catch {}
-  try { window.__iuSetCurrentPanel = function(p){ __iuCurrentPanel = p; }; } catch {}
-  try { window.applyPanelFromUrl = applyPanelFromUrl; } catch {}
-
-  function normalizeLegacySectionToPanel(){
-    try{
-      const url = new URL(location.href);
-      const sec = (url.searchParams.get('section') || '').toLowerCase();
-      if (url.searchParams.has('panel')) return;
-      if (sec === 'ai' || sec === 'shopping' || sec === 'services') {
-        url.searchParams.set('section', 'media');
-        url.searchParams.set('panel', sec);
-        history.replaceState(null, '', url.toString());
-      }
-    } catch (e) { try{ console.warn('[iu] legacy normalize failed', e); }catch{} }
-  }
 
   function applySectionFromURL(accentOverride){
     if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
@@ -11784,9 +11757,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const viewEl = document.getElementById('iuRadioView');
     try {
       window.iuOpenPanel = function(id){
-        if (id === 'ai' && typeof window.__iuOpenAiPanel === 'function') window.__iuOpenAiPanel();
-        else if (id === 'shopping' && typeof window.iuOpenNakupDomu === 'function') window.iuOpenNakupDomu();
-        else if (id === 'services' && typeof window.__iuOpenServicesPanel === 'function') window.__iuOpenServicesPanel();
+        window.dispatchEvent(new CustomEvent('iu-open-panel', { detail: id }));
       };
     } catch {}
 
@@ -11834,8 +11805,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       persistSection(getInitialSection());
     }
     applySectionFromURL();
-    normalizeLegacySectionToPanel();
     applyPanelFromUrl();
+    try { window.addEventListener('iu-panel-url-changed', applyPanelFromUrl); } catch {}
   }
 
   if (typeof window !== "undefined" && typeof window.iuIsProjectsRoute === "function" && window.iuIsProjectsRoute()) {
