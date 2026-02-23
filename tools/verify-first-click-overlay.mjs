@@ -50,21 +50,27 @@ const main = async () => {
     page.setDefaultNavigationTimeout(90000);
     page.setDefaultTimeout(90000);
 
-    await page.goto(URL, { waitUntil: "domcontentloaded" });
-    await page.reload({ waitUntil: "domcontentloaded" });
+    const hardUrl = new URL(URL);
+    hardUrl.searchParams.set("__v", String(Date.now()));
+    await page.goto(hardUrl.toString(), { waitUntil: "domcontentloaded" });
 
     await safeScreenshot(page, "prod_before_click.png");
 
+    hardUrl.searchParams.set("__v", String(Date.now() + 1));
+    await page.goto(hardUrl.toString(), { waitUntil: "domcontentloaded" });
+
     const byText = page.getByRole("link", { name: LEFT_CLICK_TEXT }).first();
-    if ((await byText.count()) > 0) {
-      await byText.click({ timeout: 30000 });
-    } else {
-      const first = page.locator("nav a, .iu-leftNav a, #iuLeftRail a, [data-left-rail] a, .iuLeftRail a, .leftRail a").first();
-      await first.click({ timeout: 30000 });
-    }
+    const fallbackLink = page.locator("nav a, .iu-leftNav a, #iuLeftRail a, [data-left-rail] a, .iuLeftRail a, .leftRail a").first();
+
+    await Promise.race([
+      page.waitForNavigation({ waitUntil: "domcontentloaded", timeout: 8000 }).catch(() => null),
+      (async () => {
+        if ((await byText.count()) > 0) await byText.click({ timeout: 30000 });
+        else await fallbackLink.click({ timeout: 30000 });
+      })(),
+    ]);
 
     await page.waitForTimeout(350);
-
     await safeScreenshot(page, "prod_after_click.png");
 
     finalUrl = page.url();
