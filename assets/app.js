@@ -7781,6 +7781,7 @@ function buildVideoAsArticleCard(it) {
     if (!modal || !list) return;
     modal.hidden = false;
     modal.setAttribute("aria-hidden", "false");
+    try { if (typeof window.__iuSetCurrentPanel === 'function') window.__iuSetCurrentPanel('shopping'); } catch {}
     list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
     try {
       await iuLoadNakupDomu();
@@ -9452,6 +9453,7 @@ function buildVideoAsArticleCard(it) {
           requestAnimationFrame(() => window.iuPersistScrollPanels());
         }
       } catch {}
+      try { if (typeof window.__iuSetCurrentPanel === 'function') window.__iuSetCurrentPanel('ai'); } catch {}
     }
     try { window.__iuOpenAiPanel = openPanel; } catch {}
 
@@ -11348,6 +11350,7 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
   try { window.iuSetPanelInUrl = setPanelInUrl; } catch {}
+  try { window.__iuSetCurrentPanel = function(p){ __iuCurrentPanel = p; }; } catch {}
 
   function normalizeLegacySectionToPanel(){
     try{
