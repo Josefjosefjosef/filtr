@@ -11730,7 +11730,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     try{ iuMyUzelApplyRailState(); }catch{}
 
     // INIT only: do NOT overwrite URL when it already has ?section= or hash.
-    const explicit = (typeof window !== "undefined" && typeof window.iuHasExplicitNavInUrl === "function" && window.iuHasExplicitNavInUrl()) || true;
+    const explicit = (typeof window !== "undefined" && typeof window.iuHasExplicitNavInUrl === "function" && window.iuHasExplicitNavInUrl()) || false;
     if (!explicit) {
       persistSection(getInitialSection());
     }
