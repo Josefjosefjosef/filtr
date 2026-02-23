@@ -1,3 +1,14 @@
+/* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
+var iuIsProjectsRoute = function iuIsProjectsRoute(){
+  try{
+    var p = (typeof location !== "undefined" && location && location.pathname ? String(location.pathname) : "").replace(/\\/g, '/');
+    return p === '/projects/' || p === '/projects' || p.indexOf('/projects/') === 0 || p === '/filtr/projects' || p === '/filtr/projects/';
+  }catch(e){
+    return false;
+  }
+};
+try { if (typeof window !== "undefined") window.iuIsProjectsRoute = iuIsProjectsRoute; } catch(e){}
+
 // === MAINTENANCE
 // ::contentReference[oaicite:0]{index=0}
 // REŽIM: MAINTENANCE
@@ -11725,10 +11736,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     applySectionFromURL();
   }
 
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', initNavRouter);
-  } else {
-    initNavRouter();
+  if (typeof window !== "undefined" && typeof window.iuIsProjectsRoute === "function" && window.iuIsProjectsRoute()) {
+    if (document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', initNavRouter);
+    } else {
+      initNavRouter();
+    }
   }
 })();
 } catch(e) {
