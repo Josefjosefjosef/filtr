@@ -2,9 +2,11 @@
   "name": "filtr",
   "private": true,
   "scripts": {
-    "check-site": "node scripts/check_site.js"
+    "check-site": "node scripts/check_site.js",
+    "smoke": "node scripts/smoke.mjs"
   },
   "devDependencies": {
+    "playwright": "^1.49.0",
     "puppeteer": "^23.0.0"
   }
 }

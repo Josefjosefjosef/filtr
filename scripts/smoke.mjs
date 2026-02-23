@@ -1,0 +1,152 @@
+#!/usr/bin/env node
+/**
+ * Smoke test for infoUzel — catches SEV1 scope crashe before merge.
+ * Runs against local static server.
+ * FAIL on: ReferenceError/TypeError, pageerror, unhandledrejection, broken nav click, route reset.
+ */
+
+import http from "http";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, "..");
+const PORT = 8080;
+const BASE = `http://127.0.0.1:${PORT}`;
+
+let server = null;
+let failed = false;
+const errors = [];
+
+function fail(msg) {
+  failed = true;
+  errors.push(msg);
+  console.error("[SMOKE FAIL]", msg);
+}
+
+// Minimal static server (0 extra deps)
+function serveFile(urlPath) {
+  let filePath = path.join(ROOT, (urlPath === "/" || urlPath === "") ? "index.html" : urlPath.replace(/^\//, "").replace(/\/$/, "") || "index.html");
+  if (urlPath && urlPath !== "/" && !urlPath.startsWith("/projects")) {
+    const p = path.join(ROOT, urlPath.replace(/^\//, "").split("/")[0]);
+    if (fs.existsSync(p) && fs.statSync(p).isDirectory()) filePath = path.join(p, "index.html");
+  }
+  if (!path.resolve(filePath).startsWith(path.resolve(ROOT)) && !filePath.includes(ROOT)) return null;
+  try {
+    if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
+      filePath = path.join(filePath, "index.html");
+    }
+    return fs.readFileSync(filePath);
+  } catch {
+    return null;
+  }
+}
+
+function startServer() {
+  return new Promise((resolve) => {
+    server = http.createServer((req, res) => {
+      const urlPath = req.url?.split("?")[0] || "/";
+      const data = serveFile(urlPath);
+      if (data) {
+        const ext = path.extname(urlPath);
+        const ct = ext === ".css" ? "text/css" : ext === ".js" ? "application/javascript" : ext === ".json" ? "application/json" : "text/html";
+        res.writeHead(200, { "Content-Type": ct });
+        res.end(data);
+      } else {
+        res.writeHead(404);
+        res.end("Not found");
+      }
+    });
+    server.listen(PORT, "127.0.0.1", () => resolve());
+  });
+}
+
+async function runSmoke() {
+  const { chromium } = await import("playwright");
+
+  await startServer();
+
+  try {
+    const browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext();
+    const page = await context.newPage();
+
+    page.on("pageerror", (err) => {
+      fail(`pageerror: ${err.message}`);
+    });
+
+    page.on("console", (msg) => {
+      const type = msg.type();
+      const text = msg.text();
+      if (type === "error") {
+        if (/ReferenceError|TypeError/.test(text)) fail(`console error: ${text}`);
+        if (/app\.js|app\.css|\.json/.test(text) && !/i\.ytimg\.com|thumbnail/.test(text)) {
+          fail(`console error (our asset): ${text}`);
+        }
+      }
+    });
+
+    const urls = [
+      `${BASE}/`,
+      `${BASE}/projects/?section=media`,
+      `${BASE}/projects/?debug=1`,
+    ];
+
+    for (const url of urls) {
+      const res = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
+      if (!res || res.status() >= 400) fail(`HTTP ${res?.status() || "?"} for ${url}`);
+      await page.waitForTimeout(500);
+    }
+
+    // Click test on /projects/?section=media
+    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await page.waitForTimeout(800);
+
+    const navSelectors = ["a.iu-leftNavItem", "a[data-rail]", ".iuLeftNav a", "nav a"];
+    let navEl = null;
+    for (const sel of navSelectors) {
+      try {
+        const el = await page.$(sel);
+        if (el) {
+          navEl = el;
+          break;
+        }
+      } catch {}
+    }
+    if (!navEl) fail("No nav link found (UI broken or overlay)");
+    else {
+      const beforeUrl = page.url();
+      await navEl.click();
+      await page.waitForTimeout(500);
+      const afterUrl = page.url();
+      const activeTag = await page.evaluate(() => document.activeElement?.tagName || "");
+      const urlChanged = afterUrl !== beforeUrl;
+      const hasFocus = /^A|BUTTON$/i.test(activeTag);
+      if (!urlChanged && !hasFocus) fail("Click did not change URL or focus");
+    }
+
+    // Route persist test
+    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await page.waitForTimeout(500);
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.waitForTimeout(500);
+    const finalUrl = page.url();
+    if (!finalUrl.includes("section=media")) fail(`Route reset: URL is ${finalUrl}`);
+
+    await browser.close();
+  } finally {
+    if (server) server.close();
+  }
+
+  if (failed) {
+    console.error("\nErrors:", errors);
+    process.exit(1);
+  }
+  console.log("SMOKE PASS");
+}
+
+runSmoke().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
