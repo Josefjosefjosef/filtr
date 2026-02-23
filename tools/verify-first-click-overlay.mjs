@@ -2,60 +2,97 @@ import { chromium } from "playwright";
 import fs from "node:fs";
 
 const OUT_DIR = "tools/_artifacts";
-fs.mkdirSync(OUT_DIR, { recursive: true });
-
 const URL = "https://infouzel.cz/projects/?panel=ai&section=jr";
-
 const LEFT_CLICK_TEXT = /Mapy|Navigace/i;
 
-const run = async () => {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+const write = (name, content) => {
+  fs.mkdirSync(OUT_DIR, { recursive: true });
+  fs.writeFileSync(`${OUT_DIR}/${name}`, content ?? "");
+};
+
+const safeScreenshot = async (page, name) => {
+  try {
+    await page.screenshot({ path: `${OUT_DIR}/${name}`, fullPage: false });
+    return true;
+  } catch (e) {
+    const msg = `SCREENSHOT_FAIL ${name}: ${String(e)}`;
+    const p = `${OUT_DIR}/prod_screenshot_error.txt`;
+    fs.mkdirSync(OUT_DIR, { recursive: true });
+    try {
+      const existing = fs.existsSync(p) ? fs.readFileSync(p, "utf8") + "\n" : "";
+      fs.writeFileSync(p, existing + msg);
+    } catch {
+      fs.writeFileSync(p, msg);
+    }
+    return false;
+  }
+};
+
+const main = async () => {
+  fs.mkdirSync(OUT_DIR, { recursive: true });
+
+  let browser = null;
+  let page = null;
 
   const errors = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(String(err)));
+  let finalUrl = "NO_URL (crash before navigation)";
+  let verdict = "FAIL";
 
-  await page.goto(URL, { waitUntil: "domcontentloaded" });
-  await page.reload({ waitUntil: "domcontentloaded" });
+  try {
+    browser = await chromium.launch({ headless: true });
+    page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 
-  await page.screenshot({ path: `${OUT_DIR}/prod_before_click.png`, fullPage: false });
+    page.on("console", (msg) => {
+      if (msg.type() === "error") errors.push(msg.text());
+    });
+    page.on("pageerror", (err) => errors.push(String(err)));
 
-  const byText = page.getByRole("link", { name: LEFT_CLICK_TEXT }).first();
-  if ((await byText.count()) > 0) {
-    await byText.click();
-  } else {
-    const first = page.locator(".iu-leftNav a, #iuLeftRail a, nav a").first();
-    await first.click();
+    page.setDefaultNavigationTimeout(90000);
+    page.setDefaultTimeout(90000);
+
+    await page.goto(URL, { waitUntil: "domcontentloaded" });
+    await page.reload({ waitUntil: "domcontentloaded" });
+
+    await safeScreenshot(page, "prod_before_click.png");
+
+    const byText = page.getByRole("link", { name: LEFT_CLICK_TEXT }).first();
+    if ((await byText.count()) > 0) {
+      await byText.click({ timeout: 30000 });
+    } else {
+      const first = page.locator("nav a, .iu-leftNav a, #iuLeftRail a, [data-left-rail] a, .iuLeftRail a, .leftRail a").first();
+      await first.click({ timeout: 30000 });
+    }
+
+    await page.waitForTimeout(350);
+
+    await safeScreenshot(page, "prod_after_click.png");
+
+    finalUrl = page.url();
+
+    const urlOk = !finalUrl.includes("panel=");
+    const consoleOk = errors.length === 0;
+
+    verdict = urlOk && consoleOk ? "OK" : "FAIL";
+  } catch (e) {
+    errors.push(`SCRIPT_CRASH: ${String(e?.message || e)}`);
+    verdict = "FAIL";
+  } finally {
+    try {
+      if (page) finalUrl = page.url() || finalUrl;
+    } catch {}
+    try {
+      if (browser) await browser.close();
+    } catch {}
+    write("prod_console_errors.txt", errors.join("\n") || "NO_CONSOLE_ERRORS");
+    write("prod_final_url.txt", finalUrl);
+    write(
+      "verdict.txt",
+      `FIRST CLICK OVERLAY: ${verdict}${verdict === "FAIL" ? ` — ${URL} — ${(errors[0] || "unknown error").replace(/\n/g, " ")}` : ""}`
+    );
+    console.log(fs.readFileSync(`${OUT_DIR}/verdict.txt`, "utf8"));
   }
 
-  await page.waitForTimeout(250);
-
-  await page.screenshot({ path: `${OUT_DIR}/prod_after_click.png`, fullPage: false });
-
-  fs.writeFileSync(`${OUT_DIR}/prod_console_errors.txt`, errors.join("\n") || "NO_CONSOLE_ERRORS");
-
-  const finalUrl = page.url();
-  fs.writeFileSync(`${OUT_DIR}/prod_final_url.txt`, finalUrl);
-
-  await browser.close();
-
-  const urlOk = !finalUrl.includes("panel=");
-  const consoleOk = errors.length === 0;
-  const verdict = urlOk && consoleOk ? "OK" : "FAIL";
-
-  const verdictLine =
-    verdict === "OK"
-      ? "FIRST CLICK OVERLAY: OK"
-      : `FIRST CLICK OVERLAY: FAIL — ${finalUrl} — urlOk=${urlOk} consoleErrors=${errors[0] || "none"}`;
-  console.log(verdictLine);
-  fs.writeFileSync(`${OUT_DIR}/verdict.txt`, verdictLine, "utf8");
   process.exit(verdict === "OK" ? 0 : 1);
 };
 
-run().catch((e) => {
-  console.error("FIRST CLICK OVERLAY: FAIL — script crashed —", e);
-  process.exit(1);
-});
+main();
