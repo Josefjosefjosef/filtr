@@ -135,6 +135,13 @@ async function runSmoke() {
     const finalUrl = page.url();
     if (!finalUrl.includes("section=media")) fail(`Route reset: URL is ${finalUrl}`);
 
+    if (failed) {
+      try {
+        await page.screenshot({ path: "smoke-fail.png", fullPage: true });
+      } catch (e) {
+        console.error("Could not save screenshot:", e.message);
+      }
+    }
     await browser.close();
   } finally {
     if (server) server.close();
