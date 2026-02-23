@@ -1,18 +1,3 @@
-/* SEV1: hard guard — prevent fatal crash if route helper is missing */
-var iuIsProjectsRoute = (typeof iuIsProjectsRoute === 'function') ? iuIsProjectsRoute : function iuIsProjectsRoute(){
-  try{
-    var p = (location && location.pathname ? String(location.pathname) : "").toLowerCase();
-    return p === "/projects" || p === "/projects/" || p.indexOf("/projects/") === 0;
-  }catch(e){
-    return false;
-  }
-};
-try{
-  if (typeof window !== "undefined" && typeof window.iuIsProjectsRoute !== "function") {
-    window.iuIsProjectsRoute = iuIsProjectsRoute;
-  }
-}catch(e){}
-
 // === MAINTENANCE
 // ::contentReference[oaicite:0]{index=0}
 // REŽIM: MAINTENANCE
@@ -51,15 +36,6 @@ window.addEventListener("unhandledrejection", (e) => {
 });
 
 (() => {
-  function iuIsProjectsRoute(){
-    try{
-      const p = (window.location.pathname || '/').replace(/\\/g, '/');
-      return p === '/projects/' || p === '/projects' || p === '/filtr/projects/' || p === '/filtr/projects';
-    }catch(e){
-      return false;
-    }
-  }
-
   function iuStripEmptyHash(){
     try{
       if(window.location.hash === '#'){
@@ -11744,12 +11720,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     applySectionFromURL();
   }
 
-  if (iuIsProjectsRoute()) {
-    if (document.readyState === 'loading'){
-      document.addEventListener('DOMContentLoaded', initNavRouter);
-    } else {
-      initNavRouter();
-    }
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initNavRouter);
+  } else {
+    initNavRouter();
   }
 })();
 

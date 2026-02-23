@@ -11882,37 +11882,3 @@ header#topbarWrap.topbar-new.iuTopbar,
   border: none;
   border-radius: 12px;
 }
-
-/* SEV1: ensure [hidden] elements never intercept clicks (incl. overlays/modals) */
-[hidden]{
-  display: none !important;
-}
-
-/* extra safety for modals/overlays if any custom rules fight [hidden] */
-#iuVideoModal[hidden],
-.iuVideoModal[hidden],
-.iuModal[hidden]{
-  display: none !important;
-}
-
-/* Gate D: clicks pass through when modal is not active (aria-hidden / isHidden) */
-#iuVideoModal[aria-hidden="true"],
-#iuVideoModal.isHidden,
-.iuVideoModal[aria-hidden="true"],
-.iuVideoModal.isHidden{
-  pointer-events: none !important;
-}
-
-/* SEV1: overlay/scrim must not intercept clicks unless rail is collapsed */
-body:not(.iu-leftRail-collapsed) .iuLeftEdgeOverlay,
-body:not(.iu-leftRail-collapsed) #iuLeftEdgeOverlay{
-  pointer-events: none !important;
-}
-
-/* SEV1: kill accidental pseudo-overlay (backup for inline style in HTML) */
-body::before,
-body::after,
-html::before,
-html::after{
-  pointer-events: none !important;
-}
