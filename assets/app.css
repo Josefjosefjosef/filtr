@@ -11799,17 +11799,17 @@ header#topbarWrap.topbar-new.iuTopbar,
   opacity: 1 !important;
 }
 
-/* AI QuickFeed — unique feed-only brand colors (not used elsewhere on site) */
+/* AI QuickFeed — unified accent with AI panel (same purple bar + tint) */
 .iuQuickFeed .iuAiCard{
-  --aiColor: var(--aiFeedColor, var(--aiColor, #1F4B99));
+  --aiColor: var(--aiFeedColor, var(--ai-accent-solid));
 }
 /* AI QuickFeed — move brand accent to the right (keep full brand background) */
 .iuQuickFeed .iuAiCard{
   position: relative;
   border-left: 0 !important;
   border-inline-start: 0 !important;
-  border-right: 4px solid var(--aiColor, #1F4B99) !important;
-  border-inline-end: 4px solid var(--aiColor, #1F4B99) !important;
+  border-right: 4px solid var(--aiColor) !important;
+  border-inline-end: 4px solid var(--aiColor) !important;
   background: linear-gradient(
       0deg,
       color-mix(in srgb, var(--aiColor) 8%, white),
