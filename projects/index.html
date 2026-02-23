@@ -59,7 +59,11 @@ style-src 'self' 'unsafe-inline' https:;
           u.searchParams.set("section", "pocasi");
           history.replaceState(null, "", u.toString());
         }
-      }catch{}
+        // Contract: section= only for feed; panel names never in section
+        if (["ai","shopping","services"].indexOf(section) !== -1) {
+          u.searchParams.set("section", "media");
+          history.replaceState(null, "", u.toString());
+        }
     })();
     </script>
 
