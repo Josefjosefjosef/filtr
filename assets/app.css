@@ -11771,6 +11771,10 @@ header#topbarWrap.topbar-new.iuTopbar,
   opacity: 1 !important;
 }
 
+/* AI QuickFeed — unique feed-only brand colors (not used elsewhere on site) */
+.iuQuickFeed .iuAiCard{
+  --aiColor: var(--aiFeedColor, var(--aiColor, #1F4B99));
+}
 /* AI QuickFeed — move brand accent to the right (keep full brand background) */
 .iuQuickFeed .iuAiCard{
   position: relative;
