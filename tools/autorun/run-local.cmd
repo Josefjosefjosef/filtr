@@ -42,6 +42,7 @@ py "%ROOT%\tools\verify_paths.py" >> "%LOG%" 2>&1
 
 if not defined SILENT echo [RUN-LOCAL] build feed
 py "%ROOT%\scripts\build_articles.py" >> "%LOG%" 2>&1
+echo [RUN-LOCAL] build feed exit=%errorlevel% >> "%LOG%"
 
 echo ===== %date% %time% RUN-LOCAL END =====>> "%LOG%"
 if not defined SILENT echo [RUN-LOCAL] done (log: %LOG%)
