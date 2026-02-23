@@ -11806,12 +11806,18 @@ header#topbarWrap.topbar-new.iuTopbar,
   margin: 0 0 16px;
   color: rgba(11, 27, 43, 0.92);
 }
-#iuAiVideoGrid {
+.iuAiVideoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
 }
 .iuAiVideo {
+  display: block;
+  width: 100%;
+  border: none;
+  padding: 0;
+  background: transparent;
+  text-align: left;
   cursor: pointer;
   border-radius: 14px;
   overflow: hidden;
