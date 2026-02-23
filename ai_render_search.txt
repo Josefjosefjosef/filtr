@@ -1,0 +1,33 @@
+projects\index.html
+  128:                        <button class="iu-mmQuickItem" type="button" data-iuq="ai" data-action="ai-panel" aria-haspopup="dialog" aria-expanded="false" aria-controls="iu-aiPanel" aria-label="AI asistenti">
+  1402:                        <button class="iu-mmQuickItem" type="button" data-iuq="ai" data-action="ai-panel" aria-haspopup="dialog" aria-expanded="false" aria-controls="iu-aiPanel" aria-label="AI asistenti">
+  1451:                    <div id="iu-aiPanel" class="iu-aiPanel" hidden role="dialog" aria-modal="true" aria-label="AI asistenti">
+  1454:                          <span>AI asistenti</span>
+  1459:                          <h2 class="iuSeoTitle">AI asistenti – přehled nástrojů pro psaní, práci a programování</h2>
+  1461:                          <section class="iuSeoText" aria-label="SEO text – AI asistenti">
+  1463:                              Sekce AI asistenti na infoUzel.cz nabízí přehled známých nástrojů
+  1482:                            <p><strong>Jsou AI asistenti přímo na infoUzel.cz?</strong><br>
+  2850:    <div class="iuModal" id="iuNakupModal" hidden aria-modal="true" aria-labelledby="iuNakupModalTitle">
+  2851:      <div class="iuModalCard">
+  2852:        <div class="iuModalHead">
+  2856:        <div class="iuModalBody" id="iuNakupList"></div>
+
+assets\app.js
+  7783:    list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
+  7788:      list.innerHTML = '<div class="iuModalMsg">Odkazy se nepodařilo načíst. Zkuste obnovit stránku.</div>';
+  8854:      title: "AI asistenti",
+  9058:          <h2>AI asistenti – přehled nástrojů ChatGPT, Gemini, Copilot a další</h2>
+  9060:            Sekce AI asistenti na infoUzel.cz nabízí přehled známých nástrojů
+  9080:          <h2>AI asistenti – krátké představení</h2>
+  9412:          container.innerHTML = `<div class="iuErrorBox">AI asistenti se nepodařilo načíst. Zkuste reload.</div>`;
+
+assets\app.css
+  11213:.iuModal[hidden]{
+  11217:.iuModal{
+  11227:.iuModalCard{
+  11236:.iuModalHead{
+  11244:.iuModalHead button{
+  11253:.iuModalBody a{
+  11263:.iuModalBody a:hover{
+  11267:.iuModalMsg{
+  11369:/* AI asistenti – full button cards (match Mapy .iuRadioChip height 110px) */

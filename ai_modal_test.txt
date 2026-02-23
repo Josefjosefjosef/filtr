@@ -1,0 +1,17 @@
+Lokální test – vypnutí modal CSS (Gate 2 / krok 6).
+
+V DevTools → Elements → vyberte prvek s class .iu-aiPanel (ne .iuModal – to je Nákup domů).
+Ve Styles přidejte pro .iu-aiPanel:
+  display: none !important;
+
+Výsledek:
+- Pokud AI panel zmizí → obsah AI asistentů je v tomto panelu (dialog nad stránkou).
+- Pokud zůstane viditelný jiný „AI“ blok → ten by mohl být ve feedu (v tomto projektu se neočekává).
+
+Alternativa: skrýt overlay .iu-aiOverlay a .iu-aiPanel:
+  .iu-aiOverlay, .iu-aiPanel { display: none !important; }
+→ AI obsah by měl zmizet (je v panelu).
+
+Výsledek testu (pro tento repo ze zdrojového kódu):
+  AI asistenti jsou vykresleni v #iu-aiPanel (dialog). Po display:none na .iu-aiPanel zmizí.
+  Závěr: v modal/popup nad feedem.

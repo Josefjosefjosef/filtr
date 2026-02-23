@@ -1,0 +1,28 @@
+assets\app.js
+  9571:  const VIEW_MAP = {
+  9572:    media: 'media',
+  9573:    radio: 'radio',
+  9574:    tvonline: 'tvonline',
+  9575:    jr: 'jr',
+  9576:    mapy: 'mapy',
+  9577:    travel: 'travel',
+  9578:    'myuzel-1': 'myuzel-1',
+  9579:    'myuzel-2': 'myuzel-2',
+  9580:    'myuzel-3': 'myuzel-3',
+  9581:    'myuzel-4': 'myuzel-4',
+  9582:    'myuzel-5': 'myuzel-5',
+  9583:  };
+  11305:    showView(VIEW_MAP[section] ?? 'media');
+  11710:      // UX: after switching section, keep main content at the top.
+
+projects\index.html
+  472:                  <section id="iuQuickFeed" class="iuQuickFeed" hidden aria-label="Rychlé odkazy – detail"></section>
+  1383:                    <section class="iu-mailboxes" aria-label="Moje schránky">
+
+assets\app.js (normalizeLegacySectionToPanel, cca 11352–11363):
+  - section=ai v URL se přepíše na section=media + panel=ai (není v VIEW_MAP).
+  - applyPanelFromUrl() pak otevře panel podle panel=ai (safeOpenPanel → iuOpenPanel('ai')).
+
+assets\app.js (showView):
+  - Zobrazuje pouze VIEW_MAP klíče (media, radio, jr, mapy, …). Žádný view „ai“.
+  - AI obsah se nevykresluje přes showView/renderFeed, ale přes panel (#iu-aiPanel).

@@ -1,0 +1,23 @@
+DOM strom AI sekce (ze zdrojového projects/index.html). V produkci zkontrolujte Elements → vyberte #iu-aiPanel → Copy → Copy element a doplňte sem.
+
+Struktura ze zdroje:
+  …
+  <aside>  (levý sloupec – Mind menu / Rychlé odkazy)
+    …
+    <section class="iu-mmQuickLinks"> … tlačítka včetně data-action="ai-panel" … </section>
+    <!-- AI Panel (Modal) -->
+    <div id="iu-aiOverlay" class="iu-aiOverlay" hidden></div>
+    <div id="iu-aiPanel" class="iu-aiPanel" hidden role="dialog" aria-modal="true" aria-label="AI asistenti">
+      <div class="iu-aiModal">
+        <div class="iu-aiPanelHeader"> … <span>AI asistenti</span> … </div>
+        <div class="iu-aiPanelBody">
+          <h2 class="iuSeoTitle">…</h2>
+          <div id="iu-aiPanelCards"></div>   ← sem se renderují karty (loadAiAssistants → renderAiCards)
+          <section class="iuSeoText"> … </section>
+        </div>
+      </div>
+    </div>
+  </aside>
+  …
+
+Důležité: #feed je jinde (hlavní obsah), např. <div id="feed">. #iu-aiPanel je SOUROZENEC kontejneru s #feed (ne dítě #feed). AI obsah tedy NENÍ uvnitř #feed.

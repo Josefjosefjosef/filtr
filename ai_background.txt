@@ -1,0 +1,21 @@
+CSS diagnostika pozadí – spustit v Console na https://infouzel.cz/projects/?section=ai nebo po otevření AI panelu (?panel=ai).
+
+Blok AI je #iu-aiPanel (nemá data-section="ai" v HTML; data-section mají jen feed view sekce).
+
+// AI panel (dialog)
+const el = document.querySelector('#iu-aiPanel');
+if(el){
+  const cs = getComputedStyle(el);
+  console.log("AI Panel Background:", cs.backgroundColor, cs.backgroundImage);
+  console.log("AI Panel Parent:", el.parentElement?.tagName, el.parentElement?.className);
+}
+
+// Rodič (typicky aside)
+const p = document.querySelector('#iu-aiPanel')?.parentElement;
+if(p){
+  const cs = getComputedStyle(p);
+  console.log("Parent BG:", cs.backgroundColor, cs.backgroundImage);
+}
+
+Výstup z produkce (pro Gate 3) vložte sem pod tento řádek:
+---
