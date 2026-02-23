@@ -7788,9 +7788,11 @@ function buildVideoAsArticleCard(it) {
       list.innerHTML = '<div class="iuModalMsg">Odkazy se nepodařilo načíst. Zkuste obnovit stránku.</div>';
     }
   }
+  try { window.__iuOpenNakupDomu = iuOpenNakupDomu; } catch {}
 
   function iuNakupDomuInit(){
     const { modal, openBtn, closeBtn } = iuNakupEls();
+    if (!modal) { try{ console.warn('[iu] Nákup modal root not found'); }catch{} return; }
     openBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
       iuOpenNakupDomu();
@@ -9416,7 +9418,7 @@ function buildVideoAsArticleCard(it) {
 
   function initAiPanel(){
     const aiPanel = document.getElementById('iu-aiPanel');
-    if (!aiPanel) return;
+    if (!aiPanel) { try{ console.warn('[iu] AI panel root not found'); }catch{} return; }
 
     loadAiAssistants();
 
@@ -9442,6 +9444,7 @@ function buildVideoAsArticleCard(it) {
       lockScroll(true);
       aiPanel.dataset.open = '1';
       setExpanded(true);
+      try{ if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl('ai'); }catch{}
       try {
         const body = aiPanel.querySelector('.iu-aiPanelBody');
         if (body && typeof window.iuPersistScrollPanels === 'function') {
@@ -9449,6 +9452,7 @@ function buildVideoAsArticleCard(it) {
         }
       } catch {}
     }
+    try { window.__iuOpenAiPanel = openPanel; } catch {}
 
     function closePanel(){
       aiPanel.hidden = true;
@@ -9456,6 +9460,7 @@ function buildVideoAsArticleCard(it) {
       lockScroll(false);
       aiPanel.dataset.open = '0';
       setExpanded(false);
+      try{ if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); }catch{}
     }
 
     function togglePanel(){
@@ -11263,6 +11268,7 @@ function buildVideoAsArticleCard(it) {
 
   function normalizeSection(raw){
     const k = String(raw || '').trim().toLowerCase();
+    if (k === 'ai' || k === 'shopping' || k === 'services') return 'media';
     if (k === 'radio') return 'radio';
     if (k === 'jr') return 'jr';
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
@@ -11288,7 +11294,31 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  function applySectionFromURL(accentOverride){
+  function parsePanelFromUrl(){
+    try{
+      const p = new URLSearchParams(window.location.search).get('panel');
+      const id = String(p || '').trim().toLowerCase();
+      if (id === 'ai' || id === 'shopping' || id === 'services') return id;
+      return null;
+    }catch{ return null; }
+  }
+
+  function setPanelInUrl(panelOrNull){
+    try{
+      const u = new URL(window.location.href);
+      if (panelOrNull) u.searchParams.set('panel', panelOrNull); else u.searchParams.delete('panel');
+      history.replaceState(null, '', u.toString());
+    }catch{}
+  }
+  try { window.iuSetPanelInUrl = setPanelInUrl; } catch {}
+
+  function applyPanelFromUrl(){
+    const panel = parsePanelFromUrl();
+    if (!panel) return;
+    try{
+      if (typeof window.iuOpenPanel === 'function') window.iuOpenPanel(panel);
+    }catch(e){ try{ console.warn('[iu] panel open failed', panel, e); }catch{} }
+  }
     if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
     // Gate C: ?section= has priority; hash ignored (getInitialSection reads search only)
     const section = getInitialSection(); // already normalized + fallback->media
@@ -11688,6 +11718,14 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function initNavRouter(){
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
+    var rawSectionForBookmark = null;
+    try{ rawSectionForBookmark = new URLSearchParams(window.location.search).get('section'); if (rawSectionForBookmark) rawSectionForBookmark = String(rawSectionForBookmark).trim().toLowerCase(); }catch{}
+    try{
+      window.iuOpenPanel = function(id){
+        if (id === 'ai' && typeof window.__iuOpenAiPanel === 'function') window.__iuOpenAiPanel();
+        if (id === 'shopping' && typeof window.__iuOpenNakupDomu === 'function') window.__iuOpenNakupDomu();
+      };
+    }catch{}
 
     // Attach handlers FIRST so left nav clicks work even if init fails or returns early.
     // Guard iuHasExplicitNavInUrl applies only to INIT; user clicks always update section.
@@ -11714,8 +11752,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         try{ iuScrollMainToTopSmooth(); }catch{}
       }
     });
-    window.addEventListener('popstate', applySectionFromURL);
-    window.addEventListener('hashchange', applySectionFromURL);
+    function onUrlChange(){ applySectionFromURL(); applyPanelFromUrl(); }
+    window.addEventListener('popstate', onUrlChange);
+    window.addEventListener('hashchange', onUrlChange);
 
     if (!feedEl || !viewEl) return;
 
@@ -11735,6 +11774,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       persistSection(getInitialSection());
     }
     applySectionFromURL();
+    applyPanelFromUrl();
+    if (rawSectionForBookmark && ['ai','shopping','services'].indexOf(rawSectionForBookmark) !== -1) {
+      try{ const u = new URL(window.location.href); u.searchParams.set('section','media'); u.searchParams.set('panel', rawSectionForBookmark); history.replaceState(null,'',u.toString()); }catch{}
+    }
   }
 
   if (typeof window !== "undefined" && typeof window.iuIsProjectsRoute === "function" && window.iuIsProjectsRoute()) {
