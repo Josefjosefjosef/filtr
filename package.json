@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "check-site": "node scripts/check_site.js",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "verify-first-click-overlay": "node tools/verify-first-click-overlay.mjs"
   },
   "devDependencies": {
     "playwright": "^1.49.0",

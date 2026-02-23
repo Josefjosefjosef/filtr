@@ -1,0 +1,40 @@
+name: Verify first-click overlay (prod)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [test/verify-first-click-overlay]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+
+      - name: Run production first-click overlay verify
+        id: verify
+        run: |
+          node tools/verify-first-click-overlay.mjs
+          echo $? > /tmp/verify_exit.txt
+
+      - name: Show verdict
+        if: always()
+        run: cat tools/_artifacts/verdict.txt 2>/dev/null || echo "FIRST CLICK OVERLAY: FAIL — no verdict file"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: first-click-overlay-artifacts
+          path: tools/_artifacts/
+
+      - name: Fail job if overlay verify failed
+        if: always()
+        run: |
+          exit "$(cat /tmp/verify_exit.txt 2>/dev/null || echo 1)"
