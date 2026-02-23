@@ -2823,6 +2823,7 @@ html[data-section="tvonline"] #iuTvOnlineView{
 
 /* Chip accent per view (JR/Radio/TV/Mapy) */
 #iuRadioView{ --iuSectionAccent: var(--iuNavAccent-radio, #6D28D9); --iu-accent-radio: var(--iuSectionAccent); }
+#iuAiView{ --iuSectionAccent: var(--iuNavAccent-ai, #7C3AED); }
 #iuMapyView{ --iuSectionAccent: var(--iuNavAccent-mapy, #22C55E); }
 #iuJrEmptyView{ --iuSectionAccent: var(--iuNavAccent-jr); }
 
@@ -7881,6 +7882,7 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
 
   --iuNavAccent-media:  #0B2A4A; /* darker journalist-style navy */
   --iuNavAccent-radio:  #8B5CF6;
+  --iuNavAccent-ai:     #7C3AED; /* AI section (unique, not used elsewhere) */
   --iuNavAccent-tv:     #EF4444;
   --iuNavAccent-tvonline: var(--iuAccentTVOnline);
   --iuNavAccent-jr:     #F97316;
@@ -7988,6 +7990,7 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
 
 /* Accent mapping */
 .iu-leftNav .iu-leftNavItem[data-accent="media"]{ --iuNavAccent: var(--iuNavAccent-media); }
+.iu-leftNav .iu-leftNavItem[data-accent="ai"]{ --iuNavAccent: var(--iuNavAccent-ai, #7C3AED); }
 .iu-leftNav .iu-leftNavItem[data-accent="radio"]{ --iuNavAccent: var(--iuNavAccent-radio); }
 .iu-leftNav .iu-leftNavItem[data-accent="tv"]{ --iuNavAccent: var(--iuNavAccent-tv); }
 .iu-leftNav .iu-leftNavItem[data-accent="tvonline"]{ --iuNavAccent: var(--iuNavAccent-tvonline); }
