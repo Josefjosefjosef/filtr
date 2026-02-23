@@ -11344,6 +11344,13 @@ function buildVideoAsArticleCard(it) {
         const prev = __iuCurrentPanel;
         try { window.dispatchEvent(new CustomEvent('iu-close-panel', { detail: prev })); } catch {}
         __iuCurrentPanel = null;
+        requestAnimationFrame(function(){
+          try {
+            document.querySelectorAll('.iuModal, #iu-aiPanel, #iu-aiOverlay, [data-iu-backdrop]').forEach(el => { el.hidden = true; });
+            document.body.classList.remove('iu-modal-open');
+            document.body.style.overflow = '';
+          } catch {}
+        });
         return;
       }
       if (panel !== null) safeOpenPanel(panel);
@@ -11794,7 +11801,15 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         try{ iuScrollMainToTopSmooth(); }catch{}
       }
     });
-    function onUrlChange(){ applySectionFromURL(); applyPanelFromUrl(); }
+    function onUrlChange(){
+      try {
+        document.querySelectorAll('.iuModal, #iu-aiPanel, #iu-aiOverlay, [data-iu-backdrop]').forEach(el => { el.hidden = true; });
+        document.body.classList.remove('iu-modal-open');
+        document.body.style.overflow = '';
+      } catch {}
+      applySectionFromURL();
+      applyPanelFromUrl();
+    }
     window.addEventListener('popstate', onUrlChange);
     window.addEventListener('hashchange', onUrlChange);
 
