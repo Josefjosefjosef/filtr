@@ -1,21 +1,15 @@
-CSS diagnostika pozadí – spustit v Console na https://infouzel.cz/projects/?section=ai nebo po otevření AI panelu (?panel=ai).
+=== Produkce – computed pozadí (spusť v Console při otevřeném AI panelu) ===
 
-Blok AI je #iu-aiPanel (nemá data-section="ai" v HTML; data-section mají jen feed view sekce).
-
-// AI panel (dialog)
-const el = document.querySelector('#iu-aiPanel');
+const el = document.querySelector('#iu-aiPanel') || document.querySelector('[data-section="ai"]');
 if(el){
   const cs = getComputedStyle(el);
-  console.log("AI Panel Background:", cs.backgroundColor, cs.backgroundImage);
-  console.log("AI Panel Parent:", el.parentElement?.tagName, el.parentElement?.className);
+  console.log("AI BG:", cs.backgroundColor, cs.backgroundImage);
+  const p = el.parentElement;
+  if(p){
+    const ps = getComputedStyle(p);
+    console.log("PARENT:", p, "BG:", ps.backgroundColor, ps.backgroundImage);
+  }
 }
 
-// Rodič (typicky aside)
-const p = document.querySelector('#iu-aiPanel')?.parentElement;
-if(p){
-  const cs = getComputedStyle(p);
-  console.log("Parent BG:", cs.backgroundColor, cs.backgroundImage);
-}
-
-Výstup z produkce (pro Gate 3) vložte sem pod tento řádek:
----
+--- PROD VÝSTUP (zkopíruj z Console a vlož sem) ---
+(Očekáváme: AI BG na #iu-aiPanel, PARENT = aside, BG rodiče. Panel běží na pozadí definovaném v CSS pro .iu-aiPanel / aside.)

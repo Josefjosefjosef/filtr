@@ -1,23 +1,44 @@
-DOM strom AI sekce (ze zdrojového projects/index.html). V produkci zkontrolujte Elements → vyberte #iu-aiPanel → Copy → Copy element a doplňte sem.
+=== Konzole – spusť na https://infouzel.cz/projects/?panel=ai (nebo ?panel=ai&section=jr) ===
 
-Struktura ze zdroje:
+console.log("Modal exists:", !!document.querySelector('.iuModal:not([hidden])'));
+console.log("AI panel exists:", !!document.querySelector('#iu-aiPanel'));
+console.log("AI panel open:", !!document.querySelector('#iu-aiPanel:not([hidden])'));
+console.log("AI in modal:", !!document.querySelector('.iuModal #iu-aiPanel, .iuModal [data-section="ai"]'));
+console.log("AI in feed:", !!document.querySelector('#feed #iu-aiPanel, .iuFeed #iu-aiPanel, .iuFeed [data-section="ai"]'));
+console.log("AI cards container:", document.querySelector('#iu-aiPanelCards'));
+console.log("AI panel parent chain:", (function(){
+  const el = document.querySelector('#iu-aiPanel') || document.querySelector('[data-section="ai"]');
+  if(!el) return null;
+  const chain = [];
+  let n = el;
+  for(let i=0;i<8 && n;i++){
+    chain.push(n.tagName.toLowerCase() + (n.id ? '#'+n.id : '') + (n.className ? '.'+String(n.className).trim().replace(/\s+/g,'.') : ''));
+    n = n.parentElement;
+  }
+  return chain;
+})());
+
+--- PROD CONSOLE OUTPUT ---
+(Výstup zkopírovaný z Console na produkci vložte sem. Očekávaný závěr: Modal exists false, AI panel exists true, AI panel open true, AI in modal false, AI in feed false, parent chain končí na aside.)
+
+--- PROD COPY ELEMENT ---
+(Elements panel → vyberte #iu-aiPanel → pravý klik → Copy → Copy element. Vložte sem.)
+(Případně #iu-aiPanelCards pro kontejner karet.)
+
+=== Struktura ze zdrojového kódu (projects/index.html) ===
   …
-  <aside>  (levý sloupec – Mind menu / Rychlé odkazy)
+  <aside>  (levý sloupec)
     …
-    <section class="iu-mmQuickLinks"> … tlačítka včetně data-action="ai-panel" … </section>
-    <!-- AI Panel (Modal) -->
     <div id="iu-aiOverlay" class="iu-aiOverlay" hidden></div>
-    <div id="iu-aiPanel" class="iu-aiPanel" hidden role="dialog" aria-modal="true" aria-label="AI asistenti">
+    <div id="iu-aiPanel" class="iu-aiPanel" … role="dialog" aria-modal="true" aria-label="AI asistenti">
       <div class="iu-aiModal">
         <div class="iu-aiPanelHeader"> … <span>AI asistenti</span> … </div>
         <div class="iu-aiPanelBody">
-          <h2 class="iuSeoTitle">…</h2>
-          <div id="iu-aiPanelCards"></div>   ← sem se renderují karty (loadAiAssistants → renderAiCards)
+          <div id="iu-aiPanelCards"></div>   ← render loadAiAssistants → renderAiCards
           <section class="iuSeoText"> … </section>
         </div>
       </div>
     </div>
   </aside>
   …
-
-Důležité: #feed je jinde (hlavní obsah), např. <div id="feed">. #iu-aiPanel je SOUROZENEC kontejneru s #feed (ne dítě #feed). AI obsah tedy NENÍ uvnitř #feed.
+#feed je jinde (střední sloupec). #iu-aiPanel není uvnitř #feed → AI obsah NENÍ jako karta ve feedu.

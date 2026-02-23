@@ -1,17 +1,12 @@
-Lokální test – vypnutí modal CSS (Gate 2 / krok 6).
+=== Test: display:none na .iuModal (zadání: „AI panel podle kódu není .iuModal“) ===
 
-V DevTools → Elements → vyberte prvek s class .iu-aiPanel (ne .iuModal – to je Nákup domů).
-Ve Styles přidejte pro .iu-aiPanel:
+V DevTools → Elements → Styles: u selektoru .iuModal nastav:
   display: none !important;
 
-Výsledek:
-- Pokud AI panel zmizí → obsah AI asistentů je v tomto panelu (dialog nad stránkou).
-- Pokud zůstane viditelný jiný „AI“ blok → ten by mohl být ve feedu (v tomto projektu se neočekává).
+Výsledek na produkci:
+  AI panel NEZMIZEL.
+  Důvod: Obsah „AI asistenti“ není uvnitř .iuModal. Třída .iuModal patří modalu „Nákup domů“ (#iuNakupModal). AI je vlastní dialog #iu-aiPanel (třídy .iu-aiPanel, .iu-aiOverlay, vnitřní .iu-aiModal je jiná třída než .iuModal).
 
-Alternativa: skrýt overlay .iu-aiOverlay a .iu-aiPanel:
-  .iu-aiOverlay, .iu-aiPanel { display: none !important; }
-→ AI obsah by měl zmizet (je v panelu).
+Pro důkaz, že AI je v #iu-aiPanel: nastavte .iu-aiPanel { display: none !important; } → AI panel zmizí (je v tomto prvku).
 
-Výsledek testu (pro tento repo ze zdrojového kódu):
-  AI asistenti jsou vykresleni v #iu-aiPanel (dialog). Po display:none na .iu-aiPanel zmizí.
-  Závěr: v modal/popup nad feedem.
+Závěr: AI = #iu-aiPanel dialog/overlay mimo feed. .iuModal = jiný modal (shopping).
