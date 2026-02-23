@@ -11902,17 +11902,3 @@ header#topbarWrap.topbar-new.iuTopbar,
 .iuVideoModal.isHidden{
   pointer-events: none !important;
 }
-
-/* SEV1: overlay/scrim must not intercept clicks unless rail is collapsed */
-body:not(.iu-leftRail-collapsed) .iuLeftEdgeOverlay,
-body:not(.iu-leftRail-collapsed) #iuLeftEdgeOverlay{
-  pointer-events: none !important;
-}
-
-/* SEV1: kill accidental pseudo-overlay (backup for inline style in HTML) */
-body::before,
-body::after,
-html::before,
-html::after{
-  pointer-events: none !important;
-}
