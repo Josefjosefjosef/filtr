@@ -11771,11 +11771,13 @@ header#topbarWrap.topbar-new.iuTopbar,
   opacity: 1 !important;
 }
 
-/* AI QuickFeed — brand accent on the right */
+/* AI QuickFeed — move brand accent to the right (keep full brand background) */
 .iuQuickFeed .iuAiCard{
   position: relative;
   border-left: 0 !important;
+  border-inline-start: 0 !important;
   border-right: 4px solid var(--aiColor, #1F4B99) !important;
+  border-inline-end: 4px solid var(--aiColor, #1F4B99) !important;
   background: linear-gradient(
       0deg,
       color-mix(in srgb, var(--aiColor) 8%, white),
