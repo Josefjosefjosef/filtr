@@ -59,6 +59,10 @@
   --accentSoft: rgba(31,75,153,0.10);
   --accentBorder: rgba(31,75,153,0.28);
 
+  /* AI panel — jednotná barva pravého/levého proužku a průsvitného podkladu */
+  --ai-accent-solid: #7B5CFF;
+  --ai-accent-soft: rgba(123, 92, 255, 0.35);
+
   /* zlaté systémy */
   --gold-main: #C9A24D;
   --gold-soft: rgba(201,162,77,0.35);
@@ -11743,13 +11747,13 @@ header#topbarWrap.topbar-new.iuTopbar,
 
 #iu-aiPanel .iu-aiItem{
   position: relative;
-  border-left: 4px solid var(--aiColor, #1F4B99);
+  border-left: 4px solid var(--ai-accent-solid);
 
   /* nové jemné vybarvení celé karty */
   background: linear-gradient(
       0deg,
-      color-mix(in srgb, var(--aiColor) 8%, white),
-      color-mix(in srgb, var(--aiColor) 8%, white)
+      color-mix(in srgb, var(--ai-accent-solid) 8%, white),
+      color-mix(in srgb, var(--ai-accent-solid) 8%, white)
   );
 
   transition: box-shadow .18s ease, transform .18s ease, background .18s ease;
@@ -11758,8 +11762,8 @@ header#topbarWrap.topbar-new.iuTopbar,
 #iu-aiPanel .iu-aiItem:hover{
   background: linear-gradient(
       0deg,
-      color-mix(in srgb, var(--aiColor) 14%, white),
-      color-mix(in srgb, var(--aiColor) 14%, white)
+      color-mix(in srgb, var(--ai-accent-solid) 14%, white),
+      color-mix(in srgb, var(--ai-accent-solid) 14%, white)
   );
 
   box-shadow: 0 10px 24px rgba(31,75,153,0.12);
