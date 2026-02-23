@@ -11,6 +11,8 @@ const LEFT_CLICK_TEXT = /Mapy|Navigace/i;
 const run = async () => {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  page.setDefaultTimeout(60000);
+  page.setDefaultNavigationTimeout(60000);
 
   const errors = [];
   page.on("console", (msg) => {
@@ -18,8 +20,8 @@ const run = async () => {
   });
   page.on("pageerror", (err) => errors.push(String(err)));
 
-  await page.goto(URL, { waitUntil: "domcontentloaded" });
-  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 60000 });
+  await page.reload({ waitUntil: "domcontentloaded", timeout: 60000 });
 
   await page.screenshot({ path: `${OUT_DIR}/prod_before_click.png`, fullPage: false });
 
@@ -56,6 +58,12 @@ const run = async () => {
 };
 
 run().catch((e) => {
-  console.error("FIRST CLICK OVERLAY: FAIL — script crashed —", e);
+  const msg = String(e?.message || e);
+  const verdictLine = `FIRST CLICK OVERLAY: FAIL — ${URL} — script crashed — ${msg}`;
+  console.error(verdictLine);
+  try {
+    fs.mkdirSync(OUT_DIR, { recursive: true });
+    fs.writeFileSync(`${OUT_DIR}/verdict.txt`, verdictLine, "utf8");
+  } catch {}
   process.exit(1);
 });
