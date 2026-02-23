@@ -36,6 +36,17 @@ window.addEventListener("unhandledrejection", (e) => {
 });
 
 (() => {
+  function iuStripEmptyHash(){
+    try{
+      if(window.location.hash === '#'){
+        const u = new URL(window.location.href);
+        u.hash = '';
+        history.replaceState(null, '', u.toString());
+      }
+    }catch(e){}
+  }
+  iuStripEmptyHash();
+
   document.documentElement.setAttribute("data-iu-js","loaded");
   try { document.documentElement.setAttribute("data-iu-path", location.pathname + location.search); } catch {}
   try { document.documentElement.setAttribute("data-iu-buildstamp", document.querySelector('meta[name="iu-build"]')?.content || "no-meta"); } catch {}
@@ -139,7 +150,10 @@ window.addEventListener("unhandledrejection", (e) => {
   function iuHasExplicitNavInUrl(){
     try{
       const u = new URL(window.location.href);
-      return u.searchParams.has("section") || !!u.hash;
+      const hasSection = u.searchParams.has('section');
+      // důležité: samotné "#" je prázdný hash -> nebrat jako explicitní navigaci
+      const hasMeaningfulHash = !!u.hash && u.hash.length > 1;
+      return hasSection || hasMeaningfulHash;
     }catch(e){
       return false;
     }
@@ -11259,6 +11273,7 @@ function buildVideoAsArticleCard(it) {
 
   function applySectionFromURL(accentOverride){
     if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
+    // Gate C: ?section= has priority; hash ignored (getInitialSection reads search only)
     const section = getInitialSection(); // already normalized + fallback->media
     const accentKey = (accentOverride && String(accentOverride).trim().toLowerCase()) || section;
     // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
