@@ -8864,6 +8864,19 @@ function buildVideoAsArticleCard(it) {
   function iuTrLangName(code){ return IU_TR_LANG_NAMES[code] || (code ? "(" + code + ")" : "—"); }
   function iuTrIsoToUrl(iso){ return IU_TR_ISO_TO_URL[iso] || iso.slice(0,2); }
 
+  /* AI QuickFeed — unique brand colors (must not appear elsewhere on site) */
+  const IU_AI_FEED_COLORS = {
+    "ChatGPT": "#057A6B",
+    "Google Gemini": "#0B6B9A",
+    "Microsoft Copilot": "#6B4EBB",
+    "Claude": "#C45A2A",
+    "Perplexity AI": "#0D7A8C",
+    "DeepSeek": "#5B21B6",
+    "Grok": "#155E75",
+    "Mistral AI": "#047857",
+    "Editee": "#B45309"
+  };
+
   function renderAiVideos(root, services){
     const el = root && root.querySelector ? root.querySelector(".iuAiVideoGrid") : null;
     const section = root && root.querySelector ? root.querySelector(".iuAiVideos") : null;
@@ -9011,12 +9024,14 @@ function buildVideoAsArticleCard(it) {
       ` : "";
       const renderCards = (items) => {
         const arr = items || data.items || [];
+        const isAi = (key || "").toLowerCase() === "ai";
         return arr.map(it => {
           const url = iuQfEscape(it.url || it.baseUrl || "#");
           const ext = (it.external !== false) ? 'target="_blank" rel="noopener noreferrer"' : "";
           const c = it.color || "#1F4B99";
+          const style = isAi ? `--aiFeedColor:${IU_AI_FEED_COLORS[it.name] || c}` : `--aiColor:${c}`;
           if (useFullCard) {
-            return `<a class="iuAiCard" href="${url}" ${ext} style="--aiColor:${c}">
+            return `<a class="iuAiCard" href="${url}" ${ext} style="${style}">
               <div class="iuAiInner">
                 <div class="iuAiName">${iuQfEscape(it.name)}</div>
                 ${it.desc ? `<div class="iuAiDesc">${iuQfEscape(it.desc)}</div>` : ""}
