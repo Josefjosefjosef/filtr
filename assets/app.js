@@ -136,16 +136,30 @@ window.addEventListener("unhandledrejection", (e) => {
     else iuInitRailThemeControls();
   }catch{}
 
-  // === PERSIST SCROLL (reload keeps position) ===
-  window.addEventListener("scroll", () => {
-    try { localStorage.setItem("iuScroll", String(window.scrollY)); } catch {}
+  function iuHasExplicitNavInUrl(){
+    try{
+      const u = new URL(window.location.href);
+      return u.searchParams.has("section") || !!u.hash;
+    }catch(e){
+      return false;
+    }
+  }
+
+  // === PERSIST SCROLL (reload keeps position, same URL only) ===
+  window.addEventListener("beforeunload", () => {
+    try{
+      sessionStorage.setItem("iu:lastUrl", window.location.href);
+      sessionStorage.setItem("iu:lastScrollY", String(window.scrollY || 0));
+    }catch(e){}
   });
   window.addEventListener("load", () => {
-    try {
-      const y = parseInt(localStorage.getItem("iuScroll") || "0", 10);
-      if (y > 0) setTimeout(() => window.scrollTo(0, y), 50);
-    } catch {}
-  });
+    try{
+      const lastUrl = sessionStorage.getItem("iu:lastUrl") || "";
+      if (lastUrl !== window.location.href) return;
+      const y = parseInt(sessionStorage.getItem("iu:lastScrollY") || "0", 10);
+      if (Number.isFinite(y) && y > 0) setTimeout(() => window.scrollTo(0, y), 50);
+    }catch(e){}
+  }, { once: true });
   const _iuPersistScrollDone = new Set();
   function persistScroll(el, key) {
     if (!el || !key || _iuPersistScrollDone.has(key)) return;
@@ -11639,8 +11653,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     try{ iuMyUzelApplyRailState(); }catch{}
 
     // Start: derive from URL (?section=radio|media). Unknown -> media.
-    // Ensure default is written into the URL (replaceState, no pushState).
-    persistSection(getInitialSection());
+    // Only set default section when URL has no explicit nav (avoid overwriting on reload).
+    if (!iuHasExplicitNavInUrl()) {
+      persistSection(getInitialSection());
+    }
     applySectionFromURL();
 
     // Delegated: any click in left rail routes to exactly one view + exactly one active item.
