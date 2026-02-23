@@ -35,15 +35,13 @@ py --version >> "%LOG%" 2>&1
 
 if not defined SILENT echo [RUN-LOCAL] doctor.py
 py "%ROOT%\tools\doctor.py" >> "%LOG%" 2>&1
+if errorlevel 1 echo [RUN-LOCAL] doctor warning >> "%LOG%"
 
 if not defined SILENT echo [RUN-LOCAL] verify_paths.py
 py "%ROOT%\tools\verify_paths.py" >> "%LOG%" 2>&1
 
 if not defined SILENT echo [RUN-LOCAL] build feed
 py "%ROOT%\scripts\build_articles.py" >> "%LOG%" 2>&1
-
-REM --- OPTIONAL: manifest hash (only if you want it) ---
-REM py "%ROOT%\tools\hash_manifest.py" create "%ROOT%" "%ROOT%\tools\autorun\manifest.json" >> "%LOG%" 2>&1
 
 echo ===== %date% %time% RUN-LOCAL END =====>> "%LOG%"
 if not defined SILENT echo [RUN-LOCAL] done (log: %LOG%)
