@@ -11294,6 +11294,7 @@ function buildVideoAsArticleCard(it) {
     const section = getInitialSection(); // already normalized + fallback->media
     const accentKey = (accentOverride && String(accentOverride).trim().toLowerCase()) || section;
     // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
+    try{ document.documentElement && document.documentElement.setAttribute("data-section", section); }catch{}
     try{ document.body && (document.body.dataset.section = section); }catch{}
     try{
       const color = IU_CONTENT_ACCENTS[accentKey] || "";
