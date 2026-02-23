@@ -9556,6 +9556,7 @@ function buildVideoAsArticleCard(it) {
     radio: "#9B8CFF",
     svatky: "#34E7A1",
     media: "#B38BFF",
+    ai: "#7C3AED",
     sport: "#FF6FD8",
     tech: "#6AA8FF",
     finance: "#FFD34D",
@@ -9570,6 +9571,7 @@ function buildVideoAsArticleCard(it) {
 
   const VIEW_MAP = {
     media: 'media',
+    ai: 'ai',
     radio: 'radio',
     tvonline: 'tvonline',
     jr: 'jr',
@@ -11213,6 +11215,7 @@ function buildVideoAsArticleCard(it) {
     const jrEmptyEl = document.getElementById('iuJrEmptyView');
     const mapyEl = document.getElementById('iuMapyView');
     const travelEl = document.getElementById('iuTravelView');
+    const aiViewEl = document.getElementById('iuAiView');
     const my1 = document.getElementById('iuMyUzelView1');
     const my2 = document.getElementById('iuMyUzelView2');
     const my3 = document.getElementById('iuMyUzelView3');
@@ -11225,6 +11228,7 @@ function buildVideoAsArticleCard(it) {
     if (jrEmptyEl) jrEmptyEl.hidden = true;
     if (mapyEl) mapyEl.hidden = true;
     if (travelEl) travelEl.hidden = true;
+    if (aiViewEl) aiViewEl.hidden = true;
     if (my1) my1.hidden = true;
     if (my2) my2.hidden = true;
     if (my3) my3.hidden = true;
@@ -11249,8 +11253,9 @@ function buildVideoAsArticleCard(it) {
       if(key === 'jr' && jrEmptyEl) { jrEmptyEl.hidden = false; activeEl = jrEmptyEl; }
       if(key === 'mapy' && mapyEl) { mapyEl.hidden = false; activeEl = mapyEl; }
       if(key === 'travel' && travelEl) { travelEl.hidden = false; activeEl = travelEl; }
-      // default feed view for all other sections
-      if(key !== 'radio' && key !== 'tvonline' && key !== 'jr' && key !== 'mapy' && key !== 'travel' && feedEl) { feedEl.hidden = false; activeEl = feedEl; }
+      if(key === 'ai' && aiViewEl) { aiViewEl.hidden = false; activeEl = aiViewEl; }
+      // default feed view for all other sections (never for ai)
+      if(key !== 'radio' && key !== 'tvonline' && key !== 'jr' && key !== 'mapy' && key !== 'travel' && key !== 'ai' && feedEl) { feedEl.hidden = false; activeEl = feedEl; }
     }
 
     // Notes: re-init within the active view on every switch (idempotent).
@@ -11266,7 +11271,7 @@ function buildVideoAsArticleCard(it) {
     if (k === 'radio') return 'radio';
     if (k === 'jr') return 'jr';
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
-    const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','tvprogram','culture','ads','jr','myuzel-1','myuzel-2','myuzel-3','myuzel-4','myuzel-5']);
+    const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','tvprogram','culture','ads','jr','ai','myuzel-1','myuzel-2','myuzel-3','myuzel-4','myuzel-5']);
     if (k === 'home') return 'media';
     return allowed.has(k) ? k : 'media';
   }
