@@ -91,6 +91,7 @@ async function runSmoke() {
     const urls = [
       `${BASE}/`,
       `${BASE}/projects/?section=media`,
+      `${BASE}/projects/?section=ai`,
       `${BASE}/projects/?debug=1`,
     ];
 
@@ -127,13 +128,21 @@ async function runSmoke() {
       if (!urlChanged && !hasFocus) fail("Click did not change URL or focus");
     }
 
-    // Route persist test
+    // Route persist test (media)
     await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
     await page.waitForTimeout(500);
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForTimeout(500);
-    const finalUrl = page.url();
-    if (!finalUrl.includes("section=media")) fail(`Route reset: URL is ${finalUrl}`);
+    let finalUrl = page.url();
+    if (!finalUrl.includes("section=media")) fail(`Route reset (media): URL is ${finalUrl}`);
+
+    // Route persist test (AI section)
+    await page.goto(`${BASE}/projects/?section=ai`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await page.waitForTimeout(500);
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.waitForTimeout(500);
+    finalUrl = page.url();
+    if (!finalUrl.includes("section=ai")) fail(`Route reset (ai): URL is ${finalUrl}`);
 
     await browser.close();
   } finally {

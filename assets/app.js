@@ -9442,6 +9442,7 @@ function buildVideoAsArticleCard(it) {
       lockScroll(true);
       aiPanel.dataset.open = '1';
       setExpanded(true);
+      try { if (typeof window.iuPersistSection === "function") window.iuPersistSection("ai"); }catch{}
       try {
         const body = aiPanel.querySelector('.iu-aiPanelBody');
         if (body && typeof window.iuPersistScrollPanels === 'function') {
@@ -9456,6 +9457,7 @@ function buildVideoAsArticleCard(it) {
       lockScroll(false);
       aiPanel.dataset.open = '0';
       setExpanded(false);
+      try { if (typeof window.iuPersistSection === "function") window.iuPersistSection("media"); }catch{}
     }
 
     function togglePanel(){
@@ -9515,6 +9517,7 @@ function buildVideoAsArticleCard(it) {
     if (aiOverlay) aiOverlay.hidden = true;
     aiPanel.dataset.open = '0';
     setExpanded(false);
+    try{ window.iuOpenAiPanel = openPanel; }catch{}
   }
 
   if (document.readyState === 'loading'){
@@ -11266,7 +11269,7 @@ function buildVideoAsArticleCard(it) {
     if (k === 'radio') return 'radio';
     if (k === 'jr') return 'jr';
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
-    const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','tvprogram','culture','ads','jr','myuzel-1','myuzel-2','myuzel-3','myuzel-4','myuzel-5']);
+    const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','tvprogram','culture','ads','jr','ai','myuzel-1','myuzel-2','myuzel-3','myuzel-4','myuzel-5']);
     if (k === 'home') return 'media';
     return allowed.has(k) ? k : 'media';
   }
@@ -11287,6 +11290,7 @@ function buildVideoAsArticleCard(it) {
       history.replaceState(null, '', url);
     }catch{}
   }
+    try{ window.iuPersistSection = persistSection; }catch{}
 
   function applySectionFromURL(accentOverride){
     if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
@@ -11318,6 +11322,13 @@ function buildVideoAsArticleCard(it) {
             iuWeatherRadarEnsure();
           }
         }catch{}
+      }
+    }catch{}
+
+    // AI section: open panel when section=ai in URL (reload persist)
+    try{
+      if (section === "ai" && typeof window.iuOpenAiPanel === "function") {
+        window.iuOpenAiPanel();
       }
     }catch{}
 
