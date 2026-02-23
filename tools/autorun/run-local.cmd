@@ -14,6 +14,14 @@ if exist "%LOCK%" (
 )
 echo %date% %time% > "%LOCK%"
 
+echo.>> "%LOG%"
+echo ===== %date% %time% RUN-LOCAL START (silent=%SILENT%) =====>> "%LOG%"
+echo CWD=%CD% >> "%LOG%"
+echo ROOT=%ROOT% >> "%LOG%"
+where py >> "%LOG%" 2>&1
+py --version >> "%LOG%" 2>&1
+if defined SILENT timeout /t 2 /nobreak >nul
+
 cd /d "%ROOT%"
 
 if not defined SILENT echo.
