@@ -9431,7 +9431,7 @@ function buildVideoAsArticleCard(it) {
 
     const aiOverlay = document.getElementById('iu-aiOverlay');
     const aiModal = aiPanel.querySelector('.iu-aiModal');
-    const aiClose = aiPanel.querySelector('.iu-aiClose');
+    const aiClose = aiPanel.querySelector('.iuAiClose');
 
     function getBtns(){
       return Array.from(document.querySelectorAll('[data-action="ai-panel"]'));
@@ -9486,12 +9486,13 @@ function buildVideoAsArticleCard(it) {
       } catch {}
     }, true);
 
-    // 2) Zavření: ✕
+    // 2) Zavření: × (odstraní panel= z URL)
     if (aiClose){
       aiClose.addEventListener('click', e => {
         e.preventDefault();
         e.stopPropagation();
         closePanel();
+        try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
       });
     }
 
