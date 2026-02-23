@@ -8808,11 +8808,11 @@ function buildVideoAsArticleCard(it) {
     ai: {
       title: "AI asistenti",
       items: [
-        { name: "ChatGPT", url: "https://chat.openai.com", desc: "Univerzální AI na psaní, nápady, obrázky i práci s daty", external: true, color: "#10A37F" },
-        { name: "Google Gemini", url: "https://gemini.google.com", desc: "AI propojená s Googlem, mapami, vyhledáváním a Gmailem", external: true, color: "#4285F4" },
-        { name: "Microsoft Copilot", url: "https://copilot.microsoft.com", desc: "AI pro práci ve Windows, Office a psaní e-mailů", external: true, color: "#7B61FF" },
-        { name: "Claude", url: "https://claude.ai", desc: "Velmi přirozená a čtivá čeština pro texty a myšlenky", external: true, color: "#D97706" },
-        { name: "Perplexity AI", url: "https://www.perplexity.ai", desc: "Odpovídá jako vyhledávač a uvádí zdroje informací", external: true, color: "#0EA5E9" },
+        { name: "ChatGPT", url: "https://chat.openai.com", desc: "Univerzální AI na psaní, nápady, obrázky i práci s daty", external: true, color: "#10A37F", video: "JTxsNm9IdYU" },
+        { name: "Google Gemini", url: "https://gemini.google.com", desc: "AI propojená s Googlem, mapami, vyhledáváním a Gmailem", external: true, color: "#4285F4", video: "r4sQqfvTv_g" },
+        { name: "Microsoft Copilot", url: "https://copilot.microsoft.com", desc: "AI pro práci ve Windows, Office a psaní e-mailů", external: true, color: "#7B61FF", video: "mO1f7b0f8C0" },
+        { name: "Claude", url: "https://claude.ai", desc: "Velmi přirozená a čtivá čeština pro texty a myšlenky", external: true, color: "#D97706", video: "X1FOhLxFQqo" },
+        { name: "Perplexity AI", url: "https://www.perplexity.ai", desc: "Odpovídá jako vyhledávač a uvádí zdroje informací", external: true, color: "#0EA5E9", video: "bL_0vD2i4-o" },
         { name: "DeepSeek", url: "https://chat.deepseek.com", desc: "Silná AI na programování, logiku a matematiku", external: true, color: "#6366F1" },
         { name: "Grok", url: "https://x.ai", desc: "AI zaměřená na aktuální dění a trendy na síti X", external: true, color: "#111827" },
         { name: "Mistral AI", url: "https://chat.mistral.ai", desc: "Evropská AI s důrazem na soukromí a efektivitu", external: true, color: "#F97316" },
@@ -8877,6 +8877,60 @@ function buildVideoAsArticleCard(it) {
     "Editee": "#B45309"
   };
 
+  function renderAiVideos(root, services){
+    const el = root && root.querySelector ? root.querySelector(".iuAiVideoGrid") : null;
+    const section = root && root.querySelector ? root.querySelector(".iuAiVideos") : null;
+    if (!el || !section) return;
+    const withVideo = (services || []).filter(it => it.video);
+    if (withVideo.length === 0) {
+      section.hidden = true;
+      return;
+    }
+    section.hidden = false;
+    el.innerHTML = withVideo.map(it => {
+      const id = (it.video || "").trim();
+      if (!id) return "";
+      return `<button class="iuAiVideo" type="button" data-id="${iuQfEscape(id)}" aria-label="Přehrát ${iuQfEscape(it.name)}">
+        <img alt="" loading="lazy" decoding="async" src="https://img.youtube.com/vi/${iuQfEscape(id)}/hqdefault.jpg">
+        <span>${iuQfEscape(it.name)}</span>
+      </button>`;
+    }).join("");
+  }
+
+  document.addEventListener("click", e => {
+    const btn = e.target && e.target.closest ? e.target.closest(".iuAiVideo") : null;
+    if (!btn) return;
+    const id = btn.dataset && btn.dataset.id;
+    const modal = document.getElementById("iuVideoModal");
+    const frame = document.getElementById("iuVideoFrame");
+    if (!modal || !frame || !id) return;
+    frame.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+    modal.hidden = false;
+  });
+  document.addEventListener("click", e => {
+    const modal = document.getElementById("iuVideoModal");
+    const frame = document.getElementById("iuVideoFrame");
+    if (!modal || modal.hidden) return;
+    if (e.target.classList && e.target.classList.contains("iuVideoModalClose")) {
+      modal.hidden = true;
+      if (frame) frame.src = "";
+      return;
+    }
+    if (e.target === modal) {
+      modal.hidden = true;
+      if (frame) frame.src = "";
+    }
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    const modal = document.getElementById("iuVideoModal");
+    const frame = document.getElementById("iuVideoFrame");
+    if (!modal || modal.hidden) return;
+    modal.hidden = true;
+    if (frame) frame.src = "";
+    e.preventDefault();
+  });
+
   function iuShowQuickFeed(key){
     const data = (window.IU_QUICK_FEEDS || {})[key];
     if (!data) return;
@@ -8939,7 +8993,8 @@ function buildVideoAsArticleCard(it) {
       iuTrInit(quick, data);
       iuTrNotesBootstrap(quick);
     } else {
-      const aiSeoBlock = (key || "").toLowerCase() === "ai" ? `
+      const isAi = (key || "").toLowerCase() === "ai";
+      const aiSeoBlock = isAi ? `
         <div class="iuFeedSeoBlock iuFeedSeoAI">
           <h2>AI asistenti – přehled nástrojů ChatGPT, Gemini, Copilot a další</h2>
           <p>
@@ -8962,40 +9017,67 @@ function buildVideoAsArticleCard(it) {
             <li>Další nástroje – DeepSeek, Grok, Mistral AI, Editee</li>
           </ul>
         </div>
+        <section class="iuAiVideos">
+          <h2>AI asistenti – krátké představení</h2>
+          <div class="iuAiVideoGrid"></div>
+        </section>
       ` : "";
-      quick.innerHTML = `
-        <div class="iuQHead">
-          <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-          <button class="iuQBack" type="button" id="iuQBackBtn">← Zpět</button>
-        </div>
-        <div class="iuQCard">
-          <div class="iuQGrid">
-            ${(data.items || []).map(it => {
-              const url = iuQfEscape(it.url || it.baseUrl || "#");
-              const ext = (it.external !== false) ? 'target="_blank" rel="noopener noreferrer"' : "";
-              const c = it.color || "#1F4B99";
-              const isAi = (key || "").toLowerCase() === "ai";
-              const style = isAi ? `--aiFeedColor:${IU_AI_FEED_COLORS[it.name] || c}` : `--aiColor:${c}`;
-              if (useFullCard) {
-                return `<a class="iuAiCard" href="${url}" ${ext} style="${style}">
-                  <div class="iuAiInner">
-                    <div class="iuAiName">${iuQfEscape(it.name)}</div>
-                    ${it.desc ? `<div class="iuAiDesc">${iuQfEscape(it.desc)}</div>` : ""}
-                  </div>
-                </a>`;
-              }
-              return `<div class="iuQItem">
-                <div class="iuQMeta">
-                  <div class="iuQName">${iuQfEscape(it.name)}</div>
-                  ${it.desc ? `<div class="iuQDesc">${iuQfEscape(it.desc)}</div>` : ""}
-                </div>
-                <a class="iuQBtn" href="${url}" ${ext}>Otevřít</a>
-              </div>`;
-            }).join("")}
+      const renderCards = (items) => {
+        const arr = items || data.items || [];
+        const isAi = (key || "").toLowerCase() === "ai";
+        return arr.map(it => {
+          const url = iuQfEscape(it.url || it.baseUrl || "#");
+          const ext = (it.external !== false) ? 'target="_blank" rel="noopener noreferrer"' : "";
+          const c = it.color || "#1F4B99";
+          const style = isAi ? `--aiFeedColor:${IU_AI_FEED_COLORS[it.name] || c}` : `--aiColor:${c}`;
+          if (useFullCard) {
+            return `<a class="iuAiCard" href="${url}" ${ext} style="${style}">
+              <div class="iuAiInner">
+                <div class="iuAiName">${iuQfEscape(it.name)}</div>
+                ${it.desc ? `<div class="iuAiDesc">${iuQfEscape(it.desc)}</div>` : ""}
+              </div>
+            </a>`;
+          }
+          return `<div class="iuQItem">
+            <div class="iuQMeta">
+              <div class="iuQName">${iuQfEscape(it.name)}</div>
+              ${it.desc ? `<div class="iuQDesc">${iuQfEscape(it.desc)}</div>` : ""}
+            </div>
+            <a class="iuQBtn" href="${url}" ${ext}>Otevřít</a>
+          </div>`;
+        }).join("");
+      };
+      const doRender = (services) => {
+        quick.innerHTML = `
+          <div class="iuQHead">
+            <div class="iuQTitle">${iuQfEscape(data.title)}</div>
+            <button class="iuQBack" type="button" id="iuQBackBtn">← Zpět</button>
           </div>
-        </div>
-        ${aiSeoBlock}
-      `;
+          <div class="iuQCard">
+            <div class="iuQGrid">
+              ${renderCards(services || data.items)}
+            </div>
+          </div>
+          ${aiSeoBlock}
+        `;
+        if (isAi && services) {
+          try { renderAiVideos(quick, services); } catch (e) { console.warn("renderAiVideos", e); }
+        }
+      };
+      if (isAi) {
+        doRender(data.items);
+        const base = (typeof location !== "undefined" && location.pathname || "").toLowerCase().includes("/filtr/") ? "/filtr/projects/" : "/projects/";
+        fetch(base + "data/services-ai.json", { cache: "no-store" })
+          .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+          .then(services => {
+            const arr = Array.isArray(services) ? services : (data.items || []);
+            if (arr.length) (window.IU_QUICK_FEEDS || {}).ai = { title: data.title, items: arr };
+            doRender(arr);
+          })
+          .catch(() => {});
+      } else {
+        doRender(data.items);
+      }
     }
     const back = document.getElementById("iuQBackBtn");
     if (back) back.addEventListener("click", iuHideQuickFeed, { once: true });

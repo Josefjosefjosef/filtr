@@ -11799,3 +11799,86 @@ header#topbarWrap.topbar-new.iuTopbar,
   box-shadow: 0 12px 28px rgba(31,75,153,0.12) !important;
   transform: translateY(-1px);
 }
+
+/* AI videos – pod SEO blokem */
+.iuAiVideos {
+  margin: 30px 0;
+}
+.iuAiVideos[hidden] {
+  display: none !important;
+}
+.iuAiVideos h2 {
+  font-size: 18px;
+  margin: 0 0 16px;
+  color: rgba(11, 27, 43, 0.92);
+}
+.iuAiVideoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+.iuAiVideo {
+  display: block;
+  width: 100%;
+  border: none;
+  padding: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+}
+.iuAiVideo:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+.iuAiVideo img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+.iuAiVideo span {
+  display: block;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(11, 27, 43, 0.92);
+}
+
+/* Video modal */
+.iuVideoModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 20, 40, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+.iuVideoModal[hidden] {
+  display: none !important;
+}
+.iuVideoModal .iuVideoModalClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10001;
+  color: #111;
+}
+.iuVideoModal iframe {
+  width: min(90vw, 960px);
+  height: min(54vw, 540px);
+  max-width: 100%;
+  border: none;
+  border-radius: 12px;
+}
