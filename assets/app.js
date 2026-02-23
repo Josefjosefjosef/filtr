@@ -11344,6 +11344,9 @@ function buildVideoAsArticleCard(it) {
       document.body.style.overflow = '';
     } catch {}
   }
+  // INITIAL PRE-HIDE: ensure no stale overlay is visible before first interaction
+  try { iuHideAllOverlaysNow(); } catch {}
+  try { requestAnimationFrame(() => { try { iuHideAllOverlaysNow(); } catch {} }); } catch {}
 
   let __iuPanelRouting = false;
   function applyPanelFromUrl(){
@@ -11784,6 +11787,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     } catch {}
 
     // Attach handlers FIRST so left nav clicks work even if init fails or returns early.
+    const leftRailEl = document.getElementById('iuLeftRail') || document.querySelector('.iu-leftNav');
+    if (leftRailEl) {
+      try {
+        leftRailEl.addEventListener('click', () => { try { iuHideAllOverlaysNow(); } catch {} }, true);
+      } catch {}
+    }
     document.addEventListener('click', (e) => {
       const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
       if (!item) return;
