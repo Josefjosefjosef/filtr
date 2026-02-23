@@ -1,3 +1,18 @@
+/* SEV1: hard guard — prevent fatal crash if route helper is missing */
+var iuIsProjectsRoute = (typeof iuIsProjectsRoute === 'function') ? iuIsProjectsRoute : function iuIsProjectsRoute(){
+  try{
+    var p = (location && location.pathname ? String(location.pathname) : "").toLowerCase();
+    return p === "/projects" || p === "/projects/" || p.indexOf("/projects/") === 0;
+  }catch(e){
+    return false;
+  }
+};
+try{
+  if (typeof window !== "undefined" && typeof window.iuIsProjectsRoute !== "function") {
+    window.iuIsProjectsRoute = iuIsProjectsRoute;
+  }
+}catch(e){}
+
 // === MAINTENANCE
 // ::contentReference[oaicite:0]{index=0}
 // REŽIM: MAINTENANCE
