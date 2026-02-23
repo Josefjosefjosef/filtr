@@ -50,7 +50,7 @@ function startServer() {
       const data = serveFile(urlPath);
       if (data) {
         const ext = path.extname(urlPath);
-        const ct = ext === ".css" ? "text/css" : ext === ".js" ? "application/javascript" : ext === ".json" ? "application/json" : "text/html";
+        const ct = ext === ".css" ? "text/css" : ext === ".js" ? "application/javascript" : ext === ".json" ? "application/json" : ext === ".ico" ? "image/x-icon" : "text/html";
         res.writeHead(200, { "Content-Type": ct });
         res.end(data);
       } else {
@@ -80,6 +80,7 @@ async function runSmoke() {
       const type = msg.type();
       const text = msg.text();
       if (type === "error") {
+        if (/\/favicon\.ico/.test(text)) return; // whitelist: ignore favicon 404
         if (/ReferenceError|TypeError/.test(text)) fail(`console error: ${text}`);
         if (/app\.js|app\.css|\.json/.test(text) && !/i\.ytimg\.com|thumbnail/.test(text)) {
           fail(`console error (our asset): ${text}`);
