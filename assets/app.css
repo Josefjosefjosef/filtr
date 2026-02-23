@@ -2659,12 +2659,34 @@ a.brand,
 }
 
 .iu-aiPanelHeader{
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 14px 16px;
   font-weight: 600;
   border-bottom: 1px solid rgba(0,0,0,.08);
+}
+
+.iuAiClose{
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+  font-size: 18px;
+  line-height: 26px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.iuAiClose:hover{
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
 .iu-aiClose{
