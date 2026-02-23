@@ -7752,6 +7752,7 @@ function buildVideoAsArticleCard(it) {
     modal.hidden = true;
     modal.setAttribute("aria-hidden", "true");
   }
+  try { window.__iuCloseNakupDomu = iuNakupClose; } catch {}
 
   async function iuLoadNakupDomu(){
     const url = new URL(IU_NAKUP_JSON_PATH, window.location.origin).toString();
@@ -7780,6 +7781,7 @@ function buildVideoAsArticleCard(it) {
     if (!modal || !list) return;
     modal.hidden = false;
     modal.setAttribute("aria-hidden", "false");
+    try { if (typeof window.__iuSetCurrentPanel === 'function') window.__iuSetCurrentPanel('shopping'); } catch {}
     list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
     try {
       await iuLoadNakupDomu();
@@ -7793,19 +7795,27 @@ function buildVideoAsArticleCard(it) {
     const { modal, openBtn, closeBtn } = iuNakupEls();
     openBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
-      iuOpenNakupDomu();
+      try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl('shopping'); } catch {}
+      try { if (typeof window.applyPanelFromUrl === 'function') window.applyPanelFromUrl(); } catch {}
     });
     closeBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
-      iuNakupClose();
+      try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
+      try { if (typeof window.applyPanelFromUrl === 'function') window.applyPanelFromUrl(); } catch {}
     });
     modal?.addEventListener("click", (e) => {
-      if (e.target === modal) iuNakupClose();
+      if (e.target === modal) {
+        try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
+        try { if (typeof window.applyPanelFromUrl === 'function') window.applyPanelFromUrl(); } catch {}
+      }
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         const m = iuNakupEls().modal;
-        if (m && !m.hidden) iuNakupClose();
+        if (m && !m.hidden) {
+          try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
+          try { if (typeof window.applyPanelFromUrl === 'function') window.applyPanelFromUrl(); } catch {}
+        }
       }
     });
   }
@@ -9448,6 +9458,7 @@ function buildVideoAsArticleCard(it) {
           requestAnimationFrame(() => window.iuPersistScrollPanels());
         }
       } catch {}
+      try { if (typeof window.__iuSetCurrentPanel === 'function') window.__iuSetCurrentPanel('ai'); } catch {}
     }
 
     function closePanel(){
@@ -9456,21 +9467,30 @@ function buildVideoAsArticleCard(it) {
       lockScroll(false);
       aiPanel.dataset.open = '0';
       setExpanded(false);
+      try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
     }
+    try { window.__iuCloseAiPanel = closePanel; } catch {}
+    try { window.__iuOpenAiPanel = openPanel; } catch {}
 
     function togglePanel(){
       if (aiPanel.hidden) openPanel();
       else closePanel();
     }
 
-    // 1) Klik na tlačítko (delegace) — legacy modal guard: quicklinks now use center QuickFeed only
+    // 1) Klik na tlačítko – přes URL (bez zásahu do href)
     document.addEventListener('click', e => {
       if (e.target.closest && e.target.closest('[data-iuq]')) return;
       const btn = e.target.closest('[data-action="ai-panel"]');
       if (!btn) return;
       e.preventDefault();
       e.stopPropagation();
-      togglePanel();
+      if (aiPanel.hidden) {
+        try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl('ai'); } catch {}
+        try { if (typeof window.applyPanelFromUrl === 'function') window.applyPanelFromUrl(); } catch {}
+      } else {
+        try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
+        try { if (typeof window.applyPanelFromUrl === 'function') window.applyPanelFromUrl(); } catch {}
+      }
     }, true);
 
     // 2) Zavření: ✕
@@ -11288,6 +11308,80 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  function parsePanelFromUrl(){
+    try{
+      const p = new URLSearchParams(window.location.search).get('panel');
+      const id = String(p || '').trim().toLowerCase();
+      if (id === 'ai' || id === 'shopping' || id === 'services') return id;
+      return null;
+    }catch{ return null; }
+  }
+
+  let __iuCurrentPanel = null;
+
+  function safeOpenPanel(panel, retryCount){
+    retryCount = retryCount || 0;
+    const maxRetry = 2;
+    try{
+      if (!panel) return;
+      const hasOpen = typeof window.iuOpenPanel === 'function';
+      const hasTarget = panel === 'ai' ? !!document.getElementById('iu-aiPanel') : true;
+      if (!hasOpen || !hasTarget) {
+        if (retryCount < maxRetry) {
+          setTimeout(function(){ safeOpenPanel(panel, retryCount + 1); }, 50);
+          return;
+        }
+        try{ console.warn('[iu] panel open skipped – iuOpenPanel or DOM not ready'); }catch{}
+        return;
+      }
+      try {
+        window.iuOpenPanel(panel);
+        __iuCurrentPanel = panel;
+      } catch (e) { try{ console.warn('[iu] panel open failed', e); }catch{} }
+    } catch (e) { try{ console.warn('[iu] safeOpenPanel error', e); }catch{} }
+  }
+
+  function applyPanelFromUrl(){
+    const panel = parsePanelFromUrl();
+    if (panel === null && __iuCurrentPanel !== null) {
+      const prev = __iuCurrentPanel;
+      try {
+        if (prev === 'ai' && typeof window.__iuCloseAiPanel === 'function') window.__iuCloseAiPanel();
+        else if (prev === 'shopping' && typeof window.__iuCloseNakupDomu === 'function') window.__iuCloseNakupDomu();
+        else if (prev === 'services' && typeof window.__iuCloseServicesPanel === 'function') window.__iuCloseServicesPanel();
+        else { try { console.warn('[iu] no close for panel', prev); } catch {} }
+      } catch (e) { try { console.warn('[iu] panel close failed', e); } catch {} }
+      __iuCurrentPanel = null;
+      return;
+    }
+    if (panel !== null) safeOpenPanel(panel);
+    else __iuCurrentPanel = null;
+  }
+
+  function setPanelInUrl(panelOrNull){
+    try{
+      const u = new URL(window.location.href);
+      if (panelOrNull) u.searchParams.set('panel', panelOrNull); else u.searchParams.delete('panel');
+      history.replaceState(null, '', u.toString());
+    }catch{}
+  }
+  try { window.iuSetPanelInUrl = setPanelInUrl; } catch {}
+  try { window.__iuSetCurrentPanel = function(p){ __iuCurrentPanel = p; }; } catch {}
+  try { window.applyPanelFromUrl = applyPanelFromUrl; } catch {}
+
+  function normalizeLegacySectionToPanel(){
+    try{
+      const url = new URL(location.href);
+      const sec = (url.searchParams.get('section') || '').toLowerCase();
+      if (url.searchParams.has('panel')) return;
+      if (sec === 'ai' || sec === 'shopping' || sec === 'services') {
+        url.searchParams.set('section', 'media');
+        url.searchParams.set('panel', sec);
+        history.replaceState(null, '', url.toString());
+      }
+    } catch (e) { try{ console.warn('[iu] legacy normalize failed', e); }catch{} }
+  }
+
   function applySectionFromURL(accentOverride){
     if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
     // Gate C: ?section= has priority; hash ignored (getInitialSection reads search only)
@@ -11688,14 +11782,18 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function initNavRouter(){
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
+    try {
+      window.iuOpenPanel = function(id){
+        if (id === 'ai' && typeof window.__iuOpenAiPanel === 'function') window.__iuOpenAiPanel();
+        else if (id === 'shopping' && typeof window.iuOpenNakupDomu === 'function') window.iuOpenNakupDomu();
+        else if (id === 'services' && typeof window.__iuOpenServicesPanel === 'function') window.__iuOpenServicesPanel();
+      };
+    } catch {}
 
     // Attach handlers FIRST so left nav clicks work even if init fails or returns early.
-    // Guard iuHasExplicitNavInUrl applies only to INIT; user clicks always update section.
     document.addEventListener('click', (e) => {
       const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
       if (!item) return;
-      // Prevent only for internal router items (href="#" / internal data-rail).
-      // External links must keep default behavior.
       try{
         const href = String(item.getAttribute("href") || "").trim();
         const rail = String(item.getAttribute("data-rail") || "").trim().toLowerCase();
@@ -11706,16 +11804,18 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const accent = (item.getAttribute('data-accent') || item.dataset?.accent || "").trim().toLowerCase();
       const section = normalizeSection(accent);
       persistSection(section);
+      try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
       applySectionFromURL(accent);
-      // UX: after switching section, keep main content at the top.
+      applyPanelFromUrl();
       try{
         requestAnimationFrame(() => requestAnimationFrame(() => iuScrollMainToTopSmooth()));
       }catch{
         try{ iuScrollMainToTopSmooth(); }catch{}
       }
     });
-    window.addEventListener('popstate', applySectionFromURL);
-    window.addEventListener('hashchange', applySectionFromURL);
+    function onUrlChange(){ applySectionFromURL(); applyPanelFromUrl(); }
+    window.addEventListener('popstate', onUrlChange);
+    window.addEventListener('hashchange', onUrlChange);
 
     if (!feedEl || !viewEl) return;
 
@@ -11729,12 +11829,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
     try{ iuMyUzelApplyRailState(); }catch{}
 
-    // INIT only: do NOT overwrite URL when it already has ?section= or hash.
     const explicit = (typeof window !== "undefined" && typeof window.iuHasExplicitNavInUrl === "function" && window.iuHasExplicitNavInUrl()) || false;
     if (!explicit) {
       persistSection(getInitialSection());
     }
     applySectionFromURL();
+    normalizeLegacySectionToPanel();
+    applyPanelFromUrl();
   }
 
   if (typeof window !== "undefined" && typeof window.iuIsProjectsRoute === "function" && window.iuIsProjectsRoute()) {
