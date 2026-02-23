@@ -23,9 +23,6 @@ jobs:
         continue-on-error: true
         run: node tools/verify-first-click-overlay.mjs
 
-      - name: Show verdict
-        run: cat tools/_artifacts/verdict.txt 2>/dev/null || echo "FIRST CLICK OVERLAY: FAIL — no verdict file"
-
       - name: Ensure artifacts dir exists
         if: always()
         run: |
@@ -33,6 +30,10 @@ jobs:
           [ -f tools/_artifacts/verdict.txt ] || echo "FIRST CLICK OVERLAY: FAIL — no verdict file" > tools/_artifacts/verdict.txt
           [ -f tools/_artifacts/prod_console_errors.txt ] || echo "NO_CONSOLE_ERRORS" > tools/_artifacts/prod_console_errors.txt
           [ -f tools/_artifacts/prod_final_url.txt ] || echo "NO_URL (crash before navigation)" > tools/_artifacts/prod_final_url.txt
+
+      - name: Show verdict
+        if: always()
+        run: cat tools/_artifacts/verdict.txt
 
       - name: Upload artifacts
         if: always()
