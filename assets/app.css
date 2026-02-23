@@ -11916,13 +11916,3 @@ html::before,
 html::after{
   pointer-events: none !important;
 }
-
-/* SEV1: layout must not intercept clicks over left rail */
-.layout{
-  pointer-events: none;
-}
-
-/* allow clicks on real content */
-.layout > *{
-  pointer-events: auto;
-}
