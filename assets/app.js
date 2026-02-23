@@ -44,6 +44,7 @@ window.addEventListener("unhandledrejection", (e) => {
       return false;
     }
   }
+  try { window.iuIsProjectsRoute = iuIsProjectsRoute; } catch(e){}
 
   function iuStripEmptyHash(){
     try{
@@ -11729,7 +11730,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     applySectionFromURL();
   }
 
-  if (iuIsProjectsRoute()) {
+  if (typeof window.iuIsProjectsRoute === "function" && window.iuIsProjectsRoute()) {
     if (document.readyState === 'loading'){
       document.addEventListener('DOMContentLoaded', initNavRouter);
     } else {
