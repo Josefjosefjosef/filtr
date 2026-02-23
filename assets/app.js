@@ -7751,6 +7751,7 @@ function buildVideoAsArticleCard(it) {
     if (!modal) return;
     modal.hidden = true;
     modal.setAttribute("aria-hidden", "true");
+    try { document.body.classList.remove('iu-modal-open'); } catch {}
   }
 
   try {
@@ -7785,6 +7786,7 @@ function buildVideoAsArticleCard(it) {
     if (!modal || !list) return;
     modal.hidden = false;
     modal.setAttribute("aria-hidden", "false");
+    try { document.body.classList.add('iu-modal-open'); } catch {}
     list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
     try {
       await iuLoadNakupDomu();
@@ -9449,6 +9451,7 @@ function buildVideoAsArticleCard(it) {
       aiPanel.hidden = false;
       if (aiOverlay) aiOverlay.hidden = false;
       lockScroll(true);
+      try { document.body.classList.add('iu-modal-open'); } catch {}
       aiPanel.dataset.open = '1';
       setExpanded(true);
       try {
@@ -9463,9 +9466,9 @@ function buildVideoAsArticleCard(it) {
       aiPanel.hidden = true;
       if (aiOverlay) aiOverlay.hidden = true;
       lockScroll(false);
+      try { document.body.classList.remove('iu-modal-open'); } catch {}
       aiPanel.dataset.open = '0';
       setExpanded(false);
-      try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
     }
 
     try {
@@ -11333,16 +11336,23 @@ function buildVideoAsArticleCard(it) {
     } catch (e) { try{ console.warn('[iu] safeOpenPanel error', e); }catch{} }
   }
 
+  let __iuPanelRouting = false;
   function applyPanelFromUrl(){
-    const panel = parsePanelFromUrl();
-    if (panel === null && __iuCurrentPanel !== null) {
-      const prev = __iuCurrentPanel;
-      try { window.dispatchEvent(new CustomEvent('iu-close-panel', { detail: prev })); } catch {}
-      __iuCurrentPanel = null;
-      return;
+    if (__iuPanelRouting) return;
+    __iuPanelRouting = true;
+    try {
+      const panel = parsePanelFromUrl();
+      if (panel === null && __iuCurrentPanel !== null) {
+        const prev = __iuCurrentPanel;
+        try { window.dispatchEvent(new CustomEvent('iu-close-panel', { detail: prev })); } catch {}
+        __iuCurrentPanel = null;
+        return;
+      }
+      if (panel !== null) safeOpenPanel(panel);
+      else __iuCurrentPanel = null;
+    } finally {
+      __iuPanelRouting = false;
     }
-    if (panel !== null) safeOpenPanel(panel);
-    else __iuCurrentPanel = null;
   }
 
   function setPanelInUrl(panelOrNull){
@@ -11350,7 +11360,7 @@ function buildVideoAsArticleCard(it) {
       const u = new URL(window.location.href);
       if (panelOrNull) u.searchParams.set('panel', panelOrNull); else u.searchParams.delete('panel');
       history.replaceState(null, '', u.toString());
-      try { window.dispatchEvent(new CustomEvent('iu-panel-url-changed')); } catch {}
+      if (!__iuPanelRouting) { try { window.dispatchEvent(new CustomEvent('iu-panel-url-changed')); } catch {} }
     }catch{}
   }
   try { window.iuSetPanelInUrl = setPanelInUrl; } catch {}
