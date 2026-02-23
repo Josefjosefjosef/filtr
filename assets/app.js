@@ -11344,6 +11344,17 @@ function buildVideoAsArticleCard(it) {
       document.body.style.overflow = '';
     } catch {}
   }
+  // FORCE STYLE CACHE so first click has no flash
+  try {
+    requestAnimationFrame(() => {
+      const els = document.querySelectorAll(
+        '.iuModal, #iu-aiPanel, #iu-aiOverlay, [data-iu-backdrop]'
+      );
+      els.forEach(el => {
+        void el.offsetHeight;
+      });
+    });
+  } catch {}
   // INITIAL PRE-HIDE: ensure no stale overlay is visible before first interaction
   try { iuHideAllOverlaysNow(); } catch {}
   try { requestAnimationFrame(() => { try { iuHideAllOverlaysNow(); } catch {} }); } catch {}
@@ -11843,6 +11854,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     applySectionFromURL();
     applyPanelFromUrl();
     try { window.addEventListener('iu-panel-url-changed', applyPanelFromUrl); } catch {}
+    // PRELOAD overlay styles on page load
+    try {
+      iuHideAllOverlaysNow();
+      requestAnimationFrame(() => {
+        iuHideAllOverlaysNow();
+      });
+    } catch {}
   }
 
   if (typeof window !== "undefined" && typeof window.iuIsProjectsRoute === "function" && window.iuIsProjectsRoute()) {
