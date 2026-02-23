@@ -11882,3 +11882,28 @@ header#topbarWrap.topbar-new.iuTopbar,
   border: none;
   border-radius: 12px;
 }
+
+/* ===== IU DEBUG PANEL SAFE (SEV1: must not block left nav) ===== */
+#iuDebugBox,
+#iuLayoutShiftBox{
+  pointer-events: none !important;
+}
+
+#iuDebugBox > *,
+#iuLayoutShiftBox > *{
+  pointer-events: auto !important;
+}
+
+/* Skryj debug PRE prvky defaultně */
+#iuVideoDebugText,
+#iuVideoDbgDumpSummary{
+  display: none !important;
+}
+
+/* Zobraz debug jen při ?debug=1 */
+.iu-debug-on #iuVideoDebugText,
+.iu-debug-on #iuVideoDbgDumpSummary,
+html[data-iu-debug="1"] #iuVideoDebugText,
+html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
+  display: block !important;
+}
