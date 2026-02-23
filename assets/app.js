@@ -8864,6 +8864,47 @@ function buildVideoAsArticleCard(it) {
   function iuTrLangName(code){ return IU_TR_LANG_NAMES[code] || (code ? "(" + code + ")" : "—"); }
   function iuTrIsoToUrl(iso){ return IU_TR_ISO_TO_URL[iso] || iso.slice(0,2); }
 
+  function renderAiVideos(items){
+    const el = document.getElementById("iuAiVideoGrid");
+    const section = document.querySelector(".iuAiVideos");
+    if (!el || !section) return;
+    const withVideo = (items || []).filter(it => it.video);
+    if (withVideo.length === 0) {
+      section.hidden = true;
+      return;
+    }
+    section.hidden = false;
+    el.innerHTML = withVideo.map(it => `<div class="iuAiVideo" data-id="${iuQfEscape(it.video)}">
+      <img src="https://img.youtube.com/vi/${iuQfEscape(it.video)}/hqdefault.jpg" alt="">
+      <span>${iuQfEscape(it.name)}</span>
+    </div>`).join("");
+  }
+
+  document.addEventListener("click", e => {
+    const v = e.target && e.target.closest ? e.target.closest(".iuAiVideo") : null;
+    if (!v) return;
+    const id = v.dataset && v.dataset.id;
+    if (!id) return;
+    const frame = document.getElementById("iuVideoFrame");
+    const modal = document.getElementById("iuVideoModal");
+    if (frame) frame.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+    if (modal) modal.hidden = false;
+  });
+  document.addEventListener("click", e => {
+    const modal = document.getElementById("iuVideoModal");
+    const frame = document.getElementById("iuVideoFrame");
+    if (!modal || modal.hidden) return;
+    if (e.target.classList && e.target.classList.contains("iuVideoModalClose")) {
+      modal.hidden = true;
+      if (frame) frame.src = "";
+      return;
+    }
+    if (e.target === modal) {
+      modal.hidden = true;
+      if (frame) frame.src = "";
+    }
+  });
+
   function iuShowQuickFeed(key){
     const data = (window.IU_QUICK_FEEDS || {})[key];
     if (!data) return;
@@ -8949,6 +8990,10 @@ function buildVideoAsArticleCard(it) {
             <li>Další nástroje – DeepSeek, Grok, Mistral AI, Editee</li>
           </ul>
         </div>
+        <section class="iuAiVideos">
+          <h2>AI asistenti – krátké představení</h2>
+          <div id="iuAiVideoGrid"></div>
+        </section>
       ` : "";
       quick.innerHTML = `
         <div class="iuQHead">
@@ -8981,6 +9026,9 @@ function buildVideoAsArticleCard(it) {
         </div>
         ${aiSeoBlock}
       `;
+      if ((key || "").toLowerCase() === "ai" && data.items) {
+        try { renderAiVideos(data.items); } catch (e) { console.warn("renderAiVideos", e); }
+      }
     }
     const back = document.getElementById("iuQBackBtn");
     if (back) back.addEventListener("click", iuHideQuickFeed, { once: true });
