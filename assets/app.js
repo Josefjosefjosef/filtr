@@ -11353,14 +11353,13 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  function setPanelInUrl(panelOrNull, opts){
-    opts = opts || {};
-    const replace = opts.replace === true;
+  function setPanelInUrl(panel, { replace = false } = {}){
     try{
-      const u = new URL(window.location.href);
-      if (panelOrNull) u.searchParams.set('panel', panelOrNull); else u.searchParams.delete('panel');
-      if (replace) history.replaceState({}, '', u.toString());
-      else history.pushState({}, '', u.toString());
+      const url = new URL(location.href);
+      if (panel) url.searchParams.set('panel', panel);
+      else url.searchParams.delete('panel');
+      if (replace) history.replaceState({}, '', url);
+      else history.pushState({}, '', url);
       if (!__iuPanelRouting) { try { window.dispatchEvent(new CustomEvent('iu-panel-url-changed')); } catch {} }
     }catch{}
   }
