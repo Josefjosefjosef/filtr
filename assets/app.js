@@ -35,6 +35,11 @@ window.addEventListener("unhandledrejection", (e) => {
   } catch {}
 });
 
+if (new URLSearchParams(location.search || "").get("debug") === "1") {
+  document.documentElement.classList.add("iu-debug-on");
+}
+
+try {
 (() => {
   function iuStripEmptyHash(){
     try{
@@ -11726,6 +11731,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     initNavRouter();
   }
 })();
+} catch(e) {
+  console.error("IU SAFE BOOT ERROR:", e);
+}
 
 // === UI-only cleanup: permanently disable any cached rail-hidden state ===
 try { document.body.classList.remove("iu" + "RailHidden"); } catch (e) {}
