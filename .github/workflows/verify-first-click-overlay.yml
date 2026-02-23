@@ -20,21 +20,25 @@ jobs:
 
       - name: Run production first-click overlay verify
         id: verify
+        continue-on-error: true
         run: |
           node tools/verify-first-click-overlay.mjs
           echo $? > /tmp/verify_exit.txt
 
+      - name: Ensure artifacts dir and verdict
+        run: |
+          mkdir -p tools/_artifacts
+          if [ ! -f tools/_artifacts/verdict.txt ]; then
+            echo "FIRST CLICK OVERLAY: FAIL — script crashed or no verdict" > tools/_artifacts/verdict.txt
+          fi
+
       - name: Show verdict
-        if: always()
-        run: cat tools/_artifacts/verdict.txt 2>/dev/null || echo "FIRST CLICK OVERLAY: FAIL — no verdict file"
+        run: cat tools/_artifacts/verdict.txt
 
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: first-click-overlay-artifacts
           path: tools/_artifacts/
 
       - name: Fail job if overlay verify failed
-        if: always()
-        run: |
-          exit "$(cat /tmp/verify_exit.txt 2>/dev/null || echo 1)"
+        run: exit "$(cat /tmp/verify_exit.txt 2>/dev/null || echo 1)"
