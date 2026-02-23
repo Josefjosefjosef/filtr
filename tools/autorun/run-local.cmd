@@ -5,13 +5,13 @@ if /I "%~1"=="/silent" set "SILENT=1"
 chcp 65001 >nul
 
 set "ROOT=C:\projects\filtr"
-set "LOG=%ROOT%\tools\autorun\autorun.log"
-set "LOCK=%ROOT%\tools\autorun\autorun.lock"
+set "LOG=C:\projects\filtr\tools\autorun\autorun.log"
+set "LOCK=C:\projects\filtr\tools\autorun\autorun.lock"
 
-if exist "%LOCK%" (
-  echo ===== %date% %time% LOCKED (skipping) =====>> "%LOG%"
-  exit /b 0
-)
+if not exist "%LOCK%" goto :run
+echo ===== %date% %time% LOCKED (skipping) =====>> "C:\projects\filtr\tools\autorun\autorun.log"
+exit /b 0
+:run
 echo %date% %time% > "%LOCK%"
 
 echo.>> "%LOG%"
@@ -20,7 +20,7 @@ echo CWD=%CD% >> "%LOG%"
 echo ROOT=%ROOT% >> "%LOG%"
 where py >> "%LOG%" 2>&1
 py --version >> "%LOG%" 2>&1
-if defined SILENT timeout /t 2 /nobreak >nul
+if defined SILENT ping -n 3 127.0.0.1 >nul 2>&1
 
 cd /d "%ROOT%"
 
