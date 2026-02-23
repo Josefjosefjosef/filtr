@@ -7752,6 +7752,7 @@ function buildVideoAsArticleCard(it) {
     modal.hidden = true;
     modal.setAttribute("aria-hidden", "true");
   }
+  try { window.__iuCloseNakupDomu = iuNakupClose; } catch {}
 
   async function iuLoadNakupDomu(){
     const url = new URL(IU_NAKUP_JSON_PATH, window.location.origin).toString();
@@ -9462,6 +9463,7 @@ function buildVideoAsArticleCard(it) {
       setExpanded(false);
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
     }
+    try { window.__iuCloseAiPanel = closePanel; } catch {}
 
     function togglePanel(){
       if (aiPanel.hidden) openPanel();
@@ -11303,6 +11305,8 @@ function buildVideoAsArticleCard(it) {
     }catch{ return null; }
   }
 
+  let __iuCurrentPanel = null;
+
   function safeOpenPanel(panel){
     try{
       if (!panel) return;
@@ -11311,13 +11315,29 @@ function buildVideoAsArticleCard(it) {
         return;
       }
       setTimeout(() => {
-        try { window.iuOpenPanel(panel); } catch (e) { console.warn('[iu] panel open failed', e); }
+        try {
+          window.iuOpenPanel(panel);
+          __iuCurrentPanel = panel;
+        } catch (e) { console.warn('[iu] panel open failed', e); }
       }, 0);
     } catch (e) { console.warn('[iu] safeOpenPanel error', e); }
   }
 
   function applyPanelFromUrl(){
-    safeOpenPanel(parsePanelFromUrl());
+    const panel = parsePanelFromUrl();
+    if (panel === null && __iuCurrentPanel !== null) {
+      const prev = __iuCurrentPanel;
+      try {
+        if (prev === 'ai' && typeof window.__iuCloseAiPanel === 'function') window.__iuCloseAiPanel();
+        else if (prev === 'shopping' && typeof window.__iuCloseNakupDomu === 'function') window.__iuCloseNakupDomu();
+        else if (prev === 'services' && typeof window.__iuCloseServicesPanel === 'function') window.__iuCloseServicesPanel();
+        else { try { console.warn('[iu] no close for panel', prev); } catch {} }
+      } catch (e) { try { console.warn('[iu] panel close failed', e); } catch {} }
+      __iuCurrentPanel = null;
+      return;
+    }
+    if (panel !== null) safeOpenPanel(panel);
+    else __iuCurrentPanel = null;
   }
 
   function setPanelInUrl(panelOrNull){
@@ -11767,7 +11787,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const accent = (item.getAttribute('data-accent') || item.dataset?.accent || "").trim().toLowerCase();
       const section = normalizeSection(accent);
       persistSection(section);
+      try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
       applySectionFromURL(accent);
+      applyPanelFromUrl();
       // UX: after switching section, keep main content at the top.
       try{
         requestAnimationFrame(() => requestAnimationFrame(() => iuScrollMainToTopSmooth()));
