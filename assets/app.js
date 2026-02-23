@@ -11656,24 +11656,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function initNavRouter(){
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
-    if (!feedEl || !viewEl) return;
 
-    renderRadioView(viewEl);
-    const wishCtl = initRadioWish(viewEl);
-    // async load (no backend); fallback keeps UI usable even if fetch fails
-    loadWishDataIntoState().then((d) => { try{ wishCtl.setData(d); }catch{} });
-
-    // Custom sections (UI-only)
-    try{ iuMyUzelApplyRailState(); }catch{}
-
-    // Start: derive from URL (?section=radio|media). Unknown -> media.
-    // Only set default section when URL has no explicit nav (avoid overwriting on reload).
-    if (!iuHasExplicitNavInUrl()) {
-      persistSection(getInitialSection());
-    }
-    applySectionFromURL();
-
-    // Delegated: any click in left rail routes to exactly one view + exactly one active item.
+    // Attach handlers FIRST so left nav clicks work even if init fails or returns early.
+    // Guard iuHasExplicitNavInUrl applies only to INIT; user clicks always update section.
     document.addEventListener('click', (e) => {
       const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
       if (!item) return;
@@ -11697,11 +11682,27 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         try{ iuScrollMainToTopSmooth(); }catch{}
       }
     });
-
-    // Back/Forward navigation must update view according to ?section=... without reload.
     window.addEventListener('popstate', applySectionFromURL);
-    // Fallback: left nav uses href="#" which may create hash-only history entries in some browsers.
     window.addEventListener('hashchange', applySectionFromURL);
+
+    if (!feedEl || !viewEl) return;
+
+    try {
+      renderRadioView(viewEl);
+      const wishCtl = initRadioWish(viewEl);
+      loadWishDataIntoState().then((d) => { try{ wishCtl.setData(d); }catch{} });
+    }catch(e){
+      try{ if (typeof window.persistLastError === "function") window.persistLastError(String(e?.message || e)); }catch{}
+    }
+
+    try{ iuMyUzelApplyRailState(); }catch{}
+
+    // INIT only: do NOT overwrite URL when it already has ?section= or hash.
+    const explicit = iuHasExplicitNavInUrl();
+    if (!explicit) {
+      persistSection(getInitialSection());
+    }
+    applySectionFromURL();
   }
 
   if (document.readyState === 'loading'){
