@@ -36,6 +36,15 @@ window.addEventListener("unhandledrejection", (e) => {
 });
 
 (() => {
+  function iuIsProjectsRoute(){
+    try{
+      const p = (window.location.pathname || '/').replace(/\\/g, '/');
+      return p === '/projects/' || p === '/projects' || p === '/filtr/projects/' || p === '/filtr/projects';
+    }catch(e){
+      return false;
+    }
+  }
+
   function iuStripEmptyHash(){
     try{
       if(window.location.hash === '#'){
@@ -11720,10 +11729,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     applySectionFromURL();
   }
 
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', initNavRouter);
-  } else {
-    initNavRouter();
+  if (iuIsProjectsRoute()) {
+    if (document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', initNavRouter);
+    } else {
+      initNavRouter();
+    }
   }
 })();
 
