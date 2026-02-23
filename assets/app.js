@@ -11353,11 +11353,14 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  function setPanelInUrl(panelOrNull){
+  function setPanelInUrl(panelOrNull, opts){
+    opts = opts || {};
+    const replace = opts.replace === true;
     try{
       const u = new URL(window.location.href);
       if (panelOrNull) u.searchParams.set('panel', panelOrNull); else u.searchParams.delete('panel');
-      history.replaceState(null, '', u.toString());
+      if (replace) history.replaceState({}, '', u.toString());
+      else history.pushState({}, '', u.toString());
       if (!__iuPanelRouting) { try { window.dispatchEvent(new CustomEvent('iu-panel-url-changed')); } catch {} }
     }catch{}
   }
