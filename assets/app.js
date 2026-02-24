@@ -8958,12 +8958,12 @@ function buildVideoAsArticleCard(it) {
     section.hidden = false;
     el.innerHTML = withVideo.map(it => {
       const id = it._ytId;
-      return `<div class="iuAiVideo">
+      return `<div class="iuAiVideo iuYtWrap">
   <iframe
-    src="https://www.youtube.com/embed/${iuQfEscape(id)}"
+    src="https://www.youtube.com/embed/${iuQfEscape(id)}?rel=0&modestbranding=1"
     title="AI asistenti – představení ${iuQfEscape(it.name)}"
     loading="lazy"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen>
   </iframe>
 </div>`;
