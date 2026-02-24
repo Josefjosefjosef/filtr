@@ -2698,6 +2698,13 @@ a.brand,
   box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
+/* Close buttons must always be clickable (above overlays) */
+.iuModalClose,
+[data-iu-close]{
+  pointer-events: auto;
+  cursor: pointer;
+}
+
 .iu-aiClose{
   border: 0;
   background: transparent;
@@ -11782,7 +11789,7 @@ header#topbarWrap.topbar-new.iuTopbar,
    AI assistants — full brand background
    ============================================================ */
 
-/* AI asistenti: unify all button/link colors to ChatGPT button color (#10a37f) */
+/* AI asistenti: unify to ChatGPT AI panel item color (IU_QUICK_FEEDS.ai.items ChatGPT.color = #10A37F in app.js), not MindMenu icon */
 .iuSectionAI{
   --ai-accent-solid: #10a37f;
   --iu-ai-accent: #10a37f;
