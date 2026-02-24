@@ -21,7 +21,7 @@ jobs:
         run: npm install
 
       - name: Install Playwright browsers
-        run: npx playwright install chromium
+        run: node node_modules/playwright/cli.js install chromium
 
       - name: Run verify (production)
         run: node tools/verify_ai_quicklink_no_url.mjs

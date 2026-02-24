@@ -21,7 +21,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install chromium
+        run: node node_modules/playwright/cli.js install chromium
 
       - name: Run embed verify (real play)
         run: node tools/verify_embed_playwright.mjs
