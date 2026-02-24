@@ -21,8 +21,10 @@ jobs:
       - name: Run verify
         id: verify
         continue-on-error: true
-        run: node tools/verify-first-click-overlay.mjs
+        run: |
+          node tools/verify-first-click-overlay.mjs
 
+      # Block run avoids YAML parse (colons in echo text)
       - name: Show verdict
         run: |
           cat tools/_artifacts/verdict.txt 2>/dev/null || echo "FIRST CLICK OVERLAY: FAIL - no verdict file"
