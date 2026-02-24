@@ -56,6 +56,9 @@ _nightly_test/
 tools/_artifacts/
 tools/_artifacts_ai_close_x/
 
+# Local feed build log (Task Scheduler / local runs)
+feed_build.log
+
 # Local prod verify scripts (keep locally, do not commit)
 tools/verify-ai-close-x.mjs
 tools/verify-ai-close-x-prod.mjs
