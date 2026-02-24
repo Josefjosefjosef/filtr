@@ -25,10 +25,11 @@ jobs:
       - name: Install and verify lockfile only
         run: |
           npm install
-          echo "--- Changed files ---"
-          git status --porcelain
-          CHANGED=$(git status --porcelain)
-          if echo "$CHANGED" | grep -v 'package-lock.json' | grep -q .; then
+          echo "--- Changed tracked files ---"
+          git diff --name-only
+          git diff --cached --name-only
+          CHANGED=$( (git diff --name-only; git diff --cached --name-only) | sort -u )
+          if echo "$CHANGED" | grep -v '^package-lock.json$' | grep -q .; then
             echo "Only package-lock.json may be changed. Aborting."
             exit 1
           fi
