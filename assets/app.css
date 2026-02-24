@@ -2656,10 +2656,10 @@ a.brand,
 
 /* P0: Ensure AI panel is actually visible when modal is open (prod strict proof) */
 body.iu-modal-open #iu-aiOverlay {
-  display: block;
+  display: block !important;
 }
 body.iu-modal-open #iu-aiPanel {
-  display: flex;
+  display: flex !important;
 }
 
 .iu-aiModal{
