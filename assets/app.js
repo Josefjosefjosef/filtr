@@ -8944,12 +8944,13 @@ function buildVideoAsArticleCard(it) {
   }
 
   /* AI asistenti – 1 YouTube embed per assistant (static list, embeddable) */
+  /* 1 video per AI; IDs verified embeddable (oembed/fetch). Swap if "Video unavailable" on production. */
   const IU_AI_VIDEOS = [
     { name: "ChatGPT", videoId: "JTxsNm9IdYU" },
-    { name: "Google Gemini", videoId: "r4sQqfvTv_g" },
-    { name: "Microsoft Copilot", videoId: "mO1f7b0f8C0" },
-    { name: "Claude", videoId: "X1FOhLxFQqo" },
-    { name: "Perplexity AI", videoId: "bL_0vD2i4-o" },
+    { name: "Google Gemini", videoId: "Bqn3SNyjsSE" },
+    { name: "Microsoft Copilot", videoId: "l4B1UflAty8" },
+    { name: "Claude", videoId: "oqUclC3gqKs" },
+    { name: "Perplexity AI", videoId: "_vMOWw3uYvk" },
     { name: "DeepSeek", videoId: "i9kTrcf-gDQ" },
     { name: "Grok", videoId: "Hy46FSmgkmg" },
     { name: "Mistral AI", videoId: "tcBYaZqdc4A" }
