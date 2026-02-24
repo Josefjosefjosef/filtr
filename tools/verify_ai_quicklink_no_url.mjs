@@ -16,7 +16,7 @@ async function runForUrl(browser, baseUrl, label) {
   const outSub = path.join(OUT_DIR, label === "root" ? "root" : "projects");
   fs.mkdirSync(outSub, { recursive: true });
 
-  const context = await browser.newContext();
+  const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await context.newPage();
 
   let navCount = 0;
@@ -65,7 +65,9 @@ async function runForUrl(browser, baseUrl, label) {
 
   await page.screenshot({ path: path.join(outSub, "before.png") });
 
-  await page.locator('[data-iuq="ai"]').first().click();
+  const aiBtn = page.locator('[data-iuq="ai"]').first();
+  await aiBtn.scrollIntoViewIfNeeded().catch(() => {});
+  await aiBtn.click({ timeout: 15000, force: true });
   await page.waitForTimeout(2000);
 
   const urlAfter = page.url();
