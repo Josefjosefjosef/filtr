@@ -9014,7 +9014,7 @@ function buildVideoAsArticleCard(it) {
       quick.innerHTML = `
         <div class="iuQHead">
           <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-          <button class="iuQBack" type="button" id="iuQBackBtn">← Zpět</button>
+          <button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button>
         </div>
         <div class="iuTrArea">
           <h3 class="iuTrTitle">Vlož text</h3>
@@ -9119,7 +9119,7 @@ function buildVideoAsArticleCard(it) {
         quick.innerHTML = `
           <div class="iuQHead">
             <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-            ${!isAi ? `<button class="iuQBack" type="button" id="iuQBackBtn">← Zpět</button>` : ""}
+            <button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button>
           </div>
           <div class="iuQCard">
             <div class="iuQGrid">
@@ -9147,8 +9147,8 @@ function buildVideoAsArticleCard(it) {
         doRender(data.items);
       }
     }
-    const back = document.getElementById("iuQBackBtn");
-    if (back) back.addEventListener("click", iuHideQuickFeed, { once: true });
+    const closeBtn = document.getElementById("iuQCloseBtn");
+    if (closeBtn) closeBtn.addEventListener("click", iuHideQuickFeed, { once: true });
     try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) { window.scrollTo(0, 0); }
   }
 
