@@ -9018,6 +9018,7 @@ function buildVideoAsArticleCard(it) {
       var p = document.getElementById("iu-aiPanel");
       var o = document.getElementById("iu-aiOverlay");
       if (p) {
+        if (typeof window.ensureAiModalInBody === "function") window.ensureAiModalInBody();
         if (typeof window.iuSetElOpenVisible === "function") {
           window.iuSetElOpenVisible(o, true);
           window.iuSetElOpenVisible(p, true);
@@ -9504,6 +9505,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     function openPanel(){
+      if (typeof window.ensureAiModalInBody === "function") window.ensureAiModalInBody();
       if (typeof window.iuSetElOpenVisible === "function") {
         window.iuSetElOpenVisible(aiOverlay, true);
         window.iuSetElOpenVisible(aiPanel, true);
@@ -11413,6 +11415,18 @@ function buildVideoAsArticleCard(it) {
     }
   }
   try { window.iuSetElOpenVisible = iuSetElOpenVisible; } catch (_) {}
+
+  function ensureAiModalInBody() {
+    const overlay = document.getElementById("iu-aiOverlay");
+    const panel = document.getElementById("iu-aiPanel");
+    if (!overlay || !panel) return;
+    if (overlay.parentElement === document.body && panel.parentElement === document.body) return;
+    const frag = document.createDocumentFragment();
+    frag.appendChild(overlay);
+    frag.appendChild(panel);
+    document.body.appendChild(frag);
+  }
+  try { window.ensureAiModalInBody = ensureAiModalInBody; } catch (_) {}
 
   function iuHideAllOverlaysNow(){
     try {
