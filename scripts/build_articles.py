@@ -13,6 +13,17 @@ from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 import feedparser
 import requests
 
+# Hardening for Windows Task Scheduler (0x8007010B): force CWD = repo root
+BASE = r"C:\projects\filtr"
+if os.path.isdir(BASE):
+    os.chdir(BASE)
+# Run log (append) – Gate B: feed_build.log created
+try:
+    _log = open("feed_build.log", "a", encoding="utf-8")
+    _log.write("\n=== RUN " + str(datetime.now()) + " ===\n")
+    _log.close()
+except Exception:
+    pass
 
 # =========================
 # Konfigurace
