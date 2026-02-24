@@ -9393,7 +9393,10 @@ function buildVideoAsArticleCard(it) {
 
   /* Global close handler: [data-iu-close] / .iuModalClose / .iu-close closes modal (capture so it runs before stopPropagation inside modals) */
   document.addEventListener('click', function(e){
-    const closeBtn = e.target.closest && e.target.closest('[data-iu-close], .iuModalClose, .iu-close');
+    const t = e.target;
+    const targetEl = (t && t.nodeType === 1) ? t : (t && t.parentElement ? t.parentElement : null);
+    if (!targetEl) return;
+    const closeBtn = targetEl.closest('[data-iu-close], .iuModalClose, .iu-close');
     if (!closeBtn) return;
     const modal = closeBtn.closest && (closeBtn.closest('.iuModal, [data-iu-modal]') || closeBtn.closest('#iu-aiPanel'));
     if (!modal) return;
