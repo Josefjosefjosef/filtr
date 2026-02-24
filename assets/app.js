@@ -1685,10 +1685,8 @@ try {
         if (!res.ok && typeof window.persistLastError === "function") {
           window.persistLastError(`Preflight ${url} → ${res.status}`);
         }
-      } catch (err) {
-        if (typeof window.persistLastError === "function") {
-          window.persistLastError(`Preflight ${url} → network error`);
-        }
+      } catch {
+        // Preflight: do not call persistLastError (avoids console.error); fail silently.
       }
     }
   })();
