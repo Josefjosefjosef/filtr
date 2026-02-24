@@ -15,8 +15,13 @@ jobs:
         with:
           node-version: "20"
 
-      - run: npm install
+      - run: npm ci
 
-      - run: npx playwright install --with-deps chromium
+      - name: Install Playwright browsers
+        run: node node_modules/playwright/cli.js install --with-deps chromium
+
+      - name: Ensure playwright bin executable (fallback)
+        run: |
+          if [ -f node_modules/.bin/playwright ]; then chmod +x node_modules/.bin/playwright || true; fi
 
       - run: npm run smoke
