@@ -3,7 +3,7 @@ name: Verify first-click overlay (prod)
 on:
   workflow_dispatch:
   push:
-    branches: [test/verify-first-click-overlay]
+    branches: [main, test/verify-first-click-overlay]
 
 jobs:
   verify:
