@@ -8943,34 +8943,47 @@ function buildVideoAsArticleCard(it) {
     return "";
   }
 
-  /* MAX 1 YouTube embed per AI – dedupe by name so we never show 2+ for same AI */
-  function renderAiVideos(root, services){
+  /* AI asistenti – 1 YouTube embed per assistant (static list, embeddable) */
+  const IU_AI_VIDEOS = [
+    { name: "ChatGPT", videoId: "JTxsNm9IdYU" },
+    { name: "Google Gemini", videoId: "r4sQqfvTv_g" },
+    { name: "Microsoft Copilot", videoId: "mO1f7b0f8C0" },
+    { name: "Claude", videoId: "X1FOhLxFQqo" },
+    { name: "Perplexity AI", videoId: "bL_0vD2i4-o" },
+    { name: "DeepSeek", videoId: "i9kTrcf-gDQ" },
+    { name: "Grok", videoId: "Hy46FSmgkmg" },
+    { name: "Mistral AI", videoId: "tcBYaZqdc4A" }
+  ];
+
+  /* MAX 1 YouTube embed per AI – render from IU_AI_VIDEOS only, dedupe by name */
+  function renderAiVideos(root){
     const el = root && root.querySelector ? root.querySelector(".iuAiVideoGrid") : null;
     const section = root && root.querySelector ? root.querySelector(".iuAiVideos") : null;
     if (!el || !section) return;
     const seen = new Set();
-    const withVideo = (services || []).map(it => {
-      if (seen.has(it.name)) return null;
-      const id = iuNormalizeYouTubeId(it.video);
-      if (!id) return null;
+    const items = IU_AI_VIDEOS.filter(it => {
+      if (!it.videoId || seen.has(it.name)) return false;
       seen.add(it.name);
-      return { ...it, _ytId: id };
-    }).filter(Boolean);
-    if (withVideo.length === 0) {
+      return true;
+    });
+    if (items.length === 0) {
       section.hidden = true;
       return;
     }
     section.hidden = false;
-    el.innerHTML = withVideo.map(it => {
-      const id = it._ytId;
-      return `<div class="iuAiVideo iuYtWrap">
+    el.innerHTML = items.map(it => {
+      const id = it.videoId;
+      const title = it.name + " – krátké představení";
+      return `<div class="iuAiVideoItem">
+  <div class="iuAiVideoTitle">${iuQfEscape(title)}</div>
+  <div class="iuYtWrap">
   <iframe
     src="https://www.youtube.com/embed/${iuQfEscape(id)}?rel=0&modestbranding=1"
-    title="${iuQfEscape(it.name)} – video"
+    title="${iuQfEscape(title)}"
     loading="lazy"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowfullscreen>
-  </iframe>
+    allowfullscreen></iframe>
+  </div>
 </div>`;
     }).join("");
   }
@@ -9128,8 +9141,8 @@ function buildVideoAsArticleCard(it) {
           </div>
           ${aiSeoBlock}
         `;
-        if (isAi && services) {
-          try { renderAiVideos(quick, services); } catch (e) { console.warn("renderAiVideos", e); }
+        if (isAi) {
+          try { renderAiVideos(quick); } catch (e) { console.warn("renderAiVideos", e); }
         }
       };
       if (isAi) {
