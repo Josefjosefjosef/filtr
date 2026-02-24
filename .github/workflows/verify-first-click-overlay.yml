@@ -19,15 +19,15 @@ jobs:
 
       - name: Debug Playwright presence
         run: |
-          ls -la node_modules/.bin/playwright 2>/dev/null || true
-          node -e "console.log(require.resolve('playwright/package.json'))" 2>/dev/null || true
-          node -e "console.log(require.resolve('@playwright/test/package.json'))" 2>/dev/null || true
+          ls -la node_modules/.bin || true
+          node -p "require.resolve('playwright/package.json')" || true
+          node -p "require.resolve('@playwright/test/package.json')" || true
 
-      - name: Install Playwright Chromium
+      - name: Install Playwright browsers
         run: node node_modules/playwright/cli.js install --with-deps chromium
 
       - name: Fix bin permissions (if needed)
-        run: chmod +x node_modules/.bin/playwright 2>/dev/null || true
+        run: chmod +x node_modules/.bin/playwright || true
 
       - name: Run verify
         id: verify
