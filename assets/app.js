@@ -9528,7 +9528,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     try {
-      window.addEventListener('iu-open-panel', function(e){ if (e.detail === 'ai') openPanel(); });
+      window.addEventListener('iu-open-panel', function(e){ var id = String(e.detail || '').trim().toLowerCase(); if (id === 'ai') return; if (e.detail === 'ai') openPanel(); });
       window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'ai') closePanel(); });
     } catch {}
 
@@ -11361,6 +11361,7 @@ function buildVideoAsArticleCard(it) {
     try{
       const p = new URLSearchParams(window.location.search).get('panel');
       const id = String(p || '').trim().toLowerCase();
+      if (id === 'ai') return null;
       // AI panel must NOT open from URL – overlay only via quicklink (data-iuq="ai")
       const ALLOWED_PANELS = new Set(['shopping', 'services']);
       if (ALLOWED_PANELS.has(id)) return id;
@@ -11372,6 +11373,8 @@ function buildVideoAsArticleCard(it) {
 
   function safeOpenPanel(panel, retryCount){
     retryCount = retryCount || 0;
+    var id = String(panel || '').trim().toLowerCase();
+    if (id === 'ai') return;
     const maxRetry = 2;
     try{
       if (!panel) return;
@@ -11884,6 +11887,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const viewEl = document.getElementById('iuRadioView');
     try {
       window.iuOpenPanel = function(id){
+        id = String(id || '').trim().toLowerCase();
+        if (id === 'ai') return;
         window.dispatchEvent(new CustomEvent('iu-open-panel', { detail: id }));
       };
     } catch {}
