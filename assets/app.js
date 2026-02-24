@@ -8851,21 +8851,6 @@ function buildVideoAsArticleCard(it) {
 
 // === Center Quick Feed (Rychlé odkazy → detail view in middle) ===
 (function(){
-  (function initIuDiag() {
-    if (window.__iuDiag) return;
-    const buf = [];
-    window.__iuDiag = {
-      push: function (e) {
-        try { e.t = Date.now(); buf.push(e); if (buf.length > 200) buf.shift(); } catch (_) {}
-      },
-      list: function () { return buf.slice(); }
-    };
-    try { window.__iuDiag.push({ k: "diagReady" }); } catch (_) {}
-  })();
-
-  function iuRect(el) { if (!el || !el.getBoundingClientRect) return null; var r = el.getBoundingClientRect(); return { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) }; }
-  function iuStyles(el) { if (!el || !window.getComputedStyle) return null; var cs = getComputedStyle(el); return { display: cs.display, visibility: cs.visibility, opacity: cs.opacity, position: cs.position, overflow: cs.overflow, zIndex: cs.zIndex }; }
-
   function iuQfEscape(s) {
     return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
@@ -9028,21 +9013,11 @@ function buildVideoAsArticleCard(it) {
 
   function iuShowQuickFeed(key){
     const keyNorm = String(key || "").trim().toLowerCase();
-    try { window.__iuDiag?.push({ k: "showQuickBegin", key: keyNorm }); } catch (_) {}
-    /* Fix A: AI uses same path as other quick links (render into #iuQuickFeed). No ai-only branch. */
     const data = (window.IU_QUICK_FEEDS || {})[keyNorm];
-    if (!data) {
-      try { window.__iuDiag?.push({ k: "showQuickReturn", key: keyNorm, reason: "no_data" }); } catch (_) {}
-      return;
-    }
+    if (!data) return;
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
-    var usedSel = "iuQuickFeed";
-    try { window.__iuDiag?.push({ k: "pickTarget", key: keyNorm, sel: usedSel, found: !!quick, rect: quick ? iuRect(quick) : null }); } catch (_) {}
-    if (!stage || !quick) {
-      try { window.__iuDiag?.push({ k: "showQuickReturn", key: keyNorm, reason: "no_stage_or_quick" }); } catch (_) {}
-      return;
-    }
+    if (!stage || !quick) return;
     stage.setAttribute("data-iu-view", "quick");
     quick.hidden = false;
     const isTranslator = String(key || "").toLowerCase() === "deepl";
@@ -9185,7 +9160,6 @@ function buildVideoAsArticleCard(it) {
         doRender(data.items);
       }
     }
-    try { window.__iuDiag?.push({ k: "renderDone", key: keyNorm, childCount: quick ? (quick.children ? quick.children.length : null) : null, styles: quick ? iuStyles(quick) : null, rect: quick ? iuRect(quick) : null }); } catch (_) {}
     const closeBtn = document.getElementById("iuQCloseBtn");
     if (closeBtn) closeBtn.addEventListener("click", iuHideQuickFeed, { once: true });
     try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) { window.scrollTo(0, 0); }
@@ -9400,7 +9374,6 @@ function buildVideoAsArticleCard(it) {
       e.stopPropagation();
       if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
       const key = el.getAttribute("data-iuq");
-      try { window.__iuDiag?.push({ k: "clickQuickLink", key: key, tag: el.tagName, aria: el.getAttribute("aria-label") }); } catch (_) {}
       if (key) iuShowQuickFeed(key);
     }, true);
   }
