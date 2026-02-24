@@ -2662,6 +2662,40 @@ body.iu-modal-open #iu-aiPanel {
   display: flex !important;
 }
 
+/* P0: AI panel must be a real modal overlay over content (above feed), not inside right column */
+#iu-aiOverlay {
+  position: fixed;
+  inset: 0;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9998;
+}
+#iu-aiPanel {
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  top: 84px;
+  transform: translateX(-50%);
+  width: min(920px, calc(100vw - 24px));
+  max-height: calc(100vh - 108px);
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  #iu-aiPanel {
+    top: 64px;
+    width: calc(100vw - 16px);
+    max-height: calc(100vh - 80px);
+  }
+}
+
 .iu-aiModal{
   width: min(560px, calc(100vw - 36px));
   max-height: min(80vh, calc(100vh - 36px));
