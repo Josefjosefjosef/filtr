@@ -9507,7 +9507,7 @@ function buildVideoAsArticleCard(it) {
       window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'ai') closePanel(); });
     } catch {}
 
-    // 1) Klik na tlačítko – přes URL (bez zásahu do href)
+    // 1) Klik na tlačítko [data-action="ai-panel"] – přes URL. Quicklink AI (data-iuq="ai") nesmí měnit URL → return výše.
     document.addEventListener('click', e => {
       if (e.target.closest && e.target.closest('[data-iuq]')) return;
       const btn = e.target.closest('[data-action="ai-panel"]');
