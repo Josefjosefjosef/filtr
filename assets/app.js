@@ -9119,7 +9119,7 @@ function buildVideoAsArticleCard(it) {
         quick.innerHTML = `
           <div class="iuQHead">
             <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-            <button class="iuQBack" type="button" id="iuQBackBtn">← Zpět</button>
+            ${!isAi ? `<button class="iuQBack" type="button" id="iuQBackBtn">← Zpět</button>` : ""}
           </div>
           <div class="iuQCard">
             <div class="iuQGrid">
