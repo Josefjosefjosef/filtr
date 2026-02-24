@@ -8930,6 +8930,7 @@ function buildVideoAsArticleCard(it) {
     "Mistral AI": "#047857",
     "Editee": "#B45309"
   };
+  const CHATGPT_AI_COLOR = IU_AI_FEED_COLORS["ChatGPT"] || "#10A37F";
 
   function iuNormalizeYouTubeId(v){
     const s = (v || "").trim();
@@ -9111,7 +9112,7 @@ function buildVideoAsArticleCard(it) {
           const url = iuQfEscape(it.url || it.baseUrl || "#");
           const ext = (it.external !== false) ? 'target="_blank" rel="noopener noreferrer"' : "";
           const c = it.color || "#1F4B99";
-          const style = isAi ? `--aiFeedColor:${IU_AI_FEED_COLORS[it.name] || c}` : `--aiColor:${c}`;
+          const style = isAi ? `--aiFeedColor:${CHATGPT_AI_COLOR}` : `--aiColor:${c}`;
           if (useFullCard) {
             return `<a class="iuAiCard" href="${url}" ${ext} style="${style}">
               <div class="iuAiInner">
