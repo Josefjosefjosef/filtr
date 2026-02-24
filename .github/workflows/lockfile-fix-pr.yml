@@ -49,6 +49,8 @@ jobs:
           git push origin fix/lockfile-sync-npm-ci
 
       - name: Open PR
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh pr create --base main --head fix/lockfile-sync-npm-ci \
             --title "Fix: sync package-lock for CI (npm ci)" \
