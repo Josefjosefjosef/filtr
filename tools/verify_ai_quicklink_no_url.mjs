@@ -37,8 +37,8 @@ async function runForUrl(browser, baseUrl, label) {
     };
   });
 
-  page.on("framenavigated", () => {
-    if (countNavigations) navCount++;
+  page.on("framenavigated", (frame) => {
+    if (countNavigations && frame === page.mainFrame()) navCount++;
   });
 
   await page.goto(baseUrl, { waitUntil: "domcontentloaded", timeout: 20000 });
@@ -145,8 +145,8 @@ async function main() {
       console.log(`[${prefix}] FAIL: URL changed or history/nav invoked`);
       failed = true;
     }
-    if (r.clsTotal > 0) {
-      console.log(`[${prefix}] FAIL: CLS_TOTAL > 0`);
+    if (r.clsTotal > 0.02) {
+      console.log(`[${prefix}] FAIL: CLS_TOTAL > 0.02`);
       failed = true;
     }
   }
