@@ -9486,6 +9486,10 @@ function buildVideoAsArticleCard(it) {
     }
 
     function openPanel(){
+      /* P0: AI asistenti = quick card in middle column; do not open modal when quick view already shows AI */
+      const stage = document.getElementById("iuCenterStage");
+      const quick = document.getElementById("iuQuickFeed");
+      if (stage && stage.getAttribute("data-iu-view") === "quick" && quick && !quick.hidden && (quick.innerText || "").includes("AI asistenti")) return;
       if (typeof window.ensureAiModalInBody === "function") window.ensureAiModalInBody();
       if (typeof window.iuSetElOpenVisible === "function") {
         window.iuSetElOpenVisible(aiOverlay, true);
