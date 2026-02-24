@@ -8860,6 +8860,7 @@ function buildVideoAsArticleCard(it) {
       },
       list: function () { return buf.slice(); }
     };
+    try { window.__iuDiag.push({ k: "diagReady" }); } catch (_) {}
   })();
 
   function iuRect(el) { if (!el || !el.getBoundingClientRect) return null; var r = el.getBoundingClientRect(); return { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) }; }
@@ -9029,7 +9030,7 @@ function buildVideoAsArticleCard(it) {
     const keyNorm = String(key || "").trim().toLowerCase();
     try { window.__iuDiag?.push({ k: "showQuickBegin", key: keyNorm }); } catch (_) {}
     /* Fix A: AI uses same path as other quick links (render into #iuQuickFeed). No ai-only branch. */
-    const data = (window.IU_QUICK_FEEDS || {})[key];
+    const data = (window.IU_QUICK_FEEDS || {})[keyNorm];
     if (!data) {
       try { window.__iuDiag?.push({ k: "showQuickReturn", key: keyNorm, reason: "no_data" }); } catch (_) {}
       return;
