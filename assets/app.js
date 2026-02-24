@@ -1681,12 +1681,11 @@ try {
 
     for (const url of endpoints) {
       try {
-        const res = await fetch(url, { method: "HEAD", cache: "no-store" });
+        const res = await fetch(url, { method: "GET", credentials: "same-origin", cache: "no-store" });
         if (!res.ok && typeof window.persistLastError === "function") {
           window.persistLastError(`Preflight ${url} → ${res.status}`);
         }
       } catch (err) {
-        console.error("[preflight error]", url, err);
         if (typeof window.persistLastError === "function") {
           window.persistLastError(`Preflight ${url} → network error`);
         }
@@ -9375,7 +9374,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuQuickFeedInit(){
     document.addEventListener("click", (e) => {
-      const el = e.target.closest("[data-iuq]");
+      const el = e.target.closest && e.target.closest('button[data-iuq], a[data-iuq], [role="button"][data-iuq]');
       if (!el) return;
       e.preventDefault();
       e.stopPropagation();
@@ -9454,7 +9453,6 @@ function buildVideoAsArticleCard(it) {
       .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(data => { renderAiCards(container, Array.isArray(data) ? data : AI_FALLBACK); })
       .catch(err => {
-        console.error("AI assistants load failed", err);
         const fallback = (window.IU_QUICK_FEEDS && window.IU_QUICK_FEEDS.ai && window.IU_QUICK_FEEDS.ai.items) || AI_FALLBACK;
         if (Array.isArray(fallback) && fallback.length > 0) {
           renderAiCards(container, fallback);
@@ -9517,7 +9515,7 @@ function buildVideoAsArticleCard(it) {
 
     // 1) Klik na tlačítko – bez změny URL (AI jen overlay)
     document.addEventListener('click', e => {
-      if (e.target.closest && e.target.closest('[data-iuq]')) return;
+      if (e.target.closest && e.target.closest('button[data-iuq], a[data-iuq], [role="button"][data-iuq]')) return;
       const btn = e.target.closest('[data-action="ai-panel"]');
       if (!btn) return;
       e.preventDefault();
@@ -11842,10 +11840,14 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const leftRailEl = document.getElementById('iuLeftRail') || document.querySelector('.iu-leftNav');
     if (leftRailEl) {
       try {
-        leftRailEl.addEventListener('click', () => { try { iuHideAllOverlaysNow(); } catch {} }, true);
+        leftRailEl.addEventListener('click', (e) => {
+          if (e.target.closest && e.target.closest('[data-iuq="ai"]')) return;
+          try { iuHideAllOverlaysNow(); } catch {}
+        }, true);
       } catch {}
     }
     document.addEventListener('click', (e) => {
+      if (e.target.closest && e.target.closest('[data-iuq="ai"]')) return;
       const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
       if (!item) return;
       try{
