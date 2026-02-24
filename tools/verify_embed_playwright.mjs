@@ -15,8 +15,8 @@ const OUT_DIR = path.join(ROOT, "artifacts", "embed-verify");
 
 const IU_AI_VIDEOS = [
   { name: "ChatGPT", videoId: "JTxsNm9IdYU" },
-  { name: "Google Gemini", videoId: "Bqn3SNyjsSE" },
-  { name: "Microsoft Copilot", videoId: "l4B1UflAty8" },
+  { name: "Google Gemini", videoId: "_TVnM9dmUSk" },
+  { name: "Microsoft Copilot", videoId: "S7xTBa93TX8" },
   { name: "Claude", videoId: "oqUclC3gqKs" },
   { name: "Perplexity AI", videoId: "_vMOWw3uYvk" },
   { name: "DeepSeek", videoId: "i9kTrcf-gDQ" },
