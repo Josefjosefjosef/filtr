@@ -1,10 +1,10 @@
-# Schedule: 04:00 UTC (05:00 CET winter)
+# Schedule: 06:00 UTC once daily (1× denně)
 name: Nightly Health Report
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 4 * * *"
+    - cron: "0 6 * * *"
 
 jobs:
   report:
@@ -44,9 +44,11 @@ jobs:
       - name: Install Puppeteer browsers
         run: npx puppeteer browsers install chrome
 
-      - name: Set report date
+      - name: Set report date and time (UTC)
         id: date
-        run: echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+          echo "time_utc=$(date -u +%H:%M)" >> "$GITHUB_OUTPUT"
 
       - name: Run check_site.js
         env:
@@ -103,15 +105,14 @@ jobs:
         run: echo "Email not configured (missing HEALTH_EMAIL_TO secret)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Send email
-        if: env.HEALTH_EMAIL_CONFIGURED == 'true'
-        continue-on-error: true
+        if: success() && env.HEALTH_EMAIL_CONFIGURED == 'true'
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.HEALTH_SMTP_SERVER }}
           server_port: ${{ secrets.HEALTH_SMTP_PORT }}
           username: ${{ secrets.HEALTH_SMTP_USERNAME }}
           password: ${{ secrets.HEALTH_SMTP_PASSWORD }}
-          subject: "infoUzel Health Report — ${{ github.run_id }}"
+          subject: "INFOUZEL HEALTH REPORT — ${{ steps.date.outputs.date }} ${{ steps.date.outputs.time_utc }} UTC"
           to: ${{ secrets.HEALTH_EMAIL_TO }}
           from: ${{ secrets.HEALTH_EMAIL_FROM }}
           body: file://reports/latest.md
