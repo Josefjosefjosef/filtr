@@ -8943,13 +8943,18 @@ function buildVideoAsArticleCard(it) {
     return "";
   }
 
+  /* MAX 1 YouTube embed per AI – dedupe by name so we never show 2+ for same AI */
   function renderAiVideos(root, services){
     const el = root && root.querySelector ? root.querySelector(".iuAiVideoGrid") : null;
     const section = root && root.querySelector ? root.querySelector(".iuAiVideos") : null;
     if (!el || !section) return;
+    const seen = new Set();
     const withVideo = (services || []).map(it => {
+      if (seen.has(it.name)) return null;
       const id = iuNormalizeYouTubeId(it.video);
-      return id ? { ...it, _ytId: id } : null;
+      if (!id) return null;
+      seen.add(it.name);
+      return { ...it, _ytId: id };
     }).filter(Boolean);
     if (withVideo.length === 0) {
       section.hidden = true;
@@ -8961,7 +8966,7 @@ function buildVideoAsArticleCard(it) {
       return `<div class="iuAiVideo iuYtWrap">
   <iframe
     src="https://www.youtube.com/embed/${iuQfEscape(id)}?rel=0&modestbranding=1"
-    title="AI asistenti – představení ${iuQfEscape(it.name)}"
+    title="${iuQfEscape(it.name)} – video"
     loading="lazy"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen>
