@@ -24,7 +24,8 @@ jobs:
         run: node tools/verify-first-click-overlay.mjs
 
       - name: Show verdict
-        run: cat tools/_artifacts/verdict.txt 2>/dev/null || echo "FIRST CLICK OVERLAY: FAIL — no verdict file"
+        run: |
+          cat tools/_artifacts/verdict.txt 2>/dev/null || echo "FIRST CLICK OVERLAY: FAIL - no verdict file"
 
       - name: Upload artifacts
         if: always()
