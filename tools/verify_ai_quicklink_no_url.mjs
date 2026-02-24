@@ -65,9 +65,10 @@ async function runForUrl(browser, baseUrl, label) {
 
   await page.screenshot({ path: path.join(outSub, "before.png") });
 
-  const aiBtn = page.locator('[data-iuq="ai"]').first();
-  await aiBtn.scrollIntoViewIfNeeded().catch(() => {});
-  await aiBtn.click({ timeout: 15000, force: true });
+  await page.evaluate(() => {
+    const btn = document.querySelector('[data-iuq="ai"]');
+    if (btn) btn.click();
+  });
   await page.waitForTimeout(2000);
 
   const urlAfter = page.url();
