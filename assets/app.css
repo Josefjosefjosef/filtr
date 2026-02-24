@@ -11772,6 +11772,12 @@ header#topbarWrap.topbar-new.iuTopbar,
    AI assistants — full brand background
    ============================================================ */
 
+/* AI asistenti: unify all button/link colors to ChatGPT button color (#10a37f) */
+.iuSectionAI{
+  --ai-accent-solid: #10a37f;
+  --iu-ai-accent: #10a37f;
+}
+
 #iu-aiPanel .iu-aiItem{
   position: relative;
   border-left: 4px solid var(--ai-accent-solid);
