@@ -8947,6 +8947,7 @@ function buildVideoAsArticleCard(it) {
     { name: "ChatGPT", videoId: "JTxsNm9IdYU" },
     { name: "Google Gemini", videoId: "_TVnM9dmUSk" },
     { name: "Microsoft Copilot", videoId: "NbpVLqtML2M" },
+    { name: "Editee", videoId: "ubPDwEokp3o" },
     { name: "Claude", videoId: "oqUclC3gqKs" },
     { name: "Perplexity AI", videoId: "_vMOWw3uYvk" },
     { name: "DeepSeek", videoId: "i9kTrcf-gDQ" },
