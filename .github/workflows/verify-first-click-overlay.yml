@@ -15,8 +15,19 @@ jobs:
         with:
           node-version: "20"
 
-      - run: npm install
-      - run: npx playwright install --with-deps chromium
+      - run: npm ci
+
+      - name: Debug Playwright presence
+        run: |
+          ls -la node_modules/.bin/playwright 2>/dev/null || true
+          node -e "console.log(require.resolve('playwright/package.json'))" 2>/dev/null || true
+          node -e "console.log(require.resolve('@playwright/test/package.json'))" 2>/dev/null || true
+
+      - name: Install Playwright Chromium
+        run: node node_modules/playwright/cli.js install --with-deps chromium
+
+      - name: Fix bin permissions (if needed)
+        run: chmod +x node_modules/.bin/playwright 2>/dev/null || true
 
       - name: Run verify
         id: verify
