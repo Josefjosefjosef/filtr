@@ -9019,7 +9019,11 @@ function buildVideoAsArticleCard(it) {
       var o = document.getElementById("iu-aiOverlay");
       if (p) {
         p.hidden = false;
-        if (o) o.hidden = false;
+        p.classList.add("is-open");
+        if (o) {
+          o.hidden = false;
+          o.classList.add("is-open");
+        }
         try { document.documentElement.style.overflow = "hidden"; } catch (_) {}
         try { document.body.classList.add("iu-modal-open"); } catch (_) {}
         try { if (p.dataset) p.dataset.open = "1"; } catch (_) {}
@@ -9415,7 +9419,10 @@ function buildVideoAsArticleCard(it) {
     e.stopPropagation();
     if (modal.id === 'iu-aiPanel') {
       const ov = document.getElementById('iu-aiOverlay');
-      if (ov) ov.hidden = true;
+      if (ov) {
+        ov.hidden = true;
+        ov.classList.remove('is-open');
+      }
       document.documentElement.style.overflow = '';
     }
     modal.setAttribute('hidden', '');

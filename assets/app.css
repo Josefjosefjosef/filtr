@@ -2654,6 +2654,16 @@ a.brand,
   padding: 18px;
 }
 
+/* P0: ensure panel/overlay visibly open when is-open (redundant with [hidden] removal) */
+#iu-aiPanel.is-open,
+.iu-aiPanel.is-open{
+  display: flex !important;
+}
+#iu-aiOverlay.is-open,
+.iu-aiOverlay.is-open{
+  display: block !important;
+}
+
 .iu-aiModal{
   width: min(560px, calc(100vw - 36px));
   max-height: min(80vh, calc(100vh - 36px));
