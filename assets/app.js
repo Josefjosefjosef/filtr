@@ -9018,8 +9018,13 @@ function buildVideoAsArticleCard(it) {
       var p = document.getElementById("iu-aiPanel");
       var o = document.getElementById("iu-aiOverlay");
       if (p) {
-        p.hidden = false;
-        if (o) o.hidden = false;
+        if (typeof window.iuSetElOpenVisible === "function") {
+          window.iuSetElOpenVisible(o, true);
+          window.iuSetElOpenVisible(p, true);
+        } else {
+          p.hidden = false;
+          if (o) o.hidden = false;
+        }
         try { document.documentElement.style.overflow = "hidden"; } catch (_) {}
         try { document.body.classList.add("iu-modal-open"); } catch (_) {}
         try { if (p.dataset) p.dataset.open = "1"; } catch (_) {}
@@ -9415,10 +9420,17 @@ function buildVideoAsArticleCard(it) {
     e.stopPropagation();
     if (modal.id === 'iu-aiPanel') {
       const ov = document.getElementById('iu-aiOverlay');
-      if (ov) ov.hidden = true;
+      if (typeof window.iuSetElOpenVisible === 'function') {
+        window.iuSetElOpenVisible(modal, false);
+        window.iuSetElOpenVisible(ov, false);
+      } else {
+        if (ov) ov.hidden = true;
+        modal.setAttribute('hidden', '');
+      }
       document.documentElement.style.overflow = '';
+    } else {
+      modal.setAttribute('hidden', '');
     }
-    modal.setAttribute('hidden', '');
     modal.classList.remove('is-open');
     document.body.classList.remove('iu-modal-open');
   }, true);
@@ -9492,8 +9504,13 @@ function buildVideoAsArticleCard(it) {
     }
 
     function openPanel(){
-      aiPanel.hidden = false;
-      if (aiOverlay) aiOverlay.hidden = false;
+      if (typeof window.iuSetElOpenVisible === "function") {
+        window.iuSetElOpenVisible(aiOverlay, true);
+        window.iuSetElOpenVisible(aiPanel, true);
+      } else {
+        aiPanel.hidden = false;
+        if (aiOverlay) aiOverlay.hidden = false;
+      }
       lockScroll(true);
       try { document.body.classList.add('iu-modal-open'); } catch {}
       aiPanel.dataset.open = '1';
@@ -9507,8 +9524,13 @@ function buildVideoAsArticleCard(it) {
     }
 
     function closePanel(){
-      aiPanel.hidden = true;
-      if (aiOverlay) aiOverlay.hidden = true;
+      if (typeof window.iuSetElOpenVisible === "function") {
+        window.iuSetElOpenVisible(aiPanel, false);
+        window.iuSetElOpenVisible(aiOverlay, false);
+      } else {
+        aiPanel.hidden = true;
+        if (aiOverlay) aiOverlay.hidden = true;
+      }
       lockScroll(false);
       try { document.body.style.overflow = ''; document.body.classList.remove('iu-modal-open'); } catch {}
       aiPanel.dataset.open = '0';
@@ -11380,9 +11402,25 @@ function buildVideoAsArticleCard(it) {
     } catch (e) { try{ console.warn('[iu] safeOpenPanel error', e); }catch{} }
   }
 
+  function iuSetElOpenVisible(el, isOpen) {
+    if (!el) return;
+    if (isOpen) {
+      el.removeAttribute("hidden");
+      if (el.style && el.style.display === "none") el.style.display = "";
+    } else {
+      el.setAttribute("hidden", "");
+      if (el.style) el.style.display = "none";
+    }
+  }
+  try { window.iuSetElOpenVisible = iuSetElOpenVisible; } catch (_) {}
+
   function iuHideAllOverlaysNow(){
     try {
-      document.querySelectorAll('.iuModal, #iu-aiPanel, #iu-aiOverlay, [data-iu-backdrop], .iuBackdrop, .iu-overlay, .iu-backdrop').forEach(el => {
+      const panel = document.getElementById("iu-aiPanel");
+      const overlay = document.getElementById("iu-aiOverlay");
+      if (panel) iuSetElOpenVisible(panel, false);
+      if (overlay) iuSetElOpenVisible(overlay, false);
+      document.querySelectorAll('.iuModal, [data-iu-backdrop], .iuBackdrop, .iu-overlay, .iu-backdrop').forEach(el => {
         el.hidden = true;
         try { el.style.display = 'none'; } catch {}
       });
