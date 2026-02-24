@@ -9389,6 +9389,25 @@ function buildVideoAsArticleCard(it) {
 (function(){
   'use strict';
 
+  /* Global close handler: [data-iu-close] / .iuModalClose / .iu-close closes modal (capture so it runs before stopPropagation inside modals) */
+  document.addEventListener('click', function(e){
+    const closeBtn = e.target.closest && e.target.closest('[data-iu-close], .iuModalClose, .iu-close');
+    if (!closeBtn) return;
+    const modal = closeBtn.closest && (closeBtn.closest('.iuModal, [data-iu-modal]') || closeBtn.closest('#iu-aiPanel'));
+    if (!modal) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (modal.id === 'iu-aiPanel') {
+      const ov = document.getElementById('iu-aiOverlay');
+      if (ov) ov.hidden = true;
+      document.documentElement.style.overflow = '';
+    }
+    modal.setAttribute('hidden', '');
+    modal.classList.remove('is-open');
+    document.body.classList.remove('iu-modal-open');
+    try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
+  }, true);
+
   const AI_FALLBACK = [
     { name: "ChatGPT", url: "https://chat.openai.com", desc: "Univerzální AI na psaní, nápady, obrázky i práci s daty" },
     { name: "Google Gemini", url: "https://gemini.google.com", desc: "AI propojená s Googlem, mapami, vyhledáváním a Gmailem" },

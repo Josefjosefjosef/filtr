@@ -2698,6 +2698,13 @@ a.brand,
   box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
+/* Close buttons must always be clickable (above overlays) */
+.iuModalClose,
+[data-iu-close]{
+  pointer-events: auto;
+  cursor: pointer;
+}
+
 .iu-aiClose{
   border: 0;
   background: transparent;
