@@ -9015,6 +9015,11 @@ function buildVideoAsArticleCard(it) {
   });
 
   function iuShowQuickFeed(key){
+    const keyNorm = String(key || "").trim().toLowerCase();
+    if (keyNorm === "ai") {
+      try { window.dispatchEvent(new CustomEvent("iu-open-panel", { detail: "ai" })); } catch {}
+      return;
+    }
     const data = (window.IU_QUICK_FEEDS || {})[key];
     if (!data) return;
     const stage = document.getElementById("iuCenterStage");
@@ -9410,7 +9415,6 @@ function buildVideoAsArticleCard(it) {
     modal.setAttribute('hidden', '');
     modal.classList.remove('is-open');
     document.body.classList.remove('iu-modal-open');
-    try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
   }, true);
 
   const AI_FALLBACK = [
@@ -9511,25 +9515,22 @@ function buildVideoAsArticleCard(it) {
       window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'ai') closePanel(); });
     } catch {}
 
-    // 1) Klik na tlačítko – přes URL (bez zásahu do href)
+    // 1) Klik na tlačítko – bez změny URL (AI jen overlay)
     document.addEventListener('click', e => {
       if (e.target.closest && e.target.closest('[data-iuq]')) return;
       const btn = e.target.closest('[data-action="ai-panel"]');
       if (!btn) return;
       e.preventDefault();
       e.stopPropagation();
-      try {
-        if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(aiPanel.hidden ? 'ai' : '');
-      } catch {}
+      openPanel();
     }, true);
 
-    // 2) Zavření: × (odstraní panel= z URL)
+    // 2) Zavření: × (bez změny URL)
     if (aiClose){
       aiClose.addEventListener('click', e => {
         e.preventDefault();
         e.stopPropagation();
         closePanel();
-        try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
       });
     }
 
@@ -11343,7 +11344,9 @@ function buildVideoAsArticleCard(it) {
     try{
       const p = new URLSearchParams(window.location.search).get('panel');
       const id = String(p || '').trim().toLowerCase();
-      if (id === 'ai' || id === 'shopping' || id === 'services') return id;
+      // AI panel must NOT open from URL – overlay only via quicklink (data-iuq="ai")
+      const ALLOWED_PANELS = new Set(['shopping', 'services']);
+      if (ALLOWED_PANELS.has(id)) return id;
       return null;
     }catch{ return null; }
   }
