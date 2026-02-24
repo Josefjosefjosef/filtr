@@ -9020,6 +9020,10 @@ function buildVideoAsArticleCard(it) {
       if (p) {
         p.hidden = false;
         if (o) o.hidden = false;
+        try {
+          var sb = window.innerWidth - document.documentElement.clientWidth;
+          if (sb > 0) document.body.style.paddingRight = sb + "px";
+        } catch (_) {}
         try { document.documentElement.style.overflow = "hidden"; } catch (_) {}
         try { document.body.classList.add("iu-modal-open"); } catch (_) {}
         try { if (p.dataset) p.dataset.open = "1"; } catch (_) {}
@@ -9488,7 +9492,16 @@ function buildVideoAsArticleCard(it) {
     }
 
     function lockScroll(lock){
-      document.documentElement.style.overflow = lock ? 'hidden' : '';
+      if (lock) {
+        try {
+          var sb = window.innerWidth - document.documentElement.clientWidth;
+          if (sb > 0) document.body.style.paddingRight = sb + "px";
+        } catch (_) {}
+        document.documentElement.style.overflow = "hidden";
+      } else {
+        document.documentElement.style.overflow = "";
+        try { document.body.style.paddingRight = ""; } catch (_) {}
+      }
     }
 
     function openPanel(){
