@@ -9015,6 +9015,15 @@ function buildVideoAsArticleCard(it) {
     const keyNorm = String(key || "").trim().toLowerCase();
     if (keyNorm === "ai") {
       try { window.dispatchEvent(new CustomEvent("iu-open-panel", { detail: "ai" })); } catch {}
+      var p = document.getElementById("iu-aiPanel");
+      var o = document.getElementById("iu-aiOverlay");
+      if (p) {
+        p.hidden = false;
+        if (o) o.hidden = false;
+        try { document.documentElement.style.overflow = "hidden"; } catch (_) {}
+        try { document.body.classList.add("iu-modal-open"); } catch (_) {}
+        try { if (p.dataset) p.dataset.open = "1"; } catch (_) {}
+      }
       return;
     }
     const data = (window.IU_QUICK_FEEDS || {})[key];
