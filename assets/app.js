@@ -9381,7 +9381,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuQuickFeedInit(){
     document.addEventListener("click", (e) => {
-      const el = e.target.closest && e.target.closest('button[data-iuq], a[data-iuq], [role="button"][data-iuq]');
+      const el = e.target.closest && e.target.closest('[data-iuq]');
       if (!el) return;
       e.preventDefault();
       e.stopPropagation();
@@ -9522,7 +9522,7 @@ function buildVideoAsArticleCard(it) {
 
     // 1) Klik na tlačítko – bez změny URL (AI jen overlay)
     document.addEventListener('click', e => {
-      if (e.target.closest && e.target.closest('button[data-iuq], a[data-iuq], [role="button"][data-iuq]')) return;
+      if (e.target.closest && e.target.closest('[data-iuq]')) return;
       const btn = e.target.closest('[data-action="ai-panel"]');
       if (!btn) return;
       e.preventDefault();
