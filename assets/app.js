@@ -9072,6 +9072,7 @@ function buildVideoAsArticleCard(it) {
           <div class="iuNotesStatus" data-iu-notes-status hidden></div>
         </div>
       `;
+      if (typeof window.iuEnsurePanelShareButton === "function") window.iuEnsurePanelShareButton(quick, function(){ return location.origin + location.pathname; });
       iuTrInit(quick, data);
       iuTrNotesBootstrap(quick);
     } else {
@@ -9142,6 +9143,7 @@ function buildVideoAsArticleCard(it) {
           </div>
           ${aiSeoBlock}
         `;
+        if (typeof window.iuEnsurePanelShareButton === "function") window.iuEnsurePanelShareButton(quick, function(){ return location.origin + location.pathname; });
         if (isAi) {
           try { renderAiVideos(quick); } catch (e) { console.warn("renderAiVideos", e); }
         }
@@ -9369,7 +9371,6 @@ function buildVideoAsArticleCard(it) {
 
   function iuQuickFeedInit(){
     document.addEventListener("click", (e) => {
-      if (e.target.closest && e.target.closest('.iuQShareBtn')) return;
       const el = e.target.closest && e.target.closest('[data-iuq]');
       if (!el) return;
       e.preventDefault();
@@ -9387,53 +9388,36 @@ function buildVideoAsArticleCard(it) {
   }
 })();
 
-// === Quicklink share buttons (Přeposlat) ===
+// === Panel header share (Přeposlat) – v hlavičce otevřeného panelu/karty ===
 (function(){
-  function iuInitQuicklinkShareButtons(){
-    const items = document.querySelectorAll('.iu-mmQuickItem, [data-iuq]');
-    items.forEach(function(el){
-      if (el.querySelector('.iuQShareBtn')) return;
-      const titleEl = el.querySelector('.iu-mmQuickTitle, .iuQuickTitle, .iuCardTitle, .iuLabel, .iuName') || el.querySelector('span:not(.iuIconTile)') || null;
-      if (!titleEl) return;
-      const parent = titleEl.parentElement;
-      if (!parent) return;
-      const row = document.createElement('div');
-      row.className = 'iuQTitleRow';
-      parent.insertBefore(row, titleEl);
-      row.appendChild(titleEl);
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'iuQShareBtn';
-      btn.setAttribute('aria-label', 'Přeposlat');
-      btn.textContent = 'Přeposlat';
-      var shareUrl = null;
-      if (el.tagName === 'A' && el.getAttribute('href')) shareUrl = el.getAttribute('href');
-      if (!shareUrl) { var a = el.querySelector('a[href]'); if (a) shareUrl = a.getAttribute('href'); }
-      if (!shareUrl && el.dataset && el.dataset.url) shareUrl = el.dataset.url;
-      try { if (shareUrl) shareUrl = new URL(shareUrl, location.origin).toString(); } catch(_) {}
-      if (!shareUrl) shareUrl = location.href.split('#')[0];
-      btn.dataset.shareUrl = shareUrl;
-      row.appendChild(btn);
-    });
+  function iuEnsurePanelShareButton(panelEl, getUrlFn){
+    if (!panelEl || typeof getUrlFn !== 'function') return;
+    var header = panelEl.querySelector && (panelEl.querySelector('.iuQHead') || panelEl.querySelector('.iu-aiPanelHeader') || panelEl.querySelector('.iuModalHeader') || panelEl.querySelector('.iuPanelHeader') || panelEl.querySelector('[class*="Header"]'));
+    if (!header || header.querySelector('.iuPanelShareBtn')) return;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'iuPanelShareBtn';
+    btn.setAttribute('aria-label', 'Přeposlat');
+    btn.textContent = 'Přeposlat';
+    btn.dataset.shareUrl = getUrlFn();
+    var closeEl = header.querySelector('.iuQClose, .iuModalClose, [data-iu-close]');
+    if (closeEl) header.insertBefore(btn, closeEl);
+    else header.appendChild(btn);
   }
+  try { window.iuEnsurePanelShareButton = iuEnsurePanelShareButton; } catch(_) {}
   document.addEventListener('click', async function(e){
-    var btn = e.target.closest && e.target.closest('.iuQShareBtn');
+    var btn = e.target.closest && e.target.closest('.iuPanelShareBtn');
     if (!btn) return;
     e.preventDefault();
     e.stopPropagation();
-    var url = (btn.dataset && btn.dataset.shareUrl) ? btn.dataset.shareUrl : location.href.split('#')[0];
+    if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+    var url = (btn.dataset && btn.dataset.shareUrl) ? btn.dataset.shareUrl : (location.origin + location.pathname);
     try {
-      var data = { title: 'infoUzel.cz', text: 'Rychlý odkaz z infoUzel.cz', url: url };
-      if (navigator.share) { await navigator.share(data); } else { await navigator.clipboard.writeText(url); alert('Odkaz zkopírován do schránky'); }
-    } catch (err) { if (typeof console !== 'undefined' && console.warn) console.warn('quicklink share fail', err); }
+      if (navigator.share) { await navigator.share({ title: 'infoUzel.cz', url: url }); } else { await navigator.clipboard.writeText(url); }
+      btn.classList.add('iuPanelShareBtn--ok');
+      setTimeout(function(){ btn.classList.remove('iuPanelShareBtn--ok'); }, 600);
+    } catch (err) { if (typeof console !== 'undefined' && console.warn) console.warn('panel share fail', err); }
   }, true);
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function(){ iuInitQuicklinkShareButtons(); setTimeout(iuInitQuicklinkShareButtons, 0); setTimeout(iuInitQuicklinkShareButtons, 250); });
-  } else {
-    iuInitQuicklinkShareButtons();
-    setTimeout(iuInitQuicklinkShareButtons, 0);
-    setTimeout(iuInitQuicklinkShareButtons, 250);
-  }
 })();
 
 // === AI PANEL (Quick Links) — centered modal (like Parcels) ===
