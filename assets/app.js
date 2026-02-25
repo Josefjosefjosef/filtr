@@ -9440,15 +9440,24 @@ function buildVideoAsArticleCard(it) {
 (function(){
   'use strict';
 
-  /* Global close handler: [data-iu-close] / .iuModalClose / .iu-close closes modal (capture so it runs before stopPropagation inside modals) */
+  /* Global close handler: [data-iu-close] / .iuModalClose / .iu-close / .iuQClose — modal or quick card (capture so it runs before stopPropagation inside modals) */
   document.addEventListener('click', function(e){
     const t0 = e.target;
     const t = (t0 && t0.nodeType === 3) ? t0.parentElement : t0; // text node -> parent so closest() works
     if (!t || t.nodeType !== 1) return;
-    const closeEl = t.closest('[data-iu-close], .iuModalClose, .iu-close, .iu-closeBtn');
+    const closeEl = t.closest('[data-iu-close], .iuModalClose, .iu-close, .iu-closeBtn, .iuQClose');
     if (!closeEl) return;
     e.preventDefault();
     e.stopPropagation();
+
+    // 1) Quick card/feed (AI asistenti etc.): X is inside #iuQuickFeed — use existing close
+    const quick = closeEl.closest && closeEl.closest('#iuQuickFeed');
+    if (quick) {
+      if (typeof window.iuEnsureArticlesView === 'function') window.iuEnsureArticlesView();
+      return;
+    }
+
+    // 2) Modal (#iu-aiPanel or .iuModal)
     const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel'));
     if (modal) {
       if (modal.id === 'iu-aiPanel') {
