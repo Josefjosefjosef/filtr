@@ -12107,3 +12107,16 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 .iuModal[hidden],#iu-aiPanel[hidden],#iu-aiOverlay[hidden],[data-iu-backdrop][hidden]{ display:none !important; }
 
 .iuModal, [data-iu-backdrop] { contain: layout paint; }
+
+/* P0: MindMenu area must visually be blue (explicit glass panel inside right rail) */
+.layout > aside.accordionCol .mindMenu{
+  background: linear-gradient(180deg, #F6F9FF 0%, #EEF4FF 100%) !important;
+  border: 1px solid #D8E4FF !important;
+  box-shadow: 0 4px 18px rgba(31,75,153,0.08) !important;
+}
+
+/* P0: prevent near-opaque white tiles from wiping the blue underlay (right rail only) */
+.layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
+  background-color: rgba(255,255,255,0.35) !important;
+  background-image: none !important;
+}
