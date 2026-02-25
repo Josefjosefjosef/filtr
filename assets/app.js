@@ -9390,6 +9390,8 @@ function buildVideoAsArticleCard(it) {
 // === Quicklink share buttons (Přeposlat) ===
 (function(){
   function iuInitQuicklinkShareButtons(){
+    // P0: QuickLinks share disabled (iuQShareBtn removed)
+    return;
     const items = document.querySelectorAll('.iu-mmQuickItem, [data-iuq]');
     items.forEach(function(el){
       if (el.querySelector('.iuQShareBtn')) return;
