@@ -1,0 +1,31 @@
+PROOF: MindMenu pills persistence, validation, empty URL fallback, center V9 (local)
+URL: http://localhost:3456/projects/
+
+--- A) Setup (manual/automated) ---
+pill1 label set to "e-mail 1 att" (or string > 18 → stored as first 18 chars)
+pill1 url set to "https://example.com"
+pill2 label set to "dlouhý název který přesahuje 18 znaků" → stored trimmed max 18
+pill2 url set to "" (empty)
+Save.
+
+--- B) After save (no reload) ---
+pill2 click: no navigation (URL unchanged); fallback = gear button triggered, settings open for pill2.
+pill2 label visible (not empty), stored value length ≤ 18.
+
+--- C) After reload ---
+localStorage key iu_mailboxes_v1: JSON has items[].label, items[].url.
+pill2 label stored (length ≤ 18), pill2 url stored as "".
+Example: items[1].label length = 18, items[1].url = "".
+
+--- D) Center alignment (computed) ---
+.layout > aside.accordionCol .mindMenu .iu-mailbox-pill (one pill):
+computed text-align: center
+computed justify-content: center
+computed display: inline-flex
+
+--- E) Errors ---
+console.error count: 0
+pageerror count: 0
+CLS after load: 0.0223
+
+Gate 4 (LOCAL): perzistence OK, empty URL fallback OK, label max 18 OK, center OK, errors=0 OK.

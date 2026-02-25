@@ -12193,3 +12193,12 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   background-image: none !important;
   box-shadow: none !important;
 }
+
+/* P0: MindMenu pills content centered */
+.layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
+  text-align: center !important;
+  justify-content: center !important;
+}
+.layout > aside.accordionCol .mindMenu .iu-mailbox-pill > *{
+  justify-content: center !important;
+}
