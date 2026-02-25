@@ -9184,11 +9184,11 @@ function buildVideoAsArticleCard(it) {
         }).join("");
       };
       const doRender = (services) => {
-        const shareBtnHtml = isAi ? `<button type="button" class="iuAiShareBtn iuQClose" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button>` : "";
+        const shareBtnHtml = isAi ? `<button type="button" class="iuAiShareBtn iuQBtn" data-iu-action="share" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button>` : "";
         quick.innerHTML = `
           <div class="iuQHead">
             <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-            <div class="iuQHeadActions">${shareBtnHtml}<button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
+            <div class="iuQHeadActions">${shareBtnHtml}<button class="iuQClose" type="button" id="iuQCloseBtn" data-iu-action="close" aria-label="Zavřít">✕</button></div>
           </div>
           <div class="iuQCard">
             <div class="iuQGrid">
@@ -9511,7 +9511,10 @@ function buildVideoAsArticleCard(it) {
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({ title: SHARE_TITLE, text: SHARE_TEXT, url: SHARE_URL });
-      } catch (e) { /* user cancel OK, no console.error */ }
+      } catch (e) {
+        if (e && e.name === "AbortError") return;
+        openShareFallbackMenu();
+      }
       return;
     }
     openShareFallbackMenu();
@@ -9585,17 +9588,22 @@ function buildVideoAsArticleCard(it) {
   }
 
   document.addEventListener("click", function(e){
-    if (e.target && e.target.closest && e.target.closest(".iuAiShareBtn")) onShareAiTab();
+    if (e.target && e.target.closest && e.target.closest(".iuAiShareBtn")) {
+      e.preventDefault();
+      e.stopPropagation();
+      onShareAiTab();
+    }
   });
   try { window.__onShareAiTab = onShareAiTab; } catch (_) {}
 
-  /* Global close handler: [data-iu-close] / .iuModalClose / .iu-close / .iuQClose — modal or quick card (capture so it runs before stopPropagation inside modals) */
+  /* Global close handler: [data-iu-close] / .iuModalClose / .iu-close / .iuQClose / [data-iu-action="close"] — never on share button */
   document.addEventListener('click', function(e){
     const t0 = e.target;
     const t = (t0 && t0.nodeType === 3) ? t0.parentElement : t0; // text node -> parent so closest() works
     if (!t || t.nodeType !== 1) return;
-    const closeEl = t.closest('[data-iu-close], .iuModalClose, .iu-close, .iu-closeBtn, .iuQClose');
+    const closeEl = t.closest('[data-iu-close], .iuModalClose, .iu-close, .iu-closeBtn, [data-iu-action="close"], .iuQClose');
     if (!closeEl) return;
+    if (closeEl.classList && closeEl.classList.contains("iuAiShareBtn")) return;
     e.preventDefault();
     e.stopPropagation();
 

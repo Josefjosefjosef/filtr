@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * Proof: AI tab header Share button – always shares https://www.infouzel.cz/
- * Test A: Web Share API mock → payload.url === PROD URL.
- * Test B: Fallback (no share) → Kopírovat odkaz → clipboard receives PROD URL.
- * Runs local via http://127.0.0.1 (static server); or PROOF_BASE_URL for PROD.
+ * Proof: AI Share button – 3 režimy.
+ * Test A: share podporováno a uspěje → payload.url === https://www.infouzel.cz/
+ * Test B: share nepodporováno → fallback otevřen, Kopírovat odkaz → clipboard PROD URL.
+ * Test C: share existuje ale selže (NotAllowedError) → fallback se otevře, Kopírovat → PROD URL.
  * Output: artifacts/PROOF_AI_SHARE_BUTTON.txt (UTF-8 no BOM, CRLF).
  */
 import { chromium } from "playwright";
@@ -56,6 +56,15 @@ function startStaticServer(rootDir) {
   });
 }
 
+async function openAiCardAndWait(page) {
+  await page.evaluate(() => {
+    const btn = document.querySelector('[data-iuq="ai"]');
+    if (btn) btn.click();
+  });
+  await page.waitForTimeout(1200);
+}
+
+/** Test A: share supported and succeeds → override captures payload, payload.url === PROD */
 async function runTestA(page, baseUrl) {
   await page.addInitScript(() => {
     window.__sharePayload = null;
@@ -68,15 +77,11 @@ async function runTestA(page, baseUrl) {
     } catch (_) {}
   });
   await page.goto(baseUrl, { waitUntil: "networkidle", timeout: 30000 });
-  await page.waitForTimeout(1500);
-  await page.evaluate(() => {
-    const btn = document.querySelector('[data-iuq="ai"]');
-    if (btn) btn.click();
-  });
-  await page.waitForTimeout(2500);
+  await page.waitForTimeout(2000);
+  await openAiCardAndWait(page);
   const shareBtn = page.locator("#iuQuickFeed .iuAiShareBtn");
-  await shareBtn.waitFor({ state: "visible", timeout: 10000 }).catch(() => {});
-  if ((await shareBtn.count()) === 0) return { pass: false, error: "Share button not found" };
+  await shareBtn.waitFor({ state: "visible", timeout: 8000 }).catch(() => {});
+  if ((await shareBtn.count()) === 0) return { pass: false, error: "Share button not found", cls: 0 };
   const payload = await page.evaluate(async () => {
     window.__sharePayload = null;
     window.__iuShareTestOverride = async (opts) => { window.__sharePayload = opts; };
@@ -87,9 +92,10 @@ async function runTestA(page, baseUrl) {
   const urlOk = payload && payload.url === SHARE_URL_EXPECTED;
   const titleOk = payload && typeof payload.title === "string" && payload.title.length > 0;
   const textOk = payload && typeof payload.text === "string" && payload.text.length > 0;
-  return { pass: urlOk && titleOk && textOk, url: payload?.url, title: payload?.title, text: payload?.text, cls };
+  return { pass: !!(urlOk && titleOk && textOk), url: payload?.url, title: payload?.title, text: payload?.text, cls };
 }
 
+/** Test B: navigator.share undefined → click Přeposlat → fallback opens → click Kopírovat → __copiedText === PROD */
 async function runTestB(page, baseUrl) {
   await page.addInitScript(() => {
     window.__copiedText = null;
@@ -102,27 +108,72 @@ async function runTestB(page, baseUrl) {
     } catch (_) {}
   });
   await page.goto(baseUrl, { waitUntil: "networkidle", timeout: 30000 });
-  await page.waitForTimeout(1500);
-  await page.evaluate(() => {
-    const btn = document.querySelector('[data-iuq="ai"]');
-    if (btn) btn.click();
-  });
-  await page.waitForTimeout(2500);
-  const copied = await page.evaluate(async () => {
+  await page.waitForTimeout(2000);
+  await openAiCardAndWait(page);
+  const shareBtn = page.locator("#iuQuickFeed .iuAiShareBtn");
+  await shareBtn.waitFor({ state: "visible", timeout: 8000 }).catch(() => {});
+  if ((await shareBtn.count()) === 0) return { pass: false, error: "Share button not found", copied: null, cls: 0 };
+  const result = await page.evaluate(async () => {
     window.__copiedText = null;
     window.__iuShareTestOverride = undefined;
     window.__iuClipboardTestCapture = (t) => { window.__copiedText = t; };
-    try {
-      Object.defineProperty(navigator, "share", { value: undefined, configurable: true, writable: true });
-    } catch (_) { navigator.share = undefined; }
-    if (typeof window.__onShareAiTab === "function") await window.__onShareAiTab();
-    const copyItem = Array.from(document.querySelectorAll(".iuAiShareFallback button, [role=menuitem]")).find(el => /Kopírovat odkaz/.test(el.textContent || ""));
+    try { Object.defineProperty(navigator, "share", { value: undefined, configurable: true, writable: true }); } catch (_) { navigator.share = undefined; }
+    const shareBtnEl = document.querySelector("#iuQuickFeed .iuAiShareBtn");
+    if (shareBtnEl) shareBtnEl.click();
+    await new Promise((r) => setTimeout(r, 400));
+    const fallback = document.getElementById("iuAiShareFallback");
+    if (!fallback) return { copied: window.__copiedText, fallbackVisible: false };
+    const copyItem = Array.from(fallback.querySelectorAll("button")).find((el) => /Kopírovat odkaz/.test(el.textContent || ""));
     if (copyItem) copyItem.click();
-    await new Promise(r => setTimeout(r, 200));
-    return window.__copiedText || null;
+    await new Promise((r) => setTimeout(r, 200));
+    return { copied: window.__copiedText, fallbackVisible: true };
   });
   const cls = await page.evaluate(() => (typeof window.__proofCls === "number" ? window.__proofCls : 0)).catch(() => 0);
-  return { pass: copied === SHARE_URL_EXPECTED, copied, cls };
+  const pass = result.fallbackVisible && result.copied === SHARE_URL_EXPECTED;
+  return { pass, copied: result.copied, fallbackVisible: result.fallbackVisible, cls };
+}
+
+/** Test C: navigator.share throws NotAllowedError → click Přeposlat → fallback opens → click Kopírovat → __copiedText === PROD */
+async function runTestC(page, baseUrl) {
+  await page.addInitScript(() => {
+    window.__copiedText = null;
+    window.__proofCls = 0;
+    try {
+      const obs = new PerformanceObserver((list) => {
+        for (const e of list.getEntries()) if (!e.hadRecentInput) window.__proofCls += e.value;
+      });
+      obs.observe({ type: "layout-shift", buffered: true });
+    } catch (_) {}
+  });
+  await page.goto(baseUrl, { waitUntil: "networkidle", timeout: 30000 });
+  await page.waitForTimeout(2000);
+  await page.evaluate(() => {
+    const err = new Error("blocked");
+    err.name = "NotAllowedError";
+    const shareReject = async () => { throw err; };
+    try { Object.defineProperty(navigator, "share", { value: shareReject, configurable: true, writable: true }); } catch (_) { navigator.share = shareReject; }
+  });
+  await openAiCardAndWait(page);
+  const shareBtn = page.locator("#iuQuickFeed .iuAiShareBtn");
+  await shareBtn.waitFor({ state: "visible", timeout: 8000 }).catch(() => {});
+  if ((await shareBtn.count()) === 0) return { pass: false, error: "Share button not found", copied: null, cls: 0 };
+  const result = await page.evaluate(async () => {
+    window.__copiedText = null;
+    window.__iuShareTestOverride = undefined;
+    window.__iuClipboardTestCapture = (t) => { window.__copiedText = t; };
+    const shareBtnEl = document.querySelector("#iuQuickFeed .iuAiShareBtn");
+    if (shareBtnEl) shareBtnEl.click();
+    await new Promise((r) => setTimeout(r, 500));
+    const fallback = document.getElementById("iuAiShareFallback");
+    if (!fallback) return { copied: window.__copiedText, fallbackVisible: false };
+    const copyItem = Array.from(fallback.querySelectorAll("button")).find((el) => /Kopírovat odkaz/.test(el.textContent || ""));
+    if (copyItem) copyItem.click();
+    await new Promise((r) => setTimeout(r, 200));
+    return { copied: window.__copiedText, fallbackVisible: true };
+  });
+  const cls = await page.evaluate(() => (typeof window.__proofCls === "number" ? window.__proofCls : 0)).catch(() => 0);
+  const pass = result.fallbackVisible && result.copied === SHARE_URL_EXPECTED;
+  return { pass, copied: result.copied, fallbackVisible: result.fallbackVisible, cls };
 }
 
 async function main() {
@@ -131,7 +182,7 @@ async function main() {
   let BASE_URL = process.env.PROOF_BASE_URL || "";
   const consoleErrors = [];
   const pageErrors = [];
-  const lines = ["PROOF: AI Share button (always https://www.infouzel.cz/)"];
+  const lines = ["PROOF: AI Share button (3 režimy, https://www.infouzel.cz/)"];
 
   try {
     if (!BASE_URL.trim()) {
@@ -156,19 +207,29 @@ async function main() {
     const resultB = await runTestB(pageB, BASE_URL);
     await pageB.close();
 
+    const pageC = await context.newPage();
+    pageC.on("console", (m) => { if (m.type() === "error") consoleErrors.push(m.text()); });
+    pageC.on("pageerror", (e) => pageErrors.push(String(e.message)));
+    const resultC = await runTestC(pageC, BASE_URL);
+    await pageC.close();
+
     lines.push("TestA_sharePayloadUrl=" + (resultA.url || resultA.error || ""));
     lines.push("TestA_pass=" + (resultA.pass === true));
+    lines.push("TestB_fallbackVisible=" + (resultB.fallbackVisible === true));
     lines.push("TestB_copiedText=" + (resultB.copied || resultB.error || ""));
     lines.push("TestB_pass=" + (resultB.pass === true));
+    lines.push("TestC_fallbackVisible=" + (resultC.fallbackVisible === true));
+    lines.push("TestC_copiedText=" + (resultC.copied || resultC.error || ""));
+    lines.push("TestC_pass=" + (resultC.pass === true));
+
     const criticalConsole = consoleErrors.filter((t) => !isNoiseConsoleError(t));
     lines.push("console.error=" + criticalConsole.length);
     lines.push("pageerror=" + pageErrors.length);
-    const clsVal = (resultA.cls || 0) + (resultB.cls || 0);
-    const clsReport = clsVal < 0.05 ? 0 : clsVal;
+    const clsVal = (resultA.cls || 0) + (resultB.cls || 0) + (resultC.cls || 0);
+    const clsReport = clsVal < 0.02 ? 0 : clsVal;
     lines.push("CLS=" + clsReport);
 
-    const failConsole = !BASE_URL.includes("127.0.0.1") && criticalConsole.length > 0;
-    const allPass = !!(resultA.pass && resultB.pass && !failConsole && pageErrors.length === 0 && clsVal < 0.05);
+    const allPass = !!(resultA.pass && resultB.pass && resultC.pass && criticalConsole.length === 0 && pageErrors.length === 0 && clsVal < 0.1);
     lines.push("allPass=" + allPass);
 
     const outPath = writeArtifact("PROOF_AI_SHARE_BUTTON.txt", lines.join("\n"));

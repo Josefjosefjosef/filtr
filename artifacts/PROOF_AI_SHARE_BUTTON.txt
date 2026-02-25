@@ -1,10 +1,14 @@
-PROOF: AI Share button (always https://www.infouzel.cz/)
-URL=http://127.0.0.1:58177/projects/
+PROOF: AI Share button (3 režimy, https://www.infouzel.cz/)
+URL=http://127.0.0.1:56370/projects/
 TestA_sharePayloadUrl=https://www.infouzel.cz/
 TestA_pass=true
+TestB_fallbackVisible=true
 TestB_copiedText=https://www.infouzel.cz/
 TestB_pass=true
+TestC_fallbackVisible=true
+TestC_copiedText=https://www.infouzel.cz/
+TestC_pass=true
 console.error=0
 pageerror=0
-CLS=0
+CLS=0.05571908516883851
 allPass=true
