@@ -1,0 +1,14 @@
+PROOF: MindMenu pill label hard max 15 chars at input V11 — AFTER MERGE PROD
+URL: https://infouzel.cz/projects/
+
+--- Input hard limit ---
+Open pill settings (gear) → label input maxlength=15, text "max 15 znaků".
+Attempt 30 chars: actualLen = 15.
+
+--- After reload ---
+Stored label length = 15 (persisted).
+
+console.error count: 0
+pageerror count: 0
+
+Gate 3 (PROD): maxlength=15, attempt 30 → actualLen 15, stored len 15, errors=0 OK.
