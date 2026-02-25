@@ -7375,6 +7375,7 @@ function buildVideoAsArticleCard(it) {
   const MAILBOX_PLACEHOLDERS = ["Např.: e-mail 1", "Např.: e-mail 2", "Např.: pracovní web", "Např.: oblíbený web"];
   const IU_MAILBOX_MIN = 1;
   const IU_MAILBOX_MAX = 6;
+  const IU_MAILBOX_LABEL_MAX = 18;
 
   function iuMailboxLoad(){
     try{
@@ -7388,7 +7389,7 @@ function buildVideoAsArticleCard(it) {
       const items = Array.isArray(parsed?.items) ? parsed.items : [];
       const raw = items.slice(0, IU_MAILBOX_MAX);
       let fixed = raw.map((it, i) => ({
-        label: String(it?.label ?? "").trim() || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : ""),
+        label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX) || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : ""),
         url: String(it?.url ?? "").trim(),
         index: i
       }));
@@ -7409,7 +7410,10 @@ function buildVideoAsArticleCard(it) {
 
   function iuMailboxSave(items){
     try{
-      const toSave = items.map(({ label, url }) => ({ label, url }));
+      const toSave = items.map((it) => ({
+        label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX),
+        url: String(it?.url ?? "").trim()
+      }));
       localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: toSave }));
     }catch{}
   }
@@ -7495,9 +7499,11 @@ function buildVideoAsArticleCard(it) {
         const items = iuMailboxLoad();
         const it = items[idx];
         if (!it) return;
-        const label = window.prompt("Název tlačítka:", it.label || "") || it.label || "";
-        const url = window.prompt("URL (www):", it.url || "") || it.url || "";
-        items[idx] = { ...it, label: String(label).trim(), url: String(url).trim() };
+        const labelRaw = window.prompt("Název tlačítka (max 18 znaků):", it.label || "") ?? it.label ?? "";
+        const urlRaw = window.prompt("URL (www):", it.url || "") ?? it.url ?? "";
+        const label = String(labelRaw).trim().slice(0, IU_MAILBOX_LABEL_MAX);
+        const url = String(urlRaw).trim();
+        items[idx] = { ...it, label: label || it.label || "", url };
         iuMailboxSave(items);
         iuMailboxRender();
         return;
@@ -7507,7 +7513,14 @@ function buildVideoAsArticleCard(it) {
         const idx = parseInt(pillBtn.getAttribute("data-mailbox-index") || "0", 10);
         const items = iuMailboxLoad();
         const it = items[idx];
-        if (it?.url) window.open(it.url, "_blank", "noopener");
+        const urlVal = it?.url && String(it.url).trim();
+        if (urlVal) {
+          window.open(it.url, "_blank", "noopener");
+        } else {
+          e.preventDefault();
+          const gear = list.querySelector(`[data-mailbox-gear="${idx}"]`);
+          if (gear) gear.click();
+        }
       }
     });
   }

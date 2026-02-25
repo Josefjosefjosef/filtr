@@ -1,0 +1,6 @@
+STORAGE_TYPE=localStorage
+STORAGE_KEY=iu_mailboxes_v1
+FORMAT=JSON object: { items: [ { label: string, url: string }, ... ] }
+SAVE_CALLSITE=iuMailboxSave (app.js ~7410), called from gear handler after prompt and from Add/Remove
+LOAD_CALLSITE=iuMailboxLoad (app.js ~7379), called from render and on init
+BUG_HYPOTHESIS=Save strips to { label, url } but did not enforce label max 18 or normalize empty url to ""; pill click when url empty does nothing (no fallback to open settings). Persistence works but label/url normalization and empty-URL behavior were missing.
