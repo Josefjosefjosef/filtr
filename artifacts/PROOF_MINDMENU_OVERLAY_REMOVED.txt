@@ -1,0 +1,28 @@
+PROOF V2: MindMenu white overlay removed in right rail
+selector rail: .layout > aside.accordionCol
+4.1 rail computed:
+  background-image: linear-gradient(rgb(246, 249, 255) 0%, rgb(238, 244, 255) 100%)
+  background-color: rgba(0, 0, 0, 0)
+
+4.2 elementsFromPoint (TOP 10) at MindMenu area (1032.5, 241) [empty area y=mindMenuBox.top+90]:
+  [1] button.iu-mailbox-pill background-color: rgba(255, 255, 255, 0.85) background-image: none
+  [2] div.iu-mailbox-row background-color: rgba(0, 0, 0, 0) background-image: none
+  [3] div#iuMailboxList.iu-mailbox-list background-color: rgba(0, 0, 0, 0) background-image: none
+  [4] section.iu-mailboxes background-color: rgba(0, 0, 0, 0) background-image: none
+  [5] div.mindMenu background-color: rgba(0, 0, 0, 0) background-image: none
+  [6] div.mindMenu-scroll-wrapper background-color: rgba(0, 0, 0, 0) background-image: none
+  [7] aside.accordionCol background-color: rgba(0, 0, 0, 0) background-image: linear-gradient(rgb(246, 249, 255) 0%, rgb(238, 244, 255) 100%)
+  [8] div.layout background-color: rgba(0, 0, 0, 0) background-image: none
+  [9] div.container background-color: rgb(255, 255, 255) background-image: none
+  [10] main#content background-color: rgb(255, 255, 255) background-image: none
+
+mindMenu computed bg-color: rgba(0, 0, 0, 0)
+mindMenu isOpaqueWhite: false
+
+4.3 errors + CLS:
+console.error count: 0
+pageerror count: 0
+CLS baseline: 0.02335107421875
+CLS after: 0.02335107421875
+
+Gate 1: div.mindMenu transparent (not rgb(255,255,255)) = OK, rail gradient = OK, console.error=0 = OK, pageerror=0 = OK

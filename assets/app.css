@@ -12107,3 +12107,18 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 .iuModal[hidden],#iu-aiPanel[hidden],#iu-aiOverlay[hidden],[data-iu-backdrop][hidden]{ display:none !important; }
 
 .iuModal, [data-iu-backdrop] { contain: layout paint; }
+
+/* P0: MindMenu must not paint opaque white over right-rail glass */
+.layout > aside.accordionCol .mindMenu{
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* If the white comes from pseudo-elements, neutralize only here */
+.layout > aside.accordionCol .mindMenu::before,
+.layout > aside.accordionCol .mindMenu::after{
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
