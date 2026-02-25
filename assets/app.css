@@ -2746,6 +2746,75 @@ body.iu-modal-open #iu-aiPanel {
   border-bottom: 1px solid rgba(0,0,0,.08);
 }
 
+.iu-aiPanelHeaderActions{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#iu-aiPanel .iuAiShareBtn{
+  padding: 6px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  color: #111;
+}
+
+#iu-aiPanel .iuAiShareBtn:hover{
+  background: #f5f5f5;
+}
+
+.iuAiShareFallback{
+  position: fixed;
+  z-index: 10001;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  padding: 4px 0;
+  min-width: 160px;
+}
+
+.iuAiShareFallback button{
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  text-align: left;
+  font-family: inherit;
+  font-size: 14px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: #111;
+}
+
+.iuAiShareFallback button:hover{
+  background: #f5f5f5;
+}
+
+.iuAiShareToast{
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  background: #333;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 10002;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+}
+
+.iuAiShareToast.iuAiShareToastVisible{
+  opacity: 1;
+}
+
 .iuAiClose{
   position: absolute;
   top: 10px;
@@ -11479,6 +11548,27 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   justify-content: space-between;
   gap: 12px;
   margin: 8px 0 14px;
+}
+
+.iuQuickFeed .iuQHeadActions{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.iuQuickFeed .iuAiShareBtn{
+  padding: 6px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  border: 1px solid rgba(20,40,70,0.16);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  color: #111;
+}
+
+.iuQuickFeed .iuAiShareBtn:hover{
+  background: #f5f5f5;
 }
 
 .iuQuickFeed .iuQTitle{
