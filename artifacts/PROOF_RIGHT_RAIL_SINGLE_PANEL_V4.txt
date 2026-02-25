@@ -1,0 +1,57 @@
+PROOF V4: paint ancestor (first element that paints: bg-image or alpha >= 0.10)
+
+--- MindMenu ---
+TOPMOST: button.iu-mailbox-pill
+PAINT_CHAIN (sel, bgc, bgi, alpha, paints, isNearWhite):
+  [1] button.iu-mailbox-pill | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [2] div.iu-mailbox-row | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [3] div#iuMailboxList.iu-mailbox-list | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [4] section.iu-mailboxes | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [5] div.mindMenu | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [6] div.mindMenu-scroll-wrapper | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [7] aside.accordionCol | rgba(0, 0, 0, 0) | linear-gradient(rgb(246, 249, 255) 0%, r | alpha=0 | paints=true | isNearWhite=false
+  [8] div.layout | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [9] div.container | rgb(255, 255, 255) | none | alpha=1 | paints=true | isNearWhite=true
+  [10] main#content | rgb(255, 255, 255) | none | alpha=1 | paints=true | isNearWhite=true
+  [11] div#page | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [12] div#app | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+FIRST_PAINTING_ANCESTOR: aside.accordionCol
+isNearWhite (of first paint): false
+
+--- gap ---
+TOPMOST: section.iu-mmQuickLinks
+PAINT_CHAIN (sel, bgc, bgi, alpha, paints, isNearWhite):
+  [1] section.iu-mmQuickLinks | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [2] div.mindMenu | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [3] div.mindMenu-scroll-wrapper | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [4] aside.accordionCol | rgba(0, 0, 0, 0) | linear-gradient(rgb(246, 249, 255) 0%, r | alpha=0 | paints=true | isNearWhite=false
+  [5] div.layout | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [6] div.container | rgb(255, 255, 255) | none | alpha=1 | paints=true | isNearWhite=true
+  [7] main#content | rgb(255, 255, 255) | none | alpha=1 | paints=true | isNearWhite=true
+  [8] div#page | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [9] div#app | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+FIRST_PAINTING_ANCESTOR: aside.accordionCol
+isNearWhite (of first paint): false
+
+--- QuickLinks ---
+TOPMOST: span.iuIconTile
+PAINT_CHAIN (sel, bgc, bgi, alpha, paints, isNearWhite):
+  [1] span.iuIconTile | rgba(0, 0, 0, 0) | linear-gradient(145deg, rgba(255, 255, 2 | alpha=0 | paints=true | isNearWhite=false
+  [2] a.iu-mmQuickItem | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [3] div.iu-mmQuickGrid | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [4] section.iu-mmQuickLinks | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [5] div.mindMenu | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [6] div.mindMenu-scroll-wrapper | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [7] aside.accordionCol | rgba(0, 0, 0, 0) | linear-gradient(rgb(246, 249, 255) 0%, r | alpha=0 | paints=true | isNearWhite=false
+  [8] div.layout | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [9] div.container | rgb(255, 255, 255) | none | alpha=1 | paints=true | isNearWhite=true
+  [10] main#content | rgb(255, 255, 255) | none | alpha=1 | paints=true | isNearWhite=true
+  [11] div#page | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+  [12] div#app | rgba(0, 0, 0, 0) | none | alpha=0 | paints=false | isNearWhite=false
+FIRST_PAINTING_ANCESTOR: span.iuIconTile
+isNearWhite (of first paint): false
+
+Gate 1: MindMenu point -> FIRST_PAINTING_ANCESTOR = right rail (accordionCol) and isNearWhite = false: OK
+console.error count: 0
+pageerror count: 0
+CLS baseline: 0.018119580078125 CLS after: 0.018119580078125

@@ -12107,3 +12107,32 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 .iuModal[hidden],#iu-aiPanel[hidden],#iu-aiOverlay[hidden],[data-iu-backdrop][hidden]{ display:none !important; }
 
 .iuModal, [data-iu-backdrop] { contain: layout paint; }
+
+/* P0: single glass panel for entire right rail */
+.layout > aside.accordionCol{
+  background: linear-gradient(180deg, #F6F9FF 0%, #EEF4FF 100%);
+  border: 1px solid #D8E4FF;
+  box-shadow: 0 4px 18px rgba(31,75,153,0.08);
+}
+
+/* P0: remove card-like paint inside right rail (MindMenu) */
+.layout > aside.accordionCol .mindMenu{
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* P0: remove card-like paint inside right rail (QuickLinks container) */
+.layout > aside.accordionCol section.iu-mmQuickLinks{
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* P0: pills must not paint over the right-rail underlay (right rail only) */
+.layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
