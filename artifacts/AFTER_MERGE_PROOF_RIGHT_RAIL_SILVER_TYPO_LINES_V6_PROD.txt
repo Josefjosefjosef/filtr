@@ -1,0 +1,30 @@
+PROOF: Right rail silver typography & lines V6 — AFTER MERGE PROD
+URL: https://infouzel.cz/projects/
+SCOPE=.layout > aside.accordionCol
+EXCLUDE=.iuRightTopCtas (Inzerce / Služby, Vložit inzerát)
+
+--- T1 (after domcontentloaded) ---
+MindMenu heading (.iu-mmSectionTitle) computed color: rgba(75, 85, 99, 0.88)
+Rychlé odkazy heading (.iu-mmSectionTitle) computed color: rgba(75, 85, 99, 0.88)
+QuickLinks label (one .iu-mmQuickItem span) computed color: rgba(75, 85, 99, 0.88)
+Pill text (.iu-mailbox-pill) computed color: rgba(75, 85, 99, 0.88)
+Settings gear (.iu-mailbox-gear) computed color: rgba(75, 85, 99, 0.88)
+Divider (.iu-mmSectionLine) computed border-color: rgba(75, 85, 99, 0.28)
+Right-rail background (T1): rgba(175, 229, 252, 0.14)
+
+--- T2 (after +2000ms settle) ---
+MindMenu heading computed color: rgba(75, 85, 99, 0.88)
+Rychlé odkazy heading computed color: rgba(75, 85, 99, 0.88)
+QuickLinks label computed color: rgba(75, 85, 99, 0.88)
+Pill text computed color: rgba(75, 85, 99, 0.88)
+Settings gear computed color: rgba(75, 85, 99, 0.88)
+Divider computed border-color: rgba(75, 85, 99, 0.28)
+Right-rail background (T2): rgba(175, 229, 252, 0.14)
+
+changed? (T1 vs T2): NO
+EXCLUDE check: .iuRightTopCtas representative text computed color reverted (not silver) = PASS
+console.error count: 0
+pageerror count: 0
+CLS after load: 0.0223
+
+Gate 4 (PROD): headings/label/pill/settings/divider silver=PASS, exclude=PASS, errors=0=PASS.
