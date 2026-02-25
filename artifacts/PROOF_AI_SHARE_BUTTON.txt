@@ -1,10 +1,30 @@
-PROOF: AI Share button (always https://www.infouzel.cz/)
-URL=http://127.0.0.1:58177/projects/
-TestA_sharePayloadUrl=https://www.infouzel.cz/
+PROOF: AI Share button (3 modes, DIAG, CLS strict 0, D1 bundle gating)
+diag_baseUrl=http://127.0.0.1:57980/projects/
+diag_finalUrl=http://127.0.0.1:57980/projects/
+diag_repoExpectedHash=593
+diag_mode=A|B|C
+diag_bundleUrl=/assets/app.js?v=593
+diag_bundleHash=593
+diag_shareType=undefined
+diag_shareOverrideApplied=true
+diag_aiOpen=true
+diag_shareBtnCount=1
+diag_fallbackCount=1
+diag_fallbackStyle={"display":"block","visibility":"visible","opacity":"1","position":"fixed","zIndex":"10001"}
+diag_fallbackRect={"x":0,"y":4,"w":160,"h":88}
+diag_fallbackInViewport=true
+diag_topElementAtFallbackCenter=BUTTON
+diag_cls={"value":0.06461964948177337,"entriesCount":5,"topEntries":[{"value":0.02153359375,"hadRecentInput":false,"sourcesSummary":"section.iu-mmQuickLinks[884,430,298x370]; span#iuTopbarDate.iuTopbarDate[1136,26,94x21]; span.iuTopbarSep[1239,26,6x21]"},{"value":0.000006289410591125488,"hadRecentInput":false,"sourcesSummary":"i.fa-solid[916,510,27x21]; i.fa-solid[1019,510,27x21]; i.fa-solid[1019,624,27x21]"},{"value":0.000006289410591125488,"hadRecentInput":false,"sourcesSummary":"i.fa-solid[916,338,27x21]; i.fa-solid[1019,338,27x21]; i.fa-solid[1019,452,27x21]"},{"value":0.02153359375,"hadRecentInput":false,"sourcesSummary":"section.iu-mmQuickLinks[884,430,298x370]; span#iuTopbarDate.iuTopbarDate[1136,26,94x21]; span.iuTopbarSep[1239,26,6x21]"},{"value":0.000006289410591125488,"hadRecentInput":false,"sourcesSummary":"i.fa-solid[916,338,27x21]; i.fa-solid[1019,338,27x21]; i.fa-solid[1019,452,27x21]"}]}
+diag_viewport_before={"innerWidth":1280,"clientWidth":1280,"scrollY":0}
+diag_viewport_after={"innerWidth":1280,"clientWidth":1280,"scrollY":0}
+diag_scrollbarWidthDelta=0
 TestA_pass=true
-TestB_copiedText=https://www.infouzel.cz/
+TestA_sharePayloadUrl=https://www.infouzel.cz/
 TestB_pass=true
+TestB_copiedText=https://www.infouzel.cz/
+TestC_pass=true
+TestC_copiedText=https://www.infouzel.cz/
+CLS=0.06461964948177337
 console.error=0
 pageerror=0
-CLS=0
-allPass=true
+allPass=false

@@ -9073,6 +9073,7 @@ function buildVideoAsArticleCard(it) {
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
     if (!stage || !quick) return;
+    try { var stageH = stage.offsetHeight; if (stageH > 0) stage.style.minHeight = stageH + "px"; } catch (_) {}
     stage.setAttribute("data-iu-view", "quick");
     quick.hidden = false;
     const isTranslator = String(key || "").toLowerCase() === "deepl";
@@ -9409,7 +9410,7 @@ function buildVideoAsArticleCard(it) {
   function iuEnsureArticlesView(){
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
-    if (stage) stage.setAttribute("data-iu-view", "articles");
+    if (stage) { stage.setAttribute("data-iu-view", "articles"); try { stage.style.minHeight = ""; } catch (_) {} }
     if (quick) {
       quick.hidden = true;
       quick.innerHTML = "";
@@ -9511,7 +9512,10 @@ function buildVideoAsArticleCard(it) {
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({ title: SHARE_TITLE, text: SHARE_TEXT, url: SHARE_URL });
-      } catch (e) { /* user cancel OK, no console.error */ }
+      } catch (e) {
+        if (e && e.name === "AbortError") return;
+        openShareFallbackMenu();
+      }
       return;
     }
     openShareFallbackMenu();
@@ -9596,6 +9600,7 @@ function buildVideoAsArticleCard(it) {
     if (!t || t.nodeType !== 1) return;
     const closeEl = t.closest('[data-iu-close], .iuModalClose, .iu-close, .iu-closeBtn, .iuQClose');
     if (!closeEl) return;
+    if (closeEl.classList && closeEl.classList.contains('iuAiShareBtn')) return;
     e.preventDefault();
     e.stopPropagation();
 

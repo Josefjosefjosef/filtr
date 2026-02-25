@@ -123,10 +123,10 @@
 
 /* ==== GLOBAL CLS GUARDS ==== */
 
-/* 1) Stabilní scrollbar – eliminuje vodorovné „cuknutí“ při objevení scrollbaru */
+/* 1) Stabilní scrollbar – eliminuje vodorovné „cuknutí“ při objevení scrollbaru (P0 CLS=0) */
 html{
   scroll-padding-top: var(--topbarStackH);
-  scrollbar-gutter: stable;
+  scrollbar-gutter: stable both-edges;
 }
 
 /* 2) Média nikdy nemají měnit rozměr po načtení */
@@ -135,6 +135,7 @@ img, svg, video, iframe{
   max-width:100%;
   height:auto;
 }
+
 
 /* 3) Všechny obrázky, které mají mít pevný poměr stran, dostanou aspect-ratio přes třídy (viz níže) */
 
