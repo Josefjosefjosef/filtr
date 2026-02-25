@@ -12292,3 +12292,42 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 .layout > aside.accordionCol .mindMenu .iu-mailbox-pill > *{
   justify-content: center !important;
 }
+
+/* === MindMenu: make the ROW the visual "pill", gear inside right edge (no DOM changes) === */
+.layout > aside.accordionCol .mindMenu .iu-mailbox-row{
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  padding-right: 36px;
+}
+
+.layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.layout > aside.accordionCol .mindMenu .iu-mailbox-gear{
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  z-index: 2;
+}
+
+@media (hover: hover) and (pointer: fine){
+  .layout > aside.accordionCol .mindMenu .iu-mailbox-row:hover .iu-mailbox-gear{
+    transform: translateY(calc(-50% - 1px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .layout > aside.accordionCol .mindMenu .iu-mailbox-row .iu-mailbox-gear{
+    transform: translateY(-50%);
+  }
+}
