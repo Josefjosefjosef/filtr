@@ -11528,9 +11528,10 @@ function buildVideoAsArticleCard(it) {
 
   function applySectionFromURL(accentOverride){
     if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
-    // Gate C: ?section= has priority; hash ignored (getInitialSection reads search only)
-    const section = getInitialSection(); // already normalized + fallback->media
-    const accentKey = (accentOverride && String(accentOverride).trim().toLowerCase()) || section;
+    // Gate C: ?section= has priority; when accentOverride (e.g. hex click) use it so URL is not changed
+    const fromUrl = getInitialSection();
+    const accentKey = (accentOverride && String(accentOverride).trim().toLowerCase()) ? normalizeSection(accentOverride) : fromUrl;
+    const section = accentKey;
     // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
     try{ document.body && (document.body.dataset.section = section); }catch{}
     try{
@@ -11968,6 +11969,21 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         try{ iuScrollMainToTopSmooth(); }catch{}
       }
     });
+    // Hex grid (Rychlé odkazy on home): switch view without changing URL – no redirect, no persistSection
+    document.addEventListener('click', (e) => {
+      const hex = e.target && e.target.closest ? e.target.closest('.iuHex') : null;
+      if (!hex) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+      const sectionAttr = String(hex.getAttribute('data-section') || '').trim().toLowerCase();
+      const cls = Array.from(hex.classList).find(c => c.startsWith('iuHex--'));
+      const sectionFromClass = cls ? cls.slice('iuHex--'.length).toLowerCase() : '';
+      const section = normalizeSection(sectionAttr || sectionFromClass);
+      iuHideAllOverlaysNow();
+      applySectionFromURL(section);
+      try{ requestAnimationFrame(() => { try{ iuScrollMainToTopSmooth(); }catch{} }); }catch{}
+    }, true);
     function onUrlChange(){
       iuHideAllOverlaysNow();
       applySectionFromURL();
