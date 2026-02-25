@@ -12107,3 +12107,10 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 .iuModal[hidden],#iu-aiPanel[hidden],#iu-aiOverlay[hidden],[data-iu-backdrop][hidden]{ display:none !important; }
 
 .iuModal, [data-iu-backdrop] { contain: layout paint; }
+
+/* P0: remove mailbox white overlay only in right rail */
+.layout > aside.accordionCol .iu-mailbox-list {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
