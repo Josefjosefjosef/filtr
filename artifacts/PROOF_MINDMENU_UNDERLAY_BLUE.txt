@@ -1,0 +1,27 @@
+PROOF: MindMenu underlay shows right-rail glass (no opaque white)
+location.href: http://localhost:3333/projects/
+pathname: /projects/
+userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)...
+
+Right rail (.layout > aside.accordionCol):
+  computed background-image: linear-gradient(rgb(246, 249, 255) 0%, rgb(238, 244, 255) 100%)
+  computed background-color: rgba(0, 0, 0, 0)
+
+ElementFromPoint Point A (MindMenu area) (1032.5,164)
+  topmost element: div.iu-mmSectionTitle
+  computed background-color: rgba(0, 0, 0, 0)
+  computed background-image: none
+  isOpaqueWhiteOverlay: false
+
+ElementFromPoint Point B (QuickLinks area) (1032.5,568.11796875)
+  topmost element: a.iu-mmQuickItem
+  computed background-color: rgba(0, 0, 0, 0)
+  computed background-image: none
+  isOpaqueWhiteOverlay: false
+
+console.error count: 0
+pageerror count: 0
+CLS baseline: 0.02335107421875
+CLS after: 0.02335107421875
+
+Gate 2: rail linear-gradient=OK, Point A isOpaqueWhiteOverlay=OK, console.error=0=OK, pageerror=0=OK

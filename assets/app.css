@@ -12107,3 +12107,10 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 .iuModal[hidden],#iu-aiPanel[hidden],#iu-aiOverlay[hidden],[data-iu-backdrop][hidden]{ display:none !important; }
 
 .iuModal, [data-iu-backdrop] { contain: layout paint; }
+
+/* MindMenu: let right-rail glass show through (P0, targeted) */
+.layout > aside.accordionCol .mindMenu {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
