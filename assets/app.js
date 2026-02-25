@@ -9579,7 +9579,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     try {
-      window.addEventListener('iu-open-panel', function(e){ var id = String(e.detail || '').trim().toLowerCase(); if (id === 'ai') return; // AI modal hard-deny (definitivně) });
+      window.addEventListener('iu-open-panel', function(e){ var id = String(e.detail || '').trim().toLowerCase(); if (id === 'ai') return; /* AI modal hard-deny */ });
       window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'ai') closePanel(); });
     } catch {}
 
