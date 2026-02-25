@@ -9369,6 +9369,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuQuickFeedInit(){
     document.addEventListener("click", (e) => {
+      if (e.target.closest && e.target.closest('.iuQShareBtn')) return;
       const el = e.target.closest && e.target.closest('[data-iuq]');
       if (!el) return;
       e.preventDefault();
@@ -9383,6 +9384,55 @@ function buildVideoAsArticleCard(it) {
     document.addEventListener("DOMContentLoaded", iuQuickFeedInit);
   } else {
     iuQuickFeedInit();
+  }
+})();
+
+// === Quicklink share buttons (Přeposlat) ===
+(function(){
+  function iuInitQuicklinkShareButtons(){
+    const items = document.querySelectorAll('.iu-mmQuickItem, [data-iuq]');
+    items.forEach(function(el){
+      if (el.querySelector('.iuQShareBtn')) return;
+      const titleEl = el.querySelector('.iu-mmQuickTitle, .iuQuickTitle, .iuCardTitle, .iuLabel, .iuName') || el.querySelector('span:not(.iuIconTile)') || null;
+      if (!titleEl) return;
+      const parent = titleEl.parentElement;
+      if (!parent) return;
+      const row = document.createElement('div');
+      row.className = 'iuQTitleRow';
+      parent.insertBefore(row, titleEl);
+      row.appendChild(titleEl);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'iuQShareBtn';
+      btn.setAttribute('aria-label', 'Přeposlat');
+      btn.textContent = 'Přeposlat';
+      var shareUrl = null;
+      if (el.tagName === 'A' && el.getAttribute('href')) shareUrl = el.getAttribute('href');
+      if (!shareUrl) { var a = el.querySelector('a[href]'); if (a) shareUrl = a.getAttribute('href'); }
+      if (!shareUrl && el.dataset && el.dataset.url) shareUrl = el.dataset.url;
+      try { if (shareUrl) shareUrl = new URL(shareUrl, location.origin).toString(); } catch(_) {}
+      if (!shareUrl) shareUrl = location.href.split('#')[0];
+      btn.dataset.shareUrl = shareUrl;
+      row.appendChild(btn);
+    });
+  }
+  document.addEventListener('click', async function(e){
+    var btn = e.target.closest && e.target.closest('.iuQShareBtn');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var url = (btn.dataset && btn.dataset.shareUrl) ? btn.dataset.shareUrl : location.href.split('#')[0];
+    try {
+      var data = { title: 'infoUzel.cz', text: 'Rychlý odkaz z infoUzel.cz', url: url };
+      if (navigator.share) { await navigator.share(data); } else { await navigator.clipboard.writeText(url); alert('Odkaz zkopírován do schránky'); }
+    } catch (err) { if (typeof console !== 'undefined' && console.warn) console.warn('quicklink share fail', err); }
+  }, true);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function(){ iuInitQuicklinkShareButtons(); setTimeout(iuInitQuicklinkShareButtons, 0); setTimeout(iuInitQuicklinkShareButtons, 250); });
+  } else {
+    iuInitQuicklinkShareButtons();
+    setTimeout(iuInitQuicklinkShareButtons, 0);
+    setTimeout(iuInitQuicklinkShareButtons, 250);
   }
 })();
 

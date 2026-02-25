@@ -1067,6 +1067,35 @@ button.iu-mmQuickItem{
   /* outline: 1px dashed rgba(0,0,255,.3); */
 }
 
+.iuQTitleRow{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.iuQShareBtn{
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: #fff;
+  cursor: pointer;
+  transition: .15s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  flex: 0 0 auto;
+}
+
+.iuQShareBtn:hover{
+  border-color: #1F4B99;
+  box-shadow: 0 0 0 2px rgba(31,75,153,.08);
+}
+
+.dark .iuQShareBtn{
+  background: #111;
+  border-color: rgba(255,255,255,.15);
+}
+
 /* MindMenu toggle wrapper */
 .iu-mindDetails{
   width: 100%;
