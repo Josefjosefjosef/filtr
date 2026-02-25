@@ -1,0 +1,30 @@
+PROOF: MindMenu pills light/white background V8.1 — AFTER MERGE PROD
+URL: https://infouzel.cz/projects/
+SCOPE=.layout > aside.accordionCol .mindMenu .iu-mailbox-pill only
+
+--- Pill[0] ---
+selector: .layout > aside.accordionCol .mindMenu .iu-mailbox-pill (first)
+T1 computed background-color: rgba(255, 255, 255, 0.62)
+T1 computed background-image: none
+T2 computed background-color: rgba(255, 255, 255, 0.62)
+T2 computed background-image: none
+pill text computed color: rgba(75, 85, 99, 0.88)
+
+--- Pill[1] ---
+selector: .layout > aside.accordionCol .mindMenu .iu-mailbox-pill (second)
+T1 computed background-color: rgba(255, 255, 255, 0.62)
+T1 computed background-image: none
+T2 computed background-color: rgba(255, 255, 255, 0.62)
+T2 computed background-image: none
+pill text computed color: rgba(75, 85, 99, 0.88)
+
+--- QuickLinks unaffected ---
+.accordionCol section.iu-mmQuickLinks computed background-color: rgba(228, 246, 254, 0.1)
+.iu-mmQuickLinks .iuIconTile computed filter: none
+
+changed? (T1 vs T2): NO
+console.error count: 0
+pageerror count: 0
+CLS after load: 0.0223
+
+Gate 4 (PROD): pills white-ish=PASS, T1==T2=PASS, QuickLinks unaffected=PASS, errors=0=PASS.
