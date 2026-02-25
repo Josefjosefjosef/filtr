@@ -9523,12 +9523,15 @@ function buildVideoAsArticleCard(it) {
   function openShareFallbackMenu(){
     const btn = document.getElementById("iuAiShareBtn") || document.querySelector("#iuQuickFeed .iuAiShareBtn");
     if (!btn) return;
-    const existing = document.getElementById("iuAiShareFallback");
+    const existing = document.querySelector('[data-iu-share-fallback="1"]');
     if (existing) { existing.remove(); return; }
+    if (typeof window.__iuShareFallbackOpen !== "undefined") window.__iuShareFallbackOpen = true;
     const wrap = document.createElement("div");
     wrap.id = "iuAiShareFallback";
     wrap.className = "iuAiShareFallback";
+    wrap.setAttribute("data-iu-share-fallback", "1");
     wrap.setAttribute("role", "menu");
+    const openTime = Date.now();
     const copyBtn = document.createElement("button");
     copyBtn.type = "button";
     copyBtn.setAttribute("role", "menuitem");
@@ -9568,8 +9571,13 @@ function buildVideoAsArticleCard(it) {
     const r = btn.getBoundingClientRect();
     wrap.style.left = r.left + "px";
     wrap.style.top = (r.bottom + 4) + "px";
-    const close = () => { wrap.remove(); document.removeEventListener("click", close); };
-    requestAnimationFrame(() => document.addEventListener("click", close, { once: true }));
+    const close = (e) => {
+      if (Date.now() - openTime < 100) return;
+      if (e && e.target && wrap.contains(e.target)) return;
+      wrap.remove();
+      document.removeEventListener("click", close);
+    };
+    setTimeout(() => document.addEventListener("click", close, { once: true }), 100);
   }
 
   function showShareToast(msg){

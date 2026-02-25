@@ -2,9 +2,13 @@ PROOF: AI Share button — PROD (after merge)
 URL=https://www.infouzel.cz/projects/
 TestA_sharePayloadUrl=https://www.infouzel.cz/
 TestA_pass=true
-TestB_copiedText=https://www.infouzel.cz/
-TestB_pass=true
+TestB_fallbackVisible=false
+TestB_copiedText=
+TestB_pass=false
+TestC_fallbackVisible=false
+TestC_copiedText=
+TestC_pass=false
 console.error=0
 pageerror=0
 CLS=0
-allPass=true
+allPass=false
