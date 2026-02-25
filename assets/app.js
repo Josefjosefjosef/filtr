@@ -7375,7 +7375,7 @@ function buildVideoAsArticleCard(it) {
   const MAILBOX_PLACEHOLDERS = ["Např.: e-mail 1", "Např.: e-mail 2", "Např.: pracovní web", "Např.: oblíbený web"];
   const IU_MAILBOX_MIN = 1;
   const IU_MAILBOX_MAX = 6;
-  const IU_MAILBOX_LABEL_MAX = 18;
+  const IU_MAILBOX_LABEL_MAX = 15;
 
   function iuMailboxLoad(){
     try{
@@ -7499,8 +7499,8 @@ function buildVideoAsArticleCard(it) {
       const form = document.createElement("form");
       form.style.cssText = "background:#fff;padding:20px;border-radius:12px;min-width:280px;box-shadow:0 10px 40px rgba(0,0,0,0.2);";
       form.innerHTML = `
-        <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max 18 znaků)</p>
-        <input type="text" id="iu-mailbox-edit-label" maxlength="18" autocomplete="off" value="${escapeHtml(it.label || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max 15 znaků)</p>
+        <input type="text" id="iu-mailbox-edit-label" maxlength="15" autocomplete="off" value="${escapeHtml(it.label || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <p style="margin:0 0 12px 0;font-weight:600;">URL (www)</p>
         <input type="text" id="iu-mailbox-edit-url" autocomplete="off" value="${escapeHtml(it.url || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:16px;border:1px solid #ccc;border-radius:6px;" />
         <div style="display:flex;gap:10px;justify-content:flex-end;">
