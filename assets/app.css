@@ -12293,10 +12293,12 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   justify-content: center !important;
 }
 
-/* === MindMenu pills: settings icon inside right edge === */
+/* === MindMenu pills: settings icon inside right edge (root-cause: row=containing block, gear=sibling) === */
+.layout > aside.accordionCol .mindMenu .iu-mailbox-row,
 .accordionCol .mindMenu .iu-mailbox-row{
   position: relative;
 }
+.layout > aside.accordionCol .mindMenu .iu-mailbox-gear,
 .accordionCol .mindMenu .iu-mailbox-gear{
   position: absolute;
   right: 8px;
@@ -12307,15 +12309,18 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   z-index: 2;
 }
 @media (hover: hover) and (pointer: fine){
+  .layout > aside.accordionCol .mindMenu .iu-mailbox-row:hover .iu-mailbox-gear,
   .accordionCol .mindMenu .iu-mailbox-row:hover .iu-mailbox-gear{
     transform: translateY(calc(-50% - 1px));
   }
 }
 @media (prefers-reduced-motion: reduce){
+  .layout > aside.accordionCol .mindMenu .iu-mailbox-row .iu-mailbox-gear,
   .accordionCol .mindMenu .iu-mailbox-row .iu-mailbox-gear{
     transform: translateY(-50%);
   }
 }
+.layout > aside.accordionCol .mindMenu .iu-mailbox-pill,
 .accordionCol .mindMenu .iu-mailbox-pill{
   padding-right: 32px;
 }
