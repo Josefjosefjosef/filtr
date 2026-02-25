@@ -10036,6 +10036,13 @@ main#content .layout{
   border-right-color: var(--iuHairline) !important;
 }
 
+/* Right rail premium glass background (full visible area, not just border) */
+.layout > aside.accordionCol{
+  background: linear-gradient(180deg, #F6F9FF 0%, #EEF4FF 100%) !important;
+  border: 1px solid #D8E4FF !important;
+  box-shadow: 0 4px 18px rgba(31,75,153,0.08) !important;
+}
+
 /* ============================================================
    v3 — remove right time/date frame (visual only)
    Source of truth stays in DOM for mirroring
@@ -11027,11 +11034,9 @@ body #iuLeftRail{
   /* nothing layout-critical here, keep auto sizing */
 }
 
-/* MindMenu premium glass background */
+/* MindMenu inner transparent so right-rail background is visible */
 .accordionCol .mindMenu{
-  background: linear-gradient(180deg, #F6F9FF 0%, #EEF4FF 100%);
-  border: 1px solid #D8E4FF;
-  box-shadow: 0 4px 18px rgba(31,75,153,0.08);
+  background: transparent;
 }
 
 /* Section head: stack title + line vertically and center */
