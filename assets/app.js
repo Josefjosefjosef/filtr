@@ -12005,10 +12005,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
     try{ iuMyUzelApplyRailState(); }catch{}
 
-    const explicit = (typeof window !== "undefined" && typeof window.iuHasExplicitNavInUrl === "function" && window.iuHasExplicitNavInUrl()) || false;
-    if (!explicit) {
-      persistSection(getInitialSection());
-    }
+    // Do not persist section to URL on init – keep URL clean (/projects/). Apply view from URL or default.
     applySectionFromURL();
     applyPanelFromUrl();
     try { window.addEventListener('iu-panel-url-changed', applyPanelFromUrl); } catch {}
