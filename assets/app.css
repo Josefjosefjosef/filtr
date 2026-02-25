@@ -12107,3 +12107,10 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 .iuModal[hidden],#iu-aiPanel[hidden],#iu-aiOverlay[hidden],[data-iu-backdrop][hidden]{ display:none !important; }
 
 .iuModal, [data-iu-backdrop] { contain: layout paint; }
+
+/* Right rail glass background (under MindMenu + QuickLinks) — P0 full column */
+.layout > aside.accordionCol {
+  background: linear-gradient(180deg, #F6F9FF 0%, #EEF4FF 100%);
+  border: 1px solid #D8E4FF;
+  box-shadow: 0 4px 18px rgba(31,75,153,0.08);
+}
