@@ -9579,19 +9579,9 @@ function buildVideoAsArticleCard(it) {
     }
 
     try {
-      window.addEventListener('iu-open-panel', function(e){ var id = String(e.detail || '').trim().toLowerCase(); if (id === 'ai') return; if (e.detail === 'ai') openPanel(); });
+      window.addEventListener('iu-open-panel', function(e){ var id = String(e.detail || '').trim().toLowerCase(); if (id === 'ai') return; // AI modal hard-deny (definitivně) });
       window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'ai') closePanel(); });
     } catch {}
-
-    // 1) Klik na tlačítko – bez změny URL (AI jen overlay)
-    document.addEventListener('click', e => {
-      if (e.target.closest && e.target.closest('[data-iuq]')) return;
-      const btn = e.target.closest('[data-action="ai-panel"]');
-      if (!btn) return;
-      e.preventDefault();
-      e.stopPropagation();
-      openPanel();
-    }, true);
 
     // 2) Zavření: × (bez změny URL)
     if (aiClose){
