@@ -12186,3 +12186,10 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   fill: currentColor !important;
   stroke: currentColor !important;
 }
+
+/* P0: MindMenu pills – force light/white background on the actual painting element */
+.layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
+  background-color: rgba(255, 255, 255, 0.62) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
