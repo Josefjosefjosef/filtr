@@ -9442,30 +9442,31 @@ function buildVideoAsArticleCard(it) {
 
   /* Global close handler: [data-iu-close] / .iuModalClose / .iu-close closes modal (capture so it runs before stopPropagation inside modals) */
   document.addEventListener('click', function(e){
-    const t = e.target;
-    const targetEl = (t && t.nodeType === 1) ? t : (t && t.parentElement ? t.parentElement : null);
-    if (!targetEl) return;
-    const closeBtn = targetEl.closest('[data-iu-close], .iuModalClose, .iu-close');
-    if (!closeBtn) return;
-    const modal = closeBtn.closest && (closeBtn.closest('.iuModal, [data-iu-modal]') || closeBtn.closest('#iu-aiPanel'));
-    if (!modal) return;
+    const t0 = e.target;
+    const t = (t0 && t0.nodeType === 3) ? t0.parentElement : t0; // text node -> parent so closest() works
+    if (!t || t.nodeType !== 1) return;
+    const closeEl = t.closest('[data-iu-close], .iuModalClose, .iu-close, .iu-closeBtn');
+    if (!closeEl) return;
     e.preventDefault();
     e.stopPropagation();
-    if (modal.id === 'iu-aiPanel') {
-      const ov = document.getElementById('iu-aiOverlay');
-      if (typeof window.iuSetElOpenVisible === 'function') {
-        window.iuSetElOpenVisible(modal, false);
-        window.iuSetElOpenVisible(ov, false);
+    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel'));
+    if (modal) {
+      if (modal.id === 'iu-aiPanel') {
+        const ov = document.getElementById('iu-aiOverlay');
+        if (typeof window.iuSetElOpenVisible === 'function') {
+          window.iuSetElOpenVisible(modal, false);
+          window.iuSetElOpenVisible(ov, false);
+        } else {
+          if (ov) ov.hidden = true;
+          modal.setAttribute('hidden', '');
+        }
+        document.documentElement.style.overflow = '';
       } else {
-        if (ov) ov.hidden = true;
         modal.setAttribute('hidden', '');
       }
-      document.documentElement.style.overflow = '';
-    } else {
-      modal.setAttribute('hidden', '');
+      modal.classList.remove('is-open');
+      document.body.classList.remove('iu-modal-open');
     }
-    modal.classList.remove('is-open');
-    document.body.classList.remove('iu-modal-open');
   }, true);
 
   const AI_FALLBACK = [
