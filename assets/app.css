@@ -12108,10 +12108,10 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 
 .iuModal, [data-iu-backdrop] { contain: layout paint; }
 
-/* P0: lock right-rail underlay against late overrides / FOUC */
+/* P0: right rail underlay derived from LEFT Weather icon (lighten 60%) */
 .layout > aside.accordionCol{
-  background-color: rgba(70, 120, 255, 0.14) !important;
-  background-image: linear-gradient(180deg, rgba(70, 120, 255, 0.16), rgba(70, 120, 255, 0.08)) !important;
+  background-color: rgba(175, 229, 252, 0.14) !important;
+  background-image: linear-gradient(180deg, rgba(175, 229, 252, 0.16), rgba(175, 229, 252, 0.08)) !important;
 }
 
 /* P0: prevent inner right-rail container from painting white (viník: .mindMenu in "Layout carriers" block) */
