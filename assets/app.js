@@ -7527,7 +7527,7 @@ function buildVideoAsArticleCard(it) {
         const label = String(labelInput.value).trim().slice(0, MAX);
         const url = String(urlInput.value).trim();
         overlay.remove();
-        onDone(label || it.label || "", url);
+        onDone(label, url);
       });
       labelInput.focus();
     }
@@ -7543,7 +7543,7 @@ function buildVideoAsArticleCard(it) {
         iuMailboxOpenEditDialog(idx, it, (label, url) => {
           const items = iuMailboxLoad();
           const labelNorm = String(label).trim().slice(0, IU_MAILBOX_LABEL_MAX);
-          items[idx] = { ...items[idx], label: labelNorm || items[idx].label || "", url: String(url).trim() };
+          items[idx] = { ...items[idx], label: labelNorm, url: String(url).trim() };
           iuMailboxSave(items);
           iuMailboxRender();
         });

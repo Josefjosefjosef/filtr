@@ -1,0 +1,6 @@
+PILL_INDEX=1
+BEFORE_LABEL_RENDERED=(user-seen text on pill before clear)
+AFTER_CLEAR_SAVED_LABEL_STORED="" (empty string in localStorage items[1].label)
+AFTER_CLEAR_UI_STILL_SHOWS=old label text on pill button (unchanged after save)
+SUSPECT=staleState
+NOTES=Save callback used "labelNorm || items[idx].label || """ so when user cleared (labelNorm="") we persisted items[idx].label (old value) instead of "". DOM was never updated because storage never got "". Fix: persist labelNorm as-is (allow ""); render already uses it.label || placeholder so "" shows default.
