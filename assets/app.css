@@ -11083,6 +11083,41 @@ body #iuLeftRail{
   margin-top: 10px !important;
 }
 
+/* ===== Right rail: Rychlé odkazy – ikony +40 %, odstup popisků, responsive, auto výška ===== */
+.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile{
+  width: 45px;
+  height: 45px;
+  flex-shrink: 0;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile > i{
+  font-size: 20px;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem span:last-of-type{
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-align: center;
+  line-height: 1.2;
+}
+.accordionCol .mindMenu .iu-mmQuickGrid{
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  max-width: 100%;
+}
+.accordionCol .mindMenu-scroll-wrapper{
+  height: auto;
+  overflow: visible;
+  align-content: start;
+}
+
 /* ===== Moje schránky (levý sloupec / mindMenu) =====
    Lícuje s ikonami Rychlých odkazů — mindMenu padding-left: 16px
    ============================================================ */
