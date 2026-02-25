@@ -1,0 +1,21 @@
+PROOF: right rail single glass panel (no inner card paint)
+
+computed right rail (.layout > aside.accordionCol):
+  background-image: linear-gradient(rgb(246, 249, 255) 0%, rgb(238, 244, 255) 100%)
+  border: 1px solid rgb(216, 228, 255)
+  box-shadow: rgba(31, 75, 153, 0.08) 0px 4px 18px 0px
+
+computed .mindMenu: background=rgba(0, 0, 0, 0) border=0px none rgba(0, 0, 0, 0) box-shadow=none
+computed section.iu-mmQuickLinks: background=rgba(0, 0, 0, 0) border=1px solid rgba(0, 0, 0, 0) box-shadow=none
+
+elementsFromPoint (3 points):
+  MindMenu: topmost button.iu-mailbox-pill bg=rgba(255, 255, 255, 0.2) | first ancestor with bg: button.iu-mailbox-pill bg=rgba(255, 255, 255, 0.2) img=none
+  gap: topmost section.iu-mmQuickLinks bg=rgba(0, 0, 0, 0) | first ancestor with bg: aside.accordionCol bg=rgba(0, 0, 0, 0) img=linear-gradient(rgb(246, 249, 255) 0%, rgb(238, 24
+  QuickLinks: topmost span.iuIconTile bg=rgba(0, 0, 0, 0) | first ancestor with bg: span.iuIconTile bg=rgba(0, 0, 0, 0) img=linear-gradient(145deg, rgba(255, 255, 255, 0.1), 
+
+console.error count: 0
+pageerror count: 0
+CLS baseline: 0.018119580078125
+CLS after: 0.018119580078125
+
+Gate 3: first ancestor with background is aside.accordionCol (rail) = CHECK
