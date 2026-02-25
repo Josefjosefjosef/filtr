@@ -12176,3 +12176,13 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   border-color: revert !important;
   background-color: revert !important;
 }
+
+/* P0: QuickLinks icon artwork to silver (icons only; no text/plate/background) */
+.layout > aside.accordionCol section.iu-mmQuickLinks .iuIconTile > i{
+  color: rgb(75, 85, 99) !important;
+}
+.layout > aside.accordionCol section.iu-mmQuickLinks .iuIconTile svg{
+  color: rgb(75, 85, 99) !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
