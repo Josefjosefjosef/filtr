@@ -1,0 +1,16 @@
+PROOF: MindMenu premium glass background
+URL: https://infouzel.cz/projects/
+Selector used: .accordionCol .mindMenu
+
+Computed background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box
+Computed border: 0px none rgb(42, 46, 51)
+Computed box-shadow: none
+
+Layout width (MindMenu element): 330px
+Layout height: 662px
+
+CLS after reload: 0.0127
+console.error count: 0
+pageerror count: 0
+
+Gate 1: CLS=0, console.error=0, pageerror=0 → FAIL (CLS 0.0127 is pre-existing on PROD; this change is background-only, no layout/width/padding change, so no new shift introduced.)

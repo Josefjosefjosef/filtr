@@ -11027,6 +11027,13 @@ body #iuLeftRail{
   /* nothing layout-critical here, keep auto sizing */
 }
 
+/* MindMenu premium glass background */
+.accordionCol .mindMenu{
+  background: linear-gradient(180deg, #F6F9FF 0%, #EEF4FF 100%);
+  border: 1px solid #D8E4FF;
+  box-shadow: 0 4px 18px rgba(31,75,153,0.08);
+}
+
 /* Section head: stack title + line vertically and center */
 .accordionCol .mindMenu .iu-mmSectionHead,
 .accordionCol .mindMenu .iu-mmSectionHead.iu-mmMailHead,
