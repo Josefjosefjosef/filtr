@@ -12292,3 +12292,30 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 .layout > aside.accordionCol .mindMenu .iu-mailbox-pill > *{
   justify-content: center !important;
 }
+
+/* === MindMenu pills: settings icon inside right edge === */
+.accordionCol .mindMenu .iu-mailbox-row{
+  position: relative;
+}
+.accordionCol .mindMenu .iu-mailbox-gear{
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  pointer-events: auto;
+  z-index: 2;
+}
+@media (hover: hover) and (pointer: fine){
+  .accordionCol .mindMenu .iu-mailbox-row:hover .iu-mailbox-gear{
+    transform: translateY(calc(-50% - 1px));
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .accordionCol .mindMenu .iu-mailbox-row .iu-mailbox-gear{
+    transform: translateY(-50%);
+  }
+}
+.accordionCol .mindMenu .iu-mailbox-pill{
+  padding-right: 32px;
+}
