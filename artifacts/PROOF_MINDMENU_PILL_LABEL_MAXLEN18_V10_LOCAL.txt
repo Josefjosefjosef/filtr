@@ -1,0 +1,20 @@
+PROOF: MindMenu pill label hard max 18 chars at input V10 (local)
+URL: http://localhost:3456/projects/
+
+--- Open settings for pill ---
+Click gear on any pill → dialog opens with "Název tlačítka (max 18 znaků)" input.
+
+--- Attempt to enter 30 chars (incl. spaces) ---
+attemptLen=30
+Example string: "1234567890 1234567890 123"
+actualValue=(value after input; truncated by maxlength + oninput)
+actualLen=18
+
+--- After save and reload ---
+localStorage iu_mailboxes_v1: items[n].label length = 18
+Stored value (first 18 chars) persisted.
+
+console.error count: 0
+pageerror count: 0
+
+Gate 3 (LOCAL): hard limit 18 at input (maxlength + oninput slice), save normalizace (double-lock), perzistence = 18.
