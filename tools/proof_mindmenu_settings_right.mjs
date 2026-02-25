@@ -18,7 +18,8 @@ const MIN_ROW_HEIGHT = 35;
 function writeArtifact(name, text) {
   fs.mkdirSync(ARTIFACTS, { recursive: true });
   const out = path.join(ARTIFACTS, name);
-  fs.writeFileSync(out, text.replace(/\r?\n/g, "\r\n"), "utf8");
+  const crlf = String(text).replace(/\r\n/g, "\n").replace(/\n/g, "\r\n");
+  fs.writeFileSync(out, crlf, "utf8");
   return out;
 }
 
@@ -74,6 +75,15 @@ async function main() {
     await page.addInitScript(() => { window.__proofCls = 0; });
     await page.goto(BASE_URL, { waitUntil: "load", timeout: 30000 });
     await page.waitForTimeout(2500);
+
+    const diagPage = await page.evaluate(() => {
+      const canonical = document.querySelector('link[rel="canonical"]');
+      const scripts = Array.from(document.querySelectorAll("script[src]")).filter((s) => (s.getAttribute("src") || "").includes("assets/app.")).map((s) => s.getAttribute("src"));
+      const resources = (performance.getEntriesByType && performance.getEntriesByType("resource")) || [];
+      const appResources = resources.filter((r) => (r.name || "").includes("assets/app.")).map((r) => ({ name: r.name, transferSize: r.transferSize || 0, decodedBodySize: r.decodedBodySize || 0 }));
+      return { locationHref: location.href, canonicalHref: canonical ? canonical.href : "", scriptSrcs: scripts, appResources };
+    }).catch(() => ({}));
+
     await page.evaluate(() => {
       window.__proofCls = 0;
       try {
@@ -121,9 +131,24 @@ async function main() {
       };
     }, MIN_ROW_HEIGHT).catch((e) => ({ pillsCount: 0, settingsIconsCount: 0, allIconsInsideRowBox: false, gearPositionAbsolute: false, rowPositionRelative: false, gearRightNotAuto: false, rowHeightOk: false, error: String(e) }));
 
+    const styleDiag = await page.evaluate(() => {
+      const row = document.querySelector(".accordionCol .mindMenu .iu-mailbox-row");
+      const gear = row ? row.querySelector(".iu-mailbox-gear") : null;
+      if (!row || !gear) return null;
+      const rStyle = getComputedStyle(row);
+      const gStyle = getComputedStyle(gear);
+      const rRect = row.getBoundingClientRect();
+      const gRect = gear.getBoundingClientRect();
+      return { rowPosition: rStyle.position, gearPosition: gStyle.position, gearRight: gStyle.right, rowRect: { x: rRect.x, y: rRect.y, width: rRect.width, height: rRect.height }, gearRect: { x: gRect.x, y: gRect.y, width: gRect.width, height: gRect.height } };
+    }).catch(() => null);
+
     const clsReport = clsValue != null && clsValue < 0.02 ? 0 : (clsValue ?? "n/a");
     const lines = [
       "MindMenu pill spans gear + height 35px",
+      "diag_locationHref: " + (diagPage.locationHref || ""),
+      "diag_canonicalHref: " + (diagPage.canonicalHref || ""),
+      "diag_scriptSrcs: " + (diagPage.scriptSrcs && diagPage.scriptSrcs.length ? diagPage.scriptSrcs.join(" | ") : ""),
+      "diag_appResources: " + (diagPage.appResources && diagPage.appResources.length ? JSON.stringify(diagPage.appResources) : ""),
       "pillsCount: " + proofData.pillsCount,
       "settingsIconsCount: " + proofData.settingsIconsCount,
       "allIconsInsideRowBox: " + (proofData.allIconsInsideRowBox ? "true" : "false"),
@@ -136,12 +161,13 @@ async function main() {
       "pageerror: " + pageErrors.length,
     ];
     if (proofData.error) lines.push("error: " + proofData.error);
-    const content = lines.join("\n");
+    if (styleDiag) lines.push("diag_rowPosition: " + styleDiag.rowPosition, "diag_gearPosition: " + styleDiag.gearPosition, "diag_gearRight: " + styleDiag.gearRight, "diag_rowRect: " + JSON.stringify(styleDiag.rowRect), "diag_gearRect: " + JSON.stringify(styleDiag.gearRect));
+    const content = lines.join("\r\n");
     const isProd = BASE_URL.includes("infouzel.cz");
     const outPath = isProd
       ? writeArtifact("PROOF_MINDMENU_PILL_SPAN_GEAR_HEIGHT35_PROD.txt", content)
       : writeArtifact("PROOF_MINDMENU_PILL_SPAN_GEAR_HEIGHT35.txt", content);
-    if (isProd) writeArtifact("AFTER_MERGE_PROOF_MINDMENU_PILL_SPAN_GEAR_HEIGHT35.txt", "PROOF: MindMenu pill spans gear + height 35px — after merge\n" + lines.slice(1).join("\n"));
+    if (isProd) writeArtifact("AFTER_MERGE_PROOF_MINDMENU_PILL_SPAN_GEAR_HEIGHT35.txt", "PROOF: MindMenu pill spans gear + height 35px — after merge\r\n" + lines.slice(1).join("\r\n"));
     console.log("Wrote", outPath);
     console.log(content);
     const gatesOk = proofData.allIconsInsideRowBox && proofData.gearPositionAbsolute && proofData.rowPositionRelative && proofData.gearRightNotAuto && proofData.rowHeightOk && clsReport === 0 && consoleErrors.length === 0 && pageErrors.length === 0;
