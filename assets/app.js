@@ -9184,10 +9184,11 @@ function buildVideoAsArticleCard(it) {
         }).join("");
       };
       const doRender = (services) => {
+        const shareBtnHtml = isAi ? `<button type="button" class="iuAiShareBtn iuQClose" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button>` : "";
         quick.innerHTML = `
           <div class="iuQHead">
             <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-            <button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button>
+            <div class="iuQHeadActions">${shareBtnHtml}<button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
           </div>
           <div class="iuQCard">
             <div class="iuQGrid">
@@ -9496,6 +9497,98 @@ function buildVideoAsArticleCard(it) {
 (function(){
   'use strict';
 
+  const SHARE_URL = "https://www.infouzel.cz/";
+  const SHARE_TITLE = "infoUzel.cz – AI asistenti";
+  const SHARE_TEXT = "AI asistenti na infoUzel.cz";
+
+  async function onShareAiTab(){
+    if (typeof window.__iuShareTestOverride === "function") {
+      try {
+        await window.__iuShareTestOverride({ title: SHARE_TITLE, text: SHARE_TEXT, url: SHARE_URL });
+      } catch (_) {}
+      return;
+    }
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({ title: SHARE_TITLE, text: SHARE_TEXT, url: SHARE_URL });
+      } catch (e) { /* user cancel OK, no console.error */ }
+      return;
+    }
+    openShareFallbackMenu();
+  }
+
+  function openShareFallbackMenu(){
+    const btn = document.getElementById("iuAiShareBtn") || document.querySelector("#iuQuickFeed .iuAiShareBtn");
+    if (!btn) return;
+    const existing = document.getElementById("iuAiShareFallback");
+    if (existing) { existing.remove(); return; }
+    const wrap = document.createElement("div");
+    wrap.id = "iuAiShareFallback";
+    wrap.className = "iuAiShareFallback";
+    wrap.setAttribute("role", "menu");
+    const copyBtn = document.createElement("button");
+    copyBtn.type = "button";
+    copyBtn.setAttribute("role", "menuitem");
+    copyBtn.textContent = "Kopírovat odkaz";
+    copyBtn.addEventListener("click", async () => {
+      try {
+        if (typeof window.__iuClipboardTestCapture === "function") {
+          window.__iuClipboardTestCapture(SHARE_URL);
+          return;
+        }
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+          await navigator.clipboard.writeText(SHARE_URL);
+        } else {
+          const ta = document.createElement("textarea");
+          ta.value = SHARE_URL;
+          ta.style.cssText = "position:fixed;left:-9999px;top:0";
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+        }
+        showShareToast("Odkaz zkopírován");
+      } catch (_) {
+        showShareToast("Nelze zkopírovat");
+      }
+      wrap.remove();
+    });
+    const mailBtn = document.createElement("button");
+    mailBtn.type = "button";
+    mailBtn.setAttribute("role", "menuitem");
+    mailBtn.textContent = "E-mail";
+    const mailto = "mailto:?subject=" + encodeURIComponent(SHARE_TITLE) + "&body=" + encodeURIComponent(SHARE_TEXT + " " + SHARE_URL);
+    mailBtn.addEventListener("click", () => { window.location.href = mailto; wrap.remove(); });
+    wrap.appendChild(copyBtn);
+    wrap.appendChild(mailBtn);
+    document.body.appendChild(wrap);
+    const r = btn.getBoundingClientRect();
+    wrap.style.left = r.left + "px";
+    wrap.style.top = (r.bottom + 4) + "px";
+    const close = () => { wrap.remove(); document.removeEventListener("click", close); };
+    requestAnimationFrame(() => document.addEventListener("click", close, { once: true }));
+  }
+
+  function showShareToast(msg){
+    let el = document.getElementById("iuAiShareToast");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "iuAiShareToast";
+      el.className = "iuAiShareToast";
+      el.setAttribute("aria-live", "polite");
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.add("iuAiShareToastVisible");
+    clearTimeout(el._toastT);
+    el._toastT = setTimeout(() => { el.classList.remove("iuAiShareToastVisible"); }, 2500);
+  }
+
+  document.addEventListener("click", function(e){
+    if (e.target && e.target.closest && e.target.closest(".iuAiShareBtn")) onShareAiTab();
+  });
+  try { window.__onShareAiTab = onShareAiTab; } catch (_) {}
+
   /* Global close handler: [data-iu-close] / .iuModalClose / .iu-close / .iuQClose — modal or quick card (capture so it runs before stopPropagation inside modals) */
   document.addEventListener('click', function(e){
     const t0 = e.target;
@@ -9583,6 +9676,9 @@ function buildVideoAsArticleCard(it) {
   function initAiPanel(){
     const aiPanel = document.getElementById('iu-aiPanel');
     if (!aiPanel) return;
+
+    const shareBtn = document.getElementById('iuAiShareBtn');
+    if (shareBtn) shareBtn.addEventListener("click", onShareAiTab);
 
     loadAiAssistants();
 
