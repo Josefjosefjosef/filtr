@@ -7491,6 +7491,47 @@ function buildVideoAsArticleCard(it) {
       iuPositionMailboxControls();
     });
 
+    function iuMailboxOpenEditDialog(idx, it, onDone){
+      const MAX = IU_MAILBOX_LABEL_MAX;
+      const overlay = document.createElement("div");
+      overlay.setAttribute("id", "iu-mailbox-edit-overlay");
+      overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:9999;";
+      const form = document.createElement("form");
+      form.style.cssText = "background:#fff;padding:20px;border-radius:12px;min-width:280px;box-shadow:0 10px 40px rgba(0,0,0,0.2);";
+      form.innerHTML = `
+        <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max 18 znaků)</p>
+        <input type="text" id="iu-mailbox-edit-label" maxlength="18" autocomplete="off" value="${escapeHtml(it.label || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <p style="margin:0 0 12px 0;font-weight:600;">URL (www)</p>
+        <input type="text" id="iu-mailbox-edit-url" autocomplete="off" value="${escapeHtml(it.url || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:16px;border:1px solid #ccc;border-radius:6px;" />
+        <div style="display:flex;gap:10px;justify-content:flex-end;">
+          <button type="button" id="iu-mailbox-edit-cancel" style="padding:8px 14px;border:1px solid #999;background:#fff;border-radius:6px;cursor:pointer;">Zrušit</button>
+          <button type="submit" style="padding:8px 14px;border:none;background:#1F4B99;color:#fff;border-radius:6px;cursor:pointer;">Uložit</button>
+        </div>
+      `;
+      overlay.appendChild(form);
+      document.body.appendChild(overlay);
+
+      const labelInput = form.querySelector("#iu-mailbox-edit-label");
+      const urlInput = form.querySelector("#iu-mailbox-edit-url");
+      labelInput.addEventListener("input", () => {
+        if (labelInput.value.length > MAX) labelInput.value = labelInput.value.slice(0, MAX);
+      });
+      form.querySelector("#iu-mailbox-edit-cancel").addEventListener("click", () => {
+        overlay.remove();
+      });
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) overlay.remove();
+      });
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const label = String(labelInput.value).trim().slice(0, MAX);
+        const url = String(urlInput.value).trim();
+        overlay.remove();
+        onDone(label || it.label || "", url);
+      });
+      labelInput.focus();
+    }
+
     list.addEventListener("click", (e) => {
       const gearBtn = e.target.closest?.("[data-mailbox-gear]");
       if (gearBtn) {
@@ -7499,13 +7540,13 @@ function buildVideoAsArticleCard(it) {
         const items = iuMailboxLoad();
         const it = items[idx];
         if (!it) return;
-        const labelRaw = window.prompt("Název tlačítka (max 18 znaků):", it.label || "") ?? it.label ?? "";
-        const urlRaw = window.prompt("URL (www):", it.url || "") ?? it.url ?? "";
-        const label = String(labelRaw).trim().slice(0, IU_MAILBOX_LABEL_MAX);
-        const url = String(urlRaw).trim();
-        items[idx] = { ...it, label: label || it.label || "", url };
-        iuMailboxSave(items);
-        iuMailboxRender();
+        iuMailboxOpenEditDialog(idx, it, (label, url) => {
+          const items = iuMailboxLoad();
+          const labelNorm = String(label).trim().slice(0, IU_MAILBOX_LABEL_MAX);
+          items[idx] = { ...items[idx], label: labelNorm || items[idx].label || "", url: String(url).trim() };
+          iuMailboxSave(items);
+          iuMailboxRender();
+        });
         return;
       }
       const pillBtn = e.target.closest?.("[data-mailbox-open]");
