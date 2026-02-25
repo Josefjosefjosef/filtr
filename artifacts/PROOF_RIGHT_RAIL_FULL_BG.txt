@@ -1,0 +1,21 @@
+PROOF: Right rail full glass background
+URL: https://infouzel.cz/projects/
+Right rail selector used: .layout > aside.accordionCol
+
+Right rail bounding box (x,y,w,h): 932.5, 84, 360, 745.796875
+
+Right rail computed:
+  background-image: none
+  background-color: rgba(255, 255, 255, 0.86)
+  border: 1px solid rgba(27, 36, 48, 0.1)
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 10px 28px 0px
+
+elementFromPoint(center): SECTION.iu-mmQuickLinks#
+  background-color: rgba(0, 0, 0, 0)
+  background-image: none
+
+CLS after load: 0.0126
+console.error count: 0
+pageerror count: 0
+
+Gate 2: background-image = linear-gradient on right rail and center not opaque white → CHECK (pre-merge: PROD has white rail; post-merge re-run for full glass.)
