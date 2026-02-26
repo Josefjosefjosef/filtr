@@ -7681,10 +7681,14 @@ function buildVideoAsArticleCard(it) {
         elNameday.setAttribute("aria-hidden","true");
       }
       try{ iuWeatherHideEmptyNameday(); }catch{}
-      fetch("https://svatky.adresa.info/json", { cache: "no-store" })
-        .then(r => r.json())
+      var _ndOrigin = typeof location !== "undefined" && location.origin ? location.origin : "";
+      var _ndLocal = _ndOrigin && (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(_ndOrigin) || _ndOrigin.indexOf("127.0.0.1") !== -1);
+      var _ndUrl = _ndLocal ? _ndOrigin + "/api/day" : "https://svatkyapi.netlify.app/api/day";
+      fetch(_ndUrl, { headers: { "accept": "application/json" }, cache: "no-store" })
+        .then(r => (r.ok ? r.json() : Promise.resolve(null))).catch(() => null)
+        .then(d => (d && typeof d === "object" ? d : null))
         .then(d => {
-          const nm = d && d.name ? String(d.name).trim() : "";
+          const nm = (d && typeof d.name === "string") ? String(d.name).trim() : "";
           const ok = Boolean(nm) && nm !== "—" && nm !== "-";
           if (ok) {
             if (elNameday) {
@@ -7695,7 +7699,7 @@ function buildVideoAsArticleCard(it) {
             try{ iuSetTopbarNameday(nm); }catch{}
           } else {
             if (elNameday) {
-              elNameday.textContent = "";
+              elNameday.textContent = "Svátek má —";
               elNameday.hidden = true;
               elNameday.setAttribute("aria-hidden","true");
             }
@@ -7705,7 +7709,7 @@ function buildVideoAsArticleCard(it) {
         })
         .catch(() => {
           if (elNameday) {
-            elNameday.textContent = "";
+            elNameday.textContent = "Svátek má —";
             elNameday.hidden = true;
             elNameday.setAttribute("aria-hidden","true");
           }
