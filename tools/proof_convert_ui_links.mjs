@@ -13,6 +13,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const ARTIFACTS = path.join(ROOT, "artifacts");
 
+function out(k, v) {
+  process.stdout.write(`${k}=${v}\n`);
+}
+
 function startStaticServer(rootDir) {
   return new Promise((resolve, reject) => {
     const server = http.createServer((req, res) => {
@@ -141,6 +145,25 @@ async function main() {
       consoleErrors.length === 0 &&
       pageErrors.length === 0;
 
+    out("PROD_URL", BASE_URL);
+    out("TIMESTAMP_PRAGUE", tsPrague);
+    out("DOM_button_count", domDump.count);
+    domDump.buttons.forEach((b, i) => {
+      out("BTN_" + (i + 1) + "_TEXT", b.text);
+      out("BTN_" + (i + 1) + "_HREF", b.href);
+    });
+    out("SHARE_HANDLER_NAME", shareHandlerProof.handlerName);
+    out("SHARE_HANDLER_SAME_REF_AI", shareHandlerProof.SHARE_HANDLER_SAME_REF_AI);
+    out("SHARE_HANDLER_SAME_REF_TRANSLATOR", shareHandlerProof.SHARE_HANDLER_SAME_REF_TRANSLATOR);
+    out("SHARE_HANDLER_SAME_REF_ALL", shareHandlerProof.SHARE_HANDLER_SAME_REF_ALL);
+    out("SHARE_PAYLOAD_TITLE", sharePayload ? sharePayload.title : "");
+    out("SHARE_PAYLOAD_TEXT", sharePayload ? sharePayload.text : "");
+    out("CLS", clsReport);
+    out("console_errors", consoleErrors.length);
+    out("pageerrors", pageErrors.length);
+    out("PASS", pass);
+    out("SCOPE_FILES", "tools/proof_convert_ui_links.mjs");
+    process.stdout.write("\n");
     const outLines = [
       "PROD_URL=" + BASE_URL,
       "TIMESTAMP_PRAGUE=" + tsPrague,
@@ -158,17 +181,8 @@ async function main() {
       "PASS=" + pass,
       "SCOPE_FILES=tools/proof_convert_ui_links.mjs"
     ];
-    const content = outLines.join("\n") + "\n";
-    const chatFence = "text\n" + content + "\n";
     writeArtifact("PROOF_CONVERT_UI_LINKS.txt", outLines);
     if (isProd) writeArtifact("AFTER_MERGE_PROOF_CONVERT_UI_LINKS.txt", outLines);
-    const NL = "\n";
-    for (const l of outLines) process.stdout.write(String(l) + NL);
-    process.stdout.write(NL);
-    process.stdout.write("===== CHAT_FENCE (copy from below) =====\n");
-    process.stdout.write(chatFence);
-    process.stdout.write("===== /CHAT_FENCE =====\n");
-    process.stdout.write("Clean: Remove-Item artifacts\\PROOF_CONVERT_UI_LINKS.txt, artifacts\\AFTER_MERGE_PROOF_CONVERT_UI_LINKS.txt -ErrorAction SilentlyContinue\n");
 
     await browser.close();
     if (staticServer) try { staticServer.close(); } catch (_) {}
