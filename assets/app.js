@@ -9511,7 +9511,10 @@ function buildVideoAsArticleCard(it) {
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({ title: SHARE_TITLE, text: SHARE_TEXT, url: SHARE_URL });
-      } catch (e) { /* user cancel OK, no console.error */ }
+      } catch (e) {
+        if (e && e.name === "AbortError") return;
+        openShareFallbackMenu();
+      }
       return;
     }
     openShareFallbackMenu();
@@ -9596,6 +9599,7 @@ function buildVideoAsArticleCard(it) {
     if (!t || t.nodeType !== 1) return;
     const closeEl = t.closest('[data-iu-close], .iuModalClose, .iu-close, .iu-closeBtn, .iuQClose');
     if (!closeEl) return;
+    if (closeEl.classList && closeEl.classList.contains('iuAiShareBtn')) return;
     e.preventDefault();
     e.stopPropagation();
 

@@ -138,6 +138,33 @@ img, svg, video, iframe{
 
 /* 3) Všechny obrázky, které mají mít pevný poměr stran, dostanou aspect-ratio přes třídy (viz níže) */
 
+/* P0 CLS: stabilizace topbar date/sep (tabular-nums + pevná šířka) */
+#iuTopbarDate,
+.iuTopbarDate{
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  min-width: 12ch;
+}
+.iuTopbarNameday{
+  display: inline-block;
+  min-width: 8ch;
+}
+.iuTopbarSep{
+  display: inline-block;
+  min-width: 1ch;
+  width: 1ch;
+}
+
+/* P0 CLS: FontAwesome ikony – fixní slot (bez mikro-shiftů při font swap) */
+i.fa-solid,
+i.fa-regular,
+i.fa-brands{
+  display: inline-block;
+  width: 1.25em;
+  text-align: center;
+  line-height: 1;
+}
+
 /* ==== GLOBAL BACKGROUND LOCK (page + columns only) ==== */
 :root{
   --iu-bg-lock: var(--iu-page-bg);
@@ -8264,6 +8291,10 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   background: none !important;
   border: 0 !important;
   box-shadow: none !important;
+  display: inline-block;
+  width: 1.25em;
+  text-align: center;
+  line-height: 1;
 }
 
 /* Hover/focus (jemné, bez posunu layoutu) */

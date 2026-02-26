@@ -1,10 +1,22 @@
-PROOF: AI Share button (always https://www.infouzel.cz/)
-URL=http://127.0.0.1:58177/projects/
-TestA_sharePayloadUrl=https://www.infouzel.cz/
+PROOF: AI Share button (3 modes, CLS strict 0, step attribution)
+diag_baseUrl=http://127.0.0.1:65423/projects/
+diag_finalUrl=http://127.0.0.1:65423/projects/
+diag_repoExpectedHash=593
+diag_rects_after_goto={"topbarDate":{"x":1140.15625,"y":25.640625,"width":90.5625,"height":20.71875,"top":25.640625,"right":1230.71875,"bottom":46.359375,"left":1140.15625},"topbarSep":{"x":1122.609375,"y":25.640625,"width":7.546875,"height":20.71875,"top":25.640625,"right":1130.15625,"bottom":46.359375,"left":1122.609375},"quickLinks":{"x":0,"y":0,"width":0,"height":0,"top":0,"right":0,"bottom":0,"left":0},"faIconSample":{"x":0,"y":0,"width":0,"height":0,"top":0,"right":0,"bottom":0,"left":0}}
+diag_rects_after_ai_open={"topbarDate":{"x":1140.15625,"y":25.640625,"width":90.5625,"height":20.71875,"top":25.640625,"right":1230.71875,"bottom":46.359375,"left":1140.15625},"topbarSep":{"x":1122.609375,"y":25.640625,"width":7.546875,"height":20.71875,"top":25.640625,"right":1130.15625,"bottom":46.359375,"left":1122.609375},"quickLinks":{"x":0,"y":0,"width":0,"height":0,"top":0,"right":0,"bottom":0,"left":0},"faIconSample":{"x":0,"y":0,"width":0,"height":0,"top":0,"right":0,"bottom":0,"left":0}}
+diag_rects_after_share_click={"topbarDate":{"x":1140.15625,"y":25.640625,"width":90.5625,"height":20.71875,"top":25.640625,"right":1230.71875,"bottom":46.359375,"left":1140.15625},"topbarSep":{"x":1122.609375,"y":25.640625,"width":7.546875,"height":20.71875,"top":25.640625,"right":1130.15625,"bottom":46.359375,"left":1122.609375},"quickLinks":{"x":0,"y":0,"width":0,"height":0,"top":0,"right":0,"bottom":0,"left":0},"faIconSample":{"x":0,"y":0,"width":0,"height":0,"top":0,"right":0,"bottom":0,"left":0}}
+diag_rects_after_wait={"topbarDate":{"x":1140.15625,"y":25.640625,"width":90.5625,"height":20.71875,"top":25.640625,"right":1230.71875,"bottom":46.359375,"left":1140.15625},"topbarSep":{"x":1122.609375,"y":25.640625,"width":7.546875,"height":20.71875,"top":25.640625,"right":1130.15625,"bottom":46.359375,"left":1122.609375},"quickLinks":{"x":0,"y":0,"width":0,"height":0,"top":0,"right":0,"bottom":0,"left":0},"faIconSample":{"x":0,"y":0,"width":0,"height":0,"top":0,"right":0,"bottom":0,"left":0}}
+diag_bundleUrl=/assets/app.js?v=593
+diag_bundleHash=593
+diag_cls={"value":0.064632275390625,"entriesCount":3,"topEntries":[{"value":0.021544091796874998,"hadRecentInput":false,"step":"init","ts":121.10000000149012,"sourcesSummary":"section.iu-mmQuickLinks; span#iuTopbarDate.iuTopbarDate; span.iuTopbarSep","movedElements":[{"previousRect":{"x":883.5,"y":258.234375,"width":298,"height":376.953125},"currentRect":{"x":883.5,"y":430.234375,"width":298,"height":369.765625}},{"previousRect":{"x":1115.859375,"y":25.640625,"width":90.5625,"height":20.71875},"currentRect":{"x":1140.15625,"y":25.640625,"width":94,"height":20.71875}}]},{"value":0.021544091796874998,"hadRecentInput":false,"step":"init","ts":269,"sourcesSummary":"section.iu-mmQuickLinks; span#iuTopbarDate.iuTopbarDate; span.iuTopbarSep","movedElements":[{"previousRect":{"x":883.5,"y":258.234375,"width":298,"height":376.953125},"currentRect":{"x":883.5,"y":430.234375,"width":298,"height":369.765625}},{"previousRect":{"x":1115.859375,"y":25.640625,"width":90.5625,"height":20.71875},"currentRect":{"x":1140.15625,"y":25.640625,"width":94,"height":20.71875}}]},{"value":0.021544091796874998,"hadRecentInput":false,"step":"init","ts":344,"sourcesSummary":"section.iu-mmQuickLinks; span#iuTopbarDate.iuTopbarDate; span.iuTopbarSep","movedElements":[{"previousRect":{"x":883.5,"y":258.234375,"width":298,"height":376.953125},"currentRect":{"x":883.5,"y":430.234375,"width":298,"height":369.765625}},{"previousRect":{"x":1115.859375,"y":25.640625,"width":90.5625,"height":20.71875},"currentRect":{"x":1140.15625,"y":25.640625,"width":94,"height":20.71875}}]}]}
 TestA_pass=true
-TestB_copiedText=https://www.infouzel.cz/
+TestA_sharePayloadUrl=https://www.infouzel.cz/
 TestB_pass=true
+TestB_copiedText=https://www.infouzel.cz/
+TestC_pass=true
+TestC_copiedText=https://www.infouzel.cz/
+diag_shareBtnCount=1
 console.error=0
 pageerror=0
-CLS=0
-allPass=true
+CLS=0.064632275390625
+allPass=false
