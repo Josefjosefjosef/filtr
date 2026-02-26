@@ -1506,22 +1506,22 @@ style-src 'self' 'unsafe-inline' https:;
                         </div>
                       </div>
                     </div>
-                    <!-- Moje služby modaly -->
-                    <div id="iu-mojeSluzbyOverlay" class="iu-aiOverlay" hidden aria-hidden="true"></div>
-                    <div id="iu-mojeSluzbyPanel" class="iu-aiPanel" hidden role="dialog" aria-modal="true" aria-label="Moje služby">
-                      <div class="iu-aiModal iu-mojeSluzbyModal" data-iu-modal-content>
-                        <div class="iu-aiPanelHeader">
-                          <span id="iu-mojeSluzbyTitle">Moje služby</span>
-                          <div class="iu-aiPanelHeaderActions">
-                            <button class="iuAiClose iuModalClose" type="button" data-iu-close aria-label="Zavřít">×</button>
-                          </div>
-                        </div>
-                        <div class="iu-aiPanelBody" id="iu-mojeSluzbyBody">
-                          <!-- JS-rendered: Banka / Bakaláři / Zdravotní pojišťovna -->
-                        </div>
-                      </div>
-                    </div>
               </aside>
+            </div>
+            <!-- Moje služby modaly (outside right rail, over center feed) -->
+            <div id="iu-mojeSluzbyOverlay" class="iu-aiOverlay" hidden aria-hidden="true"></div>
+            <div id="iu-mojeSluzbyPanel" class="iu-aiPanel iuModalCenterFeed" hidden role="dialog" aria-modal="true" aria-label="Moje služby">
+              <div class="iu-aiModal iu-mojeSluzbyModal" data-iu-modal-content>
+                <div class="iu-aiPanelHeader">
+                  <span id="iu-mojeSluzbyTitle">Moje služby</span>
+                  <div class="iu-aiPanelHeaderActions">
+                    <button class="iuAiClose iuModalClose" type="button" data-iu-close aria-label="Zavřít">×</button>
+                  </div>
+                </div>
+                <div class="iu-aiPanelBody" id="iu-mojeSluzbyBody">
+                  <!-- JS-rendered: Banka / Bakaláři / Zdravotní pojišťovna -->
+                </div>
+              </div>
             </div>
           </div>
         </main>
