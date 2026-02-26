@@ -9129,8 +9129,9 @@ function buildVideoAsArticleCard(it) {
       const preposlatBtn = document.getElementById("iuTrHeaderPreposlat");
       if (preposlatBtn) {
         preposlatBtn.addEventListener("click", function(){
-          const sendBtn = quick.querySelector('[data-iu-notes][data-iu-notes-key="translator"] [data-iu-notes-send]');
-          if (sendBtn) sendBtn.click();
+          const block = quick.querySelector('[data-iu-notes][data-iu-notes-key="translator"]');
+          const text = block ? iuNotesGetText(block) : "";
+          iuForwardActionSameAsTranslator(text, preposlatBtn);
         });
       }
     } else {
@@ -9315,6 +9316,56 @@ function buildVideoAsArticleCard(it) {
     return t ? (t + sig) : "";
   }
 
+  /** Shared forward action: same as Translator "Přeposlat" / notes "Odeslat", no translator UI. */
+  function iuForwardActionSameAsTranslator(text, anchorEl) {
+    const payload = iuNotesBuildPayload(text != null ? String(text) : "");
+    if (!payload) return;
+    if (typeof navigator !== "undefined" && navigator.share) {
+      navigator.share({ text: payload, title: "infoUzel.cz" }).then(function() {}).catch(function() {});
+      return;
+    }
+    showForwardFallbackMenu(payload, anchorEl);
+  }
+
+  function showForwardFallbackMenu(payload, anchorEl) {
+    const existing = document.getElementById("iuForwardFallbackMenu");
+    if (existing) { existing.remove(); return; }
+    const wrap = document.createElement("div");
+    wrap.id = "iuForwardFallbackMenu";
+    wrap.className = "iuNotesSendBar";
+    wrap.setAttribute("role", "menu");
+    wrap.style.cssText = "position:fixed;z-index:9999;background:#fff;border:1px solid #ccc;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.15);padding:6px;display:flex;flex-direction:column;gap:4px;min-width:160px;";
+    const addBtn = function(label, onClick) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "iuNotesSendOpt";
+      b.setAttribute("role", "menuitem");
+      b.textContent = label;
+      b.addEventListener("click", function() { onClick(); wrap.remove(); document.removeEventListener("click", close); });
+      wrap.appendChild(b);
+    };
+    addBtn("Kopírovat pro odeslání", function() {
+      try {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") navigator.clipboard.writeText(payload);
+        else { var ta = document.createElement("textarea"); ta.value = payload; ta.style.cssText = "position:fixed;left:-9999px;top:0"; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); }
+      } catch (_) {}
+    });
+    addBtn("E-mail", function() {
+      window.location.href = "mailto:?subject=" + encodeURIComponent("Poznámka z infoUzel.cz") + "&body=" + encodeURIComponent(payload);
+    });
+    addBtn("WhatsApp", function() {
+      window.open("https://wa.me/?text=" + encodeURIComponent(payload), "_blank", "noopener,noreferrer");
+    });
+    document.body.appendChild(wrap);
+    var rect = (anchorEl && anchorEl.getBoundingClientRect) ? anchorEl.getBoundingClientRect() : { left: 0, bottom: 0 };
+    wrap.style.left = rect.left + "px";
+    wrap.style.top = (rect.bottom + 4) + "px";
+    function close() { wrap.remove(); document.removeEventListener("click", close); }
+    requestAnimationFrame(function() { document.addEventListener("click", close, { once: true }); });
+  }
+
+  try { window.iuForwardActionSameAsTranslator = iuForwardActionSameAsTranslator; } catch (_) {}
+
   function iuNotesGlobalDelegation(){
     document.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-iu-notes-copy], [data-iu-notes-clear], [data-iu-notes-send], [data-iu-notes-send-wa], [data-iu-notes-send-mail], [data-iu-notes-send-copy]");
@@ -9350,16 +9401,7 @@ function buildVideoAsArticleCard(it) {
       if (btn.matches("[data-iu-notes-send]")) {
         const text = iuNotesGetText(block);
         if (!text) { showStatus("Nejdřív napiš poznámku"); return; }
-        const payload = iuNotesBuildPayload(text);
-        if (typeof navigator !== "undefined" && navigator.share) {
-          navigator.share({ text: payload, title: "infoUzel.cz" }).then(() => {}).catch(() => {
-            hideOtherSendbars();
-            if (sendbar) sendbar.hidden = false;
-          });
-        } else {
-          hideOtherSendbars();
-          if (sendbar) sendbar.hidden = false;
-        }
+        iuForwardActionSameAsTranslator(text, sendbar || btn);
         return;
       }
 
@@ -9513,6 +9555,12 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       return;
     }
+    var btn = document.getElementById("iuAiShareBtn") || document.querySelector("#iuQuickFeed .iuAiShareBtn");
+    var aiText = SHARE_TEXT + " " + SHARE_URL;
+    if (typeof window.iuForwardActionSameAsTranslator === "function") {
+      window.iuForwardActionSameAsTranslator(aiText, btn || undefined);
+      return;
+    }
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({ title: SHARE_TITLE, text: SHARE_TEXT, url: SHARE_URL });
@@ -9601,6 +9649,7 @@ function buildVideoAsArticleCard(it) {
     if (!t || t.nodeType !== 1) return;
     const closeEl = t.closest('[data-iu-close], .iuModalClose, .iu-close, .iu-closeBtn, .iuQClose');
     if (!closeEl) return;
+    if (closeEl.classList.contains("iuAiShareBtn") || closeEl.closest(".iuAiShareBtn")) return;
     e.preventDefault();
     e.stopPropagation();
 
