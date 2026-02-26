@@ -12406,11 +12406,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     iuRenderBanks();
   }
   function iuRenderBanks() {
-    const body = document.getElementById("iu-mojeSluzbyBody");
-    if (!body) return;
-    const panel = document.getElementById("iu-mojeSluzbyPanel");
-    if (!panel || !body.closest("#iu-mojeSluzbyPanel")) return;
-    renderBankaModal(body);
+    var body = document.getElementById("iu-mojeSluzbyBody");
+    var panel = document.getElementById("iu-mojeSluzbyPanel");
+    if (body && panel && body.closest("#iu-mojeSluzbyPanel")) renderBankaModal(body);
+    var quickBody = document.getElementById("iuQuickFeedMojeSluzbyBody");
+    var quick = document.getElementById("iuQuickFeed");
+    if (quickBody && quick && !quick.hidden) renderBankaModal(quickBody);
   }
 
   const IU_BANKS_ALL = [
@@ -12691,25 +12692,28 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
     function renderFav() {
       state.favorites = iuGetBanks();
+      var myBankIds = new Set(state.favorites);
       favGrid.innerHTML = state.favorites.map(function(id, idx) {
-        const bank = allBanks.find(function(b) { return b.id === id; });
+        var bank = allBanks.find(function(b) { return b.id === id; });
         if (!bank) return "";
-        const btns = editMode ? "<span class=\"iu-mojeSluzbyMoveBtns\"><button type=\"button\" data-move-left data-idx=\"" + idx + "\" aria-label=\"Doleva\">←</button><button type=\"button\" data-move-right data-idx=\"" + idx + "\" aria-label=\"Doprava\">→</button></span>" : "";
+        var btns = editMode ? "<span class=\"iu-mojeSluzbyMoveBtns\"><button type=\"button\" data-move-left data-idx=\"" + idx + "\" aria-label=\"Doleva\">←</button><button type=\"button\" data-move-right data-idx=\"" + idx + "\" aria-label=\"Doprava\">→</button></span>" : "";
         var loginUrl = bank.loginUrl || bank.url;
-        return "<div class=\"iuBankCard\" data-fav-id=\"" + esc(id) + "\" data-bank-id=\"" + esc(id) + "\" data-bank-login-url=\"" + esc(loginUrl) + "\">" + btns + "<span class=\"iuBankIcon iuBankIconGold\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span><button type=\"button\" data-bank-id=\"" + esc(id) + "\" class=\"iuBankMiniActionBtn iuBankRemove\">ODEBRAT</button></div>";
+        return "<div class=\"iuBankCard\" data-fav-id=\"" + esc(id) + "\" data-bank-id=\"" + esc(id) + "\">" + btns +
+          "<button type=\"button\" class=\"iuBankCardMain\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
+          "<button type=\"button\" data-bank-id=\"" + esc(id) + "\" class=\"iuBankMiniActionBtn iuBankRemove\">ODEBRAT</button></div>";
       }).join("");
     }
 
     function renderAll(filter) {
-      const q = (filter || "").toLowerCase().trim();
-      const list = allBanks.filter(function(b) { return !q || (b.label || "").toLowerCase().includes(q); });
+      var q = (filter || "").toLowerCase().trim();
       state.favorites = iuGetBanks();
-      allGrid.innerHTML = list.map(function(bank) {
-        const inFav = state.favorites.indexOf(bank.id) >= 0;
+      var myBankIds = new Set(state.favorites);
+      var otherBanks = allBanks.filter(function(b) { return !myBankIds.has(b.id) && (!q || (b.label || "").toLowerCase().includes(q)); });
+      allGrid.innerHTML = otherBanks.map(function(bank) {
         var loginUrl = bank.loginUrl || bank.url;
-        var btnClass = inFav ? "iuBankRemove" : "iuBankAdd";
-        var btnText = inFav ? "ODEBRAT" : "PŘIDAT";
-        return "<div class=\"iuBankCard\" data-bank-id=\"" + esc(bank.id) + "\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span><button type=\"button\" data-bank-id=\"" + esc(bank.id) + "\" class=\"iuBankMiniActionBtn " + btnClass + "\">" + btnText + "</button></div>";
+        return "<div class=\"iuBankCard\" data-bank-id=\"" + esc(bank.id) + "\">" +
+          "<button type=\"button\" class=\"iuBankCardMain\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
+          "<button type=\"button\" data-bank-id=\"" + esc(bank.id) + "\" class=\"iuBankMiniActionBtn iuBankAdd\">PŘIDAT</button></div>";
       }).join("");
     }
 
@@ -12723,41 +12727,41 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     });
 
     favGrid.addEventListener("click", function(e) {
-      const moveLeft = e.target.closest("[data-move-left]");
-      const moveRight = e.target.closest("[data-move-right]");
+      var moveLeft = e.target.closest("[data-move-left]");
+      var moveRight = e.target.closest("[data-move-right]");
       if (e.target.closest("button.iuBankRemove")) return;
-      const card = e.target.closest(".iuBankCard");
+      var mainBtn = e.target.closest("button.iuBankCardMain");
       if (moveLeft) {
-        const idx = parseInt(moveLeft.dataset.idx, 10);
+        var idx = parseInt(moveLeft.dataset.idx, 10);
         if (idx > 0) {
-          const fav = iuGetBanks().slice();
-          const t = fav[idx];
+          var fav = iuGetBanks().slice();
+          var t = fav[idx];
           fav[idx] = fav[idx - 1];
           fav[idx - 1] = t;
           iuSetBanks(fav);
           iuRenderBanks();
         }
       } else if (moveRight) {
-        const idx = parseInt(moveRight.dataset.idx, 10);
-        const fav = iuGetBanks().slice();
+        var idx = parseInt(moveRight.dataset.idx, 10);
+        var fav = iuGetBanks().slice();
         if (idx < fav.length - 1) {
-          const t = fav[idx];
+          var t = fav[idx];
           fav[idx] = fav[idx + 1];
           fav[idx + 1] = t;
           iuSetBanks(fav);
           iuRenderBanks();
         }
-      } else if (card && !editMode) {
-        var url = card.getAttribute("data-bank-login-url");
+      } else if (mainBtn && !editMode) {
+        var url = mainBtn.getAttribute("data-bank-login-url");
         if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
       }
     });
 
     allGrid.addEventListener("click", function(e) {
-      if (e.target.closest("button.iuBankRemove") || e.target.closest("button.iuBankAdd")) return;
-      const card = e.target.closest(".iuBankCard");
-      if (card && !editMode) {
-        var url = card.getAttribute("data-bank-login-url");
+      if (e.target.closest("button.iuBankAdd")) return;
+      var mainBtn = e.target.closest("button.iuBankCardMain");
+      if (mainBtn) {
+        var url = mainBtn.getAttribute("data-bank-login-url");
         if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
       }
     });
