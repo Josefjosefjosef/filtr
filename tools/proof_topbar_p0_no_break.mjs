@@ -7,7 +7,6 @@ import { chromium } from "playwright";
 import fs from "node:fs";
 import path from "node:path";
 import http from "node:http";
-import https from "node:https";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -27,22 +26,6 @@ function startStaticServer(rootDir) {
       let urlPath = (req.url || "/").split("?")[0];
       if (urlPath === "/" || urlPath === "/projects" || urlPath === "/projects/") urlPath = "/projects/index.html";
       else if (!urlPath.startsWith("/")) urlPath = "/" + urlPath;
-      if (urlPath === "/api/day") {
-        https.get("https://svatkyapi.netlify.app/api/day", { headers: { Accept: "application/json" } }, (upstream) => {
-          let body = "";
-          upstream.on("data", (ch) => { body += ch; });
-          upstream.on("end", () => {
-            const ok = upstream.statusCode === 200 && body.trim();
-            const payload = ok ? body : JSON.stringify({ name: "Dorota" });
-            res.writeHead(200, { "Content-Type": "application/json", "Cache-Control": "no-store" });
-            res.end(payload);
-          });
-        }).on("error", () => {
-          res.writeHead(200, { "Content-Type": "application/json", "Cache-Control": "no-store" });
-          res.end(JSON.stringify({ name: "Dorota" }));
-        });
-        return;
-      }
       const p = path.join(rootDir, urlPath.slice(1));
       const resolved = path.resolve(p);
       const rootResolved = path.resolve(rootDir);
@@ -54,7 +37,7 @@ function startStaticServer(rootDir) {
       fs.readFile(p, (err, data) => {
         if (err) { res.writeHead(404); res.end(); return; }
         const ext = path.extname(p);
-        const ct = ext === ".html" ? "text/html" : ext === ".js" ? "application/javascript" : ext === ".css" ? "text/css" : "application/octet-stream";
+        const ct = ext === ".html" ? "text/html" : ext === ".js" ? "application/javascript" : ext === ".css" ? "text/css" : ext === ".json" ? "application/json" : "application/octet-stream";
         res.setHeader("Content-Type", ct);
         res.setHeader("Cache-Control", "no-store");
         res.end(data);
