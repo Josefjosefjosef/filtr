@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Proof: Moje služby modal opens over center feed (not right rail).
- * Verifies: modal_parent_is_feed, modal_centered, modal_not_in_rightRail, CLS=0.
+ * Proof: Moje služby modal anchored to center feed.
+ * Verifies: modal_parent_is_feed, modal_not_in_rightRail, modal_within_feed_width,
+ * modal_centered (delta<=2), CLS=0. Output: 1 metric per line (LF).
  */
 import { chromium } from "playwright";
 import fs from "node:fs";
@@ -13,11 +14,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const ARTIFACTS = path.join(ROOT, "artifacts");
 
-function writeArtifact(name, text) {
+function writeArtifact(name, lines) {
   fs.mkdirSync(ARTIFACTS, { recursive: true });
-  const out = path.join(ARTIFACTS, name);
-  fs.writeFileSync(out, String(text).replace(/\r?\n/g, "\r\n"), "utf8");
-  return out;
+  const outPath = path.join(ARTIFACTS, name);
+  const content = (Array.isArray(lines) ? lines.join("\n") : String(lines)) + "\n";
+  fs.writeFileSync(outPath, content, "utf8");
+  return outPath;
 }
 
 function startStaticServer(rootDir) {
@@ -79,7 +81,6 @@ async function main() {
       } catch (_) {}
     });
 
-    // Open Banka modal
     await page.evaluate(() => {
       const btn = document.querySelector('[data-iu-modal="banka"]');
       if (btn) btn.click();
@@ -90,75 +91,65 @@ async function main() {
       const panel = document.getElementById("iu-mojeSluzbyPanel");
       const overlay = document.getElementById("iu-mojeSluzbyOverlay");
       const rightRail = document.querySelector(".layout > aside.accordionCol");
-      const feed = document.getElementById("feed") || document.getElementById("iuCenterStage") || document.querySelector(".iuFeedColumn");
-      const feedParent = feed ? feed.closest(".container") : null;
+      const feed = document.getElementById("feed") || document.getElementById("iuCenterStage");
 
       const out = {};
 
-      // modal_not_in_rightRail: panel and overlay must NOT be descendants of right rail
       const panelInRail = rightRail && panel && rightRail.contains(panel);
       const overlayInRail = rightRail && overlay && rightRail.contains(overlay);
       out.modal_not_in_rightRail = !panelInRail && !overlayInRail;
 
-      // modal_parent_is_feed: panel should be in .container (sibling of .layout), not in accordionCol
       const panelParent = panel ? panel.parentElement : null;
-      const panelParentIsContainer = panelParent && panelParent.classList && panelParent.classList.contains("container");
-      out.modal_parent_is_feed = panelParentIsContainer;
+      out.modal_parent_is_feed = !!(panelParent && panelParent.classList && panelParent.classList.contains("container"));
 
-      // modal_centered: modal center X should be near viewport center (or feed center)
       let modalCenterX = 0;
       let feedCenterX = 0;
-      let viewportCenterX = 0;
-      if (panel) {
-        const rect = panel.getBoundingClientRect();
+      const modalInner = panel ? panel.querySelector(".iu-aiModal, .iu-mojeSluzbyModal") : panel;
+      const el = modalInner || panel;
+      if (el) {
+        const rect = el.getBoundingClientRect();
         modalCenterX = rect.left + rect.width / 2;
       }
       if (feed) {
-        const rect = feed.getBoundingClientRect();
-        feedCenterX = rect.left + rect.width / 2;
-      }
-      viewportCenterX = window.innerWidth / 2;
-
-      // Modal should be centered over viewport (within ~100px of center)
-      const distFromViewportCenter = Math.abs(modalCenterX - viewportCenterX);
-      out.modal_centered = distFromViewportCenter < 150;
-
-      // Modal inner content rect should be within feed width (roughly)
-      const modalInner = panel ? panel.querySelector(".iu-aiModal, .iu-mojeSluzbyModal") : null;
-      if (modalInner && feed) {
-        const mRect = modalInner.getBoundingClientRect();
         const fRect = feed.getBoundingClientRect();
-        out.modal_within_feed_width = mRect.left >= fRect.left - 50 && mRect.right <= fRect.right + 50;
-      } else {
-        out.modal_within_feed_width = true;
+        feedCenterX = fRect.left + fRect.width / 2;
       }
 
-      out.modal_center_x = modalCenterX.toFixed(0);
-      out.feed_center_x = feedCenterX.toFixed(0);
-      out.viewport_center_x = viewportCenterX.toFixed(0);
+      const centerDeltaPx = Math.abs(modalCenterX - feedCenterX);
+      out.modal_centered = centerDeltaPx <= 2;
+      out.center_delta_px = centerDeltaPx.toFixed(1);
+
+      const modalRect = panel ? panel.getBoundingClientRect() : { left: 0, right: 0 };
+      const feedRect = feed ? feed.getBoundingClientRect() : { left: 0, right: 0 };
+      out.modal_within_feed_width = modalRect.left >= feedRect.left - 1 && modalRect.right <= feedRect.right + 1;
+
+      out.modal_center_x = modalCenterX.toFixed(1);
+      out.feed_center_x = feedCenterX.toFixed(1);
 
       return out;
     });
 
     lines.push("modal_parent_is_feed=" + result.modal_parent_is_feed);
-    lines.push("modal_centered=" + result.modal_centered);
     lines.push("modal_not_in_rightRail=" + result.modal_not_in_rightRail);
     lines.push("modal_within_feed_width=" + result.modal_within_feed_width);
     lines.push("modal_center_x=" + result.modal_center_x);
     lines.push("feed_center_x=" + result.feed_center_x);
-    lines.push("viewport_center_x=" + result.viewport_center_x);
+    lines.push("center_delta_px=" + result.center_delta_px);
 
     const cls = await page.evaluate(() => (window.__proofCls || 0).toFixed(6));
     lines.push("CLS=" + cls);
 
-    const allPass = result.modal_parent_is_feed && result.modal_centered && result.modal_not_in_rightRail && parseFloat(cls) === 0;
+    const allPass = result.modal_parent_is_feed &&
+      result.modal_not_in_rightRail &&
+      result.modal_within_feed_width &&
+      result.modal_centered &&
+      parseFloat(cls) === 0;
     lines.push("PASS=" + allPass);
 
-    const outText = lines.join("\n");
-    console.log(outText);
+    lines.forEach((line) => console.log(line));
 
     const artifactName = process.env.PROOF_BASE_URL ? "AFTER_MERGE_PROOF_modal_center.txt" : "PROOF_modal_center_LOCAL.txt";
-    writeArtifact(artifactName, outText);
+    writeArtifact(artifactName, lines);
 
     if (!allPass) process.exit(1);
   } finally {

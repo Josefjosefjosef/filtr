@@ -12432,6 +12432,21 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
   function esc(s) { return String(s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 
+  let _mojeSluzbyResizeTimer = null;
+  let _mojeSluzbyResizeHandler = null;
+
+  function iuMojeSluzbyModalPositionFeed() {
+    const overlay = document.getElementById("iu-mojeSluzbyOverlay");
+    const panel = document.getElementById("iu-mojeSluzbyPanel");
+    const feed = document.querySelector("#feed") || document.getElementById("iuCenterStage");
+    if (!overlay || !panel || !feed) return;
+    const r = feed.getBoundingClientRect();
+    overlay.style.left = r.left + "px";
+    overlay.style.width = r.width + "px";
+    panel.style.left = r.left + "px";
+    panel.style.width = r.width + "px";
+  }
+
   function openMojeSluzbyModal(kind) {
     const overlay = document.getElementById("iu-mojeSluzbyOverlay");
     const panel = document.getElementById("iu-mojeSluzbyPanel");
@@ -12448,6 +12463,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       window.iuSetElOpenVisible(overlay, true);
       window.iuSetElOpenVisible(panel, true);
     } else { overlay.hidden = false; panel.hidden = false; }
+    iuMojeSluzbyModalPositionFeed();
+    _mojeSluzbyResizeHandler = function() {
+      if (_mojeSluzbyResizeTimer) clearTimeout(_mojeSluzbyResizeTimer);
+      _mojeSluzbyResizeTimer = setTimeout(iuMojeSluzbyModalPositionFeed, 100);
+    };
+    window.addEventListener("resize", _mojeSluzbyResizeHandler);
     document.documentElement.style.overflow = "hidden";
     document.body.classList.add("iu-modal-open");
   }
@@ -12456,6 +12477,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const overlay = document.getElementById("iu-mojeSluzbyOverlay");
     const panel = document.getElementById("iu-mojeSluzbyPanel");
     if (!overlay || !panel) return;
+    if (_mojeSluzbyResizeHandler) {
+      window.removeEventListener("resize", _mojeSluzbyResizeHandler);
+      _mojeSluzbyResizeHandler = null;
+    }
+    if (_mojeSluzbyResizeTimer) { clearTimeout(_mojeSluzbyResizeTimer); _mojeSluzbyResizeTimer = null; }
     if (typeof window.iuSetElOpenVisible === "function") {
       window.iuSetElOpenVisible(panel, false);
       window.iuSetElOpenVisible(overlay, false);
