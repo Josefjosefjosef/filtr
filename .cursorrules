@@ -58,3 +58,17 @@ GATE (co musí vypsat / změřit):
 
 COMMIT MESSAGE:   ........
 
+Gates / PR (STOP-SHIP při špinavém stromu)
+
+Před gh pr create vždy:
+  powershell -ExecutionPolicy Bypass -File tools/guard-clean-tree.ps1
+Před commitem s min-scope (jen whitelist souborů):
+  powershell -ExecutionPolicy Bypass -File tools/guard-clean-tree.ps1 -AllowFiles assets/app.js
+Jakmile guard vrátí exit code 2 → Cursor musí STOP a opravit strom.
+
+AFTER_MERGE PROOF GATE
+
+AFTER_MERGE proof se smí vytvořit jen pokud je prokázáno, že PROD obsahuje main SHA po merge.
+Povinný postup: curl (např. curl -s "https://infouzel.cz/projects/" | findstr "assets/app.") a výstup do TXT; porovnat s git rev-parse HEAD na main a s deploy logem.
+Zákaz: vytvoření proof bez prokázání nasazení. Pokud nelze prokázat, že PROD je na mergnutém SHA → proof se nevyrábí.
+
