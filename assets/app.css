@@ -12343,12 +12343,12 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   justify-content: center !important;
 }
 
-/* === MindMenu: pill spans over gear + height 35px (row is the pill) === */
+/* === MindMenu: pill spans over gear + height 35px (row is the pill), P0 width 260px === */
 .layout > aside.accordionCol .mindMenu .iu-mailbox-row{
   position: relative;
   display: flex;
   align-items: center;
-  width: 230px;
+  width: 260px;
   height: 35px;
   min-height: 35px;
   border-radius: 999px;
@@ -12386,4 +12386,28 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   .layout > aside.accordionCol .mindMenu .iu-mailbox-row .iu-mailbox-gear{
     transform: translateY(-50%);
   }
+}
+
+/* === infoUzel.cz P0 — MindMenu pills width 260px + center === */
+
+/* wrapper pravého sloupce – jen centrování obsahu */
+section.iu-mmQuickLinks,
+section.iu-mindmenu,
+.iu-right-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* vodorovné centrování */
+}
+
+/* každý řádek pilulky – centrování v pravém sloupci */
+.layout > aside.accordionCol .mindMenu .iu-mailbox-row {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* samotná pilulka – vyplní řádek */
+.layout > aside.accordionCol .mindMenu .iu-mailbox-pill {
+  width: 100%;
+  min-width: 0;
+  flex: 0 0 auto;
 }
