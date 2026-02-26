@@ -11840,13 +11840,18 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   min-height: 110px;
 }
 
-/* Překladač poznámky — pod kartami (card); rámeček = barva odkazů v sekci (accent) */
+/* Překladač poznámky — pod kartami (card); rámeček = barva odkazů (accent), celý kontejner vybarven */
 #iuQuickFeed .iuNotes[data-iu-notes]{
   margin-top: 16px;
   padding: 10px 10px;
   border: 2px solid rgba(31,75,153,0.5);
   border-radius: 12px;
-  background: var(--iuNotesAccent, #b9bcc2);
+  background: rgba(31,75,153,0.06);
+}
+/* Psací pole beze změny — explicitně stejný vzhled jako před vybarvením kontejneru */
+#iuQuickFeed .iuNotes[data-iu-notes] .iuNotesText,
+#iuQuickFeed .iuNotes[data-iu-notes] [data-iu-notes-text]{
+  background: #ffffff;
 }
 
 /* =============================== */
