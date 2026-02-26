@@ -160,7 +160,11 @@ async function main() {
     const pass = heightShrunk && quickLinksMovedUp;
     out("PASS=" + pass);
 
-    writeArtifact("PROOF_MINDMENU_REMOVE_GAP.txt", lines.join("\r\n") + "\r\n");
+    const content = lines.join("\r\n") + "\r\n";
+    writeArtifact("PROOF_MINDMENU_REMOVE_GAP.txt", content);
+    if (BASE_URL.includes("infouzel.cz")) {
+      writeArtifact("AFTER_MERGE_PROOF_MINDMENU_REMOVE_GAP.txt", content);
+    }
 
     await browser.close();
     if (staticServer) try { staticServer.close(); } catch (_) {}
@@ -169,7 +173,11 @@ async function main() {
   } catch (err) {
     console.error(err);
     out("ERROR: " + String(err.message));
-    writeArtifact("PROOF_MINDMENU_REMOVE_GAP.txt", lines.join("\r\n") + "\r\n");
+    const content = lines.join("\r\n") + "\r\n";
+    writeArtifact("PROOF_MINDMENU_REMOVE_GAP.txt", content);
+    if (typeof BASE_URL !== "undefined" && BASE_URL.includes("infouzel.cz")) {
+      writeArtifact("AFTER_MERGE_PROOF_MINDMENU_REMOVE_GAP.txt", content);
+    }
     process.exitCode = 1;
   }
 }
