@@ -9150,11 +9150,11 @@ function buildVideoAsArticleCard(it) {
           které se otevřou v nové kartě.</p>
         </section>
         <div class="iuTranslatorVideos" aria-label="Návody k překladačům">
-          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/6Z9wWc3Xh2A?rel=0&amp;modestbranding=1" title="Jak používat DeepL" loading="lazy" allowfullscreen></iframe></div>
-          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/GmX0xNqXg9Q?rel=0&amp;modestbranding=1" title="Jak používat Google Translate" loading="lazy" allowfullscreen></iframe></div>
-          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/qN5s3XyC9nE?rel=0&amp;modestbranding=1" title="Jak používat Microsoft Translator" loading="lazy" allowfullscreen></iframe></div>
-          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/H4K9yq5cR2U?rel=0&amp;modestbranding=1" title="Jak používat Seznam Slovník" loading="lazy" allowfullscreen></iframe></div>
-          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/7C2k8VgL1xE?rel=0&amp;modestbranding=1" title="Jak používat Linguee" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/JVlSxtcMqPs?rel=0&amp;modestbranding=1" title="Jak používat DeepL" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/I2BtZBrbh8Y?rel=0&amp;modestbranding=1" title="Jak používat Google Translate" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/4swsd1JHxhM?rel=0&amp;modestbranding=1" title="Jak používat Microsoft Translator" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/8vTb4Lhd5cA?rel=0&amp;modestbranding=1" title="Jak používat Seznam Slovník" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/IHlkhnhRsZI?rel=0&amp;modestbranding=1" title="Jak používat Linguee" loading="lazy" allowfullscreen></iframe></div>
         </div>
       `;
       iuTrInit(quick, data);
