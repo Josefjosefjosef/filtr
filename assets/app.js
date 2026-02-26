@@ -12401,8 +12401,16 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }
   }
   function iuRemoveBank(id) {
-    const banks = iuGetBanks().filter(function(b) { return b !== id; });
+    var banks = iuGetBanks().filter(function(b) { return b !== id; });
     iuSetBanks(banks);
+    iuRenderBanks();
+  }
+  function iuRemoveCustomBank(id) {
+    var state = getBanksState();
+    state.customBanks = state.customBanks.filter(function(b) { return b.id !== id; });
+    state.favorites = state.favorites.filter(function(b) { return b !== id; });
+    setBanksState({ customBanks: state.customBanks });
+    iuSetBanks(state.favorites);
     iuRenderBanks();
   }
   function iuRenderBanks() {
@@ -12421,7 +12429,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     { id: "fio", label: "Fio banka", url: "https://www.fio.cz/", loginUrl: "https://www.fio.cz/ib2/portal/", color: "#00a651" },
     { id: "mb", label: "mBank", url: "https://www.mbank.cz/", loginUrl: "https://www.mbank.cz/cs/prihlaseni/", color: "#e30613" },
     { id: "rb", label: "Raiffeisenbank", url: "https://www.rb.cz/", loginUrl: "https://www.rb.cz/cs/prihlaseni/", color: "#ffed00" },
-    { id: "cs", label: "ČS", url: "https://www.csas.cz/", loginUrl: "https://www.csas.cz/cs/prihlaseni.html", color: "#1a1a1a" },
+    { id: "cs", label: "Česká spořitelna", url: "https://www.csas.cz/", loginUrl: "https://www.csas.cz/cs/prihlaseni.html", color: "#1a1a1a" },
     { id: "moneta", label: "Moneta", url: "https://www.moneta.cz/", loginUrl: "https://www.moneta.cz/ib/", color: "#e30613" },
     { id: "unicredit", label: "UniCredit", url: "https://www.unicreditbank.cz/", loginUrl: "https://www.unicreditbank.cz/cs/prihlaseni.html", color: "#e30613" },
     { id: "citi", label: "Citibank", url: "https://www.citibank.cz/", loginUrl: "https://www.citibank.cz/cs/prihlaseni.htm", color: "#056da1" },
@@ -12659,11 +12667,14 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function renderBankaModal(container) {
-    const state = getBanksState();
+    var state = getBanksState();
     state.favorites = iuGetBanks();
-    const allBanks = IU_BANKS_ALL.concat(state.customBanks.map(function(c) { return { id: c.id, label: c.label, url: c.url, loginUrl: c.url, color: "#333" }; }));
-    const favIds = new Set(state.favorites);
-    let editMode = false;
+    var allBanks = IU_BANKS_ALL.concat(state.customBanks.map(function(c) { return { id: c.id, label: c.label, url: c.url, loginUrl: c.url, color: "#333" }; }));
+    var favIds = new Set(state.favorites);
+    var presetIds = {};
+    IU_BANKS_ALL.forEach(function(b) { presetIds[b.id] = true; });
+    function isPreset(id) { return !!presetIds[id]; }
+    var editMode = false;
 
     const persist = function() { setBanksState({ favorites: state.favorites, customBanks: state.customBanks }); };
 
@@ -12698,9 +12709,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         if (!bank) return "";
         var btns = editMode ? "<span class=\"iu-mojeSluzbyMoveBtns\"><button type=\"button\" data-move-left data-idx=\"" + idx + "\" aria-label=\"Doleva\">←</button><button type=\"button\" data-move-right data-idx=\"" + idx + "\" aria-label=\"Doprava\">→</button></span>" : "";
         var loginUrl = bank.loginUrl || bank.url;
+        var removeBtn = isPreset(id) ? "<button type=\"button\" data-bank-id=\"" + esc(id) + "\" class=\"iuBankMiniActionBtn iuBankRemove\">ODEBRAT</button>" : "";
         return "<div class=\"iuBankCard\" data-fav-id=\"" + esc(id) + "\" data-bank-id=\"" + esc(id) + "\">" + btns +
           "<button type=\"button\" class=\"iuBankCardMain\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
-          "<button type=\"button\" data-bank-id=\"" + esc(id) + "\" class=\"iuBankMiniActionBtn iuBankRemove\">ODEBRAT</button></div>";
+          removeBtn + "</div>";
       }).join("");
     }
 
@@ -12711,9 +12723,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       var otherBanks = allBanks.filter(function(b) { return !myBankIds.has(b.id) && (!q || (b.label || "").toLowerCase().includes(q)); });
       allGrid.innerHTML = otherBanks.map(function(bank) {
         var loginUrl = bank.loginUrl || bank.url;
+        var miniBtn = isPreset(bank.id)
+          ? "<button type=\"button\" data-bank-id=\"" + esc(bank.id) + "\" class=\"iuBankMiniActionBtn iuBankAdd\">PŘIDAT</button>"
+          : "<button type=\"button\" data-bank-id=\"" + esc(bank.id) + "\" class=\"iuBankMiniActionBtn iuBankRemove iuBankRemoveCustom\">ODEBRAT</button>";
         return "<div class=\"iuBankCard\" data-bank-id=\"" + esc(bank.id) + "\">" +
           "<button type=\"button\" class=\"iuBankCardMain\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
-          "<button type=\"button\" data-bank-id=\"" + esc(bank.id) + "\" class=\"iuBankMiniActionBtn iuBankAdd\">PŘIDAT</button></div>";
+          miniBtn + "</div>";
       }).join("");
     }
 
@@ -12958,6 +12973,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     document.addEventListener("click", function(e) {
       var id = e.target && e.target.dataset && e.target.dataset.bankId;
       if (id) {
+        if (e.target.classList && e.target.classList.contains("iuBankRemoveCustom")) {
+          iuRemoveCustomBank(id);
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
         if (e.target.classList && e.target.classList.contains("iuBankRemove")) {
           iuRemoveBank(id);
           e.preventDefault();
