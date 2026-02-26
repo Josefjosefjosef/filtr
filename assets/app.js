@@ -12436,6 +12436,59 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   let _mojeSluzbyResizeHandler = null;
   let _mojeSluzbyScrollHandler = null;
 
+  function iuEnsureModalRoot() {
+    let root = document.getElementById("iuModalRoot");
+    if (!root) {
+      root = document.createElement("div");
+      root.id = "iuModalRoot";
+      document.body.appendChild(root);
+    }
+    return root;
+  }
+
+  function iuGetFeedEl() {
+    return document.getElementById("feed") || document.getElementById("iuCenterStage") || document.querySelector("#iuFeed") || document.querySelector(".iuFeed") || document.querySelector("main");
+  }
+
+  function iuPlaceModalOverFeed(modalEl) {
+    if (!modalEl) return;
+
+    const feed = iuGetFeedEl();
+    if (!feed) return;
+
+    const root = iuEnsureModalRoot();
+    if (modalEl.parentElement !== root) root.appendChild(modalEl);
+
+    const r = feed.getBoundingClientRect();
+
+    modalEl.style.position = "fixed";
+    modalEl.style.left = r.left + "px";
+    modalEl.style.width = r.width + "px";
+    if (!modalEl.style.top) modalEl.style.top = "80px";
+    modalEl.style.zIndex = "9999";
+
+    if (modalEl.id === "iu-mojeSluzbyPanel") {
+      const overlay = document.getElementById("iu-mojeSluzbyOverlay");
+      if (overlay) {
+        if (overlay.parentElement !== root) root.appendChild(overlay);
+        overlay.style.position = "fixed";
+        overlay.style.left = r.left + "px";
+        overlay.style.width = r.width + "px";
+        overlay.style.top = "0";
+      }
+    }
+  }
+
+  let __iuActiveOverFeedModal = null;
+  function iuSetActiveOverFeedModal(modalEl) {
+    __iuActiveOverFeedModal = modalEl;
+    iuPlaceModalOverFeed(modalEl);
+  }
+
+  window.addEventListener("resize", function() {
+    if (__iuActiveOverFeedModal) iuPlaceModalOverFeed(__iuActiveOverFeedModal);
+  }, { passive: true });
+
   function ensureModalRoot() {
     let root = document.getElementById("iuModalRoot");
     if (root) return root;
@@ -12497,6 +12550,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       window.iuSetElOpenVisible(overlay, true);
       window.iuSetElOpenVisible(panel, true);
     } else { overlay.hidden = false; panel.hidden = false; }
+    iuSetActiveOverFeedModal(panel);
     iuPositionModalOverFeed(panel);
     _mojeSluzbyResizeHandler = function() {
       if (_mojeSluzbyResizeTimer) clearTimeout(_mojeSluzbyResizeTimer);
@@ -12512,6 +12566,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function closeMojeSluzbyModal() {
+    __iuActiveOverFeedModal = null;
     const overlay = document.getElementById("iu-mojeSluzbyOverlay");
     const panel = document.getElementById("iu-mojeSluzbyPanel");
     if (!overlay || !panel) return;
@@ -12725,7 +12780,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function init() {
-    const root = ensureModalRoot();
+    const root = iuEnsureModalRoot();
     const overlay = document.getElementById("iu-mojeSluzbyOverlay");
     const panel = document.getElementById("iu-mojeSluzbyPanel");
     if (overlay && overlay.parentElement !== root) root.appendChild(overlay);
