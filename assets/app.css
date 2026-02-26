@@ -2751,13 +2751,24 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   display: flex !important;
 }
 
-/* P0: Moje služby modal centered over feed (not right rail) */
-.iuModalCenterFeed {
+/* P0: Moje služby modal — left/width set by JS from feed rect */
+#iu-mojeSluzbyOverlay {
   position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: min(720px, calc(100vw - 24px));
-  width: 100%;
+  top: 0;
+  right: auto;
+  height: 100vh;
+  box-sizing: border-box;
+}
+#iu-mojeSluzbyPanel {
+  position: fixed;
+  top: 84px;
+  right: auto;
+  height: calc(100vh - 84px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  box-sizing: border-box;
 }
 
 /* P0: AI panel must be a real modal overlay over content (above feed), not inside right column */
