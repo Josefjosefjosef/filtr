@@ -9668,6 +9668,14 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   overflow: visible !important;
 }
 
+/* P0: right rail collapses when MindMenu buttons removed — no fixed min-height */
+.layout > aside.accordionCol,
+.accordionCol .mindMenu,
+.accordionCol .mindMenu .iu-mailboxes{
+  height: auto !important;
+  min-height: 0 !important;
+}
+
 /* FINAL UI — SEO text blocks */
 .iuSeoTitle{
   font-size: 20px;

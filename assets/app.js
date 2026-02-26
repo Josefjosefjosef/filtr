@@ -7478,6 +7478,11 @@ function buildVideoAsArticleCard(it) {
       mailboxCount = items.length;
       iuUpdateMailboxControls(mailboxCount);
       iuPositionMailboxControls();
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event("resize"));
+        const rail = document.querySelector(".layout > aside.accordionCol");
+        if (rail) rail.style.height = "auto";
+      });
     });
 
     document.getElementById("iuMailboxRemove")?.addEventListener("click", () => {
@@ -7489,6 +7494,11 @@ function buildVideoAsArticleCard(it) {
       mailboxCount = items.length;
       iuUpdateMailboxControls(mailboxCount);
       iuPositionMailboxControls();
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event("resize"));
+        const rail = document.querySelector(".layout > aside.accordionCol");
+        if (rail) rail.style.height = "auto";
+      });
     });
 
     function iuMailboxOpenEditDialog(idx, it, onDone){
