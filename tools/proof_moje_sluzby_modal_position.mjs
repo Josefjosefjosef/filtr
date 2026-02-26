@@ -146,10 +146,12 @@ async function main() {
       parseFloat(cls) === 0;
     lines.push("PASS=" + allPass);
 
-    lines.forEach((line) => console.log(line));
+    const content = lines.join("\n") + "\n";
+    process.stdout.write(content);
 
     const artifactName = process.env.PROOF_BASE_URL ? "AFTER_MERGE_PROOF_modal_center.txt" : "PROOF_modal_center_LOCAL.txt";
-    writeArtifact(artifactName, lines);
+    fs.mkdirSync(ARTIFACTS, { recursive: true });
+    fs.writeFileSync(path.join(ARTIFACTS, artifactName), content, "utf8");
 
     if (!allPass) process.exit(1);
   } finally {
