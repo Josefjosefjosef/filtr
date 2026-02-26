@@ -12414,20 +12414,20 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   const IU_BANKS_ALL = [
-    { id: "csas", label: "ČSOB", url: "https://www.csob.cz/portal/", color: "#1a1a1a" },
-    { id: "kb", label: "Komerční banka", url: "https://www.kb.cz/", color: "#c41230" },
-    { id: "air", label: "Air Bank", url: "https://www.airbank.cz/", color: "#e6007e" },
-    { id: "fio", label: "Fio banka", url: "https://www.fio.cz/", color: "#00a651" },
-    { id: "mb", label: "mBank", url: "https://www.mbank.cz/", color: "#e30613" },
-    { id: "rb", label: "Raiffeisenbank", url: "https://www.rb.cz/", color: "#ffed00" },
-    { id: "cs", label: "ČS", url: "https://www.csas.cz/", color: "#1a1a1a" },
-    { id: "moneta", label: "Moneta", url: "https://www.moneta.cz/", color: "#e30613" },
-    { id: "unicredit", label: "UniCredit", url: "https://www.unicreditbank.cz/", color: "#e30613" },
-    { id: "citi", label: "Citibank", url: "https://www.citibank.cz/", color: "#056da1" },
-    { id: "max", label: "Max banka", url: "https://www.maxbanka.cz/", color: "#00a651" },
-    { id: "equa", label: "Equa bank", url: "https://www.equabank.cz/", color: "#00a651" },
-    { id: "creditas", label: "Creditas", url: "https://www.creditas.cz/", color: "#1a1a1a" },
-    { id: "sberbank", label: "Sberbank", url: "https://www.sberbank.cz/", color: "#21a038" }
+    { id: "csas", label: "ČSOB", url: "https://www.csob.cz/portal/", loginUrl: "https://www.csob.cz/portal/", color: "#1a1a1a" },
+    { id: "kb", label: "Komerční banka", url: "https://www.kb.cz/", loginUrl: "https://www.kb.cz/cs/online-banking/", color: "#c41230" },
+    { id: "air", label: "Air Bank", url: "https://www.airbank.cz/", loginUrl: "https://www.airbank.cz/cs/prihlaseni/", color: "#e6007e" },
+    { id: "fio", label: "Fio banka", url: "https://www.fio.cz/", loginUrl: "https://www.fio.cz/ib2/portal/", color: "#00a651" },
+    { id: "mb", label: "mBank", url: "https://www.mbank.cz/", loginUrl: "https://www.mbank.cz/cs/prihlaseni/", color: "#e30613" },
+    { id: "rb", label: "Raiffeisenbank", url: "https://www.rb.cz/", loginUrl: "https://www.rb.cz/cs/prihlaseni/", color: "#ffed00" },
+    { id: "cs", label: "ČS", url: "https://www.csas.cz/", loginUrl: "https://www.csas.cz/cs/prihlaseni.html", color: "#1a1a1a" },
+    { id: "moneta", label: "Moneta", url: "https://www.moneta.cz/", loginUrl: "https://www.moneta.cz/ib/", color: "#e30613" },
+    { id: "unicredit", label: "UniCredit", url: "https://www.unicreditbank.cz/", loginUrl: "https://www.unicreditbank.cz/cs/prihlaseni.html", color: "#e30613" },
+    { id: "citi", label: "Citibank", url: "https://www.citibank.cz/", loginUrl: "https://www.citibank.cz/cs/prihlaseni.htm", color: "#056da1" },
+    { id: "max", label: "Max banka", url: "https://www.maxbanka.cz/", loginUrl: "https://www.maxbanka.cz/prihlaseni/", color: "#00a651" },
+    { id: "equa", label: "Equa bank", url: "https://www.equabank.cz/", loginUrl: "https://www.equabank.cz/prihlaseni/", color: "#00a651" },
+    { id: "creditas", label: "Creditas", url: "https://www.creditas.cz/", loginUrl: "https://www.creditas.cz/prihlaseni/", color: "#1a1a1a" },
+    { id: "sberbank", label: "Sberbank", url: "https://www.sberbank.cz/", loginUrl: "https://www.sberbank.cz/cs/prihlaseni/", color: "#21a038" }
   ];
 
   const POJISTOVNY = [
@@ -12660,7 +12660,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function renderBankaModal(container) {
     const state = getBanksState();
     state.favorites = iuGetBanks();
-    const allBanks = IU_BANKS_ALL.concat(state.customBanks.map(function(c) { return { id: c.id, label: c.label, url: c.url, color: "#333" }; }));
+    const allBanks = IU_BANKS_ALL.concat(state.customBanks.map(function(c) { return { id: c.id, label: c.label, url: c.url, loginUrl: c.url, color: "#333" }; }));
     const favIds = new Set(state.favorites);
     let editMode = false;
 
@@ -12695,7 +12695,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         const bank = allBanks.find(function(b) { return b.id === id; });
         if (!bank) return "";
         const btns = editMode ? "<span class=\"iu-mojeSluzbyMoveBtns\"><button type=\"button\" data-move-left data-idx=\"" + idx + "\" aria-label=\"Doleva\">←</button><button type=\"button\" data-move-right data-idx=\"" + idx + "\" aria-label=\"Doprava\">→</button></span>" : "";
-        return "<div class=\"iuBankCard\" data-fav-id=\"" + esc(id) + "\" data-bank-id=\"" + esc(id) + "\" data-bank-url=\"" + esc(bank.url) + "\">" + btns + "<span class=\"iuBankIcon\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel\">" + esc(bank.label) + "</span><button type=\"button\" data-bank-id=\"" + esc(id) + "\" class=\"iuBankRemove\">Odebrat</button></div>";
+        var loginUrl = bank.loginUrl || bank.url;
+        return "<div class=\"iuBankCard\" data-fav-id=\"" + esc(id) + "\" data-bank-id=\"" + esc(id) + "\" data-bank-login-url=\"" + esc(loginUrl) + "\">" + btns + "<span class=\"iuBankIcon iuBankIconGold\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span><button type=\"button\" data-bank-id=\"" + esc(id) + "\" class=\"iuBankMiniActionBtn iuBankRemove\">ODEBRAT</button></div>";
       }).join("");
     }
 
@@ -12705,9 +12706,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       state.favorites = iuGetBanks();
       allGrid.innerHTML = list.map(function(bank) {
         const inFav = state.favorites.indexOf(bank.id) >= 0;
-        const btnClass = inFav ? "iuBankRemove" : "iuBankAdd";
-        const btnText = inFav ? "Odebrat" : "Přidat";
-        return "<div class=\"iuBankCard\" data-bank-id=\"" + esc(bank.id) + "\" data-bank-url=\"" + esc(bank.url) + "\"><span class=\"iuBankIcon\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel\">" + esc(bank.label) + "</span><button type=\"button\" data-bank-id=\"" + esc(bank.id) + "\" class=\"" + btnClass + "\">" + btnText + "</button></div>";
+        var loginUrl = bank.loginUrl || bank.url;
+        var btnClass = inFav ? "iuBankRemove" : "iuBankAdd";
+        var btnText = inFav ? "ODEBRAT" : "PŘIDAT";
+        return "<div class=\"iuBankCard\" data-bank-id=\"" + esc(bank.id) + "\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span><button type=\"button\" data-bank-id=\"" + esc(bank.id) + "\" class=\"iuBankMiniActionBtn " + btnClass + "\">" + btnText + "</button></div>";
       }).join("");
     }
 
@@ -12746,7 +12748,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           iuRenderBanks();
         }
       } else if (card && !editMode) {
-        const url = card.getAttribute("data-bank-url");
+        var url = card.getAttribute("data-bank-login-url");
         if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
       }
     });
@@ -12755,7 +12757,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (e.target.closest("button.iuBankRemove") || e.target.closest("button.iuBankAdd")) return;
       const card = e.target.closest(".iuBankCard");
       if (card && !editMode) {
-        const url = card.getAttribute("data-bank-url");
+        var url = card.getAttribute("data-bank-login-url");
         if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
       }
     });
@@ -12951,7 +12953,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (panel && panel.parentElement !== root) root.appendChild(panel);
 
     document.addEventListener("click", function(e) {
-      const id = e.target && e.target.dataset && e.target.dataset.bankId;
+      var id = e.target && e.target.dataset && e.target.dataset.bankId;
       if (id) {
         if (e.target.classList && e.target.classList.contains("iuBankRemove")) {
           iuRemoveBank(id);
