@@ -9084,20 +9084,6 @@ function buildVideoAsArticleCard(it) {
           <div class="iuQTitle">${iuQfEscape(data.title)}</div>
           <button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button>
         </div>
-        <div class="iuTrArea">
-          <h3 class="iuTrTitle">Vlož text</h3>
-          <textarea id="iuTrText" class="iuTrText" placeholder="Sem vlož text k překladu… (Ctrl+V)" rows="3"></textarea>
-          <div class="iuTrBar">
-            <span id="iuTrLang" class="iuTrStatus">Odhad jazyka: —</span>
-            <span class="iuTrHintMid">Klikni na překladač níže</span>
-            <span id="iuTrCount" class="iuTrCount">0 znaků</span>
-          </div>
-          <div class="iuTrUtils">
-            <button type="button" id="iuTrCopy" class="iuTrPill">Zkopírovat</button>
-            <button type="button" id="iuTrClear" class="iuTrPill">Vyčistit</button>
-          </div>
-          <p id="iuTrToast" class="iuTrToast" aria-live="polite"></p>
-        </div>
         <div class="iuQCard">
           <div class="iuQGrid">
             ${(data.items || []).map(it => `<a class="iuAiCard iuTrCard" data-tr-id="${iuQfEscape(it.id || it.name || "")}" href="${iuQfEscape(it.baseUrl || it.url || "#")}" target="_blank" rel="noopener noreferrer">
