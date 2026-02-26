@@ -2762,6 +2762,17 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   pointer-events: auto;
 }
 
+/* P0: Moje služby modal root (portal) — overlay + panel in body, no layout/CLS */
+#iuModalRoot {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+}
+#iuModalRoot > * {
+  pointer-events: auto;
+}
+
 /* P0: Moje služby modal — left/width set by JS from feed rect */
 #iu-mojeSluzbyOverlay {
   position: fixed;

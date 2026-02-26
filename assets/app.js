@@ -12436,22 +12436,46 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   let _mojeSluzbyResizeHandler = null;
   let _mojeSluzbyScrollHandler = null;
 
+  function ensureModalRoot() {
+    let root = document.getElementById("iuModalRoot");
+    if (root) return root;
+    root = document.createElement("div");
+    root.id = "iuModalRoot";
+    root.style.cssText = "position:fixed;inset:0;z-index:9998;pointer-events:none;";
+    document.body.appendChild(root);
+    return root;
+  }
+
+  function getFeedRect() {
+    const feed = document.getElementById("feed") || document.getElementById("iuCenterStage") || document.querySelector("main");
+    if (!feed) return null;
+    const r = feed.getBoundingClientRect();
+    return {
+      left: r.left,
+      width: r.width,
+      centerX: r.left + r.width / 2,
+      top: r.top,
+      bottom: r.bottom
+    };
+  }
+
   function iuPositionModalOverFeed(panelEl) {
     const overlay = document.getElementById("iu-mojeSluzbyOverlay");
     const panel = panelEl || document.getElementById("iu-mojeSluzbyPanel");
-    const feed = document.querySelector("#feed") || document.querySelector("#iuFeed") || document.querySelector(".iuFeed") || document.querySelector("main .feed") || document.getElementById("iuCenterStage");
-    if (!overlay || !panel || !feed) return;
-    const r = feed.getBoundingClientRect();
-    const topVal = Math.max(16, r.top + 24);
+    const feedRect = getFeedRect();
+    if (!overlay || !panel || !feedRect) return;
+    const topVal = Math.max(16, feedRect.top + 16);
     overlay.style.position = "fixed";
-    overlay.style.left = r.left + "px";
-    overlay.style.width = r.width + "px";
+    overlay.style.left = feedRect.left + "px";
+    overlay.style.width = feedRect.width + "px";
+    overlay.style.maxWidth = feedRect.width + "px";
     overlay.style.right = "auto";
     overlay.style.transform = "none";
     overlay.style.top = "0";
     panel.style.position = "fixed";
-    panel.style.left = r.left + "px";
-    panel.style.width = r.width + "px";
+    panel.style.left = feedRect.left + "px";
+    panel.style.width = feedRect.width + "px";
+    panel.style.maxWidth = feedRect.width + "px";
     panel.style.right = "auto";
     panel.style.transform = "none";
     panel.style.top = topVal + "px";
@@ -12701,16 +12725,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function init() {
-    let host = document.getElementById("iuModalHost");
-    if (!host) {
-      host = document.createElement("div");
-      host.id = "iuModalHost";
-      document.body.appendChild(host);
-    }
+    const root = ensureModalRoot();
     const overlay = document.getElementById("iu-mojeSluzbyOverlay");
     const panel = document.getElementById("iu-mojeSluzbyPanel");
-    if (overlay && overlay.parentElement !== host) host.appendChild(overlay);
-    if (panel && panel.parentElement !== host) host.appendChild(panel);
+    if (overlay && overlay.parentElement !== root) root.appendChild(overlay);
+    if (panel && panel.parentElement !== root) root.appendChild(panel);
 
     document.addEventListener("click", (e) => {
       const btn = e.target.closest && e.target.closest("[data-iu-modal]");
