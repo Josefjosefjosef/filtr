@@ -12445,3 +12445,24 @@ section.iu-mindmenu,
   min-width: 32px;
   min-height: 32px;
 }
+
+/* === AI karta – hover efekt zavíracího křížku (MIN-SCOPE) === */
+.iuAiClose{
+  transition: transform .15s ease,
+              box-shadow .15s ease,
+              color .15s ease,
+              background .15s ease;
+}
+.iuAiClose:hover{
+  transform: scale(1.15);
+  color: #ff4d6d;
+  background: radial-gradient(
+      circle at center,
+      rgba(255,77,109,0.15),
+      rgba(255,77,109,0.05) 60%,
+      transparent 70%
+  );
+  box-shadow:
+    0 0 6px rgba(255,77,109,.4),
+    0 0 12px rgba(255,77,109,.25);
+}
