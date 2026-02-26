@@ -51,8 +51,6 @@ function writeArtifact(name, lines) {
 async function main() {
   let BASE_URL = process.env.PROOF_BASE_URL || "";
   let staticServer = null;
-  const lines = [];
-  const out = (s) => { lines.push(s); console.log(s); };
 
   try {
     if (!BASE_URL.trim()) {
@@ -158,11 +156,12 @@ async function main() {
       "console_errors=" + consoleErrors.length,
       "pageerrors=" + pageErrors.length,
       "PASS=" + pass,
-      "SCOPE_FILES=assets/app.js,tools/proof_convert_ui_links.mjs"
+      "SCOPE_FILES=tools/proof_convert_ui_links.mjs"
     ];
-    outLines.forEach((line) => { lines.push(line); console.log(line); });
+    const content = outLines.join("\n") + "\n";
     writeArtifact("PROOF_CONVERT_UI_LINKS.txt", outLines);
     if (isProd) writeArtifact("AFTER_MERGE_PROOF_CONVERT_UI_LINKS.txt", outLines);
+    process.stdout.write(content);
 
     await browser.close();
     if (staticServer) try { staticServer.close(); } catch (_) {}
