@@ -77,11 +77,9 @@ async function main() {
           for (const e of list.getEntries()) {
             if (e.hadRecentInput) continue;
             window.__proofCls += (e.value || 0);
-            const entry = { value: e.value };
+            const entry = { value: e.value, hadRecentInput: e.hadRecentInput };
             if (e.sources && e.sources.length) {
-              entry.sources = e.sources.slice(0, 3).map((s) => ({
-                node: s.node ? { tagName: s.node.tagName, className: (s.node.className || "").slice(0, 80), id: (s.node.id || "").slice(0, 40) } : null,
-              }));
+              entry.sources = e.sources.slice(0, 5).map((s) => s.node ? { tagName: s.node.tagName, id: (s.node.id || "").slice(0, 40), className: (s.node.className || "").slice(0, 80) } : null);
             }
             window.__proofShiftEntries.push(entry);
           }
@@ -134,12 +132,10 @@ async function main() {
     out("mindmenu_height_after=" + Math.round(after.mindHeight));
     out("quicklinks_top_after=" + Math.round(after.quickLinksTop));
     out("console_errors_count=" + consoleErrors.length);
-    out("pageerror_count=" + pageErrors.length);
+    out("pageerrors_count=" + pageErrors.length);
 
     const heightShrunk = after.railHeight < before.railHeight || after.mindHeight < before.mindHeight;
     const quickLinksMovedUp = after.quickLinksTop < before.quickLinksTop;
-    const noConsoleError = consoleErrors.length === 0;
-    const noPageError = pageErrors.length === 0;
 
     if (clsLoad != null && clsLoad >= 0.001) {
       const entries = await page.evaluate(() => (window.__proofShiftEntries || []).slice(-10));
@@ -153,12 +149,15 @@ async function main() {
     out("height_shrunk=" + heightShrunk);
     out("quicklinks_moved_up=" + quickLinksMovedUp);
 
-    const clsLoadOk = clsLoad != null && clsLoad < 0.001;
-    const clsAfterOk = clsAfter != null && clsAfter < 0.001;
-    if (!clsLoadOk) throw new Error("CLS_LOAD must be 0.000000, got " + clsLoad);
-    if (!clsAfterOk) throw new Error("CLS_AFTER_REMOVE must be 0.000000, got " + clsAfter);
+    if (clsLoad == null || clsLoad >= 0.001) throw new Error("CLS_LOAD must be 0.000000, got " + clsLoad);
+    if (clsAfter == null || clsAfter >= 0.001) throw new Error("CLS_AFTER_REMOVE must be 0.000000, got " + clsAfter);
+    if (consoleErrors.length !== 0) throw new Error("console_errors_count must be 0, got " + consoleErrors.length);
+    if (pageErrors.length !== 0) throw new Error("pageerrors_count must be 0, got " + pageErrors.length);
+    if (!(before.buttonCount > after.buttonCount)) throw new Error("buttons_before must be > buttons_after");
+    if (!(after.mindHeight < before.mindHeight)) throw new Error("mindmenu_height_after must be < mindmenu_height_before");
+    if (!(after.quickLinksTop < before.quickLinksTop)) throw new Error("quicklinks_top_after must be < quicklinks_top_before");
 
-    const pass = heightShrunk && quickLinksMovedUp && noConsoleError && noPageError && clsLoadOk && clsAfterOk;
+    const pass = heightShrunk && quickLinksMovedUp;
     out("PASS=" + pass);
 
     writeArtifact("PROOF_MINDMENU_REMOVE_GAP.txt", lines.join("\r\n") + "\r\n");

@@ -1,0 +1,15 @@
+## Summary
+
+P0 MindMenu: při odebrání tlačítka se pravý sloupec okamžitě zmenší (bez mezery), Rychlé odkazy se posunou nahoru stejně jako při přidání. CLS=0.
+
+## What changed (min-scope)
+
+- assets/app.css: odstranění fixní min-height v MindMenu boxu (pravý rail může kolabovat)
+- assets/app.js: po add/remove tlačítka provést layout refresh bez animací
+- tools/proof_mindmenu_remove_gap.mjs: tvrdý důkaz (DOM+offset+CLS+console)
+
+## Gates
+
+- Diff pouze: assets/app.css, assets/app.js, tools/proof_mindmenu_remove_gap.mjs
+- console.error = 0, pageerror = 0
+- CLS = 0.000000 (load i po remove)
