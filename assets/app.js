@@ -9123,6 +9123,13 @@ function buildVideoAsArticleCard(it) {
           </div>
           <div class="iuNotesStatus" data-iu-notes-status hidden></div>
         </div>
+        <div class="iuTranslatorVideos" aria-label="Návody k překladačům">
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/6Z9wWc3Xh2A" title="Jak používat DeepL" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/GmX0xNqXg9Q" title="Jak používat Google Translate" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/qN5s3XyC9nE" title="Jak používat Microsoft Translator" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/H4K9yq5cR2U" title="Jak používat Seznam Slovník" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/7C2k8VgL1xE" title="Jak používat Linguee" loading="lazy" allowfullscreen></iframe></div>
+        </div>
       `;
       iuTrInit(quick, data);
       iuTrNotesBootstrap(quick);
