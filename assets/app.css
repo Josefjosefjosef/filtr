@@ -9668,6 +9668,17 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   overflow: visible !important;
 }
 
+/* P0: right rail collapses when MindMenu buttons removed — no gap; reserve space on load for CLS=0 */
+.layout > aside.accordionCol,
+.accordionCol .mindMenu{
+  height: auto !important;
+  min-height: 0 !important;
+}
+/* Allow mailboxes to shrink only after user has removed (JS adds .iu-mailboxes-can-shrink); keeps 255px on load for CLS=0 */
+.accordionCol .mindMenu .iu-mailboxes.iu-mailboxes-can-shrink{
+  min-height: 0 !important;
+}
+
 /* FINAL UI — SEO text blocks */
 .iuSeoTitle{
   font-size: 20px;

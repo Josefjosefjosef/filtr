@@ -7445,6 +7445,11 @@ function buildVideoAsArticleCard(it) {
     const controls = document.getElementById("iuMailboxControls");
     if (controls && controls.parentNode) controls.remove();
     const items = iuMailboxLoad();
+    const mailboxesEl = list.closest(".iu-mailboxes");
+    if (mailboxesEl) {
+      if (items.length < 4) mailboxesEl.classList.add("iu-mailboxes-can-shrink");
+      else mailboxesEl.classList.remove("iu-mailboxes-can-shrink");
+    }
     const frag = document.createDocumentFragment();
     items.forEach((it, i) => {
       const row = document.createElement("div");
@@ -7478,6 +7483,10 @@ function buildVideoAsArticleCard(it) {
       mailboxCount = items.length;
       iuUpdateMailboxControls(mailboxCount);
       iuPositionMailboxControls();
+      requestAnimationFrame(() => {
+        const rail = document.querySelector(".layout > aside.accordionCol");
+        if (rail) rail.style.height = "auto";
+      });
     });
 
     document.getElementById("iuMailboxRemove")?.addEventListener("click", () => {
@@ -7489,6 +7498,10 @@ function buildVideoAsArticleCard(it) {
       mailboxCount = items.length;
       iuUpdateMailboxControls(mailboxCount);
       iuPositionMailboxControls();
+      requestAnimationFrame(() => {
+        const rail = document.querySelector(".layout > aside.accordionCol");
+        if (rail) rail.style.height = "auto";
+      });
     });
 
     function iuMailboxOpenEditDialog(idx, it, onDone){
