@@ -9684,6 +9684,20 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   max-width: 820px;
 }
 
+.iu-video{
+  margin-top: 12px;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: var(--radius, 12px);
+  overflow: hidden;
+}
+.iu-video iframe{
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 .iuFeedSeoBlock{
   margin: 28px 0;
   padding: 20px;
