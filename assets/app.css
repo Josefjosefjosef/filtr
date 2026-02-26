@@ -2751,6 +2751,17 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   display: flex !important;
 }
 
+/* P0: Moje služby modal host in body — pointer-events pass-through for children */
+#iuModalHost {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+}
+#iuModalHost > * {
+  pointer-events: auto;
+}
+
 /* P0: Moje služby modal — left/width set by JS from feed rect */
 #iu-mojeSluzbyOverlay {
   position: fixed;

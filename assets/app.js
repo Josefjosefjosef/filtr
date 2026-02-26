@@ -12434,17 +12434,27 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
   let _mojeSluzbyResizeTimer = null;
   let _mojeSluzbyResizeHandler = null;
+  let _mojeSluzbyScrollHandler = null;
 
-  function iuMojeSluzbyModalPositionFeed() {
+  function iuPositionModalOverFeed(panelEl) {
     const overlay = document.getElementById("iu-mojeSluzbyOverlay");
-    const panel = document.getElementById("iu-mojeSluzbyPanel");
-    const feed = document.querySelector("#feed") || document.getElementById("iuCenterStage");
+    const panel = panelEl || document.getElementById("iu-mojeSluzbyPanel");
+    const feed = document.querySelector("#feed") || document.querySelector("#iuFeed") || document.querySelector(".iuFeed") || document.querySelector("main .feed") || document.getElementById("iuCenterStage");
     if (!overlay || !panel || !feed) return;
     const r = feed.getBoundingClientRect();
+    const topVal = Math.max(16, r.top + 24);
+    overlay.style.position = "fixed";
     overlay.style.left = r.left + "px";
     overlay.style.width = r.width + "px";
+    overlay.style.right = "auto";
+    overlay.style.transform = "none";
+    overlay.style.top = "0";
+    panel.style.position = "fixed";
     panel.style.left = r.left + "px";
     panel.style.width = r.width + "px";
+    panel.style.right = "auto";
+    panel.style.transform = "none";
+    panel.style.top = topVal + "px";
   }
 
   function openMojeSluzbyModal(kind) {
@@ -12463,12 +12473,16 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       window.iuSetElOpenVisible(overlay, true);
       window.iuSetElOpenVisible(panel, true);
     } else { overlay.hidden = false; panel.hidden = false; }
-    iuMojeSluzbyModalPositionFeed();
+    iuPositionModalOverFeed(panel);
     _mojeSluzbyResizeHandler = function() {
       if (_mojeSluzbyResizeTimer) clearTimeout(_mojeSluzbyResizeTimer);
-      _mojeSluzbyResizeTimer = setTimeout(iuMojeSluzbyModalPositionFeed, 100);
+      _mojeSluzbyResizeTimer = setTimeout(function() { iuPositionModalOverFeed(panel); }, 100);
+    };
+    _mojeSluzbyScrollHandler = function() {
+      requestAnimationFrame(function() { iuPositionModalOverFeed(panel); });
     };
     window.addEventListener("resize", _mojeSluzbyResizeHandler);
+    window.addEventListener("scroll", _mojeSluzbyScrollHandler, true);
     document.documentElement.style.overflow = "hidden";
     document.body.classList.add("iu-modal-open");
   }
@@ -12480,6 +12494,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (_mojeSluzbyResizeHandler) {
       window.removeEventListener("resize", _mojeSluzbyResizeHandler);
       _mojeSluzbyResizeHandler = null;
+    }
+    if (_mojeSluzbyScrollHandler) {
+      window.removeEventListener("scroll", _mojeSluzbyScrollHandler, true);
+      _mojeSluzbyScrollHandler = null;
     }
     if (_mojeSluzbyResizeTimer) { clearTimeout(_mojeSluzbyResizeTimer); _mojeSluzbyResizeTimer = null; }
     if (typeof window.iuSetElOpenVisible === "function") {
@@ -12683,6 +12701,17 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function init() {
+    let host = document.getElementById("iuModalHost");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "iuModalHost";
+      document.body.appendChild(host);
+    }
+    const overlay = document.getElementById("iu-mojeSluzbyOverlay");
+    const panel = document.getElementById("iu-mojeSluzbyPanel");
+    if (overlay && overlay.parentElement !== host) host.appendChild(overlay);
+    if (panel && panel.parentElement !== host) host.appendChild(panel);
+
     document.addEventListener("click", (e) => {
       const btn = e.target.closest && e.target.closest("[data-iu-modal]");
       if (!btn) return;
@@ -12691,9 +12720,6 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const kind = btn.getAttribute("data-iu-modal");
       if (kind) openMojeSluzbyModal(kind);
     });
-
-    const overlay = document.getElementById("iu-mojeSluzbyOverlay");
-    const panel = document.getElementById("iu-mojeSluzbyPanel");
     const closeBtn = panel && panel.querySelector("[data-iu-close]");
     if (overlay) overlay.addEventListener("click", closeMojeSluzbyModal);
     if (closeBtn) closeBtn.addEventListener("click", closeMojeSluzbyModal);
