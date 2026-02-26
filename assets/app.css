@@ -11848,6 +11848,17 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   border-radius: 12px;
   background: rgba(31,75,153,0.06);
 }
+
+/* Překladač — Poznámky: tmavě stříbrný pouze KONTEJNER (textarea beze změny) */
+#iuQuickFeed .iuNotes[data-iu-notes-key="translator"]{
+  background: rgba(140, 150, 165, 0.14);
+  border: 1px solid rgba(170, 180, 195, 0.28);
+  box-shadow:
+    0 10px 26px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  border-radius: var(--iuNotesRadius, 16px);
+}
+
 /* Psací pole beze změny — explicitně stejný vzhled jako před vybarvením kontejneru */
 #iuQuickFeed .iuNotes[data-iu-notes] .iuNotesText,
 #iuQuickFeed .iuNotes[data-iu-notes] [data-iu-notes-text]{
