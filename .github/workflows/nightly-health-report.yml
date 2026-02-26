@@ -26,9 +26,11 @@ jobs:
           HEAD_SHA="$(git rev-parse HEAD)"
           ORIGIN_MAIN_SHA="$(git rev-parse origin/main)"
 
-          echo "HEAD_SHA=$HEAD_SHA" | tee -a "$GITHUB_ENV"
-          echo "HEAD_SHA_SHORT=${HEAD_SHA:0:8}" | tee -a "$GITHUB_ENV"
-          echo "ORIGIN_MAIN_SHA=$ORIGIN_MAIN_SHA" | tee -a "$GITHUB_ENV"
+          {
+            echo "HEAD_SHA=$HEAD_SHA"
+            echo "HEAD_SHA_SHORT=$(git rev-parse --short HEAD)"
+            echo "ORIGIN_MAIN_SHA=$ORIGIN_MAIN_SHA"
+          } >> "$GITHUB_ENV"
 
           echo "HEAD_SHA=$HEAD_SHA"
           echo "ORIGIN_MAIN_SHA=$ORIGIN_MAIN_SHA"
