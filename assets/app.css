@@ -12731,7 +12731,76 @@ section.iu-mojeSluzby{
 }
 .iu-mojeSluzbyBakalariActions{
   display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.iu-bakalariSaveBtn{
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(180deg, #2a7de0, #1a5bb5);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(42,125,224,.35);
+  transition: .18s;
+}
+.iu-bakalariSaveBtn:hover:not(:disabled){
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(42,125,224,.45);
+}
+.iu-bakalariSaveBtn:disabled{
+  opacity: .5;
+  cursor: not-allowed;
+}
+.iu-bakalariSavedFeedback{
+  min-height: 1.2em;
+  opacity: 0;
+  transition: opacity .2s;
+  font-size: 13px;
+  color: #2a7de0;
+  pointer-events: none;
+}
+.iu-bakalariSavedFeedback--visible{
+  opacity: 1;
+}
+.iu-bakalariSavedSection{
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.iu-bakalariSavedLabel{
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 10px;
+}
+.iu-bakalariSavedChips{
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+}
+.iu-bakalariChip{
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.06);
+  color: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: .15s;
+}
+.iu-bakalariChip:hover{
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.3);
 }
 .iu-mojeSluzbyPojistovna{
   display: flex;
