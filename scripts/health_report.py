@@ -11,10 +11,16 @@ import argparse
 import json
 import os
 import re
+import subprocess
 from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
+
+try:
+    from zoneinfo import ZoneInfo
+except ImportError:
+    ZoneInfo = None  # type: ignore
 
 ROOT = Path(__file__).resolve().parent.parent
 REPORTS_DIR = ROOT / "reports"
@@ -47,6 +53,35 @@ def load_config() -> Dict[str, Any]:
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def get_head_sha() -> Tuple[Optional[str], Optional[str]]:
+    """Return (full_sha, short_sha) from env (CI) or git. (None, None) if unavailable."""
+    full = os.environ.get("HEAD_SHA")
+    short = os.environ.get("HEAD_SHA_SHORT")
+    if full and short:
+        return (full, short)
+    try:
+        full = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            cwd=ROOT,
+        ).stdout.strip() or None
+        short = (
+            subprocess.run(
+                ["git", "rev-parse", "--short", "HEAD"],
+                capture_output=True,
+                text=True,
+                timeout=5,
+                cwd=ROOT,
+            ).stdout.strip()
+            or None
+        )
+        return (full, short)
+    except (subprocess.SubprocessError, FileNotFoundError):
+        return (None, None)
 
 
 def date_str() -> str:
@@ -478,10 +513,44 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     return report
 
 
+def _format_report_metadata(report: Dict[str, Any]) -> str:
+    """Build proof header: Repo, Branch, Commit SHA, Run ID, Run URL, Generated at."""
+    repo = os.environ.get("GITHUB_REPOSITORY", "")
+    workflow = os.environ.get("GITHUB_WORKFLOW", "")
+    run_id = os.environ.get("GITHUB_RUN_ID", "")
+    run_number = os.environ.get("GITHUB_RUN_NUMBER", "")
+    head_full, head_short = get_head_sha()
+    lines = [
+        "Repo: " + (repo or "N/A"),
+        "Branch: main",
+        "Commit SHA: " + (f"{head_full} ({head_short})" if head_full and head_short else (head_full or "N/A")),
+        "Workflow: " + (workflow or "N/A"),
+        "Run ID: " + (run_id or "N/A"),
+        "Run number: " + (run_number or "N/A"),
+    ]
+    if repo and run_id:
+        lines.append("Run URL: https://github.com/" + repo + "/actions/runs/" + run_id)
+    else:
+        lines.append("Run URL: N/A")
+    ts_utc = report.get("timestamp") or now_iso()
+    try:
+        utc_dt = datetime.fromisoformat(ts_utc.replace("Z", "+00:00"))
+        if ZoneInfo:
+            prague_dt = utc_dt.astimezone(ZoneInfo("Europe/Prague"))
+            prague_str = prague_dt.strftime("%Y-%m-%d %H:%M:%S %Z")
+        else:
+            prague_str = ts_utc
+    except Exception:
+        prague_str = ts_utc
+    lines.append("Generated at: " + ts_utc + " UTC / Europe/Prague " + prague_str)
+    return "\n".join(lines) + "\n\n"
+
+
 def write_markdown(report: Dict[str, Any], path: Path) -> None:
     s = report["summary"]
     with open(path, "w", encoding="utf-8") as f:
         f.write("# INFOUZEL HEALTH REPORT\n\n")
+        f.write(_format_report_metadata(report))
         f.write(f"Date: {report['date']} (UTC) / Local: Europe/Prague\n\n")
         f.write("## Summary\n\n")
         f.write(f"Critical: {s['critical']}\n")

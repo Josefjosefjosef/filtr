@@ -14,6 +14,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: FRESHNESS GATE
+        run: |
+          git fetch origin main --prune
+          HEAD_SHA=$(git rev-parse HEAD)
+          ORIGIN_MAIN_SHA=$(git rev-parse origin/main)
+          if [ "$HEAD_SHA" != "$ORIGIN_MAIN_SHA" ]; then
+            echo "::error::FRESHNESS_GATE FAIL: HEAD ($HEAD_SHA) != origin/main ($ORIGIN_MAIN_SHA) — do not send email"
+            exit 1
+          fi
+          echo "HEAD_SHA=$HEAD_SHA" >> "$GITHUB_ENV"
+          echo "HEAD_SHA_SHORT=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+          echo "ORIGIN_MAIN_SHA=$ORIGIN_MAIN_SHA" >> "$GITHUB_ENV"
+          echo "HEAD_SHA=$HEAD_SHA"
+          echo "ORIGIN_MAIN_SHA=$ORIGIN_MAIN_SHA"
+          echo "FRESHNESS_GATE: PASS"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -56,6 +75,9 @@ jobs:
         run: node scripts/check_site.js
 
       - name: Run health_report.py
+        env:
+          HEAD_SHA: ${{ env.HEAD_SHA }}
+          HEAD_SHA_SHORT: ${{ env.HEAD_SHA_SHORT }}
         run: python3 scripts/health_report.py
 
       - name: Report output gates
@@ -64,6 +86,18 @@ jobs:
           test -f reports/latest.md
           grep -n "INFOUZEL HEALTH REPORT" reports/latest.md
           grep -n "^Critical:" reports/latest.md
+
+      - name: NO-STALE-SEND guard
+        run: |
+          if ! grep -q "Commit SHA: ${{ env.HEAD_SHA }}" reports/latest.md; then
+            echo "::error::NO-STALE-SEND FAIL: report does not contain Commit SHA: ${{ env.HEAD_SHA }}"
+            exit 1
+          fi
+          if ! grep -q "Run ID: ${{ github.run_id }}" reports/latest.md; then
+            echo "::error::NO-STALE-SEND FAIL: report does not contain Run ID: ${{ github.run_id }}"
+            exit 1
+          fi
+          echo "NO-STALE-SEND: PASS"
 
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
@@ -112,7 +146,7 @@ jobs:
           server_port: ${{ secrets.HEALTH_SMTP_PORT }}
           username: ${{ secrets.HEALTH_SMTP_USERNAME }}
           password: ${{ secrets.HEALTH_SMTP_PASSWORD }}
-          subject: "INFOUZEL HEALTH REPORT — ${{ steps.date.outputs.date }} ${{ steps.date.outputs.time_utc }} UTC"
+          subject: "INFOUZEL Health Report — ${{ steps.date.outputs.date }} — main ${{ env.HEAD_SHA_SHORT }} — run #${{ github.run_number }}"
           to: ${{ secrets.HEALTH_EMAIL_TO }}
           from: ${{ secrets.HEALTH_EMAIL_FROM }}
           body: file://reports/latest.md
