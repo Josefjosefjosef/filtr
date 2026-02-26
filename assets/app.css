@@ -11646,6 +11646,20 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   font-family: inherit;
   line-height: 1;
 }
+.iuQuickFeed .iuTrHeaderPreposlat{
+  padding: 6px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1;
+  border: 1px solid rgba(20,40,70,0.16);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  color: #111;
+}
+.iuQuickFeed .iuTrHeaderPreposlat:hover{
+  background: #f5f5f5;
+}
 
 .iuQuickFeed .iuQCard{
   background: #fff;
@@ -11826,11 +11840,11 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   min-height: 110px;
 }
 
-/* Překladač poznámky — pod kartami (card) */
+/* Překladač poznámky — pod kartami (card); rámeček = barva odkazů v sekci (accent) */
 #iuQuickFeed .iuNotes[data-iu-notes]{
   margin-top: 16px;
   padding: 10px 10px;
-  border: 2px solid var(--iuNotesAccent, #b9bcc2);
+  border: 2px solid rgba(31,75,153,0.5);
   border-radius: 12px;
   background: var(--iuNotesAccent, #b9bcc2);
 }
