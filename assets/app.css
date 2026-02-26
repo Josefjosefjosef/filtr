@@ -11879,6 +11879,32 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   background: #ffffff;
 }
 
+/* Překladač — videa: 2 sloupce desktop, 1 sloupec mobil, zmenšený blok, CLS=0 */
+#iuQuickFeed .iuTranslatorVideos{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 920px;
+  margin-inline: auto;
+  margin-top: 20px;
+}
+#iuQuickFeed .iuTranslatorVideos .iu-video{
+  margin-top: 0;
+  min-width: 0;
+}
+#iuQuickFeed .iuTranslatorVideos .iu-video iframe{
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  display: block;
+  vertical-align: top;
+}
+@media (max-width: 719px){
+  #iuQuickFeed .iuTranslatorVideos{
+    grid-template-columns: 1fr;
+  }
+}
+
 /* =============================== */
 /* TOPBAR — FINAL UI CONTRACT      */
 /* =============================== */
