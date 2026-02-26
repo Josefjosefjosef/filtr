@@ -11749,6 +11749,38 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   transition: box-shadow 0.18s ease, transform 0.18s ease;
 }
 
+/* Robust: convert card styles without .iuQuickFeed dependency */
+.iuConvertButtons{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 0;
+}
+.iuConvertButtons .iuBtn.iuConvert{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  min-height: 48px;
+  border-radius: 14px;
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+}
+.iuConvertShareBtn{
+  padding: 6px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  border: 1px solid rgba(20,40,70,0.16);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  cursor: pointer;
+}
+.iuConvertShareBtn:hover{
+  background: #f5f5f5;
+}
+
 .iuQuickFeed .iuQItem{
   display: flex;
   align-items: flex-start;
