@@ -138,6 +138,56 @@ img, svg, video, iframe{
 
 /* 3) Všechny obrázky, které mají mít pevný poměr stran, dostanou aspect-ratio přes třídy (viz níže) */
 
+/* ==== P0 CLS=0: stabilizace metrik (topbar + mailboxes + FA ikony) – min-scope, žádné barvy/spacing ==== */
+#iuTopbarDate,
+.iuTopbarDate{
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  min-width: 12ch;
+  min-width: 95px;
+}
+.iuTopbarDay{
+  display: inline-block;
+  min-width: 48px;
+}
+.iuTopbarNameday{
+  display: inline-block;
+  min-width: 8ch;
+}
+.iuTopbarSep{
+  display: inline-block;
+  min-width: 1ch;
+  width: 1ch;
+}
+#iuTopbarRight{
+  position: relative;
+  padding-right: 210px;
+}
+#iuTopbarToday{
+  position: absolute;
+  right: 0;
+  width: 274px;
+  min-width: 274px;
+  box-sizing: border-box;
+}
+.accordionCol .mindMenu .iu-mailboxes{
+  min-height: 255px;
+}
+i.fa-solid,
+i.fa-regular,
+i.fa-brands{
+  display: inline-block;
+  width: 1.25em;
+  text-align: center;
+  line-height: 1;
+}
+.iu-mmQuickLinks .iuIconTile > i{
+  display: inline-block;
+  width: 1.25em;
+  text-align: center;
+  line-height: 1;
+}
+
 /* ==== GLOBAL BACKGROUND LOCK (page + columns only) ==== */
 :root{
   --iu-bg-lock: var(--iu-page-bg);
