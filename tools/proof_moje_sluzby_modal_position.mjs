@@ -146,9 +146,10 @@ async function main() {
       parseFloat(cls) === 0;
     lines.push("PASS=" + allPass);
 
-    const content = lines.join("\n") + "\n";
-    process.stdout.write(content);
+    const NL = "\n";
+    for (const l of lines) process.stdout.write(String(l) + NL);
 
+    const content = lines.map(String).join("\n") + "\n";
     const artifactName = process.env.PROOF_BASE_URL ? "AFTER_MERGE_PROOF_modal_center.txt" : "PROOF_modal_center_LOCAL.txt";
     fs.mkdirSync(ARTIFACTS, { recursive: true });
     fs.writeFileSync(path.join(ARTIFACTS, artifactName), content, "utf8");
