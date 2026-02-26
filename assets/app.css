@@ -12621,6 +12621,8 @@ section.iu-mojeSluzby{
 /* MOJE BANKY – premium grid + glass cards (unikátní barvy jen zde) */
 :root{
   --iu-bank-accent: #3db3ff;
+  --iu-gold: #d4af37;
+  --iu-silver: #c0c0c0;
 }
 .iuBanksGrid{
   display: grid;
@@ -12649,6 +12651,9 @@ section.iu-mojeSluzby{
   margin-bottom: 6px;
   color: var(--iu-bank-accent);
 }
+.iuBankIconGold{
+  color: var(--iu-gold);
+}
 .iuBankLabel{
   min-height: 2em;
   display: flex;
@@ -12657,6 +12662,9 @@ section.iu-mojeSluzby{
   font-size: 12px;
   line-height: 1.2;
   color: inherit;
+}
+.iuBankLabelGold{
+  color: var(--iu-gold);
 }
 .iuBankCard button{
   width: 100%;
@@ -12671,6 +12679,22 @@ section.iu-mojeSluzby{
 }
 .iuBankCard button:hover{
   background: rgba(255,255,255,.18);
+}
+.iuBankMiniActionBtn{
+  width: auto;
+  min-width: 72px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--iu-silver);
+  background: transparent;
+  color: var(--iu-silver);
+  border-radius: 6px;
+  margin-top: 8px;
+}
+.iuBankMiniActionBtn:hover{
+  background: rgba(192,192,192,.15);
+  color: #e0e0e0;
 }
 
 .iu-mojeSluzbyFavGrid,
