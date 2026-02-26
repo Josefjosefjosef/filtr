@@ -12362,8 +12362,56 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 (function(){
   "use strict";
   const BANKS_KEY = "iu_moje_sluzby_banks_state_v1";
+  const IU_BANKS_KEY = "iuUserBanks";
   const BAKALARI_KEY = "iu_moje_sluzby_bakalari_v1";
   const POJISTOVNY_KEY = "iu_moje_sluzby_pojistovny_names_v1";
+
+  function iuGetBanks() {
+    try {
+      let arr = JSON.parse(localStorage.getItem(IU_BANKS_KEY) || "[]");
+      if (!Array.isArray(arr)) arr = [];
+      if (arr.length === 0) {
+        try {
+          const raw = localStorage.getItem(BANKS_KEY);
+          if (raw) {
+            const o = JSON.parse(raw);
+            if (o && Array.isArray(o.favorites) && o.favorites.length) {
+              arr = o.favorites;
+              localStorage.setItem(IU_BANKS_KEY, JSON.stringify(arr));
+            }
+          }
+        } catch (_) {}
+        if (arr.length === 0) {
+          arr = ["csas", "kb", "air"];
+          localStorage.setItem(IU_BANKS_KEY, JSON.stringify(arr));
+        }
+      }
+      return arr;
+    } catch (_) { return []; }
+  }
+  function iuSetBanks(arr) {
+    try { localStorage.setItem(IU_BANKS_KEY, JSON.stringify(arr)); } catch (_) {}
+  }
+  function iuAddBank(id) {
+    const banks = iuGetBanks();
+    if (!banks.includes(id)) {
+      banks.push(id);
+      iuSetBanks(banks);
+      iuRenderBanks();
+    }
+  }
+  function iuRemoveBank(id) {
+    const banks = iuGetBanks().filter(function(b) { return b !== id; });
+    iuSetBanks(banks);
+    iuRenderBanks();
+  }
+  function iuRenderBanks() {
+    const body = document.getElementById("iu-mojeSluzbyBody");
+    if (!body) return;
+    const panel = document.getElementById("iu-mojeSluzbyPanel");
+    if (!panel || !body.closest("#iu-mojeSluzbyPanel")) return;
+    renderBankaModal(body);
+  }
 
   const IU_BANKS_ALL = [
     { id: "csas", label: "ČSOB", url: "https://www.csob.cz/portal/", color: "#1a1a1a" },
@@ -12394,16 +12442,15 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function getBanksState() {
     try {
       const raw = localStorage.getItem(BANKS_KEY);
-      if (raw) {
-        const o = JSON.parse(raw);
-        if (o && Array.isArray(o.favorites)) return o;
-      }
+      const o = raw ? JSON.parse(raw) : null;
+      const customBanks = (o && Array.isArray(o.customBanks)) ? o.customBanks : [];
+      return { favorites: iuGetBanks(), customBanks: customBanks };
     } catch (_) {}
-    return { favorites: ["csas", "kb", "air"], customBanks: [] };
+    return { favorites: iuGetBanks(), customBanks: [] };
   }
 
   function setBanksState(s) {
-    try { localStorage.setItem(BANKS_KEY, JSON.stringify(s)); } catch (_) {}
+    try { localStorage.setItem(BANKS_KEY, JSON.stringify({ customBanks: (s && s.customBanks) ? s.customBanks : [] })); } catch (_) {}
   }
 
   function getBakalariState() {
@@ -12601,33 +12648,26 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
   function renderBankaModal(container) {
     const state = getBanksState();
-    const allBanks = IU_BANKS_ALL.concat(state.customBanks.map(c => ({ id: c.id, label: c.label, url: c.url, color: "#333" })));
+    state.favorites = iuGetBanks();
+    const allBanks = IU_BANKS_ALL.concat(state.customBanks.map(function(c) { return { id: c.id, label: c.label, url: c.url, color: "#333" }; }));
     const favIds = new Set(state.favorites);
     let editMode = false;
 
-    const persist = () => setBanksState({ favorites: state.favorites, customBanks: state.customBanks });
+    const persist = function() { setBanksState({ favorites: state.favorites, customBanks: state.customBanks }); };
 
-    const html = `
-      <div class="iu-mojeSluzbyBanka">
-        <div class="iu-mojeSluzbyBankaHead">
-          <button type="button" class="iu-mojeSluzbyEditToggle" data-edit-toggle>Upravit</button>
-        </div>
-        <div class="iu-mojeSluzbyBankaFav">
-          <h3>MOJE BANKY</h3>
-          <div class="iu-mmQuickGrid iu-mojeSluzbyFavGrid" data-fav-grid role="list"></div>
-        </div>
-        <div class="iu-mojeSluzbyBankaAll">
-          <h3>VŠECHNY BANKY</h3>
-          <input type="text" class="iu-mojeSluzbySearch" placeholder="Hledat banku" data-bank-search />
-          <div class="iu-mmQuickGrid iu-mojeSluzbyAllGrid" data-all-grid role="list"></div>
-        </div>
-        <div class="iu-mojeSluzbyBankaCustom">
-          <h3>Přidat vlastní banku</h3>
-          <input type="text" placeholder="Název" data-custom-name />
-          <input type="text" placeholder="URL (https://...)" data-custom-url />
-          <button type="button" data-custom-add>Přidat</button>
-        </div>
-      </div>`;
+    const html = [
+      "<div class=\"iu-mojeSluzbyBanka\">",
+      "  <div class=\"iu-mojeSluzbyBankaHead\"><button type=\"button\" class=\"iu-mojeSluzbyEditToggle\" data-edit-toggle>Upravit</button></div>",
+      "  <div class=\"iu-mojeSluzbyBankaFav\"><h3>MOJE BANKY</h3>",
+      "  <div class=\"iuBanksGrid iu-mojeSluzbyFavGrid\" data-fav-grid role=\"list\"></div></div>",
+      "  <div class=\"iu-mojeSluzbyBankaAll\"><h3>VŠECHNY BANKY</h3>",
+      "  <input type=\"text\" class=\"iu-mojeSluzbySearch\" placeholder=\"Hledat banku\" data-bank-search />",
+      "  <div class=\"iuBanksGrid iu-mojeSluzbyAllGrid\" data-all-grid role=\"list\"></div></div>",
+      "  <div class=\"iu-mojeSluzbyBankaCustom\"><h3>Přidat vlastní banku</h3>",
+      "  <input type=\"text\" placeholder=\"Název\" data-custom-name /><input type=\"text\" placeholder=\"URL (https://...)\" data-custom-url />",
+      "  <button type=\"button\" data-custom-add>Přidat</button></div>",
+      "</div>"
+    ].join("");
     container.innerHTML = html;
 
     const favGrid = container.querySelector("[data-fav-grid]");
@@ -12639,77 +12679,89 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const customAdd = container.querySelector("[data-custom-add]");
 
     function renderFav() {
-      favGrid.innerHTML = state.favorites.map((id, idx) => {
-        const bank = allBanks.find(b => b.id === id);
+      state.favorites = iuGetBanks();
+      favGrid.innerHTML = state.favorites.map(function(id, idx) {
+        const bank = allBanks.find(function(b) { return b.id === id; });
         if (!bank) return "";
-        const btns = editMode ? `<span class="iu-mojeSluzbyMoveBtns"><button type="button" data-move-left data-idx="${idx}" aria-label="Doleva">←</button><button type="button" data-move-right data-idx="${idx}" aria-label="Doprava">→</button></span>` : "";
-        return `<div class="iu-mojeSluzbyBankItem" data-fav-id="${esc(id)}">${btns}<button type="button" class="iu-mmQuickItem" data-bank-id="${esc(id)}" data-bank-url="${esc(bank.url)}"><span class="iuIconTile"><i class="fa-solid fa-building-columns"></i></span><span>${esc(bank.label)}</span></button></div>`;
+        const btns = editMode ? "<span class=\"iu-mojeSluzbyMoveBtns\"><button type=\"button\" data-move-left data-idx=\"" + idx + "\" aria-label=\"Doleva\">←</button><button type=\"button\" data-move-right data-idx=\"" + idx + "\" aria-label=\"Doprava\">→</button></span>" : "";
+        return "<div class=\"iuBankCard\" data-fav-id=\"" + esc(id) + "\" data-bank-id=\"" + esc(id) + "\" data-bank-url=\"" + esc(bank.url) + "\">" + btns + "<span class=\"iuBankIcon\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel\">" + esc(bank.label) + "</span><button type=\"button\" data-bank-id=\"" + esc(id) + "\" class=\"iuBankRemove\">Odebrat</button></div>";
       }).join("");
     }
 
     function renderAll(filter) {
       const q = (filter || "").toLowerCase().trim();
-      const list = allBanks.filter(b => !q || (b.label || "").toLowerCase().includes(q));
-      allGrid.innerHTML = list.map(bank => {
-        const inFav = favIds.has(bank.id);
-        return `<div class="iu-mojeSluzbyBankItem"><button type="button" class="iu-mmQuickItem" data-bank-id="${esc(bank.id)}" data-bank-url="${esc(bank.url)}"><span class="iuIconTile"><i class="fa-solid fa-building-columns"></i></span><span>${esc(bank.label)}</span></button><button type="button" class="iu-mojeSluzbyAddRemove" data-add-remove data-id="${esc(bank.id)}">${inFav ? "Odebrat" : "Přidat"}</button></div>`;
+      const list = allBanks.filter(function(b) { return !q || (b.label || "").toLowerCase().includes(q); });
+      state.favorites = iuGetBanks();
+      allGrid.innerHTML = list.map(function(bank) {
+        const inFav = state.favorites.indexOf(bank.id) >= 0;
+        const btnClass = inFav ? "iuBankRemove" : "iuBankAdd";
+        const btnText = inFav ? "Odebrat" : "Přidat";
+        return "<div class=\"iuBankCard\" data-bank-id=\"" + esc(bank.id) + "\" data-bank-url=\"" + esc(bank.url) + "\"><span class=\"iuBankIcon\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel\">" + esc(bank.label) + "</span><button type=\"button\" data-bank-id=\"" + esc(bank.id) + "\" class=\"" + btnClass + "\">" + btnText + "</button></div>";
       }).join("");
     }
 
     renderFav();
     renderAll();
 
-    editToggle.addEventListener("click", () => {
+    editToggle.addEventListener("click", function() {
       editMode = !editMode;
       editToggle.textContent = editMode ? "Hotovo" : "Upravit";
       renderFav();
     });
 
-    favGrid.addEventListener("click", (e) => {
+    favGrid.addEventListener("click", function(e) {
       const moveLeft = e.target.closest("[data-move-left]");
       const moveRight = e.target.closest("[data-move-right]");
-      const bankBtn = e.target.closest("[data-bank-id]");
+      if (e.target.closest("button.iuBankRemove")) return;
+      const card = e.target.closest(".iuBankCard");
       if (moveLeft) {
         const idx = parseInt(moveLeft.dataset.idx, 10);
-        if (idx > 0) { [state.favorites[idx], state.favorites[idx - 1]] = [state.favorites[idx - 1], state.favorites[idx]]; persist(); renderFav(); renderAll(); }
+        if (idx > 0) {
+          const fav = iuGetBanks().slice();
+          const t = fav[idx];
+          fav[idx] = fav[idx - 1];
+          fav[idx - 1] = t;
+          iuSetBanks(fav);
+          iuRenderBanks();
+        }
       } else if (moveRight) {
         const idx = parseInt(moveRight.dataset.idx, 10);
-        if (idx < state.favorites.length - 1) { [state.favorites[idx], state.favorites[idx + 1]] = [state.favorites[idx + 1], state.favorites[idx]]; persist(); renderFav(); renderAll(); }
-      } else if (bankBtn && !editMode) {
-        const url = bankBtn.dataset.bankUrl;
+        const fav = iuGetBanks().slice();
+        if (idx < fav.length - 1) {
+          const t = fav[idx];
+          fav[idx] = fav[idx + 1];
+          fav[idx + 1] = t;
+          iuSetBanks(fav);
+          iuRenderBanks();
+        }
+      } else if (card && !editMode) {
+        const url = card.getAttribute("data-bank-url");
         if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
       }
     });
 
-    allGrid.addEventListener("click", (e) => {
-      const addRemove = e.target.closest("[data-add-remove]");
-      const bankBtn = e.target.closest("[data-bank-id]");
-      if (addRemove) {
-        const id = addRemove.dataset.id;
-        const idx = state.favorites.indexOf(id);
-        if (idx >= 0) { state.favorites.splice(idx, 1); } else { state.favorites.push(id); }
-        favIds.clear(); state.favorites.forEach(x => favIds.add(x));
-        persist(); renderFav(); renderAll();
-      } else if (bankBtn && !editMode) {
-        const url = bankBtn.dataset.bankUrl;
+    allGrid.addEventListener("click", function(e) {
+      if (e.target.closest("button.iuBankRemove") || e.target.closest("button.iuBankAdd")) return;
+      const card = e.target.closest(".iuBankCard");
+      if (card && !editMode) {
+        const url = card.getAttribute("data-bank-url");
         if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
       }
     });
 
-    if (searchInput) searchInput.addEventListener("input", () => renderAll(searchInput.value));
+    if (searchInput) searchInput.addEventListener("input", function() { renderAll(searchInput.value); });
 
-    customAdd.addEventListener("click", () => {
+    customAdd.addEventListener("click", function() {
       const name = (customName.value || "").trim();
       const url = (customUrl.value || "").trim();
       if (!name || !url) return;
       if (!/^https?:\/\//i.test(url)) return;
       const id = "custom_" + Date.now();
-      state.customBanks.push({ id, label: name, url });
-      state.favorites.push(id);
-      favIds.add(id);
-      persist();
-      customName.value = ""; customUrl.value = "";
-      renderFav(); renderAll();
+      state.customBanks.push({ id: id, label: name, url: url });
+      setBanksState({ favorites: state.favorites, customBanks: state.customBanks });
+      iuAddBank(id);
+      customName.value = "";
+      customUrl.value = "";
     });
   }
 
@@ -12806,7 +12858,23 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (overlay && overlay.parentElement !== root) root.appendChild(overlay);
     if (panel && panel.parentElement !== root) root.appendChild(panel);
 
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", function(e) {
+      const id = e.target && e.target.dataset && e.target.dataset.bankId;
+      if (id) {
+        if (e.target.classList && e.target.classList.contains("iuBankRemove")) {
+          iuRemoveBank(id);
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        if (e.target.classList && e.target.classList.contains("iuBankAdd")) {
+          iuAddBank(id);
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+      }
+
       const btn = e.target.closest && e.target.closest("[data-iu-modal]");
       if (!btn) return;
       e.preventDefault();
