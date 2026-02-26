@@ -9180,6 +9180,31 @@ function buildVideoAsArticleCard(it) {
           iuForwardActionSameAsTranslator(text, preposlatBtn);
         });
       }
+    } else if (keyNorm === "convert") {
+      const shareBtnHtml = `<button type="button" class="iuConvertShareBtn iuQClose" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button>`;
+      quick.innerHTML = `
+        <div class="iuQHead">
+          <div class="iuQTitle">${iuQfEscape(data.title)}</div>
+          <div class="iuQHeadActions">${shareBtnHtml}<button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
+        </div>
+        <div class="iuQCard">
+          <div class="iuConvertButtons">
+            <a class="iuBtn iuConvert" href="https://www.ilovepdf.com/pdf_to_word" target="_blank" rel="noopener">PDF → Word</a>
+            <a class="iuBtn iuConvert" href="https://www.ilovepdf.com/word_to_pdf" target="_blank" rel="noopener">Word → PDF</a>
+            <a class="iuBtn iuConvert" href="https://www.ilovepdf.com/pdf_to_jpg" target="_blank" rel="noopener">PDF → JPG</a>
+            <a class="iuBtn iuConvert" href="https://smallpdf.com/jpg-to-pdf" target="_blank" rel="noopener">JPG → PDF</a>
+            <a class="iuBtn iuConvert" href="https://pdf24.org/en/merge-pdf" target="_blank" rel="noopener">Sloučit PDF</a>
+            <a class="iuBtn iuConvert" href="https://pdf24.org/en/compress-pdf" target="_blank" rel="noopener">Komprese PDF</a>
+            <a class="iuBtn iuConvert" href="https://www.adobe.com/acrobat/online/pdf-to-word.html" target="_blank" rel="noopener">Adobe PDF → Word</a>
+          </div>
+        </div>
+      `;
+      const convertShareBtn = quick.querySelector(".iuConvertShareBtn");
+      if (convertShareBtn && typeof window.iuForwardActionSameAsTranslator === "function") {
+        convertShareBtn.addEventListener("click", function () {
+          window.iuForwardActionSameAsTranslator("Převod na Word/PDF — infoUzel.cz https://infouzel.cz/", convertShareBtn);
+        });
+      }
     } else {
       const isAi = (key || "").toLowerCase() === "ai";
       const aiSeoBlock = isAi ? `

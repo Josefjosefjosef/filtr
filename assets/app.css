@@ -3400,6 +3400,21 @@ select.iuCtrl{
 .iuBtn:hover{
   filter: none;
 }
+
+/* Převod na Word/PDF — Deep Emerald Glass (unique brand) */
+:root{
+  --iu-convert-accent: #00c9a7;
+  --iu-convert-glow: rgba(0,201,167,0.35);
+}
+.iuBtn.iuConvert{
+  border-left: 4px solid var(--iu-convert-accent);
+  background: linear-gradient(180deg, #0f1a1a, #0b1212);
+}
+.iuBtn.iuConvert:hover{
+  box-shadow: 0 0 12px var(--iu-convert-glow);
+  transform: translateY(-1px);
+}
+
 .iuBtnGhost{
   background: transparent;
   color: rgba(11,27,43,0.92);
@@ -11646,6 +11661,20 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   background: #f5f5f5;
 }
 
+.iuQuickFeed .iuConvertShareBtn{
+  padding: 6px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  border: 1px solid rgba(20,40,70,0.16);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  cursor: pointer;
+}
+.iuQuickFeed .iuConvertShareBtn:hover{
+  background: #f5f5f5;
+}
+
 .iuQuickFeed .iuQTitle{
   font-weight: 800;
   font-size: 22px;
@@ -11699,6 +11728,25 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   grid-template-columns: 1fr;
   gap: 12px;
   margin-top: 12px;
+}
+
+.iuQuickFeed .iuConvertButtons{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 0;
+}
+
+.iuQuickFeed .iuConvertButtons .iuBtn.iuConvert{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  min-height: 48px;
+  border-radius: 14px;
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
 }
 
 .iuQuickFeed .iuQItem{
