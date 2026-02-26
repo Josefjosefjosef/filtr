@@ -56,6 +56,9 @@ _nightly_test/
 tools/verify-ai-close-x.mjs
 tools/verify-ai-close-x-prod.mjs
 
+# Local artifacts (proof TXTs; never commit; guard-clean-tree passes)
+artifacts/
+
 # Local artifacts
 tools/_artifacts_ai_close_x/
 tools/_artifacts/
