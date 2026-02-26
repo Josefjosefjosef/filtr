@@ -14,6 +14,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const ARTIFACTS = path.join(ROOT, "artifacts");
 
+function out(k, v) {
+  process.stdout.write(`${k}=${v}\n`);
+}
+
 function writeArtifact(name, lines) {
   fs.mkdirSync(ARTIFACTS, { recursive: true });
   const outPath = path.join(ARTIFACTS, name);
@@ -53,7 +57,6 @@ async function main() {
   let browser = null;
   let page = null;
   let staticServer = null;
-  const lines = [];
 
   try {
     let BASE_URL = process.env.PROOF_BASE_URL || "";
@@ -62,7 +65,6 @@ async function main() {
       staticServer = server;
       BASE_URL = `http://127.0.0.1:${port}/projects/`;
     }
-    lines.push("URL=" + BASE_URL);
 
     browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
@@ -129,27 +131,36 @@ async function main() {
       return out;
     });
 
-    lines.push("modal_parent_is_feed=" + result.modal_parent_is_feed);
-    lines.push("modal_not_in_rightRail=" + result.modal_not_in_rightRail);
-    lines.push("modal_within_feed_width=" + result.modal_within_feed_width);
-    lines.push("modal_center_x=" + result.modal_center_x);
-    lines.push("feed_center_x=" + result.feed_center_x);
-    lines.push("center_delta_px=" + result.center_delta_px);
-
     const cls = await page.evaluate(() => (window.__proofCls || 0).toFixed(6));
-    lines.push("CLS=" + cls);
-
     const allPass = result.modal_parent_is_feed &&
       result.modal_not_in_rightRail &&
       result.modal_within_feed_width &&
       result.modal_centered &&
       parseFloat(cls) === 0;
-    lines.push("PASS=" + allPass);
 
-    const NL = "\n";
-    for (const l of lines) process.stdout.write(String(l) + NL);
+    out("URL", BASE_URL);
+    out("modal_parent_is_feed", result.modal_parent_is_feed);
+    out("modal_not_in_rightRail", result.modal_not_in_rightRail);
+    out("modal_within_feed_width", result.modal_within_feed_width);
+    out("modal_center_x", result.modal_center_x);
+    out("feed_center_x", result.feed_center_x);
+    out("center_delta_px", result.center_delta_px);
+    out("CLS", cls);
+    out("PASS", allPass);
+    process.stdout.write("\n");
 
-    const content = lines.map(String).join("\n") + "\n";
+    const lines = [
+      "URL=" + BASE_URL,
+      "modal_parent_is_feed=" + result.modal_parent_is_feed,
+      "modal_not_in_rightRail=" + result.modal_not_in_rightRail,
+      "modal_within_feed_width=" + result.modal_within_feed_width,
+      "modal_center_x=" + result.modal_center_x,
+      "feed_center_x=" + result.feed_center_x,
+      "center_delta_px=" + result.center_delta_px,
+      "CLS=" + cls,
+      "PASS=" + allPass
+    ];
+    const content = lines.join("\n") + "\n";
     const artifactName = process.env.PROOF_BASE_URL ? "AFTER_MERGE_PROOF_modal_center.txt" : "PROOF_modal_center_LOCAL.txt";
     fs.mkdirSync(ARTIFACTS, { recursive: true });
     fs.writeFileSync(path.join(ARTIFACTS, artifactName), content, "utf8");
