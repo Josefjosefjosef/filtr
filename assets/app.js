@@ -7682,37 +7682,37 @@ function buildVideoAsArticleCard(it) {
       }
       try{ iuWeatherHideEmptyNameday(); }catch{}
       var _ndOrigin = typeof location !== "undefined" && location.origin ? location.origin : "";
-      var _ndLocal = _ndOrigin && (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(_ndOrigin) || _ndOrigin.indexOf("127.0.0.1") !== -1);
-      var _ndUrl = _ndLocal ? _ndOrigin + "/api/day" : "https://svatkyapi.netlify.app/api/day";
+      var _ndUrl = _ndOrigin ? _ndOrigin + "/projects/data/namedays.json" : "";
+      if (!_ndUrl) {
+        if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
+        try{ iuSetTopbarNameday(""); }catch{}
+        return;
+      }
       fetch(_ndUrl, { headers: { "accept": "application/json" }, cache: "no-store" })
-        .then(r => (r.ok ? r.json() : Promise.resolve(null))).catch(() => null)
-        .then(d => (d && typeof d === "object" ? d : null))
-        .then(d => {
-          const nm = (d && typeof d.name === "string") ? String(d.name).trim() : "";
-          const ok = Boolean(nm) && nm !== "—" && nm !== "-";
-          if (ok) {
-            if (elNameday) {
-              elNameday.textContent = "Svátek má " + nm;
-              elNameday.hidden = true;
-              elNameday.setAttribute("aria-hidden","true");
+        .then(r => { try { return r.ok ? r.json() : null; } catch { return null; } }).catch(function(){ return null; })
+        .then(function(d){
+          var nm = "";
+          try {
+            if (d && typeof d === "object" && !Array.isArray(d)) {
+              var now = new Date();
+              var m = (now.getMonth() + 1); var day = now.getDate();
+              var key = (m < 10 ? "0" : "") + m + "-" + (day < 10 ? "0" : "") + day;
+              var v = d[key];
+              if (typeof v === "string" && v.trim()) nm = v.trim();
             }
+          } catch (_) {}
+          var ok = Boolean(nm) && nm !== "—" && nm !== "-";
+          if (ok) {
+            if (elNameday) { elNameday.textContent = "Svátek má " + nm; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
             try{ iuSetTopbarNameday(nm); }catch{}
           } else {
-            if (elNameday) {
-              elNameday.textContent = "Svátek má —";
-              elNameday.hidden = true;
-              elNameday.setAttribute("aria-hidden","true");
-            }
+            if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
             try{ iuSetTopbarNameday(""); }catch{}
           }
           try{ iuWeatherHideEmptyNameday(); }catch{}
         })
-        .catch(() => {
-          if (elNameday) {
-            elNameday.textContent = "Svátek má —";
-            elNameday.hidden = true;
-            elNameday.setAttribute("aria-hidden","true");
-          }
+        .catch(function(){
+          if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
           try{ if (typeof iuSetTopbarNameday === "function") iuSetTopbarNameday(""); }catch{}
           try{ iuWeatherHideEmptyNameday(); }catch{}
         });
