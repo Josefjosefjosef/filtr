@@ -9123,6 +9123,40 @@ function buildVideoAsArticleCard(it) {
           </div>
           <div class="iuNotesStatus" data-iu-notes-status hidden></div>
         </div>
+        <section class="iuSeoText" aria-label="SEO text – Překladač">
+          <h2>Překladač online – překlad angličtiny, němčiny i dalších jazyků</h2>
+          <p>
+            Sekce Překladač na infoUzel.cz umožňuje rychlé přesměrování na známé
+            online překladače jako Google Překladač, DeepL, Seznam Překladač
+            a další jazykové nástroje. Můžete tak snadno přeložit texty
+            z angličtiny do češtiny, z češtiny do němčiny,
+            nebo mezi desítkami dalších jazyků.
+          </p>
+          <p>
+            infoUzel.cz funguje jako rozcestník – po kliknutí na překladač
+            se otevře oficiální stránka služby v nové kartě.
+            Můžete porovnat více překladačů a vybrat ten,
+            který vám dává nejlepší překlad.
+          </p>
+          <h3>Co v sekci Překladač najdete</h3>
+          <ul>
+            <li>Google Překladač – rychlé překlady vět a webových stránek</li>
+            <li>DeepL – velmi přesné překlady textů</li>
+            <li>Seznam Překladač – překlady s podporou češtiny</li>
+            <li>Další nástroje pro překlad dokumentů a vět</li>
+          </ul>
+          <h3>FAQ</h3>
+          <p><strong>Překládá infoUzel.cz text přímo?</strong><br>
+          Ne. infoUzel.cz pouze odkazuje na oficiální překladače,
+          které se otevřou v nové kartě.</p>
+        </section>
+        <div class="iuTranslatorVideos" aria-label="Návody k překladačům">
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/6Z9wWc3Xh2A" title="Jak používat DeepL" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/GmX0xNqXg9Q" title="Jak používat Google Translate" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/qN5s3XyC9nE" title="Jak používat Microsoft Translator" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/H4K9yq5cR2U" title="Jak používat Seznam Slovník" loading="lazy" allowfullscreen></iframe></div>
+          <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/7C2k8VgL1xE" title="Jak používat Linguee" loading="lazy" allowfullscreen></iframe></div>
+        </div>
       `;
       iuTrInit(quick, data);
       iuTrNotesBootstrap(quick);
