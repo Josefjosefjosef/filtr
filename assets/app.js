@@ -9706,8 +9706,8 @@ function buildVideoAsArticleCard(it) {
       return;
     }
 
-    // 2) Modal (#iu-aiPanel or .iuModal)
-    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel'));
+    // 2) Modal (#iu-aiPanel or .iuModal or #iu-mojeSluzbyPanel)
+    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel') || closeEl.closest('#iu-mojeSluzbyPanel'));
     if (modal) {
       if (modal.id === 'iu-aiPanel') {
         const ov = document.getElementById('iu-aiOverlay');
@@ -9719,6 +9719,8 @@ function buildVideoAsArticleCard(it) {
           modal.setAttribute('hidden', '');
         }
         document.documentElement.style.overflow = '';
+      } else if (modal.id === 'iu-mojeSluzbyPanel' && typeof window.iuCloseMojeSluzbyModal === 'function') {
+        window.iuCloseMojeSluzbyModal();
       } else {
         modal.setAttribute('hidden', '');
       }
@@ -12287,6 +12289,341 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }
   }
 })();
+
+// === MOJE SLUŽBY modaly (Banka, Bakaláři, Zdravotní pojišťovna) ===
+(function(){
+  "use strict";
+  const BANKS_KEY = "iu_moje_sluzby_banks_state_v1";
+  const BAKALARI_KEY = "iu_moje_sluzby_bakalari_v1";
+  const POJISTOVNY_KEY = "iu_moje_sluzby_pojistovny_names_v1";
+
+  const IU_BANKS_ALL = [
+    { id: "csas", label: "ČSOB", url: "https://www.csob.cz/portal/", color: "#1a1a1a" },
+    { id: "kb", label: "Komerční banka", url: "https://www.kb.cz/", color: "#c41230" },
+    { id: "air", label: "Air Bank", url: "https://www.airbank.cz/", color: "#e6007e" },
+    { id: "fio", label: "Fio banka", url: "https://www.fio.cz/", color: "#00a651" },
+    { id: "mb", label: "mBank", url: "https://www.mbank.cz/", color: "#e30613" },
+    { id: "rb", label: "Raiffeisenbank", url: "https://www.rb.cz/", color: "#ffed00" },
+    { id: "cs", label: "ČS", url: "https://www.csas.cz/", color: "#1a1a1a" },
+    { id: "moneta", label: "Moneta", url: "https://www.moneta.cz/", color: "#e30613" },
+    { id: "unicredit", label: "UniCredit", url: "https://www.unicreditbank.cz/", color: "#e30613" },
+    { id: "citi", label: "Citibank", url: "https://www.citibank.cz/", color: "#056da1" },
+    { id: "max", label: "Max banka", url: "https://www.maxbanka.cz/", color: "#00a651" },
+    { id: "equa", label: "Equa bank", url: "https://www.equabank.cz/", color: "#00a651" },
+    { id: "creditas", label: "Creditas", url: "https://www.creditas.cz/", color: "#1a1a1a" },
+    { id: "sberbank", label: "Sberbank", url: "https://www.sberbank.cz/", color: "#21a038" }
+  ];
+
+  const POJISTOVNY = [
+    { id: "vzp", label: "VZP", url: "https://www.vzp.cz/pojistenci/prihlaseni" },
+    { id: "ozp", label: "OZP", url: "https://www.ozp.cz/pojistenci/prihlaseni" },
+    { id: "zpmv", label: "ZPMV ČR (211)", url: "https://www.zpmvcr.cz/pojistenci/prihlaseni" },
+    { id: "vozp", label: "VoZP (201)", url: "https://www.vozp.cz/pojistenci/prihlaseni" },
+    { id: "cpzp", label: "ČPZP (205)", url: "https://www.cpzp.cz/pojistenci/prihlaseni" },
+    { id: "rbp", label: "RBP (213)", url: "https://www.rbp.cz/pojistenci/prihlaseni" }
+  ];
+
+  function getBanksState() {
+    try {
+      const raw = localStorage.getItem(BANKS_KEY);
+      if (raw) {
+        const o = JSON.parse(raw);
+        if (o && Array.isArray(o.favorites)) return o;
+      }
+    } catch (_) {}
+    return { favorites: ["csas", "kb", "air"], customBanks: [] };
+  }
+
+  function setBanksState(s) {
+    try { localStorage.setItem(BANKS_KEY, JSON.stringify(s)); } catch (_) {}
+  }
+
+  function getBakalariState() {
+    try {
+      const raw = localStorage.getItem(BAKALARI_KEY);
+      if (raw) {
+        const a = JSON.parse(raw);
+        if (Array.isArray(a) && a.length >= 5) return a.slice(0, 5);
+      }
+    } catch (_) {}
+    return [
+      { enabled: true, name: "", url: "" },
+      { enabled: false, name: "", url: "" },
+      { enabled: false, name: "", url: "" },
+      { enabled: false, name: "", url: "" },
+      { enabled: false, name: "", url: "" }
+    ];
+  }
+
+  function setBakalariState(a) {
+    try { localStorage.setItem(BAKALARI_KEY, JSON.stringify(a)); } catch (_) {}
+  }
+
+  function getPojistovnyNames() {
+    try {
+      const raw = localStorage.getItem(POJISTOVNY_KEY);
+      if (raw) {
+        const o = JSON.parse(raw);
+        if (o && typeof o === "object") return o;
+      }
+    } catch (_) {}
+    return {};
+  }
+
+  function setPojistovnyNames(o) {
+    try { localStorage.setItem(POJISTOVNY_KEY, JSON.stringify(o)); } catch (_) {}
+  }
+
+  function esc(s) { return String(s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+  function openMojeSluzbyModal(kind) {
+    const overlay = document.getElementById("iu-mojeSluzbyOverlay");
+    const panel = document.getElementById("iu-mojeSluzbyPanel");
+    const titleEl = document.getElementById("iu-mojeSluzbyTitle");
+    const bodyEl = document.getElementById("iu-mojeSluzbyBody");
+    if (!overlay || !panel || !bodyEl) return;
+    const titles = { banka: "Banka", bakalari: "Bakaláři", pojistovna: "Zdravotní pojišťovna" };
+    if (titleEl) titleEl.textContent = titles[kind] || kind;
+    bodyEl.innerHTML = "";
+    if (kind === "banka") renderBankaModal(bodyEl);
+    else if (kind === "bakalari") renderBakalariModal(bodyEl);
+    else if (kind === "pojistovna") renderPojistovnaModal(bodyEl);
+    if (typeof window.iuSetElOpenVisible === "function") {
+      window.iuSetElOpenVisible(overlay, true);
+      window.iuSetElOpenVisible(panel, true);
+    } else { overlay.hidden = false; panel.hidden = false; }
+    document.documentElement.style.overflow = "hidden";
+    document.body.classList.add("iu-modal-open");
+  }
+
+  function closeMojeSluzbyModal() {
+    const overlay = document.getElementById("iu-mojeSluzbyOverlay");
+    const panel = document.getElementById("iu-mojeSluzbyPanel");
+    if (!overlay || !panel) return;
+    if (typeof window.iuSetElOpenVisible === "function") {
+      window.iuSetElOpenVisible(panel, false);
+      window.iuSetElOpenVisible(overlay, false);
+    } else { overlay.hidden = true; panel.hidden = true; }
+    document.documentElement.style.overflow = "";
+    document.body.classList.remove("iu-modal-open");
+  }
+
+  function renderBankaModal(container) {
+    const state = getBanksState();
+    const allBanks = IU_BANKS_ALL.concat(state.customBanks.map(c => ({ id: c.id, label: c.label, url: c.url, color: "#333" })));
+    const favIds = new Set(state.favorites);
+    let editMode = false;
+
+    const persist = () => setBanksState({ favorites: state.favorites, customBanks: state.customBanks });
+
+    const html = `
+      <div class="iu-mojeSluzbyBanka">
+        <div class="iu-mojeSluzbyBankaHead">
+          <button type="button" class="iu-mojeSluzbyEditToggle" data-edit-toggle>Upravit</button>
+        </div>
+        <div class="iu-mojeSluzbyBankaFav">
+          <h3>MOJE BANKY</h3>
+          <div class="iu-mmQuickGrid iu-mojeSluzbyFavGrid" data-fav-grid role="list"></div>
+        </div>
+        <div class="iu-mojeSluzbyBankaAll">
+          <h3>VŠECHNY BANKY</h3>
+          <input type="text" class="iu-mojeSluzbySearch" placeholder="Hledat banku" data-bank-search />
+          <div class="iu-mmQuickGrid iu-mojeSluzbyAllGrid" data-all-grid role="list"></div>
+        </div>
+        <div class="iu-mojeSluzbyBankaCustom">
+          <h3>Přidat vlastní banku</h3>
+          <input type="text" placeholder="Název" data-custom-name />
+          <input type="text" placeholder="URL (https://...)" data-custom-url />
+          <button type="button" data-custom-add>Přidat</button>
+        </div>
+      </div>`;
+    container.innerHTML = html;
+
+    const favGrid = container.querySelector("[data-fav-grid]");
+    const allGrid = container.querySelector("[data-all-grid]");
+    const editToggle = container.querySelector("[data-edit-toggle]");
+    const searchInput = container.querySelector("[data-bank-search]");
+    const customName = container.querySelector("[data-custom-name]");
+    const customUrl = container.querySelector("[data-custom-url]");
+    const customAdd = container.querySelector("[data-custom-add]");
+
+    function renderFav() {
+      favGrid.innerHTML = state.favorites.map((id, idx) => {
+        const bank = allBanks.find(b => b.id === id);
+        if (!bank) return "";
+        const btns = editMode ? `<span class="iu-mojeSluzbyMoveBtns"><button type="button" data-move-left data-idx="${idx}" aria-label="Doleva">←</button><button type="button" data-move-right data-idx="${idx}" aria-label="Doprava">→</button></span>` : "";
+        return `<div class="iu-mojeSluzbyBankItem" data-fav-id="${esc(id)}">${btns}<button type="button" class="iu-mmQuickItem" data-bank-id="${esc(id)}" data-bank-url="${esc(bank.url)}"><span class="iuIconTile"><i class="fa-solid fa-building-columns"></i></span><span>${esc(bank.label)}</span></button></div>`;
+      }).join("");
+    }
+
+    function renderAll(filter) {
+      const q = (filter || "").toLowerCase().trim();
+      const list = allBanks.filter(b => !q || (b.label || "").toLowerCase().includes(q));
+      allGrid.innerHTML = list.map(bank => {
+        const inFav = favIds.has(bank.id);
+        return `<div class="iu-mojeSluzbyBankItem"><button type="button" class="iu-mmQuickItem" data-bank-id="${esc(bank.id)}" data-bank-url="${esc(bank.url)}"><span class="iuIconTile"><i class="fa-solid fa-building-columns"></i></span><span>${esc(bank.label)}</span></button><button type="button" class="iu-mojeSluzbyAddRemove" data-add-remove data-id="${esc(bank.id)}">${inFav ? "Odebrat" : "Přidat"}</button></div>`;
+      }).join("");
+    }
+
+    renderFav();
+    renderAll();
+
+    editToggle.addEventListener("click", () => {
+      editMode = !editMode;
+      editToggle.textContent = editMode ? "Hotovo" : "Upravit";
+      renderFav();
+    });
+
+    favGrid.addEventListener("click", (e) => {
+      const moveLeft = e.target.closest("[data-move-left]");
+      const moveRight = e.target.closest("[data-move-right]");
+      const bankBtn = e.target.closest("[data-bank-id]");
+      if (moveLeft) {
+        const idx = parseInt(moveLeft.dataset.idx, 10);
+        if (idx > 0) { [state.favorites[idx], state.favorites[idx - 1]] = [state.favorites[idx - 1], state.favorites[idx]]; persist(); renderFav(); renderAll(); }
+      } else if (moveRight) {
+        const idx = parseInt(moveRight.dataset.idx, 10);
+        if (idx < state.favorites.length - 1) { [state.favorites[idx], state.favorites[idx + 1]] = [state.favorites[idx + 1], state.favorites[idx]]; persist(); renderFav(); renderAll(); }
+      } else if (bankBtn && !editMode) {
+        const url = bankBtn.dataset.bankUrl;
+        if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
+      }
+    });
+
+    allGrid.addEventListener("click", (e) => {
+      const addRemove = e.target.closest("[data-add-remove]");
+      const bankBtn = e.target.closest("[data-bank-id]");
+      if (addRemove) {
+        const id = addRemove.dataset.id;
+        const idx = state.favorites.indexOf(id);
+        if (idx >= 0) { state.favorites.splice(idx, 1); } else { state.favorites.push(id); }
+        favIds.clear(); state.favorites.forEach(x => favIds.add(x));
+        persist(); renderFav(); renderAll();
+      } else if (bankBtn && !editMode) {
+        const url = bankBtn.dataset.bankUrl;
+        if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
+      }
+    });
+
+    if (searchInput) searchInput.addEventListener("input", () => renderAll(searchInput.value));
+
+    customAdd.addEventListener("click", () => {
+      const name = (customName.value || "").trim();
+      const url = (customUrl.value || "").trim();
+      if (!name || !url) return;
+      if (!/^https?:\/\//i.test(url)) return;
+      const id = "custom_" + Date.now();
+      state.customBanks.push({ id, label: name, url });
+      state.favorites.push(id);
+      favIds.add(id);
+      persist();
+      customName.value = ""; customUrl.value = "";
+      renderFav(); renderAll();
+    });
+  }
+
+  function renderBakalariModal(container) {
+    let slots = getBakalariState();
+    const persist = () => setBakalariState(slots);
+
+    const html = `
+      <div class="iu-mojeSluzbyBakalari">
+        <div class="iu-mojeSluzbyBakalariSlots" data-slots></div>
+        <div class="iu-mojeSluzbyBakalariActions">
+          <button type="button" data-add-slot>Přidat</button>
+          <button type="button" data-remove-slot>Odebrat</button>
+        </div>
+      </div>`;
+    container.innerHTML = html;
+
+    const slotsEl = container.querySelector("[data-slots]");
+    const addBtn = container.querySelector("[data-add-slot]");
+    const removeBtn = container.querySelector("[data-remove-slot]");
+
+    function renderSlots() {
+      slotsEl.innerHTML = slots.map((s, i) => {
+        if (!s.enabled) return `<div class="iu-mojeSluzbyBakalariSlot" data-slot="${i}" style="display:none"><input placeholder="Jméno dítěte" data-name value="${esc(s.name)}" /><input placeholder="URL" data-url value="${esc(s.url)}" /></div>`;
+        return `<div class="iu-mojeSluzbyBakalariSlot" data-slot="${i}"><span class="iuIconTile"><i class="fa-solid fa-graduation-cap"></i></span><input placeholder="Jméno dítěte" data-name value="${esc(s.name)}" /><input placeholder="URL (https://...)" data-url value="${esc(s.url)}" /></div>`;
+      }).join("");
+      slotsEl.querySelectorAll("[data-name]").forEach((inp, i) => { const s = slots[i]; if (s) inp.value = s.name; inp.addEventListener("input", () => { if (slots[i]) { slots[i].name = inp.value; persist(); } }); });
+      slotsEl.querySelectorAll("[data-url]").forEach((inp, i) => { const s = slots[i]; if (s) inp.value = s.url; inp.addEventListener("input", () => { if (slots[i]) { slots[i].url = inp.value; persist(); } }); });
+      slotsEl.querySelectorAll(".iu-mojeSluzbyBakalariSlot").forEach((div, i) => {
+        if (!slots[i] || !slots[i].enabled) return;
+        div.addEventListener("click", (e) => {
+          if (e.target.tagName === "INPUT") return;
+          const url = (slots[i].url || "").trim();
+          if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
+        });
+      });
+    }
+
+    addBtn.addEventListener("click", () => {
+      const firstDisabled = slots.findIndex(s => !s.enabled);
+      if (firstDisabled >= 0) { slots[firstDisabled].enabled = true; persist(); renderSlots(); }
+    });
+
+    removeBtn.addEventListener("click", () => {
+      const enabledIdxs = slots.map((s, i) => s.enabled ? i : -1).filter(i => i >= 0);
+      if (enabledIdxs.length <= 1) return;
+      const last = enabledIdxs[enabledIdxs.length - 1];
+      slots[last].enabled = false; slots[last].name = ""; slots[last].url = "";
+      persist(); renderSlots();
+    });
+
+    renderSlots();
+  }
+
+  function renderPojistovnaModal(container) {
+    const names = getPojistovnyNames();
+
+    const html = `
+      <div class="iu-mojeSluzbyPojistovna">
+        ${POJISTOVNY.map(p => `
+          <div class="iu-mojeSluzbyPojistovnaItem" data-id="${esc(p.id)}">
+            <span class="iuIconTile"><i class="fa-solid fa-heart-pulse"></i></span>
+            <span><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.label)}</a></span>
+            <input type="text" placeholder="Jméno" data-poj-name value="${esc(names[p.id] || "")}" />
+          </div>
+        `).join("")}
+      </div>`;
+    container.innerHTML = html;
+
+    container.querySelectorAll("[data-poj-name]").forEach(inp => {
+      const item = inp.closest("[data-id]");
+      if (!item) return;
+      const id = item.dataset.id;
+      inp.addEventListener("change", () => {
+        const n = getPojistovnyNames();
+        n[id] = inp.value.trim();
+        setPojistovnyNames(n);
+      });
+    });
+  }
+
+  function init() {
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest && e.target.closest("[data-iu-modal]");
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const kind = btn.getAttribute("data-iu-modal");
+      if (kind) openMojeSluzbyModal(kind);
+    });
+
+    const overlay = document.getElementById("iu-mojeSluzbyOverlay");
+    const panel = document.getElementById("iu-mojeSluzbyPanel");
+    const closeBtn = panel && panel.querySelector("[data-iu-close]");
+    if (overlay) overlay.addEventListener("click", closeMojeSluzbyModal);
+    if (closeBtn) closeBtn.addEventListener("click", closeMojeSluzbyModal);
+    if (panel) panel.addEventListener("click", (e) => { if (e.target === panel) closeMojeSluzbyModal(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMojeSluzbyModal(); });
+    try { window.iuCloseMojeSluzbyModal = closeMojeSluzbyModal; } catch (_) {}
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+
 } catch(e) {
   console.error("IU SAFE BOOT ERROR:", e);
 }

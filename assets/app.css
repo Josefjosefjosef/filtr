@@ -12533,3 +12533,95 @@ section.iu-mindmenu,
   outline-offset: 2px;
   box-shadow: 0 0 8px rgba(255,77,109,.25);
 }
+
+/* === MOJE SLUŽBY (P0 min-scope: spacing + modal layout only) === */
+section.iu-mojeSluzby{
+  margin-top: var(--iu-mind-gap, 10px);
+  margin-bottom: var(--iu-mind-gap, 10px);
+}
+.iu-mojeSluzbyBanka,
+.iu-mojeSluzbyBakalari,
+.iu-mojeSluzbyPojistovna{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.iu-mojeSluzbyBankaHead{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.iu-mojeSluzbyFavGrid,
+.iu-mojeSluzbyAllGrid{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.iu-mojeSluzbyBankItem{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.iu-mojeSluzbyMoveBtns{
+  display: inline-flex;
+  gap: 2px;
+}
+.iu-mojeSluzbyMoveBtns button{
+  padding: 2px 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.iu-mojeSluzbyAddRemove{
+  padding: 2px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.iu-mojeSluzbySearch{
+  padding: 6px 10px;
+  width: 100%;
+  max-width: 240px;
+}
+.iu-mojeSluzbyBankaCustom{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+}
+.iu-mojeSluzbyBankaCustom input{
+  padding: 6px 10px;
+  min-width: 100px;
+}
+.iu-mojeSluzbyBakalariSlots{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.iu-mojeSluzbyBakalariSlot{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.iu-mojeSluzbyBakalariSlot input{
+  flex: 1;
+  min-width: 0;
+  padding: 6px 10px;
+}
+.iu-mojeSluzbyBakalariActions{
+  display: flex;
+  gap: 8px;
+}
+.iu-mojeSluzbyPojistovna{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.iu-mojeSluzbyPojistovnaItem{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.iu-mojeSluzbyPojistovnaItem input{
+  flex: 1;
+  min-width: 80px;
+  padding: 6px 10px;
+}
