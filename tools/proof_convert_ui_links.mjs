@@ -159,9 +159,16 @@ async function main() {
       "SCOPE_FILES=tools/proof_convert_ui_links.mjs"
     ];
     const content = outLines.join("\n") + "\n";
+    const chatFence = "text\n" + content + "\n";
     writeArtifact("PROOF_CONVERT_UI_LINKS.txt", outLines);
     if (isProd) writeArtifact("AFTER_MERGE_PROOF_CONVERT_UI_LINKS.txt", outLines);
-    process.stdout.write(content);
+    const NL = "\n";
+    for (const l of outLines) process.stdout.write(String(l) + NL);
+    process.stdout.write(NL);
+    process.stdout.write("===== CHAT_FENCE (copy from below) =====\n");
+    process.stdout.write(chatFence);
+    process.stdout.write("===== /CHAT_FENCE =====\n");
+    process.stdout.write("Clean: Remove-Item artifacts\\PROOF_CONVERT_UI_LINKS.txt, artifacts\\AFTER_MERGE_PROOF_CONVERT_UI_LINKS.txt -ErrorAction SilentlyContinue\n");
 
     await browser.close();
     if (staticServer) try { staticServer.close(); } catch (_) {}
