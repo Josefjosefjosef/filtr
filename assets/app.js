@@ -8975,7 +8975,17 @@ function buildVideoAsArticleCard(it) {
     seznam: { title: "Seznam", items: [{ name: "Seznam.cz", url: "https://www.seznam.cz/", desc: "Vyhledávač a portál Seznam", external: true }] },
     youtube: { title: "YouTube", items: [{ name: "YouTube", url: "https://www.youtube.com/", desc: "Videa a streamy", external: true }] },
     sms: { title: "Poslat SMS zdarma", items: [{ name: "SMS zdarma", url: "https://www.smszdarma.cz", desc: "Posílání SMS zdarma", external: true }] },
-    convert: { title: "Převod na Word, PDF", items: [{ name: "iLovePDF", url: "https://www.ilovepdf.com", desc: "Převod a úprava PDF, Word a dalších formátů", external: true }] },
+    convert: {
+      title: "Převod na Word, PDF",
+      items: [
+        { name: "PDF → Word", url: "https://www.ilovepdf.com/pdf_to_word", external: true },
+        { name: "Word → PDF", url: "https://www.ilovepdf.com/word_to_pdf", external: true },
+        { name: "PDF → JPG", url: "https://www.ilovepdf.com/pdf_to_jpg", external: true },
+        { name: "JPG → PDF", url: "https://smallpdf.com/jpg-to-pdf", external: true },
+        { name: "Sloučit PDF", url: "https://pdf24.org/en/merge-pdf", external: true },
+        { name: "Komprese PDF", url: "https://pdf24.org/en/compress-pdf", external: true }
+      ]
+    },
     nakup: {
       title: "Nákup domů",
       items: [
@@ -9101,7 +9111,8 @@ function buildVideoAsArticleCard(it) {
     stage.setAttribute("data-iu-view", "quick");
     quick.hidden = false;
     const isTranslator = String(key || "").toLowerCase() === "deepl";
-    const useFullCard = ["ai", "deepl"].includes(String(key || "").toLowerCase());
+    const isConvert = String(key || "").toLowerCase() === "convert";
+    const useFullCard = ["ai", "deepl", "convert"].includes(String(key || "").toLowerCase());
 
     if (isTranslator) {
       quick.innerHTML = `
@@ -9182,6 +9193,7 @@ function buildVideoAsArticleCard(it) {
       }
     } else {
       const isAi = (key || "").toLowerCase() === "ai";
+      const shareBtnHtml = (isAi || isConvert) ? `<button type="button" class="iuAiShareBtn iuQClose" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button>` : "";
       const aiSeoBlock = isAi ? `
         <div class="iuFeedSeoBlock iuFeedSeoAI">
           <h2>AI asistenti – přehled nástrojů ChatGPT, Gemini, Copilot a další</h2>
@@ -9213,13 +9225,15 @@ function buildVideoAsArticleCard(it) {
       const renderCards = (items) => {
         const arr = items || data.items || [];
         const isAi = (key || "").toLowerCase() === "ai";
+        const isConvertKey = (key || "").toLowerCase() === "convert";
         return arr.map(it => {
           const url = iuQfEscape(it.url || it.baseUrl || "#");
           const ext = (it.external !== false) ? 'target="_blank" rel="noopener noreferrer"' : "";
           const c = it.color || "#1F4B99";
           const style = isAi ? `--aiFeedColor:${CHATGPT_AI_COLOR}` : `--aiColor:${c}`;
+          const cardClass = useFullCard ? "iuAiCard" + (isConvertKey ? " iuConvert" : "") : "";
           if (useFullCard) {
-            return `<a class="iuAiCard" href="${url}" ${ext} style="${style}">
+            return `<a class="${cardClass}" href="${url}" ${ext} style="${style}">
               <div class="iuAiInner">
                 <div class="iuAiName">${iuQfEscape(it.name)}</div>
                 ${it.desc ? `<div class="iuAiDesc">${iuQfEscape(it.desc)}</div>` : ""}
@@ -9236,7 +9250,6 @@ function buildVideoAsArticleCard(it) {
         }).join("");
       };
       const doRender = (services) => {
-        const shareBtnHtml = isAi ? `<button type="button" class="iuAiShareBtn iuQClose" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button>` : "";
         quick.innerHTML = `
           <div class="iuQHead">
             <div class="iuQTitle">${iuQfEscape(data.title)}</div>
@@ -9595,13 +9608,26 @@ function buildVideoAsArticleCard(it) {
   const SHARE_TEXT = "AI asistenti na infoUzel.cz";
 
   async function onShareAiTab(){
+    var btn = document.getElementById("iuAiShareBtn") || document.querySelector("#iuQuickFeed .iuAiShareBtn");
+    var quick = document.getElementById("iuQuickFeed");
+    var titleEl = quick && quick.querySelector(".iuQTitle");
+    var title = titleEl ? (titleEl.textContent || "").trim() : "";
+    var isConvert = title.indexOf("Převod") !== -1;
+    if (isConvert && typeof window.iuForwardActionSameAsTranslator === "function") {
+      var convertText = "Převod Word/PDF – nástroje";
+      if (typeof window.__iuShareTestOverride === "function") {
+        try { await window.__iuShareTestOverride({ title: "infoUzel.cz – Převod Word/PDF", text: convertText, url: "https://www.infouzel.cz/" }); } catch (_) {}
+        return;
+      }
+      window.iuForwardActionSameAsTranslator(convertText, btn || undefined);
+      return;
+    }
     if (typeof window.__iuShareTestOverride === "function") {
       try {
         await window.__iuShareTestOverride({ title: SHARE_TITLE, text: SHARE_TEXT, url: SHARE_URL });
       } catch (_) {}
       return;
     }
-    var btn = document.getElementById("iuAiShareBtn") || document.querySelector("#iuQuickFeed .iuAiShareBtn");
     var aiText = SHARE_TEXT + " " + SHARE_URL;
     if (typeof window.iuForwardActionSameAsTranslator === "function") {
       window.iuForwardActionSameAsTranslator(aiText, btn || undefined);

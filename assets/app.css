@@ -66,6 +66,10 @@
   /* AI sekce — nová unikátní barva, nepoužívat jinde */
   --iu-ai-accent: #6F3CFF;
 
+  /* Převod Word/PDF — unikátní accent (nikde jinde) */
+  --iu-convert-accent: #00c9a7;
+  --iu-convert-glow: rgba(0,201,167,.35);
+
   /* zlaté systémy */
   --gold-main: #C9A24D;
   --gold-soft: rgba(201,162,77,0.35);
@@ -11767,6 +11771,21 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 .iuQuickFeed .iuAiCard:focus-visible{
   outline: 2px solid rgba(31,75,153,0.5);
   outline-offset: 2px;
+}
+
+.iuQuickFeed .iuAiCard.iuConvert{
+  border-left: 4px solid var(--iu-convert-accent);
+}
+.iuQuickFeed .iuAiCard.iuConvert:hover,
+.iuQuickFeed .iuAiCard.iuConvert:focus-visible{
+  box-shadow: 0 0 12px var(--iu-convert-glow);
+}
+
+.iuBtn.iuConvert{
+  border-left: 4px solid var(--iu-convert-accent);
+}
+.iuBtn.iuConvert:hover{
+  box-shadow: 0 0 12px var(--iu-convert-glow);
 }
 
 .iuQuickFeed .iuAiInner{
