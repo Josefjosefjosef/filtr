@@ -12411,3 +12411,12 @@ section.iu-mindmenu,
   min-width: 0;
   flex: 0 0 auto;
 }
+
+/* === P0 Topbar: date/nameday nikdy nezmizí (včetně mobile) === */
+@media (max-width: 900px){
+  #iuTopbarToday{
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}

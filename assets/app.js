@@ -573,7 +573,7 @@ try {
   }
 
   // Feature flags
-  const IU_ENABLE_NAMEDAY = false; // hard off: no request, no DOM update
+  const IU_ENABLE_NAMEDAY = true; // P0: topbar "Kdo má dnes svátek"
   // FEED VIDEO EVERY 8 (YouTube preview card, lazy embed)
   const IU_FEED_VIDEO_ENABLED = true;
   const IU_FEED_VIDEO_EVERY = 8;
@@ -7714,6 +7714,14 @@ function buildVideoAsArticleCard(it) {
         });
     }
     updateNameday();
+    (function scheduleNamedayMidnight(){
+      const toNext001 = function(){
+        const n = new Date();
+        const next = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1, 0, 1, 0, 0);
+        return Math.max(60000, next - n);
+      };
+      setTimeout(function run(){ updateNameday(); setTimeout(run, 24*60*60*1000); }, toNext001());
+    })();
 
     // WEATHER (Open-Meteo) + hourly strip + min/max
     const city = iuWeatherGetActiveCity();
