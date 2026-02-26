@@ -144,6 +144,11 @@ img, svg, video, iframe{
   display: inline-block;
   font-variant-numeric: tabular-nums;
   min-width: 12ch;
+  min-width: 95px; /* P0 CLS: reserve final width so no reflow (90→94px seen in DIAG) */
+}
+.iuTopbarDay{
+  display: inline-block;
+  min-width: 48px; /* P0 CLS: reserve so date/nameday do not shift right (24px delta in DIAG) */
 }
 .iuTopbarNameday{
   display: inline-block;
@@ -153,6 +158,22 @@ img, svg, video, iframe{
   display: inline-block;
   min-width: 1ch;
   width: 1ch;
+}
+/* P0 CLS: anchor today block to right so it does not shift when left content (e.g. search) gets final width */
+#iuTopbarRight{
+  position: relative;
+  padding-right: 210px;
+}
+#iuTopbarToday{
+  position: absolute;
+  right: 0;
+  width: 274px; /* P0 CLS: fixed width so no reflow (251→273 seen in DIAG) */
+  min-width: 274px;
+  box-sizing: border-box;
+}
+/* P0 CLS: reserve height for mailboxes block so QuickLinks does not shift on JS fill (347→430 = 83px extra) */
+.accordionCol .mindMenu .iu-mailboxes{
+  min-height: 255px;
 }
 
 /* P0 CLS: FontAwesome ikony – fixní slot (bez mikro-shiftů při font swap) */
