@@ -9185,11 +9185,7 @@ function buildVideoAsArticleCard(it) {
       iuTrNotesBootstrap(quick);
       const preposlatBtn = document.getElementById("iuTrHeaderPreposlat");
       if (preposlatBtn) {
-        preposlatBtn.addEventListener("click", function(){
-          const block = quick.querySelector('[data-iu-notes][data-iu-notes-key="translator"]');
-          const text = block ? iuNotesGetText(block) : "";
-          iuForwardActionSameAsTranslator(text, preposlatBtn);
-        });
+        preposlatBtn.addEventListener("click", iuForwardActionSameAsTranslator);
       }
     } else {
       const isAi = (key || "").toLowerCase() === "ai";
@@ -9282,14 +9278,7 @@ function buildVideoAsArticleCard(it) {
         if (isConvert && typeof window.iuForwardActionSameAsTranslator === "function") {
           const convertShareBtn = quick.querySelector(".iuAiShareBtn");
           if (convertShareBtn) {
-            convertShareBtn.addEventListener("click", async function(e) {
-              e.stopPropagation();
-              if (typeof window.__iuShareTestOverride === "function") {
-                try { await window.__iuShareTestOverride({ title: "infoUzel.cz – Převod Word/PDF", text: "Převod Word/PDF – nástroje", url: "https://www.infouzel.cz/" }); } catch (_) {}
-                return;
-              }
-              window.iuForwardActionSameAsTranslator("Převod Word/PDF – nástroje", convertShareBtn);
-            });
+            convertShareBtn.addEventListener("click", iuForwardActionSameAsTranslator);
           }
         }
       }
@@ -9388,15 +9377,50 @@ function buildVideoAsArticleCard(it) {
     return t ? (t + sig) : "";
   }
 
-  /** Shared forward action: same as Translator "Přeposlat" / notes "Odeslat", no translator UI. */
-  function iuForwardActionSameAsTranslator(text, anchorEl) {
+  /** Shared forward action: same as Translator "Přeposlat" / notes "Odeslat", no translator UI.
+   * P0: Single handler ref for AI, Překladač, Převod — accepts (text, anchorEl) or (event).
+   */
+  async function iuForwardActionSameAsTranslator(textOrEvent, anchorEl) {
+    let text, anchor;
+    if (textOrEvent && textOrEvent.target && typeof textOrEvent.preventDefault === "function") {
+      const e = textOrEvent;
+      e.stopPropagation();
+      anchor = e.currentTarget || e.target;
+      const btn = e.target.closest && e.target.closest(".iuAiShareBtn, #iuTrHeaderPreposlat");
+      if (!btn) return;
+      if (typeof window.__iuShareTestOverride === "function") {
+        const quick = document.getElementById("iuQuickFeed");
+        const title = (quick && quick.querySelector(".iuQTitle")) ? (quick.querySelector(".iuQTitle").textContent || "").trim() : "";
+        const isConvert = title.indexOf("Převod") >= 0 || title.indexOf("Word") >= 0;
+        const payload = isConvert
+          ? { title: "infoUzel.cz – Převod Word/PDF", text: "Převod Word/PDF – nástroje", url: "https://www.infouzel.cz/" }
+          : { title: "infoUzel.cz – AI asistenti", text: "AI asistenti na infoUzel.cz", url: "https://www.infouzel.cz/" };
+        try { await window.__iuShareTestOverride(payload); } catch (_) {}
+        return;
+      }
+      if (btn.id === "iuTrHeaderPreposlat") {
+        const block = document.querySelector('[data-iu-notes][data-iu-notes-key="translator"]');
+        text = block ? iuNotesGetText(block) : "";
+      } else if (btn.closest && btn.closest("#iuQuickFeed")) {
+        const quick = document.getElementById("iuQuickFeed");
+        const qTitle = quick && quick.querySelector(".iuQTitle") ? (quick.querySelector(".iuQTitle").textContent || "").trim() : "";
+        text = (qTitle.indexOf("Převod") >= 0 || qTitle.indexOf("Word") >= 0)
+          ? "Převod Word/PDF – nástroje"
+          : "AI asistenti na infoUzel.cz https://www.infouzel.cz/";
+      } else {
+        text = "AI asistenti na infoUzel.cz https://www.infouzel.cz/";
+      }
+    } else {
+      text = textOrEvent;
+      anchor = anchorEl;
+    }
     let payload = iuNotesBuildPayload(text != null ? String(text) : "");
     if (!payload) payload = "https://infouzel.cz/";
     if (typeof navigator !== "undefined" && navigator.share) {
       navigator.share({ text: payload, title: "infoUzel.cz" }).then(function() {}).catch(function() {});
       return;
     }
-    showForwardFallbackMenu(payload, anchorEl);
+    showForwardFallbackMenu(payload, anchor);
   }
 
   function showForwardFallbackMenu(payload, anchorEl) {
@@ -9436,7 +9460,14 @@ function buildVideoAsArticleCard(it) {
     requestAnimationFrame(function() { document.addEventListener("click", close, { once: true }); });
   }
 
-  try { window.iuForwardActionSameAsTranslator = iuForwardActionSameAsTranslator; } catch (_) {}
+  try {
+    window.iuForwardActionSameAsTranslator = iuForwardActionSameAsTranslator;
+    window.__iuShareHandlerRef = iuForwardActionSameAsTranslator;
+    window.__iuShareHandlers = window.__iuShareHandlers || {};
+    window.__iuShareHandlers.ai = iuForwardActionSameAsTranslator;
+    window.__iuShareHandlers.translator = iuForwardActionSameAsTranslator;
+    window.__iuShareHandlers.convert = iuForwardActionSameAsTranslator;
+  } catch (_) {}
 
   function iuNotesGlobalDelegation(){
     document.addEventListener("click", (e) => {
@@ -9710,9 +9741,8 @@ function buildVideoAsArticleCard(it) {
   }
 
   document.addEventListener("click", function(e){
-    if (e.target && e.target.closest && e.target.closest(".iuAiShareBtn")) onShareAiTab();
+    if (e.target && e.target.closest && e.target.closest(".iuAiShareBtn")) iuForwardActionSameAsTranslator(e);
   });
-  try { window.__onShareAiTab = onShareAiTab; } catch (_) {}
 
   /* Global close handler: [data-iu-close] / .iuModalClose / .iu-close / .iuQClose — modal or quick card (capture so it runs before stopPropagation inside modals) */
   document.addEventListener('click', function(e){
@@ -9806,7 +9836,7 @@ function buildVideoAsArticleCard(it) {
     if (!aiPanel) return;
 
     const shareBtn = document.getElementById('iuAiShareBtn');
-    if (shareBtn) shareBtn.addEventListener("click", onShareAiTab);
+    if (shareBtn) shareBtn.addEventListener("click", iuForwardActionSameAsTranslator);
 
     loadAiAssistants();
 

@@ -43,8 +43,9 @@ function startStaticServer(rootDir) {
 
 function writeArtifact(name, lines) {
   fs.mkdirSync(ARTIFACTS, { recursive: true });
+  const outPath = path.join(ARTIFACTS, name);
   const content = (Array.isArray(lines) ? lines.join("\n") : String(lines)) + "\n";
-  fs.writeFileSync(path.join(ARTIFACTS, name), content, "utf8");
+  fs.writeFileSync(outPath, content, "utf8");
 }
 
 async function main() {
@@ -106,12 +107,21 @@ async function main() {
     });
 
     const shareHandlerProof = await page.evaluate(() => {
-      const shareBtn = document.querySelector("#iuQuickFeed .iuAiShareBtn");
-      if (!shareBtn) return { hasShareBtn: false, handlerName: "" };
-      return { hasShareBtn: true, handlerName: "iuForwardActionSameAsTranslator" };
+      const h = window.__iuShareHandlers || {};
+      const convertRef = h.convert;
+      const translatorRef = h.translator;
+      const aiRef = h.ai;
+      const sameRefAi = !!(convertRef && aiRef && convertRef === aiRef);
+      const sameRefTranslator = !!(convertRef && translatorRef && convertRef === translatorRef);
+      const sameRefAll = sameRefAi && sameRefTranslator;
+      return {
+        hasShareBtn: !!document.querySelector("#iuQuickFeed .iuAiShareBtn"),
+        handlerName: convertRef && convertRef.name ? convertRef.name : (convertRef ? "iuForwardActionSameAsTranslator" : ""),
+        SHARE_HANDLER_SAME_REF_AI: sameRefAi,
+        SHARE_HANDLER_SAME_REF_TRANSLATOR: sameRefTranslator,
+        SHARE_HANDLER_SAME_REF_ALL: sameRefAll,
+      };
     });
-    const translatorUses = "iuForwardActionSameAsTranslator";
-    const shareHandlerSame = shareHandlerProof.hasShareBtn && shareHandlerProof.handlerName === translatorUses;
 
     await page.evaluate(() => {
       window.__proofSharePayload = null;
@@ -128,7 +138,7 @@ async function main() {
     const clsReport = clsVal != null && clsVal < 0.000001 ? "0.000000" : (clsVal != null ? String(clsVal) : "n/a");
 
     const pass = domDump.count === 6 &&
-      shareHandlerSame &&
+      shareHandlerProof.SHARE_HANDLER_SAME_REF_ALL &&
       (clsVal == null || clsVal < 0.000001) &&
       consoleErrors.length === 0 &&
       pageErrors.length === 0;
@@ -139,7 +149,9 @@ async function main() {
       "DOM_button_count=" + domDump.count,
       ...domDump.buttons.flatMap((b, i) => ["BTN_" + (i + 1) + "_TEXT=" + b.text, "BTN_" + (i + 1) + "_HREF=" + b.href]),
       "SHARE_HANDLER_NAME=" + shareHandlerProof.handlerName,
-      "SHARE_HANDLER_SAME_AS_TRANSLATOR=" + shareHandlerSame,
+      "SHARE_HANDLER_SAME_REF_AI=" + shareHandlerProof.SHARE_HANDLER_SAME_REF_AI,
+      "SHARE_HANDLER_SAME_REF_TRANSLATOR=" + shareHandlerProof.SHARE_HANDLER_SAME_REF_TRANSLATOR,
+      "SHARE_HANDLER_SAME_REF_ALL=" + shareHandlerProof.SHARE_HANDLER_SAME_REF_ALL,
       "SHARE_PAYLOAD_TITLE=" + (sharePayload ? sharePayload.title : ""),
       "SHARE_PAYLOAD_TEXT=" + (sharePayload ? sharePayload.text : ""),
       "CLS=" + clsReport,
