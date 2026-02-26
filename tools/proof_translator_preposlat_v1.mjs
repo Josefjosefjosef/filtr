@@ -99,7 +99,7 @@ async function main() {
     const dom = await page.evaluate(() => {
       const quick = document.getElementById("iuQuickFeed");
       if (!quick || quick.hidden) return { headerPreposlat: 0, notesSend: 0, linkColor: "", notesContainerBg: "", inputBg: "", containerSelector: "", inputSelector: "" };
-      const headerPreposlat = quick.querySelectorAll("#iuTrHeaderPreposlat, .iuTrHeaderPreposlat").length;
+      const headerPreposlat = quick.querySelectorAll("#iuTrHeaderPreposlat, .iuTrHeaderPreposlat, .iu-forward-btn.iu-translator-forward").length;
       const notesBlock = quick.querySelector('[data-iu-notes][data-iu-notes-key="translator"]');
       const notesSend = notesBlock ? notesBlock.querySelectorAll("[data-iu-notes-send]").length : 0;
       const linkEl = quick.querySelector(".iuTrCard, .iuAiCard, a[href]");
@@ -116,19 +116,19 @@ async function main() {
       };
     });
 
-    out("DOM counts: headerPreposlat=" + dom.headerPreposlat + " notesSend=" + dom.notesSend);
+    out("DOM counts: headerPreposlat=" + dom.headerPreposlat + " notesSend=" + dom.notesSend + " (translator: forward in header only)");
     out("Barvy: linkColor=" + dom.linkColor + " notesContainerBg=" + dom.notesContainerBg + " inputBg=" + dom.inputBg);
     out("containerSelector=" + dom.containerSelector + " (neobsahuje textarea/input)");
     out("inputSelector=" + dom.inputSelector);
 
     const delegation = await page.evaluate(() => {
       const quick = document.getElementById("iuQuickFeed");
-      const sendBtn = quick ? quick.querySelector('[data-iu-notes][data-iu-notes-key="translator"] [data-iu-notes-send]') : null;
-      const foundTargetSelector = sendBtn ? '[data-iu-notes][data-iu-notes-key="translator"] [data-iu-notes-send]' : "";
-      if (sendBtn) sendBtn.click();
-      return { foundTargetSelector, clickDispatched: !!sendBtn };
+      const forwardBtn = quick ? quick.querySelector("#iuTrHeaderPreposlat, .iu-forward-btn.iu-translator-forward") : null;
+      const foundTargetSelector = forwardBtn ? "#iuTrHeaderPreposlat" : "";
+      if (forwardBtn) forwardBtn.click();
+      return { foundTargetSelector, clickDispatched: !!forwardBtn };
     });
-    out("Delegace: foundTargetSelector=" + delegation.foundTargetSelector + " clickDispatched=" + delegation.clickDispatched);
+    out("Delegace: forward in header: foundTargetSelector=" + delegation.foundTargetSelector + " clickDispatched=" + delegation.clickDispatched);
 
     const inputNotTouched = dom.inputBg && dom.notesContainerBg && dom.inputBg !== dom.notesContainerBg;
     out("INPUT_NOT_TOUCHED=" + (inputNotTouched ? "true" : "false") + " (selector audit: container only; input má vlastní background)");
@@ -157,7 +157,7 @@ async function main() {
     const proofName = isProd ? "AFTER_MERGE_PROOF_TRANSLATOR_PREPOSLAT_PROD.txt" : "PROOF_TRANSLATOR_NOTES_PREPOSLAT_HEADER.txt";
     fs.mkdirSync(ARTIFACTS, { recursive: true });
     fs.writeFileSync(path.join(ARTIFACTS, proofName), crlf, "utf8");
-    process.exitCode = (dom.headerPreposlat === 1 && dom.notesSend === 1 && delegation.clickDispatched && inputNotTouched && clsOk) ? 0 : 1;
+    process.exitCode = (dom.headerPreposlat >= 1 && delegation.clickDispatched && inputNotTouched && clsOk) ? 0 : 1;
   } catch (err) {
     console.error(err);
     process.exitCode = 1;

@@ -9094,7 +9094,7 @@ function buildVideoAsArticleCard(it) {
       quick.innerHTML = `
         <div class="iuQHead">
           <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-          <div class="iuQHeadActions"><button type="button" class="iuTrHeaderPreposlat" id="iuTrHeaderPreposlat" aria-label="Přeposlat">PŘEPOSLAT</button><button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
+          <div class="iuQHeadActions"><button type="button" class="iu-forward-btn iu-translator-forward iuTrHeaderPreposlat" id="iuTrHeaderPreposlat" aria-label="Přeposlat" title="Přeposlat"><i class="fa-solid fa-share"></i></button><button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
         </div>
         <div class="iuQCard">
           <div class="iuQGrid">
@@ -9111,11 +9111,6 @@ function buildVideoAsArticleCard(it) {
             <div class="iuNotesTitle">Poznámky</div>
           </div>
           <textarea class="iuNotesText" data-iu-notes-text placeholder="Sem si napiš poznámku…"></textarea>
-          <div class="iuNotesActions">
-            <button type="button" class="iuNotesBtn" data-iu-notes-copy>Zkopírovat</button>
-            <button type="button" class="iuNotesBtn" data-iu-notes-clear>Vyčistit</button>
-            <button type="button" class="iuNotesBtn iuNotesBtnPrimary" data-iu-notes-send>Odeslat</button>
-          </div>
           <div class="iuNotesSendBar" data-iu-notes-sendbar hidden>
             <button type="button" class="iuNotesSendOpt" data-iu-notes-send-wa>WhatsApp</button>
             <button type="button" class="iuNotesSendOpt" data-iu-notes-send-mail>E-mail</button>
