@@ -9279,6 +9279,19 @@ function buildVideoAsArticleCard(it) {
           .catch(() => {});
       } else {
         doRender(data.items);
+        if (isConvert && typeof window.iuForwardActionSameAsTranslator === "function") {
+          const convertShareBtn = quick.querySelector(".iuAiShareBtn");
+          if (convertShareBtn) {
+            convertShareBtn.addEventListener("click", async function(e) {
+              e.stopPropagation();
+              if (typeof window.__iuShareTestOverride === "function") {
+                try { await window.__iuShareTestOverride({ title: "infoUzel.cz – Převod Word/PDF", text: "Převod Word/PDF – nástroje", url: "https://www.infouzel.cz/" }); } catch (_) {}
+                return;
+              }
+              window.iuForwardActionSameAsTranslator("Převod Word/PDF – nástroje", convertShareBtn);
+            });
+          }
+        }
       }
     }
     const closeBtn = document.getElementById("iuQCloseBtn");
@@ -9609,19 +9622,6 @@ function buildVideoAsArticleCard(it) {
 
   async function onShareAiTab(){
     var btn = document.getElementById("iuAiShareBtn") || document.querySelector("#iuQuickFeed .iuAiShareBtn");
-    var quick = document.getElementById("iuQuickFeed");
-    var titleEl = quick && quick.querySelector(".iuQTitle");
-    var title = titleEl ? (titleEl.textContent || "").trim() : "";
-    var isConvert = title.indexOf("Převod") !== -1;
-    if (isConvert && typeof window.iuForwardActionSameAsTranslator === "function") {
-      var convertText = "Převod Word/PDF – nástroje";
-      if (typeof window.__iuShareTestOverride === "function") {
-        try { await window.__iuShareTestOverride({ title: "infoUzel.cz – Převod Word/PDF", text: convertText, url: "https://www.infouzel.cz/" }); } catch (_) {}
-        return;
-      }
-      window.iuForwardActionSameAsTranslator(convertText, btn || undefined);
-      return;
-    }
     if (typeof window.__iuShareTestOverride === "function") {
       try {
         await window.__iuShareTestOverride({ title: SHARE_TITLE, text: SHARE_TEXT, url: SHARE_URL });

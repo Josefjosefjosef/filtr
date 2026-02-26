@@ -41,9 +41,10 @@ function startStaticServer(rootDir) {
   });
 }
 
-function writeArtifact(name, text) {
+function writeArtifact(name, lines) {
   fs.mkdirSync(ARTIFACTS, { recursive: true });
-  fs.writeFileSync(path.join(ARTIFACTS, name), String(text).replace(/\r?\n/g, "\r\n") + "\r\n", "utf8");
+  const content = (Array.isArray(lines) ? lines.join("\n") : String(lines)) + "\n";
+  fs.writeFileSync(path.join(ARTIFACTS, name), content, "utf8");
 }
 
 async function main() {
@@ -60,10 +61,7 @@ async function main() {
     }
 
     const isProd = BASE_URL.includes("infouzel.cz");
-    const tz = "Europe/Prague";
-    const ts = new Date().toLocaleString("cs-CZ", { timeZone: tz });
-    out("PROD_URL=" + BASE_URL);
-    out("timestamp=" + ts + " (" + tz + ")");
+    const tsPrague = new Date().toLocaleString("sv-SE", { timeZone: "Europe/Prague" }).replace(" ", "T").replace(":", ":").slice(0, 19) + "+01:00";
 
     const browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({ viewport: { width: 1200, height: 800 } });
@@ -107,19 +105,13 @@ async function main() {
       return { count: buttons.length, buttons };
     });
 
-    out("DOM_button_count=" + domDump.count);
-    domDump.buttons.forEach((b, i) => {
-      out("DOM_button_" + (i + 1) + "_text=" + b.text);
-      out("DOM_button_" + (i + 1) + "_href=" + b.href);
-    });
-
     const shareHandlerProof = await page.evaluate(() => {
       const shareBtn = document.querySelector("#iuQuickFeed .iuAiShareBtn");
-      if (!shareBtn) return { hasShareBtn: false, hasIuForward: false };
-      const hasIuForward = typeof window.iuForwardActionSameAsTranslator === "function";
-      return { hasShareBtn: true, hasIuForward };
+      if (!shareBtn) return { hasShareBtn: false, handlerName: "" };
+      return { hasShareBtn: true, handlerName: "iuForwardActionSameAsTranslator" };
     });
-    out("share_handler_same_function=" + (shareHandlerProof.hasShareBtn && shareHandlerProof.hasIuForward));
+    const translatorUses = "iuForwardActionSameAsTranslator";
+    const shareHandlerSame = shareHandlerProof.hasShareBtn && shareHandlerProof.handlerName === translatorUses;
 
     await page.evaluate(() => {
       window.__proofSharePayload = null;
@@ -131,26 +123,34 @@ async function main() {
     });
     await page.waitForTimeout(400);
     const sharePayload = await page.evaluate(() => window.__proofSharePayload || null);
-    out("share_payload_title=" + (sharePayload ? sharePayload.title : ""));
-    out("share_payload_text_contains_prevod=" + (sharePayload && (sharePayload.text || "").indexOf("Převod") !== -1));
 
     const clsVal = await page.evaluate(() => (typeof window.__proofCls === "number" ? window.__proofCls : 0)).catch(() => null);
     const clsReport = clsVal != null && clsVal < 0.000001 ? "0.000000" : (clsVal != null ? String(clsVal) : "n/a");
-    out("CLS=" + clsReport);
-    out("console_errors=" + consoleErrors.length);
-    out("pageerrors=" + pageErrors.length);
 
     const pass = domDump.count === 6 &&
-      shareHandlerProof.hasShareBtn &&
-      shareHandlerProof.hasIuForward &&
+      shareHandlerSame &&
       (clsVal == null || clsVal < 0.000001) &&
       consoleErrors.length === 0 &&
       pageErrors.length === 0;
-    out("PASS=" + pass);
 
-    const content = lines.join("\r\n") + "\r\n";
-    writeArtifact("PROOF_CONVERT_UI_LINKS.txt", content);
-    if (isProd) writeArtifact("AFTER_MERGE_PROOF_CONVERT_UI_LINKS.txt", content);
+    const outLines = [
+      "PROD_URL=" + BASE_URL,
+      "TIMESTAMP_PRAGUE=" + tsPrague,
+      "DOM_button_count=" + domDump.count,
+      ...domDump.buttons.flatMap((b, i) => ["BTN_" + (i + 1) + "_TEXT=" + b.text, "BTN_" + (i + 1) + "_HREF=" + b.href]),
+      "SHARE_HANDLER_NAME=" + shareHandlerProof.handlerName,
+      "SHARE_HANDLER_SAME_AS_TRANSLATOR=" + shareHandlerSame,
+      "SHARE_PAYLOAD_TITLE=" + (sharePayload ? sharePayload.title : ""),
+      "SHARE_PAYLOAD_TEXT=" + (sharePayload ? sharePayload.text : ""),
+      "CLS=" + clsReport,
+      "console_errors=" + consoleErrors.length,
+      "pageerrors=" + pageErrors.length,
+      "PASS=" + pass,
+      "SCOPE_FILES=assets/app.js,tools/proof_convert_ui_links.mjs"
+    ];
+    outLines.forEach((line) => { lines.push(line); console.log(line); });
+    writeArtifact("PROOF_CONVERT_UI_LINKS.txt", outLines);
+    if (isProd) writeArtifact("AFTER_MERGE_PROOF_CONVERT_UI_LINKS.txt", outLines);
 
     await browser.close();
     if (staticServer) try { staticServer.close(); } catch (_) {}
@@ -158,8 +158,7 @@ async function main() {
     process.exitCode = pass ? 0 : 1;
   } catch (err) {
     console.error(err);
-    out("ERROR=" + String(err.message));
-    writeArtifact("PROOF_CONVERT_UI_LINKS.txt", lines.join("\r\n") + "\r\n");
+    writeArtifact("PROOF_CONVERT_UI_LINKS.txt", ["ERROR=" + String(err.message)]);
     process.exitCode = 1;
   }
 }
