@@ -514,16 +514,17 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
 
 
 def _format_report_metadata(report: Dict[str, Any]) -> str:
-    """Build proof header: Repo, Branch, Commit SHA, Run ID, Run URL, Generated at."""
+    """Build proof header: Repo, Branch, Commit SHA, Workflow, Run ID, Run number, Run URL, Generated at UTC/Prague."""
     repo = os.environ.get("GITHUB_REPOSITORY", "")
     workflow = os.environ.get("GITHUB_WORKFLOW", "")
     run_id = os.environ.get("GITHUB_RUN_ID", "")
     run_number = os.environ.get("GITHUB_RUN_NUMBER", "")
     head_full, head_short = get_head_sha()
+    sha_str = (f"{head_full} ({head_short})" if head_full and head_short else (head_full or "N/A"))
     lines = [
         "Repo: " + (repo or "N/A"),
         "Branch: main",
-        "Commit SHA: " + (f"{head_full} ({head_short})" if head_full and head_short else (head_full or "N/A")),
+        "Commit SHA: " + sha_str,
         "Workflow: " + (workflow or "N/A"),
         "Run ID: " + (run_id or "N/A"),
         "Run number: " + (run_number or "N/A"),
@@ -537,12 +538,13 @@ def _format_report_metadata(report: Dict[str, Any]) -> str:
         utc_dt = datetime.fromisoformat(ts_utc.replace("Z", "+00:00"))
         if ZoneInfo:
             prague_dt = utc_dt.astimezone(ZoneInfo("Europe/Prague"))
-            prague_str = prague_dt.strftime("%Y-%m-%d %H:%M:%S %Z")
+            prague_str = prague_dt.strftime("%Y-%m-%dT%H:%M:%S%z")
         else:
             prague_str = ts_utc
     except Exception:
         prague_str = ts_utc
-    lines.append("Generated at: " + ts_utc + " UTC / Europe/Prague " + prague_str)
+    lines.append("Generated at UTC: " + ts_utc)
+    lines.append("Generated at Europe/Prague: " + prague_str)
     return "\n".join(lines) + "\n\n"
 
 

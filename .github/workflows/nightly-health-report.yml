@@ -18,21 +18,27 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: FRESHNESS GATE
+      - name: Freshness gate (HEAD == origin/main)
+        shell: bash
         run: |
+          set -euo pipefail
           git fetch origin main --prune
-          HEAD_SHA=$(git rev-parse HEAD)
-          ORIGIN_MAIN_SHA=$(git rev-parse origin/main)
-          if [ "$HEAD_SHA" != "$ORIGIN_MAIN_SHA" ]; then
-            echo "::error::FRESHNESS_GATE FAIL: HEAD ($HEAD_SHA) != origin/main ($ORIGIN_MAIN_SHA) — do not send email"
-            exit 1
-          fi
-          echo "HEAD_SHA=$HEAD_SHA" >> "$GITHUB_ENV"
-          echo "HEAD_SHA_SHORT=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
-          echo "ORIGIN_MAIN_SHA=$ORIGIN_MAIN_SHA" >> "$GITHUB_ENV"
+          HEAD_SHA="$(git rev-parse HEAD)"
+          ORIGIN_MAIN_SHA="$(git rev-parse origin/main)"
+
+          echo "HEAD_SHA=$HEAD_SHA" | tee -a "$GITHUB_ENV"
+          echo "HEAD_SHA_SHORT=${HEAD_SHA:0:8}" | tee -a "$GITHUB_ENV"
+          echo "ORIGIN_MAIN_SHA=$ORIGIN_MAIN_SHA" | tee -a "$GITHUB_ENV"
+
           echo "HEAD_SHA=$HEAD_SHA"
           echo "ORIGIN_MAIN_SHA=$ORIGIN_MAIN_SHA"
-          echo "FRESHNESS_GATE: PASS"
+
+          if [ "$HEAD_SHA" != "$ORIGIN_MAIN_SHA" ]; then
+            echo "::error::FRESHNESS_GATE_FAIL: HEAD_SHA != origin/main (STOP-SHIP). No email will be sent."
+            exit 1
+          fi
+
+          echo "FRESHNESS_GATE=PASS"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -74,11 +80,18 @@ jobs:
           SITE_URL: "https://infouzel.cz/projects/?debug=1&nosw=1&section=media"
         run: node scripts/check_site.js
 
-      - name: Run health_report.py
+      - name: Generate health report
+        shell: bash
         env:
           HEAD_SHA: ${{ env.HEAD_SHA }}
           HEAD_SHA_SHORT: ${{ env.HEAD_SHA_SHORT }}
-        run: python3 scripts/health_report.py
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_WORKFLOW: ${{ github.workflow }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          set -euo pipefail
+          python3 scripts/health_report.py
 
       - name: Report output gates
         run: |
@@ -87,17 +100,24 @@ jobs:
           grep -n "INFOUZEL HEALTH REPORT" reports/latest.md
           grep -n "^Critical:" reports/latest.md
 
-      - name: NO-STALE-SEND guard
+      - name: No-stale-send guard (report must contain SHA + Run ID)
+        shell: bash
+        env:
+          HEAD_SHA: ${{ env.HEAD_SHA }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
         run: |
-          if ! grep -q "Commit SHA: ${{ env.HEAD_SHA }}" reports/latest.md; then
-            echo "::error::NO-STALE-SEND FAIL: report does not contain Commit SHA: ${{ env.HEAD_SHA }}"
+          set -euo pipefail
+
+          REPORT_PATH="reports/latest.md"
+          if [ ! -f "$REPORT_PATH" ]; then
+            echo "::error::NO_STALE_SEND_FAIL: report file not found at $REPORT_PATH"
             exit 1
           fi
-          if ! grep -q "Run ID: ${{ github.run_id }}" reports/latest.md; then
-            echo "::error::NO-STALE-SEND FAIL: report does not contain Run ID: ${{ github.run_id }}"
-            exit 1
-          fi
-          echo "NO-STALE-SEND: PASS"
+
+          grep -F "Commit SHA: ${HEAD_SHA}" "$REPORT_PATH" >/dev/null || { echo "::error::NO_STALE_SEND_FAIL: Commit SHA mismatch/missing"; exit 1; }
+          grep -F "Run ID: ${GITHUB_RUN_ID}" "$REPORT_PATH" >/dev/null || { echo "::error::NO_STALE_SEND_FAIL: Run ID missing"; exit 1; }
+
+          echo "NO_STALE_SEND=PASS"
 
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
@@ -138,6 +158,15 @@ jobs:
         if: env.HEALTH_EMAIL_CONFIGURED != 'true'
         run: echo "Email not configured (missing HEALTH_EMAIL_TO secret)" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Compose email subject
+        shell: bash
+        env:
+          HEAD_SHA_SHORT: ${{ env.HEAD_SHA_SHORT }}
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          set -euo pipefail
+          echo "EMAIL_SUBJECT=INFOUZEL Health Report — $(date -u +%F) — main ${HEAD_SHA_SHORT} — run #${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+
       - name: Send email
         if: success() && env.HEALTH_EMAIL_CONFIGURED == 'true'
         uses: dawidd6/action-send-mail@v3
@@ -146,7 +175,7 @@ jobs:
           server_port: ${{ secrets.HEALTH_SMTP_PORT }}
           username: ${{ secrets.HEALTH_SMTP_USERNAME }}
           password: ${{ secrets.HEALTH_SMTP_PASSWORD }}
-          subject: "INFOUZEL Health Report — ${{ steps.date.outputs.date }} — main ${{ env.HEAD_SHA_SHORT }} — run #${{ github.run_number }}"
+          subject: ${{ env.EMAIL_SUBJECT }}
           to: ${{ secrets.HEALTH_EMAIL_TO }}
           from: ${{ secrets.HEALTH_EMAIL_FROM }}
           body: file://reports/latest.md
