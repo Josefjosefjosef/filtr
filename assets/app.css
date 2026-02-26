@@ -12445,3 +12445,29 @@ section.iu-mindmenu,
   min-width: 32px;
   min-height: 32px;
 }
+
+/* === AI karta – premium hover/focus na close X (MIN-SCOPE, CLS=0) === */
+@media (hover:hover) and (pointer:fine){
+  #iu-aiPanel .iuAiClose{
+    transition: transform .15s ease, box-shadow .15s ease, color .15s ease, background .15s ease;
+    transform-origin: center;
+    will-change: transform;
+  }
+  #iu-aiPanel .iuAiClose:hover{
+    transform: scale(1.15);
+    color: #ff4d6d;
+    background: radial-gradient(circle at center,
+      rgba(255,77,109,0.15),
+      rgba(255,77,109,0.05) 60%,
+      transparent 70%
+    );
+    box-shadow: 0 0 6px rgba(255,77,109,.4), 0 0 12px rgba(255,77,109,.25);
+  }
+}
+
+/* Keyboard accessibility (no layout change) */
+#iu-aiPanel .iuAiClose:focus-visible{
+  outline: 2px solid rgba(255,77,109,.55);
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(255,77,109,.25);
+}
