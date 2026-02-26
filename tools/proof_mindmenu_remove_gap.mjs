@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Proof: MindMenu — after removing 2 buttons, right rail height shrinks,
- * "Rychlé odkazy" moves up, no gap, CLS=0, no console.error.
+ * "Rychlé odkazy" moves up, no gap. CLS_LOAD = 0, CLS_AFTER_REMOVE = 0, console/pageerror = 0.
  * Writes: artifacts/PROOF_MINDMENU_REMOVE_GAP.txt
  */
 import { chromium } from "playwright";
@@ -65,15 +65,26 @@ async function main() {
     const page = await context.newPage();
 
     const consoleErrors = [];
-    page.on("console", (msg) => {
-      if (msg.type() === "error") consoleErrors.push(msg.text());
-    });
+    const pageErrors = [];
+    page.on("console", (msg) => { if (msg.type() === "error") consoleErrors.push(msg.text()); });
+    page.on("pageerror", (err) => pageErrors.push(String(err.message)));
 
     await page.addInitScript(() => {
       window.__proofCls = 0;
+      window.__proofShiftEntries = [];
       try {
         const obs = new PerformanceObserver((list) => {
-          for (const e of list.getEntries()) if (!e.hadRecentInput) window.__proofCls += (e.value || 0);
+          for (const e of list.getEntries()) {
+            if (e.hadRecentInput) continue;
+            window.__proofCls += (e.value || 0);
+            const entry = { value: e.value };
+            if (e.sources && e.sources.length) {
+              entry.sources = e.sources.slice(0, 3).map((s) => ({
+                node: s.node ? { tagName: s.node.tagName, className: (s.node.className || "").slice(0, 80), id: (s.node.id || "").slice(0, 40) } : null,
+              }));
+            }
+            window.__proofShiftEntries.push(entry);
+          }
         });
         obs.observe({ type: "layout-shift", buffered: true });
       } catch (_) {}
@@ -86,59 +97,75 @@ async function main() {
       page.evaluate(() => {
         const rail = document.querySelector(".layout > aside.accordionCol");
         const mind = document.querySelector(".accordionCol .mindMenu");
-        const mailboxes = document.querySelector(".accordionCol .mindMenu .iu-mailboxes");
         const quickLinks = document.querySelector(".accordionCol .mindMenu section.iu-mmQuickLinks");
         const rows = document.querySelectorAll(".accordionCol .mindMenu .iu-mailbox-row");
         return {
           buttonCount: rows.length,
           railHeight: rail ? rail.getBoundingClientRect().height : 0,
           mindHeight: mind ? mind.getBoundingClientRect().height : 0,
-          mailboxesHeight: mailboxes ? mailboxes.getBoundingClientRect().height : 0,
           quickLinksTop: quickLinks ? quickLinks.getBoundingClientRect().top : 0,
           cls: typeof window.__proofCls === "number" ? window.__proofCls : null,
         };
       });
 
-    const clsAfterLoad = await page.evaluate(() => (typeof window.__proofCls === "number" ? window.__proofCls : null));
-    out("0) CLS after load (before any click): " + (clsAfterLoad != null ? clsAfterLoad.toFixed(6) : "n/a"));
-
+    const clsLoad = await page.evaluate(() => (typeof window.__proofCls === "number" ? window.__proofCls : null));
     const before = await getMetrics();
-    out("1) Before: buttonCount=" + before.buttonCount + " railHeight=" + Math.round(before.railHeight) + " quickLinksTop=" + Math.round(before.quickLinksTop));
+
+    out("CLS_LOAD=" + (clsLoad != null ? clsLoad.toFixed(6) : "n/a"));
+    out("buttons_before=" + before.buttonCount);
+    out("mindmenu_height_before=" + Math.round(before.mindHeight));
+    out("quicklinks_top_before=" + Math.round(before.quickLinksTop));
 
     const removeBtn = page.locator("#iuMailboxRemove");
     await removeBtn.waitFor({ state: "visible", timeout: 5000 }).catch(() => {});
     const removeCount = Math.min(2, Math.max(0, before.buttonCount - 1));
     for (let i = 0; i < removeCount; i++) {
       await removeBtn.click();
-      await page.waitForTimeout(300);
+      await page.waitForTimeout(350);
     }
-    out("2) Removed " + removeCount + " button(s)");
+    out("removed_buttons=" + removeCount);
 
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(500);
     const after = await getMetrics();
-    out("3) After: buttonCount=" + after.buttonCount + " railHeight=" + Math.round(after.railHeight) + " quickLinksTop=" + Math.round(after.quickLinksTop));
+    const clsAfter = after.cls;
+
+    out("CLS_AFTER_REMOVE=" + (clsAfter != null ? clsAfter.toFixed(6) : "n/a"));
+    out("buttons_after=" + after.buttonCount);
+    out("mindmenu_height_after=" + Math.round(after.mindHeight));
+    out("quicklinks_top_after=" + Math.round(after.quickLinksTop));
+    out("console_errors_count=" + consoleErrors.length);
+    out("pageerror_count=" + pageErrors.length);
 
     const heightShrunk = after.railHeight < before.railHeight || after.mindHeight < before.mindHeight;
-    out("4) Height shrunk: " + heightShrunk);
-
     const quickLinksMovedUp = after.quickLinksTop < before.quickLinksTop;
-    out("5) Rychlé odkazy moved up: " + quickLinksMovedUp);
-
-    const clsValue = after.cls != null ? after.cls : null;
-    const clsFromLoadOnly = clsValue != null && clsAfterLoad != null && clsValue <= clsAfterLoad + 0.001;
-    out("6) CLS=" + (clsValue != null ? clsValue.toFixed(6) : "n/a") + (clsValue != null && clsValue < 0.001 ? " (0.000000)" : ""));
-    out("6b) No new CLS from remove (delta<=0): " + clsFromLoadOnly);
-
     const noConsoleError = consoleErrors.length === 0;
-    out("7) console.error count: " + consoleErrors.length + (noConsoleError ? " (0)" : ""));
+    const noPageError = pageErrors.length === 0;
+
+    if (clsLoad != null && clsLoad >= 0.001) {
+      const entries = await page.evaluate(() => (window.__proofShiftEntries || []).slice(-10));
+      out("layout_shift_entries_last10=" + JSON.stringify(entries));
+    }
+    if (clsAfter != null && clsAfter >= 0.001) {
+      const entries = await page.evaluate(() => (window.__proofShiftEntries || []).slice(-10));
+      out("layout_shift_entries_after_remove_last10=" + JSON.stringify(entries));
+    }
+
+    out("height_shrunk=" + heightShrunk);
+    out("quicklinks_moved_up=" + quickLinksMovedUp);
+
+    const clsLoadOk = clsLoad != null && clsLoad < 0.001;
+    const clsAfterOk = clsAfter != null && clsAfter < 0.001;
+    if (!clsLoadOk) throw new Error("CLS_LOAD must be 0.000000, got " + clsLoad);
+    if (!clsAfterOk) throw new Error("CLS_AFTER_REMOVE must be 0.000000, got " + clsAfter);
+
+    const pass = heightShrunk && quickLinksMovedUp && noConsoleError && noPageError && clsLoadOk && clsAfterOk;
+    out("PASS=" + pass);
+
+    writeArtifact("PROOF_MINDMENU_REMOVE_GAP.txt", lines.join("\r\n") + "\r\n");
 
     await browser.close();
     if (staticServer) try { staticServer.close(); } catch (_) {}
 
-    const pass = heightShrunk && quickLinksMovedUp && noConsoleError && clsFromLoadOnly;
-    out("PASS=" + pass);
-
-    writeArtifact("PROOF_MINDMENU_REMOVE_GAP.txt", lines.join("\r\n") + "\r\n");
     process.exitCode = pass ? 0 : 1;
   } catch (err) {
     console.error(err);
