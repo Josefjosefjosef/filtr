@@ -9351,8 +9351,8 @@ function buildVideoAsArticleCard(it) {
 
   /** Shared forward action: same as Translator "Přeposlat" / notes "Odeslat", no translator UI. */
   function iuForwardActionSameAsTranslator(text, anchorEl) {
-    const payload = iuNotesBuildPayload(text != null ? String(text) : "");
-    if (!payload) return;
+    let payload = iuNotesBuildPayload(text != null ? String(text) : "");
+    if (!payload) payload = "https://infouzel.cz/";
     if (typeof navigator !== "undefined" && navigator.share) {
       navigator.share({ text: payload, title: "infoUzel.cz" }).then(function() {}).catch(function() {});
       return;
