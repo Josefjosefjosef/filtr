@@ -12446,23 +12446,20 @@ section.iu-mindmenu,
   min-height: 32px;
 }
 
-/* === AI karta – hover efekt zavíracího křížku (MIN-SCOPE) === */
+/* === AI karta – hover efekt zavíracího křížku (MIN-SCOPE, CLS=0) === */
 .iuAiClose{
-  transition: transform .15s ease,
-              box-shadow .15s ease,
-              color .15s ease,
-              background .15s ease;
+  transition: transform .15s ease, box-shadow .15s ease, color .15s ease, background .15s ease;
+  transform-origin: center;
+  will-change: transform;
 }
 .iuAiClose:hover{
   transform: scale(1.15);
   color: #ff4d6d;
   background: radial-gradient(
-      circle at center,
-      rgba(255,77,109,0.15),
-      rgba(255,77,109,0.05) 60%,
-      transparent 70%
+    circle at center,
+    rgba(255,77,109,0.15),
+    rgba(255,77,109,0.05) 60%,
+    transparent 70%
   );
-  box-shadow:
-    0 0 6px rgba(255,77,109,.4),
-    0 0 12px rgba(255,77,109,.25);
+  box-shadow: 0 0 6px rgba(255,77,109,.4), 0 0 12px rgba(255,77,109,.25);
 }
