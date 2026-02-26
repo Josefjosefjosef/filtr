@@ -12800,11 +12800,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
     function canSave() {
       var rows = getSlotsFromDom();
-      if (!rows.length) return false;
-      for (var i = 0; i < rows.length; i++) {
-        if (rows[i].name.length === 0 || !isValidBakalariUrl(rows[i].url)) return false;
-      }
-      return true;
+      return rows.length > 0;
     }
 
     function updateSaveButton() {
@@ -12900,11 +12896,14 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       for (var i = 0; i < rows.length; i++) {
         var name = rows[i].name.trim().slice(0, 30);
         var url = normalizeBakalariUrl(rows[i].url);
-        if (name.length === 0 || !isValidBakalariUrl(rows[i].url)) return;
+        if (name.length === 0) continue;
+        if (!isValidBakalariUrl(rows[i].url)) continue;
         toSave.push({ name: name, url: url });
       }
       setBakalariState(toSave);
       saved = toSave;
+      slots = toSave.length ? toSave.slice() : [{ name: "", url: "" }];
+      renderSlots();
       renderSavedChips();
       showSavedFeedback();
       updateSaveButton();
