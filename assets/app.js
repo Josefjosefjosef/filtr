@@ -9103,11 +9103,22 @@ function buildVideoAsArticleCard(it) {
 
   function iuShowQuickFeed(key){
     const keyNorm = String(key || "").trim().toLowerCase();
-    const data = (window.IU_QUICK_FEEDS || {})[keyNorm];
-    if (!data) return;
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
     if (!stage || !quick) return;
+    if (keyNorm === "banka" || keyNorm === "bakalari" || keyNorm === "pojistovna") {
+      const titles = { banka: "Banka", bakalari: "Bakaláři", pojistovna: "Zdravotní pojišťovna" };
+      stage.setAttribute("data-iu-view", "quick");
+      quick.hidden = false;
+      quick.innerHTML = "<div class=\"iuQHead\"><div class=\"iuQTitle\">" + iuQfEscape(titles[keyNorm] || keyNorm) + "</div><div class=\"iuQHeadActions\"><button class=\"iuQClose\" type=\"button\" id=\"iuQCloseBtn\" aria-label=\"Zavřít\">×</button></div></div><div class=\"iuQCard\" id=\"iuQuickFeedMojeSluzbyBody\"></div>";
+      const body = document.getElementById("iuQuickFeedMojeSluzbyBody");
+      if (body && typeof window.iuRenderMojeSluzbyInQuickFeed === "function") window.iuRenderMojeSluzbyInQuickFeed(keyNorm, body);
+      const closeBtn = document.getElementById("iuQCloseBtn");
+      if (closeBtn) closeBtn.addEventListener("click", function() { quick.hidden = true; stage.removeAttribute("data-iu-view"); });
+      return;
+    }
+    const data = (window.IU_QUICK_FEEDS || {})[keyNorm];
+    if (!data) return;
     stage.setAttribute("data-iu-view", "quick");
     quick.hidden = false;
     const isTranslator = String(key || "").toLowerCase() === "deepl";
@@ -9571,6 +9582,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   try { window.iuEnsureArticlesView = iuEnsureArticlesView; } catch (e) {}
+  try { window.iuShowQuickFeed = iuShowQuickFeed; } catch (e) {}
 
   function iuQuickFeedInit(){
     document.addEventListener("click", (e) => {
@@ -12779,6 +12791,14 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     });
   }
 
+  function iuRenderMojeSluzbyInQuickFeed(key, container) {
+    if (!container) return;
+    if (key === "banka") renderBankaModal(container);
+    else if (key === "bakalari") renderBakalariModal(container);
+    else if (key === "pojistovna") renderPojistovnaModal(container);
+  }
+  try { window.iuRenderMojeSluzbyInQuickFeed = iuRenderMojeSluzbyInQuickFeed; } catch (_) {}
+
   function init() {
     const root = iuEnsureModalRoot();
     const overlay = document.getElementById("iu-mojeSluzbyOverlay");
@@ -12792,7 +12812,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       e.preventDefault();
       e.stopPropagation();
       const kind = btn.getAttribute("data-iu-modal");
-      if (kind) openMojeSluzbyModal(kind);
+      if (kind) {
+        if ((kind === "banka" || kind === "bakalari" || kind === "pojistovna") && typeof window.iuShowQuickFeed === "function") {
+          window.iuShowQuickFeed(kind);
+          return;
+        }
+        openMojeSluzbyModal(kind);
+      }
     });
     const closeBtn = panel && panel.querySelector("[data-iu-close]");
     if (overlay) overlay.addEventListener("click", closeMojeSluzbyModal);
