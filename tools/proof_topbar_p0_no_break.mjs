@@ -189,7 +189,7 @@ async function main() {
     const allNamedayOk = results.every(r => r.namedayNonEmpty);
     const smokeOk = quickVisible && aiOk;
     const noErrors = consoleErrors.length === 0 && pageErrors.length === 0;
-    const clsOk = clsValue != null && clsValue < 0.02;
+    const clsOk = clsValue != null && clsValue === 0;
     const pass = allSearchOk && allDateVisible && allNamedayOk && smokeOk && noErrors && clsOk;
     lines.push("RECAP: " + (pass ? "PASS" : "FAIL"));
     lines.push("  searchOk: " + allSearchOk + " dateVisible: " + allDateVisible + " namedayOk: " + allNamedayOk + " smokeOk: " + smokeOk + " noErrors: " + noErrors + " clsOk: " + clsOk);
