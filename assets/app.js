@@ -9094,7 +9094,7 @@ function buildVideoAsArticleCard(it) {
       quick.innerHTML = `
         <div class="iuQHead">
           <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-          <button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button>
+          <div class="iuQHeadActions"><button type="button" class="iuTrHeaderPreposlat" id="iuTrHeaderPreposlat" aria-label="Přeposlat">PŘEPOSLAT</button><button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
         </div>
         <div class="iuQCard">
           <div class="iuQGrid">
@@ -9126,6 +9126,13 @@ function buildVideoAsArticleCard(it) {
       `;
       iuTrInit(quick, data);
       iuTrNotesBootstrap(quick);
+      const preposlatBtn = document.getElementById("iuTrHeaderPreposlat");
+      if (preposlatBtn) {
+        preposlatBtn.addEventListener("click", function(){
+          const sendBtn = quick.querySelector('[data-iu-notes][data-iu-notes-key="translator"] [data-iu-notes-send]');
+          if (sendBtn) sendBtn.click();
+        });
+      }
     } else {
       const isAi = (key || "").toLowerCase() === "ai";
       const aiSeoBlock = isAi ? `
