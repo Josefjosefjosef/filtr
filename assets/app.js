@@ -7423,15 +7423,15 @@ function buildVideoAsArticleCard(it) {
     try{
       const txt = localStorage.getItem(MAILBOX_STORAGE_KEY);
       if (!txt) {
-        const items = MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, index: i }));
+        const items = MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, hidden: false, index: i }));
         if (!localStorage.getItem(IU_MM_SOCIAL_DEFAULTS_FLAG)) {
           for (let i = 0; i < 4 && i < items.length; i++) {
             if (items[i].social == null) items[i].social = IU_MAILBOX_DEFAULT_SOCIAL[i] || null;
           }
-          try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
+          try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
           try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
         } else {
-          try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
+          try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
         }
         return items;
       }
@@ -7443,22 +7443,23 @@ function buildVideoAsArticleCard(it) {
         label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX) || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : ""),
         url: String(it?.url ?? "").trim(),
         social: validSocial(it?.social),
+        hidden: it?.hidden === true,
         index: i
       }));
       if (items.length > IU_MAILBOX_MAX) {
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
       }
       if (fixed.length < IU_MAILBOX_MIN) {
         for (let i = fixed.length; i < IU_MAILBOX_MIN; i++) {
-          fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || `Schránka ${i + 1}`, url: "", social: null, index: i });
+          fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || `Schránka ${i + 1}`, url: "", social: null, hidden: false, index: i });
         }
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
       }
       if (!localStorage.getItem(IU_MM_SOCIAL_DEFAULTS_FLAG)) {
         for (let i = 0; i < 4 && i < fixed.length; i++) {
           if (fixed[i].social == null) fixed[i].social = IU_MAILBOX_DEFAULT_SOCIAL[i] || null;
         }
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
         try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
       }
       return fixed;
@@ -7472,7 +7473,8 @@ function buildVideoAsArticleCard(it) {
       const toSave = items.map((it) => ({
         label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX),
         url: String(it?.url ?? "").trim(),
-        social: IU_MAILBOX_SOCIAL_OPTIONS.includes(it?.social) ? it.social : null
+        social: IU_MAILBOX_SOCIAL_OPTIONS.includes(it?.social) ? it.social : null,
+        hidden: !!it?.hidden
       }));
       localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: toSave }));
     }catch{}
@@ -7505,13 +7507,15 @@ function buildVideoAsArticleCard(it) {
     const controls = document.getElementById("iuMailboxControls");
     if (controls && controls.parentNode) controls.remove();
     const items = iuMailboxLoad();
+    const visibleCount = items.filter((it) => !it.hidden).length;
     const mailboxesEl = list.closest(".iu-mailboxes");
     if (mailboxesEl) {
-      if (items.length < 4) mailboxesEl.classList.add("iu-mailboxes-can-shrink");
+      if (visibleCount < 4) mailboxesEl.classList.add("iu-mailboxes-can-shrink");
       else mailboxesEl.classList.remove("iu-mailboxes-can-shrink");
     }
     const frag = document.createDocumentFragment();
     items.forEach((it, i) => {
+      if (it.hidden) return;
       const row = document.createElement("div");
       row.className = "iu-mailbox-row";
       const label = it.label || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : `Schránka ${i + 1}`);
@@ -7536,19 +7540,31 @@ function buildVideoAsArticleCard(it) {
     const list = document.getElementById("iuMailboxList");
     if (!list) return;
     iuMailboxRender();
-    let mailboxCount = iuMailboxLoad().length;
+    let mailboxCount = iuMailboxLoad().filter((it) => !it.hidden).length;
     iuUpdateMailboxControls(mailboxCount);
     iuPositionMailboxControls();
 
     document.getElementById("iuMailboxAdd")?.addEventListener("click", () => {
       if (mailboxCount >= IU_MAILBOX_MAX) return;
       const items = iuMailboxLoad();
-      const newIndex = items.length;
-      const defaultSocial = newIndex === 4 ? "facebook" : newIndex === 5 ? "instagram" : null;
-      items.push({ label: "", url: "", social: defaultSocial, index: newIndex });
+      const visibleCount = items.filter((it) => !it.hidden).length;
+      if (visibleCount >= IU_MAILBOX_MAX) return;
+      let restored = false;
+      for (let i = items.length - 1; i >= 0; i--) {
+        if (items[i].hidden) {
+          items[i].hidden = false;
+          restored = true;
+          break;
+        }
+      }
+      if (!restored) {
+        const newIndex = items.length;
+        const defaultSocial = newIndex === 4 ? "facebook" : newIndex === 5 ? "instagram" : null;
+        items.push({ label: "", url: "", social: defaultSocial, hidden: false, index: newIndex });
+      }
       iuMailboxSave(items);
       iuMailboxRender();
-      mailboxCount = items.length;
+      mailboxCount = items.filter((it) => !it.hidden).length;
       iuUpdateMailboxControls(mailboxCount);
       iuPositionMailboxControls();
       requestAnimationFrame(() => {
@@ -7560,10 +7576,17 @@ function buildVideoAsArticleCard(it) {
     document.getElementById("iuMailboxRemove")?.addEventListener("click", () => {
       if (mailboxCount <= IU_MAILBOX_MIN) return;
       const items = iuMailboxLoad();
-      items.pop();
+      const visibleCount = items.filter((it) => !it.hidden).length;
+      if (visibleCount <= IU_MAILBOX_MIN) return;
+      for (let i = items.length - 1; i >= 0; i--) {
+        if (!items[i].hidden) {
+          items[i].hidden = true;
+          break;
+        }
+      }
       iuMailboxSave(items);
       iuMailboxRender();
-      mailboxCount = items.length;
+      mailboxCount = items.filter((it) => !it.hidden).length;
       iuUpdateMailboxControls(mailboxCount);
       iuPositionMailboxControls();
       requestAnimationFrame(() => {
