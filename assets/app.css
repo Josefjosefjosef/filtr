@@ -121,6 +121,51 @@
 
   /* ===== VIP ===== */
   --vipGold: #C9A227;
+
+  /* merged from duplicate :root blocks (dedupe) */
+  --iu-bg-lock: var(--iu-page-bg);
+  --iu-frame-bg: #1b2430;
+  --iu-rail-active: #2D6CDF;
+  --iu-rail-muted: rgba(255,255,255,0.78);
+  --iu-rail-muted2: rgba(255,255,255,0.62);
+  /* accent palette (merged from duplicate :root) */
+  --iuAccentTVOnline: #3B82F6;
+  --iuAccentRailToggle: var(--iuNavAccent-tv, #EF4444);
+  --iuNavAccent-media: #0B2A4A;
+  --iuNavAccent-radio: #8B5CF6;
+  --iuNavAccent-tv: #EF4444;
+  --iuNavAccent-tvonline: var(--iuAccentTVOnline);
+  --iuNavAccent-jr: #F97316;
+  --iuNavAccent-mapy: #22C55E;
+  --iuNavAccent-travel: #06B6D4;
+  --iuNavAccent-pocasi: #38BDF8;
+  --iuNavAccent-namedays: #F59E0B;
+  --iuNavAccent-tvprogram: #10B981;
+  --iuNavAccent-culture: #6366F1;
+  --iuNavAccent-ads: #94A3B8;
+  --iu-accent-media: var(--iuNavAccent-media, #3B82F6);
+  --iu-accent-tv: var(--iuNavAccent-tv, #EF4444);
+  --iu-accent-tvonline: var(--iuNavAccent-tvonline);
+  --iu-accent-maps: var(--iuNavAccent-mapy, #22C55E);
+  --iu-accent-travel: var(--iuNavAccent-travel, #06B6D4);
+  /* topbar + rail (merged from duplicate :root) */
+  --iuTopbarHeight: 72px;
+  --iuTopbarBg: #0B1F33;
+  --iuTopbarStackH: var(--iuTopbarHeight);
+  --topbarStackH: var(--iuTopbarHeight);
+  --iuTopbarFg: #D1D5DB;
+  --iuTopbarMuted: #D1D5DB;
+  --iuHairline: rgba(27,36,48,.10);
+  --iuShadow: 0 6px 22px rgba(0,0,0,.10);
+  --iuTopbarRadiusLeft: 0px;
+  --iuTopbarRadiusRight: 18px;
+  --iuRailInk: #1b2430;
+  --iuRailHair: rgba(27,36,48,.14);
+  --iuRailMuted: rgba(27,36,48,.70);
+  --iuRailGlow: rgba(27,36,48,.18);
+  --iuContainerMax: 1200px;
+  --iuContainerPad: 20px;
+  --iuLeftRailW: 136px;
 }
 
 *{ box-sizing:border-box; }
@@ -173,6 +218,11 @@ img, svg, video, iframe{
   width: 274px;
   min-width: 274px;
   box-sizing: border-box;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 .accordionCol .mindMenu .iu-mailboxes{
   min-height: 255px;
@@ -194,11 +244,6 @@ i.fa-brands{
   height: 1.25em;
   text-align: center;
   line-height: 1;
-}
-
-/* ==== GLOBAL BACKGROUND LOCK (page + columns only) ==== */
-:root{
-  --iu-bg-lock: var(--iu-page-bg);
 }
 
 /* Celé pozadí stránky */
@@ -7052,6 +7097,7 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
   align-items: start;
   width: 100%;
   justify-content: start;
+  padding-top: var(--iuTopbarHeight) !important;
 }
 
 /* layout anchors - feed left, MindMenu right */
@@ -7647,9 +7693,6 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
    - NO JS changes
    - NO feed pipeline changes (render target #feed stays)
    ============================== */
-:root{
-  --iu-frame-bg: #1b2430;
-}
 
 /* Frame color: topbar (pill only) */
 .topbar-new,
@@ -7871,14 +7914,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
 /* ==============================
    LEFT RAIL ICON NAV (refactor)
    ============================== */
-
-:root{
-  --iu-frame-bg: #1b2430;
-  --iu-rail-active: #2D6CDF; /* aktivní linka */
-  /* Keep rail palette stable; contrast is handled locally under .iu-leftNav */
-  --iu-rail-muted: rgba(255,255,255,0.78);
-  --iu-rail-muted2: rgba(255,255,255,0.62);
-}
 
 .iu-leftRail{
   /* Match center feed background (no panel effect) */
@@ -8167,34 +8202,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
    Future-proof implementation
    UI-only, no layout changes
    ============================== */
-
-/* Accent palette (optional mapping via data-accent) */
-:root{
-  /* Unified accents (single-shade) */
-  --iuAccentTVOnline: #3B82F6; /* was rail/home-like blue */
-  --iuAccentRailToggle: var(--iuNavAccent-tv, #EF4444); /* reuse single red shade */
-
-  --iuNavAccent-media:  #0B2A4A; /* darker journalist-style navy */
-  --iuNavAccent-radio:  #8B5CF6;
-  --iuNavAccent-tv:     #EF4444;
-  --iuNavAccent-tvonline: var(--iuAccentTVOnline);
-  --iuNavAccent-jr:     #F97316;
-  --iuNavAccent-mapy:   #22C55E;
-  --iuNavAccent-travel: #06B6D4;
-  --iuNavAccent-pocasi: #38BDF8;
-  /* Existing items (fallbacks) */
-  --iuNavAccent-namedays: #F59E0B;
-  --iuNavAccent-tvprogram: #10B981;
-  --iuNavAccent-culture: #6366F1;
-  --iuNavAccent-ads: #94A3B8;
-
-  /* Section accents (content hooks) */
-  --iu-accent-media: var(--iuNavAccent-media, #3B82F6);
-  --iu-accent-tv: var(--iuNavAccent-tv, #EF4444);
-  --iu-accent-tvonline: var(--iuNavAccent-tvonline);
-  --iu-accent-maps: var(--iuNavAccent-mapy, #22C55E);
-  --iu-accent-travel: var(--iuNavAccent-travel, #06B6D4);
-}
 
 /* Local button palette only (rail background unchanged) */
 .iu-leftNav{
@@ -9013,14 +9020,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   align-items: center !important;
 }
 
-#iuTopbarToday{
-  min-width: 0 !important;
-  flex: 1 1 auto !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-}
-
 @media (max-width: 900px){
   .iuTopbar__gap80{ width: 24px; }
   #iuTopbarToday{ max-width: 140px; }
@@ -9793,15 +9792,6 @@ html, body {
 
 @property --iuTopbarLeftGutter { syntax: '<length>'; inherits: true; initial-value: 0px; }
 
-:root{
-  --iuTopbarHeight: 72px;
-  --iuTopbarBg: #0B1F33;
-  --iuTopbarStackH: var(--iuTopbarHeight);
-  /* Desktop geometry */
-  --iuContainerMax: 1200px;
-  --iuContainerPad: 20px;
-  --iuLeftRailW: 136px;
-}
 body.iu-leftRail-collapsed{
   --iuLeftRailW: 0px;
 }
@@ -9872,10 +9862,6 @@ body.iu-leftRail-collapsed #iuLeftRail [data-rail-container]{
 .iuLeftEdgeTooltip.is-visible{ opacity: 1; }
 @media (max-width: 980px){
   .iuLeftEdgeTooltip{ display: none !important; }
-}
-/* Keep existing stack var consumers stable */
-:root{
-  --topbarStackH: var(--iuTopbarHeight);
 }
 
 .iuTopbar{
@@ -10011,10 +9997,6 @@ body.iu-leftRail-collapsed #iuLeftRail [data-rail-container]{
 }
 
 /* AUTO OFFSET — shift 3-column layout under fixed topbar */
-.layout{
-  padding-top: var(--iuTopbarHeight) !important;
-}
-
 /* Right cluster */
 .iuTopbarRight{
   display: flex !important;
@@ -10081,18 +10063,6 @@ body.iu-leftRail-collapsed #iuLeftRail [data-rail-container]{
    UI-only, CLS-safe
    ============================================================ */
 
-:root{
-  --iuTopbarHeight: 72px;
-  --iuTopbarBg: #0B1F33;
-  --iuTopbarFg: #D1D5DB;
-  --iuTopbarMuted: #D1D5DB;
-  --iuHairline: rgba(27,36,48,.10);
-  --iuShadow: 0 6px 22px rgba(0,0,0,.10);
-
-  --iuTopbarRadiusLeft: 0px;
-  --iuTopbarRadiusRight: 18px;
-}
-
 body.iuTopbarFlushRight{
   --iuTopbarRadiusRight: 0px;
 }
@@ -10134,6 +10104,7 @@ aside#iuLeftRail{
 
 main#content .layout{
   padding-top: var(--iuTopbarHeight) !important;
+  min-height: calc(100vh - var(--iuTopbarHeight)) !important;
 }
 
 /* ============================================================
@@ -10346,21 +10317,10 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
    UI-only, CLS-safe (no width/height/margin/padding changes on hover/active)
    ============================================================ */
 
-:root{
-  --iuRailInk: #1b2430;
-  --iuRailHair: rgba(27,36,48,.14);
-  --iuRailMuted: rgba(27,36,48,.70);
-  --iuRailGlow: rgba(27,36,48,.18);
-}
-
 /* ============================================================
    RAIL — stretch to viewport under topbar (CLS-safe)
    BG_OWNER: aside#iuLeftRail.iu-leftRail .iu-leftNav
    ============================================================ */
-
-main#content .layout{
-  min-height: calc(100vh - var(--iuTopbarHeight)) !important;
-}
 
 aside#iuLeftRail.iu-leftRail{
   align-self: stretch !important;
