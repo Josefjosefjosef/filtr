@@ -8245,6 +8245,17 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   color: var(--iuRailBtnFg);
 }
 
+/* P0: Left rail only — restore original icon/label colors (accent tokens) in default state */
+aside#iuLeftRail.iu-leftRail .iu-leftNav .iu-leftNavItem:not(.is-active):not(:hover):not(:focus-visible) .iu-leftNavIcon,
+aside#iuLeftRail.iu-leftRail .iu-leftNav .iu-leftNavItem:not(.is-active):not(:hover):not(:focus-visible) .iu-leftNavLabel{
+  color: var(--iuNavAccent);
+}
+aside#iuLeftRail.iu-leftRail .iu-leftNav .iu-leftNavItem:not(.is-active):not(:hover):not(:focus-visible) .iu-leftNavIcon svg{
+  color: var(--iuNavAccent);
+  fill: currentColor;
+  stroke: currentColor;
+}
+
 .iu-leftNav .iu-leftNavIcon,
 .iu-leftNav .iu-leftNavLabel{
   color: inherit;
