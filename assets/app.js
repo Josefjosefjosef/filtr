@@ -7390,7 +7390,7 @@ function buildVideoAsArticleCard(it) {
   const MAILBOX_PLACEHOLDERS = ["Např.: e-mail 1", "Např.: e-mail 2", "Např.: pracovní web", "Např.: oblíbený web"];
   const IU_MAILBOX_MIN = 1;
   const IU_MAILBOX_MAX = 6;
-  const IU_MAILBOX_LABEL_MAX = 15;
+  const IU_MAILBOX_LABEL_MAX = 17;
   const IU_MAILBOX_SOCIAL_OPTIONS = ["facebook", "instagram", "youtube", "x", "linkedin", "tiktok"];
   const IU_MAILBOX_SOCIAL_URLS = {
     facebook: "https://facebook.com",
@@ -7498,7 +7498,7 @@ function buildVideoAsArticleCard(it) {
       const socialUrl = social && IU_MAILBOX_SOCIAL_URLS[social] ? IU_MAILBOX_SOCIAL_URLS[social] : "";
       const socialSlotHtml = social && socialUrl
         ? `<a href="${escapeHtml(socialUrl)}" class="iu-pill-social-slot" data-mailbox-social="${i}" data-social="${escapeHtml(social)}" aria-label="${escapeHtml(social)}" rel="noopener noreferrer" target="_blank"><span class="iu-pill-social-icon">${iuMailboxSocialIconSvg(social)}</span></a>`
-        : `<span class="iu-pill-social-slot" aria-hidden="true"></span>`;
+        : "";
       row.innerHTML = `<button class="iu-mailbox-pill" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
         `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><i class="fa-solid fa-gear" aria-hidden="true"></i></button>` +
         socialSlotHtml;
@@ -7562,8 +7562,8 @@ function buildVideoAsArticleCard(it) {
       const form = document.createElement("form");
       form.style.cssText = "background:#fff;padding:20px;border-radius:12px;min-width:280px;box-shadow:0 10px 40px rgba(0,0,0,0.2);";
       form.innerHTML = `
-        <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max 15 znaků)</p>
-        <input type="text" id="iu-mailbox-edit-label" maxlength="15" autocomplete="off" value="${escapeHtml(it.label || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max 17 znaků)</p>
+        <input type="text" id="iu-mailbox-edit-label" maxlength="17" autocomplete="off" value="${escapeHtml(it.label || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <p style="margin:0 0 12px 0;font-weight:600;">URL (www)</p>
         <input type="text" id="iu-mailbox-edit-url" autocomplete="off" value="${escapeHtml(it.url || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <div class="iu-mailbox-edit-social-row" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0;">

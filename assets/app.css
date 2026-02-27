@@ -12433,14 +12433,14 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   justify-content: center !important;
 }
 
-/* === MindMenu: row = PILULKA(210px) | SETTINGS | SOCIAL(40px); settings outside pill === */
+/* === MindMenu: row = PILULKA(210) + gap 10px + GEAR (no frame) + gap 10px + SOC(40 when set) === */
 .layout > aside.accordionCol .mindMenu .iu-mailbox-row{
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   min-height: 35px;
-  gap: var(--iu-mm-gap, 10px);
+  gap: 10px;
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
@@ -12462,6 +12462,10 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   min-width: 32px;
   min-height: 32px;
   margin: 0;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
 }
 
 @media (prefers-reduced-motion: no-preference){
