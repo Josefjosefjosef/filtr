@@ -12466,7 +12466,7 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   border: 0 !important;
   box-shadow: none !important;
   border-radius: 0 !important;
-  color: rgba(255, 255, 255, 0.88) !important;
+  color: rgba(170, 176, 184, 0.95) !important;
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-gear i{
@@ -12987,7 +12987,10 @@ section.iu-mojeSluzby{
   width: 20px;
   height: 20px;
   fill: #fff;
-  filter: drop-shadow(0 1px 0 rgba(0,0,0,.20));
+  filter: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  shape-rendering: geometricPrecision;
 }
 
 .iu-pill-social-opt.iu-social-ios40[aria-pressed="true"] {
@@ -13022,5 +13025,8 @@ section.iu-mojeSluzby{
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-  filter: drop-shadow(0 1px 0 rgba(0,0,0,.20));
+  filter: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  shape-rendering: geometricPrecision;
 }
