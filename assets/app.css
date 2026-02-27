@@ -12747,55 +12747,58 @@ section.iu-mojeSluzby{
   padding: 6px 10px;
   min-width: 100px;
 }
-.iu-mojeSluzbyBakalariSlots{
+.iu-bakalariForm{
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-.iu-mojeSluzbyBakalariSlot{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.iu-mojeSluzbyBakalariSlot input{
-  flex: 1;
-  min-width: 0;
-  padding: 6px 10px;
-}
-.iu-mojeSluzbyBakalariActions{
-  display: flex;
   gap: 10px;
+  margin-bottom: 8px;
+}
+.iu-bakalariLabel{
+  display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,.85);
+}
+.iu-bakalariLabel .iuIconTile{
+  font-size: 18px;
+  color: var(--iu-gold);
+}
+.iu-bakalariInput{
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.06);
+  color: inherit;
+  font-size: 14px;
+  max-width: 100%;
 }
 .iu-bakalariSaveBtn{
   padding: 10px 20px;
-  border-radius: 12px;
+  border-radius: 10px;
   font-weight: 600;
+  font-size: 13px;
   border: none;
   cursor: pointer;
   background: linear-gradient(180deg, #2a7de0, #1a5bb5);
   color: #fff;
   box-shadow: 0 4px 14px rgba(42,125,224,.35);
   transition: .18s;
+  align-self: flex-start;
 }
-.iu-bakalariSaveBtn:hover:not(:disabled){
+.iu-bakalariSaveBtn:hover{
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(42,125,224,.45);
 }
-.iu-bakalariSaveBtn:disabled{
-  opacity: .5;
-  cursor: not-allowed;
-}
-.iu-bakalariSavedFeedback{
-  min-height: 1.2em;
+.iu-bakalariMessage{
+  min-height: 1.4em;
+  font-size: 13px;
+  color: var(--iu-gold);
   opacity: 0;
   transition: opacity .2s;
-  font-size: 13px;
-  color: #2a7de0;
-  pointer-events: none;
+  margin-bottom: 4px;
 }
-.iu-bakalariSavedFeedback--visible{
+.iu-bakalariMessage--visible{
   opacity: 1;
 }
 .iu-bakalariSavedSection{
@@ -12803,37 +12806,26 @@ section.iu-mojeSluzby{
   padding-top: 12px;
   border-top: 1px solid rgba(255,255,255,.08);
 }
-.iu-bakalariSavedLabel{
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  color: rgba(255,255,255,.5);
-  margin-bottom: 10px;
+.iu-bakalariSavedGrid{
+  margin-top: 8px;
 }
-.iu-bakalariSavedChips{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.iu-bakalariChip{
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.2);
-  background: rgba(255,255,255,.06);
-  color: inherit;
-  font-size: 13px;
+.iu-bakalariTile .iuBankCardMain{
   cursor: pointer;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  transition: .15s;
 }
-.iu-bakalariChip:hover{
-  background: rgba(255,255,255,.12);
-  border-color: rgba(255,255,255,.3);
+.iu-bakalariRemove{
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid rgba(180,100,80,.5);
+  background: rgba(160,80,60,.2);
+  color: #e8c4b8;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  transition: .18s;
+}
+.iu-bakalariRemove:hover{
+  background: rgba(180,90,70,.35);
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
 }
 .iu-mojeSluzbyPojistovna{
   display: flex;

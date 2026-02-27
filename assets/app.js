@@ -12363,7 +12363,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   "use strict";
   const BANKS_KEY = "iu_moje_sluzby_banks_state_v1";
   const IU_BANKS_KEY = "iuUserBanks";
-  const BAKALARI_KEY = "iu_moje_sluzby_bakalari_v1";
+  const BAKALARI_KEY = "iu_moje_sluzby_bakalari_items_v1";
+  const BAKALARI_MAX = 12;
   const POJISTOVNY_KEY = "iu_moje_sluzby_pojistovny_names_v1";
 
   function iuGetBanks() {
@@ -12456,14 +12457,16 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
   function getBakalariState() {
     try {
-      const raw = localStorage.getItem(BAKALARI_KEY);
+      var raw = localStorage.getItem(BAKALARI_KEY);
       if (raw) {
-        const a = JSON.parse(raw);
+        var a = JSON.parse(raw);
         if (Array.isArray(a)) {
-          if (a.length && (a[0].enabled !== undefined)) {
-            return a.filter(function(s) { return s.enabled && String(s.name || "").trim() && String(s.url || "").trim(); }).map(function(s) { return { name: String(s.name).trim().slice(0, 30), url: String(s.url).trim() }; });
-          }
-          return a.map(function(s) { return { name: String(s.name || "").slice(0, 30), url: String(s.url || "") }; });
+          return a.map(function(s) {
+            var name = String(s.name || "").trim().slice(0, 30);
+            var url = String(s.url || "").trim();
+            if (!name || !url) return null;
+            return { id: s.id || "bak_" + Date.now() + "_" + Math.random().toString(36).slice(2), name: name, url: url, createdAt: s.createdAt || 0 };
+          }).filter(Boolean);
         }
       }
     } catch (_) {}
@@ -12471,7 +12474,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function setBakalariState(a) {
-    try { localStorage.setItem(BAKALARI_KEY, JSON.stringify(Array.isArray(a) ? a : [])); } catch (_) {}
+    try { localStorage.setItem(BAKALARI_KEY, JSON.stringify(Array.isArray(a) ? a.slice(0, BAKALARI_MAX) : [])); } catch (_) {}
   }
 
   function normalizeBakalariUrl(url) {
@@ -12482,8 +12485,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function isValidBakalariUrl(url) {
-    var u = normalizeBakalariUrl(url);
-    return u.length >= 10 && /^https?:\/\/./i.test(u);
+    var u = String(url || "").trim();
+    if (!u) return false;
+    var norm = normalizeBakalariUrl(u);
+    if (/^javascript:/i.test(norm) || !/^https?:\/\/./i.test(norm)) return false;
+    return norm.length >= 10;
   }
 
   function getPojistovnyNames() {
@@ -12783,134 +12789,104 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function renderBakalariModal(container) {
-    var saved = getBakalariState();
-    var slots = saved.length ? saved.map(function(s) { return { name: s.name, url: s.url }; }) : [{ name: "", url: "" }];
-    var savedFeedbackUntil = 0;
-
-    function getSlotsFromDom() {
-      var rows = container.querySelectorAll(".iu-mojeSluzbyBakalariSlot");
-      var out = [];
-      for (var i = 0; i < rows.length; i++) {
-        var nameInp = rows[i].querySelector("[data-name]");
-        var urlInp = rows[i].querySelector("[data-url]");
-        out.push({ name: (nameInp && nameInp.value) ? nameInp.value.trim().slice(0, 30) : "", url: (urlInp && urlInp.value) ? urlInp.value.trim() : "" });
-      }
-      return out;
-    }
-
-    function canSave() {
-      var rows = getSlotsFromDom();
-      return rows.length > 0;
-    }
-
-    function updateSaveButton() {
-      var btn = container.querySelector("[data-bakalari-save]");
-      if (btn) btn.disabled = !canSave();
-    }
+    var list = getBakalariState();
 
     var html = [
       "<div class=\"iu-mojeSluzbyBakalari\">",
-      "  <div class=\"iu-mojeSluzbyBakalariSlots\" data-slots></div>",
-      "  <div class=\"iu-mojeSluzbyBakalariActions\">",
-      "    <button type=\"button\" data-add-slot>Přidat</button>",
-      "    <button type=\"button\" data-remove-slot>Odebrat</button>",
-      "    <button type=\"button\" class=\"iu-bakalariSaveBtn\" data-bakalari-save disabled>Uložit</button>",
+      "  <div class=\"iu-bakalariForm\">",
+      "    <label class=\"iu-bakalariLabel\"><span class=\"iuIconTile\"><i class=\"fa-solid fa-graduation-cap\"></i></span> Jméno dítěte</label>",
+      "    <input type=\"text\" class=\"iu-bakalariInput\" placeholder=\"Jméno dítěte\" data-bakalari-name maxlength=\"30\" />",
+      "    <label class=\"iu-bakalariLabel\">URL</label>",
+      "    <input type=\"text\" class=\"iu-bakalariInput\" placeholder=\"https://...\" data-bakalari-url />",
+      "    <button type=\"button\" class=\"iu-bakalariSaveBtn\" data-bakalari-save>Uložit</button>",
       "  </div>",
-      "  <div class=\"iu-bakalariSavedFeedback\" data-bakalari-feedback aria-live=\"polite\"></div>",
+      "  <div class=\"iu-bakalariMessage\" data-bakalari-message aria-live=\"polite\"></div>",
       "  <div class=\"iu-bakalariSavedSection\">",
-      "    <div class=\"iu-bakalariSavedLabel\">Uložené</div>",
-      "    <div class=\"iu-bakalariSavedChips\" data-bakalari-chips></div>",
+      "    <div class=\"iuBanksGrid iu-bakalariSavedGrid\" data-bakalari-saved></div>",
       "  </div>",
       "</div>"
     ].join("");
     container.innerHTML = html;
 
-    var slotsEl = container.querySelector("[data-slots]");
-    var addBtn = container.querySelector("[data-add-slot]");
-    var removeBtn = container.querySelector("[data-remove-slot]");
+    var nameInp = container.querySelector("[data-bakalari-name]");
+    var urlInp = container.querySelector("[data-bakalari-url]");
     var saveBtn = container.querySelector("[data-bakalari-save]");
-    var feedbackEl = container.querySelector("[data-bakalari-feedback]");
-    var chipsEl = container.querySelector("[data-bakalari-chips]");
+    var messageEl = container.querySelector("[data-bakalari-message]");
+    var savedEl = container.querySelector("[data-bakalari-saved]");
 
-    function renderSlots() {
-      slotsEl.innerHTML = slots.map(function(s, i) {
-        return "<div class=\"iu-mojeSluzbyBakalariSlot\" data-slot=\"" + i + "\"><span class=\"iuIconTile\"><i class=\"fa-solid fa-graduation-cap\"></i></span><input placeholder=\"Jméno dítěte\" data-name maxlength=\"30\" value=\"" + esc(s.name) + "\" /><input placeholder=\"URL (https://...)\" data-url value=\"" + esc(s.url) + "\" /></div>";
-      }).join("");
-      slotsEl.querySelectorAll("[data-name]").forEach(function(inp, i) {
-        var idx = i;
-        inp.addEventListener("input", function() {
-          if (slots[idx]) slots[idx].name = inp.value.slice(0, 30);
-          updateSaveButton();
-        });
-      });
-      slotsEl.querySelectorAll("[data-url]").forEach(function(inp, i) {
-        var idx = i;
-        inp.addEventListener("input", function() {
-          if (slots[idx]) slots[idx].url = inp.value;
-          updateSaveButton();
-        });
-      });
-      updateSaveButton();
+    function setMessage(text, visible) {
+      if (!messageEl) return;
+      messageEl.textContent = text || "";
+      messageEl.classList.toggle("iu-bakalariMessage--visible", !!visible);
     }
 
-    function renderSavedChips() {
-      var list = getBakalariState();
-      chipsEl.innerHTML = list.map(function(item, i) {
-        var label = item.name.length > 24 ? item.name.slice(0, 21) + "..." : item.name;
-        return "<button type=\"button\" class=\"iu-bakalariChip\" data-bakalari-chip-url=\"" + esc(normalizeBakalariUrl(item.url)) + "\">" + esc(label) + "</button>";
+    function renderSaved() {
+      list = getBakalariState();
+      savedEl.innerHTML = list.map(function(item) {
+        var url = normalizeBakalariUrl(item.url);
+        return "<div class=\"iuBankCard iu-bakalariTile\" data-bakalari-id=\"" + esc(item.id) + "\">" +
+          "<button type=\"button\" class=\"iuBankCardMain\" data-bakalari-open-url=\"" + esc(url) + "\">" +
+          "<span class=\"iuBankIcon iuBankIconGold\"><i class=\"fa-solid fa-graduation-cap\"></i></span>" +
+          "<span class=\"iuBankLabel iuBankLabelGold\">" + esc(item.name) + "</span></button>" +
+          "<button type=\"button\" class=\"iuBankMiniActionBtn iu-bakalariRemove\" data-bakalari-remove-id=\"" + esc(item.id) + "\">Odstranit</button></div>";
       }).join("");
-      chipsEl.querySelectorAll(".iu-bakalariChip").forEach(function(btn) {
-        var url = btn.getAttribute("data-bakalari-chip-url");
-        btn.addEventListener("click", function() {
+      savedEl.querySelectorAll("[data-bakalari-open-url]").forEach(function(btn) {
+        var url = btn.getAttribute("data-bakalari-open-url");
+        btn.addEventListener("click", function(e) {
           if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
         });
       });
+      savedEl.querySelectorAll("[data-bakalari-remove-id]").forEach(function(btn) {
+        btn.addEventListener("click", function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var id = btn.getAttribute("data-bakalari-remove-id");
+          if (!id) return;
+          list = list.filter(function(x) { return x.id !== id; });
+          setBakalariState(list);
+          renderSaved();
+          setMessage("", false);
+        });
+      });
     }
-
-    function showSavedFeedback() {
-      if (!feedbackEl) return;
-      feedbackEl.textContent = "Uloženo";
-      feedbackEl.classList.add("iu-bakalariSavedFeedback--visible");
-      savedFeedbackUntil = Date.now() + 2500;
-      setTimeout(function() {
-        feedbackEl.classList.remove("iu-bakalariSavedFeedback--visible");
-        feedbackEl.textContent = "";
-      }, 2500);
-    }
-
-    addBtn.addEventListener("click", function() {
-      slots.push({ name: "", url: "" });
-      renderSlots();
-    });
-
-    removeBtn.addEventListener("click", function() {
-      if (slots.length <= 1) return;
-      slots.pop();
-      renderSlots();
-    });
 
     saveBtn.addEventListener("click", function() {
-      var rows = getSlotsFromDom();
-      if (!rows.length) return;
-      var toSave = [];
-      for (var i = 0; i < rows.length; i++) {
-        var name = rows[i].name.trim().slice(0, 30);
-        var url = normalizeBakalariUrl(rows[i].url);
-        if (name.length === 0) continue;
-        if (!isValidBakalariUrl(rows[i].url)) continue;
-        toSave.push({ name: name, url: url });
+      var name = (nameInp.value || "").trim();
+      var urlRaw = (urlInp.value || "").trim();
+      setMessage("", false);
+      if (name.length === 0) {
+        setMessage("Zadejte jméno dítěte.", true);
+        return;
       }
-      setBakalariState(toSave);
-      saved = toSave;
-      slots = toSave.length ? toSave.slice() : [{ name: "", url: "" }];
-      renderSlots();
-      renderSavedChips();
-      showSavedFeedback();
-      updateSaveButton();
+      if (name.length > 30) {
+        setMessage("Jméno může mít nejvýše 30 znaků.", true);
+        return;
+      }
+      if (urlRaw.length === 0) {
+        setMessage("Zadejte URL.", true);
+        return;
+      }
+      if (!isValidBakalariUrl(urlRaw)) {
+        setMessage("Zadejte platnou adresu (http nebo https).", true);
+        return;
+      }
+      if (list.length >= BAKALARI_MAX) {
+        setMessage("Uloženo je již maximálně " + BAKALARI_MAX + " položek. Nejprve nějakou odeberte.", true);
+        return;
+      }
+      var url = normalizeBakalariUrl(urlRaw);
+      var newItem = { id: "bak_" + Date.now() + "_" + Math.random().toString(36).slice(2), name: name, url: url, createdAt: Date.now() };
+      list = list.slice();
+      list.push(newItem);
+      setBakalariState(list);
+      nameInp.value = "";
+      urlInp.value = "";
+      renderSaved();
+      setMessage("Uloženo.", true);
+      setTimeout(function() { setMessage("", false); }, 2500);
     });
 
-    renderSlots();
-    renderSavedChips();
+    renderSaved();
   }
 
   function renderPojistovnaModal(container) {
