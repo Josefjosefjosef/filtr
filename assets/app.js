@@ -2011,6 +2011,19 @@ try {
     return null;
   }
 
+  /** P0: safe-fallback for iRozhlas links — strip tracking params to avoid 404 */
+  function normalizeArticleUrl(url) {
+    if (!url || typeof url !== "string") return url;
+    try {
+      const u = new URL(url.trim(), location.origin);
+      if (u.hostname.toLowerCase().replace(/^www\./, "") !== "irozhlas.cz") return url;
+      u.search = "";
+      return u.href;
+    } catch {
+      return url;
+    }
+  }
+
   function fmtDate(iso) {
     if (!iso) return "";
     const d = new Date(iso);
@@ -4251,12 +4264,14 @@ try {
 
     const dateText = fmtDate(it.publishedAt || it.date || it.published || "");
     const datePart = dateText ? `<span class="iu-meta-date">${escapeHtml(dateText)}</span>` : "";
-    const primaryPart = `<span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primary.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(primary.name)}</a></span>`;
+    const primaryUrl = normalizeArticleUrl(primary.url) || primary.url;
+    const primaryPart = `<span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primaryUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(primary.name)}</a></span>`;
 
     const othersPart = others.length
-      ? `<span class="iu-meta-others">Píší také: ${others.map(o =>
-          `<a class="iu-meta-link iu-meta-link-secondary" href="${escapeHtml(o.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(o.name)}</a>`
-        ).join(", ")}</span>`
+      ? `<span class="iu-meta-others">Píší také: ${others.map(o => {
+          const ou = normalizeArticleUrl(o.url) || o.url;
+          return `<a class="iu-meta-link iu-meta-link-secondary" href="${escapeHtml(ou)}" target="_blank" rel="noopener noreferrer">${escapeHtml(o.name)}</a>`;
+        }).join(", ")}</span>`
       : "";
 
     const sep = datePart ? `<span class="iu-meta-sep"> | </span>` : "";
@@ -4267,7 +4282,7 @@ try {
 
   function buildArticleHtml(it) {
     const title = safeText(it.title || it.name || "(bez názvu)");
-    const linkUrl =
+    let linkUrl =
       it.url ||
       (Array.isArray(it.sources) ? (it.sources.find((s) => s && s.url && s.url.trim())?.url || "") : "") ||
       (it.canonicalUrl || "") ||
@@ -4278,9 +4293,9 @@ try {
       persistLastError("Article without URL skipped");
       return "";
     }
-    
+    linkUrl = normalizeArticleUrl(linkUrl);
     const titleMarkup = linkUrl
-      ? `<a class="news-titleLink iuCardTitle" href="${linkUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>`
+      ? `<a class="news-titleLink iuCardTitle" href="${escapeHtml(linkUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>`
       : `<span class="news-titleLink iuCardTitle">${escapeHtml(title)}</span>`;
 
     const suspiciousFlag = it?.suspiciousTitle
@@ -4650,7 +4665,7 @@ function buildVideoAsArticleCard(it) {
         }
       }
 
-      function fmtDateNow(){
+      function fmtDateNowLong(){
         try{
           const TZ = "Europe/Prague";
           return new Intl.DateTimeFormat("cs-CZ", { day: "numeric", month: "long", year: "numeric", timeZone: TZ }).format(new Date());
@@ -4672,7 +4687,7 @@ function buildVideoAsArticleCard(it) {
 
       function sync(){
         try{ elDay.textContent = fmtDayNow(); }catch{}
-        try{ elDate.textContent = fmtDateNow(); }catch{}
+        try{ elDate.textContent = fmtDateNowLong(); }catch{}
         try{
           const nRaw = (srcName && String(srcName.textContent || "").trim()) || "";
           const n = normalizeNameday(nRaw);

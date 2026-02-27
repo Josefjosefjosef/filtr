@@ -121,6 +121,62 @@
 
   /* ===== VIP ===== */
   --vipGold: #C9A227;
+
+  /* merged from duplicate :root blocks (dedupe) */
+  --iu-bg-lock: var(--iu-page-bg);
+  --iu-frame-bg: #1b2430;
+  --iu-rail-active: #2D6CDF;
+  --iu-rail-muted: rgba(255,255,255,0.78);
+  --iu-rail-muted2: rgba(255,255,255,0.62);
+  /* accent palette (merged from duplicate :root) */
+  --iuAccentTVOnline: #3B82F6;
+  --iuAccentRailToggle: var(--iuNavAccent-tv, #EF4444);
+  --iuNavAccent-media: #0B2A4A;
+  --iuNavAccent-radio: #8B5CF6;
+  --iuNavAccent-tv: #EF4444;
+  --iuNavAccent-tvonline: var(--iuAccentTVOnline);
+  --iuNavAccent-jr: #F97316;
+  --iuNavAccent-mapy: #22C55E;
+  --iuNavAccent-travel: #06B6D4;
+  --iuNavAccent-pocasi: #38BDF8;
+  --iuNavAccent-namedays: #F59E0B;
+  --iuNavAccent-tvprogram: #10B981;
+  --iuNavAccent-culture: #6366F1;
+  --iuNavAccent-ads: #94A3B8;
+  --iu-accent-media: var(--iuNavAccent-media, #3B82F6);
+  --iu-accent-tv: var(--iuNavAccent-tv, #EF4444);
+  --iu-accent-tvonline: var(--iuNavAccent-tvonline);
+  --iu-accent-maps: var(--iuNavAccent-mapy, #22C55E);
+  --iu-accent-travel: var(--iuNavAccent-travel, #06B6D4);
+  /* topbar + rail (merged from duplicate :root) */
+  --iuTopbarHeight: 72px;
+  --iuTopbarBg: #0B1F33;
+  --iuTopbarStackH: var(--iuTopbarHeight);
+  --topbarStackH: var(--iuTopbarHeight);
+  --iuTopbarFg: #D1D5DB;
+  --iuTopbarMuted: #D1D5DB;
+  --iuHairline: rgba(27,36,48,.10);
+  --iuShadow: 0 6px 22px rgba(0,0,0,.10);
+  --iuTopbarRadiusLeft: 0px;
+  --iuTopbarRadiusRight: 18px;
+  --iuRailInk: #1b2430;
+  --iuRailHair: rgba(27,36,48,.14);
+  --iuRailMuted: rgba(27,36,48,.70);
+  --iuRailGlow: rgba(27,36,48,.18);
+  --iuContainerMax: 1200px;
+  --iuContainerPad: 20px;
+  --iuLeftRailW: 136px;
+  --iu-bank-accent: #3db3ff;
+  --iu-gold: #d4af37;
+  --iu-silver: #c0c0c0;
+  --iuRailBlueTop: #0F3B78;
+  --iuRailBlueMid: #0B2E5F;
+  --iuRailBlueBot: #071A33;
+  --iuRailSilver: rgba(235,241,255,.92);
+  --iuRailSilverMuted: rgba(235,241,255,.78);
+  --iuRailIconCircle: 44px;
+  --iuRailIconGlyph: 22px;
+  --iuRailLabelSize: 12px;
 }
 
 *{ box-sizing:border-box; }
@@ -173,6 +229,11 @@ img, svg, video, iframe{
   width: 274px;
   min-width: 274px;
   box-sizing: border-box;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 .accordionCol .mindMenu .iu-mailboxes{
   min-height: 255px;
@@ -182,19 +243,18 @@ i.fa-regular,
 i.fa-brands{
   display: inline-block;
   width: 1.25em;
+  min-width: 1.25em;
+  height: 1.25em;
   text-align: center;
   line-height: 1;
 }
 .iu-mmQuickLinks .iuIconTile > i{
   display: inline-block;
   width: 1.25em;
+  min-width: 1.25em;
+  height: 1.25em;
   text-align: center;
   line-height: 1;
-}
-
-/* ==== GLOBAL BACKGROUND LOCK (page + columns only) ==== */
-:root{
-  --iu-bg-lock: var(--iu-page-bg);
 }
 
 /* Celé pozadí stránky */
@@ -584,13 +644,6 @@ html:not([data-iu-js]) .iuDailyWeather{
 /* Kompenzace pro levý obsah pod sticky hlavičkou */
 #leftContent{
   padding-top: 0; /* premium fixed topbar uses global layout offset */
-}
-
-@media (max-width: 900px){
-  :root{
-    --iu-brief-gap-top: 18px; /* mobil: 10px + 8px */
-    --iu-brief-gap-bottom: 8px; /* mobil: margin-bottom na .iu-daily-brief (celkem s chips margin-top 10px = 18px) */
-  }
 }
 
 /* Informační pás - globální neutrální základ (pro případné budoucí použití) */
@@ -7048,6 +7101,7 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
   align-items: start;
   width: 100%;
   justify-content: start;
+  padding-top: var(--iuTopbarHeight) !important;
 }
 
 /* layout anchors - feed left, MindMenu right */
@@ -7643,9 +7697,6 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
    - NO JS changes
    - NO feed pipeline changes (render target #feed stays)
    ============================== */
-:root{
-  --iu-frame-bg: #1b2430;
-}
 
 /* Frame color: topbar (pill only) */
 .topbar-new,
@@ -7867,14 +7918,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
 /* ==============================
    LEFT RAIL ICON NAV (refactor)
    ============================== */
-
-:root{
-  --iu-frame-bg: #1b2430;
-  --iu-rail-active: #2D6CDF; /* aktivní linka */
-  /* Keep rail palette stable; contrast is handled locally under .iu-leftNav */
-  --iu-rail-muted: rgba(255,255,255,0.78);
-  --iu-rail-muted2: rgba(255,255,255,0.62);
-}
 
 .iu-leftRail{
   /* Match center feed background (no panel effect) */
@@ -8164,34 +8207,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
    UI-only, no layout changes
    ============================== */
 
-/* Accent palette (optional mapping via data-accent) */
-:root{
-  /* Unified accents (single-shade) */
-  --iuAccentTVOnline: #3B82F6; /* was rail/home-like blue */
-  --iuAccentRailToggle: var(--iuNavAccent-tv, #EF4444); /* reuse single red shade */
-
-  --iuNavAccent-media:  #0B2A4A; /* darker journalist-style navy */
-  --iuNavAccent-radio:  #8B5CF6;
-  --iuNavAccent-tv:     #EF4444;
-  --iuNavAccent-tvonline: var(--iuAccentTVOnline);
-  --iuNavAccent-jr:     #F97316;
-  --iuNavAccent-mapy:   #22C55E;
-  --iuNavAccent-travel: #06B6D4;
-  --iuNavAccent-pocasi: #38BDF8;
-  /* Existing items (fallbacks) */
-  --iuNavAccent-namedays: #F59E0B;
-  --iuNavAccent-tvprogram: #10B981;
-  --iuNavAccent-culture: #6366F1;
-  --iuNavAccent-ads: #94A3B8;
-
-  /* Section accents (content hooks) */
-  --iu-accent-media: var(--iuNavAccent-media, #3B82F6);
-  --iu-accent-tv: var(--iuNavAccent-tv, #EF4444);
-  --iu-accent-tvonline: var(--iuNavAccent-tvonline);
-  --iu-accent-maps: var(--iuNavAccent-mapy, #22C55E);
-  --iu-accent-travel: var(--iuNavAccent-travel, #06B6D4);
-}
-
 /* Local button palette only (rail background unchanged) */
 .iu-leftNav{
   --iuLeftBtnBgTop: #353d46;
@@ -8200,20 +8215,18 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   --iuLeftBtnShadow: 0 10px 22px rgba(0,0,0,0.22);
 }
 
+/* LEFT RAIL — base + quiet default (merged for dedupe) */
 .iu-leftNav .iu-leftNavItem{
   --iuNavAccent: #3B82F6; /* default fallback accent */
-  /* stripe-only: no fill, no border, no brighten */
   border-radius: 14px;
-  background: transparent;
+  background: transparent !important;
   background-image: none;
   background-color: transparent;
-  border: 0;
+  border: 0 !important;
   box-shadow: none;
-  filter: none;
+  filter: none !important;
   transition: color 220ms ease;
-
-  /* same gray as article meta time (.meta-time) */
-  color: rgba(11,27,43,0.55);
+  color: rgba(11,27,43,0.55); /* 1:1 as .meta-time */
 }
 
 /* Inner highlight (soft light from top) */
@@ -8225,15 +8238,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
 /* Default typography/weights */
 .iu-leftNav .iu-leftNavIcon{ opacity: 1; }
 .iu-leftNav .iu-leftNavLabel{ opacity: 1; }
-
-/* LEFT RAIL — quiet default (meta-time gray) */
-.iu-leftNav .iu-leftNavItem{
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none;
-  filter: none !important;
-  color: rgba(11,27,43,0.55); /* 1:1 as .meta-time */
-}
 
 /* Rail theme: affect only DEFAULT state (no hover/focus/active/section colors). */
 .iu-leftNav .iu-leftNavItem:not(.is-active):not(:hover):not(:focus-visible){
@@ -9020,14 +9024,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   align-items: center !important;
 }
 
-#iuTopbarToday{
-  min-width: 0 !important;
-  flex: 1 1 auto !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-}
-
 @media (max-width: 900px){
   .iuTopbar__gap80{ width: 24px; }
   #iuTopbarToday{ max-width: 140px; }
@@ -9050,6 +9046,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 @media (max-width: 900px){
   :root{
     --iuMobileBtnH: 60px;
+    --iu-brief-gap-top: 18px;
+    --iu-brief-gap-bottom: 8px;
   }
 
   /* Topbar must match button height */
@@ -9800,15 +9798,6 @@ html, body {
 
 @property --iuTopbarLeftGutter { syntax: '<length>'; inherits: true; initial-value: 0px; }
 
-:root{
-  --iuTopbarHeight: 72px;
-  --iuTopbarBg: #0B1F33;
-  --iuTopbarStackH: var(--iuTopbarHeight);
-  /* Desktop geometry */
-  --iuContainerMax: 1200px;
-  --iuContainerPad: 20px;
-  --iuLeftRailW: 136px;
-}
 body.iu-leftRail-collapsed{
   --iuLeftRailW: 0px;
 }
@@ -9879,10 +9868,6 @@ body.iu-leftRail-collapsed #iuLeftRail [data-rail-container]{
 .iuLeftEdgeTooltip.is-visible{ opacity: 1; }
 @media (max-width: 980px){
   .iuLeftEdgeTooltip{ display: none !important; }
-}
-/* Keep existing stack var consumers stable */
-:root{
-  --topbarStackH: var(--iuTopbarHeight);
 }
 
 .iuTopbar{
@@ -10018,10 +10003,6 @@ body.iu-leftRail-collapsed #iuLeftRail [data-rail-container]{
 }
 
 /* AUTO OFFSET — shift 3-column layout under fixed topbar */
-.layout{
-  padding-top: var(--iuTopbarHeight) !important;
-}
-
 /* Right cluster */
 .iuTopbarRight{
   display: flex !important;
@@ -10088,18 +10069,6 @@ body.iu-leftRail-collapsed #iuLeftRail [data-rail-container]{
    UI-only, CLS-safe
    ============================================================ */
 
-:root{
-  --iuTopbarHeight: 72px;
-  --iuTopbarBg: #0B1F33;
-  --iuTopbarFg: #D1D5DB;
-  --iuTopbarMuted: #D1D5DB;
-  --iuHairline: rgba(27,36,48,.10);
-  --iuShadow: 0 6px 22px rgba(0,0,0,.10);
-
-  --iuTopbarRadiusLeft: 0px;
-  --iuTopbarRadiusRight: 18px;
-}
-
 body.iuTopbarFlushRight{
   --iuTopbarRadiusRight: 0px;
 }
@@ -10141,6 +10110,7 @@ aside#iuLeftRail{
 
 main#content .layout{
   padding-top: var(--iuTopbarHeight) !important;
+  min-height: calc(100vh - var(--iuTopbarHeight)) !important;
 }
 
 /* ============================================================
@@ -10276,12 +10246,6 @@ main#content .layout{
    (mobile hide today, search overlay absolute, rail alignment)
    ============================================================ */
 
-@media (max-width: 900px){
-  #iuTopbarToday{
-    display: none;
-  }
-}
-
 /* Search panel: rozbalení doleva (override pro .iuTopSearch) */
 .iuTopSearch .iuTopSearch__panel,
 .iuTopSearch #iuTopbarSearchOverlay{
@@ -10353,21 +10317,10 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
    UI-only, CLS-safe (no width/height/margin/padding changes on hover/active)
    ============================================================ */
 
-:root{
-  --iuRailInk: #1b2430;
-  --iuRailHair: rgba(27,36,48,.14);
-  --iuRailMuted: rgba(27,36,48,.70);
-  --iuRailGlow: rgba(27,36,48,.18);
-}
-
 /* ============================================================
    RAIL — stretch to viewport under topbar (CLS-safe)
    BG_OWNER: aside#iuLeftRail.iu-leftRail .iu-leftNav
    ============================================================ */
-
-main#content .layout{
-  min-height: calc(100vh - var(--iuTopbarHeight)) !important;
-}
 
 aside#iuLeftRail.iu-leftRail{
   align-self: stretch !important;
@@ -10444,22 +10397,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
    - consistent icon + label sizing
    UI-only, CLS-safe
    ============================================================ */
-
-:root{
-  /* Premium rail blue (lux deep) */
-  --iuRailBlueTop: #0F3B78;
-  --iuRailBlueMid: #0B2E5F;
-  --iuRailBlueBot: #071A33;
-
-  /* Silver */
-  --iuRailSilver: rgba(235,241,255,.92);
-  --iuRailSilverMuted: rgba(235,241,255,.78);
-
-  /* Sizes (vyladěné pro čitelnost) */
-  --iuRailIconCircle: 44px; /* ikonový “badge” */
-  --iuRailIconGlyph: 22px;  /* samotná ikonka */
-  --iuRailLabelSize: 12px;  /* popisek */
-}
 
 /* Rail background + premium depth */
 .iu-leftRail{
@@ -11024,13 +10961,6 @@ body #iuLeftRail{
    Text labels stay silver. CLS-safe.
    ============================================================ */
 
-:root{
-  --iuRailAccent-quick: #38BDF8; /* RYCHLÝ SERVIS */
-  --iuRailAccent-day:   #A78BFA; /* PŘEHLED DNE */
-  --iuRailAccent-fun:   #F59E0B; /* ZÁBAVA & ENGAGEMENT */
-  --iuRailAccent-me:    #34D399; /* Můj infoUzel.cz */
-}
-
 /* Base: keep label text silver (explicit, to avoid accidental inherit) */
 #iuLeftRail .iu-leftNavItem span{
   color:#D1D5DB !important;
@@ -11129,17 +11059,6 @@ body #iuLeftRail{
 }
 #iuLeftRail .iuMyUzelLabel{
   --iuRailSectionAccent: color-mix(in srgb, var(--iuRailAccent-me) 55%, transparent) !important;
-}
-
-/* ============================================================
-   Left Rail — Color ONLY the icon glyph (not the silver icon tile)
-   ============================================================ */
-
-:root{
-  --iuRailAccent-quick: #38BDF8; /* RYCHLÝ SERVIS */
-  --iuRailAccent-day:   #A78BFA; /* PŘEHLED DNE */
-  --iuRailAccent-fun:   #F59E0B; /* ZÁBAVA & ENGAGEMENT */
-  --iuRailAccent-me:    #34D399; /* Můj infoUzel.cz */
 }
 
 /* 0) Hard safety: keep item text + wrapper color silver so icon tile stays silver */
@@ -12619,11 +12538,6 @@ section.iu-mojeSluzby{
   gap: 8px;
 }
 /* MOJE BANKY – premium grid + glass cards (unikátní barvy jen zde) */
-:root{
-  --iu-bank-accent: #3db3ff;
-  --iu-gold: #d4af37;
-  --iu-silver: #c0c0c0;
-}
 .iuBanksGrid{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
