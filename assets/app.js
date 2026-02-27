@@ -7462,6 +7462,16 @@ function buildVideoAsArticleCard(it) {
         try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
         try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
       }
+      let migrated56 = false;
+      for (let i = 4; i <= 5; i++) {
+        if (fixed[i] && (fixed[i].social == null || fixed[i].social === "" || typeof fixed[i].social === "undefined")) {
+          fixed[i].social = i === 4 ? "linkedin" : "youtube";
+          migrated56 = true;
+        }
+      }
+      if (migrated56) {
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
+      }
       return fixed;
     }catch{
       return MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, index: i }));
@@ -7559,7 +7569,7 @@ function buildVideoAsArticleCard(it) {
       }
       if (!restored) {
         const newIndex = items.length;
-        const defaultSocial = newIndex === 4 ? "facebook" : newIndex === 5 ? "instagram" : null;
+        const defaultSocial = newIndex === 4 ? "linkedin" : newIndex === 5 ? "youtube" : null;
         items.push({ label: "", url: "", social: defaultSocial, hidden: false, index: newIndex });
       }
       iuMailboxSave(items);
