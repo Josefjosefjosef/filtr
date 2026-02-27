@@ -11270,8 +11270,58 @@ body #iuLeftRail{
 .accordionCol .mindMenu .iu-mmQuickGrid{
   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   max-width: 100%;
-  row-gap: var(--iu-mm-rowGap, 6px);
+  row-gap: var(--iu-rr-rowGap, 8px);
   column-gap: var(--iu-mm-gap, 10px);
+}
+/* Right rail: Moje služby + Rychlé odkazy — 40px icons, labels under, unified spacing */
+.accordionCol .mindMenu .iu-mmQuickLinks{
+  --iu-rr-gapY: 6px;
+  --iu-rr-py: 8px;
+  --iu-rr-px: 10px;
+  --iu-rr-rowGap: 8px;
+  --iu-rr-ico: 40px;
+  --iu-mm-ico: 40px;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--iu-rr-gapY, 6px);
+  padding-block: var(--iu-rr-py, 8px);
+  padding-inline: var(--iu-rr-px, 10px);
+  line-height: 1.15;
+  margin: 0;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile{
+  --iu-rr-ico: 40px;
+  width: var(--iu-rr-ico, 40px);
+  height: var(--iu-rr-ico, 40px);
+  min-width: var(--iu-rr-ico, 40px);
+  min-height: var(--iu-rr-ico, 40px);
+  flex: 0 0 var(--iu-rr-ico, 40px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile > i,
+.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile > svg{
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile > i{
+  font-size: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem span:not(.iuIconTile){
+  display: block;
+  flex: 0 0 auto;
+  min-width: 0;
+  max-width: 100%;
 }
 .accordionCol .mindMenu-scroll-wrapper{
   height: auto;
