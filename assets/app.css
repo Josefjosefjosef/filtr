@@ -12943,3 +12943,31 @@ section.iu-mojeSluzby{
   row-gap: var(--iu-mm-rowGap, 6px);
   column-gap: var(--iu-mm-gap, 10px);
 }
+
+/* MindMenu pill – single social icon slot (40px, CLS-safe) */
+.iu-pill-social-slot {
+  width: 40px;
+  flex: 0 0 40px;
+  min-width: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.iu-pill-social-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #e8eaed, #cfd2d6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.iu-pill-social-icon svg {
+  fill: #fff;
+  stroke: #fff;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}

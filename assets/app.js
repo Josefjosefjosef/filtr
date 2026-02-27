@@ -7391,35 +7391,58 @@ function buildVideoAsArticleCard(it) {
   const IU_MAILBOX_MIN = 1;
   const IU_MAILBOX_MAX = 6;
   const IU_MAILBOX_LABEL_MAX = 15;
+  const IU_MAILBOX_SOCIAL_OPTIONS = ["facebook", "instagram", "youtube", "x", "linkedin", "tiktok"];
+  const IU_MAILBOX_SOCIAL_URLS = {
+    facebook: "https://facebook.com",
+    instagram: "https://instagram.com",
+    youtube: "https://youtube.com",
+    x: "https://x.com",
+    linkedin: "https://linkedin.com",
+    tiktok: "https://tiktok.com"
+  };
+
+  function iuMailboxSocialIconSvg(key) {
+    const icons = {
+      facebook: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z\"/></svg>",
+      instagram: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"2\" width=\"20\" height=\"20\" rx=\"5\" ry=\"5\"/><path d=\"M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z\"/><line x1=\"17.5\" y1=\"6.5\" x2=\"17.51\" y2=\"6.5\"/></svg>",
+      youtube: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.42 29 29 0 0 0-.46-5.33z\"/><polygon points=\"9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02\" fill=\"currentColor\"/></svg>",
+      x: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18 6L6 18M6 6l12 12\"/></svg>",
+      linkedin: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z\"/><rect x=\"2\" y=\"9\" width=\"4\" height=\"12\"/><circle cx=\"4\" cy=\"4\" r=\"2\"/></svg>",
+      tiktok: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5\"/></svg>"
+    };
+    return icons[key] || "";
+  }
 
   function iuMailboxLoad(){
     try{
       const txt = localStorage.getItem(MAILBOX_STORAGE_KEY);
       if (!txt) {
-        const items = MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", index: i }));
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items })); }catch{}
+        const items = MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, index: i }));
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
         return items;
       }
       const parsed = JSON.parse(txt);
       const items = Array.isArray(parsed?.items) ? parsed.items : [];
       const raw = items.slice(0, IU_MAILBOX_MAX);
+      const validSocial = (s) => IU_MAILBOX_SOCIAL_OPTIONS.includes(s) ? s : null;
       let fixed = raw.map((it, i) => ({
         label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX) || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : ""),
         url: String(it?.url ?? "").trim(),
+        social: validSocial(it?.social),
         index: i
       }));
       if (items.length > IU_MAILBOX_MAX) {
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url }) => ({ label, url })) })); }catch{}
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
       }
       if (fixed.length < IU_MAILBOX_MIN) {
         for (let i = fixed.length; i < IU_MAILBOX_MIN; i++) {
-          fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || `Schránka ${i + 1}`, url: "", index: i });
+          fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || `Schránka ${i + 1}`, url: "", social: null, index: i });
         }
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed })); }catch{}
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
       }
       return fixed;
     }catch{
-      return MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", index: i }));
+      return MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, index: i }));
     }
   }
 
@@ -7427,7 +7450,8 @@ function buildVideoAsArticleCard(it) {
     try{
       const toSave = items.map((it) => ({
         label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX),
-        url: String(it?.url ?? "").trim()
+        url: String(it?.url ?? "").trim(),
+        social: IU_MAILBOX_SOCIAL_OPTIONS.includes(it?.social) ? it.social : null
       }));
       localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: toSave }));
     }catch{}
@@ -7470,7 +7494,12 @@ function buildVideoAsArticleCard(it) {
       const row = document.createElement("div");
       row.className = "iu-mailbox-row";
       const label = it.label || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : `Schránka ${i + 1}`);
+      const social = it.social && IU_MAILBOX_SOCIAL_OPTIONS.includes(it.social) ? it.social : null;
+      const socialSlotHtml = social
+        ? `<a href="#" class="iu-pill-social-slot" data-mailbox-social="${i}" data-social="${escapeHtml(social)}" aria-label="${escapeHtml(social)}" rel="noopener" target="_blank"><span class="iu-pill-social-icon">${iuMailboxSocialIconSvg(social)}</span></a>`
+        : `<span class="iu-pill-social-slot" aria-hidden="true"></span>`;
       row.innerHTML = `<button class="iu-mailbox-pill" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
+        socialSlotHtml +
         `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><i class="fa-solid fa-gear" aria-hidden="true"></i></button>`;
       frag.appendChild(row);
     });
@@ -7492,7 +7521,7 @@ function buildVideoAsArticleCard(it) {
     document.getElementById("iuMailboxAdd")?.addEventListener("click", () => {
       if (mailboxCount >= IU_MAILBOX_MAX) return;
       const items = iuMailboxLoad();
-      items.push({ label: "", url: "", index: items.length });
+      items.push({ label: "", url: "", social: null, index: items.length });
       iuMailboxSave(items);
       iuMailboxRender();
       mailboxCount = items.length;
@@ -7521,6 +7550,11 @@ function buildVideoAsArticleCard(it) {
 
     function iuMailboxOpenEditDialog(idx, it, onDone){
       const MAX = IU_MAILBOX_LABEL_MAX;
+      let selectedSocial = it.social && IU_MAILBOX_SOCIAL_OPTIONS.includes(it.social) ? it.social : null;
+      const socialRowHtml = IU_MAILBOX_SOCIAL_OPTIONS.map((key) => {
+        const pressed = selectedSocial === key ? "true" : "false";
+        return `<button type="button" class="iu-pill-social-opt" data-social="${escapeHtml(key)}" aria-pressed="${pressed}" title="${escapeHtml(key)}" style="width:36px;height:36px;border-radius:50%;border:2px solid ${selectedSocial === key ? "#1F4B99" : "#cfd2d6"};background:linear-gradient(145deg,#e8eaed,#cfd2d6);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;">${iuMailboxSocialIconSvg(key)}</button>`;
+      }).join("");
       const overlay = document.createElement("div");
       overlay.setAttribute("id", "iu-mailbox-edit-overlay");
       overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:9999;";
@@ -7530,7 +7564,10 @@ function buildVideoAsArticleCard(it) {
         <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max 15 znaků)</p>
         <input type="text" id="iu-mailbox-edit-label" maxlength="15" autocomplete="off" value="${escapeHtml(it.label || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <p style="margin:0 0 12px 0;font-weight:600;">URL (www)</p>
-        <input type="text" id="iu-mailbox-edit-url" autocomplete="off" value="${escapeHtml(it.url || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:16px;border:1px solid #ccc;border-radius:6px;" />
+        <input type="text" id="iu-mailbox-edit-url" autocomplete="off" value="${escapeHtml(it.url || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <div class="iu-mailbox-edit-social-row" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0;">
+          ${socialRowHtml}
+        </div>
         <div style="display:flex;gap:10px;justify-content:flex-end;">
           <button type="button" id="iu-mailbox-edit-cancel" style="padding:8px 14px;border:1px solid #999;background:#fff;border-radius:6px;cursor:pointer;">Zrušit</button>
           <button type="submit" style="padding:8px 14px;border:none;background:#1F4B99;color:#fff;border-radius:6px;cursor:pointer;">Uložit</button>
@@ -7538,6 +7575,21 @@ function buildVideoAsArticleCard(it) {
       `;
       overlay.appendChild(form);
       document.body.appendChild(overlay);
+
+      form.querySelectorAll(".iu-pill-social-opt").forEach((btn) => {
+        btn.querySelector("svg")?.setAttribute("width", "20");
+        btn.querySelector("svg")?.setAttribute("height", "20");
+        btn.style.color = "#fff";
+        btn.addEventListener("click", () => {
+          const key = btn.getAttribute("data-social");
+          selectedSocial = selectedSocial === key ? null : key;
+          form.querySelectorAll(".iu-pill-social-opt").forEach((b) => {
+            const k = b.getAttribute("data-social");
+            b.setAttribute("aria-pressed", selectedSocial === k ? "true" : "false");
+            b.style.borderColor = selectedSocial === k ? "#1F4B99" : "#cfd2d6";
+          });
+        });
+      });
 
       const labelInput = form.querySelector("#iu-mailbox-edit-label");
       const urlInput = form.querySelector("#iu-mailbox-edit-url");
@@ -7555,12 +7607,20 @@ function buildVideoAsArticleCard(it) {
         const label = String(labelInput.value).trim().slice(0, MAX);
         const url = String(urlInput.value).trim();
         overlay.remove();
-        onDone(label, url);
+        onDone(label, url, selectedSocial);
       });
       labelInput.focus();
     }
 
     list.addEventListener("click", (e) => {
+      const socialLink = e.target.closest?.("a.iu-pill-social-slot[data-social]");
+      if (socialLink) {
+        e.preventDefault();
+        const key = socialLink.getAttribute("data-social");
+        const url = key && IU_MAILBOX_SOCIAL_URLS[key];
+        if (url) window.open(url, "_blank", "noopener");
+        return;
+      }
       const gearBtn = e.target.closest?.("[data-mailbox-gear]");
       if (gearBtn) {
         e.preventDefault();
@@ -7568,10 +7628,10 @@ function buildVideoAsArticleCard(it) {
         const items = iuMailboxLoad();
         const it = items[idx];
         if (!it) return;
-        iuMailboxOpenEditDialog(idx, it, (label, url) => {
+        iuMailboxOpenEditDialog(idx, it, (label, url, social) => {
           const items = iuMailboxLoad();
           const labelNorm = String(label).trim().slice(0, IU_MAILBOX_LABEL_MAX);
-          items[idx] = { ...items[idx], label: labelNorm, url: String(url).trim() };
+          items[idx] = { ...items[idx], label: labelNorm, url: String(url).trim(), social: social && IU_MAILBOX_SOCIAL_OPTIONS.includes(social) ? social : null };
           iuMailboxSave(items);
           iuMailboxRender();
         });
