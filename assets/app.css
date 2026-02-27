@@ -12840,13 +12840,95 @@ section.iu-mojeSluzby{
   flex-direction: column;
   gap: 8px;
 }
-.iu-mojeSluzbyPojistovnaItem{
+.iu-pojistovnaForm{
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
 }
-.iu-mojeSluzbyPojistovnaItem input{
-  flex: 1;
-  min-width: 80px;
-  padding: 6px 10px;
+.iu-pojistovnaLabel{
+  font-size: 13px;
+  color: rgba(255,255,255,.85);
+}
+.iu-pojistovnaSelect,
+.iu-pojistovnaInput{
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.06);
+  color: inherit;
+  font-size: 14px;
+  max-width: 100%;
+}
+.iu-pojistovnaSaveBtn{
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(180deg, #2a7de0, #1a5bb5);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(42,125,224,.35);
+  transition: .18s;
+  align-self: flex-start;
+}
+.iu-pojistovnaSaveBtn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(42,125,224,.45);
+}
+.iu-pojistovnaMessage{
+  min-height: 1.4em;
+  font-size: 13px;
+  color: var(--iu-gold);
+  opacity: 0;
+  transition: opacity .2s;
+  margin-bottom: 4px;
+}
+.iu-pojistovnaMessage--visible{
+  opacity: 1;
+}
+.iu-pojistovnaSaved{
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.iu-pojistovnaSavedGrid{
+  margin-top: 8px;
+}
+.iu-pojistovnaTileBtn{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 14px;
+  border: none;
+  padding: 12px;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+  transition: .18s;
+}
+.iu-pojistovnaTileBtn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.45);
+}
+.iu-pojistovnaTileAbbr{
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.iu-pojistovnaTileName{
+  font-size: 12px;
+  opacity: .95;
+}
+.iu-pojistovnaRemove{
+  margin-top: 8px;
+  padding: 6px 12px;
+  font-size: 11px;
+  border: 1px solid rgba(192,192,192,.5);
+  background: rgba(255,255,255,.1);
+  color: var(--iu-silver);
+}
+.iu-pojistovnaRemove:hover{
+  background: rgba(255,255,255,.18);
 }

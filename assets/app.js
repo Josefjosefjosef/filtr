@@ -12432,12 +12432,24 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   ];
 
   const POJISTOVNY = [
-    { id: "vzp", label: "VZP", url: "https://www.vzp.cz/pojistenci/prihlaseni" },
-    { id: "ozp", label: "OZP", url: "https://www.ozp.cz/pojistenci/prihlaseni" },
-    { id: "zpmv", label: "ZPMV ČR (211)", url: "https://www.zpmvcr.cz/pojistenci/prihlaseni" },
-    { id: "vozp", label: "VoZP (201)", url: "https://www.vozp.cz/pojistenci/prihlaseni" },
-    { id: "cpzp", label: "ČPZP (205)", url: "https://www.cpzp.cz/pojistenci/prihlaseni" },
-    { id: "rbp", label: "RBP (213)", url: "https://www.rbp.cz/pojistenci/prihlaseni" }
+    { id: "vzp", label: "VZP (111)", abbr: "VZP", loginUrl: "https://moje.vzp.cz/home/signin" },
+    { id: "vozp", label: "VoZP (201)", abbr: "VoZP", loginUrl: "https://www.vozp.cz/pojistenci/prihlaseni" },
+    { id: "cpzp", label: "ČPZP (205)", abbr: "ČPZP", loginUrl: "https://www.cpzp.cz/pojistenci/prihlaseni" },
+    { id: "ozp", label: "OZP (207)", abbr: "OZP", loginUrl: "https://portal.ozp.cz/app/prihlaseni" },
+    { id: "zps", label: "ZPŠ (209)", abbr: "ZPŠ", loginUrl: "https://portal.zpskoda.cz/app/prihlaseni" },
+    { id: "zpmv", label: "ZP MV ČR (211)", abbr: "ZPMV", loginUrl: "https://www.zpmvcr.cz/pojistenci/prihlaseni" },
+    { id: "rbp", label: "RBP (213)", abbr: "RBP", loginUrl: "https://www.rbp.cz/pojistenci/prihlaseni" }
+  ];
+  const POJISTOVNY_BUTTONS_KEY = "iu_moje_sluzby_pojistovny_buttons_v1";
+  const POJISTOVNY_MAX = 24;
+  const POJISTOVNY_COLORS = [
+    { id: "c01", value: "#1a5bb5" }, { id: "c02", value: "#c41230" }, { id: "c03", value: "#00a651" },
+    { id: "c04", value: "#e6007e" }, { id: "c05", value: "#056da1" }, { id: "c06", value: "#e30613" },
+    { id: "c07", value: "#ffed00" }, { id: "c08", value: "#1a1a1a" }, { id: "c09", value: "#6b4c9a" },
+    { id: "c10", value: "#e67e22" }, { id: "c11", value: "#16a085" }, { id: "c12", value: "#8e44ad" },
+    { id: "c13", value: "#2c3e50" }, { id: "c14", value: "#c0392b" }, { id: "c15", value: "#27ae60" },
+    { id: "c16", value: "#2980b9" }, { id: "c17", value: "#d35400" }, { id: "c18", value: "#7f8c8d" },
+    { id: "c19", value: "#bdc3c7" }, { id: "c20", value: "#95a5a6" }
   ];
 
   function getBanksState() {
@@ -12499,6 +12511,21 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
   function setPojistovnyNames(o) {
     try { localStorage.setItem(POJISTOVNY_KEY, JSON.stringify(o)); } catch (_) {}
+  }
+
+  function getPojistovnyButtonsState() {
+    try {
+      var raw = localStorage.getItem(POJISTOVNY_BUTTONS_KEY);
+      if (raw) {
+        var a = JSON.parse(raw);
+        if (Array.isArray(a)) return a.slice(0, POJISTOVNY_MAX).filter(function(x) { return x && x.id && x.insurerId && x.loginUrl; });
+      }
+    } catch (_) {}
+    return [];
+  }
+
+  function setPojistovnyButtonsState(a) {
+    try { localStorage.setItem(POJISTOVNY_BUTTONS_KEY, JSON.stringify(Array.isArray(a) ? a.slice(0, POJISTOVNY_MAX) : [])); } catch (_) {}
   }
 
   function esc(s) { return String(s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
@@ -12914,30 +12941,127 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function renderPojistovnaModal(container) {
-    const names = getPojistovnyNames();
+    var list = getPojistovnyButtonsState();
 
-    const html = `
-      <div class="iu-mojeSluzbyPojistovna">
-        ${POJISTOVNY.map(p => `
-          <div class="iu-mojeSluzbyPojistovnaItem" data-id="${esc(p.id)}">
-            <span class="iuIconTile"><i class="fa-solid fa-heart-pulse"></i></span>
-            <span><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.label)}</a></span>
-            <input type="text" placeholder="Jméno" data-poj-name value="${esc(names[p.id] || "")}" />
-          </div>
-        `).join("")}
-      </div>`;
+    var insurerOpts = "<option value=\"\">— Pojišťovna —</option>" + POJISTOVNY.map(function(p) {
+      return "<option value=\"" + esc(p.id) + "\" data-abbr=\"" + esc(p.abbr) + "\" data-url=\"" + esc(p.loginUrl) + "\">" + esc(p.label) + "</option>";
+    }).join("");
+    var colorOpts = "<option value=\"\">— Barva —</option>" + POJISTOVNY_COLORS.map(function(c) {
+      return "<option value=\"" + esc(c.id) + "\" data-value=\"" + esc(c.value) + "\">" + esc(c.value) + "</option>";
+    }).join("");
+
+    var html = [
+      "<div class=\"iu-mojeSluzbyPojistovna\">",
+      "  <div class=\"iu-pojistovnaForm\">",
+      "    <label class=\"iu-pojistovnaLabel\">Pojišťovna</label>",
+      "    <select class=\"iu-pojistovnaSelect\" data-poj-insurer>" + insurerOpts + "</select>",
+      "    <label class=\"iu-pojistovnaLabel\">Jméno</label>",
+      "    <input type=\"text\" class=\"iu-pojistovnaInput\" placeholder=\"Jméno\" data-poj-name maxlength=\"20\" />",
+      "    <label class=\"iu-pojistovnaLabel\">Barva</label>",
+      "    <select class=\"iu-pojistovnaSelect\" data-poj-color>" + colorOpts + "</select>",
+      "    <button type=\"button\" class=\"iu-pojistovnaSaveBtn\" data-poj-save>Uložit</button>",
+      "  </div>",
+      "  <div class=\"iu-pojistovnaMessage\" data-poj-message aria-live=\"polite\"></div>",
+      "  <div class=\"iu-pojistovnaSaved\">",
+      "    <div class=\"iuBanksGrid iu-pojistovnaSavedGrid\" data-poj-saved></div>",
+      "  </div>",
+      "</div>"
+    ].join("");
     container.innerHTML = html;
 
-    container.querySelectorAll("[data-poj-name]").forEach(inp => {
-      const item = inp.closest("[data-id]");
-      if (!item) return;
-      const id = item.dataset.id;
-      inp.addEventListener("change", () => {
-        const n = getPojistovnyNames();
-        n[id] = inp.value.trim();
-        setPojistovnyNames(n);
+    var insurerSelect = container.querySelector("[data-poj-insurer]");
+    var nameInput = container.querySelector("[data-poj-name]");
+    var colorSelect = container.querySelector("[data-poj-color]");
+    var saveBtn = container.querySelector("[data-poj-save]");
+    var messageEl = container.querySelector("[data-poj-message]");
+    var savedEl = container.querySelector("[data-poj-saved]");
+
+    function setMessage(text, visible) {
+      if (!messageEl) return;
+      messageEl.textContent = text || "";
+      messageEl.classList.toggle("iu-pojistovnaMessage--visible", !!visible);
+    }
+
+    function renderSaved() {
+      list = getPojistovnyButtonsState();
+      savedEl.innerHTML = list.map(function(item) {
+        var style = "background:linear-gradient(180deg," + (item.colorValue || "#1a5bb5") + ",#0d2d5c);";
+        return "<div class=\"iuBankCard iu-pojistovnaTile\" data-poj-id=\"" + esc(item.id) + "\">" +
+          "<button type=\"button\" class=\"iuBankCardMain iu-pojistovnaTileBtn\" data-poj-login-url=\"" + esc(item.loginUrl) + "\" style=\"" + esc(style) + "\">" +
+          "<span class=\"iu-pojistovnaTileAbbr\">" + esc(item.abbr) + "</span>" +
+          "<span class=\"iu-pojistovnaTileName\">" + esc(item.name) + "</span></button>" +
+          "<button type=\"button\" class=\"iuBankMiniActionBtn iu-pojistovnaRemove\" data-poj-remove-id=\"" + esc(item.id) + "\">Odstranit</button></div>";
+      }).join("");
+      savedEl.querySelectorAll("[data-poj-login-url]").forEach(function(btn) {
+        var url = btn.getAttribute("data-poj-login-url");
+        btn.addEventListener("click", function() {
+          if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
+        });
       });
+      savedEl.querySelectorAll("[data-poj-remove-id]").forEach(function(btn) {
+        btn.addEventListener("click", function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var id = btn.getAttribute("data-poj-remove-id");
+          if (!id) return;
+          list = list.filter(function(x) { return x.id !== id; });
+          setPojistovnyButtonsState(list);
+          renderSaved();
+          setMessage("", false);
+        });
+      });
+    }
+
+    saveBtn.addEventListener("click", function() {
+      var insurerId = (insurerSelect.value || "").trim();
+      var name = (nameInput.value || "").trim();
+      var nameSlice = name.slice(0, 20);
+      var colorId = (colorSelect.value || "").trim();
+      setMessage("", false);
+      if (!insurerId) {
+        setMessage("Vyberte pojišťovnu.", true);
+        return;
+      }
+      if (nameSlice.length === 0) {
+        setMessage("Zadejte jméno (1–20 znaků).", true);
+        return;
+      }
+      if (name.length > 20) {
+        setMessage("Jméno může mít nejvýše 20 znaků.", true);
+        return;
+      }
+      if (!colorId) {
+        setMessage("Vyberte barvu.", true);
+        return;
+      }
+      if (list.length >= POJISTOVNY_MAX) {
+        setMessage("Uloženo je již maximálně " + POJISTOVNY_MAX + " tlačítek. Nejprve nějaké odeberte.", true);
+        return;
+      }
+      var insurer = POJISTOVNY.filter(function(p) { return p.id === insurerId; })[0];
+      var color = POJISTOVNY_COLORS.filter(function(c) { return c.id === colorId; })[0];
+      if (!insurer || !color) return;
+      var newItem = {
+        id: "zp_" + Date.now() + "_" + Math.random().toString(36).slice(2),
+        insurerId: insurer.id,
+        abbr: insurer.abbr,
+        name: nameSlice,
+        colorId: color.id,
+        colorValue: color.value,
+        loginUrl: insurer.loginUrl
+      };
+      list = list.slice();
+      list.push(newItem);
+      setPojistovnyButtonsState(list);
+      nameInput.value = "";
+      insurerSelect.value = "";
+      colorSelect.value = "";
+      renderSaved();
+      setMessage("Uloženo.", true);
+      setTimeout(function() { setMessage("", false); }, 2500);
     });
+
+    renderSaved();
   }
 
   function iuRenderMojeSluzbyInQuickFeed(key, container) {
