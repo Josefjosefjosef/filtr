@@ -7495,12 +7495,13 @@ function buildVideoAsArticleCard(it) {
       row.className = "iu-mailbox-row";
       const label = it.label || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : `Schránka ${i + 1}`);
       const social = it.social && IU_MAILBOX_SOCIAL_OPTIONS.includes(it.social) ? it.social : null;
-      const socialSlotHtml = social
-        ? `<a href="#" class="iu-pill-social-slot" data-mailbox-social="${i}" data-social="${escapeHtml(social)}" aria-label="${escapeHtml(social)}" rel="noopener" target="_blank"><span class="iu-pill-social-icon">${iuMailboxSocialIconSvg(social)}</span></a>`
+      const socialUrl = social && IU_MAILBOX_SOCIAL_URLS[social] ? IU_MAILBOX_SOCIAL_URLS[social] : "";
+      const socialSlotHtml = social && socialUrl
+        ? `<a href="${escapeHtml(socialUrl)}" class="iu-pill-social-slot" data-mailbox-social="${i}" data-social="${escapeHtml(social)}" aria-label="${escapeHtml(social)}" rel="noopener noreferrer" target="_blank"><span class="iu-pill-social-icon">${iuMailboxSocialIconSvg(social)}</span></a>`
         : `<span class="iu-pill-social-slot" aria-hidden="true"></span>`;
       row.innerHTML = `<button class="iu-mailbox-pill" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
-        socialSlotHtml +
-        `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><i class="fa-solid fa-gear" aria-hidden="true"></i></button>`;
+        `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><i class="fa-solid fa-gear" aria-hidden="true"></i></button>` +
+        socialSlotHtml;
       frag.appendChild(row);
     });
     list.innerHTML = "";
@@ -7613,14 +7614,6 @@ function buildVideoAsArticleCard(it) {
     }
 
     list.addEventListener("click", (e) => {
-      const socialLink = e.target.closest?.("a.iu-pill-social-slot[data-social]");
-      if (socialLink) {
-        e.preventDefault();
-        const key = socialLink.getAttribute("data-social");
-        const url = key && IU_MAILBOX_SOCIAL_URLS[key];
-        if (url) window.open(url, "_blank", "noopener");
-        return;
-      }
       const gearBtn = e.target.closest?.("[data-mailbox-gear]");
       if (gearBtn) {
         e.preventDefault();

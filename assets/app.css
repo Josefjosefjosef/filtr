@@ -11315,7 +11315,8 @@ body #iuLeftRail{
 }
 
 .accordionCol .mindMenu .iu-mailbox-pill{
-  width: 230px;
+  width: 210px;
+  flex: 0 0 210px;
   height: 35px;
   border-radius: 999px;
   border: 1px solid rgba(20,40,70,0.18);
@@ -12432,23 +12433,17 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   justify-content: center !important;
 }
 
-/* === MindMenu: pill spans over gear + height 35px (row is the pill), P0 width 260px === */
+/* === MindMenu: row = PILULKA(210px) | SETTINGS | SOCIAL(40px); settings outside pill === */
 .layout > aside.accordionCol .mindMenu .iu-mailbox-row{
-  position: relative;
   display: flex;
   align-items: center;
-  width: 260px;
-  height: 35px;
   min-height: 35px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.62);
-  border: 1px solid rgba(20, 40, 70, 0.18);
-  box-shadow: none;
-  padding-right: 36px;
+  gap: var(--iu-mm-gap, 10px);
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
-  flex: 1 1 auto;
+  width: 210px;
+  flex: 0 0 210px;
   min-width: 0;
   line-height: 35px;
   background: transparent !important;
@@ -12457,27 +12452,27 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-gear{
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   margin: 0;
-  z-index: 2;
 }
 
 @media (prefers-reduced-motion: no-preference){
   .layout > aside.accordionCol .mindMenu .iu-mailbox-row:hover .iu-mailbox-gear{
-    transform: translateY(calc(-50% - 1px));
+    transform: translateY(-1px);
   }
 }
 
 @media (prefers-reduced-motion: reduce){
   .layout > aside.accordionCol .mindMenu .iu-mailbox-row .iu-mailbox-gear{
-    transform: translateY(-50%);
+    transform: none;
   }
 }
 
-/* === infoUzel.cz P0 — MindMenu pills width 260px + center === */
+/* === infoUzel.cz P0 — MindMenu pills 210px + center === */
 
 /* wrapper pravého sloupce – jen centrování obsahu */
 section.iu-mmQuickLinks,
@@ -12494,11 +12489,11 @@ section.iu-mindmenu,
   margin-right: auto;
 }
 
-/* samotná pilulka – vyplní řádek */
+/* samotná pilulka – fixní 210px */
 .layout > aside.accordionCol .mindMenu .iu-mailbox-pill {
-  width: 100%;
+  width: 210px;
+  flex: 0 0 210px;
   min-width: 0;
-  flex: 0 0 auto;
 }
 
 /* === P0 Topbar: date/nameday nikdy nezmizí (včetně mobile) === */
@@ -12949,9 +12944,9 @@ section.iu-mojeSluzby{
   width: 40px;
   flex: 0 0 40px;
   min-width: 40px;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   box-sizing: border-box;
 }
 .iu-pill-social-icon {
