@@ -12846,3 +12846,64 @@ section.iu-mojeSluzby{
 .iu-pojistovnaRemove:hover{
   background: rgba(255,255,255,.18);
 }
+
+/* INFOUZEL PREMIUM ALIGN – RIGHT RAIL ONLY */
+.accordionCol .mindMenu {
+
+  --iu-rail-gap-y: 12px;
+  --iu-rail-gap-x: 10px;
+  --iu-rail-icon-size: 45px;
+  --iu-rail-label-gap: 8px;
+}
+
+.accordionCol .mindMenu .iu-tile,
+.accordionCol .mindMenu .iu-card,
+.accordionCol .mindMenu .iu-item {
+  margin: var(--iu-rail-gap-y) 0;
+  padding-left: var(--iu-rail-gap-x);
+  padding-right: var(--iu-rail-gap-x);
+}
+
+.accordionCol .mindMenu .iu-icon {
+  width: var(--iu-rail-icon-size);
+  height: var(--iu-rail-icon-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.accordionCol .mindMenu .iu-label {
+  margin-top: var(--iu-rail-label-gap);
+  text-align: center;
+}
+
+.accordionCol .mindMenu .iu-grid {
+  row-gap: var(--iu-rail-gap-y);
+  column-gap: var(--iu-rail-gap-x);
+}
+
+/* Right rail – apply same spacing to actual MindMenu classes */
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem,
+.accordionCol .mindMenu .iu-mailbox-row {
+  margin: var(--iu-rail-gap-y) 0;
+  padding-left: var(--iu-rail-gap-x);
+  padding-right: var(--iu-rail-gap-x);
+}
+
+.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile {
+  width: var(--iu-rail-icon-size);
+  height: var(--iu-rail-icon-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem span:last-of-type {
+  margin-top: var(--iu-rail-label-gap);
+  text-align: center;
+}
+
+.accordionCol .mindMenu .iu-mmQuickGrid {
+  row-gap: var(--iu-rail-gap-y);
+  column-gap: var(--iu-rail-gap-x);
+}
