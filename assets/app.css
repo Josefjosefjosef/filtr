@@ -12433,14 +12433,14 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   justify-content: center !important;
 }
 
-/* === MindMenu: row = PILULKA(210) + gap 10px + GEAR (no frame) + gap 10px + SOC(40 when set) === */
+/* === MindMenu: row = PILULKA(210) + gap 5px + GEAR (no frame, lighter) + gap 10px + SOC(40 when set); no center when social off === */
 .layout > aside.accordionCol .mindMenu .iu-mailbox-row{
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   min-height: 35px;
-  gap: 10px;
+  gap: 0;
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
@@ -12461,11 +12461,21 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   height: 32px;
   min-width: 32px;
   min-height: 32px;
-  margin: 0;
+  margin-left: 5px;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
   border-radius: 0 !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.layout > aside.accordionCol .mindMenu .iu-mailbox-gear i{
+  color: inherit;
+  opacity: 1;
+}
+
+.layout > aside.accordionCol .mindMenu .iu-pill-social-slot{
+  margin-left: 10px;
 }
 
 @media (prefers-reduced-motion: no-preference){
@@ -12491,10 +12501,9 @@ section.iu-mindmenu,
   align-items: center;   /* vodorovné centrování */
 }
 
-/* každý řádek pilulky – centrovaný v pravém sloupci (social null i set) */
+/* řádek pilulky – bez auto-centrování (social OFF nemění pozici) */
 .layout > aside.accordionCol .mindMenu .iu-mailbox-row {
-  margin-left: auto;
-  margin-right: auto;
+  align-self: flex-start;
 }
 
 /* samotná pilulka – fixní 210px */
@@ -12957,20 +12966,61 @@ section.iu-mojeSluzby{
   justify-content: center;
   box-sizing: border-box;
 }
+
+/* iOS premium / soft-UI social icon (dialog + row), 40×40 */
+.iu-social-ios40 {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(120% 120% at 30% 25%, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 45%),
+    radial-gradient(140% 140% at 60% 70%, #aeb2b8 0%, #7f858e 55%, #5f6670 100%);
+  box-shadow:
+    inset 0 2px 3px rgba(255,255,255,.22),
+    inset 0 -3px 6px rgba(0,0,0,.38),
+    0 6px 14px rgba(0,0,0,.22);
+}
+.iu-social-ios40 svg {
+  width: 20px;
+  height: 20px;
+  fill: #fff;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.20));
+}
+
+.iu-pill-social-opt.iu-social-ios40[aria-pressed="true"] {
+  box-shadow:
+    inset 0 2px 3px rgba(255,255,255,.22),
+    inset 0 -3px 6px rgba(0,0,0,.38),
+    0 6px 14px rgba(0,0,0,.22),
+    0 0 0 2px #1F4B99;
+}
+
 .iu-pill-social-icon {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(145deg, #e8eaed, #cfd2d6);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
 }
-.iu-pill-social-icon svg {
+.iu-pill-social-icon.iu-social-ios40 {
+  background:
+    radial-gradient(120% 120% at 30% 25%, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 45%),
+    radial-gradient(140% 140% at 60% 70%, #aeb2b8 0%, #7f858e 55%, #5f6670 100%);
+  box-shadow:
+    inset 0 2px 3px rgba(255,255,255,.22),
+    inset 0 -3px 6px rgba(0,0,0,.38),
+    0 6px 14px rgba(0,0,0,.22);
+}
+.iu-pill-social-icon.iu-social-ios40 svg {
   fill: #fff;
-  stroke: #fff;
+  stroke: none;
   width: 20px;
   height: 20px;
   flex-shrink: 0;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.20));
 }

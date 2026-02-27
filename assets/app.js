@@ -7497,7 +7497,7 @@ function buildVideoAsArticleCard(it) {
       const social = it.social && IU_MAILBOX_SOCIAL_OPTIONS.includes(it.social) ? it.social : null;
       const socialUrl = social && IU_MAILBOX_SOCIAL_URLS[social] ? IU_MAILBOX_SOCIAL_URLS[social] : "";
       const socialSlotHtml = social && socialUrl
-        ? `<a href="${escapeHtml(socialUrl)}" class="iu-pill-social-slot" data-mailbox-social="${i}" data-social="${escapeHtml(social)}" aria-label="${escapeHtml(social)}" rel="noopener noreferrer" target="_blank"><span class="iu-pill-social-icon">${iuMailboxSocialIconSvg(social)}</span></a>`
+        ? `<a href="${escapeHtml(socialUrl)}" class="iu-pill-social-slot" data-mailbox-social="${i}" data-social="${escapeHtml(social)}" aria-label="${escapeHtml(social)}" rel="noopener noreferrer" target="_blank"><span class="iu-pill-social-icon iu-social-ios40">${iuMailboxSocialIconSvg(social)}</span></a>`
         : "";
       row.innerHTML = `<button class="iu-mailbox-pill" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
         `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><i class="fa-solid fa-gear" aria-hidden="true"></i></button>` +
@@ -7554,7 +7554,7 @@ function buildVideoAsArticleCard(it) {
       let selectedSocial = it.social && IU_MAILBOX_SOCIAL_OPTIONS.includes(it.social) ? it.social : null;
       const socialRowHtml = IU_MAILBOX_SOCIAL_OPTIONS.map((key) => {
         const pressed = selectedSocial === key ? "true" : "false";
-        return `<button type="button" class="iu-pill-social-opt" data-social="${escapeHtml(key)}" aria-pressed="${pressed}" title="${escapeHtml(key)}" style="width:36px;height:36px;border-radius:50%;border:2px solid ${selectedSocial === key ? "#1F4B99" : "#cfd2d6"};background:linear-gradient(145deg,#e8eaed,#cfd2d6);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;">${iuMailboxSocialIconSvg(key)}</button>`;
+        return `<button type="button" class="iu-pill-social-opt iu-social-ios40" data-social="${escapeHtml(key)}" aria-pressed="${pressed}" title="${escapeHtml(key)}" style="cursor:pointer;padding:0;">${iuMailboxSocialIconSvg(key)}</button>`;
       }).join("");
       const overlay = document.createElement("div");
       overlay.setAttribute("id", "iu-mailbox-edit-overlay");
