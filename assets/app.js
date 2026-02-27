@@ -7793,6 +7793,21 @@ function buildVideoAsArticleCard(it) {
       });
   };
 
+  function iuInjectMindSlotRow() {
+    var mojeSluzby = document.querySelector(".mindMenu .iu-mojeSluzby") || document.querySelector(".iu-mmQuickLinks.iu-mojeSluzby");
+    if (!mojeSluzby || mojeSluzby.previousElementSibling && mojeSluzby.previousElementSibling.getAttribute("data-mindslot-row")) return;
+    var section = document.createElement("section");
+    section.className = "iu-mmQuickLinks iu-mindSlot";
+    section.setAttribute("data-mindslot-row", "1");
+    section.setAttribute("aria-label", "Kalendář, Poznámky, Plánovač");
+    section.innerHTML = "<div class=\"iu-mmQuickGrid\" role=\"list\">" +
+      "<button type=\"button\" class=\"iu-mmQuickItem\" aria-label=\"Kalendář\"><span class=\"iuIconTile\"><i class=\"fa-solid fa-calendar-days\" aria-hidden=\"true\"></i></span><span>Kalendář</span></button>" +
+      "<button type=\"button\" class=\"iu-mmQuickItem\" aria-label=\"Poznámky\"><span class=\"iuIconTile\"><i class=\"fa-solid fa-note-sticky\" aria-hidden=\"true\"></i></span><span>Poznámky</span></button>" +
+      "<button type=\"button\" class=\"iu-mmQuickItem\" aria-label=\"Plánovač\"><span class=\"iuIconTile\"><i class=\"fa-solid fa-list-check\" aria-hidden=\"true\"></i></span><span>Plánovač</span></button>" +
+      "</div>";
+    mojeSluzby.parentNode.insertBefore(section, mojeSluzby);
+  }
+
   function initRightPanel() {
     const root = document.querySelector(".mindMenu") || document.querySelector("aside.accordionCol") || null;
     if (!root) return;
@@ -7808,6 +7823,7 @@ function buildVideoAsArticleCard(it) {
 
     iuWeatherInit();
     iuMailboxesInit();
+    iuInjectMindSlotRow();
     initAccordion();
   }
 
