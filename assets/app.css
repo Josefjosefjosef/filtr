@@ -11208,9 +11208,12 @@ body #iuLeftRail{
   min-width: 0;
 }
 
-/* Ensure content below has breathing room and column grows naturally downward */
+/* Ensure content below has breathing room; match Rychlé odkazy ↔ Moje služby line→icons gap */
+.accordionCol .mindMenu{
+  --iu-rr-blockTopGap: 12px;
+}
 .accordionCol .mindMenu .iu-mmSectionHead + .iu-mmQuickGrid{
-  margin-top: 12px;
+  margin-top: var(--iu-rr-blockTopGap, 12px);
 }
 
 /* Optional: slightly tighten the first section so it doesn't start too low */
@@ -11280,6 +11283,7 @@ body #iuLeftRail{
   --iu-rr-px: 10px;
   --iu-rr-rowGap: 8px;
   --iu-rr-ico: 40px;
+  --iu-rr-itemW: 72px;
   --iu-mm-ico: 40px;
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem{
@@ -11288,6 +11292,7 @@ body #iuLeftRail{
   align-items: center;
   justify-content: center;
   text-align: center;
+  width: var(--iu-rr-itemW, 72px);
   gap: var(--iu-rr-gapY, 6px);
   padding-block: var(--iu-rr-py, 8px);
   padding-inline: var(--iu-rr-px, 10px);
@@ -11320,8 +11325,10 @@ body #iuLeftRail{
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem span:not(.iuIconTile){
   display: block;
   flex: 0 0 auto;
+  width: 100%;
   min-width: 0;
   max-width: 100%;
+  text-align: center;
 }
 .accordionCol .mindMenu-scroll-wrapper{
   height: auto;
@@ -11347,7 +11354,7 @@ body #iuLeftRail{
 }
 
 .accordionCol .mindMenu .iu-mailbox-list{
-  margin-top: 12px;
+  margin-top: var(--iu-rr-blockTopGap, 12px);
   display: flex;
   flex-direction: column;
   gap: var(--iu-mm-rowGap, 6px);
