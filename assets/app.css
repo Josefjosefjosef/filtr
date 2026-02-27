@@ -177,17 +177,25 @@ img, svg, video, iframe{
 .accordionCol .mindMenu .iu-mailboxes{
   min-height: 255px;
 }
+/* P0 CLS: reserve right rail width so column does not shift on load */
+.layout > aside.accordionCol{
+  min-width: 360px;
+}
 i.fa-solid,
 i.fa-regular,
 i.fa-brands{
   display: inline-block;
   width: 1.25em;
+  min-width: 1.25em;
+  height: 1.25em;
   text-align: center;
   line-height: 1;
 }
 .iu-mmQuickLinks .iuIconTile > i{
   display: inline-block;
   width: 1.25em;
+  min-width: 1.25em;
+  height: 1.25em;
   text-align: center;
   line-height: 1;
 }
@@ -8200,20 +8208,18 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   --iuLeftBtnShadow: 0 10px 22px rgba(0,0,0,0.22);
 }
 
+/* LEFT RAIL — base + quiet default (merged for dedupe) */
 .iu-leftNav .iu-leftNavItem{
   --iuNavAccent: #3B82F6; /* default fallback accent */
-  /* stripe-only: no fill, no border, no brighten */
   border-radius: 14px;
-  background: transparent;
+  background: transparent !important;
   background-image: none;
   background-color: transparent;
-  border: 0;
+  border: 0 !important;
   box-shadow: none;
-  filter: none;
+  filter: none !important;
   transition: color 220ms ease;
-
-  /* same gray as article meta time (.meta-time) */
-  color: rgba(11,27,43,0.55);
+  color: rgba(11,27,43,0.55); /* 1:1 as .meta-time */
 }
 
 /* Inner highlight (soft light from top) */
@@ -8225,15 +8231,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
 /* Default typography/weights */
 .iu-leftNav .iu-leftNavIcon{ opacity: 1; }
 .iu-leftNav .iu-leftNavLabel{ opacity: 1; }
-
-/* LEFT RAIL — quiet default (meta-time gray) */
-.iu-leftNav .iu-leftNavItem{
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none;
-  filter: none !important;
-  color: rgba(11,27,43,0.55); /* 1:1 as .meta-time */
-}
 
 /* Rail theme: affect only DEFAULT state (no hover/focus/active/section colors). */
 .iu-leftNav .iu-leftNavItem:not(.is-active):not(:hover):not(:focus-visible){
