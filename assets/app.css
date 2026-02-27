@@ -12437,6 +12437,8 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 .layout > aside.accordionCol .mindMenu .iu-mailbox-row{
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 100%;
   min-height: 35px;
   gap: var(--iu-mm-gap, 10px);
 }
@@ -12446,8 +12448,10 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   flex: 0 0 210px;
   min-width: 0;
   line-height: 35px;
-  background: transparent !important;
-  border: 0 !important;
+  border: 1px solid rgba(20, 40, 70, 0.18);
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.62) !important;
+  background-image: none !important;
   box-shadow: none !important;
 }
 
@@ -12483,7 +12487,7 @@ section.iu-mindmenu,
   align-items: center;   /* vodorovné centrování */
 }
 
-/* každý řádek pilulky – centrování v pravém sloupci */
+/* každý řádek pilulky – centrovaný v pravém sloupci (social null i set) */
 .layout > aside.accordionCol .mindMenu .iu-mailbox-row {
   margin-left: auto;
   margin-right: auto;
@@ -12946,7 +12950,7 @@ section.iu-mojeSluzby{
   min-width: 40px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   box-sizing: border-box;
 }
 .iu-pill-social-icon {
