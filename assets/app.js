@@ -7543,7 +7543,9 @@ function buildVideoAsArticleCard(it) {
     document.getElementById("iuMailboxAdd")?.addEventListener("click", () => {
       if (mailboxCount >= IU_MAILBOX_MAX) return;
       const items = iuMailboxLoad();
-      items.push({ label: "", url: "", social: null, index: items.length });
+      const newIndex = items.length;
+      const defaultSocial = newIndex === 4 ? "facebook" : newIndex === 5 ? "instagram" : null;
+      items.push({ label: "", url: "", social: defaultSocial, index: newIndex });
       iuMailboxSave(items);
       iuMailboxRender();
       mailboxCount = items.length;
