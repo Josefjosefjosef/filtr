@@ -11228,34 +11228,50 @@ body #iuLeftRail{
   margin-top: 10px !important;
 }
 
-/* ===== Right rail: Rychlé odkazy – ikony +40 %, odstup popisků, responsive, auto výška ===== */
+/* ===== Right rail: Rychlé odkazy – jednotný řádek ikona+text, stejné mezery ===== */
 .accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile{
-  width: 45px;
-  height: 45px;
-  flex-shrink: 0;
+  width: var(--iu-mm-ico, 20px);
+  height: var(--iu-mm-ico, 20px);
+  flex: 0 0 var(--iu-mm-ico, 20px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile > i,
+.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile > svg,
+.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile > img{
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile > i{
   font-size: 20px;
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem{
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: var(--iu-mm-gap, 10px);
+  min-height: var(--iu-mm-rowH, 34px);
+  padding-block: var(--iu-mm-py, 6px);
+  padding-inline: var(--iu-mm-px, 10px);
+  line-height: 1.15;
   min-width: 0;
   max-width: 100%;
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem span:last-of-type{
+  flex: 1 1 auto;
   min-width: 0;
   max-width: 100%;
   overflow-wrap: anywhere;
-  text-align: center;
-  line-height: 1.2;
+  text-align: left;
+  line-height: 1.15;
 }
 .accordionCol .mindMenu .iu-mmQuickGrid{
   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   max-width: 100%;
+  row-gap: var(--iu-mm-rowGap, 6px);
+  column-gap: var(--iu-mm-gap, 10px);
 }
 .accordionCol .mindMenu-scroll-wrapper{
   height: auto;
@@ -11282,14 +11298,20 @@ body #iuLeftRail{
 
 .accordionCol .mindMenu .iu-mailbox-list{
   margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--iu-mm-rowGap, 6px);
 }
 
 .accordionCol .mindMenu .iu-mailbox-row{
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin: 8px 0;
+  gap: var(--iu-mm-gap, 10px);
+  min-height: var(--iu-mm-rowH, 34px);
+  padding-block: var(--iu-mm-py, 6px);
+  padding-inline: var(--iu-mm-px, 10px);
+  line-height: 1.15;
+  margin: 0;
 }
 
 .accordionCol .mindMenu .iu-mailbox-pill{
@@ -12849,61 +12871,75 @@ section.iu-mojeSluzby{
 
 /* INFOUZEL PREMIUM ALIGN – RIGHT RAIL ONLY */
 .accordionCol .mindMenu {
-
-  --iu-rail-gap-y: 12px;
-  --iu-rail-gap-x: 10px;
-  --iu-rail-icon-size: 45px;
-  --iu-rail-label-gap: 8px;
+  --iu-mm-gap: 10px;
+  --iu-mm-rowH: 34px;
+  --iu-mm-py: 6px;
+  --iu-mm-px: 10px;
+  --iu-mm-ico: 20px;
+  --iu-mm-rowGap: 6px;
+  --iu-rail-gap-y: var(--iu-mm-rowGap);
+  --iu-rail-gap-x: var(--iu-mm-px);
+  --iu-rail-icon-size: var(--iu-mm-ico);
+  --iu-rail-label-gap: var(--iu-mm-gap);
 }
 
 .accordionCol .mindMenu .iu-tile,
 .accordionCol .mindMenu .iu-card,
 .accordionCol .mindMenu .iu-item {
-  margin: var(--iu-rail-gap-y) 0;
-  padding-left: var(--iu-rail-gap-x);
-  padding-right: var(--iu-rail-gap-x);
+  margin: 0;
+  padding-block: var(--iu-mm-py, 6px);
+  padding-inline: var(--iu-mm-px, 10px);
+  min-height: var(--iu-mm-rowH, 34px);
+  display: flex;
+  align-items: center;
+  gap: var(--iu-mm-gap, 10px);
+  line-height: 1.15;
 }
 
 .accordionCol .mindMenu .iu-icon {
-  width: var(--iu-rail-icon-size);
-  height: var(--iu-rail-icon-size);
-  display: flex;
+  width: var(--iu-mm-ico, 20px);
+  height: var(--iu-mm-ico, 20px);
+  flex: 0 0 var(--iu-mm-ico, 20px);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .accordionCol .mindMenu .iu-label {
-  margin-top: var(--iu-rail-label-gap);
-  text-align: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
 }
 
 .accordionCol .mindMenu .iu-grid {
-  row-gap: var(--iu-rail-gap-y);
-  column-gap: var(--iu-rail-gap-x);
+  row-gap: var(--iu-mm-rowGap, 6px);
+  column-gap: var(--iu-mm-gap, 10px);
 }
 
 /* Right rail – apply same spacing to actual MindMenu classes */
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem,
 .accordionCol .mindMenu .iu-mailbox-row {
-  margin: var(--iu-rail-gap-y) 0;
-  padding-left: var(--iu-rail-gap-x);
-  padding-right: var(--iu-rail-gap-x);
+  margin: 0;
+  padding-block: var(--iu-mm-py, 6px);
+  padding-inline: var(--iu-mm-px, 10px);
 }
 
 .accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile {
-  width: var(--iu-rail-icon-size);
-  height: var(--iu-rail-icon-size);
-  display: flex;
+  width: var(--iu-mm-ico, 20px);
+  height: var(--iu-mm-ico, 20px);
+  flex: 0 0 var(--iu-mm-ico, 20px);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem span:last-of-type {
-  margin-top: var(--iu-rail-label-gap);
-  text-align: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
 }
 
 .accordionCol .mindMenu .iu-mmQuickGrid {
-  row-gap: var(--iu-rail-gap-y);
-  column-gap: var(--iu-rail-gap-x);
+  row-gap: var(--iu-mm-rowGap, 6px);
+  column-gap: var(--iu-mm-gap, 10px);
 }
