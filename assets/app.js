@@ -7387,6 +7387,8 @@ function buildVideoAsArticleCard(it) {
 
   // === MOJE SCHRÁNKY (MindMenu): min 1, max 6, controls follow last pill ===
   const MAILBOX_STORAGE_KEY = "iu_mailboxes_v1";
+  const IU_MM_SOCIAL_DEFAULTS_FLAG = "iu_mm_social_defaults_v1";
+  const IU_MAILBOX_DEFAULT_SOCIAL = ["facebook", "instagram", "x", "tiktok"];
   const MAILBOX_PLACEHOLDERS = ["Např.: e-mail 1", "Např.: e-mail 2", "Např.: pracovní web", "Např.: oblíbený web"];
   const IU_MAILBOX_MIN = 1;
   const IU_MAILBOX_MAX = 6;
@@ -7422,7 +7424,15 @@ function buildVideoAsArticleCard(it) {
       const txt = localStorage.getItem(MAILBOX_STORAGE_KEY);
       if (!txt) {
         const items = MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, index: i }));
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
+        if (!localStorage.getItem(IU_MM_SOCIAL_DEFAULTS_FLAG)) {
+          for (let i = 0; i < 4 && i < items.length; i++) {
+            if (items[i].social == null) items[i].social = IU_MAILBOX_DEFAULT_SOCIAL[i] || null;
+          }
+          try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
+          try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
+        } else {
+          try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
+        }
         return items;
       }
       const parsed = JSON.parse(txt);
@@ -7443,6 +7453,13 @@ function buildVideoAsArticleCard(it) {
           fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || `Schránka ${i + 1}`, url: "", social: null, index: i });
         }
         try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
+      }
+      if (!localStorage.getItem(IU_MM_SOCIAL_DEFAULTS_FLAG)) {
+        for (let i = 0; i < 4 && i < fixed.length; i++) {
+          if (fixed[i].social == null) fixed[i].social = IU_MAILBOX_DEFAULT_SOCIAL[i] || null;
+        }
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social }) => ({ label, url, social })) })); }catch{}
+        try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
       }
       return fixed;
     }catch{
