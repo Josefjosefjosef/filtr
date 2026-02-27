@@ -7806,6 +7806,9 @@ function buildVideoAsArticleCard(it) {
       "<button type=\"button\" class=\"iu-mmQuickItem\" aria-label=\"Plánovač\"><span class=\"iuIconTile\"><i class=\"fa-solid fa-list-check\" aria-hidden=\"true\"></i></span><span>Plánovač</span></button>" +
       "</div>";
     mojeSluzby.parentNode.insertBefore(section, mojeSluzby);
+    section.querySelectorAll(".iu-mmQuickItem").forEach(function(btn) {
+      btn.addEventListener("click", function(e) { e && e.preventDefault && e.preventDefault(); e && e.stopPropagation && e.stopPropagation(); });
+    });
   }
 
   function initRightPanel() {
