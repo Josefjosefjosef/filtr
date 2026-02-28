@@ -13138,3 +13138,26 @@ section.iu-mojeSluzby{
 .accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile{
   color: #fff;
 }
+
+/* RIGHT RAIL ICONS — FORCE SIZE */
+
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile,
+body .accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile{
+  width:40px !important;
+  height:40px !important;
+  min-width:40px !important;
+  min-height:40px !important;
+  padding:0 !important;
+  border-radius:999px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile i,
+body .accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile i{
+  font-size:20px !important;
+  line-height:1 !important;
+  width:auto !important;
+  height:auto !important;
+}
