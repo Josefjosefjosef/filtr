@@ -84,7 +84,7 @@ class FetchEngine:
     - Limit paralelismu (aby nebyl rate-limit)
     """
     
-    def __init__(self, user_agent: str = "infoUzelBot/1.0 (+https://infouzel.cz/bot)"):
+    def __init__(self, user_agent: str = "infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)"):
         self.user_agent = user_agent
         self.circuit_breaker = CircuitBreaker()
     

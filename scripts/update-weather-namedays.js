@@ -12,7 +12,7 @@ const path = require("path");
 async function fetchJson(url) {
   const res = await fetch(url, {
     headers: {
-      "User-Agent": "infoUzelBot/1.0 (+https://infouzel.cz/bot)",
+      "User-Agent": "infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)",
       "From": "admin@infouzel.cz",
     },
     cache: "no-store",
