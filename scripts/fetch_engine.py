@@ -4,6 +4,7 @@
 Robustní Fetch Engine s retry, circuit breaker, karanténou
 """
 
+import os
 import time
 import random
 import sys
@@ -143,10 +144,15 @@ class FetchEngine:
             return True
         rp = self._get_robotparser(url)
         if rp is None:
-            return True  # default allow on failure
+            # strict proof mode: deny when robots unavailable (deterministic proof)
+            if os.environ.get("IU_ROBOTS_STRICT_PROOF") == "1":
+                return False
+            return True  # production: default allow on failure
         try:
             return rp.can_fetch(self.user_agent, url)
         except Exception:
+            if os.environ.get("IU_ROBOTS_STRICT_PROOF") == "1":
+                return False
             return True
 
     def fetch_with_retry(self, url: str, source_id: str, 
