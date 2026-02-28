@@ -30,6 +30,7 @@ import json
 import os
 import re
 import sys
+import time
 from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse, parse_qs
 
@@ -42,13 +43,12 @@ ALLOWLIST_PATH = os.path.join(ROOT_DIR, "projects", "data", "videos_allowlist.js
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", os.path.join(ROOT_DIR, "projects", "data"))
 OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
 
-# Use a browser-like UA: some YouTube HTML endpoints return consent redirects or 404 for bot UAs.
-USER_AGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/121.0.0.0 Safari/537.36"
-)
+USER_AGENT = "infoUzelBot/1.0 (+https://infouzel.cz/bot)"
+BOT_FROM_HEADER = "admin@infouzel.cz"
 REQUEST_TIMEOUT_SEC = 20
+
+def _bot_headers():
+    return {"User-Agent": USER_AGENT, "From": BOT_FROM_HEADER}
 
 # === EMBEDABILITY FILTER (build-side) ===
 # Goal: exclude videos that cannot be embedded ("Video unavailable") or are non-embeddable.
@@ -64,7 +64,7 @@ def iu_is_embeddable(video_id: str) -> bool:
         if key in _EMBED_CACHE:
             return bool(_EMBED_CACHE[key])
         url = f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={vid}&format=json"
-        r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=5)
+        r = requests.get(url, headers=_bot_headers(), timeout=5)
         ok = bool(r.status_code == 200)
         _EMBED_CACHE[key] = ok
         return ok
@@ -85,7 +85,7 @@ def iu_not_region_blocked(video_id: str) -> bool:
         if key in _EMBED_CACHE:
             return bool(_EMBED_CACHE[key])
         url = f"https://www.youtube.com/embed/{vid}"
-        r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=5)
+        r = requests.get(url, headers=_bot_headers(), timeout=5)
         ok = bool(r.status_code == 200 and ("Video unavailable" not in (r.text or "")))
         _EMBED_CACHE[key] = ok
         return ok
@@ -207,7 +207,7 @@ def resolve_source_to_feed(url: str) -> dict:
         # Avoid consent redirect: ucbcb=1 keeps server-side fetch on youtube.com domain.
         page = f"https://www.youtube.com/@{handle}?ucbcb=1"
         try:
-            r = requests.get(page, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT_SEC)
+            r = requests.get(page, headers=_bot_headers(), timeout=REQUEST_TIMEOUT_SEC)
             if r.status_code != 200:
                 print(f"WARN: resolver handle failed status={r.status_code} url={page}")
                 return {}
@@ -226,7 +226,7 @@ def resolve_source_to_feed(url: str) -> dict:
         name = m.group(2)
         page = f"https://www.youtube.com/{kind}/{name}"
         try:
-            r = requests.get(page, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT_SEC)
+            r = requests.get(page, headers=_bot_headers(), timeout=REQUEST_TIMEOUT_SEC)
             if r.status_code != 200:
                 print(f"WARN: resolver {kind} failed status={r.status_code} url={page}")
                 return {}
@@ -247,7 +247,7 @@ def resolve_source_to_feed(url: str) -> dict:
         if name.lower() not in {"watch", "playlist", "shorts", "feed", "results"}:
             page = f"https://www.youtube.com/{name}"
             try:
-                r = requests.get(page, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT_SEC)
+                r = requests.get(page, headers=_bot_headers(), timeout=REQUEST_TIMEOUT_SEC)
                 if r.status_code != 200:
                     print(f"WARN: resolver custom failed status={r.status_code} url={page}")
                     return {}
@@ -611,10 +611,15 @@ def main() -> int:
     items = []
     seen = set()
     per_source_count = {}
+    last_feed_domain = None
     for job in feed_jobs:
         feed_url = job["feedUrl"]
+        feed_domain = (urlparse(feed_url).hostname or "").lower()
+        if last_feed_domain and feed_domain == last_feed_domain:
+            time.sleep(8)
+        last_feed_domain = feed_domain
         try:
-            r = requests.get(feed_url, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT_SEC)
+            r = requests.get(feed_url, headers=_bot_headers(), timeout=REQUEST_TIMEOUT_SEC)
             if r.status_code != 200:
                 print(f"WARN: feed fetch failed status={r.status_code} url={feed_url}")
                 continue

@@ -64,11 +64,8 @@ BOOTSTRAP_ITEM = {
     },
 }
 
-UA = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/121.0.0.0 Safari/537.36"
-)
+UA = "infoUzelBot/1.0 (+https://infouzel.cz/bot)"
+BOT_FROM_HEADER = "admin@infouzel.cz"
 
 MAX_OEMBED_WORKERS = 3  # hard cap
 
@@ -108,7 +105,7 @@ def _clamp_int(x: Any, lo: int, hi: int, default: int) -> int:
 
 def _safe_fetch_text(url: str, timeout_sec: int) -> Optional[str]:
     try:
-        r = requests.get(url, headers={"User-Agent": UA}, timeout=timeout_sec)
+        r = requests.get(url, headers={"User-Agent": UA, "From": BOT_FROM_HEADER}, timeout=timeout_sec)
         if r.status_code != 200:
             print(f"WARN: rss_fetch_failed status={r.status_code} url={url}")
             return None
@@ -202,7 +199,7 @@ def _oembed_embeddable(video_id: str, timeout_sec: int) -> bool:
     try:
         qs = urlencode({"url": f"https://www.youtube.com/watch?v={vid}", "format": "json"})
         url = f"https://www.youtube.com/oembed?{qs}"
-        r = requests.get(url, headers={"User-Agent": UA}, timeout=timeout_sec)
+        r = requests.get(url, headers={"User-Agent": UA, "From": BOT_FROM_HEADER}, timeout=timeout_sec)
         if r.status_code != 200:
             with _OEMBED_LOCK:
                 _OEMBED_CACHE[vid] = False
