@@ -13680,3 +13680,19 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem{
   margin-top: 0 !important;
 }
+
+/* === infoUzel.cz — Moje služby: stejná vzdálenost jako MindMenu === */
+.accordionCol .mindMenu{
+  --iu-mm-first-gap: var(--iu-rr-blockTopGap, 12px);
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby{
+  --iu-mm-first-gap: 28px;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmSectionHead + .iu-mmQuickGrid{
+  margin-top: var(--iu-mm-first-gap) !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmSectionHead,
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem{
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+}
