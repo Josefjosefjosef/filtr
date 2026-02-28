@@ -13283,3 +13283,24 @@ body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(s
   color: var(--iu-icon-glyph-blue) !important;
   fill: var(--iu-icon-glyph-blue) !important;
 }
+
+/* MindMenu social icons – gradient background + silver glyph ONLY COLOR */
+:root{
+  --iu-mm-bg1:#0B1F33;
+  --iu-mm-bg2:#132F4D;
+  --iu-mm-glyph:#D1D5DB;
+}
+
+.iu-pill-social-icon,
+.iu-pill-social-icon.iu-social-ios40{
+  background:linear-gradient(180deg,var(--iu-mm-bg1),var(--iu-mm-bg2)) !important;
+}
+
+.iu-pill-social-icon svg,
+.iu-pill-social-icon.iu-social-ios40 svg{
+  color:var(--iu-mm-glyph) !important;
+  fill:var(--iu-mm-glyph) !important;
+  stroke:none !important;
+  filter:none !important;
+  opacity:1 !important;
+}
