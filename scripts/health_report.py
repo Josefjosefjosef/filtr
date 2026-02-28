@@ -320,30 +320,55 @@ def find_duplicate_youtube_ids() -> List[Tuple[str, int]]:
     return dupes[:20]
 
 
+# Domains that often return 403 to bots; do not count as broken, report as blocked.
+BLOCKED_403_DOMAINS = ("irozhlas.cz",)
+
+
+def _is_blocked_403_domain(url: str) -> bool:
+    try:
+        from urllib.parse import urlparse
+        p = urlparse(url)
+        host = (p.hostname or "").lower().replace("www.", "")
+        return host in BLOCKED_403_DOMAINS
+    except Exception:
+        return False
+
+
 # --- 3. Broken ---
-def check_404_links() -> List[Dict[str, Any]]:
+def check_404_links() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """Returns (broken, blocked_403). 403 from BLOCKED_403_DOMAINS (e.g. irozhlas.cz) count as blocked, not broken."""
     broken: List[Dict[str, Any]] = []
+    blocked: List[Dict[str, Any]] = []
     arts = DATA_DIR / "articles.json"
     if not arts.exists():
-        return broken
+        return (broken, blocked)
     try:
         data = json.loads(arts.read_text(encoding="utf-8"))
         urls = [a.get("url") for a in data.get("articles", [])[:MAX_URLS_PER_CHECK] if a.get("url")]
     except (json.JSONDecodeError, OSError, KeyError):
-        return broken
+        return (broken, blocked)
     try:
         import urllib.request
+        import urllib.error
         for url in urls[:10]:
             try:
                 req = urllib.request.Request(url, headers={"User-Agent": "infoUzel-health/1.0"})
                 with urllib.request.urlopen(req, timeout=NETWORK_TIMEOUT) as r:
                     if r.status >= 400:
-                        broken.append({"url": url, "status": r.status, "where": "articles.json"})
+                        if r.status == 403 and _is_blocked_403_domain(url):
+                            blocked.append({"url": url, "status": 403, "reason": "http_403_blocked", "where": "articles.json"})
+                        else:
+                            broken.append({"url": url, "status": r.status, "where": "articles.json"})
+            except urllib.error.HTTPError as e:
+                if e.code == 403 and _is_blocked_403_domain(url):
+                    blocked.append({"url": url, "status": 403, "reason": "http_403_blocked", "where": "articles.json"})
+                else:
+                    broken.append({"url": url, "status": getattr(e, "code", None), "error": str(e)[:80], "where": "articles.json"})
             except Exception as e:
                 broken.append({"url": url, "error": str(e)[:80], "where": "articles.json"})
     except ImportError:
         pass
-    return broken[:10]
+    return (broken[:10], blocked)
 
 
 def check_json_errors() -> List[str]:
@@ -430,7 +455,7 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     dup_js = find_duplicate_js_functions()
     dup_arts = find_duplicate_articles()
     dup_yt = find_duplicate_youtube_ids()
-    broken = check_404_links()
+    broken, blocked_403 = check_404_links()
     json_errs = check_json_errors()
     feeds = discover_feeds()
     workflows = discover_workflows()
@@ -489,6 +514,7 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
             "cssKb": css_kb,
             "jsKb": js_kb,
             "brokenLinks": len(broken),
+            "blocked403": len(blocked_403),
             "duplicateSelectors": len(dup_css),
             "offlineRadios": 0,
         },
@@ -503,6 +529,7 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         },
         "broken": {
             "links404": broken,
+            "blocked403": blocked_403,
             "jsonErrors": json_errs,
         },
         "performance": perf,
@@ -565,6 +592,7 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
         f.write(f"CSS size: {s.get('cssKb')} KB\n")
         f.write(f"JS size: {s.get('jsKb')} KB\n")
         f.write(f"Broken links: {s.get('brokenLinks', 0)}\n")
+        f.write(f"Blocked (403): {s.get('blocked403', 0)}\n")
         f.write(f"Duplicate selectors: {s.get('duplicateSelectors', 0)}\n")
         f.write(f"Offline radios: {s.get('offlineRadios', 0)}\n\n")
 
@@ -612,6 +640,11 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
 
         f.write("## 3. Broken\n\n")
         br = report["broken"]
+        if br.get("blocked403"):
+            f.write("### Blocked (403)\n\n")
+            for b in br["blocked403"][:10]:
+                f.write(f"- {b.get('url', '')} (403 blocked, reason={b.get('reason', 'http_403_blocked')})\n")
+            f.write("\n")
         if br["links404"]:
             f.write("### 404 links\n\n")
             for b in br["links404"][:10]:
