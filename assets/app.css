@@ -13513,11 +13513,11 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
   white-space: normal !important;
 }
 
-/* ===== P0 TEMP – Moje služby: skrýt popisky ikon ===== */
-body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmLabel,
-body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
-  display:none !important;
-}
-body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem{
-  align-items:flex-start !important;
+/* P0 HOTFIX: Moje služby — vypnout pozadí ikon (tile background) */
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iuIconTile{
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-color: transparent !important;
 }
