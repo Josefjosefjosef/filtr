@@ -54,7 +54,8 @@ ARTICLES_INDEX_PATH = os.path.join(ARTICLES_SHARD_DIR, "index.json")
 # ✅ NOVĚ: výstup videí (pro assets/app.js)
 VIDEOS_OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
 
-USER_AGENT = "Mozilla/5.0 (compatible; infoUzelBot/1.0; +https://infouzel.cz)"
+USER_AGENT = "infoUzelBot/1.0 (+https://infouzel.cz/bot)"
+BOT_FROM_HEADER = "admin@infouzel.cz"
 REQUEST_TIMEOUT_SEC = 20
 
 MAX_ITEMS_PER_FEED = 40
@@ -625,7 +626,7 @@ def resolve_youtube_source_to_feed_url(source_url: str) -> str:
             handle = m.group(1)
             url = f"https://www.youtube.com/@{handle}"
             try:
-                r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT_SEC)
+                r = requests.get(url, headers={"User-Agent": USER_AGENT, "From": BOT_FROM_HEADER}, timeout=REQUEST_TIMEOUT_SEC)
                 if r.status_code != 200:
                     print(f"WARN: allowlist resolver handle failed status={r.status_code} url={url}")
                     return ""
@@ -795,6 +796,7 @@ def robust_fetch(url: str) -> tuple:
     """
     headers = {
         "User-Agent": USER_AGENT,
+        "From": BOT_FROM_HEADER,
         "Accept": "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1",
         "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.3",
         "Cache-Control": "no-cache",
@@ -1143,8 +1145,14 @@ def main() -> int:
 
     # ✅ sběr YouTube videí (půjde do data/videos.json)
     yt_videos = []
+    last_feed_domain = None
 
     for feed_url, meta in feed_items:
+        feed_domain = (urlparse(feed_url).hostname or "").lower()
+        if last_feed_domain and feed_domain == last_feed_domain:
+            time.sleep(8)
+        last_feed_domain = feed_domain
+
         fallback_topic = stable_section(meta.get("topic", "aktualne"))
         source = fix_cz_mojibake(str(meta.get("source") or meta.get("name") or meta.get("title") or feed_url))
         if meta.get("disabled"):

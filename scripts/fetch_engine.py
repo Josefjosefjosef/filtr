@@ -84,7 +84,7 @@ class FetchEngine:
     - Limit paralelismu (aby nebyl rate-limit)
     """
     
-    def __init__(self, user_agent: str = "Mozilla/5.0 (compatible; infoUzelBot/1.0; +https://infouzel.cz)"):
+    def __init__(self, user_agent: str = "infoUzelBot/1.0 (+https://infouzel.cz/bot)"):
         self.user_agent = user_agent
         self.circuit_breaker = CircuitBreaker()
     
@@ -209,6 +209,7 @@ class FetchEngine:
         """
         headers = {
             "User-Agent": self.user_agent,
+            "From": "admin@infouzel.cz",
             "Accept": "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1",
             "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.3",
             "Cache-Control": "no-cache",
