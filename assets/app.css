@@ -13359,10 +13359,3 @@ aside.accordionCol .iuRightTopCtas .iu-ad .iu-ad-text{
   background-clip:text;
   color:transparent;
 }
-
-/* HOTFIX: „Vložit inzerát“ — nikdy gradient na text, pouze barva nápisu */
-aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit{
-  -webkit-background-clip:border-box !important;
-  background-clip:border-box !important;
-  color:#0B1F33 !important;
-}
