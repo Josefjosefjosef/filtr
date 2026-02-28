@@ -12,6 +12,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -332,6 +333,21 @@ def _is_blocked_403_domain(url: str) -> bool:
         return host in BLOCKED_403_DOMAINS
     except Exception:
         return False
+
+
+# Deterministic self-test for 403 classification (only when IU_HEALTH_SELFTEST=1)
+if os.environ.get("IU_HEALTH_SELFTEST") == "1":
+    import urllib.error
+    _url = "https://www.irozhlas.cz/test"
+    _err = urllib.error.HTTPError(_url, 403, "Forbidden", None, None)
+    _broken, _blocked = 0, 0
+    if _err.code == 403 and _is_blocked_403_domain(_url):
+        _blocked = 1
+    else:
+        _broken = 1
+    assert _blocked == 1 and _broken == 0, f"blocked={_blocked} broken={_broken}"
+    print("SELFTEST_OK blocked403=1 broken=0")
+    sys.exit(0)
 
 
 # --- 3. Broken ---
