@@ -169,12 +169,13 @@ jobs:
           set -euo pipefail
           python3 scripts/health_report.py
 
-      - name: Report output gates
+      - name: Report output gates (grep only, no rg dependency)
         run: |
           test -f reports/check_site.json
           test -f reports/latest.md
           grep -n "INFOUZEL HEALTH REPORT" reports/latest.md
           grep -n "^Critical:" reports/latest.md
+          grep -q "### Aggregator Safety" reports/latest.md || { echo "::error::Report missing Aggregator Safety section"; exit 1; }
 
       - name: No-stale-send guard (report must contain SHA + Run ID)
         shell: bash
