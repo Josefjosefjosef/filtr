@@ -13767,3 +13767,17 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   min-height: 2.4em !important;
   display: block !important;
 }
+
+/* === infoUzel.cz — Rychlé odkazy layout (rows: 4 / 4 / 1) === */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid{
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  justify-items: center !important;
+  gap: 14px 18px !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > *:nth-child(9){
+  grid-column: 2 / 4 !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > *{
+  min-height: 72px !important;
+}
