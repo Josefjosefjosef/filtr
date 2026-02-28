@@ -13304,3 +13304,49 @@ body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(s
   filter:none !important;
   opacity:1 !important;
 }
+
+/* P0: MindMenu — remove WhatsApp handled in JS; ONLY color/center/size tweaks */
+
+/* 1) Title + underline centered */
+.accordionCol .mindMenu .iu-mmSectionHead .iu-mmSectionTitle,
+.accordionCol .mindMenu .iu-mailboxes .iu-mmSectionHead .iu-mmSectionTitle{
+  text-align: center;
+}
+.accordionCol .mindMenu .iu-mmSectionLine,
+.accordionCol .mindMenu .iu-mmSectionHead .iu-mmSectionLine{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 2) Title + underline color blue (#0B1F33) — only MindMenu section */
+.layout > aside.accordionCol .mindMenu .iu-mailboxes .iu-mmSectionHead .iu-mmSectionTitle{
+  color: #0B1F33 !important;
+  background: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+}
+.layout > aside.accordionCol .mindMenu .iu-mailboxes .iu-mmSectionHead .iu-mmSectionLine{
+  background: #0B1F33 !important;
+  background-color: #0B1F33 !important;
+}
+
+/* 3) Pills text blue (#0B1F33), NO gradient/transparent */
+.accordionCol .mindMenu .iu-mailbox-pill,
+.accordionCol .mindMenu .iu-mailbox-row .iu-mailbox-pill{
+  color: #0B1F33 !important;
+  -webkit-text-fill-color: #0B1F33 !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+}
+
+/* 4) Social icons at pills size = 35px (ONLY size) */
+.iu-pill-social-icon,
+.iu-pill-social-icon.iu-social-ios40{
+  width: 35px !important;
+  height: 35px !important;
+}
+.iu-pill-social-icon svg,
+.iu-pill-social-icon.iu-social-ios40 svg{
+  width: 17px !important;
+  height: 17px !important;
+}
