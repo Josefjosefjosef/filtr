@@ -7423,15 +7423,15 @@ function buildVideoAsArticleCard(it) {
     try{
       const txt = localStorage.getItem(MAILBOX_STORAGE_KEY);
       if (!txt) {
-        const items = MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, hidden: false, index: i }));
+        const items = MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, hidden: false, index: i, slot: i + 1 }));
         if (!localStorage.getItem(IU_MM_SOCIAL_DEFAULTS_FLAG)) {
           for (let i = 0; i < 4 && i < items.length; i++) {
             if (items[i].social == null) items[i].social = IU_MAILBOX_DEFAULT_SOCIAL[i] || null;
           }
-          try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
+          try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden, slot }) => ({ label, url, social, hidden: !!hidden, slot })) })); }catch{}
           try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
         } else {
-          try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
+          try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden, slot }) => ({ label, url, social, hidden: !!hidden, slot })) })); }catch{}
         }
         return items;
       }
@@ -7439,27 +7439,31 @@ function buildVideoAsArticleCard(it) {
       const items = Array.isArray(parsed?.items) ? parsed.items : [];
       const raw = items.slice(0, IU_MAILBOX_MAX);
       const validSocial = (s) => IU_MAILBOX_SOCIAL_OPTIONS.includes(s) ? s : null;
-      let fixed = raw.map((it, i) => ({
-        label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX) || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : ""),
-        url: String(it?.url ?? "").trim(),
-        social: validSocial(it?.social),
-        hidden: it?.hidden === true,
-        index: i
-      }));
+      let fixed = raw.map((it, i) => {
+        const slot = (typeof it?.slot === "number" && it.slot >= 1 && it.slot <= 6) ? it.slot : (i + 1);
+        return {
+          label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX) || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : ""),
+          url: String(it?.url ?? "").trim(),
+          social: validSocial(it?.social),
+          hidden: it?.hidden === true,
+          index: i,
+          slot
+        };
+      });
       if (items.length > IU_MAILBOX_MAX) {
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
       }
       if (fixed.length < IU_MAILBOX_MIN) {
         for (let i = fixed.length; i < IU_MAILBOX_MIN; i++) {
-          fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || `Schránka ${i + 1}`, url: "", social: null, hidden: false, index: i });
+          fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || `Schránka ${i + 1}`, url: "", social: null, hidden: false, index: i, slot: i + 1 });
         }
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
       }
       if (!localStorage.getItem(IU_MM_SOCIAL_DEFAULTS_FLAG)) {
         for (let i = 0; i < 4 && i < fixed.length; i++) {
           if (fixed[i].social == null) fixed[i].social = IU_MAILBOX_DEFAULT_SOCIAL[i] || null;
         }
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
         try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
       }
       let migrated56 = false;
@@ -7470,21 +7474,28 @@ function buildVideoAsArticleCard(it) {
         }
       }
       if (migrated56) {
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map(({ label, url, social, hidden }) => ({ label, url, social, hidden: !!hidden })) })); }catch{}
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
       }
+      const hadSlotMigration = raw.some((it, i) => typeof it?.slot !== "number" || it.slot < 1 || it.slot > 6);
+      if (hadSlotMigration) {
+        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
+      }
+      fixed.sort((a, b) => (a.slot || 0) - (b.slot || 0));
       return fixed;
     }catch{
-      return MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, index: i }));
+      return MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, index: i, slot: i + 1 }));
     }
   }
 
   function iuMailboxSave(items){
     try{
-      const toSave = items.map((it) => ({
+      const sorted = items.slice().sort((a, b) => (a.slot || 0) - (b.slot || 0));
+      const toSave = sorted.map((it) => ({
         label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX),
         url: String(it?.url ?? "").trim(),
         social: IU_MAILBOX_SOCIAL_OPTIONS.includes(it?.social) ? it.social : null,
-        hidden: !!it?.hidden
+        hidden: !!it?.hidden,
+        slot: typeof it?.slot === "number" ? it.slot : 0
       }));
       localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: toSave }));
     }catch{}
@@ -7516,7 +7527,8 @@ function buildVideoAsArticleCard(it) {
     if (!list) return;
     const controls = document.getElementById("iuMailboxControls");
     if (controls && controls.parentNode) controls.remove();
-    const items = iuMailboxLoad();
+    let items = iuMailboxLoad();
+    items = items.slice().sort((a, b) => (a.slot || 0) - (b.slot || 0));
     const visibleCount = items.filter((it) => !it.hidden).length;
     const mailboxesEl = list.closest(".iu-mailboxes");
     if (mailboxesEl) {
@@ -7528,7 +7540,9 @@ function buildVideoAsArticleCard(it) {
       if (it.hidden) return;
       const row = document.createElement("div");
       row.className = "iu-mailbox-row";
-      const label = it.label || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : `Schránka ${i + 1}`);
+      const slot = typeof it.slot === "number" ? it.slot : (i + 1);
+      const ph = MAILBOX_PLACEHOLDERS[slot - 1] || ("Schránka " + slot);
+      const label = it.label || ph;
       const social = it.social && IU_MAILBOX_SOCIAL_OPTIONS.includes(it.social) ? it.social : null;
       const socialUrl = social && IU_MAILBOX_SOCIAL_URLS[social] ? IU_MAILBOX_SOCIAL_URLS[social] : "";
       const socialSlotHtml = social && socialUrl
@@ -7559,18 +7573,19 @@ function buildVideoAsArticleCard(it) {
       const items = iuMailboxLoad();
       const visibleCount = items.filter((it) => !it.hidden).length;
       if (visibleCount >= IU_MAILBOX_MAX) return;
+      const next = items.filter((x) => x && x.hidden).sort((a, b) => (a.slot || 0) - (b.slot || 0))[0];
       let restored = false;
-      for (let i = items.length - 1; i >= 0; i--) {
-        if (items[i].hidden) {
-          items[i].hidden = false;
-          restored = true;
-          break;
-        }
+      if (next) {
+        next.hidden = false;
+        restored = true;
       }
       if (!restored) {
-        const newIndex = items.length;
-        const defaultSocial = newIndex === 4 ? "linkedin" : newIndex === 5 ? "youtube" : null;
-        items.push({ label: "", url: "", social: defaultSocial, hidden: false, index: newIndex });
+        const used = new Set(items.map((x) => x.slot).filter((n) => typeof n === "number"));
+        const free = [1, 2, 3, 4, 5, 6].find((s) => !used.has(s));
+        if (free != null) {
+          const defaultSocial = free === 5 ? "linkedin" : free === 6 ? "youtube" : null;
+          items.push({ label: "", url: "", social: defaultSocial, hidden: false, index: items.length, slot: free });
+        }
       }
       iuMailboxSave(items);
       iuMailboxRender();
