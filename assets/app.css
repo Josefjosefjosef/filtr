@@ -13729,7 +13729,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   text-align: center !important;
   min-width: 70px;
 }
-/* 4) Ice Mint Glass na ikoně */
+/* 4) Rychlé odkazy: vnitřní pozadí ikon světlejší hnědá #8C6A54 */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile{
   width: 35px !important;
   height: 35px !important;
@@ -13739,11 +13739,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background:
-    radial-gradient(120% 120% at 20% 10%,
-      rgba(210,255,248,0.95) 0%,
-      rgba(170,255,242,0.55) 45%,
-      rgba(120,235,220,0.25) 100%) !important;
+  background: #8C6A54 !important;
+  background-color: #8C6A54 !important;
+  background-image: none !important;
   border: 1px solid rgba(255,255,255,0.6) !important;
   box-shadow:
     0 8px 20px rgba(0,160,150,0.15),
