@@ -13781,3 +13781,69 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > *{
   min-height: 72px !important;
 }
+
+/* === infoUzel.cz — Rychlé odkazy: layout + colors (scoped) === */
+
+/* 1) GRID: rovnoměrné rozprostření po šířce sloupce */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  justify-items: stretch !important;
+  align-items: start !important;
+  column-gap: 0 !important;
+  row-gap: 14px !important;
+}
+
+/* 2) ITEM: jednotná šířka v rámci sloupce + vertikální stack */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: center !important;
+}
+
+/* 3) ICON: pozadí a bílé glyphy */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile {
+  background: #EFBE7D !important;
+  background-color: #EFBE7D !important;
+  background-image: none !important;
+  border-color: transparent !important;
+}
+
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile svg,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile svg * {
+  fill: #fff !important;
+  stroke: #fff !important;
+}
+
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile i,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile .icon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile span {
+  color: #fff !important;
+}
+
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile:hover,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile:active,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile:focus-visible {
+  background: #EFBE7D !important;
+}
+
+/* 4) LABEL: popisek přesně pod ikonou a vizuálně srovnaný */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem span:last-of-type {
+  display: block !important;
+  width: 100% !important;
+  max-width: 10.5ch !important;
+  margin-top: 8px !important;
+  line-height: 1.15 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* CLS safety: stabilní výška položky (ikona+label) */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem {
+  min-height: 88px !important;
+}
