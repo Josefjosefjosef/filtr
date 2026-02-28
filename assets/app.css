@@ -13512,3 +13512,12 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
   user-select: none;
   white-space: normal !important;
 }
+
+/* ===== P0 TEMP – Moje služby: skrýt popisky ikon ===== */
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmLabel,
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
+  display:none !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem{
+  align-items:flex-start !important;
+}
