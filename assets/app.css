@@ -13372,3 +13372,27 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit{
   background-clip: border-box !important;
   color: #0B1F33 !important;
 }
+
+/* ===== HOTFIX: CTA "Vložit inzerát" time-drift shield (text paint only) ===== */
+.mindMenu .iuRightTopCtas .iuRightCta,
+aside.accordionCol > .iuRightTopCtas > .iuRightCta,
+aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit,
+.mindMenu .iu-ad .iuRightCta{
+  /* enforce normal text paint even if later rules add gradient-text */
+  color: #0B1F33 !important;
+  -webkit-text-fill-color: #0B1F33 !important;
+
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+
+  /* critical: prevent text from becoming transparent */
+  text-shadow: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* ensure children (span/svg) inherit safe text paint */
+.mindMenu .iuRightTopCtas .iuRightCta *,
+aside.accordionCol > .iuRightTopCtas > .iuRightCta *{
+  -webkit-text-fill-color: inherit !important;
+}
