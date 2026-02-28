@@ -13463,3 +13463,41 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
     grid-template-columns:repeat(4, minmax(0, 1fr)) !important;
   }
 }
+
+/* P0: Moje služby — ikony TOP line + mezera od underline shodná s 1. pilulkou v MindMenu; label max 2 řádky */
+:root{
+  --iu-ms-icon-top-gap: -10px;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid{
+  align-items: start;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink{
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: var(--iu-ms-icon-top-gap);
+  line-height: 0;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink .iuIconTile,
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink svg{
+  display: block;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.15;
+  max-height: calc(2 * 1.15em);
+  text-align: center;
+}
