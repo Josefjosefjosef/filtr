@@ -7,9 +7,10 @@ Robustní Fetch Engine s retry, circuit breaker, karanténou
 import time
 import random
 import sys
+import urllib.robotparser
 from datetime import datetime, timezone, timedelta
 from typing import Dict, Any, Optional, Tuple
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
 import requests
 import feedparser
@@ -87,7 +88,67 @@ class FetchEngine:
     def __init__(self, user_agent: str = "infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)"):
         self.user_agent = user_agent
         self.circuit_breaker = CircuitBreaker()
-    
+        self._robots_cache: Dict[str, Tuple[float, Optional[urllib.robotparser.RobotFileParser]]] = {}
+        self._robots_ttl_sec = 6 * 60 * 60  # 6 hours
+
+    def _host_key(self, url: str) -> str:
+        """Hostname lower, without www."""
+        try:
+            p = urlparse(url)
+            host = (p.hostname or "").lower()
+            if host.startswith("www."):
+                host = host[4:]
+            return host
+        except Exception:
+            return ""
+
+    def _robots_url(self, url: str) -> str:
+        """Robots.txt URL from request URL origin (keeps scheme and port)."""
+        try:
+            return urljoin(url, "/robots.txt")
+        except Exception:
+            return ""
+
+    def _get_robotparser(self, url: str) -> Optional[urllib.robotparser.RobotFileParser]:
+        host = self._host_key(url)
+        if not host:
+            return None
+        now = time.time()
+        if host in self._robots_cache:
+            cached_at, rp = self._robots_cache[host]
+            if now - cached_at < self._robots_ttl_sec and rp is not None:
+                return rp
+            if now - cached_at < self._robots_ttl_sec and rp is None:
+                return None  # cached failure → allow
+        try:
+            import urllib.request
+            robots_url = self._robots_url(url)
+            if not robots_url:
+                return None
+            req = urllib.request.Request(
+                robots_url,
+                headers={"User-Agent": self.user_agent, "From": "admin@infouzel.cz"},
+            )
+            with urllib.request.urlopen(req, timeout=5) as r:
+                rp = urllib.robotparser.RobotFileParser()
+                rp.parse(r.read().decode("utf-8", errors="replace").splitlines())
+                self._robots_cache[host] = (now, rp)
+                return rp
+        except Exception:
+            self._robots_cache[host] = (now, None)
+            return None
+
+    def _can_fetch(self, url: str) -> bool:
+        if not self._host_key(url):
+            return True
+        rp = self._get_robotparser(url)
+        if rp is None:
+            return True  # default allow on failure
+        try:
+            return rp.can_fetch(self.user_agent, url)
+        except Exception:
+            return True
+
     def fetch_with_retry(self, url: str, source_id: str, 
                        timeout_ms: int = 20000,
                        max_retries: int = 3,
@@ -118,7 +179,13 @@ class FetchEngine:
             diagnostics["quarantined"] = True
             return (None, diagnostics)
         
-        # 2) Retry loop
+        # 2) robots.txt – pokud disallow → skip (žádný request, ne error)
+        if not self._can_fetch(url):
+            diagnostics["reason"] = "robots_disallow"
+            diagnostics["skipped"] = True
+            return (None, diagnostics)
+        
+        # 3) Retry loop
         for attempt in range(max_retries):
             diagnostics["attempts"] = attempt + 1
             
