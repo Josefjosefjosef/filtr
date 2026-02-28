@@ -12604,6 +12604,24 @@ section.iu-mindmenu,
   min-height: 32px;
 }
 
+/* IU_CLS_FIX: reserve icon boxes to prevent FA layout-shift on /projects/ (right-rail quicklinks/services) */
+@supports (font-size: 1rem) {
+  .iu-mmQuickLinks .iuIconTile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: top;
+  }
+  .iu-mmQuickLinks .iuIconTile > i,
+  .iu-mmQuickLinks .iuIconTile > svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+    line-height: 1;
+    flex: 0 0 20px;
+  }
+}
+
 /* === AI karta – premium hover/focus na close X (MIN-SCOPE, CLS=0) === */
 @media (hover:hover) and (pointer:fine){
   #iu-aiPanel .iuAiClose{
