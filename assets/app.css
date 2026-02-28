@@ -13350,25 +13350,19 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--services:hover{
   color:transparent !important;
 }
 
-/* ===== HOTFIX – restore Inzerce/Služby button (NO CLIP-LEAK) ===== */
-
-/* 1) Gradient pouze na text inzerátu (NE na wrapper, NE na tlačítko) */
-.mindMenu .iu-ad .iu-ad-title,
-.mindMenu .iu-ad .iu-ad-text,
+.accordionCol .mindMenu .iu-ad .iu-ad-title,
+.accordionCol .mindMenu .iu-ad .iu-ad-text,
 aside.accordionCol .iuRightTopCtas .iu-ad .iu-ad-title,
 aside.accordionCol .iuRightTopCtas .iu-ad .iu-ad-text{
-  background: linear-gradient(180deg, #0B1F33, #132F4D);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  background:linear-gradient(180deg,var(--iu-mm-grad-1),var(--iu-mm-grad-2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
 }
 
-/* 2) Ochrana CTA tlačítka „Vložit inzerát“ (vrátit normální paint) */
-.mindMenu .iuRightTopCtas .iuRightCta,
-.mindMenu .iu-ad .iuRightCta,
-aside.accordionCol > .iuRightTopCtas > .iuRightCta,
+/* HOTFIX: „Vložit inzerát“ — nikdy gradient na text, pouze barva nápisu */
 aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit{
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-  color: #0B1F33 !important;
+  -webkit-background-clip:border-box !important;
+  background-clip:border-box !important;
+  color:#0B1F33 !important;
 }
