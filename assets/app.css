@@ -13729,13 +13729,16 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   text-align: center !important;
   min-width: 70px;
 }
-/* 4) tvar dlaždice = Moje služby (radius/padding/box-shadow); pozadí #7A5C48 */
+/* 4) tvar dlaždice = Moje služby (radius/width/height/box-shadow/border); pozadí #7A5C48 */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile,
 body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile{
   width: 35px !important;
   height: 35px !important;
   min-width: 35px !important;
   min-height: 35px !important;
+  max-width: 35px !important;
+  max-height: 35px !important;
+  flex: 0 0 35px !important;
   border-radius: 8px !important;
   padding: 0 !important;
   box-shadow: none !important;
@@ -13745,7 +13748,7 @@ body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-moje
   background: #7A5C48 !important;
   background-color: #7A5C48 !important;
   background-image: none !important;
-  border: none !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
 }
 /* 5) ikony 35px + bílé */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile :is(i,svg,img){
