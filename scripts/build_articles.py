@@ -54,7 +54,7 @@ ARTICLES_INDEX_PATH = os.path.join(ARTICLES_SHARD_DIR, "index.json")
 # ✅ NOVĚ: výstup videí (pro assets/app.js)
 VIDEOS_OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
 
-USER_AGENT = "infoUzelBot/1.0 (+https://infouzel.cz/bot)"
+USER_AGENT = "infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)"
 BOT_FROM_HEADER = "admin@infouzel.cz"
 REQUEST_TIMEOUT_SEC = 20
 

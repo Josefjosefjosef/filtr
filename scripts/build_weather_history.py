@@ -64,7 +64,7 @@ BOOTSTRAP_ITEM = {
     },
 }
 
-UA = "infoUzelBot/1.0 (+https://infouzel.cz/bot)"
+UA = "infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)"
 BOT_FROM_HEADER = "admin@infouzel.cz"
 
 MAX_OEMBED_WORKERS = 3  # hard cap

@@ -43,7 +43,7 @@ ALLOWLIST_PATH = os.path.join(ROOT_DIR, "projects", "data", "videos_allowlist.js
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", os.path.join(ROOT_DIR, "projects", "data"))
 OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
 
-USER_AGENT = "infoUzelBot/1.0 (+https://infouzel.cz/bot)"
+USER_AGENT = "infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)"
 BOT_FROM_HEADER = "admin@infouzel.cz"
 REQUEST_TIMEOUT_SEC = 20
 
