@@ -531,6 +531,28 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         ok_count += 1
     if broken:
         warnings += min(len(broken), 5)
+    aggregator_alerts = 0
+    fm = fetch_monitor or {}
+    blocked403_by_host = fm.get("blocked403ByHost") or {}
+    robots_by_host = fm.get("robotsDisallowByHost") or {}
+    total_by_host = fm.get("totalByHost") or {}
+    timeout_by_host = fm.get("timeoutByHost") or {}
+    domain_cap_by_host = fm.get("domainCapByHost") or {}
+    for host, count in blocked403_by_host.items():
+        if count >= 5:
+            aggregator_alerts += 1
+    for host, total in total_by_host.items():
+        if total >= 20:
+            disallow = robots_by_host.get(host) or 0
+            if total > 0 and (disallow / total) > 0.10:
+                aggregator_alerts += 1
+    for host, count in timeout_by_host.items():
+        if count >= 10:
+            aggregator_alerts += 1
+    for host, count in domain_cap_by_host.items():
+        if count >= 5:
+            aggregator_alerts += 1
+    warnings += aggregator_alerts
     ok_count += max(0, 130 - critical - warnings)
 
     report: Dict[str, Any] = {
@@ -728,6 +750,55 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
         if perf.get("error"):
             f.write(f"Note: {perf['error']}\n")
         f.write("\n")
+
+        fm = report.get("fetch_monitor") or {}
+        fm_missing = not (DATA_DIR / "fetch_monitor.json").exists()
+        blocked403_by_host = fm.get("blocked403ByHost") or {}
+        robots_by_host = fm.get("robotsDisallowByHost") or {}
+        total_by_host = fm.get("totalByHost") or {}
+        timeout_by_host = fm.get("timeoutByHost") or {}
+        domain_cap_by_host = fm.get("domainCapByHost") or {}
+        f.write("### Aggregator Safety\n\n")
+        if fm_missing:
+            f.write("fetch_monitor.json missing (values 0).\n\n")
+        if blocked403_by_host:
+            f.write("Blocked (403) by host (top 10):\n")
+            for host, count in sorted(blocked403_by_host.items(), key=lambda x: -x[1])[:10]:
+                f.write(f"- {host}: {count}\n")
+                if count >= 5:
+                    f.write(f"  ALERT: 403_SPIKE host={host} count={count}\n")
+            f.write("\n")
+        if total_by_host:
+            f.write("Robots disallow rate by host (top 10):\n")
+            rates = []
+            for host, total in total_by_host.items():
+                if total > 0:
+                    disallow = robots_by_host.get(host) or 0
+                    rate = disallow / total
+                    rates.append((host, rate, disallow, total))
+            for host, rate, disallow, total in sorted(rates, key=lambda x: -x[1])[:10]:
+                f.write(f"- {host}: {rate:.2%} ({disallow}/{total})\n")
+                if rate > 0.10 and total >= 20:
+                    f.write(f"  ALERT: ROBOTS_DISALLOW_RATE host={host} rate={rate:.2%} total={total} disallow={disallow}\n")
+            f.write("\n")
+        if timeout_by_host:
+            f.write("Timeouts by host (top 10):\n")
+            for host, count in sorted(timeout_by_host.items(), key=lambda x: -x[1])[:10]:
+                f.write(f"- {host}: {count}\n")
+                if count >= 10:
+                    f.write(f"  ALERT: TIMEOUT_SPIKE host={host} count={count}\n")
+            f.write("\n")
+        else:
+            f.write("Timeouts by host (top 10): 0\n\n")
+        if domain_cap_by_host:
+            f.write("Domain cap hits by host (top 10):\n")
+            for host, count in sorted(domain_cap_by_host.items(), key=lambda x: -x[1])[:10]:
+                f.write(f"- {host}: {count}\n")
+                if count >= 5:
+                    f.write(f"  ALERT: DOMAIN_CAP host={host} count={count}\n")
+            f.write("\n")
+        else:
+            f.write("Domain cap hits by host (top 10): 0\n\n")
 
         f.write("## 5. Layout\n\n")
         for k, v in report["layout"].items():
