@@ -13513,11 +13513,21 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
   white-space: normal !important;
 }
 
-/* ===== P0 TEMP – Moje služby: skrýt popisky ikon ===== */
-body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmLabel,
+/* P0 FIX: Moje služby — label 2 lines, not clickable, no gray box (LABEL ONLY) */
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
-  display:none !important;
+  pointer-events: none !important;
+  user-select: none;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: normal !important;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem{
-  align-items:flex-start !important;
+  align-items: flex-start !important;
 }
