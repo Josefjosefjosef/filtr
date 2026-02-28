@@ -13250,3 +13250,19 @@ body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(s
   filter: none !important;
   opacity: 1 !important;
 }
+
+/* P0: ikonky — pozadí o 50% světlejší, glyph #D1D5DB beze změny */
+:root{
+  --iu-icon-bg-1-light: color-mix(in srgb, #0B1F33 50%, white);
+  --iu-icon-bg-2-light: color-mix(in srgb, #132F4D 50%, white);
+}
+
+.iu-pill-social-icon,
+.iu-pill-social-icon.iu-social-ios40{
+  background: linear-gradient(180deg,var(--iu-icon-bg-1-light),var(--iu-icon-bg-2-light)) !important;
+}
+
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile,
+body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile{
+  background: linear-gradient(180deg,var(--iu-icon-bg-1-light),var(--iu-icon-bg-2-light)) !important;
+}
