@@ -13696,3 +13696,73 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
   margin-bottom: 0 !important;
   margin-top: 0 !important;
 }
+
+/* =====================================================
+   infoUzel.cz — Rychlé odkazy FINAL styl ikon
+   ===================================================== */
+/* 1) linka pod nadpisem = stejná jako Moje služby */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionLine{
+  height: 1px !important;
+  width: 72% !important;
+  margin: 10px auto 0 auto !important;
+  background: rgba(17,24,39,0.12) !important;
+  border-radius: 1px;
+  min-width: 0;
+}
+/* 2) spacing stejný jako Moje služby */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby){
+  --iu-mm-first-gap: 28px;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead + .iu-mmQuickGrid{
+  margin-top: var(--iu-mm-first-gap) !important;
+}
+/* 3) grid + položky srovnání jako Moje služby */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid{
+  align-items: start !important;
+  justify-items: center !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: center !important;
+  min-width: 70px;
+}
+/* 4) Ice Mint Glass na ikoně */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile{
+  width: 35px !important;
+  height: 35px !important;
+  min-width: 35px !important;
+  min-height: 35px !important;
+  border-radius: 14px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background:
+    radial-gradient(120% 120% at 20% 10%,
+      rgba(210,255,248,0.95) 0%,
+      rgba(170,255,242,0.55) 45%,
+      rgba(120,235,220,0.25) 100%) !important;
+  border: 1px solid rgba(255,255,255,0.6) !important;
+  box-shadow:
+    0 8px 20px rgba(0,160,150,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.7) !important;
+}
+/* 5) ikony 35px + bílé */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile :is(i,svg,img){
+  width: 17px !important;
+  height: 17px !important;
+  color: #fff !important;
+  filter: brightness(0) invert(1) !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iuIconTile svg{
+  fill: #fff !important;
+}
+/* 6) popisky pod ikonou */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem span:last-of-type{
+  margin-top: 6px !important;
+  line-height: 1.2 !important;
+  min-height: 2.4em !important;
+  display: block !important;
+}
