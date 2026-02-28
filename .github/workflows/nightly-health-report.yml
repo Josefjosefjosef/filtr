@@ -169,13 +169,43 @@ jobs:
           set -euo pipefail
           python3 scripts/health_report.py
 
-      - name: Report output gates (grep only, no rg dependency)
+      - name: Report output gates - Linux/macOS (grep only, no rg)
+        if: runner.os == 'Linux' || runner.os == 'Darwin'
+        shell: bash
         run: |
+          set -euo pipefail
           test -f reports/check_site.json
           test -f reports/latest.md
           grep -n "INFOUZEL HEALTH REPORT" reports/latest.md
           grep -n "^Critical:" reports/latest.md
           grep -q "### Aggregator Safety" reports/latest.md || { echo "::error::Report missing Aggregator Safety section"; exit 1; }
+          echo "REPORT_GATES=PASS"
+
+      - name: Report output gates - Windows (Select-String, no rg)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          if (-not (Test-Path reports/check_site.json)) { Write-Error "check_site.json missing"; exit 1 }
+          if (-not (Test-Path reports/latest.md)) { Write-Error "latest.md missing"; exit 1 }
+          $content = Get-Content -Raw reports/latest.md
+          if ($content -notmatch "INFOUZEL HEALTH REPORT") { Write-Error "Report title missing"; exit 1 }
+          if ($content -notmatch "### Aggregator Safety") { Write-Error "Report missing Aggregator Safety section"; exit 1 }
+          Write-Host "REPORT_GATES=PASS"
+
+      - name: Deterministic aggregator safety proof (CI, temp fetch_monitor)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p projects/data
+          echo '{"generatedAt":"2026-02-28T00:00:00Z","window":"run","blocked403ByHost":{"a.test":5},"robotsDisallowByHost":{"b.test":3},"totalByHost":{"b.test":20},"timeoutByHost":{"c.test":10},"domainCapByHost":{"d.test":5}}' > projects/data/fetch_monitor.json
+          python3 scripts/health_report.py
+          grep -q "### Aggregator Safety" reports/latest.md || { echo "::error::Proof: Aggregator Safety section missing"; exit 1; }
+          grep -q "ALERT: 403_SPIKE host=a.test count=5" reports/latest.md || { echo "::error::Proof: 403_SPIKE alert missing"; exit 1; }
+          grep -q "ALERT: ROBOTS_DISALLOW_RATE host=b.test" reports/latest.md || { echo "::error::Proof: ROBOTS_DISALLOW_RATE alert missing"; exit 1; }
+          grep -q "ALERT: TIMEOUT_SPIKE host=c.test count=10" reports/latest.md || { echo "::error::Proof: TIMEOUT_SPIKE alert missing"; exit 1; }
+          grep -q "ALERT: DOMAIN_CAP host=d.test count=5" reports/latest.md || { echo "::error::Proof: DOMAIN_CAP alert missing"; exit 1; }
+          rm -f projects/data/fetch_monitor.json
+          echo "AGGREGATOR_SAFETY_PROOF=PASS"
 
       - name: No-stale-send guard (report must contain SHA + Run ID)
         shell: bash
