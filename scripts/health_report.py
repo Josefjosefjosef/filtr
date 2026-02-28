@@ -13,6 +13,7 @@ import os
 import re
 import subprocess
 import sys
+import urllib.error
 from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -335,17 +336,20 @@ def _is_blocked_403_domain(url: str) -> bool:
         return False
 
 
+def _is_403_blocked(url: str, code: int) -> bool:
+    """True if this HTTP status should be classified as blocked (not broken). Used by check_404_links and self-test."""
+    return code == 403 and _is_blocked_403_domain(url)
+
+
 # Deterministic self-test for 403 classification (only when IU_HEALTH_SELFTEST=1)
 if os.environ.get("IU_HEALTH_SELFTEST") == "1":
-    import urllib.error
-    _url = "https://www.irozhlas.cz/test"
-    _err = urllib.error.HTTPError(_url, 403, "Forbidden", None, None)
-    _broken, _blocked = 0, 0
-    if _err.code == 403 and _is_blocked_403_domain(_url):
-        _blocked = 1
-    else:
-        _broken = 1
-    assert _blocked == 1 and _broken == 0, f"blocked={_blocked} broken={_broken}"
+    url = "https://www.irozhlas.cz/test"
+    e = urllib.error.HTTPError(url, 403, "Forbidden", hdrs=None, fp=None)
+    broken = 0
+    blocked403 = 1 if _is_403_blocked(url, e.code) else 0
+    if blocked403 == 0:
+        broken = 1
+    assert blocked403 == 1 and broken == 0, f"blocked403={blocked403} broken={broken}"
     print("SELFTEST_OK blocked403=1 broken=0")
     sys.exit(0)
 
@@ -365,18 +369,17 @@ def check_404_links() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         return (broken, blocked)
     try:
         import urllib.request
-        import urllib.error
         for url in urls[:10]:
             try:
                 req = urllib.request.Request(url, headers={"User-Agent": "infoUzel-health/1.0"})
                 with urllib.request.urlopen(req, timeout=NETWORK_TIMEOUT) as r:
                     if r.status >= 400:
-                        if r.status == 403 and _is_blocked_403_domain(url):
+                        if _is_403_blocked(url, r.status):
                             blocked.append({"url": url, "status": 403, "reason": "http_403_blocked", "where": "articles.json"})
                         else:
                             broken.append({"url": url, "status": r.status, "where": "articles.json"})
             except urllib.error.HTTPError as e:
-                if e.code == 403 and _is_blocked_403_domain(url):
+                if _is_403_blocked(url, e.code):
                     blocked.append({"url": url, "status": 403, "reason": "http_403_blocked", "where": "articles.json"})
                 else:
                     broken.append({"url": url, "status": getattr(e, "code", None), "error": str(e)[:80], "where": "articles.json"})
