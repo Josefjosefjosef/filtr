@@ -1,9 +1,0 @@
-PILL_PICKED_TEXT=Schránka 1 (or placeholder label)
-PILL_ELEMENT_SELECTOR=.iu-mailbox-pill
-PAINTING_ELEMENT=same element (button.iu-mailbox-pill)
-COMPUTED_BG_COLOR_BEFORE=rgba(0, 0, 0, 0)
-COMPUTED_BG_IMAGE_BEFORE=none
-COMPUTED_BORDER_COLOR_BEFORE=rgba(20, 40, 70, 0.12)
-COMPUTED_BOX_SHADOW_BEFORE=none
-COMPUTED_FILTER_BEFORE=none
-NOTES=P0 block at 12137-12143 sets .layout > aside.accordionCol .mindMenu .iu-mailbox-pill to background transparent !important so pills do not paint over right-rail underlay. Painting is on the button element itself (no ::before/::after). Override with later rule for light bg.
