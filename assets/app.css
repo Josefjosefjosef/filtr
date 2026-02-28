@@ -13161,3 +13161,28 @@ body .accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile i{
   width:auto !important;
   height:auto !important;
 }
+
+/* RIGHT RAIL ICONS — 40px SQUARE (override round social style) */
+
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile,
+body .accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile{
+  width:40px !important;
+  height:40px !important;
+  min-width:40px !important;
+  min-height:40px !important;
+  border-radius:8px !important;   /* čtverec místo kruhu */
+  padding:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  box-sizing:border-box !important;
+}
+
+/* svg / fontawesome ikona uvnitř */
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile :is(svg,i),
+body .accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(svg,i){
+  width:20px !important;
+  height:20px !important;
+  font-size:20px !important;
+  line-height:1 !important;
+}
