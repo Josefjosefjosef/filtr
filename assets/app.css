@@ -13632,3 +13632,29 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   outline: 2px solid currentColor;
   outline-offset: 3px;
 }
+
+/* === infoUzel.cz — Moje služby: srovnat ikony + popisky === */
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid{
+  align-items: start !important;
+  justify-items: center !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: center !important;
+  min-width: 70px;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink{
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 6px;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
+  margin-top: 6px;
+  line-height: 1.2;
+  min-height: 2.4em;
+  display: block;
+}
