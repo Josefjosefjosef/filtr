@@ -13186,3 +13186,16 @@ body .accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(svg,i){
   font-size:20px !important;
   line-height:1 !important;
 }
+
+/* infoUzel.cz — sjednocení barev ikon (Moje služby + Rychlé odkazy = social ikony pilulek) */
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile,
+body .accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile{
+  color:#fff;
+}
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile :is(svg,i),
+body .accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(svg,i){
+  color:#fff;
+  fill:#fff;
+  stroke:none;
+  filter:none !important;
+}
