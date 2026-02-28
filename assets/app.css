@@ -13266,3 +13266,20 @@ body .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile,
 body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile{
   background: linear-gradient(180deg,var(--iu-icon-bg-1-light),var(--iu-icon-bg-2-light)) !important;
 }
+
+/* HOTFIX: glyph ikon musí být modrý (ne stříbrný) */
+:root{
+  --iu-icon-glyph-blue: #132F4D;
+}
+
+.iu-pill-social-icon svg,
+.iu-pill-social-icon.iu-social-ios40 svg{
+  color: var(--iu-icon-glyph-blue) !important;
+  fill: var(--iu-icon-glyph-blue) !important;
+}
+
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile :is(svg,i),
+body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(svg,i){
+  color: var(--iu-icon-glyph-blue) !important;
+  fill: var(--iu-icon-glyph-blue) !important;
+}
