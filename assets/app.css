@@ -13658,3 +13658,25 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
   min-height: 2.4em;
   display: block;
 }
+
+/* === infoUzel.cz — Pravý sloupec: sjednotit gap "nadpis/linka → ikony" === */
+:root{
+  --iu-right-section-icons-top-gap: 12px;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmSectionHead + .iu-mmQuickGrid,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead + .iu-mmQuickGrid{
+  margin-top: var(--iu-right-section-icons-top-gap) !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmSectionHead,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead{
+  margin-bottom: 0 !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby){
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem{
+  margin-top: 0 !important;
+}
