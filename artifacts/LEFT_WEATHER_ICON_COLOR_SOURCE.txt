@@ -1,9 +1,0 @@
-SELECTOR= #iuLeftRail .iu-leftNavItem[data-rail="weather"] .iu-leftNavIcon svg (tlačítko Počasí & Radar v levém sloupci; ikona SVG z iu-sprite.svg#iu-weather-radar)
-PROPERTY= color (přes currentColor; SVG dědí barvu, fill/stroke z currentColor)
-COMPUTED_RGB= rgb(56, 189, 248)
-COMPUTED_HEX= #38BDF8
-NOTES= Barva pochází z --iuRailAccent-quick resp. --iuNavAccent-pocasi: #38BDF8 (jedna hodnota pro celou ikonu). PRIMARY.
-
-LIGHTEN_METHOD=mix_with_white_60pct
-LIGHTENED_RGB= rgb(175, 229, 252)
-LIGHTENED_HEX= #AFE5FC
