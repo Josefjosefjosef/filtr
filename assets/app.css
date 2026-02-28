@@ -13350,3 +13350,68 @@ body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(s
   width: 17px !important;
   height: 17px !important;
 }
+
+/* P0: Moje služby + Rychlé odkazy — center titles, emerald icon bg (Moje služby only), 35px (Moje služby), white glyph (Moje služby) */
+:root{
+  --iu-rr-title:#0B1F33;
+  --iu-rr-emerald:#10B981;
+}
+
+/* 1) Nadpis + linka vycentrovat + modrá (obě sekce) */
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead .iu-mmSectionTitle{
+  text-align:center;
+  color:var(--iu-rr-title) !important;
+  background:none !important;
+  -webkit-background-clip:border-box !important;
+  background-clip:border-box !important;
+}
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead .iu-mmSectionLine{
+  margin-left:auto;
+  margin-right:auto;
+  background:var(--iu-rr-title) !important;
+  background-color:var(--iu-rr-title) !important;
+}
+
+/* 2) Ikony + popisky centrovat (obě sekce) */
+.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks{
+  text-align:center;
+}
+.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid{
+  justify-items:center;
+  align-items:center;
+}
+.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem{
+  justify-items:center;
+  align-items:center;
+}
+
+/* 3) Moje služby: ikona 35px + emerald pozadí (jen ikonový wrapper) — vyšší specificita než 40px rules */
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iuIconTile{
+  width:35px !important;
+  height:35px !important;
+  min-width:35px !important;
+  min-height:35px !important;
+  background:var(--iu-rr-emerald) !important;
+  box-shadow:none !important;
+}
+
+/* 4) Moje služby: glyph/SVG v ikoně bílý + velikost uvnitř 35px tile */
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iuIconTile :is(svg,i){
+  width:17px !important;
+  height:17px !important;
+  color:#fff !important;
+  fill:#fff !important;
+  stroke:none !important;
+  -webkit-text-fill-color:#fff !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iuIconTile{
+  color:#fff !important;
+}
+
+/* force 35px override (same rule repeated with section.iu-mmQuickLinks.iu-mojeSluzby for max specificity) */
+body .accordionCol .mindMenu section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickGrid .iuIconTile{
+  width:35px !important;
+  height:35px !important;
+  min-width:35px !important;
+  min-height:35px !important;
+}
