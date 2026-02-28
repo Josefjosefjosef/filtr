@@ -13784,14 +13784,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
 
 /* === infoUzel.cz — Rychlé odkazy: layout + colors (scoped) === */
 
-/* 1) GRID: rovnoměrné rozprostření po šířce sloupce */
+/* 1) GRID: stejný horizontální režim jako Moje služby (column-gap/row-gap/justify-items) */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  justify-items: stretch !important;
+  justify-items: center !important;
   align-items: start !important;
-  column-gap: 0 !important;
-  row-gap: 14px !important;
+  column-gap: 18px !important;
+  row-gap: 6px !important;
 }
 
 /* 2) ITEM: jednotná šířka v rámci sloupce + vertikální stack */
@@ -13831,12 +13831,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   background: #EFBE7D !important;
 }
 
-/* 4) LABEL: popisek přesně pod ikonou a vizuálně srovnaný */
+/* 4) LABEL: stejně jako Moje služby (center, margin-top 6px) */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem span:last-of-type {
   display: block !important;
   width: 100% !important;
   max-width: 10.5ch !important;
-  margin-top: 8px !important;
+  margin-top: 6px !important;
   line-height: 1.15 !important;
   text-align: center !important;
   white-space: normal !important;
@@ -13846,4 +13846,17 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
 /* CLS safety: stabilní výška položky (ikona+label) */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem {
   min-height: 88px !important;
+}
+
+/* === infoUzel.cz — Right rail: align section spacing (Services vs QuickLinks) === */
+body .accordionCol .mindMenu section.iu-mojeSluzby,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) {
+  padding-top: 0 !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) {
+  margin-top: 12px !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmSectionHead + .iu-mmQuickGrid,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead + .iu-mmQuickGrid {
+  margin-top: var(--iu-mm-first-gap, 12px) !important;
 }
