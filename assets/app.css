@@ -13199,3 +13199,17 @@ body .accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(svg,i){
   stroke:none;
   filter:none !important;
 }
+
+/* HOTFIX: Moje služby + Rychlé odkazy — barva ikon = computed social pill (přebití .layout > aside.accordionCol section.iu-mmQuickLinks) */
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile,
+body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile{
+  color:rgba(75,85,99,0.88) !important;
+}
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile :is(svg,i),
+body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(svg,i){
+  color:rgba(75,85,99,0.88) !important;
+  fill:#fff !important;
+  stroke:none !important;
+  opacity:1 !important;
+  filter:none !important;
+}
