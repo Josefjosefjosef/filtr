@@ -13213,3 +13213,40 @@ body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(s
   opacity:1 !important;
   filter:none !important;
 }
+
+/* P0: ikonky — sjednocení barev (gradient fill + silver glyph) — ONLY COLOR */
+:root {
+  --iu-icon-bg-1: #0B1F33;
+  --iu-icon-bg-2: #132F4D;
+  --iu-icon-glyph: #D1D5DB;
+}
+
+/* 1) MindMenu – social ikony u pilulek (kolečko) */
+.iu-pill-social-icon,
+.iu-pill-social-icon.iu-social-ios40 {
+  background: linear-gradient(180deg, var(--iu-icon-bg-1), var(--iu-icon-bg-2)) !important;
+  box-shadow: none !important;
+}
+.iu-pill-social-icon svg,
+.iu-pill-social-icon.iu-social-ios40 svg {
+  color: var(--iu-icon-glyph) !important;
+  fill: var(--iu-icon-glyph) !important;
+  stroke: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* 2) Moje služby + Rychlé odkazy – ikony (wrapper + glyph) */
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile,
+body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile {
+  background: linear-gradient(180deg, var(--iu-icon-bg-1), var(--iu-icon-bg-2)) !important;
+  box-shadow: none !important;
+}
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile :is(svg,i),
+body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(svg,i) {
+  color: var(--iu-icon-glyph) !important;
+  fill: var(--iu-icon-glyph) !important;
+  stroke: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
