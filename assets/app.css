@@ -13574,3 +13574,27 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
   outline: 2px solid currentColor;
   outline-offset: 3px;
 }
+
+/* === infoUzel.cz — Moje služby: klik pouze IKONA === */
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem *{
+  pointer-events: none !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink{
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
+  pointer-events: none !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem{
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink{
+  display: inline-flex !important;
+  padding: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
