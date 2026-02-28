@@ -16,6 +16,9 @@ from urllib.parse import urlparse, urljoin
 import requests
 import feedparser
 
+# Domains that often return 403 to bots; report as http_403_blocked in diagnostics
+BLOCKED_403_DOMAINS = ("irozhlas.cz",)
+
 
 class CircuitBreaker:
     """
@@ -165,9 +168,13 @@ class FetchEngine:
         Returns:
             (feed_dict, diagnostics_dict)
         """
+        host = self._host_key(url)
+        ts = datetime.now(timezone.utc).isoformat()
         diagnostics = {
             "url": url,
             "source_id": source_id,
+            "host": host,
+            "ts": ts,
             "httpStatus": 0,
             "contentType": "",
             "finalUrl": url,
@@ -208,16 +215,17 @@ class FetchEngine:
                 
                 # Success
                 if status_code == 200:
+                    diagnostics["reason"] = "ok"
                     # Parse
                     feed_dict, parse_diag = self._parse_feed(raw_bytes, content_type)
                     diagnostics.update(parse_diag)
+                    if not feed_dict:
+                        diagnostics["reason"] = parse_diag.get("reason", "parse_failed")
                     
                     if feed_dict:
                         self.circuit_breaker.record_success(source_id)
                         return (feed_dict, diagnostics)
                     else:
-                        # Parse failed, ale HTTP OK → ne retry
-                        diagnostics["reason"] = parse_diag.get("reason", "parse_failed")
                         self.circuit_breaker.record_failure(source_id)
                         return (None, diagnostics)
                 
@@ -228,7 +236,7 @@ class FetchEngine:
                         time.sleep(wait_ms / 1000.0)
                         continue
                     else:
-                        diagnostics["reason"] = "http_429_max_retries"
+                        diagnostics["reason"] = "http_429"
                         self.circuit_breaker.record_failure(source_id)
                         return (None, diagnostics)
                 
@@ -239,13 +247,16 @@ class FetchEngine:
                         time.sleep(wait_ms / 1000.0)
                         continue
                     else:
-                        diagnostics["reason"] = f"http_{status_code}_max_retries"
+                        diagnostics["reason"] = "http_other"
                         self.circuit_breaker.record_failure(source_id)
                         return (None, diagnostics)
                 
                 # 4xx (kromě 429) → non-retry
                 else:
-                    diagnostics["reason"] = f"http_{status_code}"
+                    if status_code == 403:
+                        diagnostics["reason"] = "http_403_blocked" if host in BLOCKED_403_DOMAINS else "http_403"
+                    else:
+                        diagnostics["reason"] = "http_other"
                     self.circuit_breaker.record_failure(source_id)
                     return (None, diagnostics)
             
@@ -255,7 +266,7 @@ class FetchEngine:
                     time.sleep(wait_ms / 1000.0)
                     continue
                 else:
-                    diagnostics["reason"] = "timeout_max_retries"
+                    diagnostics["reason"] = "timeout"
                     self.circuit_breaker.record_failure(source_id)
                     return (None, diagnostics)
             
@@ -265,19 +276,19 @@ class FetchEngine:
                     time.sleep(wait_ms / 1000.0)
                     continue
                 else:
-                    diagnostics["reason"] = "exception"
+                    diagnostics["reason"] = "http_other"
                     diagnostics["bozoException"] = str(e)
                     self.circuit_breaker.record_failure(source_id)
                     return (None, diagnostics)
         
         # Max retries reached
-        diagnostics["reason"] = "max_retries_exceeded"
+        diagnostics["reason"] = "http_other"
         self.circuit_breaker.record_failure(source_id)
         return (None, diagnostics)
     
     def _robust_fetch(self, url: str, timeout_ms: int) -> Tuple[int, str, str, bytes]:
         """
-        Základní HTTP fetch.
+        Základní HTTP fetch. Timeout hard-cap 5s.
         Returns: (status_code, final_url, content_type, raw_bytes)
         """
         headers = {
@@ -287,11 +298,11 @@ class FetchEngine:
             "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.3",
             "Cache-Control": "no-cache",
         }
-        
+        timeout_sec = min(5.0, timeout_ms / 1000.0)
         response = requests.get(
             url,
             headers=headers,
-            timeout=timeout_ms / 1000.0,
+            timeout=timeout_sec,
             allow_redirects=True,
             stream=False
         )

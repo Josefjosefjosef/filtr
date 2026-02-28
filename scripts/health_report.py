@@ -122,6 +122,17 @@ def discover_workflows() -> Dict[str, Any]:
     return out
 
 
+def load_fetch_monitor() -> Dict[str, Any]:
+    """Load projects/data/fetch_monitor.json if present."""
+    path = DATA_DIR / "fetch_monitor.json"
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+
 def discover_links() -> Dict[str, Any]:
     """Load links from sources.json, pipeline_config.json, fallback projects/index.html."""
     out: Dict[str, Any] = {"count": 0, "sources": []}
@@ -477,6 +488,7 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     broken, blocked_403 = check_404_links()
     json_errs = check_json_errors()
     feeds = discover_feeds()
+    fetch_monitor = load_fetch_monitor()
     workflows = discover_workflows()
     links = discover_links()
     radios = discover_radios()
@@ -555,6 +567,7 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         "layout": layout,
         "guards": guards,
         "discovery": {"feeds": feeds["count"], "workflows": workflows["count"], "links": links["count"], "radios": radios["count"]},
+        "fetch_monitor": fetch_monitor,
     }
     return report
 
@@ -672,6 +685,34 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
             f.write("### JSON errors\n\n")
             for e in br["jsonErrors"]:
                 f.write(f"- {e}\n")
+        f.write("\n")
+
+        fm = report.get("fetch_monitor") or {}
+        blocked403_by_host = fm.get("blocked403ByHost") or {}
+        robots_by_host = fm.get("robotsDisallowByHost") or {}
+        total_by_host = fm.get("totalByHost") or {}
+        if blocked403_by_host or robots_by_host:
+            f.write("## 3b. Fetch monitor (403 / robots)\n\n")
+            if blocked403_by_host:
+                f.write("### Blocked (403) by host (top 10)\n\n")
+                for host, count in sorted(blocked403_by_host.items(), key=lambda x: -x[1])[:10]:
+                    f.write(f"- {host}: {count}\n")
+                    if count >= 5:
+                        f.write(f"  **ALERT: 403_SPIKE host={host} count={count}**\n")
+                f.write("\n")
+            if total_by_host:
+                f.write("### Robots disallow rate by host (top 10)\n\n")
+                rates = []
+                for host, total in total_by_host.items():
+                    if total > 0:
+                        disallow = (robots_by_host.get(host) or 0)
+                        rate = disallow / total
+                        rates.append((host, rate, disallow, total))
+                for host, rate, disallow, total in sorted(rates, key=lambda x: -x[1])[:10]:
+                    f.write(f"- {host}: {rate:.2%} ({disallow}/{total})\n")
+                    if rate > 0.10 and total >= 20:
+                        f.write(f"  **ALERT: ROBOTS_DISALLOW_RATE host={host} rate={rate:.2%}**\n")
+                f.write("\n")
         f.write("\n")
 
         f.write("## 4. Performance\n\n")
