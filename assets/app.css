@@ -8325,6 +8325,9 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   transform: scale(0.96);
   transform-origin: center;
 }
+#iuLeftRail .iu-leftNav .iu-leftNavIcon svg{
+  transform: none !important;
+}
 
 /* Accent mapping */
 .iu-leftNav .iu-leftNavItem[data-accent="media"]{ --iuNavAccent: var(--iuNavAccent-media); }
