@@ -393,6 +393,26 @@ html:not([data-iu-js]) .iuDailyWeather{
   border: 0;
 }
 
+/* ===== INFOUZEL PREMIUM TOPBAR SILVER ===== */
+.topbar-new{
+  background: linear-gradient(180deg, #F8FAFC 0%, #E5E7EB 50%, #F1F5F9 100%);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 18px rgba(0,0,0,0.08);
+  backdrop-filter: blur(6px);
+}
+.topbar-new .topbar-logo .brand .name,
+.topbar-new .topbar-links,
+.topbar-new .topbar-link,
+.topbar-new .topbar-searchInput,
+.topbar-new .iu-infoBar,
+.topbar-new .iu-infoTime,
+.topbar-new .burger span{
+  color: #111827;
+}
+.topbar-new .burger span{
+  background: #111827;
+}
+
 .topbar-new::before{
   content: none !important; /* remove bottom line */
   display: none !important;
