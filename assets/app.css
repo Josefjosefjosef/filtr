@@ -13994,3 +13994,32 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmS
 body .accordionCol .mindMenu section.iu-mmQuickLinks.iu-mojeSluzby {
   min-height: 220px;
 }
+
+/* CLS fix: mailboxes section above Moje služby (sources trace: section.iu-mojeSluzby moved y 429→477 when content above grew) */
+body .accordionCol .mindMenu section.iu-mailboxes {
+  min-height: 80px;
+}
+
+.silver-links{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.silver-link{
+  display:block;
+  text-decoration:none;
+  padding:8px 10px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.65);
+  color: inherit;
+}
+
+.silver-link:hover{
+  background: rgba(255,255,255,0.80);
+}
+
+.silver-link:active{
+  transform: translateY(1px);
+}
