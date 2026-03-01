@@ -5,7 +5,7 @@
 */
 
 // Verze cache (měnit při každé významné změně)
-const CACHE_VERSION = "2026-03-01-no-stale-data-v1";
+const CACHE_VERSION = "2026-03-01-never-empty-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -87,6 +87,79 @@ function isCacheValid(meta) {
   if (!meta || !meta.timestamp) return false;
   const age = Date.now() - meta.timestamp;
   return age < (TTL[meta.type] || 300) * 1000;
+}
+
+function isoNow() {
+  return new Date().toISOString();
+}
+
+function getSeedArticles() {
+  const generatedAt = isoNow();
+  const items = [
+    { title: "Info", link: "#", pubDate: generatedAt, source: "infoUzel" },
+    { title: "Novinky", link: "#", pubDate: generatedAt, source: "infoUzel" },
+    { title: "Přehled", link: "#", pubDate: generatedAt, source: "infoUzel" },
+  ];
+  return JSON.stringify({ generatedAt, items });
+}
+
+function getSeedVideos() {
+  const generatedAt = isoNow();
+  const vid = "dQw4w9WgXcQ";
+  const videos = [
+    { title: "Video", url: "https://www.youtube.com/watch?v=" + vid, publishedAt: generatedAt, videoId: vid, thumb: "https://i.ytimg.com/vi/" + vid + "/hqdefault.jpg" },
+    { title: "Přehled", url: "https://www.youtube.com/watch?v=" + vid, publishedAt: generatedAt, videoId: vid, thumb: "https://i.ytimg.com/vi/" + vid + "/hqdefault.jpg" },
+    { title: "Info", url: "https://www.youtube.com/watch?v=" + vid, publishedAt: generatedAt, videoId: vid, thumb: "https://i.ytimg.com/vi/" + vid + "/hqdefault.jpg" },
+  ];
+  return JSON.stringify({ generatedAt, videos });
+}
+
+function seedResponse(pathname) {
+  const isArticles = pathname.includes("articles.json");
+  const body = isArticles ? getSeedArticles() : getSeedVideos();
+  return new Response(body, {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
+async function handleCriticalDataRequest(event) {
+  const url = new URL(event.request.url);
+  const pathname = url.pathname;
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), DATA_FETCH_TIMEOUT_MS);
+    const networkResponse = await fetch(event.request, {
+      signal: controller.signal,
+      cache: "no-store",
+    });
+    clearTimeout(timeoutId);
+    if (!networkResponse.ok) throw new Error("Network not ok");
+    const contentType = networkResponse.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) throw new Error("Not JSON");
+    const clone = networkResponse.clone();
+    const text = await clone.text();
+    if (!text.trim().startsWith("{") && !text.trim().startsWith("[")) throw new Error("Not JSON body");
+    const cache = await caches.open(DATA_CACHE);
+    await cache.put(event.request, networkResponse.clone());
+    return networkResponse;
+  } catch (_) {
+    const cached = await caches.match(event.request);
+    if (cached) {
+      const ct = cached.headers.get("content-type") || "";
+      if (ct.includes("application/json")) {
+        try {
+          const text = await cached.clone().text();
+          if (text.trim().startsWith("{") || text.trim().startsWith("[")) return cached;
+        } catch (_) {}
+      }
+    }
+    return seedResponse(pathname);
+  }
 }
 
 async function handleDataRequest(event) {
@@ -230,13 +303,15 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   const path = url.pathname;
 
-  if (
-    url.origin === self.location.origin &&
-    path.startsWith("/projects/data/") &&
-    (path.endsWith(".json") || path.endsWith("probe.txt"))
-  ) {
-    event.respondWith(handleDataRequest(event));
-    return;
+  if (url.origin === self.location.origin && path.startsWith("/projects/data/")) {
+    if (path.includes("articles.json") || path.includes("videos.json")) {
+      event.respondWith(handleCriticalDataRequest(event));
+      return;
+    }
+    if (path.endsWith(".json") || path.endsWith("probe.txt")) {
+      event.respondWith(handleDataRequest(event));
+      return;
+    }
   }
 
   if (
