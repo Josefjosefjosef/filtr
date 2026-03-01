@@ -126,7 +126,7 @@
     saveLastCrash(ev?.error || ev?.message, { type: "error", filename: ev?.filename, lineno: ev?.lineno, colno: ev?.colno });
     warn("window.error", ev?.message);
     if (DEBUG) showEmergencyOverlay("JS chyba na stránce.", `${ev?.message}\n${ev?.filename}:${ev?.lineno}:${ev?.colno}\n${ev?.error?.stack || ""}`);
-  }));
+  });
 
   window.addEventListener("unhandledrejection", (ev) => {
     saveLastCrash(ev?.reason, { type: "unhandledrejection" });
