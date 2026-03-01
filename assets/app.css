@@ -9802,8 +9802,10 @@ body.iu-leftRail-collapsed{
   --iuLeftRailW: 0px;
 }
 
-/* === Left page edge overlay === */
+/* === Left page edge overlay === (P0: removed + click-trap killed) */
 .iuLeftEdgeOverlay{
+  display: none !important;
+  pointer-events: none !important;
   position: fixed;
   left: 0;
   top: var(--iuTopbarHeight, 56px);
