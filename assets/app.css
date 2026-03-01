@@ -14000,6 +14000,12 @@ body .accordionCol .mindMenu section.iu-mailboxes {
   min-height: 310px;
 }
 
+/* CLS fix: reserve space for FA icon ::before (sources trace: ::before w15→27 h22→21) */
+body .accordionCol .mindMenu .iuIconTile > i {
+  min-width: 27px;
+  min-height: 21px;
+}
+
 .silver-links{
   display:flex;
   flex-direction:column;
