@@ -9888,6 +9888,26 @@ html, body {
   z-index: 1000 !important;
 }
 
+/* P0: killer premium silver (barva pouze; bez změny layoutu/výšky) */
+header.iuTopbar,
+.topbar-new.iuTopbar{
+  background-color: #ECEFF3 !important;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.35) 18%, rgba(236,239,243,1) 55%, rgba(214,219,226,1) 100%) !important;
+  border-bottom: 1px solid rgba(120,130,150,0.25) !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.75) !important;
+  color: #0B1F33 !important;
+}
+header.iuTopbar .iuHamburger,
+header.iuTopbar .iuBrand,
+.topbar-new.iuTopbar .iuHamburger,
+.topbar-new.iuTopbar .iuBrand{
+  color: #0B1F33 !important;
+}
+header.iuTopbar .iuHamburger svg,
+.topbar-new.iuTopbar .iuHamburger svg{
+  stroke: #0B1F33 !important;
+}
+
 /* inner wrappers must not create a pill or change height */
 .iuTopbar .topbar-new-inner{
   height: 100% !important;
@@ -10069,7 +10089,7 @@ body.iuTopbarFlushRight{
   --iuTopbarRadiusRight: 0px;
 }
 
-/* Topbar wrapper (real selector from grep: header#topbarWrap.topbar-new.iuTopbar) */
+/* Topbar wrapper (real selector from grep: header#topbarWrap.topbar-new.iuTopbar) — P0 silver override */
 header#topbarWrap.topbar-new.iuTopbar{
   height: var(--iuTopbarHeight) !important;
   min-height: var(--iuTopbarHeight) !important;
@@ -10080,12 +10100,13 @@ header#topbarWrap.topbar-new.iuTopbar{
   right: 0 !important;
   z-index: 2000 !important;
 
-  background: #0B1F33 !important;
-  color: #D1D5DB !important;
+  background-color: #ECEFF3 !important;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.35) 18%, rgba(236,239,243,1) 55%, rgba(214,219,226,1) 100%) !important;
+  border-bottom: 1px solid rgba(120,130,150,0.25) !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.75) !important;
+  color: #0B1F33 !important;
 
   border-radius: var(--iuTopbarRadiusLeft) var(--iuTopbarRadiusRight) var(--iuTopbarRadiusRight) var(--iuTopbarRadiusLeft) !important;
-
-  box-shadow: var(--iuShadow) !important;
 
   display: flex !important;
   align-items: center !important;
@@ -12019,14 +12040,20 @@ html{
 }
 
 /* =========================================================
-   FINAL TOPBAR – SOLID COLOR (infoUzel.cz)
-   Simple, stable, CLS-safe
+   FINAL TOPBAR – P0 PREMIUM SILVER (infoUzel.cz)
+   Silver only; layout unchanged; CLS-safe
 ========================================================= */
 
-header#topbarWrap.topbar-new.iuTopbar,
+header#topbarWrap.topbar-new.iuTopbar{
+  background-color: #ECEFF3 !important;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.35) 18%, rgba(236,239,243,1) 55%, rgba(214,219,226,1) 100%) !important;
+  border-bottom: 1px solid rgba(120,130,150,0.25) !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.75) !important;
+  color: #0B1F33 !important;
+}
 #topbarWrap .topbar-new-main{
-  background:#0B1F33 !important;
-  color:#ffffff !important;
+  background: transparent !important;
+  color: #0B1F33 !important;
 }
 
 /* Topbar: shift hamburger + logo 40px right */
