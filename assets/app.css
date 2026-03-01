@@ -13403,27 +13403,31 @@ body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead .
   align-items:center;
 }
 
-/* 3) Moje služby: ikona 35px + emerald pozadí (jen ikonový wrapper) — vyšší specificita než 40px rules */
-body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iuIconTile{
-  width:35px !important;
-  height:35px !important;
-  min-width:35px !important;
-  min-height:35px !important;
-  background:var(--iu-rr-emerald) !important;
-  box-shadow:none !important;
+/* 3) Moje služby + Rychlé odkazy: ikona = stejný styl jako Sociální sítě (kolečko + bílý glyph) */
+body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iuIconTile{
+  background: linear-gradient(180deg, var(--iu-mm-bg1), var(--iu-mm-bg2)) !important;
+  box-shadow: none !important;
+}
+body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iuIconTile :is(svg,i){
+  color: #fff !important;
+  fill: #fff !important;
+  stroke: none !important;
+  -webkit-text-fill-color: #fff !important;
+}
+body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iuIconTile{
+  color: #fff !important;
 }
 
-/* 4) Moje služby: glyph/SVG v ikoně bílý + velikost uvnitř 35px tile */
-body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iuIconTile :is(svg,i){
-  width:17px !important;
-  height:17px !important;
-  color:#fff !important;
-  fill:#fff !important;
-  stroke:none !important;
-  -webkit-text-fill-color:#fff !important;
-}
+/* 4) Moje služby: velikost 35px (Rychlé odkazy zůstávají 40px z --iu-rr-ico) */
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iuIconTile{
-  color:#fff !important;
+  width: 35px !important;
+  height: 35px !important;
+  min-width: 35px !important;
+  min-height: 35px !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iuIconTile :is(svg,i){
+  width: 17px !important;
+  height: 17px !important;
 }
 
 /* force 35px override (same rule repeated with section.iu-mmQuickLinks.iu-mojeSluzby for max specificity) */
@@ -13474,17 +13478,35 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
   pointer-events:none;
 }
 
-/* P0: Moje služby — 4 položky v 1 řádku na desktopu */
+/* P0: Moje služby + Rychlé odkazy — 4 sloupce na desktopu (Moje služby 4/0, Rychlé odkazy 4/4/1) */
 @media (min-width: 900px){
   body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid{
     display:grid !important;
     grid-template-columns:repeat(4, minmax(0, 1fr)) !important;
   }
+  .accordionCol .mindMenu .iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid{
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
-/* P0: Moje služby — ikony TOP line + mezera od underline shodná s 1. pilulkou v MindMenu; label max 2 řádky */
+/* P0: Rychlé odkazy — popisek centrovaný, max 2 řádky, neklikatelný (jen ikona klikací) */
+.accordionCol .mindMenu .iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItem span:not(.iuIconTile){
+  pointer-events: none !important;
+  user-select: none;
+  text-align: center;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.15;
+  max-height: calc(2 * 1.15em);
+  white-space: normal !important;
+}
+
+/* P0: Moje služby + Rychlé odkazy — stejná mezera od underline k horní hraně ikon */
 :root{
-  --iu-ms-icon-top-gap: -10px;
+  --iu-ms-icon-top-gap: 0;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid{
   align-items: start;
