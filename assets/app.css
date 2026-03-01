@@ -8301,7 +8301,7 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   filter: none !important;
 }
 
-/* Left rail: force real height +20% vs current (0.96 = 59.2*1.2/74) — baseline df7e13c8 */
+/* Left rail: force real height +20% vs current (0.96 = 59.2*1.2/74); icon size pre-0231bd65 baseline */
 #iuLeftRail .iu-leftNav .iu-leftNavItem{
   height: calc(74px * 0.96) !important;
   min-height: calc(74px * 0.96) !important;
