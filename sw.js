@@ -5,20 +5,36 @@
 */
 
 // Verze cache (měnit při každé významné změně)
-const CACHE_VERSION = "2026-02-21-root-noflash";
+const CACHE_VERSION = "2026-03-01-no-stale-data-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
 
 // TTL pro JSON data (v sekundách)
 const TTL = {
-  articles: 300,      // 5 minut
-  videos: 600,        // 10 minut
-  weather: 1800,      // 30 minut
-  namedays: 86400,    // 24 hodin
-  meta: 600,          // 10 minut
-  status: 300,        // 5 minut
+  articles: 300,
+  videos: 600,
+  weather: 1800,
+  namedays: 86400,
+  meta: 600,
+  status: 300,
 };
+
+// Maximální stáří cache pro fallback (ms): čerstvost podle generatedAt
+const MAX_STALE_MS = {
+  articles: 10 * 60 * 1000,
+  videos: 10 * 60 * 1000,
+  probe: 10 * 60 * 1000,
+  meta: 30 * 60 * 1000,
+};
+const DATA_FETCH_TIMEOUT_MS = 5500;
+
+function getDataRequestType(pathname) {
+  if (pathname.includes("articles.json")) return "articles";
+  if (pathname.includes("videos.json")) return "videos";
+  if (pathname.endsWith("probe.txt")) return "probe";
+  return "meta";
+}
 
 // ✅ FIX: App Shell soubory (Cache First) - relativní vůči BASE
 // BASE bude definován později, takže použijeme funkci
@@ -73,6 +89,120 @@ function isCacheValid(meta) {
   return age < (TTL[meta.type] || 300) * 1000;
 }
 
+async function handleDataRequest(event) {
+  const url = new URL(event.request.url);
+  const pathname = url.pathname;
+  const type = getDataRequestType(pathname);
+  const isJson = pathname.endsWith(".json");
+
+  const send503 = () =>
+    new Response(JSON.stringify({ error: "NETWORK_FAILED_NO_FRESH_CACHE" }), {
+      status: 503,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store",
+      },
+    });
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), DATA_FETCH_TIMEOUT_MS);
+    const networkResponse = await fetch(event.request, {
+      signal: controller.signal,
+      cache: "no-store",
+    });
+    clearTimeout(timeoutId);
+
+    if (!networkResponse.ok) throw new Error("Network not ok");
+
+    const contentType = networkResponse.headers.get("content-type") || "";
+    if (isJson && !contentType.includes("application/json")) throw new Error("Not JSON");
+
+    const clone = networkResponse.clone();
+    const text = await clone.text();
+    if (isJson) {
+      if (!text.trim().startsWith("{") && !text.trim().startsWith("[")) throw new Error("Not JSON body");
+      let generatedAt = null;
+      try {
+        const obj = JSON.parse(text);
+        generatedAt = obj && (obj.generatedAt || obj.generated_at);
+      } catch (_) {}
+      const cache = await caches.open(DATA_CACHE);
+      await cache.put(event.request, networkResponse.clone());
+      const metaCache = await caches.open(DATA_META_CACHE);
+      const metaReq = new Request(event.request.url + ".meta");
+      await metaCache.put(
+        metaReq,
+        new Response(
+          JSON.stringify({
+            timestamp: Date.now(),
+            type,
+            generatedAt: generatedAt || null,
+          }),
+          { headers: { "Content-Type": "application/json" } }
+        )
+      );
+      return networkResponse;
+    }
+
+    if (pathname.endsWith("probe.txt")) {
+      const cache = await caches.open(DATA_CACHE);
+      await cache.put(event.request, networkResponse.clone());
+      const metaCache = await caches.open(DATA_META_CACHE);
+      const metaReq = new Request(event.request.url + ".meta");
+      await metaCache.put(
+        metaReq,
+        new Response(
+          JSON.stringify({ timestamp: Date.now(), type: "probe" }),
+          { headers: { "Content-Type": "application/json" } }
+        )
+      );
+      return networkResponse;
+    }
+
+    return networkResponse;
+  } catch (_) {
+    const cached = await caches.match(event.request);
+    if (!cached) return send503();
+
+    const ct = cached.headers.get("content-type") || "";
+    if (isJson) {
+      if (!ct.includes("application/json")) return send503();
+      let text;
+      try {
+        text = await cached.clone().text();
+      } catch (_) {
+        return send503();
+      }
+      if (!text.trim().startsWith("{") && !text.trim().startsWith("[")) return send503();
+      let obj;
+      try {
+        obj = JSON.parse(text);
+      } catch (_) {
+        return send503();
+      }
+      const generatedAt = obj && (obj.generatedAt || obj.generated_at);
+      if (!generatedAt) return send503();
+      const age = Date.now() - Date.parse(generatedAt);
+      const maxStale = MAX_STALE_MS[type] ?? MAX_STALE_MS.meta;
+      if (age > maxStale) return send503();
+      return cached;
+    }
+
+    if (pathname.endsWith("probe.txt")) {
+      const metaCache = await caches.open(DATA_META_CACHE);
+      const metaRes = await metaCache.match(new Request(event.request.url + ".meta"));
+      if (!metaRes) return send503();
+      const meta = await metaRes.json();
+      if (!meta || !meta.timestamp) return send503();
+      if (Date.now() - meta.timestamp > MAX_STALE_MS.probe) return send503();
+      return cached;
+    }
+
+    return send503();
+  }
+}
+
 // Install: cache App Shell
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -98,16 +228,25 @@ self.addEventListener("activate", (event) => {
 // Fetch: Network First pro data, Cache First pro App Shell
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
+  const path = url.pathname;
 
   if (
     url.origin === self.location.origin &&
-    (url.pathname.startsWith("/projects/data/") ||
-      url.pathname.startsWith("/projects/assets/"))
+    path.startsWith("/projects/data/") &&
+    (path.endsWith(".json") || path.endsWith("probe.txt"))
+  ) {
+    event.respondWith(handleDataRequest(event));
+    return;
+  }
+
+  if (
+    url.origin === self.location.origin &&
+    (path.startsWith("/projects/data/") || path.startsWith("/projects/assets/"))
   ) {
     return;
   }
 
-  if (url.pathname.startsWith("/projects/data/")) {
+  if (path.startsWith("/projects/data/")) {
     event.respondWith(fetch(event.request, { cache: "no-store" }));
     return;
   }
