@@ -275,7 +275,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for bad in "API_KEY" "SECRET" "TOKEN" "BEGIN PRIVATE KEY"; do
+          for bad in "API_KEY" "SECRET" "TOKEN" "BEGIN PRIVATE KEY" "AWS_SECRET_ACCESS_KEY"; do
             if grep -q "$bad" reports/ultra_audit_report.txt 2>/dev/null; then
               echo "::error::STOP_SHIP: ultra_audit_report.txt contains forbidden: $bad"
               exit 1
