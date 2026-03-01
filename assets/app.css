@@ -14032,3 +14032,16 @@ body .accordionCol .mindMenu .iuIconTile > i {
 .silver-link:active{
   transform: translateY(1px);
 }
+
+/* RIGHT RAIL: remove tinted background (keep layout untouched) */
+.layout > aside.accordionCol{
+  background: #fff;
+  background-color: #fff;
+  background-image: none;
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: none;
+}
+.accordionCol section.iu-mmQuickLinks{
+  background-color: transparent !important;
+  background-image: none !important;
+}
