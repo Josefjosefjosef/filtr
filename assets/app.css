@@ -14035,9 +14035,9 @@ body .accordionCol .mindMenu .iuIconTile > i {
 
 /* RIGHT RAIL: remove tinted background (keep layout untouched) */
 .layout > aside.accordionCol{
-  background: #fff;
-  background-color: #fff;
-  background-image: none;
+  background: #fff !important;
+  background-color: #fff !important;
+  background-image: none !important;
   border-color: rgba(0,0,0,0.08);
   box-shadow: none;
 }
