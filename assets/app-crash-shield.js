@@ -446,42 +446,35 @@
   // === SERVICE WORKER REGISTER
   // =========================
 
-  // ❌ KRITICKÁ OPRAVA: Service Worker dočasně vypnut – způsoboval bílou stránku
   async function registerSW() {
-    // Service Worker registrace je dočasně zakázána
-    // Staré SW jsou odregistrovány v index.html na začátku <head>
-    return;
-    
-    /* PŮVODNÍ KÓD ZAKOMENTOVÁN:
     try {
       if (!("serviceWorker" in navigator)) return;
-      
-      // ✅ FIX: Kill switch ?nosw=1 - vypne registraci SW (musí být zde, ne v sw.js)
+
       const NOSW = new URLSearchParams(location.search).get("nosw") === "1";
       if (NOSW) {
-        log("SW kill switch aktivní (?nosw=1), SW se neregistruje");
-        // Odregistruj existující SW pokud existuje
         try {
           const regs = await navigator.serviceWorker.getRegistrations();
           for (const reg of regs) {
             await reg.unregister();
           }
-        } catch (e) {
-          // Ignoruj chyby při odregistrování
-        }
+        } catch (e) {}
         return;
       }
 
-      // ✅ FIX: BASE je path-only, takže sw.js path je správně
-      const swPath = BASE.endsWith("/") ? `${BASE}sw.js` : `${BASE}/sw.js`;
-      const scope = BASE || "./";
-      const reg = await navigator.serviceWorker.register(swPath, { scope });
-      log("SW registered", reg);
+      const reg = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
       if (reg && reg.update) reg.update().catch(() => {});
+
+      if (!navigator.serviceWorker.controller) {
+        const reloadKey = "iu_sw_reload_done";
+        if (!sessionStorage.getItem(reloadKey)) {
+          sessionStorage.setItem(reloadKey, "1");
+          location.reload();
+          return;
+        }
+      }
     } catch (e) {
       warn("SW register failed", e);
     }
-    */
   }
 
   // =========================
