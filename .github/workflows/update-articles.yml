@@ -1,8 +1,8 @@
 name: Update articles data
 
 concurrency:
-  group: data-writers-${{ github.ref }}
-  cancel-in-progress: false
+  group: data-writers-main
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -16,18 +16,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: main
           fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: scripts/requirements.txt
 
       - name: Install Python dependencies
         run: |
@@ -36,9 +38,9 @@ jobs:
 
       - name: Sync with branch
         run: |
-          git fetch origin "${GITHUB_REF_NAME}"
-          git checkout "${GITHUB_REF_NAME}"
-          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git fetch origin main
+          git checkout main
+          git pull --rebase origin main
 
       - name: Build articles JSON
         env:
@@ -120,11 +122,11 @@ jobs:
 
           for i in 1 2 3; do
             echo "[PUSH] Attempt $i/3"
-            git fetch origin "${GITHUB_REF_NAME}"
+            git fetch origin main
 
-            git rebase "origin/${GITHUB_REF_NAME}" || (git rebase --abort && exit 1)
+            git rebase origin/main || (git rebase --abort && exit 1)
 
-            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+            if git push origin "HEAD:main"; then
               echo "[PUSH] Success."
               echo "pushed=true" >> "$GITHUB_OUTPUT"
               exit 0
