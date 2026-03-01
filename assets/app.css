@@ -14033,13 +14033,13 @@ body .accordionCol .mindMenu .iuIconTile > i {
   transform: translateY(1px);
 }
 
-/* RIGHT RAIL: remove tinted background (keep layout untouched) */
+/* RIGHT RAIL: same background as page, no frame */
 .layout > aside.accordionCol{
-  background: #fff !important;
-  background-color: #fff !important;
+  background: var(--iu-page-bg) !important;
+  background-color: var(--iu-page-bg) !important;
   background-image: none !important;
-  border-color: rgba(0,0,0,0.08);
-  box-shadow: none;
+  border: none !important;
+  box-shadow: none !important;
 }
 .accordionCol section.iu-mmQuickLinks{
   background-color: transparent !important;
