@@ -8281,9 +8281,17 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   filter: none !important;
 }
 
-/* Left rail: 20% smaller button height and icons (P0 UI_CHANGE) */
+/* Left rail: force real 20% height reduction (min-height was not enough) */
 #iuLeftRail .iu-leftNav .iu-leftNavItem{
+  height: calc(74px * 0.8) !important;
   min-height: calc(74px * 0.8) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+#iuLeftRail .iu-leftNav .iu-leftNavLabel{
+  line-height: 0.9 !important;
 }
 #iuLeftRail .iu-leftNav .iu-leftNavIcon svg{
   transform: scale(0.8);
