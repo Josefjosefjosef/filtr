@@ -267,7 +267,7 @@ jobs:
             done
             echo ""
             echo "=== CURRENT STATE (narrative) ==="
-            echo "Branch: $(git rev-parse --abbrev-ref HEAD). Commit: $(git rev-parse --short HEAD). Workflows: $(ls -1 .github/workflows/*.yml 2>/dev/null | wc -l)."
+            echo "Branch: $(git rev-parse --abbrev-ref HEAD). Commit: $(git rev-parse --short HEAD). Workflows: $(find .github/workflows -maxdepth 1 -name '*.yml' 2>/dev/null | wc -l)."
           } > "$AUDIT"
           echo "ULTRA_AUDIT_GENERATED=$AUDIT"
 
