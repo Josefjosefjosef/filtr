@@ -19,8 +19,8 @@ alwaysApply: true
 - In PowerShell, DO NOT use `2>nul` (cmd syntax) and DO NOT use pipes that trigger Out-File device errors.
 - Use PowerShell-native: `2>$null` and `Select-String -Quiet` when possible.
 
-## 4) BAN: `$.` (dollar-dot) AND BAN: `$.Path` etc.
-- Never use `$.(...)` patterns in scripts or output formatting.
+## 4) BAN: dollar-dot
+- Never use dollar-dot (e.g. Path, LineNumber on `$`) in scripts or output formatting.
 - Use ONLY `$_` (pipeline variable) or explicit named variables.
 
 ## 5) Prefer "boolean gates" (Quiet) to avoid formatting issues
