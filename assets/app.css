@@ -8281,6 +8281,15 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   filter: none !important;
 }
 
+/* Left rail: 20% smaller button height and icons (P0 UI_CHANGE) */
+#iuLeftRail .iu-leftNav .iu-leftNavItem{
+  min-height: calc(74px * 0.8) !important;
+}
+#iuLeftRail .iu-leftNav .iu-leftNavIcon svg{
+  transform: scale(0.8);
+  transform-origin: center;
+}
+
 /* Accent mapping */
 .iu-leftNav .iu-leftNavItem[data-accent="media"]{ --iuNavAccent: var(--iuNavAccent-media); }
 .iu-leftNav .iu-leftNavItem[data-accent="radio"]{ --iuNavAccent: var(--iuNavAccent-radio); }
