@@ -8301,10 +8301,10 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   filter: none !important;
 }
 
-/* Left rail: force real height +20% vs current (0.96 = 59.2*1.2/74); icon box shrunk so label fits */
+/* Left rail: +10% height vs previous ~71px → 78px; icon box + spacing unchanged */
 #iuLeftRail .iu-leftNav .iu-leftNavItem{
-  height: calc(74px * 0.96) !important;
-  min-height: calc(74px * 0.96) !important;
+  height: 78px !important;
+  min-height: 78px !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   padding-left: 10px !important;
