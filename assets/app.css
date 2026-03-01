@@ -8301,39 +8301,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   filter: none !important;
 }
 
-/* IU_LEFT_RAIL_BTN_MINH_78_V1 */
-/* Left rail: +10% height vs previous ~71px → 78px; icon box + spacing unchanged */
-#iuLeftRail .iu-leftNav .iu-leftNavItem{
-  height: 78px !important;
-  min-height: 78px !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-}
-#iuLeftRail .iu-leftNav .iu-leftNavIcon{
-  flex: 0 0 auto !important;
-  width: 20px !important;
-  height: 20px !important;
-}
-#iuLeftRail .iu-leftNav .iu-leftNavLabel{
-  line-height: 0.9 !important;
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-#iuLeftRail .iu-leftNav .iu-leftNavIcon svg{
-  transform: scale(0.96);
-  transform-origin: center;
-}
-
 /* Accent mapping */
 .iu-leftNav .iu-leftNavItem[data-accent="media"]{ --iuNavAccent: var(--iuNavAccent-media); }
 .iu-leftNav .iu-leftNavItem[data-accent="radio"]{ --iuNavAccent: var(--iuNavAccent-radio); }
