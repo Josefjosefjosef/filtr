@@ -1,5 +1,5 @@
 ---
-description: infoUzel.cz — PS fallback ($_ only, no $.) + OS-safe CI (grep/pwsh, no rg)
+description: infoUzel.cz — PS fallback ($_ only, no dollar-dot) + OS-safe CI (grep/pwsh, no rg)
 alwaysApply: true
 ---
 
@@ -7,9 +7,9 @@ alwaysApply: true
 
 ## PowerShell ukázky a fallback skripty
 
-- **ZAKÁZÁNO** používat `$.…` (např. `$.Path`, `$.LineNumber`, `$.Line`, `$.Filename`, `$.Matches`, `$.Groups`).
+- **ZAKÁZÁNO** používat dollar-dot (např. dollar-dot Path, dollar-dot LineNumber, dollar-dot Line, dollar-dot Filename, dollar-dot Matches, dollar-dot Groups).
 - **POVINNÉ** používat `$_…` (např. `$_.Path`, `$_.LineNumber`, `$_.Line.Trim()`).
-- V pipeline `ForEach-Object { … }` je aktuální objekt v `$_`, ne v `$.`.
+- V pipeline `ForEach-Object { … }` je aktuální objekt v `$_`, ne jako dollar-dot.
 
 ## OS větvení v GitHub Actions
 
