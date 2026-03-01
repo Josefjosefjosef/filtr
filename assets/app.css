@@ -9798,30 +9798,6 @@ html, body {
 
 @property --iuTopbarLeftGutter { syntax: '<length>'; inherits: true; initial-value: 0px; }
 
-body.iu-leftRail-collapsed{
-  --iuLeftRailW: 0px;
-}
-
-/* === Left page edge overlay === */
-.iuLeftEdgeOverlay{
-  position: fixed;
-  left: 0;
-  top: var(--iuTopbarHeight, 56px);
-  bottom: 0;
-  width: 0px; /* nastavuje JS */
-  z-index: 9999;
-  cursor: pointer;
-  user-select: none;
-  background: #0B1F33; /* SOLID, BEZ GRADIENTU */
-}
-body.iu-leftRail-collapsed .iuLeftEdgeOverlay{
-  background: #FFFFFF;
-  box-shadow: inset -1px 0 rgba(11,31,51,0.18); /* jemná dělící linka jen když je rail pryč */
-}
-@media (max-width: 980px){
-  .iuLeftEdgeOverlay{ display: none !important; }
-}
-
 /* Left rail: solid bg (jen kontejner, tlačítka beze změny) + natáhnout do spodku viewportu */
 #iuLeftRail{
   background: #0B1F33 !important;
@@ -9830,44 +9806,10 @@ body.iu-leftRail-collapsed .iuLeftEdgeOverlay{
   min-height: calc(100vh - var(--iuTopbarHeight, 56px));
   align-self: stretch;
 }
-/* Nav visible: žádná dělící linka mezi overlay a railem */
-body:not(.iu-leftRail-collapsed) #iuLeftRail{
+#iuLeftRail{
   border-left: 0 !important;
   outline: 0 !important;
   box-shadow: none !important;
-}
-/* Collapsed: rail nesmí kreslit divider (jen overlay) – zdroj druhé linky */
-body.iu-leftRail-collapsed #iuLeftRail,
-body.iu-leftRail-collapsed #iuLeftRail .iu-leftNav,
-body.iu-leftRail-collapsed #iuLeftRail [data-rail-container]{
-  border-left: 0 !important;
-  border-right: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
-}
-
-/* Tooltip u kurzoru */
-.iuLeftEdgeTooltip{
-  position: fixed;
-  left: 0;
-  top: 0;
-  transform: translate(-9999px, -9999px);
-  z-index: 10000;
-  padding: 6px 8px;
-  border-radius: 8px;
-  font-size: 12px;
-  line-height: 1.2;
-  background: rgba(11,31,51,0.92);
-  color: #D1D5DB;
-  border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .08s linear;
-}
-.iuLeftEdgeTooltip.is-visible{ opacity: 1; }
-@media (max-width: 980px){
-  .iuLeftEdgeTooltip{ display: none !important; }
 }
 
 .iuTopbar{
@@ -10603,13 +10545,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
     display: grid;
     grid-template-columns: var(--iuLeftRailW) minmax(0, 1fr);
   }
-}
-
-/* Collapsed: hide rail content, feed expands */
-body.iu-leftRail-collapsed #iuLeftRail,
-body.iu-leftRail-collapsed aside#iuLeftRail{
-  overflow: hidden !important;
-  pointer-events: none !important;
 }
 
 /* ============================================================
