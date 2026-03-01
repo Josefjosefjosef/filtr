@@ -326,8 +326,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  const path = url.pathname;
-
   // CSS/JS assets: stale-while-revalidate, cache key bez query stringu.
   // Důvod: stabilní ?v=... + Cache First by jinak mohl držet staré CSS/JS donekonečna.
   if (
