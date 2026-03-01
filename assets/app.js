@@ -9,6 +9,16 @@ var iuIsProjectsRoute = function iuIsProjectsRoute(){
 };
 try { if (typeof window !== "undefined") window.iuIsProjectsRoute = iuIsProjectsRoute; } catch(e){}
 
+/* P0: reload always returns to top (like seznam.cz) */
+try {
+  if (typeof history !== "undefined" && "scrollRestoration" in history) history.scrollRestoration = "manual";
+  if (typeof window !== "undefined") {
+    window.scrollTo(0, 0);
+    window.addEventListener("load", function(){ window.scrollTo(0, 0); });
+    window.addEventListener("pageshow", function(){ window.scrollTo(0, 0); });
+  }
+} catch(e){}
+
 // === MAINTENANCE
 // ::contentReference[oaicite:0]{index=0}
 // REŽIM: MAINTENANCE
