@@ -78,6 +78,28 @@ try {
   try { document.documentElement.setAttribute("data-iu-buildstamp", document.querySelector('meta[name="iu-build"]')?.content || "no-meta"); } catch {}
   const $ = (sel) => document.querySelector(sel);
 
+  function iuEnsureServiceWorkerController() {
+    try {
+      var p = (typeof location !== "undefined" && location && location.pathname) ? String(location.pathname) : "";
+      if (p !== "/projects/" && p !== "/projects" && p.indexOf("/projects/") !== 0) return;
+      if (!("serviceWorker" in navigator)) return;
+      if (sessionStorage.getItem("iu_sw_reload_done")) return;
+      navigator.serviceWorker.register("/sw.js", { scope: "/" })
+        .then(function() { return navigator.serviceWorker.ready; })
+        .then(function() {
+          if (navigator.serviceWorker.controller) return;
+          sessionStorage.setItem("iu_sw_reload_done", "1");
+          location.reload();
+        })
+        .catch(function() {});
+    } catch (e) {}
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iuEnsureServiceWorkerController);
+  } else {
+    iuEnsureServiceWorkerController();
+  }
+
   function iuBasePath() {
     const p = location.pathname.toLowerCase();
     if (p.includes("/filtr/")) return "/filtr/projects/";
