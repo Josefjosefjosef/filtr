@@ -8287,11 +8287,19 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   min-height: calc(74px * 0.96) !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
   display: flex !important;
   align-items: center !important;
+  gap: 12px !important;
+}
+#iuLeftRail .iu-leftNav .iu-leftNavIcon{
+  flex: 0 0 auto !important;
 }
 #iuLeftRail .iu-leftNav .iu-leftNavLabel{
   line-height: 0.9 !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
 }
 #iuLeftRail .iu-leftNav .iu-leftNavIcon svg{
   transform: scale(0.96);
