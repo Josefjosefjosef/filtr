@@ -13418,26 +13418,6 @@ body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iuIconTile{
   color: #fff !important;
 }
 
-/* 4) Moje služby: velikost 35px (Rychlé odkazy zůstávají 40px z --iu-rr-ico) */
-body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iuIconTile{
-  width: 35px !important;
-  height: 35px !important;
-  min-width: 35px !important;
-  min-height: 35px !important;
-}
-body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iuIconTile :is(svg,i){
-  width: 17px !important;
-  height: 17px !important;
-}
-
-/* force 35px override (same rule repeated with section.iu-mmQuickLinks.iu-mojeSluzby for max specificity) */
-body .accordionCol .mindMenu section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickGrid .iuIconTile{
-  width:35px !important;
-  height:35px !important;
-  min-width:35px !important;
-  min-height:35px !important;
-}
-
 /* P0: Moje služby — label mimo odkaz, jen ikona klikací; zachovat layout */
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem{
   display:flex;
@@ -13471,7 +13451,6 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
   outline-offset:2px;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
-  font-size:12px;
   line-height:1.1;
   margin-top:4px;
   text-align:center;
