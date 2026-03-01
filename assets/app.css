@@ -13649,6 +13649,31 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
   display: block;
 }
 
+/* P0 CLS: Moje služby — textová tlačítka bez ikon (eliminate layout shift) */
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje služby"] .iu-mmQuickItemLink svg{
+  display: none !important;
+}
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje služby"] .iu-mmQuickItemLink :is(.iuIcon,.iu-mmIcon,[class*="Icon"],[class*="icon"],[data-icon]){
+  display: none !important;
+}
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje služby"] .iu-mmQuickItemLink::before,
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje služby"] .iu-mmQuickItemLink::after{
+  content: none !important;
+  display: none !important;
+}
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje služby"] .iu-mmQuickGrid{
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje služby"] .iu-mmQuickItemLink{
+  width: 100% !important;
+  min-height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
 /* === infoUzel.cz — Pravý sloupec: sjednotit gap "nadpis/linka → ikony" === */
 :root{
   --iu-right-section-icons-top-gap: 12px;
