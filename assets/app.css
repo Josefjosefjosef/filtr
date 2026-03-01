@@ -9859,6 +9859,8 @@ html, body {
 }
 
 /* Left cluster: hamburger + brand */
+.iuTopbar .iuTopbarLeft,
+#topbarWrap .iuTopbarLeft,
 .iuTopbarLeft{
   display: flex;
   align-items: center;
@@ -11973,6 +11975,11 @@ header#topbarWrap.topbar-new.iuTopbar,
 #topbarWrap .topbar-new-main{
   background:#0B1F33 !important;
   color:#ffffff !important;
+}
+
+/* Topbar: shift hamburger + logo 40px right */
+header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
+  padding-left: 40px !important;
 }
 
 /* === HOTFIX v3: topbar search panel MUST open to the LEFT === */
