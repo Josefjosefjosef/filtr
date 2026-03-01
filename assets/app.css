@@ -9802,10 +9802,13 @@ body.iu-leftRail-collapsed{
   --iuLeftRailW: 0px;
 }
 
-/* === Left page edge overlay === (P0: removed + click-trap killed) */
+/* === Left page edge overlay === (P0: hard-kill by id+class, no SW/cache bypass) */
+#iuLeftEdgeOverlay,
 .iuLeftEdgeOverlay{
   display: none !important;
   pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
   position: fixed;
   left: 0;
   top: var(--iuTopbarHeight, 56px);
@@ -9816,11 +9819,13 @@ body.iu-leftRail-collapsed{
   user-select: none;
   background: #0B1F33; /* SOLID, BEZ GRADIENTU */
 }
+body.iu-leftRail-collapsed #iuLeftEdgeOverlay,
 body.iu-leftRail-collapsed .iuLeftEdgeOverlay{
   background: #FFFFFF;
   box-shadow: inset -1px 0 rgba(11,31,51,0.18); /* jemná dělící linka jen když je rail pryč */
 }
 @media (max-width: 980px){
+  #iuLeftEdgeOverlay,
   .iuLeftEdgeOverlay{ display: none !important; }
 }
 
