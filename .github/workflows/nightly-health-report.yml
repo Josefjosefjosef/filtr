@@ -226,12 +226,77 @@ jobs:
 
           echo "NO_STALE_SEND=PASS"
 
+      - name: Generate ultra_audit_report.txt (forensic audit, no secrets)
+        shell: bash
+        env:
+          HEAD_SHA: ${{ env.HEAD_SHA }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          AUDIT="reports/ultra_audit_report.txt"
+          {
+            echo "=== ULTRA FORENSIC AUDIT — infoUzel.cz ==="
+            echo "META"
+            echo "generated_at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "HEAD_SHA: ${HEAD_SHA}"
+            echo "GITHUB_RUN_ID: ${GITHUB_RUN_ID}"
+            echo "repo: ${GITHUB_REPOSITORY}"
+            echo ""
+            echo "=== REPO INVENTORY (git ls-files, sorted) ==="
+            git ls-files | sort
+            echo ""
+            echo "=== FILE STATS (path | bytes | lines) ==="
+            git ls-files | while read -r f; do
+              if [ -f "$f" ]; then
+                bytes=$(stat -c%s "$f" 2>/dev/null || echo 0)
+                lines=$(wc -l < "$f" 2>/dev/null || echo 0)
+                echo "$f | $bytes bytes | $lines lines"
+              fi
+            done
+            echo ""
+            echo "=== WORKFLOWS (name + blob hash) ==="
+            for w in .github/workflows/*.yml; do
+              [ -f "$w" ] && echo "$w $(git hash-object "$w" 2>/dev/null || echo N/A)"
+            done | sort
+            echo ""
+            echo "=== GREP INDEX (key patterns, excl. node_modules) ==="
+            for pat in "rss\|feed\|xml\|atom" "youtube\|youtu.be" "fetch(" "serviceWorker\|workbox" "indexeddb\|localStorage\|cacheStorage" "schedule\|cron" "process\.env" "try\s*{" "catch\s*(" "infouzel"; do
+              echo "--- pattern: $pat ---"
+              git grep -n "$pat" -- . 2>/dev/null | grep -v "node_modules" | head -100 || true
+            done
+            echo ""
+            echo "=== CURRENT STATE (narrative) ==="
+            echo "Branch: $(git rev-parse --abbrev-ref HEAD). Commit: $(git rev-parse --short HEAD). Workflows: $(find .github/workflows -maxdepth 1 -name '*.yml' 2>/dev/null | wc -l)."
+          } > "$AUDIT"
+          echo "ULTRA_AUDIT_GENERATED=$AUDIT"
+
+      - name: STOP-SHIP guard (ultra report must not contain secrets)
+        shell: bash
+        run: |
+          set -euo pipefail
+          for bad in "API_KEY" "SECRET" "TOKEN" "BEGIN PRIVATE KEY" "AWS_SECRET_ACCESS_KEY"; do
+            if grep -q "$bad" reports/ultra_audit_report.txt 2>/dev/null; then
+              echo "::error::STOP_SHIP: ultra_audit_report.txt contains forbidden: $bad"
+              exit 1
+            fi
+          done
+          echo "STOP_SHIP_SECRETS=PASS"
+
+      - name: Copy nightly report for email attachments
+        shell: bash
+        run: |
+          cp reports/latest.md reports/nightly_health_report.txt
+          test -f reports/nightly_health_report.txt
+
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
         with:
           name: health-report-${{ github.run_id }}
           path: |
             reports/latest.md
+            reports/nightly_health_report.txt
+            reports/ultra_audit_report.txt
             reports/health-*.md
             reports/health-*.json
             reports/check_site.json
@@ -286,4 +351,6 @@ jobs:
           to: ${{ secrets.HEALTH_EMAIL_TO }}
           from: ${{ secrets.HEALTH_EMAIL_FROM }}
           body: file://reports/latest.md
-          attachments: reports/latest.md
+          attachments: |
+            reports/nightly_health_report.txt
+            reports/ultra_audit_report.txt
