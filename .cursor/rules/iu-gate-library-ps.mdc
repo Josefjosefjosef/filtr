@@ -23,5 +23,5 @@ When output must list matches, force 1 match = 1 line:
   ... | Select-String -Pattern "..." |
   ForEach-Object { Write-Output ($_.Path + ':' + $_.LineNumber + ':' + $_.Line.Trim()) }
 
-## 4) Ban $.(...) and $.*
-Never use `$.(...)` or `$.Path` etc. Only use `$_` or named vars.
+## 4) Ban dollar-dot
+Never use dollar-dot (e.g. property on `$`). Only use `$_` or named vars.
