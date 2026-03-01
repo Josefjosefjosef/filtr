@@ -8301,10 +8301,10 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   filter: none !important;
 }
 
-/* Left rail: force real height +20% vs current (0.96 = 59.2*1.2/74) — baseline df7e13c8 */
+/* Left rail: baseline button height 74px (no calc hacks) */
 #iuLeftRail .iu-leftNav .iu-leftNavItem{
-  height: calc(74px * 0.96) !important;
-  min-height: calc(74px * 0.96) !important;
+  height: 74px !important;
+  min-height: 74px !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   padding-left: 12px !important;
@@ -8317,7 +8317,7 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   flex: 0 0 auto !important;
 }
 #iuLeftRail .iu-leftNav .iu-leftNavLabel{
-  line-height: 0.9 !important;
+  line-height: 1.05 !important;
   flex: 1 1 auto !important;
   min-width: 0 !important;
 }
