@@ -10314,6 +10314,19 @@ main#content .layout{
    Premium integrated look, CLS-safe
    ============================================================ */
 
+/* Hide pill in sidebar so move to topbar causes no CLS (pill never paints in wrong place) */
+aside.accordionCol > .iuRightTopCtas{
+  position: absolute !important;
+  left: -9999px !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 aside.accordionCol > .iuRightTopCtas{
   display:flex;
   gap:0;
@@ -14190,5 +14203,63 @@ body #iuLeftRail .iu-leftNav .iu-leftNavItem{
 }
 body #iuLeftRail .iu-leftNav .iu-leftNavItem:hover{
   background: linear-gradient(180deg, #F4F5F7 0%, #E4E8ED 60%, #DFE3E9 100%) !important;
+}
+
+/* ===== TOPBAR: Inzerce/Služby + Vložit inzerát pill (moved from right column) ===== */
+#iuTopbarRight .iuRightTopCtas,
+#topbarWrap .iuRightTopCtas{
+  display: flex !important;
+  gap: 0 !important;
+  margin-left: 10px !important;
+  padding: 0 !important;
+}
+#iuTopbarRight .iuRightTopCtas > .iuRightCta,
+#topbarWrap .iuRightTopCtas > .iuRightCta{
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 44px !important;
+  line-height: 44px !important;
+  padding: 0 12px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.2px !important;
+  text-decoration: none !important;
+  background: rgba(255,255,255,.72) !important;
+  backdrop-filter: blur(6px) !important;
+  color: #111827 !important;
+  border: 1px solid var(--iuHairline) !important;
+  border-right: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+#iuTopbarRight .iuRightTopCtas > .iuRightCta:first-child,
+#topbarWrap .iuRightTopCtas > .iuRightCta:first-child{
+  border-top-left-radius: 14px !important;
+  border-bottom-left-radius: 14px !important;
+}
+#iuTopbarRight .iuRightTopCtas > .iuRightCta:last-child,
+#topbarWrap .iuRightTopCtas > .iuRightCta:last-child{
+  border-right: 1px solid var(--iuHairline) !important;
+  border-top-right-radius: 14px !important;
+  border-bottom-right-radius: 14px !important;
+}
+#iuTopbarRight .iuRightTopCtas > .iuRightCta.iuRightCta--services,
+#topbarWrap .iuRightTopCtas > .iuRightCta.iuRightCta--services{
+  background: #E7EDF7 !important;
+  color: #1F3B6D !important;
+  border-color: #D3DEEF !important;
+}
+#iuTopbarRight .iuRightTopCtas > .iuRightCta.iuRightCta--submit,
+#topbarWrap .iuRightTopCtas > .iuRightCta.iuRightCta--submit{
+  background: linear-gradient(180deg, #FFD873, #E5B94A) !important;
+  color: #1B2A4A !important;
+  border-color: #D4A73B !important;
+  box-shadow: 0 4px 10px rgba(229, 185, 74, .35) !important;
 }
 
