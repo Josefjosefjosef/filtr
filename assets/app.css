@@ -14425,15 +14425,19 @@ header#topbarWrap.topbar-new.iuTopbar::after{
 
 /* === PREMIUM TEXT BUTTONS — MOJE SLUŽBY + RYCHLÉ ODKAZY === */
 
-/* selektory skutečně používané v infoUzel.cz */
 .iu-mojeSluzby .iu-mmQuickItemLink,
 .iu-mojeSluzby .iu-mmQuickItem,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItemLink,
-.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItem {
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItem{
 
   display:inline-flex;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-start;
+
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
 
   min-height:40px;
   padding:10px 16px;
@@ -14447,6 +14451,10 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   font-weight:600;
   letter-spacing:0.2px;
 
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+
   box-shadow:
     0 1px 2px rgba(0,0,0,.12),
     0 4px 14px rgba(0,0,0,.08);
@@ -14457,18 +14465,24 @@ header#topbarWrap.topbar-new.iuTopbar::after{
 .iu-mojeSluzby .iu-mmQuickItemLink:hover,
 .iu-mojeSluzby .iu-mmQuickItem:hover,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItemLink:hover,
-.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItem:hover {
-
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItem:hover{
   transform:translateY(-1px);
   box-shadow:
     0 2px 4px rgba(0,0,0,.14),
     0 8px 18px rgba(0,0,0,.10);
 }
 
-/* SKRÝT IKONY – FUNKCE LINKŮ ZŮSTÁVAJÍ */
+/* skrýt ikony */
 .iu-mojeSluzby svg,
 .iu-mojeSluzby img,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) svg,
-.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) img {
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) img{
   display:none !important;
+}
+
+/* kontejnery nesmí tlačit layout do šířky */
+.iu-mojeSluzby .iu-mmQuickItems,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItems{
+  min-width:0;
+  max-width:100%;
 }
