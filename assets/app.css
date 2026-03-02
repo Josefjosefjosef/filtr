@@ -14694,5 +14694,12 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem,
   border: 2px solid var(--iuNavAccent, currentColor) !important;
   border-radius: 14px !important;
   box-sizing: border-box !important;
+  max-width: 100% !important;
+}
+
+/* P0: prevent left rail from causing horizontal overflow (border + flex) */
+#iuLeftRail .iu-leftNav{
+  min-width: 0 !important;
+  overflow-x: clip !important;
 }
 
