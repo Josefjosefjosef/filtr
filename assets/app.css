@@ -14094,3 +14094,28 @@ body #iuLeftRail{
   align-items: center !important;
 }
 
+/* ===== INFOUZEL PREMIUM LEFT SIDEBAR SILVER (BG ONLY) ===== */
+
+/* (A) Levý sloupec – pouze pozadí + jemný stín, žádné rozměry (override body #iuLeftRail) */
+body #iuLeftRail{
+  background: linear-gradient(180deg, #F8FAFC 0%, #E5E7EB 55%, #F1F5F9 100%) !important;
+  border-right: 1px solid rgba(0,0,0,0.06) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.90),
+    6px 0 18px rgba(0,0,0,0.10) !important;
+}
+
+/* (B) Tlačítka/karty v levém sloupci – pouze pozadí + světlo/stín (override body #iuLeftRail .iu-leftNavItem) */
+body #iuLeftRail .iu-leftNav .iu-leftNavItem{
+  background: linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 55%, #F3F4F6 100%) !important;
+  border: 1px solid rgba(0,0,0,0.06) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    0 8px 18px rgba(0,0,0,0.10) !important;
+}
+
+/* (C) Hover – přepis pouze background (levý tile už má hover styl) */
+body #iuLeftRail .iu-leftNav .iu-leftNavItem:hover{
+  background: linear-gradient(180deg, #FFFFFF 0%, #EEF2F7 60%, #E9EDF3 100%) !important;
+}
+
