@@ -14681,4 +14681,13 @@ aside#iuLeftRail.iu-leftRail{
   opacity: 1 !important;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
+  font-weight: 700 !important;
+}
+
+/* === LEFT RAIL: Weather button — border dokola v barvě ikony === */
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"],
+.iu-leftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"]{
+  border: 2px solid var(--iuNavAccent-pocasi, currentColor) !important;
+  border-radius: 14px;
+  box-sizing: border-box !important;
 }
