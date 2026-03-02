@@ -14279,9 +14279,13 @@ header#topbarWrap.topbar-new.iuTopbar::after{
 #topbarWrap #iuTopbarRight{
   display: flex !important;
   align-items: center !important;
+  justify-content: flex-end !important;
 }
 #topbarWrap #iuTopbarRight .iuRightTopCtas{
   order: 10 !important;
+  flex: 0 0 auto !important;
+  min-width: max-content !important;
+  margin-right: 12px !important;
 }
 #topbarWrap #iuTopbarRight #iuTopbarToday{
   order: 20 !important;
