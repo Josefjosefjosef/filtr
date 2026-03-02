@@ -13231,6 +13231,26 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   console.error("IU SAFE BOOT ERROR:", e);
 }
 
+// === TOPBAR: move Inzerce/Služby + Vložit inzerát pill (whole wrapper) before info icon ===
+(function iuMoveAdsPillToTopbar() {
+  function run() {
+    var wrapper = document.querySelector(".iuRightTopCtas");
+    if (!wrapper) return;
+    var services = wrapper.querySelector(".iuRightCta--services");
+    var submit = wrapper.querySelector(".iuRightCta--submit");
+    if (!services || !submit) return;
+    var topbarRight = document.getElementById("iuTopbarRight");
+    if (!topbarRight) return;
+    if (wrapper.parentNode === topbarRight) return;
+    topbarRight.appendChild(wrapper);
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+})();
+
 // === UI-only cleanup: permanently disable any cached rail-hidden state ===
 try { document.body.classList.remove("iu" + "RailHidden"); } catch (e) {}
 try { document.documentElement.classList.remove("iu" + "RailHidden"); } catch (e) {}
