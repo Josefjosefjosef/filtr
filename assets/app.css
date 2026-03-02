@@ -14392,3 +14392,36 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   background: #4B5563F0;
 }
 
+/* === RYCHLÉ ODKAZY → TEXT BUTTONS (SAFE, NO ICONS) === */
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) a,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItem,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  background: #4B5563E0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  min-height: 44px;
+
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* skrýt pouze ikonky v Rychlé odkazy, text zůstává */
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) svg,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) img,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iuIconTile {
+  display: none !important;
+}
+
+/* hover jemně – žádná změna layoutu */
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) a:hover,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItem:hover,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) button:hover {
+  background: #4B5563F0;
+}
+
