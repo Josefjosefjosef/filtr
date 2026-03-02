@@ -13156,6 +13156,8 @@ html, body,
 
 .iu-leftNav .iu-leftNavItem[data-accent="namedays"]{ --iuNavAccent: var(--iuNavAccent-namedays); }
 
+.iu-leftNav .iu-leftNavItem[data-accent="svatky"]{ --iuNavAccent: var(--iuNavAccent-namedays); }
+
 .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"]{ --iuNavAccent: var(--iuNavAccent-tvprogram); }
 
 .iu-leftNav .iu-leftNavItem[data-accent="culture"]{ --iuNavAccent: var(--iuNavAccent-culture); }
@@ -14653,10 +14655,11 @@ aside#iuLeftRail.iu-leftRail{
   outline: 0 !important;
 }
 
-/* === LEFT RAIL: static icon color (as hover) + crisp text + 2px accent border === */
+/* === LEFT RAIL: static icon color (as hover) + 2px accent border (all buttons, same as Weather) === */
 #iuLeftRail .iu-leftNav .iu-leftNavItem,
 .iu-leftRail .iu-leftNav .iu-leftNavItem{
   border: 2px solid var(--iuNavAccent, currentColor) !important;
+  border-radius: 14px;
   box-sizing: border-box !important;
 }
 
@@ -14684,10 +14687,3 @@ aside#iuLeftRail.iu-leftRail{
   font-weight: 700 !important;
 }
 
-/* === LEFT RAIL: Weather button — border dokola v barvě ikony === */
-#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"],
-.iu-leftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"]{
-  border: 2px solid var(--iuNavAccent-pocasi, currentColor) !important;
-  border-radius: 14px;
-  box-sizing: border-box !important;
-}
