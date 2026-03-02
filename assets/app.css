@@ -14643,3 +14643,12 @@ aside#iuLeftRail.iu-leftRail{
   content: none !important;
   display: none !important;
 }
+
+/* === LEFT/FEED FINAL HAIRLINE OFF (ROOT-CAUSE: .iu-leftNav border-right) === */
+#iuLeftRail .iu-leftNav,
+.iu-leftRail .iu-leftNav{
+  border-right: 0 !important;
+  border-left: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
