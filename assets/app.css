@@ -14166,3 +14166,20 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   color: #1D4ED8 !important;
 }
 
+/* ===== INFOUZEL LEFT RAIL: TITLES + LABEL COLORS (NO LAYOUT) ===== */
+#iuLeftRail{
+  --iuQuickServiceIconColor: #2563EB;
+  --iuTopbarBrandColor: #0B1F33;
+}
+#iuLeftRail .iuLeftRailSectionTitle:first-of-type{
+  text-transform: none;
+  --iuRailSectionAccent: #2563EB !important;
+}
+#iuLeftRail .iuLeftRailSectionTitle,
+#iuLeftRail .iuMyUzelLabel{
+  color: var(--iuTopbarBrandColor) !important;
+}
+#iuLeftRail .iu-leftNav .iu-leftNavLabel{
+  color: var(--iuTopbarBrandColor) !important;
+}
+
