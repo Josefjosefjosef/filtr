@@ -14612,3 +14612,34 @@ header#topbarWrap{
 #iuTopbarRight .iuRightTopCtas *{
   max-width: none !important;
 }
+
+/* === HOTFIX: TOPBAR — CTA NEXT TO i (ANTI-STRETCH, P0) === */
+#iuTopbarRight{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  flex: 0 0 auto !important;
+}
+
+/* CTA wrapper nesmí být 100% / nesmí grow */
+#iuTopbarRight .iuRightTopCtas{
+  display: inline-flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+}
+
+/* tvrdé přebití na případné obecné width:100% */
+#iuTopbarRight .iuRightTopCtas,
+#iuTopbarRight .iuRightTopCtas *{
+  max-width: none !important;
+}
