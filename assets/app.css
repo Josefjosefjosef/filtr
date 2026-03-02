@@ -14620,3 +14620,10 @@ header#topbarWrap{
   flex-basis: auto !important;
   padding-right: 0 !important;
 }
+
+/* === LEFT RAIL BACKGROUND MATCH PAGE (SAFE) === */
+.iu-leftRail,
+aside#iuLeftRail.iu-leftRail{
+  background: inherit !important;
+  box-shadow: none !important;
+}
