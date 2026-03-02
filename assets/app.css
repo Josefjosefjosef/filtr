@@ -14150,3 +14150,19 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   cursor: default;
 }
 
+/* ===== INFOUZEL QUICK SERVICE: ICON BLUE ONLY (Rychlý servis – first section in left rail) ===== */
+#iuLeftRail .iu-leftNav .iu-leftNavItem:nth-child(n+2):nth-child(-n+8) .iu-leftNavIcon{
+  color: #2563EB !important;
+}
+#iuLeftRail .iu-leftNav .iu-leftNavItem:nth-child(n+2):nth-child(-n+8) .iu-leftNavIcon svg{
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+#iuLeftRail .iu-leftNav .iu-leftNavItem:nth-child(n+2):nth-child(-n+8) .iu-leftNavIcon svg *{
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+#iuLeftRail .iu-leftNav .iu-leftNavItem:nth-child(n+2):nth-child(-n+8):hover .iu-leftNavIcon{
+  color: #1D4ED8 !important;
+}
+
