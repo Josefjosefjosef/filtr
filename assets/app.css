@@ -14536,10 +14536,16 @@ header#topbarWrap.iuTopbar{
 }
 
 /* === HOTFIX: TOPBAR rightPx=15 — REMOVE BLOCKER (DIAG-DRIVEN) === */
-/* Diag: header rectRight 1425 (vw 1440) → ::after right:15 is 30px from viewport. Fix: pin "i" to viewport. */
+/* Diag: topbar rectRight 1425 (vw 1440) → topbar ends 15px before viewport. Fix: anchor topbar to viewport so ::after right:15px gives 15±1. */
+#topbarWrap.topbar-new.iuTopbar,
+header#topbarWrap.iuTopbar{
+  width: 100vw !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
 header#topbarWrap.topbar-new.iuTopbar::after{
-  position: fixed !important;
+  position: absolute !important;
   right: 15px !important;
-  top: calc(var(--iuTopbarHeight, 72px) / 2) !important;
+  top: 50% !important;
   transform: translateY(-50%) !important;
 }
