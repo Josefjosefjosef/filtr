@@ -14627,3 +14627,19 @@ aside#iuLeftRail.iu-leftRail{
   background: inherit !important;
   box-shadow: none !important;
 }
+
+/* === LEFT RAIL DIVIDER OFF (SAFE) === */
+#iuLeftRail,
+.iu-leftRail,
+aside#iuLeftRail.iu-leftRail{
+  border-right: 0 !important;
+  outline: 0 !important;
+}
+
+#iuLeftRail::before,
+#iuLeftRail::after,
+.iu-leftRail::before,
+.iu-leftRail::after{
+  content: none !important;
+  display: none !important;
+}
