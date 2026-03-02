@@ -14184,3 +14184,11 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   color: var(--iuTopbarBrandColor) !important;
 }
 
+/* ===== INFOUZEL LEFT RAIL: TILE BG = HOVER BG (DEFAULT) ===== */
+body #iuLeftRail .iu-leftNav .iu-leftNavItem{
+  background: linear-gradient(180deg, #FFFFFF 0%, #EEF2F7 60%, #E9EDF3 100%) !important;
+}
+body #iuLeftRail .iu-leftNav .iu-leftNavItem:hover{
+  background: linear-gradient(180deg, #FFFFFF 0%, #EEF2F7 60%, #E9EDF3 100%) !important;
+}
+
