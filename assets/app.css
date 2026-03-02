@@ -14486,3 +14486,27 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   min-width:0;
   max-width:100%;
 }
+
+/* === HOTFIX: CLS FROM ::before — MAKE PSEUDO ELEMENT LAYOUT-NEUTRAL === */
+
+/* 1) všechny pseudo-elementy v Moje služby + Rychlé odkazy nesmí měnit layout */
+.iu-mojeSluzby *::before,
+.iu-mojeSluzby *::after,
+.accordionCol .mindMenu section.iu-mmQuickLinks *::before,
+.accordionCol .mindMenu section.iu-mmQuickLinks *::after{
+  position:absolute !important;
+  inset:0 auto auto 0 !important;
+  width:0 !important;
+  height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  content:'' !important;
+  pointer-events:none !important;
+}
+
+/* 2) pokud některé ::before kreslí divider/line, rezervuj místo wrapperu */
+.iu-mojeSluzby .iu-mmQuickItem,
+.accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmQuickItem{
+  position:relative;
+}
