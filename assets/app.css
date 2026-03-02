@@ -14510,3 +14510,27 @@ header#topbarWrap.topbar-new.iuTopbar::after{
 .accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmQuickItem{
   position:relative;
 }
+
+/* === HOTFIX: TOPBAR — KEEP CTA WRAPPER WHOLE + MOVE NEXT TO INFO i === */
+#topbarWrap.topbar-new.iuTopbar,
+header#topbarWrap.iuTopbar{
+  display: flex;
+  align-items: center;
+}
+#topbarWrap .topbar-new-main{
+  display: flex;
+  align-items: center;
+}
+#topbarWrap #iuTopbarRight{
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+#topbarWrap #iuTopbarRight .iuRightTopCtas{
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  margin-right: 10px;
+}
