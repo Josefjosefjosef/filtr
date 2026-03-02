@@ -14293,3 +14293,61 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   color: #2563EB !important;
 }
 
+/* ===== LEFT RAIL: QUICK SERVICE — HIDE TITLE + UNDERLINE ===== */
+#iuLeftRail .iu-leftNav .iuLeftRailSectionTitle:first-of-type{
+  display: none !important;
+}
+
+/* ===== LEFT RAIL: ICON COLOR = LABEL COLOR (SELECT ITEMS ONLY) ===== */
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"],
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="mapy"],
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="jr"],
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"],
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvonline"],
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="radio"],
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="svatky"]{
+  color: #2563EB;
+}
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"] .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="mapy"] .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="jr"] .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvonline"] .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="radio"] .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="svatky"] .iu-leftNavLabel{
+  color: currentColor !important;
+}
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="mapy"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="jr"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvonline"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="radio"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="svatky"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"] .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="mapy"] .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="jr"] .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvonline"] .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="radio"] .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="svatky"] .iu-leftNavIcon svg{
+  color: currentColor !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"] .iu-leftNavIcon *,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="mapy"] .iu-leftNavIcon *,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="jr"] .iu-leftNavIcon *,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon *,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvonline"] .iu-leftNavIcon *,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="radio"] .iu-leftNavIcon *,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="svatky"] .iu-leftNavIcon *{
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+/* ===== LEFT RAIL: LABELS NOT BOLD ===== */
+#iuLeftRail .iu-leftNav .iu-leftNavLabel{
+  font-weight: 400 !important;
+}
+
