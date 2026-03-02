@@ -14358,6 +14358,9 @@ header#topbarWrap.topbar-new.iuTopbar::after{
 }
 
 /* === MOJE SLUŽBY → TEXT BUTTONS (SAFE, NO ICONS) === */
+.iu-mojeSluzby .iu-mmQuickGrid{
+  min-width: 0;
+}
 .iu-mojeSluzby .iu-mmQuickItem,
 .iu-mojeSluzby .iu-mmQuickItemLink,
 .iu-mojeSluzby a,
@@ -14373,6 +14376,10 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   color: #ffffff;
   font-weight: 600;
   text-decoration: none;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .iu-mojeSluzby svg,
