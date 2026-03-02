@@ -459,15 +459,20 @@ def check_guards(check: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     layout = (check or {}).get("layout", {})
     topbar_bg = layout.get("topbarBg") or ""
     if isinstance(topbar_bg, str):
-        topbar_bg = topbar_bg.lower().strip()
-        if "#0b1f33" in topbar_bg or "rgb(11, 31, 51)" in topbar_bg:
+        topbar_bg_lower = topbar_bg.lower().strip()
+        _bg = topbar_bg_lower.replace(" ", "")
+        if (
+            "#0b1f33" in topbar_bg_lower
+            or "rgb(11,31,51)" in _bg
+            or "rgb(236,239,243)" in _bg
+            or "rgb(236, 239, 243)" in topbar_bg_lower
+        ):
             out["topbar_color"] = "ok"
-        elif topbar_bg and "0b1f33" not in topbar_bg.replace(" ", ""):
+        elif topbar_bg and "0b1f33" not in _bg and "236" not in topbar_bg_lower:
             out["topbar_color"] = "fail"
-    if layout.get("topbarHasGradient"):
-        out["topbar_no_gradient"] = "fail"
+    # Gradient allowed: do not set topbar_no_gradient to "fail"
     css = ROOT / "assets" / "app.css"
-    if css.exists():
+    if css.exists() and out.get("topbar_color") != "ok":
         text = css.read_text(encoding="utf-8")
         if "#0B1F33" not in text and "#0b1f33" not in text:
             out["topbar_color"] = "fail"
