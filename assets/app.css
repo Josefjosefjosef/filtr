@@ -14422,3 +14422,41 @@ header#topbarWrap.topbar-new.iuTopbar::after{
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) button:hover {
   background: #4B5563F0;
 }
+
+/* === PREMIUM TEXT BUTTONS — MOJE SLUŽBY + RYCHLÉ ODKAZY === */
+.iu-mojeSluzby .iu-mmQuickItem,
+.iu-mojeSluzby .iu-mmQuickItemLink,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItem,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItemLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: #4B5563E0;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.12),
+    0 4px 14px rgba(0,0,0,.08);
+  transition: all .18s ease;
+}
+.iu-mojeSluzby .iu-mmQuickItem:hover,
+.iu-mojeSluzby .iu-mmQuickItemLink:hover,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItem:hover,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItemLink:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.14),
+    0 8px 18px rgba(0,0,0,.10);
+}
+.iu-mojeSluzby svg,
+.iu-mojeSluzby img,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) svg,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) img {
+  display: none !important;
+}
