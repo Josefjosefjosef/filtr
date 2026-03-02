@@ -14687,3 +14687,12 @@ aside#iuLeftRail.iu-leftRail{
   font-weight: 700 !important;
 }
 
+/* P0 HOTFIX: override border-color:transparent (~13471) and body #iuLeftRail .iu-leftNavItem border 1px rgba(0,0,0,0.06) (~14130) — same specificity, source order wins */
+body #iuLeftRail .iu-leftNav .iu-leftNavItem,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem,
+#iuLeftRail .iu-leftNav > a.iu-leftNavItem{
+  border: 2px solid var(--iuNavAccent, currentColor) !important;
+  border-radius: 14px !important;
+  box-sizing: border-box !important;
+}
+
