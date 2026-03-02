@@ -14268,6 +14268,11 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   font-size: calc(13px * 1.7) !important;
 }
 
+/* TOPBAR: hide date + nameday badges (remove from UI) */
+#topbarWrap #iuTopbarToday{
+  display: none !important;
+}
+
 /* ===== QUICK SERVICE BLUE: ICONS + LABELS + SECTION TITLE #2563EB ===== */
 #iuLeftRail .iuLeftRailSectionTitle:first-of-type{
   color: #2563EB !important;
