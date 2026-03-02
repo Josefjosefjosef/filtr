@@ -14652,3 +14652,33 @@ aside#iuLeftRail.iu-leftRail{
   box-shadow: none !important;
   outline: 0 !important;
 }
+
+/* === LEFT RAIL: static icon color (as hover) + crisp text + 2px accent border === */
+#iuLeftRail .iu-leftNav .iu-leftNavItem,
+.iu-leftRail .iu-leftNav .iu-leftNavItem{
+  border: 2px solid var(--iuNavAccent, currentColor) !important;
+  box-sizing: border-box !important;
+}
+
+#iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavIcon,
+.iu-leftRail .iu-leftNav .iu-leftNavItem .iu-leftNavIcon{
+  color: var(--iuNavAccent, currentColor) !important;
+  filter: none !important;
+}
+
+#iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavIcon svg,
+.iu-leftRail .iu-leftNav .iu-leftNavItem .iu-leftNavIcon svg{
+  color: var(--iuNavAccent, currentColor);
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+#iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavLabel,
+.iu-leftRail .iu-leftNav .iu-leftNavItem .iu-leftNavLabel{
+  color: var(--iuNavAccent, currentColor) !important;
+  text-shadow: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
