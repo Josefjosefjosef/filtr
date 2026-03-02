@@ -14703,7 +14703,15 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem,
   overflow-x: clip !important;
 }
 
-/* infoUzel.cz — one-color services section (left rail: icons + text + borders #2563EB) */
+/* infoUzel.cz — one-color services section: force accent vars so winning rules (aside#… border, [data-rail] svg) resolve to #2563EB */
+#iuLeftRail .iu-leftNav{
+  --iuNavAccent: #2563EB;
+  --iuRailAccent-quick: #2563EB;
+  --iuRailAccent-day: #2563EB;
+  --iuRailAccent-fun: #2563EB;
+}
+
+/* infoUzel.cz — one-color services section (left rail: icons + text + borders #2563EB); explicit overrides for color/fill/stroke/border */
 #iuLeftRail .iu-leftNav .iu-leftNavItem,
 #iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavIcon,
 #iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavIcon svg,
@@ -14712,6 +14720,8 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem,
   fill: #2563EB !important;
   stroke: #2563EB !important;
 }
+body #iuLeftRail .iu-leftNav .iu-leftNavItem,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem,
 #iuLeftRail .iu-leftNav .iu-leftNavItem{
   border: 2px solid #2563EB !important;
 }
