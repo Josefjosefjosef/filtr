@@ -14549,3 +14549,36 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   top: 50% !important;
   transform: translateY(-50%) !important;
 }
+
+/* === HOTFIX: TOPBAR — CTA WRAPPER NEXT TO INFO i (CSS-ONLY) === */
+#iuTopbarRight{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+}
+
+#iuTopbarRight .iuRightTopCtas{
+  display: inline-flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+  min-width: 0 !important;
+}
+
+#iuTopbarRight .iuRightTopCtas{
+  margin-right: 0 !important;
+}
+
+/* když je "i" jako DOM element uvnitř #iuTopbarRight, drž ho taky bez flex grow */
+#iuTopbarRight .iuTopbarInfo,
+#iuTopbarRight .iu-info,
+#iuTopbarRight [aria-label="info" i]{
+  flex: 0 0 auto !important;
+}
+
+/* fallback: pokud "i" je ::after na #topbarWrap/header, zajisti prostor vpravo tak, aby CTA nebylo pod ním */
+#topbarWrap,
+header#topbarWrap{
+  padding-right: calc(15px + 44px + 10px) !important; /* 15px right + 44px circle + gap */
+}
