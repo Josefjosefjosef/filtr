@@ -14558,27 +14558,29 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   gap: 10px !important;
 }
 
+/* CTA wrapper: drž jako 1 celek, nezalamuj, neflexuj do šířky */
 #iuTopbarRight .iuRightTopCtas{
   display: inline-flex !important;
   align-items: center !important;
   flex: 0 0 auto !important;
   white-space: nowrap !important;
   min-width: 0 !important;
+  margin-right: 0 !important; /* pokud margin odsouvá CTA od "i", zruš jen v topbaru */
 }
 
-#iuTopbarRight .iuRightTopCtas{
-  margin-right: 0 !important;
-}
-
-/* když je "i" jako DOM element uvnitř #iuTopbarRight, drž ho taky bez flex grow */
+/* Pokud "i" JE DOM element uvnitř #iuTopbarRight, drž ho taky bez flex grow (best-effort) */
 #iuTopbarRight .iuTopbarInfo,
 #iuTopbarRight .iu-info,
-#iuTopbarRight [aria-label="info" i]{
+#iuTopbarRight [aria-label*="info" i]{
   flex: 0 0 auto !important;
 }
 
-/* fallback: pokud "i" je ::after na #topbarWrap/header, zajisti prostor vpravo tak, aby CTA nebylo pod ním */
+/*
+  Fallback pro případ, že "i" JE POUZE ::after (pseudo-element) na topbaru:
+  rezervuj vpravo prostor, aby CTA mohlo sedět "vedle" pseudo-elementu bez překryvu.
+  (15px right + 44px circle + 10px gap)
+*/
 #topbarWrap,
 header#topbarWrap{
-  padding-right: calc(15px + 44px + 10px) !important; /* 15px right + 44px circle + gap */
+  padding-right: calc(15px + 44px + 10px) !important;
 }
