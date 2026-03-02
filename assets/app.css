@@ -14612,3 +14612,11 @@ header#topbarWrap{
 #iuTopbarRight .iuRightTopCtas *{
   max-width: none !important;
 }
+
+/* === MIN-REVERT: remove hard 320px blocker on #iuTopbarRight (P0) === */
+#iuTopbarRight{
+  width: auto !important;
+  max-width: none !important;
+  flex-basis: auto !important;
+  padding-right: 0 !important;
+}
