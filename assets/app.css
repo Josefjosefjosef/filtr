@@ -14534,3 +14534,12 @@ header#topbarWrap.iuTopbar{
   white-space: nowrap;
   margin-right: 10px;
 }
+
+/* === HOTFIX: TOPBAR rightPx=15 — REMOVE BLOCKER (DIAG-DRIVEN) === */
+/* Diag: header rectRight 1425 (vw 1440) → ::after right:15 is 30px from viewport. Fix: pin "i" to viewport. */
+header#topbarWrap.topbar-new.iuTopbar::after{
+  position: fixed !important;
+  right: 15px !important;
+  top: calc(var(--iuTopbarHeight, 72px) / 2) !important;
+  transform: translateY(-50%) !important;
+}
