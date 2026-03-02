@@ -14357,34 +14357,34 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   font-weight: 400 !important;
 }
 
-/* === MOJE SLUŽBY → TEXT BUTTONS (SAFE, NO ICONS, SCOPED – no global a/button) === */
+/* === MOJE SLUŽBY → TEXT BUTTONS (SAFE, NO ICONS) === */
 .iu-mojeSluzby .iu-mmQuickItem,
-.iu-mojeSluzby .iu-mmQuickItemLink {
+.iu-mojeSluzby .iu-mmQuickItemLink,
+.iu-mojeSluzby a,
+.iu-mojeSluzby button {
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-
   background: #4B5563E0;
   border-radius: 12px;
   padding: 14px 16px;
   min-height: 44px;
-
   color: #ffffff;
   font-weight: 600;
   text-decoration: none;
 }
 
-/* skrýt pouze ikonky, text zůstává */
 .iu-mojeSluzby svg,
 .iu-mojeSluzby img,
 .iu-mojeSluzby .iuIconTile {
   display: none !important;
 }
 
-/* hover zachovat jemný kontrast bez změny layoutu */
 .iu-mojeSluzby .iu-mmQuickItem:hover,
-.iu-mojeSluzby .iu-mmQuickItemLink:hover {
+.iu-mojeSluzby .iu-mmQuickItemLink:hover,
+.iu-mojeSluzby a:hover,
+.iu-mojeSluzby button:hover {
   background: #4B5563F0;
 }
 
