@@ -14273,6 +14273,18 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   display: none !important;
 }
 
+/* TOPBAR: actions order — double button before info icon (keep date+nameday hidden) */
+#topbarWrap #iuTopbarRight{
+  display: flex !important;
+  align-items: center !important;
+}
+#topbarWrap #iuTopbarRight .iuRightTopCtas{
+  order: 10 !important;
+}
+#topbarWrap #iuTopbarRight #iuTopbarToday{
+  order: 20 !important;
+}
+
 /* ===== QUICK SERVICE BLUE: ICONS + LABELS + SECTION TITLE #2563EB ===== */
 #iuLeftRail .iuLeftRailSectionTitle:first-of-type{
   color: #2563EB !important;
