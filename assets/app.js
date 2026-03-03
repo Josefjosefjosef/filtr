@@ -13257,9 +13257,24 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     panel.hidden = true;
     document.body.classList.remove("iu-pdf-modal-open");
     document.documentElement.style.overflow = "";
+    if (resizeListener) {
+      window.removeEventListener("resize", resizeListener);
+      resizeListener = null;
+    }
     try { window.iuClosePdfConvertModal = null; } catch (_) {}
   }
 
+  var resizeListener = null;
+  function updatePdfOverlayRect() {
+    var feed = document.getElementById("feed");
+    var root = document.documentElement;
+    if (!feed || !root) return;
+    var r = feed.getBoundingClientRect();
+    root.style.setProperty("--iuPdfFx", r.left + "px");
+    root.style.setProperty("--iuPdfFy", r.top + "px");
+    root.style.setProperty("--iuPdfFw", r.width + "px");
+    root.style.setProperty("--iuPdfFh", r.height + "px");
+  }
   function openPdfConvertModal() {
     if (!overlay || !panel) return;
     if (overlay.parentNode !== document.body) document.body.appendChild(overlay);
@@ -13268,6 +13283,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     panel.hidden = false;
     document.body.classList.add("iu-pdf-modal-open");
     document.documentElement.style.overflow = "hidden";
+    updatePdfOverlayRect();
+    if (!resizeListener) {
+      resizeListener = function() { if (panel && !panel.hidden) updatePdfOverlayRect(); };
+      window.addEventListener("resize", resizeListener);
+    }
     try { window.iuClosePdfConvertModal = closePdfConvertModal; } catch (_) {}
     var tabText = document.querySelector("[data-iu=\"tab-text\"]");
     var tabWord = document.querySelector("[data-iu=\"tab-word\"]");

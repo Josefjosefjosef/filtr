@@ -15188,54 +15188,41 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   font-weight: 600 !important;
 }
 
-/* PDF overlay — force same over-feed host sizing as Translator overlay (CSS-only)
-   Goal: overlay matches FEED bounds (width+height) and stacks above content.
-   FEED_HOST = .layout > .mainCol (feed lives inside); overlay is sibling of .layout in .container.
-   We size overlay to main column area (1fr) so it covers feed. */
-@supports (inset: 0) {
-  main#content .container {
-    position: relative;
-  }
-  #iu-pdfConvertOverlay.iu-pdfconvert-overlay {
-    position: absolute !important;
-    top: var(--iuTopbarHeight, 84px) !important;
-    left: 0 !important;
-    right: calc(360px + 20px) !important;
-    bottom: 0 !important;
-    width: auto !important;
-    height: auto !important;
-    max-width: none !important;
-    max-height: none !important;
-    z-index: 35000;
-    background: rgba(0,0,0,.4);
-    pointer-events: auto;
-  }
-  #iu-pdfConvertModal.iu-pdfconvert-modal {
-    position: absolute !important;
-    top: var(--iuTopbarHeight, 84px) !important;
-    left: 0 !important;
-    right: calc(360px + 20px) !important;
-    bottom: 0 !important;
-    width: auto !important;
-    max-width: none !important;
-    height: auto !important;
-    max-height: none !important;
-    z-index: 35001;
-    display: flex !important;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 18px;
-    box-sizing: border-box;
-    pointer-events: auto;
-    overflow: auto;
-  }
+/* PDF overlay — exact FEED bounds via JS-set CSS vars (--iuPdfFx/Fy/Fw/Fh); no 0×0 flake */
+:root {
+  --iuPdfFx: 0px;
+  --iuPdfFy: 0px;
+  --iuPdfFw: 100vw;
+  --iuPdfFh: 100vh;
 }
-@media (max-width: 768px) {
-  #iu-pdfConvertOverlay.iu-pdfconvert-overlay {
-    right: 0 !important;
-  }
-  #iu-pdfConvertModal.iu-pdfconvert-modal {
-    right: 0 !important;
-  }
+body.iu-pdf-modal-open #iu-pdfConvertOverlay.iu-pdfconvert-overlay {
+  position: fixed !important;
+  left: var(--iuPdfFx) !important;
+  top: var(--iuPdfFy) !important;
+  width: var(--iuPdfFw) !important;
+  height: var(--iuPdfFh) !important;
+  z-index: 35000;
+  background: rgba(0,0,0,.4);
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal {
+  position: fixed !important;
+  left: var(--iuPdfFx) !important;
+  top: var(--iuPdfFy) !important;
+  width: var(--iuPdfFw) !important;
+  height: var(--iuPdfFh) !important;
+  z-index: 35001;
+  display: flex !important;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 18px;
+  box-sizing: border-box;
+  pointer-events: none !important;
+  overflow: auto;
+}
+body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal > * {
+  pointer-events: auto;
 }
 
