@@ -15125,3 +15125,37 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
 #iuQuickFeed [data-iu="pdfconvert-tools"] [role="tabpanel"][hidden] {
   display: none !important;
 }
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdf-word-html-wrapper {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 595px;
+  max-width: 595px;
+  background: #fff;
+  font-family: system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
+  padding: 12px;
+  overflow: hidden;
+  pointer-events: none;
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-word-html"] table {
+  border-collapse: collapse;
+  width: 100%;
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-word-html"] td,
+#iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-word-html"] th {
+  border: 1px solid rgba(0,0,0,0.15);
+  padding: 6px;
+  vertical-align: top;
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-word-html"] img {
+  max-width: 100%;
+  height: auto;
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-word-html"] p {
+  margin: 0 0 8px 0;
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-word-html"] ul,
+#iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-word-html"] ol {
+  margin: 0 0 8px 18px;
+}
