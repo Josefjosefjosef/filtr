@@ -9303,9 +9303,12 @@ function buildVideoAsArticleCard(it) {
       return (t || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").replace(/\t/g, "    ");
     }
     function iuPdfTextHash(s) {
-      var h = 0;
-      for (var i = 0; i < s.length; i++) h = ((h << 5) - h) + s.charCodeAt(i) | 0;
-      return h;
+      var h = 2166136261;
+      for (var i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
     }
     function iuPdfGenerateFromPlainText(text, opts, done) {
       opts = opts || {};
@@ -9363,6 +9366,7 @@ function buildVideoAsArticleCard(it) {
         }).then(function(bytes) {
           window._iuPdfLastEngine = "pdf-lib+ttf-unicode-v2";
           var blob = new Blob([bytes], { type: "application/pdf" });
+          window._iuPdfLastPdfBytes = blob.size;
           done(null, { blob: blob, fileName: opts.fileName || "document.pdf" });
         }).catch(function(e) { done(e); });
       });
@@ -9387,8 +9391,8 @@ function buildVideoAsArticleCard(it) {
           var ab = reader.result;
           window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) {
             var raw = (r && r.value) ? String(r.value) : "";
-            var text = normalizePdfText(raw).trim();
-            if (!text) { showWordPdfError("Dokument je prázdný nebo se nepodařilo přečíst text."); return; }
+            var text = normalizePdfText(raw);
+            if (!text || /^\s*$/.test(text)) { showWordPdfError("Dokument je prázdný nebo se nepodařilo přečíst text."); return; }
             iuPdfGenerateFromPlainText(text, { source: "word", fileName: "document.pdf" }, function(err, out) {
               if (err || !out || !out.blob) { showWordPdfError("Generování PDF selhalo."); return; }
               showWordPdfError("");
