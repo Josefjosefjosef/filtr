@@ -9431,44 +9431,80 @@ function buildVideoAsArticleCard(it) {
               var html = (result && result.value) ? String(result.value) : "";
               if (!html || /^\s*$/.test(html)) { fallbackToText(); return; }
               if (html.length < 50) { fallbackToText(); return; }
-              if (!wordHtmlWrapper) { fallbackToText(); return; }
-              wordHtmlWrapper.innerHTML = html;
               var hasImg = /<img\b/i.test(html);
               var hasTable = /<table\b/i.test(html);
-              var textLen = (wordHtmlWrapper.textContent || "").length;
-              if (!hasImg && !hasTable && (!textLen || /^\s*$/.test(wordHtmlWrapper.textContent))) { fallbackToText(); return; }
-              function runExport() {
+              var textLen = (html.replace(/<[^>]+>/g, "").trim()).length;
+              if (!hasImg && !hasTable && (!textLen || /^\s*$/.test(html.replace(/<[^>]+>/g, "")))) { fallbackToText(); return; }
+              window._iuPdfWordExportV = "word-export-offscreen-v1";
+              var exportRoot = document.createElement("div");
+              exportRoot.setAttribute("data-iu", "pdf-export-root");
+              exportRoot.style.cssText = "position:fixed;left:-10000px;top:0;width:794px;height:auto;overflow:visible;background:#fff;color:#000;z-index:-1;pointer-events:none;box-sizing:border-box;padding:12px;font-family:system-ui,-apple-system,sans-serif;";
+              document.body.appendChild(exportRoot);
+              exportRoot.innerHTML = html;
+              exportRoot.style.maxHeight = "none";
+              exportRoot.style.height = "auto";
+              exportRoot.style.overflow = "visible";
+              var cs = window.getComputedStyle ? window.getComputedStyle(exportRoot) : {};
+              var exportRootCss = { overflow: exportRoot.style.overflow || cs.overflow || "", height: exportRoot.style.height || cs.height || "", maxHeight: exportRoot.style.maxHeight || cs.maxHeight || "", position: cs.position || "", widthPx: exportRoot.scrollWidth || 0 };
+              var imgCount = 0;
+              var imgLoadedOk = 0;
+              var imgLoadedFail = 0;
+              var imgs = exportRoot.querySelectorAll ? exportRoot.querySelectorAll("img") : [];
+              imgCount = imgs.length;
+              function waitImagesAndFonts(thenExport) {
+                if (imgCount === 0) {
+                  (document.fonts && document.fonts.ready ? document.fonts.ready() : Promise.resolve()).then(thenExport);
+                  return;
+                }
+                var done = 0;
+                function onImg() {
+                  done++;
+                  if (done === imgCount) {
+                    for (var j = 0; j < imgs.length; j++) {
+                      if (imgs[j].naturalWidth > 0) imgLoadedOk++; else imgLoadedFail++;
+                    }
+                    (document.fonts && document.fonts.ready ? document.fonts.ready() : Promise.resolve()).then(thenExport);
+                  }
+                }
+                for (var i = 0; i < imgs.length; i++) {
+                  var img = imgs[i];
+                  if (img.complete) onImg(); else { img.onload = onImg; img.onerror = onImg; }
+                }
+              }
+              waitImagesAndFonts(function() {
+                if (hasImg && imgLoadedFail > 0) {
+                  if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+                  fallbackToText();
+                  return;
+                }
                 loadHtml2PdfIfNeeded(function() {
-                  if (typeof window.html2pdf === "undefined") { fallbackToText(); return; }
+                  if (typeof window.html2pdf === "undefined") {
+                    if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+                    fallbackToText();
+                    return;
+                  }
                   var opts = {
                     image: { type: "png", quality: 1.0 },
-                    html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
-                    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+                    html2canvas: { scale: 2, scrollX: 0, scrollY: 0, windowWidth: exportRoot.scrollWidth, windowHeight: exportRoot.scrollHeight, useCORS: false, backgroundColor: "#ffffff" },
+                    jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
                     pagebreak: { mode: ["css", "legacy"] }
                   };
-                  window.html2pdf().set(opts).from(wordHtmlWrapper).toPdf().outputPdf("blob").then(function(blob) {
+                  var scrollH = exportRoot.scrollHeight;
+                  var clientH = exportRoot.clientHeight;
+                  window.html2pdf().set(opts).from(exportRoot).toPdf().outputPdf("blob").then(function(blob) {
+                    if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
                     if (!blob || blob.size < 5000) { fallbackToText(); return; }
                     window._iuPdfLastWordMode = "word-html2pdf";
-                    window._iuPdfLastWordHtmlStats = { hasImg: hasImg, hasTable: hasTable, htmlLen: html.length, textLen: textLen };
+                    window._iuPdfLastWordHtmlStats = { hasImg: hasImg, hasTable: hasTable, htmlLen: html.length, textLen: textLen, imgCount: imgCount, imgLoadedOk: imgLoadedOk, imgLoadedFail: imgLoadedFail, exportRootScrollH: scrollH, exportRootClientH: clientH, exportRootCss: exportRootCss };
                     window._iuPdfLastPdfBytes = blob.size;
                     window._iuPdfLastWordError = null;
                     resolve({ blob: blob, fileName: "document.pdf" });
                   }).catch(function(e) {
+                    if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
                     window._iuPdfLastWordError = String(e && (e.stack || e.message || e));
                     fallbackToText();
                   });
                 });
-              }
-              requestAnimationFrame(function() {
-                var imgs = wordHtmlWrapper.querySelectorAll ? wordHtmlWrapper.querySelectorAll("img") : [];
-                var n = imgs.length;
-                if (n === 0) { runExport(); return; }
-                var done = 0;
-                function onOne() { done++; if (done === n) runExport(); }
-                for (var i = 0; i < n; i++) {
-                  var img = imgs[i];
-                  if (img.complete) onOne(); else { img.onload = onOne; img.onerror = onOne; }
-                }
               });
             }).catch(function(e) {
               window._iuPdfLastWordError = String(e && (e.stack || e.message || e));
