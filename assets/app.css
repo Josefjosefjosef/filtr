@@ -2804,6 +2804,12 @@ body.iu-modal-open #iu-mojeSluzbyOverlay {
 body.iu-modal-open #iu-mojeSluzbyPanel {
   display: flex !important;
 }
+body.iu-modal-open #iu-pdfConvertOverlay {
+  display: block !important;
+}
+body.iu-modal-open #iu-pdfConvertPanel {
+  display: flex !important;
+}
 /* P0: Moje slu┼żby modal host in body ÔÇö pointer-events pass-through for children */
 #iuModalHost {
   position: fixed;
@@ -15009,4 +15015,70 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
 .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks button.iu-mmQuickItem,
 .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks button.iu-mmQuickItem span:not(.iuIconTile) {
   font-weight: 600 !important;
+}
+
+/* === PDF convert modal (Quick Links) — scoped only [data-iu="pdf-convert-modal"] === */
+[data-iu="pdf-convert-modal"] .iu-pdfConvertInfo {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: rgba(0,0,0,.06);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+[data-iu="pdf-convert-modal"] .iu-pdfConvertInfo p {
+  margin: 0.25em 0;
+}
+[data-iu="pdf-convert-modal"] .iu-pdfConvertTabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+[data-iu="pdf-convert-modal"] .iu-pdfConvertTabs [role="tab"] {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(0,0,0,.2);
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font: inherit;
+}
+[data-iu="pdf-convert-modal"] .iu-pdfConvertTabs [role="tab"][aria-selected="true"] {
+  background: #f0f0f0;
+  border-color: rgba(0,0,0,.35);
+}
+[data-iu="pdf-convert-modal"] .iu-pdfConvertNote {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  color: #555;
+}
+[data-iu="pdf-convert-modal"] [data-iu="pdf-docx-input"] {
+  display: block;
+  margin-bottom: 0.5rem;
+  font: inherit;
+}
+[data-iu="pdf-convert-modal"] [data-iu="pdf-docx-generate"],
+[data-iu="pdf-convert-modal"] [data-iu="pdf-text-generate"] {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,.25);
+  border-radius: 4px;
+  background: #f5f5f5;
+}
+[data-iu="pdf-convert-modal"] [data-iu="pdf-text-input"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: 120px;
+  padding: 0.5rem;
+  font: inherit;
+  border: 1px solid rgba(0,0,0,.2);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+[data-iu="pdf-convert-modal"] [role="tabpanel"] {
+  margin-top: 0.5rem;
+}
+[data-iu="pdf-convert-modal"] [role="tabpanel"][hidden] {
+  display: none !important;
 }

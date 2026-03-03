@@ -9880,8 +9880,8 @@ function buildVideoAsArticleCard(it) {
       return;
     }
 
-    // 2) Modal (#iu-aiPanel or .iuModal or #iu-mojeSluzbyPanel)
-    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel') || closeEl.closest('#iu-mojeSluzbyPanel'));
+    // 2) Modal (#iu-aiPanel or .iuModal or #iu-mojeSluzbyPanel or #iu-pdfConvertPanel)
+    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel') || closeEl.closest('#iu-mojeSluzbyPanel') || closeEl.closest('#iu-pdfConvertPanel'));
     if (modal) {
       if (modal.id === 'iu-aiPanel') {
         const ov = document.getElementById('iu-aiOverlay');
@@ -9895,6 +9895,8 @@ function buildVideoAsArticleCard(it) {
         document.documentElement.style.overflow = '';
       } else if (modal.id === 'iu-mojeSluzbyPanel' && typeof window.iuCloseMojeSluzbyModal === 'function') {
         window.iuCloseMojeSluzbyModal();
+      } else if (modal.id === 'iu-pdfConvertPanel' && typeof window.iuClosePdfConvertModal === 'function') {
+        window.iuClosePdfConvertModal();
       } else {
         modal.setAttribute('hidden', '');
       }
@@ -11909,6 +11911,10 @@ function buildVideoAsArticleCard(it) {
       const overlay = document.getElementById("iu-aiOverlay");
       if (panel) iuSetElOpenVisible(panel, false);
       if (overlay) iuSetElOpenVisible(overlay, false);
+      const pdfPanel = document.getElementById("iu-pdfConvertPanel");
+      const pdfOverlay = document.getElementById("iu-pdfConvertOverlay");
+      if (pdfPanel) iuSetElOpenVisible(pdfPanel, false);
+      if (pdfOverlay) iuSetElOpenVisible(pdfOverlay, false);
       document.querySelectorAll('.iuModal, [data-iu-backdrop], .iuBackdrop, .iu-overlay, .iu-backdrop').forEach(el => {
         el.hidden = true;
         try { el.style.display = 'none'; } catch {}
@@ -12681,6 +12687,16 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         overlay.style.top = "0";
       }
     }
+    if (modalEl.id === "iu-pdfConvertPanel") {
+      const overlay = document.getElementById("iu-pdfConvertOverlay");
+      if (overlay) {
+        if (overlay.parentElement !== root) root.appendChild(overlay);
+        overlay.style.position = "fixed";
+        overlay.style.left = r.left + "px";
+        overlay.style.width = r.width + "px";
+        overlay.style.top = "0";
+      }
+    }
   }
 
   let __iuActiveOverFeedModal = null;
@@ -12689,8 +12705,33 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     iuPlaceModalOverFeed(modalEl);
   }
 
+  function iuPositionPdfConvertModal() {
+    const overlay = document.getElementById("iu-pdfConvertOverlay");
+    const panel = document.getElementById("iu-pdfConvertPanel");
+    const feedRect = getFeedRect();
+    if (!overlay || !panel || !feedRect) return;
+    const topVal = Math.max(16, feedRect.top + 16);
+    overlay.style.position = "fixed";
+    overlay.style.left = feedRect.left + "px";
+    overlay.style.width = feedRect.width + "px";
+    overlay.style.maxWidth = feedRect.width + "px";
+    overlay.style.right = "auto";
+    overlay.style.transform = "none";
+    overlay.style.top = "0";
+    panel.style.position = "fixed";
+    panel.style.left = feedRect.left + "px";
+    panel.style.width = feedRect.width + "px";
+    panel.style.maxWidth = feedRect.width + "px";
+    panel.style.right = "auto";
+    panel.style.transform = "none";
+    panel.style.top = topVal + "px";
+  }
+
   window.addEventListener("resize", function() {
-    if (__iuActiveOverFeedModal) iuPlaceModalOverFeed(__iuActiveOverFeedModal);
+    if (__iuActiveOverFeedModal) {
+      if (__iuActiveOverFeedModal.id === "iu-pdfConvertPanel") iuPositionPdfConvertModal();
+      else iuPlaceModalOverFeed(__iuActiveOverFeedModal);
+    }
   }, { passive: true });
 
   function ensureModalRoot() {
@@ -13221,6 +13262,191 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (panel) panel.addEventListener("click", (e) => { if (e.target === panel) closeMojeSluzbyModal(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMojeSluzbyModal(); });
     try { window.iuCloseMojeSluzbyModal = closeMojeSluzbyModal; } catch (_) {}
+
+    (function initPdfConvertModal() {
+      const pdfOverlay = document.getElementById("iu-pdfConvertOverlay");
+      const pdfPanel = document.getElementById("iu-pdfConvertPanel");
+      if (!pdfOverlay || !pdfPanel) return;
+
+      if (root && pdfOverlay.parentElement !== root) root.appendChild(pdfOverlay);
+      if (root && pdfPanel.parentElement !== root) root.appendChild(pdfPanel);
+
+      function closePdfConvertModal() {
+        __iuActiveOverFeedModal = null;
+        if (typeof window.iuSetElOpenVisible === "function") {
+          window.iuSetElOpenVisible(pdfPanel, false);
+          window.iuSetElOpenVisible(pdfOverlay, false);
+        } else {
+          pdfPanel.hidden = true;
+          pdfOverlay.hidden = true;
+        }
+        document.documentElement.style.overflow = "";
+        document.body.classList.remove("iu-modal-open");
+      }
+      try { window.iuClosePdfConvertModal = closePdfConvertModal; } catch (_) {}
+
+      pdfOverlay.addEventListener("click", closePdfConvertModal);
+      document.addEventListener("keydown", function pdfEsc(e) {
+        if (e.key !== "Escape") return;
+        if (!pdfPanel || pdfPanel.hidden) return;
+        closePdfConvertModal();
+      });
+
+      document.addEventListener("click", function(e) {
+        if (!e.target || !e.target.closest) return;
+        if (!e.target.closest("[data-iu=\"pdf-convert-open\"]")) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof window.iuSetElOpenVisible === "function") {
+          window.iuSetElOpenVisible(pdfOverlay, true);
+          window.iuSetElOpenVisible(pdfPanel, true);
+        } else {
+          pdfOverlay.hidden = false;
+          pdfPanel.hidden = false;
+        }
+        iuSetActiveOverFeedModal(pdfPanel);
+        iuPositionPdfConvertModal();
+        document.documentElement.style.overflow = "hidden";
+        document.body.classList.add("iu-modal-open");
+        var tabText = pdfPanel.querySelector("[data-iu=\"tab-text\"]");
+        var tabWord = pdfPanel.querySelector("[data-iu=\"tab-word\"]");
+        var panelText = pdfPanel.querySelector("[data-iu=\"tab-text-panel\"]");
+        var panelWord = pdfPanel.querySelector("[data-iu=\"tab-word-panel\"]");
+        if (tabText && panelText) { tabText.setAttribute("aria-selected", "true"); if (panelText) panelText.hidden = false; }
+        if (tabWord && panelWord) { tabWord.setAttribute("aria-selected", "false"); if (panelWord) panelWord.hidden = true; }
+      });
+
+      var tabWord = pdfPanel.querySelector("[data-iu=\"tab-word\"]");
+      var tabText = pdfPanel.querySelector("[data-iu=\"tab-text\"]");
+      var panelWord = pdfPanel.querySelector("[data-iu=\"tab-word-panel\"]");
+      var panelText = pdfPanel.querySelector("[data-iu=\"tab-text-panel\"]");
+      if (tabWord) tabWord.addEventListener("click", function() {
+        if (tabText && panelText) { tabText.setAttribute("aria-selected", "false"); panelText.hidden = true; }
+        if (tabWord && panelWord) { tabWord.setAttribute("aria-selected", "true"); panelWord.hidden = false; }
+        if (typeof window._iuPdfWordTabActivated === "undefined") window._iuPdfWordTabActivated = true;
+        loadMammothIfNeeded();
+      });
+      if (tabText) tabText.addEventListener("click", function() {
+        if (tabWord && panelWord) { tabWord.setAttribute("aria-selected", "false"); panelWord.hidden = true; }
+        if (tabText && panelText) { tabText.setAttribute("aria-selected", "true"); panelText.hidden = false; }
+      });
+
+      var docxInput = pdfPanel.querySelector("[data-iu=\"pdf-docx-input\"]");
+      var docxBtn = pdfPanel.querySelector("[data-iu=\"pdf-docx-generate\"]");
+      if (docxInput) docxInput.addEventListener("change", function() { if (docxBtn) docxBtn.disabled = !docxInput.files || docxInput.files.length === 0; });
+
+      function loadScript(src, cb) {
+        var s = document.createElement("script");
+        s.src = (/^\//.test(src) ? "" : (location.pathname.replace(/\/[^/]*$/, "") === "/projects" ? "/" : "/")) + src;
+        s.onload = function() { if (typeof cb === "function") cb(); };
+        s.onerror = function() { if (typeof cb === "function") cb(new Error("load failed")); };
+        document.head.appendChild(s);
+      }
+
+      var jspdfLoaded = false;
+      function getJspdf(cb) {
+        if (typeof window.jspdf !== "undefined" && window.jspdf.jsPDF) {
+          jspdfLoaded = true;
+          cb(null, window.jspdf.jsPDF);
+          return;
+        }
+        if (jspdfLoaded) { cb(null, window.jspdf.jsPDF); return; }
+        var base = (location.pathname || "").indexOf("/projects") !== -1 ? "/assets/vendor/jspdf.umd.min.js" : "assets/vendor/jspdf.umd.min.js";
+        if (!/^\//.test(base) && location.pathname.indexOf("/projects") !== -1) base = "/" + base;
+        loadScript(base, function(err) {
+          if (err || typeof window.jspdf === "undefined") { cb(err || new Error("jspdf")); return; }
+          jspdfLoaded = true;
+          cb(null, window.jspdf.jsPDF);
+        });
+      }
+
+      var mammothLoaded = false;
+      function loadMammothIfNeeded() {
+        if (typeof window.mammoth !== "undefined") { mammothLoaded = true; return; }
+        if (mammothLoaded) return;
+        var base = (location.pathname || "").indexOf("/projects") !== -1 ? "/assets/vendor/mammoth.browser.min.js" : "assets/vendor/mammoth.browser.min.js";
+        if (!/^\//.test(base) && location.pathname.indexOf("/projects") !== -1) base = "/" + base;
+        loadScript(base, function() { mammothLoaded = true; });
+      }
+
+      var textInput = pdfPanel.querySelector("[data-iu=\"pdf-text-input\"]");
+      var textBtn = pdfPanel.querySelector("[data-iu=\"pdf-text-generate\"]");
+      if (textBtn && textInput) textBtn.addEventListener("click", function() {
+        getJspdf(function(err, JsPDF) {
+          if (err || !JsPDF) return;
+          var text = (textInput.value || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+          var lines = text.split(/\n/);
+          var doc = new JsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+          var pageW = doc.internal.pageSize.getWidth();
+          var margin = 20;
+          var y = 20;
+          var lineHeight = 7;
+          var maxW = pageW - margin * 2;
+          for (var i = 0; i < lines.length; i++) {
+            var parts = doc.splitTextToSize(lines[i] || " ", maxW);
+            for (var j = 0; j < parts.length; j++) {
+              if (y > 270) { doc.addPage(); y = 20; }
+              doc.text(parts[j], margin, y);
+              y += lineHeight;
+            }
+          }
+          var blob = doc.output("blob");
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement("a");
+          a.href = url;
+          a.download = "text.pdf";
+          a.click();
+          setTimeout(function() { URL.revokeObjectURL(url); }, 500);
+        });
+      });
+
+      if (docxBtn && docxInput) docxBtn.addEventListener("click", function() {
+        var file = docxInput.files && docxInput.files[0];
+        if (!file) return;
+        if (typeof window.mammoth === "undefined") { loadMammothIfNeeded(); setTimeout(function() { if (window.mammoth) doDocxConvert(file); }, 300); return; }
+        doDocxConvert(file);
+      });
+
+      function doDocxConvert(file) {
+        if (typeof window.mammoth === "undefined") return;
+        var reader = new FileReader();
+        reader.onload = function() {
+          var ab = reader.result;
+          window.mammoth.convertToHtml({ arrayBuffer: ab }).then(function(result) {
+            var html = result.value || "";
+            var div = document.createElement("div");
+            div.innerHTML = html;
+            var text = (div.textContent || div.innerText || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
+            getJspdf(function(err, JsPDF) {
+              if (err || !JsPDF) return;
+              var doc = new JsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+              var pageW = doc.internal.pageSize.getWidth();
+              var margin = 20;
+              var y = 20;
+              var lineHeight = 7;
+              var maxW = pageW - margin * 2;
+              var lines = text.split(/\n/);
+              for (var i = 0; i < lines.length; i++) {
+                var parts = doc.splitTextToSize(lines[i] || " ", maxW);
+                for (var j = 0; j < parts.length; j++) {
+                  if (y > 270) { doc.addPage(); y = 20; }
+                  doc.text(parts[j], margin, y);
+                  y += lineHeight;
+                }
+              }
+              var blob = doc.output("blob");
+              var url = URL.createObjectURL(blob);
+              var a = document.createElement("a");
+              a.href = url;
+              a.download = "document.pdf";
+              a.click();
+              setTimeout(function() { URL.revokeObjectURL(url); }, 500);
+            });
+          }).catch(function() { });
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    })();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
