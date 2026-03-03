@@ -15215,7 +15215,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
     opacity: 1;
     pointer-events: auto;
   }
-  /* PANEL LAYER — exactly FEED rect (x/y/w/h == FEED) */
+  /* PANEL LAYER — exactly FEED rect (x/y/w/h == FEED); override legacy translateX(-50%) */
   #iu-pdfConvertModal.iu-pdfconvert-modal {
     position: fixed !important;
     left: var(--iuPdfFx) !important;
@@ -15224,6 +15224,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
     height: var(--iuPdfFh) !important;
     max-width: var(--iuPdfFw) !important;
     max-height: var(--iuPdfFh) !important;
+    transform: none !important;
     z-index: 10000 !important;
     visibility: hidden;
     opacity: 0;
