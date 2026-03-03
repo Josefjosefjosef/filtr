@@ -13262,6 +13262,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
   function openPdfConvertModal() {
     if (!overlay || !panel) return;
+    if (overlay.parentNode !== document.body) document.body.appendChild(overlay);
+    if (panel.parentNode !== document.body) document.body.appendChild(panel);
     overlay.hidden = false;
     panel.hidden = false;
     document.body.classList.add("iu-pdf-modal-open");
