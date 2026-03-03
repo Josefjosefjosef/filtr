@@ -13253,6 +13253,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
   var pdfRectRafId = null;
   function closePdfConvertModal() {
+    getEls();
     if (!overlay || !panel) return;
     if (typeof cancelAnimationFrame !== "undefined" && pdfRectRafId != null) {
       cancelAnimationFrame(pdfRectRafId);
@@ -13320,7 +13321,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
   var resizeListener = null;
   function openPdfConvertModal() {
-    if (!overlay || !panel) return;
+    if (!getEls()) return;
     if (overlay.parentNode !== document.body) document.body.appendChild(overlay);
     if (panel.parentNode !== document.body) document.body.appendChild(panel);
     overlay.hidden = false;
