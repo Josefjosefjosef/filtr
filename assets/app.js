@@ -9083,6 +9083,18 @@ function buildVideoAsArticleCard(it) {
     sms: { title: "Poslat SMS zdarma", items: [{ name: "SMS zdarma", url: "https://www.smszdarma.cz", desc: "Posílání SMS zdarma", external: true }] },
     convert: {
       title: "Převod na Word, PDF",
+      toolsHtml: '<div class="iuQCard" data-iu="pdfconvert-tools">' +
+        '<div class="iu-pdfConvertInfo" role="status"><p>Převod probíhá pouze ve vašem prohlížeči.</p><p>Soubor ani text nikam neodesíláme.</p><p>Po zavření okna se nic neukládá.</p></div>' +
+        '<div class="iu-pdfConvertTabs" role="tablist">' +
+        '<button type="button" role="tab" data-iu="tab-word" aria-selected="false" aria-controls="iu-pdf-tab-word-panel">Word → PDF</button>' +
+        '<button type="button" role="tab" data-iu="tab-text" aria-selected="true" aria-controls="iu-pdf-tab-text-panel">Text → PDF</button></div>' +
+        '<div id="iu-pdf-tab-word-panel" role="tabpanel" data-iu="tab-word-panel" hidden>' +
+        '<p class="iu-pdfConvertNote">Kvalita převodu závisí na složitosti dokumentu.</p>' +
+        '<input type="file" accept=".docx" data-iu="pdf-docx-input" aria-label="Vybrat soubor .docx" />' +
+        '<button type="button" data-iu="pdf-docx-generate" disabled>Převést a stáhnout PDF</button></div>' +
+        '<div id="iu-pdf-tab-text-panel" role="tabpanel" data-iu="tab-text-panel">' +
+        '<textarea data-iu="pdf-text-input" rows="6" placeholder="Vložte text…" aria-label="Text pro převod do PDF"></textarea>' +
+        '<button type="button" data-iu="pdf-text-generate">Vygenerovat PDF</button></div></div>',
       items: [
         { name: "PDF → Word", url: "https://www.ilovepdf.com/pdf_to_word", external: true },
         { name: "Word → PDF", url: "https://www.ilovepdf.com/word_to_pdf", external: true },
@@ -9315,6 +9327,8 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuShowQuickFeed(key){
+    if (typeof window.__iuDebugRca === "undefined") window.__iuDebugRca = (typeof location !== "undefined" && location.search || "").indexOf("iuDebug=1") !== -1;
+    if (window.__iuDebugRca) console.log("[iuShowQuickFeed] key=", key);
     const keyNorm = String(key || "").trim().toLowerCase();
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
@@ -9469,35 +9483,14 @@ function buildVideoAsArticleCard(it) {
           </div>`;
         }).join("");
       };
-      const pdfConvertToolsHtml = isConvert ? `
-          <div class="iuQCard" data-iu="pdfconvert-tools">
-            <div class="iu-pdfConvertInfo" role="status">
-              <p>Převod probíhá pouze ve vašem prohlížeči.</p>
-              <p>Soubor ani text nikam neodesíláme.</p>
-              <p>Po zavření okna se nic neukládá.</p>
-            </div>
-            <div class="iu-pdfConvertTabs" role="tablist">
-              <button type="button" role="tab" data-iu="tab-word" aria-selected="false" aria-controls="iu-pdf-tab-word-panel">Word → PDF</button>
-              <button type="button" role="tab" data-iu="tab-text" aria-selected="true" aria-controls="iu-pdf-tab-text-panel">Text → PDF</button>
-            </div>
-            <div id="iu-pdf-tab-word-panel" role="tabpanel" data-iu="tab-word-panel" hidden>
-              <p class="iu-pdfConvertNote">Kvalita převodu závisí na složitosti dokumentu.</p>
-              <input type="file" accept=".docx" data-iu="pdf-docx-input" aria-label="Vybrat soubor .docx" />
-              <button type="button" data-iu="pdf-docx-generate" disabled>Převést a stáhnout PDF</button>
-            </div>
-            <div id="iu-pdf-tab-text-panel" role="tabpanel" data-iu="tab-text-panel">
-              <textarea data-iu="pdf-text-input" rows="6" placeholder="Vložte text…" aria-label="Text pro převod do PDF"></textarea>
-              <button type="button" data-iu="pdf-text-generate">Vygenerovat PDF</button>
-            </div>
-          </div>
-        ` : "";
+      const toolsBlock = (data.toolsHtml != null && data.toolsHtml !== "") ? data.toolsHtml : "";
       const doRender = (services) => {
         quick.innerHTML = `
           <div class="iuQHead">
             <div class="iuQTitle">${iuQfEscape(data.title)}</div>
             <div class="iuQHeadActions">${shareBtnHtml}<button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
           </div>
-          ${pdfConvertToolsHtml}
+          ${toolsBlock}
           <div class="iuQCard">
             <div class="iuQGrid">
               ${renderCards(services || data.items)}
@@ -9505,6 +9498,24 @@ function buildVideoAsArticleCard(it) {
           </div>
           ${aiSeoBlock}
         `;
+        if (window.__iuDebugRca && keyNorm === "convert") {
+          var hasTools = !!quick.querySelector('[data-iu="pdfconvert-tools"]');
+          console.log("[iuShowQuickFeed] afterRender hasTools=", hasTools);
+          try {
+            var mo = new MutationObserver(function(muts) {
+              for (var i = 0; i < muts.length; i++) {
+                if (muts[i].type === "childList" && muts[i].removedNodes && muts[i].removedNodes.length) {
+                  for (var j = 0; j < muts[i].removedNodes.length; j++) {
+                    var n = muts[i].removedNodes[j];
+                    if (n && n.nodeType === 1 && (n.getAttribute && n.getAttribute("data-iu") === "pdfconvert-tools" || (n.querySelector && n.querySelector("[data-iu=\"pdfconvert-tools\"]")))) console.log("[iuShowQuickFeed] RCA: pdfconvert-tools removed");
+                  }
+                }
+              }
+            });
+            mo.observe(quick, { childList: true, subtree: true });
+            setTimeout(function() { mo.disconnect(); }, 5000);
+          } catch (_) {}
+        }
         if (isAi) {
           try { renderAiVideos(quick); } catch (e) { console.warn("renderAiVideos", e); }
         }

@@ -15012,6 +15012,10 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
 }
 
 /* === PDF convert tools inside existing Quick Feed card — scoped #iuQuickFeed [data-iu="pdfconvert-tools"] === */
+#iuQuickFeed [data-iu="pdfconvert-tools"] {
+  outline: 1px solid rgba(0,120,0,0.4);
+  outline-offset: 2px;
+}
 #iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfConvertInfo {
   margin-bottom: 1rem;
   padding: 0.75rem;
