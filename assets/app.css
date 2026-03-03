@@ -2919,16 +2919,24 @@ body.iu-pdf-modal-open #iu-pdfConvertModal {
 }
 
 /* PDF converter modal — scoped; no global a/button outside */
+/* PDF OVERLAY LAYERING v1 — above feed like translator; fixed viewport, high z-index */
 #iu-pdfConvertOverlay.iu-pdfconvert-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 35000;
   background: rgba(0,0,0,.4);
+  pointer-events: auto;
 }
 #iu-pdfConvertModal.iu-pdfconvert-modal {
-  position: fixed;
-  z-index: 9999;
-  left: 50%;
+  position: fixed !important;
+  z-index: 35001;
+  left: 50% !important;
   top: 84px;
   transform: translateX(-50%);
   width: min(520px, calc(100vw - 24px));
@@ -2939,6 +2947,7 @@ body.iu-pdf-modal-open #iu-pdfConvertModal {
   justify-content: center;
   padding: 18px;
   box-sizing: border-box;
+  pointer-events: auto;
 }
 .iu-pdfconvert-modal .iu-aiModal {
   width: 100%;
