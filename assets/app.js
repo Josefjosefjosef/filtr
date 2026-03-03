@@ -9398,6 +9398,7 @@ function buildVideoAsArticleCard(it) {
           var reader = new FileReader();
           reader.onload = function() {
             var ab = reader.result;
+            window._iuPdfLastSource = "word";
             window._iuPdfLastWordMode = "word-pending";
             function fallbackToText() {
               window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) {

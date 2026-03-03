@@ -15138,6 +15138,13 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   overflow: hidden;
   pointer-events: none;
 }
+#iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-word-html"] {
+  background: #fff;
+  color: #000;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
 #iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-word-html"] table {
   border-collapse: collapse;
   width: 100%;
