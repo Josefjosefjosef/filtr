@@ -2804,6 +2804,12 @@ body.iu-modal-open #iu-mojeSluzbyOverlay {
 body.iu-modal-open #iu-mojeSluzbyPanel {
   display: flex !important;
 }
+body.iu-pdf-modal-open #iu-pdfConvertOverlay {
+  display: block !important;
+}
+body.iu-pdf-modal-open #iu-pdfConvertModal {
+  display: flex !important;
+}
 
 /* P0: Moje slu┼żby modal host in body ÔÇö pointer-events pass-through for children */
 #iuModalHost {
@@ -2879,6 +2885,161 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
     width: calc(100vw - 16px);
     max-height: calc(100vh - 80px);
   }
+}
+
+/* PDF converter: button row under Moje služby (same visual scheme) */
+.iu-mojeSluzbyPdfRow {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+.iu-mojeSluzbyPdfRow .iu-pdfConvertOpen {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  color: inherit;
+  padding: 8px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+.iu-mojeSluzbyPdfRow .iu-pdfConvertOpen:hover {
+  background: rgba(0,0,0,.08);
+}
+.iu-mojeSluzbyPdfRow .iu-pdfConvertOpen:focus-visible {
+  outline: 2px solid rgba(0,123,255,.5);
+  outline-offset: 2px;
+}
+
+/* PDF converter modal — scoped; no global a/button outside */
+#iu-pdfConvertOverlay.iu-pdfconvert-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(0,0,0,.4);
+}
+#iu-pdfConvertModal.iu-pdfconvert-modal {
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  top: 84px;
+  transform: translateX(-50%);
+  width: min(520px, calc(100vw - 24px));
+  max-height: calc(100vh - 108px);
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 18px;
+  box-sizing: border-box;
+}
+.iu-pdfconvert-modal .iu-aiModal {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  border: none;
+  background: none;
+  padding: 0;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-tabs [role="tab"] {
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,.2);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-tabs [role="tab"]:hover {
+  background: rgba(0,0,0,.05);
+}
+.iu-pdfconvert-modal .iu-pdfconvert-tabs [role="tab"][aria-selected="true"] {
+  background: rgba(0,123,255,.12);
+  border-color: rgba(0,123,255,.4);
+}
+.iu-pdfconvert-modal .iu-pdfconvert-info {
+  background: rgba(0,123,255,.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-info p {
+  margin: 0 0 4px 0;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-info p:last-child {
+  margin-bottom: 0;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-panel {
+  display: block;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-panel[hidden] {
+  display: none !important;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-textarea {
+  width: 100%;
+  max-width: 100%;
+  min-height: 120px;
+  padding: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  border: 1px solid rgba(0,0,0,.2);
+  border-radius: 8px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-file {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-note {
+  font-size: 12px;
+  color: rgba(0,0,0,.6);
+  margin: 0 0 10px 0;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-btn {
+  margin-top: 10px;
+  padding: 10px 18px;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,.25);
+  border-radius: 8px;
+  background: #f5f5f5;
+  color: inherit;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-btn:hover:not(:disabled) {
+  background: #eee;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-download-wrap {
+  margin-top: 10px;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-download-link {
+  color: #007bff;
+  text-decoration: underline;
+  font-size: 14px;
+}
+.iu-pdfconvert-modal .iu-pdfconvert-download-link:hover {
+  color: #0056b3;
 }
 
 .iu-aiModal{

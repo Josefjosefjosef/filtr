@@ -9880,7 +9880,12 @@ function buildVideoAsArticleCard(it) {
       return;
     }
 
-    // 2) Modal (#iu-aiPanel or .iuModal or #iu-mojeSluzbyPanel)
+    // 2) Modal (#iu-aiPanel or .iuModal or #iu-mojeSluzbyPanel or PDF convert)
+    const pdfModal = closeEl.closest && closeEl.closest('[data-iu="pdf-convert-modal"]');
+    if (pdfModal && typeof window.iuClosePdfConvertModal === 'function') {
+      window.iuClosePdfConvertModal();
+      return;
+    }
     const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel') || closeEl.closest('#iu-mojeSluzbyPanel'));
     if (modal) {
       if (modal.id === 'iu-aiPanel') {
@@ -13230,6 +13235,264 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 } catch(e) {
   console.error("IU SAFE BOOT ERROR:", e);
 }
+
+// === PDF converter modal (client-side only; no upload) ===
+(function iuPdfConvertModal() {
+  var overlay = null;
+  var panel = null;
+  var openBtn = null;
+  var jspdfModule = null;
+  var mammothModule = null;
+
+  function getEls() {
+    overlay = document.getElementById("iu-pdfConvertOverlay");
+    panel = document.getElementById("iu-pdfConvertModal");
+    openBtn = document.querySelector("[data-iu=\"pdf-convert-open\"]");
+    return !!(overlay && panel);
+  }
+
+  function closePdfConvertModal() {
+    if (!overlay || !panel) return;
+    overlay.hidden = true;
+    panel.hidden = true;
+    document.body.classList.remove("iu-pdf-modal-open");
+    document.documentElement.style.overflow = "";
+    try { window.iuClosePdfConvertModal = null; } catch (_) {}
+  }
+
+  function openPdfConvertModal() {
+    if (!overlay || !panel) return;
+    overlay.hidden = false;
+    panel.hidden = false;
+    document.body.classList.add("iu-pdf-modal-open");
+    document.documentElement.style.overflow = "hidden";
+    try { window.iuClosePdfConvertModal = closePdfConvertModal; } catch (_) {}
+    var tabText = document.querySelector("[data-iu=\"tab-text\"]");
+    var tabWord = document.querySelector("[data-iu=\"tab-word\"]");
+    var panelText = document.getElementById("iu-pdf-panel-text");
+    var panelWord = document.getElementById("iu-pdf-panel-word");
+    if (tabText) tabText.setAttribute("aria-selected", "true");
+    if (tabWord) tabWord.setAttribute("aria-selected", "false");
+    if (panelText) panelText.hidden = false;
+    if (panelWord) panelWord.hidden = true;
+    var textDownloadWrap = document.getElementById("iu-pdf-text-download-wrap");
+    var docxDownloadWrap = document.getElementById("iu-pdf-docx-download-wrap");
+    if (textDownloadWrap) textDownloadWrap.hidden = true;
+    if (docxDownloadWrap) docxDownloadWrap.hidden = true;
+  }
+
+  function switchTab(activeTab) {
+    var tabText = document.querySelector("[data-iu=\"tab-text\"]");
+    var tabWord = document.querySelector("[data-iu=\"tab-word\"]");
+    var panelText = document.getElementById("iu-pdf-panel-text");
+    var panelWord = document.getElementById("iu-pdf-panel-word");
+    if (!panelText || !panelWord) return;
+    if (activeTab === "text") {
+      if (tabText) tabText.setAttribute("aria-selected", "true");
+      if (tabWord) tabWord.setAttribute("aria-selected", "false");
+      panelText.hidden = false;
+      panelWord.hidden = true;
+    } else {
+      if (tabText) tabText.setAttribute("aria-selected", "false");
+      if (tabWord) tabWord.setAttribute("aria-selected", "true");
+      panelText.hidden = true;
+      panelWord.hidden = false;
+      loadMammothOnce();
+    }
+  }
+
+  function loadScript(src, globalName, cb) {
+    if (document.querySelector('script[src="' + src + '"]')) {
+      cb(window[globalName]);
+      return;
+    }
+    var s = document.createElement("script");
+    s.src = src;
+    s.onload = function() { cb(window[globalName]); };
+    s.onerror = function() { cb(null); };
+    document.head.appendChild(s);
+  }
+
+  function loadMammothOnce() {
+    if (mammothModule) return;
+    var base = (typeof location !== "undefined" && location.pathname || "").toLowerCase().includes("/filtr/") ? "/filtr" : "";
+    loadScript(base + "/assets/vendor/mammoth.browser.min.js", "mammoth", function(m) {
+      mammothModule = m || null;
+      if (mammothModule) try { document.body.setAttribute("data-iu-pdf-word-loaded", "1"); } catch (_) {}
+    });
+  }
+
+  function loadJspdfOnce() {
+    if (jspdfModule) return Promise.resolve(jspdfModule);
+    return new Promise(function(resolve) {
+      var base = (typeof location !== "undefined" && location.pathname || "").toLowerCase().includes("/filtr/") ? "/filtr" : "";
+      var src = base + "/assets/vendor/jspdf.umd.min.js";
+      if (document.querySelector('script[src="' + src + '"]')) {
+        jspdfModule = window.jspdf || null;
+        resolve(jspdfModule);
+        return;
+      }
+      var s = document.createElement("script");
+      s.src = src;
+      s.onload = function() {
+        jspdfModule = window.jspdf || null;
+        resolve(jspdfModule);
+      };
+      s.onerror = function() { resolve(null); };
+      document.head.appendChild(s);
+    });
+  }
+
+  function getJsPDFCtor(jsPDF) {
+    if (!jsPDF) return null;
+    return (jsPDF.jspdf && jsPDF.jspdf.jsPDF) || jsPDF.jsPDF || jsPDF.default || jsPDF;
+  }
+
+  function textToPdf() {
+    var textarea = document.querySelector("[data-iu=\"pdf-text-input\"]");
+    var wrap = document.getElementById("iu-pdf-text-download-wrap");
+    var link = document.getElementById("iu-pdf-text-download");
+    if (!textarea || !wrap || !link) return;
+    var text = (textarea.value || "").trim();
+    if (!text) return;
+    loadJspdfOnce().then(function(jsPDF) {
+      var JsPDFCtor = getJsPDFCtor(jsPDF);
+      if (!JsPDFCtor) return;
+      try {
+        var doc = new JsPDFCtor({ orientation: "portrait", unit: "mm", format: "a4" });
+        var margin = 20;
+        var pageW = doc.internal.pageSize.getWidth();
+        var pageH = doc.internal.pageSize.getHeight();
+        var lineH = 6;
+        var y = margin;
+        var lines = text.split(/\r?\n/);
+        for (var i = 0; i < lines.length; i++) {
+          var parts = doc.splitTextToSize(lines[i] || "", pageW - 2 * margin);
+          for (var j = 0; j < parts.length; j++) {
+            if (y + lineH > pageH - margin) {
+              doc.addPage();
+              y = margin;
+            }
+            doc.text(parts[j], margin, y);
+            y += lineH;
+          }
+        }
+        var blob = doc.output("blob");
+        var url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = "dokument.pdf";
+        wrap.hidden = false;
+        link.addEventListener("click", function revoke() {
+          link.removeEventListener("click", revoke);
+          setTimeout(function() { URL.revokeObjectURL(url); }, 100);
+        }, { once: true });
+      } catch (err) {
+        console.error("[PDF]", err);
+      }
+    }).catch(function(err) {
+      console.error("[PDF jspdf load]", err);
+    });
+  }
+
+  function docxToPdf() {
+    var input = document.querySelector("[data-iu=\"pdf-docx-input\"]");
+    var wrap = document.getElementById("iu-pdf-docx-download-wrap");
+    var link = document.getElementById("iu-pdf-docx-download");
+    if (!input || !input.files || !input.files[0] || !wrap || !link || !mammothModule) return;
+    var file = input.files[0];
+    var abPromise = typeof file.arrayBuffer === "function" ? file.arrayBuffer() : readFileAsArrayBuffer(file);
+    abPromise.then(function(arrayBuffer) {
+      return mammothModule.convertToHtml({ arrayBuffer: arrayBuffer });
+    }).then(function(result) {
+      var html = result.value || "<p></p>";
+      return loadJspdfOnce().then(function(jsPDF) {
+        var JsPDFCtor = getJsPDFCtor(jsPDF);
+        if (!JsPDFCtor) return;
+        var doc = new JsPDFCtor({ orientation: "portrait", unit: "mm", format: "a4" });
+        var div = document.createElement("div");
+        div.innerHTML = html;
+        div.style.width = "210mm";
+        div.style.position = "absolute";
+        div.style.left = "-9999px";
+        document.body.appendChild(div);
+        if (typeof doc.html === "function") {
+          doc.html(div, { x: 15, y: 15, width: 180, windowWidth: 600, callback: function() {
+            try { document.body.removeChild(div); } catch (_) {}
+            var blob = doc.output("blob");
+            var url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = "dokument.pdf";
+            wrap.hidden = false;
+            link.addEventListener("click", function revoke() {
+              link.removeEventListener("click", revoke);
+              setTimeout(function() { URL.revokeObjectURL(url); }, 100);
+            }, { once: true });
+          } });
+        } else {
+          try { document.body.removeChild(div); } catch (_) {}
+          doc.text(html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 5000), 15, 15);
+          var blob = doc.output("blob");
+          var url = URL.createObjectURL(blob);
+          link.href = url;
+          link.download = "dokument.pdf";
+          wrap.hidden = false;
+          link.addEventListener("click", function revoke() {
+            link.removeEventListener("click", revoke);
+            setTimeout(function() { URL.revokeObjectURL(url); }, 100);
+          }, { once: true });
+        }
+      });
+    }).catch(function(err) {
+      console.error("[PDF mammoth]", err);
+    });
+  }
+
+  function readFileAsArrayBuffer(file) {
+    return new Promise(function(resolve, reject) {
+      var r = new FileReader();
+      r.onload = function() { resolve(r.result); };
+      r.onerror = reject;
+      r.readAsArrayBuffer(file);
+    });
+  }
+
+  function init() {
+    if (!getEls()) return;
+    if (openBtn) openBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      openPdfConvertModal();
+    });
+    if (overlay) overlay.addEventListener("click", closePdfConvertModal);
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape" && panel && !panel.hidden && typeof window.iuClosePdfConvertModal === "function") {
+        window.iuClosePdfConvertModal();
+      }
+    });
+    var tabText = document.querySelector("[data-iu=\"tab-text\"]");
+    var tabWord = document.querySelector("[data-iu=\"tab-word\"]");
+    if (tabText) tabText.addEventListener("click", function() { switchTab("text"); });
+    if (tabWord) tabWord.addEventListener("click", function() { switchTab("word"); });
+    var docxInput = document.querySelector("[data-iu=\"pdf-docx-input\"]");
+    var docxBtn = document.querySelector("[data-iu=\"pdf-docx-generate\"]");
+    if (docxInput) docxInput.addEventListener("change", function() {
+      if (docxBtn) docxBtn.disabled = !(docxInput.files && docxInput.files.length > 0);
+    });
+    var textBtn = document.querySelector("[data-iu=\"pdf-text-generate\"]");
+    if (textBtn) textBtn.addEventListener("click", textToPdf);
+    if (docxBtn) docxBtn.addEventListener("click", docxToPdf);
+    var panelEl = document.querySelector("[data-iu=\"pdf-convert-modal\"]");
+    if (panelEl) panelEl.addEventListener("click", function(e) {
+      if (e.target === panelEl) closePdfConvertModal();
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
 
 // === TOPBAR: move Inzerce/Služby + Vložit inzerát pill (whole wrapper) before info icon ===
 (function iuMoveAdsPillToTopbar() {
