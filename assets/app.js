@@ -9105,7 +9105,8 @@ function buildVideoAsArticleCard(it) {
         '<textarea data-iu="pdf-text-input" rows="6" placeholder="Vložte text…" aria-label="Text pro převod do PDF"></textarea>' +
         '<p class="iu-pdfDropHint">Přetáhněte sem .docx nebo .txt</p></div>' +
         '<button type="button" data-iu="pdf-text-generate">Vygenerovat PDF</button>' +
-        '<div class="iu-pdfResultActions" data-iu="pdf-text-result-actions" hidden></div></div></div>',
+        '<div class="iu-pdfResultActions" data-iu="pdf-text-result-actions" hidden></div></div>' +
+        '<div data-iu="pdf-word-html" class="iu-pdf-word-html-wrapper" aria-hidden="true"></div></div>',
       items: [
         { name: "PDF → Word", url: "https://www.ilovepdf.com/pdf_to_word", external: true },
         { name: "Word → PDF", url: "https://www.ilovepdf.com/word_to_pdf", external: true },
@@ -9243,6 +9244,7 @@ function buildVideoAsArticleCard(it) {
     const docxBtn = root.querySelector("[data-iu=\"pdf-download-convert\"]");
     const textInput = root.querySelector("[data-iu=\"pdf-text-input\"]");
     const textBtn = root.querySelector("[data-iu=\"pdf-text-generate\"]");
+    const wordHtmlWrapper = root.querySelector("[data-iu=\"pdf-word-html\"]");
     if (wordFileBtn && docxInput) wordFileBtn.addEventListener("click", function() { docxInput.click(); });
     if (docxInput) docxInput.addEventListener("change", function() {
       var hasFile = docxInput.files && docxInput.files.length > 0;
@@ -9377,37 +9379,95 @@ function buildVideoAsArticleCard(it) {
       if (mammothLoaded) { if (typeof cb === "function") cb(); return; }
       loadScript(vendorBase + "/mammoth.browser.min.js", function() { mammothLoaded = true; if (typeof cb === "function") cb(); });
     }
+    var html2pdfLoaded = false;
+    function loadHtml2PdfIfNeeded(cb) {
+      if (typeof window.html2pdf !== "undefined") { html2pdfLoaded = true; if (typeof cb === "function") cb(); return; }
+      if (html2pdfLoaded) { if (typeof cb === "function") cb(); return; }
+      loadScript(vendorBase + "/html2pdf.bundle.min.js", function() { html2pdfLoaded = true; if (typeof cb === "function") cb(); });
+    }
     function showWordPdfError(msg) {
       var ra = document.querySelector("#iuQuickFeed [data-iu=\"pdf-word-result-actions\"]");
       if (ra) { ra.textContent = msg || ""; ra.hidden = !msg; }
+    }
+    function iuGenerateWordPdfBlobFromSelectedDocx(file) {
+      return new Promise(function(resolve, reject) {
+        if (!file) { reject(new Error("no file")); return; }
+        loadMammothIfNeeded(function() {
+          if (typeof window.mammoth === "undefined") { reject(new Error("mammoth")); return; }
+          var reader = new FileReader();
+          reader.onload = function() {
+            var ab = reader.result;
+            function fallbackToText() {
+              window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) {
+                var raw = (r && r.value) ? String(r.value) : "";
+                var text = normalizePdfText(raw);
+                if (!text || /^\s*$/.test(text)) { reject(new Error("empty")); return; }
+                window._iuPdfLastWordMode = "word-text-fallback";
+                iuPdfGenerateFromPlainText(text, { source: "word", fileName: "document.pdf" }, function(err, out) {
+                  if (err || !out || !out.blob) reject(err || new Error("pdf")); else resolve(out);
+                });
+              }).catch(function() { reject(new Error("read")); });
+            }
+            var convertImage = window.mammoth.images && window.mammoth.images.inline
+              ? window.mammoth.images.inline(function(image) {
+                  return image.read("base64").then(function(base64) {
+                    return { src: "data:" + (image.contentType || "image/png") + ";base64," + base64 };
+                  });
+                })
+              : undefined;
+            window.mammoth.convertToHtml({ arrayBuffer: ab }, convertImage ? { convertImage: convertImage } : {}).then(function(result) {
+              var html = (result && result.value) ? String(result.value) : "";
+              if (!html || /^\s*$/.test(html)) { fallbackToText(); return; }
+              if (!wordHtmlWrapper) { fallbackToText(); return; }
+              wordHtmlWrapper.innerHTML = html;
+              var hasImg = html.indexOf("<img") !== -1;
+              var hasTable = html.indexOf("<table") !== -1;
+              var textLen = (wordHtmlWrapper.textContent || "").length;
+              if (!hasImg && !hasTable && (!textLen || /^\s*$/.test(wordHtmlWrapper.textContent))) { fallbackToText(); return; }
+              loadHtml2PdfIfNeeded(function() {
+                if (typeof window.html2pdf === "undefined") { fallbackToText(); return; }
+                var opts = {
+                  image: { type: "png", quality: 1.0 },
+                  html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+                  jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+                  pagebreak: { mode: ["css", "legacy"] }
+                };
+                window.html2pdf().set(opts).from(wordHtmlWrapper).toPdf().output("blob").then(function(blob) {
+                  if (!blob || blob.size < 5000) { fallbackToText(); return; }
+                  window._iuPdfLastWordMode = "word-html2pdf";
+                  window._iuPdfLastWordHtmlStats = { hasImg: hasImg, hasTable: hasTable, htmlLen: html.length, textLen: textLen };
+                  window._iuPdfLastPdfBytes = blob.size;
+                  resolve({ blob: blob, fileName: "document.pdf" });
+                }).catch(function() { fallbackToText(); });
+              });
+            }).catch(function() { fallbackToText(); });
+          };
+          reader.onerror = function() { reject(new Error("read")); };
+          reader.readAsArrayBuffer(file);
+        });
+      });
     }
     function doDocxConvert(file, action) {
       action = action || "download";
       showWordPdfError("");
       loadMammothIfNeeded(function() {
         if (typeof window.mammoth === "undefined") { showWordPdfError("Převod není k dispozici."); return; }
-        var reader = new FileReader();
-        reader.onload = function() {
-          var ab = reader.result;
-          window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) {
-            var raw = (r && r.value) ? String(r.value) : "";
-            var text = normalizePdfText(raw);
-            if (!text || /^\s*$/.test(text)) { showWordPdfError("Dokument je prázdný nebo se nepodařilo přečíst text."); return; }
-            iuPdfGenerateFromPlainText(text, { source: "word", fileName: "document.pdf" }, function(err, out) {
-              if (err || !out || !out.blob) { showWordPdfError("Generování PDF selhalo."); return; }
-              showWordPdfError("");
-              if (action === "share") {
-                var f = new File([out.blob], out.fileName || "document.pdf", { type: "application/pdf" });
-                if (navigator.canShare && navigator.canShare({ files: [f] })) navigator.share({ files: [f] }).catch(function() {});
-              } else {
-                var url = URL.createObjectURL(out.blob);
-                var a = document.createElement("a"); a.href = url; a.download = out.fileName || "document.pdf"; a.click();
-                setTimeout(function() { URL.revokeObjectURL(url); }, 500);
-              }
-            });
-          }).catch(function() { showWordPdfError("Soubor nelze přečíst. Zkuste jiný .docx soubor."); });
-        };
-        reader.readAsArrayBuffer(file);
+        iuGenerateWordPdfBlobFromSelectedDocx(file).then(function(out) {
+          showWordPdfError("");
+          if (action === "share") {
+            var f = new File([out.blob], out.fileName || "document.pdf", { type: "application/pdf" });
+            if (navigator.canShare && navigator.canShare({ files: [f] })) navigator.share({ files: [f] }).catch(function() {});
+          } else {
+            var url = URL.createObjectURL(out.blob);
+            var a = document.createElement("a"); a.href = url; a.download = out.fileName || "document.pdf"; a.click();
+            setTimeout(function() { URL.revokeObjectURL(url); }, 500);
+          }
+        }).catch(function(err) {
+          window._iuPdfLastWordMode = "word-error";
+          if (String(err && err.message) === "empty") showWordPdfError("Dokument je prázdný nebo se nepodařilo přečíst text.");
+          else if (String(err && err.message) === "read") showWordPdfError("Soubor nelze přečíst. Zkuste jiný .docx soubor.");
+          else showWordPdfError("Generování PDF selhalo.");
+        });
       });
     }
     if (textBtn && textInput) textBtn.addEventListener("click", function() {
