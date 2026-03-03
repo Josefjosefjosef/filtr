@@ -1150,6 +1150,16 @@ aside.accordionCol{
   color: #ff0000;
 }
 
+/* Přejmenované quick links – stejné barvy ikon */
+.iu-mmQuickItem[aria-label="Zásilky a sledování"] i{ color: #e60012; }
+.iu-mmQuickItem[aria-label="Vzory smluv a plné moci"] i{ color: #ff0000; }
+.iu-mmQuickItem[aria-label="Finanční kalkulačky"] i{ color: #4285f4; }
+.iu-mmQuickItem[aria-label="Registr smluv"] i{ color: #0066cc; }
+
+/* Inertní položky – žádná akce, konzistentní vzhled */
+.iu-mmQuickItem--inert{ cursor: default; }
+.iu-mmQuickItem--inert:hover{ background: transparent; transform: none; }
+
 /* Responzivn├ş ├║pravy */
 @media (max-width: 768px){
   .iu-mmQuickItem{
