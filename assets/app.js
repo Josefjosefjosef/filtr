@@ -9393,41 +9393,66 @@ function buildVideoAsArticleCard(it) {
       window._iuPdfLastWordError = null;
       return new Promise(function(resolve, reject) {
         if (!file) { window._iuPdfLastWordError = "no file"; reject(new Error("no file")); return; }
-        loadMammothIfNeeded(function() {
+        loadMammothIfNeeded(async function() {
           if (typeof window.mammoth === "undefined") { window._iuPdfLastWordError = "mammoth"; reject(new Error("mammoth")); return; }
-          var reader = new FileReader();
-          reader.onload = function() {
-            var ab = reader.result;
+          var ab;
+          try { ab = await file.arrayBuffer(); } catch (e) {
+            window._iuPdfLastWordError = String(e && (e.message || e));
             window._iuPdfLastSource = "word";
-            window._iuPdfLastWordMode = "word-pending";
-            function fallbackToText() {
-              window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) {
-                var raw = (r && r.value) ? String(r.value) : "";
-                var text = normalizePdfText(raw);
-                if (!text || /^\s*$/.test(text)) { window._iuPdfLastWordError = "empty"; reject(new Error("empty")); return; }
-                window._iuPdfLastWordMode = "word-text-fallback";
-                iuPdfGenerateFromPlainText(text, { source: "word", fileName: "document.pdf" }, function(err, out) {
-                  if (err || !out || !out.blob) {
-                    window._iuPdfLastWordError = String(err && (err.stack || err.message || err));
-                    reject(err || new Error("pdf"));
-                  } else {
-                    window._iuPdfLastPdfBytes = out.blob ? out.blob.size : 0;
-                    resolve(out);
-                  }
-                });
-              }).catch(function(e) {
-                window._iuPdfLastWordError = String(e && (e.stack || e.message || e));
-                reject(new Error("read"));
+            window._iuPdfLastWordMode = "word-text-fallback";
+            iuPdfGenerateFromPlainText("Dokument se nepodařilo přečíst.", { source: "word", fileName: "document.pdf" }, function(err, out) {
+              if (err || !out || !out.blob) { reject(err || new Error("pdf")); return; }
+              window._iuPdfLastPdfBytes = out.blob.size;
+              resolve(out);
+            });
+            return;
+          }
+          window._iuPdfLastSource = "word";
+          window._iuPdfLastWordMode = "word-pending";
+          function isZipMagic(buffer) {
+            if (!buffer || buffer.byteLength < 4) return false;
+            var u8 = new Uint8Array(buffer);
+            return u8[0] === 0x50 && u8[1] === 0x4B && u8[2] === 0x03 && u8[3] === 0x04;
+          }
+          function fallbackToPdfMinimal() {
+            window._iuPdfLastWordMode = "word-text-fallback";
+            iuPdfGenerateFromPlainText("Dokument se nepodařilo přečíst.", { source: "word", fileName: "document.pdf" }, function(err, out) {
+              if (err || !out || !out.blob) { reject(err || new Error("pdf")); return; }
+              window._iuPdfLastPdfBytes = out.blob.size;
+              resolve(out);
+            });
+          }
+          function fallbackToText() {
+            window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) {
+              var raw = (r && r.value) ? String(r.value) : "";
+              var text = normalizePdfText(raw);
+              if (!text || /^\s*$/.test(text)) { window._iuPdfLastWordError = "empty"; reject(new Error("empty")); return; }
+              window._iuPdfLastWordMode = "word-text-fallback";
+              iuPdfGenerateFromPlainText(text, { source: "word", fileName: "document.pdf" }, function(err, out) {
+                if (err || !out || !out.blob) {
+                  window._iuPdfLastWordError = String(err && (err.stack || err.message || err));
+                  reject(err || new Error("pdf"));
+                } else {
+                  window._iuPdfLastPdfBytes = out.blob ? out.blob.size : 0;
+                  resolve(out);
+                }
               });
-            }
-            var convertImage = window.mammoth.images && window.mammoth.images.inline
-              ? window.mammoth.images.inline(function(image) {
-                  return image.read("base64").then(function(base64) {
-                    return { src: "data:" + (image.contentType || "image/png") + ";base64," + base64 };
-                  });
-                })
-              : undefined;
-            window.mammoth.convertToHtml({ arrayBuffer: ab }, convertImage ? { convertImage: convertImage } : {}).then(function(result) {
+            }).catch(function(e) {
+              window._iuPdfLastWordError = String(e && (e.stack || e.message || e));
+              fallbackToPdfMinimal();
+            });
+          }
+          if (!isZipMagic(ab)) { fallbackToPdfMinimal(); return; }
+          var convertImage = window.mammoth.images && window.mammoth.images.inline
+            ? window.mammoth.images.inline(function(image) {
+                return image.read("base64").then(function(base64) {
+                  return { src: "data:" + (image.contentType || "image/png") + ";base64," + base64 };
+                });
+              })
+            : undefined;
+          var convertPromise = window.mammoth.convertToHtml({ arrayBuffer: ab }, convertImage ? { convertImage: convertImage } : {});
+          var timeoutPromise = new Promise(function(_, rej) { setTimeout(function() { rej(new Error("timeout")); }, 60000); });
+          Promise.race([convertPromise, timeoutPromise]).then(function(result) {
               var html = (result && result.value) ? String(result.value) : "";
               if (!html || /^\s*$/.test(html)) { fallbackToText(); return; }
               if (html.length < 50) { fallbackToText(); return; }
@@ -9519,9 +9544,6 @@ function buildVideoAsArticleCard(it) {
               window._iuPdfLastWordError = String(e && (e.stack || e.message || e));
               fallbackToText();
             });
-          };
-          reader.onerror = function() { window._iuPdfLastWordError = "FileReader error"; reject(new Error("read")); };
-          reader.readAsArrayBuffer(file);
         });
       });
     }
