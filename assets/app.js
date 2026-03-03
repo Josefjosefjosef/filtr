@@ -9089,12 +9089,18 @@ function buildVideoAsArticleCard(it) {
         '<button type="button" role="tab" data-iu="tab-word" aria-selected="false" aria-controls="iu-pdf-tab-word-panel">Word → PDF</button>' +
         '<button type="button" role="tab" data-iu="tab-text" aria-selected="true" aria-controls="iu-pdf-tab-text-panel">Text → PDF</button></div>' +
         '<div id="iu-pdf-tab-word-panel" role="tabpanel" data-iu="tab-word-panel" hidden>' +
-        '<p class="iu-pdfConvertNote">Kvalita převodu závisí na složitosti dokumentu.</p>' +
-        '<input type="file" accept=".docx" data-iu="pdf-docx-input" aria-label="Vybrat soubor .docx" />' +
-        '<button type="button" data-iu="pdf-docx-generate" disabled>Převést a stáhnout PDF</button></div>' +
+        '<p class="iu-pdfConvertNote">Kvalita převodu závisí na složitosti dokumentu. Složitý Word může být převeden jako čistý text.</p>' +
+        '<input type="file" id="iuWordFileInput" accept=".docx" data-iu="pdf-docx-input" hidden />' +
+        '<button type="button" id="iuWordFileBtn" class="iu-pdfFileBtn">Vybrat soubor (.docx)</button>' +
+        '<span id="iuWordFileLabel" class="iu-file-label">Žádný soubor nebyl vybrán</span>' +
+        '<button type="button" data-iu="pdf-docx-generate" disabled>Převést a stáhnout PDF</button>' +
+        '<div class="iu-pdfResultActions" data-iu="pdf-word-result-actions" hidden></div></div>' +
         '<div id="iu-pdf-tab-text-panel" role="tabpanel" data-iu="tab-text-panel">' +
+        '<div class="iu-pdfTextDropzone" data-iu="pdf-text-dropzone" role="group" aria-label="Text pro PDF">' +
         '<textarea data-iu="pdf-text-input" rows="6" placeholder="Vložte text…" aria-label="Text pro převod do PDF"></textarea>' +
-        '<button type="button" data-iu="pdf-text-generate">Vygenerovat PDF</button></div></div>',
+        '<p class="iu-pdfDropHint">Přetáhněte sem .docx nebo .txt</p></div>' +
+        '<button type="button" data-iu="pdf-text-generate">Vygenerovat PDF</button>' +
+        '<div class="iu-pdfResultActions" data-iu="pdf-text-result-actions" hidden></div></div></div>',
       items: [
         { name: "PDF → Word", url: "https://www.ilovepdf.com/pdf_to_word", external: true },
         { name: "Word → PDF", url: "https://www.ilovepdf.com/word_to_pdf", external: true },
@@ -9227,9 +9233,17 @@ function buildVideoAsArticleCard(it) {
     const panelWord = root.querySelector("[data-iu=\"tab-word-panel\"]");
     const panelText = root.querySelector("[data-iu=\"tab-text-panel\"]");
     const docxInput = root.querySelector("[data-iu=\"pdf-docx-input\"]");
+    const wordFileBtn = document.getElementById("iuWordFileBtn");
+    const wordFileLabel = document.getElementById("iuWordFileLabel");
     const docxBtn = root.querySelector("[data-iu=\"pdf-docx-generate\"]");
     const textInput = root.querySelector("[data-iu=\"pdf-text-input\"]");
     const textBtn = root.querySelector("[data-iu=\"pdf-text-generate\"]");
+    if (wordFileBtn && docxInput) wordFileBtn.addEventListener("click", function() { docxInput.click(); });
+    if (docxInput) docxInput.addEventListener("change", function() {
+      var hasFile = docxInput.files && docxInput.files.length > 0;
+      if (wordFileLabel) wordFileLabel.textContent = hasFile ? docxInput.files[0].name : "Žádný soubor nebyl vybrán";
+      if (docxBtn) docxBtn.disabled = !hasFile;
+    });
     if (tabWord && panelWord) tabWord.addEventListener("click", function() {
       if (tabText && panelText) { tabText.setAttribute("aria-selected", "false"); panelText.hidden = true; }
       tabWord.setAttribute("aria-selected", "true"); panelWord.hidden = false;
@@ -9240,7 +9254,6 @@ function buildVideoAsArticleCard(it) {
       if (tabWord && panelWord) { tabWord.setAttribute("aria-selected", "false"); panelWord.hidden = true; }
       tabText.setAttribute("aria-selected", "true"); panelText.hidden = false;
     });
-    if (docxInput && docxBtn) docxInput.addEventListener("change", function() { docxBtn.disabled = !docxInput.files || docxInput.files.length === 0; });
     function loadScript(src, cb) {
       var s = document.createElement("script");
       s.src = (/^\//.test(src) ? "" : "/") + src;
