@@ -12782,6 +12782,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   margin-top: 0 !important;
   max-width: none !important;
   text-align: left !important;
+  color: #111827 !important;
+  visibility: visible !important;
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:hover,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:active {
@@ -12799,7 +12801,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) [data-q
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) [data-ql="youtube"] .iuQlIcon { color: #DC2626 !important; }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) [data-ql="google"] .iuQlIcon { color: #7C3AED !important; }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) [data-ql="sms"] .iuQlIcon { color: #0891B2 !important; }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) [data-ql="convert"] .iuQlIcon { color: #64748B !important; }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) [data-ql="seznam"] .iuQlIcon { color: #0D9488 !important; }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) [data-ql="katastr"] .iuQlIcon { color: #B45309 !important; }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) [data-ql="rejstrik"] .iuQlIcon { color: #6B7280 !important; }
@@ -12812,6 +12813,102 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem.iu-mmQuickItem--inert * {
   pointer-events: none !important;
 }
+
+/* Převod na PDF: nesjednocovat vzhled — původní layout (ikona nad textem) */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:not([data-ql]) {
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:not([data-ql]) > span:last-of-type {
+  display: block !important;
+  color: #111827 !important;
+  visibility: visible !important;
+  margin-top: 6px !important;
+  line-height: 1.2 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* === Moje služby: stejný vzhled jako Rychlé odkazy (2-col, ikona vlevo, text vpravo, wrap) === */
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  justify-items: stretch !important;
+  align-items: start !important;
+}
+@media (max-width: 768px) {
+  body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid {
+    grid-template-columns: 1fr !important;
+  }
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem {
+  display: block !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  min-height: 48px !important;
+  padding: 10px 14px !important;
+  background: #E5E7EB !important;
+  background-color: #E5E7EB !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(0,0,0,0.06) !important;
+  text-decoration: none !important;
+  color: inherit !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink:hover,
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink:active {
+  background: #D1D5DB !important;
+  background-color: #D1D5DB !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon {
+  flex: 0 0 auto !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile,
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile {
+  display: flex !important;
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile i,
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile svg {
+  display: block !important;
+  width: 22px !important;
+  height: 22px !important;
+  color: currentColor !important;
+  fill: currentColor !important;
+  filter: none !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlText {
+  display: block !important;
+  min-width: 0 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  line-height: 1.2 !important;
+  color: #111827 !important;
+  visibility: visible !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby [data-ms="ds"] .iuQlIcon { color: #0EA5E9 !important; }
+body .accordionCol .mindMenu section.iu-mojeSluzby [data-ms="banka"] .iuQlIcon { color: #16A34A !important; }
+body .accordionCol .mindMenu section.iu-mojeSluzby [data-ms="pojistovna"] .iuQlIcon { color: #DC2626 !important; }
+body .accordionCol .mindMenu section.iu-mojeSluzby [data-ms="bakalari"] .iuQlIcon { color: #7C3AED !important; }
 
 /* Silver hero slot (CLS-safe) */
 .silver-slot{
