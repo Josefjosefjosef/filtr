@@ -15250,3 +15250,14 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   }
 }
 
+/* PDF overlay UX — soften backdrop, emphasize FEED panel (wrapper-only) */
+@supports (inset: 0) {
+  body.iu-pdf-modal-open #iu-pdfConvertOverlay.iu-pdfconvert-overlay {
+    background: rgba(0,0,0,0.26) !important;
+  }
+  body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal {
+    box-shadow: 0 12px 34px rgba(0,0,0,0.22) !important;
+    border: 1px solid rgba(255,255,255,0.18) !important;
+  }
+}
+
