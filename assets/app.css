@@ -15158,3 +15158,10 @@ body .rightCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem {
   stroke: var(--iu-rightcol-text) !important;
 }
 
+/* LEFT RAIL – zmenšení písma tlačítek o 10 % (text only, strict scope) */
+body aside#iuLeftRail.iu-leftRail .iu-leftNav .iu-leftNavItem[class] .iu-leftNavLabel,
+body #iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavLabel,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
+  font-size: 90% !important;
+}
+
