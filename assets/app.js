@@ -9085,17 +9085,18 @@ function buildVideoAsArticleCard(it) {
       title: "Převod na Word, PDF",
       toolsHtml: '<div class="iuQCard" data-iu="pdfconvert-tools">' +
         '<div class="iu-pdfConvertInfo" role="status"><p>Převod probíhá pouze ve vašem prohlížeči.</p><p>Soubor ani text nikam neodesíláme.</p><p>Po zavření okna se nic neukládá.</p></div>' +
-        '<div class="iuPdfTabsRow">' +
-        '<div class="iu-pdfConvertTabs" role="tablist">' +
+        '<div class="iuPdfTabsRow"><div class="iu-pdfConvertTabs" role="tablist">' +
         '<button type="button" role="tab" data-iu="tab-word" aria-selected="false" aria-controls="iu-pdf-tab-word-panel">Word → PDF</button>' +
-        '<button type="button" role="tab" data-iu="tab-text" aria-selected="true" aria-controls="iu-pdf-tab-text-panel">Text → PDF</button></div>' +
-        '<button type="button" class="iu-pdfShareBtn" data-iu="pdf-share" disabled title="Sdílení není podporováno">Přeposlat PDF</button></div>' +
+        '<button type="button" role="tab" data-iu="tab-text" aria-selected="true" aria-controls="iu-pdf-tab-text-panel">Text → PDF</button></div></div>' +
         '<div id="iu-pdf-tab-word-panel" role="tabpanel" data-iu="tab-word-panel" hidden>' +
         '<p class="iu-pdfConvertNote">Kvalita převodu závisí na složitosti dokumentu. Složitý Word může být převeden jako čistý text.</p>' +
+        '<div class="iuPdfActionRow">' +
         '<input type="file" id="iuWordFileInput" accept=".docx" data-iu="pdf-docx-input" hidden />' +
         '<button type="button" id="iuWordFileBtn" class="iu-pdfFileBtn">Vybrat soubor (.docx)</button>' +
         '<span id="iuWordFileLabel" class="iu-file-label">Žádný soubor nebyl vybrán</span>' +
         '<button type="button" data-iu="pdf-docx-generate" disabled>Převést a stáhnout PDF</button>' +
+        '<button type="button" class="iu-pdfShareConvertBtn" data-iu="pdf-share-convert" disabled>Převést a přeposlat PDF</button>' +
+        '<span class="iu-pdfShareUnsupported" id="iuPdfShareUnsupported" aria-hidden="true">Sdílení není podporováno</span></div>' +
         '<div class="iu-pdfResultActions" data-iu="pdf-word-result-actions" hidden></div></div>' +
         '<div id="iu-pdf-tab-text-panel" role="tabpanel" data-iu="tab-text-panel">' +
         '<div class="iu-pdfTextDropzone" data-iu="pdf-text-dropzone" role="group" aria-label="Text pro PDF">' +
@@ -9245,6 +9246,7 @@ function buildVideoAsArticleCard(it) {
       var hasFile = docxInput.files && docxInput.files.length > 0;
       if (wordFileLabel) wordFileLabel.textContent = hasFile ? docxInput.files[0].name : "Žádný soubor nebyl vybrán";
       if (docxBtn) docxBtn.disabled = !hasFile;
+      updateShareConvertButton();
     });
     if (tabWord && panelWord) tabWord.addEventListener("click", function() {
       if (tabText && panelText) { tabText.setAttribute("aria-selected", "false"); panelText.hidden = true; }
@@ -9256,14 +9258,15 @@ function buildVideoAsArticleCard(it) {
       if (tabWord && panelWord) { tabWord.setAttribute("aria-selected", "false"); panelWord.hidden = true; }
       tabText.setAttribute("aria-selected", "true"); panelText.hidden = false;
     });
-    var lastPdfBlob = null;
-    var lastPdfFile = null;
-    var shareBtn = root.querySelector("[data-iu=\"pdf-share\"]");
-    function updateShareButton() {
-      if (!shareBtn) return;
-      var canShare = lastPdfFile && typeof navigator !== "undefined" && navigator.canShare && navigator.canShare({ files: [lastPdfFile] });
-      shareBtn.disabled = !canShare;
-      shareBtn.title = canShare ? "Sdílet vygenerované PDF" : "Sdílení není podporováno";
+    var shareConvertBtn = root.querySelector("[data-iu=\"pdf-share-convert\"]");
+    var canShareFiles = !!(typeof navigator !== "undefined" && navigator.canShare && navigator.canShare({ files: [new File([], "x.pdf", { type: "application/pdf" })] }));
+    var shareUnsupportedEl = document.getElementById("iuPdfShareUnsupported");
+    function updateShareConvertButton() {
+      if (!shareConvertBtn) return;
+      var hasFile = docxInput && docxInput.files && docxInput.files.length > 0;
+      shareConvertBtn.disabled = !hasFile || !canShareFiles;
+      shareConvertBtn.title = canShareFiles ? "Převést a sdílet PDF" : "Sdílení není podporováno";
+      if (shareUnsupportedEl) shareUnsupportedEl.style.display = canShareFiles ? "none" : "inline";
     }
     function loadScript(src, cb) {
       var s = document.createElement("script");
@@ -9342,9 +9345,6 @@ function buildVideoAsArticleCard(it) {
         }).then(function(bytes) {
           window._iuPdfLastEngine = "pdf-lib+ttf-unicode";
           var blob = new Blob([bytes], { type: "application/pdf" });
-          lastPdfBlob = blob;
-          lastPdfFile = new File([blob], "prevod.pdf", { type: "application/pdf" });
-          updateShareButton();
           done(null, blob);
         }).catch(function(e) { done(e); });
       });
@@ -9355,7 +9355,8 @@ function buildVideoAsArticleCard(it) {
       if (mammothLoaded) { if (typeof cb === "function") cb(); return; }
       loadScript(vendorBase + "/mammoth.browser.min.js", function() { mammothLoaded = true; if (typeof cb === "function") cb(); });
     }
-    function doDocxConvert(file) {
+    function doDocxConvert(file, action) {
+      action = action || "download";
       loadMammothIfNeeded(function() {
         if (typeof window.mammoth === "undefined") return;
         var reader = new FileReader();
@@ -9365,9 +9366,14 @@ function buildVideoAsArticleCard(it) {
             var t = (text || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
             generateTextPdfBlob(t || " ", function(err, blob) {
               if (err || !blob) return;
-              var url = URL.createObjectURL(blob);
-              var a = document.createElement("a"); a.href = url; a.download = "document.pdf"; a.click();
-              setTimeout(function() { URL.revokeObjectURL(url); }, 500);
+              if (action === "share") {
+                var f = new File([blob], "document.pdf", { type: "application/pdf" });
+                if (navigator.canShare && navigator.canShare({ files: [f] })) navigator.share({ files: [f] }).catch(function() {});
+              } else {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement("a"); a.href = url; a.download = "document.pdf"; a.click();
+                setTimeout(function() { URL.revokeObjectURL(url); }, 500);
+              }
             });
           }
           window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) {
@@ -9395,15 +9401,14 @@ function buildVideoAsArticleCard(it) {
     if (docxBtn && docxInput) docxBtn.addEventListener("click", function() {
       var file = docxInput.files && docxInput.files[0];
       if (!file) return;
-      doDocxConvert(file);
+      doDocxConvert(file, "download");
     });
-    if (shareBtn) shareBtn.addEventListener("click", function() {
-      if (!lastPdfFile || shareBtn.disabled) return;
-      if (navigator.canShare && navigator.canShare({ files: [lastPdfFile] })) {
-        navigator.share({ files: [lastPdfFile], title: "PDF", text: "" }).catch(function() {});
-      }
+    if (shareConvertBtn && docxInput) shareConvertBtn.addEventListener("click", function() {
+      var file = docxInput.files && docxInput.files[0];
+      if (!file || shareConvertBtn.disabled) return;
+      doDocxConvert(file, "share");
     });
-    updateShareButton();
+    updateShareConvertButton();
   }
 
   function iuShowQuickFeed(key){

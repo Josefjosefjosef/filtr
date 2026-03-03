@@ -15032,18 +15032,28 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   gap: 12px;
   margin-bottom: 1rem;
 }
-#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfShareBtn {
-  margin-left: auto;
-  padding: 0.5rem 1rem;
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iuPdfActionRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfShareConvertBtn {
+  padding: 0.5rem 0.75rem;
   font: inherit;
   cursor: pointer;
   border: 1px solid rgba(0,0,0,.25);
   border-radius: 4px;
   background: #f5f5f5;
 }
-#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfShareBtn:disabled {
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfShareConvertBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfShareUnsupported {
+  font-size: 0.85rem;
+  color: #888;
 }
 #iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfConvertTabs {
   display: flex;
