@@ -13386,12 +13386,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           link.removeEventListener("click", revoke);
           setTimeout(function() { URL.revokeObjectURL(url); }, 100);
         }, { once: true });
-      } catch (err) {
-        console.error("[PDF]", err);
-      }
-    }).catch(function(err) {
-      console.error("[PDF jspdf load]", err);
-    });
+      } catch (err) { /* PDF gen fail: silent, no console */ }
+    }).catch(function() { /* jspdf load fail: silent */ });
   }
 
   function docxToPdf() {
@@ -13442,9 +13438,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           }, { once: true });
         }
       });
-    }).catch(function(err) {
-      console.error("[PDF mammoth]", err);
-    });
+    }).catch(function() { /* mammoth fail: silent */ });
   }
 
   function readFileAsArrayBuffer(file) {

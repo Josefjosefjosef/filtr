@@ -2887,13 +2887,19 @@ body.iu-pdf-modal-open #iu-pdfConvertModal {
   }
 }
 
-/* PDF converter: button row under Moje služby (same visual scheme) */
+/* PDF converter: button row under Moje služby — always visible in right rail (desktop + tablet) */
+.accordionCol .mindMenu [data-iu="right-rail-my-services"] .iu-mojeSluzbyPdfRow,
 .iu-mojeSluzbyPdfRow {
   margin-top: 10px;
-  display: flex;
+  display: flex !important;
   justify-content: center;
+  visibility: visible !important;
+  min-height: 36px;
 }
+.accordionCol .mindMenu [data-iu="right-rail-my-services"] .iu-mojeSluzbyPdfRow .iu-pdfConvertOpen,
 .iu-mojeSluzbyPdfRow .iu-pdfConvertOpen {
+  display: inline-flex !important;
+  visibility: visible !important;
   background: none;
   border: none;
   cursor: pointer;
