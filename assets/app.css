@@ -14818,6 +14818,14 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"
   stroke: currentColor !important;
 }
 
+/* STRICT: only 4 accents; force green via filter because sprite hardcodes fill */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="finance"] .iu-leftNavIcon svg,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="home"] .iu-leftNavIcon svg,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zdravi"] .iu-leftNavIcon svg,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"] .iu-leftNavIcon svg{
+  filter: brightness(0) saturate(100%) invert(55%) sepia(61%) saturate(526%) hue-rotate(109deg) brightness(95%) contrast(92%) !important;
+}
+
 /* infoUzel.cz — topbar: 1px brand accent line (visibility v2: rgba(37,99,235,.60)); strict scope: real topbar element */
 header#topbarWrap.topbar-new.iuTopbar,
 header.iuTopbar.topbar-new,
