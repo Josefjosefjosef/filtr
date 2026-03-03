@@ -9089,12 +9089,16 @@ function buildVideoAsArticleCard(it) {
         '<button type="button" role="tab" data-iu="tab-word" aria-selected="false" aria-controls="iu-pdf-tab-word-panel">Word → PDF</button>' +
         '<button type="button" role="tab" data-iu="tab-text" aria-selected="true" aria-controls="iu-pdf-tab-text-panel">Text → PDF</button></div>' +
         '<div id="iu-pdf-tab-word-panel" role="tabpanel" data-iu="tab-word-panel" hidden>' +
-        '<p class="iu-pdfConvertNote">Kvalita převodu závisí na složitosti dokumentu.</p>' +
+        '<p class="iu-pdfConvertNote">Kvalita převodu závisí na složitosti dokumentu. Složitý Word může být převeden jako čistý text.</p>' +
         '<input type="file" accept=".docx" data-iu="pdf-docx-input" aria-label="Vybrat soubor .docx" />' +
-        '<button type="button" data-iu="pdf-docx-generate" disabled>Převést a stáhnout PDF</button></div>' +
+        '<button type="button" data-iu="pdf-docx-generate" disabled>Převést a stáhnout PDF</button>' +
+        '<div class="iu-pdfResultActions" data-iu="pdf-word-result-actions" hidden></div></div>' +
         '<div id="iu-pdf-tab-text-panel" role="tabpanel" data-iu="tab-text-panel">' +
+        '<div class="iu-pdfTextDropzone" data-iu="pdf-text-dropzone" role="group" aria-label="Text pro PDF">' +
         '<textarea data-iu="pdf-text-input" rows="6" placeholder="Vložte text…" aria-label="Text pro převod do PDF"></textarea>' +
-        '<button type="button" data-iu="pdf-text-generate">Vygenerovat PDF</button></div></div>',
+        '<p class="iu-pdfDropHint">Přetáhněte sem .docx nebo .txt</p></div>' +
+        '<button type="button" data-iu="pdf-text-generate">Vygenerovat PDF</button>' +
+        '<div class="iu-pdfResultActions" data-iu="pdf-text-result-actions" hidden></div></div></div>',
       items: [
         { name: "PDF → Word", url: "https://www.ilovepdf.com/pdf_to_word", external: true },
         { name: "Word → PDF", url: "https://www.ilovepdf.com/word_to_pdf", external: true },
@@ -9241,6 +9245,9 @@ function buildVideoAsArticleCard(it) {
       tabText.setAttribute("aria-selected", "true"); panelText.hidden = false;
     });
     if (docxInput && docxBtn) docxInput.addEventListener("change", function() { docxBtn.disabled = !docxInput.files || docxInput.files.length === 0; });
+    var textResultActions = root.querySelector("[data-iu=\"pdf-text-result-actions\"]");
+    var wordResultActions = root.querySelector("[data-iu=\"pdf-word-result-actions\"]");
+    var dropzone = root.querySelector("[data-iu=\"pdf-text-dropzone\"]");
     function loadScript(src, cb) {
       var s = document.createElement("script");
       s.src = (/^\//.test(src) ? "" : "/") + src;
@@ -9248,82 +9255,199 @@ function buildVideoAsArticleCard(it) {
       s.onerror = function() { if (typeof cb === "function") cb(new Error("load failed")); };
       document.head.appendChild(s);
     }
-    var jspdfLoaded = false;
-    function getJspdf(cb) {
-      if (typeof window.jspdf !== "undefined" && window.jspdf.jsPDF) { jspdfLoaded = true; cb(null, window.jspdf.jsPDF); return; }
-      if (jspdfLoaded) { cb(null, window.jspdf.jsPDF); return; }
-      var base = (location.pathname || "").indexOf("/projects") !== -1 ? "/assets/vendor/jspdf.umd.min.js" : "/assets/vendor/jspdf.umd.min.js";
-      loadScript(base, function(err) {
-        if (err || typeof window.jspdf === "undefined") { cb(err || new Error("jspdf")); return; }
-        jspdfLoaded = true; cb(null, window.jspdf.jsPDF);
+    var vendorBase = "/assets/vendor";
+    var fontUrl = "/assets/fonts/noto-sans-latin-ext-400-normal.woff";
+    var pdfLibReady = false;
+    var pdfLibFont = null;
+    function loadPdfLibAndFont(cb) {
+      if (pdfLibFont) { cb(null, pdfLibFont); return; }
+      if (typeof window.PDFLib === "undefined") {
+        loadScript(vendorBase + "/pdf-lib.min.js", function(err) {
+          if (err || typeof window.PDFLib === "undefined") { cb(err || new Error("pdf-lib")); return; }
+          loadScript(vendorBase + "/fontkit.umd.js", function(err2) {
+            if (err2 || typeof window.fontkit === "undefined") { cb(err2 || new Error("fontkit")); return; }
+            fetchFontAndReady(cb);
+          });
+        });
+      } else if (typeof window.fontkit === "undefined") {
+        loadScript(vendorBase + "/fontkit.umd.js", function(err2) {
+          if (err2 || typeof window.fontkit === "undefined") { cb(err2 || new Error("fontkit")); return; }
+          fetchFontAndReady(cb);
+        });
+      } else {
+        fetchFontAndReady(cb);
+      }
+    }
+    function fetchFontAndReady(cb) {
+      if (pdfLibFont) { cb(null, pdfLibFont); return; }
+      fetch(fontUrl).then(function(r) { return r.arrayBuffer(); }).then(function(ab) {
+        pdfLibFont = ab;
+        pdfLibReady = true;
+        cb(null, pdfLibFont);
+      }).catch(function(e) { cb(e || new Error("font fetch")); });
+    }
+    function normalizePdfText(t) {
+      return (t || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").replace(/\t/g, "    ").trim();
+    }
+    function generateTextPdfBlob(text, done) {
+      var normalized = normalizePdfText(text);
+      loadPdfLibAndFont(function(err, fontBytes) {
+        if (err || !fontBytes) { done(err || new Error("font")); return; }
+        var PDFLib = window.PDFLib;
+        var fontkit = window.fontkit;
+        if (!PDFLib || !fontkit) { done(new Error("PDFLib")); return; }
+        PDFLib.PDFDocument.create().then(function(pdfDoc) {
+          pdfDoc.registerFontkit(fontkit);
+          return pdfDoc.embedFont(fontBytes).then(function(customFont) {
+            var fontSize = 11;
+            var marginPt = 40;
+            var pageW = 595.28 - marginPt * 2;
+            var pageH = 841.89 - marginPt * 2;
+            var lineHeight = fontSize * 1.25;
+            var y = marginPt;
+            var lines = normalized.split(/\n/);
+            var page = pdfDoc.addPage([595.28, 841.89]);
+            for (var i = 0; i < lines.length; i++) {
+              var line = lines[i] || " ";
+              var chunks = [];
+              var rest = line;
+              while (rest.length > 0) {
+                var w = customFont.widthOfTextAtSize(rest, fontSize);
+                if (w <= pageW) { chunks.push(rest); rest = ""; continue; }
+                var low = 0, high = rest.length;
+                while (low < high - 1) {
+                  var mid = Math.ceil((low + high) / 2);
+                  var seg = rest.substring(0, mid);
+                  if (customFont.widthOfTextAtSize(seg, fontSize) <= pageW) low = mid; else high = mid;
+                }
+                var lastSpace = rest.lastIndexOf(" ", low);
+                var cut = (lastSpace > 0) ? lastSpace : Math.max(1, low);
+                chunks.push(rest.substring(0, cut).trim() || rest.substring(0, 1));
+                rest = rest.substring(cut).trim();
+              }
+              for (var k = 0; k < chunks.length; k++) {
+                if (y + lineHeight > 841.89 - marginPt) {
+                  page = pdfDoc.addPage([595.28, 841.89]);
+                  y = marginPt;
+                }
+                page.drawText(chunks[k], { x: marginPt, y: 841.89 - y, size: fontSize, font: customFont });
+                y += lineHeight;
+              }
+            }
+            return pdfDoc.save();
+          });
+        }).then(function(bytes) {
+          window._iuPdfLastEngine = "pdf-lib+ttf";
+          done(null, new Blob([bytes], { type: "application/pdf" }));
+        }).catch(function(e) { done(e); });
+      });
+    }
+    function showResultActions(blob, actionsEl, filename) {
+      if (!actionsEl) return;
+      var file = new File([blob], filename || "prevod.pdf", { type: "application/pdf" });
+      var canShare = typeof navigator !== "undefined" && navigator.canShare && navigator.canShare({ files: [file] });
+      var html = '<button type="button" class="iu-pdfBtnDownload" data-iu="pdf-download">Stáhnout PDF</button>';
+      if (canShare) {
+        html += '<button type="button" class="iu-pdfBtnShare" data-iu="pdf-share">Sdílet…</button>';
+      } else {
+        html += '<span class="iu-pdfShareDisabled" title="Sdílení není podporováno v tomto prohlížeči">Sdílení není podporováno</span>';
+      }
+      html += '<a class="iu-pdfBtnMail" href="mailto:?subject=PDF%20z%20infoUzel&body=PDF%20je%20sta%C5%BEen%C3%A9%20v%20po%C4%8D%C3%ADta%C4%8Di%20(v%20Sta%C5%BEen%C3%AD).%20Pros%C3%ADm%20p%C5%99ilo%C5%BEte%20soubor%20prevod.pdf" target="_blank" rel="noopener">Odeslat e-mailem</a>';
+      actionsEl.innerHTML = html;
+      actionsEl.hidden = false;
+      var dlBtn = actionsEl.querySelector("[data-iu=\"pdf-download\"]");
+      var shareBtn = actionsEl.querySelector("[data-iu=\"pdf-share\"]");
+      if (dlBtn) dlBtn.addEventListener("click", function() {
+        var u = URL.createObjectURL(blob);
+        var a = document.createElement("a"); a.href = u; a.download = filename || "prevod.pdf"; a.click();
+        setTimeout(function() { URL.revokeObjectURL(u); }, 500);
+      });
+      if (shareBtn && canShare) shareBtn.addEventListener("click", function() {
+        navigator.share({ files: [file], title: "PDF z infoUzel", text: "Převod do PDF" }).catch(function() {});
       });
     }
     var mammothLoaded = false;
-    function loadMammothIfNeeded() {
-      if (typeof window.mammoth !== "undefined") { mammothLoaded = true; return; }
-      if (mammothLoaded) return;
-      var base = (location.pathname || "").indexOf("/projects") !== -1 ? "/assets/vendor/mammoth.browser.min.js" : "/assets/vendor/mammoth.browser.min.js";
-      loadScript(base, function() { mammothLoaded = true; });
+    function loadMammothIfNeeded(cb) {
+      if (typeof window.mammoth !== "undefined") { mammothLoaded = true; if (typeof cb === "function") cb(); return; }
+      if (mammothLoaded) { if (typeof cb === "function") cb(); return; }
+      loadScript(vendorBase + "/mammoth.browser.min.js", function() { mammothLoaded = true; if (typeof cb === "function") cb(); });
     }
     function doDocxConvert(file) {
-      if (typeof window.mammoth === "undefined") return;
-      var reader = new FileReader();
-      reader.onload = function() {
-        var ab = reader.result;
-        window.mammoth.convertToHtml({ arrayBuffer: ab }).then(function(result) {
-          var html = result.value || "";
-          var div = document.createElement("div");
-          div.innerHTML = html;
-          var text = (div.textContent || div.innerText || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
-          getJspdf(function(err, JsPDF) {
-            if (err || !JsPDF) return;
-            var doc = new JsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-            var pageW = doc.internal.pageSize.getWidth();
-            var margin = 20, y = 20, lineHeight = 7, maxW = pageW - 40;
-            var lines = text.split(/\n/);
-            for (var i = 0; i < lines.length; i++) {
-              var parts = doc.splitTextToSize(lines[i] || " ", maxW);
-              for (var j = 0; j < parts.length; j++) {
-                if (y > 270) { doc.addPage(); y = 20; }
-                doc.text(parts[j], 20, y); y += lineHeight;
-              }
+      loadMammothIfNeeded(function() {
+        if (typeof window.mammoth === "undefined") return;
+        var reader = new FileReader();
+        reader.onload = function() {
+          var ab = reader.result;
+          window.mammoth.convertToHtml({ arrayBuffer: ab }).then(function(result) {
+            var html = result.value || "";
+            var div = document.createElement("div");
+            div.innerHTML = html;
+            var text = (div.textContent || div.innerText || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
+            if (!text) {
+              window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) { text = (r.value || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim(); runWordPdf(text); }).catch(function() { runWordPdf(""); });
+            } else {
+              runWordPdf(text);
             }
-            var blob = doc.output("blob");
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement("a"); a.href = url; a.download = "document.pdf"; a.click();
-            setTimeout(function() { URL.revokeObjectURL(url); }, 500);
+          }).catch(function() {
+            window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) {
+              var text = (r.value || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
+              runWordPdf(text);
+            }).catch(function() { runWordPdf(""); });
           });
-        }).catch(function() {});
-      };
-      reader.readAsArrayBuffer(file);
+        };
+        reader.readAsArrayBuffer(file);
+      });
+      function runWordPdf(text) {
+        generateTextPdfBlob(text || " ", function(err, blob) {
+          if (err || !blob) return;
+          showResultActions(blob, wordResultActions, "document.pdf");
+          var u = URL.createObjectURL(blob);
+          var a = document.createElement("a"); a.href = u; a.download = "document.pdf"; a.click();
+          setTimeout(function() { URL.revokeObjectURL(u); }, 500);
+        });
+      }
     }
     if (textBtn && textInput) textBtn.addEventListener("click", function() {
-      getJspdf(function(err, JsPDF) {
-        if (err || !JsPDF) return;
-        var text = (textInput.value || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-        var lines = text.split(/\n/);
-        var doc = new JsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-        var pageW = doc.internal.pageSize.getWidth();
-        var margin = 20, y = 20, lineHeight = 7, maxW = pageW - 40;
-        for (var i = 0; i < lines.length; i++) {
-          var parts = doc.splitTextToSize(lines[i] || " ", maxW);
-          for (var j = 0; j < parts.length; j++) {
-            if (y > 270) { doc.addPage(); y = 20; }
-            doc.text(parts[j], margin, y); y += lineHeight;
-          }
-        }
-        var blob = doc.output("blob");
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement("a"); a.href = url; a.download = "text.pdf"; a.click();
-        setTimeout(function() { URL.revokeObjectURL(url); }, 500);
+      generateTextPdfBlob(textInput.value, function(err, blob) {
+        if (err || !blob) return;
+        showResultActions(blob, textResultActions, "text.pdf");
+        var u = URL.createObjectURL(blob);
+        var a = document.createElement("a"); a.href = u; a.download = "text.pdf"; a.click();
+        setTimeout(function() { URL.revokeObjectURL(u); }, 500);
       });
     });
     if (docxBtn && docxInput) docxBtn.addEventListener("click", function() {
       var file = docxInput.files && docxInput.files[0];
       if (!file) return;
-      if (typeof window.mammoth === "undefined") { loadMammothIfNeeded(); setTimeout(function() { if (window.mammoth) doDocxConvert(file); }, 300); return; }
       doDocxConvert(file);
     });
+    if (dropzone && textInput) {
+      dropzone.addEventListener("dragenter", function(e) { e.preventDefault(); e.stopPropagation(); dropzone.classList.add("iu-pdfDropzoneActive"); });
+      dropzone.addEventListener("dragover", function(e) { e.preventDefault(); e.stopPropagation(); dropzone.classList.add("iu-pdfDropzoneActive"); });
+      dropzone.addEventListener("dragleave", function(e) { e.preventDefault(); e.stopPropagation(); dropzone.classList.remove("iu-pdfDropzoneActive"); });
+      dropzone.addEventListener("drop", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.remove("iu-pdfDropzoneActive");
+        var file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (!file) return;
+        var name = (file.name || "").toLowerCase();
+        if (name.endsWith(".docx")) {
+          loadMammothIfNeeded(function() {
+            if (typeof window.mammoth === "undefined") { return; }
+            var reader = new FileReader();
+            reader.onload = function() {
+              window.mammoth.extractRawText({ arrayBuffer: reader.result }).then(function(r) {
+                textInput.value = (r.value || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+              }).catch(function() {});
+            };
+            reader.readAsArrayBuffer(file);
+          });
+        } else if (name.endsWith(".txt")) {
+          file.text().then(function(t) { textInput.value = (t || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n"); }).catch(function() {});
+        }
+      });
+    }
   }
 
   function iuShowQuickFeed(key){

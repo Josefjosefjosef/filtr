@@ -15012,10 +15012,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
 }
 
 /* === PDF convert tools inside existing Quick Feed card — scoped #iuQuickFeed [data-iu="pdfconvert-tools"] === */
-#iuQuickFeed [data-iu="pdfconvert-tools"] {
-  outline: 1px solid rgba(0,120,0,0.4);
-  outline-offset: 2px;
-}
 #iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfConvertInfo {
   margin-bottom: 1rem;
   padding: 0.75rem;
@@ -15079,4 +15075,44 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
 }
 #iuQuickFeed [data-iu="pdfconvert-tools"] [role="tabpanel"][hidden] {
   display: none !important;
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfTextDropzone {
+  outline: 1px dashed rgba(0,0,0,.15);
+  outline-offset: 2px;
+  border-radius: 4px;
+  padding: 4px;
+  transition: outline-color .15s ease, background .15s ease;
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfTextDropzone.iu-pdfDropzoneActive {
+  outline-color: rgba(0,100,200,.5);
+  background: rgba(0,100,200,.06);
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfDropHint {
+  margin: 0.35rem 0 0 0;
+  font-size: 0.8rem;
+  color: #666;
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfResultActions {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfBtnDownload,
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfBtnShare,
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfBtnMail {
+  padding: 0.4rem 0.75rem;
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,.25);
+  border-radius: 4px;
+  background: #f5f5f5;
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+}
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfShareDisabled {
+  font-size: 0.85rem;
+  color: #888;
 }
