@@ -15188,41 +15188,64 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   font-weight: 600 !important;
 }
 
-/* PDF overlay — exact FEED bounds via JS-set CSS vars (--iuPdfFx/Fy/Fw/Fh); no 0×0 flake */
-:root {
-  --iuPdfFx: 0px;
-  --iuPdfFy: 0px;
-  --iuPdfFw: 100vw;
-  --iuPdfFh: 100vh;
-}
-body.iu-pdf-modal-open #iu-pdfConvertOverlay.iu-pdfconvert-overlay {
-  position: fixed !important;
-  left: var(--iuPdfFx) !important;
-  top: var(--iuPdfFy) !important;
-  width: var(--iuPdfFw) !important;
-  height: var(--iuPdfFh) !important;
-  z-index: 35000;
-  background: rgba(0,0,0,.4);
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-}
-body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal {
-  position: fixed !important;
-  left: var(--iuPdfFx) !important;
-  top: var(--iuPdfFy) !important;
-  width: var(--iuPdfFw) !important;
-  height: var(--iuPdfFh) !important;
-  z-index: 35001;
-  display: flex !important;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 18px;
-  box-sizing: border-box;
-  pointer-events: none !important;
-  overflow: auto;
-}
-body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal > * {
-  pointer-events: auto;
+/* PDF convert — open-from-top backdrop + panel clamped to FEED (MIN, SAFE) */
+@supports (inset: 0) {
+  :root {
+    --iuPdfFx: 0px;
+    --iuPdfFy: 0px;
+    --iuPdfFw: 100vw;
+    --iuPdfFh: 100vh;
+  }
+  /* BACKDROP LAYER — always full viewport from top */
+  #iu-pdfConvertOverlay.iu-pdfconvert-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    z-index: 9999 !important;
+    background: rgba(0,0,0,.4);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+  body.iu-pdf-modal-open #iu-pdfConvertOverlay.iu-pdfconvert-overlay {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  /* PANEL LAYER — exactly FEED rect (x/y/w/h == FEED) */
+  #iu-pdfConvertModal.iu-pdfconvert-modal {
+    position: fixed !important;
+    left: var(--iuPdfFx) !important;
+    top: var(--iuPdfFy) !important;
+    width: var(--iuPdfFw) !important;
+    height: var(--iuPdfFh) !important;
+    max-width: var(--iuPdfFw) !important;
+    max-height: var(--iuPdfFh) !important;
+    z-index: 10000 !important;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+    display: flex !important;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 18px;
+    box-sizing: border-box;
+  }
+  body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: none;
+    overflow: auto;
+  }
+  body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal > * {
+    pointer-events: auto;
+  }
+  body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal :is(.iu-aiModal, .iuModalPanel, .modal-body, .content) {
+    max-height: 100%;
+  }
 }
 
