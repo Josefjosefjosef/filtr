@@ -9083,6 +9083,18 @@ function buildVideoAsArticleCard(it) {
     sms: { title: "Poslat SMS zdarma", items: [{ name: "SMS zdarma", url: "https://www.smszdarma.cz", desc: "Posílání SMS zdarma", external: true }] },
     convert: {
       title: "Převod na Word, PDF",
+      toolsHtml: '<div class="iuQCard" data-iu="pdfconvert-tools">' +
+        '<div class="iu-pdfConvertInfo" role="status"><p>Převod probíhá pouze ve vašem prohlížeči.</p><p>Soubor ani text nikam neodesíláme.</p><p>Po zavření okna se nic neukládá.</p></div>' +
+        '<div class="iu-pdfConvertTabs" role="tablist">' +
+        '<button type="button" role="tab" data-iu="tab-word" aria-selected="false" aria-controls="iu-pdf-tab-word-panel">Word → PDF</button>' +
+        '<button type="button" role="tab" data-iu="tab-text" aria-selected="true" aria-controls="iu-pdf-tab-text-panel">Text → PDF</button></div>' +
+        '<div id="iu-pdf-tab-word-panel" role="tabpanel" data-iu="tab-word-panel" hidden>' +
+        '<p class="iu-pdfConvertNote">Kvalita převodu závisí na složitosti dokumentu.</p>' +
+        '<input type="file" accept=".docx" data-iu="pdf-docx-input" aria-label="Vybrat soubor .docx" />' +
+        '<button type="button" data-iu="pdf-docx-generate" disabled>Převést a stáhnout PDF</button></div>' +
+        '<div id="iu-pdf-tab-text-panel" role="tabpanel" data-iu="tab-text-panel">' +
+        '<textarea data-iu="pdf-text-input" rows="6" placeholder="Vložte text…" aria-label="Text pro převod do PDF"></textarea>' +
+        '<button type="button" data-iu="pdf-text-generate">Vygenerovat PDF</button></div></div>',
       items: [
         { name: "PDF → Word", url: "https://www.ilovepdf.com/pdf_to_word", external: true },
         { name: "Word → PDF", url: "https://www.ilovepdf.com/word_to_pdf", external: true },
@@ -9207,7 +9219,116 @@ function buildVideoAsArticleCard(it) {
     e.preventDefault();
   });
 
+  function iuPdfConvertToolsBootstrap(quick) {
+    const root = quick && quick.querySelector("[data-iu=\"pdfconvert-tools\"]");
+    if (!root) return;
+    const tabWord = root.querySelector("[data-iu=\"tab-word\"]");
+    const tabText = root.querySelector("[data-iu=\"tab-text\"]");
+    const panelWord = root.querySelector("[data-iu=\"tab-word-panel\"]");
+    const panelText = root.querySelector("[data-iu=\"tab-text-panel\"]");
+    const docxInput = root.querySelector("[data-iu=\"pdf-docx-input\"]");
+    const docxBtn = root.querySelector("[data-iu=\"pdf-docx-generate\"]");
+    const textInput = root.querySelector("[data-iu=\"pdf-text-input\"]");
+    const textBtn = root.querySelector("[data-iu=\"pdf-text-generate\"]");
+    if (tabWord && panelWord) tabWord.addEventListener("click", function() {
+      if (tabText && panelText) { tabText.setAttribute("aria-selected", "false"); panelText.hidden = true; }
+      tabWord.setAttribute("aria-selected", "true"); panelWord.hidden = false;
+      if (typeof window._iuPdfWordTabActivated === "undefined") window._iuPdfWordTabActivated = true;
+      loadMammothIfNeeded();
+    });
+    if (tabText && panelText) tabText.addEventListener("click", function() {
+      if (tabWord && panelWord) { tabWord.setAttribute("aria-selected", "false"); panelWord.hidden = true; }
+      tabText.setAttribute("aria-selected", "true"); panelText.hidden = false;
+    });
+    if (docxInput && docxBtn) docxInput.addEventListener("change", function() { docxBtn.disabled = !docxInput.files || docxInput.files.length === 0; });
+    function loadScript(src, cb) {
+      var s = document.createElement("script");
+      s.src = (/^\//.test(src) ? "" : "/") + src;
+      s.onload = function() { if (typeof cb === "function") cb(); };
+      s.onerror = function() { if (typeof cb === "function") cb(new Error("load failed")); };
+      document.head.appendChild(s);
+    }
+    var jspdfLoaded = false;
+    function getJspdf(cb) {
+      if (typeof window.jspdf !== "undefined" && window.jspdf.jsPDF) { jspdfLoaded = true; cb(null, window.jspdf.jsPDF); return; }
+      if (jspdfLoaded) { cb(null, window.jspdf.jsPDF); return; }
+      var base = (location.pathname || "").indexOf("/projects") !== -1 ? "/assets/vendor/jspdf.umd.min.js" : "/assets/vendor/jspdf.umd.min.js";
+      loadScript(base, function(err) {
+        if (err || typeof window.jspdf === "undefined") { cb(err || new Error("jspdf")); return; }
+        jspdfLoaded = true; cb(null, window.jspdf.jsPDF);
+      });
+    }
+    var mammothLoaded = false;
+    function loadMammothIfNeeded() {
+      if (typeof window.mammoth !== "undefined") { mammothLoaded = true; return; }
+      if (mammothLoaded) return;
+      var base = (location.pathname || "").indexOf("/projects") !== -1 ? "/assets/vendor/mammoth.browser.min.js" : "/assets/vendor/mammoth.browser.min.js";
+      loadScript(base, function() { mammothLoaded = true; });
+    }
+    function doDocxConvert(file) {
+      if (typeof window.mammoth === "undefined") return;
+      var reader = new FileReader();
+      reader.onload = function() {
+        var ab = reader.result;
+        window.mammoth.convertToHtml({ arrayBuffer: ab }).then(function(result) {
+          var html = result.value || "";
+          var div = document.createElement("div");
+          div.innerHTML = html;
+          var text = (div.textContent || div.innerText || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
+          getJspdf(function(err, JsPDF) {
+            if (err || !JsPDF) return;
+            var doc = new JsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+            var pageW = doc.internal.pageSize.getWidth();
+            var margin = 20, y = 20, lineHeight = 7, maxW = pageW - 40;
+            var lines = text.split(/\n/);
+            for (var i = 0; i < lines.length; i++) {
+              var parts = doc.splitTextToSize(lines[i] || " ", maxW);
+              for (var j = 0; j < parts.length; j++) {
+                if (y > 270) { doc.addPage(); y = 20; }
+                doc.text(parts[j], 20, y); y += lineHeight;
+              }
+            }
+            var blob = doc.output("blob");
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement("a"); a.href = url; a.download = "document.pdf"; a.click();
+            setTimeout(function() { URL.revokeObjectURL(url); }, 500);
+          });
+        }).catch(function() {});
+      };
+      reader.readAsArrayBuffer(file);
+    }
+    if (textBtn && textInput) textBtn.addEventListener("click", function() {
+      getJspdf(function(err, JsPDF) {
+        if (err || !JsPDF) return;
+        var text = (textInput.value || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+        var lines = text.split(/\n/);
+        var doc = new JsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+        var pageW = doc.internal.pageSize.getWidth();
+        var margin = 20, y = 20, lineHeight = 7, maxW = pageW - 40;
+        for (var i = 0; i < lines.length; i++) {
+          var parts = doc.splitTextToSize(lines[i] || " ", maxW);
+          for (var j = 0; j < parts.length; j++) {
+            if (y > 270) { doc.addPage(); y = 20; }
+            doc.text(parts[j], margin, y); y += lineHeight;
+          }
+        }
+        var blob = doc.output("blob");
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a"); a.href = url; a.download = "text.pdf"; a.click();
+        setTimeout(function() { URL.revokeObjectURL(url); }, 500);
+      });
+    });
+    if (docxBtn && docxInput) docxBtn.addEventListener("click", function() {
+      var file = docxInput.files && docxInput.files[0];
+      if (!file) return;
+      if (typeof window.mammoth === "undefined") { loadMammothIfNeeded(); setTimeout(function() { if (window.mammoth) doDocxConvert(file); }, 300); return; }
+      doDocxConvert(file);
+    });
+  }
+
   function iuShowQuickFeed(key){
+    if (typeof window.__iuDebugRca === "undefined") window.__iuDebugRca = (typeof location !== "undefined" && location.search || "").indexOf("iuDebug=1") !== -1;
+    if (window.__iuDebugRca) console.log("[iuShowQuickFeed] key=", key);
     const keyNorm = String(key || "").trim().toLowerCase();
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
@@ -9362,12 +9483,14 @@ function buildVideoAsArticleCard(it) {
           </div>`;
         }).join("");
       };
+      const toolsBlock = (data.toolsHtml != null && data.toolsHtml !== "") ? data.toolsHtml : "";
       const doRender = (services) => {
         quick.innerHTML = `
           <div class="iuQHead">
             <div class="iuQTitle">${iuQfEscape(data.title)}</div>
             <div class="iuQHeadActions">${shareBtnHtml}<button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
           </div>
+          ${toolsBlock}
           <div class="iuQCard">
             <div class="iuQGrid">
               ${renderCards(services || data.items)}
@@ -9375,9 +9498,28 @@ function buildVideoAsArticleCard(it) {
           </div>
           ${aiSeoBlock}
         `;
+        if (window.__iuDebugRca && keyNorm === "convert") {
+          var hasTools = !!quick.querySelector('[data-iu="pdfconvert-tools"]');
+          console.log("[iuShowQuickFeed] afterRender hasTools=", hasTools);
+          try {
+            var mo = new MutationObserver(function(muts) {
+              for (var i = 0; i < muts.length; i++) {
+                if (muts[i].type === "childList" && muts[i].removedNodes && muts[i].removedNodes.length) {
+                  for (var j = 0; j < muts[i].removedNodes.length; j++) {
+                    var n = muts[i].removedNodes[j];
+                    if (n && n.nodeType === 1 && (n.getAttribute && n.getAttribute("data-iu") === "pdfconvert-tools" || (n.querySelector && n.querySelector("[data-iu=\"pdfconvert-tools\"]")))) console.log("[iuShowQuickFeed] RCA: pdfconvert-tools removed");
+                  }
+                }
+              }
+            });
+            mo.observe(quick, { childList: true, subtree: true });
+            setTimeout(function() { mo.disconnect(); }, 5000);
+          } catch (_) {}
+        }
         if (isAi) {
           try { renderAiVideos(quick); } catch (e) { console.warn("renderAiVideos", e); }
         }
+        if (isConvert) iuPdfConvertToolsBootstrap(quick);
       };
       if (isAi) {
         doRender(data.items);
