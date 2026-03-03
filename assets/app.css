@@ -15182,3 +15182,9 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   font-weight: 600;
 }
 
+/* FONTWEIGHT FIX v1 (AI/Balíky/Nákup domu) — only these 3 are <button>, rest are <a>; UA gives button bold */
+.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks button.iu-mmQuickItem,
+.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks button.iu-mmQuickItem span:not(.iuIconTile) {
+  font-weight: 600 !important;
+}
+
