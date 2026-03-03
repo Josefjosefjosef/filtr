@@ -15196,7 +15196,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
     --iuPdfFw: 100vw;
     --iuPdfFh: 100vh;
   }
-  /* BACKDROP LAYER — always full viewport from top */
+  /* BACKDROP LAYER — always full viewport from top; above feed like translator */
   #iu-pdfConvertOverlay.iu-pdfconvert-overlay {
     position: fixed !important;
     inset: 0 !important;
@@ -15204,18 +15204,18 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
     height: 100vh !important;
     max-width: 100vw !important;
     max-height: 100vh !important;
-    z-index: 9999 !important;
+    z-index: 35000 !important;
     background: rgba(0,0,0,.4);
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
   }
   body.iu-pdf-modal-open #iu-pdfConvertOverlay.iu-pdfconvert-overlay {
-    visibility: visible;
-    opacity: 1;
+    visibility: visible !important;
+    opacity: 1 !important;
     pointer-events: auto;
   }
-  /* PANEL LAYER — exactly FEED rect (x/y/w/h == FEED); override legacy translateX(-50%) */
+  /* PANEL LAYER — exactly FEED rect (x/y/w/h == FEED); override legacy translateX(-50%); P0 min size so never 0×0 */
   #iu-pdfConvertModal.iu-pdfconvert-modal {
     position: fixed !important;
     left: var(--iuPdfFx) !important;
@@ -15224,8 +15224,10 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
     height: var(--iuPdfFh) !important;
     max-width: var(--iuPdfFw) !important;
     max-height: var(--iuPdfFh) !important;
+    min-width: 320px;
+    min-height: 240px;
     transform: none !important;
-    z-index: 10000 !important;
+    z-index: 35001 !important;
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
@@ -15237,8 +15239,8 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
     box-sizing: border-box;
   }
   body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal {
-    visibility: visible;
-    opacity: 1;
+    visibility: visible !important;
+    opacity: 1 !important;
     pointer-events: none;
     overflow: auto;
   }
