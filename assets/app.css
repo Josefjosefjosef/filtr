@@ -14746,3 +14746,41 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem,
   font-size: 1.2em;
 }
 
+/* infoUzel.cz — Prehled dne: ONLY 7 buttons (Zprávy, Sport, Technologie & Internet, Finance, Bydlení & Hobby, Zdraví, Cestování) green #10B981 */
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="media"],
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="sport"],
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tech"],
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="finance"],
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="home"],
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="zdravi"],
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="travel"]{
+  border: 2px solid #10B981 !important;
+  color: #10B981 !important;
+}
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="media"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="media"] .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="sport"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="sport"] .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tech"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tech"] .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="finance"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="finance"] .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="home"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="home"] .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="zdravi"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="zdravi"] .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="travel"] .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="travel"] .iu-leftNavLabel{
+  color: #10B981 !important;
+}
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="media"] .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="sport"] .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tech"] .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="finance"] .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="home"] .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="zdravi"] .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="travel"] .iu-leftNavIcon svg{
+  fill: #10B981 !important;
+  stroke: #10B981 !important;
+}
+
