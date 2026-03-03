@@ -14841,3 +14841,8 @@ header.iuTopbar.topbar-new,
   border-bottom: none !important;
 }
 
+/* P0: apply page gradient to html/body (override later #fff !important at ~8108, ~12876) */
+html, body{
+  background: var(--iu-page-bg) !important;
+}
+
