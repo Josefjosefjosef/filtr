@@ -9300,10 +9300,25 @@ function buildVideoAsArticleCard(it) {
       }
     }
     function normalizePdfText(t) {
-      return (t || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").replace(/\t/g, "    ").trim();
+      return (t || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").replace(/\t/g, "    ");
     }
-    function generateTextPdfBlob(text, done) {
+    function iuPdfTextHash(s) {
+      var h = 0;
+      for (var i = 0; i < s.length; i++) h = ((h << 5) - h) + s.charCodeAt(i) | 0;
+      return h;
+    }
+    function iuPdfGenerateFromPlainText(text, opts, done) {
+      opts = opts || {};
       var normalized = normalizePdfText(text);
+      var forRender = normalized.length ? normalized : " ";
+      window._iuPdfLastTextHash = iuPdfTextHash(normalized);
+      if (opts.source === "word") {
+        window._iuPdfLastSource = "word";
+        window._iuPdfLastTextLen = forRender.length;
+      } else {
+        window._iuPdfLastSource = "text";
+        window._iuPdfLastTextLen = forRender.length;
+      }
       loadPdfLibAndFont(function(err, fontBytes) {
         if (err || !fontBytes) { done(err); return; }
         var PDFLib = window.PDFLib;
@@ -9317,10 +9332,11 @@ function buildVideoAsArticleCard(it) {
             var pageW = 595.28 - marginPt * 2;
             var lineHeight = fontSize * 1.25;
             var y = marginPt;
-            var lines = normalized.split(/\n/);
+            var lines = forRender.split(/\n/);
             var page = pdfDoc.addPage([595.28, 841.89]);
             for (var i = 0; i < lines.length; i++) {
-              var line = lines[i] || " ";
+              var line = lines[i];
+              if (line === undefined || line === "") line = " ";
               var chunks = [];
               var rest = line;
               while (rest.length > 0) {
@@ -9345,9 +9361,9 @@ function buildVideoAsArticleCard(it) {
             return pdfDoc.save();
           });
         }).then(function(bytes) {
-          window._iuPdfLastEngine = "pdf-lib+ttf-unicode";
+          window._iuPdfLastEngine = "pdf-lib+ttf-unicode-v2";
           var blob = new Blob([bytes], { type: "application/pdf" });
-          done(null, blob);
+          done(null, { blob: blob, fileName: opts.fileName || "document.pdf" });
         }).catch(function(e) { done(e); });
       });
     }
@@ -9357,46 +9373,45 @@ function buildVideoAsArticleCard(it) {
       if (mammothLoaded) { if (typeof cb === "function") cb(); return; }
       loadScript(vendorBase + "/mammoth.browser.min.js", function() { mammothLoaded = true; if (typeof cb === "function") cb(); });
     }
+    function showWordPdfError(msg) {
+      var ra = document.querySelector("#iuQuickFeed [data-iu=\"pdf-word-result-actions\"]");
+      if (ra) { ra.textContent = msg || ""; ra.hidden = !msg; }
+    }
     function doDocxConvert(file, action) {
       action = action || "download";
+      showWordPdfError("");
       loadMammothIfNeeded(function() {
-        if (typeof window.mammoth === "undefined") return;
+        if (typeof window.mammoth === "undefined") { showWordPdfError("Převod není k dispozici."); return; }
         var reader = new FileReader();
         reader.onload = function() {
           var ab = reader.result;
-          function runWithText(text) {
-            var t = (text || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
-            generateTextPdfBlob(t || " ", function(err, blob) {
-              if (err || !blob) return;
+          window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) {
+            var raw = (r && r.value) ? String(r.value) : "";
+            var text = normalizePdfText(raw).trim();
+            if (!text) { showWordPdfError("Dokument je prázdný nebo se nepodařilo přečíst text."); return; }
+            iuPdfGenerateFromPlainText(text, { source: "word", fileName: "document.pdf" }, function(err, out) {
+              if (err || !out || !out.blob) { showWordPdfError("Generování PDF selhalo."); return; }
+              showWordPdfError("");
               if (action === "share") {
-                var f = new File([blob], "document.pdf", { type: "application/pdf" });
+                var f = new File([out.blob], out.fileName || "document.pdf", { type: "application/pdf" });
                 if (navigator.canShare && navigator.canShare({ files: [f] })) navigator.share({ files: [f] }).catch(function() {});
               } else {
-                var url = URL.createObjectURL(blob);
-                var a = document.createElement("a"); a.href = url; a.download = "document.pdf"; a.click();
+                var url = URL.createObjectURL(out.blob);
+                var a = document.createElement("a"); a.href = url; a.download = out.fileName || "document.pdf"; a.click();
                 setTimeout(function() { URL.revokeObjectURL(url); }, 500);
               }
             });
-          }
-          window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) {
-            var text = (r.value || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
-            if (text) { runWithText(text); return; }
-            window.mammoth.convertToHtml({ arrayBuffer: ab }).then(function(result) {
-              var div = document.createElement("div");
-              div.innerHTML = result.value || "";
-              var t = (div.textContent || div.innerText || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
-              runWithText(t || " ");
-            }).catch(function() { runWithText(""); });
-          }).catch(function() { runWithText(""); });
+          }).catch(function() { showWordPdfError("Soubor nelze přečíst. Zkuste jiný .docx soubor."); });
         };
         reader.readAsArrayBuffer(file);
       });
     }
     if (textBtn && textInput) textBtn.addEventListener("click", function() {
-      generateTextPdfBlob(textInput.value, function(err, blob) {
-        if (err || !blob) return;
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement("a"); a.href = url; a.download = "text.pdf"; a.click();
+      var text = textInput.value;
+      iuPdfGenerateFromPlainText(text, { source: "text", fileName: "text.pdf" }, function(err, out) {
+        if (err || !out || !out.blob) return;
+        var url = URL.createObjectURL(out.blob);
+        var a = document.createElement("a"); a.href = url; a.download = out.fileName || "text.pdf"; a.click();
         setTimeout(function() { URL.revokeObjectURL(url); }, 500);
       });
     });
