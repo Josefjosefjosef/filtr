@@ -15039,6 +15039,9 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   flex-wrap: wrap;
   margin-top: 0.5rem;
 }
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iuPdfFileStatusRow {
+  margin-top: 8px;
+}
 #iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfShareConvertBtn {
   padding: 0.5rem 0.75rem;
   font: inherit;
@@ -15084,7 +15087,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   pointer-events: none;
 }
 #iuQuickFeed [data-iu="pdfconvert-tools"] .iu-pdfFileBtn {
-  margin-right: 0.5rem;
   padding: 0.5rem 1rem;
   font: inherit;
   cursor: pointer;
@@ -15092,14 +15094,13 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   border-radius: 4px;
   background: #f5f5f5;
 }
-#iuQuickFeed [data-iu="pdfconvert-tools"] .iu-file-label {
+#iuQuickFeed [data-iu="pdfconvert-tools"] .iuPdfFileStatusRow .iu-file-label {
   color: #666;
-  margin-left: 0.5rem;
   font-size: 0.9rem;
 }
-#iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-docx-generate"],
+#iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-download-convert"],
 #iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-text-generate"] {
-  margin-top: 0.5rem;
+  margin-top: 0;
   padding: 0.5rem 1rem;
   font: inherit;
   cursor: pointer;

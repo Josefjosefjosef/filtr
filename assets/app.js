@@ -9090,12 +9090,14 @@ function buildVideoAsArticleCard(it) {
         '<button type="button" role="tab" data-iu="tab-text" aria-selected="true" aria-controls="iu-pdf-tab-text-panel">Text → PDF</button></div></div>' +
         '<div id="iu-pdf-tab-word-panel" role="tabpanel" data-iu="tab-word-panel" hidden>' +
         '<p class="iu-pdfConvertNote">Kvalita převodu závisí na složitosti dokumentu. Složitý Word může být převeden jako čistý text.</p>' +
-        '<div class="iuPdfActionRow">' +
+        '<div class="iuPdfActionRow" data-iu="pdf-action-row">' +
         '<input type="file" id="iuWordFileInput" accept=".docx" data-iu="pdf-docx-input" hidden />' +
         '<button type="button" id="iuWordFileBtn" class="iu-pdfFileBtn">Vybrat soubor (.docx)</button>' +
-        '<span id="iuWordFileLabel" class="iu-file-label">Žádný soubor nebyl vybrán</span>' +
-        '<button type="button" data-iu="pdf-docx-generate" disabled>Převést a stáhnout PDF</button>' +
+        '<button type="button" data-iu="pdf-download-convert" disabled>Převést a stáhnout PDF</button>' +
         '<button type="button" class="iu-pdfShareConvertBtn" data-iu="pdf-share-convert" disabled>Převést a přeposlat PDF</button>' +
+        '</div>' +
+        '<div class="iuPdfFileStatusRow" data-iu="pdf-file-status">' +
+        '<span id="iuWordFileLabel" class="iu-file-label">Žádný soubor nebyl vybrán</span>' +
         '<span class="iu-pdfShareUnsupported" id="iuPdfShareUnsupported" aria-hidden="true">Sdílení není podporováno</span></div>' +
         '<div class="iu-pdfResultActions" data-iu="pdf-word-result-actions" hidden></div></div>' +
         '<div id="iu-pdf-tab-text-panel" role="tabpanel" data-iu="tab-text-panel">' +
@@ -9238,7 +9240,7 @@ function buildVideoAsArticleCard(it) {
     const docxInput = root.querySelector("[data-iu=\"pdf-docx-input\"]");
     const wordFileBtn = document.getElementById("iuWordFileBtn");
     const wordFileLabel = document.getElementById("iuWordFileLabel");
-    const docxBtn = root.querySelector("[data-iu=\"pdf-docx-generate\"]");
+    const docxBtn = root.querySelector("[data-iu=\"pdf-download-convert\"]");
     const textInput = root.querySelector("[data-iu=\"pdf-text-input\"]");
     const textBtn = root.querySelector("[data-iu=\"pdf-text-generate\"]");
     if (wordFileBtn && docxInput) wordFileBtn.addEventListener("click", function() { docxInput.click(); });
