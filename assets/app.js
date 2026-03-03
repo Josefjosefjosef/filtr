@@ -13284,6 +13284,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     document.body.classList.add("iu-pdf-modal-open");
     document.documentElement.style.overflow = "hidden";
     updatePdfOverlayRect();
+    if (typeof requestAnimationFrame !== "undefined") requestAnimationFrame(function() { updatePdfOverlayRect(); });
     if (!resizeListener) {
       resizeListener = function() { if (panel && !panel.hidden) updatePdfOverlayRect(); };
       window.addEventListener("resize", resizeListener);
