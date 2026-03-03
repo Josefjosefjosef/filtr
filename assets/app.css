@@ -14862,3 +14862,9 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="vzdelavan
   filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(10deg) brightness(98%) contrast(92%) !important;
 }
 
+/* LEFT RAIL — all button labels under icons #2E3238; overrides accent-specific label colors */
+body #iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavLabel,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel{
+  color: #2E3238 !important;
+}
+
