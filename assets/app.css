@@ -14862,10 +14862,11 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="vzdelavan
   filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(10deg) brightness(98%) contrast(92%) !important;
 }
 
-/* LEFT RAIL — label text under icons (ALL buttons, whole rail); overrides accent-specific label colors */
+/* LEFT RAIL — label under icons: color #2E3238 + font-size +20% (1.2em) */
 body aside#iuLeftRail.iu-leftRail .iu-leftNav .iu-leftNavItem[class] .iu-leftNavLabel,
 body #iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavLabel,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel{
   color: #2E3238 !important;
+  font-size: 1.2em;
 }
 
