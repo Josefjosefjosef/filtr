@@ -15174,3 +15174,11 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   font-size: 90% !important;
 }
 
+/* RIGHT COLUMN — unify icon labels typography (Moje služby + Rychlé odkazy)
+   EXCLUDES: Add/Remove CTA (#iuMailboxAdd, #iuMailboxRemove) + "Převod na PDF" row (.iu-mojeSluzbyPdfRow / .iu-pdfConvertOpen) */
+.layout > aside.accordionCol .mindMenu .iu-mojeSluzby .iu-mmQuickItem .iu-mmLabel,
+.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem span:not(.iuIconTile) {
+  font-size: 13px;
+  font-weight: 600;
+}
+
