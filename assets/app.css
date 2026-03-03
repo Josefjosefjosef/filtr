@@ -14795,7 +14795,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"
   stroke: #10B981 !important;
 }
 
-/* P0: 4 accents (finance/home/zdravi/travel) — <use> sprite ignores svg *; force color + currentColor on wrapper/svg so symbol inherits */
+/* P0: 4 accents (finance/home/zdravi/travel) — varianta B: <use> sprite; force color + currentColor on wrapper/svg/use so symbol inherits */
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="finance"] .iu-leftNavIcon,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="home"] .iu-leftNavIcon,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zdravi"] .iu-leftNavIcon,
@@ -14807,6 +14807,13 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="home"] 
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zdravi"] .iu-leftNavIcon svg,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"] .iu-leftNavIcon svg{
   color: #10B981 !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="finance"] .iu-leftNavIcon svg use,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="home"] .iu-leftNavIcon svg use,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zdravi"] .iu-leftNavIcon svg use,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"] .iu-leftNavIcon svg use{
   fill: currentColor !important;
   stroke: currentColor !important;
 }
