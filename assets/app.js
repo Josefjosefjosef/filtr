@@ -9430,10 +9430,11 @@ function buildVideoAsArticleCard(it) {
             window.mammoth.convertToHtml({ arrayBuffer: ab }, convertImage ? { convertImage: convertImage } : {}).then(function(result) {
               var html = (result && result.value) ? String(result.value) : "";
               if (!html || /^\s*$/.test(html)) { fallbackToText(); return; }
+              if (html.length < 50) { fallbackToText(); return; }
               if (!wordHtmlWrapper) { fallbackToText(); return; }
               wordHtmlWrapper.innerHTML = html;
-              var hasImg = html.indexOf("<img") !== -1;
-              var hasTable = html.indexOf("<table") !== -1;
+              var hasImg = /<img\b/i.test(html);
+              var hasTable = /<table\b/i.test(html);
               var textLen = (wordHtmlWrapper.textContent || "").length;
               if (!hasImg && !hasTable && (!textLen || /^\s*$/.test(wordHtmlWrapper.textContent))) { fallbackToText(); return; }
               function runExport() {
