@@ -1,0 +1,21 @@
+# PROD /projects/ — source of truth (P0, STOP-SHIP)
+
+## Referenční URL
+
+**JEDINÁ** referenční produkční URL pro ověření: **https://infouzel.cz/projects/**
+
+Úkol je splněný **až když** je výsledek reálně vidět a prokazatelný na této URL (DOM důkaz + klikatelnost + CLS=0).
+
+Jakýkoli „PASS“ bez ověření na /projects/ je **neplatný**.
+
+## Povinný proof (PASS musí obsahovat)
+
+1. **(a)** Ověření markeru v nasazeném JS (deploy gate): stažení app*.js z PROD, kontrola že obsahuje relevantní marker (např. pdfconvert-tools / toolsHtml).
+2. **(b)** DOM důkaz viditelnosti: `[data-iu="pdfconvert-tools"]` nebo jiný cílový prvek visible + bbox > 0.
+3. **(c)** Klikatelnost panelu přes `elementFromPoint` ve středu panelu (musí vracet panel nebo jeho child).
+4. **(d)** CLS=0 přes 3 reloady (goto + 3× reload).
+
+## Fail-fast
+
+- Pokud není nasazeno (deploy gate FAIL) → **STOP-SHIP „DEPLOY NOT COMPLETE“**. Nesmí se pokračovat na UI proof viditelnosti.
+- Proof skripty pouze v %TEMP%, necommitovat. Do chatu jen RAW stdout v ~~~text blocích.
