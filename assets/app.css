@@ -14870,3 +14870,30 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel{
   font-size: 1.2em !important;
 }
 
+/* RIGHT COLUMN – FORCE TEXT COLOR UNIFICATION (scope: accordionCol = right column, mindMenu, quick links, moje služby) */
+.layout > aside.accordionCol,
+.layout > aside.accordionCol h1,
+.layout > aside.accordionCol h2,
+.layout > aside.accordionCol h3,
+.layout > aside.accordionCol h4,
+.layout > aside.accordionCol h5,
+.layout > aside.accordionCol h6,
+.layout > aside.accordionCol p,
+.layout > aside.accordionCol span,
+.layout > aside.accordionCol a,
+.layout > aside.accordionCol li,
+.layout > aside.accordionCol .mindMenu,
+.layout > aside.accordionCol .mindMenu *:not(.iu-btn):not(.btn-add):not(.btn-remove):not(#iuMailboxAdd):not(#iuMailboxRemove),
+.layout > aside.accordionCol .iu-mmQuickLinks,
+.layout > aside.accordionCol .iu-mmQuickLinks *,
+.layout > aside.accordionCol .iu-mojeSluzby,
+.layout > aside.accordionCol .iu-mojeSluzby * {
+  color: #2E3238 !important;
+}
+
+/* underline lines under headings if border-based */
+.layout > aside.accordionCol h2::after,
+.layout > aside.accordionCol h3::after {
+  border-color: #2E3238 !important;
+}
+
