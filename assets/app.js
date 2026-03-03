@@ -9400,6 +9400,11 @@ function buildVideoAsArticleCard(it) {
             var ab = reader.result;
             window._iuPdfLastSource = "word";
             window._iuPdfLastWordMode = "word-pending";
+            function isZipMagic(buffer) {
+              if (!buffer || buffer.byteLength < 4) return false;
+              var u8 = new Uint8Array(buffer);
+              return u8[0] === 0x50 && u8[1] === 0x4B && u8[2] === 0x03 && u8[3] === 0x04;
+            }
             function fallbackToText() {
               window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) {
                 var raw = (r && r.value) ? String(r.value) : "";
@@ -9417,9 +9422,15 @@ function buildVideoAsArticleCard(it) {
                 });
               }).catch(function(e) {
                 window._iuPdfLastWordError = String(e && (e.stack || e.message || e));
-                reject(new Error("read"));
+                window._iuPdfLastWordMode = "word-text-fallback";
+                iuPdfGenerateFromPlainText("Dokument se nepodařilo přečíst.", { source: "word", fileName: "document.pdf" }, function(err, out) {
+                  if (err || !out || !out.blob) { reject(err || new Error("pdf")); return; }
+                  window._iuPdfLastPdfBytes = out.blob.size;
+                  resolve(out);
+                });
               });
             }
+            if (!isZipMagic(ab)) { fallbackToText(); return; }
             var convertImage = window.mammoth.images && window.mammoth.images.inline
               ? window.mammoth.images.inline(function(image) {
                   return image.read("base64").then(function(base64) {
