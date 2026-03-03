@@ -13259,6 +13259,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       cancelAnimationFrame(pdfRectRafId);
       pdfRectRafId = null;
     }
+    panel.classList.remove("iuPdfPanelVisibleFix");
+    panel.style.display = "";
+    panel.style.visibility = "";
+    panel.style.opacity = "";
+    panel.style.pointerEvents = "";
     overlay.hidden = true;
     panel.hidden = true;
     document.body.classList.remove("iu-pdf-modal-open");
@@ -13319,13 +13324,30 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }
   }
 
+  function getPdfOverlayRoot() {
+    var root = document.getElementById("iuModalRoot");
+    if (!root) {
+      root = document.createElement("div");
+      root.id = "iuModalRoot";
+      root.style.cssText = "position:fixed;inset:0;z-index:9998;pointer-events:none;";
+      document.body.appendChild(root);
+    }
+    return root;
+  }
+
   var resizeListener = null;
   function openPdfConvertModal() {
     if (!getEls()) return;
-    if (overlay.parentNode !== document.body) document.body.appendChild(overlay);
-    if (panel.parentNode !== document.body) document.body.appendChild(panel);
+    var root = getPdfOverlayRoot();
+    if (overlay.parentNode !== root) root.appendChild(overlay);
+    if (panel.parentNode !== root) root.appendChild(panel);
     overlay.hidden = false;
     panel.hidden = false;
+    panel.classList.add("iuPdfPanelVisibleFix");
+    panel.style.display = "flex";
+    panel.style.visibility = "visible";
+    panel.style.opacity = "1";
+    panel.style.pointerEvents = "auto";
     document.body.classList.add("iu-pdf-modal-open");
     document.documentElement.style.overflow = "hidden";
     stabilizeAndApplyPdfRect(5);

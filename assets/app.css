@@ -2949,6 +2949,12 @@ body.iu-pdf-modal-open #iu-pdfConvertModal {
   box-sizing: border-box;
   pointer-events: auto;
 }
+body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal.iuPdfPanelVisibleFix {
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  background: rgba(255,255,255,0.96) !important;
+}
 .iu-pdfconvert-modal .iu-aiModal {
   width: 100%;
   max-width: 100%;
@@ -15246,6 +15252,10 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   }
   body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal > * {
     pointer-events: auto;
+  }
+  body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal.iuPdfPanelVisibleFix {
+    pointer-events: auto !important;
+    background: rgba(255,255,255,0.96) !important;
   }
   body.iu-pdf-modal-open #iu-pdfConvertModal.iu-pdfconvert-modal :is(.iu-aiModal, .iuModalPanel, .modal-body, .content) {
     max-height: 100%;
