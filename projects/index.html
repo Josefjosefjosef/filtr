@@ -1455,10 +1455,10 @@ style-src 'self' 'unsafe-inline' https:;
                           <span>Překladač</span>
                         </a>
 
-                        <button class="iu-mmQuickItem" type="button" data-iu="pdf-convert-open" data-iuq="convert" aria-label="Převod na Word, PDF">
+                        <a class="iu-mmQuickItem" role="listitem" data-iuq="convert" href="https://www.ilovepdf.com" target="_blank" rel="noopener" aria-label="Převod na Word, PDF">
                           <span class="iuIconTile"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i></span>
                           <span>Převod na Word, PDF</span>
-                        </button>
+                        </a>
 
                         <button class="iu-mmQuickItem" type="button" data-iuq="baliky" aria-label="Balíky" data-iu-action="parcels" id="iuParcelsBtn">
                           <span class="iuIconTile"><i class="fa-solid fa-box" aria-hidden="true"></i></span>
@@ -1550,38 +1550,6 @@ style-src 'self' 'unsafe-inline' https:;
                 </div>
                 <div class="iu-aiPanelBody" id="iu-mojeSluzbyBody">
                   <!-- JS-rendered: Banka / Bakaláři / Zdravotní pojišťovna -->
-                </div>
-              </div>
-            </div>
-            <!-- Převod na Word/PDF (over feed, client-side only) -->
-            <div id="iu-pdfConvertOverlay" class="iu-aiOverlay" hidden aria-hidden="true"></div>
-            <div id="iu-pdfConvertPanel" class="iu-aiPanel iuModalCenterFeed" hidden role="dialog" aria-modal="true" aria-label="Převod na Word, PDF" data-iu="pdf-convert-modal">
-              <div class="iu-aiModal iu-pdfConvertModal">
-                <div class="iu-aiPanelHeader">
-                  <span>Převod na Word, PDF</span>
-                  <div class="iu-aiPanelHeaderActions">
-                    <button class="iuAiClose iuModalClose" type="button" data-iu-close aria-label="Zavřít">×</button>
-                  </div>
-                </div>
-                <div class="iu-aiPanelBody iu-pdfConvertBody">
-                  <div class="iu-pdfConvertInfo" role="status">
-                    <p>Převod probíhá pouze ve vašem prohlížeči.</p>
-                    <p>Soubor ani text nikam neodesíláme.</p>
-                    <p>Po zavření okna se nic neukládá.</p>
-                  </div>
-                  <div class="iu-pdfConvertTabs" role="tablist">
-                    <button type="button" role="tab" data-iu="tab-word" aria-selected="false" aria-controls="iu-pdf-tab-word-panel">Word → PDF</button>
-                    <button type="button" role="tab" data-iu="tab-text" aria-selected="true" aria-controls="iu-pdf-tab-text-panel">Text → PDF</button>
-                  </div>
-                  <div id="iu-pdf-tab-word-panel" role="tabpanel" data-iu="tab-word-panel" hidden>
-                    <p class="iu-pdfConvertNote">Kvalita převodu závisí na složitosti dokumentu.</p>
-                    <input type="file" accept=".docx" data-iu="pdf-docx-input" aria-label="Vybrat soubor .docx" />
-                    <button type="button" data-iu="pdf-docx-generate" disabled>Převést a stáhnout PDF</button>
-                  </div>
-                  <div id="iu-pdf-tab-text-panel" role="tabpanel" data-iu="tab-text-panel">
-                    <textarea data-iu="pdf-text-input" rows="8" placeholder="Vložte text…" aria-label="Text pro převod do PDF"></textarea>
-                    <button type="button" data-iu="pdf-text-generate">Vygenerovat PDF</button>
-                  </div>
                 </div>
               </div>
             </div>
