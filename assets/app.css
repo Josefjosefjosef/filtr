@@ -14870,3 +14870,96 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel{
   font-size: 1.2em !important;
 }
 
+/* RIGHT COLUMN – FORCE TEXT COLOR UNIFICATION (v2, strict) */
+:root { --iu-rightcol-text: #2E3238; }
+
+/* scope: right column wrapper(s) */
+.rightCol,
+.layout > aside.accordionCol {
+  color: var(--iu-rightcol-text) !important;
+}
+
+/* scope: sections inside right column (both "names" + real project classes) */
+.layout > aside.accordionCol .mindMenu,
+.layout > aside.accordionCol .iu-mmQuickLinks,
+.layout > aside.accordionCol .iu-mojeSluzby,
+.rightCol .mindMenu,
+.rightCol .rychle-odkazy,
+.rightCol .moje-sluzby {
+  color: var(--iu-rightcol-text) !important;
+}
+
+/* force text color for common text nodes, but DO NOT touch Add/Remove CTA */
+.layout > aside.accordionCol :where(h1,h2,h3,h4,h5,h6,p,span,a,li,div,label,small,strong,em,b,i,u,code,pre,figcaption,dt,dd) {
+  color: var(--iu-rightcol-text) !important;
+}
+
+.layout > aside.accordionCol :where(a) {
+  color: var(--iu-rightcol-text) !important;
+  text-decoration-color: var(--iu-rightcol-text) !important;
+}
+
+/* do not override Add/Remove CTA (hard exceptions) */
+.layout > aside.accordionCol #iuMailboxAdd,
+.layout > aside.accordionCol #iuMailboxAdd *,
+.layout > aside.accordionCol #iuMailboxRemove,
+.layout > aside.accordionCol #iuMailboxRemove * {
+  color: inherit !important; /* keep their existing CTA styling */
+  text-decoration-color: inherit !important;
+}
+
+/* underline / lines under headings (if implemented via pseudo) */
+.layout > aside.accordionCol :where(h1,h2,h3,h4,h5,h6)::before,
+.layout > aside.accordionCol :where(h1,h2,h3,h4,h5,h6)::after {
+  border-color: var(--iu-rightcol-text) !important;
+  background-color: var(--iu-rightcol-text) !important;
+}
+
+/* v2 override: win over body/--iu-rr-title/--iu-rr-silver (same scope only) */
+body .layout > aside.accordionCol .mindMenu .iu-mmSectionHead .iu-mmSectionTitle,
+body .layout > aside.accordionCol .mindMenu .iu-mailboxes .iu-mmSectionHead .iu-mmSectionTitle,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead .iu-mmSectionTitle,
+body .layout > aside.accordionCol .mindMenu .iu-mmSectionHead .iu-mmSectionLine,
+body .layout > aside.accordionCol .mindMenu .iu-mailboxes .iu-mmSectionHead .iu-mmSectionLine,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead .iu-mmSectionLine,
+.layout > aside.accordionCol .mindMenu .iu-mailbox-pill,
+.layout > aside.accordionCol .mindMenu .iu-mailbox-pill *,
+.layout > aside.accordionCol .mindMenu .iu-mailbox-gear,
+.layout > aside.accordionCol .mindMenu .iu-mailbox-gear i,
+.layout > aside.accordionCol .mindMenu .iu-mailbox-gear svg,
+.layout > aside.accordionCol .mindMenu .iu-pill-social-slot,
+.layout > aside.accordionCol .mindMenu .iu-pill-social-icon,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItemLink,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem span,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile i,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmLabel {
+  color: var(--iu-rightcol-text) !important;
+  -webkit-text-fill-color: var(--iu-rightcol-text) !important;
+  fill: var(--iu-rightcol-text) !important;
+  stroke: var(--iu-rightcol-text) !important;
+}
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iuIconTile,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iuIconTile i {
+  color: var(--iu-rightcol-text) !important;
+  fill: var(--iu-rightcol-text) !important;
+  stroke: var(--iu-rightcol-text) !important;
+  -webkit-text-fill-color: var(--iu-rightcol-text) !important;
+}
+.layout > aside.accordionCol .iu-aiPanel,
+.layout > aside.accordionCol .iu-aiPanel * {
+  color: var(--iu-rightcol-text) !important;
+  -webkit-text-fill-color: var(--iu-rightcol-text) !important;
+}
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead .iu-mmSectionLine {
+  background: var(--iu-rightcol-text) !important;
+  background-color: var(--iu-rightcol-text) !important;
+}
+.layout > aside.accordionCol .mindMenu .iu-mailbox-gear i,
+.layout > aside.accordionCol .mindMenu .iu-mailbox-gear svg,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile i {
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
