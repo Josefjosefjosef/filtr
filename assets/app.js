@@ -9390,23 +9390,34 @@ function buildVideoAsArticleCard(it) {
       if (ra) { ra.textContent = msg || ""; ra.hidden = !msg; }
     }
     function iuGenerateWordPdfBlobFromSelectedDocx(file) {
+      window._iuPdfLastWordError = null;
       return new Promise(function(resolve, reject) {
-        if (!file) { reject(new Error("no file")); return; }
+        if (!file) { window._iuPdfLastWordError = "no file"; reject(new Error("no file")); return; }
         loadMammothIfNeeded(function() {
-          if (typeof window.mammoth === "undefined") { reject(new Error("mammoth")); return; }
+          if (typeof window.mammoth === "undefined") { window._iuPdfLastWordError = "mammoth"; reject(new Error("mammoth")); return; }
           var reader = new FileReader();
           reader.onload = function() {
             var ab = reader.result;
+            window._iuPdfLastWordMode = "word-pending";
             function fallbackToText() {
               window.mammoth.extractRawText({ arrayBuffer: ab }).then(function(r) {
                 var raw = (r && r.value) ? String(r.value) : "";
                 var text = normalizePdfText(raw);
-                if (!text || /^\s*$/.test(text)) { reject(new Error("empty")); return; }
+                if (!text || /^\s*$/.test(text)) { window._iuPdfLastWordError = "empty"; reject(new Error("empty")); return; }
                 window._iuPdfLastWordMode = "word-text-fallback";
                 iuPdfGenerateFromPlainText(text, { source: "word", fileName: "document.pdf" }, function(err, out) {
-                  if (err || !out || !out.blob) reject(err || new Error("pdf")); else resolve(out);
+                  if (err || !out || !out.blob) {
+                    window._iuPdfLastWordError = String(err && (err.stack || err.message || err));
+                    reject(err || new Error("pdf"));
+                  } else {
+                    window._iuPdfLastPdfBytes = out.blob ? out.blob.size : 0;
+                    resolve(out);
+                  }
                 });
-              }).catch(function() { reject(new Error("read")); });
+              }).catch(function(e) {
+                window._iuPdfLastWordError = String(e && (e.stack || e.message || e));
+                reject(new Error("read"));
+              });
             }
             var convertImage = window.mammoth.images && window.mammoth.images.inline
               ? window.mammoth.images.inline(function(image) {
@@ -9424,25 +9435,45 @@ function buildVideoAsArticleCard(it) {
               var hasTable = html.indexOf("<table") !== -1;
               var textLen = (wordHtmlWrapper.textContent || "").length;
               if (!hasImg && !hasTable && (!textLen || /^\s*$/.test(wordHtmlWrapper.textContent))) { fallbackToText(); return; }
-              loadHtml2PdfIfNeeded(function() {
-                if (typeof window.html2pdf === "undefined") { fallbackToText(); return; }
-                var opts = {
-                  image: { type: "png", quality: 1.0 },
-                  html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
-                  jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-                  pagebreak: { mode: ["css", "legacy"] }
-                };
-                window.html2pdf().set(opts).from(wordHtmlWrapper).toPdf().output("blob").then(function(blob) {
-                  if (!blob || blob.size < 5000) { fallbackToText(); return; }
-                  window._iuPdfLastWordMode = "word-html2pdf";
-                  window._iuPdfLastWordHtmlStats = { hasImg: hasImg, hasTable: hasTable, htmlLen: html.length, textLen: textLen };
-                  window._iuPdfLastPdfBytes = blob.size;
-                  resolve({ blob: blob, fileName: "document.pdf" });
-                }).catch(function() { fallbackToText(); });
+              function runExport() {
+                loadHtml2PdfIfNeeded(function() {
+                  if (typeof window.html2pdf === "undefined") { fallbackToText(); return; }
+                  var opts = {
+                    image: { type: "png", quality: 1.0 },
+                    html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+                    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+                    pagebreak: { mode: ["css", "legacy"] }
+                  };
+                  window.html2pdf().set(opts).from(wordHtmlWrapper).toPdf().outputPdf("blob").then(function(blob) {
+                    if (!blob || blob.size < 5000) { fallbackToText(); return; }
+                    window._iuPdfLastWordMode = "word-html2pdf";
+                    window._iuPdfLastWordHtmlStats = { hasImg: hasImg, hasTable: hasTable, htmlLen: html.length, textLen: textLen };
+                    window._iuPdfLastPdfBytes = blob.size;
+                    window._iuPdfLastWordError = null;
+                    resolve({ blob: blob, fileName: "document.pdf" });
+                  }).catch(function(e) {
+                    window._iuPdfLastWordError = String(e && (e.stack || e.message || e));
+                    fallbackToText();
+                  });
+                });
+              }
+              requestAnimationFrame(function() {
+                var imgs = wordHtmlWrapper.querySelectorAll ? wordHtmlWrapper.querySelectorAll("img") : [];
+                var n = imgs.length;
+                if (n === 0) { runExport(); return; }
+                var done = 0;
+                function onOne() { done++; if (done === n) runExport(); }
+                for (var i = 0; i < n; i++) {
+                  var img = imgs[i];
+                  if (img.complete) onOne(); else { img.onload = onOne; img.onerror = onOne; }
+                }
               });
-            }).catch(function() { fallbackToText(); });
+            }).catch(function(e) {
+              window._iuPdfLastWordError = String(e && (e.stack || e.message || e));
+              fallbackToText();
+            });
           };
-          reader.onerror = function() { reject(new Error("read")); };
+          reader.onerror = function() { window._iuPdfLastWordError = "FileReader error"; reject(new Error("read")); };
           reader.readAsArrayBuffer(file);
         });
       });
@@ -9464,6 +9495,8 @@ function buildVideoAsArticleCard(it) {
           }
         }).catch(function(err) {
           window._iuPdfLastWordMode = "word-error";
+          window._iuPdfLastWordError = String(err && (err.stack || err.message || err));
+          window._iuPdfLastPdfBytes = 0;
           if (String(err && err.message) === "empty") showWordPdfError("Dokument je prázdný nebo se nepodařilo přečíst text.");
           else if (String(err && err.message) === "read") showWordPdfError("Soubor nelze přečíst. Zkuste jiný .docx soubor.");
           else showWordPdfError("Generování PDF selhalo.");
