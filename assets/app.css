@@ -14847,3 +14847,18 @@ html, body{
   background: var(--iu-page-bg) !important;
 }
 
+/* P0: ZÁBAVA & ENGAGEMENT (data-rail=hry/culture/veda/vzdelavani) — border + icon #F59E0B; override one-color #2563EB */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="hry"],
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="culture"],
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="veda"],
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="vzdelavani"]{
+  border-color: #F59E0B !important;
+}
+/* Icon: svg+use sprite — force amber via filter (same approach as green 4; fill/stroke may not override symbol) */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="hry"] .iu-leftNavIcon svg,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="culture"] .iu-leftNavIcon svg,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="veda"] .iu-leftNavIcon svg,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="vzdelavani"] .iu-leftNavIcon svg{
+  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(10deg) brightness(98%) contrast(92%) !important;
+}
+
