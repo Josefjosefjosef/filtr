@@ -12705,7 +12705,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmS
   margin-top: var(--iu-mm-first-gap, 12px) !important;
 }
 
-/* === Rychl├ę odkazy VARIANTA 1: 2-col grid, barevn├ę ikony (symbol bez pozad├ş), wrap text, min-height 48px === */
+/* === Rychlé odkazy: 2-col grid, ikony viditelné a hittable (elementFromPoint), wrap text, min-height 48px === */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
