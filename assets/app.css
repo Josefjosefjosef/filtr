@@ -14795,6 +14795,22 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"
   stroke: #10B981 !important;
 }
 
+/* P0: 4 accents (finance/home/zdravi/travel) — <use> sprite ignores svg *; force color + currentColor on wrapper/svg so symbol inherits */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="finance"] .iu-leftNavIcon,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="home"] .iu-leftNavIcon,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zdravi"] .iu-leftNavIcon,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"] .iu-leftNavIcon{
+  color: #10B981 !important;
+}
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="finance"] .iu-leftNavIcon svg,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="home"] .iu-leftNavIcon svg,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zdravi"] .iu-leftNavIcon svg,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"] .iu-leftNavIcon svg{
+  color: #10B981 !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
 /* infoUzel.cz — topbar: subtle blue accent line (same as left column #2563EB, 35% opacity) */
 .topbar-new{
   border-bottom: 1px solid rgba(37, 99, 235, 0.35);
