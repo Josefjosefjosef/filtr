@@ -12789,6 +12789,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon i {
   font-size: 16px !important;
   line-height: 1 !important;
+  color: inherit !important;
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlText {
   display: block !important;
@@ -12892,6 +12893,10 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink:active {
   background: #D1D5DB !important;
   background-color: #D1D5DB !important;
 }
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon * {
+  pointer-events: auto !important;
+}
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon {
   flex: 0 0 auto !important;
   width: 18px !important;
@@ -12899,7 +12904,7 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon
   min-width: 18px !important;
   max-width: 18px !important;
   position: relative !important;
-  z-index: 1 !important;
+  z-index: 2 !important;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile,
 section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile {
