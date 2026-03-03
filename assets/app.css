@@ -14811,8 +14811,10 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"
   stroke: currentColor !important;
 }
 
-/* infoUzel.cz — topbar: subtle blue accent line (same as left column #2563EB, 35% opacity) */
-.topbar-new{
-  border-bottom: 1px solid rgba(37, 99, 235, 0.35);
+/* infoUzel.cz — topbar: 1px brand accent line (overrides silver border rgba(120,130,150,0.25)); strict scope: real topbar element */
+header#topbarWrap.topbar-new.iuTopbar,
+header.iuTopbar.topbar-new,
+.topbar-new.iuTopbar{
+  border-bottom: 1px solid rgba(37, 99, 235, 0.35) !important;
 }
 
