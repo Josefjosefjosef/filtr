@@ -76,3 +76,20 @@ jobs:
           BASE_URL="${{ steps.deployment.outputs.page_url }}"
           echo "Base URL: ${BASE_URL}"
           curl -sL "${BASE_URL}projects/" | grep -oE "/assets/app\\.[a-f0-9]+\\.(css|js)" | head -n 5 || true
+
+      - name: Deploy gate — verify deployed app.js contains pdfconvert-tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE_URL="${{ steps.deployment.outputs.page_url }}"
+          APP_PATH=$(curl -sL "${BASE_URL}projects/" | grep -oE "/assets/app\\.[a-f0-9]+\\.js" | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            APP_PATH="/assets/app.${ASSET_VER}.js"
+          fi
+          APP_URL="${BASE_URL%/}${APP_PATH}"
+          echo "Fetching: $APP_URL"
+          if ! curl -sL "$APP_URL" | grep -q "pdfconvert-tools"; then
+            echo "FAIL: deployed app.js does not contain pdfconvert-tools"
+            exit 1
+          fi
+          echo "PASS: deployed app.js contains pdfconvert-tools"
