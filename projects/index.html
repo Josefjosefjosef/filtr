@@ -1405,7 +1405,7 @@ style-src 'self' 'unsafe-inline' https:;
                       </div>
                     </section>
                     <!-- MOJE SLUŽBY -->
-                    <section class="iu-mmQuickLinks iu-mojeSluzby" aria-label="Moje služby">
+                    <section class="iu-mmQuickLinks iu-mojeSluzby" data-iu="right-rail-my-services" aria-label="Moje služby">
                       <div class="iu-mmSectionHead">
                         <div class="iu-mmSectionTitle">Moje služby</div>
                         <div class="iu-mmSectionLine" aria-hidden="true"></div>
@@ -1435,6 +1435,9 @@ style-src 'self' 'unsafe-inline' https:;
                           </button>
                           <span class="iu-mmLabel">Bakaláři</span>
                         </div>
+                      </div>
+                      <div class="iu-mojeSluzbyPdfRow">
+                        <button type="button" class="iu-mmQuickItemLink iu-pdfConvertOpen" data-iu="pdf-convert-open" aria-label="Převod na PDF">Převod na PDF</button>
                       </div>
                     </section>
                     <!-- Rychlé odkazy -->
@@ -1550,6 +1553,46 @@ style-src 'self' 'unsafe-inline' https:;
                 </div>
                 <div class="iu-aiPanelBody" id="iu-mojeSluzbyBody">
                   <!-- JS-rendered: Banka / Bakaláři / Zdravotní pojišťovna -->
+                </div>
+              </div>
+            </div>
+            <!-- PDF converter modal (client-side only) -->
+            <div id="iu-pdfConvertOverlay" class="iu-aiOverlay iu-pdfconvert-overlay" hidden aria-hidden="true"></div>
+            <div id="iu-pdfConvertModal" class="iu-aiPanel iu-pdfconvert-modal" data-iu="pdf-convert-modal" hidden role="dialog" aria-modal="true" aria-label="Převod na PDF">
+              <div class="iu-aiModal iu-pdfconvert-modal-inner">
+                <div class="iu-aiPanelHeader">
+                  <span>Převod na PDF</span>
+                  <div class="iu-aiPanelHeaderActions">
+                    <button class="iuAiClose iuModalClose" type="button" data-iu-close aria-label="Zavřít">×</button>
+                  </div>
+                </div>
+                <div class="iu-aiPanelBody iu-pdfconvert-body">
+                  <div class="iu-pdfconvert-tabs" role="tablist">
+                    <button type="button" role="tab" id="iu-pdf-tab-text" data-iu="tab-text" aria-selected="true" aria-controls="iu-pdf-panel-text">Text → PDF</button>
+                    <button type="button" role="tab" id="iu-pdf-tab-word" data-iu="tab-word" aria-selected="false" aria-controls="iu-pdf-panel-word">Word → PDF</button>
+                  </div>
+                  <div class="iu-pdfconvert-info" aria-live="polite">
+                    <p>Převod probíhá pouze ve vašem prohlížeči.</p>
+                    <p>Soubor ani text nikam neodesíláme.</p>
+                    <p>Po zavření okna se nic neukládá.</p>
+                  </div>
+                  <div id="iu-pdf-panel-text" role="tabpanel" data-iu="panel-text" class="iu-pdfconvert-panel" aria-labelledby="iu-pdf-tab-text">
+                    <label class="iu-pdfconvert-label" for="iu-pdf-text-input">Vložte text</label>
+                    <textarea id="iu-pdf-text-input" data-iu="pdf-text-input" class="iu-pdfconvert-textarea" rows="6" placeholder="Sem vložte text…"></textarea>
+                    <button type="button" class="iu-pdfconvert-btn" data-iu="pdf-text-generate">Vygenerovat PDF</button>
+                    <div id="iu-pdf-text-download-wrap" class="iu-pdfconvert-download-wrap" hidden>
+                      <a id="iu-pdf-text-download" data-iu="pdf-text-download" download="dokument.pdf" class="iu-pdfconvert-download-link">Stáhnout PDF</a>
+                    </div>
+                  </div>
+                  <div id="iu-pdf-panel-word" role="tabpanel" data-iu="panel-word" class="iu-pdfconvert-panel" aria-labelledby="iu-pdf-tab-word" hidden>
+                    <label class="iu-pdfconvert-label" for="iu-pdf-docx-input">Vyberte soubor .docx</label>
+                    <input type="file" id="iu-pdf-docx-input" data-iu="pdf-docx-input" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="iu-pdfconvert-file">
+                    <p class="iu-pdfconvert-note">Kvalita převodu závisí na složitosti dokumentu.</p>
+                    <button type="button" class="iu-pdfconvert-btn" data-iu="pdf-docx-generate" disabled>Převést a stáhnout PDF</button>
+                    <div id="iu-pdf-docx-download-wrap" class="iu-pdfconvert-download-wrap" hidden>
+                      <a id="iu-pdf-docx-download" data-iu="pdf-docx-download" download="dokument.pdf" class="iu-pdfconvert-download-link">Stáhnout PDF</a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
