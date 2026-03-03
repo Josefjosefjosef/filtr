@@ -12775,9 +12775,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlText {
   display: block !important;
+  flex: 1 1 auto !important;
   min-width: 0 !important;
   white-space: normal !important;
   overflow-wrap: anywhere !important;
+  overflow: visible !important;
   line-height: 1.2 !important;
   margin-top: 0 !important;
   max-width: none !important;
@@ -12898,9 +12900,11 @@ section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile 
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlText {
   display: block !important;
+  flex: 1 1 auto !important;
   min-width: 0 !important;
   white-space: normal !important;
   overflow-wrap: anywhere !important;
+  overflow: visible !important;
   line-height: 1.2 !important;
   color: #111827 !important;
   visibility: visible !important;
