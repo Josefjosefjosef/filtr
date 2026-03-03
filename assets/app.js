@@ -9451,9 +9451,18 @@ function buildVideoAsArticleCard(it) {
               var imgLoadedFail = 0;
               var imgs = exportRoot.querySelectorAll ? exportRoot.querySelectorAll("img") : [];
               imgCount = imgs.length;
+              function safeFontsReady() {
+                try {
+                  var r = document && document.fonts && document.fonts.ready;
+                  if (r && typeof r.then === "function") {
+                    return r.catch(function(){});
+                  }
+                } catch(e){}
+                return Promise.resolve();
+              }
               function waitImagesAndFonts(thenExport) {
                 if (imgCount === 0) {
-                  (document.fonts && document.fonts.ready ? document.fonts.ready() : Promise.resolve()).then(thenExport);
+                  safeFontsReady().then(thenExport);
                   return;
                 }
                 var done = 0;
@@ -9463,7 +9472,7 @@ function buildVideoAsArticleCard(it) {
                     for (var j = 0; j < imgs.length; j++) {
                       if (imgs[j].naturalWidth > 0) imgLoadedOk++; else imgLoadedFail++;
                     }
-                    (document.fonts && document.fonts.ready ? document.fonts.ready() : Promise.resolve()).then(thenExport);
+                    safeFontsReady().then(thenExport);
                   }
                 }
                 for (var i = 0; i < imgs.length; i++) {
