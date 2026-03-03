@@ -13251,8 +13251,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     return !!(overlay && panel);
   }
 
+  var pdfRectRafId = null;
   function closePdfConvertModal() {
     if (!overlay || !panel) return;
+    if (typeof cancelAnimationFrame !== "undefined" && pdfRectRafId != null) {
+      cancelAnimationFrame(pdfRectRafId);
+      pdfRectRafId = null;
+    }
     overlay.hidden = true;
     panel.hidden = true;
     document.body.classList.remove("iu-pdf-modal-open");
@@ -13264,17 +13269,56 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     try { window.iuClosePdfConvertModal = null; } catch (_) {}
   }
 
-  var resizeListener = null;
-  function updatePdfOverlayRect() {
-    var feed = document.getElementById("feed");
-    var root = document.documentElement;
-    if (!feed || !root) return;
-    var r = feed.getBoundingClientRect();
-    root.style.setProperty("--iuPdfFx", r.left + "px");
-    root.style.setProperty("--iuPdfFy", r.top + "px");
-    root.style.setProperty("--iuPdfFw", r.width + "px");
-    root.style.setProperty("--iuPdfFh", r.height + "px");
+  function rectEq(a, b, tol) {
+    if (!a || !b) return false;
+    tol = tol || 1;
+    return Math.abs(a.left - b.left) <= tol && Math.abs(a.top - b.top) <= tol &&
+      Math.abs(a.width - b.width) <= tol && Math.abs(a.height - b.height) <= tol;
   }
+  function measureFeedRect() {
+    var feed = document.getElementById("feed");
+    if (!feed) return null;
+    return feed.getBoundingClientRect();
+  }
+  function applyPdfRect(rect) {
+    if (!rect) return;
+    var root = document.documentElement;
+    root.style.setProperty("--iuPdfFx", rect.left + "px");
+    root.style.setProperty("--iuPdfFy", rect.top + "px");
+    root.style.setProperty("--iuPdfFw", rect.width + "px");
+    root.style.setProperty("--iuPdfFh", rect.height + "px");
+  }
+  function stabilizeAndApplyPdfRect(maxFrames) {
+    maxFrames = maxFrames || 5;
+    if (typeof cancelAnimationFrame !== "undefined" && pdfRectRafId != null) cancelAnimationFrame(pdfRectRafId);
+    var prev = null;
+    var iter = 0;
+    function run() {
+      pdfRectRafId = null;
+      if (!panel || panel.hidden) return;
+      var r = measureFeedRect();
+      if (!r) { if (prev) applyPdfRect(prev); return; }
+      if (prev != null && rectEq(r, prev, 1)) {
+        applyPdfRect(r);
+        return;
+      }
+      prev = r;
+      iter++;
+      if (iter >= maxFrames) {
+        applyPdfRect(r);
+        return;
+      }
+      if (typeof requestAnimationFrame !== "undefined") pdfRectRafId = requestAnimationFrame(run);
+      else applyPdfRect(r);
+    }
+    if (typeof requestAnimationFrame !== "undefined") pdfRectRafId = requestAnimationFrame(run);
+    else {
+      var r = measureFeedRect();
+      if (r) applyPdfRect(r);
+    }
+  }
+
+  var resizeListener = null;
   function openPdfConvertModal() {
     if (!overlay || !panel) return;
     if (overlay.parentNode !== document.body) document.body.appendChild(overlay);
@@ -13283,10 +13327,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     panel.hidden = false;
     document.body.classList.add("iu-pdf-modal-open");
     document.documentElement.style.overflow = "hidden";
-    updatePdfOverlayRect();
-    if (typeof requestAnimationFrame !== "undefined") requestAnimationFrame(function() { updatePdfOverlayRect(); });
+    stabilizeAndApplyPdfRect(5);
     if (!resizeListener) {
-      resizeListener = function() { if (panel && !panel.hidden) updatePdfOverlayRect(); };
+      resizeListener = function() { if (panel && !panel.hidden) stabilizeAndApplyPdfRect(5); };
       window.addEventListener("resize", resizeListener);
     }
     try { window.iuClosePdfConvertModal = closePdfConvertModal; } catch (_) {}
