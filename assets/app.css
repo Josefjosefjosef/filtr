@@ -16083,13 +16083,17 @@ section.iu-mmQuickLinks .iuQlText,
   font-weight: 600 !important;
 }
 
-/* Quicklinks: tile = 2-col grid (left slot 36px + content); no absolute overlay */
+/* Quicklinks: tile = 2-col grid (left slot 36px + content); no absolute overlay; override flex */
+.iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
 .iu-mmQuickGrid .iu-mmQuickItemLink,
 .iu-mmQuickGrid .iu-mmQuickItem:is(a, button),
+section.iu-mmQuickLinks .iu-mmQuickItem .iu-mmQuickItemLink,
 section.iu-mmQuickLinks .iu-mmQuickItemLink,
 section.iu-mmQuickLinks .iu-mmQuickItem:is(a, button),
 .rightRail .quickLinks a.iu-mmQuickItemLink,
-.rightRail .quickLinks button.iu-mmQuickItemLink {
+.rightRail .quickLinks button.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) {
   display: grid !important;
   grid-template-columns: 36px 1fr !important;
   align-items: center !important;
