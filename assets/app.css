@@ -16099,13 +16099,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   align-items: center !important;
 }
 
-/* Quicklinks: label in content column, centered; margin overrides (no absolute) */
+/* Quicklinks: label in content column, centered; margin overrides (no absolute); last-wins over body rules */
 .iu-mmQuickGrid .iu-mmQuickItemLink span.iuQlText,
 .iu-mmQuickGrid .iu-mmQuickItem span.iuQlText,
 section.iu-mmQuickLinks .iu-mmQuickItemLink span.iuQlText,
 section.iu-mmQuickLinks .iu-mmQuickItem span.iuQlText,
 .rightRail .quickLinks a.iu-mmQuickItemLink span.iuQlText,
-.rightRail .quickLinks button.iu-mmQuickItemLink span.iuQlText {
+.rightRail .quickLinks button.iu-mmQuickItemLink span.iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlText {
   grid-column: 2 !important;
   justify-self: center !important;
   align-self: center !important;
