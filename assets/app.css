@@ -13142,6 +13142,32 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
   border: 1px solid rgba(0,0,0,0.06) !important;
   box-sizing: border-box !important;
 }
+/* P0: Unify tile — first 4 use inner .iu-mmQuickItemLink; override dark pill so same light tile as rest */
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink {
+  background: #E5E7EB !important;
+  background-color: #E5E7EB !important;
+  color: #2E3238 !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(0,0,0,0.06) !important;
+  box-shadow: none !important;
+  min-height: 48px !important;
+  height: 100% !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  box-sizing: border-box !important;
+}
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:hover,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:active {
+  background: #D1D5DB !important;
+  background-color: #D1D5DB !important;
+  box-shadow: none !important;
+}
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > .iuIconTile {
   flex: 0 0 32px !important;
@@ -13164,12 +13190,22 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
   align-items: center !important;
   justify-content: center !important;
   border: 0 !important;
-  box-shadow: none !important;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.2) !important;
 }
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile > i {
   font-size: 17px !important;
   color: #fff !important;
 }
+/* P0: Quicklinks premium — unique accent per tile (first 4 data-ms) */
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="ds"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="ds"] .iuIconTile { background-color: #C44569 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="banka"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="banka"] .iuIconTile { background-color: #17C3B2 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="pojistovna"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="pojistovna"] .iuIconTile { background-color: #E8B923 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="bakalari"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="bakalari"] .iuIconTile { background-color: #7B68EE !important; }
+/* P0: Quicklinks premium — unique accent per tile (data-iuq / data-ql) */
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="ai"] .iuQlIcon,
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="ai"] .iuIconTile { background-color: #00BBF9 !important; }
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="deepl"] .iuQlIcon,
