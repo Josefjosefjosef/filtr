@@ -13389,6 +13389,39 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem button {
   pointer-events: auto !important;
 }
+
+/* P0: Rychlé odkazy — první 4 tiles (div > .iu-mmQuickItemLink): celé tlačítko klikatelné + text max 2 řádky, bez zalamování po písmenech */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) {
+  display: block !important;
+  width: 100% !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) .iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) button.iu-mmQuickItemLink {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 2.5em !important;
+  text-decoration: none !important;
+  box-sizing: border-box !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) .iuQlText {
+  flex: 1 !important;
+  min-width: 0 !important;
+  margin-left: 10px !important;
+  white-space: normal !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.2 !important;
+  max-height: 2.4em !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
 /* P0 FINAL: undo overly-broad clamp on generic spans inside quicklinks */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem span:not(.iuIconTile):not(.iuQlText):not(.iuQlLabel) {
   display: inline !important;
