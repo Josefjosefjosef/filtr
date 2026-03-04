@@ -13146,6 +13146,32 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
   border: 1px solid rgba(0,0,0,0.06) !important;
   box-sizing: border-box !important;
 }
+/* P0: Force grid layout — higher specificity than body ... display:flex */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql],
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ms] {
+  display: grid !important;
+  grid-template-columns: 32px 1fr !important;
+  column-gap: 10px !important;
+  align-items: start !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ms] .iu-mmQuickItemLink {
+  display: grid !important;
+  grid-template-columns: 32px 1fr !important;
+  column-gap: 10px !important;
+  align-items: start !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql] .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ms] .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ms] .iu-mmQuickItemLink .iuQlIcon {
+  grid-column: 1 !important;
+  align-self: start !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql] .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql] > span:not(.iuQlIcon):not(.iuIconTile),
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ms] .iuQlText {
+  grid-column: 2 !important;
+  line-height: 1.25 !important;
+}
 /* P0: No inner-pill — first 4 tiles: inner .iu-mmQuickItemLink is transparent; only outer tile is visible; hover on tile */
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink {
