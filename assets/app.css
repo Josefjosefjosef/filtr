@@ -13069,6 +13069,19 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon
   color: #fff !important;
   pointer-events: none !important;
 }
+/* P0: Premium circle style — same for Moje služby + Rychlé odkazy (shadow, glow, hover); colors unchanged */
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12), inset 0 2px 4px rgba(255,255,255,0.35) !important;
+  transition: transform .18s ease, box-shadow .18s ease !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink:hover .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink:active .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.16), inset 0 2px 6px rgba(255,255,255,0.35) !important;
+}
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms="ds"] .iu-mmQuickItemLink .iuQlIcon,
 section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms="ds"] .iu-mmQuickItemLink .iuQlIcon { background-color: #FF6B6B !important; }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms="banka"] .iu-mmQuickItemLink .iuQlIcon,
@@ -13079,7 +13092,7 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms="baka
 section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms="bakalari"] .iu-mmQuickItemLink .iuQlIcon { background-color: #9B5DE5 !important; }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlText {
   font-size: 11px !important;
-  font-weight: 400 !important;
+  font-weight: 600 !important;
   color: #2E3238 !important;
 }
 
@@ -13151,7 +13164,7 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > span:not(.iuQlIcon):not(.iuIconTile) {
   font-size: 11px !important;
-  font-weight: 400 !important;
+  font-weight: 600 !important;
   color: #2E3238 !important;
   white-space: normal !important;
   overflow-wrap: anywhere !important;
@@ -13160,7 +13173,7 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iuQlText,
 body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
 body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > span:not(.iuQlIcon):not(.iuIconTile) {
   font-size: 11px !important;
-  font-weight: 400 !important;
+  font-weight: 600 !important;
   color: #2E3238 !important;
 }
 
