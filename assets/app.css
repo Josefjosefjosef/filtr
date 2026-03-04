@@ -13371,6 +13371,18 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-la
   box-shadow: none !important;
   background-image: none !important;
 }
+/* P0: first 4 quicklinks tiles — single circle: hide duplicate .iuIconTile, keep .iuQlIcon only */
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:nth-child(-n+4) .iuIconTile {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  pointer-events: none !important;
+}
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(1) .iuQlIcon .iuIconTile,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(1) .iuQlIcon { background-color: hsl(11 85% 55%) !important; }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(2) .iuQlIcon .iuIconTile,
