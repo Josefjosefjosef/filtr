@@ -13134,16 +13134,14 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
   background: #E5E7EB !important;
   background-color: #E5E7EB !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 10px !important;
-  padding-left: 12px !important;
-  padding-right: 12px !important;
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem {
+  display: grid !important;
+  grid-template-columns: 32px 1fr !important;
+  column-gap: 10px !important;
+  align-items: start !important;
+  padding: 10px 12px !important;
   min-height: 48px !important;
-  height: 48px !important;
   border-radius: 8px !important;
   border: 1px solid rgba(0,0,0,0.06) !important;
   box-sizing: border-box !important;
@@ -13158,16 +13156,14 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
   outline: none !important;
   border-radius: inherit !important;
   color: #2E3238 !important;
-  min-height: 48px !important;
+  min-height: 0 !important;
   height: 100% !important;
   width: 100% !important;
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 10px !important;
-  padding-left: 12px !important;
-  padding-right: 12px !important;
+  display: grid !important;
+  grid-template-columns: 32px 1fr !important;
+  column-gap: 10px !important;
+  align-items: start !important;
+  padding: 0 !important;
   box-sizing: border-box !important;
 }
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:hover,
@@ -13184,7 +13180,10 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
   background-color: #D1D5DB !important;
 }
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > .iuIconTile {
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > .iuIconTile,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem > .iuIconTile {
   flex: 0 0 32px !important;
   width: 32px !important;
   height: 32px !important;
@@ -13192,7 +13191,7 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
   min-height: 32px !important;
   border-radius: 50% !important;
   aspect-ratio: 1 / 1 !important;
-  align-self: center !important;
+  align-self: start !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -13264,6 +13263,9 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
   word-break: normal !important;
   overflow-wrap: normal !important;
   hyphens: manual !important;
+  line-height: 1.25 !important;
+  padding-top: 2px !important;
+  min-width: 0 !important;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iuQlText,
 body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
