@@ -69,3 +69,7 @@ projects/data/fetch_monitor.json
 # Node (vendor libs in assets/vendor; do not track node_modules)
 node_modules/
 
+# infoUzel: proof scripts only in %TEMP% (never commit root-level proof_*.mjs)
+/proof_*.mjs
+/proof-*.mjs
+
