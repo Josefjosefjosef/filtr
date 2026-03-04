@@ -13376,6 +13376,20 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(17) .iuQlIcon .iuIconTile,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(17) .iuQlIcon { background-color: hsl(25 90% 52%) !important; }
 
+/* P0 FINAL: quicklinks MUST be clickable (override any pointer-events:none) */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem a,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem button {
+  pointer-events: auto !important;
+}
+/* P0 FINAL: undo overly-broad clamp on generic spans inside quicklinks */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem span:not(.iuIconTile):not(.iuQlText):not(.iuQlLabel) {
+  display: inline !important;
+  -webkit-line-clamp: unset !important;
+  -webkit-box-orient: unset !important;
+  overflow: visible !important;
+}
+
 /* P0 FINAL: quicklinks badge MUST BE FLAT (no effects) — higher specificity than 12769 */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
   box-shadow: none !important;
