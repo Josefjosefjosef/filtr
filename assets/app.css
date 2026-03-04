@@ -13099,6 +13099,12 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlText
   color: #2E3238 !important;
 }
 /* P0: Moje služby — stacking/overflow so premium circle shadow is visible (RCA D fix) */
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid {
+  overflow: visible !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItem {
+  overflow: visible !important;
+}
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink {
   position: relative !important;
   overflow: visible !important;
