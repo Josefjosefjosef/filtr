@@ -16112,7 +16112,10 @@ section.iu-mmQuickLinks .iu-mmQuickItem .iu-mmQuickItemLink .iuQlIcon,
 section.iu-mmQuickLinks .iu-mmQuickItemLink .iuQlIcon,
 section.iu-mmQuickLinks .iu-mmQuickItem:is(a, button) .iuQlIcon,
 .rightRail .quickLinks a.iu-mmQuickItemLink .iuQlIcon,
-.rightRail .quickLinks button.iu-mmQuickItemLink .iuQlIcon {
+.rightRail .quickLinks button.iu-mmQuickItemLink .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) .iuQlIcon {
+  display: block !important;
   position: absolute !important;
   left: 0 !important;
   top: 0 !important;
