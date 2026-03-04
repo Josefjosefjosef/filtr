@@ -13376,6 +13376,26 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(17) .iuQlIcon .iuIconTile,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(17) .iuQlIcon { background-color: hsl(25 90% 52%) !important; }
 
+/* P0 FINAL: quicklinks badge MUST BE FLAT (no effects) */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
+  box-shadow: none !important;
+  filter: none !important;
+  outline: none !important;
+  background-image: none !important;
+  border-image: none !important;
+  text-shadow: none !important;
+}
+/* kill pseudo highlight */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile::before,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
 /* Silver hero slot (CLS-safe) */
 .silver-slot{
   width: 100%;
