@@ -6384,7 +6384,7 @@ function buildVideoAsArticleCard(it) {
       inline.textContent = `Poslední chyba: ${message}`;
       inline.style.display = "block";
     }
-    if (message) console.error("[ERR]", message);
+    if (message && message !== "Data existují, ale nic nebylo vykresleno") console.error("[ERR]", message);
   }
   try { window.persistLastError = persistLastError; } catch {}
 
