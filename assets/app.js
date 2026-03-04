@@ -10120,23 +10120,6 @@ function buildVideoAsArticleCard(it) {
   }
 })();
 
-// === P0: Quicklinks label restore — ensure .iuQlText is never empty (fallback from aria-label) ===
-(function(){
-  function iuQuicklinksLabelRestore(){
-    document.querySelectorAll(".iu-mmQuickItemLink").forEach(function(link){
-      var textEl = link.querySelector(".iuQlText");
-      if (textEl && !textEl.textContent.trim()) {
-        textEl.textContent = link.getAttribute("aria-label") || link.getAttribute("data-label") || "";
-      }
-    });
-  }
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", iuQuicklinksLabelRestore);
-  } else {
-    iuQuicklinksLabelRestore();
-  }
-})();
-
 // === Quicklink share buttons (Přeposlat) ===
 (function(){
   function iuInitQuicklinkShareButtons(){
