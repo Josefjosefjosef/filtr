@@ -12746,21 +12746,27 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   pointer-events: auto !important;
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
-  flex: 0 0 auto !important;
-  width: 18px !important;
-  height: 18px !important;
-  min-width: 18px !important;
-  max-width: 18px !important;
+  flex: 0 0 26px !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  max-width: 26px !important;
   position: relative !important;
   z-index: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
-  width: 18px !important;
-  height: 18px !important;
-  min-width: 18px !important;
-  min-height: 18px !important;
-  max-width: 18px !important;
-  max-height: 18px !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  max-width: 26px !important;
+  max-height: 26px !important;
   padding: 0 !important;
   margin: 0 !important;
   line-height: 1 !important;
@@ -12776,8 +12782,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile svg,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon.iuIconTile i,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon.iuIconTile svg {
-  width: 18px !important;
-  height: 18px !important;
+  width: 20px !important;
+  height: 20px !important;
   display: block !important;
   color: inherit !important;
   fill: currentColor !important;
@@ -12787,13 +12793,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   opacity: 1 !important;
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon i {
-  font-size: 16px !important;
+  font-size: 20px !important;
   line-height: 1 !important;
   color: inherit !important;
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlText {
   display: block !important;
-  flex: 1 1 0 !important;
+  flex: 1 1 auto !important;
   min-width: 0 !important;
   max-width: 100% !important;
   white-space: normal !important;
@@ -12898,22 +12904,28 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon
   pointer-events: auto !important;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon {
-  flex: 0 0 auto !important;
-  width: 18px !important;
-  height: 18px !important;
-  min-width: 18px !important;
-  max-width: 18px !important;
+  flex: 0 0 26px !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  max-width: 26px !important;
   position: relative !important;
   z-index: 2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile,
 section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile {
-  width: 18px !important;
-  height: 18px !important;
-  min-width: 18px !important;
-  min-height: 18px !important;
-  max-width: 18px !important;
-  max-height: 18px !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  max-width: 26px !important;
+  max-height: 26px !important;
   padding: 0 !important;
   margin: 0 !important;
   line-height: 1 !important;
@@ -12928,8 +12940,8 @@ section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile 
 section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile i,
 section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile svg {
   display: block !important;
-  width: 18px !important;
-  height: 18px !important;
+  width: 20px !important;
+  height: 20px !important;
   color: inherit !important;
   fill: currentColor !important;
   stroke: currentColor !important;
@@ -12938,12 +12950,12 @@ section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile 
   opacity: 1 !important;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon i {
-  font-size: 16px !important;
+  font-size: 20px !important;
   line-height: 1 !important;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlText {
   display: block !important;
-  flex: 1 1 0 !important;
+  flex: 1 1 auto !important;
   min-width: 0 !important;
   max-width: 100% !important;
   white-space: normal !important;
