@@ -13137,7 +13137,7 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem {
   display: grid !important;
-  grid-template-columns: 32px 1fr !important;
+  grid-template-columns: 32px minmax(0,1fr) !important;
   column-gap: 10px !important;
   align-items: start !important;
   padding: 10px 12px !important;
@@ -13150,13 +13150,13 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql],
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ms] {
   display: grid !important;
-  grid-template-columns: 32px 1fr !important;
+  grid-template-columns: 32px minmax(0,1fr) !important;
   column-gap: 10px !important;
   align-items: start !important;
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ms] .iu-mmQuickItemLink {
   display: grid !important;
-  grid-template-columns: 32px 1fr !important;
+  grid-template-columns: 32px minmax(0,1fr) !important;
   column-gap: 10px !important;
   align-items: start !important;
 }
@@ -13172,6 +13172,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ms] .iuQlText {
   grid-column: 2 !important;
   line-height: 1.25 !important;
+  min-width: 0 !important;
 }
 /* P0: No inner-pill — first 4 tiles: inner .iu-mmQuickItemLink is transparent; only outer tile is visible; hover on tile */
 .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
@@ -13187,7 +13188,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   height: 100% !important;
   width: 100% !important;
   display: grid !important;
-  grid-template-columns: 32px 1fr !important;
+  grid-template-columns: 32px minmax(0,1fr) !important;
   column-gap: 10px !important;
   align-items: start !important;
   padding: 0 !important;
