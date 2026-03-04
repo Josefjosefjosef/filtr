@@ -16037,3 +16037,15 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   align-items: center !important;
   justify-content: center !important;
 }
+
+/* QUICKLINKS — REMOVE CIRCLE ICONS */
+.rightRail .iuQlIcon,
+.rightRail .iuIconTile {
+  display: none !important;
+}
+
+.rightRail .iuQuickLinkTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
