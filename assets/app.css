@@ -1156,28 +1156,6 @@ aside.accordionCol{
 .iu-mmQuickItem[aria-label="Finanční kalkulačky"] i{ color: #4285f4; }
 .iu-mmQuickItem[aria-label="Registr smluv"] i{ color: #0066cc; }
 
-/* ONLY: Rychlé odkazy → Převod na Word, PDF — hide any icon (DOM or pseudo/background); scoped unique by data-iuq + href */
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuIconTile,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuQlIcon,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] img,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] svg,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] i[class*="fa"],
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a[href="https://www.ilovepdf.com"] .iuIconTile,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a[href="https://www.ilovepdf.com"] img,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a[href="https://www.ilovepdf.com"] svg,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a[href="https://www.ilovepdf.com"] i[class*="fa-"] {
-  display: none !important;
-}
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuIconTile::before,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuIconTile::after,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuQlIcon::before,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuQlIcon::after,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a[href="https://www.ilovepdf.com"] .iuIconTile::before,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a[href="https://www.ilovepdf.com"] .iuIconTile::after {
-  content: none !important;
-  display: none !important;
-}
-
 /* Inertní položky – žádná akce, konzistentní vzhled */
 .iu-mmQuickItem--inert{ cursor: default; }
 .iu-mmQuickItem--inert:hover{ background: transparent; transform: none; }
@@ -12901,22 +12879,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   pointer-events: none !important;
 }
 
-/* Převod na PDF: nesjednocovat vzhled — původní layout (ikona nad textem) */
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:not([data-ql]) {
-  flex-direction: column !important;
-  align-items: center !important;
-  text-align: center !important;
-}
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:not([data-ql]) > span:last-of-type {
-  display: block !important;
-  color: #111827 !important;
-  visibility: visible !important;
-  margin-top: 6px !important;
-  line-height: 1.2 !important;
-  white-space: normal !important;
-  overflow-wrap: anywhere !important;
-}
-
 /* === Moje služby: stejný vzhled jako Rychlé odkazy (2-col, ikona vlevo, text vpravo, wrap) === */
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid {
   display: grid !important;
@@ -13116,8 +13078,89 @@ section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms="pojistovna"] .iu-
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms="bakalari"] .iu-mmQuickItemLink .iuQlIcon,
 section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms="bakalari"] .iu-mmQuickItemLink .iuQlIcon { background-color: #9B5DE5 !important; }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlText {
-  font-size: 14px !important;
-  font-weight: 500 !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: #2E3238 !important;
+}
+
+/* P0: Right rail unified — same button bg for both sections, layout, font 11px match left rail */
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
+  background: #E5E7EB !important;
+  background-color: #E5E7EB !important;
+}
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  min-height: 48px !important;
+  height: 48px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(0,0,0,0.06) !important;
+  box-sizing: border-box !important;
+}
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > .iuIconTile {
+  flex: 0 0 32px !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile > i {
+  font-size: 17px !important;
+  color: #fff !important;
+}
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="ai"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="ai"] .iuIconTile { background-color: #00BBF9 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="deepl"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="deepl"] .iuIconTile { background-color: #F15BB5 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="convert"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="convert"] .iuIconTile { background-color: #06D6A0 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="baliky"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="zasilky"] .iuQlIcon { background-color: #F77F00 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="nakup"] .iuQlIcon { background-color: #4361EE !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="sms"] .iuQlIcon { background-color: #2E86AB !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="youtube"] .iuQlIcon { background-color: #E63946 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="google"] .iuQlIcon { background-color: #7209B7 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="seznam"] .iuQlIcon { background-color: #3A86FF !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="katastr"] .iuQlIcon { background-color: #1D3557 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="rejstrik"] .iuQlIcon { background-color: #A8DADC !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="zivnost"] .iuQlIcon { background-color: #457B9D !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="platformy"] .iuQlIcon { background-color: #F4A261 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > span:not(.iuQlIcon):not(.iuIconTile) {
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: #2E3238 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > span:not(.iuQlIcon):not(.iuIconTile) {
+  font-size: 11px !important;
+  font-weight: 400 !important;
   color: #2E3238 !important;
 }
 
