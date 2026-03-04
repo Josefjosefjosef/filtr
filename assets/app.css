@@ -16049,3 +16049,11 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   align-items: center;
   justify-content: center;
 }
+
+/* QUICKLINKS — REMOVE ALL CIRCLE BADGES (v3; RCA: .iuIconTile visible in non-grid section) */
+.iu-mmQuickGrid .iuQlIcon,
+.iu-mmQuickGrid .iuIconTile,
+section.iu-mmQuickLinks .iuQlIcon,
+section.iu-mmQuickLinks .iuIconTile {
+  display: none !important;
+}
