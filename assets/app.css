@@ -13098,6 +13098,23 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlText
   font-weight: 600 !important;
   color: #2E3238 !important;
 }
+/* P0: Moje služby — stacking/overflow so premium circle shadow is visible (RCA D fix) */
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink {
+  position: relative !important;
+  overflow: visible !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink::before,
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink::after {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink .iuQlIcon .iuIconTile {
+  position: relative !important;
+  z-index: 1 !important;
+}
 
 /* P0: Right rail unified — same button bg for both sections, layout, font 11px match left rail */
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink,
