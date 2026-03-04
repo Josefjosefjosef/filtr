@@ -12746,11 +12746,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   pointer-events: auto !important;
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
-  flex: 0 0 26px !important;
-  width: 26px !important;
-  height: 26px !important;
-  min-width: 26px !important;
-  max-width: 26px !important;
+  flex: 0 0 30px !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  max-width: 30px !important;
   position: relative !important;
   z-index: 1 !important;
   display: flex !important;
@@ -12760,42 +12760,82 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   border: 0 !important;
   box-shadow: none !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
-  width: 26px !important;
-  height: 26px !important;
-  min-width: 26px !important;
-  min-height: 26px !important;
-  max-width: 26px !important;
-  max-height: 26px !important;
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql] .iuQlIcon .iuIconTile {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
   padding: 0 !important;
   margin: 0 !important;
   line-height: 1 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: transparent !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 22px 22px !important;
+  background-color: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
   border-radius: 0 !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile i,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile svg,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon.iuIconTile i,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon.iuIconTile svg {
-  width: 20px !important;
-  height: 20px !important;
-  display: block !important;
-  color: inherit !important;
-  fill: currentColor !important;
-  stroke: currentColor !important;
-  filter: none !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql] .iuQlIcon .iuIconTile i {
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  opacity: 0 !important;
+  font-size: 0 !important;
+  pointer-events: none !important;
 }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql="ai"] .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%232563EB'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql="prekladac"] .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%230EA5E9'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql="zasilky"] .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%23F59E0B'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql="nakup"] .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%2316A34A'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql="youtube"] .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%23DC2626'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql="google"] .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%237C3AED'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql="sms"] .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%230891B2'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql="seznam"] .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%230D9488'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql="katastr"] .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%23B45309'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql="rejstrik"] .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%236B7280'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql="zivnost"] .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%234F46E5'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem[data-ql="platformy"] .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%23BE185D'/%3E%3C/svg%3E") !important; }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon i {
   font-size: 20px !important;
   line-height: 1 !important;
   color: inherit !important;
+}
+/* PDF: keep original 26px, no SVG fallback */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:not([data-ql]) .iuQlIcon {
+  flex: 0 0 26px !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  max-width: 26px !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:not([data-ql]) .iuQlIcon .iuIconTile {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  max-width: 26px !important;
+  max-height: 26px !important;
+  background-image: none !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:not([data-ql]) .iuQlIcon .iuIconTile i {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: auto !important;
+  min-height: auto !important;
+  overflow: visible !important;
+  position: static !important;
+  opacity: 1 !important;
+  font-size: 20px !important;
+  pointer-events: auto !important;
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlText {
   display: block !important;
@@ -12904,11 +12944,11 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon
   pointer-events: auto !important;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon {
-  flex: 0 0 26px !important;
-  width: 26px !important;
-  height: 26px !important;
-  min-width: 26px !important;
-  max-width: 26px !important;
+  flex: 0 0 30px !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  max-width: 30px !important;
   position: relative !important;
   z-index: 2 !important;
   display: flex !important;
@@ -12918,37 +12958,48 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon
   border: 0 !important;
   box-shadow: none !important;
 }
-body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile,
-section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile {
-  width: 26px !important;
-  height: 26px !important;
-  min-width: 26px !important;
-  min-height: 26px !important;
-  max-width: 26px !important;
-  max-height: 26px !important;
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms] .iu-mmQuickItemLink .iuQlIcon .iuIconTile,
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms] .iu-mmQuickItemLink .iuQlIcon .iuIconTile {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
   padding: 0 !important;
   margin: 0 !important;
   line-height: 1 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: transparent !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 22px 22px !important;
+  background-color: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
   border-radius: 0 !important;
 }
-section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile i,
-section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile svg {
-  display: block !important;
-  width: 20px !important;
-  height: 20px !important;
-  color: inherit !important;
-  fill: currentColor !important;
-  stroke: currentColor !important;
-  filter: none !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms] .iu-mmQuickItemLink .iuQlIcon .iuIconTile i,
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms] .iu-mmQuickItemLink .iuQlIcon .iuIconTile i {
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  opacity: 0 !important;
+  font-size: 0 !important;
+  pointer-events: none !important;
 }
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms="ds"] .iu-mmQuickItemLink .iuQlIcon .iuIconTile,
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms="ds"] .iu-mmQuickItemLink .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%230EA5E9'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms="banka"] .iu-mmQuickItemLink .iuQlIcon .iuIconTile,
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms="banka"] .iu-mmQuickItemLink .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%2316A34A'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms="pojistovna"] .iu-mmQuickItemLink .iuQlIcon .iuIconTile,
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms="pojistovna"] .iu-mmQuickItemLink .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%23DC2626'/%3E%3C/svg%3E") !important; }
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms="bakalari"] .iu-mmQuickItemLink .iuQlIcon .iuIconTile,
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms="bakalari"] .iu-mmQuickItemLink .iuQlIcon .iuIconTile { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%237C3AED'/%3E%3C/svg%3E") !important; }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon i {
   font-size: 20px !important;
   line-height: 1 !important;
