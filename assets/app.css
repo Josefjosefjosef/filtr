@@ -13049,6 +13049,78 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlText
   position: relative !important;
   z-index: 1 !important;
 }
+
+/* P0: Moje služby — stejný layout jako Rychlé odkazy: kolečko vlevo, text vpravo; 48px; barevná kolečka 32×32 */
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon {
+  flex: 0 0 32px !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile::after {
+  content: none !important;
+  display: none !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon .iuIconTile i {
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  position: static !important;
+  opacity: 1 !important;
+  font-size: 17px !important;
+  line-height: 1 !important;
+  color: #fff !important;
+  pointer-events: none !important;
+}
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms="ds"] .iu-mmQuickItemLink .iuQlIcon,
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms="ds"] .iu-mmQuickItemLink .iuQlIcon { background-color: #FF6B6B !important; }
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms="banka"] .iu-mmQuickItemLink .iuQlIcon,
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms="banka"] .iu-mmQuickItemLink .iuQlIcon { background-color: #4ECDC4 !important; }
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms="pojistovna"] .iu-mmQuickItemLink .iuQlIcon,
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms="pojistovna"] .iu-mmQuickItemLink .iuQlIcon { background-color: #FFD166 !important; }
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItem[data-ms="bakalari"] .iu-mmQuickItemLink .iuQlIcon,
+section.iu-mmQuickLinks.iu-mojeSluzby .iu-mmQuickItem[data-ms="bakalari"] .iu-mmQuickItemLink .iuQlIcon { background-color: #9B5DE5 !important; }
+body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlText {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #2E3238 !important;
+}
+
 /* Silver hero slot (CLS-safe) */
 .silver-slot{
   width: 100%;
