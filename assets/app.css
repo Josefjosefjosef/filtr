@@ -13310,10 +13310,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   column-gap: 10px !important;
   align-items: center !important;
 }
-/* clamp ONLY label (.iuQlText/.iuQlLabel); [class][aria-label] overrides 13286–13303 so all 17 get 14px */
+/* clamp ONLY label (.iuQlText/.iuQlLabel); [class][aria-label] overrides 13286–13303 so all 17 get 14px; min-width so label has visible box (RCA: width 0 => textInvisible) */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlLabel {
-  min-width: 0 !important;
+  min-width: min-content !important;
   font-size: 14px !important;
   font-weight: 600 !important;
   line-height: 1.25 !important;
