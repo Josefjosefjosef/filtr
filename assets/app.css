@@ -16083,38 +16083,31 @@ section.iu-mmQuickLinks .iuQlText,
   font-weight: 600 !important;
 }
 
-/* Quicklinks: left slot variable (real center area = right of slot) */
-.iu-mmQuickGrid,
-section.iu-mmQuickLinks,
-.rightRail .quickLinks {
-  --iu-ql-leftslot: 36px;
-}
-
-/* Quicklinks: tile as positioning context */
+/* Quicklinks: tile = 2-col grid (left slot 36px + content); no absolute overlay */
 .iu-mmQuickGrid .iu-mmQuickItemLink,
 .iu-mmQuickGrid .iu-mmQuickItem:is(a, button),
 section.iu-mmQuickLinks .iu-mmQuickItemLink,
-section.iu-mmQuickLinks .iu-mmQuickItem:is(a, button) {
-  position: relative !important;
+section.iu-mmQuickLinks .iu-mmQuickItem:is(a, button),
+.rightRail .quickLinks a.iu-mmQuickItemLink,
+.rightRail .quickLinks button.iu-mmQuickItemLink {
+  display: grid !important;
+  grid-template-columns: 36px 1fr !important;
+  align-items: center !important;
 }
 
-/* Quicklinks: center label in right area only (exclude left slot) */
+/* Quicklinks: label in content column, centered; margin overrides (no absolute) */
 .iu-mmQuickGrid .iu-mmQuickItemLink span.iuQlText,
 .iu-mmQuickGrid .iu-mmQuickItem span.iuQlText,
 section.iu-mmQuickLinks .iu-mmQuickItemLink span.iuQlText,
-section.iu-mmQuickLinks .iu-mmQuickItem span.iuQlText {
-  position: absolute !important;
-  left: var(--iu-ql-leftslot) !important;
-  right: 0 !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+section.iu-mmQuickLinks .iu-mmQuickItem span.iuQlText,
+.rightRail .quickLinks a.iu-mmQuickItemLink span.iuQlText,
+.rightRail .quickLinks button.iu-mmQuickItemLink span.iuQlText {
+  grid-column: 2 !important;
+  justify-self: center !important;
+  align-self: center !important;
   margin: 0 !important;
   padding: 0 10px !important;
   font-weight: 600 !important;
-  pointer-events: none !important;
   text-align: center !important;
   line-height: 1.15 !important;
 }
