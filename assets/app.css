@@ -13303,6 +13303,77 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   color: #2E3238 !important;
 }
 
+/* P0 FINAL: quicklinks polish — last-write-wins (grid stable + flat badges + clamp text + unique colors) */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem {
+  display: grid !important;
+  grid-template-columns: 32px minmax(0, 1fr) !important;
+  column-gap: 10px !important;
+  align-items: center !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlLabel,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem span:not(.iuQlIcon):not(.iuIconTile) {
+  min-width: 0 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  background-image: none !important;
+  filter: none !important;
+  outline: none !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
+  flex: 0 0 32px !important;
+  align-self: center !important;
+  transform: none !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(1) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(1) .iuQlIcon { background-color: hsl(11 85% 55%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(2) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(2) .iuQlIcon { background-color: hsl(29 90% 52%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(3) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(3) .iuQlIcon { background-color: hsl(48 92% 50%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(4) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(4) .iuQlIcon { background-color: hsl(95 75% 45%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(5) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(5) .iuQlIcon { background-color: hsl(165 70% 40%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(6) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(6) .iuQlIcon { background-color: hsl(199 85% 48%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(7) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(7) .iuQlIcon { background-color: hsl(230 75% 55%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(8) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(8) .iuQlIcon { background-color: hsl(270 70% 55%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(9) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(9) .iuQlIcon { background-color: hsl(310 75% 55%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(10) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(10) .iuQlIcon { background-color: hsl(340 80% 55%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(11) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(11) .iuQlIcon { background-color: hsl(15 88% 50%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(12) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(12) .iuQlIcon { background-color: hsl(45 95% 48%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(13) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(13) .iuQlIcon { background-color: hsl(180 65% 45%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(14) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(14) .iuQlIcon { background-color: hsl(220 80% 52%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(15) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(15) .iuQlIcon { background-color: hsl(280 72% 52%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(16) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(16) .iuQlIcon { background-color: hsl(330 78% 55%) !important; }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(17) .iuQlIcon .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:nth-child(17) .iuQlIcon { background-color: hsl(25 90% 52%) !important; }
+
 /* Silver hero slot (CLS-safe) */
 .silver-slot{
   width: 100%;
