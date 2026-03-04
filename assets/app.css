@@ -16057,3 +16057,15 @@ section.iu-mmQuickLinks .iuQlIcon,
 section.iu-mmQuickLinks .iuIconTile {
   display: none !important;
 }
+
+/* QUICKLINKS — REMOVE ALL VISIBLE CIRCLE BADGES (v4; RCA-driven; last-wins specificity) */
+body .iu-mmQuickGrid .iuQlIcon,
+body .iu-mmQuickGrid .iuIconTile,
+body .iu-mmQuickGrid .iuQlIcon .iuIconTile,
+body section.iu-mmQuickLinks .iuQlIcon,
+body section.iu-mmQuickLinks .iuIconTile {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
