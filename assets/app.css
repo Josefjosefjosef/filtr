@@ -16069,3 +16069,16 @@ body section.iu-mmQuickLinks .iuIconTile {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/* Quicklinks – centrování textu + lehce tučnější */
+.iu-mmQuickGrid .iu-mmQuickItem,
+.iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
+.rightRail .iuQuickLinkTile {
+  display: flex !important;
+  align-items: center !important;
+}
+.iu-mmQuickGrid .iuQlText,
+section.iu-mmQuickLinks .iuQlText,
+.rightRail .iuQlText {
+  font-weight: 600 !important;
+}
