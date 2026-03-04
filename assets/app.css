@@ -13336,7 +13336,30 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
 }
-/* quicklinks: sjednocení koleček — pozice jako Datová schránka, velikost 15×15, border-radius 50% */
+/* quicklinks: sjednocení koleček — identická pozice, 15×15, border-radius 50% */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
+  position: relative !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmCircle,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon.iu-mmCircle {
+  position: absolute !important;
+  left: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 15px !important;
+  height: 15px !important;
+  min-width: 15px !important;
+  min-height: 15px !important;
+  max-width: 15px !important;
+  max-height: 15px !important;
+  flex: none !important;
+  box-sizing: border-box !important;
+  border-radius: 50% !important;
+  box-shadow: none !important;
+  background-image: none !important;
+  filter: none !important;
+  outline: none !important;
+}
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
   width: 15px !important;
   height: 15px !important;
@@ -13362,9 +13385,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-la
   max-width: 15px !important;
   max-height: 15px !important;
   align-self: center !important;
-  transform: none !important;
   box-shadow: none !important;
   background-image: none !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(> .iuQlIcon) {
+  padding-left: 36px !important;
 }
 /* P0: first 4 quicklinks tiles — single circle: hide duplicate .iuIconTile, keep .iuQlIcon only */
 body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:nth-child(-n+4) .iuIconTile {
