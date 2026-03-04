@@ -1156,18 +1156,24 @@ aside.accordionCol{
 .iu-mmQuickItem[aria-label="Finanční kalkulačky"] i{ color: #4285f4; }
 .iu-mmQuickItem[aria-label="Registr smluv"] i{ color: #0066cc; }
 
-/* ONLY: Rychlé odkazy → Převod na Word, PDF — hide any icon (DOM or pseudo/background) */
+/* ONLY: Rychlé odkazy → Převod na Word, PDF — hide any icon (DOM or pseudo/background); scoped unique by data-iuq + href */
 .accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuIconTile,
 .accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuQlIcon,
 .accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] img,
 .accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] svg,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] i[class*="fa"] {
+.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] i[class*="fa"],
+.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a[href="https://www.ilovepdf.com"] .iuIconTile,
+.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a[href="https://www.ilovepdf.com"] img,
+.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a[href="https://www.ilovepdf.com"] svg,
+.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a[href="https://www.ilovepdf.com"] i[class*="fa-"] {
   display: none !important;
 }
 .accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuIconTile::before,
 .accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuIconTile::after,
 .accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuQlIcon::before,
-.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuQlIcon::after {
+.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem[data-iuq="convert"] .iuQlIcon::after,
+.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a[href="https://www.ilovepdf.com"] .iuIconTile::before,
+.accordionCol section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a[href="https://www.ilovepdf.com"] .iuIconTile::after {
   content: none !important;
   display: none !important;
 }
