@@ -16083,12 +16083,12 @@ section.iu-mmQuickLinks .iuQlText,
   font-weight: 600 !important;
 }
 
-/* DEPLOY MARKER (Quicklinks true-center v1) */
+/* DEPLOY MARKER (Quicklinks center, no reserved icon space v1) */
 :root {
-  --iu-ql-true-center-v1: 1;
+  --iu-ql-center-noreserve-v1: 1;
 }
 
-/* Quicklinks: tile = positioning context; remove layout slot for true center */
+/* Quicklinks tiles: remove any reserved left space; true center via grid */
 .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
 .iu-mmQuickGrid .iu-mmQuickItemLink,
 .iu-mmQuickGrid .iu-mmQuickItem:is(a, button),
@@ -16099,32 +16099,27 @@ section.iu-mmQuickLinks .iu-mmQuickItem:is(a, button),
 .rightRail .quickLinks button.iu-mmQuickItemLink,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) {
-  position: relative !important;
   padding-left: 0 !important;
-  display: block !important;
+  text-indent: 0 !important;
+  display: grid !important;
+  place-items: center !important;
 }
 
-/* Quicklinks: left bar out of layout, pinned left (RCA: .iuQlIcon) */
-.iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink .iuQlIcon,
-.iu-mmQuickGrid .iu-mmQuickItemLink .iuQlIcon,
-.iu-mmQuickGrid .iu-mmQuickItem:is(a, button) .iuQlIcon,
-section.iu-mmQuickLinks .iu-mmQuickItem .iu-mmQuickItemLink .iuQlIcon,
-section.iu-mmQuickLinks .iu-mmQuickItemLink .iuQlIcon,
-section.iu-mmQuickLinks .iu-mmQuickItem:is(a, button) .iuQlIcon,
-.rightRail .quickLinks a.iu-mmQuickItemLink .iuQlIcon,
-.rightRail .quickLinks button.iu-mmQuickItemLink .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) .iuQlIcon {
-  display: block !important;
-  position: absolute !important;
-  left: 0 !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  width: 36px !important;
-  pointer-events: none !important;
+/* Quicklinks: icon/circle must not reserve space */
+.iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlIcon,
+.iu-mmQuickGrid .iu-mmQuickItemLink span.iuQlIcon,
+.iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlIcon,
+section.iu-mmQuickLinks .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlIcon,
+section.iu-mmQuickLinks .iu-mmQuickItemLink span.iuQlIcon,
+section.iu-mmQuickLinks .iu-mmQuickItem:is(a, button) span.iuQlIcon,
+.rightRail .quickLinks a.iu-mmQuickItemLink span.iuQlIcon,
+.rightRail .quickLinks button.iu-mmQuickItemLink span.iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlIcon {
+  display: none !important;
 }
 
-/* Quicklinks: label true-center across WHOLE tile */
+/* Quicklinks: label centered + max 2 lines */
 .iu-mmQuickGrid .iu-mmQuickItemLink span.iuQlText,
 .iu-mmQuickGrid .iu-mmQuickItem span.iuQlText,
 section.iu-mmQuickLinks .iu-mmQuickItemLink span.iuQlText,
@@ -16133,15 +16128,13 @@ section.iu-mmQuickLinks .iu-mmQuickItem span.iuQlText,
 .rightRail .quickLinks button.iu-mmQuickItemLink span.iuQlText,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlText,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlText {
-  position: absolute !important;
-  inset: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
   margin: 0 !important;
-  padding: 0 10px !important;
+  padding: 0 12px !important;
   font-weight: 600 !important;
   text-align: center !important;
   line-height: 1.15 !important;
-  pointer-events: none !important;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  overflow: hidden !important;
 }
