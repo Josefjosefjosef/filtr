@@ -13341,14 +13341,18 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
 }
+/* iu:quicklinks-dot-20x20 v1 */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
   width: 20px !important;
   height: 20px !important;
   min-width: 20px !important;
   min-height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
   flex: 0 0 20px !important;
+  box-sizing: border-box !important;
   aspect-ratio: 1 / 1 !important;
-  border-radius: 50% !important;
+  border-radius: 9999px !important;
   box-shadow: none !important;
   background-image: none !important;
   filter: none !important;
