@@ -13317,6 +13317,39 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   column-gap: 10px !important;
   align-items: center !important;
 }
+/* P0: Rychlé odkazy — kolečka na identické pozici + text zarovnat (CSS-only, .iuQlIcon) */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem {
+  position: relative !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
+  position: absolute !important;
+  left: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 15px !important;
+  height: 15px !important;
+  min-width: 15px !important;
+  min-height: 15px !important;
+  max-width: 15px !important;
+  max-height: 15px !important;
+  border-radius: 999px !important;
+  flex: none !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
+  width: 15px !important;
+  height: 15px !important;
+  min-width: 15px !important;
+  min-height: 15px !important;
+  max-width: 15px !important;
+  max-height: 15px !important;
+  border-radius: 999px !important;
+}
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(button, a) {
+  display: flex !important;
+  align-items: center !important;
+  padding-left: 36px !important;
+}
 /* QUICKLINKS — typography match .iu-leftNavLabel (12.6px system-ui, #2E3238); min-width so label has visible box */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlLabel {
