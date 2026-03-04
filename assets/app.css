@@ -13310,9 +13310,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   column-gap: 10px !important;
   align-items: center !important;
 }
+/* clamp ONLY label (.iuQlText/.iuQlLabel), never generic spans — restores 4 tiles (DS, banka, pojistovna, bakalari) */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlLabel,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem span:not(.iuQlIcon):not(.iuIconTile) {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlLabel {
   min-width: 0 !important;
   font-size: 14px !important;
   font-weight: 600 !important;
