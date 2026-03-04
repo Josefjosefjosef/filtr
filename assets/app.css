@@ -16022,3 +16022,18 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
 #iuQuickFeed [data-iu="pdfconvert-tools"] [data-iu="pdf-word-html"] ol {
   margin: 0 0 8px 18px;
 }
+
+/* QUICKLINKS – REMOVE COLORED CIRCLES (Rychlé odkazy a nástroje, pravý sloupec) */
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmCircle,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
+  display: none !important;
+}
+
+/* QUICKLINKS – CENTER TEXT (bez změny velikosti/spacingu tlačítek) */
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
