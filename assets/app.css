@@ -16885,3 +16885,39 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   font-weight:600;
   line-height:1.15;
 }
+
+/* ===== v3: exact pre-rebuild tile size and background (RCA from PRE_SHA) ===== */
+:root{ --iu-tile-style-v3:1; }
+
+.accordionCol .mindMenu .iuTileLink{
+  min-height:48px;
+  padding:10px 14px 10px 0;
+  background-color:rgb(229, 231, 235);
+  background-image:none;
+  border-radius:8px;
+  border:1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:none;
+  font-size:14px;
+  font-weight:600;
+  line-height:16.1px;
+}
+
+.accordionCol .mindMenu .iuTileLink:hover{
+  background-color:rgb(209, 213, 219);
+  background-image:none;
+}
+
+.accordionCol .mindMenu .iuTile button.iuTileLink{
+  background-color:rgb(229, 231, 235);
+  border:1px solid rgba(0, 0, 0, 0.06);
+}
+
+.accordionCol .mindMenu .iuTile button.iuTileLink:hover{
+  background-color:rgb(209, 213, 219);
+}
+
+.accordionCol .mindMenu .iuTile > .iuTileText{
+  font-size:14px;
+  font-weight:600;
+  line-height:16.1px;
+}
