@@ -16154,7 +16154,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
 .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
 .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iu-mmQuickItem:is(a, button),
 .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks a.iu-mmQuickItemLink,
-.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks button.iu-mmQuickItemLink {
+.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks button.iu-mmQuickItemLink,
+body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
+body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iu-mmQuickItem:is(a, button),
+body .accordionCol .mindMenu .iu-mmQuickLinks a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu .iu-mmQuickLinks button.iu-mmQuickItemLink {
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
   text-indent: 0 !important;
@@ -16162,7 +16166,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   place-items: center !important;
 }
 
-.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem {
+.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem,
+body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem {
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
 }
@@ -16184,7 +16189,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
 .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem .iuQlIcon,
 .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItemLink .iuQlIcon,
 .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem .iuIconTile,
-.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItemLink .iuIconTile {
+.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItemLink .iuIconTile,
+body .accordionCol .mindMenu .iu-mmQuickLinks .iuQlIcon,
+body .accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile,
+body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem .iuQlIcon,
+body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItemLink .iuQlIcon,
+body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem .iuIconTile,
+body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItemLink .iuIconTile {
   display: none !important;
 }
 
@@ -16192,7 +16203,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
 .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks a.iu-mmQuickItemLink span.iuQlText,
 .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks button.iu-mmQuickItemLink span.iuQlText,
 .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem:is(a, button) span.iuQlText,
-.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlText {
+.layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlText,
+body .accordionCol .mindMenu .iu-mmQuickLinks a.iu-mmQuickItemLink span.iuQlText,
+body .accordionCol .mindMenu .iu-mmQuickLinks button.iu-mmQuickItemLink span.iuQlText,
+body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem:is(a, button) span.iuQlText,
+body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlText {
   margin: 0 !important;
   padding: 0 12px !important;
   font-weight: 600 !important;
