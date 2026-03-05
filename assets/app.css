@@ -16921,3 +16921,88 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   font-weight:600;
   line-height:16.1px;
 }
+
+/* DEPLOY MARKER */
+:root{ --iu-tile-style-v4:1; }
+
+/* keep 2 columns (explicit) */
+body .accordionCol .mindMenu .iu-mmQuickGrid{
+  display:grid !important;
+  grid-template-columns:repeat(2, 1fr) !important;
+}
+
+/* unify wrapper height for ALL tiles */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile{
+  width:100% !important;
+  height:72px !important;          /* matches observed wrapper (143x72) */
+  min-height:72px !important;
+  box-sizing:border-box !important;
+}
+
+/* clickable tiles (a/button) — FORCE pre style */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink{
+  width:100% !important;
+  height:100% !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  box-sizing:border-box !important;
+
+  /* PRE values from RCA */
+  padding:10px 14px 10px 0 !important;
+  background-color:rgb(229, 231, 235) !important; /* #E5E7EB */
+  border-radius:8px !important;
+  border:1px solid rgba(0,0,0,0.06) !important;
+  box-shadow:none !important;
+
+  font-size:14px !important;
+  font-weight:600 !important;
+  line-height:16.1px !important;
+
+  text-align:center !important;
+  text-decoration:none !important;
+  color:inherit !important;
+}
+
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink:hover{
+  background-color:rgb(209, 213, 219) !important; /* #D1D5DB */
+}
+
+/* inert tiles (no link) — render as tile too */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileText,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > span.iuTileText{
+  width:100% !important;
+  height:100% !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  box-sizing:border-box !important;
+
+  /* same PRE visual */
+  padding:10px 14px 10px 0 !important;
+  background-color:rgb(229, 231, 235) !important;
+  border-radius:8px !important;
+  border:1px solid rgba(0,0,0,0.06) !important;
+  box-shadow:none !important;
+
+  font-size:14px !important;
+  font-weight:600 !important;
+  line-height:16.1px !important;
+
+  text-align:center !important;
+  color:inherit !important;
+}
+
+/* text clamp (both clickable & inert) */
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTileText{
+  display:-webkit-box !important;
+  -webkit-box-orient:vertical !important;
+  -webkit-line-clamp:2 !important;
+  overflow:hidden !important;
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+}
