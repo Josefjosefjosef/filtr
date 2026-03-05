@@ -16773,12 +16773,16 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
 
 /* make clickable element fill tile + true center */
 body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"]
-.iu-mmQuickGrid .iu-mmQuickItemLink{
+.iu-mmQuickGrid .iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"]
+.iu-mmQuickGrid .iu-mmQuickItem:is(a,button){
 
   width:100% !important;
   height:100% !important;
 
-  padding:10px 14px !important;
+  padding:10px 14px 10px 0 !important;
+  padding-left:0 !important;
+  padding-inline-start:0 !important;
   box-sizing:border-box !important;
 
   display:flex !important;
