@@ -17111,3 +17111,99 @@ body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > span.iuTileText{
   word-break:normal !important;
   overflow-wrap:break-word !important;
 }
+
+/* DEPLOY MARKER */
+:root{ --iu-tile-size-v6:1; }
+
+/* grid zachovat */
+body .accordionCol .mindMenu .iu-mmQuickGrid{
+  display:grid !important;
+  grid-template-columns:repeat(2,1fr) !important;
+}
+
+/* wrapper */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile{
+  width:100% !important;
+  height:64px !important;
+  min-height:64px !important;
+  box-sizing:border-box !important;
+}
+
+/* clickable */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink{
+  width:100% !important;
+  height:100% !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  box-sizing:border-box !important;
+
+  padding:10px 14px !important;
+
+  background-color:#E5E7EB !important;
+
+  border-radius:8px !important;
+  border:1px solid rgba(0,0,0,0.06) !important;
+
+  font-size:12.6px !important;
+  line-height:18px !important;
+  font-weight:600 !important;
+
+  color:#2E3238 !important;
+
+  text-align:center !important;
+
+  text-decoration:none !important;
+}
+
+/* hover */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink:hover{
+  background-color:#D1D5DB !important;
+}
+
+/* text element */
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTileText{
+
+  width:100% !important;
+
+  display:-webkit-box !important;
+  -webkit-box-orient:vertical !important;
+  -webkit-line-clamp:2 !important;
+
+  overflow:hidden !important;
+
+  text-align:center !important;
+
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+
+}
+
+/* inert tiles */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > span.iuTileText{
+
+  width:100% !important;
+  height:100% !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  box-sizing:border-box !important;
+
+  padding:10px 14px !important;
+
+  background:#E5E7EB !important;
+
+  border-radius:8px !important;
+  border:1px solid rgba(0,0,0,0.06) !important;
+
+  font-size:12.6px !important;
+  line-height:18px !important;
+  font-weight:600 !important;
+
+  color:#2E3238 !important;
+
+}
