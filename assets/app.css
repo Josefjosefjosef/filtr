@@ -17006,3 +17006,108 @@ body .accordionCol .mindMenu .iu-mmQuickGrid .iuTileText{
   word-break:normal !important;
   overflow-wrap:break-word !important;
 }
+
+/* DEPLOY MARKER */
+:root{ --iu-tile-center-v5:1; }
+
+/* keep 2 columns (explicit) */
+body .accordionCol .mindMenu .iu-mmQuickGrid{
+  display:grid !important;
+  grid-template-columns:repeat(2, 1fr) !important;
+}
+
+/* unify wrapper height */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile{
+  width:100% !important;
+  height:72px !important;
+  min-height:72px !important;
+  box-sizing:border-box !important;
+}
+
+/* CLICKABLE: background+border must live on the link/button (NOT on span) */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink{
+  width:100% !important;
+  height:100% !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  box-sizing:border-box !important;
+
+  /* symmetric padding => true visual center */
+  padding:10px 14px !important;
+
+  background-color:rgb(229, 231, 235) !important; /* #E5E7EB */
+  border-radius:8px !important;
+  border:1px solid rgba(0,0,0,0.06) !important;
+  box-shadow:none !important;
+
+  font-size:14px !important;
+  font-weight:600 !important;
+  line-height:16.1px !important;
+
+  text-align:center !important;
+  text-decoration:none !important;
+  color:inherit !important;
+}
+
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink:hover{
+  background-color:rgb(209, 213, 219) !important; /* #D1D5DB */
+}
+
+/* IMPORTANT: span inside link must be CLEAN (no bg/padding), and should fill width for precise centering */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText{
+  background:transparent !important;
+  padding:0 !important;
+  border:0 !important;
+  box-shadow:none !important;
+
+  width:100% !important;
+  max-width:100% !important;
+  flex:1 1 auto !important;
+
+  text-align:center !important;
+
+  display:-webkit-box !important;
+  -webkit-box-orient:vertical !important;
+  -webkit-line-clamp:2 !important;
+  overflow:hidden !important;
+
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+}
+
+/* INERT: render as a real tile box (no link) */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileText,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > span.iuTileText{
+  width:100% !important;
+  height:100% !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  box-sizing:border-box !important;
+
+  padding:10px 14px !important; /* symmetric */
+  background-color:rgb(229, 231, 235) !important;
+  border-radius:8px !important;
+  border:1px solid rgba(0,0,0,0.06) !important;
+  box-shadow:none !important;
+
+  font-size:14px !important;
+  font-weight:600 !important;
+  line-height:16.1px !important;
+
+  text-align:center !important;
+
+  /* clamp for inert too */
+  display:-webkit-box !important;
+  -webkit-box-orient:vertical !important;
+  -webkit-line-clamp:2 !important;
+  overflow:hidden !important;
+
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+}
