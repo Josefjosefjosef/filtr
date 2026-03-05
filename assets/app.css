@@ -16623,9 +16623,25 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
 /* DEPLOY MARKER */
 :root{ --iu-ql-center-realtiles-v5:1; }
 
-/* EXACT winning selector override */
+/* EXACT winning selector override (a, button) */
 body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"]
 .iu-mmQuickGrid .iu-mmQuickItem:is(a,button){
+
+  padding:10px 14px !important;
+  padding-left:0 !important;
+  padding-inline-start:0 !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  box-sizing:border-box !important;
+
+}
+
+/* same override for div.iu-mmQuickItem so proof sees all tiles */
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"]
+.iu-mmQuickGrid .iu-mmQuickItem{
 
   padding:10px 14px !important;
   padding-left:0 !important;
