@@ -17295,3 +17295,94 @@ body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileText{
 
   text-align:center !important;
 }
+
+/* DEPLOY MARKER */
+:root{ --iu-tile-size-v8:1; }
+
+/* SCOPE: jen MindMenu quick grid */
+body .accordionCol .mindMenu .iu-mmQuickGrid{
+  display:grid !important;
+  grid-template-columns:repeat(2,1fr) !important;
+}
+
+/* FORCE wrapper height */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile{
+  height:64px !important;
+  min-height:64px !important;
+  max-height:64px !important;
+  box-sizing:border-box !important;
+}
+
+/* FORCE clickable height (a + button) */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > a.iuTileLink,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > button.iuTileLink,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink{
+  height:64px !important;
+  min-height:64px !important;
+  max-height:64px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  padding:0 !important; /* true center */
+  box-sizing:border-box !important;
+
+  background-color:#E5E7EB !important;
+  border-radius:8px !important;
+  border:1px solid rgba(0,0,0,0.06) !important;
+  text-decoration:none !important;
+  color:inherit !important;
+}
+
+/* hover */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > a.iuTileLink:hover,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > button.iuTileLink:hover,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink:hover{
+  background-color:#D1D5DB !important;
+}
+
+/* TEXT inside clickable (keep v7) */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink .iuTileText{
+  width:100% !important;
+  padding:0 14px !important;
+
+  font-size:12.6px !important;
+  line-height:18px !important;
+  font-weight:600 !important;
+  color:#2E3238 !important;
+  text-align:center !important;
+
+  display:-webkit-box !important;
+  -webkit-box-orient:vertical !important;
+  -webkit-line-clamp:2 !important;
+  overflow:hidden !important;
+
+  overflow-wrap:break-word !important;
+  word-break:normal !important;
+}
+
+/* inert tiles (fallback) */
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > span.iuTileText,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileText{
+  height:64px !important;
+  min-height:64px !important;
+  max-height:64px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  padding:0 14px !important;
+  box-sizing:border-box !important;
+
+  background-color:#E5E7EB !important;
+  border-radius:8px !important;
+  border:1px solid rgba(0,0,0,0.06) !important;
+
+  font-size:12.6px !important;
+  line-height:18px !important;
+  font-weight:600 !important;
+  color:#2E3238 !important;
+  text-align:center !important;
+}
