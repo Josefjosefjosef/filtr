@@ -16515,3 +16515,69 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   -webkit-line-clamp: 2 !important;
   overflow: hidden !important;
 }
+
+/* DEPLOY MARKER (Quicklinks v3 — force override A/BUTTON) */
+:root {
+  --iu-ql-center-realtiles-v3: 1;
+}
+
+/* Quicklinks – FORCE override on A/BUTTON tiles — beat .iu-mmQuickGrid .iu-mmQuickItem:is(a,button) 36px */
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] button.iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid a.iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid button.iu-mmQuickItem {
+  padding: 10px 14px 10px 14px !important;
+  padding-left: 0 !important;
+  padding-inline-start: 0 !important;
+  text-indent: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
+/* Neutralize inner link if nested */
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItem > a.iu-mmQuickItemLink,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] button.iu-mmQuickItem > button.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] button.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > button.iu-mmQuickItemLink {
+  padding: 0 !important;
+  padding-left: 0 !important;
+  padding-inline-start: 0 !important;
+  text-indent: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Remove icons – quicklinks only (v3) */
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlIcon,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuIconTile,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuIcon,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] i,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] svg,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] i,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] svg {
+  display: none !important;
+}
+
+/* Label – max 2 lines, centered (v3) */
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlText {
+  margin: 0 !important;
+  padding: 0 8px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  line-height: 1.15 !important;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  overflow: hidden !important;
+}
