@@ -15717,19 +15717,19 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem,
   overflow-x: clip !important;
 }
 
-/* infoUzel.cz — one-color services section: quick/day blue; Zábava & Engagement keep orange (#F59E0B) */
+/* infoUzel.cz — one-color services section: force accent vars so winning rules (aside#… border, [data-rail] svg) resolve to #2563EB */
 #iuLeftRail .iu-leftNav{
   --iuNavAccent: #2563EB;
   --iuRailAccent-quick: #2563EB;
   --iuRailAccent-day: #2563EB;
-  --iuRailAccent-fun: #F59E0B;
+  --iuRailAccent-fun: #2563EB;
 }
 
-/* infoUzel.cz — one-color left rail (icons + text #2563EB); exclude Zábava & Engagement (hry, culture, veda, vzdelavani) so their icons stay orange */
-#iuLeftRail .iu-leftNav .iu-leftNavItem:not([data-rail="hry"]):not([data-rail="culture"]):not([data-rail="veda"]):not([data-rail="vzdelavani"]),
-#iuLeftRail .iu-leftNav .iu-leftNavItem:not([data-rail="hry"]):not([data-rail="culture"]):not([data-rail="veda"]):not([data-rail="vzdelavani"]) .iu-leftNavIcon,
-#iuLeftRail .iu-leftNav .iu-leftNavItem:not([data-rail="hry"]):not([data-rail="culture"]):not([data-rail="veda"]):not([data-rail="vzdelavani"]) .iu-leftNavIcon svg,
-#iuLeftRail .iu-leftNav .iu-leftNavItem:not([data-rail="hry"]):not([data-rail="culture"]):not([data-rail="veda"]):not([data-rail="vzdelavani"]) .iu-leftNavLabel{
+/* infoUzel.cz — one-color services section (left rail: icons + text + borders #2563EB); explicit overrides for color/fill/stroke/border */
+#iuLeftRail .iu-leftNav .iu-leftNavItem,
+#iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavIcon svg,
+#iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavLabel{
   color: #2563EB !important;
   fill: #2563EB !important;
   stroke: #2563EB !important;
