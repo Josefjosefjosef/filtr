@@ -17540,13 +17540,15 @@ body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink{
 overflow:hidden !important;
 }
 
-/* P0 UI: invert left CTA Inzerce/Služby — background=#1F3B6D text=#FDE047 */
-a.iuRightCta.iuRightCta--services{
+/* P0 UI: invert left CTA Inzerce/Služby — real target (same specificity as #iuTopbarRight rule) */
+#iuTopbarRight .iuRightTopCtas > .iuRightCta.iuRightCta--services,
+#topbarWrap .iuRightTopCtas > .iuRightCta.iuRightCta--services{
   background:#1F3B6D !important;
   color:#FDE047 !important;
   border-color:#1F3B6D !important;
 }
-a.iuRightCta.iuRightCta--services:hover{
+#iuTopbarRight .iuRightTopCtas > .iuRightCta.iuRightCta--services:hover,
+#topbarWrap .iuRightTopCtas > .iuRightCta.iuRightCta--services:hover{
   background:#1F3B6D !important;
   color:#FDE047 !important;
 }
