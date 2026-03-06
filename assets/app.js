@@ -13663,30 +13663,18 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
 // === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → feed-replace overlay (EXCLUSIVE SINGLE-CONTENT) ===
 (function iuAdsStageOverlay() {
-  var prevMiddleView = null;
-  var didHideSilverSlot = false;
-  var middleViewIds = ["feed", "iuRadioView", "iuTvOnlineView", "iuJrEmptyView", "iuMapyView", "iuTravelView", "iuMyUzelView1", "iuMyUzelView2", "iuMyUzelView3", "iuMyUzelView4", "iuMyUzelView5"];
-  var standardContentIds = ["silver-slot"].concat(middleViewIds);
+  var hiddenSiblings = [];
   function openAdsStage(activeTab) {
     var stage = document.getElementById("iuAdsStage");
     if (!stage) return;
-    prevMiddleView = null;
-    didHideSilverSlot = false;
-    for (var i = 0; i < standardContentIds.length; i++) {
-      var el = document.getElementById(standardContentIds[i]);
-      if (!el) continue;
-      if (el.id === "silver-slot") {
-        if (!el.hidden) {
-          el.hidden = true;
-          didHideSilverSlot = true;
-        }
-        continue;
-      }
-      if (!el.hidden) {
-        prevMiddleView = el;
-        el.hidden = true;
-        break;
-      }
+    var parent = stage.parentElement;
+    if (!parent) return;
+    hiddenSiblings = [];
+    for (var i = 0; i < parent.children.length; i++) {
+      var ch = parent.children[i];
+      if (ch.id === "iuAdsStage") continue;
+      hiddenSiblings.push({ el: ch, wasHidden: ch.hidden });
+      ch.hidden = true;
     }
     stage.hidden = false;
     setAdsTab(activeTab);
@@ -13695,13 +13683,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     var stage = document.getElementById("iuAdsStage");
     if (!stage) return;
     stage.hidden = true;
-    if (prevMiddleView) prevMiddleView.hidden = false;
-    prevMiddleView = null;
-    if (didHideSilverSlot) {
-      var silverEl = document.getElementById("silver-slot");
-      if (silverEl) silverEl.hidden = false;
-      didHideSilverSlot = false;
+    for (var i = 0; i < hiddenSiblings.length; i++) {
+      var item = hiddenSiblings[i];
+      if (item.el) item.el.hidden = item.wasHidden;
     }
+    hiddenSiblings = [];
   }
   function setAdsTab(tab) {
     var tabBrowse = document.getElementById("iuAdsTabBrowse");
