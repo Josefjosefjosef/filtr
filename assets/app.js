@@ -13661,17 +13661,28 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 })();
 
-// === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → feed-replace overlay (VARIANT A, no URL change) ===
+// === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → feed-replace overlay (EXCLUSIVE SINGLE-CONTENT) ===
 (function iuAdsStageOverlay() {
   var prevMiddleView = null;
+  var didHideSilverSlot = false;
   var middleViewIds = ["feed", "iuRadioView", "iuTvOnlineView", "iuJrEmptyView", "iuMapyView", "iuTravelView", "iuMyUzelView1", "iuMyUzelView2", "iuMyUzelView3", "iuMyUzelView4", "iuMyUzelView5"];
+  var standardContentIds = ["silver-slot"].concat(middleViewIds);
   function openAdsStage(activeTab) {
     var stage = document.getElementById("iuAdsStage");
     if (!stage) return;
     prevMiddleView = null;
-    for (var i = 0; i < middleViewIds.length; i++) {
-      var el = document.getElementById(middleViewIds[i]);
-      if (el && !el.hidden) {
+    didHideSilverSlot = false;
+    for (var i = 0; i < standardContentIds.length; i++) {
+      var el = document.getElementById(standardContentIds[i]);
+      if (!el) continue;
+      if (el.id === "silver-slot") {
+        if (!el.hidden) {
+          el.hidden = true;
+          didHideSilverSlot = true;
+        }
+        continue;
+      }
+      if (!el.hidden) {
         prevMiddleView = el;
         el.hidden = true;
         break;
@@ -13686,6 +13697,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     stage.hidden = true;
     if (prevMiddleView) prevMiddleView.hidden = false;
     prevMiddleView = null;
+    if (didHideSilverSlot) {
+      var silverEl = document.getElementById("silver-slot");
+      if (silverEl) silverEl.hidden = false;
+      didHideSilverSlot = false;
+    }
   }
   function setAdsTab(tab) {
     var tabBrowse = document.getElementById("iuAdsTabBrowse");

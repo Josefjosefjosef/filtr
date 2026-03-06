@@ -3154,8 +3154,11 @@ body[data-section="media"] #feed{
 #feed[hidden]{
   display: none !important;
 }
+#silver-slot[hidden]{
+  display: none !important;
+}
 
-/* === Inzerce a služby: feed-replace overlay (VARIANT A, middle column only) === */
+/* === Inzerce a služby: feed-replace overlay (EXCLUSIVE SINGLE-CONTENT) === */
 #iuAdsStage[hidden]{
   display: none !important;
 }
@@ -10745,6 +10748,12 @@ aside.accordionCol > .iuRightTopCtas{
   margin: 0 0 12px 0;       /* udr┼żet odstup pod CTA */
 }
 
+aside.accordionCol > .iuRightTopCtas > button.iuRightCta{
+  margin: 0;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
 aside.accordionCol > .iuRightTopCtas > .iuRightCta{
   flex:1 1 0;
   min-width:0;
@@ -15503,6 +15512,13 @@ body #iuLeftRail .iu-leftNav .iu-leftNavItem:hover{
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+}
+#iuTopbarRight .iuRightTopCtas > button.iuRightCta,
+#topbarWrap .iuRightTopCtas > button.iuRightCta{
+  margin: 0;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
 }
 #iuTopbarRight .iuRightTopCtas > .iuRightCta:first-child,
 #topbarWrap .iuRightTopCtas > .iuRightCta:first-child{
