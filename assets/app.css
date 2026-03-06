@@ -8419,13 +8419,18 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
    UI-only / CLS-safe
    ============================================================ */
 
-/* 1. men┼í├ş v├Ż┼íka topbaru */
+/* 1. v├Ż┼íka topbaru (64px pro brand + subtitle, bez p┼Öet├şk├ín├ş) */
 .topbar-new,
 .topbar-new-inner {
-  min-height: 56px !important;     /* p┼»vodn─Ť ~70 */
-  height: 56px !important;
+  min-height: 64px !important;
+  height: 64px !important;
   padding-top: 4px !important;
   padding-bottom: 4px !important;
+}
+#topbarWrap.iuTopbar,
+#topbarWrap.topbar-new.iuTopbar{
+  min-height: 64px !important;
+  height: 64px !important;
 }
 
 /* 2. hamburger men┼í├ş a ─Źist┼í├ş */
@@ -9544,6 +9549,30 @@ header.iuTopbar .iuHamburger svg,
 .iuBrand__info,
 .iuBrand__cz{ font-weight: 300; margin: 0; padding: 0; }
 .iuBrand__uzel{ font-weight: 500; margin: 0; padding: 0; }
+
+/* Brand block: title + subtitle (compact, title dominant, subtitle below) */
+.iuBrandBlock{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  transform: translateY(-2px);
+  flex-shrink: 0;
+  min-width: 0;
+}
+.iuBrandSubtitle{
+  font-size: 11px;
+  line-height: 1.2;
+  color: rgba(255,255,255,0.6);
+  font-weight: 400;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+}
+@media (max-width: 700px){
+  .iuBrandSubtitle{ display: none; }
+}
 
 /* =========================================================
    TOPBAR CONTENT GRID ÔÇö safe infrastructure
