@@ -9550,7 +9550,21 @@ header.iuTopbar .iuHamburger svg,
 .iuBrand__cz{ font-weight: 300; margin: 0; padding: 0; }
 .iuBrand__uzel{ font-weight: 500; margin: 0; padding: 0; }
 
-/* Brand block: title + subtitle (compact, title dominant, subtitle below) */
+/* Brand block: 2 lines only (infoUzel.cz + Váš osobní internet), vertically centered in topbar */
+.iuTopbar .iuTopbarLeft{
+  height: 100%;
+}
+.iuTopbar .iuBrandBlock{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100%;
+  flex-shrink: 0;
+  min-width: 0;
+  gap: 0;
+  transform: none;
+}
 .iuBrandBlock{
   display: flex;
   flex-direction: column;
@@ -9561,22 +9575,24 @@ header.iuTopbar .iuHamburger svg,
   flex-shrink: 0;
   min-width: 0;
 }
-/* Topbar logo: gentle shift up */
+/* Topbar: logo + tagline block centered, no extra shift */
 .iuTopbar .iuBrandBlock .iuBrand{
   position: relative;
-  top: -5px;
+  top: 0;
+  line-height: 1.1;
+  margin: 0;
 }
-/* Tagline line 1 (Váš osobní internet) */
+/* Tagline: only "Váš osobní internet" (no third line) */
 .iuBrandSubtitle::before{
   content: "Váš osobní internet";
   display: block;
   font-size: 1.22em;
-  line-height: 1.25;
-  margin-bottom: 7px;
+  line-height: 1.2;
+  margin: 4px 0 0 0;
   font-weight: 600;
 }
 .iuTopbar .iuBrandSubtitle::before{
-  color: var(--iuTopbarFg, #D1D5DB);
+  color: #6B7280;
 }
 .iuBrandSubtitle{
   font-size: 11px;
@@ -9587,11 +9603,10 @@ header.iuTopbar .iuHamburger svg,
   margin: 0;
   padding: 0;
 }
-/* Tagline typography: line 2 (Zprávy • Služby • …) */
 .iuTopbar .iuBrandSubtitle{
-  color: #6B7280;
   font-size: 1em;
   line-height: 1.35;
+  color: #6B7280;
   white-space: normal;
 }
 @media (max-width: 700px){
