@@ -470,6 +470,91 @@ style-src 'self' 'unsafe-inline' https:;
                   </section>
                   <div id="feed">
                   </div>
+                  <section id="iuAdsStage" class="iuAdsStage" hidden aria-label="Inzerce a služby">
+                    <div class="iuAdsStageInner">
+                      <div class="iuAdsStageHeader">
+                        <div class="iuAdsStageTitleBlock">
+                          <h2 class="iuAdsStageTitle">Inzerce a služby</h2>
+                          <p class="iuAdsStageSubtitle">Prohlížejte inzeráty nebo vložte vlastní. Bez poplatků.</p>
+                        </div>
+                        <button type="button" class="iuAdsStageBack" id="iuAdsStageBack" aria-label="Zpět na přehled">Zpět na přehled</button>
+                      </div>
+                      <div class="iuAdsStageTabs" role="tablist" aria-label="Režim inzerce">
+                        <button type="button" class="iuAdsStageTab is-active" role="tab" aria-selected="true" aria-controls="iuAdsPanelBrowse" id="iuAdsTabBrowse" data-iu-ads-tab="browse">Prohlížet inzerci</button>
+                        <button type="button" class="iuAdsStageTab" role="tab" aria-selected="false" aria-controls="iuAdsPanelSubmit" id="iuAdsTabSubmit" data-iu-ads-tab="submit">Vložit inzerát</button>
+                      </div>
+                      <div id="iuAdsPanelBrowse" class="iuAdsStagePanel" role="tabpanel" aria-labelledby="iuAdsTabBrowse">
+                        <div class="iuAdsCategories" aria-label="Kategorie inzerátů">
+                          <button type="button" class="iuAdsCategoryCard" aria-label="Auto">Auto</button>
+                          <button type="button" class="iuAdsCategoryCard" aria-label="Reality">Reality</button>
+                          <button type="button" class="iuAdsCategoryCard" aria-label="Elektronika">Elektronika</button>
+                          <button type="button" class="iuAdsCategoryCard" aria-label="Práce">Práce</button>
+                          <button type="button" class="iuAdsCategoryCard" aria-label="Služby">Služby</button>
+                          <button type="button" class="iuAdsCategoryCard" aria-label="Domácnost">Domácnost</button>
+                          <button type="button" class="iuAdsCategoryCard" aria-label="Sport a hobby">Sport a hobby</button>
+                          <button type="button" class="iuAdsCategoryCard" aria-label="Ostatní">Ostatní</button>
+                        </div>
+                        <div class="iuAdsSampleList" aria-label="Ukázkové inzeráty">
+                          <article class="iuAdsSampleCard">
+                            <h3 class="iuAdsSampleCardTitle">Notebook Dell Inspiron 15</h3>
+                            <p class="iuAdsSampleCardDesc">Funkční, lehký, vhodný na kancelář. Batérie v pořádku.</p>
+                            <span class="iuAdsSampleCardLoc">Praha</span>
+                            <span class="iuAdsSampleCardPrice">5 200 Kč</span>
+                            <button type="button" class="iuAdsSampleCardCta">Detail</button>
+                          </article>
+                          <article class="iuAdsSampleCard">
+                            <h3 class="iuAdsSampleCardTitle">Pronájem bytu 2+1</h3>
+                            <p class="iuAdsSampleCardDesc">Klidná lokalita, parkování, balkon.</p>
+                            <span class="iuAdsSampleCardLoc">Brno</span>
+                            <span class="iuAdsSampleCardPrice">dohodou</span>
+                            <button type="button" class="iuAdsSampleCardCta">Detail</button>
+                          </article>
+                          <article class="iuAdsSampleCard">
+                            <h3 class="iuAdsSampleCardTitle">Úklidové služby</h3>
+                            <p class="iuAdsSampleCardDesc">Jednorázový i pravidelný úklid domácností a kanceláří.</p>
+                            <span class="iuAdsSampleCardLoc">Celá ČR</span>
+                            <span class="iuAdsSampleCardPrice">dohodou</span>
+                            <button type="button" class="iuAdsSampleCardCta">Detail</button>
+                          </article>
+                        </div>
+                      </div>
+                      <div id="iuAdsPanelSubmit" class="iuAdsStagePanel" role="tabpanel" aria-labelledby="iuAdsTabSubmit" hidden>
+                        <form class="iuAdsSubmitForm" id="iuAdsSubmitForm" aria-label="Formulář pro vložení inzerátu">
+                          <label class="iuAdsFormRow" for="iuAdsFieldCategory">Kategorie</label>
+                          <select id="iuAdsFieldCategory" class="iuAdsFormInput" name="category" required aria-required="true">
+                            <option value="">— vyberte —</option>
+                            <option value="auto">Auto</option>
+                            <option value="reality">Reality</option>
+                            <option value="elektronika">Elektronika</option>
+                            <option value="prace">Práce</option>
+                            <option value="sluzby">Služby</option>
+                            <option value="ostatni">Ostatní</option>
+                          </select>
+                          <label class="iuAdsFormRow" for="iuAdsFieldTitle">Název inzerátu</label>
+                          <input type="text" id="iuAdsFieldTitle" class="iuAdsFormInput" name="title" placeholder="Krátký název" required aria-required="true">
+                          <label class="iuAdsFormRow" for="iuAdsFieldDesc">Popis</label>
+                          <textarea id="iuAdsFieldDesc" class="iuAdsFormInput iuAdsFormTextarea" name="description" rows="4" placeholder="Popis inzerátu"></textarea>
+                          <label class="iuAdsFormRow" for="iuAdsFieldPrice">Cena (Kč)</label>
+                          <input type="text" id="iuAdsFieldPrice" class="iuAdsFormInput" name="price" placeholder="např. 1 500 nebo dohodou" inputmode="numeric">
+                          <label class="iuAdsFormRow" for="iuAdsFieldLoc">Lokalita</label>
+                          <input type="text" id="iuAdsFieldLoc" class="iuAdsFormInput" name="location" placeholder="Město nebo region">
+                          <label class="iuAdsFormRow" for="iuAdsFieldPhone">Telefon</label>
+                          <input type="tel" id="iuAdsFieldPhone" class="iuAdsFormInput" name="phone" placeholder="+420 …">
+                          <label class="iuAdsFormRow" for="iuAdsFieldEmail">E-mail</label>
+                          <input type="email" id="iuAdsFieldEmail" class="iuAdsFormInput" name="email" placeholder="vas@email.cz">
+                          <div class="iuAdsFormRow">
+                            <span class="iuAdsFormLabel">Fotografie</span>
+                            <div class="iuAdsUploadPlaceholder" aria-hidden="true">Přetáhněte sem nebo klikněte pro výběr (placeholder)</div>
+                          </div>
+                          <label class="iuAdsFormCheckRow">
+                            <input type="checkbox" id="iuAdsFieldTerms" name="terms" required aria-required="true">
+                            <span>Souhlasím s podmínkami inzerce</span>
+                          </label>
+                          <button type="submit" class="iuAdsSubmitCta">Publikovat inzerát</button>
+                        </form>
+                      </div>
+                    </div>
+                  </section>
                   </div>
                   <section id="iuQuickFeed" class="iuQuickFeed" hidden aria-label="Rychlé odkazy – detail"></section>
                   <section id="iuMyUzelView1" class="iuView iuMyUzelView" data-section="myuzel-1" aria-label="Můj info uzel – Sekce 1" hidden>
