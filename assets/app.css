@@ -17389,3 +17389,47 @@ body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileText{
 
 /* RAIL_CLEANUP_MARKER — right rail CSS hygiene (diag HEIGHT_ROOT_CAUSE fix) */
 :root{ --iu-rail-clean-v1:1; }
+
+/* DEPLOY MARKER */
+:root{ --iu-ql-accent-v1:1; }
+
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="datova-schranka"]{ --iu-ql-accent:#1D4ED8; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="internetove-bankovnictvi"]{ --iu-ql-accent:#047857; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="bakalari"]{ --iu-ql-accent:#7C3AED; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="zdravotni-pojistovna"]{ --iu-ql-accent:#0EA5A4; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="zasilky-a-sledovani"]{ --iu-ql-accent:#EA580C; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="nakup-domu"]{ --iu-ql-accent:#DB2777; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="ai-asistenti"]{ --iu-ql-accent:#2563EB; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="prekladac"]{ --iu-ql-accent:#0284C7; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="prevod-word-pdf"]{ --iu-ql-accent:#4B5563; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="financni-kalkulacky"]{ --iu-ql-accent:#CA8A04; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="vzory-smluv-plne-moci"]{ --iu-ql-accent:#9F1239; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="komunikace-vzdelavani"]{ --iu-ql-accent:#6366F1; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="katastr-nemovitosti"]{ --iu-ql-accent:#92400E; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="registr-smluv"]{ --iu-ql-accent:#4D7C0F; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="obchodni-rejstrik"]{ --iu-ql-accent:#0F766E; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="zivnostensky-rejstrik"]{ --iu-ql-accent:#DC2626; }
+body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="poslat-sms-zdarma"]{ --iu-ql-accent:#E11D48; }
+
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > a.iuTileLink,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > button.iuTileLink,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink{
+position:relative !important;
+border:1px solid var(--iu-ql-accent) !important;
+border-radius:8px !important;
+}
+
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > a.iuTileLink::before,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > button.iuTileLink::before,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink::before{
+content:"" !important;
+position:absolute !important;
+left:0 !important;
+top:0 !important;
+bottom:0 !important;
+width:2px !important;
+background:var(--iu-ql-accent) !important;
+border-top-left-radius:8px !important;
+border-bottom-left-radius:8px !important;
+pointer-events:none !important;
+}
