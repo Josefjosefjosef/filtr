@@ -10074,6 +10074,10 @@ main#content .layout{
 .accordionCol .mindMenu .iu-mmTopTool:active{
   transform: translateY(0.5px);
 }
+/* Right-rail only: explicit transition to avoid transition:all paint jitter (RCA close-loop) */
+.accordionCol .mindMenu .iu-mmTopTool{
+  transition: filter .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
 .accordionCol .mindMenu .iu-mmTopToolIcon{
   flex: 0 0 auto;
   width: 20px;
@@ -15431,6 +15435,7 @@ header#topbarWrap.topbar-new.iuTopbar::after{
 .accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile{
   outline: 2px solid transparent;
   outline-offset: 2px;
+  transition: box-shadow .18s ease, border-color .18s ease;
 }
 
 .iu-mojeSluzby .iu-mmQuickItemLink:hover,
