@@ -17539,3 +17539,14 @@ body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > button.iuTileLink,
 body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink{
 overflow:hidden !important;
 }
+
+/* P0 UI: invert left CTA Inzerce/Služby — background=#1F3B6D text=#FDE047 */
+a.iuRightCta.iuRightCta--services{
+  background:#1F3B6D;
+  color:#FDE047;
+  border-color:#1F3B6D;
+}
+a.iuRightCta.iuRightCta--services:hover{
+  background:#1F3B6D;
+  color:#FDE047;
+}
