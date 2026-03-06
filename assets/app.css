@@ -12799,10 +12799,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) {
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) {
   margin-top: 12px !important;
 }
+/* Geometry-exact: topTools mb 8 + mindMenu gap 24 + section mt + SectionHead mt → match gapAbove 24 → section mt -16 */
 body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mojeSluzby){
-  margin-top: 8px !important;
+  margin-top: -16px !important;
 }
-/* Geometry-exact: gap below top tools = gap above (no extra SectionHead spacing) */
 body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead{
   margin-top: 8px !important;
 }
