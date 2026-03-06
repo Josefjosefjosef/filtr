@@ -10043,7 +10043,7 @@ main#content .layout{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   min-width: 0;
 }
 .accordionCol .mindMenu .iu-mmTopTool{
@@ -10122,6 +10122,11 @@ main#content .layout{
   .accordionCol .mindMenu .iu-mmTopTools{
     grid-template-columns: 1fr;
   }
+}
+
+/* Align spacing: same visual gap above and below top tools (Kalendář/Poznámky/Úkoly) */
+.accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks{
+  margin-top: 8px !important;
 }
 
 /* Ensure content below has breathing room; match Rychl├ę odkazy Ôćö Moje slu┼żby lineÔćĺicons gap */
