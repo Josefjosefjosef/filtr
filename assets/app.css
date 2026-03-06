@@ -15223,14 +15223,6 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   flex: 0 0 auto !important;
   min-width: max-content !important;
   margin-right: 12px !important;
-  /* P0: align split-button center with right column (MindMenu) center — shift left per viewport */
-  transform: translateX(-94px) !important;
-}
-@media (min-width: 1400px) and (max-width: 1699px){
-  #topbarWrap #iuTopbarRight .iuRightTopCtas{ transform: translateX(-131px) !important; }
-}
-@media (min-width: 1700px){
-  #topbarWrap #iuTopbarRight .iuRightTopCtas{ transform: translateX(-371px) !important; }
 }
 #topbarWrap #iuTopbarRight #iuTopbarToday{
   order: 20 !important;
