@@ -13688,6 +13688,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (item.el) item.el.hidden = item.wasHidden;
     }
     hiddenSiblings = [];
+    var feed = document.getElementById("feed");
+    var silver = document.getElementById("silver-slot");
+    var homeView = document.getElementById("iuHomeView");
+    if (feed && feed.id === "feed") feed.hidden = false;
+    if (silver && silver.id === "silver-slot") silver.hidden = false;
+    if (homeView && homeView.id === "iuHomeView") homeView.hidden = true;
   }
   function setAdsTab(tab) {
     var tabBrowse = document.getElementById("iuAdsTabBrowse");
@@ -13705,18 +13711,17 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
   function run() {
     var wrapper = document.querySelector(".iuRightTopCtas");
-    var services = wrapper ? wrapper.querySelector(".iuRightCta--services") : null;
-    var submit = wrapper ? wrapper.querySelector(".iuRightCta--submit") : null;
-    if (services) {
-      services.addEventListener("click", function (e) {
-        e.preventDefault();
-        openAdsStage("browse");
-      });
-    }
-    if (submit) {
-      submit.addEventListener("click", function (e) {
-        e.preventDefault();
-        openAdsStage("submit");
+    if (wrapper) {
+      wrapper.addEventListener("click", function (e) {
+        var t = e.target && e.target.closest ? e.target.closest("button") : null;
+        if (!t || !wrapper.contains(t)) return;
+        if (t.classList && t.classList.contains("iuRightCta--services")) {
+          e.preventDefault();
+          openAdsStage("browse");
+        } else if (t.classList && t.classList.contains("iuRightCta--submit")) {
+          e.preventDefault();
+          openAdsStage("submit");
+        }
       });
     }
     var backBtn = document.getElementById("iuAdsStageBack");

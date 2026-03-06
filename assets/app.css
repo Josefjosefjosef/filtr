@@ -187,6 +187,7 @@
 html{
   scroll-padding-top: var(--topbarStackH);
   scrollbar-gutter: stable;
+  overflow-x: hidden;
 }
 
 /* 2) M├ędia nikdy nemaj├ş m─Ťnit rozm─Ťr po na─Źten├ş */
@@ -293,6 +294,8 @@ html,body{ height:100%; }
 
 body{
   margin:0;
+  max-width: 100vw;
+  box-sizing: border-box;
   /* TEMP DEBUG BACKGROUND */
   background: var(--iu-page-bg);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
@@ -7372,6 +7375,9 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
   gap: 20px;
   align-items: start;
   width: 100%;
+  max-width: 100vw;
+  min-width: 0;
+  box-sizing: border-box;
   justify-content: start;
   padding-top: var(--iuTopbarHeight) !important;
 }
