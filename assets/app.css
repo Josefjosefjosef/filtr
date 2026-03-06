@@ -10037,6 +10037,84 @@ main#content .layout{
   min-width: 0;
 }
 
+/* === MindMenu: top tools (Kalendář, Poznámky, Úkoly) above Rychlé odkazy === */
+.accordionCol .mindMenu .iu-mmTopTools{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+  min-width: 0;
+}
+.accordionCol .mindMenu .iu-mmTopTool{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  min-width: 0;
+}
+.accordionCol .mindMenu .iu-mmTopTool:hover{
+  filter: brightness(0.97);
+  border-color: rgba(0,0,0,0.1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.accordionCol .mindMenu .iu-mmTopTool:focus-visible{
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+.accordionCol .mindMenu .iu-mmTopTool:active{
+  transform: translateY(0.5px);
+}
+.accordionCol .mindMenu .iu-mmTopToolIcon{
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.accordionCol .mindMenu .iu-mmTopToolIcon svg{
+  width: 16px;
+  height: 16px;
+}
+.accordionCol .mindMenu .iu-mmTopToolText{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.accordionCol .mindMenu .iu-mmTopTool--cal{
+  background: #EFF6FF;
+  color: #1D4ED8;
+}
+.accordionCol .mindMenu .iu-mmTopTool--notes{
+  background: #F5F3FF;
+  color: #6D28D9;
+}
+.accordionCol .mindMenu .iu-mmTopTool--tasks{
+  background: #ECFDF5;
+  color: #047857;
+}
+@media (max-width: 420px){
+  .accordionCol .mindMenu .iu-mmTopTools{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 320px){
+  .accordionCol .mindMenu .iu-mmTopTools{
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Ensure content below has breathing room; match Rychl├ę odkazy Ôćö Moje slu┼żby lineÔćĺicons gap */
 .accordionCol .mindMenu{
   --iu-rr-blockTopGap: 12px;
