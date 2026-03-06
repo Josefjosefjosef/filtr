@@ -15419,6 +15419,20 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   transition:all .18s ease;
 }
 
+/* Right-rail only: explicit transition to avoid paint jitter (RCA: transition-all-on-right-rail-items) */
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItemLink,
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItem,
+.accordionCol .mindMenu .iu-mojeSluzby .iu-mmQuickItemLink,
+.accordionCol .mindMenu .iu-mojeSluzby .iu-mmQuickItem{
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+/* Right-rail only: reserve outline space to avoid focus layout shift (RCA: outline-border-swap) */
+.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile{
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
 .iu-mojeSluzby .iu-mmQuickItemLink:hover,
 .iu-mojeSluzby .iu-mmQuickItem:hover,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickItemLink:hover,
