@@ -16931,11 +16931,11 @@ body .accordionCol .mindMenu .iu-mmQuickGrid{
   grid-template-columns:repeat(2, 1fr) !important;
 }
 
-/* unify wrapper height for ALL tiles */
+/* unify wrapper height for ALL tiles (was 72px; diag HEIGHT_ROOT_CAUSE → 64px) */
 body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile{
   width:100% !important;
-  height:72px !important;          /* matches observed wrapper (143x72) */
-  min-height:72px !important;
+  height:64px !important;
+  min-height:64px !important;
   box-sizing:border-box !important;
 }
 
@@ -17016,11 +17016,11 @@ body .accordionCol .mindMenu .iu-mmQuickGrid{
   grid-template-columns:repeat(2, 1fr) !important;
 }
 
-/* unify wrapper height */
+/* unify wrapper height (was 72px; diag HEIGHT_ROOT_CAUSE → 64px) */
 body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile{
   width:100% !important;
-  height:72px !important;
-  min-height:72px !important;
+  height:64px !important;
+  min-height:64px !important;
   box-sizing:border-box !important;
 }
 
@@ -17386,3 +17386,6 @@ body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileText{
   color:#2E3238 !important;
   text-align:center !important;
 }
+
+/* RAIL_CLEANUP_MARKER — right rail CSS hygiene (diag HEIGHT_ROOT_CAUSE fix) */
+:root{ --iu-rail-clean-v1:1; }
