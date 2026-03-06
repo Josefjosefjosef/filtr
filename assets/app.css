@@ -10125,7 +10125,7 @@ main#content .layout{
 }
 
 /* Align spacing: same visual gap above and below top tools (Kalendář/Poznámky/Úkoly) */
-body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks{
+body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mojeSluzby){
   margin-top: 8px !important;
 }
 
