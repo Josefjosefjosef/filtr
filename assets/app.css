@@ -17433,3 +17433,19 @@ border-top-left-radius:8px !important;
 border-bottom-left-radius:8px !important;
 pointer-events:none !important;
 }
+
+/* DEPLOY MARKER */
+:root{ --iu-ql-strip-radius-v1:1; }
+
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > a.iuTileLink::before,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > button.iuTileLink::before,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink::before{
+border-top-left-radius:8px !important;
+border-bottom-left-radius:8px !important;
+}
+
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > a.iuTileLink,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > button.iuTileLink,
+body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink{
+overflow:hidden !important;
+}
