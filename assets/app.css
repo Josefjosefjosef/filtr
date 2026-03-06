@@ -10048,22 +10048,19 @@ main#content .layout{
 }
 .accordionCol .mindMenu .iu-mmTopTool{
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
   gap: 8px;
-  min-height: 40px;
-  height: 40px;
-  padding: 0 10px;
+  padding: 10px 8px;
+  aspect-ratio: 1 / 1;
+  min-height: 0;
+  min-width: 0;
   border-radius: 12px;
   border: 1px solid rgba(0,0,0,0.06);
   box-shadow: 0 1px 0 rgba(0,0,0,0.04);
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   cursor: pointer;
-  min-width: 0;
 }
 .accordionCol .mindMenu .iu-mmTopTool:hover{
   filter: brightness(0.97);
@@ -10079,19 +10076,25 @@ main#content .layout{
 }
 .accordionCol .mindMenu .iu-mmTopToolIcon{
   flex: 0 0 auto;
-  width: 18px;
-  height: 18px;
-  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
 }
 .accordionCol .mindMenu .iu-mmTopToolIcon svg{
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 }
 .accordionCol .mindMenu .iu-mmTopToolText{
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.15;
+  white-space: normal;
   overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+  min-width: 0;
 }
 .accordionCol .mindMenu .iu-mmTopTool--cal{
   background: #EFF6FF;
