@@ -13661,6 +13661,94 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 })();
 
+// === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → feed-replace overlay (VARIANT A, no URL change) ===
+(function iuAdsStageOverlay() {
+  var prevMiddleView = null;
+  var middleViewIds = ["feed", "iuRadioView", "iuTvOnlineView", "iuJrEmptyView", "iuMapyView", "iuTravelView", "iuMyUzelView1", "iuMyUzelView2", "iuMyUzelView3", "iuMyUzelView4", "iuMyUzelView5"];
+  function openAdsStage(activeTab) {
+    var stage = document.getElementById("iuAdsStage");
+    if (!stage) return;
+    prevMiddleView = null;
+    for (var i = 0; i < middleViewIds.length; i++) {
+      var el = document.getElementById(middleViewIds[i]);
+      if (el && !el.hidden) {
+        prevMiddleView = el;
+        el.hidden = true;
+        break;
+      }
+    }
+    stage.hidden = false;
+    setAdsTab(activeTab);
+  }
+  function closeAdsStage() {
+    var stage = document.getElementById("iuAdsStage");
+    if (!stage) return;
+    stage.hidden = true;
+    if (prevMiddleView) prevMiddleView.hidden = false;
+    prevMiddleView = null;
+  }
+  function setAdsTab(tab) {
+    var tabBrowse = document.getElementById("iuAdsTabBrowse");
+    var tabSubmit = document.getElementById("iuAdsTabSubmit");
+    var panelBrowse = document.getElementById("iuAdsPanelBrowse");
+    var panelSubmit = document.getElementById("iuAdsPanelSubmit");
+    if (!tabBrowse || !tabSubmit || !panelBrowse || !panelSubmit) return;
+    var isBrowse = tab === "browse";
+    tabBrowse.classList.toggle("is-active", isBrowse);
+    tabSubmit.classList.toggle("is-active", !isBrowse);
+    tabBrowse.setAttribute("aria-selected", isBrowse ? "true" : "false");
+    tabSubmit.setAttribute("aria-selected", !isBrowse ? "true" : "false");
+    panelBrowse.hidden = !isBrowse;
+    panelSubmit.hidden = isBrowse;
+  }
+  function run() {
+    var wrapper = document.querySelector(".iuRightTopCtas");
+    var services = wrapper ? wrapper.querySelector(".iuRightCta--services") : null;
+    var submit = wrapper ? wrapper.querySelector(".iuRightCta--submit") : null;
+    if (services) {
+      services.addEventListener("click", function (e) {
+        e.preventDefault();
+        openAdsStage("browse");
+      });
+    }
+    if (submit) {
+      submit.addEventListener("click", function (e) {
+        e.preventDefault();
+        openAdsStage("submit");
+      });
+    }
+    var backBtn = document.getElementById("iuAdsStageBack");
+    if (backBtn) {
+      backBtn.addEventListener("click", function () {
+        closeAdsStage();
+      });
+    }
+    var tabBrowse = document.getElementById("iuAdsTabBrowse");
+    var tabSubmit = document.getElementById("iuAdsTabSubmit");
+    if (tabBrowse) {
+      tabBrowse.addEventListener("click", function () {
+        setAdsTab("browse");
+      });
+    }
+    if (tabSubmit) {
+      tabSubmit.addEventListener("click", function () {
+        setAdsTab("submit");
+      });
+    }
+    var form = document.getElementById("iuAdsSubmitForm");
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+      });
+    }
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+})();
+
 // === UI-only cleanup: permanently disable any cached rail-hidden state ===
 try { document.body.classList.remove("iu" + "RailHidden"); } catch (e) {}
 try { document.documentElement.classList.remove("iu" + "RailHidden"); } catch (e) {}
