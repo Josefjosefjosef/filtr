@@ -3154,8 +3154,11 @@ body[data-section="media"] #feed{
 #feed[hidden]{
   display: none !important;
 }
+#silver-slot[hidden]{
+  display: none !important;
+}
 
-/* === Inzerce a služby: feed-replace overlay (VARIANT A, middle column only) === */
+/* === Inzerce a služby: feed-replace overlay (EXCLUSIVE SINGLE-CONTENT) === */
 #iuAdsStage[hidden]{
   display: none !important;
 }
