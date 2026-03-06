@@ -46,6 +46,12 @@ async function runHeadlessChecks() {
       hasOverflowX: false,
       topbarHasGradient: false,
       topbarBg: null,
+      brandTitleExists: false,
+      subtitleExists: false,
+      subtitleTextExactMatch: false,
+      subtitleBelowTitle: false,
+      subtitleWraps: false,
+      topbarOverflow: false,
     },
     error: null,
   };
@@ -95,6 +101,12 @@ async function runHeadlessChecks() {
           hasOverflowX: false,
           topbarHasGradient: false,
           topbarBg: null,
+          brandTitleExists: false,
+          subtitleExists: false,
+          subtitleTextExactMatch: false,
+          subtitleBelowTitle: false,
+          subtitleWraps: false,
+          topbarOverflow: false,
         },
       };
 
@@ -131,6 +143,27 @@ async function runHeadlessChecks() {
           const bg = (style.background || style.backgroundColor || '').toLowerCase();
           out.layout.topbarHasGradient = bg.includes('linear-gradient') || bg.includes('gradient');
         }
+
+        const brandTitle = document.querySelector('.iuTopbarLeft .iuBrand, .iuBrand');
+        const brandBlock = document.querySelector('.iuBrandBlock');
+        const subtitleEl = document.querySelector('.iuBrandSubtitle');
+        const expectedSubtitle = 'Zprávy • Služby • Nástroje • Silver – váš osobní asistent pro každý den';
+        out.layout.brandTitleExists = !!(brandTitle && (brandTitle.textContent || '').replace(/\s+/g, '').includes('infoUzel'));
+        out.layout.subtitleExists = !!subtitleEl;
+        out.layout.subtitleTextExactMatch = !!(subtitleEl && (subtitleEl.textContent || '').trim() === expectedSubtitle);
+        let subtitleBelowTitle = false;
+        let subtitleWraps = false;
+        if (brandTitle && subtitleEl) {
+          const r1 = brandTitle.getBoundingClientRect();
+          const r2 = subtitleEl.getBoundingClientRect();
+          subtitleBelowTitle = r2.top >= r1.bottom - 2;
+          const cs = window.getComputedStyle(subtitleEl);
+          const lineHeight = parseFloat(cs.lineHeight) || 14;
+          subtitleWraps = subtitleEl.scrollHeight > lineHeight * 1.8;
+        }
+        out.layout.subtitleBelowTitle = subtitleBelowTitle;
+        out.layout.subtitleWraps = subtitleWraps;
+        out.layout.topbarOverflow = topbar ? (topbar.scrollWidth > topbar.clientWidth + 2) : false;
 
         out.layout.hasLeftRail = !!document.querySelector('.accordionCol, aside.accordionCol, [class*="accordionCol"]');
         out.layout.hasMindMenu = !!document.querySelector('.iu-mmQuickLinks, [class*="iu-mm"], .iu-mmSectionHead');
@@ -177,6 +210,12 @@ async function main() {
       hasOverflowX: false,
       topbarHasGradient: false,
       topbarBg: null,
+      brandTitleExists: false,
+      subtitleExists: false,
+      subtitleTextExactMatch: false,
+      subtitleBelowTitle: false,
+      subtitleWraps: false,
+      topbarOverflow: false,
     },
     bundle: {
       cssKb: bundle.cssKb ?? headless.bundle?.cssKb ?? 0,
@@ -199,7 +238,7 @@ main().catch((e) => {
     cls: null,
     lcpMs: null,
     jsErrors: [],
-    layout: { topbarHeight: null, hasLeftRail: false, hasMindMenu: false, hasTopbarGrid: false, hasOverflowX: false, topbarHasGradient: false, topbarBg: null },
+    layout: { topbarHeight: null, hasLeftRail: false, hasMindMenu: false, hasTopbarGrid: false, hasOverflowX: false, topbarHasGradient: false, topbarBg: null, brandTitleExists: false, subtitleExists: false, subtitleTextExactMatch: false, subtitleBelowTitle: false, subtitleWraps: false, topbarOverflow: false },
     bundle: getBundleSizes(),
     error: String(e.message || e),
   };
