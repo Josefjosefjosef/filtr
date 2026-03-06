@@ -9561,6 +9561,23 @@ header.iuTopbar .iuHamburger svg,
   flex-shrink: 0;
   min-width: 0;
 }
+/* Topbar logo: gentle shift up */
+.iuTopbar .iuBrandBlock .iuBrand{
+  position: relative;
+  top: -5px;
+}
+/* Tagline line 1 (Váš osobní internet) */
+.iuBrandSubtitle::before{
+  content: "Váš osobní internet";
+  display: block;
+  font-size: 1.22em;
+  line-height: 1.25;
+  margin-bottom: 7px;
+  font-weight: 600;
+}
+.iuTopbar .iuBrandSubtitle::before{
+  color: var(--iuTopbarFg, #D1D5DB);
+}
 .iuBrandSubtitle{
   font-size: 11px;
   line-height: 1.2;
@@ -9569,6 +9586,13 @@ header.iuTopbar .iuHamburger svg,
   white-space: nowrap;
   margin: 0;
   padding: 0;
+}
+/* Tagline typography: line 2 (Zprávy • Služby • …) */
+.iuTopbar .iuBrandSubtitle{
+  color: #6B7280;
+  font-size: 1em;
+  line-height: 1.35;
+  white-space: normal;
 }
 @media (max-width: 700px){
   .iuBrandSubtitle{ display: none; }
