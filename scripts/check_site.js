@@ -15,7 +15,7 @@ const REPORTS_DIR = path.join(ROOT, 'reports');
 const OUTPUT_PATH = path.join(REPORTS_DIR, 'check_site.json');
 const SITE_URL = process.env.SITE_URL || 'https://infouzel.cz/projects/?debug=1&nosw=1&section=media';
 
-const SETTLE_MS = 3000;
+const SETTLE_MS = 5000;
 const PAGE_TIMEOUT_MS = 25000;
 
 function getBundleSizes() {
@@ -52,6 +52,8 @@ async function runHeadlessChecks() {
       subtitleBelowTitle: false,
       subtitleWraps: false,
       topbarOverflow: false,
+      subtitleComputedColor: null,
+      subtitleVisible: false,
     },
     error: null,
   };
@@ -89,7 +91,9 @@ async function runHeadlessChecks() {
 
     await new Promise((r) => setTimeout(r, SETTLE_MS));
 
-    const metrics = await page.evaluate(() => {
+    let metrics;
+    try {
+      metrics = await page.evaluate(() => {
       const out = {
         cls: null,
         lcpMs: null,
@@ -107,6 +111,8 @@ async function runHeadlessChecks() {
           subtitleBelowTitle: false,
           subtitleWraps: false,
           topbarOverflow: false,
+          subtitleComputedColor: null,
+          subtitleVisible: false,
         },
       };
 
@@ -164,6 +170,12 @@ async function runHeadlessChecks() {
         out.layout.subtitleBelowTitle = subtitleBelowTitle;
         out.layout.subtitleWraps = subtitleWraps;
         out.layout.topbarOverflow = topbar ? (topbar.scrollWidth > topbar.clientWidth + 2) : false;
+        if (subtitleEl) {
+          const subStyle = window.getComputedStyle(subtitleEl);
+          out.layout.subtitleComputedColor = subStyle.color || null;
+          const r = subtitleEl.getBoundingClientRect();
+          out.layout.subtitleVisible = r.width > 0 && r.height > 0 && (subtitleEl.offsetParent !== null);
+        }
 
         out.layout.hasLeftRail = !!document.querySelector('.accordionCol, aside.accordionCol, [class*="accordionCol"]');
         out.layout.hasMindMenu = !!document.querySelector('.iu-mmQuickLinks, [class*="iu-mm"], .iu-mmSectionHead');
@@ -176,7 +188,13 @@ async function runHeadlessChecks() {
       }
 
       return out;
-    });
+      });
+    } catch (e) {
+      result.error = String(e.message || e);
+      result.layoutEvaluateError = String(e.message || e);
+      if (browser) await browser.close();
+      return result;
+    }
 
     result.cls = metrics.cls;
     result.lcpMs = metrics.lcpMs;
@@ -216,6 +234,8 @@ async function main() {
       subtitleBelowTitle: false,
       subtitleWraps: false,
       topbarOverflow: false,
+      subtitleComputedColor: null,
+      subtitleVisible: false,
     },
     bundle: {
       cssKb: bundle.cssKb ?? headless.bundle?.cssKb ?? 0,
@@ -225,6 +245,9 @@ async function main() {
 
   if (headless.error) {
     output.error = headless.error;
+  }
+  if (headless.layoutEvaluateError) {
+    output.layoutEvaluateError = headless.layoutEvaluateError;
   }
 
   fs.mkdirSync(REPORTS_DIR, { recursive: true });
@@ -238,7 +261,7 @@ main().catch((e) => {
     cls: null,
     lcpMs: null,
     jsErrors: [],
-    layout: { topbarHeight: null, hasLeftRail: false, hasMindMenu: false, hasTopbarGrid: false, hasOverflowX: false, topbarHasGradient: false, topbarBg: null, brandTitleExists: false, subtitleExists: false, subtitleTextExactMatch: false, subtitleBelowTitle: false, subtitleWraps: false, topbarOverflow: false },
+    layout: { topbarHeight: null, hasLeftRail: false, hasMindMenu: false, hasTopbarGrid: false, hasOverflowX: false, topbarHasGradient: false, topbarBg: null, brandTitleExists: false, subtitleExists: false, subtitleTextExactMatch: false, subtitleBelowTitle: false, subtitleWraps: false, topbarOverflow: false, subtitleComputedColor: null, subtitleVisible: false },
     bundle: getBundleSizes(),
     error: String(e.message || e),
   };
