@@ -10615,6 +10615,7 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   flex-direction: column;
   gap: 4px;
   margin-bottom: 12px;
+  touch-action: none;
 }
 .iu-quicktools-settings-row{
   display: flex;
@@ -10624,6 +10625,7 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   border-radius: 8px;
   background: rgba(0,0,0,0.03);
   cursor: default;
+  touch-action: none;
 }
 .iu-quicktools-settings-row:hover{
   background: rgba(0,0,0,0.06);

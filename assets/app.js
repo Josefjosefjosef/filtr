@@ -7963,8 +7963,8 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuQuickToolsApplyConfig() {
-    const section = document.querySelector("aside.accordionCol .mindMenu section.iu-mmQuickLinks");
-    const grid = section ? section.querySelector(".iu-mmQuickGrid") : null;
+    const section = document.querySelector("aside.accordionCol .mindMenu section.iu-mmQuickLinks") || document.querySelector("section.iu-mmQuickLinks");
+    const grid = section ? section.querySelector(".iu-mmQuickGrid") : document.querySelector(".iu-mmQuickGrid");
     if (!grid) return;
     const stored = loadQuickToolsConfig();
     const cfg = stored ? sanitizeQuickToolsConfig(stored) : getDefaultQuickToolsConfig();
@@ -7990,6 +7990,7 @@ function buildVideoAsArticleCard(it) {
     if (!panel) return;
     panel.hidden = false;
     panel.setAttribute("aria-hidden", "false");
+    if (typeof panel._iuQuickToolsSync === "function") panel._iuQuickToolsSync();
     document.body.addEventListener("keydown", iuQuickToolsSettingsOnEsc);
     document.addEventListener("click", iuQuickToolsSettingsOnOutside);
   }
@@ -8090,20 +8091,60 @@ function buildVideoAsArticleCard(it) {
       if (panel.hidden) iuQuickToolsSettingsOpen(); else iuQuickToolsSettingsClose();
     });
 
-    function onQuickToolsVisibilityChange(e) {
-      const t = e.target;
-      if (!t || t.getAttribute("data-iu-quicktools-visible-toggle") == null) return;
-      if (!panel.contains(t)) return;
-      const id = t.getAttribute("data-iu-quicktools-visible-toggle");
+    function applyQuickToolsVisibilityFromCheckbox(checkboxEl) {
+      if (!checkboxEl || checkboxEl.getAttribute("data-iu-quicktools-visible-toggle") == null) return;
+      if (!panel.contains(checkboxEl)) return;
+      const id = checkboxEl.getAttribute("data-iu-quicktools-visible-toggle");
       let cfg = loadQuickToolsConfig();
       if (!cfg) cfg = getDefaultQuickToolsConfig();
       cfg = sanitizeQuickToolsConfig(cfg);
       const idx = cfg.visible.indexOf(id);
-      if (t.checked) { if (idx === -1) cfg.visible.push(id); }
+      if (checkboxEl.checked) { if (idx === -1) cfg.visible.push(id); }
       else { if (idx !== -1) cfg.visible.splice(idx, 1); }
-      iuQuickToolsSaveAndApply(cfg);
+      saveQuickToolsConfig(cfg);
+      iuQuickToolsApplyConfig();
+    }
+    function onQuickToolsVisibilityChange(e) {
+      const t = e.target;
+      if (!t || t.getAttribute("data-iu-quicktools-visible-toggle") == null) return;
+      applyQuickToolsVisibilityFromCheckbox(t);
     }
     panel.addEventListener("change", onQuickToolsVisibilityChange, true);
+    panel.addEventListener("input", onQuickToolsVisibilityChange, true);
+    function onPanelCheckboxClick(e) {
+      const t = e.target;
+      if (t && t.type === "checkbox" && t.getAttribute("data-iu-quicktools-visible-toggle") != null && panel.contains(t)) {
+        applyQuickToolsVisibilityFromCheckbox(t);
+      }
+    }
+    panel.addEventListener("click", onPanelCheckboxClick, true);
+    document.addEventListener("click", onPanelCheckboxClick, true);
+    function syncQuickToolsVisibilityFromPanel() {
+      if (!panel) return;
+      var listEl = panel.querySelector(".iu-quicktools-settings-list");
+      if (!listEl) return;
+      var checkboxes = listEl.querySelectorAll("input[type=checkbox][data-iu-quicktools-visible-toggle]");
+      var cfg = loadQuickToolsConfig();
+      if (!cfg) cfg = getDefaultQuickToolsConfig();
+      cfg = sanitizeQuickToolsConfig(cfg);
+      var changed = false;
+      for (var i = 0; i < checkboxes.length; i++) {
+        var cb = checkboxes[i];
+        var id = cb.getAttribute("data-iu-quicktools-visible-toggle");
+        if (!id) continue;
+        var inVisible = cfg.visible.indexOf(id) !== -1;
+        if (cb.checked !== inVisible) {
+          if (cb.checked) { if (cfg.visible.indexOf(id) === -1) { cfg.visible.push(id); changed = true; } }
+          else { if (cfg.visible.indexOf(id) !== -1) { cfg.visible.splice(cfg.visible.indexOf(id), 1); changed = true; } }
+        }
+      }
+      if (changed) {
+        saveQuickToolsConfig(cfg);
+        iuQuickToolsApplyConfig();
+      }
+    }
+    panel._iuQuickToolsSync = syncQuickToolsVisibilityFromPanel;
+    setInterval(syncQuickToolsVisibilityFromPanel, 50);
 
     panel.addEventListener("click", function(e){
       if (e.target && e.target.classList && e.target.classList.contains("iu-quicktools-settings-reset")) {
@@ -8149,6 +8190,22 @@ function buildVideoAsArticleCard(it) {
 
     var pointerDragRow = null;
     var pointerDragList = null;
+    function onPointerMove(e) {
+      if (!pointerDragRow || !pointerDragList || e.pointerId === undefined) return;
+      var el = document.elementFromPoint(e.clientX, e.clientY);
+      var row = el && el.closest ? el.closest("[data-quicktool-id]") : null;
+      if (row && row !== pointerDragRow && pointerDragList.contains(row)) {
+        pointerDragList.insertBefore(pointerDragRow, row.nextSibling);
+      }
+    }
+    function onPointerUp(e) {
+      if (pointerDragRow && e.pointerId !== undefined) {
+        try { pointerDragRow.releasePointerCapture(e.pointerId); } catch (_) {}
+        persistQuickToolsOrderFromPanel();
+        pointerDragRow = null;
+        pointerDragList = null;
+      }
+    }
     panel.addEventListener("pointerdown", function(e){
       var row = e.target && e.target.closest ? e.target.closest("[data-quicktool-id]") : null;
       if (!row) return;
@@ -8159,28 +8216,14 @@ function buildVideoAsArticleCard(it) {
       row.setPointerCapture(e.pointerId);
       e.preventDefault();
     });
-    panel.addEventListener("pointermove", function(e){
-      if (!pointerDragRow || !pointerDragList || e.pointerId === undefined) return;
-      var el = document.elementFromPoint(e.clientX, e.clientY);
-      var row = el && el.closest ? el.closest("[data-quicktool-id]") : null;
-      if (row && row !== pointerDragRow && pointerDragList.contains(row)) {
-        pointerDragList.insertBefore(pointerDragRow, row.nextSibling);
-      }
-    });
-    panel.addEventListener("pointerup", function(e){
-      if (pointerDragRow && e.pointerId !== undefined) {
-        try { pointerDragRow.releasePointerCapture(e.pointerId); } catch (_) {}
-        persistQuickToolsOrderFromPanel();
-        pointerDragRow = null;
-        pointerDragList = null;
-      }
-    });
-    panel.addEventListener("pointercancel", function(e){
+    document.addEventListener("pointermove", onPointerMove, true);
+    document.addEventListener("pointerup", onPointerUp, true);
+    document.addEventListener("pointercancel", function(e){
       if (pointerDragRow && e.pointerId !== undefined) {
         pointerDragRow = null;
         pointerDragList = null;
       }
-    });
+    }, true);
 
     document.addEventListener("iu-quicktools-reorder-from-test", function(e){
       if (e.detail && Array.isArray(e.detail.order)) {
