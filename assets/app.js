@@ -13698,8 +13698,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (center && center.children) {
       for (var i = 0; i < center.children.length; i++) {
         var child = center.children[i];
-        if (child && child !== stage && !child.hidden) {
-          savedHiddenContainers.push(child);
+        if (child && child !== stage) {
+          if (!child.hidden) savedHiddenContainers.push(child);
           child.hidden = true;
           try { child.style.setProperty("display", "none", "important"); } catch (e) {}
         }
@@ -13718,13 +13718,17 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     var stage = document.getElementById("iuAdsStage");
     if (!stage) return;
     stage.hidden = true;
+    var center = document.getElementById("iuCenterStage");
+    if (center && center.children) {
+      for (var i = 0; i < center.children.length; i++) {
+        var c = center.children[i];
+        if (c && c !== stage) try { c.style.removeProperty("display"); } catch (e) {}
+      }
+    }
     var articlesStage = document.querySelector(".iuArticlesStage");
     for (var i = savedHiddenContainers.length - 1; i >= 0; i--) {
       var el = savedHiddenContainers[i];
-      if (el) {
-        el.hidden = false;
-        try { el.style.removeProperty("display"); } catch (e) {}
-      }
+      if (el) el.hidden = false;
       if (el === articlesStage) {
         var feed = document.getElementById("feed");
         var silver = document.getElementById("silver-slot");
