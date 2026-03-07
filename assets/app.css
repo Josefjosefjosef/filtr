@@ -15592,9 +15592,11 @@ header#topbarWrap.topbar-new.iuTopbar::after{
 #topbarWrap #iuTopbarToday{
   display: none !important;
 }
-/* P0: restore right topbar scroll/date indicator */
+/* P0: ghost box fix — do not restore date/nameday in topbar right (paints under CTA) */
 #topbarWrap #iuTopbarRight #iuTopbarToday{
-  display: flex !important;
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 /* TOPBAR: actions order — double button before info icon (keep date+nameday hidden) */
