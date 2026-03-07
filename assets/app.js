@@ -13686,14 +13686,23 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (feed) activeView = feed;
     }
     var containerToHide = null;
+    var articlesStageEl = document.querySelector(".iuArticlesStage");
     if (activeView) {
-      var articlesStage = activeView.closest ? activeView.closest(".iuArticlesStage") : null;
+      var articlesStage = activeView.closest ? activeView.closest(".iuArticlesStage") : (activeView.parentElement && activeView.parentElement.classList && activeView.parentElement.classList.contains("iuArticlesStage") ? activeView.parentElement : null);
       containerToHide = articlesStage ? articlesStage : activeView;
     }
+    if (!containerToHide && articlesStageEl) containerToHide = articlesStageEl;
     if (savedHiddenContainer) savedHiddenContainer = null;
     if (containerToHide) {
       savedHiddenContainer = containerToHide;
       containerToHide.hidden = true;
+      var isArticlesScope = containerToHide === articlesStageEl || (containerToHide.classList && containerToHide.classList.contains("iuArticlesStage"));
+      if (isArticlesScope) {
+        var feedEl = document.getElementById("feed");
+        var silverEl = document.getElementById("silver-slot");
+        if (feedEl) feedEl.hidden = true;
+        if (silverEl) silverEl.hidden = true;
+      }
     }
     stage.hidden = false;
     setAdsTab(activeTab);
@@ -13707,7 +13716,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       var articlesStage = document.querySelector(".iuArticlesStage");
       if (savedHiddenContainer === articlesStage) {
         var feed = document.getElementById("feed");
+        var silver = document.getElementById("silver-slot");
         if (feed) feed.hidden = false;
+        if (silver) silver.hidden = false;
       }
       savedHiddenContainer = null;
     }
