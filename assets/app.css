@@ -3162,6 +3162,13 @@ body[data-section="media"] #feed{
 }
 
 /* === Inzerce a služby: feed-replace overlay (EXCLUSIVE SINGLE-CONTENT) === */
+/* Central middle-host state: when data-iu-mode="ads", only #iuAdsStage is rendered */
+#iuCenterStage[data-iu-mode="ads"] > *:not(#iuAdsStage){
+  display: none !important;
+}
+#iuCenterStage[data-iu-mode="ads"] > #iuAdsStage{
+  display: block !important;
+}
 #iuAdsStage[hidden]{
   display: none !important;
 }

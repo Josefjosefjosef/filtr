@@ -12195,8 +12195,8 @@ function buildVideoAsArticleCard(it) {
     if (my4) my4.hidden = true;
     if (my5) my5.hidden = true;
 
-    var adsStage = document.getElementById('iuAdsStage');
-    if (adsStage && !adsStage.hidden) return;
+    var center = document.getElementById('iuCenterStage');
+    if (center && center.getAttribute('data-iu-mode') === 'ads') return;
 
     let activeEl = null;
     if (String(key || '').toLowerCase().startsWith('myuzel-')) {
@@ -13673,44 +13673,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 })();
 
-// === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → single active middle view host (EXCLUSIVE) ===
+// === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → central exclusive middle mode (data-iu-mode on #iuCenterStage) ===
 (function iuAdsStageOverlay() {
-  var savedHiddenContainers = [];
-  var MIDDLE_VIEW_IDS = ["feed", "iuRadioView", "iuTvOnlineView", "iuJrEmptyView", "iuMapyView", "iuTravelView", "iuMyUzelView1", "iuMyUzelView2", "iuMyUzelView3", "iuMyUzelView4", "iuMyUzelView5", "iuWeatherView", "iuTvProgramView", "iuHomeView"];
-  function getActiveStandardView() {
-    for (var i = 0; i < MIDDLE_VIEW_IDS.length; i++) {
-      var el = document.getElementById(MIDDLE_VIEW_IDS[i]);
-      if (el && !el.hidden) return el;
-    }
-    var articlesStage = document.querySelector(".iuArticlesStage");
-    if (articlesStage && !articlesStage.hidden) {
-      var feed = document.getElementById("feed");
-      if (feed) return feed;
-    }
-    return null;
-  }
   function openAdsStage(activeTab) {
     var stage = document.getElementById("iuAdsStage");
     if (!stage) return;
     var center = document.getElementById("iuCenterStage");
-    var articlesStageEl = document.querySelector(".iuArticlesStage");
-    savedHiddenContainers = [];
-    if (center && center.children) {
-      for (var i = 0; i < center.children.length; i++) {
-        var child = center.children[i];
-        if (child && child !== stage) {
-          if (!child.hidden) savedHiddenContainers.push(child);
-          child.hidden = true;
-          try { child.style.setProperty("display", "none", "important"); } catch (e) {}
-        }
-      }
-    }
-    if (articlesStageEl) {
-      var feedEl = document.getElementById("feed");
-      var silverEl = document.getElementById("silver-slot");
-      if (feedEl) feedEl.hidden = true;
-      if (silverEl) silverEl.hidden = true;
-    }
+    if (center) center.setAttribute("data-iu-mode", "ads");
     stage.hidden = false;
     setAdsTab(activeTab);
   }
@@ -13719,24 +13688,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (!stage) return;
     stage.hidden = true;
     var center = document.getElementById("iuCenterStage");
-    if (center && center.children) {
-      for (var i = 0; i < center.children.length; i++) {
-        var c = center.children[i];
-        if (c && c !== stage) try { c.style.removeProperty("display"); } catch (e) {}
-      }
-    }
-    var articlesStage = document.querySelector(".iuArticlesStage");
-    for (var i = savedHiddenContainers.length - 1; i >= 0; i--) {
-      var el = savedHiddenContainers[i];
-      if (el) el.hidden = false;
-      if (el === articlesStage) {
-        var feed = document.getElementById("feed");
-        var silver = document.getElementById("silver-slot");
-        if (feed) feed.hidden = false;
-        if (silver) silver.hidden = false;
-      }
-    }
-    savedHiddenContainers = [];
+    if (center) center.removeAttribute("data-iu-mode");
     if (typeof window.iuApplySectionFromURL === "function") {
       try { window.iuApplySectionFromURL(); } catch (e) {}
     }
