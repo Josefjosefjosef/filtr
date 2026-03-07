@@ -200,41 +200,9 @@ img, svg, video, iframe{
 /* 3) V┼íechny obr├ízky, kter├ę maj├ş m├şt pevn├Ż pom─Ťr stran, dostanou aspect-ratio p┼Öes t┼Ö├şdy (viz n├ş┼że) */
 
 /* ==== P0 CLS=0: stabilizace metrik (topbar + mailboxes + FA ikony) ÔÇô min-scope, ┼ż├ídn├ę barvy/spacing ==== */
-#iuTopbarDate,
-.iuTopbarDate{
-  display: inline-block;
-  font-variant-numeric: tabular-nums;
-  min-width: 12ch;
-  min-width: 95px;
-}
-.iuTopbarDay{
-  display: inline-block;
-  min-width: 48px;
-}
-.iuTopbarNameday{
-  display: inline-block;
-  min-width: 8ch;
-}
-.iuTopbarSep{
-  display: inline-block;
-  min-width: 1ch;
-  width: 1ch;
-}
 #iuTopbarRight{
   position: relative;
   padding-right: 210px;
-}
-#iuTopbarToday{
-  position: absolute;
-  right: 0;
-  width: 274px;
-  min-width: 274px;
-  box-sizing: border-box;
-  min-width: 0 !important;
-  flex: 1 1 auto !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
 }
 .accordionCol .mindMenu .iu-mailboxes{
   min-height: 255px;
@@ -8855,8 +8823,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   text-overflow: ellipsis;
   transition: opacity .2s ease;
 }
-#iuTopbarDayInfo.iuTopbarDayInfo--hidden,
-#iuTopbarToday.iuTopbarDayInfo--hidden{
+#iuTopbarDayInfo.iuTopbarDayInfo--hidden{
   opacity: 0;
   pointer-events: none;
 }
@@ -8964,7 +8931,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 
 @media (max-width: 900px){
   .iuTopbar__gap80{ width: 24px; }
-  #iuTopbarToday{ max-width: 140px; }
 }
 
 @media (max-width: 500px){
@@ -10058,54 +10024,6 @@ header#topbarWrap.topbar-new.iuTopbar{
 main#content .layout{
   padding-top: var(--iuTopbarHeight) !important;
   min-height: calc(100vh - var(--iuTopbarHeight)) !important;
-}
-
-/* ============================================================
-   Today info in topbar (v3: time/date/nameday parts)
-   Hidden on search open without CLS
-   ============================================================ */
-
-.iuTopbarToday{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  white-space: nowrap;
-  font-size: 14px;
-  color: #D1D5DB !important;
-  transition: opacity .2s ease;
-}
-
-.iuTopbarDay,
-.iuTopbarDate,
-.iuTopbarNameday{
-  color: #D1D5DB !important;
-}
-
-.iuTopbarDay{
-  font-weight: 600;
-  letter-spacing: .2px;
-}
-
-.iuTopbarNameday{
-  flex-shrink: 0;
-  opacity: 0.9;
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-.iuTopbarSep{
-  opacity: .55;
-  color: #D1D5DB !important;
-}
-
-.iuSearchOpen #iuTopbarToday{
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-}
-
-@media (max-width:900px){
-  #iuTopbarToday{ display:none; }
 }
 
 /* ============================================================
@@ -11375,14 +11293,6 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
   color: rgba(11,27,43,0.92) !important;
 }
 
-/* === HOTFIX v3: nameday must not shrink === */
-#iuTopbarNameday,
-.iuTopbarNameday{
-  flex: 0 0 auto;
-  white-space: nowrap;
-  opacity: 0.9;
-}
-
 /* ===== infoUzel feed title weights (clean unified rule) ===== */
 @media (min-width: 900px){
   /* prvn├ş ─Źl├ínek v├Żrazn─Ťj┼í├ş */
@@ -11829,15 +11739,6 @@ section.iu-mindmenu,
   width: 220px;
   flex: 0 0 220px;
   min-width: 0;
-}
-
-/* === P0 Topbar: date/nameday nikdy nezmiz├ş (v─Źetn─Ť mobile) === */
-@media (max-width: 900px){
-  #iuTopbarToday{
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
 }
 
 /* === P0 CLS=0 stop-ship: rezervace m├şsta ikon (bez zm─Ťny barev/spacingu) === */
@@ -15588,18 +15489,7 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   font-size: calc(13px * 1.7) !important;
 }
 
-/* TOPBAR: hide date + nameday badges (remove from UI) */
-#topbarWrap #iuTopbarToday{
-  display: none !important;
-}
-/* P0: ghost box fix — do not restore date/nameday in topbar right (paints under CTA) */
-#topbarWrap #iuTopbarRight #iuTopbarToday{
-  display: none !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-/* TOPBAR: actions order — double button before info icon (keep date+nameday hidden) */
+/* TOPBAR: actions order — double button before info icon */
 #topbarWrap #iuTopbarRight{
   display: flex !important;
   align-items: center !important;
@@ -15610,9 +15500,6 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   flex: 0 0 auto !important;
   min-width: max-content !important;
   margin-right: 12px !important;
-}
-#topbarWrap #iuTopbarRight #iuTopbarToday{
-  order: 20 !important;
 }
 
 /* ===== QUICK SERVICE BLUE: ICONS + LABELS + SECTION TITLE #2563EB ===== */
