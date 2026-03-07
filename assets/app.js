@@ -13664,7 +13664,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 // === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → single active middle view host (EXCLUSIVE) ===
 (function iuAdsStageOverlay() {
   var savedHiddenContainers = [];
-  var MIDDLE_VIEW_IDS = ["feed", "iuRadioView", "iuTvOnlineView", "iuJrEmptyView", "iuMapyView", "iuTravelView", "iuMyUzelView1", "iuMyUzelView2", "iuMyUzelView3", "iuMyUzelView4", "iuMyUzelView5"];
+  var MIDDLE_VIEW_IDS = ["feed", "iuRadioView", "iuTvOnlineView", "iuJrEmptyView", "iuMapyView", "iuTravelView", "iuMyUzelView1", "iuMyUzelView2", "iuMyUzelView3", "iuMyUzelView4", "iuMyUzelView5", "iuWeatherView", "iuTvProgramView", "iuHomeView"];
   function getActiveStandardView() {
     for (var i = 0; i < MIDDLE_VIEW_IDS.length; i++) {
       var el = document.getElementById(MIDDLE_VIEW_IDS[i]);
