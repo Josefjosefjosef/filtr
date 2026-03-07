@@ -7963,8 +7963,13 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuQuickToolsApplyConfig() {
-    const section = document.querySelector("aside.accordionCol .mindMenu section.iu-mmQuickLinks") || document.querySelector("section.iu-mmQuickLinks");
-    const grid = section ? section.querySelector(".iu-mmQuickGrid") : document.querySelector(".iu-mmQuickGrid");
+    const panelEl = document.getElementById("iuQuickToolsSettingsPanel");
+    const grid = panelEl && panelEl.nextElementSibling && panelEl.nextElementSibling.classList.contains("iu-mmQuickGrid")
+      ? panelEl.nextElementSibling
+      : (function(){
+          const section = panelEl ? panelEl.closest("section.iu-mmQuickLinks") : (document.querySelector("aside.accordionCol .mindMenu section.iu-mmQuickLinks") || document.querySelector("aside.accordionCol section.iu-mmQuickLinks"));
+          return section ? section.querySelector(".iu-mmQuickGrid") : null;
+        })();
     if (!grid) return;
     const stored = loadQuickToolsConfig();
     const cfg = stored ? sanitizeQuickToolsConfig(stored) : getDefaultQuickToolsConfig();
@@ -7981,7 +7986,9 @@ function buildVideoAsArticleCard(it) {
     tiles.forEach(function(el){ grid.appendChild(el); });
     tiles.forEach(function(el){
       const id = el.getAttribute("data-quicktool-id");
-      el.hidden = cfg.visible.indexOf(id) === -1;
+      const hide = cfg.visible.indexOf(id) === -1;
+      el.hidden = hide;
+      el.style.display = hide ? "none" : "";
     });
   }
 
@@ -8111,6 +8118,7 @@ function buildVideoAsArticleCard(it) {
     }
     panel.addEventListener("change", onQuickToolsVisibilityChange, true);
     panel.addEventListener("input", onQuickToolsVisibilityChange, true);
+    document.addEventListener("change", onQuickToolsVisibilityChange, true);
     function onPanelCheckboxClick(e) {
       const t = e.target;
       if (t && t.type === "checkbox" && t.getAttribute("data-iu-quicktools-visible-toggle") != null && panel.contains(t)) {
@@ -8144,7 +8152,6 @@ function buildVideoAsArticleCard(it) {
       }
     }
     panel._iuQuickToolsSync = syncQuickToolsVisibilityFromPanel;
-    setInterval(syncQuickToolsVisibilityFromPanel, 50);
 
     panel.addEventListener("click", function(e){
       if (e.target && e.target.classList && e.target.classList.contains("iu-quicktools-settings-reset")) {
