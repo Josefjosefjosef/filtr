@@ -3169,6 +3169,27 @@ body[data-section="media"] #feed{
 #iuCenterStage[data-iu-mode="ads"] > #iuAdsStage{
   display: block !important;
 }
+
+/* View switching: single data-view state; only the matching data-view-host is visible */
+#iuCenterStage [data-view-host]{
+  display: none !important;
+}
+#iuCenterStage[data-view="media"] [data-view-host="media"],
+#iuCenterStage[data-view="pocasi"] [data-view-host="pocasi"],
+#iuCenterStage[data-view="tvprogram"] [data-view-host="tvprogram"],
+#iuCenterStage[data-view="tvonline"] [data-view-host="tvonline"],
+#iuCenterStage[data-view="travel"] [data-view-host="travel"],
+#iuCenterStage[data-view="radio"] [data-view-host="radio"],
+#iuCenterStage[data-view="jr"] [data-view-host="jr"],
+#iuCenterStage[data-view="mapy"] [data-view-host="mapy"],
+#iuCenterStage[data-view="myuzel-1"] [data-view-host="myuzel-1"],
+#iuCenterStage[data-view="myuzel-2"] [data-view-host="myuzel-2"],
+#iuCenterStage[data-view="myuzel-3"] [data-view-host="myuzel-3"],
+#iuCenterStage[data-view="myuzel-4"] [data-view-host="myuzel-4"],
+#iuCenterStage[data-view="myuzel-5"] [data-view-host="myuzel-5"]{
+  display: block !important;
+}
+
 #iuAdsStage[hidden]{
   display: none !important;
 }
