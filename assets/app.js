@@ -13694,6 +13694,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (containerToHide) {
       savedHiddenContainer = containerToHide;
       containerToHide.hidden = true;
+      var articlesStageEl = document.querySelector(".iuArticlesStage");
+      if (containerToHide === articlesStageEl) {
+        var feedEl = document.getElementById("feed");
+        var silverEl = document.getElementById("silver-slot");
+        if (feedEl) feedEl.hidden = true;
+        if (silverEl) silverEl.hidden = true;
+      }
     }
     stage.hidden = false;
     setAdsTab(activeTab);
@@ -13707,7 +13714,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       var articlesStage = document.querySelector(".iuArticlesStage");
       if (savedHiddenContainer === articlesStage) {
         var feed = document.getElementById("feed");
+        var silver = document.getElementById("silver-slot");
         if (feed) feed.hidden = false;
+        if (silver) silver.hidden = false;
       }
       savedHiddenContainer = null;
     }
