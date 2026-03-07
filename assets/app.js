@@ -8090,9 +8090,10 @@ function buildVideoAsArticleCard(it) {
       if (panel.hidden) iuQuickToolsSettingsOpen(); else iuQuickToolsSettingsClose();
     });
 
-    panel.addEventListener("change", function(e){
+    function onQuickToolsVisibilityChange(e) {
       const t = e.target;
       if (!t || t.getAttribute("data-iu-quicktools-visible-toggle") == null) return;
+      if (!panel.contains(t)) return;
       const id = t.getAttribute("data-iu-quicktools-visible-toggle");
       let cfg = loadQuickToolsConfig();
       if (!cfg) cfg = getDefaultQuickToolsConfig();
@@ -8101,7 +8102,8 @@ function buildVideoAsArticleCard(it) {
       if (t.checked) { if (idx === -1) cfg.visible.push(id); }
       else { if (idx !== -1) cfg.visible.splice(idx, 1); }
       iuQuickToolsSaveAndApply(cfg);
-    });
+    }
+    panel.addEventListener("change", onQuickToolsVisibilityChange, true);
 
     panel.addEventListener("click", function(e){
       if (e.target && e.target.classList && e.target.classList.contains("iu-quicktools-settings-reset")) {
@@ -8111,6 +8113,17 @@ function buildVideoAsArticleCard(it) {
         iuQuickToolsSettingsClose();
       }
     });
+
+    function persistQuickToolsOrderFromPanel() {
+      var listEl = panel.querySelector(".iu-quicktools-settings-list");
+      if (!listEl) return;
+      var ids = Array.from(listEl.querySelectorAll("[data-quicktool-id]")).map(function(el){ return el.getAttribute("data-quicktool-id"); });
+      var cfg = loadQuickToolsConfig();
+      if (!cfg) cfg = getDefaultQuickToolsConfig();
+      cfg = sanitizeQuickToolsConfig(cfg);
+      cfg.order = ids;
+      iuQuickToolsSaveAndApply(cfg);
+    }
 
     var dragSrc = null;
     panel.addEventListener("dragstart", function(e){
@@ -8122,7 +8135,7 @@ function buildVideoAsArticleCard(it) {
       if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
       var row = e.target && e.target.closest ? e.target.closest("[data-quicktool-id]") : null;
       if (row && dragSrc && row !== dragSrc) {
-        row.parentNode.insertBefore(dragSrc, row);
+        row.parentNode.insertBefore(dragSrc, row.nextSibling);
       }
     });
     panel.addEventListener("dragend", function(){
@@ -8131,15 +8144,44 @@ function buildVideoAsArticleCard(it) {
     panel.addEventListener("drop", function(e){
       e.preventDefault();
       if (!dragSrc) return;
-      var listEl = panel.querySelector(".iu-quicktools-settings-list");
-      if (!listEl) return;
-      var ids = Array.from(listEl.querySelectorAll("[data-quicktool-id]")).map(function(el){ return el.getAttribute("data-quicktool-id"); });
-      var cfg = loadQuickToolsConfig();
-      if (!cfg) cfg = getDefaultQuickToolsConfig();
-      cfg = sanitizeQuickToolsConfig(cfg);
-      cfg.order = ids;
-      iuQuickToolsSaveAndApply(cfg);
+      persistQuickToolsOrderFromPanel();
     });
+
+    var pointerDragRow = null;
+    var pointerDragList = null;
+    panel.addEventListener("pointerdown", function(e){
+      var row = e.target && e.target.closest ? e.target.closest("[data-quicktool-id]") : null;
+      if (!row) return;
+      var listEl = row.parentNode;
+      if (!listEl || !listEl.classList.contains("iu-quicktools-settings-list")) return;
+      pointerDragRow = row;
+      pointerDragList = listEl;
+      row.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    panel.addEventListener("pointermove", function(e){
+      if (!pointerDragRow || !pointerDragList || e.pointerId === undefined) return;
+      var el = document.elementFromPoint(e.clientX, e.clientY);
+      var row = el && el.closest ? el.closest("[data-quicktool-id]") : null;
+      if (row && row !== pointerDragRow && pointerDragList.contains(row)) {
+        pointerDragList.insertBefore(pointerDragRow, row.nextSibling);
+      }
+    });
+    panel.addEventListener("pointerup", function(e){
+      if (pointerDragRow && e.pointerId !== undefined) {
+        try { pointerDragRow.releasePointerCapture(e.pointerId); } catch (_) {}
+        persistQuickToolsOrderFromPanel();
+        pointerDragRow = null;
+        pointerDragList = null;
+      }
+    });
+    panel.addEventListener("pointercancel", function(e){
+      if (pointerDragRow && e.pointerId !== undefined) {
+        pointerDragRow = null;
+        pointerDragList = null;
+      }
+    });
+
     document.addEventListener("iu-quicktools-reorder-from-test", function(e){
       if (e.detail && Array.isArray(e.detail.order)) {
         var cfg = loadQuickToolsConfig();

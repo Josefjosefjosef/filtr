@@ -10541,9 +10541,43 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   column-gap: var(--iu-mm-gap, 10px);
 }
 
-/* Quick tools settings: gear in section head (same style as mailbox gear) */
+/* Quick tools settings: gear in section head (always visible, SVG fallback) */
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionTitle{
+  flex-shrink: 0;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead .iu-mmSectionLine{
+  flex: 1;
+  min-width: 0;
+}
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger{
   flex-shrink: 0;
+  min-width: 28px;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(46, 50, 56, 0.9);
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger .iu-quicktools-gear-icon{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg{
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger .fa-solid.fa-gear{
+  display: none;
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger:focus-visible{
   outline: 2px solid currentColor;
