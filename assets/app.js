@@ -13661,32 +13661,39 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 })();
 
-// === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → feed-replace overlay (EXCLUSIVE SINGLE-CONTENT) ===
+// === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → single active middle view host (EXCLUSIVE) ===
 (function iuAdsStageOverlay() {
-  var prevMiddleView = null;
-  var didHideSilverSlot = false;
-  var middleViewIds = ["feed", "iuRadioView", "iuTvOnlineView", "iuJrEmptyView", "iuMapyView", "iuTravelView", "iuMyUzelView1", "iuMyUzelView2", "iuMyUzelView3", "iuMyUzelView4", "iuMyUzelView5"];
-  var standardContentIds = ["silver-slot"].concat(middleViewIds);
+  var savedHiddenContainer = null;
+  var MIDDLE_VIEW_IDS = ["feed", "iuRadioView", "iuTvOnlineView", "iuJrEmptyView", "iuMapyView", "iuTravelView", "iuMyUzelView1", "iuMyUzelView2", "iuMyUzelView3", "iuMyUzelView4", "iuMyUzelView5"];
+  function getActiveStandardView() {
+    for (var i = 0; i < MIDDLE_VIEW_IDS.length; i++) {
+      var el = document.getElementById(MIDDLE_VIEW_IDS[i]);
+      if (el && !el.hidden) return el;
+    }
+    var articlesStage = document.querySelector(".iuArticlesStage");
+    if (articlesStage && !articlesStage.hidden) {
+      var feed = document.getElementById("feed");
+      if (feed) return feed;
+    }
+    return null;
+  }
   function openAdsStage(activeTab) {
     var stage = document.getElementById("iuAdsStage");
     if (!stage) return;
-    prevMiddleView = null;
-    didHideSilverSlot = false;
-    for (var i = 0; i < standardContentIds.length; i++) {
-      var el = document.getElementById(standardContentIds[i]);
-      if (!el) continue;
-      if (el.id === "silver-slot") {
-        if (!el.hidden) {
-          el.hidden = true;
-          didHideSilverSlot = true;
-        }
-        continue;
-      }
-      if (!el.hidden) {
-        prevMiddleView = el;
-        el.hidden = true;
-        break;
-      }
+    var activeView = getActiveStandardView();
+    if (!activeView) {
+      var feed = document.getElementById("feed");
+      if (feed) activeView = feed;
+    }
+    var containerToHide = null;
+    if (activeView) {
+      var articlesStage = activeView.closest ? activeView.closest(".iuArticlesStage") : null;
+      containerToHide = articlesStage ? articlesStage : activeView;
+    }
+    if (savedHiddenContainer) savedHiddenContainer = null;
+    if (containerToHide) {
+      savedHiddenContainer = containerToHide;
+      containerToHide.hidden = true;
     }
     stage.hidden = false;
     setAdsTab(activeTab);
@@ -13695,12 +13702,14 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     var stage = document.getElementById("iuAdsStage");
     if (!stage) return;
     stage.hidden = true;
-    if (prevMiddleView) prevMiddleView.hidden = false;
-    prevMiddleView = null;
-    if (didHideSilverSlot) {
-      var silverEl = document.getElementById("silver-slot");
-      if (silverEl) silverEl.hidden = false;
-      didHideSilverSlot = false;
+    if (savedHiddenContainer) {
+      savedHiddenContainer.hidden = false;
+      var articlesStage = document.querySelector(".iuArticlesStage");
+      if (savedHiddenContainer === articlesStage) {
+        var feed = document.getElementById("feed");
+        if (feed) feed.hidden = false;
+      }
+      savedHiddenContainer = null;
     }
   }
   function setAdsTab(tab) {
@@ -13719,18 +13728,17 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
   function run() {
     var wrapper = document.querySelector(".iuRightTopCtas");
-    var services = wrapper ? wrapper.querySelector(".iuRightCta--services") : null;
-    var submit = wrapper ? wrapper.querySelector(".iuRightCta--submit") : null;
-    if (services) {
-      services.addEventListener("click", function (e) {
-        e.preventDefault();
-        openAdsStage("browse");
-      });
-    }
-    if (submit) {
-      submit.addEventListener("click", function (e) {
-        e.preventDefault();
-        openAdsStage("submit");
+    if (wrapper) {
+      wrapper.addEventListener("click", function (e) {
+        var t = e.target && e.target.closest ? e.target.closest("button") : null;
+        if (!t || !wrapper.contains(t)) return;
+        if (t.classList && t.classList.contains("iuRightCta--services")) {
+          e.preventDefault();
+          openAdsStage("browse");
+        } else if (t.classList && t.classList.contains("iuRightCta--submit")) {
+          e.preventDefault();
+          openAdsStage("submit");
+        }
       });
     }
     var backBtn = document.getElementById("iuAdsStageBack");
