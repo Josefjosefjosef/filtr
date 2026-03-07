@@ -13676,6 +13676,21 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       hiddenSiblings.push({ el: ch, wasHidden: ch.hidden });
       ch.hidden = true;
     }
+    var feed = document.getElementById("feed");
+    var silver = document.getElementById("silver-slot");
+    var homeView = document.getElementById("iuHomeView");
+    if (feed && feed.parentElement !== parent) {
+      hiddenSiblings.push({ el: feed, wasHidden: feed.hidden });
+      feed.hidden = true;
+    }
+    if (silver && silver.parentElement !== parent) {
+      hiddenSiblings.push({ el: silver, wasHidden: silver.hidden });
+      silver.hidden = true;
+    }
+    if (homeView && homeView.parentElement !== parent) {
+      hiddenSiblings.push({ el: homeView, wasHidden: homeView.hidden });
+      homeView.hidden = true;
+    }
     stage.hidden = false;
     setAdsTab(activeTab);
   }
