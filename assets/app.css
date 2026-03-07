@@ -10925,6 +10925,7 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 /* Articles mode: hide QuickFeed (sections managed by existing nav logic) */
 #iuCenterStage[data-iu-view="articles"] .iuArticlesStage{ display:block !important; }
 #iuCenterStage[data-iu-view="articles"] #iuQuickFeed{ display:none !important; }
+#iuCenterStage[data-iu-view="articles"] .iuArticlesStage[hidden]{ display:none !important; }
 
 .iuQuickFeed[hidden]{
   display: none !important;
