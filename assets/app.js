@@ -12167,64 +12167,16 @@ function buildVideoAsArticleCard(it) {
   }
 
   function showView(key){
-    const feedEl = document.getElementById('feed');
-    const viewEl = document.getElementById('iuRadioView');
-    const tvonlineEl = document.getElementById('iuTvOnlineView');
-    const jrEmptyEl = document.getElementById('iuJrEmptyView');
-    const mapyEl = document.getElementById('iuMapyView');
-    const travelEl = document.getElementById('iuTravelView');
-    const weatherEl = document.getElementById('iuWeatherView');
-    const tvprogramEl = document.getElementById('iuTvProgramView');
-    const my1 = document.getElementById('iuMyUzelView1');
-    const my2 = document.getElementById('iuMyUzelView2');
-    const my3 = document.getElementById('iuMyUzelView3');
-    const my4 = document.getElementById('iuMyUzelView4');
-    const my5 = document.getElementById('iuMyUzelView5');
-
-    if (feedEl) feedEl.hidden = true;
-    if (viewEl) viewEl.hidden = true;
-    if (tvonlineEl) tvonlineEl.hidden = true;
-    if (jrEmptyEl) jrEmptyEl.hidden = true;
-    if (mapyEl) mapyEl.hidden = true;
-    if (travelEl) travelEl.hidden = true;
-    if (weatherEl) weatherEl.hidden = true;
-    if (tvprogramEl) tvprogramEl.hidden = true;
-    if (my1) my1.hidden = true;
-    if (my2) my2.hidden = true;
-    if (my3) my3.hidden = true;
-    if (my4) my4.hidden = true;
-    if (my5) my5.hidden = true;
-
-    var center = document.getElementById('iuCenterStage');
-    if (center && center.getAttribute('data-iu-mode') === 'ads') return;
-
-    let activeEl = null;
-    if (String(key || '').toLowerCase().startsWith('myuzel-')) {
-      if (key === 'myuzel-1' && my1) my1.hidden = false;
-      if (key === 'myuzel-2' && my2) my2.hidden = false;
-      if (key === 'myuzel-3' && my3) my3.hidden = false;
-      if (key === 'myuzel-4' && my4) my4.hidden = false;
-      if (key === 'myuzel-5' && my5) my5.hidden = false;
-      activeEl = my1 && key === 'myuzel-1' ? my1 :
-                 my2 && key === 'myuzel-2' ? my2 :
-                 my3 && key === 'myuzel-3' ? my3 :
-                 my4 && key === 'myuzel-4' ? my4 :
-                 my5 && key === 'myuzel-5' ? my5 : null;
-    } else {
-      if(key === 'radio' && viewEl) { viewEl.hidden = false; activeEl = viewEl; }
-      if(key === 'tvonline' && tvonlineEl) { tvonlineEl.hidden = false; activeEl = tvonlineEl; }
-      if(key === 'jr' && jrEmptyEl) { jrEmptyEl.hidden = false; activeEl = jrEmptyEl; }
-      if(key === 'mapy' && mapyEl) { mapyEl.hidden = false; activeEl = mapyEl; }
-      if(key === 'travel' && travelEl) { travelEl.hidden = false; activeEl = travelEl; }
-      if(key === 'pocasi' && weatherEl) { weatherEl.hidden = false; activeEl = weatherEl; }
-      if(key === 'tvprogram' && tvprogramEl) { tvprogramEl.hidden = false; activeEl = tvprogramEl; }
-      // default feed view for all other sections
-      if(key !== 'radio' && key !== 'tvonline' && key !== 'jr' && key !== 'mapy' && key !== 'travel' && key !== 'pocasi' && key !== 'tvprogram' && feedEl) { feedEl.hidden = false; activeEl = feedEl; }
+    const center = document.getElementById('iuCenterStage');
+    if (!center) return;
+    if (center.getAttribute('data-iu-mode') === 'ads') {
+      center.dataset.pendingView = key || '';
+      return;
     }
-
-    // Notes: re-init within the active view on every switch (idempotent).
+    center.dataset.view = key || 'media';
+    const activeEl = center.querySelector('[data-view-host="' + (key || 'media') + '"]');
     try{
-      if (activeEl) requestAnimationFrame(() => { try{ iuInitNotesInView(activeEl); }catch{} });
+      if (activeEl) requestAnimationFrame(function(){ try{ iuInitNotesInView(activeEl); }catch{} });
     }catch{
       try{ if (activeEl) iuInitNotesInView(activeEl); }catch{}
     }
@@ -13688,7 +13640,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (!stage) return;
     stage.hidden = true;
     var center = document.getElementById("iuCenterStage");
-    if (center) center.removeAttribute("data-iu-mode");
+    if (center) {
+      center.removeAttribute("data-iu-mode");
+      var view = center.dataset.pendingView || center.dataset.view;
+      if (view) center.dataset.view = view;
+      try { delete center.dataset.pendingView; } catch (e) {}
+    }
     if (typeof window.iuApplySectionFromURL === "function") {
       try { window.iuApplySectionFromURL(); } catch (e) {}
     }
