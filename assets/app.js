@@ -13704,6 +13704,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     stage.hidden = true;
     if (savedHiddenContainer) {
       savedHiddenContainer.hidden = false;
+      var articlesStage = document.querySelector(".iuArticlesStage");
+      if (savedHiddenContainer === articlesStage) {
+        var feed = document.getElementById("feed");
+        if (feed) feed.hidden = false;
+      }
       savedHiddenContainer = null;
     }
   }
