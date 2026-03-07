@@ -7900,6 +7900,257 @@ function buildVideoAsArticleCard(it) {
       });
   };
 
+  const IU_QUICKTOOLS_STORAGE_KEY = "infouzel_quicktools";
+  const IU_QUICKTOOLS_CONFIG_VERSION = 1;
+  const IU_QUICKTOOLS_REGISTRY = [
+    { id: "datovka", label: "Datová schránka", accent: "#1F4B99" },
+    { id: "bankovnictvi", label: "Internetové bankovnictví", accent: "#0066cc" },
+    { id: "bakalari", label: "Bakaláři", accent: "#2e7d32" },
+    { id: "zdravotni_pojistovna", label: "Zdravotní pojišťovna", accent: "#00838f" },
+    { id: "zasilky", label: "Zásilky a sledování", accent: "#e60012" },
+    { id: "nakup_domu", label: "Nákup domů", accent: "#1F4B99" },
+    { id: "ai_asistenti", label: "AI asistenti", accent: "#0d9488" },
+    { id: "prekladac", label: "Překladač", accent: "#0d9488" },
+    { id: "word_pdf", label: "Převod Word / PDF", accent: "#c62828" },
+    { id: "financni_kalkulacky", label: "Finanční kalkulačky", accent: "#4285f4" },
+    { id: "vzory_smluv", label: "Vzory smluv a plné moci", accent: "#ff0000" },
+    { id: "komunikace_vzdelavani", label: "Komunikace a vzdělávání", accent: "#6a1b9a" },
+    { id: "katastr_nemovitosti", label: "Katastr nemovitostí", accent: "#5d4037" },
+    { id: "registr_smluv", label: "Registr smluv", accent: "#0066cc" },
+    { id: "obchodni_rejstrik", label: "Obchodní rejstřík", accent: "#37474f" },
+    { id: "zivnostensky_rejstrik", label: "Živnostenský rejstřík", accent: "#455a64" },
+    { id: "poslat_sms_zdarma", label: "Poslat SMS zdarma", accent: "#2e7d32" }
+  ];
+
+  function loadQuickToolsConfig() {
+    try {
+      const raw = typeof localStorage !== "undefined" ? localStorage.getItem(IU_QUICKTOOLS_STORAGE_KEY) : null;
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed.version === "number" && Array.isArray(parsed.order) && Array.isArray(parsed.visible)) return parsed;
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveQuickToolsConfig(cfg) {
+    try {
+      if (typeof localStorage !== "undefined") localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, JSON.stringify(cfg));
+    } catch (e) {}
+  }
+
+  function resetQuickToolsConfig() {
+    try {
+      if (typeof localStorage !== "undefined") localStorage.removeItem(IU_QUICKTOOLS_STORAGE_KEY);
+    } catch (e) {}
+  }
+
+  function getDefaultQuickToolsConfig() {
+    const order = IU_QUICKTOOLS_REGISTRY.map(function(r){ return r.id; });
+    return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order.slice(), visible: order.slice() };
+  }
+
+  function sanitizeQuickToolsConfig(stored) {
+    const defaultCfg = getDefaultQuickToolsConfig();
+    const knownIds = new Set(IU_QUICKTOOLS_REGISTRY.map(function(r){ return r.id; }));
+    let order = Array.isArray(stored.order) ? stored.order.filter(function(id){ return knownIds.has(id); }) : [];
+    const missingOrder = defaultCfg.order.filter(function(id){ return order.indexOf(id) === -1; });
+    order = order.concat(missingOrder);
+    let visible = Array.isArray(stored.visible) ? stored.visible.filter(function(id){ return knownIds.has(id); }) : [];
+    visible = order.filter(function(id){ return visible.indexOf(id) !== -1; });
+    return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order, visible: visible };
+  }
+
+  function iuQuickToolsApplyConfig() {
+    const section = document.querySelector("aside.accordionCol .mindMenu section.iu-mmQuickLinks");
+    const grid = section ? section.querySelector(".iu-mmQuickGrid") : null;
+    if (!grid) return;
+    const stored = loadQuickToolsConfig();
+    const cfg = stored ? sanitizeQuickToolsConfig(stored) : getDefaultQuickToolsConfig();
+    const orderMap = {};
+    cfg.order.forEach(function(id, i){ orderMap[id] = i; });
+    const tiles = Array.from(grid.querySelectorAll(".iuTile[data-quicktool-id]"));
+    tiles.sort(function(a, b){
+      const idA = a.getAttribute("data-quicktool-id");
+      const idB = b.getAttribute("data-quicktool-id");
+      const idxA = orderMap[idA] !== undefined ? orderMap[idA] : 999;
+      const idxB = orderMap[idB] !== undefined ? orderMap[idB] : 999;
+      return idxA - idxB;
+    });
+    tiles.forEach(function(el){ grid.appendChild(el); });
+    tiles.forEach(function(el){
+      const id = el.getAttribute("data-quicktool-id");
+      el.hidden = cfg.visible.indexOf(id) === -1;
+    });
+  }
+
+  function iuQuickToolsSettingsOpen() {
+    const panel = document.getElementById("iuQuickToolsSettingsPanel");
+    if (!panel) return;
+    panel.hidden = false;
+    panel.setAttribute("aria-hidden", "false");
+    document.body.addEventListener("keydown", iuQuickToolsSettingsOnEsc);
+    document.addEventListener("click", iuQuickToolsSettingsOnOutside);
+  }
+
+  function iuQuickToolsSettingsClose() {
+    const panel = document.getElementById("iuQuickToolsSettingsPanel");
+    if (!panel) return;
+    panel.hidden = true;
+    panel.setAttribute("aria-hidden", "true");
+    document.body.removeEventListener("keydown", iuQuickToolsSettingsOnEsc);
+    document.removeEventListener("click", iuQuickToolsSettingsOnOutside);
+  }
+
+  function iuQuickToolsSettingsOnEsc(e) {
+    if (e.key === "Escape") iuQuickToolsSettingsClose();
+  }
+
+  function iuQuickToolsSettingsOnOutside(e) {
+    const panel = document.getElementById("iuQuickToolsSettingsPanel");
+    const trigger = document.querySelector(".iu-quicktools-settings-trigger");
+    if (!panel || !e.target) return;
+    if (panel.contains(e.target) || (trigger && trigger.contains(e.target))) return;
+    iuQuickToolsSettingsClose();
+  }
+
+  function iuQuickToolsSettingsRender(cfg) {
+    const panel = document.getElementById("iuQuickToolsSettingsPanel");
+    if (!panel) return;
+    const visibleSet = new Set(cfg.visible);
+    const frag = document.createDocumentFragment();
+    const title = document.createElement("div");
+    title.className = "iu-quicktools-settings-title";
+    title.textContent = "Viditelnost a pořadí";
+    frag.appendChild(title);
+    const list = document.createElement("div");
+    list.className = "iu-quicktools-settings-list";
+    list.setAttribute("role", "list");
+    cfg.order.forEach(function(id){
+      const item = IU_QUICKTOOLS_REGISTRY.find(function(r){ return r.id === id; });
+      if (!item) return;
+      const row = document.createElement("div");
+      row.className = "iu-quicktools-settings-row";
+      row.setAttribute("data-quicktool-id", id);
+      row.setAttribute("draggable", "true");
+      row.setAttribute("role", "listitem");
+      const handle = document.createElement("span");
+      handle.className = "iu-quicktools-drag-handle";
+      handle.setAttribute("data-drag-handle", "true");
+      handle.setAttribute("aria-hidden", "true");
+      handle.textContent = "⋮⋮";
+      const marker = document.createElement("span");
+      marker.className = "iu-quicktools-settings-marker";
+      marker.style.backgroundColor = item.accent || "#666";
+      const label = document.createElement("span");
+      label.className = "iu-quicktools-settings-label";
+      label.textContent = item.label;
+      const toggle = document.createElement("input");
+      toggle.type = "checkbox";
+      toggle.checked = visibleSet.has(id);
+      toggle.setAttribute("data-iu-quicktools-visible-toggle", id);
+      toggle.setAttribute("aria-label", "Zobrazit " + item.label);
+      row.appendChild(handle);
+      row.appendChild(marker);
+      row.appendChild(label);
+      row.appendChild(toggle);
+      list.appendChild(row);
+    });
+    frag.appendChild(list);
+    const resetBtn = document.createElement("button");
+    resetBtn.type = "button";
+    resetBtn.className = "iu-quicktools-settings-reset";
+    resetBtn.textContent = "Obnovit výchozí";
+    frag.appendChild(resetBtn);
+    panel.innerHTML = "";
+    panel.appendChild(frag);
+  }
+
+  function iuQuickToolsSaveAndApply(cfg) {
+    saveQuickToolsConfig(cfg);
+    iuQuickToolsApplyConfig();
+    iuQuickToolsSettingsRender(cfg);
+  }
+
+  function iuQuickToolsInit() {
+    if (window.__iuQuickToolsInitDone) return;
+    window.__iuQuickToolsInitDone = 1;
+    iuQuickToolsApplyConfig();
+    const section = document.querySelector("aside.accordionCol .mindMenu section.iu-mmQuickLinks");
+    const trigger = section ? section.querySelector(".iu-quicktools-settings-trigger") : null;
+    const panel = document.getElementById("iuQuickToolsSettingsPanel");
+    if (!section || !panel) return;
+    let cfg = loadQuickToolsConfig();
+    if (!cfg) cfg = getDefaultQuickToolsConfig();
+    cfg = sanitizeQuickToolsConfig(cfg);
+    iuQuickToolsSettingsRender(cfg);
+
+    trigger.addEventListener("click", function(){
+      if (panel.hidden) iuQuickToolsSettingsOpen(); else iuQuickToolsSettingsClose();
+    });
+
+    panel.addEventListener("change", function(e){
+      const t = e.target;
+      if (!t || t.getAttribute("data-iu-quicktools-visible-toggle") == null) return;
+      const id = t.getAttribute("data-iu-quicktools-visible-toggle");
+      let cfg = loadQuickToolsConfig();
+      if (!cfg) cfg = getDefaultQuickToolsConfig();
+      cfg = sanitizeQuickToolsConfig(cfg);
+      const idx = cfg.visible.indexOf(id);
+      if (t.checked) { if (idx === -1) cfg.visible.push(id); }
+      else { if (idx !== -1) cfg.visible.splice(idx, 1); }
+      iuQuickToolsSaveAndApply(cfg);
+    });
+
+    panel.addEventListener("click", function(e){
+      if (e.target && e.target.classList && e.target.classList.contains("iu-quicktools-settings-reset")) {
+        resetQuickToolsConfig();
+        cfg = getDefaultQuickToolsConfig();
+        iuQuickToolsSaveAndApply(cfg);
+        iuQuickToolsSettingsClose();
+      }
+    });
+
+    var dragSrc = null;
+    panel.addEventListener("dragstart", function(e){
+      const row = e.target && e.target.closest ? e.target.closest("[data-quicktool-id]") : null;
+      if (row) { dragSrc = row; e.dataTransfer.setData("text/plain", row.getAttribute("data-quicktool-id")); e.dataTransfer.effectAllowed = "move"; }
+    });
+    panel.addEventListener("dragover", function(e){
+      e.preventDefault();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+      var row = e.target && e.target.closest ? e.target.closest("[data-quicktool-id]") : null;
+      if (row && dragSrc && row !== dragSrc) {
+        row.parentNode.insertBefore(dragSrc, row);
+      }
+    });
+    panel.addEventListener("dragend", function(){
+      dragSrc = null;
+    });
+    panel.addEventListener("drop", function(e){
+      e.preventDefault();
+      if (!dragSrc) return;
+      var listEl = panel.querySelector(".iu-quicktools-settings-list");
+      if (!listEl) return;
+      var ids = Array.from(listEl.querySelectorAll("[data-quicktool-id]")).map(function(el){ return el.getAttribute("data-quicktool-id"); });
+      var cfg = loadQuickToolsConfig();
+      if (!cfg) cfg = getDefaultQuickToolsConfig();
+      cfg = sanitizeQuickToolsConfig(cfg);
+      cfg.order = ids;
+      iuQuickToolsSaveAndApply(cfg);
+    });
+    document.addEventListener("iu-quicktools-reorder-from-test", function(e){
+      if (e.detail && Array.isArray(e.detail.order)) {
+        var cfg = loadQuickToolsConfig();
+        if (!cfg) cfg = getDefaultQuickToolsConfig();
+        cfg = sanitizeQuickToolsConfig(cfg);
+        cfg.order = e.detail.order;
+        iuQuickToolsSaveAndApply(cfg);
+      }
+    });
+  }
+
   function initRightPanel() {
     const root = document.querySelector(".mindMenu") || document.querySelector("aside.accordionCol") || null;
     if (!root) return;
@@ -7915,6 +8166,7 @@ function buildVideoAsArticleCard(it) {
 
     iuWeatherInit();
     iuMailboxesInit();
+    iuQuickToolsInit();
     initAccordion();
   }
 

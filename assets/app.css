@@ -10540,6 +10540,107 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   row-gap: var(--iu-rr-rowGap, 8px);
   column-gap: var(--iu-mm-gap, 10px);
 }
+
+/* Quick tools settings: gear in section head (same style as mailbox gear) */
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger{
+  flex-shrink: 0;
+}
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger:focus-visible{
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Quick tools settings panel */
+.iu-quicktools-settings-panel{
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
+  min-width: 260px;
+  max-width: min(320px, calc(100vw - 24px));
+  max-height: min(70vh, 420px);
+  overflow-y: auto;
+  background: rgba(255,255,255,0.98);
+  border: 1px solid rgba(20,40,70,0.12);
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.12), 0 2px 10px rgba(0,0,0,0.08);
+  padding: 12px;
+  z-index: 100;
+}
+.accordionCol .mindMenu section.iu-mmQuickLinks{
+  position: relative;
+}
+.iu-quicktools-settings-title{
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0,0,0,0.85);
+  margin-bottom: 10px;
+}
+.iu-quicktools-settings-list{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.iu-quicktools-settings-row{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.03);
+  cursor: default;
+}
+.iu-quicktools-settings-row:hover{
+  background: rgba(0,0,0,0.06);
+}
+.iu-quicktools-drag-handle{
+  cursor: grab;
+  font-size: 14px;
+  line-height: 1;
+  color: rgba(0,0,0,0.4);
+  user-select: none;
+  flex-shrink: 0;
+}
+.iu-quicktools-drag-handle:active{
+  cursor: grabbing;
+}
+.iu-quicktools-settings-marker{
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.iu-quicktools-settings-label{
+  flex: 1;
+  font-size: 13px;
+  color: rgba(0,0,0,0.85);
+  min-width: 0;
+}
+.iu-quicktools-settings-row input[type="checkbox"]{
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.iu-quicktools-settings-reset{
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1F4B99;
+  background: rgba(31,75,153,0.08);
+  border: 1px solid rgba(31,75,153,0.2);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.iu-quicktools-settings-reset:hover{
+  background: rgba(31,75,153,0.12);
+}
+.iu-quicktools-settings-reset:focus-visible{
+  outline: 2px solid #1F4B99;
+  outline-offset: 2px;
+}
+
 /* Right rail: Moje slu┼żby + Rychl├ę odkazy ÔÇö 40px icons, labels under, unified spacing */
 .accordionCol .mindMenu .iu-mmQuickLinks{
   --iu-rr-gapY: 6px;
