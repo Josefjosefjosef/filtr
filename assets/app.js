@@ -13701,6 +13701,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         if (child && child !== stage && !child.hidden) {
           savedHiddenContainers.push(child);
           child.hidden = true;
+          try { child.style.setProperty("display", "none", "important"); } catch (e) {}
         }
       }
     }
@@ -13720,7 +13721,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     var articlesStage = document.querySelector(".iuArticlesStage");
     for (var i = savedHiddenContainers.length - 1; i >= 0; i--) {
       var el = savedHiddenContainers[i];
-      if (el) el.hidden = false;
+      if (el) {
+        el.hidden = false;
+        try { el.style.removeProperty("display"); } catch (e) {}
+      }
       if (el === articlesStage) {
         var feed = document.getElementById("feed");
         var silver = document.getElementById("silver-slot");
