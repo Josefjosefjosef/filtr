@@ -8140,6 +8140,15 @@ function buildVideoAsArticleCard(it) {
       cfg.order = ids;
       iuQuickToolsSaveAndApply(cfg);
     });
+    document.addEventListener("iu-quicktools-reorder-from-test", function(e){
+      if (e.detail && Array.isArray(e.detail.order)) {
+        var cfg = loadQuickToolsConfig();
+        if (!cfg) cfg = getDefaultQuickToolsConfig();
+        cfg = sanitizeQuickToolsConfig(cfg);
+        cfg.order = e.detail.order;
+        iuQuickToolsSaveAndApply(cfg);
+      }
+    });
   }
 
   function initRightPanel() {
