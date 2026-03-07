@@ -13664,17 +13664,30 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 // === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → feed-replace overlay (EXCLUSIVE SINGLE-CONTENT) ===
 (function iuAdsStageOverlay() {
   var hiddenSiblings = [];
+  var MIDDLE_VIEW_IDS = ["feed", "iuRadioView", "iuTvOnlineView", "iuJrEmptyView", "iuMapyView", "iuTravelView", "iuMyUzelView1", "iuMyUzelView2", "iuMyUzelView3", "iuMyUzelView4", "iuMyUzelView5"];
+  function getActiveStandardView() {
+    for (var i = 0; i < MIDDLE_VIEW_IDS.length; i++) {
+      var el = document.getElementById(MIDDLE_VIEW_IDS[i]);
+      if (el && !el.hidden) return el;
+    }
+    return null;
+  }
   function openAdsStage(activeTab) {
     var stage = document.getElementById("iuAdsStage");
     if (!stage) return;
     var parent = stage.parentElement;
     if (!parent) return;
     hiddenSiblings = [];
+    var activeView = getActiveStandardView();
     for (var i = 0; i < parent.children.length; i++) {
       var ch = parent.children[i];
       if (ch.id === "iuAdsStage") continue;
       hiddenSiblings.push({ el: ch, wasHidden: ch.hidden });
       ch.hidden = true;
+    }
+    if (activeView && activeView.parentElement !== parent) {
+      hiddenSiblings.push({ el: activeView, wasHidden: activeView.hidden });
+      activeView.hidden = true;
     }
     var feed = document.getElementById("feed");
     var silver = document.getElementById("silver-slot");
@@ -13703,12 +13716,6 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (item.el) item.el.hidden = item.wasHidden;
     }
     hiddenSiblings = [];
-    var feed = document.getElementById("feed");
-    var silver = document.getElementById("silver-slot");
-    var homeView = document.getElementById("iuHomeView");
-    if (feed && feed.id === "feed") feed.hidden = false;
-    if (silver && silver.id === "silver-slot") silver.hidden = false;
-    if (homeView && homeView.id === "iuHomeView") homeView.hidden = true;
   }
   function setAdsTab(tab) {
     var tabBrowse = document.getElementById("iuAdsTabBrowse");
