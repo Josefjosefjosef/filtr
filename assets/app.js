@@ -12747,40 +12747,43 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       };
     } catch {}
 
-    // Attach handlers FIRST so left nav clicks work even if init fails or returns early.
+    // Single delegated click listener on left rail (event delegation – no per-item listeners).
     const leftRailEl = document.getElementById('iuLeftRail') || document.querySelector('.iu-leftNav');
     if (leftRailEl) {
       try {
-        leftRailEl.addEventListener('click', (e) => {
+        leftRailEl.addEventListener('click', function(e) {
           if (e.target.closest && e.target.closest('[data-iuq="ai"]')) return;
-          try { iuHideAllOverlaysNow(); } catch {}
-        }, true);
-      } catch {}
+          const btn = e.target.closest ? e.target.closest('[data-nav-view]') : null;
+          if (!btn) return;
+          const view = (btn.getAttribute('data-nav-view') || btn.dataset.navView || '').trim().toLowerCase();
+          if (!view) return;
+          try {
+            const href = String(btn.getAttribute('href') || '').trim();
+            const isExternal = href && /^https?:\/\//i.test(href);
+            const isInternal = !isExternal && (href === '#' || href === '');
+            if (isInternal) e.preventDefault();
+          } catch (_) {}
+          const center = document.getElementById('iuCenterStage');
+          if (!center) return;
+          try { iuHideAllOverlaysNow(); } catch (_) {}
+          const section = normalizeSection(view);
+          persistSection(section);
+          try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch (_) {}
+          if (center.getAttribute('data-iu-mode') === 'ads') {
+            center.dataset.pendingView = view;
+            return;
+          }
+          center.dataset.view = view;
+          applySectionFromURL(view);
+          applyPanelFromUrl();
+          try {
+            requestAnimationFrame(function() { requestAnimationFrame(function() { try { iuScrollMainToTopSmooth(); } catch (_) {} }); });
+          } catch (_) {
+            try { iuScrollMainToTopSmooth(); } catch (_) {}
+          }
+        });
+      } catch (_) {}
     }
-    document.addEventListener('click', (e) => {
-      if (e.target.closest && e.target.closest('[data-iuq="ai"]')) return;
-      const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
-      if (!item) return;
-      try{
-        const href = String(item.getAttribute("href") || "").trim();
-        const rail = String(item.getAttribute("data-rail") || "").trim().toLowerCase();
-        const isExternal = href && /^https?:\/\//i.test(href);
-        const isInternal = !isExternal && (href === "#" || href === "" || !!rail);
-        if (isInternal) e.preventDefault();
-      }catch{}
-      const accent = (item.getAttribute('data-accent') || item.dataset?.accent || "").trim().toLowerCase();
-      const section = normalizeSection(accent);
-      iuHideAllOverlaysNow();
-      persistSection(section);
-      try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
-      applySectionFromURL(accent);
-      applyPanelFromUrl();
-      try{
-        requestAnimationFrame(() => requestAnimationFrame(() => iuScrollMainToTopSmooth()));
-      }catch{
-        try{ iuScrollMainToTopSmooth(); }catch{}
-      }
-    });
     // Hex grid (Rychlé odkazy on home): switch view without changing URL – no redirect, no persistSection
     document.addEventListener('click', (e) => {
       const hex = e.target && e.target.closest ? e.target.closest('.iuHex') : null;
