@@ -8044,6 +8044,9 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   width: 100%;
   min-width: 0;
 }
+#iuCenterStage .iuArticlesStage[hidden]{
+  display: none !important;
+}
 
 /* #feed is inside #iuCenterStage .iuArticlesStage */
 
@@ -15559,6 +15562,10 @@ header#topbarWrap.topbar-new.iuTopbar::after{
 /* TOPBAR: hide date + nameday badges (remove from UI) */
 #topbarWrap #iuTopbarToday{
   display: none !important;
+}
+/* P0: restore right topbar scroll/date indicator */
+#topbarWrap #iuTopbarRight #iuTopbarToday{
+  display: flex !important;
 }
 
 /* TOPBAR: actions order — double button before info icon (keep date+nameday hidden) */
