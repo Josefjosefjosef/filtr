@@ -13680,29 +13680,23 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function openAdsStage(activeTab) {
     var stage = document.getElementById("iuAdsStage");
     if (!stage) return;
-    var activeView = getActiveStandardView();
-    if (!activeView) {
-      var feed = document.getElementById("feed");
-      if (feed) activeView = feed;
-    }
+    var center = document.getElementById("iuCenterStage");
     var articlesStageEl = document.querySelector(".iuArticlesStage");
     savedHiddenContainers = [];
-    if (articlesStageEl && !articlesStageEl.hidden) {
-      savedHiddenContainers.push(articlesStageEl);
-      articlesStageEl.hidden = true;
+    if (center && center.children) {
+      for (var i = 0; i < center.children.length; i++) {
+        var child = center.children[i];
+        if (child && child !== stage && !child.hidden) {
+          savedHiddenContainers.push(child);
+          child.hidden = true;
+        }
+      }
+    }
+    if (articlesStageEl) {
       var feedEl = document.getElementById("feed");
       var silverEl = document.getElementById("silver-slot");
       if (feedEl) feedEl.hidden = true;
       if (silverEl) silverEl.hidden = true;
-    }
-    if (activeView) {
-      var insideArticles = activeView.closest ? activeView.closest(".iuArticlesStage") : (activeView.parentElement && activeView.parentElement.classList && activeView.parentElement.classList.contains("iuArticlesStage") ? activeView.parentElement : null);
-      if (!insideArticles && activeView !== articlesStageEl) {
-        if (!activeView.hidden) {
-          savedHiddenContainers.push(activeView);
-          activeView.hidden = true;
-        }
-      }
     }
     stage.hidden = false;
     setAdsTab(activeTab);
@@ -13712,11 +13706,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (!stage) return;
     stage.hidden = true;
     var articlesStage = document.querySelector(".iuArticlesStage");
-    var wasArticlesOnly = savedHiddenContainers.length === 1 && savedHiddenContainers[0] === articlesStage;
     for (var i = savedHiddenContainers.length - 1; i >= 0; i--) {
       var el = savedHiddenContainers[i];
       if (el) el.hidden = false;
-      if (el === articlesStage && wasArticlesOnly) {
+      if (el === articlesStage) {
         var feed = document.getElementById("feed");
         var silver = document.getElementById("silver-slot");
         if (feed) feed.hidden = false;
