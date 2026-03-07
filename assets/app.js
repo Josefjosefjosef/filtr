@@ -10533,6 +10533,8 @@ function buildVideoAsArticleCard(it) {
     jr: 'jr',
     mapy: 'mapy',
     travel: 'travel',
+    pocasi: 'pocasi',
+    tvprogram: 'tvprogram',
     'myuzel-1': 'myuzel-1',
     'myuzel-2': 'myuzel-2',
     'myuzel-3': 'myuzel-3',
@@ -12171,6 +12173,8 @@ function buildVideoAsArticleCard(it) {
     const jrEmptyEl = document.getElementById('iuJrEmptyView');
     const mapyEl = document.getElementById('iuMapyView');
     const travelEl = document.getElementById('iuTravelView');
+    const weatherEl = document.getElementById('iuWeatherView');
+    const tvprogramEl = document.getElementById('iuTvProgramView');
     const my1 = document.getElementById('iuMyUzelView1');
     const my2 = document.getElementById('iuMyUzelView2');
     const my3 = document.getElementById('iuMyUzelView3');
@@ -12183,11 +12187,16 @@ function buildVideoAsArticleCard(it) {
     if (jrEmptyEl) jrEmptyEl.hidden = true;
     if (mapyEl) mapyEl.hidden = true;
     if (travelEl) travelEl.hidden = true;
+    if (weatherEl) weatherEl.hidden = true;
+    if (tvprogramEl) tvprogramEl.hidden = true;
     if (my1) my1.hidden = true;
     if (my2) my2.hidden = true;
     if (my3) my3.hidden = true;
     if (my4) my4.hidden = true;
     if (my5) my5.hidden = true;
+
+    var adsStage = document.getElementById('iuAdsStage');
+    if (adsStage && !adsStage.hidden) return;
 
     let activeEl = null;
     if (String(key || '').toLowerCase().startsWith('myuzel-')) {
@@ -12207,8 +12216,10 @@ function buildVideoAsArticleCard(it) {
       if(key === 'jr' && jrEmptyEl) { jrEmptyEl.hidden = false; activeEl = jrEmptyEl; }
       if(key === 'mapy' && mapyEl) { mapyEl.hidden = false; activeEl = mapyEl; }
       if(key === 'travel' && travelEl) { travelEl.hidden = false; activeEl = travelEl; }
+      if(key === 'pocasi' && weatherEl) { weatherEl.hidden = false; activeEl = weatherEl; }
+      if(key === 'tvprogram' && tvprogramEl) { tvprogramEl.hidden = false; activeEl = tvprogramEl; }
       // default feed view for all other sections
-      if(key !== 'radio' && key !== 'tvonline' && key !== 'jr' && key !== 'mapy' && key !== 'travel' && feedEl) { feedEl.hidden = false; activeEl = feedEl; }
+      if(key !== 'radio' && key !== 'tvonline' && key !== 'jr' && key !== 'mapy' && key !== 'travel' && key !== 'pocasi' && key !== 'tvprogram' && feedEl) { feedEl.hidden = false; activeEl = feedEl; }
     }
 
     // Notes: re-init within the active view on every switch (idempotent).
@@ -12474,6 +12485,7 @@ function buildVideoAsArticleCard(it) {
     try{ window.__iuLoadData && window.__iuLoadData(); }catch{}
     try{ window.__iuStartAutoRefresh && window.__iuStartAutoRefresh(); }catch{}
   }
+  try { window.iuApplySectionFromURL = applySectionFromURL; } catch (e) {}
 
   function initRadioWish(viewEl){
     const accEl = document.getElementById("iuRadioWish");
@@ -13717,6 +13729,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       }
     }
     savedHiddenContainers = [];
+    if (typeof window.iuApplySectionFromURL === "function") {
+      try { window.iuApplySectionFromURL(); } catch (e) {}
+    }
   }
   function setAdsTab(tab) {
     var tabBrowse = document.getElementById("iuAdsTabBrowse");
