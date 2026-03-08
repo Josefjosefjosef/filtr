@@ -16696,6 +16696,99 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   border: 1px solid rgba(0,0,0,0.25);
 }
 
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results-heading {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results-disclaimer {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  color: rgba(0,0,0,0.7);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results-summary {
+  margin: 0 0 1rem 0;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results-summary p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-provider-card {
+  padding: 0.75rem;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.5);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-provider-name {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-provider-rows {
+  margin-bottom: 0.75rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-provider-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-provider-label {
+  color: rgba(0,0,0,0.65);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-provider-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-detail {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.25);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-objednat {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 6px;
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  text-decoration: none;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-objednat:hover {
+  background: #1b5e20;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-provider-detail {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  font-size: 0.85rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results-footer {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(0,0,0,0.6);
+}
+
 #iuQuickFeed [data-iu="pdfconvert-tools"] .iuPdfTabsRow {
   display: flex;
   align-items: center;
