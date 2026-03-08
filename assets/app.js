@@ -9650,47 +9650,78 @@ function buildVideoAsArticleCard(it) {
     return { city: city, postalCode: pc, region: region, localityBucket: localityBucket };
   }
 
-  /** Explicit coverage rules: only statuses with evidence. Order: negative relevance, relevance, partial, public_only, unknown fallback. */
+  /** Discovery evidence registry: each rule has sourceType, sourceNote, confidenceLevel, lastReviewedAt, staleAfterDays. relevant_for_address only from strong + trusted. */
   var IU_NAKUP_PROVIDER_DISCOVERY_RULES = [
-    { providerId: "rohlik", addressClass: "prague", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha Prahy (známá)", evidenceCode: "RULE_PRAGUE_KNOWN" },
-    { providerId: "rohlik", addressClass: "suburban", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha okolí Prahy (známá)", evidenceCode: "RULE_SUBURBAN_KNOWN" },
-    { providerId: "rohlik", addressClass: "large_city", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha města neověřena", evidenceCode: "RULE_BIG_CITY_UNKNOWN" },
-    { providerId: "rohlik", addressClass: "regional", discoveryStatus: "not_relevant_for_address", relevanceReason: "mimo známou obsluhu", evidenceCode: "RULE_OUTSIDE_KNOWN_SCOPE" },
-    { providerId: "rohlik", addressClass: "small_city", discoveryStatus: "not_relevant_for_address", relevanceReason: "mimo známou obsluhu", evidenceCode: "RULE_OUTSIDE_KNOWN_SCOPE" },
-    { providerId: "wolt", addressClass: "prague", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha Prahy (známá)", evidenceCode: "RULE_PRAGUE_KNOWN" },
-    { providerId: "wolt", addressClass: "suburban", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha okolí Prahy neověřena", evidenceCode: "RULE_SUBURBAN_UNKNOWN" },
-    { providerId: "wolt", addressClass: "large_city", discoveryStatus: "not_relevant_for_address", relevanceReason: "mimo známou obsluhu", evidenceCode: "RULE_OUTSIDE_KNOWN_SCOPE" },
-    { providerId: "wolt", addressClass: "regional", discoveryStatus: "not_relevant_for_address", relevanceReason: "mimo známou obsluhu", evidenceCode: "RULE_OUTSIDE_KNOWN_SCOPE" },
-    { providerId: "wolt", addressClass: "small_city", discoveryStatus: "not_relevant_for_address", relevanceReason: "mimo známou obsluhu", evidenceCode: "RULE_OUTSIDE_KNOWN_SCOPE" },
-    { providerId: "tesco", addressClass: "prague", discoveryStatus: "relevant_for_address", relevanceReason: "široká obsluha (známá)", evidenceCode: "RULE_PRAGUE_KNOWN" },
-    { providerId: "tesco", addressClass: "suburban", discoveryStatus: "relevant_for_address", relevanceReason: "široká obsluha (známá)", evidenceCode: "RULE_SUBURBAN_KNOWN" },
-    { providerId: "tesco", addressClass: "large_city", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha větších měst (známá)", evidenceCode: "RULE_BIG_CITY_KNOWN" },
-    { providerId: "tesco", addressClass: "regional", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha lokality neověřena", evidenceCode: "RULE_REGIONAL_UNKNOWN" },
-    { providerId: "tesco", addressClass: "small_city", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha lokality neověřena", evidenceCode: "RULE_SMALL_CITY_UNKNOWN" },
-    { providerId: "kosik", addressClass: "prague", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha větších měst (známá)", evidenceCode: "RULE_PRAGUE_KNOWN" },
-    { providerId: "kosik", addressClass: "suburban", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha větších měst (známá)", evidenceCode: "RULE_SUBURBAN_KNOWN" },
-    { providerId: "kosik", addressClass: "large_city", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha větších měst (známá)", evidenceCode: "RULE_BIG_CITY_KNOWN" },
-    { providerId: "kosik", addressClass: "regional", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha regionu neověřena", evidenceCode: "RULE_REGIONAL_UNKNOWN" },
-    { providerId: "kosik", addressClass: "small_city", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha neověřena", evidenceCode: "RULE_SMALL_CITY_UNKNOWN" }
+    { providerId: "rohlik", addressClass: "prague", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha Prahy (známá)", evidenceCode: "RULE_PRAGUE_KNOWN", sourceType: "manual", sourceNote: "Rohlík doručuje Praha; veřejné info.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "rohlik", addressClass: "suburban", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha okolí Prahy (známá)", evidenceCode: "RULE_SUBURBAN_KNOWN", sourceType: "manual", sourceNote: "Středočeský kraj okolí Prahy.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "rohlik", addressClass: "large_city", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha města neověřena", evidenceCode: "RULE_BIG_CITY_UNKNOWN", sourceType: "manual", sourceNote: "Brno/Ostrava neověřeno.", confidenceLevel: "medium", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "rohlik", addressClass: "regional", discoveryStatus: "not_relevant_for_address", relevanceReason: "mimo známou obsluhu", evidenceCode: "RULE_OUTSIDE_KNOWN_SCOPE", sourceType: "manual", sourceNote: "Mimo Praha/středočeské.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "rohlik", addressClass: "small_city", discoveryStatus: "not_relevant_for_address", relevanceReason: "mimo známou obsluhu", evidenceCode: "RULE_OUTSIDE_KNOWN_SCOPE", sourceType: "manual", sourceNote: "Mimo známou obsluhu.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "wolt", addressClass: "prague", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha Prahy (známá)", evidenceCode: "RULE_PRAGUE_KNOWN", sourceType: "manual", sourceNote: "Wolt Market Praha.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "wolt", addressClass: "suburban", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha okolí Prahy neověřena", evidenceCode: "RULE_SUBURBAN_UNKNOWN", sourceType: "manual", sourceNote: "Okolí Prahy neověřeno.", confidenceLevel: "medium", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "wolt", addressClass: "large_city", discoveryStatus: "not_relevant_for_address", relevanceReason: "mimo známou obsluhu", evidenceCode: "RULE_OUTSIDE_KNOWN_SCOPE", sourceType: "manual", sourceNote: "Mimo Praha.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "wolt", addressClass: "regional", discoveryStatus: "not_relevant_for_address", relevanceReason: "mimo známou obsluhu", evidenceCode: "RULE_OUTSIDE_KNOWN_SCOPE", sourceType: "manual", sourceNote: "Mimo známou obsluhu.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "wolt", addressClass: "small_city", discoveryStatus: "not_relevant_for_address", relevanceReason: "mimo známou obsluhu", evidenceCode: "RULE_OUTSIDE_KNOWN_SCOPE", sourceType: "manual", sourceNote: "Mimo známou obsluhu.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "tesco", addressClass: "prague", discoveryStatus: "relevant_for_address", relevanceReason: "široká obsluha (známá)", evidenceCode: "RULE_PRAGUE_KNOWN", sourceType: "manual", sourceNote: "Tesco široká obsluha.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "tesco", addressClass: "suburban", discoveryStatus: "relevant_for_address", relevanceReason: "široká obsluha (známá)", evidenceCode: "RULE_SUBURBAN_KNOWN", sourceType: "manual", sourceNote: "Tesco středočeské.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "tesco", addressClass: "large_city", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha větších měst (známá)", evidenceCode: "RULE_BIG_CITY_KNOWN", sourceType: "manual", sourceNote: "Tesco větší města.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "tesco", addressClass: "regional", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha lokality neověřena", evidenceCode: "RULE_REGIONAL_UNKNOWN", sourceType: "manual", sourceNote: "Region neověřen.", confidenceLevel: "medium", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "tesco", addressClass: "small_city", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha lokality neověřena", evidenceCode: "RULE_SMALL_CITY_UNKNOWN", sourceType: "manual", sourceNote: "Malá města neověřena.", confidenceLevel: "medium", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "kosik", addressClass: "prague", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha větších měst (známá)", evidenceCode: "RULE_PRAGUE_KNOWN", sourceType: "manual", sourceNote: "Košík Praha.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "kosik", addressClass: "suburban", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha větších měst (známá)", evidenceCode: "RULE_SUBURBAN_KNOWN", sourceType: "manual", sourceNote: "Košík okolí Prahy.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "kosik", addressClass: "large_city", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha větších měst (známá)", evidenceCode: "RULE_BIG_CITY_KNOWN", sourceType: "manual", sourceNote: "Košík větší města.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "kosik", addressClass: "regional", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha regionu neověřena", evidenceCode: "RULE_REGIONAL_UNKNOWN", sourceType: "manual", sourceNote: "Region neověřen.", confidenceLevel: "medium", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "kosik", addressClass: "small_city", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha neověřena", evidenceCode: "RULE_SMALL_CITY_UNKNOWN", sourceType: "manual", sourceNote: "Malá města neověřena.", confidenceLevel: "medium", lastReviewedAt: "2025-03-01", staleAfterDays: 180 }
   ];
 
-  /** Resolve coverage evidence from explicit rules only. Default: unknown_for_address + RULE_NO_CONFIDENT_COVERAGE_MATCH. */
-  function iuNakupResolveCoverageEvidence(providerId, addressClass) {
+  function iuNakupIsEvidenceStale(rule, now) {
+    if (!rule || rule.lastReviewedAt == null) return true;
+    var t = typeof rule.lastReviewedAt === "number" ? rule.lastReviewedAt : (new Date(rule.lastReviewedAt)).getTime();
+    var days = typeof rule.staleAfterDays === "number" ? rule.staleAfterDays : 180;
+    return (now - t) > days * 86400000;
+  }
+
+  function iuNakupCanTrustCoverageRule(rule, now) {
+    if (!rule) return false;
+    if (rule.sourceNote == null || rule.sourceNote === "") return false;
+    if (rule.lastReviewedAt == null) return false;
+    if (iuNakupIsEvidenceStale(rule, now)) return false;
+    return true;
+  }
+
+  /** Resolve coverage evidence from registry. relevant_for_address only if rule trusted + confidenceLevel strong; else downgrade to unknown_for_address. */
+  function iuNakupResolveCoverageEvidence(providerId, addressClass, now) {
     var rules = IU_NAKUP_PROVIDER_DISCOVERY_RULES || [];
+    var t = now != null ? now : Date.now();
     for (var i = 0; i < rules.length; i++) {
       var r = rules[i];
       if (r.providerId === providerId && r.addressClass === addressClass) {
-        return { discoveryStatus: r.discoveryStatus, relevanceReason: r.relevanceReason, evidenceCode: r.evidenceCode };
+        var trusted = iuNakupCanTrustCoverageRule(r, t);
+        var stale = iuNakupIsEvidenceStale(r, t);
+        var status = r.discoveryStatus;
+        if (status === "relevant_for_address" && (!trusted || r.confidenceLevel !== "strong")) status = "unknown_for_address";
+        if (status === "relevant_for_address" && stale) status = "unknown_for_address";
+        return {
+          discoveryStatus: status,
+          relevanceReason: status === "unknown_for_address" && r.discoveryStatus === "relevant_for_address" ? "obsluha neověřena (pravidlo zastaralé nebo nedostatečné)" : r.relevanceReason,
+          evidenceCode: r.evidenceCode,
+          sourceType: r.sourceType || "",
+          sourceNote: r.sourceNote || "",
+          confidenceLevel: r.confidenceLevel || "weak",
+          lastReviewedAt: r.lastReviewedAt != null ? r.lastReviewedAt : "",
+          stale: stale
+        };
       }
     }
-    return { discoveryStatus: "unknown_for_address", relevanceReason: "obsluha neověřena", evidenceCode: "RULE_NO_CONFIDENT_COVERAGE_MATCH" };
+    return { discoveryStatus: "unknown_for_address", relevanceReason: "obsluha neověřena", evidenceCode: "RULE_NO_CONFIDENT_COVERAGE_MATCH", sourceType: "", sourceNote: "", confidenceLevel: "weak", lastReviewedAt: "", stale: true };
   }
 
-  /** Per-provider discovery: status only from iuNakupResolveCoverageEvidence. Adds addressClass, evidenceCode. */
+  /** Per-provider discovery: status from iuNakupResolveCoverageEvidence. Adds addressClass, evidenceCode, sourceType, confidenceLevel, lastReviewedAt, stale. */
   function iuNakupEvaluateProviderDiscovery(providerId, context) {
     var cap = IU_NAKUP_PROVIDER_CAPABILITIES && IU_NAKUP_PROVIDER_CAPABILITIES.filter(function(c) { return c.providerId === providerId; })[0];
     var address = context && context.address;
     var classified = context && context.classified;
+    var now = context && context.now != null ? context.now : Date.now();
     var out = {
       providerId: cap ? cap.providerId : providerId,
       providerName: cap ? cap.providerName : providerId,
@@ -9702,7 +9733,11 @@ function buildVideoAsArticleCard(it) {
       addressClass: null,
       publicPresenceKnown: true,
       verifiedSourceAvailable: false,
-      resultKind: "unverifiable"
+      resultKind: "unverifiable",
+      sourceType: "",
+      confidenceLevel: "weak",
+      lastReviewedAt: "",
+      stale: true
     };
     if (!address || !classified) {
       out.discoveryStatus = "public_presence_only";
@@ -9712,10 +9747,14 @@ function buildVideoAsArticleCard(it) {
     }
     var addressClass = classified.localityBucket || "regional";
     out.addressClass = addressClass;
-    var resolved = iuNakupResolveCoverageEvidence(providerId, addressClass);
+    var resolved = iuNakupResolveCoverageEvidence(providerId, addressClass, now);
     out.discoveryStatus = resolved.discoveryStatus;
     out.relevanceReason = resolved.relevanceReason;
     out.evidenceCode = resolved.evidenceCode;
+    out.sourceType = resolved.sourceType != null ? resolved.sourceType : "";
+    out.confidenceLevel = resolved.confidenceLevel != null ? resolved.confidenceLevel : "weak";
+    out.lastReviewedAt = resolved.lastReviewedAt != null ? resolved.lastReviewedAt : "";
+    out.stale = !!resolved.stale;
     return out;
   }
 
@@ -9760,17 +9799,28 @@ function buildVideoAsArticleCard(it) {
     { providerId: "wolt", providerName: "Wolt Market", orderUrl: "https://market.wolt.com/cs/cze" }
   ];
 
-  function iuNakupCreateUnverifiableResult(providerId, addressConsidered, discoveryStatus, evidenceCode, relevanceReason) {
+  function iuNakupCreateUnverifiableResult(providerId, addressConsidered, discoveryStatus, evidenceCode, relevanceReason, audit) {
     var cap = IU_NAKUP_PROVIDER_CAPABILITIES && IU_NAKUP_PROVIDER_CAPABILITIES.filter(function(c) { return c.providerId === providerId; })[0];
     var base = !cap ? { providerId: providerId, id: providerId, verificationStatus: "unverifiable", sourceKind: "unverifiable" } : { providerId: cap.providerId, id: cap.providerId, providerName: cap.providerName, orderUrl: cap.orderUrl, verificationStatus: "unverifiable", sourceKind: "unverifiable" };
     base.addressConsidered = !!addressConsidered;
     base.discoveryStatus = discoveryStatus || "unknown_for_address";
     base.evidenceCode = evidenceCode || "RULE_NO_CONFIDENT_COVERAGE_MATCH";
     base.relevanceReason = relevanceReason || "obsluha neověřena";
+    if (audit && typeof audit === "object") {
+      base.sourceType = audit.sourceType != null ? audit.sourceType : "";
+      base.confidenceLevel = audit.confidenceLevel != null ? audit.confidenceLevel : "weak";
+      base.lastReviewedAt = audit.lastReviewedAt != null ? audit.lastReviewedAt : "";
+      base.stale = !!audit.stale;
+    } else {
+      base.sourceType = "";
+      base.confidenceLevel = "weak";
+      base.lastReviewedAt = "";
+      base.stale = true;
+    }
     return base;
   }
 
-  /** Force result to unverifiable and strip all verified-like fields if provider not in allowlist. Preserves discoveryStatus, evidenceCode, relevanceReason. */
+  /** Force result to unverifiable and strip all verified-like fields if provider not in allowlist. Preserves discoveryStatus, evidenceCode, relevanceReason, audit fields. */
   function iuNakupNormalizeResult(result) {
     var pid = result && (result.providerId || result.id);
     var allowed = IU_NAKUP_VERIFIED_LIVE_ALLOWED || [];
@@ -9778,8 +9828,9 @@ function buildVideoAsArticleCard(it) {
     var discoveryStatus = (result && result.discoveryStatus) || "unknown_for_address";
     var evidenceCode = (result && result.evidenceCode) || "RULE_NO_CONFIDENT_COVERAGE_MATCH";
     var relevanceReason = (result && result.relevanceReason) || "obsluha neověřena";
-    if (!pid || allowed.indexOf(pid) === -1) return iuNakupCreateUnverifiableResult(pid, addrConsidered, discoveryStatus, evidenceCode, relevanceReason);
-    if (result.verificationStatus !== "verified_live") return iuNakupCreateUnverifiableResult(pid, addrConsidered, discoveryStatus, evidenceCode, relevanceReason);
+    var audit = result ? { sourceType: result.sourceType, confidenceLevel: result.confidenceLevel, lastReviewedAt: result.lastReviewedAt, stale: result.stale } : null;
+    if (!pid || allowed.indexOf(pid) === -1) return iuNakupCreateUnverifiableResult(pid, addrConsidered, discoveryStatus, evidenceCode, relevanceReason, audit);
+    if (result.verificationStatus !== "verified_live") return iuNakupCreateUnverifiableResult(pid, addrConsidered, discoveryStatus, evidenceCode, relevanceReason, audit);
     return result;
   }
 
@@ -9799,12 +9850,13 @@ function buildVideoAsArticleCard(it) {
     return true;
   }
 
-  /** Returns one unverifiable result per discovered provider; preserves discovery order, discoveryStatus, evidenceCode, relevanceReason. */
+  /** Returns one unverifiable result per discovered provider; preserves discovery order, discoveryStatus, evidenceCode, relevanceReason, audit fields. */
   function iuEstimateProviderResults(items, address, discoveredProviders) {
-    var list = discoveredProviders && discoveredProviders.length ? discoveredProviders : (IU_NAKUP_PROVIDER_CAPABILITIES || []).map(function(c) { return iuNakupEvaluateProviderDiscovery(c.providerId, { address: address, classified: address ? iuNakupClassifyAddress(address) : null }); });
+    var list = discoveredProviders && discoveredProviders.length ? discoveredProviders : (IU_NAKUP_PROVIDER_CAPABILITIES || []).map(function(c) { return iuNakupEvaluateProviderDiscovery(c.providerId, { address: address, classified: address ? iuNakupClassifyAddress(address) : null, now: Date.now() }); });
     return list.map(function(d) {
       var pid = d.providerId || d.id;
-      return iuNakupCreateUnverifiableResult(pid, d.addressConsidered, d.discoveryStatus, d.evidenceCode, d.relevanceReason);
+      var audit = { sourceType: d.sourceType, confidenceLevel: d.confidenceLevel, lastReviewedAt: d.lastReviewedAt, stale: d.stale };
+      return iuNakupCreateUnverifiableResult(pid, d.addressConsidered, d.discoveryStatus, d.evidenceCode, d.relevanceReason, audit);
     });
   }
 
@@ -9965,6 +10017,10 @@ function buildVideoAsArticleCard(it) {
             card.setAttribute("data-discovery-status", row.discoveryStatus || "unknown_for_address");
             card.setAttribute("data-evidence-code", row.evidenceCode || "RULE_NO_CONFIDENT_COVERAGE_MATCH");
             card.setAttribute("data-relevance-reason", row.relevanceReason || "obsluha neověřena");
+            card.setAttribute("data-source-type", row.sourceType != null ? String(row.sourceType) : "");
+            card.setAttribute("data-confidence-level", row.confidenceLevel != null ? String(row.confidenceLevel) : "weak");
+            card.setAttribute("data-last-reviewed-at", row.lastReviewedAt != null ? String(row.lastReviewedAt) : "");
+            card.setAttribute("data-stale", row.stale === true ? "true" : "false");
           }
           var statusEl = card.querySelector(".iu-nakup-ceny-discovery-status");
           if (row && statusEl) statusEl.textContent = discoveryStatusLabel[row.discoveryStatus] || discoveryStatusLabel.unknown_for_address;
