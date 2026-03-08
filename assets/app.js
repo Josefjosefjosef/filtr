@@ -9427,7 +9427,7 @@ function buildVideoAsArticleCard(it) {
     naceneni: {
       title: "Nacenění nákupu s doručením domů",
       items: [],
-      toolsHtml: '<div class="iuQCard iu-nakup-ceny-shell"><p class="iu-nakup-ceny-desc">Napište seznam nákupu. Porovnáme ceny ve vybraných online obchodech včetně doručení domů.</p><textarea class="iu-nakup-ceny-input" rows="6" placeholder="Např. 20 rohlíků, 3 mléka, 20 čokoládových jogurtů, 5 cukru" aria-label="Seznam nákupu"></textarea><div class="iu-nakup-ceny-actions"><button type="button" class="iu-nakup-ceny-btn-primary">Spočítat nákup</button><button type="button" class="iu-nakup-ceny-btn-secondary">Vyčistit</button></div></div>'
+      toolsHtml: '<div class="iuQCard iu-nakup-ceny-shell"><p class="iu-nakup-ceny-desc">Napište seznam nákupu. Porovnáme ceny ve vybraných online obchodech včetně doručení domů.</p><textarea class="iu-nakup-ceny-input" rows="6" placeholder="Např. 20 rohlíků, 3 mléka, 20 čokoládových jogurtů, 5 cukru" aria-label="Seznam nákupu"></textarea><div class="iu-nakup-ceny-error" role="alert" aria-live="polite"></div><div class="iu-nakup-ceny-actions"><button type="button" class="iu-nakup-ceny-btn-primary">Spočítat nákup</button><button type="button" class="iu-nakup-ceny-btn-secondary">Vyčistit</button></div><div class="iu-nakup-ceny-vas-nakup" hidden><h3 class="iu-nakup-ceny-vas-nakup-heading">Váš nákup</h3><div class="iu-nakup-ceny-vas-nakup-text"></div></div></div>'
     },
     convert: {
       title: "Převod na Word, PDF",
@@ -9578,6 +9578,60 @@ function buildVideoAsArticleCard(it) {
     if (frame) frame.src = "";
     e.preventDefault();
   });
+
+  var IU_SHOPPING_LAST_LIST_KEY = "iuShoppingLastListV1";
+
+  function iuNakupCenyBootstrap(quick) {
+    const shell = quick && quick.querySelector(".iu-nakup-ceny-shell");
+    if (!shell) return;
+    const input = shell.querySelector(".iu-nakup-ceny-input");
+    const errorEl = shell.querySelector(".iu-nakup-ceny-error");
+    const btnPrimary = shell.querySelector(".iu-nakup-ceny-btn-primary");
+    const btnSecondary = shell.querySelector(".iu-nakup-ceny-btn-secondary");
+    const vasNakupBlock = shell.querySelector(".iu-nakup-ceny-vas-nakup");
+    const vasNakupText = shell.querySelector(".iu-nakup-ceny-vas-nakup-text");
+    if (!input || !errorEl || !btnPrimary || !btnSecondary || !vasNakupBlock || !vasNakupText) return;
+    try {
+      var lastList = localStorage.getItem(IU_SHOPPING_LAST_LIST_KEY);
+      if (lastList && typeof lastList === "string") {
+        input.value = lastList;
+      }
+    } catch (_) {}
+    function setError(msg) {
+      errorEl.textContent = msg || "";
+    }
+    function isValid(val) {
+      var t = (val || "").trim();
+      if (t.length < 3) return false;
+      return /[a-zA-Z\u00e1\u00e9\u00ed\u00f3\u00fa\u00fd\u010d\u010f\u011b\u0148\u0159\u0161\u0165\u016f\u017e]/.test(t);
+    }
+    btnPrimary.addEventListener("click", function() {
+      var val = (input.value || "").trim();
+      if (val === "") {
+        setError("Zadejte prosím seznam nákupu.");
+        return;
+      }
+      if (!isValid(val)) {
+        setError("Zadaný seznam nákupu není platný.");
+        return;
+      }
+      setError("");
+      vasNakupText.textContent = val;
+      vasNakupBlock.hidden = false;
+      try {
+        localStorage.setItem(IU_SHOPPING_LAST_LIST_KEY, val);
+      } catch (_) {}
+    });
+    btnSecondary.addEventListener("click", function() {
+      input.value = "";
+      setError("");
+      vasNakupBlock.hidden = true;
+      vasNakupText.textContent = "";
+    });
+    input.addEventListener("input", function() {
+      setError("");
+    });
+  }
 
   function iuPdfConvertToolsBootstrap(quick) {
     const root = quick && quick.querySelector("[data-iu=\"pdfconvert-tools\"]");
@@ -10136,6 +10190,7 @@ function buildVideoAsArticleCard(it) {
           try { renderAiVideos(quick); } catch (e) { console.warn("renderAiVideos", e); }
         }
         if (isConvert) iuPdfConvertToolsBootstrap(quick);
+        if (keyNorm === "naceneni") iuNakupCenyBootstrap(quick);
       };
       if (isAi) {
         doRender(data.items);
