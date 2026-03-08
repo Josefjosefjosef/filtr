@@ -9582,6 +9582,69 @@ function buildVideoAsArticleCard(it) {
   var IU_SHOPPING_LAST_LIST_KEY = "iuShoppingLastListV1";
   var IU_SHOPPING_DELIVERY_ADDRESS_KEY = "iuShoppingDeliveryAddressV1";
 
+  /** Normalize address: trim, PSČ 5 digits, unified shape. Returns { street, city, postalCode, country } or null if invalid. */
+  function iuNakupNormalizeAddress(addr) {
+    if (!addr || typeof addr !== "object") return null;
+    var ulice = (addr.ulice != null ? addr.ulice : addr.street);
+    var mesto = (addr.mesto != null ? addr.mesto : addr.city);
+    var psc = (addr.psc != null ? addr.psc : addr.postalCode);
+    var street = typeof ulice === "string" ? ulice.trim() : "";
+    var city = typeof mesto === "string" ? mesto.trim() : "";
+    var postalCode = typeof psc === "string" ? psc.replace(/\s/g, "").trim() : "";
+    if (postalCode.length !== 5 || !/^\d{5}$/.test(postalCode)) return null;
+    if (street.length < 2 || city.length < 2) return null;
+    return { street: street, city: city, postalCode: postalCode, country: addr.country || "CZ" };
+  }
+
+  /** Read saved address from localStorage; defensively normalize; return null if invalid. */
+  function iuNakupReadSavedAddress() {
+    try {
+      var raw = localStorage.getItem(IU_SHOPPING_DELIVERY_ADDRESS_KEY);
+      if (!raw || typeof raw !== "string") return null;
+      var o = JSON.parse(raw);
+      if (!o || (typeof o.ulice !== "string" && typeof o.street !== "string")) return null;
+      return iuNakupNormalizeAddress(o);
+    } catch (_) { return null; }
+  }
+
+  /** Read address from shell UI inputs. Returns normalized object or null. */
+  function iuNakupReadAddressFromUi(shell) {
+    if (!shell) return null;
+    var uliceInp = shell.querySelector(".iu-nakup-ceny-ulice");
+    var mestoInp = shell.querySelector(".iu-nakup-ceny-mesto");
+    var pscInp = shell.querySelector(".iu-nakup-ceny-psc");
+    if (!uliceInp || !mestoInp || !pscInp) return null;
+    var ulice = (uliceInp.value || "").trim();
+    var mesto = (mestoInp.value || "").trim();
+    var psc = (pscInp.value || "").replace(/\s/g, "").trim();
+    if (!ulice || !mesto || !psc) return null;
+    return iuNakupNormalizeAddress({ ulice: ulice, mesto: mesto, psc: psc });
+  }
+
+  /** Effective address for pipeline: from UI if filled, else saved. Normalized. */
+  function iuNakupGetEffectiveAddress(shell) {
+    var fromUi = shell ? iuNakupReadAddressFromUi(shell) : null;
+    if (fromUi) return fromUi;
+    return iuNakupReadSavedAddress();
+  }
+
+  /** Provider discovery: accepts context { items, address, now }; returns structured list. Address considered in pipeline. */
+  function iuNakupDiscoverProviders(context) {
+    var caps = IU_NAKUP_PROVIDER_CAPABILITIES || [];
+    var address = context && context.address;
+    return caps.map(function(c) {
+      return {
+        providerId: c.providerId,
+        providerName: c.providerName,
+        orderUrl: c.orderUrl,
+        publicPresenceKnown: true,
+        addressConsidered: !!address,
+        discoveryStatus: "ok",
+        resultKind: "unverifiable"
+      };
+    });
+  }
+
   var IU_NAKUP_PROVIDERS = [
     { id: "rohlik", name: "Rohlík", url: "https://www.rohlik.cz/" },
     { id: "tesco", name: "Tesco", url: "https://nakup.itesco.cz/" },
@@ -9606,10 +9669,11 @@ function buildVideoAsArticleCard(it) {
     { providerId: "wolt", providerName: "Wolt Market", orderUrl: "https://market.wolt.com/cs/cze" }
   ];
 
-  function iuNakupCreateUnverifiableResult(providerId) {
+  function iuNakupCreateUnverifiableResult(providerId, addressConsidered) {
     var cap = IU_NAKUP_PROVIDER_CAPABILITIES && IU_NAKUP_PROVIDER_CAPABILITIES.filter(function(c) { return c.providerId === providerId; })[0];
-    if (!cap) return { providerId: providerId, id: providerId, verificationStatus: "unverifiable", sourceKind: "unverifiable" };
-    return { providerId: cap.providerId, id: cap.providerId, providerName: cap.providerName, orderUrl: cap.orderUrl, verificationStatus: "unverifiable", sourceKind: "unverifiable" };
+    var base = !cap ? { providerId: providerId, id: providerId, verificationStatus: "unverifiable", sourceKind: "unverifiable" } : { providerId: cap.providerId, id: cap.providerId, providerName: cap.providerName, orderUrl: cap.orderUrl, verificationStatus: "unverifiable", sourceKind: "unverifiable" };
+    base.addressConsidered = !!addressConsidered;
+    return base;
   }
 
   /** Force result to unverifiable and strip all verified-like fields if provider not in allowlist. */
@@ -9637,10 +9701,13 @@ function buildVideoAsArticleCard(it) {
     return true;
   }
 
-  /** Returns one unverifiable result per provider; no verified-like fields in object. */
-  function iuEstimateProviderResults(items) {
-    if (!IU_NAKUP_PROVIDER_CAPABILITIES || !IU_NAKUP_PROVIDER_CAPABILITIES.length) return [];
-    return IU_NAKUP_PROVIDER_CAPABILITIES.map(function(c) { return iuNakupCreateUnverifiableResult(c.providerId); });
+  /** Returns one unverifiable result per discovered provider; items and address passed for pipeline truth. */
+  function iuEstimateProviderResults(items, address, discoveredProviders) {
+    var list = discoveredProviders && discoveredProviders.length ? discoveredProviders : (IU_NAKUP_PROVIDER_CAPABILITIES || []).map(function(c) { return { providerId: c.providerId, providerName: c.providerName, orderUrl: c.orderUrl, addressConsidered: !!address }; });
+    return list.map(function(d) {
+      var pid = d.providerId || d.id;
+      return iuNakupCreateUnverifiableResult(pid, d.addressConsidered);
+    });
   }
 
   function iuParseShoppingList(raw) {
@@ -9704,15 +9771,14 @@ function buildVideoAsArticleCard(it) {
     const summaryFastestVal = shell.querySelector(".iu-nakup-ceny-summary-fastest-value");
     if (!input || !errorEl || !btnPrimary || !btnSecondary || !vasNakupBlock || !vasNakupText) return;
     function getSavedAddress() {
-      try {
-        var raw = localStorage.getItem(IU_SHOPPING_DELIVERY_ADDRESS_KEY);
-        if (!raw || typeof raw !== "string") return null;
-        var o = JSON.parse(raw);
-        return o && typeof o.ulice === "string" && typeof o.mesto === "string" && typeof o.psc === "string" ? o : null;
-      } catch (_) { return null; }
+      var r = iuNakupReadSavedAddress();
+      return r ? { ulice: r.street, mesto: r.city, psc: r.postalCode } : null;
     }
     function formatAddress(o) {
-      return (o.ulice || "").trim() + ", " + (o.psc || "").trim() + " " + (o.mesto || "").trim();
+      var ul = (o && (o.ulice != null ? o.ulice : o.street)) || "";
+      var ps = (o && (o.psc != null ? o.psc : o.postalCode)) || "";
+      var me = (o && (o.mesto != null ? o.mesto : o.city)) || "";
+      return ul.trim() + ", " + ps.trim() + " " + me.trim();
     }
     function showAddressStep() {
       var saved = getSavedAddress();
@@ -9754,7 +9820,10 @@ function buildVideoAsArticleCard(it) {
       if (savedAddressBlock) savedAddressBlock.hidden = true;
       var rawText = vasNakupText ? (vasNakupText.textContent || "").trim() : "";
       var parsed = rawText ? iuParseShoppingList(rawText) : { items: [] };
-      var rawEstimates = (parsed.items && parsed.items.length) ? iuEstimateProviderResults(parsed.items) : [];
+      var address = iuNakupGetEffectiveAddress(quick);
+      var discoveryContext = { items: parsed.items || [], address: address, now: Date.now() };
+      var discoveredProviders = iuNakupDiscoverProviders(discoveryContext);
+      var rawEstimates = (parsed.items && parsed.items.length) ? iuEstimateProviderResults(parsed.items, address, discoveredProviders) : [];
       var estimates = rawEstimates.map(function(r) { return iuNakupNormalizeResult(r); });
       lastNakupState.items = parsed.items || [];
       lastNakupState.estimates = estimates;
@@ -9931,13 +10000,13 @@ function buildVideoAsArticleCard(it) {
         setAddrError("PSČ musí být 5 číslic (např. 123 45).");
         return;
       }
-      var payload = { ulice: ulice, mesto: mesto, psc: psc };
-      if (saveAddrCb && saveAddrCb.checked) {
+      var normalized = iuNakupNormalizeAddress({ ulice: ulice, mesto: mesto, psc: psc });
+      if (normalized && saveAddrCb && saveAddrCb.checked) {
         try {
-          localStorage.setItem(IU_SHOPPING_DELIVERY_ADDRESS_KEY, JSON.stringify(payload));
+          localStorage.setItem(IU_SHOPPING_DELIVERY_ADDRESS_KEY, JSON.stringify({ street: normalized.street, city: normalized.city, postalCode: normalized.postalCode, country: normalized.country }));
         } catch (_) {}
       }
-      if (savedAddrText) savedAddrText.textContent = formatAddress(payload);
+      if (savedAddrText) savedAddrText.textContent = formatAddress(normalized || { ulice: ulice, mesto: mesto, psc: psc });
       if (addressForm) addressForm.hidden = true;
       if (savedAddressBlock) savedAddressBlock.hidden = false;
       showResults();
@@ -9953,6 +10022,7 @@ function buildVideoAsArticleCard(it) {
         uliceInp.value = saved.ulice || "";
         mestoInp.value = saved.mesto || "";
         pscInp.value = saved.psc || "";
+        setAddrError("");
       } else {
         uliceInp.value = "";
         mestoInp.value = "";
