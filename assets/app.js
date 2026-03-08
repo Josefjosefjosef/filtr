@@ -9427,7 +9427,7 @@ function buildVideoAsArticleCard(it) {
     naceneni: {
       title: "Nacenění nákupu s doručením domů",
       items: [],
-      toolsHtml: '<div class="iuQCard iu-nakup-ceny-shell"><p class="iu-nakup-ceny-desc">Napište seznam nákupu. Porovnáme ceny ve vybraných online obchodech včetně doručení domů.</p><textarea class="iu-nakup-ceny-input" rows="6" placeholder="Např. 20 rohlíků, 3 mléka, 20 čokoládových jogurtů, 5 cukru" aria-label="Seznam nákupu"></textarea><div class="iu-nakup-ceny-error" role="alert" aria-live="polite"></div><div class="iu-nakup-ceny-actions"><button type="button" class="iu-nakup-ceny-btn-primary">Spočítat nákup</button><button type="button" class="iu-nakup-ceny-btn-secondary">Vyčistit</button></div><div class="iu-nakup-ceny-vas-nakup" hidden><h3 class="iu-nakup-ceny-vas-nakup-heading">Váš nákup</h3><div class="iu-nakup-ceny-vas-nakup-text"></div></div><div class="iu-nakup-ceny-address-form" hidden><div class="iu-nakup-ceny-address-errors" role="alert" aria-live="polite"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-ulice-inp">Ulice a číslo</label><input type="text" id="iu-nakup-ceny-ulice-inp" class="iu-nakup-ceny-ulice" aria-label="Ulice a číslo" autocomplete="street-address"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-mesto-inp">Město</label><input type="text" id="iu-nakup-ceny-mesto-inp" class="iu-nakup-ceny-mesto" aria-label="Město" autocomplete="address-level2"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-psc-inp">PSČ</label><input type="text" id="iu-nakup-ceny-psc-inp" class="iu-nakup-ceny-psc" aria-label="PSČ" inputmode="numeric" maxlength="6" autocomplete="postal-code"></div><label class="iu-nakup-ceny-save-addr-label"><input type="checkbox" class="iu-nakup-ceny-save-addr" checked aria-label="Používat tuto adresu i příště">Používat tuto adresu i příště</label><div class="iu-nakup-ceny-address-actions"><button type="button" class="iu-nakup-ceny-btn-confirm-addr">Potvrdit adresu</button></div></div><div class="iu-nakup-ceny-saved-address" hidden><p class="iu-nakup-ceny-saved-address-intro">Doručení domů na adresu:</p><p class="iu-nakup-ceny-saved-addr-text"></p><div class="iu-nakup-ceny-saved-actions"><button type="button" class="iu-nakup-ceny-btn-use-addr">Použít tuto adresu</button><button type="button" class="iu-nakup-ceny-btn-change-addr">Změnit adresu</button></div></div><div class="iu-nakup-ceny-clarify" hidden><h3 class="iu-nakup-ceny-clarify-heading">Upřesnění nákupu</h3><p class="iu-nakup-ceny-clarify-desc">Mám počítat běžné varianty těchto položek?</p><ul class="iu-nakup-ceny-clarify-items" aria-label="Položky k upřesnění"></ul><div class="iu-nakup-ceny-clarify-actions"><button type="button" class="iu-nakup-ceny-btn-use-defaults">Ano, použít běžné varianty</button><button type="button" class="iu-nakup-ceny-btn-edit-items">Upravit položky</button></div></div><div class="iu-nakup-ceny-results" hidden><h3 class="iu-nakup-ceny-results-heading">Porovnání nákupu s doručením domů</h3><p class="iu-nakup-ceny-results-disclaimer">Orientační porovnání vybraných obchodů pro doručení domů.</p><div class="iu-nakup-ceny-results-summary"><p class="iu-nakup-ceny-summary-cheapest"><span class="iu-nakup-ceny-summary-label">Nejlevnější varianta:</span> <span class="iu-nakup-ceny-summary-cheapest-value"></span></p><p class="iu-nakup-ceny-summary-fastest"><span class="iu-nakup-ceny-summary-label">Nejrychlejší doručení:</span> <span class="iu-nakup-ceny-summary-fastest-value"></span></p></div><div class="iu-nakup-ceny-results-cards"><div class="iu-nakup-ceny-provider-card" data-provider="rohlik"><h4 class="iu-nakup-ceny-provider-name">Rohlík</h4><div class="iu-nakup-ceny-provider-rows"><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Zboží</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doprava</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Celkem</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doručení</span><span class="iu-nakup-ceny-provider-val">—</span></div></div><div class="iu-nakup-ceny-provider-unverifiable" hidden>Nelze aktuálně ověřit na webu prodejce.</div><div class="iu-nakup-ceny-provider-actions"><a class="iu-nakup-ceny-btn-objednat" href="https://www.rohlik.cz/" target="_blank" rel="noopener noreferrer">Objednat</a><button type="button" class="iu-nakup-ceny-btn-detail">Detail nákupu</button></div><div class="iu-nakup-ceny-provider-detail" hidden><p class="iu-nakup-ceny-detail-text">Orientační přehled položek nákupu.</p></div></div><div class="iu-nakup-ceny-provider-card" data-provider="tesco"><h4 class="iu-nakup-ceny-provider-name">Tesco</h4><div class="iu-nakup-ceny-provider-rows"><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Zboží</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doprava</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Celkem</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doručení</span><span class="iu-nakup-ceny-provider-val">—</span></div></div><div class="iu-nakup-ceny-provider-unverifiable" hidden>Nelze aktuálně ověřit na webu prodejce.</div><div class="iu-nakup-ceny-provider-actions"><a class="iu-nakup-ceny-btn-objednat" href="https://nakup.itesco.cz/" target="_blank" rel="noopener noreferrer">Objednat</a><button type="button" class="iu-nakup-ceny-btn-detail">Detail nákupu</button></div><div class="iu-nakup-ceny-provider-detail" hidden><p class="iu-nakup-ceny-detail-text">Orientační přehled položek nákupu.</p></div></div><div class="iu-nakup-ceny-provider-card" data-provider="kosik"><h4 class="iu-nakup-ceny-provider-name">Košík</h4><div class="iu-nakup-ceny-provider-rows"><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Zboží</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doprava</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Celkem</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doručení</span><span class="iu-nakup-ceny-provider-val">—</span></div></div><div class="iu-nakup-ceny-provider-unverifiable" hidden>Nelze aktuálně ověřit na webu prodejce.</div><div class="iu-nakup-ceny-provider-actions"><a class="iu-nakup-ceny-btn-objednat" href="https://www.kosik.cz/" target="_blank" rel="noopener noreferrer">Objednat</a><button type="button" class="iu-nakup-ceny-btn-detail">Detail nákupu</button></div><div class="iu-nakup-ceny-provider-detail" hidden><p class="iu-nakup-ceny-detail-text">Orientační přehled položek nákupu.</p></div></div><div class="iu-nakup-ceny-provider-card" data-provider="wolt"><h4 class="iu-nakup-ceny-provider-name">Wolt Market</h4><div class="iu-nakup-ceny-provider-rows"><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Zboží</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doprava</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Celkem</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doručení</span><span class="iu-nakup-ceny-provider-val">—</span></div></div><div class="iu-nakup-ceny-provider-unverifiable" hidden>Nelze aktuálně ověřit na webu prodejce.</div><div class="iu-nakup-ceny-provider-actions"><a class="iu-nakup-ceny-btn-objednat" href="https://market.wolt.com/cs/cze" target="_blank" rel="noopener noreferrer">Objednat</a><button type="button" class="iu-nakup-ceny-btn-detail">Detail nákupu</button></div><div class="iu-nakup-ceny-provider-detail" hidden><p class="iu-nakup-ceny-detail-text">Orientační přehled položek nákupu.</p></div></div></div><p class="iu-nakup-ceny-results-footer">Po kliknutí otevřeme vybraný obchod. Dokončení objednávky provedete přímo u prodejce.</p></div></div>'
+      toolsHtml: '<div class="iuQCard iu-nakup-ceny-shell"><p class="iu-nakup-ceny-desc">Napište seznam nákupu. Porovnáme ceny ve vybraných online obchodech včetně doručení domů.</p><textarea class="iu-nakup-ceny-input" rows="6" placeholder="Např. 20 rohlíků, 3 mléka, 20 čokoládových jogurtů, 5 cukru" aria-label="Seznam nákupu"></textarea><div class="iu-nakup-ceny-error" role="alert" aria-live="polite"></div><div class="iu-nakup-ceny-actions"><button type="button" class="iu-nakup-ceny-btn-primary">Spočítat nákup</button><button type="button" class="iu-nakup-ceny-btn-secondary">Vyčistit</button></div><div class="iu-nakup-ceny-vas-nakup" hidden><h3 class="iu-nakup-ceny-vas-nakup-heading">Váš nákup</h3><div class="iu-nakup-ceny-vas-nakup-text"></div></div><div class="iu-nakup-ceny-address-form" hidden><div class="iu-nakup-ceny-address-errors" role="alert" aria-live="polite"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-ulice-inp">Ulice a číslo</label><input type="text" id="iu-nakup-ceny-ulice-inp" class="iu-nakup-ceny-ulice" aria-label="Ulice a číslo" autocomplete="street-address"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-mesto-inp">Město</label><input type="text" id="iu-nakup-ceny-mesto-inp" class="iu-nakup-ceny-mesto" aria-label="Město" autocomplete="address-level2"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-psc-inp">PSČ</label><input type="text" id="iu-nakup-ceny-psc-inp" class="iu-nakup-ceny-psc" aria-label="PSČ" inputmode="numeric" maxlength="6" autocomplete="postal-code"></div><label class="iu-nakup-ceny-save-addr-label"><input type="checkbox" class="iu-nakup-ceny-save-addr" checked aria-label="Používat tuto adresu i příště">Používat tuto adresu i příště</label><div class="iu-nakup-ceny-address-actions"><button type="button" class="iu-nakup-ceny-btn-confirm-addr">Potvrdit adresu</button></div></div><div class="iu-nakup-ceny-saved-address" hidden><p class="iu-nakup-ceny-saved-address-intro">Doručení domů na adresu:</p><p class="iu-nakup-ceny-saved-addr-text"></p><div class="iu-nakup-ceny-saved-actions"><button type="button" class="iu-nakup-ceny-btn-use-addr">Použít tuto adresu</button><button type="button" class="iu-nakup-ceny-btn-change-addr">Změnit adresu</button></div></div><div class="iu-nakup-ceny-clarify" hidden><h3 class="iu-nakup-ceny-clarify-heading">Upřesnění nákupu</h3><p class="iu-nakup-ceny-clarify-desc">Mám počítat běžné varianty těchto položek?</p><ul class="iu-nakup-ceny-clarify-items" aria-label="Položky k upřesnění"></ul><div class="iu-nakup-ceny-clarify-actions"><button type="button" class="iu-nakup-ceny-btn-use-defaults">Ano, použít běžné varianty</button><button type="button" class="iu-nakup-ceny-btn-edit-items">Upravit položky</button></div></div><div class="iu-nakup-ceny-results" hidden><h3 class="iu-nakup-ceny-results-heading">Porovnání nákupu s doručením domů</h3><p class="iu-nakup-ceny-results-disclaimer">Porovnání vybraných obchodů. Aktuální ceny a doručení ověřujte na webu prodejce.</p><div class="iu-nakup-ceny-results-summary"><p class="iu-nakup-ceny-summary-cheapest"><span class="iu-nakup-ceny-summary-label">Nejlevnější varianta:</span> <span class="iu-nakup-ceny-summary-cheapest-value"></span></p><p class="iu-nakup-ceny-summary-fastest"><span class="iu-nakup-ceny-summary-label">Nejrychlejší doručení:</span> <span class="iu-nakup-ceny-summary-fastest-value"></span></p></div><div class="iu-nakup-ceny-results-cards"><div class="iu-nakup-ceny-provider-card" data-provider="rohlik"><h4 class="iu-nakup-ceny-provider-name">Rohlík</h4><div class="iu-nakup-ceny-provider-rows"><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Zboží</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doprava</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Celkem</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doručení</span><span class="iu-nakup-ceny-provider-val">—</span></div></div><div class="iu-nakup-ceny-provider-unverifiable" hidden>Nelze aktuálně ověřit na webu prodejce.</div><div class="iu-nakup-ceny-provider-actions"><a class="iu-nakup-ceny-btn-objednat" href="https://www.rohlik.cz/" target="_blank" rel="noopener noreferrer">Objednat</a><button type="button" class="iu-nakup-ceny-btn-detail">Detail nákupu</button></div><div class="iu-nakup-ceny-provider-detail" hidden><p class="iu-nakup-ceny-detail-text">Aktuální cenu, akce a doručení se nepodařilo spolehlivě ověřit na webu prodejce.</p></div></div><div class="iu-nakup-ceny-provider-card" data-provider="tesco"><h4 class="iu-nakup-ceny-provider-name">Tesco</h4><div class="iu-nakup-ceny-provider-rows"><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Zboží</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doprava</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Celkem</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doručení</span><span class="iu-nakup-ceny-provider-val">—</span></div></div><div class="iu-nakup-ceny-provider-unverifiable" hidden>Nelze aktuálně ověřit na webu prodejce.</div><div class="iu-nakup-ceny-provider-actions"><a class="iu-nakup-ceny-btn-objednat" href="https://nakup.itesco.cz/" target="_blank" rel="noopener noreferrer">Objednat</a><button type="button" class="iu-nakup-ceny-btn-detail">Detail nákupu</button></div><div class="iu-nakup-ceny-provider-detail" hidden><p class="iu-nakup-ceny-detail-text">Aktuální cenu, akce a doručení se nepodařilo spolehlivě ověřit na webu prodejce.</p></div></div><div class="iu-nakup-ceny-provider-card" data-provider="kosik"><h4 class="iu-nakup-ceny-provider-name">Košík</h4><div class="iu-nakup-ceny-provider-rows"><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Zboží</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doprava</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Celkem</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doručení</span><span class="iu-nakup-ceny-provider-val">—</span></div></div><div class="iu-nakup-ceny-provider-unverifiable" hidden>Nelze aktuálně ověřit na webu prodejce.</div><div class="iu-nakup-ceny-provider-actions"><a class="iu-nakup-ceny-btn-objednat" href="https://www.kosik.cz/" target="_blank" rel="noopener noreferrer">Objednat</a><button type="button" class="iu-nakup-ceny-btn-detail">Detail nákupu</button></div><div class="iu-nakup-ceny-provider-detail" hidden><p class="iu-nakup-ceny-detail-text">Aktuální cenu, akce a doručení se nepodařilo spolehlivě ověřit na webu prodejce.</p></div></div><div class="iu-nakup-ceny-provider-card" data-provider="wolt"><h4 class="iu-nakup-ceny-provider-name">Wolt Market</h4><div class="iu-nakup-ceny-provider-rows"><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Zboží</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doprava</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Celkem</span><span class="iu-nakup-ceny-provider-val">—</span></div><div class="iu-nakup-ceny-provider-row"><span class="iu-nakup-ceny-provider-label">Doručení</span><span class="iu-nakup-ceny-provider-val">—</span></div></div><div class="iu-nakup-ceny-provider-unverifiable" hidden>Nelze aktuálně ověřit na webu prodejce.</div><div class="iu-nakup-ceny-provider-actions"><a class="iu-nakup-ceny-btn-objednat" href="https://market.wolt.com/cs/cze" target="_blank" rel="noopener noreferrer">Objednat</a><button type="button" class="iu-nakup-ceny-btn-detail">Detail nákupu</button></div><div class="iu-nakup-ceny-provider-detail" hidden><p class="iu-nakup-ceny-detail-text">Aktuální cenu, akce a doručení se nepodařilo spolehlivě ověřit na webu prodejce.</p></div></div></div><p class="iu-nakup-ceny-results-footer">Po kliknutí otevřeme vybraný obchod. Dokončení objednávky provedete přímo u prodejce.</p></div></div>'
     },
     convert: {
       title: "Převod na Word, PDF",
@@ -9596,45 +9596,51 @@ function buildVideoAsArticleCard(it) {
     { pattern: /cukr/i, defaultLabel: "cukr krystal 1 kg" }
   ];
 
-  var IU_NAKUP_BASELINE_CZK = { rohlik: 5, mleko: 30, jogurt: 25, cukr: 40 };
-  var IU_NAKUP_DELIVERY_CZK = { rohlik: 39, tesco: 99, kosik: 49, wolt: 49 };
-  var IU_NAKUP_DELIVERY_LABEL = { rohlik: "1–2 dny", tesco: "vybraný den", kosik: "1–2 dny", wolt: "30–60 min" };
+  /** Only providers in this list may be shown as verified_live. Empty => Wolt, Rohlík, Košík, Tesco all unverifiable. */
+  var IU_NAKUP_VERIFIED_LIVE_ALLOWED = [];
 
-  function iuNakupCanDisplayVerifiedData(result) {
-    if (!result) return false;
-    return result.verificationStatus === "verified_live" &&
-      result.goodsCzk != null &&
-      result.deliveryCzk != null &&
-      result.totalCzk != null &&
-      (result.deliveryLabel != null && result.deliveryLabel !== "") &&
-      (result.rawEvidence != null && typeof result.rawEvidence === "object");
+  var IU_NAKUP_PROVIDER_CAPABILITIES = [
+    { providerId: "rohlik", providerName: "Rohlík", orderUrl: "https://www.rohlik.cz/" },
+    { providerId: "tesco", providerName: "Tesco", orderUrl: "https://nakup.itesco.cz/" },
+    { providerId: "kosik", providerName: "Košík", orderUrl: "https://www.kosik.cz/" },
+    { providerId: "wolt", providerName: "Wolt Market", orderUrl: "https://market.wolt.com/cs/cze" }
+  ];
+
+  function iuNakupCreateUnverifiableResult(providerId) {
+    var cap = IU_NAKUP_PROVIDER_CAPABILITIES && IU_NAKUP_PROVIDER_CAPABILITIES.filter(function(c) { return c.providerId === providerId; })[0];
+    if (!cap) return { providerId: providerId, id: providerId, verificationStatus: "unverifiable", sourceKind: "unverifiable" };
+    return { providerId: cap.providerId, id: cap.providerId, providerName: cap.providerName, orderUrl: cap.orderUrl, verificationStatus: "unverifiable", sourceKind: "unverifiable" };
   }
 
+  /** Force result to unverifiable and strip all verified-like fields if provider not in allowlist. */
+  function iuNakupNormalizeResult(result) {
+    var pid = result && (result.providerId || result.id);
+    var allowed = IU_NAKUP_VERIFIED_LIVE_ALLOWED || [];
+    if (!pid || allowed.indexOf(pid) === -1) return iuNakupCreateUnverifiableResult(pid);
+    if (result.verificationStatus !== "verified_live") return iuNakupCreateUnverifiableResult(pid);
+    return result;
+  }
+
+  /** Guard: true only if provider in allowlist and full verified_live contract satisfied. */
+  function iuNakupCanDisplayVerifiedData(result) {
+    if (!result) return false;
+    var pid = result.providerId || result.id;
+    var allowed = IU_NAKUP_VERIFIED_LIVE_ALLOWED || [];
+    if (allowed.indexOf(pid) === -1) return false;
+    if (result.verificationStatus !== "verified_live") return false;
+    if (result.goodsCzk == null || result.deliveryCzk == null || result.totalCzk == null) return false;
+    if (result.deliveryLabel == null || result.deliveryLabel === "") return false;
+    if (result.verifiedAt == null) return false;
+    if (result.rawEvidence == null || typeof result.rawEvidence !== "object") return false;
+    if (result.verificationExpiresAt == null) return false;
+    if (result.verificationExpiresAt < Date.now()) return false;
+    return true;
+  }
+
+  /** Returns one unverifiable result per provider; no verified-like fields in object. */
   function iuEstimateProviderResults(items) {
-    if (!items || !items.length) return [];
-    var goodsCzk = 0;
-    for (var i = 0; i < items.length; i++) {
-      var it = items[i];
-      var qty = it.qty || 1;
-      var raw = (it.raw || "").toLowerCase();
-      if (/rohlík/.test(raw)) goodsCzk += qty * (IU_NAKUP_BASELINE_CZK.rohlik || 5);
-      else if (/mléko|mlíko/.test(raw)) goodsCzk += qty * (IU_NAKUP_BASELINE_CZK.mleko || 30);
-      else if (/jogurt|čokolád/.test(raw)) goodsCzk += qty * (IU_NAKUP_BASELINE_CZK.jogurt || 25);
-      else if (/cukr/.test(raw)) goodsCzk += qty * (IU_NAKUP_BASELINE_CZK.cukr || 40);
-      else goodsCzk += qty * 50;
-    }
-    var ids = ["rohlik", "tesco", "kosik", "wolt"];
-    return ids.map(function(id) {
-      var deliveryCzk = IU_NAKUP_DELIVERY_CZK[id] || 0;
-      return {
-        id: id,
-        goodsCzk: goodsCzk,
-        deliveryCzk: deliveryCzk,
-        totalCzk: goodsCzk + deliveryCzk,
-        deliveryLabel: IU_NAKUP_DELIVERY_LABEL[id] || "—",
-        verificationStatus: "unverifiable"
-      };
-    });
+    if (!IU_NAKUP_PROVIDER_CAPABILITIES || !IU_NAKUP_PROVIDER_CAPABILITIES.length) return [];
+    return IU_NAKUP_PROVIDER_CAPABILITIES.map(function(c) { return iuNakupCreateUnverifiableResult(c.providerId); });
   }
 
   function iuParseShoppingList(raw) {
@@ -9748,12 +9754,17 @@ function buildVideoAsArticleCard(it) {
       if (savedAddressBlock) savedAddressBlock.hidden = true;
       var rawText = vasNakupText ? (vasNakupText.textContent || "").trim() : "";
       var parsed = rawText ? iuParseShoppingList(rawText) : { items: [] };
-      var estimates = (parsed.items && parsed.items.length) ? iuEstimateProviderResults(parsed.items) : [];
+      var rawEstimates = (parsed.items && parsed.items.length) ? iuEstimateProviderResults(parsed.items) : [];
+      var estimates = rawEstimates.map(function(r) { return iuNakupNormalizeResult(r); });
       lastNakupState.items = parsed.items || [];
       lastNakupState.estimates = estimates;
       var summaryEl = resultsBlock ? resultsBlock.querySelector(".iu-nakup-ceny-results-summary") : null;
       var verifiedCount = estimates.filter(function(r) { return iuNakupCanDisplayVerifiedData(r); }).length;
       if (summaryEl) summaryEl.hidden = verifiedCount < 2;
+      if (summaryEl && summaryEl.hidden) {
+        if (summaryCheapestVal) summaryCheapestVal.textContent = "";
+        if (summaryFastestVal) summaryFastestVal.textContent = "";
+      }
       if (summaryEl && !summaryEl.hidden && summaryCheapestVal && summaryFastestVal) {
         var verified = estimates.filter(function(r) { return iuNakupCanDisplayVerifiedData(r); });
         var cheapest = verified.slice().sort(function(a, b) { return (a.totalCzk || 0) - (b.totalCzk || 0); })[0];
@@ -9778,10 +9789,10 @@ function buildVideoAsArticleCard(it) {
           if (unverEl) unverEl.hidden = canShow;
           if (row && vals.length >= 4) {
             if (canShow) {
-              vals[0].textContent = (row.goodsCzk != null ? row.goodsCzk + " Kč" : "—");
-              vals[1].textContent = (row.deliveryCzk != null ? row.deliveryCzk + " Kč" : "—");
-              vals[2].textContent = (row.totalCzk != null ? row.totalCzk + " Kč" : "—");
-              vals[3].textContent = (row.deliveryLabel != null && row.deliveryLabel !== "" ? row.deliveryLabel : "—");
+              vals[0].textContent = row.goodsCzk + " Kč";
+              vals[1].textContent = row.deliveryCzk + " Kč";
+              vals[2].textContent = row.totalCzk + " Kč";
+              vals[3].textContent = row.deliveryLabel;
             } else {
               vals[0].textContent = "—";
               vals[1].textContent = "—";
@@ -9797,7 +9808,7 @@ function buildVideoAsArticleCard(it) {
               } else {
                 var items = lastNakupState.items;
                 var list = items.length ? items.map(function(it) { return (it.qty || 1) + "× " + (it.raw || ""); }).join(", ") : "";
-                detailText.textContent = (list ? list + ". " : "") + "Aktuální cenu a doručení se nepodařilo spolehlivě ověřit na webu prodejce.";
+                detailText.textContent = (list ? list + ". " : "") + "Aktuální cenu, akce a doručení se nepodařilo spolehlivě ověřit na webu prodejce.";
               }
             }
             detailEl.hidden = true;
