@@ -9596,6 +9596,30 @@ function buildVideoAsArticleCard(it) {
     { pattern: /cukr/i, defaultLabel: "cukr krystal 1 kg" }
   ];
 
+  var IU_NAKUP_BASELINE_CZK = { rohlik: 5, mleko: 30, jogurt: 25, cukr: 40 };
+  var IU_NAKUP_DELIVERY_CZK = { rohlik: 39, tesco: 99, kosik: 49, wolt: 49 };
+  var IU_NAKUP_DELIVERY_LABEL = { rohlik: "1–2 dny", tesco: "vybraný den", kosik: "1–2 dny", wolt: "30–60 min" };
+
+  function iuEstimateProviderResults(items) {
+    if (!items || !items.length) return [];
+    var goodsCzk = 0;
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      var qty = it.qty || 1;
+      var raw = (it.raw || "").toLowerCase();
+      if (/rohlík/.test(raw)) goodsCzk += qty * (IU_NAKUP_BASELINE_CZK.rohlik || 5);
+      else if (/mléko|mlíko/.test(raw)) goodsCzk += qty * (IU_NAKUP_BASELINE_CZK.mleko || 30);
+      else if (/jogurt|čokolád/.test(raw)) goodsCzk += qty * (IU_NAKUP_BASELINE_CZK.jogurt || 25);
+      else if (/cukr/.test(raw)) goodsCzk += qty * (IU_NAKUP_BASELINE_CZK.cukr || 40);
+      else goodsCzk += qty * 50;
+    }
+    var ids = ["rohlik", "tesco", "kosik", "wolt"];
+    return ids.map(function(id) {
+      var deliveryCzk = IU_NAKUP_DELIVERY_CZK[id] || 0;
+      return { id: id, goodsCzk: goodsCzk, deliveryCzk: deliveryCzk, totalCzk: goodsCzk + deliveryCzk, deliveryLabel: IU_NAKUP_DELIVERY_LABEL[id] || "—" };
+    });
+  }
+
   function iuParseShoppingList(raw) {
     var text = (raw || "").trim();
     if (!text) return { items: [], clarificationNeeded: false };
@@ -9706,7 +9730,25 @@ function buildVideoAsArticleCard(it) {
       if (savedAddressBlock) savedAddressBlock.hidden = true;
       if (summaryCheapestVal && IU_NAKUP_PROVIDERS && IU_NAKUP_PROVIDERS[0]) summaryCheapestVal.textContent = IU_NAKUP_PROVIDERS[0].name;
       if (summaryFastestVal && IU_NAKUP_PROVIDERS && IU_NAKUP_PROVIDERS[3]) summaryFastestVal.textContent = IU_NAKUP_PROVIDERS[3].name;
-      if (resultsBlock) resultsBlock.hidden = false;
+      if (resultsBlock) {
+        var rawText = vasNakupText ? (vasNakupText.textContent || "").trim() : "";
+        var parsed = rawText ? iuParseShoppingList(rawText) : { items: [] };
+        var estimates = (parsed.items && parsed.items.length) ? iuEstimateProviderResults(parsed.items) : [];
+        var cards = resultsBlock.querySelectorAll ? resultsBlock.querySelectorAll(".iu-nakup-ceny-provider-card") : [];
+        for (var c = 0; c < cards.length; c++) {
+          var card = cards[c];
+          var pid = card.getAttribute && card.getAttribute("data-provider");
+          var row = estimates.filter(function(r) { return r.id === pid; })[0];
+          var vals = card.querySelectorAll ? card.querySelectorAll(".iu-nakup-ceny-provider-val") : [];
+          if (row && vals.length >= 4) {
+            vals[0].textContent = (row.goodsCzk != null ? row.goodsCzk + " Kč" : "—");
+            vals[1].textContent = (row.deliveryCzk != null ? row.deliveryCzk + " Kč" : "—");
+            vals[2].textContent = (row.totalCzk != null ? row.totalCzk + " Kč" : "—");
+            vals[3].textContent = (row.deliveryLabel != null && row.deliveryLabel !== "" ? row.deliveryLabel : "—");
+          }
+        }
+        resultsBlock.hidden = false;
+      }
     }
     try {
       var lastList = localStorage.getItem(IU_SHOPPING_LAST_LIST_KEY);
