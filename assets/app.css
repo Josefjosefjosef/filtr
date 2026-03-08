@@ -17500,6 +17500,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   display: none !important;
 }
 
+/* Exception: settings gear icon SVG must be visible */
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg {
+  display: block !important;
+}
+
 /* Label – max 2 lines, centered (v3) */
 body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlText,
 body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlText {
