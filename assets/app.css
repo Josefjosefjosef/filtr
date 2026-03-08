@@ -7448,9 +7448,9 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
   .iu-mobileStack{
     display: block;
   }
-  /* Mobil: p┼»vodn├ş prav├Ż sloupec schovat (aby nebyl duplicitn─Ť) */
+  /* Mobil: prav├Ż sloupec zobrazit (jedin├ę Rychl├ę odkazy, 1 ikona nastaven├ş) */
   aside.accordionCol{
-    display: none;
+    display: block;
   }
   /* A ÔÇô hlavn├ş li┼íta */
   .topbar-links{
@@ -7464,28 +7464,24 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
     white-space: nowrap;
   }
   
-  /* B ÔÇô rychl├ę odkazy (mobiln├ş kopie) */
-  .iu-mobileQuickLinks .iu-mmQuickGrid{
+  /* B ÔÇô rychl├ę odkazy (jedin├ę v accordionCol): horizont├íl scroll na mobilu */
+  .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid{
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    gap: 14px; /* zv─Ťt┼íeno z 10px kv┼»li scale(1.2) */
+    gap: 14px;
     white-space: nowrap;
   }
-  .iu-mobileQuickLinks .iu-mmQuickGrid > *{
+  .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid > *{
     flex: 0 0 auto;
   }
-  
-  /* B ÔÇô Rychl├ę odkazy (mobil): zv─Ťt┼íen├ş ikon + popisk┼» o ~20 % */
-  .iu-mobileQuickLinks .iu-mmQuickItem{
+  .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iuTile{
     transform: scale(1.2);
     transform-origin: center;
   }
-  
-  /* m├şrn─Ť v─Ťt┼í├ş popisek */
-  .iu-mobileQuickLinks .iu-mmQuickItem span{
+  .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iuTile .iuTileText{
     font-size: 1.1em;
   }
   
