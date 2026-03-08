@@ -10561,15 +10561,7 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   flex-shrink: 0;
   text-align: center;
 }
-.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead .iu-mmSectionLine{
-  display: block;
-  width: 72px;
-  height: 1px;
-  margin-top: 2px;
-  margin-bottom: 0;
-  min-width: 0;
-  flex: none;
-}
+/* Linka pod Rychlé odkazy = stejný styl jako MindMenu (.accordionCol .mindMenu .iu-mmSectionLine) */
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger{
   flex-shrink: 0;
   display: inline-flex;
@@ -13162,15 +13154,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmS
   background: rgba(17,24,39,0.12) !important;
   border-radius: 1px;
   min-width: 0;
-}
-/* Rychlé odkazy: linka přímo pod title+gear, vycentrovaná, 72px (override 72% elsewhere) */
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead .iu-mmSectionLine{
-  width: 72px !important;
-  max-width: 72px !important;
-  margin-top: 2px !important;
-  margin-bottom: 0 !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
 }
 /* 2) spacing stejn├Ż jako Moje slu┼żby */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby){
