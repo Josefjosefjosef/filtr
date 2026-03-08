@@ -17500,10 +17500,23 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   display: none !important;
 }
 
-/* Exception: settings gear icon SVG must be visible */
+/* Exception: settings gear icon (wrapper + SVG) must be visible and not collapse to 0 width */
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
 body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg,
 body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg {
-  display: block !important;
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+  min-height: 14px !important;
+  overflow: visible !important;
+}
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon {
+  flex-shrink: 0 !important;
 }
 
 /* Label – max 2 lines, centered (v3) */
