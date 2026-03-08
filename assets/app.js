@@ -9897,7 +9897,7 @@ function buildVideoAsArticleCard(it) {
     if (mestoInp) mestoInp.addEventListener("input", function() { setAddrError(""); });
     if (pscInp) pscInp.addEventListener("input", function() { setAddrError(""); });
     if (resultsBlock) resultsBlock.addEventListener("click", function(e) {
-      var btn = e.target;
+      var btn = (e.target && e.target.closest) ? e.target.closest(".iu-nakup-ceny-btn-detail") : e.target;
       if (btn && btn.classList && btn.classList.contains("iu-nakup-ceny-btn-detail")) {
         var card = btn.closest && btn.closest(".iu-nakup-ceny-provider-card");
         if (card) {
