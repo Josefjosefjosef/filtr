@@ -10537,10 +10537,12 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   column-gap: var(--iu-mm-gap, 10px);
 }
 
-/* Quick tools settings: gear in section head (always visible, SVG fallback) */
+/* Quick tools settings: gear in section head (always visible, SVG fallback). Inline row: title + line + button. */
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead{
   display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   flex-wrap: nowrap;
   position: relative;
