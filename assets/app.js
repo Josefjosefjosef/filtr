@@ -9427,7 +9427,7 @@ function buildVideoAsArticleCard(it) {
     naceneni: {
       title: "Nacenění nákupu s doručením domů",
       items: [],
-      toolsHtml: '<div class="iuQCard iu-nakup-ceny-shell"><p class="iu-nakup-ceny-desc">Napište seznam nákupu. Porovnáme ceny ve vybraných online obchodech včetně doručení domů.</p><textarea class="iu-nakup-ceny-input" rows="6" placeholder="Např. 20 rohlíků, 3 mléka, 20 čokoládových jogurtů, 5 cukru" aria-label="Seznam nákupu"></textarea><div class="iu-nakup-ceny-error" role="alert" aria-live="polite"></div><div class="iu-nakup-ceny-actions"><button type="button" class="iu-nakup-ceny-btn-primary">Spočítat nákup</button><button type="button" class="iu-nakup-ceny-btn-secondary">Vyčistit</button></div><div class="iu-nakup-ceny-vas-nakup" hidden><h3 class="iu-nakup-ceny-vas-nakup-heading">Váš nákup</h3><div class="iu-nakup-ceny-vas-nakup-text"></div></div><div class="iu-nakup-ceny-address-form" hidden><div class="iu-nakup-ceny-address-errors" role="alert" aria-live="polite"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-ulice-inp">Ulice a číslo</label><input type="text" id="iu-nakup-ceny-ulice-inp" class="iu-nakup-ceny-ulice" aria-label="Ulice a číslo" autocomplete="street-address"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-mesto-inp">Město</label><input type="text" id="iu-nakup-ceny-mesto-inp" class="iu-nakup-ceny-mesto" aria-label="Město" autocomplete="address-level2"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-psc-inp">PSČ</label><input type="text" id="iu-nakup-ceny-psc-inp" class="iu-nakup-ceny-psc" aria-label="PSČ" inputmode="numeric" maxlength="6" autocomplete="postal-code"></div><label class="iu-nakup-ceny-save-addr-label"><input type="checkbox" class="iu-nakup-ceny-save-addr" checked aria-label="Používat tuto adresu i příště">Používat tuto adresu i příště</label><div class="iu-nakup-ceny-address-actions"><button type="button" class="iu-nakup-ceny-btn-confirm-addr">Potvrdit adresu</button></div></div><div class="iu-nakup-ceny-saved-address" hidden><p class="iu-nakup-ceny-saved-address-intro">Doručení domů na adresu:</p><p class="iu-nakup-ceny-saved-addr-text"></p><div class="iu-nakup-ceny-saved-actions"><button type="button" class="iu-nakup-ceny-btn-use-addr">Použít tuto adresu</button><button type="button" class="iu-nakup-ceny-btn-change-addr">Změnit adresu</button></div></div></div>'
+      toolsHtml: '<div class="iuQCard iu-nakup-ceny-shell"><p class="iu-nakup-ceny-desc">Napište seznam nákupu. Porovnáme ceny ve vybraných online obchodech včetně doručení domů.</p><textarea class="iu-nakup-ceny-input" rows="6" placeholder="Např. 20 rohlíků, 3 mléka, 20 čokoládových jogurtů, 5 cukru" aria-label="Seznam nákupu"></textarea><div class="iu-nakup-ceny-error" role="alert" aria-live="polite"></div><div class="iu-nakup-ceny-actions"><button type="button" class="iu-nakup-ceny-btn-primary">Spočítat nákup</button><button type="button" class="iu-nakup-ceny-btn-secondary">Vyčistit</button></div><div class="iu-nakup-ceny-vas-nakup" hidden><h3 class="iu-nakup-ceny-vas-nakup-heading">Váš nákup</h3><div class="iu-nakup-ceny-vas-nakup-text"></div></div><div class="iu-nakup-ceny-address-form" hidden><div class="iu-nakup-ceny-address-errors" role="alert" aria-live="polite"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-ulice-inp">Ulice a číslo</label><input type="text" id="iu-nakup-ceny-ulice-inp" class="iu-nakup-ceny-ulice" aria-label="Ulice a číslo" autocomplete="street-address"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-mesto-inp">Město</label><input type="text" id="iu-nakup-ceny-mesto-inp" class="iu-nakup-ceny-mesto" aria-label="Město" autocomplete="address-level2"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-psc-inp">PSČ</label><input type="text" id="iu-nakup-ceny-psc-inp" class="iu-nakup-ceny-psc" aria-label="PSČ" inputmode="numeric" maxlength="6" autocomplete="postal-code"></div><label class="iu-nakup-ceny-save-addr-label"><input type="checkbox" class="iu-nakup-ceny-save-addr" checked aria-label="Používat tuto adresu i příště">Používat tuto adresu i příště</label><div class="iu-nakup-ceny-address-actions"><button type="button" class="iu-nakup-ceny-btn-confirm-addr">Potvrdit adresu</button></div></div><div class="iu-nakup-ceny-saved-address" hidden><p class="iu-nakup-ceny-saved-address-intro">Doručení domů na adresu:</p><p class="iu-nakup-ceny-saved-addr-text"></p><div class="iu-nakup-ceny-saved-actions"><button type="button" class="iu-nakup-ceny-btn-use-addr">Použít tuto adresu</button><button type="button" class="iu-nakup-ceny-btn-change-addr">Změnit adresu</button></div></div><div class="iu-nakup-ceny-clarify" hidden><h3 class="iu-nakup-ceny-clarify-heading">Upřesnění nákupu</h3><p class="iu-nakup-ceny-clarify-desc">Mám počítat běžné varianty těchto položek?</p><ul class="iu-nakup-ceny-clarify-items" aria-label="Položky k upřesnění"></ul><div class="iu-nakup-ceny-clarify-actions"><button type="button" class="iu-nakup-ceny-btn-use-defaults">Ano, použít běžné varianty</button><button type="button" class="iu-nakup-ceny-btn-edit-items">Upravit položky</button></div></div></div>'
     },
     convert: {
       title: "Převod na Word, PDF",
@@ -9582,6 +9582,45 @@ function buildVideoAsArticleCard(it) {
   var IU_SHOPPING_LAST_LIST_KEY = "iuShoppingLastListV1";
   var IU_SHOPPING_DELIVERY_ADDRESS_KEY = "iuShoppingDeliveryAddressV1";
 
+  var IU_NAKUP_RECOGNIZE = [
+    { pattern: /rohlík/i, defaultLabel: "běžný rohlík" },
+    { pattern: /mléko|mlíko|mléka|mlíka/i, defaultLabel: "mléko 1 l" },
+    { pattern: /jogurt.*čokolád|čokolád.*jogurt/i, defaultLabel: "jogurt čokoládový 125–150 g" },
+    { pattern: /cukr/i, defaultLabel: "cukr krystal 1 kg" }
+  ];
+
+  function iuParseShoppingList(raw) {
+    var text = (raw || "").trim();
+    if (!text) return { items: [], clarificationNeeded: false };
+    var tokens = text.split(/\s*[,;\n]\s*/).map(function(s) { return s.trim(); }).filter(Boolean);
+    var items = [];
+    var clarificationNeeded = false;
+    for (var i = 0; i < tokens.length; i++) {
+      var token = tokens[i];
+      var qty = 1;
+      var name = token;
+      var m = token.match(/^(\d+)\s+(.+)$/);
+      if (m) {
+        qty = parseInt(m[1], 10) || 1;
+        name = (m[2] || "").trim();
+      }
+      if (!name) continue;
+      var recognized = false;
+      var defaultLabel = "";
+      for (var j = 0; j < IU_NAKUP_RECOGNIZE.length; j++) {
+        var r = IU_NAKUP_RECOGNIZE[j];
+        if (r.pattern.test(name)) {
+          recognized = true;
+          defaultLabel = r.defaultLabel;
+          break;
+        }
+      }
+      items.push({ qty: qty, raw: name, defaultLabel: defaultLabel, recognized: recognized });
+      if (!recognized) clarificationNeeded = true;
+    }
+    return { items: items, clarificationNeeded: clarificationNeeded };
+  }
+
   function iuNakupCenyBootstrap(quick) {
     const shell = quick && quick.querySelector(".iu-nakup-ceny-shell");
     if (!shell) return;
@@ -9602,8 +9641,13 @@ function buildVideoAsArticleCard(it) {
     const savedAddrText = shell.querySelector(".iu-nakup-ceny-saved-addr-text");
     const btnUseAddr = shell.querySelector(".iu-nakup-ceny-btn-use-addr");
     const btnChangeAddr = shell.querySelector(".iu-nakup-ceny-btn-change-addr");
+    const clarifyBlock = shell.querySelector(".iu-nakup-ceny-clarify");
+    const clarifyItemsList = shell.querySelector(".iu-nakup-ceny-clarify-items");
+    const btnUseDefaults = shell.querySelector(".iu-nakup-ceny-btn-use-defaults");
+    const btnEditItems = shell.querySelector(".iu-nakup-ceny-btn-edit-items");
     if (!input || !errorEl || !btnPrimary || !btnSecondary || !vasNakupBlock || !vasNakupText) return;
     if (!addressForm || !savedAddressBlock || !addrErrors || !uliceInp || !mestoInp || !pscInp || !btnConfirmAddr || !savedAddrText || !btnUseAddr || !btnChangeAddr) return;
+    if (!clarifyBlock || !clarifyItemsList || !btnUseDefaults || !btnEditItems) return;
     function getSavedAddress() {
       try {
         var raw = localStorage.getItem(IU_SHOPPING_DELIVERY_ADDRESS_KEY);
@@ -9631,6 +9675,20 @@ function buildVideoAsArticleCard(it) {
       savedAddressBlock.hidden = true;
       addrErrors.textContent = "";
     }
+    function hideClarify() {
+      clarifyBlock.hidden = true;
+      clarifyItemsList.innerHTML = "";
+    }
+    function showClarify(uncertainItems) {
+      clarifyItemsList.innerHTML = "";
+      for (var i = 0; i < uncertainItems.length; i++) {
+        var it = uncertainItems[i];
+        var li = document.createElement("li");
+        li.textContent = (it.qty || 1) + "× " + (it.raw || "");
+        clarifyItemsList.appendChild(li);
+      }
+      clarifyBlock.hidden = false;
+    }
     try {
       var lastList = localStorage.getItem(IU_SHOPPING_LAST_LIST_KEY);
       if (lastList && typeof lastList === "string") {
@@ -9655,19 +9713,40 @@ function buildVideoAsArticleCard(it) {
         setError("Zadaný seznam nákupu není platný.");
         return;
       }
+      var parsed = iuParseShoppingList(val);
+      if (!parsed.items || parsed.items.length === 0) {
+        setError("Zadaný seznam nákupu není platný.");
+        return;
+      }
       setError("");
       vasNakupText.textContent = val;
       vasNakupBlock.hidden = false;
+      hideClarify();
       try {
         localStorage.setItem(IU_SHOPPING_LAST_LIST_KEY, val);
       } catch (_) {}
-      showAddressStep();
+      if (parsed.clarificationNeeded) {
+        var uncertain = parsed.items.filter(function(it) { return !it.recognized; });
+        showClarify(uncertain);
+      } else {
+        showAddressStep();
+      }
     });
     btnSecondary.addEventListener("click", function() {
       input.value = "";
       setError("");
       vasNakupBlock.hidden = true;
       vasNakupText.textContent = "";
+      hideClarify();
+      hideAddressStep();
+    });
+    btnUseDefaults.addEventListener("click", function() {
+      hideClarify();
+      showAddressStep();
+    });
+    btnEditItems.addEventListener("click", function() {
+      hideClarify();
+      vasNakupBlock.hidden = true;
       hideAddressStep();
     });
     input.addEventListener("input", function() {
