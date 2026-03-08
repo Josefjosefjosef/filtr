@@ -9427,7 +9427,7 @@ function buildVideoAsArticleCard(it) {
     naceneni: {
       title: "Nacenění nákupu s doručením domů",
       items: [],
-      toolsHtml: '<div class="iuQCard iu-nakup-ceny-shell"><p class="iu-nakup-ceny-desc">Napište seznam nákupu. Porovnáme ceny ve vybraných online obchodech včetně doručení domů.</p><textarea class="iu-nakup-ceny-input" rows="6" placeholder="Např. 20 rohlíků, 3 mléka, 20 čokoládových jogurtů, 5 cukru" aria-label="Seznam nákupu"></textarea><div class="iu-nakup-ceny-error" role="alert" aria-live="polite"></div><div class="iu-nakup-ceny-actions"><button type="button" class="iu-nakup-ceny-btn-primary">Spočítat nákup</button><button type="button" class="iu-nakup-ceny-btn-secondary">Vyčistit</button></div><div class="iu-nakup-ceny-vas-nakup" hidden><h3 class="iu-nakup-ceny-vas-nakup-heading">Váš nákup</h3><div class="iu-nakup-ceny-vas-nakup-text"></div></div></div>'
+      toolsHtml: '<div class="iuQCard iu-nakup-ceny-shell"><p class="iu-nakup-ceny-desc">Napište seznam nákupu. Porovnáme ceny ve vybraných online obchodech včetně doručení domů.</p><textarea class="iu-nakup-ceny-input" rows="6" placeholder="Např. 20 rohlíků, 3 mléka, 20 čokoládových jogurtů, 5 cukru" aria-label="Seznam nákupu"></textarea><div class="iu-nakup-ceny-error" role="alert" aria-live="polite"></div><div class="iu-nakup-ceny-actions"><button type="button" class="iu-nakup-ceny-btn-primary">Spočítat nákup</button><button type="button" class="iu-nakup-ceny-btn-secondary">Vyčistit</button></div><div class="iu-nakup-ceny-vas-nakup" hidden><h3 class="iu-nakup-ceny-vas-nakup-heading">Váš nákup</h3><div class="iu-nakup-ceny-vas-nakup-text"></div></div><div class="iu-nakup-ceny-address-form" hidden><div class="iu-nakup-ceny-address-errors" role="alert" aria-live="polite"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-ulice-inp">Ulice a číslo</label><input type="text" id="iu-nakup-ceny-ulice-inp" class="iu-nakup-ceny-ulice" aria-label="Ulice a číslo" autocomplete="street-address"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-mesto-inp">Město</label><input type="text" id="iu-nakup-ceny-mesto-inp" class="iu-nakup-ceny-mesto" aria-label="Město" autocomplete="address-level2"></div><div class="iu-nakup-ceny-field"><label for="iu-nakup-ceny-psc-inp">PSČ</label><input type="text" id="iu-nakup-ceny-psc-inp" class="iu-nakup-ceny-psc" aria-label="PSČ" inputmode="numeric" maxlength="6" autocomplete="postal-code"></div><label class="iu-nakup-ceny-save-addr-label"><input type="checkbox" class="iu-nakup-ceny-save-addr" checked aria-label="Používat tuto adresu i příště">Používat tuto adresu i příště</label><div class="iu-nakup-ceny-address-actions"><button type="button" class="iu-nakup-ceny-btn-confirm-addr">Potvrdit adresu</button></div></div><div class="iu-nakup-ceny-saved-address" hidden><p class="iu-nakup-ceny-saved-address-intro">Doručení domů na adresu:</p><p class="iu-nakup-ceny-saved-addr-text"></p><div class="iu-nakup-ceny-saved-actions"><button type="button" class="iu-nakup-ceny-btn-use-addr">Použít tuto adresu</button><button type="button" class="iu-nakup-ceny-btn-change-addr">Změnit adresu</button></div></div></div>'
     },
     convert: {
       title: "Převod na Word, PDF",
@@ -9580,6 +9580,7 @@ function buildVideoAsArticleCard(it) {
   });
 
   var IU_SHOPPING_LAST_LIST_KEY = "iuShoppingLastListV1";
+  var IU_SHOPPING_DELIVERY_ADDRESS_KEY = "iuShoppingDeliveryAddressV1";
 
   function iuNakupCenyBootstrap(quick) {
     const shell = quick && quick.querySelector(".iu-nakup-ceny-shell");
@@ -9590,7 +9591,46 @@ function buildVideoAsArticleCard(it) {
     const btnSecondary = shell.querySelector(".iu-nakup-ceny-btn-secondary");
     const vasNakupBlock = shell.querySelector(".iu-nakup-ceny-vas-nakup");
     const vasNakupText = shell.querySelector(".iu-nakup-ceny-vas-nakup-text");
+    const addressForm = shell.querySelector(".iu-nakup-ceny-address-form");
+    const savedAddressBlock = shell.querySelector(".iu-nakup-ceny-saved-address");
+    const addrErrors = shell.querySelector(".iu-nakup-ceny-address-errors");
+    const uliceInp = shell.querySelector(".iu-nakup-ceny-ulice");
+    const mestoInp = shell.querySelector(".iu-nakup-ceny-mesto");
+    const pscInp = shell.querySelector(".iu-nakup-ceny-psc");
+    const saveAddrCb = shell.querySelector(".iu-nakup-ceny-save-addr");
+    const btnConfirmAddr = shell.querySelector(".iu-nakup-ceny-btn-confirm-addr");
+    const savedAddrText = shell.querySelector(".iu-nakup-ceny-saved-addr-text");
+    const btnUseAddr = shell.querySelector(".iu-nakup-ceny-btn-use-addr");
+    const btnChangeAddr = shell.querySelector(".iu-nakup-ceny-btn-change-addr");
     if (!input || !errorEl || !btnPrimary || !btnSecondary || !vasNakupBlock || !vasNakupText) return;
+    if (!addressForm || !savedAddressBlock || !addrErrors || !uliceInp || !mestoInp || !pscInp || !btnConfirmAddr || !savedAddrText || !btnUseAddr || !btnChangeAddr) return;
+    function getSavedAddress() {
+      try {
+        var raw = localStorage.getItem(IU_SHOPPING_DELIVERY_ADDRESS_KEY);
+        if (!raw || typeof raw !== "string") return null;
+        var o = JSON.parse(raw);
+        return o && typeof o.ulice === "string" && typeof o.mesto === "string" && typeof o.psc === "string" ? o : null;
+      } catch (_) { return null; }
+    }
+    function formatAddress(o) {
+      return (o.ulice || "").trim() + ", " + (o.psc || "").trim() + " " + (o.mesto || "").trim();
+    }
+    function showAddressStep() {
+      var saved = getSavedAddress();
+      addressForm.hidden = true;
+      savedAddressBlock.hidden = true;
+      if (saved) {
+        savedAddrText.textContent = formatAddress(saved);
+        savedAddressBlock.hidden = false;
+      } else {
+        addressForm.hidden = false;
+      }
+    }
+    function hideAddressStep() {
+      addressForm.hidden = true;
+      savedAddressBlock.hidden = true;
+      addrErrors.textContent = "";
+    }
     try {
       var lastList = localStorage.getItem(IU_SHOPPING_LAST_LIST_KEY);
       if (lastList && typeof lastList === "string") {
@@ -9621,16 +9661,76 @@ function buildVideoAsArticleCard(it) {
       try {
         localStorage.setItem(IU_SHOPPING_LAST_LIST_KEY, val);
       } catch (_) {}
+      showAddressStep();
     });
     btnSecondary.addEventListener("click", function() {
       input.value = "";
       setError("");
       vasNakupBlock.hidden = true;
       vasNakupText.textContent = "";
+      hideAddressStep();
     });
     input.addEventListener("input", function() {
       setError("");
     });
+    function setAddrError(msg) {
+      addrErrors.textContent = msg || "";
+    }
+    function validateCzechPsc(psc) {
+      var s = (psc || "").replace(/\s/g, "");
+      return /^\d{5}$/.test(s);
+    }
+    btnConfirmAddr.addEventListener("click", function() {
+      var ulice = (uliceInp.value || "").trim();
+      var mesto = (mestoInp.value || "").trim();
+      var psc = (pscInp.value || "").trim().replace(/\s/g, "");
+      setAddrError("");
+      if (ulice === "") {
+        setAddrError("Zadejte prosím ulici a číslo.");
+        return;
+      }
+      if (mesto === "") {
+        setAddrError("Zadejte prosím město.");
+        return;
+      }
+      if (psc === "") {
+        setAddrError("Zadejte prosím PSČ.");
+        return;
+      }
+      if (!/^\d{5}$/.test(psc)) {
+        setAddrError("PSČ musí být 5 číslic (např. 123 45).");
+        return;
+      }
+      var payload = { ulice: ulice, mesto: mesto, psc: psc };
+      if (saveAddrCb && saveAddrCb.checked) {
+        try {
+          localStorage.setItem(IU_SHOPPING_DELIVERY_ADDRESS_KEY, JSON.stringify(payload));
+        } catch (_) {}
+      }
+      savedAddrText.textContent = formatAddress(payload);
+      addressForm.hidden = true;
+      savedAddressBlock.hidden = false;
+    });
+    btnUseAddr.addEventListener("click", function() {
+    });
+    btnChangeAddr.addEventListener("click", function() {
+      savedAddressBlock.hidden = true;
+      addressForm.hidden = false;
+      var saved = getSavedAddress();
+      if (saved) {
+        uliceInp.value = saved.ulice || "";
+        mestoInp.value = saved.mesto || "";
+        pscInp.value = saved.psc || "";
+      } else {
+        uliceInp.value = "";
+        mestoInp.value = "";
+        pscInp.value = "";
+      }
+      setAddrError("");
+    });
+    if (uliceInp) uliceInp.addEventListener("input", function() { setAddrError(""); });
+    if (mestoInp) mestoInp.addEventListener("input", function() { setAddrError(""); });
+    if (pscInp) pscInp.addEventListener("input", function() { setAddrError(""); });
   }
 
   function iuPdfConvertToolsBootstrap(quick) {
