@@ -16573,6 +16573,89 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   font-size: 0.95rem;
 }
 
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-address-form {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-address-errors {
+  min-height: 1.5em;
+  margin-bottom: 0.5rem;
+  color: #b71c1c;
+  font-size: 0.9rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-field {
+  margin-bottom: 0.75rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-field label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-field input[type="text"] {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  border: 1px solid rgba(20,40,70,0.2);
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-save-addr-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-address-actions {
+  margin-top: 0.5rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-confirm-addr {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  cursor: pointer;
+  border-radius: 6px;
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-saved-address {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-saved-address-intro {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-saved-addr-text {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.95rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-saved-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-use-addr,
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-change-addr {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  cursor: pointer;
+  border-radius: 6px;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-use-addr {
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-change-addr {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.25);
+}
+
 #iuQuickFeed [data-iu="pdfconvert-tools"] .iuPdfTabsRow {
   display: flex;
   align-items: center;
