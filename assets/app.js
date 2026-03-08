@@ -9726,25 +9726,36 @@ function buildVideoAsArticleCard(it) {
       if (t.length < 3) return false;
       return /[a-zA-Z\u00e1\u00e9\u00ed\u00f3\u00fa\u00fd\u010d\u010f\u011b\u0148\u0159\u0161\u0165\u016f\u017e]/.test(t);
     }
-    btnPrimary.addEventListener("click", function() {
-      var val = (input.value || "").trim();
+    function onPrimaryClick() {
+      var inp = shell.querySelector(".iu-nakup-ceny-input");
+      var errElNow = shell.querySelector(".iu-nakup-ceny-error");
+      var vasTextNow = shell.querySelector(".iu-nakup-ceny-vas-nakup-text");
+      var vasBlockNow = shell.querySelector(".iu-nakup-ceny-vas-nakup");
+      if (!inp || !errElNow || !vasTextNow || !vasBlockNow) return;
+      var val = (inp.value || "").trim();
       if (val === "") {
-        setError("Zadejte prosím seznam nákupu.");
+        errElNow.textContent = "Zadejte prosím seznam nákupu.";
+        errElNow.removeAttribute("hidden");
+        try { errElNow.scrollIntoView({ block: "nearest", behavior: "auto" }); } catch (_) {}
         return;
       }
       if (!isValid(val)) {
-        setError("Zadaný seznam nákupu není platný.");
+        errElNow.textContent = "Zadaný seznam nákupu není platný.";
+        errElNow.removeAttribute("hidden");
+        try { errElNow.scrollIntoView({ block: "nearest", behavior: "auto" }); } catch (_) {}
         return;
       }
       var parsed = iuParseShoppingList(val);
       if (!parsed.items || parsed.items.length === 0) {
-        setError("Zadaný seznam nákupu není platný.");
+        errElNow.textContent = "Zadaný seznam nákupu není platný.";
+        errElNow.removeAttribute("hidden");
+        try { errElNow.scrollIntoView({ block: "nearest", behavior: "auto" }); } catch (_) {}
         return;
       }
-      setError("");
-      vasNakupText.textContent = val;
-      vasNakupBlock.hidden = false;
-      vasNakupBlock.removeAttribute("hidden");
+      errElNow.textContent = "";
+      vasTextNow.textContent = val;
+      vasBlockNow.hidden = false;
+      vasBlockNow.removeAttribute("hidden");
       hideClarify();
       try {
         localStorage.setItem(IU_SHOPPING_LAST_LIST_KEY, val);
@@ -9755,7 +9766,12 @@ function buildVideoAsArticleCard(it) {
       } else {
         showAddressStep();
       }
-      try { vasNakupBlock.scrollIntoView({ block: "nearest", behavior: "auto" }); } catch (_) {}
+      try { vasBlockNow.scrollIntoView({ block: "nearest", behavior: "auto" }); } catch (_) {}
+    }
+    shell.addEventListener("click", function(e) {
+      var t = e.target && e.target.nodeType === 3 ? e.target.parentElement : e.target;
+      if (!t || !t.closest) return;
+      if (t.closest(".iu-nakup-ceny-btn-primary")) onPrimaryClick();
     });
     btnSecondary.addEventListener("click", function() {
       input.value = "";
