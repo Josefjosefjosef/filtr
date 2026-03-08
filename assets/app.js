@@ -9628,21 +9628,85 @@ function buildVideoAsArticleCard(it) {
     return iuNakupReadSavedAddress();
   }
 
-  /** Provider discovery: accepts context { items, address, now }; returns structured list. Address considered in pipeline. */
+  /** Address classification for discovery: returns { city, postalCode, region, localityBucket }. localityBucket: prague | large_city | suburban | regional | small_city | edge. */
+  function iuNakupClassifyAddress(address) {
+    if (!address || typeof address !== "object") return null;
+    var city = (address.city != null ? address.city : address.mesto) || "";
+    var postalCode = (address.postalCode != null ? address.postalCode : address.psc) || "";
+    var pc = typeof postalCode === "string" ? postalCode.replace(/\s/g, "").trim() : String(postalCode || "");
+    var num = pc.length === 5 && /^\d{5}$/.test(pc) ? parseInt(pc, 10) : 0;
+    var region = "CZ";
+    var localityBucket = "regional";
+    if (num >= 10000 && num <= 19999) { region = "Praha"; localityBucket = "prague"; }
+    else if (num >= 25000 && num <= 25999) { region = "Středočeský"; localityBucket = "suburban"; }
+    else if (num >= 60000 && num <= 69999) { region = "Brno/jižní Morava"; localityBucket = "large_city"; }
+    else if (num >= 70000 && num <= 79999) { region = "Severní Morava"; localityBucket = "large_city"; }
+    else if (num >= 76000 && num <= 77000) { region = "Zlínský"; localityBucket = "regional"; }
+    else if (num >= 59000 && num <= 59999) { region = "Vysočina"; localityBucket = "small_city"; }
+    else if (num >= 50000 && num <= 59999) { region = "východ Čech"; localityBucket = num >= 59000 ? "small_city" : "regional"; }
+    else if (num >= 30000 && num <= 39999) { region = "jižní Čechy"; localityBucket = "regional"; }
+    else if (num >= 40000 && num <= 49999) { region = "severní Čechy"; localityBucket = "regional"; }
+    else if (num >= 1 && num <= 99999) localityBucket = "regional";
+    return { city: city, postalCode: pc, region: region, localityBucket: localityBucket };
+  }
+
+  /** Per-provider discovery evaluation: returns discoveryStatus (relevant_for_address | unknown_for_address | not_relevant_for_address | public_presence_only), relevanceReason, etc. */
+  function iuNakupEvaluateProviderDiscovery(providerId, context) {
+    var cap = IU_NAKUP_PROVIDER_CAPABILITIES && IU_NAKUP_PROVIDER_CAPABILITIES.filter(function(c) { return c.providerId === providerId; })[0];
+    var address = context && context.address;
+    var classified = context && context.classified;
+    var out = {
+      providerId: cap ? cap.providerId : providerId,
+      providerName: cap ? cap.providerName : providerId,
+      orderUrl: cap ? cap.orderUrl : "",
+      addressConsidered: !!address,
+      discoveryStatus: "unknown_for_address",
+      relevanceReason: "address not evaluated",
+      publicPresenceKnown: true,
+      verifiedSourceAvailable: false,
+      resultKind: "unverifiable"
+    };
+    if (!address || !classified) {
+      out.discoveryStatus = "public_presence_only";
+      out.relevanceReason = "no address";
+      return out;
+    }
+    var bucket = classified.localityBucket || "regional";
+    if (providerId === "rohlik") {
+      if (bucket === "prague" || bucket === "suburban") { out.discoveryStatus = "relevant_for_address"; out.relevanceReason = "obsluha Prahy a okolí"; }
+      else if (bucket === "large_city") { out.discoveryStatus = "unknown_for_address"; out.relevanceReason = "obsluha města neověřena"; }
+      else { out.discoveryStatus = "not_relevant_for_address"; out.relevanceReason = "mimo známou obsluhu"; }
+    } else if (providerId === "wolt") {
+      if (bucket === "prague") { out.discoveryStatus = "relevant_for_address"; out.relevanceReason = "obsluha Prahy"; }
+      else if (bucket === "suburban") { out.discoveryStatus = "unknown_for_address"; out.relevanceReason = "obsluha okolí Prahy neověřena"; }
+      else { out.discoveryStatus = "not_relevant_for_address"; out.relevanceReason = "mimo známou obsluhu"; }
+    } else if (providerId === "tesco") {
+      if (bucket === "prague" || bucket === "suburban" || bucket === "large_city") { out.discoveryStatus = "relevant_for_address"; out.relevanceReason = "široká obsluha"; }
+      else if (bucket === "regional" || bucket === "small_city") { out.discoveryStatus = "unknown_for_address"; out.relevanceReason = "obsluha lokality neověřena"; }
+      else { out.discoveryStatus = "unknown_for_address"; out.relevanceReason = "obsluha neověřena"; }
+    } else if (providerId === "kosik") {
+      if (bucket === "prague" || bucket === "large_city" || bucket === "suburban") { out.discoveryStatus = "relevant_for_address"; out.relevanceReason = "obsluha větších měst"; }
+      else if (bucket === "regional") { out.discoveryStatus = "unknown_for_address"; out.relevanceReason = "obsluha regionu neověřena"; }
+      else { out.discoveryStatus = "unknown_for_address"; out.relevanceReason = "obsluha neověřena"; }
+    }
+    return out;
+  }
+
+  var IU_NAKUP_DISCOVERY_STATUS_ORDER = { relevant_for_address: 0, unknown_for_address: 1, not_relevant_for_address: 2, public_presence_only: 3 };
+
+  /** Provider discovery: address-sensitive; returns list with discoveryStatus, sorted by relevance. */
   function iuNakupDiscoverProviders(context) {
     var caps = IU_NAKUP_PROVIDER_CAPABILITIES || [];
     var address = context && context.address;
-    return caps.map(function(c) {
-      return {
-        providerId: c.providerId,
-        providerName: c.providerName,
-        orderUrl: c.orderUrl,
-        publicPresenceKnown: true,
-        addressConsidered: !!address,
-        discoveryStatus: "ok",
-        resultKind: "unverifiable"
-      };
+    var classified = address ? iuNakupClassifyAddress(address) : null;
+    var ctx = { address: address, classified: classified, items: context && context.items, now: context && context.now };
+    var list = caps.map(function(c) { return iuNakupEvaluateProviderDiscovery(c.providerId, ctx); });
+    list.sort(function(a, b) {
+      var oa = IU_NAKUP_DISCOVERY_STATUS_ORDER[a.discoveryStatus] ?? 4;
+      var ob = IU_NAKUP_DISCOVERY_STATUS_ORDER[b.discoveryStatus] ?? 4;
+      return oa !== ob ? oa - ob : 0;
     });
+    return list;
   }
 
   var IU_NAKUP_PROVIDERS = [
@@ -9669,19 +9733,22 @@ function buildVideoAsArticleCard(it) {
     { providerId: "wolt", providerName: "Wolt Market", orderUrl: "https://market.wolt.com/cs/cze" }
   ];
 
-  function iuNakupCreateUnverifiableResult(providerId, addressConsidered) {
+  function iuNakupCreateUnverifiableResult(providerId, addressConsidered, discoveryStatus) {
     var cap = IU_NAKUP_PROVIDER_CAPABILITIES && IU_NAKUP_PROVIDER_CAPABILITIES.filter(function(c) { return c.providerId === providerId; })[0];
     var base = !cap ? { providerId: providerId, id: providerId, verificationStatus: "unverifiable", sourceKind: "unverifiable" } : { providerId: cap.providerId, id: cap.providerId, providerName: cap.providerName, orderUrl: cap.orderUrl, verificationStatus: "unverifiable", sourceKind: "unverifiable" };
     base.addressConsidered = !!addressConsidered;
+    base.discoveryStatus = discoveryStatus || "unknown_for_address";
     return base;
   }
 
-  /** Force result to unverifiable and strip all verified-like fields if provider not in allowlist. */
+  /** Force result to unverifiable and strip all verified-like fields if provider not in allowlist. Preserves discoveryStatus. */
   function iuNakupNormalizeResult(result) {
     var pid = result && (result.providerId || result.id);
     var allowed = IU_NAKUP_VERIFIED_LIVE_ALLOWED || [];
-    if (!pid || allowed.indexOf(pid) === -1) return iuNakupCreateUnverifiableResult(pid);
-    if (result.verificationStatus !== "verified_live") return iuNakupCreateUnverifiableResult(pid);
+    var addrConsidered = !!(result && result.addressConsidered);
+    var discoveryStatus = (result && result.discoveryStatus) || "unknown_for_address";
+    if (!pid || allowed.indexOf(pid) === -1) return iuNakupCreateUnverifiableResult(pid, addrConsidered, discoveryStatus);
+    if (result.verificationStatus !== "verified_live") return iuNakupCreateUnverifiableResult(pid, addrConsidered, discoveryStatus);
     return result;
   }
 
@@ -9701,12 +9768,12 @@ function buildVideoAsArticleCard(it) {
     return true;
   }
 
-  /** Returns one unverifiable result per discovered provider; items and address passed for pipeline truth. */
+  /** Returns one unverifiable result per discovered provider; preserves discovery order and discoveryStatus. */
   function iuEstimateProviderResults(items, address, discoveredProviders) {
-    var list = discoveredProviders && discoveredProviders.length ? discoveredProviders : (IU_NAKUP_PROVIDER_CAPABILITIES || []).map(function(c) { return { providerId: c.providerId, providerName: c.providerName, orderUrl: c.orderUrl, addressConsidered: !!address }; });
+    var list = discoveredProviders && discoveredProviders.length ? discoveredProviders : (IU_NAKUP_PROVIDER_CAPABILITIES || []).map(function(c) { return iuNakupEvaluateProviderDiscovery(c.providerId, { address: address, classified: address ? iuNakupClassifyAddress(address) : null }); });
     return list.map(function(d) {
       var pid = d.providerId || d.id;
-      return iuNakupCreateUnverifiableResult(pid, d.addressConsidered);
+      return iuNakupCreateUnverifiableResult(pid, d.addressConsidered, d.discoveryStatus);
     });
   }
 
@@ -9844,7 +9911,16 @@ function buildVideoAsArticleCard(it) {
         summaryFastestVal.textContent = fastest && provById[fastest.id] ? provById[fastest.id].name : "";
       }
       if (resultsBlock) {
+        var cardsContainer = resultsBlock.querySelector(".iu-nakup-ceny-results-cards");
+        if (cardsContainer && estimates.length > 0) {
+          for (var i = 0; i < estimates.length; i++) {
+            var est = estimates[i];
+            var cardForEst = cardsContainer.querySelector(".iu-nakup-ceny-provider-card[data-provider=\"" + (est.id || "") + "\"]");
+            if (cardForEst) cardsContainer.appendChild(cardForEst);
+          }
+        }
         var cards = resultsBlock.querySelectorAll ? resultsBlock.querySelectorAll(".iu-nakup-ceny-provider-card") : [];
+        var discoveryStatusLabel = { relevant_for_address: "Doručení v obslužné oblasti.", unknown_for_address: "Doručení do této adresy neověřeno.", not_relevant_for_address: "Mimo známou obsluhu.", public_presence_only: "Obsluha adresy neověřena." };
         for (var c = 0; c < cards.length; c++) {
           var card = cards[c];
           var pid = card.getAttribute && card.getAttribute("data-provider");
@@ -9854,6 +9930,17 @@ function buildVideoAsArticleCard(it) {
           var vals = card.querySelectorAll ? card.querySelectorAll(".iu-nakup-ceny-provider-val") : [];
           var detailEl = card.querySelector(".iu-nakup-ceny-provider-detail");
           var canShow = row && iuNakupCanDisplayVerifiedData(row);
+          if (row && card.setAttribute) card.setAttribute("data-discovery-status", row.discoveryStatus || "unknown_for_address");
+          var statusEl = card.querySelector(".iu-nakup-ceny-discovery-status");
+          if (row && statusEl) statusEl.textContent = discoveryStatusLabel[row.discoveryStatus] || discoveryStatusLabel.unknown_for_address;
+          if (!statusEl && row && card.appendChild) {
+            var span = document.createElement("span");
+            span.className = "iu-nakup-ceny-discovery-status";
+            span.setAttribute("aria-live", "polite");
+            span.textContent = discoveryStatusLabel[row.discoveryStatus] || discoveryStatusLabel.unknown_for_address;
+            var nameEl = card.querySelector(".iu-nakup-ceny-provider-name");
+            if (nameEl && nameEl.nextSibling) card.insertBefore(span, nameEl.nextSibling); else card.appendChild(span);
+          }
           if (rowsEl) rowsEl.hidden = !canShow;
           if (unverEl) unverEl.hidden = canShow;
           if (row && vals.length >= 4) {
