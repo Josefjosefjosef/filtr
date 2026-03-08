@@ -16656,6 +16656,46 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   border: 1px solid rgba(0,0,0,0.25);
 }
 
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-clarify {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-clarify-heading {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-clarify-desc {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.95rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-clarify-items {
+  margin: 0 0 0.75rem 0;
+  padding-left: 1.25rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-clarify-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-use-defaults,
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-edit-items {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  cursor: pointer;
+  border-radius: 6px;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-use-defaults {
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-edit-items {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.25);
+}
+
 #iuQuickFeed [data-iu="pdfconvert-tools"] .iuPdfTabsRow {
   display: flex;
   align-items: center;
