@@ -10537,14 +10537,16 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   column-gap: var(--iu-mm-gap, 10px);
 }
 
-/* Quick tools header: top row = title + gear button; line below. */
+/* Quick tools header: top row = title + gear button; line directly below, centered. */
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead{
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: 4px;
   position: relative;
   width: 100%;
+  text-align: center;
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionTopRow{
   display: inline-flex;
@@ -10557,12 +10559,14 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   width: auto;
   margin: 0;
   flex-shrink: 0;
+  text-align: center;
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead .iu-mmSectionLine{
   display: block;
   width: 72px;
   height: 1px;
-  margin: 0;
+  margin-top: 2px;
+  margin-bottom: 0;
   min-width: 0;
   flex: none;
 }
@@ -13158,6 +13162,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmS
   background: rgba(17,24,39,0.12) !important;
   border-radius: 1px;
   min-width: 0;
+}
+/* Rychlé odkazy: linka přímo pod title+gear, vycentrovaná, 72px (override 72% elsewhere) */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead .iu-mmSectionLine{
+  width: 72px !important;
+  max-width: 72px !important;
+  margin-top: 2px !important;
+  margin-bottom: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 /* 2) spacing stejn├Ż jako Moje slu┼żby */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby){
