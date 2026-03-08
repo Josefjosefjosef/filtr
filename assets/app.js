@@ -7919,7 +7919,7 @@ function buildVideoAsArticleCard(it) {
     { id: "registr_smluv", label: "Registr smluv", accent: "#0066cc" },
     { id: "obchodni_rejstrik", label: "Obchodní rejstřík", accent: "#37474f" },
     { id: "zivnostensky_rejstrik", label: "Živnostenský rejstřík", accent: "#455a64" },
-    { id: "poslat_sms_zdarma", label: "Poslat SMS zdarma", accent: "#2e7d32" }
+    { id: "naceneni_nakupu_domu", label: "Nacenění nákupu s doručením domů", accent: "#2e7d32" }
   ];
 
   function loadQuickToolsConfig() {
@@ -9424,7 +9424,11 @@ function buildVideoAsArticleCard(it) {
     google: { title: "Google", items: [{ name: "Google", url: "https://www.google.com", desc: "Vyhledávač Google", external: true }] },
     seznam: { title: "Seznam", items: [{ name: "Seznam.cz", url: "https://www.seznam.cz/", desc: "Vyhledávač a portál Seznam", external: true }] },
     youtube: { title: "YouTube", items: [{ name: "YouTube", url: "https://www.youtube.com/", desc: "Videa a streamy", external: true }] },
-    sms: { title: "Poslat SMS zdarma", items: [{ name: "SMS zdarma", url: "https://www.smszdarma.cz", desc: "Posílání SMS zdarma", external: true }] },
+    naceneni: {
+      title: "Nacenění nákupu s doručením domů",
+      items: [],
+      toolsHtml: '<div class="iuQCard iu-nakup-ceny-shell"><p class="iu-nakup-ceny-desc">Napište seznam nákupu. Porovnáme ceny ve vybraných online obchodech včetně doručení domů.</p><textarea class="iu-nakup-ceny-input" rows="6" placeholder="Např. 20 rohlíků, 3 mléka, 20 čokoládových jogurtů, 5 cukru" aria-label="Seznam nákupu"></textarea><div class="iu-nakup-ceny-actions"><button type="button" class="iu-nakup-ceny-btn-primary">Spočítat nákup</button><button type="button" class="iu-nakup-ceny-btn-secondary">Vyčistit</button></div></div>'
+    },
     convert: {
       title: "Převod na Word, PDF",
       toolsHtml: '<div class="iuQCard" data-iu="pdfconvert-tools">' +
