@@ -9744,6 +9744,7 @@ function buildVideoAsArticleCard(it) {
       setError("");
       vasNakupText.textContent = val;
       vasNakupBlock.hidden = false;
+      vasNakupBlock.removeAttribute("hidden");
       hideClarify();
       try {
         localStorage.setItem(IU_SHOPPING_LAST_LIST_KEY, val);
@@ -9754,6 +9755,7 @@ function buildVideoAsArticleCard(it) {
       } else {
         showAddressStep();
       }
+      try { vasNakupBlock.scrollIntoView({ block: "nearest", behavior: "auto" }); } catch (_) {}
     });
     btnSecondary.addEventListener("click", function() {
       input.value = "";
@@ -10720,9 +10722,12 @@ function buildVideoAsArticleCard(it) {
 
   function iuQuickFeedInit(){
     document.addEventListener("click", (e) => {
-      if (e.target.closest && e.target.closest('.iuQShareBtn')) return;
-      if (e.target.closest && e.target.closest('#iuQuickFeed')) return;
-      const el = e.target.closest && e.target.closest('[data-iuq]');
+      var t = e.target;
+      if (t && t.nodeType === 3) t = t.parentElement;
+      if (!t || typeof t.closest !== "function") return;
+      if (t.closest('.iuQShareBtn')) return;
+      if (t.closest('#iuQuickFeed')) return;
+      const el = t.closest('[data-iuq]');
       if (!el) return;
       e.preventDefault();
       e.stopPropagation();
