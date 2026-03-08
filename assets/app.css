@@ -16444,6 +16444,13 @@ body .rightCol .mindMenu .iu-mailbox-gear svg {
   fill: var(--iu-rightcol-text) !important;
   stroke: var(--iu-rightcol-text) !important;
 }
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg {
+  color: var(--iu-rightcol-text, #2e3238) !important;
+  fill: none !important;
+  stroke: var(--iu-rightcol-text, #2e3238) !important;
+}
 body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile,
 body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile i,
 body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItemLink,
