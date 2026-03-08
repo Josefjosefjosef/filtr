@@ -9656,9 +9656,6 @@ function buildVideoAsArticleCard(it) {
     const summaryCheapestVal = shell.querySelector(".iu-nakup-ceny-summary-cheapest-value");
     const summaryFastestVal = shell.querySelector(".iu-nakup-ceny-summary-fastest-value");
     if (!input || !errorEl || !btnPrimary || !btnSecondary || !vasNakupBlock || !vasNakupText) return;
-    if (!addressForm || !savedAddressBlock || !addrErrors || !uliceInp || !mestoInp || !pscInp || !btnConfirmAddr || !savedAddrText || !btnUseAddr || !btnChangeAddr) return;
-    if (!clarifyBlock || !clarifyItemsList || !btnUseDefaults || !btnEditItems) return;
-    if (!resultsBlock || !summaryCheapestVal || !summaryFastestVal) return;
     function getSavedAddress() {
       try {
         var raw = localStorage.getItem(IU_SHOPPING_DELIVERY_ADDRESS_KEY);
@@ -9672,25 +9669,26 @@ function buildVideoAsArticleCard(it) {
     }
     function showAddressStep() {
       var saved = getSavedAddress();
-      addressForm.hidden = true;
-      savedAddressBlock.hidden = true;
-      if (saved) {
+      if (addressForm) addressForm.hidden = true;
+      if (savedAddressBlock) savedAddressBlock.hidden = true;
+      if (saved && savedAddrText && savedAddressBlock) {
         savedAddrText.textContent = formatAddress(saved);
         savedAddressBlock.hidden = false;
-      } else {
+      } else if (addressForm) {
         addressForm.hidden = false;
       }
     }
     function hideAddressStep() {
-      addressForm.hidden = true;
-      savedAddressBlock.hidden = true;
-      addrErrors.textContent = "";
+      if (addressForm) addressForm.hidden = true;
+      if (savedAddressBlock) savedAddressBlock.hidden = true;
+      if (addrErrors) addrErrors.textContent = "";
     }
     function hideClarify() {
-      clarifyBlock.hidden = true;
-      clarifyItemsList.innerHTML = "";
+      if (clarifyBlock) clarifyBlock.hidden = true;
+      if (clarifyItemsList) clarifyItemsList.innerHTML = "";
     }
     function showClarify(uncertainItems) {
+      if (!clarifyItemsList || !clarifyBlock) return;
       clarifyItemsList.innerHTML = "";
       for (var i = 0; i < uncertainItems.length; i++) {
         var it = uncertainItems[i];
@@ -9701,14 +9699,14 @@ function buildVideoAsArticleCard(it) {
       clarifyBlock.hidden = false;
     }
     function hideResults() {
-      resultsBlock.hidden = true;
+      if (resultsBlock) resultsBlock.hidden = true;
     }
     function showResults() {
-      addressForm.hidden = true;
-      savedAddressBlock.hidden = true;
-      if (IU_NAKUP_PROVIDERS && IU_NAKUP_PROVIDERS[0]) summaryCheapestVal.textContent = IU_NAKUP_PROVIDERS[0].name;
-      if (IU_NAKUP_PROVIDERS && IU_NAKUP_PROVIDERS[3]) summaryFastestVal.textContent = IU_NAKUP_PROVIDERS[3].name;
-      resultsBlock.hidden = false;
+      if (addressForm) addressForm.hidden = true;
+      if (savedAddressBlock) savedAddressBlock.hidden = true;
+      if (summaryCheapestVal && IU_NAKUP_PROVIDERS && IU_NAKUP_PROVIDERS[0]) summaryCheapestVal.textContent = IU_NAKUP_PROVIDERS[0].name;
+      if (summaryFastestVal && IU_NAKUP_PROVIDERS && IU_NAKUP_PROVIDERS[3]) summaryFastestVal.textContent = IU_NAKUP_PROVIDERS[3].name;
+      if (resultsBlock) resultsBlock.hidden = false;
     }
     try {
       var lastList = localStorage.getItem(IU_SHOPPING_LAST_LIST_KEY);
@@ -9718,6 +9716,10 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
     function setError(msg) {
       errorEl.textContent = msg || "";
+      if (msg && msg.length > 0) {
+        errorEl.removeAttribute("hidden");
+        try { errorEl.scrollIntoView({ block: "nearest", behavior: "auto" }); } catch (_) {}
+      }
     }
     function isValid(val) {
       var t = (val || "").trim();
@@ -9762,11 +9764,11 @@ function buildVideoAsArticleCard(it) {
       hideAddressStep();
       hideResults();
     });
-    btnUseDefaults.addEventListener("click", function() {
+    if (btnUseDefaults) btnUseDefaults.addEventListener("click", function() {
       hideClarify();
       showAddressStep();
     });
-    btnEditItems.addEventListener("click", function() {
+    if (btnEditItems) btnEditItems.addEventListener("click", function() {
       hideClarify();
       vasNakupBlock.hidden = true;
       hideAddressStep();
@@ -9775,13 +9777,13 @@ function buildVideoAsArticleCard(it) {
       setError("");
     });
     function setAddrError(msg) {
-      addrErrors.textContent = msg || "";
+      if (addrErrors) addrErrors.textContent = msg || "";
     }
     function validateCzechPsc(psc) {
       var s = (psc || "").replace(/\s/g, "");
       return /^\d{5}$/.test(s);
     }
-    btnConfirmAddr.addEventListener("click", function() {
+    if (btnConfirmAddr && uliceInp && mestoInp && pscInp) btnConfirmAddr.addEventListener("click", function() {
       var ulice = (uliceInp.value || "").trim();
       var mesto = (mestoInp.value || "").trim();
       var psc = (pscInp.value || "").trim().replace(/\s/g, "");
@@ -9808,15 +9810,15 @@ function buildVideoAsArticleCard(it) {
           localStorage.setItem(IU_SHOPPING_DELIVERY_ADDRESS_KEY, JSON.stringify(payload));
         } catch (_) {}
       }
-      savedAddrText.textContent = formatAddress(payload);
-      addressForm.hidden = true;
-      savedAddressBlock.hidden = false;
+      if (savedAddrText) savedAddrText.textContent = formatAddress(payload);
+      if (addressForm) addressForm.hidden = true;
+      if (savedAddressBlock) savedAddressBlock.hidden = false;
       showResults();
     });
-    btnUseAddr.addEventListener("click", function() {
+    if (btnUseAddr) btnUseAddr.addEventListener("click", function() {
       showResults();
     });
-    btnChangeAddr.addEventListener("click", function() {
+    if (btnChangeAddr && savedAddressBlock && addressForm && uliceInp && mestoInp && pscInp) btnChangeAddr.addEventListener("click", function() {
       savedAddressBlock.hidden = true;
       addressForm.hidden = false;
       var saved = getSavedAddress();
@@ -9834,7 +9836,7 @@ function buildVideoAsArticleCard(it) {
     if (uliceInp) uliceInp.addEventListener("input", function() { setAddrError(""); });
     if (mestoInp) mestoInp.addEventListener("input", function() { setAddrError(""); });
     if (pscInp) pscInp.addEventListener("input", function() { setAddrError(""); });
-    resultsBlock.addEventListener("click", function(e) {
+    if (resultsBlock) resultsBlock.addEventListener("click", function(e) {
       var btn = e.target;
       if (btn && btn.classList && btn.classList.contains("iu-nakup-ceny-btn-detail")) {
         var card = btn.closest && btn.closest(".iu-nakup-ceny-provider-card");
@@ -10719,6 +10721,7 @@ function buildVideoAsArticleCard(it) {
   function iuQuickFeedInit(){
     document.addEventListener("click", (e) => {
       if (e.target.closest && e.target.closest('.iuQShareBtn')) return;
+      if (e.target.closest && e.target.closest('#iuQuickFeed')) return;
       const el = e.target.closest && e.target.closest('[data-iuq]');
       if (!el) return;
       e.preventDefault();
