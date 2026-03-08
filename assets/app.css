@@ -10547,6 +10547,7 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   align-items: center;
   gap: 8px;
   flex-wrap: nowrap;
+  position: relative;
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionTitle{
   flex-shrink: 0;
@@ -16450,6 +16451,7 @@ body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-sett
   color: var(--iu-rightcol-text, #2e3238) !important;
   fill: none !important;
   stroke: var(--iu-rightcol-text, #2e3238) !important;
+  opacity: 1 !important;
 }
 body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile,
 body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile i,
