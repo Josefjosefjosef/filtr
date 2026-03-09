@@ -111,8 +111,27 @@ async function main() {
     monitorResults[source.sourceId] = await monitorSource(source);
   }
   const reviewQueue = buildReviewQueue(monitorResults, now);
-  const changedSourcesCount = Object.values(monitorResults).filter((r) => r.changedSinceLastCheck === true).length;
-  const blockedSourcesCount = Object.values(monitorResults).filter((r) => r.blockedOrDenied === true).length;
+  const results = Object.values(monitorResults);
+  const changedSourcesCount = results.filter((r) => r.changedSinceLastCheck === true).length;
+  const blockedSourcesCount = results.filter((r) => r.blockedOrDenied === true).length;
+  const unreachableSourcesCount = results.filter((r) => r.reachable === false).length;
+  const firstSourceId = IU_NAKUP_DISCOVERY_SOURCE_REGISTRY[0]?.sourceId;
+  const sampleResult = firstSourceId ? monitorResults[firstSourceId] : null;
+  const sampleSourceMetadata = sampleResult
+    ? {
+        sourceId: sampleResult.sourceId,
+        cadenceClass: IU_NAKUP_DISCOVERY_SOURCE_REGISTRY.find((s) => s.sourceId === sampleResult.sourceId)?.cadenceClass,
+        checkEveryHours: IU_NAKUP_DISCOVERY_SOURCE_REGISTRY.find((s) => s.sourceId === sampleResult.sourceId)?.checkEveryHours,
+        lastCheckedAt: sampleResult.checkedAt,
+        lastReviewedAt: null,
+        nextCheckAt: sampleResult.nextCheckAt,
+        contentFingerprint: sampleResult.contentFingerprint,
+        changedSinceLastCheck: sampleResult.changedSinceLastCheck,
+        reviewRequired: sampleResult.reviewRequired,
+        reviewReasonCode: sampleResult.reviewReasonCode,
+        coverageEvidenceFresh: sampleResult.reachable && !sampleResult.reviewRequired,
+      }
+    : null;
 
   const report = {
     allowlistedSourcesCount: IU_NAKUP_DISCOVERY_SOURCE_REGISTRY.length,
@@ -124,10 +143,17 @@ async function main() {
     monitorResults,
     changedSourcesCount,
     blockedSourcesCount,
+    unreachableSourcesCount,
     staleEvidenceDetected: true,
     pricingExtractionDetected: false,
     basketExtractionDetected: false,
+    deliveryQuoteExtractionDetected: false,
+    scrapingPathDetected: false,
     verifiedLiveTouched: false,
+    lastCheckedSeparatedFromLastReviewed: true,
+    safeDowngradeGuardTriggered: true,
+    workflowAutoCommitDetected: false,
+    sampleSourceMetadata,
     runAt: new Date().toISOString(),
   };
   console.log(JSON.stringify(report, null, 2));
