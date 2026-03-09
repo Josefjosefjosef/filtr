@@ -2917,7 +2917,67 @@ style-src 'self' 'unsafe-inline' https:;
           <span id="iuNakupModalTitle">Nákup domů</span>
           <button id="iuNakupClose" type="button" aria-label="Zavřít">×</button>
         </div>
-        <div class="iuModalBody" id="iuNakupList"></div>
+        <div class="iuModalBody">
+          <div class="iu-nakup-community-top" data-iu="nakup-community-top" role="region" aria-label="Komunitní nákupní nástroj">
+            <h2 class="iu-nakup-community-headline">Komunitní nákupní nástroj</h2>
+            <p class="iu-nakup-community-subtext">Sdílení a porovnání nákupů v rámci komunity. Nejde o živé ceny obchodů ani o porovnání košíků v reálném čase. Osobní údaje se neukládají.</p>
+            <div class="iu-nakup-community-picker-shell" data-iu="store-location-picker" aria-label="Obchod nebo lokace">
+              <label class="iu-nakup-community-picker-label" for="iu-nakup-picker-input">Obchod / lokace</label>
+              <input type="text" id="iu-nakup-picker-input" class="iu-nakup-community-picker-input" autocomplete="off" aria-autocomplete="list" aria-controls="iu-nakup-picker-listbox" aria-expanded="false" aria-label="Vyhledat obchod nebo lokaci" />
+              <div id="iu-nakup-picker-listbox" class="iu-nakup-community-picker-listbox" role="listbox" aria-label="Návrhy obchodů" hidden></div>
+              <span class="iu-nakup-community-picker-fallback" data-iu="picker-fallback" aria-live="polite"></span>
+            </div>
+            <div class="iu-nakup-community-mode-switcher" data-iu="mode-switcher" role="tablist" aria-label="Způsob vstupu">
+              <button type="button" role="tab" class="iu-nakup-community-mode-tab iu-nakup-community-mode-active" data-mode="text" aria-selected="true">Vložit text</button>
+              <button type="button" role="tab" class="iu-nakup-community-mode-tab" data-mode="cart" aria-selected="false">Nahrát košík</button>
+              <button type="button" role="tab" class="iu-nakup-community-mode-tab" data-mode="receipt" aria-selected="false">Vyfotit účtenku</button>
+            </div>
+            <div class="iu-nakup-community-mode-panels">
+              <div class="iu-nakup-community-text-shell" data-iu="text-input-shell">
+                <textarea class="iu-nakup-community-textarea" rows="4" placeholder="Vložte seznam položek, např. mléko 30 Kč, 2x chleba 25 Kč" aria-label="Seznam položek" data-iu="pasted-text-input"></textarea>
+                <div class="iu-nakup-community-parser-preview" data-iu="parser-preview" hidden aria-label="Náhled rozpoznaných položek">
+                  <h3 class="iu-nakup-community-preview-heading">Náhled</h3>
+                  <ul class="iu-nakup-community-parsed-list" data-iu="parsed-list" aria-label="Rozpoznané položky"></ul>
+                </div>
+                <div class="iu-nakup-community-confirm-row">
+                  <button type="button" class="iu-nakup-community-btn-confirm" data-iu="confirm-share-btn" aria-label="Potvrdit a sdílet do komunitní vrstvy">Potvrdit a sdílet</button>
+                </div>
+                <div class="iu-nakup-community-safe-result" data-iu="safe-result" role="status" hidden>
+                  <p class="iu-nakup-community-result-text">Záznam byl přidán do komunitní vrstvy.</p>
+                </div>
+              </div>
+              <div class="iu-nakup-community-upload-row" hidden>
+                <button type="button" class="iu-nakup-community-cta iu-nakup-community-cta-screenshot" data-iu="screenshot-cta" aria-label="Nahrát screenshot košíku">Screenshot košíku</button>
+                <button type="button" class="iu-nakup-community-cta iu-nakup-community-cta-receipt" data-iu="receipt-cta" aria-label="Nahrát fotku účtenky">Fotka účtenky</button>
+              </div>
+            </div>
+            <p class="iu-nakup-community-disclaimer" data-iu="disclaimer">Toto je komunitní nástroj. Osobní historie jen na tomto zařízení. Data nejsou živá z obchodů.</p>
+            <div class="iu-nakup-community-my-purchases" data-iu="my-purchases-section">
+              <h3 class="iu-nakup-community-my-purchases-heading">Moje nákupy</h3>
+              <p class="iu-nakup-community-personal-separation" data-iu="community-personal-separation">Osobní historie je oddělená od komunitní vrstvy. Ukládá se pouze lokálně na tomto zařízení.</p>
+              <div class="iu-nakup-community-stats" data-iu="purchase-stats" aria-label="Statistiky nákupů"></div>
+              <ul class="iu-nakup-community-history-list" data-iu="my-purchases-list" aria-label="Seznam nákupů"></ul>
+              <div class="iu-nakup-community-history-empty" data-iu="my-purchases-empty" role="status">
+                <p>Zatím žádné nákupy v osobní historii.</p>
+              </div>
+              <div class="iu-nakup-community-history-detail" data-iu="purchase-detail" hidden aria-label="Detail nákupu">
+                <h4 class="iu-nakup-community-detail-heading">Detail nákupu</h4>
+                <div class="iu-nakup-community-detail-body" data-iu="purchase-detail-body"></div>
+                <div class="iu-nakup-community-detail-actions">
+                  <button type="button" class="iu-nakup-community-btn-delete-one" data-iu="delete-purchase-btn">Smazat nákup</button>
+                  <button type="button" class="iu-nakup-community-btn-back" data-iu="back-to-list-btn">Zpět na seznam</button>
+                </div>
+              </div>
+              <div class="iu-nakup-community-clear-row">
+                <button type="button" class="iu-nakup-community-btn-clear" data-iu="clear-history-btn" aria-label="Smazat celou historii">Smazat celou historii</button>
+              </div>
+            </div>
+            <div class="iu-nakup-community-empty-state" data-iu="empty-state" role="status">
+              <p>Zatím žádná data. Nástroj je připraven pro budoucí komunitní funkce.</p>
+            </div>
+          </div>
+          <div id="iuNakupList"></div>
+        </div>
       </div>
     </div>
     <div id="iuVideoModal" class="iuVideoModal" hidden aria-modal="true" aria-label="Přehrát video">

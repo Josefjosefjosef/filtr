@@ -8264,6 +8264,166 @@ function buildVideoAsArticleCard(it) {
 
   const IU_NAKUP_JSON_PATH = "/assets/data/services-shopping.json";
 
+  /* Store/location registry — no concrete addresses, only brand + city + district/zone */
+  const IU_NAKUP_STORE_BRANDS = ["Lidl", "Kaufland", "Albert", "Tesco", "Billa", "Penny"];
+  const IU_NAKUP_STORE_TYPES = ["supermarket", "hypermarket"];
+  const IU_NAKUP_CITIES = ["Praha", "Brno", "Ostrava", "Plzeň", "Liberec", "Olomouc"];
+  const IU_NAKUP_DISTRICTS_BY_CITY = {
+    "Praha": ["Praha 1", "Praha 2", "Praha 3", "Praha 4", "Praha 5", "Praha 6", "Praha 7", "Praha 8", "Praha 9", "Praha 10"],
+    "Brno": ["Brno-střed", "Brno-sever", "Brno-jih", "Brno-východ", "Brno-západ"],
+    "Ostrava": ["Ostrava-město", "Ostrava-jih", "Ostrava-sever"],
+    "Plzeň": ["Plzeň 1", "Plzeň 2", "Plzeň 3"],
+    "Liberec": ["Liberec I", "Liberec II"],
+    "Olomouc": ["Olomouc-město"]
+  };
+  function iuNakupBuildStoreRegistry(){
+    const out = [];
+    const seen = {};
+    IU_NAKUP_STORE_BRANDS.forEach(function(brand) {
+      IU_NAKUP_CITIES.forEach(function(city) {
+        const districts = IU_NAKUP_DISTRICTS_BY_CITY[city] || [city];
+        districts.forEach(function(districtOrZone) {
+          const storeKey = (brand + "-" + city + "-" + districtOrZone).toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+          if (seen[storeKey]) return;
+          seen[storeKey] = true;
+          out.push({
+            storeKey: storeKey,
+            storeBrand: brand,
+            storeType: IU_NAKUP_STORE_TYPES[0],
+            city: city,
+            districtOrZone: districtOrZone,
+            label: brand + " — " + districtOrZone
+          });
+        });
+      });
+    });
+    return out;
+  }
+  const IU_NAKUP_STORE_REGISTRY = iuNakupBuildStoreRegistry();
+
+  const IU_NAKUP_UI_TEXTS = {
+    pickerPlaceholder: "Napište např. Lidl Praha…",
+    pickerFallbackNoSelection: "Obchod nebo lokace nevybrána",
+    emptyState: "Zatím žádná data. Nástroj je připraven pro budoucí komunitní funkce.",
+    modeText: "Vložit text",
+    modeCart: "Nahrát košík",
+    modeReceipt: "Vyfotit účtenku"
+  };
+
+  const IU_NAKUP_PERSIST_KEY = "iu:nakup:lastStoreKey";
+
+  function iuNakupParsePastedText(rawText){
+    var lines = (rawText || "").split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+    var out = [];
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      var quantity = 1;
+      var amount = null;
+      var label = line;
+      var m = line.match(/^(\d+)\s*(?:x|ks)?\s*(.+)$/);
+      if (m) {
+        quantity = parseInt(m[1], 10) || 1;
+        label = m[2].trim();
+      }
+      var priceMatch = label.match(/\s+(\d+(?:[.,]\d{1,2})?)\s*(?:Kč|,-|kc)?\s*$/i);
+      if (priceMatch) {
+        amount = parseFloat(priceMatch[1].replace(",", ".")) || null;
+        label = label.slice(0, label.length - priceMatch[0].length).trim();
+      }
+      var needsReview = !label || (amount === null && /^\d+/.test(lines[i]));
+      var confidence = needsReview ? 0.5 : (amount !== null && label ? 0.9 : 0.6);
+      var normalizedLabel = (label || "").toLowerCase().replace(/\s+/g, " ").trim();
+      out.push({
+        label: normalizedLabel || (line || "").slice(0, 80),
+        quantity: quantity,
+        amount: amount,
+        confidence: confidence,
+        needsReview: needsReview,
+        fingerprint: (normalizedLabel + "|" + quantity + "|" + (amount != null ? amount : "")).slice(0, 120)
+      });
+    }
+    return out;
+  }
+
+  function iuNakupBuildCommunityRecord(opts){
+    var store = opts.store || {};
+    var parsedItems = opts.parsedItems || [];
+    var now = new Date().toISOString();
+    return {
+      storeBrand: store.storeBrand || null,
+      storeType: store.storeType || null,
+      city: store.city || null,
+      districtOrZone: store.districtOrZone || null,
+      storeKey: store.storeKey || null,
+      sourceType: "community",
+      submittedAt: now,
+      observedAt: now,
+      rawInputType: "pasted_text",
+      parsedItems: parsedItems.map(function(item) {
+        return {
+          label: item.label,
+          quantity: item.quantity,
+          amount: item.amount,
+          confidence: item.confidence,
+          needsReview: item.needsReview
+        };
+      })
+    };
+  }
+
+  var IU_NAKUP_COMMUNITY_RECORDS = [];
+  try { if (typeof window !== "undefined") window.IU_NAKUP_COMMUNITY_RECORDS = IU_NAKUP_COMMUNITY_RECORDS; } catch (_) {}
+
+  const IU_NAKUP_PERSONAL_KEY = "iu:nakup:personalHistory";
+
+  function iuNakupGetPersonalHistory(){
+    try {
+      var raw = localStorage.getItem(IU_NAKUP_PERSONAL_KEY);
+      if (!raw) return [];
+      var arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch (_) { return []; }
+  }
+
+  function iuNakupSavePersonalHistory(arr){
+    try {
+      localStorage.setItem(IU_NAKUP_PERSONAL_KEY, JSON.stringify(Array.isArray(arr) ? arr : []));
+    } catch (_) {}
+  }
+  try { if (typeof window !== "undefined") window.iuNakupGetPersonalHistory = iuNakupGetPersonalHistory; } catch (_) {}
+
+  function iuNakupBuildPersonalRecord(opts){
+    var store = opts.store || {};
+    var parsedItems = opts.parsedItems || [];
+    var now = new Date();
+    var iso = now.toISOString();
+    var totalAmountKnown = null;
+    var sum = 0;
+    var allKnown = true;
+    for (var i = 0; i < parsedItems.length; i++) {
+      var a = parsedItems[i].amount;
+      if (a != null) sum += a * (parsedItems[i].quantity || 1);
+      else allKnown = false;
+    }
+    if (parsedItems.length && allKnown) totalAmountKnown = Math.round(sum * 100) / 100;
+    return {
+      id: "iu-nakup-" + now.getTime() + "-" + Math.random().toString(36).slice(2, 9),
+      storeBrand: store.storeBrand || null,
+      storeType: store.storeType || null,
+      city: store.city || null,
+      districtOrZone: store.districtOrZone || null,
+      storeKey: store.storeKey || null,
+      purchaseDate: iso.slice(0, 10),
+      purchaseTime: iso.slice(11, 19),
+      submittedAt: iso,
+      totalAmountKnown: totalAmountKnown,
+      parsedItems: parsedItems.map(function(item) {
+        return { label: item.label, quantity: item.quantity, amount: item.amount, confidence: item.confidence, needsReview: item.needsReview };
+      }),
+      parsedItemsCount: parsedItems.length
+    };
+  }
+
   function iuNakupEls(){
     return {
       modal: document.getElementById("iuNakupModal"),
@@ -8321,8 +8481,364 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuNakupCommunityPickerFilter(query){
+    const q = (query || "").trim().toLowerCase();
+    if (!q) return IU_NAKUP_STORE_REGISTRY.slice(0, 12);
+    const terms = q.split(/\s+/).filter(Boolean);
+    return IU_NAKUP_STORE_REGISTRY.filter(function(entry) {
+      const text = (entry.label || "").toLowerCase() + " " + (entry.storeBrand || "").toLowerCase() + " " + (entry.city || "").toLowerCase() + " " + (entry.districtOrZone || "").toLowerCase();
+      return terms.every(function(term) { return text.indexOf(term) !== -1; });
+    }).slice(0, 12);
+  }
+
+  function iuNakupCommunityInit(){
+    const modal = document.getElementById("iuNakupModal");
+    const topBlock = modal && modal.querySelector("[data-iu=\"nakup-community-top\"]");
+    if (!topBlock) return;
+    const switcher = topBlock.querySelector("[data-iu=\"mode-switcher\"]");
+    const pickerShell = topBlock.querySelector("[data-iu=\"store-location-picker\"]");
+    const input = topBlock.querySelector(".iu-nakup-community-picker-input");
+    const listbox = topBlock.querySelector(".iu-nakup-community-picker-listbox");
+    const fallbackEl = topBlock.querySelector(".iu-nakup-community-picker-fallback");
+    const textShell = topBlock.querySelector("[data-iu=\"text-input-shell\"]");
+    const uploadRow = topBlock.querySelector(".iu-nakup-community-upload-row");
+    const tabs = topBlock.querySelectorAll(".iu-nakup-community-mode-tab");
+    const textarea = topBlock.querySelector("[data-iu=\"pasted-text-input\"]");
+    const parserPreview = topBlock.querySelector("[data-iu=\"parser-preview\"]");
+    const parsedList = topBlock.querySelector("[data-iu=\"parsed-list\"]");
+    const confirmBtn = topBlock.querySelector("[data-iu=\"confirm-share-btn\"]");
+    const safeResult = topBlock.querySelector("[data-iu=\"safe-result\"]");
+    const myPurchasesList = topBlock.querySelector("[data-iu=\"my-purchases-list\"]");
+    const myPurchasesEmpty = topBlock.querySelector("[data-iu=\"my-purchases-empty\"]");
+    const purchaseStats = topBlock.querySelector("[data-iu=\"purchase-stats\"]");
+    const purchaseDetail = topBlock.querySelector("[data-iu=\"purchase-detail\"]");
+    const purchaseDetailBody = topBlock.querySelector("[data-iu=\"purchase-detail-body\"]");
+    const clearHistoryBtn = topBlock.querySelector("[data-iu=\"clear-history-btn\"]");
+    const deletePurchaseBtn = topBlock.querySelector("[data-iu=\"delete-purchase-btn\"]");
+    const backToListBtn = topBlock.querySelector("[data-iu=\"back-to-list-btn\"]");
+
+    var selectedStoreKey = null;
+    var detailPurchaseId = null;
+    var suggestions = [];
+    var highlightedIndex = -1;
+
+    function setFallbackText(){
+      if (fallbackEl) fallbackEl.textContent = selectedStoreKey ? "" : (IU_NAKUP_UI_TEXTS.pickerFallbackNoSelection || "Obchod nebo lokace nevybrána");
+    }
+    function applyModePanel(mode){
+      if (textShell) textShell.hidden = mode !== "text";
+      if (uploadRow) uploadRow.hidden = mode === "text";
+    }
+    function showListbox(show){
+      if (!listbox) return;
+      listbox.hidden = !show;
+      listbox.setAttribute("aria-expanded", show ? "true" : "false");
+      if (input) input.setAttribute("aria-expanded", show ? "true" : "false");
+      if (!show) highlightedIndex = -1;
+    }
+    function renderListbox(items){
+      if (!listbox) return;
+      listbox.innerHTML = "";
+      items.forEach(function(entry, i) {
+        var opt = document.createElement("div");
+        opt.setAttribute("role", "option");
+        opt.setAttribute("data-store-key", entry.storeKey || "");
+        opt.setAttribute("data-label", entry.label || "");
+        opt.className = "iu-nakup-community-picker-option";
+        opt.id = "iu-nakup-picker-opt-" + i;
+        opt.textContent = entry.label || entry.storeKey || "";
+        listbox.appendChild(opt);
+      });
+      suggestions = items;
+    }
+    function selectByKey(storeKey, label){
+      selectedStoreKey = storeKey;
+      if (input) input.value = label || IU_NAKUP_UI_TEXTS.pickerFallbackNoSelection;
+      showListbox(false);
+      setFallbackText();
+      try { sessionStorage.setItem(IU_NAKUP_PERSIST_KEY, storeKey || ""); } catch (_) {}
+    }
+    function selectHighlighted(){
+      if (highlightedIndex >= 0 && suggestions[highlightedIndex]) {
+        var e = suggestions[highlightedIndex];
+        selectByKey(e.storeKey, e.label);
+      }
+    }
+
+    if (tabs && tabs.length) {
+      tabs.forEach(function(tab) {
+        tab.addEventListener("click", function() {
+          var mode = (tab.getAttribute("data-mode") || "text").toLowerCase();
+          tabs.forEach(function(t) {
+            t.classList.remove("iu-nakup-community-mode-active");
+            t.setAttribute("aria-selected", "false");
+          });
+          tab.classList.add("iu-nakup-community-mode-active");
+          tab.setAttribute("aria-selected", "true");
+          applyModePanel(mode);
+        });
+      });
+      applyModePanel("text");
+    }
+
+    var emptyStateEl = topBlock.querySelector("[data-iu=\"empty-state\"] p");
+    if (emptyStateEl && IU_NAKUP_UI_TEXTS.emptyState) emptyStateEl.textContent = IU_NAKUP_UI_TEXTS.emptyState;
+
+    try {
+      var lastKey = sessionStorage.getItem(IU_NAKUP_PERSIST_KEY) || "";
+      var restored = IU_NAKUP_STORE_REGISTRY.filter(function(e) { return e.storeKey === lastKey; })[0];
+      if (restored && input) {
+        selectedStoreKey = restored.storeKey;
+        input.value = restored.label;
+      } else if (input) {
+        input.placeholder = IU_NAKUP_UI_TEXTS.pickerPlaceholder || "Napište např. Lidl Praha…";
+      }
+    } catch (_) {}
+    setFallbackText();
+
+    if (input && listbox) {
+      input.addEventListener("input", function() {
+        var q = input.value.trim();
+        if (!q) {
+          selectedStoreKey = null;
+          setFallbackText();
+          renderListbox(IU_NAKUP_STORE_REGISTRY.slice(0, 12));
+          showListbox(true);
+          highlightedIndex = -1;
+          return;
+        }
+        var hits = iuNakupCommunityPickerFilter(q);
+        renderListbox(hits);
+        showListbox(true);
+        highlightedIndex = hits.length ? 0 : -1;
+        if (highlightedIndex >= 0 && listbox.children[highlightedIndex]) {
+          listbox.children[highlightedIndex].classList.add("iu-nakup-community-picker-option-active");
+        }
+      });
+      input.addEventListener("focus", function() {
+        if (suggestions.length === 0) suggestions = IU_NAKUP_STORE_REGISTRY.slice(0, 12);
+        renderListbox(suggestions);
+        showListbox(true);
+      });
+      input.addEventListener("keydown", function(e) {
+        if (!listbox || listbox.hidden) {
+          if (e.key === "Escape") { e.preventDefault(); showListbox(false); }
+          return;
+        }
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          highlightedIndex = highlightedIndex < suggestions.length - 1 ? highlightedIndex + 1 : 0;
+          listbox.querySelectorAll(".iu-nakup-community-picker-option").forEach(function(el, i) {
+            el.classList.toggle("iu-nakup-community-picker-option-active", i === highlightedIndex);
+          });
+          if (listbox.children[highlightedIndex]) listbox.children[highlightedIndex].scrollIntoView({ block: "nearest" });
+          return;
+        }
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          highlightedIndex = highlightedIndex <= 0 ? suggestions.length - 1 : highlightedIndex - 1;
+          listbox.querySelectorAll(".iu-nakup-community-picker-option").forEach(function(el, i) {
+            el.classList.toggle("iu-nakup-community-picker-option-active", i === highlightedIndex);
+          });
+          if (listbox.children[highlightedIndex]) listbox.children[highlightedIndex].scrollIntoView({ block: "nearest" });
+          return;
+        }
+        if (e.key === "Enter") {
+          e.preventDefault();
+          selectHighlighted();
+          return;
+        }
+        if (e.key === "Escape") {
+          e.preventDefault();
+          showListbox(false);
+        }
+      });
+    }
+    if (listbox) {
+      listbox.addEventListener("click", function(e) {
+        var opt = e.target && e.target.closest && e.target.closest("[data-store-key]");
+        if (opt) selectByKey(opt.getAttribute("data-store-key") || "", opt.getAttribute("data-label") || opt.textContent);
+      });
+    }
+    document.addEventListener("click", function(e) {
+      if (pickerShell && !pickerShell.contains(e.target)) showListbox(false);
+    });
+
+    function renderParserPreview(items){
+      if (!parsedList) return;
+      parsedList.innerHTML = "";
+      items.forEach(function(item) {
+        var li = document.createElement("li");
+        li.className = "iu-nakup-community-parsed-item" + (item.needsReview ? " iu-nakup-community-needs-review" : "");
+        var text = (item.label || "") + (item.quantity > 1 ? " × " + item.quantity : "") + (item.amount != null ? " — " + item.amount + " Kč" : "");
+        li.textContent = text;
+        if (item.needsReview) {
+          var badge = document.createElement("span");
+          badge.className = "iu-nakup-community-needs-review-badge";
+          badge.setAttribute("aria-label", "Položka vyžaduje kontrolu");
+          badge.textContent = "kontrola";
+          li.appendChild(document.createTextNode(" "));
+          li.appendChild(badge);
+        }
+        parsedList.appendChild(li);
+      });
+    }
+    function runParserAndPreview(){
+      var raw = textarea ? textarea.value.trim() : "";
+      var items = iuNakupParsePastedText(raw);
+      if (parserPreview) {
+        parserPreview.hidden = items.length === 0;
+        renderParserPreview(items);
+      }
+    }
+    if (textarea) {
+      textarea.addEventListener("input", runParserAndPreview);
+      textarea.addEventListener("change", runParserAndPreview);
+    }
+    function renderPurchaseStats(history){
+      if (!purchaseStats) return;
+      if (!history.length) { purchaseStats.innerHTML = ""; purchaseStats.hidden = true; return; }
+      purchaseStats.hidden = false;
+      var now = Date.now();
+      var day = 24 * 60 * 60 * 1000;
+      var totalKnown = 0;
+      var countWithAmount = 0;
+      var sum7 = 0;
+      var sum30 = 0;
+      for (var i = 0; i < history.length; i++) {
+        var h = history[i];
+        var t = (h.submittedAt && new Date(h.submittedAt).getTime()) || 0;
+        if (h.totalAmountKnown != null) { totalKnown += h.totalAmountKnown; countWithAmount++; }
+        if (t && now - t <= 7 * day) sum7 += h.totalAmountKnown != null ? h.totalAmountKnown : 0;
+        if (t && now - t <= 30 * day) sum30 += h.totalAmountKnown != null ? h.totalAmountKnown : 0;
+      }
+      var last = history[0];
+      var lastDate = last && last.purchaseDate ? last.purchaseDate : "—";
+      var lastTime = last && last.purchaseTime ? last.purchaseTime : "—";
+      var storeCounts = {};
+      for (var j = 0; j < history.length; j++) {
+        var k = history[j].storeBrand || history[j].storeKey || "—";
+        storeCounts[k] = (storeCounts[k] || 0) + 1;
+      }
+      var mostFreq = "";
+      var maxC = 0;
+      for (var key in storeCounts) { if (storeCounts[key] > maxC) { maxC = storeCounts[key]; mostFreq = key; } }
+      var avg = countWithAmount > 0 ? Math.round((totalKnown / countWithAmount) * 100) / 100 : null;
+      purchaseStats.innerHTML = "<p class=\"iu-nakup-stats-line\">Počet nákupů: " + history.length + "</p>" +
+        (totalKnown > 0 ? "<p class=\"iu-nakup-stats-line\">Utraceno celkem: " + totalKnown + " Kč</p>" : "") +
+        (avg != null ? "<p class=\"iu-nakup-stats-line\">Průměrný nákup: " + avg + " Kč</p>" : "") +
+        (sum7 > 0 ? "<p class=\"iu-nakup-stats-line\">Utraceno 7 dní: " + sum7 + " Kč</p>" : "") +
+        (sum30 > 0 ? "<p class=\"iu-nakup-stats-line\">Utraceno 30 dní: " + sum30 + " Kč</p>" : "") +
+        "<p class=\"iu-nakup-stats-line\">Poslední nákup: " + lastDate + " " + lastTime + "</p>" +
+        (mostFreq && mostFreq !== "—" ? "<p class=\"iu-nakup-stats-line\">Nejčastější obchod: " + mostFreq + "</p>" : "");
+    }
+    function renderMyPurchases(){
+      var history = iuNakupGetPersonalHistory();
+      renderPurchaseStats(history);
+      if (!myPurchasesList || !myPurchasesEmpty) return;
+      myPurchasesList.innerHTML = "";
+      if (!history.length) {
+        myPurchasesList.hidden = true;
+        myPurchasesEmpty.hidden = false;
+        if (purchaseDetail) purchaseDetail.hidden = true;
+        return;
+      }
+      myPurchasesEmpty.hidden = true;
+      myPurchasesList.hidden = false;
+      history.forEach(function(p) {
+        var li = document.createElement("li");
+        li.className = "iu-nakup-history-item";
+        li.setAttribute("data-purchase-id", p.id || "");
+        var label = (p.storeBrand || p.storeKey || "—") + (p.districtOrZone ? " " + p.districtOrZone : "");
+        var totalStr = p.totalAmountKnown != null ? p.totalAmountKnown + " Kč" : "—";
+        li.innerHTML = "<span class=\"iu-nakup-history-date\">" + (p.purchaseDate || "") + " " + (p.purchaseTime || "") + "</span> " +
+          "<span class=\"iu-nakup-history-store\">" + escapeHtml(label) + "</span> " +
+          "<span class=\"iu-nakup-history-total\">" + totalStr + "</span> " +
+          "<button type=\"button\" class=\"iu-nakup-community-btn-detail\" data-iu=\"open-detail\" data-purchase-id=\"" + escapeHtml(p.id || "") + "\">Detail</button>";
+        myPurchasesList.appendChild(li);
+      });
+    }
+    function openDetail(id){
+      var history = iuNakupGetPersonalHistory();
+      var p = history.filter(function(h) { return h.id === id; })[0];
+      if (!p || !purchaseDetail || !purchaseDetailBody) return;
+      detailPurchaseId = id;
+      var label = (p.storeBrand || "—") + (p.city ? " " + p.city : "") + (p.districtOrZone ? " " + p.districtOrZone : "");
+      var totalStr = p.totalAmountKnown != null ? p.totalAmountKnown + " Kč" : "neznámo (údaj nebyl rozpoznán)";
+      var rows = "<p><strong>Obchod / lokace:</strong> " + escapeHtml(label) + "</p><p><strong>Datum:</strong> " + (p.purchaseDate || "—") + " <strong>Čas:</strong> " + (p.purchaseTime || "—") + "</p><p><strong>Celkem:</strong> " + totalStr + "</p>";
+      if (p.parsedItems && p.parsedItems.length) {
+        rows += "<ul class=\"iu-nakup-detail-items\">";
+        p.parsedItems.forEach(function(item) {
+          rows += "<li>" + escapeHtml(item.label || "") + (item.quantity > 1 ? " × " + item.quantity : "") + (item.amount != null ? " — " + item.amount + " Kč" : "") + "</li>";
+        });
+        rows += "</ul>";
+      }
+      purchaseDetailBody.innerHTML = rows;
+      purchaseDetail.hidden = false;
+      if (myPurchasesList) myPurchasesList.hidden = true;
+      if (myPurchasesEmpty) myPurchasesEmpty.hidden = true;
+    }
+    function closeDetail(){
+      detailPurchaseId = null;
+      if (purchaseDetail) purchaseDetail.hidden = true;
+      renderMyPurchases();
+    }
+    if (myPurchasesList) {
+      myPurchasesList.addEventListener("click", function(e) {
+        var btn = e.target && e.target.closest && e.target.closest("[data-iu=\"open-detail\"]");
+        if (btn) openDetail(btn.getAttribute("data-purchase-id") || "");
+      });
+    }
+    if (deletePurchaseBtn && purchaseDetail) {
+      deletePurchaseBtn.addEventListener("click", function() {
+        if (!detailPurchaseId) return;
+        var history = iuNakupGetPersonalHistory().filter(function(h) { return h.id !== detailPurchaseId; });
+        iuNakupSavePersonalHistory(history);
+        closeDetail();
+      });
+    }
+    if (backToListBtn) backToListBtn.addEventListener("click", closeDetail);
+    if (clearHistoryBtn) {
+      clearHistoryBtn.addEventListener("click", function() {
+        if (confirm("Opravdu smazat celou osobní historii?")) {
+          iuNakupSavePersonalHistory([]);
+          closeDetail();
+          renderMyPurchases();
+        }
+      });
+    }
+    renderMyPurchases();
+
+    if (confirmBtn) {
+      confirmBtn.addEventListener("click", function() {
+        var raw = textarea ? textarea.value.trim() : "";
+        var items = iuNakupParsePastedText(raw);
+        var storeEntry = selectedStoreKey ? (IU_NAKUP_STORE_REGISTRY.filter(function(e) { return e.storeKey === selectedStoreKey; })[0] || null) : null;
+        var record = iuNakupBuildCommunityRecord({
+          store: storeEntry || {},
+          parsedItems: items
+        });
+        IU_NAKUP_COMMUNITY_RECORDS.push(record);
+        try { window.IU_NAKUP_COMMUNITY_RECORDS = IU_NAKUP_COMMUNITY_RECORDS; } catch (_) {}
+        var personalRecord = iuNakupBuildPersonalRecord({ store: storeEntry || {}, parsedItems: items });
+        var personalHistory = iuNakupGetPersonalHistory();
+        personalHistory.unshift(personalRecord);
+        iuNakupSavePersonalHistory(personalHistory);
+        renderMyPurchases();
+        if (safeResult) {
+          safeResult.hidden = false;
+          if (safeResult.querySelector(".iu-nakup-community-result-text")) safeResult.querySelector(".iu-nakup-community-result-text").textContent = "Záznam byl přidán do komunitní vrstvy.";
+        }
+        if (parserPreview) parserPreview.hidden = true;
+        if (parsedList) parsedList.innerHTML = "";
+        if (textarea) textarea.value = "";
+      });
+    }
+  }
+
   function iuNakupDomuInit(){
     const { modal, openBtn, closeBtn } = iuNakupEls();
+    iuNakupCommunityInit();
     openBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl('shopping'); } catch {}
@@ -9843,15 +10359,29 @@ function buildVideoAsArticleCard(it) {
     var detailRows = [
       { label: "Stav", value: base.titleText },
       { label: "Důvod", value: relevanceReason },
-      { label: "Typ evidence", value: sourceType },
-      { label: "Síla evidence", value: confidenceLevel },
       { label: "Čerstvost evidence", value: fresh },
       { label: "Naposledy revidováno", value: lastReviewedAt },
       { label: "Rozsah pokrytí", value: scope },
       { label: "Kód evidence", value: evidenceCode }
     ];
-    var disclaimerText = "Tento nástroj zatím neporovnává ceny, dopravu ani dostupnost košíku. Zobrazuje pouze bezpečně ověřené informace o pokrytí a veřejné přítomnosti.";
-    return { badgeText: base.badgeText, badgeTone: base.badgeTone, titleText: base.titleText, subtitleText: base.subtitleText, detailRows: detailRows, disclaimerText: disclaimerText };
+    var technicalRows = [
+      { label: "Typ evidence", value: sourceType },
+      { label: "Síla evidence", value: confidenceLevel }
+    ];
+    var disclaimerText = "Zatím zobrazujeme pouze bezpečně ověřené informace o pokrytí a veřejné přítomnosti. Ceny, dopravu ani dostupnost košíku zde zatím neporovnáváme.";
+    return { badgeText: base.badgeText, badgeTone: base.badgeTone, titleText: base.titleText, subtitleText: base.subtitleText, detailRows: detailRows, technicalRows: technicalRows, disclaimerText: disclaimerText };
+  }
+
+  /** CTA policy: primary/secondary labels and whether to show order button. Never "Objednat" for unknown/public_presence_only/not_relevant. */
+  function iuNakupGetProviderActions(status) {
+    var s = status || "unknown_for_address";
+    var map = {
+      relevant_for_address: { primaryLabel: "Otevřít obchod", primaryIsLink: true, secondaryLabel: "Detail stavu", showOrderButton: true },
+      unknown_for_address: { primaryLabel: "Otevřít web obchodu", primaryIsLink: true, secondaryLabel: "Proč stav nevíme", showOrderButton: false },
+      public_presence_only: { primaryLabel: "Otevřít web obchodu", primaryIsLink: true, secondaryLabel: "Detail stavu", showOrderButton: false },
+      not_relevant_for_address: { primaryLabel: "Detail stavu", primaryIsLink: false, secondaryLabel: "Upravit adresu", showOrderButton: false }
+    };
+    return map[s] || map.unknown_for_address;
   }
 
   /** Provider discovery: address-sensitive; returns list with discoveryStatus, sorted by relevance. */
@@ -10090,6 +10620,74 @@ function buildVideoAsArticleCard(it) {
       if (summaryFastestVal) summaryFastestVal.textContent = "";
       if (resultsBlock) {
         var cardsContainer = resultsBlock.querySelector(".iu-nakup-ceny-results-cards");
+        var allUnknownOrPublic = estimates.length > 0 && estimates.every(function(e) { var s = e.discoveryStatus || "unknown_for_address"; return s === "unknown_for_address" || s === "public_presence_only"; });
+        var collapsedPanel = resultsBlock.querySelector(".iu-nakup-ceny-results-collapsed");
+        if (!collapsedPanel) {
+          collapsedPanel = document.createElement("div");
+          collapsedPanel.className = "iu-nakup-ceny-results-collapsed";
+          collapsedPanel.setAttribute("hidden", "");
+          var titleEl = document.createElement("h4");
+          titleEl.className = "iu-nakup-ceny-collapsed-title";
+          titleEl.textContent = "Obsluhu adresy zatím nelze bezpečně potvrdit";
+          var textEl = document.createElement("p");
+          textEl.className = "iu-nakup-ceny-collapsed-text";
+          textEl.textContent = "Nemáme dostatečně silnou evidenci pro spolehlivé potvrzení obsluhy této adresy.";
+          var listEl = document.createElement("ul");
+          listEl.className = "iu-nakup-ceny-collapsed-providers";
+          listEl.setAttribute("aria-label", "Obchody");
+          var provNames = ["Rohlík", "Košík", "Tesco", "Wolt Market"];
+          var provUrls = ["https://www.rohlik.cz/", "https://www.kosik.cz/", "https://nakup.itesco.cz/", "https://market.wolt.com/cs/cze"];
+          for (var pi = 0; pi < provNames.length; pi++) {
+            var li = document.createElement("li");
+            var a = document.createElement("a");
+            a.href = provUrls[pi];
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            a.textContent = provNames[pi];
+            li.appendChild(a);
+            listEl.appendChild(li);
+          }
+          var ctaWrap = document.createElement("div");
+          ctaWrap.className = "iu-nakup-ceny-collapsed-ctas";
+          var ctaLinks = document.createElement("div");
+          ctaLinks.className = "iu-nakup-ceny-collapsed-cta-links";
+          ctaLinks.appendChild(document.createTextNode("Otevřít web obchodů: "));
+          for (var qi = 0; qi < provNames.length; qi++) {
+            if (qi > 0) ctaLinks.appendChild(document.createTextNode(", "));
+            var ca = document.createElement("a");
+            ca.href = provUrls[qi];
+            ca.target = "_blank";
+            ca.rel = "noopener noreferrer";
+            ca.textContent = provNames[qi];
+            ca.className = "iu-nakup-ceny-collapsed-cta-link";
+            ctaLinks.appendChild(ca);
+          }
+          var ctaWhy = document.createElement("button");
+          ctaWhy.type = "button";
+          ctaWhy.className = "iu-nakup-ceny-btn-why-unknown";
+          ctaWhy.textContent = "Proč to zatím nevíme";
+          var whyContent = document.createElement("p");
+          whyContent.className = "iu-nakup-ceny-collapsed-why-content";
+          whyContent.hidden = true;
+          whyContent.textContent = "Zatím zobrazujeme pouze bezpečně ověřené informace o pokrytí a veřejné přítomnosti. Ceny, dopravu ani dostupnost košíku zde zatím neporovnáváme.";
+          ctaWrap.appendChild(ctaLinks);
+          ctaWrap.appendChild(ctaWhy);
+          collapsedPanel.appendChild(titleEl);
+          collapsedPanel.appendChild(textEl);
+          collapsedPanel.appendChild(listEl);
+          collapsedPanel.appendChild(ctaWrap);
+          collapsedPanel.appendChild(whyContent);
+          ctaWhy.addEventListener("click", function() { whyContent.hidden = !whyContent.hidden; });
+          if (cardsContainer && cardsContainer.parentNode) resultsBlock.insertBefore(collapsedPanel, cardsContainer);
+          else resultsBlock.appendChild(collapsedPanel);
+        }
+        if (allUnknownOrPublic) {
+          if (cardsContainer) cardsContainer.hidden = true;
+          collapsedPanel.hidden = false;
+        } else {
+          if (cardsContainer) cardsContainer.hidden = false;
+          collapsedPanel.hidden = true;
+        }
         if (cardsContainer && estimates.length > 0) {
           for (var i = 0; i < estimates.length; i++) {
             var est = estimates[i];
@@ -10150,6 +10748,33 @@ function buildVideoAsArticleCard(it) {
             var statusRef = card.querySelector(".iu-nakup-ceny-discovery-status");
             if (statusRef && statusRef.nextSibling) card.insertBefore(subSpan, statusRef.nextSibling); else if (statusRef) statusRef.parentNode.appendChild(subSpan); else card.appendChild(subSpan);
           }
+          var actions = iuNakupGetProviderActions(row ? row.discoveryStatus : "unknown_for_address");
+          var orderLink = card.querySelector(".iu-nakup-ceny-btn-objednat");
+          var detailBtn = card.querySelector(".iu-nakup-ceny-btn-detail");
+          if (orderLink) {
+            if (actions.showOrderButton) {
+              orderLink.hidden = false;
+              orderLink.textContent = actions.primaryLabel;
+            } else if (actions.primaryIsLink) {
+              orderLink.hidden = false;
+              orderLink.textContent = actions.primaryLabel;
+            } else {
+              orderLink.hidden = true;
+            }
+          }
+          if (detailBtn) detailBtn.textContent = actions.primaryIsLink ? actions.secondaryLabel : actions.primaryLabel;
+          var editAddrBtn = card.querySelector(".iu-nakup-ceny-btn-edit-address");
+          if (actions.primaryIsLink === false && actions.secondaryLabel === "Upravit adresu") {
+            if (!editAddrBtn) {
+              editAddrBtn = document.createElement("button");
+              editAddrBtn.type = "button";
+              editAddrBtn.className = "iu-nakup-ceny-btn-edit-address";
+              editAddrBtn.textContent = "Upravit adresu";
+              var actionsDiv = card.querySelector(".iu-nakup-ceny-provider-actions");
+              if (actionsDiv) actionsDiv.appendChild(editAddrBtn);
+            }
+            editAddrBtn.hidden = false;
+          } else if (editAddrBtn) editAddrBtn.hidden = true;
           if (detailEl) {
             var detailInner = detailEl.querySelector(".iu-nakup-ceny-detail-audit");
             if (!detailInner) {
@@ -10168,6 +10793,26 @@ function buildVideoAsArticleCard(it) {
                 dl.appendChild(dd);
               }
               auditWrap.appendChild(dl);
+              if (model.technicalRows && model.technicalRows.length > 0) {
+                var techWrap = document.createElement("details");
+                techWrap.className = "iu-nakup-ceny-detail-technical";
+                var techSum = document.createElement("summary");
+                techSum.textContent = "Technické vysvětlení";
+                techWrap.appendChild(techSum);
+                var techDl = document.createElement("dl");
+                techDl.className = "iu-nakup-ceny-detail-rows";
+                for (var tr = 0; tr < model.technicalRows.length; tr++) {
+                  var tp = model.technicalRows[tr];
+                  var tdt = document.createElement("dt");
+                  tdt.textContent = tp.label + ":";
+                  var tdd = document.createElement("dd");
+                  tdd.textContent = tp.value;
+                  techDl.appendChild(tdt);
+                  techDl.appendChild(tdd);
+                }
+                techWrap.appendChild(techDl);
+                auditWrap.appendChild(techWrap);
+              }
               var discP = document.createElement("p");
               discP.className = "iu-nakup-ceny-detail-disclaimer";
               discP.textContent = model.disclaimerText;
@@ -10187,6 +10832,29 @@ function buildVideoAsArticleCard(it) {
                   dl.appendChild(dd);
                 }
               }
+              var techWrap = detailInner.querySelector(".iu-nakup-ceny-detail-technical");
+              if (model.technicalRows && model.technicalRows.length > 0) {
+                if (!techWrap) {
+                  techWrap = document.createElement("details");
+                  techWrap.className = "iu-nakup-ceny-detail-technical";
+                  var techSum = document.createElement("summary");
+                  techSum.textContent = "Technické vysvětlení";
+                  techWrap.appendChild(techSum);
+                  detailInner.appendChild(techWrap);
+                }
+                var techDl = techWrap.querySelector("dl");
+                if (!techDl) { techDl = document.createElement("dl"); techDl.className = "iu-nakup-ceny-detail-rows"; techWrap.appendChild(techDl); }
+                while (techDl.firstChild) techDl.removeChild(techDl.firstChild);
+                for (var tr = 0; tr < model.technicalRows.length; tr++) {
+                  var tp = model.technicalRows[tr];
+                  var tdt = document.createElement("dt");
+                  tdt.textContent = tp.label + ":";
+                  var tdd = document.createElement("dd");
+                  tdd.textContent = tp.value;
+                  techDl.appendChild(tdt);
+                  techDl.appendChild(tdd);
+                }
+              } else if (techWrap) techWrap.remove();
               var discP = detailEl.querySelector(".iu-nakup-ceny-detail-disclaimer");
               if (discP) discP.textContent = model.disclaimerText;
             }
@@ -10344,6 +11012,13 @@ function buildVideoAsArticleCard(it) {
     if (mestoInp) mestoInp.addEventListener("input", function() { setAddrError(""); });
     if (pscInp) pscInp.addEventListener("input", function() { setAddrError(""); });
     if (resultsBlock) resultsBlock.addEventListener("click", function(e) {
+      var target = e.target && e.target.closest ? e.target.closest(".iu-nakup-ceny-btn-edit-address") : null;
+      if (target && target.classList && target.classList.contains("iu-nakup-ceny-btn-edit-address")) {
+        hideResults();
+        if (savedAddressBlock) savedAddressBlock.hidden = true;
+        if (addressForm) addressForm.hidden = false;
+        return;
+      }
       var btn = (e.target && e.target.closest) ? e.target.closest(".iu-nakup-ceny-btn-detail") : e.target;
       if (btn && btn.classList && btn.classList.contains("iu-nakup-ceny-btn-detail")) {
         var card = btn.closest && btn.closest(".iu-nakup-ceny-provider-card");

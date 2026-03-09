@@ -11073,6 +11073,7 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   border-radius: 18px;
   box-shadow: 0 30px 80px rgba(0,0,0,.25);
   padding: 18px;
+  overflow-x: hidden;
 }
 
 .iuModalHead{
@@ -11110,6 +11111,349 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   padding: 10px 6px;
   color: rgba(11,27,43,.72);
   font-size: 14px;
+}
+
+/* Nákup domů — komunitní horní blok (shell) */
+.iu-nakup-community-top{
+  overflow-x: hidden;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(11,27,43,.1);
+}
+.iu-nakup-community-headline{
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  color: #0b1b2b;
+}
+.iu-nakup-community-subtext{
+  font-size: 13px;
+  color: rgba(11,27,43,.72);
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+.iu-nakup-community-picker-shell{
+  margin-bottom: 12px;
+  position: relative;
+}
+.iu-nakup-community-picker-label{
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(11,27,43,.8);
+  margin-bottom: 4px;
+}
+.iu-nakup-community-picker-input{
+  width: 100%;
+  max-width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid rgba(11,27,43,.2);
+  border-radius: 8px;
+  background: #fff;
+  box-sizing: border-box;
+}
+.iu-nakup-community-picker-listbox{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: 2px;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,.2);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+  z-index: 10;
+}
+.iu-nakup-community-picker-option{
+  padding: 8px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #0b1b2b;
+}
+.iu-nakup-community-picker-option:hover,
+.iu-nakup-community-picker-option.iu-nakup-community-picker-option-active{
+  background: #f3f6fb;
+}
+.iu-nakup-community-picker-fallback{
+  display: block;
+  font-size: 12px;
+  color: rgba(11,27,43,.6);
+  margin-top: 4px;
+  min-height: 1em;
+}
+.iu-nakup-community-mode-panels{
+  min-height: 120px;
+}
+.iu-nakup-community-mode-switcher{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.iu-nakup-community-mode-tab{
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid rgba(11,27,43,.25);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  color: #0b1b2b;
+}
+.iu-nakup-community-mode-tab:hover{
+  background: #f3f6fb;
+}
+.iu-nakup-community-mode-tab.iu-nakup-community-mode-active{
+  background: #1F4B99;
+  border-color: #1F4B99;
+  color: #fff;
+}
+.iu-nakup-community-text-shell{
+  margin-bottom: 12px;
+}
+.iu-nakup-community-textarea{
+  width: 100%;
+  max-width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid rgba(11,27,43,.2);
+  border-radius: 8px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.iu-nakup-community-parser-preview{
+  margin-top: 10px;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid rgba(11,27,43,.1);
+}
+.iu-nakup-community-preview-heading{
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #0b1b2b;
+}
+.iu-nakup-community-parsed-list{
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: rgba(11,27,43,.85);
+}
+.iu-nakup-community-parsed-item{
+  margin-bottom: 4px;
+}
+.iu-nakup-community-parsed-item.iu-nakup-community-needs-review{
+  color: rgba(11,27,43,.75);
+}
+.iu-nakup-community-needs-review-badge{
+  font-size: 11px;
+  color: #b45309;
+  margin-left: 6px;
+  font-weight: 600;
+}
+.iu-nakup-community-confirm-row{
+  margin-top: 12px;
+}
+.iu-nakup-community-btn-confirm{
+  padding: 8px 16px;
+  font-size: 14px;
+  border: 1px solid #1F4B99;
+  border-radius: 8px;
+  background: #1F4B99;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+.iu-nakup-community-btn-confirm:hover{
+  background: #173a7a;
+  border-color: #173a7a;
+}
+.iu-nakup-community-safe-result{
+  margin-top: 12px;
+  padding: 10px;
+  background: #e8f5e9;
+  border-radius: 8px;
+  border: 1px solid rgba(46,125,50,.25);
+}
+.iu-nakup-community-result-text{
+  margin: 0;
+  font-size: 13px;
+  color: #2e7d32;
+  font-weight: 600;
+}
+.iu-nakup-community-my-purchases{
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(11,27,43,.1);
+}
+.iu-nakup-community-my-purchases-heading{
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #0b1b2b;
+}
+.iu-nakup-community-personal-separation{
+  font-size: 12px;
+  color: rgba(11,27,43,.65);
+  margin: 0 0 10px 0;
+}
+.iu-nakup-community-stats{
+  font-size: 13px;
+  color: rgba(11,27,43,.85);
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+.iu-nakup-stats-line{
+  margin: 2px 0;
+}
+.iu-nakup-community-history-list{
+  list-style: none;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+.iu-nakup-community-history-list[hidden]{
+  display: none !important;
+}
+.iu-nakup-history-item{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(11,27,43,.08);
+  font-size: 13px;
+}
+.iu-nakup-history-date{
+  color: rgba(11,27,43,.7);
+  white-space: nowrap;
+}
+.iu-nakup-history-store{
+  flex: 1;
+  min-width: 0;
+}
+.iu-nakup-history-total{
+  font-weight: 600;
+}
+.iu-nakup-community-btn-detail{
+  padding: 4px 10px;
+  font-size: 12px;
+  border: 1px solid rgba(11,27,43,.25);
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+.iu-nakup-community-history-empty{
+  font-size: 13px;
+  color: rgba(11,27,43,.65);
+  padding: 8px 0;
+}
+.iu-nakup-community-history-empty[hidden]{
+  display: none !important;
+}
+.iu-nakup-community-history-detail{
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid rgba(11,27,43,.1);
+}
+.iu-nakup-community-detail-heading{
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+.iu-nakup-community-detail-body{
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+.iu-nakup-community-detail-body p{
+  margin: 4px 0;
+}
+.iu-nakup-detail-items{
+  margin: 8px 0 0 18px;
+  padding: 0;
+}
+.iu-nakup-community-detail-actions{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.iu-nakup-community-btn-delete-one,
+.iu-nakup-community-btn-back{
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.iu-nakup-community-btn-delete-one{
+  border: 1px solid #c62828;
+  background: #ffebee;
+  color: #c62828;
+}
+.iu-nakup-community-btn-back{
+  border: 1px solid rgba(11,27,43,.25);
+  background: #fff;
+  color: #0b1b2b;
+}
+.iu-nakup-community-clear-row{
+  margin-top: 8px;
+}
+.iu-nakup-community-btn-clear{
+  padding: 6px 12px;
+  font-size: 12px;
+  border: 1px solid rgba(11,27,43,.2);
+  border-radius: 6px;
+  background: #fff;
+  color: rgba(11,27,43,.8);
+  cursor: pointer;
+}
+.iu-nakup-community-btn-clear:hover{
+  background: #ffebee;
+  border-color: #c62828;
+  color: #c62828;
+}
+.iu-nakup-community-upload-row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.iu-nakup-community-cta{
+  padding: 8px 14px;
+  font-size: 13px;
+  border: 1px solid rgba(11,27,43,.25);
+  border-radius: 8px;
+  background: #f8fafc;
+  cursor: pointer;
+  color: #0b1b2b;
+}
+.iu-nakup-community-cta:hover{
+  background: #eef2f7;
+}
+.iu-nakup-community-disclaimer{
+  font-size: 12px;
+  color: rgba(11,27,43,.6);
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+.iu-nakup-community-empty-state{
+  font-size: 13px;
+  color: rgba(11,27,43,.65);
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+.iu-nakup-community-empty-state p{
+  margin: 0;
+}
+.iuModalBody > #iuNakupList{
+  margin-top: 4px;
 }
 
 /* === Center Quick Feed (Rychl├ę odkazy detail view) === */
@@ -16754,6 +17098,57 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
 #iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results-summary p {
   margin: 0.25rem 0;
   font-size: 0.95rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results-collapsed {
+  margin-bottom: 1rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-text {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  color: rgba(0,0,0,0.7);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-providers {
+  margin: 0 0 0.75rem 0;
+  padding-left: 1.25rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-cta-links {
+  font-size: 0.9rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-cta-link {
+  margin-right: 0.25rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-why-unknown {
+  padding: 0.4rem 0.75rem;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.25);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-why-content {
+  margin: 0.75rem 0 0 0;
+  font-size: 0.85rem;
+  color: rgba(0,0,0,0.6);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-technical {
+  margin-top: 0.5rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-technical summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: rgba(0,0,0,0.65);
 }
 #iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results-cards {
   display: grid;
