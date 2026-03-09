@@ -8348,7 +8348,18 @@ function buildVideoAsArticleCard(it) {
   function iuNakupBuildCommunityRecord(opts){
     var store = opts.store || {};
     var parsedItems = opts.parsedItems || [];
+    var rawInputType = opts.rawInputType || "pasted_text";
+    if (rawInputType !== "pasted_text" && rawInputType !== "screenshot_cart" && rawInputType !== "receipt_photo") rawInputType = "pasted_text";
     var now = new Date().toISOString();
+    var safeItems = parsedItems.map(function(item) {
+      return {
+        label: item.label,
+        quantity: item.quantity,
+        amount: item.amount,
+        confidence: item.confidence,
+        needsReview: item.needsReview
+      };
+    });
     return {
       storeBrand: store.storeBrand || null,
       storeType: store.storeType || null,
@@ -8358,16 +8369,8 @@ function buildVideoAsArticleCard(it) {
       sourceType: "community",
       submittedAt: now,
       observedAt: now,
-      rawInputType: "pasted_text",
-      parsedItems: parsedItems.map(function(item) {
-        return {
-          label: item.label,
-          quantity: item.quantity,
-          amount: item.amount,
-          confidence: item.confidence,
-          needsReview: item.needsReview
-        };
-      })
+      rawInputType: rawInputType,
+      parsedItems: safeItems
     };
   }
 
@@ -8516,8 +8519,19 @@ function buildVideoAsArticleCard(it) {
     const clearHistoryBtn = topBlock.querySelector("[data-iu=\"clear-history-btn\"]");
     const deletePurchaseBtn = topBlock.querySelector("[data-iu=\"delete-purchase-btn\"]");
     const backToListBtn = topBlock.querySelector("[data-iu=\"back-to-list-btn\"]");
+    const screenshotInput = topBlock.querySelector("[data-iu=\"screenshot-input\"]");
+    const receiptInput = topBlock.querySelector("[data-iu=\"receipt-input\"]");
+    const screenshotPreview = topBlock.querySelector("[data-iu=\"screenshot-preview\"]");
+    const receiptReview = topBlock.querySelector("[data-iu=\"receipt-review\"]");
+    const screenshotPreviewImg = topBlock.querySelector("[data-iu=\"screenshot-preview-img\"]");
+    const receiptPreviewImg = topBlock.querySelector("[data-iu=\"receipt-preview-img\"]");
+    const screenshotConfirmBtn = topBlock.querySelector("[data-iu=\"screenshot-confirm-btn\"]");
+    const receiptConfirmBtn = topBlock.querySelector("[data-iu=\"receipt-confirm-btn\"]");
+    const screenshotFallback = topBlock.querySelector("[data-iu=\"screenshot-fallback\"]");
 
     var selectedStoreKey = null;
+    var screenshotObjectUrl = null;
+    var receiptObjectUrl = null;
     var detailPurchaseId = null;
     var suggestions = [];
     var highlightedIndex = -1;
@@ -8579,6 +8593,105 @@ function buildVideoAsArticleCard(it) {
         });
       });
       applyModePanel("text");
+    }
+
+    if (topBlock.querySelector("[data-iu=\"screenshot-cta\"]")) {
+      topBlock.querySelector("[data-iu=\"screenshot-cta\"]").addEventListener("click", function() {
+        if (screenshotInput) screenshotInput.click();
+      });
+    }
+    if (topBlock.querySelector("[data-iu=\"receipt-cta\"]")) {
+      topBlock.querySelector("[data-iu=\"receipt-cta\"]").addEventListener("click", function() {
+        if (receiptInput) receiptInput.click();
+      });
+    }
+    if (screenshotInput) {
+      screenshotInput.addEventListener("change", function() {
+        var file = (this.files && this.files[0]) ? this.files[0] : null;
+        if (screenshotObjectUrl) { try { URL.revokeObjectURL(screenshotObjectUrl); } catch (_) {} screenshotObjectUrl = null; }
+        if (!file || !file.type || file.type.indexOf("image/") !== 0) {
+          if (screenshotPreview) screenshotPreview.hidden = true;
+          if (screenshotFallback) screenshotFallback.textContent = "Vyberte obrázek.";
+          return;
+        }
+        screenshotObjectUrl = URL.createObjectURL(file);
+        if (screenshotPreviewImg) {
+          screenshotPreviewImg.innerHTML = "";
+          var img = document.createElement("img");
+          img.src = screenshotObjectUrl;
+          img.alt = "Náhled screenshotu";
+          img.setAttribute("data-iu", "screenshot-preview-image");
+          screenshotPreviewImg.appendChild(img);
+        }
+        if (screenshotPreview) screenshotPreview.hidden = false;
+        if (screenshotFallback) screenshotFallback.textContent = "";
+        this.value = "";
+      });
+    }
+    if (receiptInput) {
+      receiptInput.addEventListener("change", function() {
+        var file = (this.files && this.files[0]) ? this.files[0] : null;
+        if (receiptObjectUrl) { try { URL.revokeObjectURL(receiptObjectUrl); } catch (_) {} receiptObjectUrl = null; }
+        if (!file || !file.type || file.type.indexOf("image/") !== 0) {
+          if (receiptReview) receiptReview.hidden = true;
+          return;
+        }
+        receiptObjectUrl = URL.createObjectURL(file);
+        if (receiptPreviewImg) {
+          receiptPreviewImg.innerHTML = "";
+          var img = document.createElement("img");
+          img.src = receiptObjectUrl;
+          img.alt = "Náhled účtenky";
+          img.setAttribute("data-iu", "receipt-preview-image");
+          receiptPreviewImg.appendChild(img);
+        }
+        if (receiptReview) receiptReview.hidden = false;
+        this.value = "";
+      });
+    }
+    function clearScreenshotPreview(){
+      if (screenshotObjectUrl) { try { URL.revokeObjectURL(screenshotObjectUrl); } catch (_) {} screenshotObjectUrl = null; }
+      if (screenshotPreviewImg) screenshotPreviewImg.innerHTML = "";
+      if (screenshotPreview) screenshotPreview.hidden = true;
+    }
+    function clearReceiptPreview(){
+      if (receiptObjectUrl) { try { URL.revokeObjectURL(receiptObjectUrl); } catch (_) {} receiptObjectUrl = null; }
+      if (receiptPreviewImg) receiptPreviewImg.innerHTML = "";
+      if (receiptReview) receiptReview.hidden = true;
+    }
+    if (screenshotConfirmBtn) {
+      screenshotConfirmBtn.addEventListener("click", function() {
+        var storeEntry = selectedStoreKey ? (IU_NAKUP_STORE_REGISTRY.filter(function(e) { return e.storeKey === selectedStoreKey; })[0] || null) : null;
+        var record = iuNakupBuildCommunityRecord({
+          store: storeEntry || {},
+          rawInputType: "screenshot_cart",
+          parsedItems: [{ label: "Screenshot košíku (vyžaduje potvrzení)", quantity: 1, amount: null, confidence: 0.5, needsReview: true }]
+        });
+        IU_NAKUP_COMMUNITY_RECORDS.push(record);
+        try { window.IU_NAKUP_COMMUNITY_RECORDS = IU_NAKUP_COMMUNITY_RECORDS; } catch (_) {}
+        if (safeResult) {
+          safeResult.hidden = false;
+          if (safeResult.querySelector(".iu-nakup-community-result-text")) safeResult.querySelector(".iu-nakup-community-result-text").textContent = "Záznam byl přidán do komunitní vrstvy.";
+        }
+        clearScreenshotPreview();
+      });
+    }
+    if (receiptConfirmBtn) {
+      receiptConfirmBtn.addEventListener("click", function() {
+        var storeEntry = selectedStoreKey ? (IU_NAKUP_STORE_REGISTRY.filter(function(e) { return e.storeKey === selectedStoreKey; })[0] || null) : null;
+        var record = iuNakupBuildCommunityRecord({
+          store: storeEntry || {},
+          rawInputType: "receipt_photo",
+          parsedItems: [{ label: "Účtenka (vyžaduje kontrolu)", quantity: 1, amount: null, confidence: 0, needsReview: true }]
+        });
+        IU_NAKUP_COMMUNITY_RECORDS.push(record);
+        try { window.IU_NAKUP_COMMUNITY_RECORDS = IU_NAKUP_COMMUNITY_RECORDS; } catch (_) {}
+        if (safeResult) {
+          safeResult.hidden = false;
+          if (safeResult.querySelector(".iu-nakup-community-result-text")) safeResult.querySelector(".iu-nakup-community-result-text").textContent = "Záznam byl přidán do komunitní vrstvy.";
+        }
+        clearReceiptPreview();
+      });
     }
 
     var emptyStateEl = topBlock.querySelector("[data-iu=\"empty-state\"] p");
