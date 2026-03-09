@@ -16776,7 +16776,28 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   display: block;
   font-size: 0.8rem;
   color: rgba(0,0,0,0.6);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-discovery-subtitle {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.8rem;
+  color: rgba(0,0,0,0.55);
+  font-weight: 400;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-provider-card[data-badge-tone="safe-positive"] .iu-nakup-ceny-discovery-status { color: #2e7d32; }
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-provider-card[data-badge-tone="caution"] .iu-nakup-ceny-discovery-status { color: #b45309; }
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-provider-card[data-badge-tone="neutral"] .iu-nakup-ceny-discovery-status { color: rgba(0,0,0,0.5); }
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-provider-card[data-badge-tone="info"] .iu-nakup-ceny-discovery-status { color: #1565c0; }
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-audit { margin-bottom: 0.75rem; }
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-rows { margin: 0; }
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-rows dt { margin-top: 0.35rem; margin-bottom: 0.1rem; font-weight: 600; color: rgba(0,0,0,0.7); }
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-rows dd { margin-left: 0; margin-bottom: 0.25rem; color: rgba(0,0,0,0.65); }
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-disclaimer {
+  font-size: 0.8rem;
+  color: rgba(0,0,0,0.55);
+  margin: 0.75rem 0 0 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(0,0,0,0.08);
 }
 #iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-provider-rows {
   margin-bottom: 0.75rem;
