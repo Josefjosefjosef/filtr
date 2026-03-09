@@ -12750,18 +12750,18 @@ body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(s
   background-clip: border-box !important;
 }
 .layout > aside.accordionCol .mindMenu .iu-mailboxes .iu-mmSectionHead .iu-mmSectionLine{
-  background: #0B1F33 !important;
-  background-color: #0B1F33 !important;
-}
-
-/* unify MindMenu divider thickness with Quick Links */
-.accordionCol .mindMenu .iu-mailboxes .iu-mmSectionLine{
+  /* Title stays blue; line must match Quick Links rendering exactly (same variable, no border/shadow/filter) */
   height: 1px !important;
   min-height: 1px !important;
   max-height: 1px !important;
   border: 0 !important;
-  background: #2E3238 !important;
-  background-color: #2E3238 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  background: var(--iu-rightcol-text) !important;
+  background-color: var(--iu-rightcol-text) !important;
 }
 
 /* 3) Pills text blue (#0B1F33), NO gradient/transparent */
