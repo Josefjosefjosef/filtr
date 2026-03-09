@@ -12754,6 +12754,16 @@ body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile :is(s
   background-color: #0B1F33 !important;
 }
 
+/* unify MindMenu divider thickness with Quick Links */
+.accordionCol .mindMenu .iu-mailboxes .iu-mmSectionLine{
+  height: 1px !important;
+  min-height: 1px !important;
+  max-height: 1px !important;
+  border: 0 !important;
+  background: #2E3238 !important;
+  background-color: #2E3238 !important;
+}
+
 /* 3) Pills text blue (#0B1F33), NO gradient/transparent */
 .accordionCol .mindMenu .iu-mailbox-pill,
 .accordionCol .mindMenu .iu-mailbox-row .iu-mailbox-pill{
