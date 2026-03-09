@@ -10548,12 +10548,15 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   width: 100%;
   text-align: center;
 }
+/* Pixel-align: integer height so divider lands on whole pixel (same yFrac as MindMenu) */
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionTopRow{
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   flex-wrap: nowrap;
+  min-height: 32px;
+  box-sizing: border-box;
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionTopRow .iu-mmSectionTitle{
   width: auto;
@@ -10568,10 +10571,11 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   padding-bottom: 0;
   margin-bottom: 0;
 }
-/* divider distance identical to MindMenu */
+/* divider distance identical to MindMenu; snap to pixel grid so visual thickness matches MindMenu (RCA: yFrac 0) */
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead .iu-mmSectionLine{
   margin-top: 10px !important;
   margin-bottom: 0;
+  transform: translateY(-0.671875px); /* snap from subpixel to whole pixel (RCA yFrac 0.671875 → 0) */
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger{
   flex-shrink: 0;
