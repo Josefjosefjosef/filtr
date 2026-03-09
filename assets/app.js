@@ -8264,6 +8264,54 @@ function buildVideoAsArticleCard(it) {
 
   const IU_NAKUP_JSON_PATH = "/assets/data/services-shopping.json";
 
+  /* Store/location registry — no concrete addresses, only brand + city + district/zone */
+  const IU_NAKUP_STORE_BRANDS = ["Lidl", "Kaufland", "Albert", "Tesco", "Billa", "Penny"];
+  const IU_NAKUP_STORE_TYPES = ["supermarket", "hypermarket"];
+  const IU_NAKUP_CITIES = ["Praha", "Brno", "Ostrava", "Plzeň", "Liberec", "Olomouc"];
+  const IU_NAKUP_DISTRICTS_BY_CITY = {
+    "Praha": ["Praha 1", "Praha 2", "Praha 3", "Praha 4", "Praha 5", "Praha 6", "Praha 7", "Praha 8", "Praha 9", "Praha 10"],
+    "Brno": ["Brno-střed", "Brno-sever", "Brno-jih", "Brno-východ", "Brno-západ"],
+    "Ostrava": ["Ostrava-město", "Ostrava-jih", "Ostrava-sever"],
+    "Plzeň": ["Plzeň 1", "Plzeň 2", "Plzeň 3"],
+    "Liberec": ["Liberec I", "Liberec II"],
+    "Olomouc": ["Olomouc-město"]
+  };
+  function iuNakupBuildStoreRegistry(){
+    const out = [];
+    const seen = {};
+    IU_NAKUP_STORE_BRANDS.forEach(function(brand) {
+      IU_NAKUP_CITIES.forEach(function(city) {
+        const districts = IU_NAKUP_DISTRICTS_BY_CITY[city] || [city];
+        districts.forEach(function(districtOrZone) {
+          const storeKey = (brand + "-" + city + "-" + districtOrZone).toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+          if (seen[storeKey]) return;
+          seen[storeKey] = true;
+          out.push({
+            storeKey: storeKey,
+            storeBrand: brand,
+            storeType: IU_NAKUP_STORE_TYPES[0],
+            city: city,
+            districtOrZone: districtOrZone,
+            label: brand + " — " + districtOrZone
+          });
+        });
+      });
+    });
+    return out;
+  }
+  const IU_NAKUP_STORE_REGISTRY = iuNakupBuildStoreRegistry();
+
+  const IU_NAKUP_UI_TEXTS = {
+    pickerPlaceholder: "Napište např. Lidl Praha…",
+    pickerFallbackNoSelection: "Obchod nebo lokace nevybrána",
+    emptyState: "Zatím žádná data. Nástroj je připraven pro budoucí komunitní funkce.",
+    modeText: "Vložit text",
+    modeCart: "Nahrát košík",
+    modeReceipt: "Vyfotit účtenku"
+  };
+
+  const IU_NAKUP_PERSIST_KEY = "iu:nakup:lastStoreKey";
+
   function iuNakupEls(){
     return {
       modal: document.getElementById("iuNakupModal"),
@@ -8321,27 +8369,179 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  function iuNakupCommunityModeInit(){
+  function iuNakupCommunityPickerFilter(query){
+    const q = (query || "").trim().toLowerCase();
+    if (!q) return IU_NAKUP_STORE_REGISTRY.slice(0, 12);
+    const terms = q.split(/\s+/).filter(Boolean);
+    return IU_NAKUP_STORE_REGISTRY.filter(function(entry) {
+      const text = (entry.label || "").toLowerCase() + " " + (entry.storeBrand || "").toLowerCase() + " " + (entry.city || "").toLowerCase() + " " + (entry.districtOrZone || "").toLowerCase();
+      return terms.every(function(term) { return text.indexOf(term) !== -1; });
+    }).slice(0, 12);
+  }
+
+  function iuNakupCommunityInit(){
     const modal = document.getElementById("iuNakupModal");
     const topBlock = modal && modal.querySelector("[data-iu=\"nakup-community-top\"]");
-    const switcher = topBlock && topBlock.querySelector("[data-iu=\"mode-switcher\"]");
-    if (!switcher) return;
-    const tabs = switcher.querySelectorAll(".iu-nakup-community-mode-tab");
-    tabs.forEach(function(tab) {
-      tab.addEventListener("click", function() {
-        tabs.forEach(function(t) {
-          t.classList.remove("iu-nakup-community-mode-active");
-          t.setAttribute("aria-selected", "false");
-        });
-        tab.classList.add("iu-nakup-community-mode-active");
-        tab.setAttribute("aria-selected", "true");
+    if (!topBlock) return;
+    const switcher = topBlock.querySelector("[data-iu=\"mode-switcher\"]");
+    const pickerShell = topBlock.querySelector("[data-iu=\"store-location-picker\"]");
+    const input = topBlock.querySelector(".iu-nakup-community-picker-input");
+    const listbox = topBlock.querySelector(".iu-nakup-community-picker-listbox");
+    const fallbackEl = topBlock.querySelector(".iu-nakup-community-picker-fallback");
+    const textShell = topBlock.querySelector("[data-iu=\"text-input-shell\"]");
+    const uploadRow = topBlock.querySelector(".iu-nakup-community-upload-row");
+    const tabs = topBlock.querySelectorAll(".iu-nakup-community-mode-tab");
+
+    var selectedStoreKey = null;
+    var suggestions = [];
+    var highlightedIndex = -1;
+
+    function setFallbackText(){
+      if (fallbackEl) fallbackEl.textContent = selectedStoreKey ? "" : (IU_NAKUP_UI_TEXTS.pickerFallbackNoSelection || "Obchod nebo lokace nevybrána");
+    }
+    function applyModePanel(mode){
+      if (textShell) textShell.hidden = mode !== "text";
+      if (uploadRow) uploadRow.hidden = mode === "text";
+    }
+    function showListbox(show){
+      if (!listbox) return;
+      listbox.hidden = !show;
+      listbox.setAttribute("aria-expanded", show ? "true" : "false");
+      if (input) input.setAttribute("aria-expanded", show ? "true" : "false");
+      if (!show) highlightedIndex = -1;
+    }
+    function renderListbox(items){
+      if (!listbox) return;
+      listbox.innerHTML = "";
+      items.forEach(function(entry, i) {
+        var opt = document.createElement("div");
+        opt.setAttribute("role", "option");
+        opt.setAttribute("data-store-key", entry.storeKey || "");
+        opt.setAttribute("data-label", entry.label || "");
+        opt.className = "iu-nakup-community-picker-option";
+        opt.id = "iu-nakup-picker-opt-" + i;
+        opt.textContent = entry.label || entry.storeKey || "";
+        listbox.appendChild(opt);
       });
+      suggestions = items;
+    }
+    function selectByKey(storeKey, label){
+      selectedStoreKey = storeKey;
+      if (input) input.value = label || IU_NAKUP_UI_TEXTS.pickerFallbackNoSelection;
+      showListbox(false);
+      setFallbackText();
+      try { sessionStorage.setItem(IU_NAKUP_PERSIST_KEY, storeKey || ""); } catch (_) {}
+    }
+    function selectHighlighted(){
+      if (highlightedIndex >= 0 && suggestions[highlightedIndex]) {
+        var e = suggestions[highlightedIndex];
+        selectByKey(e.storeKey, e.label);
+      }
+    }
+
+    if (tabs && tabs.length) {
+      tabs.forEach(function(tab) {
+        tab.addEventListener("click", function() {
+          var mode = (tab.getAttribute("data-mode") || "text").toLowerCase();
+          tabs.forEach(function(t) {
+            t.classList.remove("iu-nakup-community-mode-active");
+            t.setAttribute("aria-selected", "false");
+          });
+          tab.classList.add("iu-nakup-community-mode-active");
+          tab.setAttribute("aria-selected", "true");
+          applyModePanel(mode);
+        });
+      });
+      applyModePanel("text");
+    }
+
+    var emptyStateEl = topBlock.querySelector("[data-iu=\"empty-state\"] p");
+    if (emptyStateEl && IU_NAKUP_UI_TEXTS.emptyState) emptyStateEl.textContent = IU_NAKUP_UI_TEXTS.emptyState;
+
+    try {
+      var lastKey = sessionStorage.getItem(IU_NAKUP_PERSIST_KEY) || "";
+      var restored = IU_NAKUP_STORE_REGISTRY.filter(function(e) { return e.storeKey === lastKey; })[0];
+      if (restored && input) {
+        selectedStoreKey = restored.storeKey;
+        input.value = restored.label;
+      } else if (input) {
+        input.placeholder = IU_NAKUP_UI_TEXTS.pickerPlaceholder || "Napište např. Lidl Praha…";
+      }
+    } catch (_) {}
+    setFallbackText();
+
+    if (input && listbox) {
+      input.addEventListener("input", function() {
+        var q = input.value.trim();
+        if (!q) {
+          selectedStoreKey = null;
+          setFallbackText();
+          renderListbox(IU_NAKUP_STORE_REGISTRY.slice(0, 12));
+          showListbox(true);
+          highlightedIndex = -1;
+          return;
+        }
+        var hits = iuNakupCommunityPickerFilter(q);
+        renderListbox(hits);
+        showListbox(true);
+        highlightedIndex = hits.length ? 0 : -1;
+        if (highlightedIndex >= 0 && listbox.children[highlightedIndex]) {
+          listbox.children[highlightedIndex].classList.add("iu-nakup-community-picker-option-active");
+        }
+      });
+      input.addEventListener("focus", function() {
+        if (suggestions.length === 0) suggestions = IU_NAKUP_STORE_REGISTRY.slice(0, 12);
+        renderListbox(suggestions);
+        showListbox(true);
+      });
+      input.addEventListener("keydown", function(e) {
+        if (!listbox || listbox.hidden) {
+          if (e.key === "Escape") { e.preventDefault(); showListbox(false); }
+          return;
+        }
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          highlightedIndex = highlightedIndex < suggestions.length - 1 ? highlightedIndex + 1 : 0;
+          listbox.querySelectorAll(".iu-nakup-community-picker-option").forEach(function(el, i) {
+            el.classList.toggle("iu-nakup-community-picker-option-active", i === highlightedIndex);
+          });
+          if (listbox.children[highlightedIndex]) listbox.children[highlightedIndex].scrollIntoView({ block: "nearest" });
+          return;
+        }
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          highlightedIndex = highlightedIndex <= 0 ? suggestions.length - 1 : highlightedIndex - 1;
+          listbox.querySelectorAll(".iu-nakup-community-picker-option").forEach(function(el, i) {
+            el.classList.toggle("iu-nakup-community-picker-option-active", i === highlightedIndex);
+          });
+          if (listbox.children[highlightedIndex]) listbox.children[highlightedIndex].scrollIntoView({ block: "nearest" });
+          return;
+        }
+        if (e.key === "Enter") {
+          e.preventDefault();
+          selectHighlighted();
+          return;
+        }
+        if (e.key === "Escape") {
+          e.preventDefault();
+          showListbox(false);
+        }
+      });
+    }
+    if (listbox) {
+      listbox.addEventListener("click", function(e) {
+        var opt = e.target && e.target.closest && e.target.closest("[data-store-key]");
+        if (opt) selectByKey(opt.getAttribute("data-store-key") || "", opt.getAttribute("data-label") || opt.textContent);
+      });
+    }
+    document.addEventListener("click", function(e) {
+      if (pickerShell && !pickerShell.contains(e.target)) showListbox(false);
     });
   }
 
   function iuNakupDomuInit(){
     const { modal, openBtn, closeBtn } = iuNakupEls();
-    iuNakupCommunityModeInit();
+    iuNakupCommunityInit();
     openBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl('shopping'); } catch {}

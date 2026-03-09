@@ -2922,20 +2922,24 @@ style-src 'self' 'unsafe-inline' https:;
             <h2 class="iu-nakup-community-headline">Komunitní nákupní nástroj</h2>
             <p class="iu-nakup-community-subtext">Sdílení a porovnání nákupů v rámci komunity. Nejde o živé ceny obchodů ani o porovnání košíků v reálném čase. Osobní údaje se neukládají.</p>
             <div class="iu-nakup-community-picker-shell" data-iu="store-location-picker" aria-label="Obchod nebo lokace">
-              <label class="iu-nakup-community-picker-label">Obchod / lokace</label>
-              <select class="iu-nakup-community-picker-select" aria-label="Výběr obchodu nebo lokace" disabled><option>— vyberte později —</option></select>
+              <label class="iu-nakup-community-picker-label" for="iu-nakup-picker-input">Obchod / lokace</label>
+              <input type="text" id="iu-nakup-picker-input" class="iu-nakup-community-picker-input" autocomplete="off" aria-autocomplete="list" aria-controls="iu-nakup-picker-listbox" aria-expanded="false" aria-label="Vyhledat obchod nebo lokaci" />
+              <div id="iu-nakup-picker-listbox" class="iu-nakup-community-picker-listbox" role="listbox" aria-label="Návrhy obchodů" hidden></div>
+              <span class="iu-nakup-community-picker-fallback" data-iu="picker-fallback" aria-live="polite"></span>
             </div>
             <div class="iu-nakup-community-mode-switcher" data-iu="mode-switcher" role="tablist" aria-label="Způsob vstupu">
               <button type="button" role="tab" class="iu-nakup-community-mode-tab iu-nakup-community-mode-active" data-mode="text" aria-selected="true">Vložit text</button>
               <button type="button" role="tab" class="iu-nakup-community-mode-tab" data-mode="cart" aria-selected="false">Nahrát košík</button>
               <button type="button" role="tab" class="iu-nakup-community-mode-tab" data-mode="receipt" aria-selected="false">Vyfotit účtenku</button>
             </div>
-            <div class="iu-nakup-community-text-shell" data-iu="text-input-shell">
-              <textarea class="iu-nakup-community-textarea" rows="4" placeholder="Vložte seznam položek (zatím bez zpracování)…" aria-label="Seznam položek"></textarea>
-            </div>
-            <div class="iu-nakup-community-upload-row">
-              <button type="button" class="iu-nakup-community-cta iu-nakup-community-cta-screenshot" data-iu="screenshot-cta" aria-label="Nahrát screenshot košíku">Screenshot košíku</button>
-              <button type="button" class="iu-nakup-community-cta iu-nakup-community-cta-receipt" data-iu="receipt-cta" aria-label="Nahrát fotku účtenky">Fotka účtenky</button>
+            <div class="iu-nakup-community-mode-panels">
+              <div class="iu-nakup-community-text-shell" data-iu="text-input-shell">
+                <textarea class="iu-nakup-community-textarea" rows="4" placeholder="Vložte seznam položek (zatím bez zpracování)…" aria-label="Seznam položek"></textarea>
+              </div>
+              <div class="iu-nakup-community-upload-row" hidden>
+                <button type="button" class="iu-nakup-community-cta iu-nakup-community-cta-screenshot" data-iu="screenshot-cta" aria-label="Nahrát screenshot košíku">Screenshot košíku</button>
+                <button type="button" class="iu-nakup-community-cta iu-nakup-community-cta-receipt" data-iu="receipt-cta" aria-label="Nahrát fotku účtenky">Fotka účtenky</button>
+              </div>
             </div>
             <p class="iu-nakup-community-disclaimer" data-iu="disclaimer">Toto je komunitní nástroj. Neukládáme osobní údaje. Data nejsou živá z obchodů.</p>
             <div class="iu-nakup-community-empty-state" data-iu="empty-state" role="status">

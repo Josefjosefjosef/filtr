@@ -11134,6 +11134,7 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 }
 .iu-nakup-community-picker-shell{
   margin-bottom: 12px;
+  position: relative;
 }
 .iu-nakup-community-picker-label{
   display: block;
@@ -11142,7 +11143,7 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   color: rgba(11,27,43,.8);
   margin-bottom: 4px;
 }
-.iu-nakup-community-picker-select{
+.iu-nakup-community-picker-input{
   width: 100%;
   max-width: 100%;
   padding: 8px 10px;
@@ -11150,6 +11151,41 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   border: 1px solid rgba(11,27,43,.2);
   border-radius: 8px;
   background: #fff;
+  box-sizing: border-box;
+}
+.iu-nakup-community-picker-listbox{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: 2px;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,.2);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+  z-index: 10;
+}
+.iu-nakup-community-picker-option{
+  padding: 8px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #0b1b2b;
+}
+.iu-nakup-community-picker-option:hover,
+.iu-nakup-community-picker-option.iu-nakup-community-picker-option-active{
+  background: #f3f6fb;
+}
+.iu-nakup-community-picker-fallback{
+  display: block;
+  font-size: 12px;
+  color: rgba(11,27,43,.6);
+  margin-top: 4px;
+  min-height: 1em;
+}
+.iu-nakup-community-mode-panels{
+  min-height: 120px;
 }
 .iu-nakup-community-mode-switcher{
   display: flex;
