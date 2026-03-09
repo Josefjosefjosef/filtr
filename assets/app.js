@@ -8374,6 +8374,56 @@ function buildVideoAsArticleCard(it) {
   var IU_NAKUP_COMMUNITY_RECORDS = [];
   try { if (typeof window !== "undefined") window.IU_NAKUP_COMMUNITY_RECORDS = IU_NAKUP_COMMUNITY_RECORDS; } catch (_) {}
 
+  const IU_NAKUP_PERSONAL_KEY = "iu:nakup:personalHistory";
+
+  function iuNakupGetPersonalHistory(){
+    try {
+      var raw = localStorage.getItem(IU_NAKUP_PERSONAL_KEY);
+      if (!raw) return [];
+      var arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch (_) { return []; }
+  }
+
+  function iuNakupSavePersonalHistory(arr){
+    try {
+      localStorage.setItem(IU_NAKUP_PERSONAL_KEY, JSON.stringify(Array.isArray(arr) ? arr : []));
+    } catch (_) {}
+  }
+  try { if (typeof window !== "undefined") window.iuNakupGetPersonalHistory = iuNakupGetPersonalHistory; } catch (_) {}
+
+  function iuNakupBuildPersonalRecord(opts){
+    var store = opts.store || {};
+    var parsedItems = opts.parsedItems || [];
+    var now = new Date();
+    var iso = now.toISOString();
+    var totalAmountKnown = null;
+    var sum = 0;
+    var allKnown = true;
+    for (var i = 0; i < parsedItems.length; i++) {
+      var a = parsedItems[i].amount;
+      if (a != null) sum += a * (parsedItems[i].quantity || 1);
+      else allKnown = false;
+    }
+    if (parsedItems.length && allKnown) totalAmountKnown = Math.round(sum * 100) / 100;
+    return {
+      id: "iu-nakup-" + now.getTime() + "-" + Math.random().toString(36).slice(2, 9),
+      storeBrand: store.storeBrand || null,
+      storeType: store.storeType || null,
+      city: store.city || null,
+      districtOrZone: store.districtOrZone || null,
+      storeKey: store.storeKey || null,
+      purchaseDate: iso.slice(0, 10),
+      purchaseTime: iso.slice(11, 19),
+      submittedAt: iso,
+      totalAmountKnown: totalAmountKnown,
+      parsedItems: parsedItems.map(function(item) {
+        return { label: item.label, quantity: item.quantity, amount: item.amount, confidence: item.confidence, needsReview: item.needsReview };
+      }),
+      parsedItemsCount: parsedItems.length
+    };
+  }
+
   function iuNakupEls(){
     return {
       modal: document.getElementById("iuNakupModal"),
@@ -8458,8 +8508,17 @@ function buildVideoAsArticleCard(it) {
     const parsedList = topBlock.querySelector("[data-iu=\"parsed-list\"]");
     const confirmBtn = topBlock.querySelector("[data-iu=\"confirm-share-btn\"]");
     const safeResult = topBlock.querySelector("[data-iu=\"safe-result\"]");
+    const myPurchasesList = topBlock.querySelector("[data-iu=\"my-purchases-list\"]");
+    const myPurchasesEmpty = topBlock.querySelector("[data-iu=\"my-purchases-empty\"]");
+    const purchaseStats = topBlock.querySelector("[data-iu=\"purchase-stats\"]");
+    const purchaseDetail = topBlock.querySelector("[data-iu=\"purchase-detail\"]");
+    const purchaseDetailBody = topBlock.querySelector("[data-iu=\"purchase-detail-body\"]");
+    const clearHistoryBtn = topBlock.querySelector("[data-iu=\"clear-history-btn\"]");
+    const deletePurchaseBtn = topBlock.querySelector("[data-iu=\"delete-purchase-btn\"]");
+    const backToListBtn = topBlock.querySelector("[data-iu=\"back-to-list-btn\"]");
 
     var selectedStoreKey = null;
+    var detailPurchaseId = null;
     var suggestions = [];
     var highlightedIndex = -1;
 
@@ -8636,6 +8695,120 @@ function buildVideoAsArticleCard(it) {
       textarea.addEventListener("input", runParserAndPreview);
       textarea.addEventListener("change", runParserAndPreview);
     }
+    function renderPurchaseStats(history){
+      if (!purchaseStats) return;
+      if (!history.length) { purchaseStats.innerHTML = ""; purchaseStats.hidden = true; return; }
+      purchaseStats.hidden = false;
+      var now = Date.now();
+      var day = 24 * 60 * 60 * 1000;
+      var totalKnown = 0;
+      var countWithAmount = 0;
+      var sum7 = 0;
+      var sum30 = 0;
+      for (var i = 0; i < history.length; i++) {
+        var h = history[i];
+        var t = (h.submittedAt && new Date(h.submittedAt).getTime()) || 0;
+        if (h.totalAmountKnown != null) { totalKnown += h.totalAmountKnown; countWithAmount++; }
+        if (t && now - t <= 7 * day) sum7 += h.totalAmountKnown != null ? h.totalAmountKnown : 0;
+        if (t && now - t <= 30 * day) sum30 += h.totalAmountKnown != null ? h.totalAmountKnown : 0;
+      }
+      var last = history[0];
+      var lastDate = last && last.purchaseDate ? last.purchaseDate : "—";
+      var lastTime = last && last.purchaseTime ? last.purchaseTime : "—";
+      var storeCounts = {};
+      for (var j = 0; j < history.length; j++) {
+        var k = history[j].storeBrand || history[j].storeKey || "—";
+        storeCounts[k] = (storeCounts[k] || 0) + 1;
+      }
+      var mostFreq = "";
+      var maxC = 0;
+      for (var key in storeCounts) { if (storeCounts[key] > maxC) { maxC = storeCounts[key]; mostFreq = key; } }
+      var avg = countWithAmount > 0 ? Math.round((totalKnown / countWithAmount) * 100) / 100 : null;
+      purchaseStats.innerHTML = "<p class=\"iu-nakup-stats-line\">Počet nákupů: " + history.length + "</p>" +
+        (totalKnown > 0 ? "<p class=\"iu-nakup-stats-line\">Utraceno celkem: " + totalKnown + " Kč</p>" : "") +
+        (avg != null ? "<p class=\"iu-nakup-stats-line\">Průměrný nákup: " + avg + " Kč</p>" : "") +
+        (sum7 > 0 ? "<p class=\"iu-nakup-stats-line\">Utraceno 7 dní: " + sum7 + " Kč</p>" : "") +
+        (sum30 > 0 ? "<p class=\"iu-nakup-stats-line\">Utraceno 30 dní: " + sum30 + " Kč</p>" : "") +
+        "<p class=\"iu-nakup-stats-line\">Poslední nákup: " + lastDate + " " + lastTime + "</p>" +
+        (mostFreq && mostFreq !== "—" ? "<p class=\"iu-nakup-stats-line\">Nejčastější obchod: " + mostFreq + "</p>" : "");
+    }
+    function renderMyPurchases(){
+      var history = iuNakupGetPersonalHistory();
+      renderPurchaseStats(history);
+      if (!myPurchasesList || !myPurchasesEmpty) return;
+      myPurchasesList.innerHTML = "";
+      if (!history.length) {
+        myPurchasesList.hidden = true;
+        myPurchasesEmpty.hidden = false;
+        if (purchaseDetail) purchaseDetail.hidden = true;
+        return;
+      }
+      myPurchasesEmpty.hidden = true;
+      myPurchasesList.hidden = false;
+      history.forEach(function(p) {
+        var li = document.createElement("li");
+        li.className = "iu-nakup-history-item";
+        li.setAttribute("data-purchase-id", p.id || "");
+        var label = (p.storeBrand || p.storeKey || "—") + (p.districtOrZone ? " " + p.districtOrZone : "");
+        var totalStr = p.totalAmountKnown != null ? p.totalAmountKnown + " Kč" : "—";
+        li.innerHTML = "<span class=\"iu-nakup-history-date\">" + (p.purchaseDate || "") + " " + (p.purchaseTime || "") + "</span> " +
+          "<span class=\"iu-nakup-history-store\">" + escapeHtml(label) + "</span> " +
+          "<span class=\"iu-nakup-history-total\">" + totalStr + "</span> " +
+          "<button type=\"button\" class=\"iu-nakup-community-btn-detail\" data-iu=\"open-detail\" data-purchase-id=\"" + escapeHtml(p.id || "") + "\">Detail</button>";
+        myPurchasesList.appendChild(li);
+      });
+    }
+    function openDetail(id){
+      var history = iuNakupGetPersonalHistory();
+      var p = history.filter(function(h) { return h.id === id; })[0];
+      if (!p || !purchaseDetail || !purchaseDetailBody) return;
+      detailPurchaseId = id;
+      var label = (p.storeBrand || "—") + (p.city ? " " + p.city : "") + (p.districtOrZone ? " " + p.districtOrZone : "");
+      var totalStr = p.totalAmountKnown != null ? p.totalAmountKnown + " Kč" : "neznámo (údaj nebyl rozpoznán)";
+      var rows = "<p><strong>Obchod / lokace:</strong> " + escapeHtml(label) + "</p><p><strong>Datum:</strong> " + (p.purchaseDate || "—") + " <strong>Čas:</strong> " + (p.purchaseTime || "—") + "</p><p><strong>Celkem:</strong> " + totalStr + "</p>";
+      if (p.parsedItems && p.parsedItems.length) {
+        rows += "<ul class=\"iu-nakup-detail-items\">";
+        p.parsedItems.forEach(function(item) {
+          rows += "<li>" + escapeHtml(item.label || "") + (item.quantity > 1 ? " × " + item.quantity : "") + (item.amount != null ? " — " + item.amount + " Kč" : "") + "</li>";
+        });
+        rows += "</ul>";
+      }
+      purchaseDetailBody.innerHTML = rows;
+      purchaseDetail.hidden = false;
+      if (myPurchasesList) myPurchasesList.hidden = true;
+      if (myPurchasesEmpty) myPurchasesEmpty.hidden = true;
+    }
+    function closeDetail(){
+      detailPurchaseId = null;
+      if (purchaseDetail) purchaseDetail.hidden = true;
+      renderMyPurchases();
+    }
+    if (myPurchasesList) {
+      myPurchasesList.addEventListener("click", function(e) {
+        var btn = e.target && e.target.closest && e.target.closest("[data-iu=\"open-detail\"]");
+        if (btn) openDetail(btn.getAttribute("data-purchase-id") || "");
+      });
+    }
+    if (deletePurchaseBtn && purchaseDetail) {
+      deletePurchaseBtn.addEventListener("click", function() {
+        if (!detailPurchaseId) return;
+        var history = iuNakupGetPersonalHistory().filter(function(h) { return h.id !== detailPurchaseId; });
+        iuNakupSavePersonalHistory(history);
+        closeDetail();
+      });
+    }
+    if (backToListBtn) backToListBtn.addEventListener("click", closeDetail);
+    if (clearHistoryBtn) {
+      clearHistoryBtn.addEventListener("click", function() {
+        if (confirm("Opravdu smazat celou osobní historii?")) {
+          iuNakupSavePersonalHistory([]);
+          closeDetail();
+          renderMyPurchases();
+        }
+      });
+    }
+    renderMyPurchases();
+
     if (confirmBtn) {
       confirmBtn.addEventListener("click", function() {
         var raw = textarea ? textarea.value.trim() : "";
@@ -8647,6 +8820,11 @@ function buildVideoAsArticleCard(it) {
         });
         IU_NAKUP_COMMUNITY_RECORDS.push(record);
         try { window.IU_NAKUP_COMMUNITY_RECORDS = IU_NAKUP_COMMUNITY_RECORDS; } catch (_) {}
+        var personalRecord = iuNakupBuildPersonalRecord({ store: storeEntry || {}, parsedItems: items });
+        var personalHistory = iuNakupGetPersonalHistory();
+        personalHistory.unshift(personalRecord);
+        iuNakupSavePersonalHistory(personalHistory);
+        renderMyPurchases();
         if (safeResult) {
           safeResult.hidden = false;
           if (safeResult.querySelector(".iu-nakup-community-result-text")) safeResult.querySelector(".iu-nakup-community-result-text").textContent = "Záznam byl přidán do komunitní vrstvy.";

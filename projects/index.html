@@ -2951,7 +2951,27 @@ style-src 'self' 'unsafe-inline' https:;
                 <button type="button" class="iu-nakup-community-cta iu-nakup-community-cta-receipt" data-iu="receipt-cta" aria-label="Nahrát fotku účtenky">Fotka účtenky</button>
               </div>
             </div>
-            <p class="iu-nakup-community-disclaimer" data-iu="disclaimer">Toto je komunitní nástroj. Neukládáme osobní údaje. Data nejsou živá z obchodů.</p>
+            <p class="iu-nakup-community-disclaimer" data-iu="disclaimer">Toto je komunitní nástroj. Osobní historie jen na tomto zařízení. Data nejsou živá z obchodů.</p>
+            <div class="iu-nakup-community-my-purchases" data-iu="my-purchases-section">
+              <h3 class="iu-nakup-community-my-purchases-heading">Moje nákupy</h3>
+              <p class="iu-nakup-community-personal-separation" data-iu="community-personal-separation">Osobní historie je oddělená od komunitní vrstvy. Ukládá se pouze lokálně na tomto zařízení.</p>
+              <div class="iu-nakup-community-stats" data-iu="purchase-stats" aria-label="Statistiky nákupů"></div>
+              <ul class="iu-nakup-community-history-list" data-iu="my-purchases-list" aria-label="Seznam nákupů"></ul>
+              <div class="iu-nakup-community-history-empty" data-iu="my-purchases-empty" role="status">
+                <p>Zatím žádné nákupy v osobní historii.</p>
+              </div>
+              <div class="iu-nakup-community-history-detail" data-iu="purchase-detail" hidden aria-label="Detail nákupu">
+                <h4 class="iu-nakup-community-detail-heading">Detail nákupu</h4>
+                <div class="iu-nakup-community-detail-body" data-iu="purchase-detail-body"></div>
+                <div class="iu-nakup-community-detail-actions">
+                  <button type="button" class="iu-nakup-community-btn-delete-one" data-iu="delete-purchase-btn">Smazat nákup</button>
+                  <button type="button" class="iu-nakup-community-btn-back" data-iu="back-to-list-btn">Zpět na seznam</button>
+                </div>
+              </div>
+              <div class="iu-nakup-community-clear-row">
+                <button type="button" class="iu-nakup-community-btn-clear" data-iu="clear-history-btn" aria-label="Smazat celou historii">Smazat celou historii</button>
+              </div>
+            </div>
             <div class="iu-nakup-community-empty-state" data-iu="empty-state" role="status">
               <p>Zatím žádná data. Nástroj je připraven pro budoucí komunitní funkce.</p>
             </div>
