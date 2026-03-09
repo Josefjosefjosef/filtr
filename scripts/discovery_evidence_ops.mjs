@@ -153,6 +153,8 @@ async function main() {
     lastCheckedSeparatedFromLastReviewed: true,
     safeDowngradeGuardTriggered: true,
     workflowAutoCommitDetected: false,
+    workflowAutoPushDetected: false,
+    workflowAutoPrDetected: false,
     sampleSourceMetadata,
     runAt: new Date().toISOString(),
   };
