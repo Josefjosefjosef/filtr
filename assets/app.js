@@ -8312,6 +8312,68 @@ function buildVideoAsArticleCard(it) {
 
   const IU_NAKUP_PERSIST_KEY = "iu:nakup:lastStoreKey";
 
+  function iuNakupParsePastedText(rawText){
+    var lines = (rawText || "").split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+    var out = [];
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      var quantity = 1;
+      var amount = null;
+      var label = line;
+      var m = line.match(/^(\d+)\s*(?:x|ks)?\s*(.+)$/);
+      if (m) {
+        quantity = parseInt(m[1], 10) || 1;
+        label = m[2].trim();
+      }
+      var priceMatch = label.match(/\s+(\d+(?:[.,]\d{1,2})?)\s*(?:Kč|,-|kc)?\s*$/i);
+      if (priceMatch) {
+        amount = parseFloat(priceMatch[1].replace(",", ".")) || null;
+        label = label.slice(0, label.length - priceMatch[0].length).trim();
+      }
+      var needsReview = !label || (amount === null && /^\d+/.test(lines[i]));
+      var confidence = needsReview ? 0.5 : (amount !== null && label ? 0.9 : 0.6);
+      var normalizedLabel = (label || "").toLowerCase().replace(/\s+/g, " ").trim();
+      out.push({
+        label: normalizedLabel || (line || "").slice(0, 80),
+        quantity: quantity,
+        amount: amount,
+        confidence: confidence,
+        needsReview: needsReview,
+        fingerprint: (normalizedLabel + "|" + quantity + "|" + (amount != null ? amount : "")).slice(0, 120)
+      });
+    }
+    return out;
+  }
+
+  function iuNakupBuildCommunityRecord(opts){
+    var store = opts.store || {};
+    var parsedItems = opts.parsedItems || [];
+    var now = new Date().toISOString();
+    return {
+      storeBrand: store.storeBrand || null,
+      storeType: store.storeType || null,
+      city: store.city || null,
+      districtOrZone: store.districtOrZone || null,
+      storeKey: store.storeKey || null,
+      sourceType: "community",
+      submittedAt: now,
+      observedAt: now,
+      rawInputType: "pasted_text",
+      parsedItems: parsedItems.map(function(item) {
+        return {
+          label: item.label,
+          quantity: item.quantity,
+          amount: item.amount,
+          confidence: item.confidence,
+          needsReview: item.needsReview
+        };
+      })
+    };
+  }
+
+  var IU_NAKUP_COMMUNITY_RECORDS = [];
+  try { if (typeof window !== "undefined") window.IU_NAKUP_COMMUNITY_RECORDS = IU_NAKUP_COMMUNITY_RECORDS; } catch (_) {}
+
   function iuNakupEls(){
     return {
       modal: document.getElementById("iuNakupModal"),
@@ -8391,6 +8453,11 @@ function buildVideoAsArticleCard(it) {
     const textShell = topBlock.querySelector("[data-iu=\"text-input-shell\"]");
     const uploadRow = topBlock.querySelector(".iu-nakup-community-upload-row");
     const tabs = topBlock.querySelectorAll(".iu-nakup-community-mode-tab");
+    const textarea = topBlock.querySelector("[data-iu=\"pasted-text-input\"]");
+    const parserPreview = topBlock.querySelector("[data-iu=\"parser-preview\"]");
+    const parsedList = topBlock.querySelector("[data-iu=\"parsed-list\"]");
+    const confirmBtn = topBlock.querySelector("[data-iu=\"confirm-share-btn\"]");
+    const safeResult = topBlock.querySelector("[data-iu=\"safe-result\"]");
 
     var selectedStoreKey = null;
     var suggestions = [];
@@ -8537,6 +8604,58 @@ function buildVideoAsArticleCard(it) {
     document.addEventListener("click", function(e) {
       if (pickerShell && !pickerShell.contains(e.target)) showListbox(false);
     });
+
+    function renderParserPreview(items){
+      if (!parsedList) return;
+      parsedList.innerHTML = "";
+      items.forEach(function(item) {
+        var li = document.createElement("li");
+        li.className = "iu-nakup-community-parsed-item" + (item.needsReview ? " iu-nakup-community-needs-review" : "");
+        var text = (item.label || "") + (item.quantity > 1 ? " × " + item.quantity : "") + (item.amount != null ? " — " + item.amount + " Kč" : "");
+        li.textContent = text;
+        if (item.needsReview) {
+          var badge = document.createElement("span");
+          badge.className = "iu-nakup-community-needs-review-badge";
+          badge.setAttribute("aria-label", "Položka vyžaduje kontrolu");
+          badge.textContent = "kontrola";
+          li.appendChild(document.createTextNode(" "));
+          li.appendChild(badge);
+        }
+        parsedList.appendChild(li);
+      });
+    }
+    function runParserAndPreview(){
+      var raw = textarea ? textarea.value.trim() : "";
+      var items = iuNakupParsePastedText(raw);
+      if (parserPreview) {
+        parserPreview.hidden = items.length === 0;
+        renderParserPreview(items);
+      }
+    }
+    if (textarea) {
+      textarea.addEventListener("input", runParserAndPreview);
+      textarea.addEventListener("change", runParserAndPreview);
+    }
+    if (confirmBtn) {
+      confirmBtn.addEventListener("click", function() {
+        var raw = textarea ? textarea.value.trim() : "";
+        var items = iuNakupParsePastedText(raw);
+        var storeEntry = selectedStoreKey ? (IU_NAKUP_STORE_REGISTRY.filter(function(e) { return e.storeKey === selectedStoreKey; })[0] || null) : null;
+        var record = iuNakupBuildCommunityRecord({
+          store: storeEntry || {},
+          parsedItems: items
+        });
+        IU_NAKUP_COMMUNITY_RECORDS.push(record);
+        try { window.IU_NAKUP_COMMUNITY_RECORDS = IU_NAKUP_COMMUNITY_RECORDS; } catch (_) {}
+        if (safeResult) {
+          safeResult.hidden = false;
+          if (safeResult.querySelector(".iu-nakup-community-result-text")) safeResult.querySelector(".iu-nakup-community-result-text").textContent = "Záznam byl přidán do komunitní vrstvy.";
+        }
+        if (parserPreview) parserPreview.hidden = true;
+        if (parsedList) parsedList.innerHTML = "";
+        if (textarea) textarea.value = "";
+      });
+    }
   }
 
   function iuNakupDomuInit(){

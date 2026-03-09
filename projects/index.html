@@ -2934,7 +2934,17 @@ style-src 'self' 'unsafe-inline' https:;
             </div>
             <div class="iu-nakup-community-mode-panels">
               <div class="iu-nakup-community-text-shell" data-iu="text-input-shell">
-                <textarea class="iu-nakup-community-textarea" rows="4" placeholder="Vložte seznam položek (zatím bez zpracování)…" aria-label="Seznam položek"></textarea>
+                <textarea class="iu-nakup-community-textarea" rows="4" placeholder="Vložte seznam položek, např. mléko 30 Kč, 2x chleba 25 Kč" aria-label="Seznam položek" data-iu="pasted-text-input"></textarea>
+                <div class="iu-nakup-community-parser-preview" data-iu="parser-preview" hidden aria-label="Náhled rozpoznaných položek">
+                  <h3 class="iu-nakup-community-preview-heading">Náhled</h3>
+                  <ul class="iu-nakup-community-parsed-list" data-iu="parsed-list" aria-label="Rozpoznané položky"></ul>
+                </div>
+                <div class="iu-nakup-community-confirm-row">
+                  <button type="button" class="iu-nakup-community-btn-confirm" data-iu="confirm-share-btn" aria-label="Potvrdit a sdílet do komunitní vrstvy">Potvrdit a sdílet</button>
+                </div>
+                <div class="iu-nakup-community-safe-result" data-iu="safe-result" role="status" hidden>
+                  <p class="iu-nakup-community-result-text">Záznam byl přidán do komunitní vrstvy.</p>
+                </div>
               </div>
               <div class="iu-nakup-community-upload-row" hidden>
                 <button type="button" class="iu-nakup-community-cta iu-nakup-community-cta-screenshot" data-iu="screenshot-cta" aria-label="Nahrát screenshot košíku">Screenshot košíku</button>
