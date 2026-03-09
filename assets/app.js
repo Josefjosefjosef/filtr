@@ -9650,7 +9650,32 @@ function buildVideoAsArticleCard(it) {
     return { city: city, postalCode: pc, region: region, localityBucket: localityBucket };
   }
 
-  /** Discovery evidence registry: each rule has sourceType, sourceNote, confidenceLevel, lastReviewedAt, staleAfterDays; optional reviewStatus, reviewedBy, reviewNotes, coverageConfidenceReason, coverageScopeDescription. relevant_for_address only from strong + trusted. */
+  /** Allowlisted official-source registry for automation. lastCheckedAt = when automation checked; lastReviewedAt = when human approved (on rules). No pricing, no basket, no scraping. */
+  var IU_NAKUP_DISCOVERY_SOURCE_REGISTRY = [
+    { sourceId: "rohlik_storefront", providerId: "rohlik", sourceKind: "official_storefront", sourceUrl: "https://www.rohlik.cz/", allowlisted: true, publicOrOfficial: true, monitorMode: "availability_only", cadenceClass: "high_volatility", checkEveryHours: 72, sourcePurpose: "storefront availability", legalMode: "official_docs_monitoring", autoMonitorEnabled: true },
+    { sourceId: "tesco_storefront", providerId: "tesco", sourceKind: "official_storefront", sourceUrl: "https://nakup.itesco.cz/", allowlisted: true, publicOrOfficial: true, monitorMode: "availability_only", cadenceClass: "high_volatility", checkEveryHours: 72, sourcePurpose: "storefront availability", legalMode: "official_docs_monitoring", autoMonitorEnabled: true },
+    { sourceId: "kosik_storefront", providerId: "kosik", sourceKind: "official_storefront", sourceUrl: "https://www.kosik.cz/", allowlisted: true, publicOrOfficial: true, monitorMode: "availability_only", cadenceClass: "high_volatility", checkEveryHours: 72, sourcePurpose: "storefront availability", legalMode: "official_docs_monitoring", autoMonitorEnabled: true },
+    { sourceId: "wolt_storefront", providerId: "wolt", sourceKind: "official_storefront", sourceUrl: "https://market.wolt.com/cs/cze", allowlisted: true, publicOrOfficial: true, monitorMode: "availability_only", cadenceClass: "high_volatility", checkEveryHours: 72, sourcePurpose: "storefront availability", legalMode: "official_docs_monitoring", autoMonitorEnabled: true },
+  ];
+
+  /** Cadence: hours between checks. high_volatility=72h, medium=168h (7d), low=336h (14d). */
+  function iuNakupGetCadencePlan() {
+    return { high_volatility: 72, medium: 168, low: 336 };
+  }
+  function iuNakupIsSourceDue(source, now) {
+    if (!source || source.allowlisted !== true) return false;
+    var next = source.nextCheckAt;
+    if (next == null) return true;
+    var t = now != null ? now : Date.now();
+    return t >= next;
+  }
+  function iuNakupComputeNextCheckAt(source, now, result) {
+    var t = now != null ? now : Date.now();
+    var hours = source.checkEveryHours || (iuNakupGetCadencePlan()[source.cadenceClass] || 72);
+    return t + hours * 3600000;
+  }
+
+  /** Discovery evidence registry: each rule has sourceType, sourceNote, confidenceLevel, lastReviewedAt (human review), staleAfterDays; optional lastCheckedAt (automation only, in ops report). relevant_for_address only from strong + trusted; stale/changed/blocked -> safe downgrade to unknown_for_address. */
   var IU_NAKUP_PROVIDER_DISCOVERY_RULES = [
     { providerId: "rohlik", addressClass: "prague", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha Prahy (známá)", evidenceCode: "RULE_PRAGUE_KNOWN", sourceType: "manual", sourceNote: "Rohlík doručuje Praha; veřejné info.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180, reviewStatus: "reviewed", reviewedBy: "infouzel-maintainer", reviewNotes: "coverage verified via public presence", coverageConfidenceReason: "known service area", coverageScopeDescription: "Praha and close suburbs" },
     { providerId: "rohlik", addressClass: "suburban", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha okolí Prahy (známá)", evidenceCode: "RULE_SUBURBAN_KNOWN", sourceType: "manual", sourceNote: "Středočeský kraj okolí Prahy.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
@@ -9812,7 +9837,16 @@ function buildVideoAsArticleCard(it) {
     return list;
   }
 
-  try { if (typeof window !== "undefined") { window.iuNakupCollectStaleEvidence = iuNakupCollectStaleEvidence; window.iuNakupRefreshCoverageEvidence = iuNakupRefreshCoverageEvidence; } } catch(e){}
+  try {
+    if (typeof window !== "undefined") {
+      window.iuNakupCollectStaleEvidence = iuNakupCollectStaleEvidence;
+      window.iuNakupRefreshCoverageEvidence = iuNakupRefreshCoverageEvidence;
+      window.iuNakupGetCadencePlan = iuNakupGetCadencePlan;
+      window.iuNakupIsSourceDue = iuNakupIsSourceDue;
+      window.iuNakupComputeNextCheckAt = iuNakupComputeNextCheckAt;
+      window.iuNakupDiscoverySourceRegistry = function () { return IU_NAKUP_DISCOVERY_SOURCE_REGISTRY || []; };
+    }
+  } catch (e) {}
 
   var IU_NAKUP_PROVIDERS = [
     { id: "rohlik", name: "Rohlík", url: "https://www.rohlik.cz/" },
