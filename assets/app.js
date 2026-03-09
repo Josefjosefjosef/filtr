@@ -8321,8 +8321,27 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuNakupCommunityModeInit(){
+    const modal = document.getElementById("iuNakupModal");
+    const topBlock = modal && modal.querySelector("[data-iu=\"nakup-community-top\"]");
+    const switcher = topBlock && topBlock.querySelector("[data-iu=\"mode-switcher\"]");
+    if (!switcher) return;
+    const tabs = switcher.querySelectorAll(".iu-nakup-community-mode-tab");
+    tabs.forEach(function(tab) {
+      tab.addEventListener("click", function() {
+        tabs.forEach(function(t) {
+          t.classList.remove("iu-nakup-community-mode-active");
+          t.setAttribute("aria-selected", "false");
+        });
+        tab.classList.add("iu-nakup-community-mode-active");
+        tab.setAttribute("aria-selected", "true");
+      });
+    });
+  }
+
   function iuNakupDomuInit(){
     const { modal, openBtn, closeBtn } = iuNakupEls();
+    iuNakupCommunityModeInit();
     openBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl('shopping'); } catch {}

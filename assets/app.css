@@ -11073,6 +11073,7 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   border-radius: 18px;
   box-shadow: 0 30px 80px rgba(0,0,0,.25);
   padding: 18px;
+  overflow-x: hidden;
 }
 
 .iuModalHead{
@@ -11110,6 +11111,119 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   padding: 10px 6px;
   color: rgba(11,27,43,.72);
   font-size: 14px;
+}
+
+/* Nákup domů — komunitní horní blok (shell) */
+.iu-nakup-community-top{
+  overflow-x: hidden;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(11,27,43,.1);
+}
+.iu-nakup-community-headline{
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  color: #0b1b2b;
+}
+.iu-nakup-community-subtext{
+  font-size: 13px;
+  color: rgba(11,27,43,.72);
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+.iu-nakup-community-picker-shell{
+  margin-bottom: 12px;
+}
+.iu-nakup-community-picker-label{
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(11,27,43,.8);
+  margin-bottom: 4px;
+}
+.iu-nakup-community-picker-select{
+  width: 100%;
+  max-width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid rgba(11,27,43,.2);
+  border-radius: 8px;
+  background: #fff;
+}
+.iu-nakup-community-mode-switcher{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.iu-nakup-community-mode-tab{
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid rgba(11,27,43,.25);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  color: #0b1b2b;
+}
+.iu-nakup-community-mode-tab:hover{
+  background: #f3f6fb;
+}
+.iu-nakup-community-mode-tab.iu-nakup-community-mode-active{
+  background: #1F4B99;
+  border-color: #1F4B99;
+  color: #fff;
+}
+.iu-nakup-community-text-shell{
+  margin-bottom: 12px;
+}
+.iu-nakup-community-textarea{
+  width: 100%;
+  max-width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid rgba(11,27,43,.2);
+  border-radius: 8px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.iu-nakup-community-upload-row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.iu-nakup-community-cta{
+  padding: 8px 14px;
+  font-size: 13px;
+  border: 1px solid rgba(11,27,43,.25);
+  border-radius: 8px;
+  background: #f8fafc;
+  cursor: pointer;
+  color: #0b1b2b;
+}
+.iu-nakup-community-cta:hover{
+  background: #eef2f7;
+}
+.iu-nakup-community-disclaimer{
+  font-size: 12px;
+  color: rgba(11,27,43,.6);
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+.iu-nakup-community-empty-state{
+  font-size: 13px;
+  color: rgba(11,27,43,.65);
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+.iu-nakup-community-empty-state p{
+  margin: 0;
+}
+.iuModalBody > #iuNakupList{
+  margin-top: 4px;
 }
 
 /* === Center Quick Feed (Rychl├ę odkazy detail view) === */
