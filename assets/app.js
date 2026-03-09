@@ -4440,14 +4440,14 @@ function buildVideoAsArticleCard(it) {
       const notFound = document.getElementById("iuTopbarSearchNotFound");
       const googleBtn = document.getElementById("iuTopbarSearchGoogleBtn");
 
-      if (!btn || !overlay || !form || !input || !dayInfo) return;
+      if (!btn || !overlay || !form || !input) return;
 
       let isOpen = false;
       let scrollHidden = false;
       let scrollTimer = 0;
 
       function setDayHidden(hidden){
-        try{ dayInfo.classList.toggle("iuTopbarDayInfo--hidden", !!hidden); }catch{}
+        try{ if (dayInfo) dayInfo.classList.toggle("iuTopbarDayInfo--hidden", !!hidden); }catch{}
       }
 
       function setSearchOpen(open){
@@ -4502,13 +4502,13 @@ function buildVideoAsArticleCard(it) {
 
       function updateDayInfo(){
         try{
+          if (!dayInfo) return;
           // v3: topbar today is a structured component; keep its children intact.
-          if (dayInfo && dayInfo.id === "iuTopbarToday") return;
+          if (dayInfo.id === "iuTopbarToday") return;
           const dateStr = fmtDateNow();
           const namedayStr = readNamedayFromUI();
           const full = namedayStr ? `${dateStr} · ${namedayStr}` : dateStr;
           dayInfo.textContent = full;
-          // tooltip: always keep full text available even when CSS truncates
           try{ dayInfo.setAttribute("title", full); }catch{}
         }catch{}
       }

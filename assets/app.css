@@ -15775,16 +15775,12 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   font-size: calc(13px * 1.7) !important;
 }
 
-/* TOPBAR: hide date + nameday badges (remove from UI) */
+/* TOPBAR: date/nameday strip under CTA removed (P0 UI change) — never show */
 #topbarWrap #iuTopbarToday{
   display: none !important;
 }
-/* P0: restore right topbar scroll/date indicator */
-#topbarWrap #iuTopbarRight #iuTopbarToday{
-  display: flex !important;
-}
 
-/* TOPBAR: actions order — double button before info icon (keep date+nameday hidden) */
+/* TOPBAR: actions order — CTA only, no date/nameday strip */
 #topbarWrap #iuTopbarRight{
   display: flex !important;
   align-items: center !important;
@@ -15795,9 +15791,6 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   flex: 0 0 auto !important;
   min-width: max-content !important;
   margin-right: 12px !important;
-}
-#topbarWrap #iuTopbarRight #iuTopbarToday{
-  order: 20 !important;
 }
 
 /* ===== QUICK SERVICE BLUE: ICONS + LABELS + SECTION TITLE #2563EB ===== */
