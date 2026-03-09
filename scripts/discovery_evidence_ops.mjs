@@ -5,7 +5,7 @@
  * Runs in CI; outputs machine-readable report to stdout. Does not commit.
  * Audit: workflow has no git commit/push/gh pr create; automation allowlisted only; stale/changed/blocked -> unknown_for_address (never relevant_for_address).
  * Hard-pass: workflow safety and automation safety proofs required for merge.
- * Audit: final delivery-only hardpass (no pricing/basket/delivery quote/scraping).
+ * Audit: final delivery-only hardpass (no pricing/basket/delivery quote/scraping). Proof hardening: automation safety refs file:line.
  * Keep registry in sync with app.js IU_NAKUP_DISCOVERY_SOURCE_REGISTRY.
  */
 
