@@ -9650,7 +9650,7 @@ function buildVideoAsArticleCard(it) {
     return { city: city, postalCode: pc, region: region, localityBucket: localityBucket };
   }
 
-  /** Allowlisted official-source registry for automation. lastCheckedAt = when automation checked; lastReviewedAt = when human approved (on rules). No pricing, no basket, no scraping. Audit: final delivery-only hardpass; verified_live lock unchanged. */
+  /** Allowlisted official-source registry for automation. lastCheckedAt = when automation checked; lastReviewedAt = when human approved (on rules). No pricing, no basket, no scraping. Audit: final delivery-only hardpass; verified_live lock unchanged. Proof hardening: stale guard refs file:line. */
   var IU_NAKUP_DISCOVERY_SOURCE_REGISTRY = [
     { sourceId: "rohlik_storefront", providerId: "rohlik", sourceKind: "official_storefront", sourceUrl: "https://www.rohlik.cz/", allowlisted: true, publicOrOfficial: true, monitorMode: "availability_only", cadenceClass: "high_volatility", checkEveryHours: 72, sourcePurpose: "storefront availability", legalMode: "official_docs_monitoring", autoMonitorEnabled: true },
     { sourceId: "tesco_storefront", providerId: "tesco", sourceKind: "official_storefront", sourceUrl: "https://nakup.itesco.cz/", allowlisted: true, publicOrOfficial: true, monitorMode: "availability_only", cadenceClass: "high_volatility", checkEveryHours: 72, sourcePurpose: "storefront availability", legalMode: "official_docs_monitoring", autoMonitorEnabled: true },
