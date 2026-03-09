@@ -9650,9 +9650,9 @@ function buildVideoAsArticleCard(it) {
     return { city: city, postalCode: pc, region: region, localityBucket: localityBucket };
   }
 
-  /** Discovery evidence registry: each rule has sourceType, sourceNote, confidenceLevel, lastReviewedAt, staleAfterDays. relevant_for_address only from strong + trusted. */
+  /** Discovery evidence registry: each rule has sourceType, sourceNote, confidenceLevel, lastReviewedAt, staleAfterDays; optional reviewStatus, reviewedBy, reviewNotes, coverageConfidenceReason, coverageScopeDescription. relevant_for_address only from strong + trusted. */
   var IU_NAKUP_PROVIDER_DISCOVERY_RULES = [
-    { providerId: "rohlik", addressClass: "prague", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha Prahy (známá)", evidenceCode: "RULE_PRAGUE_KNOWN", sourceType: "manual", sourceNote: "Rohlík doručuje Praha; veřejné info.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
+    { providerId: "rohlik", addressClass: "prague", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha Prahy (známá)", evidenceCode: "RULE_PRAGUE_KNOWN", sourceType: "manual", sourceNote: "Rohlík doručuje Praha; veřejné info.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180, reviewStatus: "reviewed", reviewedBy: "infouzel-maintainer", reviewNotes: "coverage verified via public presence", coverageConfidenceReason: "known service area", coverageScopeDescription: "Praha and close suburbs" },
     { providerId: "rohlik", addressClass: "suburban", discoveryStatus: "relevant_for_address", relevanceReason: "obsluha okolí Prahy (známá)", evidenceCode: "RULE_SUBURBAN_KNOWN", sourceType: "manual", sourceNote: "Středočeský kraj okolí Prahy.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
     { providerId: "rohlik", addressClass: "large_city", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha města neověřena", evidenceCode: "RULE_BIG_CITY_UNKNOWN", sourceType: "manual", sourceNote: "Brno/Ostrava neověřeno.", confidenceLevel: "medium", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
     { providerId: "rohlik", addressClass: "regional", discoveryStatus: "not_relevant_for_address", relevanceReason: "mimo známou obsluhu", evidenceCode: "RULE_OUTSIDE_KNOWN_SCOPE", sourceType: "manual", sourceNote: "Mimo Praha/středočeské.", confidenceLevel: "strong", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
@@ -9673,6 +9673,41 @@ function buildVideoAsArticleCard(it) {
     { providerId: "kosik", addressClass: "regional", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha regionu neověřena", evidenceCode: "RULE_REGIONAL_UNKNOWN", sourceType: "manual", sourceNote: "Region neověřen.", confidenceLevel: "medium", lastReviewedAt: "2025-03-01", staleAfterDays: 180 },
     { providerId: "kosik", addressClass: "small_city", discoveryStatus: "unknown_for_address", relevanceReason: "obsluha neověřena", evidenceCode: "RULE_SMALL_CITY_UNKNOWN", sourceType: "manual", sourceNote: "Malá města neověřena.", confidenceLevel: "medium", lastReviewedAt: "2025-03-01", staleAfterDays: 180 }
   ];
+
+  /** Returns list of stale evidence entries: { providerId, evidenceCode, lastReviewedAt, staleDays, confidenceLevel }. Available in debug and for proof. */
+  function iuNakupCollectStaleEvidence(now) {
+    var t = now != null ? now : Date.now();
+    var rules = IU_NAKUP_PROVIDER_DISCOVERY_RULES || [];
+    var out = [];
+    for (var i = 0; i < rules.length; i++) {
+      var r = rules[i];
+      if (!iuNakupIsEvidenceStale(r, t)) continue;
+      var lastMs = r.lastReviewedAt != null ? (typeof r.lastReviewedAt === "number" ? r.lastReviewedAt : (new Date(r.lastReviewedAt)).getTime()) : 0;
+      var staleDays = lastMs ? Math.floor((t - lastMs) / 86400000) : 0;
+      out.push({ providerId: r.providerId, evidenceCode: r.evidenceCode || "", lastReviewedAt: r.lastReviewedAt != null ? r.lastReviewedAt : "", staleDays: staleDays, confidenceLevel: r.confidenceLevel || "weak" });
+    }
+    return out;
+  }
+
+  /** Safe coverage refresh: returns updated rule shape with lastReviewedAt, reviewNotes, reviewStatus, reviewedBy. Does not mutate registry; for audit trail and maintainer apply. */
+  function iuNakupRefreshCoverageEvidence(ruleUpdate) {
+    if (!ruleUpdate || !ruleUpdate.providerId || ruleUpdate.addressClass == null) return null;
+    var rules = IU_NAKUP_PROVIDER_DISCOVERY_RULES || [];
+    for (var i = 0; i < rules.length; i++) {
+      var r = rules[i];
+      if (r.providerId !== ruleUpdate.providerId || r.addressClass !== ruleUpdate.addressClass) continue;
+      var merged = {};
+      for (var k in r) if (Object.prototype.hasOwnProperty.call(r, k)) merged[k] = r[k];
+      if (ruleUpdate.lastReviewedAt != null) merged.lastReviewedAt = ruleUpdate.lastReviewedAt;
+      if (ruleUpdate.reviewNotes != null) merged.reviewNotes = ruleUpdate.reviewNotes;
+      if (ruleUpdate.reviewStatus != null) merged.reviewStatus = ruleUpdate.reviewStatus;
+      if (ruleUpdate.reviewedBy != null) merged.reviewedBy = ruleUpdate.reviewedBy;
+      if (ruleUpdate.coverageConfidenceReason != null) merged.coverageConfidenceReason = ruleUpdate.coverageConfidenceReason;
+      if (ruleUpdate.coverageScopeDescription != null) merged.coverageScopeDescription = ruleUpdate.coverageScopeDescription;
+      return merged;
+    }
+    return null;
+  }
 
   function iuNakupIsEvidenceStale(rule, now) {
     if (!rule || rule.lastReviewedAt == null) return true;
@@ -9709,11 +9744,12 @@ function buildVideoAsArticleCard(it) {
           sourceNote: r.sourceNote || "",
           confidenceLevel: r.confidenceLevel || "weak",
           lastReviewedAt: r.lastReviewedAt != null ? r.lastReviewedAt : "",
-          stale: stale
+          stale: stale,
+          coverageEvidenceFresh: !stale
         };
       }
     }
-    return { discoveryStatus: "unknown_for_address", relevanceReason: "obsluha neověřena", evidenceCode: "RULE_NO_CONFIDENT_COVERAGE_MATCH", sourceType: "", sourceNote: "", confidenceLevel: "weak", lastReviewedAt: "", stale: true };
+    return { discoveryStatus: "unknown_for_address", relevanceReason: "obsluha neověřena", evidenceCode: "RULE_NO_CONFIDENT_COVERAGE_MATCH", sourceType: "", sourceNote: "", confidenceLevel: "weak", lastReviewedAt: "", stale: true, coverageEvidenceFresh: false };
   }
 
   /** Per-provider discovery: status from iuNakupResolveCoverageEvidence. Adds addressClass, evidenceCode, sourceType, confidenceLevel, lastReviewedAt, stale. */
@@ -9755,6 +9791,7 @@ function buildVideoAsArticleCard(it) {
     out.confidenceLevel = resolved.confidenceLevel != null ? resolved.confidenceLevel : "weak";
     out.lastReviewedAt = resolved.lastReviewedAt != null ? resolved.lastReviewedAt : "";
     out.stale = !!resolved.stale;
+    out.coverageEvidenceFresh = !!resolved.coverageEvidenceFresh;
     return out;
   }
 
@@ -9774,6 +9811,8 @@ function buildVideoAsArticleCard(it) {
     });
     return list;
   }
+
+  try { if (typeof window !== "undefined") { window.iuNakupCollectStaleEvidence = iuNakupCollectStaleEvidence; window.iuNakupRefreshCoverageEvidence = iuNakupRefreshCoverageEvidence; } } catch(e){}
 
   var IU_NAKUP_PROVIDERS = [
     { id: "rohlik", name: "Rohlík", url: "https://www.rohlik.cz/" },
@@ -9811,11 +9850,13 @@ function buildVideoAsArticleCard(it) {
       base.confidenceLevel = audit.confidenceLevel != null ? audit.confidenceLevel : "weak";
       base.lastReviewedAt = audit.lastReviewedAt != null ? audit.lastReviewedAt : "";
       base.stale = !!audit.stale;
+      base.coverageEvidenceFresh = audit.coverageEvidenceFresh === true || (audit.stale === false);
     } else {
       base.sourceType = "";
       base.confidenceLevel = "weak";
       base.lastReviewedAt = "";
       base.stale = true;
+      base.coverageEvidenceFresh = false;
     }
     return base;
   }
@@ -9855,7 +9896,7 @@ function buildVideoAsArticleCard(it) {
     var list = discoveredProviders && discoveredProviders.length ? discoveredProviders : (IU_NAKUP_PROVIDER_CAPABILITIES || []).map(function(c) { return iuNakupEvaluateProviderDiscovery(c.providerId, { address: address, classified: address ? iuNakupClassifyAddress(address) : null, now: Date.now() }); });
     return list.map(function(d) {
       var pid = d.providerId || d.id;
-      var audit = { sourceType: d.sourceType, confidenceLevel: d.confidenceLevel, lastReviewedAt: d.lastReviewedAt, stale: d.stale };
+      var audit = { sourceType: d.sourceType, confidenceLevel: d.confidenceLevel, lastReviewedAt: d.lastReviewedAt, stale: d.stale, coverageEvidenceFresh: d.coverageEvidenceFresh };
       return iuNakupCreateUnverifiableResult(pid, d.addressConsidered, d.discoveryStatus, d.evidenceCode, d.relevanceReason, audit);
     });
   }
@@ -10025,6 +10066,7 @@ function buildVideoAsArticleCard(it) {
             card.setAttribute("data-confidence-level", confidenceLevel);
             card.setAttribute("data-last-reviewed-at", lastReviewedAt);
             card.setAttribute("data-stale", row.stale === true ? "true" : "false");
+            card.setAttribute("data-coverage-evidence-fresh", row.coverageEvidenceFresh === true ? "true" : "false");
           }
           var statusEl = card.querySelector(".iu-nakup-ceny-discovery-status");
           if (row && statusEl) statusEl.textContent = discoveryStatusLabel[row.discoveryStatus] || discoveryStatusLabel.unknown_for_address;
