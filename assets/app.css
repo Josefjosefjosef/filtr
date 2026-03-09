@@ -13155,6 +13155,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmS
   border-radius: 1px;
   min-width: 0;
 }
+/* title→line = 10px: topRow height 44px vs title 18px leaves 13px below title; compensate so title-to-line = 10 */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead .iu-mmSectionLine{
+  margin-top: -3px !important;
+  margin-bottom: 0 !important;
+}
 /* 2) spacing stejn├Ż jako Moje slu┼żby */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby){
   --iu-mm-first-gap: 28px;
