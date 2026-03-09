@@ -16755,6 +16755,57 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   margin: 0.25rem 0;
   font-size: 0.95rem;
 }
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results-collapsed {
+  margin-bottom: 1rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-text {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  color: rgba(0,0,0,0.7);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-providers {
+  margin: 0 0 0.75rem 0;
+  padding-left: 1.25rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-cta-links {
+  font-size: 0.9rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-cta-link {
+  margin-right: 0.25rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-why-unknown {
+  padding: 0.4rem 0.75rem;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.25);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-why-content {
+  margin: 0.75rem 0 0 0;
+  font-size: 0.85rem;
+  color: rgba(0,0,0,0.6);
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-technical {
+  margin-top: 0.5rem;
+}
+#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-technical summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: rgba(0,0,0,0.65);
+}
 #iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -16852,72 +16903,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   border-top: 1px solid rgba(0,0,0,0.08);
   font-size: 0.85rem;
 }
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-unknown {
-  margin-bottom: 1rem;
-  padding: 0.75rem 0;
-  border-top: 1px solid rgba(0,0,0,0.08);
-}
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-title {
-  margin: 0 0 0.5rem 0;
-  font-weight: 600;
-  font-size: 1rem;
-}
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-text {
-  margin: 0 0 0.75rem 0;
-  font-size: 0.9rem;
-  color: rgba(0,0,0,0.7);
-}
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-providers {
-  margin: 0 0 0.75rem 0;
-  padding-left: 1.25rem;
-}
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-providers li { margin-bottom: 0.25rem; }
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-open-shops {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  border-radius: 6px;
-  background: #2e7d32;
-  color: #fff;
-  text-decoration: none;
-}
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-btn-why-unknown {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  border-radius: 6px;
-  background: transparent;
-  border: 1px solid rgba(0,0,0,0.25);
-  cursor: pointer;
-}
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-collapsed-why {
-  margin-top: 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(0,0,0,0.08);
-  font-size: 0.9rem;
-}
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-technical {
-  margin-top: 0.5rem;
-}
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-technical-toggle {
-  padding: 0.25rem 0;
-  font-size: 0.85rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: rgba(0,0,0,0.65);
-  text-decoration: underline;
-}
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-technical-rows {
-  margin: 0.25rem 0 0 0;
-  padding-left: 0.5rem;
-}
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-technical-rows dt { margin-top: 0.25rem; font-weight: 600; color: rgba(0,0,0,0.6); }
-#iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-detail-technical-rows dd { margin-left: 0; margin-bottom: 0.15rem; color: rgba(0,0,0,0.55); }
 #iuQuickFeed .iu-nakup-ceny-shell .iu-nakup-ceny-results-footer {
   margin: 0;
   font-size: 0.8rem;
