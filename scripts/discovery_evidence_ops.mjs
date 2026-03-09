@@ -4,6 +4,7 @@
  * NO pricing, NO basket, NO delivery quote, NO scraping.
  * Runs in CI; outputs machine-readable report to stdout. Does not commit.
  * Audit: workflow has no git commit/push/gh pr create; automation allowlisted only; stale/changed/blocked -> unknown_for_address (never relevant_for_address).
+ * Hard-pass: workflow safety and automation safety proofs required for merge.
  *
  * Keep registry in sync with app.js IU_NAKUP_DISCOVERY_SOURCE_REGISTRY.
  */
