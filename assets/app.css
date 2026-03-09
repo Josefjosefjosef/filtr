@@ -10562,6 +10562,17 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   text-align: center;
 }
 /* Linka pod Rychlé odkazy = stejný styl jako MindMenu (.accordionCol .mindMenu .iu-mmSectionLine) */
+/* match MindMenu divider spacing */
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead{
+  gap: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+/* divider distance identical to MindMenu */
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead .iu-mmSectionLine{
+  margin-top: 10px !important;
+  margin-bottom: 0;
+}
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger{
   flex-shrink: 0;
   display: inline-flex;
@@ -13117,6 +13128,10 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmSectionHead,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead{
   margin-bottom: 0 !important;
 }
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead{
+  gap: 0 !important;
+  padding-bottom: 0 !important;
+}
 body .accordionCol .mindMenu section.iu-mojeSluzby,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby){
   padding-top: 0 !important;
@@ -13154,6 +13169,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmS
   background: rgba(17,24,39,0.12) !important;
   border-radius: 1px;
   min-width: 0;
+}
+/* divider distance identical to MindMenu (override any later 2px) */
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead .iu-mmSectionLine{
+  margin-top: 10px !important;
+  margin-bottom: 0 !important;
 }
 /* 2) spacing stejn├Ż jako Moje slu┼żby */
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby){
