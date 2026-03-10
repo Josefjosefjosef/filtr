@@ -11103,15 +11103,19 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 
 @media (min-width: 901px){
   #iuNakupModal{
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
     padding-left: var(--iu-nakup-feed-left, 0);
     padding-top: 24px;
+    contain: none;
   }
   #iuNakupModal .iuModalCard{
     width: var(--iu-nakup-feed-width, 760px);
     max-width: var(--iu-nakup-feed-width, 760px);
-    margin-left: 0;
+    margin-left: 0 !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
     height: 85vh;
     max-height: 85vh;
   }
