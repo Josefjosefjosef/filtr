@@ -8480,6 +8480,12 @@ function buildVideoAsArticleCard(it) {
     const modal = document.getElementById("iuNakupModal");
     const card = modal ? modal.querySelector(".iuModalCard") : null;
     if (!card) return;
+    if (window.innerWidth < 901) {
+      card.style.removeProperty("width");
+      card.style.removeProperty("max-width");
+      card.style.removeProperty("margin-left");
+      return;
+    }
     let feed = document.getElementById("feed") || document.getElementById("iuCenterStage") || document.querySelector("main");
     if (!feed) return;
     let r = feed.getBoundingClientRect();
@@ -8491,15 +8497,9 @@ function buildVideoAsArticleCard(it) {
     const root = document.documentElement;
     root.style.setProperty("--iu-nakup-feed-width", r.width + "px");
     root.style.setProperty("--iu-nakup-feed-left", r.left + "px");
-    if (window.innerWidth >= 901) {
-      card.style.setProperty("width", r.width + "px", "important");
-      card.style.setProperty("max-width", r.width + "px", "important");
-      card.style.setProperty("margin-left", r.left + "px", "important");
-    } else {
-      card.style.removeProperty("width");
-      card.style.removeProperty("max-width");
-      card.style.removeProperty("margin-left");
-    }
+    card.style.setProperty("width", r.width + "px", "important");
+    card.style.setProperty("max-width", r.width + "px", "important");
+    card.style.setProperty("margin-left", r.left + "px", "important");
   }
 
   async function iuOpenNakupDomu(){
@@ -8509,6 +8509,19 @@ function buildVideoAsArticleCard(it) {
     modal.removeAttribute("aria-hidden");
     try { modal.style.display = ""; } catch (_) {}
     try { document.body.style.overflow = "hidden"; document.body.classList.add("iu-modal-open"); } catch (_) {}
+    const card = modal.querySelector(".iuModalCard");
+    if (card && window.innerWidth <= 900) {
+      try {
+        modal.style.display = "flex";
+        modal.style.alignItems = "stretch";
+        modal.style.justifyContent = "stretch";
+        modal.style.padding = "0";
+        card.style.setProperty("width", "100%", "important");
+        card.style.setProperty("height", "100%", "important");
+        card.style.setProperty("max-width", "none", "important");
+        card.style.setProperty("max-height", "none", "important");
+      } catch (_) {}
+    }
     list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
     try {
       await iuLoadNakupDomu();
