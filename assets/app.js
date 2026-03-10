@@ -16170,12 +16170,15 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 })();
 
-// === PWA install CTA: early BIP capture in HTML inline + event delegation for click ===
+// === PWA install CTA: desktop always visible + fallback overlay; mobile pointer/tap + click ===
 (function iuPwaInstallCta() {
   var deferredPrompt = null;
   var ctaEl = null;
   var overlayEl = null;
+  var desktopFallbackEl = null;
   var ran = false;
+  var lastOpenTime = 0;
+  var OPEN_DEBOUNCE_MS = 400;
 
   if (typeof window.__iuBipEvent !== "undefined" && window.__iuBipEvent) {
     deferredPrompt = window.__iuBipEvent;
@@ -16216,11 +16219,54 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function showIosOverlay() {
-    if (overlayEl) overlayEl.hidden = false;
+    if (overlayEl && overlayEl.hidden) {
+      overlayEl.hidden = false;
+      lastOpenTime = Date.now();
+    }
   }
 
   function closeIosOverlay() {
     if (overlayEl) overlayEl.hidden = true;
+  }
+
+  function showDesktopFallbackOverlay() {
+    if (desktopFallbackEl && desktopFallbackEl.hidden) {
+      desktopFallbackEl.hidden = false;
+      lastOpenTime = Date.now();
+    }
+  }
+
+  function closeDesktopFallbackOverlay() {
+    if (desktopFallbackEl) desktopFallbackEl.hidden = true;
+  }
+
+  function handleCtaAction(ev) {
+    var btn = ev.target && ev.target.closest ? ev.target.closest("#iuPwaInstallCta") : null;
+    if (!btn || !document.body.contains(btn)) return;
+    ev.preventDefault();
+    if (Date.now() - lastOpenTime < OPEN_DEBOUNCE_MS) return;
+    if (deferredPrompt) {
+      try {
+        deferredPrompt.prompt();
+        var choice = deferredPrompt.userChoice;
+        if (choice && typeof choice.then === "function") {
+          choice.then(function (result) {
+            if (result && result.outcome === "accepted") hideCta();
+            deferredPrompt = null;
+          }).catch(function () { deferredPrompt = null; });
+        } else {
+          deferredPrompt = null;
+        }
+        return;
+      } catch (err) {
+        deferredPrompt = null;
+      }
+    }
+    if (isIos()) {
+      showIosOverlay();
+      return;
+    }
+    showDesktopFallbackOverlay();
   }
 
   function run() {
@@ -16229,6 +16275,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (nodes.length !== 1) return;
     ctaEl = nodes[0];
     overlayEl = document.getElementById("iuPwaIosOverlay");
+    desktopFallbackEl = document.getElementById("iuPwaDesktopFallbackOverlay");
     ran = true;
 
     if (typeof window.__iuBipEvent !== "undefined" && window.__iuBipEvent) {
@@ -16240,34 +16287,14 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       return;
     }
 
-    hideCta();
-    if (deferredPrompt) showCta();
-    if (isIos()) showCta();
+    showCta();
 
     document.addEventListener("click", function (ev) {
-      var btn = ev.target && ev.target.closest ? ev.target.closest("#iuPwaInstallCta") : null;
-      if (!btn || !document.body.contains(btn)) return;
-      ev.preventDefault();
-      if (deferredPrompt) {
-        try {
-          deferredPrompt.prompt();
-          var choice = deferredPrompt.userChoice;
-          if (choice && typeof choice.then === "function") {
-            choice.then(function (result) {
-              if (result && result.outcome === "accepted") hideCta();
-              deferredPrompt = null;
-            }).catch(function () { deferredPrompt = null; });
-          } else {
-            deferredPrompt = null;
-          }
-        } catch (err) {
-          deferredPrompt = null;
-        }
-        return;
-      }
-      if (isIos()) {
-        showIosOverlay();
-      }
+      handleCtaAction(ev);
+    }, true);
+
+    document.addEventListener("pointerup", function (ev) {
+      handleCtaAction(ev);
     }, true);
 
     if (overlayEl) {
@@ -16279,6 +16306,15 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       });
       document.addEventListener("keydown", function keyClose(e) {
         if (e.key === "Escape" && overlayEl && !overlayEl.hidden) closeIosOverlay();
+        if (e.key === "Escape" && desktopFallbackEl && !desktopFallbackEl.hidden) closeDesktopFallbackOverlay();
+      });
+    }
+    if (desktopFallbackEl) {
+      desktopFallbackEl.querySelectorAll("[data-iu-pwa-desktop-fallback-close]").forEach(function (el) {
+        el.addEventListener("click", closeDesktopFallbackOverlay);
+      });
+      desktopFallbackEl.addEventListener("click", function (e) {
+        if (e.target === desktopFallbackEl) closeDesktopFallbackOverlay();
       });
     }
   }
