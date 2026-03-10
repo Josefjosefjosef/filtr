@@ -8484,6 +8484,10 @@ function buildVideoAsArticleCard(it) {
       card.style.removeProperty("width");
       card.style.removeProperty("max-width");
       card.style.removeProperty("margin-left");
+      if (modal) {
+        modal.style.removeProperty("padding-left");
+        modal.style.removeProperty("padding-top");
+      }
       return;
     }
     let feed = document.getElementById("feed") || document.getElementById("iuCenterStage") || document.querySelector("main");
@@ -8497,9 +8501,13 @@ function buildVideoAsArticleCard(it) {
     const root = document.documentElement;
     root.style.setProperty("--iu-nakup-feed-width", r.width + "px");
     root.style.setProperty("--iu-nakup-feed-left", r.left + "px");
+    if (modal) {
+      modal.style.setProperty("padding-left", r.left + "px");
+      modal.style.setProperty("padding-top", "24px");
+    }
     card.style.setProperty("width", r.width + "px", "important");
     card.style.setProperty("max-width", r.width + "px", "important");
-    card.style.setProperty("margin-left", r.left + "px", "important");
+    card.style.setProperty("margin-left", "0", "important");
   }
 
   async function iuOpenNakupDomu(){
@@ -8510,6 +8518,14 @@ function buildVideoAsArticleCard(it) {
     try { modal.style.display = ""; } catch (_) {}
     try { document.body.style.overflow = "hidden"; document.body.classList.add("iu-modal-open"); } catch (_) {}
     const card = modal.querySelector(".iuModalCard");
+    if (card && window.innerWidth >= 901) {
+      try {
+        modal.style.display = "flex";
+        modal.style.alignItems = "flex-start";
+        modal.style.justifyContent = "flex-start";
+        iuNakupApplyFeedWidth();
+      } catch (_) {}
+    }
     if (card && window.innerWidth <= 900) {
       try {
         modal.style.display = "flex";
