@@ -1482,7 +1482,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <div class="iuTile" role="listitem" data-quicktool-id="bakalari" data-iu-ql="bakalari" data-ms="bakalari"><button class="iuTileLink" type="button" data-iu-modal="bakalari" aria-label="Bakaláři"><span class="iuTileText">Bakaláři</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="zdravotni_pojistovna" data-iu-ql="zdravotni-pojistovna" data-ms="pojistovna"><button class="iuTileLink" type="button" data-iu-modal="pojistovna" aria-label="Zdravotní pojišťovna"><span class="iuTileText">Zdravotní pojišťovna</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="zasilky" data-iu-ql="zasilky-a-sledovani"><button class="iuTileLink" type="button" data-iuq="baliky" data-ql="zasilky" aria-label="Zásilky a sledování" data-iu-action="parcels" id="iuParcelsBtn"><span class="iuTileText">Zásilky a sledování</span></button></div>
-                        <div class="iuTile" role="listitem" data-quicktool-id="nakup_domu" data-iu-ql="nakup-domu"><button class="iuTileLink" type="button" data-iuq="nakup" data-ql="nakup" id="iuOpenNakupDomu" aria-label="Nákup domů"><span class="iuTileText">Nákup domů</span></button></div>
+                        <div class="iuTile" role="listitem" data-quicktool-id="nakup_domu" data-iu-ql="nakup-domu"><button class="iuTileLink" type="button" data-iuq="nakup" data-ql="nakup" id="iuOpenNakupDomu" aria-label="Evidence nákupů"><span class="iuTileText">Evidence nákupů</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="ai_asistenti" data-iu-ql="ai-asistenti"><button class="iuTileLink" type="button" data-iuq="ai" data-ql="ai" aria-label="AI asistenti"><span class="iuTileText">AI asistenti</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="prekladac" data-iu-ql="prekladac"><a class="iuTileLink" href="https://www.deepl.com/" target="_blank" rel="noopener noreferrer" aria-label="Překladač"><span class="iuTileText">Překladač</span></a></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="word_pdf" data-iu-ql="prevod-word-pdf"><a class="iuTileLink" role="listitem" data-iuq="convert" data-ql="convert" href="https://www.ilovepdf.com" target="_blank" rel="noopener" aria-label="Převod Word / PDF"><span class="iuTileText">Převod Word / PDF</span></a></div>
@@ -2914,82 +2914,117 @@ style-src 'self' 'unsafe-inline' https:;
     <div class="iuModal" id="iuNakupModal" hidden aria-modal="true" aria-labelledby="iuNakupModalTitle">
       <div class="iuModalCard">
         <div class="iuModalHead">
-          <span id="iuNakupModalTitle">Nákup domů</span>
+          <span id="iuNakupModalTitle">Evidence nákupů</span>
           <button id="iuNakupClose" type="button" aria-label="Zavřít">×</button>
         </div>
         <div class="iuModalBody">
-          <div class="iu-nakup-community-top" data-iu="nakup-community-top" role="region" aria-label="Komunitní nákupní nástroj">
-            <h2 class="iu-nakup-community-headline">Komunitní nákupní nástroj</h2>
-            <p class="iu-nakup-community-subtext">Sdílení a porovnání nákupů v rámci komunity. Nejde o živé ceny obchodů ani o porovnání košíků v reálném čase. Osobní údaje se neukládají.</p>
-            <div class="iu-nakup-community-picker-shell" data-iu="store-location-picker" aria-label="Obchod nebo lokace">
-              <label class="iu-nakup-community-picker-label" for="iu-nakup-picker-input">Obchod / lokace</label>
-              <input type="text" id="iu-nakup-picker-input" class="iu-nakup-community-picker-input" autocomplete="off" aria-autocomplete="list" aria-controls="iu-nakup-picker-listbox" aria-expanded="false" aria-label="Vyhledat obchod nebo lokaci" />
-              <div id="iu-nakup-picker-listbox" class="iu-nakup-community-picker-listbox" role="listbox" aria-label="Návrhy obchodů" hidden></div>
-              <span class="iu-nakup-community-picker-fallback" data-iu="picker-fallback" aria-live="polite"></span>
+          <div class="iu-evidence-nakupu-top" data-iu="evidence-nakupu-top" data-iu-personal-evidence-only="true" role="region" aria-label="Evidence nákupů">
+            <div class="iu-evidence-cta-row" data-iu="evidence-cta-row">
+              <button type="button" class="iu-evidence-cta iu-evidence-cta-photo" data-iu="photo-receipt-cta" aria-label="Vyfoť účtenku nebo fakturu"><span class="iu-evidence-cta-text">Vyfoť účtenku nebo fakturu</span></button>
+              <button type="button" class="iu-evidence-cta iu-evidence-cta-upload" data-iu="upload-receipt-cta" aria-label="Nahraj účtenku nebo fakturu"><span class="iu-evidence-cta-text">Nahraj účtenku nebo fakturu</span></button>
             </div>
-            <div class="iu-nakup-community-mode-switcher" data-iu="mode-switcher" role="tablist" aria-label="Způsob vstupu">
-              <button type="button" role="tab" class="iu-nakup-community-mode-tab iu-nakup-community-mode-active" data-mode="text" aria-selected="true">Vložit text</button>
-              <button type="button" role="tab" class="iu-nakup-community-mode-tab" data-mode="cart" aria-selected="false">Nahrát košík</button>
-              <button type="button" role="tab" class="iu-nakup-community-mode-tab" data-mode="receipt" aria-selected="false">Vyfotit účtenku</button>
-            </div>
-            <div class="iu-nakup-community-mode-panels">
-              <div class="iu-nakup-community-text-shell" data-iu="text-input-shell">
-                <textarea class="iu-nakup-community-textarea" rows="4" placeholder="Vložte seznam položek, např. mléko 30 Kč, 2x chleba 25 Kč" aria-label="Seznam položek" data-iu="pasted-text-input"></textarea>
-                <div class="iu-nakup-community-parser-preview" data-iu="parser-preview" hidden aria-label="Náhled rozpoznaných položek">
-                  <h3 class="iu-nakup-community-preview-heading">Náhled</h3>
-                  <ul class="iu-nakup-community-parsed-list" data-iu="parsed-list" aria-label="Rozpoznané položky"></ul>
-                </div>
-                <div class="iu-nakup-community-confirm-row">
-                  <button type="button" class="iu-nakup-community-btn-confirm" data-iu="confirm-share-btn" aria-label="Potvrdit a sdílet do komunitní vrstvy">Potvrdit a sdílet</button>
-                </div>
-                <div class="iu-nakup-community-safe-result" data-iu="safe-result" role="status" hidden>
-                  <p class="iu-nakup-community-result-text">Záznam byl přidán do komunitní vrstvy.</p>
-                </div>
+            <div class="iu-evidence-upload-flow" data-iu="upload-flow-container" aria-label="Nahrání dokladu">
+              <input type="file" id="iu-evidence-photo-input" class="iu-evidence-file-input" accept="image/*" data-iu="upload-photo-input" hidden aria-label="Vybrat nebo vyfotit obrázek účtenky či faktury" />
+              <input type="file" id="iu-evidence-upload-input" class="iu-evidence-file-input" accept="image/*,application/pdf" data-iu="upload-pdf-input" hidden aria-label="Nahrát obrázek nebo PDF účtenky či faktury" />
+              <div class="iu-evidence-upload-states">
+                <div class="iu-evidence-upload-state iu-evidence-state-idle" data-iu="upload-state-idle" role="status">Vyberte soubor nebo vyfoťte doklad.</div>
+                <div class="iu-evidence-upload-state iu-evidence-state-pending" data-iu="upload-state-pending" role="status" hidden>Odesílám…</div>
+                <div class="iu-evidence-upload-state iu-evidence-state-success" data-iu="upload-state-success" role="status" hidden>Doklad byl nahrán. Zpracování připraveno.</div>
+                <div class="iu-evidence-upload-state iu-evidence-state-failed" data-iu="upload-state-failed" role="status" hidden>Nahrání se nepodařilo. Zkuste jiný soubor.</div>
               </div>
-              <div class="iu-nakup-community-upload-row" hidden>
-                <input type="file" id="iu-nakup-screenshot-input" accept="image/*" data-iu="screenshot-input" hidden aria-label="Screenshot košíku" />
-                <input type="file" id="iu-nakup-receipt-input" accept="image/*" data-iu="receipt-input" hidden aria-label="Fotka účtenky" />
-                <button type="button" class="iu-nakup-community-cta iu-nakup-community-cta-screenshot" data-iu="screenshot-cta" aria-label="Nahrát screenshot košíku">Screenshot košíku</button>
-                <button type="button" class="iu-nakup-community-cta iu-nakup-community-cta-receipt" data-iu="receipt-cta" aria-label="Nahrát fotku účtenky">Fotka účtenky</button>
-                <p class="iu-nakup-community-upload-fallback" data-iu="screenshot-fallback" role="status" aria-live="polite"></p>
-                <div class="iu-nakup-community-screenshot-preview" data-iu="screenshot-preview" hidden aria-label="Náhled screenshotu">
-                  <p class="iu-nakup-community-needs-more-confirmation">Náhled. Vyžaduje další potvrzení.</p>
-                  <div class="iu-nakup-community-screenshot-preview-img" data-iu="screenshot-preview-img"></div>
-                  <button type="button" class="iu-nakup-community-btn-confirm" data-iu="screenshot-confirm-btn">Potvrdit a sdílet</button>
-                </div>
-                <div class="iu-nakup-community-receipt-review" data-iu="receipt-review" hidden aria-label="Kontrola účtenky">
-                  <p class="iu-nakup-community-receipt-needs-review" data-iu="receipt-needs-review-state">Účtenka vyžaduje kontrolu. Text z obrázku se neukládá.</p>
-                  <div class="iu-nakup-community-receipt-preview-img" data-iu="receipt-preview-img"></div>
-                  <button type="button" class="iu-nakup-community-btn-confirm" data-iu="receipt-confirm-btn">Přidat jako neověřenou</button>
-                </div>
+              <div class="iu-evidence-validation" data-iu="validation-messages" aria-live="polite" hidden>
+                <span data-iu="file-type-validation" class="iu-evidence-validation-msg"></span>
+                <span data-iu="file-size-validation" class="iu-evidence-validation-msg"></span>
               </div>
-            </div>
-            <p class="iu-nakup-community-disclaimer" data-iu="disclaimer">Toto je komunitní nástroj. Osobní historie jen na tomto zařízení. Data nejsou živá z obchodů.</p>
-            <div class="iu-nakup-community-my-purchases" data-iu="my-purchases-section">
-              <h3 class="iu-nakup-community-my-purchases-heading">Moje nákupy</h3>
-              <p class="iu-nakup-community-personal-separation" data-iu="community-personal-separation">Osobní historie je oddělená od komunitní vrstvy. Ukládá se pouze lokálně na tomto zařízení.</p>
-              <div class="iu-nakup-community-stats" data-iu="purchase-stats" aria-label="Statistiky nákupů"></div>
-              <ul class="iu-nakup-community-history-list" data-iu="my-purchases-list" aria-label="Seznam nákupů"></ul>
-              <div class="iu-nakup-community-history-empty" data-iu="my-purchases-empty" role="status">
-                <p>Zatím žádné nákupy v osobní historii.</p>
+              <div class="iu-evidence-preview-shell" data-iu="preview-shell" aria-label="Náhled vybraného souboru">
+                <h4 class="iu-evidence-preview-heading">Náhled</h4>
+                <p class="iu-evidence-preview-name" data-iu="preview-filename">—</p>
+                <p class="iu-evidence-preview-meta" data-iu="preview-meta">—</p>
               </div>
-              <div class="iu-nakup-community-history-detail" data-iu="purchase-detail" hidden aria-label="Detail nákupu">
-                <h4 class="iu-nakup-community-detail-heading">Detail nákupu</h4>
-                <div class="iu-nakup-community-detail-body" data-iu="purchase-detail-body"></div>
-                <div class="iu-nakup-community-detail-actions">
-                  <button type="button" class="iu-nakup-community-btn-delete-one" data-iu="delete-purchase-btn">Smazat nákup</button>
-                  <button type="button" class="iu-nakup-community-btn-back" data-iu="back-to-list-btn">Zpět na seznam</button>
-                </div>
-              </div>
-              <div class="iu-nakup-community-clear-row">
-                <button type="button" class="iu-nakup-community-btn-clear" data-iu="clear-history-btn" aria-label="Smazat celou historii">Smazat celou historii</button>
+              <div class="iu-evidence-extraction-panel" data-iu="ocr-extraction-result" aria-label="Vytěžené údaje z dokladu">
+                <h4 class="iu-evidence-extraction-heading">Základní údaje z dokladu</h4>
+                <dl class="iu-evidence-extraction-fields">
+                  <dt>Obchod / firma</dt>
+                  <dd data-iu="extraction-store">—</dd>
+                  <dt>Datum</dt>
+                  <dd data-iu="extraction-date">—</dd>
+                  <dt>Čas</dt>
+                  <dd data-iu="extraction-time">—</dd>
+                  <dt>Celkem</dt>
+                  <dd data-iu="extraction-total">—</dd>
+                  <dt>Cena včetně DPH</dt>
+                  <dd data-iu="extraction-vat-included">—</dd>
+                  <dt>Bez DPH</dt>
+                  <dd data-iu="extraction-vat-excluded-state">—</dd>
+                  <dt>Typ dokladu</dt>
+                  <dd data-iu="extraction-doc-type">—</dd>
+                  <dt data-iu="confidence-label">Confidence</dt>
+                  <dd data-iu="confidence-visible">—</dd>
+                  <dt data-iu="needs-review-label">Vyžaduje kontrolu</dt>
+                  <dd data-iu="needs-review-visible">—</dd>
+                </dl>
+                <p class="iu-evidence-unknown-hint" data-iu="unknown-state-works">Údaje označené jako „unknown“ nebyly bezpečně rozpoznány.</p>
               </div>
             </div>
-            <div class="iu-nakup-community-empty-state" data-iu="empty-state" role="status">
-              <p>Zatím žádná data. Nástroj je připraven pro budoucí komunitní funkce.</p>
+            <script type="application/json" id="iu-evidence-upload-contract" data-iu="server-contract-shell" aria-hidden="true">{"contract":"receipt_photo,invoice_photo,receipt_pdf,invoice_pdf","receipt_photo":{"type":"image","accept":["image/*"]},"invoice_photo":{"type":"image","accept":["image/*"]},"receipt_pdf":{"type":"pdf","accept":["application/pdf"]},"invoice_pdf":{"type":"pdf","accept":["application/pdf"]}}</script>
+            <div class="iu-evidence-calendar-shell" data-iu="calendar-shell" aria-label="Kalendář nákupů">
+              <h3 class="iu-evidence-shell-heading">Kalendář nákupů</h3>
+              <div class="iu-evidence-calendar-nav" data-iu="calendar-nav" aria-label="Měsíc">
+                <button type="button" class="iu-evidence-calendar-prev" data-iu="calendar-prev" aria-label="Předchozí měsíc">‹</button>
+                <span class="iu-evidence-calendar-month" data-iu="calendar-month"></span>
+                <button type="button" class="iu-evidence-calendar-next" data-iu="calendar-next" aria-label="Následující měsíc">›</button>
+              </div>
+              <div class="iu-evidence-calendar-grid" data-iu="calendar-grid" role="grid" aria-label="Kalendář"></div>
+            </div>
+            <div class="iu-evidence-daily-list-shell" data-iu="daily-list-shell" aria-label="Seznam dokladů pro vybraný den">
+              <h3 class="iu-evidence-shell-heading">Záznamy pro vybraný den</h3>
+              <ul class="iu-evidence-daily-list" data-iu="daily-receipt-list" role="list" aria-label="Doklady"></ul>
+              <div class="iu-evidence-daily-empty" data-iu="daily-list-empty" role="status" hidden>Pro vybraný den nejsou žádné záznamy.</div>
+            </div>
+            <div class="iu-evidence-detail-panel" data-iu="receipt-detail" aria-label="Detail dokladu" hidden>
+              <h3 class="iu-evidence-shell-heading">Detail dokladu</h3>
+              <dl class="iu-evidence-detail-fields">
+                <dt data-iu="detail-label-store">Obchod / firma</dt>
+                <dd data-iu="receipt-detail-store"></dd>
+                <dt data-iu="detail-label-date">Datum</dt>
+                <dd data-iu="receipt-detail-date"></dd>
+                <dt data-iu="detail-label-time">Čas</dt>
+                <dd data-iu="receipt-detail-time"></dd>
+                <dt data-iu="detail-label-total">Celkem</dt>
+                <dd data-iu="receipt-detail-total"></dd>
+                <dt data-iu="detail-label-vat-included">Cena včetně DPH</dt>
+                <dd data-iu="receipt-detail-price-vat-included"></dd>
+                <dt data-iu="detail-label-vat-excluded">Bez DPH</dt>
+                <dd><span data-iu="receipt-detail-price-vat-excluded"></span> <span data-iu="receipt-detail-price-vat-excluded-state" class="iu-evidence-vat-state"></span></dd>
+                <dt data-iu="detail-label-status">Stav zpracování</dt>
+                <dd data-iu="receipt-detail-status"></dd>
+                <dt data-iu="detail-label-confidence">Confidence</dt>
+                <dd data-iu="receipt-detail-confidence"></dd>
+                <dt data-iu="detail-label-needs-review">Vyžaduje kontrolu</dt>
+                <dd data-iu="receipt-detail-needs-review"></dd>
+              </dl>
+              <div class="iu-evidence-detail-actions">
+                <button type="button" class="iu-evidence-btn-back" data-iu="receipt-detail-back" aria-label="Zpět na seznam">Zpět na seznam</button>
+                <button type="button" class="iu-evidence-btn-delete" data-iu="receipt-detail-delete" aria-label="Smazat záznam">Smazat záznam</button>
+              </div>
+            </div>
+            <div class="iu-evidence-empty-state" data-iu="empty-state" role="status">
+              <p>Zatím žádné záznamy. Doklady se budou ukládat do osobní evidence.</p>
+            </div>
+            <div class="iu-evidence-warranty-layer" data-iu="warranty-reminder-layer" aria-label="Záruky a termíny">
+              <h3 class="iu-evidence-shell-heading">Záruky, termíny a upozornění</h3>
+              <div class="iu-evidence-reminder-shell" data-iu="reminder-shell" aria-label="Připomínky a hlídače">
+                <p class="iu-evidence-shell-placeholder">Připomínky a hlídání důležitých milníků (připraveno pro pozdější fázi).</p>
+              </div>
+              <div class="iu-evidence-timeline-shell" data-iu="timeline-shell" aria-label="Termíny a lhůty">
+                <p class="iu-evidence-shell-placeholder">Termíny, záruky a lhůta pro vrácení (připraveno).</p>
+              </div>
+            </div>
+            <p class="iu-evidence-disclaimer" data-iu="disclaimer">Doklady se ukládají do osobní evidence. Část anonymizovaných údajů může být později použita pro komunitní přehled.</p>
+            <div class="iu-evidence-layer-separation" data-iu="personal-community-separation" role="status" aria-label="Oddělení vrstev">
+              <p class="iu-evidence-separation-text">Osobní evidence a komunitní vrstva jsou oddělené. Do komunity neputují obrázky, PDF, raw text ani osobní údaje (jméno, e-mail, telefon, adresa, platební údaje).</p>
             </div>
           </div>
-          <div id="iuNakupList"></div>
         </div>
       </div>
     </div>

@@ -11171,7 +11171,323 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   font-size: 14px;
 }
 
-/* Nákup domů — komunitní horní blok (shell) */
+/* Evidence nákupů — MVP shell (CTAs, kalendář, seznam, prázdný stav) */
+.iu-evidence-nakupu-top{
+  overflow-x: hidden;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+}
+.iu-evidence-cta-row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.iu-evidence-cta{
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid #1F4B99;
+  border-radius: 10px;
+  background: #1F4B99;
+  color: #fff;
+  cursor: pointer;
+  flex: 1;
+  min-width: 180px;
+}
+.iu-evidence-cta:hover{
+  background: #173a7a;
+  border-color: #173a7a;
+}
+.iu-evidence-cta-text{
+  display: block;
+}
+.iu-evidence-calendar-shell,
+.iu-evidence-daily-list-shell{
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border: 1px solid rgba(11,27,43,.1);
+  border-radius: 10px;
+}
+.iu-evidence-shell-heading{
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #0b1b2b;
+}
+.iu-evidence-shell-placeholder{
+  font-size: 13px;
+  color: rgba(11,27,43,.65);
+  margin: 0;
+}
+.iu-evidence-empty-state{
+  font-size: 13px;
+  color: rgba(11,27,43,.7);
+  padding: 12px 0;
+  margin-bottom: 12px;
+}
+.iu-evidence-empty-state p{
+  margin: 0;
+}
+.iu-evidence-disclaimer{
+  font-size: 12px;
+  color: rgba(11,27,43,.65);
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Evidence nákupů — upload flow (photo + PDF), preview, states, validation */
+.iu-evidence-upload-flow{
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid rgba(11,27,43,.12);
+  border-radius: 10px;
+  overflow-x: hidden;
+}
+.iu-evidence-upload-states{
+  margin-bottom: 10px;
+}
+.iu-evidence-upload-state{
+  font-size: 14px;
+  color: rgba(11,27,43,.85);
+}
+.iu-evidence-state-pending{
+  color: #1F4B99;
+  font-weight: 600;
+}
+.iu-evidence-state-success{
+  color: #2e7d32;
+  font-weight: 600;
+}
+.iu-evidence-state-failed{
+  color: #b45309;
+  font-weight: 600;
+}
+.iu-evidence-validation{
+  font-size: 13px;
+  color: #b45309;
+  margin-bottom: 10px;
+}
+.iu-evidence-validation-msg{
+  display: block;
+  margin-top: 4px;
+}
+.iu-evidence-preview-shell{
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,.15);
+  border-radius: 8px;
+  margin-top: 10px;
+}
+.iu-evidence-preview-heading{
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  color: #0b1b2b;
+}
+.iu-evidence-preview-name,
+.iu-evidence-preview-meta{
+  font-size: 13px;
+  color: rgba(11,27,43,.8);
+  margin: 4px 0 0 0;
+}
+
+/* Evidence nákupů — OCR extraction panel */
+.iu-evidence-extraction-panel{
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,.12);
+  border-radius: 8px;
+}
+.iu-evidence-extraction-heading{
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  color: #0b1b2b;
+}
+.iu-evidence-extraction-fields{
+  margin: 0;
+  font-size: 13px;
+}
+.iu-evidence-extraction-fields dt{
+  margin-top: 6px;
+  margin-bottom: 2px;
+  font-weight: 600;
+  color: rgba(11,27,43,.75);
+}
+.iu-evidence-extraction-fields dd{
+  margin: 0;
+  color: #0b1b2b;
+}
+.iu-evidence-unknown-hint{
+  font-size: 12px;
+  color: rgba(11,27,43,.6);
+  margin: 10px 0 0 0;
+}
+
+.iu-evidence-layer-separation{
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: rgba(31,75,153,.06);
+  border: 1px solid rgba(31,75,153,.2);
+  border-radius: 8px;
+}
+.iu-evidence-separation-text{
+  font-size: 13px;
+  color: rgba(11,27,43,.85);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.iu-evidence-warranty-layer{
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid rgba(11,27,43,.1);
+  border-radius: 10px;
+  overflow-x: hidden;
+}
+.iu-evidence-warranty-layer .iu-evidence-shell-heading{
+  margin-bottom: 12px;
+}
+.iu-evidence-reminder-shell,
+.iu-evidence-timeline-shell{
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,.08);
+  border-radius: 8px;
+}
+.iu-evidence-timeline-shell{
+  margin-bottom: 0;
+}
+
+/* Evidence nákupů — kalendář, denní seznam, detail dokladu */
+.iu-evidence-calendar-nav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.iu-evidence-calendar-prev,
+.iu-evidence-calendar-next{
+  padding: 4px 10px;
+  font-size: 18px;
+  border: 1px solid rgba(11,27,43,.2);
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  color: #0b1b2b;
+}
+.iu-evidence-calendar-month{
+  font-size: 14px;
+  font-weight: 600;
+  color: #0b1b2b;
+}
+.iu-evidence-calendar-grid{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  font-size: 12px;
+}
+.iu-evidence-calendar-day{
+  padding: 6px 4px;
+  text-align: center;
+  border-radius: 6px;
+  cursor: pointer;
+  color: rgba(11,27,43,.7);
+}
+.iu-evidence-calendar-day.iu-evidence-day-other{
+  color: rgba(11,27,43,.4);
+}
+.iu-evidence-calendar-day.iu-evidence-day-selected{
+  background: #1F4B99;
+  color: #fff;
+}
+.iu-evidence-calendar-day.iu-evidence-day-has{
+  font-weight: 600;
+  color: #1F4B99;
+}
+.iu-evidence-daily-list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.iu-evidence-daily-item{
+  display: block;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,.12);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #0b1b2b;
+  text-align: left;
+}
+.iu-evidence-daily-item:hover{
+  background: #f3f6fb;
+}
+.iu-evidence-daily-empty{
+  font-size: 13px;
+  color: rgba(11,27,43,.65);
+  padding: 10px 0;
+}
+.iu-evidence-detail-panel{
+  margin-top: 12px;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,.12);
+  border-radius: 10px;
+}
+.iu-evidence-detail-fields{
+  margin: 0 0 14px 0;
+  font-size: 14px;
+}
+.iu-evidence-detail-fields dt{
+  margin-top: 10px;
+  margin-bottom: 2px;
+  font-weight: 600;
+  color: rgba(11,27,43,.8);
+}
+.iu-evidence-detail-fields dd{
+  margin: 0;
+  color: #0b1b2b;
+}
+.iu-evidence-vat-state{
+  font-style: italic;
+  color: rgba(11,27,43,.65);
+}
+.iu-evidence-detail-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.iu-evidence-btn-back,
+.iu-evidence-btn-delete{
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.iu-evidence-btn-back{
+  border: 1px solid #1F4B99;
+  background: #1F4B99;
+  color: #fff;
+}
+.iu-evidence-btn-delete{
+  border: 1px solid rgba(11,27,43,.25);
+  background: #fff;
+  color: #b45309;
+}
+
+/* Nákup domů — komunitní horní blok (shell) — legacy, kept for reference */
 .iu-nakup-community-top{
   overflow-x: hidden;
   margin-bottom: 16px;
@@ -11565,6 +11881,37 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 
 .iuQuickFeed[hidden]{
   display: none !important;
+}
+
+/* Evidence nákupů in quick feed: same section engine as other quick tools */
+#iuQuickFeed > .iuModalCard{
+  width: 100%;
+  max-width: none;
+  height: auto;
+  min-height: 60vh;
+  max-height: none;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Mobile: ensure quick feed + card have non-zero size (avoid 0×0 when in center column) */
+@media (max-width: 900px){
+  #iuCenterStage[data-iu-view="quick"]{
+    width: 100% !important;
+    min-width: 100%;
+  }
+  #iuCenterStage[data-iu-view="quick"] #iuQuickFeed{
+    width: 100%;
+    min-width: 100%;
+    display: block !important;
+  }
+  #iuCenterStage[data-iu-view="quick"] #iuQuickFeed > .iuModalCard{
+    width: 100% !important;
+    min-width: 100%;
+    min-height: 80vh;
+    max-height: none;
+    box-sizing: border-box;
+  }
 }
 
 .iuQuickFeed{

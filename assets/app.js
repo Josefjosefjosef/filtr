@@ -7908,7 +7908,7 @@ function buildVideoAsArticleCard(it) {
     { id: "bakalari", label: "Bakaláři", accent: "#2e7d32" },
     { id: "zdravotni_pojistovna", label: "Zdravotní pojišťovna", accent: "#00838f" },
     { id: "zasilky", label: "Zásilky a sledování", accent: "#e60012" },
-    { id: "nakup_domu", label: "Nákup domů", accent: "#1F4B99" },
+    { id: "nakup_domu", label: "Evidence nákupů", accent: "#1F4B99" },
     { id: "ai_asistenti", label: "AI asistenti", accent: "#0d9488" },
     { id: "prekladac", label: "Překladač", accent: "#0d9488" },
     { id: "word_pdf", label: "Převod Word / PDF", accent: "#c62828" },
@@ -8436,7 +8436,23 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
+  function iuNakupCloseQuickView(){
+    const quick = document.getElementById("iuQuickFeed");
+    const modal = document.getElementById("iuNakupModal");
+    const card = quick && quick.querySelector(".iuModalCard");
+    if (card && modal) modal.appendChild(card);
+    if (quick) { quick.hidden = true; quick.removeAttribute("data-iu-quick-key"); }
+    const stage = document.getElementById("iuCenterStage");
+    if (stage) stage.removeAttribute("data-iu-view");
+    if (modal) { modal.hidden = true; modal.setAttribute("aria-hidden", "true"); }
+    try { document.body.style.overflow = ""; document.body.classList.remove("iu-modal-open"); } catch (_) {}
+  }
+  try { window.iuNakupCloseQuickView = iuNakupCloseQuickView; } catch (_) {}
+
   function iuNakupClose(){
+    const quick = document.getElementById("iuQuickFeed");
+    const card = quick && quick.querySelector(".iuModalCard");
+    if (card && typeof window.iuNakupCloseQuickView === "function") { window.iuNakupCloseQuickView(); return; }
     const { modal } = iuNakupEls();
     if (!modal) return;
     modal.hidden = true;
@@ -8457,8 +8473,8 @@ function buildVideoAsArticleCard(it) {
   }
 
   try {
-    window.addEventListener('iu-open-panel', function(e){ if (e.detail === 'shopping') iuOpenNakupDomu(); });
-    window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'shopping') iuNakupClose(); });
+    window.addEventListener('iu-open-panel', function(e){ if (e.detail === 'shopping') { if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } });
+    window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'shopping') { if (typeof window.iuNakupCloseQuickView === "function") window.iuNakupCloseQuickView(); else iuNakupClose(); } });
   } catch {}
 
   async function iuLoadNakupDomu(){
@@ -8519,7 +8535,7 @@ function buildVideoAsArticleCard(it) {
 
   async function iuOpenNakupDomu(){
     const { modal, list } = iuNakupEls();
-    if (!modal || !list) return;
+    if (!modal) return;
     const feed = document.getElementById("feed");
     if (feed) {
       try { feed.hidden = true; feed.style.display = "none"; feed.setAttribute("data-iu-feed-hidden-by", "nakup"); window.__iuFeedHiddenByNakup = true; } catch (_) {}
@@ -8559,12 +8575,14 @@ function buildVideoAsArticleCard(it) {
         card.style.setProperty("max-height", "none", "important");
       } catch (_) {}
     }
-    list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
-    try {
-      await iuLoadNakupDomu();
-    } catch (err) {
-      console.error("[iuNakupDomu] load failed", err);
-      list.innerHTML = '<div class="iuModalMsg">Odkazy se nepodařilo načíst. Zkuste obnovit stránku.</div>';
+    if (list) {
+      list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
+      try {
+        await iuLoadNakupDomu();
+      } catch (err) {
+        console.error("[iuNakupDomu] load failed", err);
+        list.innerHTML = '<div class="iuModalMsg">Odkazy se nepodařilo načíst. Zkuste obnovit stránku.</div>';
+      }
     }
     try {
       requestAnimationFrame(function() { iuNakupApplyFeedWidth(); });
@@ -9047,10 +9065,475 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /* Evidence nákupů — upload flow: contract payload models for future backend (no OCR/parser) */
+  const IU_EVIDENCE_UPLOAD_CONTRACT = {
+    receipt_photo: { kind: "receipt_photo", accept: ["image/*"], type: "image" },
+    invoice_photo: { kind: "invoice_photo", accept: ["image/*"], type: "image" },
+    receipt_pdf: { kind: "receipt_pdf", accept: ["application/pdf"], type: "pdf" },
+    invoice_pdf: { kind: "invoice_pdf", accept: ["application/pdf"], type: "pdf" }
+  };
+  const IU_EVIDENCE_MAX_FILE_BYTES = 10 * 1024 * 1024;
+
+  /** OCR pipeline hook: file + kind -> Promise<extracted>. Stub: no real OCR, returns unknown/needsReview. */
+  function iuEvidenceOcrHook(file, kind) {
+    return new Promise(function(resolve) {
+      setTimeout(function() {
+        var docType = (kind === "receipt_photo" || kind === "receipt_pdf") ? "receipt" : "invoice";
+        resolve({
+          store: "unknown",
+          date: "unknown",
+          time: "unknown",
+          total: "unknown",
+          priceVatIncluded: "unknown",
+          priceVatExcluded: "unknown",
+          priceVatExcludedState: "unknown",
+          docType: docType,
+          confidence: 0,
+          needsReview: true
+        });
+      }, 300);
+    });
+  }
+
+  try { window.iuEvidenceOcrHook = iuEvidenceOcrHook; } catch (_) {}
+
+  /** Basic field extraction: normalise extracted result for storage (unknown = not invented). */
+  function iuEvidenceParseExtraction(extracted) {
+    var v = function(x) { return (x && String(x).trim() && String(x) !== "unknown") ? String(x).trim() : "unknown"; };
+    return {
+      store: v(extracted.store),
+      date: v(extracted.date),
+      time: v(extracted.time),
+      total: v(extracted.total),
+      priceVatIncluded: v(extracted.priceVatIncluded),
+      priceVatExcluded: v(extracted.priceVatExcluded),
+      priceVatExcludedState: (extracted.priceVatExcludedState === "known" && extracted.priceVatExcluded && extracted.priceVatExcluded !== "unknown") ? "known" : "unknown",
+      docType: v(extracted.docType) || "receipt",
+      confidence: typeof extracted.confidence === "number" ? extracted.confidence : 0,
+      needsReview: !!extracted.needsReview
+    };
+  }
+
+  function iuEvidenceUploadInit(){
+    const modal = document.getElementById("iuNakupModal");
+    const topBlock = modal && modal.querySelector("[data-iu=\"evidence-nakupu-top\"]");
+    if (!topBlock) return;
+    const container = topBlock.querySelector("[data-iu=\"upload-flow-container\"]");
+    const photoCta = topBlock.querySelector("[data-iu=\"photo-receipt-cta\"]");
+    const uploadCta = topBlock.querySelector("[data-iu=\"upload-receipt-cta\"]");
+    const photoInput = topBlock.querySelector("[data-iu=\"upload-photo-input\"]");
+    const uploadInput = topBlock.querySelector("[data-iu=\"upload-pdf-input\"]");
+    const stateIdle = topBlock.querySelector("[data-iu=\"upload-state-idle\"]");
+    const statePending = topBlock.querySelector("[data-iu=\"upload-state-pending\"]");
+    const stateSuccess = topBlock.querySelector("[data-iu=\"upload-state-success\"]");
+    const stateFailed = topBlock.querySelector("[data-iu=\"upload-state-failed\"]");
+    const validationBlock = topBlock.querySelector("[data-iu=\"validation-messages\"]");
+    const typeValidation = topBlock.querySelector("[data-iu=\"file-type-validation\"]");
+    const sizeValidation = topBlock.querySelector("[data-iu=\"file-size-validation\"]");
+    const previewShell = topBlock.querySelector("[data-iu=\"preview-shell\"]");
+    const previewName = topBlock.querySelector("[data-iu=\"preview-filename\"]");
+    const previewMeta = topBlock.querySelector("[data-iu=\"preview-meta\"]");
+    const extractionPanel = topBlock.querySelector("[data-iu=\"ocr-extraction-result\"]");
+    const extractionStore = topBlock.querySelector("[data-iu=\"extraction-store\"]");
+    const extractionDate = topBlock.querySelector("[data-iu=\"extraction-date\"]");
+    const extractionTime = topBlock.querySelector("[data-iu=\"extraction-time\"]");
+    const extractionTotal = topBlock.querySelector("[data-iu=\"extraction-total\"]");
+    const extractionVatIncluded = topBlock.querySelector("[data-iu=\"extraction-vat-included\"]");
+    const extractionVatExcludedState = topBlock.querySelector("[data-iu=\"extraction-vat-excluded-state\"]");
+    const extractionDocType = topBlock.querySelector("[data-iu=\"extraction-doc-type\"]");
+    const confidenceVisible = topBlock.querySelector("[data-iu=\"confidence-visible\"]");
+    const needsReviewVisible = topBlock.querySelector("[data-iu=\"needs-review-visible\"]");
+    if (!container || !photoCta || !uploadCta || !photoInput || !uploadInput) return;
+
+    function setState(which) {
+      [stateIdle, statePending, stateSuccess, stateFailed].forEach(function(el) {
+        if (el) { el.hidden = true; }
+      });
+      const el = which === "idle" ? stateIdle : which === "pending" ? statePending : which === "success" ? stateSuccess : which === "failed" ? stateFailed : null;
+      if (el) { el.hidden = false; }
+    }
+    function showValidation(typeMsg, sizeMsg) {
+      if (!validationBlock) return;
+      validationBlock.hidden = !typeMsg && !sizeMsg;
+      if (typeValidation) typeValidation.textContent = typeMsg || "";
+      if (sizeValidation) sizeValidation.textContent = sizeMsg || "";
+    }
+    function showPreview(file) {
+      if (!previewShell || !previewName || !previewMeta) return;
+      previewName.textContent = file.name || "—";
+      previewMeta.textContent = (file.type || "") + " · " + (file.size ? Math.round(file.size / 1024) + " KB" : "");
+    }
+
+    function showExtraction(parsed) {
+      if (!extractionPanel) return;
+      extractionPanel.hidden = false;
+      var unknownLabel = "unknown";
+      if (extractionStore) extractionStore.textContent = parsed.store === "unknown" ? unknownLabel : parsed.store;
+      if (extractionDate) extractionDate.textContent = parsed.date === "unknown" ? unknownLabel : parsed.date;
+      if (extractionTime) extractionTime.textContent = parsed.time === "unknown" ? unknownLabel : parsed.time;
+      if (extractionTotal) extractionTotal.textContent = parsed.total === "unknown" ? unknownLabel : parsed.total;
+      if (extractionVatIncluded) extractionVatIncluded.textContent = parsed.priceVatIncluded === "unknown" ? unknownLabel : parsed.priceVatIncluded;
+      if (extractionVatExcludedState) extractionVatExcludedState.textContent = parsed.priceVatExcludedState === "unknown" ? "Bez DPH: " + unknownLabel : (parsed.priceVatExcluded === "unknown" ? unknownLabel : parsed.priceVatExcluded);
+      if (extractionDocType) extractionDocType.textContent = parsed.docType === "unknown" ? unknownLabel : parsed.docType;
+      if (confidenceVisible) confidenceVisible.textContent = String(parsed.confidence);
+      if (needsReviewVisible) needsReviewVisible.textContent = parsed.needsReview ? "Ano" : "Ne";
+    }
+
+    function validateFile(file, acceptList) {
+      var typeErr = "";
+      var sizeErr = "";
+      var allowed = acceptList || ["image/*", "application/pdf"];
+      var isImage = (file.type || "").indexOf("image/") === 0;
+      var isPdf = (file.type || "") === "application/pdf";
+      if (!isImage && !isPdf) typeErr = "Povolené typy: obrázek nebo PDF.";
+      if (file.size > IU_EVIDENCE_MAX_FILE_BYTES) sizeErr = "Max. velikost 10 MB.";
+      return { typeErr: typeErr, sizeErr: sizeErr, valid: !typeErr && !sizeErr };
+    }
+
+    function handleFile(file, kind) {
+      showValidation("", "");
+      var v = validateFile(file);
+      if (!v.valid) {
+        showValidation(v.typeErr, v.sizeErr);
+        setState("failed");
+        return;
+      }
+      showPreview(file);
+      setState("pending");
+      iuEvidenceOcrHook(file, kind).then(function(extracted) {
+        var parsed = iuEvidenceParseExtraction(extracted);
+        showExtraction(parsed);
+        var today = new Date();
+        var dateStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
+        var rec = {
+          id: "iu-ev-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8),
+          docType: parsed.docType,
+          store: parsed.store === "unknown" ? "—" : parsed.store,
+          date: parsed.date === "unknown" ? dateStr : parsed.date,
+          time: parsed.time === "unknown" ? "—" : parsed.time,
+          total: parsed.total === "unknown" ? "—" : parsed.total,
+          priceVatIncluded: parsed.priceVatIncluded === "unknown" ? "—" : parsed.priceVatIncluded,
+          priceVatExcluded: parsed.priceVatExcludedState === "known" ? parsed.priceVatExcluded : "",
+          priceVatExcludedState: parsed.priceVatExcludedState,
+          processingStatus: "extrahováno",
+          confidence: parsed.confidence,
+          needsReview: parsed.needsReview
+        };
+        var arr = iuEvidenceGetReceipts();
+        arr.push(rec);
+        iuEvidenceSaveReceipts(arr);
+        setState("success");
+      });
+    }
+
+    photoCta.addEventListener("click", function() {
+      if (photoInput) photoInput.click();
+    });
+    uploadCta.addEventListener("click", function() {
+      if (uploadInput) uploadInput.click();
+    });
+    photoInput.addEventListener("change", function() {
+      var f = photoInput && photoInput.files && photoInput.files[0];
+      if (f) handleFile(f, "receipt_photo");
+      if (photoInput) photoInput.value = "";
+    });
+    uploadInput.addEventListener("change", function() {
+      var f = uploadInput && uploadInput.files && uploadInput.files[0];
+      if (f) handleFile(f, "receipt_pdf");
+      if (uploadInput) uploadInput.value = "";
+    });
+  }
+
+  const IU_EVIDENCE_RECEIPTS_KEY = "iu:evidence:receipts";
+
+  /** Community layer: FORBIDDEN keys — must never appear in community record. */
+  var IU_EVIDENCE_COMMUNITY_FORBIDDEN = ["rawImage", "rawPdf", "rawText", "name", "email", "phone", "address", "customerAddress", "paymentData", "userId", "userIdentifier", "iban", "cardNumber", "originalFile", "fullText"];
+  /** Community layer: allowed keys only (safe anonymized extract). */
+  var IU_EVIDENCE_COMMUNITY_ALLOWED = ["storeBrand", "merchantName", "city", "area", "date", "time", "total", "priceVatIncluded", "priceVatExcludedState", "priceVatExcluded", "items", "confidence", "needsReview", "docType"];
+
+  /** Safe community record model: returns empty template (no personal data). */
+  function iuEvidenceCommunityRecordModel() {
+    return {
+      storeBrand: null,
+      merchantName: null,
+      city: null,
+      area: null,
+      date: null,
+      time: null,
+      total: null,
+      priceVatIncluded: null,
+      priceVatExcludedState: null,
+      priceVatExcluded: null,
+      items: null,
+      confidence: null,
+      needsReview: null,
+      docType: null
+    };
+  }
+
+  /** Anonymization pipeline: personal record -> community-safe record. Excludes all forbidden fields. */
+  function iuEvidenceAnonymizeForCommunity(personalRecord) {
+    var out = iuEvidenceCommunityRecordModel();
+    var allowed = IU_EVIDENCE_COMMUNITY_ALLOWED;
+    for (var i = 0; i < allowed.length; i++) {
+      var k = allowed[i];
+      if (personalRecord && Object.prototype.hasOwnProperty.call(personalRecord, k)) {
+        if (k === "store" && personalRecord.store) out.merchantName = personalRecord.store;
+        else if (k === "store") out.merchantName = personalRecord.merchantName || personalRecord.storeBrand || null;
+        else out[k] = personalRecord[k];
+      }
+    }
+    if (personalRecord && personalRecord.store && !out.merchantName) out.merchantName = personalRecord.store;
+    return out;
+  }
+
+  /** Review gate: only records with needsReview === false pass (safe for community submit). */
+  function iuEvidenceNeedsReviewGate(record) {
+    return record && record.needsReview === false;
+  }
+
+  try {
+    window.iuEvidenceCommunityForbiddenKeys = IU_EVIDENCE_COMMUNITY_FORBIDDEN.slice();
+    window.iuEvidenceCommunityRecordModel = iuEvidenceCommunityRecordModel;
+    window.iuEvidenceAnonymizeForCommunity = iuEvidenceAnonymizeForCommunity;
+    window.iuEvidenceNeedsReviewGate = iuEvidenceNeedsReviewGate;
+  } catch (_) {}
+
+  /** Warranty fields model: source, confidence, needsReview required. Later phase. */
+  function iuEvidenceWarrantyModel() {
+    return {
+      warrantyEndDate: null,
+      source: null,
+      confidence: null,
+      needsReview: null
+    };
+  }
+
+  /** Return window model: lhůta pro vrácení. source, confidence, needsReview required. */
+  function iuEvidenceReturnWindowModel() {
+    return {
+      returnByDate: null,
+      source: null,
+      confidence: null,
+      needsReview: null
+    };
+  }
+
+  try {
+    window.iuEvidenceWarrantyModel = iuEvidenceWarrantyModel;
+    window.iuEvidenceReturnWindowModel = iuEvidenceReturnWindowModel;
+  } catch (_) {}
+
+  function iuEvidenceSeedRecord(){
+    var d = new Date();
+    var dateStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    return { id: "iu-ev-seed-1", docType: "receipt", store: "Test obchod", date: dateStr, time: "14:30", total: "450 Kč", priceVatIncluded: "450 Kč", priceVatExcluded: "371,90 Kč", priceVatExcludedState: "known", processingStatus: "uloženo", confidence: 0.85, needsReview: false };
+  }
+  const IU_EVIDENCE_SEED = [iuEvidenceSeedRecord()];
+
+  function iuEvidenceGetReceipts(){
+    try {
+      var raw = localStorage.getItem(IU_EVIDENCE_RECEIPTS_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr) || arr.length === 0) {
+        arr = JSON.parse(JSON.stringify(IU_EVIDENCE_SEED));
+        localStorage.setItem(IU_EVIDENCE_RECEIPTS_KEY, JSON.stringify(arr));
+      }
+      return arr;
+    } catch (_) {
+      return JSON.parse(JSON.stringify(IU_EVIDENCE_SEED));
+    }
+  }
+
+  function iuEvidenceSaveReceipts(arr){
+    try {
+      localStorage.setItem(IU_EVIDENCE_RECEIPTS_KEY, JSON.stringify(arr));
+    } catch (_) {}
+  }
+
+  function iuEvidenceCalendarInit(){
+    const modal = document.getElementById("iuNakupModal");
+    const topBlock = modal && modal.querySelector("[data-iu=\"evidence-nakupu-top\"]");
+    if (!topBlock) return;
+    const grid = topBlock.querySelector("[data-iu=\"calendar-grid\"]");
+    const monthEl = topBlock.querySelector("[data-iu=\"calendar-month\"]");
+    const prevBtn = topBlock.querySelector("[data-iu=\"calendar-prev\"]");
+    const nextBtn = topBlock.querySelector("[data-iu=\"calendar-next\"]");
+    const dailyList = topBlock.querySelector("[data-iu=\"daily-receipt-list\"]");
+    const dailyEmpty = topBlock.querySelector("[data-iu=\"daily-list-empty\"]");
+    const detailPanel = topBlock.querySelector("[data-iu=\"receipt-detail\"]");
+    const detailStore = topBlock.querySelector("[data-iu=\"receipt-detail-store\"]");
+    const detailDate = topBlock.querySelector("[data-iu=\"receipt-detail-date\"]");
+    const detailTime = topBlock.querySelector("[data-iu=\"receipt-detail-time\"]");
+    const detailTotal = topBlock.querySelector("[data-iu=\"receipt-detail-total\"]");
+    const detailVatIncluded = topBlock.querySelector("[data-iu=\"receipt-detail-price-vat-included\"]");
+    const detailVatExcluded = topBlock.querySelector("[data-iu=\"receipt-detail-price-vat-excluded\"]");
+    const detailVatExcludedState = topBlock.querySelector("[data-iu=\"receipt-detail-price-vat-excluded-state\"]");
+    const detailStatus = topBlock.querySelector("[data-iu=\"receipt-detail-status\"]");
+    const detailConfidence = topBlock.querySelector("[data-iu=\"receipt-detail-confidence\"]");
+    const detailNeedsReview = topBlock.querySelector("[data-iu=\"receipt-detail-needs-review\"]");
+    const backBtn = topBlock.querySelector("[data-iu=\"receipt-detail-back\"]");
+    const deleteBtn = topBlock.querySelector("[data-iu=\"receipt-detail-delete\"]");
+    const dailyListShell = topBlock.querySelector("[data-iu=\"daily-list-shell\"]");
+    const emptyState = topBlock.querySelector("[data-iu=\"empty-state\"]");
+    if (!grid || !monthEl || !dailyList) return;
+
+    var today = new Date();
+    var currentMonth = today.getMonth();
+    var currentYear = today.getFullYear();
+    var selectedDate = (function(){
+      var y = currentYear, m = currentMonth + 1, d = today.getDate();
+      return y + "-" + String(m).padStart(2, "0") + "-" + String(d).padStart(2, "0");
+    })();
+    var selectedReceiptId = null;
+
+    function dateKey(d){
+      var y = d.getFullYear();
+      var m = String(d.getMonth() + 1).padStart(2, "0");
+      var day = String(d.getDate()).padStart(2, "0");
+      return y + "-" + m + "-" + day;
+    }
+
+    function receiptsByDate(){
+      var receipts = iuEvidenceGetReceipts();
+      var byDate = {};
+      receipts.forEach(function(r){
+        var d = r.date || "";
+        if (!byDate[d]) byDate[d] = [];
+        byDate[d].push(r);
+      });
+      return byDate;
+    }
+
+    function renderCalendar(){
+      var byDate = receiptsByDate();
+      var first = new Date(currentYear, currentMonth, 1);
+      var last = new Date(currentYear, currentMonth + 1, 0);
+      var startPad = (first.getDay() + 6) % 7;
+      var daysInMonth = last.getDate();
+      var monthNames = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"];
+      if (monthEl) monthEl.textContent = monthNames[currentMonth] + " " + currentYear;
+      grid.innerHTML = "";
+      for (var i = 0; i < 7; i++) {
+        var h = document.createElement("div");
+        h.setAttribute("role", "columnheader");
+        h.className = "iu-evidence-calendar-day";
+        h.textContent = ["Po","Út","St","Čt","Pá","So","Ne"][i];
+        h.style.cursor = "default";
+        grid.appendChild(h);
+      }
+      for (var p = 0; p < startPad; p++) {
+        var empty = document.createElement("div");
+        empty.className = "iu-evidence-calendar-day iu-evidence-day-other";
+        empty.textContent = "";
+        empty.style.pointerEvents = "none";
+        grid.appendChild(empty);
+      }
+      for (var d = 1; d <= daysInMonth; d++) {
+        var dayDate = new Date(currentYear, currentMonth, d);
+        var key = dateKey(dayDate);
+        var hasReceipts = byDate[key] && byDate[key].length > 0;
+        var isSelected = selectedDate === key;
+        var cell = document.createElement("button");
+        cell.type = "button";
+        cell.className = "iu-evidence-calendar-day" + (isSelected ? " iu-evidence-day-selected" : hasReceipts ? " iu-evidence-day-has" : "") + (currentMonth !== dayDate.getMonth() ? " iu-evidence-day-other" : "");
+        cell.textContent = d;
+        cell.setAttribute("data-date", key);
+        cell.setAttribute("aria-label", "Den " + d);
+        cell.addEventListener("click", function(){
+          var k = this.getAttribute("data-date");
+          selectedDate = k;
+          renderCalendar();
+          renderDailyList();
+          if (detailPanel && selectedReceiptId) { detailPanel.hidden = true; selectedReceiptId = null; }
+        });
+        grid.appendChild(cell);
+      }
+    }
+
+    function renderDailyList(){
+      if (!dailyList || !dailyEmpty) return;
+      dailyList.innerHTML = "";
+      dailyEmpty.hidden = true;
+      if (!selectedDate) return;
+      var receipts = iuEvidenceGetReceipts().filter(function(r){ return r.date === selectedDate; });
+      if (receipts.length === 0) {
+        dailyEmpty.hidden = false;
+        return;
+      }
+      receipts.forEach(function(r){
+        var li = document.createElement("li");
+        li.className = "iu-evidence-daily-item";
+        li.setAttribute("data-receipt-id", r.id || "");
+        li.textContent = (r.store || "—") + " · " + (r.total || "");
+        li.addEventListener("click", function(){
+          selectedReceiptId = this.getAttribute("data-receipt-id");
+          showDetail(selectedReceiptId);
+        });
+        dailyList.appendChild(li);
+      });
+    }
+
+    function showDetail(id){
+      var receipts = iuEvidenceGetReceipts();
+      var r = receipts.filter(function(x){ return (x.id || "") === id; })[0];
+      if (!r || !detailPanel) return;
+      if (detailStore) detailStore.textContent = r.store || "—";
+      if (detailDate) detailDate.textContent = r.date || "—";
+      if (detailTime) detailTime.textContent = r.time || "—";
+      if (detailTotal) detailTotal.textContent = r.total || "—";
+      if (detailVatIncluded) detailVatIncluded.textContent = r.priceVatIncluded || "—";
+      if (detailVatExcluded) {
+        detailVatExcluded.textContent = (r.priceVatExcludedState === "known" && r.priceVatExcluded) ? r.priceVatExcluded : "";
+      }
+      if (detailVatExcludedState) {
+        detailVatExcludedState.textContent = (r.priceVatExcludedState === "unknown" || !r.priceVatExcluded) ? "Bez DPH: neuvedeno" : "";
+      }
+      if (detailStatus) detailStatus.textContent = r.processingStatus || "—";
+      if (detailConfidence) detailConfidence.textContent = typeof r.confidence === "number" ? String(r.confidence) : "—";
+      if (detailNeedsReview) detailNeedsReview.textContent = r.needsReview ? "Ano" : "Ne";
+      detailPanel.hidden = false;
+      if (dailyListShell) dailyListShell.hidden = true;
+    }
+
+    function hideDetail(){
+      if (detailPanel) detailPanel.hidden = true;
+      if (dailyListShell) dailyListShell.hidden = false;
+      selectedReceiptId = null;
+      renderDailyList();
+    }
+
+    if (backBtn) backBtn.addEventListener("click", hideDetail);
+    if (deleteBtn) deleteBtn.addEventListener("click", function(){
+      if (!selectedReceiptId) return;
+      var receipts = iuEvidenceGetReceipts().filter(function(r){ return (r.id || "") !== selectedReceiptId; });
+      iuEvidenceSaveReceipts(receipts);
+      hideDetail();
+      renderCalendar();
+    });
+
+    if (prevBtn) prevBtn.addEventListener("click", function(){
+      currentMonth -= 1;
+      if (currentMonth < 0) { currentMonth = 11; currentYear -= 1; }
+      renderCalendar();
+    });
+    if (nextBtn) nextBtn.addEventListener("click", function(){
+      currentMonth += 1;
+      if (currentMonth > 11) { currentMonth = 0; currentYear += 1; }
+      renderCalendar();
+    });
+
+    renderCalendar();
+    if (emptyState) emptyState.hidden = iuEvidenceGetReceipts().length > 0;
+  }
+
   function iuNakupDomuInit(){
     const { modal, openBtn, closeBtn } = iuNakupEls();
     iuNakupCommunityInit();
+    iuEvidenceUploadInit();
+    iuEvidenceCalendarInit();
     function openNakupPanel() {
+      try { if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } catch (_) {}
       try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
     }
     openBtn?.addEventListener("click", (e) => {
@@ -9063,18 +9546,26 @@ function buildVideoAsArticleCard(it) {
     }, { passive: false });
     closeBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
+      const q = document.getElementById("iuQuickFeed");
+      if (q && q.querySelector(".iuModalCard") && typeof window.iuNakupCloseQuickView === "function") window.iuNakupCloseQuickView();
+      else iuNakupClose();
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
     });
     modal?.addEventListener("click", (e) => {
       if (e.target === modal) {
+        const q = document.getElementById("iuQuickFeed");
+        if (q && q.querySelector(".iuModalCard") && typeof window.iuNakupCloseQuickView === "function") window.iuNakupCloseQuickView();
+        else iuNakupClose();
         try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
       }
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
-        const m = iuNakupEls().modal;
-        if (m && !m.hidden) {
-          try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
+        const q = document.getElementById("iuQuickFeed");
+        if (q && q.querySelector(".iuModalCard") && typeof window.iuNakupCloseQuickView === "function") { window.iuNakupCloseQuickView(); try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {} }
+        else {
+          const m = iuNakupEls().modal;
+          if (m && !m.hidden) { iuNakupClose(); try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {} }
         }
       }
     });
@@ -10199,7 +10690,7 @@ function buildVideoAsArticleCard(it) {
       ]
     },
     nakup: {
-      title: "Nákup domů",
+      title: "Evidence nákupů",
       items: [
         { name: "Rohlík.cz", url: "https://www.rohlik.cz", desc: "Online nákup potravin s dovozem", external: true },
         { name: "Košík.cz", url: "https://www.kosik.cz", desc: "Online nákup potravin", external: true },
@@ -11618,6 +12109,34 @@ function buildVideoAsArticleCard(it) {
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
     if (!stage || !quick) return;
+    if (keyNorm === "nakup") {
+      const modal = document.getElementById("iuNakupModal");
+      let card = modal && modal.querySelector(".iuModalCard");
+      if (!card && quick) card = quick.querySelector(".iuModalCard");
+      if (card && quick) {
+        if (modal && card.parentElement === modal) {
+          modal.hidden = true;
+          quick.appendChild(card);
+        }
+        stage.setAttribute("data-iu-view", "quick");
+        quick.hidden = false;
+        quick.setAttribute("data-iu-quick-key", "nakup");
+        if (window.innerWidth <= 900) {
+          var w = window.innerWidth;
+          var h = window.innerHeight;
+          quick.style.setProperty("width", w + "px", "important");
+          quick.style.setProperty("min-width", w + "px", "important");
+          quick.style.setProperty("display", "block", "important");
+          card.style.setProperty("width", w + "px", "important");
+          card.style.setProperty("min-width", w + "px", "important");
+          card.style.setProperty("min-height", h + "px", "important");
+          card.style.setProperty("max-height", "none", "important");
+        }
+        if (typeof window.iuLoadNakupDomu === "function") window.iuLoadNakupDomu().catch(function(){});
+        try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
+      }
+      return;
+    }
     if (keyNorm === "banka" || keyNorm === "bakalari" || keyNorm === "pojistovna") {
       const titles = { banka: "Banka", bakalari: "Bakaláři", pojistovna: "Zdravotní pojišťovna" };
       stage.setAttribute("data-iu-view", "quick");
@@ -12128,10 +12647,11 @@ function buildVideoAsArticleCard(it) {
       const el = t.closest('[data-iuq]');
       if (!el) return;
       const key = (el.getAttribute("data-iuq") || "").trim().toLowerCase();
-      if (key === "nakup") return;
-      e.preventDefault();
-      e.stopPropagation();
-      if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+      if (key !== "nakup") {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+      }
       if (key) iuShowQuickFeed(key);
     }, true);
   }
@@ -14335,15 +14855,17 @@ function buildVideoAsArticleCard(it) {
     try {
       const panel = parsePanelFromUrl();
       if (panel === null && __iuCurrentPanel !== null) {
-        iuHideAllOverlaysNow();
         const prev = __iuCurrentPanel;
+        if (prev === "shopping" && typeof window.iuNakupCloseQuickView === "function") { try { window.iuNakupCloseQuickView(); } catch (_) {} }
+        else iuHideAllOverlaysNow();
         try { window.dispatchEvent(new CustomEvent('iu-close-panel', { detail: prev })); } catch {}
         __iuCurrentPanel = null;
         return;
       }
       if (panel === "shopping") {
-        const feed = document.getElementById("feed");
-        if (feed) { try { feed.hidden = true; feed.style.display = "none"; feed.setAttribute("data-iu-feed-hidden-by", "nakup"); window.__iuFeedHiddenByNakup = true; } catch (_) {} }
+        if (typeof window.iuShowQuickFeed === "function") { try { window.iuShowQuickFeed("nakup"); } catch (_) {} }
+        __iuCurrentPanel = "shopping";
+        return;
       }
       if (panel !== null) safeOpenPanel(panel);
       else __iuCurrentPanel = null;
