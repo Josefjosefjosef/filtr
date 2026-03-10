@@ -16173,6 +16173,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 // === PWA install CTA: beforeinstallprompt (Android) + iOS add-to-home overlay ===
 // RCA: beforeinstallprompt can fire before this script runs (module deferred). Register listener
 // immediately so we never miss the event; bind DOM/click in run() when DOM is ready.
+// Proof contract: desktop visible only when BIP fired; prod proof must inject BIP for desktop and require CLS===0 (no relaxation).
 (function iuPwaInstallCta() {
   var deferredPrompt = null;
   var ctaEl = null;
