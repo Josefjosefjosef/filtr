@@ -11294,6 +11294,128 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   margin: 4px 0 0 0;
 }
 
+/* Evidence nákupů — kalendář, denní seznam, detail dokladu */
+.iu-evidence-calendar-nav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.iu-evidence-calendar-prev,
+.iu-evidence-calendar-next{
+  padding: 4px 10px;
+  font-size: 18px;
+  border: 1px solid rgba(11,27,43,.2);
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  color: #0b1b2b;
+}
+.iu-evidence-calendar-month{
+  font-size: 14px;
+  font-weight: 600;
+  color: #0b1b2b;
+}
+.iu-evidence-calendar-grid{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  font-size: 12px;
+}
+.iu-evidence-calendar-day{
+  padding: 6px 4px;
+  text-align: center;
+  border-radius: 6px;
+  cursor: pointer;
+  color: rgba(11,27,43,.7);
+}
+.iu-evidence-calendar-day.iu-evidence-day-other{
+  color: rgba(11,27,43,.4);
+}
+.iu-evidence-calendar-day.iu-evidence-day-selected{
+  background: #1F4B99;
+  color: #fff;
+}
+.iu-evidence-calendar-day.iu-evidence-day-has{
+  font-weight: 600;
+  color: #1F4B99;
+}
+.iu-evidence-daily-list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.iu-evidence-daily-item{
+  display: block;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,.12);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #0b1b2b;
+  text-align: left;
+}
+.iu-evidence-daily-item:hover{
+  background: #f3f6fb;
+}
+.iu-evidence-daily-empty{
+  font-size: 13px;
+  color: rgba(11,27,43,.65);
+  padding: 10px 0;
+}
+.iu-evidence-detail-panel{
+  margin-top: 12px;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,.12);
+  border-radius: 10px;
+}
+.iu-evidence-detail-fields{
+  margin: 0 0 14px 0;
+  font-size: 14px;
+}
+.iu-evidence-detail-fields dt{
+  margin-top: 10px;
+  margin-bottom: 2px;
+  font-weight: 600;
+  color: rgba(11,27,43,.8);
+}
+.iu-evidence-detail-fields dd{
+  margin: 0;
+  color: #0b1b2b;
+}
+.iu-evidence-vat-state{
+  font-style: italic;
+  color: rgba(11,27,43,.65);
+}
+.iu-evidence-detail-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.iu-evidence-btn-back,
+.iu-evidence-btn-delete{
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.iu-evidence-btn-back{
+  border: 1px solid #1F4B99;
+  background: #1F4B99;
+  color: #fff;
+}
+.iu-evidence-btn-delete{
+  border: 1px solid rgba(11,27,43,.25);
+  background: #fff;
+  color: #b45309;
+}
+
 /* Nákup domů — komunitní horní blok (shell) — legacy, kept for reference */
 .iu-nakup-community-top{
   overflow-x: hidden;

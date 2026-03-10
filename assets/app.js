@@ -9159,10 +9159,211 @@ function buildVideoAsArticleCard(it) {
     });
   }
 
+  const IU_EVIDENCE_RECEIPTS_KEY = "iu:evidence:receipts";
+  function iuEvidenceSeedRecord(){
+    var d = new Date();
+    var dateStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    return { id: "iu-ev-seed-1", docType: "receipt", store: "Test obchod", date: dateStr, time: "14:30", total: "450 Kč", priceVatIncluded: "450 Kč", priceVatExcluded: "371,90 Kč", priceVatExcludedState: "known", processingStatus: "uloženo" };
+  }
+  const IU_EVIDENCE_SEED = [iuEvidenceSeedRecord()];
+
+  function iuEvidenceGetReceipts(){
+    try {
+      var raw = localStorage.getItem(IU_EVIDENCE_RECEIPTS_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr) || arr.length === 0) {
+        arr = JSON.parse(JSON.stringify(IU_EVIDENCE_SEED));
+        localStorage.setItem(IU_EVIDENCE_RECEIPTS_KEY, JSON.stringify(arr));
+      }
+      return arr;
+    } catch (_) {
+      return JSON.parse(JSON.stringify(IU_EVIDENCE_SEED));
+    }
+  }
+
+  function iuEvidenceSaveReceipts(arr){
+    try {
+      localStorage.setItem(IU_EVIDENCE_RECEIPTS_KEY, JSON.stringify(arr));
+    } catch (_) {}
+  }
+
+  function iuEvidenceCalendarInit(){
+    const modal = document.getElementById("iuNakupModal");
+    const topBlock = modal && modal.querySelector("[data-iu=\"evidence-nakupu-top\"]");
+    if (!topBlock) return;
+    const grid = topBlock.querySelector("[data-iu=\"calendar-grid\"]");
+    const monthEl = topBlock.querySelector("[data-iu=\"calendar-month\"]");
+    const prevBtn = topBlock.querySelector("[data-iu=\"calendar-prev\"]");
+    const nextBtn = topBlock.querySelector("[data-iu=\"calendar-next\"]");
+    const dailyList = topBlock.querySelector("[data-iu=\"daily-receipt-list\"]");
+    const dailyEmpty = topBlock.querySelector("[data-iu=\"daily-list-empty\"]");
+    const detailPanel = topBlock.querySelector("[data-iu=\"receipt-detail\"]");
+    const detailStore = topBlock.querySelector("[data-iu=\"receipt-detail-store\"]");
+    const detailDate = topBlock.querySelector("[data-iu=\"receipt-detail-date\"]");
+    const detailTime = topBlock.querySelector("[data-iu=\"receipt-detail-time\"]");
+    const detailTotal = topBlock.querySelector("[data-iu=\"receipt-detail-total\"]");
+    const detailVatIncluded = topBlock.querySelector("[data-iu=\"receipt-detail-price-vat-included\"]");
+    const detailVatExcluded = topBlock.querySelector("[data-iu=\"receipt-detail-price-vat-excluded\"]");
+    const detailVatExcludedState = topBlock.querySelector("[data-iu=\"receipt-detail-price-vat-excluded-state\"]");
+    const detailStatus = topBlock.querySelector("[data-iu=\"receipt-detail-status\"]");
+    const backBtn = topBlock.querySelector("[data-iu=\"receipt-detail-back\"]");
+    const deleteBtn = topBlock.querySelector("[data-iu=\"receipt-detail-delete\"]");
+    const dailyListShell = topBlock.querySelector("[data-iu=\"daily-list-shell\"]");
+    const emptyState = topBlock.querySelector("[data-iu=\"empty-state\"]");
+    if (!grid || !monthEl || !dailyList) return;
+
+    var today = new Date();
+    var currentMonth = today.getMonth();
+    var currentYear = today.getFullYear();
+    var selectedDate = (function(){
+      var y = currentYear, m = currentMonth + 1, d = today.getDate();
+      return y + "-" + String(m).padStart(2, "0") + "-" + String(d).padStart(2, "0");
+    })();
+    var selectedReceiptId = null;
+
+    function dateKey(d){
+      var y = d.getFullYear();
+      var m = String(d.getMonth() + 1).padStart(2, "0");
+      var day = String(d.getDate()).padStart(2, "0");
+      return y + "-" + m + "-" + day;
+    }
+
+    function receiptsByDate(){
+      var receipts = iuEvidenceGetReceipts();
+      var byDate = {};
+      receipts.forEach(function(r){
+        var d = r.date || "";
+        if (!byDate[d]) byDate[d] = [];
+        byDate[d].push(r);
+      });
+      return byDate;
+    }
+
+    function renderCalendar(){
+      var byDate = receiptsByDate();
+      var first = new Date(currentYear, currentMonth, 1);
+      var last = new Date(currentYear, currentMonth + 1, 0);
+      var startPad = (first.getDay() + 6) % 7;
+      var daysInMonth = last.getDate();
+      var monthNames = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"];
+      if (monthEl) monthEl.textContent = monthNames[currentMonth] + " " + currentYear;
+      grid.innerHTML = "";
+      for (var i = 0; i < 7; i++) {
+        var h = document.createElement("div");
+        h.setAttribute("role", "columnheader");
+        h.className = "iu-evidence-calendar-day";
+        h.textContent = ["Po","Út","St","Čt","Pá","So","Ne"][i];
+        h.style.cursor = "default";
+        grid.appendChild(h);
+      }
+      for (var p = 0; p < startPad; p++) {
+        var empty = document.createElement("div");
+        empty.className = "iu-evidence-calendar-day iu-evidence-day-other";
+        empty.textContent = "";
+        empty.style.pointerEvents = "none";
+        grid.appendChild(empty);
+      }
+      for (var d = 1; d <= daysInMonth; d++) {
+        var dayDate = new Date(currentYear, currentMonth, d);
+        var key = dateKey(dayDate);
+        var hasReceipts = byDate[key] && byDate[key].length > 0;
+        var isSelected = selectedDate === key;
+        var cell = document.createElement("button");
+        cell.type = "button";
+        cell.className = "iu-evidence-calendar-day" + (isSelected ? " iu-evidence-day-selected" : hasReceipts ? " iu-evidence-day-has" : "") + (currentMonth !== dayDate.getMonth() ? " iu-evidence-day-other" : "");
+        cell.textContent = d;
+        cell.setAttribute("data-date", key);
+        cell.setAttribute("aria-label", "Den " + d);
+        cell.addEventListener("click", function(){
+          var k = this.getAttribute("data-date");
+          selectedDate = k;
+          renderCalendar();
+          renderDailyList();
+          if (detailPanel && selectedReceiptId) { detailPanel.hidden = true; selectedReceiptId = null; }
+        });
+        grid.appendChild(cell);
+      }
+    }
+
+    function renderDailyList(){
+      if (!dailyList || !dailyEmpty) return;
+      dailyList.innerHTML = "";
+      dailyEmpty.hidden = true;
+      if (!selectedDate) return;
+      var receipts = iuEvidenceGetReceipts().filter(function(r){ return r.date === selectedDate; });
+      if (receipts.length === 0) {
+        dailyEmpty.hidden = false;
+        return;
+      }
+      receipts.forEach(function(r){
+        var li = document.createElement("li");
+        li.className = "iu-evidence-daily-item";
+        li.setAttribute("data-receipt-id", r.id || "");
+        li.textContent = (r.store || "—") + " · " + (r.total || "");
+        li.addEventListener("click", function(){
+          selectedReceiptId = this.getAttribute("data-receipt-id");
+          showDetail(selectedReceiptId);
+        });
+        dailyList.appendChild(li);
+      });
+    }
+
+    function showDetail(id){
+      var receipts = iuEvidenceGetReceipts();
+      var r = receipts.filter(function(x){ return (x.id || "") === id; })[0];
+      if (!r || !detailPanel) return;
+      if (detailStore) detailStore.textContent = r.store || "—";
+      if (detailDate) detailDate.textContent = r.date || "—";
+      if (detailTime) detailTime.textContent = r.time || "—";
+      if (detailTotal) detailTotal.textContent = r.total || "—";
+      if (detailVatIncluded) detailVatIncluded.textContent = r.priceVatIncluded || "—";
+      if (detailVatExcluded) {
+        detailVatExcluded.textContent = (r.priceVatExcludedState === "known" && r.priceVatExcluded) ? r.priceVatExcluded : "";
+      }
+      if (detailVatExcludedState) {
+        detailVatExcludedState.textContent = (r.priceVatExcludedState === "unknown" || !r.priceVatExcluded) ? "Bez DPH: neuvedeno" : "";
+      }
+      if (detailStatus) detailStatus.textContent = r.processingStatus || "—";
+      detailPanel.hidden = false;
+      if (dailyListShell) dailyListShell.hidden = true;
+    }
+
+    function hideDetail(){
+      if (detailPanel) detailPanel.hidden = true;
+      if (dailyListShell) dailyListShell.hidden = false;
+      selectedReceiptId = null;
+      renderDailyList();
+    }
+
+    if (backBtn) backBtn.addEventListener("click", hideDetail);
+    if (deleteBtn) deleteBtn.addEventListener("click", function(){
+      if (!selectedReceiptId) return;
+      var receipts = iuEvidenceGetReceipts().filter(function(r){ return (r.id || "") !== selectedReceiptId; });
+      iuEvidenceSaveReceipts(receipts);
+      hideDetail();
+      renderCalendar();
+    });
+
+    if (prevBtn) prevBtn.addEventListener("click", function(){
+      currentMonth -= 1;
+      if (currentMonth < 0) { currentMonth = 11; currentYear -= 1; }
+      renderCalendar();
+    });
+    if (nextBtn) nextBtn.addEventListener("click", function(){
+      currentMonth += 1;
+      if (currentMonth > 11) { currentMonth = 0; currentYear += 1; }
+      renderCalendar();
+    });
+
+    renderCalendar();
+    if (emptyState) emptyState.hidden = iuEvidenceGetReceipts().length > 0;
+  }
+
   function iuNakupDomuInit(){
     const { modal, openBtn, closeBtn } = iuNakupEls();
     iuNakupCommunityInit();
     iuEvidenceUploadInit();
+    iuEvidenceCalendarInit();
     function openNakupPanel() {
       try { if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } catch (_) {}
       try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}

@@ -2918,7 +2918,7 @@ style-src 'self' 'unsafe-inline' https:;
           <button id="iuNakupClose" type="button" aria-label="Zavřít">×</button>
         </div>
         <div class="iuModalBody">
-          <div class="iu-evidence-nakupu-top" data-iu="evidence-nakupu-top" role="region" aria-label="Evidence nákupů">
+          <div class="iu-evidence-nakupu-top" data-iu="evidence-nakupu-top" data-iu-personal-evidence-only="true" role="region" aria-label="Evidence nákupů">
             <div class="iu-evidence-cta-row" data-iu="evidence-cta-row">
               <button type="button" class="iu-evidence-cta iu-evidence-cta-photo" data-iu="photo-receipt-cta" aria-label="Vyfoť účtenku nebo fakturu"><span class="iu-evidence-cta-text">Vyfoť účtenku nebo fakturu</span></button>
               <button type="button" class="iu-evidence-cta iu-evidence-cta-upload" data-iu="upload-receipt-cta" aria-label="Nahraj účtenku nebo fakturu"><span class="iu-evidence-cta-text">Nahraj účtenku nebo fakturu</span></button>
@@ -2945,11 +2945,40 @@ style-src 'self' 'unsafe-inline' https:;
             <script type="application/json" id="iu-evidence-upload-contract" data-iu="server-contract-shell" aria-hidden="true">{"contract":"receipt_photo,invoice_photo,receipt_pdf,invoice_pdf","receipt_photo":{"type":"image","accept":["image/*"]},"invoice_photo":{"type":"image","accept":["image/*"]},"receipt_pdf":{"type":"pdf","accept":["application/pdf"]},"invoice_pdf":{"type":"pdf","accept":["application/pdf"]}}</script>
             <div class="iu-evidence-calendar-shell" data-iu="calendar-shell" aria-label="Kalendář nákupů">
               <h3 class="iu-evidence-shell-heading">Kalendář nákupů</h3>
-              <p class="iu-evidence-shell-placeholder">Připraveno pro výběr data.</p>
+              <div class="iu-evidence-calendar-nav" data-iu="calendar-nav" aria-label="Měsíc">
+                <button type="button" class="iu-evidence-calendar-prev" data-iu="calendar-prev" aria-label="Předchozí měsíc">‹</button>
+                <span class="iu-evidence-calendar-month" data-iu="calendar-month"></span>
+                <button type="button" class="iu-evidence-calendar-next" data-iu="calendar-next" aria-label="Následující měsíc">›</button>
+              </div>
+              <div class="iu-evidence-calendar-grid" data-iu="calendar-grid" role="grid" aria-label="Kalendář"></div>
             </div>
             <div class="iu-evidence-daily-list-shell" data-iu="daily-list-shell" aria-label="Seznam dokladů pro vybraný den">
               <h3 class="iu-evidence-shell-heading">Záznamy pro vybraný den</h3>
-              <p class="iu-evidence-shell-placeholder">Po výběru data se zde zobrazí seznam dokladů.</p>
+              <ul class="iu-evidence-daily-list" data-iu="daily-receipt-list" role="list" aria-label="Doklady"></ul>
+              <div class="iu-evidence-daily-empty" data-iu="daily-list-empty" role="status" hidden>Pro vybraný den nejsou žádné záznamy.</div>
+            </div>
+            <div class="iu-evidence-detail-panel" data-iu="receipt-detail" aria-label="Detail dokladu" hidden>
+              <h3 class="iu-evidence-shell-heading">Detail dokladu</h3>
+              <dl class="iu-evidence-detail-fields">
+                <dt data-iu="detail-label-store">Obchod / firma</dt>
+                <dd data-iu="receipt-detail-store"></dd>
+                <dt data-iu="detail-label-date">Datum</dt>
+                <dd data-iu="receipt-detail-date"></dd>
+                <dt data-iu="detail-label-time">Čas</dt>
+                <dd data-iu="receipt-detail-time"></dd>
+                <dt data-iu="detail-label-total">Celkem</dt>
+                <dd data-iu="receipt-detail-total"></dd>
+                <dt data-iu="detail-label-vat-included">Cena včetně DPH</dt>
+                <dd data-iu="receipt-detail-price-vat-included"></dd>
+                <dt data-iu="detail-label-vat-excluded">Bez DPH</dt>
+                <dd><span data-iu="receipt-detail-price-vat-excluded"></span> <span data-iu="receipt-detail-price-vat-excluded-state" class="iu-evidence-vat-state"></span></dd>
+                <dt data-iu="detail-label-status">Stav zpracování</dt>
+                <dd data-iu="receipt-detail-status"></dd>
+              </dl>
+              <div class="iu-evidence-detail-actions">
+                <button type="button" class="iu-evidence-btn-back" data-iu="receipt-detail-back" aria-label="Zpět na seznam">Zpět na seznam</button>
+                <button type="button" class="iu-evidence-btn-delete" data-iu="receipt-detail-delete" aria-label="Smazat záznam">Smazat záznam</button>
+              </div>
             </div>
             <div class="iu-evidence-empty-state" data-iu="empty-state" role="status">
               <p>Zatím žádné záznamy. Doklady se budou ukládat do osobní evidence.</p>
