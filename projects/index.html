@@ -26,6 +26,7 @@ style-src 'self' 'unsafe-inline' https:;
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
     <link rel="stylesheet" href="/assets/app.css?v=ytv8b2" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
+    <link rel="manifest" href="/projects/manifest.json" />
   </head>
 
   <body>
@@ -1430,12 +1431,21 @@ style-src 'self' 'unsafe-inline' https:;
               </div>
               <aside class="accordionCol" aria-label="Postranní panel">
                 <div class="iuRightTopCtas" aria-label="Inzerce a služby">
+                  <button type="button" class="iuRightCta iuRightCta--pwa-install" id="iuPwaInstallCta" aria-label="Přidat na plochu" data-iu-pwa-cta><span class="iu-pwa-cta-long">Přidat na plochu</span><span class="iu-pwa-cta-short">Do telefonu</span></button>
                   <button type="button" class="iuRightCta iuRightCta--services" aria-label="Inzerce a služby">
                     Inzerce / Služby
                   </button>
                   <button type="button" class="iuRightCta iuRightCta--submit" aria-label="Vložit inzerát">
                     Vložit inzerát
                   </button>
+                </div>
+                <div id="iuPwaIosOverlay" class="iuPwaIosOverlay" role="dialog" aria-modal="true" aria-labelledby="iuPwaIosOverlayTitle" aria-label="Přidat infoUzel na plochu" hidden>
+                  <div class="iuPwaIosOverlay__backdrop" data-iu-pwa-overlay-close></div>
+                  <div class="iuPwaIosOverlay__sheet">
+                    <h2 id="iuPwaIosOverlayTitle" class="iuPwaIosOverlay__title">Přidat infoUzel na plochu</h2>
+                    <p class="iuPwaIosOverlay__body">Na iPhonu otevřete infoUzel v Safari, klepněte na Sdílet a zvolte Přidat na plochu.</p>
+                    <button type="button" class="iuPwaIosOverlay__close" data-iu-pwa-overlay-close aria-label="Zavřít">Zavřít</button>
+                  </div>
                 </div>
                 <div class="mindMenu-scroll-wrapper">
                   <div class="mindMenu">

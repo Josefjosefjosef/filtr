@@ -16557,6 +16557,56 @@ body #iuLeftRail .iu-leftNav .iu-leftNavItem:hover{
   box-shadow: 0 4px 10px rgba(229, 185, 74, .35) !important;
 }
 
+/* PWA install CTA: sekundární, před Inzerce / Vložit inzerát */
+#iuTopbarRight .iuRightTopCtas > .iuRightCta.iuRightCta--pwa-install,
+#topbarWrap .iuRightTopCtas > .iuRightCta.iuRightCta--pwa-install{
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #1F3B6D !important;
+  border-color: var(--iuHairline, rgba(0,0,0,.08)) !important;
+}
+#iuTopbarRight .iuRightTopCtas > .iuRightCta.iuRightCta--pwa-install:hover,
+#topbarWrap .iuRightTopCtas > .iuRightCta.iuRightCta--pwa-install:hover{
+  background: rgba(255, 255, 255, 1) !important;
+}
+.iuRightCta.iuRightCta--pwa-install.iu-pwa-install-hidden{
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* iOS add-to-home overlay */
+.iuPwaIosOverlay{ position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; }
+.iuPwaIosOverlay[hidden]{ display: none !important; }
+.iuPwaIosOverlay__backdrop{ position: absolute; inset: 0; background: rgba(0,0,0,.4); }
+.iuPwaIosOverlay__sheet{ position: relative; background: #fff; border-radius: 14px; padding: 1.25rem 1.5rem; max-width: 320px; box-shadow: 0 12px 40px rgba(0,0,0,.2); }
+.iuPwaIosOverlay__title{ margin: 0 0 .75rem; font-size: 1.1rem; font-weight: 600; color: #1B2A4A; }
+.iuPwaIosOverlay__body{ margin: 0 0 1rem; font-size: 0.9rem; line-height: 1.4; color: #333; }
+.iuPwaIosOverlay__close{ display: block; width: 100%; padding: .5rem 1rem; font-size: 0.95rem; font-weight: 500; color: #1F3B6D; background: #E7EDF7; border: none; border-radius: 8px; cursor: pointer; }
+
+/* Mobil: kratší label PWA CTA + menší padding aby se vešly bez overflow */
+.iu-pwa-cta-short{ display: none; }
+@media (max-width: 480px) {
+  .iu-pwa-cta-long{ display: none; }
+  .iu-pwa-cta-short{ display: inline; }
+  #iuTopbarRight .iuRightTopCtas,
+  #topbarWrap .iuRightTopCtas{
+    margin-right: 4px !important;
+  }
+  #iuTopbarRight .iuRightTopCtas > .iuRightCta,
+  #topbarWrap .iuRightTopCtas > .iuRightCta{
+    padding-left: 0.4rem !important;
+    padding-right: 0.4rem !important;
+    font-size: 0.75rem !important;
+    min-width: 0 !important;
+  }
+}
+/* Velmi úzký viewport: skrýt PWA CTA (zachovat jen Inzerce + Vložit), aby topbar nepřetékal */
+@media (max-width: 420px) {
+  #iuTopbarRight .iuRightTopCtas > .iuRightCta--pwa-install,
+  #topbarWrap .iuRightTopCtas > .iuRightCta--pwa-install{
+    display: none !important;
+  }
+}
+
 /* ===== TOPBAR: INFO BADGE 'i' +70% ===== */
 header#topbarWrap.topbar-new.iuTopbar::after{
   font-size: calc(13px * 1.7) !important;
