@@ -20,7 +20,7 @@ const EXPECTED_LABELS = [
   "Překladač",
   "Převod na Word, PDF",
   "Balíky",
-  "Nákup domů",
+  "Evidence nákupů",
   "Poslat SMS zdarma",
   "YouTube",
   "Google",

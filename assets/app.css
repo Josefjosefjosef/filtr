@@ -11171,7 +11171,73 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   font-size: 14px;
 }
 
-/* Nákup domů — komunitní horní blok (shell) */
+/* Evidence nákupů — MVP shell (CTAs, kalendář, seznam, prázdný stav) */
+.iu-evidence-nakupu-top{
+  overflow-x: hidden;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+}
+.iu-evidence-cta-row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.iu-evidence-cta{
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid #1F4B99;
+  border-radius: 10px;
+  background: #1F4B99;
+  color: #fff;
+  cursor: pointer;
+  flex: 1;
+  min-width: 180px;
+}
+.iu-evidence-cta:hover{
+  background: #173a7a;
+  border-color: #173a7a;
+}
+.iu-evidence-cta-text{
+  display: block;
+}
+.iu-evidence-calendar-shell,
+.iu-evidence-daily-list-shell{
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border: 1px solid rgba(11,27,43,.1);
+  border-radius: 10px;
+}
+.iu-evidence-shell-heading{
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #0b1b2b;
+}
+.iu-evidence-shell-placeholder{
+  font-size: 13px;
+  color: rgba(11,27,43,.65);
+  margin: 0;
+}
+.iu-evidence-empty-state{
+  font-size: 13px;
+  color: rgba(11,27,43,.7);
+  padding: 12px 0;
+  margin-bottom: 12px;
+}
+.iu-evidence-empty-state p{
+  margin: 0;
+}
+.iu-evidence-disclaimer{
+  font-size: 12px;
+  color: rgba(11,27,43,.65);
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Nákup domů — komunitní horní blok (shell) — legacy, kept for reference */
 .iu-nakup-community-top{
   overflow-x: hidden;
   margin-bottom: 16px;
@@ -11567,7 +11633,7 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   display: none !important;
 }
 
-/* Nákup domů in quick feed: same section engine as other quick tools */
+/* Evidence nákupů in quick feed: same section engine as other quick tools */
 #iuQuickFeed > .iuModalCard{
   width: 100%;
   max-width: none;

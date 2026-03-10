@@ -7908,7 +7908,7 @@ function buildVideoAsArticleCard(it) {
     { id: "bakalari", label: "Bakaláři", accent: "#2e7d32" },
     { id: "zdravotni_pojistovna", label: "Zdravotní pojišťovna", accent: "#00838f" },
     { id: "zasilky", label: "Zásilky a sledování", accent: "#e60012" },
-    { id: "nakup_domu", label: "Nákup domů", accent: "#1F4B99" },
+    { id: "nakup_domu", label: "Evidence nákupů", accent: "#1F4B99" },
     { id: "ai_asistenti", label: "AI asistenti", accent: "#0d9488" },
     { id: "prekladac", label: "Překladač", accent: "#0d9488" },
     { id: "word_pdf", label: "Převod Word / PDF", accent: "#c62828" },
@@ -8535,7 +8535,7 @@ function buildVideoAsArticleCard(it) {
 
   async function iuOpenNakupDomu(){
     const { modal, list } = iuNakupEls();
-    if (!modal || !list) return;
+    if (!modal) return;
     const feed = document.getElementById("feed");
     if (feed) {
       try { feed.hidden = true; feed.style.display = "none"; feed.setAttribute("data-iu-feed-hidden-by", "nakup"); window.__iuFeedHiddenByNakup = true; } catch (_) {}
@@ -8575,12 +8575,14 @@ function buildVideoAsArticleCard(it) {
         card.style.setProperty("max-height", "none", "important");
       } catch (_) {}
     }
-    list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
-    try {
-      await iuLoadNakupDomu();
-    } catch (err) {
-      console.error("[iuNakupDomu] load failed", err);
-      list.innerHTML = '<div class="iuModalMsg">Odkazy se nepodařilo načíst. Zkuste obnovit stránku.</div>';
+    if (list) {
+      list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
+      try {
+        await iuLoadNakupDomu();
+      } catch (err) {
+        console.error("[iuNakupDomu] load failed", err);
+        list.innerHTML = '<div class="iuModalMsg">Odkazy se nepodařilo načíst. Zkuste obnovit stránku.</div>';
+      }
     }
     try {
       requestAnimationFrame(function() { iuNakupApplyFeedWidth(); });
@@ -10224,7 +10226,7 @@ function buildVideoAsArticleCard(it) {
       ]
     },
     nakup: {
-      title: "Nákup domů",
+      title: "Evidence nákupů",
       items: [
         { name: "Rohlík.cz", url: "https://www.rohlik.cz", desc: "Online nákup potravin s dovozem", external: true },
         { name: "Košík.cz", url: "https://www.kosik.cz", desc: "Online nákup potravin", external: true },
