@@ -8474,7 +8474,8 @@ function buildVideoAsArticleCard(it) {
     const { modal, list } = iuNakupEls();
     if (!modal || !list) return;
     modal.hidden = false;
-    modal.setAttribute("aria-hidden", "false");
+    modal.removeAttribute("aria-hidden");
+    try { modal.style.display = ""; } catch (_) {}
     list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
     try {
       await iuLoadNakupDomu();
@@ -12022,10 +12023,11 @@ function buildVideoAsArticleCard(it) {
       if (t.closest('#iuQuickFeed')) return;
       const el = t.closest('[data-iuq]');
       if (!el) return;
+      const key = (el.getAttribute("data-iuq") || "").trim().toLowerCase();
+      if (key === "nakup") return;
       e.preventDefault();
       e.stopPropagation();
       if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
-      const key = el.getAttribute("data-iuq");
       if (key) iuShowQuickFeed(key);
     }, true);
   }
