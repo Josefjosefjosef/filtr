@@ -16557,20 +16557,47 @@ body #iuLeftRail .iu-leftNav .iu-leftNavItem:hover{
   box-shadow: 0 4px 10px rgba(229, 185, 74, .35) !important;
 }
 
-/* PWA install CTA: sekundární, před Inzerce / Vložit inzerát */
-#iuTopbarRight .iuRightTopCtas > .iuRightCta.iuRightCta--pwa-install,
-#topbarWrap .iuRightTopCtas > .iuRightCta.iuRightCta--pwa-install{
-  background: rgba(255, 255, 255, 0.9) !important;
-  color: #1F3B6D !important;
-  border-color: var(--iuHairline, rgba(0,0,0,.08)) !important;
-}
-#iuTopbarRight .iuRightTopCtas > .iuRightCta.iuRightCta--pwa-install:hover,
-#topbarWrap .iuRightTopCtas > .iuRightCta.iuRightCta--pwa-install:hover{
-  background: rgba(255, 255, 255, 1) !important;
-}
-.iuRightCta.iuRightCta--pwa-install.iu-pwa-install-hidden{
+.iuRightCta.iuRightCta--pwa-install.iu-pwa-install-hidden,
+.iuPwaInstallCta.iu-pwa-install-hidden{
   visibility: hidden !important;
   pointer-events: none !important;
+}
+
+/* PWA install CTA next to logo: small pill, secondary */
+.iuTopbarLeft .iuPwaInstallCta--byLogo,
+#topbarWrap .iuTopbarLeft .iuPwaInstallCta--byLogo{
+  margin: 0;
+  padding: 0 10px;
+  height: 30px;
+  min-height: 30px;
+  line-height: 28px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 999px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  box-shadow: none;
+}
+.iuTopbarLeft .iuPwaInstallCta--byLogo:hover,
+#topbarWrap .iuTopbarLeft .iuPwaInstallCta--byLogo:hover{
+  background: rgba(255,255,255,.22);
+  border-color: rgba(255,255,255,.35);
+}
+.iuTopbarLeft .iuPwaInstallCta--byLogo:focus-visible,
+#topbarWrap .iuTopbarLeft .iuPwaInstallCta--byLogo:focus-visible{
+  outline: 2px solid rgba(255,255,255,.6);
+  outline-offset: 2px;
 }
 
 /* iOS add-to-home overlay */
@@ -16597,13 +16624,6 @@ body #iuLeftRail .iu-leftNav .iu-leftNavItem:hover{
     padding-right: 0.4rem !important;
     font-size: 0.75rem !important;
     min-width: 0 !important;
-  }
-}
-/* Velmi úzký viewport: skrýt PWA CTA (zachovat jen Inzerce + Vložit), aby topbar nepřetékal */
-@media (max-width: 420px) {
-  #iuTopbarRight .iuRightTopCtas > .iuRightCta--pwa-install,
-  #topbarWrap .iuRightTopCtas > .iuRightCta--pwa-install{
-    display: none !important;
   }
 }
 
