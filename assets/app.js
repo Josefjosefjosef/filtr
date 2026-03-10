@@ -12121,6 +12121,7 @@ function buildVideoAsArticleCard(it) {
           var w = window.innerWidth;
           var newsList = stage && stage.parentElement;
           if (newsList && newsList.id === "newsList") {
+            newsList.style.setProperty("width", w + "px", "important");
             newsList.style.setProperty("min-width", w + "px", "important");
           }
           stage.style.setProperty("flex", "0 0 " + w + "px", "important");
@@ -12134,6 +12135,7 @@ function buildVideoAsArticleCard(it) {
           card.style.setProperty("min-width", w + "px", "important");
           card.style.setProperty("min-height", "0", "important");
           card.style.setProperty("max-height", "none", "important");
+          if (newsList && newsList.id === "newsList") newsList.offsetHeight;
         }
         if (typeof window.iuLoadNakupDomu === "function") window.iuLoadNakupDomu().catch(function(){});
         try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
