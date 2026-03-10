@@ -11567,6 +11567,37 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   display: none !important;
 }
 
+/* Nákup domů in quick feed: same section engine as other quick tools */
+#iuQuickFeed > .iuModalCard{
+  width: 100%;
+  max-width: none;
+  height: auto;
+  min-height: 60vh;
+  max-height: none;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Mobile: ensure quick feed + card have non-zero size (avoid 0×0 when in center column) */
+@media (max-width: 900px){
+  #iuCenterStage[data-iu-view="quick"]{
+    width: 100% !important;
+    min-width: 100%;
+  }
+  #iuCenterStage[data-iu-view="quick"] #iuQuickFeed{
+    width: 100%;
+    min-width: 100%;
+    display: block !important;
+  }
+  #iuCenterStage[data-iu-view="quick"] #iuQuickFeed > .iuModalCard{
+    width: 100% !important;
+    min-width: 100%;
+    min-height: 80vh;
+    max-height: none;
+    box-sizing: border-box;
+  }
+}
+
 .iuQuickFeed{
   background: transparent;
 }

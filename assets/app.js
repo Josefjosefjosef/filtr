@@ -8436,7 +8436,23 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
+  function iuNakupCloseQuickView(){
+    const quick = document.getElementById("iuQuickFeed");
+    const modal = document.getElementById("iuNakupModal");
+    const card = quick && quick.querySelector(".iuModalCard");
+    if (card && modal) modal.appendChild(card);
+    if (quick) { quick.hidden = true; quick.removeAttribute("data-iu-quick-key"); }
+    const stage = document.getElementById("iuCenterStage");
+    if (stage) stage.removeAttribute("data-iu-view");
+    if (modal) { modal.hidden = true; modal.setAttribute("aria-hidden", "true"); }
+    try { document.body.style.overflow = ""; document.body.classList.remove("iu-modal-open"); } catch (_) {}
+  }
+  try { window.iuNakupCloseQuickView = iuNakupCloseQuickView; } catch (_) {}
+
   function iuNakupClose(){
+    const quick = document.getElementById("iuQuickFeed");
+    const card = quick && quick.querySelector(".iuModalCard");
+    if (card && typeof window.iuNakupCloseQuickView === "function") { window.iuNakupCloseQuickView(); return; }
     const { modal } = iuNakupEls();
     if (!modal) return;
     modal.hidden = true;
@@ -8457,8 +8473,8 @@ function buildVideoAsArticleCard(it) {
   }
 
   try {
-    window.addEventListener('iu-open-panel', function(e){ if (e.detail === 'shopping') iuOpenNakupDomu(); });
-    window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'shopping') iuNakupClose(); });
+    window.addEventListener('iu-open-panel', function(e){ if (e.detail === 'shopping') { if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } });
+    window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'shopping') { if (typeof window.iuNakupCloseQuickView === "function") window.iuNakupCloseQuickView(); else iuNakupClose(); } });
   } catch {}
 
   async function iuLoadNakupDomu(){
@@ -9051,6 +9067,7 @@ function buildVideoAsArticleCard(it) {
     const { modal, openBtn, closeBtn } = iuNakupEls();
     iuNakupCommunityInit();
     function openNakupPanel() {
+      try { if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } catch (_) {}
       try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
     }
     openBtn?.addEventListener("click", (e) => {
@@ -9063,18 +9080,26 @@ function buildVideoAsArticleCard(it) {
     }, { passive: false });
     closeBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
+      const q = document.getElementById("iuQuickFeed");
+      if (q && q.querySelector(".iuModalCard") && typeof window.iuNakupCloseQuickView === "function") window.iuNakupCloseQuickView();
+      else iuNakupClose();
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
     });
     modal?.addEventListener("click", (e) => {
       if (e.target === modal) {
+        const q = document.getElementById("iuQuickFeed");
+        if (q && q.querySelector(".iuModalCard") && typeof window.iuNakupCloseQuickView === "function") window.iuNakupCloseQuickView();
+        else iuNakupClose();
         try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
       }
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
-        const m = iuNakupEls().modal;
-        if (m && !m.hidden) {
-          try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
+        const q = document.getElementById("iuQuickFeed");
+        if (q && q.querySelector(".iuModalCard") && typeof window.iuNakupCloseQuickView === "function") { window.iuNakupCloseQuickView(); try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {} }
+        else {
+          const m = iuNakupEls().modal;
+          if (m && !m.hidden) { iuNakupClose(); try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {} }
         }
       }
     });
@@ -11618,6 +11643,34 @@ function buildVideoAsArticleCard(it) {
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
     if (!stage || !quick) return;
+    if (keyNorm === "nakup") {
+      const modal = document.getElementById("iuNakupModal");
+      let card = modal && modal.querySelector(".iuModalCard");
+      if (!card && quick) card = quick.querySelector(".iuModalCard");
+      if (card && quick) {
+        if (modal && card.parentElement === modal) {
+          modal.hidden = true;
+          quick.appendChild(card);
+        }
+        stage.setAttribute("data-iu-view", "quick");
+        quick.hidden = false;
+        quick.setAttribute("data-iu-quick-key", "nakup");
+        if (window.innerWidth <= 900) {
+          var w = window.innerWidth;
+          var h = window.innerHeight;
+          quick.style.setProperty("width", w + "px", "important");
+          quick.style.setProperty("min-width", w + "px", "important");
+          quick.style.setProperty("display", "block", "important");
+          card.style.setProperty("width", w + "px", "important");
+          card.style.setProperty("min-width", w + "px", "important");
+          card.style.setProperty("min-height", h + "px", "important");
+          card.style.setProperty("max-height", "none", "important");
+        }
+        if (typeof window.iuLoadNakupDomu === "function") window.iuLoadNakupDomu().catch(function(){});
+        try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
+      }
+      return;
+    }
     if (keyNorm === "banka" || keyNorm === "bakalari" || keyNorm === "pojistovna") {
       const titles = { banka: "Banka", bakalari: "Bakaláři", pojistovna: "Zdravotní pojišťovna" };
       stage.setAttribute("data-iu-view", "quick");
@@ -12128,10 +12181,11 @@ function buildVideoAsArticleCard(it) {
       const el = t.closest('[data-iuq]');
       if (!el) return;
       const key = (el.getAttribute("data-iuq") || "").trim().toLowerCase();
-      if (key === "nakup") return;
-      e.preventDefault();
-      e.stopPropagation();
-      if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+      if (key !== "nakup") {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+      }
       if (key) iuShowQuickFeed(key);
     }, true);
   }
@@ -14335,15 +14389,17 @@ function buildVideoAsArticleCard(it) {
     try {
       const panel = parsePanelFromUrl();
       if (panel === null && __iuCurrentPanel !== null) {
-        iuHideAllOverlaysNow();
         const prev = __iuCurrentPanel;
+        if (prev === "shopping" && typeof window.iuNakupCloseQuickView === "function") { try { window.iuNakupCloseQuickView(); } catch (_) {} }
+        else iuHideAllOverlaysNow();
         try { window.dispatchEvent(new CustomEvent('iu-close-panel', { detail: prev })); } catch {}
         __iuCurrentPanel = null;
         return;
       }
       if (panel === "shopping") {
-        const feed = document.getElementById("feed");
-        if (feed) { try { feed.hidden = true; feed.style.display = "none"; feed.setAttribute("data-iu-feed-hidden-by", "nakup"); window.__iuFeedHiddenByNakup = true; } catch (_) {} }
+        if (typeof window.iuShowQuickFeed === "function") { try { window.iuShowQuickFeed("nakup"); } catch (_) {} }
+        __iuCurrentPanel = "shopping";
+        return;
       }
       if (panel !== null) safeOpenPanel(panel);
       else __iuCurrentPanel = null;
