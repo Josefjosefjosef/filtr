@@ -11237,6 +11237,63 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   line-height: 1.45;
 }
 
+/* Evidence nákupů — upload flow (photo + PDF), preview, states, validation */
+.iu-evidence-upload-flow{
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid rgba(11,27,43,.12);
+  border-radius: 10px;
+  overflow-x: hidden;
+}
+.iu-evidence-upload-states{
+  margin-bottom: 10px;
+}
+.iu-evidence-upload-state{
+  font-size: 14px;
+  color: rgba(11,27,43,.85);
+}
+.iu-evidence-state-pending{
+  color: #1F4B99;
+  font-weight: 600;
+}
+.iu-evidence-state-success{
+  color: #2e7d32;
+  font-weight: 600;
+}
+.iu-evidence-state-failed{
+  color: #b45309;
+  font-weight: 600;
+}
+.iu-evidence-validation{
+  font-size: 13px;
+  color: #b45309;
+  margin-bottom: 10px;
+}
+.iu-evidence-validation-msg{
+  display: block;
+  margin-top: 4px;
+}
+.iu-evidence-preview-shell{
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,.15);
+  border-radius: 8px;
+  margin-top: 10px;
+}
+.iu-evidence-preview-heading{
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  color: #0b1b2b;
+}
+.iu-evidence-preview-name,
+.iu-evidence-preview-meta{
+  font-size: 13px;
+  color: rgba(11,27,43,.8);
+  margin: 4px 0 0 0;
+}
+
 /* Nákup domů — komunitní horní blok (shell) — legacy, kept for reference */
 .iu-nakup-community-top{
   overflow-x: hidden;

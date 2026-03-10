@@ -9065,9 +9065,104 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /* Evidence nákupů — upload flow: contract payload models for future backend (no OCR/parser) */
+  const IU_EVIDENCE_UPLOAD_CONTRACT = {
+    receipt_photo: { kind: "receipt_photo", accept: ["image/*"], type: "image" },
+    invoice_photo: { kind: "invoice_photo", accept: ["image/*"], type: "image" },
+    receipt_pdf: { kind: "receipt_pdf", accept: ["application/pdf"], type: "pdf" },
+    invoice_pdf: { kind: "invoice_pdf", accept: ["application/pdf"], type: "pdf" }
+  };
+  const IU_EVIDENCE_MAX_FILE_BYTES = 10 * 1024 * 1024;
+
+  function iuEvidenceUploadInit(){
+    const modal = document.getElementById("iuNakupModal");
+    const topBlock = modal && modal.querySelector("[data-iu=\"evidence-nakupu-top\"]");
+    if (!topBlock) return;
+    const container = topBlock.querySelector("[data-iu=\"upload-flow-container\"]");
+    const photoCta = topBlock.querySelector("[data-iu=\"photo-receipt-cta\"]");
+    const uploadCta = topBlock.querySelector("[data-iu=\"upload-receipt-cta\"]");
+    const photoInput = topBlock.querySelector("[data-iu=\"upload-photo-input\"]");
+    const uploadInput = topBlock.querySelector("[data-iu=\"upload-pdf-input\"]");
+    const stateIdle = topBlock.querySelector("[data-iu=\"upload-state-idle\"]");
+    const statePending = topBlock.querySelector("[data-iu=\"upload-state-pending\"]");
+    const stateSuccess = topBlock.querySelector("[data-iu=\"upload-state-success\"]");
+    const stateFailed = topBlock.querySelector("[data-iu=\"upload-state-failed\"]");
+    const validationBlock = topBlock.querySelector("[data-iu=\"validation-messages\"]");
+    const typeValidation = topBlock.querySelector("[data-iu=\"file-type-validation\"]");
+    const sizeValidation = topBlock.querySelector("[data-iu=\"file-size-validation\"]");
+    const previewShell = topBlock.querySelector("[data-iu=\"preview-shell\"]");
+    const previewName = topBlock.querySelector("[data-iu=\"preview-filename\"]");
+    const previewMeta = topBlock.querySelector("[data-iu=\"preview-meta\"]");
+    if (!container || !photoCta || !uploadCta || !photoInput || !uploadInput) return;
+
+    function setState(which) {
+      [stateIdle, statePending, stateSuccess, stateFailed].forEach(function(el) {
+        if (el) { el.hidden = true; }
+      });
+      const el = which === "idle" ? stateIdle : which === "pending" ? statePending : which === "success" ? stateSuccess : which === "failed" ? stateFailed : null;
+      if (el) { el.hidden = false; }
+    }
+    function showValidation(typeMsg, sizeMsg) {
+      if (!validationBlock) return;
+      validationBlock.hidden = !typeMsg && !sizeMsg;
+      if (typeValidation) typeValidation.textContent = typeMsg || "";
+      if (sizeValidation) sizeValidation.textContent = sizeMsg || "";
+    }
+    function showPreview(file) {
+      if (!previewShell || !previewName || !previewMeta) return;
+      previewShell.hidden = false;
+      previewName.textContent = file.name || "—";
+      previewMeta.textContent = (file.type || "") + " · " + (file.size ? Math.round(file.size / 1024) + " KB" : "");
+    }
+
+    function validateFile(file, acceptList) {
+      var typeErr = "";
+      var sizeErr = "";
+      var allowed = acceptList || ["image/*", "application/pdf"];
+      var isImage = (file.type || "").indexOf("image/") === 0;
+      var isPdf = (file.type || "") === "application/pdf";
+      if (!isImage && !isPdf) typeErr = "Povolené typy: obrázek nebo PDF.";
+      if (file.size > IU_EVIDENCE_MAX_FILE_BYTES) sizeErr = "Max. velikost 10 MB.";
+      return { typeErr: typeErr, sizeErr: sizeErr, valid: !typeErr && !sizeErr };
+    }
+
+    function handleFile(file, kind) {
+      showValidation("", "");
+      var v = validateFile(file);
+      if (!v.valid) {
+        showValidation(v.typeErr, v.sizeErr);
+        setState("failed");
+        return;
+      }
+      showPreview(file);
+      setState("pending");
+      setTimeout(function() {
+        setState("success");
+      }, 600);
+    }
+
+    photoCta.addEventListener("click", function() {
+      if (photoInput) photoInput.click();
+    });
+    uploadCta.addEventListener("click", function() {
+      if (uploadInput) uploadInput.click();
+    });
+    photoInput.addEventListener("change", function() {
+      var f = photoInput && photoInput.files && photoInput.files[0];
+      if (f) handleFile(f, "receipt_photo");
+      if (photoInput) photoInput.value = "";
+    });
+    uploadInput.addEventListener("change", function() {
+      var f = uploadInput && uploadInput.files && uploadInput.files[0];
+      if (f) handleFile(f, "receipt_pdf");
+      if (uploadInput) uploadInput.value = "";
+    });
+  }
+
   function iuNakupDomuInit(){
     const { modal, openBtn, closeBtn } = iuNakupEls();
     iuNakupCommunityInit();
+    iuEvidenceUploadInit();
     function openNakupPanel() {
       try { if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } catch (_) {}
       try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
