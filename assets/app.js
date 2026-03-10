@@ -16171,11 +16171,24 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 })();
 
 // === PWA install CTA: beforeinstallprompt (Android) + iOS add-to-home overlay ===
+// RCA: beforeinstallprompt can fire before this script runs (module deferred). Register listener
+// immediately so we never miss the event; bind DOM/click in run() when DOM is ready.
 (function iuPwaInstallCta() {
   var deferredPrompt = null;
   var ctaEl = null;
   var overlayEl = null;
   var ran = false;
+
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (ctaEl) ctaEl.classList.remove("iu-pwa-install-hidden");
+  }, { passive: false });
+
+  window.addEventListener("appinstalled", function () {
+    deferredPrompt = null;
+    if (ctaEl) ctaEl.classList.add("iu-pwa-install-hidden");
+  });
 
   function isStandalone() {
     try {
@@ -16223,16 +16236,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }
 
     hideCta();
-    window.addEventListener("beforeinstallprompt", function (e) {
-      e.preventDefault();
-      deferredPrompt = e;
-      showCta();
-    }, { once: false });
-
-    window.addEventListener("appinstalled", function () {
-      deferredPrompt = null;
-      hideCta();
-    });
+    if (deferredPrompt) showCta();
+    if (isIos()) showCta();
 
     ctaEl.addEventListener("click", function (ev) {
       ev.preventDefault();
@@ -16268,10 +16273,6 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       document.addEventListener("keydown", function keyClose(e) {
         if (e.key === "Escape" && overlayEl && !overlayEl.hidden) closeIosOverlay();
       });
-    }
-
-    if (isIos()) {
-      showCta();
     }
   }
 
