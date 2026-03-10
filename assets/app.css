@@ -11294,6 +11294,40 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   margin: 4px 0 0 0;
 }
 
+/* Evidence nákupů — OCR extraction panel */
+.iu-evidence-extraction-panel{
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,.12);
+  border-radius: 8px;
+}
+.iu-evidence-extraction-heading{
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  color: #0b1b2b;
+}
+.iu-evidence-extraction-fields{
+  margin: 0;
+  font-size: 13px;
+}
+.iu-evidence-extraction-fields dt{
+  margin-top: 6px;
+  margin-bottom: 2px;
+  font-weight: 600;
+  color: rgba(11,27,43,.75);
+}
+.iu-evidence-extraction-fields dd{
+  margin: 0;
+  color: #0b1b2b;
+}
+.iu-evidence-unknown-hint{
+  font-size: 12px;
+  color: rgba(11,27,43,.6);
+  margin: 10px 0 0 0;
+}
+
 /* Evidence nákupů — kalendář, denní seznam, detail dokladu */
 .iu-evidence-calendar-nav{
   display: flex;

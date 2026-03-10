@@ -2936,10 +2936,34 @@ style-src 'self' 'unsafe-inline' https:;
                 <span data-iu="file-type-validation" class="iu-evidence-validation-msg"></span>
                 <span data-iu="file-size-validation" class="iu-evidence-validation-msg"></span>
               </div>
-              <div class="iu-evidence-preview-shell" data-iu="preview-shell" aria-label="Náhled vybraného souboru" hidden>
+              <div class="iu-evidence-preview-shell" data-iu="preview-shell" aria-label="Náhled vybraného souboru">
                 <h4 class="iu-evidence-preview-heading">Náhled</h4>
-                <p class="iu-evidence-preview-name" data-iu="preview-filename"></p>
-                <p class="iu-evidence-preview-meta" data-iu="preview-meta"></p>
+                <p class="iu-evidence-preview-name" data-iu="preview-filename">—</p>
+                <p class="iu-evidence-preview-meta" data-iu="preview-meta">—</p>
+              </div>
+              <div class="iu-evidence-extraction-panel" data-iu="ocr-extraction-result" aria-label="Vytěžené údaje z dokladu">
+                <h4 class="iu-evidence-extraction-heading">Základní údaje z dokladu</h4>
+                <dl class="iu-evidence-extraction-fields">
+                  <dt>Obchod / firma</dt>
+                  <dd data-iu="extraction-store">—</dd>
+                  <dt>Datum</dt>
+                  <dd data-iu="extraction-date">—</dd>
+                  <dt>Čas</dt>
+                  <dd data-iu="extraction-time">—</dd>
+                  <dt>Celkem</dt>
+                  <dd data-iu="extraction-total">—</dd>
+                  <dt>Cena včetně DPH</dt>
+                  <dd data-iu="extraction-vat-included">—</dd>
+                  <dt>Bez DPH</dt>
+                  <dd data-iu="extraction-vat-excluded-state">—</dd>
+                  <dt>Typ dokladu</dt>
+                  <dd data-iu="extraction-doc-type">—</dd>
+                  <dt data-iu="confidence-label">Confidence</dt>
+                  <dd data-iu="confidence-visible">—</dd>
+                  <dt data-iu="needs-review-label">Vyžaduje kontrolu</dt>
+                  <dd data-iu="needs-review-visible">—</dd>
+                </dl>
+                <p class="iu-evidence-unknown-hint" data-iu="unknown-state-works">Údaje označené jako „unknown“ nebyly bezpečně rozpoznány.</p>
               </div>
             </div>
             <script type="application/json" id="iu-evidence-upload-contract" data-iu="server-contract-shell" aria-hidden="true">{"contract":"receipt_photo,invoice_photo,receipt_pdf,invoice_pdf","receipt_photo":{"type":"image","accept":["image/*"]},"invoice_photo":{"type":"image","accept":["image/*"]},"receipt_pdf":{"type":"pdf","accept":["application/pdf"]},"invoice_pdf":{"type":"pdf","accept":["application/pdf"]}}</script>
@@ -2974,6 +2998,10 @@ style-src 'self' 'unsafe-inline' https:;
                 <dd><span data-iu="receipt-detail-price-vat-excluded"></span> <span data-iu="receipt-detail-price-vat-excluded-state" class="iu-evidence-vat-state"></span></dd>
                 <dt data-iu="detail-label-status">Stav zpracování</dt>
                 <dd data-iu="receipt-detail-status"></dd>
+                <dt data-iu="detail-label-confidence">Confidence</dt>
+                <dd data-iu="receipt-detail-confidence"></dd>
+                <dt data-iu="detail-label-needs-review">Vyžaduje kontrolu</dt>
+                <dd data-iu="receipt-detail-needs-review"></dd>
               </dl>
               <div class="iu-evidence-detail-actions">
                 <button type="button" class="iu-evidence-btn-back" data-iu="receipt-detail-back" aria-label="Zpět na seznam">Zpět na seznam</button>

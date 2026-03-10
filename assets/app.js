@@ -9074,6 +9074,46 @@ function buildVideoAsArticleCard(it) {
   };
   const IU_EVIDENCE_MAX_FILE_BYTES = 10 * 1024 * 1024;
 
+  /** OCR pipeline hook: file + kind -> Promise<extracted>. Stub: no real OCR, returns unknown/needsReview. */
+  function iuEvidenceOcrHook(file, kind) {
+    return new Promise(function(resolve) {
+      setTimeout(function() {
+        var docType = (kind === "receipt_photo" || kind === "receipt_pdf") ? "receipt" : "invoice";
+        resolve({
+          store: "unknown",
+          date: "unknown",
+          time: "unknown",
+          total: "unknown",
+          priceVatIncluded: "unknown",
+          priceVatExcluded: "unknown",
+          priceVatExcludedState: "unknown",
+          docType: docType,
+          confidence: 0,
+          needsReview: true
+        });
+      }, 300);
+    });
+  }
+
+  try { window.iuEvidenceOcrHook = iuEvidenceOcrHook; } catch (_) {}
+
+  /** Basic field extraction: normalise extracted result for storage (unknown = not invented). */
+  function iuEvidenceParseExtraction(extracted) {
+    var v = function(x) { return (x && String(x).trim() && String(x) !== "unknown") ? String(x).trim() : "unknown"; };
+    return {
+      store: v(extracted.store),
+      date: v(extracted.date),
+      time: v(extracted.time),
+      total: v(extracted.total),
+      priceVatIncluded: v(extracted.priceVatIncluded),
+      priceVatExcluded: v(extracted.priceVatExcluded),
+      priceVatExcludedState: (extracted.priceVatExcludedState === "known" && extracted.priceVatExcluded && extracted.priceVatExcluded !== "unknown") ? "known" : "unknown",
+      docType: v(extracted.docType) || "receipt",
+      confidence: typeof extracted.confidence === "number" ? extracted.confidence : 0,
+      needsReview: !!extracted.needsReview
+    };
+  }
+
   function iuEvidenceUploadInit(){
     const modal = document.getElementById("iuNakupModal");
     const topBlock = modal && modal.querySelector("[data-iu=\"evidence-nakupu-top\"]");
@@ -9093,6 +9133,16 @@ function buildVideoAsArticleCard(it) {
     const previewShell = topBlock.querySelector("[data-iu=\"preview-shell\"]");
     const previewName = topBlock.querySelector("[data-iu=\"preview-filename\"]");
     const previewMeta = topBlock.querySelector("[data-iu=\"preview-meta\"]");
+    const extractionPanel = topBlock.querySelector("[data-iu=\"ocr-extraction-result\"]");
+    const extractionStore = topBlock.querySelector("[data-iu=\"extraction-store\"]");
+    const extractionDate = topBlock.querySelector("[data-iu=\"extraction-date\"]");
+    const extractionTime = topBlock.querySelector("[data-iu=\"extraction-time\"]");
+    const extractionTotal = topBlock.querySelector("[data-iu=\"extraction-total\"]");
+    const extractionVatIncluded = topBlock.querySelector("[data-iu=\"extraction-vat-included\"]");
+    const extractionVatExcludedState = topBlock.querySelector("[data-iu=\"extraction-vat-excluded-state\"]");
+    const extractionDocType = topBlock.querySelector("[data-iu=\"extraction-doc-type\"]");
+    const confidenceVisible = topBlock.querySelector("[data-iu=\"confidence-visible\"]");
+    const needsReviewVisible = topBlock.querySelector("[data-iu=\"needs-review-visible\"]");
     if (!container || !photoCta || !uploadCta || !photoInput || !uploadInput) return;
 
     function setState(which) {
@@ -9110,9 +9160,23 @@ function buildVideoAsArticleCard(it) {
     }
     function showPreview(file) {
       if (!previewShell || !previewName || !previewMeta) return;
-      previewShell.hidden = false;
       previewName.textContent = file.name || "—";
       previewMeta.textContent = (file.type || "") + " · " + (file.size ? Math.round(file.size / 1024) + " KB" : "");
+    }
+
+    function showExtraction(parsed) {
+      if (!extractionPanel) return;
+      extractionPanel.hidden = false;
+      var unknownLabel = "unknown";
+      if (extractionStore) extractionStore.textContent = parsed.store === "unknown" ? unknownLabel : parsed.store;
+      if (extractionDate) extractionDate.textContent = parsed.date === "unknown" ? unknownLabel : parsed.date;
+      if (extractionTime) extractionTime.textContent = parsed.time === "unknown" ? unknownLabel : parsed.time;
+      if (extractionTotal) extractionTotal.textContent = parsed.total === "unknown" ? unknownLabel : parsed.total;
+      if (extractionVatIncluded) extractionVatIncluded.textContent = parsed.priceVatIncluded === "unknown" ? unknownLabel : parsed.priceVatIncluded;
+      if (extractionVatExcludedState) extractionVatExcludedState.textContent = parsed.priceVatExcludedState === "unknown" ? "Bez DPH: " + unknownLabel : (parsed.priceVatExcluded === "unknown" ? unknownLabel : parsed.priceVatExcluded);
+      if (extractionDocType) extractionDocType.textContent = parsed.docType === "unknown" ? unknownLabel : parsed.docType;
+      if (confidenceVisible) confidenceVisible.textContent = String(parsed.confidence);
+      if (needsReviewVisible) needsReviewVisible.textContent = parsed.needsReview ? "Ano" : "Ne";
     }
 
     function validateFile(file, acceptList) {
@@ -9136,9 +9200,30 @@ function buildVideoAsArticleCard(it) {
       }
       showPreview(file);
       setState("pending");
-      setTimeout(function() {
+      iuEvidenceOcrHook(file, kind).then(function(extracted) {
+        var parsed = iuEvidenceParseExtraction(extracted);
+        showExtraction(parsed);
+        var today = new Date();
+        var dateStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
+        var rec = {
+          id: "iu-ev-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8),
+          docType: parsed.docType,
+          store: parsed.store === "unknown" ? "—" : parsed.store,
+          date: parsed.date === "unknown" ? dateStr : parsed.date,
+          time: parsed.time === "unknown" ? "—" : parsed.time,
+          total: parsed.total === "unknown" ? "—" : parsed.total,
+          priceVatIncluded: parsed.priceVatIncluded === "unknown" ? "—" : parsed.priceVatIncluded,
+          priceVatExcluded: parsed.priceVatExcludedState === "known" ? parsed.priceVatExcluded : "",
+          priceVatExcludedState: parsed.priceVatExcludedState,
+          processingStatus: "extrahováno",
+          confidence: parsed.confidence,
+          needsReview: parsed.needsReview
+        };
+        var arr = iuEvidenceGetReceipts();
+        arr.push(rec);
+        iuEvidenceSaveReceipts(arr);
         setState("success");
-      }, 600);
+      });
     }
 
     photoCta.addEventListener("click", function() {
@@ -9163,7 +9248,7 @@ function buildVideoAsArticleCard(it) {
   function iuEvidenceSeedRecord(){
     var d = new Date();
     var dateStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-    return { id: "iu-ev-seed-1", docType: "receipt", store: "Test obchod", date: dateStr, time: "14:30", total: "450 Kč", priceVatIncluded: "450 Kč", priceVatExcluded: "371,90 Kč", priceVatExcludedState: "known", processingStatus: "uloženo" };
+    return { id: "iu-ev-seed-1", docType: "receipt", store: "Test obchod", date: dateStr, time: "14:30", total: "450 Kč", priceVatIncluded: "450 Kč", priceVatExcluded: "371,90 Kč", priceVatExcludedState: "known", processingStatus: "uloženo", confidence: 0.85, needsReview: false };
   }
   const IU_EVIDENCE_SEED = [iuEvidenceSeedRecord()];
 
@@ -9206,6 +9291,8 @@ function buildVideoAsArticleCard(it) {
     const detailVatExcluded = topBlock.querySelector("[data-iu=\"receipt-detail-price-vat-excluded\"]");
     const detailVatExcludedState = topBlock.querySelector("[data-iu=\"receipt-detail-price-vat-excluded-state\"]");
     const detailStatus = topBlock.querySelector("[data-iu=\"receipt-detail-status\"]");
+    const detailConfidence = topBlock.querySelector("[data-iu=\"receipt-detail-confidence\"]");
+    const detailNeedsReview = topBlock.querySelector("[data-iu=\"receipt-detail-needs-review\"]");
     const backBtn = topBlock.querySelector("[data-iu=\"receipt-detail-back\"]");
     const deleteBtn = topBlock.querySelector("[data-iu=\"receipt-detail-delete\"]");
     const dailyListShell = topBlock.querySelector("[data-iu=\"daily-list-shell\"]");
@@ -9324,6 +9411,8 @@ function buildVideoAsArticleCard(it) {
         detailVatExcludedState.textContent = (r.priceVatExcludedState === "unknown" || !r.priceVatExcluded) ? "Bez DPH: neuvedeno" : "";
       }
       if (detailStatus) detailStatus.textContent = r.processingStatus || "—";
+      if (detailConfidence) detailConfidence.textContent = typeof r.confidence === "number" ? String(r.confidence) : "—";
+      if (detailNeedsReview) detailNeedsReview.textContent = r.needsReview ? "Ano" : "Ne";
       detailPanel.hidden = false;
       if (dailyListShell) dailyListShell.hidden = true;
     }
