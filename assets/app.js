@@ -16170,6 +16170,102 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 })();
 
+// === PWA install CTA: beforeinstallprompt (Android) + iOS add-to-home overlay ===
+(function iuPwaInstallCta() {
+  var deferredPrompt = null;
+  var ctaEl = null;
+  var overlayEl = null;
+
+  function isStandalone() {
+    try {
+      if (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) return true;
+      if (navigator.standalone === true) return true;
+      if (document.referrer && document.referrer.indexOf("android-app://") === 0) return true;
+    } catch (e) {}
+    return false;
+  }
+
+  function isIos() {
+    try {
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    } catch (e) {}
+    return false;
+  }
+
+  function hideCta() {
+    if (ctaEl) ctaEl.classList.add("iu-pwa-install-hidden");
+  }
+
+  function showIosOverlay() {
+    if (!overlayEl) return;
+    overlayEl.hidden = false;
+  }
+
+  function closeIosOverlay() {
+    if (overlayEl) overlayEl.hidden = true;
+  }
+
+  function run() {
+    ctaEl = document.getElementById("iuPwaInstallCta");
+    overlayEl = document.getElementById("iuPwaIosOverlay");
+    if (!ctaEl) return;
+
+    if (isStandalone()) {
+      hideCta();
+      return;
+    }
+
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    window.addEventListener("appinstalled", function () {
+      deferredPrompt = null;
+      hideCta();
+    });
+
+    ctaEl.addEventListener("click", function () {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function (choice) {
+          if (choice.outcome === "accepted") hideCta();
+          deferredPrompt = null;
+        }).catch(function () { deferredPrompt = null; });
+        return;
+      }
+      if (isIos()) {
+        showIosOverlay();
+      }
+    });
+
+    if (overlayEl) {
+      overlayEl.querySelectorAll("[data-iu-pwa-overlay-close]").forEach(function (el) {
+        el.addEventListener("click", closeIosOverlay);
+      });
+      overlayEl.addEventListener("click", function (e) {
+        if (e.target === overlayEl) closeIosOverlay();
+      });
+    }
+
+    if (isIos() && !deferredPrompt) {
+      if (typeof deferredPrompt === "undefined" || deferredPrompt === null) {
+        var check = function () {
+          if (deferredPrompt) return;
+          if (isStandalone()) hideCta();
+        };
+        setTimeout(check, 500);
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+})();
+
 // === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → central exclusive middle mode (data-iu-mode on #iuCenterStage) ===
 (function iuAdsStageOverlay() {
   function openAdsStage(activeTab) {
