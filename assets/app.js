@@ -8445,7 +8445,7 @@ function buildVideoAsArticleCard(it) {
     const stage = document.getElementById("iuCenterStage");
     if (stage) stage.removeAttribute("data-iu-view");
     if (modal) { modal.hidden = true; modal.setAttribute("aria-hidden", "true"); }
-    try { document.body.style.overflow = ""; document.body.classList.remove("iu-modal-open"); } catch (_) {}
+    try { document.body.style.overflow = ""; document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen"); } catch (_) {}
   }
   try { window.iuNakupCloseQuickView = iuNakupCloseQuickView; } catch (_) {}
 
@@ -12117,22 +12117,22 @@ function buildVideoAsArticleCard(it) {
         stage.setAttribute("data-iu-view", "quick");
         quick.hidden = false;
         quick.setAttribute("data-iu-quick-key", "nakup");
+        try { document.body.classList.add("iu-quickFeedOpen"); } catch (_) {}
         if (window.innerWidth <= 900) {
-          var w = window.innerWidth;
           var newsList = stage && stage.parentElement;
           if (newsList && newsList.id === "newsList") {
-            newsList.style.setProperty("width", w + "px", "important");
-            newsList.style.setProperty("min-width", w + "px", "important");
+            newsList.style.setProperty("width", "100%", "important");
+            newsList.style.setProperty("min-width", "0", "important");
           }
-          stage.style.setProperty("flex", "0 0 " + w + "px", "important");
-          stage.style.setProperty("width", w + "px", "important");
-          stage.style.setProperty("min-width", w + "px", "important");
+          stage.style.setProperty("flex", "0 0 100%", "important");
+          stage.style.setProperty("width", "100%", "important");
+          stage.style.setProperty("min-width", "0", "important");
           stage.style.setProperty("max-width", "100%", "important");
-          quick.style.setProperty("width", w + "px", "important");
-          quick.style.setProperty("min-width", w + "px", "important");
+          quick.style.setProperty("width", "100%", "important");
+          quick.style.setProperty("min-width", "0", "important");
           quick.style.setProperty("display", "block", "important");
-          card.style.setProperty("width", w + "px", "important");
-          card.style.setProperty("min-width", w + "px", "important");
+          card.style.setProperty("width", "100%", "important");
+          card.style.setProperty("min-width", "0", "important");
           card.style.setProperty("min-height", "0", "important");
           card.style.setProperty("max-height", "none", "important");
           if (newsList && newsList.id === "newsList") newsList.offsetHeight;

@@ -9009,6 +9009,19 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   #leftContent{
     display: none !important;
   }
+  /* Quick-feed engine: when Evidence nákupů (or other quick panel) is open, show center column so #iuCenterStage/#iuQuickFeed/.iuModalCard get real geometry */
+  #leftContent:has(#iuCenterStage[data-iu-view="quick"]){
+    display: block !important;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  #leftContent:has(#iuCenterStage[data-iu-view="quick"]) #newsList{
+    min-width: 0;
+    width: 100%;
+  }
   .iu-mobileStack{
     display: none !important;
   }
@@ -11938,31 +11951,73 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
     box-sizing: border-box;
   }
   #newsList > #iuCenterStage[data-iu-view="quick"]{
-    flex: 0 0 100vw !important;
-    width: 100vw !important;
-    min-width: 100vw !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
     max-width: 100%;
     box-sizing: border-box;
   }
   #iuCenterStage[data-iu-view="quick"]{
-    width: 100vw !important;
-    min-width: 100vw !important;
+    width: 100% !important;
+    min-width: 0 !important;
     max-width: 100%;
     box-sizing: border-box;
   }
   #iuCenterStage[data-iu-view="quick"] #iuQuickFeed{
     width: 100% !important;
-    min-width: 100%;
+    min-width: 0 !important;
     display: block !important;
     box-sizing: border-box;
   }
   #iuCenterStage[data-iu-view="quick"] #iuQuickFeed > .iuModalCard{
     width: 100% !important;
-    min-width: 100%;
+    min-width: 0 !important;
     min-height: 0;
     max-height: none !important;
     box-sizing: border-box;
   }
+}
+
+/* Quick-feed open: prevent horizontal overflow (JS sets body.iu-quickFeedOpen when quick panel opens) */
+html:has(body.iu-quickFeedOpen),
+body.iu-quickFeedOpen{
+  overflow-x: hidden !important;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+html:has(#leftContent:has(#iuCenterStage[data-iu-view="quick"])),
+body:has(#leftContent:has(#iuCenterStage[data-iu-view="quick"])),
+#app:has(#iuCenterStage[data-iu-view="quick"]),
+#page:has(#iuCenterStage[data-iu-view="quick"]){
+  overflow-x: hidden !important;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.layout:has(#iuCenterStage[data-iu-view="quick"]),
+.layout:has(#iuCenterStage[data-iu-view="quick"]) > .mainCol,
+.layout:has(#iuCenterStage[data-iu-view="quick"]) .mainCol,
+.container:has(#iuCenterStage[data-iu-view="quick"]){
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+/* RailShift=0: zero left padding when quick open so #iuLeftRail (inside #newsList) has getBoundingClientRect().left === 0 */
+.container:has(#iuCenterStage[data-iu-view="quick"]),
+.layout:has(#iuCenterStage[data-iu-view="quick"]) > .mainCol,
+#leftContent:has(#iuCenterStage[data-iu-view="quick"]),
+#leftContent:has(#iuCenterStage[data-iu-view="quick"]) #newsList{
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+#iuCenterStage[data-iu-view="quick"],
+#iuCenterStage[data-iu-view="quick"] #iuQuickFeed,
+#iuCenterStage[data-iu-view="quick"] #iuQuickFeed > .iuModalCard{
+  overflow-x: hidden;
 }
 
 .iuQuickFeed{
