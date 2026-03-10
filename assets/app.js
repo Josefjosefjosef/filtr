@@ -9382,6 +9382,27 @@ function buildVideoAsArticleCard(it) {
       } else if (candidatesEl) { candidatesEl.hidden = true; }
     }
 
+    function renderItemsList(listEl, items) {
+      if (!listEl || !Array.isArray(items)) return;
+      listEl.innerHTML = "";
+      items.forEach(function(it) {
+        var li = document.createElement("li");
+        li.className = "iu-evidence-item-row";
+        li.setAttribute("data-iu", "item-row");
+        var name = it.name || it.rawName || "—";
+        var priceStr = it.priceStr != null ? it.priceStr : (typeof it.price === "number" ? it.price + " Kč" : "—");
+        var conf = it.corrected ? 0.75 : 0.9;
+        var needR = it.corrected || (it.rawName === "unknown");
+        var spName = document.createElement("span"); spName.className = "iu-evidence-item-name"; spName.textContent = name; li.appendChild(spName);
+        li.appendChild(document.createTextNode(" "));
+        var spPrice = document.createElement("span"); spPrice.className = "iu-evidence-item-price"; spPrice.textContent = priceStr; li.appendChild(spPrice);
+        li.appendChild(document.createTextNode(" "));
+        var spConf = document.createElement("span"); spConf.className = "iu-evidence-item-conf"; spConf.textContent = "confidence: " + conf.toFixed(2); li.appendChild(spConf);
+        if (needR) { li.appendChild(document.createTextNode(" ")); var spNeed = document.createElement("span"); spNeed.className = "iu-evidence-item-needs"; spNeed.textContent = "kontrola"; li.appendChild(spNeed); }
+        listEl.appendChild(li);
+      });
+    }
+
     function showReviewPanel(result) {
       if (!extractionPanel) return;
       currentPipelineResult = result;
@@ -9405,25 +9426,9 @@ function buildVideoAsArticleCard(it) {
         validationSummaryEl.textContent = vs.sumMismatch ? "Součet položek (" + (vs.itemsSum || 0) + ") neodpovídá celkové částce (" + (vs.totalNum != null ? vs.totalNum : "—") + ")." : (vs.valid ? "Validace: OK" : "Zkontrolujte údaje.");
         validationSummaryEl.hidden = false;
       }
-      if (itemsListEl) {
-        itemsListEl.innerHTML = "";
-        (result.items || []).forEach(function(it) {
-          var li = document.createElement("li");
-          li.className = "iu-evidence-item-row";
-          li.setAttribute("data-iu", "item-row");
-          var name = it.name || it.rawName || "—";
-          var priceStr = it.priceStr != null ? it.priceStr : (typeof it.price === "number" ? it.price + " Kč" : "—");
-          var conf = it.corrected ? 0.75 : 0.9;
-          var needR = it.corrected || (it.rawName === "unknown");
-          var spName = document.createElement("span"); spName.className = "iu-evidence-item-name"; spName.textContent = name; li.appendChild(spName);
-          li.appendChild(document.createTextNode(" "));
-          var spPrice = document.createElement("span"); spPrice.className = "iu-evidence-item-price"; spPrice.textContent = priceStr; li.appendChild(spPrice);
-          li.appendChild(document.createTextNode(" "));
-          var spConf = document.createElement("span"); spConf.className = "iu-evidence-item-conf"; spConf.textContent = "confidence: " + conf.toFixed(2); li.appendChild(spConf);
-          if (needR) { li.appendChild(document.createTextNode(" ")); var spNeed = document.createElement("span"); spNeed.className = "iu-evidence-item-needs"; spNeed.textContent = "kontrola"; li.appendChild(spNeed); }
-          itemsListEl.appendChild(li);
-        });
-      }
+      var listEl = extractionPanel.querySelector("[data-iu=\"evidence-items-list\"]");
+      var items = result.items || result.itemCandidates || [];
+      renderItemsList(listEl, items);
     }
 
     function validateFile(file, acceptList) {
