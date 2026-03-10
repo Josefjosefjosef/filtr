@@ -16170,15 +16170,16 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 })();
 
-// === PWA install CTA: beforeinstallprompt (Android) + iOS add-to-home overlay ===
-// RCA: beforeinstallprompt can fire before this script runs (module deferred). Register listener
-// immediately so we never miss the event; bind DOM/click in run() when DOM is ready.
+// === PWA install CTA: early BIP capture in HTML inline + event delegation for click ===
 (function iuPwaInstallCta() {
   var deferredPrompt = null;
   var ctaEl = null;
   var overlayEl = null;
   var ran = false;
 
+  if (typeof window.__iuBipEvent !== "undefined" && window.__iuBipEvent) {
+    deferredPrompt = window.__iuBipEvent;
+  }
   window.addEventListener("beforeinstallprompt", function (e) {
     e.preventDefault();
     deferredPrompt = e;
@@ -16230,6 +16231,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     overlayEl = document.getElementById("iuPwaIosOverlay");
     ran = true;
 
+    if (typeof window.__iuBipEvent !== "undefined" && window.__iuBipEvent) {
+      deferredPrompt = window.__iuBipEvent;
+    }
+
     if (isStandalone()) {
       hideCta();
       return;
@@ -16239,7 +16244,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (deferredPrompt) showCta();
     if (isIos()) showCta();
 
-    ctaEl.addEventListener("click", function (ev) {
+    document.addEventListener("click", function (ev) {
+      var btn = ev.target && ev.target.closest ? ev.target.closest("#iuPwaInstallCta") : null;
+      if (!btn || !document.body.contains(btn)) return;
       ev.preventDefault();
       if (deferredPrompt) {
         try {
@@ -16261,7 +16268,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (isIos()) {
         showIosOverlay();
       }
-    });
+    }, true);
 
     if (overlayEl) {
       overlayEl.querySelectorAll("[data-iu-pwa-overlay-close]").forEach(function (el) {
