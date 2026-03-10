@@ -9248,10 +9248,10 @@ function buildVideoAsArticleCard(it) {
 
   /** Community layer: FORBIDDEN keys — must never appear in community record. */
   var IU_EVIDENCE_COMMUNITY_FORBIDDEN = ["rawImage", "rawPdf", "rawText", "name", "email", "phone", "address", "customerAddress", "paymentData", "userId", "userIdentifier", "iban", "cardNumber", "originalFile", "fullText"];
-  /** Community layer: allowed keys only (safe anonymized extract). */
-  var IU_EVIDENCE_COMMUNITY_ALLOWED = ["storeBrand", "merchantName", "city", "area", "date", "time", "total", "priceVatIncluded", "priceVatExcludedState", "priceVatExcluded", "items", "confidence", "needsReview", "docType"];
+  /** Community layer: approved minimum only (merchant, city/area, date/time, total, VAT state, confidence, needsReview). */
+  var IU_EVIDENCE_COMMUNITY_ALLOWED = ["storeBrand", "merchantName", "city", "area", "date", "time", "total", "priceVatExcludedState", "confidence", "needsReview"];
 
-  /** Safe community record model: returns empty template (no personal data). */
+  /** Safe community record model: returns empty template (approved minimum only, no items/docType/priceVatIncluded/priceVatExcluded). */
   function iuEvidenceCommunityRecordModel() {
     return {
       storeBrand: null,
@@ -9261,13 +9261,9 @@ function buildVideoAsArticleCard(it) {
       date: null,
       time: null,
       total: null,
-      priceVatIncluded: null,
       priceVatExcludedState: null,
-      priceVatExcluded: null,
-      items: null,
       confidence: null,
-      needsReview: null,
-      docType: null
+      needsReview: null
     };
   }
 
