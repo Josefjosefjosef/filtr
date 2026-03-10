@@ -7449,8 +7449,13 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
     display: block;
   }
   /* Mobil: prav├Ż sloupec zobrazit (jedin├ę Rychl├ę odkazy, 1 ikona nastaven├ş) */
+  /* P0 CLS fix: reserve space so ASIDE.accordionCol does not shift after first paint */
   aside.accordionCol{
     display: block;
+    min-height: 320px;
+  }
+  .layout > .mainCol{
+    min-height: 85vh;
   }
   /* A ÔÇô hlavn├ş li┼íta */
   .topbar-links{
