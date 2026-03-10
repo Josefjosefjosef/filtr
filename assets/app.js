@@ -8447,6 +8447,13 @@ function buildVideoAsArticleCard(it) {
       document.documentElement.style.removeProperty("--iu-nakup-feed-left");
     } catch (_) {}
     try { document.body.style.overflow = ""; document.body.classList.remove("iu-modal-open"); } catch (_) {}
+    try {
+      if (window.__iuFeedHiddenByNakup) {
+        const feed = document.getElementById("feed");
+        if (feed) { feed.hidden = false; feed.style.display = ""; feed.removeAttribute("data-iu-feed-hidden-by"); }
+        window.__iuFeedHiddenByNakup = false;
+      }
+    } catch (_) {}
   }
 
   try {
@@ -8513,6 +8520,10 @@ function buildVideoAsArticleCard(it) {
   async function iuOpenNakupDomu(){
     const { modal, list } = iuNakupEls();
     if (!modal || !list) return;
+    const feed = document.getElementById("feed");
+    if (feed) {
+      try { feed.hidden = true; feed.style.display = "none"; feed.setAttribute("data-iu-feed-hidden-by", "nakup"); window.__iuFeedHiddenByNakup = true; } catch (_) {}
+    }
     modal.hidden = false;
     modal.removeAttribute("aria-hidden");
     try { modal.style.display = ""; } catch (_) {}
@@ -8520,10 +8531,20 @@ function buildVideoAsArticleCard(it) {
     const card = modal.querySelector(".iuModalCard");
     if (card && window.innerWidth >= 901) {
       try {
+        const stage = document.getElementById("iuCenterStage");
+        const r = stage ? stage.getBoundingClientRect() : { width: 0, left: 0 };
+        if (r.width > 0) {
+          document.documentElement.style.setProperty("--iu-nakup-feed-width", r.width + "px");
+          document.documentElement.style.setProperty("--iu-nakup-feed-left", r.left + "px");
+          modal.style.setProperty("padding-left", r.left + "px");
+          modal.style.setProperty("padding-top", "24px");
+          card.style.setProperty("width", r.width + "px", "important");
+          card.style.setProperty("max-width", r.width + "px", "important");
+          card.style.setProperty("margin-left", "0", "important");
+        } else { iuNakupApplyFeedWidth(); }
         modal.style.display = "flex";
         modal.style.alignItems = "flex-start";
         modal.style.justifyContent = "flex-start";
-        iuNakupApplyFeedWidth();
       } catch (_) {}
     }
     if (card && window.innerWidth <= 900) {
@@ -14319,6 +14340,10 @@ function buildVideoAsArticleCard(it) {
         try { window.dispatchEvent(new CustomEvent('iu-close-panel', { detail: prev })); } catch {}
         __iuCurrentPanel = null;
         return;
+      }
+      if (panel === "shopping") {
+        const feed = document.getElementById("feed");
+        if (feed) { try { feed.hidden = true; feed.style.display = "none"; feed.setAttribute("data-iu-feed-hidden-by", "nakup"); window.__iuFeedHiddenByNakup = true; } catch (_) {} }
       }
       if (panel !== null) safeOpenPanel(panel);
       else __iuCurrentPanel = null;
