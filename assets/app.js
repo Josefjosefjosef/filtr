@@ -8441,6 +8441,7 @@ function buildVideoAsArticleCard(it) {
     if (!modal) return;
     modal.hidden = true;
     modal.setAttribute("aria-hidden", "true");
+    try { document.body.style.overflow = ""; document.body.classList.remove("iu-modal-open"); } catch (_) {}
   }
 
   try {
@@ -8476,6 +8477,7 @@ function buildVideoAsArticleCard(it) {
     modal.hidden = false;
     modal.removeAttribute("aria-hidden");
     try { modal.style.display = ""; } catch (_) {}
+    try { document.body.style.overflow = "hidden"; document.body.classList.add("iu-modal-open"); } catch (_) {}
     list.innerHTML = '<div class="iuModalMsg">Načítám…</div>';
     try {
       await iuLoadNakupDomu();
@@ -8953,10 +8955,17 @@ function buildVideoAsArticleCard(it) {
   function iuNakupDomuInit(){
     const { modal, openBtn, closeBtn } = iuNakupEls();
     iuNakupCommunityInit();
+    function openNakupPanel() {
+      try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
+    }
     openBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
-      try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl('shopping'); } catch {}
+      openNakupPanel();
     });
+    openBtn?.addEventListener("touchend", (e) => {
+      e.preventDefault?.();
+      openNakupPanel();
+    }, { passive: false });
     closeBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
