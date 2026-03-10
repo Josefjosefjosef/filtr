@@ -9080,6 +9080,7 @@ function buildVideoAsArticleCard(it) {
     var s = raw.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
     s = s.replace(/[ \t]+/g, " ").replace(/\n +/g, "\n").replace(/ +\n/g, "\n").trim();
     s = s.replace(/Kc\b/gi, "Kč").replace(/Kč/g, "Kc");
+    s = s.replace(/\bCZK\b/gi, "Kc");
     var out = "";
     for (var i = 0; i < s.length; i++) {
       var c = s[i];
@@ -9134,8 +9135,12 @@ function buildVideoAsArticleCard(it) {
     if (timeMatch) time = timeMatch[1].padStart(2, "0") + ":" + timeMatch[2].padStart(2, "0");
     var celkemLine = lines.filter(function(l) { return /celkem|total|celk/i.test(l); })[0];
     if (celkemLine) {
-      var celkemMatch = celkemLine.match(/([\d\s,\.]+)\s*Kc?\s*$/i);
-      if (celkemMatch) { var n = parseFloat(String(celkemMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(n)) { totalNum = n; total = celkemMatch[1].trim() + " Kč"; priceVatIncluded = total; } }
+      var celkemMatch = celkemLine.match(/([\d\s,\.]+)\s*Kc?\s*$/i) || celkemLine.match(/celkem\s*[:\s]*([\d\s,\.]+)/i);
+      if (celkemMatch && celkemMatch[1]) {
+        var numStr = String(celkemMatch[1]).trim().replace(/\s/g, "").replace(",", ".");
+        var n = parseFloat(numStr);
+        if (!isNaN(n)) { totalNum = n; total = numStr + " Kč"; priceVatIncluded = total; }
+      }
     }
     if (total === "unknown" && lines.length > 0) {
       var lastLine = lines[lines.length - 1];
@@ -9144,6 +9149,12 @@ function buildVideoAsArticleCard(it) {
     }
     lines.forEach(function(line, idx) {
       if (idx === 0 || /celkem|total|datum|date|čas|time/i.test(line)) return;
+      var polozkaMatch = line.match(/položka\s*[:\s]+(.+)/i);
+      if (polozkaMatch) {
+        var itemName = polozkaMatch[1].trim();
+        if (itemName && totalNum != null) items.push({ name: itemName, price: totalNum, priceStr: (totalNum + " Kč"), qty: null, lineTotal: totalNum });
+        return;
+      }
       var m = line.match(/^(.+?)\s+([\d\s,\.]+)\s*Kc?\s*$/i);
       if (m) {
         var name = m[1].trim();
@@ -9152,11 +9163,27 @@ function buildVideoAsArticleCard(it) {
         if (!isNaN(price) && price >= 0) items.push({ name: name, price: price, priceStr: m[2].trim() + " Kč", qty: null, lineTotal: price });
       }
     });
-    if (/faktura|invoice|ič|dič/i.test(normalizedText)) docType = "invoice";
+    if (/faktura|invoice|ič|dič|daňový\s*doklad/i.test(normalizedText)) docType = "invoice";
     var duzpMatch = normalizedText.match(/DUZP[:\s]*(\d{1,2})\.(\d{1,2})\.(\d{4})/i) || normalizedText.match(/splatnost[:\s]*(\d{1,2})\.(\d{1,2})\.(\d{4})/i);
     var duzp = "unknown";
     if (duzpMatch) duzp = duzpMatch[3] + "-" + duzpMatch[2].padStart(2, "0") + "-" + duzpMatch[1].padStart(2, "0");
-    return { store: store, date: date, time: time, total: total, totalNum: totalNum, priceVatIncluded: priceVatIncluded, priceVatExcluded: priceVatExcluded, priceVatExcludedState: priceVatExcludedState, docType: docType, items: items, duzp: duzp };
+    var docNumber = "unknown";
+    var docNumMatch = normalizedText.match(/doklad\s*[:\s]*(\d{4}[-\s]?\d+)/i) || normalizedText.match(/(\d{4}[-\s]\d{5,})/);
+    if (docNumMatch) docNumber = docNumMatch[1].replace(/\s/g, "-");
+    var vatBase = null, vatAmount = null;
+    var vatBaseMatch = normalizedText.match(/základ\s*[:\s]*([\d\s,\.]+)/i);
+    if (vatBaseMatch) { var vb = parseFloat(String(vatBaseMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(vb)) vatBase = vb; }
+    var vatAmountMatch = normalizedText.match(/DPH\s*[:\s]*([\d\s,\.]+)/i);
+    if (vatAmountMatch) { var va = parseFloat(String(vatAmountMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(va)) vatAmount = va; }
+    var supplier = "unknown";
+    var sroMatch = normalizedText.match(/([A-Za-zÁ-ž\s]+s\.r\.o\.)/);
+    if (sroMatch) supplier = sroMatch[1].trim();
+    var dic = "unknown", ico = "unknown";
+    var dicMatch = normalizedText.match(/DIČ\s*[:\s]*([A-Z0-9]+)/i);
+    if (dicMatch) dic = dicMatch[1].trim();
+    var icoMatch = normalizedText.match(/IČO\s*[:\s]*(\d+)/i);
+    if (icoMatch) ico = icoMatch[1].trim();
+    return { store: store, date: date, time: time, total: total, totalNum: totalNum, priceVatIncluded: priceVatIncluded, priceVatExcluded: priceVatExcluded, priceVatExcludedState: priceVatExcludedState, docType: docType, items: items, duzp: duzp, docNumber: docNumber, vatBase: vatBase, vatAmount: vatAmount, supplier: supplier, dic: dic, ico: ico };
   }
 
   /** Logical validation: sum(items) vs total, valid date/time, non-negative prices. */
@@ -9257,27 +9284,26 @@ function buildVideoAsArticleCard(it) {
       reviewSummary: reviewSummary,
       unknownState: unknownState,
       docType: correctedFields.docType,
-      invoiceDuzp: parsed.duzp || "unknown"
+      invoiceDuzp: parsed.duzp || "unknown",
+      docNumber: parsed.docNumber,
+      vatBase: parsed.vatBase,
+      vatAmount: parsed.vatAmount,
+      supplier: parsed.supplier,
+      dic: parsed.dic,
+      ico: parsed.ico
     };
   }
 
-  /** OCR pipeline hook: file + kind -> Promise<extracted>. Simulates raw OCR then runs full pipeline (normalize, autoCorrect, validate, confidence, needsReview). */
+  /** OCR pipeline hook: file + kind -> Promise<extracted>. Uses only actual OCR input or unknown; no sample/fallback. */
   function iuEvidenceOcrHook(file, kind) {
-    return new Promise(function(resolve) {
-      setTimeout(function() {
-        var scenario = "clean";
-        if (file && file.name) {
-          if (/merchant|obchod|typ/i.test(file.name)) scenario = "merchantTypo";
-          else if (/item|polozk/i.test(file.name)) scenario = "itemTypo";
-          else if (/sum|součet|mismatch/i.test(file.name)) scenario = "sumMismatch";
-          else if (/unknown/i.test(file.name)) scenario = "unknown";
-          else if (/faktura|invoice/i.test(file.name)) scenario = "invoice";
-        }
-        var rawOcrText = iuEvidenceSimulatedRawOcr(kind, scenario);
-        var result = iuEvidenceOcrPipeline(rawOcrText, kind);
-        resolve(result);
-      }, 300);
-    });
+    var rawOcrText = "";
+    if (typeof window !== "undefined" && window.__iuEvidenceInjectRawOcr && typeof window.__iuEvidenceInjectRawOcr === "string" && window.__iuEvidenceInjectRawOcr.trim().length > 0) {
+      rawOcrText = window.__iuEvidenceInjectRawOcr.trim();
+    } else {
+      rawOcrText = iuEvidenceSimulatedRawOcr(kind, "unknown");
+    }
+    var result = iuEvidenceOcrPipeline(rawOcrText, kind);
+    return Promise.resolve(result);
   }
 
   try {
@@ -9406,6 +9432,7 @@ function buildVideoAsArticleCard(it) {
     function showReviewPanel(result) {
       if (!extractionPanel) return;
       currentPipelineResult = result;
+      try { window.__iuEvidenceLastResult = result; } catch (_) {}
       extractionPanel.hidden = false;
       var cf = result.correctedFields || {};
       var fc = result.fieldConfidence || {};
