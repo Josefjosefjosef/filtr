@@ -9245,6 +9245,60 @@ function buildVideoAsArticleCard(it) {
   }
 
   const IU_EVIDENCE_RECEIPTS_KEY = "iu:evidence:receipts";
+
+  /** Community layer: FORBIDDEN keys — must never appear in community record. */
+  var IU_EVIDENCE_COMMUNITY_FORBIDDEN = ["rawImage", "rawPdf", "rawText", "name", "email", "phone", "address", "customerAddress", "paymentData", "userId", "userIdentifier", "iban", "cardNumber", "originalFile", "fullText"];
+  /** Community layer: allowed keys only (safe anonymized extract). */
+  var IU_EVIDENCE_COMMUNITY_ALLOWED = ["storeBrand", "merchantName", "city", "area", "date", "time", "total", "priceVatIncluded", "priceVatExcludedState", "priceVatExcluded", "items", "confidence", "needsReview", "docType"];
+
+  /** Safe community record model: returns empty template (no personal data). */
+  function iuEvidenceCommunityRecordModel() {
+    return {
+      storeBrand: null,
+      merchantName: null,
+      city: null,
+      area: null,
+      date: null,
+      time: null,
+      total: null,
+      priceVatIncluded: null,
+      priceVatExcludedState: null,
+      priceVatExcluded: null,
+      items: null,
+      confidence: null,
+      needsReview: null,
+      docType: null
+    };
+  }
+
+  /** Anonymization pipeline: personal record -> community-safe record. Excludes all forbidden fields. */
+  function iuEvidenceAnonymizeForCommunity(personalRecord) {
+    var out = iuEvidenceCommunityRecordModel();
+    var allowed = IU_EVIDENCE_COMMUNITY_ALLOWED;
+    for (var i = 0; i < allowed.length; i++) {
+      var k = allowed[i];
+      if (personalRecord && Object.prototype.hasOwnProperty.call(personalRecord, k)) {
+        if (k === "store" && personalRecord.store) out.merchantName = personalRecord.store;
+        else if (k === "store") out.merchantName = personalRecord.merchantName || personalRecord.storeBrand || null;
+        else out[k] = personalRecord[k];
+      }
+    }
+    if (personalRecord && personalRecord.store && !out.merchantName) out.merchantName = personalRecord.store;
+    return out;
+  }
+
+  /** Review gate: only records with needsReview === false pass (safe for community submit). */
+  function iuEvidenceNeedsReviewGate(record) {
+    return record && record.needsReview === false;
+  }
+
+  try {
+    window.iuEvidenceCommunityForbiddenKeys = IU_EVIDENCE_COMMUNITY_FORBIDDEN.slice();
+    window.iuEvidenceCommunityRecordModel = iuEvidenceCommunityRecordModel;
+    window.iuEvidenceAnonymizeForCommunity = iuEvidenceAnonymizeForCommunity;
+    window.iuEvidenceNeedsReviewGate = iuEvidenceNeedsReviewGate;
+  } catch (_) {}
+
   function iuEvidenceSeedRecord(){
     var d = new Date();
     var dateStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
