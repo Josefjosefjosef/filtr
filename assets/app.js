@@ -16175,6 +16175,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   var deferredPrompt = null;
   var ctaEl = null;
   var overlayEl = null;
+  var ran = false;
 
   function isStandalone() {
     try {
@@ -16196,9 +16197,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (ctaEl) ctaEl.classList.add("iu-pwa-install-hidden");
   }
 
+  function showCta() {
+    if (ctaEl) ctaEl.classList.remove("iu-pwa-install-hidden");
+  }
+
   function showIosOverlay() {
-    if (!overlayEl) return;
-    overlayEl.hidden = false;
+    if (overlayEl) overlayEl.hidden = false;
   }
 
   function closeIosOverlay() {
@@ -16206,32 +16210,47 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function run() {
-    ctaEl = document.getElementById("iuPwaInstallCta");
+    if (ran) return;
+    var nodes = document.querySelectorAll("#iuPwaInstallCta");
+    if (nodes.length !== 1) return;
+    ctaEl = nodes[0];
     overlayEl = document.getElementById("iuPwaIosOverlay");
-    if (!ctaEl) return;
+    ran = true;
 
     if (isStandalone()) {
       hideCta();
       return;
     }
 
+    hideCta();
     window.addEventListener("beforeinstallprompt", function (e) {
       e.preventDefault();
       deferredPrompt = e;
-    });
+      showCta();
+    }, { once: false });
 
     window.addEventListener("appinstalled", function () {
       deferredPrompt = null;
       hideCta();
     });
 
-    ctaEl.addEventListener("click", function () {
+    ctaEl.addEventListener("click", function (ev) {
+      ev.preventDefault();
       if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(function (choice) {
-          if (choice.outcome === "accepted") hideCta();
+        try {
+          deferredPrompt.prompt();
+          var choice = deferredPrompt.userChoice;
+          if (choice && typeof choice.then === "function") {
+            choice.then(function (result) {
+              if (result && result.outcome === "accepted") hideCta();
+              deferredPrompt = null;
+            }).catch(function () { deferredPrompt = null; });
+          } else {
+            deferredPrompt = null;
+          }
+        } catch (err) {
           deferredPrompt = null;
-        }).catch(function () { deferredPrompt = null; });
+        }
         return;
       }
       if (isIos()) {
@@ -16246,16 +16265,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       overlayEl.addEventListener("click", function (e) {
         if (e.target === overlayEl) closeIosOverlay();
       });
+      document.addEventListener("keydown", function keyClose(e) {
+        if (e.key === "Escape" && overlayEl && !overlayEl.hidden) closeIosOverlay();
+      });
     }
 
-    if (isIos() && !deferredPrompt) {
-      if (typeof deferredPrompt === "undefined" || deferredPrompt === null) {
-        var check = function () {
-          if (deferredPrompt) return;
-          if (isStandalone()) hideCta();
-        };
-        setTimeout(check, 500);
-      }
+    if (isIos()) {
+      showCta();
     }
   }
 
