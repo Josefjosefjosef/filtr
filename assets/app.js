@@ -9299,6 +9299,31 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidenceNeedsReviewGate = iuEvidenceNeedsReviewGate;
   } catch (_) {}
 
+  /** Warranty fields model: source, confidence, needsReview required. Later phase. */
+  function iuEvidenceWarrantyModel() {
+    return {
+      warrantyEndDate: null,
+      source: null,
+      confidence: null,
+      needsReview: null
+    };
+  }
+
+  /** Return window model: lhůta pro vrácení. source, confidence, needsReview required. */
+  function iuEvidenceReturnWindowModel() {
+    return {
+      returnByDate: null,
+      source: null,
+      confidence: null,
+      needsReview: null
+    };
+  }
+
+  try {
+    window.iuEvidenceWarrantyModel = iuEvidenceWarrantyModel;
+    window.iuEvidenceReturnWindowModel = iuEvidenceReturnWindowModel;
+  } catch (_) {}
+
   function iuEvidenceSeedRecord(){
     var d = new Date();
     var dateStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");

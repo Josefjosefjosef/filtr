@@ -11342,6 +11342,29 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   line-height: 1.45;
 }
 
+.iu-evidence-warranty-layer{
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid rgba(11,27,43,.1);
+  border-radius: 10px;
+  overflow-x: hidden;
+}
+.iu-evidence-warranty-layer .iu-evidence-shell-heading{
+  margin-bottom: 12px;
+}
+.iu-evidence-reminder-shell,
+.iu-evidence-timeline-shell{
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid rgba(11,27,43,.08);
+  border-radius: 8px;
+}
+.iu-evidence-timeline-shell{
+  margin-bottom: 0;
+}
+
 /* Evidence nákupů — kalendář, denní seznam, detail dokladu */
 .iu-evidence-calendar-nav{
   display: flex;
