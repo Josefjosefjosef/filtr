@@ -11912,16 +11912,49 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   min-height: auto;
 }
 
-/* Mobile: ensure quick feed + card have non-zero size (avoid 0×0 when in center column) */
+/* Mobile: ensure quick feed + card have non-zero size (avoid 0×0 when in center column).
+   P0: parent chain must have width so #iuCenterStage 100% resolves; RCA showed stageWidth=0 when parents collapsed. */
 @media (max-width: 900px){
-  #iuCenterStage[data-iu-view="quick"]{
-    width: 100% !important;
+  html, body{
     min-width: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+  .layout{
+    min-width: 100vw;
+    width: 100vw;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .layout > .mainCol{
+    min-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  #newsList{
+    min-width: 100vw;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  #newsList > #iuCenterStage[data-iu-view="quick"]{
+    flex: 0 0 100vw !important;
+    width: 100vw !important;
+    min-width: 100vw !important;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  #iuCenterStage[data-iu-view="quick"]{
+    width: 100vw !important;
+    min-width: 100vw !important;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   #iuCenterStage[data-iu-view="quick"] #iuQuickFeed{
-    width: 100%;
+    width: 100% !important;
     min-width: 100%;
     display: block !important;
+    box-sizing: border-box;
   }
   #iuCenterStage[data-iu-view="quick"] #iuQuickFeed > .iuModalCard{
     width: 100% !important;
