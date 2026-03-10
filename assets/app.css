@@ -11086,43 +11086,45 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   flex-direction: column;
 }
 
+/* P0: Evidence nákupů panel expands with feed — no internal scroll, no max-height, part of page flow */
+#iuNakupModal{
+  position: relative;
+  inset: auto;
+  background: transparent;
+  display: block;
+  align-items: stretch;
+  justify-content: stretch;
+  padding: 0;
+  contain: none;
+  z-index: 0;
+}
+#iuNakupModal .iuModalCard{
+  width: 100%;
+  max-width: var(--iu-nakup-feed-width, 760px);
+  height: auto !important;
+  max-height: none !important;
+  min-height: 0;
+  overflow: visible !important;
+  border-radius: 0;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+#iuNakupModal .iuModalBody{
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  min-height: 0;
+  flex: 0 1 auto;
+}
 @media (max-width: 900px){
-  #iuNakupModal{
-    align-items: stretch;
-    justify-content: stretch;
-    padding: 0;
-    contain: none;
-  }
   #iuNakupModal .iuModalCard{
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    max-height: none;
     min-width: 100%;
-    min-height: 100%;
-    border-radius: 0;
-    box-shadow: none;
-    box-sizing: border-box;
   }
 }
 
 @media (min-width: 901px){
-  #iuNakupModal{
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
-    padding-left: var(--iu-nakup-feed-left, 0);
-    padding-top: 24px;
-    contain: none;
-  }
   #iuNakupModal .iuModalCard{
-    width: var(--iu-nakup-feed-width, 760px);
-    max-width: var(--iu-nakup-feed-width, 760px);
-    margin-left: 0 !important;
-    transform: none !important;
-    left: auto !important;
-    right: auto !important;
-    height: 85vh;
-    max-height: 85vh;
+    margin-left: var(--iu-nakup-feed-left, 0);
   }
 }
 
@@ -11176,9 +11178,12 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   font-size: 14px;
 }
 
-/* Evidence nákupů — MVP shell (CTAs, kalendář, seznam, prázdný stav) */
+/* Evidence nákupů — MVP shell (CTAs, kalendář, seznam, prázdný stav). P0: no internal scroll, expands with feed. */
 .iu-evidence-nakupu-top{
   overflow-x: hidden;
+  overflow-y: visible !important;
+  height: auto !important;
+  max-height: none !important;
   margin-bottom: 16px;
   padding-bottom: 16px;
 }
@@ -11888,15 +11893,23 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   display: none !important;
 }
 
-/* Evidence nákupů in quick feed: same section engine as other quick tools */
+/* Evidence nákupů in quick feed: no internal scroll, expands with feed */
 #iuQuickFeed > .iuModalCard{
   width: 100%;
   max-width: none;
-  height: auto;
-  min-height: 60vh;
-  max-height: none;
+  height: auto !important;
+  min-height: 0;
+  max-height: none !important;
   margin: 0;
   flex-shrink: 0;
+  overflow: visible !important;
+}
+#iuQuickFeed .iuModalBody{
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  flex: 0 1 auto;
+  min-height: auto;
 }
 
 /* Mobile: ensure quick feed + card have non-zero size (avoid 0×0 when in center column) */
@@ -11913,8 +11926,8 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   #iuCenterStage[data-iu-view="quick"] #iuQuickFeed > .iuModalCard{
     width: 100% !important;
     min-width: 100%;
-    min-height: 80vh;
-    max-height: none;
+    min-height: 0;
+    max-height: none !important;
     box-sizing: border-box;
   }
 }
