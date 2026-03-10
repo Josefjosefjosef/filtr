@@ -2963,27 +2963,52 @@ style-src 'self' 'unsafe-inline' https:;
               </div>
               <div class="iu-evidence-extraction-panel" data-iu="ocr-extraction-result" aria-label="Vytěžené údaje z dokladu">
                 <h4 class="iu-evidence-extraction-heading">Základní údaje z dokladu</h4>
-                <dl class="iu-evidence-extraction-fields">
-                  <dt>Obchod / firma</dt>
-                  <dd data-iu="extraction-store">—</dd>
-                  <dt>Datum</dt>
-                  <dd data-iu="extraction-date">—</dd>
-                  <dt>Čas</dt>
-                  <dd data-iu="extraction-time">—</dd>
-                  <dt>Celkem</dt>
-                  <dd data-iu="extraction-total">—</dd>
-                  <dt>Cena včetně DPH</dt>
-                  <dd data-iu="extraction-vat-included">—</dd>
-                  <dt>Bez DPH</dt>
-                  <dd data-iu="extraction-vat-excluded-state">—</dd>
-                  <dt>Typ dokladu</dt>
-                  <dd data-iu="extraction-doc-type">—</dd>
-                  <dt data-iu="confidence-label">Confidence</dt>
-                  <dd data-iu="confidence-visible">—</dd>
-                  <dt data-iu="needs-review-label">Vyžaduje kontrolu</dt>
-                  <dd data-iu="needs-review-visible">—</dd>
-                </dl>
+                <div class="iu-evidence-review-fields" data-iu="review-fields">
+                  <div class="iu-evidence-review-row" data-iu="review-store">
+                    <span class="iu-evidence-review-label">Obchod / firma</span>
+                    <span class="iu-evidence-review-value" data-iu="review-store-value">—</span>
+                    <span class="iu-evidence-review-confidence" data-iu="review-store-confidence"></span>
+                    <span class="iu-evidence-review-needs" data-iu="review-store-needs"></span>
+                    <select class="iu-evidence-review-candidates" data-iu="review-store-candidates" aria-label="Vybrat variantu obchodu" hidden></select>
+                    <button type="button" class="iu-evidence-review-confirm" data-iu="review-store-confirm" aria-label="Potvrdit">Potvrdit</button>
+                  </div>
+                  <div class="iu-evidence-review-row" data-iu="review-date">
+                    <span class="iu-evidence-review-label">Datum</span>
+                    <span class="iu-evidence-review-value" data-iu="review-date-value">—</span>
+                    <span class="iu-evidence-review-confidence" data-iu="review-date-confidence"></span>
+                    <span class="iu-evidence-review-needs" data-iu="review-date-needs"></span>
+                    <button type="button" class="iu-evidence-review-confirm" data-iu="review-date-confirm" aria-label="Potvrdit">Potvrdit</button>
+                  </div>
+                  <div class="iu-evidence-review-row" data-iu="review-time">
+                    <span class="iu-evidence-review-label">Čas</span>
+                    <span class="iu-evidence-review-value" data-iu="review-time-value">—</span>
+                    <span class="iu-evidence-review-confidence" data-iu="review-time-confidence"></span>
+                    <span class="iu-evidence-review-needs" data-iu="review-time-needs"></span>
+                    <button type="button" class="iu-evidence-review-confirm" data-iu="review-time-confirm" aria-label="Potvrdit">Potvrdit</button>
+                  </div>
+                  <div class="iu-evidence-review-row" data-iu="review-total">
+                    <span class="iu-evidence-review-label">Celkem</span>
+                    <span class="iu-evidence-review-value" data-iu="review-total-value">—</span>
+                    <span class="iu-evidence-review-confidence" data-iu="review-total-confidence"></span>
+                    <span class="iu-evidence-review-needs" data-iu="review-total-needs"></span>
+                    <button type="button" class="iu-evidence-review-confirm" data-iu="review-total-confirm" aria-label="Potvrdit">Potvrdit</button>
+                  </div>
+                  <div class="iu-evidence-review-row" data-iu="review-doctype">
+                    <span class="iu-evidence-review-label">Typ dokladu</span>
+                    <span class="iu-evidence-review-value" data-iu="review-doctype-value">—</span>
+                    <span class="iu-evidence-review-confidence" data-iu="review-doctype-confidence"></span>
+                    <span class="iu-evidence-review-needs" data-iu="review-doctype-needs"></span>
+                    <button type="button" class="iu-evidence-review-confirm" data-iu="review-doctype-confirm" aria-label="Potvrdit">Potvrdit</button>
+                  </div>
+                </div>
+                <div class="iu-evidence-review-summary" data-iu="review-summary-visible" aria-live="polite"></div>
+                <div class="iu-evidence-validation-summary" data-iu="validation-summary-visible" aria-live="polite"></div>
+                <h4 class="iu-evidence-items-heading">Položky</h4>
+                <ul class="iu-evidence-items-list" data-iu="evidence-items-list" aria-label="Položky dokladu"></ul>
                 <p class="iu-evidence-unknown-hint" data-iu="unknown-state-works">Údaje označené jako „unknown“ nebyly bezpečně rozpoznány.</p>
+                <div class="iu-evidence-review-actions">
+                  <button type="button" class="iu-evidence-save-cta" data-iu="evidence-save-cta" aria-label="Uložit do evidence">Uložit do evidence</button>
+                </div>
               </div>
             </div>
             <script type="application/json" id="iu-evidence-upload-contract" data-iu="server-contract-shell" aria-hidden="true">{"contract":"receipt_photo,invoice_photo,receipt_pdf,invoice_pdf","receipt_photo":{"type":"image","accept":["image/*"]},"invoice_photo":{"type":"image","accept":["image/*"]},"receipt_pdf":{"type":"pdf","accept":["application/pdf"]},"invoice_pdf":{"type":"pdf","accept":["application/pdf"]}}</script>
@@ -3022,6 +3047,8 @@ style-src 'self' 'unsafe-inline' https:;
                 <dd data-iu="receipt-detail-confidence"></dd>
                 <dt data-iu="detail-label-needs-review">Vyžaduje kontrolu</dt>
                 <dd data-iu="receipt-detail-needs-review"></dd>
+                <dt data-iu="detail-label-items">Položky</dt>
+                <dd data-iu="receipt-detail-items"></dd>
               </dl>
               <div class="iu-evidence-detail-actions">
                 <button type="button" class="iu-evidence-btn-back" data-iu="receipt-detail-back" aria-label="Zpět na seznam">Zpět na seznam</button>

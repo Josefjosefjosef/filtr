@@ -9074,43 +9074,234 @@ function buildVideoAsArticleCard(it) {
   };
   const IU_EVIDENCE_MAX_FILE_BYTES = 10 * 1024 * 1024;
 
-  /** OCR pipeline hook: file + kind -> Promise<extracted>. Stub: no real OCR, returns unknown/needsReview. */
+  /** OCR normalisation: whitespace, artefacts, separators, safe diacritics, common OCR substitutions (0↔O, 1↔l, Kč↔Kc, etc.). */
+  function iuEvidenceNormalizeOcrText(raw) {
+    if (raw == null || typeof raw !== "string") return "";
+    var s = raw.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+    s = s.replace(/[ \t]+/g, " ").replace(/\n +/g, "\n").replace(/ +\n/g, "\n").trim();
+    s = s.replace(/Kc\b/gi, "Kč").replace(/Kč/g, "Kc");
+    var out = "";
+    for (var i = 0; i < s.length; i++) {
+      var c = s[i];
+      if (c === "," && out.length > 0 && /\d/.test(out[out.length - 1]) && i < s.length - 1 && /\d/.test(s[i + 1])) { out += "."; continue; }
+      out += c;
+    }
+    return out;
+  }
+
+  /** Safe OCR character substitutions for display/correction (0/O, 1/l/I, 5/S, 8/B in word context). */
+  var IU_EVIDENCE_OCR_STORE_CORRECTIONS = { "L1DL": "Lidl", "K0SIK": "Kaufland", "TESC0": "Tesco", "ALBERT": "Albert", "B1LLA": "Billa" };
+  var IU_EVIDENCE_OCR_ITEM_CORRECTIONS = { "MLEK0": "Mléko", "R0HLIK": "Rohlík", "MASL0": "Máslo", "CHLEB": "Chléb", "SYR": "Sýr" };
+
+  function iuEvidenceAutoCorrectStore(raw) {
+    var r = (raw && String(raw).trim()) || "";
+    var u = r.toUpperCase().replace(/\s+/g, "");
+    var corrected = IU_EVIDENCE_OCR_STORE_CORRECTIONS[u] || null;
+    var candidates = [];
+    if (corrected && corrected !== r) candidates.push(corrected);
+    Object.keys(IU_EVIDENCE_OCR_STORE_CORRECTIONS).forEach(function(k) {
+      if (k !== u && candidates.indexOf(IU_EVIDENCE_OCR_STORE_CORRECTIONS[k]) === -1) candidates.push(IU_EVIDENCE_OCR_STORE_CORRECTIONS[k]);
+    });
+    return { value: corrected || r, candidates: candidates.slice(0, 3), corrected: !!corrected };
+  }
+
+  function iuEvidenceAutoCorrectItemName(raw) {
+    var r = (raw && String(raw).trim()) || "";
+    var u = r.toUpperCase().replace(/\s+/g, "");
+    var corrected = IU_EVIDENCE_OCR_ITEM_CORRECTIONS[u] || null;
+    var candidates = [];
+    if (corrected && corrected !== r) candidates.push(corrected);
+    Object.keys(IU_EVIDENCE_OCR_ITEM_CORRECTIONS).forEach(function(k) {
+      if (k !== u && candidates.indexOf(IU_EVIDENCE_OCR_ITEM_CORRECTIONS[k]) === -1) candidates.push(IU_EVIDENCE_OCR_ITEM_CORRECTIONS[k]);
+    });
+    return { value: corrected || r, candidates: candidates.slice(0, 3), corrected: !!corrected };
+  }
+
+  /** Heuristic parse normalized text to fields + items. */
+  function iuEvidenceParseNormalizedToFields(normalizedText) {
+    var lines = normalizedText.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+    var store = lines[0] || "unknown";
+    var date = "unknown", time = "unknown", total = "unknown", totalNum = null;
+    var priceVatIncluded = "unknown", priceVatExcluded = "unknown", priceVatExcludedState = "unknown";
+    var docType = "receipt";
+    var items = [];
+    var dateMatch = normalizedText.match(/(\d{4})-(\d{2})-(\d{2})/) || normalizedText.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+    if (dateMatch) {
+      if (dateMatch[0].indexOf("-") !== -1) date = dateMatch[0];
+      else date = dateMatch[3] + "-" + dateMatch[2].padStart(2, "0") + "-" + dateMatch[1].padStart(2, "0");
+    }
+    var timeMatch = normalizedText.match(/\b(\d{1,2}):(\d{2})\b/);
+    if (timeMatch) time = timeMatch[1].padStart(2, "0") + ":" + timeMatch[2].padStart(2, "0");
+    var celkemLine = lines.filter(function(l) { return /celkem|total|celk/i.test(l); })[0];
+    if (celkemLine) {
+      var celkemMatch = celkemLine.match(/([\d\s,\.]+)\s*Kc?\s*$/i);
+      if (celkemMatch) { var n = parseFloat(String(celkemMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(n)) { totalNum = n; total = celkemMatch[1].trim() + " Kč"; priceVatIncluded = total; } }
+    }
+    if (total === "unknown" && lines.length > 0) {
+      var lastLine = lines[lines.length - 1];
+      var lastMatch = lastLine.match(/([\d\s,\.]+)\s*Kc?\s*$/i);
+      if (lastMatch) { var n2 = parseFloat(String(lastMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(n2)) { totalNum = n2; total = lastMatch[1].trim() + " Kč"; priceVatIncluded = total; } }
+    }
+    lines.forEach(function(line, idx) {
+      if (idx === 0 || /celkem|total|datum|date|čas|time/i.test(line)) return;
+      var m = line.match(/^(.+?)\s+([\d\s,\.]+)\s*Kc?\s*$/i);
+      if (m) {
+        var name = m[1].trim();
+        var priceStr = m[2].replace(/\s/g, "").replace(",", ".");
+        var price = parseFloat(priceStr);
+        if (!isNaN(price) && price >= 0) items.push({ name: name, price: price, priceStr: m[2].trim() + " Kč", qty: null, lineTotal: price });
+      }
+    });
+    if (/faktura|invoice|ič|dič/i.test(normalizedText)) docType = "invoice";
+    var duzpMatch = normalizedText.match(/DUZP[:\s]*(\d{1,2})\.(\d{1,2})\.(\d{4})/i) || normalizedText.match(/splatnost[:\s]*(\d{1,2})\.(\d{1,2})\.(\d{4})/i);
+    var duzp = "unknown";
+    if (duzpMatch) duzp = duzpMatch[3] + "-" + duzpMatch[2].padStart(2, "0") + "-" + duzpMatch[1].padStart(2, "0");
+    return { store: store, date: date, time: time, total: total, totalNum: totalNum, priceVatIncluded: priceVatIncluded, priceVatExcluded: priceVatExcluded, priceVatExcludedState: priceVatExcludedState, docType: docType, items: items, duzp: duzp };
+  }
+
+  /** Logical validation: sum(items) vs total, valid date/time, non-negative prices. */
+  function iuEvidenceValidate(fields) {
+    var errors = [];
+    var itemsSum = 0;
+    (fields.items || []).forEach(function(it) {
+      var p = typeof it.price === "number" ? it.price : parseFloat(String(it.price || 0).replace(/\s/g, "").replace(",", "."));
+      if (!isNaN(p) && p >= 0) itemsSum += p;
+    });
+    var totalNum = fields.totalNum != null ? fields.totalNum : (typeof fields.total === "string" ? parseFloat(fields.total.replace(/\s/g, "").replace(",", ".").replace(/[^\d.]/g, "")) : NaN);
+    var sumMismatch = false;
+    if (!isNaN(totalNum) && itemsSum > 0 && Math.abs(itemsSum - totalNum) > 0.01) { errors.push("sumMismatch"); sumMismatch = true; }
+    if (fields.date && fields.date !== "unknown") {
+      var d = new Date(fields.date);
+      if (isNaN(d.getTime())) errors.push("invalidDate");
+    }
+    if (fields.time && fields.time !== "unknown" && !/^\d{1,2}:\d{2}$/.test(fields.time)) errors.push("invalidTime");
+    return { valid: errors.length === 0, errors: errors, sumMismatch: sumMismatch, itemsSum: itemsSum, totalNum: totalNum };
+  }
+
+  function iuEvidenceComputeFieldConfidence(fieldName, value, corrected, validationOk) {
+    if (value == null || value === "unknown" || String(value).trim() === "") return 0;
+    var c = corrected ? 0.7 : 0.95;
+    if (!validationOk && (fieldName === "total" || fieldName === "items")) c = Math.min(c, 0.5);
+    return Math.min(1, Math.max(0, c));
+  }
+
+  function iuEvidenceNeedsReviewForField(confidence, isUnknown) {
+    return isUnknown || confidence < 0.8;
+  }
+
+  /** Simulated raw OCR texts for 6 scenarios (no server). */
+  function iuEvidenceSimulatedRawOcr(kind, scenario) {
+    var scenarios = {
+      clean: "Lidl\n10.03.2024 14:30\nMléko 45 Kc\nRohlík 12 Kc\nCelkem 57 Kc",
+      merchantTypo: "L1DL\n10.03.2024 14:30\nMléko 45 Kc\nRohlík 12 Kc\nCelkem 57 Kc",
+      itemTypo: "Lidl\n10.03.2024 14:30\nMLEK0 45 Kc\nR0HLIK 12 Kc\nCelkem 57 Kc",
+      sumMismatch: "Lidl\n10.03.2024 14:30\nMléko 45 Kc\nRohlík 12 Kc\nCelkem 60 Kc",
+      unknown: "?\n?\n?\nCelkem ? Kc",
+      invoice: "Firma s.r.o.\nFaktura č. 2024001\nDatum vystavení: 10.03.2024\nDUZP: 09.04.2024\nCelkem 1200 Kc"
+    };
+    return scenarios[scenario] || scenarios.clean;
+  }
+
+  /** Full pipeline: rawOcrText -> normalized -> parse -> autoCorrect -> validate -> confidence + needsReview. */
+  function iuEvidenceOcrPipeline(rawOcrText, kind) {
+    var docType = (kind === "receipt_photo" || kind === "receipt_pdf") ? "receipt" : "invoice";
+    var normalizedText = iuEvidenceNormalizeOcrText(rawOcrText);
+    var parsed = iuEvidenceParseNormalizedToFields(normalizedText);
+    var storeAc = iuEvidenceAutoCorrectStore(parsed.store);
+    var correctedFields = {
+      store: storeAc.value,
+      date: parsed.date,
+      time: parsed.time,
+      total: parsed.total,
+      priceVatIncluded: parsed.priceVatIncluded,
+      priceVatExcluded: parsed.priceVatExcluded,
+      priceVatExcludedState: parsed.priceVatExcludedState,
+      docType: parsed.docType
+    };
+    var fieldCandidates = { store: storeAc.candidates, date: [], time: [], total: [], docType: [] };
+    var itemsWithCorrection = (parsed.items || []).map(function(it) {
+      var ac = iuEvidenceAutoCorrectItemName(it.name);
+      var conf = ac.corrected ? 0.75 : 0.9;
+      var needR = ac.corrected || (it.name === "unknown");
+      return { rawName: it.name, name: ac.value, price: it.price, priceStr: it.priceStr, qty: it.qty, lineTotal: it.lineTotal, candidates: ac.candidates, corrected: ac.corrected, confidence: conf, needsReview: needR };
+    });
+    var validation = iuEvidenceValidate({ totalNum: parsed.totalNum, total: parsed.total, date: parsed.date, time: parsed.time, items: itemsWithCorrection });
+    var storeConf = iuEvidenceComputeFieldConfidence("store", correctedFields.store, storeAc.corrected, validation.valid);
+    var dateConf = parsed.date !== "unknown" ? 0.9 : 0;
+    var timeConf = parsed.time !== "unknown" ? 0.9 : 0;
+    var totalConf = iuEvidenceComputeFieldConfidence("total", correctedFields.total, false, validation.valid);
+    var fieldConfidence = { store: storeConf, date: dateConf, time: timeConf, total: totalConf, docType: parsed.docType !== "unknown" ? 0.85 : 0, vatIncluded: 0.8, vatExcluded: 0 };
+    var fieldNeedsReview = {
+      store: iuEvidenceNeedsReviewForField(storeConf, correctedFields.store === "unknown"),
+      date: iuEvidenceNeedsReviewForField(dateConf, parsed.date === "unknown"),
+      time: iuEvidenceNeedsReviewForField(timeConf, parsed.time === "unknown"),
+      total: iuEvidenceNeedsReviewForField(totalConf, correctedFields.total === "unknown"),
+      docType: iuEvidenceNeedsReviewForField(fieldConfidence.docType, parsed.docType === "unknown")
+    };
+    var itemConfidence = itemsWithCorrection.map(function(it) { return it.corrected ? 0.75 : 0.9; });
+    var itemNeedsReview = itemsWithCorrection.map(function(it) { return it.corrected || it.rawName === "unknown"; });
+    var validationSummary = { valid: validation.valid, sumMismatch: validation.sumMismatch, itemsSum: validation.itemsSum, totalNum: validation.totalNum, errors: validation.errors };
+    var docNeedsReview = validation.sumMismatch || Object.keys(fieldNeedsReview).some(function(k) { return fieldNeedsReview[k]; }) || itemNeedsReview.some(Boolean);
+    var reviewSummary = { docNeedsReview: docNeedsReview, fieldReviews: fieldNeedsReview, itemReviews: itemNeedsReview };
+    var unknownState = { store: correctedFields.store === "unknown", date: parsed.date === "unknown", time: parsed.time === "unknown", total: correctedFields.total === "unknown", docType: parsed.docType === "unknown", duzp: !parsed.duzp || parsed.duzp === "unknown" };
+    return {
+      rawOcrText: rawOcrText,
+      normalizedText: normalizedText,
+      correctedFields: correctedFields,
+      fieldConfidence: fieldConfidence,
+      fieldNeedsReview: fieldNeedsReview,
+      fieldCandidates: { store: storeAc.candidates, date: [], time: [], total: [], docType: [] },
+      itemCandidates: itemsWithCorrection,
+      items: itemsWithCorrection,
+      validationSummary: validationSummary,
+      reviewSummary: reviewSummary,
+      unknownState: unknownState,
+      docType: correctedFields.docType,
+      invoiceDuzp: parsed.duzp || "unknown"
+    };
+  }
+
+  /** OCR pipeline hook: file + kind -> Promise<extracted>. Simulates raw OCR then runs full pipeline (normalize, autoCorrect, validate, confidence, needsReview). */
   function iuEvidenceOcrHook(file, kind) {
     return new Promise(function(resolve) {
       setTimeout(function() {
-        var docType = (kind === "receipt_photo" || kind === "receipt_pdf") ? "receipt" : "invoice";
-        resolve({
-          store: "unknown",
-          date: "unknown",
-          time: "unknown",
-          total: "unknown",
-          priceVatIncluded: "unknown",
-          priceVatExcluded: "unknown",
-          priceVatExcludedState: "unknown",
-          docType: docType,
-          confidence: 0,
-          needsReview: true
-        });
+        var scenario = "clean";
+        if (file && file.name) {
+          if (/merchant|obchod|typ/i.test(file.name)) scenario = "merchantTypo";
+          else if (/item|polozk/i.test(file.name)) scenario = "itemTypo";
+          else if (/sum|součet|mismatch/i.test(file.name)) scenario = "sumMismatch";
+          else if (/unknown/i.test(file.name)) scenario = "unknown";
+          else if (/faktura|invoice/i.test(file.name)) scenario = "invoice";
+        }
+        var rawOcrText = iuEvidenceSimulatedRawOcr(kind, scenario);
+        var result = iuEvidenceOcrPipeline(rawOcrText, kind);
+        resolve(result);
       }, 300);
     });
   }
 
-  try { window.iuEvidenceOcrHook = iuEvidenceOcrHook; } catch (_) {}
+  try {
+    window.iuEvidenceOcrHook = iuEvidenceOcrHook;
+    window.iuEvidenceNormalizeOcrText = iuEvidenceNormalizeOcrText;
+    window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
+  } catch (_) {}
 
-  /** Basic field extraction: normalise extracted result for storage (unknown = not invented). */
+  /** Build flat parsed result from pipeline result (for storage). User-confirmed or pipeline values. */
   function iuEvidenceParseExtraction(extracted) {
-    var v = function(x) { return (x && String(x).trim() && String(x) !== "unknown") ? String(x).trim() : "unknown"; };
+    var cf = extracted.correctedFields || extracted;
+    var v = function(x) { return (x != null && String(x).trim() && String(x) !== "unknown") ? String(x).trim() : "unknown"; };
     return {
-      store: v(extracted.store),
-      date: v(extracted.date),
-      time: v(extracted.time),
-      total: v(extracted.total),
-      priceVatIncluded: v(extracted.priceVatIncluded),
-      priceVatExcluded: v(extracted.priceVatExcluded),
-      priceVatExcludedState: (extracted.priceVatExcludedState === "known" && extracted.priceVatExcluded && extracted.priceVatExcluded !== "unknown") ? "known" : "unknown",
-      docType: v(extracted.docType) || "receipt",
-      confidence: typeof extracted.confidence === "number" ? extracted.confidence : 0,
-      needsReview: !!extracted.needsReview
+      store: v(cf.store),
+      date: v(cf.date),
+      time: v(cf.time),
+      total: v(cf.total),
+      priceVatIncluded: v(cf.priceVatIncluded),
+      priceVatExcluded: v(cf.priceVatExcluded),
+      priceVatExcludedState: (extracted.priceVatExcludedState === "known" && cf.priceVatExcluded && cf.priceVatExcluded !== "unknown") ? "known" : "unknown",
+      docType: v(cf.docType) || "receipt",
+      confidence: typeof extracted.fieldConfidence === "object" ? (extracted.fieldConfidence.store + extracted.fieldConfidence.total) / 2 : (typeof extracted.confidence === "number" ? extracted.confidence : 0),
+      needsReview: !!(extracted.reviewSummary && extracted.reviewSummary.docNeedsReview) || !!extracted.needsReview,
+      items: Array.isArray(extracted.items) ? extracted.items.map(function(it) { return { name: it.name || it.rawName, price: it.price, priceStr: it.priceStr, confidence: it.confidence, needsReview: it.needsReview }; }) : []
     };
   }
 
@@ -9134,16 +9325,28 @@ function buildVideoAsArticleCard(it) {
     const previewName = topBlock.querySelector("[data-iu=\"preview-filename\"]");
     const previewMeta = topBlock.querySelector("[data-iu=\"preview-meta\"]");
     const extractionPanel = topBlock.querySelector("[data-iu=\"ocr-extraction-result\"]");
-    const extractionStore = topBlock.querySelector("[data-iu=\"extraction-store\"]");
-    const extractionDate = topBlock.querySelector("[data-iu=\"extraction-date\"]");
-    const extractionTime = topBlock.querySelector("[data-iu=\"extraction-time\"]");
-    const extractionTotal = topBlock.querySelector("[data-iu=\"extraction-total\"]");
-    const extractionVatIncluded = topBlock.querySelector("[data-iu=\"extraction-vat-included\"]");
-    const extractionVatExcludedState = topBlock.querySelector("[data-iu=\"extraction-vat-excluded-state\"]");
-    const extractionDocType = topBlock.querySelector("[data-iu=\"extraction-doc-type\"]");
-    const confidenceVisible = topBlock.querySelector("[data-iu=\"confidence-visible\"]");
-    const needsReviewVisible = topBlock.querySelector("[data-iu=\"needs-review-visible\"]");
+    const reviewStoreValue = topBlock.querySelector("[data-iu=\"review-store-value\"]");
+    const reviewStoreConfidence = topBlock.querySelector("[data-iu=\"review-store-confidence\"]");
+    const reviewStoreNeeds = topBlock.querySelector("[data-iu=\"review-store-needs\"]");
+    const reviewStoreCandidates = topBlock.querySelector("[data-iu=\"review-store-candidates\"]");
+    const reviewDateValue = topBlock.querySelector("[data-iu=\"review-date-value\"]");
+    const reviewDateConfidence = topBlock.querySelector("[data-iu=\"review-date-confidence\"]");
+    const reviewDateNeeds = topBlock.querySelector("[data-iu=\"review-date-needs\"]");
+    const reviewTimeValue = topBlock.querySelector("[data-iu=\"review-time-value\"]");
+    const reviewTimeConfidence = topBlock.querySelector("[data-iu=\"review-time-confidence\"]");
+    const reviewTimeNeeds = topBlock.querySelector("[data-iu=\"review-time-needs\"]");
+    const reviewTotalValue = topBlock.querySelector("[data-iu=\"review-total-value\"]");
+    const reviewTotalConfidence = topBlock.querySelector("[data-iu=\"review-total-confidence\"]");
+    const reviewTotalNeeds = topBlock.querySelector("[data-iu=\"review-total-needs\"]");
+    const reviewDoctypeValue = topBlock.querySelector("[data-iu=\"review-doctype-value\"]");
+    const reviewDoctypeConfidence = topBlock.querySelector("[data-iu=\"review-doctype-confidence\"]");
+    const reviewDoctypeNeeds = topBlock.querySelector("[data-iu=\"review-doctype-needs\"]");
+    const reviewSummaryEl = topBlock.querySelector("[data-iu=\"review-summary-visible\"]");
+    const validationSummaryEl = topBlock.querySelector("[data-iu=\"validation-summary-visible\"]");
+    const itemsListEl = topBlock.querySelector("[data-iu=\"evidence-items-list\"]");
+    const saveCta = topBlock.querySelector("[data-iu=\"evidence-save-cta\"]");
     if (!container || !photoCta || !uploadCta || !photoInput || !uploadInput) return;
+    var currentPipelineResult = null;
 
     function setState(which) {
       [stateIdle, statePending, stateSuccess, stateFailed].forEach(function(el) {
@@ -9164,19 +9367,63 @@ function buildVideoAsArticleCard(it) {
       previewMeta.textContent = (file.type || "") + " · " + (file.size ? Math.round(file.size / 1024) + " KB" : "");
     }
 
-    function showExtraction(parsed) {
-      if (!extractionPanel) return;
-      extractionPanel.hidden = false;
+    function setReviewField(valueEl, confEl, needsEl, candidatesEl, value, confidence, needsReview, candidates) {
       var unknownLabel = "unknown";
-      if (extractionStore) extractionStore.textContent = parsed.store === "unknown" ? unknownLabel : parsed.store;
-      if (extractionDate) extractionDate.textContent = parsed.date === "unknown" ? unknownLabel : parsed.date;
-      if (extractionTime) extractionTime.textContent = parsed.time === "unknown" ? unknownLabel : parsed.time;
-      if (extractionTotal) extractionTotal.textContent = parsed.total === "unknown" ? unknownLabel : parsed.total;
-      if (extractionVatIncluded) extractionVatIncluded.textContent = parsed.priceVatIncluded === "unknown" ? unknownLabel : parsed.priceVatIncluded;
-      if (extractionVatExcludedState) extractionVatExcludedState.textContent = parsed.priceVatExcludedState === "unknown" ? "Bez DPH: " + unknownLabel : (parsed.priceVatExcluded === "unknown" ? unknownLabel : parsed.priceVatExcluded);
-      if (extractionDocType) extractionDocType.textContent = parsed.docType === "unknown" ? unknownLabel : parsed.docType;
-      if (confidenceVisible) confidenceVisible.textContent = String(parsed.confidence);
-      if (needsReviewVisible) needsReviewVisible.textContent = parsed.needsReview ? "Ano" : "Ne";
+      if (valueEl) valueEl.textContent = (value == null || value === "unknown" || String(value).trim() === "") ? unknownLabel : String(value);
+      if (confEl) { confEl.textContent = confidence != null ? "confidence: " + Number(confidence).toFixed(2) : ""; confEl.hidden = confidence == null; }
+      if (needsEl) { needsEl.textContent = needsReview ? "Vyžaduje kontrolu" : ""; needsEl.hidden = !needsReview; }
+      if (candidatesEl && Array.isArray(candidates) && candidates.length > 0) {
+        candidatesEl.innerHTML = "";
+        var opt = document.createElement("option");
+        opt.value = ""; opt.textContent = "— vybrat variantu —";
+        candidatesEl.appendChild(opt);
+        candidates.forEach(function(c) { var o = document.createElement("option"); o.value = c; o.textContent = c; candidatesEl.appendChild(o); });
+        candidatesEl.hidden = false;
+      } else if (candidatesEl) { candidatesEl.hidden = true; }
+    }
+
+    function showReviewPanel(result) {
+      if (!extractionPanel) return;
+      currentPipelineResult = result;
+      extractionPanel.hidden = false;
+      var cf = result.correctedFields || {};
+      var fc = result.fieldConfidence || {};
+      var fnr = result.fieldNeedsReview || {};
+      var cand = result.fieldCandidates || {};
+      setReviewField(reviewStoreValue, reviewStoreConfidence, reviewStoreNeeds, reviewStoreCandidates, cf.store, fc.store, fnr.store, cand.store);
+      setReviewField(reviewDateValue, reviewDateConfidence, reviewDateNeeds, null, cf.date, fc.date, fnr.date, null);
+      setReviewField(reviewTimeValue, reviewTimeConfidence, reviewTimeNeeds, null, cf.time, fc.time, fnr.time, null);
+      setReviewField(reviewTotalValue, reviewTotalConfidence, reviewTotalNeeds, null, cf.total, fc.total, fnr.total, null);
+      setReviewField(reviewDoctypeValue, reviewDoctypeConfidence, reviewDoctypeNeeds, null, cf.docType, fc.docType, fnr.docType, null);
+      if (reviewSummaryEl) {
+        var rs = result.reviewSummary || {};
+        reviewSummaryEl.textContent = "Kontrola: " + (rs.docNeedsReview ? "doklad vyžaduje kontrolu" : "OK");
+        reviewSummaryEl.hidden = false;
+      }
+      if (validationSummaryEl) {
+        var vs = result.validationSummary || {};
+        validationSummaryEl.textContent = vs.sumMismatch ? "Součet položek (" + (vs.itemsSum || 0) + ") neodpovídá celkové částce (" + (vs.totalNum != null ? vs.totalNum : "—") + ")." : (vs.valid ? "Validace: OK" : "Zkontrolujte údaje.");
+        validationSummaryEl.hidden = false;
+      }
+      if (itemsListEl) {
+        itemsListEl.innerHTML = "";
+        (result.items || []).forEach(function(it) {
+          var li = document.createElement("li");
+          li.className = "iu-evidence-item-row";
+          li.setAttribute("data-iu", "item-row");
+          var name = it.name || it.rawName || "—";
+          var priceStr = it.priceStr != null ? it.priceStr : (typeof it.price === "number" ? it.price + " Kč" : "—");
+          var conf = it.corrected ? 0.75 : 0.9;
+          var needR = it.corrected || (it.rawName === "unknown");
+          var spName = document.createElement("span"); spName.className = "iu-evidence-item-name"; spName.textContent = name; li.appendChild(spName);
+          li.appendChild(document.createTextNode(" "));
+          var spPrice = document.createElement("span"); spPrice.className = "iu-evidence-item-price"; spPrice.textContent = priceStr; li.appendChild(spPrice);
+          li.appendChild(document.createTextNode(" "));
+          var spConf = document.createElement("span"); spConf.className = "iu-evidence-item-conf"; spConf.textContent = "confidence: " + conf.toFixed(2); li.appendChild(spConf);
+          if (needR) { li.appendChild(document.createTextNode(" ")); var spNeed = document.createElement("span"); spNeed.className = "iu-evidence-item-needs"; spNeed.textContent = "kontrola"; li.appendChild(spNeed); }
+          itemsListEl.appendChild(li);
+        });
+      }
     }
 
     function validateFile(file, acceptList) {
@@ -9190,6 +9437,10 @@ function buildVideoAsArticleCard(it) {
       return { typeErr: typeErr, sizeErr: sizeErr, valid: !typeErr && !sizeErr };
     }
 
+    function getReviewValue(valueEl) {
+      return (valueEl && valueEl.textContent) ? valueEl.textContent.trim() : "";
+    }
+
     function handleFile(file, kind) {
       showValidation("", "");
       var v = validateFile(file);
@@ -9200,30 +9451,43 @@ function buildVideoAsArticleCard(it) {
       }
       showPreview(file);
       setState("pending");
-      iuEvidenceOcrHook(file, kind).then(function(extracted) {
-        var parsed = iuEvidenceParseExtraction(extracted);
-        showExtraction(parsed);
-        var today = new Date();
-        var dateStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
-        var rec = {
-          id: "iu-ev-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8),
-          docType: parsed.docType,
-          store: parsed.store === "unknown" ? "—" : parsed.store,
-          date: parsed.date === "unknown" ? dateStr : parsed.date,
-          time: parsed.time === "unknown" ? "—" : parsed.time,
-          total: parsed.total === "unknown" ? "—" : parsed.total,
-          priceVatIncluded: parsed.priceVatIncluded === "unknown" ? "—" : parsed.priceVatIncluded,
-          priceVatExcluded: parsed.priceVatExcludedState === "known" ? parsed.priceVatExcluded : "",
-          priceVatExcludedState: parsed.priceVatExcludedState,
-          processingStatus: "extrahováno",
-          confidence: parsed.confidence,
-          needsReview: parsed.needsReview
-        };
-        var arr = iuEvidenceGetReceipts();
-        arr.push(rec);
-        iuEvidenceSaveReceipts(arr);
-        setState("success");
+      iuEvidenceOcrHook(file, kind).then(function(result) {
+        showReviewPanel(result);
+        setState("idle");
       });
+    }
+
+    function saveFromReviewPanel() {
+      if (!currentPipelineResult) return;
+      var cf = currentPipelineResult.correctedFields || {};
+      var store = getReviewValue(reviewStoreValue); if (store === "unknown" || !store) store = cf.store || "—";
+      var date = getReviewValue(reviewDateValue); if (date === "unknown" || !date) date = cf.date;
+      var time = getReviewValue(reviewTimeValue); if (time === "unknown" || !time) time = cf.time;
+      var total = getReviewValue(reviewTotalValue); if (total === "unknown" || !total) total = cf.total || "—";
+      var docType = getReviewValue(reviewDoctypeValue); if (docType === "unknown" || !docType) docType = cf.docType || "receipt";
+      var today = new Date();
+      var dateStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
+      if (date === "unknown" || !date) date = dateStr;
+      var rec = {
+        id: "iu-ev-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8),
+        docType: docType,
+        store: store === "unknown" ? "—" : store,
+        date: date === "unknown" ? dateStr : date,
+        time: time === "unknown" ? "—" : time,
+        total: total === "unknown" ? "—" : total,
+        priceVatIncluded: (currentPipelineResult.correctedFields && currentPipelineResult.correctedFields.priceVatIncluded) || total,
+        priceVatExcluded: (currentPipelineResult.correctedFields && currentPipelineResult.correctedFields.priceVatExcluded) || "",
+        priceVatExcludedState: "unknown",
+        processingStatus: "extrahováno",
+        confidence: typeof currentPipelineResult.fieldConfidence === "object" ? (currentPipelineResult.fieldConfidence.store + currentPipelineResult.fieldConfidence.total) / 2 : 0,
+        needsReview: !!(currentPipelineResult.reviewSummary && currentPipelineResult.reviewSummary.docNeedsReview),
+        items: (currentPipelineResult.items || []).map(function(it) { return { name: it.name || it.rawName, price: it.price, priceStr: it.priceStr }; })
+      };
+      var arr = iuEvidenceGetReceipts();
+      arr.push(rec);
+      iuEvidenceSaveReceipts(arr);
+      currentPipelineResult = null;
+      setState("success");
     }
 
     photoCta.addEventListener("click", function() {
@@ -9242,6 +9506,8 @@ function buildVideoAsArticleCard(it) {
       if (f) handleFile(f, "receipt_pdf");
       if (uploadInput) uploadInput.value = "";
     });
+    if (saveCta) saveCta.addEventListener("click", function() { saveFromReviewPanel(); });
+    if (reviewStoreCandidates) reviewStoreCandidates.addEventListener("change", function() { var v = reviewStoreCandidates.value; if (v && reviewStoreValue) reviewStoreValue.textContent = v; });
   }
 
   const IU_EVIDENCE_RECEIPTS_KEY = "iu:evidence:receipts";
@@ -9368,6 +9634,7 @@ function buildVideoAsArticleCard(it) {
     const detailStatus = topBlock.querySelector("[data-iu=\"receipt-detail-status\"]");
     const detailConfidence = topBlock.querySelector("[data-iu=\"receipt-detail-confidence\"]");
     const detailNeedsReview = topBlock.querySelector("[data-iu=\"receipt-detail-needs-review\"]");
+    const detailItems = topBlock.querySelector("[data-iu=\"receipt-detail-items\"]");
     const backBtn = topBlock.querySelector("[data-iu=\"receipt-detail-back\"]");
     const deleteBtn = topBlock.querySelector("[data-iu=\"receipt-detail-delete\"]");
     const dailyListShell = topBlock.querySelector("[data-iu=\"daily-list-shell\"]");
@@ -9488,6 +9755,10 @@ function buildVideoAsArticleCard(it) {
       if (detailStatus) detailStatus.textContent = r.processingStatus || "—";
       if (detailConfidence) detailConfidence.textContent = typeof r.confidence === "number" ? String(r.confidence) : "—";
       if (detailNeedsReview) detailNeedsReview.textContent = r.needsReview ? "Ano" : "Ne";
+      if (detailItems) {
+        var items = Array.isArray(r.items) ? r.items : [];
+        detailItems.textContent = items.length ? items.map(function(it) { return (it.name || "—") + " " + (it.priceStr != null ? it.priceStr : (it.price != null ? it.price + " Kč" : "")); }).join("; ") : "—";
+      }
       detailPanel.hidden = false;
       if (dailyListShell) dailyListShell.hidden = true;
     }

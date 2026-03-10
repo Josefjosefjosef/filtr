@@ -11351,6 +11351,35 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   margin: 10px 0 0 0;
 }
 
+/* Evidence — review panel (per-field confidence, needsReview, candidates, confirm) */
+.iu-evidence-review-fields{ margin: 0 0 12px 0; }
+.iu-evidence-review-row{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.iu-evidence-review-label{ font-weight: 600; color: rgba(11,27,43,.75); min-width: 100px; }
+.iu-evidence-review-value{ color: #0b1b2b; }
+.iu-evidence-review-confidence{ font-size: 12px; color: rgba(11,27,43,.6); }
+.iu-evidence-review-needs{ font-size: 12px; color: #b45309; font-weight: 600; }
+.iu-evidence-review-candidates{ max-width: 200px; padding: 4px 8px; font-size: 13px; }
+.iu-evidence-review-confirm{ padding: 4px 10px; font-size: 12px; border-radius: 6px; cursor: pointer; border: 1px solid #1F4B99; background: #1F4B99; color: #fff; }
+.iu-evidence-review-summary,
+.iu-evidence-validation-summary{ font-size: 13px; margin: 8px 0; padding: 6px 10px; background: #f8fafc; border-radius: 6px; }
+.iu-evidence-validation-summary{ color: #b45309; }
+.iu-evidence-items-heading{ font-size: 13px; font-weight: 700; margin: 14px 0 8px 0; color: #0b1b2b; }
+.iu-evidence-items-list{ list-style: none; margin: 0; padding: 0; }
+.iu-evidence-item-row{ padding: 6px 0; border-bottom: 1px solid rgba(11,27,43,.08); font-size: 13px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.iu-evidence-item-name{ font-weight: 500; color: #0b1b2b; }
+.iu-evidence-item-price{ color: rgba(11,27,43,.8); }
+.iu-evidence-item-conf{ font-size: 12px; color: rgba(11,27,43,.6); }
+.iu-evidence-item-needs{ font-size: 12px; color: #b45309; }
+.iu-evidence-review-actions{ margin-top: 14px; }
+.iu-evidence-save-cta{ padding: 10px 18px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; border: 1px solid #1F4B99; background: #1F4B99; color: #fff; }
+
 .iu-evidence-layer-separation{
   margin-top: 16px;
   padding: 12px 14px;
