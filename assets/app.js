@@ -12119,13 +12119,20 @@ function buildVideoAsArticleCard(it) {
         quick.setAttribute("data-iu-quick-key", "nakup");
         if (window.innerWidth <= 900) {
           var w = window.innerWidth;
-          var h = window.innerHeight;
+          var newsList = stage && stage.parentElement;
+          if (newsList && newsList.id === "newsList") {
+            newsList.style.setProperty("min-width", w + "px", "important");
+          }
+          stage.style.setProperty("flex", "0 0 " + w + "px", "important");
+          stage.style.setProperty("width", w + "px", "important");
+          stage.style.setProperty("min-width", w + "px", "important");
+          stage.style.setProperty("max-width", "100%", "important");
           quick.style.setProperty("width", w + "px", "important");
           quick.style.setProperty("min-width", w + "px", "important");
           quick.style.setProperty("display", "block", "important");
           card.style.setProperty("width", w + "px", "important");
           card.style.setProperty("min-width", w + "px", "important");
-          card.style.setProperty("min-height", h + "px", "important");
+          card.style.setProperty("min-height", "0", "important");
           card.style.setProperty("max-height", "none", "important");
         }
         if (typeof window.iuLoadNakupDomu === "function") window.iuLoadNakupDomu().catch(function(){});
