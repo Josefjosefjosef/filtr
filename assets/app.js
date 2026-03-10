@@ -8441,6 +8441,11 @@ function buildVideoAsArticleCard(it) {
     if (!modal) return;
     modal.hidden = true;
     modal.setAttribute("aria-hidden", "true");
+    try {
+      if (window._iuNakupResizeHandler) window.removeEventListener("resize", window._iuNakupResizeHandler);
+      document.documentElement.style.removeProperty("--iu-nakup-feed-width");
+      document.documentElement.style.removeProperty("--iu-nakup-feed-left");
+    } catch (_) {}
     try { document.body.style.overflow = ""; document.body.classList.remove("iu-modal-open"); } catch (_) {}
   }
 
@@ -8471,6 +8476,32 @@ function buildVideoAsArticleCard(it) {
     `).join("");
   }
 
+  function iuNakupApplyFeedWidth() {
+    const modal = document.getElementById("iuNakupModal");
+    const card = modal ? modal.querySelector(".iuModalCard") : null;
+    if (!card) return;
+    let feed = document.getElementById("feed") || document.getElementById("iuCenterStage") || document.querySelector("main");
+    if (!feed) return;
+    let r = feed.getBoundingClientRect();
+    if (r.width <= 0 && document.getElementById("iuCenterStage")) {
+      feed = document.getElementById("iuCenterStage");
+      r = feed.getBoundingClientRect();
+    }
+    if (r.width <= 0) return;
+    const root = document.documentElement;
+    root.style.setProperty("--iu-nakup-feed-width", r.width + "px");
+    root.style.setProperty("--iu-nakup-feed-left", r.left + "px");
+    if (window.innerWidth >= 901) {
+      card.style.setProperty("width", r.width + "px", "important");
+      card.style.setProperty("max-width", r.width + "px", "important");
+      card.style.setProperty("margin-left", r.left + "px", "important");
+    } else {
+      card.style.removeProperty("width");
+      card.style.removeProperty("max-width");
+      card.style.removeProperty("margin-left");
+    }
+  }
+
   async function iuOpenNakupDomu(){
     const { modal, list } = iuNakupEls();
     if (!modal || !list) return;
@@ -8485,6 +8516,20 @@ function buildVideoAsArticleCard(it) {
       console.error("[iuNakupDomu] load failed", err);
       list.innerHTML = '<div class="iuModalMsg">Odkazy se nepodařilo načíst. Zkuste obnovit stránku.</div>';
     }
+    try {
+      requestAnimationFrame(function() { iuNakupApplyFeedWidth(); });
+      setTimeout(function() { iuNakupApplyFeedWidth(); }, 50);
+      setTimeout(function() { iuNakupApplyFeedWidth(); }, 200);
+    } catch (_) {}
+    try {
+      if (!window._iuNakupResizeHandler) {
+        window._iuNakupResizeHandler = function() {
+          var m = document.getElementById("iuNakupModal");
+          if (m && !m.hidden) iuNakupApplyFeedWidth();
+        };
+      }
+      window.addEventListener("resize", window._iuNakupResizeHandler);
+    } catch (_) {}
   }
 
   function iuNakupCommunityPickerFilter(query){

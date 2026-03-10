@@ -11081,6 +11081,40 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   flex-direction: column;
 }
 
+@media (max-width: 900px){
+  #iuNakupModal{
+    align-items: stretch;
+    justify-content: stretch;
+    padding: 0;
+  }
+  #iuNakupModal .iuModalCard{
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    min-width: 100%;
+    min-height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+@media (min-width: 901px){
+  #iuNakupModal{
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-left: var(--iu-nakup-feed-left, 0);
+    padding-top: 24px;
+  }
+  #iuNakupModal .iuModalCard{
+    width: var(--iu-nakup-feed-width, 760px);
+    max-width: var(--iu-nakup-feed-width, 760px);
+    margin-left: 0;
+    height: 85vh;
+    max-height: 85vh;
+  }
+}
+
 #iuOpenNakupDomu{
   touch-action: manipulation;
 }
