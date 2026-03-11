@@ -9491,6 +9491,66 @@ function buildVideoAsArticleCard(it) {
     return { hallucinatedCriticalField: critical, hallucinatedItemField: item, hallucinationRate: rate };
   }
 
+  /** Phase 3 closeout: normalized string compare (runtime source of truth). */
+  function iuEvidenceNormalizedCompare(actual, expected) {
+    if (expected == null || String(expected).trim() === "" || String(expected).toLowerCase() === "unknown") return true;
+    var na = (actual == null ? "" : String(actual)).trim().toLowerCase().replace(/\s+/g, " ").replace(/-/g, "");
+    var ne = String(expected).trim().toLowerCase().replace(/\s+/g, " ").replace(/-/g, "");
+    return na === ne || (na.length > 0 && ne.length > 0 && (na.indexOf(ne) >= 0 || ne.indexOf(na) >= 0));
+  }
+
+  /** Phase 3 closeout: numeric compare with tolerance (runtime source of truth). */
+  function iuEvidenceNumericCompare(a, b, tol) {
+    function parseNum(x) { if (x == null) return NaN; var s = String(x).replace(/[^\d.,]/g, "").replace(",", "."); return parseFloat(s) || NaN; }
+    var na = typeof a === "number" ? a : parseNum(a);
+    var nb = Number(b);
+    if (isNaN(na) || isNaN(nb)) return false;
+    return Math.abs(na - nb) <= (tol != null ? tol : 0.02);
+  }
+
+  /** Phase 3 closeout: accuracy regression gate for one result. */
+  function iuEvidenceAccuracyRegressionGate(r) {
+    if (!r || typeof r !== "object") return false;
+    return r.ocrPass1Executed === true && !(r.hallucinatedCriticalField || r.hallucinatedItemField);
+  }
+
+  /** Phase 3 closeout: build one accuracy summary row from one result. */
+  function iuEvidenceBuildAccuracySummaryRow(r) {
+    var pass = iuEvidenceAccuracyRegressionGate(r);
+    var readiness = iuEvidenceReviewReadiness(r);
+    var hall = iuEvidenceHallucinationMetrics(r);
+    return {
+      documentsTested: 1,
+      documentsPassed: pass ? 1 : 0,
+      documentsNeedsReview: readiness.needsReview ? 1 : 0,
+      documentsFailed: pass ? 0 : 1,
+      criticalFieldMatchRate: pass ? 1 : 0,
+      fieldUnknownRate: 0,
+      fieldMismatchRate: pass ? 0 : 1,
+      hallucinationRate: hall.hallucinationRate,
+      autoAcceptRate: readiness.canAutoAccept ? 1 : 0,
+      accuracyRegressionGatePass: pass
+    };
+  }
+
+  /** Phase 3 closeout: summary shape (keys only). */
+  function iuEvidenceAccuracySummaryShape() {
+    return { documentsTested: 0, documentsPassed: 0, documentsNeedsReview: 0, documentsFailed: 0, criticalFieldMatchRate: 0, fieldUnknownRate: 0, fieldMismatchRate: 0, hallucinationRate: 0, autoAcceptRate: 0, accuracyRegressionGatePass: false };
+  }
+
+  /** Phase 3 closeout: build phase3 verdict from aggregated summary. */
+  function iuEvidenceBuildPhase3Verdict(summary) {
+    if (!summary || typeof summary !== "object") return { phase3Closeout: false, finalDecision: "FAIL", blockingReason: "missing_summary" };
+    var dt = summary.documentsTested || 0;
+    var dp = summary.documentsPassed || 0;
+    var df = summary.documentsFailed || 0;
+    var hr = summary.hallucinationRate || 0;
+    var gate = summary.accuracyRegressionGatePass === true;
+    var pass = dt >= 4 && dp >= 3 && df === 0 && hr === 0 && gate;
+    var reason = pass ? "" : (hr > 0 ? "hallucinationRate>0" : dt < 4 ? "documentsTested<4" : dp < 3 ? "documentsPassed<3" : df > 0 ? "documentsFailed>0" : !gate ? "accuracyRegressionGateFail" : "unknown");
+    return { phase3Closeout: pass, finalDecision: pass ? "PASS" : "FAIL", blockingReason: reason };
+  }
+
   var IU_EVIDENCE_OCR_ENGINE_CDN = "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js";
   var IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK = "https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.0.0/tesseract.min.js";
   var _iuEvidenceTesseractPromise = null;
@@ -9834,6 +9894,7 @@ function buildVideoAsArticleCard(it) {
                 } catch (_) {}
                 try {
                   window.__iuEvidenceLastResult = finalOut;
+                  try { window.__iuEvidenceAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow(out); } catch (_) {}
                   if (window.__iuEvidenceDebug) {
                     window.__iuEvidenceDebug.failureReason = null;
                     window.__iuEvidenceDebug.rootRuntimeFailurePoint = null;
@@ -9928,6 +9989,12 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidenceOcrHook = iuEvidenceOcrHook;
     window.iuEvidenceNormalizeOcrText = iuEvidenceNormalizeOcrText;
     window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
+    window.iuEvidenceNormalizedCompare = iuEvidenceNormalizedCompare;
+    window.iuEvidenceNumericCompare = iuEvidenceNumericCompare;
+    window.iuEvidenceAccuracyRegressionGate = iuEvidenceAccuracyRegressionGate;
+    window.iuEvidenceBuildAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow;
+    window.iuEvidenceAccuracySummaryShape = iuEvidenceAccuracySummaryShape;
+    window.iuEvidenceBuildPhase3Verdict = iuEvidenceBuildPhase3Verdict;
   } catch (_) {}
 
   /** Build flat parsed result from pipeline result (for storage). User-confirmed or pipeline values. */
