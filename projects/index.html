@@ -2669,10 +2669,20 @@ style-src 'self' 'unsafe-inline' https:;
     <script defer src="/assets/app-crash-shield.js"></script>
     <script type="module" src="/assets/app.js?v=593"></script>
     <script>
-    </script>
-    <script>
     (function(){
       try { document.documentElement.setAttribute("data-iu-html-after-appjs", "reached"); } catch(e){}
+      var limit = 300, i = 0;
+      function check() {
+        try {
+          if (typeof window.iuEvidenceRunPipelineWithSimulatedText === "function") {
+            window.dispatchEvent(new CustomEvent("iuEvidenceReady"));
+            return;
+          }
+        } catch (_) {}
+        i++;
+        if (i < limit) setTimeout(check, 200);
+      }
+      setTimeout(check, 1500);
     })();
     </script>
     <script>

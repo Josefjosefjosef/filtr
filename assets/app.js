@@ -8302,9 +8302,9 @@ function buildVideoAsArticleCard(it) {
   const IU_NAKUP_STORE_REGISTRY = iuNakupBuildStoreRegistry();
 
   const IU_NAKUP_UI_TEXTS = {
-    pickerPlaceholder: "Napište např. Lidl Praha…",
+    pickerPlaceholder: "Obchod nebo lokace (volitelné)",
     pickerFallbackNoSelection: "Obchod nebo lokace nevybrána",
-    emptyState: "Zatím žádná data. Nástroj je připraven pro budoucí komunitní funkce.",
+    emptyState: "Zatím žádná data. Nahrajte účtenku nebo vložte text.",
     modeText: "Vložit text",
     modeCart: "Nahrát košík",
     modeReceipt: "Vyfotit účtenku"
@@ -9151,6 +9151,7 @@ function buildVideoAsArticleCard(it) {
     while (i < lines.length) {
       var line = lines[i];
       if (i === 0 || /celkem|total|datum|date|čas|time/i.test(line)) { i++; continue; }
+      if (/z[áa]klad\s*[:\s]|DPH\s*[:\s]|doklad\s*[:\s]/i.test(line)) { i++; continue; }
       var polozkaMatch = line.match(/položka\s*[:\s]+(.+)/i);
       if (polozkaMatch) {
         var itemName = polozkaMatch[1].trim();
@@ -9200,10 +9201,11 @@ function buildVideoAsArticleCard(it) {
           if (!isNaN(priceNum2) && priceNum2 >= 0) { items.push({ name: line.trim(), price: priceNum2, priceStr: priceLineMatch2[1].trim() + " Kč", qty: null, unitPrice: null, lineTotal: priceNum2 }); i += 2; continue; }
         }
       }
-      var m = line.match(/^(.+?)\s+([\d\s,\.]+)\s*Kc?\s*$/i);
+      var m = line.match(/^(.+)\s+([\d,\.]+)\s*Kc?\s*$/i);
       if (m) {
         var name = m[1].trim();
-        var priceStr = m[2].replace(/\s/g, "").replace(",", ".");
+        if (/z[áa]klad|^DPH\s|doklad\s*[:\s]/i.test(name)) { i++; continue; }
+        var priceStr = m[2].replace(/,/g, ".");
         var price = parseFloat(priceStr);
         if (!isNaN(price) && price >= 0) items.push({ name: name, price: price, priceStr: m[2].trim() + " Kč", qty: null, unitPrice: null, lineTotal: price });
       }
@@ -9395,7 +9397,7 @@ function buildVideoAsArticleCard(it) {
       sumMismatch: "Lidl\n10.03.2024 14:30\nMléko 45 Kc\nRohlík 12 Kc\nCelkem 60 Kc",
       unknown: "?\n?\n?\nCelkem ? Kc",
       degraded: "?\n?\n?\nCelkem ? Kc",
-      invoice: "Firma s.r.o.\nFaktura č. 2024001\nDatum vystavení: 10.03.2024\nDUZP: 09.04.2024\nCelkem 1200 Kc",
+      invoice: "Firma s.r.o.\nFaktura č. 2024001\nDatum vystavení: 10.03.2024\nDUZP: 09.04.2024\nZáklad: 991,74 Kc\nDPH: 208,26 Kc\nCelkem 1200 Kc",
       fuel: "Čerpací stanice\n10.03.2024 14:30\nDIESEL 17,55 L  39,90  700,00 Kc\nCelkem 700,00 Kc\nZáklad: 578,51 Kc\nDPH: 121,49 Kc\nDoklad: 2024-12345"
     };
     return scenarios[scenario] || scenarios.clean;
@@ -10095,6 +10097,7 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidenceBuildAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow;
     window.iuEvidenceAccuracySummaryShape = iuEvidenceAccuracySummaryShape;
     window.iuEvidenceBuildPhase3Verdict = iuEvidenceBuildPhase3Verdict;
+    try { if (typeof window.dispatchEvent === "function") window.dispatchEvent(new CustomEvent("iuEvidenceReady")); } catch (_) {}
   } catch (_) {}
 
   /** Build flat parsed result from pipeline result (for storage). User-confirmed or pipeline values. */
@@ -10429,24 +10432,14 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidenceReturnWindowModel = iuEvidenceReturnWindowModel;
   } catch (_) {}
 
-  function iuEvidenceSeedRecord(){
-    var d = new Date();
-    var dateStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-    return { id: "iu-ev-seed-1", docType: "receipt", store: "Test obchod", date: dateStr, time: "14:30", total: "450 Kč", priceVatIncluded: "450 Kč", priceVatExcluded: "371,90 Kč", priceVatExcludedState: "known", processingStatus: "uloženo", confidence: 0.85, needsReview: false };
-  }
-  const IU_EVIDENCE_SEED = [iuEvidenceSeedRecord()];
-
   function iuEvidenceGetReceipts(){
     try {
       var raw = localStorage.getItem(IU_EVIDENCE_RECEIPTS_KEY);
       var arr = raw ? JSON.parse(raw) : [];
-      if (!Array.isArray(arr) || arr.length === 0) {
-        arr = JSON.parse(JSON.stringify(IU_EVIDENCE_SEED));
-        localStorage.setItem(IU_EVIDENCE_RECEIPTS_KEY, JSON.stringify(arr));
-      }
+      if (!Array.isArray(arr)) arr = [];
       return arr;
     } catch (_) {
-      return JSON.parse(JSON.stringify(IU_EVIDENCE_SEED));
+      return [];
     }
   }
 
