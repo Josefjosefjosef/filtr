@@ -9460,6 +9460,37 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
+  /** Phase 3: review queue readiness from pipeline result. */
+  function iuEvidenceReviewReadiness(r) {
+    if (!r || typeof r !== "object") return { reviewReasonCodes: ["manual_check_required"], reviewPriority: "high", canAutoAccept: false, needsReview: true };
+    var codes = [];
+    var cf = r.correctedFields || {};
+    var vs = r.validationSummary || {};
+    var rs = r.reviewSummary || {};
+    var needsReview = !!(rs.docNeedsReview);
+    if ((cf.total === "unknown" || cf.total == null || String(cf.total).trim() === "") && (r.vatBase == null && r.vatAmount == null)) codes.push("missing_total");
+    if (r.docNumber === "unknown" || r.docNumber == null || String(r.docNumber || "").trim() === "") codes.push("missing_doc_number");
+    if (!r.items || r.items.length === 0) codes.push("missing_items");
+    if (vs.sumMismatch) codes.push("financial_inconsistent");
+    if (r.vatBase != null && r.vatAmount != null && vs.vatConsistency === false) codes.push("vat_inconsistent");
+    if (cf.store === "unknown" || !cf.store) codes.push("weak_merchant");
+    if ((r.ico === "unknown" || !r.ico) && (r.dic === "unknown" || !r.dic)) codes.push("weak_doc_ids");
+    if (rs.docNeedsReview && codes.indexOf("manual_check_required") < 0) codes.push("manual_check_required");
+    var priority = codes.indexOf("financial_inconsistent") >= 0 || codes.indexOf("vat_inconsistent") >= 0 ? "high" : (codes.length > 0 ? "medium" : "low");
+    var canAutoAccept = !needsReview && !vs.sumMismatch && (vs.vatConsistency !== false);
+    return { reviewReasonCodes: codes, reviewPriority: priority, canAutoAccept: canAutoAccept, needsReview: needsReview };
+  }
+
+  /** Phase 3: hallucination metrics (safe defaults when no detector). */
+  function iuEvidenceHallucinationMetrics(r) {
+    if (!r || typeof r !== "object") return { hallucinatedCriticalField: false, hallucinatedItemField: false, hallucinationRate: 0 };
+    var critical = !!(r.hallucinatedMerchantPresent || r.hallucinatedTotalPresent);
+    var item = !!(r.hallucinatedItemsPresent);
+    var total = 1;
+    var rate = (critical || item) ? 1 / total : 0;
+    return { hallucinatedCriticalField: critical, hallucinatedItemField: item, hallucinationRate: rate };
+  }
+
   var IU_EVIDENCE_OCR_ENGINE_CDN = "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js";
   var IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK = "https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.0.0/tesseract.min.js";
   var _iuEvidenceTesseractPromise = null;
@@ -9790,6 +9821,17 @@ function buildVideoAsArticleCard(it) {
                 out.uploadedBinaryHashObserved = uploadedBinaryHashObserved;
                 if (out.items && Array.isArray(out.items)) out.items.forEach(function(it, idx) { it.sourceZone = "itemsZone"; if (out.fieldSourceZone && Array.isArray(out.fieldSourceZone.items)) out.fieldSourceZone.items[idx] = "itemsZone"; else if (out.fieldSourceZone) { out.fieldSourceZone.items = out.fieldSourceZone.items || []; out.fieldSourceZone.items[idx] = "itemsZone"; } });
                 var finalOut = (out && typeof out === "object") ? out : { ocrPass1Executed: true, ocrPass2Executed: false, usedInjectPath: false, proofUsedInjectedTextAsPrimary: false, preprocessingApplied: preprocessingApplied, actualOcrEnginePresent: actualOcrEnginePresent, actualOcrEngineName: actualOcrEnginePresent ? "Tesseract.js" : "none", realImageOrPdfInputUsed: realImageOrPdfInputUsed, uploadedBinaryHashObserved: uploadedBinaryHashObserved };
+                try {
+                  var readiness = iuEvidenceReviewReadiness(out);
+                  finalOut.reviewReasonCodes = readiness.reviewReasonCodes;
+                  finalOut.reviewPriority = readiness.reviewPriority;
+                  finalOut.canAutoAccept = readiness.canAutoAccept;
+                  finalOut.needsReview = readiness.needsReview;
+                  var hall = iuEvidenceHallucinationMetrics(out);
+                  finalOut.hallucinatedCriticalField = hall.hallucinatedCriticalField;
+                  finalOut.hallucinatedItemField = hall.hallucinatedItemField;
+                  finalOut.hallucinationRate = hall.hallucinationRate;
+                } catch (_) {}
                 try {
                   window.__iuEvidenceLastResult = finalOut;
                   if (window.__iuEvidenceDebug) {
