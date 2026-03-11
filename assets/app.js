@@ -9411,6 +9411,139 @@ function buildVideoAsArticleCard(it) {
     return { columns: columnCenters, itemColumnMapping: mapping, used: columnCenters.length >= 1 };
   }
 
+  /** Phase 6: structural evidence graph from geometry + zones + column detection. */
+  function iuEvidenceBuildEvidenceGraph(geometry, zones, columnDetection) {
+    var words = (geometry && geometry.words) || [];
+    var lines = (geometry && geometry.lines) || [];
+    var lineGroups = (geometry && geometry.lineGroups) || [];
+    var merchantCandidates = (zones && zones.merchantZone) ? zones.merchantZone.map(function(i) { return { lineIndex: i, text: (lines[i] && lines[i].text) || "" }; }) : [];
+    var rowGroups = lineGroups.slice();
+    var columnGroups = (columnDetection && columnDetection.columns) ? columnDetection.columns : [];
+    var itemCandidates = (zones && zones.itemsZone) ? zones.itemsZone.map(function(i) { return { lineIndex: i, text: (lines[i] && lines[i].text) || "" }; }) : [];
+    var totalsCandidates = (zones && zones.totalsZone) ? zones.totalsZone.map(function(i) { return { lineIndex: i, text: (lines[i] && lines[i].text) || "" }; }) : [];
+    var vatCandidates = (zones && zones.vatZone) ? zones.vatZone.map(function(i) { return { lineIndex: i, text: (lines[i] && lines[i].text) || "" }; }) : [];
+    var receiptIdCandidates = (zones && zones.idsZone) ? zones.idsZone.map(function(i) { return { lineIndex: i, text: (lines[i] && lines[i].text) || "" }; }) : [];
+    var dateCandidates = (zones && zones.metaZone) ? zones.metaZone.map(function(i) { return { lineIndex: i, text: (lines[i] && lines[i].text) || "" }; }) : [];
+    return {
+      documentNode: { wordsCount: words.length, linesCount: lines.length, lineGroupsCount: lineGroups.length },
+      merchantCandidates: merchantCandidates,
+      rowGroups: rowGroups,
+      columnGroups: columnGroups,
+      itemCandidates: itemCandidates,
+      totalsCandidates: totalsCandidates,
+      vatCandidates: vatCandidates,
+      receiptIdCandidates: receiptIdCandidates,
+      dateCandidates: dateCandidates,
+      consistencyFlags: {},
+      conflictFlags: {}
+    };
+  }
+
+  /** Phase 6: row resolver – line groups as row groups, classify item-like rows from zones. */
+  function iuEvidenceRowResolver(geometry, zones) {
+    var lineGroups = (geometry && geometry.lineGroups) || [];
+    var itemsZone = (zones && zones.itemsZone) || [];
+    var itemRowsDetected = itemsZone.length > 0;
+    return { rowGroups: lineGroups, itemRowsDetected: itemRowsDetected, used: true };
+  }
+
+  /** Phase 6: column resolver – strengthen existing column detection, fallback single-column, unknown when unsure. */
+  function iuEvidenceColumnResolver(geometry, columnDetection, docWidth) {
+    if (!columnDetection || !columnDetection.used) {
+      var words = (geometry && geometry.words) || [];
+      return { used: false, itemColumnMapping: null, fallbackSingleColumn: words.length > 0, unknownLayout: true };
+    }
+    var imap = columnDetection.itemColumnMapping;
+    var hasMapping = imap && (imap.qtyColumn != null || imap.unitPriceColumn != null || imap.lineTotalColumn != null);
+    return { used: !!hasMapping, itemColumnMapping: imap, fallbackSingleColumn: !hasMapping, unknownLayout: !hasMapping };
+  }
+
+  /** Phase 6: candidate resolver – total, VAT, receipt ID, date from zones + math consistency. */
+  function iuEvidenceCandidateResolver(evidenceGraph, validationSummary) {
+    var totalCandidates = (evidenceGraph && evidenceGraph.totalsCandidates) || [];
+    var vatCandidates = (evidenceGraph && evidenceGraph.vatCandidates) || [];
+    var receiptIdCandidates = (evidenceGraph && evidenceGraph.receiptIdCandidates) || [];
+    var dateCandidates = (evidenceGraph && evidenceGraph.dateCandidates) || [];
+    var totalResolvedSafely = totalCandidates.length > 0 && validationSummary && !validationSummary.sumMismatch;
+    var vatResolvedSafely = vatCandidates.length >= 0 && validationSummary && validationSummary.vatConsistency !== false;
+    var receiptIdResolvedSafely = receiptIdCandidates.length > 0;
+    var dateResolvedSafely = dateCandidates.length > 0;
+    return {
+      totalsCandidatesPresent: totalCandidates.length > 0,
+      totalResolvedSafely: totalResolvedSafely,
+      vatCandidatePresent: vatCandidates.length > 0,
+      vatResolvedSafely: vatResolvedSafely,
+      receiptIdCandidatePresent: receiptIdCandidates.length > 0,
+      receiptIdResolvedSafely: receiptIdResolvedSafely,
+      dateCandidatesPresent: dateCandidates.length > 0,
+      dateResolvedSafely: dateResolvedSafely,
+      used: true
+    };
+  }
+
+  /** Phase 6: doc typology v1 – retail_receipt | simple_invoice_like | unknown_layout. */
+  function iuEvidenceResolveDocTypology(evidenceGraph, columnDetection, zones) {
+    var itemsZone = (zones && zones.itemsZone) || [];
+    var vatZone = (zones && zones.vatZone) || [];
+    var idsZone = (zones && zones.idsZone) || [];
+    var colUsed = columnDetection && columnDetection.used;
+    if (itemsZone.length > 0 && colUsed) return { docTypeResolved: true, docTypeInSet: "retail_receipt", rule: "itemsZone_and_columnDetection" };
+    if (itemsZone.length > 0) return { docTypeResolved: true, docTypeInSet: "retail_receipt", rule: "itemsZone_only" };
+    if ((vatZone.length > 0 || idsZone.length > 0) && itemsZone.length === 0) return { docTypeResolved: true, docTypeInSet: "simple_invoice_like", rule: "vatOrIds_no_items" };
+    return { docTypeResolved: false, docTypeInSet: "unknown_layout", rule: "fallback" };
+  }
+
+  /** Phase 6: math consistency + conflict resolver – set unknown/needsReview when conflict. */
+  function iuEvidencePhase6ConflictResolver(validationSummary, candidateResult) {
+    var conflict = !!(validationSummary && validationSummary.sumMismatch);
+    var unknownInsteadOfLie = true;
+    var needsReview = conflict || !(candidateResult && candidateResult.totalResolvedSafely);
+    return { conflictDetected: conflict, unknownInsteadOfLie: unknownInsteadOfLie, needsReview: needsReview };
+  }
+
+  /** Phase 6: full structural layer – run all resolvers, attach to result. */
+  function iuEvidencePhase6StructuralLayer(geometry, zones, columnDetection, pipelineResult) {
+    var graph = iuEvidenceBuildEvidenceGraph(geometry, zones, columnDetection);
+    var rowRes = iuEvidenceRowResolver(geometry, zones);
+    var colRes = iuEvidenceColumnResolver(geometry, columnDetection, 1000);
+    var validationSummary = (pipelineResult && pipelineResult.validationSummary) || {};
+    var candRes = iuEvidenceCandidateResolver(graph, validationSummary);
+    var typology = iuEvidenceResolveDocTypology(graph, columnDetection, zones);
+    var conflictRes = iuEvidencePhase6ConflictResolver(validationSummary, candRes);
+    var items = (pipelineResult && pipelineResult.items) || [];
+    var atLeastOneSafeItemResolved = items.length >= 1 && !(pipelineResult && pipelineResult.hallucinatedItemField);
+    return {
+      phase6StructuralLayerPresent: true,
+      evidenceGraphPresent: !!graph,
+      evidenceGraph: graph,
+      rowResolverPresent: true,
+      rowResolverUsed: rowRes.used,
+      columnResolverPresent: true,
+      columnResolverUsed: colRes.used,
+      candidateResolverPresent: true,
+      candidateResolverUsed: candRes.used,
+      receiptTypologyPresent: true,
+      docTypeResolved: typology.docTypeResolved,
+      docTypeInSet: typology.docTypeInSet,
+      docTypeRule: typology.rule,
+      realRuntimeUsesGeometry: !!(geometry && (geometry.words || geometry.lines)),
+      realRuntimeUsesWordBoxes: !!(geometry && geometry.words && geometry.words.length > 0),
+      realRuntimeUsesLineGroups: !!(geometry && geometry.lineGroups && geometry.lineGroups.length > 0),
+      itemRowsDetected: rowRes.itemRowsDetected,
+      itemColumnMappingPresent: !!(colRes.itemColumnMapping && (colRes.itemColumnMapping.qtyColumn != null || colRes.itemColumnMapping.unitPriceColumn != null || colRes.itemColumnMapping.lineTotalColumn != null)),
+      atLeastOneSafeItemResolved: atLeastOneSafeItemResolved,
+      totalsCandidatesPresent: candRes.totalsCandidatesPresent,
+      totalResolvedSafely: candRes.totalResolvedSafely,
+      vatCandidateResolverPresent: true,
+      vatResolvedSafely: candRes.vatResolvedSafely,
+      receiptIdCandidateResolverPresent: true,
+      receiptIdResolvedSafely: candRes.receiptIdResolvedSafely,
+      mathConsistencyCheckPresent: !!(validationSummary && typeof validationSummary.sumMismatch !== "undefined"),
+      conflictResolverPresent: true,
+      unknownInsteadOfLie: conflictRes.unknownInsteadOfLie
+    };
+  }
+
   /** Assign field -> source zone by matching field value to line text. */
   function iuEvidenceAssignFieldSourceZones(parsed, zones, textLines) {
     var out = { store: "", total: "", vatBase: "", vatAmount: "", docNumber: "", date: "", time: "", supplier: "", dic: "", ico: "", items: [] };
@@ -10135,6 +10268,37 @@ function buildVideoAsArticleCard(it) {
                   finalOut.merchantNormalizationPresent = true;
                   finalOut.merchantNormalizedWhenKnown = !!finalOut.merchantNormalizedWhenKnown;
                   finalOut.phase5AccuracyLayerPresent = !!(finalOut.imagePreprocessingLayerPresent && finalOut.retailColumnDetectionPresent && finalOut.merchantNormalizationPresent);
+                  try {
+                    var p6 = iuEvidencePhase6StructuralLayer(geom, zones, colDet, finalOut);
+                    if (p6) {
+                      finalOut.phase6StructuralLayerPresent = !!p6.phase6StructuralLayerPresent;
+                      finalOut.evidenceGraphPresent = !!p6.evidenceGraphPresent;
+                      finalOut.evidenceGraph = p6.evidenceGraph;
+                      finalOut.rowResolverPresent = !!p6.rowResolverPresent;
+                      finalOut.rowResolverUsed = !!p6.rowResolverUsed;
+                      finalOut.columnResolverPresent = !!p6.columnResolverPresent;
+                      finalOut.columnResolverUsed = !!p6.columnResolverUsed;
+                      finalOut.candidateResolverPresent = !!p6.candidateResolverPresent;
+                      finalOut.candidateResolverUsed = !!p6.candidateResolverUsed;
+                      finalOut.receiptTypologyPresent = !!p6.receiptTypologyPresent;
+                      finalOut.docTypeResolved = !!p6.docTypeResolved;
+                      finalOut.docTypeInSet = p6.docTypeInSet || "unknown_layout";
+                      finalOut.realRuntimeUsesGeometry = !!p6.realRuntimeUsesGeometry;
+                      finalOut.realRuntimeUsesWordBoxes = !!p6.realRuntimeUsesWordBoxes;
+                      finalOut.realRuntimeUsesLineGroups = !!p6.realRuntimeUsesLineGroups;
+                      finalOut.itemRowsDetected = !!p6.itemRowsDetected;
+                      finalOut.atLeastOneSafeItemResolved = !!p6.atLeastOneSafeItemResolved;
+                      finalOut.totalsCandidatesPresent = !!p6.totalsCandidatesPresent;
+                      finalOut.totalResolvedSafely = !!p6.totalResolvedSafely;
+                      finalOut.vatCandidateResolverPresent = !!p6.vatCandidateResolverPresent;
+                      finalOut.vatResolvedSafely = !!p6.vatResolvedSafely;
+                      finalOut.receiptIdCandidateResolverPresent = !!p6.receiptIdCandidateResolverPresent;
+                      finalOut.receiptIdResolvedSafely = !!p6.receiptIdResolvedSafely;
+                      finalOut.mathConsistencyCheckPresent = !!p6.mathConsistencyCheckPresent;
+                      finalOut.conflictResolverPresent = !!p6.conflictResolverPresent;
+                      finalOut.unknownInsteadOfLie = !!p6.unknownInsteadOfLie;
+                    }
+                  } catch (_) {}
                   window.__iuEvidenceLastResult = finalOut;
                   try { window.__iuEvidenceAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow(out); } catch (_) {}
                   if (window.__iuEvidenceDebug) {
@@ -10190,6 +10354,12 @@ function buildVideoAsArticleCard(it) {
           failRes.merchantNormalizationPresent = true;
           failRes.merchantNormalizedWhenKnown = !!failRes.merchantNormalizedWhenKnown;
           failRes.phase5AccuracyLayerPresent = false;
+          failRes.phase6StructuralLayerPresent = false;
+          failRes.evidenceGraphPresent = false;
+          failRes.rowResolverUsed = false;
+          failRes.columnResolverUsed = false;
+          failRes.candidateResolverUsed = false;
+          failRes.unknownInsteadOfLie = true;
           return failRes;
         });
       }).catch(function(err) {
@@ -10220,6 +10390,12 @@ function buildVideoAsArticleCard(it) {
         errRes.merchantNormalizationPresent = true;
         errRes.merchantNormalizedWhenKnown = !!errRes.merchantNormalizedWhenKnown;
         errRes.phase5AccuracyLayerPresent = false;
+        errRes.phase6StructuralLayerPresent = false;
+        errRes.evidenceGraphPresent = false;
+        errRes.rowResolverUsed = false;
+        errRes.columnResolverUsed = false;
+        errRes.candidateResolverUsed = false;
+        errRes.unknownInsteadOfLie = true;
         return errRes;
       }).then(function(finalResult) {
         if (finalResult == null || typeof finalResult !== "object") {
@@ -10327,6 +10503,37 @@ function buildVideoAsArticleCard(it) {
     result.merchantNormalizationPresent = true;
     result.merchantNormalizedWhenKnown = !!result.merchantNormalizedWhenKnown;
     result.phase5AccuracyLayerPresent = false;
+    try {
+      var p6Sim = iuEvidencePhase6StructuralLayer(geom, zones, colDetSim, result);
+      if (p6Sim) {
+        result.phase6StructuralLayerPresent = !!p6Sim.phase6StructuralLayerPresent;
+        result.evidenceGraphPresent = !!p6Sim.evidenceGraphPresent;
+        result.evidenceGraph = p6Sim.evidenceGraph;
+        result.rowResolverPresent = !!p6Sim.rowResolverPresent;
+        result.rowResolverUsed = !!p6Sim.rowResolverUsed;
+        result.columnResolverPresent = !!p6Sim.columnResolverPresent;
+        result.columnResolverUsed = !!p6Sim.columnResolverUsed;
+        result.candidateResolverPresent = !!p6Sim.candidateResolverPresent;
+        result.candidateResolverUsed = !!p6Sim.candidateResolverUsed;
+        result.receiptTypologyPresent = !!p6Sim.receiptTypologyPresent;
+        result.docTypeResolved = !!p6Sim.docTypeResolved;
+        result.docTypeInSet = p6Sim.docTypeInSet || "unknown_layout";
+        result.realRuntimeUsesGeometry = !!p6Sim.realRuntimeUsesGeometry;
+        result.realRuntimeUsesWordBoxes = !!p6Sim.realRuntimeUsesWordBoxes;
+        result.realRuntimeUsesLineGroups = !!p6Sim.realRuntimeUsesLineGroups;
+        result.itemRowsDetected = !!p6Sim.itemRowsDetected;
+        result.atLeastOneSafeItemResolved = !!p6Sim.atLeastOneSafeItemResolved;
+        result.totalsCandidatesPresent = !!p6Sim.totalsCandidatesPresent;
+        result.totalResolvedSafely = !!p6Sim.totalResolvedSafely;
+        result.vatCandidateResolverPresent = !!p6Sim.vatCandidateResolverPresent;
+        result.vatResolvedSafely = !!p6Sim.vatResolvedSafely;
+        result.receiptIdCandidateResolverPresent = !!p6Sim.receiptIdCandidateResolverPresent;
+        result.receiptIdResolvedSafely = !!p6Sim.receiptIdResolvedSafely;
+        result.mathConsistencyCheckPresent = !!p6Sim.mathConsistencyCheckPresent;
+        result.conflictResolverPresent = !!p6Sim.conflictResolverPresent;
+        result.unknownInsteadOfLie = !!p6Sim.unknownInsteadOfLie;
+      }
+    } catch (_) {}
     return result;
   }
 
