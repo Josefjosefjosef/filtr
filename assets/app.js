@@ -9242,7 +9242,86 @@ function buildVideoAsArticleCard(it) {
       var vatSum = fields.vatBase + fields.vatAmount;
       if (Math.abs(vatSum - totalNum) > 1) vatConsistency = false;
     }
+    if (fields.ico && fields.ico !== "unknown" && !/^\d{8}$/.test(String(fields.ico).trim())) errors.push("invalidIco");
+    if (fields.dic && fields.dic !== "unknown" && !/^CZ\d{8,10}$/i.test(String(fields.dic).replace(/\s/g, ""))) { if (!/^[A-Z]{2}\d/.test(String(fields.dic).replace(/\s/g, ""))) errors.push("invalidDic"); }
+    if (fields.docNumber && fields.docNumber !== "unknown" && !/^\d{4}[-\s]?\d+$/.test(String(fields.docNumber).replace(/\s/g, ""))) errors.push("invalidDocNumber");
     return { valid: errors.length === 0, errors: errors, sumMismatch: sumMismatch, itemsSum: itemsSum, totalNum: totalNum, vatConsistency: vatConsistency };
+  }
+
+  /** Build geometry from Tesseract result; fallback to text lines if no words/lines. */
+  function iuEvidenceBuildOcrGeometry(r1, mergedText) {
+    var words = [];
+    var lines = [];
+    var lineGroups = [];
+    try {
+      if (r1 && r1.data) {
+        if (Array.isArray(r1.data.words)) words = r1.data.words.map(function(w) { return { text: (w && w.text) || "", bbox: (w && w.bbox) || null }; });
+        if (Array.isArray(r1.data.lines)) {
+          lines = r1.data.lines.map(function(ln) { return { text: (ln && ln.text) || "", bbox: (ln && ln.bbox) || null }; });
+          var lastY = -1;
+          lines.forEach(function(ln) {
+            var y = ln.bbox && typeof ln.bbox.y0 !== "undefined" ? ln.bbox.y0 : lastY;
+            if (lineGroups.length === 0 || (lastY >= 0 && Math.abs(y - lastY) > 15)) lineGroups.push([]);
+            lineGroups[lineGroups.length - 1].push(ln);
+            if (ln.bbox && typeof ln.bbox.y0 !== "undefined") lastY = ln.bbox.y0;
+          });
+        }
+      }
+      if (lines.length === 0 && mergedText) {
+        var textLines = mergedText.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+        textLines.forEach(function(t) { lines.push({ text: t, bbox: null }); });
+      }
+    } catch (_) {}
+    return { words: words, lines: lines, lineGroups: lineGroups };
+  }
+
+  /** Classify lines into zones by position and keywords. */
+  function iuEvidenceClassifyDocumentZones(geometry, docHeight) {
+    var zones = { merchantZone: [], metaZone: [], itemsZone: [], totalsZone: [], vatZone: [], idsZone: [] };
+    var lines = geometry.lines || [];
+    var h = docHeight || 1000;
+    for (var i = 0; i < lines.length; i++) {
+      var ln = lines[i];
+      var t = (ln.text || "").trim();
+      var yNorm = ln.bbox && typeof ln.bbox.y0 !== "undefined" ? ln.bbox.y0 / h : i / Math.max(lines.length, 1);
+      if (i === 0 || (yNorm < 0.25 && !/celkem|total|základ|DPH|IČO|DIČ|doklad/i.test(t))) zones.merchantZone.push(i);
+      else if (/celkem|total|celk\s/i.test(t) && /[\d,\.]/.test(t)) zones.totalsZone.push(i);
+      else if (/základ|DPH|vat\s/i.test(t)) zones.vatZone.push(i);
+      else if (/IČO|DIČ|doklad\s*[:\s]|ičo|dič/i.test(t)) zones.idsZone.push(i);
+      else if (/\d{1,2}[.:]\d{2}/.test(t) || /\d{4}-\d{2}-\d{2}/.test(t) || /datum|čas|date|time/i.test(t)) zones.metaZone.push(i);
+      else if (i > 0 && t.length > 0) zones.itemsZone.push(i);
+    }
+    return zones;
+  }
+
+  /** Assign field -> source zone by matching field value to line text. */
+  function iuEvidenceAssignFieldSourceZones(parsed, zones, textLines) {
+    var out = { store: "", total: "", vatBase: "", vatAmount: "", docNumber: "", date: "", time: "", supplier: "", dic: "", ico: "", items: [] };
+    var lineTexts = textLines && textLines.length ? textLines : (parsed && parsed.rawOcrText ? parsed.rawOcrText.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean) : []);
+    function zoneForLineIndex(idx) {
+      for (var z in zones) { if (zones[z].indexOf(idx) >= 0) return z; }
+      return idx === 0 ? "merchantZone" : "itemsZone";
+    }
+    function findLineForValue(val) {
+      if (val == null || String(val).trim() === "" || String(val) === "unknown") return -1;
+      var v = String(val).trim();
+      for (var i = 0; i < lineTexts.length; i++) { if (lineTexts[i].indexOf(v) >= 0) return i; }
+      return -1;
+    }
+    if (parsed && parsed.correctedFields) {
+      var cf = parsed.correctedFields;
+      var idx = findLineForValue(cf.store); out.store = idx >= 0 ? zoneForLineIndex(idx) : "merchantZone";
+      idx = findLineForValue(cf.total); out.total = idx >= 0 ? zoneForLineIndex(idx) : "totalsZone";
+      idx = findLineForValue(parsed.docNumber); out.docNumber = idx >= 0 ? zoneForLineIndex(idx) : "idsZone";
+      idx = findLineForValue(cf.date); out.date = idx >= 0 ? zoneForLineIndex(idx) : "metaZone";
+      idx = findLineForValue(cf.time); out.time = idx >= 0 ? zoneForLineIndex(idx) : "metaZone";
+      idx = findLineForValue(parsed.supplier); out.supplier = idx >= 0 ? zoneForLineIndex(idx) : "idsZone";
+      idx = findLineForValue(parsed.dic); out.dic = idx >= 0 ? zoneForLineIndex(idx) : "idsZone";
+      idx = findLineForValue(parsed.ico); out.ico = idx >= 0 ? zoneForLineIndex(idx) : "idsZone";
+    }
+    if (parsed && (parsed.vatBase != null || parsed.vatAmount != null)) { out.vatBase = "vatZone"; out.vatAmount = "vatZone"; }
+    if (parsed && parsed.items) parsed.items.forEach(function() { out.items.push("itemsZone"); });
+    return out;
   }
 
   function iuEvidenceComputeFieldConfidence(fieldName, value, corrected, validationOk) {
@@ -9589,11 +9668,18 @@ function buildVideoAsArticleCard(it) {
               ocrPass1Executed = true;
               var text1 = (r1 && r1.data && r1.data.text) || "";
               var merged = text1.trim();
+              var docHeight = (canvas && canvas.height) || 1000;
+              var geometry = iuEvidenceBuildOcrGeometry(r1, merged);
+              var documentZones = iuEvidenceClassifyDocumentZones(geometry, docHeight);
+              try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.ocrGeometryPresent = true; window.__iuEvidenceDebug.ocrWordBoxesPresent = geometry.words.length > 0; window.__iuEvidenceDebug.ocrLineGroupsPresent = (geometry.lineGroups && geometry.lineGroups.length > 0); window.__iuEvidenceDebug.documentZonesPresent = true; window.__iuEvidenceDebug.merchantZonePresent = documentZones.merchantZone.length > 0; window.__iuEvidenceDebug.metaZonePresent = documentZones.metaZone.length > 0; window.__iuEvidenceDebug.itemsZonePresent = documentZones.itemsZone.length > 0; window.__iuEvidenceDebug.totalsZonePresent = documentZones.totalsZone.length > 0; window.__iuEvidenceDebug.vatZonePresent = documentZones.vatZone.length > 0; window.__iuEvidenceDebug.idsZonePresent = documentZones.idsZone.length > 0; } } catch (_) {}
               var result;
               try {
                 result = iuEvidenceOcrPipeline(merged || "?", kind);
                 if (!result || typeof result !== "object") result = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
                 if (!result || typeof result !== "object") { result = {}; result.rawOcrText = merged || "?"; result.correctedFields = {}; result.ocrPass1Executed = true; result.ocrPass2Executed = false; result.usedInjectPath = false; result.proofStillDependsOnInjectedText = false; result.proofUsedInjectedTextAsPrimary = false; result.preprocessingApplied = preprocessingApplied; result.actualOcrEnginePresent = actualOcrEnginePresent; result.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none"; result.realImageOrPdfInputUsed = realImageOrPdfInputUsed; result.uploadedBinaryHashObserved = uploadedBinaryHashObserved; }
+                result.ocrGeometry = geometry;
+                result.documentZones = documentZones;
+                result.fieldSourceZone = iuEvidenceAssignFieldSourceZones(result, documentZones, geometry.lines.map(function(ln) { return ln.text || ""; }));
                 result.usedInjectPath = false;
                 result.proofStillDependsOnInjectedText = false;
                 result.proofUsedInjectedTextAsPrimary = false;
@@ -9611,6 +9697,9 @@ function buildVideoAsArticleCard(it) {
               } catch (e) {
                 result = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
                 if (!result || typeof result !== "object") result = {};
+                result.ocrGeometry = geometry;
+                result.documentZones = documentZones;
+                result.fieldSourceZone = result.fieldSourceZone || { store: "merchantZone", total: "totalsZone", vatBase: "vatZone", vatAmount: "vatZone", docNumber: "idsZone", items: [] };
                 result.ocrPass1Executed = true;
                 result.ocrPass2Executed = false;
                 result.usedInjectPath = false;
@@ -9622,33 +9711,58 @@ function buildVideoAsArticleCard(it) {
                 result.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
                 result.uploadedBinaryHashObserved = uploadedBinaryHashObserved;
               }
-              var out = (result && typeof result === "object") ? result : {};
-              out.ocrPass1Executed = true;
-              out.ocrPass2Executed = false;
-              out.usedInjectPath = false;
-              out.proofStillDependsOnInjectedText = false;
-              out.proofUsedInjectedTextAsPrimary = false;
-              out.preprocessingApplied = preprocessingApplied;
-              out.actualOcrEnginePresent = actualOcrEnginePresent;
-              out.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
-              out.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
-              out.uploadedBinaryHashObserved = uploadedBinaryHashObserved;
-              var finalOut = (out && typeof out === "object") ? out : { ocrPass1Executed: true, ocrPass2Executed: false, usedInjectPath: false, proofUsedInjectedTextAsPrimary: false, preprocessingApplied: preprocessingApplied, actualOcrEnginePresent: actualOcrEnginePresent, actualOcrEngineName: actualOcrEnginePresent ? "Tesseract.js" : "none", realImageOrPdfInputUsed: realImageOrPdfInputUsed, uploadedBinaryHashObserved: uploadedBinaryHashObserved };
-              try {
-                window.__iuEvidenceLastResult = finalOut;
-                if (window.__iuEvidenceDebug) {
-                  window.__iuEvidenceDebug.failureReason = null;
-                  window.__iuEvidenceDebug.rootRuntimeFailurePoint = null;
-                  window.__iuEvidenceDebug.rootCauseRemainingStopShip = null;
-                  window.__iuEvidenceDebug.ocrRunCompleted = true;
-                  window.__iuEvidenceDebug.ocrFinalState = "success";
-                  window.__iuEvidenceDebug.ocrResultSource = "real_ocr";
-                  window.__iuEvidenceDebug.ocrFinalCommitted = true;
-                  window.__iuEvidenceDebug.resultPropagatedToUi = true;
-                  window.__iuEvidenceDebug.lastResultSet = true;
-                }
-              } catch (_) {}
-              return worker.terminate().then(function() { return finalOut; });
+              var needPass2 = (result.correctedFields && result.correctedFields.total === "unknown") || (result.vatBase == null && result.vatAmount == null) || (result.docNumber === "unknown");
+              var pass2Promise = Promise.resolve(null);
+              if (needPass2 && worker && typeof worker.recognize === "function") {
+                pass2Promise = worker.recognize(imageInput).then(function(r2) {
+                  var text2 = (r2 && r2.data && r2.data.text) || "";
+                  if (text2.trim()) {
+                    var res2 = iuEvidenceOcrPipeline(text2.trim(), kind);
+                    if (res2 && res2.correctedFields && result.correctedFields) {
+                      if (result.correctedFields.total === "unknown" && res2.correctedFields.total !== "unknown") { result.correctedFields.total = res2.correctedFields.total; result.totalNum = (res2.validationSummary && res2.validationSummary.totalNum) != null ? res2.validationSummary.totalNum : result.totalNum; result.validationSummary = result.validationSummary || {}; result.validationSummary.totalNum = result.totalNum; result.fieldSourceZone = result.fieldSourceZone || {}; result.fieldSourceZone.total = "totalsZone"; }
+                      if (result.vatBase == null && res2.vatBase != null) { result.vatBase = res2.vatBase; result.fieldSourceZone = result.fieldSourceZone || {}; result.fieldSourceZone.vatBase = "vatZone"; }
+                      if (result.vatAmount == null && res2.vatAmount != null) { result.vatAmount = res2.vatAmount; result.fieldSourceZone.vatAmount = "vatZone"; }
+                      if (result.docNumber === "unknown" && res2.docNumber !== "unknown") { result.docNumber = res2.docNumber; result.fieldSourceZone.docNumber = "idsZone"; }
+                    }
+                    ocrPass2Executed = true;
+                    try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.targetedSecondPassUsedWhenNeeded = true; window.__iuEvidenceDebug.targetedSecondPassForTotals = true; window.__iuEvidenceDebug.targetedSecondPassForVat = true; window.__iuEvidenceDebug.targetedSecondPassForIds = true; window.__iuEvidenceDebug.targetedSecondPassForItems = true; } } catch (_) {}
+                  }
+                  return result;
+                }).catch(function() { return result; });
+              }
+              return pass2Promise.then(function(res) {
+                var out = (res && typeof res === "object") ? res : result;
+                out.ocrPass1Executed = true;
+                out.ocrPass2Executed = !!ocrPass2Executed;
+                out.usedInjectPath = false;
+                out.proofStillDependsOnInjectedText = false;
+                out.proofUsedInjectedTextAsPrimary = false;
+                out.preprocessingApplied = preprocessingApplied;
+                out.actualOcrEnginePresent = actualOcrEnginePresent;
+                out.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
+                out.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
+                out.uploadedBinaryHashObserved = uploadedBinaryHashObserved;
+                if (out.items && Array.isArray(out.items)) out.items.forEach(function(it, idx) { it.sourceZone = "itemsZone"; if (out.fieldSourceZone && Array.isArray(out.fieldSourceZone.items)) out.fieldSourceZone.items[idx] = "itemsZone"; else if (out.fieldSourceZone) { out.fieldSourceZone.items = out.fieldSourceZone.items || []; out.fieldSourceZone.items[idx] = "itemsZone"; } });
+                var finalOut = (out && typeof out === "object") ? out : { ocrPass1Executed: true, ocrPass2Executed: false, usedInjectPath: false, proofUsedInjectedTextAsPrimary: false, preprocessingApplied: preprocessingApplied, actualOcrEnginePresent: actualOcrEnginePresent, actualOcrEngineName: actualOcrEnginePresent ? "Tesseract.js" : "none", realImageOrPdfInputUsed: realImageOrPdfInputUsed, uploadedBinaryHashObserved: uploadedBinaryHashObserved };
+                try {
+                  window.__iuEvidenceLastResult = finalOut;
+                  if (window.__iuEvidenceDebug) {
+                    window.__iuEvidenceDebug.failureReason = null;
+                    window.__iuEvidenceDebug.rootRuntimeFailurePoint = null;
+                    window.__iuEvidenceDebug.rootCauseRemainingStopShip = null;
+                    window.__iuEvidenceDebug.ocrRunCompleted = true;
+                    window.__iuEvidenceDebug.ocrFinalState = "success";
+                    window.__iuEvidenceDebug.ocrResultSource = "real_ocr";
+                    window.__iuEvidenceDebug.ocrFinalCommitted = true;
+                    window.__iuEvidenceDebug.resultPropagatedToUi = true;
+                    window.__iuEvidenceDebug.lastResultSet = true;
+                    window.__iuEvidenceDebug.mathGuardsPresent = true;
+                    window.__iuEvidenceDebug.docGuardsPresent = true;
+                    window.__iuEvidenceDebug.fieldSourceZonePresent = !!(finalOut.fieldSourceZone && (finalOut.fieldSourceZone.store || finalOut.fieldSourceZone.total));
+                  }
+                } catch (_) {}
+                return worker.terminate().then(function() { return finalOut; });
+              });
             });
         });
         });
