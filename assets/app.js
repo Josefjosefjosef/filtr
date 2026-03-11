@@ -9547,7 +9547,7 @@ function buildVideoAsArticleCard(it) {
     var hr = summary.hallucinationRate || 0;
     var gate = summary.accuracyRegressionGatePass === true;
     var pass = dt >= 4 && dp >= 3 && df === 0 && hr === 0 && gate;
-    var reason = pass ? "" : (hr > 0 ? "hallucinationRate>0" : dt < 4 ? "documentsTested<4" : dp < 3 ? "documentsPassed<3" : df > 0 ? "documentsFailed>0" : !gate ? "accuracyRegressionGateFail" : "unknown");
+    var reason = pass ? "" : (hr > 0 ? "hallucinationRate>0" : dt < 4 ? "documentsTested<4" : dp < 3 ? "documentsPassed<3" : df > 0 ? "documentsFailed>0" : !gate ? "accuracyRegressionGateFail" : "accuracyRegressionGateFail");
     return { phase3Closeout: pass, finalDecision: pass ? "PASS" : "FAIL", blockingReason: reason };
   }
 
