@@ -9329,12 +9329,13 @@ function buildVideoAsArticleCard(it) {
       var ln = lines[i];
       var t = (ln.text || "").trim();
       var yNorm = ln.bbox && typeof ln.bbox.y0 !== "undefined" ? ln.bbox.y0 / h : i / Math.max(lines.length, 1);
-      if (i === 0 || (yNorm < 0.25 && !/celkem|total|základ|DPH|IČO|DIČ|doklad/i.test(t))) zones.merchantZone.push(i);
+      if (i === 0) zones.merchantZone.push(i);
       else if (/celkem|total|celk\s/i.test(t) && /[\d,\.]/.test(t)) zones.totalsZone.push(i);
       else if (/základ|DPH|vat\s/i.test(t)) zones.vatZone.push(i);
       else if (/IČO|DIČ|doklad\s*[:\s]|ičo|dič/i.test(t)) zones.idsZone.push(i);
       else if (/\d{1,2}[.:]\d{2}/.test(t) || /\d{4}-\d{2}-\d{2}/.test(t) || /datum|čas|date|time/i.test(t)) zones.metaZone.push(i);
-      else if (i > 0 && t.length > 0) zones.itemsZone.push(i);
+      else if (yNorm < 0.25 && !/celkem|total|základ|DPH|IČO|DIČ|doklad/i.test(t)) zones.merchantZone.push(i);
+      else if (t.length > 0) zones.itemsZone.push(i);
     }
     return zones;
   }
