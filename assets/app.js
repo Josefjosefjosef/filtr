@@ -9176,6 +9176,20 @@ function buildVideoAsArticleCard(it) {
         continue;
       }
       if (/^(množství|jednotková cena|jednotkova cena)\s*[:\s]/i.test(line)) { i++; continue; }
+      var prevLine = i > 0 ? lines[i - 1] : "";
+      var nextLine = lines[i + 1];
+      var priceLineMatch = line.match(/^([\d\s,\.]+)\s*Kc?\s*$/i);
+      if (priceLineMatch && prevLine && /^[A-Za-zÁ-ž\s\-]+$/.test(prevLine.trim()) && prevLine.trim().length > 0 && !/celkem|total|datum|date|čas|time/i.test(prevLine)) {
+        var priceNum = parseFloat(String(priceLineMatch[1]).replace(/\s/g, "").replace(",", "."));
+        if (!isNaN(priceNum) && priceNum >= 0) { items.push({ name: prevLine.trim(), price: priceNum, priceStr: priceLineMatch[1].trim() + " Kč", qty: null, unitPrice: null, lineTotal: priceNum }); i++; continue; }
+      }
+      if (nextLine && /^[A-Za-zÁ-ž\s\-]+$/.test(line.trim()) && line.trim().length > 0 && !/celkem|total|datum|date|čas|time/i.test(line)) {
+        var priceLineMatch2 = nextLine.match(/^([\d\s,\.]+)\s*Kc?\s*$/i);
+        if (priceLineMatch2) {
+          var priceNum2 = parseFloat(String(priceLineMatch2[1]).replace(/\s/g, "").replace(",", "."));
+          if (!isNaN(priceNum2) && priceNum2 >= 0) { items.push({ name: line.trim(), price: priceNum2, priceStr: priceLineMatch2[1].trim() + " Kč", qty: null, unitPrice: null, lineTotal: priceNum2 }); i += 2; continue; }
+        }
+      }
       var m = line.match(/^(.+?)\s+([\d\s,\.]+)\s*Kc?\s*$/i);
       if (m) {
         var name = m[1].trim();
@@ -9193,7 +9207,7 @@ function buildVideoAsArticleCard(it) {
     var docNumMatch = normalizedText.match(/doklad\s*[:\s]*(\d{4}[-\s]?\d+)/i) || normalizedText.match(/(\d{4}[-\s]\d{5,})/);
     if (docNumMatch) docNumber = docNumMatch[1].replace(/\s/g, "-");
     var vatBase = null, vatAmount = null;
-    var vatBaseMatch = normalizedText.match(/základ\s*[:\s]*([\d\s,\.]+)/i);
+    var vatBaseMatch = normalizedText.match(/z[áa]klad\s*[:\s]*([\d\s,\.]+)/i);
     if (vatBaseMatch) { var vb = parseFloat(String(vatBaseMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(vb)) vatBase = vb; }
     var vatAmountMatch = normalizedText.match(/DPH\s*[:\s]*([\d\s,\.]+)/i);
     if (vatAmountMatch) { var va = parseFloat(String(vatAmountMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(va)) vatAmount = va; }
