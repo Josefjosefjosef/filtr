@@ -9987,7 +9987,7 @@ function buildVideoAsArticleCard(it) {
         if (file.size) uploadedBinaryHashObserved = true;
         try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.preprocessedCanvasWidth = canvas.width; window.__iuEvidenceDebug.preprocessedCanvasHeight = canvas.height; window.__iuEvidenceDebug.uploadedBinaryHashObserved = !!uploadedBinaryHashObserved; } } catch (_) {}
         var workerOpts = iuEvidenceOcrWorkerOptions();
-        var workerTimeoutMs = 45000;
+        var workerTimeoutMs = 90000;
         var workerPromise = Tesseract.createWorker(workerOpts).then(function(worker) {
           if (!worker) {
             try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.failureReason = "workerOrRecognizeFail:createWorkerReturnedFalsy"; window.__iuEvidenceDebug.rootRuntimeFailurePoint = "workerOrRecognizeFail"; window.__iuEvidenceDebug.rootCauseRemainingStopShip = "workerOrRecognizeFail:createWorkerReturnedFalsy"; } } catch (_) {}
@@ -10326,7 +10326,7 @@ function buildVideoAsArticleCard(it) {
     result.columnDetectionUsed = !!result.retailColumnDetectionPresent;
     result.merchantNormalizationPresent = true;
     result.merchantNormalizedWhenKnown = !!result.merchantNormalizedWhenKnown;
-    result.phase5AccuracyLayerPresent = true;
+    result.phase5AccuracyLayerPresent = false;
     return result;
   }
 
