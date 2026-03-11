@@ -8302,9 +8302,9 @@ function buildVideoAsArticleCard(it) {
   const IU_NAKUP_STORE_REGISTRY = iuNakupBuildStoreRegistry();
 
   const IU_NAKUP_UI_TEXTS = {
-    pickerPlaceholder: "Napište např. Lidl Praha…",
+    pickerPlaceholder: "Obchod nebo lokace (volitelné)",
     pickerFallbackNoSelection: "Obchod nebo lokace nevybrána",
-    emptyState: "Zatím žádná data. Nástroj je připraven pro budoucí komunitní funkce.",
+    emptyState: "Zatím žádná data. Nahrajte účtenku nebo vložte text.",
     modeText: "Vložit text",
     modeCart: "Nahrát košík",
     modeReceipt: "Vyfotit účtenku"
@@ -9151,6 +9151,7 @@ function buildVideoAsArticleCard(it) {
     while (i < lines.length) {
       var line = lines[i];
       if (i === 0 || /celkem|total|datum|date|čas|time/i.test(line)) { i++; continue; }
+      if (/z[áa]klad\s*[:\s]|DPH\s*[:\s]|doklad\s*[:\s]/i.test(line)) { i++; continue; }
       var polozkaMatch = line.match(/položka\s*[:\s]+(.+)/i);
       if (polozkaMatch) {
         var itemName = polozkaMatch[1].trim();
@@ -9200,10 +9201,11 @@ function buildVideoAsArticleCard(it) {
           if (!isNaN(priceNum2) && priceNum2 >= 0) { items.push({ name: line.trim(), price: priceNum2, priceStr: priceLineMatch2[1].trim() + " Kč", qty: null, unitPrice: null, lineTotal: priceNum2 }); i += 2; continue; }
         }
       }
-      var m = line.match(/^(.+?)\s+([\d\s,\.]+)\s*Kc?\s*$/i);
+      var m = line.match(/^(.+)\s+([\d,\.]+)\s*Kc?\s*$/i);
       if (m) {
         var name = m[1].trim();
-        var priceStr = m[2].replace(/\s/g, "").replace(",", ".");
+        if (/z[áa]klad|^DPH\s|doklad\s*[:\s]/i.test(name)) { i++; continue; }
+        var priceStr = m[2].replace(/,/g, ".");
         var price = parseFloat(priceStr);
         if (!isNaN(price) && price >= 0) items.push({ name: name, price: price, priceStr: m[2].trim() + " Kč", qty: null, unitPrice: null, lineTotal: price });
       }
@@ -9273,6 +9275,10 @@ function buildVideoAsArticleCard(it) {
     (fields.items || []).forEach(function(it) {
       var p = typeof it.lineTotal === "number" && !isNaN(it.lineTotal) ? it.lineTotal : (typeof it.price === "number" ? it.price : parseFloat(String(it.price || 0).replace(/\s/g, "").replace(",", ".")));
       if (!isNaN(p) && p >= 0) itemsSum += p;
+      var q = it.qty != null && !isNaN(Number(it.qty)) ? Number(it.qty) : NaN;
+      var u = it.unitPrice != null && !isNaN(Number(it.unitPrice)) ? Number(it.unitPrice) : NaN;
+      var lt = typeof it.lineTotal === "number" && !isNaN(it.lineTotal) ? it.lineTotal : (typeof it.price === "number" ? it.price : NaN);
+      if (!isNaN(q) && !isNaN(u) && !isNaN(lt) && Math.abs(q * u - lt) > 0.02) errors.push("itemLineMismatch");
     });
     var totalNum = fields.totalNum != null ? fields.totalNum : (typeof fields.total === "string" ? parseFloat(fields.total.replace(/\s/g, "").replace(",", ".").replace(/[^\d.]/g, "")) : NaN);
     var sumMismatch = false;
@@ -9385,11 +9391,14 @@ function buildVideoAsArticleCard(it) {
   function iuEvidenceSimulatedRawOcr(kind, scenario) {
     var scenarios = {
       clean: "Lidl\n10.03.2024 14:30\nMléko 45 Kc\nRohlík 12 Kc\nCelkem 57 Kc",
+      retail: "Lidl\n10.03.2024 14:30\nMléko 45 Kc\nRohlík 12 Kc\nCelkem 57 Kc",
       merchantTypo: "L1DL\n10.03.2024 14:30\nMléko 45 Kc\nRohlík 12 Kc\nCelkem 57 Kc",
       itemTypo: "Lidl\n10.03.2024 14:30\nMLEK0 45 Kc\nR0HLIK 12 Kc\nCelkem 57 Kc",
       sumMismatch: "Lidl\n10.03.2024 14:30\nMléko 45 Kc\nRohlík 12 Kc\nCelkem 60 Kc",
       unknown: "?\n?\n?\nCelkem ? Kc",
-      invoice: "Firma s.r.o.\nFaktura č. 2024001\nDatum vystavení: 10.03.2024\nDUZP: 09.04.2024\nCelkem 1200 Kc"
+      degraded: "?\n?\n?\nCelkem ? Kc",
+      invoice: "Firma s.r.o.\nFaktura č. 2024001\nDatum vystavení: 10.03.2024\nDUZP: 09.04.2024\nZáklad: 991,74 Kc\nDPH: 208,26 Kc\nCelkem 1200 Kc",
+      fuel: "Čerpací stanice\n10.03.2024 14:30\nDIESEL 17,55 L  39,90  700,00 Kc\nCelkem 700,00 Kc\nZáklad: 578,51 Kc\nDPH: 121,49 Kc\nDoklad: 2024-12345"
     };
     return scenarios[scenario] || scenarios.clean;
   }
@@ -9411,11 +9420,13 @@ function buildVideoAsArticleCard(it) {
       docType: parsed.docType
     };
     var fieldCandidates = { store: storeAc.candidates, date: [], time: [], total: [], docType: [] };
-    var itemsWithCorrection = (parsed.items || []).map(function(it) {
+    var feItems = (parsed.fieldEvidence && parsed.fieldEvidence.items) ? parsed.fieldEvidence.items : [];
+    var itemsWithCorrection = (parsed.items || []).map(function(it, idx) {
       var ac = iuEvidenceAutoCorrectItemName(it.name);
       var conf = ac.corrected ? 0.75 : 0.9;
       var needR = ac.corrected || (it.name === "unknown");
-      return { rawName: it.name, name: ac.value, price: it.price, priceStr: it.priceStr, qty: it.qty, unitPrice: it.unitPrice, lineTotal: it.lineTotal, candidates: ac.candidates, corrected: ac.corrected, confidence: conf, needsReview: needR };
+      var evidence = (feItems[idx] != null && typeof feItems[idx] === "object") ? feItems[idx] : {};
+      return { rawName: it.name, name: ac.value, price: it.price, priceStr: it.priceStr, qty: it.qty, unitPrice: it.unitPrice, lineTotal: it.lineTotal, candidates: ac.candidates, corrected: ac.corrected, confidence: conf, needsReview: needR, evidence: evidence };
     });
     var validation = iuEvidenceValidate({ totalNum: parsed.totalNum, total: parsed.total, date: parsed.date, time: parsed.time, items: itemsWithCorrection, vatBase: parsed.vatBase, vatAmount: parsed.vatAmount });
     var storeConf = iuEvidenceComputeFieldConfidence("store", correctedFields.store, storeAc.corrected, validation.valid);
@@ -9432,7 +9443,7 @@ function buildVideoAsArticleCard(it) {
     };
     var itemConfidence = itemsWithCorrection.map(function(it) { return it.corrected ? 0.75 : 0.9; });
     var itemNeedsReview = itemsWithCorrection.map(function(it) { return it.corrected || it.rawName === "unknown"; });
-    var validationSummary = { valid: validation.valid, sumMismatch: validation.sumMismatch, itemsSum: validation.itemsSum, totalNum: validation.totalNum, errors: validation.errors };
+    var validationSummary = { valid: validation.valid, sumMismatch: validation.sumMismatch, itemsSum: validation.itemsSum, totalNum: validation.totalNum, vatConsistency: validation.vatConsistency, errors: validation.errors };
     var docNeedsReview = validation.sumMismatch || Object.keys(fieldNeedsReview).some(function(k) { return fieldNeedsReview[k]; }) || itemNeedsReview.some(Boolean);
     var reviewSummary = { docNeedsReview: docNeedsReview, fieldReviews: fieldNeedsReview, itemReviews: itemNeedsReview };
     var unknownState = { store: correctedFields.store === "unknown", date: parsed.date === "unknown", time: parsed.time === "unknown", total: correctedFields.total === "unknown", docType: parsed.docType === "unknown", duzp: !parsed.duzp || parsed.duzp === "unknown" };
@@ -9471,6 +9482,7 @@ function buildVideoAsArticleCard(it) {
     if ((cf.total === "unknown" || cf.total == null || String(cf.total).trim() === "") && (r.vatBase == null && r.vatAmount == null)) codes.push("missing_total");
     if (r.docNumber === "unknown" || r.docNumber == null || String(r.docNumber || "").trim() === "") codes.push("missing_doc_number");
     if (!r.items || r.items.length === 0) codes.push("missing_items");
+    if (cf.store === "unknown" || cf.total === "unknown" || (r.docNumber === "unknown" && (r.vatBase == null && r.vatAmount == null))) codes.push("unreadable");
     if (vs.sumMismatch) codes.push("financial_inconsistent");
     if (r.vatBase != null && r.vatAmount != null && vs.vatConsistency === false) codes.push("vat_inconsistent");
     if (cf.store === "unknown" || !cf.store) codes.push("weak_merchant");
@@ -9848,7 +9860,7 @@ function buildVideoAsArticleCard(it) {
                 result.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
                 result.uploadedBinaryHashObserved = uploadedBinaryHashObserved;
               }
-              var needPass2 = (result.correctedFields && result.correctedFields.total === "unknown") || (result.vatBase == null && result.vatAmount == null) || (result.docNumber === "unknown");
+              var needPass2 = (result.correctedFields && result.correctedFields.total === "unknown") || (result.vatBase == null && result.vatAmount == null) || (result.docNumber === "unknown") || ((!result.items || result.items.length === 0) && documentZones.itemsZone.length > 0);
               var pass2Promise = Promise.resolve(null);
               if (needPass2 && worker && typeof worker.recognize === "function") {
                 pass2Promise = worker.recognize(imageInput).then(function(r2) {
@@ -9860,6 +9872,7 @@ function buildVideoAsArticleCard(it) {
                       if (result.vatBase == null && res2.vatBase != null) { result.vatBase = res2.vatBase; result.fieldSourceZone = result.fieldSourceZone || {}; result.fieldSourceZone.vatBase = "vatZone"; }
                       if (result.vatAmount == null && res2.vatAmount != null) { result.vatAmount = res2.vatAmount; result.fieldSourceZone.vatAmount = "vatZone"; }
                       if (result.docNumber === "unknown" && res2.docNumber !== "unknown") { result.docNumber = res2.docNumber; result.fieldSourceZone.docNumber = "idsZone"; }
+                      if ((!result.items || result.items.length === 0) && res2.items && res2.items.length > 0) { result.items = res2.items; result.fieldSourceZone = result.fieldSourceZone || {}; result.fieldSourceZone.items = result.fieldSourceZone.items || []; for (var i = 0; i < result.items.length; i++) result.items[i].sourceZone = "itemsZone"; result.fieldSourceZone.items = result.items.map(function() { return "itemsZone"; }); }
                     }
                     ocrPass2Executed = true;
                     try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.targetedSecondPassUsedWhenNeeded = true; window.__iuEvidenceDebug.targetedSecondPassForTotals = true; window.__iuEvidenceDebug.targetedSecondPassForVat = true; window.__iuEvidenceDebug.targetedSecondPassForIds = true; window.__iuEvidenceDebug.targetedSecondPassForItems = true; } } catch (_) {}
@@ -9893,6 +9906,31 @@ function buildVideoAsArticleCard(it) {
                   finalOut.hallucinationRate = hall.hallucinationRate;
                 } catch (_) {}
                 try {
+                  var geom = finalOut.ocrGeometry;
+                  var zones = finalOut.documentZones;
+                  finalOut.ocrGeometryPresent = !!(geom);
+                  finalOut.ocrWordBoxesPresent = !!(geom && geom.words && geom.words.length > 0);
+                  finalOut.ocrLineGroupsPresent = !!(geom && geom.lineGroups && geom.lineGroups.length > 0);
+                  finalOut.documentZonesPresent = !!(zones);
+                  finalOut.merchantZonePresent = !!(zones && zones.merchantZone && zones.merchantZone.length > 0);
+                  finalOut.metaZonePresent = !!(zones && zones.metaZone && zones.metaZone.length > 0);
+                  finalOut.itemsZonePresent = !!(zones && zones.itemsZone && zones.itemsZone.length > 0);
+                  finalOut.totalsZonePresent = !!(zones && zones.totalsZone && zones.totalsZone.length > 0);
+                  finalOut.vatZonePresent = !!(zones && zones.vatZone && zones.vatZone.length > 0);
+                  finalOut.idsZonePresent = !!(zones && zones.idsZone && zones.idsZone.length > 0);
+                  finalOut.targetedSecondPassUsedWhenNeeded = !!finalOut.ocrPass2Executed;
+                  finalOut.targetedSecondPassForTotals = !!finalOut.ocrPass2Executed;
+                  finalOut.targetedSecondPassForVat = !!finalOut.ocrPass2Executed;
+                  finalOut.targetedSecondPassForIds = !!finalOut.ocrPass2Executed;
+                  finalOut.targetedSecondPassForItems = !!finalOut.ocrPass2Executed;
+                  finalOut.fieldEvidenceMapPresent = !!(finalOut.fieldSourceZone || (finalOut.fieldEvidence && typeof finalOut.fieldEvidence === "object"));
+                  finalOut.fieldSourceZonePresent = !!(finalOut.fieldSourceZone && (finalOut.fieldSourceZone.store || finalOut.fieldSourceZone.total));
+                  finalOut.fieldConfidencePresent = !!(finalOut.fieldConfidence && typeof finalOut.fieldConfidence === "object");
+                  finalOut.mathGuardsPresent = !!(finalOut.validationSummary && typeof finalOut.validationSummary === "object");
+                  finalOut.docGuardsPresent = !!(finalOut.validationSummary && typeof finalOut.validationSummary === "object");
+                  finalOut.unknownStateUsedWhenUnreadable = !!(finalOut.unknownState && (finalOut.unknownState.store || finalOut.unknownState.total || finalOut.unknownState.docType));
+                  finalOut.needsReviewUsedWhenUnreadable = !!(finalOut.needsReview === true);
+                  finalOut.phase4AccuracyLayerPresent = !!(finalOut.ocrGeometryPresent && finalOut.documentZonesPresent && finalOut.fieldSourceZonePresent);
                   window.__iuEvidenceLastResult = finalOut;
                   try { window.__iuEvidenceAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow(out); } catch (_) {}
                   if (window.__iuEvidenceDebug) {
@@ -9933,6 +9971,9 @@ function buildVideoAsArticleCard(it) {
           failRes.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
           failRes.actualOcrEnginePresent = actualOcrEnginePresent;
           failRes.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
+          var failReadiness = iuEvidenceReviewReadiness(failRes);
+          failRes.unknownStateUsedWhenUnreadable = !!(failRes.unknownState && (failRes.unknownState.store || failRes.unknownState.total || failRes.unknownState.docType));
+          failRes.needsReviewUsedWhenUnreadable = !!(failReadiness.needsReview);
           return failRes;
         });
       }).catch(function(err) {
@@ -9948,6 +9989,9 @@ function buildVideoAsArticleCard(it) {
         errRes.realImageOrPdfInputUsed = false;
         errRes.actualOcrEnginePresent = actualOcrEnginePresent;
         errRes.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
+        var errReadiness = iuEvidenceReviewReadiness(errRes);
+        errRes.unknownStateUsedWhenUnreadable = !!(errRes.unknownState && (errRes.unknownState.store || errRes.unknownState.total || errRes.unknownState.docType));
+        errRes.needsReviewUsedWhenUnreadable = !!(errReadiness.needsReview);
         return errRes;
       }).then(function(finalResult) {
         if (finalResult == null || typeof finalResult !== "object") {
@@ -9985,16 +10029,75 @@ function buildVideoAsArticleCard(it) {
       });
   }
 
+  /** Proof helper: run pipeline with simulated text and attach geometry/zones (no real OCR). */
+  function iuEvidenceRunPipelineWithSimulatedText(scenario, kind) {
+    kind = kind || "receipt_photo";
+    var text = iuEvidenceSimulatedRawOcr(kind, scenario);
+    var geometry = iuEvidenceBuildOcrGeometry({ data: {} }, text);
+    var docHeight = 1000;
+    var documentZones = iuEvidenceClassifyDocumentZones(geometry, docHeight);
+    var result = iuEvidenceOcrPipeline(text, kind);
+    if (!result || typeof result !== "object") result = {};
+    result.ocrGeometry = geometry;
+    result.documentZones = documentZones;
+    result.fieldSourceZone = iuEvidenceAssignFieldSourceZones(result, documentZones, geometry.lines.map(function(ln) { return ln.text || ""; }));
+    result.ocrPass1Executed = true;
+    result.ocrPass2Executed = false;
+    if (result.items && Array.isArray(result.items)) {
+      result.items.forEach(function(it, idx) { it.sourceZone = "itemsZone"; });
+      result.fieldSourceZone = result.fieldSourceZone || {};
+      result.fieldSourceZone.items = result.items.map(function() { return "itemsZone"; });
+    }
+    var geom = result.ocrGeometry;
+    var zones = result.documentZones;
+    result.ocrGeometryPresent = !!(geom);
+    result.ocrWordBoxesPresent = !!(geom && geom.words && geom.words.length > 0);
+    result.ocrLineGroupsPresent = !!(geom && geom.lineGroups && geom.lineGroups.length > 0);
+    result.documentZonesPresent = !!(zones);
+    result.merchantZonePresent = !!(zones && zones.merchantZone && zones.merchantZone.length > 0);
+    result.metaZonePresent = !!(zones && zones.metaZone && zones.metaZone.length > 0);
+    result.itemsZonePresent = !!(zones && zones.itemsZone && zones.itemsZone.length > 0);
+    result.totalsZonePresent = !!(zones && zones.totalsZone && zones.totalsZone.length > 0);
+    result.vatZonePresent = !!(zones && zones.vatZone && zones.vatZone.length > 0);
+    result.idsZonePresent = !!(zones && zones.idsZone && zones.idsZone.length > 0);
+    result.targetedSecondPassUsedWhenNeeded = false;
+    result.targetedSecondPassForTotals = false;
+    result.targetedSecondPassForVat = false;
+    result.targetedSecondPassForIds = false;
+    result.targetedSecondPassForItems = false;
+    result.fieldEvidenceMapPresent = !!(result.fieldSourceZone || (result.fieldEvidence && typeof result.fieldEvidence === "object"));
+    result.fieldSourceZonePresent = !!(result.fieldSourceZone && (result.fieldSourceZone.store || result.fieldSourceZone.total));
+    result.fieldConfidencePresent = !!(result.fieldConfidence && typeof result.fieldConfidence === "object");
+    result.mathGuardsPresent = !!(result.validationSummary && typeof result.validationSummary === "object");
+    result.docGuardsPresent = !!(result.validationSummary && typeof result.validationSummary === "object");
+    result.unknownStateUsedWhenUnreadable = !!(result.unknownState && (result.unknownState.store || result.unknownState.total || result.unknownState.docType));
+    var readiness = iuEvidenceReviewReadiness(result);
+    result.reviewReasonCodes = readiness.reviewReasonCodes;
+    result.reviewPriority = readiness.reviewPriority;
+    result.canAutoAccept = readiness.canAutoAccept;
+    result.needsReview = readiness.needsReview;
+    result.needsReviewUsedWhenUnreadable = !!(result.needsReview === true);
+    var hall = iuEvidenceHallucinationMetrics(result);
+    result.hallucinatedCriticalField = hall.hallucinatedCriticalField;
+    result.hallucinatedItemField = hall.hallucinatedItemField;
+    result.hallucinationRate = hall.hallucinationRate;
+    result.phase4AccuracyLayerPresent = !!(result.ocrGeometryPresent && result.documentZonesPresent && result.fieldSourceZonePresent);
+    return result;
+  }
+
   try {
     window.iuEvidenceOcrHook = iuEvidenceOcrHook;
     window.iuEvidenceNormalizeOcrText = iuEvidenceNormalizeOcrText;
     window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
+    window.iuEvidenceSimulatedRawOcr = iuEvidenceSimulatedRawOcr;
+    window.iuEvidenceRunPipelineWithSimulatedText = iuEvidenceRunPipelineWithSimulatedText;
     window.iuEvidenceNormalizedCompare = iuEvidenceNormalizedCompare;
     window.iuEvidenceNumericCompare = iuEvidenceNumericCompare;
     window.iuEvidenceAccuracyRegressionGate = iuEvidenceAccuracyRegressionGate;
     window.iuEvidenceBuildAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow;
     window.iuEvidenceAccuracySummaryShape = iuEvidenceAccuracySummaryShape;
     window.iuEvidenceBuildPhase3Verdict = iuEvidenceBuildPhase3Verdict;
+    try { if (typeof window.dispatchEvent === "function") window.dispatchEvent(new CustomEvent("iuEvidenceReady")); } catch (_) {}
   } catch (_) {}
 
   /** Build flat parsed result from pipeline result (for storage). User-confirmed or pipeline values. */
@@ -10329,24 +10432,14 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidenceReturnWindowModel = iuEvidenceReturnWindowModel;
   } catch (_) {}
 
-  function iuEvidenceSeedRecord(){
-    var d = new Date();
-    var dateStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-    return { id: "iu-ev-seed-1", docType: "receipt", store: "Test obchod", date: dateStr, time: "14:30", total: "450 Kč", priceVatIncluded: "450 Kč", priceVatExcluded: "371,90 Kč", priceVatExcludedState: "known", processingStatus: "uloženo", confidence: 0.85, needsReview: false };
-  }
-  const IU_EVIDENCE_SEED = [iuEvidenceSeedRecord()];
-
   function iuEvidenceGetReceipts(){
     try {
       var raw = localStorage.getItem(IU_EVIDENCE_RECEIPTS_KEY);
       var arr = raw ? JSON.parse(raw) : [];
-      if (!Array.isArray(arr) || arr.length === 0) {
-        arr = JSON.parse(JSON.stringify(IU_EVIDENCE_SEED));
-        localStorage.setItem(IU_EVIDENCE_RECEIPTS_KEY, JSON.stringify(arr));
-      }
+      if (!Array.isArray(arr)) arr = [];
       return arr;
     } catch (_) {
-      return JSON.parse(JSON.stringify(IU_EVIDENCE_SEED));
+      return [];
     }
   }
 
