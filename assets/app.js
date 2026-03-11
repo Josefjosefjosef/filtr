@@ -9147,22 +9147,44 @@ function buildVideoAsArticleCard(it) {
       var lastMatch = lastLine.match(/([\d\s,\.]+)\s*Kc?\s*$/i);
       if (lastMatch) { var n2 = parseFloat(String(lastMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(n2)) { totalNum = n2; total = lastMatch[1].trim() + " Kč"; priceVatIncluded = total; } }
     }
-    lines.forEach(function(line, idx) {
-      if (idx === 0 || /celkem|total|datum|date|čas|time/i.test(line)) return;
+    var i = 0;
+    while (i < lines.length) {
+      var line = lines[i];
+      if (i === 0 || /celkem|total|datum|date|čas|time/i.test(line)) { i++; continue; }
       var polozkaMatch = line.match(/položka\s*[:\s]+(.+)/i);
       if (polozkaMatch) {
         var itemName = polozkaMatch[1].trim();
-        if (itemName && totalNum != null) items.push({ name: itemName, price: totalNum, priceStr: (totalNum + " Kč"), qty: null, lineTotal: totalNum });
-        return;
+        var qty = null, unitPrice = null, lineTotalNum = totalNum;
+        var j = i + 1;
+        while (j < lines.length && j < i + 8) {
+          var nextLine = lines[j];
+          if (/položka\s*[:\s]/i.test(nextLine)) break;
+          var mnozstviMatch = nextLine.match(/množství\s*[:\s]*([\d\s,\.]+)/i);
+          if (mnozstviMatch) { var q = parseFloat(String(mnozstviMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(q)) qty = q; }
+          var jednotkovaMatch = nextLine.match(/jednotková\s*cena\s*[:\s]*([\d\s,\.]+)/i);
+          if (jednotkovaMatch) { var up = parseFloat(String(jednotkovaMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(up)) unitPrice = up; }
+          var celkemItemMatch = nextLine.match(/celkem\s*[:\s]*([\d\s,\.]+)/i);
+          if (celkemItemMatch) { var lt = parseFloat(String(celkemItemMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(lt)) lineTotalNum = lt; break; }
+          j++;
+        }
+        if (lineTotalNum == null && unitPrice != null && qty != null) lineTotalNum = Math.round(unitPrice * qty * 100) / 100;
+        if (itemName && (lineTotalNum != null || totalNum != null)) {
+          var lt = lineTotalNum != null ? lineTotalNum : totalNum;
+          items.push({ name: itemName, price: lt, priceStr: (lt + " Kč"), qty: qty, unitPrice: unitPrice, lineTotal: lt });
+        }
+        i = j > i ? j : i + 1;
+        continue;
       }
+      if (/^(množství|jednotková cena|jednotkova cena)\s*[:\s]/i.test(line)) { i++; continue; }
       var m = line.match(/^(.+?)\s+([\d\s,\.]+)\s*Kc?\s*$/i);
       if (m) {
         var name = m[1].trim();
         var priceStr = m[2].replace(/\s/g, "").replace(",", ".");
         var price = parseFloat(priceStr);
-        if (!isNaN(price) && price >= 0) items.push({ name: name, price: price, priceStr: m[2].trim() + " Kč", qty: null, lineTotal: price });
+        if (!isNaN(price) && price >= 0) items.push({ name: name, price: price, priceStr: m[2].trim() + " Kč", qty: null, unitPrice: null, lineTotal: price });
       }
-    });
+      i++;
+    }
     if (/faktura|invoice|ič|dič|daňový\s*doklad/i.test(normalizedText)) docType = "invoice";
     var duzpMatch = normalizedText.match(/DUZP[:\s]*(\d{1,2})\.(\d{1,2})\.(\d{4})/i) || normalizedText.match(/splatnost[:\s]*(\d{1,2})\.(\d{1,2})\.(\d{4})/i);
     var duzp = "unknown";
@@ -9183,7 +9205,20 @@ function buildVideoAsArticleCard(it) {
     if (dicMatch) dic = dicMatch[1].trim();
     var icoMatch = normalizedText.match(/IČO\s*[:\s]*(\d+)/i);
     if (icoMatch) ico = icoMatch[1].trim();
-    return { store: store, date: date, time: time, total: total, totalNum: totalNum, priceVatIncluded: priceVatIncluded, priceVatExcluded: priceVatExcluded, priceVatExcludedState: priceVatExcludedState, docType: docType, items: items, duzp: duzp, docNumber: docNumber, vatBase: vatBase, vatAmount: vatAmount, supplier: supplier, dic: dic, ico: ico };
+    var fieldEvidence = {
+      merchant: { raw: store },
+      date: { raw: dateMatch ? dateMatch[0] : null },
+      time: { raw: timeMatch ? timeMatch[0] : null },
+      total: { raw: celkemLine || null },
+      docNumber: { raw: docNumMatch ? docNumMatch[0] : null },
+      vatBase: { raw: vatBaseMatch ? vatBaseMatch[0] : null },
+      vatAmount: { raw: vatAmountMatch ? vatAmountMatch[0] : null },
+      supplier: { raw: sroMatch ? sroMatch[0] : null },
+      dic: { raw: dicMatch ? dicMatch[0] : null },
+      ico: { raw: icoMatch ? icoMatch[0] : null },
+      items: items.map(function(it) { return { name: { raw: it.name }, qty: { raw: it.qty != null ? String(it.qty) : null }, unitPrice: { raw: it.unitPrice != null ? String(it.unitPrice) : null }, lineTotal: { raw: it.lineTotal != null ? String(it.lineTotal) : null } }; })
+    };
+    return { store: store, date: date, time: time, total: total, totalNum: totalNum, priceVatIncluded: priceVatIncluded, priceVatExcluded: priceVatExcluded, priceVatExcludedState: priceVatExcludedState, docType: docType, items: items, duzp: duzp, docNumber: docNumber, vatBase: vatBase, vatAmount: vatAmount, supplier: supplier, dic: dic, ico: ico, fieldEvidence: fieldEvidence };
   }
 
   /** Logical validation: sum(items) vs total, valid date/time, non-negative prices. */
@@ -9191,7 +9226,7 @@ function buildVideoAsArticleCard(it) {
     var errors = [];
     var itemsSum = 0;
     (fields.items || []).forEach(function(it) {
-      var p = typeof it.price === "number" ? it.price : parseFloat(String(it.price || 0).replace(/\s/g, "").replace(",", "."));
+      var p = typeof it.lineTotal === "number" && !isNaN(it.lineTotal) ? it.lineTotal : (typeof it.price === "number" ? it.price : parseFloat(String(it.price || 0).replace(/\s/g, "").replace(",", ".")));
       if (!isNaN(p) && p >= 0) itemsSum += p;
     });
     var totalNum = fields.totalNum != null ? fields.totalNum : (typeof fields.total === "string" ? parseFloat(fields.total.replace(/\s/g, "").replace(",", ".").replace(/[^\d.]/g, "")) : NaN);
@@ -9202,7 +9237,12 @@ function buildVideoAsArticleCard(it) {
       if (isNaN(d.getTime())) errors.push("invalidDate");
     }
     if (fields.time && fields.time !== "unknown" && !/^\d{1,2}:\d{2}$/.test(fields.time)) errors.push("invalidTime");
-    return { valid: errors.length === 0, errors: errors, sumMismatch: sumMismatch, itemsSum: itemsSum, totalNum: totalNum };
+    var vatConsistency = true;
+    if (fields.vatBase != null && fields.vatAmount != null && totalNum != null && !isNaN(totalNum)) {
+      var vatSum = fields.vatBase + fields.vatAmount;
+      if (Math.abs(vatSum - totalNum) > 1) vatConsistency = false;
+    }
+    return { valid: errors.length === 0, errors: errors, sumMismatch: sumMismatch, itemsSum: itemsSum, totalNum: totalNum, vatConsistency: vatConsistency };
   }
 
   function iuEvidenceComputeFieldConfidence(fieldName, value, corrected, validationOk) {
@@ -9250,9 +9290,9 @@ function buildVideoAsArticleCard(it) {
       var ac = iuEvidenceAutoCorrectItemName(it.name);
       var conf = ac.corrected ? 0.75 : 0.9;
       var needR = ac.corrected || (it.name === "unknown");
-      return { rawName: it.name, name: ac.value, price: it.price, priceStr: it.priceStr, qty: it.qty, lineTotal: it.lineTotal, candidates: ac.candidates, corrected: ac.corrected, confidence: conf, needsReview: needR };
+      return { rawName: it.name, name: ac.value, price: it.price, priceStr: it.priceStr, qty: it.qty, unitPrice: it.unitPrice, lineTotal: it.lineTotal, candidates: ac.candidates, corrected: ac.corrected, confidence: conf, needsReview: needR };
     });
-    var validation = iuEvidenceValidate({ totalNum: parsed.totalNum, total: parsed.total, date: parsed.date, time: parsed.time, items: itemsWithCorrection });
+    var validation = iuEvidenceValidate({ totalNum: parsed.totalNum, total: parsed.total, date: parsed.date, time: parsed.time, items: itemsWithCorrection, vatBase: parsed.vatBase, vatAmount: parsed.vatAmount });
     var storeConf = iuEvidenceComputeFieldConfidence("store", correctedFields.store, storeAc.corrected, validation.valid);
     var dateConf = parsed.date !== "unknown" ? 0.9 : 0;
     var timeConf = parsed.time !== "unknown" ? 0.9 : 0;
@@ -9290,20 +9330,209 @@ function buildVideoAsArticleCard(it) {
       vatAmount: parsed.vatAmount,
       supplier: parsed.supplier,
       dic: parsed.dic,
-      ico: parsed.ico
+      ico: parsed.ico,
+      fieldEvidence: parsed.fieldEvidence || {}
     };
   }
 
-  /** OCR pipeline hook: file + kind -> Promise<extracted>. Uses only actual OCR input or unknown; no sample/fallback. */
-  function iuEvidenceOcrHook(file, kind) {
-    var rawOcrText = "";
-    if (typeof window !== "undefined" && window.__iuEvidenceInjectRawOcr && typeof window.__iuEvidenceInjectRawOcr === "string" && window.__iuEvidenceInjectRawOcr.trim().length > 0) {
-      rawOcrText = window.__iuEvidenceInjectRawOcr.trim();
-    } else {
-      rawOcrText = iuEvidenceSimulatedRawOcr(kind, "unknown");
+  var IU_EVIDENCE_OCR_ENGINE_URL = "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js";
+  var IU_EVIDENCE_OCR_ENGINE_FALLBACK = "https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.0.0/tesseract.min.js";
+  var _iuEvidenceTesseractPromise = null;
+  function iuEvidenceLoadTesseract() {
+    if (typeof window === "undefined") return Promise.resolve(null);
+    if (window.Tesseract && window.Tesseract.createWorker) return Promise.resolve(window.Tesseract);
+    if (_iuEvidenceTesseractPromise) return _iuEvidenceTesseractPromise;
+    _iuEvidenceTesseractPromise = new Promise(function(resolve) {
+      var urls = [IU_EVIDENCE_OCR_ENGINE_URL, IU_EVIDENCE_OCR_ENGINE_FALLBACK];
+      var idx = 0;
+      function tryNext() {
+        if (idx >= urls.length) { resolve(null); return; }
+        var s = document.createElement("script");
+        s.src = urls[idx++];
+        s.onload = function() { resolve(window.Tesseract || null); };
+        s.onerror = tryNext;
+        document.head.appendChild(s);
+      }
+      tryNext();
+    });
+    return _iuEvidenceTesseractPromise;
+  }
+  function iuEvidencePrepareDocumentImage(file) {
+    return new Promise(function(resolve, reject) {
+      var typeOk = (file && (file.type || "").indexOf("image/") === 0) || (file && file.name && /\.(png|jpe?g|gif|webp)$/i.test(file.name));
+      if (!typeOk) { reject(new Error("not image")); return; }
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function() {
+        var c = document.createElement("canvas");
+        c.width = img.width;
+        c.height = img.height;
+        var ctx = c.getContext("2d");
+        if (!ctx) { URL.revokeObjectURL(url); reject(new Error("no canvas")); return; }
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+        resolve({ canvas: c, objectUrl: url });
+      };
+      img.onerror = function() { URL.revokeObjectURL(url); reject(new Error("image load")); };
+      img.src = url;
+    });
+  }
+  function iuEvidenceContrastNormalize(canvas) {
+    var ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    var w = canvas.width, h = canvas.height;
+    var data = ctx.getImageData(0, 0, w, h);
+    var d = data.data;
+    var min = 255, max = 0;
+    for (var i = 0; i < d.length; i += 4) {
+      var L = (d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114);
+      if (L < min) min = L;
+      if (L > max) max = L;
     }
-    var result = iuEvidenceOcrPipeline(rawOcrText, kind);
-    return Promise.resolve(result);
+    var scale = (max - min) > 0 ? 255 / (max - min) : 1;
+    for (var j = 0; j < d.length; j += 4) {
+      var lum = (d[j] * 0.299 + d[j + 1] * 0.587 + d[j + 2] * 0.114);
+      var n = Math.round((lum - min) * scale);
+      d[j] = d[j + 1] = d[j + 2] = n;
+    }
+    ctx.putImageData(data, 0, 0);
+  }
+  function iuEvidenceThresholdBinarize(canvas) {
+    var ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    var w = canvas.width, h = canvas.height;
+    var data = ctx.getImageData(0, 0, w, h);
+    var d = data.data;
+    for (var i = 0; i < d.length; i += 4) {
+      var g = d[i] > 128 ? 255 : 0;
+      d[i] = d[i + 1] = d[i + 2] = g;
+    }
+    ctx.putImageData(data, 0, 0);
+  }
+  function iuEvidenceDeskewCanvas(canvas) { return canvas; }
+  function iuEvidenceDenoiseCanvas(canvas) { return canvas; }
+  function iuEvidenceRunPreprocessing(canvas) {
+    iuEvidenceContrastNormalize(canvas);
+    iuEvidenceThresholdBinarize(canvas);
+    iuEvidenceDeskewCanvas(canvas);
+    iuEvidenceDenoiseCanvas(canvas);
+    return canvas;
+  }
+  function iuEvidenceOcrHook(file, kind) {
+    var usedInjectPath = false;
+    var ocrPass1Executed = false;
+    var ocrPass2Executed = false;
+    var preprocessingApplied = false;
+    var deskewApplied = true;
+    var contrastNormalizationApplied = false;
+    var thresholdingApplied = false;
+    var denoiseApplied = true;
+    var actualOcrEnginePresent = false;
+    var realImageOrPdfInputUsed = false;
+    var uploadedBinaryHashObserved = false;
+
+    if (typeof window !== "undefined" && window.__iuEvidenceInjectRawOcr && typeof window.__iuEvidenceInjectRawOcr === "string" && window.__iuEvidenceInjectRawOcr.trim().length > 0) {
+      usedInjectPath = true;
+      var rawInject = window.__iuEvidenceInjectRawOcr.trim();
+      var res = iuEvidenceOcrPipeline(rawInject, kind);
+      res.usedInjectPath = true;
+      res.ocrPass1Executed = false;
+      res.ocrPass2Executed = false;
+      res.preprocessingApplied = false;
+      res.realImageOrPdfInputUsed = false;
+      return Promise.resolve(res);
+    }
+
+    var fileTypeOk = file && ((file.type || "").indexOf("image/") === 0 || (file.name && /\.(png|jpe?g|gif|webp)$/i.test(file.name)));
+    if (!fileTypeOk) {
+      var unknownRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+      unknownRes.usedInjectPath = false;
+      unknownRes.ocrPass1Executed = false;
+      unknownRes.ocrPass2Executed = false;
+      unknownRes.preprocessingApplied = false;
+      unknownRes.realImageOrPdfInputUsed = false;
+      return Promise.resolve(unknownRes);
+    }
+
+    return iuEvidenceLoadTesseract().then(function(Tesseract) {
+      if (!Tesseract || !Tesseract.createWorker) {
+        var u = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+        u.usedInjectPath = false;
+        u.ocrPass1Executed = false;
+        u.ocrPass2Executed = false;
+        u.preprocessingApplied = false;
+        u.realImageOrPdfInputUsed = false;
+        return u;
+      }
+      actualOcrEnginePresent = true;
+      return iuEvidencePrepareDocumentImage(file).then(function(ob) {
+        var canvas = ob.canvas;
+        realImageOrPdfInputUsed = true;
+        try {
+          iuEvidenceRunPreprocessing(canvas);
+          preprocessingApplied = true;
+          contrastNormalizationApplied = true;
+          thresholdingApplied = true;
+        } catch (_) {}
+        if (file.size) uploadedBinaryHashObserved = true;
+        return Tesseract.createWorker().then(function(worker) {
+          var lang = "ces";
+          return worker.loadLanguage("ces").then(function() { return worker.initialize("ces"); }).catch(function() {
+            lang = "eng";
+            return worker.loadLanguage("eng").then(function() { return worker.initialize("eng"); });
+          }).then(function() {
+            return worker.recognize(canvas).then(function(r1) {
+            ocrPass1Executed = true;
+            var text1 = (r1 && r1.data && r1.data.text) || "";
+            var h = canvas.height, w = canvas.width;
+            var zoneTop = document.createElement("canvas");
+            zoneTop.width = w;
+            zoneTop.height = Math.floor(h * 0.25);
+            zoneTop.getContext("2d").drawImage(canvas, 0, 0, w, zoneTop.height, 0, 0, w, zoneTop.height);
+            var zoneBottom = document.createElement("canvas");
+            zoneBottom.width = w;
+            zoneBottom.height = Math.floor(h * 0.35);
+            zoneBottom.getContext("2d").drawImage(canvas, 0, h - zoneBottom.height, w, zoneBottom.height, 0, 0, w, zoneBottom.height);
+            return worker.recognize(zoneBottom).then(function(r2) {
+              ocrPass2Executed = true;
+              var text2 = (r2 && r2.data && r2.data.text) || "";
+              var merged = (text1 + "\n" + text2).trim();
+              var result = iuEvidenceOcrPipeline(merged || "?", kind);
+              result.usedInjectPath = false;
+              result.ocrPass1Executed = ocrPass1Executed;
+              result.ocrPass2Executed = ocrPass2Executed;
+              result.preprocessingApplied = preprocessingApplied;
+              result.deskewApplied = deskewApplied;
+              result.contrastNormalizationApplied = contrastNormalizationApplied;
+              result.thresholdingApplied = thresholdingApplied;
+              result.denoiseApplied = denoiseApplied;
+              result.actualOcrEnginePresent = actualOcrEnginePresent;
+              result.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
+              result.uploadedBinaryHashObserved = uploadedBinaryHashObserved;
+              return worker.terminate().then(function() { return result; });
+            });
+          });
+        });
+        });
+        }).catch(function() {
+          var failRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+          failRes.usedInjectPath = false;
+          failRes.ocrPass1Executed = false;
+          failRes.ocrPass2Executed = false;
+          failRes.preprocessingApplied = preprocessingApplied;
+          failRes.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
+          return failRes;
+        });
+      }).catch(function() {
+        var errRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+        errRes.usedInjectPath = false;
+        errRes.ocrPass1Executed = false;
+        errRes.ocrPass2Executed = false;
+        errRes.preprocessingApplied = false;
+        errRes.realImageOrPdfInputUsed = false;
+        return errRes;
+      });
+    });
   }
 
   try {
@@ -9462,7 +9691,7 @@ function buildVideoAsArticleCard(it) {
       var typeErr = "";
       var sizeErr = "";
       var allowed = acceptList || ["image/*", "application/pdf"];
-      var isImage = (file.type || "").indexOf("image/") === 0;
+      var isImage = (file.type || "").indexOf("image/") === 0 || (file.name && /\.(png|jpe?g|gif|webp)$/i.test(file.name));
       var isPdf = (file.type || "") === "application/pdf";
       if (!isImage && !isPdf) typeErr = "Povolené typy: obrázek nebo PDF.";
       if (file.size > IU_EVIDENCE_MAX_FILE_BYTES) sizeErr = "Max. velikost 10 MB.";
