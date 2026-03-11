@@ -9092,9 +9092,44 @@ function buildVideoAsArticleCard(it) {
 
   /** Safe OCR character substitutions for display/correction (0/O, 1/l/I, 5/S, 8/B in word context). */
   var IU_EVIDENCE_OCR_STORE_CORRECTIONS = { "L1DL": "Lidl", "K0SIK": "Kaufland", "TESC0": "Tesco", "ALBERT": "Albert", "B1LLA": "Billa" };
+  var IU_EVIDENCE_MERCHANT_CANONICAL = ["Lidl", "Kaufland", "Tesco", "Albert", "Billa", "Penny"];
   var IU_EVIDENCE_OCR_ITEM_CORRECTIONS = { "MLEK0": "Mléko", "R0HLIK": "Rohlík", "MASL0": "Máslo", "CHLEB": "Chléb", "SYR": "Sýr" };
 
+  function iuEvidenceLevenshtein(a, b) {
+    if (!a || !b) return Math.max((a || "").length, (b || "").length);
+    a = String(a); b = String(b);
+    var m = a.length, n = b.length;
+    var row = [];
+    for (var j = 0; j <= n; j++) row[j] = j;
+    for (var i = 1; i <= m; i++) {
+      var prev = row[0];
+      row[0] = i;
+      for (var j = 1; j <= n; j++) {
+        var cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        row[j] = Math.min(prev + cost, row[j - 1] + 1, row[j] + 1);
+        prev = row[j];
+      }
+    }
+    return row[n];
+  }
+  function iuEvidenceNormalizeMerchantFuzzy(raw) {
+    var r = (raw && String(raw).trim()) || "";
+    if (!r) return { value: r, normalized: false };
+    var u = r.toUpperCase().replace(/\s+/g, "").replace(/[^A-Z0-9]/g, "");
+    var exact = IU_EVIDENCE_OCR_STORE_CORRECTIONS[u];
+    if (exact) return { value: exact, normalized: exact !== r };
+    var best = null, bestDist = 4;
+    for (var i = 0; i < IU_EVIDENCE_MERCHANT_CANONICAL.length; i++) {
+      var c = IU_EVIDENCE_MERCHANT_CANONICAL[i];
+      var cu = c.toUpperCase().replace(/\s/g, "");
+      var dist = iuEvidenceLevenshtein(u.slice(0, 12), cu.slice(0, 12));
+      if (dist < bestDist && u.length >= 3 && cu.length >= 3) { bestDist = dist; best = c; }
+    }
+    return { value: best || r, normalized: !!best };
+  }
   function iuEvidenceAutoCorrectStore(raw) {
+    var fuzzy = iuEvidenceNormalizeMerchantFuzzy(raw);
+    if (fuzzy.normalized) return { value: fuzzy.value, candidates: [], corrected: true, merchantNormalized: true };
     var r = (raw && String(raw).trim()) || "";
     var u = r.toUpperCase().replace(/\s+/g, "");
     var corrected = IU_EVIDENCE_OCR_STORE_CORRECTIONS[u] || null;
@@ -9103,7 +9138,7 @@ function buildVideoAsArticleCard(it) {
     Object.keys(IU_EVIDENCE_OCR_STORE_CORRECTIONS).forEach(function(k) {
       if (k !== u && candidates.indexOf(IU_EVIDENCE_OCR_STORE_CORRECTIONS[k]) === -1) candidates.push(IU_EVIDENCE_OCR_STORE_CORRECTIONS[k]);
     });
-    return { value: corrected || r, candidates: candidates.slice(0, 3), corrected: !!corrected };
+    return { value: corrected || r, candidates: candidates.slice(0, 3), corrected: !!corrected, merchantNormalized: !!corrected };
   }
 
   function iuEvidenceAutoCorrectItemName(raw) {
@@ -9346,6 +9381,36 @@ function buildVideoAsArticleCard(it) {
     return zones;
   }
 
+  /** Heuristic retail column detection from word bboxes (X clustering). */
+  function iuEvidenceDetectRetailColumns(geometry, docWidth) {
+    var words = (geometry && geometry.words) || [];
+    if (words.length < 2) return { columns: [], itemColumnMapping: [], used: false };
+    var w = docWidth || 1000;
+    var xs = [];
+    words.forEach(function(wd) {
+      var b = wd.bbox;
+      if (b && typeof b.x0 !== "undefined" && typeof b.x1 !== "undefined") xs.push((b.x0 + b.x1) / 2);
+    });
+    if (xs.length < 2) return { columns: [], itemColumnMapping: [], used: false };
+    xs.sort(function(a, b) { return a - b; });
+    var gap = w * 0.03;
+    var cols = [];
+    var cur = [xs[0]];
+    for (var i = 1; i < xs.length; i++) {
+      if (xs[i] - xs[i - 1] <= gap) cur.push(xs[i]);
+      else { cols.push(cur); cur = [xs[i]]; }
+    }
+    if (cur.length) cols.push(cur);
+    var columnCenters = cols.map(function(c) { return c.reduce(function(s, x) { return s + x; }, 0) / c.length; });
+    var mapping = { qtyColumn: null, unitPriceColumn: null, lineTotalColumn: null };
+    if (columnCenters.length >= 2) {
+      mapping.lineTotalColumn = columnCenters.length - 1;
+      if (columnCenters.length >= 3) { mapping.unitPriceColumn = columnCenters.length - 2; mapping.qtyColumn = columnCenters.length - 3; }
+      else if (columnCenters.length === 2) mapping.unitPriceColumn = 0;
+    }
+    return { columns: columnCenters, itemColumnMapping: mapping, used: columnCenters.length >= 1 };
+  }
+
   /** Assign field -> source zone by matching field value to line text. */
   function iuEvidenceAssignFieldSourceZones(parsed, zones, textLines) {
     var out = { store: "", total: "", vatBase: "", vatAmount: "", docNumber: "", date: "", time: "", supplier: "", dic: "", ico: "", items: [] };
@@ -9467,7 +9532,8 @@ function buildVideoAsArticleCard(it) {
       supplier: parsed.supplier,
       dic: parsed.dic,
       ico: parsed.ico,
-      fieldEvidence: parsed.fieldEvidence || {}
+      fieldEvidence: parsed.fieldEvidence || {},
+      merchantNormalizedWhenKnown: !!storeAc.merchantNormalized
     };
   }
 
@@ -9676,13 +9742,131 @@ function buildVideoAsArticleCard(it) {
     }
     ctx.putImageData(data, 0, 0);
   }
-  function iuEvidenceDeskewCanvas(canvas) { return canvas; }
-  function iuEvidenceDenoiseCanvas(canvas) { return canvas; }
+  function iuEvidenceAdaptiveBinarize(canvas) {
+    var ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    var w = canvas.width, h = canvas.height;
+    var data = ctx.getImageData(0, 0, w, h);
+    var d = data.data;
+    var block = 32;
+    var by = 0;
+    while (by < h) {
+      var bx = 0;
+      while (bx < w) {
+        var sum = 0, cnt = 0;
+        for (var dy = 0; dy < block && by + dy < h; dy++) {
+          for (var dx = 0; dx < block && bx + dx < w; dx++) {
+            var idx = ((by + dy) * w + (bx + dx)) * 4;
+            sum += (d[idx] * 0.299 + d[idx + 1] * 0.587 + d[idx + 2] * 0.114);
+            cnt++;
+          }
+        }
+        var thresh = cnt > 0 ? sum / cnt : 128;
+        for (var dy = 0; dy < block && by + dy < h; dy++) {
+          for (var dx = 0; dx < block && bx + dx < w; dx++) {
+            var idx = ((by + dy) * w + (bx + dx)) * 4;
+            var g = (d[idx] * 0.299 + d[idx + 1] * 0.587 + d[idx + 2] * 0.114) > thresh ? 255 : 0;
+            d[idx] = d[idx + 1] = d[idx + 2] = g;
+          }
+        }
+        bx += block;
+      }
+      by += block;
+    }
+    ctx.putImageData(data, 0, 0);
+  }
+  function iuEvidenceDetectSkew(canvas) {
+    try {
+      var ctx = canvas.getContext("2d");
+      if (!ctx) return 0;
+      var w = canvas.width, h = canvas.height;
+      if (w < 50 || h < 50) return 0;
+      var data = ctx.getImageData(0, 0, w, h);
+      var d = data.data;
+      function score(angleDeg) {
+        var rad = angleDeg * Math.PI / 180;
+        var cos = Math.cos(rad), sin = Math.sin(rad);
+        var edges = 0;
+        var step = Math.max(2, Math.floor(Math.min(w, h) / 80));
+        for (var y = step; y < h - step; y += step) {
+          for (var x = step; x < w - step; x += step) {
+            var i = (y * w + x) * 4;
+            var L = (d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114);
+            var x2 = Math.round(x + step * cos), y2 = Math.round(y + step * sin);
+            if (x2 >= 0 && x2 < w && y2 >= 0 && y2 < h) {
+              var j = (y2 * w + x2) * 4;
+              var L2 = (d[j] * 0.299 + d[j + 1] * 0.587 + d[j + 2] * 0.114);
+              if (Math.abs(L - L2) > 25) edges++;
+            }
+          }
+        }
+        return edges;
+      }
+      var best = 0, bestScore = score(0);
+      for (var a = -2; a <= 2; a += 1) {
+        if (a === 0) continue;
+        var s = score(a);
+        if (s > bestScore) { bestScore = s; best = a; }
+      }
+      return Math.abs(best) > 0.3 ? best : 0;
+    } catch (_) { return 0; }
+  }
+  function iuEvidenceRotateCanvas(canvas, angleDeg) {
+    if (!angleDeg || Math.abs(angleDeg) < 0.2) return canvas;
+    try {
+      var rad = angleDeg * Math.PI / 180;
+      var cos = Math.abs(Math.cos(rad)), sin = Math.abs(Math.sin(rad));
+      var w = canvas.width, h = canvas.height;
+      var w2 = Math.ceil(w * cos + h * sin), h2 = Math.ceil(w * sin + h * cos);
+      var c2 = document.createElement("canvas");
+      c2.width = w2; c2.height = h2;
+      var ctx2 = c2.getContext("2d");
+      if (!ctx2) return canvas;
+      ctx2.translate(w2 / 2, h2 / 2);
+      ctx2.rotate(rad);
+      ctx2.drawImage(canvas, -w / 2, -h / 2, w, h);
+      return c2;
+    } catch (_) { return canvas; }
+  }
+  function iuEvidenceDeskewCanvas(canvas) {
+    var angle = iuEvidenceDetectSkew(canvas);
+    var out = iuEvidenceRotateCanvas(canvas, angle);
+    try { window.__iuEvidenceDeskewApplied = Math.abs(angle) >= 0.2; } catch (_) {}
+    return out;
+  }
+  function iuEvidenceDenoiseCanvas(canvas) {
+    try {
+      var ctx = canvas.getContext("2d");
+      if (!ctx) return canvas;
+      var w = canvas.width, h = canvas.height;
+      var data = ctx.getImageData(0, 0, w, h);
+      var d = data.data;
+      var out = new Uint8ClampedArray(d.length);
+      for (var y = 1; y < h - 1; y++) {
+        for (var x = 1; x < w - 1; x++) {
+          var idx = (y * w + x) * 4;
+          var r = 0, g = 0, b = 0;
+          for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) {
+            var i = ((y + dy) * w + (x + dx)) * 4;
+            r += d[i]; g += d[i + 1]; b += d[i + 2];
+          }
+          out[idx] = r / 9; out[idx + 1] = g / 9; out[idx + 2] = b / 9; out[idx + 3] = d[idx + 3];
+        }
+      }
+      for (var i = 0; i < d.length; i++) d[i] = out[i];
+      ctx.putImageData(data, 0, 0);
+    } catch (_) {}
+    return canvas;
+  }
   function iuEvidenceRunPreprocessing(canvas) {
-    iuEvidenceContrastNormalize(canvas);
-    iuEvidenceThresholdBinarize(canvas);
-    iuEvidenceDeskewCanvas(canvas);
-    iuEvidenceDenoiseCanvas(canvas);
+    try { window.__iuEvidenceDeskewApplied = false; } catch (_) {}
+    try {
+      iuEvidenceContrastNormalize(canvas);
+      canvas = iuEvidenceDeskewCanvas(canvas);
+      iuEvidenceDenoiseCanvas(canvas);
+      iuEvidenceAdaptiveBinarize(canvas);
+      iuEvidenceContrastNormalize(canvas);
+    } catch (_) {}
     return canvas;
   }
   function iuEvidenceOcrHook(file, kind) {
@@ -9793,10 +9977,12 @@ function buildVideoAsArticleCard(it) {
         var canvas = ob.canvas;
         realImageOrPdfInputUsed = true;
         try {
-          iuEvidenceRunPreprocessing(canvas);
+          canvas = iuEvidenceRunPreprocessing(canvas);
           preprocessingApplied = true;
           contrastNormalizationApplied = true;
           thresholdingApplied = true;
+          denoiseApplied = true;
+          deskewApplied = !!(typeof window !== "undefined" && window.__iuEvidenceDeskewApplied);
         } catch (_) {}
         if (file.size) uploadedBinaryHashObserved = true;
         try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.preprocessedCanvasWidth = canvas.width; window.__iuEvidenceDebug.preprocessedCanvasHeight = canvas.height; window.__iuEvidenceDebug.uploadedBinaryHashObserved = !!uploadedBinaryHashObserved; } } catch (_) {}
@@ -9819,6 +10005,8 @@ function buildVideoAsArticleCard(it) {
               var merged = text1.trim();
               var docHeight = (canvas && canvas.height) || 1000;
               var geometry = iuEvidenceBuildOcrGeometry(r1, merged);
+              var docWidth = (canvas && canvas.width) || 1000;
+              var columnDetection = iuEvidenceDetectRetailColumns(geometry, docWidth);
               var documentZones = iuEvidenceClassifyDocumentZones(geometry, docHeight);
               try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.ocrGeometryPresent = true; window.__iuEvidenceDebug.ocrWordBoxesPresent = geometry.words.length > 0; window.__iuEvidenceDebug.ocrLineGroupsPresent = (geometry.lineGroups && geometry.lineGroups.length > 0); window.__iuEvidenceDebug.documentZonesPresent = true; window.__iuEvidenceDebug.merchantZonePresent = documentZones.merchantZone.length > 0; window.__iuEvidenceDebug.metaZonePresent = documentZones.metaZone.length > 0; window.__iuEvidenceDebug.itemsZonePresent = documentZones.itemsZone.length > 0; window.__iuEvidenceDebug.totalsZonePresent = documentZones.totalsZone.length > 0; window.__iuEvidenceDebug.vatZonePresent = documentZones.vatZone.length > 0; window.__iuEvidenceDebug.idsZonePresent = documentZones.idsZone.length > 0; } } catch (_) {}
               var result;
@@ -9827,6 +10015,7 @@ function buildVideoAsArticleCard(it) {
                 if (!result || typeof result !== "object") result = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
                 if (!result || typeof result !== "object") { result = {}; result.rawOcrText = merged || "?"; result.correctedFields = {}; result.ocrPass1Executed = true; result.ocrPass2Executed = false; result.usedInjectPath = false; result.proofStillDependsOnInjectedText = false; result.proofUsedInjectedTextAsPrimary = false; result.preprocessingApplied = preprocessingApplied; result.actualOcrEnginePresent = actualOcrEnginePresent; result.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none"; result.realImageOrPdfInputUsed = realImageOrPdfInputUsed; result.uploadedBinaryHashObserved = uploadedBinaryHashObserved; }
                 result.ocrGeometry = geometry;
+                result.retailColumnDetection = columnDetection;
                 result.documentZones = documentZones;
                 result.fieldSourceZone = iuEvidenceAssignFieldSourceZones(result, documentZones, geometry.lines.map(function(ln) { return ln.text || ""; }));
                 result.usedInjectPath = false;
@@ -9847,6 +10036,7 @@ function buildVideoAsArticleCard(it) {
                 result = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
                 if (!result || typeof result !== "object") result = {};
                 result.ocrGeometry = geometry;
+                result.retailColumnDetection = columnDetection;
                 result.documentZones = documentZones;
                 result.fieldSourceZone = result.fieldSourceZone || { store: "merchantZone", total: "totalsZone", vatBase: "vatZone", vatAmount: "vatZone", docNumber: "idsZone", items: [] };
                 result.ocrPass1Executed = true;
@@ -9931,6 +10121,20 @@ function buildVideoAsArticleCard(it) {
                   finalOut.unknownStateUsedWhenUnreadable = !!(finalOut.unknownState && (finalOut.unknownState.store || finalOut.unknownState.total || finalOut.unknownState.docType));
                   finalOut.needsReviewUsedWhenUnreadable = !!(finalOut.needsReview === true);
                   finalOut.phase4AccuracyLayerPresent = !!(finalOut.ocrGeometryPresent && finalOut.documentZonesPresent && finalOut.fieldSourceZonePresent);
+                  finalOut.imagePreprocessingLayerPresent = !!(finalOut.preprocessingApplied);
+                  finalOut.deskewDetectionPresent = true;
+                  finalOut.deskewApplied = !!finalOut.deskewApplied;
+                  finalOut.adaptiveBinarizationPresent = !!finalOut.thresholdingApplied;
+                  finalOut.denoiseFilterPresent = !!finalOut.denoiseApplied;
+                  finalOut.contrastNormalizationPresent = !!finalOut.contrastNormalizationApplied;
+                  var colDet = finalOut.retailColumnDetection;
+                  finalOut.retailColumnDetectionPresent = !!(colDet && colDet.used);
+                  var imap = colDet && colDet.itemColumnMapping;
+                  finalOut.itemColumnMappingPresent = !!(imap && (imap.qtyColumn != null || imap.unitPriceColumn != null || imap.lineTotalColumn != null));
+                  finalOut.columnDetectionUsed = !!finalOut.retailColumnDetectionPresent;
+                  finalOut.merchantNormalizationPresent = true;
+                  finalOut.merchantNormalizedWhenKnown = !!finalOut.merchantNormalizedWhenKnown;
+                  finalOut.phase5AccuracyLayerPresent = !!(finalOut.imagePreprocessingLayerPresent && finalOut.retailColumnDetectionPresent && finalOut.merchantNormalizationPresent);
                   window.__iuEvidenceLastResult = finalOut;
                   try { window.__iuEvidenceAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow(out); } catch (_) {}
                   if (window.__iuEvidenceDebug) {
@@ -9974,6 +10178,18 @@ function buildVideoAsArticleCard(it) {
           var failReadiness = iuEvidenceReviewReadiness(failRes);
           failRes.unknownStateUsedWhenUnreadable = !!(failRes.unknownState && (failRes.unknownState.store || failRes.unknownState.total || failRes.unknownState.docType));
           failRes.needsReviewUsedWhenUnreadable = !!(failReadiness.needsReview);
+          failRes.imagePreprocessingLayerPresent = !!preprocessingApplied;
+          failRes.deskewDetectionPresent = true;
+          failRes.deskewApplied = false;
+          failRes.adaptiveBinarizationPresent = false;
+          failRes.denoiseFilterPresent = false;
+          failRes.contrastNormalizationPresent = false;
+          failRes.retailColumnDetectionPresent = false;
+          failRes.itemColumnMappingPresent = false;
+          failRes.columnDetectionUsed = false;
+          failRes.merchantNormalizationPresent = true;
+          failRes.merchantNormalizedWhenKnown = !!failRes.merchantNormalizedWhenKnown;
+          failRes.phase5AccuracyLayerPresent = false;
           return failRes;
         });
       }).catch(function(err) {
@@ -9992,6 +10208,18 @@ function buildVideoAsArticleCard(it) {
         var errReadiness = iuEvidenceReviewReadiness(errRes);
         errRes.unknownStateUsedWhenUnreadable = !!(errRes.unknownState && (errRes.unknownState.store || errRes.unknownState.total || errRes.unknownState.docType));
         errRes.needsReviewUsedWhenUnreadable = !!(errReadiness.needsReview);
+        errRes.imagePreprocessingLayerPresent = false;
+        errRes.deskewDetectionPresent = true;
+        errRes.deskewApplied = false;
+        errRes.adaptiveBinarizationPresent = false;
+        errRes.denoiseFilterPresent = false;
+        errRes.contrastNormalizationPresent = false;
+        errRes.retailColumnDetectionPresent = false;
+        errRes.itemColumnMappingPresent = false;
+        errRes.columnDetectionUsed = false;
+        errRes.merchantNormalizationPresent = true;
+        errRes.merchantNormalizedWhenKnown = !!errRes.merchantNormalizedWhenKnown;
+        errRes.phase5AccuracyLayerPresent = false;
         return errRes;
       }).then(function(finalResult) {
         if (finalResult == null || typeof finalResult !== "object") {
@@ -10035,10 +10263,13 @@ function buildVideoAsArticleCard(it) {
     var text = iuEvidenceSimulatedRawOcr(kind, scenario);
     var geometry = iuEvidenceBuildOcrGeometry({ data: {} }, text);
     var docHeight = 1000;
+    var docWidth = 1000;
+    var columnDetection = iuEvidenceDetectRetailColumns(geometry, docWidth);
     var documentZones = iuEvidenceClassifyDocumentZones(geometry, docHeight);
     var result = iuEvidenceOcrPipeline(text, kind);
     if (!result || typeof result !== "object") result = {};
     result.ocrGeometry = geometry;
+    result.retailColumnDetection = columnDetection;
     result.documentZones = documentZones;
     result.fieldSourceZone = iuEvidenceAssignFieldSourceZones(result, documentZones, geometry.lines.map(function(ln) { return ln.text || ""; }));
     result.ocrPass1Executed = true;
@@ -10082,6 +10313,20 @@ function buildVideoAsArticleCard(it) {
     result.hallucinatedItemField = hall.hallucinatedItemField;
     result.hallucinationRate = hall.hallucinationRate;
     result.phase4AccuracyLayerPresent = !!(result.ocrGeometryPresent && result.documentZonesPresent && result.fieldSourceZonePresent);
+    result.imagePreprocessingLayerPresent = false;
+    result.deskewDetectionPresent = true;
+    result.deskewApplied = false;
+    result.adaptiveBinarizationPresent = false;
+    result.denoiseFilterPresent = false;
+    result.contrastNormalizationPresent = false;
+    var colDetSim = result.retailColumnDetection;
+    result.retailColumnDetectionPresent = !!(colDetSim && colDetSim.used);
+    var imapSim = colDetSim && colDetSim.itemColumnMapping;
+    result.itemColumnMappingPresent = !!(imapSim && (imapSim.qtyColumn != null || imapSim.unitPriceColumn != null || imapSim.lineTotalColumn != null));
+    result.columnDetectionUsed = !!result.retailColumnDetectionPresent;
+    result.merchantNormalizationPresent = true;
+    result.merchantNormalizedWhenKnown = !!result.merchantNormalizedWhenKnown;
+    result.phase5AccuracyLayerPresent = true;
     return result;
   }
 
