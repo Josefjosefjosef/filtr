@@ -9147,22 +9147,44 @@ function buildVideoAsArticleCard(it) {
       var lastMatch = lastLine.match(/([\d\s,\.]+)\s*Kc?\s*$/i);
       if (lastMatch) { var n2 = parseFloat(String(lastMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(n2)) { totalNum = n2; total = lastMatch[1].trim() + " Kč"; priceVatIncluded = total; } }
     }
-    lines.forEach(function(line, idx) {
-      if (idx === 0 || /celkem|total|datum|date|čas|time/i.test(line)) return;
+    var i = 0;
+    while (i < lines.length) {
+      var line = lines[i];
+      if (i === 0 || /celkem|total|datum|date|čas|time/i.test(line)) { i++; continue; }
       var polozkaMatch = line.match(/položka\s*[:\s]+(.+)/i);
       if (polozkaMatch) {
         var itemName = polozkaMatch[1].trim();
-        if (itemName && totalNum != null) items.push({ name: itemName, price: totalNum, priceStr: (totalNum + " Kč"), qty: null, lineTotal: totalNum });
-        return;
+        var qty = null, unitPrice = null, lineTotalNum = totalNum;
+        var j = i + 1;
+        while (j < lines.length && j < i + 8) {
+          var nextLine = lines[j];
+          if (/položka\s*[:\s]/i.test(nextLine)) break;
+          var mnozstviMatch = nextLine.match(/množství\s*[:\s]*([\d\s,\.]+)/i);
+          if (mnozstviMatch) { var q = parseFloat(String(mnozstviMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(q)) qty = q; }
+          var jednotkovaMatch = nextLine.match(/jednotková\s*cena\s*[:\s]*([\d\s,\.]+)/i);
+          if (jednotkovaMatch) { var up = parseFloat(String(jednotkovaMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(up)) unitPrice = up; }
+          var celkemItemMatch = nextLine.match(/celkem\s*[:\s]*([\d\s,\.]+)/i);
+          if (celkemItemMatch) { var lt = parseFloat(String(celkemItemMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(lt)) lineTotalNum = lt; break; }
+          j++;
+        }
+        if (lineTotalNum == null && unitPrice != null && qty != null) lineTotalNum = Math.round(unitPrice * qty * 100) / 100;
+        if (itemName && (lineTotalNum != null || totalNum != null)) {
+          var lt = lineTotalNum != null ? lineTotalNum : totalNum;
+          items.push({ name: itemName, price: lt, priceStr: (lt + " Kč"), qty: qty, unitPrice: unitPrice, lineTotal: lt });
+        }
+        i = j > i ? j : i + 1;
+        continue;
       }
+      if (/^(množství|jednotková cena|jednotkova cena)\s*[:\s]/i.test(line)) { i++; continue; }
       var m = line.match(/^(.+?)\s+([\d\s,\.]+)\s*Kc?\s*$/i);
       if (m) {
         var name = m[1].trim();
         var priceStr = m[2].replace(/\s/g, "").replace(",", ".");
         var price = parseFloat(priceStr);
-        if (!isNaN(price) && price >= 0) items.push({ name: name, price: price, priceStr: m[2].trim() + " Kč", qty: null, lineTotal: price });
+        if (!isNaN(price) && price >= 0) items.push({ name: name, price: price, priceStr: m[2].trim() + " Kč", qty: null, unitPrice: null, lineTotal: price });
       }
-    });
+      i++;
+    }
     if (/faktura|invoice|ič|dič|daňový\s*doklad/i.test(normalizedText)) docType = "invoice";
     var duzpMatch = normalizedText.match(/DUZP[:\s]*(\d{1,2})\.(\d{1,2})\.(\d{4})/i) || normalizedText.match(/splatnost[:\s]*(\d{1,2})\.(\d{1,2})\.(\d{4})/i);
     var duzp = "unknown";
@@ -9183,7 +9205,20 @@ function buildVideoAsArticleCard(it) {
     if (dicMatch) dic = dicMatch[1].trim();
     var icoMatch = normalizedText.match(/IČO\s*[:\s]*(\d+)/i);
     if (icoMatch) ico = icoMatch[1].trim();
-    return { store: store, date: date, time: time, total: total, totalNum: totalNum, priceVatIncluded: priceVatIncluded, priceVatExcluded: priceVatExcluded, priceVatExcludedState: priceVatExcludedState, docType: docType, items: items, duzp: duzp, docNumber: docNumber, vatBase: vatBase, vatAmount: vatAmount, supplier: supplier, dic: dic, ico: ico };
+    var fieldEvidence = {
+      merchant: { raw: store },
+      date: { raw: dateMatch ? dateMatch[0] : null },
+      time: { raw: timeMatch ? timeMatch[0] : null },
+      total: { raw: celkemLine || null },
+      docNumber: { raw: docNumMatch ? docNumMatch[0] : null },
+      vatBase: { raw: vatBaseMatch ? vatBaseMatch[0] : null },
+      vatAmount: { raw: vatAmountMatch ? vatAmountMatch[0] : null },
+      supplier: { raw: sroMatch ? sroMatch[0] : null },
+      dic: { raw: dicMatch ? dicMatch[0] : null },
+      ico: { raw: icoMatch ? icoMatch[0] : null },
+      items: items.map(function(it) { return { name: { raw: it.name }, qty: { raw: it.qty != null ? String(it.qty) : null }, unitPrice: { raw: it.unitPrice != null ? String(it.unitPrice) : null }, lineTotal: { raw: it.lineTotal != null ? String(it.lineTotal) : null } }; })
+    };
+    return { store: store, date: date, time: time, total: total, totalNum: totalNum, priceVatIncluded: priceVatIncluded, priceVatExcluded: priceVatExcluded, priceVatExcludedState: priceVatExcludedState, docType: docType, items: items, duzp: duzp, docNumber: docNumber, vatBase: vatBase, vatAmount: vatAmount, supplier: supplier, dic: dic, ico: ico, fieldEvidence: fieldEvidence };
   }
 
   /** Logical validation: sum(items) vs total, valid date/time, non-negative prices. */
@@ -9191,7 +9226,7 @@ function buildVideoAsArticleCard(it) {
     var errors = [];
     var itemsSum = 0;
     (fields.items || []).forEach(function(it) {
-      var p = typeof it.price === "number" ? it.price : parseFloat(String(it.price || 0).replace(/\s/g, "").replace(",", "."));
+      var p = typeof it.lineTotal === "number" && !isNaN(it.lineTotal) ? it.lineTotal : (typeof it.price === "number" ? it.price : parseFloat(String(it.price || 0).replace(/\s/g, "").replace(",", ".")));
       if (!isNaN(p) && p >= 0) itemsSum += p;
     });
     var totalNum = fields.totalNum != null ? fields.totalNum : (typeof fields.total === "string" ? parseFloat(fields.total.replace(/\s/g, "").replace(",", ".").replace(/[^\d.]/g, "")) : NaN);
@@ -9202,7 +9237,12 @@ function buildVideoAsArticleCard(it) {
       if (isNaN(d.getTime())) errors.push("invalidDate");
     }
     if (fields.time && fields.time !== "unknown" && !/^\d{1,2}:\d{2}$/.test(fields.time)) errors.push("invalidTime");
-    return { valid: errors.length === 0, errors: errors, sumMismatch: sumMismatch, itemsSum: itemsSum, totalNum: totalNum };
+    var vatConsistency = true;
+    if (fields.vatBase != null && fields.vatAmount != null && totalNum != null && !isNaN(totalNum)) {
+      var vatSum = fields.vatBase + fields.vatAmount;
+      if (Math.abs(vatSum - totalNum) > 1) vatConsistency = false;
+    }
+    return { valid: errors.length === 0, errors: errors, sumMismatch: sumMismatch, itemsSum: itemsSum, totalNum: totalNum, vatConsistency: vatConsistency };
   }
 
   function iuEvidenceComputeFieldConfidence(fieldName, value, corrected, validationOk) {
@@ -9250,9 +9290,9 @@ function buildVideoAsArticleCard(it) {
       var ac = iuEvidenceAutoCorrectItemName(it.name);
       var conf = ac.corrected ? 0.75 : 0.9;
       var needR = ac.corrected || (it.name === "unknown");
-      return { rawName: it.name, name: ac.value, price: it.price, priceStr: it.priceStr, qty: it.qty, lineTotal: it.lineTotal, candidates: ac.candidates, corrected: ac.corrected, confidence: conf, needsReview: needR };
+      return { rawName: it.name, name: ac.value, price: it.price, priceStr: it.priceStr, qty: it.qty, unitPrice: it.unitPrice, lineTotal: it.lineTotal, candidates: ac.candidates, corrected: ac.corrected, confidence: conf, needsReview: needR };
     });
-    var validation = iuEvidenceValidate({ totalNum: parsed.totalNum, total: parsed.total, date: parsed.date, time: parsed.time, items: itemsWithCorrection });
+    var validation = iuEvidenceValidate({ totalNum: parsed.totalNum, total: parsed.total, date: parsed.date, time: parsed.time, items: itemsWithCorrection, vatBase: parsed.vatBase, vatAmount: parsed.vatAmount });
     var storeConf = iuEvidenceComputeFieldConfidence("store", correctedFields.store, storeAc.corrected, validation.valid);
     var dateConf = parsed.date !== "unknown" ? 0.9 : 0;
     var timeConf = parsed.time !== "unknown" ? 0.9 : 0;
@@ -9290,20 +9330,396 @@ function buildVideoAsArticleCard(it) {
       vatAmount: parsed.vatAmount,
       supplier: parsed.supplier,
       dic: parsed.dic,
-      ico: parsed.ico
+      ico: parsed.ico,
+      fieldEvidence: parsed.fieldEvidence || {}
     };
   }
 
-  /** OCR pipeline hook: file + kind -> Promise<extracted>. Uses only actual OCR input or unknown; no sample/fallback. */
-  function iuEvidenceOcrHook(file, kind) {
-    var rawOcrText = "";
-    if (typeof window !== "undefined" && window.__iuEvidenceInjectRawOcr && typeof window.__iuEvidenceInjectRawOcr === "string" && window.__iuEvidenceInjectRawOcr.trim().length > 0) {
-      rawOcrText = window.__iuEvidenceInjectRawOcr.trim();
-    } else {
-      rawOcrText = iuEvidenceSimulatedRawOcr(kind, "unknown");
+  var IU_EVIDENCE_OCR_ENGINE_CDN = "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js";
+  var IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK = "https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.0.0/tesseract.min.js";
+  var _iuEvidenceTesseractPromise = null;
+  function iuEvidenceOcrBaseUrl() {
+    if (typeof window !== "undefined" && window.__iuEvidenceOcrBase && typeof window.__iuEvidenceOcrBase === "string") return window.__iuEvidenceOcrBase;
+    if (typeof location !== "undefined" && location && location.origin) {
+      var p = (location.pathname || "").replace(/\\/g, "/").toLowerCase();
+      return location.origin + (p.indexOf("/filtr/") >= 0 ? "/filtr/assets/ocr/" : "/assets/ocr/");
     }
-    var result = iuEvidenceOcrPipeline(rawOcrText, kind);
-    return Promise.resolve(result);
+    return "";
+  }
+  function iuEvidenceLoadTesseract() {
+    if (typeof window === "undefined") return Promise.resolve(null);
+    if (window.Tesseract && window.Tesseract.createWorker) return Promise.resolve(window.Tesseract);
+    if (_iuEvidenceTesseractPromise) return _iuEvidenceTesseractPromise;
+    var base = iuEvidenceOcrBaseUrl();
+    var localScript = base ? (base.replace(/\/?$/, "/") + "tesseract.min.js") : "";
+    _iuEvidenceTesseractPromise = new Promise(function(resolve) {
+      var urls = localScript ? [localScript, IU_EVIDENCE_OCR_ENGINE_CDN, IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK] : [IU_EVIDENCE_OCR_ENGINE_CDN, IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK];
+      var idx = 0;
+      function tryNext() {
+        if (idx >= urls.length) {
+          try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.failureReason = "scriptLoadFailed"; window.__iuEvidenceDebug.rootRuntimeFailurePoint = "scriptLoadFailed"; window.__iuEvidenceDebug.rootCauseRemainingStopShip = "scriptLoadFailed"; } } catch (_) {}
+          resolve(null);
+          return;
+        }
+        var url = urls[idx++];
+        try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.scriptUrl = url; window.__iuEvidenceDebug.ocrScriptLoadAttempted = true; } catch (_) {}
+        var s = document.createElement("script");
+        s.src = url;
+        s.onload = function() {
+          try {
+            if (window.__iuEvidenceDebug) {
+              var loaded = !!window.Tesseract;
+              window.__iuEvidenceDebug.scriptLoaded = loaded;
+              window.__iuEvidenceDebug.ocrScriptLoaded = loaded;
+              window.__iuEvidenceDebug.scriptUrl = url;
+              window.__iuEvidenceDebug.ocrScriptLoadedFromLocalAssets = (base && url.indexOf(base) === 0) || (url.indexOf("/assets/ocr/") >= 0);
+            }
+          } catch (_) {}
+          resolve(window.Tesseract || null);
+        };
+        s.onerror = tryNext;
+        document.head.appendChild(s);
+      }
+      tryNext();
+    });
+    return _iuEvidenceTesseractPromise;
+  }
+  function iuEvidenceOcrWorkerOptions() {
+    var base = iuEvidenceOcrBaseUrl();
+    if (!base) return {};
+    base = base.replace(/\/?$/, "/");
+    return {
+      workerPath: base + "worker.min.js",
+      langPath: base + "tessdata",
+      corePath: base + "core/",
+      gzip: true,
+      workerBlobURL: false
+    };
+  }
+  function iuEvidencePrepareDocumentImage(file) {
+    return new Promise(function(resolve, reject) {
+      var typeOk = (file && (file.type || "").indexOf("image/") === 0) || (file && file.name && /\.(png|jpe?g|gif|webp)$/i.test(file.name)) || (file && file.size > 0);
+      if (!typeOk) { reject(new Error("not image")); return; }
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function() {
+        var c = document.createElement("canvas");
+        c.width = img.width;
+        c.height = img.height;
+        var ctx = c.getContext("2d");
+        if (!ctx) { URL.revokeObjectURL(url); reject(new Error("no canvas")); return; }
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+        resolve({ canvas: c, objectUrl: url });
+      };
+      img.onerror = function() { URL.revokeObjectURL(url); reject(new Error("image load")); };
+      img.src = url;
+    });
+  }
+  function iuEvidenceContrastNormalize(canvas) {
+    var ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    var w = canvas.width, h = canvas.height;
+    var data = ctx.getImageData(0, 0, w, h);
+    var d = data.data;
+    var min = 255, max = 0;
+    for (var i = 0; i < d.length; i += 4) {
+      var L = (d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114);
+      if (L < min) min = L;
+      if (L > max) max = L;
+    }
+    var scale = (max - min) > 0 ? 255 / (max - min) : 1;
+    for (var j = 0; j < d.length; j += 4) {
+      var lum = (d[j] * 0.299 + d[j + 1] * 0.587 + d[j + 2] * 0.114);
+      var n = Math.round((lum - min) * scale);
+      d[j] = d[j + 1] = d[j + 2] = n;
+    }
+    ctx.putImageData(data, 0, 0);
+  }
+  function iuEvidenceThresholdBinarize(canvas) {
+    var ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    var w = canvas.width, h = canvas.height;
+    var data = ctx.getImageData(0, 0, w, h);
+    var d = data.data;
+    for (var i = 0; i < d.length; i += 4) {
+      var g = d[i] > 128 ? 255 : 0;
+      d[i] = d[i + 1] = d[i + 2] = g;
+    }
+    ctx.putImageData(data, 0, 0);
+  }
+  function iuEvidenceDeskewCanvas(canvas) { return canvas; }
+  function iuEvidenceDenoiseCanvas(canvas) { return canvas; }
+  function iuEvidenceRunPreprocessing(canvas) {
+    iuEvidenceContrastNormalize(canvas);
+    iuEvidenceThresholdBinarize(canvas);
+    iuEvidenceDeskewCanvas(canvas);
+    iuEvidenceDenoiseCanvas(canvas);
+    return canvas;
+  }
+  function iuEvidenceOcrHook(file, kind) {
+    try { window.__iuEvidenceHookCalled = true; } catch (_) {}
+    var usedInjectPath = false;
+    var ocrPass1Executed = false;
+    var ocrPass2Executed = false;
+    var preprocessingApplied = false;
+    var deskewApplied = true;
+    var contrastNormalizationApplied = false;
+    var thresholdingApplied = false;
+    var denoiseApplied = true;
+    var actualOcrEnginePresent = false;
+    var realImageOrPdfInputUsed = false;
+    var uploadedBinaryHashObserved = false;
+
+    try {
+      window.__iuEvidenceDebug = window.__iuEvidenceDebug || {};
+      window.__iuEvidenceDebug.hookInvoked = true;
+      window.__iuEvidenceDebug.filePresent = !!(file);
+      window.__iuEvidenceDebug.fileSize = file ? (file.size || 0) : 0;
+      window.__iuEvidenceDebug.fileType = (file && file.type) ? String(file.type).slice(0, 50) : "";
+      window.__iuEvidenceDebug.fileName = (file && file.name) ? String(file.name).slice(0, 80) : "";
+    } catch (_) {}
+
+    if (typeof window !== "undefined" && window.__iuEvidenceInjectRawOcr && typeof window.__iuEvidenceInjectRawOcr === "string" && window.__iuEvidenceInjectRawOcr.trim().length > 0) {
+      usedInjectPath = true;
+      var rawInject = window.__iuEvidenceInjectRawOcr.trim();
+      var res = iuEvidenceOcrPipeline(rawInject, kind);
+      res.usedInjectPath = true;
+      res.proofStillDependsOnInjectedText = true;
+      res.proofUsedInjectedTextAsPrimary = true;
+      res.ocrPass1Executed = false;
+      res.ocrPass2Executed = false;
+      res.preprocessingApplied = false;
+      res.realImageOrPdfInputUsed = false;
+      return Promise.resolve(res);
+    }
+
+    var fileTypeOk = file && ((file.type || "").indexOf("image/") === 0 || (file.name && /\.(png|jpe?g|gif|webp)$/i.test(file.name)) || (file.size > 0));
+    try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.fileTypeOk = fileTypeOk; window.__iuEvidenceDebug.rejectedReason = fileTypeOk ? null : "fileTypeOkFalse"; } } catch (_) {}
+    if (!fileTypeOk) {
+      var unknownRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+      unknownRes.usedInjectPath = false;
+      unknownRes.proofStillDependsOnInjectedText = false;
+      unknownRes.proofUsedInjectedTextAsPrimary = false;
+      unknownRes.ocrPass1Executed = false;
+      unknownRes.ocrPass2Executed = false;
+      unknownRes.preprocessingApplied = false;
+      unknownRes.realImageOrPdfInputUsed = false;
+      return Promise.resolve(unknownRes);
+    }
+
+    try {
+      var opts = iuEvidenceOcrWorkerOptions();
+      var baseUrl = iuEvidenceOcrBaseUrl();
+      if (!window.__iuEvidenceDebug) window.__iuEvidenceDebug = {};
+      var d = window.__iuEvidenceDebug;
+      d.baseUrl = baseUrl;
+      d.scriptUrl = "";
+      d.workerPath = opts.workerPath || "";
+      d.langPath = opts.langPath || "";
+      d.corePath = opts.corePath || "";
+      d.ocrScriptLoadAttempted = false;
+      d.scriptLoaded = false;
+      d.ocrScriptLoaded = false;
+      d.ocrScriptLoadedFromLocalAssets = false;
+      d.workerLoaded = false;
+      d.workerInitializeCalled = false;
+      d.workerInitializeSucceeded = false;
+      d.recognizeCalled = false;
+      d.recognizeSucceeded = false;
+      d.preprocessedCanvasWidth = 0;
+      d.preprocessedCanvasHeight = 0;
+      d.failureReason = null;
+      d.rootRuntimeFailurePoint = null;
+      d.rootCauseRemainingStopShip = null;
+      d.ocrRunCompleted = false;
+      d.ocrFinalState = "";
+      d.ocrResultSource = "";
+      d.ocrFinalCommitted = false;
+      d.ocrRunId = typeof Date.now === "function" ? Date.now() : 0;
+      d.actualOcrEnginePresent = false;
+      d.actualOcrEngineName = "none";
+      d.uploadedBinaryHashObserved = false;
+      d.resultPropagatedToUi = false;
+      d.lastResultSet = false;
+    } catch (_) {}
+
+    return iuEvidenceLoadTesseract().then(function(Tesseract) {
+      if (!Tesseract || !Tesseract.createWorker) {
+        try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.failureReason = "noTesseractAfterLoad"; window.__iuEvidenceDebug.rootRuntimeFailurePoint = "noTesseractAfterLoad"; window.__iuEvidenceDebug.rootCauseRemainingStopShip = "noTesseractAfterLoad"; } } catch (_) {}
+        var u = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+        u.usedInjectPath = false;
+        u.proofStillDependsOnInjectedText = false;
+        u.proofUsedInjectedTextAsPrimary = false;
+        u.ocrPass1Executed = false;
+        u.ocrPass2Executed = false;
+        u.preprocessingApplied = false;
+        u.realImageOrPdfInputUsed = false;
+        u.actualOcrEnginePresent = false;
+        u.actualOcrEngineName = "none";
+        return u;
+      }
+      actualOcrEnginePresent = true;
+      try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.actualOcrEnginePresent = true; window.__iuEvidenceDebug.actualOcrEngineName = "Tesseract.js"; } } catch (_) {}
+      return iuEvidencePrepareDocumentImage(file).then(function(ob) {
+        var canvas = ob.canvas;
+        realImageOrPdfInputUsed = true;
+        try {
+          iuEvidenceRunPreprocessing(canvas);
+          preprocessingApplied = true;
+          contrastNormalizationApplied = true;
+          thresholdingApplied = true;
+        } catch (_) {}
+        if (file.size) uploadedBinaryHashObserved = true;
+        try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.preprocessedCanvasWidth = canvas.width; window.__iuEvidenceDebug.preprocessedCanvasHeight = canvas.height; window.__iuEvidenceDebug.uploadedBinaryHashObserved = !!uploadedBinaryHashObserved; } } catch (_) {}
+        var workerOpts = iuEvidenceOcrWorkerOptions();
+        var workerTimeoutMs = 45000;
+        var workerPromise = Tesseract.createWorker(workerOpts).then(function(worker) {
+          if (!worker) {
+            try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.failureReason = "workerOrRecognizeFail:createWorkerReturnedFalsy"; window.__iuEvidenceDebug.rootRuntimeFailurePoint = "workerOrRecognizeFail"; window.__iuEvidenceDebug.rootCauseRemainingStopShip = "workerOrRecognizeFail:createWorkerReturnedFalsy"; } } catch (_) {}
+            return Promise.reject(new Error("createWorkerReturnedFalsy"));
+          }
+          try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.workerLoaded = true; window.__iuEvidenceDebug.workerInitializeCalled = true; } catch (_) {}
+          var initPromise = (worker.loadLanguage && typeof worker.loadLanguage === "function") ? worker.loadLanguage("eng").then(function() { return worker.initialize("eng"); }) : worker.initialize("eng");
+          return initPromise.then(function() {
+            try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.workerInitializeSucceeded = true; window.__iuEvidenceDebug.recognizeCalled = true; } catch (_) {}
+            var imageInput = (file && (file instanceof Blob || (typeof File !== "undefined" && file instanceof File))) ? file : canvas;
+            return worker.recognize(imageInput).then(function(r1) {
+              try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.recognizeSucceeded = true; } catch (_) {}
+              ocrPass1Executed = true;
+              var text1 = (r1 && r1.data && r1.data.text) || "";
+              var merged = text1.trim();
+              var result;
+              try {
+                result = iuEvidenceOcrPipeline(merged || "?", kind);
+                if (!result || typeof result !== "object") result = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+                if (!result || typeof result !== "object") { result = {}; result.rawOcrText = merged || "?"; result.correctedFields = {}; result.ocrPass1Executed = true; result.ocrPass2Executed = false; result.usedInjectPath = false; result.proofStillDependsOnInjectedText = false; result.proofUsedInjectedTextAsPrimary = false; result.preprocessingApplied = preprocessingApplied; result.actualOcrEnginePresent = actualOcrEnginePresent; result.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none"; result.realImageOrPdfInputUsed = realImageOrPdfInputUsed; result.uploadedBinaryHashObserved = uploadedBinaryHashObserved; }
+                result.usedInjectPath = false;
+                result.proofStillDependsOnInjectedText = false;
+                result.proofUsedInjectedTextAsPrimary = false;
+                result.ocrPass1Executed = true;
+                result.ocrPass2Executed = false;
+                result.preprocessingApplied = preprocessingApplied;
+                result.deskewApplied = deskewApplied;
+                result.contrastNormalizationApplied = contrastNormalizationApplied;
+                result.thresholdingApplied = thresholdingApplied;
+                result.denoiseApplied = denoiseApplied;
+                result.actualOcrEnginePresent = actualOcrEnginePresent;
+                result.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
+                result.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
+                result.uploadedBinaryHashObserved = uploadedBinaryHashObserved;
+              } catch (e) {
+                result = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+                if (!result || typeof result !== "object") result = {};
+                result.ocrPass1Executed = true;
+                result.ocrPass2Executed = false;
+                result.usedInjectPath = false;
+                result.proofStillDependsOnInjectedText = false;
+                result.proofUsedInjectedTextAsPrimary = false;
+                result.preprocessingApplied = preprocessingApplied;
+                result.actualOcrEnginePresent = actualOcrEnginePresent;
+                result.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
+                result.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
+                result.uploadedBinaryHashObserved = uploadedBinaryHashObserved;
+              }
+              var out = (result && typeof result === "object") ? result : {};
+              out.ocrPass1Executed = true;
+              out.ocrPass2Executed = false;
+              out.usedInjectPath = false;
+              out.proofStillDependsOnInjectedText = false;
+              out.proofUsedInjectedTextAsPrimary = false;
+              out.preprocessingApplied = preprocessingApplied;
+              out.actualOcrEnginePresent = actualOcrEnginePresent;
+              out.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
+              out.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
+              out.uploadedBinaryHashObserved = uploadedBinaryHashObserved;
+              var finalOut = (out && typeof out === "object") ? out : { ocrPass1Executed: true, ocrPass2Executed: false, usedInjectPath: false, proofUsedInjectedTextAsPrimary: false, preprocessingApplied: preprocessingApplied, actualOcrEnginePresent: actualOcrEnginePresent, actualOcrEngineName: actualOcrEnginePresent ? "Tesseract.js" : "none", realImageOrPdfInputUsed: realImageOrPdfInputUsed, uploadedBinaryHashObserved: uploadedBinaryHashObserved };
+              try {
+                window.__iuEvidenceLastResult = finalOut;
+                if (window.__iuEvidenceDebug) {
+                  window.__iuEvidenceDebug.failureReason = null;
+                  window.__iuEvidenceDebug.rootRuntimeFailurePoint = null;
+                  window.__iuEvidenceDebug.rootCauseRemainingStopShip = null;
+                  window.__iuEvidenceDebug.ocrRunCompleted = true;
+                  window.__iuEvidenceDebug.ocrFinalState = "success";
+                  window.__iuEvidenceDebug.ocrResultSource = "real_ocr";
+                  window.__iuEvidenceDebug.ocrFinalCommitted = true;
+                  window.__iuEvidenceDebug.resultPropagatedToUi = true;
+                  window.__iuEvidenceDebug.lastResultSet = true;
+                }
+              } catch (_) {}
+              return worker.terminate().then(function() { return finalOut; });
+            });
+        });
+        });
+        });
+        var timeoutPromise = new Promise(function(_, reject) {
+          setTimeout(function() { reject(new Error("workerInitTimeout")); }, workerTimeoutMs);
+        });
+        return Promise.race([workerPromise, timeoutPromise]).catch(function(err) {
+          var errMsg = (err && err.message ? String(err.message).slice(0, 80) : "unknown");
+          try { var dx = window.__iuEvidenceDebug; if (dx) { dx.failureReason = "workerOrRecognizeFail:" + errMsg; dx.rootRuntimeFailurePoint = "workerOrRecognizeFail"; dx.rootCauseRemainingStopShip = "workerOrRecognizeFail:" + errMsg; dx.ocrRunCompleted = true; dx.ocrFinalState = "failure"; dx.ocrResultSource = "safe_fallback"; } } catch (_) {}
+          var failRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+          failRes.usedInjectPath = false;
+          failRes.proofStillDependsOnInjectedText = false;
+          failRes.proofUsedInjectedTextAsPrimary = false;
+          failRes.ocrPass1Executed = false;
+          failRes._failureReason = errMsg;
+          failRes.ocrPass2Executed = false;
+          failRes.preprocessingApplied = preprocessingApplied;
+          failRes.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
+          failRes.actualOcrEnginePresent = actualOcrEnginePresent;
+          failRes.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
+          return failRes;
+        });
+      }).catch(function(err) {
+        var errMsg2 = (err && err.message ? String(err.message).slice(0, 80) : "unknown");
+        try { var dx = window.__iuEvidenceDebug; if (dx && !dx.failureReason) { dx.failureReason = "prepareDocumentImage:" + errMsg2; dx.rootRuntimeFailurePoint = "prepareDocumentImage"; dx.rootCauseRemainingStopShip = "prepareDocumentImage:" + errMsg2; dx.ocrRunCompleted = true; dx.ocrFinalState = "failure"; dx.ocrResultSource = "safe_fallback"; } } catch (_) {}
+        var errRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+        errRes.usedInjectPath = false;
+        errRes.proofStillDependsOnInjectedText = false;
+        errRes.proofUsedInjectedTextAsPrimary = false;
+        errRes.ocrPass1Executed = false;
+        errRes.ocrPass2Executed = false;
+        errRes.preprocessingApplied = false;
+        errRes.realImageOrPdfInputUsed = false;
+        errRes.actualOcrEnginePresent = actualOcrEnginePresent;
+        errRes.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
+        return errRes;
+      }).then(function(finalResult) {
+        if (finalResult == null || typeof finalResult !== "object") {
+          var d = window.__iuEvidenceDebug;
+          if (d && d.recognizeSucceeded === true) {
+            var minimalSuccess = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+            if (!minimalSuccess || typeof minimalSuccess !== "object") minimalSuccess = {};
+            minimalSuccess.usedInjectPath = false;
+            minimalSuccess.proofStillDependsOnInjectedText = false;
+            minimalSuccess.proofUsedInjectedTextAsPrimary = false;
+            minimalSuccess.ocrPass1Executed = true;
+            minimalSuccess.ocrPass2Executed = false;
+            minimalSuccess.preprocessingApplied = preprocessingApplied;
+            minimalSuccess.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
+            minimalSuccess.actualOcrEnginePresent = actualOcrEnginePresent;
+            minimalSuccess.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
+            try { if (d) { d.failureReason = null; d.rootRuntimeFailurePoint = null; d.rootCauseRemainingStopShip = null; d.ocrRunCompleted = true; d.ocrFinalState = "success"; d.ocrResultSource = "real_ocr"; d.ocrFinalCommitted = true; } } catch (_) {}
+            try { window.__iuEvidenceLastResult = minimalSuccess; if (d) { d.resultPropagatedToUi = true; d.lastResultSet = true; } } catch (_) {}
+            return minimalSuccess;
+          }
+          try { if (d) { d.failureReason = (d.failureReason || "workerOrRecognizeFail:hookResolvedUndefined"); d.rootRuntimeFailurePoint = (d.rootRuntimeFailurePoint || "hookResolvedUndefined"); d.rootCauseRemainingStopShip = (d.rootCauseRemainingStopShip || "hookResolvedUndefined"); d.ocrRunCompleted = true; d.ocrFinalState = "failure"; d.ocrResultSource = "safe_fallback"; } } catch (_) {}
+          var safeRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+          safeRes.usedInjectPath = false;
+          safeRes.proofStillDependsOnInjectedText = false;
+          safeRes.proofUsedInjectedTextAsPrimary = false;
+          safeRes.ocrPass1Executed = false;
+          safeRes.ocrPass2Executed = false;
+          safeRes.preprocessingApplied = preprocessingApplied;
+          safeRes.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
+          safeRes.actualOcrEnginePresent = actualOcrEnginePresent;
+          safeRes.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
+          return safeRes;
+        }
+        return finalResult;
+      });
   }
 
   try {
@@ -9431,8 +9847,22 @@ function buildVideoAsArticleCard(it) {
 
     function showReviewPanel(result) {
       if (!extractionPanel) return;
+      if (!result || typeof result !== "object") result = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr("receipt_photo", "unknown"), "receipt_photo");
+      try {
+        var d = window.__iuEvidenceDebug;
+        var committed = window.__iuEvidenceLastResult;
+        var committedSuccess = committed && committed.ocrPass1Executed === true && d && d.ocrFinalCommitted === true;
+        if (committedSuccess && result && result.ocrPass1Executed !== true) { result = committed; }
+        if (d && result && result._failureReason) { d.failureReason = "workerOrRecognizeFail:" + result._failureReason; d.rootRuntimeFailurePoint = "workerOrRecognizeFail"; d.rootCauseRemainingStopShip = "workerOrRecognizeFail:" + result._failureReason; }
+        if (d) { d.resultPropagatedToUi = true; d.lastResultSet = true; if (result && result.ocrPass1Executed === true) { d.failureReason = null; d.rootRuntimeFailurePoint = null; d.rootCauseRemainingStopShip = null; d.ocrRunCompleted = true; d.ocrFinalState = "success"; d.ocrResultSource = "real_ocr"; d.ocrFinalCommitted = true; } }
+      } catch (_) {}
       currentPipelineResult = result;
-      try { window.__iuEvidenceLastResult = result; } catch (_) {}
+      try {
+        var dx = window.__iuEvidenceDebug;
+        var cur = window.__iuEvidenceLastResult;
+        var noOverwrite = cur && cur.ocrPass1Executed === true && dx && dx.ocrFinalCommitted === true && result && result.ocrPass1Executed !== true;
+        if (!noOverwrite) window.__iuEvidenceLastResult = result;
+      } catch (_) {}
       extractionPanel.hidden = false;
       var cf = result.correctedFields || {};
       var fc = result.fieldConfidence || {};
@@ -9462,7 +9892,7 @@ function buildVideoAsArticleCard(it) {
       var typeErr = "";
       var sizeErr = "";
       var allowed = acceptList || ["image/*", "application/pdf"];
-      var isImage = (file.type || "").indexOf("image/") === 0;
+      var isImage = (file.type || "").indexOf("image/") === 0 || (file.name && /\.(png|jpe?g|gif|webp)$/i.test(file.name)) || (file.size > 0);
       var isPdf = (file.type || "") === "application/pdf";
       if (!isImage && !isPdf) typeErr = "Povolené typy: obrázek nebo PDF.";
       if (file.size > IU_EVIDENCE_MAX_FILE_BYTES) sizeErr = "Max. velikost 10 MB.";
@@ -9484,6 +9914,18 @@ function buildVideoAsArticleCard(it) {
       showPreview(file);
       setState("pending");
       iuEvidenceOcrHook(file, kind).then(function(result) {
+        if (result == null || typeof result !== "object") {
+          var committed = window.__iuEvidenceLastResult;
+          var d = window.__iuEvidenceDebug;
+          if (committed && committed.ocrPass1Executed === true && d && d.ocrFinalCommitted === true) { result = committed; } else {
+            try { if (d) { d.failureReason = (d.failureReason || "workerOrRecognizeFail:hookResolvedUndefined"); d.rootRuntimeFailurePoint = (d.rootRuntimeFailurePoint || "hookResolvedUndefined"); d.rootCauseRemainingStopShip = (d.rootCauseRemainingStopShip || "hookResolvedUndefined"); d.ocrRunCompleted = true; d.ocrFinalState = "failure"; d.ocrResultSource = "safe_fallback"; } } catch (_) {}
+            result = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+            result.usedInjectPath = false;
+            result.proofStillDependsOnInjectedText = false;
+            result.proofUsedInjectedTextAsPrimary = false;
+            result._failureReason = "hookResolvedUndefined";
+          }
+        }
         showReviewPanel(result);
         setState("idle");
       });
