@@ -9357,6 +9357,15 @@ function buildVideoAsArticleCard(it) {
         var textLines = mergedText.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
         textLines.forEach(function(t) { lines.push({ text: t, bbox: null }); });
       }
+      if (lineGroups.length === 0 && lines.length > 0) {
+        lines.forEach(function(ln) { lineGroups.push([ln]); });
+      }
+      if (words.length === 0 && lines.length > 0) {
+        lines.forEach(function(ln) {
+          var t = (ln.text || "").trim();
+          if (t) t.split(/\s+/).forEach(function(w) { if (w) words.push({ text: w, bbox: null }); });
+        });
+      }
     } catch (_) {}
     return { words: words, lines: lines, lineGroups: lineGroups };
   }
