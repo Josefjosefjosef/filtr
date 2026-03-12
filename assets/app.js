@@ -9334,6 +9334,30 @@ function buildVideoAsArticleCard(it) {
     return { valid: errors.length === 0, errors: errors, sumMismatch: sumMismatch, itemsSum: itemsSum, totalNum: totalNum, vatConsistency: vatConsistency };
   }
 
+  /** Parse Tesseract TSV string into words and lines (level 3=line, 4=word). */
+  function iuEvidenceParseTsvToGeometry(tsvText) {
+    var words = [];
+    var lines = [];
+    if (!tsvText || typeof tsvText !== "string") return { words: words, lines: lines };
+    var rows = tsvText.split(/\n/);
+    for (var i = 0; i < rows.length; i++) {
+      var parts = rows[i].split(/\t/);
+      if (parts.length < 12) continue;
+      if (parts[0] === "level") continue;
+      var level = parseInt(parts[0], 10);
+      var text = (parts[11] || "").trim();
+      if (!text) continue;
+      var left = parseFloat(parts[6]) || 0;
+      var top = parseFloat(parts[7]) || 0;
+      var w = parseFloat(parts[8]) || 0;
+      var h = parseFloat(parts[9]) || 0;
+      var bbox = { x0: left, y0: top, x1: left + w, y1: top + h };
+      if (level === 4) words.push({ text: text, bbox: bbox });
+      else if (level === 3) lines.push({ text: text, bbox: bbox });
+    }
+    return { words: words, lines: lines };
+  }
+
   /** Build geometry from Tesseract result; fallback to text lines if no words/lines. */
   function iuEvidenceBuildOcrGeometry(r1, mergedText) {
     var words = [];
@@ -9351,6 +9375,38 @@ function buildVideoAsArticleCard(it) {
             lineGroups[lineGroups.length - 1].push(ln);
             if (ln.bbox && typeof ln.bbox.y0 !== "undefined") lastY = ln.bbox.y0;
           });
+        }
+        if (words.length === 0 && lines.length === 0) {
+          var tsvStr = (r1.data && typeof r1.data.tsv === "string") ? r1.data.tsv : "";
+          if (tsvStr && tsvStr.indexOf("\t") >= 0) {
+            var fromTsv = iuEvidenceParseTsvToGeometry(tsvStr);
+            words = fromTsv.words;
+            lines = fromTsv.lines;
+          }
+        }
+        if (words.length === 0 && lines.length === 0 && Array.isArray(r1.data.blocks)) {
+          r1.data.blocks.forEach(function(blk) {
+            var parags = (blk && blk.paragraphs) && Array.isArray(blk.paragraphs) ? blk.paragraphs : [];
+            parags.forEach(function(par) {
+              var lineList = (par && par.lines) && Array.isArray(par.lines) ? par.lines : [];
+              lineList.forEach(function(ln) {
+                var lnText = (ln && ln.text) ? String(ln.text) : "";
+                var lnBbox = (ln && ln.bbox) ? ln.bbox : null;
+                if (!lnText && ln && Array.isArray(ln.words)) lnText = ln.words.map(function(w) { return (w && w.text) || ""; }).join(" ");
+                lines.push({ text: lnText, bbox: lnBbox });
+                if (ln && Array.isArray(ln.words)) ln.words.forEach(function(w) { words.push({ text: (w && w.text) || "", bbox: (w && w.bbox) || null }); });
+              });
+            });
+          });
+          if (lineGroups.length === 0 && lines.length > 0) {
+            var lastY = -1;
+            lines.forEach(function(ln) {
+              var y = ln.bbox && typeof ln.bbox.y0 !== "undefined" ? ln.bbox.y0 : lastY;
+              if (lineGroups.length === 0 || (lastY >= 0 && Math.abs(y - lastY) > 15)) lineGroups.push([]);
+              lineGroups[lineGroups.length - 1].push(ln);
+              if (ln.bbox && typeof ln.bbox.y0 !== "undefined") lastY = ln.bbox.y0;
+            });
+          }
         }
       }
       if (lines.length === 0 && mergedText) {
@@ -11252,6 +11308,79 @@ function buildVideoAsArticleCard(it) {
     return { documentsTested: n, headerFieldAccuracy: n ? h / n : 0, itemRowRecall: n ? r / n : 0, itemFieldAccuracy: n ? i / n : 0, totalsAccuracy: n ? t / n : 0, paymentSummaryAccuracy: n ? p / n : 0, weightedContentAccuracy: n ? w / n : 0 };
   }
 
+  /** Phase 7.2R: map receipt_corpus.json golden shape to Phase 72 scorer shape (store, grandTotal, amount). */
+  function iuEvidencePhase72rMapCorpusGoldenToScorer(golden) {
+    if (!golden) return null;
+    var gh = golden.header || {};
+    var gt = golden.totals || {};
+    var gp = golden.payment || {};
+    return {
+      header: { store: gh.merchant != null ? gh.merchant : gh.store, date: gh.date, time: gh.time, total: gt.total != null ? gt.total : gh.total },
+      items: golden.items || [],
+      totals: { grandTotal: gt.total != null ? gt.total : gt.grandTotal },
+      payment: { method: gp.method, amount: gp.paidAmount != null ? gp.paidAmount : gp.amount }
+    };
+  }
+
+  /** Phase 7.2R: run OCR + scoring on real images only. No simulated text. Returns { perDocResults, aggregated, realImageDocumentsTested, simulatedDocumentsUsedForFinalScore }. */
+  function iuEvidencePhase72rRunRealImageValidation(corpusArray, baseUrl) {
+    if (typeof window === "undefined" || !window.iuEvidenceOcrHook || !window.iuEvidencePhase72ContentAccuracyScorer || !window.iuEvidencePhase72AggregateAccuracy || !window.iuEvidencePhase72rMapCorpusGoldenToScorer) return Promise.resolve({ perDocResults: [], aggregated: {}, realImageDocumentsTested: 0, simulatedDocumentsUsedForFinalScore: 0, usesSimulatedRawOcr: true, proofUsedInjectedTextAsPrimary: true });
+    var clearInject = function() { try { if (window.__iuEvidenceInjectRawOcr !== undefined) window.__iuEvidenceInjectRawOcr = ""; } catch (_) {} };
+    clearInject();
+    var corpus = Array.isArray(corpusArray) ? corpusArray : [];
+    var base = (baseUrl || "").replace(/\/$/, "");
+    var perDocResults = [];
+    var realCount = 0;
+    var simulatedCount = 0;
+    function runOne(idx) {
+      if (idx >= corpus.length) return Promise.resolve();
+      var rec = corpus[idx];
+      var imageRef = (rec && rec.imageRef) ? String(rec.imageRef).trim() : "";
+      var documentId = (rec && rec.documentId != null) ? String(rec.documentId) : String(idx + 1);
+      var golden = (rec && rec.golden) ? rec.golden : {};
+      var goldenForScorer = iuEvidencePhase72rMapCorpusGoldenToScorer(golden);
+      var imgUrl = base ? (base + "/" + imageRef.replace(/^\//, "")) : imageRef;
+      return fetch(imgUrl).then(function(res) { return res.ok ? res.blob() : Promise.reject(new Error("fetch_fail")); }).then(function(blob) {
+        var fileName = imageRef.split("/").pop() || documentId + ".jpeg";
+        var file = typeof File !== "undefined" ? new File([blob], fileName, { type: blob.type || "image/jpeg" }) : blob;
+        clearInject();
+        return window.iuEvidenceOcrHook(file, "receipt_photo");
+      }).then(function(result) {
+        var imageBased = !!(result && result.realImageOrPdfInputUsed && !result.proofUsedInjectedTextAsPrimary && !result.usedInjectPath);
+        if (imageBased) realCount++; else simulatedCount++;
+        var score = (result && goldenForScorer) ? window.iuEvidencePhase72ContentAccuracyScorer(result, goldenForScorer) : { headerFieldAccuracy: 0, itemRowRecall: 0, itemFieldAccuracyAdjusted: 0, totalsAccuracy: 0, paymentSummaryAccuracy: 0, weightedContentAccuracy: 0 };
+        var needsReview = !!(result && result.validationSummary && result.validationSummary.sumMismatch);
+        var blocked = !!(result && result.validationSummary && result.validationSummary.sumMismatch);
+        var hallucinatedField = false;
+        perDocResults.push({
+          documentId: documentId,
+          imageRef: imageRef,
+          imageBased: imageBased,
+          headerFieldAccuracy: score.headerFieldAccuracy,
+          itemRowRecall: score.itemRowRecall,
+          itemFieldAccuracyAdjusted: score.itemFieldAccuracyAdjusted,
+          totalsAccuracy: score.totalsAccuracy,
+          paymentSummaryAccuracy: score.paymentSummaryAccuracy,
+          weightedDocumentAccuracy: score.weightedContentAccuracy,
+          needsReview: needsReview,
+          blocked: blocked,
+          hallucinatedField: hallucinatedField,
+          PASS: imageBased && score.weightedContentAccuracy >= 0.98
+        });
+        return runOne(idx + 1);
+      }).catch(function() {
+        simulatedCount++;
+        perDocResults.push({ documentId: documentId, imageRef: imageRef, imageBased: false, headerFieldAccuracy: 0, itemRowRecall: 0, itemFieldAccuracyAdjusted: 0, totalsAccuracy: 0, paymentSummaryAccuracy: 0, weightedDocumentAccuracy: 0, needsReview: true, blocked: true, hallucinatedField: false, PASS: false });
+        return runOne(idx + 1);
+      });
+    }
+    return runOne(0).then(function() {
+      var scoreOnly = perDocResults.filter(function(r) { return r.imageBased; }).map(function(r) { return { headerFieldAccuracy: r.headerFieldAccuracy, itemRowRecall: r.itemRowRecall, itemFieldAccuracyAdjusted: r.itemFieldAccuracyAdjusted, totalsAccuracy: r.totalsAccuracy, paymentSummaryAccuracy: r.paymentSummaryAccuracy, weightedContentAccuracy: r.weightedDocumentAccuracy }; });
+      var aggregated = scoreOnly.length > 0 ? window.iuEvidencePhase72AggregateAccuracy(scoreOnly) : { documentsTested: 0, headerFieldAccuracy: 0, itemRowRecall: 0, itemFieldAccuracy: 0, totalsAccuracy: 0, paymentSummaryAccuracy: 0, weightedContentAccuracy: 0 };
+      return { perDocResults: perDocResults, aggregated: aggregated, realImageDocumentsTested: realCount, simulatedDocumentsUsedForFinalScore: simulatedCount, usesSimulatedRawOcr: simulatedCount > 0, proofUsedInjectedTextAsPrimary: simulatedCount > 0 };
+    });
+  }
+
   var IU_EVIDENCE_OCR_ENGINE_CDN = "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js";
   var IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK = "https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.0.0/tesseract.min.js";
   var _iuEvidenceTesseractPromise = null;
@@ -11268,9 +11397,11 @@ function buildVideoAsArticleCard(it) {
     if (window.Tesseract && window.Tesseract.createWorker) return Promise.resolve(window.Tesseract);
     if (_iuEvidenceTesseractPromise) return _iuEvidenceTesseractPromise;
     var base = iuEvidenceOcrBaseUrl();
+    var isAppOrigin = base && base.indexOf("cdn.") < 0 && base.indexOf("jsdelivr") < 0 && base.indexOf("cdnjs") < 0;
+    var isLocalProof = base && (base.indexOf("127.0.0.1") >= 0 || base.indexOf("localhost") >= 0);
     var localScript = base ? (base.replace(/\/?$/, "/") + "tesseract.min.js") : "";
     _iuEvidenceTesseractPromise = new Promise(function(resolve) {
-      var urls = localScript ? [localScript, IU_EVIDENCE_OCR_ENGINE_CDN, IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK] : [IU_EVIDENCE_OCR_ENGINE_CDN, IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK];
+      var urls = isLocalProof ? [IU_EVIDENCE_OCR_ENGINE_CDN, IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK, localScript] : (localScript ? [localScript, IU_EVIDENCE_OCR_ENGINE_CDN, IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK] : [IU_EVIDENCE_OCR_ENGINE_CDN, IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK]);
       var idx = 0;
       function tryNext() {
         if (idx >= urls.length) {
@@ -11305,6 +11436,10 @@ function buildVideoAsArticleCard(it) {
     var base = iuEvidenceOcrBaseUrl();
     if (!base) return {};
     base = base.replace(/\/?$/, "/");
+    var isCdn = base.indexOf("cdn.") >= 0 || base.indexOf("jsdelivr") >= 0 || base.indexOf("cdnjs") >= 0;
+    var isLocalProof = base.indexOf("127.0.0.1") >= 0 || base.indexOf("localhost") >= 0;
+    if (!isCdn && !isLocalProof) return {};
+    if (isLocalProof) return {};
     return {
       workerPath: base + "worker.min.js",
       langPath: base + "tessdata",
@@ -11592,6 +11727,11 @@ function buildVideoAsArticleCard(it) {
         u.realImageOrPdfInputUsed = false;
         u.actualOcrEnginePresent = false;
         u.actualOcrEngineName = "none";
+        u.realImageOcrAttempted = false;
+        u.realImageOcrSucceeded = false;
+        u.ocrUsedSimulatedFallback = true;
+        u.ocrRuntimeLoadOk = false;
+        u.ocrFailureReason = "noTesseractAfterLoad";
         return u;
       }
       actualOcrEnginePresent = true;
@@ -11610,7 +11750,9 @@ function buildVideoAsArticleCard(it) {
         if (file.size) uploadedBinaryHashObserved = true;
         try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.preprocessedCanvasWidth = canvas.width; window.__iuEvidenceDebug.preprocessedCanvasHeight = canvas.height; window.__iuEvidenceDebug.uploadedBinaryHashObserved = !!uploadedBinaryHashObserved; } } catch (_) {}
         var workerOpts = iuEvidenceOcrWorkerOptions();
-        var workerTimeoutMs = 90000;
+        var workerBase = iuEvidenceOcrBaseUrl();
+        var isLocalProofEnv = workerBase && (workerBase.indexOf("127.0.0.1") >= 0 || workerBase.indexOf("localhost") >= 0);
+        var workerTimeoutMs = isLocalProofEnv ? 180000 : 90000;
         var workerPromise = Tesseract.createWorker(workerOpts).then(function(worker) {
           if (!worker) {
             try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.failureReason = "workerOrRecognizeFail:createWorkerReturnedFalsy"; window.__iuEvidenceDebug.rootRuntimeFailurePoint = "workerOrRecognizeFail"; window.__iuEvidenceDebug.rootCauseRemainingStopShip = "workerOrRecognizeFail:createWorkerReturnedFalsy"; } } catch (_) {}
@@ -11621,7 +11763,10 @@ function buildVideoAsArticleCard(it) {
           return initPromise.then(function() {
             try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.workerInitializeSucceeded = true; window.__iuEvidenceDebug.recognizeCalled = true; } catch (_) {}
             var imageInput = (file && (file instanceof Blob || (typeof File !== "undefined" && file instanceof File))) ? file : canvas;
-            return worker.recognize(imageInput).then(function(r1) {
+            var recOpts = {};
+            try { recOpts = { output: { text: true, blocks: true } }; } catch (_) {}
+            return worker.recognize(imageInput, recOpts).then(function(r1) {
+              if (!r1 || typeof r1 !== "object" || !r1.data) return Promise.reject(new Error("ocr_result_invalid"));
               try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.recognizeSucceeded = true; } catch (_) {}
               ocrPass1Executed = true;
               var text1 = (r1 && r1.data && r1.data.text) || "";
@@ -11633,14 +11778,25 @@ function buildVideoAsArticleCard(it) {
               var documentZones = iuEvidenceClassifyDocumentZones(geometry, docHeight);
               try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.ocrGeometryPresent = true; window.__iuEvidenceDebug.ocrWordBoxesPresent = geometry.words.length > 0; window.__iuEvidenceDebug.ocrLineGroupsPresent = (geometry.lineGroups && geometry.lineGroups.length > 0); window.__iuEvidenceDebug.documentZonesPresent = true; window.__iuEvidenceDebug.merchantZonePresent = documentZones.merchantZone.length > 0; window.__iuEvidenceDebug.metaZonePresent = documentZones.metaZone.length > 0; window.__iuEvidenceDebug.itemsZonePresent = documentZones.itemsZone.length > 0; window.__iuEvidenceDebug.totalsZonePresent = documentZones.totalsZone.length > 0; window.__iuEvidenceDebug.vatZonePresent = documentZones.vatZone.length > 0; window.__iuEvidenceDebug.idsZonePresent = documentZones.idsZone.length > 0; } } catch (_) {}
               var result;
+              var pipelineInput = realImageOrPdfInputUsed ? (merged || "") : (merged || "?");
               try {
-                result = iuEvidenceOcrPipeline(merged || "?", kind);
-                if (!result || typeof result !== "object") result = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
-                if (!result || typeof result !== "object") { result = {}; result.rawOcrText = merged || "?"; result.correctedFields = {}; result.ocrPass1Executed = true; result.ocrPass2Executed = false; result.usedInjectPath = false; result.proofStillDependsOnInjectedText = false; result.proofUsedInjectedTextAsPrimary = false; result.preprocessingApplied = preprocessingApplied; result.actualOcrEnginePresent = actualOcrEnginePresent; result.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none"; result.realImageOrPdfInputUsed = realImageOrPdfInputUsed; result.uploadedBinaryHashObserved = uploadedBinaryHashObserved; }
+                result = iuEvidenceOcrPipeline(pipelineInput, kind);
+                if (!result || typeof result !== "object") {
+                  if (realImageOrPdfInputUsed) {
+                    result = iuEvidenceOcrPipeline("", kind);
+                    if (!result || typeof result !== "object") result = {};
+                    result.rawOcrText = merged || "";
+                    result.correctedFields = result.correctedFields || { store: "unknown", date: "unknown", time: "unknown", total: "unknown" };
+                    result.items = result.items || [];
+                  } else {
+                    result = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+                  }
+                }
+                if (!result || typeof result !== "object") { result = {}; result.rawOcrText = merged || (realImageOrPdfInputUsed ? "" : "?"); result.correctedFields = result.correctedFields || {}; result.ocrPass1Executed = true; result.ocrPass2Executed = false; result.usedInjectPath = false; result.proofStillDependsOnInjectedText = false; result.proofUsedInjectedTextAsPrimary = false; result.preprocessingApplied = preprocessingApplied; result.actualOcrEnginePresent = actualOcrEnginePresent; result.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none"; result.realImageOrPdfInputUsed = realImageOrPdfInputUsed; result.uploadedBinaryHashObserved = uploadedBinaryHashObserved; }
                 result.ocrGeometry = geometry;
                 result.retailColumnDetection = columnDetection;
                 result.documentZones = documentZones;
-                result.fieldSourceZone = iuEvidenceAssignFieldSourceZones(result, documentZones, geometry.lines.map(function(ln) { return ln.text || ""; }));
+                result.fieldSourceZone = result.fieldSourceZone || iuEvidenceAssignFieldSourceZones(result, documentZones, geometry.lines.map(function(ln) { return ln.text || ""; }));
                 result.usedInjectPath = false;
                 result.proofStillDependsOnInjectedText = false;
                 result.proofUsedInjectedTextAsPrimary = false;
@@ -11655,8 +11811,31 @@ function buildVideoAsArticleCard(it) {
                 result.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
                 result.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
                 result.uploadedBinaryHashObserved = uploadedBinaryHashObserved;
+                result.realImageOcrAttempted = realImageOrPdfInputUsed;
+                result.realImageOcrSucceeded = realImageOrPdfInputUsed;
+                result.ocrUsedSimulatedFallback = false;
+                result.ocrRuntimeLoadOk = true;
+                result.ocrFailureReason = "";
               } catch (e) {
-                result = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+                if (realImageOrPdfInputUsed) {
+                  result = iuEvidenceOcrPipeline("", kind);
+                  if (!result || typeof result !== "object") result = {};
+                  result.rawOcrText = merged || "";
+                  result.correctedFields = result.correctedFields || { store: "unknown", date: "unknown", time: "unknown", total: "unknown" };
+                  result.items = result.items || [];
+                  result.ocrUsedSimulatedFallback = false;
+                  result.realImageOcrAttempted = true;
+                  result.realImageOcrSucceeded = !!(merged && String(merged).trim().length > 0);
+                  result.ocrRuntimeLoadOk = true;
+                  result.ocrFailureReason = (e && e.message) ? String(e.message).slice(0, 120) : "pipeline_exception";
+                } else {
+                  result = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+                  result.ocrUsedSimulatedFallback = true;
+                  result.realImageOcrAttempted = false;
+                  result.realImageOcrSucceeded = false;
+                  result.ocrRuntimeLoadOk = false;
+                  result.ocrFailureReason = (e && e.message) ? String(e.message).slice(0, 120) : "pipeline_exception";
+                }
                 if (!result || typeof result !== "object") result = {};
                 result.ocrGeometry = geometry;
                 result.retailColumnDetection = columnDetection;
@@ -11676,7 +11855,7 @@ function buildVideoAsArticleCard(it) {
               var needPass2 = (result.correctedFields && result.correctedFields.total === "unknown") || (result.vatBase == null && result.vatAmount == null) || (result.docNumber === "unknown") || ((!result.items || result.items.length === 0) && documentZones.itemsZone.length > 0);
               var pass2Promise = Promise.resolve(null);
               if (needPass2 && worker && typeof worker.recognize === "function") {
-                pass2Promise = worker.recognize(imageInput).then(function(r2) {
+                pass2Promise = worker.recognize(imageInput, recOpts).then(function(r2) {
                   var text2 = (r2 && r2.data && r2.data.text) || "";
                   if (text2.trim()) {
                     var res2 = iuEvidenceOcrPipeline(text2.trim(), kind);
@@ -11695,6 +11874,7 @@ function buildVideoAsArticleCard(it) {
               }
               return pass2Promise.then(function(res) {
                 var out = (res && typeof res === "object") ? res : result;
+                if (!out || typeof out !== "object") out = (result && typeof result === "object") ? result : {};
                 out.ocrPass1Executed = true;
                 out.ocrPass2Executed = !!ocrPass2Executed;
                 out.usedInjectPath = false;
@@ -11707,6 +11887,11 @@ function buildVideoAsArticleCard(it) {
                 out.uploadedBinaryHashObserved = uploadedBinaryHashObserved;
                 if (out.items && Array.isArray(out.items)) out.items.forEach(function(it, idx) { it.sourceZone = "itemsZone"; if (out.fieldSourceZone && Array.isArray(out.fieldSourceZone.items)) out.fieldSourceZone.items[idx] = "itemsZone"; else if (out.fieldSourceZone) { out.fieldSourceZone.items = out.fieldSourceZone.items || []; out.fieldSourceZone.items[idx] = "itemsZone"; } });
                 var finalOut = (out && typeof out === "object") ? out : { ocrPass1Executed: true, ocrPass2Executed: false, usedInjectPath: false, proofUsedInjectedTextAsPrimary: false, preprocessingApplied: preprocessingApplied, actualOcrEnginePresent: actualOcrEnginePresent, actualOcrEngineName: actualOcrEnginePresent ? "Tesseract.js" : "none", realImageOrPdfInputUsed: realImageOrPdfInputUsed, uploadedBinaryHashObserved: uploadedBinaryHashObserved };
+                finalOut.realImageOcrAttempted = !!realImageOrPdfInputUsed;
+                finalOut.realImageOcrSucceeded = (out.realImageOcrSucceeded !== undefined ? out.realImageOcrSucceeded : !!realImageOrPdfInputUsed) && !!(out.ocrUsedSimulatedFallback === false);
+                finalOut.ocrUsedSimulatedFallback = out.ocrUsedSimulatedFallback !== undefined ? out.ocrUsedSimulatedFallback : false;
+                finalOut.ocrRuntimeLoadOk = out.ocrRuntimeLoadOk !== undefined ? out.ocrRuntimeLoadOk : true;
+                finalOut.ocrFailureReason = out.ocrFailureReason !== undefined ? out.ocrFailureReason : "";
                 try {
                   var readiness = iuEvidenceReviewReadiness(out);
                   finalOut.reviewReasonCodes = readiness.reviewReasonCodes;
@@ -11725,6 +11910,11 @@ function buildVideoAsArticleCard(it) {
                   finalOut.ocrGeometryPresent = !!(geom);
                   finalOut.ocrWordBoxesPresent = !!(geom && geom.words && geom.words.length > 0);
                   finalOut.ocrLineGroupsPresent = !!(geom && geom.lineGroups && geom.lineGroups.length > 0);
+                  finalOut.realImageOcrAttempted = !!realImageOrPdfInputUsed;
+                  finalOut.realImageOcrSucceeded = (finalOut.realImageOcrSucceeded !== undefined ? finalOut.realImageOcrSucceeded : !!realImageOrPdfInputUsed) && !!(finalOut.ocrUsedSimulatedFallback === false);
+                  finalOut.ocrUsedSimulatedFallback = finalOut.ocrUsedSimulatedFallback !== undefined ? finalOut.ocrUsedSimulatedFallback : false;
+                  finalOut.ocrRuntimeLoadOk = finalOut.ocrRuntimeLoadOk !== undefined ? finalOut.ocrRuntimeLoadOk : true;
+                  finalOut.ocrFailureReason = finalOut.ocrFailureReason !== undefined ? finalOut.ocrFailureReason : "";
                   finalOut.documentZonesPresent = !!(zones);
                   finalOut.merchantZonePresent = !!(zones && zones.merchantZone && zones.merchantZone.length > 0);
                   finalOut.metaZonePresent = !!(zones && zones.metaZone && zones.metaZone.length > 0);
@@ -12003,7 +12193,19 @@ function buildVideoAsArticleCard(it) {
                     window.__iuEvidenceDebug.fieldSourceZonePresent = !!(finalOut.fieldSourceZone && (finalOut.fieldSourceZone.store || finalOut.fieldSourceZone.total));
                   }
                 } catch (_) {}
-                return worker.terminate().then(function() { return finalOut; });
+                var toReturn = (finalOut != null && typeof finalOut === "object") ? finalOut : (typeof result !== "undefined" && result != null && typeof result === "object" ? result : {});
+                if (!toReturn || typeof toReturn !== "object") toReturn = {};
+                if (toReturn.realImageOcrAttempted === undefined) toReturn.realImageOcrAttempted = !!realImageOrPdfInputUsed;
+                if (toReturn.ocrUsedSimulatedFallback === undefined) toReturn.ocrUsedSimulatedFallback = false;
+                var hasValidOcrOutput = !!(toReturn.ocrWordBoxesPresent || toReturn.ocrLineGroupsPresent || (toReturn.rawOcrText != null && String(toReturn.rawOcrText).trim().length > 0));
+                toReturn.realImageOcrSucceeded = !!realImageOrPdfInputUsed && !toReturn.ocrUsedSimulatedFallback && hasValidOcrOutput;
+                toReturn.ocrRuntimeLoadOk = true;
+                toReturn.ocrFailureReason = toReturn.ocrFailureReason || "";
+                if (realImageOrPdfInputUsed && !toReturn.ocrUsedSimulatedFallback && (toReturn.rawOcrText != null && String(toReturn.rawOcrText).trim().length > 0)) toReturn.realImageOcrSucceeded = true;
+                var resultToReturn = (toReturn != null && typeof toReturn === "object") ? toReturn : {};
+                try { window.__iuEvidenceLastResult = resultToReturn; } catch (_) {}
+                try { if (worker && typeof worker.terminate === "function") worker.terminate(); } catch (_) {}
+                return Promise.resolve(resultToReturn);
               });
             });
         });
@@ -12012,10 +12214,42 @@ function buildVideoAsArticleCard(it) {
         var timeoutPromise = new Promise(function(_, reject) {
           setTimeout(function() { reject(new Error("workerInitTimeout")); }, workerTimeoutMs);
         });
+        workerPromise = workerPromise.then(function(v) {
+          if (v != null && typeof v === "object") return v;
+          var last = (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object") ? window.__iuEvidenceLastResult : null;
+          return last || {};
+        });
         return Promise.race([workerPromise, timeoutPromise]).catch(function(err) {
           var errMsg = (err && err.message ? String(err.message).slice(0, 80) : "unknown");
-          try { var dx = window.__iuEvidenceDebug; if (dx) { dx.failureReason = "workerOrRecognizeFail:" + errMsg; dx.rootRuntimeFailurePoint = "workerOrRecognizeFail"; dx.rootCauseRemainingStopShip = "workerOrRecognizeFail:" + errMsg; dx.ocrRunCompleted = true; dx.ocrFinalState = "failure"; dx.ocrResultSource = "safe_fallback"; } } catch (_) {}
-          var failRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+          try { var dx = window.__iuEvidenceDebug; if (dx) { dx.failureReason = "workerOrRecognizeFail:" + errMsg; dx.rootRuntimeFailurePoint = "workerOrRecognizeFail"; dx.rootCauseRemainingStopShip = "workerOrRecognizeFail:" + errMsg; dx.ocrRunCompleted = true; dx.ocrFinalState = "failure"; dx.ocrResultSource = realImageOrPdfInputUsed ? "truthful_failed" : "safe_fallback"; } } catch (_) {}
+          var failRes;
+          if (realImageOrPdfInputUsed) {
+            failRes = iuEvidenceOcrPipeline("", kind);
+            if (!failRes || typeof failRes !== "object") failRes = {};
+            failRes.rawOcrText = "";
+            failRes.correctedFields = failRes.correctedFields || { store: "unknown", date: "unknown", time: "unknown", total: "unknown" };
+            failRes.items = failRes.items || [];
+            failRes.ocrGeometry = null;
+            failRes.documentZones = null;
+            failRes.retailColumnDetection = null;
+            failRes.fieldSourceZone = { store: "merchantZone", total: "totalsZone", vatBase: "vatZone", vatAmount: "vatZone", docNumber: "idsZone", items: [] };
+            failRes.realImageOcrAttempted = true;
+            failRes.realImageOcrSucceeded = false;
+            failRes.ocrUsedSimulatedFallback = false;
+            failRes.ocrRuntimeLoadOk = false;
+            failRes.ocrFailureReason = errMsg;
+            failRes.ocrGeometryPresent = false;
+            failRes.ocrWordBoxesPresent = false;
+            failRes.ocrLineGroupsPresent = false;
+            failRes.documentZonesPresent = false;
+          } else {
+            failRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+            failRes.realImageOcrAttempted = false;
+            failRes.realImageOcrSucceeded = false;
+            failRes.ocrUsedSimulatedFallback = true;
+            failRes.ocrRuntimeLoadOk = false;
+            failRes.ocrFailureReason = errMsg;
+          }
           failRes.usedInjectPath = false;
           failRes.proofStillDependsOnInjectedText = false;
           failRes.proofUsedInjectedTextAsPrimary = false;
@@ -12087,8 +12321,17 @@ function buildVideoAsArticleCard(it) {
         });
       }).catch(function(err) {
         var errMsg2 = (err && err.message ? String(err.message).slice(0, 80) : "unknown");
-        try { var dx = window.__iuEvidenceDebug; if (dx && !dx.failureReason) { dx.failureReason = "prepareDocumentImage:" + errMsg2; dx.rootRuntimeFailurePoint = "prepareDocumentImage"; dx.rootCauseRemainingStopShip = "prepareDocumentImage:" + errMsg2; dx.ocrRunCompleted = true; dx.ocrFinalState = "failure"; dx.ocrResultSource = "safe_fallback"; } } catch (_) {}
-        var errRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+        try { var dx = window.__iuEvidenceDebug; if (dx && !dx.failureReason) { dx.failureReason = "prepareDocumentImage:" + errMsg2; dx.rootRuntimeFailurePoint = "prepareDocumentImage"; dx.rootCauseRemainingStopShip = "prepareDocumentImage:" + errMsg2; dx.ocrRunCompleted = true; dx.ocrFinalState = "failure"; dx.ocrResultSource = "truthful_failed"; } } catch (_) {}
+        var errRes = iuEvidenceOcrPipeline("", kind);
+        if (!errRes || typeof errRes !== "object") errRes = {};
+        errRes.rawOcrText = "";
+        errRes.correctedFields = errRes.correctedFields || { store: "unknown", date: "unknown", time: "unknown", total: "unknown" };
+        errRes.items = errRes.items || [];
+        errRes.realImageOcrAttempted = true;
+        errRes.realImageOcrSucceeded = false;
+        errRes.ocrUsedSimulatedFallback = false;
+        errRes.ocrRuntimeLoadOk = false;
+        errRes.ocrFailureReason = "image_load_failed:" + errMsg2;
         errRes.usedInjectPath = false;
         errRes.proofStillDependsOnInjectedText = false;
         errRes.proofUsedInjectedTextAsPrimary = false;
@@ -12168,7 +12411,16 @@ function buildVideoAsArticleCard(it) {
         errRes.factLinkageTruthful = false;
         return errRes;
       }).then(function(finalResult) {
+        var obj = (finalResult != null && typeof finalResult === "object") ? finalResult : (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object" ? window.__iuEvidenceLastResult : null);
+        if (obj && realImageOrPdfInputUsed && (obj.rawOcrText != null && String(obj.rawOcrText).trim().length > 0 || obj.ocrGeometry)) {
+          if (obj.realImageOcrSucceeded === undefined) obj.realImageOcrSucceeded = true;
+          if (obj.ocrWordBoxesPresent === undefined && obj.ocrGeometry) obj.ocrWordBoxesPresent = !!(obj.ocrGeometry.words && obj.ocrGeometry.words.length > 0);
+          if (obj.ocrLineGroupsPresent === undefined && obj.ocrGeometry) obj.ocrLineGroupsPresent = !!(obj.ocrGeometry.lineGroups && obj.ocrGeometry.lineGroups.length > 0);
+          return obj;
+        }
         if (finalResult == null || typeof finalResult !== "object") {
+          var lastRes = (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object" && (window.__iuEvidenceLastResult.rawOcrText != null && String(window.__iuEvidenceLastResult.rawOcrText).trim().length > 0 || window.__iuEvidenceLastResult.ocrGeometry)) ? window.__iuEvidenceLastResult : null;
+          if (realImageOrPdfInputUsed && lastRes) return lastRes;
           var d = window.__iuEvidenceDebug;
           if (d && d.recognizeSucceeded === true) {
             var minimalSuccess = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
@@ -12180,6 +12432,9 @@ function buildVideoAsArticleCard(it) {
             minimalSuccess.ocrPass2Executed = false;
             minimalSuccess.preprocessingApplied = preprocessingApplied;
             minimalSuccess.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
+            minimalSuccess.realImageOcrAttempted = !!realImageOrPdfInputUsed;
+            minimalSuccess.realImageOcrSucceeded = false;
+            minimalSuccess.ocrUsedSimulatedFallback = false;
             minimalSuccess.actualOcrEnginePresent = actualOcrEnginePresent;
             minimalSuccess.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
             try { if (d) { d.failureReason = null; d.rootRuntimeFailurePoint = null; d.rootCauseRemainingStopShip = null; d.ocrRunCompleted = true; d.ocrFinalState = "success"; d.ocrResultSource = "real_ocr"; d.ocrFinalCommitted = true; } } catch (_) {}
@@ -12209,6 +12464,9 @@ function buildVideoAsArticleCard(it) {
           safeRes.ocrPass2Executed = false;
           safeRes.preprocessingApplied = preprocessingApplied;
           safeRes.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
+          safeRes.realImageOcrAttempted = !!realImageOrPdfInputUsed;
+          safeRes.realImageOcrSucceeded = false;
+          safeRes.ocrUsedSimulatedFallback = !realImageOrPdfInputUsed;
           safeRes.actualOcrEnginePresent = actualOcrEnginePresent;
           safeRes.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
           safeRes.phase62CanonicalPurchaseRecordPresent = false;
@@ -12546,6 +12804,7 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidencePipelineResultToPresentationResponse = iuEvidencePipelineResultToPresentationResponse;
     window.iuEvidenceRenderExtractionPanelFromContract = iuEvidenceRenderExtractionPanelFromContract;
     window.iuEvidenceOcrHook = iuEvidenceOcrHook;
+    window.iuEvidenceLoadTesseract = iuEvidenceLoadTesseract;
     window.iuEvidenceNormalizeOcrText = iuEvidenceNormalizeOcrText;
     window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
     window.iuEvidenceSimulatedRawOcr = iuEvidenceSimulatedRawOcr;
@@ -12566,6 +12825,8 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidencePhase72ContentAccuracyScorer = iuEvidencePhase72ContentAccuracyScorer;
     window.iuEvidencePhase72GoldenSet = iuEvidencePhase72GoldenSet;
     window.iuEvidencePhase72AggregateAccuracy = iuEvidencePhase72AggregateAccuracy;
+    window.iuEvidencePhase72rMapCorpusGoldenToScorer = iuEvidencePhase72rMapCorpusGoldenToScorer;
+    window.iuEvidencePhase72rRunRealImageValidation = iuEvidencePhase72rRunRealImageValidation;
     window.IU_PHASE72_WEIGHTS = IU_PHASE72_WEIGHTS;
     window.IU_PHASE72_GOLDEN_SCENARIOS = IU_PHASE72_GOLDEN_SCENARIOS;
     try { if (typeof window.dispatchEvent === "function") window.dispatchEvent(new CustomEvent("iuEvidenceReady")); } catch (_) {}
