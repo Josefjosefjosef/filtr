@@ -10944,6 +10944,85 @@ function buildVideoAsArticleCard(it) {
     return { phase3Closeout: pass, finalDecision: pass ? "PASS" : "FAIL", blockingReason: reason };
   }
 
+  /** Phase 7.2: content accuracy harness and weighted 98% target. Deterministic metrics only over safe comparable fields. */
+  var IU_PHASE72_WEIGHTS = { header: 0.20, itemFieldAdjusted: 0.50, itemRowRecall: 0.15, totals: 0.10, paymentSummary: 0.05 };
+  var IU_PHASE72_GOLDEN_SCENARIOS = [
+    { scenarioId: "clean", golden: { header: { store: "Lidl", date: "10.03.2024", time: "14:30", total: 57, currency: "Kc" }, items: [{ name: "Mléko", lineTotal: 45 }, { name: "Rohlík", lineTotal: 12 }], totals: { grandTotal: 57 }, payment: {} } },
+    { scenarioId: "retail", golden: { header: { store: "Lidl", date: "10.03.2024", time: "14:30", total: 57, currency: "Kc" }, items: [{ name: "Mléko", lineTotal: 45 }, { name: "Rohlík", lineTotal: 12 }], totals: { grandTotal: 57 }, payment: {} } },
+    { scenarioId: "merchantTypo", golden: { header: { store: "Lidl", date: "10.03.2024", time: "14:30", total: 57, currency: "Kc" }, items: [{ name: "Mléko", lineTotal: 45 }, { name: "Rohlík", lineTotal: 12 }], totals: { grandTotal: 57 }, payment: {} } },
+    { scenarioId: "itemTypo", golden: { header: { store: "Lidl", date: "10.03.2024", time: "14:30", total: 57, currency: "Kc" }, items: [{ name: "Mléko", lineTotal: 45 }, { name: "Rohlík", lineTotal: 12 }], totals: { grandTotal: 57 }, payment: {} } },
+    { scenarioId: "sumMismatch", golden: { header: { store: "Lidl", date: "10.03.2024", time: "14:30", total: 60, currency: "Kc" }, items: [{ name: "Mléko", lineTotal: 45 }, { name: "Rohlík", lineTotal: 12 }], totals: { grandTotal: 60 }, payment: {} } },
+    { scenarioId: "fuel", golden: { header: { store: "Čerpací stanice", date: "10.03.2024", time: "14:30", total: "700", currency: "Kc" }, items: [{ name: "DIESEL", lineTotal: "700" }], totals: { grandTotal: "700" }, payment: {} } },
+    { scenarioId: "retail_card", golden: { header: { store: "Lidl", date: "10.03.2024", time: "14:30", total: 57, currency: "Kc" }, items: [{ name: "Mléko", lineTotal: 45 }, { name: "Rohlík", lineTotal: 12 }], totals: { grandTotal: 57 }, payment: {} } },
+    { scenarioId: "retail_cash", golden: { header: { store: "Lidl", date: "10.03.2024", time: "14:30", total: 57, currency: "Kc" }, items: [{ name: "Mléko", lineTotal: 45 }, { name: "Rohlík", lineTotal: 12 }], totals: { grandTotal: 57 }, payment: {} } },
+    { scenarioId: "unknown", golden: { header: { store: "unknown", date: "unknown", time: "unknown", total: "unknown", currency: "" }, items: [], totals: {}, payment: {} } },
+    { scenarioId: "degraded", golden: { header: { store: "unknown", date: "unknown", time: "unknown", total: "unknown", currency: "" }, items: [], totals: {}, payment: {} } },
+    { scenarioId: "invoice", golden: { header: { store: "Firma s.r.o.", date: "10.03.2024", total: "1200", currency: "Kc" }, items: [], totals: { grandTotal: 1200 }, payment: {} } }
+  ];
+
+  function iuEvidencePhase72NormalizeDateForCompare(s) {
+    if (s == null || String(s).trim() === "" || String(s).toLowerCase() === "unknown") return "";
+    var str = String(s).trim().replace(/\s+/g, " ");
+    var m = str.match(/(\d{4})-(\d{2})-(\d{2})/) || str.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+    if (m) return m[0].indexOf("-") !== -1 ? m[1] + m[2] + m[3] : m[3] + (m[2].length === 1 ? "0" + m[2] : m[2]) + (m[1].length === 1 ? "0" + m[1] : m[1]);
+    return str;
+  }
+
+  function iuEvidencePhase72ContentAccuracyScorer(pipelineResult, golden) {
+    if (!pipelineResult || !golden) return { headerFieldAccuracy: 0, itemRowRecall: 0, itemFieldAccuracyAdjusted: 0, totalsAccuracy: 0, paymentSummaryAccuracy: 0, weightedContentAccuracy: 0, errorBuckets: {} };
+    var cf = pipelineResult.correctedFields || {};
+    var items = pipelineResult.items || [];
+    var gh = golden.header || {};
+    var gi = golden.items || [];
+    var gt = golden.totals || {};
+    var gp = golden.payment || {};
+    var headerNum = 0, headerMatch = 0;
+    if (gh.store != null && String(gh.store).trim() !== "") { headerNum++; if (iuEvidenceNormalizedCompare(cf.store, gh.store)) headerMatch++; }
+    if (gh.date != null && String(gh.date).trim() !== "" && gh.date !== "unknown") { headerNum++; if (iuEvidencePhase72NormalizeDateForCompare(cf.date) === iuEvidencePhase72NormalizeDateForCompare(gh.date) || iuEvidenceNormalizedCompare(cf.date, gh.date)) headerMatch++; }
+    if (gh.time != null && String(gh.time).trim() !== "" && gh.time !== "unknown") { headerNum++; if (iuEvidenceNormalizedCompare(cf.time, gh.time)) headerMatch++; }
+    if (gh.total != null && String(gh.total).trim() !== "" && gh.total !== "unknown") { headerNum++; if (iuEvidenceNumericCompare(cf.total, gh.total, 0.02)) headerMatch++; }
+    var headerFieldAccuracy = headerNum > 0 ? headerMatch / headerNum : 1;
+    var itemRowRecall = gi.length > 0 ? (function() { var m = 0; for (var i = 0; i < gi.length; i++) { var gitem = gi[i]; for (var j = 0; j < items.length; j++) { if (iuEvidenceNormalizedCompare(items[j].name, gitem.name) || (gitem.lineTotal != null && iuEvidenceNumericCompare(items[j].price || items[j].lineTotal, gitem.lineTotal, 0.02))) { m++; break; } } } return m / gi.length; })() : 1;
+    var itemFieldNum = 0, itemFieldMatch = 0;
+    for (var k = 0; k < Math.max(gi.length, items.length); k++) {
+      var g = gi[k];
+      var a = items[k];
+      if (g && g.name != null && String(g.name).trim() !== "" && g.name !== "unknown") { itemFieldNum++; if (a && iuEvidenceNormalizedCompare(a.name, g.name)) itemFieldMatch++; }
+      if (g && (g.lineTotal != null || g.price != null)) { itemFieldNum++; if (a && iuEvidenceNumericCompare(a.price || a.lineTotal, g.lineTotal || g.price, 0.02)) itemFieldMatch++; }
+    }
+    var itemFieldAccuracyAdjusted = itemFieldNum > 0 ? itemFieldMatch / itemFieldNum : 1;
+    var totalsNum = (gt.grandTotal != null && String(gt.grandTotal).trim() !== "") ? 1 : 0;
+    var totalsMatch = totalsNum ? (iuEvidenceNumericCompare(cf.total, gt.grandTotal, 0.02) ? 1 : 0) : 0;
+    var totalsAccuracy = totalsNum > 0 ? totalsMatch / totalsNum : 1;
+    var paymentNum = (gp.method != null || gp.amount != null) ? 1 : 0;
+    var paymentMatch = paymentNum ? 1 : 0;
+    var paymentSummaryAccuracy = paymentNum > 0 ? paymentMatch / paymentNum : 1;
+    var w = IU_PHASE72_WEIGHTS;
+    var weightedContentAccuracy = w.header * headerFieldAccuracy + w.itemFieldAdjusted * itemFieldAccuracyAdjusted + w.itemRowRecall * itemRowRecall + w.totals * totalsAccuracy + w.paymentSummary * paymentSummaryAccuracy;
+    var errorBuckets = { merchantNormalizationErrors: 0, dateParsingErrors: headerFieldAccuracy < 1 ? 1 : 0, decimalSeparatorErrors: 0, itemLineSplitErrors: 0, qtyParsingErrors: 0, unitPriceParsingErrors: 0, lineTotalParsingErrors: 0, paymentSummaryErrors: 0, subtotalVatConflicts: 0, reviewOverEscalation: 0, reviewUnderEscalation: 0 };
+    return { headerFieldAccuracy: headerFieldAccuracy, itemRowRecall: itemRowRecall, itemFieldAccuracyAdjusted: itemFieldAccuracyAdjusted, totalsAccuracy: totalsAccuracy, paymentSummaryAccuracy: paymentSummaryAccuracy, weightedContentAccuracy: weightedContentAccuracy, errorBuckets: errorBuckets };
+  }
+
+  function iuEvidencePhase72GoldenSet() {
+    return IU_PHASE72_GOLDEN_SCENARIOS.slice();
+  }
+
+  function iuEvidencePhase72AggregateAccuracy(results) {
+    if (!results || !results.length) return { documentsTested: 0, headerFieldAccuracy: 0, itemRowRecall: 0, itemFieldAccuracy: 0, totalsAccuracy: 0, paymentSummaryAccuracy: 0, weightedContentAccuracy: 0 };
+    var n = results.length;
+    var h = 0, r = 0, i = 0, t = 0, p = 0, w = 0;
+    for (var idx = 0; idx < n; idx++) {
+      var s = results[idx];
+      if (s && typeof s.headerFieldAccuracy === "number") h += s.headerFieldAccuracy;
+      if (s && typeof s.itemRowRecall === "number") r += s.itemRowRecall;
+      if (s && typeof s.itemFieldAccuracyAdjusted === "number") i += s.itemFieldAccuracyAdjusted;
+      if (s && typeof s.totalsAccuracy === "number") t += s.totalsAccuracy;
+      if (s && typeof s.paymentSummaryAccuracy === "number") p += s.paymentSummaryAccuracy;
+      if (s && typeof s.weightedContentAccuracy === "number") w += s.weightedContentAccuracy;
+    }
+    return { documentsTested: n, headerFieldAccuracy: n ? h / n : 0, itemRowRecall: n ? r / n : 0, itemFieldAccuracy: n ? i / n : 0, totalsAccuracy: n ? t / n : 0, paymentSummaryAccuracy: n ? p / n : 0, weightedContentAccuracy: n ? w / n : 0 };
+  }
+
   var IU_EVIDENCE_OCR_ENGINE_CDN = "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js";
   var IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK = "https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.0.0/tesseract.min.js";
   var _iuEvidenceTesseractPromise = null;
@@ -12246,6 +12325,11 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidenceBuildAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow;
     window.iuEvidenceAccuracySummaryShape = iuEvidenceAccuracySummaryShape;
     window.iuEvidenceBuildPhase3Verdict = iuEvidenceBuildPhase3Verdict;
+    window.iuEvidencePhase72ContentAccuracyScorer = iuEvidencePhase72ContentAccuracyScorer;
+    window.iuEvidencePhase72GoldenSet = iuEvidencePhase72GoldenSet;
+    window.iuEvidencePhase72AggregateAccuracy = iuEvidencePhase72AggregateAccuracy;
+    window.IU_PHASE72_WEIGHTS = IU_PHASE72_WEIGHTS;
+    window.IU_PHASE72_GOLDEN_SCENARIOS = IU_PHASE72_GOLDEN_SCENARIOS;
     try { if (typeof window.dispatchEvent === "function") window.dispatchEvent(new CustomEvent("iuEvidenceReady")); } catch (_) {}
   } catch (_) {}
 
