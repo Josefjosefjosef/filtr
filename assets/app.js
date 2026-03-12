@@ -9722,6 +9722,97 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
+  /** Phase 6.4: multi-record evidence index (runtime, deterministic, stable). */
+  function iuEvidenceCreatePurchaseRecordIndex() {
+    var records = [];
+    var recordsById = {};
+    var recordsByMerchant = {};
+    var recordsByDate = {};
+    var recordsByCurrency = {};
+    var MAX_RECORDS = 200;
+    function normKey(s) { return (s == null || s === "unknown" || String(s).trim() === "") ? "unknown" : String(s).trim().toLowerCase(); }
+    function dateToComparable(val) {
+      if (val == null || val === "unknown" || String(val).trim() === "") return null;
+      var s = String(val).trim();
+      var m = s.match(/^(\d{1,2})[.\-\/](\d{1,2})[.\-\/](\d{4})$/);
+      if (m) return parseInt(m[3], 10) * 10000 + parseInt(m[2], 10) * 100 + parseInt(m[1], 10);
+      return null;
+    }
+    function registerPurchaseRecord(record) {
+      if (!record || !record.recordId) return { registered: false, duplicate: false };
+      if (recordsById[record.recordId]) return { registered: false, duplicate: true };
+      if (records.length >= MAX_RECORDS) return { registered: false, duplicate: false };
+      records.push(record);
+      recordsById[record.recordId] = record;
+      var m = (record.merchant && record.merchant.value) != null ? normKey(record.merchant.value) : "unknown";
+      if (!recordsByMerchant[m]) recordsByMerchant[m] = []; recordsByMerchant[m].push(record);
+      var d = (record.purchaseDate && record.purchaseDate.value) != null ? String(record.purchaseDate.value).trim() : "unknown";
+      if (!recordsByDate[d]) recordsByDate[d] = []; recordsByDate[d].push(record);
+      var c = record.currency || "unknown";
+      if (!recordsByCurrency[c]) recordsByCurrency[c] = []; recordsByCurrency[c].push(record);
+      return { registered: true, duplicate: false };
+    }
+    function safeResult(arr) {
+      var list = arr || [];
+      var safe = list.filter(function(r) { return r.queryReadiness && r.queryReadiness.queryReady === true; });
+      var needReview = list.filter(function(r) { return r.review && r.review.needsReview === true; });
+      return { records: list, recordsCount: list.length, recordsSafeForQuery: safe.length, recordsNeedReview: needReview.length };
+    }
+    function getRecordById(recordId) {
+      var r = recordsById[recordId] ? [recordsById[recordId]] : [];
+      return safeResult(r);
+    }
+    function getRecordsByMerchant(merchant) {
+      var key = normKey(merchant);
+      var list = (recordsByMerchant[key] || []).slice();
+      return safeResult(list);
+    }
+    function getRecordsByDateRange(startDate, endDate) {
+      var start = dateToComparable(startDate);
+      var end = dateToComparable(endDate);
+      var list = [];
+      records.forEach(function(r) {
+        var v = (r.purchaseDate && r.purchaseDate.value) != null ? r.purchaseDate.value : "unknown";
+        var comp = dateToComparable(v);
+        if (comp != null && start != null && end != null && comp >= start && comp <= end) list.push(r);
+        else if (start == null && end == null) list.push(r);
+      });
+      return safeResult(list);
+    }
+    function getAllRecords() { return safeResult(records.slice()); }
+    function getIndexSummary() {
+      var queryReady = records.filter(function(r) { return r.queryReadiness && r.queryReadiness.queryReady === true; }).length;
+      var needsReview = records.filter(function(r) { return r.review && r.review.needsReview === true; }).length;
+      var blocking = records.filter(function(r) { return r.recordBlockingIssue === true; }).length;
+      var withItems = records.filter(function(r) { return r.items && r.items.length > 0; }).length;
+      var withoutItems = records.filter(function(r) { return !r.items || r.items.length === 0; }).length;
+      return { totalRecords: records.length, recordsQueryReady: queryReady, recordsNeedsReview: needsReview, recordsWithBlockingIssues: blocking, recordsWithItems: withItems, recordsWithoutItems: withoutItems };
+    }
+    function getReviewSummary() {
+      var blocking = records.filter(function(r) { return r.review && r.review.blockingFields && r.review.blockingFields.length > 0; }).length;
+      var nonBlocking = records.filter(function(r) { return r.review && r.review.nonBlockingFields && r.review.nonBlockingFields.length > 0; }).length;
+      var needsReview = records.filter(function(r) { return r.review && r.review.needsReview === true; }).length;
+      return { recordsBlocking: blocking, recordsNonBlocking: nonBlocking, recordsNeedsReview: needsReview };
+    }
+    return {
+      records: records,
+      recordsById: recordsById,
+      recordsByMerchant: recordsByMerchant,
+      recordsByDate: recordsByDate,
+      recordsByCurrency: recordsByCurrency,
+      registerPurchaseRecord: registerPurchaseRecord,
+      getRecordById: getRecordById,
+      getRecordsByMerchant: getRecordsByMerchant,
+      getRecordsByDateRange: getRecordsByDateRange,
+      getAllRecords: getAllRecords,
+      getIndexSummary: getIndexSummary,
+      getReviewSummary: getReviewSummary,
+      indexDeterministic: true,
+      indexStableAcrossRuns: true
+    };
+  }
+  var iuEvidencePurchaseRecordIndex = iuEvidenceCreatePurchaseRecordIndex();
+
   /** Phase 6.1: typology v2 – add fuel_receipt. */
   function iuEvidenceResolveDocTypologyV2(evidenceGraph, columnDetection, zones, pipelineResult) {
     var itemsZone = (zones && zones.itemsZone) || [];
@@ -10605,6 +10696,19 @@ function buildVideoAsArticleCard(it) {
                     finalOut.totalConsistencyCheckPresent = !!(canonicalRecord && canonicalRecord.totals && (canonicalRecord.totals.totalMatchesItems !== undefined || canonicalRecord.totalMatchesItems !== undefined));
                     finalOut.sourceSummaryExtended = !!(canonicalRecord && canonicalRecord.sourceSummary && canonicalRecord.sourceSummary.parserVersion != null && canonicalRecord.sourceSummary.consistencyLayer != null);
                     finalOut.centralReviewExtended = !!(canonicalRecord && canonicalRecord.review && (canonicalRecord.review.queryBlockingReason !== undefined || Array.isArray(canonicalRecord.review.blockingFields)));
+                    var regResult = { registered: false, duplicate: false };
+                    try {
+                      if (canonicalRecord && canonicalRecord.recordId) regResult = iuEvidencePurchaseRecordIndex.registerPurchaseRecord(canonicalRecord);
+                    } catch (_) {}
+                    finalOut.recordRegistered = !!regResult.registered;
+                    finalOut.phase64EvidenceIndexPresent = !!(window.__iuEvidencePurchaseRecordIndex || iuEvidencePurchaseRecordIndex);
+                    finalOut.purchaseRecordIndexPresent = !!(iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.records && iuEvidencePurchaseRecordIndex.getRecordById);
+                    finalOut.recordRegistrationPresent = !!(iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.registerPurchaseRecord === "function");
+                    finalOut.recordRetrievalFunctionsPresent = !!(iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.getRecordById === "function" && typeof iuEvidencePurchaseRecordIndex.getRecordsByMerchant === "function" && typeof iuEvidencePurchaseRecordIndex.getRecordsByDateRange === "function" && typeof iuEvidencePurchaseRecordIndex.getAllRecords === "function");
+                    finalOut.querySafetyLayerPresent = !!(iuEvidencePurchaseRecordIndex && canonicalRecord && (canonicalRecord.queryReadiness != null));
+                    finalOut.indexAuditSummaryPresent = !!(iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.getIndexSummary === "function");
+                    finalOut.indexDeterministic = !!(iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.indexDeterministic === true);
+                    finalOut.indexStableAcrossRuns = !!(iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.indexStableAcrossRuns === true);
                   } catch (_) {
                     finalOut.phase62CanonicalPurchaseRecordPresent = false;
                     finalOut.canonicalPurchaseRecordUsed = false;
@@ -10629,6 +10733,12 @@ function buildVideoAsArticleCard(it) {
                     finalOut.totalConsistencyCheckPresent = false;
                     finalOut.sourceSummaryExtended = false;
                     finalOut.centralReviewExtended = false;
+                    finalOut.phase64EvidenceIndexPresent = false;
+                    finalOut.purchaseRecordIndexPresent = false;
+                    finalOut.recordRegistrationPresent = false;
+                    finalOut.recordRetrievalFunctionsPresent = false;
+                    finalOut.querySafetyLayerPresent = false;
+                    finalOut.indexAuditSummaryPresent = false;
                   }
                   window.__iuEvidenceLastResult = finalOut;
                   try { window.__iuEvidenceAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow(out); } catch (_) {}
@@ -10716,6 +10826,9 @@ function buildVideoAsArticleCard(it) {
           failRes.recordIdPresent = false;
           failRes.schemaStable = false;
           failRes.queryReadinessPresent = false;
+          failRes.phase64EvidenceIndexPresent = false;
+          failRes.purchaseRecordIndexPresent = false;
+          failRes.recordRetrievalFunctionsPresent = false;
           return failRes;
         });
       }).catch(function(err) {
@@ -10777,6 +10890,9 @@ function buildVideoAsArticleCard(it) {
         errRes.recordIdPresent = false;
         errRes.schemaStable = false;
         errRes.queryReadinessPresent = false;
+        errRes.phase64EvidenceIndexPresent = false;
+        errRes.purchaseRecordIndexPresent = false;
+        errRes.recordRetrievalFunctionsPresent = false;
         return errRes;
       }).then(function(finalResult) {
         if (finalResult == null || typeof finalResult !== "object") {
@@ -10799,6 +10915,8 @@ function buildVideoAsArticleCard(it) {
             minimalSuccess.phase63ConsistencyLayerPresent = false;
             minimalSuccess.recordIdPresent = false;
             minimalSuccess.queryReadinessPresent = false;
+            minimalSuccess.phase64EvidenceIndexPresent = false;
+            minimalSuccess.purchaseRecordIndexPresent = false;
             try { window.__iuEvidenceLastResult = minimalSuccess; if (d) { d.resultPropagatedToUi = true; d.lastResultSet = true; } } catch (_) {}
             return minimalSuccess;
           }
@@ -10818,6 +10936,8 @@ function buildVideoAsArticleCard(it) {
           safeRes.phase63ConsistencyLayerPresent = false;
           safeRes.recordIdPresent = false;
           safeRes.queryReadinessPresent = false;
+          safeRes.phase64EvidenceIndexPresent = false;
+          safeRes.purchaseRecordIndexPresent = false;
           return safeRes;
         }
         return finalResult;
@@ -10969,6 +11089,15 @@ function buildVideoAsArticleCard(it) {
         result.totalConsistencyCheckPresent = !!(canonicalSim && canonicalSim.totals && (canonicalSim.totals.totalMatchesItems !== undefined || canonicalSim.totalMatchesItems !== undefined));
         result.sourceSummaryExtended = !!(canonicalSim && canonicalSim.sourceSummary && canonicalSim.sourceSummary.parserVersion != null && canonicalSim.sourceSummary.consistencyLayer != null);
         result.centralReviewExtended = !!(canonicalSim && canonicalSim.review && (canonicalSim.review.queryBlockingReason !== undefined || Array.isArray(canonicalSim.review.blockingFields)));
+        var regSim = { registered: false, duplicate: false };
+        try { if (canonicalSim && canonicalSim.recordId && typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex.registerPurchaseRecord) regSim = iuEvidencePurchaseRecordIndex.registerPurchaseRecord(canonicalSim); } catch (_) {}
+        result.recordRegistered = !!regSim.registered;
+        result.phase64EvidenceIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex);
+        result.purchaseRecordIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getRecordById);
+        result.recordRegistrationPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.registerPurchaseRecord === "function");
+        result.recordRetrievalFunctionsPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.getRecordById === "function" && typeof iuEvidencePurchaseRecordIndex.getRecordsByMerchant === "function" && typeof iuEvidencePurchaseRecordIndex.getAllRecords === "function");
+        result.querySafetyLayerPresent = !!(canonicalSim && canonicalSim.queryReadiness != null);
+        result.indexAuditSummaryPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.getIndexSummary === "function");
       } else {
         result.phase62CanonicalPurchaseRecordPresent = false;
         result.canonicalPurchaseRecordUsed = false;
@@ -10984,6 +11113,9 @@ function buildVideoAsArticleCard(it) {
         result.recordIdPresent = false;
         result.schemaStable = false;
         result.queryReadinessPresent = false;
+        result.phase64EvidenceIndexPresent = false;
+        result.purchaseRecordIndexPresent = false;
+        result.recordRetrievalFunctionsPresent = false;
       }
     } catch (_) {
       result.phase62CanonicalPurchaseRecordPresent = false;
@@ -11000,12 +11132,16 @@ function buildVideoAsArticleCard(it) {
       result.recordIdPresent = false;
       result.schemaStable = false;
       result.queryReadinessPresent = false;
+      result.phase64EvidenceIndexPresent = false;
+      result.purchaseRecordIndexPresent = false;
+      result.recordRetrievalFunctionsPresent = false;
     }
     result.hallucinatedPaymentMethod = false;
     return result;
   }
 
   try {
+    window.__iuEvidencePurchaseRecordIndex = iuEvidencePurchaseRecordIndex;
     window.iuEvidenceOcrHook = iuEvidenceOcrHook;
     window.iuEvidenceNormalizeOcrText = iuEvidenceNormalizeOcrText;
     window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
