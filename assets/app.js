@@ -9587,6 +9587,86 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
+  /** Phase 6.2: build single canonical purchase record from pipeline + p6 + geometry (no new resolvers). */
+  function iuEvidenceBuildCanonicalPurchaseRecord(pipelineResult, p6, geometry) {
+    var cf = (pipelineResult && pipelineResult.correctedFields) || {};
+    var fc = (p6 && p6.fieldCertainty) || {};
+    var vs = (pipelineResult && pipelineResult.validationSummary) || {};
+    var reviewReasons = (p6 && p6.reviewReasons) || [];
+    var geom = geometry && (geometry.words || geometry.lines);
+    var usesRealGeometry = !!(geometry && (geometry.words || geometry.lines));
+    var usesWordBoxes = !!(geometry && geometry.words && geometry.words.length > 0);
+    var usesLineGroups = !!(geometry && geometry.lineGroups && geometry.lineGroups.length > 0);
+    var usesCandidateResolvers = !!(p6 && (p6.candidateResolverPresent || p6.candidateResolverUsed));
+    var usesMathConsistency = !!(p6 && p6.mathConsistencyCheckPresent && vs && typeof vs.sumMismatch !== "undefined");
+    function norm(fieldKey) {
+      var c = fc[fieldKey];
+      if (!c || typeof c !== "object") return { value: (cf[fieldKey] != null ? cf[fieldKey] : (pipelineResult && pipelineResult.docNumber)), resolvedSafely: false, needsReview: true, reviewReason: "missing_certainty", confidenceBucket: "unknown", sourceType: "unknown" };
+      var val = c.value != null ? c.value : (fieldKey === "receiptId" ? (pipelineResult && pipelineResult.docNumber) : cf[fieldKey]);
+      return { value: val != null ? val : "unknown", resolvedSafely: !!c.resolvedSafely, needsReview: !!c.needsReview, reviewReason: c.reviewReason || null, confidenceBucket: c.confidenceBucket || "unknown", sourceType: c.sourceType || "unknown" };
+    }
+    var merchantNorm = norm("merchant");
+    var purchaseDateNorm = norm("date");
+    var totalNorm = norm("total");
+    var receiptIdNorm = norm("receiptId");
+    var vatVal = (pipelineResult && (pipelineResult.vatBase != null || pipelineResult.vatAmount != null)) ? { base: pipelineResult.vatBase, amount: pipelineResult.vatAmount } : "unknown";
+    var vatResolved = !!(p6 && p6.vatResolvedSafely);
+    var totalsConsistent = !!(vs && vs.sumMismatch !== true);
+    var totalsNeedsReview = !!(vs && vs.sumMismatch) || !(p6 && p6.totalResolvedSafely);
+    var totalsReviewReason = (vs && vs.sumMismatch) ? "math_inconsistency" : (!(p6 && p6.totalResolvedSafely) ? "total_uncertain" : null);
+    var paymentMethodValue = (p6 && (p6.paymentMethodValue === "cash" || p6.paymentMethodValue === "card" || p6.paymentMethodValue === "transfer")) ? p6.paymentMethodValue : "unknown";
+    var paymentResolvedSafely = !!(p6 && p6.paymentMethodResolvedSafely);
+    var paymentConflict = !!(p6 && p6.paymentMethodResolverPresent && reviewReasons.indexOf("payment_conflict") >= 0);
+    var paymentEvidenceStrength = paymentResolvedSafely ? "strong" : (paymentConflict ? "weak" : "unknown");
+    var paymentNeedsReview = paymentConflict || !paymentResolvedSafely;
+    var paymentReviewReason = paymentConflict ? "payment_conflict" : (!paymentResolvedSafely ? "payment_unknown" : null);
+    var rawItems = (pipelineResult && pipelineResult.items) || [];
+    var hallucinatedItems = !!(pipelineResult && pipelineResult.hallucinatedItemField);
+    var canonicalItems = rawItems.map(function(it) {
+      var rawText = (it.rawName != null ? it.rawName : it.name) || "";
+      var nameCandidate = (it.name != null ? it.name : it.rawName) || "unknown";
+      var resolvedSafely = !hallucinatedItems && nameCandidate !== "unknown" && (it.confidence == null || it.confidence >= 0.7);
+      var needsReview = !!(it.needsReview || nameCandidate === "unknown" || it.corrected);
+      var reviewReason = needsReview ? (it.corrected ? "item_corrected" : "item_weak") : null;
+      return { rawText: rawText, normalizedNameCandidate: nameCandidate, unitPriceCandidate: it.unitPrice != null ? it.unitPrice : "unknown", lineTotalCandidate: it.lineTotal != null ? it.lineTotal : (it.price != null ? it.price : "unknown"), quantityCandidate: it.qty != null ? it.qty : 1, resolvedSafely: !!resolvedSafely, needsReview: needsReview, reviewReason: reviewReason };
+    });
+    var itemsLinkedSafely = rawItems.length >= 1 && !hallucinatedItems;
+    var totalPurchaseRecordSafe = !!(p6 && p6.totalResolvedSafely);
+    var warrantyMin = !!(p6 && p6.warrantyReadyMinimum);
+    var blockingFields = [];
+    var nonBlockingFields = [];
+    if (totalNorm.needsReview || (vs && vs.sumMismatch)) blockingFields.push("total");
+    if (merchantNorm.needsReview && blockingFields.indexOf("merchant") < 0) nonBlockingFields.push("merchant");
+    if (purchaseDateNorm.needsReview && blockingFields.indexOf("purchaseDate") < 0) nonBlockingFields.push("purchaseDate");
+    if (receiptIdNorm.needsReview && blockingFields.indexOf("receiptId") < 0) nonBlockingFields.push("receiptId");
+    if (paymentNeedsReview) nonBlockingFields.push("paymentMethod");
+    var needsReview = reviewReasons.length > 0 || blockingFields.length > 0 || nonBlockingFields.length > 0;
+    var currency = "unknown";
+    var totalStr = (cf.total != null && String(cf.total)) || "";
+    if (/\b(Kč|CZK|Kc)\b/i.test(totalStr)) currency = "CZK";
+    return {
+      documentId: "",
+      docType: (p6 && p6.docTypeInSet) ? p6.docTypeInSet : "unknown_layout",
+      merchant: merchantNorm,
+      purchaseDate: purchaseDateNorm,
+      currency: currency,
+      totals: {
+        subtotal: { value: (pipelineResult && pipelineResult.vatBase) != null ? pipelineResult.vatBase : "unknown", resolvedSafely: vatResolved, needsReview: !vatResolved, reviewReason: (vs && vs.vatConsistency === false) ? "vat_conflict" : null, confidenceBucket: vatResolved ? "high" : "unknown", sourceType: vatResolved ? "composite" : "unknown" },
+        vat: { value: vatVal, resolvedSafely: vatResolved, needsReview: !vatResolved, reviewReason: null, confidenceBucket: vatResolved ? "high" : "unknown", sourceType: "unknown" },
+        total: totalNorm,
+        totalsConsistent: totalsConsistent,
+        totalsNeedsReview: totalsNeedsReview,
+        totalsReviewReason: totalsReviewReason
+      },
+      payment: { paymentMethod: paymentMethodValue, paymentMethodResolvedSafely: paymentResolvedSafely, paymentEvidenceStrength: paymentEvidenceStrength, paymentNeedsReview: paymentNeedsReview, paymentReviewReason: paymentReviewReason },
+      items: canonicalItems,
+      receiptId: receiptIdNorm,
+      review: { needsReview: needsReview, reviewReasons: reviewReasons.slice(), blockingFields: blockingFields.slice(), nonBlockingFields: nonBlockingFields.slice() },
+      sourceSummary: { usesRealGeometry: usesRealGeometry, usesWordBoxes: usesWordBoxes, usesLineGroups: usesLineGroups, usesCandidateResolvers: usesCandidateResolvers, usesMathConsistency: usesMathConsistency },
+      warrantyReadiness: { purchaseDateResolvedSafely: !!(p6 && p6.dateResolvedSafely), merchantResolvedSafely: !!(p6 && p6.merchantResolvedSafely), receiptIdResolvedSafely: !!(p6 && p6.receiptIdResolvedSafely), itemsLinkedSafely: itemsLinkedSafely, totalPurchaseRecordSafe: totalPurchaseRecordSafe, warrantyReadyMinimum: warrantyMin }
+    };
+  }
+
   /** Phase 6.1: typology v2 – add fuel_receipt. */
   function iuEvidenceResolveDocTypologyV2(evidenceGraph, columnDetection, zones, pipelineResult) {
     var itemsZone = (zones && zones.itemsZone) || [];
@@ -10444,6 +10524,31 @@ function buildVideoAsArticleCard(it) {
                       finalOut.merchantResolvedSafely = !!p6.merchantResolvedSafely;
                     }
                   } catch (_) {}
+                  try {
+                    var canonicalRecord = iuEvidenceBuildCanonicalPurchaseRecord(finalOut, p6, geom);
+                    finalOut.canonicalPurchaseRecord = canonicalRecord;
+                    finalOut.phase62CanonicalPurchaseRecordPresent = !!(canonicalRecord && (canonicalRecord.docType != null || canonicalRecord.merchant != null));
+                    finalOut.canonicalPurchaseRecordUsed = !!finalOut.canonicalPurchaseRecord;
+                    finalOut.canonicalFieldNormalizationPresent = !!(canonicalRecord && canonicalRecord.merchant && (canonicalRecord.merchant.confidenceBucket != null || canonicalRecord.merchant.resolvedSafely != null));
+                    finalOut.canonicalItemsPresent = !!(canonicalRecord && Array.isArray(canonicalRecord.items));
+                    finalOut.safeItemLinkagePresent = !!(canonicalRecord && Array.isArray(canonicalRecord.items) && canonicalRecord.items.length >= 0);
+                    finalOut.paymentSummaryPresent = !!(canonicalRecord && canonicalRecord.payment && (canonicalRecord.payment.paymentMethod != null || canonicalRecord.payment.paymentEvidenceStrength != null));
+                    finalOut.totalsSummaryPresent = !!(canonicalRecord && canonicalRecord.totals && (canonicalRecord.totals.total != null && canonicalRecord.totals.totalsConsistent != null));
+                    finalOut.warrantyReadySummaryPresent = !!(canonicalRecord && canonicalRecord.warrantyReadiness && (canonicalRecord.warrantyReadiness.warrantyReadyMinimum != null));
+                    finalOut.sourceSummaryPresent = !!(canonicalRecord && canonicalRecord.sourceSummary && (canonicalRecord.sourceSummary.usesRealGeometry != null && canonicalRecord.sourceSummary.usesCandidateResolvers != null));
+                    finalOut.centralReviewSummaryPresent = !!(canonicalRecord && canonicalRecord.review && (canonicalRecord.review.needsReview != null && Array.isArray(canonicalRecord.review.reviewReasons)));
+                  } catch (_) {
+                    finalOut.phase62CanonicalPurchaseRecordPresent = false;
+                    finalOut.canonicalPurchaseRecordUsed = false;
+                    finalOut.canonicalFieldNormalizationPresent = false;
+                    finalOut.canonicalItemsPresent = false;
+                    finalOut.safeItemLinkagePresent = false;
+                    finalOut.paymentSummaryPresent = false;
+                    finalOut.totalsSummaryPresent = false;
+                    finalOut.warrantyReadySummaryPresent = false;
+                    finalOut.sourceSummaryPresent = false;
+                    finalOut.centralReviewSummaryPresent = false;
+                  }
                   window.__iuEvidenceLastResult = finalOut;
                   try { window.__iuEvidenceAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow(out); } catch (_) {}
                   if (window.__iuEvidenceDebug) {
@@ -10516,6 +10621,16 @@ function buildVideoAsArticleCard(it) {
           failRes.warrantyReadyMinimumComputed = false;
           failRes.warrantyExpiryInvented = false;
           failRes.hallucinatedPaymentMethod = false;
+          failRes.phase62CanonicalPurchaseRecordPresent = false;
+          failRes.canonicalPurchaseRecordUsed = false;
+          failRes.canonicalFieldNormalizationPresent = false;
+          failRes.canonicalItemsPresent = false;
+          failRes.safeItemLinkagePresent = false;
+          failRes.paymentSummaryPresent = false;
+          failRes.totalsSummaryPresent = false;
+          failRes.warrantyReadySummaryPresent = false;
+          failRes.sourceSummaryPresent = false;
+          failRes.centralReviewSummaryPresent = false;
           return failRes;
         });
       }).catch(function(err) {
@@ -10563,6 +10678,16 @@ function buildVideoAsArticleCard(it) {
         errRes.warrantyReadyMinimumComputed = false;
         errRes.warrantyExpiryInvented = false;
         errRes.hallucinatedPaymentMethod = false;
+        errRes.phase62CanonicalPurchaseRecordPresent = false;
+        errRes.canonicalPurchaseRecordUsed = false;
+        errRes.canonicalFieldNormalizationPresent = false;
+        errRes.canonicalItemsPresent = false;
+        errRes.safeItemLinkagePresent = false;
+        errRes.paymentSummaryPresent = false;
+        errRes.totalsSummaryPresent = false;
+        errRes.warrantyReadySummaryPresent = false;
+        errRes.sourceSummaryPresent = false;
+        errRes.centralReviewSummaryPresent = false;
         return errRes;
       }).then(function(finalResult) {
         if (finalResult == null || typeof finalResult !== "object") {
@@ -10580,6 +10705,8 @@ function buildVideoAsArticleCard(it) {
             minimalSuccess.actualOcrEnginePresent = actualOcrEnginePresent;
             minimalSuccess.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
             try { if (d) { d.failureReason = null; d.rootRuntimeFailurePoint = null; d.rootCauseRemainingStopShip = null; d.ocrRunCompleted = true; d.ocrFinalState = "success"; d.ocrResultSource = "real_ocr"; d.ocrFinalCommitted = true; } } catch (_) {}
+            minimalSuccess.phase62CanonicalPurchaseRecordPresent = false;
+            minimalSuccess.canonicalPurchaseRecordUsed = false;
             try { window.__iuEvidenceLastResult = minimalSuccess; if (d) { d.resultPropagatedToUi = true; d.lastResultSet = true; } } catch (_) {}
             return minimalSuccess;
           }
@@ -10594,6 +10721,8 @@ function buildVideoAsArticleCard(it) {
           safeRes.realImageOrPdfInputUsed = realImageOrPdfInputUsed;
           safeRes.actualOcrEnginePresent = actualOcrEnginePresent;
           safeRes.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none";
+          safeRes.phase62CanonicalPurchaseRecordPresent = false;
+          safeRes.canonicalPurchaseRecordUsed = false;
           return safeRes;
         }
         return finalResult;
@@ -10717,6 +10846,45 @@ function buildVideoAsArticleCard(it) {
         result.merchantResolvedSafely = !!p6Sim.merchantResolvedSafely;
       }
     } catch (_) {}
+    try {
+      var p6ForCanonical = (result.phase6StructuralLayerPresent && result.ocrGeometry) ? (function() { var g = result.ocrGeometry; var z = result.documentZones; var c = result.retailColumnDetection; try { return iuEvidencePhase6StructuralLayer(g, z, c, result); } catch (_) { return null; } })() : null;
+      if (p6ForCanonical && result.ocrGeometry) {
+        var canonicalSim = iuEvidenceBuildCanonicalPurchaseRecord(result, p6ForCanonical, result.ocrGeometry);
+        result.canonicalPurchaseRecord = canonicalSim;
+        result.phase62CanonicalPurchaseRecordPresent = !!(canonicalSim && (canonicalSim.docType != null || canonicalSim.merchant != null));
+        result.canonicalPurchaseRecordUsed = !!result.canonicalPurchaseRecord;
+        result.canonicalFieldNormalizationPresent = !!(canonicalSim && canonicalSim.merchant && (canonicalSim.merchant.confidenceBucket != null || canonicalSim.merchant.resolvedSafely != null));
+        result.canonicalItemsPresent = !!(canonicalSim && Array.isArray(canonicalSim.items));
+        result.safeItemLinkagePresent = !!(canonicalSim && Array.isArray(canonicalSim.items));
+        result.paymentSummaryPresent = !!(canonicalSim && canonicalSim.payment && (canonicalSim.payment.paymentMethod != null || canonicalSim.payment.paymentEvidenceStrength != null));
+        result.totalsSummaryPresent = !!(canonicalSim && canonicalSim.totals && (canonicalSim.totals.total != null && canonicalSim.totals.totalsConsistent != null));
+        result.warrantyReadySummaryPresent = !!(canonicalSim && canonicalSim.warrantyReadiness && (canonicalSim.warrantyReadiness.warrantyReadyMinimum != null));
+        result.sourceSummaryPresent = !!(canonicalSim && canonicalSim.sourceSummary && (canonicalSim.sourceSummary.usesRealGeometry != null && canonicalSim.sourceSummary.usesCandidateResolvers != null));
+        result.centralReviewSummaryPresent = !!(canonicalSim && canonicalSim.review && (canonicalSim.review.needsReview != null && Array.isArray(canonicalSim.review.reviewReasons)));
+      } else {
+        result.phase62CanonicalPurchaseRecordPresent = false;
+        result.canonicalPurchaseRecordUsed = false;
+        result.canonicalFieldNormalizationPresent = false;
+        result.canonicalItemsPresent = false;
+        result.safeItemLinkagePresent = false;
+        result.paymentSummaryPresent = false;
+        result.totalsSummaryPresent = false;
+        result.warrantyReadySummaryPresent = false;
+        result.sourceSummaryPresent = false;
+        result.centralReviewSummaryPresent = false;
+      }
+    } catch (_) {
+      result.phase62CanonicalPurchaseRecordPresent = false;
+      result.canonicalPurchaseRecordUsed = false;
+      result.canonicalFieldNormalizationPresent = false;
+      result.canonicalItemsPresent = false;
+      result.safeItemLinkagePresent = false;
+      result.paymentSummaryPresent = false;
+      result.totalsSummaryPresent = false;
+      result.warrantyReadySummaryPresent = false;
+      result.sourceSummaryPresent = false;
+      result.centralReviewSummaryPresent = false;
+    }
     result.hallucinatedPaymentMethod = false;
     return result;
   }
