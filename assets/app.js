@@ -9501,6 +9501,99 @@ function buildVideoAsArticleCard(it) {
     return { conflictDetected: conflict, unknownInsteadOfLie: unknownInsteadOfLie, needsReview: needsReview };
   }
 
+  /** Phase 6.1: payment method resolver – evidence-only cash|card|transfer|unknown. */
+  function iuEvidencePaymentMethodResolver(linesText, pipelineResult) {
+    var raw = (pipelineResult && pipelineResult.rawOcrText) || "";
+    var combined = (linesText && linesText.join ? linesText.join(" ") : "") || raw;
+    var t = (combined || "").toLowerCase();
+    var cash = /\b(hotovost|cash|v\s*hotovosti)\b/i.test(t);
+    var card = /\b(karta|card|platba\s*kartou|kartou)\b/i.test(t);
+    var transfer = /\b(převod|transfer|bankovní\s*převod)\b/i.test(t);
+    var count = (cash ? 1 : 0) + (card ? 1 : 0) + (transfer ? 1 : 0);
+    var value = "unknown";
+    var resolvedSafely = false;
+    var conflict = false;
+    if (count === 1) {
+      if (cash) { value = "cash"; resolvedSafely = true; }
+      else if (card) { value = "card"; resolvedSafely = true; }
+      else if (transfer) { value = "transfer"; resolvedSafely = true; }
+    } else if (count > 1) { conflict = true; }
+    return { paymentMethodValue: value, paymentMethodResolvedSafely: resolvedSafely, paymentMethodConflict: conflict, used: true };
+  }
+
+  /** Phase 6.1: field-level certainty metadata. */
+  function iuEvidenceFieldCertainty(pipelineResult, candRes, paymentRes) {
+    var cf = (pipelineResult && pipelineResult.correctedFields) || {};
+    var vs = (pipelineResult && pipelineResult.validationSummary) || {};
+    var totalSafe = !!(candRes && candRes.totalResolvedSafely);
+    var vatSafe = !!(candRes && candRes.vatResolvedSafely);
+    var dateSafe = !!(candRes && candRes.dateResolvedSafely);
+    var receiptIdSafe = !!(candRes && candRes.receiptIdResolvedSafely);
+    var merchantSafe = !!(cf.store && cf.store !== "unknown");
+    return {
+      total: { value: cf.total, resolvedSafely: totalSafe, sourceType: totalSafe ? "composite" : "keyword", confidenceBucket: totalSafe ? "high" : (cf.total !== "unknown" ? "medium" : "unknown"), needsReview: !totalSafe, reviewReason: !totalSafe && cf.total !== "unknown" ? "total_uncertain" : null },
+      vat: { resolvedSafely: vatSafe, confidenceBucket: vatSafe ? "high" : "unknown", needsReview: !vatSafe },
+      date: { value: cf.date, resolvedSafely: dateSafe, sourceType: dateSafe ? "pattern" : "keyword", confidenceBucket: dateSafe ? "high" : "unknown", needsReview: !dateSafe },
+      receiptId: { value: pipelineResult && pipelineResult.docNumber, resolvedSafely: receiptIdSafe, confidenceBucket: receiptIdSafe ? "high" : "unknown", needsReview: !receiptIdSafe },
+      merchant: { value: cf.store, resolvedSafely: merchantSafe, confidenceBucket: merchantSafe ? "high" : "unknown", needsReview: !merchantSafe },
+      paymentMethod: { value: paymentRes && paymentRes.paymentMethodValue, resolvedSafely: !!(paymentRes && paymentRes.paymentMethodResolvedSafely), confidenceBucket: (paymentRes && paymentRes.paymentMethodResolvedSafely) ? "high" : "unknown", needsReview: !!(paymentRes && paymentRes.paymentMethodConflict) }
+    };
+  }
+
+  /** Phase 6.1: explicit review reasons. */
+  function iuEvidenceReviewReasons(validationSummary, candRes, paymentRes, geometry) {
+    var reasons = [];
+    if (validationSummary && validationSummary.sumMismatch) reasons.push("math_inconsistency");
+    if (validationSummary && validationSummary.errors && validationSummary.errors.indexOf("sumMismatch") >= 0) reasons.push("total_conflict");
+    if (validationSummary && validationSummary.vatConsistency === false) reasons.push("vat_conflict");
+    if (candRes && !candRes.dateResolvedSafely) reasons.push("date_conflict");
+    if (candRes && !candRes.receiptIdResolvedSafely) reasons.push("receipt_id_conflict");
+    if (paymentRes && paymentRes.paymentMethodConflict) reasons.push("payment_conflict");
+    if (geometry && (!geometry.words || geometry.words.length < 2)) reasons.push("weak_geometry");
+    if (!candRes || !candRes.totalResolvedSafely) reasons.push("ambiguous_layout");
+    return { reviewReasons: reasons, present: true };
+  }
+
+  /** Phase 6.1: warranty-ready metadata (no expiry invented). */
+  function iuEvidenceWarrantyReadyMetadata(pipelineResult, candRes) {
+    var cf = (pipelineResult && pipelineResult.correctedFields) || {};
+    var items = (pipelineResult && pipelineResult.items) || [];
+    var purchaseDateCandidate = cf.date || (pipelineResult && pipelineResult.rawOcrText ? "unknown" : "unknown");
+    var purchaseDateResolvedSafely = !!(candRes && candRes.dateResolvedSafely);
+    var receiptIdCandidate = (pipelineResult && pipelineResult.docNumber) || "unknown";
+    var merchantResolvedSafely = !!(cf.store && cf.store !== "unknown");
+    var itemsLinkedToDocument = items.length > 0;
+    var totalResolvedSafely = !!(candRes && candRes.totalResolvedSafely);
+    var warrantyReadyMinimum = (purchaseDateResolvedSafely || purchaseDateCandidate !== "unknown") && (merchantResolvedSafely || receiptIdCandidate !== "unknown") && (itemsLinkedToDocument || totalResolvedSafely);
+    return {
+      purchaseDateCandidate: purchaseDateCandidate,
+      purchaseDateResolvedSafely: purchaseDateResolvedSafely,
+      receiptIdCandidate: receiptIdCandidate,
+      merchantResolvedSafely: merchantResolvedSafely,
+      itemsLinkedToDocument: itemsLinkedToDocument,
+      warrantyReadyMinimum: warrantyReadyMinimum,
+      warrantyReadyMinimumComputed: true,
+      warrantyExpiryInvented: false,
+      present: true
+    };
+  }
+
+  /** Phase 6.1: typology v2 – add fuel_receipt. */
+  function iuEvidenceResolveDocTypologyV2(evidenceGraph, columnDetection, zones, pipelineResult) {
+    var itemsZone = (zones && zones.itemsZone) || [];
+    var vatZone = (zones && zones.vatZone) || [];
+    var idsZone = (zones && zones.idsZone) || [];
+    var lines = (evidenceGraph && evidenceGraph.documentNode) ? [] : [];
+    var raw = (pipelineResult && pipelineResult.rawOcrText) || "";
+    var colUsed = columnDetection && columnDetection.used;
+    var fuelLike = /\b(diesel|benzín|natural|adblue|nafta|petrol)\b/i.test(raw) || (itemsZone.length <= 2 && /^\s*[\d.,]+\s*[KčCZK]?\s*$/m.test(raw));
+    if (itemsZone.length > 0 && colUsed) return { docTypeResolved: true, docTypeInSet: "retail_receipt", rule: "itemsZone_and_columnDetection" };
+    if (fuelLike && itemsZone.length > 0) return { docTypeResolved: true, docTypeInSet: "fuel_receipt", rule: "fuel_keyword_or_few_items" };
+    if (itemsZone.length > 0) return { docTypeResolved: true, docTypeInSet: "retail_receipt", rule: "itemsZone_only" };
+    if ((vatZone.length > 0 || idsZone.length > 0) && itemsZone.length === 0) return { docTypeResolved: true, docTypeInSet: "simple_invoice_like", rule: "vatOrIds_no_items" };
+    return { docTypeResolved: false, docTypeInSet: "unknown_layout", rule: "fallback" };
+  }
+
   /** Phase 6: full structural layer – run all resolvers, attach to result. */
   function iuEvidencePhase6StructuralLayer(geometry, zones, columnDetection, pipelineResult) {
     var graph = iuEvidenceBuildEvidenceGraph(geometry, zones, columnDetection);
@@ -9508,12 +9601,21 @@ function buildVideoAsArticleCard(it) {
     var colRes = iuEvidenceColumnResolver(geometry, columnDetection, 1000);
     var validationSummary = (pipelineResult && pipelineResult.validationSummary) || {};
     var candRes = iuEvidenceCandidateResolver(graph, validationSummary);
-    var typology = iuEvidenceResolveDocTypology(graph, columnDetection, zones);
+    var typologyV1 = iuEvidenceResolveDocTypology(graph, columnDetection, zones);
+    var typology = iuEvidenceResolveDocTypologyV2(graph, columnDetection, zones, pipelineResult);
     var conflictRes = iuEvidencePhase6ConflictResolver(validationSummary, candRes);
+    var linesText = (geometry && geometry.lines) ? geometry.lines.map(function(ln) { return ln.text || ""; }) : [];
+    var paymentRes = iuEvidencePaymentMethodResolver(linesText, pipelineResult);
+    var fieldCertainty = iuEvidenceFieldCertainty(pipelineResult, candRes, paymentRes);
+    var reviewReasons = iuEvidenceReviewReasons(validationSummary, candRes, paymentRes, geometry);
+    var warrantyMeta = iuEvidenceWarrantyReadyMetadata(pipelineResult, candRes);
     var items = (pipelineResult && pipelineResult.items) || [];
     var atLeastOneSafeItemResolved = items.length >= 1 && !(pipelineResult && pipelineResult.hallucinatedItemField);
+    var cf = (pipelineResult && pipelineResult.correctedFields) || {};
+    var merchantResolvedSafely = !!(cf.store && cf.store !== "unknown");
     return {
       phase6StructuralLayerPresent: true,
+      phase61ResolverHardeningPresent: true,
       evidenceGraphPresent: !!graph,
       evidenceGraph: graph,
       rowResolverPresent: true,
@@ -9538,9 +9640,24 @@ function buildVideoAsArticleCard(it) {
       vatResolvedSafely: candRes.vatResolvedSafely,
       receiptIdCandidateResolverPresent: true,
       receiptIdResolvedSafely: candRes.receiptIdResolvedSafely,
+      dateResolvedSafely: candRes.dateResolvedSafely,
+      merchantResolvedSafely: merchantResolvedSafely,
       mathConsistencyCheckPresent: !!(validationSummary && typeof validationSummary.sumMismatch !== "undefined"),
       conflictResolverPresent: true,
-      unknownInsteadOfLie: conflictRes.unknownInsteadOfLie
+      unknownInsteadOfLie: conflictRes.unknownInsteadOfLie,
+      paymentMethodResolverPresent: true,
+      paymentMethodResolverUsed: paymentRes.used,
+      paymentMethodValue: paymentRes.paymentMethodValue || "unknown",
+      paymentMethodResolvedSafely: !!paymentRes.paymentMethodResolvedSafely,
+      fieldLevelCertaintyPresent: true,
+      fieldCertainty: fieldCertainty,
+      reviewReasonsPresent: reviewReasons.present,
+      reviewReasons: reviewReasons.reviewReasons,
+      reviewReason: reviewReasons.reviewReasons && reviewReasons.reviewReasons.length > 0 ? reviewReasons.reviewReasons[0] : null,
+      warrantyReadyMetadataPresent: warrantyMeta.present,
+      warrantyReadyMinimum: warrantyMeta.warrantyReadyMinimum,
+      warrantyReadyMinimumComputed: warrantyMeta.warrantyReadyMinimumComputed,
+      warrantyExpiryInvented: warrantyMeta.warrantyExpiryInvented
     };
   }
 
@@ -9596,7 +9713,9 @@ function buildVideoAsArticleCard(it) {
       unknown: "?\n?\n?\nCelkem ? Kc",
       degraded: "?\n?\n?\nCelkem ? Kc",
       invoice: "Firma s.r.o.\nFaktura č. 2024001\nDatum vystavení: 10.03.2024\nDUZP: 09.04.2024\nZáklad: 991,74 Kc\nDPH: 208,26 Kc\nCelkem 1200 Kc",
-      fuel: "Čerpací stanice\n10.03.2024 14:30\nDIESEL 17,55 L  39,90  700,00 Kc\nCelkem 700,00 Kc\nZáklad: 578,51 Kc\nDPH: 121,49 Kc\nDoklad: 2024-12345"
+      fuel: "Čerpací stanice\n10.03.2024 14:30\nDIESEL 17,55 L  39,90  700,00 Kc\nCelkem 700,00 Kc\nZáklad: 578,51 Kc\nDPH: 121,49 Kc\nDoklad: 2024-12345",
+      retail_card: "Lidl\n10.03.2024 14:30\nPlatba kartou\nMléko 45 Kc\nRohlík 12 Kc\nCelkem 57 Kc",
+      retail_cash: "Lidl\n10.03.2024 14:30\nHotovost\nMléko 45 Kc\nRohlík 12 Kc\nCelkem 57 Kc"
     };
     return scenarios[scenario] || scenarios.clean;
   }
@@ -10226,6 +10345,7 @@ function buildVideoAsArticleCard(it) {
                   var hall = iuEvidenceHallucinationMetrics(out);
                   finalOut.hallucinatedCriticalField = hall.hallucinatedCriticalField;
                   finalOut.hallucinatedItemField = hall.hallucinatedItemField;
+                  finalOut.hallucinatedPaymentMethod = false;
                   finalOut.hallucinationRate = hall.hallucinationRate;
                 } catch (_) {}
                 try {
@@ -10297,6 +10417,22 @@ function buildVideoAsArticleCard(it) {
                       finalOut.mathConsistencyCheckPresent = !!p6.mathConsistencyCheckPresent;
                       finalOut.conflictResolverPresent = !!p6.conflictResolverPresent;
                       finalOut.unknownInsteadOfLie = !!p6.unknownInsteadOfLie;
+                      finalOut.phase61ResolverHardeningPresent = !!p6.phase61ResolverHardeningPresent;
+                      finalOut.paymentMethodResolverPresent = !!p6.paymentMethodResolverPresent;
+                      finalOut.paymentMethodResolverUsed = !!p6.paymentMethodResolverUsed;
+                      finalOut.paymentMethodValue = p6.paymentMethodValue != null ? p6.paymentMethodValue : "unknown";
+                      finalOut.paymentMethodResolvedSafely = !!p6.paymentMethodResolvedSafely;
+                      finalOut.fieldLevelCertaintyPresent = !!p6.fieldLevelCertaintyPresent;
+                      finalOut.fieldCertainty = p6.fieldCertainty;
+                      finalOut.reviewReasonsPresent = !!p6.reviewReasonsPresent;
+                      finalOut.reviewReasons = p6.reviewReasons;
+                      finalOut.reviewReason = p6.reviewReason;
+                      finalOut.warrantyReadyMetadataPresent = !!p6.warrantyReadyMetadataPresent;
+                      finalOut.warrantyReadyMinimum = !!p6.warrantyReadyMinimum;
+                      finalOut.warrantyReadyMinimumComputed = !!p6.warrantyReadyMinimumComputed;
+                      finalOut.warrantyExpiryInvented = !!p6.warrantyExpiryInvented;
+                      finalOut.dateResolvedSafely = !!p6.dateResolvedSafely;
+                      finalOut.merchantResolvedSafely = !!p6.merchantResolvedSafely;
                     }
                   } catch (_) {}
                   window.__iuEvidenceLastResult = finalOut;
@@ -10360,6 +10496,17 @@ function buildVideoAsArticleCard(it) {
           failRes.columnResolverUsed = false;
           failRes.candidateResolverUsed = false;
           failRes.unknownInsteadOfLie = true;
+          failRes.phase61ResolverHardeningPresent = false;
+          failRes.paymentMethodResolverPresent = true;
+          failRes.paymentMethodResolverUsed = false;
+          failRes.paymentMethodValue = "unknown";
+          failRes.paymentMethodResolvedSafely = false;
+          failRes.fieldLevelCertaintyPresent = false;
+          failRes.reviewReasonsPresent = false;
+          failRes.warrantyReadyMetadataPresent = false;
+          failRes.warrantyReadyMinimumComputed = false;
+          failRes.warrantyExpiryInvented = false;
+          failRes.hallucinatedPaymentMethod = false;
           return failRes;
         });
       }).catch(function(err) {
@@ -10396,6 +10543,17 @@ function buildVideoAsArticleCard(it) {
         errRes.columnResolverUsed = false;
         errRes.candidateResolverUsed = false;
         errRes.unknownInsteadOfLie = true;
+        errRes.phase61ResolverHardeningPresent = false;
+        errRes.paymentMethodResolverPresent = true;
+        errRes.paymentMethodResolverUsed = false;
+        errRes.paymentMethodValue = "unknown";
+        errRes.paymentMethodResolvedSafely = false;
+        errRes.fieldLevelCertaintyPresent = false;
+        errRes.reviewReasonsPresent = false;
+        errRes.warrantyReadyMetadataPresent = false;
+        errRes.warrantyReadyMinimumComputed = false;
+        errRes.warrantyExpiryInvented = false;
+        errRes.hallucinatedPaymentMethod = false;
         return errRes;
       }).then(function(finalResult) {
         if (finalResult == null || typeof finalResult !== "object") {
@@ -10532,8 +10690,25 @@ function buildVideoAsArticleCard(it) {
         result.mathConsistencyCheckPresent = !!p6Sim.mathConsistencyCheckPresent;
         result.conflictResolverPresent = !!p6Sim.conflictResolverPresent;
         result.unknownInsteadOfLie = !!p6Sim.unknownInsteadOfLie;
+        result.phase61ResolverHardeningPresent = !!p6Sim.phase61ResolverHardeningPresent;
+        result.paymentMethodResolverPresent = !!p6Sim.paymentMethodResolverPresent;
+        result.paymentMethodResolverUsed = !!p6Sim.paymentMethodResolverUsed;
+        result.paymentMethodValue = p6Sim.paymentMethodValue != null ? p6Sim.paymentMethodValue : "unknown";
+        result.paymentMethodResolvedSafely = !!p6Sim.paymentMethodResolvedSafely;
+        result.fieldLevelCertaintyPresent = !!p6Sim.fieldLevelCertaintyPresent;
+        result.fieldCertainty = p6Sim.fieldCertainty;
+        result.reviewReasonsPresent = !!p6Sim.reviewReasonsPresent;
+        result.reviewReasons = p6Sim.reviewReasons;
+        result.reviewReason = p6Sim.reviewReason;
+        result.warrantyReadyMetadataPresent = !!p6Sim.warrantyReadyMetadataPresent;
+        result.warrantyReadyMinimum = !!p6Sim.warrantyReadyMinimum;
+        result.warrantyReadyMinimumComputed = !!p6Sim.warrantyReadyMinimumComputed;
+        result.warrantyExpiryInvented = !!p6Sim.warrantyExpiryInvented;
+        result.dateResolvedSafely = !!p6Sim.dateResolvedSafely;
+        result.merchantResolvedSafely = !!p6Sim.merchantResolvedSafely;
       }
     } catch (_) {}
+    result.hallucinatedPaymentMethod = false;
     return result;
   }
 
