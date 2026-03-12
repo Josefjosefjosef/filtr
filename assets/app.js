@@ -10461,6 +10461,128 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
+  /** Phase 7.1: render contract builder. Maps UI view model (7.0) -> deterministic render contract. No DOM, no UI components. */
+  var IU_RENDER_SECTIONS = {
+    TITLE_SECTION: "title_section",
+    SUBTITLE_SECTION: "subtitle_section",
+    PRIMARY_FACTS_SECTION: "primary_facts_section",
+    SECONDARY_FACTS_SECTION: "secondary_facts_section",
+    BADGES_SECTION: "badges_section",
+    WARNINGS_SECTION: "warnings_section",
+    BLOCKED_NOTICES_SECTION: "blocked_notices_section",
+    REVIEW_BANNER_SECTION: "review_banner_section",
+    SAFE_ACTIONS_SECTION: "safe_actions_section"
+  };
+  var IU_RENDER_ORDER = [
+    IU_RENDER_SECTIONS.TITLE_SECTION,
+    IU_RENDER_SECTIONS.SUBTITLE_SECTION,
+    IU_RENDER_SECTIONS.PRIMARY_FACTS_SECTION,
+    IU_RENDER_SECTIONS.BADGES_SECTION,
+    IU_RENDER_SECTIONS.WARNINGS_SECTION,
+    IU_RENDER_SECTIONS.BLOCKED_NOTICES_SECTION,
+    IU_RENDER_SECTIONS.SECONDARY_FACTS_SECTION,
+    IU_RENDER_SECTIONS.REVIEW_BANNER_SECTION,
+    IU_RENDER_SECTIONS.SAFE_ACTIONS_SECTION
+  ];
+
+  function iuEvidenceBuildRenderContract(uiViewModel) {
+    var vm = uiViewModel && typeof uiViewModel === "object" ? uiViewModel : null;
+    if (!vm || vm.resultSource !== "phase7.0") {
+      return {
+        renderType: "phase7.1_render_contract",
+        intentName: null,
+        renderMode: "uiEmpty",
+        renderValid: false,
+        displaySafe: false,
+        sections: [],
+        sectionOrder: IU_RENDER_ORDER.slice(),
+        visibleSections: [IU_RENDER_SECTIONS.TITLE_SECTION, IU_RENDER_SECTIONS.SAFE_ACTIONS_SECTION],
+        badgesPlacement: IU_RENDER_SECTIONS.BADGES_SECTION,
+        warningsPlacement: IU_RENDER_SECTIONS.WARNINGS_SECTION,
+        blockedNoticesPlacement: IU_RENDER_SECTIONS.BLOCKED_NOTICES_SECTION,
+        reviewBannerPlacement: IU_RENDER_SECTIONS.REVIEW_BANNER_SECTION,
+        safeActionsPlacement: IU_RENDER_SECTIONS.SAFE_ACTIONS_SECTION,
+        renderSlots: {},
+        auditSummary: { source: "phase7.1", viewModelPresent: false },
+        sourceViewModelType: null,
+        sourceViewModelAudit: null,
+        resultSource: "phase7.1"
+      };
+    }
+    var renderMode = vm.renderMode || "uiEmpty";
+    var displaySafe = vm.displaySafe === true;
+    var renderValid = vm.uiModelValid === true;
+
+    var primaryCount = Array.isArray(vm.primaryDisplayFacts) ? vm.primaryDisplayFacts.length : 0;
+    var secondaryCount = Array.isArray(vm.secondaryDisplayFacts) ? vm.secondaryDisplayFacts.length : 0;
+    var badgesCount = Array.isArray(vm.badges) ? vm.badges.length : 0;
+    var warningsCount = Array.isArray(vm.warnings) ? vm.warnings.length : 0;
+    var blockedCount = Array.isArray(vm.blockedNotices) ? vm.blockedNotices.length : 0;
+    var reviewBannerPresent = typeof vm.reviewBanner === "string" && vm.reviewBanner.length > 0;
+    var safeActionsCount = Array.isArray(vm.safeActions) ? vm.safeActions.length : 0;
+    var hasTitle = typeof vm.title === "string" && vm.title.length > 0;
+    var hasSubtitle = typeof vm.subtitle === "string" && vm.subtitle.length > 0;
+
+    var sections = [];
+    if (hasTitle) sections.push(IU_RENDER_SECTIONS.TITLE_SECTION);
+    if (hasSubtitle) sections.push(IU_RENDER_SECTIONS.SUBTITLE_SECTION);
+    if (primaryCount > 0) sections.push(IU_RENDER_SECTIONS.PRIMARY_FACTS_SECTION);
+    if (badgesCount > 0) sections.push(IU_RENDER_SECTIONS.BADGES_SECTION);
+    if (warningsCount > 0) sections.push(IU_RENDER_SECTIONS.WARNINGS_SECTION);
+    if (blockedCount > 0) sections.push(IU_RENDER_SECTIONS.BLOCKED_NOTICES_SECTION);
+    if (secondaryCount > 0) sections.push(IU_RENDER_SECTIONS.SECONDARY_FACTS_SECTION);
+    if (reviewBannerPresent) sections.push(IU_RENDER_SECTIONS.REVIEW_BANNER_SECTION);
+    if (safeActionsCount > 0) sections.push(IU_RENDER_SECTIONS.SAFE_ACTIONS_SECTION);
+
+    var visibleSections = [];
+    if (hasTitle || renderMode === "uiInvalid" || renderMode === "uiEmpty") visibleSections.push(IU_RENDER_SECTIONS.TITLE_SECTION);
+    if (hasSubtitle) visibleSections.push(IU_RENDER_SECTIONS.SUBTITLE_SECTION);
+    if (primaryCount > 0) visibleSections.push(IU_RENDER_SECTIONS.PRIMARY_FACTS_SECTION);
+    if (badgesCount > 0) visibleSections.push(IU_RENDER_SECTIONS.BADGES_SECTION);
+    if (warningsCount > 0 || renderMode === "uiInvalid") visibleSections.push(IU_RENDER_SECTIONS.WARNINGS_SECTION);
+    if (blockedCount > 0 || renderMode === "uiBlocked") visibleSections.push(IU_RENDER_SECTIONS.BLOCKED_NOTICES_SECTION);
+    if (secondaryCount > 0) visibleSections.push(IU_RENDER_SECTIONS.SECONDARY_FACTS_SECTION);
+    if (reviewBannerPresent || renderMode === "uiReview") visibleSections.push(IU_RENDER_SECTIONS.REVIEW_BANNER_SECTION);
+    if (safeActionsCount > 0 || renderMode === "uiEmpty" || renderMode === "uiInvalid") visibleSections.push(IU_RENDER_SECTIONS.SAFE_ACTIONS_SECTION);
+    var visibleSet = {};
+    for (var v = 0; v < visibleSections.length; v++) visibleSet[visibleSections[v]] = true;
+    visibleSections = IU_RENDER_ORDER.filter(function(s) { return visibleSet[s]; });
+
+    var sectionOrderValid = true;
+
+    var renderSlots = {};
+    renderSlots[IU_RENDER_SECTIONS.TITLE_SECTION] = true;
+    renderSlots[IU_RENDER_SECTIONS.SUBTITLE_SECTION] = true;
+    renderSlots[IU_RENDER_SECTIONS.PRIMARY_FACTS_SECTION] = true;
+    renderSlots[IU_RENDER_SECTIONS.SECONDARY_FACTS_SECTION] = true;
+    renderSlots[IU_RENDER_SECTIONS.BADGES_SECTION] = true;
+    renderSlots[IU_RENDER_SECTIONS.WARNINGS_SECTION] = true;
+    renderSlots[IU_RENDER_SECTIONS.BLOCKED_NOTICES_SECTION] = true;
+    renderSlots[IU_RENDER_SECTIONS.REVIEW_BANNER_SECTION] = true;
+    renderSlots[IU_RENDER_SECTIONS.SAFE_ACTIONS_SECTION] = true;
+
+    return {
+      renderType: "phase7.1_render_contract",
+      intentName: vm.intentName != null ? vm.intentName : null,
+      renderMode: renderMode,
+      renderValid: renderValid,
+      displaySafe: displaySafe,
+      sections: sections,
+      sectionOrder: IU_RENDER_ORDER.slice(),
+      visibleSections: visibleSections,
+      badgesPlacement: IU_RENDER_SECTIONS.BADGES_SECTION,
+      warningsPlacement: IU_RENDER_SECTIONS.WARNINGS_SECTION,
+      blockedNoticesPlacement: IU_RENDER_SECTIONS.BLOCKED_NOTICES_SECTION,
+      reviewBannerPlacement: IU_RENDER_SECTIONS.REVIEW_BANNER_SECTION,
+      safeActionsPlacement: IU_RENDER_SECTIONS.SAFE_ACTIONS_SECTION,
+      renderSlots: renderSlots,
+      auditSummary: { source: "phase7.1", renderMode: renderMode, sectionsCount: sections.length, visibleCount: visibleSections.length },
+      sourceViewModelType: vm.viewType || null,
+      sourceViewModelAudit: vm.auditSummary || null,
+      resultSource: "phase7.1"
+    };
+  }
+
   function iuEvidenceRunEvidenceIntent(intentName, intentInput) {
     var validation = iuEvidenceValidateIntentInput(intentName, intentInput);
     if (!validation.valid) {
@@ -11469,6 +11591,12 @@ function buildVideoAsArticleCard(it) {
                     finalOut.uiSlotContractPresent = !!(_vm70 && IU_UI_SLOTS && IU_UI_SLOTS.TITLE && IU_UI_SLOTS.SAFE_ACTIONS);
                     finalOut.renderModeMappingPresent = !!(_vm70 && IU_UI_RENDER_MODES && (_vm70.renderMode === "uiSuccess" || _vm70.renderMode === "uiInvalid" || _vm70.renderMode === "uiBlocked"));
                     finalOut.truthfulPresentationLinkage = !!(_vm70 && _vm70.sourcePresentationType === "phase6.9_presentation");
+                    var _rc71 = typeof iuEvidenceBuildRenderContract === "function" ? iuEvidenceBuildRenderContract(_vm70) : null;
+                    finalOut.phase71RenderContractPresent = !!(_rc71 && _rc71.resultSource === "phase7.1" && _rc71.renderType === "phase7.1_render_contract");
+                    finalOut.renderContractBuilderPresent = !!(_rc71 && Array.isArray(_rc71.sections) && Array.isArray(_rc71.sectionOrder) && Array.isArray(_rc71.visibleSections));
+                    finalOut.renderSectionsPresent = !!(_rc71 && IU_RENDER_SECTIONS && IU_RENDER_SECTIONS.TITLE_SECTION && IU_RENDER_SECTIONS.SAFE_ACTIONS_SECTION);
+                    finalOut.renderOrderingPresent = !!(_rc71 && _rc71.sectionOrder && _rc71.sectionOrder.length > 0);
+                    finalOut.truthfulRenderLinkage = !!(_rc71 && _rc71.sourceViewModelType === "phase7.0_ui_view");
                   } catch (_) {
                     finalOut.phase62CanonicalPurchaseRecordPresent = false;
                     finalOut.canonicalPurchaseRecordUsed = false;
@@ -11544,6 +11672,11 @@ function buildVideoAsArticleCard(it) {
                     finalOut.uiSlotContractPresent = false;
                     finalOut.renderModeMappingPresent = false;
                     finalOut.truthfulPresentationLinkage = false;
+                    finalOut.phase71RenderContractPresent = false;
+                    finalOut.renderContractBuilderPresent = false;
+                    finalOut.renderSectionsPresent = false;
+                    finalOut.renderOrderingPresent = false;
+                    finalOut.truthfulRenderLinkage = false;
                   }
                   window.__iuEvidenceLastResult = finalOut;
                   try { window.__iuEvidenceAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow(out); } catch (_) {}
@@ -11982,6 +12115,9 @@ function buildVideoAsArticleCard(it) {
           var _vm70sim = typeof iuEvidenceBuildUIViewModel === "function" ? iuEvidenceBuildUIViewModel(_p69sim) : null;
           result.phase70UiAdapterPresent = !!(_vm70sim && _vm70sim.resultSource === "phase7.0");
           result.uiViewModelPresent = !!(_vm70sim && _vm70sim.uiSlots && _vm70sim.renderMode != null);
+          var _rc71sim = typeof iuEvidenceBuildRenderContract === "function" ? iuEvidenceBuildRenderContract(_vm70sim) : null;
+          result.phase71RenderContractPresent = !!(_rc71sim && _rc71sim.resultSource === "phase7.1");
+          result.renderSectionsPresent = !!(_rc71sim && _rc71sim.sectionOrder && _rc71sim.sectionOrder.length > 0);
         } catch (_) {
           result.canonicalAnswerBundlePresent = false;
           result.safeAnswerFieldsPresent = false;
@@ -11994,6 +12130,8 @@ function buildVideoAsArticleCard(it) {
           result.renderModeDisciplinePresent = false;
           result.phase70UiAdapterPresent = false;
           result.uiViewModelPresent = false;
+          result.phase71RenderContractPresent = false;
+          result.renderSectionsPresent = false;
         }
         result.phase64EvidenceIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex);
         result.purchaseRecordIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getRecordById);
@@ -12042,6 +12180,8 @@ function buildVideoAsArticleCard(it) {
         result.renderModeDisciplinePresent = false;
         result.phase70UiAdapterPresent = false;
         result.uiViewModelPresent = false;
+        result.phase71RenderContractPresent = false;
+        result.renderSectionsPresent = false;
       }
     } catch (_) {
       result.phase62CanonicalPurchaseRecordPresent = false;
@@ -12092,6 +12232,9 @@ function buildVideoAsArticleCard(it) {
     window.IU_UI_RENDER_MODES = IU_UI_RENDER_MODES;
     window.IU_UI_BADGES = IU_UI_BADGES;
     window.IU_UI_SAFE_ACTIONS = IU_UI_SAFE_ACTIONS;
+    window.iuEvidenceBuildRenderContract = iuEvidenceBuildRenderContract;
+    window.IU_RENDER_SECTIONS = IU_RENDER_SECTIONS;
+    window.IU_RENDER_ORDER = IU_RENDER_ORDER;
     window.iuEvidenceOcrHook = iuEvidenceOcrHook;
     window.iuEvidenceNormalizeOcrText = iuEvidenceNormalizeOcrText;
     window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
