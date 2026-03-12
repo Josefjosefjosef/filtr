@@ -1,0 +1,199 @@
+[
+  {
+    "documentId": "1",
+    "imageRef": "receipts/1.jpeg",
+    "golden": {
+      "header": {
+        "merchant": "ACTION",
+        "date": "2024-04-04",
+        "time": "12:47:49",
+        "currency": "CZK",
+        "documentNumber": "B06210170111766"
+      },
+      "items": [
+        { "name": "baterie panasonic 9 v alkalické power", "qty": 1, "unitPrice": 29.90, "lineTotal": 29.90 },
+        { "name": "panasonic baterie 12ks aaa zinko karbon", "qty": 1, "unitPrice": 48.50, "lineTotal": 48.50 },
+        { "name": "duracell simply baterie 10 ks aa", "qty": 1, "unitPrice": 116.90, "lineTotal": 116.90 }
+      ],
+      "totals": { "total": 195.30, "subtotal": 161.40, "vatBuckets": { "21%": 33.90 } },
+      "payment": { "method": "cash", "paidAmount": 200.00, "change": 5.00 }
+    },
+    "goldenAudit": { "manuallyVerified": true, "uncertainFields": [] }
+  },
+  {
+    "documentId": "2",
+    "imageRef": "receipts/2.jpeg",
+    "golden": {
+      "header": {
+        "merchant": "CS PRIM",
+        "date": "2026-03-10",
+        "time": "16:35:34",
+        "currency": "CZK",
+        "documentNumber": "2026-43860"
+      },
+      "items": [
+        { "name": "DIESEL", "qty": 17.55, "unitPrice": 39.90, "lineTotal": 700.00 }
+      ],
+      "totals": { "total": 700.00, "subtotal": 578.51, "vatBuckets": { "21%": 121.49 } },
+      "payment": { "method": "card", "paidAmount": 700.00, "change": null }
+    },
+    "goldenAudit": { "manuallyVerified": true, "uncertainFields": [] }
+  },
+  {
+    "documentId": "3",
+    "imageRef": "receipts/3.jpeg",
+    "golden": {
+      "header": {
+        "merchant": "ACTION",
+        "date": "2026-03-08",
+        "time": "11:28:51",
+        "currency": "CZK",
+        "documentNumber": "B06210270140563"
+      },
+      "items": [
+        { "name": "matchbox auto různé druhy", "qty": 2, "unitPrice": 29.90, "lineTotal": 59.80 }
+      ],
+      "totals": { "total": 59.80, "subtotal": 49.42, "vatBuckets": { "21%": 10.38 } },
+      "payment": { "method": "card", "paidAmount": 59.80, "change": null }
+    },
+    "goldenAudit": { "manuallyVerified": true, "uncertainFields": [] }
+  },
+  {
+    "documentId": "4",
+    "imageRef": "receipts/4.jpeg",
+    "golden": {
+      "header": {
+        "merchant": "MOBIL POHOTOVOST GSM s.r.o.",
+        "date": "2023-03-03",
+        "time": "14:11:52",
+        "currency": "CZK",
+        "documentNumber": "1111233588"
+      },
+      "items": [
+        { "name": "Apple iPhone 13 Pro Max, 128GB Gold použité", "qty": null, "unitPrice": 23990.00, "lineTotal": 23990.00 }
+      ],
+      "totals": { "total": 23990.00, "subtotal": 23990.00, "vatBuckets": null },
+      "payment": { "method": null, "paidAmount": 24000.00, "change": 10.00 }
+    },
+    "goldenAudit": { "manuallyVerified": true, "uncertainFields": ["payment.method", "items[0].qty"] }
+  },
+  {
+    "documentId": "5",
+    "imageRef": "receipts/5.jpeg",
+    "golden": {
+      "header": {
+        "merchant": "Lee Cooper CZ s.r.o.",
+        "date": "2024-02-25",
+        "time": "20:52",
+        "currency": "CZK",
+        "documentNumber": "K212400863"
+      },
+      "items": [
+        { "name": "Panska bunda", "qty": 1, "unitPrice": 2099.00, "lineTotal": 2099.00 },
+        { "name": "Panska mikina", "qty": 1, "unitPrice": 699.00, "lineTotal": 699.00 },
+        { "name": "Panska mikina", "qty": 1, "unitPrice": 874.00, "lineTotal": 874.00 },
+        { "name": "Panska mikina", "qty": 1, "unitPrice": 809.10, "lineTotal": 809.10 }
+      ],
+      "totals": { "total": 4481.00, "subtotal": 3703.39, "vatBuckets": { "21%": 777.71 } },
+      "payment": { "method": "cash", "paidAmount": 5490.00, "change": 1009.00 }
+    },
+    "goldenAudit": { "manuallyVerified": true, "uncertainFields": [] }
+  },
+  {
+    "documentId": "6",
+    "imageRef": "receipts/6.jpeg",
+    "golden": {
+      "header": {
+        "merchant": "BENU Česká republika s.r.o.",
+        "date": "2024-03-03",
+        "time": "12:13:32",
+        "currency": "CZK",
+        "documentNumber": "2040033"
+      },
+      "items": [
+        { "name": "Femibion 3 Kojení tbl.28 + tob.28", "qty": 1, "unitPrice": 679.00, "lineTotal": 679.00 },
+        { "name": "DEPAN nosní odsávačka na baterie model 01002001", "qty": 1, "unitPrice": 1149.00, "lineTotal": 1149.00 },
+        { "name": "Z toho recyklační příspěvek", "qty": 1, "unitPrice": 0.17, "lineTotal": 0.17 }
+      ],
+      "totals": { "total": 1828.00, "subtotal": 1555.84, "vatBuckets": { "12%": 72.75, "21%": 199.41 } },
+      "payment": { "method": "card", "paidAmount": 1828.00, "change": null }
+    },
+    "goldenAudit": { "manuallyVerified": true, "uncertainFields": [] }
+  },
+  {
+    "documentId": "7",
+    "imageRef": "receipts/7.jpeg",
+    "golden": {
+      "header": {
+        "merchant": "HORNBACH",
+        "date": "2024-02-13",
+        "time": "14:19:56",
+        "currency": "CZK",
+        "documentNumber": null
+      },
+      "items": [
+        { "name": "SADA VRTAKU LONG LIF", "qty": 1, "unitPrice": 339.00, "lineTotal": 339.00 }
+      ],
+      "totals": { "total": 339.00, "subtotal": 280.17, "vatBuckets": { "21%": 58.83 } },
+      "payment": { "method": "card", "paidAmount": 339.00, "change": null }
+    },
+    "goldenAudit": { "manuallyVerified": true, "uncertainFields": ["header.documentNumber"] }
+  },
+  {
+    "documentId": "8",
+    "imageRef": "receipts/8.jpeg",
+    "golden": {
+      "header": {
+        "merchant": "DATART",
+        "date": "2024-02-13",
+        "time": "13:48:51",
+        "currency": "CZK",
+        "documentNumber": "353140022164"
+      },
+      "items": [
+        { "name": "Bezsáčkový vysavač Bosch BGCOSAAAT Cleann s", "qty": 1, "unitPrice": 2239.00, "lineTotal": 2239.00 }
+      ],
+      "totals": { "total": 2239.00, "subtotal": 1850.41, "vatBuckets": { "21%": 388.59 } },
+      "payment": { "method": "card", "paidAmount": 2239.00, "change": null }
+    },
+    "goldenAudit": { "manuallyVerified": true, "uncertainFields": [] }
+  },
+  {
+    "documentId": "9",
+    "imageRef": "receipts/9.jpeg",
+    "golden": {
+      "header": {
+        "merchant": "DATART",
+        "date": "2024-02-13",
+        "time": "13:59:08",
+        "currency": "CZK",
+        "documentNumber": "353140022173"
+      },
+      "items": [
+        { "name": "Anténa pokojová Phillips SDV6227/12", "qty": 1, "unitPrice": 994.93, "lineTotal": 994.93 },
+        { "name": "Kabel prodlužovací EMOS, 4x zásuvka 5m - bílý", "qty": 1, "unitPrice": 297.98, "lineTotal": 297.98 },
+        { "name": "Držák TV GoGEN L polohovatelný, pro úhlopříčky 32\" až 55\", nosnost 35 kg", "qty": 1, "unitPrice": 1399.00, "lineTotal": 1399.00 }
+      ],
+      "totals": { "total": 2697.00, "subtotal": 2228.93, "vatBuckets": { "21%": 468.07 } },
+      "payment": { "method": "card", "paidAmount": 2697.00, "change": null }
+    },
+    "goldenAudit": { "manuallyVerified": true, "uncertainFields": [] }
+  },
+  {
+    "documentId": "10",
+    "imageRef": "receipts/10.jpeg",
+    "golden": {
+      "header": {
+        "merchant": "FUNBABY",
+        "date": "2024-04-04",
+        "time": "11:43:08",
+        "currency": "CZK",
+        "documentNumber": "004002148"
+      },
+      "items": [],
+      "totals": { "total": 12109.00, "subtotal": 10007.20, "vatBuckets": { "21%": 2101.55 } },
+      "payment": { "method": "cash", "paidAmount": 15000.00, "change": 2891.00 }
+    },
+    "goldenAudit": { "manuallyVerified": true, "uncertainFields": ["items"] }
+  }
+]
