@@ -10079,6 +10079,185 @@ function buildVideoAsArticleCard(it) {
   }
   var iuEvidenceFactsLayer = iuEvidenceCreateFactsLayer(iuEvidencePurchaseRecordIndex);
 
+  /** Phase 6.8: structured intent contract + answer bundle foundation (deterministic client layer over fact packs). */
+  var IU_EVIDENCE_SUPPORTED_INTENTS = {
+    spend_by_merchant: { required: ["merchant"], optional: [] },
+    spend_by_date_range: { required: ["startDate", "endDate"], optional: [] },
+    last_purchase_by_merchant: { required: ["merchant"], optional: [] },
+    merchant_timeline: { required: ["merchant"], optional: [] },
+    review_records_summary: { required: [], optional: ["merchant", "startDate", "endDate"] }
+  };
+  function iuEvidenceValidateIntentInput(intentName, intentInput) {
+    var errors = [];
+    var contract = IU_EVIDENCE_SUPPORTED_INTENTS[intentName];
+    if (!contract) {
+      errors.push("unsupported_intent");
+      return { valid: false, validationErrors: errors };
+    }
+    var inp = intentInput && typeof intentInput === "object" ? intentInput : {};
+    var req = contract.required || [];
+    for (var i = 0; i < req.length; i++) {
+      var key = req[i];
+      var val = inp[key];
+      if (val == null || (typeof val === "string" && String(val).trim() === "")) {
+        if (key === "merchant") errors.push("empty_merchant");
+        else if (key === "startDate" || key === "endDate") errors.push("missing_required_field");
+        else errors.push("missing_required_field");
+      }
+    }
+    if ((intentName === "spend_by_date_range") && inp.startDate && inp.endDate) {
+      var startC = iuEvidenceDateToComparable(inp.startDate);
+      var endC = iuEvidenceDateToComparable(inp.endDate);
+      if (startC != null && endC != null && startC > endC) errors.push("invalid_date_range");
+    }
+    if (errors.length > 0) return { valid: false, validationErrors: errors };
+    return { valid: true, validationErrors: [] };
+  }
+  function iuEvidenceBuildAnswerBundleFromFactPack(intentName, input, factPack) {
+    var pack = factPack || {};
+    var safe = pack.resultSafe === true;
+    var partial = pack.partialResult === true;
+    var needsReview = pack.needsReview === true;
+    var reviewReason = pack.reviewReason || null;
+    var allowed = pack.factsAllowedToSay || [];
+    var blocked = pack.factsBlockedToSay || [];
+    var answerFields = {};
+    var blockedAnswerFields = [];
+    var factsAllowedToSay = (pack.factsAllowedToSay || []).slice();
+    var factsBlockedToSay = (pack.factsBlockedToSay || []).slice();
+    var safety = pack.safety || {};
+    var unsafeBecause = (safety.unsafeBecause || []).slice();
+    var allowedClaims = (safety.allowedClaims || []).slice();
+    var blockedClaims = (safety.blockedClaims || []).slice();
+    var evidenceStrength = safety.evidenceStrength || "unknown";
+    var partialBecause = partial ? [reviewReason || "partial_data"].filter(Boolean) : [];
+    var reviewBecause = needsReview ? [reviewReason || "needs_review"].filter(Boolean) : [];
+    if (intentName === "spend_by_merchant" || intentName === "spend_by_date_range") {
+      if (allowed.indexOf("total_spend_value") >= 0 && pack.totalSpendValue != null) answerFields.totalSpendValue = pack.totalSpendValue;
+      if (allowed.indexOf("currency") >= 0 && pack.currency != null) answerFields.currency = pack.currency;
+      answerFields.merchant = pack.merchant != null ? String(pack.merchant) : (input && input.merchant != null ? String(input.merchant) : null);
+      answerFields.recordsUsed = pack.usedRecords != null ? pack.usedRecords : (pack.matchedRecords != null ? pack.matchedRecords : 0);
+      answerFields.recordsMatched = pack.matchedRecords != null ? pack.matchedRecords : 0;
+      answerFields.excludedReview = pack.excludedReview != null ? pack.excludedReview : 0;
+      answerFields.excludedBlocking = pack.excludedBlocking != null ? pack.excludedBlocking : 0;
+      if (safe === false && pack.totalSpendValue != null) blockedAnswerFields.push("totalSpendValue");
+    }
+    if (intentName === "last_purchase_by_merchant") {
+      answerFields.merchant = pack.merchant != null ? String(pack.merchant) : (input && input.merchant != null ? String(input.merchant) : null);
+      if (allowed.indexOf("last_purchase_date") >= 0 && pack.lastPurchaseDate != null) answerFields.lastPurchaseDate = pack.lastPurchaseDate;
+      if (allowed.indexOf("last_total") >= 0 && pack.lastTotal != null) answerFields.lastTotal = pack.lastTotal;
+      if (allowed.indexOf("last_currency") >= 0 && pack.lastCurrency != null) answerFields.lastCurrency = pack.lastCurrency;
+      if (allowed.indexOf("last_record_id") >= 0 && pack.lastRecordId != null) answerFields.lastRecordId = pack.lastRecordId;
+      if (safe === false) {
+        if (pack.lastPurchaseDate != null) blockedAnswerFields.push("lastPurchaseDate");
+        if (pack.lastTotal != null) blockedAnswerFields.push("lastTotal");
+        if (pack.lastRecordId != null) blockedAnswerFields.push("lastRecordId");
+      }
+    }
+    if (intentName === "merchant_timeline") {
+      answerFields.merchant = pack.merchant != null ? String(pack.merchant) : (input && input.merchant != null ? String(input.merchant) : null);
+      if (allowed.indexOf("first_purchase_date") >= 0 && pack.firstSafePurchaseDate != null) answerFields.firstSafePurchaseDate = pack.firstSafePurchaseDate;
+      if (allowed.indexOf("last_purchase_date") >= 0 && pack.lastSafePurchaseDate != null) answerFields.lastSafePurchaseDate = pack.lastSafePurchaseDate;
+      if (allowed.indexOf("safe_purchase_count") >= 0 && pack.safePurchaseCount != null) answerFields.safePurchaseCount = pack.safePurchaseCount;
+      if (partial || !safe) {
+        if (pack.firstSafePurchaseDate != null) blockedAnswerFields.push("firstSafePurchaseDate");
+        if (pack.lastSafePurchaseDate != null) blockedAnswerFields.push("lastSafePurchaseDate");
+        if (pack.safePurchaseCount != null) blockedAnswerFields.push("safePurchaseCount");
+      }
+    }
+    if (intentName === "review_records_summary") {
+      answerFields.excludedReviewCount = pack.excludedReviewCount != null ? pack.excludedReviewCount : 0;
+      answerFields.excludedBlockingCount = pack.excludedBlockingCount != null ? pack.excludedBlockingCount : 0;
+      answerFields.exclusionReasons = (pack.exclusionReasons || []).slice();
+      answerFields.reviewOnlyRecordIds = (pack.reviewOnlyRecordIds || []).slice();
+      answerFields.blockingRecordIds = (pack.blockingRecordIds || []).slice();
+    }
+    var safeForClientAnswer = safe && !partial && unsafeBecause.length === 0;
+    return {
+      intentName: intentName,
+      input: input && typeof input === "object" ? JSON.parse(JSON.stringify(input)) : {},
+      validInput: true,
+      validationErrors: [],
+      resultSafe: safe,
+      partialResult: partial,
+      needsReview: needsReview,
+      reviewReason: reviewReason,
+      answerFields: answerFields,
+      blockedAnswerFields: blockedAnswerFields,
+      factsAllowedToSay: factsAllowedToSay,
+      factsBlockedToSay: factsBlockedToSay,
+      sourceFactPackType: pack.factPackType || null,
+      sourceFactPackAudit: pack.audit || null,
+      safety: {
+        safeForClientAnswer: safeForClientAnswer,
+        unsafeBecause: unsafeBecause,
+        allowedClaims: allowedClaims,
+        blockedClaims: blockedClaims,
+        evidenceStrength: evidenceStrength,
+        partialBecause: partialBecause,
+        reviewBecause: reviewBecause
+      },
+      resultSource: "phase6.8"
+    };
+  }
+  function iuEvidenceRunEvidenceIntent(intentName, intentInput) {
+    var validation = iuEvidenceValidateIntentInput(intentName, intentInput);
+    if (!validation.valid) {
+      return {
+        intentName: intentName,
+        input: intentInput && typeof intentInput === "object" ? JSON.parse(JSON.stringify(intentInput)) : {},
+        validInput: false,
+        validationErrors: (validation.validationErrors || []).slice(),
+        resultSafe: false,
+        partialResult: true,
+        needsReview: true,
+        reviewReason: "invalid_input",
+        answerFields: {},
+        blockedAnswerFields: [],
+        factsAllowedToSay: [],
+        factsBlockedToSay: [],
+        sourceFactPackType: null,
+        sourceFactPackAudit: null,
+        safety: { safeForClientAnswer: false, unsafeBecause: validation.validationErrors.slice(), allowedClaims: [], blockedClaims: [], evidenceStrength: "unknown", partialBecause: [], reviewBecause: ["invalid_input"] },
+        resultSource: "phase6.8"
+      };
+    }
+    var inp = intentInput && typeof intentInput === "object" ? intentInput : {};
+    var factPack = null;
+    if (intentName === "spend_by_merchant") {
+      factPack = iuEvidenceFactsLayer && iuEvidenceFactsLayer.buildSpendSummaryFactPack ? iuEvidenceFactsLayer.buildSpendSummaryFactPack({ merchant: inp.merchant }) : null;
+    } else if (intentName === "spend_by_date_range") {
+      factPack = iuEvidenceFactsLayer && iuEvidenceFactsLayer.buildSpendSummaryFactPack ? iuEvidenceFactsLayer.buildSpendSummaryFactPack({ startDate: inp.startDate, endDate: inp.endDate }) : null;
+    } else if (intentName === "last_purchase_by_merchant") {
+      factPack = iuEvidenceFactsLayer && iuEvidenceFactsLayer.buildLastPurchaseFactPack ? iuEvidenceFactsLayer.buildLastPurchaseFactPack({ merchant: inp.merchant }) : null;
+    } else if (intentName === "merchant_timeline") {
+      factPack = iuEvidenceFactsLayer && iuEvidenceFactsLayer.buildMerchantTimelineFactPack ? iuEvidenceFactsLayer.buildMerchantTimelineFactPack({ merchant: inp.merchant }) : null;
+    } else if (intentName === "review_records_summary") {
+      factPack = iuEvidenceFactsLayer && iuEvidenceFactsLayer.buildReviewExclusionFactPack ? iuEvidenceFactsLayer.buildReviewExclusionFactPack(inp) : null;
+    }
+    if (!factPack) {
+      return {
+        intentName: intentName,
+        input: inp,
+        validInput: true,
+        validationErrors: [],
+        resultSafe: false,
+        partialResult: true,
+        needsReview: true,
+        reviewReason: "no_fact_pack",
+        answerFields: {},
+        blockedAnswerFields: [],
+        factsAllowedToSay: [],
+        factsBlockedToSay: [],
+        sourceFactPackType: null,
+        sourceFactPackAudit: null,
+        safety: { safeForClientAnswer: false, unsafeBecause: ["no_fact_pack"], allowedClaims: [], blockedClaims: [], evidenceStrength: "unknown", partialBecause: [], reviewBecause: ["no_fact_pack"] },
+        resultSource: "phase6.8"
+      };
+    }
+    return iuEvidenceBuildAnswerBundleFromFactPack(intentName, inp, factPack);
+  }
+
   /** Phase 6.1: typology v2 – add fuel_receipt. */
   function iuEvidenceResolveDocTypologyV2(evidenceGraph, columnDetection, zones, pipelineResult) {
     var itemsZone = (zones && zones.itemsZone) || [];
@@ -11000,6 +11179,20 @@ function buildVideoAsArticleCard(it) {
                     finalOut.allowedBlockedClaimDisciplinePresent = !!(iuEvidenceFactsLayer && iuEvidenceFactsLayer.buildLastPurchaseFactPack && (function() { var p = iuEvidenceFactsLayer.buildLastPurchaseFactPack({ merchant: "x" }); return p && Array.isArray(p.factsAllowedToSay) && Array.isArray(p.factsBlockedToSay); })());
                     finalOut.queryToFactLinkagePresent = !!(iuEvidenceFactsLayer && typeof iuEvidenceCreateFactsLayer === "function");
                     finalOut.factAuditMetadataPresent = !!(iuEvidenceFactsLayer && iuEvidenceFactsLayer.buildSpendSummaryFactPack && (function() { var p = iuEvidenceFactsLayer.buildSpendSummaryFactPack({ merchant: "x" }); return p && p.audit && p.audit.resultSource === "phase6.7"; })());
+                    finalOut.phase68IntentContractPresent = !!(typeof iuEvidenceRunEvidenceIntent === "function" && IU_EVIDENCE_SUPPORTED_INTENTS && IU_EVIDENCE_SUPPORTED_INTENTS.spend_by_merchant && IU_EVIDENCE_SUPPORTED_INTENTS.spend_by_date_range);
+                    finalOut.supportedIntentsPresent = !!(IU_EVIDENCE_SUPPORTED_INTENTS && typeof iuEvidenceValidateIntentInput === "function" && iuEvidenceValidateIntentInput("unknown_intent", {}).validationErrors && iuEvidenceValidateIntentInput("unknown_intent", {}).validationErrors.indexOf("unsupported_intent") >= 0);
+                    finalOut.inputValidationPresent = !!(typeof iuEvidenceValidateIntentInput === "function" && iuEvidenceValidateIntentInput("spend_by_merchant", {}).valid === false && iuEvidenceValidateIntentInput("spend_by_merchant", {}).validationErrors.length > 0);
+                    finalOut.intentRouterPresent = !!(typeof iuEvidenceRunEvidenceIntent === "function");
+                    var _b68 = iuEvidenceRunEvidenceIntent("spend_by_merchant", { merchant: "Lidl" });
+                    finalOut.canonicalAnswerBundlePresent = !!(_b68 && _b68.intentName === "spend_by_merchant" && _b68.validInput !== undefined && _b68.answerFields !== undefined && _b68.blockedAnswerFields !== undefined && _b68.safety && _b68.resultSource === "phase6.8");
+                    finalOut.safeAnswerFieldsPresent = !!(_b68 && typeof _b68.answerFields === "object");
+                    finalOut.blockedAnswerFieldDisciplinePresent = !!(Array.isArray(_b68 && _b68.blockedAnswerFields));
+                    finalOut.answerSafetyMetadataPresent = !!(_b68 && _b68.safety && typeof _b68.safety.safeForClientAnswer === "boolean" && _b68.safety.evidenceStrength != null);
+                    var _inv = iuEvidenceRunEvidenceIntent("unknown_intent", {});
+                    finalOut.unsupportedIntentHandled = !!(_inv && _inv.validInput === false && _inv.validationErrors && _inv.validationErrors.indexOf("unsupported_intent") >= 0);
+                    var _inv2 = iuEvidenceRunEvidenceIntent("spend_by_merchant", {});
+                    finalOut.invalidInputHandled = !!(_inv2 && _inv2.validInput === false && _inv2.validationErrors && _inv2.validationErrors.length > 0);
+                    finalOut.factLinkageTruthful = !!(iuEvidenceFactsLayer && _b68 && _b68.sourceFactPackType === "spendSummary" && _b68.sourceFactPackAudit && _b68.sourceFactPackAudit.resultSource === "phase6.7");
                   } catch (_) {
                     finalOut.phase62CanonicalPurchaseRecordPresent = false;
                     finalOut.canonicalPurchaseRecordUsed = false;
@@ -11053,6 +11246,17 @@ function buildVideoAsArticleCard(it) {
                     finalOut.allowedBlockedClaimDisciplinePresent = false;
                     finalOut.queryToFactLinkagePresent = false;
                     finalOut.factAuditMetadataPresent = false;
+                    finalOut.phase68IntentContractPresent = false;
+                    finalOut.supportedIntentsPresent = false;
+                    finalOut.inputValidationPresent = false;
+                    finalOut.intentRouterPresent = false;
+                    finalOut.canonicalAnswerBundlePresent = false;
+                    finalOut.safeAnswerFieldsPresent = false;
+                    finalOut.blockedAnswerFieldDisciplinePresent = false;
+                    finalOut.answerSafetyMetadataPresent = false;
+                    finalOut.unsupportedIntentHandled = false;
+                    finalOut.invalidInputHandled = false;
+                    finalOut.factLinkageTruthful = false;
                   }
                   window.__iuEvidenceLastResult = finalOut;
                   try { window.__iuEvidenceAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow(out); } catch (_) {}
@@ -11223,6 +11427,17 @@ function buildVideoAsArticleCard(it) {
         errRes.spendAggregationPresent = false;
         errRes.phase67FactsLayerPresent = false;
         errRes.spendSummaryFactPackPresent = false;
+        errRes.phase68IntentContractPresent = false;
+        errRes.supportedIntentsPresent = false;
+        errRes.inputValidationPresent = false;
+        errRes.intentRouterPresent = false;
+        errRes.canonicalAnswerBundlePresent = false;
+        errRes.safeAnswerFieldsPresent = false;
+        errRes.blockedAnswerFieldDisciplinePresent = false;
+        errRes.answerSafetyMetadataPresent = false;
+        errRes.unsupportedIntentHandled = false;
+        errRes.invalidInputHandled = false;
+        errRes.factLinkageTruthful = false;
         return errRes;
       }).then(function(finalResult) {
         if (finalResult == null || typeof finalResult !== "object") {
@@ -11250,6 +11465,10 @@ function buildVideoAsArticleCard(it) {
             minimalSuccess.phase65RecordIdentityHardeningPresent = false;
             minimalSuccess.phase66QueryPrimitivesPresent = false;
             minimalSuccess.phase67FactsLayerPresent = false;
+            minimalSuccess.phase68IntentContractPresent = false;
+            minimalSuccess.supportedIntentsPresent = false;
+            minimalSuccess.intentRouterPresent = false;
+            minimalSuccess.canonicalAnswerBundlePresent = false;
             try { window.__iuEvidenceLastResult = minimalSuccess; if (d) { d.resultPropagatedToUi = true; d.lastResultSet = true; } } catch (_) {}
             return minimalSuccess;
           }
@@ -11274,6 +11493,10 @@ function buildVideoAsArticleCard(it) {
           safeRes.phase65RecordIdentityHardeningPresent = false;
           safeRes.phase66QueryPrimitivesPresent = false;
           safeRes.phase67FactsLayerPresent = false;
+          safeRes.phase68IntentContractPresent = false;
+          safeRes.supportedIntentsPresent = false;
+          safeRes.intentRouterPresent = false;
+          safeRes.canonicalAnswerBundlePresent = false;
           return safeRes;
         }
         return finalResult;
@@ -11451,6 +11674,30 @@ function buildVideoAsArticleCard(it) {
         result.allowedBlockedClaimDisciplinePresent = !!(typeof iuEvidenceFactsLayer !== "undefined" && iuEvidenceFactsLayer && iuEvidenceFactsLayer.buildLastPurchaseFactPack && (function() { var p = iuEvidenceFactsLayer.buildLastPurchaseFactPack({ merchant: "x" }); return p && Array.isArray(p.factsAllowedToSay) && Array.isArray(p.factsBlockedToSay); })());
         result.queryToFactLinkagePresent = !!(typeof iuEvidenceCreateFactsLayer === "function");
         result.factAuditMetadataPresent = !!(typeof iuEvidenceFactsLayer !== "undefined" && iuEvidenceFactsLayer && iuEvidenceFactsLayer.buildSpendSummaryFactPack && (function() { var p = iuEvidenceFactsLayer.buildSpendSummaryFactPack({ merchant: "x" }); return p && p.audit && p.audit.resultSource === "phase6.7"; })());
+        result.phase68IntentContractPresent = !!(typeof iuEvidenceRunEvidenceIntent === "function" && typeof IU_EVIDENCE_SUPPORTED_INTENTS !== "undefined" && IU_EVIDENCE_SUPPORTED_INTENTS && IU_EVIDENCE_SUPPORTED_INTENTS.spend_by_merchant);
+        result.supportedIntentsPresent = !!(typeof IU_EVIDENCE_SUPPORTED_INTENTS !== "undefined" && IU_EVIDENCE_SUPPORTED_INTENTS && typeof iuEvidenceValidateIntentInput === "function");
+        result.inputValidationPresent = !!(typeof iuEvidenceValidateIntentInput === "function" && iuEvidenceValidateIntentInput("spend_by_merchant", {}).valid === false);
+        result.intentRouterPresent = !!(typeof iuEvidenceRunEvidenceIntent === "function");
+        try {
+          var _b68sim = typeof iuEvidenceRunEvidenceIntent === "function" && iuEvidenceRunEvidenceIntent("spend_by_merchant", { merchant: "x" });
+          result.canonicalAnswerBundlePresent = !!(_b68sim && _b68sim.intentName === "spend_by_merchant" && _b68sim.answerFields !== undefined && _b68sim.resultSource === "phase6.8");
+          result.safeAnswerFieldsPresent = !!(_b68sim && typeof _b68sim.answerFields === "object");
+          result.blockedAnswerFieldDisciplinePresent = !!(_b68sim && Array.isArray(_b68sim.blockedAnswerFields));
+          result.answerSafetyMetadataPresent = !!(_b68sim && _b68sim.safety && typeof _b68sim.safety.safeForClientAnswer === "boolean");
+          var _invSim = typeof iuEvidenceRunEvidenceIntent === "function" && iuEvidenceRunEvidenceIntent("unknown_intent", {});
+          result.unsupportedIntentHandled = !!(_invSim && _invSim.validInput === false && _invSim.validationErrors && _invSim.validationErrors.indexOf("unsupported_intent") >= 0);
+          var _invSim2 = typeof iuEvidenceRunEvidenceIntent === "function" && iuEvidenceRunEvidenceIntent("spend_by_merchant", {});
+          result.invalidInputHandled = !!(_invSim2 && _invSim2.validInput === false && _invSim2.validationErrors && _invSim2.validationErrors.length > 0);
+          result.factLinkageTruthful = !!(_b68sim && _b68sim.sourceFactPackType === "spendSummary" && _b68sim.sourceFactPackAudit && _b68sim.sourceFactPackAudit.resultSource === "phase6.7");
+        } catch (_) {
+          result.canonicalAnswerBundlePresent = false;
+          result.safeAnswerFieldsPresent = false;
+          result.blockedAnswerFieldDisciplinePresent = false;
+          result.answerSafetyMetadataPresent = false;
+          result.unsupportedIntentHandled = false;
+          result.invalidInputHandled = false;
+          result.factLinkageTruthful = false;
+        }
         result.phase64EvidenceIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex);
         result.purchaseRecordIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getRecordById);
         result.recordRegistrationPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.registerPurchaseRecord === "function");
@@ -11483,6 +11730,17 @@ function buildVideoAsArticleCard(it) {
         result.spendAggregationPresent = false;
         result.phase67FactsLayerPresent = false;
         result.spendSummaryFactPackPresent = false;
+        result.phase68IntentContractPresent = false;
+        result.supportedIntentsPresent = false;
+        result.inputValidationPresent = false;
+        result.intentRouterPresent = false;
+        result.canonicalAnswerBundlePresent = false;
+        result.safeAnswerFieldsPresent = false;
+        result.blockedAnswerFieldDisciplinePresent = false;
+        result.answerSafetyMetadataPresent = false;
+        result.unsupportedIntentHandled = false;
+        result.invalidInputHandled = false;
+        result.factLinkageTruthful = false;
       }
     } catch (_) {
       result.phase62CanonicalPurchaseRecordPresent = false;
@@ -11510,6 +11768,10 @@ function buildVideoAsArticleCard(it) {
       result.spendAggregationPresent = false;
       result.phase67FactsLayerPresent = false;
       result.spendSummaryFactPackPresent = false;
+      result.phase68IntentContractPresent = false;
+      result.supportedIntentsPresent = false;
+      result.intentRouterPresent = false;
+      result.canonicalAnswerBundlePresent = false;
     }
     result.hallucinatedPaymentMethod = false;
     return result;
@@ -11518,6 +11780,9 @@ function buildVideoAsArticleCard(it) {
   try {
     window.__iuEvidencePurchaseRecordIndex = iuEvidencePurchaseRecordIndex;
     window.__iuEvidenceFactsLayer = iuEvidenceFactsLayer;
+    window.IU_EVIDENCE_SUPPORTED_INTENTS = IU_EVIDENCE_SUPPORTED_INTENTS;
+    window.iuEvidenceValidateIntentInput = iuEvidenceValidateIntentInput;
+    window.iuEvidenceRunEvidenceIntent = iuEvidenceRunEvidenceIntent;
     window.iuEvidenceOcrHook = iuEvidenceOcrHook;
     window.iuEvidenceNormalizeOcrText = iuEvidenceNormalizeOcrText;
     window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
