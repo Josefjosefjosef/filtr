@@ -10200,6 +10200,144 @@ function buildVideoAsArticleCard(it) {
       resultSource: "phase6.8"
     };
   }
+
+  /** Phase 6.9: deterministic presentation contract. Maps answer bundle -> presentation-safe response. No new facts. */
+  var IU_EVIDENCE_RENDER_MODES = { SUCCESS: "success", PARTIAL: "partial", REVIEW: "review", INVALID: "invalid", BLOCKED: "blocked", EMPTY: "empty" };
+  var IU_EVIDENCE_SAFE_ACTIONS = ["review_records", "refine_filter", "retry_with_valid_input"];
+
+  function iuEvidenceBuildPresentationResponse(answerBundle) {
+    var b = answerBundle && typeof answerBundle === "object" ? answerBundle : null;
+    if (!b) {
+      return {
+        responseType: "phase6.9_presentation",
+        intentName: null,
+        renderMode: IU_EVIDENCE_RENDER_MODES.EMPTY,
+        presentationValid: false,
+        displaySafe: false,
+        headline: "",
+        subheadline: "",
+        primaryFacts: [],
+        secondaryFacts: [],
+        warnings: [],
+        blockedNotices: [],
+        reviewBanner: "",
+        safeActions: [IU_EVIDENCE_SAFE_ACTIONS[2]],
+        auditSummary: { source: "phase6.9", bundlePresent: false },
+        sourceAnswerBundleType: null,
+        sourceAnswerBundleAudit: null,
+        resultSource: "phase6.9"
+      };
+    }
+    var validInput = b.validInput === true;
+    var validationErrors = (b.validationErrors || []).slice();
+    var resultSafe = b.resultSafe === true;
+    var partialResult = b.partialResult === true;
+    var needsReview = b.needsReview === true;
+    var reviewReason = b.reviewReason || null;
+    var answerFields = b.answerFields && typeof b.answerFields === "object" ? b.answerFields : {};
+    var blockedAnswerFields = Array.isArray(b.blockedAnswerFields) ? b.blockedAnswerFields.slice() : [];
+    var safety = b.safety || {};
+    var allowedClaims = (safety.allowedClaims || []).slice();
+    var blockedClaims = (safety.blockedClaims || []).slice();
+    var unsafeBecause = (safety.unsafeBecause || []).slice();
+    var factPackType = b.sourceFactPackType || null;
+
+    var renderMode = IU_EVIDENCE_RENDER_MODES.SUCCESS;
+    if (!validInput) {
+      renderMode = validationErrors.indexOf("unsupported_intent") >= 0 ? IU_EVIDENCE_RENDER_MODES.INVALID : IU_EVIDENCE_RENDER_MODES.INVALID;
+    } else if (blockedClaims.length > 0 || blockedAnswerFields.length > 0) {
+      if (!resultSafe) renderMode = IU_EVIDENCE_RENDER_MODES.BLOCKED;
+      else renderMode = needsReview ? IU_EVIDENCE_RENDER_MODES.REVIEW : (partialResult ? IU_EVIDENCE_RENDER_MODES.PARTIAL : IU_EVIDENCE_RENDER_MODES.SUCCESS);
+    } else if (needsReview) {
+      renderMode = IU_EVIDENCE_RENDER_MODES.REVIEW;
+    } else if (partialResult) {
+      renderMode = IU_EVIDENCE_RENDER_MODES.PARTIAL;
+    } else if (resultSafe && !partialResult && !needsReview) {
+      renderMode = IU_EVIDENCE_RENDER_MODES.SUCCESS;
+    } else if (Object.keys(answerFields).length === 0 && factPackType === null) {
+      renderMode = IU_EVIDENCE_RENDER_MODES.EMPTY;
+    }
+
+    var displaySafe = resultSafe && !partialResult && blockedClaims.length === 0 && blockedAnswerFields.length === 0;
+    var presentationValid = (validInput && (factPackType != null || validationErrors.length > 0)) || (!validInput && validationErrors.length > 0);
+
+    var primaryFacts = [];
+    var secondaryFacts = [];
+    var k;
+    for (k in answerFields) if (answerFields.hasOwnProperty(k) && blockedAnswerFields.indexOf(k) < 0) {
+      primaryFacts.push({ key: k, value: answerFields[k] });
+    }
+    if (blockedAnswerFields.length > 0) {
+      for (k in answerFields) if (answerFields.hasOwnProperty(k) && blockedAnswerFields.indexOf(k) >= 0) {
+        secondaryFacts.push({ key: k, value: answerFields[k], blocked: true });
+      }
+    }
+
+    var warnings = [];
+    if (reviewReason === "review_records_excluded" || unsafeBecause.indexOf("review_records_excluded") >= 0) warnings.push("review_records_excluded");
+    if (unsafeBecause.indexOf("blocking_records_excluded") >= 0 || (blockedClaims.length > 0)) warnings.push("blocking_records_excluded");
+    if (partialResult && reviewReason) warnings.push("partial_data");
+    if (reviewReason === "no_query_safe_records" || reviewReason === "no_records" || reviewReason === "no_data") warnings.push("no_safe_records");
+    if (reviewReason === "no_fact_pack") warnings.push("unsupported_intent");
+    if (!validInput && validationErrors.length > 0) warnings.push("invalid_input");
+    if (validationErrors.indexOf("unsupported_intent") >= 0) warnings.push("unsupported_intent");
+    if (validationErrors.indexOf("empty_merchant") >= 0) warnings.push("empty_merchant");
+    if (validationErrors.indexOf("invalid_date_range") >= 0) warnings.push("invalid_date_range");
+
+    var blockedNotices = [];
+    if (blockedClaims.indexOf("exact_total_not_safe") >= 0 || blockedClaims.indexOf("total_not_safe") >= 0) blockedNotices.push("total_not_safe");
+    if (blockedClaims.indexOf("last_purchase_not_safe") >= 0) blockedNotices.push("last_purchase_not_safe");
+    if (blockedClaims.indexOf("date_range_partial") >= 0) blockedNotices.push("date_range_partial");
+    if (blockedClaims.indexOf("merchant_match_ambiguous") >= 0) blockedNotices.push("merchant_ambiguous");
+    blockedClaims.forEach(function(c) { if (blockedNotices.indexOf(c) < 0) blockedNotices.push(c); });
+
+    var reviewBanner = "";
+    if (renderMode === IU_EVIDENCE_RENDER_MODES.REVIEW || needsReview) reviewBanner = reviewReason || "needs_review";
+    if (renderMode === IU_EVIDENCE_RENDER_MODES.INVALID && validationErrors.length > 0) reviewBanner = validationErrors.join("; ");
+
+    var safeActions = [];
+    if (needsReview || partialResult) safeActions.push(IU_EVIDENCE_SAFE_ACTIONS[0]);
+    if (resultSafe && partialResult) safeActions.push(IU_EVIDENCE_SAFE_ACTIONS[1]);
+    if (!validInput || renderMode === IU_EVIDENCE_RENDER_MODES.INVALID) safeActions.push(IU_EVIDENCE_SAFE_ACTIONS[2]);
+    if (safeActions.length === 0 && renderMode === IU_EVIDENCE_RENDER_MODES.SUCCESS) safeActions = [];
+
+    var headline = "";
+    var subheadline = "";
+    if (renderMode === IU_EVIDENCE_RENDER_MODES.INVALID) {
+      headline = "invalid_input";
+      subheadline = validationErrors.join(", ") || "validation_failed";
+    } else if (renderMode === IU_EVIDENCE_RENDER_MODES.EMPTY) {
+      headline = "no_data";
+      subheadline = factPackType == null ? "unsupported_or_no_fact_pack" : "";
+    } else if (renderMode === IU_EVIDENCE_RENDER_MODES.SUCCESS) {
+      headline = "result_ready";
+      subheadline = factPackType || "";
+    } else {
+      headline = renderMode;
+      subheadline = reviewReason || "";
+    }
+
+    return {
+      responseType: "phase6.9_presentation",
+      intentName: b.intentName != null ? b.intentName : null,
+      renderMode: renderMode,
+      presentationValid: presentationValid,
+      displaySafe: displaySafe,
+      headline: headline,
+      subheadline: subheadline,
+      primaryFacts: primaryFacts,
+      secondaryFacts: secondaryFacts,
+      warnings: warnings,
+      blockedNotices: blockedNotices,
+      reviewBanner: reviewBanner,
+      safeActions: safeActions,
+      auditSummary: { source: "phase6.9", renderMode: renderMode, validInput: validInput, resultSafe: resultSafe },
+      sourceAnswerBundleType: factPackType,
+      sourceAnswerBundleAudit: b.sourceFactPackAudit || null,
+      resultSource: "phase6.9"
+    };
+  }
+
   function iuEvidenceRunEvidenceIntent(intentName, intentInput) {
     var validation = iuEvidenceValidateIntentInput(intentName, intentInput);
     if (!validation.valid) {
@@ -11193,6 +11331,15 @@ function buildVideoAsArticleCard(it) {
                     var _inv2 = iuEvidenceRunEvidenceIntent("spend_by_merchant", {});
                     finalOut.invalidInputHandled = !!(_inv2 && _inv2.validInput === false && _inv2.validationErrors && _inv2.validationErrors.length > 0);
                     finalOut.factLinkageTruthful = !!(iuEvidenceFactsLayer && _b68 && _b68.sourceFactPackType === "spendSummary" && _b68.sourceFactPackAudit && _b68.sourceFactPackAudit.resultSource === "phase6.7");
+                    var _p69 = typeof iuEvidenceBuildPresentationResponse === "function" ? iuEvidenceBuildPresentationResponse(_b68) : null;
+                    finalOut.phase69PresentationContractPresent = !!(_p69 && _p69.responseType === "phase6.9_presentation" && _p69.resultSource === "phase6.9");
+                    finalOut.renderModeDisciplinePresent = !!(_p69 && _p69.renderMode && IU_EVIDENCE_RENDER_MODES && (IU_EVIDENCE_RENDER_MODES.SUCCESS === "success" && IU_EVIDENCE_RENDER_MODES.INVALID === "invalid"));
+                    finalOut.presentationResponsePresent = !!(_p69 && Array.isArray(_p69.primaryFacts) && Array.isArray(_p69.warnings) && Array.isArray(_p69.blockedNotices) && Array.isArray(_p69.safeActions));
+                    finalOut.truthfulBundleLinkagePresent = !!(_p69 && _p69.sourceAnswerBundleType === "spendSummary" && _p69.sourceAnswerBundleAudit);
+                    var _p69inv = typeof iuEvidenceBuildPresentationResponse === "function" ? iuEvidenceBuildPresentationResponse(_inv) : null;
+                    finalOut.unsupportedIntentPresentedTruthfully = !!(_p69inv && _p69inv.renderMode === "invalid" && _p69inv.intentName === "unknown_intent");
+                    var _p69inv2 = typeof iuEvidenceBuildPresentationResponse === "function" ? iuEvidenceBuildPresentationResponse(_inv2) : null;
+                    finalOut.invalidInputPresentedTruthfully = !!(_p69inv2 && _p69inv2.renderMode === "invalid");
                   } catch (_) {
                     finalOut.phase62CanonicalPurchaseRecordPresent = false;
                     finalOut.canonicalPurchaseRecordUsed = false;
@@ -11257,6 +11404,12 @@ function buildVideoAsArticleCard(it) {
                     finalOut.unsupportedIntentHandled = false;
                     finalOut.invalidInputHandled = false;
                     finalOut.factLinkageTruthful = false;
+                    finalOut.phase69PresentationContractPresent = false;
+                    finalOut.renderModeDisciplinePresent = false;
+                    finalOut.presentationResponsePresent = false;
+                    finalOut.truthfulBundleLinkagePresent = false;
+                    finalOut.unsupportedIntentPresentedTruthfully = false;
+                    finalOut.invalidInputPresentedTruthfully = false;
                   }
                   window.__iuEvidenceLastResult = finalOut;
                   try { window.__iuEvidenceAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow(out); } catch (_) {}
@@ -11689,6 +11842,9 @@ function buildVideoAsArticleCard(it) {
           var _invSim2 = typeof iuEvidenceRunEvidenceIntent === "function" && iuEvidenceRunEvidenceIntent("spend_by_merchant", {});
           result.invalidInputHandled = !!(_invSim2 && _invSim2.validInput === false && _invSim2.validationErrors && _invSim2.validationErrors.length > 0);
           result.factLinkageTruthful = !!(_b68sim && _b68sim.sourceFactPackType === "spendSummary" && _b68sim.sourceFactPackAudit && _b68sim.sourceFactPackAudit.resultSource === "phase6.7");
+          var _p69sim = typeof iuEvidenceBuildPresentationResponse === "function" ? iuEvidenceBuildPresentationResponse(_b68sim) : null;
+          result.phase69PresentationContractPresent = !!(_p69sim && _p69sim.resultSource === "phase6.9" && _p69sim.renderMode != null);
+          result.renderModeDisciplinePresent = !!(_p69sim && typeof IU_EVIDENCE_RENDER_MODES !== "undefined" && IU_EVIDENCE_RENDER_MODES.SUCCESS === "success");
         } catch (_) {
           result.canonicalAnswerBundlePresent = false;
           result.safeAnswerFieldsPresent = false;
@@ -11697,6 +11853,8 @@ function buildVideoAsArticleCard(it) {
           result.unsupportedIntentHandled = false;
           result.invalidInputHandled = false;
           result.factLinkageTruthful = false;
+          result.phase69PresentationContractPresent = false;
+          result.renderModeDisciplinePresent = false;
         }
         result.phase64EvidenceIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex);
         result.purchaseRecordIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getRecordById);
@@ -11741,6 +11899,8 @@ function buildVideoAsArticleCard(it) {
         result.unsupportedIntentHandled = false;
         result.invalidInputHandled = false;
         result.factLinkageTruthful = false;
+        result.phase69PresentationContractPresent = false;
+        result.renderModeDisciplinePresent = false;
       }
     } catch (_) {
       result.phase62CanonicalPurchaseRecordPresent = false;
@@ -11783,6 +11943,9 @@ function buildVideoAsArticleCard(it) {
     window.IU_EVIDENCE_SUPPORTED_INTENTS = IU_EVIDENCE_SUPPORTED_INTENTS;
     window.iuEvidenceValidateIntentInput = iuEvidenceValidateIntentInput;
     window.iuEvidenceRunEvidenceIntent = iuEvidenceRunEvidenceIntent;
+    window.iuEvidenceBuildPresentationResponse = iuEvidenceBuildPresentationResponse;
+    window.IU_EVIDENCE_RENDER_MODES = IU_EVIDENCE_RENDER_MODES;
+    window.IU_EVIDENCE_SAFE_ACTIONS = IU_EVIDENCE_SAFE_ACTIONS;
     window.iuEvidenceOcrHook = iuEvidenceOcrHook;
     window.iuEvidenceNormalizeOcrText = iuEvidenceNormalizeOcrText;
     window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
