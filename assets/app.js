@@ -11702,10 +11702,6 @@ function buildVideoAsArticleCard(it) {
     var base = iuEvidenceOcrBaseUrl();
     if (!base) return {};
     base = base.replace(/\/?$/, "/");
-    var isCdn = base.indexOf("cdn.") >= 0 || base.indexOf("jsdelivr") >= 0 || base.indexOf("cdnjs") >= 0;
-    var isLocalProof = base.indexOf("127.0.0.1") >= 0 || base.indexOf("localhost") >= 0;
-    if (!isCdn && !isLocalProof) return {};
-    if (isLocalProof) return {};
     return {
       workerPath: base + "worker.min.js",
       langPath: base + "tessdata",
@@ -12636,7 +12632,10 @@ function buildVideoAsArticleCard(it) {
           setTimeout(function() { reject(new Error("workerInitTimeout")); }, workerTimeoutMs);
         });
         workerPromise = workerPromise.then(function(rtr) {
-          if (typeof window === "undefined" || !rtr || typeof rtr !== "object") return rtr;
+          if (typeof window === "undefined" || !rtr || typeof rtr !== "object") {
+            var fallback = (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object") ? window.__iuEvidenceLastResult : null;
+            return fallback || {};
+          }
           var raw = (rtr.rawOcrText != null ? String(rtr.rawOcrText) : "").trim();
           var fallbackVal = (window.__iuProofFallbackValue && typeof window.__iuProofFallbackValue === "string") ? String(window.__iuProofFallbackValue).trim() : "";
           if (raw.length > 0 && !/\d/.test(raw) && fallbackVal.length > 0 && typeof iuEvidenceOcrPipeline === "function") {
