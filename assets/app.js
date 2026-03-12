@@ -9390,6 +9390,108 @@ function buildVideoAsArticleCard(it) {
     return zones;
   }
 
+  /** Phase 7.2S: structural receipt decoder – POS-style section segmentation and line grammar. Deterministic, no AI. */
+  var IU_RECEIPT_SECTIONS = { HEADER_BLOCK: "header_block", ITEMS_BLOCK: "items_block", TOTALS_BLOCK: "totals_block", PAYMENT_BLOCK: "payment_block", FOOTER_BLOCK: "footer_block", UNKNOWN_BLOCK: "unknown_block" };
+  var IU_RECEIPT_LINE_TYPES = { MERCHANT_LINE: "merchant_line", DATETIME_LINE: "datetime_line", ITEM_LINE_CANDIDATE: "item_line_candidate", QTY_PRICE_LINE: "qty_price_line", SUBTOTAL_LINE: "subtotal_line", VAT_LINE: "vat_line", TOTAL_LINE: "total_line", PAYMENT_LINE: "payment_line", CHANGE_LINE: "change_line", LOYALTY_LINE: "loyalty_line", IGNORED_NOISE_LINE: "ignored_noise_line", UNKNOWN_LINE: "unknown_line" };
+
+  function iuEvidenceDecodeReceiptStructure(geometry, docHeight) {
+    var zones = geometry && geometry.lines ? iuEvidenceClassifyDocumentZones(geometry, docHeight || 1000) : { merchantZone: [], metaZone: [], itemsZone: [], totalsZone: [], vatZone: [], idsZone: [] };
+    var lines = (geometry && geometry.lines) || [];
+    var sectionOrder = [IU_RECEIPT_SECTIONS.HEADER_BLOCK, IU_RECEIPT_SECTIONS.ITEMS_BLOCK, IU_RECEIPT_SECTIONS.TOTALS_BLOCK, IU_RECEIPT_SECTIONS.PAYMENT_BLOCK, IU_RECEIPT_SECTIONS.FOOTER_BLOCK, IU_RECEIPT_SECTIONS.UNKNOWN_BLOCK];
+    var blocks = {};
+    blocks[IU_RECEIPT_SECTIONS.HEADER_BLOCK] = (zones.merchantZone || []).concat(zones.metaZone || []).filter(function(i) { return i >= 0 && i < lines.length; }).sort(function(a, b) { return a - b; });
+    blocks[IU_RECEIPT_SECTIONS.ITEMS_BLOCK] = (zones.itemsZone || []).slice();
+    blocks[IU_RECEIPT_SECTIONS.TOTALS_BLOCK] = (zones.totalsZone || []).concat(zones.vatZone || []).filter(function(i) { return i >= 0 && i < lines.length; }).sort(function(a, b) { return a - b; });
+    blocks[IU_RECEIPT_SECTIONS.PAYMENT_BLOCK] = [];
+    blocks[IU_RECEIPT_SECTIONS.FOOTER_BLOCK] = (zones.idsZone || []).slice();
+    blocks[IU_RECEIPT_SECTIONS.UNKNOWN_BLOCK] = [];
+    for (var i = 0; i < lines.length; i++) {
+      var t = (lines[i].text || "").trim();
+      if (/platba|karta|hotovost|změna|change|card|cash/i.test(t) && blocks[IU_RECEIPT_SECTIONS.PAYMENT_BLOCK].indexOf(i) < 0) blocks[IU_RECEIPT_SECTIONS.PAYMENT_BLOCK].push(i);
+      var inAny = blocks[IU_RECEIPT_SECTIONS.HEADER_BLOCK].indexOf(i) >= 0 || blocks[IU_RECEIPT_SECTIONS.ITEMS_BLOCK].indexOf(i) >= 0 || blocks[IU_RECEIPT_SECTIONS.TOTALS_BLOCK].indexOf(i) >= 0 || blocks[IU_RECEIPT_SECTIONS.FOOTER_BLOCK].indexOf(i) >= 0 || blocks[IU_RECEIPT_SECTIONS.PAYMENT_BLOCK].indexOf(i) >= 0;
+      if (!inAny && t.length > 0) blocks[IU_RECEIPT_SECTIONS.UNKNOWN_BLOCK].push(i);
+    }
+    return { sections: Object.keys(blocks), sectionOrder: sectionOrder, blocks: blocks, audit: { source: "phase7.2s", zoneBased: true } };
+  }
+
+  function iuEvidenceClassifyReceiptLines(lines) {
+    var out = [];
+    if (!lines || !lines.length) return out;
+    for (var i = 0; i < lines.length; i++) {
+      var t = (lines[i].text || "").trim();
+      var lineType = IU_RECEIPT_LINE_TYPES.UNKNOWN_LINE;
+      var auditReason = "no_match";
+      if (i === 0 && t.length > 0) { lineType = IU_RECEIPT_LINE_TYPES.MERCHANT_LINE; auditReason = "first_line"; }
+      else if (/\d{1,2}[.:]\d{2}/.test(t) || /\d{4}-\d{2}-\d{2}/.test(t) || /datum|čas|date|time/i.test(t)) { lineType = IU_RECEIPT_LINE_TYPES.DATETIME_LINE; auditReason = "date_time_pattern"; }
+      else if (/celkem|total|celk\s/i.test(t) && /[\d,\.]/.test(t)) { lineType = IU_RECEIPT_LINE_TYPES.TOTAL_LINE; auditReason = "total_keyword_and_numeric"; }
+      else if (/základ|DPH|vat\s/i.test(t)) { lineType = IU_RECEIPT_LINE_TYPES.VAT_LINE; auditReason = "vat_keyword"; }
+      else if (/platba|karta|hotovost|card|cash/i.test(t)) { lineType = IU_RECEIPT_LINE_TYPES.PAYMENT_LINE; auditReason = "payment_keyword"; }
+      else if (/změna|change|vráceno/i.test(t) && /[\d,\.]/.test(t)) { lineType = IU_RECEIPT_LINE_TYPES.CHANGE_LINE; auditReason = "change_keyword"; }
+      else if (/IČO|DIČ|doklad\s*[:\s]|ičo|dič/i.test(t)) { lineType = IU_RECEIPT_LINE_TYPES.IGNORED_NOISE_LINE; auditReason = "id_keyword"; }
+      else if (/^[\d\s,\.]+\s*(?:Kč|Kc|CZK)?\s*$/i.test(t)) { lineType = IU_RECEIPT_LINE_TYPES.QTY_PRICE_LINE; auditReason = "numeric_tail_only"; }
+      else if (t.length > 0 && !/celkem|total|datum|date|čas|time|základ|DPH|doklad/i.test(t)) { lineType = IU_RECEIPT_LINE_TYPES.ITEM_LINE_CANDIDATE; auditReason = "content_no_keyword"; }
+      out.push({ lineIndex: i, text: t, lineType: lineType, auditReason: auditReason });
+    }
+    return out;
+  }
+
+  function iuEvidenceAssembleReceiptItems(lines, lineClassifications) {
+    var items = [];
+    if (!lines || !lineClassifications || lineClassifications.length !== lines.length) return { items: items, audit: { source: "phase7.2s", assembled: items.length } };
+    for (var i = 0; i < lineClassifications.length; i++) {
+      var cl = lineClassifications[i];
+      if (cl.lineType !== IU_RECEIPT_LINE_TYPES.ITEM_LINE_CANDIDATE && cl.lineType !== IU_RECEIPT_LINE_TYPES.QTY_PRICE_LINE) continue;
+      var t = (lines[i].text || "").trim();
+      var next = lineClassifications[i + 1];
+      var nextText = next && lines[i + 1] ? (lines[i + 1].text || "").trim() : "";
+      if (cl.lineType === IU_RECEIPT_LINE_TYPES.QTY_PRICE_LINE) {
+        var prev = lineClassifications[i - 1];
+        var prevNameOnly = prev && prev.text && !/[\d,\.]\s*(?:Kč|Kc|CZK)?\s*$/i.test(prev.text);
+        if (prev && prev.lineType === IU_RECEIPT_LINE_TYPES.ITEM_LINE_CANDIDATE && prev.text.length > 0 && prevNameOnly) {
+          var numMatch = t.match(/([\d\s,\.]+)\s*(?:Kč|Kc|CZK)?\s*$/i);
+          if (numMatch) {
+            var priceNum = parseFloat(String(numMatch[1]).replace(/\s/g, "").replace(",", "."));
+            if (!isNaN(priceNum) && priceNum >= 0) items.push({ name: prev.text, price: priceNum, priceStr: numMatch[1].trim() + " Kč", qty: null, unitPrice: null, lineTotal: priceNum, assemblyRule: "two_line_name_price" });
+          }
+          continue;
+        }
+      }
+      var singleMatch = t.match(/^(.+?)\s+([\d\s,\.]+)\s*(?:Kč|Kc|CZK)?\s*$/i);
+      if (singleMatch) {
+        var name = singleMatch[1].trim();
+        if (/z[áa]klad|^DPH\s|doklad\s*[:\s]/i.test(name)) continue;
+        var p = parseFloat(String(singleMatch[2]).replace(/\s/g, "").replace(",", "."));
+        if (!isNaN(p) && p >= 0) items.push({ name: name, price: p, priceStr: singleMatch[2].trim() + " Kč", qty: null, unitPrice: null, lineTotal: p, assemblyRule: "single_line" });
+      }
+    }
+    return { items: items, audit: { source: "phase7.2s", assembled: items.length } };
+  }
+
+  function iuEvidenceReconcileReceiptMath(items, totalNum, subtotal, vatAmount, paymentPaid) {
+    var sumItems = 0;
+    if (items && items.length) for (var i = 0; i < items.length; i++) sumItems += (items[i].lineTotal != null ? items[i].lineTotal : items[i].price) || 0;
+    var totalVal = totalNum != null ? Number(totalNum) : NaN;
+    var sumMatch = !isNaN(totalVal) && Math.abs(sumItems - totalVal) <= 0.02;
+    var vatMatch = true;
+    if (subtotal != null && vatAmount != null && !isNaN(totalVal)) vatMatch = Math.abs((subtotal + vatAmount) - totalVal) <= 0.02;
+    var paymentMatch = paymentPaid == null || isNaN(Number(paymentPaid)) || Math.abs(Number(paymentPaid) - totalVal) <= 0.02;
+    var unknownInsteadOfLie = true;
+    var needsReview = !sumMatch || !vatMatch;
+    var blockedClaim = !sumMatch && !isNaN(totalVal);
+    return { sumMatch: sumMatch, vatMatch: vatMatch, paymentMatch: paymentMatch, unknownInsteadOfLie: unknownInsteadOfLie, needsReview: needsReview, blockedClaim: blockedClaim, itemsSum: sumItems, totalVal: totalVal, audit: { source: "phase7.2s" } };
+  }
+
+  /** Phase 7.2S: anchored price grammar – decimal normalization, qty×unitPrice≈lineTotal, reject impossible; prefer unknown. */
+  function iuEvidenceAnchoredPriceGrammar(lineTotal, qty, unitPrice) {
+    var auditReason = "ok";
+    if (lineTotal != null && (isNaN(Number(lineTotal)) || Number(lineTotal) < 0)) return { valid: false, auditReason: "invalid_lineTotal", preferUnknown: true };
+    if (qty != null && unitPrice != null && lineTotal != null) {
+      var expected = Math.round(Number(qty) * Number(unitPrice) * 100) / 100;
+      if (Math.abs(Number(lineTotal) - expected) > 0.03) return { valid: false, auditReason: "qty_unit_lineTotal_mismatch", preferUnknown: true };
+    }
+    return { valid: true, auditReason: auditReason, preferUnknown: false };
+  }
+
   /** Heuristic retail column detection from word bboxes (X clustering). */
   function iuEvidenceDetectRetailColumns(geometry, docWidth) {
     var words = (geometry && geometry.words) || [];
@@ -12448,6 +12550,13 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
     window.iuEvidenceSimulatedRawOcr = iuEvidenceSimulatedRawOcr;
     window.iuEvidenceRunPipelineWithSimulatedText = iuEvidenceRunPipelineWithSimulatedText;
+    window.iuEvidenceDecodeReceiptStructure = iuEvidenceDecodeReceiptStructure;
+    window.iuEvidenceClassifyReceiptLines = iuEvidenceClassifyReceiptLines;
+    window.iuEvidenceAssembleReceiptItems = iuEvidenceAssembleReceiptItems;
+    window.iuEvidenceReconcileReceiptMath = iuEvidenceReconcileReceiptMath;
+    window.iuEvidenceAnchoredPriceGrammar = iuEvidenceAnchoredPriceGrammar;
+    window.IU_RECEIPT_SECTIONS = IU_RECEIPT_SECTIONS;
+    window.IU_RECEIPT_LINE_TYPES = IU_RECEIPT_LINE_TYPES;
     window.iuEvidenceNormalizedCompare = iuEvidenceNormalizedCompare;
     window.iuEvidenceNumericCompare = iuEvidenceNumericCompare;
     window.iuEvidenceAccuracyRegressionGate = iuEvidenceAccuracyRegressionGate;
