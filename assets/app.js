@@ -9838,6 +9838,99 @@ function buildVideoAsArticleCard(it) {
       var needsReview = records.filter(function(r) { return r.review && r.review.needsReview === true; }).length;
       return { recordsBlocking: blocking, recordsNonBlocking: nonBlocking, recordsNeedsReview: needsReview };
     }
+    function isQuerySafe(r) { return !!(r.queryReadiness && r.queryReadiness.queryReady === true); }
+    function totalResolvedSafe(r) { return !!(r.totals && r.totals.total && r.totals.total.resolvedSafely === true); }
+    function parseTotalNum(r) {
+      var v = r.totals && r.totals.total && r.totals.total.value;
+      if (v == null || v === "unknown") return NaN;
+      var s = String(v).replace(/[^\d.,]/g, "").replace(",", ".");
+      return parseFloat(s) || NaN;
+    }
+    function splitSafeReviewBlocked(list) {
+      var safeRecords = []; var reviewRecords = []; var blockedRecords = [];
+      list.forEach(function(r) {
+        if (r.recordBlockingIssue === true || (r.review && r.review.blockingFields && r.review.blockingFields.length > 0)) blockedRecords.push(r);
+        else if (r.review && r.review.needsReview === true) reviewRecords.push(r);
+        else if (isQuerySafe(r)) safeRecords.push(r);
+        else reviewRecords.push(r);
+      });
+      return { safeRecords: safeRecords, reviewRecords: reviewRecords, blockedRecords: blockedRecords };
+    }
+    function getQueryReadyRecords() {
+      var list = records.filter(isQuerySafe);
+      return { records: list, recordsCount: list.length, safeRecords: list, reviewRecords: [], blockedRecords: [], queryAudit: { queryType: "getQueryReadyRecords", recordsScanned: records.length, recordsMatched: list.length, recordsUsed: list.length, resultSafe: true, resultSource: "phase6.6" } };
+    }
+    function getRecordsNeedingReview() {
+      var list = records.filter(function(r) { return r.review && r.review.needsReview === true; });
+      return { records: list, recordsCount: list.length, safeRecords: [], reviewRecords: list, blockedRecords: [], queryAudit: { queryType: "getRecordsNeedingReview", recordsScanned: records.length, recordsMatched: list.length, recordsUsed: 0, resultSafe: false, resultSource: "phase6.6" } };
+    }
+    function queryRecordsByMerchant(merchant) {
+      var key = normKey(merchant);
+      var list = (recordsByMerchant[key] || []).slice();
+      var split = splitSafeReviewBlocked(list);
+      return { records: list, recordsCount: list.length, safeRecords: split.safeRecords, reviewRecords: split.reviewRecords, blockedRecords: split.blockedRecords, queryAudit: { queryType: "queryRecordsByMerchant", filterMerchant: key, recordsScanned: records.length, recordsMatched: list.length, recordsUsed: split.safeRecords.length, resultSafe: split.blockedRecords.length === 0, resultSource: "phase6.6" } };
+    }
+    function queryRecordsByDateRange(startDate, endDate) {
+      var start = dateToComparable(startDate);
+      var end = dateToComparable(endDate);
+      var list = [];
+      records.forEach(function(r) {
+        var v = (r.purchaseDate && r.purchaseDate.value) != null ? r.purchaseDate.value : "unknown";
+        var comp = dateToComparable(v);
+        if (comp != null && start != null && end != null && comp >= start && comp <= end) list.push(r);
+        else if (start == null && end == null) list.push(r);
+      });
+      var split = splitSafeReviewBlocked(list);
+      return { records: list, recordsCount: list.length, safeRecords: split.safeRecords, reviewRecords: split.reviewRecords, blockedRecords: split.blockedRecords, queryAudit: { queryType: "queryRecordsByDateRange", filterDateStart: startDate, filterDateEnd: endDate, recordsScanned: records.length, recordsMatched: list.length, recordsUsed: split.safeRecords.length, resultSafe: split.blockedRecords.length === 0, resultSource: "phase6.6" } };
+    }
+    function getLastPurchaseByMerchant(merchant) {
+      var q = queryRecordsByMerchant(merchant);
+      var safe = q.safeRecords.slice();
+      safe.sort(function(a, b) {
+        var ca = dateToComparable(a.purchaseDate && a.purchaseDate.value);
+        var cb = dateToComparable(b.purchaseDate && b.purchaseDate.value);
+        if (ca == null && cb == null) return 0;
+        if (ca == null) return 1;
+        if (cb == null) return -1;
+        return cb - ca;
+      });
+      var lastRecord = safe.length > 0 ? safe[0] : null;
+      var lastPurchaseDate = lastRecord && lastRecord.purchaseDate && lastRecord.purchaseDate.value ? lastRecord.purchaseDate.value : "unknown";
+      var lastTotal = lastRecord ? (lastRecord.totals && lastRecord.totals.total ? lastRecord.totals.total.value : "unknown") : "unknown";
+      var lastCurrency = lastRecord ? (lastRecord.currency || "unknown") : "unknown";
+      var resultSafe = !!lastRecord && isQuerySafe(lastRecord);
+      var reviewReason = lastRecord ? null : (q.recordsCount > 0 ? "no_query_safe_records" : "no_records");
+      return { lastRecord: lastRecord, lastPurchaseDate: lastPurchaseDate, lastTotal: lastTotal, lastCurrency: lastCurrency, resultSafe: resultSafe, reviewReason: reviewReason, queryAudit: { queryType: "getLastPurchaseByMerchant", filterMerchant: normKey(merchant), recordsScanned: records.length, recordsMatched: q.recordsCount, recordsUsed: resultSafe ? 1 : 0, resultSafe: resultSafe, resultSource: "phase6.6" } };
+    }
+    function aggregateSpend(list, queryType, filterMerchant, filterDateStart, filterDateEnd) {
+      var split = splitSafeReviewBlocked(list);
+      var used = split.safeRecords.filter(totalResolvedSafe);
+      var sum = 0;
+      var currency = "unknown";
+      used.forEach(function(r) {
+        var n = parseTotalNum(r);
+        if (!isNaN(n)) sum += n;
+        if (r.currency && r.currency !== "unknown") currency = r.currency;
+      });
+      var aggregationSafe = used.length > 0 && split.blockedRecords.length === 0;
+      var aggregationReviewReason = split.blockedRecords.length > 0 ? "blocking_records_excluded" : (split.reviewRecords.length > 0 ? "review_records_excluded" : null);
+      return { recordsMatched: list.length, recordsUsedForAggregation: used.length, recordsExcludedReview: split.reviewRecords.length, recordsExcludedBlocking: split.blockedRecords.length, sumTotalValue: sum, sumCurrency: currency, aggregationSafe: aggregationSafe, aggregationReviewReason: aggregationReviewReason, queryAudit: { queryType: queryType, filterMerchant: filterMerchant, filterDateStart: filterDateStart, filterDateEnd: filterDateEnd, recordsScanned: records.length, recordsMatched: list.length, recordsUsed: used.length, resultSafe: aggregationSafe, resultSource: "phase6.6" } };
+    }
+    function getSpendTotalByMerchant(merchant) {
+      var list = (recordsByMerchant[normKey(merchant)] || []).slice();
+      return aggregateSpend(list, "getSpendTotalByMerchant", normKey(merchant), null, null);
+    }
+    function getSpendTotalByDateRange(startDate, endDate) {
+      var start = dateToComparable(startDate);
+      var end = dateToComparable(endDate);
+      var list = [];
+      records.forEach(function(r) {
+        var v = (r.purchaseDate && r.purchaseDate.value) != null ? r.purchaseDate.value : "unknown";
+        var comp = dateToComparable(v);
+        if (comp != null && start != null && end != null && comp >= start && comp <= end) list.push(r);
+      });
+      return aggregateSpend(list, "getSpendTotalByDateRange", null, startDate, endDate);
+    }
     return {
       records: records,
       recordsById: recordsById,
@@ -9851,6 +9944,13 @@ function buildVideoAsArticleCard(it) {
       getAllRecords: getAllRecords,
       getIndexSummary: getIndexSummary,
       getReviewSummary: getReviewSummary,
+      getQueryReadyRecords: getQueryReadyRecords,
+      getRecordsNeedingReview: getRecordsNeedingReview,
+      queryRecordsByMerchant: queryRecordsByMerchant,
+      queryRecordsByDateRange: queryRecordsByDateRange,
+      getLastPurchaseByMerchant: getLastPurchaseByMerchant,
+      getSpendTotalByMerchant: getSpendTotalByMerchant,
+      getSpendTotalByDateRange: getSpendTotalByDateRange,
       indexDeterministic: true,
       indexStableAcrossRuns: true
     };
@@ -10760,6 +10860,15 @@ function buildVideoAsArticleCard(it) {
                     finalOut.indexAuditSummaryPresent = !!(iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.getIndexSummary === "function");
                     finalOut.indexDeterministic = !!(iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.indexDeterministic === true);
                     finalOut.indexStableAcrossRuns = !!(iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.indexStableAcrossRuns === true);
+                    finalOut.phase66QueryPrimitivesPresent = !!(iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.getQueryReadyRecords === "function" && typeof iuEvidencePurchaseRecordIndex.queryRecordsByMerchant === "function");
+                    finalOut.queryByMerchantPresent = !!(iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.queryRecordsByMerchant === "function");
+                    finalOut.queryByDateRangePresent = !!(iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.queryRecordsByDateRange === "function");
+                    finalOut.lastPurchasePrimitivePresent = !!(iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.getLastPurchaseByMerchant === "function");
+                    finalOut.spendAggregationPresent = !!(iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.getSpendTotalByMerchant === "function" && typeof iuEvidencePurchaseRecordIndex.getSpendTotalByDateRange === "function");
+                    finalOut.querySafetyRulesPresent = !!(iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getQueryReadyRecords && (iuEvidencePurchaseRecordIndex.getQueryReadyRecords().safeRecords !== undefined));
+                    finalOut.aggregationSummaryPresent = !!(iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getSpendTotalByMerchant && (function() { var r = iuEvidencePurchaseRecordIndex.getSpendTotalByMerchant("x"); return r && r.recordsUsedForAggregation !== undefined && r.sumTotalValue !== undefined; })());
+                    finalOut.queryAuditMetadataPresent = !!(iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.queryRecordsByMerchant && (function() { var r = iuEvidencePurchaseRecordIndex.queryRecordsByMerchant("x"); return r && r.queryAudit && r.queryAudit.resultSource === "phase6.6"; })());
+                    finalOut.reviewExclusionTruthful = !!(iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.queryRecordsByMerchant && (function() { var r = iuEvidencePurchaseRecordIndex.queryRecordsByMerchant("x"); return r && r.reviewRecords !== undefined && r.blockedRecords !== undefined; })());
                   } catch (_) {
                     finalOut.phase62CanonicalPurchaseRecordPresent = false;
                     finalOut.canonicalPurchaseRecordUsed = false;
@@ -10795,6 +10904,15 @@ function buildVideoAsArticleCard(it) {
                     finalOut.recordIdCollisionHandled = false;
                     finalOut.duplicateDetectionPresent = false;
                     finalOut.indexAuditSummaryExtended = false;
+                    finalOut.phase66QueryPrimitivesPresent = false;
+                    finalOut.queryByMerchantPresent = false;
+                    finalOut.queryByDateRangePresent = false;
+                    finalOut.lastPurchasePrimitivePresent = false;
+                    finalOut.spendAggregationPresent = false;
+                    finalOut.querySafetyRulesPresent = false;
+                    finalOut.aggregationSummaryPresent = false;
+                    finalOut.queryAuditMetadataPresent = false;
+                    finalOut.reviewExclusionTruthful = false;
                   }
                   window.__iuEvidenceLastResult = finalOut;
                   try { window.__iuEvidenceAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow(out); } catch (_) {}
@@ -10888,6 +11006,9 @@ function buildVideoAsArticleCard(it) {
           failRes.phase65RecordIdentityHardeningPresent = false;
           failRes.recordIdCollisionGuardPresent = false;
           failRes.duplicateDetectionPresent = false;
+          failRes.phase66QueryPrimitivesPresent = false;
+          failRes.queryByMerchantPresent = false;
+          failRes.spendAggregationPresent = false;
           return failRes;
         });
       }).catch(function(err) {
@@ -10955,6 +11076,9 @@ function buildVideoAsArticleCard(it) {
         errRes.phase65RecordIdentityHardeningPresent = false;
         errRes.recordIdCollisionGuardPresent = false;
         errRes.duplicateDetectionPresent = false;
+        errRes.phase66QueryPrimitivesPresent = false;
+        errRes.queryByMerchantPresent = false;
+        errRes.spendAggregationPresent = false;
         return errRes;
       }).then(function(finalResult) {
         if (finalResult == null || typeof finalResult !== "object") {
@@ -10980,6 +11104,7 @@ function buildVideoAsArticleCard(it) {
             minimalSuccess.phase64EvidenceIndexPresent = false;
             minimalSuccess.purchaseRecordIndexPresent = false;
             minimalSuccess.phase65RecordIdentityHardeningPresent = false;
+            minimalSuccess.phase66QueryPrimitivesPresent = false;
             try { window.__iuEvidenceLastResult = minimalSuccess; if (d) { d.resultPropagatedToUi = true; d.lastResultSet = true; } } catch (_) {}
             return minimalSuccess;
           }
@@ -11002,6 +11127,7 @@ function buildVideoAsArticleCard(it) {
           safeRes.phase64EvidenceIndexPresent = false;
           safeRes.purchaseRecordIndexPresent = false;
           safeRes.phase65RecordIdentityHardeningPresent = false;
+          safeRes.phase66QueryPrimitivesPresent = false;
           return safeRes;
         }
         return finalResult;
@@ -11161,6 +11287,15 @@ function buildVideoAsArticleCard(it) {
         result.recordIdCollisionHandled = !!regSim.collisionHandled;
         result.duplicateDetectionPresent = true;
         result.indexAuditSummaryExtended = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getIndexSummary && iuEvidencePurchaseRecordIndex.getIndexSummary().uniqueRecordsStored !== undefined);
+        result.phase66QueryPrimitivesPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.getQueryReadyRecords === "function" && typeof iuEvidencePurchaseRecordIndex.queryRecordsByMerchant === "function");
+        result.queryByMerchantPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.queryRecordsByMerchant === "function");
+        result.queryByDateRangePresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.queryRecordsByDateRange === "function");
+        result.lastPurchasePrimitivePresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.getLastPurchaseByMerchant === "function");
+        result.spendAggregationPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.getSpendTotalByMerchant === "function");
+        result.querySafetyRulesPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getQueryReadyRecords && (function() { var q = iuEvidencePurchaseRecordIndex.getQueryReadyRecords(); return q && q.safeRecords !== undefined; })());
+        result.aggregationSummaryPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getSpendTotalByMerchant && (function() { var r = iuEvidencePurchaseRecordIndex.getSpendTotalByMerchant("x"); return r && r.recordsUsedForAggregation !== undefined && r.sumTotalValue !== undefined; })());
+        result.queryAuditMetadataPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.queryRecordsByMerchant && (function() { var r = iuEvidencePurchaseRecordIndex.queryRecordsByMerchant("x"); return r && r.queryAudit && r.queryAudit.resultSource === "phase6.6"; })());
+        result.reviewExclusionTruthful = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.queryRecordsByMerchant && (function() { var r = iuEvidencePurchaseRecordIndex.queryRecordsByMerchant("x"); return r && r.reviewRecords !== undefined && r.blockedRecords !== undefined; })());
         result.phase64EvidenceIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex);
         result.purchaseRecordIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getRecordById);
         result.recordRegistrationPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.registerPurchaseRecord === "function");
@@ -11188,6 +11323,9 @@ function buildVideoAsArticleCard(it) {
         result.phase65RecordIdentityHardeningPresent = false;
         result.recordIdCollisionGuardPresent = false;
         result.duplicateDetectionPresent = false;
+        result.phase66QueryPrimitivesPresent = false;
+        result.queryByMerchantPresent = false;
+        result.spendAggregationPresent = false;
       }
     } catch (_) {
       result.phase62CanonicalPurchaseRecordPresent = false;
@@ -11210,6 +11348,9 @@ function buildVideoAsArticleCard(it) {
       result.phase65RecordIdentityHardeningPresent = false;
       result.recordIdCollisionGuardPresent = false;
       result.duplicateDetectionPresent = false;
+      result.phase66QueryPrimitivesPresent = false;
+      result.queryByMerchantPresent = false;
+      result.spendAggregationPresent = false;
     }
     result.hallucinatedPaymentMethod = false;
     return result;
