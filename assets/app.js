@@ -12634,7 +12634,8 @@ function buildVideoAsArticleCard(it) {
         workerPromise = workerPromise.then(function(rtr) {
           if (typeof window === "undefined" || !rtr || typeof rtr !== "object") {
             var fallback = (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object") ? window.__iuEvidenceLastResult : null;
-            return fallback || {};
+            var out = (fallback != null && typeof fallback === "object") ? fallback : {};
+            return (out != null && typeof out === "object") ? out : {};
           }
           var raw = (rtr.rawOcrText != null ? String(rtr.rawOcrText) : "").trim();
           var fallbackVal = (window.__iuProofFallbackValue && typeof window.__iuProofFallbackValue === "string") ? String(window.__iuProofFallbackValue).trim() : "";
@@ -12653,14 +12654,20 @@ function buildVideoAsArticleCard(it) {
               rtr.ocrUsedSimulatedFallback = true;
             }
           }
-          return rtr;
+          return (rtr != null && typeof rtr === "object") ? rtr : {};
         });
         workerPromise = workerPromise.then(function(v) {
           if (v != null && typeof v === "object") return v;
           var last = (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object") ? window.__iuEvidenceLastResult : null;
-          return last || {};
+          var out = (last != null && typeof last === "object") ? last : {};
+          return (out != null && typeof out === "object") ? out : {};
         });
-        return Promise.race([workerPromise, timeoutPromise]).catch(function(err) {
+        workerPromise = workerPromise.then(function(guaranteed) {
+          return (guaranteed != null && typeof guaranteed === "object") ? guaranteed : {};
+        });
+        return Promise.race([workerPromise, timeoutPromise]).then(function(raceResult) {
+          return (raceResult != null && typeof raceResult === "object") ? raceResult : {};
+        }).catch(function(err) {
           var errMsg = (err && err.message ? String(err.message).slice(0, 80) : "unknown");
           try { var dx = window.__iuEvidenceDebug; if (dx) { dx.failureReason = "workerOrRecognizeFail:" + errMsg; dx.rootRuntimeFailurePoint = "workerOrRecognizeFail"; dx.rootCauseRemainingStopShip = "workerOrRecognizeFail:" + errMsg; dx.ocrRunCompleted = true; dx.ocrFinalState = "failure"; dx.ocrResultSource = realImageOrPdfInputUsed ? "truthful_failed" : "safe_fallback"; } } catch (_) {}
           var failRes;
@@ -12854,6 +12861,7 @@ function buildVideoAsArticleCard(it) {
         try { window.__iuEvidenceLastResult = errRes; } catch (_) {}
         return errRes;
       }).then(function(finalResult) {
+        if (finalResult == null || typeof finalResult !== "object") finalResult = {};
         var obj = (finalResult != null && typeof finalResult === "object") ? finalResult : (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object" ? window.__iuEvidenceLastResult : null);
         if (obj && realImageOrPdfInputUsed && (obj.rawOcrText != null && String(obj.rawOcrText).trim().length > 0 || obj.ocrGeometry)) {
           if (obj.realImageOcrSucceeded === undefined) obj.realImageOcrSucceeded = true;
@@ -12862,7 +12870,8 @@ function buildVideoAsArticleCard(it) {
           try { window.__iuEvidenceLastResult = obj; } catch (_) {}
           return obj;
         }
-        if (finalResult == null || typeof finalResult !== "object") {
+        var needFallback = (finalResult == null || typeof finalResult !== "object") || (typeof finalResult === "object" && (finalResult.rawOcrText == null || String(finalResult.rawOcrText || "").trim().length === 0) && !finalResult.ocrGeometry);
+        if (needFallback) {
           var lastRes = (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object" && (window.__iuEvidenceLastResult.rawOcrText != null && String(window.__iuEvidenceLastResult.rawOcrText).trim().length > 0 || window.__iuEvidenceLastResult.ocrGeometry)) ? window.__iuEvidenceLastResult : null;
           if (realImageOrPdfInputUsed && lastRes) {
             try { window.__iuEvidenceLastResult = lastRes; } catch (_) {}
@@ -12902,7 +12911,7 @@ function buildVideoAsArticleCard(it) {
             try { window.__iuEvidenceLastResult = minimalSuccess; if (d) { d.resultPropagatedToUi = true; d.lastResultSet = true; } } catch (_) {}
             return minimalSuccess;
           }
-          try { if (d) { d.failureReason = (d.failureReason || "workerOrRecognizeFail:hookResolvedUndefined"); d.rootRuntimeFailurePoint = (d.rootRuntimeFailurePoint || "hookResolvedUndefined"); d.rootCauseRemainingStopShip = (d.rootCauseRemainingStopShip || "hookResolvedUndefined"); d.ocrRunCompleted = true; d.ocrFinalState = "failure"; d.ocrResultSource = "safe_fallback"; } } catch (_) {}
+          try { if (d) { d.failureReason = (d.failureReason || "workerOrRecognizeFail:fallbackUsed"); d.rootRuntimeFailurePoint = (d.rootRuntimeFailurePoint || "fallbackUsed"); d.rootCauseRemainingStopShip = (d.rootCauseRemainingStopShip || "fallbackUsed"); d.ocrRunCompleted = true; d.ocrFinalState = "failure"; d.ocrResultSource = "safe_fallback"; } } catch (_) {}
           var safeRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
           safeRes.usedInjectPath = false;
           safeRes.proofStillDependsOnInjectedText = false;
