@@ -2973,8 +2973,10 @@ style-src 'self' 'unsafe-inline' https:;
                 <p class="iu-evidence-preview-meta" data-iu="preview-meta">—</p>
               </div>
               <div class="iu-evidence-extraction-panel" data-iu="ocr-extraction-result" aria-label="Vytěžené údaje z dokladu">
-                <h4 class="iu-evidence-extraction-heading">Základní údaje z dokladu</h4>
-                <div class="iu-evidence-review-fields" data-iu="review-fields">
+                <div data-iu-section="title_section"><h4 class="iu-evidence-extraction-heading">Základní údaje z dokladu</h4></div>
+                <div data-iu-section="subtitle_section" class="iu-evidence-subtitle" aria-live="polite" hidden></div>
+                <div data-iu-section="badges_section" class="iu-evidence-badges" aria-live="polite" hidden></div>
+                <div class="iu-evidence-review-fields" data-iu="review-fields" data-iu-section="primary_facts_section">
                   <div class="iu-evidence-review-row" data-iu="review-store">
                     <span class="iu-evidence-review-label">Obchod / firma</span>
                     <span class="iu-evidence-review-value" data-iu="review-store-value">—</span>
@@ -3012,12 +3014,13 @@ style-src 'self' 'unsafe-inline' https:;
                     <button type="button" class="iu-evidence-review-confirm" data-iu="review-doctype-confirm" aria-label="Potvrdit">Potvrdit</button>
                   </div>
                 </div>
-                <div class="iu-evidence-review-summary" data-iu="review-summary-visible" aria-live="polite"></div>
-                <div class="iu-evidence-validation-summary" data-iu="validation-summary-visible" aria-live="polite"></div>
+                <div data-iu-section="review_banner_section"><div class="iu-evidence-review-summary" data-iu="review-summary-visible" aria-live="polite"></div></div>
+                <div data-iu-section="warnings_section"><div class="iu-evidence-validation-summary" data-iu="validation-summary-visible" aria-live="polite"></div></div>
+                <div data-iu-section="blocked_notices_section" class="iu-evidence-blocked-notices" aria-live="polite" hidden></div>
                 <h4 class="iu-evidence-items-heading">Položky</h4>
                 <ul class="iu-evidence-items-list" data-iu="evidence-items-list" aria-label="Položky dokladu"></ul>
                 <p class="iu-evidence-unknown-hint" data-iu="unknown-state-works">Údaje označené jako „unknown“ nebyly bezpečně rozpoznány.</p>
-                <div class="iu-evidence-review-actions">
+                <div class="iu-evidence-review-actions" data-iu-section="safe_actions_section">
                   <button type="button" class="iu-evidence-save-cta" data-iu="evidence-save-cta" aria-label="Uložit do evidence">Uložit do evidence</button>
                 </div>
               </div>
