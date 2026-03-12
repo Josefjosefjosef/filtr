@@ -10583,6 +10583,133 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
+  /** Phase 7.3: pipeline result -> presentation response (same shape as 6.9) for single-receipt display. */
+  function iuEvidencePipelineResultToPresentationResponse(pipelineResult) {
+    if (!pipelineResult || typeof pipelineResult !== "object") {
+      return {
+        responseType: "phase6.9_presentation",
+        intentName: "ocr_extraction",
+        renderMode: IU_EVIDENCE_RENDER_MODES.EMPTY,
+        presentationValid: false,
+        displaySafe: false,
+        headline: "",
+        subheadline: "",
+        primaryFacts: [],
+        secondaryFacts: [],
+        warnings: [],
+        blockedNotices: [],
+        reviewBanner: "",
+        safeActions: [IU_EVIDENCE_SAFE_ACTIONS[2]],
+        auditSummary: { source: "phase6.9", ocrExtraction: true, bundlePresent: false },
+        sourceAnswerBundleType: "ocr_extraction",
+        sourceAnswerBundleAudit: null,
+        resultSource: "phase6.9"
+      };
+    }
+    var cf = pipelineResult.correctedFields || {};
+    var vs = pipelineResult.validationSummary || {};
+    var rs = pipelineResult.reviewSummary || {};
+    var validInput = true;
+    var resultSafe = !(rs.docNeedsReview) && !(vs.sumMismatch);
+    var partialResult = !!(rs.docNeedsReview);
+    var needsReview = !!(rs.docNeedsReview);
+    var reviewReason = rs.docNeedsReview ? "doklad_vyzaduje_kontrolu" : null;
+    var answerFields = { store: cf.store, date: cf.date, time: cf.time, total: cf.total, docType: cf.docType || "receipt" };
+    var blockedAnswerFields = [];
+    var warnings = [];
+    if (vs.sumMismatch) warnings.push("sum_mismatch");
+    if (cf.store === "unknown" || !cf.store) warnings.push("merchant_unknown");
+    if (cf.total === "unknown" || cf.total == null) warnings.push("total_unknown");
+    var blockedNotices = [];
+    var renderMode = IU_EVIDENCE_RENDER_MODES.SUCCESS;
+    if (needsReview) renderMode = IU_EVIDENCE_RENDER_MODES.REVIEW;
+    else if (partialResult) renderMode = IU_EVIDENCE_RENDER_MODES.PARTIAL;
+    else if (Object.keys(answerFields).length === 0 || (cf.store === "unknown" && cf.total === "unknown")) renderMode = IU_EVIDENCE_RENDER_MODES.EMPTY;
+    var displaySafe = resultSafe && !partialResult;
+    var primaryFacts = [];
+    var k;
+    for (k in answerFields) if (answerFields.hasOwnProperty(k)) primaryFacts.push({ key: k, value: answerFields[k] });
+    var reviewBanner = needsReview ? (reviewReason || "Vyžaduje kontrolu") : "";
+    if (vs.sumMismatch) reviewBanner = (reviewBanner ? reviewBanner + ". " : "") + "Součet neodpovídá celkové částce.";
+    var safeActions = [];
+    if (needsReview || partialResult) safeActions.push(IU_EVIDENCE_SAFE_ACTIONS[0]);
+    safeActions.push(IU_EVIDENCE_SAFE_ACTIONS[2]);
+    var headline = renderMode === IU_EVIDENCE_RENDER_MODES.EMPTY ? "no_data" : (renderMode === IU_EVIDENCE_RENDER_MODES.REVIEW ? "review_required" : "Základní údaje z dokladu");
+    var subheadline = renderMode === IU_EVIDENCE_RENDER_MODES.REVIEW ? (reviewReason || "") : "";
+    return {
+      responseType: "phase6.9_presentation",
+      intentName: "ocr_extraction",
+      renderMode: renderMode,
+      presentationValid: true,
+      displaySafe: displaySafe,
+      headline: headline,
+      subheadline: subheadline,
+      primaryFacts: primaryFacts,
+      secondaryFacts: [],
+      warnings: warnings,
+      blockedNotices: blockedNotices,
+      reviewBanner: reviewBanner,
+      safeActions: safeActions,
+      auditSummary: { source: "phase6.9", ocrExtraction: true, renderMode: renderMode },
+      sourceAnswerBundleType: "ocr_extraction",
+      sourceAnswerBundleAudit: null,
+      resultSource: "phase6.9"
+    };
+  }
+
+  /** Phase 7.3: render extraction panel from render contract + view model. No placeholders; real runtime state only. */
+  function iuEvidenceRenderExtractionPanelFromContract(panelEl, contract, viewModel, pipelineResult) {
+    if (!panelEl || !contract || !viewModel) return;
+    var visibleSet = {};
+    var vis = contract.visibleSections || [];
+    for (var v = 0; v < vis.length; v++) visibleSet[vis[v]] = true;
+    var sectionSelectors = {
+      title_section: "[data-iu-section=\"title_section\"]",
+      subtitle_section: "[data-iu-section=\"subtitle_section\"]",
+      primary_facts_section: "[data-iu-section=\"primary_facts_section\"]",
+      badges_section: "[data-iu-section=\"badges_section\"]",
+      warnings_section: "[data-iu-section=\"warnings_section\"]",
+      blocked_notices_section: "[data-iu-section=\"blocked_notices_section\"]",
+      secondary_facts_section: "[data-iu-section=\"secondary_facts_section\"]",
+      review_banner_section: "[data-iu-section=\"review_banner_section\"]",
+      safe_actions_section: "[data-iu-section=\"safe_actions_section\"]"
+    };
+    for (var sec in sectionSelectors) {
+      if (!sectionSelectors.hasOwnProperty(sec)) continue;
+      var el = panelEl.querySelector(sectionSelectors[sec]);
+      if (el) el.hidden = !visibleSet[sec];
+    }
+    var titleSection = panelEl.querySelector("[data-iu-section=\"title_section\"]");
+    if (titleSection) {
+      var h = titleSection.querySelector(".iu-evidence-extraction-heading") || (titleSection.tagName === "H4" ? titleSection : null);
+      if (h && typeof viewModel.title === "string" && viewModel.title.length > 0) h.textContent = viewModel.title;
+    }
+    var subtitleEl = panelEl.querySelector("[data-iu-section=\"subtitle_section\"]");
+    if (subtitleEl && viewModel.subtitle) subtitleEl.textContent = viewModel.subtitle;
+    var warningsEl = panelEl.querySelector("[data-iu-section=\"warnings_section\"]");
+    if (warningsEl) {
+      var msg = warningsEl.querySelector("[data-iu=\"validation-summary-visible\"]") || warningsEl.querySelector(".iu-evidence-validation-summary");
+      if (msg && viewModel.warnings && viewModel.warnings.length > 0) msg.textContent = viewModel.warnings.join("; ");
+      else if (msg && pipelineResult && pipelineResult.validationSummary && pipelineResult.validationSummary.sumMismatch) msg.textContent = "Součet položek neodpovídá celkové částce.";
+      else if (msg) msg.textContent = "";
+    }
+    var reviewBannerEl = panelEl.querySelector("[data-iu-section=\"review_banner_section\"]");
+    if (reviewBannerEl) {
+      var bannerText = reviewBannerEl.querySelector("[data-iu=\"review-summary-visible\"]") || reviewBannerEl.querySelector(".iu-evidence-review-summary");
+      if (bannerText) bannerText.textContent = viewModel.reviewBanner ? ("Kontrola: " + viewModel.reviewBanner) : (viewModel.renderMode === "uiReview" ? "Doklad vyžaduje kontrolu." : "");
+    }
+    var badgesEl = panelEl.querySelector("[data-iu-section=\"badges_section\"]");
+    if (badgesEl && viewModel.badges && viewModel.badges.length > 0) {
+      badgesEl.textContent = viewModel.badges.join(" · ");
+      badgesEl.hidden = false;
+    } else if (badgesEl) badgesEl.hidden = true;
+    var blockedEl = panelEl.querySelector("[data-iu-section=\"blocked_notices_section\"]");
+    if (blockedEl && viewModel.blockedNotices && viewModel.blockedNotices.length > 0) {
+      blockedEl.textContent = viewModel.blockedNotices.join("; ");
+      blockedEl.hidden = false;
+    } else if (blockedEl) blockedEl.hidden = true;
+  }
+
   function iuEvidenceRunEvidenceIntent(intentName, intentInput) {
     var validation = iuEvidenceValidateIntentInput(intentName, intentInput);
     if (!validation.valid) {
@@ -12314,6 +12441,8 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidenceBuildRenderContract = iuEvidenceBuildRenderContract;
     window.IU_RENDER_SECTIONS = IU_RENDER_SECTIONS;
     window.IU_RENDER_ORDER = IU_RENDER_ORDER;
+    window.iuEvidencePipelineResultToPresentationResponse = iuEvidencePipelineResultToPresentationResponse;
+    window.iuEvidenceRenderExtractionPanelFromContract = iuEvidenceRenderExtractionPanelFromContract;
     window.iuEvidenceOcrHook = iuEvidenceOcrHook;
     window.iuEvidenceNormalizeOcrText = iuEvidenceNormalizeOcrText;
     window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
@@ -12469,6 +12598,10 @@ function buildVideoAsArticleCard(it) {
         if (!noOverwrite) window.__iuEvidenceLastResult = result;
       } catch (_) {}
       extractionPanel.hidden = false;
+      var pres73 = typeof iuEvidencePipelineResultToPresentationResponse === "function" ? iuEvidencePipelineResultToPresentationResponse(result) : null;
+      var vm73 = pres73 && typeof iuEvidenceBuildUIViewModel === "function" ? iuEvidenceBuildUIViewModel(pres73) : null;
+      var contract73 = vm73 && typeof iuEvidenceBuildRenderContract === "function" ? iuEvidenceBuildRenderContract(vm73) : null;
+      if (contract73 && vm73 && typeof iuEvidenceRenderExtractionPanelFromContract === "function") iuEvidenceRenderExtractionPanelFromContract(extractionPanel, contract73, vm73, result);
       var cf = result.correctedFields || {};
       var fc = result.fieldConfidence || {};
       var fnr = result.fieldNeedsReview || {};
