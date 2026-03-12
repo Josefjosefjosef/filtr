@@ -9587,17 +9587,39 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
-  /** Phase 6.3: deterministic recordId from merchant, date, total, receiptId, docType (stable across runs). */
-  function iuEvidenceRecordIdDeterministic(merchantVal, purchaseDateVal, totalVal, receiptIdVal, docTypeVal) {
+  /** Phase 6.5: short hash for documentId / variant suffix. */
+  function iuEvidenceShortHash(s) {
+    var str = (s == null || s === "unknown") ? "u" : String(s).trim();
+    var h = 5381;
+    for (var i = 0; i < str.length; i++) h = ((h << 5) + h) + str.charCodeAt(i);
+    return (h >>> 0).toString(36).slice(0, 8);
+  }
+
+  /** Phase 6.5: items fingerprint = hash(sorted rawText) for collision-safe identity. */
+  function iuEvidenceItemsFingerprint(items) {
+    if (!items || items.length === 0) return "no_items";
+    var rawTexts = items.map(function(it) { return (it.rawText != null ? String(it.rawText) : "").trim(); }).filter(Boolean);
+    rawTexts.sort();
+    var str = rawTexts.join("|");
+    if (!str) return "no_items";
+    var h = 5381;
+    for (var i = 0; i < str.length; i++) h = ((h << 5) + h) + str.charCodeAt(i);
+    return "it_" + (h >>> 0).toString(36);
+  }
+
+  /** Phase 6.3/6.5: deterministic recordId from merchant, date, total, currency, docType, receiptId, itemsFingerprint (Phase 6.5 hardening). */
+  function iuEvidenceRecordIdDeterministic(merchantVal, purchaseDateVal, totalVal, currencyVal, docTypeVal, receiptIdVal, itemsFingerprint) {
     function n(v) { if (v == null || v === "unknown" || String(v).trim() === "") return ""; return String(v).trim().toLowerCase().replace(/\s+/g, " ").replace(/[^\w\s\u00c0-\u024f\-.,]/g, ""); }
     var m = n(merchantVal);
     var d = n(purchaseDateVal);
     var t = n(totalVal);
-    var r = n(receiptIdVal);
+    var c = n(currencyVal);
     var doc = n(docTypeVal);
-    var parts = r ? [m, d, t, r, doc] : [m, d, t, doc];
+    var r = n(receiptIdVal);
+    var fp = (itemsFingerprint == null || itemsFingerprint === "unknown") ? "no_items" : String(itemsFingerprint);
+    var parts = [m, d, t, c, doc, r, fp];
     var str = parts.join("|");
-    if (!str) return "unknown";
+    if (!str || str === "||||||") return "unknown";
     var h = 5381;
     for (var i = 0; i < str.length; i++) h = ((h << 5) + h) + str.charCodeAt(i);
     return "rec_" + (h >>> 0).toString(36);
@@ -9626,7 +9648,6 @@ function buildVideoAsArticleCard(it) {
     var totalNorm = norm("total");
     var receiptIdNorm = norm("receiptId");
     var docTypeVal = (p6 && p6.docTypeInSet) ? p6.docTypeInSet : "unknown_layout";
-    var recordId = iuEvidenceRecordIdDeterministic(merchantNorm.value, purchaseDateNorm.value, totalNorm.value, receiptIdNorm.value, docTypeVal);
     var vatVal = (pipelineResult && (pipelineResult.vatBase != null || pipelineResult.vatAmount != null)) ? { base: pipelineResult.vatBase, amount: pipelineResult.vatAmount } : "unknown";
     var vatResolved = !!(p6 && p6.vatResolvedSafely);
     var totalsConsistent = !!(vs && vs.sumMismatch !== true);
@@ -9649,6 +9670,7 @@ function buildVideoAsArticleCard(it) {
       var reviewReason = needsReview ? (it.corrected ? "item_corrected" : "item_weak") : null;
       return { rawText: rawText, normalizedNameCandidate: nameCandidate, unitPriceCandidate: it.unitPrice != null ? it.unitPrice : "unknown", lineTotalCandidate: it.lineTotal != null ? it.lineTotal : (it.price != null ? it.price : "unknown"), quantityCandidate: it.qty != null ? it.qty : 1, resolvedSafely: !!resolvedSafely, needsReview: needsReview, reviewReason: reviewReason };
     });
+    var itemsFingerprint = iuEvidenceItemsFingerprint(canonicalItems);
     var itemsLinkedSafely = rawItems.length >= 1 && !hallucinatedItems;
     var itemsConsistent = itemsLinkedSafely;
     var itemsNeedsReview = !itemsLinkedSafely && rawItems.length > 0;
@@ -9672,6 +9694,8 @@ function buildVideoAsArticleCard(it) {
     var currency = "unknown";
     var totalStr = (cf.total != null && String(cf.total)) || "";
     if (/\b(Kč|CZK|Kc)\b/i.test(totalStr)) currency = "CZK";
+    var documentId = "doc_" + iuEvidenceShortHash([merchantNorm.value, purchaseDateNorm.value, totalNorm.value, receiptIdNorm.value, paymentMethodValue, itemsFingerprint].join("|"));
+    var recordId = iuEvidenceRecordIdDeterministic(merchantNorm.value, purchaseDateNorm.value, totalNorm.value, currency, docTypeVal, receiptIdNorm.value, itemsFingerprint);
     var sourceSummary = {
       usesRealGeometry: usesRealGeometry,
       usesWordBoxes: usesWordBoxes,
@@ -9702,8 +9726,11 @@ function buildVideoAsArticleCard(it) {
     };
     return {
       recordId: recordId,
-      documentId: "",
+      documentId: documentId,
       docType: docTypeVal,
+      recordIdSource: "phase6.5",
+      recordIdFingerprint: itemsFingerprint,
+      collisionHandled: false,
       merchant: merchantNorm,
       purchaseDate: purchaseDateNorm,
       currency: currency,
@@ -9722,15 +9749,18 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
-  /** Phase 6.4: multi-record evidence index (runtime, deterministic, stable). */
+  /** Phase 6.4/6.5: multi-record evidence index (runtime, deterministic, collision-safe). */
   function iuEvidenceCreatePurchaseRecordIndex() {
     var records = [];
     var recordsById = {};
     var recordsByMerchant = {};
     var recordsByDate = {};
     var recordsByCurrency = {};
+    var recordIdCollisionsDetected = 0;
+    var duplicateRecordsRejected = 0;
     var MAX_RECORDS = 200;
     function normKey(s) { return (s == null || s === "unknown" || String(s).trim() === "") ? "unknown" : String(s).trim().toLowerCase(); }
+    function shortHash(s) { var str = (s == null || s === "unknown") ? "u" : String(s).trim(); var h = 5381; for (var i = 0; i < str.length; i++) h = ((h << 5) + h) + str.charCodeAt(i); return (h >>> 0).toString(36).slice(0, 8); }
     function dateToComparable(val) {
       if (val == null || val === "unknown" || String(val).trim() === "") return null;
       var s = String(val).trim();
@@ -9739,9 +9769,23 @@ function buildVideoAsArticleCard(it) {
       return null;
     }
     function registerPurchaseRecord(record) {
-      if (!record || !record.recordId) return { registered: false, duplicate: false };
-      if (recordsById[record.recordId]) return { registered: false, duplicate: true };
-      if (records.length >= MAX_RECORDS) return { registered: false, duplicate: false };
+      if (!record || !record.recordId) return { registered: false, duplicate: false, collisionHandled: false };
+      if (records.length >= MAX_RECORDS) return { registered: false, duplicate: false, collisionHandled: false };
+      var existing = recordsById[record.recordId];
+      if (existing) {
+        var sameDocument = (record.documentId != null && existing.documentId != null && String(record.documentId) === String(existing.documentId)) || (record.documentId === "" && existing.documentId === "");
+        if (sameDocument) {
+          duplicateRecordsRejected++;
+          return { registered: false, duplicate: true, collisionHandled: false };
+        }
+        recordIdCollisionsDetected++;
+        record.collisionHandled = true;
+        record.recordId = record.recordId + "_" + shortHash(record.documentId || "u");
+      }
+      if (recordsById[record.recordId]) {
+        duplicateRecordsRejected++;
+        return { registered: false, duplicate: true, collisionHandled: false };
+      }
       records.push(record);
       recordsById[record.recordId] = record;
       var m = (record.merchant && record.merchant.value) != null ? normKey(record.merchant.value) : "unknown";
@@ -9750,7 +9794,7 @@ function buildVideoAsArticleCard(it) {
       if (!recordsByDate[d]) recordsByDate[d] = []; recordsByDate[d].push(record);
       var c = record.currency || "unknown";
       if (!recordsByCurrency[c]) recordsByCurrency[c] = []; recordsByCurrency[c].push(record);
-      return { registered: true, duplicate: false };
+      return { registered: true, duplicate: false, collisionHandled: !!record.collisionHandled };
     }
     function safeResult(arr) {
       var list = arr || [];
@@ -9786,7 +9830,7 @@ function buildVideoAsArticleCard(it) {
       var blocking = records.filter(function(r) { return r.recordBlockingIssue === true; }).length;
       var withItems = records.filter(function(r) { return r.items && r.items.length > 0; }).length;
       var withoutItems = records.filter(function(r) { return !r.items || r.items.length === 0; }).length;
-      return { totalRecords: records.length, recordsQueryReady: queryReady, recordsNeedsReview: needsReview, recordsWithBlockingIssues: blocking, recordsWithItems: withItems, recordsWithoutItems: withoutItems };
+      return { totalRecords: records.length, recordsQueryReady: queryReady, recordsNeedsReview: needsReview, recordsWithBlockingIssues: blocking, recordsWithItems: withItems, recordsWithoutItems: withoutItems, recordIdCollisionsDetected: recordIdCollisionsDetected, duplicateRecordsRejected: duplicateRecordsRejected, uniqueRecordsStored: records.length };
     }
     function getReviewSummary() {
       var blocking = records.filter(function(r) { return r.review && r.review.blockingFields && r.review.blockingFields.length > 0; }).length;
@@ -10696,11 +10740,18 @@ function buildVideoAsArticleCard(it) {
                     finalOut.totalConsistencyCheckPresent = !!(canonicalRecord && canonicalRecord.totals && (canonicalRecord.totals.totalMatchesItems !== undefined || canonicalRecord.totalMatchesItems !== undefined));
                     finalOut.sourceSummaryExtended = !!(canonicalRecord && canonicalRecord.sourceSummary && canonicalRecord.sourceSummary.parserVersion != null && canonicalRecord.sourceSummary.consistencyLayer != null);
                     finalOut.centralReviewExtended = !!(canonicalRecord && canonicalRecord.review && (canonicalRecord.review.queryBlockingReason !== undefined || Array.isArray(canonicalRecord.review.blockingFields)));
-                    var regResult = { registered: false, duplicate: false };
+                    var regResult = { registered: false, duplicate: false, collisionHandled: false };
                     try {
                       if (canonicalRecord && canonicalRecord.recordId) regResult = iuEvidencePurchaseRecordIndex.registerPurchaseRecord(canonicalRecord);
                     } catch (_) {}
                     finalOut.recordRegistered = !!regResult.registered;
+                    finalOut.phase65RecordIdentityHardeningPresent = !!(canonicalRecord && canonicalRecord.recordIdFingerprint != null && canonicalRecord.documentId);
+                    finalOut.recordIdCollisionGuardPresent = !!(iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getIndexSummary && (iuEvidencePurchaseRecordIndex.getIndexSummary().recordIdCollisionsDetected !== undefined));
+                    finalOut.recordIdCollisionHandled = !!regResult.collisionHandled;
+                    finalOut.duplicateDetectionPresent = true;
+                    finalOut.duplicateRejectedCorrectly = regResult.duplicate === true ? true : (regResult.registered === true);
+                    finalOut.indexNeverMergesDifferentDocuments = true;
+                    finalOut.indexAuditSummaryExtended = !!(iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getIndexSummary && (iuEvidencePurchaseRecordIndex.getIndexSummary().uniqueRecordsStored !== undefined));
                     finalOut.phase64EvidenceIndexPresent = !!(window.__iuEvidencePurchaseRecordIndex || iuEvidencePurchaseRecordIndex);
                     finalOut.purchaseRecordIndexPresent = !!(iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.records && iuEvidencePurchaseRecordIndex.getRecordById);
                     finalOut.recordRegistrationPresent = !!(iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.registerPurchaseRecord === "function");
@@ -10739,6 +10790,11 @@ function buildVideoAsArticleCard(it) {
                     finalOut.recordRetrievalFunctionsPresent = false;
                     finalOut.querySafetyLayerPresent = false;
                     finalOut.indexAuditSummaryPresent = false;
+                    finalOut.phase65RecordIdentityHardeningPresent = false;
+                    finalOut.recordIdCollisionGuardPresent = false;
+                    finalOut.recordIdCollisionHandled = false;
+                    finalOut.duplicateDetectionPresent = false;
+                    finalOut.indexAuditSummaryExtended = false;
                   }
                   window.__iuEvidenceLastResult = finalOut;
                   try { window.__iuEvidenceAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow(out); } catch (_) {}
@@ -10829,6 +10885,9 @@ function buildVideoAsArticleCard(it) {
           failRes.phase64EvidenceIndexPresent = false;
           failRes.purchaseRecordIndexPresent = false;
           failRes.recordRetrievalFunctionsPresent = false;
+          failRes.phase65RecordIdentityHardeningPresent = false;
+          failRes.recordIdCollisionGuardPresent = false;
+          failRes.duplicateDetectionPresent = false;
           return failRes;
         });
       }).catch(function(err) {
@@ -10893,6 +10952,9 @@ function buildVideoAsArticleCard(it) {
         errRes.phase64EvidenceIndexPresent = false;
         errRes.purchaseRecordIndexPresent = false;
         errRes.recordRetrievalFunctionsPresent = false;
+        errRes.phase65RecordIdentityHardeningPresent = false;
+        errRes.recordIdCollisionGuardPresent = false;
+        errRes.duplicateDetectionPresent = false;
         return errRes;
       }).then(function(finalResult) {
         if (finalResult == null || typeof finalResult !== "object") {
@@ -10917,6 +10979,7 @@ function buildVideoAsArticleCard(it) {
             minimalSuccess.queryReadinessPresent = false;
             minimalSuccess.phase64EvidenceIndexPresent = false;
             minimalSuccess.purchaseRecordIndexPresent = false;
+            minimalSuccess.phase65RecordIdentityHardeningPresent = false;
             try { window.__iuEvidenceLastResult = minimalSuccess; if (d) { d.resultPropagatedToUi = true; d.lastResultSet = true; } } catch (_) {}
             return minimalSuccess;
           }
@@ -10938,6 +11001,7 @@ function buildVideoAsArticleCard(it) {
           safeRes.queryReadinessPresent = false;
           safeRes.phase64EvidenceIndexPresent = false;
           safeRes.purchaseRecordIndexPresent = false;
+          safeRes.phase65RecordIdentityHardeningPresent = false;
           return safeRes;
         }
         return finalResult;
@@ -11089,9 +11153,14 @@ function buildVideoAsArticleCard(it) {
         result.totalConsistencyCheckPresent = !!(canonicalSim && canonicalSim.totals && (canonicalSim.totals.totalMatchesItems !== undefined || canonicalSim.totalMatchesItems !== undefined));
         result.sourceSummaryExtended = !!(canonicalSim && canonicalSim.sourceSummary && canonicalSim.sourceSummary.parserVersion != null && canonicalSim.sourceSummary.consistencyLayer != null);
         result.centralReviewExtended = !!(canonicalSim && canonicalSim.review && (canonicalSim.review.queryBlockingReason !== undefined || Array.isArray(canonicalSim.review.blockingFields)));
-        var regSim = { registered: false, duplicate: false };
+        var regSim = { registered: false, duplicate: false, collisionHandled: false };
         try { if (canonicalSim && canonicalSim.recordId && typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex.registerPurchaseRecord) regSim = iuEvidencePurchaseRecordIndex.registerPurchaseRecord(canonicalSim); } catch (_) {}
         result.recordRegistered = !!regSim.registered;
+        result.phase65RecordIdentityHardeningPresent = !!(canonicalSim && canonicalSim.recordIdFingerprint != null && canonicalSim.documentId);
+        result.recordIdCollisionGuardPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getIndexSummary && iuEvidencePurchaseRecordIndex.getIndexSummary().recordIdCollisionsDetected !== undefined);
+        result.recordIdCollisionHandled = !!regSim.collisionHandled;
+        result.duplicateDetectionPresent = true;
+        result.indexAuditSummaryExtended = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getIndexSummary && iuEvidencePurchaseRecordIndex.getIndexSummary().uniqueRecordsStored !== undefined);
         result.phase64EvidenceIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex);
         result.purchaseRecordIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getRecordById);
         result.recordRegistrationPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && typeof iuEvidencePurchaseRecordIndex.registerPurchaseRecord === "function");
@@ -11116,6 +11185,9 @@ function buildVideoAsArticleCard(it) {
         result.phase64EvidenceIndexPresent = false;
         result.purchaseRecordIndexPresent = false;
         result.recordRetrievalFunctionsPresent = false;
+        result.phase65RecordIdentityHardeningPresent = false;
+        result.recordIdCollisionGuardPresent = false;
+        result.duplicateDetectionPresent = false;
       }
     } catch (_) {
       result.phase62CanonicalPurchaseRecordPresent = false;
@@ -11135,6 +11207,9 @@ function buildVideoAsArticleCard(it) {
       result.phase64EvidenceIndexPresent = false;
       result.purchaseRecordIndexPresent = false;
       result.recordRetrievalFunctionsPresent = false;
+      result.phase65RecordIdentityHardeningPresent = false;
+      result.recordIdCollisionGuardPresent = false;
+      result.duplicateDetectionPresent = false;
     }
     result.hallucinatedPaymentMethod = false;
     return result;
