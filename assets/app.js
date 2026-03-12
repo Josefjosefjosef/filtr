@@ -10338,6 +10338,129 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
+  /** Phase 7.0: UI response adapter. Maps presentation response (6.9) -> stable UI view model. No new facts. */
+  var IU_UI_SLOTS = {
+    TITLE: "title",
+    SUBTITLE: "subtitle",
+    PRIMARY_FACTS: "primary_facts",
+    SECONDARY_FACTS: "secondary_facts",
+    BADGES: "badges",
+    WARNINGS: "warnings",
+    BLOCKED_NOTICES: "blocked_notices",
+    REVIEW_BANNER: "review_banner",
+    SAFE_ACTIONS: "safe_actions"
+  };
+  var IU_UI_RENDER_MODES = { UI_SUCCESS: "uiSuccess", UI_PARTIAL: "uiPartial", UI_REVIEW: "uiReview", UI_INVALID: "uiInvalid", UI_BLOCKED: "uiBlocked", UI_EMPTY: "uiEmpty" };
+  var IU_UI_BADGES = ["review_records", "partial_data", "invalid_input", "blocked_claim", "no_records"];
+  var IU_UI_SAFE_ACTIONS = ["review_records", "refine_filter", "retry_with_valid_input"];
+
+  function iuEvidenceBuildUIViewModel(presentationResponse) {
+    var p = presentationResponse && typeof presentationResponse === "object" ? presentationResponse : null;
+    if (!p || p.resultSource !== "phase6.9") {
+      return {
+        viewType: "phase7.0_ui_view",
+        intentName: null,
+        renderMode: IU_UI_RENDER_MODES.UI_EMPTY,
+        displaySafe: false,
+        uiModelValid: false,
+        title: "",
+        subtitle: "",
+        primaryDisplayFacts: [],
+        secondaryDisplayFacts: [],
+        badges: [],
+        warnings: [],
+        blockedNotices: [],
+        reviewBanner: "",
+        safeActions: [IU_UI_SAFE_ACTIONS[2]],
+        uiSlots: { title: true, subtitle: true, primary_facts: true, secondary_facts: true, badges: true, warnings: true, blocked_notices: true, review_banner: true, safe_actions: true },
+        auditSummary: { source: "phase7.0", presentationPresent: false },
+        sourcePresentationType: null,
+        sourcePresentationAudit: null,
+        resultSource: "phase7.0"
+      };
+    }
+    var prMode = p.renderMode || "";
+    var uiRenderMode = IU_UI_RENDER_MODES.UI_EMPTY;
+    if (prMode === "success") uiRenderMode = IU_UI_RENDER_MODES.UI_SUCCESS;
+    else if (prMode === "partial") uiRenderMode = IU_UI_RENDER_MODES.UI_PARTIAL;
+    else if (prMode === "review") uiRenderMode = IU_UI_RENDER_MODES.UI_REVIEW;
+    else if (prMode === "invalid") uiRenderMode = IU_UI_RENDER_MODES.UI_INVALID;
+    else if (prMode === "blocked") uiRenderMode = IU_UI_RENDER_MODES.UI_BLOCKED;
+    else if (prMode === "empty") uiRenderMode = IU_UI_RENDER_MODES.UI_EMPTY;
+
+    var displaySafe = p.displaySafe === true;
+    var uiModelValid = p.presentationValid === true;
+
+    var title = typeof p.headline === "string" ? p.headline : "";
+    var subtitle = typeof p.subheadline === "string" ? p.subheadline : "";
+
+    var primaryDisplayFacts = [];
+    var primaryFacts = p.primaryFacts || [];
+    for (var i = 0; i < primaryFacts.length; i++) {
+      var f = primaryFacts[i];
+      if (f && typeof f === "object" && !f.blocked) primaryDisplayFacts.push({ key: f.key, value: f.value });
+    }
+    var secondaryDisplayFacts = [];
+    var secondaryFacts = p.secondaryFacts || [];
+    for (var j = 0; j < secondaryFacts.length; j++) {
+      var g = secondaryFacts[j];
+      if (g && typeof g === "object") secondaryDisplayFacts.push({ key: g.key, value: g.value, blocked: g.blocked === true });
+    }
+
+    var badges = [];
+    var warnings = (p.warnings || []).slice();
+    var blockedNotices = (p.blockedNotices || []).slice();
+    if (warnings.indexOf("review_records_excluded") >= 0 || prMode === "review") badges.push(IU_UI_BADGES[0]);
+    if (warnings.indexOf("partial_data") >= 0 || prMode === "partial") badges.push(IU_UI_BADGES[1]);
+    if (warnings.indexOf("invalid_input") >= 0 || prMode === "invalid") badges.push(IU_UI_BADGES[2]);
+    if (blockedNotices.length > 0 || prMode === "blocked") badges.push(IU_UI_BADGES[3]);
+    if (warnings.indexOf("no_safe_records") >= 0 || warnings.indexOf("unsupported_intent") >= 0 || prMode === "empty") badges.push(IU_UI_BADGES[4]);
+    if (badges.length === 0 && (warnings.length > 0 || blockedNotices.length > 0)) {
+      if (blockedNotices.length > 0) badges.push(IU_UI_BADGES[3]);
+      else if (warnings.length > 0) badges.push(IU_UI_BADGES[1]);
+    }
+
+    var reviewBanner = typeof p.reviewBanner === "string" ? p.reviewBanner : "";
+    var safeActions = [];
+    var pActions = p.safeActions || [];
+    for (var a = 0; a < pActions.length; a++) {
+      if (IU_UI_SAFE_ACTIONS.indexOf(pActions[a]) >= 0) safeActions.push(pActions[a]);
+    }
+
+    var uiSlots = {};
+    uiSlots[IU_UI_SLOTS.TITLE] = true;
+    uiSlots[IU_UI_SLOTS.SUBTITLE] = true;
+    uiSlots[IU_UI_SLOTS.PRIMARY_FACTS] = true;
+    uiSlots[IU_UI_SLOTS.SECONDARY_FACTS] = true;
+    uiSlots[IU_UI_SLOTS.BADGES] = true;
+    uiSlots[IU_UI_SLOTS.WARNINGS] = true;
+    uiSlots[IU_UI_SLOTS.BLOCKED_NOTICES] = true;
+    uiSlots[IU_UI_SLOTS.REVIEW_BANNER] = true;
+    uiSlots[IU_UI_SLOTS.SAFE_ACTIONS] = true;
+
+    return {
+      viewType: "phase7.0_ui_view",
+      intentName: p.intentName != null ? p.intentName : null,
+      renderMode: uiRenderMode,
+      displaySafe: displaySafe,
+      uiModelValid: uiModelValid,
+      title: title,
+      subtitle: subtitle,
+      primaryDisplayFacts: primaryDisplayFacts,
+      secondaryDisplayFacts: secondaryDisplayFacts,
+      badges: badges,
+      warnings: warnings,
+      blockedNotices: blockedNotices,
+      reviewBanner: reviewBanner,
+      safeActions: safeActions,
+      uiSlots: uiSlots,
+      auditSummary: { source: "phase7.0", uiRenderMode: uiRenderMode, presentationValid: p.presentationValid },
+      sourcePresentationType: p.responseType || null,
+      sourcePresentationAudit: p.auditSummary || null,
+      resultSource: "phase7.0"
+    };
+  }
+
   function iuEvidenceRunEvidenceIntent(intentName, intentInput) {
     var validation = iuEvidenceValidateIntentInput(intentName, intentInput);
     if (!validation.valid) {
@@ -11340,6 +11463,12 @@ function buildVideoAsArticleCard(it) {
                     finalOut.unsupportedIntentPresentedTruthfully = !!(_p69inv && _p69inv.renderMode === "invalid" && _p69inv.intentName === "unknown_intent");
                     var _p69inv2 = typeof iuEvidenceBuildPresentationResponse === "function" ? iuEvidenceBuildPresentationResponse(_inv2) : null;
                     finalOut.invalidInputPresentedTruthfully = !!(_p69inv2 && _p69inv2.renderMode === "invalid");
+                    var _vm70 = typeof iuEvidenceBuildUIViewModel === "function" ? iuEvidenceBuildUIViewModel(_p69) : null;
+                    finalOut.phase70UiAdapterPresent = !!(_vm70 && _vm70.resultSource === "phase7.0" && _vm70.viewType === "phase7.0_ui_view");
+                    finalOut.uiViewModelPresent = !!(_vm70 && Array.isArray(_vm70.primaryDisplayFacts) && _vm70.uiSlots && _vm70.renderMode != null);
+                    finalOut.uiSlotContractPresent = !!(_vm70 && IU_UI_SLOTS && IU_UI_SLOTS.TITLE && IU_UI_SLOTS.SAFE_ACTIONS);
+                    finalOut.renderModeMappingPresent = !!(_vm70 && IU_UI_RENDER_MODES && (_vm70.renderMode === "uiSuccess" || _vm70.renderMode === "uiInvalid" || _vm70.renderMode === "uiBlocked"));
+                    finalOut.truthfulPresentationLinkage = !!(_vm70 && _vm70.sourcePresentationType === "phase6.9_presentation");
                   } catch (_) {
                     finalOut.phase62CanonicalPurchaseRecordPresent = false;
                     finalOut.canonicalPurchaseRecordUsed = false;
@@ -11410,6 +11539,11 @@ function buildVideoAsArticleCard(it) {
                     finalOut.truthfulBundleLinkagePresent = false;
                     finalOut.unsupportedIntentPresentedTruthfully = false;
                     finalOut.invalidInputPresentedTruthfully = false;
+                    finalOut.phase70UiAdapterPresent = false;
+                    finalOut.uiViewModelPresent = false;
+                    finalOut.uiSlotContractPresent = false;
+                    finalOut.renderModeMappingPresent = false;
+                    finalOut.truthfulPresentationLinkage = false;
                   }
                   window.__iuEvidenceLastResult = finalOut;
                   try { window.__iuEvidenceAccuracySummaryRow = iuEvidenceBuildAccuracySummaryRow(out); } catch (_) {}
@@ -11845,6 +11979,9 @@ function buildVideoAsArticleCard(it) {
           var _p69sim = typeof iuEvidenceBuildPresentationResponse === "function" ? iuEvidenceBuildPresentationResponse(_b68sim) : null;
           result.phase69PresentationContractPresent = !!(_p69sim && _p69sim.resultSource === "phase6.9" && _p69sim.renderMode != null);
           result.renderModeDisciplinePresent = !!(_p69sim && typeof IU_EVIDENCE_RENDER_MODES !== "undefined" && IU_EVIDENCE_RENDER_MODES.SUCCESS === "success");
+          var _vm70sim = typeof iuEvidenceBuildUIViewModel === "function" ? iuEvidenceBuildUIViewModel(_p69sim) : null;
+          result.phase70UiAdapterPresent = !!(_vm70sim && _vm70sim.resultSource === "phase7.0");
+          result.uiViewModelPresent = !!(_vm70sim && _vm70sim.uiSlots && _vm70sim.renderMode != null);
         } catch (_) {
           result.canonicalAnswerBundlePresent = false;
           result.safeAnswerFieldsPresent = false;
@@ -11855,6 +11992,8 @@ function buildVideoAsArticleCard(it) {
           result.factLinkageTruthful = false;
           result.phase69PresentationContractPresent = false;
           result.renderModeDisciplinePresent = false;
+          result.phase70UiAdapterPresent = false;
+          result.uiViewModelPresent = false;
         }
         result.phase64EvidenceIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex);
         result.purchaseRecordIndexPresent = !!(typeof iuEvidencePurchaseRecordIndex !== "undefined" && iuEvidencePurchaseRecordIndex && iuEvidencePurchaseRecordIndex.getRecordById);
@@ -11901,6 +12040,8 @@ function buildVideoAsArticleCard(it) {
         result.factLinkageTruthful = false;
         result.phase69PresentationContractPresent = false;
         result.renderModeDisciplinePresent = false;
+        result.phase70UiAdapterPresent = false;
+        result.uiViewModelPresent = false;
       }
     } catch (_) {
       result.phase62CanonicalPurchaseRecordPresent = false;
@@ -11946,6 +12087,11 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidenceBuildPresentationResponse = iuEvidenceBuildPresentationResponse;
     window.IU_EVIDENCE_RENDER_MODES = IU_EVIDENCE_RENDER_MODES;
     window.IU_EVIDENCE_SAFE_ACTIONS = IU_EVIDENCE_SAFE_ACTIONS;
+    window.iuEvidenceBuildUIViewModel = iuEvidenceBuildUIViewModel;
+    window.IU_UI_SLOTS = IU_UI_SLOTS;
+    window.IU_UI_RENDER_MODES = IU_UI_RENDER_MODES;
+    window.IU_UI_BADGES = IU_UI_BADGES;
+    window.IU_UI_SAFE_ACTIONS = IU_UI_SAFE_ACTIONS;
     window.iuEvidenceOcrHook = iuEvidenceOcrHook;
     window.iuEvidenceNormalizeOcrText = iuEvidenceNormalizeOcrText;
     window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
