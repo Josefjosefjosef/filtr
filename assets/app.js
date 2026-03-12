@@ -12050,7 +12050,7 @@ function buildVideoAsArticleCard(it) {
           return initPromise.then(function() {
             try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.workerInitializeSucceeded = true; window.__iuEvidenceDebug.recognizeCalled = true; } catch (_) {}
             var imageInput;
-            if (canvas && canvas.width > 0 && canvas.height > 0 && isLocalProofEnv) {
+            if (canvas && canvas.width > 0 && canvas.height > 0) {
               try {
                 var dataUrl = canvas.toDataURL("image/jpeg", 0.92);
                 if (dataUrl && dataUrl.indexOf("data:") === 0) imageInput = dataUrl;
