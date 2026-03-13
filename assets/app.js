@@ -12862,6 +12862,10 @@ function buildVideoAsArticleCard(it) {
       }).then(function(finalResult) {
         if (finalResult == null || typeof finalResult !== "object") finalResult = {};
         var obj = (finalResult != null && typeof finalResult === "object") ? finalResult : (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object" ? window.__iuEvidenceLastResult : null);
+        if (!obj || (typeof obj === "object" && (obj.rawOcrText == null || String(obj.rawOcrText || "").trim().length === 0) && !obj.ocrGeometry)) {
+          var _last = (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object") ? window.__iuEvidenceLastResult : null;
+          if (_last && (_last.rawOcrText != null && String(_last.rawOcrText).trim().length > 0 || _last.ocrGeometry)) obj = _last;
+        }
         if (obj && realImageOrPdfInputUsed && (obj.rawOcrText != null && String(obj.rawOcrText).trim().length > 0 || obj.ocrGeometry)) {
           if (obj.realImageOcrSucceeded === undefined) obj.realImageOcrSucceeded = true;
           if (obj.ocrWordBoxesPresent === undefined && obj.ocrGeometry) obj.ocrWordBoxesPresent = !!(obj.ocrGeometry.words && obj.ocrGeometry.words.length > 0);
@@ -12869,7 +12873,7 @@ function buildVideoAsArticleCard(it) {
           try { window.__iuEvidenceLastResult = obj; } catch (_) {}
           return obj;
         }
-        var needFallback = (finalResult == null || typeof finalResult !== "object") || (typeof finalResult === "object" && (finalResult.rawOcrText == null || String(finalResult.rawOcrText || "").trim().length === 0) && !finalResult.ocrGeometry);
+        var needFallback = (obj == null || typeof obj !== "object") || (typeof obj === "object" && (obj.rawOcrText == null || String(obj.rawOcrText || "").trim().length === 0) && !obj.ocrGeometry);
         if (needFallback) {
           var lastRes = (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object" && (window.__iuEvidenceLastResult.rawOcrText != null && String(window.__iuEvidenceLastResult.rawOcrText).trim().length > 0 || window.__iuEvidenceLastResult.ocrGeometry)) ? window.__iuEvidenceLastResult : null;
           if (realImageOrPdfInputUsed && lastRes) {
