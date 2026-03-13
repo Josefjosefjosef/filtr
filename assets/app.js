@@ -12048,11 +12048,18 @@ function buildVideoAsArticleCard(it) {
             try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.workerInitializeSucceeded = true; window.__iuEvidenceDebug.recognizeCalled = true; } catch (_) {}
             function buildImageInputAndRecognize() {
               var imageInput;
+              var minDataUrlLength = 1000;
               if (recognizeInputCanvas && recognizeInputCanvas.width > 0 && recognizeInputCanvas.height > 0) {
                 try {
                   var dataUrl = recognizeInputCanvas.toDataURL("image/jpeg", 0.92);
-                  if (dataUrl && dataUrl.indexOf("data:") === 0) imageInput = dataUrl;
+                  if (dataUrl && dataUrl.indexOf("data:") === 0 && dataUrl.length > minDataUrlLength) imageInput = dataUrl;
                 } catch (_) {}
+                if (!imageInput) {
+                  try {
+                    var dataUrlPng = recognizeInputCanvas.toDataURL("image/png");
+                    if (dataUrlPng && dataUrlPng.indexOf("data:") === 0 && dataUrlPng.length > minDataUrlLength) imageInput = dataUrlPng;
+                  } catch (_) {}
+                }
               }
               if (!imageInput) imageInput = (recognizeInputCanvas && recognizeInputCanvas.width > 0 && recognizeInputCanvas.height > 0) ? recognizeInputCanvas : ((file && (file instanceof Blob || (typeof File !== "undefined" && file instanceof File))) ? file : recognizeInputCanvas);
               var recOpts = {};
