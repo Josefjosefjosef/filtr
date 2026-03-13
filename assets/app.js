@@ -12018,6 +12018,7 @@ function buildVideoAsArticleCard(it) {
       try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.actualOcrEnginePresent = true; window.__iuEvidenceDebug.actualOcrEngineName = "Tesseract.js"; } } catch (_) {}
       return iuEvidencePrepareDocumentImage(file).then(function(ob) {
         var canvas = ob.canvas;
+        var originalCanvas = ob.canvas;
         realImageOrPdfInputUsed = true;
         var skipPreprocess = typeof window !== "undefined" && window.__iuEvidenceOcrSkipPreprocess === true;
         if (!skipPreprocess) {
@@ -12035,6 +12036,7 @@ function buildVideoAsArticleCard(it) {
         var workerOpts = iuEvidenceOcrWorkerOptions();
         var workerBase = iuEvidenceOcrBaseUrl();
         var workerTimeoutMs = 180000;
+        var recognizeInputCanvas = originalCanvas && originalCanvas.width > 0 && originalCanvas.height > 0 ? originalCanvas : canvas;
         var workerPromise = Tesseract.createWorker(workerOpts).then(function(worker) {
           if (!worker) {
             try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.failureReason = "workerOrRecognizeFail:createWorkerReturnedFalsy"; window.__iuEvidenceDebug.rootRuntimeFailurePoint = "workerOrRecognizeFail"; window.__iuEvidenceDebug.rootCauseRemainingStopShip = "workerOrRecognizeFail:createWorkerReturnedFalsy"; } } catch (_) {}
@@ -12045,13 +12047,13 @@ function buildVideoAsArticleCard(it) {
           return initPromise.then(function() {
             try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.workerInitializeSucceeded = true; window.__iuEvidenceDebug.recognizeCalled = true; } catch (_) {}
             var imageInput;
-            if (canvas && canvas.width > 0 && canvas.height > 0) {
+            if (recognizeInputCanvas && recognizeInputCanvas.width > 0 && recognizeInputCanvas.height > 0) {
               try {
-                var dataUrl = canvas.toDataURL("image/jpeg", 0.92);
+                var dataUrl = recognizeInputCanvas.toDataURL("image/jpeg", 0.92);
                 if (dataUrl && dataUrl.indexOf("data:") === 0) imageInput = dataUrl;
               } catch (_) {}
             }
-            if (!imageInput) imageInput = (canvas && canvas.width > 0 && canvas.height > 0) ? canvas : ((file && (file instanceof Blob || (typeof File !== "undefined" && file instanceof File))) ? file : canvas);
+            if (!imageInput) imageInput = (recognizeInputCanvas && recognizeInputCanvas.width > 0 && recognizeInputCanvas.height > 0) ? recognizeInputCanvas : ((file && (file instanceof Blob || (typeof File !== "undefined" && file instanceof File))) ? file : recognizeInputCanvas);
             var recOpts = {};
             try { recOpts = { output: { text: true, blocks: true } }; } catch (_) {}
             return worker.recognize(imageInput, recOpts).then(function(r1) {
