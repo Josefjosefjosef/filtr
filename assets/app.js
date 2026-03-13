@@ -11652,6 +11652,7 @@ function buildVideoAsArticleCard(it) {
   var IU_EVIDENCE_OCR_WORKER_CDN_BASE = "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/";
   var IU_EVIDENCE_OCR_CORE_CDN = "https://cdn.jsdelivr.net/npm/tesseract.js-core@4.0.0/";
   var IU_EVIDENCE_OCR_TESSDATA_CDN = "https://tessdata.projectnaptha.com/4.0.0";
+  var IU_EVIDENCE_OCR_TESSDATA_CDN_ENG = "https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@4.0.0/";
   var _iuEvidenceTesseractPromise = null;
   function iuEvidenceOcrBaseUrl() {
     if (typeof window !== "undefined" && window.__iuEvidenceOcrBase && typeof window.__iuEvidenceOcrBase === "string") return window.__iuEvidenceOcrBase;
@@ -11710,7 +11711,7 @@ function buildVideoAsArticleCard(it) {
       return {
         workerPath: IU_EVIDENCE_OCR_WORKER_CDN_BASE + "worker.min.js",
         corePath: IU_EVIDENCE_OCR_CORE_CDN || (IU_EVIDENCE_OCR_WORKER_CDN_BASE + "core/"),
-        langPath: IU_EVIDENCE_OCR_TESSDATA_CDN || (IU_EVIDENCE_OCR_WORKER_CDN_BASE + "tessdata"),
+        langPath: (IU_EVIDENCE_OCR_TESSDATA_CDN_ENG && IU_EVIDENCE_OCR_TESSDATA_CDN_ENG.length > 0) ? IU_EVIDENCE_OCR_TESSDATA_CDN_ENG : (IU_EVIDENCE_OCR_TESSDATA_CDN || (IU_EVIDENCE_OCR_WORKER_CDN_BASE + "tessdata")),
         gzip: true,
         workerBlobURL: true
       };
