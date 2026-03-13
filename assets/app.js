@@ -12066,15 +12066,23 @@ function buildVideoAsArticleCard(it) {
               try { recOpts = { output: { text: true, blocks: true } }; } catch (_) {}
               return worker.recognize(imageInput, recOpts);
             }
-            var recognizePromise = typeof requestAnimationFrame === "function"
-              ? new Promise(function(resolve, reject) {
-                  requestAnimationFrame(function() {
-                    requestAnimationFrame(function() {
-                      buildImageInputAndRecognize().then(resolve).catch(reject);
-                    });
-                  });
-                })
-              : buildImageInputAndRecognize();
+            var recognizePromise;
+            if (typeof requestAnimationFrame === "function") {
+              var recognizeSettled = false;
+              recognizePromise = new Promise(function(resolve, reject) {
+                function runRecognize() {
+                  if (recognizeSettled) return;
+                  recognizeSettled = true;
+                  buildImageInputAndRecognize().then(resolve).catch(reject);
+                }
+                requestAnimationFrame(function() {
+                  requestAnimationFrame(runRecognize);
+                });
+                setTimeout(runRecognize, 200);
+              });
+            } else {
+              recognizePromise = buildImageInputAndRecognize();
+            }
             return recognizePromise.then(function(r1) {
               if (!r1 || typeof r1 !== "object" || !r1.data) return Promise.reject(new Error("ocr_result_invalid"));
               try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.recognizeSucceeded = true; } catch (_) {}
