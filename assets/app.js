@@ -11649,6 +11649,9 @@ function buildVideoAsArticleCard(it) {
 
   var IU_EVIDENCE_OCR_ENGINE_CDN = "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js";
   var IU_EVIDENCE_OCR_ENGINE_CDN_FALLBACK = "https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.0.0/tesseract.min.js";
+  var IU_EVIDENCE_OCR_WORKER_CDN_BASE = "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/";
+  var IU_EVIDENCE_OCR_CORE_CDN = "https://cdn.jsdelivr.net/npm/tesseract.js-core@4.0.0/";
+  var IU_EVIDENCE_OCR_TESSDATA_CDN = "https://tessdata.projectnaptha.com/4.0.0";
   var _iuEvidenceTesseractPromise = null;
   function iuEvidenceOcrBaseUrl() {
     if (typeof window !== "undefined" && window.__iuEvidenceOcrBase && typeof window.__iuEvidenceOcrBase === "string") return window.__iuEvidenceOcrBase;
@@ -11702,6 +11705,16 @@ function buildVideoAsArticleCard(it) {
     var base = iuEvidenceOcrBaseUrl();
     if (!base) return {};
     base = base.replace(/\/?$/, "/");
+    var useCdnWorker = typeof location !== "undefined" && location.origin && base.indexOf("cdn.") < 0 && base.indexOf("jsdelivr") < 0 && base.indexOf("cdnjs") < 0 && base.indexOf("127.0.0.1") < 0 && base.indexOf("localhost") < 0;
+    if (useCdnWorker && IU_EVIDENCE_OCR_WORKER_CDN_BASE) {
+      return {
+        workerPath: IU_EVIDENCE_OCR_WORKER_CDN_BASE + "worker.min.js",
+        corePath: IU_EVIDENCE_OCR_CORE_CDN || (IU_EVIDENCE_OCR_WORKER_CDN_BASE + "core/"),
+        langPath: IU_EVIDENCE_OCR_TESSDATA_CDN || (IU_EVIDENCE_OCR_WORKER_CDN_BASE + "tessdata"),
+        gzip: true,
+        workerBlobURL: true
+      };
+    }
     return {
       workerPath: base + "worker.min.js",
       langPath: base + "tessdata",
