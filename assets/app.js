@@ -11707,7 +11707,7 @@ function buildVideoAsArticleCard(it) {
       langPath: base + "tessdata",
       corePath: base + "core/",
       gzip: true,
-      workerBlobURL: false
+      workerBlobURL: true
     };
   }
   function iuEvidencePrepareDocumentImage(file) {
