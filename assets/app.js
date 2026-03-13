@@ -12046,17 +12046,29 @@ function buildVideoAsArticleCard(it) {
           var initPromise = (worker.loadLanguage && typeof worker.loadLanguage === "function") ? worker.loadLanguage("eng").then(function() { return worker.initialize("eng"); }) : worker.initialize("eng");
           return initPromise.then(function() {
             try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.workerInitializeSucceeded = true; window.__iuEvidenceDebug.recognizeCalled = true; } catch (_) {}
-            var imageInput;
-            if (recognizeInputCanvas && recognizeInputCanvas.width > 0 && recognizeInputCanvas.height > 0) {
-              try {
-                var dataUrl = recognizeInputCanvas.toDataURL("image/jpeg", 0.92);
-                if (dataUrl && dataUrl.indexOf("data:") === 0) imageInput = dataUrl;
-              } catch (_) {}
+            function buildImageInputAndRecognize() {
+              var imageInput;
+              if (recognizeInputCanvas && recognizeInputCanvas.width > 0 && recognizeInputCanvas.height > 0) {
+                try {
+                  var dataUrl = recognizeInputCanvas.toDataURL("image/jpeg", 0.92);
+                  if (dataUrl && dataUrl.indexOf("data:") === 0) imageInput = dataUrl;
+                } catch (_) {}
+              }
+              if (!imageInput) imageInput = (recognizeInputCanvas && recognizeInputCanvas.width > 0 && recognizeInputCanvas.height > 0) ? recognizeInputCanvas : ((file && (file instanceof Blob || (typeof File !== "undefined" && file instanceof File))) ? file : recognizeInputCanvas);
+              var recOpts = {};
+              try { recOpts = { output: { text: true, blocks: true } }; } catch (_) {}
+              return worker.recognize(imageInput, recOpts);
             }
-            if (!imageInput) imageInput = (recognizeInputCanvas && recognizeInputCanvas.width > 0 && recognizeInputCanvas.height > 0) ? recognizeInputCanvas : ((file && (file instanceof Blob || (typeof File !== "undefined" && file instanceof File))) ? file : recognizeInputCanvas);
-            var recOpts = {};
-            try { recOpts = { output: { text: true, blocks: true } }; } catch (_) {}
-            return worker.recognize(imageInput, recOpts).then(function(r1) {
+            var recognizePromise = typeof requestAnimationFrame === "function"
+              ? new Promise(function(resolve, reject) {
+                  requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                      buildImageInputAndRecognize().then(resolve).catch(reject);
+                    });
+                  });
+                })
+              : buildImageInputAndRecognize();
+            return recognizePromise.then(function(r1) {
               if (!r1 || typeof r1 !== "object" || !r1.data) return Promise.reject(new Error("ocr_result_invalid"));
               try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.recognizeSucceeded = true; } catch (_) {}
               try { if (proofCtx && proofCtx.fallback && typeof proofCtx.fallback === "string") window.__iuEvidenceProofCorpusNumericFallback = proofCtx.fallback; } catch (_) {}
