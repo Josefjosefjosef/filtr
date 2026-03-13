@@ -12034,8 +12034,7 @@ function buildVideoAsArticleCard(it) {
         try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.preprocessedCanvasWidth = canvas.width; window.__iuEvidenceDebug.preprocessedCanvasHeight = canvas.height; window.__iuEvidenceDebug.uploadedBinaryHashObserved = !!uploadedBinaryHashObserved; } } catch (_) {}
         var workerOpts = iuEvidenceOcrWorkerOptions();
         var workerBase = iuEvidenceOcrBaseUrl();
-        var isLocalProofEnv = workerBase && (workerBase.indexOf("127.0.0.1") >= 0 || workerBase.indexOf("localhost") >= 0);
-        var workerTimeoutMs = isLocalProofEnv ? 180000 : 90000;
+        var workerTimeoutMs = 180000;
         var workerPromise = Tesseract.createWorker(workerOpts).then(function(worker) {
           if (!worker) {
             try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.failureReason = "workerOrRecognizeFail:createWorkerReturnedFalsy"; window.__iuEvidenceDebug.rootRuntimeFailurePoint = "workerOrRecognizeFail"; window.__iuEvidenceDebug.rootCauseRemainingStopShip = "workerOrRecognizeFail:createWorkerReturnedFalsy"; } } catch (_) {}
