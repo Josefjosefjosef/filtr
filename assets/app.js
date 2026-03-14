@@ -12061,6 +12061,8 @@ function buildVideoAsArticleCard(it) {
           initPromise = initPromise.catch(function(err) { try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.initRejectionError = (err && err.message) ? String(err.message) : String(err); window.__iuEvidenceDebug.initRejectionPhase = "init"; } } catch (_) {} throw err; });
           return initPromise.then(function() {
             try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.workerInitializeSucceeded = true; window.__iuEvidenceDebug.recognizeCalled = true; } catch (_) {}
+            var pass1ImageInput;
+            var pass1RecOpts;
             function buildImageInputAndRecognize() {
               var imageInput;
               var minDataUrlLength = 1000;
@@ -12079,6 +12081,8 @@ function buildVideoAsArticleCard(it) {
               if (!imageInput) imageInput = (recognizeInputCanvas && recognizeInputCanvas.width > 0 && recognizeInputCanvas.height > 0) ? recognizeInputCanvas : ((file && (file instanceof Blob || (typeof File !== "undefined" && file instanceof File))) ? file : recognizeInputCanvas);
               var recOpts = {};
               try { recOpts = { output: { text: true, blocks: true } }; } catch (_) {}
+              pass1ImageInput = imageInput;
+              pass1RecOpts = recOpts;
               return worker.recognize(imageInput, recOpts);
             }
             var recognizePromise;
@@ -12257,7 +12261,7 @@ function buildVideoAsArticleCard(it) {
               var needPass2 = (result.correctedFields && result.correctedFields.total === "unknown") || (result.vatBase == null && result.vatAmount == null) || (result.docNumber === "unknown") || ((!result.items || result.items.length === 0) && documentZones.itemsZone.length > 0);
               var pass2Promise = Promise.resolve(null);
               if (needPass2 && worker && typeof worker.recognize === "function") {
-                pass2Promise = worker.recognize(imageInput, recOpts).then(function(r2) {
+                pass2Promise = worker.recognize(pass1ImageInput, pass1RecOpts).then(function(r2) {
                   var text2 = (r2 && r2.data && r2.data.text) || "";
                   if (text2.trim()) {
                     var res2 = iuEvidenceOcrPipeline(text2.trim(), kind);
