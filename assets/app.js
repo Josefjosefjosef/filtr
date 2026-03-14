@@ -9228,8 +9228,13 @@ function buildVideoAsArticleCard(it) {
       var lastMatch = lastLine.match(/([\d\s,\.]+)\s*Kc?\s*$/i);
       if (lastMatch) { var n2 = parseFloat(String(lastMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(n2)) { totalNum = n2; total = lastMatch[1].trim() + " Kč"; priceVatIncluded = total; } }
     }
+    var totalAnchorIdx = lines.length;
+    for (var ti = 0; ti < lines.length; ti++) {
+      if (/(?:^|\s)(?:celkem|total|k\s*[uú]hrad|platb|zaplaceno|payment|vráceno)/i.test(lines[ti])) { totalAnchorIdx = ti; break; }
+    }
     var i = 0;
     while (i < lines.length) {
+      if (i >= totalAnchorIdx) { i++; continue; }
       var line = lines[i];
       if (i === 0 || /celkem|total|datum|date|čas|time/i.test(line)) { i++; continue; }
       if (/z[áa]klad\s*[:\s]|DPH\s*[:\s]|doklad\s*[:\s]/i.test(line)) { i++; continue; }
@@ -9293,7 +9298,7 @@ function buildVideoAsArticleCard(it) {
       i++;
     }
     if (items.length === 0) {
-      for (var fi = 0; fi < lines.length; fi++) {
+      for (var fi = 0; fi < lines.length && fi < totalAnchorIdx; fi++) {
         var fl = lines[fi];
         if (fi === 0 || /celkem|total|datum|date|čas|time|z[áa]klad|DPH|doklad/i.test(fl) || iuEvidenceIsHeaderNoiseLine(fl)) continue;
         var fm = fl.match(/^(.+?)\s+([\d\s,\.]+)\s*Kc?\s*$/i);
