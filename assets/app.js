@@ -9159,20 +9159,34 @@ function buildVideoAsArticleCard(it) {
     var priceVatIncluded = "unknown", priceVatExcluded = "unknown", priceVatExcludedState = "unknown";
     var docType = "receipt";
     var items = [];
-    var dateMatch = normalizedText.match(/(\d{4})-(\d{2})-(\d{2})/) || normalizedText.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+    var dateMatch = normalizedText.match(/(\d{4})-(\d{2})-(\d{2})/) || normalizedText.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/) || normalizedText.match(/(\d{1,2})-(\d{2})-(\d{4})/);
     if (dateMatch) {
-      if (dateMatch[0].indexOf("-") !== -1) date = dateMatch[0];
-      else date = dateMatch[3] + "-" + dateMatch[2].padStart(2, "0") + "-" + dateMatch[1].padStart(2, "0");
+      if (dateMatch[0].indexOf("-") !== -1 && dateMatch[1].length === 4) date = dateMatch[0];
+      else if (dateMatch[0].indexOf(".") !== -1) date = dateMatch[3] + "-" + dateMatch[2].padStart(2, "0") + "-" + dateMatch[1].padStart(2, "0");
+      else if (dateMatch[3] && dateMatch[3].length === 4) date = dateMatch[3] + "-" + dateMatch[2].padStart(2, "0") + "-" + dateMatch[1].padStart(2, "0");
+      else date = dateMatch[0];
     }
     var timeMatch = normalizedText.match(/\b(\d{1,2}):(\d{2})\b/);
     if (timeMatch) time = timeMatch[1].padStart(2, "0") + ":" + timeMatch[2].padStart(2, "0");
     var celkemLine = lines.filter(function(l) { return /celkem|total|celk/i.test(l); })[0];
     if (celkemLine) {
-      var celkemMatch = celkemLine.match(/([\d\s,\.]+)\s*Kc?\s*$/i) || celkemLine.match(/celkem\s*[:\s]*([\d\s,\.]+)/i);
+      var celkemMatch = celkemLine.match(/([\d\s,\.]+)\s*Kc?\s*$/i) || celkemLine.match(/celkem\s*[:\s]*([\d\s,\.]+)/i) || celkemLine.match(/([\d\s,\.]+)\s*(?:Kc|CZK|Kč)?\s*$/i);
       if (celkemMatch && celkemMatch[1]) {
         var numStr = String(celkemMatch[1]).trim().replace(/\s/g, "").replace(",", ".");
         var n = parseFloat(numStr);
         if (!isNaN(n)) { totalNum = n; total = numStr + " Kč"; priceVatIncluded = total; }
+      }
+      if (total === "unknown") {
+        var celkemIdx = lines.indexOf(celkemLine);
+        if (celkemIdx >= 0 && celkemIdx + 1 < lines.length) {
+          var nextLine = lines[celkemIdx + 1];
+          var nextMatch = nextLine.match(/([\d\s,\.]+)\s*(?:Kc|CZK|Kč)?\s*$/i) || nextLine.match(/^([\d\s,\.]+)/);
+          if (nextMatch && nextMatch[1]) {
+            var numStr2 = String(nextMatch[1]).trim().replace(/\s/g, "").replace(",", ".");
+            var n2 = parseFloat(numStr2);
+            if (!isNaN(n2) && n2 > 0) { totalNum = n2; total = numStr2 + " Kč"; priceVatIncluded = total; }
+          }
+        }
       }
     }
     if (total === "unknown" && lines.length > 0) {
