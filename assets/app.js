@@ -9074,13 +9074,14 @@ function buildVideoAsArticleCard(it) {
   };
   const IU_EVIDENCE_MAX_FILE_BYTES = 10 * 1024 * 1024;
 
-  /** OCR normalisation: whitespace, artefacts, separators, safe diacritics, common OCR substitutions (0↔O, 1↔l, Kč↔Kc, etc.). */
+  /** OCR normalisation: whitespace, artefacts, separators, safe diacritics, common OCR substitutions (0↔O, 1↔l, Kč↔Kc, etc.). Date separators ~, multiple dashes -> single -. */
   function iuEvidenceNormalizeOcrText(raw) {
     if (raw == null || typeof raw !== "string") return "";
     var s = raw.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
     s = s.replace(/[ \t]+/g, " ").replace(/\n +/g, "\n").replace(/ +\n/g, "\n").trim();
     s = s.replace(/Kc\b/gi, "Kč").replace(/Kč/g, "Kc");
     s = s.replace(/\bCZK\b/gi, "Kc");
+    s = s.replace(/~/g, "-").replace(/-+/g, "-");
     var out = "";
     for (var i = 0; i < s.length; i++) {
       var c = s[i];
@@ -9151,10 +9152,43 @@ function buildVideoAsArticleCard(it) {
     return { value: corrected || r, candidates: candidates.slice(0, 3), corrected: !!corrected };
   }
 
+  var IU_EVIDENCE_HEADER_NOISE_RE = /(?:IČO|DIČ|VAT|datum|čas|date|time|provozovna|pokladna|cashier|celkem|total|receipt|doklad|platba|card|payment|change|vráceno|obchodní\s*údaje|gestice|adresa|č\.\s*p\.|produkte|specifikace|zaokrouhlen|hotov|počet\s*článk|číslo\s*dokladu|\d{4}-\d{2}-\d{2}|\d{1,2}\.\d{1,2}\.\d{4})/i;
+  function iuEvidenceIsHeaderNoiseLine(line) {
+    if (!line || typeof line !== "string") return true;
+    var t = line.trim();
+    if (t.length < 2) return true;
+    return IU_EVIDENCE_HEADER_NOISE_RE.test(t);
+  }
+  function iuEvidencePickMerchantFromLines(lines) {
+    var minLen = 6;
+    var symbolHeavy = function(l) { var a = l.replace(/\s/g, ""); if (a.length < 3) return true; var nonLetter = (a.match(/[^A-Za-zÁ-ž0-9]/g) || []).length; return nonLetter > a.length * 0.45; };
+    var addressOrNoise = /gestice|^\s*em\s|\d{4,}\s|Obchodni\s*Fi[,]|provozovna|pokladna/i;
+    var merchantLike = /s\.r\.o\.|a\.s\.|retail|market|shop|store|prodejna/i;
+    var best = null;
+    var bestScore = -1;
+    for (var idx = 0; idx < lines.length; idx++) {
+      var l = lines[idx];
+      var t = (l && String(l).trim()) || "";
+      if (t.length < minLen) continue;
+      if (iuEvidenceIsHeaderNoiseLine(t)) continue;
+      if (addressOrNoise.test(t)) continue;
+      if (symbolHeavy(t)) continue;
+      if (/\d{1,2}:\d{2}(:\d{2})?/.test(t) && t.length < 15) continue;
+      if (/\d{4,}/.test(t)) continue;
+      var score = 0;
+      if (/s\.r\.o\.|a\.s\./.test(t)) score += 3;
+      else if (merchantLike.test(t)) score += 2;
+      if (/^[A-Za-zÁ-ž\s\-\.]+$/.test(t) && !/\d{4}/.test(t)) score += 1;
+      if (score > bestScore) { bestScore = score; best = t; }
+    }
+    return best || ((lines[0] && lines[0].trim().length >= minLen && !iuEvidenceIsHeaderNoiseLine(lines[0]) && !addressOrNoise.test(lines[0].trim())) ? lines[0].trim() : "unknown");
+  }
+
   /** Heuristic parse normalized text to fields + items. */
   function iuEvidenceParseNormalizedToFields(normalizedText) {
     var lines = normalizedText.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
-    var store = lines[0] || "unknown";
+    var store = iuEvidencePickMerchantFromLines(lines);
+    if (store === "unknown" && lines[0]) store = lines[0].trim();
     var date = "unknown", time = "unknown", total = "unknown", totalNum = null;
     var priceVatIncluded = "unknown", priceVatExcluded = "unknown", priceVatExcludedState = "unknown";
     var docType = "receipt";
@@ -9216,7 +9250,7 @@ function buildVideoAsArticleCard(it) {
           j++;
         }
         if (lineTotalNum == null && unitPrice != null && qty != null) lineTotalNum = Math.round(unitPrice * qty * 100) / 100;
-        if (itemName && (lineTotalNum != null || totalNum != null)) {
+        if (itemName && (lineTotalNum != null || totalNum != null) && !iuEvidenceIsHeaderNoiseLine(itemName)) {
           var lt = lineTotalNum != null ? lineTotalNum : totalNum;
           items.push({ name: itemName, price: lt, priceStr: (lt + " Kč"), qty: qty, unitPrice: unitPrice, lineTotal: lt });
         }
@@ -9230,18 +9264,18 @@ function buildVideoAsArticleCard(it) {
       if (priceLineMatch) {
         var priceNum = parseFloat(String(priceLineMatch[1]).replace(/\s/g, "").replace(",", "."));
         if (!isNaN(priceNum) && priceNum >= 0) {
-          if (prevLine && /^[A-Za-zÁ-ž\s\-]+$/.test(prevLine.trim()) && prevLine.trim().length > 0 && !/celkem|total|datum|date|čas|time/i.test(prevLine)) {
+          if (prevLine && /^[A-Za-zÁ-ž\s\-]+$/.test(prevLine.trim()) && prevLine.trim().length > 0 && !/celkem|total|datum|date|čas|time/i.test(prevLine) && !iuEvidenceIsHeaderNoiseLine(prevLine)) {
             items.push({ name: prevLine.trim(), price: priceNum, priceStr: priceLineMatch[1].trim() + " Kč", qty: null, unitPrice: null, lineTotal: priceNum }); i++; continue;
           }
           for (var bi = i - 1; bi >= 1; bi--) {
             var bl = lines[bi];
-            if (/^[A-Za-zÁ-ž\s\-]+$/.test(bl.trim()) && bl.trim().length > 0 && !/celkem|total|datum|date|čas|time|z[áa]klad|DPH|doklad/i.test(bl)) {
+            if (/^[A-Za-zÁ-ž\s\-]+$/.test(bl.trim()) && bl.trim().length > 0 && !/celkem|total|datum|date|čas|time|z[áa]klad|DPH|doklad/i.test(bl) && !iuEvidenceIsHeaderNoiseLine(bl)) {
               items.push({ name: bl.trim(), price: priceNum, priceStr: priceLineMatch[1].trim() + " Kč", qty: null, unitPrice: null, lineTotal: priceNum }); i++; continue;
             }
           }
         }
       }
-      if (nextLine && /^[A-Za-zÁ-ž\s\-]+$/.test(line.trim()) && line.trim().length > 0 && !/celkem|total|datum|date|čas|time/i.test(line)) {
+      if (nextLine && /^[A-Za-zÁ-ž\s\-]+$/.test(line.trim()) && line.trim().length > 0 && !/celkem|total|datum|date|čas|time/i.test(line) && !iuEvidenceIsHeaderNoiseLine(line)) {
         var priceLineMatch2 = nextLine.match(/^([\d\s,\.]+)\s*Kc?\s*$/i);
         if (priceLineMatch2) {
           var priceNum2 = parseFloat(String(priceLineMatch2[1]).replace(/\s/g, "").replace(",", "."));
@@ -9251,7 +9285,7 @@ function buildVideoAsArticleCard(it) {
       var m = line.match(/^(.+)\s+([\d,\.]+)\s*Kc?\s*$/i);
       if (m) {
         var name = m[1].trim();
-        if (/z[áa]klad|^DPH\s|doklad\s*[:\s]/i.test(name)) { i++; continue; }
+        if (/z[áa]klad|^DPH\s|doklad\s*[:\s]/i.test(name) || iuEvidenceIsHeaderNoiseLine(name)) { i++; continue; }
         var priceStr = m[2].replace(/,/g, ".");
         var price = parseFloat(priceStr);
         if (!isNaN(price) && price >= 0) items.push({ name: name, price: price, priceStr: m[2].trim() + " Kč", qty: null, unitPrice: null, lineTotal: price });
@@ -9261,9 +9295,10 @@ function buildVideoAsArticleCard(it) {
     if (items.length === 0) {
       for (var fi = 0; fi < lines.length; fi++) {
         var fl = lines[fi];
-        if (fi === 0 || /celkem|total|datum|date|čas|time|z[áa]klad|DPH|doklad/i.test(fl)) continue;
+        if (fi === 0 || /celkem|total|datum|date|čas|time|z[áa]klad|DPH|doklad/i.test(fl) || iuEvidenceIsHeaderNoiseLine(fl)) continue;
         var fm = fl.match(/^(.+?)\s+([\d\s,\.]+)\s*Kc?\s*$/i);
         if (fm) {
+          if (iuEvidenceIsHeaderNoiseLine(fm[1].trim())) continue;
           var fprice = parseFloat(String(fm[2]).replace(/\s/g, "").replace(",", "."));
           if (!isNaN(fprice) && fprice >= 0) { items.push({ name: fm[1].trim(), price: fprice, priceStr: fm[2].trim() + " Kč", qty: null, unitPrice: null, lineTotal: fprice }); break; }
         }
