@@ -9639,6 +9639,10 @@ function buildVideoAsArticleCard(it) {
     var dateTimeOnlyRe = /^\s*\d{4}-\d{2}-\d{2}\s+\d{1,2}:\d{2}(:\d{2})?\s*$|^\s*\d{1,2}\.\d{1,2}\.\d{4}\s+\d{1,2}:\d{2}/;
     var onlyNumbersOrCodeRe = /^[\d\s.,\-:]+$/;
     var nonItemBlockRe = /(?:terminál|terminal\s*id|merchant\s*#|invoice\s*#|batch\s*#|auth\s*#|číslo\s*terminálu|platba\s*kartou|platebni\s*karta|hotovost\s*:|vraceno\s*|prijata\s*castka|prijata\s*hotovost|k\s*uhrade|celkem\s*polozek|APP\s*:\s*DEBIT|mastercard|visa\s*|debit\s*|kód\s*účtenky|survey|dotazník|promo\s*|\.cz\s|\.com\s|aplikace|obchodni\s*\d+|provozovna\s*:|adresa\s*|praha\s*\d|praha\s*[0-9]|\d{5}\s*[a-z]|expedoval\s*|zdanitelné|číslo\s*dokladu|slo\s*dahov|prodej\s*dle\s*par|zaokrouhleni\s*|rekapitulace\s*DPH|celk\.cena\s*ve|děkujeme|nashledanou|účtenk|vratit\s*zboží)/i;
+    var paymentLineRe = /(?:platba\s*kartou|platebni\s*karta|hotovost\s*:|vraceno\s*|prijata\s*castka|prijata\s*hotovost|k\s*uhrade|APP\s*:\s*DEBIT|mastercard|visa\s*|debit\s*|platba\s*v\s*hotovosti|bezhotovostní)/i;
+    var terminalLineRe = /(?:terminál|terminal\s*id|merchant\s*#|invoice\s*#|batch\s*#|auth\s*#|číslo\s*terminálu)/i;
+    var qrSurveyLineRe = /(?:survey|dotazník|\.cz\s|\.com\s|aplikace|kód\s*účtenky)/i;
+    var footerLineRe = /(?:děkujeme|nashledanou|účtenk|vratit\s*zboží|nashledanou)/i;
     var productNameNoiseRe = /^(?:platba|hotovost|vraceno|prijata|celkem|dph|vat|doklad|auth|batch|terminál|merchant|invoice|karta|obchodni\s*\d+|expedoval|zdanit|zaokrouhleni|rekapitulace|děkujeme|nashledanou)\s*$/i;
     var docWidth = 1000;
     var linesAnalyzed = lines.length;
@@ -9727,9 +9731,18 @@ function buildVideoAsArticleCard(it) {
         }
         continue;
       }
-      if (headerNoiseRe.test(lineNorm)) { normalizationStats.linesRejectedNoise++; rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "headerNoise" }); continue; }
-      if (vatSubtotalRe.test(lineNorm)) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "vatSubtotal" }); continue; }
-      if (nonItemBlockRe.test(lineNorm)) { normalizationStats.linesRejectedNoise++; rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "nonItemBlock" }); continue; }
+      if (headerNoiseRe.test(lineNorm)) { normalizationStats.linesRejectedNoise++; rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "company_header_line" }); continue; }
+      if (vatSubtotalRe.test(lineNorm)) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "vat_summary_line" }); continue; }
+      if (nonItemBlockRe.test(lineNorm)) {
+        normalizationStats.linesRejectedNoise++;
+        var reason = "unknown_non_item";
+        if (paymentLineRe.test(lineNorm)) reason = "payment_line";
+        else if (terminalLineRe.test(lineNorm)) reason = "terminal_line";
+        else if (qrSurveyLineRe.test(lineNorm)) reason = "qr_or_survey_line";
+        else if (footerLineRe.test(lineNorm)) reason = "footer_line";
+        rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: reason });
+        continue;
+      }
       if (!pricesInLine || pricesInLine.length === 0) continue;
       normalizationStats.linesWithPriceLike++;
       var lastPriceStr = pricesInLine[pricesInLine.length - 1];
@@ -9745,10 +9758,19 @@ function buildVideoAsArticleCard(it) {
       if (qtyMatch) { var q = parseInt(qtyMatch[1], 10); if (!isNaN(q)) qty = q; }
       if (!namePart) namePart = "Položka";
       normalizationStats.linesItemLike++;
-      candidateItemLines.push({ name: namePart, price: priceNum, quantity: qty, rawLine: rawLine, lineTotal: priceNum });
+      candidateItemLines.push({ name: namePart, price: priceNum, quantity: qty, rawLine: rawLine, lineTotal: priceNum, lineIndex: i });
     }
 
-    var items = candidateItemLines.slice();
+    var stopReasons = ["payment_line", "terminal_line", "qr_or_survey_line", "footer_line", "vat_summary_line"];
+    var firstStopIndex = null;
+    for (var si = 0; si < rejectedItemLines.length; si++) {
+      if (stopReasons.indexOf(rejectedItemLines[si].reason) >= 0) {
+        var idx = rejectedItemLines[si].lineIndex;
+        if (firstStopIndex == null || idx < firstStopIndex) firstStopIndex = idx;
+      }
+    }
+    var candidateFiltered = firstStopIndex != null ? candidateItemLines.filter(function(c) { return c.lineIndex < firstStopIndex; }) : candidateItemLines;
+    var items = candidateFiltered.map(function(c) { return { name: c.name, price: c.price, quantity: c.quantity, rawLine: c.rawLine, lineTotal: c.lineTotal }; });
     var totalValue = null;
     if (totalCandidates.length > 0) {
       totalCandidates.sort(function(a, b) { return b.lineIndex - a.lineIndex; });
@@ -9837,6 +9859,7 @@ function buildVideoAsArticleCard(it) {
     var sumSanityFail = totalValue != null && totalValue > 0 && (differencePercent >= 25 || itemsSum > totalValue * 2);
     var itemExtractionTrusted = !sumSanityFail && consistencyOk;
     var acceptedItemSegments = items.map(function(it) { return { name: it.name, price: it.price, rawLine: it.rawLine }; });
+    function countRejectedByReason(r) { return rejectedItemLines.filter(function(x) { return x.reason === r; }).length; }
     return {
       items: items,
       totalValue: totalValue,
@@ -9846,9 +9869,13 @@ function buildVideoAsArticleCard(it) {
       differencePercent: differencePercent,
       consistencyOk: consistencyOk,
       linesAnalyzed: linesAnalyzed,
-      candidateItemLines: candidateItemLines,
+      candidateItemLines: candidateFiltered.map(function(c) { return { name: c.name, price: c.price, quantity: c.quantity, rawLine: c.rawLine, lineTotal: c.lineTotal }; }),
       acceptedItemSegments: acceptedItemSegments,
       rejectedItemLines: rejectedItemLines,
+      rejectedAsPaymentCount: countRejectedByReason("payment_line"),
+      rejectedAsTerminalCount: countRejectedByReason("terminal_line"),
+      rejectedAsQrSurveyCount: countRejectedByReason("qr_or_survey_line"),
+      rejectedAsFooterCount: countRejectedByReason("footer_line"),
       candidateTotalLines: candidateTotalLines,
       selectedTotalLine: selectedTotalLine,
       priceColumnStats: priceColumnStats,
@@ -9859,7 +9886,9 @@ function buildVideoAsArticleCard(it) {
       itemExtractionTrusted: itemExtractionTrusted,
       itemLinesDetected: items.length,
       itemsWithPrice: items.filter(function(it) { return it.price != null && !isNaN(it.price); }).length,
-      itemsWithoutPrice: items.length - items.filter(function(it) { return it.price != null && !isNaN(it.price); }).length
+      itemsWithoutPrice: items.length - items.filter(function(it) { return it.price != null && !isNaN(it.price); }).length,
+      quantityResolvedCount: items.filter(function(it) { return it.quantity != null && !isNaN(it.quantity); }).length,
+      priceResolvedCount: items.filter(function(it) { return it.price != null && !isNaN(it.price); }).length
     };
   }
 
@@ -12267,6 +12296,11 @@ function buildVideoAsArticleCard(it) {
                     result.items = phase73.items.map(function(it) { return { name: it.name, price: it.price, priceStr: (it.price != null ? String(it.price) : "") + " Kč", qty: it.quantity, unitPrice: null, lineTotal: it.lineTotal != null ? it.lineTotal : it.price, rawLine: it.rawLine }; });
                     if (result.fieldSourceZone) result.fieldSourceZone.items = result.items.map(function() { return "itemsZone"; });
                   }
+                  if (phase73.rejectedItemLines) result.rejectedItemLines = phase73.rejectedItemLines;
+                  if (phase73.rejectedAsPaymentCount != null) result.rejectedAsPaymentCount = phase73.rejectedAsPaymentCount;
+                  if (phase73.rejectedAsTerminalCount != null) result.rejectedAsTerminalCount = phase73.rejectedAsTerminalCount;
+                  if (phase73.rejectedAsQrSurveyCount != null) result.rejectedAsQrSurveyCount = phase73.rejectedAsQrSurveyCount;
+                  if (phase73.rejectedAsFooterCount != null) result.rejectedAsFooterCount = phase73.rejectedAsFooterCount;
                   if (phase73.totalLineDetected && phase73.totalValue != null) {
                     result.correctedFields = result.correctedFields || {};
                     result.correctedFields.total = phase73.totalValue + " Kč";
@@ -12368,6 +12402,11 @@ function buildVideoAsArticleCard(it) {
                   result.items = phase73Catch.items.map(function(it) { return { name: it.name, price: it.price, priceStr: (it.price != null ? String(it.price) : "") + " Kč", qty: it.quantity, unitPrice: null, lineTotal: it.lineTotal != null ? it.lineTotal : it.price, rawLine: it.rawLine }; });
                   result.fieldSourceZone = result.fieldSourceZone || {}; result.fieldSourceZone.items = result.items.map(function() { return "itemsZone"; });
                 }
+                if (phase73Catch.rejectedItemLines) result.rejectedItemLines = phase73Catch.rejectedItemLines;
+                if (phase73Catch.rejectedAsPaymentCount != null) result.rejectedAsPaymentCount = phase73Catch.rejectedAsPaymentCount;
+                if (phase73Catch.rejectedAsTerminalCount != null) result.rejectedAsTerminalCount = phase73Catch.rejectedAsTerminalCount;
+                if (phase73Catch.rejectedAsQrSurveyCount != null) result.rejectedAsQrSurveyCount = phase73Catch.rejectedAsQrSurveyCount;
+                if (phase73Catch.rejectedAsFooterCount != null) result.rejectedAsFooterCount = phase73Catch.rejectedAsFooterCount;
                 if (phase73Catch.totalLineDetected && phase73Catch.totalValue != null) {
                   result.correctedFields = result.correctedFields || {}; result.correctedFields.total = phase73Catch.totalValue + " Kč"; result.totalNum = phase73Catch.totalValue;
                   result.validationSummary = result.validationSummary || {}; result.validationSummary.totalNum = phase73Catch.totalValue; result.validationSummary.itemsSum = phase73Catch.itemsSum; result.validationSummary.sumMismatch = !phase73Catch.consistencyOk; if (typeof phase73Catch.itemExtractionTrusted !== "undefined") result.validationSummary.itemExtractionTrusted = phase73Catch.itemExtractionTrusted;
@@ -13580,16 +13619,9 @@ function buildVideoAsArticleCard(it) {
     function setReviewField(valueEl, confEl, needsEl, candidatesEl, value, confidence, needsReview, candidates) {
       var unknownLabel = "unknown";
       if (valueEl) valueEl.textContent = (value == null || value === "unknown" || String(value).trim() === "") ? unknownLabel : String(value);
-      if (confEl) { confEl.textContent = confidence != null ? "confidence: " + Number(confidence).toFixed(2) : ""; confEl.hidden = confidence == null; }
-      if (needsEl) { needsEl.textContent = needsReview ? "Vyžaduje kontrolu" : ""; needsEl.hidden = !needsReview; }
-      if (candidatesEl && Array.isArray(candidates) && candidates.length > 0) {
-        candidatesEl.innerHTML = "";
-        var opt = document.createElement("option");
-        opt.value = ""; opt.textContent = "— vybrat variantu —";
-        candidatesEl.appendChild(opt);
-        candidates.forEach(function(c) { var o = document.createElement("option"); o.value = c; o.textContent = c; candidatesEl.appendChild(o); });
-        candidatesEl.hidden = false;
-      } else if (candidatesEl) { candidatesEl.hidden = true; }
+      if (confEl) { confEl.hidden = true; }
+      if (needsEl) { needsEl.hidden = true; }
+      if (candidatesEl) { candidatesEl.hidden = true; }
     }
 
     function renderItemsList(listEl, items) {
@@ -13600,15 +13632,13 @@ function buildVideoAsArticleCard(it) {
         li.className = "iu-evidence-item-row";
         li.setAttribute("data-iu", "item-row");
         var name = it.name || it.rawName || "—";
+        var qty = it.qty != null ? it.qty : it.quantity;
+        var qtyDisplay = qty != null ? (qty === 1 ? "1×" : Number(qty) + "×") : "";
         var priceStr = it.priceStr != null ? it.priceStr : (typeof it.price === "number" ? it.price + " Kč" : "—");
-        var conf = it.corrected ? 0.75 : 0.9;
-        var needR = it.corrected || (it.rawName === "unknown");
         var spName = document.createElement("span"); spName.className = "iu-evidence-item-name"; spName.textContent = name; li.appendChild(spName);
+        if (qtyDisplay) { li.appendChild(document.createTextNode(" ")); var spQty = document.createElement("span"); spQty.className = "iu-evidence-item-qty"; spQty.textContent = qtyDisplay; li.appendChild(spQty); }
         li.appendChild(document.createTextNode(" "));
         var spPrice = document.createElement("span"); spPrice.className = "iu-evidence-item-price"; spPrice.textContent = priceStr; li.appendChild(spPrice);
-        li.appendChild(document.createTextNode(" "));
-        var spConf = document.createElement("span"); spConf.className = "iu-evidence-item-conf"; spConf.textContent = "confidence: " + conf.toFixed(2); li.appendChild(spConf);
-        if (needR) { li.appendChild(document.createTextNode(" ")); var spNeed = document.createElement("span"); spNeed.className = "iu-evidence-item-needs"; spNeed.textContent = "kontrola"; li.appendChild(spNeed); }
         listEl.appendChild(li);
       });
     }
@@ -13654,8 +13684,11 @@ function buildVideoAsArticleCard(it) {
       setReviewField(rStore || reviewStoreValue, reviewStoreConfidence, reviewStoreNeeds, reviewStoreCandidates, storeVal, fc.store, fnr.store, cand.store);
       setReviewField(rDate || reviewDateValue, reviewDateConfidence, reviewDateNeeds, null, dateVal, fc.date, fnr.date, null);
       setReviewField(rTime || reviewTimeValue, reviewTimeConfidence, reviewTimeNeeds, null, timeVal, fc.time, fnr.time, null);
+      var totalLabelEl = panel.querySelector("[data-iu=\"review-total\"]");
+      if (totalLabelEl) { var lbl = totalLabelEl.querySelector(".iu-evidence-review-label"); if (lbl) lbl.textContent = "Celkem zaplaceno"; }
       setReviewField(rTotal || reviewTotalValue, reviewTotalConfidence, reviewTotalNeeds, null, totalVal, fc.total, fnr.total, null);
-      setReviewField(rDoctype || reviewDoctypeValue, reviewDoctypeConfidence, reviewDoctypeNeeds, null, cf.docType, fc.docType, fnr.docType, null);
+      var docTypeDisplay = "Zjednodušený daňový doklad";
+      setReviewField(rDoctype || reviewDoctypeValue, reviewDoctypeConfidence, reviewDoctypeNeeds, null, docTypeDisplay, fc.docType, fnr.docType, null);
       var applied = { store: storeVal, date: dateVal, time: timeVal, total: totalVal };
       (function(renderedResult, appliedSnapshot) {
         setTimeout(function() {
@@ -13670,19 +13703,48 @@ function buildVideoAsArticleCard(it) {
           var rtot = document.querySelector("[data-iu=\"review-total-value\"]"); if (rtot) rtot.textContent = (tot == null || tot === "unknown" || String(tot).trim() === "") ? "unknown" : String(tot);
         }, 0);
       })(result, applied);
-      if (reviewSummaryEl) {
-        var rs = result.reviewSummary || {};
-        reviewSummaryEl.textContent = "Kontrola: " + (rs.docNeedsReview ? "doklad vyžaduje kontrolu" : "OK");
-        reviewSummaryEl.hidden = false;
-      }
-      if (validationSummaryEl) {
-        var vs = result.validationSummary || {};
-        validationSummaryEl.textContent = vs.sumMismatch ? "Součet položek (" + (vs.itemsSum || 0) + ") neodpovídá celkové částce (" + (vs.totalNum != null ? vs.totalNum : "—") + ")." : (vs.valid ? "Validace: OK" : "Zkontrolujte údaje.");
-        validationSummaryEl.hidden = false;
-      }
+      if (reviewSummaryEl) reviewSummaryEl.hidden = true;
+      if (validationSummaryEl) validationSummaryEl.hidden = true;
       var listEl = extractionPanel.querySelector("[data-iu=\"evidence-items-list\"]");
       var items = result.items || result.itemCandidates || [];
       renderItemsList(listEl, items);
+      var unknownHint = extractionPanel.querySelector("[data-iu=\"unknown-state-works\"]");
+      if (unknownHint) unknownHint.hidden = true;
+      var primarySection = extractionPanel.querySelector("[data-iu-section=\"primary_facts_section\"]");
+      var paymentRow = extractionPanel.querySelector("[data-iu=\"review-payment\"]");
+      if (!paymentRow && primarySection) {
+        paymentRow = document.createElement("div");
+        paymentRow.className = "iu-evidence-review-row";
+        paymentRow.setAttribute("data-iu", "review-payment");
+        paymentRow.innerHTML = "<span class=\"iu-evidence-review-label\">Uhrazeno</span><span class=\"iu-evidence-review-value\" data-iu=\"review-payment-value\">—</span>";
+        primarySection.appendChild(paymentRow);
+      }
+      if (paymentRow) {
+        var raw = (result.rawOcrText || "").toLowerCase();
+        var paymentVal = "";
+        if (/\b(hotovost|v\s*hotovosti|cash)\b/.test(raw)) paymentVal = "platba v hotovosti";
+        else if (/\b(karta|card|platba\s*kartou|bezhotovostní)\b/.test(raw)) paymentVal = "bezhotovostní úhrada";
+        var pv = paymentRow.querySelector("[data-iu=\"review-payment-value\"]");
+        if (pv) pv.textContent = paymentVal || "—";
+      }
+      var summaryEl = extractionPanel.querySelector("[data-iu=\"receipt-summary\"]");
+      if (!summaryEl && listEl && listEl.parentNode) {
+        summaryEl = document.createElement("div");
+        summaryEl.setAttribute("data-iu", "receipt-summary");
+        summaryEl.className = "iu-evidence-summary-block";
+        summaryEl.innerHTML = "<h4 class=\"iu-evidence-items-heading\">Souhrn</h4><p class=\"iu-evidence-summary-row\"><span class=\"iu-evidence-review-label\">cena celkem bez DPH</span> <span data-iu=\"summary-without-vat\">—</span></p><p class=\"iu-evidence-summary-row\"><span class=\"iu-evidence-review-label\">cena celkem s DPH</span> <span data-iu=\"summary-with-vat\">—</span></p>";
+        var actionsSection = extractionPanel.querySelector("[data-iu-section=\"safe_actions_section\"]");
+        if (actionsSection && actionsSection.parentNode) actionsSection.parentNode.insertBefore(summaryEl, actionsSection);
+        else extractionPanel.appendChild(summaryEl);
+      }
+      if (summaryEl) {
+        var vatBase = result.vatBase != null ? result.vatBase : (result.validationSummary && result.validationSummary.vatBase);
+        var totalWithVat = result.totalNum != null ? result.totalNum : (cf.total ? parseFloat(String(cf.total).replace(/\s*Kč\s*/i, "").replace(",", ".")) : NaN);
+        var sv = summaryEl.querySelector("[data-iu=\"summary-without-vat\"]");
+        var sw = summaryEl.querySelector("[data-iu=\"summary-with-vat\"]");
+        if (sv) sv.textContent = (vatBase != null && !isNaN(vatBase)) ? (vatBase + " Kč") : "—";
+        if (sw) sw.textContent = (!isNaN(totalWithVat)) ? (totalWithVat + " Kč") : (cf.total && cf.total !== "unknown" ? cf.total : "—");
+      }
     }
 
     function validateFile(file, acceptList) {
