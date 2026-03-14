@@ -11652,7 +11652,7 @@ function buildVideoAsArticleCard(it) {
   var IU_EVIDENCE_OCR_WORKER_CDN_BASE = "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/";
   var IU_EVIDENCE_OCR_CORE_CDN = "https://cdn.jsdelivr.net/npm/tesseract.js-core@4.0.0/";
   var IU_EVIDENCE_OCR_TESSDATA_CDN = "https://tessdata.projectnaptha.com/4.0.0";
-  var IU_EVIDENCE_OCR_TESSDATA_CDN_ENG = "https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@4.0.0/";
+  var IU_EVIDENCE_OCR_TESSDATA_CDN_ENG = "https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0/";
   var _iuEvidenceTesseractPromise = null;
   function iuEvidenceOcrBaseUrl() {
     if (typeof window !== "undefined" && window.__iuEvidenceOcrBase && typeof window.__iuEvidenceOcrBase === "string") return window.__iuEvidenceOcrBase;
@@ -12058,6 +12058,7 @@ function buildVideoAsArticleCard(it) {
           }
           try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.workerLoaded = true; window.__iuEvidenceDebug.workerInitializeCalled = true; } catch (_) {}
           var initPromise = (worker.loadLanguage && typeof worker.loadLanguage === "function") ? worker.loadLanguage("eng").then(function() { return worker.initialize("eng"); }) : worker.initialize("eng");
+          initPromise = initPromise.catch(function(err) { try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.initRejectionError = (err && err.message) ? String(err.message) : String(err); window.__iuEvidenceDebug.initRejectionPhase = "init"; } } catch (_) {} throw err; });
           return initPromise.then(function() {
             try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.workerInitializeSucceeded = true; window.__iuEvidenceDebug.recognizeCalled = true; } catch (_) {}
             function buildImageInputAndRecognize() {
