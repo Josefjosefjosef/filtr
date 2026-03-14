@@ -11123,11 +11123,11 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   box-sizing: border-box;
 }
 #iuNakupModal .iuModalBody{
-  overflow: visible !important;
-  overflow-x: visible !important;
-  overflow-y: visible !important;
-  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 72vh;
   flex: 0 1 auto;
+  contain: layout;
 }
 @media (max-width: 900px){
   #iuNakupModal .iuModalCard{
@@ -11317,13 +11317,24 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   margin: 4px 0 0 0;
 }
 
-/* Evidence nákupů — OCR extraction panel */
+/* Evidence nákupů — OCR extraction panel (CLS: fixed height so reveal and content fill do not shift layout) */
 .iu-evidence-extraction-panel{
   margin-top: 14px;
   padding: 12px 14px;
   background: #fff;
   border: 1px solid rgba(11,27,43,.12);
   border-radius: 8px;
+  height: 55vh;
+  min-height: 320px;
+  max-height: 55vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  contain: layout;
+}
+[data-iu="ocr-extraction-result"][hidden]{
+  display: block !important;
+  visibility: hidden;
+  pointer-events: none;
 }
 .iu-evidence-extraction-heading{
   font-size: 13px;
@@ -11371,7 +11382,7 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 .iu-evidence-validation-summary{ font-size: 13px; margin: 8px 0; padding: 6px 10px; background: #f8fafc; border-radius: 6px; }
 .iu-evidence-validation-summary{ color: #b45309; }
 .iu-evidence-items-heading{ font-size: 13px; font-weight: 700; margin: 14px 0 8px 0; color: #0b1b2b; }
-.iu-evidence-items-list{ list-style: none; margin: 0; padding: 0; }
+.iu-evidence-items-list{ list-style: none; margin: 0; padding: 0; min-height: 260px; }
 .iu-evidence-item-row{ padding: 6px 0; border-bottom: 1px solid rgba(11,27,43,.08); font-size: 13px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .iu-evidence-item-name{ font-weight: 500; color: #0b1b2b; }
 .iu-evidence-item-price{ color: rgba(11,27,43,.8); }
