@@ -9638,6 +9638,8 @@ function buildVideoAsArticleCard(it) {
     var vatSubtotalRe = /(?:mezisoučet|subtotal|z[áa]klad\s*DPH|sleva|promo)/i;
     var dateTimeOnlyRe = /^\s*\d{4}-\d{2}-\d{2}\s+\d{1,2}:\d{2}(:\d{2})?\s*$|^\s*\d{1,2}\.\d{1,2}\.\d{4}\s+\d{1,2}:\d{2}/;
     var onlyNumbersOrCodeRe = /^[\d\s.,\-:]+$/;
+    var nonItemBlockRe = /(?:terminál|terminal\s*id|merchant\s*#|invoice\s*#|batch\s*#|auth\s*#|číslo\s*terminálu|platba\s*kartou|platebni\s*karta|hotovost\s*:|vraceno\s*|prijata\s*castka|prijata\s*hotovost|k\s*uhrade|celkem\s*polozek|APP\s*:\s*DEBIT|mastercard|visa\s*|debit\s*|kód\s*účtenky|survey|dotazník|promo\s*|\.cz\s|\.com\s|aplikace|obchodni\s*\d+|provozovna\s*:|adresa\s*|praha\s*\d|praha\s*[0-9]|\d{5}\s*[a-z]|expedoval\s*|zdanitelné|číslo\s*dokladu|slo\s*dahov|prodej\s*dle\s*par|zaokrouhleni\s*|rekapitulace\s*DPH|celk\.cena\s*ve|děkujeme|nashledanou|účtenk|vratit\s*zboží)/i;
+    var productNameNoiseRe = /^(?:platba|hotovost|vraceno|prijata|celkem|dph|vat|doklad|auth|batch|terminál|merchant|invoice|karta|obchodni\s*\d+|expedoval|zdanit|zaokrouhleni|rekapitulace|děkujeme|nashledanou)\s*$/i;
     var docWidth = 1000;
     var linesAnalyzed = lines.length;
     var candidateItemLines = [];
@@ -9727,6 +9729,7 @@ function buildVideoAsArticleCard(it) {
       }
       if (headerNoiseRe.test(lineNorm)) { normalizationStats.linesRejectedNoise++; rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "headerNoise" }); continue; }
       if (vatSubtotalRe.test(lineNorm)) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "vatSubtotal" }); continue; }
+      if (nonItemBlockRe.test(lineNorm)) { normalizationStats.linesRejectedNoise++; rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "nonItemBlock" }); continue; }
       if (!pricesInLine || pricesInLine.length === 0) continue;
       normalizationStats.linesWithPriceLike++;
       var lastPriceStr = pricesInLine[pricesInLine.length - 1];
@@ -9736,6 +9739,7 @@ function buildVideoAsArticleCard(it) {
       if (!inBand) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "priceNotInBand" }); continue; }
       var lastIdx = lineNorm.lastIndexOf(lastPriceStr);
       var namePart = (lastIdx >= 0 ? lineNorm.substring(0, lastIdx) : lineNorm).trim().replace(/\s+/g, " ").replace(/\s*[xX]\s*$/i, "").trim();
+      if (productNameNoiseRe.test(namePart) || (namePart.length > 0 && namePart.length < 2)) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "productNameNoise" }); continue; }
       var qtyMatch = lineNorm.match(/(\d+)\s*[xX×]\s*([0-9]+(?:[.,][0-9]{1,2})?)/i) || lineNorm.match(/(\d+)\s*[xX×]/i);
       var qty = null;
       if (qtyMatch) { var q = parseInt(qtyMatch[1], 10); if (!isNaN(q)) qty = q; }
@@ -9774,6 +9778,7 @@ function buildVideoAsArticleCard(it) {
           continue;
         }
         if (headerNoiseRe.test(lineNorm) || vatSubtotalRe.test(lineNorm)) continue;
+        if (nonItemBlockRe.test(lineNorm)) continue;
         var prices = extractPriceTokens(lineNorm);
         if (prices && prices.length >= 1) {
           if (prices.length === 1) {
@@ -9782,6 +9787,7 @@ function buildVideoAsArticleCard(it) {
             if (!isNaN(priceNum) && priceNum >= 0) {
               var lastIdx = lineNorm.lastIndexOf(lastPriceStr);
               var namePart = (lastIdx >= 0 ? lineNorm.substring(0, lastIdx) : lineNorm).trim().replace(/\s+/g, " ").replace(/\s*[xX]\s*$/i, "").trim();
+              if (productNameNoiseRe.test(namePart) || namePart.length < 2) continue;
               var qtyMatch = lineNorm.match(/(\d+)\s*[xX×]\s*([0-9]+(?:[.,][0-9]{1,2})?)/i) || lineNorm.match(/(\d+)\s*[xX×]/i);
               var qty = null;
               if (qtyMatch) { var q = parseInt(qtyMatch[1], 10); if (!isNaN(q)) qty = q; }
@@ -9797,6 +9803,7 @@ function buildVideoAsArticleCard(it) {
               var idx = lineNorm.indexOf(pstr, prevEnd);
               if (idx < 0) break;
               var namePart = (idx > prevEnd ? lineNorm.substring(prevEnd, idx) : lineNorm.substring(0, idx)).trim().replace(/\s+/g, " ").replace(/\s*[xX]\s*$/i, "").trim();
+              if (productNameNoiseRe.test(namePart) || namePart.length < 2) continue;
               if (!namePart) namePart = "Položka";
               prevEnd = idx + pstr.length;
               textOnlyItems.push({ name: namePart, price: pnum, quantity: null, rawLine: rawLine, lineTotal: pnum });
@@ -9807,7 +9814,7 @@ function buildVideoAsArticleCard(it) {
           if (simpleMatch) {
             var nm = simpleMatch[1].trim();
             var pr = parsePriceNum(simpleMatch[2]);
-            if (nm.length > 0 && !isNaN(pr) && pr >= 0) textOnlyItems.push({ name: nm, price: pr, quantity: null, rawLine: rawLine, lineTotal: pr });
+            if (nm.length > 0 && !isNaN(pr) && pr >= 0 && !productNameNoiseRe.test(nm)) textOnlyItems.push({ name: nm, price: pr, quantity: null, rawLine: rawLine, lineTotal: pr });
           }
         }
       }
@@ -9827,6 +9834,8 @@ function buildVideoAsArticleCard(it) {
     var difference = totalValue != null ? Math.abs(itemsSum - totalValue) : null;
     var differencePercent = (totalValue != null && totalValue > 0 && difference != null) ? (difference / totalValue) * 100 : null;
     var consistencyOk = differencePercent != null && differencePercent < 5;
+    var sumSanityFail = totalValue != null && totalValue > 0 && (differencePercent >= 25 || itemsSum > totalValue * 2);
+    var itemExtractionTrusted = !sumSanityFail && consistencyOk;
     var acceptedItemSegments = items.map(function(it) { return { name: it.name, price: it.price, rawLine: it.rawLine }; });
     return {
       items: items,
@@ -9847,6 +9856,7 @@ function buildVideoAsArticleCard(it) {
       phase73ItemsDetected: items.length,
       phase73TotalDetected: totalLineDetected,
       phase73ConsistencyOk: consistencyOk,
+      itemExtractionTrusted: itemExtractionTrusted,
       itemLinesDetected: items.length,
       itemsWithPrice: items.filter(function(it) { return it.price != null && !isNaN(it.price); }).length,
       itemsWithoutPrice: items.length - items.filter(function(it) { return it.price != null && !isNaN(it.price); }).length
@@ -12265,6 +12275,7 @@ function buildVideoAsArticleCard(it) {
                     result.validationSummary.totalNum = phase73.totalValue;
                     result.validationSummary.itemsSum = phase73.itemsSum;
                     result.validationSummary.sumMismatch = !phase73.consistencyOk;
+                    if (typeof phase73.itemExtractionTrusted !== "undefined") result.validationSummary.itemExtractionTrusted = phase73.itemExtractionTrusted;
                   }
                   result.phase73ItemsDetected = (phase73.items && phase73.items.length) || 0;
                   result.phase73TotalDetected = phase73.totalLineDetected;
@@ -12359,7 +12370,7 @@ function buildVideoAsArticleCard(it) {
                 }
                 if (phase73Catch.totalLineDetected && phase73Catch.totalValue != null) {
                   result.correctedFields = result.correctedFields || {}; result.correctedFields.total = phase73Catch.totalValue + " Kč"; result.totalNum = phase73Catch.totalValue;
-                  result.validationSummary = result.validationSummary || {}; result.validationSummary.totalNum = phase73Catch.totalValue; result.validationSummary.itemsSum = phase73Catch.itemsSum; result.validationSummary.sumMismatch = !phase73Catch.consistencyOk;
+                  result.validationSummary = result.validationSummary || {}; result.validationSummary.totalNum = phase73Catch.totalValue; result.validationSummary.itemsSum = phase73Catch.itemsSum; result.validationSummary.sumMismatch = !phase73Catch.consistencyOk; if (typeof phase73Catch.itemExtractionTrusted !== "undefined") result.validationSummary.itemExtractionTrusted = phase73Catch.itemExtractionTrusted;
                 }
                 if (documentZones && geometry && geometry.lines && result.correctedFields) {
                   var linesCatch = geometry.lines;
