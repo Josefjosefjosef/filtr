@@ -11124,10 +11124,10 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 }
 #iuNakupModal .iuModalBody{
   overflow-x: hidden;
-  overflow-y: auto;
-  min-height: 72vh;
+  overflow-y: visible;
+  min-height: 0;
   flex: 0 1 auto;
-  contain: layout;
+  contain: none;
 }
 @media (max-width: 900px){
   #iuNakupModal .iuModalCard{
@@ -11317,19 +11317,19 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   margin: 4px 0 0 0;
 }
 
-/* Evidence nákupů — OCR extraction panel (CLS: fixed height so reveal and content fill do not shift layout) */
+/* Evidence nákupů — OCR extraction panel. P0: no inner scroll; content grows naturally, page scrolls. */
 .iu-evidence-extraction-panel{
   margin-top: 14px;
   padding: 12px 14px;
   background: #fff;
   border: 1px solid rgba(11,27,43,.12);
   border-radius: 8px;
-  height: 55vh;
-  min-height: 320px;
-  max-height: 55vh;
-  overflow-y: scroll;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow-y: visible;
   overflow-x: hidden;
-  contain: layout;
+  contain: none;
 }
 [data-iu="ocr-extraction-result"][hidden]{
   display: block !important;
