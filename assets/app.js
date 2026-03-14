@@ -9091,6 +9091,42 @@ function buildVideoAsArticleCard(it) {
     return out;
   }
 
+  /** Extract normalized date YYYY-MM-DD from a single line (Czech/retail separators . - /). For zone-aware date fallback. */
+  function iuEvidenceExtractDateFromLine(lineText) {
+    if (!lineText || typeof lineText !== "string") return null;
+    var s = String(lineText).trim().replace(/\s/g, " ").replace(/[\/,]/g, ".").replace(/~/g, "-");
+    var m = s.match(/(\d{4})-(\d{2})-(\d{2})/) || s.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/) || s.match(/(\d{1,2})-(\d{1,2})-(\d{4})/) || s.match(/(\d{4})\.(\d{1,2})\.(\d{1,2})/);
+    if (!m) return null;
+    var y, mo, d;
+    if (m[1].length === 4) { y = m[1]; mo = m[2].padStart(2, "0"); d = m[3].padStart(2, "0"); }
+    else if (m[3].length === 4) { y = m[3]; mo = m[2].padStart(2, "0"); d = m[1].padStart(2, "0"); }
+    else return null;
+    var year = parseInt(y, 10);
+    if (year < 2000 || year > 2030) return null;
+    var month = parseInt(mo, 10);
+    if (month < 1 || month > 12) return null;
+    var day = parseInt(d, 10);
+    if (day < 1 || day > 31) return null;
+    return y + "-" + mo + "-" + d;
+  }
+
+  /** Extract normalized time HH:MM or HH:MM:SS from a single line. For zone-aware time fallback. */
+  function iuEvidenceExtractTimeFromLine(lineText) {
+    if (!lineText || typeof lineText !== "string") return null;
+    var m = String(lineText).trim().match(/\b(\d{1,2}):(\d{2})(?::(\d{2}))?\b/);
+    if (!m) return null;
+    var h = parseInt(m[1], 10);
+    if (h < 0 || h > 23) return null;
+    var min = parseInt(m[2], 10);
+    if (min < 0 || min > 59) return null;
+    if (m[3] != null) {
+      var sec = parseInt(m[3], 10);
+      if (sec < 0 || sec > 59) return null;
+      return m[1].padStart(2, "0") + ":" + m[2].padStart(2, "0") + ":" + m[3].padStart(2, "0");
+    }
+    return m[1].padStart(2, "0") + ":" + m[2].padStart(2, "0");
+  }
+
   /** Safe OCR character substitutions for display/correction (0/O, 1/l/I, 5/S, 8/B in word context). */
   var IU_EVIDENCE_OCR_STORE_CORRECTIONS = { "L1DL": "Lidl", "K0SIK": "Kaufland", "TESC0": "Tesco", "ALBERT": "Albert", "B1LLA": "Billa" };
   var IU_EVIDENCE_MERCHANT_CANONICAL = ["Lidl", "Kaufland", "Tesco", "Albert", "Billa", "Penny"];
@@ -9164,6 +9200,7 @@ function buildVideoAsArticleCard(it) {
     var symbolHeavy = function(l) { var a = l.replace(/\s/g, ""); if (a.length < 3) return true; var nonLetter = (a.match(/[^A-Za-zÁ-ž0-9]/g) || []).length; return nonLetter > a.length * 0.45; };
     var addressOrNoise = /gestice|^\s*em\s|\d{4,}\s|Obchodni\s*Fi[,]|provozovna|pokladna/i;
     var merchantLike = /s\.r\.o\.|a\.s\.|retail|market|shop|store|prodejna/i;
+    var promoPaymentNoise = /platba|karta|hotovost|card\b|payment|terminal|survey|promo|sleva\b|akce\b|d[eě]kujeme|d[ií]ky\s*za|vra[cč]eno|zm[eě]na\s*[0-9]/i;
     var best = null;
     var bestScore = -1;
     for (var idx = 0; idx < lines.length; idx++) {
@@ -9172,6 +9209,7 @@ function buildVideoAsArticleCard(it) {
       if (t.length < minLen) continue;
       if (iuEvidenceIsHeaderNoiseLine(t)) continue;
       if (addressOrNoise.test(t)) continue;
+      if (promoPaymentNoise.test(t)) continue;
       if (symbolHeavy(t)) continue;
       if (/\d{1,2}:\d{2}(:\d{2})?/.test(t) && t.length < 15) continue;
       if (/\d{4,}/.test(t)) continue;
@@ -9181,7 +9219,7 @@ function buildVideoAsArticleCard(it) {
       if (/^[A-Za-zÁ-ž\s\-\.]+$/.test(t) && !/\d{4}/.test(t)) score += 1;
       if (score > bestScore) { bestScore = score; best = t; }
     }
-    return best || ((lines[0] && lines[0].trim().length >= minLen && !iuEvidenceIsHeaderNoiseLine(lines[0]) && !addressOrNoise.test(lines[0].trim())) ? lines[0].trim() : "unknown");
+    return best || ((lines[0] && lines[0].trim().length >= minLen && !iuEvidenceIsHeaderNoiseLine(lines[0]) && !addressOrNoise.test(lines[0].trim()) && !promoPaymentNoise.test(lines[0].trim())) ? lines[0].trim() : "unknown");
   }
 
   /** Heuristic parse normalized text to fields + items. */
@@ -12232,6 +12270,33 @@ function buildVideoAsArticleCard(it) {
                   result.phase73TotalDetected = phase73.totalLineDetected;
                   result.phase73ConsistencyOk = phase73.consistencyOk;
                 } catch (_) {}
+                if (documentZones && geometry && geometry.lines && result.correctedFields) {
+                  var lines = geometry.lines;
+                  var cf = result.correctedFields;
+                  if (cf.store === "unknown" && documentZones.merchantZone && documentZones.merchantZone.length > 0) {
+                    var merchantLineTexts = documentZones.merchantZone.map(function(i) { return (lines[i] && lines[i].text) ? String(lines[i].text).trim() : ""; }).filter(function(t) { return t.length > 0; });
+                    if (merchantLineTexts.length > 0) {
+                      var zoneStore = iuEvidencePickMerchantFromLines(merchantLineTexts);
+                      if (zoneStore && zoneStore !== "unknown") cf.store = zoneStore;
+                    }
+                  }
+                  if (cf.date === "unknown" && documentZones.metaZone && documentZones.metaZone.length > 0) {
+                    for (var mi = 0; mi < documentZones.metaZone.length; mi++) {
+                      var lineIdx = documentZones.metaZone[mi];
+                      var lineText = (lines[lineIdx] && lines[lineIdx].text) ? String(lines[lineIdx].text).trim() : "";
+                      var dateVal = iuEvidenceExtractDateFromLine(lineText);
+                      if (dateVal) { cf.date = dateVal; break; }
+                    }
+                  }
+                  if (cf.time === "unknown" && documentZones.metaZone && documentZones.metaZone.length > 0) {
+                    for (var ti = 0; ti < documentZones.metaZone.length; ti++) {
+                      var lineIdx2 = documentZones.metaZone[ti];
+                      var lineText2 = (lines[lineIdx2] && lines[lineIdx2].text) ? String(lines[lineIdx2].text).trim() : "";
+                      var timeVal = iuEvidenceExtractTimeFromLine(lineText2);
+                      if (timeVal) { cf.time = timeVal; break; }
+                    }
+                  }
+                }
                 try { window.__iuEvidenceLastResult = result; } catch (_) {}
                 result.fieldSourceZone = result.fieldSourceZone || iuEvidenceAssignFieldSourceZones(result, documentZones, geometry.lines.map(function(ln) { return ln.text || ""; }));
                 result.usedInjectPath = false;
@@ -12295,6 +12360,33 @@ function buildVideoAsArticleCard(it) {
                 if (phase73Catch.totalLineDetected && phase73Catch.totalValue != null) {
                   result.correctedFields = result.correctedFields || {}; result.correctedFields.total = phase73Catch.totalValue + " Kč"; result.totalNum = phase73Catch.totalValue;
                   result.validationSummary = result.validationSummary || {}; result.validationSummary.totalNum = phase73Catch.totalValue; result.validationSummary.itemsSum = phase73Catch.itemsSum; result.validationSummary.sumMismatch = !phase73Catch.consistencyOk;
+                }
+                if (documentZones && geometry && geometry.lines && result.correctedFields) {
+                  var linesCatch = geometry.lines;
+                  var cfCatch = result.correctedFields;
+                  if (cfCatch.store === "unknown" && documentZones.merchantZone && documentZones.merchantZone.length > 0) {
+                    var merchantLineTextsCatch = documentZones.merchantZone.map(function(i) { return (linesCatch[i] && linesCatch[i].text) ? String(linesCatch[i].text).trim() : ""; }).filter(function(t) { return t.length > 0; });
+                    if (merchantLineTextsCatch.length > 0) {
+                      var zoneStoreCatch = iuEvidencePickMerchantFromLines(merchantLineTextsCatch);
+                      if (zoneStoreCatch && zoneStoreCatch !== "unknown") cfCatch.store = zoneStoreCatch;
+                    }
+                  }
+                  if (cfCatch.date === "unknown" && documentZones.metaZone && documentZones.metaZone.length > 0) {
+                    for (var miC = 0; miC < documentZones.metaZone.length; miC++) {
+                      var lineIdxC = documentZones.metaZone[miC];
+                      var lineTextC = (linesCatch[lineIdxC] && linesCatch[lineIdxC].text) ? String(linesCatch[lineIdxC].text).trim() : "";
+                      var dateValC = iuEvidenceExtractDateFromLine(lineTextC);
+                      if (dateValC) { cfCatch.date = dateValC; break; }
+                    }
+                  }
+                  if (cfCatch.time === "unknown" && documentZones.metaZone && documentZones.metaZone.length > 0) {
+                    for (var tiC = 0; tiC < documentZones.metaZone.length; tiC++) {
+                      var lineIdx2C = documentZones.metaZone[tiC];
+                      var lineText2C = (linesCatch[lineIdx2C] && linesCatch[lineIdx2C].text) ? String(linesCatch[lineIdx2C].text).trim() : "";
+                      var timeValC = iuEvidenceExtractTimeFromLine(lineText2C);
+                      if (timeValC) { cfCatch.time = timeValC; break; }
+                    }
+                  }
                 }
                 result.phase73ItemsDetected = (phase73Catch.items && phase73Catch.items.length) || 0; result.phase73TotalDetected = phase73Catch.totalLineDetected; result.phase73ConsistencyOk = phase73Catch.consistencyOk;
                 result.fieldSourceZone = result.fieldSourceZone || { store: "merchantZone", total: "totalsZone", vatBase: "vatZone", vatAmount: "vatZone", docNumber: "idsZone", items: [] };
