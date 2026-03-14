@@ -12920,6 +12920,7 @@ function buildVideoAsArticleCard(it) {
         try { window.__iuEvidenceLastResult = errRes; } catch (_) {}
         return errRes;
       }).then(function(finalResult) {
+        var savedGood = (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object") ? window.__iuEvidenceLastResult : null;
         if (finalResult == null || typeof finalResult !== "object") finalResult = {};
         var obj = (finalResult != null && typeof finalResult === "object") ? finalResult : (typeof window !== "undefined" && window.__iuEvidenceLastResult && typeof window.__iuEvidenceLastResult === "object" ? window.__iuEvidenceLastResult : null);
         if (obj && realImageOrPdfInputUsed && (obj.rawOcrText != null && String(obj.rawOcrText).trim().length > 0 || obj.ocrGeometry)) {
@@ -12998,6 +12999,10 @@ function buildVideoAsArticleCard(it) {
           safeRes.supportedIntentsPresent = false;
           safeRes.intentRouterPresent = false;
           safeRes.canonicalAnswerBundlePresent = false;
+          if (realImageOrPdfInputUsed && savedGood && savedGood.correctedFields && (savedGood.correctedFields.total !== "unknown" || (savedGood.correctedFields.store && savedGood.correctedFields.store !== "unknown"))) {
+            try { window.__iuEvidenceLastResult = savedGood; } catch (_) {}
+            return savedGood;
+          }
           return safeRes;
         }
         return finalResult;
@@ -13472,7 +13477,8 @@ function buildVideoAsArticleCard(it) {
         var d = window.__iuEvidenceDebug;
         var committed = window.__iuEvidenceLastResult;
         var committedSuccess = committed && committed.ocrPass1Executed === true && d && d.ocrFinalCommitted === true;
-        if (committedSuccess && result && result.ocrPass1Executed !== true) { result = committed; }
+        var resultHasRealData = result && result.correctedFields && (result.correctedFields.total !== "unknown" || result.correctedFields.time !== "unknown" || (result.correctedFields.store && result.correctedFields.store !== "unknown"));
+        if (committedSuccess && result && result.ocrPass1Executed !== true && !resultHasRealData) { result = committed; }
         if (d && result && result._failureReason) { d.failureReason = "workerOrRecognizeFail:" + result._failureReason; d.rootRuntimeFailurePoint = "workerOrRecognizeFail"; d.rootCauseRemainingStopShip = "workerOrRecognizeFail:" + result._failureReason; }
         if (d) { d.resultPropagatedToUi = true; d.lastResultSet = true; if (result && result.ocrPass1Executed === true) { d.failureReason = null; d.rootRuntimeFailurePoint = null; d.rootCauseRemainingStopShip = null; d.ocrRunCompleted = true; d.ocrFinalState = "success"; d.ocrResultSource = "real_ocr"; d.ocrFinalCommitted = true; } }
       } catch (_) {}
@@ -13492,11 +13498,35 @@ function buildVideoAsArticleCard(it) {
       var fc = result.fieldConfidence || {};
       var fnr = result.fieldNeedsReview || {};
       var cand = result.fieldCandidates || {};
-      setReviewField(reviewStoreValue, reviewStoreConfidence, reviewStoreNeeds, reviewStoreCandidates, cf.store, fc.store, fnr.store, cand.store);
-      setReviewField(reviewDateValue, reviewDateConfidence, reviewDateNeeds, null, cf.date, fc.date, fnr.date, null);
-      setReviewField(reviewTimeValue, reviewTimeConfidence, reviewTimeNeeds, null, cf.time, fc.time, fnr.time, null);
-      setReviewField(reviewTotalValue, reviewTotalConfidence, reviewTotalNeeds, null, cf.total, fc.total, fnr.total, null);
-      setReviewField(reviewDoctypeValue, reviewDoctypeConfidence, reviewDoctypeNeeds, null, cf.docType, fc.docType, fnr.docType, null);
+      var storeVal = cf.store != null && cf.store !== "unknown" ? String(cf.store).split("\n")[0].trim() : (result.store != null && result.store !== "unknown" ? String(result.store).split("\n")[0].trim() : cf.store);
+      var dateVal = cf.date != null && cf.date !== "unknown" ? cf.date : (result.date != null && result.date !== "unknown" ? result.date : cf.date);
+      var timeVal = cf.time != null && cf.time !== "unknown" ? cf.time : (result.time != null && result.time !== "unknown" ? result.time : cf.time);
+      var totalVal = cf.total != null && cf.total !== "unknown" ? cf.total : (result.total != null && result.total !== "unknown" ? result.total : cf.total);
+      var panel = extractionPanel || topBlock;
+      var rStore = panel.querySelector("[data-iu=\"review-store-value\"]");
+      var rDate = panel.querySelector("[data-iu=\"review-date-value\"]");
+      var rTime = panel.querySelector("[data-iu=\"review-time-value\"]");
+      var rTotal = panel.querySelector("[data-iu=\"review-total-value\"]");
+      var rDoctype = panel.querySelector("[data-iu=\"review-doctype-value\"]");
+      setReviewField(rStore || reviewStoreValue, reviewStoreConfidence, reviewStoreNeeds, reviewStoreCandidates, storeVal, fc.store, fnr.store, cand.store);
+      setReviewField(rDate || reviewDateValue, reviewDateConfidence, reviewDateNeeds, null, dateVal, fc.date, fnr.date, null);
+      setReviewField(rTime || reviewTimeValue, reviewTimeConfidence, reviewTimeNeeds, null, timeVal, fc.time, fnr.time, null);
+      setReviewField(rTotal || reviewTotalValue, reviewTotalConfidence, reviewTotalNeeds, null, totalVal, fc.total, fnr.total, null);
+      setReviewField(rDoctype || reviewDoctypeValue, reviewDoctypeConfidence, reviewDoctypeNeeds, null, cf.docType, fc.docType, fnr.docType, null);
+      var applied = { store: storeVal, date: dateVal, time: timeVal, total: totalVal };
+      (function(renderedResult, appliedSnapshot) {
+        setTimeout(function() {
+          var c = (renderedResult && renderedResult.correctedFields) || {};
+          var s = (c.store != null && c.store !== "unknown" ? String(c.store).split("\n")[0].trim() : null) || appliedSnapshot.store;
+          var d = (c.date != null && c.date !== "unknown" ? c.date : null) || appliedSnapshot.date;
+          var t = (c.time != null && c.time !== "unknown" ? c.time : null) || appliedSnapshot.time;
+          var tot = (c.total != null && c.total !== "unknown" ? c.total : null) || appliedSnapshot.total;
+          var rs = document.querySelector("[data-iu=\"review-store-value\"]"); if (rs) rs.textContent = (s == null || s === "unknown" || String(s).trim() === "") ? "unknown" : String(s);
+          var rd = document.querySelector("[data-iu=\"review-date-value\"]"); if (rd) rd.textContent = (d == null || d === "unknown" || String(d).trim() === "") ? "unknown" : String(d);
+          var rt = document.querySelector("[data-iu=\"review-time-value\"]"); if (rt) rt.textContent = (t == null || t === "unknown" || String(t).trim() === "") ? "unknown" : String(t);
+          var rtot = document.querySelector("[data-iu=\"review-total-value\"]"); if (rtot) rtot.textContent = (tot == null || tot === "unknown" || String(tot).trim() === "") ? "unknown" : String(tot);
+        }, 0);
+      })(result, applied);
       if (reviewSummaryEl) {
         var rs = result.reviewSummary || {};
         reviewSummaryEl.textContent = "Kontrola: " + (rs.docNeedsReview ? "doklad vyžaduje kontrolu" : "OK");
@@ -13550,8 +13580,37 @@ function buildVideoAsArticleCard(it) {
             result._failureReason = "hookResolvedUndefined";
           }
         }
-        showReviewPanel(result);
-        setState("idle");
+        var last = window.__iuEvidenceLastResult;
+        if (last && last.correctedFields) {
+          var cf = last.correctedFields;
+          var hasReal = (cf.store && cf.store !== "unknown") || (cf.total && cf.total !== "unknown") || (cf.time && cf.time !== "unknown");
+          if (hasReal && (!result || !result.correctedFields || (result.correctedFields.total === "unknown" && (!result.correctedFields.time || result.correctedFields.time === "unknown")))) { result = last; }
+        }
+        var resultIsBad = !result || !result.correctedFields || (result.correctedFields.total === "unknown" && (result.correctedFields.time === "unknown" || !result.correctedFields.time));
+        if (resultIsBad) {
+          var pollStart = Date.now();
+          var pollMax = 28000;
+          function pollThenShow() {
+            var latest = window.__iuEvidenceLastResult;
+            if (latest && latest.correctedFields) {
+              var c = latest.correctedFields;
+              if ((c.total && c.total !== "unknown") || (c.time && c.time !== "unknown") || (c.store && c.store !== "unknown")) {
+                showReviewPanel(latest);
+                setState("idle");
+                return;
+              }
+            }
+            if (Date.now() - pollStart < pollMax) setTimeout(pollThenShow, 200);
+            else {
+              showReviewPanel(result);
+              setState("idle");
+            }
+          }
+          pollThenShow();
+        } else {
+          showReviewPanel(result);
+          setState("idle");
+        }
       });
     }
 
