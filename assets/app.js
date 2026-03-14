@@ -9135,9 +9135,7 @@ function buildVideoAsArticleCard(it) {
     var corrected = IU_EVIDENCE_OCR_STORE_CORRECTIONS[u] || null;
     var candidates = [];
     if (corrected && corrected !== r) candidates.push(corrected);
-    Object.keys(IU_EVIDENCE_OCR_STORE_CORRECTIONS).forEach(function(k) {
-      if (k !== u && candidates.indexOf(IU_EVIDENCE_OCR_STORE_CORRECTIONS[k]) === -1) candidates.push(IU_EVIDENCE_OCR_STORE_CORRECTIONS[k]);
-    });
+    if ((!r || r === "unknown") && candidates.length === 0) return { value: "unknown", candidates: [], corrected: false, merchantNormalized: false };
     return { value: corrected || r, candidates: candidates.slice(0, 3), corrected: !!corrected, merchantNormalized: !!corrected };
   }
 
