@@ -97,6 +97,18 @@ style-src 'self' 'unsafe-inline' https:;
                     </div>
                   </header>
                 </div>
+                <!-- P0 Mobile/tablet: topbar → Silver → 2-tab gate (Navigace | MindMenu); only one section open at a time -->
+                <div id="iuMobileGateWrap" class="iu-mobileGateWrap" aria-hidden="true" data-iu-mobile-gate="">
+                  <div id="iuMobileSilverSlot" class="iu-mobileSilverSlot" aria-label="Silver"></div>
+                  <div id="iuMobileGateTabs" class="iu-mobileGateTabs" role="tablist" aria-label="Sekce mobilního rozcestníku">
+                    <button type="button" id="iuMobileGateTabNav" class="iu-mobileGateTab" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelNav" data-iu-gate-tab="nav">Navigace po webu</button>
+                    <button type="button" id="iuMobileGateTabTools" class="iu-mobileGateTab" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelTools" data-iu-gate-tab="tools">MindMenu a nástroje</button>
+                  </div>
+                  <div id="iuMobileGateContent" class="iu-mobileGateContent" aria-hidden="true">
+                    <div id="iuMobileGatePanelNav" class="iu-mobileGatePanel" role="tabpanel" aria-labelledby="iuMobileGateTabNav" hidden></div>
+                    <div id="iuMobileGatePanelTools" class="iu-mobileGatePanel" role="tabpanel" aria-labelledby="iuMobileGateTabTools" hidden></div>
+                  </div>
+                </div>
                 <div id="iuMobileFocus" class="iuMobileFocus" aria-label="Sekce (mobil)">
                   <div class="iuMobileFocusActive"></div>
                   <div class="iuMobileFocusTiles"></div>
