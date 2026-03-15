@@ -9304,7 +9304,11 @@ function buildVideoAsArticleCard(it) {
     var supplierFromBlock = iuEvidenceSupplierFromLegalFormBlock(normalizedText);
     var store = iuEvidencePickMerchantFromLines(lines);
     if (supplierFromBlock && supplierFromBlock.length >= 6 && !/^[\d\s\.\-]+$/.test(supplierFromBlock.replace(/\s/g, ""))) store = supplierFromBlock;
-    else if (store === "unknown" && lines[0]) store = lines[0].trim();
+    else if (store === "unknown" && lines[0]) {
+      var first = lines[0].trim();
+      var addressOnly = /^\s*[A-Za-zÁ-ž\-]+\s+\d{1,5}\s*$/.test(first);
+      if (!addressOnly && !iuEvidenceIsHeaderNoiseLine(first)) store = first;
+    }
     var date = "unknown", time = "unknown", total = "unknown", totalNum = null;
     var priceVatIncluded = "unknown", priceVatExcluded = "unknown", priceVatExcludedState = "unknown";
     var docType = "receipt";
@@ -11746,7 +11750,7 @@ function buildVideoAsArticleCard(it) {
         });
       }
       if (phase73FromText.totalLineDetected && phase73FromText.totalValue != null) {
-        finalTotal = phase73FromText.totalValue + " Kč";
+        finalTotal = typeof iuEvidenceFormatTotalTwoDecimals === "function" ? iuEvidenceFormatTotalTwoDecimals(phase73FromText.totalValue) : (phase73FromText.totalValue + " Kč");
         finalTotalNum = phase73FromText.totalValue;
         finalValidationSummary = { valid: phase73FromText.consistencyOk, sumMismatch: !phase73FromText.consistencyOk, itemsSum: phase73FromText.itemsSum, totalNum: phase73FromText.totalValue, vatConsistency: validationSummary.vatConsistency, errors: validationSummary.errors };
       }
@@ -12569,7 +12573,7 @@ function buildVideoAsArticleCard(it) {
                   if (phase73.rejectedAsFooterCount != null) result.rejectedAsFooterCount = phase73.rejectedAsFooterCount;
                   if (phase73.totalLineDetected && phase73.totalValue != null) {
                     result.correctedFields = result.correctedFields || {};
-                    result.correctedFields.total = phase73.totalValue + " Kč";
+                    result.correctedFields.total = typeof iuEvidenceFormatTotalTwoDecimals === "function" ? iuEvidenceFormatTotalTwoDecimals(phase73.totalValue) : (phase73.totalValue + " Kč");
                     result.totalNum = phase73.totalValue;
                     if (!result.validationSummary) result.validationSummary = {};
                     result.validationSummary.totalNum = phase73.totalValue;
@@ -12683,7 +12687,7 @@ function buildVideoAsArticleCard(it) {
                 if (phase73Catch.rejectedAsQrSurveyCount != null) result.rejectedAsQrSurveyCount = phase73Catch.rejectedAsQrSurveyCount;
                 if (phase73Catch.rejectedAsFooterCount != null) result.rejectedAsFooterCount = phase73Catch.rejectedAsFooterCount;
                 if (phase73Catch.totalLineDetected && phase73Catch.totalValue != null) {
-                  result.correctedFields = result.correctedFields || {}; result.correctedFields.total = phase73Catch.totalValue + " Kč"; result.totalNum = phase73Catch.totalValue;
+                  result.correctedFields = result.correctedFields || {}; result.correctedFields.total = typeof iuEvidenceFormatTotalTwoDecimals === "function" ? iuEvidenceFormatTotalTwoDecimals(phase73Catch.totalValue) : (phase73Catch.totalValue + " Kč"); result.totalNum = phase73Catch.totalValue;
                   result.validationSummary = result.validationSummary || {}; result.validationSummary.totalNum = phase73Catch.totalValue; result.validationSummary.itemsSum = phase73Catch.itemsSum; result.validationSummary.sumMismatch = !phase73Catch.consistencyOk; if (typeof phase73Catch.itemExtractionTrusted !== "undefined") result.validationSummary.itemExtractionTrusted = phase73Catch.itemExtractionTrusted;
                 }
                 if (documentZones && geometry && geometry.lines && result.correctedFields) {
@@ -12793,7 +12797,7 @@ function buildVideoAsArticleCard(it) {
                     out.phase73TotalDetected = p73Retry.totalLineDetected;
                     out.phase73ConsistencyOk = p73Retry.consistencyOk;
                     out.totalNum = p73Retry.totalValue;
-                    if (p73Retry.totalLineDetected && p73Retry.totalValue != null) { out.correctedFields = out.correctedFields || {}; out.correctedFields.total = p73Retry.totalValue + " Kč"; out.validationSummary = out.validationSummary || {}; out.validationSummary.totalNum = p73Retry.totalValue; out.validationSummary.itemsSum = p73Retry.itemsSum; out.validationSummary.sumMismatch = !p73Retry.consistencyOk; }
+                    if (p73Retry.totalLineDetected && p73Retry.totalValue != null) { out.correctedFields = out.correctedFields || {}; out.correctedFields.total = typeof iuEvidenceFormatTotalTwoDecimals === "function" ? iuEvidenceFormatTotalTwoDecimals(p73Retry.totalValue) : (p73Retry.totalValue + " Kč"); out.validationSummary = out.validationSummary || {}; out.validationSummary.totalNum = p73Retry.totalValue; out.validationSummary.itemsSum = p73Retry.itemsSum; out.validationSummary.sumMismatch = !p73Retry.consistencyOk; }
                   }
                 }
                 finalOut.realImageOcrAttempted = !!realImageOrPdfInputUsed;
@@ -13844,22 +13848,45 @@ function buildVideoAsArticleCard(it) {
         if (totalOk) addOk(); else flunk("action_total");
         var noSroSpace = actionResult.correctedFields && actionResult.correctedFields.store && actionResult.correctedFields.store.indexOf("s.r o") < 0;
         if (noSroSpace) addOk(); else flunk("action_noSroSpace");
+        if (typeof iuEvidenceFormatDateDDMMYYYY === "function") {
+          var dateUi = iuEvidenceFormatDateDDMMYYYY(actionResult.correctedFields && actionResult.correctedFields.date);
+          if (dateUi === "04.04.2024") addOk(); else flunk("action_date_ui");
+        }
+        var timeStr = actionResult.correctedFields && String(actionResult.correctedFields.time || "").trim();
+        if (/^12:47/.test(timeStr)) addOk(); else flunk("action_time_ui");
+        var totalStr = actionResult.correctedFields ? String(actionResult.correctedFields.total || "").trim() : "";
+        if (/195[,.]30\s*K[cč]/i.test(totalStr)) addOk(); else flunk("action_total_ui");
+        if (typeof iuEvidencePaymentToDisplayLabel === "function") {
+          var payUi = iuEvidencePaymentToDisplayLabel(actionResult.paymentMethodValue);
+          if (payUi === "Hotovost") addOk(); else flunk("action_payment_ui");
+        }
       }
       if (typeof iuEvidencePaymentToDisplayLabel === "function" && iuEvidencePaymentToDisplayLabel("unknown") === "Neurčeno") addOk(); else flunk("label_neurceno");
       if (typeof iuEvidenceParseNormalizedToFields === "function") {
         var addrOnly = iuEvidenceParseNormalizedToFields("Ulice 123\nPraha 1");
-        if (!addrOnly.store || addrOnly.store === "unknown" || (addrOnly.store.indexOf("Ulice 123") < 0 && addrOnly.store.indexOf("Praha 1") < 0)) addOk(); else flunk("addr_only");
+        if (addrOnly.store === "unknown") addOk(); else flunk("addr_only");
         var icoOnly = iuEvidenceParseNormalizedToFields("IČ: 12345678\nDIČ: CZ12345678");
-        if (!icoOnly.store || icoOnly.store === "unknown" || (icoOnly.store.indexOf("IČ") < 0 && icoOnly.store.indexOf("DIČ") < 0)) addOk(); else flunk("ico_only");
+        if (icoOnly.store === "unknown") addOk(); else flunk("ico_only");
         var dekujeme = iuEvidenceParseNormalizedToFields("Děkujeme za nákup\nNashledanou");
         if (dekujeme.store !== "Děkujeme za nákup") addOk(); else flunk("dekujeme");
         var legalBeatsHeader = iuEvidenceParseNormalizedToFields("Obchodní řetězec\nFirma s.r.o.\nIČ 12345678");
         if (legalBeatsHeader.store && legalBeatsHeader.store.indexOf("Firma s.r.o.") >= 0) addOk(); else flunk("legal_beats_header");
       }
-      var pass = (fail === 0 && ok >= 14) || (ok >= 15 && fail <= 2);
+      var pass = fail === 0 && ok >= 22;
       var actionMerchant = actionResult && actionResult.correctedFields ? actionResult.correctedFields.store : null;
       var actionPayment = actionResult ? actionResult.paymentMethodValue : null;
       var merchantExactMatch = actionMerchant != null && String(actionMerchant).trim() === "Action Retail Czech s.r.o.";
+      var actionDateUiExact = null;
+      var actionTimeExact = null;
+      var actionTotalUiExact = null;
+      var actionPaymentUiExact = null;
+      if (actionResult && actionResult.correctedFields) {
+        if (typeof iuEvidenceFormatDateDDMMYYYY === "function") actionDateUiExact = iuEvidenceFormatDateDDMMYYYY(actionResult.correctedFields.date);
+        actionTimeExact = String(actionResult.correctedFields.time || "").trim();
+        actionTotalUiExact = String(actionResult.correctedFields.total || "").trim();
+        if (typeof iuEvidencePaymentToDisplayLabel === "function") actionPaymentUiExact = iuEvidencePaymentToDisplayLabel(actionResult.paymentMethodValue);
+      }
+      var merchantCandidateTestsPass = failures.indexOf("addr_only") < 0 && failures.indexOf("ico_only") < 0 && failures.indexOf("dekujeme") < 0 && failures.indexOf("legal_beats_header") < 0;
       var fieldSummary = null;
       if (actionResult) {
         var cf = actionResult.correctedFields || {};
@@ -13875,16 +13902,22 @@ function buildVideoAsArticleCard(it) {
         };
       }
       try {
-        window.__iuEvidenceSummaryExtractionTestsPass = (fail === 0 && ok >= 14);
+        window.__iuEvidenceSummaryExtractionTestsPass = (fail === 0 && ok >= 22);
+        window.__iuEvidenceSummaryStrictPass = (fail === 0 && ok >= 22);
         window.__iuEvidenceSummaryExtractionTestsOk = ok;
         window.__iuEvidenceSummaryExtractionTestsFail = fail;
         window.__iuEvidenceSummaryFailures = failures;
         window.__iuEvidenceActionMerchantExact = actionMerchant;
         window.__iuEvidenceActionPayment = actionPayment;
         window.__iuEvidenceMerchantExactMatch = merchantExactMatch;
+        window.__iuEvidenceActionDateUiExact = actionDateUiExact;
+        window.__iuEvidenceActionTimeExact = actionTimeExact;
+        window.__iuEvidenceActionTotalUiExact = actionTotalUiExact;
+        window.__iuEvidenceActionPaymentUiExact = actionPaymentUiExact;
+        window.__iuEvidenceMerchantCandidateTestsPass = merchantCandidateTestsPass;
         window.__iuEvidenceFieldSummary = fieldSummary;
       } catch (_) {}
-      return { pass: pass, ok: ok, fail: fail, failures: failures, merchantExactMatch: merchantExactMatch, actionMerchant: actionMerchant, actionPayment: actionPayment, fieldSummary: fieldSummary };
+      return { pass: pass, ok: ok, fail: fail, failures: failures, merchantExactMatch: merchantExactMatch, merchantCandidateTestsPass: merchantCandidateTestsPass, actionMerchant: actionMerchant, actionPayment: actionPayment, actionDateUiExact: actionDateUiExact, actionTimeExact: actionTimeExact, actionTotalUiExact: actionTotalUiExact, actionPaymentUiExact: actionPaymentUiExact, fieldSummary: fieldSummary };
     };
     try { if (typeof window.dispatchEvent === "function") window.dispatchEvent(new CustomEvent("iuEvidenceReady")); } catch (_) {}
   } catch (_) {}
