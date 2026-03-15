@@ -9630,6 +9630,16 @@ function buildVideoAsArticleCard(it) {
   /** Phase 7.3: right-edge price column anchored decoder. Normalizes lines, finds dominant price column from bbox, parses items/total deterministically. */
   function iuEvidencePhase73ItemTotalsDecoder(geometry) {
     var lines = (geometry && geometry.lines) || [];
+    try {
+      var debugLines = (geometry && geometry.lines) || lines;
+      console.log("OCR_LINES_START");
+      for (var _ocrDi = 0; _ocrDi < debugLines.length; _ocrDi++) {
+        var _ocrL = debugLines[_ocrDi];
+        var _ocrT = (_ocrL != null && typeof _ocrL.text !== "undefined") ? String(_ocrL.text) : String(_ocrL);
+        console.log(_ocrDi + ": " + _ocrT);
+      }
+      console.log("OCR_LINES_END");
+    } catch (_ocrE) {}
     var words = (geometry && geometry.words) || [];
     var pricePattern = /(\d{1,5}(?:[.,]\d{1,2})?)/g;
     var totalKeywordRe = /(?:^|\s)(?:celkem|total|k\s*[uú]hrad[eě]|k\s*uhrade|suma|castka|\u010d\u00e1stka|k\s*platb[eě]|k\s*platbe|k\s*zaplacen[ií]|celk\.?\s*cena|zaplaceno)\s*[:\s]*(?:\s*kč)?/i;
