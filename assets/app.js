@@ -19904,9 +19904,8 @@ function buildVideoAsArticleCard(it) {
         return;
       }
       if (panel === "shopping") {
-        try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl(null, { replace: true }); } catch (_) {}
-        if (typeof window.iuNakupCloseQuickView === "function") { try { window.iuNakupCloseQuickView(); } catch (_) {} }
-        __iuCurrentPanel = null;
+        if (typeof window.iuShowQuickFeed === "function") { try { window.iuShowQuickFeed("nakup"); } catch (_) {} }
+        __iuCurrentPanel = "shopping";
         return;
       }
       if (panel !== null) safeOpenPanel(panel);
