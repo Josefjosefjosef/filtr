@@ -9324,31 +9324,42 @@ function buildVideoAsArticleCard(it) {
     }
     var timeMatch = normalizedText.match(/\b(\d{1,2}):(\d{2})\b/);
     if (timeMatch) time = timeMatch[1].padStart(2, "0") + ":" + timeMatch[2].padStart(2, "0");
-    var celkemLine = lines.filter(function(l) { return /celkem|total|celk/i.test(l); })[0];
-    if (celkemLine) {
-      var celkemMatch = celkemLine.match(/([\d\s,\.]+)\s*Kc?\s*$/i) || celkemLine.match(/celkem\s*[:\s]*([\d\s,\.]+)/i) || celkemLine.match(/([\d\s,\.]+)\s*(?:Kc|CZK|Kč)?\s*$/i);
-      if (celkemMatch && celkemMatch[1]) {
-        var numStr = String(celkemMatch[1]).trim().replace(/\s/g, "").replace(",", ".");
+    var totalMarkerRe = /(?:^|\s)(?:celkem|total|celk\s|k\s*[uú]hrad|k\s*uhrad|k\s*zaplaceni)/i;
+    var itemPriceNoiseRe = /^[A-Za-zÁ-ž\s\-]+\s+[\d\s,\.]+\s*(?:Kč|Kc|CZK)?\s*$/i;
+    var totalCandidates = [];
+    for (var ti = 0; ti < lines.length; ti++) {
+      var l = lines[ti];
+      var hasMarker = totalMarkerRe.test(l);
+      var amountOnLine = l.match(/([\d\s,\.]+)\s*(?:Kc|CZK|Kč)?\s*$/i) || l.match(/celkem\s*[:\s]*([\d\s,\.]+)/i);
+      if (hasMarker && amountOnLine && amountOnLine[1]) {
+        var numStr = String(amountOnLine[1]).trim().replace(/\s/g, "").replace(",", ".");
         var n = parseFloat(numStr);
-        if (!isNaN(n)) { totalNum = n; total = numStr + " Kč"; priceVatIncluded = total; }
+        if (!isNaN(n) && n > 0 && !(itemPriceNoiseRe.test(l.trim()) && !hasMarker)) totalCandidates.push({ idx: ti, num: n, numStr: numStr });
       }
-      if (total === "unknown") {
-        var celkemIdx = lines.indexOf(celkemLine);
-        if (celkemIdx >= 0 && celkemIdx + 1 < lines.length) {
-          var nextLine = lines[celkemIdx + 1];
-          var nextMatch = nextLine.match(/([\d\s,\.]+)\s*(?:Kc|CZK|Kč)?\s*$/i) || nextLine.match(/^([\d\s,\.]+)/);
-          if (nextMatch && nextMatch[1]) {
-            var numStr2 = String(nextMatch[1]).trim().replace(/\s/g, "").replace(",", ".");
-            var n2 = parseFloat(numStr2);
-            if (!isNaN(n2) && n2 > 0) { totalNum = n2; total = numStr2 + " Kč"; priceVatIncluded = total; }
-          }
+      if (hasMarker && ti + 1 < lines.length) {
+        var nextL = lines[ti + 1];
+        var nextAmt = nextL.match(/([\d\s,\.]+)\s*(?:Kc|CZK|Kč)?\s*$/i) || nextL.match(/^([\d\s,\.]+)/);
+        if (nextAmt && nextAmt[1]) {
+          var n2 = parseFloat(String(nextAmt[1]).trim().replace(/\s/g, "").replace(",", "."));
+          if (!isNaN(n2) && n2 > 0) totalCandidates.push({ idx: ti + 1, num: n2, numStr: String(nextAmt[1]).trim().replace(/\s/g, "").replace(",", ".") });
         }
       }
+    }
+    var celkemLine = null;
+    if (totalCandidates.length > 0) {
+      var best = totalCandidates[0];
+      for (var ci = 1; ci < totalCandidates.length; ci++) {
+        if (totalCandidates[ci].idx > best.idx) best = totalCandidates[ci];
+      }
+      totalNum = best.num;
+      total = (best.numStr.indexOf(",") >= 0 ? best.numStr : best.numStr.replace(".", ",")) + " Kč";
+      priceVatIncluded = total;
+      celkemLine = lines[best.idx];
     }
     if (total === "unknown" && lines.length > 0) {
       var lastLine = lines[lines.length - 1];
       var lastMatch = lastLine.match(/([\d\s,\.]+)\s*Kc?\s*$/i);
-      if (lastMatch) { var n2 = parseFloat(String(lastMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(n2)) { totalNum = n2; total = lastMatch[1].trim() + " Kč"; priceVatIncluded = total; } }
+      if (lastMatch && !itemPriceNoiseRe.test(lastLine.trim())) { var n2 = parseFloat(String(lastMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(n2)) { totalNum = n2; total = lastMatch[1].trim() + " Kč"; priceVatIncluded = total; } }
     }
     var totalAnchorIdx = lines.length;
     for (var ti = 0; ti < lines.length; ti++) {
@@ -9616,10 +9627,85 @@ function buildVideoAsArticleCard(it) {
       else if (/základ|DPH|vat\s/i.test(t)) zones.vatZone.push(i);
       else if (/IČO|DIČ|doklad\s*[:\s]|ičo|dič/i.test(t)) zones.idsZone.push(i);
       else if (/\d{1,2}[.:]\d{2}/.test(t) || /\d{4}-\d{2}-\d{2}/.test(t) || /datum|čas|date|time/i.test(t)) zones.metaZone.push(i);
-      else if (yNorm < 0.25 && !/celkem|total|základ|DPH|IČO|DIČ|doklad/i.test(t)) zones.merchantZone.push(i);
+      else if ((yNorm < 0.25 || (lines.length <= 6 && i < 3)) && !/celkem|total|základ|DPH|IČO|DIČ|doklad/i.test(t)) zones.merchantZone.push(i);
       else if (t.length > 0) zones.itemsZone.push(i);
     }
     return zones;
+  }
+
+  /** Phase 2: Safe structural line merge – vertical pair (total/payment) + optional merchant block in header. Evidence-based only. */
+  function iuEvidenceStructuralLineMerge(normalizedText) {
+    if (!normalizedText || typeof normalizedText !== "string") return "";
+    var lines = normalizedText.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+    if (lines.length === 0) return normalizedText;
+    var docHeight = Math.max(lines.length, 1);
+    var geometry = { lines: [] };
+    for (var gi = 0; gi < lines.length; gi++) geometry.lines.push({ text: lines[gi], bbox: { y0: gi } });
+    var zones = iuEvidenceClassifyDocumentZones(geometry, docHeight);
+    var merchantSet = {};
+    (zones.merchantZone || []).forEach(function(i) { merchantSet[i] = true; });
+    var totalMarkerOnly = function(t) {
+      var s = (t || "").trim();
+      return /^(CELKEM|TOTAL|K\s*[UÚ]HRAD[EĚ]?|K\s*UHRADE|KCELKEM|K\s*ZAPLACENI)\s*$/i.test(s) || (/^(CELKEM|TOTAL|K\s*[UÚ]HRAD|K\s*UHRAD|K\s*ZAPLACENI)$/i.test(s));
+    };
+    var amountOnly = function(t) {
+      var s = (t || "").trim();
+      return /^[\d\s,\.]+\s*(?:Kč|Kc|CZK)?\s*$/i.test(s) && /\d[.,]\d/.test(s);
+    };
+    var paymentMarkerOnly = function(t) {
+      var s = (t || "").trim();
+      return /^(PLATBA|ÚHRADA|UHRAZENO|ZPŮSOB\s*PLATBY|ZPUSOB\s*PLATBY)\s*$/i.test(s);
+    };
+    var paymentLabelLine = function(t) {
+      var s = (t || "").trim();
+      return /^(KARTA|KARTOU|HOTOVĚ|HOTOVOST|CARD|VISA|MASTERCARD|MAESTRO|PŘEVOD|PREVOD|STRAVENKY)\s*$/i.test(s);
+    };
+    var isMerchantLikeLine = function(t) {
+      var s = (t || "").trim();
+      if (s.length < 2 || s.length > 45) return false;
+      if (/celkem|total|platba|karta|hotovost|děkujeme|d[ií]ky\s*za|vr[aá]ceno|IČ|DIČ|datum|čas/i.test(s)) return false;
+      if (/^\d[\d\s,\.]*\s*(?:Kč|Kc)?\s*$/i.test(s)) return false;
+      if (/^[A-Za-zÁ-ž0-9\s\-\.]+[\d,\.]\s*(?:Kč|Kc)?\s*$/i.test(s) && /[\d,\.]\s*(?:Kč|Kc)?\s*$/i.test(s)) return false;
+      return true;
+    };
+    var out = [];
+    var used = {};
+    var i = 0;
+    while (i < lines.length) {
+      if (used[i]) { i++; continue; }
+      var t = lines[i];
+      var next = lines[i + 1];
+      if (next != null && totalMarkerOnly(t) && amountOnly(next)) {
+        out.push(t + " " + next);
+        used[i + 1] = true;
+        i += 2;
+        continue;
+      }
+      if (next != null && paymentMarkerOnly(t) && paymentLabelLine(next)) {
+        out.push(t + " " + next);
+        used[i + 1] = true;
+        i += 2;
+        continue;
+      }
+      var inHeader = merchantSet[i];
+      if (inHeader && isMerchantLikeLine(t)) {
+        var block = [t];
+        var j = i + 1;
+        while (j < lines.length && block.length < 4 && merchantSet[j] && isMerchantLikeLine(lines[j])) {
+          block.push(lines[j]);
+          used[j] = true;
+          j++;
+        }
+        if (block.length > 1) {
+          out.push(block.join(" "));
+          i = j;
+          continue;
+        }
+      }
+      out.push(t);
+      i++;
+    }
+    return out.join("\n");
   }
 
   /** Phase 7.2S: structural receipt decoder – POS-style section segmentation and line grammar. Deterministic, no AI. */
@@ -10274,9 +10360,39 @@ function buildVideoAsArticleCard(it) {
     return { conflictDetected: conflict, unknownInsteadOfLie: unknownInsteadOfLie, needsReview: needsReview };
   }
 
-  /** Phase 6.1: payment method resolver – evidence-only cash|card|transfer|voucher|other|unknown. Never lie: weak/conflict → unknown. */
+  /** Phase 6.1: payment method resolver – evidence-only cash|card|transfer|voucher|other|unknown. Footer-first: prefer last lines. Never lie: weak/conflict → unknown. */
   function iuEvidencePaymentMethodResolver(linesText, pipelineResult) {
     var raw = (pipelineResult && pipelineResult.rawOcrText) || "";
+    var lines = (linesText && linesText.length) ? linesText : (raw ? raw.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean) : []);
+    if (lines.length > 0) {
+      var typesSeen = {};
+      for (var si = 0; si < lines.length; si++) {
+        var s = (lines[si] && String(lines[si]).trim()).toLowerCase() || "";
+        if (/\b(hotov[ěe]|hotovost|cash|vr[aá]ceno\s*\(?hotov|typ\s*platby\s*hotov)\b/i.test(s)) typesSeen.cash = true;
+        if (/\b(kartou|platebn[ií]\s*kartou|karta\b|visa|mastercard|maestro)\b/i.test(s)) typesSeen.card = true;
+        if (/\b(převod|bank\s*transfer|úhradou)\b/i.test(s)) typesSeen.transfer = true;
+        if (/\b(stravenka|edenred|sodexo)\b/i.test(s)) typesSeen.voucher = true;
+      }
+      var typeCount = (typesSeen.cash ? 1 : 0) + (typesSeen.card ? 1 : 0) + (typesSeen.transfer ? 1 : 0) + (typesSeen.voucher ? 1 : 0);
+      if (typeCount <= 1) {
+        for (var idx = lines.length - 1; idx >= 0; idx--) {
+          var lineStr = (lines[idx] && String(lines[idx]).trim()) || "";
+          if (lineStr.length < 2) continue;
+          var lt = lineStr.toLowerCase();
+          var lCash = /\b(hotov[ěe]|hotovost|cash|v\s*hotovosti|platba\s*hotov[ěe]|vr[aá]ceno\s*\(?hotov[ěe]?\)?|typ\s*\(?y\)?\s*platby\s*hotov[ěe]|přijat[aá]\s*č[aá]stka)\b/i.test(lt) || (/\bvr[aá]ceno\b/i.test(lt) && /\bhotov/i.test(lt)) || (/hotov[eě]/i.test(lt) && !/kartou|karta\b|visa|mastercard|maestro/i.test(lt));
+          var lCard = /\b(kartou|platebn[ií]\s*kartou|karta\b|visa|mastercard|maestro|amex|apple\s*pay|google\s*pay|terminal\s*.*autorizace|autorizace\s*.*(?:karta|pan|aid)|bezhotovostn[ěe])\b/i.test(lt) || (/\b(?:visa|mastercard|maestro)\b/i.test(lt));
+          var lTransfer = /\b(převod|bank\s*transfer|bankovn[ií]\s*převod|úhradou|qr\s*platba|okamžit[aá]\s*platba)\b/i.test(lt);
+          var lVoucher = /\b(stravenka|ticket\s*restaurant|edenred|sodexo|benefity)\b/i.test(lt);
+          var lHits = (lCash ? 1 : 0) + (lCard ? 1 : 0) + (lTransfer ? 1 : 0) + (lVoucher ? 1 : 0);
+          if (lHits === 1) {
+            if (lCash) return { paymentMethodValue: "cash", paymentMethodResolvedSafely: true, paymentMethodConflict: false, used: true };
+            if (lCard) return { paymentMethodValue: "card", paymentMethodResolvedSafely: true, paymentMethodConflict: false, used: true };
+            if (lTransfer) return { paymentMethodValue: "transfer", paymentMethodResolvedSafely: true, paymentMethodConflict: false, used: true };
+            if (lVoucher) return { paymentMethodValue: "voucher", paymentMethodResolvedSafely: true, paymentMethodConflict: false, used: true };
+          }
+        }
+      }
+    }
     var combined = (linesText && linesText.join ? linesText.join(" ") : "") || raw;
     var t = (combined || "").toLowerCase();
     var cash = /\b(hotov[ěe]|hotovost|cash|v\s*hotovosti|platba\s*hotov[ěe]|vr[aá]ceno\s*\(?hotov[ěe]?\)?|typ\s*\(?y\)?\s*platby\s*hotov[ěe]|přijat[aá]\s*č[aá]stka)\b/i.test(t) || (/\bvr[aá]ceno\b/i.test(t) && /\bhotov/i.test(t));
@@ -11680,13 +11796,14 @@ function buildVideoAsArticleCard(it) {
     return scenarios[scenario] || scenarios.clean;
   }
 
-  /** Full pipeline: rawOcrText -> normalized -> parse -> autoCorrect -> validate -> confidence + needsReview. */
+  /** Full pipeline: rawOcrText -> normalized -> structural line merge -> parse -> autoCorrect -> validate -> confidence + needsReview. */
   function iuEvidenceOcrPipeline(rawOcrText, kind) {
     var docType = (kind === "receipt_photo" || kind === "receipt_pdf") ? "receipt" : "invoice";
     var normalizedText = iuEvidenceNormalizeOcrText(rawOcrText);
+    var mergedText = typeof iuEvidenceStructuralLineMerge === "function" ? iuEvidenceStructuralLineMerge(normalizedText) : normalizedText;
     var phase73FromText = null;
-    if (normalizedText && typeof iuEvidencePhase73ItemTotalsDecoder === "function") {
-      var textLines = normalizedText.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+    if (mergedText && typeof iuEvidencePhase73ItemTotalsDecoder === "function") {
+      var textLines = mergedText.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
       if (textLines.length > 0) {
         var lineObjs = textLines.map(function(t) { return { text: t }; });
         var secondary = lineObjs;
@@ -11701,7 +11818,7 @@ function buildVideoAsArticleCard(it) {
         phase73FromText = iuEvidencePhase73ItemTotalsDecoder({ lines: secondary });
       }
     }
-    var parsed = iuEvidenceParseNormalizedToFields(normalizedText);
+    var parsed = iuEvidenceParseNormalizedToFields(mergedText);
     var storeAc = iuEvidenceAutoCorrectStore(parsed.store);
     var correctedFields = {
       store: storeAc.value,
@@ -11761,7 +11878,7 @@ function buildVideoAsArticleCard(it) {
     var phase73TotalDetected = (phase73FromText && phase73FromText.totalLineDetected) ? true : undefined;
     var phase73ConsistencyOk = (phase73FromText && phase73FromText.consistencyOk !== undefined) ? phase73FromText.consistencyOk : undefined;
     var pipelineForPayment = { rawOcrText: rawOcrText, correctedFields: (function() { var c = {}; for (var k in correctedFields) c[k] = correctedFields[k]; c.total = finalTotal; return c; })() };
-    var textLinesForPayment = normalizedText.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+    var textLinesForPayment = mergedText.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
     var paymentRes = typeof iuEvidencePaymentMethodResolver === "function" ? iuEvidencePaymentMethodResolver(textLinesForPayment, pipelineForPayment) : { paymentMethodValue: "unknown", paymentMethodResolvedSafely: false, paymentMethodConflict: false };
     return {
       rawOcrText: rawOcrText,
@@ -13856,6 +13973,7 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidenceOcrHook = iuEvidenceOcrHook;
     window.iuEvidenceLoadTesseract = iuEvidenceLoadTesseract;
     window.iuEvidenceNormalizeOcrText = iuEvidenceNormalizeOcrText;
+    window.iuEvidenceStructuralLineMerge = iuEvidenceStructuralLineMerge;
     window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
     window.iuEvidenceSimulatedRawOcr = iuEvidenceSimulatedRawOcr;
     window.iuEvidenceRunPipelineWithSimulatedText = iuEvidenceRunPipelineWithSimulatedText;
@@ -13915,6 +14033,40 @@ function buildVideoAsArticleCard(it) {
         var hasTotals = zones.totalsZone && zones.totalsZone.length > 0;
         if (hasHeader && hasTotals) addOk(); else flunk("zone_detection");
       }
+      if (typeof iuEvidenceStructuralLineMerge === "function" && typeof iuEvidenceParseNormalizedToFields === "function") {
+        var vp1 = iuEvidenceStructuralLineMerge("CELKEM\n195,30");
+        var p1 = iuEvidenceParseNormalizedToFields(vp1);
+        if (/195[,.]30\s*K[cč]/.test(String(p1.total || ""))) addOk(); else flunk("vertical_pair_total");
+        var vp2 = iuEvidenceStructuralLineMerge("K ÚHRADĚ\n89,00");
+        var p2 = iuEvidenceParseNormalizedToFields(vp2);
+        if (/89[,.]00\s*K[cč]/.test(String(p2.total || ""))) addOk(); else flunk("vertical_pair_total_alt");
+      }
+      if (typeof iuEvidenceOcrPipeline === "function") {
+        var payCard = iuEvidenceOcrPipeline("PLATBA\nKARTA", "receipt_photo");
+        if (payCard.paymentMethodValue === "card") addOk(); else flunk("vertical_pair_payment_card");
+        var payCash = iuEvidenceOcrPipeline("ÚHRADA\nHOTOVĚ", "receipt_photo");
+        if (payCash.paymentMethodValue === "cash") addOk(); else flunk("vertical_pair_payment_cash");
+      }
+      if (typeof iuEvidenceOcrPipeline === "function") {
+        var mlText = "ACTION\nRETAIL\nCZECH\nSRO";
+        var mlRes = iuEvidenceOcrPipeline(iuEvidenceNormalizeOcrText(mlText), "receipt_photo");
+        var storeStr = mlRes.correctedFields && String(mlRes.correctedFields.store || "");
+        if (storeStr.indexOf("ACTION") >= 0 && (storeStr.indexOf("RETAIL") >= 0 || storeStr.indexOf("CZECH") >= 0)) addOk(); else flunk("merchant_multiline_block_action_like");
+        var mlSlogan = "VÍTEJTE\nABC MARKET\ns r o\nDěkujeme za nákup";
+        var mlSloganRes = iuEvidenceOcrPipeline(iuEvidenceNormalizeOcrText(mlSlogan), "receipt_photo");
+        var storeSlogan = mlSloganRes.correctedFields && String(mlSloganRes.correctedFields.store || "");
+        if (/ABC\s*MARKET/i.test(storeSlogan) && storeSlogan.indexOf("Děkujeme") < 0) addOk(); else flunk("merchant_multiline_legal_beats_slogan");
+      }
+      if (typeof iuEvidenceOcrPipeline === "function") {
+        var fgText = "položka 25,90\nmezisoučet 120,00\nCELKEM\n195,30";
+        var fgRes = iuEvidenceOcrPipeline(iuEvidenceNormalizeOcrText(fgText), "receipt_photo");
+        var fgTotal = fgRes.correctedFields && String(fgRes.correctedFields.total || "");
+        if (/195[,.]30\s*K[cč]/.test(fgTotal)) addOk(); else flunk("footer_gravity_prefers_real_total");
+        var ipText = "JABLKO 25,90\nCHLÉB 34,90\nCELKEM 195,30";
+        var ipRes = iuEvidenceOcrPipeline(iuEvidenceNormalizeOcrText(ipText), "receipt_photo");
+        var ipTotal = ipRes.correctedFields && String(ipRes.correctedFields.total || "");
+        if (/195[,.]30\s*K[cč]/.test(ipTotal) && ipTotal.indexOf("25,90") < 0) addOk(); else flunk("item_price_noise_penalty");
+      }
       if (typeof iuEvidencePaymentMethodResolver === "function") {
         var cashRes = iuEvidencePaymentMethodResolver(["TYP PLATBY", "Hotově", "Vráceno (hotově) -5,00"], { rawOcrText: "Hotově Vráceno hotově" });
         if (cashRes.paymentMethodValue === "cash") addOk(); else flunk("pay_cash");
@@ -13964,7 +14116,7 @@ function buildVideoAsArticleCard(it) {
         var legalBeatsHeader = iuEvidenceParseNormalizedToFields("Obchodní řetězec\nFirma s.r.o.\nIČ 12345678");
         if (legalBeatsHeader.store && legalBeatsHeader.store.indexOf("Firma s.r.o.") >= 0) addOk(); else flunk("legal_beats_header");
       }
-      var pass = fail === 0 && ok >= 29;
+      var pass = fail === 0 && ok >= 37;
       var actionMerchant = actionResult && actionResult.correctedFields ? actionResult.correctedFields.store : null;
       var actionPayment = actionResult ? actionResult.paymentMethodValue : null;
       var merchantExactMatch = actionMerchant != null && String(actionMerchant).trim() === "Action Retail Czech s.r.o.";
@@ -13993,9 +14145,17 @@ function buildVideoAsArticleCard(it) {
           payment: { value: actionResult.paymentMethodValue, needsReview: !!(actionResult.paymentMethodConflict || !actionResult.paymentMethodResolvedSafely) }
         };
       }
+      var structuralMergeTestsPass = failures.indexOf("vertical_pair_total") < 0 && failures.indexOf("vertical_pair_total_alt") < 0 && failures.indexOf("merchant_multiline_block_action_like") < 0 && failures.indexOf("merchant_multiline_legal_beats_slogan") < 0;
+      var verticalPairTestsPass = failures.indexOf("vertical_pair_total") < 0 && failures.indexOf("vertical_pair_total_alt") < 0 && failures.indexOf("vertical_pair_payment_card") < 0 && failures.indexOf("vertical_pair_payment_cash") < 0;
+      var footerGravityTestsPass = failures.indexOf("footer_gravity_prefers_real_total") < 0;
+      var itemNoisePenaltyTestsPass = failures.indexOf("item_price_noise_penalty") < 0;
       try {
-        window.__iuEvidenceSummaryExtractionTestsPass = (fail === 0 && ok >= 29);
-        window.__iuEvidenceSummaryStrictPass = (fail === 0 && ok >= 29);
+        window.__iuEvidenceSummaryExtractionTestsPass = (fail === 0 && ok >= 37);
+        window.__iuEvidenceSummaryStrictPass = (fail === 0 && ok >= 37);
+        window.__iuEvidenceStructuralMergeTestsPass = structuralMergeTestsPass;
+        window.__iuEvidenceVerticalPairTestsPass = verticalPairTestsPass;
+        window.__iuEvidenceFooterGravityTestsPass = footerGravityTestsPass;
+        window.__iuEvidenceItemNoisePenaltyTestsPass = itemNoisePenaltyTestsPass;
         window.__iuEvidenceSummaryExtractionTestsOk = ok;
         window.__iuEvidenceSummaryExtractionTestsFail = fail;
         window.__iuEvidenceSummaryFailures = failures;
