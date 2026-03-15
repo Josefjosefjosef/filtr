@@ -9643,6 +9643,7 @@ function buildVideoAsArticleCard(it) {
     var terminalLineRe = /(?:terminál|terminal\s*id|merchant\s*#|invoice\s*#|batch\s*#|auth\s*#|číslo\s*terminálu)/i;
     var qrSurveyLineRe = /(?:survey|dotazník|\.cz\s|\.com\s|aplikace|kód\s*účtenky)/i;
     var footerLineRe = /(?:děkujeme|nashledanou|účtenk|vratit\s*zboží|nashledanou)/i;
+    var addressLineRe = /(?:^\s*\d{5}\s|\d{5}\s*[A-Za-z]|Praha\s+[0-9]|Brno\s+[0-9]|,\s*\d{5}\s)/i;
     var productNameNoiseRe = /^(?:platba|hotovost|vraceno|prijata|celkem|dph|vat|doklad|auth|batch|terminál|merchant|invoice|karta|obchodni\s*\d+|expedoval|zdanit|zaokrouhleni|rekapitulace|děkujeme|nashledanou)\s*$/i;
     var docWidth = 1000;
     var linesAnalyzed = lines.length;
@@ -9733,6 +9734,7 @@ function buildVideoAsArticleCard(it) {
       }
       if (headerNoiseRe.test(lineNorm)) { normalizationStats.linesRejectedNoise++; rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "company_header_line" }); continue; }
       if (vatSubtotalRe.test(lineNorm)) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "vat_summary_line" }); continue; }
+      if (addressLineRe.test(lineNorm)) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "address_line" }); continue; }
       if (nonItemBlockRe.test(lineNorm)) {
         normalizationStats.linesRejectedNoise++;
         var reason = "unknown_non_item";
@@ -9753,9 +9755,10 @@ function buildVideoAsArticleCard(it) {
       var lastIdx = lineNorm.lastIndexOf(lastPriceStr);
       var namePart = (lastIdx >= 0 ? lineNorm.substring(0, lastIdx) : lineNorm).trim().replace(/\s+/g, " ").replace(/\s*[xX]\s*$/i, "").trim();
       if (productNameNoiseRe.test(namePart) || (namePart.length > 0 && namePart.length < 2)) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "productNameNoise" }); continue; }
-      var qtyMatch = lineNorm.match(/(\d+)\s*[xX×]\s*([0-9]+(?:[.,][0-9]{1,2})?)/i) || lineNorm.match(/(\d+)\s*[xX×]/i);
+      var qtyMatch = lineNorm.match(/(\d+)\s*[xX×]\s*([0-9]+(?:[.,][0-9]{1,2})?)/i) || lineNorm.match(/(\d+)\s*[xX×]/i) || lineNorm.match(/(\d+)\s*ks\b/i);
       var qty = null;
-      if (qtyMatch) { var q = parseInt(qtyMatch[1], 10); if (!isNaN(q)) qty = q; }
+      if (qtyMatch) { var q = parseInt(qtyMatch[1], 10); if (!isNaN(q) && q > 0) qty = q; }
+      if (qty == null && namePart && namePart.length >= 2 && !isNaN(priceNum)) qty = 1;
       if (!namePart) namePart = "Položka";
       normalizationStats.linesItemLike++;
       candidateItemLines.push({ name: namePart, price: priceNum, quantity: qty, rawLine: rawLine, lineTotal: priceNum, lineIndex: i });
@@ -9810,9 +9813,10 @@ function buildVideoAsArticleCard(it) {
               var lastIdx = lineNorm.lastIndexOf(lastPriceStr);
               var namePart = (lastIdx >= 0 ? lineNorm.substring(0, lastIdx) : lineNorm).trim().replace(/\s+/g, " ").replace(/\s*[xX]\s*$/i, "").trim();
               if (productNameNoiseRe.test(namePart) || namePart.length < 2) continue;
-              var qtyMatch = lineNorm.match(/(\d+)\s*[xX×]\s*([0-9]+(?:[.,][0-9]{1,2})?)/i) || lineNorm.match(/(\d+)\s*[xX×]/i);
+              var qtyMatch = lineNorm.match(/(\d+)\s*[xX×]\s*([0-9]+(?:[.,][0-9]{1,2})?)/i) || lineNorm.match(/(\d+)\s*[xX×]/i) || lineNorm.match(/(\d+)\s*ks\b/i);
               var qty = null;
-              if (qtyMatch) { var q = parseInt(qtyMatch[1], 10); if (!isNaN(q)) qty = q; }
+              if (qtyMatch) { var q = parseInt(qtyMatch[1], 10); if (!isNaN(q) && q > 0) qty = q; }
+              if (qty == null && namePart && namePart.length >= 2) qty = 1;
               if (!namePart) namePart = "Položka";
               textOnlyItems.push({ name: namePart, price: priceNum, quantity: qty, rawLine: rawLine, lineTotal: priceNum });
             }
@@ -9860,6 +9864,16 @@ function buildVideoAsArticleCard(it) {
     var itemExtractionTrusted = !sumSanityFail && consistencyOk;
     var acceptedItemSegments = items.map(function(it) { return { name: it.name, price: it.price, rawLine: it.rawLine }; });
     function countRejectedByReason(r) { return rejectedItemLines.filter(function(x) { return x.reason === r; }).length; }
+    var itemSectionStartLine = null;
+    var itemSectionEndLine = null;
+    if (candidateFiltered.length > 0) {
+      for (var ci = 0; ci < candidateFiltered.length; ci++) {
+        var idx = candidateFiltered[ci].lineIndex;
+        if (itemSectionStartLine == null || idx < itemSectionStartLine) itemSectionStartLine = idx;
+        if (itemSectionEndLine == null || idx > itemSectionEndLine) itemSectionEndLine = idx;
+      }
+    }
+    if (firstStopIndex != null && itemSectionEndLine != null && firstStopIndex - 1 < itemSectionEndLine) itemSectionEndLine = firstStopIndex - 1;
     return {
       items: items,
       totalValue: totalValue,
@@ -9869,6 +9883,9 @@ function buildVideoAsArticleCard(it) {
       differencePercent: differencePercent,
       consistencyOk: consistencyOk,
       linesAnalyzed: linesAnalyzed,
+      itemSectionStartLine: itemSectionStartLine,
+      itemSectionEndLine: itemSectionEndLine,
+      candidateLinesCount: candidateItemLines.length,
       candidateItemLines: candidateFiltered.map(function(c) { return { name: c.name, price: c.price, quantity: c.quantity, rawLine: c.rawLine, lineTotal: c.lineTotal }; }),
       acceptedItemSegments: acceptedItemSegments,
       rejectedItemLines: rejectedItemLines,
@@ -12297,6 +12314,9 @@ function buildVideoAsArticleCard(it) {
                     if (result.fieldSourceZone) result.fieldSourceZone.items = result.items.map(function() { return "itemsZone"; });
                   }
                   if (phase73.rejectedItemLines) result.rejectedItemLines = phase73.rejectedItemLines;
+                  if (phase73.itemSectionStartLine != null) result.itemSectionStartLine = phase73.itemSectionStartLine;
+                  if (phase73.itemSectionEndLine != null) result.itemSectionEndLine = phase73.itemSectionEndLine;
+                  if (phase73.candidateLinesCount != null) result.candidateLinesCount = phase73.candidateLinesCount;
                   if (phase73.rejectedAsPaymentCount != null) result.rejectedAsPaymentCount = phase73.rejectedAsPaymentCount;
                   if (phase73.rejectedAsTerminalCount != null) result.rejectedAsTerminalCount = phase73.rejectedAsTerminalCount;
                   if (phase73.rejectedAsQrSurveyCount != null) result.rejectedAsQrSurveyCount = phase73.rejectedAsQrSurveyCount;
@@ -12403,6 +12423,9 @@ function buildVideoAsArticleCard(it) {
                   result.fieldSourceZone = result.fieldSourceZone || {}; result.fieldSourceZone.items = result.items.map(function() { return "itemsZone"; });
                 }
                 if (phase73Catch.rejectedItemLines) result.rejectedItemLines = phase73Catch.rejectedItemLines;
+                if (phase73Catch.itemSectionStartLine != null) result.itemSectionStartLine = phase73Catch.itemSectionStartLine;
+                if (phase73Catch.itemSectionEndLine != null) result.itemSectionEndLine = phase73Catch.itemSectionEndLine;
+                if (phase73Catch.candidateLinesCount != null) result.candidateLinesCount = phase73Catch.candidateLinesCount;
                 if (phase73Catch.rejectedAsPaymentCount != null) result.rejectedAsPaymentCount = phase73Catch.rejectedAsPaymentCount;
                 if (phase73Catch.rejectedAsTerminalCount != null) result.rejectedAsTerminalCount = phase73Catch.rejectedAsTerminalCount;
                 if (phase73Catch.rejectedAsQrSurveyCount != null) result.rejectedAsQrSurveyCount = phase73Catch.rejectedAsQrSurveyCount;
