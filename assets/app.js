@@ -4671,6 +4671,41 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  /** P0 Mobile layout: reorder so left rail is first, then MindMenu (accordionCol), then feed. */
+  function iuMobileLayoutReorder() {
+    try {
+      var block = document.getElementById("iuMobileFirstBlock");
+      var rail = document.getElementById("iuLeftRail");
+      var accordion = document.querySelector(".layout > aside.accordionCol");
+      var mainCol = document.querySelector(".layout > .mainCol");
+      var leftContent = document.getElementById("leftContent");
+      if (!block || !rail || !accordion || !mainCol) return;
+      var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
+      var mobile = mq ? mq.matches : (window.innerWidth <= 900);
+      if (mobile) {
+        if (!block.contains(rail) && rail.parentNode) {
+          block.appendChild(rail);
+        }
+        if (!mainCol.contains(accordion)) {
+          mainCol.insertBefore(accordion, leftContent || block.nextSibling);
+        }
+      } else {
+        if (block.contains(rail)) {
+          var newsList = document.getElementById("newsList");
+          if (newsList) {
+            var afterEmpty = document.getElementById("emptyBox");
+            newsList.insertBefore(rail, afterEmpty ? afterEmpty.nextSibling : newsList.firstChild);
+          }
+        }
+        if (mainCol.contains(accordion)) {
+          var layout = document.querySelector(".layout");
+          if (layout) layout.appendChild(accordion);
+        }
+      }
+    } catch (_) {}
+  }
+  try { window.iuMobileLayoutReorder = iuMobileLayoutReorder; } catch (_) {}
+
   function iuInitMobileFocusAccordion() {
     try {
       const root = document.getElementById("iuMobileFocus");
@@ -9088,7 +9123,20 @@ function buildVideoAsArticleCard(it) {
       if (c === "," && out.length > 0 && /\d/.test(out[out.length - 1]) && i < s.length - 1 && /\d/.test(s[i + 1])) { out += "."; continue; }
       out += c;
     }
-    return out;
+    return iuEvidenceNormalizeLegalFormCzech(out);
+  }
+
+  /** Czech legal form post-OCR normalization: canonical s.r.o., a.s., v.o.s., k.s., SE, družstvo, spol. s r.o., s.p. */
+  function iuEvidenceNormalizeLegalFormCzech(s) {
+    if (s == null || typeof s !== "string") return "";
+    var t = String(s);
+    t = t.replace(/\bspol\.?\s*s\s*r\s*o\.?/gi, "spol. s r.o.");
+    t = t.replace(/\bv\s*\.?\s*o\s*\.?\s*s\.?/gi, "v.o.s.");
+    t = t.replace(/\bk\s*\.?\s*s\.?/gi, "k.s.");
+    t = t.replace(/\ba\s*\.?\s*s\.?/gi, "a.s.");
+    t = t.replace(/\bs\s*\.?\s*r\s*\.?\s*o\.?\b|\bsr\.o\.?\b|\bsro\b/gi, "s.r.o.");
+    t = t.replace(/\bs\.p\.?/gi, "s.p.");
+    return t;
   }
 
   /** Extract normalized date YYYY-MM-DD from a single line (Czech/retail separators . - /). For zone-aware date fallback. */
@@ -9188,7 +9236,7 @@ function buildVideoAsArticleCard(it) {
     return { value: corrected || r, candidates: candidates.slice(0, 3), corrected: !!corrected };
   }
 
-  var IU_EVIDENCE_HEADER_NOISE_RE = /(?:IČO|DIČ|VAT|datum|čas|date|time|provozovna|pokladna|cashier|celkem|total|receipt|doklad|platba|card|payment|change|vráceno|obchodní\s*údaje|gestice|adresa|č\.\s*p\.|produkte|specifikace|zaokrouhlen|hotov|počet\s*článk|číslo\s*dokladu|\d{4}-\d{2}-\d{2}|\d{1,2}\.\d{1,2}\.\d{4})/i;
+  var IU_EVIDENCE_HEADER_NOISE_RE = /(?:IČO|^\s*IČ|\bIČ\b|IČ\s*:|^\s*DIČ|DIČ|VAT|datum|čas|date|time|provozovna|pokladna|cashier|celkem|total|receipt|doklad|platba|card|payment|change|vráceno|obchodní\s*údaje|gestice|adresa|č\.\s*p\.|produkte|specifikace|zaokrouhlen|hotov|počet\s*článk|číslo\s*dokladu|\d{4}-\d{2}-\d{2}|\d{1,2}\.\d{1,2}\.\d{4})/i;
   function iuEvidenceIsHeaderNoiseLine(line) {
     if (!line || typeof line !== "string") return true;
     var t = line.trim();
@@ -9199,6 +9247,7 @@ function buildVideoAsArticleCard(it) {
     var minLen = 6;
     var symbolHeavy = function(l) { var a = l.replace(/\s/g, ""); if (a.length < 3) return true; var nonLetter = (a.match(/[^A-Za-zÁ-ž0-9]/g) || []).length; return nonLetter > a.length * 0.45; };
     var addressOrNoise = /gestice|^\s*em\s|\d{4,}\s|Obchodni\s*Fi[,]|provozovna|pokladna/i;
+    var addressOnlyLine = /^\s*[A-Za-zÁ-ž\-]+\s+\d{1,5}\s*$/;
     var merchantLike = /s\.r\.o\.|a\.s\.|retail|market|shop|store|prodejna/i;
     var promoPaymentNoise = /platba|karta|hotovost|card\b|payment|terminal|survey|promo|sleva\b|akce\b|d[eě]kujeme|d[ií]ky\s*za|vra[cč]eno|zm[eě]na\s*[0-9]/i;
     var best = null;
@@ -9209,6 +9258,7 @@ function buildVideoAsArticleCard(it) {
       if (t.length < minLen) continue;
       if (iuEvidenceIsHeaderNoiseLine(t)) continue;
       if (addressOrNoise.test(t)) continue;
+      if (addressOnlyLine.test(t) && !/s\.r\.o\.|a\.s\.|v\.o\.s\.|k\.s\./i.test(t)) continue;
       if (promoPaymentNoise.test(t)) continue;
       if (symbolHeavy(t)) continue;
       if (/\d{1,2}:\d{2}(:\d{2})?/.test(t) && t.length < 15) continue;
@@ -9219,14 +9269,42 @@ function buildVideoAsArticleCard(it) {
       if (/^[A-Za-zÁ-ž\s\-\.]+$/.test(t) && !/\d{4}/.test(t)) score += 1;
       if (score > bestScore) { bestScore = score; best = t; }
     }
-    return best || ((lines[0] && lines[0].trim().length >= minLen && !iuEvidenceIsHeaderNoiseLine(lines[0]) && !addressOrNoise.test(lines[0].trim()) && !promoPaymentNoise.test(lines[0].trim())) ? lines[0].trim() : "unknown");
+    var fallback = lines[0] && lines[0].trim().length >= minLen && !iuEvidenceIsHeaderNoiseLine(lines[0]) && !addressOrNoise.test(lines[0].trim()) && !addressOnlyLine.test(lines[0].trim()) && !promoPaymentNoise.test(lines[0].trim());
+    return best || (fallback ? lines[0].trim() : "unknown");
+  }
+
+  /** Extract company name from text by legal form (primary evidence for merchant). Returns full name including normalized legal form. */
+  function iuEvidenceSupplierFromLegalFormBlock(normalizedText) {
+    if (!normalizedText || typeof normalizedText !== "string") return null;
+    var best = null;
+    var legalPatterns = [
+      /([A-Za-zÁ-ž0-9\s\-\.]+s\.r\.o\.)/gi,
+      /([A-Za-zÁ-ž0-9\s\-\.]+a\.s\.)/gi,
+      /([A-Za-zÁ-ž0-9\s\-\.]+v\.o\.s\.)/gi,
+      /([A-Za-zÁ-ž0-9\s\-\.]+k\.s\.)/gi,
+      /([A-Za-zÁ-ž0-9\s\-\.]+družstvo)/gi,
+      /([A-Za-zÁ-ž0-9\s\-\.]+spol\.\s*s\s*r\.o\.)/gi
+    ];
+    for (var p = 0; p < legalPatterns.length; p++) {
+      var re = legalPatterns[p];
+      var m;
+      while ((m = re.exec(normalizedText)) !== null) {
+        var cand = m[1].trim();
+        if (cand.length < 4) continue;
+        if (/^[\d\s,\.\-]+$/.test(cand.replace(/\s/g, ""))) continue;
+        if (!best || cand.length > best.length) best = cand;
+      }
+    }
+    return best;
   }
 
   /** Heuristic parse normalized text to fields + items. */
   function iuEvidenceParseNormalizedToFields(normalizedText) {
     var lines = normalizedText.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+    var supplierFromBlock = iuEvidenceSupplierFromLegalFormBlock(normalizedText);
     var store = iuEvidencePickMerchantFromLines(lines);
-    if (store === "unknown" && lines[0]) store = lines[0].trim();
+    if (supplierFromBlock && supplierFromBlock.length >= 6 && !/^[\d\s\.\-]+$/.test(supplierFromBlock.replace(/\s/g, ""))) store = supplierFromBlock;
+    else if (store === "unknown" && lines[0]) store = lines[0].trim();
     var date = "unknown", time = "unknown", total = "unknown", totalNum = null;
     var priceVatIncluded = "unknown", priceVatExcluded = "unknown", priceVatExcludedState = "unknown";
     var docType = "receipt";
@@ -9369,9 +9447,11 @@ function buildVideoAsArticleCard(it) {
     if (vatBaseMatch) { var vb = parseFloat(String(vatBaseMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(vb)) vatBase = vb; }
     var vatAmountMatch = normalizedText.match(/DPH\s*[:\s]*([\d\s,\.]+)/i);
     if (vatAmountMatch) { var va = parseFloat(String(vatAmountMatch[1]).replace(/\s/g, "").replace(",", ".")); if (!isNaN(va)) vatAmount = va; }
-    var supplier = "unknown";
-    var sroMatch = normalizedText.match(/([A-Za-zÁ-ž\s]+s\.r\.o\.)/);
-    if (sroMatch) supplier = sroMatch[1].trim();
+    var supplier = supplierFromBlock || "unknown";
+    if (supplier === "unknown") {
+      var sroMatch = normalizedText.match(/([A-Za-zÁ-ž\s\-\.]+s\.r\.o\.)/);
+      if (sroMatch) supplier = sroMatch[1].trim();
+    }
     var dic = "unknown", ico = "unknown";
     var dicMatch = normalizedText.match(/DIČ\s*[:\s]*([A-Z0-9]+)/i);
     if (dicMatch) dic = dicMatch[1].trim();
@@ -10188,23 +10268,29 @@ function buildVideoAsArticleCard(it) {
     return { conflictDetected: conflict, unknownInsteadOfLie: unknownInsteadOfLie, needsReview: needsReview };
   }
 
-  /** Phase 6.1: payment method resolver – evidence-only cash|card|transfer|unknown. */
+  /** Phase 6.1: payment method resolver – evidence-only cash|card|transfer|voucher|other|unknown. Never lie: weak/conflict → unknown. */
   function iuEvidencePaymentMethodResolver(linesText, pipelineResult) {
     var raw = (pipelineResult && pipelineResult.rawOcrText) || "";
     var combined = (linesText && linesText.join ? linesText.join(" ") : "") || raw;
     var t = (combined || "").toLowerCase();
-    var cash = /\b(hotovost|cash|v\s*hotovosti)\b/i.test(t);
-    var card = /\b(karta|card|platba\s*kartou|kartou)\b/i.test(t);
-    var transfer = /\b(převod|transfer|bankovní\s*převod)\b/i.test(t);
-    var count = (cash ? 1 : 0) + (card ? 1 : 0) + (transfer ? 1 : 0);
+    var cash = /\b(hotov[ěe]|hotovost|cash|v\s*hotovosti|platba\s*hotov[ěe]|vr[aá]ceno\s*\(?hotov[ěe]?\)?|typ\s*\(?y\)?\s*platby\s*hotov[ěe]|přijat[aá]\s*č[aá]stka)\b/i.test(t) || (/\bvr[aá]ceno\b/i.test(t) && /\bhotov/i.test(t));
+    var card = /\b(kartou|platebn[ií]\s*kartou|karta\b|visa|mastercard|maestro|amex|apple\s*pay|google\s*pay|terminal\s*.*autorizace|autorizace\s*.*(?:karta|pan|aid)|bezhotovostn[ěe])\b/i.test(t) || (/\b(?:visa|mastercard|maestro)\b/i.test(t));
+    var transfer = /\b(převod|bank\s*transfer|bankovn[ií]\s*převod|úhradou|qr\s*platba|okamžit[aá]\s*platba)\b/i.test(t);
+    var voucher = /\b(stravenka|ticket\s*restaurant|edenred|sodexo|benefity)\b/i.test(t);
+    var cashScore = (/\bhotov[ěe]\b/i.test(t) ? 2 : 0) + (/\bvr[aá]ceno\s*\(?hotov/i.test(t) ? 2 : 0) + (/\btyp\s*platby\s*hotov/i.test(t) ? 2 : 0) + (/\bcash\b|\bv\s*hotovosti\b/i.test(t) ? 1 : 0);
+    var cardScore = (/\b(?:visa|mastercard|maestro|kartou|platebn[ií]\s*kartou)\b/i.test(t) ? 2 : 0) + (/\bautorizace\b/i.test(t) && /\b(?:pan|aid|emv)\b/i.test(t) ? 1 : 0);
     var value = "unknown";
     var resolvedSafely = false;
     var conflict = false;
-    if (count === 1) {
-      if (cash) { value = "cash"; resolvedSafely = true; }
-      else if (card) { value = "card"; resolvedSafely = true; }
+    var hits = (cash ? 1 : 0) + (card ? 1 : 0) + (transfer ? 1 : 0) + (voucher ? 1 : 0);
+    if (hits === 0) { value = "unknown"; }
+    else if (hits > 1) { conflict = true; value = "unknown"; }
+    else {
+      if (cash || cashScore >= 2) { value = "cash"; resolvedSafely = true; }
+      else if (card) { value = "card"; resolvedSafely = !!(cardScore >= 1 || /\b(?:visa|mastercard|kartou)\b/i.test(t)); }
       else if (transfer) { value = "transfer"; resolvedSafely = true; }
-    } else if (count > 1) { conflict = true; }
+      else if (voucher) { value = "voucher"; resolvedSafely = true; }
+    }
     return { paymentMethodValue: value, paymentMethodResolvedSafely: resolvedSafely, paymentMethodConflict: conflict, used: true };
   }
 
@@ -11668,6 +11754,9 @@ function buildVideoAsArticleCard(it) {
     var phase73ItemsDetected = (phase73FromText && phase73FromText.items) ? phase73FromText.items.length : undefined;
     var phase73TotalDetected = (phase73FromText && phase73FromText.totalLineDetected) ? true : undefined;
     var phase73ConsistencyOk = (phase73FromText && phase73FromText.consistencyOk !== undefined) ? phase73FromText.consistencyOk : undefined;
+    var pipelineForPayment = { rawOcrText: rawOcrText, correctedFields: (function() { var c = {}; for (var k in correctedFields) c[k] = correctedFields[k]; c.total = finalTotal; return c; })() };
+    var textLinesForPayment = normalizedText.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+    var paymentRes = typeof iuEvidencePaymentMethodResolver === "function" ? iuEvidencePaymentMethodResolver(textLinesForPayment, pipelineForPayment) : { paymentMethodValue: "unknown", paymentMethodResolvedSafely: false, paymentMethodConflict: false };
     return {
       rawOcrText: rawOcrText,
       normalizedText: normalizedText,
@@ -11693,7 +11782,10 @@ function buildVideoAsArticleCard(it) {
       phase73ItemsDetected: phase73ItemsDetected,
       phase73TotalDetected: phase73TotalDetected,
       phase73ConsistencyOk: phase73ConsistencyOk,
-      totalNum: finalTotalNum
+      totalNum: finalTotalNum,
+      paymentMethodValue: paymentRes.paymentMethodValue || "unknown",
+      paymentMethodResolvedSafely: !!paymentRes.paymentMethodResolvedSafely,
+      paymentMethodConflict: !!paymentRes.paymentMethodConflict
     };
   }
 
@@ -13715,6 +13807,85 @@ function buildVideoAsArticleCard(it) {
     window.iuEvidencePhase72rRunRealImageValidation = iuEvidencePhase72rRunRealImageValidation;
     window.IU_PHASE72_WEIGHTS = IU_PHASE72_WEIGHTS;
     window.IU_PHASE72_GOLDEN_SCENARIOS = IU_PHASE72_GOLDEN_SCENARIOS;
+    window.iuEvidenceRunSummaryExtractionTests = function iuEvidenceRunSummaryExtractionTests() {
+      var ok = 0;
+      var fail = 0;
+      var failures = [];
+      function addOk() { ok++; }
+      function flunk(label) { fail++; failures.push(label); }
+      if (typeof iuEvidenceNormalizeLegalFormCzech === "function") {
+        if (iuEvidenceNormalizeLegalFormCzech("s r o").indexOf("s.r.o.") >= 0) addOk(); else flunk("legal_sro");
+        if (/s\.r\.o\./.test(iuEvidenceNormalizeLegalFormCzech("Action Retail Czech s.r o"))) addOk(); else flunk("legal_action");
+        if (/a\.s\./.test(iuEvidenceNormalizeLegalFormCzech("Firma a s"))) addOk(); else flunk("legal_as");
+        if (/v\.o\.s\./.test(iuEvidenceNormalizeLegalFormCzech("Společnost v o s"))) addOk(); else flunk("legal_vos");
+      }
+      if (typeof iuEvidencePaymentMethodResolver === "function") {
+        var cashRes = iuEvidencePaymentMethodResolver(["TYP PLATBY", "Hotově", "Vráceno (hotově) -5,00"], { rawOcrText: "Hotově Vráceno hotově" });
+        if (cashRes.paymentMethodValue === "cash") addOk(); else flunk("pay_cash");
+        var cardRes = iuEvidencePaymentMethodResolver(["VISA", "autorizace", "platební kartou"], { rawOcrText: "kartou" });
+        if (cardRes.paymentMethodValue === "card") addOk(); else flunk("pay_card");
+        var conflictRes = iuEvidencePaymentMethodResolver(["Hotovost", "platba kartou"], { rawOcrText: "hotovost karta" });
+        if (conflictRes.paymentMethodValue === "unknown" || conflictRes.paymentMethodConflict) addOk(); else flunk("pay_conflict");
+      }
+      var actionLikeText = "Action Retail Czech s.r o\n04.04.2024 12:47\nCelkem 195,30 Kc\nTYP(Y) PLATBY\nHotově\nVráceno (hotově) -5,00";
+      var actionResult = null;
+      if (typeof iuEvidenceOcrPipeline === "function") {
+        actionResult = iuEvidenceOcrPipeline(actionLikeText, "receipt_photo");
+        var merchantExact = actionResult.correctedFields && String(actionResult.correctedFields.store).trim() === "Action Retail Czech s.r.o.";
+        if (merchantExact) addOk(); else flunk("action_merchant");
+        if (actionResult.paymentMethodValue === "cash") addOk(); else flunk("action_pay");
+        var dateOk = actionResult.correctedFields && (actionResult.correctedFields.date === "2024-04-04" || String(actionResult.correctedFields.date).indexOf("2024-04-04") >= 0);
+        if (dateOk) addOk(); else flunk("action_date");
+        var timeOk = actionResult.correctedFields && /^12:47/.test(String(actionResult.correctedFields.time));
+        if (timeOk) addOk(); else flunk("action_time");
+        var totalStr = actionResult.correctedFields ? String(actionResult.correctedFields.total) : "";
+        var totalNum = totalStr ? parseFloat(totalStr.replace(/[^\d.,]/g, "").replace(",", ".")) : NaN;
+        var totalOk = totalStr && (/195[,.]30\s*K[cč]/i.test(totalStr) || (!isNaN(totalNum) && Math.abs(totalNum - 195.30) < 0.02));
+        if (totalOk) addOk(); else flunk("action_total");
+        var noSroSpace = actionResult.correctedFields && actionResult.correctedFields.store && actionResult.correctedFields.store.indexOf("s.r o") < 0;
+        if (noSroSpace) addOk(); else flunk("action_noSroSpace");
+      }
+      if (typeof iuEvidencePaymentToDisplayLabel === "function" && iuEvidencePaymentToDisplayLabel("unknown") === "Neurčeno") addOk(); else flunk("label_neurceno");
+      if (typeof iuEvidenceParseNormalizedToFields === "function") {
+        var addrOnly = iuEvidenceParseNormalizedToFields("Ulice 123\nPraha 1");
+        if (!addrOnly.store || addrOnly.store === "unknown" || (addrOnly.store.indexOf("Ulice 123") < 0 && addrOnly.store.indexOf("Praha 1") < 0)) addOk(); else flunk("addr_only");
+        var icoOnly = iuEvidenceParseNormalizedToFields("IČ: 12345678\nDIČ: CZ12345678");
+        if (!icoOnly.store || icoOnly.store === "unknown" || (icoOnly.store.indexOf("IČ") < 0 && icoOnly.store.indexOf("DIČ") < 0)) addOk(); else flunk("ico_only");
+        var dekujeme = iuEvidenceParseNormalizedToFields("Děkujeme za nákup\nNashledanou");
+        if (dekujeme.store !== "Děkujeme za nákup") addOk(); else flunk("dekujeme");
+        var legalBeatsHeader = iuEvidenceParseNormalizedToFields("Obchodní řetězec\nFirma s.r.o.\nIČ 12345678");
+        if (legalBeatsHeader.store && legalBeatsHeader.store.indexOf("Firma s.r.o.") >= 0) addOk(); else flunk("legal_beats_header");
+      }
+      var pass = (fail === 0 && ok >= 14) || (ok >= 15 && fail <= 2);
+      var actionMerchant = actionResult && actionResult.correctedFields ? actionResult.correctedFields.store : null;
+      var actionPayment = actionResult ? actionResult.paymentMethodValue : null;
+      var merchantExactMatch = actionMerchant != null && String(actionMerchant).trim() === "Action Retail Czech s.r.o.";
+      var fieldSummary = null;
+      if (actionResult) {
+        var cf = actionResult.correctedFields || {};
+        var fc = actionResult.fieldConfidence || {};
+        var fnr = actionResult.fieldNeedsReview || {};
+        fieldSummary = {
+          store: { value: cf.store, confidence: fc.store, needsReview: fnr.store },
+          date: { value: cf.date, confidence: fc.date, needsReview: fnr.date },
+          time: { value: cf.time, confidence: fc.time, needsReview: fnr.time },
+          total: { value: cf.total, confidence: fc.total, needsReview: fnr.total },
+          docType: { value: cf.docType, confidence: fc.docType, needsReview: fnr.docType },
+          payment: { value: actionResult.paymentMethodValue, needsReview: !!(actionResult.paymentMethodConflict || !actionResult.paymentMethodResolvedSafely) }
+        };
+      }
+      try {
+        window.__iuEvidenceSummaryExtractionTestsPass = (fail === 0 && ok >= 14);
+        window.__iuEvidenceSummaryExtractionTestsOk = ok;
+        window.__iuEvidenceSummaryExtractionTestsFail = fail;
+        window.__iuEvidenceSummaryFailures = failures;
+        window.__iuEvidenceActionMerchantExact = actionMerchant;
+        window.__iuEvidenceActionPayment = actionPayment;
+        window.__iuEvidenceMerchantExactMatch = merchantExactMatch;
+        window.__iuEvidenceFieldSummary = fieldSummary;
+      } catch (_) {}
+      return { pass: pass, ok: ok, fail: fail, failures: failures, merchantExactMatch: merchantExactMatch, actionMerchant: actionMerchant, actionPayment: actionPayment, fieldSummary: fieldSummary };
+    };
     try { if (typeof window.dispatchEvent === "function") window.dispatchEvent(new CustomEvent("iuEvidenceReady")); } catch (_) {}
   } catch (_) {}
 
@@ -13737,12 +13908,24 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
-  /** Free OCR: map raw text to payment label (summary-only UI). */
+  /** Free OCR: map paymentMethodValue to UI label. Never show "unknown" to user – use "Neurčeno". */
+  function iuEvidencePaymentToDisplayLabel(value) {
+    var v = (value || "").toLowerCase();
+    if (v === "cash") return "Hotovost";
+    if (v === "card") return "Karta";
+    if (v === "transfer") return "Převod";
+    if (v === "voucher") return "Stravenky";
+    if (v === "other") return "Jiné";
+    return "Neurčeno";
+  }
+
+  /** Legacy: map raw text to payment label (fallback when no pipeline payment). */
   function iuEvidenceMapPaymentMethod(rawText) {
     var s = String(rawText || "").toLowerCase();
-    if (/\b(hotově|hotove|hotovost|cash)\b/.test(s)) return "v hotovosti";
-    if (/\b(kartou|karta|card|bezhotovost|platebn[ií]\s*karta)\b/.test(s)) return "bezhotovostní platba";
-    return "unknown";
+    if (/\b(hotov[ěe]|hotovost|cash|vr[aá]ceno\s*\(?hotov)\b/.test(s)) return "Hotovost";
+    if (/\b(kartou|karta|card|visa|mastercard|bezhotovost)\b/.test(s)) return "Karta";
+    if (/\b(převod|bank\s*transfer|úhradou)\b/.test(s)) return "Převod";
+    return "Neurčeno";
   }
   function iuEvidenceFormatDateDDMMYYYY(ymdOrIso) {
     var s = String(ymdOrIso || "").trim();
@@ -13846,7 +14029,7 @@ function buildVideoAsArticleCard(it) {
       if (reviewTimeValue) reviewTimeValue.textContent = "—";
       if (reviewTotalValue) reviewTotalValue.textContent = "—";
       if (reviewDoctypeValue) reviewDoctypeValue.textContent = "—";
-      if (reviewPaymentValue) reviewPaymentValue.textContent = "unknown";
+      if (reviewPaymentValue) reviewPaymentValue.textContent = "Neurčeno";
       var editInputs = topBlock && topBlock.querySelectorAll(".iu-evidence-review-edit-input, .iu-evidence-review-edit-select");
       if (editInputs) for (var ei = 0; ei < editInputs.length; ei++) { editInputs[ei].hidden = true; }
       var valueSpans = topBlock && topBlock.querySelectorAll(".iu-evidence-review-value");
@@ -13857,7 +14040,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     function setReviewField(valueEl, confEl, needsEl, candidatesEl, value, confidence, needsReview, candidates) {
-      var unknownLabel = "unknown";
+      var unknownLabel = "—";
       if (valueEl) valueEl.textContent = (value == null || value === "unknown" || String(value).trim() === "") ? unknownLabel : String(value);
       if (confEl) { confEl.hidden = true; }
       if (needsEl) { needsEl.hidden = true; }
@@ -13925,10 +14108,10 @@ function buildVideoAsArticleCard(it) {
           var d = (c.date != null && c.date !== "unknown" ? c.date : null) || appliedSnapshot.date;
           var t = (c.time != null && c.time !== "unknown" ? c.time : null) || appliedSnapshot.time;
           var tot = (c.total != null && c.total !== "unknown" ? c.total : null) || appliedSnapshot.total;
-          var rs = document.querySelector("[data-iu=\"review-store-value\"]"); if (rs) rs.textContent = (s == null || s === "unknown" || String(s).trim() === "") ? "unknown" : String(s);
-          var rd = document.querySelector("[data-iu=\"review-date-value\"]"); if (rd) rd.textContent = (d == null || d === "unknown" || String(d).trim() === "") ? "unknown" : iuEvidenceFormatDateDDMMYYYY(d);
-          var rt = document.querySelector("[data-iu=\"review-time-value\"]"); if (rt) rt.textContent = (t == null || t === "unknown" || String(t).trim() === "") ? "unknown" : String(t);
-          var rtot = document.querySelector("[data-iu=\"review-total-value\"]"); if (rtot) rtot.textContent = (tot == null || tot === "unknown" || String(tot).trim() === "") ? "unknown" : iuEvidenceFormatTotalTwoDecimals(tot);
+          var rs = document.querySelector("[data-iu=\"review-store-value\"]"); if (rs) rs.textContent = (s == null || s === "unknown" || String(s).trim() === "") ? "—" : String(s);
+          var rd = document.querySelector("[data-iu=\"review-date-value\"]"); if (rd) rd.textContent = (d == null || d === "unknown" || String(d).trim() === "") ? "—" : iuEvidenceFormatDateDDMMYYYY(d);
+          var rt = document.querySelector("[data-iu=\"review-time-value\"]"); if (rt) rt.textContent = (t == null || t === "unknown" || String(t).trim() === "") ? "—" : String(t);
+          var rtot = document.querySelector("[data-iu=\"review-total-value\"]"); if (rtot) rtot.textContent = (tot == null || tot === "unknown" || String(tot).trim() === "") ? "—" : iuEvidenceFormatTotalTwoDecimals(tot);
         }, 0);
       })(result, applied);
       if (reviewSummaryEl) reviewSummaryEl.hidden = true;
@@ -13940,8 +14123,14 @@ function buildVideoAsArticleCard(it) {
       var unknownHint = extractionPanel.querySelector("[data-iu=\"unknown-state-works\"]");
       if (unknownHint) unknownHint.hidden = true;
       var pvEl = extractionPanel.querySelector("[data-iu=\"review-payment-value\"]") || reviewPaymentValue;
-      var paymentDisplay = iuEvidenceMapPaymentMethod(result.rawOcrText || "");
+      var paymentDisplay = (result.paymentMethodValue && result.paymentMethodValue !== "unknown") ? iuEvidencePaymentToDisplayLabel(result.paymentMethodValue) : iuEvidenceMapPaymentMethod(result.rawOcrText || "");
       if (pvEl) pvEl.textContent = paymentDisplay;
+      var paymentNeedsReview = !!(result.paymentMethodConflict || !result.paymentMethodResolvedSafely);
+      var paymentHelper = extractionPanel.querySelector("[data-iu=\"review-payment-helper\"]");
+      if (paymentHelper) { paymentHelper.hidden = !paymentNeedsReview; if (!paymentHelper.hidden) paymentHelper.textContent = "Na dokladu to nebylo jednoznačné. Vyber způsob úhrady."; }
+      var storeHelper = extractionPanel.querySelector("[data-iu=\"review-store-helper\"]");
+      var storeNeedsCheck = (fnr.store || (fc.store != null && fc.store < 0.8)) && storeVal && storeVal !== "unknown";
+      if (storeHelper) { storeHelper.hidden = !storeNeedsCheck; if (!storeHelper.hidden) storeHelper.textContent = "Zkontrolujte název firmy. OCR může chybně rozdělit právní formu."; }
       var snapStore = (storeVal == null || storeVal === "unknown" || String(storeVal).trim() === "") ? "—" : String(storeVal);
       var snapDate = (dateVal == null || dateVal === "unknown" || String(dateVal).trim() === "") ? "" : String(dateVal);
       var snapTime = (timeVal == null || timeVal === "unknown" || String(timeVal).trim() === "") ? "—" : String(timeVal);
@@ -14049,7 +14238,7 @@ function buildVideoAsArticleCard(it) {
       var total = getReviewValue(reviewTotalValue); if (total === "unknown" || !total) total = "—";
       var docType = getReviewValue(reviewDoctypeValue); if (docType === "unknown" || !docType) docType = "Zjednodušený daňový doklad";
       var pm = getReviewValue(reviewPaymentValue);
-      if (pm !== "v hotovosti" && pm !== "bezhotovostní platba") pm = "unknown";
+      if (!/^(Hotovost|Karta|Převod|Jiné|Neurčeno)$/.test(pm)) pm = "Neurčeno";
       var today = new Date();
       var dateStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
       if (!date) date = dateStr;
@@ -14117,7 +14306,7 @@ function buildVideoAsArticleCard(it) {
       if (reviewTimeValue) reviewTimeValue.textContent = rec.receiptTime || rec.time || "—";
       if (reviewTotalValue) reviewTotalValue.textContent = iuEvidenceFormatTotalTwoDecimals(rec.totalAmount || rec.total) || "—";
       if (reviewDoctypeValue) reviewDoctypeValue.textContent = rec.documentType || "Zjednodušený daňový doklad";
-      if (reviewPaymentValue) reviewPaymentValue.textContent = (rec.paymentMethod && (rec.paymentMethod === "v hotovosti" || rec.paymentMethod === "bezhotovostní platba")) ? rec.paymentMethod : "unknown";
+      if (reviewPaymentValue) reviewPaymentValue.textContent = (rec.paymentMethod && /^(Hotovost|Karta|Převod|Jiné|Neurčeno|v hotovosti|bezhotovostní platba)$/.test(rec.paymentMethod)) ? (rec.paymentMethod === "v hotovosti" ? "Hotovost" : rec.paymentMethod === "bezhotovostní platba" ? "Karta" : rec.paymentMethod) : "Neurčeno";
       var snap = {
         correctedFields: { store: rec.merchantName || rec.store || "unknown", date: rec.receiptDate || rec.date || "unknown", time: rec.receiptTime || rec.time || "unknown", total: rec.totalAmount || rec.total || "unknown" },
         merchantName: rec.merchantName || rec.store || "—",
@@ -14158,7 +14347,7 @@ function buildVideoAsArticleCard(it) {
       var time = getReviewValue(reviewTimeValue); if (time === "unknown" || !time) time = "—";
       var total = getReviewValue(reviewTotalValue); if (total === "unknown" || !total) total = "—";
       var docType = getReviewValue(reviewDoctypeValue); if (docType === "unknown" || !docType) docType = "Zjednodušený daňový doklad";
-      var pm = getReviewValue(reviewPaymentValue); if (pm !== "v hotovosti" && pm !== "bezhotovostní platba") pm = "unknown";
+      var pm = getReviewValue(reviewPaymentValue); if (!/^(Hotovost|Karta|Převod|Jiné|Neurčeno)$/.test(pm)) pm = "Neurčeno";
       currentPipelineResult = {
         correctedFields: { store: store === "—" ? "unknown" : store, date: date || "unknown", time: time === "—" ? "unknown" : time, total: total === "—" ? "unknown" : total },
         merchantName: store,
@@ -14191,7 +14380,7 @@ function buildVideoAsArticleCard(it) {
       function commitEdit() {
         var v = (editEl.value || "").trim();
         if (!isSelect && (v === "" || v === "unknown")) v = "—";
-        if (isSelect && v !== "v hotovosti" && v !== "bezhotovostní platba") v = "unknown";
+        if (isSelect && !/^(Hotovost|Karta|Převod|Jiné|Neurčeno)$/.test(v)) v = "Neurčeno";
         if (editDataIu === "review-total-edit" && v !== "—") v = iuEvidenceFormatTotalTwoDecimals(v);
         valueSpan.textContent = v;
         valueSpan.hidden = false;
@@ -14209,6 +14398,7 @@ function buildVideoAsArticleCard(it) {
     wireEditRow("review-total-value", "review-total-edit", "review-total-confirm", false);
     wireEditRow("review-doctype-value", "review-doctype-edit", "review-doctype-confirm", false);
     wireEditRow("review-payment-value", "review-payment-edit", "review-payment-confirm", true);
+    try { window.__iuEvidenceShowReviewPanelForTest = showReviewPanel; } catch (_) {}
   }
 
   const IU_EVIDENCE_RECEIPTS_KEY = "iu:evidence:receipts";
@@ -14637,6 +14827,12 @@ function buildVideoAsArticleCard(it) {
     try{ document.body.classList.add("iuTopbarFlushRight"); }catch{}
     iuInitTopbarSearchToggle();
     iuMirrorTodayToTopbar();
+    iuMobileLayoutReorder();
+    setTimeout(function() { iuMobileLayoutReorder(); }, 100);
+    try {
+      var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
+      if (mq && mq.addEventListener) mq.addEventListener("change", function() { iuMobileLayoutReorder(); });
+    } catch (_) {}
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
 

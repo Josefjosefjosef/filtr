@@ -101,6 +101,8 @@ style-src 'self' 'unsafe-inline' https:;
                   <div class="iuMobileFocusActive"></div>
                   <div class="iuMobileFocusTiles"></div>
                 </div>
+                <!-- P0 Mobile: wrapper for left rail + MindMenu order (rail first, then MindMenu) -->
+                <div id="iuMobileFirstBlock" class="iu-mobileFirstBlock" aria-hidden="true"></div>
                 <!-- Mobilní stack: placeholder (rychl├ę odkazy jsou jedin├ę v accordionCol) -->
                 <div class="iu-mobileStack">
                 </div>
@@ -2984,6 +2986,7 @@ style-src 'self' 'unsafe-inline' https:;
                     <input type="text" class="iu-evidence-review-edit-input" data-iu="review-store-edit" aria-label="Obchod / firma" hidden />
                     <span class="iu-evidence-review-confidence" data-iu="review-store-confidence"></span>
                     <span class="iu-evidence-review-needs" data-iu="review-store-needs"></span>
+                    <span class="iu-evidence-review-helper" data-iu="review-store-helper" hidden aria-live="polite"></span>
                     <select class="iu-evidence-review-candidates" data-iu="review-store-candidates" aria-label="Vybrat variantu obchodu" hidden></select>
                     <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-store-confirm" aria-label="Upravit">Upravit</button>
                   </div>
@@ -3021,11 +3024,14 @@ style-src 'self' 'unsafe-inline' https:;
                   </div>
                   <div class="iu-evidence-review-row" data-iu="review-payment">
                     <span class="iu-evidence-review-label">Uhrazeno</span>
-                    <span class="iu-evidence-review-value" data-iu="review-payment-value">unknown</span>
+                    <span class="iu-evidence-review-value" data-iu="review-payment-value">Neurčeno</span>
+                    <span class="iu-evidence-review-helper" data-iu="review-payment-helper" hidden aria-live="polite"></span>
                     <select class="iu-evidence-review-edit-select" data-iu="review-payment-edit" aria-label="Uhrazeno" hidden>
-                      <option value="v hotovosti">v hotovosti</option>
-                      <option value="bezhotovostní platba">bezhotovostní platba</option>
-                      <option value="unknown">unknown</option>
+                      <option value="Hotovost">Hotovost</option>
+                      <option value="Karta">Karta</option>
+                      <option value="Převod">Převod</option>
+                      <option value="Jiné">Jiné</option>
+                      <option value="Neurčeno">Neurčeno</option>
                     </select>
                     <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-payment-confirm" aria-label="Upravit">Upravit</button>
                   </div>
@@ -3035,7 +3041,7 @@ style-src 'self' 'unsafe-inline' https:;
                 <div data-iu-section="blocked_notices_section" class="iu-evidence-blocked-notices" aria-live="polite" hidden></div>
                 <h4 class="iu-evidence-items-heading">Položky</h4>
                 <ul class="iu-evidence-items-list" data-iu="evidence-items-list" aria-label="Položky dokladu"></ul>
-                <p class="iu-evidence-unknown-hint" data-iu="unknown-state-works">Údaje označené jako „unknown“ nebyly bezpečně rozpoznány.</p>
+                <p class="iu-evidence-unknown-hint" data-iu="unknown-state-works">Údaje, které OCR nerozpoznalo, je třeba zkontrolovat.</p>
                 <div class="iu-evidence-review-actions" data-iu-section="safe_actions_section">
                   <button type="button" class="iu-evidence-save-cta" data-iu="evidence-save-cta" aria-label="Uložit do evidence">Uložit do evidence</button>
                 </div>
