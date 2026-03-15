@@ -2946,7 +2946,7 @@ style-src 'self' 'unsafe-inline' https:;
       <div class="iuModalCard">
         <div class="iuModalHead">
           <span id="iuNakupModalTitle">Evidence nákupů</span>
-          <button id="iuNakupClose" type="button" aria-label="Zavřít">×</button>
+          <button id="iuNakupClose" type="button" class="iuNakupCloseBtn" aria-label="Zavřít">Zavřít</button>
         </div>
         <div class="iuModalBody">
           <div class="iu-evidence-nakupu-top" data-iu="evidence-nakupu-top" data-iu-personal-evidence-only="true" role="region" aria-label="Evidence nákupů">
@@ -2960,7 +2960,7 @@ style-src 'self' 'unsafe-inline' https:;
                   <span class="iu-evidence-idle-text">Vyberte soubor nebo vyfoťte doklad.</span>
                   <button type="button" class="iu-evidence-clear-cta" data-iu="evidence-clear-cta" aria-label="Vyčistit formulář">Vyčistit</button>
                 </div>
-                <div class="iu-evidence-upload-state iu-evidence-state-pending" data-iu="upload-state-pending" role="status" hidden>Odesílám…</div>
+                <div class="iu-evidence-upload-state iu-evidence-state-pending" data-iu="upload-state-pending" role="status" hidden aria-live="polite">…</div>
                 <div class="iu-evidence-upload-state iu-evidence-state-success" data-iu="upload-state-success" role="status" hidden>Doklad byl nahrán. Zpracování připraveno.</div>
                 <div class="iu-evidence-upload-state iu-evidence-state-failed" data-iu="upload-state-failed" role="status" hidden>Nahrání se nepodařilo. Zkuste jiný soubor.</div>
               </div>
@@ -2990,7 +2990,7 @@ style-src 'self' 'unsafe-inline' https:;
                   <div class="iu-evidence-review-row" data-iu="review-date">
                     <span class="iu-evidence-review-label">Datum</span>
                     <span class="iu-evidence-review-value" data-iu="review-date-value">—</span>
-                    <input type="text" class="iu-evidence-review-edit-input" data-iu="review-date-edit" aria-label="Datum" placeholder="YYYY-MM-DD" hidden />
+                    <input type="text" class="iu-evidence-review-edit-input" data-iu="review-date-edit" aria-label="Datum" placeholder="DD.MM.YYYY" hidden />
                     <span class="iu-evidence-review-confidence" data-iu="review-date-confidence"></span>
                     <span class="iu-evidence-review-needs" data-iu="review-date-needs"></span>
                     <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-date-confirm" aria-label="Upravit">Upravit</button>

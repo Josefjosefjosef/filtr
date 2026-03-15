@@ -11121,7 +11121,10 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   border-radius: 0;
   box-shadow: none;
   box-sizing: border-box;
+  background: #fff;
 }
+#iuNakupModal[hidden]{ display: none !important; }
+#iuNakupModal:not([hidden]){ background: #fff; }
 #iuNakupModal .iuModalBody{
   overflow-x: hidden;
   overflow-y: visible;
@@ -11169,6 +11172,19 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   cursor: pointer;
   line-height: 1;
   padding: 0 4px;
+}
+#iuNakupModal .iuNakupCloseBtn{
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border: 1px solid rgba(11,27,43,.2);
+  border-radius: 6px;
+  background: #f5f7fa;
+  color: #0b1b2b;
+}
+#iuNakupModal .iuNakupCloseBtn:hover{
+  background: #e8ecf1;
+  border-color: rgba(11,27,43,.3);
 }
 
 .iuModalBody a{
@@ -11376,8 +11392,7 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   overflow: visible !important;
 }
 [data-iu="ocr-extraction-result"][hidden]{
-  display: block !important;
-  visibility: hidden;
+  display: none !important;
   pointer-events: none;
 }
 .iu-evidence-extraction-heading{
@@ -11415,6 +11430,11 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   gap: 8px 12px;
   margin-bottom: 8px;
   font-size: 13px;
+  border-radius: 6px;
+  transition: background-color .15s ease;
+}
+.iu-evidence-review-row:hover{
+  background-color: rgba(11,27,43,.04);
 }
 .iu-evidence-review-label{ font-weight: 600; color: rgba(11,27,43,.75); min-width: 100px; }
 .iu-evidence-review-value{ color: #0b1b2b; }
@@ -11578,14 +11598,14 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   font-size: 12px;
   border-radius: 6px;
   cursor: pointer;
-  border: 1px solid #e65100;
-  background: #e65100;
+  border: 1px solid #1F4B99;
+  background: #1F4B99;
   color: #fff;
   flex-shrink: 0;
 }
 .iu-evidence-day-edit-btn:hover{
-  background: #bf360c;
-  border-color: #bf360c;
+  background: #173d82;
+  border-color: #173d82;
   color: #fff;
 }
 .iu-evidence-day-delete-btn{

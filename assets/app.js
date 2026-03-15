@@ -13744,6 +13744,32 @@ function buildVideoAsArticleCard(it) {
     if (/\b(kartou|karta|card|bezhotovost|platebn[ií]\s*karta)\b/.test(s)) return "bezhotovostní platba";
     return "unknown";
   }
+  function iuEvidenceFormatDateDDMMYYYY(ymdOrIso) {
+    var s = String(ymdOrIso || "").trim();
+    if (!s || s === "—" || s === "unknown") return s;
+    var m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if (m) return String(parseInt(m[3], 10)).padStart(2, "0") + "." + String(parseInt(m[2], 10)).padStart(2, "0") + "." + m[1];
+    var m2 = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+    if (m2) return String(parseInt(m2[1], 10)).padStart(2, "0") + "." + String(parseInt(m2[2], 10)).padStart(2, "0") + m2[3];
+    return s;
+  }
+  function iuEvidenceParseDateToYMD(str) {
+    var s = String(str || "").trim();
+    if (!s || s === "—" || s === "unknown") return "";
+    var m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if (m) return m[1] + "-" + String(parseInt(m[2], 10)).padStart(2, "0") + "-" + String(parseInt(m[3], 10)).padStart(2, "0");
+    var m2 = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+    if (m2) return m2[3] + "-" + String(parseInt(m2[2], 10)).padStart(2, "0") + "-" + String(parseInt(m2[1], 10)).padStart(2, "0");
+    return s;
+  }
+  function iuEvidenceFormatTotalTwoDecimals(val) {
+    if (val == null || val === "" || val === "—" || val === "unknown") return String(val === "unknown" ? "unknown" : (val === "" ? "" : "—"));
+    var s = String(val).replace(/\s*Kč\s*$/i, "").trim().replace(",", ".");
+    var num = parseFloat(s);
+    if (isNaN(num)) return String(val);
+    var fixed = num.toFixed(2).replace(".", ",");
+    return fixed + " Kč";
+  }
 
   function iuEvidenceUploadInit(){
     const modal = document.getElementById("iuNakupModal");
@@ -13784,6 +13810,7 @@ function buildVideoAsArticleCard(it) {
     const validationSummaryEl = topBlock.querySelector("[data-iu=\"validation-summary-visible\"]");
     const saveCta = topBlock.querySelector("[data-iu=\"evidence-save-cta\"]");
     if (!container || !photoCta || !receiptInput) return;
+    if (previewShell) previewShell.hidden = true;
     var currentPipelineResult = null;
 
     function setState(which) {
@@ -13792,6 +13819,7 @@ function buildVideoAsArticleCard(it) {
       });
       const el = which === "idle" ? stateIdle : which === "pending" ? statePending : which === "success" ? stateSuccess : which === "failed" ? stateFailed : null;
       if (el) { el.hidden = false; }
+      if (previewShell) previewShell.hidden = (which === "idle");
     }
     function showValidation(typeMsg, sizeMsg) {
       if (!validationBlock) return;
@@ -13801,6 +13829,7 @@ function buildVideoAsArticleCard(it) {
     }
     function showPreview(file) {
       if (!previewShell || !previewName || !previewMeta) return;
+      previewShell.hidden = false;
       previewName.textContent = file.name || "—";
       previewMeta.textContent = (file.type || "") + " · " + (file.size ? Math.round(file.size / 1024) + " KB" : "");
     }
@@ -13878,11 +13907,11 @@ function buildVideoAsArticleCard(it) {
       var rTotal = panel.querySelector("[data-iu=\"review-total-value\"]");
       var rDoctype = panel.querySelector("[data-iu=\"review-doctype-value\"]");
       setReviewField(rStore || reviewStoreValue, reviewStoreConfidence, reviewStoreNeeds, reviewStoreCandidates, storeVal, fc.store, fnr.store, cand.store);
-      setReviewField(rDate || reviewDateValue, reviewDateConfidence, reviewDateNeeds, null, dateVal, fc.date, fnr.date, null);
+      setReviewField(rDate || reviewDateValue, reviewDateConfidence, reviewDateNeeds, null, iuEvidenceFormatDateDDMMYYYY(dateVal), fc.date, fnr.date, null);
       setReviewField(rTime || reviewTimeValue, reviewTimeConfidence, reviewTimeNeeds, null, timeVal, fc.time, fnr.time, null);
       var totalLabelEl = panel.querySelector("[data-iu=\"review-total\"]");
       if (totalLabelEl) { var lbl = totalLabelEl.querySelector(".iu-evidence-review-label"); if (lbl) lbl.textContent = "Celkem zaplaceno"; }
-      setReviewField(rTotal || reviewTotalValue, reviewTotalConfidence, reviewTotalNeeds, null, totalVal, fc.total, fnr.total, null);
+      setReviewField(rTotal || reviewTotalValue, reviewTotalConfidence, reviewTotalNeeds, null, iuEvidenceFormatTotalTwoDecimals(totalVal), fc.total, fnr.total, null);
       var rawOcr = String(result.rawOcrText || "");
       var docTypeDisplay = "Zjednodušený daňový doklad";
       if (/\bdaňová\s+faktura\b/i.test(rawOcr) || /\btax\s+invoice\b/i.test(rawOcr)) docTypeDisplay = "Daňová faktura";
@@ -13897,9 +13926,9 @@ function buildVideoAsArticleCard(it) {
           var t = (c.time != null && c.time !== "unknown" ? c.time : null) || appliedSnapshot.time;
           var tot = (c.total != null && c.total !== "unknown" ? c.total : null) || appliedSnapshot.total;
           var rs = document.querySelector("[data-iu=\"review-store-value\"]"); if (rs) rs.textContent = (s == null || s === "unknown" || String(s).trim() === "") ? "unknown" : String(s);
-          var rd = document.querySelector("[data-iu=\"review-date-value\"]"); if (rd) rd.textContent = (d == null || d === "unknown" || String(d).trim() === "") ? "unknown" : String(d);
+          var rd = document.querySelector("[data-iu=\"review-date-value\"]"); if (rd) rd.textContent = (d == null || d === "unknown" || String(d).trim() === "") ? "unknown" : iuEvidenceFormatDateDDMMYYYY(d);
           var rt = document.querySelector("[data-iu=\"review-time-value\"]"); if (rt) rt.textContent = (t == null || t === "unknown" || String(t).trim() === "") ? "unknown" : String(t);
-          var rtot = document.querySelector("[data-iu=\"review-total-value\"]"); if (rtot) rtot.textContent = (tot == null || tot === "unknown" || String(tot).trim() === "") ? "unknown" : String(tot);
+          var rtot = document.querySelector("[data-iu=\"review-total-value\"]"); if (rtot) rtot.textContent = (tot == null || tot === "unknown" || String(tot).trim() === "") ? "unknown" : iuEvidenceFormatTotalTwoDecimals(tot);
         }, 0);
       })(result, applied);
       if (reviewSummaryEl) reviewSummaryEl.hidden = true;
@@ -14014,7 +14043,8 @@ function buildVideoAsArticleCard(it) {
       var editingId = null;
       try { editingId = window.__iuEvidenceEditingRecordId; } catch (_) {}
       var store = getReviewValue(reviewStoreValue); if (store === "unknown" || !store) store = "—";
-      var date = getReviewValue(reviewDateValue); if (date === "unknown" || !date) date = "";
+      var dateRaw = getReviewValue(reviewDateValue);
+      var date = iuEvidenceParseDateToYMD(dateRaw) || (dateRaw === "unknown" || !dateRaw ? "" : dateRaw);
       var time = getReviewValue(reviewTimeValue); if (time === "unknown" || !time) time = "—";
       var total = getReviewValue(reviewTotalValue); if (total === "unknown" || !total) total = "—";
       var docType = getReviewValue(reviewDoctypeValue); if (docType === "unknown" || !docType) docType = "Zjednodušený daňový doklad";
@@ -14022,7 +14052,7 @@ function buildVideoAsArticleCard(it) {
       if (pm !== "v hotovosti" && pm !== "bezhotovostní platba") pm = "unknown";
       var today = new Date();
       var dateStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
-      if (date === "unknown" || !date) date = dateStr;
+      if (!date) date = dateStr;
       if (editingId) {
         var arr = iuEvidenceGetReceipts();
         var idx = -1;
@@ -14045,6 +14075,8 @@ function buildVideoAsArticleCard(it) {
           iuEvidenceSaveReceipts(arr);
           currentPipelineResult = null;
           try { window.__iuEvidenceFreeSummarySnapshot = null; window.__iuEvidenceEditingRecordId = null; } catch (_) {}
+          if (typeof window.iuEvidenceRefreshCalendar === "function") { window.iuEvidenceRefreshCalendar(); }
+          if (typeof window.iuEvidenceCalendarGoToDate === "function") { window.iuEvidenceCalendarGoToDate(date); }
           setState("success");
           return;
         }
@@ -14073,15 +14105,17 @@ function buildVideoAsArticleCard(it) {
       iuEvidenceSaveReceipts(arr);
       currentPipelineResult = null;
       try { window.__iuEvidenceFreeSummarySnapshot = null; } catch (_) {}
+      if (typeof window.iuEvidenceRefreshCalendar === "function") { window.iuEvidenceRefreshCalendar(); }
+      if (typeof window.iuEvidenceCalendarGoToDate === "function") { window.iuEvidenceCalendarGoToDate(date); }
       setState("success");
     }
 
     window.iuEvidenceLoadRecordIntoForm = function(rec) {
       if (!rec || !extractionPanel) return;
       if (reviewStoreValue) reviewStoreValue.textContent = rec.merchantName || rec.store || "—";
-      if (reviewDateValue) reviewDateValue.textContent = rec.receiptDate || rec.date || "—";
+      if (reviewDateValue) reviewDateValue.textContent = iuEvidenceFormatDateDDMMYYYY(rec.receiptDate || rec.date) || "—";
       if (reviewTimeValue) reviewTimeValue.textContent = rec.receiptTime || rec.time || "—";
-      if (reviewTotalValue) reviewTotalValue.textContent = rec.totalAmount || rec.total || "—";
+      if (reviewTotalValue) reviewTotalValue.textContent = iuEvidenceFormatTotalTwoDecimals(rec.totalAmount || rec.total) || "—";
       if (reviewDoctypeValue) reviewDoctypeValue.textContent = rec.documentType || "Zjednodušený daňový doklad";
       if (reviewPaymentValue) reviewPaymentValue.textContent = (rec.paymentMethod && (rec.paymentMethod === "v hotovosti" || rec.paymentMethod === "bezhotovostní platba")) ? rec.paymentMethod : "unknown";
       var snap = {
@@ -14158,6 +14192,7 @@ function buildVideoAsArticleCard(it) {
         var v = (editEl.value || "").trim();
         if (!isSelect && (v === "" || v === "unknown")) v = "—";
         if (isSelect && v !== "v hotovosti" && v !== "bezhotovostní platba") v = "unknown";
+        if (editDataIu === "review-total-edit" && v !== "—") v = iuEvidenceFormatTotalTwoDecimals(v);
         valueSpan.textContent = v;
         valueSpan.hidden = false;
         editEl.hidden = true;
@@ -14318,8 +14353,17 @@ function buildVideoAsArticleCard(it) {
     function receiptsByDate(){
       var receipts = iuEvidenceGetReceipts();
       var byDate = {};
+      function normKey(str) {
+        if (!str || typeof str !== "string") return str;
+        var parts = str.trim().match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+        if (parts) return parts[1] + "-" + String(parseInt(parts[2], 10)).padStart(2, "0") + "-" + String(parseInt(parts[3], 10)).padStart(2, "0");
+        var d = str.trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+        if (d) return d[3] + "-" + String(parseInt(d[2], 10)).padStart(2, "0") + "-" + String(parseInt(d[1], 10)).padStart(2, "0");
+        return str;
+      }
       receipts.forEach(function(r){
-        var d = r.date || "";
+        var d = normKey(r.date || r.receiptDate || "");
+        if (!d) return;
         if (!byDate[d]) byDate[d] = [];
         byDate[d].push(r);
       });
@@ -14327,28 +14371,33 @@ function buildVideoAsArticleCard(it) {
     }
 
     function renderCalendar(){
+      var block = document.querySelector("[data-iu=\"evidence-nakupu-top\"]");
+      var gridToUse = block ? block.querySelector("[data-iu=\"calendar-grid\"]") : null;
+      var monthToUse = block ? block.querySelector("[data-iu=\"calendar-month\"]") : null;
+      if (!gridToUse) gridToUse = grid;
+      if (!monthToUse) monthToUse = monthEl;
       var byDate = receiptsByDate();
       var first = new Date(currentYear, currentMonth, 1);
       var last = new Date(currentYear, currentMonth + 1, 0);
       var startPad = (first.getDay() + 6) % 7;
       var daysInMonth = last.getDate();
       var monthNames = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"];
-      if (monthEl) monthEl.textContent = monthNames[currentMonth] + " " + currentYear;
-      grid.innerHTML = "";
+      if (monthToUse) monthToUse.textContent = monthNames[currentMonth] + " " + currentYear;
+      gridToUse.innerHTML = "";
       for (var i = 0; i < 7; i++) {
         var h = document.createElement("div");
         h.setAttribute("role", "columnheader");
         h.className = "iu-evidence-calendar-day";
         h.textContent = ["Po","Út","St","Čt","Pá","So","Ne"][i];
         h.style.cursor = "default";
-        grid.appendChild(h);
+        gridToUse.appendChild(h);
       }
       for (var p = 0; p < startPad; p++) {
         var empty = document.createElement("div");
         empty.className = "iu-evidence-calendar-day iu-evidence-day-other";
         empty.textContent = "";
         empty.style.pointerEvents = "none";
-        grid.appendChild(empty);
+        gridToUse.appendChild(empty);
       }
       var todayKey = dateKey(new Date());
       for (var d = 1; d <= daysInMonth; d++) {
@@ -14359,7 +14408,7 @@ function buildVideoAsArticleCard(it) {
         var isToday = key === todayKey;
         var cell = document.createElement("button");
         cell.type = "button";
-        cell.className = "iu-evidence-calendar-day" + (isToday ? " iu-evidence-day-today" : "") + (isSelected ? " iu-evidence-day-selected" : hasReceipts ? " iu-evidence-day-has" : "") + (currentMonth !== dayDate.getMonth() ? " iu-evidence-day-other" : "");
+        cell.className = "iu-evidence-calendar-day" + (isToday ? " iu-evidence-day-today" : "") + (hasReceipts ? " iu-evidence-day-has" : "") + (isSelected ? " iu-evidence-day-selected" : "") + (currentMonth !== dayDate.getMonth() ? " iu-evidence-day-other" : "");
         cell.textContent = d;
         cell.setAttribute("data-date", key);
         cell.setAttribute("aria-label", "Den " + d);
@@ -14370,18 +14419,23 @@ function buildVideoAsArticleCard(it) {
           renderDailyList();
           if (detailPanel && selectedReceiptId) { detailPanel.hidden = true; selectedReceiptId = null; }
         });
-        grid.appendChild(cell);
+        gridToUse.appendChild(cell);
       }
     }
 
     function renderDailyList(){
-      if (!dailyList || !dailyEmpty) return;
-      dailyList.innerHTML = "";
-      dailyEmpty.hidden = true;
+      var block = document.querySelector("[data-iu=\"evidence-nakupu-top\"]");
+      var dailyListCur = block ? block.querySelector("[data-iu=\"daily-receipt-list\"]") : null;
+      var dailyEmptyCur = block ? block.querySelector("[data-iu=\"daily-list-empty\"]") : null;
+      if (!dailyListCur) dailyListCur = dailyList;
+      if (!dailyEmptyCur) dailyEmptyCur = dailyEmpty;
+      if (!dailyListCur || !dailyEmptyCur) return;
+      dailyListCur.innerHTML = "";
+      dailyEmptyCur.hidden = true;
       if (!selectedDate) return;
       var receipts = iuEvidenceGetReceipts().filter(function(r){ return r.date === selectedDate; });
       if (receipts.length === 0) {
-        dailyEmpty.hidden = false;
+        dailyEmptyCur.hidden = false;
         return;
       }
       receipts.forEach(function(r){
@@ -14392,7 +14446,7 @@ function buildVideoAsArticleCard(it) {
         inner.className = "iu-evidence-daily-item-inner";
         var textSpan = document.createElement("span");
         textSpan.className = "iu-evidence-daily-item-text";
-        textSpan.textContent = (r.merchantName || r.store || "—") + " · " + (r.totalAmount || r.total || "");
+        textSpan.textContent = (r.merchantName || r.store || "—") + " · " + (iuEvidenceFormatTotalTwoDecimals(r.totalAmount || r.total) || "—");
         textSpan.addEventListener("click", function(e){
           e.stopPropagation();
           selectedReceiptId = (e.currentTarget.closest("li") || li).getAttribute("data-receipt-id");
@@ -14426,7 +14480,7 @@ function buildVideoAsArticleCard(it) {
         inner.appendChild(editBtn);
         inner.appendChild(deleteBtn);
         li.appendChild(inner);
-        dailyList.appendChild(li);
+        dailyListCur.appendChild(li);
       });
     }
 
@@ -14435,9 +14489,9 @@ function buildVideoAsArticleCard(it) {
       var r = receipts.filter(function(x){ return (x.id || "") === id; })[0];
       if (!r || !detailPanel) return;
       if (detailStore) detailStore.textContent = r.merchantName || r.store || "—";
-      if (detailDate) detailDate.textContent = r.receiptDate || r.date || "—";
+      if (detailDate) detailDate.textContent = iuEvidenceFormatDateDDMMYYYY(r.receiptDate || r.date) || "—";
       if (detailTime) detailTime.textContent = r.receiptTime || r.time || "—";
-      if (detailTotal) detailTotal.textContent = r.totalAmount || r.total || "—";
+      if (detailTotal) detailTotal.textContent = iuEvidenceFormatTotalTwoDecimals(r.totalAmount || r.total) || "—";
       if (detailDoctype) detailDoctype.textContent = r.documentType || (r.docType && r.docType !== "receipt" ? r.docType : null) || "Zjednodušený daňový doklad";
       if (detailPayment) detailPayment.textContent = (r.paymentMethod != null && String(r.paymentMethod).length) ? r.paymentMethod : "unknown";
       if (detailVatIncluded) detailVatIncluded.textContent = "";
@@ -14480,6 +14534,23 @@ function buildVideoAsArticleCard(it) {
 
     renderCalendar();
     if (emptyState) emptyState.hidden = iuEvidenceGetReceipts().length > 0;
+    window.iuEvidenceRefreshCalendar = function() {
+      renderCalendar();
+      renderDailyList();
+      if (emptyState) emptyState.hidden = iuEvidenceGetReceipts().length > 0;
+    };
+    window.iuEvidenceCalendarGoToDate = function(ymd) {
+      if (!ymd || typeof ymd !== "string") return;
+      selectedDate = ymd.trim();
+      var parts = ymd.trim().match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+      if (parts) {
+        currentYear = parseInt(parts[1], 10);
+        currentMonth = parseInt(parts[2], 10) - 1;
+      }
+      renderCalendar();
+      renderDailyList();
+      if (emptyState) emptyState.hidden = iuEvidenceGetReceipts().length > 0;
+    };
   }
 
   function iuNakupDomuInit(){
