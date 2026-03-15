@@ -13716,7 +13716,7 @@ function buildVideoAsArticleCard(it) {
         paymentRow = document.createElement("div");
         paymentRow.className = "iu-evidence-review-row";
         paymentRow.setAttribute("data-iu", "review-payment");
-        paymentRow.innerHTML = "<span class=\"iu-evidence-review-label\">Uhrazeno</span><span class=\"iu-evidence-review-value\" data-iu=\"review-payment-value\">—</span>";
+        paymentRow.innerHTML = "<span class=\"iu-evidence-review-label\">Uhrazeno</span><span class=\"iu-evidence-review-value\" data-iu=\"review-payment-value\">unknown</span>";
         primarySection.appendChild(paymentRow);
       }
       if (paymentRow) {
@@ -13725,7 +13725,7 @@ function buildVideoAsArticleCard(it) {
         if (/\b(hotovost|v\s*hotovosti|cash)\b/.test(raw)) paymentVal = "platba v hotovosti";
         else if (/\b(karta|card|platba\s*kartou|bezhotovostní)\b/.test(raw)) paymentVal = "bezhotovostní úhrada";
         var pv = paymentRow.querySelector("[data-iu=\"review-payment-value\"]");
-        if (pv) pv.textContent = paymentVal || "—";
+        if (pv) pv.textContent = paymentVal || "unknown";
       }
       var summaryEl = extractionPanel.querySelector("[data-iu=\"receipt-summary\"]");
       if (!summaryEl && listEl && listEl.parentNode) {
