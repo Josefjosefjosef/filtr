@@ -9139,7 +9139,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     min-width: 0 !important;
     flex-wrap: nowrap !important;
   }
-  /* P0: brand + Přidat na plochu in one row (inline), no clipping */
+  /* P0: brand + Přidat na plochu always one row (inline guarantee) */
   #topbarWrap .iuTopbarLeft{
     display: flex !important;
     flex-direction: row !important;
@@ -9151,11 +9151,21 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     overflow: visible !important;
     flex-wrap: nowrap !important;
   }
+  #topbarWrap .iuTopbarLeft .iuBrandBlock{
+    flex-shrink: 0 !important;
+    min-width: 0 !important;
+  }
+  #topbarWrap .iuTopbarLeft .iuBrand{
+    white-space: nowrap !important;
+    font-size: clamp(14px, 4.5vw, 22px) !important;
+  }
   #topbarWrap .iuTopbarLeft .iuPwaInstallCta{
     flex-shrink: 0 !important;
     min-height: 36px !important;
     padding: 6px 10px !important;
     font-size: 12px !important;
+    white-space: nowrap !important;
+    max-width: 140px !important;
   }
   #topbarWrap .iuBrandBlock{
     min-width: 0 !important;
