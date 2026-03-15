@@ -9721,6 +9721,7 @@ function buildVideoAsArticleCard(it) {
 
     var itemSectionStartLine = null;
     var itemSectionEndLine = null;
+    var itemSectionPreslicedTotal = null;
     for (var si = 0; si < lines.length; si++) {
       var st = normalizeLineText((lines[si].text || "").trim());
       if (!st) continue;
@@ -9730,8 +9731,23 @@ function buildVideoAsArticleCard(it) {
       for (var ei = itemSectionStartLine + 1; ei < lines.length; ei++) {
         var et = normalizeLineText((lines[ei].text || "").trim());
         if (!et) continue;
-        if (itemSectionStopRe.test(et)) { itemSectionEndLine = ei; break; }
+        if (itemSectionStopRe.test(et)) {
+          if (/CELKEM/i.test(et)) {
+            itemSectionEndLine = ei - 1;
+            var pcTot = extractPriceTokens(et);
+            if (pcTot && pcTot.length >= 1) {
+              var tv = parsePriceNum(pcTot[pcTot.length - 1]);
+              if (!isNaN(tv) && tv >= 0) itemSectionPreslicedTotal = tv;
+            }
+          } else {
+            itemSectionEndLine = ei;
+          }
+          break;
+        }
       }
+    }
+    if (itemSectionEndLine != null && itemSectionEndLine < itemSectionStartLine) {
+      itemSectionEndLine = itemSectionStartLine;
     }
     if (itemSectionStartLine != null && itemSectionEndLine != null) {
       if (geometry && geometry.lines) {
@@ -9845,6 +9861,10 @@ function buildVideoAsArticleCard(it) {
       totalCandidates.sort(function(a, b) { return b.lineIndex - a.lineIndex; });
       selectedTotalLine = totalCandidates[0];
       totalValue = selectedTotalLine.value;
+    }
+    if (totalValue == null && itemSectionPreslicedTotal != null) {
+      totalValue = itemSectionPreslicedTotal;
+      selectedTotalLine = { lineIndex: -1, value: itemSectionPreslicedTotal, text: "", rightX: null };
     }
     var totalLineDetected = totalValue != null;
 
