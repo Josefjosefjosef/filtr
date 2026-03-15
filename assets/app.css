@@ -9056,7 +9056,18 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     min-width: 0 !important;
     box-sizing: border-box !important;
     padding: 0 !important;
+    margin-top: 0 !important;
     overflow-x: hidden !important;
+  }
+  /* P0 Silver flush: no gap between topbar and Silver */
+  #iuMobileGateWrap #iuMobileSilverSlot{
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+  #iuMobileGateWrap #iuMobileSilverSlot .silver-slot,
+  #iuMobileGateWrap #iuMobileSilverSlot .silver-shell{
+    margin-top: 0 !important;
+    padding-top: 0 !important;
   }
   #iuMobileFocus,
   #iuMobileFirstBlock,
@@ -9182,11 +9193,22 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     padding-right: 6px !important;
     font-size: clamp(11px, 2.8vw, 14px) !important;
   }
+  /* On mobile show only right slot (info circle); CTA is in #iuMobileCtaSlot */
   #topbarWrap .iuTopbarContent{
+    display: flex !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    pointer-events: none !important;
+    padding: 0 !important;
+  }
+  #topbarWrap .iuTopbarContent .iuTopbarSlot:not(.iuTopbarSlot--right){
     display: none !important;
-    width: 0 !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
+  }
+  #topbarWrap .iuTopbarContent .iuTopbarSlot--right{
+    pointer-events: auto !important;
   }
   /* Silver slot: full width, centered */
   #iuMobileSilverSlot.iu-mobileSilverSlot{
@@ -9241,6 +9263,65 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     background: #b0b0b0 !important;
     border-color: #888 !important;
     color: #0d1520 !important;
+  }
+  /* P0 Mobile CTA block: below main entry buttons, full width, 50/50 */
+  #iuMobileCtaSlot.iu-mobileCtaSlot{
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    padding: 12px 12px 16px !important;
+    gap: 0 !important;
+  }
+  #iuMobileCtaSlot.iu-mobileCtaSlot:empty{
+    display: none !important;
+  }
+  #iuMobileCtaSlot .iuRightTopCtas{
+    display: flex !important;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    gap: 0 !important;
+  }
+  #iuMobileCtaSlot .iuRightTopCtas > .iuRightCta{
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 12px 8px !important;
+    font-size: 13px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+  #iuMobileCtaSlot .iuRightCta--submit .iuRightCta-submit-desktop{
+    display: none !important;
+  }
+  #iuMobileCtaSlot .iuRightCta--submit .iuRightCta-submit-mobile{
+    display: inline !important;
+  }
+  #iuMobileCtaSlot .iuRightCta--submit .iuRightCta-submit-mobile:empty{
+    display: none !important;
+  }
+  /* Same CTA visual family as desktop (silver-blue + gold) */
+  #iuMobileCtaSlot .iuRightCta--services{
+    background: #E7EDF7 !important;
+    color: #1F3B6D !important;
+    border: 1px solid #D3DEEF !important;
+  }
+  #iuMobileCtaSlot .iuRightCta--submit{
+    background: linear-gradient(180deg, #FFD873, #E5B94A) !important;
+    color: #1B2A4A !important;
+    border: 1px solid #D4A73B !important;
+  }
+  #iuMobileCtaSlot .iuRightTopCtas > .iuRightCta:first-child{
+    border-radius: 12px 0 0 12px !important;
+    border-right: none !important;
+  }
+  #iuMobileCtaSlot .iuRightTopCtas > .iuRightCta:last-child{
+    border-radius: 0 12px 12px 0 !important;
+    border-left: none !important;
   }
   #iuMobileGateContent.iu-mobileGateContent{
     width: 100% !important;
