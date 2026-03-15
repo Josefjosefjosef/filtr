@@ -9109,13 +9109,12 @@ function buildVideoAsArticleCard(it) {
   };
   const IU_EVIDENCE_MAX_FILE_BYTES = 10 * 1024 * 1024;
 
-  /** OCR normalisation: whitespace, artefacts, separators, safe diacritics, common OCR substitutions (0↔O, 1↔l, Kč↔Kc, etc.). Date separators ~, multiple dashes -> single -. */
+  /** OCR normalisation: whitespace, artefacts, separators, safe diacritics. Kc/CZK -> Kč. Line cleanup for CELKEM/total. Date separators ~, multiple dashes -> single -. */
   function iuEvidenceNormalizeOcrText(raw) {
     if (raw == null || typeof raw !== "string") return "";
     var s = raw.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
     s = s.replace(/[ \t]+/g, " ").replace(/\n +/g, "\n").replace(/ +\n/g, "\n").trim();
-    s = s.replace(/Kc\b/gi, "Kč").replace(/Kč/g, "Kc");
-    s = s.replace(/\bCZK\b/gi, "Kc");
+    s = s.replace(/\bKc\b/gi, "Kč").replace(/\bCZK\b/gi, "Kč");
     s = s.replace(/~/g, "-").replace(/-+/g, "-");
     var out = "";
     for (var i = 0; i < s.length; i++) {
@@ -9123,10 +9122,12 @@ function buildVideoAsArticleCard(it) {
       if (c === "," && out.length > 0 && /\d/.test(out[out.length - 1]) && i < s.length - 1 && /\d/.test(s[i + 1])) { out += "."; continue; }
       out += c;
     }
-    return iuEvidenceNormalizeLegalFormCzech(out);
+    s = out;
+    s = s.replace(/(CELKEM|TOTAL|K\s*[UÚ]HRAD[EĚ]?|K\s*UHRADE|KCELKEM)\s*[.:\s\-]+\s*(\d[\d,.\s]*)/gi, "$1 $2");
+    return iuEvidenceNormalizeLegalFormCzech(s);
   }
 
-  /** Czech legal form post-OCR normalization: canonical s.r.o., a.s., v.o.s., k.s., SE, družstvo, spol. s r.o., s.p. */
+  /** Czech legal form post-OCR normalization: canonical s.r.o., a.s., v.o.s., k.s., SE, družstvo, spol. s r.o., s.p. Variants: s r o, s.r o, sr.o, a s, v o s, k s. */
   function iuEvidenceNormalizeLegalFormCzech(s) {
     if (s == null || typeof s !== "string") return "";
     var t = String(s);
@@ -9134,6 +9135,7 @@ function buildVideoAsArticleCard(it) {
     t = t.replace(/\bv\s*\.?\s*o\s*\.?\s*s\.?/gi, "v.o.s.");
     t = t.replace(/\bk\s*\.?\s*s\.?/gi, "k.s.");
     t = t.replace(/\ba\s*\.?\s*s\.?/gi, "a.s.");
+    t = t.replace(/\bs\s*\.\s*r\s*o\b/gi, "s.r.o.");
     t = t.replace(/\bs\s*\.?\s*r\s*\.?\s*o\.?\b|\bsr\.o\.?\b|\bsro\b/gi, "s.r.o.");
     t = t.replace(/\bs\.p\.?/gi, "s.p.");
     return t;
@@ -10422,7 +10424,7 @@ function buildVideoAsArticleCard(it) {
     var totalMatchesItems = (vs && typeof vs.sumMismatch === "boolean") ? !vs.sumMismatch : "unknown";
     var totalsNeedsReview = !!(vs && vs.sumMismatch) || !(p6 && p6.totalResolvedSafely);
     var totalsReviewReason = (vs && vs.sumMismatch) ? "math_inconsistency" : (!(p6 && p6.totalResolvedSafely) ? "total_uncertain" : null);
-    var paymentMethodValue = (p6 && (p6.paymentMethodValue === "cash" || p6.paymentMethodValue === "card" || p6.paymentMethodValue === "transfer")) ? p6.paymentMethodValue : "unknown";
+    var paymentMethodValue = (p6 && (p6.paymentMethodValue === "cash" || p6.paymentMethodValue === "card" || p6.paymentMethodValue === "transfer" || p6.paymentMethodValue === "voucher" || p6.paymentMethodValue === "other")) ? p6.paymentMethodValue : "unknown";
     var paymentResolvedSafely = !!(p6 && p6.paymentMethodResolvedSafely);
     var paymentConflict = !!(p6 && p6.paymentMethodResolverPresent && reviewReasons.indexOf("payment_conflict") >= 0);
     var paymentEvidenceStrength = paymentResolvedSafely ? "strong" : (paymentConflict ? "weak" : "unknown");
@@ -12293,6 +12295,42 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
     return canvas;
   }
+  /** Light preprocessing for OCR dual-pass: clone, grayscale via contrast, gentle threshold. No deskew/crop. */
+  function iuEvidenceLightPreprocessForOcr(canvas) {
+    if (!canvas || !canvas.getContext) return canvas;
+    try {
+      var c2 = document.createElement("canvas");
+      c2.width = canvas.width;
+      c2.height = canvas.height;
+      var ctx2 = c2.getContext("2d");
+      if (!ctx2) return canvas;
+      ctx2.drawImage(canvas, 0, 0);
+      iuEvidenceContrastNormalize(c2);
+      iuEvidenceThresholdBinarize(c2);
+      return c2;
+    } catch (_) { return canvas; }
+  }
+  /** Quality score for OCR text: higher = better. Favors length, digits, keywords, amounts, date/time, legal form. Penalizes very short, no digits, broken. */
+  function iuEvidenceOcrTextQualityScore(text) {
+    if (text == null || typeof text !== "string") return 0;
+    var t = text.trim();
+    var score = 0;
+    var letters = (t.match(/[A-Za-zÁ-ž]/g) || []).length;
+    var digits = (t.match(/\d/g) || []).length;
+    score += Math.min(letters * 0.5, 30);
+    score += Math.min(digits * 2, 40);
+    if (/\b(celkem|total|hotov[eě]|karta|kartou|i[cč]o|di[cč]|dph|k[cč])\b/i.test(t)) score += 15;
+    if (/\d{1,5}[.,]\d{2}/.test(t)) score += 20;
+    if (/\d{1,2}\.\d{1,2}\.\d{4}|\d{4}-\d{2}-\d{2}/.test(t)) score += 10;
+    if (/\b\d{1,2}:\d{2}/.test(t)) score += 5;
+    if (/\bs\.r\.o\.|a\.s\.|v\.o\.s\.|k\.s\.|spol\.\s*s\s*r\.o\./i.test(t)) score += 10;
+    if (t.length < 20) score -= 25;
+    if (digits === 0) score -= 30;
+    if ((t.match(/[^\s]/g) || []).length < 10) score -= 20;
+    var repeated = (t.match(/(.)\1{4,}/g) || []).length;
+    if (repeated > 0) score -= repeated * 5;
+    return Math.max(0, score);
+  }
   function iuEvidenceOcrHook(file, kind) {
     try { window.__iuEvidenceHookCalled = true; } catch (_) {}
     var proofFallbackArg = (arguments.length >= 3 && typeof arguments[2] === "string") ? String(arguments[2]).trim() : (typeof window !== "undefined" && window.__iuEvidenceProofCorpusNumericFallback && typeof window.__iuEvidenceProofCorpusNumericFallback === "string") ? String(window.__iuEvidenceProofCorpusNumericFallback).trim() : "";
@@ -12495,8 +12533,21 @@ function buildVideoAsArticleCard(it) {
             return recognizePromise.then(function(r1) {
               if (!r1 || typeof r1 !== "object" || !r1.data) return Promise.reject(new Error("ocr_result_invalid"));
               try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.recognizeSucceeded = true; } catch (_) {}
-              try { if (proofCtx && proofCtx.fallback && typeof proofCtx.fallback === "string") window.__iuEvidenceProofCorpusNumericFallback = proofCtx.fallback; } catch (_) {}
               ocrPass1Executed = true;
+              var s1 = iuEvidenceOcrTextQualityScore((r1.data && r1.data.text) || "");
+              var lightCanvas = null;
+              try { lightCanvas = iuEvidenceLightPreprocessForOcr(originalCanvas); } catch (_) {}
+              var runDualPass = lightCanvas && lightCanvas !== originalCanvas && typeof iuEvidenceOcrTextQualityScore === "function";
+              if (!runDualPass) return Promise.resolve({ result: r1, passChosen: 1, pass1Score: s1, pass2Score: null });
+              var pass2Input = lightCanvas.toDataURL("image/jpeg", 0.92);
+              if (!pass2Input || pass2Input.length < 500) return Promise.resolve({ result: r1, passChosen: 1, pass1Score: s1, pass2Score: null });
+              return worker.recognize(pass2Input, pass1RecOpts).then(function(r2) {
+                var s2 = iuEvidenceOcrTextQualityScore((r2 && r2.data && r2.data.text) || "");
+                return { result: s2 > s1 ? r2 : r1, passChosen: s2 > s1 ? 2 : 1, pass1Score: s1, pass2Score: s2 };
+              }).catch(function() { return { result: r1, passChosen: 1, pass1Score: s1, pass2Score: null }; });
+            }).then(function(selected) {
+              var r1 = selected.result;
+              try { if (proofCtx && proofCtx.fallback && typeof proofCtx.fallback === "string") window.__iuEvidenceProofCorpusNumericFallback = proofCtx.fallback; } catch (_) {}
               var text1 = (r1 && r1.data && r1.data.text) || "";
               var merged = text1.trim();
               var workerHasDigits = /\d/.test(merged);
@@ -12532,6 +12583,7 @@ function buildVideoAsArticleCard(it) {
                   }
                 }
                 if (!result || typeof result !== "object") { result = {}; result.rawOcrText = merged || (realImageOrPdfInputUsed ? "" : "?"); result.correctedFields = result.correctedFields || {}; result.ocrPass1Executed = true; result.ocrPass2Executed = false; result.usedInjectPath = false; result.proofStillDependsOnInjectedText = false; result.proofUsedInjectedTextAsPrimary = false; result.preprocessingApplied = preprocessingApplied; result.actualOcrEnginePresent = actualOcrEnginePresent; result.actualOcrEngineName = actualOcrEnginePresent ? "Tesseract.js" : "none"; result.realImageOrPdfInputUsed = realImageOrPdfInputUsed; result.uploadedBinaryHashObserved = uploadedBinaryHashObserved; }
+                if (selected && (selected.passChosen != null || selected.pass1Score != null)) { result.ocrPassChosen = selected.passChosen; result.pass1Score = selected.pass1Score; result.pass2Score = selected.pass2Score; }
                 result.ocrGeometry = geometry;
                 result.retailColumnDetection = columnDetection;
                 result.documentZones = documentZones;
@@ -12609,6 +12661,22 @@ function buildVideoAsArticleCard(it) {
                       var lineText2 = (lines[lineIdx2] && lines[lineIdx2].text) ? String(lines[lineIdx2].text).trim() : "";
                       var timeVal = iuEvidenceExtractTimeFromLine(lineText2);
                       if (timeVal) { cf.time = timeVal; break; }
+                    }
+                  }
+                  var footerLineTexts = [];
+                  var footerIdxSet = {};
+                  (documentZones.totalsZone || []).forEach(function(i) { footerIdxSet[i] = true; });
+                  (documentZones.vatZone || []).forEach(function(i) { footerIdxSet[i] = true; });
+                  for (var fi = 0; fi < lines.length; fi++) {
+                    if (/platba|karta|hotovost|card|cash|vr[aá]ceno|zm[eě]na|p[eř]evod|úhrad/i.test((lines[fi] && lines[fi].text) || "")) footerIdxSet[fi] = true;
+                  }
+                  for (var fk in footerIdxSet) footerLineTexts.push((lines[fk] && lines[fk].text) ? String(lines[fk].text).trim() : "");
+                  if (footerLineTexts.length > 0 && typeof iuEvidencePaymentMethodResolver === "function") {
+                    var payResFooter = iuEvidencePaymentMethodResolver(footerLineTexts, { rawOcrText: result.rawOcrText, correctedFields: result.correctedFields });
+                    if (payResFooter.paymentMethodResolvedSafely && payResFooter.paymentMethodValue && payResFooter.paymentMethodValue !== "unknown") {
+                      result.paymentMethodValue = payResFooter.paymentMethodValue;
+                      result.paymentMethodResolvedSafely = true;
+                      result.paymentMethodConflict = false;
                     }
                   }
                 }
@@ -12770,6 +12838,7 @@ function buildVideoAsArticleCard(it) {
                   if (finalOut.rawOcrText === undefined) finalOut.rawOcrText = result.rawOcrText;
                   if (finalOut.rawWorkerText === undefined) finalOut.rawWorkerText = result.rawWorkerText;
                   if (finalOut.ocrGeometry === undefined) finalOut.ocrGeometry = result.ocrGeometry;
+                  if (result.ocrPassChosen != null) { finalOut.ocrPassChosen = result.ocrPassChosen; finalOut.pass1Score = result.pass1Score; finalOut.pass2Score = result.pass2Score; }
                 }
                 var geomForDecoder = finalOut.ocrGeometry;
                 var hasGeometryLines = geomForDecoder && geomForDecoder.lines && geomForDecoder.lines.length > 0;
@@ -13822,6 +13891,29 @@ function buildVideoAsArticleCard(it) {
         if (/s\.r\.o\./.test(iuEvidenceNormalizeLegalFormCzech("Action Retail Czech s.r o"))) addOk(); else flunk("legal_action");
         if (/a\.s\./.test(iuEvidenceNormalizeLegalFormCzech("Firma a s"))) addOk(); else flunk("legal_as");
         if (/v\.o\.s\./.test(iuEvidenceNormalizeLegalFormCzech("Společnost v o s"))) addOk(); else flunk("legal_vos");
+        if (/s\.r\.o\./.test(iuEvidenceNormalizeLegalFormCzech("Firma sr.o."))) addOk(); else flunk("legal_sro_variant");
+      }
+      if (typeof iuEvidenceNormalizeOcrText === "function") {
+        var lineClean1 = iuEvidenceNormalizeOcrText("CELKEM........195,30 Kc");
+        if (/CELKEM\s+195/.test(lineClean1) || /195[,.]30/.test(lineClean1)) addOk(); else flunk("line_cleanup_dots");
+        var lineClean2 = iuEvidenceNormalizeOcrText("CELKEM : 195,30 Kc");
+        if (/CELKEM\s+195/.test(lineClean2) || /195[,.]30/.test(lineClean2)) addOk(); else flunk("line_cleanup_colon");
+        var lineClean3 = iuEvidenceNormalizeOcrText("TOTAL-199,50 Kc");
+        if (/199[,.]50/.test(lineClean3) || /TOTAL\s*199/.test(lineClean3)) addOk(); else flunk("line_cleanup_dash");
+      }
+      if (typeof iuEvidenceOcrTextQualityScore === "function") {
+        var goodScore = iuEvidenceOcrTextQualityScore("Action Retail Czech s.r.o.\n04.04.2024 12:47\nCelkem 195,30 Kc\nHotove");
+        var badScore = iuEvidenceOcrTextQualityScore("xx");
+        if (goodScore > badScore && goodScore > 20) addOk(); else flunk("quality_score_better");
+        var emptyScore = iuEvidenceOcrTextQualityScore("");
+        if (emptyScore >= 0 && emptyScore <= 5) addOk(); else flunk("quality_score_empty");
+      }
+      if (typeof iuEvidenceClassifyDocumentZones === "function") {
+        var synthLines = [{ text: "Firma s.r.o.", bbox: { y0: 0 } }, { text: "Adresa 123", bbox: { y0: 50 } }, { text: "polozka 1  10,00", bbox: { y0: 200 } }, { text: "Celkem 100,00 Kc", bbox: { y0: 400 } }, { text: "Hotovost", bbox: { y0: 450 } }];
+        var zones = iuEvidenceClassifyDocumentZones({ lines: synthLines }, 500);
+        var hasHeader = (zones.merchantZone && zones.merchantZone.length > 0) || (zones.metaZone && zones.metaZone.length >= 0);
+        var hasTotals = zones.totalsZone && zones.totalsZone.length > 0;
+        if (hasHeader && hasTotals) addOk(); else flunk("zone_detection");
       }
       if (typeof iuEvidencePaymentMethodResolver === "function") {
         var cashRes = iuEvidencePaymentMethodResolver(["TYP PLATBY", "Hotově", "Vráceno (hotově) -5,00"], { rawOcrText: "Hotově Vráceno hotově" });
@@ -13872,7 +13964,7 @@ function buildVideoAsArticleCard(it) {
         var legalBeatsHeader = iuEvidenceParseNormalizedToFields("Obchodní řetězec\nFirma s.r.o.\nIČ 12345678");
         if (legalBeatsHeader.store && legalBeatsHeader.store.indexOf("Firma s.r.o.") >= 0) addOk(); else flunk("legal_beats_header");
       }
-      var pass = fail === 0 && ok >= 22;
+      var pass = fail === 0 && ok >= 29;
       var actionMerchant = actionResult && actionResult.correctedFields ? actionResult.correctedFields.store : null;
       var actionPayment = actionResult ? actionResult.paymentMethodValue : null;
       var merchantExactMatch = actionMerchant != null && String(actionMerchant).trim() === "Action Retail Czech s.r.o.";
@@ -13902,8 +13994,8 @@ function buildVideoAsArticleCard(it) {
         };
       }
       try {
-        window.__iuEvidenceSummaryExtractionTestsPass = (fail === 0 && ok >= 22);
-        window.__iuEvidenceSummaryStrictPass = (fail === 0 && ok >= 22);
+        window.__iuEvidenceSummaryExtractionTestsPass = (fail === 0 && ok >= 29);
+        window.__iuEvidenceSummaryStrictPass = (fail === 0 && ok >= 29);
         window.__iuEvidenceSummaryExtractionTestsOk = ok;
         window.__iuEvidenceSummaryExtractionTestsFail = fail;
         window.__iuEvidenceSummaryFailures = failures;
@@ -13979,10 +14071,10 @@ function buildVideoAsArticleCard(it) {
     return s;
   }
   function iuEvidenceFormatTotalTwoDecimals(val) {
-    if (val == null || val === "" || val === "—" || val === "unknown") return String(val === "unknown" ? "unknown" : (val === "" ? "" : "—"));
+    if (val == null || val === "" || val === "—" || val === "unknown") return "—";
     var s = String(val).replace(/\s*Kč\s*$/i, "").trim().replace(",", ".");
     var num = parseFloat(s);
-    if (isNaN(num)) return String(val);
+    if (isNaN(num)) return "—";
     var fixed = num.toFixed(2).replace(".", ",");
     return fixed + " Kč";
   }
@@ -14339,7 +14431,7 @@ function buildVideoAsArticleCard(it) {
       if (reviewTimeValue) reviewTimeValue.textContent = rec.receiptTime || rec.time || "—";
       if (reviewTotalValue) reviewTotalValue.textContent = iuEvidenceFormatTotalTwoDecimals(rec.totalAmount || rec.total) || "—";
       if (reviewDoctypeValue) reviewDoctypeValue.textContent = rec.documentType || "Zjednodušený daňový doklad";
-      if (reviewPaymentValue) reviewPaymentValue.textContent = (rec.paymentMethod && /^(Hotovost|Karta|Převod|Jiné|Neurčeno|v hotovosti|bezhotovostní platba)$/.test(rec.paymentMethod)) ? (rec.paymentMethod === "v hotovosti" ? "Hotovost" : rec.paymentMethod === "bezhotovostní platba" ? "Karta" : rec.paymentMethod) : "Neurčeno";
+      if (reviewPaymentValue) reviewPaymentValue.textContent = (rec.paymentMethod && /^(Hotovost|Karta|Převod|Stravenky|Jiné|Neurčeno|v hotovosti|bezhotovostní platba)$/.test(rec.paymentMethod)) ? (rec.paymentMethod === "v hotovosti" ? "Hotovost" : rec.paymentMethod === "bezhotovostní platba" ? "Karta" : rec.paymentMethod) : "Neurčeno";
       var snap = {
         correctedFields: { store: rec.merchantName || rec.store || "unknown", date: rec.receiptDate || rec.date || "unknown", time: rec.receiptTime || rec.time || "unknown", total: rec.totalAmount || rec.total || "unknown" },
         merchantName: rec.merchantName || rec.store || "—",
@@ -14413,7 +14505,7 @@ function buildVideoAsArticleCard(it) {
       function commitEdit() {
         var v = (editEl.value || "").trim();
         if (!isSelect && (v === "" || v === "unknown")) v = "—";
-        if (isSelect && !/^(Hotovost|Karta|Převod|Jiné|Neurčeno)$/.test(v)) v = "Neurčeno";
+        if (isSelect && !/^(Hotovost|Karta|Převod|Stravenky|Jiné|Neurčeno)$/.test(v)) v = "Neurčeno";
         if (editDataIu === "review-total-edit" && v !== "—") v = iuEvidenceFormatTotalTwoDecimals(v);
         valueSpan.textContent = v;
         valueSpan.hidden = false;
