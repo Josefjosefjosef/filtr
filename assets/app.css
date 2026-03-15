@@ -11174,17 +11174,20 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   padding: 0 4px;
 }
 #iuNakupModal .iuNakupCloseBtn{
-  font-size: 14px;
-  font-weight: 600;
-  padding: 6px 12px;
-  border: 1px solid rgba(11,27,43,.2);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 8px;
+  line-height: 1;
+  border: 1px solid rgba(11,27,43,.15);
   border-radius: 6px;
-  background: #f5f7fa;
-  color: #0b1b2b;
+  background: transparent;
+  color: #4b5563;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 #iuNakupModal .iuNakupCloseBtn:hover{
-  background: #e8ecf1;
-  border-color: rgba(11,27,43,.3);
+  background: rgba(0,0,0,.05);
+  border-color: rgba(11,27,43,.25);
 }
 
 .iuModalBody a{
