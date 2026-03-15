@@ -4721,7 +4721,7 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
-  /** P0 Mobile gate: tab click — only one section open; use existing left rail / MindMenu. */
+  /** P0 Mobile gate: tab click — only one section open; use existing left rail / MindMenu; back button. */
   function iuMobileGateTabInit() {
     try {
       var wrap = document.getElementById("iuMobileGateWrap");
@@ -4730,9 +4730,14 @@ function buildVideoAsArticleCard(it) {
       var panelNav = document.getElementById("iuMobileGatePanelNav");
       var panelTools = document.getElementById("iuMobileGatePanelTools");
       var content = document.getElementById("iuMobileGateContent");
+      var backBar = document.getElementById("iuMobileGateBackBar");
+      var backBtn = document.getElementById("iuMobileGateBack");
+      var mainBackBtn = document.getElementById("iuMobileMainBack");
       if (!wrap || !tabNav || !tabTools || !panelNav || !panelTools || !content) return;
       function setTab(value) {
         wrap.setAttribute("data-iu-mobile-gate", value || "");
+        var bar = document.getElementById("iuMobileGateBackBar");
+        if (bar) bar.hidden = !value;
         if (value === "nav") {
           tabNav.setAttribute("aria-selected", "true");
           tabTools.setAttribute("aria-selected", "false");
@@ -4752,7 +4757,20 @@ function buildVideoAsArticleCard(it) {
           panelNav.hidden = true;
           panelTools.hidden = true;
           try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_) {}
+          var mb = document.getElementById("iuMobileMainBackBar");
+          if (mb) mb.hidden = true;
         }
+      }
+      if (backBtn) {
+        backBtn.addEventListener("click", function () {
+          setTab("");
+        });
+      }
+      if (mainBackBtn) {
+        mainBackBtn.addEventListener("click", function () {
+          try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_) {}
+          setTab("");
+        });
       }
       tabNav.addEventListener("click", function () {
         var cur = wrap.getAttribute("data-iu-mobile-gate");
@@ -20949,6 +20967,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       try {
         if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
           document.body.classList.add("iu-mobileMainVisible");
+          var mb = document.getElementById("iuMobileMainBackBar");
+          if (mb) mb.hidden = false;
         }
       } catch (_) {}
       try{
