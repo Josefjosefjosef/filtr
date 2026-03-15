@@ -13694,9 +13694,7 @@ function buildVideoAsArticleCard(it) {
     if (!topBlock) return;
     const container = topBlock.querySelector("[data-iu=\"upload-flow-container\"]");
     const photoCta = topBlock.querySelector("[data-iu=\"photo-receipt-cta\"]");
-    const uploadCta = topBlock.querySelector("[data-iu=\"upload-receipt-cta\"]");
-    const photoInput = topBlock.querySelector("[data-iu=\"upload-photo-input\"]");
-    const uploadInput = topBlock.querySelector("[data-iu=\"upload-pdf-input\"]");
+    const receiptInput = topBlock.querySelector("[data-iu=\"upload-receipt-input\"]");
     const stateIdle = topBlock.querySelector("[data-iu=\"upload-state-idle\"]");
     const statePending = topBlock.querySelector("[data-iu=\"upload-state-pending\"]");
     const stateSuccess = topBlock.querySelector("[data-iu=\"upload-state-success\"]");
@@ -13728,7 +13726,7 @@ function buildVideoAsArticleCard(it) {
     const validationSummaryEl = topBlock.querySelector("[data-iu=\"validation-summary-visible\"]");
     const itemsListEl = topBlock.querySelector("[data-iu=\"evidence-items-list\"]");
     const saveCta = topBlock.querySelector("[data-iu=\"evidence-save-cta\"]");
-    if (!container || !photoCta || !uploadCta || !photoInput || !uploadInput) return;
+    if (!container || !photoCta || !receiptInput) return;
     var currentPipelineResult = null;
 
     function setState(which) {
@@ -13987,20 +13985,12 @@ function buildVideoAsArticleCard(it) {
     }
 
     photoCta.addEventListener("click", function() {
-      if (photoInput) photoInput.click();
+      if (receiptInput) receiptInput.click();
     });
-    uploadCta.addEventListener("click", function() {
-      if (uploadInput) uploadInput.click();
-    });
-    photoInput.addEventListener("change", function() {
-      var f = photoInput && photoInput.files && photoInput.files[0];
-      if (f) handleFile(f, "receipt_photo");
-      if (photoInput) photoInput.value = "";
-    });
-    uploadInput.addEventListener("change", function() {
-      var f = uploadInput && uploadInput.files && uploadInput.files[0];
-      if (f) handleFile(f, "receipt_pdf");
-      if (uploadInput) uploadInput.value = "";
+    receiptInput.addEventListener("change", function() {
+      var f = receiptInput && receiptInput.files && receiptInput.files[0];
+      if (f) handleFile(f, (f.type && String(f.type).indexOf("pdf") >= 0) ? "receipt_pdf" : "receipt_photo");
+      if (receiptInput) receiptInput.value = "";
     });
     if (saveCta) saveCta.addEventListener("click", function() { saveFromReviewPanel(); });
     if (reviewStoreCandidates) reviewStoreCandidates.addEventListener("change", function() { var v = reviewStoreCandidates.value; if (v && reviewStoreValue) reviewStoreValue.textContent = v; });

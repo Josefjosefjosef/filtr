@@ -2951,12 +2951,10 @@ style-src 'self' 'unsafe-inline' https:;
         <div class="iuModalBody">
           <div class="iu-evidence-nakupu-top" data-iu="evidence-nakupu-top" data-iu-personal-evidence-only="true" role="region" aria-label="Evidence nákupů">
             <div class="iu-evidence-cta-row" data-iu="evidence-cta-row">
-              <button type="button" class="iu-evidence-cta iu-evidence-cta-photo" data-iu="photo-receipt-cta" aria-label="Vyfoť účtenku nebo fakturu"><span class="iu-evidence-cta-text">Vyfoť účtenku nebo fakturu</span></button>
-              <button type="button" class="iu-evidence-cta iu-evidence-cta-upload" data-iu="upload-receipt-cta" aria-label="Nahraj účtenku nebo fakturu"><span class="iu-evidence-cta-text">Nahraj účtenku nebo fakturu</span></button>
+              <button type="button" class="iu-evidence-cta iu-evidence-cta-photo" data-iu="photo-receipt-cta" aria-label="Vyfoť nebo nahraj účtenku nebo fakturu"><span class="iu-evidence-cta-icon" aria-hidden="true">📷</span><span class="iu-evidence-cta-text">Vyfoť nebo nahraj účtenku / fakturu</span></button>
             </div>
             <div class="iu-evidence-upload-flow" data-iu="upload-flow-container" aria-label="Nahrání dokladu">
-              <input type="file" id="iu-evidence-photo-input" class="iu-evidence-file-input" accept="image/*" data-iu="upload-photo-input" hidden aria-label="Vybrat nebo vyfotit obrázek účtenky či faktury" />
-              <input type="file" id="iu-evidence-upload-input" class="iu-evidence-file-input" accept="image/*,application/pdf" data-iu="upload-pdf-input" hidden aria-label="Nahrát obrázek nebo PDF účtenky či faktury" />
+              <input type="file" id="iu-evidence-receipt-input" class="iu-evidence-file-input" accept="image/*,application/pdf" capture="environment" data-iu="upload-receipt-input" hidden aria-label="Vyfoť nebo nahraj obrázek nebo PDF účtenky či faktury" />
               <div class="iu-evidence-upload-states">
                 <div class="iu-evidence-upload-state iu-evidence-state-idle" data-iu="upload-state-idle" role="status">Vyberte soubor nebo vyfoťte doklad.</div>
                 <div class="iu-evidence-upload-state iu-evidence-state-pending" data-iu="upload-state-pending" role="status" hidden>Odesílám…</div>
