@@ -9140,15 +9140,17 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     min-width: 0 !important;
     flex-wrap: nowrap !important;
   }
+  /* P0: brand + Přidat na plochu in one row (inline), not stacked */
   #topbarWrap .iuTopbarLeft{
     display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 4px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
     flex: 0 1 auto !important;
     min-width: 0 !important;
     max-width: 55% !important;
     overflow: hidden !important;
+    flex-wrap: nowrap !important;
   }
   #topbarWrap .iuBrandBlock{
     min-width: 0 !important;
@@ -9294,15 +9296,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     font-size: 13px !important;
     white-space: normal !important;
     word-break: break-word !important;
-  }
-  #iuMobileCtaSlot .iuRightCta--submit .iuRightCta-submit-desktop{
-    display: none !important;
-  }
-  #iuMobileCtaSlot .iuRightCta--submit .iuRightCta-submit-mobile{
-    display: inline !important;
-  }
-  #iuMobileCtaSlot .iuRightCta--submit .iuRightCta-submit-mobile:empty{
-    display: none !important;
   }
   /* Same CTA visual family as desktop (silver-blue + gold) */
   #iuMobileCtaSlot .iuRightCta--services{
