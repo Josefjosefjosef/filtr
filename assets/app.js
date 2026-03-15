@@ -9634,8 +9634,10 @@ function buildVideoAsArticleCard(it) {
     var pricePattern = /(\d{1,5}(?:[.,]\d{1,2})?)/g;
     var totalKeywordRe = /(?:^|\s)(?:celkem|total|k\s*[uú]hrad[eě]|k\s*uhrade|suma|castka|\u010d\u00e1stka|k\s*platb[eě]|k\s*platbe|k\s*zaplacen[ií]|celk\.?\s*cena|zaplaceno)\s*[:\s]*(?:\s*kč)?/i;
     var totalExcludeRe = /(?:^|\s)(?:DPH|VAT|mezisoučet|subtotal|sleva|akce|karta|hotovost|vratka|zaplaceno)/i;
-    var headerNoiseRe = /(?:z[áa]klad|DPH\s*[:\s]|doklad\s*[:\s]|IČO|DIČ|datum|čas)/i;
-    var vatSubtotalRe = /(?:mezisoučet|subtotal|z[áa]klad\s*DPH|sleva|promo)/i;
+    var headerNoiseRe = /(?:z[áa]klad|DPH\s*[:\s]|doklad\s*[:\s]|IČO|IČ\s*[:.]|DIČ|datum|čas|telefon|adresa)/i;
+    var vatSubtotalRe = /(?:mezisoučet|subtotal|z[áa]klad\s*DPH|sleva|promo|cena\s*bez\s*DPH|DPH\s+[\d.,%])/i;
+    var itemLineForbiddenRe = /(?:^\s*(?:Datum|Adresa)\b|(?:IČ|DIČ|Telefon|Doklad)\s*[:.]|\bDPH\b|Cena bez DPH|CELKEM|Placeno|Hotově|Kartou|www\.|http)/i;
+    var itemSectionStopRe = /(?:CELKEM|TOTAL|Cena bez DPH|DPH\s|K\s*ZAPLACENÍ|Placeno|Hotově|Kartou)/i;
     var dateTimeOnlyRe = /^\s*\d{4}-\d{2}-\d{2}\s+\d{1,2}:\d{2}(:\d{2})?\s*$|^\s*\d{1,2}\.\d{1,2}\.\d{4}\s+\d{1,2}:\d{2}/;
     var onlyNumbersOrCodeRe = /^[\d\s.,\-:]+$/;
     var nonItemBlockRe = /(?:terminál|terminal\s*id|merchant\s*#|invoice\s*#|batch\s*#|auth\s*#|číslo\s*terminálu|platba\s*kartou|platebni\s*karta|hotovost\s*:|vraceno\s*|prijata\s*castka|prijata\s*hotovost|k\s*uhrade|celkem\s*polozek|APP\s*:\s*DEBIT|mastercard|visa\s*|debit\s*|kód\s*účtenky|survey|dotazník|promo\s*|\.cz\s|\.com\s|aplikace|obchodni\s*\d+|provozovna\s*:|adresa\s*|praha\s*\d|praha\s*[0-9]|\d{5}\s*[a-z]|expedoval\s*|zdanitelné|číslo\s*dokladu|slo\s*dahov|prodej\s*dle\s*par|zaokrouhleni\s*|rekapitulace\s*DPH|celk\.cena\s*ve|děkujeme|nashledanou|účtenk|vratit\s*zboží)/i;
@@ -9719,18 +9721,21 @@ function buildVideoAsArticleCard(it) {
       var lineBbox = lines[i].bbox;
       var lineRightX = (lineBbox && typeof lineBbox.x1 === "number") ? lineBbox.x1 : null;
       var pricesInLine = extractPriceTokens(lineNorm);
-      if (totalKeywordRe.test(lineNorm) || /celkem|total|k\s*[uú]hrad[eě]|suma|k\s*platb[eě]|castka/i.test(lineNorm)) {
+      if (totalKeywordRe.test(lineNorm) || /celkem|total|k\s*[uú]hrad[eě]|suma|k\s*platb[eě]|castka/i.test(lineNorm) || itemSectionStopRe.test(lineNorm)) {
         if (!vatSubtotalRe.test(lineNorm) && !totalExcludeRe.test(lineNorm) && pricesInLine && pricesInLine.length >= 1) {
           var lastPriceStr = pricesInLine[pricesInLine.length - 1];
           var n = parsePriceNum(lastPriceStr);
           var hasDecimal = String(lastPriceStr).indexOf(",") >= 0 || String(lastPriceStr).indexOf(".") >= 0;
           var plausibleTotal = !isNaN(n) && n >= 0 && (n >= 10 || (n >= 1 && hasDecimal));
           if (plausibleTotal) {
+            rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "total_line" });
             normalizationStats.linesTotalLike++;
             candidateTotalLines.push({ lineIndex: i, text: rawLine, value: n, rightX: lineRightX });
             if (!priceColumnStats.used || lineInPriceBand(lineRightX, priceColumnStats.minX, priceColumnStats.maxX, priceColumnStats.tolerance))
               totalCandidates.push({ lineIndex: i, value: n, rightX: lineRightX });
           }
+        } else if (itemSectionStopRe.test(lineNorm) || vatSubtotalRe.test(lineNorm)) {
+          rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "total_line" });
         }
         continue;
       }
@@ -9748,6 +9753,14 @@ function buildVideoAsArticleCard(it) {
         continue;
       }
       if (!pricesInLine || pricesInLine.length === 0) continue;
+      if (itemLineForbiddenRe.test(lineNorm)) {
+        var forbidReason = "header_line";
+        if (/\bDPH\b|Cena bez DPH/i.test(lineNorm)) forbidReason = "vat_line";
+        else if (/Placeno|Hotově|Kartou|platba/i.test(lineNorm)) forbidReason = "payment_line";
+        else if (/děkujeme|nashledanou|www\.|http/i.test(lineNorm)) forbidReason = "footer_line";
+        rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: forbidReason });
+        continue;
+      }
       normalizationStats.linesWithPriceLike++;
       var lastPriceStr = pricesInLine[pricesInLine.length - 1];
       var priceNum = parsePriceNum(lastPriceStr);
@@ -9756,7 +9769,8 @@ function buildVideoAsArticleCard(it) {
       if (!inBand) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "priceNotInBand" }); continue; }
       var lastIdx = lineNorm.lastIndexOf(lastPriceStr);
       var namePart = (lastIdx >= 0 ? lineNorm.substring(0, lastIdx) : lineNorm).trim().replace(/\s+/g, " ").replace(/\s*[xX]\s*$/i, "").trim();
-      if (productNameNoiseRe.test(namePart) || (namePart.length > 0 && namePart.length < 2)) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "productNameNoise" }); continue; }
+      if (namePart.length < 2) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "productNameNoise" }); continue; }
+      if (productNameNoiseRe.test(namePart)) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "productNameNoise" }); continue; }
       var qtyMatch = lineNorm.match(/(\d+)\s*[xX×]\s*([0-9]+(?:[.,][0-9]{1,2})?)/i) || lineNorm.match(/(\d+)\s*[xX×]/i) || lineNorm.match(/(\d+)\s*ks\b/i);
       var qty = null;
       if (qtyMatch) { var q = parseInt(qtyMatch[1], 10); if (!isNaN(q) && q > 0) qty = q; }
@@ -9766,7 +9780,7 @@ function buildVideoAsArticleCard(it) {
       candidateItemLines.push({ name: namePart, price: priceNum, quantity: qty, rawLine: rawLine, lineTotal: priceNum, lineIndex: i });
     }
 
-    var stopReasons = ["payment_line", "terminal_line", "qr_or_survey_line", "footer_line", "vat_summary_line"];
+    var stopReasons = ["payment_line", "terminal_line", "qr_or_survey_line", "footer_line", "vat_summary_line", "total_line", "vat_line", "header_line"];
     var firstStopIndex = null;
     for (var si = 0; si < rejectedItemLines.length; si++) {
       if (stopReasons.indexOf(rejectedItemLines[si].reason) >= 0) {
@@ -9805,6 +9819,7 @@ function buildVideoAsArticleCard(it) {
           continue;
         }
         if (headerNoiseRe.test(lineNorm) || vatSubtotalRe.test(lineNorm)) continue;
+        if (itemSectionStopRe.test(lineNorm) || itemLineForbiddenRe.test(lineNorm)) continue;
         if (nonItemBlockRe.test(lineNorm)) continue;
         var prices = extractPriceTokens(lineNorm);
         if (prices && prices.length >= 1) {
@@ -9879,6 +9894,19 @@ function buildVideoAsArticleCard(it) {
       }
     }
     if (firstStopIndex != null && itemSectionEndLine != null && firstStopIndex - 1 < itemSectionEndLine) itemSectionEndLine = firstStopIndex - 1;
+    var headerLeakRe = /IČ|DIČ|Telefon|Doklad|Datum|Adresa/i;
+    var vatLeakRe = /\bDPH\b|Cena bez DPH/i;
+    var paymentLeakRe = /Placeno|Hotově|Kartou|platba\s*kartou/i;
+    var footerLeakRe = /děkujeme|nashledanou|www\.|http/i;
+    var headerLeakIntoItemsCount = 0, vatLeakIntoItemsCount = 0, paymentLeakIntoItemsCount = 0, footerLeakIntoItemsCount = 0;
+    for (var li = 0; li < items.length; li++) {
+      var rl = items[li].rawLine || "";
+      if (headerLeakRe.test(rl)) headerLeakIntoItemsCount++;
+      if (vatLeakRe.test(rl)) vatLeakIntoItemsCount++;
+      if (paymentLeakRe.test(rl)) paymentLeakIntoItemsCount++;
+      if (footerLeakRe.test(rl)) footerLeakIntoItemsCount++;
+    }
+    var itemsContainHeaderNoise = headerLeakIntoItemsCount > 0;
     return {
       items: items,
       totalValue: totalValue,
@@ -9911,7 +9939,12 @@ function buildVideoAsArticleCard(it) {
       itemsWithPrice: items.filter(function(it) { return it.price != null && !isNaN(it.price); }).length,
       itemsWithoutPrice: items.length - items.filter(function(it) { return it.price != null && !isNaN(it.price); }).length,
       quantityResolvedCount: items.filter(function(it) { return it.quantity != null && !isNaN(it.quantity); }).length,
-      priceResolvedCount: items.filter(function(it) { return it.price != null && !isNaN(it.price); }).length
+      priceResolvedCount: items.filter(function(it) { return it.price != null && !isNaN(it.price); }).length,
+      headerLeakIntoItemsCount: headerLeakIntoItemsCount,
+      vatLeakIntoItemsCount: vatLeakIntoItemsCount,
+      paymentLeakIntoItemsCount: paymentLeakIntoItemsCount,
+      footerLeakIntoItemsCount: footerLeakIntoItemsCount,
+      itemsContainHeaderNoise: itemsContainHeaderNoise
     };
   }
 
@@ -12324,6 +12357,11 @@ function buildVideoAsArticleCard(it) {
                   if (phase73.itemSectionEndLine != null) result.itemSectionEndLine = phase73.itemSectionEndLine;
                   if (phase73.candidateLinesCount != null) result.candidateLinesCount = phase73.candidateLinesCount;
                   if (phase73.sumMatchesTotal !== undefined) result.sumMatchesTotal = phase73.sumMatchesTotal;
+                  if (phase73.headerLeakIntoItemsCount != null) result.headerLeakIntoItemsCount = phase73.headerLeakIntoItemsCount;
+                  if (phase73.vatLeakIntoItemsCount != null) result.vatLeakIntoItemsCount = phase73.vatLeakIntoItemsCount;
+                  if (phase73.paymentLeakIntoItemsCount != null) result.paymentLeakIntoItemsCount = phase73.paymentLeakIntoItemsCount;
+                  if (phase73.footerLeakIntoItemsCount != null) result.footerLeakIntoItemsCount = phase73.footerLeakIntoItemsCount;
+                  if (phase73.itemsContainHeaderNoise !== undefined) result.itemsContainHeaderNoise = phase73.itemsContainHeaderNoise;
                   if (phase73.rejectedAsPaymentCount != null) result.rejectedAsPaymentCount = phase73.rejectedAsPaymentCount;
                   if (phase73.rejectedAsTerminalCount != null) result.rejectedAsTerminalCount = phase73.rejectedAsTerminalCount;
                   if (phase73.rejectedAsQrSurveyCount != null) result.rejectedAsQrSurveyCount = phase73.rejectedAsQrSurveyCount;
@@ -12434,6 +12472,11 @@ function buildVideoAsArticleCard(it) {
                 if (phase73Catch.itemSectionEndLine != null) result.itemSectionEndLine = phase73Catch.itemSectionEndLine;
                 if (phase73Catch.candidateLinesCount != null) result.candidateLinesCount = phase73Catch.candidateLinesCount;
                 if (phase73Catch.sumMatchesTotal !== undefined) result.sumMatchesTotal = phase73Catch.sumMatchesTotal;
+                if (phase73Catch.headerLeakIntoItemsCount != null) result.headerLeakIntoItemsCount = phase73Catch.headerLeakIntoItemsCount;
+                if (phase73Catch.vatLeakIntoItemsCount != null) result.vatLeakIntoItemsCount = phase73Catch.vatLeakIntoItemsCount;
+                if (phase73Catch.paymentLeakIntoItemsCount != null) result.paymentLeakIntoItemsCount = phase73Catch.paymentLeakIntoItemsCount;
+                if (phase73Catch.footerLeakIntoItemsCount != null) result.footerLeakIntoItemsCount = phase73Catch.footerLeakIntoItemsCount;
+                if (phase73Catch.itemsContainHeaderNoise !== undefined) result.itemsContainHeaderNoise = phase73Catch.itemsContainHeaderNoise;
                 if (phase73Catch.rejectedAsPaymentCount != null) result.rejectedAsPaymentCount = phase73Catch.rejectedAsPaymentCount;
                 if (phase73Catch.rejectedAsTerminalCount != null) result.rejectedAsTerminalCount = phase73Catch.rejectedAsTerminalCount;
                 if (phase73Catch.rejectedAsQrSurveyCount != null) result.rejectedAsQrSurveyCount = phase73Catch.rejectedAsQrSurveyCount;
