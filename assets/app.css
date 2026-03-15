@@ -9443,11 +9443,11 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     min-width: 0 !important;
   }
 
-  /* P0 Mobile topbar: compact height, no clipping of PWA button */
+  /* P0 Mobile topbar: compact height, no clipping of PWA button; fixed height to prevent CLS after gap removal */
   #leftStickyHeader{
     overflow: visible !important;
     min-height: var(--iuMobileBtnH) !important;
-    height: auto !important;
+    height: var(--iuMobileBtnH) !important;
   }
   #leftStickyHeader #topbarWrap.iuTopbar,
   #leftStickyHeader .topbar-new.iuTopbar{
@@ -9472,14 +9472,14 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   #topbarWrap .topbar-new-inner,
   #topbarWrap .topbar-new-main{
     min-height: var(--iuMobileBtnH) !important;
-    height: auto !important;
+    height: var(--iuMobileBtnH) !important;
   }
   #topbarWrap .topbar-new-main{
     align-items: center;
   }
   #leftStickyHeader .iuTopbar .topbar-new-inner,
   #leftStickyHeader .iuTopbar .topbar-new-main{
-    height: auto !important;
+    height: var(--iuMobileBtnH) !important;
     min-height: var(--iuMobileBtnH) !important;
   }
   #topbarWrap #iuTopbarRight,
