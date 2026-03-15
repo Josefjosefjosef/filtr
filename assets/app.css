@@ -9181,6 +9181,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     padding: 12px 0 !important;
     flex-wrap: nowrap !important;
   }
+  /* P0 Gate buttons: silver background, premium look; default neutral */
   #iuMobileGateTabs .iu-mobileGateTab{
     flex: 1 1 0 !important;
     min-width: 0 !important;
@@ -9193,19 +9194,18 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     font-size: 13px !important;
     font-weight: 600 !important;
     border-radius: 10px !important;
-    border: 1px solid var(--iuHairline, rgba(0,0,0,.1)) !important;
-    background: var(--iu-frame-bg, #f5f5f5) !important;
+    border: 1px solid rgba(0,0,0,.12) !important;
+    background: #c9c9c9 !important;
     color: #1b2a4a !important;
     cursor: pointer !important;
     appearance: none !important;
     -webkit-appearance: none !important;
     transition: background .15s ease, border-color .15s ease !important;
   }
-  /* P0: active state only when user has selected (aria-selected=true); default neutral */
   #iuMobileGateTabs .iu-mobileGateTab[aria-selected="true"]{
-    background: #E7EDF7 !important;
-    border-color: #2563EB !important;
-    color: #1F3B6D !important;
+    background: #b0b0b0 !important;
+    border-color: #888 !important;
+    color: #0d1520 !important;
   }
   #iuMobileGateContent.iu-mobileGateContent{
     width: 100% !important;
@@ -9225,6 +9225,50 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   }
   #iuMobileGateContent .iu-mobileGatePanel:not([hidden]){
     display: block !important;
+  }
+  /* P0 Back button when gate panel is open */
+  #iuMobileGateBackBar{
+    display: none !important;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(0,0,0,.08);
+    background: #f0f0f0;
+  }
+  #iuMobileGateBackBar:not([hidden]){
+    display: flex !important;
+    align-items: center !important;
+  }
+  .iu-mobileGateBackBtn{
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1b2a4a;
+    background: #e0e0e0;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 8px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .iu-mobileGateBackBtn:hover{
+    background: #d0d0d0;
+  }
+  .iu-mobileGateBackBtn:focus-visible{
+    outline: 2px solid #2563EB;
+    outline-offset: 2px;
+  }
+  /* P0 Back bar when main content opened from nav card (iu-mobileMainVisible) */
+  #iuMobileMainBackBar{
+    display: none !important;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(0,0,0,.08);
+    background: #f0f0f0;
+  }
+  body.iu-mobileMainVisible #iuMobileMainBackBar{
+    display: flex !important;
+    align-items: center !important;
+  }
+  body.iu-mobileMainVisible #iuMobileMainBackBar[hidden]{
+    display: none !important;
   }
   /* Left rail inside gate (existing component, same 2-up grid) */
   #iuMobileGatePanelNav #iuLeftRail,
@@ -9259,20 +9303,49 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     min-width: 0 !important;
   }
 
-  /* Topbar must match button height */
+  /* P0 Topbar containment: allow topbar to grow so all content (incl. wrapped dual button) stays inside */
+  #leftStickyHeader{
+    overflow: visible !important;
+    min-height: 120px !important;
+    height: auto !important;
+  }
+  #leftStickyHeader #topbarWrap.iuTopbar,
+  #leftStickyHeader .topbar-new.iuTopbar{
+    height: auto !important;
+    min-height: 120px !important;
+  }
+  #leftStickyHeader .iuTopbar .topbar-new-inner,
+  #leftStickyHeader .iuTopbar .topbar-new-main{
+    height: auto !important;
+    min-height: var(--iuMobileBtnH) !important;
+  }
   #topbarWrap{
-    height: var(--iuMobileBtnH);
+    min-height: var(--iuMobileBtnH) !important;
+    height: auto !important;
+    overflow: visible !important;
   }
   .topbar-new,
   .topbar-new-inner{
-    height: var(--iuMobileBtnH);
+    min-height: var(--iuMobileBtnH) !important;
+    height: auto !important;
   }
   #topbarWrap .topbar-new-inner,
   #topbarWrap .topbar-new-main{
-    height: 100%;
+    min-height: var(--iuMobileBtnH) !important;
+    height: auto !important;
   }
   #topbarWrap .topbar-new-main{
     align-items: center;
+  }
+  #leftStickyHeader .iuTopbar .topbar-new-inner,
+  #leftStickyHeader .iuTopbar .topbar-new-main{
+    height: auto !important;
+    min-height: var(--iuMobileBtnH) !important;
+  }
+  #topbarWrap #iuTopbarRight,
+  #topbarWrap .iuRightTopCtas{
+    flex-shrink: 0 !important;
+    max-width: 100% !important;
   }
 
   /* P0 Mobile layout: remove temp top tiles; left rail + MindMenu first (reordered by JS) */
