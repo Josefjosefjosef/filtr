@@ -9632,7 +9632,7 @@ function buildVideoAsArticleCard(it) {
     var lines = (geometry && geometry.lines) || [];
     var words = (geometry && geometry.words) || [];
     var pricePattern = /(\d{1,5}(?:[.,]\d{1,2})?)/g;
-    var totalKeywordRe = /(?:^|\s)(?:celkem|total|k\s*[uú]hrad[eě]|k\s*uhrade|suma|castka|\u010d\u00e1stka|k\s*platb[eě]|k\s*platbe)\s*[:\s]*/i;
+    var totalKeywordRe = /(?:^|\s)(?:celkem|total|k\s*[uú]hrad[eě]|k\s*uhrade|suma|castka|\u010d\u00e1stka|k\s*platb[eě]|k\s*platbe|k\s*zaplacen[ií]|celk\.?\s*cena|zaplaceno)\s*[:\s]*(?:\s*kč)?/i;
     var totalExcludeRe = /(?:^|\s)(?:DPH|VAT|mezisoučet|subtotal|sleva|akce|karta|hotovost|vratka|zaplaceno)/i;
     var headerNoiseRe = /(?:z[áa]klad|DPH\s*[:\s]|doklad\s*[:\s]|IČO|DIČ|datum|čas)/i;
     var vatSubtotalRe = /(?:mezisoučet|subtotal|z[áa]klad\s*DPH|sleva|promo)/i;
@@ -9723,7 +9723,9 @@ function buildVideoAsArticleCard(it) {
         if (!vatSubtotalRe.test(lineNorm) && !totalExcludeRe.test(lineNorm) && pricesInLine && pricesInLine.length >= 1) {
           var lastPriceStr = pricesInLine[pricesInLine.length - 1];
           var n = parsePriceNum(lastPriceStr);
-          if (!isNaN(n) && n >= 0) {
+          var hasDecimal = String(lastPriceStr).indexOf(",") >= 0 || String(lastPriceStr).indexOf(".") >= 0;
+          var plausibleTotal = !isNaN(n) && n >= 0 && (n >= 10 || (n >= 1 && hasDecimal));
+          if (plausibleTotal) {
             normalizationStats.linesTotalLike++;
             candidateTotalLines.push({ lineIndex: i, text: rawLine, value: n, rightX: lineRightX });
             if (!priceColumnStats.used || lineInPriceBand(lineRightX, priceColumnStats.minX, priceColumnStats.maxX, priceColumnStats.tolerance))
@@ -9859,7 +9861,10 @@ function buildVideoAsArticleCard(it) {
     for (var j = 0; j < items.length; j++) itemsSum += (items[j].lineTotal != null ? items[j].lineTotal : items[j].price) || 0;
     var difference = totalValue != null ? Math.abs(itemsSum - totalValue) : null;
     var differencePercent = (totalValue != null && totalValue > 0 && difference != null) ? (difference / totalValue) * 100 : null;
-    var consistencyOk = differencePercent != null && differencePercent < 5;
+    var sumToleranceAbs = 0.01;
+    var sumTolerancePct = 5;
+    var consistencyOk = totalValue != null && (difference <= sumToleranceAbs || (differencePercent != null && differencePercent < sumTolerancePct));
+    var sumMatchesTotal = totalValue == null ? null : consistencyOk;
     var sumSanityFail = totalValue != null && totalValue > 0 && (differencePercent >= 25 || itemsSum > totalValue * 2);
     var itemExtractionTrusted = !sumSanityFail && consistencyOk;
     var acceptedItemSegments = items.map(function(it) { return { name: it.name, price: it.price, rawLine: it.rawLine }; });
@@ -9900,6 +9905,7 @@ function buildVideoAsArticleCard(it) {
       phase73ItemsDetected: items.length,
       phase73TotalDetected: totalLineDetected,
       phase73ConsistencyOk: consistencyOk,
+      sumMatchesTotal: sumMatchesTotal,
       itemExtractionTrusted: itemExtractionTrusted,
       itemLinesDetected: items.length,
       itemsWithPrice: items.filter(function(it) { return it.price != null && !isNaN(it.price); }).length,
@@ -12317,6 +12323,7 @@ function buildVideoAsArticleCard(it) {
                   if (phase73.itemSectionStartLine != null) result.itemSectionStartLine = phase73.itemSectionStartLine;
                   if (phase73.itemSectionEndLine != null) result.itemSectionEndLine = phase73.itemSectionEndLine;
                   if (phase73.candidateLinesCount != null) result.candidateLinesCount = phase73.candidateLinesCount;
+                  if (phase73.sumMatchesTotal !== undefined) result.sumMatchesTotal = phase73.sumMatchesTotal;
                   if (phase73.rejectedAsPaymentCount != null) result.rejectedAsPaymentCount = phase73.rejectedAsPaymentCount;
                   if (phase73.rejectedAsTerminalCount != null) result.rejectedAsTerminalCount = phase73.rejectedAsTerminalCount;
                   if (phase73.rejectedAsQrSurveyCount != null) result.rejectedAsQrSurveyCount = phase73.rejectedAsQrSurveyCount;
@@ -12426,6 +12433,7 @@ function buildVideoAsArticleCard(it) {
                 if (phase73Catch.itemSectionStartLine != null) result.itemSectionStartLine = phase73Catch.itemSectionStartLine;
                 if (phase73Catch.itemSectionEndLine != null) result.itemSectionEndLine = phase73Catch.itemSectionEndLine;
                 if (phase73Catch.candidateLinesCount != null) result.candidateLinesCount = phase73Catch.candidateLinesCount;
+                if (phase73Catch.sumMatchesTotal !== undefined) result.sumMatchesTotal = phase73Catch.sumMatchesTotal;
                 if (phase73Catch.rejectedAsPaymentCount != null) result.rejectedAsPaymentCount = phase73Catch.rejectedAsPaymentCount;
                 if (phase73Catch.rejectedAsTerminalCount != null) result.rejectedAsTerminalCount = phase73Catch.rejectedAsTerminalCount;
                 if (phase73Catch.rejectedAsQrSurveyCount != null) result.rejectedAsQrSurveyCount = phase73Catch.rejectedAsQrSurveyCount;
