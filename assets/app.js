@@ -9722,6 +9722,8 @@ function buildVideoAsArticleCard(it) {
     var itemSectionStartLine = null;
     var itemSectionEndLine = null;
     var itemSectionPreslicedTotal = null;
+    var p73CelkemEndExclusive = null;
+    var p73ActionBodyOnly = false;
     for (var si = 0; si < lines.length; si++) {
       var st = normalizeLineText((lines[si].text || "").trim());
       if (!st) continue;
@@ -9734,11 +9736,13 @@ function buildVideoAsArticleCard(it) {
         if (itemSectionStopRe.test(et)) {
           if (/CELKEM/i.test(et)) {
             itemSectionEndLine = ei - 1;
+            p73CelkemEndExclusive = ei;
             var pcTot = extractPriceTokens(et);
             if (pcTot && pcTot.length >= 1) {
               var tv = parsePriceNum(pcTot[pcTot.length - 1]);
               if (!isNaN(tv) && tv >= 0) itemSectionPreslicedTotal = tv;
             }
+            p73ActionBodyOnly = true;
           } else {
             itemSectionEndLine = ei;
           }
@@ -9750,10 +9754,17 @@ function buildVideoAsArticleCard(it) {
       itemSectionEndLine = itemSectionStartLine;
     }
     if (itemSectionStartLine != null && itemSectionEndLine != null) {
-      if (geometry && geometry.lines) {
-        geometry.lines = geometry.lines.slice(itemSectionStartLine, itemSectionEndLine + 1);
+      if (p73ActionBodyOnly && p73CelkemEndExclusive != null) {
+        if (geometry && geometry.lines) {
+          geometry.lines = geometry.lines.slice(itemSectionStartLine + 1, p73CelkemEndExclusive);
+        }
+        lines = (geometry && geometry.lines) || lines.slice(itemSectionStartLine + 1, p73CelkemEndExclusive);
+      } else {
+        if (geometry && geometry.lines) {
+          geometry.lines = geometry.lines.slice(itemSectionStartLine, itemSectionEndLine + 1);
+        }
+        lines = (geometry && geometry.lines) || lines.slice(itemSectionStartLine, itemSectionEndLine + 1);
       }
-      lines = (geometry && geometry.lines) || lines.slice(itemSectionStartLine, itemSectionEndLine + 1);
       itemSectionStartLine = 0;
       itemSectionEndLine = lines.length - 1;
       linesAnalyzed = lines.length;
@@ -9768,9 +9779,35 @@ function buildVideoAsArticleCard(it) {
       var rawLine = (lines[i].text || "").trim();
       var lineNorm = normalizeLineText(rawLine);
       if (!lineNorm) continue;
-      var inItemSection = (itemSectionStartLine == null || i > itemSectionStartLine) && (itemSectionEndLine == null || i < itemSectionEndLine);
-      var strictPricesInLine = extractStrictPriceTokens(lineNorm);
       normalizationStats.linesNonEmpty++;
+      if (p73ActionBodyOnly) {
+        var strictP2 = extractStrictPriceTokens(lineNorm);
+        var codeAtStart2 = /^\d{6,}/.test(lineNorm.replace(/^\s+/, ""));
+        if (codeAtStart2 && strictP2.length >= 1) {
+          var lp2 = strictP2[strictP2.length - 1];
+          var pn2 = parsePriceNum(lp2);
+          if (!isNaN(pn2) && pn2 >= 0) {
+            var lix2 = lineNorm.lastIndexOf(lp2);
+            var nm2 = (lix2 >= 0 ? lineNorm.substring(0, lix2) : lineNorm).trim().replace(/\s+/g, " ");
+            nm2 = nm2.replace(productCodeRe, "").trim();
+            if (nm2.length >= 2 && !productNameNoiseRe.test(nm2)) {
+              candidateItemLines.push({ name: nm2, price: pn2, quantity: 1, rawLine: rawLine, lineTotal: pn2, lineIndex: i });
+            }
+          }
+          continue;
+        }
+        if (strictP2.length === 0 && candidateItemLines.length > 0) {
+          if (!itemSectionStopRe.test(lineNorm) && !itemLineForbiddenRe.test(lineNorm) && !headerNoiseRe.test(lineNorm) && !vatSubtotalRe.test(lineNorm) && !nonItemBlockRe.test(lineNorm)) {
+            var lastC2 = candidateItemLines[candidateItemLines.length - 1];
+            var ct2 = lineNorm.replace(productCodeRe, "").trim();
+            if (ct2) { lastC2.name += " " + ct2; lastC2.rawLine += " " + rawLine; }
+          }
+          continue;
+        }
+        continue;
+      }
+      var inItemSection = (itemSectionStartLine == null || i > itemSectionStartLine) && (itemSectionEndLine == null || i <= itemSectionEndLine);
+      var strictPricesInLine = extractStrictPriceTokens(lineNorm);
       if (dateTimeOnlyRe.test(lineNorm)) { normalizationStats.linesRejectedNoise++; rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "dateTimeOnly" }); continue; }
       if (onlyNumbersOrCodeRe.test(lineNorm) && lineNorm.replace(/\s/g, "").length < 20) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "onlyNumbers" }); continue; }
       var lineBbox = lines[i].bbox;
