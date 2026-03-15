@@ -3201,6 +3201,28 @@ body[data-section="media"] #feed{
   margin: 0;
   padding: 0;
 }
+/* P0 Mobile/tablet: fullscreen CTA overlay when stage is moved to body */
+@media (max-width: 900px){
+  body > #iuAdsStage.iuAdsStage--fullscreen{
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    z-index: 9999 !important;
+    overflow: auto !important;
+    background: #fff !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  body > #iuAdsStage.iuAdsStage--fullscreen .iuAdsStageInner{
+    min-height: 100%;
+    box-sizing: border-box;
+  }
+}
 .iuAdsStageInner{
   background: #fff;
   border-radius: 16px;
@@ -9037,6 +9059,13 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   #leftContent{
     display: none !important;
   }
+  /* P0: when nav card opened target content, show main area and hide gate */
+  body.iu-mobileMainVisible #leftContent{
+    display: block !important;
+  }
+  body.iu-mobileMainVisible #iuMobileGateWrap{
+    display: none !important;
+  }
   .layout > aside.accordionCol{
     display: none !important;
   }
@@ -9084,13 +9113,15 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     max-width: 100% !important;
   }
 
-  /* P0 Topbar mobile/tablet: left = logo + Do telefonu (stacked), right = dual button; whole content centered in viewport */
+  /* P0 Topbar mobile/tablet: left = logo + Přidat na plochu only (no slogan, no Do telefonu); right = dual button; responsive fit */
   #topbarWrap .topbar-new-inner,
   #topbarWrap .topbar-new-main{
     width: 100% !important;
     max-width: 100% !important;
     justify-content: center !important;
     gap: 12px 16px !important;
+    min-width: 0 !important;
+    flex-wrap: wrap !important;
   }
   #topbarWrap .iuTopbarLeft{
     display: flex !important;
@@ -9098,6 +9129,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     align-items: center !important;
     gap: 4px !important;
     flex: 0 0 auto !important;
+    min-width: 0 !important;
   }
   #topbarWrap .iuHamburger{
     display: none !important;
@@ -9105,9 +9137,21 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   #topbarWrap .iuBrandBlock{
     flex: 0 0 auto !important;
   }
+  /* P0: Remove slogan under logo on mobile/tablet; show only "Přidat na plochu" (hide "Do telefonu") */
+  #topbarWrap .iuBrandSubtitle,
+  #topbarWrap .iuBrandSubtitle::before{
+    display: none !important;
+  }
+  #topbarWrap .iu-pwa-cta-short{
+    display: none !important;
+  }
+  #topbarWrap .iu-pwa-cta-long{
+    display: inline !important;
+  }
   #topbarWrap #iuTopbarRight{
     flex: 0 0 auto !important;
     margin-left: 0 !important;
+    min-width: 0 !important;
   }
   /* Silver slot: full width, centered */
   #iuMobileSilverSlot.iu-mobileSilverSlot{
@@ -9141,7 +9185,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     flex: 1 1 0 !important;
     min-width: 0 !important;
     max-width: 200px !important;
-    height: 44px !important;
+    height: 52px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -9157,6 +9201,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     -webkit-appearance: none !important;
     transition: background .15s ease, border-color .15s ease !important;
   }
+  /* P0: active state only when user has selected (aria-selected=true); default neutral */
   #iuMobileGateTabs .iu-mobileGateTab[aria-selected="true"]{
     background: #E7EDF7 !important;
     border-color: #2563EB !important;
@@ -10197,7 +10242,7 @@ header.iuTopbar .iuHamburger svg,
   line-height: 1.1;
   margin: 0;
 }
-/* Tagline: only "Váš osobní internet" (no third line) */
+/* Tagline: only "Váš osobní internet" (no third line); hidden on mobile/tablet per P0 */
 .iuBrandSubtitle::before{
   content: "Váš osobní internet";
   display: block;

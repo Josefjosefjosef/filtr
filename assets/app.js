@@ -4751,6 +4751,7 @@ function buildVideoAsArticleCard(it) {
           content.setAttribute("aria-hidden", "true");
           panelNav.hidden = true;
           panelTools.hidden = true;
+          try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_) {}
         }
       }
       tabNav.addEventListener("click", function () {
@@ -6499,12 +6500,23 @@ function buildVideoAsArticleCard(it) {
     }
     const el = document.getElementById("dataStatusLastError");
     if (el) {
-      el.textContent = `Poslední chyba: ${message}`;
+      if (message) {
+        el.textContent = "Poslední chyba: " + message;
+        el.style.display = "";
+      } else {
+        el.textContent = "";
+        el.style.display = "none";
+      }
     }
     const inline = document.getElementById("lastErrInline");
     if (inline) {
-      inline.textContent = `Poslední chyba: ${message}`;
-      inline.style.display = "block";
+      if (message) {
+        inline.textContent = "Poslední chyba: " + message;
+        inline.style.display = "block";
+      } else {
+        inline.textContent = "";
+        inline.style.display = "none";
+      }
     }
     if (message && message !== "Data existují, ale nic nebylo vykresleno") console.error("[ERR]", message);
   }
@@ -20934,6 +20946,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
       applySectionFromURL(accent);
       applyPanelFromUrl();
+      try {
+        if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+          document.body.classList.add("iu-mobileMainVisible");
+        }
+      } catch (_) {}
       try{
         requestAnimationFrame(() => requestAnimationFrame(() => iuScrollMainToTopSmooth()));
       }catch{
@@ -21940,26 +21957,40 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 })();
 
-// === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → central exclusive middle mode (data-iu-mode on #iuCenterStage) ===
+// === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → central exclusive middle mode; P0 mobile = fullscreen overlay ===
 (function iuAdsStageOverlay() {
+  function isMobile() {
+    try {
+      return window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+    } catch (e) { return false; }
+  }
   function openAdsStage(activeTab) {
     var stage = document.getElementById("iuAdsStage");
     if (!stage) return;
     var center = document.getElementById("iuCenterStage");
     if (center) center.setAttribute("data-iu-mode", "ads");
     stage.hidden = false;
+    if (isMobile() && stage.parentNode !== document.body) {
+      stage.classList.add("iuAdsStage--fullscreen");
+      document.body.appendChild(stage);
+    }
     setAdsTab(activeTab);
   }
   function closeAdsStage() {
     var stage = document.getElementById("iuAdsStage");
     if (!stage) return;
-    stage.hidden = true;
     var center = document.getElementById("iuCenterStage");
+    if (stage.classList.contains("iuAdsStage--fullscreen") && stage.parentNode === document.body && center) {
+      stage.classList.remove("iuAdsStage--fullscreen");
+      center.appendChild(stage);
+    }
+    stage.hidden = true;
     if (center) {
       center.removeAttribute("data-iu-mode");
       var view = center.dataset.pendingView || center.dataset.view;
       if (view) center.dataset.view = view;
       try { delete center.dataset.pendingView; } catch (e) {}
+      if (stage.parentNode !== center) center.appendChild(stage);
     }
     if (typeof window.iuApplySectionFromURL === "function") {
       try { window.iuApplySectionFromURL(); } catch (e) {}
