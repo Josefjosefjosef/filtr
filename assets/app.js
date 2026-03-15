@@ -13823,7 +13823,7 @@ function buildVideoAsArticleCard(it) {
       var valueSpans = topBlock && topBlock.querySelectorAll(".iu-evidence-review-value");
       if (valueSpans) for (var vs = 0; vs < valueSpans.length; vs++) { valueSpans[vs].hidden = false; }
       currentPipelineResult = null;
-      try { window.__iuEvidenceFreeSummarySnapshot = null; } catch (_) {}
+      try { window.__iuEvidenceFreeSummarySnapshot = null; window.__iuEvidenceEditingRecordId = null; } catch (_) {}
       setState("idle");
     }
 
@@ -14011,18 +14011,50 @@ function buildVideoAsArticleCard(it) {
     }
 
     function saveFromReviewPanel() {
-      if (!currentPipelineResult) return;
-      var cf = currentPipelineResult.correctedFields || currentPipelineResult;
-      var store = getReviewValue(reviewStoreValue); if (store === "unknown" || !store) store = (cf && cf.store) || "—";
-      var date = getReviewValue(reviewDateValue); if (date === "unknown" || !date) date = (cf && cf.date) || "";
-      var time = getReviewValue(reviewTimeValue); if (time === "unknown" || !time) time = (cf && cf.time) || "—";
-      var total = getReviewValue(reviewTotalValue); if (total === "unknown" || !total) total = (cf && cf.total) || "—";
+      var editingId = null;
+      try { editingId = window.__iuEvidenceEditingRecordId; } catch (_) {}
+      var store = getReviewValue(reviewStoreValue); if (store === "unknown" || !store) store = "—";
+      var date = getReviewValue(reviewDateValue); if (date === "unknown" || !date) date = "";
+      var time = getReviewValue(reviewTimeValue); if (time === "unknown" || !time) time = "—";
+      var total = getReviewValue(reviewTotalValue); if (total === "unknown" || !total) total = "—";
       var docType = getReviewValue(reviewDoctypeValue); if (docType === "unknown" || !docType) docType = "Zjednodušený daňový doklad";
       var pm = getReviewValue(reviewPaymentValue);
       if (pm !== "v hotovosti" && pm !== "bezhotovostní platba") pm = "unknown";
       var today = new Date();
       var dateStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
       if (date === "unknown" || !date) date = dateStr;
+      if (editingId) {
+        var arr = iuEvidenceGetReceipts();
+        var idx = -1;
+        for (var i = 0; i < arr.length; i++) { if ((arr[i].id || "") === editingId) { idx = i; break; } }
+        if (idx >= 0) {
+          var rec = {
+            id: editingId,
+            merchantName: store === "unknown" ? "—" : store,
+            receiptDate: date === "unknown" ? dateStr : date,
+            receiptTime: time === "unknown" ? "—" : time,
+            totalAmount: total === "unknown" ? "—" : total,
+            documentType: docType,
+            paymentMethod: pm,
+            store: store === "unknown" ? "—" : store,
+            date: date === "unknown" ? dateStr : date,
+            time: time === "unknown" ? "—" : time,
+            total: total === "unknown" ? "—" : total
+          };
+          arr[idx] = rec;
+          iuEvidenceSaveReceipts(arr);
+          currentPipelineResult = null;
+          try { window.__iuEvidenceFreeSummarySnapshot = null; window.__iuEvidenceEditingRecordId = null; } catch (_) {}
+          setState("success");
+          return;
+        }
+      }
+      if (!currentPipelineResult) return;
+      var cf = currentPipelineResult.correctedFields || currentPipelineResult;
+      store = store === "—" ? (cf && cf.store) || "—" : store;
+      date = date || (cf && cf.date) || "";
+      time = time === "—" ? (cf && cf.time) || "—" : time;
+      total = total === "—" ? (cf && cf.total) || "—" : total;
       var rec = {
         id: "iu-ev-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8),
         merchantName: store === "unknown" ? "—" : store,
@@ -14043,6 +14075,33 @@ function buildVideoAsArticleCard(it) {
       try { window.__iuEvidenceFreeSummarySnapshot = null; } catch (_) {}
       setState("success");
     }
+
+    window.iuEvidenceLoadRecordIntoForm = function(rec) {
+      if (!rec || !extractionPanel) return;
+      if (reviewStoreValue) reviewStoreValue.textContent = rec.merchantName || rec.store || "—";
+      if (reviewDateValue) reviewDateValue.textContent = rec.receiptDate || rec.date || "—";
+      if (reviewTimeValue) reviewTimeValue.textContent = rec.receiptTime || rec.time || "—";
+      if (reviewTotalValue) reviewTotalValue.textContent = rec.totalAmount || rec.total || "—";
+      if (reviewDoctypeValue) reviewDoctypeValue.textContent = rec.documentType || "Zjednodušený daňový doklad";
+      if (reviewPaymentValue) reviewPaymentValue.textContent = (rec.paymentMethod && (rec.paymentMethod === "v hotovosti" || rec.paymentMethod === "bezhotovostní platba")) ? rec.paymentMethod : "unknown";
+      var snap = {
+        correctedFields: { store: rec.merchantName || rec.store || "unknown", date: rec.receiptDate || rec.date || "unknown", time: rec.receiptTime || rec.time || "unknown", total: rec.totalAmount || rec.total || "unknown" },
+        merchantName: rec.merchantName || rec.store || "—",
+        receiptDate: rec.receiptDate || rec.date || "",
+        receiptTime: rec.receiptTime || rec.time || "—",
+        totalAmount: rec.totalAmount || rec.total || "—",
+        documentType: rec.documentType || "Zjednodušený daňový doklad",
+        paymentMethod: rec.paymentMethod || "unknown",
+        store: rec.merchantName || rec.store || "—",
+        date: rec.receiptDate || rec.date || "",
+        time: rec.receiptTime || rec.time || "—",
+        total: rec.totalAmount || rec.total || "—"
+      };
+      currentPipelineResult = snap;
+      try { window.__iuEvidenceFreeSummarySnapshot = snap; window.__iuEvidenceEditingRecordId = rec.id || null; } catch (_) {}
+      extractionPanel.hidden = false;
+      setState("idle");
+    };
 
     photoCta.addEventListener("click", function() {
       if (receiptInput) receiptInput.click();
@@ -14291,14 +14350,16 @@ function buildVideoAsArticleCard(it) {
         empty.style.pointerEvents = "none";
         grid.appendChild(empty);
       }
+      var todayKey = dateKey(new Date());
       for (var d = 1; d <= daysInMonth; d++) {
         var dayDate = new Date(currentYear, currentMonth, d);
         var key = dateKey(dayDate);
         var hasReceipts = byDate[key] && byDate[key].length > 0;
         var isSelected = selectedDate === key;
+        var isToday = key === todayKey;
         var cell = document.createElement("button");
         cell.type = "button";
-        cell.className = "iu-evidence-calendar-day" + (isSelected ? " iu-evidence-day-selected" : hasReceipts ? " iu-evidence-day-has" : "") + (currentMonth !== dayDate.getMonth() ? " iu-evidence-day-other" : "");
+        cell.className = "iu-evidence-calendar-day" + (isToday ? " iu-evidence-day-today" : "") + (isSelected ? " iu-evidence-day-selected" : hasReceipts ? " iu-evidence-day-has" : "") + (currentMonth !== dayDate.getMonth() ? " iu-evidence-day-other" : "");
         cell.textContent = d;
         cell.setAttribute("data-date", key);
         cell.setAttribute("aria-label", "Den " + d);
@@ -14327,11 +14388,44 @@ function buildVideoAsArticleCard(it) {
         var li = document.createElement("li");
         li.className = "iu-evidence-daily-item";
         li.setAttribute("data-receipt-id", r.id || "");
-        li.textContent = (r.merchantName || r.store || "—") + " · " + (r.totalAmount || r.total || "");
-        li.addEventListener("click", function(){
-          selectedReceiptId = this.getAttribute("data-receipt-id");
+        var inner = document.createElement("div");
+        inner.className = "iu-evidence-daily-item-inner";
+        var textSpan = document.createElement("span");
+        textSpan.className = "iu-evidence-daily-item-text";
+        textSpan.textContent = (r.merchantName || r.store || "—") + " · " + (r.totalAmount || r.total || "");
+        textSpan.addEventListener("click", function(e){
+          e.stopPropagation();
+          selectedReceiptId = (e.currentTarget.closest("li") || li).getAttribute("data-receipt-id");
           showDetail(selectedReceiptId);
         });
+        var editBtn = document.createElement("button");
+        editBtn.type = "button";
+        editBtn.className = "iu-evidence-day-edit-btn";
+        editBtn.textContent = "Upravit";
+        editBtn.setAttribute("aria-label", "Upravit záznam");
+        editBtn.addEventListener("click", function(e){
+          e.stopPropagation();
+          if (typeof window.iuEvidenceLoadRecordIntoForm === "function") window.iuEvidenceLoadRecordIntoForm(r);
+          if (detailPanel) detailPanel.hidden = true;
+          if (dailyListShell) dailyListShell.hidden = false;
+        });
+        var deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "iu-evidence-day-delete-btn";
+        deleteBtn.textContent = "Odstranit";
+        deleteBtn.setAttribute("aria-label", "Odstranit záznam");
+        deleteBtn.addEventListener("click", function(e){
+          e.stopPropagation();
+          var arr = iuEvidenceGetReceipts().filter(function(x){ return (x.id || "") !== (r.id || ""); });
+          iuEvidenceSaveReceipts(arr);
+          if (selectedReceiptId === (r.id || "")) { selectedReceiptId = null; if (detailPanel) detailPanel.hidden = true; if (dailyListShell) dailyListShell.hidden = false; }
+          renderDailyList();
+          renderCalendar();
+        });
+        inner.appendChild(textSpan);
+        inner.appendChild(editBtn);
+        inner.appendChild(deleteBtn);
+        li.appendChild(inner);
         dailyList.appendChild(li);
       });
     }

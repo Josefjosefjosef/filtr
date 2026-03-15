@@ -11222,6 +11222,16 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   background: #173a7a;
   border-color: #173a7a;
 }
+.iu-evidence-cta-photo{
+  background: #2e7d32;
+  border-color: #2e7d32;
+  color: #fff;
+}
+.iu-evidence-cta-photo:hover{
+  background: #1b5e20;
+  border-color: #1b5e20;
+  color: #fff;
+}
 .iu-evidence-cta-icon{
   display: inline-block;
   margin-right: 8px;
@@ -11297,14 +11307,15 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   font-size: 13px;
   border-radius: 8px;
   cursor: pointer;
-  border: 1px solid rgba(11,27,43,.25);
-  background: #fff;
-  color: #0b1b2b;
+  border: 1px solid #1F4B99;
+  background: #1F4B99;
+  color: #fff;
   flex-shrink: 0;
 }
 .iu-evidence-clear-cta:hover{
-  background: #f1f5f9;
-  border-color: rgba(11,27,43,.35);
+  background: #173a7a;
+  border-color: #173a7a;
+  color: #fff;
 }
 .iu-evidence-state-pending{
   color: #1F4B99;
@@ -11520,7 +11531,17 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 }
 .iu-evidence-calendar-day.iu-evidence-day-has{
   font-weight: 600;
-  color: #1F4B99;
+  background: #e3f2fd;
+  color: #0d47a1;
+}
+.iu-evidence-calendar-day.iu-evidence-day-today{
+  background: #2e7d32;
+  color: #fff;
+  font-weight: 600;
+}
+.iu-evidence-calendar-day.iu-evidence-day-today.iu-evidence-day-has{
+  background: #2e7d32;
+  color: #fff;
 }
 .iu-evidence-daily-list{
   list-style: none;
@@ -11541,6 +11562,46 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
 }
 .iu-evidence-daily-item:hover{
   background: #f3f6fb;
+}
+.iu-evidence-daily-item-inner{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.iu-evidence-daily-item-text{
+  flex: 1;
+  min-width: 0;
+}
+.iu-evidence-day-edit-btn{
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid #e65100;
+  background: #e65100;
+  color: #fff;
+  flex-shrink: 0;
+}
+.iu-evidence-day-edit-btn:hover{
+  background: #bf360c;
+  border-color: #bf360c;
+  color: #fff;
+}
+.iu-evidence-day-delete-btn{
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid #c62828;
+  background: #c62828;
+  color: #fff;
+  flex-shrink: 0;
+}
+.iu-evidence-day-delete-btn:hover{
+  background: #b71c1c;
+  border-color: #b71c1c;
+  color: #fff;
 }
 .iu-evidence-daily-empty{
   font-size: 13px;
