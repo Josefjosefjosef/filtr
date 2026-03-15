@@ -2998,7 +2998,7 @@ style-src 'self' 'unsafe-inline' https:;
                     <button type="button" class="iu-evidence-review-confirm" data-iu="review-time-confirm" aria-label="Potvrdit">Potvrdit</button>
                   </div>
                   <div class="iu-evidence-review-row" data-iu="review-total">
-                    <span class="iu-evidence-review-label">Celkem</span>
+                    <span class="iu-evidence-review-label">Celkem zaplaceno</span>
                     <span class="iu-evidence-review-value" data-iu="review-total-value">—</span>
                     <span class="iu-evidence-review-confidence" data-iu="review-total-confidence"></span>
                     <span class="iu-evidence-review-needs" data-iu="review-total-needs"></span>
@@ -3010,6 +3010,10 @@ style-src 'self' 'unsafe-inline' https:;
                     <span class="iu-evidence-review-confidence" data-iu="review-doctype-confidence"></span>
                     <span class="iu-evidence-review-needs" data-iu="review-doctype-needs"></span>
                     <button type="button" class="iu-evidence-review-confirm" data-iu="review-doctype-confirm" aria-label="Potvrdit">Potvrdit</button>
+                  </div>
+                  <div class="iu-evidence-review-row" data-iu="review-payment">
+                    <span class="iu-evidence-review-label">Uhrazeno</span>
+                    <span class="iu-evidence-review-value" data-iu="review-payment-value">unknown</span>
                   </div>
                 </div>
                 <div data-iu-section="review_banner_section"><div class="iu-evidence-review-summary" data-iu="review-summary-visible" aria-live="polite"></div></div>
@@ -3047,20 +3051,24 @@ style-src 'self' 'unsafe-inline' https:;
                 <dd data-iu="receipt-detail-date"></dd>
                 <dt data-iu="detail-label-time">Čas</dt>
                 <dd data-iu="receipt-detail-time"></dd>
-                <dt data-iu="detail-label-total">Celkem</dt>
+                <dt data-iu="detail-label-total">Celkem zaplaceno</dt>
                 <dd data-iu="receipt-detail-total"></dd>
-                <dt data-iu="detail-label-vat-included">Cena včetně DPH</dt>
-                <dd data-iu="receipt-detail-price-vat-included"></dd>
-                <dt data-iu="detail-label-vat-excluded">Bez DPH</dt>
-                <dd><span data-iu="receipt-detail-price-vat-excluded"></span> <span data-iu="receipt-detail-price-vat-excluded-state" class="iu-evidence-vat-state"></span></dd>
-                <dt data-iu="detail-label-status">Stav zpracování</dt>
-                <dd data-iu="receipt-detail-status"></dd>
-                <dt data-iu="detail-label-confidence">Confidence</dt>
-                <dd data-iu="receipt-detail-confidence"></dd>
-                <dt data-iu="detail-label-needs-review">Vyžaduje kontrolu</dt>
-                <dd data-iu="receipt-detail-needs-review"></dd>
-                <dt data-iu="detail-label-items">Položky</dt>
-                <dd data-iu="receipt-detail-items"></dd>
+                <dt data-iu="detail-label-doctype">Typ dokladu</dt>
+                <dd data-iu="receipt-detail-doctype"></dd>
+                <dt data-iu="detail-label-payment">Uhrazeno</dt>
+                <dd data-iu="receipt-detail-payment"></dd>
+                <dt class="iu-evidence-detail-suppressed" data-iu="detail-label-vat-included">Cena včetně DPH</dt>
+                <dd class="iu-evidence-detail-suppressed" data-iu="receipt-detail-price-vat-included"></dd>
+                <dt class="iu-evidence-detail-suppressed" data-iu="detail-label-vat-excluded">Bez DPH</dt>
+                <dd class="iu-evidence-detail-suppressed"><span data-iu="receipt-detail-price-vat-excluded"></span> <span data-iu="receipt-detail-price-vat-excluded-state" class="iu-evidence-vat-state"></span></dd>
+                <dt class="iu-evidence-detail-suppressed" data-iu="detail-label-status">Stav zpracování</dt>
+                <dd class="iu-evidence-detail-suppressed" data-iu="receipt-detail-status"></dd>
+                <dt class="iu-evidence-detail-suppressed" data-iu="detail-label-confidence">Confidence</dt>
+                <dd class="iu-evidence-detail-suppressed" data-iu="receipt-detail-confidence"></dd>
+                <dt class="iu-evidence-detail-suppressed" data-iu="detail-label-needs-review">Vyžaduje kontrolu</dt>
+                <dd class="iu-evidence-detail-suppressed" data-iu="receipt-detail-needs-review"></dd>
+                <dt class="iu-evidence-detail-suppressed" data-iu="detail-label-items">Položky</dt>
+                <dd class="iu-evidence-detail-suppressed" data-iu="receipt-detail-items"></dd>
               </dl>
               <div class="iu-evidence-detail-actions">
                 <button type="button" class="iu-evidence-btn-back" data-iu="receipt-detail-back" aria-label="Zpět na seznam">Zpět na seznam</button>
