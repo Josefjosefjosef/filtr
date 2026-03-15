@@ -8984,11 +8984,234 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
    MOBILE ÔÇö Focus Accordion (active section under topbar)
    ============================================================ */
 
+/* P0 Mobile gate: hidden on desktop */
+#iuMobileGateWrap.iu-mobileGateWrap{
+  display: none !important;
+}
+
 @media (max-width: 900px){
   :root{
     --iuMobileBtnH: 60px;
     --iu-brief-gap-top: 18px;
     --iu-brief-gap-bottom: 8px;
+  }
+
+  /* P0 Mobile gate: single-column layout so mainCol is full width (fixes 820px centering) */
+  .layout{
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .layout > .mainCol{
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  /* P0 Mobile gate: no container padding so topbar + gate are viewport-wide and centered (no negative-margin hack) */
+  .container{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  /* P0 Mobile gate: show wrap; hide feed/rail stack so only topbar + Silver + tabs (+ gate panel when open) */
+  .layout,
+  .mainCol{
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  #iuMobileGateWrap.iu-mobileGateWrap{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+  }
+  #iuMobileFocus,
+  #iuMobileFirstBlock,
+  .iu-mobileStack,
+  #leftContent{
+    display: none !important;
+  }
+  .layout > aside.accordionCol{
+    display: none !important;
+  }
+
+  html{
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+  body{
+    overflow-x: hidden !important;
+    width: 100% !important;
+    min-width: 100vw !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+  }
+  .container{
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  /* P0 Topbar wrapper: viewport-wide so wrapper center = viewport center (scrollbar narrows inner 100%) */
+  #leftStickyHeader{
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+  #iuMobileGateWrap.iu-mobileGateWrap{
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  #topbarWrap .topbar-new-inner{
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    box-sizing: border-box !important;
+  }
+  #leftStickyHeader #topbarWrap,
+  #iuMobileGateWrap #iuMobileSilverSlot,
+  #iuMobileGateWrap #iuMobileGateTabs{
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* P0 Topbar mobile/tablet: left = logo + Do telefonu (stacked), right = dual button; whole content centered in viewport */
+  #topbarWrap .topbar-new-inner,
+  #topbarWrap .topbar-new-main{
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-content: center !important;
+    gap: 12px 16px !important;
+  }
+  #topbarWrap .iuTopbarLeft{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 4px !important;
+    flex: 0 0 auto !important;
+  }
+  #topbarWrap .iuHamburger{
+    display: none !important;
+  }
+  #topbarWrap .iuBrandBlock{
+    flex: 0 0 auto !important;
+  }
+  #topbarWrap #iuTopbarRight{
+    flex: 0 0 auto !important;
+    margin-left: 0 !important;
+  }
+  /* Silver slot: full width, centered */
+  #iuMobileSilverSlot.iu-mobileSilverSlot{
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+  #iuMobileSilverSlot .silver-slot,
+  #iuMobileSilverSlot .silver-shell{
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  /* 2-tab gate: side by side, centered */
+  #iuMobileGateTabs.iu-mobileGateTabs{
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px 0 !important;
+    flex-wrap: nowrap !important;
+  }
+  #iuMobileGateTabs .iu-mobileGateTab{
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    max-width: 200px !important;
+    height: 44px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 12px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    border: 1px solid var(--iuHairline, rgba(0,0,0,.1)) !important;
+    background: var(--iu-frame-bg, #f5f5f5) !important;
+    color: #1b2a4a !important;
+    cursor: pointer !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    transition: background .15s ease, border-color .15s ease !important;
+  }
+  #iuMobileGateTabs .iu-mobileGateTab[aria-selected="true"]{
+    background: #E7EDF7 !important;
+    border-color: #2563EB !important;
+    color: #1F3B6D !important;
+  }
+  #iuMobileGateContent.iu-mobileGateContent{
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+  #iuMobileGateContent .iu-mobileGatePanel{
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  #iuMobileGateContent .iu-mobileGatePanel[hidden]{
+    display: none !important;
+  }
+  #iuMobileGateContent .iu-mobileGatePanel:not([hidden]){
+    display: block !important;
+  }
+  /* Left rail inside gate (existing component, same 2-up grid) */
+  #iuMobileGatePanelNav #iuLeftRail,
+  #iuMobileGatePanelNav .iu-leftRail{
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 12px;
+    box-sizing: border-box !important;
+  }
+  #iuMobileGatePanelNav .iu-leftNav{
+    display: contents;
+  }
+  #iuMobileGatePanelNav .iuLeftRailSectionTitle{
+    grid-column: 1 / -1;
+  }
+  #iuMobileGatePanelNav .iu-leftNavItem{
+    margin: 0;
+    padding: 10px 12px;
+    min-height: 48px;
+    border-radius: 10px;
+    background: var(--iu-frame-bg, #f5f5f5);
+    box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  }
+  /* MindMenu inside gate (existing component) */
+  #iuMobileGatePanelTools .mindMenu-scroll-wrapper{
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
   }
 
   /* Topbar must match button height */
@@ -9012,7 +9235,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     display: none !important;
   }
   .iu-mobileFirstBlock{
-    display: block;
+    display: none !important;
     width: 100%;
     min-width: 0;
     order: -1;
@@ -9064,9 +9287,9 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px 12px;
   }
-  /* Default mobile screen: show leftContent so left rail (and reordered MindMenu) can show */
+  /* Default mobile: P0 gate layout — hide leftContent (only topbar + Silver + tabs + gate panel when open) */
   #leftContent{
-    display: block !important;
+    display: none !important;
     width: 100%;
     min-width: 0;
     max-width: 100%;

@@ -4671,36 +4671,123 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  /** P0 Mobile layout: reorder so left rail is first, then MindMenu (accordionCol), then feed. */
-  function iuMobileLayoutReorder() {
+  /** P0 Mobile gate: on mobile move Silver + rail + MindMenu into gate; on desktop restore. Tab state: nav | tools | none. */
+  function iuMobileGateReorder() {
     try {
-      var block = document.getElementById("iuMobileFirstBlock");
+      var wrap = document.getElementById("iuMobileGateWrap");
+      var silverSlot = document.getElementById("iuMobileSilverSlot");
+      var panelNav = document.getElementById("iuMobileGatePanelNav");
+      var panelTools = document.getElementById("iuMobileGatePanelTools");
+      var silver = document.getElementById("silver-slot");
       var rail = document.getElementById("iuLeftRail");
+      var mindMenuWrapper = document.querySelector(".mindMenu-scroll-wrapper");
+      var newsList = document.getElementById("newsList");
+      var feed = document.getElementById("feed");
       var accordion = document.querySelector(".layout > aside.accordionCol");
-      var mainCol = document.querySelector(".layout > .mainCol");
-      var leftContent = document.getElementById("leftContent");
-      if (!block || !rail || !accordion || !mainCol) return;
+      if (!wrap || !silverSlot || !panelNav || !panelTools || !silver || !rail || !newsList || !feed) return;
       var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
       var mobile = mq ? mq.matches : (window.innerWidth <= 900);
       if (mobile) {
-        if (!block.contains(rail) && rail.parentNode) {
-          block.appendChild(rail);
-        }
-        if (!mainCol.contains(accordion)) {
-          mainCol.insertBefore(accordion, leftContent || block.nextSibling);
-        }
-      } else {
-        if (block.contains(rail)) {
-          var newsList = document.getElementById("newsList");
-          if (newsList) {
-            var afterEmpty = document.getElementById("emptyBox");
-            newsList.insertBefore(rail, afterEmpty ? afterEmpty.nextSibling : newsList.firstChild);
+        wrap.setAttribute("aria-hidden", "false");
+        if (!silverSlot.contains(silver)) {
+          var articlesStage = feed && feed.parentNode;
+          if (articlesStage) {
+            silverSlot.appendChild(silver);
           }
         }
-        if (mainCol.contains(accordion)) {
-          var layout = document.querySelector(".layout");
-          if (layout) layout.appendChild(accordion);
+        if (!panelNav.contains(rail)) {
+          panelNav.appendChild(rail);
         }
+        if (mindMenuWrapper && !panelTools.contains(mindMenuWrapper)) {
+          panelTools.appendChild(mindMenuWrapper);
+        }
+      } else {
+        wrap.setAttribute("aria-hidden", "true");
+        if (silverSlot.contains(silver)) {
+          var stage = feed && feed.parentNode;
+          if (stage) {
+            stage.insertBefore(silver, feed);
+          }
+        }
+        if (panelNav.contains(rail)) {
+          var afterEmpty = document.getElementById("emptyBox");
+          newsList.insertBefore(rail, afterEmpty ? afterEmpty.nextSibling : newsList.firstChild);
+        }
+        if (mindMenuWrapper && accordion && !accordion.contains(mindMenuWrapper)) {
+          var afterPwa = accordion.querySelector("#iuPwaDesktopFallbackOverlay");
+          accordion.insertBefore(mindMenuWrapper, afterPwa ? afterPwa.nextSibling : accordion.firstChild);
+        }
+      }
+    } catch (_) {}
+  }
+
+  /** P0 Mobile gate: tab click — only one section open; use existing left rail / MindMenu. */
+  function iuMobileGateTabInit() {
+    try {
+      var wrap = document.getElementById("iuMobileGateWrap");
+      var tabNav = document.getElementById("iuMobileGateTabNav");
+      var tabTools = document.getElementById("iuMobileGateTabTools");
+      var panelNav = document.getElementById("iuMobileGatePanelNav");
+      var panelTools = document.getElementById("iuMobileGatePanelTools");
+      var content = document.getElementById("iuMobileGateContent");
+      if (!wrap || !tabNav || !tabTools || !panelNav || !panelTools || !content) return;
+      function setTab(value) {
+        wrap.setAttribute("data-iu-mobile-gate", value || "");
+        if (value === "nav") {
+          tabNav.setAttribute("aria-selected", "true");
+          tabTools.setAttribute("aria-selected", "false");
+          content.setAttribute("aria-hidden", "false");
+          panelNav.hidden = false;
+          panelTools.hidden = true;
+        } else if (value === "tools") {
+          tabNav.setAttribute("aria-selected", "false");
+          tabTools.setAttribute("aria-selected", "true");
+          content.setAttribute("aria-hidden", "false");
+          panelNav.hidden = true;
+          panelTools.hidden = false;
+        } else {
+          tabNav.setAttribute("aria-selected", "false");
+          tabTools.setAttribute("aria-selected", "false");
+          content.setAttribute("aria-hidden", "true");
+          panelNav.hidden = true;
+          panelTools.hidden = true;
+        }
+      }
+      tabNav.addEventListener("click", function () {
+        var cur = wrap.getAttribute("data-iu-mobile-gate");
+        setTab(cur === "nav" ? "" : "nav");
+      });
+      tabTools.addEventListener("click", function () {
+        var cur = wrap.getAttribute("data-iu-mobile-gate");
+        setTab(cur === "tools" ? "" : "tools");
+      });
+      setTab("");
+    } catch (_) {}
+  }
+
+  /** P0 Mobile layout: reorder — on mobile use gate (Silver first + 2-tab); on desktop restore. */
+  function iuMobileLayoutReorder() {
+    try {
+      iuMobileGateReorder();
+      var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
+      var mobile = mq ? mq.matches : (window.innerWidth <= 900);
+      if (mobile) return;
+      var accordion = document.querySelector(".layout > aside.accordionCol");
+      var mainCol = document.querySelector(".layout > .mainCol");
+      var leftContent = document.getElementById("leftContent");
+      var block = document.getElementById("iuMobileFirstBlock");
+      var rail = document.getElementById("iuLeftRail");
+      if (!accordion || !mainCol) return;
+      if (block && block.contains(rail)) {
+        var newsList = document.getElementById("newsList");
+        if (newsList) {
+          var afterEmpty = document.getElementById("emptyBox");
+          newsList.insertBefore(rail, afterEmpty ? afterEmpty.nextSibling : newsList.firstChild);
+        }
+      }
+      if (mainCol.contains(accordion)) {
+        var layout = document.querySelector(".layout");
+        if (layout) layout.appendChild(accordion);
       }
     } catch (_) {}
   }
@@ -15118,6 +15205,7 @@ function buildVideoAsArticleCard(it) {
       var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
       if (mq && mq.addEventListener) mq.addEventListener("change", function() { iuMobileLayoutReorder(); });
     } catch (_) {}
+    iuMobileGateTabInit();
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
 
