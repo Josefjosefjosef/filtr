@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  guard:
+  repo-guard:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
