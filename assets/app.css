@@ -11275,6 +11275,7 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   border: 1px solid rgba(11,27,43,.12);
   border-radius: 10px;
   overflow-x: hidden;
+  overflow-y: visible;
 }
 .iu-evidence-upload-states{
   margin-bottom: 10px;
@@ -11334,9 +11335,12 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   height: auto;
   min-height: 0;
   max-height: none;
-  overflow-y: visible;
+  overflow-y: visible !important;
   overflow-x: hidden;
   contain: none;
+}
+[data-iu-personal-evidence-only="true"] .iu-evidence-extraction-panel{
+  overflow: visible !important;
 }
 [data-iu="ocr-extraction-result"][hidden]{
   display: block !important;
@@ -11396,6 +11400,9 @@ aside.accordionCol > .iuRightTopCtas > .iuRightCta.iuRightCta--submit:hover{
   display: none !important;
 }
 [data-iu-personal-evidence-only="true"] .iu-evidence-detail-suppressed{
+  display: none !important;
+}
+[data-iu-personal-evidence-only="true"] [data-iu="receipt-detail-items"]{
   display: none !important;
 }
 .iu-evidence-item-row{ padding: 6px 0; border-bottom: 1px solid rgba(11,27,43,.08); font-size: 13px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }

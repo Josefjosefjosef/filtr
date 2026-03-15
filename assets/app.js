@@ -13825,7 +13825,6 @@ function buildVideoAsArticleCard(it) {
         if (d && result && result._failureReason) { d.failureReason = "workerOrRecognizeFail:" + result._failureReason; d.rootRuntimeFailurePoint = "workerOrRecognizeFail"; d.rootCauseRemainingStopShip = "workerOrRecognizeFail:" + result._failureReason; }
         if (d) { d.resultPropagatedToUi = true; d.lastResultSet = true; if (result && result.ocrPass1Executed === true) { d.failureReason = null; d.rootRuntimeFailurePoint = null; d.rootCauseRemainingStopShip = null; d.ocrRunCompleted = true; d.ocrFinalState = "success"; d.ocrResultSource = "real_ocr"; d.ocrFinalCommitted = true; } }
       } catch (_) {}
-      currentPipelineResult = result;
       try {
         var dx = window.__iuEvidenceDebug;
         var cur = window.__iuEvidenceLastResult;
@@ -13888,7 +13887,27 @@ function buildVideoAsArticleCard(it) {
       var unknownHint = extractionPanel.querySelector("[data-iu=\"unknown-state-works\"]");
       if (unknownHint) unknownHint.hidden = true;
       var pvEl = extractionPanel.querySelector("[data-iu=\"review-payment-value\"]") || reviewPaymentValue;
-      if (pvEl) pvEl.textContent = iuEvidenceMapPaymentMethod(result.rawOcrText || "");
+      var paymentDisplay = iuEvidenceMapPaymentMethod(result.rawOcrText || "");
+      if (pvEl) pvEl.textContent = paymentDisplay;
+      var snapStore = (storeVal == null || storeVal === "unknown" || String(storeVal).trim() === "") ? "—" : String(storeVal);
+      var snapDate = (dateVal == null || dateVal === "unknown" || String(dateVal).trim() === "") ? "" : String(dateVal);
+      var snapTime = (timeVal == null || timeVal === "unknown" || String(timeVal).trim() === "") ? "—" : String(timeVal);
+      var snapTotal = (totalVal == null || totalVal === "unknown" || String(totalVal).trim() === "") ? "—" : String(totalVal);
+      var freeSummarySnapshot = {
+        correctedFields: { store: snapStore === "—" ? "unknown" : snapStore, date: snapDate || "unknown", time: snapTime === "—" ? "unknown" : snapTime, total: snapTotal === "—" ? "unknown" : snapTotal },
+        merchantName: snapStore,
+        receiptDate: snapDate || "",
+        receiptTime: snapTime,
+        totalAmount: snapTotal,
+        documentType: docTypeDisplay,
+        paymentMethod: paymentDisplay,
+        store: snapStore,
+        date: snapDate,
+        time: snapTime,
+        total: snapTotal
+      };
+      currentPipelineResult = freeSummarySnapshot;
+      try { window.__iuEvidenceFreeSummarySnapshot = freeSummarySnapshot; } catch (_) {}
     }
 
     function validateFile(file, acceptList) {
@@ -13965,11 +13984,11 @@ function buildVideoAsArticleCard(it) {
 
     function saveFromReviewPanel() {
       if (!currentPipelineResult) return;
-      var cf = currentPipelineResult.correctedFields || {};
-      var store = getReviewValue(reviewStoreValue); if (store === "unknown" || !store) store = cf.store || "—";
-      var date = getReviewValue(reviewDateValue); if (date === "unknown" || !date) date = cf.date;
-      var time = getReviewValue(reviewTimeValue); if (time === "unknown" || !time) time = cf.time;
-      var total = getReviewValue(reviewTotalValue); if (total === "unknown" || !total) total = cf.total || "—";
+      var cf = currentPipelineResult.correctedFields || currentPipelineResult;
+      var store = getReviewValue(reviewStoreValue); if (store === "unknown" || !store) store = (cf && cf.store) || "—";
+      var date = getReviewValue(reviewDateValue); if (date === "unknown" || !date) date = (cf && cf.date) || "";
+      var time = getReviewValue(reviewTimeValue); if (time === "unknown" || !time) time = (cf && cf.time) || "—";
+      var total = getReviewValue(reviewTotalValue); if (total === "unknown" || !total) total = (cf && cf.total) || "—";
       var docType = getReviewValue(reviewDoctypeValue); if (docType === "unknown" || !docType) docType = "Zjednodušený daňový doklad";
       var pm = getReviewValue(reviewPaymentValue);
       if (pm !== "v hotovosti" && pm !== "bezhotovostní platba") pm = "unknown";
@@ -13993,6 +14012,7 @@ function buildVideoAsArticleCard(it) {
       arr.push(rec);
       iuEvidenceSaveReceipts(arr);
       currentPipelineResult = null;
+      try { window.__iuEvidenceFreeSummarySnapshot = null; } catch (_) {}
       setState("success");
     }
 
