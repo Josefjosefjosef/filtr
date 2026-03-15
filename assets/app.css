@@ -7437,6 +7437,11 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
 .iu-mobileStack{
   display: none;
 }
+@media (min-width: 901px){
+  .iu-mobileFirstBlock{
+    display: none !important;
+  }
+}
 @media (max-width: 768px){
   .layout{
     grid-template-columns: 1fr;
@@ -7469,25 +7474,22 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
     white-space: nowrap;
   }
   
-  /* B ÔÇô rychl├ę odkazy (jedin├ę v accordionCol): horizont├íl scroll na mobilu */
+  /* B ÔÇô rychl├ę odkazy: 2-up grid na mobilu (P0) */
   .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid{
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    gap: 14px;
-    white-space: nowrap;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px 12px;
+    overflow: visible;
   }
   .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid > *{
-    flex: 0 0 auto;
-  }
-  .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iuTile{
-    transform: scale(1.2);
-    transform-origin: center;
+    min-width: 0;
   }
   .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid .iuTile .iuTileText{
-    font-size: 1.1em;
+    font-size: 0.95em;
+  }
+  /* MindMenu top tools: 3-up (Kalend├í┼Ö, Pozn├ímky, ├Ükoly) na mobilu (P0) */
+  .accordionCol .mindMenu .iu-mmTopTools{
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
   
   /* C ÔÇô moje schr├ínky (mobiln├ş kopie): VERTIK├üLN─Ü, bez scrollu */
@@ -9005,9 +9007,71 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     align-items: center;
   }
 
-  /* Default mobile screen: ONLY focus buttons (no content) */
-  #leftContent{
+  /* P0 Mobile layout: remove temp top tiles; left rail + MindMenu first (reordered by JS) */
+  #iuMobileFocus{
     display: none !important;
+  }
+  .iu-mobileFirstBlock{
+    display: block;
+    width: 100%;
+    min-width: 0;
+    order: -1;
+  }
+  .iu-mobileFirstBlock:empty{
+    display: none;
+  }
+  /* Left rail in mobile first block: 2-up grid */
+  #iuMobileFirstBlock #iuLeftRail,
+  .iu-mobileFirstBlock .iu-leftRail{
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+  .iu-mobileFirstBlock .iu-leftNav{
+    display: contents;
+  }
+  .iu-mobileFirstBlock .iuLeftRailSectionTitle{
+    grid-column: 1 / -1;
+  }
+  .iu-mobileFirstBlock .iu-leftNavItem{
+    margin: 0;
+    padding: 10px 12px;
+    min-height: 48px;
+    border-radius: 10px;
+    background: var(--iu-frame-bg, #f5f5f5);
+    box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  }
+  .iu-mobileFirstBlock .iuLeftRailSectionTitle{
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    padding: 0 4px;
+  }
+  .iu-mobileFirstBlock .iuLeftRailSectionTitle:first-child{
+    margin-top: 0;
+  }
+  /* Quick links 2-up on mobile (same as 768px block, ensure at 900px) */
+  .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid{
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px 12px;
+  }
+  /* Default mobile screen: show leftContent so left rail (and reordered MindMenu) can show */
+  #leftContent{
+    display: block !important;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
   /* Quick-feed engine: when Evidence nákupů (or other quick panel) is open, show center column so #iuCenterStage/#iuQuickFeed/.iuModalCard get real geometry */
   #leftContent:has(#iuCenterStage[data-iu-view="quick"]){
@@ -9017,6 +9081,21 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     max-width: 100%;
     box-sizing: border-box;
     overflow-x: hidden;
+  }
+  /* P0 Mobile: quick-link open panel = full-screen over viewport */
+  #leftContent:has(#iuCenterStage[data-iu-view="quick"]){
+    position: fixed;
+    inset: 0;
+    top: var(--iuTopbarHeight, 60px);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100% !important;
+    height: calc(100vh - var(--iuTopbarHeight, 60px)) !important;
+    z-index: 100;
+    background: var(--iu-page-bg, #fff);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
   }
   #leftContent:has(#iuCenterStage[data-iu-view="quick"]) #newsList{
     min-width: 0;
