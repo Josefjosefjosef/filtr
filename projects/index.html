@@ -105,6 +105,8 @@ style-src 'self' 'unsafe-inline' https:;
                     <button type="button" id="iuMobileGateTabNav" class="iu-mobileGateTab" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelNav" data-iu-gate-tab="nav">Navigace po webu</button>
                     <button type="button" id="iuMobileGateTabTools" class="iu-mobileGateTab" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelTools" data-iu-gate-tab="tools">MindMenu a nástroje</button>
                   </div>
+                  <!-- P0 Mobile/tablet: CTA block below main entry buttons (dual 50/50); JS moves .iuRightTopCtas here on mobile -->
+                  <div id="iuMobileCtaSlot" class="iu-mobileCtaSlot" aria-label="Inzerce a služby (mobil)" aria-hidden="true"></div>
                   <div id="iuMobileGateContent" class="iu-mobileGateContent" aria-hidden="true">
                     <div id="iuMobileGateBackBar" class="iu-mobileGateBackBar" hidden aria-label="Návrat">
                       <button type="button" id="iuMobileGateBack" class="iu-mobileGateBackBtn" aria-label="Zpět">Zpět</button>
@@ -1460,8 +1462,9 @@ style-src 'self' 'unsafe-inline' https:;
                   <button type="button" class="iuRightCta iuRightCta--services" aria-label="Inzerce a služby">
                     Inzerce / Služby
                   </button>
-                  <button type="button" class="iuRightCta iuRightCta--submit" aria-label="Vložit inzerát">
-                    Vložit inzerát
+                  <button type="button" class="iuRightCta iuRightCta--submit" aria-label="Vložit inzerát" data-iu-cta-submit>
+                    <span class="iuRightCta-submit-desktop">Vložit inzerát</span>
+                    <span class="iuRightCta-submit-mobile">Vložit inzerát zdarma</span>
                   </button>
                 </div>
                 <div id="iuPwaIosOverlay" class="iuPwaIosOverlay" role="dialog" aria-modal="true" aria-labelledby="iuPwaIosOverlayTitle" aria-label="Přidat infoUzel na plochu" hidden>

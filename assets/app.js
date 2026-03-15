@@ -21801,8 +21801,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   console.error("IU SAFE BOOT ERROR:", e);
 }
 
-// === TOPBAR: move Inzerce/Služby + Vložit inzerát pill (whole wrapper) before info icon ===
+// === TOPBAR / MOBILE: move CTA to topbar on desktop, to mobile slot below gate tabs on mobile/tablet ===
 (function iuMoveAdsPillToTopbar() {
+  function isMobile() {
+    try {
+      return window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+    } catch (e) { return false; }
+  }
   function run() {
     var wrapper = document.querySelector(".iuRightTopCtas");
     if (!wrapper) return;
@@ -21810,14 +21815,29 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     var submit = wrapper.querySelector(".iuRightCta--submit");
     if (!services || !submit) return;
     var topbarRight = document.getElementById("iuTopbarRight");
+    var mobileSlot = document.getElementById("iuMobileCtaSlot");
     if (!topbarRight) return;
-    if (wrapper.parentNode === topbarRight) return;
-    topbarRight.appendChild(wrapper);
+    if (isMobile() && mobileSlot) {
+      if (wrapper.parentNode === mobileSlot) return;
+      mobileSlot.appendChild(wrapper);
+      mobileSlot.setAttribute("aria-hidden", "false");
+    } else {
+      if (wrapper.parentNode === topbarRight) return;
+      topbarRight.appendChild(wrapper);
+      if (mobileSlot) mobileSlot.setAttribute("aria-hidden", "true");
+    }
+  }
+  function init() {
+    run();
+    try {
+      var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
+      if (mq && mq.addEventListener) mq.addEventListener("change", run);
+    } catch (e) {}
   }
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", run);
+    document.addEventListener("DOMContentLoaded", init);
   } else {
-    run();
+    init();
   }
 })();
 
