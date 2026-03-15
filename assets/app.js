@@ -9636,8 +9636,8 @@ function buildVideoAsArticleCard(it) {
     var totalExcludeRe = /(?:^|\s)(?:DPH|VAT|mezisoučet|subtotal|sleva|akce|karta|hotovost|vratka|zaplaceno)/i;
     var headerNoiseRe = /(?:z[áa]klad|DPH\s*[:\s]|doklad\s*[:\s]|IČO|IČ\s*[:.]|DIČ|datum|čas|telefon|adresa)/i;
     var vatSubtotalRe = /(?:mezisoučet|subtotal|z[áa]klad\s*DPH|sleva|promo|cena\s*bez\s*DPH|DPH\s+[\d.,%])/i;
-    var itemSectionStartRe = /(?:PRODUK|PRODUKTY|PRODUKTO)/i;
-    var itemSectionStopRe = /(?:CELKEM|TYP\s*\(Y\)\s*PLATBY|SPECIFIKACE\s*DPH|TOTAL|Cena bez DPH|DPH\s|K\s*ZAPLACENÍ|Placeno|Hotově|Kartou)/i;
+    var itemSectionStartRe = /PRODUK/i;
+    var itemSectionStopRe = /CELKEM|PLATB|DPH|SPECIFIK/i;
     var itemLineForbiddenRe = /(?:^\s*(?:Datum|Adresa)\b|(?:IČ|DIČ|Telefon|Doklad)\s*[:.]|\bDPH\b|Cena bez DPH|CELKEM|Placeno|Hotově|Kartou|www\.|http)/i;
     var strictPriceRe = /\d{1,4}[.,]\d{2}/g;
     var productCodeRe = /^\s*\d{6,}\s*/;
@@ -9733,10 +9733,22 @@ function buildVideoAsArticleCard(it) {
         if (itemSectionStopRe.test(et)) { itemSectionEndLine = ei; break; }
       }
     }
+    if (itemSectionStartLine != null && itemSectionEndLine != null) {
+      if (geometry && geometry.lines) {
+        geometry.lines = geometry.lines.slice(itemSectionStartLine, itemSectionEndLine + 1);
+      }
+      lines = (geometry && geometry.lines) || lines.slice(itemSectionStartLine, itemSectionEndLine + 1);
+      itemSectionStartLine = 0;
+      itemSectionEndLine = lines.length - 1;
+      linesAnalyzed = lines.length;
+    }
 
     normalizationStats.linesIn = lines.length;
     var totalCandidates = [];
     for (var i = 0; i < lines.length; i++) {
+      if (itemSectionStartLine != null && itemSectionEndLine != null && (i < itemSectionStartLine || i > itemSectionEndLine)) {
+        continue;
+      }
       var rawLine = (lines[i].text || "").trim();
       var lineNorm = normalizeLineText(rawLine);
       if (!lineNorm) continue;
@@ -9836,7 +9848,7 @@ function buildVideoAsArticleCard(it) {
     }
     var totalLineDetected = totalValue != null;
 
-      if (items.length === 0) {
+    if (items.length === 0 && itemSectionStartLine == null) {
       var textOnlyItems = [];
       var textOnlyTotal = null;
       var textOnlyTotalDetected = false;
@@ -9922,16 +9934,6 @@ function buildVideoAsArticleCard(it) {
     var itemExtractionTrusted = !sumSanityFail && consistencyOk;
     var acceptedItemSegments = items.map(function(it) { return { name: it.name, price: it.price, rawLine: it.rawLine }; });
     function countRejectedByReason(r) { return rejectedItemLines.filter(function(x) { return x.reason === r; }).length; }
-    var itemSectionStartLine = null;
-    var itemSectionEndLine = null;
-    if (candidateFiltered.length > 0) {
-      for (var ci = 0; ci < candidateFiltered.length; ci++) {
-        var idx = candidateFiltered[ci].lineIndex;
-        if (itemSectionStartLine == null || idx < itemSectionStartLine) itemSectionStartLine = idx;
-        if (itemSectionEndLine == null || idx > itemSectionEndLine) itemSectionEndLine = idx;
-      }
-    }
-    if (firstStopIndex != null && itemSectionEndLine != null && firstStopIndex - 1 < itemSectionEndLine) itemSectionEndLine = firstStopIndex - 1;
     var headerLeakRe = /IČ|DIČ|Telefon|Doklad|Datum|Adresa/i;
     var vatLeakRe = /\bDPH\b|Cena bez DPH/i;
     var paymentLeakRe = /Placeno|Hotově|Kartou|platba\s*kartou/i;
