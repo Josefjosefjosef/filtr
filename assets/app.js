@@ -9636,8 +9636,11 @@ function buildVideoAsArticleCard(it) {
     var totalExcludeRe = /(?:^|\s)(?:DPH|VAT|mezisoučet|subtotal|sleva|akce|karta|hotovost|vratka|zaplaceno)/i;
     var headerNoiseRe = /(?:z[áa]klad|DPH\s*[:\s]|doklad\s*[:\s]|IČO|IČ\s*[:.]|DIČ|datum|čas|telefon|adresa)/i;
     var vatSubtotalRe = /(?:mezisoučet|subtotal|z[áa]klad\s*DPH|sleva|promo|cena\s*bez\s*DPH|DPH\s+[\d.,%])/i;
+    var itemSectionStartRe = /(?:PRODUK|PRODUKTY|PRODUKTO)/i;
+    var itemSectionStopRe = /(?:CELKEM|TYP\s*\(Y\)\s*PLATBY|SPECIFIKACE\s*DPH|TOTAL|Cena bez DPH|DPH\s|K\s*ZAPLACENÍ|Placeno|Hotově|Kartou)/i;
     var itemLineForbiddenRe = /(?:^\s*(?:Datum|Adresa)\b|(?:IČ|DIČ|Telefon|Doklad)\s*[:.]|\bDPH\b|Cena bez DPH|CELKEM|Placeno|Hotově|Kartou|www\.|http)/i;
-    var itemSectionStopRe = /(?:CELKEM|TOTAL|Cena bez DPH|DPH\s|K\s*ZAPLACENÍ|Placeno|Hotově|Kartou)/i;
+    var strictPriceRe = /\d{1,4}[.,]\d{2}/g;
+    var productCodeRe = /^\s*\d{6,}\s*/;
     var dateTimeOnlyRe = /^\s*\d{4}-\d{2}-\d{2}\s+\d{1,2}:\d{2}(:\d{2})?\s*$|^\s*\d{1,2}\.\d{1,2}\.\d{4}\s+\d{1,2}:\d{2}/;
     var onlyNumbersOrCodeRe = /^[\d\s.,\-:]+$/;
     var nonItemBlockRe = /(?:terminál|terminal\s*id|merchant\s*#|invoice\s*#|batch\s*#|auth\s*#|číslo\s*terminálu|platba\s*kartou|platebni\s*karta|hotovost\s*:|vraceno\s*|prijata\s*castka|prijata\s*hotovost|k\s*uhrade|celkem\s*polozek|APP\s*:\s*DEBIT|mastercard|visa\s*|debit\s*|kód\s*účtenky|survey|dotazník|promo\s*|\.cz\s|\.com\s|aplikace|obchodni\s*\d+|provozovna\s*:|adresa\s*|praha\s*\d|praha\s*[0-9]|\d{5}\s*[a-z]|expedoval\s*|zdanitelné|číslo\s*dokladu|slo\s*dahov|prodej\s*dle\s*par|zaokrouhleni\s*|rekapitulace\s*DPH|celk\.cena\s*ve|děkujeme|nashledanou|účtenk|vratit\s*zboží)/i;
@@ -9675,6 +9678,13 @@ function buildVideoAsArticleCard(it) {
       while ((m = re.exec(lineNorm)) !== null) out.push(m[1]);
       return out;
     }
+    function extractStrictPriceTokens(lineNorm) {
+      var out = [];
+      var re = /\d{1,4}[.,]\d{2}/g;
+      var m;
+      while ((m = re.exec(lineNorm)) !== null) out.push(m[0]);
+      return out;
+    }
 
     function lineInPriceBand(lineRightX, minX, maxX, tol) {
       if (minX == null || maxX == null) return true;
@@ -9709,18 +9719,43 @@ function buildVideoAsArticleCard(it) {
       docWidth = bandMax + 50;
     }
 
+    var itemSectionStartLine = null;
+    var itemSectionEndLine = null;
+    for (var si = 0; si < lines.length; si++) {
+      var st = normalizeLineText((lines[si].text || "").trim());
+      if (!st) continue;
+      if (itemSectionStartRe.test(st)) { itemSectionStartLine = si; break; }
+    }
+    if (itemSectionStartLine != null) {
+      for (var ei = itemSectionStartLine + 1; ei < lines.length; ei++) {
+        var et = normalizeLineText((lines[ei].text || "").trim());
+        if (!et) continue;
+        if (itemSectionStopRe.test(et)) { itemSectionEndLine = ei; break; }
+      }
+    }
+
     normalizationStats.linesIn = lines.length;
     var totalCandidates = [];
     for (var i = 0; i < lines.length; i++) {
       var rawLine = (lines[i].text || "").trim();
       var lineNorm = normalizeLineText(rawLine);
       if (!lineNorm) continue;
+      var inItemSection = (itemSectionStartLine == null || i > itemSectionStartLine) && (itemSectionEndLine == null || i < itemSectionEndLine);
+      var strictPricesInLine = extractStrictPriceTokens(lineNorm);
       normalizationStats.linesNonEmpty++;
       if (dateTimeOnlyRe.test(lineNorm)) { normalizationStats.linesRejectedNoise++; rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "dateTimeOnly" }); continue; }
       if (onlyNumbersOrCodeRe.test(lineNorm) && lineNorm.replace(/\s/g, "").length < 20) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "onlyNumbers" }); continue; }
       var lineBbox = lines[i].bbox;
       var lineRightX = (lineBbox && typeof lineBbox.x1 === "number") ? lineBbox.x1 : null;
       var pricesInLine = extractPriceTokens(lineNorm);
+      if (inItemSection && strictPricesInLine.length === 0 && !itemSectionStopRe.test(lineNorm) && !itemLineForbiddenRe.test(lineNorm) && !headerNoiseRe.test(lineNorm) && !vatSubtotalRe.test(lineNorm) && !nonItemBlockRe.test(lineNorm)) {
+        if (candidateItemLines.length > 0) {
+          var lastCand = candidateItemLines[candidateItemLines.length - 1];
+          var contText = lineNorm.replace(productCodeRe, "").trim();
+          if (contText) { lastCand.name += " " + contText; lastCand.rawLine += " " + rawLine; }
+        }
+        continue;
+      }
       if (totalKeywordRe.test(lineNorm) || /celkem|total|k\s*[uú]hrad[eě]|suma|k\s*platb[eě]|castka/i.test(lineNorm) || itemSectionStopRe.test(lineNorm)) {
         if (!vatSubtotalRe.test(lineNorm) && !totalExcludeRe.test(lineNorm) && pricesInLine && pricesInLine.length >= 1) {
           var lastPriceStr = pricesInLine[pricesInLine.length - 1];
@@ -9761,14 +9796,15 @@ function buildVideoAsArticleCard(it) {
         rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: forbidReason });
         continue;
       }
-      normalizationStats.linesWithPriceLike++;
-      var lastPriceStr = pricesInLine[pricesInLine.length - 1];
+      if (itemSectionStartLine != null && inItemSection && strictPricesInLine.length === 0) continue;
+      var lastPriceStr = (itemSectionStartLine != null && strictPricesInLine.length >= 1) ? strictPricesInLine[strictPricesInLine.length - 1] : pricesInLine[pricesInLine.length - 1];
       var priceNum = parsePriceNum(lastPriceStr);
       if (isNaN(priceNum) || priceNum < 0) continue;
-      var inBand = !priceColumnStats.used || lineInPriceBand(lineRightX, priceColumnStats.minX, priceColumnStats.maxX, priceColumnStats.tolerance);
-      if (!inBand) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "priceNotInBand" }); continue; }
+      if (!inItemSection) continue;
+      normalizationStats.linesWithPriceLike++;
       var lastIdx = lineNorm.lastIndexOf(lastPriceStr);
       var namePart = (lastIdx >= 0 ? lineNorm.substring(0, lastIdx) : lineNorm).trim().replace(/\s+/g, " ").replace(/\s*[xX]\s*$/i, "").trim();
+      namePart = namePart.replace(productCodeRe, "").trim();
       if (namePart.length < 2) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "productNameNoise" }); continue; }
       if (productNameNoiseRe.test(namePart)) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "productNameNoise" }); continue; }
       var qtyMatch = lineNorm.match(/(\d+)\s*[xX×]\s*([0-9]+(?:[.,][0-9]{1,2})?)/i) || lineNorm.match(/(\d+)\s*[xX×]/i) || lineNorm.match(/(\d+)\s*ks\b/i);
@@ -9777,6 +9813,8 @@ function buildVideoAsArticleCard(it) {
       if (qty == null && namePart && namePart.length >= 2 && !isNaN(priceNum)) qty = 1;
       if (!namePart) namePart = "Položka";
       normalizationStats.linesItemLike++;
+      var inBand = !priceColumnStats.used || lineInPriceBand(lineRightX, priceColumnStats.minX, priceColumnStats.maxX, priceColumnStats.tolerance);
+      if (!inBand) { rejectedItemLines.push({ lineIndex: i, text: rawLine, reason: "priceNotInBand" }); continue; }
       candidateItemLines.push({ name: namePart, price: priceNum, quantity: qty, rawLine: rawLine, lineTotal: priceNum, lineIndex: i });
     }
 
