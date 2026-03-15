@@ -9018,7 +9018,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 
 @media (max-width: 900px){
   :root{
-    --iuMobileBtnH: 60px;
+    --iuMobileBtnH: 52px;
     --iu-brief-gap-top: 18px;
     --iu-brief-gap-bottom: 8px;
   }
@@ -9118,8 +9118,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     box-sizing: border-box !important;
   }
   #topbarWrap .topbar-new-inner{
-    padding-left: 12px !important;
-    padding-right: 12px !important;
+    padding: 6px 12px !important;
     box-sizing: border-box !important;
   }
   #leftStickyHeader #topbarWrap,
@@ -9140,17 +9139,23 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     min-width: 0 !important;
     flex-wrap: nowrap !important;
   }
-  /* P0: brand + Přidat na plochu in one row (inline), not stacked */
+  /* P0: brand + Přidat na plochu in one row (inline), no clipping */
   #topbarWrap .iuTopbarLeft{
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 6px !important;
     flex: 0 1 auto !important;
     min-width: 0 !important;
     max-width: 55% !important;
-    overflow: hidden !important;
+    overflow: visible !important;
     flex-wrap: nowrap !important;
+  }
+  #topbarWrap .iuTopbarLeft .iuPwaInstallCta{
+    flex-shrink: 0 !important;
+    min-height: 36px !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
   }
   #topbarWrap .iuBrandBlock{
     min-width: 0 !important;
@@ -9412,31 +9417,31 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     min-width: 0 !important;
   }
 
-  /* P0 Topbar containment: allow topbar to grow so all content (incl. wrapped dual button) stays inside */
+  /* P0 Mobile topbar: compact height, no clipping of PWA button */
   #leftStickyHeader{
     overflow: visible !important;
-    min-height: 120px !important;
+    min-height: var(--iuMobileBtnH) !important;
     height: auto !important;
   }
   #leftStickyHeader #topbarWrap.iuTopbar,
   #leftStickyHeader .topbar-new.iuTopbar{
-    height: auto !important;
-    min-height: 120px !important;
+    height: var(--iuMobileBtnH) !important;
+    min-height: var(--iuMobileBtnH) !important;
   }
   #leftStickyHeader .iuTopbar .topbar-new-inner,
   #leftStickyHeader .iuTopbar .topbar-new-main{
-    height: auto !important;
+    height: var(--iuMobileBtnH) !important;
     min-height: var(--iuMobileBtnH) !important;
   }
   #topbarWrap{
     min-height: var(--iuMobileBtnH) !important;
-    height: auto !important;
+    height: var(--iuMobileBtnH) !important;
     overflow: visible !important;
   }
   .topbar-new,
   .topbar-new-inner{
     min-height: var(--iuMobileBtnH) !important;
-    height: auto !important;
+    height: var(--iuMobileBtnH) !important;
   }
   #topbarWrap .topbar-new-inner,
   #topbarWrap .topbar-new-main{
