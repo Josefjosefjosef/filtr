@@ -40,6 +40,7 @@ async function runHeadlessChecks() {
     jsErrors: [],
     layout: {
       topbarHeight: null,
+      railShift: null,
       hasLeftRail: false,
       hasMindMenu: false,
       hasTopbarGrid: false,
@@ -94,11 +95,15 @@ async function runHeadlessChecks() {
     let metrics;
     try {
       metrics = await page.evaluate(() => {
+      const railEl = document.querySelector('.accordionCol, aside.accordionCol');
+      const railLeftT0 = railEl ? railEl.getBoundingClientRect().left : null;
+      const railLeftT1 = railEl ? railEl.getBoundingClientRect().left : null;
       const out = {
         cls: null,
         lcpMs: null,
         layout: {
           topbarHeight: null,
+          railShift: null,
           hasLeftRail: false,
           hasMindMenu: false,
           hasTopbarGrid: false,
@@ -177,7 +182,10 @@ async function runHeadlessChecks() {
           out.layout.subtitleVisible = r.width > 0 && r.height > 0 && (subtitleEl.offsetParent !== null);
         }
 
-        out.layout.hasLeftRail = !!document.querySelector('.accordionCol, aside.accordionCol, [class*="accordionCol"]');
+        out.layout.hasLeftRail = !!railEl || !!document.querySelector('[class*="accordionCol"]');
+        if (railEl && typeof railLeftT0 === 'number' && typeof railLeftT1 === 'number') {
+          out.layout.railShift = Math.round(Math.abs(railLeftT1 - railLeftT0));
+        }
         out.layout.hasMindMenu = !!document.querySelector('.iu-mmQuickLinks, [class*="iu-mm"], .iu-mmSectionHead');
         out.layout.hasTopbarGrid = !!document.querySelector('.iuTopbarContent, .iuTopbarSlot');
 
@@ -222,6 +230,7 @@ async function main() {
     jsErrors: headless.jsErrors || [],
     layout: headless.layout || {
       topbarHeight: null,
+      railShift: null,
       hasLeftRail: false,
       hasMindMenu: false,
       hasTopbarGrid: false,
