@@ -9029,6 +9029,10 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     flex-direction: column !important;
     width: 100% !important;
     max-width: 100% !important;
+    padding-top: var(--iuMobileBtnH) !important;
+  }
+  main#content .layout{
+    padding-top: var(--iuMobileBtnH) !important;
   }
   .layout > .mainCol{
     width: 100% !important;
@@ -9066,6 +9070,18 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   }
   #iuMobileGateWrap #iuMobileSilverSlot .silver-slot,
   #iuMobileGateWrap #iuMobileSilverSlot .silver-shell{
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+  /* P0 Mobile: no vertical gap between topbar and Silver block */
+  #leftStickyHeader{
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  #leftContent,
+  .mainContent,
+  #projectsRoot,
+  .layout > .mainCol{
     margin-top: 0 !important;
     padding-top: 0 !important;
   }
@@ -10616,6 +10632,13 @@ header#topbarWrap.topbar-new.iuTopbar{
 main#content .layout{
   padding-top: var(--iuTopbarHeight) !important;
   min-height: calc(100vh - var(--iuTopbarHeight)) !important;
+}
+
+@media (max-width: 900px){
+  main#content .layout{
+    padding-top: 0 !important;
+    min-height: 100vh !important;
+  }
 }
 
 /* ============================================================
