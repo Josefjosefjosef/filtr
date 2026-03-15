@@ -3,7 +3,7 @@ name: Layout guard
 on: [pull_request]
 
 jobs:
-  guard:
+  layout-guard:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
