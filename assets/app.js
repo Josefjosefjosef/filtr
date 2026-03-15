@@ -13805,6 +13805,28 @@ function buildVideoAsArticleCard(it) {
       previewMeta.textContent = (file.type || "") + " · " + (file.size ? Math.round(file.size / 1024) + " KB" : "");
     }
 
+    function clearForm() {
+      if (receiptInput) receiptInput.value = "";
+      if (previewName) previewName.textContent = "—";
+      if (previewMeta) previewMeta.textContent = "—";
+      if (extractionPanel) extractionPanel.hidden = true;
+      var listEl = extractionPanel && extractionPanel.querySelector("[data-iu=\"evidence-items-list\"]");
+      if (listEl) listEl.innerHTML = "";
+      if (reviewStoreValue) reviewStoreValue.textContent = "—";
+      if (reviewDateValue) reviewDateValue.textContent = "—";
+      if (reviewTimeValue) reviewTimeValue.textContent = "—";
+      if (reviewTotalValue) reviewTotalValue.textContent = "—";
+      if (reviewDoctypeValue) reviewDoctypeValue.textContent = "—";
+      if (reviewPaymentValue) reviewPaymentValue.textContent = "unknown";
+      var editInputs = topBlock && topBlock.querySelectorAll(".iu-evidence-review-edit-input, .iu-evidence-review-edit-select");
+      if (editInputs) for (var ei = 0; ei < editInputs.length; ei++) { editInputs[ei].hidden = true; }
+      var valueSpans = topBlock && topBlock.querySelectorAll(".iu-evidence-review-value");
+      if (valueSpans) for (var vs = 0; vs < valueSpans.length; vs++) { valueSpans[vs].hidden = false; }
+      currentPipelineResult = null;
+      try { window.__iuEvidenceFreeSummarySnapshot = null; } catch (_) {}
+      setState("idle");
+    }
+
     function setReviewField(valueEl, confEl, needsEl, candidatesEl, value, confidence, needsReview, candidates) {
       var unknownLabel = "unknown";
       if (valueEl) valueEl.textContent = (value == null || value === "unknown" || String(value).trim() === "") ? unknownLabel : String(value);
@@ -13837,8 +13859,10 @@ function buildVideoAsArticleCard(it) {
         var _fel = extractionPanel.querySelector("[data-iu-section=\"" + hideFreeSec[_fs] + "\"]");
         if (_fel) _fel.hidden = true;
       }
-      var _fcb = extractionPanel.querySelectorAll(".iu-evidence-review-confirm");
-      for (var _fc = 0; _fc < _fcb.length; _fc++) _fcb[_fc].hidden = true;
+      var _editInps = extractionPanel.querySelectorAll(".iu-evidence-review-edit-input, .iu-evidence-review-edit-select");
+      for (var _ei = 0; _ei < _editInps.length; _ei++) { _editInps[_ei].hidden = true; }
+      var _valSpans = extractionPanel.querySelectorAll(".iu-evidence-review-value");
+      for (var _vi = 0; _vi < _valSpans.length; _vi++) { _valSpans[_vi].hidden = false; }
       var cf = result.correctedFields || {};
       var fc = result.fieldConfidence || {};
       var fnr = result.fieldNeedsReview || {};
@@ -13908,6 +13932,10 @@ function buildVideoAsArticleCard(it) {
       };
       currentPipelineResult = freeSummarySnapshot;
       try { window.__iuEvidenceFreeSummarySnapshot = freeSummarySnapshot; } catch (_) {}
+      var _editInps2 = extractionPanel.querySelectorAll(".iu-evidence-review-edit-input, .iu-evidence-review-edit-select");
+      for (var _e2 = 0; _e2 < _editInps2.length; _e2++) { _editInps2[_e2].hidden = true; }
+      var _valSpans2 = extractionPanel.querySelectorAll(".iu-evidence-review-value");
+      for (var _v2 = 0; _v2 < _valSpans2.length; _v2++) { _valSpans2[_v2].hidden = false; }
     }
 
     function validateFile(file, acceptList) {
@@ -14026,6 +14054,67 @@ function buildVideoAsArticleCard(it) {
     });
     if (saveCta) saveCta.addEventListener("click", function() { saveFromReviewPanel(); });
     if (reviewStoreCandidates) reviewStoreCandidates.addEventListener("change", function() { var v = reviewStoreCandidates.value; if (v && reviewStoreValue) reviewStoreValue.textContent = v; });
+
+    var clearBtn = topBlock.querySelector("[data-iu=\"evidence-clear-cta\"]");
+    if (clearBtn) clearBtn.addEventListener("click", function() { clearForm(); });
+
+    function commitEditAndSyncPipeline() {
+      if (!currentPipelineResult) return;
+      var store = getReviewValue(reviewStoreValue); if (store === "unknown" || !store) store = "—";
+      var date = getReviewValue(reviewDateValue); if (date === "unknown" || !date) date = "";
+      var time = getReviewValue(reviewTimeValue); if (time === "unknown" || !time) time = "—";
+      var total = getReviewValue(reviewTotalValue); if (total === "unknown" || !total) total = "—";
+      var docType = getReviewValue(reviewDoctypeValue); if (docType === "unknown" || !docType) docType = "Zjednodušený daňový doklad";
+      var pm = getReviewValue(reviewPaymentValue); if (pm !== "v hotovosti" && pm !== "bezhotovostní platba") pm = "unknown";
+      currentPipelineResult = {
+        correctedFields: { store: store === "—" ? "unknown" : store, date: date || "unknown", time: time === "—" ? "unknown" : time, total: total === "—" ? "unknown" : total },
+        merchantName: store,
+        receiptDate: date,
+        receiptTime: time,
+        totalAmount: total,
+        documentType: docType,
+        paymentMethod: pm,
+        store: store,
+        date: date,
+        time: time,
+        total: total
+      };
+      try { window.__iuEvidenceFreeSummarySnapshot = currentPipelineResult; } catch (_) {}
+    }
+
+    function wireEditRow(valueDataIu, editDataIu, btnDataIu, isSelect) {
+      var valueSpan = topBlock.querySelector("[data-iu=\"" + valueDataIu + "\"]");
+      var editEl = topBlock.querySelector("[data-iu=\"" + editDataIu + "\"]");
+      var btn = topBlock.querySelector("[data-iu=\"" + btnDataIu + "\"]");
+      if (!valueSpan || !editEl || !btn) return;
+      function showEdit() {
+        valueSpan.hidden = true;
+        editEl.hidden = false;
+        if (isSelect) editEl.value = (valueSpan.textContent || "").trim();
+        else editEl.value = (valueSpan.textContent || "").trim();
+        if (editEl.value === "—" || editEl.value === "") editEl.value = isSelect ? "unknown" : "";
+        editEl.focus();
+      }
+      function commitEdit() {
+        var v = (editEl.value || "").trim();
+        if (!isSelect && (v === "" || v === "unknown")) v = "—";
+        if (isSelect && v !== "v hotovosti" && v !== "bezhotovostní platba") v = "unknown";
+        valueSpan.textContent = v;
+        valueSpan.hidden = false;
+        editEl.hidden = true;
+        commitEditAndSyncPipeline();
+      }
+      btn.addEventListener("click", showEdit);
+      editEl.addEventListener("blur", commitEdit);
+      if (!isSelect) editEl.addEventListener("keydown", function(e) { if (e.key === "Enter") { e.preventDefault(); commitEdit(); } });
+      if (isSelect) editEl.addEventListener("change", commitEdit);
+    }
+    wireEditRow("review-store-value", "review-store-edit", "review-store-confirm", false);
+    wireEditRow("review-date-value", "review-date-edit", "review-date-confirm", false);
+    wireEditRow("review-time-value", "review-time-edit", "review-time-confirm", false);
+    wireEditRow("review-total-value", "review-total-edit", "review-total-confirm", false);
+    wireEditRow("review-doctype-value", "review-doctype-edit", "review-doctype-confirm", false);
+    wireEditRow("review-payment-value", "review-payment-edit", "review-payment-confirm", true);
   }
 
   const IU_EVIDENCE_RECEIPTS_KEY = "iu:evidence:receipts";

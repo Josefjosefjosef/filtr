@@ -2956,7 +2956,10 @@ style-src 'self' 'unsafe-inline' https:;
             <div class="iu-evidence-upload-flow" data-iu="upload-flow-container" aria-label="Nahrání dokladu">
               <input type="file" id="iu-evidence-receipt-input" class="iu-evidence-file-input" accept="image/*,application/pdf" capture="environment" data-iu="upload-receipt-input" hidden aria-label="Vyfoť nebo nahraj obrázek nebo PDF účtenky či faktury" />
               <div class="iu-evidence-upload-states">
-                <div class="iu-evidence-upload-state iu-evidence-state-idle" data-iu="upload-state-idle" role="status">Vyberte soubor nebo vyfoťte doklad.</div>
+                <div class="iu-evidence-upload-state iu-evidence-state-idle iu-evidence-idle-row" data-iu="upload-state-idle" role="status">
+                  <span class="iu-evidence-idle-text">Vyberte soubor nebo vyfoťte doklad.</span>
+                  <button type="button" class="iu-evidence-clear-cta" data-iu="evidence-clear-cta" aria-label="Vyčistit formulář">Vyčistit</button>
+                </div>
                 <div class="iu-evidence-upload-state iu-evidence-state-pending" data-iu="upload-state-pending" role="status" hidden>Odesílám…</div>
                 <div class="iu-evidence-upload-state iu-evidence-state-success" data-iu="upload-state-success" role="status" hidden>Doklad byl nahrán. Zpracování připraveno.</div>
                 <div class="iu-evidence-upload-state iu-evidence-state-failed" data-iu="upload-state-failed" role="status" hidden>Nahrání se nepodařilo. Zkuste jiný soubor.</div>
@@ -2978,42 +2981,53 @@ style-src 'self' 'unsafe-inline' https:;
                   <div class="iu-evidence-review-row" data-iu="review-store">
                     <span class="iu-evidence-review-label">Obchod / firma</span>
                     <span class="iu-evidence-review-value" data-iu="review-store-value">—</span>
+                    <input type="text" class="iu-evidence-review-edit-input" data-iu="review-store-edit" aria-label="Obchod / firma" hidden />
                     <span class="iu-evidence-review-confidence" data-iu="review-store-confidence"></span>
                     <span class="iu-evidence-review-needs" data-iu="review-store-needs"></span>
                     <select class="iu-evidence-review-candidates" data-iu="review-store-candidates" aria-label="Vybrat variantu obchodu" hidden></select>
-                    <button type="button" class="iu-evidence-review-confirm" data-iu="review-store-confirm" aria-label="Potvrdit">Potvrdit</button>
+                    <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-store-confirm" aria-label="Upravit">Upravit</button>
                   </div>
                   <div class="iu-evidence-review-row" data-iu="review-date">
                     <span class="iu-evidence-review-label">Datum</span>
                     <span class="iu-evidence-review-value" data-iu="review-date-value">—</span>
+                    <input type="text" class="iu-evidence-review-edit-input" data-iu="review-date-edit" aria-label="Datum" placeholder="YYYY-MM-DD" hidden />
                     <span class="iu-evidence-review-confidence" data-iu="review-date-confidence"></span>
                     <span class="iu-evidence-review-needs" data-iu="review-date-needs"></span>
-                    <button type="button" class="iu-evidence-review-confirm" data-iu="review-date-confirm" aria-label="Potvrdit">Potvrdit</button>
+                    <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-date-confirm" aria-label="Upravit">Upravit</button>
                   </div>
                   <div class="iu-evidence-review-row" data-iu="review-time">
                     <span class="iu-evidence-review-label">Čas</span>
                     <span class="iu-evidence-review-value" data-iu="review-time-value">—</span>
+                    <input type="text" class="iu-evidence-review-edit-input" data-iu="review-time-edit" aria-label="Čas" placeholder="HH:MM" hidden />
                     <span class="iu-evidence-review-confidence" data-iu="review-time-confidence"></span>
                     <span class="iu-evidence-review-needs" data-iu="review-time-needs"></span>
-                    <button type="button" class="iu-evidence-review-confirm" data-iu="review-time-confirm" aria-label="Potvrdit">Potvrdit</button>
+                    <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-time-confirm" aria-label="Upravit">Upravit</button>
                   </div>
                   <div class="iu-evidence-review-row" data-iu="review-total">
                     <span class="iu-evidence-review-label">Celkem zaplaceno</span>
                     <span class="iu-evidence-review-value" data-iu="review-total-value">—</span>
+                    <input type="text" class="iu-evidence-review-edit-input" data-iu="review-total-edit" aria-label="Celkem zaplaceno" hidden />
                     <span class="iu-evidence-review-confidence" data-iu="review-total-confidence"></span>
                     <span class="iu-evidence-review-needs" data-iu="review-total-needs"></span>
-                    <button type="button" class="iu-evidence-review-confirm" data-iu="review-total-confirm" aria-label="Potvrdit">Potvrdit</button>
+                    <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-total-confirm" aria-label="Upravit">Upravit</button>
                   </div>
                   <div class="iu-evidence-review-row" data-iu="review-doctype">
                     <span class="iu-evidence-review-label">Typ dokladu</span>
                     <span class="iu-evidence-review-value" data-iu="review-doctype-value">—</span>
+                    <input type="text" class="iu-evidence-review-edit-input" data-iu="review-doctype-edit" aria-label="Typ dokladu" hidden />
                     <span class="iu-evidence-review-confidence" data-iu="review-doctype-confidence"></span>
                     <span class="iu-evidence-review-needs" data-iu="review-doctype-needs"></span>
-                    <button type="button" class="iu-evidence-review-confirm" data-iu="review-doctype-confirm" aria-label="Potvrdit">Potvrdit</button>
+                    <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-doctype-confirm" aria-label="Upravit">Upravit</button>
                   </div>
                   <div class="iu-evidence-review-row" data-iu="review-payment">
                     <span class="iu-evidence-review-label">Uhrazeno</span>
                     <span class="iu-evidence-review-value" data-iu="review-payment-value">unknown</span>
+                    <select class="iu-evidence-review-edit-select" data-iu="review-payment-edit" aria-label="Uhrazeno" hidden>
+                      <option value="v hotovosti">v hotovosti</option>
+                      <option value="bezhotovostní platba">bezhotovostní platba</option>
+                      <option value="unknown">unknown</option>
+                    </select>
+                    <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-payment-confirm" aria-label="Upravit">Upravit</button>
                   </div>
                 </div>
                 <div data-iu-section="review_banner_section"><div class="iu-evidence-review-summary" data-iu="review-summary-visible" aria-live="polite"></div></div>
