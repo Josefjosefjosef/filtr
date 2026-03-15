@@ -428,6 +428,11 @@ html:not([data-iu-js]) .iuDailyWeather{
   min-height: 68px;
   height: 68px;
   padding: 0;
+  min-width: 0;
+}
+.iuTopbarSpacer{
+  flex: 1 1 auto;
+  min-width: 0;
 }
 .topbar-logo{
   flex: 0 0 auto;
@@ -17733,6 +17738,17 @@ header#topbarWrap{
     flex-shrink: 1 !important;
     flex: 0 1 auto !important;
   }
+}
+
+/* P0 Topbar flex-spacer layout stabilization (3-part: left / spacer / right) */
+#topbarWrap #iuTopbarRight{
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+}
+#topbarWrap #iuTopbarRight .iuRightTopCtas,
+#topbarWrap .iuRightTopCtas{
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
 }
 
 /* === LEFT RAIL BACKGROUND MATCH PAGE (SAFE) === */
