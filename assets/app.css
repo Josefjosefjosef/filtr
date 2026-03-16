@@ -9103,17 +9103,23 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   body.iu-mobileMainVisible #iuMobileGateWrap{
     display: none !important;
   }
-  /* P0 Tablet (769px–900px): show feed column so #feed is visible; avoid 0×0 collapse at 820×1180 */
+  /* P0 Tablet (769px–900px): show feed column; stabilize wrapper so it never expands (CLS root cause = #leftContent height change on feed inject) */
+  @media (min-width: 769px) and (max-width: 900px) {
+    #leftContent{
+      display: block !important;
+      height: calc(100vh - 120px);
+      max-height: calc(100vh - 120px);
+      overflow: hidden;
+    }
+    #feed{
+      height: 100%;
+      overflow-y: auto;
+    }
+  }
+  /* Legacy tablet range without max-width for display only */
   @media (min-width: 769px) {
     #leftContent{
       display: block !important;
-    }
-    /* Root-cause CLS fix: JS injects feed content after first paint, expanding #feed from 70vh to ~30k px; fix = fixed height + overflow so container never grows (trace: #leftContent/#feed sources at 0.449) */
-    #feed{
-      height: calc(100vh - 120px) !important;
-      max-height: calc(100vh - 120px) !important;
-      overflow-y: auto !important;
-      min-height: 0 !important;
     }
   }
   .layout > aside.accordionCol{
