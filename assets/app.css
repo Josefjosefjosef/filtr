@@ -9103,15 +9103,23 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   body.iu-mobileMainVisible #iuMobileGateWrap{
     display: none !important;
   }
-  /* P0 Tablet (769px–900px): show feed column; stabilize wrapper so it never expands (CLS root cause = #leftContent height change on feed inject) */
+  /* P0 Tablet (769px–900px): show feed column; prevent CLS from feed 0×0→visible at ~248ms (prod trace: #leftContent top 640→704, #feed 0×0→805×208).
+      Reserve feed space and fix wrapper from first paint so no reflow on inject. */
   @media (min-width: 769px) and (max-width: 900px) {
     #leftContent{
       display: block !important;
       height: calc(100vh - 120px);
       max-height: calc(100vh - 120px);
       overflow: hidden;
+      /* Stable position: prevent top/height change when #feed appears */
+      min-height: calc(100vh - 120px);
+    }
+    /* Feed never 0×0 at first paint: reserve height so layout is stable before JS inject */
+    #iuCenterStage .iuArticlesStage{
+      min-height: calc(100vh - 120px);
     }
     #feed{
+      min-height: calc(100vh - 120px);
       height: 100%;
       overflow-y: auto;
     }
