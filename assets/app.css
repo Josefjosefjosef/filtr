@@ -9064,6 +9064,11 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     overflow-x: hidden !important;
   }
   /* P0 Silver flush: no gap between topbar and Silver */
+  /* P0 CLS=0: reserve Silver slot height before first paint (RCA: silver_content_growth) */
+  #iuMobileGateWrap #iuMobileSilverSlot,
+  #iuMobileSilverSlot.iu-mobileSilverSlot{
+    min-height: 512px !important;
+  }
   #iuMobileGateWrap #iuMobileSilverSlot{
     margin-top: 0 !important;
     padding-top: 0 !important;
@@ -17273,26 +17278,16 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
 header#topbarWrap.topbar-new.iuTopbar{
   padding-right: 62px !important;
   position: relative;
+  /* P0 CLS=0: badge as background (no ::after layout box) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 46'%3E%3Ccircle cx='23' cy='23' r='22' fill='rgba(255,255,255,0.10)' stroke='rgba(255,255,255,0.35)' stroke-width='1'/%3E%3Ccircle cx='23' cy='15' r='2.5' fill='%230B1F33'/%3E%3Cpath d='M23 20v14' stroke='%230B1F33' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+  background-position: right 15px center !important;
+  background-size: 44px 44px !important;
+  background-repeat: no-repeat !important;
 }
-/* Override .topbar-new::after (content:none; display:none !important) so dot is visible */
+/* P0 CLS=0: no ::after (badge moved to header background above) */
 header#topbarWrap.topbar-new.iuTopbar::after{
-  content: "i" !important;
-  position: absolute !important;
-  right: 15px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  width: 44px !important;
-  height: 44px !important;
-  display: grid !important;
-  place-items: center !important;
-  border-radius: 999px !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  border: 1px solid rgba(255,255,255,0.35) !important;
-  background: rgba(255,255,255,0.10) !important;
-  color: #0B1F33 !important;
-  pointer-events: none !important;
-  cursor: default !important;
+  content: none !important;
+  display: none !important;
 }
 
 /* ===== INFOUZEL QUICK SERVICE: ICON BLUE ONLY (Rychlý servis – first section in left rail) ===== */
@@ -17764,13 +17759,6 @@ header#topbarWrap.iuTopbar{
   max-width: 100% !important;
   box-sizing: border-box !important;
 }
-header#topbarWrap.topbar-new.iuTopbar::after{
-  position: absolute !important;
-  right: 15px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-}
-
 /* === HOTFIX: TOPBAR — CTA WRAPPER NEXT TO INFO i (CSS-ONLY) === */
 #iuTopbarRight{
   display: flex !important;
