@@ -9108,6 +9108,10 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     #leftContent{
       display: block !important;
     }
+    /* Reserve feed height at first paint to avoid CLS when JS populates feed (forensic: 200px→30k shift) */
+    #feed{
+      min-height: 70vh !important;
+    }
   }
   .layout > aside.accordionCol{
     display: none !important;
