@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="iu-build" content="ff57115" />
+    <meta name="iu-data-ver" content="iu-data-ver-placeholder" />
     <!-- iu-build: ff57115 -->
     <title>infoUzel.cz</title>
 
@@ -1845,8 +1846,10 @@ style-src 'self' 'unsafe-inline' https:;
         function write(t){ if(out) { out.textContent = t; } }
         try{
           write("Running…");
-          var aUrl = "/projects/data/articles.json";
-          var vUrl = "/projects/data/videos.json";
+          var dataVer = (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim();
+          var q = (dataVer && dataVer !== "iu-data-ver-placeholder") ? "?v=" + dataVer : "";
+          var aUrl = "/projects/data/articles.json" + q;
+          var vUrl = "/projects/data/videos.json" + q;
 
           var ra = await fetch(aUrl, { cache: "no-store" });
           var rv = await fetch(vUrl, { cache: "no-store" });

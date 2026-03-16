@@ -108,7 +108,10 @@ try {
   }
 
   function iuDataUrl(file) {
-    return iuBasePath() + "data/" + file;
+    const base = iuBasePath() + "data/" + file;
+    const ver = (typeof document !== "undefined" && document.querySelector) ? (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim() : '';
+    if (ver && ver !== "iu-data-ver-placeholder" && (file === "articles.json" || file === "videos.json")) return base + "?v=" + ver;
+    return base;
   }
 
   function iuGetMindMenuRoot(){
