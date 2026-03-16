@@ -9103,6 +9103,12 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   body.iu-mobileMainVisible #iuMobileGateWrap{
     display: none !important;
   }
+  /* P0 Tablet (769px–900px): show feed column so #feed is visible; avoid 0×0 collapse at 820×1180 */
+  @media (min-width: 769px) {
+    #leftContent{
+      display: block !important;
+    }
+  }
   .layout > aside.accordionCol{
     display: none !important;
   }
@@ -9575,6 +9581,17 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     max-width: 100%;
     box-sizing: border-box;
     overflow-x: hidden;
+  }
+  /* P0 Tablet (769px–900px): show feed column so #feed has non-zero rect at 820×1180 */
+  @media (min-width: 769px) {
+    #leftContent{
+      display: block !important;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow-x: hidden;
+    }
   }
   /* Quick-feed engine: when Evidence nákupů (or other quick panel) is open, show center column so #iuCenterStage/#iuQuickFeed/.iuModalCard get real geometry */
   #leftContent:has(#iuCenterStage[data-iu-view="quick"]){
