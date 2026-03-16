@@ -67,11 +67,7 @@ jobs:
               STATUS=$(echo "$FIRST" | awk '{print $2}')
               CONCLUSION=$(echo "$FIRST" | awk '{print $3}')
               URL=$(echo "$FIRST" | awk '{print $4}')
-              echo "pages_deploy_detected=true" >> "$GITHUB_OUTPUT"
-              echo "pages_deploy_status=$STATUS" >> "$GITHUB_OUTPUT"
-              echo "pages_deploy_conclusion=$CONCLUSION" >> "$GITHUB_OUTPUT"
-              echo "pages_deploy_url=$URL" >> "$GITHUB_OUTPUT"
-              echo "pages_run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+              { echo "pages_deploy_detected=true"; echo "pages_deploy_status=$STATUS"; echo "pages_deploy_conclusion=$CONCLUSION"; echo "pages_deploy_url=$URL"; echo "pages_run_id=$RUN_ID"; } >> "$GITHUB_OUTPUT"
               echo "[PAGES] Run $RUN_ID status=$STATUS conclusion=$CONCLUSION"
               break
             fi
@@ -79,9 +75,7 @@ jobs:
             sleep 10
           done
           if [ -z "${RUN_ID:-}" ]; then
-            echo "pages_deploy_detected=false" >> "$GITHUB_OUTPUT"
-            echo "pages_deploy_status=not_found" >> "$GITHUB_OUTPUT"
-            echo "pages_deploy_url=" >> "$GITHUB_OUTPUT"
+            { echo "pages_deploy_detected=false"; echo "pages_deploy_status=not_found"; echo "pages_deploy_url="; } >> "$GITHUB_OUTPUT"
             echo "[PAGES] No deploy run found for this commit (will still poll live)"
           fi
 
@@ -142,7 +136,7 @@ jobs:
             if [ -n "$LIVE_ARTICLES" ]; then
               live_articles_reachable="true"
               live_articles_hash=$(printf '%s' "$LIVE_ARTICLES" | sha256sum | awk '{print $1}')
-              [ "$live_articles_hash" = "$REPO_ARTICLES" ] && live_articles_match="true" || true
+              if [ "$live_articles_hash" = "$REPO_ARTICLES" ]; then live_articles_match="true"; fi
             fi
 
             # Fetch live videos (optional)
@@ -153,7 +147,7 @@ jobs:
               if [ -z "$REPO_VIDEOS" ]; then
                 live_videos_match="true"
               else
-                [ "$live_videos_hash" = "$REPO_VIDEOS" ] && live_videos_match="true" || true
+                if [ "$live_videos_hash" = "$REPO_VIDEOS" ]; then live_videos_match="true"; fi
               fi
             elif [ -z "$REPO_VIDEOS" ]; then
               live_videos_match="true"
@@ -179,20 +173,22 @@ jobs:
                 stale_after_deploy="true"
               fi
               echo "FAIL: timeout; live did not match repo"
-              echo "merged_commit_sha=${{ github.sha }}" >> "$GITHUB_OUTPUT"
-              echo "repo_articles_hash=$REPO_ARTICLES" >> "$GITHUB_OUTPUT"
-              echo "live_articles_hash=$live_articles_hash" >> "$GITHUB_OUTPUT"
-              echo "repo_videos_hash=$REPO_VIDEOS" >> "$GITHUB_OUTPUT"
-              echo "live_videos_hash=$live_videos_hash" >> "$GITHUB_OUTPUT"
-              echo "live_articles_match_repo=$live_articles_match" >> "$GITHUB_OUTPUT"
-              echo "live_videos_match_repo=$live_videos_match" >> "$GITHUB_OUTPUT"
-              echo "live_articles_reachable=$live_articles_reachable" >> "$GITHUB_OUTPUT"
-              echo "live_videos_reachable=$live_videos_reachable" >> "$GITHUB_OUTPUT"
-              echo "propagation_attempts=$propagation_attempts" >> "$GITHUB_OUTPUT"
-              echo "propagation_wait_used=true" >> "$GITHUB_OUTPUT"
-              echo "stale_after_deploy=$stale_after_deploy" >> "$GITHUB_OUTPUT"
-              echo "freshness_prod_pass=false" >> "$GITHUB_OUTPUT"
-              echo "status=FAIL" >> "$GITHUB_OUTPUT"
+              {
+                echo "merged_commit_sha=${{ github.sha }}"
+                echo "repo_articles_hash=$REPO_ARTICLES"
+                echo "live_articles_hash=$live_articles_hash"
+                echo "repo_videos_hash=$REPO_VIDEOS"
+                echo "live_videos_hash=$live_videos_hash"
+                echo "live_articles_match_repo=$live_articles_match"
+                echo "live_videos_match_repo=$live_videos_match"
+                echo "live_articles_reachable=$live_articles_reachable"
+                echo "live_videos_reachable=$live_videos_reachable"
+                echo "propagation_attempts=$propagation_attempts"
+                echo "propagation_wait_used=true"
+                echo "stale_after_deploy=$stale_after_deploy"
+                echo "freshness_prod_pass=false"
+                echo "status=FAIL"
+              } >> "$GITHUB_OUTPUT"
               exit 1
             fi
 
@@ -200,20 +196,22 @@ jobs:
             sleep "$SLEEP"
           done
 
-          echo "merged_commit_sha=${{ github.sha }}" >> "$GITHUB_OUTPUT"
-          echo "repo_articles_hash=$REPO_ARTICLES" >> "$GITHUB_OUTPUT"
-          echo "live_articles_hash=$live_articles_hash" >> "$GITHUB_OUTPUT"
-          echo "repo_videos_hash=$REPO_VIDEOS" >> "$GITHUB_OUTPUT"
-          echo "live_videos_hash=$live_videos_hash" >> "$GITHUB_OUTPUT"
-          echo "live_articles_match_repo=$live_articles_match" >> "$GITHUB_OUTPUT"
-          echo "live_videos_match_repo=$live_videos_match" >> "$GITHUB_OUTPUT"
-          echo "live_articles_reachable=$live_articles_reachable" >> "$GITHUB_OUTPUT"
-          echo "live_videos_reachable=$live_videos_reachable" >> "$GITHUB_OUTPUT"
-          echo "propagation_attempts=$propagation_attempts" >> "$GITHUB_OUTPUT"
-          echo "propagation_wait_used=true" >> "$GITHUB_OUTPUT"
-          echo "stale_after_deploy=$stale_after_deploy" >> "$GITHUB_OUTPUT"
-          echo "freshness_prod_pass=true" >> "$GITHUB_OUTPUT"
-          echo "status=PASS" >> "$GITHUB_OUTPUT"
+          {
+            echo "merged_commit_sha=${{ github.sha }}"
+            echo "repo_articles_hash=$REPO_ARTICLES"
+            echo "live_articles_hash=$live_articles_hash"
+            echo "repo_videos_hash=$REPO_VIDEOS"
+            echo "live_videos_hash=$live_videos_hash"
+            echo "live_articles_match_repo=$live_articles_match"
+            echo "live_videos_match_repo=$live_videos_match"
+            echo "live_articles_reachable=$live_articles_reachable"
+            echo "live_videos_reachable=$live_videos_reachable"
+            echo "propagation_attempts=$propagation_attempts"
+            echo "propagation_wait_used=true"
+            echo "stale_after_deploy=$stale_after_deploy"
+            echo "freshness_prod_pass=true"
+            echo "status=PASS"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Production truth output
         if: always()

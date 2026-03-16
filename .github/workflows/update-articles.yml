@@ -89,17 +89,11 @@ jobs:
         run: |
           set -euo pipefail
           if git diff --quiet projects/data; then
-            echo "data_changed=false" >> "$GITHUB_OUTPUT"
-            echo "commit_skipped=true" >> "$GITHUB_OUTPUT"
-            echo "push_skipped=true" >> "$GITHUB_OUTPUT"
-            echo "pr_skipped=true" >> "$GITHUB_OUTPUT"
+            { echo "data_changed=false"; echo "commit_skipped=true"; echo "push_skipped=true"; echo "pr_skipped=true"; } >> "$GITHUB_OUTPUT"
             echo "[DATA] No diff in projects/data — PASS, no commit/push/PR"
             exit 0
           fi
-          echo "data_changed=true" >> "$GITHUB_OUTPUT"
-          echo "commit_skipped=false" >> "$GITHUB_OUTPUT"
-          echo "push_skipped=false" >> "$GITHUB_OUTPUT"
-          echo "pr_skipped=false" >> "$GITHUB_OUTPUT"
+          { echo "data_changed=true"; echo "commit_skipped=false"; echo "push_skipped=false"; echo "pr_skipped=false"; } >> "$GITHUB_OUTPUT"
           echo "[DATA] Diff detected — will commit to ${{ env.AUTOMATION_BRANCH }} and open/update PR"
 
       - name: Commit to automation branch and push
