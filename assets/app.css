@@ -9108,9 +9108,12 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     #leftContent{
       display: block !important;
     }
-    /* Reserve feed height at first paint to avoid CLS when JS populates feed (forensic: 200px→30k shift) */
+    /* Root-cause CLS fix: JS injects feed content after first paint, expanding #feed from 70vh to ~30k px; fix = fixed height + overflow so container never grows (trace: #leftContent/#feed sources at 0.449) */
     #feed{
-      min-height: 70vh !important;
+      height: calc(100vh - 120px) !important;
+      max-height: calc(100vh - 120px) !important;
+      overflow-y: auto !important;
+      min-height: 0 !important;
     }
   }
   .layout > aside.accordionCol{
