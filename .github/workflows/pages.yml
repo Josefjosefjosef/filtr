@@ -52,7 +52,8 @@ jobs:
           # Replace /assets/app.css?v=... and /assets/app.js?v=... with /assets/app.ASSET_VER.*
           find "$SITE_DIR" -name "*.html" -print0 | xargs -0 sed -i \
             -e "s#/assets/app\\.css?v=[A-Za-z0-9_-]*#/assets/app.${ASSET_VER}.css#g" \
-            -e "s#/assets/app\\.js?v=[A-Za-z0-9_-]*#/assets/app.${ASSET_VER}.js#g"
+            -e "s#/assets/app\\.js?v=[A-Za-z0-9_-]*#/assets/app.${ASSET_VER}.js#g" \
+            -e "s#iu-data-ver-placeholder#${ASSET_VER}#g"
 
           echo "--- app.*.css refs after rewrite (first 20) ---"
           grep -R --line-number "/assets/app\.${ASSET_VER}\.css" "$SITE_DIR" | head -n 20 || true

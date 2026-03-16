@@ -344,9 +344,11 @@
   const BASE = getBaseRoot();
 
   const PROJECTS_DATA_BASE = "/projects/data";
+  const dataVer = (typeof document !== "undefined" && document.querySelector) ? (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim() : '';
+  const dataVerQ = (dataVer && dataVer !== "iu-data-ver-placeholder") ? "?v=" + dataVer : "";
   const DATA = {
-    articlesUrl: `${PROJECTS_DATA_BASE}/articles.json`,
-    videosUrl: `${PROJECTS_DATA_BASE}/videos.json`,
+    articlesUrl: `${PROJECTS_DATA_BASE}/articles.json${dataVerQ}`,
+    videosUrl: `${PROJECTS_DATA_BASE}/videos.json${dataVerQ}`,
     metaUrl: `${PROJECTS_DATA_BASE}/meta.json`,
     statusUrl: `${PROJECTS_DATA_BASE}/status.json`  // status.json se generuje v workflow
   };
