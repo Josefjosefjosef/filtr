@@ -1,17 +1,24 @@
+# Update articles data — PR-based flow for protected main.
+# Never pushes to main. Uses automation branch + single PR + safe auto-merge when data-only.
+
 name: Update articles data
 
 concurrency:
-  group: data-writers-main
+  group: update-articles-data
   cancel-in-progress: true
 
 permissions:
   contents: write
-  actions: write
+  pull-requests: write
 
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "*/5 * * * *"
+
+env:
+  AUTOMATION_BRANCH: automation/update-articles-data
+  PR_TITLE: "chore(data): update articles data"
 
 jobs:
   build:
@@ -35,12 +42,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
-
-      - name: Sync with branch
-        run: |
-          git fetch origin main
-          git checkout main
-          git pull --rebase origin main
 
       - name: Build articles JSON
         env:
@@ -82,85 +83,111 @@ jobs:
             exit 1
           fi
 
-      - name: Detect data changes
-        id: detect_changes
+      - name: No-diff gate (skip commit/push/PR if no data changes)
+        id: no_diff
         shell: bash
         run: |
           set -euo pipefail
-          if git status --porcelain projects/data/ | grep -q .; then
-            echo "data_changed=true" >> "$GITHUB_OUTPUT"
-            echo "[DEPLOY] data_changed=true"
-          else
-            echo "data_changed=false" >> "$GITHUB_OUTPUT"
-            echo "[DEPLOY] data_changed=false"
+          if git diff --quiet projects/data; then
+            { echo "data_changed=false"; echo "commit_skipped=true"; echo "push_skipped=true"; echo "pr_skipped=true"; } >> "$GITHUB_OUTPUT"
+            echo "[DATA] No diff in projects/data — PASS, no commit/push/PR"
+            exit 0
           fi
+          { echo "data_changed=true"; echo "commit_skipped=false"; echo "push_skipped=false"; echo "pr_skipped=false"; } >> "$GITHUB_OUTPUT"
+          echo "[DATA] Diff detected — will commit to ${{ env.AUTOMATION_BRANCH }} and open/update PR"
 
-      - name: Commit & push (safe, rebase + retry)
+      - name: Commit to automation branch and push
+        if: steps.no_diff.outputs.data_changed == 'true'
         id: commit_push
         shell: bash
         run: |
           set -euo pipefail
-
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet && git diff --cached --quiet; then
-            echo "[DATA] No changes to commit."
-            echo "pushed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
+          git add projects/data
+          git diff --cached --quiet && { echo "[DATA] Nothing to commit after add"; exit 0; }
 
-          git add -A
+          git stash push -m "data" -- projects/data
+          git fetch origin main
+          git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
+          git stash pop || true
+          git add projects/data
+          git diff --cached --quiet && { echo "[DATA] Nothing to commit after stash pop"; exit 0; }
 
-          if git diff --cached --quiet; then
-            echo "[DATA] Nothing staged after add."
-            echo "pushed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
+          git commit -m "${{ env.PR_TITLE }}"
+          git push --force-with-lease origin "${{ env.AUTOMATION_BRANCH }}"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
 
-          git commit -m "data: update $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || true
-
-          for i in 1 2 3; do
-            echo "[PUSH] Attempt $i/3"
-            git fetch origin main
-
-            git rebase origin/main || (git rebase --abort && exit 1)
-
-            if git push origin "HEAD:main"; then
-              echo "[PUSH] Success."
-              echo "pushed=true" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-
-            echo "[PUSH] Failed, retrying..."
-            sleep 2
-          done
-
-          echo "[PUSH] Failed after retries."
-          echo "pushed=false" >> "$GITHUB_OUTPUT"
-          exit 1
-
-      - name: Trigger Pages deploy (workflow_dispatch)
-        if: ${{ success() && steps.detect_changes.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' }}
+      - name: Create or update PR
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          echo "[DEPLOY] dispatch_pages=RUN"
-          curl -f -sS -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H "Content-Type: application/json" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/pages.yml/dispatches" \
-            -d '{"ref":"main"}'
-        continue-on-error: true
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
+          EXISTING=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number' 2>/dev/null || true)
+          if [ -n "$EXISTING" ]; then
+            echo "pr_number=$EXISTING" >> "$GITHUB_OUTPUT"
+            echo "pr_url=https://github.com/${{ github.repository }}/pull/$EXISTING" >> "$GITHUB_OUTPUT"
+            echo "[PR] Updated existing PR #$EXISTING"
+            exit 0
+          fi
+          gh pr create --base main --head "$BRANCH" \
+            --title "${{ env.PR_TITLE }}" \
+            --body "Auto-update from Update articles data workflow. Data-only change."
+          NUM=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number')
+          echo "pr_number=$NUM" >> "$GITHUB_OUTPUT"
+          echo "pr_url=https://github.com/${{ github.repository }}/pull/$NUM" >> "$GITHUB_OUTPUT"
+          echo "[PR] Created PR #$NUM"
+
+      - name: Diff scope check (data-only → allow auto-merge)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        id: scope
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          echo "[SCOPE] Changed files:"
+          echo "$CHANGED"
+          DATA_ONLY=true
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              projects/data/*) ;;
+              *) DATA_ONLY=false; break ;;
+            esac
+          done <<< "$CHANGED"
+          if [ "$DATA_ONLY" = true ]; then
+            echo "data_only=true" >> "$GITHUB_OUTPUT"
+            echo "[SCOPE] data-only — auto-merge allowed"
+          else
+            echo "data_only=false" >> "$GITHUB_OUTPUT"
+            echo "[SCOPE] non-data change — auto-merge disabled"
+          fi
+
+      - name: Enable auto-merge (squash) when data-only
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          gh pr merge "$NUM" --auto --squash
+          echo "[AUTO-MERGE] Enabled for PR #$NUM"
 
       - name: Deploy summary
         if: always()
         run: |
-          echo "[DEPLOY] data_changed=${{ steps.detect_changes.outputs.data_changed }}"
-          if [ "${{ steps.detect_changes.outputs.data_changed }}" == "true" ] && [ "${{ steps.commit_push.outputs.pushed }}" == "true" ]; then
-            echo "[DEPLOY] dispatch_pages=RUN"
-          else
-            echo "[DEPLOY] dispatch_pages=SKIP"
-          fi
+          echo "[DEPLOY] data_changed=${{ steps.no_diff.outputs.data_changed }}"
+          echo "[DEPLOY] commit_skipped=${{ steps.no_diff.outputs.commit_skipped }}"
+          echo "[DEPLOY] push_skipped=${{ steps.no_diff.outputs.push_skipped }}"
+          echo "[DEPLOY] pr_skipped=${{ steps.no_diff.outputs.pr_skipped }}"
+          echo "[DEPLOY] direct_push_to_main=false"
+
+      - name: Notify completion (beep)
+        if: always()
+        run: printf '\a'
