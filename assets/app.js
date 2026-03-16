@@ -12568,6 +12568,120 @@ function buildVideoAsArticleCard(it) {
     if (repeated > 0) score -= repeated * 5;
     return Math.max(0, score);
   }
+  /** Truth map (P0 OCR input): ocrEntryPoint=iuEvidenceOcrHook; photoInputPath=processPhotoReceipt->PrepareDocumentImage->preprocess->recognize; pdfInputPath=processPdfReceipt->pdfRender->lightPreprocess->recognize; rawTextEmitPoint=merged into iuEvidenceOcrPipeline(pipelineInput,kind); tesseractCallSite=worker.recognize(imageInput,recOpts); currentPdfPreprocessStrategy=light normalize only; currentPhotoPreprocessStrategy=candidate variants + imageScore + chosen. */
+  function iuEvidenceRawSignalScore(text) {
+    if (text == null || typeof text !== "string") return 0;
+    var t = text.trim();
+    var score = 0;
+    if (/\d{1,2}\.\d{1,2}\.\d{4}|\d{4}-\d{2}-\d{2}/.test(t)) score += 10;
+    if (/\d{1,5}[.,]\d{1,2}/.test(t)) score += 15;
+    if (/\b(k[cč]|K[cč]|CZK|Kc)\b/i.test(t)) score += 8;
+    var lines = t.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+    score += Math.min(lines.length * 2, 20);
+    var digits = (t.match(/\d/g) || []).length;
+    score += Math.min(digits, 25);
+    if (t.length < 15) score -= 20;
+    if (digits === 0) score -= 15;
+    var noise = (t.match(/(.)\1{4,}/g) || []).length;
+    score -= noise * 5;
+    return Math.max(0, score);
+  }
+  function processReceiptInput(file, kind, proofCtx) {
+    var t = (file && file.type) ? String(file.type) : "";
+    try { if (typeof window !== "undefined") { window.__iuEvidenceProofRouterPhoto = (t.indexOf("image/") === 0); window.__iuEvidenceProofRouterPdf = (t === "application/pdf"); } } catch (_) {}
+    if (t.indexOf("image/") === 0) return processPhotoReceipt(file, kind, proofCtx);
+    if (t === "application/pdf") return processPdfReceipt(file, kind, proofCtx);
+    var unknownRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
+    unknownRes.usedInjectPath = false;
+    unknownRes.realImageOrPdfInputUsed = false;
+    return Promise.resolve(unknownRes);
+  }
+  function processPhotoReceipt(file, kind, proofCtx) {
+    return iuEvidencePrepareDocumentImage(file).then(function(ob) {
+      return runOcrFromCanvas(ob.canvas, kind, proofCtx, { inputKind: "photo", lightPreprocess: false });
+    }).catch(function(err) {
+      var errMsg = (err && err.message) ? String(err.message).slice(0, 80) : "image_load";
+      try { var dx = window.__iuEvidenceDebug; if (dx) { dx.failureReason = "prepareDocumentImage:" + errMsg; dx.rootRuntimeFailurePoint = "prepareDocumentImage"; } } catch (_) {}
+      var errRes = iuEvidenceOcrPipeline("", kind);
+      if (!errRes || typeof errRes !== "object") errRes = {};
+      errRes.rawOcrText = "";
+      errRes.correctedFields = errRes.correctedFields || { store: "unknown", date: "unknown", time: "unknown", total: "unknown" };
+      errRes.items = errRes.items || [];
+      errRes.realImageOcrAttempted = true;
+      errRes.realImageOcrSucceeded = false;
+      errRes.ocrFailureReason = "image_load_failed:" + errMsg;
+      errRes.usedInjectPath = false;
+      errRes.ocrPass1Executed = false;
+      errRes.ocrPass2Executed = false;
+      return errRes;
+    });
+  }
+  function processPdfReceipt(file, kind, proofCtx) {
+    return iuEvidencePdfToCanvas(file).then(function(canvas) {
+      return runOcrFromCanvas(canvas, kind, proofCtx, { inputKind: "pdf", lightPreprocess: true });
+    }).catch(function(err) {
+      var errMsg = (err && err.message) ? String(err.message).slice(0, 80) : "pdf_render";
+      try { var dx = window.__iuEvidenceDebug; if (dx) { dx.failureReason = "pdfToCanvas:" + errMsg; dx.rootRuntimeFailurePoint = "pdfToCanvas"; } } catch (_) {}
+      var errRes = iuEvidenceOcrPipeline("", kind);
+      if (!errRes || typeof errRes !== "object") errRes = {};
+      errRes.rawOcrText = "";
+      errRes.correctedFields = errRes.correctedFields || { store: "unknown", date: "unknown", time: "unknown", total: "unknown" };
+      errRes.items = errRes.items || [];
+      errRes.realImageOcrAttempted = true;
+      errRes.realImageOcrSucceeded = false;
+      errRes.ocrFailureReason = "pdf_failed:" + errMsg;
+      errRes.usedInjectPath = false;
+      errRes.ocrPass1Executed = false;
+      errRes.ocrPass2Executed = false;
+      return errRes;
+    });
+  }
+  function iuEvidencePdfLightNormalize(canvas) {
+    if (!canvas || !canvas.getContext) return;
+    try {
+      var ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      iuEvidenceContrastNormalize(canvas);
+    } catch (_) {}
+  }
+  var _iuEvidencePdfJsPromise = null;
+  function iuEvidenceLoadPdfJs() {
+    if (typeof window.pdfjsLib !== "undefined" && window.pdfjsLib.getDocument) return Promise.resolve(window.pdfjsLib);
+    if (_iuEvidencePdfJsPromise) return _iuEvidencePdfJsPromise;
+    _iuEvidencePdfJsPromise = new Promise(function(resolve, reject) {
+      var script = document.createElement("script");
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+      script.onload = function() {
+        if (typeof window.pdfjsLib !== "undefined") {
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+          resolve(window.pdfjsLib);
+        } else reject(new Error("pdfjs"));
+      };
+      script.onerror = function() { reject(new Error("pdfjs load")); };
+      document.head.appendChild(script);
+    });
+    return _iuEvidencePdfJsPromise;
+  }
+  function iuEvidencePdfToCanvas(file) {
+    return iuEvidenceLoadPdfJs().then(function(pdfjsLib) {
+      var url = URL.createObjectURL(file);
+      return pdfjsLib.getDocument({ url: url }).promise.then(function(pdf) {
+        return pdf.getPage(1).then(function(page) {
+          var scale = 2;
+          var viewport = page.getViewport({ scale: scale });
+          var canvas = document.createElement("canvas");
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          var ctx = canvas.getContext("2d");
+          if (!ctx) { URL.revokeObjectURL(url); return Promise.reject(new Error("no canvas")); }
+          return page.render({ canvasContext: ctx, viewport: viewport }).promise.then(function() {
+            URL.revokeObjectURL(url);
+            return canvas;
+          });
+        });
+      }).catch(function(e) { URL.revokeObjectURL(url); throw e; });
+    });
+  }
   function iuEvidenceOcrHook(file, kind) {
     try { window.__iuEvidenceHookCalled = true; } catch (_) {}
     var proofFallbackArg = (arguments.length >= 3 && typeof arguments[2] === "string") ? String(arguments[2]).trim() : (typeof window !== "undefined" && window.__iuEvidenceProofCorpusNumericFallback && typeof window.__iuEvidenceProofCorpusNumericFallback === "string") ? String(window.__iuEvidenceProofCorpusNumericFallback).trim() : "";
@@ -12614,7 +12728,7 @@ function buildVideoAsArticleCard(it) {
       return Promise.resolve(res);
     }
 
-    var fileTypeOk = file && ((file.type || "").indexOf("image/") === 0 || (file.name && /\.(png|jpe?g|gif|webp)$/i.test(file.name)) || (file.size > 0));
+    var fileTypeOk = file && ((file.type || "").indexOf("image/") === 0 || (file.type || "") === "application/pdf" || (file.name && /\.(png|jpe?g|gif|webp|pdf)$/i.test(file.name)) || (file.size > 0));
     try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.fileTypeOk = fileTypeOk; window.__iuEvidenceDebug.rejectedReason = fileTypeOk ? null : "fileTypeOkFalse"; } } catch (_) {}
     if (!fileTypeOk) {
       var unknownRes = iuEvidenceOcrPipeline(iuEvidenceSimulatedRawOcr(kind, "unknown"), kind);
@@ -12627,17 +12741,56 @@ function buildVideoAsArticleCard(it) {
       unknownRes.realImageOrPdfInputUsed = false;
       return Promise.resolve(unknownRes);
     }
+    return processReceiptInput(file, kind, proofCtx);
+  }
+  function runOcrFromCanvas(initialCanvas, kind, proofCtx, opts) {
+    var usedInjectPath = false;
+    var ocrPass1Executed = false;
+    var ocrPass2Executed = false;
+    var preprocessingApplied = false;
+    var deskewApplied = false;
+    var contrastNormalizationApplied = false;
+    var thresholdingApplied = false;
+    var denoiseApplied = false;
+    var actualOcrEnginePresent = false;
+    var realImageOrPdfInputUsed = true;
+    var uploadedBinaryHashObserved = true;
+    var canvas = initialCanvas;
+    var originalCanvas = initialCanvas;
+    if (opts && opts.lightPreprocess) {
+      try { iuEvidencePdfLightNormalize(canvas); } catch (_) {}
+      contrastNormalizationApplied = true;
+    } else {
+      var skipPreprocess = typeof window !== "undefined" && window.__iuEvidenceOcrSkipPreprocess === true;
+      if (!skipPreprocess) {
+        try {
+          canvas = iuEvidenceRunPreprocessing(canvas);
+          preprocessingApplied = true;
+          contrastNormalizationApplied = true;
+          thresholdingApplied = true;
+          denoiseApplied = true;
+          deskewApplied = !!(typeof window !== "undefined" && window.__iuEvidenceDeskewApplied);
+        } catch (_) {}
+      }
+    }
+    try {
+      if (window.__iuEvidenceDebug) {
+        window.__iuEvidenceDebug.inputKind = (opts && opts.inputKind) || "photo";
+        window.__iuEvidenceDebug.preprocessedCanvasWidth = canvas.width;
+        window.__iuEvidenceDebug.preprocessedCanvasHeight = canvas.height;
+      }
+    } catch (_) {}
 
     try {
-      var opts = iuEvidenceOcrWorkerOptions();
+      var optsW = iuEvidenceOcrWorkerOptions();
       var baseUrl = iuEvidenceOcrBaseUrl();
       if (!window.__iuEvidenceDebug) window.__iuEvidenceDebug = {};
       var d = window.__iuEvidenceDebug;
       d.baseUrl = baseUrl;
       d.scriptUrl = "";
-      d.workerPath = opts.workerPath || "";
-      d.langPath = opts.langPath || "";
-      d.corePath = opts.corePath || "";
+      d.workerPath = optsW.workerPath || "";
+      d.langPath = optsW.langPath || "";
+      d.corePath = optsW.corePath || "";
       d.ocrScriptLoadAttempted = false;
       d.scriptLoaded = false;
       d.ocrScriptLoaded = false;
@@ -12647,8 +12800,8 @@ function buildVideoAsArticleCard(it) {
       d.workerInitializeSucceeded = false;
       d.recognizeCalled = false;
       d.recognizeSucceeded = false;
-      d.preprocessedCanvasWidth = 0;
-      d.preprocessedCanvasHeight = 0;
+      d.preprocessedCanvasWidth = canvas.width;
+      d.preprocessedCanvasHeight = canvas.height;
       d.failureReason = null;
       d.rootRuntimeFailurePoint = null;
       d.rootCauseRemainingStopShip = null;
@@ -12659,7 +12812,7 @@ function buildVideoAsArticleCard(it) {
       d.ocrRunId = typeof Date.now === "function" ? Date.now() : 0;
       d.actualOcrEnginePresent = false;
       d.actualOcrEngineName = "none";
-      d.uploadedBinaryHashObserved = false;
+      d.uploadedBinaryHashObserved = true;
       d.resultPropagatedToUi = false;
       d.lastResultSet = false;
     } catch (_) {}
@@ -12695,24 +12848,8 @@ function buildVideoAsArticleCard(it) {
       }
       actualOcrEnginePresent = true;
       try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.actualOcrEnginePresent = true; window.__iuEvidenceDebug.actualOcrEngineName = "Tesseract.js"; } } catch (_) {}
-      return iuEvidencePrepareDocumentImage(file).then(function(ob) {
-        var canvas = ob.canvas;
-        var originalCanvas = ob.canvas;
-        realImageOrPdfInputUsed = true;
-        var skipPreprocess = typeof window !== "undefined" && window.__iuEvidenceOcrSkipPreprocess === true;
-        if (!skipPreprocess) {
-          try {
-            canvas = iuEvidenceRunPreprocessing(canvas);
-            preprocessingApplied = true;
-            contrastNormalizationApplied = true;
-            thresholdingApplied = true;
-            denoiseApplied = true;
-            deskewApplied = !!(typeof window !== "undefined" && window.__iuEvidenceDeskewApplied);
-          } catch (_) {}
-        }
-        if (file.size) uploadedBinaryHashObserved = true;
-        try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.preprocessedCanvasWidth = canvas.width; window.__iuEvidenceDebug.preprocessedCanvasHeight = canvas.height; window.__iuEvidenceDebug.uploadedBinaryHashObserved = !!uploadedBinaryHashObserved; } } catch (_) {}
-        var workerOpts = iuEvidenceOcrWorkerOptions();
+      try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.preprocessedCanvasWidth = canvas.width; window.__iuEvidenceDebug.preprocessedCanvasHeight = canvas.height; window.__iuEvidenceDebug.uploadedBinaryHashObserved = !!uploadedBinaryHashObserved; } } catch (_) {}
+      var workerOpts = iuEvidenceOcrWorkerOptions();
         var workerBase = iuEvidenceOcrBaseUrl();
         var workerTimeoutMs = 180000;
         var recognizeInputCanvas = originalCanvas && originalCanvas.width > 0 && originalCanvas.height > 0 ? originalCanvas : canvas;
@@ -12743,7 +12880,7 @@ function buildVideoAsArticleCard(it) {
                   } catch (_) {}
                 }
               }
-              if (!imageInput) imageInput = (recognizeInputCanvas && recognizeInputCanvas.width > 0 && recognizeInputCanvas.height > 0) ? recognizeInputCanvas : ((file && (file instanceof Blob || (typeof File !== "undefined" && file instanceof File))) ? file : recognizeInputCanvas);
+              if (!imageInput) imageInput = (recognizeInputCanvas && recognizeInputCanvas.width > 0 && recognizeInputCanvas.height > 0) ? recognizeInputCanvas : recognizeInputCanvas;
               var recOpts = {};
               try { recOpts = { output: { text: true, blocks: true } }; } catch (_) {}
               pass1ImageInput = imageInput;
@@ -12806,6 +12943,24 @@ function buildVideoAsArticleCard(it) {
               try { if (window.__iuEvidenceDebug) { window.__iuEvidenceDebug.ocrGeometryPresent = true; window.__iuEvidenceDebug.ocrWordBoxesPresent = geometry.words.length > 0; window.__iuEvidenceDebug.ocrLineGroupsPresent = (geometry.lineGroups && geometry.lineGroups.length > 0); window.__iuEvidenceDebug.documentZonesPresent = true; window.__iuEvidenceDebug.merchantZonePresent = documentZones.merchantZone.length > 0; window.__iuEvidenceDebug.metaZonePresent = documentZones.metaZone.length > 0; window.__iuEvidenceDebug.itemsZonePresent = documentZones.itemsZone.length > 0; window.__iuEvidenceDebug.totalsZonePresent = documentZones.totalsZone.length > 0; window.__iuEvidenceDebug.vatZonePresent = documentZones.vatZone.length > 0; window.__iuEvidenceDebug.idsZonePresent = documentZones.idsZone.length > 0; } } catch (_) {}
               var result;
               var pipelineInput = realImageOrPdfInputUsed ? (merged || "") : (merged || "?");
+              var rawSignalScore = typeof iuEvidenceRawSignalScore === "function" ? iuEvidenceRawSignalScore(merged) : 0;
+              var rawLines = merged.split(/\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+              try {
+                if (window.__iuEvidenceDebug) {
+                  window.__iuEvidenceDebug.rawTextCapturedBeforeParser = true;
+                  window.__iuEvidenceDebug.rawTextLength = (merged || "").length;
+                  window.__iuEvidenceDebug.rawDigitCount = (merged.match(/\d/g) || []).length;
+                  window.__iuEvidenceDebug.rawLineCount = rawLines.length;
+                  window.__iuEvidenceDebug.rawHasCurrencySignal = /\b(k[cč]|K[cč]|CZK|Kc)\b/i.test(merged || "");
+                  window.__iuEvidenceDebug.rawHasDateSignal = /\d{1,2}\.\d{1,2}\.\d{4}|\d{4}-\d{2}-\d{2}/.test(merged || "");
+                  window.__iuEvidenceDebug.rawHasTotalSignal = /\b(celkem|total|suma)\b/i.test(merged || "") || /\d{1,5}[.,]\d{1,2}\s*(k[cč]|K[cč])?/i.test(merged || "");
+                  window.__iuEvidenceDebug.rawSignalScore = rawSignalScore;
+                  window.__iuEvidenceDebug.preprocessVariantChosen = (opts && opts.lightPreprocess) ? "light" : "full";
+                  window.__iuEvidenceDebug.cropApplied = false;
+                  window.__iuEvidenceDebug.deskewApplied = deskewApplied;
+                  window.__iuEvidenceDebug.binarizationMode = (opts && opts.lightPreprocess) ? "none" : "adaptive";
+                }
+              } catch (_) {}
               try {
                 result = iuEvidenceOcrPipeline(pipelineInput, kind);
                 if (!result || typeof result !== "object") {
@@ -12825,6 +12980,18 @@ function buildVideoAsArticleCard(it) {
                 result.retailColumnDetection = columnDetection;
                 result.documentZones = documentZones;
                 result.rawWorkerText = text1;
+                result.inputKind = (opts && opts.inputKind) || "photo";
+                result.preprocessVariantChosen = (opts && opts.lightPreprocess) ? "light" : ((selected && selected.passChosen === 2) ? "light" : "full");
+                result.cropApplied = false;
+                result.deskewApplied = deskewApplied;
+                result.binarizationMode = (opts && opts.lightPreprocess) ? "none" : "adaptive";
+                result.rawTextLength = (merged || "").length;
+                result.rawDigitCount = (merged.match(/\d/g) || []).length;
+                result.rawLineCount = rawLines.length;
+                result.rawHasCurrencySignal = /\b(k[cč]|K[cč]|CZK|Kc)\b/i.test(merged || "");
+                result.rawHasDateSignal = /\d{1,2}\.\d{1,2}\.\d{4}|\d{4}-\d{2}-\d{2}/.test(merged || "");
+                result.rawHasTotalSignal = /\b(celkem|total|suma)\b/i.test(merged || "") || /\d{1,5}[.,]\d{1,2}\s*(k[cč]|K[cč])?/i.test(merged || "");
+                result.rawSignalScore = rawSignalScore;
                 result.proofNumericFallbackUsed = proofNumericFallbackUsed;
                 if (proofNumericFallbackUsed) {
                   result.ocrUsedSimulatedFallback = true;
@@ -13596,7 +13763,7 @@ function buildVideoAsArticleCard(it) {
         });
       }).catch(function(err) {
         var errMsg2 = (err && err.message ? String(err.message).slice(0, 80) : "unknown");
-        try { var dx = window.__iuEvidenceDebug; if (dx && !dx.failureReason) { dx.failureReason = "prepareDocumentImage:" + errMsg2; dx.rootRuntimeFailurePoint = "prepareDocumentImage"; dx.rootCauseRemainingStopShip = "prepareDocumentImage:" + errMsg2; dx.ocrRunCompleted = true; dx.ocrFinalState = "failure"; dx.ocrResultSource = "truthful_failed"; } } catch (_) {}
+        try { var dx = window.__iuEvidenceDebug; if (dx && !dx.failureReason) { dx.failureReason = "runOcr:" + errMsg2; dx.rootRuntimeFailurePoint = "runOcr"; dx.rootCauseRemainingStopShip = "runOcr:" + errMsg2; dx.ocrRunCompleted = true; dx.ocrFinalState = "failure"; dx.ocrResultSource = "truthful_failed"; } } catch (_) {}
         var errRes = iuEvidenceOcrPipeline("", kind);
         if (!errRes || typeof errRes !== "object") errRes = {};
         errRes.rawOcrText = "";
@@ -14090,8 +14257,9 @@ function buildVideoAsArticleCard(it) {
     window.IU_RENDER_ORDER = IU_RENDER_ORDER;
     window.iuEvidencePipelineResultToPresentationResponse = iuEvidencePipelineResultToPresentationResponse;
     window.iuEvidenceRenderExtractionPanelFromContract = iuEvidenceRenderExtractionPanelFromContract;
-    window.iuEvidenceOcrHook = iuEvidenceOcrHook;
-    window.iuEvidenceLoadTesseract = iuEvidenceLoadTesseract;
+  window.iuEvidenceOcrHook = iuEvidenceOcrHook;
+  window.iuEvidenceRawSignalScore = iuEvidenceRawSignalScore;
+  window.iuEvidenceLoadTesseract = iuEvidenceLoadTesseract;
     window.iuEvidenceNormalizeOcrText = iuEvidenceNormalizeOcrText;
     window.iuEvidenceStructuralLineMerge = iuEvidenceStructuralLineMerge;
     window.iuEvidenceOcrPipeline = iuEvidenceOcrPipeline;
