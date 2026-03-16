@@ -9064,6 +9064,11 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     overflow-x: hidden !important;
   }
   /* P0 Silver flush: no gap between topbar and Silver */
+  /* P0 CLS=0: reserve Silver slot height before first paint (RCA: silver_content_growth) */
+  #iuMobileGateWrap #iuMobileSilverSlot,
+  #iuMobileSilverSlot.iu-mobileSilverSlot{
+    min-height: 512px !important;
+  }
   #iuMobileGateWrap #iuMobileSilverSlot{
     margin-top: 0 !important;
     padding-top: 0 !important;
