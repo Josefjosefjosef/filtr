@@ -12617,11 +12617,14 @@ function buildVideoAsArticleCard(it) {
     });
   }
   function processPdfReceipt(file, kind, proofCtx) {
+    try { window.__iuEvidencePdfCatchFallbackUsed = false; } catch (_) {}
     return iuEvidencePdfToCanvas(file).then(function(canvas) {
+      try { window.__iuEvidencePdfCanvasRenderPass = true; window.__iuEvidencePdfCatchFallbackUsed = false; } catch (_) {}
       return runOcrFromCanvas(canvas, kind, proofCtx, { inputKind: "pdf", lightPreprocess: true });
     }).catch(function(err) {
+      try { window.__iuEvidencePdfCatchFallbackUsed = true; } catch (_) {}
       var errMsg = (err && err.message) ? String(err.message).slice(0, 80) : "pdf_render";
-      try { var dx = window.__iuEvidenceDebug; if (dx) { dx.failureReason = "pdfToCanvas:" + errMsg; dx.rootRuntimeFailurePoint = "pdfToCanvas"; } } catch (_) {}
+      try { var dx = window.__iuEvidenceDebug; if (dx) { dx.failureReason = "pdfToCanvas:" + errMsg; dx.rootRuntimeFailurePoint = "pdfToCanvas"; dx.inputKind = "pdf"; } } catch (_) {}
       var errRes = iuEvidenceOcrPipeline("", kind);
       if (!errRes || typeof errRes !== "object") errRes = {};
       errRes.rawOcrText = "";
@@ -12633,6 +12636,17 @@ function buildVideoAsArticleCard(it) {
       errRes.usedInjectPath = false;
       errRes.ocrPass1Executed = false;
       errRes.ocrPass2Executed = false;
+      errRes.inputKind = "pdf";
+      errRes.preprocessVariantChosen = "light";
+      errRes.binarizationMode = "none";
+      errRes.rawTextLength = 0;
+      errRes.rawDigitCount = 0;
+      errRes.rawLineCount = 0;
+      errRes.rawHasCurrencySignal = false;
+      errRes.rawHasDateSignal = false;
+      errRes.rawHasTotalSignal = false;
+      errRes.rawSignalScore = 0;
+      try { window.__iuEvidenceLastResult = errRes; } catch (_) {}
       return errRes;
     });
   }
@@ -12665,7 +12679,11 @@ function buildVideoAsArticleCard(it) {
   function iuEvidencePdfToCanvas(file) {
     return iuEvidenceLoadPdfJs().then(function(pdfjsLib) {
       var url = URL.createObjectURL(file);
-      return pdfjsLib.getDocument({ url: url }).promise.then(function(pdf) {
+      var getDocPromise = (file.arrayBuffer && typeof file.arrayBuffer === "function")
+        ? file.arrayBuffer().then(function(ab) { return pdfjsLib.getDocument({ data: ab }).promise; })
+        : pdfjsLib.getDocument({ url: url }).promise;
+      return getDocPromise.then(function(pdf) {
+        if (url) try { URL.revokeObjectURL(url); } catch (_) {}
         return pdf.getPage(1).then(function(page) {
           var scale = 2;
           var viewport = page.getViewport({ scale: scale });
@@ -12673,13 +12691,14 @@ function buildVideoAsArticleCard(it) {
           canvas.width = viewport.width;
           canvas.height = viewport.height;
           var ctx = canvas.getContext("2d");
-          if (!ctx) { URL.revokeObjectURL(url); return Promise.reject(new Error("no canvas")); }
-          return page.render({ canvasContext: ctx, viewport: viewport }).promise.then(function() {
-            URL.revokeObjectURL(url);
-            return canvas;
-          });
+          if (!ctx) return Promise.reject(new Error("no canvas"));
+          return page.render({ canvasContext: ctx, viewport: viewport }).promise.then(function() { return canvas; });
         });
-      }).catch(function(e) { URL.revokeObjectURL(url); throw e; });
+      }).catch(function(e) {
+        if (url) try { URL.revokeObjectURL(url); } catch (_) {}
+        try { if (window.__iuEvidenceDebug) window.__iuEvidenceDebug.pdfLoadError = (e && e.message) ? String(e.message).slice(0, 120) : String(e); } catch (_) {}
+        throw e;
+      });
     });
   }
   function iuEvidenceOcrHook(file, kind) {
@@ -12982,9 +13001,11 @@ function buildVideoAsArticleCard(it) {
                 result.rawWorkerText = text1;
                 result.inputKind = (opts && opts.inputKind) || "photo";
                 result.preprocessVariantChosen = (opts && opts.lightPreprocess) ? "light" : ((selected && selected.passChosen === 2) ? "light" : "full");
+                result.ocrRunId = (typeof window !== "undefined" && window.__iuEvidenceDebug && window.__iuEvidenceDebug.ocrRunId) || 0;
                 result.cropApplied = false;
                 result.deskewApplied = deskewApplied;
                 result.binarizationMode = (opts && opts.lightPreprocess) ? "none" : "adaptive";
+                try { if (opts && opts.lightPreprocess && typeof window !== "undefined") window.__iuEvidencePdfRecognizeCallReached = true; } catch (_) {}
                 result.rawTextLength = (merged || "").length;
                 result.rawDigitCount = (merged.match(/\d/g) || []).length;
                 result.rawLineCount = rawLines.length;
@@ -13760,10 +13781,10 @@ function buildVideoAsArticleCard(it) {
           failRes.spendSummaryFactPackPresent = false;
           try { window.__iuEvidenceLastResult = failRes; } catch (_) {}
           return failRes;
-        });
-      }).catch(function(err) {
+        }
+      ).catch(function(err) {
         var errMsg2 = (err && err.message ? String(err.message).slice(0, 80) : "unknown");
-        try { var dx = window.__iuEvidenceDebug; if (dx && !dx.failureReason) { dx.failureReason = "runOcr:" + errMsg2; dx.rootRuntimeFailurePoint = "runOcr"; dx.rootCauseRemainingStopShip = "runOcr:" + errMsg2; dx.ocrRunCompleted = true; dx.ocrFinalState = "failure"; dx.ocrResultSource = "truthful_failed"; } } catch (_) {}
+        try { var dx = window.__iuEvidenceDebug; if (dx) { if (!dx.failureReason) { dx.failureReason = "runOcr:" + errMsg2; dx.rootRuntimeFailurePoint = "runOcr"; dx.rootCauseRemainingStopShip = "runOcr:" + errMsg2; dx.ocrRunCompleted = true; dx.ocrFinalState = "failure"; dx.ocrResultSource = "truthful_failed"; } if (realImageOrPdfInputUsed) dx.rawTextCapturedBeforeParser = true; if (opts && opts.inputKind) dx.inputKind = opts.inputKind; } } catch (_) {}
         var errRes = iuEvidenceOcrPipeline("", kind);
         if (!errRes || typeof errRes !== "object") errRes = {};
         errRes.rawOcrText = "";
