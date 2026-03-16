@@ -9143,8 +9143,23 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     box-sizing: border-box !important;
   }
   #leftStickyHeader #topbarWrap,
-  #iuMobileGateWrap #iuMobileSilverSlot,
-  #iuMobileGateWrap #iuMobileGateTabs{
+  #iuMobileGateWrap #iuMobileSilverSlot{
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  /* P0 Mobile CTA row width lock: one wrapper = same content width for top row (tabs) + bottom row (dual CTA) */
+  #iuMobileGateWrap .iu-mobileCtaGroup{
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    padding: 0 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    --iu-mobile-cta-h: 52px !important;
+  }
+  #iuMobileGateWrap .iu-mobileCtaGroup #iuMobileGateTabs,
+  #iuMobileGateWrap .iu-mobileCtaGroup #iuMobileCtaSlot{
     width: 100% !important;
     max-width: 100% !important;
   }
@@ -9264,24 +9279,20 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     min-width: 0 !important;
     box-sizing: border-box !important;
   }
-  /* 2-tab gate: side by side, centered */
+  /* 2-tab gate: same width as bottom CTA row (grid 1fr 1fr inside .iu-mobileCtaGroup) */
   #iuMobileGateTabs.iu-mobileGateTabs{
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: center !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
     gap: 8px !important;
     width: 100% !important;
     max-width: 100% !important;
     padding: 12px 0 !important;
-    flex-wrap: nowrap !important;
+    box-sizing: border-box !important;
   }
-  /* P0 Gate buttons: silver background, premium look; default neutral */
+  /* P0 Gate buttons: silver background; height aligned with bottom CTA row */
   #iuMobileGateTabs .iu-mobileGateTab{
-    flex: 1 1 0 !important;
     min-width: 0 !important;
-    max-width: 200px !important;
-    height: 52px !important;
+    height: var(--iu-mobile-cta-h, 52px) !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -9302,7 +9313,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     border-color: #888 !important;
     color: #0d1520 !important;
   }
-  /* P0 Mobile CTA block: below main entry buttons, full width, 50/50 */
+  /* P0 Mobile CTA block: same content width as top row (no horizontal padding; parent .iu-mobileCtaGroup has it) */
   #iuMobileCtaSlot.iu-mobileCtaSlot{
     display: flex !important;
     flex-direction: row !important;
@@ -9310,7 +9321,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     max-width: 100% !important;
     min-width: 0 !important;
     box-sizing: border-box !important;
-    padding: 12px 12px 16px !important;
+    padding: 0 0 16px !important;
     gap: 0 !important;
   }
   #iuMobileCtaSlot.iu-mobileCtaSlot:empty{
@@ -9328,10 +9339,16 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     flex: 1 1 0 !important;
     min-width: 0 !important;
     max-width: none !important;
-    padding: 12px 8px !important;
+    min-height: var(--iu-mobile-cta-h, 52px) !important;
+    height: var(--iu-mobile-cta-h, 52px) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 8px !important;
     font-size: 13px !important;
     white-space: normal !important;
     word-break: break-word !important;
+    box-sizing: border-box !important;
   }
   /* Same CTA visual family as desktop (silver-blue + gold) */
   #iuMobileCtaSlot .iuRightCta--services{

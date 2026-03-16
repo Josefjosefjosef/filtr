@@ -101,12 +101,15 @@ style-src 'self' 'unsafe-inline' https:;
                 <!-- P0 Mobile/tablet: topbar → Silver → 2-tab gate (Navigace | MindMenu); only one section open at a time -->
                 <div id="iuMobileGateWrap" class="iu-mobileGateWrap" aria-hidden="true" data-iu-mobile-gate="">
                   <div id="iuMobileSilverSlot" class="iu-mobileSilverSlot" aria-label="Silver"></div>
-                  <div id="iuMobileGateTabs" class="iu-mobileGateTabs" role="tablist" aria-label="Sekce mobilního rozcestníku">
-                    <button type="button" id="iuMobileGateTabNav" class="iu-mobileGateTab" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelNav" data-iu-gate-tab="nav">Navigace po webu</button>
-                    <button type="button" id="iuMobileGateTabTools" class="iu-mobileGateTab" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelTools" data-iu-gate-tab="tools">MindMenu a nástroje</button>
+                  <!-- P0 Mobile CTA row width lock: one wrapper = same width for top row (tabs) + bottom row (dual CTA) -->
+                  <div class="iu-mobileCtaGroup" aria-label="Navigace a inzerce">
+                    <div id="iuMobileGateTabs" class="iu-mobileGateTabs" role="tablist" aria-label="Sekce mobilního rozcestníku">
+                      <button type="button" id="iuMobileGateTabNav" class="iu-mobileGateTab" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelNav" data-iu-gate-tab="nav">Navigace po webu</button>
+                      <button type="button" id="iuMobileGateTabTools" class="iu-mobileGateTab" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelTools" data-iu-gate-tab="tools">MindMenu a nástroje</button>
+                    </div>
+                    <!-- P0 Mobile/tablet: CTA block below main entry buttons (dual 50/50); JS moves .iuRightTopCtas here on mobile -->
+                    <div id="iuMobileCtaSlot" class="iu-mobileCtaSlot" aria-label="Inzerce a služby (mobil)" aria-hidden="true"></div>
                   </div>
-                  <!-- P0 Mobile/tablet: CTA block below main entry buttons (dual 50/50); JS moves .iuRightTopCtas here on mobile -->
-                  <div id="iuMobileCtaSlot" class="iu-mobileCtaSlot" aria-label="Inzerce a služby (mobil)" aria-hidden="true"></div>
                   <div id="iuMobileGateContent" class="iu-mobileGateContent" aria-hidden="true">
                     <div id="iuMobileGateBackBar" class="iu-mobileGateBackBar" hidden aria-label="Návrat">
                       <button type="button" id="iuMobileGateBack" class="iu-mobileGateBackBtn" aria-label="Zpět">Zpět</button>
