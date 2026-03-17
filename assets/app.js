@@ -22198,6 +22198,49 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
 // === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → central exclusive middle mode; P0 mobile = fullscreen overlay ===
 (function iuAdsStageOverlay() {
+  const categories = ["Auto", "Reality", "Práce", "Služby"];
+  function iuAdsCategoryValue(lab) {
+    try {
+      return lab.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/\s+/g, "-");
+    } catch (e) {
+      return String(lab).toLowerCase();
+    }
+  }
+  function initAdsCategories() {
+    var grid = document.getElementById("iuAdsCategoriesGrid");
+    var sel = document.getElementById("iuAdsFieldCategory");
+    if (grid && !grid.dataset.iuAdsCatsInit) {
+      grid.dataset.iuAdsCatsInit = "1";
+      grid.textContent = "";
+      for (var i = 0; i < categories.length; i++) {
+        var lab = categories[i];
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "iuAdsCategoryCard";
+        btn.setAttribute("aria-label", lab);
+        btn.textContent = lab;
+        btn.setAttribute("data-iu-ads-category", iuAdsCategoryValue(lab));
+        grid.appendChild(btn);
+      }
+    }
+    if (sel && !sel.dataset.iuAdsCatsInit) {
+      sel.dataset.iuAdsCatsInit = "1";
+      var keep = sel.querySelector('option[value=""]');
+      var placeholderText = keep ? keep.textContent : "— vyberte —";
+      sel.textContent = "";
+      var opt0 = document.createElement("option");
+      opt0.value = "";
+      opt0.textContent = placeholderText;
+      sel.appendChild(opt0);
+      for (var j = 0; j < categories.length; j++) {
+        var lab2 = categories[j];
+        var opt = document.createElement("option");
+        opt.value = iuAdsCategoryValue(lab2);
+        opt.textContent = lab2;
+        sel.appendChild(opt);
+      }
+    }
+  }
   function isMobile() {
     try {
       return window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
@@ -22250,6 +22293,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     panelSubmit.hidden = isBrowse;
   }
   function run() {
+    initAdsCategories();
     var wrapper = document.querySelector(".iuRightTopCtas");
     if (wrapper) {
       wrapper.addEventListener("click", function (e) {
