@@ -3327,6 +3327,86 @@ body[data-section="media"] #feed{
 .iuAdsStagePanel{
   min-height: 120px;
 }
+#iuAdsPanelSubmit.iuAdsPanelSubmit--auto{
+  display: flex;
+  flex-direction: column;
+  height: min(92vh, 1180px);
+  max-height: min(92vh, 1180px);
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+#iuAdsPanelSubmit.iuAdsPanelSubmit--auto .iuAdsSubmitForm{
+  flex: 1 1 0;
+  min-height: 0;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  max-width: 100%;
+}
+.iuAdsAutoPostReserve{
+  position: relative;
+  flex: 1 1 0;
+  min-height: 200px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.iuAdsAutoPostPlaceholder{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 20px 14px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: rgba(248, 250, 252, .85);
+  border: 1px dashed rgba(31, 59, 109, .12);
+  border-radius: 12px;
+}
+.iuAdsAutoPostPlaceholder[hidden]{
+  display: none !important;
+}
+.iuAdsAutoPostPlaceholderText{
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #64748b;
+  text-align: center;
+  max-width: 320px;
+}
+#iuAdsAutoPost{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+#iuAdsAutoPost[hidden]{
+  display: none !important;
+}
+.iuAdsVinMsgSlot{
+  min-height: 3rem;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+.iuAdsVinMsgSlot .iuAdsVinMsg[hidden]{
+  display: none !important;
+}
 .iuAdsCategories{
   display: grid;
   grid-template-columns: repeat(2, 1fr);

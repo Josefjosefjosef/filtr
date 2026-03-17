@@ -22556,13 +22556,32 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     var legacy = $("iuAdsLegacyFlat");
     var pre = $("iuAdsAutoPre");
     var post = $("iuAdsAutoPost");
+    var reserve = $("iuAdsAutoPostReserve");
+    var placeholder = $("iuAdsAutoPostPlaceholder");
+    var panelSubmit = document.getElementById("iuAdsPanelSubmit");
     var val = cat ? String(cat.value || "") : "";
     var isAuto = val === AUTO_VAL;
     var isEmpty = !val;
 
+    if (panelSubmit) {
+      panelSubmit.classList.toggle("iuAdsPanelSubmit--auto", !!isAuto);
+    }
+
     setHidden(legacy, isEmpty || isAuto);
     setHidden(pre, !isAuto);
-    setHidden(post, !isAuto || autoApiState !== "loaded");
+    setHidden(reserve, !isAuto);
+    if (isAuto) {
+      if (autoApiState === "loaded") {
+        if (placeholder) placeholder.hidden = true;
+        setHidden(post, false);
+      } else {
+        if (placeholder) placeholder.hidden = false;
+        setHidden(post, true);
+      }
+    } else {
+      if (placeholder) placeholder.hidden = true;
+      setHidden(post, true);
+    }
 
     setDisabledIn(legacy, isEmpty || isAuto);
     setDisabledIn(pre, !isAuto);

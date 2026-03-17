@@ -426,11 +426,17 @@ style-src 'self' 'unsafe-inline' https:;
                             <label class="iuAdsFormRow" for="iuAdsAutoVin">VIN <span class="iuAdsReqMark">*</span></label>
                             <input type="text" id="iuAdsAutoVin" class="iuAdsFormInput iuAdsVinInput" name="auto_vin" maxlength="17" autocomplete="off" autocapitalize="characters" placeholder="17 znaků" aria-describedby="iuAdsAutoVinHint">
                             <p class="iuAdsFormHint" id="iuAdsAutoVinHint">Zadejte kompletní VIN vozidla.</p>
-                            <p class="iuAdsVinMsg iuAdsVinMsg--err" id="iuAdsAutoVinError" role="alert" hidden></p>
-                            <p class="iuAdsVinMsg iuAdsVinMsg--load" id="iuAdsAutoVinLoading" hidden>Načítání údajů…</p>
+                            <div class="iuAdsVinMsgSlot" aria-live="polite">
+                              <p class="iuAdsVinMsg iuAdsVinMsg--err" id="iuAdsAutoVinError" role="alert" hidden></p>
+                              <p class="iuAdsVinMsg iuAdsVinMsg--load" id="iuAdsAutoVinLoading" hidden>Načítání údajů…</p>
+                            </div>
                             <button type="button" class="iuAdsSubmitCta iuAdsVinLoadBtn" id="iuAdsAutoVinLoadBtn">Načíst údaje o vozidle</button>
                           </div>
-                          <div id="iuAdsAutoPost" hidden>
+                          <div id="iuAdsAutoPostReserve" class="iuAdsAutoPostReserve" hidden>
+                            <div id="iuAdsAutoPostPlaceholder" class="iuAdsAutoPostPlaceholder">
+                              <p class="iuAdsAutoPostPlaceholderText">Po úspěšném načtení VIN se zde zobrazí další pole k vyplnění.</p>
+                            </div>
+                            <div id="iuAdsAutoPost" hidden>
                             <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockApi">
                               <p class="iuAdsAutoCardTitle">Údaje načtené z VIN</p>
                               <p class="iuAdsAutoCardNote">Pole jsou doplněna z registru / služby podle VIN; můžete je upřesnit.</p>
@@ -575,6 +581,7 @@ style-src 'self' 'unsafe-inline' https:;
                                 <span>Souhlasím s podmínkami inzerce</span>
                               </label>
                               <button type="submit" class="iuAdsSubmitCta" id="iuAdsAutoSubmit">Publikovat inzerát</button>
+                            </div>
                             </div>
                           </div>
                         </form>
