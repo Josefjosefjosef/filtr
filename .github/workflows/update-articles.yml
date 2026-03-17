@@ -242,7 +242,7 @@ jobs:
             if [ -n "$PROD_AT" ] && [ "$PROD_AT" = "$EXPECTED" ]; then
               END_EPOCH=$(date +%s)
               LATENCY=$((END_EPOCH - RUN_EPOCH))
-              echo "fetchToProdLatencySeconds=$LATENCY" >> $GITHUB_OUTPUT
+              echo "fetchToProdLatencySeconds=$LATENCY" >> "$GITHUB_OUTPUT"
               echo "[DEPLOY] Prod has build data. generatedAt=$PROD_AT latency_seconds=$LATENCY"
               exit 0
             fi
