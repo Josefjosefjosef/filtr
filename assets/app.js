@@ -22377,39 +22377,29 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     return /^[A-HJ-NPR-Z0-9]{17}$/.test(s);
   }
 
+  function cleanApiStr(x) {
+    if (x == null) return "";
+    var t = String(x).trim();
+    if (t === "undefined" || t === "null" || t === "NaN") return "";
+    return t.replace(/\s+/g, " ").trim();
+  }
+
   function mapApiToForm(j) {
     var o = j && typeof j === "object" ? j : {};
     return {
-      make: o.make != null ? String(o.make) : o.znacka != null ? String(o.znacka) : "",
-      model: o.model != null ? String(o.model) : o.modelObchodni != null ? String(o.modelObchodni) : "",
-      vin: o.vin != null ? String(o.vin) : "",
-      firstReg:
-        o.firstReg != null
-          ? String(o.firstReg)
-          : o.datumPrvniRegistrace != null
-            ? String(o.datumPrvniRegistrace)
-            : "",
-      body: o.body != null ? String(o.body) : o.karoserie != null ? String(o.karoserie) : "",
-      fuel: o.fuel != null ? String(o.fuel) : o.palivo != null ? String(o.palivo) : "",
-      displacement:
-        o.displacement != null
-          ? String(o.displacement)
-          : o.objemMotoru != null
-            ? String(o.objemMotoru)
-            : "",
-      powerKw:
-        o.powerKw != null
-          ? String(o.powerKw)
-          : o.vykonKw != null
-            ? String(o.vykonKw)
-            : o.vykon != null
-              ? String(o.vykon)
-              : "",
-      color: o.color != null ? String(o.color) : o.barva != null ? String(o.barva) : "",
-      seats: o.seats != null ? String(o.seats) : o.pocetMist != null ? String(o.pocetMist) : "",
-      stk: o.stk != null ? String(o.stk) : o.stkDo != null ? String(o.stkDo) : "",
-      owners: o.owners != null ? String(o.owners) : o.pocetVlastniku != null ? String(o.pocetVlastniku) : "",
-      firstRegYear: o.firstRegYear != null ? String(o.firstRegYear) : ""
+      make: cleanApiStr(o.make != null ? o.make : o.znacka),
+      model: cleanApiStr(o.model != null ? o.model : o.modelObchodni),
+      vin: cleanApiStr(o.vin),
+      firstReg: cleanApiStr(o.firstReg != null ? o.firstReg : o.datumPrvniRegistrace),
+      body: cleanApiStr(o.body != null ? o.body : o.karoserie),
+      fuel: cleanApiStr(o.fuel != null ? o.fuel : o.palivo),
+      displacement: cleanApiStr(o.displacement != null ? o.displacement : o.objemMotoru),
+      powerKw: cleanApiStr(o.powerKw != null ? o.powerKw : o.vykonKw != null ? o.vykonKw : o.vykon),
+      color: cleanApiStr(o.color != null ? o.color : o.barva),
+      seats: cleanApiStr(o.seats != null ? o.seats : o.pocetMist),
+      stk: cleanApiStr(o.stk != null ? o.stk : o.stkDo),
+      owners: cleanApiStr(o.owners != null ? o.owners : o.pocetVlastniku),
+      firstRegYear: cleanApiStr(o.firstRegYear)
     };
   }
 
@@ -22481,8 +22471,26 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       credentials: "same-origin",
       headers: { Accept: "application/json" }
     }).then(function (res) {
-      if (!res.ok) throw new Error("http");
-      return res.json();
+      return res.text().then(function (text) {
+        var j = null;
+        try {
+          j = JSON.parse(text);
+        } catch (pe) {
+          throw new Error("Neplatná odpověď serveru.");
+        }
+        if (res.status === 429) {
+          throw new Error((j && j.error) || "Příliš mnoho požadavků. Zkuste to za chvíli.");
+        }
+        if (res.status === 400) {
+          throw new Error((j && j.error) || "Neplatný VIN.");
+        }
+        if (!j || !j.success || !j.data) {
+          throw new Error(
+            (j && j.error) || "Údaje z VIN se nepodařilo načíst. Zkuste to později nebo jiný VIN."
+          );
+        }
+        return j.data;
+      });
     });
   }
 
@@ -22496,11 +22504,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (!validVinFormat(vin)) {
       return Promise.reject(new Error("Zadejte platný VIN (17 znaků, bez I, O, Q)."));
     }
-    return realVinDecode(vin).catch(function () {
-      throw new Error(
-        "Údaje z VIN se nepodařilo načíst. Zkontrolujte VIN nebo zkuste později (služba může být nedostupná)."
-      );
-    });
+    return realVinDecode(vin);
   }
 
   function setHidden(el, on) {
@@ -22660,8 +22664,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     applyCategoryUI();
 
     decodeVin(raw)
-      .then(function (j) {
-        var payload = j && typeof j === "object" && j.data && !j.make ? j.data : j;
+      .then(function (payload) {
         var m = mapApiToForm(payload);
         m.vin = m.vin || normalizeVin(raw);
         if (!m.firstRegYear && m.firstReg) m.firstRegYear = firstRegYearFrom(m.firstReg);
