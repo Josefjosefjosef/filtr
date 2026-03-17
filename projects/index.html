@@ -344,16 +344,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <button type="button" class="iuAdsStageTab" role="tab" aria-selected="false" aria-controls="iuAdsPanelSubmit" id="iuAdsTabSubmit" data-iu-ads-tab="submit">Vložit inzerát</button>
                       </div>
                       <div id="iuAdsPanelBrowse" class="iuAdsStagePanel" role="tabpanel" aria-labelledby="iuAdsTabBrowse">
-                        <div class="iuAdsCategories" aria-label="Kategorie inzerátů">
-                          <button type="button" class="iuAdsCategoryCard" aria-label="Auto">Auto</button>
-                          <button type="button" class="iuAdsCategoryCard" aria-label="Reality">Reality</button>
-                          <button type="button" class="iuAdsCategoryCard" aria-label="Elektronika">Elektronika</button>
-                          <button type="button" class="iuAdsCategoryCard" aria-label="Práce">Práce</button>
-                          <button type="button" class="iuAdsCategoryCard" aria-label="Služby">Služby</button>
-                          <button type="button" class="iuAdsCategoryCard" aria-label="Domácnost">Domácnost</button>
-                          <button type="button" class="iuAdsCategoryCard" aria-label="Sport a hobby">Sport a hobby</button>
-                          <button type="button" class="iuAdsCategoryCard" aria-label="Ostatní">Ostatní</button>
-                        </div>
+                        <div class="iuAdsCategories" id="iuAdsCategoriesGrid" aria-label="Kategorie inzerátů"></div>
                         <div class="iuAdsSampleList" aria-label="Ukázkové inzeráty">
                           <article class="iuAdsSampleCard">
                             <h3 class="iuAdsSampleCardTitle">Notebook Dell Inspiron 15</h3>
@@ -371,7 +362,7 @@ style-src 'self' 'unsafe-inline' https:;
                           </article>
                           <article class="iuAdsSampleCard">
                             <h3 class="iuAdsSampleCardTitle">Úklidové služby</h3>
-                            <p class="iuAdsSampleCardDesc">Jednorázový i pravidelný úklid domácností a kanceláří.</p>
+                            <p class="iuAdsSampleCardDesc">Jednorázový i pravidelný úklid bytů a kanceláří.</p>
                             <span class="iuAdsSampleCardLoc">Celá ČR</span>
                             <span class="iuAdsSampleCardPrice">dohodou</span>
                             <button type="button" class="iuAdsSampleCardCta">Detail</button>
@@ -383,12 +374,6 @@ style-src 'self' 'unsafe-inline' https:;
                           <label class="iuAdsFormRow" for="iuAdsFieldCategory">Kategorie</label>
                           <select id="iuAdsFieldCategory" class="iuAdsFormInput" name="category" required aria-required="true">
                             <option value="">— vyberte —</option>
-                            <option value="auto">Auto</option>
-                            <option value="reality">Reality</option>
-                            <option value="elektronika">Elektronika</option>
-                            <option value="prace">Práce</option>
-                            <option value="sluzby">Služby</option>
-                            <option value="ostatni">Ostatní</option>
                           </select>
                           <label class="iuAdsFormRow" for="iuAdsFieldTitle">Název inzerátu</label>
                           <input type="text" id="iuAdsFieldTitle" class="iuAdsFormInput" name="title" placeholder="Krátký název" required aria-required="true">
