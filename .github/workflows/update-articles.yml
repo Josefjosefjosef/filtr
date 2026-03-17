@@ -14,7 +14,7 @@ permissions:
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/11 * * * *"
 
 env:
   AUTOMATION_BRANCH: automation/update-articles-data
@@ -82,6 +82,13 @@ jobs:
             echo "ERROR: projects/data/videos.json is empty"
             exit 1
           fi
+
+      - name: Capture build generatedAt (for same-cycle deploy verify)
+        id: capture_ts
+        run: |
+          BUILD_GENERATED_AT=$(jq -r '.generatedAt // empty' projects/data/articles.json)
+          echo "generated_at=$BUILD_GENERATED_AT" >> "$GITHUB_OUTPUT"
+          echo "[BUILD] generatedAt=$BUILD_GENERATED_AT"
 
       - name: No-diff gate (skip commit/push/PR if no data changes)
         id: no_diff
@@ -178,6 +185,73 @@ jobs:
           [ -z "$NUM" ] && exit 0
           gh pr merge "$NUM" --auto --squash
           echo "[AUTO-MERGE] Enabled for PR #$NUM"
+
+      - name: Merge PR same-cycle (data-only, no hanging PR)
+        id: merge_now
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          if gh pr merge "$NUM" --admin --merge 2>/dev/null; then
+            echo "merged_now=true" >> "$GITHUB_OUTPUT"
+            echo "[SAME-CYCLE] PR #$NUM merged via --admin --merge"
+          else
+            echo "merged_now=false" >> "$GITHUB_OUTPUT"
+            echo "[SAME-CYCLE] Relying on auto-merge; will wait for merge"
+          fi
+
+      - name: Wait for PR merge (when not merged in previous step)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.merge_now.outputs.merged_now == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          MAX_WAIT=480
+          ELAPSED=0
+          while [ "$ELAPSED" -lt "$MAX_WAIT" ]; do
+            STATE=$(gh pr view "$NUM" --json state -q '.state' 2>/dev/null || true)
+            if [ "$STATE" = "MERGED" ]; then
+              echo "[SAME-CYCLE] PR #$NUM merged after ${ELAPSED}s"
+              exit 0
+            fi
+            sleep 15
+            ELAPSED=$((ELAPSED + 15))
+          done
+          echo "[SAME-CYCLE] Timeout waiting for merge"
+          exit 1
+
+      - name: Wait for Pages deploy and verify prod
+        id: deploy_verify
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        run: |
+          set -euo pipefail
+          EXPECTED="${{ steps.capture_ts.outputs.generated_at }}"
+          [ -z "$EXPECTED" ] && echo "[DEPLOY] No expected generatedAt, skip verify" && exit 0
+          RUN_START=${GITHUB_RUN_STARTED_AT:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}
+          RUN_EPOCH=$(date -d "$RUN_START" +%s 2>/dev/null || date +%s)
+          MAX_WAIT=600
+          ELAPSED=0
+          while [ "$ELAPSED" -lt "$MAX_WAIT" ]; do
+            PROD_JSON=$(curl -sS -m 15 "https://infouzel.cz/projects/data/articles.json" 2>/dev/null || true)
+            PROD_AT=$(echo "$PROD_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
+            if [ -n "$PROD_AT" ] && [ "$PROD_AT" = "$EXPECTED" ]; then
+              END_EPOCH=$(date +%s)
+              LATENCY=$((END_EPOCH - RUN_EPOCH))
+              echo "fetchToProdLatencySeconds=$LATENCY" >> $GITHUB_OUTPUT
+              echo "[DEPLOY] Prod has build data. generatedAt=$PROD_AT latency_seconds=$LATENCY"
+              exit 0
+            fi
+            echo "[DEPLOY] Poll $ELAPSED s: prod generatedAt=$PROD_AT (expected=$EXPECTED)"
+            sleep 20
+            ELAPSED=$((ELAPSED + 20))
+          done
+          echo "[DEPLOY] Timeout waiting for prod"
+          exit 1
 
       - name: Deploy summary
         if: always()
