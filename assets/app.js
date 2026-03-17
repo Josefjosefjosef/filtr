@@ -6353,6 +6353,13 @@ function buildVideoAsArticleCard(it) {
         }
         setStatus(statusParts.join(" • "));
       }
+      const elUpdated = document.getElementById("dataUpdatedAt");
+      if (elUpdated && (state.lastArticlesGeneratedAt || state.lastVideosGeneratedAt)) {
+        const stamp = state.lastArticlesGeneratedAt || state.lastVideosGeneratedAt;
+        const displayDate = stamp.substring(0, 16).replace("T", " ");
+        elUpdated.textContent = "Poslední aktualizace dat: " + displayDate;
+        elUpdated.style.display = "";
+      }
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 
       debugLog("[DATA] combined count=", state.cachedItems.length);
