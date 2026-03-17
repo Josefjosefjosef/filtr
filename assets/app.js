@@ -22291,6 +22291,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     tabSubmit.setAttribute("aria-selected", !isBrowse ? "true" : "false");
     panelBrowse.hidden = !isBrowse;
     panelSubmit.hidden = isBrowse;
+    try {
+      if (typeof window.iuAdsRefreshCategoryUI === "function") {
+        window.iuAdsRefreshCategoryUI();
+      }
+    } catch (eTab) {}
   }
   function run() {
     initAdsCategories();
@@ -22571,6 +22576,14 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       panelSubmit.classList.toggle("iuAdsPanelSubmit--auto", !!isAuto);
     }
 
+    if (panelSubmit && panelSubmit.hidden) {
+      setHidden(pre, true);
+      setHidden(post, true);
+      setHidden(reserve, true);
+      if (placeholder) placeholder.hidden = true;
+      return;
+    }
+
     setHidden(legacy, isEmpty || isAuto);
     setHidden(pre, !isAuto);
     setHidden(reserve, !isAuto);
@@ -22773,6 +22786,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       });
     }
     onCategoryChange();
+    window.iuAdsRefreshCategoryUI = applyCategoryUI;
   };
 
   if (document.readyState === "loading") {

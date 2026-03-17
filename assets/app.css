@@ -3327,7 +3327,14 @@ body[data-section="media"] #feed{
 .iuAdsStagePanel{
   min-height: 120px;
 }
-#iuAdsPanelSubmit.iuAdsPanelSubmit--auto{
+/* P0: author display:flex must not defeat HTML hidden on tab panels */
+#iuAdsPanelSubmit[hidden],
+#iuAdsPanelBrowse[hidden]{
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+#iuAdsPanelSubmit:not([hidden]).iuAdsPanelSubmit--auto{
   display: flex;
   flex-direction: column;
   height: min(92vh, 1180px);
@@ -3337,15 +3344,23 @@ body[data-section="media"] #feed{
   width: 100%;
   max-width: 100%;
 }
-#iuAdsPanelSubmit.iuAdsPanelSubmit--auto .iuAdsSubmitForm{
+#iuAdsPanelSubmit:not([hidden]).iuAdsPanelSubmit--auto .iuAdsSubmitForm{
   flex: 1 1 0;
   min-height: 0;
   max-height: 100%;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 20px;
+  box-sizing: border-box;
   max-width: 100%;
+}
+#iuAdsPanelSubmit:not([hidden]).iuAdsPanelSubmit--auto #iuAdsSectionCategory,
+#iuAdsPanelSubmit:not([hidden]).iuAdsPanelSubmit--auto #iuAdsAutoPre{
+  flex-shrink: 0;
 }
 .iuAdsAutoPostReserve{
   position: relative;
