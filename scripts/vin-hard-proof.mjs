@@ -49,7 +49,7 @@ function startServer() {
   return new Promise((resolve, reject) => {
     const proc = spawn(process.execPath, ["server/projects-static-and-vin.mjs"], {
       cwd: ROOT,
-      env: { ...process.env, PORT },
+      env: { ...process.env, PORT, VIN_USE_NHTSA_FALLBACK: "1" },
       stdio: ["ignore", "pipe", "pipe"]
     });
     let out = "";
@@ -60,6 +60,16 @@ function startServer() {
     proc.on("error", reject);
     setTimeout(() => reject(new Error("server start timeout")), 20000);
   });
+}
+
+async function selectCategoryAuto(page) {
+  await page.evaluate(() => {
+    const cat = document.getElementById("iuAdsFieldCategory");
+    if (!cat) return;
+    cat.value = "auto";
+    cat.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  await page.waitForTimeout(200);
 }
 
 async function openAdsSubmit(page) {
@@ -152,8 +162,7 @@ try {
     const post = await page.evaluate(() => document.getElementById("iuAdsAutoPost")?.hidden);
     if (!leg || !pre || !post) r.gatedBeforeApiPass = false;
 
-    await page.selectOption("#iuAdsFieldCategory", "auto");
-    await page.waitForTimeout(150);
+    await selectCategoryAuto(page);
     await page.evaluate(() => {
       window.__s = 0;
     });
@@ -223,7 +232,7 @@ try {
   const p4 = await b4.newPage({ viewport: { width: 1280, height: 800 } });
   await p4.goto(BASE, { waitUntil: "load", timeout: 120000 });
   await openAdsSubmit(p4);
-  await p4.selectOption("#iuAdsFieldCategory", "auto");
+  await selectCategoryAuto(p4);
   await p4.fill("#iuAdsAutoVin", "IIIIIIIIIIIIIIIII");
   await p4.click("#iuAdsAutoVinLoadBtn");
   await p4.waitForTimeout(800);
