@@ -22198,7 +22198,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
 // === TOPBAR CTA: Inzerce/Služby + Vložit inzerát → central exclusive middle mode; P0 mobile = fullscreen overlay ===
 (function iuAdsStageOverlay() {
-  const categories = ["Auto", "Reality", "Práce", "Služby"];
+  const categories = ["Auto", "Reality", "Služby", "Práce"];
   function iuAdsCategoryValue(lab) {
     try {
       return lab.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/\s+/g, "-");
@@ -22332,11 +22332,456 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         e.preventDefault();
       });
     }
+    try {
+      if (typeof window.iuAdsSubmitFormWire === "function") {
+        window.iuAdsSubmitFormWire();
+      }
+    } catch (e2) {}
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", run);
   } else {
     run();
+  }
+})();
+
+(function iuAdsSubmitFormState() {
+  var AUTO_VAL = "auto";
+  var autoApiState = "idle";
+  var autoTitleUserEdited = false;
+  var lastLoadedVin = "";
+
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  function iuVinMockEnabled() {
+    try {
+      var h = String(location.hostname || "");
+      if (h !== "localhost" && h !== "127.0.0.1") return false;
+      return /(?:^|[?&])iuVinMock=1(?:&|$)/.test(String(location.search || ""));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function normalizeVin(v) {
+    return String(v || "")
+      .replace(/\s+/g, "")
+      .toUpperCase();
+  }
+
+  function validVinFormat(v) {
+    var s = normalizeVin(v);
+    if (s.length !== 17) return false;
+    return /^[A-HJ-NPR-Z0-9]{17}$/.test(s);
+  }
+
+  function mapApiToForm(j) {
+    var o = j && typeof j === "object" ? j : {};
+    return {
+      make: o.make != null ? String(o.make) : o.znacka != null ? String(o.znacka) : "",
+      model: o.model != null ? String(o.model) : o.modelObchodni != null ? String(o.modelObchodni) : "",
+      vin: o.vin != null ? String(o.vin) : "",
+      firstReg:
+        o.firstReg != null
+          ? String(o.firstReg)
+          : o.datumPrvniRegistrace != null
+            ? String(o.datumPrvniRegistrace)
+            : "",
+      body: o.body != null ? String(o.body) : o.karoserie != null ? String(o.karoserie) : "",
+      fuel: o.fuel != null ? String(o.fuel) : o.palivo != null ? String(o.palivo) : "",
+      displacement:
+        o.displacement != null
+          ? String(o.displacement)
+          : o.objemMotoru != null
+            ? String(o.objemMotoru)
+            : "",
+      powerKw:
+        o.powerKw != null
+          ? String(o.powerKw)
+          : o.vykonKw != null
+            ? String(o.vykonKw)
+            : o.vykon != null
+              ? String(o.vykon)
+              : "",
+      color: o.color != null ? String(o.color) : o.barva != null ? String(o.barva) : "",
+      seats: o.seats != null ? String(o.seats) : o.pocetMist != null ? String(o.pocetMist) : "",
+      stk: o.stk != null ? String(o.stk) : o.stkDo != null ? String(o.stkDo) : "",
+      owners: o.owners != null ? String(o.owners) : o.pocetVlastniku != null ? String(o.pocetVlastniku) : "",
+      firstRegYear: o.firstRegYear != null ? String(o.firstRegYear) : ""
+    };
+  }
+
+  function firstRegYearFrom(d) {
+    if (!d) return "";
+    var m = String(d).match(/(\d{4})/);
+    return m ? m[1] : "";
+  }
+
+  function buildAutoTitle(d) {
+    var parts = [];
+    var brand = (d.make || "").trim();
+    var model = (d.model || "").trim();
+    var fuel = (d.fuel || "").trim();
+    var yr = (d.firstRegYear || firstRegYearFrom(d.firstReg) || "").trim();
+    var pw = (d.powerKw || "").replace(/\s*kW\s*$/i, "").trim();
+    if (brand) parts.push(brand);
+    if (model) parts.push(model);
+    var tail = [];
+    if (fuel) tail.push(fuel);
+    if (yr) tail.push(yr);
+    if (pw) tail.push(pw + " kW");
+    var head = parts.join(" ");
+    if (tail.length) {
+      return (head ? head + ", " : "") + tail.join(", ");
+    }
+    return head || "";
+  }
+
+  function mockVinDecode(vin) {
+    var v = normalizeVin(vin);
+    var n = 0;
+    for (var i = 0; i < v.length; i++) n = (n * 31 + v.charCodeAt(i)) >>> 0;
+    var fuels = ["Benzín", "Nafta", "Hybrid", "CNG"];
+    var bodies = ["Liftback", "Kombi", "SUV", "Sedan"];
+    var colors = ["Šedá", "Černá", "Bílá", "Modrá"];
+    var y = 2008 + (n % 12);
+    return Promise.resolve({
+      make: "Demo " + (n % 7 === 0 ? "Auto" : "Vůz"),
+      model: "Model-" + (100 + (n % 800)),
+      vin: v,
+      firstReg: y + "-06-15",
+      firstRegYear: String(y),
+      body: bodies[n % bodies.length],
+      fuel: fuels[n % fuels.length],
+      displacement: String(1200 + (n % 1400)) + " cm³",
+      powerKw: String(60 + (n % 120)),
+      color: colors[n % colors.length],
+      seats: String(4 + (n % 3)),
+      stk: String(y + 5) + "-12-31",
+      owners: String(1 + (n % 3))
+    });
+  }
+
+  function realVinDecode(vin) {
+    var v = normalizeVin(vin);
+    var base = "";
+    try {
+      var meta = document.querySelector('meta[name="iu-vin-api"]');
+      if (meta && meta.getAttribute("content")) base = meta.getAttribute("content").trim();
+    } catch (e1) {}
+    if (!base) {
+      var pth = String(location.pathname || "");
+      base = pth.indexOf("/projects") >= 0 ? "/projects/api/vin-decode" : "/api/vin-decode";
+    }
+    var sep = base.indexOf("?") >= 0 ? "&" : "?";
+    return fetch(base + sep + "vin=" + encodeURIComponent(v), {
+      method: "GET",
+      credentials: "same-origin",
+      headers: { Accept: "application/json" }
+    }).then(function (res) {
+      if (!res.ok) throw new Error("http");
+      return res.json();
+    });
+  }
+
+  function decodeVin(vin) {
+    if (iuVinMockEnabled()) {
+      if (!validVinFormat(vin)) {
+        return Promise.reject(new Error("Zadejte platný VIN (17 znaků, bez I, O, Q)."));
+      }
+      return mockVinDecode(vin);
+    }
+    if (!validVinFormat(vin)) {
+      return Promise.reject(new Error("Zadejte platný VIN (17 znaků, bez I, O, Q)."));
+    }
+    return realVinDecode(vin).catch(function () {
+      throw new Error(
+        "Údaje z VIN se nepodařilo načíst. Zkontrolujte VIN nebo zkuste později (služba může být nedostupná)."
+      );
+    });
+  }
+
+  function setHidden(el, on) {
+    if (!el) return;
+    el.hidden = !!on;
+  }
+
+  function setDisabledIn(root, dis) {
+    if (!root) return;
+    var inputs = root.querySelectorAll("input, select, textarea, button");
+    for (var i = 0; i < inputs.length; i++) {
+      var inp = inputs[i];
+      if (inp.id === "iuAdsAutoVinLoadBtn" && root.id === "iuAdsAutoPre") continue;
+      inp.disabled = !!dis;
+    }
+  }
+
+  function resetAutoForm() {
+    autoApiState = "idle";
+    autoTitleUserEdited = false;
+    lastLoadedVin = "";
+    var vinIn = $("iuAdsAutoVin");
+    if (vinIn) vinIn.value = "";
+    var ot = $("iuAdsAutoOfferType");
+    var vt = $("iuAdsAutoVehicleType");
+    var cond = $("iuAdsAutoCondition");
+    if (ot) ot.selectedIndex = 0;
+    if (vt) vt.selectedIndex = 0;
+    if (cond) cond.selectedIndex = 0;
+    var post = $("iuAdsAutoPost");
+    if (post) {
+      var fs = post.querySelectorAll("input, select, textarea");
+      for (var i = 0; i < fs.length; i++) {
+        var x = fs[i];
+        if (x.type === "checkbox" || x.type === "radio") {
+          x.checked = false;
+        } else if (x.type !== "button" && x.type !== "submit") {
+          x.value = "";
+        }
+      }
+    }
+    var err = $("iuAdsAutoVinError");
+    var ld = $("iuAdsAutoVinLoading");
+    if (err) {
+      err.textContent = "";
+      err.hidden = true;
+    }
+    if (ld) ld.hidden = true;
+  }
+
+  function applyCategoryUI() {
+    var cat = $("iuAdsFieldCategory");
+    var legacy = $("iuAdsLegacyFlat");
+    var pre = $("iuAdsAutoPre");
+    var post = $("iuAdsAutoPost");
+    var reserve = $("iuAdsAutoPostReserve");
+    var placeholder = $("iuAdsAutoPostPlaceholder");
+    var panelSubmit = document.getElementById("iuAdsPanelSubmit");
+    var val = cat ? String(cat.value || "") : "";
+    var isAuto = val === AUTO_VAL;
+    var isEmpty = !val;
+
+    if (panelSubmit) {
+      panelSubmit.classList.toggle("iuAdsPanelSubmit--auto", !!isAuto);
+    }
+
+    setHidden(legacy, isEmpty || isAuto);
+    setHidden(pre, !isAuto);
+    setHidden(reserve, !isAuto);
+    if (isAuto) {
+      if (autoApiState === "loaded") {
+        if (placeholder) placeholder.hidden = true;
+        setHidden(post, false);
+      } else {
+        if (placeholder) placeholder.hidden = false;
+        setHidden(post, true);
+      }
+    } else {
+      if (placeholder) placeholder.hidden = true;
+      setHidden(post, true);
+    }
+
+    setDisabledIn(legacy, isEmpty || isAuto);
+    setDisabledIn(pre, !isAuto);
+    setDisabledIn(post, !isAuto || autoApiState !== "loaded");
+
+    if (isAuto && autoApiState === "loading") {
+      var ld2 = $("iuAdsAutoVinLoading");
+      if (ld2) ld2.hidden = false;
+    }
+
+    if (legacy && !isEmpty && !isAuto) {
+      var t = $("iuAdsFieldTitle");
+      var d = $("iuAdsFieldDesc");
+      var terms = $("iuAdsFieldTerms");
+      if (t) t.setAttribute("required", "required");
+      if (d) d.setAttribute("required", "required");
+      if (terms) terms.setAttribute("required", "required");
+    } else {
+      var t2 = $("iuAdsFieldTitle");
+      var d2 = $("iuAdsFieldDesc");
+      var terms2 = $("iuAdsFieldTerms");
+      if (t2) t2.removeAttribute("required");
+      if (d2) d2.removeAttribute("required");
+      if (terms2) terms2.removeAttribute("required");
+    }
+  }
+
+  function fillApiFields(m) {
+    function set(id, v) {
+      var el = $(id);
+      if (el) el.value = v != null ? String(v) : "";
+    }
+    set("iuAdsApiMake", m.make);
+    set("iuAdsApiModel", m.model);
+    set("iuAdsApiVinDisp", m.vin);
+    set("iuAdsApiFirstReg", m.firstReg);
+    set("iuAdsApiBody", m.body);
+    set("iuAdsApiFuel", m.fuel);
+    set("iuAdsApiDisplacement", m.displacement);
+    set(
+      "iuAdsApiPower",
+      m.powerKw
+        ? String(m.powerKw).indexOf("kW") >= 0
+          ? String(m.powerKw)
+          : String(m.powerKw) + " kW"
+        : ""
+    );
+    set("iuAdsApiColor", m.color);
+    set("iuAdsApiSeats", m.seats);
+    set("iuAdsApiStk", m.stk);
+    set("iuAdsApiOwners", m.owners);
+    if (!autoTitleUserEdited) {
+      var titleEl = $("iuAdsAutoTitle");
+      var built = buildAutoTitle(m);
+      if (titleEl && built) titleEl.value = built;
+    }
+  }
+
+  function onVinLoad() {
+    var vinEl = $("iuAdsAutoVin");
+    var errEl = $("iuAdsAutoVinError");
+    var ldEl = $("iuAdsAutoVinLoading");
+    var lbBtn = $("iuAdsAutoVinLoadBtn");
+    var raw = vinEl ? vinEl.value : "";
+    var nv = normalizeVin(raw);
+    if (nv !== normalizeVin(lastLoadedVin || "___")) {
+      autoTitleUserEdited = false;
+    }
+    if (errEl) {
+      errEl.hidden = true;
+      errEl.textContent = "";
+    }
+    autoApiState = "loading";
+    if (ldEl) ldEl.hidden = false;
+    if (lbBtn) lbBtn.disabled = true;
+    applyCategoryUI();
+
+    decodeVin(raw)
+      .then(function (j) {
+        var payload = j && typeof j === "object" && j.data && !j.make ? j.data : j;
+        var m = mapApiToForm(payload);
+        m.vin = m.vin || normalizeVin(raw);
+        if (!m.firstRegYear && m.firstReg) m.firstRegYear = firstRegYearFrom(m.firstReg);
+        lastLoadedVin = m.vin;
+        autoApiState = "loaded";
+        if (ldEl) ldEl.hidden = true;
+        if (errEl) errEl.hidden = true;
+        fillApiFields(m);
+        applyCategoryUI();
+      })
+      .catch(function (e) {
+        autoApiState = "error";
+        if (ldEl) ldEl.hidden = true;
+        if (errEl) {
+          errEl.textContent = e && e.message ? String(e.message) : "Chyba načtení.";
+          errEl.hidden = false;
+        }
+        setHidden($("iuAdsAutoPost"), true);
+        applyCategoryUI();
+      })
+      .then(function () {
+        if (lbBtn) lbBtn.disabled = false;
+      });
+  }
+
+  function onCategoryChange() {
+    var cat = $("iuAdsFieldCategory");
+    var val = cat ? String(cat.value || "") : "";
+    if (val !== AUTO_VAL) {
+      resetAutoForm();
+    } else {
+      autoApiState = "idle";
+      autoTitleUserEdited = false;
+      var err = $("iuAdsAutoVinError");
+      var ld = $("iuAdsAutoVinLoading");
+      if (err) {
+        err.textContent = "";
+        err.hidden = true;
+      }
+      if (ld) ld.hidden = true;
+    }
+    applyCategoryUI();
+  }
+
+  window.iuAdsSubmitFormWire = function () {
+    var cat = $("iuAdsFieldCategory");
+    var btn = $("iuAdsAutoVinLoadBtn");
+    var titleAuto = $("iuAdsAutoTitle");
+    var form = $("iuAdsSubmitForm");
+
+    if (cat && !cat.dataset.iuAdsWired) {
+      cat.dataset.iuAdsWired = "1";
+      cat.addEventListener("change", onCategoryChange);
+    }
+    if (btn && !btn.dataset.iuAdsWired) {
+      btn.dataset.iuAdsWired = "1";
+      btn.addEventListener("click", onVinLoad);
+    }
+    if (titleAuto && !titleAuto.dataset.iuAdsWired) {
+      titleAuto.dataset.iuAdsWired = "1";
+      titleAuto.addEventListener("input", function () {
+        autoTitleUserEdited = true;
+      });
+    }
+    if (form && !form.dataset.iuAdsSubmitWired) {
+      form.dataset.iuAdsSubmitWired = "1";
+      form.addEventListener("submit", function (ev) {
+        var c = cat ? String(cat.value || "") : "";
+        if (c === AUTO_VAL) {
+          if (autoApiState !== "loaded") {
+            ev.preventDefault();
+            return;
+          }
+          var titleA = $("iuAdsAutoTitle");
+          if (!titleA || !String(titleA.value || "").trim()) {
+            ev.preventDefault();
+            try {
+              titleA.focus();
+            } catch (f1) {}
+            return;
+          }
+          var termsA = $("iuAdsAutoTerms");
+          if (!termsA || !termsA.checked) {
+            ev.preventDefault();
+            return;
+          }
+        } else if (c && c !== AUTO_VAL) {
+          var t = $("iuAdsFieldTitle");
+          var d = $("iuAdsFieldDesc");
+          var terms = $("iuAdsFieldTerms");
+          if (!t || !String(t.value || "").trim()) {
+            ev.preventDefault();
+            return;
+          }
+          if (!d || !String(d.value || "").trim()) {
+            ev.preventDefault();
+            return;
+          }
+          if (!terms || !terms.checked) {
+            ev.preventDefault();
+            return;
+          }
+        } else {
+          ev.preventDefault();
+        }
+      });
+    }
+    onCategoryChange();
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        window.iuAdsSubmitFormWire();
+      } catch (e) {}
+    });
+  } else {
+    try {
+      window.iuAdsSubmitFormWire();
+    } catch (e2) {}
   }
 })();
 

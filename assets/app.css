@@ -3327,6 +3327,86 @@ body[data-section="media"] #feed{
 .iuAdsStagePanel{
   min-height: 120px;
 }
+#iuAdsPanelSubmit.iuAdsPanelSubmit--auto{
+  display: flex;
+  flex-direction: column;
+  height: min(92vh, 1180px);
+  max-height: min(92vh, 1180px);
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+#iuAdsPanelSubmit.iuAdsPanelSubmit--auto .iuAdsSubmitForm{
+  flex: 1 1 0;
+  min-height: 0;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  max-width: 100%;
+}
+.iuAdsAutoPostReserve{
+  position: relative;
+  flex: 1 1 0;
+  min-height: 200px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.iuAdsAutoPostPlaceholder{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 20px 14px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: rgba(248, 250, 252, .85);
+  border: 1px dashed rgba(31, 59, 109, .12);
+  border-radius: 12px;
+}
+.iuAdsAutoPostPlaceholder[hidden]{
+  display: none !important;
+}
+.iuAdsAutoPostPlaceholderText{
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #64748b;
+  text-align: center;
+  max-width: 320px;
+}
+#iuAdsAutoPost{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+#iuAdsAutoPost[hidden]{
+  display: none !important;
+}
+.iuAdsVinMsgSlot{
+  min-height: 3rem;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+.iuAdsVinMsgSlot .iuAdsVinMsg[hidden]{
+  display: none !important;
+}
 .iuAdsCategories{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -3484,6 +3564,108 @@ button.iuAdsCategoryCard{
 .iuAdsSubmitCta:focus-visible{
   outline: 2px solid rgba(31, 75, 153, .55);
   outline-offset: 2px;
+}
+
+.iuAdsFormSection--legacy{
+  margin-top: 4px;
+}
+.iuAdsAutoCard{
+  margin-top: 16px;
+  padding: 16px 18px;
+  border: 1px solid rgba(31, 59, 109, .12);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fafbfd 0%, #f4f6fa 100%);
+  box-sizing: border-box;
+  max-width: 100%;
+}
+.iuAdsAutoCardTitle{
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1F3B6D;
+}
+.iuAdsAutoCardNote{
+  margin: -4px 0 12px;
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.35;
+}
+.iuAdsFieldFromApi{
+  background: rgba(31, 75, 153, .04);
+  border-color: rgba(31, 59, 109, .14);
+}
+.iuAdsReqMark{
+  color: #b45309;
+}
+.iuAdsFormHint{
+  margin: 4px 0 0;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+.iuAdsVinMsg{
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+.iuAdsVinMsg--err{
+  color: #b91c1c;
+}
+.iuAdsVinMsg--load{
+  color: #1F3B6D;
+}
+.iuAdsVinLoadBtn{
+  margin-top: 14px;
+}
+.iuAdsAutoBlock{
+  margin-top: 14px;
+}
+.iuAdsAutoBlock:first-of-type{
+  margin-top: 12px;
+}
+.iuAdsFieldsetBool{
+  border: 0;
+  margin: 12px 0 0;
+  padding: 0;
+}
+.iuAdsFieldsetBool .iuAdsFormRow{
+  margin-top: 0;
+}
+.iuAdsBoolOpt{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+}
+.iuAdsEquipGrid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 14px;
+  margin-top: 4px;
+}
+@media (max-width: 520px){
+  .iuAdsEquipGrid{
+    grid-template-columns: 1fr;
+  }
+}
+.iuAdsEquipItem{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #374151;
+  cursor: pointer;
+}
+.iuAdsEquipItem input{
+  flex-shrink: 0;
+}
+.iuAdsUploadShell{
+  cursor: default;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .iuRadioView{
