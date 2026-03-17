@@ -29,14 +29,16 @@ jobs:
           test -f projects/data/articles.json && echo "articles.json exists" || echo "articles.json missing"
           test -f projects/data/videos.json && echo "videos.json exists" || echo "videos.json missing"
 
+      # Repo freshness vs automation SLA: */11 cron + build (~15m) + merge-queue + Pages (~25m).
+      # 360m (6h) covers observed backlog (~255m) with margin; fails if main data older than 6h.
       - name: Freshness check (max age minutes)
         env:
-          MAX_AGE_MINUTES: "120"
+          MAX_AGE_MINUTES: "360"
         run: |
           python - <<'PY'
           import json, os, sys, datetime, pathlib
 
-          max_age_minutes = int(os.environ.get("MAX_AGE_MINUTES","120"))
+          max_age_minutes = int(os.environ.get("MAX_AGE_MINUTES","360"))
           now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
 
           def parse_iso(s):

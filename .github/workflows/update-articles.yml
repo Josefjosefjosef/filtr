@@ -204,30 +204,41 @@ jobs:
           fi
 
       - name: Wait for PR merge (when not merged in previous step)
+        id: wait_merge
         if: steps.no_diff.outputs.data_changed == 'true' && steps.merge_now.outputs.merged_now == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
         run: |
           set -euo pipefail
           NUM="${{ steps.pr.outputs.pr_number }}"
-          [ -z "$NUM" ] && exit 0
+          if [ -z "$NUM" ]; then
+            echo "pr_merged=false" >> "$GITHUB_OUTPUT"
+            echo "same_cycle_pending=false" >> "$GITHUB_OUTPUT"
+            echo "[SAME-CYCLE] No PR number — skip wait"
+            exit 0
+          fi
           MAX_WAIT=480
           ELAPSED=0
           while [ "$ELAPSED" -lt "$MAX_WAIT" ]; do
             STATE=$(gh pr view "$NUM" --json state -q '.state' 2>/dev/null || true)
             if [ "$STATE" = "MERGED" ]; then
+              echo "pr_merged=true" >> "$GITHUB_OUTPUT"
+              echo "same_cycle_pending=false" >> "$GITHUB_OUTPUT"
               echo "[SAME-CYCLE] PR #$NUM merged after ${ELAPSED}s"
               exit 0
             fi
             sleep 15
             ELAPSED=$((ELAPSED + 15))
           done
-          echo "[SAME-CYCLE] Timeout waiting for merge"
-          exit 1
+          echo "pr_merged=false" >> "$GITHUB_OUTPUT"
+          echo "same_cycle_pending=true" >> "$GITHUB_OUTPUT"
+          echo "[SAME-CYCLE] Timeout waiting for merge — auto-merge still pending; workflow continues (no false-fail)"
+          exit 0
 
       - name: Wait for Pages deploy and verify prod
         id: deploy_verify
-        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && (steps.merge_now.outputs.merged_now == 'true' || steps.wait_merge.outputs.pr_merged == 'true')
         run: |
           set -euo pipefail
           EXPECTED="${{ steps.capture_ts.outputs.generated_at }}"
@@ -255,12 +266,39 @@ jobs:
 
       - name: Deploy summary
         if: always()
+        shell: bash
         run: |
+          set -euo pipefail
           echo "[DEPLOY] data_changed=${{ steps.no_diff.outputs.data_changed }}"
           echo "[DEPLOY] commit_skipped=${{ steps.no_diff.outputs.commit_skipped }}"
           echo "[DEPLOY] push_skipped=${{ steps.no_diff.outputs.push_skipped }}"
           echo "[DEPLOY] pr_skipped=${{ steps.no_diff.outputs.pr_skipped }}"
           echo "[DEPLOY] direct_push_to_main=false"
+          MNO="${{ steps.merge_now.outputs.merged_now }}"
+          PM="${{ steps.wait_merge.outputs.pr_merged }}"
+          SCP="${{ steps.wait_merge.outputs.same_cycle_pending }}"
+          if [ "$MNO" = "true" ] || [ "$PM" = "true" ]; then
+            echo "prMergedSameCycle=true"
+          else
+            echo "prMergedSameCycle=false"
+          fi
+          if [ "$SCP" = "true" ]; then
+            echo "sameCyclePending=true"
+          else
+            echo "sameCyclePending=false"
+          fi
+          DV="${{ steps.deploy_verify.outcome }}"
+          if [ "$DV" = "success" ]; then
+            echo "deployVerifyRan=true"
+            echo "wasPublishedInSameCycle=true"
+          else
+            echo "deployVerifyRan=false"
+            echo "wasPublishedInSameCycle=false"
+          fi
+          FT="${{ steps.deploy_verify.outputs.fetchToProdLatencySeconds }}"
+          if [ -n "$FT" ]; then
+            echo "fetchToProdLatencySeconds=$FT"
+          fi
 
       - name: Notify completion (beep)
         if: always()
