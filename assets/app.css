@@ -3162,6 +3162,18 @@ body[data-section="media"] #feed{
 #feed[hidden]{
   display: none !important;
 }
+
+/* Tablet: reserve feed layout box before render to avoid 0×0 → reflow CLS */
+@media (min-width: 769px) and (max-width: 900px) {
+  #feed{
+    display: block;
+    min-height: 700px;
+  }
+  .iuArticlesStage{
+    min-height: 700px;
+  }
+}
+
 #silver-slot[hidden]{
   display: none !important;
 }
