@@ -370,32 +370,213 @@ style-src 'self' 'unsafe-inline' https:;
                         </div>
                       </div>
                       <div id="iuAdsPanelSubmit" class="iuAdsStagePanel" role="tabpanel" aria-labelledby="iuAdsTabSubmit" hidden>
-                        <form class="iuAdsSubmitForm" id="iuAdsSubmitForm" aria-label="Formulář pro vložení inzerátu">
-                          <label class="iuAdsFormRow" for="iuAdsFieldCategory">Kategorie</label>
-                          <select id="iuAdsFieldCategory" class="iuAdsFormInput" name="category" required aria-required="true">
-                            <option value="">— vyberte —</option>
-                          </select>
-                          <label class="iuAdsFormRow" for="iuAdsFieldTitle">Název inzerátu</label>
-                          <input type="text" id="iuAdsFieldTitle" class="iuAdsFormInput" name="title" placeholder="Krátký název" required aria-required="true">
-                          <label class="iuAdsFormRow" for="iuAdsFieldDesc">Popis</label>
-                          <textarea id="iuAdsFieldDesc" class="iuAdsFormInput iuAdsFormTextarea" name="description" rows="4" placeholder="Popis inzerátu"></textarea>
-                          <label class="iuAdsFormRow" for="iuAdsFieldPrice">Cena (Kč)</label>
-                          <input type="text" id="iuAdsFieldPrice" class="iuAdsFormInput" name="price" placeholder="např. 1 500 nebo dohodou" inputmode="numeric">
-                          <label class="iuAdsFormRow" for="iuAdsFieldLoc">Lokalita</label>
-                          <input type="text" id="iuAdsFieldLoc" class="iuAdsFormInput" name="location" placeholder="Město nebo region">
-                          <label class="iuAdsFormRow" for="iuAdsFieldPhone">Telefon</label>
-                          <input type="tel" id="iuAdsFieldPhone" class="iuAdsFormInput" name="phone" placeholder="+420 …">
-                          <label class="iuAdsFormRow" for="iuAdsFieldEmail">E-mail</label>
-                          <input type="email" id="iuAdsFieldEmail" class="iuAdsFormInput" name="email" placeholder="vas@email.cz">
-                          <div class="iuAdsFormRow">
-                            <span class="iuAdsFormLabel">Fotografie</span>
-                            <div class="iuAdsUploadPlaceholder" aria-hidden="true">Přetáhněte sem nebo klikněte pro výběr (placeholder)</div>
+                        <form class="iuAdsSubmitForm" id="iuAdsSubmitForm" aria-label="Formulář pro vložení inzerátu" novalidate>
+                          <div class="iuAdsFormSection" id="iuAdsSectionCategory">
+                            <label class="iuAdsFormRow" for="iuAdsFieldCategory">Kategorie</label>
+                            <select id="iuAdsFieldCategory" class="iuAdsFormInput" name="category" aria-required="true">
+                              <option value="">— vyberte —</option>
+                            </select>
                           </div>
-                          <label class="iuAdsFormCheckRow">
-                            <input type="checkbox" id="iuAdsFieldTerms" name="terms" required aria-required="true">
-                            <span>Souhlasím s podmínkami inzerce</span>
-                          </label>
-                          <button type="submit" class="iuAdsSubmitCta">Publikovat inzerát</button>
+                          <div id="iuAdsLegacyFlat" class="iuAdsFormSection iuAdsFormSection--legacy" hidden>
+                            <label class="iuAdsFormRow" for="iuAdsFieldTitle">Název inzerátu</label>
+                            <input type="text" id="iuAdsFieldTitle" class="iuAdsFormInput" name="title" placeholder="Krátký název">
+                            <label class="iuAdsFormRow" for="iuAdsFieldDesc">Popis</label>
+                            <textarea id="iuAdsFieldDesc" class="iuAdsFormInput iuAdsFormTextarea" name="description" rows="4" placeholder="Popis inzerátu"></textarea>
+                            <label class="iuAdsFormRow" for="iuAdsFieldPrice">Cena (Kč)</label>
+                            <input type="text" id="iuAdsFieldPrice" class="iuAdsFormInput" name="price" placeholder="např. 1 500 nebo dohodou" inputmode="numeric">
+                            <label class="iuAdsFormRow" for="iuAdsFieldLoc">Lokalita</label>
+                            <input type="text" id="iuAdsFieldLoc" class="iuAdsFormInput" name="location" placeholder="Město nebo region">
+                            <label class="iuAdsFormRow" for="iuAdsFieldPhone">Telefon</label>
+                            <input type="tel" id="iuAdsFieldPhone" class="iuAdsFormInput" name="phone" placeholder="+420 …">
+                            <label class="iuAdsFormRow" for="iuAdsFieldEmail">E-mail</label>
+                            <input type="email" id="iuAdsFieldEmail" class="iuAdsFormInput" name="email" placeholder="vas@email.cz">
+                            <div class="iuAdsFormRow">
+                              <span class="iuAdsFormLabel">Fotografie</span>
+                              <div class="iuAdsUploadPlaceholder" aria-hidden="true">Přetáhněte sem nebo klikněte pro výběr (placeholder)</div>
+                            </div>
+                            <label class="iuAdsFormCheckRow">
+                              <input type="checkbox" id="iuAdsFieldTerms" name="terms">
+                              <span>Souhlasím s podmínkami inzerce</span>
+                            </label>
+                            <button type="submit" class="iuAdsSubmitCta" id="iuAdsLegacySubmit">Publikovat inzerát</button>
+                          </div>
+                          <div id="iuAdsAutoPre" class="iuAdsFormSection iuAdsAutoCard" hidden>
+                            <p class="iuAdsAutoCardTitle">Údaje o vozidle</p>
+                            <label class="iuAdsFormRow" for="iuAdsAutoOfferType">Typ nabídky</label>
+                            <select id="iuAdsAutoOfferType" class="iuAdsFormInput" name="auto_offer_type">
+                              <option value="prodej">Prodej</option>
+                              <option value="pronajem">Pronájem</option>
+                            </select>
+                            <label class="iuAdsFormRow" for="iuAdsAutoVehicleType">Typ vozidla</label>
+                            <select id="iuAdsAutoVehicleType" class="iuAdsFormInput" name="auto_vehicle_type">
+                              <option value="osobni">Osobní auta</option>
+                              <option value="nakladni">Nákladní auta</option>
+                              <option value="motorky">Motorky a čtyřkolky</option>
+                              <option value="uzitkove">Užitkové vozy</option>
+                              <option value="karavany">Karavany a obytné vozy</option>
+                              <option value="privesy">Přívěsy a návěsy</option>
+                            </select>
+                            <label class="iuAdsFormRow" for="iuAdsAutoCondition">Stav</label>
+                            <select id="iuAdsAutoCondition" class="iuAdsFormInput" name="auto_condition">
+                              <option value="nove">Nové</option>
+                              <option value="ojete">Ojeté</option>
+                              <option value="poskozene">Poškozené</option>
+                              <option value="veteran">Veterán</option>
+                            </select>
+                            <label class="iuAdsFormRow" for="iuAdsAutoVin">VIN <span class="iuAdsReqMark">*</span></label>
+                            <input type="text" id="iuAdsAutoVin" class="iuAdsFormInput iuAdsVinInput" name="auto_vin" maxlength="17" autocomplete="off" autocapitalize="characters" placeholder="17 znaků" aria-describedby="iuAdsAutoVinHint">
+                            <p class="iuAdsFormHint" id="iuAdsAutoVinHint">Zadejte kompletní VIN vozidla.</p>
+                            <p class="iuAdsVinMsg iuAdsVinMsg--err" id="iuAdsAutoVinError" role="alert" hidden></p>
+                            <p class="iuAdsVinMsg iuAdsVinMsg--load" id="iuAdsAutoVinLoading" hidden>Načítání údajů…</p>
+                            <button type="button" class="iuAdsSubmitCta iuAdsVinLoadBtn" id="iuAdsAutoVinLoadBtn">Načíst údaje o vozidle</button>
+                          </div>
+                          <div id="iuAdsAutoPost" hidden>
+                            <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockApi">
+                              <p class="iuAdsAutoCardTitle">Údaje načtené z VIN</p>
+                              <p class="iuAdsAutoCardNote">Pole jsou doplněna z registru / služby podle VIN; můžete je upřesnit.</p>
+                              <label class="iuAdsFormRow" for="iuAdsApiMake">Značka</label>
+                              <input type="text" id="iuAdsApiMake" class="iuAdsFormInput iuAdsFieldFromApi" name="api_make" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiModel">Model / obchodní označení</label>
+                              <input type="text" id="iuAdsApiModel" class="iuAdsFormInput iuAdsFieldFromApi" name="api_model" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiVinDisp">VIN</label>
+                              <input type="text" id="iuAdsApiVinDisp" class="iuAdsFormInput iuAdsFieldFromApi" name="api_vin_disp" readonly tabindex="0" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiFirstReg">Datum první registrace</label>
+                              <input type="text" id="iuAdsApiFirstReg" class="iuAdsFormInput iuAdsFieldFromApi" name="api_first_reg" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiBody">Karoserie</label>
+                              <input type="text" id="iuAdsApiBody" class="iuAdsFormInput iuAdsFieldFromApi" name="api_body" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiFuel">Palivo</label>
+                              <input type="text" id="iuAdsApiFuel" class="iuAdsFormInput iuAdsFieldFromApi" name="api_fuel" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiDisplacement">Objem motoru</label>
+                              <input type="text" id="iuAdsApiDisplacement" class="iuAdsFormInput iuAdsFieldFromApi" name="api_displacement" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiPower">Výkon</label>
+                              <input type="text" id="iuAdsApiPower" class="iuAdsFormInput iuAdsFieldFromApi" name="api_power" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiColor">Barva</label>
+                              <input type="text" id="iuAdsApiColor" class="iuAdsFormInput iuAdsFieldFromApi" name="api_color" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiSeats">Počet míst</label>
+                              <input type="text" id="iuAdsApiSeats" class="iuAdsFormInput iuAdsFieldFromApi" name="api_seats" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiStk">STK do</label>
+                              <input type="text" id="iuAdsApiStk" class="iuAdsFormInput iuAdsFieldFromApi" name="api_stk" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiOwners">Počet vlastníků</label>
+                              <input type="text" id="iuAdsApiOwners" class="iuAdsFormInput iuAdsFieldFromApi" name="api_owners" data-iu-from-api="1">
+                            </div>
+                            <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockExtra">
+                              <p class="iuAdsAutoCardTitle">Doplňující údaje</p>
+                              <label class="iuAdsFormRow" for="iuAdsAutoGearbox">Převodovka</label>
+                              <select id="iuAdsAutoGearbox" class="iuAdsFormInput" name="auto_gearbox">
+                                <option value="">— vyberte —</option>
+                                <option value="manual">Manuální</option>
+                                <option value="auto">Automatická</option>
+                                <option value="semi">Poloautomatická</option>
+                              </select>
+                              <label class="iuAdsFormRow" for="iuAdsAutoDrive">Pohon</label>
+                              <select id="iuAdsAutoDrive" class="iuAdsFormInput" name="auto_drive">
+                                <option value="">— vyberte —</option>
+                                <option value="fwd">Přední náhon</option>
+                                <option value="rwd">Zadní náhon</option>
+                                <option value="awd">4x4</option>
+                              </select>
+                              <label class="iuAdsFormRow" for="iuAdsAutoOrigin">Země původu</label>
+                              <select id="iuAdsAutoOrigin" class="iuAdsFormInput" name="auto_origin">
+                                <option value="">— vyberte —</option>
+                                <option value="cz">Česká republika</option>
+                                <option value="de">Německo</option>
+                                <option value="it">Itálie</option>
+                                <option value="fr">Francie</option>
+                                <option value="at">Rakousko</option>
+                                <option value="be">Belgie</option>
+                                <option value="nl">Nizozemsko</option>
+                                <option value="sk">Slovensko</option>
+                                <option value="other">Jiná</option>
+                              </select>
+                              <fieldset class="iuAdsFieldsetBool">
+                                <legend class="iuAdsFormRow">Servisní knížka</legend>
+                                <label class="iuAdsBoolOpt"><input type="radio" name="auto_service_book" value="yes"> Ano</label>
+                                <label class="iuAdsBoolOpt"><input type="radio" name="auto_service_book" value="no"> Ne</label>
+                              </fieldset>
+                              <fieldset class="iuAdsFieldsetBool">
+                                <legend class="iuAdsFormRow">Nehavarované</legend>
+                                <label class="iuAdsBoolOpt"><input type="radio" name="auto_accident_free" value="yes"> Ano</label>
+                                <label class="iuAdsBoolOpt"><input type="radio" name="auto_accident_free" value="no"> Ne</label>
+                              </fieldset>
+                              <fieldset class="iuAdsFieldsetBool">
+                                <legend class="iuAdsFormRow">První majitel</legend>
+                                <label class="iuAdsBoolOpt"><input type="radio" name="auto_first_owner" value="yes"> Ano</label>
+                                <label class="iuAdsBoolOpt"><input type="radio" name="auto_first_owner" value="no"> Ne</label>
+                              </fieldset>
+                              <label class="iuAdsFormRow" for="iuAdsAutoMileage">Najeto</label>
+                              <input type="text" id="iuAdsAutoMileage" class="iuAdsFormInput" name="auto_mileage" inputmode="numeric" placeholder="např. 125 000 km">
+                            </div>
+                            <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockLoc">
+                              <p class="iuAdsAutoCardTitle">Lokalita</p>
+                              <label class="iuAdsFormRow" for="iuAdsAutoKraj">Kraj</label>
+                              <select id="iuAdsAutoKraj" class="iuAdsFormInput" name="auto_kraj">
+                                <option value="">— vyberte kraj —</option>
+                                <option value="pha">Hlavní město Praha</option>
+                                <option value="stc">Středočeský kraj</option>
+                                <option value="jhc">Jihočeský kraj</option>
+                                <option value="plz">Plzeňský kraj</option>
+                                <option value="kva">Karlovarský kraj</option>
+                                <option value="ulk">Ústecký kraj</option>
+                                <option value="lib">Liberecký kraj</option>
+                                <option value="khr">Královéhradecký kraj</option>
+                                <option value="pce">Pardubický kraj</option>
+                                <option value="vys">Kraj Vysočina</option>
+                                <option value="jhm">Jihomoravský kraj</option>
+                                <option value="olm">Olomoucký kraj</option>
+                                <option value="msk">Moravskoslezský kraj</option>
+                                <option value="zlin">Zlínský kraj</option>
+                              </select>
+                              <label class="iuAdsFormRow" for="iuAdsAutoCity">Město</label>
+                              <input type="text" id="iuAdsAutoCity" class="iuAdsFormInput" name="auto_city" placeholder="Zadejte město">
+                            </div>
+                            <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockPrice">
+                              <p class="iuAdsAutoCardTitle">Cena a kontakt</p>
+                              <label class="iuAdsFormRow" for="iuAdsAutoPrice">Cena (Kč)</label>
+                              <input type="text" id="iuAdsAutoPrice" class="iuAdsFormInput" name="auto_price" inputmode="numeric" placeholder="např. 250 000">
+                              <label class="iuAdsFormRow" for="iuAdsAutoPhone">Telefon</label>
+                              <input type="tel" id="iuAdsAutoPhone" class="iuAdsFormInput" name="auto_phone" placeholder="+420 …">
+                              <label class="iuAdsFormRow" for="iuAdsAutoEmail">E-mail</label>
+                              <input type="email" id="iuAdsAutoEmail" class="iuAdsFormInput" name="auto_email" placeholder="vas@email.cz">
+                            </div>
+                            <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockText">
+                              <p class="iuAdsAutoCardTitle">Název a popis</p>
+                              <label class="iuAdsFormRow" for="iuAdsAutoTitle">Název inzerátu</label>
+                              <input type="text" id="iuAdsAutoTitle" class="iuAdsFormInput" name="auto_title" placeholder="Vyplní se po načtení VIN">
+                              <label class="iuAdsFormRow" for="iuAdsAutoDesc">Popis</label>
+                              <textarea id="iuAdsAutoDesc" class="iuAdsFormInput iuAdsFormTextarea" name="auto_description" rows="5" placeholder="Popište stav vozidla, historii…"></textarea>
+                            </div>
+                            <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockEquip">
+                              <p class="iuAdsAutoCardTitle">Výbava</p>
+                              <div class="iuAdsEquipGrid" role="group" aria-label="Výbava vozidla">
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_klima" value="1"> Klimatizace</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_auto_prev" value="1"> Automatická převodovka</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_nav" value="1"> Navigace</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_cam" value="1"> Parkovací kamera</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_pdc" value="1"> Parkovací senzory</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_leather" value="1"> Kožená sedadla</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_heat_seat" value="1"> Vyhřívaná sedadla</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_tempo" value="1"> Tempomat</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_acc" value="1"> Adaptivní tempomat</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_tow" value="1"> Tažné zařízení</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_pano" value="1"> Panoramatická střecha</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_led" value="1"> LED světlomety</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_xenon" value="1"> Xenony</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_alu" value="1"> Alu kola</label>
+                                <label class="iuAdsEquipItem"><input type="checkbox" name="eq_4x4" value="1"> 4x4</label>
+                              </div>
+                            </div>
+                            <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockPhotos">
+                              <p class="iuAdsAutoCardTitle">Fotografie</p>
+                              <div class="iuAdsUploadPlaceholder iuAdsUploadShell" id="iuAdsAutoPhotoZone" role="button" tabindex="0" aria-label="Oblast pro fotografie (zatím jen rozhraní)">Přetáhněte fotky sem nebo klikněte — rozhraní připravujeme</div>
+                            </div>
+                            <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockPublish">
+                              <label class="iuAdsFormCheckRow">
+                                <input type="checkbox" id="iuAdsAutoTerms" name="auto_terms">
+                                <span>Souhlasím s podmínkami inzerce</span>
+                              </label>
+                              <button type="submit" class="iuAdsSubmitCta" id="iuAdsAutoSubmit">Publikovat inzerát</button>
+                            </div>
+                          </div>
                         </form>
                       </div>
                     </div>
