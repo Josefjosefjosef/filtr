@@ -22967,6 +22967,25 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (vEl) vEl.value = vinVal != null ? String(vinVal) : "";
   }
 
+  function scrollAutoPostIntoViewDesktop() {
+    try {
+      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) return;
+    } catch (eM) {}
+    var postEl = $("iuAdsAutoPost");
+    if (!postEl || postEl.hidden) return;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        try {
+          postEl.scrollIntoView({ block: "start", behavior: "smooth" });
+        } catch (e1) {
+          try {
+            postEl.scrollIntoView(true);
+          } catch (e2) {}
+        }
+      });
+    });
+  }
+
   function onVinLoad() {
     var vinEl = $("iuAdsAutoVin");
     var errEl = $("iuAdsAutoVinError");
@@ -22998,6 +23017,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           var tMan = $("iuAdsAutoTitle");
           if (tMan) tMan.value = "";
           applyCategoryUI();
+          scrollAutoPostIntoViewDesktop();
           return;
         }
         if (result && result.kind === "api") {
@@ -23010,6 +23030,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           if (errEl) errEl.hidden = true;
           fillApiFields(m);
           applyCategoryUI();
+          scrollAutoPostIntoViewDesktop();
         }
       })
       .catch(function (e) {
