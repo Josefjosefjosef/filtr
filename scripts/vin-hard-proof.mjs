@@ -195,8 +195,15 @@ try {
     if (oxP) r.overflowPanel = true;
 
     await page.click("#iuAdsTabBrowse");
-    await page.waitForTimeout(150);
+    await page.waitForTimeout(200);
+    const browseHidesAuto = await page.evaluate(() => {
+      const ps = document.getElementById("iuAdsPanelSubmit");
+      const pre = document.getElementById("iuAdsAutoPre");
+      return !!(ps && ps.hidden && pre && pre.hidden);
+    });
+    if (!browseHidesAuto) r.tabSwitchPass = false;
     await page.click("#iuAdsTabSubmit");
+    await page.waitForTimeout(200);
     const okTab = await page.evaluate(
       () =>
         document.getElementById("iuAdsFieldCategory")?.value === "auto" &&
@@ -212,7 +219,7 @@ try {
   await p2.goto(BASE, { waitUntil: "load", timeout: 120000 });
   await p2.waitForTimeout(1500);
   await openAdsSubmit(p2);
-  await p2.selectOption("#iuAdsFieldCategory", "auto");
+  await selectCategoryAuto(p2);
   await p2.fill("#iuAdsAutoVin", "SHORT");
   await p2.click("#iuAdsAutoVinLoadBtn");
   await p2.waitForTimeout(600);
