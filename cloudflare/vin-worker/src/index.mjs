@@ -51,6 +51,45 @@ function vinModel(success, error, vin, data) {
   };
 }
 
+/** API někdy vrací Status jako číslo, někdy řetězec; Data může být vnořený JSON string. */
+function upstreamStatusOk(status) {
+  if (status === 1 || status === true) return true;
+  const s = String(status ?? "").trim();
+  return s === "1" || s.toLowerCase() === "true";
+}
+
+function normalizeVinDataPayload(data) {
+  if (data == null) return null;
+  if (typeof data === "string") {
+    const t = data.trim();
+    if (!t) return null;
+    try {
+      return JSON.parse(t);
+    } catch (_e) {
+      return null;
+    }
+  }
+  if (typeof data === "object") return data;
+  return null;
+}
+
+function jsonStringifyVinResponse(obj) {
+  try {
+    return JSON.stringify(obj);
+  } catch (_e) {
+    try {
+      const safe = JSON.stringify(obj, function (_k, v) {
+        if (typeof v === "bigint") return String(v);
+        if (v === undefined) return null;
+        return v;
+      });
+      return safe;
+    } catch (_e2) {
+      return null;
+    }
+  }
+}
+
 function normalizeVin(value) {
   return String(value || "").trim().toUpperCase();
 }
@@ -102,70 +141,102 @@ export default {
         return respCorsJson(405, vinModel(false, "method_not_allowed", "", null));
       }
 
-      const apiKey = safeText(env.VIN_UPSTREAM_KEY || env.VIN_API_KEY).trim();
-      if (!apiKey) {
-        return respCorsJson(500, vinModel(false, "missing_secret", "", null));
-      }
-
-      const vin = normalizeVin(url.searchParams.get("vin"));
-      if (!isValidVin(vin)) {
-        return respCorsJson(
-          400,
-          vinModel(false, "VIN musí mít přesně 17 znaků.", vin, null)
-        );
-      }
-
-      const upstreamUrl = `${UPSTREAM_BASE}?vin=${encodeURIComponent(vin)}`;
-
-      let upstreamResponse;
+      let vinForErr = "";
       try {
-        upstreamResponse = await fetch(upstreamUrl, {
-          method: "GET",
-          headers: {
-            API_KEY: apiKey,
-            Accept: "application/json"
-          },
-          cf: {
-            cacheTtl: 0,
-            cacheEverything: false
+        const apiKey = safeText(env.VIN_UPSTREAM_KEY || env.VIN_API_KEY).trim();
+        if (!apiKey) {
+          return respCorsJson(500, vinModel(false, "missing_secret", "", null));
+        }
+
+        const vin = normalizeVin(url.searchParams.get("vin"));
+        vinForErr = vin;
+        if (!isValidVin(vin)) {
+          return respCorsJson(
+            400,
+            vinModel(false, "VIN musí mít přesně 17 znaků.", vin, null)
+          );
+        }
+
+        const upstreamUrl = `${UPSTREAM_BASE}?vin=${encodeURIComponent(vin)}`;
+
+        let upstreamResponse;
+        try {
+          upstreamResponse = await fetch(upstreamUrl, {
+            method: "GET",
+            headers: {
+              API_KEY: apiKey,
+              Accept: "application/json"
+            },
+            cf: {
+              cacheTtl: 0,
+              cacheEverything: false
+            }
+          });
+        } catch (_err) {
+          return respCorsJson(
+            502,
+            vinModel(false, "upstream_fetch_failed", vin, null)
+          );
+        }
+
+        const rawText = await upstreamResponse.text();
+
+        if (!upstreamResponse.ok) {
+          return respCorsJson(
+            502,
+            vinModel(false, "upstream_http_error", vin, null)
+          );
+        }
+
+        let parsed;
+        try {
+          parsed = rawText ? JSON.parse(rawText) : null;
+        } catch (_err) {
+          return respCorsJson(
+            502,
+            vinModel(false, "upstream_invalid_json", vin, null)
+          );
+        }
+
+        if (typeof parsed === "string") {
+          try {
+            parsed = JSON.parse(parsed);
+          } catch (_e) {
+            return respCorsJson(
+              502,
+              vinModel(false, "upstream_wrapped_invalid", vin, null)
+            );
           }
+        }
+
+        const dataRaw = parsed && parsed.Data != null ? parsed.Data : parsed?.data;
+        const dataNorm = normalizeVinDataPayload(dataRaw);
+
+        if (!upstreamStatusOk(parsed?.Status ?? parsed?.status) || !dataNorm) {
+          return respCorsJson(
+            404,
+            vinModel(false, "vin_not_found", vin, null)
+          );
+        }
+
+        const payload = vinModel(true, null, vin, dataNorm);
+        const jsonOut = jsonStringifyVinResponse(payload);
+        if (jsonOut == null) {
+          return respCorsJson(
+            502,
+            vinModel(false, "response_serialize_failed", vin, null)
+          );
+        }
+        return new Response(jsonOut, {
+          status: 200,
+          headers: { ...JSON_BASE, ...corsHeaders() }
         });
-      } catch (_err) {
+      } catch (_fatal) {
         return respCorsJson(
-          502,
-          vinModel(false, "upstream_fetch_failed", vin, null)
+          500,
+          vinModel(false, "worker_internal", vinForErr || "", null)
         );
       }
-
-      const rawText = await upstreamResponse.text();
-
-      if (!upstreamResponse.ok) {
-        return respCorsJson(
-          502,
-          vinModel(false, "upstream_http_error", vin, null)
-        );
-      }
-
-      let parsed;
-      try {
-        parsed = rawText ? JSON.parse(rawText) : null;
-      } catch (_err) {
-        return respCorsJson(
-          502,
-          vinModel(false, "upstream_invalid_json", vin, null)
-        );
-      }
-
-      const upstreamStatus = parsed?.Status;
-
-      if (upstreamStatus !== 1 || !parsed?.Data) {
-        return respCorsJson(
-          404,
-          vinModel(false, "vin_not_found", vin, null)
-        );
-      }
-
-      return respCorsJson(200, vinModel(true, null, vin, parsed.Data));
     }
 
     if (method === "GET") {
