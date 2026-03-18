@@ -31,6 +31,13 @@ jobs:
           ref: main
           fetch-depth: 0
 
+      - name: Sync main ref (avoid stale checkout on schedule)
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -117,13 +124,15 @@ jobs:
 
           git stash push -m "data" -- projects/data
           git fetch origin main
+          git fetch origin "${{ env.AUTOMATION_BRANCH }}" 2>/dev/null || true
           git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
           git stash pop || true
           git add projects/data
           git diff --cached --quiet && { echo "[DATA] Nothing to commit after stash pop"; exit 0; }
 
           git commit -m "${{ env.PR_TITLE }}"
-          git push --force-with-lease origin "${{ env.AUTOMATION_BRANCH }}"
+          # Force push: automation branch is bot-owned; --force-with-lease can block when remote diverged after main-only merges (PR stuck BEHIND).
+          git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
       - name: Create or update PR
@@ -148,6 +157,18 @@ jobs:
           echo "pr_number=$NUM" >> "$GITHUB_OUTPUT"
           echo "pr_url=https://github.com/${{ github.repository }}/pull/$NUM" >> "$GITHUB_OUTPUT"
           echo "[PR] Created PR #$NUM"
+
+      - name: Merge latest main into PR head if behind (unblock auto-merge)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          echo "[SYNC] PUT update-branch for PR #$NUM"
+          gh api --method PUT "repos/${{ github.repository }}/pulls/${NUM}/update-branch" || echo "[SYNC] update-branch skipped or failed (non-fatal)"
 
       - name: Diff scope check (data-only → allow auto-merge)
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
