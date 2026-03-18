@@ -1,0 +1,8 @@
+# Deploy: cd cloudflare/vin-worker && npx wrangler deploy
+# Secrets: wrangler secret put VIN_UPSTREAM_KEY
+# Optional: wrangler secret put VIN_UPSTREAM_URL (only if not using default api.dataovozidlech.cz)
+name = "steep-term-ba60"
+main = "src/index.mjs"
+compatibility_date = "2024-11-01"
+
+# Do not put API keys in this file.

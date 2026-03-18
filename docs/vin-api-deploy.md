@@ -62,3 +62,20 @@ location /projects/api/vin-decode {
 ```
 
 Statika `/projects/` zůstává na GitHub Pages nebo jiném rootu.
+
+## Cloudflare Worker (`cloudflare/vin-worker`)
+
+Worker volá **přímo** `https://api.dataovozidlech.cz/api/vehicletechnicaldata/v2/{vin}` (Bearer z secretu).  
+Nepoužívejte jako `VIN_UPSTREAM_URL` doménu za Cloudflare orange-cloud s neplatným certifikátem na originu — prohlížeč nebo `return fetch(váš_proxy)` může končit **525 SSL handshake failed**.
+
+| Route | Chování |
+|-------|---------|
+| `GET /health` | `{ "ok": true, "worker": "up" }` — bez upstreamu |
+| `GET /vin?vin=` | Stejný JSON model jako Node API; neplatný VIN → 400; chybí secret → 500; síť/TLS upstream → `upstream_fetch_failed`; HTTP upstream → `upstream_http_error` |
+
+```bash
+cd cloudflare/vin-worker
+npx wrangler secret put VIN_UPSTREAM_KEY
+# Volitelně smažte/nea nastavujte VIN_UPSTREAM_URL = použije se výchozí dataovozidlech API
+npx wrangler deploy
+```

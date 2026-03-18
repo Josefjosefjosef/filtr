@@ -213,8 +213,28 @@ async function fetchCzUpstream(vin, env, signal) {
     headers.Authorization = "Bearer " + key;
   }
 
-  const res = await fetch(url, { method: "GET", headers, signal });
-  const text = await res.text();
+  let res;
+  let text;
+  const upstreamHost = (() => {
+    try {
+      return new URL(url).hostname;
+    } catch (e) {
+      return "";
+    }
+  })();
+  try {
+    res = await fetch(url, { method: "GET", headers, signal });
+    text = await res.text();
+  } catch (e) {
+    const detail =
+      e && e.name === "AbortError"
+        ? "upstream_timeout"
+        : String(e && e.message ? e.message : e);
+    const err = new Error("upstream_network");
+    err.upstreamDetail = detail;
+    err.upstreamHost = upstreamHost;
+    throw err;
+  }
 
   if (/maximální\s+počet\s+požadavků|maximalni\s+pocet\s+ pozadavku/i.test(text)) {
     throw new Error("upstream_rate_text");
@@ -222,7 +242,10 @@ async function fetchCzUpstream(vin, env, signal) {
 
   if (!res.ok) {
     if (res.status === 429) throw new Error("upstream_429");
-    throw new Error("upstream_http_" + res.status);
+    const err = new Error("upstream_http_" + res.status);
+    err.upstreamHost = upstreamHost;
+    err.upstreamDetail = text.length > 300 ? text.slice(0, 300) + "…" : text;
+    throw err;
   }
 
   let j = null;
@@ -368,6 +391,32 @@ export async function decodeVinHandler(vinRaw, clientIp, env) {
       return jsonRes(503, {
         success: false,
         error: "Služba je vytížena. Zkuste to za okamžik.",
+        vin,
+        data: null,
+        cached: false,
+        source: null
+      });
+    }
+    if (msg === "upstream_network") {
+      return jsonRes(502, {
+        success: false,
+        error: "upstream_fetch_failed",
+        detail: e.upstreamDetail || msg,
+        upstreamHost: e.upstreamHost || "",
+        vin,
+        data: null,
+        cached: false,
+        source: null
+      });
+    }
+    if (/^upstream_http_\d+$/.test(msg)) {
+      const httpStatus = parseInt(msg.replace("upstream_http_", ""), 10);
+      return jsonRes(502, {
+        success: false,
+        error: "upstream_http_error",
+        httpStatus,
+        detail: e.upstreamDetail || "",
+        upstreamHost: e.upstreamHost || "",
         vin,
         data: null,
         cached: false,
