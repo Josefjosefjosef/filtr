@@ -44,7 +44,8 @@ const r = {
   vinNotFoundWorkerPass: true,
   publishLocalPass: true,
   scrollSinglePass: true,
-  vinSuccessDtoPass: true
+  vinSuccessDtoPass: true,
+  desktopMakeInViewportPass: true
 };
 
 const ADS_LO = 22340;
@@ -288,7 +289,7 @@ try {
   await b6.close();
 
   const b7 = await chromium.launch({ headless: true });
-  const p7 = await b7.newPage({ viewport: { width: 1280, height: 800 } });
+  const p7 = await b7.newPage({ viewport: { width: 1366, height: 900 } });
   await p7.goto(BASE, { waitUntil: "load", timeout: 120000 });
   await p7.waitForTimeout(1500);
   await openAdsSubmit(p7);
@@ -296,7 +297,7 @@ try {
   await p7.fill("#iuAdsAutoVin", VIN_SUCCESS);
   await p7.click("#iuAdsAutoVinLoadBtn");
   await p7.waitForSelector("#iuAdsAutoPost:not([hidden])", { timeout: 40000 });
-  await p7.waitForTimeout(600);
+  await p7.waitForTimeout(3500);
   const dto = await p7.evaluate(() => {
     const $ = (id) => document.getElementById(id);
     return {
@@ -342,6 +343,18 @@ try {
     return n;
   });
   if (scrollN > 0) r.scrollSinglePass = false;
+  const dVis = await p7.evaluate(() => {
+    const mk = document.getElementById("iuAdsApiMake");
+    if (!mk) return { ok: false, top: -1, vh: 0 };
+    const bb = mk.getBoundingClientRect();
+    var vh = window.innerHeight || 0;
+    return {
+      ok: bb.height > 0 && bb.top >= 10 && bb.bottom <= vh - 10,
+      top: Math.round(bb.top),
+      vh
+    };
+  });
+  if (!dVis.ok) r.desktopMakeInViewportPass = false;
   await b7.close();
 
   const b4 = await chromium.launch({ headless: true });
@@ -377,7 +390,8 @@ const pass =
   r.vinNotFoundWorkerPass &&
   r.publishLocalPass &&
   r.scrollSinglePass &&
-  r.vinSuccessDtoPass;
+  r.vinSuccessDtoPass &&
+  r.desktopMakeInViewportPass;
 
 console.log(
   JSON.stringify(

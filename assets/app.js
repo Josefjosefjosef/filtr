@@ -22967,20 +22967,58 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (vEl) vEl.value = vinVal != null ? String(vinVal) : "";
   }
 
-  function scrollAutoPostIntoViewDesktop() {
+  function scrollDesktopVinFieldsIntoView() {
     try {
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) return;
     } catch (eM) {}
     var postEl = $("iuAdsAutoPost");
-    if (!postEl || postEl.hidden) return;
+    var target = $("iuAdsApiMake") || postEl;
+    if (!postEl || postEl.hidden || !target) return;
+    function inViewport(el) {
+      var r = el.getBoundingClientRect();
+      var vh = window.innerHeight || 0;
+      var pad = 12;
+      return r.height > 0 && r.top >= pad && r.bottom <= vh - pad && r.width > 0;
+    }
+    function oneStep() {
+      var pr = target.getBoundingClientRect();
+      var vh = window.innerHeight || 800;
+      if (pr.top >= 12 && pr.bottom <= vh - 12) return false;
+      var node = target.parentElement;
+      var moved = false;
+      while (node && node !== document.documentElement) {
+        var cs = window.getComputedStyle(node);
+        var oy = cs.overflowY;
+        if (
+          (oy === "auto" || oy === "scroll") &&
+          node.scrollHeight > node.clientHeight + 2
+        ) {
+          var nr = node.getBoundingClientRect();
+          if (pr.bottom > nr.bottom - 16 || pr.top < nr.top + 16) {
+            node.scrollTop += pr.top - nr.top - 48;
+            moved = true;
+            break;
+          }
+        }
+        node = node.parentElement;
+      }
+      if (!moved) {
+        try {
+          window.scrollTo(0, window.scrollY + pr.top - 80);
+        } catch (eW) {}
+        try {
+          target.scrollIntoView({ block: "start", behavior: "auto" });
+        } catch (eS) {}
+        moved = true;
+      }
+      return moved;
+    }
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        try {
-          postEl.scrollIntoView({ block: "start", behavior: "smooth" });
-        } catch (e1) {
-          try {
-            postEl.scrollIntoView(true);
-          } catch (e2) {}
+        var k;
+        for (k = 0; k < 10; k++) {
+          if (inViewport(target)) break;
+          oneStep();
         }
       });
     });
@@ -23017,7 +23055,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           var tMan = $("iuAdsAutoTitle");
           if (tMan) tMan.value = "";
           applyCategoryUI();
-          scrollAutoPostIntoViewDesktop();
+          scrollDesktopVinFieldsIntoView();
           return;
         }
         if (result && result.kind === "api") {
@@ -23030,7 +23068,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           if (errEl) errEl.hidden = true;
           fillApiFields(m);
           applyCategoryUI();
-          scrollAutoPostIntoViewDesktop();
+          scrollDesktopVinFieldsIntoView();
         }
       })
       .catch(function (e) {
