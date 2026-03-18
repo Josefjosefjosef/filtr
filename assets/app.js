@@ -1523,7 +1523,12 @@ try {
     if (!data || !data.generatedAt) return;
     const t = Date.parse(data.generatedAt);
     if (!Number.isFinite(t)) return;
-    if (Date.now() - t > maxAgeMs) throw new Error("STALE_FEED");
+    if (Date.now() - t > maxAgeMs) {
+      // P0: never abort loadData — STALE_FEED left feed empty while JSON was valid (SW fixed).
+      try {
+        debugWarn("[DATA] generatedAt older than maxAge (warn only)", data.generatedAt);
+      } catch (_) {}
+    }
   }
 
   function isSuspiciousTitle(title) {
