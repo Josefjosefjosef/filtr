@@ -400,11 +400,13 @@ style-src 'self' 'unsafe-inline' https:;
                             <p class="iuAdsAutoCardTitle">Údaje o vozidle</p>
                             <label class="iuAdsFormRow" for="iuAdsAutoOfferType">Typ nabídky</label>
                             <select id="iuAdsAutoOfferType" class="iuAdsFormInput" name="auto_offer_type">
+                              <option value="">Vyberte</option>
                               <option value="prodej">Prodej</option>
                               <option value="pronajem">Pronájem</option>
                             </select>
                             <label class="iuAdsFormRow" for="iuAdsAutoVehicleType">Typ vozidla</label>
                             <select id="iuAdsAutoVehicleType" class="iuAdsFormInput" name="auto_vehicle_type">
+                              <option value="">Vyberte</option>
                               <option value="osobni">Osobní auta</option>
                               <option value="nakladni">Nákladní auta</option>
                               <option value="motorky">Motorky a čtyřkolky</option>
@@ -414,6 +416,7 @@ style-src 'self' 'unsafe-inline' https:;
                             </select>
                             <label class="iuAdsFormRow" for="iuAdsAutoCondition">Stav</label>
                             <select id="iuAdsAutoCondition" class="iuAdsFormInput" name="auto_condition">
+                              <option value="">Vyberte</option>
                               <option value="nove">Nové</option>
                               <option value="ojete">Ojeté</option>
                               <option value="poskozene">Poškozené</option>
@@ -486,6 +489,30 @@ style-src 'self' 'unsafe-inline' https:;
                               <input type="text" id="iuAdsApiStk" class="iuAdsFormInput iuAdsFieldFromApi" name="api_stk" data-iu-from-api="1">
                               <label class="iuAdsFormRow" for="iuAdsApiOwners">Počet vlastníků</label>
                               <input type="text" id="iuAdsApiOwners" class="iuAdsFormInput iuAdsFieldFromApi" name="api_owners" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiEmissionsNorm">Emisní norma</label>
+                              <input type="text" id="iuAdsApiEmissionsNorm" class="iuAdsFormInput iuAdsFieldFromApi" name="api_emissions_norm" readonly tabindex="0" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiConsCity">Spotřeba — město [l/100 km]</label>
+                              <input type="text" id="iuAdsApiConsCity" class="iuAdsFormInput iuAdsFieldFromApi" name="api_cons_city" readonly tabindex="0" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiConsExtra">Spotřeba — mimo město [l/100 km]</label>
+                              <input type="text" id="iuAdsApiConsExtra" class="iuAdsFormInput iuAdsFieldFromApi" name="api_cons_extra" readonly tabindex="0" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiConsCombined">Spotřeba — komb. [l/100 km]</label>
+                              <input type="text" id="iuAdsApiConsCombined" class="iuAdsFormInput iuAdsFieldFromApi" name="api_cons_combined" readonly tabindex="0" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiDimL">Rozměry — délka [mm]</label>
+                              <input type="text" id="iuAdsApiDimL" class="iuAdsFormInput iuAdsFieldFromApi" name="api_dim_l" readonly tabindex="0" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiDimW">Rozměry — šířka [mm]</label>
+                              <input type="text" id="iuAdsApiDimW" class="iuAdsFormInput iuAdsFieldFromApi" name="api_dim_w" readonly tabindex="0" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiDimH">Rozměry — výška [mm]</label>
+                              <input type="text" id="iuAdsApiDimH" class="iuAdsFormInput iuAdsFieldFromApi" name="api_dim_h" readonly tabindex="0" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiTireN1">Pneumatika náprava 1</label>
+                              <input type="text" id="iuAdsApiTireN1" class="iuAdsFormInput iuAdsFieldFromApi" name="api_tire_n1" readonly tabindex="0" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiTireN2">Pneumatika náprava 2</label>
+                              <input type="text" id="iuAdsApiTireN2" class="iuAdsFormInput iuAdsFieldFromApi" name="api_tire_n2" readonly tabindex="0" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiTireN3">Pneumatika náprava 3</label>
+                              <input type="text" id="iuAdsApiTireN3" class="iuAdsFormInput iuAdsFieldFromApi" name="api_tire_n3" readonly tabindex="0" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiTireN4">Pneumatika náprava 4</label>
+                              <input type="text" id="iuAdsApiTireN4" class="iuAdsFormInput iuAdsFieldFromApi" name="api_tire_n4" readonly tabindex="0" data-iu-from-api="1">
+                              <label class="iuAdsFormRow" for="iuAdsApiMaxSpeed">Max. rychlost</label>
+                              <input type="text" id="iuAdsApiMaxSpeed" class="iuAdsFormInput iuAdsFieldFromApi" name="api_max_speed" readonly tabindex="0" data-iu-from-api="1">
                             </div>
                             <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockExtra">
                               <p class="iuAdsAutoCardTitle">Doplňující údaje</p>
@@ -2881,7 +2908,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script type="module">import{franc}from"/assets/vendor/franc-min.js";window.franc=franc;</script>
     <script defer src="/assets/app-crash-shield.js"></script>
-    <script type="module" src="/assets/app.js?v=595"></script>
+    <script type="module" src="/assets/app.js?v=596"></script>
     <script>
     (function(){
       try { document.documentElement.setAttribute("data-iu-html-after-appjs", "reached"); } catch(e){}
