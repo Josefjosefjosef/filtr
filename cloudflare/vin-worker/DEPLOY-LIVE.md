@@ -52,6 +52,13 @@ curl -sS "https://steep-term-ba60.josef-zmrhal.workers.dev/vin?vin=WBADT43452G12
 
 PASS: health → `{"ok":true,"worker":"up"}`; invalid VIN → 400 + `success`; real VIN → JSON, **not** 525.
 
+## 6) R2 upload (`POST /upload-image`)
+
+1. Create bucket: `npx wrangler r2 bucket create infouzel-ads-images` (once).
+2. Enable public access on bucket (R2 dashboard) or custom domain → set **`R2_PUBLIC_BASE_URL`** (Worker var).
+3. Secret: `npx wrangler secret put IMAGE_UPLOAD_SECRET` (Bearer for uploads; never embed in static frontend — use server-side or future short-lived token).
+4. Upload: `curl -X POST -H "Authorization: Bearer $IMAGE_UPLOAD_SECRET" -F "file=@photo.jpg" https://…/upload-image`
+
 ## STOP-SHIP
 
 If `/health` is not 200 with `ok:true`, or real VIN still 525 → wrong deploy account, wrong worker name, or bad `VIN_UPSTREAM_URL` still set.

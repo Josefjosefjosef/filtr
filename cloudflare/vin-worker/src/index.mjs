@@ -1,63 +1,296 @@
 /**
- * Cloudflare Worker — VIN decode via api.dataovozidlech.cz (direct HTTPS).
- * Avoid proxying through orange-cloud domains (avoids SSL 525 passthrough).
+ * Cloudflare Worker — VIN (dataovozidlech) + R2 image upload (Worker-only).
+ * No direct browser→R2. No fake VIN data.
  */
-import { decodeVinHandler, createDecodeEnv } from "../../../server/vin-decode-core.mjs";
 
-const JSON_HDR = { "Content-Type": "application/json; charset=utf-8" };
+const JSON_HEADERS = {
+  "Content-Type": "application/json; charset=utf-8",
+  "Cache-Control": "no-store"
+};
+
+const UPSTREAM_BASE = "https://api.dataovozidlech.cz/api/vehicletechnicaldata/v2";
+const SOURCE = "dataovozidlech";
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+const ALLOWED_MIME = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 function jsonResponse(status, obj) {
-  return new Response(JSON.stringify(obj), { status, headers: JSON_HDR });
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: JSON_HEADERS
+  });
+}
+
+function vinModel(success, error, vin, data) {
+  return {
+    success,
+    error: error == null ? null : String(error),
+    vin: vin == null ? "" : String(vin),
+    data: data == null ? null : data,
+    cached: false,
+    source: SOURCE
+  };
+}
+
+function normalizeVin(value) {
+  return String(value || "").trim().toUpperCase();
+}
+
+function isValidVin(vin) {
+  return /^[A-HJ-NPR-Z0-9]{17}$/.test(vin);
+}
+
+function safeText(value) {
+  if (value == null) return "";
+  return String(value);
+}
+
+function extForKind(kind) {
+  if (kind === "jpeg") return "jpg";
+  if (kind === "png") return "png";
+  if (kind === "webp") return "webp";
+  return "bin";
+}
+
+function mimeForKind(kind) {
+  if (kind === "jpeg") return "image/jpeg";
+  if (kind === "png") return "image/png";
+  if (kind === "webp") return "image/webp";
+  return "application/octet-stream";
 }
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    const path = url.pathname.replace(/\/$/, "") || "/";
+    const path = url.pathname.replace(/\/+$/, "") || "/";
+    const method = request.method.toUpperCase();
 
-    if (path === "/health" && request.method === "GET") {
+    if (path === "/health") {
+      if (method !== "GET") {
+        return jsonResponse(405, { success: false, error: "method_not_allowed" });
+      }
       return jsonResponse(200, { ok: true, worker: "up" });
     }
 
+    if (path === "/upload-image" && method === "POST") {
+      return handleUploadImage(request, env);
+    }
+
     if (path !== "/vin") {
-      if (request.method === "GET") {
-        return jsonResponse(404, { success: false, error: "Not found" });
+      if (method === "GET") {
+        return jsonResponse(404, vinModel(false, "not_found", "", null));
       }
-      return jsonResponse(405, { success: false, error: "Method not allowed" });
+      return jsonResponse(405, vinModel(false, "method_not_allowed", "", null));
     }
 
-    if (request.method !== "GET") {
-      return jsonResponse(405, { success: false, error: "Method not allowed" });
+    if (method !== "GET") {
+      return jsonResponse(405, vinModel(false, "method_not_allowed", "", null));
     }
 
-    const key = (env.VIN_UPSTREAM_KEY || "").trim();
-    if (!key) {
-      return jsonResponse(500, {
-        success: false,
-        error: "missing_secret",
-        detail: "VIN_UPSTREAM_KEY is not configured"
+    const apiKey = safeText(env.VIN_UPSTREAM_KEY || env.VIN_API_KEY).trim();
+    if (!apiKey) {
+      return jsonResponse(
+        500,
+        vinModel(false, "missing_secret", "", null)
+      );
+    }
+
+    const vin = normalizeVin(url.searchParams.get("vin"));
+    if (!isValidVin(vin)) {
+      return jsonResponse(
+        400,
+        vinModel(false, "VIN musí mít přesně 17 znaků.", vin, null)
+      );
+    }
+
+    const upstreamUrl = `${UPSTREAM_BASE}?vin=${encodeURIComponent(vin)}`;
+
+    let upstreamResponse;
+    try {
+      upstreamResponse = await fetch(upstreamUrl, {
+        method: "GET",
+        headers: {
+          API_KEY: apiKey,
+          Accept: "application/json"
+        },
+        cf: {
+          cacheTtl: 0,
+          cacheEverything: false
+        }
       });
+    } catch (err) {
+      return jsonResponse(
+        502,
+        vinModel(
+          false,
+          "upstream_fetch_failed",
+          vin,
+          null
+        )
+      );
     }
 
-    const vin = url.searchParams.get("vin") || "";
-    const decodeEnv = createDecodeEnv({
-      VIN_UPSTREAM_KEY: key,
-      VIN_UPSTREAM_URL: (env.VIN_UPSTREAM_URL || "").trim(),
-      VIN_UPSTREAM_AUTH_STYLE: (env.VIN_UPSTREAM_AUTH_STYLE || "bearer").trim(),
-      VIN_USE_NHTSA_FALLBACK: "",
-      VIN_IP_RATE_MAX: env.VIN_IP_RATE_MAX || "60",
-      VIN_CACHE_TTL_MS: env.VIN_CACHE_TTL_MS || "86400000",
-      VIN_UPSTREAM_MAX_PER_MIN: env.VIN_UPSTREAM_MAX_PER_MIN || "27"
-    });
+    const rawText = await upstreamResponse.text();
 
-    const cfConnecting = request.headers.get("CF-Connecting-IP");
-    const xff = request.headers.get("X-Forwarded-For");
-    const clientIp =
-      (cfConnecting && cfConnecting.trim()) ||
-      (xff && xff.split(",")[0].trim()) ||
-      "worker";
+    if (!upstreamResponse.ok) {
+      return jsonResponse(
+        502,
+        vinModel(false, "upstream_http_error", vin, null)
+      );
+    }
 
-    const out = await decodeVinHandler(vin, clientIp, decodeEnv);
-    return new Response(out.body, { status: out.status, headers: out.headers });
+    let parsed;
+    try {
+      parsed = rawText ? JSON.parse(rawText) : null;
+    } catch (_err) {
+      return jsonResponse(
+        502,
+        vinModel(false, "upstream_invalid_json", vin, null)
+      );
+    }
+
+    const upstreamStatus = parsed?.Status;
+
+    if (upstreamStatus !== 1 || !parsed?.Data) {
+      return jsonResponse(
+        404,
+        vinModel(false, "vin_not_found", vin, null)
+      );
+    }
+
+    return jsonResponse(200, vinModel(true, null, vin, parsed.Data));
   }
 };
+
+async function handleUploadImage(request, env) {
+  const secret = safeText(env.IMAGE_UPLOAD_SECRET).trim();
+  if (!secret) {
+    return jsonResponse(503, {
+      success: false,
+      error: "upload_not_configured",
+      detail: "Set IMAGE_UPLOAD_SECRET"
+    });
+  }
+
+  const auth = request.headers.get("Authorization") || "";
+  if (auth !== "Bearer " + secret) {
+    return jsonResponse(401, { success: false, error: "unauthorized" });
+  }
+
+  const bucket = env.R2_BUCKET;
+  if (!bucket) {
+    return jsonResponse(503, {
+      success: false,
+      error: "r2_not_bound",
+      detail: "Configure R2 binding R2_BUCKET"
+    });
+  }
+
+  const baseUrl = safeText(env.R2_PUBLIC_BASE_URL).replace(/\/+$/, "");
+  if (!baseUrl) {
+    return jsonResponse(503, {
+      success: false,
+      error: "r2_public_url_missing",
+      detail: "Set var R2_PUBLIC_BASE_URL (custom domain or r2.dev)"
+    });
+  }
+
+  let form;
+  try {
+    form = await request.formData();
+  } catch (_e) {
+    return jsonResponse(400, { success: false, error: "invalid_multipart" });
+  }
+
+  const file = form.get("file") || form.get("image");
+  if (!file || typeof file.stream !== "function") {
+    return jsonResponse(400, {
+      success: false,
+      error: "missing_file",
+      detail: "Use form field file or image"
+    });
+  }
+
+  if (file.size > MAX_UPLOAD_BYTES) {
+    return jsonResponse(413, {
+      success: false,
+      error: "file_too_large",
+      detail: "Max 5MB"
+    });
+  }
+
+  const declared = (file.type || "").toLowerCase().split(";")[0].trim();
+  if (!ALLOWED_MIME.has(declared)) {
+    return jsonResponse(415, {
+      success: false,
+      error: "unsupported_media_type",
+      detail: "image/jpeg, image/png, image/webp only"
+    });
+  }
+
+  const kind = await detectImageFileKind(file);
+  if (!kind) {
+    return jsonResponse(400, {
+      success: false,
+      error: "invalid_image_payload",
+      detail: "Magic bytes do not match JPEG/PNG/WEBP"
+    });
+  }
+
+  const expectedMime = mimeForKind(kind);
+  if (declared !== expectedMime) {
+    return jsonResponse(400, {
+      success: false,
+      error: "mime_content_mismatch",
+      detail: "Declared Content-Type does not match file content"
+    });
+  }
+
+  const id = crypto.randomUUID();
+  const ext = extForKind(kind);
+  const key = "ads/" + id + "." + ext;
+
+  try {
+    await bucket.put(key, file.stream(), {
+      httpMetadata: { contentType: expectedMime }
+    });
+  } catch (_e) {
+    return jsonResponse(500, { success: false, error: "r2_put_failed" });
+  }
+
+  const publicUrl = baseUrl + "/" + key;
+  return jsonResponse(200, {
+    success: true,
+    url: publicUrl
+  });
+}
+
+async function detectImageFileKind(file) {
+  const buf = await file.slice(0, 16).arrayBuffer();
+  const u8 = new Uint8Array(buf);
+  if (u8.length >= 3 && u8[0] === 0xff && u8[1] === 0xd8 && u8[2] === 0xff) {
+    return "jpeg";
+  }
+  if (
+    u8.length >= 8 &&
+    u8[0] === 0x89 &&
+    u8[1] === 0x50 &&
+    u8[2] === 0x4e &&
+    u8[3] === 0x47
+  ) {
+    return "png";
+  }
+  if (
+    u8.length >= 12 &&
+    u8[0] === 0x52 &&
+    u8[1] === 0x49 &&
+    u8[2] === 0x46 &&
+    u8[3] === 0x46 &&
+    u8[8] === 0x57 &&
+    u8[9] === 0x45 &&
+    u8[10] === 0x42 &&
+    u8[11] === 0x50
+  ) {
+    return "webp";
+  }
+  return null;
+}
