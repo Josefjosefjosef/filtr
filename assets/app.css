@@ -1184,15 +1184,6 @@ aside.accordionCol{
   }
 }
 
-/* Debug: diagnostick├ę obrysy (pouze pro v├Żvoj) */
-.iu-mmQuickLinks{
-  /* outline: 1px dashed rgba(255,0,0,.3); */
-}
-
-.iu-mmQuickItem{
-  /* outline: 1px dashed rgba(0,0,255,.3); */
-}
-
 .iuQTitleRow{
   display: flex;
   align-items: center;
@@ -8605,33 +8596,20 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   display: block;
 }
 
-/* === MindMenu QuickLinks (softer, smaller) === */
+/* MindMenu QuickLinks: .iuIconTile (merged: glass+P0 white + CLS min box) */
 .iu-mmQuickLinks .iuIconTile{
   width: 32px;
   height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   border-radius: 10px;
-
-  /* jemn─Ťj┼í├ş pozad├ş + lehk├Ż ÔÇ×glassÔÇť */
-  background: linear-gradient(
-    145deg,
-    rgba(255,255,255,0.10),
-    rgba(255,255,255,0.04)
-  );
-
-  /* jemn─Ťj┼í├ş hrana + st├şn */
-  border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.16);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
-/* P0: QuickLinks icon plates must be pure white (no blue tint); icon images unchanged */
-.iu-mmQuickLinks .iuIconTile{
   background: #fff !important;
   background-color: #fff !important;
   background-image: none !important;
-  border-color: rgba(0,0,0,0.08) !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
   box-shadow: none !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .iu-mmQuickLinks .iuIconTile > i{
@@ -13850,12 +13828,6 @@ section.iu-mindmenu,
     visibility: visible !important;
     opacity: 1 !important;
   }
-}
-
-/* === P0 CLS=0 stop-ship: rezervace m├şsta ikon (bez zm─Ťny barev/spacingu) === */
-.iu-mmQuickLinks .iuIconTile{
-  min-width: 32px;
-  min-height: 32px;
 }
 
 /* IU_CLS_FIX: reserve icon boxes to prevent FA layout-shift on /projects/ (right-rail quicklinks/services) */
