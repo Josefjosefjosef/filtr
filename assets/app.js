@@ -23005,6 +23005,14 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     setDisabledIn(legacy, isEmpty || isAuto);
     setDisabledIn(pre, !isAuto);
     setDisabledIn(post, !isAuto || autoApiState !== "loaded");
+    setDisabledIn(pre, !isAuto);
+    var preMetaLocked = isAuto && autoApiState !== "loaded";
+    var otEl = $("iuAdsAutoOfferType");
+    var vtEl2 = $("iuAdsAutoVehicleType");
+    var cdEl = $("iuAdsAutoCondition");
+    if (otEl) otEl.disabled = !isAuto || preMetaLocked;
+    if (vtEl2) vtEl2.disabled = !isAuto || preMetaLocked;
+    if (cdEl) cdEl.disabled = !isAuto || preMetaLocked;
 
     if (isAuto && autoApiState === "loading") {
       var ld2 = $("iuAdsAutoVinLoading");
@@ -23234,15 +23242,19 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         if (reqId !== vinLoadRequestId) return;
         if (result && result.kind === "manual") {
           lastLoadedVin = result.vinNorm;
-          autoApiState = "loaded";
+          autoApiState = "not_found";
           if (ldEl) ldEl.hidden = true;
-          if (errEl) errEl.hidden = true;
-          clearApiFieldsExceptVin(lastLoadedVin);
+          if (errEl) {
+            errEl.textContent =
+              "Tento VIN nebyl v registru nalezen. Zkuste jiný VIN a znovu načtěte údaje.";
+            errEl.hidden = false;
+          }
+          clearApiFieldsExceptVin("");
           autoTitleUserEdited = false;
-          var tMan = $("iuAdsAutoTitle");
-          if (tMan) tMan.value = "";
+          var tMan2 = $("iuAdsAutoTitle");
+          if (tMan2) tMan2.value = "";
+          setHidden($("iuAdsAutoPost"), true);
           applyCategoryUI();
-          scrollDesktopVinFieldsIntoView();
           return;
         }
         if (result && result.kind === "api") {
@@ -23280,7 +23292,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (val !== AUTO_VAL) {
       resetAutoForm();
     } else {
-      if (autoApiState !== "loading" && autoApiState !== "loaded") {
+      if (autoApiState !== "loading" && autoApiState !== "loaded" && autoApiState !== "not_found") {
         autoApiState = "idle";
         autoTitleUserEdited = false;
         var err = $("iuAdsAutoVinError");
@@ -23353,10 +23365,22 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           ev.preventDefault();
           showAutoPublishFeedback("", false);
           if (autoApiState !== "loaded") {
-            showAutoPublishFeedback(
-              "Nejdříve zadejte VIN a klikněte na „Načíst údaje o vozidle“.",
-              true
-            );
+            if (autoApiState === "not_found") {
+              showAutoPublishFeedback(
+                "VIN nebyl nalezen. Zadejte VIN existujícího vozidla a úspěšně načtěte údaje.",
+                true
+              );
+            } else if (autoApiState === "error") {
+              showAutoPublishFeedback(
+                "Nejdříve opravte VIN a úspěšně načtěte údaje o vozidle z registru.",
+                true
+              );
+            } else {
+              showAutoPublishFeedback(
+                "Nejdříve zadejte VIN a klikněte na „Načíst údaje o vozidle“.",
+                true
+              );
+            }
             return;
           }
           var otReq = $("iuAdsAutoOfferType");
