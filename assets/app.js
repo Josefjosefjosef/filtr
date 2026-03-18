@@ -22358,6 +22358,38 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   var lastLoadedVin = "";
   /** Monotonic id so stale decodeVin completions cannot overwrite newer user action. */
   var vinLoadRequestId = 0;
+  var vinLoadUiBusy = false;
+  var VIN_LOAD_BTN_LABEL = "Načíst údaje o vozidle";
+
+  function restoreVinLoadButton(btn) {
+    if (!btn) return;
+    btn.classList.remove("is-loading");
+    btn.textContent = VIN_LOAD_BTN_LABEL;
+  }
+
+  function setVinLoadButtonLoading(btn, loading) {
+    if (!btn) return;
+    if (loading) {
+      btn.classList.add("is-loading");
+      btn.disabled = true;
+      btn.textContent = "Načítám…";
+    } else {
+      btn.disabled = false;
+      restoreVinLoadButton(btn);
+    }
+  }
+
+  function vinLoadUserErrorText(err) {
+    var m = err && err.message ? String(err.message) : "";
+    if (
+      /Zadejte platný VIN/i.test(m) ||
+      (/17/.test(m) && /znak/i.test(m)) ||
+      /bez I, O, Q/i.test(m) ||
+      /VIN musí mít/i.test(m)
+    )
+      return "Zadejte platný VIN (17 znaků).";
+    return "Nepodařilo se načíst data. Zkuste to znovu.";
+  }
 
   function showAutoPublishFeedback(msg, isErr) {
     var fb = document.getElementById("iuAdsAutoPublishFeedback");
@@ -22856,6 +22888,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       err.hidden = true;
     }
     if (ld) ld.hidden = true;
+    vinLoadUiBusy = false;
+    var lbReset = $("iuAdsAutoVinLoadBtn");
+    if (lbReset) {
+      lbReset.classList.remove("is-loading");
+      lbReset.textContent = VIN_LOAD_BTN_LABEL;
+      lbReset.disabled = false;
+    }
     showAutoPublishFeedback("", false);
   }
 
@@ -23084,6 +23123,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     var errEl = $("iuAdsAutoVinError");
     var ldEl = $("iuAdsAutoVinLoading");
     var lbBtn = $("iuAdsAutoVinLoadBtn");
+    if (vinLoadUiBusy) return;
+    vinLoadUiBusy = true;
+
     var raw = vinEl ? vinEl.value : "";
     var nv = normalizeVin(raw);
     var reqId = ++vinLoadRequestId;
@@ -23095,9 +23137,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       errEl.textContent = "";
     }
     autoApiState = "loading";
-    if (ldEl) ldEl.hidden = false;
-    if (lbBtn) lbBtn.disabled = true;
+    if (ldEl) ldEl.hidden = true;
+    setVinLoadButtonLoading(lbBtn, true);
     applyCategoryUI();
+    if (ldEl) ldEl.hidden = true;
 
     decodeVin(raw)
       .then(function (result) {
@@ -23106,7 +23149,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           lastLoadedVin = result.vinNorm;
           autoApiState = "loaded";
           if (ldEl) ldEl.hidden = true;
-          if (errEl) errEl.hidden = true;
+          if (errEl) {
+            errEl.textContent = "Vozidlo nebylo nalezeno.";
+            errEl.hidden = false;
+          }
           clearApiFieldsExceptVin(lastLoadedVin);
           autoTitleUserEdited = false;
           var tMan = $("iuAdsAutoTitle");
@@ -23122,7 +23168,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           lastLoadedVin = m.vin;
           autoApiState = "loaded";
           if (ldEl) ldEl.hidden = true;
-          if (errEl) errEl.hidden = true;
+          if (errEl) {
+            errEl.textContent = "";
+            errEl.hidden = true;
+          }
           fillApiFields(m);
           applyCategoryUI();
           scrollDesktopVinFieldsIntoView();
@@ -23133,14 +23182,16 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         autoApiState = "error";
         if (ldEl) ldEl.hidden = true;
         if (errEl) {
-          errEl.textContent = e && e.message ? String(e.message) : "Chyba načtení.";
+          errEl.textContent = vinLoadUserErrorText(e);
           errEl.hidden = false;
         }
         setHidden($("iuAdsAutoPost"), true);
         applyCategoryUI();
       })
       .then(function () {
-        if (reqId === vinLoadRequestId && lbBtn) lbBtn.disabled = false;
+        if (reqId !== vinLoadRequestId) return;
+        vinLoadUiBusy = false;
+        setVinLoadButtonLoading(lbBtn, false);
       });
   }
 

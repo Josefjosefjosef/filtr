@@ -3638,6 +3638,31 @@ button.iuAdsCategoryCard{
 .iuAdsVinLoadBtn{
   margin-top: 14px;
 }
+.iuAdsVinLoadBtn.is-loading{
+  opacity: 0.7;
+  cursor: wait;
+  position: relative;
+  padding-left: 30px;
+}
+.iuAdsVinLoadBtn.is-loading::before{
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border: 2px solid rgba(31, 59, 109, 0.2);
+  border-top-color: var(--iu-accent, #1f3b6d);
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: iuVinLoadSpin 0.65s linear infinite;
+}
+@keyframes iuVinLoadSpin{
+  to{
+    transform: rotate(360deg);
+  }
+}
 .iuAdsAutoBlock{
   margin-top: 14px;
 }
