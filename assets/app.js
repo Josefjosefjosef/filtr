@@ -22356,6 +22356,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   var autoApiState = "idle";
   var autoTitleUserEdited = false;
   var lastLoadedVin = "";
+  /** Monotonic id so stale decodeVin completions cannot overwrite newer user action. */
+  var vinLoadRequestId = 0;
 
   function showAutoPublishFeedback(msg, isErr) {
     var fb = document.getElementById("iuAdsAutoPublishFeedback");
@@ -23031,6 +23033,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     var lbBtn = $("iuAdsAutoVinLoadBtn");
     var raw = vinEl ? vinEl.value : "";
     var nv = normalizeVin(raw);
+    var reqId = ++vinLoadRequestId;
     if (nv !== normalizeVin(lastLoadedVin || "___")) {
       autoTitleUserEdited = false;
     }
@@ -23045,6 +23048,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
     decodeVin(raw)
       .then(function (result) {
+        if (reqId !== vinLoadRequestId) return;
         if (result && result.kind === "manual") {
           lastLoadedVin = result.vinNorm;
           autoApiState = "loaded";
@@ -23072,6 +23076,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         }
       })
       .catch(function (e) {
+        if (reqId !== vinLoadRequestId) return;
         autoApiState = "error";
         if (ldEl) ldEl.hidden = true;
         if (errEl) {
@@ -23082,7 +23087,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         applyCategoryUI();
       })
       .then(function () {
-        if (lbBtn) lbBtn.disabled = false;
+        if (reqId === vinLoadRequestId && lbBtn) lbBtn.disabled = false;
       });
   }
 
