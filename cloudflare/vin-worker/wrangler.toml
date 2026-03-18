@@ -1,8 +1,21 @@
-# Deploy: cd cloudflare/vin-worker && npx wrangler deploy
+# Target URL: https://steep-term-ba60.josef-zmrhal.workers.dev
+# Worker name MUST match subdomain label (steep-term-ba60).
+# Entrypoint MUST be src/index.mjs (decodeVinHandler + /health).
+#
+# Live proof after deploy:
+#   GET /health  -> {"ok":true,"worker":"up"}  (NOT {"error":"Not found"})
+#   GET /vin?vin=123 -> JSON with "success":false and Czech VIN message (NOT {"error":"Invalid VIN"})
+#
+# Deploy (requires CF login or CLOUDFLARE_API_TOKEN):
+#   cd cloudflare/vin-worker && npx wrangler deploy
+#
 # Secrets: wrangler secret put VIN_UPSTREAM_KEY
-# Optional: wrangler secret put VIN_UPSTREAM_URL (only if not using default api.dataovozidlech.cz)
+# Remove bad upstream URL (525): wrangler secret delete VIN_UPSTREAM_URL
 name = "steep-term-ba60"
 main = "src/index.mjs"
 compatibility_date = "2024-11-01"
+workers_dev = true
 
 # Do not put API keys in this file.
+# Optional: uncomment after wrangler whoami -> account id
+# account_id = "YOUR_ACCOUNT_ID"
