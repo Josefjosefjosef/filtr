@@ -22675,6 +22675,92 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     var stk = formatDateOnlyApi(stkRaw);
     var owners = cleanApiStr(pickVehicleField(o, ["PocetVlastniku", "pocetVlastniku", "owners"]));
     var firstRegYear = firstRegYearFrom(firstReg) || cleanApiStr(o.firstRegYear);
+    var emissionsNorm = "";
+    try {
+      if (o.emissionsStandard != null && String(o.emissionsStandard).trim() !== "")
+        emissionsNorm = cleanApiStr(o.emissionsStandard);
+      else
+        emissionsNorm = cleanApiStr(
+          pickVehicleField(o, ["EmisniUroven", "emisniUroven", "EmiseEHKOSNEHSES"])
+        );
+    } catch (eEm) {}
+    var consCity = "";
+    var consExtra = "";
+    var consCombined = "";
+    try {
+      var fc = o.fuelConsumption;
+      if (fc != null && typeof fc === "object") {
+        if (fc.city != null) consCity = cleanApiStr(fc.city);
+        if (fc.extraUrban != null) consExtra = cleanApiStr(fc.extraUrban);
+        if (fc.combined != null) consCombined = cleanApiStr(fc.combined);
+      }
+      if (!consCity && !consExtra && !consCombined) {
+        var spot = pickVehicleField(o, ["SpotrebaNa100Km", "spotrebaNa100Km", "Spotreba"]);
+        if (spot != null && String(spot).trim() !== "") {
+          var sp = String(spot).split("/");
+          consCity = cleanApiStr(sp[0] || "");
+          consExtra = cleanApiStr(sp[1] || "");
+          consCombined = cleanApiStr(sp[2] || "");
+        }
+      }
+    } catch (eFc) {}
+    var dimL = "";
+    var dimW = "";
+    var dimH = "";
+    try {
+      var dims = o.dimensions;
+      if (dims != null && typeof dims === "object") {
+        if (dims.length != null) dimL = cleanApiStr(dims.length);
+        if (dims.width != null) dimW = cleanApiStr(dims.width);
+        if (dims.height != null) dimH = cleanApiStr(dims.height);
+      }
+      if (!dimL && !dimW && !dimH) {
+        var roz = pickVehicleField(o, ["Rozmery", "rozmery"]);
+        if (roz != null && String(roz).trim() !== "") {
+          var rp = String(roz).split("/");
+          dimL = cleanApiStr(rp[0] || "");
+          dimW = cleanApiStr(rp[1] || "");
+          dimH = cleanApiStr(rp[2] || "");
+        }
+      }
+    } catch (eDim) {}
+    var tireN1 = "";
+    var tireN2 = "";
+    var tireN3 = "";
+    var tireN4 = "";
+    try {
+      var tr = o.tires;
+      if (tr != null && typeof tr === "object") {
+        tireN1 = cleanApiStr(tr.N1 != null ? tr.N1 : tr.n1);
+        tireN2 = cleanApiStr(tr.N2 != null ? tr.N2 : tr.n2);
+        tireN3 = cleanApiStr(tr.N3 != null ? tr.N3 : tr.n3);
+        tireN4 = cleanApiStr(tr.N4 != null ? tr.N4 : tr.n4);
+      }
+      if (!tireN1 && !tireN2 && !tireN3 && !tireN4) {
+        var nap = pickVehicleField(o, ["NapravyPneuRafky", "napravyPneu"]);
+        if (nap != null && String(nap).trim() !== "") {
+          var segs = String(nap)
+            .split(";")
+            .map(function (seg) {
+              return cleanApiStr(seg);
+            })
+            .filter(Boolean);
+          if (segs[0]) tireN1 = segs[0];
+          if (segs[1]) tireN2 = segs[1];
+          if (segs[2]) tireN3 = segs[2];
+          if (segs[3]) tireN4 = segs[3];
+        }
+      }
+    } catch (eTire) {}
+    var maxSpeed = "";
+    try {
+      if (o.maxSpeed != null && String(o.maxSpeed).trim() !== "")
+        maxSpeed = cleanApiStr(o.maxSpeed);
+      else {
+        var ms = pickVehicleField(o, ["NejvyssiRychlost", "nejvyssiRychlost"]);
+        if (ms != null && String(ms).trim() !== "") maxSpeed = cleanApiStr(ms);
+      }
+    } catch (eMs) {}
     return {
       make: make,
       model: model,
@@ -22690,7 +22776,19 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       seats: seats,
       stk: stk,
       owners: owners,
-      firstRegYear: firstRegYear
+      firstRegYear: firstRegYear,
+      emissionsNorm: emissionsNorm,
+      consCity: consCity,
+      consExtra: consExtra,
+      consCombined: consCombined,
+      dimL: dimL,
+      dimW: dimW,
+      dimH: dimH,
+      tireN1: tireN1,
+      tireN2: tireN2,
+      tireN3: tireN3,
+      tireN4: tireN4,
+      maxSpeed: maxSpeed
     };
   }
 
@@ -22729,7 +22827,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       VozidloKaroserieBarva: colors[n % colors.length],
       VozidloKaroserieMist: 4 + (n % 3) + " / " + (4 + (n % 3)) + " / 0",
       PravidelnaTechnickaProhlidkaDo: y + 5 + "-12-31T00:00:00",
-      PocetVlastniku: 1 + (n % 3)
+      PocetVlastniku: 1 + (n % 3),
+      EmisniUroven: "EURO 6",
+      SpotrebaNa100Km: "6.2 / 4.1 / 5.0",
+      Rozmery: "4500/ 1800/ 1620",
+      NapravyPneuRafky: "205/55 R16 91H; 205/55 R16 91H",
+      NejvyssiRychlost: 195
     });
   }
 
@@ -22984,6 +23087,18 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     set("iuAdsApiSeats", m.seats);
     set("iuAdsApiStk", m.stk);
     set("iuAdsApiOwners", m.owners);
+    set("iuAdsApiEmissionsNorm", m.emissionsNorm);
+    set("iuAdsApiConsCity", m.consCity);
+    set("iuAdsApiConsExtra", m.consExtra);
+    set("iuAdsApiConsCombined", m.consCombined);
+    set("iuAdsApiDimL", m.dimL);
+    set("iuAdsApiDimW", m.dimW);
+    set("iuAdsApiDimH", m.dimH);
+    set("iuAdsApiTireN1", m.tireN1);
+    set("iuAdsApiTireN2", m.tireN2);
+    set("iuAdsApiTireN3", m.tireN3);
+    set("iuAdsApiTireN4", m.tireN4);
+    set("iuAdsApiMaxSpeed", m.maxSpeed);
     if (!autoTitleUserEdited) {
       var titleEl = $("iuAdsAutoTitle");
       var built = buildAutoTitle(m);
@@ -23011,7 +23126,19 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       "iuAdsApiColor",
       "iuAdsApiSeats",
       "iuAdsApiStk",
-      "iuAdsApiOwners"
+      "iuAdsApiOwners",
+      "iuAdsApiEmissionsNorm",
+      "iuAdsApiConsCity",
+      "iuAdsApiConsExtra",
+      "iuAdsApiConsCombined",
+      "iuAdsApiDimL",
+      "iuAdsApiDimW",
+      "iuAdsApiDimH",
+      "iuAdsApiTireN1",
+      "iuAdsApiTireN2",
+      "iuAdsApiTireN3",
+      "iuAdsApiTireN4",
+      "iuAdsApiMaxSpeed"
     ];
     var i;
     for (i = 0; i < ids.length; i++) {
@@ -23169,6 +23296,26 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     applyCategoryUI();
   }
 
+  function wireAdsBoolRadioDeselect(fieldset) {
+    if (!fieldset || fieldset.dataset.iuAdsBoolToggleWired === "1") return;
+    fieldset.dataset.iuAdsBoolToggleWired = "1";
+    var radios = fieldset.querySelectorAll('input[type="radio"]');
+    var i;
+    for (i = 0; i < radios.length; i++) {
+      (function (rad) {
+        rad.addEventListener("mousedown", function () {
+          rad.dataset.iuRadioWasChecked = rad.checked ? "1" : "";
+        });
+        rad.addEventListener("click", function () {
+          if (rad.dataset.iuRadioWasChecked === "1") {
+            rad.checked = false;
+            rad.dataset.iuRadioWasChecked = "";
+          }
+        });
+      })(radios[i]);
+    }
+  }
+
   window.iuAdsSubmitFormWire = function () {
     var cat = $("iuAdsFieldCategory");
     var btn = $("iuAdsAutoVinLoadBtn");
@@ -23210,6 +23357,30 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
               "Nejdříve zadejte VIN a klikněte na „Načíst údaje o vozidle“.",
               true
             );
+            return;
+          }
+          var otReq = $("iuAdsAutoOfferType");
+          if (!otReq || !String(otReq.value || "").trim()) {
+            showAutoPublishFeedback("Vyberte typ nabídky.", true);
+            try {
+              otReq.focus();
+            } catch (eOt) {}
+            return;
+          }
+          var vtReq = $("iuAdsAutoVehicleType");
+          if (!vtReq || !String(vtReq.value || "").trim()) {
+            showAutoPublishFeedback("Vyberte typ vozidla.", true);
+            try {
+              vtReq.focus();
+            } catch (eVt) {}
+            return;
+          }
+          var condReq = $("iuAdsAutoCondition");
+          if (!condReq || !String(condReq.value || "").trim()) {
+            showAutoPublishFeedback("Vyberte stav vozidla.", true);
+            try {
+              condReq.focus();
+            } catch (eCd) {}
             return;
           }
           var titleA = $("iuAdsAutoTitle");
@@ -23276,6 +23447,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           ev.preventDefault();
         }
       });
+    }
+    var boolNm;
+    var boolNames = ["auto_service_book", "auto_accident_free", "auto_first_owner"];
+    for (boolNm = 0; boolNm < boolNames.length; boolNm++) {
+      var r0 = document.querySelector('input[name="' + boolNames[boolNm] + '"]');
+      if (r0 && r0.closest && r0.closest("fieldset")) wireAdsBoolRadioDeselect(r0.closest("fieldset"));
     }
     onCategoryChange();
     window.iuAdsRefreshCategoryUI = applyCategoryUI;
