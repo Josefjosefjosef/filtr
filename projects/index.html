@@ -445,12 +445,38 @@ style-src 'self' 'unsafe-inline' https:;
                               <label class="iuAdsFormRow" for="iuAdsApiFirstReg">Datum první registrace</label>
                               <input type="text" id="iuAdsApiFirstReg" class="iuAdsFormInput iuAdsFieldFromApi" name="api_first_reg" data-iu-from-api="1">
                               <label class="iuAdsFormRow" for="iuAdsApiBody">Karoserie</label>
-                              <input type="text" id="iuAdsApiBody" class="iuAdsFormInput iuAdsFieldFromApi" name="api_body" data-iu-from-api="1">
+                              <select id="iuAdsApiBody" class="iuAdsFormInput iuAdsFieldFromApi" name="api_body" data-iu-from-api="1">
+                                <option value="">— vyberte —</option>
+                                <option value="osobni">Osobní automobil</option>
+                                <option value="suv">SUV</option>
+                                <option value="kombi">Kombi</option>
+                                <option value="mpv">MPV / vícemístné</option>
+                                <option value="hatchback">Hatchback</option>
+                                <option value="sedan">Sedan</option>
+                                <option value="liftback">Liftback</option>
+                                <option value="kupé">Kupé</option>
+                                <option value="kabrio">Kabriolet</option>
+                                <option value="pickup">Pick-up</option>
+                                <option value="dodavka">Dodávka / užitkové</option>
+                                <option value="terenni">Terénní</option>
+                                <option value="jine">Jiné</option>
+                              </select>
                               <label class="iuAdsFormRow" for="iuAdsApiFuel">Palivo</label>
-                              <input type="text" id="iuAdsApiFuel" class="iuAdsFormInput iuAdsFieldFromApi" name="api_fuel" data-iu-from-api="1">
-                              <label class="iuAdsFormRow" for="iuAdsApiDisplacement">Objem motoru</label>
+                              <select id="iuAdsApiFuel" class="iuAdsFormInput iuAdsFieldFromApi" name="api_fuel" data-iu-from-api="1">
+                                <option value="">— vyberte —</option>
+                                <option value="benzin">Benzín</option>
+                                <option value="nafta">Nafta</option>
+                                <option value="elektro">Elektřina</option>
+                                <option value="hybrid">Hybrid</option>
+                                <option value="phev">Plug-in hybrid</option>
+                                <option value="lpg">LPG</option>
+                                <option value="cng">CNG</option>
+                                <option value="vodik">Vodík</option>
+                                <option value="jine">Jiné</option>
+                              </select>
+                              <label class="iuAdsFormRow" for="iuAdsApiDisplacement">Zdvihový objem [cm³]</label>
                               <input type="text" id="iuAdsApiDisplacement" class="iuAdsFormInput iuAdsFieldFromApi" name="api_displacement" data-iu-from-api="1">
-                              <label class="iuAdsFormRow" for="iuAdsApiPower">Výkon</label>
+                              <label class="iuAdsFormRow" for="iuAdsApiPower">Max. výkon [kW] / [min⁻¹]</label>
                               <input type="text" id="iuAdsApiPower" class="iuAdsFormInput iuAdsFieldFromApi" name="api_power" data-iu-from-api="1">
                               <label class="iuAdsFormRow" for="iuAdsApiColor">Barva</label>
                               <input type="text" id="iuAdsApiColor" class="iuAdsFormInput iuAdsFieldFromApi" name="api_color" data-iu-from-api="1">
@@ -2855,7 +2881,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script type="module">import{franc}from"/assets/vendor/franc-min.js";window.franc=franc;</script>
     <script defer src="/assets/app-crash-shield.js"></script>
-    <script type="module" src="/assets/app.js?v=594"></script>
+    <script type="module" src="/assets/app.js?v=595"></script>
     <script>
     (function(){
       try { document.documentElement.setAttribute("data-iu-html-after-appjs", "reached"); } catch(e){}

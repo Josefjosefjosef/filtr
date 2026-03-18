@@ -27,6 +27,7 @@ const VIEWS = [
   [1920, 1080]
 ];
 const VIN_OK = "WBADT43452G123456";
+const VIN_SUCCESS = "VR3KAHPY2SS059749";
 
 const r = {
   clsGlobalMax: 0,
@@ -41,7 +42,9 @@ const r = {
   tabSwitchPass: true,
   invalidVinPass: true,
   vinNotFoundWorkerPass: true,
-  publishLocalPass: true
+  publishLocalPass: true,
+  scrollSinglePass: true,
+  vinSuccessDtoPass: true
 };
 
 const ADS_LO = 22340;
@@ -284,6 +287,63 @@ try {
   if (!fb2.includes("Cena")) r.publishLocalPass = false;
   await b6.close();
 
+  const b7 = await chromium.launch({ headless: true });
+  const p7 = await b7.newPage({ viewport: { width: 1280, height: 800 } });
+  await p7.goto(BASE, { waitUntil: "load", timeout: 120000 });
+  await p7.waitForTimeout(1500);
+  await openAdsSubmit(p7);
+  await selectCategoryAuto(p7);
+  await p7.fill("#iuAdsAutoVin", VIN_SUCCESS);
+  await p7.click("#iuAdsAutoVinLoadBtn");
+  await p7.waitForSelector("#iuAdsAutoPost:not([hidden])", { timeout: 40000 });
+  await p7.waitForTimeout(600);
+  const dto = await p7.evaluate(() => {
+    const $ = (id) => document.getElementById(id);
+    return {
+      make: ($("iuAdsApiMake") && $("iuAdsApiMake").value) || "",
+      model: ($("iuAdsApiModel") && $("iuAdsApiModel").value) || "",
+      firstReg: ($("iuAdsApiFirstReg") && $("iuAdsApiFirstReg").value) || "",
+      disp: ($("iuAdsApiDisplacement") && $("iuAdsApiDisplacement").value) || "",
+      power: ($("iuAdsApiPower") && $("iuAdsApiPower").value) || "",
+      color: ($("iuAdsApiColor") && $("iuAdsApiColor").value) || "",
+      seats: ($("iuAdsApiSeats") && $("iuAdsApiSeats").value) || "",
+      stk: ($("iuAdsApiStk") && $("iuAdsApiStk").value) || "",
+      title: ($("iuAdsAutoTitle") && $("iuAdsAutoTitle").value) || "",
+      bodySel: ($("iuAdsApiBody") && $("iuAdsApiBody").value) || "",
+      fuelSel: ($("iuAdsApiFuel") && $("iuAdsApiFuel").value) || ""
+    };
+  });
+  if (dto.make !== "PEUGEOT") r.vinSuccessDtoPass = false;
+  if (!String(dto.model).includes("3008")) r.vinSuccessDtoPass = false;
+  if (dto.firstReg !== "2025-05-06" || dto.firstReg.indexOf("T") >= 0) r.vinSuccessDtoPass = false;
+  if (!String(dto.disp).includes("1199")) r.vinSuccessDtoPass = false;
+  if (!String(dto.power).includes("100") || !String(dto.power).includes("5500")) r.vinSuccessDtoPass = false;
+  const colU = String(dto.color).toUpperCase();
+  if (colU.indexOf("ŠED") < 0 && colU.indexOf("SED") < 0) r.vinSuccessDtoPass = false;
+  if (!String(dto.seats).includes("5")) r.vinSuccessDtoPass = false;
+  if (dto.stk !== "2029-05-06") r.vinSuccessDtoPass = false;
+  if (dto.bodySel !== "osobni") r.vinSuccessDtoPass = false;
+  if (dto.fuelSel !== "benzin") r.vinSuccessDtoPass = false;
+  const ti = String(dto.title);
+  if (!ti.includes("PEUGEOT") || !ti.includes("3008") || !ti.includes("2025")) r.vinSuccessDtoPass = false;
+  const scrollN = await p7.evaluate(() => {
+    const panel = document.getElementById("iuAdsPanelSubmit");
+    if (!panel) return 99;
+    let n = 0;
+    panel.querySelectorAll("*").forEach((el) => {
+      const s = getComputedStyle(el);
+      if (
+        (s.overflowY === "auto" || s.overflowY === "scroll") &&
+        el.scrollHeight > el.clientHeight + 4
+      ) {
+        n++;
+      }
+    });
+    return n;
+  });
+  if (scrollN > 0) r.scrollSinglePass = false;
+  await b7.close();
+
   const b4 = await chromium.launch({ headless: true });
   const p4 = await b4.newPage({ viewport: { width: 1280, height: 800 } });
   await p4.goto(BASE, { waitUntil: "load", timeout: 120000 });
@@ -315,7 +375,9 @@ const pass =
   r.tabSwitchPass &&
   r.invalidVinPass &&
   r.vinNotFoundWorkerPass &&
-  r.publishLocalPass;
+  r.publishLocalPass &&
+  r.scrollSinglePass &&
+  r.vinSuccessDtoPass;
 
 console.log(
   JSON.stringify(

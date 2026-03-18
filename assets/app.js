@@ -22460,66 +22460,182 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     return "";
   }
 
+  function formatDateOnlyApi(s) {
+    if (s == null || s === "") return "";
+    var t = String(s).trim();
+    var ix = t.indexOf("T");
+    if (ix > 0) t = t.slice(0, ix);
+    return t.replace(/\s+/g, "");
+  }
+
+  function mapPalivoKod(k) {
+    var u = String(k || "")
+      .toUpperCase()
+      .trim();
+    var M = {
+      BA: "benzin",
+      BP: "benzin",
+      BE: "benzin",
+      NA: "nafta",
+      DS: "nafta",
+      EL: "elektro",
+      EE: "elektro",
+      HY: "hybrid",
+      HE: "hybrid",
+      GP: "phev",
+      LP: "lpg",
+      CZ: "cng",
+      VO: "vodik"
+    };
+    return M[u] || "";
+  }
+
+  function mapKaroserieKeyFromDruh(dr) {
+    var u = String(dr || "").toUpperCase();
+    if (/SUV|TERÉNN|TERENN|OFF-ROAD/i.test(u)) return "suv";
+    if (/KOMBI|STACION|UNIVERSAL/i.test(u)) return "kombi";
+    if (/OSOBN|OSOBNÍ|AUTOMOBIL/i.test(u) && !/SUV|MPV/i.test(u)) return "osobni";
+    if (/DODÁV|DODAV|NÁKLAD|NAKLAD/i.test(u)) return "dodavka";
+    if (/MPV|VÍCEÚČ|VICEUC|VÍCEÚCELOV/i.test(u)) return "mpv";
+    if (/PICK/i.test(u)) return "pickup";
+    if (/KABRIO|KABIO/i.test(u)) return "kabrio";
+    if (/KUPÉ|KUPE/i.test(u)) return "kupé";
+    if (/TERÉNN|TERENN/i.test(u)) return "terenni";
+    return "";
+  }
+
+  function guessKaroserieKeyFromText(s) {
+    var u = String(s || "").toUpperCase();
+    if (/^SUV| SUV/.test(u) || u === "SUV") return "suv";
+    if (/KOMBI/.test(u)) return "kombi";
+    if (/HATCH|HATCHBACK/.test(u)) return "hatchback";
+    if (/LIFTBACK/.test(u)) return "liftback";
+    if (/SEDAN|LIMUZ/.test(u)) return "sedan";
+    if (/MPV/.test(u)) return "mpv";
+    if (/PICK/.test(u)) return "pickup";
+    if (/DODÁV|DODAV/.test(u)) return "dodavka";
+    if (/KABRIO/.test(u)) return "kabrio";
+    if (/KUPÉ|KUPE/.test(u)) return "kupé";
+    return "";
+  }
+
+  function formatMotorMaxVykon(raw) {
+    var s = cleanApiStr(raw);
+    if (!s) return "";
+    var p = s.split("/");
+    if (p.length >= 2) {
+      var kw = p[0].trim();
+      var rpm = p[1].trim();
+      if (kw && rpm) return kw + " kW / " + rpm + " min⁻¹";
+    }
+    var n = parseFloat(s.replace(",", "."));
+    if (!isNaN(n)) return String(Math.round(n)) + " kW";
+    return s;
+  }
+
+  function formatPocetMistApi(v) {
+    if (v == null || v === "") return "";
+    var parts = String(v)
+      .split("/")
+      .map(function (x) {
+        return x.trim();
+      });
+    while (parts.length < 3) parts.push("");
+    var a = parts[0] || "—";
+    var b = parts[1] || "—";
+    var c = parts[2] === "" ? "0" : parts[2];
+    return a + " celkem (" + b + " k sezení, " + c + " k stání)";
+  }
+
   function mapApiToForm(j) {
     var o = j && typeof j === "object" ? j : {};
-    var disp = pickVehicleField(o, [
-      "objemMotoru",
-      "zdvihovyObjem",
-      "ObjemMotoru",
-      "ZdvihovyObjem"
+    var make = cleanApiStr(
+      pickVehicleField(o, [
+        "TovarniZnacka",
+        "Tovární značka",
+        "tovarniZnacka",
+        "make",
+        "Make",
+        "vyrobce",
+        "Vyrobce",
+        "znacka",
+        "Znacka"
+      ])
+    );
+    var model = cleanApiStr(
+      pickVehicleField(o, [
+        "ObchodniOznaceni",
+        "obchodniOznaceni",
+        "model",
+        "Model"
+      ])
+    );
+    var vin = cleanApiStr(pickVehicleField(o, ["VIN", "vin", "identifikacniCisloVozidla"]));
+    var firstRaw = pickVehicleField(o, [
+      "DatumPrvniRegistrace",
+      "DatumPrvniRegistraceVCr",
+      "datumPrvniRegistrace",
+      "firstReg"
     ]);
-    if (disp !== "" && disp != null) {
-      var dn = parseInt(String(disp).replace(/\D/g, ""), 10);
-      if (dn > 100 && dn < 20000) disp = dn + " cm³";
-      else disp = cleanApiStr(disp);
-    } else {
-      disp = "";
+    var firstReg = formatDateOnlyApi(firstRaw);
+    var druh = pickVehicleField(o, ["VozidloDruh", "VozidloDruh2", "KaroserieDruh"]);
+    var bodyKey =
+      mapKaroserieKeyFromDruh(druh) ||
+      guessKaroserieKeyFromText(
+        pickVehicleField(o, ["KaroserieDruh", "karoserie", "Karoserie", "body", "BodyClass"])
+      );
+    var bodyFallback = cleanApiStr(druh || pickVehicleField(o, ["karoserie", "Karoserie", "body"]));
+    var palivoKod = pickVehicleField(o, ["Palivo", "palivo", "druhPaliva"]);
+    var fuelKey = mapPalivoKod(palivoKod) || "";
+    var fuelFallback = cleanApiStr(palivoKod);
+    var zdvih = pickVehicleField(o, [
+      "MotorZdvihObjem",
+      "motorZdvihObjem",
+      "objemMotoru",
+      "ObjemMotoru",
+      "zdvihovyObjem"
+    ]);
+    var displacement = "";
+    if (zdvih != null && String(zdvih).trim() !== "") {
+      var zn = parseInt(String(zdvih).replace(/\D/g, ""), 10);
+      if (!isNaN(zn) && zn > 0 && zn < 50000) displacement = String(zn) + " cm³";
+      else displacement = cleanApiStr(zdvih);
     }
-    var pw = pickVehicleField(o, ["vykonMotoruKw", "vykonKw", "VykonKw", "vykon", "Vykon"]);
-    if (pw !== "" && pw != null && String(pw).indexOf("kW") < 0) {
-      var pfn = parseFloat(String(pw).replace(",", "."));
-      if (!isNaN(pfn)) pw = String(Math.round(pfn));
-    } else {
-      pw = cleanApiStr(pw);
-    }
+    var powerKw = formatMotorMaxVykon(
+      pickVehicleField(o, ["MotorMaxVykon", "motorMaxVykon", "vykonMotoruKw", "VykonKw", "vykon"])
+    );
+    var color = cleanApiStr(
+      pickVehicleField(o, ["VozidloKaroserieBarva", "barva", "Barva", "exteriorColor"])
+    );
+    var seats = formatPocetMistApi(
+      pickVehicleField(o, ["VozidloKaroserieMist", "pocetMist", "PocetMist", "seats"])
+    );
+    var stkRaw = pickVehicleField(o, [
+      "PravidelnaTechnickaProhlidkaDo",
+      "pravidelnaTechnickaProhlidkaDo",
+      "platnostStk",
+      "stkDo",
+      "StkDo"
+    ]);
+    var stk = formatDateOnlyApi(stkRaw);
+    var owners = cleanApiStr(pickVehicleField(o, ["PocetVlastniku", "pocetVlastniku", "owners"]));
+    var firstRegYear = firstRegYearFrom(firstReg) || cleanApiStr(o.firstRegYear);
     return {
-      make: cleanApiStr(
-        pickVehicleField(o, ["make", "Make", "vyrobce", "Vyrobce", "znacka", "Znacka"])
-      ),
-      model: cleanApiStr(
-        pickVehicleField(o, [
-          "model",
-          "Model",
-          "obchodniOznaceni",
-          "ObchodniOznaceni",
-          "typ",
-          "Typ"
-        ])
-      ),
-      vin: cleanApiStr(pickVehicleField(o, ["vin", "VIN", "identifikacniCisloVozidla"])),
-      firstReg: cleanApiStr(
-        pickVehicleField(o, [
-          "datumPrvniRegistrace",
-          "datumPrvniRegistraceCZ",
-          "firstReg",
-          "DatumPrvniRegistrace"
-        ])
-      ),
-      body: cleanApiStr(
-        pickVehicleField(o, ["karoserie", "Karoserie", "druhKaroserie", "body", "BodyClass"])
-      ),
-      fuel: cleanApiStr(pickVehicleField(o, ["palivo", "Palivo", "druhPaliva", "fuelType"])),
-      displacement: typeof disp === "string" ? disp : cleanApiStr(disp),
-      powerKw: typeof pw === "string" ? pw : cleanApiStr(pw),
-      color: cleanApiStr(pickVehicleField(o, ["barva", "Barva", "exteriorColor"])),
-      seats: cleanApiStr(pickVehicleField(o, ["pocetMist", "PocetMist", "seats"])),
-      stk: cleanApiStr(
-        pickVehicleField(o, ["platnostStk", "stkDo", "stk", "StkDo", "platnostSTK"])
-      ),
-      owners: cleanApiStr(
-        pickVehicleField(o, ["pocetVlastniku", "PocetVlastniku", "owners"])
-      ),
-      firstRegYear: cleanApiStr(o.firstRegYear)
+      make: make,
+      model: model,
+      vin: vin,
+      firstReg: firstReg,
+      bodyKey: bodyKey,
+      bodyFallback: bodyFallback,
+      fuelKey: fuelKey,
+      fuelFallback: fuelFallback,
+      displacement: displacement,
+      powerKw: powerKw,
+      color: color,
+      seats: seats,
+      stk: stk,
+      owners: owners,
+      firstRegYear: firstRegYear
     };
   }
 
@@ -22530,23 +22646,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function buildAutoTitle(d) {
-    var parts = [];
     var brand = (d.make || "").trim();
     var model = (d.model || "").trim();
-    var fuel = (d.fuel || "").trim();
-    var yr = (d.firstRegYear || firstRegYearFrom(d.firstReg) || "").trim();
-    var pw = (d.powerKw || "").replace(/\s*kW\s*$/i, "").trim();
-    if (brand) parts.push(brand);
-    if (model) parts.push(model);
-    var tail = [];
-    if (fuel) tail.push(fuel);
-    if (yr) tail.push(yr);
-    if (pw) tail.push(pw + " kW");
-    var head = parts.join(" ");
-    if (tail.length) {
-      return (head ? head + ", " : "") + tail.join(", ");
-    }
-    return head || "";
+    var yr = String(d.firstRegYear || firstRegYearFrom(d.firstReg) || "").trim();
+    var left = [brand, model].filter(Boolean).join(" ");
+    if (yr) return (left ? left + " " : "") + yr;
+    return left || "";
   }
 
   function mockVinDecode(vin) {
@@ -22558,19 +22663,18 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     var colors = ["Šedá", "Černá", "Bílá", "Modrá"];
     var y = 2008 + (n % 12);
     return Promise.resolve({
-      make: "Demo " + (n % 7 === 0 ? "Auto" : "Vůz"),
-      model: "Model-" + (100 + (n % 800)),
-      vin: v,
-      firstReg: y + "-06-15",
-      firstRegYear: String(y),
-      body: bodies[n % bodies.length],
-      fuel: fuels[n % fuels.length],
-      displacement: String(1200 + (n % 1400)) + " cm³",
-      powerKw: String(60 + (n % 120)),
-      color: colors[n % colors.length],
-      seats: String(4 + (n % 3)),
-      stk: String(y + 5) + "-12-31",
-      owners: String(1 + (n % 3))
+      TovarniZnacka: "Demo " + (n % 7 === 0 ? "Auto" : "Vůz"),
+      ObchodniOznaceni: "Model-" + (100 + (n % 800)),
+      VIN: v,
+      DatumPrvniRegistrace: y + "-06-15T00:00:00",
+      VozidloDruh: "OSOBNÍ AUTOMOBIL",
+      Palivo: "BA",
+      MotorZdvihObjem: 1200 + (n % 1400),
+      MotorMaxVykon: 60 + (n % 120) + " / 4500",
+      VozidloKaroserieBarva: colors[n % colors.length],
+      VozidloKaroserieMist: 4 + (n % 3) + " / " + (4 + (n % 3)) + " / 0",
+      PravidelnaTechnickaProhlidkaDo: y + 5 + "-12-31T00:00:00",
+      PocetVlastniku: 1 + (n % 3)
     });
   }
 
@@ -22614,7 +22718,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         return Promise.reject(new Error("Zadejte platný VIN (17 znaků, bez I, O, Q)."));
       }
       return mockVinDecode(vin).then(function (m) {
-        return { kind: "api", data: m, vinNorm: m.vin };
+        return { kind: "api", data: m, vinNorm: m.VIN || m.vin };
       });
     }
     if (!validVinFormat(vin)) {
@@ -22738,6 +22842,48 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }
   }
 
+  function stripApiRawOption(sel) {
+    if (!sel || sel.tagName !== "SELECT") return;
+    var j;
+    for (j = sel.options.length - 1; j >= 0; j--) {
+      if (sel.options[j].value === "iu_api_raw") sel.remove(j);
+    }
+  }
+
+  function setApiSelect(id, valueKey, fallbackText) {
+    var el = $(id);
+    if (!el) return;
+    var fk = valueKey || "";
+    var fb = cleanApiStr(fallbackText);
+    if (el.tagName !== "SELECT") {
+      el.value = fb || fk || "";
+      return;
+    }
+    stripApiRawOption(el);
+    var i;
+    var found = false;
+    for (i = 0; i < el.options.length; i++) {
+      if (el.options[i].value === fk) {
+        el.selectedIndex = i;
+        found = true;
+        break;
+      }
+    }
+    if (!found && fb) {
+      var opt = document.createElement("option");
+      opt.value = "iu_api_raw";
+      opt.textContent = fb.length > 80 ? fb.slice(0, 77) + "…" : fb;
+      opt.selected = true;
+      el.appendChild(opt);
+    } else if (!found && fk) {
+      var opt2 = document.createElement("option");
+      opt2.value = "iu_api_raw";
+      opt2.textContent = fk;
+      opt2.selected = true;
+      el.appendChild(opt2);
+    }
+  }
+
   function fillApiFields(m) {
     function set(id, v) {
       var el = $(id);
@@ -22747,17 +22893,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     set("iuAdsApiModel", m.model);
     set("iuAdsApiVinDisp", m.vin);
     set("iuAdsApiFirstReg", m.firstReg);
-    set("iuAdsApiBody", m.body);
-    set("iuAdsApiFuel", m.fuel);
+    setApiSelect("iuAdsApiBody", m.bodyKey, m.bodyFallback);
+    setApiSelect("iuAdsApiFuel", m.fuelKey, m.fuelFallback);
     set("iuAdsApiDisplacement", m.displacement);
-    set(
-      "iuAdsApiPower",
-      m.powerKw
-        ? String(m.powerKw).indexOf("kW") >= 0
-          ? String(m.powerKw)
-          : String(m.powerKw) + " kW"
-        : ""
-    );
+    set("iuAdsApiPower", m.powerKw || "");
     set("iuAdsApiColor", m.color);
     set("iuAdsApiSeats", m.seats);
     set("iuAdsApiStk", m.stk);
@@ -22770,12 +22909,20 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function clearApiFieldsExceptVin(vinVal) {
+    var elB = $("iuAdsApiBody");
+    if (elB && elB.tagName === "SELECT") {
+      stripApiRawOption(elB);
+      elB.selectedIndex = 0;
+    } else if (elB) elB.value = "";
+    var elF = $("iuAdsApiFuel");
+    if (elF && elF.tagName === "SELECT") {
+      stripApiRawOption(elF);
+      elF.selectedIndex = 0;
+    } else if (elF) elF.value = "";
     var ids = [
       "iuAdsApiMake",
       "iuAdsApiModel",
       "iuAdsApiFirstReg",
-      "iuAdsApiBody",
-      "iuAdsApiFuel",
       "iuAdsApiDisplacement",
       "iuAdsApiPower",
       "iuAdsApiColor",
