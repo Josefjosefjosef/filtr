@@ -1,0 +1,31 @@
+# Bot/user squash-merge of data PRs often does not trigger pages.yml via push.
+# This workflow runs on merge to main when projects/data changed and dispatches Pages deploy.
+name: Pages deploy after data PR merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+    paths:
+      - "projects/data/**"
+
+permissions:
+  actions: write
+
+concurrency:
+  group: pages-dispatch-after-data-merge
+  cancel-in-progress: false
+
+jobs:
+  dispatch-pages:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch Deploy to GitHub Pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh workflow run pages.yml --ref main --repo "${{ github.repository }}"
+          echo "Dispatched pages.yml for merged data PR #${{ github.event.pull_request.number }}"
