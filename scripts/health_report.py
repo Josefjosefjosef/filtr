@@ -509,6 +509,9 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
             "total_qualified_rules_scanned": 0,
             "groups_top": [],
             "classification_counts": {},
+            "dead_override_candidate_policy": (
+                "not_emitted: reserved; conservative specificity/cascade analysis not implemented."
+            ),
         }
     dup_arts = find_duplicate_articles()
     dup_yt = find_duplicate_youtube_ids()
@@ -703,6 +706,11 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
             "- **Real duplicate groups** = same normalized selector string appearing in **2+ qualified rules** "
             "(tinycss2 parse). Use for controlled cleanup; classifications are conservative.\n"
         )
+        f.write(
+            "- **dead_override_candidate** is **not emitted** in this report: reserved for a future pass that "
+            "would require matching specificity, media context, property overlap, and pseudo-state safety; "
+            "omitted to avoid false positives.\n"
+        )
         f.write("- **Token frequency ≠ duplicate selector blocks.**\n\n")
 
         f.write("## 1. Project structure\n\n")
@@ -734,19 +742,34 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
             f.write(f"### Real CSS duplicate selector blocks (AST)\n\nError: {audit['error']}\n\n")
         else:
             f.write("### Real CSS duplicate selector blocks (AST, tinycss2)\n\n")
+            f.write("REAL_CSS_DUPLICATE_AUDIT_OK=tinycss2\n\n")
             f.write(f"- Duplicate selector groups: {audit.get('duplicate_selector_groups', 0)}\n")
             f.write(f"- Occurrences in those groups: {audit.get('duplicate_rule_occurrences_in_groups', 0)}\n")
             f.write(f"- Qualified rules scanned: {audit.get('total_qualified_rules_scanned', 0)}\n")
+            lr = audit.get("line_range_method") or ""
+            if lr:
+                f.write(f"- **Line ranges:** {lr}\n")
+            f.write(
+                f"- **dead_override_candidate:** {audit.get('dead_override_candidate_policy', 'not emitted (reserved).')}\n"
+            )
             cc = audit.get("classification_counts") or {}
             if cc:
                 f.write("- By classification: " + ", ".join(f"{k}={v}" for k, v in sorted(cc.items())) + "\n")
-            f.write("\nTop groups (normalized selector, count, class, sample lines):\n\n")
-            for g in (audit.get("groups_top") or [])[:15]:
-                lines_s = ", ".join(str(x) for x in (g.get("lines") or [])[:12])
-                medias = "; ".join((g.get("media_contexts") or [])[:3])
-                f.write(f"- `{g.get('selector_normalized', '')[:120]}` … **{g.get('count', 0)}x** "
-                        f"[{g.get('classification', '')}] lines: {lines_s}\n")
-                f.write(f"  media: {medias}\n")
+            f.write("\n#### Full sample — top duplicate groups (raw selector, lines, media, class)\n\n")
+            for gi, g in enumerate((audit.get("groups_top") or [])[:10], start=1):
+                norm = g.get("selector_normalized") or ""
+                cls_g = g.get("classification") or ""
+                cnt = g.get("count", 0)
+                f.write(f"##### Group {gi} — **{cnt}x** — `{cls_g}`\n\n")
+                f.write("**normalized key (full):**\n\n```\n")
+                f.write(norm + "\n```\n\n")
+                for oi, occ in enumerate(g.get("occurrences") or [], start=1):
+                    raw = occ.get("selector_raw") or ""
+                    f.write(f"**Occurrence {oi}** — line_start={occ.get('line_start')}, line_end={occ.get('line_end')}, "
+                            f"media_context=`{occ.get('media_context', '')}`\n\n")
+                    f.write("```css\n")
+                    f.write(raw + "\n```\n\n")
+                    f.write(f"- classification (group): `{cls_g}`\n\n")
             f.write("\n")
         f.write("### CSS token frequency signals (regex — NOT duplicate rule blocks)\n\n")
         if dup.get("cssTokenFrequencySignals") or dup.get("cssSelectors"):
