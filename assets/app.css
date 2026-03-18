@@ -11376,16 +11376,18 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   column-gap: var(--iu-mm-gap, 10px);
 }
 
-/* Quick tools header: top row = title + gear button; line directly below, centered. */
+/* Quick tools header: top row = title + gear; merged duplicate .iu-mmSectionHead (was gap:4px then gap:0) */
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 0;
   position: relative;
   width: 100%;
   text-align: center;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 /* Pixel-align: integer height so divider lands on whole pixel (same yFrac as MindMenu) */
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionTopRow{
@@ -11402,13 +11404,6 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   margin: 0;
   flex-shrink: 0;
   text-align: center;
-}
-/* Linka pod Rychlé odkazy = stejný styl jako MindMenu (.accordionCol .mindMenu .iu-mmSectionLine) */
-/* match MindMenu divider spacing */
-.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead{
-  gap: 0;
-  padding-bottom: 0;
-  margin-bottom: 0;
 }
 /* divider distance identical to MindMenu; snap to pixel grid so visual thickness matches MindMenu (RCA: yFrac 0) */
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead .iu-mmSectionLine{
@@ -11572,7 +11567,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   margin: 0;
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile{
-  --iu-rr-ico: 40px;
   width: var(--iu-rr-ico, 40px);
   height: var(--iu-rr-ico, 40px);
   min-width: var(--iu-rr-ico, 40px);
