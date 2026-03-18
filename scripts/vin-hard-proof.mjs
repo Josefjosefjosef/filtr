@@ -45,7 +45,8 @@ const r = {
   publishLocalPass: true,
   scrollSinglePass: true,
   vinSuccessDtoPass: true,
-  desktopMakeInViewportPass: true
+  desktopMakeInViewportPass: true,
+  retryAfterFailSequencePass: true
 };
 
 const ADS_LO = 22340;
@@ -357,6 +358,53 @@ try {
   if (!dVis.ok) r.desktopMakeInViewportPass = false;
   await b7.close();
 
+  const b8 = await chromium.launch({ headless: true });
+  const p8 = await b8.newPage({ viewport: { width: 1280, height: 800 } });
+  await p8.goto(BASE, { waitUntil: "load", timeout: 120000 });
+  await p8.waitForTimeout(1500);
+  await openAdsSubmit(p8);
+  await selectCategoryAuto(p8);
+  let w8 = 0;
+  p8.on("request", (req) => {
+    if (req.url().includes("josef-zmrhal.workers.dev/vin")) w8++;
+  });
+  await p8.fill("#iuAdsAutoVin", "SHORT");
+  await p8.click("#iuAdsAutoVinLoadBtn");
+  await p8.waitForTimeout(600);
+  if (w8 !== 0) r.retryAfterFailSequencePass = false;
+  const inv8 =
+    (await p8.evaluate(() => document.getElementById("iuAdsAutoVinError")?.textContent || "")).length >
+    5;
+  const ph8a = await p8.evaluate(() => document.getElementById("iuAdsAutoPost")?.hidden);
+  if (!inv8 || !ph8a) r.retryAfterFailSequencePass = false;
+  const w0 = w8;
+  await p8.fill("#iuAdsAutoVin", VIN_OK);
+  await p8.click("#iuAdsAutoVinLoadBtn");
+  await p8.waitForFunction(
+    () => {
+      const p = document.getElementById("iuAdsAutoPost");
+      return p && !p.hidden;
+    },
+    { timeout: 35000 }
+  );
+  await p8.waitForTimeout(500);
+  if (w8 <= w0) r.retryAfterFailSequencePass = false;
+  const mkNf = (await p8.inputValue("#iuAdsApiMake")).trim();
+  const vinNf = (await p8.inputValue("#iuAdsApiVinDisp")).toUpperCase();
+  if (mkNf.length !== 0 || vinNf !== VIN_OK) r.retryAfterFailSequencePass = false;
+  await p8.fill("#iuAdsAutoVin", VIN_SUCCESS);
+  await p8.click("#iuAdsAutoVinLoadBtn");
+  await p8.waitForFunction(
+    () => (document.getElementById("iuAdsApiMake")?.value || "") === "PEUGEOT",
+    { timeout: 50000 }
+  );
+  await p8.waitForTimeout(400);
+  if ((await p8.inputValue("#iuAdsApiMake")) !== "PEUGEOT") r.retryAfterFailSequencePass = false;
+  await p8.click("#iuAdsAutoVinLoadBtn");
+  await p8.waitForTimeout(4000);
+  if ((await p8.inputValue("#iuAdsApiMake")) !== "PEUGEOT") r.retryAfterFailSequencePass = false;
+  await b8.close();
+
   const b4 = await chromium.launch({ headless: true });
   const p4 = await b4.newPage({ viewport: { width: 1280, height: 800 } });
   await p4.goto(BASE, { waitUntil: "load", timeout: 120000 });
@@ -400,7 +448,8 @@ console.log(
       consoleErrorsCount: r.appAdsErr,
       cls: r.clsGlobalMax,
       railShift: r.railMax,
-      HARD_PASS: pass
+      HARD_PASS: pass,
+      retryAfterFailSequence: r.retryAfterFailSequencePass
     },
     null,
     0
