@@ -259,7 +259,11 @@ def diff_from_yesterday() -> Dict[str, Any]:
 
 
 # --- 2. Duplicates ---
-def find_duplicate_css_selectors() -> List[Tuple[str, int]]:
+def find_css_token_frequency_signals() -> List[Tuple[str, int]]:
+    """
+    Regex over app.css: counts repeated tokens/idents (e.g. .mindMenu, rgba, display).
+    NOT duplicate CSS rule blocks. Top 50 by frequency; len() is often 50 (cap).
+    """
     dupes: List[Tuple[str, int]] = []
     css_path = ROOT / "assets" / "app.css"
     if not css_path.exists():
@@ -273,6 +277,11 @@ def find_duplicate_css_selectors() -> List[Tuple[str, int]]:
         if len(positions) > 1 and len(sel) > 2:
             dupes.append((sel, len(positions)))
     return sorted(dupes, key=lambda x: -x[1])[:50]
+
+
+def find_duplicate_css_selectors() -> List[Tuple[str, int]]:
+    """Backward-compatible alias for find_css_token_frequency_signals()."""
+    return find_css_token_frequency_signals()
 
 
 def find_duplicate_js_functions() -> List[Tuple[str, int]]:
@@ -486,8 +495,24 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     check = load_check_site()
     structure = collect_structure()
     diff = diff_from_yesterday()
-    dup_css = find_duplicate_css_selectors()
+    dup_css = find_css_token_frequency_signals()
     dup_js = find_duplicate_js_functions()
+    try:
+        from css_duplicate_audit import audit_css_file
+
+        css_real_dup = audit_css_file(ROOT / "assets" / "app.css")
+    except Exception as ex:
+        css_real_dup = {
+            "error": str(ex),
+            "duplicate_selector_groups": 0,
+            "duplicate_rule_occurrences_in_groups": 0,
+            "total_qualified_rules_scanned": 0,
+            "groups_top": [],
+            "classification_counts": {},
+            "dead_override_candidate_policy": (
+                "not_emitted: reserved; conservative specificity/cascade analysis not implemented."
+            ),
+        }
     dup_arts = find_duplicate_articles()
     dup_yt = find_duplicate_youtube_ids()
     broken, blocked_403 = check_404_links()
@@ -574,13 +599,20 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
             "brokenLinks": len(broken),
             "blocked403": len(blocked_403),
             "duplicateSelectors": len(dup_css),
+            "cssTokenFrequencyTypesTop50Count": len(dup_css),
+            "realCssDuplicateSelectorGroups": css_real_dup.get("duplicate_selector_groups", 0),
+            "realCssDuplicateRuleOccurrencesInGroups": css_real_dup.get(
+                "duplicate_rule_occurrences_in_groups", 0
+            ),
             "offlineRadios": 0,
         },
         "structure": structure,
         "structure_lines": list_top_level(),
         "diff": diff,
         "duplicates": {
+            "cssTokenFrequencySignals": dup_css[:20],
             "cssSelectors": dup_css[:20],
+            "realCssDuplicateSelectorAudit": css_real_dup,
             "jsFunctions": dup_js[:15],
             "articles": dup_arts[:10],
             "youtubeIds": dup_yt[:10],
@@ -652,8 +684,34 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
         f.write(f"JS size: {s.get('jsKb')} KB\n")
         f.write(f"Broken links: {s.get('brokenLinks', 0)}\n")
         f.write(f"Blocked (403): {s.get('blocked403', 0)}\n")
-        f.write(f"Duplicate selectors: {s.get('duplicateSelectors', 0)}\n")
+        f.write(
+            f"CSS token frequency types (top-50 cap, NOT selector blocks): {s.get('cssTokenFrequencyTypesTop50Count', s.get('duplicateSelectors', 0))}\n"
+        )
+        f.write(
+            f"  (legacy JSON key duplicateSelectors = same number — regex token signal only)\n"
+        )
+        f.write(
+            f"Real duplicate selector rule groups (AST/tinycss2): {s.get('realCssDuplicateSelectorGroups', 0)}\n"
+        )
+        f.write(
+            f"Rule occurrences inside those groups: {s.get('realCssDuplicateRuleOccurrencesInGroups', 0)}\n"
+        )
         f.write(f"Offline radios: {s.get('offlineRadios', 0)}\n\n")
+        f.write("### Legend (CSS metrics)\n\n")
+        f.write(
+            "- **Token frequency** counts repeated regex fragments (e.g. `important`, `rgba`, `.accordionCol`). "
+            "High counts do **not** mean duplicate rule blocks.\n"
+        )
+        f.write(
+            "- **Real duplicate groups** = same normalized selector string appearing in **2+ qualified rules** "
+            "(tinycss2 parse). Use for controlled cleanup; classifications are conservative.\n"
+        )
+        f.write(
+            "- **dead_override_candidate** is **not emitted** in this report: reserved for a future pass that "
+            "would require matching specificity, media context, property overlap, and pseudo-state safety; "
+            "omitted to avoid false positives.\n"
+        )
+        f.write("- **Token frequency ≠ duplicate selector blocks.**\n\n")
 
         f.write("## 1. Project structure\n\n")
         st = report["structure"]
@@ -679,10 +737,44 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
 
         f.write("## 2. Duplicates\n\n")
         dup = report["duplicates"]
-        if dup["cssSelectors"]:
-            f.write("### CSS selectors\n\n")
-            for sel, c in dup["cssSelectors"][:10]:
-                f.write(f"- `{sel}`: {c}x\n")
+        audit = dup.get("realCssDuplicateSelectorAudit") or {}
+        if audit.get("error"):
+            f.write(f"### Real CSS duplicate selector blocks (AST)\n\nError: {audit['error']}\n\n")
+        else:
+            f.write("### Real CSS duplicate selector blocks (AST, tinycss2)\n\n")
+            f.write("REAL_CSS_DUPLICATE_AUDIT_OK=tinycss2\n\n")
+            f.write(f"- Duplicate selector groups: {audit.get('duplicate_selector_groups', 0)}\n")
+            f.write(f"- Occurrences in those groups: {audit.get('duplicate_rule_occurrences_in_groups', 0)}\n")
+            f.write(f"- Qualified rules scanned: {audit.get('total_qualified_rules_scanned', 0)}\n")
+            lr = audit.get("line_range_method") or ""
+            if lr:
+                f.write(f"- **Line ranges:** {lr}\n")
+            f.write(
+                f"- **dead_override_candidate:** {audit.get('dead_override_candidate_policy', 'not emitted (reserved).')}\n"
+            )
+            cc = audit.get("classification_counts") or {}
+            if cc:
+                f.write("- By classification: " + ", ".join(f"{k}={v}" for k, v in sorted(cc.items())) + "\n")
+            f.write("\n#### Full sample — top duplicate groups (raw selector, lines, media, class)\n\n")
+            for gi, g in enumerate((audit.get("groups_top") or [])[:10], start=1):
+                norm = g.get("selector_normalized") or ""
+                cls_g = g.get("classification") or ""
+                cnt = g.get("count", 0)
+                f.write(f"##### Group {gi} — **{cnt}x** — `{cls_g}`\n\n")
+                f.write("**normalized key (full):**\n\n```\n")
+                f.write(norm + "\n```\n\n")
+                for oi, occ in enumerate(g.get("occurrences") or [], start=1):
+                    raw = occ.get("selector_raw") or ""
+                    f.write(f"**Occurrence {oi}** — line_start={occ.get('line_start')}, line_end={occ.get('line_end')}, "
+                            f"media_context=`{occ.get('media_context', '')}`\n\n")
+                    f.write("```css\n")
+                    f.write(raw + "\n```\n\n")
+                    f.write(f"- classification (group): `{cls_g}`\n\n")
+            f.write("\n")
+        f.write("### CSS token frequency signals (regex — NOT duplicate rule blocks)\n\n")
+        if dup.get("cssTokenFrequencySignals") or dup.get("cssSelectors"):
+            for sel, c in (dup.get("cssTokenFrequencySignals") or dup.get("cssSelectors"))[:10]:
+                f.write(f"- `{sel}`: {c} regex-hits\n")
         if dup["jsFunctions"]:
             f.write("### JS functions\n\n")
             for fn, c in dup["jsFunctions"][:10]:
