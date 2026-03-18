@@ -23080,6 +23080,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function onVinLoad() {
+    if (autoApiState === "loading") {
+      return;
+    }
     var vinEl = $("iuAdsAutoVin");
     var errEl = $("iuAdsAutoVinError");
     var ldEl = $("iuAdsAutoVinLoading");
@@ -23150,15 +23153,17 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (val !== AUTO_VAL) {
       resetAutoForm();
     } else {
-      autoApiState = "idle";
-      autoTitleUserEdited = false;
-      var err = $("iuAdsAutoVinError");
-      var ld = $("iuAdsAutoVinLoading");
-      if (err) {
-        err.textContent = "";
-        err.hidden = true;
+      if (autoApiState !== "loading" && autoApiState !== "loaded") {
+        autoApiState = "idle";
+        autoTitleUserEdited = false;
+        var err = $("iuAdsAutoVinError");
+        var ld = $("iuAdsAutoVinLoading");
+        if (err) {
+          err.textContent = "";
+          err.hidden = true;
+        }
+        if (ld) ld.hidden = true;
       }
-      if (ld) ld.hidden = true;
     }
     showAutoPublishFeedback("", false);
     applyCategoryUI();
