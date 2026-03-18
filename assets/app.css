@@ -11207,11 +11207,6 @@ main#content .layout{
    Bigger typography, premium spacing. CLS-safe.
    ============================================================ */
 
-/* MindMenu inner transparent so right-rail background is visible */
-.accordionCol .mindMenu{
-  background: transparent;
-}
-
 /* Section head: stack title + line vertically and center */
 .accordionCol .mindMenu .iu-mmSectionHead,
 .accordionCol .mindMenu .iu-mmSectionHead.iu-mmMailHead,
@@ -11272,6 +11267,7 @@ main#content .layout{
   border: 1px solid rgba(0,0,0,0.06);
   box-shadow: 0 1px 0 rgba(0,0,0,0.04);
   cursor: pointer;
+  transition: filter .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 .accordionCol .mindMenu .iu-mmTopTool:hover{
   filter: brightness(0.97);
@@ -11284,10 +11280,6 @@ main#content .layout{
 }
 .accordionCol .mindMenu .iu-mmTopTool:active{
   transform: translateY(0.5px);
-}
-/* Right-rail only: explicit transition to avoid transition:all paint jitter (RCA close-loop) */
-.accordionCol .mindMenu .iu-mmTopTool{
-  transition: filter .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 .accordionCol .mindMenu .iu-mmTopToolIcon{
   flex: 0 0 auto;
@@ -11344,10 +11336,6 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   margin-top: 8px !important;
 }
 
-/* Ensure content below has breathing room; match Rychl├ę odkazy Ôćö Moje slu┼żby lineÔćĺicons gap */
-.accordionCol .mindMenu{
-  --iu-rr-blockTopGap: 12px;
-}
 .accordionCol .mindMenu .iu-mmSectionHead + .iu-mmQuickGrid{
   margin-top: var(--iu-rr-blockTopGap, 12px);
 }
@@ -11367,9 +11355,7 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   margin-top: 10px !important;
 }
 
-/* ===== Right rail: Rychl├ę odkazy ÔÇô jednotn├Ż ┼Ö├ídek ikona+text, stejn├ę mezery ===== */
-.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile > i,
-.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile > svg,
+/* ===== Right rail: Rychlé odkazy — img tiles only here; i/svg covered by rule below ===== */
 .accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile > img{
   width: 100%;
   height: 100%;
@@ -11665,6 +11651,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   padding-inline: var(--iu-mm-px, 10px);
   line-height: 1.15;
   margin: 0;
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .accordionCol .mindMenu .iu-mailbox-pill{
@@ -11728,10 +11715,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
 }
 
 /* === IU MAILBOX: premium hover (no layout shift, touch-safe, a11y) === */
-.accordionCol .mindMenu .iu-mailbox-row{
-  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
 .accordionCol .mindMenu .iu-mailbox-row .iu-mailbox-pill{
   transition: box-shadow 180ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 180ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 180ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
@@ -13750,17 +13733,6 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   background-image: none !important;
 }
 
-/* P0: pills must not paint over the right-rail underlay (right rail only) */
-.layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
-}
-.layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
-  text-shadow: 0 1px 2px rgba(0,0,0,0.18);
-}
-
 /* P0: Right rail typography + separators to silver (exclude ads/services blocks) */
 .layout > aside.accordionCol :is(h1, h2, h3, .iu-mmTitle, .iu-panelTitle, .iuSectionTitle, .iu-mmSectionTitle){
   color: var(--iu-rr-silver-text) !important;
@@ -13803,18 +13775,6 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   stroke: currentColor !important;
 }
 
-/* P0: MindMenu pills ÔÇô force light/white background on the actual painting element */
-.layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
-  background-color: rgba(255, 255, 255, 0.62) !important;
-  background-image: none !important;
-  box-shadow: none !important;
-}
-
-/* P0: MindMenu pills content centered */
-.layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
-  text-align: center !important;
-  justify-content: center !important;
-}
 .layout > aside.accordionCol .mindMenu .iu-mailbox-pill > *{
   justify-content: center !important;
 }
@@ -13829,6 +13789,7 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   gap: 0;
 }
 
+/* P0: MindMenu pills — single authoritative block (merged duplicate selectors) */
 .layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
   width: 220px;
   flex: 0 0 220px;
@@ -13839,6 +13800,9 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   background-color: rgba(255, 255, 255, 0.62) !important;
   background-image: none !important;
   box-shadow: none !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.18);
+  text-align: center !important;
+  justify-content: center !important;
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-gear{
@@ -13876,8 +13840,6 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   }
 }
 
-/* === infoUzel.cz P0 ÔÇö MindMenu pills 220px + center === */
-
 /* wrapper prav├ęho sloupce ÔÇô centrov├ín├ş obsahu */
 section.iu-mmQuickLinks,
 section.iu-mindmenu,
@@ -13885,19 +13847,6 @@ section.iu-mindmenu,
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-/* ┼Ö├ídek pilulky ÔÇô centrovan├Ż v prav├ęm sloupci */
-.layout > aside.accordionCol .mindMenu .iu-mailbox-row {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* samotn├í pilulka ÔÇô fixn├ş 220px */
-.layout > aside.accordionCol .mindMenu .iu-mailbox-pill {
-  width: 220px;
-  flex: 0 0 220px;
-  min-width: 0;
 }
 
 /* === P0 Topbar: date/nameday nikdy nezmiz├ş (v─Źetn─Ť mobile) === */
@@ -14288,6 +14237,8 @@ section.iu-mojeSluzby{
 
 /* INFOUZEL PREMIUM ALIGN ÔÇô RIGHT RAIL ONLY */
 .accordionCol .mindMenu {
+  background: transparent;
+  --iu-rr-blockTopGap: 12px;
   --iu-mm-gap: 10px;
   --iu-mm-rowH: 34px;
   --iu-mm-py: 6px;
