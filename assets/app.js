@@ -23125,6 +23125,15 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       btn.dataset.iuAdsWired = "1";
       btn.addEventListener("click", onVinLoad);
     }
+    var vinInpEnter = $("iuAdsAutoVin");
+    if (vinInpEnter && !vinInpEnter.dataset.iuAdsVinEnterWired) {
+      vinInpEnter.dataset.iuAdsVinEnterWired = "1";
+      vinInpEnter.addEventListener("keydown", function (ev) {
+        if (ev.key !== "Enter") return;
+        ev.preventDefault();
+        onVinLoad();
+      });
+    }
     if (titleAuto && !titleAuto.dataset.iuAdsWired) {
       titleAuto.dataset.iuAdsWired = "1";
       titleAuto.addEventListener("input", function () {
