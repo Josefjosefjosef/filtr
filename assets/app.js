@@ -22681,34 +22681,62 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   var VIN_WORKER_URL =
     "https://steep-term-ba60.josef-zmrhal.workers.dev/vin?vin=";
 
+  function parseVinWorkerResponse(text, v, httpStatus) {
+    var raw = String(text || "").trim();
+    if (!raw) {
+      if (httpStatus >= 500) {
+        throw new Error("Služba VIN je dočasně nedostupná. Zkuste to za chvíli.");
+      }
+      throw new Error("Údaje z VIN se nepodařilo načíst.");
+    }
+    var j = null;
+    try {
+      j = JSON.parse(raw);
+    } catch (pe) {
+      if (httpStatus >= 500 || /internal|error/i.test(raw.slice(0, 80))) {
+        throw new Error("Služba VIN je dočasně nedostupná. Zkuste to za chvíli.");
+      }
+      throw new Error("Neplatná odpověď VIN služby.");
+    }
+    if (j && j.success === true && j.data) {
+      return { kind: "api", data: j.data, vinNorm: v };
+    }
+    if (j && j.success === false && String(j.error || "") === "vin_not_found") {
+      return { kind: "manual", vinNorm: cleanApiStr(j.vin) || v };
+    }
+    if (j && j.success === false) {
+      var er = j.error;
+      if (String(er || "").indexOf("17") >= 0 || er === "VIN musí mít přesně 17 znaků.") {
+        throw new Error("Zadejte platný VIN (17 znaků, bez I, O, Q).");
+      }
+      throw new Error(typeof er === "string" && er ? er : "Údaje z VIN se nepodařilo načíst.");
+    }
+    throw new Error("Údaje z VIN se nepodařilo načíst.");
+  }
+
   function fetchVinFromWorker(vin) {
     var v = normalizeVin(vin);
-    return fetch(VIN_WORKER_URL + encodeURIComponent(v), {
-      method: "GET",
-      headers: { Accept: "application/json" }
-    }).then(function (res) {
-      return res.text().then(function (text) {
-        var j = null;
-        try {
-          j = text ? JSON.parse(text) : null;
-        } catch (pe) {
-          throw new Error("Neplatná odpověď VIN služby.");
-        }
-        if (j && j.success === true && j.data) {
-          return { kind: "api", data: j.data, vinNorm: v };
-        }
-        if (j && j.success === false && String(j.error || "") === "vin_not_found") {
-          return { kind: "manual", vinNorm: cleanApiStr(j.vin) || v };
-        }
-        if (j && j.success === false) {
-          var er = j.error;
-          if (String(er || "").indexOf("17") >= 0 || er === "VIN musí mít přesně 17 znaků.") {
-            throw new Error("Zadejte platný VIN (17 znaků, bez I, O, Q).");
-          }
-          throw new Error(typeof er === "string" && er ? er : "Údaje z VIN se nepodařilo načíst.");
-        }
-        throw new Error("Údaje z VIN se nepodařilo načíst.");
+    var url = VIN_WORKER_URL + encodeURIComponent(v);
+    var opts = { method: "GET", headers: { Accept: "application/json" } };
+    function once() {
+      return fetch(url, opts).then(function (res) {
+        return res.text().then(function (text) {
+          return { res: res, text: text };
+        });
       });
+    }
+    return once().then(function (pair) {
+      var st = pair.res.status;
+      if (st >= 502 && st <= 599) {
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            resolve(once());
+          }, 1100);
+        });
+      }
+      return pair;
+    }).then(function (pair) {
+      return parseVinWorkerResponse(pair.text, v, pair.res.status);
     });
   }
 
