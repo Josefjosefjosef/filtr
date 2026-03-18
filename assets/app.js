@@ -22549,8 +22549,61 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     return a + " celkem (" + b + " k sezení, " + c + " k stání)";
   }
 
+  function normalizeVinApiData(d, depth) {
+    if (depth == null) depth = 0;
+    if (depth > 8) return d != null && typeof d === "object" ? d : {};
+    if (d == null) return {};
+    if (typeof d === "string") {
+      var s0 = String(d).trim();
+      if (!s0) return {};
+      try {
+        return normalizeVinApiData(JSON.parse(s0), depth + 1);
+      } catch (eNorm) {
+        return {};
+      }
+    }
+    if (Array.isArray(d)) {
+      var i0;
+      for (i0 = 0; i0 < d.length; i0++) {
+        if (d[i0] != null && typeof d[i0] === "object") {
+          var u = normalizeVinApiData(d[i0], depth + 1);
+          if (
+            (u.TovarniZnacka != null && String(u.TovarniZnacka).trim() !== "") ||
+            (u.ObchodniOznaceni != null && String(u.ObchodniOznaceni).trim() !== "")
+          )
+            return u;
+        }
+      }
+      return d[0] != null && typeof d[0] === "object" ? normalizeVinApiData(d[0], depth + 1) : {};
+    }
+    if (typeof d !== "object") return {};
+    if (
+      (d.TovarniZnacka != null && String(d.TovarniZnacka).trim() !== "") ||
+      (d.ObchodniOznaceni != null && String(d.ObchodniOznaceni).trim() !== "") ||
+      (d.VIN != null && String(d.VIN).replace(/\s/g, "").length >= 11)
+    )
+      return d;
+    var nest =
+      d.vehicle || d.Vehicle || d.vozidlo || d.vozidla || d.Data || d.detaily || d.result;
+    if (nest != null && nest !== d) return normalizeVinApiData(nest, depth + 1);
+    var k0;
+    for (k0 in d) {
+      if (!Object.prototype.hasOwnProperty.call(d, k0)) continue;
+      var v0 = d[k0];
+      if (v0 != null && typeof v0 === "object") {
+        var sub = normalizeVinApiData(v0, depth + 1);
+        if (
+          (sub.TovarniZnacka != null && String(sub.TovarniZnacka).trim() !== "") ||
+          (sub.ObchodniOznaceni != null && String(sub.ObchodniOznaceni).trim() !== "")
+        )
+          return sub;
+      }
+    }
+    return d;
+  }
+
   function mapApiToForm(j) {
-    var o = j && typeof j === "object" ? j : {};
+    var o = normalizeVinApiData(j);
     var make = cleanApiStr(
       pickVehicleField(o, [
         "TovarniZnacka",
