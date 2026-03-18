@@ -1,22 +1,31 @@
 /**
- * Cloudflare Worker — VIN (dataovozidlech) + R2 image upload (Worker-only).
- * No direct browser→R2. No fake VIN data.
+ * Cloudflare Worker — VIN (dataovozidlech) + R2 upload.
+ * CORS: /health a /vin musí být volatelné z prohlížeče (infouzel.cz).
  */
 
-const JSON_HEADERS = {
+const JSON_BASE = {
   "Content-Type": "application/json; charset=utf-8",
   "Cache-Control": "no-store"
 };
 
-const VIN_CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Accept"
-};
+function corsHeaders() {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Accept, Content-Type",
+    "Access-Control-Max-Age": "86400"
+  };
+}
 
-function vinApiResponse(status, obj) {
-  const h = { ...JSON_HEADERS, ...VIN_CORS };
-  return new Response(JSON.stringify(obj), { status, headers: h });
+function respCorsJson(status, obj) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: { ...JSON_BASE, ...corsHeaders() }
+  });
+}
+
+function respCorsOptions() {
+  return new Response(null, { status: 204, headers: corsHeaders() });
 }
 
 const UPSTREAM_BASE = "https://api.dataovozidlech.cz/api/vehicletechnicaldata/v2";
@@ -24,10 +33,10 @@ const SOURCE = "dataovozidlech";
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 const ALLOWED_MIME = new Set(["image/jpeg", "image/png", "image/webp"]);
 
-function jsonResponse(status, obj) {
+function jsonResponseNoCors(status, obj) {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: JSON_HEADERS
+    headers: JSON_BASE
   });
 }
 
@@ -76,10 +85,11 @@ export default {
     const method = request.method.toUpperCase();
 
     if (path === "/health") {
+      if (method === "OPTIONS") return respCorsOptions();
       if (method !== "GET") {
-        return jsonResponse(405, { success: false, error: "method_not_allowed" });
+        return respCorsJson(405, { success: false, error: "method_not_allowed" });
       }
-      return jsonResponse(200, { ok: true, worker: "up" });
+      return respCorsJson(200, { ok: true, worker: "up" });
     }
 
     if (path === "/upload-image" && method === "POST") {
@@ -87,21 +97,19 @@ export default {
     }
 
     if (path === "/vin") {
-      if (method === "OPTIONS") {
-        return new Response(null, { status: 204, headers: VIN_CORS });
-      }
+      if (method === "OPTIONS") return respCorsOptions();
       if (method !== "GET") {
-        return vinApiResponse(405, vinModel(false, "method_not_allowed", "", null));
+        return respCorsJson(405, vinModel(false, "method_not_allowed", "", null));
       }
 
       const apiKey = safeText(env.VIN_UPSTREAM_KEY || env.VIN_API_KEY).trim();
       if (!apiKey) {
-        return vinApiResponse(500, vinModel(false, "missing_secret", "", null));
+        return respCorsJson(500, vinModel(false, "missing_secret", "", null));
       }
 
       const vin = normalizeVin(url.searchParams.get("vin"));
       if (!isValidVin(vin)) {
-        return vinApiResponse(
+        return respCorsJson(
           400,
           vinModel(false, "VIN musí mít přesně 17 znaků.", vin, null)
         );
@@ -123,7 +131,7 @@ export default {
           }
         });
       } catch (_err) {
-        return vinApiResponse(
+        return respCorsJson(
           502,
           vinModel(false, "upstream_fetch_failed", vin, null)
         );
@@ -132,7 +140,7 @@ export default {
       const rawText = await upstreamResponse.text();
 
       if (!upstreamResponse.ok) {
-        return vinApiResponse(
+        return respCorsJson(
           502,
           vinModel(false, "upstream_http_error", vin, null)
         );
@@ -142,7 +150,7 @@ export default {
       try {
         parsed = rawText ? JSON.parse(rawText) : null;
       } catch (_err) {
-        return vinApiResponse(
+        return respCorsJson(
           502,
           vinModel(false, "upstream_invalid_json", vin, null)
         );
@@ -151,26 +159,26 @@ export default {
       const upstreamStatus = parsed?.Status;
 
       if (upstreamStatus !== 1 || !parsed?.Data) {
-        return vinApiResponse(
+        return respCorsJson(
           404,
           vinModel(false, "vin_not_found", vin, null)
         );
       }
 
-      return vinApiResponse(200, vinModel(true, null, vin, parsed.Data));
+      return respCorsJson(200, vinModel(true, null, vin, parsed.Data));
     }
 
     if (method === "GET") {
-      return jsonResponse(404, vinModel(false, "not_found", "", null));
+      return jsonResponseNoCors(404, vinModel(false, "not_found", "", null));
     }
-    return jsonResponse(405, vinModel(false, "method_not_allowed", "", null));
+    return jsonResponseNoCors(405, vinModel(false, "method_not_allowed", "", null));
   }
 };
 
 async function handleUploadImage(request, env) {
   const secret = safeText(env.IMAGE_UPLOAD_SECRET).trim();
   if (!secret) {
-    return jsonResponse(503, {
+    return jsonResponseNoCors(503, {
       success: false,
       error: "upload_not_configured",
       detail: "Set IMAGE_UPLOAD_SECRET"
@@ -179,12 +187,12 @@ async function handleUploadImage(request, env) {
 
   const auth = request.headers.get("Authorization") || "";
   if (auth !== "Bearer " + secret) {
-    return jsonResponse(401, { success: false, error: "unauthorized" });
+    return jsonResponseNoCors(401, { success: false, error: "unauthorized" });
   }
 
   const bucket = env.R2_BUCKET;
   if (!bucket) {
-    return jsonResponse(503, {
+    return jsonResponseNoCors(503, {
       success: false,
       error: "r2_not_bound",
       detail: "Configure R2 binding R2_BUCKET"
@@ -193,7 +201,7 @@ async function handleUploadImage(request, env) {
 
   const baseUrl = safeText(env.R2_PUBLIC_BASE_URL).replace(/\/+$/, "");
   if (!baseUrl) {
-    return jsonResponse(503, {
+    return jsonResponseNoCors(503, {
       success: false,
       error: "r2_public_url_missing",
       detail: "Set var R2_PUBLIC_BASE_URL (custom domain or r2.dev)"
@@ -204,12 +212,12 @@ async function handleUploadImage(request, env) {
   try {
     form = await request.formData();
   } catch (_e) {
-    return jsonResponse(400, { success: false, error: "invalid_multipart" });
+    return jsonResponseNoCors(400, { success: false, error: "invalid_multipart" });
   }
 
   const file = form.get("file") || form.get("image");
   if (!file || typeof file.stream !== "function") {
-    return jsonResponse(400, {
+    return jsonResponseNoCors(400, {
       success: false,
       error: "missing_file",
       detail: "Use form field file or image"
@@ -217,7 +225,7 @@ async function handleUploadImage(request, env) {
   }
 
   if (file.size > MAX_UPLOAD_BYTES) {
-    return jsonResponse(413, {
+    return jsonResponseNoCors(413, {
       success: false,
       error: "file_too_large",
       detail: "Max 5MB"
@@ -226,7 +234,7 @@ async function handleUploadImage(request, env) {
 
   const declared = (file.type || "").toLowerCase().split(";")[0].trim();
   if (!ALLOWED_MIME.has(declared)) {
-    return jsonResponse(415, {
+    return jsonResponseNoCors(415, {
       success: false,
       error: "unsupported_media_type",
       detail: "image/jpeg, image/png, image/webp only"
@@ -235,7 +243,7 @@ async function handleUploadImage(request, env) {
 
   const kind = await detectImageFileKind(file);
   if (!kind) {
-    return jsonResponse(400, {
+    return jsonResponseNoCors(400, {
       success: false,
       error: "invalid_image_payload",
       detail: "Magic bytes do not match JPEG/PNG/WEBP"
@@ -244,7 +252,7 @@ async function handleUploadImage(request, env) {
 
   const expectedMime = mimeForKind(kind);
   if (declared !== expectedMime) {
-    return jsonResponse(400, {
+    return jsonResponseNoCors(400, {
       success: false,
       error: "mime_content_mismatch",
       detail: "Declared Content-Type does not match file content"
@@ -260,11 +268,11 @@ async function handleUploadImage(request, env) {
       httpMetadata: { contentType: expectedMime }
     });
   } catch (_e) {
-    return jsonResponse(500, { success: false, error: "r2_put_failed" });
+    return jsonResponseNoCors(500, { success: false, error: "r2_put_failed" });
   }
 
   const publicUrl = baseUrl + "/" + key;
-  return jsonResponse(200, {
+  return jsonResponseNoCors(200, {
     success: true,
     url: publicUrl
   });

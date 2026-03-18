@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Hard proof: global static guard + overlay Auto VIN flow.
- * Requires: npm i (playwright). Run: node scripts/vin-hard-proof.mjs
- * Spawns server/projects-static-and-vin.mjs
+ * Hard proof: Auto VIN gate, CLS, overflow, Worker vin_not_found + publish localStorage.
+ * Local success path: ?iuVinMock=1 (deterministic). Live Worker: vin_not_found + publish.
+ * Run: node scripts/vin-hard-proof.mjs
  */
 import { spawn } from "child_process";
 import path from "path";
@@ -16,6 +16,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const PORT = "8893";
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
+const BASE_MOCK = `${BASE}?iuVinMock=1`;
 const VIEWS = [
   [390, 844],
   [412, 915],
@@ -39,11 +40,12 @@ const r = {
   apiErrorGatePass: true,
   tabSwitchPass: true,
   invalidVinPass: true,
-  cacheRepeatPass: true
+  vinNotFoundWorkerPass: true,
+  publishLocalPass: true
 };
 
 const ADS_LO = 22340;
-const ADS_HI = 22850;
+const ADS_HI = 23050;
 
 function startServer() {
   return new Promise((resolve, reject) => {
@@ -134,7 +136,7 @@ try {
       } catch (e) {}
     });
 
-    await page.goto(BASE, { waitUntil: "load", timeout: 120000 });
+    await page.goto(BASE_MOCK, { waitUntil: "load", timeout: 120000 });
     await page.waitForTimeout(2000);
     try {
       await page.evaluate(() => document.fonts.ready);
@@ -198,8 +200,8 @@ try {
     await page.waitForTimeout(200);
     const browseHidesAuto = await page.evaluate(() => {
       const ps = document.getElementById("iuAdsPanelSubmit");
-      const pre = document.getElementById("iuAdsAutoPre");
-      return !!(ps && ps.hidden && pre && pre.hidden);
+      const preEl = document.getElementById("iuAdsAutoPre");
+      return !!(ps && ps.hidden && preEl && preEl.hidden);
     });
     if (!browseHidesAuto) r.tabSwitchPass = false;
     await page.click("#iuAdsTabSubmit");
@@ -220,6 +222,10 @@ try {
   await p2.waitForTimeout(1500);
   await openAdsSubmit(p2);
   await selectCategoryAuto(p2);
+  let reqWorker = 0;
+  p2.on("request", (req) => {
+    if (req.url().includes("josef-zmrhal.workers.dev/vin")) reqWorker++;
+  });
   await p2.fill("#iuAdsAutoVin", "SHORT");
   await p2.click("#iuAdsAutoVinLoadBtn");
   await p2.waitForTimeout(600);
@@ -228,18 +234,63 @@ try {
     5;
   const ph = await p2.evaluate(() => document.getElementById("iuAdsAutoPost")?.hidden);
   if (!inv || !ph) r.invalidVinPass = false;
+  if (reqWorker !== 0) r.invalidVinPass = false;
   await b2.close();
 
-  const apiU = `http://127.0.0.1:${PORT}/projects/api/vin-decode?vin=${encodeURIComponent(VIN_OK)}`;
-  const a1 = await fetch(apiU).then((x) => x.json());
-  const a2 = await fetch(apiU).then((x) => x.json());
-  if (!(a1.success && a2.success && a2.cached === true)) r.cacheRepeatPass = false;
+  const b6 = await chromium.launch({ headless: true });
+  const p6 = await b6.newPage({ viewport: { width: 1280, height: 800 } });
+  await p6.goto(BASE, { waitUntil: "load", timeout: 120000 });
+  await p6.waitForTimeout(1500);
+  await openAdsSubmit(p6);
+  await selectCategoryAuto(p6);
+  await p6.evaluate(() => {
+    try {
+      localStorage.removeItem("iuInfoUzel_autoAds_v1");
+    } catch (e) {}
+  });
+  await p6.fill("#iuAdsAutoVin", VIN_OK);
+  await p6.click("#iuAdsAutoVinLoadBtn");
+  await p6.waitForSelector("#iuAdsAutoPost:not([hidden])", { timeout: 30000 });
+  await p6.waitForTimeout(500);
+  const vinU = (await p6.inputValue("#iuAdsApiVinDisp")).toUpperCase();
+  const mkE = (await p6.inputValue("#iuAdsApiMake")).trim();
+  if (vinU !== VIN_OK) r.vinNotFoundWorkerPass = false;
+  if (mkE.length > 0) r.vinNotFoundWorkerPass = false;
+  await p6.fill("#iuAdsAutoTitle", "Ruční název po VIN");
+  await p6.fill("#iuAdsAutoPrice", "250000");
+  await p6.fill("#iuAdsAutoEmail", "proof@test.local");
+  await p6.check("#iuAdsAutoTerms");
+  await p6.click("#iuAdsAutoSubmit");
+  await p6.waitForTimeout(600);
+  const fb = await p6.evaluate(
+    () => document.getElementById("iuAdsAutoPublishFeedback")?.textContent || ""
+  );
+  const cnt = await p6.evaluate(() => {
+    try {
+      const a = JSON.parse(localStorage.getItem("iuInfoUzel_autoAds_v1") || "[]");
+      return Array.isArray(a) ? a.length : 0;
+    } catch (e) {
+      return 0;
+    }
+  });
+  if (!fb.includes("lokálně") || !fb.includes("mezistav")) r.publishLocalPass = false;
+  if (cnt < 1) r.publishLocalPass = false;
+  await p6.fill("#iuAdsAutoPrice", "");
+  await p6.click("#iuAdsAutoSubmit");
+  await p6.waitForTimeout(400);
+  const fb2 = await p6.evaluate(
+    () => document.getElementById("iuAdsAutoPublishFeedback")?.textContent || ""
+  );
+  if (!fb2.includes("Cena")) r.publishLocalPass = false;
+  await b6.close();
 
   const b4 = await chromium.launch({ headless: true });
   const p4 = await b4.newPage({ viewport: { width: 1280, height: 800 } });
   await p4.goto(BASE, { waitUntil: "load", timeout: 120000 });
+  await p4.waitForTimeout(1500);
   await openAdsSubmit(p4);
   await selectCategoryAuto(p4);
+  await p4.waitForSelector("#iuAdsAutoVin", { state: "visible", timeout: 15000 });
   await p4.fill("#iuAdsAutoVin", "IIIIIIIIIIIIIIIII");
   await p4.click("#iuAdsAutoVinLoadBtn");
   await p4.waitForTimeout(800);
@@ -263,12 +314,16 @@ const pass =
   r.apiErrorGatePass &&
   r.tabSwitchPass &&
   r.invalidVinPass &&
-  r.cacheRepeatPass;
+  r.vinNotFoundWorkerPass &&
+  r.publishLocalPass;
 
 console.log(
   JSON.stringify(
     {
       ...r,
+      consoleErrorsCount: r.appAdsErr,
+      cls: r.clsGlobalMax,
+      railShift: r.railMax,
       HARD_PASS: pass
     },
     null,

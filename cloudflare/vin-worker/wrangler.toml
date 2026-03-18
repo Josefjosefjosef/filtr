@@ -16,9 +16,10 @@ main = "src/index.mjs"
 compatibility_date = "2024-11-01"
 workers_dev = true
 
-[[r2_buckets]]
-binding = "R2_BUCKET"
-bucket_name = "infouzel-ads-images"
+# R2: odkomentuj až po zapnutí R2 v Dashboardu (jinak wrangler deploy selže code 10042)
+# [[r2_buckets]]
+# binding = "R2_BUCKET"
+# bucket_name = "infouzel-ads-images"
 
 # Plain var (not secret): public base URL after R2 public access / custom domain
 # wrangler vars (or dashboard): R2_PUBLIC_BASE_URL = https://<your-r2-public-host>
