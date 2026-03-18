@@ -22352,9 +22352,71 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
 (function iuAdsSubmitFormState() {
   var AUTO_VAL = "auto";
+  var ADS_LOCAL_KEY = "iuInfoUzel_autoAds_v1";
   var autoApiState = "idle";
   var autoTitleUserEdited = false;
   var lastLoadedVin = "";
+
+  function showAutoPublishFeedback(msg, isErr) {
+    var fb = document.getElementById("iuAdsAutoPublishFeedback");
+    if (!fb) return;
+    fb.textContent = msg || "";
+    fb.hidden = !msg;
+    fb.classList.toggle("iuAdsPublishFeedback--err", !!isErr);
+  }
+
+  function validEmailStr(s) {
+    var t = String(s || "").trim();
+    if (t.length < 5) return false;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t);
+  }
+
+  function collectAutoAdRecord() {
+    var post = document.getElementById("iuAdsAutoPost");
+    var out = { vin: lastLoadedVin, category: AUTO_VAL };
+    if (!post) return out;
+    var fields = post.querySelectorAll("input, select, textarea");
+    var i;
+    for (i = 0; i < fields.length; i++) {
+      var f = fields[i];
+      var name = f.name || f.id;
+      if (!name || f.type === "submit" || f.type === "button") continue;
+      if (f.type === "checkbox") {
+        out[name] = f.checked ? "1" : "";
+      } else if (f.type === "radio") {
+        if (f.checked) out[name] = f.value;
+      } else {
+        out[name] = f.value;
+      }
+    }
+    return out;
+  }
+
+  function persistAutoAdLocal() {
+    var rec = {
+      id: "ad_" + Date.now(),
+      savedAt: new Date().toISOString(),
+      payload: collectAutoRecord()
+    };
+    var arr = [];
+    try {
+      arr = JSON.parse(localStorage.getItem(ADS_LOCAL_KEY) || "[]");
+    } catch (e0) {
+      arr = [];
+    }
+    if (!Array.isArray(arr)) arr = [];
+    arr.push(rec);
+    try {
+      localStorage.setItem(ADS_LOCAL_KEY, JSON.stringify(arr));
+    } catch (e1) {
+      throw new Error("Uložení se nezdařilo (úložiště prohlížeče).");
+    }
+    return arr.length;
+  }
+
+  function collectAutoRecord() {
+    return collectAutoAdRecord();
+  }
 
   function $(id) {
     return document.getElementById(id);
@@ -22389,21 +22451,74 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     return t.replace(/\s+/g, " ").trim();
   }
 
+  function pickVehicleField(o, keys) {
+    var i;
+    for (i = 0; i < keys.length; i++) {
+      var k = keys[i];
+      if (o[k] != null && String(o[k]).trim() !== "") return o[k];
+    }
+    return "";
+  }
+
   function mapApiToForm(j) {
     var o = j && typeof j === "object" ? j : {};
+    var disp = pickVehicleField(o, [
+      "objemMotoru",
+      "zdvihovyObjem",
+      "ObjemMotoru",
+      "ZdvihovyObjem"
+    ]);
+    if (disp !== "" && disp != null) {
+      var dn = parseInt(String(disp).replace(/\D/g, ""), 10);
+      if (dn > 100 && dn < 20000) disp = dn + " cm³";
+      else disp = cleanApiStr(disp);
+    } else {
+      disp = "";
+    }
+    var pw = pickVehicleField(o, ["vykonMotoruKw", "vykonKw", "VykonKw", "vykon", "Vykon"]);
+    if (pw !== "" && pw != null && String(pw).indexOf("kW") < 0) {
+      var pfn = parseFloat(String(pw).replace(",", "."));
+      if (!isNaN(pfn)) pw = String(Math.round(pfn));
+    } else {
+      pw = cleanApiStr(pw);
+    }
     return {
-      make: cleanApiStr(o.make != null ? o.make : o.znacka),
-      model: cleanApiStr(o.model != null ? o.model : o.modelObchodni),
-      vin: cleanApiStr(o.vin),
-      firstReg: cleanApiStr(o.firstReg != null ? o.firstReg : o.datumPrvniRegistrace),
-      body: cleanApiStr(o.body != null ? o.body : o.karoserie),
-      fuel: cleanApiStr(o.fuel != null ? o.fuel : o.palivo),
-      displacement: cleanApiStr(o.displacement != null ? o.displacement : o.objemMotoru),
-      powerKw: cleanApiStr(o.powerKw != null ? o.powerKw : o.vykonKw != null ? o.vykonKw : o.vykon),
-      color: cleanApiStr(o.color != null ? o.color : o.barva),
-      seats: cleanApiStr(o.seats != null ? o.seats : o.pocetMist),
-      stk: cleanApiStr(o.stk != null ? o.stk : o.stkDo),
-      owners: cleanApiStr(o.owners != null ? o.owners : o.pocetVlastniku),
+      make: cleanApiStr(
+        pickVehicleField(o, ["make", "Make", "vyrobce", "Vyrobce", "znacka", "Znacka"])
+      ),
+      model: cleanApiStr(
+        pickVehicleField(o, [
+          "model",
+          "Model",
+          "obchodniOznaceni",
+          "ObchodniOznaceni",
+          "typ",
+          "Typ"
+        ])
+      ),
+      vin: cleanApiStr(pickVehicleField(o, ["vin", "VIN", "identifikacniCisloVozidla"])),
+      firstReg: cleanApiStr(
+        pickVehicleField(o, [
+          "datumPrvniRegistrace",
+          "datumPrvniRegistraceCZ",
+          "firstReg",
+          "DatumPrvniRegistrace"
+        ])
+      ),
+      body: cleanApiStr(
+        pickVehicleField(o, ["karoserie", "Karoserie", "druhKaroserie", "body", "BodyClass"])
+      ),
+      fuel: cleanApiStr(pickVehicleField(o, ["palivo", "Palivo", "druhPaliva", "fuelType"])),
+      displacement: typeof disp === "string" ? disp : cleanApiStr(disp),
+      powerKw: typeof pw === "string" ? pw : cleanApiStr(pw),
+      color: cleanApiStr(pickVehicleField(o, ["barva", "Barva", "exteriorColor"])),
+      seats: cleanApiStr(pickVehicleField(o, ["pocetMist", "PocetMist", "seats"])),
+      stk: cleanApiStr(
+        pickVehicleField(o, ["platnostStk", "stkDo", "stk", "StkDo", "platnostSTK"])
+      ),
+      owners: cleanApiStr(
+        pickVehicleField(o, ["pocetVlastniku", "PocetVlastniku", "owners"])
+      ),
       firstRegYear: cleanApiStr(o.firstRegYear)
     };
   }
@@ -22459,42 +22574,36 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     });
   }
 
-  function realVinDecode(vin) {
+  var VIN_WORKER_URL =
+    "https://steep-term-ba60.josef-zmrhal.workers.dev/vin?vin=";
+
+  function fetchVinFromWorker(vin) {
     var v = normalizeVin(vin);
-    var base = "";
-    try {
-      var meta = document.querySelector('meta[name="iu-vin-api"]');
-      if (meta && meta.getAttribute("content")) base = meta.getAttribute("content").trim();
-    } catch (e1) {}
-    if (!base) {
-      var pth = String(location.pathname || "");
-      base = pth.indexOf("/projects") >= 0 ? "/projects/api/vin-decode" : "/api/vin-decode";
-    }
-    var sep = base.indexOf("?") >= 0 ? "&" : "?";
-    return fetch(base + sep + "vin=" + encodeURIComponent(v), {
+    return fetch(VIN_WORKER_URL + encodeURIComponent(v), {
       method: "GET",
-      credentials: "same-origin",
       headers: { Accept: "application/json" }
     }).then(function (res) {
       return res.text().then(function (text) {
         var j = null;
         try {
-          j = JSON.parse(text);
+          j = text ? JSON.parse(text) : null;
         } catch (pe) {
-          throw new Error("Neplatná odpověď serveru.");
+          throw new Error("Neplatná odpověď VIN služby.");
         }
-        if (res.status === 429) {
-          throw new Error((j && j.error) || "Příliš mnoho požadavků. Zkuste to za chvíli.");
+        if (j && j.success === true && j.data) {
+          return { kind: "api", data: j.data, vinNorm: v };
         }
-        if (res.status === 400) {
-          throw new Error((j && j.error) || "Neplatný VIN.");
+        if (j && j.success === false && String(j.error || "") === "vin_not_found") {
+          return { kind: "manual", vinNorm: cleanApiStr(j.vin) || v };
         }
-        if (!j || !j.success || !j.data) {
-          throw new Error(
-            (j && j.error) || "Údaje z VIN se nepodařilo načíst. Zkuste to později nebo jiný VIN."
-          );
+        if (j && j.success === false) {
+          var er = j.error;
+          if (String(er || "").indexOf("17") >= 0 || er === "VIN musí mít přesně 17 znaků.") {
+            throw new Error("Zadejte platný VIN (17 znaků, bez I, O, Q).");
+          }
+          throw new Error(typeof er === "string" && er ? er : "Údaje z VIN se nepodařilo načíst.");
         }
-        return j.data;
+        throw new Error("Údaje z VIN se nepodařilo načíst.");
       });
     });
   }
@@ -22504,12 +22613,14 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (!validVinFormat(vin)) {
         return Promise.reject(new Error("Zadejte platný VIN (17 znaků, bez I, O, Q)."));
       }
-      return mockVinDecode(vin);
+      return mockVinDecode(vin).then(function (m) {
+        return { kind: "api", data: m, vinNorm: m.vin };
+      });
     }
     if (!validVinFormat(vin)) {
       return Promise.reject(new Error("Zadejte platný VIN (17 znaků, bez I, O, Q)."));
     }
-    return realVinDecode(vin);
+    return fetchVinFromWorker(vin);
   }
 
   function setHidden(el, on) {
@@ -22558,6 +22669,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       err.hidden = true;
     }
     if (ld) ld.hidden = true;
+    showAutoPublishFeedback("", false);
   }
 
   function applyCategoryUI() {
@@ -22657,6 +22769,29 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }
   }
 
+  function clearApiFieldsExceptVin(vinVal) {
+    var ids = [
+      "iuAdsApiMake",
+      "iuAdsApiModel",
+      "iuAdsApiFirstReg",
+      "iuAdsApiBody",
+      "iuAdsApiFuel",
+      "iuAdsApiDisplacement",
+      "iuAdsApiPower",
+      "iuAdsApiColor",
+      "iuAdsApiSeats",
+      "iuAdsApiStk",
+      "iuAdsApiOwners"
+    ];
+    var i;
+    for (i = 0; i < ids.length; i++) {
+      var el = $(ids[i]);
+      if (el) el.value = "";
+    }
+    var vEl = $("iuAdsApiVinDisp");
+    if (vEl) vEl.value = vinVal != null ? String(vinVal) : "";
+  }
+
   function onVinLoad() {
     var vinEl = $("iuAdsAutoVin");
     var errEl = $("iuAdsAutoVinError");
@@ -22677,16 +22812,30 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     applyCategoryUI();
 
     decodeVin(raw)
-      .then(function (payload) {
-        var m = mapApiToForm(payload);
-        m.vin = m.vin || normalizeVin(raw);
-        if (!m.firstRegYear && m.firstReg) m.firstRegYear = firstRegYearFrom(m.firstReg);
-        lastLoadedVin = m.vin;
-        autoApiState = "loaded";
-        if (ldEl) ldEl.hidden = true;
-        if (errEl) errEl.hidden = true;
-        fillApiFields(m);
-        applyCategoryUI();
+      .then(function (result) {
+        if (result && result.kind === "manual") {
+          lastLoadedVin = result.vinNorm;
+          autoApiState = "loaded";
+          if (ldEl) ldEl.hidden = true;
+          if (errEl) errEl.hidden = true;
+          clearApiFieldsExceptVin(lastLoadedVin);
+          autoTitleUserEdited = false;
+          var tMan = $("iuAdsAutoTitle");
+          if (tMan) tMan.value = "";
+          applyCategoryUI();
+          return;
+        }
+        if (result && result.kind === "api") {
+          var m = mapApiToForm(result.data);
+          m.vin = m.vin || result.vinNorm || normalizeVin(raw);
+          if (!m.firstRegYear && m.firstReg) m.firstRegYear = firstRegYearFrom(m.firstReg);
+          lastLoadedVin = m.vin;
+          autoApiState = "loaded";
+          if (ldEl) ldEl.hidden = true;
+          if (errEl) errEl.hidden = true;
+          fillApiFields(m);
+          applyCategoryUI();
+        }
       })
       .catch(function (e) {
         autoApiState = "error";
@@ -22719,6 +22868,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       }
       if (ld) ld.hidden = true;
     }
+    showAutoPublishFeedback("", false);
     applyCategoryUI();
   }
 
@@ -22747,23 +22897,59 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       form.addEventListener("submit", function (ev) {
         var c = cat ? String(cat.value || "") : "";
         if (c === AUTO_VAL) {
+          ev.preventDefault();
+          showAutoPublishFeedback("", false);
           if (autoApiState !== "loaded") {
-            ev.preventDefault();
+            showAutoPublishFeedback(
+              "Nejdříve zadejte VIN a klikněte na „Načíst údaje o vozidle“.",
+              true
+            );
             return;
           }
           var titleA = $("iuAdsAutoTitle");
           if (!titleA || !String(titleA.value || "").trim()) {
-            ev.preventDefault();
+            showAutoPublishFeedback("Vyplňte název inzerátu.", true);
             try {
               titleA.focus();
             } catch (f1) {}
             return;
           }
-          var termsA = $("iuAdsAutoTerms");
-          if (!termsA || !termsA.checked) {
-            ev.preventDefault();
+          var priceA = $("iuAdsAutoPrice");
+          if (!priceA || !String(priceA.value || "").trim()) {
+            showAutoPublishFeedback("Cena je povinná.", true);
+            try {
+              priceA.focus();
+            } catch (f2) {}
             return;
           }
+          var emailA = $("iuAdsAutoEmail");
+          if (!emailA || !validEmailStr(emailA.value)) {
+            showAutoPublishFeedback("Vyplňte platný e-mail.", true);
+            try {
+              emailA.focus();
+            } catch (f3) {}
+            return;
+          }
+          var termsA = $("iuAdsAutoTerms");
+          if (!termsA || !termsA.checked) {
+            showAutoPublishFeedback("Je potřeba souhlas s podmínkami inzerce.", true);
+            return;
+          }
+          try {
+            var n = persistAutoAdLocal();
+            showAutoPublishFeedback(
+              "Inzerát uložen lokálně (mezistav bez centrálního serveru). Počet záznamů v tomto prohlížeči: " +
+                n +
+                ".",
+              false
+            );
+          } catch (eSave) {
+            showAutoPublishFeedback(
+              eSave && eSave.message ? String(eSave.message) : "Uložení selhalo.",
+              true
+            );
+          }
+          return;
         } else if (c && c !== AUTO_VAL) {
           var t = $("iuAdsFieldTitle");
           var d = $("iuAdsFieldDesc");

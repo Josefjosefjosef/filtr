@@ -26,7 +26,7 @@ style-src 'self' 'unsafe-inline' https:;
       body::before, body::after, html::before, html::after { pointer-events: none !important; }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
-    <link rel="stylesheet" href="/assets/app.css?v=ytv8b2" />
+    <link rel="stylesheet" href="/assets/app.css?v=ytv8b3" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
@@ -390,10 +390,6 @@ style-src 'self' 'unsafe-inline' https:;
                             <input type="tel" id="iuAdsFieldPhone" class="iuAdsFormInput" name="phone" placeholder="+420 …">
                             <label class="iuAdsFormRow" for="iuAdsFieldEmail">E-mail</label>
                             <input type="email" id="iuAdsFieldEmail" class="iuAdsFormInput" name="email" placeholder="vas@email.cz">
-                            <div class="iuAdsFormRow">
-                              <span class="iuAdsFormLabel">Fotografie</span>
-                              <div class="iuAdsUploadPlaceholder" aria-hidden="true">Přetáhněte sem nebo klikněte pro výběr (placeholder)</div>
-                            </div>
                             <label class="iuAdsFormCheckRow">
                               <input type="checkbox" id="iuAdsFieldTerms" name="terms">
                               <span>Souhlasím s podmínkami inzerce</span>
@@ -537,12 +533,12 @@ style-src 'self' 'unsafe-inline' https:;
                             </div>
                             <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockPrice">
                               <p class="iuAdsAutoCardTitle">Cena a kontakt</p>
-                              <label class="iuAdsFormRow" for="iuAdsAutoPrice">Cena (Kč)</label>
-                              <input type="text" id="iuAdsAutoPrice" class="iuAdsFormInput" name="auto_price" inputmode="numeric" placeholder="např. 250 000">
+                              <label class="iuAdsFormRow" for="iuAdsAutoPrice">Cena (Kč) <span class="iuAdsReqMark">*</span></label>
+                              <input type="text" id="iuAdsAutoPrice" class="iuAdsFormInput" name="auto_price" inputmode="numeric" placeholder="např. 250 000" autocomplete="off">
                               <label class="iuAdsFormRow" for="iuAdsAutoPhone">Telefon</label>
-                              <input type="tel" id="iuAdsAutoPhone" class="iuAdsFormInput" name="auto_phone" placeholder="+420 …">
-                              <label class="iuAdsFormRow" for="iuAdsAutoEmail">E-mail</label>
-                              <input type="email" id="iuAdsAutoEmail" class="iuAdsFormInput" name="auto_email" placeholder="vas@email.cz">
+                              <input type="tel" id="iuAdsAutoPhone" class="iuAdsFormInput" name="auto_phone" placeholder="+420 …" autocomplete="tel">
+                              <label class="iuAdsFormRow" for="iuAdsAutoEmail">E-mail <span class="iuAdsReqMark">*</span></label>
+                              <input type="email" id="iuAdsAutoEmail" class="iuAdsFormInput" name="auto_email" placeholder="vas@email.cz" autocomplete="email">
                             </div>
                             <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockText">
                               <p class="iuAdsAutoCardTitle">Název a popis</p>
@@ -571,11 +567,8 @@ style-src 'self' 'unsafe-inline' https:;
                                 <label class="iuAdsEquipItem"><input type="checkbox" name="eq_4x4" value="1"> 4x4</label>
                               </div>
                             </div>
-                            <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockPhotos">
-                              <p class="iuAdsAutoCardTitle">Fotografie</p>
-                              <div class="iuAdsUploadPlaceholder iuAdsUploadShell" id="iuAdsAutoPhotoZone" role="button" tabindex="0" aria-label="Oblast pro fotografie (zatím jen rozhraní)">Přetáhněte fotky sem nebo klikněte — rozhraní připravujeme</div>
-                            </div>
                             <div class="iuAdsAutoCard iuAdsAutoBlock" id="iuAdsBlockPublish">
+                              <p class="iuAdsPublishFeedback" id="iuAdsAutoPublishFeedback" role="status" aria-live="polite" hidden></p>
                               <label class="iuAdsFormCheckRow">
                                 <input type="checkbox" id="iuAdsAutoTerms" name="auto_terms">
                                 <span>Souhlasím s podmínkami inzerce</span>
@@ -2862,7 +2855,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script type="module">import{franc}from"/assets/vendor/franc-min.js";window.franc=franc;</script>
     <script defer src="/assets/app-crash-shield.js"></script>
-    <script type="module" src="/assets/app.js?v=593"></script>
+    <script type="module" src="/assets/app.js?v=594"></script>
     <script>
     (function(){
       try { document.documentElement.setAttribute("data-iu-html-after-appjs", "reached"); } catch(e){}
