@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Set, Tuple
@@ -261,7 +262,7 @@ def main() -> int:
         return 2
     baseline = load_baseline(BASELINE_PATH)
     cur, raw_b = audit_current()
-    emit = args.github_actions or bool(sys.environ.get("GITHUB_ACTIONS"))
+    emit = args.github_actions or bool(os.environ.get("GITHUB_ACTIONS"))
     exit_code = run_guard(baseline, cur, raw_b, emit_github=emit)
     if args.json_summary:
         summary = {
