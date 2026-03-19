@@ -16724,12 +16724,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel{
 }
 
 /* ACTIVE micro-highlight ÔÇö disabled (no oval tiles) */
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"]::before,
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active::before,
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::before{
-  content: none !important;
-  display: none !important;
-}
 
 /* active badge ÔÇö disabled (glow only via #iuLeftRail block) */
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
