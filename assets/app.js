@@ -6373,7 +6373,7 @@ function buildVideoAsArticleCard(it) {
         const stamp = state.lastArticlesGeneratedAt || state.lastVideosGeneratedAt;
         const displayDate = stamp.substring(0, 16).replace("T", " ");
         elUpdated.textContent = "Poslední aktualizace dat: " + displayDate;
-        elUpdated.style.display = "";
+        elUpdated.classList.remove("iu-date-pending");
       }
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 

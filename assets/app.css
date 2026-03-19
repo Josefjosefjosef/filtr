@@ -2490,6 +2490,15 @@ a.brand,
   flex: 0 0 auto;
 }
 
+/* P0 CLS: reserve #dataUpdatedAt height from first paint so #newsList does not shift when date text is set. */
+#dataUpdatedAt{
+  min-height: 1.12em;
+  box-sizing: border-box;
+}
+#dataUpdatedAt.iu-date-pending{
+  visibility: hidden;
+}
+
 @media (max-width: 520px){
   .feedTopRow{
     flex-direction: column;
