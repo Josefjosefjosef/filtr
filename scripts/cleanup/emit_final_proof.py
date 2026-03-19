@@ -36,6 +36,9 @@ def main() -> None:
         main_proof["remaining_safe_now"], main_proof["analyzer_version"],
     )
     guard_count = len(TRUE_GUARD_MAP)
+    st = _run(["git", "status", "--short"], ROOT)
+    log = _run(["git", "log", "--oneline", "main..HEAD"], ROOT)
+    repo_clean = not bool(st)
     layers = compute_verdict_layers(
         engine_readiness_ok=(guard_count == 20),
         main_safe_now=int(main_proof.get("remaining_safe_now", 0)),
@@ -45,9 +48,8 @@ def main() -> None:
         target_stop_reason=target_proof.get("stop_reason"),
         target_consistent=target_proof.get("real_backlog_consistent", False),
         any_guard_block=(guard_count != 20),
+        repo_clean=repo_clean,
     )
-    st = _run(["git", "status", "--short"], ROOT)
-    log = _run(["git", "log", "--oneline", "main..HEAD"], ROOT)
     run_claim_vs_evidence(
         layers["ENGINE_READINESS_VERDICT"],
         layers["REAL_BACKLOG_STATUS_VERDICT_MAIN"],
@@ -56,7 +58,7 @@ def main() -> None:
         guard_count,
         int(main_proof.get("remaining_safe_now", 0)),
         int(target_proof.get("remaining_safe_now", 0)),
-        not bool(st),
+        repo_clean,
         bool(log) and "chore(css)" not in log,
     )
     neg = run_negative_tests()
@@ -68,7 +70,7 @@ def main() -> None:
     print(_run(["git", "diff", "--name-only", "main..HEAD"], ROOT) or _run(["git", "diff", "--name-only", "HEAD"], ROOT))
     print("--- true guard map 1-20 ---")
     for g in TRUE_GUARD_MAP:
-        print(json.dumps(g, ensure_ascii=False))
+        print(json.dumps(g, ensure_ascii=True))
     print("--- machine actions ---")
     for g in TRUE_GUARD_MAP:
         print(str(g["guard_number"]) + ": " + g["exact_machine_action_on_fail"])
@@ -76,14 +78,14 @@ def main() -> None:
     if (ENGINE_DIR / "forensic-backlog-explanation.json").exists():
         print((ENGINE_DIR / "forensic-backlog-explanation.json").read_text(encoding="utf-8"))
     print("--- main backlog proof ---")
-    print(json.dumps({k: v for k, v in main_proof.items()}, indent=2, ensure_ascii=False))
+    print(json.dumps({k: v for k, v in main_proof.items()}, indent=2, ensure_ascii=True))
     print("--- target branch backlog proof ---")
-    print(json.dumps({k: v for k, v in target_proof.items()}, indent=2, ensure_ascii=False))
+    print(json.dumps({k: v for k, v in target_proof.items()}, indent=2, ensure_ascii=True))
     print("--- claim vs evidence ---")
     if (ENGINE_DIR / "claim-vs-evidence.json").exists():
         print((ENGINE_DIR / "claim-vs-evidence.json").read_text(encoding="utf-8"))
     print("--- artifact contract v3 ---")
-    print(json.dumps(ARTIFACT_CONTRACT_V3, indent=2))
+    print(json.dumps(ARTIFACT_CONTRACT_V3, indent=2, ensure_ascii=True))
     print("--- negative test results ---")
     for k in sorted(neg.keys()):
         print(k + ":" + neg[k])

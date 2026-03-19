@@ -148,7 +148,7 @@ TRUE_GUARD_MAP = [
     {
         "guard_number": 16,
         "exact_guard_name": "self_heal_loop_integrity",
-        "exact_purpose": "FAIL→revert; PASS→checkpoint; crash→recovery audit; no repeat same fail.",
+        "exact_purpose": "FAIL->revert; PASS->checkpoint; crash->recovery audit; no repeat same fail.",
         "exact_fail_condition": "Missing revert after FAIL, or checkpoint after PASS, or recovery audit after crash.",
         "exact_machine_action_on_fail": "loop_integrity_broken_force_stop",
         "code_entrypoint": "scripts.cleanup.meta_guards.guard_16_self_heal_loop_integrity",

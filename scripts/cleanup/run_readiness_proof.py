@@ -34,6 +34,16 @@ def main() -> None:
     )
     guard_count = len(TRUE_GUARD_MAP)
     any_guard_block = guard_count != 20
+    try:
+        st = subprocess.run(["git", "status", "--short"], cwd=ROOT, capture_output=True, text=True, timeout=5).stdout.strip()
+    except Exception:
+        st = "?"
+    try:
+        log = subprocess.run(["git", "log", "--oneline", "main..HEAD"], cwd=ROOT, capture_output=True, text=True, timeout=5).stdout.strip()
+    except Exception:
+        log = ""
+    repo_clean = not bool(st)
+    chain_ok = bool(log and "chore(css)" not in log)
     layers = compute_verdict_layers(
         engine_readiness_ok=(guard_count == 20),
         main_safe_now=int(main_proof.get("remaining_safe_now", 0)),
@@ -43,16 +53,8 @@ def main() -> None:
         target_stop_reason=target_proof.get("stop_reason"),
         target_consistent=target_proof.get("real_backlog_consistent", False),
         any_guard_block=any_guard_block,
+        repo_clean=repo_clean,
     )
-    try:
-        st = subprocess.run(["git", "status", "--short"], cwd=ROOT, capture_output=True, text=True, timeout=5).stdout.strip()
-    except Exception:
-        st = "?"
-    try:
-        log = subprocess.run(["git", "log", "--oneline", "main..HEAD"], cwd=ROOT, capture_output=True, text=True, timeout=5).stdout.strip()
-    except Exception:
-        log = ""
-    chain_ok = bool(log and "chore(css)" not in log)
     run_claim_vs_evidence(
         engine_ready=layers["ENGINE_READINESS_VERDICT"],
         main_verdict=layers["REAL_BACKLOG_STATUS_VERDICT_MAIN"],
@@ -61,7 +63,7 @@ def main() -> None:
         guard_count=guard_count,
         main_safe=int(main_proof.get("remaining_safe_now", 0)),
         target_safe=int(target_proof.get("remaining_safe_now", 0)),
-        repo_clean=not bool(st),
+        repo_clean=repo_clean,
         chain_ok=chain_ok,
     )
     print("ENGINE_READINESS_VERDICT: " + layers["ENGINE_READINESS_VERDICT"])
@@ -69,7 +71,7 @@ def main() -> None:
     print("REAL_BACKLOG_STATUS_VERDICT_TARGET_BRANCH: " + layers["REAL_BACKLOG_STATUS_VERDICT_TARGET_BRANCH"])
     print("CONTINUOUS_CLEANUP_START_VERDICT: " + layers["CONTINUOUS_CLEANUP_START_VERDICT"])
     first_cleanup = "NOT_RUN"
-    if layers["CONTINUOUS_CLEANUP_START_VERDICT"] == "READY FOR CONTINUOUS GUARDED CLEANUP LOOP" and int(target_proof.get("remaining_safe_now", 0)) > 0 and not st:
+    if layers["CONTINUOUS_CLEANUP_START_VERDICT"] == "READY FOR CONTINUOUS GUARDED CLEANUP LOOP" and int(target_proof.get("remaining_safe_now", 0)) > 0 and repo_clean:
         from scripts.cleanup.cleanup_one_step import run_one_cleanup_iteration
         first_cleanup = run_one_cleanup_iteration()
     print("FIRST_REAL_CLEANUP_ITERATION_VERDICT: " + first_cleanup)
