@@ -234,6 +234,7 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
             "duplicate_selector_groups": 0,
             "duplicate_rule_occurrences_in_groups": 0,
             "groups_top": [],
+            "duplicate_groups_brief": [],
             "classification_counts": {},
             "dead_override_candidate_policy": DEAD_OVERRIDE_POLICY,
         }
@@ -246,6 +247,7 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
             "duplicate_selector_groups": 0,
             "duplicate_rule_occurrences_in_groups": 0,
             "groups_top": [],
+            "duplicate_groups_brief": [],
             "classification_counts": {},
             "dead_override_candidate_policy": DEAD_OVERRIDE_POLICY,
         }
@@ -287,12 +289,17 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
         )
 
     dup_groups.sort(key=lambda x: -x["count"])
+    duplicate_groups_brief = [
+        {"selector_normalized": g["selector_normalized"], "classification": g["classification"]}
+        for g in dup_groups
+    ]
 
     return {
         "duplicate_selector_groups": len(dup_groups),
         "duplicate_rule_occurrences_in_groups": total_occ,
         "total_qualified_rules_scanned": len(occurrences),
         "groups_top": dup_groups[:25],
+        "duplicate_groups_brief": duplicate_groups_brief,
         "classification_counts": dict(class_counts),
         "dead_override_candidate_policy": DEAD_OVERRIDE_POLICY,
         "line_range_method": (
