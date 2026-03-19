@@ -17,9 +17,26 @@ TEMP_BASE = Path(os.environ.get("TEMP", os.environ.get("TMP", "/tmp"))) / "filtr
 ENGINE_DIR = TEMP_BASE / "reports" / "cleanup-engine"
 
 
+def _increment_fail_history(selector_normalized: str) -> None:
+    """GATE 4: Record failed candidate for truthful classification (by_selector count)."""
+    ENGINE_DIR.mkdir(parents=True, exist_ok=True)
+    path = ENGINE_DIR / "failed_candidates.json"
+    data = {"by_selector": {}}
+    if path.exists():
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(data.get("by_selector"), dict):
+                data["by_selector"] = {}
+        except Exception:
+            data = {"by_selector": {}}
+    data.setdefault("by_selector", {})[selector_normalized] = data["by_selector"].get(selector_normalized, 0) + 1
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
 def _write_forensic(iteration_number: int, candidate_id: str, selector: str, line_start: int, line_end: int,
     exact_fail_reason: str, revert_proof: str):
     ENGINE_DIR.mkdir(parents=True, exist_ok=True)
+    _increment_fail_history(selector)
     data = {
         "session_id": None,
         "iteration_number": iteration_number,
@@ -50,6 +67,8 @@ def run_one_cleanup_iteration(iteration_number: int = 1, group_index: int = 0) -
     if group_index >= len(safe_groups):
         return "FAIL_REVERTED"
     safe_group = safe_groups[group_index]
+    if safe_group.get("classification") != "true_debt_safe_now" or safe_group.get("allowed_next_action") != "allow_cleanup":
+        return "FAIL_REVERTED"
     selector = safe_group.get("selector_normalized", "")
     candidate_id = "cleanup_candidate_" + str(group_index) + "_" + (selector[:50] or "id")
     occs = safe_group["occurrences"]

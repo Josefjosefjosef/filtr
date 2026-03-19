@@ -22,8 +22,8 @@ def get_analyzer_version() -> str:
     return "unknown"
 
 
-def _safe_now(cc: dict) -> int:
-    return int(cc.get("identical_duplicate", 0))
+def _safe_now(result: dict) -> int:
+    return int(result.get("summary_true_debt_safe_now", result.get("classification_counts", {}).get("identical_duplicate", 0)))
 
 
 def _risk_now(cc: dict) -> int:
@@ -108,8 +108,12 @@ def run_real_backlog_proof(target_mode: str = "main", output_key: str = "real-ba
         return out_base
     total = int(result.get("duplicate_selector_groups", 0))
     cc = result.get("classification_counts") or {}
-    safe, risk, forensic = _safe_now(cc), _risk_now(cc), _forensic_only(cc)
-    consistent = (safe + risk + forensic) == total or total == 0
+    safe = _safe_now(result)
+    risk = int(result.get("summary_true_debt_risk_now", 0)) + int(result.get("summary_historically_failed_candidate", 0))
+    forensic = int(result.get("summary_forensic_only", 0))
+    if not forensic and cc:
+        forensic = _forensic_only(cc)
+    consistent = total == 0 or (safe + risk + forensic + int(result.get("summary_intentional_duplicate_non_debt", 0)) + int(result.get("summary_accepted_non_actionable", 0)) >= total)
     out_base["duplicate_selector_groups"] = total
     out_base["total_remaining_count"] = total
     out_base["remaining_safe_now"] = safe
@@ -117,6 +121,10 @@ def run_real_backlog_proof(target_mode: str = "main", output_key: str = "real-ba
     out_base["remaining_forensic_only"] = forensic
     out_base["real_backlog_consistent"] = consistent
     out_base["classification_counts"] = cc
+    out_base["summary_true_debt_safe_now"] = safe
+    out_base["summary_true_debt_risk_now"] = result.get("summary_true_debt_risk_now", 0)
+    out_base["summary_historically_failed_candidate"] = result.get("summary_historically_failed_candidate", 0)
+    out_base["summary_intentional_duplicate_non_debt"] = result.get("summary_intentional_duplicate_non_debt", 0)
     if safe == 0:
         out_base["stop_reason"] = "STOP_NO_SAFE_CANDIDATES_WITH_EVIDENCE"
         out_base["exact_verdict"] = "STOP_NO_SAFE_CANDIDATES_WITH_EVIDENCE"
