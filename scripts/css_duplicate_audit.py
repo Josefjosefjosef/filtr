@@ -293,12 +293,14 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
         {"selector_normalized": g["selector_normalized"], "classification": g["classification"]}
         for g in dup_groups
     ]
+    safe_groups_top = [g for g in dup_groups if g.get("classification") == "identical_duplicate"][:25]
 
     return {
         "duplicate_selector_groups": len(dup_groups),
         "duplicate_rule_occurrences_in_groups": total_occ,
         "total_qualified_rules_scanned": len(occurrences),
         "groups_top": dup_groups[:25],
+        "safe_groups_top": safe_groups_top,
         "duplicate_groups_brief": duplicate_groups_brief,
         "classification_counts": dict(class_counts),
         "dead_override_candidate_policy": DEAD_OVERRIDE_POLICY,

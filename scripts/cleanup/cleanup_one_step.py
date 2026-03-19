@@ -46,8 +46,7 @@ def run_one_cleanup_iteration(iteration_number: int = 1, group_index: int = 0) -
     result = audit_css_file(APP_CSS)
     if result.get("error"):
         return "FAIL_REVERTED"
-    groups_top = result.get("groups_top") or []
-    safe_groups = [g for g in groups_top if g.get("classification") == "identical_duplicate" and (g.get("occurrences") or [])]
+    safe_groups = result.get("safe_groups_top") or []
     if group_index >= len(safe_groups):
         return "FAIL_REVERTED"
     safe_group = safe_groups[group_index]
@@ -61,18 +60,20 @@ def run_one_cleanup_iteration(iteration_number: int = 1, group_index: int = 0) -
     line_end = int(second.get("line_end", 0))
     if line_start < 1 or line_end < line_start:
         return "FAIL_REVERTED"
-    lines = APP_CSS.read_text(encoding="utf-8").splitlines()
+    raw = APP_CSS.read_text(encoding="utf-8")
+    lines = raw.splitlines()
+    newline = "\r\n" if "\r\n" in raw else "\n"
     if line_end > len(lines):
         _write_forensic(iteration_number, candidate_id, selector, line_start, line_end,
             "line_end_out_of_range", "no_edit_done")
         return "FAIL_REVERTED"
     new_lines = lines[: line_start - 1] + lines[line_end:]
-    APP_CSS.write_text("\n".join(new_lines) + ("\n" if lines and not lines[-1].endswith("\n") else ""), encoding="utf-8")
+    APP_CSS.write_text(newline.join(new_lines) + (newline if new_lines else ""), encoding="utf-8")
     verify = audit_css_file(APP_CSS)
     if verify.get("error"):
-        APP_CSS.write_text("\n".join(lines) + ("\n" if lines and not lines[-1].endswith("\n") else ""), encoding="utf-8")
+        APP_CSS.write_text(raw, encoding="utf-8")
         _write_forensic(iteration_number, candidate_id, selector, line_start, line_end,
-            "audit_error_after_edit", "git_checkout_assets_app_css")
+            "audit_error_after_edit", "restore_raw_before_edit")
         return "FAIL_REVERTED"
     commit_msg = "chore(css): cleanup iterace " + str(iteration_number)
     try:
