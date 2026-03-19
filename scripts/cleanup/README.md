@@ -5,13 +5,19 @@
 - Guards 11 and 12 are distinct: 11 = redo_block_candidate_level, 12 = checkpoint_consistency_pre_commit.
 - Guards 17 and 18: 17 = redo_block_iteration_level, 18 = checkpoint_consistency_post_commit.
 - All 20 slots have exact_guard_name, exact_purpose, exact_fail_condition, exact_machine_action_on_fail, code_entrypoint, active.
+- Guard validation: exact_code_function, exact_orchestrator_binding, last_validation_result.
 
-## Forensic backlog truth
+## Forensic root cause (0 vs 12)
 
-- Old state (safe_now=0) vs new state (safe_now=12): root cause documented in forensic-backlog-explanation.json (different_commit_or_branch or same_commit_different_analyzer).
-- Main and target branch proof are separate; each has branch_name, commit_sha, analyzer_version, remaining_safe_now, exact_verdict.
+- ROOT_CAUSE_VERDICT: DIFFERENT_BRANCH_OR_COMMIT_CONTEXT when old result had no stored artifact; new state has analyzer_file_path, analyzer_source_hash, exact_classification_counts.
+- forensic-root-cause-lock.json: old_state, new_state, root_cause_diff.
 
-## Start cleanup only when raw data allows
+## Claim vs evidence
 
-- CONTINUOUS_CLEANUP_START_VERDICT = READY only if engine READY, target safe_now > 0, claim vs evidence PASS, repo clean, chain isolated.
-- First real cleanup iteration runs at most once when start is READY; on failure reverts and returns FAIL_REVERTED.
+- Each claim: supporting_raw_evidence, blocking_raw_evidence, claim_vs_evidence_status = PASS/FAIL.
+- Start verdict PASS only when repo_clean and target_safe > 0 and chain ok.
+
+## Iteration fail / pass semantics
+
+- On FAIL_REVERTED: forensic written to cleanup-iteration-forensic.json; FAILED_CANDIDATE_NEXT_STATUS e.g. SKIP_TO_RISK_NOW; second iteration may use different group_index (redo block).
+- Full raw output: py -3 scripts/cleanup/emit_full_raw.py
