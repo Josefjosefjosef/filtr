@@ -7803,6 +7803,15 @@ html[data-iu-debug="1"] #iuDiagPanel {
   text-align: left;
 }
 
+/* CLS P0 (desktop): data-feed-ready=false reserve; html/body data-section set early in index (before paint)
+   so body[data-section="media"] feed typography matches first paint. :empty unusable (whitespace). */
+@media (min-width: 901px) {
+  #iuCenterStage[data-iu-view="articles"] #feed[data-feed-ready="false"] {
+    min-height: clamp(50rem, 68vh, 58rem) !important;
+    box-sizing: border-box;
+  }
+}
+
 .feedGrid,
 .feedCols,
 .feedMasonry{

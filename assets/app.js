@@ -3589,6 +3589,10 @@ try {
   }
 
   function renderEmpty(message, extraHtml = "") {
+    try {
+      const fr = document.getElementById("feed");
+      if (fr && fr.id === "feed") fr.setAttribute("data-feed-ready", "true");
+    } catch {}
     const target = getFeedTarget();
     if (target) {
       withScrollLock(() => {
@@ -3916,9 +3920,11 @@ try {
     // Zachovat #sectionsBar jako reálný DOM node před clear
     const sectionsBar = document.getElementById("sectionsBar");
     if (!items || items.length === 0) {
+      feedEl.setAttribute("data-feed-ready", "true");
       renderEmpty("Žádné články k zobrazení. Zkontroluj Stav dat.");
       return;
     }
+    feedEl.setAttribute("data-feed-ready", "false");
 
     // Render-only paging: show at most pageSize*page items, no other slicing elsewhere
     const pageSize = Number(state.pageSize) > 0 ? Number(state.pageSize) : 200;
@@ -4053,6 +4059,7 @@ try {
       const item = visibleItems[i];
       const kind = String(item.contentType || "").toLowerCase();
       if (!ALLOWED_CONTENT_TYPES.has(kind)) {
+        feedEl.setAttribute("data-feed-ready", "true");
         persistLastError("Invariant breach: neznámý contentType");
         renderInlineError("Obsah dočasně nedostupný.");
         return;
@@ -4118,7 +4125,6 @@ try {
       window.__iuVideoAnchorSectionKey = sectionKey;
       iuInitVideoAnchorObserver();
       iuEnsureVideoAnchors(sectionKey);
-      // keep diag count roughly aligned (best-effort)
       injectedVideosCount = safeTarget.querySelectorAll(".iuVideoCard[data-slot]").length;
     } catch {}
 
@@ -4170,6 +4176,7 @@ try {
       persistLastError("Data existují, ale nic nebylo vykresleno");
       renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
       setStatus("Stav dat: chyba (viz feed)");
+      feedEl.setAttribute("data-feed-ready", "true");
       return;
     }
     if (elDataCount) elDataCount.textContent = String(items.length);
@@ -4217,17 +4224,20 @@ try {
       }
     }
     if (!Array.isArray(state.cachedItems)) {
+      feedEl.setAttribute("data-feed-ready", "true");
       persistLastError("Invariant breach: state.cachedItems není pole");
       renderInlineError("Obsah dočasně nedostupný.");
       return;
     }
     for (const it of state.cachedItems) {
       if (!it || !it.contentType) {
+        feedEl.setAttribute("data-feed-ready", "true");
         persistLastError("Invariant breach: položka bez contentType");
         renderInlineError("Obsah dočasně nedostupný.");
         break;
       }
     }
+    feedEl.setAttribute("data-feed-ready", "true");
   }
 
   function renderInlineError(message) {
@@ -6451,6 +6461,7 @@ function buildVideoAsArticleCard(it) {
           const sectionsBar = document.getElementById("sectionsBar");
           if (sectionsBar) feed.replaceChildren(sectionsBar, div);
           else feed.replaceChildren(div);
+          feed.setAttribute("data-feed-ready", "true");
         }
       }
 
