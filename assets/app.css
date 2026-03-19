@@ -8313,6 +8313,17 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
   width: 100%;
 }
 
+/* CLS P0: lock center column width before feed render (784→817 forensic).
+   Variant A: minmax(817px,1fr) + container room so no overflow. */
+@media (min-width: 1240px){
+  .container{
+    max-width: 1240px;
+  }
+  .layout{
+    grid-template-columns: minmax(817px, 1fr) 360px;
+  }
+}
+
 #iuCenterStage .iuArticlesStage{
   display: block !important;
   width: 100%;
