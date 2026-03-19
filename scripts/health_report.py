@@ -755,6 +755,13 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
             cc = audit.get("classification_counts") or {}
             if cc:
                 f.write("- By classification: " + ", ".join(f"{k}={v}" for k, v in sorted(cc.items())) + "\n")
+            f.write("\n### CSS debt guardrail (AST baseline lock)\n\n")
+            try:
+                from css_debt_guard import markdown_for_health_report
+
+                f.write(markdown_for_health_report())
+            except Exception as ex:
+                f.write(f"_CSS debt guard error: {ex}_\n")
             f.write("\n#### Full sample — top duplicate groups (raw selector, lines, media, class)\n\n")
             for gi, g in enumerate((audit.get("groups_top") or [])[:10], start=1):
                 norm = g.get("selector_normalized") or ""

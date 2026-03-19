@@ -32,8 +32,8 @@ jobs:
           pip install -r scripts/requirements.txt
           python3 -c "import tinycss2; print('TINYCSS2_IMPORT_OK', getattr(tinycss2, '__version__', 'unknown'))"
 
-      - name: Python compile gate (audit + report)
-        run: python -m py_compile scripts/health_report.py scripts/css_duplicate_audit.py
+      - name: Python compile gate (audit + report + css debt guard)
+        run: python -m py_compile scripts/health_report.py scripts/css_duplicate_audit.py scripts/css_debt_guard.py
 
       - name: Run health report
         env:
@@ -64,8 +64,15 @@ jobs:
           }
           echo "PR_HEALTH_REPORT_AUDIT_GATES=PASS"
 
+      - name: CSS debt guard (AST baseline lock; HARD FAIL on debt growth)
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          python3 scripts/css_debt_guard.py --github-actions --json-summary reports/css_debt_guard_summary.json
+          test -f reports/css_debt_guard_summary.json
+
       - name: Log audit excerpt
         run: |
           set -euo pipefail
           echo "=== grep: marker + section headers ==="
-          grep -n "REAL_CSS_DUPLICATE_AUDIT_OK\|Real CSS duplicate selector blocks\|CSS token frequency signals\|Legend (CSS metrics)" reports/latest.md | head -40
+          grep -n "REAL_CSS_DUPLICATE_AUDIT_OK\|CSS debt guardrail\|CSS token frequency signals\|Legend (CSS metrics)" reports/latest.md | head -40
