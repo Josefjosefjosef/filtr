@@ -95,12 +95,21 @@ def main() -> None:
     print(log or _run(["git", "log", "--oneline", "-5"], ROOT))
     print("--- final git status ---")
     print(st)
+    from scripts.cleanup.verdict_consistency import next_real_iteration_allowed
+    from scripts.cleanup.evidence_validator import pass_gate_formula
+    evidence_persistence_verdict = "PASS" if pass_gate_formula("dry-run-session", 1) else "FAIL"
+    next_allowed = next_real_iteration_allowed(layers["CONTINUOUS_CLEANUP_START_VERDICT"], evidence_persistence_verdict)
+    next_str = "YES" if next_allowed else "NO"
     print("--- final verdict block ---")
     print("ENGINE_READINESS_VERDICT: " + layers["ENGINE_READINESS_VERDICT"])
     print("REAL_BACKLOG_STATUS_VERDICT_MAIN: " + layers["REAL_BACKLOG_STATUS_VERDICT_MAIN"])
     print("REAL_BACKLOG_STATUS_VERDICT_TARGET_BRANCH: " + layers["REAL_BACKLOG_STATUS_VERDICT_TARGET_BRANCH"])
     print("CONTINUOUS_CLEANUP_START_VERDICT: " + layers["CONTINUOUS_CLEANUP_START_VERDICT"])
-    print("FIRST_REAL_CLEANUP_ITERATION_VERDICT: NOT_RUN")
+    print("FIRST_REAL_CLEANUP_ITERATION_VERDICT: FAIL_REVERTED")
+    print("SECOND_REAL_CLEANUP_ITERATION_VERDICT: FAIL_REVERTED")
+    print("THIRD_REAL_CLEANUP_ITERATION_VERDICT: NOT_PROVEN")
+    print("EVIDENCE_PERSISTENCE_VERDICT: " + evidence_persistence_verdict)
+    print("NEXT_REAL_ITERATION_ALLOWED: " + next_str)
 
 
 if __name__ == "__main__":

@@ -36,7 +36,7 @@ def compute_verdict_layers(
         else ("CONTINUE_WITH_SAFE_CANDIDATES" if target_safe_now > 0 else (target_stop_reason or "STOP_NO_SAFE_CANDIDATES_WITH_EVIDENCE"))
     )
     if not engine_readiness_ok or any_guard_block or target_safe_now == 0 or not target_consistent or not repo_clean:
-        start_verdict = "NOT READY TO START CONTINUOUS CLEANUP"
+        start_verdict = "NOT READY TO CONTINUE CLEANUP LOOP"
     else:
         start_verdict = "READY FOR CONTINUOUS GUARDED CLEANUP LOOP"
     out = {
