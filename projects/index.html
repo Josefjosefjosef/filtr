@@ -68,6 +68,24 @@ style-src 'self' 'unsafe-inline' https:;
       }catch{}
     })();
     </script>
+    <script>
+    (function(){
+      function normSection(s){
+        var k = String(s || "").trim().toLowerCase();
+        if (k === "radio") return "radio";
+        if (k === "jr") return "jr";
+        var allowed = {media:1,tv:1,tvonline:1,mapy:1,travel:1,pocasi:1,tvprogram:1,culture:1,ads:1,jr:1,radio:1,"myuzel-1":1,"myuzel-2":1,"myuzel-3":1,"myuzel-4":1,"myuzel-5":1};
+        if (k === "home") return "media";
+        return allowed[k] ? k : "media";
+      }
+      try{
+        var u = new URL(window.location.href);
+        var sec = normSection(u.searchParams.get("section") || "media");
+        document.documentElement.setAttribute("data-section", sec);
+        document.body.setAttribute("data-section", sec);
+      }catch(e){}
+    })();
+    </script>
 
     <div id="app">
       <div id="page">
@@ -133,7 +151,7 @@ style-src 'self' 'unsafe-inline' https:;
                     <button type="button" id="iuMobileMainBack" class="iu-mobileGateBackBtn" aria-label="Zpět">Zpět</button>
                   </div>
                   <div class="sec" id="sectionLabel" style="display:none;">Sekce: Vše</div>
-                  <div class="feedUpdatedAt" id="dataUpdatedAt" style="display:none;">Poslední aktualizace dat: —</div>
+                  <div class="feedUpdatedAt iu-date-pending" id="dataUpdatedAt">Poslední aktualizace dat: —</div>
                   <div id="newsList">
                   <div id="dataStatus" style="display:none"></div>
                   <div id="emptyBox" class="iu-loadingMsg" aria-live="polite" style="display:none"></div>
@@ -773,8 +791,7 @@ style-src 'self' 'unsafe-inline' https:;
                       </aside>
                     </div>
                   </section>
-                  <div id="feed" data-view-host="media">
-                  </div>
+                  <div id="feed" data-view-host="media" data-feed-ready="false"></div>
                   </div>
                   <section id="iuQuickFeed" class="iuQuickFeed" hidden aria-label="Rychlé odkazy – detail"></section>
                   <section id="iuMyUzelView1" class="iuView iuMyUzelView" data-section="myuzel-1" data-view-host="myuzel-1" aria-label="Můj info uzel – Sekce 1" hidden>
