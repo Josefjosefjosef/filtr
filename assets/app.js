@@ -986,7 +986,7 @@ try {
         try {
           if (!node) return false;
           if (!(node instanceof Element)) return false;
-          return node.id === "iuDebugBox" || node.id === "iuLayoutShiftBox";
+          return node.id === "iuDebugBox" || node.id === "iuLayoutShiftBox" || node.id === "iuVideoDebugPanel";
         } catch (_) {
           return false;
         }
@@ -1171,7 +1171,8 @@ try {
                       (lbl) =>
                         lbl &&
                         lbl.indexOf("iuDebugBox") === -1 &&
-                        lbl.indexOf("iuLayoutShiftBox") === -1
+                        lbl.indexOf("iuLayoutShiftBox") === -1 &&
+                        lbl.indexOf("iuVideoDebugPanel") === -1
                     )
                     .slice(0, 2);
                 }
@@ -15740,6 +15741,7 @@ function buildVideoAsArticleCard(it) {
           "right:12px",
           "bottom:12px",
           "max-width:460px",
+          "min-height:120px",
           "max-height:45vh",
           "overflow:auto",
           "z-index:2147483647",
