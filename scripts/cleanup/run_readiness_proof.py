@@ -14,14 +14,21 @@ sys.path.insert(0, str(ROOT))
 
 
 def main() -> None:
-    from scripts.cleanup.guard_map import TRUE_GUARD_MAP, get_guard_map_version
+    from scripts.cleanup.guard_map import TRUE_GUARD_MAP
     from scripts.cleanup.real_backlog_proof import run_real_backlog_proof
     from scripts.cleanup.verdict_layers import compute_verdict_layers
     from scripts.cleanup.claim_vs_evidence import run_claim_vs_evidence
     from scripts.cleanup.forensic_report import build_forensic_explanation
+    from scripts.cleanup.forensic_root_cause import build_root_cause_lock
 
     main_proof = run_real_backlog_proof(target_mode="main", output_key="real-backlog-main.json")
     target_proof = run_real_backlog_proof(target_mode="target_branch", output_key="real-backlog-target.json")
+    build_root_cause_lock(
+        new_branch_name=main_proof["branch_name"],
+        new_commit_sha=main_proof["commit_sha"],
+        new_safe_now=main_proof["remaining_safe_now"],
+        new_classification_counts=main_proof.get("classification_counts") or {},
+    )
     build_forensic_explanation(
         old_branch_name="main",
         old_commit_sha="previous",
@@ -71,10 +78,20 @@ def main() -> None:
     print("REAL_BACKLOG_STATUS_VERDICT_TARGET_BRANCH: " + layers["REAL_BACKLOG_STATUS_VERDICT_TARGET_BRANCH"])
     print("CONTINUOUS_CLEANUP_START_VERDICT: " + layers["CONTINUOUS_CLEANUP_START_VERDICT"])
     first_cleanup = "NOT_RUN"
+    second_cleanup = "NOT_RUN"
     if layers["CONTINUOUS_CLEANUP_START_VERDICT"] == "READY FOR CONTINUOUS GUARDED CLEANUP LOOP" and int(target_proof.get("remaining_safe_now", 0)) > 0 and repo_clean:
         from scripts.cleanup.cleanup_one_step import run_one_cleanup_iteration
-        first_cleanup = run_one_cleanup_iteration()
+        first_cleanup = run_one_cleanup_iteration(iteration_number=1, group_index=0)
+    if first_cleanup == "FAIL_REVERTED":
+        try:
+            st2 = subprocess.run(["git", "status", "--short"], cwd=ROOT, capture_output=True, text=True, timeout=5).stdout.strip()
+        except Exception:
+            st2 = "?"
+        if not st2 and layers["CONTINUOUS_CLEANUP_START_VERDICT"] == "READY FOR CONTINUOUS GUARDED CLEANUP LOOP" and int(target_proof.get("remaining_safe_now", 0)) > 1:
+            from scripts.cleanup.cleanup_one_step import run_one_cleanup_iteration
+            second_cleanup = run_one_cleanup_iteration(iteration_number=2, group_index=1)
     print("FIRST_REAL_CLEANUP_ITERATION_VERDICT: " + first_cleanup)
+    print("SECOND_REAL_CLEANUP_ITERATION_VERDICT: " + second_cleanup)
 
 
 if __name__ == "__main__":

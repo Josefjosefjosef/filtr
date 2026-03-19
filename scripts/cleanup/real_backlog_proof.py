@@ -116,6 +116,7 @@ def run_real_backlog_proof(target_mode: str = "main", output_key: str = "real-ba
     out_base["remaining_risk_now"] = risk
     out_base["remaining_forensic_only"] = forensic
     out_base["real_backlog_consistent"] = consistent
+    out_base["classification_counts"] = cc
     if safe == 0:
         out_base["stop_reason"] = "STOP_NO_SAFE_CANDIDATES_WITH_EVIDENCE"
         out_base["exact_verdict"] = "STOP_NO_SAFE_CANDIDATES_WITH_EVIDENCE"
