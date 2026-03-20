@@ -22,8 +22,9 @@ def get_analyzer_version() -> str:
     return "unknown"
 
 
-def _safe_now(cc: dict) -> int:
-    return int(cc.get("identical_duplicate", 0))
+def _safe_now_from_inventory(result: dict) -> int:
+    """Canonical remaining_safe_now = len(safe_groups_top). Unified with cleanup engine and safe_now_forensic."""
+    return len(result.get("safe_groups_top") or [])
 
 
 def _risk_now(cc: dict) -> int:
@@ -108,8 +109,9 @@ def run_real_backlog_proof(target_mode: str = "main", output_key: str = "real-ba
         return out_base
     total = int(result.get("duplicate_selector_groups", 0))
     cc = result.get("classification_counts") or {}
-    safe, risk, forensic = _safe_now(cc), _risk_now(cc), _forensic_only(cc)
-    consistent = (safe + risk + forensic) == total or total == 0
+    safe = _safe_now_from_inventory(result)
+    risk, forensic = _risk_now(cc), _forensic_only(cc)
+    consistent = (int(cc.get("identical_duplicate", 0)) + risk + forensic) == total or total == 0
     out_base["duplicate_selector_groups"] = total
     out_base["total_remaining_count"] = total
     out_base["remaining_safe_now"] = safe

@@ -306,7 +306,7 @@ def _discovery_subgroup_safe_candidates(
             strict_sig = strict_normalize_decl_map(decls)
             key = (media, strict_sig)
             buckets[key].append((occ, decls))
-        for key, bucket in buckets.items():
+        for key, bucket in sorted(buckets.items(), key=lambda kv: (kv[0][0], kv[0][1], min((o.get("line_start") or 0 for o, _ in kv[1])))):
             if len(bucket) < 2:
                 continue
             media_ctx, _ = key
@@ -407,7 +407,7 @@ def _discovery_forensic_triage_wave1(
             strict_sig = strict_normalize_decl_map(decls)
             key = (media, strict_sig)
             buckets[key].append((occ, decls))
-        for key, bucket in buckets.items():
+        for key, bucket in sorted(buckets.items(), key=lambda kv: (kv[0][0], kv[0][1], min((o.get("line_start") or 0 for o, _ in kv[1])))):
             if len(bucket) < 2:
                 rejected["no_pair_or_subgroup"] += 1
                 continue
@@ -552,7 +552,7 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
             }
         )
 
-    dup_groups.sort(key=lambda x: -x["count"])
+    dup_groups.sort(key=lambda x: (-x["count"], x.get("selector_normalized") or ""))
     duplicate_groups_brief = [
         {"selector_normalized": g["selector_normalized"], "classification": g["classification"]}
         for g in dup_groups
@@ -564,6 +564,10 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
     subgroup_safe, subgroup_evidence = _discovery_subgroup_safe_candidates(dup_groups, base_safe_selectors)
     use_expansion = os.environ.get("DISCOVERY_EXPANSION", "1") != "0"
     use_subgroup = os.environ.get("SUBGROUP_DISCOVERY", "1") != "0"
+    inventory_flags = {
+        "DISCOVERY_EXPANSION": "1" if use_expansion else "0",
+        "SUBGROUP_DISCOVERY": "1" if use_subgroup else "0",
+    }
     safe_before_triage = (
         base_safe
         + (expanded_safe if use_expansion else [])
@@ -575,10 +579,15 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
         k = (gr.get("selector_normalized") or "", tuple(sorted((o.get("line_start"), o.get("line_end")) for o in occs)))
         existing_keys.add(k)
     use_triage = os.environ.get("FORENSIC_TRIAGE_WAVE1", "1") != "0"
+    inventory_flags["FORENSIC_TRIAGE_WAVE1"] = "1" if use_triage else "0"
     triage_safe, triage_evidence, triage_rejected, risk_gr, forensic_gr = (
         _discovery_forensic_triage_wave1(dup_groups, existing_keys) if use_triage else ([], [], {}, 0, 0)
     )
-    safe_groups_top = safe_before_triage + (triage_safe if use_triage else [])
+    safe_groups_top_raw = safe_before_triage + (triage_safe if use_triage else [])
+    safe_groups_top = sorted(
+        safe_groups_top_raw,
+        key=lambda g: (g.get("selector_normalized") or "", min((o.get("line_start") or 0 for o in (g.get("occurrences") or []))) or 0),
+    )
 
     return {
         "duplicate_selector_groups": len(dup_groups),
@@ -617,6 +626,7 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
         },
         "duplicate_groups_brief": duplicate_groups_brief,
         "classification_counts": dict(class_counts),
+        "inventory_flags": inventory_flags,
         "dead_override_candidate_policy": DEAD_OVERRIDE_POLICY,
         "line_range_method": (
             "line_start: tinycss2 QualifiedRule.source_line/column (first prelude token). "
