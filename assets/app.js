@@ -7699,11 +7699,11 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
-  function iuWxRenderMap(svgHost, state){
+  function iuWxRenderMap(svgHost, state, forcedLayer){
     if (!svgHost) return;
     const st = state;
     const next0 = (st && Array.isArray(st.nextHours)) ? st.nextHours[0] : null;
-    const layer = st && st.map ? st.map.activeLayer : "temp";
+    const layer = forcedLayer || (st && st.map ? st.map.activeLayer : "temp");
 
     const layerColor = (l) => {
       if (l === "precip") return "#38BDF8";
@@ -7950,72 +7950,97 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  function iuWeatherShowMapLoading(){
+    try{
+      const sk = document.getElementById("iuWxMapSkeleton");
+      const ok = document.getElementById("iuWxMapSuccess");
+      const fail = document.getElementById("iuWxMapFail");
+      if (sk) sk.hidden = false;
+      if (ok) ok.hidden = true;
+      if (fail) fail.hidden = true;
+    }catch{}
+  }
+
+  function iuWeatherShowMapSuccess(){
+    try{
+      const sk = document.getElementById("iuWxMapSkeleton");
+      const ok = document.getElementById("iuWxMapSuccess");
+      const fail = document.getElementById("iuWxMapFail");
+      if (sk) sk.hidden = true;
+      if (ok) ok.hidden = false;
+      if (fail) fail.hidden = true;
+    }catch{}
+  }
+
+  function iuWeatherShowMapFail(){
+    try{
+      const sk = document.getElementById("iuWxMapSkeleton");
+      const ok = document.getElementById("iuWxMapSuccess");
+      const fail = document.getElementById("iuWxMapFail");
+      if (sk) sk.hidden = true;
+      if (ok) ok.hidden = true;
+      if (fail) fail.hidden = false;
+    }catch{}
+  }
+
+  function iuWeatherLoadLayer(layerId, state){
+    return new Promise((resolve, reject) => {
+      try{
+        const root = document.getElementById("iuWxMapContainer");
+        if (!root) throw new Error("missing map container");
+        const layer = String(layerId || "precip");
+        root.innerHTML = "";
+        iuWxRenderMap(root, state, layer);
+        if (!root.querySelector("svg")) throw new Error("layer render failed");
+        resolve();
+      }catch(e){ reject(e); }
+    });
+  }
+
+  function iuWeatherRenderMapLayer(layerId, state){
+    const st = state || window.__iuWeatherState;
+    if (!st || !st.map) return;
+    const root = document.getElementById("iuWxMapContainer");
+    if (!root) { iuWeatherShowMapFail(); return; }
+
+    const layer = String(layerId || st.map.activeLayer || "precip");
+    st.map.activeLayer = layer;
+    window.__iuWeatherMapMounted = false;
+    root.innerHTML = "";
+    iuWeatherShowMapLoading();
+
+    const tryRender = (attempt) => {
+      const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 4000));
+      Promise.race([iuWeatherLoadLayer(layer, st), timeout])
+        .then(() => {
+          window.__iuWeatherMapMounted = true;
+          iuWeatherShowMapSuccess();
+          iuWxSyncLayerButtons(st);
+        })
+        .catch(() => {
+          if (attempt < 2) {
+            setTimeout(() => tryRender(attempt + 1), 250 * (attempt + 1));
+            return;
+          }
+          window.__iuWeatherMapMounted = false;
+          iuWeatherShowMapFail();
+        });
+    };
+    tryRender(0);
+  }
+
   function iuWxSetActiveLayer(layerId){
     try{
       const st = window.__iuWeatherState;
       if (!st || !st.map) return;
       if (st.map.disabledLayers && st.map.disabledLayers.indexOf(layerId) !== -1) return;
       st.map.activeLayer = layerId;
-      iuWxRenderMap(document.getElementById("iuWxMapSvgHost"), st);
-      iuWxSyncLayerButtons(st);
+      iuWeatherRenderMapLayer(layerId, st);
     }catch{}
   }
 
   function iuWxRenderMapWithRetry(state){
-    try{
-      const elMapSkeleton = document.getElementById("iuWxMapSkeleton");
-      const elMapSuccess = document.getElementById("iuWxMapSuccess");
-      const elMapFail = document.getElementById("iuWxMapFail");
-      const host = document.getElementById("iuWxMapSvgHost");
-      if (!host || !state || !state.map) throw new Error("map host/state missing");
-
-      if (elMapSkeleton) elMapSkeleton.hidden = false;
-      if (elMapSuccess) elMapSuccess.hidden = true;
-      if (elMapFail) elMapFail.hidden = true;
-
-      let done = false;
-      const failTimer = setTimeout(() => {
-        if (done) return;
-        if (elMapSkeleton) elMapSkeleton.hidden = true;
-        if (elMapSuccess) elMapSuccess.hidden = true;
-        if (elMapFail) elMapFail.hidden = false;
-      }, 4000);
-
-      const run = (attempt) => {
-        try{
-          host.innerHTML = "";
-          if (!state.map.activeLayer) state.map.activeLayer = "precip";
-          iuWxRenderMap(host, state);
-          if (!host.querySelector("svg")) throw new Error("svg not rendered");
-          done = true;
-          clearTimeout(failTimer);
-          if (elMapSkeleton) elMapSkeleton.hidden = true;
-          if (elMapSuccess) elMapSuccess.hidden = false;
-          if (elMapFail) elMapFail.hidden = true;
-          return;
-        }catch{
-          if (attempt < 2) {
-            setTimeout(() => run(attempt + 1), 250 * (attempt + 1));
-            return;
-          }
-          done = true;
-          clearTimeout(failTimer);
-          if (elMapSkeleton) elMapSkeleton.hidden = true;
-          if (elMapSuccess) elMapSuccess.hidden = true;
-          if (elMapFail) elMapFail.hidden = false;
-        }
-      };
-      run(0);
-    }catch{
-      try{
-        const elMapSkeleton = document.getElementById("iuWxMapSkeleton");
-        const elMapSuccess = document.getElementById("iuWxMapSuccess");
-        const elMapFail = document.getElementById("iuWxMapFail");
-        if (elMapSkeleton) elMapSkeleton.hidden = true;
-        if (elMapSuccess) elMapSuccess.hidden = true;
-        if (elMapFail) elMapFail.hidden = false;
-      }catch{}
-    }
+    try{ iuWeatherRenderMapLayer(state && state.map ? state.map.activeLayer : "precip", state); }catch{ iuWeatherShowMapFail(); }
   }
 
   function iuWxApplyMobileLayoutFix(){
@@ -8023,7 +8048,7 @@ function buildVideoAsArticleCard(it) {
       const isMobile = typeof window !== "undefined" && typeof window.innerWidth === "number" && window.innerWidth <= 768;
       const mapHost = document.getElementById("iuWxMapHost");
       const map = document.getElementById("iuWxMap");
-      const mapSvg = document.getElementById("iuWxMapSvgHost");
+      const mapSvg = document.getElementById("iuWxMapContainer");
       const layerBar = document.getElementById("iuWxLayerSwitchBar");
       const quickGrid = document.getElementById("iuWeatherView") ? document.getElementById("iuWeatherView").querySelector(".iuWeatherQuickGrid") : null;
 
