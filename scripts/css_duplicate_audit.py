@@ -268,6 +268,95 @@ def _discovery_expand_safe_candidates(
     return out[:50]
 
 
+def _discovery_subgroup_safe_candidates(
+    dup_groups: List[Dict[str, Any]],
+    base_safe_selectors: set,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """
+    Within groups that are NOT whole-group safe, find pair/subgroup level safe candidates:
+    occurrences that share same media and strict-identical declarations (exact redundant subset).
+    Same safety threshold: no layout, no risky selector. Does not change classify_group.
+    Returns (list of synthetic safe groups for safe_groups_top, list of evidence records).
+    """
+    from collections import defaultdict as dd
+
+    out_groups: List[Dict[str, Any]] = []
+    evidence_list: List[Dict[str, Any]] = []
+    for g in dup_groups:
+        sel = g.get("selector_normalized") or ""
+        if sel in base_safe_selectors:
+            continue
+        cls = g.get("classification")
+        if cls == "identical_duplicate":
+            continue
+        occs_out = g.get("occurrences") or []
+        decls_list = g.get("_occs_declarations") or []
+        medias_list = g.get("_occs_media") or []
+        if len(occs_out) < 2 or len(decls_list) != len(occs_out):
+            continue
+        sel_l = sel.lower()
+        if any(m in sel_l for m in RISKY_SELECTOR_MARKERS):
+            continue
+        buckets: Dict[Tuple[str, Tuple[Tuple[str, str], ...]], List[Tuple[Dict[str, Any], Dict[str, str]]]] = dd(list)
+        for i, occ in enumerate(occs_out):
+            if i >= len(decls_list):
+                break
+            media = medias_list[i] if i < len(medias_list) else ""
+            decls = decls_list[i]
+            strict_sig = strict_normalize_decl_map(decls)
+            key = (media, strict_sig)
+            buckets[key].append((occ, decls))
+        for key, bucket in buckets.items():
+            if len(bucket) < 2:
+                continue
+            media_ctx, _ = key
+            _, repr_decls = bucket[0]
+            any_layout = (
+                LAYOUT_PROPS.intersection(repr_decls.keys())
+                or any(
+                    LAYOUT_PROPS & set(re.split(r"[\s:]+", v.lower()))
+                    for v in repr_decls.values()
+                )
+            )
+            if any_layout:
+                continue
+            occs_sub = [o for o, _ in bucket]
+            candidate_kind = "pair" if len(bucket) == 2 else "subgroup"
+            parent_group_id = sel[:80].replace(" ", "_")
+            cid = f"subgroup_{parent_group_id}_{candidate_kind}_{len(out_groups)}"
+            synthetic = {
+                "selector_normalized": sel,
+                "count": len(occs_sub),
+                "classification": "identical_duplicate",
+                "declarations_identical_across_group": True,
+                "occurrences": occs_sub,
+                "safe_source": "subgroup_discovery",
+                "candidate_id": cid,
+                "parent_group_id": parent_group_id,
+                "candidate_kind": candidate_kind,
+                "safe_classification_reason": "exact_decl_equivalent_subset_same_media_no_layout_no_risky_selector",
+                "risk_flags": [],
+                "discovery_evidence": {
+                    "strict_decl_identical": True,
+                    "same_media_context": True,
+                    "no_layout_props": True,
+                    "no_risky_selector": True,
+                },
+            }
+            out_groups.append(synthetic)
+            evidence_list.append({
+                "candidate_id": cid,
+                "parent_group_id": parent_group_id,
+                "candidate_kind": candidate_kind,
+                "selector": sel,
+                "reason": "exact_decl_equivalent_subset_same_media_no_layout_no_risky_selector",
+                "risk_flags": [],
+                "safe_classification_reason": synthetic["safe_classification_reason"],
+                "evidence": synthetic["discovery_evidence"],
+            })
+    return out_groups[:50], evidence_list
+
+
 def classify_group(occs: List[Dict[str, Any]]) -> str:
     medias = {o["media_context"] for o in occs}
     decl_sigs = [normalize_decl_map(o["declarations"]) for o in occs]
@@ -357,9 +446,16 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
     ]
     base_safe_raw = [g for g in dup_groups if g.get("classification") == "identical_duplicate"][:50]
     base_safe = [{k: v for k, v in g.items() if not k.startswith("_")} for g in base_safe_raw]
+    base_safe_selectors = {g["selector_normalized"] for g in base_safe_raw}
     expanded_safe = _discovery_expand_safe_candidates(dup_groups, base_safe_raw)
+    subgroup_safe, subgroup_evidence = _discovery_subgroup_safe_candidates(dup_groups, base_safe_selectors)
     use_expansion = os.environ.get("DISCOVERY_EXPANSION", "1") != "0"
-    safe_groups_top = base_safe + (expanded_safe if use_expansion else [])
+    use_subgroup = os.environ.get("SUBGROUP_DISCOVERY", "1") != "0"
+    safe_groups_top = (
+        base_safe
+        + (expanded_safe if use_expansion else [])
+        + (subgroup_safe if use_subgroup else [])
+    )
 
     return {
         "duplicate_selector_groups": len(dup_groups),
@@ -369,10 +465,14 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
         "safe_groups_top": safe_groups_top,
         "discovery_expansion": {
             "enabled": use_expansion,
+            "subgroup_enabled": use_subgroup,
             "base_safe_count": len(base_safe),
             "expanded_count": len(expanded_safe),
+            "subgroup_count": len(subgroup_safe),
             "safe_now_before_expansion": len(base_safe),
-            "safe_now_after_expansion": len(base_safe) + len(expanded_safe),
+            "safe_now_after_expansion": len(base_safe)
+            + (len(expanded_safe) if use_expansion else 0)
+            + (len(subgroup_safe) if use_subgroup else 0),
             "new_candidates": [
                 {
                     "candidate_id": "discovery_expanded_" + (g.get("selector_normalized") or "")[:50].replace(" ", "_"),
@@ -383,6 +483,7 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
                 }
                 for g in expanded_safe
             ],
+            "subgroup_new_candidates": subgroup_evidence if use_subgroup else [],
         },
         "duplicate_groups_brief": duplicate_groups_brief,
         "classification_counts": dict(class_counts),
