@@ -5212,8 +5212,12 @@ html[data-section="pocasi"] #iuWeatherView .iuWeatherStickyTime{
 }
 body[data-section="pocasi"] #iuWeatherView .iuWeatherStickyDate,
 html[data-section="pocasi"] #iuWeatherView .iuWeatherStickyDate{
+  font-variant-numeric: tabular-nums;
   font-weight: 800;
   font-size: 200%;
+  min-width: 12ch; /* reserve width to avoid first render shift from "—" to date text */
+  text-align: right;
+  flex: 0 0 12ch;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
