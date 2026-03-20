@@ -186,7 +186,7 @@
 /* 1) Stabiln├ş scrollbar ÔÇô eliminuje vodorovn├ę ÔÇ×cuknut├şÔÇť p┼Öi objeven├ş scrollbaru */
 html{
   scroll-padding-top: var(--topbarStackH);
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
   overflow-x: hidden;
 }
 
@@ -13348,7 +13348,7 @@ body:has(#leftContent:has(#iuCenterStage[data-iu-view="quick"])),
 
 /* CLS guard ÔÇö keep layout viewport width stable when scrollbar appears */
 html{
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
 }
 
 /* TOPBAR RIGHT ÔÇö layout contract (prevents CLS from dynamic time/date/namday) */
