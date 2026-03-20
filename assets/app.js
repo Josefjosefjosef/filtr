@@ -8018,6 +8018,52 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuWxApplyMobileLayoutFix(){
+    try{
+      const isMobile = typeof window !== "undefined" && typeof window.innerWidth === "number" && window.innerWidth <= 768;
+      const mapHost = document.getElementById("iuWxMapHost");
+      const map = document.getElementById("iuWxMap");
+      const mapSvg = document.getElementById("iuWxMapSvgHost");
+      const layerBar = document.getElementById("iuWxLayerSwitchBar");
+      const quickGrid = document.getElementById("iuWeatherView") ? document.getElementById("iuWeatherView").querySelector(".iuWeatherQuickGrid") : null;
+
+      if (!isMobile) {
+        if (mapHost) { mapHost.style.minHeight = ""; mapHost.style.overflow = ""; }
+        if (map) map.style.minHeight = "";
+        if (mapSvg) mapSvg.style.height = "";
+        if (layerBar) {
+          layerBar.style.position = "";
+          layerBar.style.left = "";
+          layerBar.style.right = "";
+          layerBar.style.top = "";
+          layerBar.style.margin = "";
+          layerBar.style.justifyContent = "";
+        }
+        if (quickGrid) {
+          quickGrid.style.gridTemplateColumns = "";
+          quickGrid.style.gap = "";
+        }
+        return;
+      }
+
+      if (mapHost) { mapHost.style.minHeight = "220px"; mapHost.style.overflow = "visible"; }
+      if (map) map.style.minHeight = "220px";
+      if (mapSvg) mapSvg.style.height = "220px";
+      if (layerBar) {
+        layerBar.style.position = "static";
+        layerBar.style.left = "auto";
+        layerBar.style.right = "auto";
+        layerBar.style.top = "auto";
+        layerBar.style.margin = "8px 8px 10px";
+        layerBar.style.justifyContent = "flex-start";
+      }
+      if (quickGrid) {
+        quickGrid.style.gridTemplateColumns = "1fr";
+        quickGrid.style.gap = "12px";
+      }
+    }catch{}
+  }
+
   async function iuWeatherEnsureState(){
     const city = iuWeatherGetActiveCity();
     if (!city || typeof city.lat !== "number" || typeof city.lon !== "number") throw new Error("bad city");
@@ -8345,6 +8391,7 @@ function buildVideoAsArticleCard(it) {
           })());
 
       if (window.__iuWeatherRenderToken !== myToken) return;
+      iuWxApplyMobileLayoutFix();
       if (!state.map || typeof state.map !== "object") state.map = { activeLayer: "precip", supportedLayers: [], disabledLayers: [] };
       if (!state.map.activeLayer) state.map.activeLayer = "precip";
 
@@ -8872,6 +8919,14 @@ function buildVideoAsArticleCard(it) {
           iuWxSetActiveLayer(qLayer);
         }catch{}
       });
+
+      try{
+        if (!window.__iuWeatherMobileFixResizeBound) {
+          window.__iuWeatherMobileFixResizeBound = 1;
+          window.addEventListener("resize", () => { try{ iuWxApplyMobileLayoutFix(); }catch{} }, { passive: true });
+        }
+      }catch{}
+      try{ iuWxApplyMobileLayoutFix(); }catch{}
     }catch{}
   }
 

@@ -5428,7 +5428,6 @@ html[data-section="pocasi"] #iuWeatherView .iuWeatherEmbedBtn{
   z-index: 2;
 }
 
-/* Main weather map: internal map (no external iframes) */
 body[data-section="pocasi"] #iuWeatherView .iuWxMapHost,
 html[data-section="pocasi"] #iuWeatherView .iuWxMapHost{
   position: relative;
@@ -5471,7 +5470,6 @@ html[data-section="pocasi"] #iuWeatherView .iuWxMapSkeleton{
   background: rgba(255,255,255,0.04);
 }
 
-/* Layer switch buttons overlay */
 body[data-section="pocasi"] #iuWeatherView .iuWxLayerSwitchBar,
 html[data-section="pocasi"] #iuWeatherView .iuWxLayerSwitchBar{
   position: absolute;
@@ -5804,34 +5802,11 @@ html[data-section="pocasi"] #iuWeatherView #iuWeatherAlertText{
   color: var(--iuWxAlertRed, #d61f1f);
 }
 
-/* Quick layers + map stacking on mobile */
-@media (max-width: 768px){
-  body[data-section="pocasi"] #iuWeatherView .iuWxMapHost,
-  html[data-section="pocasi"] #iuWeatherView .iuWxMapHost{
-    min-height: 220px;
-    overflow: visible;
-  }
-  body[data-section="pocasi"] #iuWeatherView .iuWxMap,
-  html[data-section="pocasi"] #iuWeatherView .iuWxMap{
-    min-height: 220px;
-  }
-  body[data-section="pocasi"] #iuWeatherView .iuWxMapSvgHost,
-  html[data-section="pocasi"] #iuWeatherView .iuWxMapSvgHost{
-    height: 220px;
-  }
-  body[data-section="pocasi"] #iuWeatherView .iuWxLayerSwitchBar,
-  html[data-section="pocasi"] #iuWeatherView .iuWxLayerSwitchBar{
-    position: static;
-    left: auto;
-    right: auto;
-    top: auto;
-    margin: 8px 8px 10px;
-    justify-content: flex-start;
-  }
+/* Quick layers: keep compact two-column fallback for small screens */
+@media (max-width: 900px){
   body[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid,
   html[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid{
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
