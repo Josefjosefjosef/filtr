@@ -922,6 +922,10 @@ style-src 'self' 'unsafe-inline' https:;
                         <span class="iuWeatherMyCityLabel">Moje město:</span>
                         <strong class="iuWeatherMyCityName" id="iuWeatherMyCityName">Praha</strong>
                         <button class="iuBtn iuBtn--ghost iuWeatherMyCityBtn" id="iuWeatherCityChange" type="button">Změnit</button>
+                        <button class="iuBtn iuBtn--ghost iuWeatherMyCityBtn" id="iuWeatherGeoBtn" type="button">Aktuální poloha</button>
+                      </div>
+                      <div class="iuWeatherGeoActiveLine" id="iuWeatherGeoActiveLine" hidden aria-hidden="true">
+                        Aktuální poloha: <strong id="iuWeatherGeoLabel">—</strong>
                       </div>
                       <label class="iuWeatherMyCityPin">
                         <input type="checkbox" id="iuWeatherCityPinned" />
@@ -941,6 +945,7 @@ style-src 'self' 'unsafe-inline' https:;
                               <div class="iuHomeWeatherMeta">
                                 <div class="iuHomeWeatherCity" id="iuWxPlace">—</div>
                                 <div class="iuHomeWeatherDesc iuWxMinMax" id="iuWxMinMax">Max —° · Min —°</div>
+                                <div class="iuHomeWeatherDesc iuWxFeelsLike" id="iuWxFeelsLike">Pocitově —°C</div>
                               </div>
                               <div class="iuHomeWeatherNow">
                                 <div class="iuHomeWeatherTemp" id="iuWxTemp">—°C</div>
@@ -950,12 +955,16 @@ style-src 'self' 'unsafe-inline' https:;
 
                             <!-- Stabilizace CLS: skeleton sloty (neposkakuje při doplnění hodin JS) -->
                             <div class="iuWxHours iuWxHours--skeleton" id="iuWxHours" aria-label="Hodinová předpověď (6 hodin)">
-                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
-                              <div class="iuWxHour" aria-hidden="true"><div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div class="iuWxHourTime">--h</div><div class="iuWxHourIcon">🌤</div><div class="iuWxHourTemp">—</div><div class="iuWxHourPrecip">—</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div class="iuWxHourTime">--h</div><div class="iuWxHourIcon">🌤</div><div class="iuWxHourTemp">—</div><div class="iuWxHourPrecip">—</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div class="iuWxHourTime">--h</div><div class="iuWxHourIcon">🌤</div><div class="iuWxHourTemp">—</div><div class="iuWxHourPrecip">—</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div class="iuWxHourTime">--h</div><div class="iuWxHourIcon">🌤</div><div class="iuWxHourTemp">—</div><div class="iuWxHourPrecip">—</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div class="iuWxHourTime">--h</div><div class="iuWxHourIcon">🌤</div><div class="iuWxHourTemp">—</div><div class="iuWxHourPrecip">—</div></div>
+                              <div class="iuWxHour" aria-hidden="true"><div class="iuWxHourTime">--h</div><div class="iuWxHourIcon">🌤</div><div class="iuWxHourTemp">—</div><div class="iuWxHourPrecip">—</div></div>
+                            </div>
+
+                            <div class="iuWxHeroNarrative" id="iuWxHeroNarrative" aria-label="Krátký souhrn">
+                              —
                             </div>
                           </div>
                         </div>
@@ -979,22 +988,32 @@ style-src 'self' 'unsafe-inline' https:;
                     </section>
 
                     <div class="iuSubSectionHeader">
-                      <h3 class="iuSectionSubTitle">Radar srážek</h3>
+                      <h3 class="iuSectionSubTitle">Hlavní mapa počasí</h3>
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
                     </div>
-                    <section
-                      class="iuWeatherEmbed"
-                      id="iuWxRadar"
-                      data-iu-embed="radar"
-                      data-src="https://www.ventusky.com/?p=49.8;18.3;7&l=rain-3h"
-                      aria-label="Radar srážek"
-                    >
-                      <div class="iuWeatherEmbedInner">
-                        <div class="iuWeatherEmbedSkeleton" id="iuWxRadarSkeleton" aria-hidden="true">Radar srážek (klikněte pro načtení)</div>
-                        <div class="iuWeatherEmbedFrame" id="iuWxRadarFrame" aria-hidden="true"></div>
-                        <button class="iuBtn iuWeatherEmbedBtn" type="button" id="iuWxRadarOpen">Otevřít radar</button>
+
+                    <div class="iuWxMapHost" id="iuWxMapHost" aria-label="Hlavní mapa počasí (map + vrstvy)">
+                      <section class="iuWxMap" id="iuWxMap" aria-label="Mapa počasí">
+                        <div class="iuWxMapState iuWxMapSkeleton" id="iuWxMapSkeleton" aria-hidden="true">
+                          Načítání mapy…
+                        </div>
+                        <div class="iuWxMapState iuWxMapSuccess" id="iuWxMapSuccess" hidden aria-hidden="true">
+                          <div class="iuWxMapSvgHost" id="iuWxMapSvgHost" aria-label="Obsah mapy"></div>
+                        </div>
+                        <div class="iuWxMapState iuWxMapFail" id="iuWxMapFail" hidden aria-live="polite">
+                          Mapu se nepodařilo načíst. Zkuste prosím později.
+                        </div>
+                      </section>
+
+                      <div class="iuWxLayerSwitchBar" id="iuWxLayerSwitchBar" role="group" aria-label="Přepínání vrstev mapy">
+                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="precip">💧 Radar / srážky</button>
+                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="wind">💨 Vítr</button>
+                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="pressure">🧭 Tlak</button>
+                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="temp">🌡 Teplota</button>
+                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="fog">🌫 Mlha</button>
+                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="uv">🌞 UV</button>
                       </div>
-                    </section>
+                    </div>
 
                     <div class="iuSubSectionHeader">
                       <h3 class="iuSectionSubTitle">7denní předpověď</h3>
@@ -1018,22 +1037,49 @@ style-src 'self' 'unsafe-inline' https:;
                     </section>
 
                     <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">Premium mini-karty metrik</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <section class="iuWxPremiumGrid" id="iuWxPremiumGrid" aria-label="Premium mini-karty metrik">
+                      <div class="iuWxPremiumCard" id="iuWxCardWind" aria-label="Vítr">
+                        <div class="iuWxPremiumTitle">Vítr</div>
+                        <div class="iuWxPremiumValue"><span id="iuWxWindKph">—</span> km/h</div>
+                        <div class="iuWxPremiumSub">nárazy <span id="iuWxWindGustKph">—</span> km/h</div>
+                        <div class="iuWxPremiumSub">směr <span id="iuWxWindDir">—</span></div>
+                      </div>
+                      <div class="iuWxPremiumCard" id="iuWxCardPressure" aria-label="Tlak">
+                        <div class="iuWxPremiumTitle">Tlak</div>
+                        <div class="iuWxPremiumValue"><span id="iuWxPressureHpa">—</span> hPa</div>
+                      </div>
+                      <div class="iuWxPremiumCard" id="iuWxCardFog" aria-label="Mlha / dohlednost">
+                        <div class="iuWxPremiumTitle">Mlha</div>
+                        <div class="iuWxPremiumValue"><span id="iuWxVisibilityKm">—</span> km</div>
+                      </div>
+                      <div class="iuWxPremiumCard" id="iuWxCardUv" aria-label="UV index">
+                        <div class="iuWxPremiumTitle">UV</div>
+                        <div class="iuWxPremiumValue"><span id="iuWxUvIndex">—</span> ( <span id="iuWxUvCategory">—</span> )</div>
+                      </div>
+                      <div class="iuWxPremiumCard" id="iuWxCardHumidity" aria-label="Vlhkost">
+                        <div class="iuWxPremiumTitle">Vlhkost</div>
+                        <div class="iuWxPremiumValue"><span id="iuWxHumidityPct">—</span> %</div>
+                      </div>
+                      <div class="iuWxPremiumCard" id="iuWxCardPrecip" aria-label="Srážky dnes">
+                        <div class="iuWxPremiumTitle">Srážky dnes</div>
+                        <div class="iuWxPremiumValue"><span id="iuWxPrecipTodayMm">—</span> mm</div>
+                      </div>
+                    </section>
+
+                    <div class="iuSubSectionHeader">
                       <h3 class="iuSectionSubTitle">Rychlé vrstvy</h3>
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
                     </div>
                     <div class="iuWeatherQuickGrid" role="list" aria-label="Rychlé vrstvy">
-                      <a class="iuRadioChip iuWeatherQuickChip" role="listitem" href="https://www.windy.com/?rain,50.075,14.438,8" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">💧 Srážky</span><span class="iuRadioChipDesc">vrstva (Windy)</span></a>
-                      <a class="iuRadioChip iuWeatherQuickChip" role="listitem" href="https://www.windy.com/?wind,50.075,14.438,8" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">💨 Vítr</span><span class="iuRadioChipDesc">vrstva (Windy)</span></a>
-                      <a class="iuRadioChip iuWeatherQuickChip" role="listitem" href="https://www.windy.com/?pressure,50.075,14.438,8" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">🧭 Tlak</span><span class="iuRadioChipDesc">vrstva (Windy)</span></a>
-                      <a class="iuRadioChip iuWeatherQuickChip" role="listitem" href="https://www.windy.com/?fog,50.075,14.438,8" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">🌫 Mlha</span><span class="iuRadioChipDesc">viditelnost</span></a>
-                      <a class="iuRadioChip iuWeatherQuickChip" role="listitem" href="https://www.windy.com/?uvindex,50.075,14.438,8" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">🌞 UV</span><span class="iuRadioChipDesc">UV index</span></a>
+                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="precip"> <span class="iuRadioChipTitle">💧 Srážky</span><span class="iuRadioChipDesc">vrstva</span> </button>
+                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="wind"> <span class="iuRadioChipTitle">💨 Vítr</span><span class="iuRadioChipDesc">vrstva</span> </button>
+                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="pressure"> <span class="iuRadioChipTitle">🧭 Tlak</span><span class="iuRadioChipDesc">vrstva</span> </button>
+                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="fog"> <span class="iuRadioChipTitle">🌫 Mlha</span><span class="iuRadioChipDesc">viditelnost</span> </button>
+                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="uv"> <span class="iuRadioChipTitle">🌞 UV</span><span class="iuRadioChipDesc">UV index</span> </button>
                     </div>
-
-                    <div class="iuSubSectionHeader">
-                      <h3 class="iuSectionSubTitle">Poznámky</h3>
-                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
-                    </div>
-                    <div class="iuNotesHost" id="iuWxNotes" data-iu-notes-key="pocasi_notes" data-iu-notes-scope="pocasi" data-iu-notes-title="Poznámky"></div>
 
                     <div class="iuSubSectionHeader">
                       <h3 class="iuSectionSubTitle">Další zdroje</h3>
@@ -1156,6 +1202,12 @@ style-src 'self' 'unsafe-inline' https:;
                         <p>Historické video dnes není k dispozici.</p>
                       </div>
                     </section>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">Poznámky</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <div class="iuNotesHost" id="iuWxNotes" data-iu-notes-key="section_weather" data-iu-notes-scope="section" data-iu-notes-name="weather" data-iu-notes-title="Poznámky"></div>
                     </div>
                   </div>
 

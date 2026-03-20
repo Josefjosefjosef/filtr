@@ -6790,6 +6790,12 @@ function buildVideoAsArticleCard(it) {
   const IU_WEATHER_CITY_PIN_KEY = "iuWeatherCityPinned"; // "1" | "0"
   const IU_WEATHER_CITY_SELECTED_KEY = "iuWeatherCitySelectedV1"; // JSON: { name, lat, lon }
 
+  const IU_WEATHER_LOCATION_MODE_KEY = "iuWeatherLocationModeV1"; // "city" | "gps"
+  const IU_WEATHER_LOCATION_MODE_CITY = "city";
+  const IU_WEATHER_LOCATION_MODE_GPS = "gps";
+
+  const IU_WEATHER_GPS_SELECTED_KEY = "iuWeatherGpsSelectedV1"; // JSON: { name, lat, lon }
+
   const IU_WEATHER_DEFAULT_CITY = { name: "Praha", lat: 50.0755, lon: 14.4378 };
 
   const IU_CITY_FALLBACK = [
@@ -7138,6 +7144,56 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  function iuWeatherReadLocationMode(){
+    try{
+      const raw = String(localStorage.getItem(IU_WEATHER_LOCATION_MODE_KEY) || "").trim().toLowerCase();
+      if (raw === IU_WEATHER_LOCATION_MODE_GPS) return IU_WEATHER_LOCATION_MODE_GPS;
+      return IU_WEATHER_LOCATION_MODE_CITY;
+    }catch{
+      return IU_WEATHER_LOCATION_MODE_CITY;
+    }
+  }
+
+  function iuWeatherWriteLocationMode(mode){
+    try{
+      const m = mode === IU_WEATHER_LOCATION_MODE_GPS ? IU_WEATHER_LOCATION_MODE_GPS : IU_WEATHER_LOCATION_MODE_CITY;
+      localStorage.setItem(IU_WEATHER_LOCATION_MODE_KEY, m);
+    }catch{}
+  }
+
+  function iuWeatherReadGpsSelected(){
+    try{
+      const raw = localStorage.getItem(IU_WEATHER_GPS_SELECTED_KEY);
+      if (!raw) return null;
+      const obj = JSON.parse(raw);
+      const name = String(obj && obj.name || "").trim();
+      const lat = Number(obj && obj.lat);
+      const lon = Number(obj && obj.lon);
+      if (!name || !isFinite(lat) || !isFinite(lon)) return null;
+      return { name, lat, lon };
+    }catch{
+      return null;
+    }
+  }
+
+  function iuWeatherWriteGpsSelected(city){
+    try{
+      if (!city) return;
+      localStorage.setItem(IU_WEATHER_GPS_SELECTED_KEY, JSON.stringify({
+        name: String(city.name || "").trim(),
+        lat: Number(city.lat),
+        lon: Number(city.lon),
+      }));
+    }catch{}
+  }
+
+  function iuWeatherClearRuntimeCity(){
+    try{
+      if (window.__iuWeatherRuntimeCity) window.__iuWeatherRuntimeCity = null;
+      try{ delete window.__iuWeatherRuntimeCity; }catch{}
+    }catch{}
+  }
+
   function iuWeatherGetRuntime(){
     try{
       const c = window.__iuWeatherRuntimeCity;
@@ -7149,7 +7205,14 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuWeatherGetActiveCity(){
-    return iuWeatherGetRuntime() || iuWeatherReadPinned() || iuWeatherReadSelected() || IU_WEATHER_DEFAULT_CITY;
+    const runtime = iuWeatherGetRuntime();
+    if (runtime) return runtime;
+    const mode = iuWeatherReadLocationMode();
+    if (mode === IU_WEATHER_LOCATION_MODE_GPS) {
+      const gps = iuWeatherReadGpsSelected();
+      if (gps) return gps;
+    }
+    return iuWeatherReadPinned() || iuWeatherReadSelected() || IU_WEATHER_DEFAULT_CITY;
   }
 
   function iuWeatherSetRuntime(city){
@@ -7163,10 +7226,12 @@ function buildVideoAsArticleCard(it) {
     return (
       "https://api.open-meteo.com/v1/forecast" +
       `?latitude=${encodeURIComponent(String(la))}&longitude=${encodeURIComponent(String(lo))}` +
-      "&current=temperature_2m,weather_code" +
-      "&hourly=temperature_2m,weather_code" +
-      "&daily=temperature_2m_max,temperature_2m_min,weather_code" +
-      "&timezone=Europe%2FPrague"
+      "&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,relative_humidity_2m,visibility" +
+      "&hourly=temperature_2m,apparent_temperature,weather_code,precipitation_probability,precipitation,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,relative_humidity_2m,visibility,uv_index" +
+      "&daily=temperature_2m_max,temperature_2m_min,weather_code,uv_index_max" +
+      "&timezone=Europe%2FPrague" +
+      "&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&pressure_unit=hPa" +
+      "&models=gfs_seamless"
     );
   }
   async function iuFetchOpenMeteo(lat, lon){
@@ -7222,6 +7287,18 @@ function buildVideoAsArticleCard(it) {
       const my = document.getElementById("iuWeatherMyCityName");
       if (h1) h1.textContent = city && city.name ? String(city.name) : "Praha";
       if (my) my.textContent = city && city.name ? String(city.name) : "Praha";
+
+      const mode = iuWeatherReadLocationMode();
+      const geoLine = document.getElementById("iuWeatherGeoActiveLine");
+      const geoLabel = document.getElementById("iuWeatherGeoLabel");
+      if (geoLine) {
+        const isGps = mode === IU_WEATHER_LOCATION_MODE_GPS;
+        geoLine.hidden = !isGps;
+        try { geoLine.setAttribute("aria-hidden", isGps ? "false" : "true"); } catch {}
+      }
+      if (geoLabel) {
+        geoLabel.textContent = city && city.name ? String(city.name) : "—";
+      }
     }catch{}
   }
 
@@ -7272,12 +7349,13 @@ function buildVideoAsArticleCard(it) {
     const times = hourly && Array.isArray(hourly.time) ? hourly.time : [];
     const temps = hourly && Array.isArray(hourly.temperature_2m) ? hourly.temperature_2m : [];
     const codes = hourly && Array.isArray(hourly.weather_code) ? hourly.weather_code : [];
+    const precipProbs = hourly && Array.isArray(hourly.precipitation_probability) ? hourly.precipitation_probability : [];
     const items = [];
     for (let i = 0; i < times.length; i++){
       const dt = new Date(times[i]);
       if (isNaN(dt.getTime())) continue;
       if (dt < now) continue;
-      items.push({ d: dt, temp: temps[i], code: codes[i] });
+      items.push({ d: dt, temp: temps[i], code: codes[i], precipProb: precipProbs[i] });
       if (items.length >= 6) break;
     }
     for (let i = 0; i < slots.length; i++){
@@ -7285,17 +7363,672 @@ function buildVideoAsArticleCard(it) {
       const it = items[i];
       if (!slot) continue;
       if (it) {
-        let hh = "--h";
-        try{ hh = new Intl.DateTimeFormat("cs-CZ",{hour:"numeric",hour12:false,timeZone:"Europe/Prague"}).format(it.d) + "h"; }catch{}
-        slot.innerHTML = `<div>${escapeHtml(hh)}</div><div class="iuWxHourTemp">${escapeHtml(iuFmtDegShort(it.temp))}</div><div>${escapeHtml(iuWxIconFromCode(it.code))}</div>`;
+        let timeTxt = "--:--";
+        try{
+          timeTxt = new Intl.DateTimeFormat("cs-CZ",{
+            hour:"2-digit",
+            minute:"2-digit",
+            hour12:false,
+            timeZone:"Europe/Prague",
+          }).format(it.d);
+        }catch{}
+        const icon = iuWxIconFromCode(it.code);
+        const tempTxt = iuFmtDegShort(it.temp);
+        let precipTxt = "—";
+        if (typeof it.precipProb === "number" && isFinite(it.precipProb)) precipTxt = `${Math.round(it.precipProb)}%`;
+        slot.innerHTML =
+          `<div class="iuWxHourTime">${escapeHtml(timeTxt)}</div>` +
+          `<div class="iuWxHourIcon">${escapeHtml(icon)}</div>` +
+          `<div class="iuWxHourTemp">${escapeHtml(tempTxt)}</div>` +
+          `<div class="iuWxHourPrecip">${escapeHtml(precipTxt)}</div>`;
         slot.removeAttribute("aria-hidden");
       } else {
-        slot.innerHTML = `<div>--h</div><div class="iuWxHourTemp">—</div><div>🌤</div>`;
+        slot.innerHTML =
+          `<div class="iuWxHourTime">--:--</div>` +
+          `<div class="iuWxHourIcon">🌤</div>` +
+          `<div class="iuWxHourTemp">—</div>` +
+          `<div class="iuWxHourPrecip">—</div>`;
         slot.setAttribute("aria-hidden", "true");
       }
     }
     try{ elHours.classList.remove("iuWxHours--skeleton"); }catch{}
   }
+
+  function iuWxClamp01(n){
+    if (typeof n !== "number" || !isFinite(n)) return 0;
+    if (n < 0) return 0;
+    if (n > 1) return 1;
+    return n;
+  }
+
+  function iuWxFormatHourHHMM(d){
+    try{
+      return new Intl.DateTimeFormat("cs-CZ",{
+        hour:"2-digit",
+        minute:"2-digit",
+        hour12:false,
+        timeZone:"Europe/Prague",
+      }).format(d);
+    }catch{
+      try{
+        const hh = String(d.getHours());
+        return `${hh}:00`;
+      }catch{
+        return "—";
+      }
+    }
+  }
+
+  function iuWxWindDirLabel(deg){
+    const d = Number(deg);
+    if (!isFinite(d)) return "—";
+    const dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+    const idx = Math.round(d / 22.5) % 16;
+    return dirs[idx] || "—";
+  }
+
+  function iuWxUvCategory(uvIndex){
+    const u = Number(uvIndex);
+    if (!isFinite(u)) return { label: "—", cat: "—" };
+    const v = Math.max(0, u);
+    if (v < 3) return { label: "Nízké", cat: "0-2" };
+    if (v < 6) return { label: "Mírné", cat: "3-5" };
+    if (v < 8) return { label: "Vysoké", cat: "6-7" };
+    if (v < 11) return { label: "Velmi vysoké", cat: "8-10" };
+    return { label: "Extrémní", cat: "11+" };
+  }
+
+  function iuWxInferPrecipText(code){
+    const c = Number(code);
+    if (!isFinite(c)) return "Srážky";
+    if (c >= 71 && c <= 77) return "Sněžení";
+    if ((c >= 51 && c <= 67) || (c >= 80 && c <= 82) || (c >= 95)) return "Déšť";
+    if (c >= 45 && c <= 48) return "Mlha / vlhko";
+    return "Srážky";
+  }
+
+  function iuWxSelectNextHoursFromHourly(hourly){
+    const now = new Date();
+    const times = hourly && Array.isArray(hourly.time) ? hourly.time : [];
+    const temps = hourly && Array.isArray(hourly.temperature_2m) ? hourly.temperature_2m : [];
+    const feels = hourly && Array.isArray(hourly.apparent_temperature) ? hourly.apparent_temperature : [];
+    const codes = hourly && Array.isArray(hourly.weather_code) ? hourly.weather_code : [];
+    const pProbs = hourly && Array.isArray(hourly.precipitation_probability) ? hourly.precipitation_probability : [];
+    const pMm = hourly && Array.isArray(hourly.precipitation) ? hourly.precipitation : [];
+    const wSpd = hourly && Array.isArray(hourly.wind_speed_10m) ? hourly.wind_speed_10m : [];
+    const wGust = hourly && Array.isArray(hourly.wind_gusts_10m) ? hourly.wind_gusts_10m : [];
+    const wDir = hourly && Array.isArray(hourly.wind_direction_10m) ? hourly.wind_direction_10m : [];
+    const pMsl = hourly && Array.isArray(hourly.pressure_msl) ? hourly.pressure_msl : [];
+    const rh = hourly && Array.isArray(hourly.relative_humidity_2m) ? hourly.relative_humidity_2m : [];
+    const vis = hourly && Array.isArray(hourly.visibility) ? hourly.visibility : [];
+    const uv = hourly && Array.isArray(hourly.uv_index) ? hourly.uv_index : [];
+
+    const out = [];
+    for (let i = 0; i < times.length; i++){
+      const dt = new Date(times[i]);
+      if (isNaN(dt.getTime())) continue;
+      if (dt < now) continue;
+      const code = codes[i];
+      out.push({
+        time: dt,
+        temperatureC: typeof temps[i] === "number" ? temps[i] : null,
+        feelsLikeC: typeof feels[i] === "number" ? feels[i] : null,
+        weatherCode: code,
+        precipProbability: typeof pProbs[i] === "number" ? pProbs[i] : null,
+        precipMm: typeof pMm[i] === "number" ? pMm[i] : null,
+        windKph: typeof wSpd[i] === "number" ? wSpd[i] : null,
+        windGustKph: typeof wGust[i] === "number" ? wGust[i] : null,
+        windDirDeg: typeof wDir[i] === "number" ? wDir[i] : null,
+        pressureHpa: typeof pMsl[i] === "number" ? pMsl[i] : null,
+        humidityPct: typeof rh[i] === "number" ? rh[i] : null,
+        visibilityKm: typeof vis[i] === "number" ? vis[i] : null,
+        uvIndex: typeof uv[i] === "number" ? uv[i] : null,
+      });
+      if (out.length >= 6) break;
+    }
+    return out;
+  }
+
+  function iuWxComputePrecipTodayMm(hourly){
+    try{
+      if (!hourly || !Array.isArray(hourly.time) || !Array.isArray(hourly.precipitation)) return null;
+      const times = hourly.time;
+      const pMm = hourly.precipitation;
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = now.getMonth();
+      const d0 = now.getDate();
+      let sum = 0;
+      let any = false;
+      for (let i = 0; i < times.length; i++){
+        const dt = new Date(times[i]);
+        if (isNaN(dt.getTime())) continue;
+        if (dt.getFullYear() !== y || dt.getMonth() !== m || dt.getDate() !== d0) continue;
+        if (typeof pMm[i] === "number" && isFinite(pMm[i]) && pMm[i] >= 0){
+          sum += pMm[i];
+          any = true;
+        }
+      }
+      if (!any) return null;
+      return sum;
+    }catch{
+      return null;
+    }
+  }
+
+  function iuWxBuildWeatherState(city, d, locationMode, keepActiveLayer){
+    const cur = d && d.current ? d.current : {};
+    const hourly = d && d.hourly ? d.hourly : {};
+    const daily = d && d.daily ? d.daily : {};
+
+    const nextHours = iuWxSelectNextHoursFromHourly(hourly);
+
+    const todayMax = daily && Array.isArray(daily.temperature_2m_max) ? daily.temperature_2m_max[0] : null;
+    const todayMin = daily && Array.isArray(daily.temperature_2m_min) ? daily.temperature_2m_min[0] : null;
+
+    const feelsLikeC =
+      (typeof cur.apparent_temperature === "number" && isFinite(cur.apparent_temperature))
+        ? cur.apparent_temperature
+        : (nextHours[0] && typeof nextHours[0].feelsLikeC === "number" ? nextHours[0].feelsLikeC : null);
+
+    const windKph = (typeof cur.wind_speed_10m === "number" && isFinite(cur.wind_speed_10m))
+      ? cur.wind_speed_10m
+      : (nextHours[0] && typeof nextHours[0].windKph === "number" ? nextHours[0].windKph : null);
+
+    const windGustKph = (typeof cur.wind_gusts_10m === "number" && isFinite(cur.wind_gusts_10m))
+      ? cur.wind_gusts_10m
+      : (nextHours[0] && typeof nextHours[0].windGustKph === "number" ? nextHours[0].windGustKph : null);
+
+    const windDirDeg = (typeof cur.wind_direction_10m === "number" && isFinite(cur.wind_direction_10m))
+      ? cur.wind_direction_10m
+      : (nextHours[0] && typeof nextHours[0].windDirDeg === "number" ? nextHours[0].windDirDeg : null);
+
+    const pressureHpa = (typeof cur.pressure_msl === "number" && isFinite(cur.pressure_msl))
+      ? cur.pressure_msl
+      : (nextHours[0] && typeof nextHours[0].pressureHpa === "number" ? nextHours[0].pressureHpa : null);
+
+    const humidityPct = (typeof cur.relative_humidity_2m === "number" && isFinite(cur.relative_humidity_2m))
+      ? cur.relative_humidity_2m
+      : (nextHours[0] && typeof nextHours[0].humidityPct === "number" ? nextHours[0].humidityPct : null);
+
+    const visibilityKm = (typeof cur.visibility === "number" && isFinite(cur.visibility))
+      ? cur.visibility
+      : (nextHours[0] && typeof nextHours[0].visibilityKm === "number" ? nextHours[0].visibilityKm : null);
+
+    const uvIndex = (typeof nextHours[0]?.uvIndex === "number" && isFinite(nextHours[0].uvIndex))
+      ? nextHours[0].uvIndex
+      : (daily && Array.isArray(daily.uv_index_max) ? daily.uv_index_max[0] : null);
+
+    const weatherCode = (typeof cur.weather_code === "number" && isFinite(cur.weather_code))
+      ? cur.weather_code
+      : (nextHours[0] ? nextHours[0].weatherCode : null);
+
+    const precipTodayMm = iuWxComputePrecipTodayMm(hourly);
+
+    // Next-hour narrative and map layer intensities
+    let bestPrecip = null;
+    if (Array.isArray(nextHours) && nextHours.length){
+      for (let i = 0; i < nextHours.length; i++){
+        const it = nextHours[i];
+        if (!it) continue;
+        const p = it.precipProbability;
+        if (typeof p === "number" && isFinite(p)){
+          if (bestPrecip == null || p > bestPrecip.p){
+            bestPrecip = { i, p, code: it.weatherCode, time: it.time };
+          }
+        }
+      }
+    }
+
+    let gustMax = null;
+    if (Array.isArray(nextHours) && nextHours.length){
+      for (let i = 0; i < nextHours.length; i++){
+        const it = nextHours[i];
+        if (!it) continue;
+        const g = it.windGustKph;
+        const s = it.windKph;
+        const v = (typeof g === "number" && isFinite(g)) ? g : s;
+        if (typeof v === "number" && isFinite(v)){
+          if (gustMax == null || v > gustMax) gustMax = v;
+        }
+      }
+    }
+
+    const icon = iuWxIconFromCode(weatherCode);
+    const tTxt = (typeof cur.temperature_2m === "number" && isFinite(cur.temperature_2m)) ? Math.round(cur.temperature_2m) : null;
+
+    let precipPart = "Spíše bez srážek.";
+    if (bestPrecip && typeof bestPrecip.p === "number" && isFinite(bestPrecip.p) && bestPrecip.p >= 20 && bestPrecip.time){
+      const timeLabel = iuWxFormatHourHHMM(bestPrecip.time);
+      const what = iuWxInferPrecipText(bestPrecip.code);
+      precipPart = `${what} kolem ${timeLabel}.`;
+    }
+
+    let windPart = "";
+    if (typeof gustMax === "number" && isFinite(gustMax)){
+      windPart = ` Vítr až ${Math.round(gustMax)} km/h.`;
+    }
+
+    const narrative = `${precipPart}${windPart}`.replace(/\s+/g, " ").trim();
+
+    const feelsLikeNum = (typeof feelsLikeC === "number" && isFinite(feelsLikeC)) ? Math.round(feelsLikeC) : null;
+    const tempNum = (typeof cur.temperature_2m === "number" && isFinite(cur.temperature_2m)) ? Math.round(cur.temperature_2m) : null;
+    const silverNarrative = [city && city.name ? String(city.name) : "—", tempNum != null ? `${tempNum}°C` : "—", feelsLikeNum != null ? `pocitově ${feelsLikeNum}°C` : ""].filter(Boolean).join(", ") + (narrative ? `. ${narrative}` : "");
+
+    const supportedLayers = [];
+    const disabledLayers = [];
+
+    const hourlyHas = (key) => hourly && Array.isArray(hourly[key]) && hourly[key].some((x) => typeof x === "number" && isFinite(x));
+
+    if (hourlyHas("precipitation_probability")) supportedLayers.push("precip"); else disabledLayers.push("precip");
+    if (hourlyHas("wind_speed_10m") || hourlyHas("wind_gusts_10m")) supportedLayers.push("wind"); else disabledLayers.push("wind");
+    if (hourlyHas("pressure_msl")) supportedLayers.push("pressure"); else disabledLayers.push("pressure");
+    if (hourlyHas("temperature_2m")) supportedLayers.push("temp"); else disabledLayers.push("temp");
+    if (hourlyHas("visibility")) supportedLayers.push("fog"); else disabledLayers.push("fog");
+    if (hourlyHas("uv_index") || (daily && Array.isArray(daily.uv_index_max) && daily.uv_index_max.some((x) => typeof x === "number" && isFinite(x)))) supportedLayers.push("uv"); else disabledLayers.push("uv");
+
+    let activeLayer = keepActiveLayer;
+    if (!activeLayer || disabledLayers.indexOf(activeLayer) !== -1) {
+      if (supportedLayers.indexOf("precip") !== -1) activeLayer = "precip";
+      else if (supportedLayers.indexOf("temp") !== -1) activeLayer = "temp";
+      else activeLayer = supportedLayers[0] || "temp";
+    }
+
+    // forecast (7 days) — keep as minimal objects
+    const forecast = [];
+    const fTimes = daily && Array.isArray(daily.time) ? daily.time : [];
+    const fCodes = daily && Array.isArray(daily.weather_code) ? daily.weather_code : [];
+    const fMax = daily && Array.isArray(daily.temperature_2m_max) ? daily.temperature_2m_max : [];
+    const fMin = daily && Array.isArray(daily.temperature_2m_min) ? daily.temperature_2m_min : [];
+    for (let i = 0; i < 7; i++){
+      const t = fTimes[i];
+      if (!t) continue;
+      forecast.push({ time: new Date(String(t)), weatherCode: fCodes[i], todayMax: fMax[i], todayMin: fMin[i] });
+    }
+
+    return {
+      location: {
+        mode: locationMode,
+        cityLabel: city && city.name ? String(city.name) : "—",
+      },
+      mode: locationMode,
+      city: city || { name: "Praha", lat: 50.0755, lon: 14.4378 },
+      lat: Number(city && city.lat),
+      lon: Number(city && city.lon),
+      current: {
+        temperatureC: typeof cur.temperature_2m === "number" ? cur.temperature_2m : (nextHours[0] ? nextHours[0].temperatureC : null),
+        feelsLikeC: feelsLikeC,
+        weatherCode: weatherCode,
+        windKph: windKph,
+        windGustKph: windGustKph,
+        windDirDeg: windDirDeg,
+        pressureHpa: pressureHpa,
+        humidityPct: humidityPct,
+        visibilityKm: visibilityKm,
+        uvIndex: uvIndex,
+        precipTodayMm: precipTodayMm,
+        icon: icon,
+      },
+      daily: {
+        todayMax: todayMax,
+        todayMin: todayMin,
+      },
+      rawDaily: daily,
+      forecast: forecast,
+      hourly: hourly,
+      nextHours: nextHours,
+      alerts: [],
+      map: {
+        activeLayer: activeLayer,
+        supportedLayers: supportedLayers,
+        disabledLayers: disabledLayers,
+      },
+      summary: {
+        narrative: narrative,
+      },
+      narrative: narrative,
+      silverNarrative: silverNarrative,
+    };
+  }
+
+  function iuWxRenderMap(svgHost, state){
+    if (!svgHost) return;
+    const st = state;
+    const next0 = (st && Array.isArray(st.nextHours)) ? st.nextHours[0] : null;
+    const layer = st && st.map ? st.map.activeLayer : "temp";
+
+    const layerColor = (l) => {
+      if (l === "precip") return "#38BDF8";
+      if (l === "wind") return "#FB923C";
+      if (l === "pressure") return "#22C55E";
+      if (l === "temp") return "#F43F5E";
+      if (l === "fog") return "#A3A3A3";
+      if (l === "uv") return "#FDE047";
+      return "#38BDF8";
+    };
+
+    let intensity = 0;
+    if (layer === "precip") {
+      intensity = iuWxClamp01((next0 && typeof next0.precipProbability === "number" ? next0.precipProbability : 0) / 100);
+    } else if (layer === "wind") {
+      const g = next0 && typeof next0.windGustKph === "number" ? next0.windGustKph : (next0 ? next0.windKph : null);
+      intensity = iuWxClamp01((typeof g === "number" && isFinite(g)) ? g / 80 : 0);
+    } else if (layer === "pressure") {
+      const p = next0 && typeof next0.pressureHpa === "number" ? next0.pressureHpa : (st.current ? st.current.pressureHpa : null);
+      intensity = iuWxClamp01((typeof p === "number" && isFinite(p)) ? (p - 990) / 50 : 0);
+    } else if (layer === "temp") {
+      const t = next0 && typeof next0.temperatureC === "number" ? next0.temperatureC : (st.current ? st.current.temperatureC : null);
+      intensity = iuWxClamp01((typeof t === "number" && isFinite(t)) ? (t + 10) / 45 : 0);
+    } else if (layer === "fog") {
+      const v = next0 && typeof next0.visibilityKm === "number" ? next0.visibilityKm : (st.current ? st.current.visibilityKm : null);
+      intensity = iuWxClamp01((typeof v === "number" && isFinite(v)) ? (1 - (v / 10)) : 0);
+    } else if (layer === "uv") {
+      const u = next0 && typeof next0.uvIndex === "number" ? next0.uvIndex : (st.current ? st.current.uvIndex : null);
+      intensity = iuWxClamp01((typeof u === "number" && isFinite(u)) ? (u / 11) : 0);
+    }
+
+    const alpha = 0.08 + intensity * 0.55;
+    const base = "rgba(255,255,255,0.06)";
+    const color = layerColor(layer);
+
+    const cityName = st && st.city && st.city.name ? String(st.city.name) : "—";
+
+    function iuWxDetRand(seed, i){
+      // Deterministic pseudo-random for stable visuals (no flicker / no layout change).
+      const x = Math.sin(seed * 0.000001 + i * 12.345) * 10000;
+      return x - Math.floor(x);
+    }
+
+    const seedBase = (Number(st.lat) || 0) * 1000 + (Number(st.lon) || 0) * 100;
+    const overlayParts = [];
+
+    if (layer === "precip") {
+      const n = 10;
+      for (let i = 0; i < n; i++){
+        const rx = iuWxDetRand(seedBase, i + 1);
+        const ry = iuWxDetRand(seedBase, i + 11);
+        const x = 10 + rx * 80;
+        const y = 10 + ry * 80;
+        const dropH = 4 + intensity * 10;
+        const op = 0.06 + intensity * 0.26 + iuWxDetRand(seedBase, i + 31) * 0.12;
+        overlayParts.push(
+          `<path d="M ${x.toFixed(1)} ${y.toFixed(1)} C ${(x - 1.2).toFixed(1)} ${(y + 1.2).toFixed(1)} ${(x + 1.2).toFixed(1)} ${(y + 1.2).toFixed(1)} ${x.toFixed(1)} ${(y + dropH).toFixed(1)} Z" fill="${color}" opacity="${op.toFixed(3)}" />`
+        );
+      }
+    } else if (layer === "wind") {
+      const dir = typeof next0?.windDirDeg === "number" ? next0.windDirDeg : (st.current ? st.current.windDirDeg : null);
+      const deg = Number(dir);
+      const ang = isFinite(deg) ? (deg - 90) * (Math.PI / 180) : 0;
+      const cx = 50;
+      const cy = 50;
+      const ax = cx + Math.cos(ang) * (12 + intensity * 18);
+      const ay = cy + Math.sin(ang) * (12 + intensity * 18);
+      const lines = 7;
+      for (let i = 0; i < lines; i++){
+        const k = (i + 1) / lines;
+        const ox = cx + Math.cos(ang) * (5 + k * 20);
+        const oy = cy + Math.sin(ang) * (5 + k * 20);
+        const len = 2 + k * (6 + intensity * 8);
+        const head = 1.4 + intensity * 1.1;
+        const perp = ang + Math.PI / 2;
+        const lx1 = ox - Math.cos(perp) * head;
+        const ly1 = oy - Math.sin(perp) * head;
+        const lx2 = ox + Math.cos(perp) * head;
+        const ly2 = oy + Math.sin(perp) * head;
+        overlayParts.push(
+          `<path d="M ${cx.toFixed(1)} ${cy.toFixed(1)} L ${ox.toFixed(1)} ${oy.toFixed(1)}" stroke="${color}" stroke-width="${(0.6 + intensity * 1.1).toFixed(2)}" opacity="${(0.08 + intensity * 0.28).toFixed(3)}" />` +
+          `<path d="M ${lx1.toFixed(1)} ${ly1.toFixed(1)} L ${ox.toFixed(1)} ${oy.toFixed(1)} L ${lx2.toFixed(1)} ${ly2.toFixed(1)} Z" fill="${color}" opacity="${(0.10 + intensity * 0.30).toFixed(3)}" />` +
+          `<circle cx="${ox.toFixed(1)}" cy="${oy.toFixed(1)}" r="${(0.8 + intensity * 1.4).toFixed(2)}" fill="${color}" opacity="${(0.07 + intensity * 0.22).toFixed(3)}" />`
+        );
+      }
+    } else if (layer === "pressure") {
+      const p = typeof next0?.pressureHpa === "number" ? next0.pressureHpa : (st.current ? st.current.pressureHpa : null);
+      const pr = Number(p);
+      const centerY = 50 + (isFinite(pr) ? (pr - 1013) / 3 : 0);
+      const count = 6;
+      for (let i = 0; i < count; i++){
+        const off = (i - (count / 2)) * (2 + intensity * 1.6);
+        const y = centerY + off;
+        overlayParts.push(
+          `<path d="M 12 ${y.toFixed(1)} C 30 ${(y - 4 - intensity * 2).toFixed(1)}, 70 ${(y + 4 + intensity * 2).toFixed(1)}, 88 ${y.toFixed(1)}" fill="none" stroke="${color}" stroke-width="${(0.55 + intensity * 0.7).toFixed(2)}" opacity="${(0.05 + intensity * 0.20).toFixed(3)}" />`
+        );
+      }
+    } else if (layer === "temp") {
+      const t = typeof next0?.temperatureC === "number" ? next0.temperatureC : (st.current ? st.current.temperatureC : null);
+      const tn = Number(t);
+      const warm = isFinite(tn) ? (tn + 20) / 50 : intensity;
+      const cl = Math.max(0, Math.min(1, warm));
+      const coldColor = "#60A5FA";
+      const hotColor = "#F97316";
+      const mix = (a, b, k) => a + (b - a) * k;
+      function hexToRgb(h){
+        const s = String(h).replace("#","");
+        const n = parseInt(s,16);
+        return { r: (n>>16)&255, g: (n>>8)&255, b: n&255 };
+      }
+      const c1 = hexToRgb(coldColor);
+      const c2 = hexToRgb(hotColor);
+      const rr = Math.round(mix(c1.r,c2.r,cl));
+      const gg = Math.round(mix(c1.g,c2.g,cl));
+      const bb = Math.round(mix(c1.b,c2.b,cl));
+      const tempColor = `rgb(${rr},${gg},${bb})`;
+      const n = 5;
+      for (let i = 0; i < n; i++){
+        const k = (i + 1) / n;
+        const r = 16 + k * (16 + intensity * 12);
+        const op = 0.03 + cl * 0.20 + intensity * 0.18;
+        overlayParts.push(`<circle cx="50" cy="50" r="${r.toFixed(1)}" fill="${tempColor}" opacity="${op.toFixed(3)}" />`);
+      }
+    } else if (layer === "fog") {
+      const v = typeof next0?.visibilityKm === "number" ? next0.visibilityKm : (st.current ? st.current.visibilityKm : null);
+      const vn = Number(v);
+      const foggy = isFinite(vn) ? (1 - (vn / 10)) : intensity;
+      const op = 0.05 + iuWxClamp01(foggy) * 0.45;
+      overlayParts.push(`<rect x="10" y="18" width="80" height="64" rx="10" fill="${color}" opacity="${op.toFixed(3)}" />`);
+      const puffs = 10;
+      for (let i = 0; i < puffs; i++){
+        const rx = iuWxDetRand(seedBase, i + 71);
+        const ry = iuWxDetRand(seedBase, i + 91);
+        const x = 15 + rx * 70;
+        const y = 22 + ry * 56;
+        const r = 4 + iuWxDetRand(seedBase, i + 111) * (10 + intensity * 10);
+        overlayParts.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${color}" opacity="${(op * (0.35 + intensity * 0.3)).toFixed(3)}" />`);
+      }
+    } else if (layer === "uv") {
+      const u = typeof next0?.uvIndex === "number" ? next0.uvIndex : (st.current ? st.current.uvIndex : null);
+      const un = Number(u);
+      const uNorm = isFinite(un) ? (un / 11) : intensity;
+      const rays = 12;
+      for (let i = 0; i < rays; i++){
+        const ang = (i / rays) * Math.PI * 2 + (seedBase % 1) * 0.3;
+        const x1 = 50 + Math.cos(ang) * (18 + intensity * 10);
+        const y1 = 50 + Math.sin(ang) * (18 + intensity * 10);
+        const x2 = 50 + Math.cos(ang) * (34 + intensity * 18);
+        const y2 = 50 + Math.sin(ang) * (34 + intensity * 18);
+        const op = 0.05 + iuWxClamp01(uNorm) * 0.45 + iuWxDetRand(seedBase, i + 151) * 0.10;
+        overlayParts.push(`<path d="M ${x1.toFixed(1)} ${y1.toFixed(1)} L ${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="${color}" stroke-width="${(0.8 + intensity * 1.2).toFixed(2)}" opacity="${op.toFixed(3)}" />`);
+      }
+      overlayParts.push(`<circle cx="50" cy="50" r="${(6 + intensity * 10).toFixed(1)}" fill="${color}" opacity="${(0.10 + intensity * 0.45).toFixed(3)}" />`);
+    } else {
+      const ringCount = 4;
+      for (let i = 0; i < ringCount; i++){
+        const k = (i + 1) / ringCount;
+        const r = 12 + k * (26 + intensity * 18);
+        const op = (0.06 + intensity * 0.18) * (1 - (i * 0.18));
+        overlayParts.push(`<circle cx="50" cy="50" r="${r.toFixed(1)}" fill="${color}" opacity="${op.toFixed(3)}" />`);
+      }
+    }
+
+    const label = (function(){
+      if (!next0) return "—";
+      if (layer === "precip" && typeof next0.precipProbability === "number") return `Srážky: ${Math.round(next0.precipProbability)}%`;
+      if (layer === "wind") {
+        const g = typeof next0.windGustKph === "number" ? next0.windGustKph : next0.windKph;
+        if (typeof g === "number") return `Vítr: ${Math.round(g)} km/h`;
+      }
+      if (layer === "pressure" && typeof next0.pressureHpa === "number") return `Tlak: ${Math.round(next0.pressureHpa)} hPa`;
+      if (layer === "temp" && typeof next0.temperatureC === "number") return `Teplota: ${Math.round(next0.temperatureC)}°C`;
+      if (layer === "fog" && typeof next0.visibilityKm === "number") return `Mlha: ${Math.round(next0.visibilityKm * 10) / 10} km`;
+      if (layer === "uv" && typeof next0.uvIndex === "number") return `UV: ${Math.round(next0.uvIndex * 10) / 10}`;
+      return "—";
+    })();
+
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Mapová vrstva: ${escapeHtml(layer)}">
+        <defs>
+          <linearGradient id="iuWxGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="rgba(255,255,255,0.10)" />
+            <stop offset="1" stop-color="rgba(0,0,0,0.05)" />
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="100" height="100" fill="url(#iuWxGrad)" />
+        ${overlayParts.join("")}
+        <rect x="10" y="10" width="80" height="80" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.6"/>
+        <path d="M10 50 H 90" stroke="rgba(255,255,255,0.08)" stroke-width="0.6" />
+        <path d="M50 10 V 90" stroke="rgba(255,255,255,0.08)" stroke-width="0.6" />
+        <circle cx="50" cy="50" r="${(4 + intensity * 6).toFixed(1)}" fill="${color}" opacity="${alpha.toFixed(3)}" />
+        <text x="50" y="56" text-anchor="middle" fill="rgba(255,255,255,0.92)" font-size="5" font-weight="900">${escapeHtml(cityName)}</text>
+        <text x="12" y="18" text-anchor="start" fill="rgba(255,255,255,0.85)" font-size="4.5" font-weight="800">${escapeHtml(label)}</text>
+      </svg>
+    `;
+
+    svgHost.innerHTML = svg;
+  }
+
+  function iuWxSyncLayerButtons(state){
+    try{
+      const bar = document.getElementById("iuWxLayerSwitchBar");
+      if (bar) {
+        const btns = Array.from(bar.querySelectorAll("button[data-iu-weather-layer]"));
+        for (let i = 0; i < btns.length; i++){
+          const b = btns[i];
+          const layerId = b.getAttribute("data-iu-weather-layer");
+          const disabled = state && state.map && Array.isArray(state.map.disabledLayers) && state.map.disabledLayers.indexOf(layerId) !== -1;
+          const active = state && state.map && state.map.activeLayer === layerId;
+
+          if (!b.dataset.iuWxLayerOrigLabel) {
+            b.dataset.iuWxLayerOrigLabel = String(b.textContent || "").trim();
+          }
+          b.disabled = Boolean(disabled);
+          if (disabled) {
+            b.textContent = "brzy";
+            b.classList.remove("is-active");
+          } else {
+            b.textContent = b.dataset.iuWxLayerOrigLabel;
+            if (active) b.classList.add("is-active"); else b.classList.remove("is-active");
+          }
+        }
+      }
+
+      const quickGrid = document.getElementById("iuWeatherView") ? document.getElementById("iuWeatherView").querySelector(".iuWeatherQuickGrid") : null;
+      if (quickGrid) {
+        const qb = Array.from(quickGrid.querySelectorAll("button[data-iu-quick-layer]"));
+        for (let i = 0; i < qb.length; i++){
+          const b = qb[i];
+          const qLayer = b.getAttribute("data-iu-quick-layer");
+          if (!b.dataset.iuWxQuickOrigLabel) b.dataset.iuWxQuickOrigLabel = String(b.textContent || "").trim();
+          const disabled = state && state.map && Array.isArray(state.map.disabledLayers) && state.map.disabledLayers.indexOf(qLayer) !== -1;
+          const active = state && state.map && state.map.activeLayer === qLayer;
+          b.disabled = Boolean(disabled);
+          if (disabled) {
+            b.textContent = "brzy";
+            b.classList.remove("is-active");
+          } else {
+            b.textContent = b.dataset.iuWxQuickOrigLabel;
+            if (active) b.classList.add("is-active"); else b.classList.remove("is-active");
+          }
+        }
+      }
+    }catch{}
+  }
+
+  function iuWxSetActiveLayer(layerId){
+    try{
+      const st = window.__iuWeatherState;
+      if (!st || !st.map) return;
+      if (st.map.disabledLayers && st.map.disabledLayers.indexOf(layerId) !== -1) return;
+      st.map.activeLayer = layerId;
+      iuWxRenderMap(document.getElementById("iuWxMapSvgHost"), st);
+      iuWxSyncLayerButtons(st);
+    }catch{}
+  }
+
+  async function iuWeatherEnsureState(){
+    const city = iuWeatherGetActiveCity();
+    if (!city || typeof city.lat !== "number" || typeof city.lon !== "number") throw new Error("bad city");
+    const locationMode = iuWeatherReadLocationMode();
+    const key = `${city.lat},${city.lon},${locationMode}`;
+
+    const activeKeyNow = function(){
+      try{
+        const c = iuWeatherGetActiveCity();
+        const m = iuWeatherReadLocationMode();
+        if (!c || typeof c.lat !== "number" || typeof c.lon !== "number") return "";
+        return `${c.lat},${c.lon},${m}`;
+      }catch{
+        return "";
+      }
+    };
+
+    const ensurePromisesByKey = window.__iuWeatherEnsurePromisesByKey || (window.__iuWeatherEnsurePromisesByKey = {});
+    try{
+      const st0 = window.__iuWeatherState;
+      if (st0 && typeof st0.lat === "number" && typeof st0.lon === "number" && st0.mode === locationMode && st0.hourly && st0.rawDaily) {
+        if (Math.abs(st0.lat - city.lat) < 0.00001 && Math.abs(st0.lon - city.lon) < 0.00001) return st0;
+      }
+    }catch{}
+
+    const existingPromise = ensurePromisesByKey[key];
+    if (existingPromise) return existingPromise;
+
+    try{
+      if (window.__iuWeatherEnsureLockPromise && window.__iuWeatherEnsureLockPromise.then) {
+        // lock exists - proceed below
+      }
+    }catch{}
+
+    const runJob = async () => {
+      // Re-check cache right before fetch (after any lock wait).
+      try{
+        const st1 = window.__iuWeatherState;
+        if (st1 && typeof st1.lat === "number" && typeof st1.lon === "number" && st1.mode === locationMode && st1.hourly && st1.rawDaily) {
+          if (Math.abs(st1.lat - city.lat) < 0.00001 && Math.abs(st1.lon - city.lon) < 0.00001) return st1;
+        }
+      }catch{}
+
+      const d = await iuFetchOpenMeteo(city.lat, city.lon);
+      const keepActiveLayer =
+        window.__iuWeatherState && window.__iuWeatherState.map && typeof window.__iuWeatherState.map.activeLayer === "string"
+          ? window.__iuWeatherState.map.activeLayer
+          : null;
+      const state = iuWxBuildWeatherState(city, d, locationMode, keepActiveLayer);
+
+      // Avoid outdated requests overwriting the latest global state.
+      try{
+        const nowKey = activeKeyNow();
+        if (nowKey === key) window.__iuWeatherState = state;
+      }catch{
+        // If key computation fails, be conservative and do not overwrite.
+      }
+
+      return state;
+    };
+
+    const prevLock = window.__iuWeatherEnsureLockPromise || Promise.resolve();
+    const job = prevLock.then(runJob, runJob);
+    window.__iuWeatherEnsureLockPromise = job.catch(() => {});
+    ensurePromisesByKey[key] = job;
+    try{
+      job.finally(() => {
+        try{
+          if (ensurePromisesByKey[key] === job) delete ensurePromisesByKey[key];
+        }catch{}
+      });
+    }catch{}
+
+    return job;
+  }
+  try{ window.iuWeatherEnsureState = iuWeatherEnsureState; }catch{}
 
   function iuWeatherEnsureCitySheet(){
     let overlay = document.getElementById("iuWeatherSheetOverlay");
@@ -7388,6 +8121,7 @@ function buildVideoAsArticleCard(it) {
         const lon = Number(c[3]);
         if (!name || !isFinite(lat) || !isFinite(lon)) return;
         const city = { name, lat, lon };
+        iuWeatherWriteLocationMode(IU_WEATHER_LOCATION_MODE_CITY);
         iuWeatherSetRuntime(city);
         iuWeatherWriteSelected(city);
         iuWeatherSyncCityLabels(city);
@@ -7468,16 +8202,20 @@ function buildVideoAsArticleCard(it) {
 
   async function iuWeatherLoadAndRender(){
     try{
+      const myToken = (window.__iuWeatherRenderToken = (window.__iuWeatherRenderToken || 0) + 1);
       const city = iuWeatherGetActiveCity();
+      const locationMode = iuWeatherReadLocationMode();
       iuWeatherSyncCityLabels(city);
       iuWeatherSyncPinnedToggle();
 
       const elErr = document.getElementById("iuDailyErr");
       const elWeather = document.getElementById("iuDailyWeather");
       const elPlace = document.getElementById("iuWxPlace");
+      const elFeelsLike = document.getElementById("iuWxFeelsLike");
       const elIcon = document.getElementById("iuWxIcon");
       const elTemp = document.getElementById("iuWxTemp");
       const elMinMax = document.getElementById("iuWxMinMax");
+      const elNarrative = document.getElementById("iuWxHeroNarrative");
 
       if (elErr) elErr.hidden = true;
       if (elWeather) elWeather.hidden = false;
@@ -7485,33 +8223,101 @@ function buildVideoAsArticleCard(it) {
       if (elTemp) elTemp.textContent = "—°C";
       if (elMinMax) elMinMax.textContent = "Max —° · Min —°";
       if (elIcon) elIcon.textContent = "🌤";
+      if (elFeelsLike) elFeelsLike.textContent = "Pocitově —°C";
+      if (elNarrative) elNarrative.textContent = "—";
       try{ const elHours = document.getElementById("iuWxHours"); if (elHours) elHours.classList.add("iuWxHours--skeleton"); }catch{}
 
-      const d = await iuFetchOpenMeteo(city.lat, city.lon);
-      const cur = d && d.current;
-      const hourly = d && d.hourly;
-      const daily = d && d.daily;
-      if (!cur || typeof cur.temperature_2m !== "number") throw new Error("bad current");
+      const elMapSkeleton = document.getElementById("iuWxMapSkeleton");
+      const elMapSuccess = document.getElementById("iuWxMapSuccess");
+      const elMapFail = document.getElementById("iuWxMapFail");
+      if (elMapSkeleton) elMapSkeleton.hidden = false;
+      if (elMapSuccess) elMapSuccess.hidden = true;
+      if (elMapFail) elMapFail.hidden = true;
 
-      if (elTemp) elTemp.textContent = `${Math.round(cur.temperature_2m)}°C`;
-      if (elIcon) elIcon.textContent = iuWxIconFromCode(cur.weather_code);
+      // Premium mini-karty metrik
+      const elWindKph = document.getElementById("iuWxWindKph");
+      const elWindGustKph = document.getElementById("iuWxWindGustKph");
+      const elWindDir = document.getElementById("iuWxWindDir");
+      const elPressureHpa = document.getElementById("iuWxPressureHpa");
+      const elVisibilityKm = document.getElementById("iuWxVisibilityKm");
+      const elUvIndex = document.getElementById("iuWxUvIndex");
+      const elUvCategory = document.getElementById("iuWxUvCategory");
+      const elHumidityPct = document.getElementById("iuWxHumidityPct");
+      const elPrecipTodayMm = document.getElementById("iuWxPrecipTodayMm");
 
-      const max0 = daily && Array.isArray(daily.temperature_2m_max) ? daily.temperature_2m_max[0] : null;
-      const min0 = daily && Array.isArray(daily.temperature_2m_min) ? daily.temperature_2m_min[0] : null;
-      if (elMinMax) elMinMax.textContent = `Max ${iuFmtDegShort(max0)} · Min ${iuFmtDegShort(min0)}`;
+      function iuWxSetMinus(el){
+        if (!el) return;
+        el.textContent = "—";
+      }
+      iuWxSetMinus(elWindKph);
+      iuWxSetMinus(elWindGustKph);
+      iuWxSetMinus(elWindDir);
+      iuWxSetMinus(elPressureHpa);
+      iuWxSetMinus(elVisibilityKm);
+      iuWxSetMinus(elUvIndex);
+      iuWxSetMinus(elUvCategory);
+      iuWxSetMinus(elHumidityPct);
+      iuWxSetMinus(elPrecipTodayMm);
 
-      iuWeatherUpdateHours(hourly);
-      iuWeatherRender7Day(daily);
+      const state = await (typeof window.iuWeatherEnsureState === "function"
+        ? window.iuWeatherEnsureState()
+        : (async () => {
+            const d = await iuFetchOpenMeteo(city.lat, city.lon);
+            const cur = d && d.current;
+            const hourly = d && d.hourly;
+            const daily = d && d.daily;
+            if (!cur || typeof cur.temperature_2m !== "number") throw new Error("bad current");
+            const existingState = window.__iuWeatherState;
+            const keepActiveLayer =
+              existingState && existingState.map && typeof existingState.map.activeLayer === "string"
+                ? existingState.map.activeLayer
+                : null;
+            const state = iuWxBuildWeatherState(city, d, locationMode, keepActiveLayer);
+            window.__iuWeatherState = state;
+            return state;
+          })());
+
+      if (window.__iuWeatherRenderToken !== myToken) return;
+
+      if (elTemp) elTemp.textContent = state && state.current && typeof state.current.temperatureC === "number" ? `${Math.round(state.current.temperatureC)}°C` : "—°C";
+      if (elIcon) elIcon.textContent = state && state.current && state.current.icon ? state.current.icon : "🌤";
+      if (elMinMax) elMinMax.textContent = `Max ${iuFmtDegShort(state && state.daily ? state.daily.todayMax : null)} · Min ${iuFmtDegShort(state && state.daily ? state.daily.todayMin : null)}`;
+      if (elFeelsLike) elFeelsLike.textContent =
+        (state && state.current && typeof state.current.feelsLikeC === "number" && isFinite(state.current.feelsLikeC))
+          ? `Pocitově ${Math.round(state.current.feelsLikeC)}°C`
+          : "Pocitově —°C";
+      if (elNarrative) elNarrative.textContent = state && state.summary && state.summary.narrative ? String(state.summary.narrative) : "—";
+
+      // Premium mini-karty
+      try{
+        if (elWindKph) elWindKph.textContent = typeof state.current.windKph === "number" ? `${Math.round(state.current.windKph)}` : "—";
+        if (elWindGustKph) elWindGustKph.textContent = typeof state.current.windGustKph === "number" ? `${Math.round(state.current.windGustKph)}` : "—";
+        if (elWindDir) elWindDir.textContent = iuWxWindDirLabel(state.current.windDirDeg);
+        if (elPressureHpa) elPressureHpa.textContent = typeof state.current.pressureHpa === "number" ? `${Math.round(state.current.pressureHpa)}` : "—";
+        if (elVisibilityKm) elVisibilityKm.textContent = typeof state.current.visibilityKm === "number" ? `${Math.round(state.current.visibilityKm * 10) / 10}` : "—";
+        if (elUvIndex) elUvIndex.textContent = typeof state.current.uvIndex === "number" ? `${Math.round(state.current.uvIndex * 10) / 10}` : "—";
+        if (elUvCategory) {
+          const c = iuWxUvCategory(state.current.uvIndex);
+          elUvCategory.textContent = c && c.label ? c.label : "—";
+        }
+        if (elHumidityPct) elHumidityPct.textContent = typeof state.current.humidityPct === "number" ? `${Math.round(state.current.humidityPct)}` : "—";
+        if (elPrecipTodayMm) elPrecipTodayMm.textContent = typeof state.current.precipTodayMm === "number" ? `${Math.round(state.current.precipTodayMm)}` : "—";
+      }catch{}
+
+      // Hours/7-day depend on shared state raw response
+      iuWeatherUpdateHours(state.hourly);
+      iuWeatherRender7Day(state.rawDaily);
+
+      // Map + layer UI
+      if (elMapSkeleton) elMapSkeleton.hidden = true;
+      if (elMapSuccess) elMapSuccess.hidden = false;
+      if (elMapFail) elMapFail.hidden = true;
+      iuWxSyncLayerButtons(state);
+      iuWxRenderMap(document.getElementById("iuWxMapSvgHost"), state);
 
       if (elWeather) elWeather.hidden = false;
       if (elErr) elErr.hidden = true;
 
-      try{
-        const params = new URLSearchParams(location.search || "");
-        if (params.get("radarOpen") === "1") {
-          iuWeatherRadarEnsure();
-        }
-      }catch{}
       try{ iuWeatherHideEmptyNameday(); }catch{}
     }catch{
       try{
@@ -7519,6 +8325,15 @@ function buildVideoAsArticleCard(it) {
         const elWeather = document.getElementById("iuDailyWeather");
         if (elWeather) elWeather.hidden = true;
         if (elErr) elErr.hidden = false;
+      }catch{}
+
+      try{
+        const elMapSkeleton = document.getElementById("iuWxMapSkeleton");
+        const elMapSuccess = document.getElementById("iuWxMapSuccess");
+        const elMapFail = document.getElementById("iuWxMapFail");
+        if (elMapSkeleton) elMapSkeleton.hidden = true;
+        if (elMapSuccess) elMapSuccess.hidden = true;
+        if (elMapFail) elMapFail.hidden = false;
       }catch{}
     }
 
@@ -7891,15 +8706,103 @@ function buildVideoAsArticleCard(it) {
         try{
           const city = iuWeatherGetActiveCity();
           const pinned = Boolean(pin.checked);
+          iuWeatherWriteLocationMode(IU_WEATHER_LOCATION_MODE_CITY);
           iuWeatherWritePinned(pinned);
           if (pinned) iuWeatherWriteSelected(city);
           iuWeatherSyncPinnedToggle();
+          iuWeatherSyncCityLabels(city);
+          iuWeatherLoadAndRender();
         }catch{}
+      });
+
+      const geoBtn = document.getElementById("iuWeatherGeoBtn");
+      if (geoBtn) geoBtn.addEventListener("click", () => {
+        (async () => {
+          try{
+            if (!navigator.geolocation) throw new Error("no geolocation");
+
+            const geoLine = document.getElementById("iuWeatherGeoActiveLine");
+            if (geoLine) { geoLine.hidden = false; try { geoLine.setAttribute("aria-hidden","false"); } catch {} }
+
+            const cities = await iuLoadCitiesSafe();
+
+            const getNearestLabel = (lat, lon) => {
+              try{
+                let best = null;
+                let bestD = Infinity;
+                for (let i = 0; i < cities.length; i++){
+                  const c = cities[i];
+                  if (!c || c.length < 4) continue;
+                  const cLat = Number(c[2]);
+                  const cLon = Number(c[3]);
+                  if (!isFinite(cLat) || !isFinite(cLon)) continue;
+                  const dLat = cLat - lat;
+                  const dLon = cLon - lon;
+                  const d = dLat*dLat + dLon*dLon; // cheap approx for label
+                  if (d < bestD) { bestD = d; best = c; }
+                }
+                if (best && best[0]) return iuCityLabel(best);
+              }catch{}
+              return "—";
+            };
+
+            const pos = await new Promise((resolve, reject) => {
+              try{
+                navigator.geolocation.getCurrentPosition(
+                  (p) => resolve(p),
+                  (err) => reject(err),
+                  { enableHighAccuracy: false, timeout: 5000, maximumAge: 60000 }
+                );
+              }catch(e){ reject(e); }
+            });
+
+            const lat = Number(pos && pos.coords && pos.coords.latitude);
+            const lon = Number(pos && pos.coords && pos.coords.longitude);
+            if (!isFinite(lat) || !isFinite(lon)) throw new Error("bad coords");
+
+            const label = getNearestLabel(lat, lon);
+            const city = { name: label || "Poloha", lat, lon };
+            iuWeatherWriteLocationMode(IU_WEATHER_LOCATION_MODE_GPS);
+            iuWeatherSetRuntime(city);
+            iuWeatherWriteGpsSelected(city);
+            iuWeatherSyncCityLabels(city);
+            iuWeatherLoadAndRender();
+          }catch{
+            // Fallback to city mode
+            iuWeatherWriteLocationMode(IU_WEATHER_LOCATION_MODE_CITY);
+            iuWeatherClearRuntimeCity();
+            const geoLine = document.getElementById("iuWeatherGeoActiveLine");
+            if (geoLine) { geoLine.hidden = true; try { geoLine.setAttribute("aria-hidden","true"); } catch {} }
+            iuWeatherLoadAndRender();
+          }
+        })();
       });
 
       const radarBtn = document.getElementById("iuWxRadarOpen");
       if (radarBtn) radarBtn.addEventListener("click", () => {
         iuWeatherRadarEnsure();
+      });
+
+      const layerBar = document.getElementById("iuWxLayerSwitchBar");
+      if (layerBar) layerBar.addEventListener("click", (e) => {
+        try{
+          const btn = e.target && e.target.closest ? e.target.closest("button[data-iu-weather-layer]") : null;
+          if (!btn) return;
+          const layerId = btn.getAttribute("data-iu-weather-layer");
+          if (!layerId) return;
+          iuWxSetActiveLayer(layerId);
+        }catch{}
+      });
+
+      const quickGrid = document.getElementById("iuWeatherView") ? document.getElementById("iuWeatherView").querySelector(".iuWeatherQuickGrid") : null;
+      if (quickGrid) quickGrid.addEventListener("click", (e) => {
+        try{
+          const btn = e.target && e.target.closest ? e.target.closest("button[data-iu-quick-layer]") : null;
+          if (!btn) return;
+          const qLayer = btn.getAttribute("data-iu-quick-layer");
+          if (!qLayer) return;
+          iuWxSetActiveLayer(qLayer);
+        }catch{}
       });
     }catch{}
   }
@@ -8045,38 +8948,52 @@ function buildVideoAsArticleCard(it) {
       try { elHours.classList.add("iuWxHours--skeleton"); } catch(_){}
     }
 
-    iuFetchOpenMeteo(lat, lon)
-      .then(d => {
-        const cur = d && d.current;
-        const hourly = d && d.hourly;
-        const daily = d && d.daily;
-
-        if (!cur || typeof cur.temperature_2m !== "number") throw new Error("bad current");
-
-        const t = Math.round(cur.temperature_2m);
-        const code = cur.weather_code;
-
-        if (elTemp) elTemp.textContent = `${t}°C`;
-        if (elIcon) elIcon.textContent = iconFromCode(code);
-
-        // min/max
-        const max0 = daily && Array.isArray(daily.temperature_2m_max) ? daily.temperature_2m_max[0] : null;
-        const min0 = daily && Array.isArray(daily.temperature_2m_min) ? daily.temperature_2m_min[0] : null;
-        if (elMinMax) {
-          elMinMax.textContent = `Max ${fmtDeg(max0)} · Min ${fmtDeg(min0)}`;
-        }
-
-        // hourly strip: update stable slots (count depends on HTML; Weather view uses 6)
-        try{ iuWeatherUpdateHours(hourly); }catch{}
-        try{ iuWeatherRender7Day(daily); }catch{}
-
+    // Consume unified shared state when available (avoid duplicate Open-Meteo fetches).
+    try{
+      const st = window.__iuWeatherState;
+      if (st && typeof st.lat === "number" && typeof st.lon === "number" && Math.abs(st.lat - lat) < 0.00001 && Math.abs(st.lon - lon) < 0.00001 && st.current && st.hourly && st.rawDaily) {
+        if (elPlace) elPlace.textContent = st.city && st.city.name ? String(st.city.name) : "Praha";
+        if (elTemp) elTemp.textContent = typeof st.current.temperatureC === "number" ? `${Math.round(st.current.temperatureC)}°C` : "—°C";
+        if (elIcon) elIcon.textContent = st.current.icon ? String(st.current.icon) : iconFromCode(st.current.weatherCode);
+        if (elMinMax) elMinMax.textContent = `Max ${fmtDeg(st.daily ? st.daily.todayMax : null)} · Min ${fmtDeg(st.daily ? st.daily.todayMin : null)}`;
+        try{ iuWeatherUpdateHours(st.hourly); }catch{}
+        try{ iuWeatherRender7Day(st.rawDaily); }catch{}
         if (elWeather) elWeather.hidden = false;
         if (elErr) elErr.hidden = true;
-      })
-      .catch(() => {
+        return;
+      }
+    }catch{}
+
+    if (typeof window.iuWeatherEnsureState === "function") {
+      const wxToken = (window.__iuDailyPanelWxToken = (window.__iuDailyPanelWxToken || 0) + 1);
+      try{
+        window.iuWeatherEnsureState()
+          .then(st => {
+            if (window.__iuDailyPanelWxToken !== wxToken) return;
+            if (!st || !st.current) throw new Error("bad state");
+            if (elPlace) elPlace.textContent = st.city && st.city.name ? String(st.city.name) : "Praha";
+            if (elTemp) elTemp.textContent = typeof st.current.temperatureC === "number" ? `${Math.round(st.current.temperatureC)}°C` : "—°C";
+            if (elIcon) elIcon.textContent = st.current.icon ? String(st.current.icon) : iconFromCode(st.current.weatherCode);
+            if (elMinMax) elMinMax.textContent = `Max ${fmtDeg(st.daily ? st.daily.todayMax : null)} · Min ${fmtDeg(st.daily ? st.daily.todayMin : null)}`;
+            try{ iuWeatherUpdateHours(st.hourly); }catch{}
+            try{ iuWeatherRender7Day(st.rawDaily); }catch{}
+            if (elWeather) elWeather.hidden = false;
+            if (elErr) elErr.hidden = true;
+          })
+          .catch(() => {
+            if (elWeather) elWeather.hidden = true;
+            if (elErr) elErr.hidden = false;
+          });
+      }catch{
         if (elWeather) elWeather.hidden = true;
         if (elErr) elErr.hidden = false;
-      });
+      }
+      return;
+    }
+
+    // If ensureState is missing (should never happen), fail closed without fetching.
+    if (elWeather) elWeather.hidden = true;
+    if (elErr) elErr.hidden = false;
   };
 
   const IU_QUICKTOOLS_STORAGE_KEY = "infouzel_quicktools";
