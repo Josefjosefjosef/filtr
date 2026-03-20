@@ -309,6 +309,11 @@ body{
   -webkit-font-smoothing: antialiased;
 }
 
+/* P0 scroll paint containment: clip page wrapper so no content can paint under fixed topbar */
+#page{
+  overflow-x: hidden;
+}
+
 /* CLS mitigation: keep daily panel slots reserved before JS toggles text */
 html:not([data-iu-js]) .iuDailyNameday,
 html:not([data-iu-js]) .iuDailyWeather{
