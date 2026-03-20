@@ -457,18 +457,16 @@ self.addEventListener("fetch", (event) => {
           }
 
           if (isJSON) {
-            // Validní JSON - cacheuj
-            caches.open(DATA_CACHE).then((cache) => {
-              cache.put(event.request, response.clone());
-              // Ulož metadata pro TTL
-              const meta = {
-                timestamp: Date.now(),
-                type: path.includes("articles") ? "articles" : path.includes("videos") ? "videos" : path.includes("weather") ? "weather" : path.includes("namedays") ? "namedays" : "meta"
-              };
-              caches.open(DATA_META_CACHE).then((metaCache) => {
-                metaCache.put(new Request(event.request.url + ".meta"), new Response(JSON.stringify(meta)));
-              });
-            });
+            // Validní JSON - cacheuj (klonovat a await před return response — jinak tělo už čte klient a .clone() spadne)
+            const responseForCache = response.clone();
+            const cache = await caches.open(DATA_CACHE);
+            await cache.put(event.request, responseForCache);
+            const meta = {
+              timestamp: Date.now(),
+              type: path.includes("articles") ? "articles" : path.includes("videos") ? "videos" : path.includes("weather") ? "weather" : path.includes("namedays") ? "namedays" : "meta"
+            };
+            const metaCache = await caches.open(DATA_META_CACHE);
+            await metaCache.put(new Request(event.request.url + ".meta"), new Response(JSON.stringify(meta)));
           }
 
           return response;
