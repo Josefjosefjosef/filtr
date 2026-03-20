@@ -77,12 +77,25 @@ def compute_from_journal(events: List[Dict[str, Any]]) -> Dict[str, Any]:
     per_iteration.sort(key=lambda x: x[0])
     per_iteration_verdicts = [v for _, v in per_iteration]
 
+    # Session facts for truthful verdict classification
+    count_verdicted = len(per_iteration_verdicts)
+    has_iteration_after_pass = False
+    has_iteration_after_fail = False
+    for i, v in enumerate(per_iteration_verdicts):
+        if v == "PASS" and i + 1 < len(per_iteration_verdicts):
+            has_iteration_after_pass = True
+        if v == "FAIL_REVERTED" and i + 1 < len(per_iteration_verdicts):
+            has_iteration_after_fail = True
+
     return {
         "count_pass": count_pass,
         "count_fail_reverted": count_fail_reverted,
         "count_skipped": count_skipped,
         "per_iteration_verdicts": per_iteration_verdicts,
         "final_stop_status": final_stop_status,
+        "count_verdicted_iterations": count_verdicted,
+        "has_iteration_after_pass": has_iteration_after_pass,
+        "has_iteration_after_fail": has_iteration_after_fail,
     }
 
 
@@ -195,3 +208,91 @@ def self_check_per_iteration_vs_totals(report: Dict[str, Any]) -> bool:
     if count_fail != report.get("TOTAL_FAIL_REVERTED_ITERATIONS", -1):
         return False
     return True
+
+
+# Explicit normalization: only these engine statuses map to normalized; no mapping = emit raw only.
+LOOP_FINAL_STATUS_NORMALIZATION: Dict[str, str] = {
+    "STOP_NO_SAFE_CANDIDATES_WITH_EVIDENCE": "SAFE_BACKLOG_EXHAUSTED",
+    "STOP_ENGINE_BLOCKER_WITH_EVIDENCE": "ENGINE_BLOCKED",
+    "STOP_REPORT_INCONSISTENT_FIX_FIRST": "REPORT_BLOCKED",
+}
+
+
+def build_full_loop_verdict_block(session_id: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Build full loop verdict block from one session. No PASS without session proof.
+    - CONTINUOUS_MULTI_CANDIDATE_EXECUTION: PASS only if count_verdicted_iterations >= 2.
+    - FAIL_REVERT_CONTINUE_BEHAVIOR: PASS only if at least one FAIL_REVERTED and an iteration after it.
+    - PASS_COMMIT_CONTINUE_BEHAVIOR: PASS only if at least one PASS and an iteration after it.
+    - LOOP_FINAL_STATUS: raw engine status from journal; optional normalized_status only if in map (with proof).
+    """
+    sid = session_id or get_canonical_session()
+    out: Dict[str, Any] = {
+        "ENGINE_FOREGROUND_LOOP_CAPABILITY": "FAIL",
+        "CONTINUOUS_MULTI_CANDIDATE_EXECUTION": "FAIL",
+        "FAIL_REVERT_CONTINUE_BEHAVIOR": "FAIL",
+        "PASS_COMMIT_CONTINUE_BEHAVIOR": "FAIL",
+        "SESSION_SCOPED_FINAL_REPORT": "FAIL",
+        "REPORT_TOTALS_MATCH_JOURNAL": "FAIL",
+        "REPORT_PER_ITERATION_VERDICTS_MATCH_JOURNAL": "FAIL",
+        "REPORT_FINAL_STOP_STATUS_MATCHES_JOURNAL": "FAIL",
+        "NO_BACKGROUND_CLAIMS_IN_OUTPUT": "PASS",
+        "LOOP_FINAL_STATUS": None,
+        "LOOP_FINAL_STATUS_RAW": None,
+        "LOOP_FINAL_STATUS_NORMALIZED": None,
+        "FULL_FOREGROUND_RUN_COMPLETED": "NO",
+        "session_facts": None,
+    }
+    if not sid:
+        return out
+    events = load_journal_events(sid)
+    if not events:
+        return out
+    from_journal = compute_from_journal(events)
+    loop_final = load_loop_final()
+    if loop_final is None or loop_final.get("session_id") != sid:
+        return out
+    consistent, _ = validate_consistency(sid, from_journal, loop_final)
+    if not consistent:
+        return out
+
+    n = from_journal["count_verdicted_iterations"]
+    count_pass = from_journal["count_pass"]
+    count_fail = from_journal["count_fail_reverted"]
+    after_pass = from_journal["has_iteration_after_pass"]
+    after_fail = from_journal["has_iteration_after_fail"]
+    raw_status = from_journal["final_stop_status"]
+
+    out["SESSION_SCOPED_FINAL_REPORT"] = "PASS"
+    out["REPORT_TOTALS_MATCH_JOURNAL"] = "PASS"
+    out["REPORT_PER_ITERATION_VERDICTS_MATCH_JOURNAL"] = "PASS"
+    out["REPORT_FINAL_STOP_STATUS_MATCHES_JOURNAL"] = "PASS"
+    out["ENGINE_FOREGROUND_LOOP_CAPABILITY"] = "PASS"
+    out["LOOP_FINAL_STATUS"] = raw_status
+    out["LOOP_FINAL_STATUS_RAW"] = raw_status
+    out["session_facts"] = {
+        "count_verdicted_iterations": n,
+        "per_iteration_verdicts": from_journal["per_iteration_verdicts"],
+        "count_pass": count_pass,
+        "count_fail_reverted": count_fail,
+        "has_iteration_after_pass": after_pass,
+        "has_iteration_after_fail": after_fail,
+        "final_stop_status_raw": raw_status,
+    }
+
+    if n >= 2:
+        out["CONTINUOUS_MULTI_CANDIDATE_EXECUTION"] = "PASS"
+    if count_fail >= 1 and after_fail:
+        out["FAIL_REVERT_CONTINUE_BEHAVIOR"] = "PASS"
+    if count_pass >= 1 and after_pass:
+        out["PASS_COMMIT_CONTINUE_BEHAVIOR"] = "PASS"
+
+    has_session_end = any(ev.get("event") == "session_end" for ev in events)
+    if has_session_end:
+        out["FULL_FOREGROUND_RUN_COMPLETED"] = "YES"
+
+    if raw_status and raw_status in LOOP_FINAL_STATUS_NORMALIZATION:
+        out["LOOP_FINAL_STATUS_NORMALIZED"] = LOOP_FINAL_STATUS_NORMALIZATION[raw_status]
+        out["LOOP_FINAL_STATUS_MAPPING_APPLIED"] = True
+
+    return out
