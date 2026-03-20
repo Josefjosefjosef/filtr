@@ -9457,11 +9457,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   #topbarWrap .iuBrandBlock{
     flex: 0 0 auto !important;
   }
-  /* P0: Remove slogan under logo on mobile/tablet; show only "Přidat na plochu" (hide "Do telefonu") */
-  #topbarWrap .iuBrandSubtitle,
-  #topbarWrap .iuBrandSubtitle::before{
-    display: none !important;
-  }
+  /* Tagline: hidden only on narrow phones via `.iuBrandSubtitle{ display:none }` (max-width:700px); keep visible 701–900px for headless CI viewport (800px) and tablet. */
   #topbarWrap .iu-pwa-cta-short{
     display: none !important;
   }
@@ -10730,32 +10726,24 @@ header.iuTopbar .iuHamburger svg,
   line-height: 1.1;
   margin: 0;
 }
-/* Tagline: only "Váš osobní internet" (no third line); hidden on mobile/tablet per P0 */
-.iuBrandSubtitle::before{
-  content: "Váš osobní internet";
-  display: block;
-  font-size: 1.22em;
-  line-height: 1.2;
-  margin: 4px 0 0 0;
-  font-weight: 600;
-}
-.iuTopbar .iuBrandSubtitle::before{
-  color: #6B7280;
-}
+/* Tagline under logo: source text in HTML (audit + accessibility); hidden on narrow phones only (max-width:700px) */
 .iuBrandSubtitle{
   font-size: 11px;
   line-height: 1.2;
   color: #0B1F33;
   font-weight: 400;
-  white-space: nowrap;
+  white-space: normal;
   margin: 0;
   padding: 0;
+  display: block;
+  max-width: 100%;
 }
 .iuTopbar .iuBrandSubtitle{
-  font-size: 1em;
+  font-size: clamp(10px, 2.6vw, 12px);
   line-height: 1.35;
   color: #6B7280;
-  white-space: normal;
+  font-weight: 600;
+  margin-top: 2px;
 }
 @media (max-width: 700px){
   .iuBrandSubtitle{ display: none; }
