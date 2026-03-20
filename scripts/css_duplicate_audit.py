@@ -5,6 +5,7 @@ Precise line_start from QualifiedRule; line_end via brace match from rule start.
 """
 from __future__ import annotations
 
+import os
 import re
 from collections import defaultdict
 from pathlib import Path
@@ -72,6 +73,15 @@ def normalize_decl_map(decls: Dict[str, str]) -> Tuple[Tuple[str, str], ...]:
     items = []
     for k in sorted(decls.keys()):
         v = re.sub(r"\s+", " ", decls[k].strip().lower())
+        items.append((k, v))
+    return tuple(items)
+
+
+def strict_normalize_decl_map(decls: Dict[str, str]) -> Tuple[Tuple[str, str], ...]:
+    """Stricter normalization for discovery expansion: collapse all whitespace in values."""
+    items = []
+    for k in sorted(decls.keys()):
+        v = re.sub(r"\s+", "", decls[k].strip().lower())
         items.append((k, v))
     return tuple(items)
 
@@ -208,6 +218,56 @@ def walk_rules(
                 walk_rules(nested, media_stack + [f"@{kw_l}"], occurrences, text)
 
 
+def _discovery_expand_safe_candidates(
+    dup_groups: List[Dict[str, Any]],
+    base_safe: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    """
+    Discovery expansion only: add groups that pass strict evidence (same media, strict identical
+    decls, no layout, no risky selector) but were not classified identical_duplicate.
+    Does not change classify_group or engine decision logic.
+    """
+    base_sel = {g["selector_normalized"] for g in base_safe}
+    out: List[Dict[str, Any]] = []
+    for g in dup_groups:
+        if g["selector_normalized"] in base_sel:
+            continue
+        cls = g.get("classification")
+        if cls == "identical_duplicate":
+            continue
+        decls_list = g.get("_occs_declarations") or []
+        medias = g.get("_occs_media") or []
+        if len(decls_list) < 2 or len(set(medias)) != 1:
+            continue
+        strict_sigs = [strict_normalize_decl_map(d) for d in decls_list]
+        if len(set(strict_sigs)) != 1:
+            continue
+        any_layout = any(
+            LAYOUT_PROPS.intersection(d.keys())
+            or any(LAYOUT_PROPS & set(re.split(r"[\s:]+", v.lower())) for v in d.values())
+            for d in decls_list
+        )
+        if any_layout:
+            continue
+        sel_l = (g.get("selector_normalized") or "").lower()
+        if any(m in sel_l for m in RISKY_SELECTOR_MARKERS):
+            continue
+        g_copy = {k: v for k, v in g.items() if not k.startswith("_")}
+        g_copy["safe_source"] = "discovery_expanded"
+        g_copy["safe_classification_reason"] = (
+            "strict_identical_declarations_same_media_no_layout_no_risky_selector"
+        )
+        g_copy["risk_flags"] = []
+        g_copy["discovery_evidence"] = {
+            "strict_decl_identical": True,
+            "single_media_context": True,
+            "no_layout_props": True,
+            "no_risky_selector": True,
+        }
+        out.append(g_copy)
+    return out[:50]
+
+
 def classify_group(occs: List[Dict[str, Any]]) -> str:
     medias = {o["media_context"] for o in occs}
     decl_sigs = [normalize_decl_map(o["declarations"]) for o in occs]
@@ -285,6 +345,8 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
                 "classification": cls,
                 "declarations_identical_across_group": len({normalize_decl_map(o["declarations"]) for o in occs}) == 1,
                 "occurrences": occ_out,
+                "_occs_declarations": [o["declarations"] for o in occs],
+                "_occs_media": [o["media_context"] for o in occs],
             }
         )
 
@@ -293,7 +355,11 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
         {"selector_normalized": g["selector_normalized"], "classification": g["classification"]}
         for g in dup_groups
     ]
-    safe_groups_top = [g for g in dup_groups if g.get("classification") == "identical_duplicate"][:25]
+    base_safe_raw = [g for g in dup_groups if g.get("classification") == "identical_duplicate"][:50]
+    base_safe = [{k: v for k, v in g.items() if not k.startswith("_")} for g in base_safe_raw]
+    expanded_safe = _discovery_expand_safe_candidates(dup_groups, base_safe_raw)
+    use_expansion = os.environ.get("DISCOVERY_EXPANSION", "1") != "0"
+    safe_groups_top = base_safe + (expanded_safe if use_expansion else [])
 
     return {
         "duplicate_selector_groups": len(dup_groups),
@@ -301,6 +367,23 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
         "total_qualified_rules_scanned": len(occurrences),
         "groups_top": dup_groups[:25],
         "safe_groups_top": safe_groups_top,
+        "discovery_expansion": {
+            "enabled": use_expansion,
+            "base_safe_count": len(base_safe),
+            "expanded_count": len(expanded_safe),
+            "safe_now_before_expansion": len(base_safe),
+            "safe_now_after_expansion": len(base_safe) + len(expanded_safe),
+            "new_candidates": [
+                {
+                    "candidate_id": "discovery_expanded_" + (g.get("selector_normalized") or "")[:50].replace(" ", "_"),
+                    "selector": g.get("selector_normalized"),
+                    "reason": "strict_identical_declarations_same_media_no_layout_no_risky_selector",
+                    "risk_flags": g.get("risk_flags", []),
+                    "safe_classification_reason": g.get("safe_classification_reason", ""),
+                }
+                for g in expanded_safe
+            ],
+        },
         "duplicate_groups_brief": duplicate_groups_brief,
         "classification_counts": dict(class_counts),
         "dead_override_candidate_policy": DEAD_OVERRIDE_POLICY,
