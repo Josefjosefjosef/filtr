@@ -509,6 +509,8 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
             "total_qualified_rules_scanned": 0,
             "groups_top": [],
             "classification_counts": {},
+            "debt_verdict_counts": {},
+            "debt_occurrence_counts": {},
             "dead_override_candidate_policy": (
                 "not_emitted: reserved; conservative specificity/cascade analysis not implemented."
             ),
@@ -585,6 +587,8 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     warnings += aggregator_alerts
     ok_count += max(0, 130 - critical - warnings)
 
+    dv_counts = (css_real_dup.get("debt_verdict_counts") or {}) if isinstance(css_real_dup, dict) else {}
+    do_counts = (css_real_dup.get("debt_occurrence_counts") or {}) if isinstance(css_real_dup, dict) else {}
     report: Dict[str, Any] = {
         "date": date_str(),
         "timestamp": now_iso(),
@@ -604,6 +608,18 @@ def build_report(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
             "realCssDuplicateRuleOccurrencesInGroups": css_real_dup.get(
                 "duplicate_rule_occurrences_in_groups", 0
             ),
+            "realCssDuplicateGroups": css_real_dup.get("duplicate_selector_groups", 0),
+            "realCssDuplicateOccurrences": css_real_dup.get("duplicate_rule_occurrences_in_groups", 0),
+            "allowedDuplicateGroups": dv_counts.get("intentional_non_debt", 0),
+            "allowedDuplicateOccurrences": do_counts.get("intentional_non_debt", 0),
+            "realDebtDuplicateGroups": dv_counts.get("true_debt", 0),
+            "realDebtDuplicateOccurrences": do_counts.get("true_debt", 0),
+            "riskDuplicateGroups": dv_counts.get("risk_now", 0),
+            "riskDuplicateOccurrences": do_counts.get("risk_now", 0),
+            "unresolvedDuplicateGroups": dv_counts.get("unresolved_needs_review", 0),
+            "unresolvedDuplicateOccurrences": do_counts.get("unresolved_needs_review", 0),
+            "debtVerdictCounts": dv_counts,
+            "debtOccurrenceCounts": do_counts,
             "offlineRadios": 0,
         },
         "structure": structure,
@@ -696,6 +712,22 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
         f.write(
             f"Rule occurrences inside those groups: {s.get('realCssDuplicateRuleOccurrencesInGroups', 0)}\n"
         )
+        f.write("\n### CSS duplicate debt separation (AST — not regex tokens)\n\n")
+        f.write(f"REAL_CSS_DUPLICATE_GROUPS: {s.get('realCssDuplicateGroups', s.get('realCssDuplicateSelectorGroups', 0))}\n")
+        f.write(f"REAL_CSS_DUPLICATE_OCCURRENCES: {s.get('realCssDuplicateOccurrences', s.get('realCssDuplicateRuleOccurrencesInGroups', 0))}\n")
+        f.write(f"ALLOWED_DUPLICATE_GROUPS: {s.get('allowedDuplicateGroups', 0)}\n")
+        f.write(f"ALLOWED_DUPLICATE_OCCURRENCES: {s.get('allowedDuplicateOccurrences', 0)}\n")
+        f.write(f"REAL_DEBT_DUPLICATE_GROUPS: {s.get('realDebtDuplicateGroups', 0)}\n")
+        f.write(f"REAL_DEBT_DUPLICATE_OCCURRENCES: {s.get('realDebtDuplicateOccurrences', 0)}\n")
+        f.write(f"RISK_DUPLICATE_GROUPS: {s.get('riskDuplicateGroups', 0)}\n")
+        f.write(f"RISK_DUPLICATE_OCCURRENCES: {s.get('riskDuplicateOccurrences', 0)}\n")
+        f.write(f"UNRESOLVED_DUPLICATE_GROUPS: {s.get('unresolvedDuplicateGroups', 0)}\n")
+        f.write(f"UNRESOLVED_DUPLICATE_OCCURRENCES: {s.get('unresolvedDuplicateOccurrences', 0)}\n")
+        f.write("\n")
+        f.write("- **Allowed duplicates** = intentional / expected duplicate rule groups (not treated as technical debt).\n")
+        f.write("- **Real debt duplicates** = `debt_verdict: true_debt` (conservative; identical redundant blocks in equivalent scope).\n")
+        f.write("- **Risk duplicates** = layout/risk-context groups; not auto-counted as removable debt.\n")
+        f.write("- **Unresolved** = needs human review before any debt claim.\n\n")
         f.write(f"Offline radios: {s.get('offlineRadios', 0)}\n\n")
         f.write("### Legend (CSS metrics)\n\n")
         f.write(
@@ -703,8 +735,9 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
             "High counts do **not** mean duplicate rule blocks.\n"
         )
         f.write(
-            "- **Real duplicate groups** = same normalized selector string appearing in **2+ qualified rules** "
-            "(tinycss2 parse). Use for controlled cleanup; classifications are conservative.\n"
+            "- **Real duplicate groups** = same normalized selector string in **2+ qualified rules** (tinycss2). "
+            "**Not every duplicate is CSS debt:** see **debt_verdict** (allowed / real debt / risk / unresolved) above; "
+            "**technical_classification** describes the pattern only.\n"
         )
         f.write(
             "- **dead_override_candidate** is **not emitted** in this report: reserved for a future pass that "
@@ -743,7 +776,18 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
         else:
             f.write("### Real CSS duplicate selector blocks (AST, tinycss2)\n\n")
             f.write("REAL_CSS_DUPLICATE_AUDIT_OK=tinycss2\n\n")
-            f.write(f"- Duplicate selector groups: {audit.get('duplicate_selector_groups', 0)}\n")
+            summ = report.get("summary") or {}
+            f.write(f"- REAL_CSS_DUPLICATE_GROUPS: {summ.get('realCssDuplicateGroups', audit.get('duplicate_selector_groups', 0))}\n")
+            f.write(f"- REAL_CSS_DUPLICATE_OCCURRENCES: {summ.get('realCssDuplicateOccurrences', audit.get('duplicate_rule_occurrences_in_groups', 0))}\n")
+            f.write(f"- ALLOWED_DUPLICATE_GROUPS: {summ.get('allowedDuplicateGroups', 0)}\n")
+            f.write(f"- ALLOWED_DUPLICATE_OCCURRENCES: {summ.get('allowedDuplicateOccurrences', 0)}\n")
+            f.write(f"- REAL_DEBT_DUPLICATE_GROUPS: {summ.get('realDebtDuplicateGroups', 0)}\n")
+            f.write(f"- REAL_DEBT_DUPLICATE_OCCURRENCES: {summ.get('realDebtDuplicateOccurrences', 0)}\n")
+            f.write(f"- RISK_DUPLICATE_GROUPS: {summ.get('riskDuplicateGroups', 0)}\n")
+            f.write(f"- RISK_DUPLICATE_OCCURRENCES: {summ.get('riskDuplicateOccurrences', 0)}\n")
+            f.write(f"- UNRESOLVED_DUPLICATE_GROUPS: {summ.get('unresolvedDuplicateGroups', 0)}\n")
+            f.write(f"- UNRESOLVED_DUPLICATE_OCCURRENCES: {summ.get('unresolvedDuplicateOccurrences', 0)}\n\n")
+            f.write(f"- Duplicate selector groups (total): {audit.get('duplicate_selector_groups', 0)}\n")
             f.write(f"- Occurrences in those groups: {audit.get('duplicate_rule_occurrences_in_groups', 0)}\n")
             f.write(f"- Qualified rules scanned: {audit.get('total_qualified_rules_scanned', 0)}\n")
             lr = audit.get("line_range_method") or ""
@@ -767,16 +811,22 @@ def write_markdown(report: Dict[str, Any], path: Path) -> None:
                 norm = g.get("selector_normalized") or ""
                 cls_g = g.get("classification") or ""
                 cnt = g.get("count", 0)
+                dv = g.get("debt_verdict") or ""
+                dr = g.get("debt_reason") or ""
+                tc = g.get("technical_classification") or cls_g
                 f.write(f"##### Group {gi} — **{cnt}x** — `{cls_g}`\n\n")
                 f.write("**normalized key (full):**\n\n```\n")
                 f.write(norm + "\n```\n\n")
+                f.write(f"- technical_classification: `{tc}`\n")
+                f.write(f"- debt_verdict: `{dv}`\n")
+                f.write(f"- debt_reason: {dr}\n\n")
                 for oi, occ in enumerate(g.get("occurrences") or [], start=1):
                     raw = occ.get("selector_raw") or ""
                     f.write(f"**Occurrence {oi}** — line_start={occ.get('line_start')}, line_end={occ.get('line_end')}, "
                             f"media_context=`{occ.get('media_context', '')}`\n\n")
                     f.write("```css\n")
                     f.write(raw + "\n```\n\n")
-                    f.write(f"- classification (group): `{cls_g}`\n\n")
+                    f.write(f"- technical_classification (group): `{tc}`\n\n")
             f.write("\n")
         f.write("### CSS token frequency signals (regex — NOT duplicate rule blocks)\n\n")
         if dup.get("cssTokenFrequencySignals") or dup.get("cssSelectors"):
