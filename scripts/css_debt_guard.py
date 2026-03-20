@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 CSS debt guardrail: AST tinycss2 duplicate audit vs locked baseline.
-Hard FAIL: duplicate groups, occurrences, risky_layout_coupled, CSS size > baseline+budget.
-Soft WARN: breakpoint_specific, intentional_cascade, identical_duplicate; new risk-zone dup groups.
+Hard FAIL: duplicate groups/occurrences rise, risky_layout_coupled rise, CSS size > baseline+budget,
+or debt_verdict true_debt / risk_now group counts rise.
+Soft WARN: intentional_non_debt or unresolved_needs_review rises; legacy technical-class soft path if no debt baseline.
 No token-based duplicateSelectors — only css_duplicate_audit metrics.
 """
 from __future__ import annotations
@@ -83,6 +84,10 @@ def evaluate_guard(
     c_g = current["duplicate_selector_groups"]
     c_o = current["duplicate_rule_occurrences_in_groups"]
     c_c = current["classification_counts"]
+    b_dv = baseline.get("debt_verdict_counts") or {}
+    c_dv = current.get("debt_verdict_counts") or {}
+    b_do = baseline.get("debt_occurrence_counts") or {}
+    c_do = current.get("debt_occurrence_counts") or {}
 
     hard_reasons: List[str] = []
     if c_g > b_g:
@@ -97,11 +102,34 @@ def evaluate_guard(
         hard_reasons.append(
             f"app.css bytes {raw_bytes} > baseline {b_bytes} + budget {budget} (max allowed {b_bytes + budget})"
         )
+    if b_dv and c_dv:
+        if c_dv.get("true_debt", 0) > b_dv.get("true_debt", 0):
+            hard_reasons.append(
+                f"debt_verdict true_debt groups {c_dv.get('true_debt', 0)} > baseline {b_dv.get('true_debt', 0)}"
+            )
+        if c_dv.get("risk_now", 0) > b_dv.get("risk_now", 0):
+            hard_reasons.append(
+                f"debt_verdict risk_now groups {c_dv.get('risk_now', 0)} > baseline {b_dv.get('risk_now', 0)}"
+            )
 
     soft_warns: List[str] = []
-    for k in ("breakpoint_specific", "intentional_cascade_candidate", "identical_duplicate"):
-        if c_c.get(k, 0) > b_c.get(k, 0):
-            soft_warns.append(f"{k}: {c_c.get(k,0)} > baseline {b_c.get(k,0)} (+{c_c.get(k,0)-b_c.get(k,0)})")
+    if b_dv and c_dv:
+        if c_dv.get("intentional_non_debt", 0) > b_dv.get("intentional_non_debt", 0):
+            soft_warns.append(
+                f"debt_verdict intentional_non_debt: {c_dv.get('intentional_non_debt', 0)} > baseline "
+                f"{b_dv.get('intentional_non_debt', 0)} (allowed / non-debt duplicates — not auto-fail)"
+            )
+        if c_dv.get("unresolved_needs_review", 0) > b_dv.get("unresolved_needs_review", 0):
+            soft_warns.append(
+                f"debt_verdict unresolved_needs_review: {c_dv.get('unresolved_needs_review', 0)} > baseline "
+                f"{b_dv.get('unresolved_needs_review', 0)}"
+            )
+    else:
+        for k in ("breakpoint_specific", "intentional_cascade_candidate", "identical_duplicate"):
+            if c_c.get(k, 0) > b_c.get(k, 0):
+                soft_warns.append(
+                    f"{k}: {c_c.get(k, 0)} > baseline {b_c.get(k, 0)} (+{c_c.get(k, 0) - b_c.get(k, 0)})"
+                )
 
     base_risk = pair_set(baseline.get("risk_zone_duplicate_groups") or [])
     cur_risk = pair_set(risk_zone_entries(current))
@@ -122,6 +150,16 @@ def evaluate_guard(
         bv = b_c.get(cls, 0)
         cv = c_c.get(cls, 0)
         lines.append(f"| {cls} | {bv} | {cv} | {cv - bv:+d} |")
+    lines.append("| **debt_verdict (groups)** | — | — | — |")
+    for dvk in ("intentional_non_debt", "true_debt", "risk_now", "unresolved_needs_review"):
+        bv = b_dv.get(dvk, 0) if b_dv else 0
+        cv = c_dv.get(dvk, 0) if c_dv else 0
+        lines.append(f"| debt: {dvk} | {bv} | {cv} | {cv - bv:+d} |")
+    lines.append("| **debt_verdict (occurrences)** | — | — | — |")
+    for dvk in ("intentional_non_debt", "true_debt", "risk_now", "unresolved_needs_review"):
+        bv = b_do.get(dvk, 0) if b_do else 0
+        cv = c_do.get(dvk, 0) if c_do else 0
+        lines.append(f"| debt occ: {dvk} | {bv} | {cv} | {cv - bv:+d} |")
     lines.append(f"| app.css raw bytes | {b_bytes} | {raw_bytes} | {raw_bytes - b_bytes:+d} |")
     lines.append(f"| size budget | +{budget} bytes max | — | — |")
     lines.append("")
@@ -133,8 +171,10 @@ def evaluate_guard(
             lines.append(f"- … +{len(new_risk) - 15} more")
     lines.append("")
     lines.append(
-        "**Rules:** HARD FAIL if groups, occurrences, risky_layout_coupled rise, or raw CSS > baseline+4KB. "
-        "SOFT WARN if only breakpoint_specific / intentional_cascade / identical_duplicate rise, or new risk-zone dup groups."
+        "**Rules:** HARD FAIL if duplicate groups/occurrences rise, risky_layout_coupled rises, raw CSS > baseline+4KB, "
+        "or **debt_verdict true_debt / risk_now** group counts rise. "
+        "SOFT WARN if **intentional_non_debt** or **unresolved_needs_review** rises (allowed/non-debt or needs-review — not automatic debt), "
+        "or new risk-zone duplicate patterns; legacy soft-warn on technical class counts only if debt_verdict baseline missing."
     )
     lines.append("")
 
@@ -217,25 +257,33 @@ def selftest() -> int:
         return 1
     print("SELFTEST_OK CASE2b hard fail on risky_layout_coupled")
 
-    # CASE 3 soft only — bump baseline soft metrics above current (impossible) instead:
-    # loosen baseline so current has LOWER soft counts... we need current to EXCEED baseline on soft only.
+    # CASE 3 soft only — debt_verdict intentional_non_debt rises vs baseline (allowed duplicates), hard metrics unchanged
     loose = json.loads(json.dumps(bl))
-    for k in ("breakpoint_specific", "intentional_cascade_candidate", "identical_duplicate"):
-        loose["classification_counts"][k] = cur["classification_counts"][k] - 1
-    fake_cur = json.loads(json.dumps(cur))
-    fake_cur["classification_counts"] = dict(cur["classification_counts"])
-    fake_cur["classification_counts"]["breakpoint_specific"] = cur["classification_counts"][
-        "breakpoint_specific"
-    ]
-    # Make fake_cur: same hard metrics as cur, +1 breakpoint_specific only
-    fake_cur["classification_counts"]["breakpoint_specific"] = (
-        loose["classification_counts"]["breakpoint_specific"] + 1
-    )
-    rc = run_guard(loose, fake_cur, raw_b, emit_github=False)
-    if rc != 0:
-        print("SELFTEST_FAIL: CASE3 soft-only should PASS exit 0", file=sys.stderr)
-        return 1
-    print("SELFTEST_OK CASE3 soft warn only PASS exit 0")
+    if loose.get("debt_verdict_counts") and cur.get("debt_verdict_counts"):
+        loose["debt_verdict_counts"] = dict(loose["debt_verdict_counts"])
+        loose["debt_verdict_counts"]["intentional_non_debt"] = cur["debt_verdict_counts"]["intentional_non_debt"] - 1
+        if loose.get("debt_occurrence_counts") and cur.get("debt_occurrence_counts"):
+            loose["debt_occurrence_counts"] = dict(loose["debt_occurrence_counts"])
+            loose["debt_occurrence_counts"]["intentional_non_debt"] = cur["debt_occurrence_counts"][
+                "intentional_non_debt"
+            ] - 1
+        fake_cur = json.loads(json.dumps(cur))
+        fake_cur["debt_verdict_counts"] = dict(cur["debt_verdict_counts"])
+        fake_cur["debt_verdict_counts"]["intentional_non_debt"] = loose["debt_verdict_counts"][
+            "intentional_non_debt"
+        ] + 1
+        if fake_cur.get("debt_occurrence_counts") and loose.get("debt_occurrence_counts"):
+            fake_cur["debt_occurrence_counts"] = dict(cur["debt_occurrence_counts"])
+            fake_cur["debt_occurrence_counts"]["intentional_non_debt"] = loose["debt_occurrence_counts"][
+                "intentional_non_debt"
+            ] + 1
+        rc = run_guard(loose, fake_cur, raw_b, emit_github=False)
+        if rc != 0:
+            print("SELFTEST_FAIL: CASE3 soft-only should PASS exit 0", file=sys.stderr)
+            return 1
+        print("SELFTEST_OK CASE3 soft warn only PASS exit 0")
+    else:
+        print("SELFTEST_SKIP CASE3 (no debt_verdict_counts in baseline)")
 
     # CASE 4 size fail
     tiny = json.loads(json.dumps(bl))

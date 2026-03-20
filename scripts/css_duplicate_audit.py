@@ -15,6 +15,12 @@ try:
 except ImportError:
     tinycss2 = None  # type: ignore
 
+# Debt verdict labels (reporting layer; does not change classify_group / AST logic).
+DEBT_VERDICT_INTENTIONAL_NON_DEBT = "intentional_non_debt"
+DEBT_VERDICT_TRUE_DEBT = "true_debt"
+DEBT_VERDICT_RISK_NOW = "risk_now"
+DEBT_VERDICT_UNRESOLVED = "unresolved_needs_review"
+
 LAYOUT_PROPS = frozenset(
     {
         "width",
@@ -208,6 +214,87 @@ def walk_rules(
                 walk_rules(nested, media_stack + [f"@{kw_l}"], occurrences, text)
 
 
+def risk_zone_hit(selector_normalized: str) -> bool:
+    """
+    Conservative risk-zone heuristic (aligned with css_debt_guard.risk_zone_hit).
+    Used only for debt_verdict layering — does not affect technical classification.
+    """
+    s = selector_normalized.lower()
+    if "topbar" in s or "iutopbar" in s:
+        return True
+    if "iuleftrail" in s or "accordioncol" in s or "leftnav" in s or "iu-left" in s:
+        return True
+    if "#feed" in s or "newslist" in s or "iucenterstage" in s or "newswrap" in s:
+        return True
+    if "mindmenu" in s or "mmquick" in s or "iu-mm" in s:
+        return True
+    if "overlay" in s or "modal" in s or "fullscreen" in s:
+        return True
+    if ":hover" in s or ":focus" in s or ":active" in s or ":checked" in s:
+        return True
+    if "::before" in s or "::after" in s or ":before" in s or ":after" in s:
+        return True
+    if ".open" in s or ".active" in s or "is-active" in s or "aria-expanded" in s or "data-" in s:
+        return True
+    return False
+
+
+def compute_debt_verdict(technical_classification: str, selector_normalized: str, occs: List[Dict[str, Any]]) -> Tuple[str, str]:
+    """
+    Map technical duplicate classification to a conservative debt verdict for reporting.
+    Never auto-claims true_debt when risk heuristics fire on identical_duplicate.
+    """
+    medias = {o["media_context"] for o in occs}
+    multi_media = len(medias) > 1
+    rz = risk_zone_hit(selector_normalized)
+
+    if technical_classification == "breakpoint_specific":
+        if rz:
+            return (
+                DEBT_VERDICT_RISK_NOW,
+                "Media-scoped duplicate; risk-zone heuristic matches — not auto-counted as removable debt.",
+            )
+        return (
+            DEBT_VERDICT_INTENTIONAL_NON_DEBT,
+            "Media-scoped overrides across breakpoints; expected pattern — not treated as technical debt.",
+        )
+
+    if technical_classification == "intentional_cascade_candidate":
+        if rz:
+            return (
+                DEBT_VERDICT_RISK_NOW,
+                "Declaration variants in risk-sensitive selector context — not auto-counted as removable debt.",
+            )
+        return (
+            DEBT_VERDICT_INTENTIONAL_NON_DEBT,
+            "Cascade-style declaration differences in same media — intentional variance — not default debt.",
+        )
+
+    if technical_classification == "risky_layout_coupled":
+        return (
+            DEBT_VERDICT_RISK_NOW,
+            "Layout/risk-marker duplicate — requires caution; not auto-counted as removable debt.",
+        )
+
+    if technical_classification == "identical_duplicate":
+        if multi_media:
+            return (
+                DEBT_VERDICT_UNRESOLVED,
+                "Identical declarations but multiple media stacks in group — needs review before debt claim.",
+            )
+        if rz:
+            return (
+                DEBT_VERDICT_UNRESOLVED,
+                "Identical redundant blocks in risk zone — review before treating as removable debt.",
+            )
+        return (
+            DEBT_VERDICT_TRUE_DEBT,
+            "Repeated identical rule blocks in equivalent scope — conservative true duplicate debt (verify before edit).",
+        )
+
+    return (DEBT_VERDICT_UNRESOLVED, "Unmapped technical classification — needs review.")
+
+
 def classify_group(occs: List[Dict[str, Any]]) -> str:
     medias = {o["media_context"] for o in occs}
     decl_sigs = [normalize_decl_map(o["declarations"]) for o in occs]
@@ -236,6 +323,8 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
             "groups_top": [],
             "duplicate_groups_brief": [],
             "classification_counts": {},
+            "debt_verdict_counts": {},
+            "debt_occurrence_counts": {},
             "dead_override_candidate_policy": DEAD_OVERRIDE_POLICY,
         }
     text = css_path.read_text(encoding="utf-8")
@@ -249,6 +338,8 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
             "groups_top": [],
             "duplicate_groups_brief": [],
             "classification_counts": {},
+            "debt_verdict_counts": {},
+            "debt_occurrence_counts": {},
             "dead_override_candidate_policy": DEAD_OVERRIDE_POLICY,
         }
     occurrences: List[Dict[str, Any]] = []
@@ -278,21 +369,39 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
                     "media_context": o["media_context"],
                 }
             )
+        debt_v, debt_reason = compute_debt_verdict(cls, norm_key, occs)
         dup_groups.append(
             {
                 "selector_normalized": norm_key,
                 "count": len(occs),
                 "classification": cls,
+                "technical_classification": cls,
+                "debt_verdict": debt_v,
+                "debt_reason": debt_reason,
                 "declarations_identical_across_group": len({normalize_decl_map(o["declarations"]) for o in occs}) == 1,
                 "occurrences": occ_out,
             }
         )
 
     dup_groups.sort(key=lambda x: -x["count"])
-    duplicate_groups_brief = [
-        {"selector_normalized": g["selector_normalized"], "classification": g["classification"]}
-        for g in dup_groups
-    ]
+    debt_verdict_counts: Dict[str, int] = defaultdict(int)
+    debt_occurrence_counts: Dict[str, int] = defaultdict(int)
+    for g in dup_groups:
+        dv = g.get("debt_verdict") or DEBT_VERDICT_UNRESOLVED
+        debt_verdict_counts[dv] += 1
+        debt_occurrence_counts[dv] += int(g.get("count") or 0)
+
+    duplicate_groups_brief = []
+    for g in dup_groups:
+        duplicate_groups_brief.append(
+            {
+                "selector_normalized": g["selector_normalized"],
+                "classification": g["classification"],
+                "technical_classification": g["technical_classification"],
+                "debt_verdict": g["debt_verdict"],
+                "debt_reason": g["debt_reason"],
+            }
+        )
 
     return {
         "duplicate_selector_groups": len(dup_groups),
@@ -301,6 +410,8 @@ def audit_css_file(css_path: Path) -> Dict[str, Any]:
         "groups_top": dup_groups[:25],
         "duplicate_groups_brief": duplicate_groups_brief,
         "classification_counts": dict(class_counts),
+        "debt_verdict_counts": dict(debt_verdict_counts),
+        "debt_occurrence_counts": dict(debt_occurrence_counts),
         "dead_override_candidate_policy": DEAD_OVERRIDE_POLICY,
         "line_range_method": (
             "line_start: tinycss2 QualifiedRule.source_line/column (first prelude token). "
