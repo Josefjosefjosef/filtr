@@ -5428,7 +5428,6 @@ html[data-section="pocasi"] #iuWeatherView .iuWeatherEmbedBtn{
   z-index: 2;
 }
 
-/* Main weather map: internal map (no external iframes) */
 body[data-section="pocasi"] #iuWeatherView .iuWxMapHost,
 html[data-section="pocasi"] #iuWeatherView .iuWxMapHost{
   position: relative;
@@ -5463,13 +5462,14 @@ html[data-section="pocasi"] #iuWeatherView .iuWxMapState{
   color: rgba(255,255,255,0.92);
   text-align: center;
   background: rgba(255,255,255,0.02);
+  pointer-events: none;
+  z-index: 2;
 }
 body[data-section="pocasi"] #iuWeatherView .iuWxMapSkeleton,
 html[data-section="pocasi"] #iuWeatherView .iuWxMapSkeleton{
   background: rgba(255,255,255,0.04);
 }
 
-/* Layer switch buttons overlay */
 body[data-section="pocasi"] #iuWeatherView .iuWxLayerSwitchBar,
 html[data-section="pocasi"] #iuWeatherView .iuWxLayerSwitchBar{
   position: absolute;
@@ -5802,7 +5802,7 @@ html[data-section="pocasi"] #iuWeatherView #iuWeatherAlertText{
   color: var(--iuWxAlertRed, #d61f1f);
 }
 
-/* Quick layers: 2 columns on mobile */
+/* Quick layers: keep compact two-column fallback for small screens */
 @media (max-width: 900px){
   body[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid,
   html[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid{
@@ -6552,6 +6552,8 @@ html[data-section="pocasi"] #iuWeatherView .iuWeatherQuickGrid{
   grid-template-columns: 1fr;
   gap: 10px;
   margin: 10px 0 14px 0;
+  position: relative;
+  z-index: 5;
 }
 body[data-section="pocasi"] #iuWeatherView .iuWeatherQuickChip,
 html[data-section="pocasi"] #iuWeatherView .iuWeatherQuickChip{
