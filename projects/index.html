@@ -919,10 +919,14 @@ style-src 'self' 'unsafe-inline' https:;
 
                     <section class="iuWeatherMyCity" aria-label="Moje město">
                       <div class="iuWeatherMyCityTop">
-                        <span class="iuWeatherMyCityLabel">Moje město:</span>
-                        <strong class="iuWeatherMyCityName" id="iuWeatherMyCityName">Praha</strong>
-                        <button class="iuBtn iuBtn--ghost iuWeatherMyCityBtn" id="iuWeatherCityChange" type="button">Změnit</button>
-                        <button class="iuBtn iuBtn--ghost iuWeatherMyCityBtn" id="iuWeatherGeoBtn" type="button">Aktuální poloha</button>
+                        <div class="iuWeatherMyCityRow iuWeatherMyCityRow--label">
+                          <span class="iuWeatherMyCityLabel">Moje město:</span>
+                          <strong class="iuWeatherMyCityName" id="iuWeatherMyCityName">Praha</strong>
+                        </div>
+                        <div class="iuWeatherMyCityRow iuWeatherMyCityRow--actions">
+                          <button class="iuBtn iuBtn--ghost iuWeatherMyCityBtn" id="iuWeatherCityChange" type="button">Změnit</button>
+                          <button class="iuBtn iuBtn--ghost iuWeatherMyCityBtn" id="iuWeatherGeoBtn" type="button">Aktuální poloha</button>
+                        </div>
                       </div>
                       <div class="iuWeatherGeoActiveLine" id="iuWeatherGeoActiveLine" hidden aria-hidden="true">
                         Aktuální poloha: <strong id="iuWeatherGeoLabel">—</strong>
