@@ -6800,6 +6800,24 @@ function buildVideoAsArticleCard(it) {
 
   const IU_WEATHER_DEFAULT_CITY = { name: "Praha", lat: 50.0755, lon: 14.4378 };
 
+  function iuWeatherValidateCoords(lat, lon){
+    const la = Number(lat);
+    const lo = Number(lon);
+    if (!isFinite(la) || !isFinite(lo)) return false;
+    if (la < -90 || la > 90) return false;
+    if (lo < -180 || lo > 180) return false;
+    return true;
+  }
+
+  function iuWeatherCoordsLabelLooksLikeCoords(s){
+    try{
+      const t = String(s || "").trim();
+      if (!t) return false;
+      if ((/\u00b0/.test(t) || /°/.test(t)) && /,\s*-?/.test(t)) return true;
+    }catch{}
+    return false;
+  }
+
   const IU_CITY_FALLBACK = [
     ["Praha","Hlavní město Praha",50.0755,14.4378],
     ["Brno","Brno-město",49.1951,16.6068],
@@ -7101,6 +7119,14 @@ function buildVideoAsArticleCard(it) {
       const lon = Number(o.lon);
       const label = String(o.label || "").trim();
       if (!isFinite(lat) || !isFinite(lon) || !label) return null;
+      if (!iuWeatherValidateCoords(lat, lon)) {
+        try{ localStorage.removeItem(IU_MANUAL_LOCATION_KEY); }catch{}
+        return null;
+      }
+      if (iuWeatherCoordsLabelLooksLikeCoords(label)) {
+        try{ localStorage.removeItem(IU_MANUAL_LOCATION_KEY); }catch{}
+        return null;
+      }
       return { lat, lon, label };
     }catch{}
     return null;
@@ -7108,12 +7134,17 @@ function buildVideoAsArticleCard(it) {
 
   function iuWeatherWriteManualLocation(m){
     try{
+      const lat = Number(m.lat);
+      const lon = Number(m.lon);
+      const label = String(m.label || "").trim();
+      if (!iuWeatherValidateCoords(lat, lon)) return;
+      if (!label || iuWeatherCoordsLabelLooksLikeCoords(label)) return;
       localStorage.setItem(
         IU_MANUAL_LOCATION_KEY,
         JSON.stringify({
-          lat: Number(m.lat),
-          lon: Number(m.lon),
-          label: String(m.label || "").trim(),
+          lat,
+          lon,
+          label,
         }),
       );
     }catch{}
@@ -7144,6 +7175,10 @@ function buildVideoAsArticleCard(it) {
       const lat = Number(obj && obj.lat);
       const lon = Number(obj && obj.lon);
       if (!name || !isFinite(lat) || !isFinite(lon)) return null;
+      if (!iuWeatherValidateCoords(lat, lon) || iuWeatherCoordsLabelLooksLikeCoords(name)) {
+        try{ localStorage.removeItem(IU_WEATHER_GPS_SELECTED_KEY); }catch{}
+        return null;
+      }
       return { name, lat, lon };
     }catch{
       return null;
@@ -7153,10 +7188,15 @@ function buildVideoAsArticleCard(it) {
   function iuWeatherWriteGpsSelected(city){
     try{
       if (!city) return;
+      const lat = Number(city.lat);
+      const lon = Number(city.lon);
+      const name = String(city.name || "").trim();
+      if (!iuWeatherValidateCoords(lat, lon)) return;
+      if (!name || iuWeatherCoordsLabelLooksLikeCoords(name)) return;
       localStorage.setItem(IU_WEATHER_GPS_SELECTED_KEY, JSON.stringify({
-        name: String(city.name || "").trim(),
-        lat: Number(city.lat),
-        lon: Number(city.lon),
+        name,
+        lat,
+        lon,
       }));
     }catch{}
   }
@@ -7172,10 +7212,22 @@ function buildVideoAsArticleCard(it) {
     try{
       const c = window.__iuWeatherRuntimeCity;
       if (c && typeof c === "object" && c.name && isFinite(Number(c.lat)) && isFinite(Number(c.lon))) {
-        return { name: String(c.name), lat: Number(c.lat), lon: Number(c.lon) };
+        const lat = Number(c.lat);
+        const lon = Number(c.lon);
+        if (!iuWeatherValidateCoords(lat, lon)) return null;
+        if (iuWeatherCoordsLabelLooksLikeCoords(String(c.name))) return null;
+        return { name: String(c.name), lat, lon };
       }
     }catch{}
     return null;
+  }
+
+  function iuWeatherFallbackCityFromManualOrDefault(){
+    const man = iuWeatherReadManualLocation();
+    if (man && iuWeatherValidateCoords(man.lat, man.lon) && man.label) {
+      return { name: man.label, lat: man.lat, lon: man.lon, key: null };
+    }
+    return { name: IU_WEATHER_DEFAULT_CITY.name, lat: IU_WEATHER_DEFAULT_CITY.lat, lon: IU_WEATHER_DEFAULT_CITY.lon, key: null };
   }
 
   function iuWeatherGetActiveCity(){
@@ -7184,15 +7236,23 @@ function buildVideoAsArticleCard(it) {
     const mode = iuWeatherReadLocationMode();
     if (mode === IU_WEATHER_MODE_MANUAL) {
       const man = iuWeatherReadManualLocation();
-      if (man) return { name: man.label, lat: man.lat, lon: man.lon, key: null };
+      if (man && iuWeatherValidateCoords(man.lat, man.lon)) return { name: man.label, lat: man.lat, lon: man.lon, key: null };
     }
     const gps = iuWeatherReadGpsSelected();
-    if (gps) return { name: gps.name, lat: gps.lat, lon: gps.lon, key: null };
-    return IU_WEATHER_DEFAULT_CITY;
+    if (gps && iuWeatherValidateCoords(gps.lat, gps.lon)) return { name: gps.name, lat: gps.lat, lon: gps.lon, key: null };
+    return { name: IU_WEATHER_DEFAULT_CITY.name, lat: IU_WEATHER_DEFAULT_CITY.lat, lon: IU_WEATHER_DEFAULT_CITY.lon, key: null };
   }
 
   function iuWeatherSetRuntime(city){
-    try{ window.__iuWeatherRuntimeCity = { name: city.name, lat: city.lat, lon: city.lon }; }catch{}
+    try{
+      if (!city) return;
+      const lat = Number(city.lat);
+      const lon = Number(city.lon);
+      if (!iuWeatherValidateCoords(lat, lon)) return;
+      const name = String(city.name || "").trim();
+      if (!name || iuWeatherCoordsLabelLooksLikeCoords(name)) return;
+      window.__iuWeatherRuntimeCity = { name, lat, lon };
+    }catch{}
   }
 
   function iuWeatherCityKeyFromRow(c, idx){
@@ -7238,7 +7298,8 @@ function buildVideoAsArticleCard(it) {
   async function iuWeatherReverseGeocode(lat, lon){
     const la = Number(lat);
     const lo = Number(lon);
-    if (!isFinite(la) || !isFinite(lo)) return "Neznámá lokalita";
+    if (!isFinite(la) || !isFinite(lo)) return "";
+    if (!iuWeatherValidateCoords(la, lo)) return "";
     try{
       const u0 =
         "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=" +
@@ -7296,7 +7357,7 @@ function buildVideoAsArticleCard(it) {
       }
       if (best && best[0]) return iuCityLabel(best);
     }catch{}
-    return `${la.toFixed(3)}°, ${lo.toFixed(3)}°`;
+    return "";
   }
 
   function iuWeatherApplySharedStateMeta(state){
@@ -7328,6 +7389,9 @@ function buildVideoAsArticleCard(it) {
     window.iuWeatherResetMapView = iuWeatherResetMapView;
     window.iuWeatherSetMapState = iuWeatherSetMapState;
     window.iuWeatherApplySharedStateMeta = iuWeatherApplySharedStateMeta;
+    window.iuWeatherValidateCoords = iuWeatherValidateCoords;
+    window.iuWeatherFallbackCityFromManualOrDefault = iuWeatherFallbackCityFromManualOrDefault;
+    window.iuWeatherGetActiveCity = iuWeatherGetActiveCity;
   }catch{}
 
   const __iuOpenMeteoCache = new Map(); // key -> { t, data, p }
@@ -8463,15 +8527,20 @@ function buildVideoAsArticleCard(it) {
     if (btnOk) btnOk.addEventListener("click", () => {
       (async () => {
         if (!pending || !isFinite(pending.lat) || !isFinite(pending.lon)) return;
+        if (!iuWeatherValidateCoords(pending.lat, pending.lon)) {
+          alert("Neplatné souřadnice. Vyberte prosím jiné místo na mapě.");
+          return;
+        }
         if (!confirm("Chcete uložit tuto lokalitu pro počasí?")) return;
         try{
           const label = await iuWeatherReverseGeocode(pending.lat, pending.lon);
-          if (!label || !String(label).trim()) {
+          const labelTrim = String(label || "").trim();
+          if (!labelTrim || iuWeatherCoordsLabelLooksLikeCoords(labelTrim)) {
             alert("Nepodařilo se zjistit název lokality.");
             return;
           }
           iuWeatherWriteLocationMode(IU_WEATHER_MODE_MANUAL);
-          iuWeatherWriteManualLocation({ lat: pending.lat, lon: pending.lon, label: String(label).trim() });
+          iuWeatherWriteManualLocation({ lat: pending.lat, lon: pending.lon, label: labelTrim });
           iuWeatherClearRuntimeCity();
           iuWeatherClearOpenMeteoCache();
           try{ window.__iuWeatherState = null; }catch{}
@@ -9040,10 +9109,23 @@ function buildVideoAsArticleCard(it) {
         const lat = Number(pos && pos.coords && pos.coords.latitude);
         const lon = Number(pos && pos.coords && pos.coords.longitude);
         if (!isFinite(lat) || !isFinite(lon)) throw new Error("bad coords");
+        if (!iuWeatherValidateCoords(lat, lon)) throw new Error("coords out of range");
 
         if (geoLabel) geoLabel.textContent = "Hledám lokalitu…";
         const label = await iuWeatherReverseGeocode(lat, lon);
-        const city = { name: label || "Poloha", lat, lon };
+        const labelTrim = String(label || "").trim();
+        const cityResolveSucceeded = !!(labelTrim && !iuWeatherCoordsLabelLooksLikeCoords(labelTrim));
+        if (!cityResolveSucceeded) {
+          iuWeatherWriteLocationMode(IU_WEATHER_MODE_MANUAL);
+          iuWeatherClearRuntimeCity();
+          iuWeatherClearOpenMeteoCache();
+          try{ window.__iuWeatherState = null; }catch{}
+          const fb = iuWeatherFallbackCityFromManualOrDefault();
+          iuWeatherSyncCityLabels(fb);
+          iuWeatherLoadAndRender();
+          return;
+        }
+        const city = { name: labelTrim, lat, lon };
         iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
         iuWeatherClearRuntimeCity();
         iuWeatherWriteGpsSelected(city);
