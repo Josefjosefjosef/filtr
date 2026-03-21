@@ -7191,6 +7191,17 @@ function buildVideoAsArticleCard(it) {
     return IU_WEATHER_DEFAULT_CITY;
   }
 
+  /** Compare two WGS84 points (~5 m) — used for map picker dirty / save enable. */
+  function iuWeatherCoordsNearlyEqual(latA, lonA, latB, lonB){
+    const a = Number(latA);
+    const o = Number(lonA);
+    const b = Number(latB);
+    const p = Number(lonB);
+    if (!isFinite(a) || !isFinite(o) || !isFinite(b) || !isFinite(p)) return false;
+    const eps = 0.00005;
+    return Math.abs(a - b) < eps && Math.abs(o - p) < eps;
+  }
+
   function iuWeatherSetRuntime(city){
     try{ window.__iuWeatherRuntimeCity = { name: city.name, lat: city.lat, lon: city.lon }; }catch{}
   }
@@ -7328,6 +7339,7 @@ function buildVideoAsArticleCard(it) {
     window.iuWeatherResetMapView = iuWeatherResetMapView;
     window.iuWeatherSetMapState = iuWeatherSetMapState;
     window.iuWeatherApplySharedStateMeta = iuWeatherApplySharedStateMeta;
+    window.iuWeatherCoordsNearlyEqual = iuWeatherCoordsNearlyEqual;
   }catch{}
 
   const __iuOpenMeteoCache = new Map(); // key -> { t, data, p }
@@ -8420,7 +8432,10 @@ function buildVideoAsArticleCard(it) {
       try{ overlay.hidden = true; }catch{}
       try{ document.body.style.overflow = prevBodyOverflow || ""; }catch{}
       teardownMap();
-      if (btnOk) btnOk.disabled = true;
+      if (btnOk) {
+        btnOk.disabled = true;
+        try{ btnOk.classList.remove("iuWeatherMapPickerConfirm--dirty"); }catch{}
+      }
     }
 
     async function open(){
@@ -8437,21 +8452,77 @@ function buildVideoAsArticleCard(it) {
       const ac = iuWeatherGetActiveCity();
       const center = [isFinite(ac.lat) ? ac.lat : 49.75, isFinite(ac.lon) ? ac.lon : 15.5];
       teardownMap();
-      map = window.L.map(mapEl, { zoomControl: true, attributionControl: true }).setView(center, 7);
+      if (btnOk) {
+        btnOk.disabled = true;
+        btnOk.classList.remove("iuWeatherMapPickerConfirm--dirty");
+      }
+
+      function invalidateMapPickerSize(){
+        try{
+          if (map) map.invalidateSize({ animate: false });
+        }catch{}
+      }
+
+      map = window.L.map(mapEl, {
+        zoomControl: true,
+        attributionControl: true,
+        tap: false,
+      }).setView(center, 7);
       window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: "&copy; OpenStreetMap",
       }).addTo(map);
-      setTimeout(() => { try{ map.invalidateSize(); }catch{} }, 50);
-      map.on("click", (e) => {
-        pending = { lat: e.latlng.lat, lon: e.latlng.lng };
-        if (!marker) {
-          marker = window.L.marker(e.latlng).addTo(map);
-        } else {
-          marker.setLatLng(e.latlng);
+
+      function syncMapPickerSaveButton(){
+        if (!btnOk) return;
+        if (!pending || !isFinite(pending.lat) || !isFinite(pending.lon)) {
+          btnOk.disabled = true;
+          btnOk.classList.remove("iuWeatherMapPickerConfirm--dirty");
+          return;
         }
-        if (btnOk) btnOk.disabled = false;
+        const dirty = !iuWeatherCoordsNearlyEqual(pending.lat, pending.lon, ac.lat, ac.lon);
+        btnOk.disabled = !dirty;
+        if (dirty) btnOk.classList.add("iuWeatherMapPickerConfirm--dirty");
+        else btnOk.classList.remove("iuWeatherMapPickerConfirm--dirty");
+      }
+
+      function onMapPick(latlng){
+        if (!latlng || typeof latlng.lat !== "number" || typeof latlng.lng !== "number") return;
+        if (!isFinite(latlng.lat) || !isFinite(latlng.lng)) return;
+        pending = { lat: latlng.lat, lon: latlng.lng };
+        try{
+          if (!marker) {
+            marker = window.L.marker(latlng).addTo(map);
+          } else {
+            marker.setLatLng(latlng);
+          }
+        }catch{}
+        try{
+          window.__iuWeatherFlowDiag = window.__iuWeatherFlowDiag || {};
+          window.__iuWeatherFlowDiag.lastMapPick = { lat: pending.lat, lon: pending.lon, t: Date.now() };
+        }catch{}
+        syncMapPickerSaveButton();
+      }
+
+      map.on("click", (e) => {
+        try{
+          if (e && e.latlng) onMapPick(e.latlng);
+        }catch{}
       });
+
+      map.whenReady(() => {
+        invalidateMapPickerSize();
+        try{
+          requestAnimationFrame(() => {
+            invalidateMapPickerSize();
+            requestAnimationFrame(invalidateMapPickerSize);
+          });
+        }catch{}
+      });
+      setTimeout(invalidateMapPickerSize, 0);
+      setTimeout(invalidateMapPickerSize, 50);
+      setTimeout(invalidateMapPickerSize, 200);
+      setTimeout(invalidateMapPickerSize, 500);
     }
 
     if (closeBtn) closeBtn.addEventListener("click", close);
@@ -9023,9 +9094,11 @@ function buildVideoAsArticleCard(it) {
   function iuWeatherActivateGpsViaGeolocation(){
     (async () => {
       const geoLabel = document.getElementById("iuWeatherGeoLabel");
+      const h1City = document.getElementById("iuWeatherCityH1");
       try{
         if (!navigator.geolocation) throw new Error("no geolocation");
         if (geoLabel) geoLabel.textContent = "Zjišťuji polohu…";
+        if (h1City) h1City.textContent = "Zjišťuji polohu…";
 
         const pos = await new Promise((resolve, reject) => {
           try{
@@ -9042,13 +9115,26 @@ function buildVideoAsArticleCard(it) {
         if (!isFinite(lat) || !isFinite(lon)) throw new Error("bad coords");
 
         if (geoLabel) geoLabel.textContent = "Hledám lokalitu…";
-        const label = await iuWeatherReverseGeocode(lat, lon);
-        const city = { name: label || "Poloha", lat, lon };
+        if (h1City) h1City.textContent = "Hledám lokalitu…";
+        const label = await Promise.race([
+          iuWeatherReverseGeocode(lat, lon).catch(() => ""),
+          new Promise((resolve) => setTimeout(() => resolve(""), 12000)),
+        ]);
+        const labelTrim = String(label || "").trim();
+        const city = {
+          name: labelTrim || `Poloha (${lat.toFixed(2)}°, ${lon.toFixed(2)}°)`,
+          lat,
+          lon,
+        };
         iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
         iuWeatherClearRuntimeCity();
         iuWeatherWriteGpsSelected(city);
         iuWeatherClearOpenMeteoCache();
         try{ window.__iuWeatherState = null; }catch{}
+        try{
+          window.__iuWeatherFlowDiag = window.__iuWeatherFlowDiag || {};
+          window.__iuWeatherFlowDiag.lastGeoSuccess = { lat, lon, t: Date.now() };
+        }catch{}
         iuWeatherSyncCityLabels(city);
         iuWeatherLoadAndRender();
       }catch{
@@ -9085,16 +9171,29 @@ function buildVideoAsArticleCard(it) {
       if (window.__iuWeatherInitDone) return;
       window.__iuWeatherInitDone = 1;
 
-      const btn = document.getElementById("iuWeatherCityChange");
-      if (btn) btn.addEventListener("click", () => {
-        try{
-          const mode = iuWeatherReadLocationMode();
-          if (mode === IU_WEATHER_MODE_GPS) {
-            if (iuWeatherSwitchToModeManualUsingStoredIfAny()) return;
-          }
-          iuWeatherOpenMapPicker();
-        }catch{}
-      });
+      document.addEventListener(
+        "click",
+        (ev) => {
+          try{
+            const t = ev.target;
+            if (!t || !t.closest) return;
+            if (t.closest("#iuWeatherGeoBtn")) {
+              ev.preventDefault();
+              iuWeatherActivateGpsViaGeolocation();
+              return;
+            }
+            if (t.closest("#iuWeatherCityChange")) {
+              ev.preventDefault();
+              const mode = iuWeatherReadLocationMode();
+              if (mode === IU_WEATHER_MODE_GPS) {
+                if (iuWeatherSwitchToModeManualUsingStoredIfAny()) return;
+              }
+              iuWeatherOpenMapPicker();
+            }
+          }catch{}
+        },
+        false,
+      );
 
       try{
         const params = new URLSearchParams(location.search || "");
@@ -9102,11 +9201,6 @@ function buildVideoAsArticleCard(it) {
           try{ iuWeatherOpenMapPicker(); }catch{}
         }
       }catch{}
-
-      const geoBtn = document.getElementById("iuWeatherGeoBtn");
-      if (geoBtn) geoBtn.addEventListener("click", () => {
-        iuWeatherActivateGpsViaGeolocation();
-      });
 
       const radarBtn = document.getElementById("iuWxRadarOpen");
       if (radarBtn) radarBtn.addEventListener("click", () => {
