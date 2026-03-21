@@ -7088,25 +7088,6 @@ function buildVideoAsArticleCard(it) {
       if (window.__iuWeatherLegacyMigrated) return;
       window.__iuWeatherLegacyMigrated = 1;
       if (localStorage.getItem(IU_WEATHER_MODE_KEY)) return;
-      const oldMode = String(localStorage.getItem(IU_WEATHER_LOCATION_MODE_LEGACY_KEY) || "").toLowerCase();
-      if (oldMode === "gps") {
-        localStorage.setItem(IU_WEATHER_MODE_KEY, IU_WEATHER_MODE_GPS);
-        return;
-      }
-      const raw = localStorage.getItem(IU_WEATHER_CITY_SELECTED_KEY) || localStorage.getItem(IU_WEATHER_CITY_KEY);
-      if (raw) {
-        try{
-          const o = JSON.parse(raw);
-          const label = String(o && o.name || "").trim();
-          const lat = Number(o && o.lat);
-          const lon = Number(o && o.lon);
-          if (label && isFinite(lat) && isFinite(lon)) {
-            localStorage.setItem(IU_WEATHER_MODE_KEY, IU_WEATHER_MODE_MANUAL);
-            localStorage.setItem(IU_MANUAL_LOCATION_KEY, JSON.stringify({ lat, lon, label }));
-            return;
-          }
-        }catch{}
-      }
       localStorage.setItem(IU_WEATHER_MODE_KEY, IU_WEATHER_MODE_GPS);
     }catch{}
   }
