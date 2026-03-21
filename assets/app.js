@@ -21957,6 +21957,7 @@ function buildVideoAsArticleCard(it) {
     const section = accentKey;
     // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
     try{ document.body && (document.body.dataset.section = section); }catch{}
+    try{ document.documentElement && (document.documentElement.dataset.section = section); }catch{}
     try{
       const color = IU_CONTENT_ACCENTS[accentKey] || "";
       document.body && document.body.style.setProperty("--iuContentAccent", color);
@@ -21965,6 +21966,23 @@ function buildVideoAsArticleCard(it) {
     try{ state.page = 1; }catch{}
     setLeftNavActive(section);
     showView(VIEW_MAP[section] ?? 'media');
+
+    // P0 mobile: #leftContent is display:none below 900px until iu-mobileMainVisible (rail click).
+    // Direct URL (?section=pocasi etc.) must reveal main or center views measure 0×0 (CLS/Playwright).
+    try{
+      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+        const sec = String(section || "").toLowerCase();
+        if (sec && sec !== "media") {
+          document.body.classList.add("iu-mobileMainVisible");
+          var mbVis = document.getElementById("iuMobileMainBackBar");
+          if (mbVis) mbVis.hidden = false;
+        } else {
+          try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_) {}
+          var mbHid = document.getElementById("iuMobileMainBackBar");
+          if (mbHid) mbHid.hidden = true;
+        }
+      }
+    }catch{}
 
     // Weather (UI-only): ensure render + radarOpen works after view switch.
     try{
