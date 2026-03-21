@@ -7445,7 +7445,7 @@ function buildVideoAsArticleCard(it) {
           geoBtn.setAttribute("aria-pressed", "false");
         }
         if (cityBtn) {
-          cityBtn.textContent = "Moje město";
+          cityBtn.textContent = "Moje město / Změnit město";
           cityBtn.classList.add("iuWeatherMyCityBtn--active");
           cityBtn.setAttribute("aria-pressed", "true");
         }
