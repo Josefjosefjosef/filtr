@@ -6051,7 +6051,7 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   }
 }
 
-/* Map-only location picker (Leaflet) */
+/* Weather location picker (internal SVG + local dataset, no external tiles) */
 .iuWeatherMapPickerOverlay{
   position: fixed;
   inset: 0;
@@ -6076,6 +6076,7 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   background: rgba(12,18,28,0.98);
   border: 1px solid rgba(255,255,255,0.12);
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 .iuWeatherMapPickerHead{
   display:flex;
@@ -6103,15 +6104,120 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
 .iuWeatherMapPickerClose:focus-visible{
   outline: 3px solid #fff;
 }
+.iuWeatherMapPickerSearchRow{
+  flex: 0 0 auto;
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: hidden;
+}
+.iuWeatherMapPickerSearchLabel{
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.72);
+  margin-bottom: 6px;
+}
+.iuWeatherMapPickerSearch{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(0,0,0,0.25);
+  color: rgba(255,255,255,0.96);
+  padding: 10px 12px;
+  font-size: 16px;
+  outline: none;
+}
+.iuWeatherMapPickerSearch:focus{
+  border-color: rgba(96,165,250,0.85);
+  box-shadow: 0 0 0 3px rgba(96,165,250,0.22);
+}
+.iuWeatherMapPickerSuggest{
+  margin-top: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(8,12,20,0.98);
+}
+.iuWeatherMapPickerSuggestItem{
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: transparent;
+  color: rgba(255,255,255,0.94);
+  font-size: 15px;
+  cursor: pointer;
+}
+.iuWeatherMapPickerSuggestItem:last-child{
+  border-bottom: 0;
+}
+.iuWeatherMapPickerSuggestItem:hover,
+.iuWeatherMapPickerSuggestItem:focus-visible{
+  background: rgba(96,165,250,0.18);
+  outline: none;
+}
 .iuWeatherMapPickerMap{
   flex: 1 1 auto;
   min-height: 280px;
   width: 100%;
+  max-width: 100%;
   position: relative;
   z-index: 0;
+  overflow: hidden;
 }
-.iuWeatherMapPickerOverlay .leaflet-container{
-  font: inherit;
+.iuWeatherMapPickerMapInner{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+.iuWeatherMapPickerSvg{
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  display: block;
+  touch-action: manipulation;
+}
+.iuWeatherMapPickerLbl{
+  font-size: 9px;
+  font-weight: 800;
+  fill: rgba(255,255,255,0.88);
+  paint-order: stroke fill;
+  stroke: rgba(0,0,0,0.55);
+  stroke-width: 2px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.iuWeatherMapPickerPin{
+  fill: #fbbf24;
+  stroke: rgba(0,0,0,0.55);
+  stroke-width: 2px;
+  pointer-events: none;
+}
+.iuWeatherMapPickerSelected{
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  min-height: 1.25em;
+}
+.iuWeatherMapPickerAttr{
+  flex: 0 0 auto;
+  padding: 4px 14px 8px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: rgba(255,255,255,0.45);
 }
 .iuWeatherMapPickerBar{
   display: flex;
