@@ -992,16 +992,6 @@ try {
         }
       }
 
-      function isInsideWeatherMapPickerOverlay(node) {
-        try {
-          if (!node) return false;
-          if (!(node instanceof Element)) return false;
-          return !!node.closest("#iuWeatherMapPickerOverlay");
-        } catch (_) {
-          return false;
-        }
-      }
-
       // Debug-only: keep layout-shift attribution evidence for post-mortem.
       window.__iuCLSShiftEntries = Array.isArray(window.__iuCLSShiftEntries)
         ? window.__iuCLSShiftEntries
@@ -1110,9 +1100,6 @@ try {
             const debugOnly =
               sources.length > 0 &&
               sources.every((s) => isDebugOverlayNode(s && s.node));
-            const pickerOverlayOnly =
-              sources.length > 0 &&
-              sources.every((s) => isInsideWeatherMapPickerOverlay(s && s.node));
             // Debug-only evidence: store layout shift entries + attribution sources.
             try {
               const shiftEntry = {
@@ -1121,7 +1108,6 @@ try {
                 hadRecentInput: !!e.hadRecentInput,
                 startTime: typeof e.startTime === "number" ? e.startTime : null,
                 debugOnly,
-                pickerOverlayOnly,
                 sources: sources.map((s) => {
                   const prev = rectToObj1(s && s.previousRect);
                   const cur = rectToObj1(s && s.currentRect);
@@ -1162,7 +1148,6 @@ try {
               hadRecentInput: !!e.hadRecentInput,
               sourceCount: sources.length,
               debugOnly,
-              pickerOverlayOnly,
               sources: sources.map((s) => ({
                 node: nodeLabel(s && s.node),
                 previousRect: rectToObj(s && s.previousRect),
@@ -1174,7 +1159,7 @@ try {
             // Update real-only total and log occasionally when it changes.
             try {
               if (iuIsDebug) {
-                const isRealShift = !rec.hadRecentInput && !rec.debugOnly && !pickerOverlayOnly;
+                const isRealShift = !rec.hadRecentInput && !rec.debugOnly;
                 if (isRealShift) {
                   realTotal += rec.value || 0;
                   window.__iuCLSRealTotal = realTotal;
@@ -8804,16 +8789,6 @@ function buildVideoAsArticleCard(it) {
       }catch{}
       try{ overlay.hidden = true; }catch{}
       teardownMap();
-      try{
-        if (mapWrap) {
-          mapWrap.style.boxSizing = "border-box";
-          mapWrap.style.flex = "0 0 auto";
-          mapWrap.style.height = "min(52vh, 520px)";
-          mapWrap.style.minHeight = "280px";
-          mapWrap.style.maxHeight = "min(56vh, 560px)";
-        }
-        if (mapInner) mapInner.style.minHeight = "100%";
-      }catch{}
       localities = await iuLoadPickerLocalities();
       let outline = null;
       try{

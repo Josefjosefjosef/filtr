@@ -5308,33 +5308,39 @@ body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityPin{
 
 /* Now card + hours strip: fixed rhythm */
 body[data-section="pocasi"] #iuWeatherView .iuDailyWeather,
-html[data-section="pocasi"] #iuWeatherView .iuDailyWeather{
+html[data-section="pocasi"] #iuWeatherView .iuDailyWeather,
+#iuWeatherView[data-view-host="pocasi"] .iuDailyWeather{
   min-height: 210px; /* CLS guard */
 }
 
 /* pocasi: full-page .iuHomeWeather must grow (home rail uses fixed 160px) */
 body[data-section="pocasi"] #iuWeatherView .iuWeatherNow.iuHomeWeather,
-html[data-section="pocasi"] #iuWeatherView .iuWeatherNow.iuHomeWeather{
+html[data-section="pocasi"] #iuWeatherView .iuWeatherNow.iuHomeWeather,
+#iuWeatherView[data-view-host="pocasi"] .iuWeatherNow.iuHomeWeather{
   height:auto;
-  min-height:0;
+  /* was min-height:0 — allowed collapse before weather paint (CLS). Match shell reserve. */
+  min-height: 220px;
   flex:0 0 auto;
   align-self:stretch;
   width:100%;
 }
 body[data-section="pocasi"] #iuWeatherView .iuWeatherNow .iuHomeWeatherShell,
-html[data-section="pocasi"] #iuWeatherView .iuWeatherNow .iuHomeWeatherShell{
+html[data-section="pocasi"] #iuWeatherView .iuWeatherNow .iuHomeWeatherShell,
+#iuWeatherView[data-view-host="pocasi"] .iuWeatherNow .iuHomeWeatherShell{
   height:auto;
-  min-height:0;
+  min-height: 220px;
   overflow:visible;
 }
 body[data-section="pocasi"] #iuWeatherView .iuWeatherNowAndAlerts,
-html[data-section="pocasi"] #iuWeatherView .iuWeatherNowAndAlerts{
+html[data-section="pocasi"] #iuWeatherView .iuWeatherNowAndAlerts,
+#iuWeatherView[data-view-host="pocasi"] .iuWeatherNowAndAlerts{
   display:flex;
   flex-direction:column;
   gap:14px;
   width:100%;
   min-width:0;
-  min-height: 52px;
+  /* !important: beat flex min-height:auto / any late overrides — first paint reserved for „Právě teď“ CLS */
+  min-height: 260px !important;
 }
 
 #iuWeatherView[data-view-host="pocasi"] .iuHomeWeatherTopRow{
@@ -6111,7 +6117,10 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   border-bottom: 1px solid rgba(255,255,255,0.08);
   box-sizing: border-box;
   max-width: 100%;
-  overflow: hidden;
+  /* overflow visible so absolutely positioned suggest is not clipped */
+  overflow: visible;
+  position: relative;
+  z-index: 4;
 }
 .iuWeatherMapPickerSearchLabel{
   display: block;
@@ -6137,6 +6146,11 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   box-shadow: 0 0 0 3px rgba(96,165,250,0.22);
 }
 .iuWeatherMapPickerSuggest{
+  /* Out of document flow: opening suggestions must not push the map (CLS). */
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 100%;
   margin-top: 8px;
   max-height: 200px;
   overflow-y: auto;
@@ -6144,6 +6158,8 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(8,12,20,0.98);
+  z-index: 20;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.45);
 }
 .iuWeatherMapPickerSuggestItem{
   display: block;
@@ -6166,12 +6182,12 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   outline: none;
 }
 .iuWeatherMapPickerMap{
-  /* Fixed band: avoids flex relayout when SVG mounts (CLS on picker open). */
+  /* aspect-ratio reserves height from width before SVG paints — avoids map-band CLS */
   flex: 0 0 auto;
   width: 100%;
   max-width: 100%;
+  aspect-ratio: 800 / 450;
   min-height: 280px;
-  height: min(52vh, 520px);
   max-height: min(56vh, 560px);
   position: relative;
   z-index: 0;
