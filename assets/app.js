@@ -7265,70 +7265,6 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  async function iuWeatherReverseGeocode(lat, lon){
-    const la = Number(lat);
-    const lo = Number(lon);
-    if (!isFinite(la) || !isFinite(lo)) return "Neznámá lokalita";
-    try{
-      const u0 =
-        "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=" +
-        encodeURIComponent(String(la)) +
-        "&longitude=" +
-        encodeURIComponent(String(lo)) +
-        "&localityLanguage=cs";
-      const r0 = await fetch(u0, { cache: "no-store" });
-      if (r0 && r0.ok){
-        const j0 = await r0.json();
-        const pick0 = j0 && (j0.city || j0.locality || j0.principalSubdivision);
-        if (pick0 && String(pick0).trim()) return String(pick0).trim();
-      }
-    }catch{}
-    try{
-      const u =
-        "https://nominatim.openstreetmap.org/reverse?format=json&lat=" +
-        encodeURIComponent(String(la)) +
-        "&lon=" +
-        encodeURIComponent(String(lo)) +
-        "&accept-language=cs&addressdetails=1";
-      const r = await fetch(u, {
-        headers: {
-          Accept: "application/json",
-          "User-Agent": "infoUzel-weather/1.0 (https://infouzel.cz)",
-        },
-        cache: "no-store",
-      });
-      if (r && r.ok){
-        const j = await r.json();
-        const a = j && j.address;
-        const pick =
-          (a && (a.city || a.town || a.village || a.municipality || a.hamlet || a.suburb || a.city_district)) ||
-          (j && j.display_name && String(j.display_name).split(",")[0].trim());
-        if (pick && String(pick).trim()) return String(pick).trim();
-      }
-    }catch{}
-    try{
-      const cities = await iuLoadCitiesSafe();
-      let best = null;
-      let bestD = Infinity;
-      for (let i = 0; i < cities.length; i++){
-        const c = cities[i];
-        if (!c || c.length < 4) continue;
-        const cLat = Number(c[2]);
-        const cLon = Number(c[3]);
-        if (!isFinite(cLat) || !isFinite(cLon)) continue;
-        const dLat = cLat - la;
-        const dLon = cLon - lo;
-        const d = dLat * dLat + dLon * dLon;
-        if (d < bestD) {
-          bestD = d;
-          best = c;
-        }
-      }
-      if (best && best[0]) return iuCityLabel(best);
-    }catch{}
-    return `${la.toFixed(3)}°, ${lo.toFixed(3)}°`;
-  }
-
   function iuWeatherApplySharedStateMeta(state){
     try{
       if (!state || typeof state !== "object") return;
@@ -8525,6 +8461,49 @@ function buildVideoAsArticleCard(it) {
     return best;
   }
 
+  /** GPS label: nearest locality from picker dataset / city list — no browser reverse-geocode APIs. */
+  async function iuWeatherGpsNearestLocalityLabel(lat, lon){
+    const la = Number(lat);
+    const lo = Number(lon);
+    if (!isFinite(la) || !isFinite(lo)) return "Neznámá lokalita";
+    try{
+      const items = await iuLoadPickerLocalities();
+      if (items && items.length){
+        const near = iuPickerNearest(la, lo, items);
+        if (near && near.name){
+          try{
+            const nm = String(near.name || "").trim();
+            const reg = String(near.region || "").trim();
+            return reg ? `${nm} (${reg})` : nm;
+          }catch{
+            return String(near.name || "").trim();
+          }
+        }
+      }
+    }catch{}
+    try{
+      const cities = await iuLoadCitiesSafe();
+      let best = null;
+      let bestD = Infinity;
+      for (let i = 0; i < cities.length; i++){
+        const c = cities[i];
+        if (!c || c.length < 4) continue;
+        const cLat = Number(c[2]);
+        const cLon = Number(c[3]);
+        if (!isFinite(cLat) || !isFinite(cLon)) continue;
+        const dLat = cLat - la;
+        const dLon = cLon - lo;
+        const d = dLat * dLat + dLon * dLon;
+        if (d < bestD) {
+          bestD = d;
+          best = c;
+        }
+      }
+      if (best && best[0]) return iuCityLabel(best);
+    }catch{}
+    return `${la.toFixed(3)}°, ${lo.toFixed(3)}°`;
+  }
+
   function iuPickerSearchItems(query, items, limit){
     const q = iuWeatherNorm(query);
     if (!q) return [];
@@ -9560,7 +9539,7 @@ function buildVideoAsArticleCard(it) {
                 iuWeatherSyncCityLabels(cMid);
               }catch{}
 
-              const label = await iuWeatherReverseGeocode(lat, lon);
+              const label = await iuWeatherGpsNearestLocalityLabel(lat, lon);
               const city = { name: label || "Poloha", lat, lon };
               iuWeatherSetGeoFlowFeedback("", "clear");
               iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
