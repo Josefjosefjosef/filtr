@@ -7505,6 +7505,30 @@ function buildVideoAsArticleCard(it) {
           myInfoWrap.setAttribute("aria-hidden", "false");
         }
       }
+
+      try{
+        const fb = window.__iuWeatherGeoFlowFeedback;
+        if (fb && fb.message && (fb.kind === "loading" || fb.kind === "error")) {
+          const geoLabelEl = document.getElementById("iuWeatherGeoLabel");
+          const geoBtnEl = document.getElementById("iuWeatherGeoBtn");
+          const geoWrapEl = document.getElementById("iuWeatherGeoInfoLineWrap");
+          if (geoLabelEl) geoLabelEl.textContent = fb.message;
+          if (geoWrapEl) {
+            geoWrapEl.hidden = false;
+            geoWrapEl.setAttribute("aria-hidden", "false");
+          }
+          if (geoBtnEl) {
+            geoBtnEl.textContent = fb.message;
+            if (fb.kind === "error") {
+              geoBtnEl.setAttribute("aria-invalid", "true");
+              geoBtnEl.removeAttribute("aria-busy");
+            } else {
+              geoBtnEl.setAttribute("aria-busy", "true");
+              geoBtnEl.removeAttribute("aria-invalid");
+            }
+          }
+        }
+      }catch{}
     }catch{}
   }
 
@@ -9099,26 +9123,58 @@ function buildVideoAsArticleCard(it) {
     });
   }
 
+  function iuWeatherSetGeoFlowFeedback(message, kind){
+    try{
+      if (kind === "clear" || !message) {
+        window.__iuWeatherGeoFlowFeedback = null;
+        return;
+      }
+      window.__iuWeatherGeoFlowFeedback = { message: String(message), kind: String(kind || "error") };
+    }catch{}
+  }
+
+  function iuWeatherGeoErrorMessageFromCode(err){
+    try{
+      const c = err && typeof err.code === "number" ? err.code : -1;
+      if (c === 1) return "Nelze získat polohu — v prohlížeči povolte přístup k poloze";
+      if (c === 2) return "Nelze získat polohu — poloha není dostupná";
+      if (c === 3) return "Nelze získat polohu — vypršel čas";
+    }catch{}
+    return "Nelze získat polohu";
+  }
+
   function iuWeatherActivateGpsViaGeolocation(){
-    const geoLabel = document.getElementById("iuWeatherGeoLabel");
     try{
       if (!navigator.geolocation) throw new Error("no geolocation");
-      if (geoLabel) geoLabel.textContent = "Zjišťuji polohu…";
+      iuWeatherSetGeoFlowFeedback("", "clear");
+      iuWeatherSetGeoFlowFeedback("Zjišťuji polohu…", "loading");
+      try{
+        const c0 = iuWeatherGetActiveCity();
+        iuWeatherSyncCityLabels(c0);
+      }catch{}
 
       // P0 mobile (iOS Safari): getCurrentPosition must run in the same synchronous
       // user-gesture turn as the tap/click. An async IIFE defers to a microtask and
       // drops the gesture, so the API never prompts / never returns — looks like a dead button.
+      // P0 mobile Chrome: error callback must set visible feedback — manual mode hides the geo line unless we force-show it via iuWeatherSyncCityLabels + __iuWeatherGeoFlowFeedback.
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           void (async () => {
             try{
+              iuWeatherSetGeoFlowFeedback("", "clear");
               const lat = Number(pos && pos.coords && pos.coords.latitude);
               const lon = Number(pos && pos.coords && pos.coords.longitude);
               if (!isFinite(lat) || !isFinite(lon)) throw new Error("bad coords");
 
-              if (geoLabel) geoLabel.textContent = "Hledám lokalitu…";
+              iuWeatherSetGeoFlowFeedback("Hledám lokalitu…", "loading");
+              try{
+                const cMid = iuWeatherGetActiveCity();
+                iuWeatherSyncCityLabels(cMid);
+              }catch{}
+
               const label = await iuWeatherReverseGeocode(lat, lon);
               const city = { name: label || "Poloha", lat, lon };
+              iuWeatherSetGeoFlowFeedback("", "clear");
               iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
               iuWeatherClearRuntimeCity();
               iuWeatherWriteGpsSelected(city);
@@ -9128,7 +9184,7 @@ function buildVideoAsArticleCard(it) {
               iuWeatherLoadAndRender();
             }catch{
               iuWeatherClearRuntimeCity();
-              if (geoLabel) geoLabel.textContent = "Poloha nedostupná";
+              iuWeatherSetGeoFlowFeedback("Nelze získat polohu", "error");
               try{
                 const c = iuWeatherGetActiveCity();
                 iuWeatherSyncCityLabels(c);
@@ -9137,9 +9193,9 @@ function buildVideoAsArticleCard(it) {
             }
           })();
         },
-        () => {
+        (err) => {
           iuWeatherClearRuntimeCity();
-          if (geoLabel) geoLabel.textContent = "Poloha nedostupná";
+          iuWeatherSetGeoFlowFeedback(iuWeatherGeoErrorMessageFromCode(err), "error");
           try{
             const c = iuWeatherGetActiveCity();
             iuWeatherSyncCityLabels(c);
@@ -9150,7 +9206,7 @@ function buildVideoAsArticleCard(it) {
       );
     }catch{
       iuWeatherClearRuntimeCity();
-      if (geoLabel) geoLabel.textContent = "Poloha nedostupná";
+      iuWeatherSetGeoFlowFeedback("Nelze získat polohu — geolokace není dostupná", "error");
       try{
         const c = iuWeatherGetActiveCity();
         iuWeatherSyncCityLabels(c);
