@@ -977,70 +977,7 @@ style-src 'self' 'unsafe-inline' https:;
                       </div>
                     </section>
                     </div>
-
-                    <div class="iuWeatherWarningsBlock">
-                    <div class="iuSubSectionHeader">
-                      <h3 class="iuSectionSubTitle">Výstrahy</h3>
-                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
                     </div>
-                    <section class="iuWeatherAlertsBox" aria-label="Výstrahy a varování">
-                      <div class="iuWeatherAlertTitle">Výstrahy</div>
-                      <div class="iuWeatherAlertText" id="iuWeatherAlertText">Výstrahy: zkontrolujte Meteoalarm (EU).</div>
-                      <div class="iuWeatherAlertActions" role="group" aria-label="Výstrahy (odkaz)">
-                        <a class="iuBtn iuBtn--ghost iuWeatherAlertBtn" href="https://www.meteoalarm.org/en/live/" target="_blank" rel="noopener noreferrer">EU – Meteoalarm</a>
-                      </div>
-                    </section>
-                    </div>
-                    </div>
-
-                    <div class="iuSubSectionHeader">
-                      <h3 class="iuSectionSubTitle">Hlavní mapa počasí</h3>
-                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
-                    </div>
-
-                    <div class="iuWxMapHost" id="iuWxMapHost" aria-label="Hlavní mapa počasí (map + vrstvy)">
-                      <section class="iuWxMap" id="iuWxMap" aria-label="Mapa počasí">
-                        <div class="iuWxMapState iuWxMapSkeleton" id="iuWxMapSkeleton" aria-hidden="true">
-                          Načítání mapy…
-                        </div>
-                        <div class="iuWxMapState iuWxMapSuccess" id="iuWxMapSuccess" hidden aria-hidden="true">
-                          <div class="iuWxMapSvgHost" id="iuWxMapContainer" aria-label="Obsah mapy"></div>
-                        </div>
-                        <div class="iuWxMapState iuWxMapFail" id="iuWxMapFail" hidden aria-live="polite">
-                          Mapu se nepodařilo načíst. Zkuste prosím později.
-                        </div>
-                      </section>
-
-                      <div class="iuWxLayerSwitchBar" id="iuWxLayerSwitchBar" role="group" aria-label="Přepínání vrstev mapy">
-                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="precip">💧 Radar / srážky</button>
-                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="wind">💨 Vítr</button>
-                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="pressure">🧭 Tlak</button>
-                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="temp">🌡 Teplota</button>
-                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="fog">🌫 Mlha</button>
-                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="uv">🌞 UV</button>
-                      </div>
-                    </div>
-
-                    <div class="iuSubSectionHeader">
-                      <h3 class="iuSectionSubTitle">7denní předpověď</h3>
-                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
-                    </div>
-                    <section class="iuWx7DayWrap" aria-label="7denní předpověď">
-                      <div class="iuWx7Day" id="iuWx7Day" role="list" aria-label="7denní předpověď (list)">
-                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
-                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
-                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
-                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
-                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
-                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
-                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
-                      </div>
-                      <div class="iuWx7Source">
-                        <span>Zdroj: Open-Meteo</span>
-                        <a href="https://www.yr.no/en" target="_blank" rel="noopener noreferrer">Detail (Yr.no)</a>
-                        <a href="https://www.meteoblue.com/" target="_blank" rel="noopener noreferrer">Detail (Meteoblue)</a>
-                      </div>
-                    </section>
 
                     <div class="iuSubSectionHeader">
                       <h3 class="iuSectionSubTitle">Premium mini-karty metrik</h3>
@@ -1076,16 +1013,67 @@ style-src 'self' 'unsafe-inline' https:;
                     </section>
 
                     <div class="iuSubSectionHeader">
-                      <h3 class="iuSectionSubTitle">Rychlé vrstvy</h3>
+                      <h3 class="iuSectionSubTitle">Hlavní mapa počasí</h3>
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
                     </div>
-                    <div class="iuWeatherQuickGrid" role="list" aria-label="Rychlé vrstvy">
-                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="precip"><span class="iuRadioChipTitle">💧 Srážky</span> <span class="iuRadioChipDesc">Mapová vrstva</span></button>
-                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="wind"><span class="iuRadioChipTitle">💨 Vítr</span> <span class="iuRadioChipDesc">Mapová vrstva</span></button>
-                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="pressure"><span class="iuRadioChipTitle">🧭 Tlak</span> <span class="iuRadioChipDesc">Mapová vrstva</span></button>
-                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="fog"><span class="iuRadioChipTitle">🌫 Mlha</span> <span class="iuRadioChipDesc">Viditelnost</span></button>
-                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="uv"><span class="iuRadioChipTitle">🌞 UV index</span> <span class="iuRadioChipDesc">Mapová vrstva</span></button>
+
+                    <div class="iuWxMapHost" id="iuWxMapHost" aria-label="Hlavní mapa počasí (map + vrstvy)">
+                      <section class="iuWxMap" id="iuWxMap" aria-label="Mapa počasí">
+                        <div class="iuWxMapState iuWxMapSkeleton" id="iuWxMapSkeleton" aria-hidden="true">
+                          Načítání mapy…
+                        </div>
+                        <div class="iuWxMapState iuWxMapSuccess" id="iuWxMapSuccess" hidden aria-hidden="true">
+                          <div class="iuWxMapSvgHost" id="iuWxMapContainer" aria-label="Obsah mapy"></div>
+                        </div>
+                        <div class="iuWxMapState iuWxMapFail" id="iuWxMapFail" hidden aria-live="polite">
+                          Mapu se nepodařilo načíst. Zkuste prosím později.
+                        </div>
+                      </section>
+
+                      <div class="iuWxLayerSwitchBar" id="iuWxLayerSwitchBar" role="group" aria-label="Přepínání vrstev mapy">
+                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="precip">💧 Radar / srážky</button>
+                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="wind">💨 Vítr</button>
+                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="pressure">🧭 Tlak</button>
+                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="temp">🌡 Teplota</button>
+                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="fog">🌫 Mlha</button>
+                        <button type="button" class="iuWxLayerBtn" data-iu-weather-layer="uv">🌞 UV</button>
+                      </div>
                     </div>
+
+                    <div class="iuWeatherWarningsBlock">
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">Výstrahy</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <section class="iuWeatherAlertsBox" aria-label="Výstrahy a varování">
+                      <div class="iuWeatherAlertTitle">Výstrahy</div>
+                      <div class="iuWeatherAlertText" id="iuWeatherAlertText">Výstrahy: zkontrolujte Meteoalarm (EU).</div>
+                      <div class="iuWeatherAlertActions" role="group" aria-label="Výstrahy (odkaz)">
+                        <a class="iuBtn iuBtn--ghost iuWeatherAlertBtn" href="https://www.meteoalarm.org/en/live/" target="_blank" rel="noopener noreferrer">EU – Meteoalarm</a>
+                      </div>
+                    </section>
+                    </div>
+
+                    <div class="iuSubSectionHeader">
+                      <h3 class="iuSectionSubTitle">7denní předpověď</h3>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <section class="iuWx7DayWrap" aria-label="7denní předpověď">
+                      <div class="iuWx7Day" id="iuWx7Day" role="list" aria-label="7denní předpověď (list)">
+                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
+                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
+                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
+                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
+                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
+                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
+                        <div class="iuWx7Row" aria-hidden="true"><div class="iuWx7DayName">—</div><div class="iuWx7Icon">🌤</div><div class="iuWx7Temps">— / —</div></div>
+                      </div>
+                      <div class="iuWx7Source">
+                        <span>Zdroj: Open-Meteo</span>
+                        <a href="https://www.yr.no/en" target="_blank" rel="noopener noreferrer">Detail (Yr.no)</a>
+                        <a href="https://www.meteoblue.com/" target="_blank" rel="noopener noreferrer">Detail (Meteoblue)</a>
+                      </div>
+                    </section>
 
                     <div class="iuSubSectionHeader">
                       <h3 class="iuSectionSubTitle">Další zdroje</h3>
