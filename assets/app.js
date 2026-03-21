@@ -9090,7 +9090,10 @@ function buildVideoAsArticleCard(it) {
         try{
           const mode = iuWeatherReadLocationMode();
           if (mode === IU_WEATHER_MODE_GPS) {
-            if (iuWeatherSwitchToModeManualUsingStoredIfAny()) return;
+            if (iuWeatherSwitchToModeManualUsingStoredIfAny()) {
+              iuWeatherOpenMapPicker();
+              return;
+            }
           }
           iuWeatherOpenMapPicker();
         }catch{}
