@@ -8286,14 +8286,31 @@ function buildVideoAsArticleCard(it) {
   function iuWeatherLoadLeaflet(){
     return new Promise((resolve, reject) => {
       try{
-        if (typeof window.L !== "undefined" && window.L && typeof window.L.map === "function") return resolve();
         const base = "/assets/vendor/leaflet-1.9.4/";
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = base + "leaflet.css";
-        document.head.appendChild(link);
+        const cssHref = base + "leaflet.css";
+        const jsSrc = base + "leaflet.js";
+        const selCss = 'link[href*="/assets/vendor/leaflet-1.9.4/leaflet.css"]';
+        const selJs = 'script[src*="/assets/vendor/leaflet-1.9.4/leaflet.js"]';
+        if (!document.querySelector(selCss)) {
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = cssHref;
+          link.setAttribute("data-iu-leaflet-vendor", "1");
+          document.head.appendChild(link);
+        }
+        const existingJs = document.querySelector(selJs);
+        if (existingJs) {
+          if (typeof window.L !== "undefined" && window.L && typeof window.L.map === "function") {
+            return resolve();
+          }
+          existingJs.addEventListener("load", () => resolve(), { once: true });
+          existingJs.addEventListener("error", () => reject(new Error("leaflet")), { once: true });
+          return;
+        }
         const s = document.createElement("script");
-        s.src = base + "leaflet.js";
+        s.src = jsSrc;
+        s.async = true;
+        s.setAttribute("data-iu-leaflet-vendor", "1");
         s.onload = () => resolve();
         s.onerror = () => reject(new Error("leaflet"));
         document.head.appendChild(s);
