@@ -5266,12 +5266,15 @@ body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityStack{
   min-height: 48px; /* CLS guard */
   font-size: clamp(15px, 4.2vw, 20px);
 }
-body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityBlock{
+body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityBlock,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityBlock{
   display:flex;
   flex-direction: column;
   align-items: stretch;
   gap: 8px;
   min-width: 0;
+  /* CLS: reserve full button + info line before iuWeatherSyncCityLabels toggles visibility (was ~20px→49px shift). */
+  min-height: 72px;
 }
 body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityInfoLine{
   font-size: clamp(13px, 3.6vw, 15px);

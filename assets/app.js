@@ -1193,6 +1193,9 @@ try {
       observer.observe({ type: "layout-shift", buffered: true });
       window.__iuCLSObserverInstalled = true;
       window.__iuCLSObserverInstalling = false;
+      try {
+        window.__iuCLSRealTotal = 0;
+      } catch {}
 
       // Debug-only helper for one-shot runtime capture (no prod impact).
       try {
