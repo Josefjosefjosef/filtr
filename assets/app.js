@@ -6786,15 +6786,17 @@ function buildVideoAsArticleCard(it) {
   // WEATHER (mobile funnel + "Moje město") — UI/UX only
   // ============================================================
 
-  const IU_WEATHER_CITY_KEY = "iuWeatherCity"; // legacy JSON: { name, lat, lon }
-  const IU_WEATHER_CITY_PIN_KEY = "iuWeatherCityPinned"; // "1" | "0"
-  const IU_WEATHER_CITY_SELECTED_KEY = "iuWeatherCitySelectedV1"; // JSON: { name, lat, lon }
+  const IU_WEATHER_CITY_KEY = "iuWeatherCity";
+  const IU_WEATHER_CITY_PIN_KEY = "iuWeatherCityPinned";
+  const IU_WEATHER_CITY_SELECTED_KEY = "iuWeatherCitySelectedV1";
+  const IU_WEATHER_LOCATION_MODE_LEGACY_KEY = "iuWeatherLocationModeV1";
 
-  const IU_WEATHER_LOCATION_MODE_KEY = "iuWeatherLocationModeV1"; // "city" | "gps"
-  const IU_WEATHER_LOCATION_MODE_CITY = "city";
-  const IU_WEATHER_LOCATION_MODE_GPS = "gps";
+  const IU_WEATHER_MODE_KEY = "iu_location_mode";
+  const IU_MANUAL_LOCATION_KEY = "iu_manual_location";
+  const IU_WEATHER_MODE_GPS = "gps";
+  const IU_WEATHER_MODE_MANUAL = "manual";
 
-  const IU_WEATHER_GPS_SELECTED_KEY = "iuWeatherGpsSelectedV1"; // JSON: { name, lat, lon }
+  const IU_WEATHER_GPS_SELECTED_KEY = "iuWeatherGpsSelectedV1";
 
   const IU_WEATHER_DEFAULT_CITY = { name: "Praha", lat: 50.0755, lon: 14.4378 };
 
@@ -7081,72 +7083,37 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  function iuWeatherReadPinned(){
+  function iuWeatherMigrateLegacyOnce(){
     try{
-      const pinned = String(localStorage.getItem(IU_WEATHER_CITY_PIN_KEY) || "0");
-      if (pinned !== "1") return null;
-      // preferred: new selected key
-      try{
-        const rawNew = localStorage.getItem(IU_WEATHER_CITY_SELECTED_KEY);
-        if (rawNew) {
-          const o = JSON.parse(rawNew);
-          const name = String(o && o.name || "").trim();
-          const lat = Number(o && o.lat);
-          const lon = Number(o && o.lon);
-          if (name && isFinite(lat) && isFinite(lon)) {
-            const k = o && o.key != null ? String(o.key).trim() : "";
-            return { name, lat, lon, key: k || null };
-          }
-        }
-      }catch{}
-
-      // legacy: pinned payload in IU_WEATHER_CITY_KEY
-      try{
-        const raw = localStorage.getItem(IU_WEATHER_CITY_KEY);
-        if (!raw) return null;
-        const obj = JSON.parse(raw);
-        const name = String(obj && obj.name || "").trim();
-        const lat = Number(obj && obj.lat);
-        const lon = Number(obj && obj.lon);
-        if (!name || !isFinite(lat) || !isFinite(lon)) return null;
-        return { name, lat, lon, key: null };
-      }catch{}
-
-      return null;
-    }catch{
-      return null;
-    }
+      if (window.__iuWeatherLegacyMigrated) return;
+      window.__iuWeatherLegacyMigrated = 1;
+      if (localStorage.getItem(IU_WEATHER_MODE_KEY)) return;
+      localStorage.setItem(IU_WEATHER_MODE_KEY, IU_WEATHER_MODE_GPS);
+    }catch{}
   }
 
-  function iuWeatherWritePinned(pinned){
-    try{ localStorage.setItem(IU_WEATHER_CITY_PIN_KEY, pinned ? "1" : "0"); }catch{}
-  }
-
-  function iuWeatherReadSelected(){
+  function iuWeatherReadManualLocation(){
     try{
-      const raw = localStorage.getItem(IU_WEATHER_CITY_SELECTED_KEY);
+      const raw = localStorage.getItem(IU_MANUAL_LOCATION_KEY);
       if (!raw) return null;
-      const obj = JSON.parse(raw);
-      const name = String(obj && obj.name || "").trim();
-      const lat = Number(obj && obj.lat);
-      const lon = Number(obj && obj.lon);
-      if (!name || !isFinite(lat) || !isFinite(lon)) return null;
-      const keyRaw = obj && obj.key != null ? String(obj.key).trim() : "";
-      return { name, lat, lon, key: keyRaw || null };
-    }catch{
-      return null;
-    }
+      const o = JSON.parse(raw);
+      const lat = Number(o.lat);
+      const lon = Number(o.lon);
+      const label = String(o.label || "").trim();
+      if (!isFinite(lat) || !isFinite(lon) || !label) return null;
+      return { lat, lon, label };
+    }catch{}
+    return null;
   }
 
-  function iuWeatherWriteSelected(city){
+  function iuWeatherWriteManualLocation(m){
     try{
       localStorage.setItem(
-        IU_WEATHER_CITY_SELECTED_KEY,
+        IU_MANUAL_LOCATION_KEY,
         JSON.stringify({
-          key: city && city.key != null ? String(city.key).trim() : "",
-          name: String(city && city.name || "").trim(),
-          lat: Number(city && city.lat),
-          lon: Number(city && city.lon),
+          lat: Number(m.lat),
+          lon: Number(m.lon),
+          label: String(m.label || "").trim(),
         }),
       );
     }catch{}
@@ -7154,18 +7121,17 @@ function buildVideoAsArticleCard(it) {
 
   function iuWeatherReadLocationMode(){
     try{
-      const raw = String(localStorage.getItem(IU_WEATHER_LOCATION_MODE_KEY) || "").trim().toLowerCase();
-      if (raw === IU_WEATHER_LOCATION_MODE_GPS) return IU_WEATHER_LOCATION_MODE_GPS;
-      return IU_WEATHER_LOCATION_MODE_CITY;
-    }catch{
-      return IU_WEATHER_LOCATION_MODE_CITY;
-    }
+      iuWeatherMigrateLegacyOnce();
+      const m = String(localStorage.getItem(IU_WEATHER_MODE_KEY) || IU_WEATHER_MODE_GPS).trim().toLowerCase();
+      return m === IU_WEATHER_MODE_MANUAL ? IU_WEATHER_MODE_MANUAL : IU_WEATHER_MODE_GPS;
+    }catch{}
+    return IU_WEATHER_MODE_GPS;
   }
 
   function iuWeatherWriteLocationMode(mode){
     try{
-      const m = mode === IU_WEATHER_LOCATION_MODE_GPS ? IU_WEATHER_LOCATION_MODE_GPS : IU_WEATHER_LOCATION_MODE_CITY;
-      localStorage.setItem(IU_WEATHER_LOCATION_MODE_KEY, m);
+      const m = mode === IU_WEATHER_MODE_MANUAL ? IU_WEATHER_MODE_MANUAL : IU_WEATHER_MODE_GPS;
+      localStorage.setItem(IU_WEATHER_MODE_KEY, m);
     }catch{}
   }
 
@@ -7216,15 +7182,13 @@ function buildVideoAsArticleCard(it) {
     const runtime = iuWeatherGetRuntime();
     if (runtime) return runtime;
     const mode = iuWeatherReadLocationMode();
-    if (mode === IU_WEATHER_LOCATION_MODE_GPS) {
-      const gps = iuWeatherReadGpsSelected();
-      if (gps) return { name: gps.name, lat: gps.lat, lon: gps.lon, key: null };
+    if (mode === IU_WEATHER_MODE_MANUAL) {
+      const man = iuWeatherReadManualLocation();
+      if (man) return { name: man.label, lat: man.lat, lon: man.lon, key: null };
     }
-    const pinned = iuWeatherReadPinned();
-    const sel = iuWeatherReadSelected();
-    const c = pinned || sel || IU_WEATHER_DEFAULT_CITY;
-    const key = sel && sel.key ? sel.key : pinned && pinned.key ? pinned.key : null;
-    return { name: c.name, lat: c.lat, lon: c.lon, key: key || null };
+    const gps = iuWeatherReadGpsSelected();
+    if (gps) return { name: gps.name, lat: gps.lat, lon: gps.lon, key: null };
+    return IU_WEATHER_DEFAULT_CITY;
   }
 
   function iuWeatherSetRuntime(city){
@@ -7339,13 +7303,11 @@ function buildVideoAsArticleCard(it) {
     try{
       if (!state || typeof state !== "object") return;
       const mode = iuWeatherReadLocationMode();
-      const sel = iuWeatherReadSelected();
+      const man = iuWeatherReadManualLocation();
       const gps = iuWeatherReadGpsSelected();
       const active = iuWeatherGetActiveCity();
       state.mode = mode;
-      state.city = sel
-        ? { key: sel.key || null, label: sel.name, lat: sel.lat, lon: sel.lon }
-        : null;
+      state.manual = man ? { label: man.label, lat: man.lat, lon: man.lon } : null;
       state.gps = gps ? { label: gps.name, lat: gps.lat, lon: gps.lon } : null;
       state.activeLocation = {
         label: active && active.name ? String(active.name) : "—",
@@ -7369,6 +7331,9 @@ function buildVideoAsArticleCard(it) {
   }catch{}
 
   const __iuOpenMeteoCache = new Map(); // key -> { t, data, p }
+  function iuWeatherClearOpenMeteoCache(){
+    try{ __iuOpenMeteoCache.clear(); }catch{}
+  }
   function iuOpenMeteoUrl(lat, lon){
     const la = Number(lat);
     const lo = Number(lon);
@@ -7437,9 +7402,9 @@ function buildVideoAsArticleCard(it) {
       const my = document.getElementById("iuWeatherMyCityName");
       const geoLine = document.getElementById("iuWeatherGeoActiveLine");
       const geoLabel = document.getElementById("iuWeatherGeoLabel");
-      const disp = city && city.name ? String(city.name) : "Praha";
+      const disp = city && city.name ? String(city.name) : "—";
 
-      if (mode === IU_WEATHER_LOCATION_MODE_GPS) {
+      if (mode === IU_WEATHER_MODE_GPS) {
         if (h1) h1.textContent = disp;
         if (my) my.textContent = "—";
         if (geoLine) {
@@ -7456,15 +7421,6 @@ function buildVideoAsArticleCard(it) {
         }
         if (geoLabel) geoLabel.textContent = "—";
       }
-    }catch{}
-  }
-
-  function iuWeatherSyncPinnedToggle(){
-    try{
-      const el = document.getElementById("iuWeatherCityPinned");
-      if (!el) return;
-      const pinned = String(localStorage.getItem(IU_WEATHER_CITY_PIN_KEY) || "0") === "1";
-      el.checked = pinned;
     }catch{}
   }
 
@@ -8327,121 +8283,146 @@ function buildVideoAsArticleCard(it) {
     window.iuWeatherRenderMapLayer = iuWeatherRenderMapLayer;
   }catch{}
 
-  function iuWeatherEnsureCitySheet(){
-    let overlay = document.getElementById("iuWeatherSheetOverlay");
+  function iuWeatherLoadLeaflet(){
+    return new Promise((resolve, reject) => {
+      try{
+        if (typeof window.L !== "undefined" && window.L && typeof window.L.map === "function") return resolve();
+        const base = "/assets/vendor/leaflet-1.9.4/";
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = base + "leaflet.css";
+        document.head.appendChild(link);
+        const s = document.createElement("script");
+        s.src = base + "leaflet.js";
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error("leaflet"));
+        document.head.appendChild(s);
+      }catch(e){ reject(e); }
+    });
+  }
+
+  function iuWeatherEnsureMapPickerOverlay(){
+    let overlay = document.getElementById("iuWeatherMapPickerOverlay");
     if (overlay) return overlay;
     overlay = document.createElement("div");
-    overlay.id = "iuWeatherSheetOverlay";
+    overlay.id = "iuWeatherMapPickerOverlay";
     overlay.hidden = true;
-    overlay.className = "iuWeatherSheetOverlay";
+    overlay.className = "iuWeatherMapPickerOverlay";
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-label", "Zvolit místo na mapě");
     overlay.innerHTML = `
-      <div class="iuWeatherSheet" role="dialog" aria-modal="true" aria-label="Vybrat město">
-        <div class="iuWeatherSheetHead">
-          <div class="iuWeatherSheetTitle">Moje město</div>
-          <button class="iuWeatherSheetClose" type="button" aria-label="Zavřít">✕</button>
+      <div class="iuWeatherMapPickerPanel">
+        <div class="iuWeatherMapPickerHead">
+          <div class="iuWeatherMapPickerTitle">Zvolte místo na mapě</div>
+          <button type="button" class="iuWeatherMapPickerClose" aria-label="Zavřít">✕</button>
         </div>
-        <input class="iuWeatherSheetSearch" type="search" inputmode="search" autocomplete="off" placeholder="Hledat město…" />
-        <div class="iuWeatherSheetList" role="list"></div>
+        <div id="iuWeatherMapPickerMap" class="iuWeatherMapPickerMap"></div>
+        <div class="iuWeatherMapPickerBar">
+          <button type="button" class="iuBtn iuBtn--ghost" id="iuWeatherMapPickerConfirm" disabled>Uložit výběr</button>
+          <button type="button" class="iuBtn iuBtn--ghost" id="iuWeatherMapPickerCancel">Zrušit</button>
+        </div>
       </div>
     `.trim();
     document.body.appendChild(overlay);
 
-    const sheet = overlay.querySelector(".iuWeatherSheet");
-    const closeBtn = overlay.querySelector(".iuWeatherSheetClose");
-    const input = overlay.querySelector(".iuWeatherSheetSearch");
-    const list = overlay.querySelector(".iuWeatherSheetList");
+    const mapEl = document.getElementById("iuWeatherMapPickerMap");
+    const closeBtn = overlay.querySelector(".iuWeatherMapPickerClose");
+    const btnOk = document.getElementById("iuWeatherMapPickerConfirm");
+    const btnCancel = document.getElementById("iuWeatherMapPickerCancel");
+
+    let map = null;
+    let marker = null;
+    let pending = null;
+    let prevBodyOverflow = "";
+
+    function teardownMap(){
+      try{
+        if (map) {
+          map.remove();
+          map = null;
+        }
+      }catch{}
+      marker = null;
+      pending = null;
+      try{ if (mapEl) mapEl.replaceChildren(); }catch{}
+    }
 
     function close(){
       try{ overlay.hidden = true; }catch{}
+      try{ document.body.style.overflow = prevBodyOverflow || ""; }catch{}
+      teardownMap();
+      if (btnOk) btnOk.disabled = true;
     }
+
     async function open(){
-      try{ overlay.hidden = false; }catch{}
-      try{ if (input) input.focus(); }catch{}
+      prevBodyOverflow = document.body.style.overflow || "";
+      document.body.style.overflow = "hidden";
+      overlay.hidden = false;
       try{
-        if (!window.__iuWeatherCitiesData) {
-          if (list) list.innerHTML = `<div class="iuWeatherSheetEmpty">Načítání měst…</div>`;
-          window.__iuWeatherCitiesData = await iuLoadCitiesSafe();
-        }
+        await iuWeatherLoadLeaflet();
       }catch{
-        window.__iuWeatherCitiesData = IU_CITY_FALLBACK;
-      }
-      renderList();
-    }
-    function renderList(){
-      if (!list) return;
-      const q = iuWeatherNorm(input && input.value);
-      const data = Array.isArray(window.__iuWeatherCitiesData) && window.__iuWeatherCitiesData.length
-        ? window.__iuWeatherCitiesData
-        : IU_CITY_FALLBACK;
-
-      const out = [];
-      for (let i = 0; i < data.length; i++){
-        const c = data[i];
-        const nm = c && c[0] ? String(c[0]) : "";
-        const okr = c && c[1] ? String(c[1]) : "";
-        if (!nm) continue;
-        if (q) {
-          const hay = iuWeatherNorm(nm + " " + okr);
-          if (!hay.includes(q)) continue;
-        }
-        out.push({ idx: i, label: iuCityLabel(c), key: iuWeatherCityKeyFromRow(c, i) });
-        if (out.length >= 20) break;
-      }
-
-      list.innerHTML = out.length
-        ? out.map((it) => {
-          const label = escapeHtml(it.label || "");
-          const ck = escapeHtml(it.key || "");
-          return `<button type="button" class="iuWeatherSheetItem" role="listitem" data-idx="${String(it.idx)}" data-city-key="${ck}">${label}</button>`;
-        }).join("")
-        : `<div class="iuWeatherSheetEmpty">Nic nenalezeno</div>`;
-    }
-
-    overlay.addEventListener("click", (e) => {
-      try{
-        if (e && e.target === overlay) close();
-      }catch{}
-    });
-    if (closeBtn) closeBtn.addEventListener("click", close);
-    if (input) input.addEventListener("input", renderList);
-    if (list) list.addEventListener("click", (e) => {
-      try{
-        const btn = e.target && e.target.closest ? e.target.closest(".iuWeatherSheetItem") : null;
-        if (!btn) return;
-        const idx = Number(btn.getAttribute("data-idx"));
-        const data = Array.isArray(window.__iuWeatherCitiesData) && window.__iuWeatherCitiesData.length
-          ? window.__iuWeatherCitiesData
-          : IU_CITY_FALLBACK;
-        const c = data[idx];
-        if (!c) return;
-        const name = String(c[0] || "").trim();
-        const lat = Number(c[2]);
-        const lon = Number(c[3]);
-        if (!name || !isFinite(lat) || !isFinite(lon)) return;
-        const cityKey = iuWeatherCityKeyFromRow(c, idx);
-        const city = { key: cityKey, name, lat, lon };
-        iuWeatherWriteLocationMode(IU_WEATHER_LOCATION_MODE_CITY);
-        iuWeatherSetRuntime(city);
-        iuWeatherWriteSelected(city);
-        iuWeatherSyncCityLabels(city);
-        try{ if (document.getElementById("iuWxPlace")) document.getElementById("iuWxPlace").textContent = String(city.name); }catch{}
-        try{
-          const pin = document.getElementById("iuWeatherCityPinned");
-          if (pin && pin.checked) {
-            iuWeatherWritePinned(true);
-            iuWeatherSyncPinnedToggle();
-          } else {
-            iuWeatherWritePinned(false);
-          }
-        }catch{}
-        iuWeatherLoadAndRender();
+        try{ alert("Mapu se nepodařilo načíst. Zkuste to znovu."); }catch{}
         close();
-      }catch{}
+        return;
+      }
+      const ac = iuWeatherGetActiveCity();
+      const center = [isFinite(ac.lat) ? ac.lat : 49.75, isFinite(ac.lon) ? ac.lon : 15.5];
+      teardownMap();
+      map = window.L.map(mapEl, { zoomControl: true, attributionControl: true }).setView(center, 7);
+      window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap",
+      }).addTo(map);
+      setTimeout(() => { try{ map.invalidateSize(); }catch{} }, 50);
+      map.on("click", (e) => {
+        pending = { lat: e.latlng.lat, lon: e.latlng.lng };
+        if (!marker) {
+          marker = window.L.marker(e.latlng).addTo(map);
+        } else {
+          marker.setLatLng(e.latlng);
+        }
+        if (btnOk) btnOk.disabled = false;
+      });
+    }
+
+    if (closeBtn) closeBtn.addEventListener("click", close);
+    if (btnCancel) btnCancel.addEventListener("click", close);
+    overlay.addEventListener("click", (e) => {
+      try{ if (e.target === overlay) close(); }catch{}
     });
 
-    overlay.__iuWeatherOpen = open;
-    overlay.__iuWeatherClose = close;
+    if (btnOk) btnOk.addEventListener("click", () => {
+      (async () => {
+        if (!pending || !isFinite(pending.lat) || !isFinite(pending.lon)) return;
+        if (!confirm("Chcete uložit tuto lokalitu pro počasí?")) return;
+        try{
+          const label = await iuWeatherReverseGeocode(pending.lat, pending.lon);
+          if (!label || !String(label).trim()) {
+            alert("Nepodařilo se zjistit název lokality.");
+            return;
+          }
+          iuWeatherWriteLocationMode(IU_WEATHER_MODE_MANUAL);
+          iuWeatherWriteManualLocation({ lat: pending.lat, lon: pending.lon, label: String(label).trim() });
+          iuWeatherClearRuntimeCity();
+          iuWeatherClearOpenMeteoCache();
+          try{ window.__iuWeatherState = null; }catch{}
+          const c = iuWeatherGetActiveCity();
+          iuWeatherSyncCityLabels(c);
+          close();
+          await iuWeatherLoadAndRender();
+        }catch{}
+      })();
+    });
+
+    overlay.__iuWeatherMapOpen = open;
+    overlay.__iuWeatherMapClose = close;
     return overlay;
+  }
+
+  function iuWeatherOpenMapPicker(){
+    const o = iuWeatherEnsureMapPickerOverlay();
+    try{ o.__iuWeatherMapOpen(); }catch{}
   }
 
   function iuWeatherRadarEnsure(){
@@ -8505,7 +8486,6 @@ function buildVideoAsArticleCard(it) {
       const city = iuWeatherGetActiveCity();
       const locationMode = iuWeatherReadLocationMode();
       iuWeatherSyncCityLabels(city);
-      iuWeatherSyncPinnedToggle();
 
       const elErr = document.getElementById("iuDailyErr");
       const elWeather = document.getElementById("iuDailyWeather");
@@ -8977,35 +8957,17 @@ function buildVideoAsArticleCard(it) {
       if (window.__iuWeatherInitDone) return;
       window.__iuWeatherInitDone = 1;
 
-      iuWeatherSyncPinnedToggle();
-
       const btn = document.getElementById("iuWeatherCityChange");
       if (btn) btn.addEventListener("click", () => {
-        const overlay = iuWeatherEnsureCitySheet();
-        try{ overlay.__iuWeatherOpen(); }catch{}
+        try{ iuWeatherOpenMapPicker(); }catch{}
       });
 
       try{
         const params = new URLSearchParams(location.search || "");
-        if (params.get("cityPicker") === "1") {
-          const overlay = iuWeatherEnsureCitySheet();
-          try{ overlay.__iuWeatherOpen(); }catch{}
+        if (params.get("cityPicker") === "1" || params.get("mapPicker") === "1") {
+          try{ iuWeatherOpenMapPicker(); }catch{}
         }
       }catch{}
-
-      const pin = document.getElementById("iuWeatherCityPinned");
-      if (pin) pin.addEventListener("change", () => {
-        try{
-          const city = iuWeatherGetActiveCity();
-          const pinned = Boolean(pin.checked);
-          iuWeatherWriteLocationMode(IU_WEATHER_LOCATION_MODE_CITY);
-          iuWeatherWritePinned(pinned);
-          if (pinned) iuWeatherWriteSelected(city);
-          iuWeatherSyncPinnedToggle();
-          iuWeatherSyncCityLabels(city);
-          iuWeatherLoadAndRender();
-        }catch{}
-      });
 
       const geoBtn = document.getElementById("iuWeatherGeoBtn");
       if (geoBtn) geoBtn.addEventListener("click", () => {
@@ -9037,19 +8999,20 @@ function buildVideoAsArticleCard(it) {
             if (geoLabel) geoLabel.textContent = "Hledám lokalitu…";
             const label = await iuWeatherReverseGeocode(lat, lon);
             const city = { name: label || "Poloha", lat, lon };
-            iuWeatherWriteLocationMode(IU_WEATHER_LOCATION_MODE_GPS);
+            iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
             iuWeatherClearRuntimeCity();
             iuWeatherWriteGpsSelected(city);
+            iuWeatherClearOpenMeteoCache();
+            try{ window.__iuWeatherState = null; }catch{}
             iuWeatherSyncCityLabels(city);
             iuWeatherLoadAndRender();
           }catch{
-            iuWeatherWriteLocationMode(IU_WEATHER_LOCATION_MODE_CITY);
             iuWeatherClearRuntimeCity();
             if (geoLine) {
-              geoLine.hidden = true;
-              geoLine.setAttribute("aria-hidden", "true");
+              geoLine.hidden = false;
+              geoLine.setAttribute("aria-hidden", "false");
             }
-            if (geoLabel) geoLabel.textContent = "—";
+            if (geoLabel) geoLabel.textContent = "Poloha nedostupná";
             try{
               const c = iuWeatherGetActiveCity();
               iuWeatherSyncCityLabels(c);

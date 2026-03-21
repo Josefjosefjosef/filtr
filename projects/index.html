@@ -931,10 +931,6 @@ style-src 'self' 'unsafe-inline' https:;
                       <div class="iuWeatherGeoActiveLine" id="iuWeatherGeoActiveLine" hidden aria-hidden="true">
                         Aktuální poloha: <strong id="iuWeatherGeoLabel">—</strong>
                       </div>
-                      <label class="iuWeatherMyCityPin">
-                        <input type="checkbox" id="iuWeatherCityPinned" />
-                        <span>Uložit jako výchozí</span>
-                      </label>
                     </section>
 
                     <div class="iuSubSectionHeader">
@@ -1078,11 +1074,11 @@ style-src 'self' 'unsafe-inline' https:;
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
                     </div>
                     <div class="iuWeatherQuickGrid" role="list" aria-label="Rychlé vrstvy">
-                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="precip"> <span class="iuRadioChipTitle">💧 Srážky</span><span class="iuRadioChipDesc">vrstva</span> </button>
-                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="wind"> <span class="iuRadioChipTitle">💨 Vítr</span><span class="iuRadioChipDesc">vrstva</span> </button>
-                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="pressure"> <span class="iuRadioChipTitle">🧭 Tlak</span><span class="iuRadioChipDesc">vrstva</span> </button>
-                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="fog"> <span class="iuRadioChipTitle">🌫 Mlha</span><span class="iuRadioChipDesc">viditelnost</span> </button>
-                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="uv"> <span class="iuRadioChipTitle">🌞 UV</span><span class="iuRadioChipDesc">UV index</span> </button>
+                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="precip"><span class="iuRadioChipTitle">💧 Srážky</span> <span class="iuRadioChipDesc">Mapová vrstva</span></button>
+                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="wind"><span class="iuRadioChipTitle">💨 Vítr</span> <span class="iuRadioChipDesc">Mapová vrstva</span></button>
+                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="pressure"><span class="iuRadioChipTitle">🧭 Tlak</span> <span class="iuRadioChipDesc">Mapová vrstva</span></button>
+                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="fog"><span class="iuRadioChipTitle">🌫 Mlha</span> <span class="iuRadioChipDesc">Viditelnost</span></button>
+                      <button type="button" class="iuRadioChip iuWeatherQuickChip" role="listitem" data-iu-quick-layer="uv"><span class="iuRadioChipTitle">🌞 UV index</span> <span class="iuRadioChipDesc">Mapová vrstva</span></button>
                     </div>
 
                     <div class="iuSubSectionHeader">
@@ -2982,7 +2978,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script type="module">import{franc}from"/assets/vendor/franc-min.js";window.franc=franc;</script>
     <script defer src="/assets/app-crash-shield.js"></script>
-    <script type="module" src="/assets/app.js?v=596"></script>
+    <script type="module" src="/assets/app.js?v=598"></script>
     <script>
     (function(){
       try { document.documentElement.setAttribute("data-iu-html-after-appjs", "reached"); } catch(e){}
