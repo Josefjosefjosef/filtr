@@ -9215,6 +9215,14 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuWeatherHasSavedManualCity(){
+    try{
+      return !!iuWeatherReadManualLocation();
+    }catch{
+      return false;
+    }
+  }
+
   function iuWeatherSwitchToModeManualUsingStoredIfAny(){
     try{
       const man = iuWeatherReadManualLocation();
@@ -9242,10 +9250,11 @@ function buildVideoAsArticleCard(it) {
         try{
           const mode = iuWeatherReadLocationMode();
           if (mode === IU_WEATHER_MODE_GPS) {
-            if (iuWeatherSwitchToModeManualUsingStoredIfAny()) {
-              iuWeatherOpenMapPicker();
-              return;
+            if (iuWeatherHasSavedManualCity()) {
+              if (iuWeatherSwitchToModeManualUsingStoredIfAny()) return;
             }
+            iuWeatherOpenMapPicker();
+            return;
           }
           iuWeatherOpenMapPicker();
         }catch{}
