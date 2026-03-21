@@ -9169,6 +9169,17 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /** Mobile browsers (Chrome/Android) often set click/pointer target to a Text node inside <button>; Text has no .closest, so delegated handlers must normalize to an Element. */
+  function iuDomEventTargetElement(ev){
+    try{
+      const t = ev && ev.target;
+      if (!t) return null;
+      if (t.nodeType === 1) return t;
+      if (t.parentElement) return t.parentElement;
+    }catch{}
+    return null;
+  }
+
   function iuWeatherInit(){
     try{
       if (window.__iuWeatherInitDone) return;
@@ -9178,7 +9189,7 @@ function buildVideoAsArticleCard(it) {
         "click",
         (ev) => {
           try{
-            const t = ev.target;
+            const t = iuDomEventTargetElement(ev);
             if (!t || !t.closest) return;
             if (t.closest("#iuWeatherGeoBtn")) {
               ev.preventDefault();
@@ -19744,7 +19755,9 @@ function buildVideoAsArticleCard(it) {
 
   function iuNotesGlobalDelegation(){
     document.addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-iu-notes-copy], [data-iu-notes-clear], [data-iu-notes-send], [data-iu-notes-send-wa], [data-iu-notes-send-mail], [data-iu-notes-send-copy]");
+      const t0 = typeof iuDomEventTargetElement === "function" ? iuDomEventTargetElement(e) : e.target;
+      if (!t0 || !t0.closest) return;
+      const btn = t0.closest("[data-iu-notes-copy], [data-iu-notes-clear], [data-iu-notes-send], [data-iu-notes-send-wa], [data-iu-notes-send-mail], [data-iu-notes-send-copy]");
       if (!btn) return;
       const block = btn.closest("[data-iu-notes]");
       if (!block) return;
