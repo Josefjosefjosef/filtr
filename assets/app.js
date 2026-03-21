@@ -9179,6 +9179,7 @@ function buildVideoAsArticleCard(it) {
     }catch{}
     return null;
   }
+  try { window.iuDomEventTargetElement = iuDomEventTargetElement; } catch {}
 
   function iuWeatherInit(){
     try{
@@ -19755,7 +19756,10 @@ function buildVideoAsArticleCard(it) {
 
   function iuNotesGlobalDelegation(){
     document.addEventListener("click", (e) => {
-      const t0 = typeof iuDomEventTargetElement === "function" ? iuDomEventTargetElement(e) : e.target;
+      const t0 =
+        typeof window !== "undefined" && typeof window.iuDomEventTargetElement === "function"
+          ? window.iuDomEventTargetElement(e)
+          : null;
       if (!t0 || !t0.closest) return;
       const btn = t0.closest("[data-iu-notes-copy], [data-iu-notes-clear], [data-iu-notes-send], [data-iu-notes-send-wa], [data-iu-notes-send-mail], [data-iu-notes-send-copy]");
       if (!btn) return;
