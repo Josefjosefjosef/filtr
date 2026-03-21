@@ -8317,9 +8317,90 @@ function buildVideoAsArticleCard(it) {
   const IU_PICKER_VB_H = 450;
   const IU_PICKER_BOUNDS_FALLBACK = { minLon: 12.0, maxLon: 19.0, minLat: 48.55, maxLat: 51.1 };
 
+  /** Noise rows in GeoNames (district parts) — never use as map labels. */
+  const IU_PICKER_MESSY_CITY_SUBSTR = /\b(střed|Stodůlky|Žižkov|Chodov)\b/i;
+
+  /** GeoNames English admin1 labels → Czech (safe fixed map; no heuristics). */
+  const IU_PICKER_EN_REGION_TO_CZ = {
+    Prague: "Praha",
+    "South Moravian": "Jihomoravský kraj",
+    "Plzeň Region": "Plzeňský kraj",
+    "Central Bohemia": "Středočeský kraj",
+  };
+
+  function iuPickerAliasesFromSourceRow(r){
+    try{
+      if (r && typeof r === "object" && !Array.isArray(r) && Array.isArray(r.a)){
+        return r.a.map((x) => String(x || "").trim()).filter(Boolean);
+      }
+      if (Array.isArray(r) && Array.isArray(r[6])){
+        return r[6].map((x) => String(x || "").trim()).filter(Boolean);
+      }
+    }catch{}
+    return [];
+  }
+
+  function iuPickerCzLocalityNameFromParts(name){
+    const n = String(name || "").trim();
+    if (n === "Prague") return "Praha";
+    if (n === "Pilsen") return "Plzeň";
+    return n;
+  }
+
+  function iuPickerCzRegionNameFromParts(region){
+    const r0 = String(region || "").trim();
+    if (!r0) return "";
+    const cz = IU_PICKER_EN_REGION_TO_CZ[r0];
+    return cz || r0;
+  }
+
+  function iuPickerItemSearchHaystack(it){
+    try{
+      const parts = [iuWeatherNorm(it.name), iuWeatherNorm(it.region || "")];
+      const czNm = iuPickerCzLocalityNameFromParts(it.name);
+      if (czNm !== it.name) parts.push(iuWeatherNorm(czNm));
+      const regRaw = String(it.region || "").trim();
+      const czReg = iuPickerCzRegionNameFromParts(regRaw);
+      if (czReg && czReg !== regRaw) parts.push(iuWeatherNorm(czReg));
+      if (it.aliases && Array.isArray(it.aliases)){
+        for (let i = 0; i < it.aliases.length; i++){
+          const ax = it.aliases[i];
+          if (ax) parts.push(iuWeatherNorm(ax));
+        }
+      }
+      return parts.join(" ");
+    }catch{
+      return iuWeatherNorm(it && it.name);
+    }
+  }
+
+  function iuPickerIsMapLabelRow(it){
+    try{
+      if (!it) return false;
+      if (IU_PICKER_MESSY_CITY_SUBSTR.test(String(it.name || ""))) return false;
+      if (it.type === "city") return true;
+      if (it.type === "town" && Number(it.priority) >= 60) return true;
+      return false;
+    }catch{
+      return false;
+    }
+  }
+
+  function iuPickerLabelFromItem(it){
+    try{
+      const nm = iuPickerCzLocalityNameFromParts(it.name);
+      const regRaw = String(it.region || "").trim();
+      const reg = regRaw ? iuPickerCzRegionNameFromParts(regRaw) : "";
+      return reg ? `${nm} (${reg})` : nm;
+    }catch{
+      return String(it && it.name || "");
+    }
+  }
+
   function iuPickerParseRow(r){
     try{
       if (!r) return null;
+      const aliases = iuPickerAliasesFromSourceRow(r);
       if (typeof r === "object" && !Array.isArray(r)) {
         const name = String(r.n || r.name || "").trim();
         const region = String(r.r || r.region || "").trim();
@@ -8333,6 +8414,7 @@ function buildVideoAsArticleCard(it) {
           lon,
           priority: Number.isFinite(Number(r.p)) ? Number(r.p) : 50,
           type: String(r.t || r.type || "obec"),
+          aliases,
         };
       }
       if (Array.isArray(r)) {
@@ -8349,6 +8431,7 @@ function buildVideoAsArticleCard(it) {
           lon,
           priority: Number.isFinite(Number(a[4])) ? Number(a[4]) : 80,
           type: String(a[5] || "obec"),
+          aliases,
         };
       }
     }catch{}
@@ -8472,9 +8555,7 @@ function buildVideoAsArticleCard(it) {
         const near = iuPickerNearest(la, lo, items);
         if (near && near.name){
           try{
-            const nm = String(near.name || "").trim();
-            const reg = String(near.region || "").trim();
-            return reg ? `${nm} (${reg})` : nm;
+            return iuPickerLabelFromItem(near);
           }catch{
             return String(near.name || "").trim();
           }
@@ -8504,6 +8585,16 @@ function buildVideoAsArticleCard(it) {
     return `${la.toFixed(3)}°, ${lo.toFixed(3)}°`;
   }
 
+  function iuPickerSearchDedupeKey(it){
+    try{
+      const la = Math.round(Number(it.lat) * 1e4) / 1e4;
+      const lo = Math.round(Number(it.lon) * 1e4) / 1e4;
+      return `${iuWeatherNorm(it.name)}|${iuWeatherNorm(it.region || "")}|${la}|${lo}`;
+    }catch{
+      return String(it && it.name);
+    }
+  }
+
   function iuPickerSearchItems(query, items, limit){
     const q = iuWeatherNorm(query);
     if (!q) return [];
@@ -8511,20 +8602,26 @@ function buildVideoAsArticleCard(it) {
     const scored = [];
     for (let i = 0; i < items.length; i++){
       const it = items[i];
-      const nn = iuWeatherNorm(it.name);
-      const rr = iuWeatherNorm(it.region || "");
-      const hay = nn + " " + rr;
+      const hay = iuPickerItemSearchHaystack(it);
       if (!hay.includes(q)) continue;
+      const nn = iuWeatherNorm(it.name);
+      const czNm = iuWeatherNorm(iuPickerCzLocalityNameFromParts(it.name));
       let score = 0;
-      if (nn.startsWith(q)) score += 8;
-      else if (nn.includes(q)) score += 4;
+      if (czNm.startsWith(q) || nn.startsWith(q)) score += 10;
+      else if (czNm.includes(q) || nn.includes(q)) score += 6;
+      else if (hay.includes(q)) score += 3;
+      const rr = iuWeatherNorm(it.region || "");
       if (rr.includes(q)) score += 2;
       score += (Number(it.priority) || 0) / 200;
       scored.push({ it, score });
     }
     scored.sort((a, b) => b.score - a.score || (b.it.priority || 0) - (a.it.priority || 0));
     const out = [];
+    const seen = new Set();
     for (let j = 0; j < scored.length && out.length < lim; j++){
+      const k = iuPickerSearchDedupeKey(scored[j].it);
+      if (seen.has(k)) continue;
+      seen.add(k);
       out.push(scored[j].it);
     }
     return out;
@@ -8635,13 +8732,6 @@ function buildVideoAsArticleCard(it) {
     let svgNs = "http://www.w3.org/2000/svg";
     let svgEl = null;
     let markerEl = null;
-    function iuPickerLabelFromIt(it){
-      try{
-        return it.region ? `${it.name} (${it.region})` : String(it.name || "");
-      }catch{
-        return String(it && it.name || "");
-      }
-    }
 
     function teardownMap(){
       try{
@@ -8659,7 +8749,7 @@ function buildVideoAsArticleCard(it) {
 
     function setPendingFromIt(it){
       if (!it || !iuWeatherIsValidGeoCoords(it.lat, it.lon)) return;
-      const label = iuPickerLabelFromIt(it);
+      const label = iuPickerLabelFromItem(it);
       pending = { lat: it.lat, lon: it.lon, label };
       try{ overlay.__iuWeatherPickerLastPick = { lat: it.lat, lon: it.lon, label }; }catch{}
       if (btnOk) btnOk.disabled = false;
@@ -8699,7 +8789,7 @@ function buildVideoAsArticleCard(it) {
         btn.type = "button";
         btn.className = "iuWeatherMapPickerSuggestItem";
         btn.setAttribute("role", "option");
-        btn.textContent = iuPickerLabelFromIt(it);
+        btn.textContent = iuPickerLabelFromItem(it);
         btn.addEventListener("click", () => {
           try{ if (inpSearch) inpSearch.value = it.name; }catch{}
           hideSuggest();
@@ -8720,7 +8810,7 @@ function buildVideoAsArticleCard(it) {
             hideSuggest();
             return;
           }
-          const hits = iuPickerSearchItems(q, localities, 14);
+          const hits = iuPickerSearchItems(q, localities, 22);
           renderSuggest(hits);
         }catch{}
       }, 120);
@@ -8852,7 +8942,11 @@ function buildVideoAsArticleCard(it) {
 
       const labelLayer = document.createElementNS(svgNs, "g");
       labelLayer.classList.add("iuWeatherMapPickerLabelLayer");
-      const labelRows = iuPickerPickLabelsForRender(localities, bounds, IU_PICKER_VB_W, IU_PICKER_VB_H);
+      const mapLabelItems = [];
+      for (let mi = 0; mi < localities.length; mi++){
+        if (iuPickerIsMapLabelRow(localities[mi])) mapLabelItems.push(localities[mi]);
+      }
+      const labelRows = iuPickerPickLabelsForRender(mapLabelItems, bounds, IU_PICKER_VB_W, IU_PICKER_VB_H);
       for (let i = 0; i < labelRows.length; i++){
         const row = labelRows[i];
         const t = document.createElementNS(svgNs, "text");
@@ -8860,7 +8954,7 @@ function buildVideoAsArticleCard(it) {
         t.setAttribute("y", String(row.y));
         t.setAttribute("text-anchor", "middle");
         t.classList.add("iuWeatherMapPickerLbl");
-        const raw = String(row.it.name || "");
+        const raw = String(iuPickerCzLocalityNameFromParts(row.it.name || ""));
         const shown = raw.length > 18 ? raw.slice(0, 17) + "…" : raw;
         t.textContent = shown;
         t.addEventListener("click", (ev) => {
