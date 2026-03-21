@@ -917,19 +917,20 @@ style-src 'self' 'unsafe-inline' https:;
                       <div class="iuWeatherStickyNameday" id="iuWxStickyNameday" hidden aria-hidden="true"></div>
                     </section>
 
-                    <section class="iuWeatherMyCity" aria-label="Moje město">
-                      <div class="iuWeatherMyCityTop">
-                        <div class="iuWeatherMyCityRow iuWeatherMyCityRow--label">
-                          <span class="iuWeatherMyCityLabel">Moje město:</span>
-                          <strong class="iuWeatherMyCityName" id="iuWeatherMyCityName">Praha</strong>
+                    <section class="iuWeatherMyCity" aria-label="Lokalita počasí">
+                      <div class="iuWeatherMyCityStack">
+                        <div class="iuWeatherMyCityBlock iuWeatherMyCityBlock--geo">
+                          <button class="iuBtn iuBtn--ghost iuWeatherMyCityBtn" id="iuWeatherGeoBtn" type="button" aria-pressed="true">Aktuální poloha</button>
+                          <div class="iuWeatherMyCityInfoLine">
+                            Aktuální poloha: <strong id="iuWeatherGeoLabel">—</strong>
+                          </div>
                         </div>
-                        <div class="iuWeatherMyCityRow iuWeatherMyCityRow--actions">
-                          <button class="iuBtn iuBtn--ghost iuWeatherMyCityBtn" id="iuWeatherCityChange" type="button">Změnit</button>
-                          <button class="iuBtn iuBtn--ghost iuWeatherMyCityBtn" id="iuWeatherGeoBtn" type="button">Aktuální poloha</button>
+                        <div class="iuWeatherMyCityBlock iuWeatherMyCityBlock--city">
+                          <button class="iuBtn iuBtn--ghost iuWeatherMyCityBtn" id="iuWeatherCityChange" type="button" aria-pressed="false">Změnit na moje město</button>
+                          <div class="iuWeatherMyCityInfoLine">
+                            Moje město: <strong id="iuWeatherMyCityName">Praha</strong>
+                          </div>
                         </div>
-                      </div>
-                      <div class="iuWeatherGeoActiveLine" id="iuWeatherGeoActiveLine" hidden aria-hidden="true">
-                        Aktuální poloha: <strong id="iuWeatherGeoLabel">—</strong>
                       </div>
                     </section>
 
