@@ -7391,7 +7391,6 @@ function buildVideoAsArticleCard(it) {
     window.iuWeatherApplySharedStateMeta = iuWeatherApplySharedStateMeta;
     window.iuWeatherValidateCoords = iuWeatherValidateCoords;
     window.iuWeatherFallbackCityFromManualOrDefault = iuWeatherFallbackCityFromManualOrDefault;
-    window.iuWeatherGetActiveCity = iuWeatherGetActiveCity;
   }catch{}
 
   const __iuOpenMeteoCache = new Map(); // key -> { t, data, p }
