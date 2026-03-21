@@ -7450,6 +7450,28 @@ function buildVideoAsArticleCard(it) {
           cityBtn.setAttribute("aria-pressed", "true");
         }
       }
+
+      const geoInfoWrap = document.getElementById("iuWeatherGeoInfoLineWrap");
+      const myInfoWrap = document.getElementById("iuWeatherMyCityInfoLineWrap");
+      if (mode === IU_WEATHER_MODE_GPS) {
+        if (geoInfoWrap) {
+          geoInfoWrap.hidden = false;
+          geoInfoWrap.setAttribute("aria-hidden", "false");
+        }
+        if (myInfoWrap) {
+          myInfoWrap.hidden = true;
+          myInfoWrap.setAttribute("aria-hidden", "true");
+        }
+      } else {
+        if (geoInfoWrap) {
+          geoInfoWrap.hidden = true;
+          geoInfoWrap.setAttribute("aria-hidden", "true");
+        }
+        if (myInfoWrap) {
+          myInfoWrap.hidden = false;
+          myInfoWrap.setAttribute("aria-hidden", "false");
+        }
+      }
     }catch{}
   }
 
@@ -8998,6 +9020,83 @@ function buildVideoAsArticleCard(it) {
     });
   }
 
+  function iuWeatherActivateGpsViaGeolocation(){
+    (async () => {
+      const geoLabel = document.getElementById("iuWeatherGeoLabel");
+      try{
+        if (!navigator.geolocation) throw new Error("no geolocation");
+        if (geoLabel) geoLabel.textContent = "Zjišťuji polohu…";
+
+        const pos = await new Promise((resolve, reject) => {
+          try{
+            navigator.geolocation.getCurrentPosition(
+              (p) => resolve(p),
+              (err) => reject(err),
+              { enableHighAccuracy: false, timeout: 12000, maximumAge: 60000 },
+            );
+          }catch(e){ reject(e); }
+        });
+
+        const lat = Number(pos && pos.coords && pos.coords.latitude);
+        const lon = Number(pos && pos.coords && pos.coords.longitude);
+        if (!isFinite(lat) || !isFinite(lon)) throw new Error("bad coords");
+
+        if (geoLabel) geoLabel.textContent = "Hledám lokalitu…";
+        const label = await iuWeatherReverseGeocode(lat, lon);
+        const city = { name: label || "Poloha", lat, lon };
+        iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
+        iuWeatherClearRuntimeCity();
+        iuWeatherWriteGpsSelected(city);
+        iuWeatherClearOpenMeteoCache();
+        try{ window.__iuWeatherState = null; }catch{}
+        iuWeatherSyncCityLabels(city);
+        iuWeatherLoadAndRender();
+      }catch{
+        iuWeatherClearRuntimeCity();
+        if (geoLabel) geoLabel.textContent = "Poloha nedostupná";
+        try{
+          const c = iuWeatherGetActiveCity();
+          iuWeatherSyncCityLabels(c);
+        }catch{}
+        iuWeatherLoadAndRender();
+      }
+    })();
+  }
+
+  function iuWeatherSwitchToModeGpsUsingStoredIfAny(){
+    try{
+      const gps = iuWeatherReadGpsSelected();
+      if (!gps) return false;
+      iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
+      iuWeatherClearRuntimeCity();
+      iuWeatherClearOpenMeteoCache();
+      try{ window.__iuWeatherState = null; }catch{}
+      const c = iuWeatherGetActiveCity();
+      iuWeatherSyncCityLabels(c);
+      iuWeatherLoadAndRender();
+      return true;
+    }catch{
+      return false;
+    }
+  }
+
+  function iuWeatherSwitchToModeManualUsingStoredIfAny(){
+    try{
+      const man = iuWeatherReadManualLocation();
+      if (!man) return false;
+      iuWeatherWriteLocationMode(IU_WEATHER_MODE_MANUAL);
+      iuWeatherClearRuntimeCity();
+      iuWeatherClearOpenMeteoCache();
+      try{ window.__iuWeatherState = null; }catch{}
+      const c = iuWeatherGetActiveCity();
+      iuWeatherSyncCityLabels(c);
+      iuWeatherLoadAndRender();
+      return true;
+    }catch{
+      return false;
+    }
+  }
+
   function iuWeatherInit(){
     try{
       if (window.__iuWeatherInitDone) return;
@@ -9005,7 +9104,13 @@ function buildVideoAsArticleCard(it) {
 
       const btn = document.getElementById("iuWeatherCityChange");
       if (btn) btn.addEventListener("click", () => {
-        try{ iuWeatherOpenMapPicker(); }catch{}
+        try{
+          const mode = iuWeatherReadLocationMode();
+          if (mode === IU_WEATHER_MODE_GPS) {
+            if (iuWeatherSwitchToModeManualUsingStoredIfAny()) return;
+          }
+          iuWeatherOpenMapPicker();
+        }catch{}
       });
 
       try{
@@ -9017,46 +9122,13 @@ function buildVideoAsArticleCard(it) {
 
       const geoBtn = document.getElementById("iuWeatherGeoBtn");
       if (geoBtn) geoBtn.addEventListener("click", () => {
-        (async () => {
-          const geoLabel = document.getElementById("iuWeatherGeoLabel");
-          try{
-            if (!navigator.geolocation) throw new Error("no geolocation");
-            if (geoLabel) geoLabel.textContent = "Zjišťuji polohu…";
-
-            const pos = await new Promise((resolve, reject) => {
-              try{
-                navigator.geolocation.getCurrentPosition(
-                  (p) => resolve(p),
-                  (err) => reject(err),
-                  { enableHighAccuracy: false, timeout: 12000, maximumAge: 60000 },
-                );
-              }catch(e){ reject(e); }
-            });
-
-            const lat = Number(pos && pos.coords && pos.coords.latitude);
-            const lon = Number(pos && pos.coords && pos.coords.longitude);
-            if (!isFinite(lat) || !isFinite(lon)) throw new Error("bad coords");
-
-            if (geoLabel) geoLabel.textContent = "Hledám lokalitu…";
-            const label = await iuWeatherReverseGeocode(lat, lon);
-            const city = { name: label || "Poloha", lat, lon };
-            iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
-            iuWeatherClearRuntimeCity();
-            iuWeatherWriteGpsSelected(city);
-            iuWeatherClearOpenMeteoCache();
-            try{ window.__iuWeatherState = null; }catch{}
-            iuWeatherSyncCityLabels(city);
-            iuWeatherLoadAndRender();
-          }catch{
-            iuWeatherClearRuntimeCity();
-            if (geoLabel) geoLabel.textContent = "Poloha nedostupná";
-            try{
-              const c = iuWeatherGetActiveCity();
-              iuWeatherSyncCityLabels(c);
-            }catch{}
-            iuWeatherLoadAndRender();
+        try{
+          const mode = iuWeatherReadLocationMode();
+          if (mode === IU_WEATHER_MODE_MANUAL) {
+            if (iuWeatherSwitchToModeGpsUsingStoredIfAny()) return;
           }
-        })();
+        }catch{}
+        iuWeatherActivateGpsViaGeolocation();
       });
 
       const radarBtn = document.getElementById("iuWxRadarOpen");
