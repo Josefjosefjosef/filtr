@@ -6009,89 +6009,75 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   }
 }
 
-/* City picker bottom-sheet (no libraries) */
-.iuWeatherSheetOverlay{
+/* Map-only location picker (Leaflet) */
+.iuWeatherMapPickerOverlay{
   position: fixed;
   inset: 0;
   z-index: 2147483000;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0,0,0,0.6);
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
   justify-content: center;
-  padding: 16px;
+  padding: 0;
   box-sizing: border-box;
 }
-.iuWeatherSheetOverlay[hidden]{
+.iuWeatherMapPickerOverlay[hidden]{
   display: none !important;
 }
-.iuWeatherSheet{
+.iuWeatherMapPickerPanel{
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  max-width: 560px;
-  border-radius: 16px;
-  background: rgba(18,28,41,0.98);
-  border: 1px solid rgba(255,255,255,0.14);
-  box-shadow: 0 20px 70px rgba(0,0,0,0.55);
-  overflow: hidden;
+  max-width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: rgba(12,18,28,0.98);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-sizing: border-box;
 }
-.iuWeatherSheetHead{
+.iuWeatherMapPickerHead{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap: 10px;
   padding: 12px 14px;
   border-bottom: 1px solid rgba(255,255,255,0.10);
+  flex: 0 0 auto;
 }
-.iuWeatherSheetTitle{
+.iuWeatherMapPickerTitle{
   font-weight: 900;
+  color: rgba(255,255,255,0.95);
 }
-.iuWeatherSheetClose{
+.iuWeatherMapPickerClose{
   appearance:none;
   border:0;
   background: transparent;
   color: rgba(255,255,255,0.92);
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
   padding: 6px 10px;
   border-radius: 10px;
 }
-.iuWeatherSheetClose:focus-visible{
+.iuWeatherMapPickerClose:focus-visible{
   outline: 3px solid #fff;
 }
-.iuWeatherSheetSearch{
-  width: calc(100% - 28px);
-  margin: 12px 14px 10px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-  box-sizing: border-box;
-}
-.iuWeatherSheetSearch::placeholder{ color: rgba(255,255,255,0.65); }
-.iuWeatherSheetList{
-  max-height: min(55vh, 520px);
-  overflow: auto;
-  padding: 0 14px 14px;
-  box-sizing: border-box;
-}
-.iuWeatherSheetItem{
+.iuWeatherMapPickerMap{
+  flex: 1 1 auto;
+  min-height: 280px;
   width: 100%;
-  text-align: left;
-  appearance:none;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.04);
-  color: rgba(255,255,255,0.94);
-  padding: 10px 12px;
-  border-radius: 12px;
-  cursor: pointer;
-  margin-top: 10px;
-  font-weight: 800;
+  position: relative;
+  z-index: 0;
 }
-.iuWeatherSheetItem:hover{ filter: brightness(1.05); }
-.iuWeatherSheetItem:focus-visible{ outline: 3px solid #fff; }
-.iuWeatherSheetEmpty{
-  padding: 14px 2px;
-  opacity: 0.85;
+.iuWeatherMapPickerOverlay .leaflet-container{
+  font: inherit;
+}
+.iuWeatherMapPickerBar{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255,255,255,0.10);
+  flex: 0 0 auto;
 }
 body[data-section="pocasi"] #iuWeatherView,
 html[data-section="pocasi"] #iuWeatherView{
