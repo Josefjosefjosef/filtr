@@ -5294,6 +5294,8 @@ body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityBtn{
   white-space: normal;
   text-align: center;
   max-width: 100%;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityPin{
   display:flex;
