@@ -5266,12 +5266,15 @@ body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityStack{
   min-height: 48px; /* CLS guard */
   font-size: clamp(15px, 4.2vw, 20px);
 }
-body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityBlock{
+body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityBlock,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityBlock{
   display:flex;
   flex-direction: column;
   align-items: stretch;
   gap: 8px;
   min-width: 0;
+  /* CLS: reserve full button + info line before iuWeatherSyncCityLabels toggles visibility (was ~20px→49px shift). */
+  min-height: 72px;
 }
 body[data-section="pocasi"] #iuWeatherView .iuWeatherMyCityInfoLine{
   font-size: clamp(13px, 3.6vw, 15px);
@@ -6112,6 +6115,8 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
 }
 .iuWeatherMapPickerOverlay .leaflet-container{
   font: inherit;
+  touch-action: pan-x pan-y pinch-zoom;
+  -webkit-tap-highlight-color: transparent;
 }
 .iuWeatherMapPickerBar{
   display: flex;
@@ -6120,6 +6125,18 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   padding: 12px 14px;
   border-top: 1px solid rgba(255,255,255,0.10);
   flex: 0 0 auto;
+}
+.iuWeatherMapPickerBar #iuWeatherMapPickerConfirm:disabled{
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.iuWeatherMapPickerBar #iuWeatherMapPickerConfirm:not(:disabled),
+.iuWeatherMapPickerBar #iuWeatherMapPickerConfirm.iuWeatherMapPickerConfirm--dirty{
+  opacity: 1;
+  cursor: pointer;
+  border-color: rgba(56,189,248,0.55);
+  background: rgba(56,189,248,0.14);
+  color: rgba(255,255,255,0.96);
 }
 body[data-section="pocasi"] #iuWeatherView,
 html[data-section="pocasi"] #iuWeatherView{
