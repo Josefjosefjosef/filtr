@@ -1100,7 +1100,6 @@ try {
             const debugOnly =
               sources.length > 0 &&
               sources.every((s) => isDebugOverlayNode(s && s.node));
-
             // Debug-only evidence: store layout shift entries + attribution sources.
             try {
               const shiftEntry = {
@@ -8378,39 +8377,230 @@ function buildVideoAsArticleCard(it) {
     window.iuWeatherRenderMapLayer = iuWeatherRenderMapLayer;
   }catch{}
 
-  function iuWeatherLoadLeaflet(){
-    return new Promise((resolve, reject) => {
-      try{
-        const base = "/assets/vendor/leaflet-1.9.4/";
-        const cssHref = base + "leaflet.css";
-        const jsSrc = base + "leaflet.js";
-        const selCss = 'link[href*="/assets/vendor/leaflet-1.9.4/leaflet.css"]';
-        const selJs = 'script[src*="/assets/vendor/leaflet-1.9.4/leaflet.js"]';
-        if (!document.querySelector(selCss)) {
-          const link = document.createElement("link");
-          link.rel = "stylesheet";
-          link.href = cssHref;
-          link.setAttribute("data-iu-leaflet-vendor", "1");
-          document.head.appendChild(link);
+  const IU_PICKER_VB_W = 800;
+  const IU_PICKER_VB_H = 450;
+  const IU_PICKER_BOUNDS_FALLBACK = { minLon: 12.0, maxLon: 19.0, minLat: 48.55, maxLat: 51.1 };
+
+  function iuPickerParseRow(r){
+    try{
+      if (!r) return null;
+      if (typeof r === "object" && !Array.isArray(r)) {
+        const name = String(r.n || r.name || "").trim();
+        const region = String(r.r || r.region || "").trim();
+        const lat = Number(r.lat);
+        const lon = Number(r.lon);
+        if (!name || !iuWeatherIsValidGeoCoords(lat, lon)) return null;
+        return {
+          name,
+          region,
+          lat,
+          lon,
+          priority: Number.isFinite(Number(r.p)) ? Number(r.p) : 50,
+          type: String(r.t || r.type || "obec"),
+        };
+      }
+      if (Array.isArray(r)) {
+        const a = r;
+        const name = String(a[0] || "").trim();
+        const region = String(a[1] || "").trim();
+        const lat = Number(a[2]);
+        const lon = Number(a[3]);
+        if (!name || !iuWeatherIsValidGeoCoords(lat, lon)) return null;
+        return {
+          name,
+          region,
+          lat,
+          lon,
+          priority: Number.isFinite(Number(a[4])) ? Number(a[4]) : 80,
+          type: String(a[5] || "obec"),
+        };
+      }
+    }catch{}
+    return null;
+  }
+
+  async function iuLoadPickerLocalities(){
+    try{
+      if (window.__iuPickerLocalitiesCache) return window.__iuPickerLocalitiesCache;
+    }catch{}
+    try{
+      const r = await fetch(iuDataUrl("cz_localities_picker.json"), { cache: "force-cache" });
+      if (r.ok) {
+        const d = await r.json();
+        const raw = Array.isArray(d.items) ? d.items : [];
+        const items = raw.map(iuPickerParseRow).filter(Boolean);
+        if (items.length) {
+          try{ window.__iuPickerLocalitiesCache = items; }catch{}
+          return items;
         }
-        const existingJs = document.querySelector(selJs);
-        if (existingJs) {
-          if (typeof window.L !== "undefined" && window.L && typeof window.L.map === "function") {
-            return resolve();
+      }
+    }catch{}
+    const fb = IU_CITY_FALLBACK.map((row) => iuPickerParseRow([row[0], row[1], row[2], row[3], 85, "city"])).filter(Boolean);
+    try{ window.__iuPickerLocalitiesCache = fb; }catch{}
+    return fb;
+  }
+
+  function iuPickerBoundsFromGeometry(geom){
+    try{
+      let minLon = Infinity;
+      let maxLon = -Infinity;
+      let minLat = Infinity;
+      let maxLat = -Infinity;
+      function ringWalk(ring){
+        for (let i = 0; i < ring.length; i++){
+          const pair = ring[i];
+          const lon = Number(pair[0]);
+          const lat = Number(pair[1]);
+          if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+          minLon = Math.min(minLon, lon);
+          maxLon = Math.max(maxLon, lon);
+          minLat = Math.min(minLat, lat);
+          maxLat = Math.max(maxLat, lat);
+        }
+      }
+      function walk(g){
+        if (!g) return;
+        if (g.type === "Polygon") {
+          const rings = g.coordinates;
+          if (rings && rings[0]) ringWalk(rings[0]);
+        } else if (g.type === "MultiPolygon") {
+          const polys = g.coordinates;
+          for (let p = 0; p < polys.length; p++){
+            const poly = polys[p];
+            if (poly && poly[0]) ringWalk(poly[0]);
           }
-          existingJs.addEventListener("load", () => resolve(), { once: true });
-          existingJs.addEventListener("error", () => reject(new Error("leaflet")), { once: true });
-          return;
         }
-        const s = document.createElement("script");
-        s.src = jsSrc;
-        s.async = true;
-        s.setAttribute("data-iu-leaflet-vendor", "1");
-        s.onload = () => resolve();
-        s.onerror = () => reject(new Error("leaflet"));
-        document.head.appendChild(s);
-      }catch(e){ reject(e); }
+      }
+      walk(geom);
+      if (!Number.isFinite(minLon) || !Number.isFinite(maxLon)) return null;
+      const padLon = (maxLon - minLon) * 0.02;
+      const padLat = (maxLat - minLat) * 0.02;
+      return {
+        minLon: minLon - padLon,
+        maxLon: maxLon + padLon,
+        minLat: minLat - padLat,
+        maxLat: maxLat + padLat,
+      };
+    }catch{}
+    return null;
+  }
+
+  function iuPickerProject(lat, lon, b, w, h){
+    const x = ((lon - b.minLon) / (b.maxLon - b.minLon)) * w;
+    const y = ((b.maxLat - lat) / (b.maxLat - b.minLat)) * h;
+    return { x, y };
+  }
+
+  function iuPickerUnproject(svgX, svgY, b, w, h){
+    const lon = b.minLon + (svgX / w) * (b.maxLon - b.minLon);
+    const lat = b.maxLat - (svgY / h) * (b.maxLat - b.minLat);
+    return { lat, lon };
+  }
+
+  function iuPickerHaversineKm(lat1, lon1, lat2, lon2){
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  function iuPickerNearest(lat, lon, items){
+    let best = null;
+    let bestD = Infinity;
+    for (let i = 0; i < items.length; i++){
+      const it = items[i];
+      const d = iuPickerHaversineKm(lat, lon, it.lat, it.lon);
+      if (d < bestD) {
+        bestD = d;
+        best = it;
+      }
+    }
+    return best;
+  }
+
+  function iuPickerSearchItems(query, items, limit){
+    const q = iuWeatherNorm(query);
+    if (!q) return [];
+    const lim = typeof limit === "number" && limit > 0 ? limit : 12;
+    const scored = [];
+    for (let i = 0; i < items.length; i++){
+      const it = items[i];
+      const nn = iuWeatherNorm(it.name);
+      const rr = iuWeatherNorm(it.region || "");
+      const hay = nn + " " + rr;
+      if (!hay.includes(q)) continue;
+      let score = 0;
+      if (nn.startsWith(q)) score += 8;
+      else if (nn.includes(q)) score += 4;
+      if (rr.includes(q)) score += 2;
+      score += (Number(it.priority) || 0) / 200;
+      scored.push({ it, score });
+    }
+    scored.sort((a, b) => b.score - a.score || (b.it.priority || 0) - (a.it.priority || 0));
+    const out = [];
+    for (let j = 0; j < scored.length && out.length < lim; j++){
+      out.push(scored[j].it);
+    }
+    return out;
+  }
+
+  function iuPickerRingToPath(ring, b, w, h){
+    let d = "";
+    for (let i = 0; i < ring.length; i++){
+      const lon = Number(ring[i][0]);
+      const lat = Number(ring[i][1]);
+      const pt = iuPickerProject(lat, lon, b, w, h);
+      d += (i === 0 ? "M " : " L ") + pt.x.toFixed(2) + " " + pt.y.toFixed(2);
+    }
+    d += " Z";
+    return d;
+  }
+
+  function iuPickerOutlinePaths(geom, b, w, h){
+    const paths = [];
+    try{
+      if (geom.type === "Polygon") {
+        const rings = geom.coordinates;
+        if (rings && rings[0]) paths.push(iuPickerRingToPath(rings[0], b, w, h));
+      } else if (geom.type === "MultiPolygon") {
+        const polys = geom.coordinates;
+        for (let p = 0; p < polys.length; p++){
+          const poly = polys[p];
+          if (poly && poly[0]) paths.push(iuPickerRingToPath(poly[0], b, w, h));
+        }
+      }
+    }catch{}
+    return paths;
+  }
+
+  function iuPickerPickLabelsForRender(items, b, w, h){
+    const cols = 14;
+    const rows = 9;
+    const buckets = new Map();
+    for (let i = 0; i < items.length; i++){
+      const it = items[i];
+      const pt = iuPickerProject(it.lat, it.lon, b, w, h);
+      if (pt.x < -40 || pt.x > w + 40 || pt.y < -40 || pt.y > h + 40) continue;
+      const cx = Math.min(cols - 1, Math.max(0, Math.floor((pt.x / w) * cols)));
+      const cy = Math.min(rows - 1, Math.max(0, Math.floor((pt.y / h) * rows)));
+      const key = cx + "," + cy;
+      if (!buckets.has(key)) buckets.set(key, []);
+      buckets.get(key).push({ it, x: pt.x, y: pt.y });
+    }
+    const out = [];
+    buckets.forEach((arr) => {
+      arr.sort((a, b2) => (b2.it.priority || 0) - (a.it.priority || 0));
+      if (arr[0]) out.push(arr[0]);
+      if (arr[1] && (arr[1].it.priority || 0) >= 35) out.push(arr[1]);
     });
+    return out;
   }
 
   function iuWeatherEnsureMapPickerOverlay(){
@@ -8429,7 +8619,16 @@ function buildVideoAsArticleCard(it) {
           <div class="iuWeatherMapPickerTitle">Zvolte místo na mapě</div>
           <button type="button" class="iuWeatherMapPickerClose" aria-label="Zavřít">✕</button>
         </div>
-        <div id="iuWeatherMapPickerMap" class="iuWeatherMapPickerMap"></div>
+        <div class="iuWeatherMapPickerSearchRow">
+          <label class="iuWeatherMapPickerSearchLabel" for="iuWeatherMapPickerSearch">Hledat obec / město</label>
+          <input type="search" id="iuWeatherMapPickerSearch" class="iuWeatherMapPickerSearch" autocomplete="off" placeholder="Začněte psát název…" />
+          <div id="iuWeatherMapPickerSuggest" class="iuWeatherMapPickerSuggest" hidden role="listbox"></div>
+        </div>
+        <div id="iuWeatherMapPickerMap" class="iuWeatherMapPickerMap" role="presentation">
+          <div class="iuWeatherMapPickerMapInner"></div>
+        </div>
+        <div id="iuWeatherMapPickerSelected" class="iuWeatherMapPickerSelected" aria-live="polite"></div>
+        <div class="iuWeatherMapPickerAttr" aria-hidden="true">Obrys: Natural Earth (public domain). Lokality: GeoNames (CC BY 4.0).</div>
         <div class="iuWeatherMapPickerBar">
           <button type="button" class="iuBtn iuBtn--ghost" id="iuWeatherMapPickerConfirm" disabled>Uložit výběr</button>
           <button type="button" class="iuBtn iuBtn--ghost" id="iuWeatherMapPickerCancel">Zrušit</button>
@@ -8438,16 +8637,32 @@ function buildVideoAsArticleCard(it) {
     `.trim();
     document.body.appendChild(overlay);
 
-    const mapEl = document.getElementById("iuWeatherMapPickerMap");
+    const mapWrap = document.getElementById("iuWeatherMapPickerMap");
+    const mapInner = mapWrap && mapWrap.querySelector(".iuWeatherMapPickerMapInner");
     const closeBtn = overlay.querySelector(".iuWeatherMapPickerClose");
     const btnOk = document.getElementById("iuWeatherMapPickerConfirm");
     const btnCancel = document.getElementById("iuWeatherMapPickerCancel");
+    const inpSearch = document.getElementById("iuWeatherMapPickerSearch");
+    const suggestEl = document.getElementById("iuWeatherMapPickerSuggest");
+    const selectedEl = document.getElementById("iuWeatherMapPickerSelected");
 
-    let map = null;
-    let marker = null;
     let pending = null;
     let prevBodyOverflow = "";
+    let prevBodyPaddingRight = "";
     let pickerResizeObserver = null;
+    let searchTimer = null;
+    let localities = [];
+    let bounds = IU_PICKER_BOUNDS_FALLBACK;
+    let svgNs = "http://www.w3.org/2000/svg";
+    let svgEl = null;
+    let markerEl = null;
+    function iuPickerLabelFromIt(it){
+      try{
+        return it.region ? `${it.name} (${it.region})` : String(it.name || "");
+      }catch{
+        return String(it && it.name || "");
+      }
+    }
 
     function teardownMap(){
       try{
@@ -8456,86 +8671,258 @@ function buildVideoAsArticleCard(it) {
           pickerResizeObserver = null;
         }
       }catch{}
+      pending = null;
+      svgEl = null;
+      markerEl = null;
+      try{ if (mapInner) mapInner.replaceChildren(); }catch{}
+      try{ overlay.__iuWeatherPickerLastPick = null; }catch{}
+    }
+
+    function setPendingFromIt(it){
+      if (!it || !iuWeatherIsValidGeoCoords(it.lat, it.lon)) return;
+      const label = iuPickerLabelFromIt(it);
+      pending = { lat: it.lat, lon: it.lon, label };
+      try{ overlay.__iuWeatherPickerLastPick = { lat: it.lat, lon: it.lon, label }; }catch{}
+      if (btnOk) btnOk.disabled = false;
+      if (selectedEl) {
+        selectedEl.textContent = `Vybráno: ${label} · ${it.type || "lokalita"}`;
+      }
       try{
-        if (map) {
-          map.remove();
-          map = null;
+        if (svgEl && markerEl) {
+          const pt = iuPickerProject(it.lat, it.lon, bounds, IU_PICKER_VB_W, IU_PICKER_VB_H);
+          markerEl.setAttribute("cx", String(pt.x));
+          markerEl.setAttribute("cy", String(pt.y));
+          markerEl.setAttribute("r", "7");
         }
       }catch{}
-      marker = null;
-      pending = null;
-      try{ if (mapEl) mapEl.replaceChildren(); }catch{}
+    }
+
+    function hideSuggest(){
+      try{
+        if (suggestEl) {
+          suggestEl.hidden = true;
+          suggestEl.replaceChildren();
+        }
+      }catch{}
+    }
+
+    function renderSuggest(items){
+      if (!suggestEl) return;
+      suggestEl.replaceChildren();
+      if (!items || !items.length) {
+        suggestEl.hidden = true;
+        return;
+      }
+      suggestEl.hidden = false;
+      for (let i = 0; i < items.length; i++){
+        const it = items[i];
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "iuWeatherMapPickerSuggestItem";
+        btn.setAttribute("role", "option");
+        btn.textContent = iuPickerLabelFromIt(it);
+        btn.addEventListener("click", () => {
+          try{ if (inpSearch) inpSearch.value = it.name; }catch{}
+          hideSuggest();
+          setPendingFromIt(it);
+        });
+        suggestEl.appendChild(btn);
+      }
+    }
+
+    function onSearchInput(){
+      try{
+        if (searchTimer) clearTimeout(searchTimer);
+      }catch{}
+      searchTimer = setTimeout(() => {
+        try{
+          const q = inpSearch ? String(inpSearch.value || "").trim() : "";
+          if (q.length < 2) {
+            hideSuggest();
+            return;
+          }
+          const hits = iuPickerSearchItems(q, localities, 14);
+          renderSuggest(hits);
+        }catch{}
+      }, 120);
+    }
+
+    function svgPointFromEvent(ev){
+      try{
+        if (!svgEl) return null;
+        const rect = svgEl.getBoundingClientRect();
+        const wPx = rect.width || 1;
+        const hPx = rect.height || 1;
+        const cx = Number(ev.clientX) - rect.left;
+        const cy = Number(ev.clientY) - rect.top;
+        const x = (cx / wPx) * IU_PICKER_VB_W;
+        const y = (cy / hPx) * IU_PICKER_VB_H;
+        return { x, y };
+      }catch{}
+      return null;
     }
 
     function close(){
       try{ overlay.hidden = true; }catch{}
       try{ document.body.style.overflow = prevBodyOverflow || ""; }catch{}
+      try{
+        document.body.style.paddingRight = prevBodyPaddingRight || "";
+      }catch{}
       teardownMap();
       if (btnOk) btnOk.disabled = true;
+      try{ if (inpSearch) inpSearch.value = ""; }catch{}
+      hideSuggest();
+      if (selectedEl) selectedEl.textContent = "";
     }
 
     async function open(){
       prevBodyOverflow = document.body.style.overflow || "";
-      document.body.style.overflow = "hidden";
-      overlay.hidden = false;
       try{
-        await iuWeatherLoadLeaflet();
+        prevBodyPaddingRight = document.body.style.paddingRight || "";
       }catch{
-        try{ alert("Mapu se nepodařilo načíst. Zkuste to znovu."); }catch{}
-        close();
-        return;
+        prevBodyPaddingRight = "";
       }
-      const ac = iuWeatherGetActiveCity();
-      const centerLat = isFinite(ac.lat) ? ac.lat : 49.75;
-      const centerLon = isFinite(ac.lon) ? ac.lon : 15.5;
-      const centerZoom = 7;
-      teardownMap();
-      map = window.L.map(mapEl, { zoomControl: true, attributionControl: true }).setView([centerLat, centerLon], centerZoom);
-      window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "&copy; OpenStreetMap",
-      }).addTo(map);
-      function refreshPickerMapLayout(){
-        try{
-          if (!map) return;
-          map.invalidateSize({ animate: false });
-          map.setView([centerLat, centerLon], centerZoom, { animate: false });
-        }catch{}
-      }
+      document.body.style.overflow = "hidden";
       try{
-        if (mapEl && typeof ResizeObserver !== "undefined") {
-          pickerResizeObserver = new ResizeObserver(() => {
-            refreshPickerMapLayout();
-          });
-          pickerResizeObserver.observe(mapEl);
+        const gap = window.innerWidth - document.documentElement.clientWidth;
+        if (gap > 0) document.body.style.paddingRight = gap + "px";
+      }catch{}
+      try{ overlay.hidden = true; }catch{}
+      teardownMap();
+      localities = await iuLoadPickerLocalities();
+      let outline = null;
+      try{
+        const rr = await fetch(iuDataUrl("cz_outline_ne50.geojson"), { cache: "force-cache" });
+        if (rr.ok) outline = await rr.json();
+      }catch{}
+      try{
+        const g = outline && outline.features && outline.features[0] && outline.features[0].geometry;
+        const bb = iuPickerBoundsFromGeometry(g);
+        if (bb) bounds = bb;
+        else bounds = IU_PICKER_BOUNDS_FALLBACK;
+      }catch{
+        bounds = IU_PICKER_BOUNDS_FALLBACK;
+      }
+
+      const svg = document.createElementNS(svgNs, "svg");
+      svg.setAttribute("viewBox", "0 0 " + IU_PICKER_VB_W + " " + IU_PICKER_VB_H);
+      svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+      svg.classList.add("iuWeatherMapPickerSvg");
+      svgEl = svg;
+
+      const defs = document.createElementNS(svgNs, "defs");
+      const grad = document.createElementNS(svgNs, "linearGradient");
+      grad.setAttribute("id", "iuWeatherMapPickerSeaGrad");
+      grad.setAttribute("x1", "0");
+      grad.setAttribute("y1", "0");
+      grad.setAttribute("x2", "0");
+      grad.setAttribute("y2", "1");
+      const s1 = document.createElementNS(svgNs, "stop");
+      s1.setAttribute("offset", "0%");
+      s1.setAttribute("stop-color", "#0b1220");
+      const s2 = document.createElementNS(svgNs, "stop");
+      s2.setAttribute("offset", "100%");
+      s2.setAttribute("stop-color", "#15263d");
+      grad.appendChild(s1);
+      grad.appendChild(s2);
+      defs.appendChild(grad);
+      svg.appendChild(defs);
+
+      const sea = document.createElementNS(svgNs, "rect");
+      sea.setAttribute("x", "0");
+      sea.setAttribute("y", "0");
+      sea.setAttribute("width", String(IU_PICKER_VB_W));
+      sea.setAttribute("height", String(IU_PICKER_VB_H));
+      sea.setAttribute("fill", "url(#iuWeatherMapPickerSeaGrad)");
+      sea.classList.add("iuWeatherMapPickerSea");
+      svg.appendChild(sea);
+
+      try{
+        const g0 = outline && outline.features && outline.features[0] && outline.features[0].geometry;
+        if (g0) {
+          const paths = iuPickerOutlinePaths(g0, bounds, IU_PICKER_VB_W, IU_PICKER_VB_H);
+          for (let p = 0; p < paths.length; p++){
+            const path = document.createElementNS(svgNs, "path");
+            path.setAttribute("d", paths[p]);
+            path.setAttribute("fill", "rgba(72,140,220,0.38)");
+            path.setAttribute("stroke", "rgba(255,255,255,0.28)");
+            path.setAttribute("stroke-width", "1.2");
+            path.classList.add("iuWeatherMapPickerLand");
+            svg.appendChild(path);
+          }
         }
       }catch{}
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          refreshPickerMapLayout();
-          setTimeout(refreshPickerMapLayout, 50);
-          setTimeout(refreshPickerMapLayout, 200);
+
+      const hit = document.createElementNS(svgNs, "rect");
+      hit.setAttribute("x", "0");
+      hit.setAttribute("y", "0");
+      hit.setAttribute("width", String(IU_PICKER_VB_W));
+      hit.setAttribute("height", String(IU_PICKER_VB_H));
+      hit.setAttribute("fill", "transparent");
+      hit.classList.add("iuWeatherMapPickerHit");
+      hit.addEventListener("click", (ev) => {
+        try{
+          const pt = svgPointFromEvent(ev);
+          if (!pt) return;
+          const ll = iuPickerUnproject(pt.x, pt.y, bounds, IU_PICKER_VB_W, IU_PICKER_VB_H);
+          const near = iuPickerNearest(ll.lat, ll.lon, localities);
+          if (near) setPendingFromIt(near);
+        }catch{}
+      });
+      svg.appendChild(hit);
+
+      const labelLayer = document.createElementNS(svgNs, "g");
+      labelLayer.classList.add("iuWeatherMapPickerLabelLayer");
+      const labelRows = iuPickerPickLabelsForRender(localities, bounds, IU_PICKER_VB_W, IU_PICKER_VB_H);
+      for (let i = 0; i < labelRows.length; i++){
+        const row = labelRows[i];
+        const t = document.createElementNS(svgNs, "text");
+        t.setAttribute("x", String(row.x));
+        t.setAttribute("y", String(row.y));
+        t.setAttribute("text-anchor", "middle");
+        t.classList.add("iuWeatherMapPickerLbl");
+        const raw = String(row.it.name || "");
+        const shown = raw.length > 18 ? raw.slice(0, 17) + "…" : raw;
+        t.textContent = shown;
+        t.addEventListener("click", (ev) => {
+          try{ ev.stopPropagation(); }catch{}
+          setPendingFromIt(row.it);
         });
-      });
-      map.on("click", (e) => {
-        const lat = Number(e.latlng && e.latlng.lat);
-        const lng = Number(e.latlng && e.latlng.lng);
-        if (!iuWeatherIsValidGeoCoords(lat, lng)) {
-          pending = null;
-          try{ overlay.__iuWeatherPickerLastPick = null; }catch{}
-          if (btnOk) btnOk.disabled = true;
-          return;
+        labelLayer.appendChild(t);
+      }
+      svg.appendChild(labelLayer);
+
+      markerEl = document.createElementNS(svgNs, "circle");
+      markerEl.setAttribute("cx", "0");
+      markerEl.setAttribute("cy", "0");
+      markerEl.setAttribute("r", "0");
+      markerEl.classList.add("iuWeatherMapPickerPin");
+      svg.appendChild(markerEl);
+
+      try{ if (mapInner) mapInner.appendChild(svg); }catch{}
+
+      const ac = iuWeatherGetActiveCity();
+      const seedLat = isFinite(ac.lat) ? ac.lat : 49.75;
+      const seedLon = isFinite(ac.lon) ? ac.lon : 15.5;
+      const seed = iuPickerNearest(seedLat, seedLon, localities);
+      if (seed) setPendingFromIt(seed);
+
+      try{
+        if (mapWrap && typeof ResizeObserver !== "undefined") {
+          pickerResizeObserver = new ResizeObserver(() => {
+            try{
+              /* layout-only; SVG scales via viewBox */
+            }catch{}
+          });
+          pickerResizeObserver.observe(mapWrap);
         }
-        pending = { lat, lon: lng };
-        try{ overlay.__iuWeatherPickerLastPick = { lat, lon: lng }; }catch{}
-        const ll = window.L.latLng(lat, lng);
-        if (!marker) {
-          marker = window.L.marker(ll).addTo(map);
-        } else {
-          marker.setLatLng(ll);
-        }
-        if (btnOk) btnOk.disabled = false;
-      });
+      }catch{}
+
+      if (inpSearch) {
+        try{ inpSearch.value = ""; }catch{}
+        inpSearch.focus();
+      }
+      try{ overlay.hidden = false; }catch{}
     }
 
     if (closeBtn) closeBtn.addEventListener("click", close);
@@ -8543,35 +8930,43 @@ function buildVideoAsArticleCard(it) {
     overlay.addEventListener("click", (e) => {
       try{ if (e.target === overlay) close(); }catch{}
     });
+    if (inpSearch) inpSearch.addEventListener("input", onSearchInput);
+    if (inpSearch) {
+      inpSearch.addEventListener("blur", () => {
+        setTimeout(() => hideSuggest(), 180);
+      });
+    }
 
-    if (btnOk) btnOk.addEventListener("click", () => {
-      (async () => {
-        if (!pending || !iuWeatherIsValidGeoCoords(pending.lat, pending.lon)) return;
-        if (!confirm("Chcete uložit tuto lokalitu pro počasí?")) return;
-        try{
-          const label = await iuWeatherReverseGeocode(pending.lat, pending.lon);
-          if (!label || !String(label).trim()) {
-            alert("Nepodařilo se zjistit název lokality.");
-            return;
-          }
-          iuWeatherWriteLocationMode(IU_WEATHER_MODE_MANUAL);
-          iuWeatherWriteManualLocation({ lat: pending.lat, lon: pending.lon, label: String(label).trim() });
-          iuWeatherClearRuntimeCity();
-          iuWeatherClearOpenMeteoCache();
-          try{ window.__iuWeatherState = null; }catch{}
-          iuWeatherBumpDailyPanelWeatherToken();
-          const c = iuWeatherGetActiveCity();
-          iuWeatherSyncCityLabels(c);
-          await iuWeatherLoadAndRender();
-          close();
-        }catch{
+    if (btnOk) {
+      btnOk.addEventListener("click", () => {
+        (async () => {
+          if (!pending || !iuWeatherIsValidGeoCoords(pending.lat, pending.lon)) return;
+          if (!confirm("Chcete uložit tuto lokalitu pro počasí?")) return;
           try{
+            const label = String(pending.label || "").trim();
+            if (!label) {
+              alert("Vyberte prosím lokalitu.");
+              return;
+            }
+            iuWeatherWriteLocationMode(IU_WEATHER_MODE_MANUAL);
+            iuWeatherWriteManualLocation({ lat: pending.lat, lon: pending.lon, label });
+            iuWeatherClearRuntimeCity();
+            iuWeatherClearOpenMeteoCache();
+            try{ window.__iuWeatherState = null; }catch{}
+            iuWeatherBumpDailyPanelWeatherToken();
             const c = iuWeatherGetActiveCity();
             iuWeatherSyncCityLabels(c);
-          }catch{}
-        }
-      })();
-    });
+            close();
+            await iuWeatherLoadAndRender();
+          }catch{
+            try{
+              const c = iuWeatherGetActiveCity();
+              iuWeatherSyncCityLabels(c);
+            }catch{}
+          }
+        })();
+      });
+    }
 
     overlay.__iuWeatherMapOpen = open;
     overlay.__iuWeatherMapClose = close;
