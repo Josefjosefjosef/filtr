@@ -5346,6 +5346,21 @@ html[data-section="pocasi"] #iuWeatherView .iuWeatherNowAndAlerts{
   min-width:0;
 }
 
+#iuWeatherView[data-view-host="pocasi"] .iuHomeWeatherTopRow{
+  grid-template-columns:minmax(0,1fr) 124px;
+}
+#iuWeatherView[data-view-host="pocasi"] .iuHomeWeatherNow{
+  justify-self:stretch;
+  width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  justify-content:flex-end;
+}
+#iuWeatherView[data-view-host="pocasi"] #iuWxTemp{
+  min-width:78px;
+  box-sizing:border-box;
+}
+
 body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuHomeWeatherShell,
 html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuHomeWeatherShell{
   background: rgba(255,255,255,0.06);
@@ -5368,7 +5383,6 @@ html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuHomeWeatherDesc{
 body[data-section="pocasi"] #iuWeatherView .iuWxHours,
 html[data-section="pocasi"] #iuWeatherView .iuWxHours{
   gap: 8px;
-  min-height: 92px;
 }
 body[data-section="pocasi"] #iuWeatherView .iuWxHour,
 html[data-section="pocasi"] #iuWeatherView .iuWxHour{
@@ -5599,7 +5613,7 @@ html[data-section="pocasi"] #iuWeatherView .iuWxPremiumSub{
 body[data-section="pocasi"] #iuWeatherView #iuWxHeroNarrative,
 html[data-section="pocasi"] #iuWeatherView #iuWxHeroNarrative{
   margin-top: 10px;
-  min-height: 4.5em;
+  min-height: 26px; /* CLS guard */
   font-weight: 900;
   opacity: 0.9;
   text-align: left;
