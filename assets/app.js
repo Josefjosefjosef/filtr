@@ -7399,27 +7399,56 @@ function buildVideoAsArticleCard(it) {
     try{
       const mode = iuWeatherReadLocationMode();
       const h1 = document.getElementById("iuWeatherCityH1");
-      const my = document.getElementById("iuWeatherMyCityName");
-      const geoLine = document.getElementById("iuWeatherGeoActiveLine");
+      const myNameEl = document.getElementById("iuWeatherMyCityName");
       const geoLabel = document.getElementById("iuWeatherGeoLabel");
+      const geoBtn = document.getElementById("iuWeatherGeoBtn");
+      const cityBtn = document.getElementById("iuWeatherCityChange");
       const disp = city && city.name ? String(city.name) : "—";
+      const gpsStored = iuWeatherReadGpsSelected();
+      const manualStored = iuWeatherReadManualLocation();
+
+      if (h1) h1.textContent = disp;
+
+      let geoInfo = "—";
+      if (mode === IU_WEATHER_MODE_GPS) {
+        geoInfo = disp;
+      } else {
+        geoInfo = gpsStored && gpsStored.name ? String(gpsStored.name) : "—";
+      }
+
+      let myInfo = "—";
+      if (mode === IU_WEATHER_MODE_MANUAL) {
+        myInfo = disp;
+      } else {
+        if (manualStored && manualStored.label) myInfo = String(manualStored.label).trim();
+        else myInfo = String(IU_WEATHER_DEFAULT_CITY && IU_WEATHER_DEFAULT_CITY.name ? IU_WEATHER_DEFAULT_CITY.name : "Praha");
+      }
+
+      if (geoLabel) geoLabel.textContent = geoInfo;
+      if (myNameEl) myNameEl.textContent = myInfo;
 
       if (mode === IU_WEATHER_MODE_GPS) {
-        if (h1) h1.textContent = disp;
-        if (my) my.textContent = "—";
-        if (geoLine) {
-          geoLine.hidden = false;
-          geoLine.setAttribute("aria-hidden", "false");
+        if (geoBtn) {
+          geoBtn.textContent = "Aktuální poloha";
+          geoBtn.classList.add("iuWeatherMyCityBtn--active");
+          geoBtn.setAttribute("aria-pressed", "true");
         }
-        if (geoLabel) geoLabel.textContent = disp;
+        if (cityBtn) {
+          cityBtn.textContent = "Změnit na moje město";
+          cityBtn.classList.remove("iuWeatherMyCityBtn--active");
+          cityBtn.setAttribute("aria-pressed", "false");
+        }
       } else {
-        if (h1) h1.textContent = disp;
-        if (my) my.textContent = disp;
-        if (geoLine) {
-          geoLine.hidden = true;
-          geoLine.setAttribute("aria-hidden", "true");
+        if (geoBtn) {
+          geoBtn.textContent = "Změnit na aktuální polohu";
+          geoBtn.classList.remove("iuWeatherMyCityBtn--active");
+          geoBtn.setAttribute("aria-pressed", "false");
         }
-        if (geoLabel) geoLabel.textContent = "—";
+        if (cityBtn) {
+          cityBtn.textContent = "Moje město";
+          cityBtn.classList.add("iuWeatherMyCityBtn--active");
+          cityBtn.setAttribute("aria-pressed", "true");
+        }
       }
     }catch{}
   }
@@ -8989,14 +9018,9 @@ function buildVideoAsArticleCard(it) {
       const geoBtn = document.getElementById("iuWeatherGeoBtn");
       if (geoBtn) geoBtn.addEventListener("click", () => {
         (async () => {
-          const geoLine = document.getElementById("iuWeatherGeoActiveLine");
           const geoLabel = document.getElementById("iuWeatherGeoLabel");
           try{
             if (!navigator.geolocation) throw new Error("no geolocation");
-            if (geoLine) {
-              geoLine.hidden = false;
-              geoLine.setAttribute("aria-hidden", "false");
-            }
             if (geoLabel) geoLabel.textContent = "Zjišťuji polohu…";
 
             const pos = await new Promise((resolve, reject) => {
@@ -9025,10 +9049,6 @@ function buildVideoAsArticleCard(it) {
             iuWeatherLoadAndRender();
           }catch{
             iuWeatherClearRuntimeCity();
-            if (geoLine) {
-              geoLine.hidden = false;
-              geoLine.setAttribute("aria-hidden", "false");
-            }
             if (geoLabel) geoLabel.textContent = "Poloha nedostupná";
             try{
               const c = iuWeatherGetActiveCity();
