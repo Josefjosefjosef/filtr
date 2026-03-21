@@ -9100,46 +9100,63 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuWeatherActivateGpsViaGeolocation(){
-    (async () => {
-      const geoLabel = document.getElementById("iuWeatherGeoLabel");
-      try{
-        if (!navigator.geolocation) throw new Error("no geolocation");
-        if (geoLabel) geoLabel.textContent = "Zjišťuji polohu…";
+    const geoLabel = document.getElementById("iuWeatherGeoLabel");
+    try{
+      if (!navigator.geolocation) throw new Error("no geolocation");
+      if (geoLabel) geoLabel.textContent = "Zjišťuji polohu…";
 
-        const pos = await new Promise((resolve, reject) => {
+      // P0 mobile (iOS Safari): getCurrentPosition must run in the same synchronous
+      // user-gesture turn as the tap/click. An async IIFE defers to a microtask and
+      // drops the gesture, so the API never prompts / never returns — looks like a dead button.
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          void (async () => {
+            try{
+              const lat = Number(pos && pos.coords && pos.coords.latitude);
+              const lon = Number(pos && pos.coords && pos.coords.longitude);
+              if (!isFinite(lat) || !isFinite(lon)) throw new Error("bad coords");
+
+              if (geoLabel) geoLabel.textContent = "Hledám lokalitu…";
+              const label = await iuWeatherReverseGeocode(lat, lon);
+              const city = { name: label || "Poloha", lat, lon };
+              iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
+              iuWeatherClearRuntimeCity();
+              iuWeatherWriteGpsSelected(city);
+              iuWeatherClearOpenMeteoCache();
+              try{ window.__iuWeatherState = null; }catch{}
+              iuWeatherSyncCityLabels(city);
+              iuWeatherLoadAndRender();
+            }catch{
+              iuWeatherClearRuntimeCity();
+              if (geoLabel) geoLabel.textContent = "Poloha nedostupná";
+              try{
+                const c = iuWeatherGetActiveCity();
+                iuWeatherSyncCityLabels(c);
+              }catch{}
+              iuWeatherLoadAndRender();
+            }
+          })();
+        },
+        () => {
+          iuWeatherClearRuntimeCity();
+          if (geoLabel) geoLabel.textContent = "Poloha nedostupná";
           try{
-            navigator.geolocation.getCurrentPosition(
-              (p) => resolve(p),
-              (err) => reject(err),
-              { enableHighAccuracy: false, timeout: 12000, maximumAge: 60000 },
-            );
-          }catch(e){ reject(e); }
-        });
-
-        const lat = Number(pos && pos.coords && pos.coords.latitude);
-        const lon = Number(pos && pos.coords && pos.coords.longitude);
-        if (!isFinite(lat) || !isFinite(lon)) throw new Error("bad coords");
-
-        if (geoLabel) geoLabel.textContent = "Hledám lokalitu…";
-        const label = await iuWeatherReverseGeocode(lat, lon);
-        const city = { name: label || "Poloha", lat, lon };
-        iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
-        iuWeatherClearRuntimeCity();
-        iuWeatherWriteGpsSelected(city);
-        iuWeatherClearOpenMeteoCache();
-        try{ window.__iuWeatherState = null; }catch{}
-        iuWeatherSyncCityLabels(city);
-        iuWeatherLoadAndRender();
-      }catch{
-        iuWeatherClearRuntimeCity();
-        if (geoLabel) geoLabel.textContent = "Poloha nedostupná";
-        try{
-          const c = iuWeatherGetActiveCity();
-          iuWeatherSyncCityLabels(c);
-        }catch{}
-        iuWeatherLoadAndRender();
-      }
-    })();
+            const c = iuWeatherGetActiveCity();
+            iuWeatherSyncCityLabels(c);
+          }catch{}
+          iuWeatherLoadAndRender();
+        },
+        { enableHighAccuracy: false, timeout: 12000, maximumAge: 60000 },
+      );
+    }catch{
+      iuWeatherClearRuntimeCity();
+      if (geoLabel) geoLabel.textContent = "Poloha nedostupná";
+      try{
+        const c = iuWeatherGetActiveCity();
+        iuWeatherSyncCityLabels(c);
+      }catch{}
+      iuWeatherLoadAndRender();
+    }
   }
 
   function iuWeatherSwitchToModeManualUsingStoredIfAny(){
