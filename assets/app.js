@@ -8386,12 +8386,45 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuPickerApplyLabelSuffixCollisionGuard(items){
+    try{
+      if (!items || !items.length) return items;
+      const groups = new Map();
+      for (let i = 0; i < items.length; i++){
+        const it = items[i];
+        if (!it) continue;
+        const nm = iuPickerCzLocalityNameFromParts(it.name);
+        const regRaw = String(it.region || "").trim();
+        const reg = regRaw ? iuPickerCzRegionNameFromParts(regRaw) : "";
+        const key = iuWeatherNorm(nm) + "|" + iuWeatherNorm(reg);
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(it);
+      }
+      groups.forEach((arr) => {
+        if (!arr || arr.length <= 1) return;
+        for (let j = 0; j < arr.length; j++){
+          const it = arr[j];
+          const la = Number(it.lat);
+          const lo = Number(it.lon);
+          if (iuWeatherIsValidGeoCoords(la, lo)){
+            it.labelSuffix = la.toFixed(2) + "°, " + lo.toFixed(2) + "°";
+          }
+        }
+      });
+    }catch{}
+    return items;
+  }
+
   function iuPickerLabelFromItem(it){
     try{
       const nm = iuPickerCzLocalityNameFromParts(it.name);
       const regRaw = String(it.region || "").trim();
       const reg = regRaw ? iuPickerCzRegionNameFromParts(regRaw) : "";
-      return reg ? `${nm} (${reg})` : nm;
+      let out = reg ? `${nm} (${reg})` : nm;
+      if (it && it.labelSuffix && String(it.labelSuffix).trim()){
+        out = `${out} · ${String(it.labelSuffix).trim()}`;
+      }
+      return out;
     }catch{
       return String(it && it.name || "");
     }
@@ -8447,14 +8480,16 @@ function buildVideoAsArticleCard(it) {
       if (r.ok) {
         const d = await r.json();
         const raw = Array.isArray(d.items) ? d.items : [];
-        const items = raw.map(iuPickerParseRow).filter(Boolean);
+        const items = iuPickerApplyLabelSuffixCollisionGuard(raw.map(iuPickerParseRow).filter(Boolean));
         if (items.length) {
           try{ window.__iuPickerLocalitiesCache = items; }catch{}
           return items;
         }
       }
     }catch{}
-    const fb = IU_CITY_FALLBACK.map((row) => iuPickerParseRow([row[0], row[1], row[2], row[3], 85, "city"])).filter(Boolean);
+    const fb = iuPickerApplyLabelSuffixCollisionGuard(
+      IU_CITY_FALLBACK.map((row) => iuPickerParseRow([row[0], row[1], row[2], row[3], 85, "city"])).filter(Boolean),
+    );
     try{ window.__iuPickerLocalitiesCache = fb; }catch{}
     return fb;
   }
@@ -8599,20 +8634,27 @@ function buildVideoAsArticleCard(it) {
     const q = iuWeatherNorm(query);
     if (!q) return [];
     const lim = typeof limit === "number" && limit > 0 ? limit : 12;
+    const qTokens = q.split(/\s+/).filter((x) => String(x || "").trim().length > 0);
     const scored = [];
     for (let i = 0; i < items.length; i++){
       const it = items[i];
       const hay = iuPickerItemSearchHaystack(it);
-      if (!hay.includes(q)) continue;
+      let matched = false;
+      if (hay.includes(q)) matched = true;
+      else if (qTokens.length >= 2) matched = qTokens.every((t) => hay.includes(t));
+      if (!matched) continue;
       const nn = iuWeatherNorm(it.name);
       const czNm = iuWeatherNorm(iuPickerCzLocalityNameFromParts(it.name));
       let score = 0;
-      if (czNm.startsWith(q) || nn.startsWith(q)) score += 10;
-      else if (czNm.includes(q) || nn.includes(q)) score += 6;
-      else if (hay.includes(q)) score += 3;
+      if (nn === q || czNm === q) score += 100;
+      else if (qTokens.length >= 2 && qTokens.every((t) => nn.includes(t) || czNm.includes(t))) score += 55;
+      else if (czNm.startsWith(q) || nn.startsWith(q)) score += 24;
+      else if (czNm.includes(q) || nn.includes(q)) score += 16;
+      else if (hay.includes(q)) score += 6;
+      else score += 3;
       const rr = iuWeatherNorm(it.region || "");
-      if (rr.includes(q)) score += 2;
-      score += (Number(it.priority) || 0) / 200;
+      if (rr.includes(q)) score += 4;
+      score += (Number(it.priority) || 0) / 60;
       scored.push({ it, score });
     }
     scored.sort((a, b) => b.score - a.score || (b.it.priority || 0) - (a.it.priority || 0));
@@ -8810,7 +8852,7 @@ function buildVideoAsArticleCard(it) {
             hideSuggest();
             return;
           }
-          const hits = iuPickerSearchItems(q, localities, 22);
+          const hits = iuPickerSearchItems(q, localities, 28);
           renderSuggest(hits);
         }catch{}
       }, 120);
