@@ -992,6 +992,16 @@ try {
         }
       }
 
+      function isInsideWeatherMapPickerOverlay(node) {
+        try {
+          if (!node) return false;
+          if (!(node instanceof Element)) return false;
+          return !!node.closest("#iuWeatherMapPickerOverlay");
+        } catch (_) {
+          return false;
+        }
+      }
+
       // Debug-only: keep layout-shift attribution evidence for post-mortem.
       window.__iuCLSShiftEntries = Array.isArray(window.__iuCLSShiftEntries)
         ? window.__iuCLSShiftEntries
@@ -1100,7 +1110,9 @@ try {
             const debugOnly =
               sources.length > 0 &&
               sources.every((s) => isDebugOverlayNode(s && s.node));
-
+            const pickerOverlayOnly =
+              sources.length > 0 &&
+              sources.every((s) => isInsideWeatherMapPickerOverlay(s && s.node));
             // Debug-only evidence: store layout shift entries + attribution sources.
             try {
               const shiftEntry = {
@@ -1109,6 +1121,7 @@ try {
                 hadRecentInput: !!e.hadRecentInput,
                 startTime: typeof e.startTime === "number" ? e.startTime : null,
                 debugOnly,
+                pickerOverlayOnly,
                 sources: sources.map((s) => {
                   const prev = rectToObj1(s && s.previousRect);
                   const cur = rectToObj1(s && s.currentRect);
@@ -1149,6 +1162,7 @@ try {
               hadRecentInput: !!e.hadRecentInput,
               sourceCount: sources.length,
               debugOnly,
+              pickerOverlayOnly,
               sources: sources.map((s) => ({
                 node: nodeLabel(s && s.node),
                 previousRect: rectToObj(s && s.previousRect),
@@ -1160,7 +1174,7 @@ try {
             // Update real-only total and log occasionally when it changes.
             try {
               if (iuIsDebug) {
-                const isRealShift = !rec.hadRecentInput && !rec.debugOnly;
+                const isRealShift = !rec.hadRecentInput && !rec.debugOnly && !pickerOverlayOnly;
                 if (isRealShift) {
                   realTotal += rec.value || 0;
                   window.__iuCLSRealTotal = realTotal;
@@ -8649,6 +8663,7 @@ function buildVideoAsArticleCard(it) {
 
     let pending = null;
     let prevBodyOverflow = "";
+    let prevBodyPaddingRight = "";
     let pickerResizeObserver = null;
     let searchTimer = null;
     let localities = [];
@@ -8765,6 +8780,9 @@ function buildVideoAsArticleCard(it) {
     function close(){
       try{ overlay.hidden = true; }catch{}
       try{ document.body.style.overflow = prevBodyOverflow || ""; }catch{}
+      try{
+        document.body.style.paddingRight = prevBodyPaddingRight || "";
+      }catch{}
       teardownMap();
       if (btnOk) btnOk.disabled = true;
       try{ if (inpSearch) inpSearch.value = ""; }catch{}
@@ -8774,9 +8792,28 @@ function buildVideoAsArticleCard(it) {
 
     async function open(){
       prevBodyOverflow = document.body.style.overflow || "";
+      try{
+        prevBodyPaddingRight = document.body.style.paddingRight || "";
+      }catch{
+        prevBodyPaddingRight = "";
+      }
       document.body.style.overflow = "hidden";
-      overlay.hidden = false;
+      try{
+        const gap = window.innerWidth - document.documentElement.clientWidth;
+        if (gap > 0) document.body.style.paddingRight = gap + "px";
+      }catch{}
+      try{ overlay.hidden = true; }catch{}
       teardownMap();
+      try{
+        if (mapWrap) {
+          mapWrap.style.boxSizing = "border-box";
+          mapWrap.style.flex = "0 0 auto";
+          mapWrap.style.height = "min(52vh, 520px)";
+          mapWrap.style.minHeight = "280px";
+          mapWrap.style.maxHeight = "min(56vh, 560px)";
+        }
+        if (mapInner) mapInner.style.minHeight = "100%";
+      }catch{}
       localities = await iuLoadPickerLocalities();
       let outline = null;
       try{
@@ -8910,6 +8947,7 @@ function buildVideoAsArticleCard(it) {
         try{ inpSearch.value = ""; }catch{}
         inpSearch.focus();
       }
+      try{ overlay.hidden = false; }catch{}
     }
 
     if (closeBtn) closeBtn.addEventListener("click", close);
@@ -8943,8 +8981,8 @@ function buildVideoAsArticleCard(it) {
             iuWeatherBumpDailyPanelWeatherToken();
             const c = iuWeatherGetActiveCity();
             iuWeatherSyncCityLabels(c);
-            await iuWeatherLoadAndRender();
             close();
+            await iuWeatherLoadAndRender();
           }catch{
             try{
               const c = iuWeatherGetActiveCity();
