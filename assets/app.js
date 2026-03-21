@@ -7255,6 +7255,19 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  function iuWeatherBumpDailyPanelWeatherToken(){
+    try{ window.__iuDailyPanelWxToken = (window.__iuDailyPanelWxToken || 0) + 1; }catch{}
+  }
+
+  function iuWeatherStateMatchesActiveCity(st){
+    try{
+      if (!st || typeof st.lat !== "number" || typeof st.lon !== "number" || !isFinite(st.lat) || !isFinite(st.lon)) return false;
+      const cur = iuWeatherGetActiveCity();
+      if (!cur || typeof cur.lat !== "number" || typeof cur.lon !== "number") return false;
+      return Math.abs(st.lat - cur.lat) < 0.00002 && Math.abs(st.lon - cur.lon) < 0.00002;
+    }catch{ return false; }
+  }
+
   function iuWeatherCityKeyFromRow(c, idx){
     try{
       const nm = c && c[0] ? String(c[0]).trim() : "";
@@ -8543,11 +8556,17 @@ function buildVideoAsArticleCard(it) {
           iuWeatherClearRuntimeCity();
           iuWeatherClearOpenMeteoCache();
           try{ window.__iuWeatherState = null; }catch{}
+          iuWeatherBumpDailyPanelWeatherToken();
           const c = iuWeatherGetActiveCity();
           iuWeatherSyncCityLabels(c);
-          close();
           await iuWeatherLoadAndRender();
-        }catch{}
+          close();
+        }catch{
+          try{
+            const c = iuWeatherGetActiveCity();
+            iuWeatherSyncCityLabels(c);
+          }catch{}
+        }
       })();
     });
 
@@ -9119,6 +9138,7 @@ function buildVideoAsArticleCard(it) {
           iuWeatherClearRuntimeCity();
           iuWeatherClearOpenMeteoCache();
           try{ window.__iuWeatherState = null; }catch{}
+          iuWeatherBumpDailyPanelWeatherToken();
           const fb = iuWeatherFallbackCityFromManualOrDefault();
           iuWeatherSyncCityLabels(fb);
           iuWeatherLoadAndRender();
@@ -9130,6 +9150,7 @@ function buildVideoAsArticleCard(it) {
         iuWeatherWriteGpsSelected(city);
         iuWeatherClearOpenMeteoCache();
         try{ window.__iuWeatherState = null; }catch{}
+        iuWeatherBumpDailyPanelWeatherToken();
         iuWeatherSyncCityLabels(city);
         iuWeatherLoadAndRender();
       }catch{
@@ -9152,6 +9173,7 @@ function buildVideoAsArticleCard(it) {
       iuWeatherClearRuntimeCity();
       iuWeatherClearOpenMeteoCache();
       try{ window.__iuWeatherState = null; }catch{}
+      iuWeatherBumpDailyPanelWeatherToken();
       const c = iuWeatherGetActiveCity();
       iuWeatherSyncCityLabels(c);
       iuWeatherLoadAndRender();
@@ -9370,7 +9392,7 @@ function buildVideoAsArticleCard(it) {
     // Consume unified shared state when available (avoid duplicate Open-Meteo fetches).
     try{
       const st = window.__iuWeatherState;
-      if (st && typeof st.lat === "number" && typeof st.lon === "number" && Math.abs(st.lat - lat) < 0.00001 && Math.abs(st.lon - lon) < 0.00001 && st.current && st.hourly && st.rawDaily) {
+      if (st && typeof st.lat === "number" && typeof st.lon === "number" && Math.abs(st.lat - lat) < 0.00001 && Math.abs(st.lon - lon) < 0.00001 && st.current && st.hourly && st.rawDaily && iuWeatherStateMatchesActiveCity(st)) {
         if (elPlace) elPlace.textContent = st.city && st.city.name ? String(st.city.name) : "Praha";
         if (elTemp) elTemp.textContent = typeof st.current.temperatureC === "number" ? `${Math.round(st.current.temperatureC)}°C` : "—°C";
         if (elIcon) elIcon.textContent = st.current.icon ? String(st.current.icon) : iconFromCode(st.current.weatherCode);
@@ -9389,6 +9411,7 @@ function buildVideoAsArticleCard(it) {
         window.iuWeatherEnsureState()
           .then(st => {
             if (window.__iuDailyPanelWxToken !== wxToken) return;
+            if (!iuWeatherStateMatchesActiveCity(st)) return;
             if (!st || !st.current) throw new Error("bad state");
             if (elPlace) elPlace.textContent = st.city && st.city.name ? String(st.city.name) : "Praha";
             if (elTemp) elTemp.textContent = typeof st.current.temperatureC === "number" ? `${Math.round(st.current.temperatureC)}°C` : "—°C";
