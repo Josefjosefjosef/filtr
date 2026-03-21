@@ -7744,6 +7744,28 @@ function buildVideoAsArticleCard(it) {
     return n;
   }
 
+  const IU_WX_MAP_LAYER_KEYS = ["precip", "wind", "pressure", "temp"];
+  const IU_WEATHER_MAP_LAYER_STORAGE_KEY = "iuWeatherMapActiveLayerV1";
+  function iuWxSanitizeMapLayerKey(k){
+    try{
+      const t = k == null || k === "" ? "" : String(k).trim();
+      if (IU_WX_MAP_LAYER_KEYS.indexOf(t) !== -1) return t;
+    }catch{}
+    return "precip";
+  }
+  function iuWxReadPersistedMapLayer(){
+    try{
+      const raw = localStorage.getItem(IU_WEATHER_MAP_LAYER_STORAGE_KEY);
+      if (!raw) return null;
+      return String(raw).trim();
+    }catch{ return null; }
+  }
+  function iuWxPersistMapLayer(layerId){
+    try{
+      localStorage.setItem(IU_WEATHER_MAP_LAYER_STORAGE_KEY, iuWxSanitizeMapLayerKey(layerId));
+    }catch{}
+  }
+
   function iuWxBuildWeatherState(city, d, locationMode, keepActiveLayer){
     const cur = d && d.current ? d.current : {};
     const hourly = d && d.hourly ? d.hourly : {};
@@ -7853,10 +7875,8 @@ function buildVideoAsArticleCard(it) {
     if (hourlyHas("wind_speed_10m") || hourlyHas("wind_gusts_10m")) supportedLayers.push("wind"); else disabledLayers.push("wind");
     if (hourlyHas("pressure_msl")) supportedLayers.push("pressure"); else disabledLayers.push("pressure");
     if (hourlyHas("temperature_2m")) supportedLayers.push("temp"); else disabledLayers.push("temp");
-    if (hourlyHas("visibility")) supportedLayers.push("fog"); else disabledLayers.push("fog");
-    if (hourlyHas("uv_index") || (daily && Array.isArray(daily.uv_index_max) && daily.uv_index_max.some((x) => typeof x === "number" && isFinite(x)))) supportedLayers.push("uv"); else disabledLayers.push("uv");
 
-    let activeLayer = keepActiveLayer;
+    let activeLayer = iuWxSanitizeMapLayerKey(keepActiveLayer);
     if (!activeLayer || disabledLayers.indexOf(activeLayer) !== -1) {
       if (supportedLayers.indexOf("precip") !== -1) activeLayer = "precip";
       else if (supportedLayers.indexOf("temp") !== -1) activeLayer = "temp";
@@ -7926,15 +7946,13 @@ function buildVideoAsArticleCard(it) {
     if (!svgHost) return;
     const st = state;
     const next0 = (st && Array.isArray(st.nextHours)) ? st.nextHours[0] : null;
-    const layer = forcedLayer || (st && st.map ? st.map.activeLayer : "temp");
+    const layer = iuWxSanitizeMapLayerKey(forcedLayer || (st && st.map ? st.map.activeLayer : "temp"));
 
     const layerColor = (l) => {
       if (l === "precip") return "#38BDF8";
       if (l === "wind") return "#FB923C";
       if (l === "pressure") return "#22C55E";
       if (l === "temp") return "#F43F5E";
-      if (l === "fog") return "#A3A3A3";
-      if (l === "uv") return "#FDE047";
       return "#38BDF8";
     };
 
@@ -7950,12 +7968,6 @@ function buildVideoAsArticleCard(it) {
     } else if (layer === "temp") {
       const t = next0 && typeof next0.temperatureC === "number" ? next0.temperatureC : (st.current ? st.current.temperatureC : null);
       intensity = iuWxClamp01((typeof t === "number" && isFinite(t)) ? (t + 10) / 45 : 0);
-    } else if (layer === "fog") {
-      const v = next0 && typeof next0.visibilityKm === "number" ? next0.visibilityKm : (st.current ? st.current.visibilityKm : null);
-      intensity = iuWxClamp01((typeof v === "number" && isFinite(v)) ? (1 - (v / 10)) : 0);
-    } else if (layer === "uv") {
-      const u = next0 && typeof next0.uvIndex === "number" ? next0.uvIndex : (st.current ? st.current.uvIndex : null);
-      intensity = iuWxClamp01((typeof u === "number" && isFinite(u)) ? (u / 11) : 0);
     }
 
     const alpha = 0.08 + intensity * 0.55;
@@ -8050,36 +8062,6 @@ function buildVideoAsArticleCard(it) {
         const op = 0.03 + cl * 0.20 + intensity * 0.18;
         overlayParts.push(`<circle cx="50" cy="50" r="${r.toFixed(1)}" fill="${tempColor}" opacity="${op.toFixed(3)}" />`);
       }
-    } else if (layer === "fog") {
-      const v = typeof next0?.visibilityKm === "number" ? next0.visibilityKm : (st.current ? st.current.visibilityKm : null);
-      const vn = Number(v);
-      const foggy = isFinite(vn) ? (1 - (vn / 10)) : intensity;
-      const op = 0.05 + iuWxClamp01(foggy) * 0.45;
-      overlayParts.push(`<rect x="10" y="18" width="80" height="64" rx="10" fill="${color}" opacity="${op.toFixed(3)}" />`);
-      const puffs = 10;
-      for (let i = 0; i < puffs; i++){
-        const rx = iuWxDetRand(seedBase, i + 71);
-        const ry = iuWxDetRand(seedBase, i + 91);
-        const x = 15 + rx * 70;
-        const y = 22 + ry * 56;
-        const r = 4 + iuWxDetRand(seedBase, i + 111) * (10 + intensity * 10);
-        overlayParts.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${color}" opacity="${(op * (0.35 + intensity * 0.3)).toFixed(3)}" />`);
-      }
-    } else if (layer === "uv") {
-      const u = typeof next0?.uvIndex === "number" ? next0.uvIndex : (st.current ? st.current.uvIndex : null);
-      const un = Number(u);
-      const uNorm = isFinite(un) ? (un / 11) : intensity;
-      const rays = 12;
-      for (let i = 0; i < rays; i++){
-        const ang = (i / rays) * Math.PI * 2 + (seedBase % 1) * 0.3;
-        const x1 = 50 + Math.cos(ang) * (18 + intensity * 10);
-        const y1 = 50 + Math.sin(ang) * (18 + intensity * 10);
-        const x2 = 50 + Math.cos(ang) * (34 + intensity * 18);
-        const y2 = 50 + Math.sin(ang) * (34 + intensity * 18);
-        const op = 0.05 + iuWxClamp01(uNorm) * 0.45 + iuWxDetRand(seedBase, i + 151) * 0.10;
-        overlayParts.push(`<path d="M ${x1.toFixed(1)} ${y1.toFixed(1)} L ${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="${color}" stroke-width="${(0.8 + intensity * 1.2).toFixed(2)}" opacity="${op.toFixed(3)}" />`);
-      }
-      overlayParts.push(`<circle cx="50" cy="50" r="${(6 + intensity * 10).toFixed(1)}" fill="${color}" opacity="${(0.10 + intensity * 0.45).toFixed(3)}" />`);
     } else {
       const ringCount = 4;
       for (let i = 0; i < ringCount; i++){
@@ -8099,8 +8081,6 @@ function buildVideoAsArticleCard(it) {
       }
       if (layer === "pressure" && typeof next0.pressureHpa === "number") return `Tlak: ${Math.round(next0.pressureHpa)} hPa`;
       if (layer === "temp" && typeof next0.temperatureC === "number") return `Teplota: ${Math.round(next0.temperatureC)}°C`;
-      if (layer === "fog" && typeof next0.visibilityKm === "number") return `Mlha: ${Math.round(next0.visibilityKm * 10) / 10} km`;
-      if (layer === "uv" && typeof next0.uvIndex === "number") return `UV: ${Math.round(next0.uvIndex * 10) / 10}`;
       return "—";
     })();
 
@@ -8191,7 +8171,7 @@ function buildVideoAsArticleCard(it) {
       try{
         const root = document.getElementById("iuWxMapContainer");
         if (!root) throw new Error("missing map container");
-        const layer = String(layerId || "precip");
+        const layer = iuWxSanitizeMapLayerKey(String(layerId || "precip"));
         iuWeatherResetMapView(root);
         iuWxRenderMap(root, state, layer);
         if (!root.querySelector("svg")) throw new Error("layer render failed");
@@ -8219,7 +8199,7 @@ function buildVideoAsArticleCard(it) {
     const root = document.getElementById("iuWxMapContainer");
     if (!root) { iuWeatherShowMapFail(); return; }
 
-    const layer = String(layerId || st.map.activeLayer || "precip");
+    const layer = iuWxSanitizeMapLayerKey(String(layerId || st.map.activeLayer || "precip"));
     st.map.activeLayer = layer;
     window.__iuWeatherMapMounted = false;
     iuWeatherResetMapView(root);
@@ -8250,9 +8230,11 @@ function buildVideoAsArticleCard(it) {
     try{
       const st = window.__iuWeatherState;
       if (!st || !st.map) return;
-      if (st.map.disabledLayers && st.map.disabledLayers.indexOf(layerId) !== -1) return;
-      st.map.activeLayer = layerId;
-      iuWeatherRenderMapLayer(layerId, st);
+      const id = iuWxSanitizeMapLayerKey(layerId);
+      if (st.map.disabledLayers && st.map.disabledLayers.indexOf(id) !== -1) return;
+      st.map.activeLayer = id;
+      iuWxPersistMapLayer(id);
+      iuWeatherRenderMapLayer(id, st);
     }catch{}
   }
 
@@ -8350,10 +8332,14 @@ function buildVideoAsArticleCard(it) {
       }catch{}
 
       const d = await iuFetchOpenMeteo(city.lat, city.lon);
-      const keepActiveLayer =
-        window.__iuWeatherState && window.__iuWeatherState.map && typeof window.__iuWeatherState.map.activeLayer === "string"
-          ? window.__iuWeatherState.map.activeLayer
-          : null;
+      const keepActiveLayer = (function(){
+        try{
+          if (window.__iuWeatherState && window.__iuWeatherState.map && typeof window.__iuWeatherState.map.activeLayer === "string"){
+            return iuWxSanitizeMapLayerKey(window.__iuWeatherState.map.activeLayer);
+          }
+        }catch{}
+        return iuWxSanitizeMapLayerKey(iuWxReadPersistedMapLayer());
+      })();
       const state = iuWxBuildWeatherState(city, d, locationMode, keepActiveLayer);
       if (!state.map || typeof state.map !== "object") state.map = { activeLayer: "precip", supportedLayers: [], disabledLayers: [] };
       if (!state.map.activeLayer) state.map.activeLayer = "precip";
@@ -8363,6 +8349,7 @@ function buildVideoAsArticleCard(it) {
         const nowKey = activeKeyNow();
         if (nowKey === key) {
           window.__iuWeatherState = state;
+          iuWxPersistMapLayer(state.map.activeLayer);
           iuWeatherApplySharedStateMeta(state);
         }
       }catch{
@@ -8713,12 +8700,17 @@ function buildVideoAsArticleCard(it) {
             const daily = d && d.daily;
             if (!cur || typeof cur.temperature_2m !== "number") throw new Error("bad current");
             const existingState = window.__iuWeatherState;
-            const keepActiveLayer =
-              existingState && existingState.map && typeof existingState.map.activeLayer === "string"
-                ? existingState.map.activeLayer
-                : null;
+            const keepActiveLayer = (function(){
+              try{
+                if (existingState && existingState.map && typeof existingState.map.activeLayer === "string"){
+                  return iuWxSanitizeMapLayerKey(existingState.map.activeLayer);
+                }
+              }catch{}
+              return iuWxSanitizeMapLayerKey(iuWxReadPersistedMapLayer());
+            })();
             const state = iuWxBuildWeatherState(city, d, locationMode, keepActiveLayer);
             window.__iuWeatherState = state;
+            iuWxPersistMapLayer(state.map.activeLayer);
             return state;
           })());
 
@@ -8726,6 +8718,7 @@ function buildVideoAsArticleCard(it) {
       iuWxApplyMobileLayoutFix();
       if (!state.map || typeof state.map !== "object") state.map = { activeLayer: "precip", supportedLayers: [], disabledLayers: [] };
       if (!state.map.activeLayer) state.map.activeLayer = "precip";
+      iuWxPersistMapLayer(state.map.activeLayer);
 
       if (elTemp) elTemp.textContent = state && state.current && typeof state.current.temperatureC === "number" ? `${Math.round(state.current.temperatureC)}°C` : "—°C";
       if (elIcon) elIcon.textContent = state && state.current && state.current.icon ? state.current.icon : "🌤";
