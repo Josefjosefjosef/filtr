@@ -8306,12 +8306,13 @@ function buildVideoAsArticleCard(it) {
     return new Promise((resolve, reject) => {
       try{
         if (typeof window.L !== "undefined" && window.L && typeof window.L.map === "function") return resolve();
+        const base = "/assets/vendor/leaflet-1.9.4/";
         const link = document.createElement("link");
         link.rel = "stylesheet";
-        link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+        link.href = base + "leaflet.css";
         document.head.appendChild(link);
         const s = document.createElement("script");
-        s.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+        s.src = base + "leaflet.js";
         s.onload = () => resolve();
         s.onerror = () => reject(new Error("leaflet"));
         document.head.appendChild(s);
@@ -8377,7 +8378,13 @@ function buildVideoAsArticleCard(it) {
       prevBodyOverflow = document.body.style.overflow || "";
       document.body.style.overflow = "hidden";
       overlay.hidden = false;
-      await iuWeatherLoadLeaflet();
+      try{
+        await iuWeatherLoadLeaflet();
+      }catch{
+        try{ alert("Mapu se nepodařilo načíst. Zkuste to znovu."); }catch{}
+        close();
+        return;
+      }
       const ac = iuWeatherGetActiveCity();
       const center = [isFinite(ac.lat) ? ac.lat : 49.75, isFinite(ac.lon) ? ac.lon : 15.5];
       teardownMap();
