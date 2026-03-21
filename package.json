@@ -8,6 +8,7 @@
     "vin-api": "node server/vin-decode-http.mjs",
     "serve-projects-vin": "node server/projects-static-and-vin.mjs",
     "vin-hard-proof": "node scripts/vin-hard-proof.mjs",
+    "build:cz-localities-picker": "node scripts/build-cz-localities-picker.mjs",
     "deploy:vin-worker": "npx wrangler deploy --config cloudflare/vin-worker/wrangler.toml"
   },
   "devDependencies": {
