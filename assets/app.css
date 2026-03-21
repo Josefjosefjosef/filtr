@@ -5322,36 +5322,28 @@ html[data-section="pocasi"] #iuWeatherView .iuDailyWeather{
   min-height: 210px; /* CLS guard */
 }
 
-/* Právě teď (Počasí): home rail uses fixed-height .iuHomeWeather — here the card must grow so Výstrahy never overlap */
+/* pocasi: full-page .iuHomeWeather must grow (home rail uses fixed 160px) */
 body[data-section="pocasi"] #iuWeatherView .iuWeatherNow.iuHomeWeather,
 html[data-section="pocasi"] #iuWeatherView .iuWeatherNow.iuHomeWeather{
-  height: auto;
-  min-height: 0;
-  flex: 0 0 auto;
-  align-self: stretch;
-  width: 100%;
+  height:auto;
+  min-height:0;
+  flex:0 0 auto;
+  align-self:stretch;
+  width:100%;
 }
 body[data-section="pocasi"] #iuWeatherView .iuWeatherNow .iuHomeWeatherShell,
 html[data-section="pocasi"] #iuWeatherView .iuWeatherNow .iuHomeWeatherShell{
-  height: auto;
-  min-height: 0;
-  overflow: visible;
+  height:auto;
+  min-height:0;
+  overflow:visible;
 }
 body[data-section="pocasi"] #iuWeatherView .iuWeatherNowAndAlerts,
 html[data-section="pocasi"] #iuWeatherView .iuWeatherNowAndAlerts{
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  width: 100%;
-  min-width: 0;
-}
-body[data-section="pocasi"] #iuWeatherView .iuWeatherCurrentBlock,
-html[data-section="pocasi"] #iuWeatherView .iuWeatherCurrentBlock,
-body[data-section="pocasi"] #iuWeatherView .iuWeatherWarningsBlock,
-html[data-section="pocasi"] #iuWeatherView .iuWeatherWarningsBlock{
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  width:100%;
+  min-width:0;
 }
 
 body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuHomeWeatherShell,
