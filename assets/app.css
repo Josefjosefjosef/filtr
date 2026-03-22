@@ -9685,9 +9685,14 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   }
   #iuMobileFocus,
   #iuMobileFirstBlock,
-  .iu-mobileStack,
-  #leftContent{
+  .iu-mobileStack{
     display: none !important;
+  }
+  /* P0: #leftContent jen <768px skrýt — jinak pozdější display:none přebije tablet 768–900px a feed se „dopíchne“ s obřím CLS. */
+  @media (max-width: 767px){
+    #leftContent{
+      display: none !important;
+    }
   }
   /* P0: when nav card opened target content, show main area and hide gate */
   body.iu-mobileMainVisible #leftContent{
@@ -10184,26 +10189,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px 12px;
-  }
-  /* Default mobile: P0 gate layout — hide leftContent (only topbar + Silver + tabs + gate panel when open) */
-  #leftContent{
-    display: none !important;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    box-sizing: border-box;
-    overflow-x: hidden;
-  }
-  /* P0 Tablet (768px–900px): show feed column — 769px zde nestačí: při přesně 768px by zůstalo display:none z řádku výše → obří CLS při pozdním zobrazení feedu. */
-  @media (min-width: 768px) {
-    #leftContent{
-      display: block !important;
-      width: 100%;
-      min-width: 0;
-      max-width: 100%;
-      box-sizing: border-box;
-      overflow-x: hidden;
-    }
   }
   /* Quick-feed engine: when Evidence nákupů (or other quick panel) is open, show center column so #iuCenterStage/#iuQuickFeed/.iuModalCard get real geometry */
   #leftContent:has(#iuCenterStage[data-iu-view="quick"]){
