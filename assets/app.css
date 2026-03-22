@@ -10194,8 +10194,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     box-sizing: border-box;
     overflow-x: hidden;
   }
-  /* P0 Tablet (769px–900px): show feed column so #feed has non-zero rect at 820×1180 */
-  @media (min-width: 769px) {
+  /* P0 Tablet (768px–900px): show feed column — 769px zde nestačí: při přesně 768px by zůstalo display:none z řádku výše → obří CLS při pozdním zobrazení feedu. */
+  @media (min-width: 768px) {
     #leftContent{
       display: block !important;
       width: 100%;
