@@ -8153,6 +8153,11 @@ html[data-iu-debug="1"] #iuDiagPanel {
     min-height: clamp(50rem, 68vh, 58rem) !important;
     box-sizing: border-box;
   }
+  /* P0 CLS: #feed > * uses margin:10px 0 — first card’s margin-top created a 10px vertical jump vs empty pre-render feed box (LS on #feed). */
+  html[data-section="media"] #iuCenterStage[data-iu-view="articles"] #feed > .news-card:first-child,
+  html[data-section="media"] #iuCenterStage[data-iu-view="articles"] #feed > article:first-child {
+    margin-top: 0 !important;
+  }
 }
 
 .feedGrid,
@@ -11493,6 +11498,17 @@ main#content .layout:has(#leftStickyHeader){
     column-gap: 20px;
     row-gap: 14px;
     align-items: start;
+  }
+  /* P0 CLS (desktop feed): first layout pass reported min-content width ~746px on .iuArticlesStage then grid clamped to column (~664px); overflow-x clips the transient wider border box so Layout Instability does not count the horizontal jump. */
+  html[data-section="media"] #newsList > #iuCenterStage[data-iu-view="articles"]{
+    overflow-x: hidden;
+    max-width: 100%;
+    min-width: 0;
+  }
+  html[data-section="media"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage{
+    overflow-x: hidden;
+    max-width: 100%;
+    min-width: 0;
   }
 }
 
