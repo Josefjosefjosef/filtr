@@ -135,12 +135,16 @@ style-src 'self' 'unsafe-inline' https:;
                           <div class="iuSilverWelcomeMeta" id="iuSilverWelcomeMeta" data-iu-silver-meta></div>
                         </div>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparator" aria-hidden="true"></div>
-                        <div class="silver-weather-card" id="iuSilverWeatherCard" data-iu-silver-weather-card>
-                          <div class="silver-weather-line1" id="iuSilverWeatherLine1" data-iu-silver-weather-line="1" data-iu-silver-weather-slot="summary">
-                            <span data-iu-silver-weather-hook="temp">Venku je 8 °C</span><span class="silver-weather-line__sep" aria-hidden="true"> | </span><span data-iu-silver-weather-hook="feels">Pocitově 6 °C</span><span class="silver-weather-line__sep" aria-hidden="true"> | </span><span data-iu-silver-weather-hook="status">🌧️ Déšť za ~2 h</span>
+                        <div class="silver-weather-card" id="iuSilverWeatherCard" data-iu-silver-weather-card data-iu-silver-wx-phase="loading">
+                          <div class="silver-weather-line1" id="iuSilverWeatherLine1" data-iu-silver-weather-line="1" data-iu-silver-weather-slot="summary"></div>
+                          <div class="silver-weather-line2" id="iuSilverWeatherLine2" data-iu-silver-weather-line="2" data-iu-silver-weather-slot="tip"></div>
+                          <p class="silver-weather-privacy" id="iuSilverWeatherPrivacy" hidden data-iu-silver-weather-privacy>🔒 Polohu neukládáme.</p>
+                          <div class="silver-weather-actions" id="iuSilverWeatherActions" hidden data-iu-silver-weather-actions="first">
+                            <button type="button" class="silver-weather-btn" id="iuSilverWeatherBtnGeo" data-iu-silver-wx-action="geo">Použít moji polohu</button>
+                            <button type="button" class="silver-weather-btn silver-weather-btn--ghost" id="iuSilverWeatherBtnCity" data-iu-silver-wx-action="city">Vybrat město</button>
                           </div>
-                          <div class="silver-weather-line2" id="iuSilverWeatherLine2" data-iu-silver-weather-line="2" data-iu-silver-weather-slot="tip">
-                            <span data-iu-silver-weather-hook="tip">💡☂️ Pokud půjdeš ven, vezmi si deštník.</span>
+                          <div class="silver-weather-actions silver-weather-actions--single" id="iuSilverWeatherActionsDenied" hidden data-iu-silver-weather-actions="denied">
+                            <button type="button" class="silver-weather-btn" id="iuSilverWeatherBtnCityDenied" data-iu-silver-wx-action="city-denied">Nastavit moje město</button>
                           </div>
                         </div>
                       </div>
