@@ -5420,6 +5420,7 @@ html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertText{
 body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertsBox > .iuWeatherAlertText:first-child,
 html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertsBox > .iuWeatherAlertText:first-child{
   margin-top: 0;
+  text-align: center; /* align sentence to same axis as full-width CTA label below */
 }
 
 body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertTitle,
