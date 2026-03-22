@@ -78,20 +78,58 @@ try {
   try { document.documentElement.setAttribute("data-iu-buildstamp", document.querySelector('meta[name="iu-build"]')?.content || "no-meta"); } catch {}
   const $ = (sel) => document.querySelector(sel);
 
+  /** P0: banner když je nový SW nainstalovaný, ale starý ještě řídí stránku (PWA update UX) */
+  function iuShowSwUpdateBanner() {
+    try {
+      if (document.getElementById("iu-update-banner")) return;
+      var el = document.createElement("div");
+      el.id = "iu-update-banner";
+      el.setAttribute("role", "status");
+      el.style.cssText =
+        "position:fixed;bottom:0;left:0;right:0;z-index:2147483646;padding:12px 16px;background:#0B1F33;color:#fff;font:14px/1.4 system-ui,-apple-system,sans-serif;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;box-shadow:0 -4px 24px rgba(0,0,0,.2);box-sizing:border-box;";
+      el.innerHTML =
+        '<span>Nová verze je připravena.</span><button type="button" id="iu-update-btn" style="padding:8px 14px;border-radius:8px;border:0;background:#fff;color:#0B1F33;font:inherit;font-weight:600;cursor:pointer;">Aktualizovat</button>';
+      document.body.appendChild(el);
+      var btn = document.getElementById("iu-update-btn");
+      if (btn) {
+        btn.addEventListener("click", function () {
+          location.reload();
+        });
+      }
+    } catch (e) {}
+  }
+
   function iuEnsureServiceWorkerController() {
     try {
       var p = (typeof location !== "undefined" && location && location.pathname) ? String(location.pathname) : "";
       if (p !== "/projects/" && p !== "/projects" && p.indexOf("/projects/") !== 0) return;
       if (!("serviceWorker" in navigator)) return;
-      if (sessionStorage.getItem("iu_sw_reload_done")) return;
-      navigator.serviceWorker.register("/sw.js", { scope: "/" })
-        .then(function() { return navigator.serviceWorker.ready; })
-        .then(function() {
+      navigator.serviceWorker
+        .register("/sw.js", { scope: "/" })
+        .then(function (reg) {
+          try {
+            reg.addEventListener("updatefound", function () {
+              var nw = reg.installing;
+              if (!nw) return;
+              nw.addEventListener("statechange", function () {
+                if (nw.state === "installed" && navigator.serviceWorker.controller) {
+                  iuShowSwUpdateBanner();
+                }
+              });
+            });
+            if (reg.waiting && navigator.serviceWorker.controller) {
+              iuShowSwUpdateBanner();
+            }
+            reg.update();
+          } catch (e) {}
+          return navigator.serviceWorker.ready;
+        })
+        .then(function () {
           if (navigator.serviceWorker.controller) return;
           sessionStorage.setItem("iu_sw_reload_done", "1");
           location.reload();
         })
-        .catch(function() {});
+        .catch(function () {});
     } catch (e) {}
   }
   if (document.readyState === "loading") {
