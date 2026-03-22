@@ -4721,6 +4721,20 @@ function buildVideoAsArticleCard(it) {
     }
     let silverNamedayResolvedLine = "";
     let silverNamedayDateKey = "";
+    /** Plný suffix jmen ze stejného JSON fetch jako iuSetTopbarNameday (ne DOM), aby welcome meta nikdy nezůstala na ořezu z topbaru. */
+    function readNamedaySuffixFromFetchAuthoritative(){
+      try{
+        const g =
+          typeof window.__iuNamedaySuffixFromSource === "string"
+            ? String(window.__iuNamedaySuffixFromSource || "").trim()
+            : "";
+        if (g && g !== "—" && g !== "-"){
+          silverNamedayResolvedLine = "svátek má " + g;
+          return silverNamedayResolvedLine;
+        }
+      }catch{}
+      return "";
+    }
     function parseNamedayNamesFromRaw(raw){
       if (!raw || raw === "—") return "";
       const t = String(raw).trim();
@@ -4742,6 +4756,8 @@ function buildVideoAsArticleCard(it) {
       return rest;
     }
     function readNamedaySuffixForMeta(){
+      const fromFetch = readNamedaySuffixFromFetchAuthoritative();
+      if (fromFetch) return fromFetch;
       const src = document.getElementById("iuDailyNameday");
       const top = document.getElementById("iuTopbarNameday");
       let raw = (src && String(src.textContent || "").trim()) || "";
@@ -4848,6 +4864,7 @@ function buildVideoAsArticleCard(it) {
           String(refDate.getDate());
         if (silverNamedayDateKey && dk !== silverNamedayDateKey) {
           silverNamedayResolvedLine = "";
+          try{ window.__iuNamedaySuffixFromSource = ""; }catch{}
         }
         silverNamedayDateKey = dk;
         const nd = readNamedaySuffixForMeta();
@@ -10280,6 +10297,7 @@ function buildVideoAsArticleCard(it) {
       var _ndOrigin = typeof location !== "undefined" && location.origin ? location.origin : "";
       var _ndUrl = _ndOrigin ? _ndOrigin + "/projects/data/namedays.json" : "";
       if (!_ndUrl) {
+        try{ window.__iuNamedaySuffixFromSource = ""; }catch{}
         if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
         try{ iuSetTopbarNameday(""); }catch{}
         return;
@@ -10298,6 +10316,7 @@ function buildVideoAsArticleCard(it) {
             }
           } catch (_) {}
           var ok = Boolean(nm) && nm !== "—" && nm !== "-";
+          try{ window.__iuNamedaySuffixFromSource = ok ? nm : ""; }catch{}
           if (ok) {
             if (elNameday) { elNameday.textContent = "Svátek má " + nm; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
             try{ iuSetTopbarNameday(nm); }catch{}
@@ -10305,9 +10324,11 @@ function buildVideoAsArticleCard(it) {
             if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
             try{ iuSetTopbarNameday(""); }catch{}
           }
+          try{ if (typeof window.iuSilverWelcomeRefresh === "function") window.iuSilverWelcomeRefresh(); }catch{}
           try{ iuWeatherHideEmptyNameday(); }catch{}
         })
         .catch(function(){
+          try{ window.__iuNamedaySuffixFromSource = ""; }catch{}
           if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
           try{ if (typeof iuSetTopbarNameday === "function") iuSetTopbarNameday(""); }catch{}
           try{ iuWeatherHideEmptyNameday(); }catch{}
