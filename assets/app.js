@@ -8317,9 +8317,6 @@ function buildVideoAsArticleCard(it) {
   const IU_PICKER_VB_H = 450;
   const IU_PICKER_BOUNDS_FALLBACK = { minLon: 12.0, maxLon: 19.0, minLat: 48.55, maxLat: 51.1 };
 
-  /** Noise rows in GeoNames (district parts) — never use as map labels. */
-  const IU_PICKER_MESSY_CITY_SUBSTR = /\b(střed|Stodůlky|Žižkov|Chodov)\b/i;
-
   /** GeoNames English admin1 labels → Czech (safe fixed map; no heuristics). */
   const IU_PICKER_EN_REGION_TO_CZ = {
     Prague: "Praha",
@@ -8371,18 +8368,6 @@ function buildVideoAsArticleCard(it) {
       return parts.join(" ");
     }catch{
       return iuWeatherNorm(it && it.name);
-    }
-  }
-
-  function iuPickerIsMapLabelRow(it){
-    try{
-      if (!it) return false;
-      if (IU_PICKER_MESSY_CITY_SUBSTR.test(String(it.name || ""))) return false;
-      if (it.type === "city") return true;
-      if (it.type === "town" && Number(it.priority) >= 60) return true;
-      return false;
-    }catch{
-      return false;
     }
   }
 
@@ -8469,6 +8454,35 @@ function buildVideoAsArticleCard(it) {
       }
     }catch{}
     return null;
+  }
+
+  async function iuLoadMapDisplayCities(){
+    try{
+      if (window.__iuMapDisplayCitiesCache) return window.__iuMapDisplayCitiesCache;
+    }catch{}
+    try{
+      const r = await fetch(iuDataUrl("cz_map_display_cities.json"), { cache: "force-cache" });
+      if (r.ok){
+        const d = await r.json();
+        const raw = Array.isArray(d.items) ? d.items : [];
+        const out = [];
+        for (let i = 0; i < raw.length; i++){
+          const row = raw[i];
+          const it = iuPickerParseRow({
+            n: row.n,
+            r: "",
+            lat: row.lat,
+            lon: row.lon,
+            p: row.p != null ? row.p : 80,
+            t: "city",
+          });
+          if (it) out.push(it);
+        }
+        try{ window.__iuMapDisplayCitiesCache = out; }catch{}
+        return out;
+      }
+    }catch{}
+    return [];
   }
 
   async function iuLoadPickerLocalities(){
@@ -8746,7 +8760,7 @@ function buildVideoAsArticleCard(it) {
           <div class="iuWeatherMapPickerMapInner"></div>
         </div>
         <div id="iuWeatherMapPickerSelected" class="iuWeatherMapPickerSelected" aria-live="polite"></div>
-        <div class="iuWeatherMapPickerAttr" aria-hidden="true">Obrys: Natural Earth (public domain). Lokality: GeoNames (CC BY 4.0).</div>
+        <div class="iuWeatherMapPickerAttr" aria-hidden="true">Obrys: Natural Earth (public domain). Kraje: Eurostat GISCO (EUPL-1.2). Lokality (vyhledávání): GeoNames (CC BY 4.0). Mapa měst: veřejná administrativní sídla + GeoNames.</div>
         <div class="iuWeatherMapPickerBar">
           <button type="button" class="iuBtn iuBtn--ghost" id="iuWeatherMapPickerConfirm" disabled>Uložit výběr</button>
           <button type="button" class="iuBtn iuBtn--ghost" id="iuWeatherMapPickerCancel">Zrušit</button>
@@ -8901,6 +8915,7 @@ function buildVideoAsArticleCard(it) {
       try{ overlay.hidden = true; }catch{}
       teardownMap();
       localities = await iuLoadPickerLocalities();
+      const mapDisplayCities = await iuLoadMapDisplayCities();
       let outline = null;
       try{
         const rr = await fetch(iuDataUrl("cz_outline_ne50.geojson"), { cache: "force-cache" });
@@ -8964,6 +8979,59 @@ function buildVideoAsArticleCard(it) {
         }
       }catch{}
 
+      try{
+        let krajeFc = null;
+        try{
+          const rk = await fetch(iuDataUrl("cz_kraje_nuts3_20m.geojson"), { cache: "force-cache" });
+          if (rk.ok) krajeFc = await rk.json();
+        }catch{}
+        if (krajeFc && krajeFc.features && krajeFc.features.length){
+          const krajRoot = document.createElementNS(svgNs, "g");
+          krajRoot.classList.add("iuWeatherMapPickerKrajLayer");
+          try{ krajRoot.setAttribute("pointer-events", "none"); }catch{}
+          for (let fi = 0; fi < krajeFc.features.length; fi++){
+            const geom = krajeFc.features[fi] && krajeFc.features[fi].geometry;
+            if (!geom) continue;
+            const paths = iuPickerOutlinePaths(geom, bounds, IU_PICKER_VB_W, IU_PICKER_VB_H);
+            for (let p = 0; p < paths.length; p++){
+              const path = document.createElementNS(svgNs, "path");
+              path.setAttribute("d", paths[p]);
+              path.setAttribute("fill", "none");
+              path.setAttribute("stroke", "rgba(255,255,255,0.2)");
+              path.setAttribute("stroke-width", "1.1");
+              path.classList.add("iuWeatherMapPickerKraj");
+              krajRoot.appendChild(path);
+            }
+          }
+          svg.appendChild(krajRoot);
+        }
+      }catch{}
+
+      const labelLayer = document.createElementNS(svgNs, "g");
+      labelLayer.classList.add("iuWeatherMapPickerLabelLayer");
+      try{ labelLayer.setAttribute("pointer-events", "none"); }catch{}
+      const mapLabelItems = mapDisplayCities && mapDisplayCities.length ? mapDisplayCities : [];
+      const labelRows = iuPickerPickLabelsForRender(mapLabelItems, bounds, IU_PICKER_VB_W, IU_PICKER_VB_H);
+      for (let i = 0; i < labelRows.length; i++){
+        const row = labelRows[i];
+        const dot = document.createElementNS(svgNs, "circle");
+        dot.setAttribute("cx", String(row.x));
+        dot.setAttribute("cy", String(row.y));
+        dot.setAttribute("r", "2.6");
+        dot.classList.add("iuWeatherMapPickerCityDot");
+        labelLayer.appendChild(dot);
+        const t = document.createElementNS(svgNs, "text");
+        t.setAttribute("x", String(row.x));
+        t.setAttribute("y", String(row.y + 11));
+        t.setAttribute("text-anchor", "middle");
+        t.classList.add("iuWeatherMapPickerLbl");
+        const raw = String(iuPickerCzLocalityNameFromParts(row.it.name || ""));
+        const shown = raw.length > 18 ? raw.slice(0, 17) + "…" : raw;
+        t.textContent = shown;
+        labelLayer.appendChild(t);
+      }
+      svg.appendChild(labelLayer);
+
       const hit = document.createElementNS(svgNs, "rect");
       hit.setAttribute("x", "0");
       hit.setAttribute("y", "0");
@@ -8981,31 +9049,6 @@ function buildVideoAsArticleCard(it) {
         }catch{}
       });
       svg.appendChild(hit);
-
-      const labelLayer = document.createElementNS(svgNs, "g");
-      labelLayer.classList.add("iuWeatherMapPickerLabelLayer");
-      const mapLabelItems = [];
-      for (let mi = 0; mi < localities.length; mi++){
-        if (iuPickerIsMapLabelRow(localities[mi])) mapLabelItems.push(localities[mi]);
-      }
-      const labelRows = iuPickerPickLabelsForRender(mapLabelItems, bounds, IU_PICKER_VB_W, IU_PICKER_VB_H);
-      for (let i = 0; i < labelRows.length; i++){
-        const row = labelRows[i];
-        const t = document.createElementNS(svgNs, "text");
-        t.setAttribute("x", String(row.x));
-        t.setAttribute("y", String(row.y));
-        t.setAttribute("text-anchor", "middle");
-        t.classList.add("iuWeatherMapPickerLbl");
-        const raw = String(iuPickerCzLocalityNameFromParts(row.it.name || ""));
-        const shown = raw.length > 18 ? raw.slice(0, 17) + "…" : raw;
-        t.textContent = shown;
-        t.addEventListener("click", (ev) => {
-          try{ ev.stopPropagation(); }catch{}
-          setPendingFromIt(row.it);
-        });
-        labelLayer.appendChild(t);
-      }
-      svg.appendChild(labelLayer);
 
       markerEl = document.createElementNS(svgNs, "circle");
       markerEl.setAttribute("cx", "0");

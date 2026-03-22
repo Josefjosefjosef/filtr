@@ -98,7 +98,7 @@ async function main() {
     const code = f[7];
     const pr = priorityFromPop(pop, code);
     const t = featureType(code, pop);
-    rows.push({ n: name, r: region, lat, lon, p: pr, t, pop });
+    rows.push({ n: name, r: region, lat, lon, p: pr, t, pop, code });
   }
 
   rows.sort((a, b) => b.pop - a.pop || a.n.localeCompare(b.n));
@@ -110,6 +110,7 @@ async function main() {
     lon: x.lon,
     p: x.p,
     t: x.t,
+    fc: x.code,
   }));
 
   for (const it of items) {
