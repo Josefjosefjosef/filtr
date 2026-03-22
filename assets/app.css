@@ -4965,9 +4965,9 @@ body[data-section="home"] .iuHomeCanvas{
   color: var(--iuContentAccent, var(--iuSectionAccent, currentColor));
 }
 
-/* Weather: title text matches .iuHomeWeatherShell border (same color-mix as card border) */
+/* Weather: title text — exact computed border color (DevTools sRGB, matches .iuHomeWeatherShell) */
 #newsList #iuWeatherView .iuSectionHeader--weather h1{
-  color: color-mix(in srgb, var(--iuNavAccent-pocasi, #38BDF8) 35%, rgba(255,255,255,0.12));
+  color: color(srgb 0.165804 0.558902 0.741961);
 }
 
 /* Buttons in content */
