@@ -4698,6 +4698,8 @@ function buildVideoAsArticleCard(it) {
 
     const TZ = "Europe/Prague";
     const headlineEl = document.getElementById("iuSilverWelcomeHeadline");
+    const greetEl = document.getElementById("iuSilverWelcomeGreet");
+    const userEl = document.getElementById("iuSilverWelcomeUser");
     const metaEl = document.getElementById("iuSilverWelcomeMeta");
     const cardEl = document.getElementById("iuSilverWelcomeCard");
     if (!headlineEl || !metaEl || !cardEl) return;
@@ -4745,6 +4747,41 @@ function buildVideoAsArticleCard(it) {
       if (k === "afternoon") return "Příjemné odpoledne";
       return "Dobrý večer";
     }
+    /** Žádný samostatný profil — pokud později přibude zdroj jména v appce, doplnit zde. */
+    function readSilverDisplayName(){
+      try{
+        return "";
+      }catch{
+        return "";
+      }
+    }
+    function fitMetaFont(){
+      try{
+        if (!metaEl) return;
+        const w = typeof window.innerWidth === "number" ? window.innerWidth : 1024;
+        const maxPx = w <= 480 ? 12 : w <= 900 ? 13 : 14;
+        const minPx = 10;
+        let fs = maxPx;
+        metaEl.style.fontSize = fs + "px";
+        try{ void metaEl.offsetWidth; }catch{}
+        let guard = 0;
+        while (fs > minPx && metaEl.scrollWidth > metaEl.clientWidth + 0.75 && guard < 80) {
+          fs -= 0.25;
+          metaEl.style.fontSize = fs + "px";
+          try{ void metaEl.offsetWidth; }catch{}
+          guard++;
+        }
+      }catch{}
+    }
+    function scheduleSilverWelcomeFit(){
+      try{
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            try{ fitMetaFont(); }catch{}
+          });
+        });
+      }catch{}
+    }
     function applyVariantClass(k){
       try{
         cardEl.classList.remove(
@@ -4764,16 +4801,34 @@ function buildVideoAsArticleCard(it) {
         const h = typeof opts.hour === "number" ? opts.hour : refDate.getHours();
         const k = greetingKeyFromHour(h);
         applyVariantClass(k);
-        headlineEl.textContent = phraseFromKey(k);
+        const phrase = phraseFromKey(k);
+        const displayName = readSilverDisplayName();
+        if (greetEl && userEl) {
+          const nm = String(displayName || "").trim();
+          if (nm) {
+            greetEl.textContent = phrase + ",";
+            userEl.textContent = " " + nm;
+            try{ userEl.hidden = false; }catch{}
+          } else {
+            greetEl.textContent = phrase;
+            userEl.textContent = "";
+            try{ userEl.hidden = true; }catch{}
+          }
+        } else {
+          headlineEl.textContent = phrase;
+        }
         const w = fmtDayForMeta(refDate);
         const wLower = w ? w.charAt(0).toLowerCase() + w.slice(1) : "";
         const dlong = fmtDateLong(refDate);
         const nd = readNamedaySuffix();
         metaEl.textContent = "Dnes je " + wLower + " " + dlong + " · " + nd;
+        try{ fitMetaFont(); }catch{}
+        scheduleSilverWelcomeFit();
       }catch{}
     }
 
     window.iuSilverWelcomeRefresh = refresh;
+    window.iuSilverWelcomeScheduleFit = scheduleSilverWelcomeFit;
 
     refresh();
     try{
@@ -4792,6 +4847,27 @@ function buildVideoAsArticleCard(it) {
     }catch{}
     try{ setTimeout(() => refresh(), 400); }catch{}
     try{ setTimeout(() => refresh(), 1500); }catch{}
+    try{
+      if (typeof ResizeObserver !== "undefined" && cardEl) {
+        const ro = new ResizeObserver(() => {
+          try{ scheduleSilverWelcomeFit(); }catch{}
+        });
+        ro.observe(cardEl);
+      }
+    }catch{}
+    try{
+      let t = 0;
+      window.addEventListener(
+        "resize",
+        () => {
+          try{
+            clearTimeout(t);
+            t = setTimeout(() => scheduleSilverWelcomeFit(), 80);
+          }catch{}
+        },
+        { passive: true }
+      );
+    }catch{}
   }
 
   /** P0 Mobile gate: on mobile move Silver + rail + MindMenu into gate; on desktop restore. Tab state: nav | tools | none. */

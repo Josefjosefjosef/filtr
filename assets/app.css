@@ -16388,26 +16388,46 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .iuSilverWelcomeHeadline{
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  min-width: 0;
+  width: 100%;
+  white-space: nowrap;
   font-weight: 600;
   line-height: 1.15;
   letter-spacing: -0.01em;
   font-size: clamp(16px, 0.55vw + 14px, 20px);
-  white-space: nowrap;
+  color: rgba(15, 30, 45, 0.98);
+}
+
+.iuSilverWelcomeGreet{
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.iuSilverWelcomeUser{
+  flex: 1 1 auto;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-width: 0;
-  color: rgba(15, 30, 45, 0.98);
+}
+
+.iuSilverWelcomeUser[hidden]{
+  display: none !important;
 }
 
 .iuSilverWelcomeMeta{
   font-weight: 500;
   line-height: 1.2;
-  font-size: clamp(11px, 0.45vw + 9px, 14px);
+  font-size: 14px;
   letter-spacing: -0.015em;
   color: rgba(30, 40, 55, 0.82);
   white-space: nowrap;
-  overflow: hidden;
+  width: 100%;
   min-width: 0;
+  overflow: visible;
+  /* font-size doplňuje runtime fit (fitMetaFont) — meta bez ellipsis, bez ořezu */
 }
 
 .iuSilverWelcomeCard--morning{
