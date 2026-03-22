@@ -16525,6 +16525,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   background-image: none;
   border-radius: 0 0 var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius);
   overflow: hidden;
+  /* P0 CLS: izolovat přepisy line1/line2 + CTA od reflow sousedního .silver-shell ve flex column */
+  contain: layout;
 }
 
 .silver-weather-line1,
@@ -16536,6 +16538,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   line-height: 1.28;
   font-weight: 500;
   letter-spacing: -0.015em;
+  /* P0 CLS: stabilní výška jednoho řádku před/po innerHTML (loading vs data) na desktopu */
+  min-height: 1.28em;
 }
 
 .silver-weather-line1{
