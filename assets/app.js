@@ -4719,33 +4719,18 @@ function buildVideoAsArticleCard(it) {
         return String(d.toLocaleDateString("cs-CZ"));
       }
     }
-    let silverNamedayResolvedLine = "";
-    let silverNamedayDateKey = "";
-    /** Plný suffix jmen ze stejného JSON fetch jako iuSetTopbarNameday (ne DOM), aby welcome meta nikdy nezůstala na ořezu z topbaru. */
-    function readNamedaySuffixFromFetchAuthoritative(){
-      try{
-        const g =
-          typeof window.__iuNamedaySuffixFromSource === "string"
-            ? String(window.__iuNamedaySuffixFromSource || "").trim()
-            : "";
-        if (g && g !== "—" && g !== "-"){
-          silverNamedayResolvedLine = "svátek má " + g;
-          return silverNamedayResolvedLine;
-        }
-      }catch{}
-      return "";
-    }
-    function parseNamedayNamesFromRaw(raw){
+    /** Plný text za „svátek má“ — JSON (iuDailyPanelInit) má přednost; DOM jen doplnění (celý zbytek řetězce, žádná singularizace). */
+    function parseNamedayTailFromRaw(raw){
       if (!raw || raw === "—") return "";
       const t = String(raw).trim();
       if (!t) return "";
-      const m = t.match(/svátek\s+má\s+(.+)/i);
+      const m = t.match(/^svátek\s+má\s+(.+)$/i);
       if (m && m[1]) {
         const name = String(m[1]).trim();
         if (!name || /^[—\-\s]+$/i.test(name)) return "";
         return name;
       }
-      const m2 = t.match(/svátek\s*:\s*(.+)/i);
+      const m2 = t.match(/^svátek\s*:\s*(.+)$/i);
       if (m2 && m2[1]) {
         const name = String(m2[1]).trim();
         if (!name || /^[—\-\s]+$/i.test(name)) return "";
@@ -4756,19 +4741,20 @@ function buildVideoAsArticleCard(it) {
       return rest;
     }
     function readNamedaySuffixForMeta(){
-      const fromFetch = readNamedaySuffixFromFetchAuthoritative();
-      if (fromFetch) return fromFetch;
+      try{
+        const g =
+          typeof window.__iuNamedaySuffixFromSource === "string"
+            ? String(window.__iuNamedaySuffixFromSource || "").trim()
+            : "";
+        if (g && g !== "—" && g !== "-"){
+          return "svátek má " + g;
+        }
+      }catch{}
       const src = document.getElementById("iuDailyNameday");
       const top = document.getElementById("iuTopbarNameday");
       let raw = (src && String(src.textContent || "").trim()) || "";
       if (!raw) raw = (top && String(top.textContent || "").trim()) || "";
-      const candidate = parseNamedayNamesFromRaw(raw);
-      if (candidate) {
-        silverNamedayResolvedLine = "svátek má " + candidate;
-      }
-      if (silverNamedayResolvedLine) {
-        return silverNamedayResolvedLine;
-      }
+      const candidate = parseNamedayTailFromRaw(raw);
       return candidate ? "svátek má " + candidate : "svátek má —";
     }
     function greetingKeyFromHour(h){
@@ -4856,17 +4842,7 @@ function buildVideoAsArticleCard(it) {
         const w = fmtDayForMeta(refDate);
         const wLower = w ? w.charAt(0).toLowerCase() + w.slice(1) : "";
         const dlong = fmtDateLong(refDate);
-        const dk =
-          String(refDate.getFullYear()) +
-          "-" +
-          String(refDate.getMonth() + 1) +
-          "-" +
-          String(refDate.getDate());
-        if (silverNamedayDateKey && dk !== silverNamedayDateKey) {
-          silverNamedayResolvedLine = "";
-          try{ window.__iuNamedaySuffixFromSource = ""; }catch{}
-        }
-        silverNamedayDateKey = dk;
+        /* P0: Nemazat window.__iuNamedaySuffixFromSource v welcome — vlastní iuDailyPanelInit; mazání způsobovalo závod a ořez plného textu. */
         const nd = readNamedaySuffixForMeta();
         metaEl.textContent = "Dnes je " + wLower + " " + dlong + " · " + nd;
         try{ fitMetaFont(); }catch{}
