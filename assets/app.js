@@ -7239,6 +7239,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuWeatherResetMapView(root){
     try{
+      if (IU_DISABLE_WEATHER_MAIN_MAP) return;
       if (!root) return;
       root.innerHTML = "";
       root.removeAttribute("data-view-key");
@@ -7249,6 +7250,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuWeatherSetMapState(mapUiState){
     try{
+      if (IU_DISABLE_WEATHER_MAIN_MAP) return;
       const sk = document.getElementById("iuWxMapSkeleton");
       const ok = document.getElementById("iuWxMapSuccess");
       const fail = document.getElementById("iuWxMapFail");
@@ -7789,6 +7791,9 @@ function buildVideoAsArticleCard(it) {
     return n;
   }
 
+  /** When true, the main weather SVG map block is omitted from DOM; all map init/render for that section is skipped. */
+  const IU_DISABLE_WEATHER_MAIN_MAP = true;
+
   const IU_WX_MAP_LAYER_KEYS = ["precip", "wind", "pressure", "temp"];
   const IU_WEATHER_MAP_LAYER_STORAGE_KEY = "iuWeatherMapActiveLayerV1";
   function iuWxSanitizeMapLayerKey(k){
@@ -8000,6 +8005,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuWxRenderMap(svgHost, state, forcedLayer){
+    if (IU_DISABLE_WEATHER_MAIN_MAP) return;
     if (!svgHost) return;
     const st = state;
     const next0 = (st && Array.isArray(st.nextHours)) ? st.nextHours[0] : null;
@@ -8226,6 +8232,7 @@ function buildVideoAsArticleCard(it) {
   function iuWeatherLoadLayer(layerId, state){
     return new Promise((resolve, reject) => {
       try{
+        if (IU_DISABLE_WEATHER_MAIN_MAP) { reject(new Error("main weather map disabled")); return; }
         const root = document.getElementById("iuWxMapContainer");
         if (!root) throw new Error("missing map container");
         const layer = iuWxSanitizeMapLayerKey(String(layerId || "precip"));
@@ -8251,6 +8258,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuWeatherRenderMapLayer(layerId, state){
+    if (IU_DISABLE_WEATHER_MAIN_MAP) return;
     const st = state || window.__iuWeatherState;
     if (!st || !st.map) return;
     const root = document.getElementById("iuWxMapContainer");
@@ -8291,11 +8299,17 @@ function buildVideoAsArticleCard(it) {
       if (st.map.disabledLayers && st.map.disabledLayers.indexOf(id) !== -1) return;
       st.map.activeLayer = id;
       iuWxPersistMapLayer(id);
+      if (IU_DISABLE_WEATHER_MAIN_MAP) {
+        iuWxSyncLayerButtons(st);
+        iuWeatherApplySharedStateMeta(st);
+        return;
+      }
       iuWeatherRenderMapLayer(id, st);
     }catch{}
   }
 
   function iuWxRenderMapWithRetry(state){
+    if (IU_DISABLE_WEATHER_MAIN_MAP) return;
     try{ iuWeatherRenderMapLayer(state && state.map ? state.map.activeLayer : "precip", state); }catch{ iuWeatherShowMapFail(); }
   }
 
@@ -9339,7 +9353,7 @@ function buildVideoAsArticleCard(it) {
       if (elNarrative) elNarrative.textContent = "—";
       try{ const elHours = document.getElementById("iuWxHours"); if (elHours) elHours.classList.add("iuWxHours--skeleton"); }catch{}
 
-      iuWeatherSetMapState("loading");
+      if (!IU_DISABLE_WEATHER_MAIN_MAP) iuWeatherSetMapState("loading");
 
       // Premium mini-karty metrik
       const elWindKph = document.getElementById("iuWxWindKph");
@@ -9431,7 +9445,7 @@ function buildVideoAsArticleCard(it) {
 
       // Map + layer UI
       iuWxSyncLayerButtons(state);
-      iuWxRenderMapWithRetry(state);
+      if (!IU_DISABLE_WEATHER_MAIN_MAP) iuWxRenderMapWithRetry(state);
 
       iuWeatherApplySharedStateMeta(state);
       iuWeatherClearRuntimeCity();
@@ -9449,7 +9463,7 @@ function buildVideoAsArticleCard(it) {
       }catch{}
 
       try{
-        iuWeatherSetMapState("fail");
+        if (!IU_DISABLE_WEATHER_MAIN_MAP) iuWeatherSetMapState("fail");
       }catch{}
     }
 
