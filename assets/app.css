@@ -13923,8 +13923,8 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
     zarovnaný na horní okraj layoutu (vedle topbaru). Posun o výšku topbaru = stejný horní tok jako Silver.
   */
   .layout:has(#leftStickyHeader) > aside.accordionCol{
-    /* P0: +5px pod původním zarovnáním pod topbar (viz nižší blok margin-top:0 !important — margin zde přebíjí) */
-    padding-top: calc(var(--iuTopbarHeight) + 5px) !important;
+    /* P0: +15px pod výškou topbaru na pravém sloupci (desktop mikro offset) */
+    padding-top: calc(var(--iuTopbarHeight) + 15px) !important;
     box-sizing: border-box;
   }
 
