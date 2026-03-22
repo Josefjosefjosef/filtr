@@ -99,6 +99,97 @@ try {
     } catch (e) {}
   }
 
+  /** P0: shell vs CSS build mismatch → unregister SW, smazat iu-* caches, jeden hard navigation (bez nekonečné smyčky) */
+  function iuMaybeShellStaleRecovery(onContinue) {
+    try {
+      var p =
+        typeof location !== "undefined" && location && location.pathname
+          ? String(location.pathname)
+          : "";
+      if (p !== "/projects/" && p !== "/projects" && p.indexOf("/projects/") !== 0) {
+        onContinue();
+        return;
+      }
+      if (sessionStorage.getItem("iu_shell_recovery_done") === "1") {
+        onContinue();
+        return;
+      }
+      var meta = document.querySelector('meta[name="iu-data-ver"]');
+      var dataVer = meta ? String(meta.getAttribute("content") || "").trim() : "";
+      if (!dataVer || dataVer === "iu-data-ver-placeholder") {
+        onContinue();
+        return;
+      }
+      var link = document.querySelector('link[rel="stylesheet"][href*="assets/app"]');
+      var href = link ? String(link.getAttribute("href") || "") : "";
+      if (href && href.indexOf("http") !== 0) {
+        try {
+          href = new URL(href, document.baseURI).href;
+        } catch (e) {}
+      }
+      var m = href.match(/app\.([a-f0-9]{8})\.css/i);
+      var cssHash = m ? m[1] : null;
+      if (!cssHash) {
+        onContinue();
+        return;
+      }
+      if (String(cssHash).toLowerCase() === String(dataVer).toLowerCase()) {
+        onContinue();
+        return;
+      }
+      sessionStorage.setItem("iu_shell_recovery_done", "1");
+      if (!("serviceWorker" in navigator) || !("caches" in window)) {
+        try {
+          var u0 = new URL(location.href);
+          u0.searchParams.set("iu_recovered", "1");
+          location.replace(u0.toString());
+        } catch (e) {
+          location.reload();
+        }
+        return;
+      }
+      Promise.all([
+        navigator.serviceWorker.getRegistrations().then(function (regs) {
+          return Promise.all(
+            regs.map(function (r) {
+              return r.unregister();
+            })
+          );
+        }),
+        caches.keys().then(function (keys) {
+          return Promise.all(
+            keys.map(function (k) {
+              if (k.indexOf("iu-") === 0) {
+                return caches.delete(k);
+              }
+            })
+          );
+        }),
+      ])
+        .then(function () {
+          var u = new URL(location.href);
+          u.searchParams.set("iu_recovered", "1");
+          location.replace(u.toString());
+        })
+        .catch(function () {
+          try {
+            sessionStorage.removeItem("iu_shell_recovery_done");
+          } catch (e) {}
+          onContinue();
+        });
+    } catch (e) {
+      onContinue();
+    }
+  }
+
+  function iuBootServiceWorker() {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", iuEnsureServiceWorkerController);
+    } else {
+      iuEnsureServiceWorkerController();
+    }
+  }
+
   function iuEnsureServiceWorkerController() {
     try {
       var p = (typeof location !== "undefined" && location && location.pathname) ? String(location.pathname) : "";
@@ -132,11 +223,8 @@ try {
         .catch(function () {});
     } catch (e) {}
   }
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", iuEnsureServiceWorkerController);
-  } else {
-    iuEnsureServiceWorkerController();
-  }
+
+  iuMaybeShellStaleRecovery(iuBootServiceWorker);
 
   function iuBasePath() {
     const p = location.pathname.toLowerCase();
