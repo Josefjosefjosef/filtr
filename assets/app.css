@@ -16382,29 +16382,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   box-sizing: border-box;
 }
 
-/* Right rail: 5 buttons stacked */
-.silver-rail{
-  width: 150px;
-  min-width: 150px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-left: auto;
-  align-self: stretch;
-}
-
-.silver-railBtn{
-  height: 44px;
-  border-radius: 14px;
-  border: 1px solid rgba(0,0,0,0.10);
-  background: rgba(255,255,255,0.70);
-  padding: 0 12px;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-/* Compose area next to rail */
+/* Compose area (full width of .silver-shell after rail removal) */
 .silver-compose{
   flex: 1 1 auto;
   min-width: 0;
@@ -16448,7 +16426,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   font: inherit;
 }
 
-/* Mobile: keep height, shrink rail */
+/* Mobile: keep height */
 @media (max-width: 768px){
   .silver-slot{
     height: 500px;
@@ -16458,16 +16436,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   .silver-shell{
     padding: 12px;
     gap: 10px;
-  }
-  .silver-rail{
-    width: 128px;
-    min-width: 128px;
-    gap: 8px;
-  }
-  .silver-railBtn{
-    height: 40px;
-    border-radius: 12px;
-    padding: 0 10px;
   }
 }
 
