@@ -7307,9 +7307,9 @@ function buildVideoAsArticleCard(it) {
     return (
       "https://api.open-meteo.com/v1/forecast" +
       `?latitude=${encodeURIComponent(String(la))}&longitude=${encodeURIComponent(String(lo))}` +
-      "&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,relative_humidity_2m,visibility" +
-      "&hourly=temperature_2m,apparent_temperature,weather_code,precipitation_probability,precipitation,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,relative_humidity_2m,visibility,uv_index" +
-      "&daily=temperature_2m_max,temperature_2m_min,weather_code,uv_index_max" +
+      "&current=temperature_2m,apparent_temperature,weather_code,is_day,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,relative_humidity_2m,visibility" +
+      "&hourly=temperature_2m,apparent_temperature,weather_code,is_day,precipitation_probability,precipitation,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,relative_humidity_2m,visibility,uv_index" +
+      "&daily=temperature_2m_max,temperature_2m_min,weather_code,uv_index_max,sunrise,sunset" +
       "&timezone=Europe%2FPrague" +
       "&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&pressure_unit=hPa" +
       "&models=gfs_seamless"
@@ -7337,8 +7337,90 @@ function buildVideoAsArticleCard(it) {
     return await p;
   }
 
-  function iuWxIconFromCode(code){
+  function iuWxNormalizeWeatherCode(code){
+    if (code === null || code === undefined) return null;
     const c = Number(code);
+    if (!isFinite(c)) return null;
+    return c;
+  }
+
+  function iuWxNormalizeIsDay(v){
+    if (v === true || v === 1) return true;
+    if (v === false || v === 0) return false;
+    if (v === null || v === undefined) return null;
+    if (typeof v === "string"){
+      const s = v.trim();
+      if (s === "1" || s === "true") return true;
+      if (s === "0" || s === "false") return false;
+    }
+    const n = Number(v);
+    if (n === 1 && isFinite(n)) return true;
+    if (n === 0 && isFinite(n)) return false;
+    return null;
+  }
+
+  function iuWxDeriveIsDayFromTsSunriseSunset(ts, sunriseStr, sunsetStr){
+    try{
+      if (!ts || !(ts instanceof Date) || isNaN(ts.getTime())) return null;
+      if (sunriseStr == null || sunsetStr == null) return null;
+      const s1 = String(sunriseStr).trim();
+      const s2 = String(sunsetStr).trim();
+      if (s1 === "" || s2 === "") return null;
+      const sr = new Date(s1);
+      const ss = new Date(s2);
+      if (isNaN(sr.getTime()) || isNaN(ss.getTime())) return null;
+      if (sr.getTime() >= ss.getTime()) return null;
+      const t = ts.getTime();
+      if (t >= sr.getTime() && t < ss.getTime()) return true;
+      return false;
+    }catch{
+      return null;
+    }
+  }
+
+  function iuWxFallbackIsDayFromTsPrague(d){
+    try{
+      if (!d || !(d instanceof Date) || isNaN(d.getTime())) return true;
+      const parts = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Prague", hour: "numeric", hour12: false }).formatToParts(d);
+      let h = null;
+      for (let i = 0; i < parts.length; i++){
+        if (parts[i].type === "hour") h = parseInt(parts[i].value, 10);
+      }
+      if (h == null || !isFinite(h)) return true;
+      return h >= 6 && h < 20;
+    }catch{
+      return true;
+    }
+  }
+
+  function iuWxFindDailySunriseSunsetForDate(daily, dt){
+    try{
+      if (!daily || !dt || !(dt instanceof Date) || isNaN(dt.getTime())) return { sr: null, ss: null };
+      const times = Array.isArray(daily.time) ? daily.time : [];
+      const sunr = Array.isArray(daily.sunrise) ? daily.sunrise : null;
+      const suns = Array.isArray(daily.sunset) ? daily.sunset : null;
+      if (!sunr || !suns || times.length === 0) return { sr: null, ss: null };
+      const dtf = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Prague", year: "numeric", month: "2-digit", day: "2-digit" });
+      const dayKey = dtf.format(dt);
+      for (let j = 0; j < times.length; j++){
+        const tj = new Date(String(times[j] || ""));
+        if (isNaN(tj.getTime())) continue;
+        if (dtf.format(tj) === dayKey) return { sr: sunr[j], ss: suns[j] };
+      }
+    }catch{}
+    return { sr: null, ss: null };
+  }
+
+  function iuWxCodeIsDayNightVariant(c){
+    const n = Number(c);
+    if (!isFinite(n)) return false;
+    return n === 0 || n === 1 || n === 2;
+  }
+
+  /** WMO weather_code → emoji; day/night agnostic (no sun/moon for variant codes — use resolve). */
+  function iuWxIconFromCodeStatic(code){
+    const c = iuWxNormalizeWeatherCode(code);
+    if (c === null) return "☁️";
     if (c === 0) return "☀️";
     if (c === 1 || c === 2) return "🌤";
     if (c === 3) return "☁️";
@@ -7346,8 +7428,40 @@ function buildVideoAsArticleCard(it) {
     if ((c >= 51 && c <= 67) || (c >= 80 && c <= 82)) return "🌧";
     if (c >= 71 && c <= 77) return "❄️";
     if (c >= 95) return "⛈";
-    return "🌤";
+    return "☁️";
   }
+
+  /**
+   * Single resolver for current + hourly: weather_code + is_day (or derived).
+   * Variant-sensitive: WMO 0–2 (clear / mainly clear / partly cloudy). Other codes unchanged by day/night.
+   */
+  function iuWxResolveWeatherIcon(weatherCode, isDay){
+    const c = iuWxNormalizeWeatherCode(weatherCode);
+    if (c === null) return "☁️";
+    if (!iuWxCodeIsDayNightVariant(c)) return iuWxIconFromCodeStatic(c);
+    const id = iuWxNormalizeIsDay(isDay);
+    if (id === true){
+      if (c === 0) return "☀️";
+      if (c === 1 || c === 2) return "🌤";
+      return "🌤";
+    }
+    if (id === false){
+      if (c === 0 || c === 1) return "🌙";
+      if (c === 2) return "☁️";
+      return "🌙";
+    }
+    return "☁️";
+  }
+
+  function iuWxIconFromCode(code){
+    return iuWxIconFromCodeStatic(code);
+  }
+
+  try{
+    window.iuWxResolveWeatherIcon = iuWxResolveWeatherIcon;
+    window.iuWxNormalizeIsDay = iuWxNormalizeIsDay;
+    window.iuWxDeriveIsDayFromTsSunriseSunset = iuWxDeriveIsDayFromTsSunriseSunset;
+  }catch{}
 
   function iuFmtDegShort(n){
     if (typeof n !== "number" || !isFinite(n)) return "—";
@@ -7490,33 +7604,21 @@ function buildVideoAsArticleCard(it) {
           dayName = IU_DAYS_FULL[wd] || IU_DAYS_FULL[0];
         }
       }catch{}
-      const icon = iuWxIconFromCode(code);
+      const icon = iuWxResolveWeatherIcon(code, true);
       const temps = `${iuFmtDegShort(max)} / ${iuFmtDegShort(min)}`;
       row.innerHTML = `<div class="iuWx7DayName">${escapeHtml(dayName)}</div><div class="iuWx7Icon">${escapeHtml(icon)}</div><div class="iuWx7Temps">${escapeHtml(temps)}</div>`;
       row.removeAttribute("aria-hidden");
     }
   }
 
-  function iuWeatherUpdateHours(hourly){
+  function iuWeatherUpdateHours(hourly, daily){
     const elHours = document.getElementById("iuWxHours");
     if (!elHours) return;
     const slots = Array.from(elHours.querySelectorAll(".iuWxHour"));
-    const now = new Date();
-    const times = hourly && Array.isArray(hourly.time) ? hourly.time : [];
-    const temps = hourly && Array.isArray(hourly.temperature_2m) ? hourly.temperature_2m : [];
-    const codes = hourly && Array.isArray(hourly.weather_code) ? hourly.weather_code : [];
-    const precipProbs = hourly && Array.isArray(hourly.precipitation_probability) ? hourly.precipitation_probability : [];
-    const items = [];
-    for (let i = 0; i < times.length; i++){
-      const dt = new Date(times[i]);
-      if (isNaN(dt.getTime())) continue;
-      if (dt < now) continue;
-      items.push({ d: dt, temp: temps[i], code: codes[i], precipProb: precipProbs[i] });
-      if (items.length >= 6) break;
-    }
+    const nextList = iuWxSelectNextHoursFromHourly(hourly, daily);
     for (let i = 0; i < slots.length; i++){
       const slot = slots[i];
-      const it = items[i];
+      const it = nextList[i];
       if (!slot) continue;
       if (it) {
         let timeTxt = "--:--";
@@ -7526,12 +7628,12 @@ function buildVideoAsArticleCard(it) {
             minute:"2-digit",
             hour12:false,
             timeZone:"Europe/Prague",
-          }).format(it.d);
+          }).format(it.time);
         }catch{}
-        const icon = iuWxIconFromCode(it.code);
-        const tempTxt = iuFmtDegShort(it.temp);
+        const icon = iuWxResolveWeatherIcon(it.weatherCode, it.isDay);
+        const tempTxt = iuFmtDegShort(it.temperatureC);
         let precipTxt = "—";
-        if (typeof it.precipProb === "number" && isFinite(it.precipProb)) precipTxt = `${Math.round(it.precipProb)}%`;
+        if (typeof it.precipProbability === "number" && isFinite(it.precipProbability)) precipTxt = `${Math.round(it.precipProbability)}%`;
         slot.innerHTML =
           `<div class="iuWxHourTime">${escapeHtml(timeTxt)}</div>` +
           `<div class="iuWxHourIcon">${escapeHtml(icon)}</div>` +
@@ -7541,7 +7643,7 @@ function buildVideoAsArticleCard(it) {
       } else {
         slot.innerHTML =
           `<div class="iuWxHourTime">--:--</div>` +
-          `<div class="iuWxHourIcon">🌤</div>` +
+          `<div class="iuWxHourIcon">☁️</div>` +
           `<div class="iuWxHourTemp">—</div>` +
           `<div class="iuWxHourPrecip">—</div>`;
         slot.setAttribute("aria-hidden", "true");
@@ -7603,7 +7705,7 @@ function buildVideoAsArticleCard(it) {
     return "Srážky";
   }
 
-  function iuWxSelectNextHoursFromHourly(hourly){
+  function iuWxSelectNextHoursFromHourly(hourly, daily){
     const now = new Date();
     const times = hourly && Array.isArray(hourly.time) ? hourly.time : [];
     const temps = hourly && Array.isArray(hourly.temperature_2m) ? hourly.temperature_2m : [];
@@ -7618,6 +7720,7 @@ function buildVideoAsArticleCard(it) {
     const rh = hourly && Array.isArray(hourly.relative_humidity_2m) ? hourly.relative_humidity_2m : [];
     const vis = hourly && Array.isArray(hourly.visibility) ? hourly.visibility : [];
     const uv = hourly && Array.isArray(hourly.uv_index) ? hourly.uv_index : [];
+    const isDayArr = hourly && Array.isArray(hourly.is_day) ? hourly.is_day : [];
 
     const out = [];
     for (let i = 0; i < times.length; i++){
@@ -7625,11 +7728,18 @@ function buildVideoAsArticleCard(it) {
       if (isNaN(dt.getTime())) continue;
       if (dt < now) continue;
       const code = codes[i];
+      let hourIsDay = iuWxNormalizeIsDay(isDayArr[i]);
+      if (hourIsDay === null) {
+        const { sr, ss } = iuWxFindDailySunriseSunsetForDate(daily, dt);
+        hourIsDay = iuWxDeriveIsDayFromTsSunriseSunset(dt, sr, ss);
+      }
+      if (hourIsDay === null) hourIsDay = iuWxFallbackIsDayFromTsPrague(dt);
       out.push({
         time: dt,
         temperatureC: typeof temps[i] === "number" ? temps[i] : null,
         feelsLikeC: typeof feels[i] === "number" ? feels[i] : null,
         weatherCode: code,
+        isDay: hourIsDay,
         precipProbability: typeof pProbs[i] === "number" ? pProbs[i] : null,
         precipMm: typeof pMm[i] === "number" ? pMm[i] : null,
         windKph: typeof wSpd[i] === "number" ? wSpd[i] : null,
@@ -7706,7 +7816,7 @@ function buildVideoAsArticleCard(it) {
     const hourly = d && d.hourly ? d.hourly : {};
     const daily = d && d.daily ? d.daily : {};
 
-    const nextHours = iuWxSelectNextHoursFromHourly(hourly);
+    const nextHours = iuWxSelectNextHoursFromHourly(hourly, daily);
 
     const todayMax = daily && Array.isArray(daily.temperature_2m_max) ? daily.temperature_2m_max[0] : null;
     const todayMin = daily && Array.isArray(daily.temperature_2m_min) ? daily.temperature_2m_min[0] : null;
@@ -7749,6 +7859,17 @@ function buildVideoAsArticleCard(it) {
       ? cur.weather_code
       : (nextHours[0] ? nextHours[0].weatherCode : null);
 
+    const curTs =
+      (cur.time != null && String(cur.time).trim() !== "")
+        ? new Date(String(cur.time))
+        : new Date();
+    let currentIsDay = iuWxNormalizeIsDay(cur.is_day);
+    if (currentIsDay === null) {
+      const { sr, ss } = iuWxFindDailySunriseSunsetForDate(daily, curTs);
+      currentIsDay = iuWxDeriveIsDayFromTsSunriseSunset(curTs, sr, ss);
+    }
+    if (currentIsDay === null) currentIsDay = iuWxFallbackIsDayFromTsPrague(curTs);
+
     const precipTodayMm = iuWxComputePrecipTodayMm(hourly);
 
     // Next-hour narrative and map layer intensities
@@ -7780,7 +7901,7 @@ function buildVideoAsArticleCard(it) {
       }
     }
 
-    const icon = iuWxIconFromCode(weatherCode);
+    const icon = iuWxResolveWeatherIcon(weatherCode, currentIsDay);
     const tTxt = (typeof cur.temperature_2m === "number" && isFinite(cur.temperature_2m)) ? Math.round(cur.temperature_2m) : null;
 
     let precipPart = "Spíše bez srážek.";
@@ -7852,6 +7973,7 @@ function buildVideoAsArticleCard(it) {
         uvIndex: uvIndex,
         precipTodayMm: precipTodayMm,
         icon: icon,
+        isDay: currentIsDay,
       },
       daily: {
         todayMax: todayMax,
@@ -9212,7 +9334,7 @@ function buildVideoAsArticleCard(it) {
       if (elPlace) elPlace.textContent = String(city.name || "Praha");
       if (elTemp) elTemp.textContent = "—°C";
       if (elMinMax) elMinMax.textContent = "Max —° · Min —°";
-      if (elIcon) elIcon.textContent = "🌤";
+      if (elIcon) elIcon.textContent = "☁️";
       if (elFeelsLike) elFeelsLike.textContent = "Pocitově —°C";
       if (elNarrative) elNarrative.textContent = "—";
       try{ const elHours = document.getElementById("iuWxHours"); if (elHours) elHours.classList.add("iuWxHours--skeleton"); }catch{}
@@ -9274,7 +9396,12 @@ function buildVideoAsArticleCard(it) {
       iuWxPersistMapLayer(state.map.activeLayer);
 
       if (elTemp) elTemp.textContent = state && state.current && typeof state.current.temperatureC === "number" ? `${Math.round(state.current.temperatureC)}°C` : "—°C";
-      if (elIcon) elIcon.textContent = state && state.current && state.current.icon ? state.current.icon : "🌤";
+      if (elIcon) {
+        elIcon.textContent =
+          state && state.current && state.current.icon
+            ? state.current.icon
+            : iuWxResolveWeatherIcon(state && state.current ? state.current.weatherCode : null, state && state.current ? state.current.isDay : undefined);
+      }
       if (elMinMax) elMinMax.textContent = `Max ${iuFmtDegShort(state && state.daily ? state.daily.todayMax : null)} · Min ${iuFmtDegShort(state && state.daily ? state.daily.todayMin : null)}`;
       if (elFeelsLike) elFeelsLike.textContent =
         (state && state.current && typeof state.current.feelsLikeC === "number" && isFinite(state.current.feelsLikeC))
@@ -9299,7 +9426,7 @@ function buildVideoAsArticleCard(it) {
       }catch{}
 
       // Hours/7-day depend on shared state raw response
-      iuWeatherUpdateHours(state.hourly);
+      iuWeatherUpdateHours(state.hourly, state.rawDaily);
       iuWeatherRender7Day(state.rawDaily);
 
       // Map + layer UI
@@ -9890,17 +10017,6 @@ function buildVideoAsArticleCard(it) {
       if (typeof n !== "number" || !isFinite(n)) return "—";
       return Math.round(n) + "°";
     }
-    function iconFromCode(code){
-      if (code === 0) return "☀️";
-      if (code === 1 || code === 2) return "🌤";
-      if (code === 3) return "☁️";
-      if (code >= 45 && code <= 48) return "🌫";
-      if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return "🌧";
-      if (code >= 71 && code <= 77) return "❄️";
-      if (code >= 95) return "⛈";
-      return "🌤";
-    }
-
     // TIME/DATE tick (idempotent)
     function tick(){
       const now = new Date();
@@ -9989,7 +10105,7 @@ function buildVideoAsArticleCard(it) {
     if (elPlace) elPlace.textContent = placeName;
     if (elTemp) elTemp.textContent = "—°C";
     if (elMinMax) elMinMax.textContent = "Max —° · Min —°";
-    if (elIcon) elIcon.textContent = "🌤";
+    if (elIcon) elIcon.textContent = "☁️";
     // CLS mitigation: hodiny mají předrenderované "sloty" v HTML (skeleton),
     // takže je tady nemažeme (mazání + pozdější append = layout shift).
     if (elHours) {
@@ -10002,9 +10118,9 @@ function buildVideoAsArticleCard(it) {
       if (st && typeof st.lat === "number" && typeof st.lon === "number" && Math.abs(st.lat - lat) < 0.00001 && Math.abs(st.lon - lon) < 0.00001 && st.current && st.hourly && st.rawDaily && iuWeatherStateMatchesActiveCity(st)) {
         if (elPlace) elPlace.textContent = st.city && st.city.name ? String(st.city.name) : "Praha";
         if (elTemp) elTemp.textContent = typeof st.current.temperatureC === "number" ? `${Math.round(st.current.temperatureC)}°C` : "—°C";
-        if (elIcon) elIcon.textContent = st.current.icon ? String(st.current.icon) : iconFromCode(st.current.weatherCode);
+        if (elIcon) elIcon.textContent = st.current.icon ? String(st.current.icon) : iuWxResolveWeatherIcon(st.current.weatherCode, st.current.isDay);
         if (elMinMax) elMinMax.textContent = `Max ${fmtDeg(st.daily ? st.daily.todayMax : null)} · Min ${fmtDeg(st.daily ? st.daily.todayMin : null)}`;
-        try{ iuWeatherUpdateHours(st.hourly); }catch{}
+        try{ iuWeatherUpdateHours(st.hourly, st.rawDaily); }catch{}
         try{ iuWeatherRender7Day(st.rawDaily); }catch{}
         if (elWeather) elWeather.hidden = false;
         if (elErr) elErr.hidden = true;
@@ -10022,9 +10138,9 @@ function buildVideoAsArticleCard(it) {
             if (!st || !st.current) throw new Error("bad state");
             if (elPlace) elPlace.textContent = st.city && st.city.name ? String(st.city.name) : "Praha";
             if (elTemp) elTemp.textContent = typeof st.current.temperatureC === "number" ? `${Math.round(st.current.temperatureC)}°C` : "—°C";
-            if (elIcon) elIcon.textContent = st.current.icon ? String(st.current.icon) : iconFromCode(st.current.weatherCode);
+            if (elIcon) elIcon.textContent = st.current.icon ? String(st.current.icon) : iuWxResolveWeatherIcon(st.current.weatherCode, st.current.isDay);
             if (elMinMax) elMinMax.textContent = `Max ${fmtDeg(st.daily ? st.daily.todayMax : null)} · Min ${fmtDeg(st.daily ? st.daily.todayMin : null)}`;
-            try{ iuWeatherUpdateHours(st.hourly); }catch{}
+            try{ iuWeatherUpdateHours(st.hourly, st.rawDaily); }catch{}
             try{ iuWeatherRender7Day(st.rawDaily); }catch{}
             if (elWeather) elWeather.hidden = false;
             if (elErr) elErr.hidden = true;
