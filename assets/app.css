@@ -8012,7 +8012,8 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
   border: none;
   border-radius: 0;
   box-shadow: none;
-  margin-top: 0;
+  /* P0 desktop: pravý sloupec +5px níž (≤900px je aside skryté mobile pravidly — margin se neprojeví) */
+  margin-top: 5px;
   align-self: start;
 }
 
