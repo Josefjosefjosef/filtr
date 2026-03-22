@@ -127,11 +127,22 @@ style-src 'self' 'unsafe-inline' https:;
                 <div id="iuSilverTopCardsStack" class="iuSilverTopCardsStack" aria-label="Silver horní boxy">
                   <section id="silver-slot" class="silver-slot" aria-label="Silver">
                     <div class="iuSilverWelcomeSticky" id="iuSilverWelcomeSticky">
-                      <div class="iuSilverWelcomeCard iuSilverWelcomeCard--evening" id="iuSilverWelcomeCard" data-iu-silver-welcome-card data-iu-silver-welcome-variant="evening">
-                        <div class="iuSilverWelcomeHeadline" id="iuSilverWelcomeHeadline" aria-live="polite">
-                          <span class="iuSilverWelcomeGreet" id="iuSilverWelcomeGreet"></span><span class="iuSilverWelcomeUser" id="iuSilverWelcomeUser" hidden></span>
+                      <div class="silver-welcome-stack silver-welcome-stack--evening" id="iuSilverWelcomeStack" data-iu-silver-welcome-stack data-iu-silver-welcome-variant="evening">
+                        <div class="iuSilverWelcomeCard silver-welcome-card" id="iuSilverWelcomeCard" data-iu-silver-welcome-card data-iu-silver-welcome-variant="evening">
+                          <div class="iuSilverWelcomeHeadline" id="iuSilverWelcomeHeadline" aria-live="polite">
+                            <span class="iuSilverWelcomeGreet" id="iuSilverWelcomeGreet"></span><span class="iuSilverWelcomeUser" id="iuSilverWelcomeUser" hidden></span>
+                          </div>
+                          <div class="iuSilverWelcomeMeta" id="iuSilverWelcomeMeta" data-iu-silver-meta></div>
                         </div>
-                        <div class="iuSilverWelcomeMeta" id="iuSilverWelcomeMeta" data-iu-silver-meta></div>
+                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparator" aria-hidden="true"></div>
+                        <div class="silver-weather-card" id="iuSilverWeatherCard" data-iu-silver-weather-card>
+                          <div class="silver-weather-line1" id="iuSilverWeatherLine1" data-iu-silver-weather-line="1" data-iu-silver-weather-slot="summary">
+                            <span data-iu-silver-weather-hook="temp">Venku je 8 °C</span><span class="silver-weather-line__sep" aria-hidden="true"> | </span><span data-iu-silver-weather-hook="feels">Pocitově 6 °C</span><span class="silver-weather-line__sep" aria-hidden="true"> | </span><span data-iu-silver-weather-hook="status">🌧️ Déšť za ~2 h</span>
+                          </div>
+                          <div class="silver-weather-line2" id="iuSilverWeatherLine2" data-iu-silver-weather-line="2" data-iu-silver-weather-slot="tip">
+                            <span data-iu-silver-weather-hook="tip">💡☂️ Pokud půjdeš ven, vezmi si deštník.</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div class="silver-shell">

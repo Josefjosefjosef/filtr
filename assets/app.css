@@ -16452,6 +16452,127 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   min-height: 0;
 }
 
+/* Silver welcome stack: jeden sdílený surface (time-of-day skin) na wrapperu; segmenty uvnitř transparentní */
+.silver-welcome-stack{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+  min-width: 0;
+  border-radius: var(--iuSilverTopCardRadius);
+  border: var(--iuSilverTopCardBorder);
+  box-shadow: var(--iuSilverTopCardShadow);
+  overflow: hidden;
+  contain: layout style;
+}
+
+.silver-welcome-stack--morning{
+  background: linear-gradient(135deg, #fff5e8 0%, #ffe8cc 45%, #ffd8a8 100%);
+}
+
+.silver-welcome-stack--lateMorning{
+  background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 50%, #e4ecfa 100%);
+}
+
+.silver-welcome-stack--afternoon{
+  background: linear-gradient(135deg, #fff9f0 0%, #fff0dc 55%, #ffe4c4 100%);
+}
+
+.silver-welcome-stack--evening{
+  background: linear-gradient(135deg, #0f2438 0%, #162d45 55%, #203a52 100%);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+}
+
+.silver-welcome-stack__separator{
+  flex: 0 0 auto;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  align-self: stretch;
+  min-width: 0;
+  background: rgba(15, 35, 55, 0.1);
+  opacity: 0.82;
+  pointer-events: none;
+}
+
+.silver-welcome-stack--evening .silver-welcome-stack__separator{
+  background: rgba(255, 255, 255, 0.14);
+  opacity: 0.75;
+}
+
+/* Silver weather: shell pod welcome; žádný vlastní surface — background jen z .silver-welcome-stack */
+.silver-weather-card{
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 12px;
+  margin: 0;
+  border: none;
+  background: transparent;
+  background-image: none;
+  border-radius: 0 0 var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius);
+  overflow: hidden;
+}
+
+.silver-weather-line1,
+.silver-weather-line2{
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  font-size: 14px;
+  line-height: 1.28;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.silver-weather-line1{
+  color: rgba(30, 40, 55, 0.88);
+}
+
+.silver-weather-line2{
+  color: rgba(30, 40, 55, 0.82);
+}
+
+.silver-welcome-stack--evening .silver-weather-line1{
+  color: rgba(240, 248, 255, 0.92);
+}
+
+.silver-welcome-stack--evening .silver-weather-line2{
+  color: rgba(230, 238, 248, 0.88);
+}
+
+/* Desktop ≥1025: jeden řádek; 1024 a méně = tablet/mobil — wrap bez overflowX */
+@media (min-width: 1025px){
+  .silver-weather-line1,
+  .silver-weather-line2{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 1024px){
+  .silver-weather-line1,
+  .silver-weather-line2{
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
 /* Silver welcome (P0): sticky card, max 70px height, 2 lines, date+svátek z iuDailyPanelInit */
 .iuSilverWelcomeSticky{
   position: sticky;
@@ -16470,14 +16591,20 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   min-height: 58px;
   box-sizing: border-box;
   padding: 6px 12px 7px;
-  border-radius: var(--iuSilverTopCardRadius);
+  border-radius: var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius) 0 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 2px;
   overflow: hidden;
-  border: var(--iuSilverTopCardBorder);
-  box-shadow: var(--iuSilverTopCardShadow);
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  background-image: none;
+}
+
+.silver-welcome-stack .iuSilverWelcomeCard{
+  flex: 0 0 auto;
 }
 
 .iuSilverWelcomeHeadline{
@@ -16523,29 +16650,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   /* font-size doplňuje runtime fit (fitMetaFont) — meta bez ellipsis, bez ořezu */
 }
 
-.iuSilverWelcomeCard--morning{
-  background: linear-gradient(135deg, #fff5e8 0%, #ffe8cc 45%, #ffd8a8 100%);
-}
-
-.iuSilverWelcomeCard--lateMorning{
-  background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 50%, #e4ecfa 100%);
-}
-
-.iuSilverWelcomeCard--afternoon{
-  background: linear-gradient(135deg, #fff9f0 0%, #fff0dc 55%, #ffe4c4 100%);
-}
-
-.iuSilverWelcomeCard--evening{
-  background: linear-gradient(135deg, #0f2438 0%, #162d45 55%, #203a52 100%);
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
-}
-
-.iuSilverWelcomeCard--evening .iuSilverWelcomeHeadline{
+.silver-welcome-stack--evening .iuSilverWelcomeHeadline{
   color: rgba(255, 255, 255, 0.96);
 }
 
-.iuSilverWelcomeCard--evening .iuSilverWelcomeMeta{
+.silver-welcome-stack--evening .iuSilverWelcomeMeta{
   color: rgba(230, 238, 248, 0.88);
 }
 
