@@ -13921,10 +13921,11 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
   /*
     P0: Levý sloupec má #leftStickyHeader nahoře, Silver až pod ním; pravý sloupec byl v gridu
     zarovnaný na horní okraj layoutu (vedle topbaru). Posun o výšku topbaru = stejný horní tok jako Silver.
+    Mezera pod topbarem (Silver top − topbar bottom) se měří na desktopu; dorovnání pravého sloupce = stejný gap.
   */
   .layout:has(#leftStickyHeader) > aside.accordionCol{
-    /* P0: pravý sloupec — baseline = výška topbaru (bez extra px) */
-    padding-top: var(--iuTopbarHeight) !important;
+    /* P0: dorovnaný mezerový gap pod topbarem jako u #iuSilverWelcomeSticky (měřeno +4px vs baseline) */
+    padding-top: calc(var(--iuTopbarHeight) + 4px) !important;
     box-sizing: border-box;
   }
 
