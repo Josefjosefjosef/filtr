@@ -4306,25 +4306,27 @@ select.iuCtrl{
   grid-column: 1 / -1;
 }
 
-/* ┼át├ştek "Zpr├íva dne" p┼Öes ::after (NOV─Ü, bez kolize s akcentem) */
-#feed > .news-card:first-child::after,
-#feed > article:first-child::after{
-  content: "Zpr├íva dne";
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  line-height: 1;
-  color: var(--iu-accent);
-  background: #fff;
-  border: 1px solid rgba(17,17,17,0.10);
-  border-radius: 999px;
-  padding: 4px 10px;
-  position: absolute;
-  left: 14px;
-  top: 12px;
-  pointer-events: none;
-  z-index: 3;
+/* ┼át├ştek "Zpr├íva dne" p┼Öes ::after — jen desktop (≥901px); na ≤900px štítek vypnut kvůli CLS (jinak duplicitní selektor v mobile bloku). */
+@media (min-width: 901px){
+  #feed > .news-card:first-child::after,
+  #feed > article:first-child::after{
+    content: "Zpr├íva dne";
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    color: var(--iu-accent);
+    background: #fff;
+    border: 1px solid rgba(17,17,17,0.10);
+    border-radius: 999px;
+    padding: 4px 10px;
+    position: absolute;
+    left: 14px;
+    top: 12px;
+    pointer-events: none;
+    z-index: 3;
+  }
 }
 
 /* Meta ┼Ö├ídek v TOP polo┼żce - spacing u┼ż ┼Öe┼í├ş margin-top z #feed .iu-meta-line */
@@ -9722,16 +9724,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     letter-spacing: -0.018em;
     min-height: 1.25em;
     contain: layout style;
-  }
-  /* P0 CLS: první karta feedu — štítek ::after skryt na úzkém layoutu + min výška pro stabilnější paint */
-  #feed > .news-card:first-child::after,
-  #feed > article:first-child::after{
-    content: none !important;
-    display: none !important;
-  }
-  #feed > article:first-child,
-  #feed > .news-card:first-child{
-    min-height: min(320px, 70vh);
   }
   .layout > aside.accordionCol{
     display: none !important;
