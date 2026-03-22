@@ -5048,6 +5048,372 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  /** Silver weather strip: čte jen z existujícího `window.__iuWeatherState` / `iuWeatherEnsureState()` — žádný vlastní fetch. */
+  function iuSilverWeatherInit(){
+    try{
+      if (window.__iuSilverWeatherInit) return;
+      window.__iuSilverWeatherInit = 1;
+    }catch{}
+
+    const card = document.getElementById("iuSilverWeatherCard");
+    const line1 = document.getElementById("iuSilverWeatherLine1");
+    const line2 = document.getElementById("iuSilverWeatherLine2");
+    const privacyEl = document.getElementById("iuSilverWeatherPrivacy");
+    const actionsFirst = document.getElementById("iuSilverWeatherActions");
+    const actionsDenied = document.getElementById("iuSilverWeatherActionsDenied");
+    const btnGeo = document.getElementById("iuSilverWeatherBtnGeo");
+    const btnCity = document.getElementById("iuSilverWeatherBtnCity");
+    const btnCityDenied = document.getElementById("iuSilverWeatherBtnCityDenied");
+    if (!card || !line1 || !line2) return;
+
+    function iuSilverWeatherNavigateToWeather(){
+      try{
+        const el = document.querySelector('.iu-leftNavItem[data-accent="pocasi"]');
+        if (el) { el.click(); return; }
+      }catch{}
+      try{
+        const u = new URL(window.location.href);
+        u.searchParams.set("section", "pocasi");
+        window.location.href = u.toString();
+      }catch{}
+    }
+
+    function iuSilverWeatherHasPersonalizedLocation(){
+      try{
+        return !!iuWeatherReadGpsSelected() || !!iuWeatherReadManualLocation();
+      }catch{
+        return false;
+      }
+    }
+
+    function iuSilverWeatherGeoDeniedVisible(){
+      try{
+        const fb = window.__iuWeatherGeoFlowFeedback;
+        if (!fb || String(fb.kind || "") !== "error") return false;
+        const m = String(fb.message || "");
+        if (m.indexOf("povolte") !== -1) return true;
+        if (m.indexOf("Nelze získat polohu") !== -1) return true;
+        if (m.indexOf("geolokace") !== -1) return true;
+        return true;
+      }catch{
+        return false;
+      }
+    }
+
+    function iuSilverWeatherComputePhase(){
+      try{
+        if (iuSilverWeatherGeoDeniedVisible() && iuWeatherReadLocationMode() === IU_WEATHER_MODE_GPS && !iuWeatherReadGpsSelected()) return "denied";
+      }catch{}
+      try{
+        if (!iuSilverWeatherHasPersonalizedLocation()) return "firstVisit";
+      }catch{}
+      try{
+        const st = window.__iuWeatherState;
+        if (st && iuWeatherStateMatchesActiveCity(st) && st.current) return "data";
+      }catch{}
+      return "loading";
+    }
+
+    function iuSilverWeatherBestPrecipSoon(st){
+      try{
+        const nh = st && Array.isArray(st.nextHours) ? st.nextHours : [];
+        let best = null;
+        for (let i = 0; i < nh.length; i++){
+          const it = nh[i];
+          if (!it) continue;
+          const p = it.precipProbability;
+          if (typeof p !== "number" || !isFinite(p) || p < 25) continue;
+          if (!best || p > best.p) best = { p, code: it.weatherCode, time: it.time };
+        }
+        if (!best || !best.time) return null;
+        const now = new Date();
+        const dt = best.time instanceof Date ? best.time : new Date(best.time);
+        if (isNaN(dt.getTime())) return null;
+        const dh = Math.max(0, (dt - now) / 3600000);
+        if (dh > 12) return null;
+        return { h: Math.max(1, Math.round(dh)), code: best.code };
+      }catch{
+        return null;
+      }
+    }
+
+    function iuSilverWeatherGustMaxNext(st){
+      try{
+        const nh = st && Array.isArray(st.nextHours) ? st.nextHours : [];
+        let g = null;
+        for (let i = 0; i < nh.length; i++){
+          const it = nh[i];
+          if (!it) continue;
+          const v = typeof it.windGustKph === "number" ? it.windGustKph : it.windKph;
+          if (typeof v === "number" && isFinite(v)){
+            if (g == null || v > g) g = v;
+          }
+        }
+        return g;
+      }catch{
+        return null;
+      }
+    }
+
+    function iuSilverWeatherDayPartIcon(st){
+      try{
+        const now = new Date();
+        const daily = st.rawDaily;
+        const { sr, ss } = iuWxFindDailySunriseSunsetForDate(daily, now);
+        if (sr && ss){
+          const tSr = new Date(String(sr)).getTime();
+          const tSs = new Date(String(ss)).getTime();
+          const tN = now.getTime();
+          if (!isNaN(tSr) && !isNaN(tSs) && tSr < tSs){
+            if (tN < tSr || tN >= tSs) return "🌙";
+            const msH = 60 * 60 * 1000;
+            if (tN >= tSr && tN < tSr + msH) return "🌅";
+            if (tN >= tSs - msH && tN < tSs) return "🌅";
+          }
+        }
+      }catch{}
+      const c = st.current.weatherCode;
+      const id = st.current.isDay;
+      if (id === false) return "🌙";
+      if (c === 0) return "☀️";
+      if (c === 1 || c === 2) return "🌤";
+      if (c === 3) return "⛅";
+      return iuWxResolveWeatherIcon(c, true);
+    }
+
+    function iuSilverWeatherStatusShort(st){
+      const c = Number(st.current.weatherCode);
+      const soon = iuSilverWeatherBestPrecipSoon(st);
+      const gustM = iuSilverWeatherGustMaxNext(st);
+      if (isFinite(c) && c >= 95) return { icon: "⛈️", text: "Bouřky" };
+      if (soon && soon.h){
+        const ic = iuWxResolveWeatherIcon(soon.code != null ? soon.code : c, st.current.isDay);
+        const what = iuWxInferPrecipText(soon.code != null ? soon.code : c);
+        return { icon: ic, text: `${what} za ~${soon.h} h` };
+      }
+      if (isFinite(c) && ((c >= 51 && c <= 67) || (c >= 80 && c <= 82))) return { icon: "🌧️", text: "Déšť" };
+      if (isFinite(c) && c >= 71 && c <= 77) return { icon: "❄️", text: "Sníh" };
+      if (typeof gustM === "number" && isFinite(gustM) && gustM >= 45) return { icon: "🌬️", text: "Silný vítr" };
+      if (isFinite(c) && ((c >= 45 && c <= 48) || c === 56)) return { icon: "🌫️", text: "Mlha / vlhko" };
+      if (c === 0) return { icon: "☀️", text: "Beze srážek" };
+      if (c === 1 || c === 2) return { icon: "🌤", text: "Proměnlivo" };
+      if (c === 3) return { icon: "⛅", text: "Oblačno" };
+      return { icon: iuWxResolveWeatherIcon(c, st.current.isDay), text: "Počasí" };
+    }
+
+    function iuSilverWeatherTipCategory(st){
+      const c = Number(st.current.weatherCode);
+      const soon = iuSilverWeatherBestPrecipSoon(st);
+      const gustM = iuSilverWeatherGustMaxNext(st);
+      const t = typeof st.current.temperatureC === "number" ? st.current.temperatureC : null;
+      const fl = typeof st.current.feelsLikeC === "number" ? st.current.feelsLikeC : null;
+      if (isFinite(c) && c >= 95) return "storm";
+      if (soon && soon.h) return "rain";
+      if (isFinite(c) && ((c >= 51 && c <= 67) || (c >= 80 && c <= 82))) return "rain";
+      if (isFinite(c) && c >= 71 && c <= 77) return "snow";
+      if (typeof gustM === "number" && isFinite(gustM) && gustM >= 45) return "wind";
+      if ((typeof fl === "number" && fl <= 5) || (typeof t === "number" && t <= 2)) return "cold";
+      if ((typeof t === "number" && t >= 28) || (typeof fl === "number" && fl >= 28)) return "heat";
+      return "nice";
+    }
+
+    function iuSilverWeatherPickTip(st){
+      const cat = iuSilverWeatherTipCategory(st);
+      const seed = Math.abs(iuHashStr(String(iuDayKeyLocal()) + "|" + cat + "|" + String(st.lat) + "|" + String(st.lon)));
+      const variants = {
+        storm: ["💡⛈️ Hrozí bouřky, buď opatrný.", "💡⚡ Bouřky mohou být silné.", "💡⛈️ Počítej s bouřkami."],
+        rain: ["💡☂️ Vezmi si deštník, bude se hodit.", "💡☂️ Pokud půjdeš ven, vezmi si deštník.", "💡🌧️ Vypadá to na déšť, vezmi si deštník."],
+        snow: ["💡❄️ Může sněžit, počítej s tím.", "💡🧊 Pozor na kluzko.", "💡❄️ Sníh může komplikovat pohyb."],
+        wind: ["💡🌬️ Foukat bude víc, raději se obleč tepleji.", "💡🌬️ Pozor na silný vítr.", "💡🌬️ Vítr může být nepříjemný."],
+        cold: ["💡🧥 Je docela chladno, vezmi si bundu.", "💡🥶 Obleč se tepleji.", "💡🧥 Bez bundy to nepůjde."],
+        heat: ["💡🥵 Je horko, nezapomeň na pitný režim.", "💡🥤 Dbej na dostatek tekutin.", "💡☀️ Vysoké teploty, chraň se před sluncem."],
+        nice: ["💡☀️ Dnes to venku vypadá moc dobře.", "💡☀️ Ideální počasí na venek.", "💡🌤️ Bez nepříjemností."],
+      };
+      const list = variants[cat] || variants.nice;
+      return list[seed % list.length];
+    }
+
+    function iuSilverWeatherRenderData(st){
+      const dp = iuSilverWeatherDayPartIcon(st);
+      const t = typeof st.current.temperatureC === "number" ? Math.round(st.current.temperatureC) : null;
+      const fl = typeof st.current.feelsLikeC === "number" ? Math.round(st.current.feelsLikeC) : null;
+      const stat = iuSilverWeatherStatusShort(st);
+      const tip = iuSilverWeatherPickTip(st);
+      const tStr = t != null ? `Venku je ${t} °C` : "Venku je —°C";
+      const flStr = fl != null ? `Pocitově ${fl} °C` : "Pocitově —°C";
+      line1.innerHTML =
+        `<span class="silver-weather-dpart" aria-hidden="true">${escapeHtml(dp)}</span> ` +
+        `<span data-iu-silver-weather-hook="temp">${escapeHtml(tStr)}</span>` +
+        `<span class="silver-weather-line__sep" aria-hidden="true"> | </span>` +
+        `<span data-iu-silver-weather-hook="feels">${escapeHtml(flStr)}</span>` +
+        `<span class="silver-weather-line__sep" aria-hidden="true"> | </span>` +
+        `<span class="silver-weather-stat" aria-hidden="true">${escapeHtml(stat.icon)}</span>` +
+        `<span data-iu-silver-weather-hook="status"> ${escapeHtml(stat.text)}</span>`;
+      line2.innerHTML = `<span data-iu-silver-weather-hook="tip">${escapeHtml(tip)}</span>`;
+      try{
+        card.setAttribute("data-iu-silver-wx-phase", "data");
+        card.setAttribute("data-iu-silver-wx-tip", iuSilverWeatherTipCategory(st));
+      }catch{}
+    }
+
+    function iuSilverWeatherRenderLoading(){
+      line1.innerHTML =
+        `<span class="silver-weather-dpart" aria-hidden="true">🌤️</span> ` +
+        `<span data-iu-silver-weather-hook="summary">Počasí se načítá…</span>`;
+      line2.innerHTML = `<span data-iu-silver-weather-hook="tip">💡 Za chvíli ho ukážeme tady.</span>`;
+      try{ card.setAttribute("data-iu-silver-wx-phase", "loading"); }catch{}
+    }
+
+    function iuSilverWeatherRenderFirstVisit(){
+      line1.innerHTML =
+        `<span class="silver-weather-dpart" aria-hidden="true">🌤️</span> ` +
+        `<span>Zobrazit počasí pro tvoji polohu?</span>`;
+      line2.innerHTML = `<span>💡📍 Povolit polohu a ukážeme ti počasí hned tady.</span>`;
+      try{
+        card.setAttribute("data-iu-silver-wx-phase", "firstVisit");
+        if (privacyEl) privacyEl.hidden = false;
+        if (actionsFirst) actionsFirst.hidden = false;
+        if (actionsDenied) actionsDenied.hidden = true;
+      }catch{}
+    }
+
+    function iuSilverWeatherRenderDenied(){
+      line1.innerHTML =
+        `<span class="silver-weather-dpart" aria-hidden="true">🌤️</span> ` +
+        `<span>Počasí ještě není nastavené</span>`;
+      line2.innerHTML = `<span>💡🏙️ Vyber si svoje město a budeme ho ukazovat tady.</span>`;
+      try{
+        card.setAttribute("data-iu-silver-wx-phase", "denied");
+        if (privacyEl) privacyEl.hidden = true;
+        if (actionsFirst) actionsFirst.hidden = true;
+        if (actionsDenied) actionsDenied.hidden = false;
+      }catch{}
+    }
+
+    function iuSilverWeatherHideAllActions(){
+      try{
+        if (privacyEl) privacyEl.hidden = true;
+        if (actionsFirst) actionsFirst.hidden = true;
+        if (actionsDenied) actionsDenied.hidden = true;
+      }catch{}
+    }
+
+    function iuSilverWeatherRefresh(){
+      try{
+        const phase = iuSilverWeatherComputePhase();
+        iuSilverWeatherHideAllActions();
+        if (phase === "denied"){
+          iuSilverWeatherRenderDenied();
+          return;
+        }
+        if (phase === "firstVisit"){
+          iuSilverWeatherRenderFirstVisit();
+          return;
+        }
+        if (phase === "loading"){
+          iuSilverWeatherRenderLoading();
+          if (typeof window.iuWeatherEnsureState !== "function") return;
+          window.iuWeatherEnsureState()
+            .then((st) => {
+              if (!st || !iuWeatherStateMatchesActiveCity(st)) return;
+              iuSilverWeatherRenderData(st);
+            })
+            .catch(() => {
+              try{ iuSilverWeatherRenderLoading(); }catch{}
+            });
+          return;
+        }
+        if (phase === "data"){
+          const st = window.__iuWeatherState;
+          if (st && st.current) iuSilverWeatherRenderData(st);
+          else iuSilverWeatherRenderLoading();
+        }
+      }catch{}
+    }
+
+    try{
+      card.addEventListener("click", (ev) => {
+        try{
+          if (ev.target && ev.target.closest && ev.target.closest("button, a")) return;
+          const ph = String(card.getAttribute("data-iu-silver-wx-phase") || "");
+          if (ph === "data") iuSilverWeatherNavigateToWeather();
+        }catch{}
+      });
+    }catch{}
+
+    function wireBtn(el, fn){
+      if (!el) return;
+      el.addEventListener("click", (e) => {
+        try{
+          e.preventDefault();
+          e.stopPropagation();
+        }catch{}
+        try{ fn(); }catch{}
+      });
+    }
+    wireBtn(btnGeo, () => {
+      try{
+        iuSilverWeatherNavigateToWeather();
+        setTimeout(() => {
+          try{
+            if (typeof window.iuWeatherActivateGpsViaGeolocation === "function") window.iuWeatherActivateGpsViaGeolocation();
+          }catch{}
+        }, 180);
+      }catch{}
+    });
+    wireBtn(btnCity, () => {
+      try {
+        iuSilverWeatherNavigateToWeather();
+        setTimeout(() => {
+          try{
+            if (typeof window.iuWeatherOpenMapPicker === "function") window.iuWeatherOpenMapPicker();
+          }catch{}
+        }, 180);
+      }catch{}
+    });
+    wireBtn(btnCityDenied, () => {
+      try {
+        iuSilverWeatherNavigateToWeather();
+        setTimeout(() => {
+          try{
+            if (typeof window.iuWeatherOpenMapPicker === "function") window.iuWeatherOpenMapPicker();
+          }catch{}
+        }, 180);
+      }catch{}
+    });
+
+    try{
+      const orig = window.iuWeatherLoadAndRender;
+      if (typeof orig === "function" && !window.__iuSilverWeatherHookedLoadRender) {
+        window.__iuSilverWeatherHookedLoadRender = 1;
+        window.iuWeatherLoadAndRender = async function(){
+          const r = await orig.apply(this, arguments);
+          try{ iuSilverWeatherRefresh(); }catch{}
+          return r;
+        };
+      }
+    }catch{}
+
+    try{
+      window.addEventListener("storage", (e) => {
+        const k = String(e.key || "");
+        if (k === "iu_location_mode" || k === "iu_manual_location" || k.indexOf("iuWeather") !== -1) {
+          try{ iuSilverWeatherRefresh(); }catch{}
+        }
+      });
+    }catch{}
+
+    try{
+      window.addEventListener("iu-silver-wx-refresh", () => {
+        try{ iuSilverWeatherRefresh(); }catch{}
+      });
+    }catch{}
+
+    window.iuSilverWeatherRefresh = iuSilverWeatherRefresh;
+    iuSilverWeatherRefresh();
+    try{ setInterval(() => { try{ iuSilverWeatherRefresh(); }catch{} }, 45000); }catch{}
+  }
+
   /** P0 Mobile gate: on mobile move Silver + rail + MindMenu into gate; on desktop restore. Tab state: nav | tools | none. */
   function iuMobileGateReorder() {
     try {
@@ -9635,6 +10001,10 @@ function buildVideoAsArticleCard(it) {
     const o = iuWeatherEnsureMapPickerOverlay();
     try{ o.__iuWeatherMapOpen(); }catch{}
   }
+  try{
+    window.iuWeatherOpenMapPicker = iuWeatherOpenMapPicker;
+    window.iuWeatherActivateGpsViaGeolocation = iuWeatherActivateGpsViaGeolocation;
+  }catch{}
 
   function iuWeatherRadarEnsure(){
     const root = document.getElementById("iuWxRadar");
@@ -10178,9 +10548,11 @@ function buildVideoAsArticleCard(it) {
     try{
       if (kind === "clear" || !message) {
         window.__iuWeatherGeoFlowFeedback = null;
+        try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
         return;
       }
       window.__iuWeatherGeoFlowFeedback = { message: String(message), kind: String(kind || "error") };
+      try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
     }catch{}
   }
 
@@ -10506,6 +10878,7 @@ function buildVideoAsArticleCard(it) {
         try{ iuWeatherRender7Day(st.rawDaily); }catch{}
         if (elWeather) elWeather.hidden = false;
         if (elErr) elErr.hidden = true;
+        try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
         return;
       }
     }catch{}
@@ -10526,10 +10899,12 @@ function buildVideoAsArticleCard(it) {
             try{ iuWeatherRender7Day(st.rawDaily); }catch{}
             if (elWeather) elWeather.hidden = false;
             if (elErr) elErr.hidden = true;
+            try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
           })
           .catch(() => {
             if (elWeather) elWeather.hidden = true;
             if (elErr) elErr.hidden = false;
+            try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
           });
       }catch{
         if (elWeather) elWeather.hidden = true;
@@ -17919,6 +18294,7 @@ function buildVideoAsArticleCard(it) {
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
 
+    try{ iuSilverWeatherInit(); }catch{}
     try { initRightPanel(); } catch (e) { console.error("RightPanel init failed", e); if (typeof persistLastError === "function") persistLastError("RightPanel init failed"); }
 
     try{ iuSilverWelcomeInit(); }catch{}
