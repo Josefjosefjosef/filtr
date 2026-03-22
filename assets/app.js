@@ -4719,21 +4719,41 @@ function buildVideoAsArticleCard(it) {
         return String(d.toLocaleDateString("cs-CZ"));
       }
     }
-    function readNamedaySuffix(){
-      const src = document.getElementById("iuDailyNameday");
-      const top = document.getElementById("iuTopbarNameday");
-      const raw = (src && String(src.textContent || "").trim()) || (top && String(top.textContent || "").trim()) || "";
-      if (!raw || raw === "—") return "svátek má —";
-      const m = raw.match(/svátek\s+má\s+(.+)/i);
+    let silverNamedayResolvedLine = "";
+    let silverNamedayDateKey = "";
+    function parseNamedayNamesFromRaw(raw){
+      if (!raw || raw === "—") return "";
+      const t = String(raw).trim();
+      if (!t) return "";
+      const m = t.match(/svátek\s+má\s+(.+)/i);
       if (m && m[1]) {
         const name = String(m[1]).trim();
-        if (!name || /^[—\-]+$/i.test(name)) return "svátek má —";
-        return "svátek má " + name;
+        if (!name || /^[—\-\s]+$/i.test(name)) return "";
+        return name;
       }
-      const m2 = raw.match(/svátek\s*:\s*(.+)/i);
-      if (m2 && m2[1]) return "svátek má " + String(m2[1]).trim();
-      const rest = String(raw).replace(/^svátek\s+má\s*/i, "").trim();
-      return rest ? "svátek má " + rest : "svátek má —";
+      const m2 = t.match(/svátek\s*:\s*(.+)/i);
+      if (m2 && m2[1]) {
+        const name = String(m2[1]).trim();
+        if (!name || /^[—\-\s]+$/i.test(name)) return "";
+        return name;
+      }
+      const rest = t.replace(/^svátek\s+má\s*/i, "").trim();
+      if (!rest || /^[—\-\s]+$/i.test(rest)) return "";
+      return rest;
+    }
+    function readNamedaySuffixForMeta(){
+      const src = document.getElementById("iuDailyNameday");
+      const top = document.getElementById("iuTopbarNameday");
+      let raw = (src && String(src.textContent || "").trim()) || "";
+      if (!raw) raw = (top && String(top.textContent || "").trim()) || "";
+      const candidate = parseNamedayNamesFromRaw(raw);
+      if (candidate) {
+        silverNamedayResolvedLine = "svátek má " + candidate;
+      }
+      if (silverNamedayResolvedLine) {
+        return silverNamedayResolvedLine;
+      }
+      return candidate ? "svátek má " + candidate : "svátek má —";
     }
     function greetingKeyFromHour(h){
       if (h >= 5 && h < 9) return "morning";
@@ -4820,7 +4840,17 @@ function buildVideoAsArticleCard(it) {
         const w = fmtDayForMeta(refDate);
         const wLower = w ? w.charAt(0).toLowerCase() + w.slice(1) : "";
         const dlong = fmtDateLong(refDate);
-        const nd = readNamedaySuffix();
+        const dk =
+          String(refDate.getFullYear()) +
+          "-" +
+          String(refDate.getMonth() + 1) +
+          "-" +
+          String(refDate.getDate());
+        if (silverNamedayDateKey && dk !== silverNamedayDateKey) {
+          silverNamedayResolvedLine = "";
+        }
+        silverNamedayDateKey = dk;
+        const nd = readNamedaySuffixForMeta();
         metaEl.textContent = "Dnes je " + wLower + " " + dlong + " · " + nd;
         try{ fitMetaFont(); }catch{}
         scheduleSilverWelcomeFit();
@@ -4878,6 +4908,7 @@ function buildVideoAsArticleCard(it) {
       var panelNav = document.getElementById("iuMobileGatePanelNav");
       var panelTools = document.getElementById("iuMobileGatePanelTools");
       var silver = document.getElementById("silver-slot");
+      var topCardsStack = document.getElementById("iuSilverTopCardsStack");
       var rail = document.getElementById("iuLeftRail");
       var mindMenuWrapper = document.querySelector(".mindMenu-scroll-wrapper");
       var newsList = document.getElementById("newsList");
@@ -4903,9 +4934,13 @@ function buildVideoAsArticleCard(it) {
       } else {
         wrap.setAttribute("aria-hidden", "true");
         if (silverSlot.contains(silver)) {
-          var stage = feed && feed.parentNode;
-          if (stage) {
-            stage.insertBefore(silver, feed);
+          if (topCardsStack) {
+            topCardsStack.appendChild(silver);
+          } else {
+            var stage = feed && feed.parentNode;
+            if (stage) {
+              stage.insertBefore(silver, feed);
+            }
           }
         }
         if (panelNav.contains(rail)) {

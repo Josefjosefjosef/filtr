@@ -1,26 +1,24 @@
 {
   "schema": "css_debt_guard_v1",
-  "duplicate_selector_groups": 268,
-  "duplicate_rule_occurrences_in_groups": 706,
+  "duplicate_selector_groups": 267,
+  "duplicate_rule_occurrences_in_groups": 705,
   "classification_counts": {
     "identical_duplicate": 12,
-    "breakpoint_specific": 127,
+    "breakpoint_specific": 126,
     "risky_layout_coupled": 105,
     "intentional_cascade_candidate": 24
   },
   "debt_verdict_counts": {
-    "intentional_non_debt": 79,
-    "true_debt": 0,
+    "intentional_non_debt": 78,
     "risk_now": 177,
     "unresolved_needs_review": 12
   },
   "debt_occurrence_counts": {
-    "intentional_non_debt": 224,
-    "true_debt": 0,
+    "intentional_non_debt": 223,
     "risk_now": 457,
     "unresolved_needs_review": 25
   },
-  "app_css_bytes": 595506,
+  "app_css_bytes": 600729,
   "css_size_guard_budget_bytes": 4096,
   "risk_zone_duplicate_groups": [
     {
@@ -636,10 +634,6 @@
       "classification": "risky_layout_coupled"
     },
     {
-      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherAlertTitle, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherAlertTitle",
-      "classification": "intentional_cascade_candidate"
-    },
-    {
       "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed #iuWxHours .iuWxHour, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed #iuWxHours .iuWxHour",
       "classification": "intentional_cascade_candidate"
     },
@@ -664,23 +658,11 @@
       "classification": "identical_duplicate"
     },
     {
-      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed a, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed a",
-      "classification": "intentional_cascade_candidate"
-    },
-    {
       "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherQuickChip, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherQuickChip",
       "classification": "risky_layout_coupled"
     },
     {
       "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherQuickGrid, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherQuickGrid",
-      "classification": "breakpoint_specific"
-    },
-    {
-      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherRadarFrame, body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherWeekFrame, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherRadarFrame, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherWeekFrame",
-      "classification": "breakpoint_specific"
-    },
-    {
-      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherSticky, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherSticky",
       "classification": "breakpoint_specific"
     },
     {
