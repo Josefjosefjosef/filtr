@@ -113,7 +113,14 @@ style-src 'self' 'unsafe-inline' https:;
                         <div class="iuTopbarSpacer" aria-hidden="true"></div>
                         <div class="iuTopbarRight" id="iuTopbarRight">
                         </div>
-                        <div class="iuTopbarContent" aria-label="Topbar content"></div>
+                        <div class="iuTopbarContent" aria-label="Topbar content">
+                          <!-- Hidden anchors for nameday/date sync (iuSetTopbarNameday / iuMirrorTodayToTopbar); not shown in topbar UI -->
+                          <div id="iuTopbarToday" class="iuTopbarToday" hidden aria-hidden="true">
+                            <span id="iuTopbarDay"></span>
+                            <span id="iuTopbarDate"></span>
+                            <span id="iuTopbarNameday"></span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </header>
@@ -768,16 +775,15 @@ style-src 'self' 'unsafe-inline' https:;
                     </div>
                   </div>
                   <section id="silver-slot" class="silver-slot" aria-label="Silver">
+                    <div class="iuSilverWelcomeSticky" id="iuSilverWelcomeSticky">
+                      <div class="iuSilverWelcomeCard iuSilverWelcomeCard--evening" id="iuSilverWelcomeCard" data-iu-silver-welcome-card data-iu-silver-welcome-variant="evening">
+                        <div class="iuSilverWelcomeHeadline" id="iuSilverWelcomeHeadline" aria-live="polite"></div>
+                        <div class="iuSilverWelcomeMeta" id="iuSilverWelcomeMeta" data-iu-silver-meta></div>
+                      </div>
+                    </div>
                     <div class="silver-shell">
                       <div class="silver-compose">
                         <div class="silver-output" aria-live="polite">
-                          <div class="silver-brief">
-                            <div class="silver-line">Dobré ráno.</div>
-                            <div class="silver-line">👉 Dnes je venku …</div>
-                            <div class="silver-line">👉 Dnes ráno se píše například o:</div>
-                            <div class="silver-links" aria-label="Ranní odkazy">
-                            </div>
-                          </div>
                         </div>
                         <div class="silver-inputWrap">
                           <input class="silver-input" type="text" inputmode="text" autocomplete="off" placeholder="Napiš Silverovi…" aria-label="Napiš Silverovi">
