@@ -11436,10 +11436,7 @@ main#content .layout:has(#leftStickyHeader){
   left: auto !important;
 }
 
-/* Right panel must never overlap the fixed topbar (only affects sticky/fixed) */
-.layout > aside.accordionCol{
-  top: var(--iuTopbarHeight) !important;
-}
+/* Right column vertical offset: desktop používá padding-top u .layout:has(#leftStickyHeader) > aside (viz výše), ne top na static aside. */
 
 /* ============================================================
    FINAL ÔÇö Left Rail 10/10 (premium blue + silver labels)
@@ -13910,6 +13907,15 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
     padding-top: 0 !important;
     margin-top: 0 !important;
     align-self: start;
+  }
+
+  /*
+    P0: Levý sloupec má #leftStickyHeader nahoře, Silver až pod ním; pravý sloupec byl v gridu
+    zarovnaný na horní okraj layoutu (vedle topbaru). Posun o výšku topbaru = stejný horní tok jako Silver.
+  */
+  .layout:has(#leftStickyHeader) > aside.accordionCol{
+    padding-top: var(--iuTopbarHeight) !important;
+    box-sizing: border-box;
   }
 
   .mindMenu-scroll-wrapper,
