@@ -9703,6 +9703,10 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   }
   /* P0 Tablet (768px–900px): show feed column; 768 musí být zahrnuto — jinak #leftContent zůstane display:none z mobile pravidla a feed inject dá obří CLS. */
   @media (min-width: 768px) and (max-width: 900px) {
+    /* P0 CLS: gate wrap krátce klesne o ~68px (t≈500ms) → posune #leftContent → ~0.024 CLS; stabilizovat finální výšku gate. */
+    #iuMobileGateWrap.iu-mobileGateWrap{
+      min-height: 656px;
+    }
     #leftContent{
       display: block !important;
       height: calc(100vh - 120px);
