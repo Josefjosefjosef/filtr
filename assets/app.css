@@ -6207,6 +6207,18 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   display: block;
   touch-action: manipulation;
 }
+.iuWeatherMapPickerKrajLayer{
+  pointer-events: none;
+}
+.iuWeatherMapPickerKraj{
+  pointer-events: none;
+}
+.iuWeatherMapPickerCityDot{
+  fill: rgba(255,255,255,0.75);
+  stroke: rgba(0,0,0,0.45);
+  stroke-width: 0.9px;
+  pointer-events: none;
+}
 .iuWeatherMapPickerLbl{
   font-size: 9px;
   font-weight: 800;
@@ -6214,8 +6226,8 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   paint-order: stroke fill;
   stroke: rgba(0,0,0,0.55);
   stroke-width: 2px;
-  cursor: pointer;
-  pointer-events: auto;
+  cursor: default;
+  pointer-events: none;
 }
 .iuWeatherMapPickerPin{
   fill: #fbbf24;
