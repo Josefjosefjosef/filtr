@@ -13924,8 +13924,9 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
     Mezera pod topbarem (Silver top − topbar bottom) se měří na desktopu; dorovnání pravého sloupce = stejný gap.
   */
   .layout:has(#leftStickyHeader) > aside.accordionCol{
-    /* P0: dorovnaný mezerový gap pod topbarem jako u #iuSilverWelcomeSticky (měřeno +4px vs baseline) */
-    padding-top: calc(var(--iuTopbarHeight) + 4px) !important;
+    /* P0: stejný vertikální offset jako dřív (topbar + 4px gap), ale margin místo padding — pozadí aside nevyplňuje pás nad .mindMenu */
+    padding-top: 0 !important;
+    margin-top: calc(var(--iuTopbarHeight) + 4px) !important;
     box-sizing: border-box;
   }
 
