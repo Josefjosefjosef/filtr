@@ -293,6 +293,12 @@ html, body{
 
 html,body{ height:100%; }
 
+/* P0 CLS: stabilní gutter svislého scrollbaru — bez toho může mizící/objevující se šířka scrollbaru dát ~0.00024 shift (mobile/tablet). */
+html{
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
+}
+
 body{
   margin:0;
   /* P0 CLS (desktop): 100vw includes scrollbar gutter inconsistently vs layout — iuArticlesStage width jumped when scrollport finalized; use % of html like topbar fix */
@@ -9688,8 +9694,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   body.iu-mobileMainVisible #iuMobileGateWrap{
     display: none !important;
   }
-  /* P0 Tablet (769px–900px): show feed column; stabilize wrapper so it never expands (CLS root cause = #leftContent height change on feed inject) */
-  @media (min-width: 769px) and (max-width: 900px) {
+  /* P0 Tablet (768px–900px): show feed column; 768 musí být zahrnuto — jinak #leftContent zůstane display:none z mobile pravidla a feed inject dá obří CLS. */
+  @media (min-width: 768px) and (max-width: 900px) {
     #leftContent{
       display: block !important;
       height: calc(100vh - 120px);
@@ -9702,10 +9708,30 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     }
   }
   /* Legacy tablet range without max-width for display only */
-  @media (min-width: 769px) {
+  @media (min-width: 768px) {
     #leftContent{
       display: block !important;
     }
+  }
+  /* P0 CLS: Silver welcome — bez duplicitního @media bloku (debt guard); clamp místo JS fit na ≤900px */
+  .iuSilverWelcomeCard{
+    contain: layout style;
+  }
+  .iuSilverWelcomeMeta{
+    font-size: clamp(10px, 3.05vw, 12px);
+    letter-spacing: -0.018em;
+    min-height: 1.25em;
+    contain: layout style;
+  }
+  /* P0 CLS: první karta feedu — štítek ::after skryt na úzkém layoutu + min výška pro stabilnější paint */
+  #feed > .news-card:first-child::after,
+  #feed > article:first-child::after{
+    content: none !important;
+    display: none !important;
+  }
+  #feed > article:first-child,
+  #feed > .news-card:first-child{
+    min-height: min(320px, 70vh);
   }
   .layout > aside.accordionCol{
     display: none !important;

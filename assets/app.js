@@ -4777,9 +4777,22 @@ function buildVideoAsArticleCard(it) {
         return "";
       }
     }
+    /** P0 CLS: na mobile/tablet (≤900px) nepoužívat iterativní měření fontu — každý krok mění layout-shift; CSS clamp v app.css. */
+    function silverWelcomeUseJsMetaFit(){
+      try{
+        if (typeof window.matchMedia === "function") {
+          return window.matchMedia("(min-width: 901px)").matches;
+        }
+      }catch{}
+      return (typeof window.innerWidth === "number" ? window.innerWidth : 1024) > 900;
+    }
     function fitMetaFont(){
       try{
         if (!metaEl) return;
+        if (!silverWelcomeUseJsMetaFit()) {
+          try{ metaEl.style.removeProperty("font-size"); }catch{}
+          return;
+        }
         const w = typeof window.innerWidth === "number" ? window.innerWidth : 1024;
         const maxPx = w <= 480 ? 12 : w <= 900 ? 13 : 14;
         const minPx = 10;
@@ -4797,6 +4810,10 @@ function buildVideoAsArticleCard(it) {
     }
     function scheduleSilverWelcomeFit(){
       try{
+        if (!silverWelcomeUseJsMetaFit()) {
+          try{ if (metaEl) metaEl.style.removeProperty("font-size"); }catch{}
+          return;
+        }
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             try{ fitMetaFont(); }catch{}
@@ -4845,8 +4862,12 @@ function buildVideoAsArticleCard(it) {
         /* P0: Nemazat window.__iuNamedaySuffixFromSource v welcome — vlastní iuDailyPanelInit; mazání způsobovalo závod a ořez plného textu. */
         const nd = readNamedaySuffixForMeta();
         metaEl.textContent = "Dnes je " + wLower + " " + dlong + " · " + nd;
-        try{ fitMetaFont(); }catch{}
-        scheduleSilverWelcomeFit();
+        if (silverWelcomeUseJsMetaFit()) {
+          try{ fitMetaFont(); }catch{}
+          scheduleSilverWelcomeFit();
+        } else {
+          try{ metaEl.style.removeProperty("font-size"); }catch{}
+        }
       }catch{}
     }
 
@@ -4868,10 +4889,15 @@ function buildVideoAsArticleCard(it) {
         try{ if (document.visibilityState === "visible") refresh(); }catch{}
       });
     }catch{}
-    try{ setTimeout(() => refresh(), 400); }catch{}
-    try{ setTimeout(() => refresh(), 1500); }catch{}
+    /* P0 CLS: na ≤900px neopakujeme refresh zbytečně po 400/1500 ms — MutationObserver + fetch callback stačí; méně layout passů. */
     try{
-      if (typeof ResizeObserver !== "undefined" && cardEl) {
+      if (silverWelcomeUseJsMetaFit()) {
+        setTimeout(() => refresh(), 400);
+        setTimeout(() => refresh(), 1500);
+      }
+    }catch{}
+    try{
+      if (typeof ResizeObserver !== "undefined" && cardEl && silverWelcomeUseJsMetaFit()) {
         const ro = new ResizeObserver(() => {
           try{ scheduleSilverWelcomeFit(); }catch{}
         });
