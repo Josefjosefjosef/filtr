@@ -22,8 +22,7 @@ style-src 'self' 'unsafe-inline' https:;
 ">
 
     <style>
-      /* DIAG ONLY: zviditelnění, zda je feed přítomen a není skryt/překryt */
-      #feed { min-height: 200px !important; outline: 2px dashed rgba(255,255,255,0.35) !important; outline-offset: 2px; }
+      /* pointer-events: diag overlays must not steal clicks */
       body::before, body::after, html::before, html::after { pointer-events: none !important; }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
