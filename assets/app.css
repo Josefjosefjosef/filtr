@@ -13877,8 +13877,7 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
   }
 }
 
-/* ===== infoUzel: LOCK TOP right column (desktop) ÔÇô no auto-align ===== */
-/* position: static + top: auto overrides line 9893; margin-top 12px = fin├íln├ş nudge. */
+/* ===== infoUzel: desktop right column — same top flow as main column (no extra nudge) ===== */
 @media (min-width: 900px){
   .layout{
     align-items: start;
@@ -13888,7 +13887,7 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
     position: static !important;
     top: auto !important;
     padding-top: 0 !important;
-    margin-top: 12px !important; /* fin├íln├ş nudge ÔÇô LOCK TOP */
+    margin-top: 0 !important;
     align-self: start;
   }
 
