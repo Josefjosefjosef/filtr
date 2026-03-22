@@ -2943,6 +2943,40 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script type="module">import{franc}from"/assets/vendor/franc-min.js";window.franc=franc;</script>
     <script defer src="/assets/app-crash-shield.js"></script>
+    <!-- P0 CLS: run same mobile gate DOM placement synchronously before module paint (iuMobileGateReorder in app.js runs too late vs first paint) -->
+    <script>
+    (function(){
+      try{
+        var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
+        var mobile = mq ? mq.matches : (window.innerWidth <= 900);
+        if (!mobile) return;
+        var wrap = document.getElementById("iuMobileGateWrap");
+        var silverSlot = document.getElementById("iuMobileSilverSlot");
+        var panelNav = document.getElementById("iuMobileGatePanelNav");
+        var panelTools = document.getElementById("iuMobileGatePanelTools");
+        var silver = document.getElementById("silver-slot");
+        var rail = document.getElementById("iuLeftRail");
+        var mindMenuWrapper = document.querySelector(".mindMenu-scroll-wrapper");
+        var newsList = document.getElementById("newsList");
+        var feed = document.getElementById("feed");
+        var accordion = document.querySelector(".layout > aside.accordionCol");
+        if (!wrap || !silverSlot || !panelNav || !panelTools || !silver || !rail || !newsList || !feed || !accordion) return;
+        wrap.setAttribute("aria-hidden", "false");
+        if (!silverSlot.contains(silver)) {
+          var articlesStage = feed.parentNode;
+          if (articlesStage) {
+            silverSlot.appendChild(silver);
+          }
+        }
+        if (!panelNav.contains(rail)) {
+          panelNav.appendChild(rail);
+        }
+        if (mindMenuWrapper && !panelTools.contains(mindMenuWrapper)) {
+          panelTools.appendChild(mindMenuWrapper);
+        }
+      }catch(_){}
+    })();
+    </script>
     <script type="module" src="/assets/app.js?v=599"></script>
     <script>
     (function(){

@@ -186,7 +186,8 @@
 /* 1) Stabiln├ş scrollbar ÔÇô eliminuje vodorovn├ę ÔÇ×cuknut├şÔÇť p┼Öi objeven├ş scrollbaru */
 html{
   scroll-padding-top: var(--topbarStackH);
-  scrollbar-gutter: auto;
+  /* P0 CLS: reserve scrollbar width so feed column width does not shift when scrollport appears */
+  scrollbar-gutter: stable;
   overflow-x: hidden;
 }
 
@@ -8141,10 +8142,9 @@ html[data-iu-debug="1"] #iuDiagPanel {
   text-align: left;
 }
 
-/* CLS P0 (desktop): data-feed-ready=false reserve; html/body data-section set early in index (before paint)
-   so body[data-section="media"] feed typography matches first paint. :empty unusable (whitespace). */
+/* CLS P0 (desktop): reserve feed column height always (not only while data-feed-ready=false) so toggling ready does not collapse min-height and cause layout shift */
 @media (min-width: 901px) {
-  #iuCenterStage[data-iu-view="articles"] #feed[data-feed-ready="false"] {
+  html[data-section="media"] #iuCenterStage[data-iu-view="articles"] #feed {
     min-height: clamp(50rem, 68vh, 58rem) !important;
     box-sizing: border-box;
   }
@@ -13699,11 +13699,6 @@ body:has(#leftContent:has(#iuCenterStage[data-iu-view="quick"])),
 /* TOPBAR ÔÇö FINAL UI CONTRACT      */
 /* =============================== */
 
-/* CLS guard ÔÇö keep layout viewport width stable when scrollbar appears */
-html{
-  scrollbar-gutter: auto;
-}
-
 /* TOPBAR RIGHT ÔÇö layout contract (prevents CLS from dynamic time/date/namday) */
 #iuTopbarRight{
   flex: 0 0 320px;
@@ -16427,7 +16422,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .iuSilverWelcomeCard{
   width: 100%;
   max-height: 70px;
-  min-height: 0;
+  /* P0 CLS: reserve final two-line card height before first paint (flex sibling .silver-shell reflow) */
+  min-height: 58px;
   box-sizing: border-box;
   padding: 6px 12px 7px;
   border-radius: var(--iuSilverTopCardRadius);
