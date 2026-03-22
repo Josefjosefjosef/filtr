@@ -4828,6 +4828,7 @@ function buildVideoAsArticleCard(it) {
     const userEl = document.getElementById("iuSilverWelcomeUser");
     const metaEl = document.getElementById("iuSilverWelcomeMeta");
     const cardEl = document.getElementById("iuSilverWelcomeCard");
+    const stackEl = document.getElementById("iuSilverWelcomeStack");
     if (!headlineEl || !metaEl || !cardEl) return;
 
     function fmtDayForMeta(d){
@@ -4949,13 +4950,15 @@ function buildVideoAsArticleCard(it) {
     }
     function applyVariantClass(k){
       try{
-        cardEl.classList.remove(
-          "iuSilverWelcomeCard--morning",
-          "iuSilverWelcomeCard--lateMorning",
-          "iuSilverWelcomeCard--afternoon",
-          "iuSilverWelcomeCard--evening"
-        );
-        cardEl.classList.add("iuSilverWelcomeCard--" + k);
+        const variants = ["morning", "lateMorning", "afternoon", "evening"];
+        const prefix = "silver-welcome-stack--";
+        if (stackEl) {
+          for (let i = 0; i < variants.length; i++) {
+            stackEl.classList.remove(prefix + variants[i]);
+          }
+          stackEl.classList.add(prefix + k);
+          stackEl.setAttribute("data-iu-silver-welcome-variant", k);
+        }
         cardEl.setAttribute("data-iu-silver-welcome-variant", k);
       }catch{}
     }
