@@ -795,6 +795,28 @@ style-src 'self' 'unsafe-inline' https:;
                     </div>
                   </div>
                   <div id="feed" data-view-host="media" data-feed-ready="false"></div>
+                  <script>
+                  (function(){
+                    try {
+                      if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return;
+                      var wrap = document.getElementById("iuMobileGateWrap");
+                      var silverSlot = document.getElementById("iuMobileSilverSlot");
+                      var panelNav = document.getElementById("iuMobileGatePanelNav");
+                      var silver = document.getElementById("silver-slot");
+                      var rail = document.getElementById("iuLeftRail");
+                      var feed = document.getElementById("feed");
+                      if (!wrap || !silverSlot || !panelNav || !silver || !rail || !feed) return;
+                      wrap.setAttribute("aria-hidden", "false");
+                      if (!silverSlot.contains(silver)) {
+                        var articlesStage = feed.parentNode;
+                        if (articlesStage) silverSlot.appendChild(silver);
+                      }
+                      if (!panelNav.contains(rail)) {
+                        panelNav.appendChild(rail);
+                      }
+                    } catch (e) {}
+                  })();
+                  </script>
                   </div>
                   <section id="iuQuickFeed" class="iuQuickFeed" hidden aria-label="Rychlé odkazy – detail"></section>
                   <section id="iuMyUzelView1" class="iuView iuMyUzelView" data-section="myuzel-1" data-view-host="myuzel-1" aria-label="Můj info uzel – Sekce 1" hidden>
