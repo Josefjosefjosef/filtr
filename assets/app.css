@@ -9712,6 +9712,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     #feed{
       height: 100%;
       overflow-y: auto;
+      /* P0 CLS: prázdný feed → inject karet mění výšku #leftContent (~0.024 CLS na 768px) */
+      min-height: min(320px, 48vh);
     }
   }
   /* Legacy tablet range without max-width for display only */
