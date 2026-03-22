@@ -5412,6 +5412,10 @@ html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertText{
   opacity: 0.9;
   min-height: 18px; /* CLS guard */
 }
+body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertsBox > .iuWeatherAlertText:first-child,
+html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertsBox > .iuWeatherAlertText:first-child{
+  margin-top: 0;
+}
 
 body[data-section="pocasi"] #iuWeatherView .iuWeatherAlertTitle,
 html[data-section="pocasi"] #iuWeatherView .iuWeatherAlertTitle{
