@@ -5,7 +5,8 @@
 */
 
 // Verze cache (měnit při každé významné změně)
-const CACHE_VERSION = "2026-03-18-feed-data-passthrough-v1";
+// 2026-03-22: bust app shell po gap-align CSS (PR #1362) — klienti se starým SW mohli držet zastaralé /assets cache
+const CACHE_VERSION = "2026-03-22-gap-align-css-sw-bust-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
