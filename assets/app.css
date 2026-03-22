@@ -7977,6 +7977,11 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
   padding-top: var(--iuTopbarHeight) !important;
 }
 
+/* P0: #leftStickyHeader je v toku dokumentu — padding-top na .layout by jinak zdvojnásobil mezeru před Silver / prvním obsahem pod topbarem */
+.layout:has(#leftStickyHeader){
+  padding-top: 0 !important;
+}
+
 /* layout anchors - feed left, MindMenu right */
 .layout > .mainCol{
   grid-column: 1;
@@ -9581,6 +9586,10 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   main#content .layout{
     padding-top: var(--iuMobileBtnH) !important;
   }
+  .layout:has(#leftStickyHeader),
+  main#content .layout:has(#leftStickyHeader){
+    padding-top: 0 !important;
+  }
   .layout > .mainCol{
     width: 100% !important;
     max-width: 100% !important;
@@ -9608,7 +9617,9 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     box-sizing: border-box !important;
     padding: 0 !important;
     margin-top: 0 !important;
-    overflow-x: hidden !important;
+    /* P0: overflow-x:hidden zakládá scrollport — rozbíjí sticky welcome vůči viewportu (viz posun o sticky top) */
+    overflow-x: visible !important;
+    overflow-y: visible !important;
   }
   /* P0 Silver flush: no gap between topbar and Silver */
   /* P0 CLS=0: reserve Silver slot height before first paint (RCA: silver_content_growth) */
@@ -9624,6 +9635,23 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   #iuMobileGateWrap #iuMobileSilverSlot .silver-shell{
     margin-top: 0 !important;
     padding-top: 0 !important;
+  }
+  /*
+    P0: .silver-slot má globálně overflow:hidden — vytvoří scrollport a position:sticky na welcome
+    pak počítá top vůči slotu → vizuálně posune kartu o hodnotu sticky top dolů (56px + 56px).
+    Na mobilním gate držíme overflow visible, aby sticky seděl vůči viewportu / page scrollu.
+  */
+  #iuMobileSilverSlot .silver-slot,
+  #iuMobileGateWrap #iuMobileSilverSlot .silver-slot{
+    overflow: visible !important;
+  }
+  /*
+    P0 Silver welcome sticky: v ≤820px má :root --topbarStackH 148px (legacy „stack“ topbar).
+    Silver stránka má kompaktní lištu (--iuMobileBtnH). Stará hodnota 148+4px posouvala welcome
+    o ~152px dolů uvnitř .silver-slot (vizek pod topbarem). Držíme offset u skutečné výšky lišty.
+  */
+  .iuSilverWelcomeSticky{
+    top: calc(var(--iuMobileBtnH, 52px) + 4px) !important;
   }
   /* P0 Mobile: no vertical gap between topbar and Silver block */
   #leftStickyHeader{
@@ -11237,6 +11265,12 @@ header#topbarWrap.topbar-new.iuTopbar::before{
 
 main#content .layout{
   padding-top: var(--iuTopbarHeight) !important;
+  min-height: calc(100vh - var(--iuTopbarHeight)) !important;
+}
+
+/* P0: stejný důvod jako .layout:has(#leftStickyHeader) — main#content .layout je specifičtější a jinak přidává druhou rezervu pod topbar */
+main#content .layout:has(#leftStickyHeader){
+  padding-top: 0 !important;
   min-height: calc(100vh - var(--iuTopbarHeight)) !important;
 }
 
@@ -16360,14 +16394,34 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   filter: none !important;
 }
 
+/* Silver top cards stack — sdílený surface pro welcome + budoucí boxy (jedna šířka, radius, gap, tonalita) */
+:root{
+  --iuSilverTopCardRadius: 18px;
+  --iuSilverTopCardsGap: 8px;
+  --iuSilverTopCardShadow: 0 4px 14px rgba(15, 35, 55, 0.1);
+  --iuSilverTopCardBorder: 1px solid rgba(15, 35, 55, 0.12);
+}
+
+.iuSilverTopCardsStack{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--iuSilverTopCardsGap);
+  margin: 0 0 4px 0;
+  padding: 0;
+  min-height: 0;
+}
+
 /* Silver welcome (P0): sticky card, max 70px height, 2 lines, date+svátek z iuDailyPanelInit */
 .iuSilverWelcomeSticky{
   position: sticky;
-  top: calc(var(--topbarStackH, 72px) + 6px);
+  top: calc(var(--topbarStackH, 72px) + 4px);
   z-index: 4;
   width: 100%;
   box-sizing: border-box;
-  margin: 0 0 10px 0;
+  margin: 0 0 8px 0;
   flex: 0 0 auto;
 }
 
@@ -16377,14 +16431,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   min-height: 0;
   box-sizing: border-box;
   padding: 6px 12px 7px;
-  border-radius: 18px;
+  border-radius: var(--iuSilverTopCardRadius);
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 2px;
   overflow: hidden;
-  border: 1px solid rgba(15, 35, 55, 0.12);
-  box-shadow: 0 4px 14px rgba(15, 35, 55, 0.1);
+  border: var(--iuSilverTopCardBorder);
+  box-shadow: var(--iuSilverTopCardShadow);
 }
 
 .iuSilverWelcomeHeadline{
