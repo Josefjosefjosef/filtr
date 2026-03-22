@@ -7,7 +7,8 @@
 // Verze cache (měnit při každé významné změně)
 // 2026-03-22: bust app shell po gap-align CSS (PR #1362) — klienti se starým SW mohli držet zastaralé /assets cache
 // 2026-03-22: bump — app.js iuShowSwUpdateBanner (nový SW → banner „Aktualizovat“)
-const CACHE_VERSION = "2026-03-22-sw-update-banner-v1";
+// 2026-03-22: HTML document = network-first (žádný preferovaný starý shell)
+const CACHE_VERSION = "2026-03-22-html-network-first-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -42,8 +43,7 @@ function getDataRequestType(pathname) {
 // BASE bude definován později, takže použijeme funkci
 function getAppShellUrls() {
   return [
-    BASE,
-    `${BASE}index.html`,
+    // P0: BASE / index.html — nepre-cacheovat (document = network-first; starý shell by přežíval)
     // CSS/JS musí být updatovatelný i se stabilním ?v=... (viz fetch handler níž)
     `${BASE}assets/app.css`,
     `${BASE}assets/app-crash-shield.js`,
@@ -308,6 +308,31 @@ self.addEventListener("fetch", (event) => {
     url.origin === self.location.origin &&
     (path.startsWith("/projects/data/") || path.startsWith("/projects/assets/"))
   ) {
+    return;
+  }
+
+  // P0: HTML dokumenty (navigace) — network-first; cache jen při výpadku sítě (offline fallback)
+  if (
+    event.request.method === "GET" &&
+    url.origin === self.location.origin &&
+    (event.request.mode === "navigate" || event.request.destination === "document")
+  ) {
+    event.respondWith(
+      (async () => {
+        try {
+          const res = await fetch(event.request, { cache: "no-store" });
+          return res;
+        } catch (_) {
+          const cached = await caches.match(event.request);
+          if (cached) return cached;
+          return new Response("", {
+            status: 503,
+            statusText: "Offline",
+            headers: { "Cache-Control": "no-store" },
+          });
+        }
+      })()
+    );
     return;
   }
 
