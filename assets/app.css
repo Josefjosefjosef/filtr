@@ -5955,6 +5955,29 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   max-width: 760px;
   margin: 24px auto 0 auto;
 }
+
+/* History intro: single column (heading above text) — avoid .iuSectionHeader flex row */
+#iuWeatherView .iuWeatherHistorySection{
+  display: block;
+}
+#iuWeatherView .iuWeatherHistoryIntro{
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+#iuWeatherView .iuWeatherHistoryIntro h2{
+  margin: 0 0 12px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  opacity: 0.92;
+  font-size: 18px;
+  color: var(--iuNavAccent-pocasi, #38BDF8);
+}
+#iuWeatherView .iuWeatherHistoryIntro .iuSectionSub{
+  margin: 0 0 16px;
+  line-height: 1.55;
+  opacity: 0.88;
+}
 #iuWeatherView #iuWeatherHistoryCard{
   width: 100%;
 }
