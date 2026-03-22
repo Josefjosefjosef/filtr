@@ -8012,8 +8012,7 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
   border: none;
   border-radius: 0;
   box-shadow: none;
-  /* P0 desktop: pravý sloupec +5px níž (≤900px je aside skryté mobile pravidly — margin se neprojeví) */
-  margin-top: 5px;
+  margin-top: 0;
   align-self: start;
 }
 
@@ -13924,7 +13923,8 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
     zarovnaný na horní okraj layoutu (vedle topbaru). Posun o výšku topbaru = stejný horní tok jako Silver.
   */
   .layout:has(#leftStickyHeader) > aside.accordionCol{
-    padding-top: var(--iuTopbarHeight) !important;
+    /* P0: +5px pod původním zarovnáním pod topbar (viz nižší blok margin-top:0 !important — margin zde přebíjí) */
+    padding-top: calc(var(--iuTopbarHeight) + 5px) !important;
     box-sizing: border-box;
   }
 
