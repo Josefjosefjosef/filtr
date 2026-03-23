@@ -5624,7 +5624,6 @@ function buildVideoAsArticleCard(it) {
       var wrap = document.getElementById("iuMobileGateWrap");
       var silverSlot = document.getElementById("iuMobileSilverSlot");
       var panelNav = document.getElementById("iuMobileGatePanelNav");
-      var panelTools = document.getElementById("iuMobileGatePanelTools");
       var silver = document.getElementById("silver-slot");
       var topCardsStack = document.getElementById("iuSilverTopCardsStack");
       var rail = document.getElementById("iuLeftRail");
@@ -5632,7 +5631,7 @@ function buildVideoAsArticleCard(it) {
       var newsList = document.getElementById("newsList");
       var feed = document.getElementById("feed");
       var accordion = document.querySelector(".layout > aside.accordionCol");
-      if (!wrap || !silverSlot || !panelNav || !panelTools || !silver || !rail || !newsList || !feed) return;
+      if (!wrap || !silverSlot || !panelNav || !silver || !rail || !newsList || !feed) return;
       var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
       var mobile = mq ? mq.matches : (window.innerWidth <= 900);
       if (mobile) {
@@ -5645,9 +5644,6 @@ function buildVideoAsArticleCard(it) {
         }
         if (!panelNav.contains(rail)) {
           panelNav.appendChild(rail);
-        }
-        if (mindMenuWrapper && !panelTools.contains(mindMenuWrapper)) {
-          panelTools.appendChild(mindMenuWrapper);
         }
       } else {
         wrap.setAttribute("aria-hidden", "true");
@@ -5729,8 +5725,11 @@ function buildVideoAsArticleCard(it) {
         setTab(cur === "nav" ? "" : "nav");
       });
       tabTools.addEventListener("click", function () {
-        var cur = wrap.getAttribute("data-iu-mobile-gate");
-        setTab(cur === "tools" ? "" : "tools");
+        var target = document.querySelector(".layout > aside.accordionCol .mindMenu-scroll-wrapper");
+        if (target && typeof target.scrollIntoView === "function") {
+          try { target.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (_) { target.scrollIntoView(); }
+        }
+        setTab("");
       });
       setTab("");
     } catch (_) {}
@@ -21013,6 +21012,17 @@ function buildVideoAsArticleCard(it) {
         return isMobile && wrap.getAttribute("data-iu-mobile-gate") === "tools" && !toolsPanel.hidden;
       } catch (_) { return false; }
     })();
+    const isMobileMindMenuFlowSource = (() => {
+      try {
+        const isMobile = !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
+        const flow = document.getElementById("iuMobileMindMenuFlow");
+        const aside = document.querySelector(".layout > aside.accordionCol");
+        const fromFlow = !!(flow && flow.contains(document.activeElement));
+        const fromAside = !!(aside && aside.contains(document.activeElement));
+        return isMobile && (fromFlow || fromAside);
+      } catch (_) { return false; }
+    })();
+    const isMobileOverlayScope = isMobileGateToolsOpen || isMobileMindMenuFlowSource;
     if (keyNorm === "nakup") {
       const modal = document.getElementById("iuNakupModal");
       let card = modal && modal.querySelector(".iuModalCard");
@@ -21027,7 +21037,7 @@ function buildVideoAsArticleCard(it) {
         quick.setAttribute("data-iu-quick-key", "nakup");
         try {
           document.body.classList.add("iu-quickFeedOpen");
-          if (isMobileGateToolsOpen) {
+          if (isMobileOverlayScope) {
             document.documentElement.style.overflow = "hidden";
             document.body.style.overflow = "hidden";
             document.body.classList.add("iu-modal-open", "iu-mobileGateToolsQuickOpen");
@@ -21062,7 +21072,7 @@ function buildVideoAsArticleCard(it) {
       stage.setAttribute("data-iu-view", "quick");
       quick.hidden = false;
       try {
-        if (isMobileGateToolsOpen) {
+        if (isMobileOverlayScope) {
           document.documentElement.style.overflow = "hidden";
           document.body.style.overflow = "hidden";
           document.body.classList.add("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen");

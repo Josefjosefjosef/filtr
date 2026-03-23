@@ -10074,6 +10074,22 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     min-width: 0 !important;
   }
 
+  #iuMobileMindMenuFlow{
+    display: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    padding: 0 12px 12px !important;
+    margin: 0 !important;
+  }
+  #iuMobileMindMenuFlow .mindMenu-scroll-wrapper{
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+
   /* P0 Mobile topbar: compact height, no clipping of PWA button */
   #leftStickyHeader{
     overflow: visible !important;
@@ -21127,7 +21143,14 @@ overflow:hidden !important;
 
 /* Safe mobile/tablet re-implement scoped to MindMenu+tools panel only. */
 @media (max-width: 900px){
-  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid{
+  .layout > aside.accordionCol{
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid{
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px 12px !important;
