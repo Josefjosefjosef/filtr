@@ -9666,6 +9666,113 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     margin: 0 !important;
   }
 
+@media (max-width: 1023px){
+  #iuMobileGatePanelTools{
+    padding: 0 12px 12px !important;
+    box-sizing: border-box !important;
+  }
+  #iuMobileGatePanelTools #iuMobileMindMenuFlow{
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  #iuMobileGatePanelTools .mindMenu{
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  #iuMobileGatePanelTools .mindMenu .iu-mailboxes{
+    padding-bottom: 12px !important;
+  }
+  #iuMobileGatePanelTools .mindMenu .iu-mailbox-list{
+    gap: var(--iu-mm-rowGap, 6px) !important;
+  }
+  #iuMobileGatePanelTools .mindMenu .iu-mailbox-row{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-height: 35px !important;
+    gap: 0 !important;
+  }
+  #iuMobileGatePanelTools .mindMenu .iu-mailbox-pill{
+    width: 220px !important;
+    flex: 0 0 220px !important;
+    min-width: 0 !important;
+    line-height: 35px !important;
+    border: 1px solid rgba(20, 40, 70, 0.18) !important;
+    border-radius: 999px !important;
+    background-color: rgba(255, 255, 255, 0.62) !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+  #iuMobileGatePanelTools .mindMenu .iu-mailbox-gear{
+    flex: 0 0 auto !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    margin-left: 5px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: rgba(170, 176, 184, 0.95) !important;
+  }
+  #iuMobileGatePanelTools .mindMenu .iu-pill-social-slot{
+    margin-left: 10px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+  #iuMobileGatePanelTools .mindMenu .iu-mmTopTools{
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+  }
+  #iuMobileGatePanelTools .mindMenu .iu-mmTopTool{
+    min-width: 0 !important;
+  }
+  #iuMobileGatePanelTools .mindMenu .iu-mmTopToolText{
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid{
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px 12px !important;
+  }
+  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iuTile{
+    min-width: 0 !important;
+  }
+  #iu-aiPanel,
+  #iu-mojeSluzbyPanel{
+    top: calc(var(--iuMobileBtnH, 52px) + 8px) !important;
+    max-height: calc(100dvh - (var(--iuMobileBtnH, 52px) + 20px)) !important;
+  }
+  #iu-aiPanel .iu-aiPanelHeader,
+  #iu-mojeSluzbyPanel .iu-aiPanelHeader{
+    padding: 10px 12px !important;
+    min-height: 46px !important;
+    align-items: center !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  #iu-aiPanel .iu-aiPanelBody,
+  #iu-mojeSluzbyPanel .iu-aiPanelBody{
+    padding: 12px !important;
+  }
+  #iu-aiPanel .iuAiClose,
+  #iu-mojeSluzbyPanel .iuAiClose{
+    align-self: center !important;
+    margin: 0 !important;
+  }
+}
+
   
   #leftStickyHeader{
     overflow: visible !important;
@@ -20030,4 +20137,27 @@ overflow:hidden !important;
   }
 }
 
+@media (max-width: 1023px){
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="datova-schranka"]{ --iu-ql-accent:#1D4ED8; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="internetove-bankovnictvi"]{ --iu-ql-accent:#047857; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="bakalari"]{ --iu-ql-accent:#7C3AED; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="zdravotni-pojistovna"]{ --iu-ql-accent:#0EA5A4; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="zasilky-a-sledovani"]{ --iu-ql-accent:#EA580C; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="nakup-domu"]{ --iu-ql-accent:#DB2777; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="ai-asistenti"]{ --iu-ql-accent:#2563EB; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="prekladac"]{ --iu-ql-accent:#0284C7; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="prevod-word-pdf"]{ --iu-ql-accent:#4B5563; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="financni-kalkulacky"]{ --iu-ql-accent:#CA8A04; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="vzory-smluv-plne-moci"]{ --iu-ql-accent:#9F1239; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="komunikace-vzdelavani"]{ --iu-ql-accent:#6366F1; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="katastr-nemovitosti"]{ --iu-ql-accent:#92400E; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="registr-smluv"]{ --iu-ql-accent:#4D7C0F; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="obchodni-rejstrik"]{ --iu-ql-accent:#0F766E; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="zivnostensky-rejstrik"]{ --iu-ql-accent:#DC2626; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="naceneni-nakupu"]{ --iu-ql-accent:#2E3238; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink{
+    border-color: var(--iu-ql-accent) !important;
+  }
+}
 
+ 
