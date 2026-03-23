@@ -21004,6 +21004,15 @@ function buildVideoAsArticleCard(it) {
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
     if (!stage || !quick) return;
+    const isMobileGateToolsOpen = (() => {
+      try {
+        const wrap = document.getElementById("iuMobileGateWrap");
+        const toolsPanel = document.getElementById("iuMobileGatePanelTools");
+        if (!wrap || !toolsPanel) return false;
+        const isMobile = !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
+        return isMobile && wrap.getAttribute("data-iu-mobile-gate") === "tools" && !toolsPanel.hidden;
+      } catch (_) { return false; }
+    })();
     if (keyNorm === "nakup") {
       const modal = document.getElementById("iuNakupModal");
       let card = modal && modal.querySelector(".iuModalCard");
@@ -21016,7 +21025,14 @@ function buildVideoAsArticleCard(it) {
         stage.setAttribute("data-iu-view", "quick");
         quick.hidden = false;
         quick.setAttribute("data-iu-quick-key", "nakup");
-        try { document.body.classList.add("iu-quickFeedOpen"); } catch (_) {}
+        try {
+          document.body.classList.add("iu-quickFeedOpen");
+          if (isMobileGateToolsOpen) {
+            document.documentElement.style.overflow = "hidden";
+            document.body.style.overflow = "hidden";
+            document.body.classList.add("iu-modal-open", "iu-mobileGateToolsQuickOpen");
+          }
+        } catch (_) {}
         if (window.innerWidth <= 900) {
           var newsList = stage && stage.parentElement;
           if (newsList && newsList.id === "newsList") {
@@ -21045,6 +21061,13 @@ function buildVideoAsArticleCard(it) {
       const titles = { banka: "Banka", bakalari: "Bakaláři", pojistovna: "Zdravotní pojišťovna" };
       stage.setAttribute("data-iu-view", "quick");
       quick.hidden = false;
+      try {
+        if (isMobileGateToolsOpen) {
+          document.documentElement.style.overflow = "hidden";
+          document.body.style.overflow = "hidden";
+          document.body.classList.add("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen");
+        }
+      } catch (_) {}
       quick.innerHTML = "<div class=\"iuQHead\"><div class=\"iuQTitle\">" + iuQfEscape(titles[keyNorm] || keyNorm) + "</div><div class=\"iuQHeadActions\"><button class=\"iuQClose\" type=\"button\" id=\"iuQCloseBtn\" aria-label=\"Zavřít\">×</button></div></div><div class=\"iuQCard\" id=\"iuQuickFeedMojeSluzbyBody\"></div>";
       const body = document.getElementById("iuQuickFeedMojeSluzbyBody");
       if (body && typeof window.iuRenderMojeSluzbyInQuickFeed === "function") window.iuRenderMojeSluzbyInQuickFeed(keyNorm, body);
@@ -21532,6 +21555,11 @@ function buildVideoAsArticleCard(it) {
       quick.hidden = true;
       quick.innerHTML = "";
     }
+    try {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen");
+    } catch (_) {}
   }
 
   function iuHideQuickFeed(){
