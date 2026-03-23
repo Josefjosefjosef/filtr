@@ -5684,8 +5684,8 @@ function buildVideoAsArticleCard(it) {
           }
           var topTools = mindMenu ? mindMenu.querySelector(".iu-mmTopTools") : null;
           if (topTools) {
-            topTools.style.minHeight = "56px";
-            topTools.style.height = "56px";
+            topTools.style.removeProperty("min-height");
+            topTools.style.removeProperty("height");
           }
           var mailboxList = mindMenu ? mindMenu.querySelector("#iuMailboxList") : null;
           if (mailboxList) mailboxList.style.minHeight = "262px";
