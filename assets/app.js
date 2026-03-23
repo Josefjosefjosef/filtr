@@ -5060,10 +5060,8 @@ function buildVideoAsArticleCard(it) {
     const line2 = document.getElementById("iuSilverWeatherLine2");
     const privacyEl = document.getElementById("iuSilverWeatherPrivacy");
     const actionsFirst = document.getElementById("iuSilverWeatherActions");
-    const actionsDenied = document.getElementById("iuSilverWeatherActionsDenied");
     const btnGeo = document.getElementById("iuSilverWeatherBtnGeo");
     const btnCity = document.getElementById("iuSilverWeatherBtnCity");
-    const btnCityDenied = document.getElementById("iuSilverWeatherBtnCityDenied");
     if (!card || !line1 || !line2) return;
 
     function iuSilverWeatherNavigateToWeather(){
@@ -5273,7 +5271,8 @@ function buildVideoAsArticleCard(it) {
         card.setAttribute("data-iu-silver-wx-phase", "firstVisit");
         if (privacyEl) privacyEl.hidden = false;
         if (actionsFirst) actionsFirst.hidden = false;
-        if (actionsDenied) actionsDenied.hidden = true;
+        if (btnGeo) btnGeo.hidden = false;
+        if (btnCity) btnCity.hidden = false;
       }catch{}
     }
 
@@ -5285,8 +5284,9 @@ function buildVideoAsArticleCard(it) {
       try{
         card.setAttribute("data-iu-silver-wx-phase", "denied");
         if (privacyEl) privacyEl.hidden = true;
-        if (actionsFirst) actionsFirst.hidden = true;
-        if (actionsDenied) actionsDenied.hidden = false;
+        if (actionsFirst) actionsFirst.hidden = false;
+        if (btnGeo) btnGeo.hidden = true;
+        if (btnCity) btnCity.hidden = false;
       }catch{}
     }
 
@@ -5294,7 +5294,8 @@ function buildVideoAsArticleCard(it) {
       try{
         if (privacyEl) privacyEl.hidden = true;
         if (actionsFirst) actionsFirst.hidden = true;
-        if (actionsDenied) actionsDenied.hidden = true;
+        if (btnGeo) btnGeo.hidden = false;
+        if (btnCity) btnCity.hidden = false;
       }catch{}
     }
 
@@ -5362,16 +5363,6 @@ function buildVideoAsArticleCard(it) {
       }catch{}
     });
     wireBtn(btnCity, () => {
-      try {
-        iuSilverWeatherNavigateToWeather();
-        setTimeout(() => {
-          try{
-            if (typeof window.iuWeatherOpenMapPicker === "function") window.iuWeatherOpenMapPicker();
-          }catch{}
-        }, 180);
-      }catch{}
-    });
-    wireBtn(btnCityDenied, () => {
       try {
         iuSilverWeatherNavigateToWeather();
         setTimeout(() => {
