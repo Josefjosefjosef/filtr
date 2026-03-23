@@ -5624,17 +5624,18 @@ function buildVideoAsArticleCard(it) {
       var wrap = document.getElementById("iuMobileGateWrap");
       var silverSlot = document.getElementById("iuMobileSilverSlot");
       var panelNav = document.getElementById("iuMobileGatePanelNav");
-      var panelTools = document.getElementById("iuMobileGatePanelTools");
       var silver = document.getElementById("silver-slot");
       var topCardsStack = document.getElementById("iuSilverTopCardsStack");
       var rail = document.getElementById("iuLeftRail");
-      var mindMenuWrapper = document.querySelector(".mindMenu-scroll-wrapper");
+      var mindMenuFlow = document.getElementById("iuMobileMindMenuFlow");
       var newsList = document.getElementById("newsList");
       var feed = document.getElementById("feed");
       var accordion = document.querySelector(".layout > aside.accordionCol");
-      if (!wrap || !silverSlot || !panelNav || !panelTools || !silver || !rail || !newsList || !feed) return;
+      if (!wrap || !silverSlot || !panelNav || !silver || !rail || !newsList || !feed) return;
       var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
       var mobile = mq ? mq.matches : (window.innerWidth <= 900);
+      var mqMind = window.matchMedia && window.matchMedia("(max-width: 1023px)");
+      var mobileMind = mqMind ? mqMind.matches : (window.innerWidth < 1024);
       if (mobile) {
         wrap.setAttribute("aria-hidden", "false");
         if (!silverSlot.contains(silver)) {
@@ -5646,8 +5647,48 @@ function buildVideoAsArticleCard(it) {
         if (!panelNav.contains(rail)) {
           panelNav.appendChild(rail);
         }
-        if (mindMenuWrapper && !panelTools.contains(mindMenuWrapper)) {
-          panelTools.appendChild(mindMenuWrapper);
+        if (mobileMind && mindMenuFlow) {
+          mindMenuFlow.style.display = "block";
+          mindMenuFlow.style.width = "100%";
+          mindMenuFlow.style.maxWidth = "100%";
+          mindMenuFlow.style.minWidth = "0";
+          var mindMenu = document.querySelector(".mindMenu");
+          if (mindMenu && !mindMenuFlow.style.minHeight) {
+            var reserveH = Math.ceil(mindMenu.getBoundingClientRect().height || mindMenu.offsetHeight || 0);
+            if (reserveH > 0) mindMenuFlow.style.minHeight = reserveH + "px";
+          }
+          if (mindMenu && mindMenu.parentElement !== mindMenuFlow) {
+            mindMenuFlow.insertBefore(mindMenu, mindMenuFlow.firstChild || null);
+          }
+          var grid = mindMenuFlow.querySelector(".iu-mmQuickGrid");
+          var toolsSection = grid ? (grid.closest("section.iu-mmQuickLinks") || grid.parentElement) : null;
+          if (mindMenu && toolsSection && mindMenu.contains(toolsSection)) {
+            mindMenuFlow.insertBefore(toolsSection, mindMenu.nextSibling);
+          }
+          if (mindMenu && toolsSection && toolsSection.parentElement === mindMenuFlow) {
+            mindMenuFlow.insertBefore(mindMenu, toolsSection);
+          }
+          if (toolsSection) {
+            var gridInTools = toolsSection.querySelector(".iu-mmQuickGrid");
+            if (gridInTools) {
+              gridInTools.style.display = "grid";
+              gridInTools.style.gridTemplateColumns = "repeat(2, minmax(0, 1fr))";
+              gridInTools.style.gap = "10px 12px";
+            }
+          }
+          var topTools = mindMenu ? mindMenu.querySelector(".iu-mmTopTools") : null;
+          if (topTools) {
+            topTools.style.minHeight = "56px";
+            topTools.style.height = "56px";
+          }
+          var mailboxList = mindMenu ? mindMenu.querySelector("#iuMailboxList") : null;
+          if (mailboxList) mailboxList.style.minHeight = "262px";
+          var mailboxesSection = mindMenu ? mindMenu.querySelector("section.iu-mailboxes") : null;
+          if (mailboxesSection) mailboxesSection.style.minHeight = "340px";
+          var staleWrapper = mindMenuFlow.querySelector(".mindMenu-scroll-wrapper");
+          if (staleWrapper && !staleWrapper.querySelector(".mindMenu")) {
+            staleWrapper.remove();
+          }
         }
       } else {
         wrap.setAttribute("aria-hidden", "true");
@@ -5665,9 +5706,55 @@ function buildVideoAsArticleCard(it) {
           var afterEmpty = document.getElementById("emptyBox");
           newsList.insertBefore(rail, afterEmpty ? afterEmpty.nextSibling : newsList.firstChild);
         }
-        if (mindMenuWrapper && accordion && !accordion.contains(mindMenuWrapper)) {
+        var mindMenuDesktop = document.querySelector(".mindMenu");
+        if (mindMenuDesktop && accordion && !accordion.contains(mindMenuDesktop)) {
+          var wrapper = accordion.querySelector(".mindMenu-scroll-wrapper");
           var afterPwa = accordion.querySelector("#iuPwaDesktopFallbackOverlay");
-          accordion.insertBefore(mindMenuWrapper, afterPwa ? afterPwa.nextSibling : accordion.firstChild);
+          if (wrapper) {
+            if (!wrapper.contains(mindMenuDesktop)) wrapper.appendChild(mindMenuDesktop);
+            accordion.insertBefore(wrapper, afterPwa ? afterPwa.nextSibling : accordion.firstChild);
+          } else {
+            accordion.insertBefore(mindMenuDesktop, afterPwa ? afterPwa.nextSibling : accordion.firstChild);
+          }
+        }
+      }
+      if (!mobileMind && accordion) {
+        if (mindMenuFlow) {
+          mindMenuFlow.style.minHeight = "";
+          mindMenuFlow.style.display = "";
+          mindMenuFlow.style.width = "";
+          mindMenuFlow.style.maxWidth = "";
+          mindMenuFlow.style.minWidth = "";
+        }
+        var mindMenuDesktopAlways = document.querySelector(".mindMenu");
+        if (mindMenuDesktopAlways && !accordion.contains(mindMenuDesktopAlways)) {
+          var wrapperAlways = accordion.querySelector(".mindMenu-scroll-wrapper");
+          var afterPwaDesktop = accordion.querySelector("#iuPwaDesktopFallbackOverlay");
+          if (wrapperAlways) {
+            if (!wrapperAlways.contains(mindMenuDesktopAlways)) wrapperAlways.appendChild(mindMenuDesktopAlways);
+            var toolsSectionDesktop = accordion.querySelector("section.iu-mmQuickLinks");
+            if (toolsSectionDesktop && !mindMenuDesktopAlways.contains(toolsSectionDesktop)) {
+              mindMenuDesktopAlways.appendChild(toolsSectionDesktop);
+            }
+            var gridDesktop = toolsSectionDesktop ? toolsSectionDesktop.querySelector(".iu-mmQuickGrid") : null;
+            if (gridDesktop) {
+              gridDesktop.style.display = "";
+              gridDesktop.style.gridTemplateColumns = "";
+              gridDesktop.style.gap = "";
+            }
+            var topToolsDesktop = mindMenuDesktopAlways.querySelector(".iu-mmTopTools");
+            if (topToolsDesktop) {
+              topToolsDesktop.style.minHeight = "";
+              topToolsDesktop.style.height = "";
+            }
+            var mailboxListDesktop = mindMenuDesktopAlways.querySelector("#iuMailboxList");
+            if (mailboxListDesktop) mailboxListDesktop.style.minHeight = "";
+            var mailboxesSectionDesktop = mindMenuDesktopAlways.querySelector("section.iu-mailboxes");
+            if (mailboxesSectionDesktop) mailboxesSectionDesktop.style.minHeight = "";
+            accordion.insertBefore(wrapperAlways, afterPwaDesktop ? afterPwaDesktop.nextSibling : accordion.firstChild);
+          } else {
+            accordion.insertBefore(mindMenuDesktopAlways, afterPwaDesktop ? afterPwaDesktop.nextSibling : accordion.firstChild);
+          }
         }
       }
     } catch (_) {}
@@ -5729,8 +5816,11 @@ function buildVideoAsArticleCard(it) {
         setTab(cur === "nav" ? "" : "nav");
       });
       tabTools.addEventListener("click", function () {
-        var cur = wrap.getAttribute("data-iu-mobile-gate");
-        setTab(cur === "tools" ? "" : "tools");
+        var target = document.querySelector("#iuMobileMindMenuFlow .mindMenu-scroll-wrapper") || document.querySelector(".layout > aside.accordionCol .mindMenu-scroll-wrapper");
+        if (target && typeof target.scrollIntoView === "function") {
+          try { target.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (_) { target.scrollIntoView(); }
+        }
+        setTab("");
       });
       setTab("");
     } catch (_) {}
@@ -21013,6 +21103,17 @@ function buildVideoAsArticleCard(it) {
         return isMobile && wrap.getAttribute("data-iu-mobile-gate") === "tools" && !toolsPanel.hidden;
       } catch (_) { return false; }
     })();
+    const isMobileMindMenuFlowSource = (() => {
+      try {
+        const isMobile = !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
+        const flow = document.getElementById("iuMobileMindMenuFlow");
+        const aside = document.querySelector(".layout > aside.accordionCol");
+        const fromFlow = !!(flow && flow.contains(document.activeElement));
+        const fromAside = !!(aside && aside.contains(document.activeElement));
+        return isMobile && (fromFlow || fromAside);
+      } catch (_) { return false; }
+    })();
+    const isMobileOverlayScope = isMobileGateToolsOpen || isMobileMindMenuFlowSource;
     if (keyNorm === "nakup") {
       const modal = document.getElementById("iuNakupModal");
       let card = modal && modal.querySelector(".iuModalCard");
@@ -21027,7 +21128,7 @@ function buildVideoAsArticleCard(it) {
         quick.setAttribute("data-iu-quick-key", "nakup");
         try {
           document.body.classList.add("iu-quickFeedOpen");
-          if (isMobileGateToolsOpen) {
+          if (isMobileOverlayScope) {
             document.documentElement.style.overflow = "hidden";
             document.body.style.overflow = "hidden";
             document.body.classList.add("iu-modal-open", "iu-mobileGateToolsQuickOpen");
@@ -21062,7 +21163,7 @@ function buildVideoAsArticleCard(it) {
       stage.setAttribute("data-iu-view", "quick");
       quick.hidden = false;
       try {
-        if (isMobileGateToolsOpen) {
+        if (isMobileOverlayScope) {
           document.documentElement.style.overflow = "hidden";
           document.body.style.overflow = "hidden";
           document.body.classList.add("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen");

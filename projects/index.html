@@ -1751,6 +1751,7 @@ style-src 'self' 'unsafe-inline' https:;
                 </div>
                   </div>
               </div>
+              <div id="iuMobileMindMenuFlow" class="iu-mobileMindMenuFlow" aria-label="MindMenu a nástroje"></div>
               <aside class="accordionCol" aria-label="Postranní panel">
                 <div class="iuRightTopCtas" aria-label="Inzerce a služby">
                   <button type="button" class="iuRightCta iuRightCta--services" aria-label="Inzerce a služby">
@@ -1878,6 +1879,29 @@ style-src 'self' 'unsafe-inline' https:;
                       </div>
                     </div>
               </aside>
+              <script>
+              (function(){
+                try{
+                  if (!window.matchMedia || !window.matchMedia("(max-width: 1023px)").matches) return;
+                  var flow = document.getElementById("iuMobileMindMenuFlow");
+                  var mindMenu = document.querySelector(".mindMenu");
+                  if (!flow || !mindMenu) return;
+                  var reserve = Math.ceil(mindMenu.getBoundingClientRect().height || mindMenu.offsetHeight || 0);
+                  if (reserve > 0) flow.style.minHeight = reserve + "px";
+                  if (mindMenu.parentElement !== flow) flow.insertBefore(mindMenu, flow.firstChild || null);
+                  var grid = flow.querySelector(".iu-mmQuickGrid");
+                  var toolsSection = grid ? (grid.closest("section.iu-mmQuickLinks") || grid.parentElement) : null;
+                  if (toolsSection && mindMenu.contains(toolsSection)) {
+                    flow.insertBefore(toolsSection, mindMenu.nextSibling);
+                  }
+                  if (toolsSection && toolsSection.parentElement === flow) {
+                    flow.insertBefore(mindMenu, toolsSection);
+                  }
+                  var staleWrapper = flow.querySelector(".mindMenu-scroll-wrapper");
+                  if (staleWrapper && !staleWrapper.querySelector(".mindMenu")) staleWrapper.remove();
+                }catch(_){}
+              })();
+              </script>
             </div>
             <!-- Moje služby modaly (outside right rail, over center feed) -->
             <div id="iu-mojeSluzbyOverlay" class="iu-aiOverlay" hidden aria-hidden="true"></div>
@@ -2994,14 +3018,12 @@ style-src 'self' 'unsafe-inline' https:;
         var wrap = document.getElementById("iuMobileGateWrap");
         var silverSlot = document.getElementById("iuMobileSilverSlot");
         var panelNav = document.getElementById("iuMobileGatePanelNav");
-        var panelTools = document.getElementById("iuMobileGatePanelTools");
         var silver = document.getElementById("silver-slot");
         var rail = document.getElementById("iuLeftRail");
-        var mindMenuWrapper = document.querySelector(".mindMenu-scroll-wrapper");
         var newsList = document.getElementById("newsList");
         var feed = document.getElementById("feed");
         var accordion = document.querySelector(".layout > aside.accordionCol");
-        if (!wrap || !silverSlot || !panelNav || !panelTools || !silver || !rail || !newsList || !feed || !accordion) return;
+        if (!wrap || !silverSlot || !panelNav || !silver || !rail || !newsList || !feed || !accordion) return;
         wrap.setAttribute("aria-hidden", "false");
         if (!silverSlot.contains(silver)) {
           var articlesStage = feed.parentNode;
@@ -3011,9 +3033,6 @@ style-src 'self' 'unsafe-inline' https:;
         }
         if (!panelNav.contains(rail)) {
           panelNav.appendChild(rail);
-        }
-        if (mindMenuWrapper && !panelTools.contains(mindMenuWrapper)) {
-          panelTools.appendChild(mindMenuWrapper);
         }
       }catch(_){}
     })();
