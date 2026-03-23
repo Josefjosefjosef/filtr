@@ -134,10 +134,10 @@ style-src 'self' 'unsafe-inline' https:;
                           </div>
                           <div class="iuSilverWelcomeMeta" id="iuSilverWelcomeMeta" data-iu-silver-meta></div>
                           <div class="iu-nameday-cta" id="iuNamedayCta" data-iu-nameday-cta>
-                            <button class="iu-btn-secondary iu-nameday-wish" type="button">
+                            <button type="button" class="silver-weather-btn iu-nameday-wish">
                               Přání k svátku
                             </button>
-                            <button class="iu-btn-secondary iu-nameday-flowers" type="button">
+                            <button type="button" class="silver-weather-btn iu-nameday-flowers">
                               Poslat květiny
                             </button>
                           </div>
@@ -3465,16 +3465,15 @@ style-src 'self' 'unsafe-inline' https:;
         </div>
       </div>
     </div>
-    <div id="iuNamedayWishOverlay" class="iu-nameday-wish-overlay" hidden aria-hidden="true">
-      <div class="iu-nameday-wish-backdrop" aria-hidden="true"></div>
-      <div class="iu-nameday-wish-dialog" role="dialog" aria-modal="true" aria-labelledby="iuNamedayWishTitle">
-        <h2 id="iuNamedayWishTitle" class="iu-nameday-wish-title">Vyber styl přání</h2>
+    <div id="iuNamedayWishOverlay" class="iuModal" hidden aria-hidden="true">
+      <div class="iuModalCard" id="iuNamedayWishCard" role="dialog" aria-modal="true" aria-labelledby="iuNamedayWishTitle">
+        <h2 id="iuNamedayWishTitle">Vyber styl přání</h2>
         <div class="iu-nameday-wish-mode-row">
-          <button type="button" class="iu-nameday-wish-mode iu-nameday-wish-mode--tykat" data-iu-nameday-mode="tykat" aria-pressed="true">Tykat</button>
-          <button type="button" class="iu-nameday-wish-mode iu-nameday-wish-mode--vykat" data-iu-nameday-mode="vykat" aria-pressed="false">Vykat</button>
+          <button type="button" class="silver-weather-btn iu-nameday-wish-mode--tykat" data-iu-nameday-mode="tykat" aria-pressed="true">Tykat</button>
+          <button type="button" class="silver-weather-btn iu-nameday-wish-mode--vykat" data-iu-nameday-mode="vykat" aria-pressed="false">Vykat</button>
         </div>
-        <textarea id="iuNamedayWishTextarea" class="iu-nameday-wish-textarea" readonly rows="5" autocomplete="off" aria-label="Text přání"></textarea>
-        <button type="button" id="iuNamedayWishCopy" class="iu-nameday-wish-copy">Kopírovat přání</button>
+        <textarea id="iuNamedayWishTextarea" readonly rows="5" autocomplete="off" aria-label="Text přání"></textarea>
+        <button type="button" id="iuNamedayWishCopy" class="silver-weather-btn">Kopírovat přání</button>
       </div>
     </div>
     <div id="iuVideoModal" class="iuVideoModal" hidden aria-modal="true" aria-label="Přehrát video">

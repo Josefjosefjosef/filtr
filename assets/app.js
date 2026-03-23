@@ -5165,6 +5165,7 @@ function buildVideoAsArticleCard(it) {
     function openOverlay(){
       try{
         setMode("tykat");
+        try{ overlay.style.display = ""; }catch{}
         overlay.removeAttribute("hidden");
         overlay.setAttribute("aria-hidden", "false");
         try{ ta.focus(); }catch{}
@@ -5208,7 +5209,7 @@ function buildVideoAsArticleCard(it) {
       overlay.addEventListener("click", (e) => {
         try{
           const t = e.target;
-          if (t === overlay || (t && t.classList && t.classList.contains("iu-nameday-wish-backdrop"))) {
+          if (t === overlay) {
             closeOverlay();
           }
         }catch{}
@@ -5216,7 +5217,7 @@ function buildVideoAsArticleCard(it) {
     }catch{}
 
     try{
-      const dlg = overlay.querySelector(".iu-nameday-wish-dialog");
+      const dlg = overlay.querySelector("#iuNamedayWishCard");
       if (dlg) {
         dlg.addEventListener("click", (e) => {
           try{ e.stopPropagation(); }catch{}

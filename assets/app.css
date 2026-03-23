@@ -16673,7 +16673,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   border-color: rgba(255, 255, 255, 0.28);
 }
 
-/* Nameday CTA + přání (welcome box only) — absolutně vůči kartě: neovlivňuje výšku toku, slot rezervuje padding-bottom na kartě */
+/* Nameday CTA + přání: řádek v kartě; CTA=.silver-weather-btn; overlay=#iuNamedayWishOverlay; karta=#iuNamedayWishCard */
 .iu-nameday-cta{
   position: absolute;
   left: 12px;
@@ -16710,156 +16710,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 }
 
-.iu-nameday-cta .iu-btn-secondary{
-  flex: 1 1 180px;
-  min-width: 0;
-  appearance: none;
-  border: 1px solid rgba(15, 35, 55, 0.18);
-  background: rgba(255, 255, 255, 0.35);
-  color: rgba(15, 30, 45, 0.95);
-  border-radius: 10px;
-  padding: 6px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.2;
-  cursor: pointer;
-  box-sizing: border-box;
-  max-width: 100%;
-  min-height: 30px;
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.silver-welcome-stack--evening .iu-nameday-cta .iu-btn-secondary{
-  border-color: rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(248, 252, 255, 0.95);
-}
-
-.iu-nameday-cta .iu-btn-secondary:hover{
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(15, 30, 45, 0.12);
-  background: rgba(255, 255, 255, 0.48);
-  border-color: rgba(15, 35, 55, 0.24);
-}
-
-.silver-welcome-stack--evening .iu-nameday-cta .iu-btn-secondary:hover{
-  background: rgba(255, 255, 255, 0.17);
-  border-color: rgba(255, 255, 255, 0.32);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-}
-
-.iu-nameday-cta .iu-btn-secondary:focus-visible{
-  outline: 2px solid rgba(90, 140, 220, 0.85);
-  outline-offset: 2px;
-}
-
-.silver-welcome-stack--evening .iu-nameday-cta .iu-btn-secondary:focus-visible{
-  outline-color: rgba(200, 230, 255, 0.95);
-}
-
-.iu-nameday-wish-overlay[hidden]{
-  display: none !important;
-}
-
-.iu-nameday-wish-overlay{
-  position: fixed;
-  inset: 0;
-  z-index: 99990;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-.iu-nameday-wish-backdrop{
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 30, 45, 0.45);
-}
-
-.iu-nameday-wish-dialog{
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 420px;
-  box-sizing: border-box;
-  padding: 18px 18px 16px;
-  border-radius: 14px;
-  background: #fff;
-  color: rgba(15, 30, 45, 0.95);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
-  border: 1px solid rgba(15, 35, 55, 0.12);
-}
-
-.iu-nameday-wish-title{
-  margin: 0 0 14px 0;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.iu-nameday-wish-mode-row{
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.iu-nameday-wish-mode{
-  flex: 1 1 0;
-  appearance: none;
-  border: 1px solid rgba(15, 35, 55, 0.18);
-  background: rgba(255, 255, 255, 0.92);
-  color: rgba(15, 30, 45, 0.95);
-  border-radius: 10px;
-  padding: 8px 12px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  min-height: 36px;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-
-.iu-nameday-wish-mode[aria-pressed="true"]{
-  border-color: rgba(90, 140, 220, 0.85);
-  background: rgba(90, 140, 220, 0.12);
-}
-
-.iu-nameday-wish-textarea{
-  width: 100%;
-  min-height: 120px;
-  box-sizing: border-box;
-  margin: 0 0 12px 0;
-  padding: 10px 12px;
-  font-size: 14px;
-  line-height: 1.45;
-  border-radius: 10px;
-  border: 1px solid rgba(15, 35, 55, 0.16);
-  resize: none;
-  font-family: inherit;
-  color: rgba(15, 30, 45, 0.95);
-  background: rgba(248, 250, 252, 0.95);
-}
-
-.iu-nameday-wish-copy{
-  width: 100%;
-  appearance: none;
-  border: 1px solid rgba(15, 35, 55, 0.18);
-  background: rgba(90, 140, 220, 0.18);
-  color: rgba(15, 30, 45, 0.95);
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  min-height: 40px;
-  transition: background-color 0.15s ease, transform 0.15s ease;
-}
-
-.iu-nameday-wish-copy:hover{
-  transform: translateY(-1px);
-  background: rgba(90, 140, 220, 0.28);
-}
+.iu-nameday-cta .silver-weather-btn{flex:1 1 180px;min-width:0}
+#iuNamedayWishOverlay.iuModal{z-index:99990;background:rgba(15,30,45,.45);padding:16px;box-sizing:border-box;contain:none!important}
+#iuNamedayWishCard{width:100%;max-width:420px;height:auto!important;max-height:none!important;min-height:min-content;overflow:visible!important;padding:18px 18px 16px;contain:none!important}
+#iuNamedayWishCard h2{margin:0 0 14px;font-size:18px;font-weight:700;line-height:1.2}
+#iuNamedayWishCard .iu-nameday-wish-mode-row{display:flex;gap:10px;margin:0 0 12px}
+#iuNamedayWishCard .iu-nameday-wish-mode-row .silver-weather-btn{flex:1 1 0;min-height:36px}
+#iuNamedayWishCard .silver-weather-btn[aria-pressed="true"]{border-color:rgba(90,140,220,.85);background:rgba(90,140,220,.12)}
+#iuNamedayWishTextarea{width:100%;min-height:120px;box-sizing:border-box;margin:0 0 12px;padding:10px 12px;font-size:14px;line-height:1.45;border-radius:10px;border:1px solid rgba(15,35,55,.16);resize:none;font-family:inherit;color:rgba(15,30,45,.95);background:rgba(248,250,252,.95)}
+#iuNamedayWishCopy{width:100%}
 
 /* Silver welcome (P0): sticky card + nameday CTA řádek, date+svátek z iuDailyPanelInit */
 .iuSilverWelcomeSticky{
