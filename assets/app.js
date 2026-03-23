@@ -19669,6 +19669,8 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
   }
+
+  try { window.iuOpenParcelsModal = openParcels; } catch (_) {}
   
   function closeParcels(){
     if(!modal || !overlay) return;
@@ -19676,6 +19678,7 @@ function buildVideoAsArticleCard(it) {
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
   }
+  try { window.iuCloseParcelsModal = closeParcels; } catch (_) {}
   
   function addParcelRow(carrierId){
     const rowsContainer = $(`.iu-parcelRows[data-carrier="${carrierId}"]`);
@@ -21348,6 +21351,7 @@ function buildVideoAsArticleCard(it) {
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
     if (!stage || !quick) return;
+    try { iuCloseAllOverlaysExcept("quickfeed"); } catch (_) {}
     const isMobileGateToolsOpen = (() => {
       try {
         const wrap = document.getElementById("iuMobileGateWrap");
@@ -21923,6 +21927,54 @@ function buildVideoAsArticleCard(it) {
     iuEnsureArticlesView();
   }
 
+  function iuCloseAllOverlaysExcept(targetId) {
+    const target = String(targetId || "").trim().toLowerCase();
+    try {
+      if (target !== "quickfeed") iuEnsureArticlesView();
+      if (target !== "parcels" && typeof window.iuCloseParcelsModal === "function") {
+        try { window.iuCloseParcelsModal(); } catch (_) {}
+      }
+      if (target !== "mojesluzby" && typeof window.iuCloseMojeSluzbyModal === "function") {
+        try { window.iuCloseMojeSluzbyModal(); } catch (_) {}
+      }
+      if (target !== "ai") {
+        const aiPanel = document.getElementById("iu-aiPanel");
+        const aiOverlay = document.getElementById("iu-aiOverlay");
+        if (aiPanel) aiPanel.hidden = true;
+        if (aiOverlay) aiOverlay.hidden = true;
+      }
+      // Force-close stale generic overlays/backdrops to keep max-open invariant.
+      document.querySelectorAll('.iuModal, [data-iu-backdrop], .iuBackdrop, .iu-overlay, .iu-backdrop').forEach((el) => {
+        if (target && el.id && String(el.id).toLowerCase().indexOf(target) !== -1) return;
+        el.hidden = true;
+        try { el.style.display = "none"; } catch (_) {}
+      });
+      if (target === "quickfeed") {
+        try {
+          document.documentElement.style.overflow = "hidden";
+          document.body.style.overflow = "hidden";
+          document.body.classList.add("iu-modal-open", "iu-quickFeedOpen");
+        } catch (_) {}
+      }
+    } catch (_) {}
+  }
+
+  function iuResolveQuickAction(el) {
+    if (!el) return { actionType: "none", key: "" };
+    const key = String(el.getAttribute("data-iuq") || "").trim().toLowerCase();
+    const href = String(el.getAttribute("href") || "").trim();
+    const action = String(el.getAttribute("data-iu-action") || "").trim().toLowerCase();
+    const modal = String(el.getAttribute("data-iu-modal") || "").trim().toLowerCase();
+    const isExternalHref = !!href && /^https?:\/\//i.test(href);
+    if (action === "parcels" || key === "baliky") return { actionType: "overlay", overlayId: "parcels", key };
+    if (modal === "banka" || modal === "bakalari" || modal === "pojistovna") return { actionType: "overlay", overlayId: "quickfeed", key: modal };
+    if (key === "nakup" || key === "ai" || key === "deepl" || key === "convert" || key === "naceneni") {
+      return { actionType: "overlay", overlayId: "quickfeed", key };
+    }
+    if (isExternalHref) return { actionType: "external", key, href };
+    return { actionType: key ? "overlay" : "none", overlayId: "quickfeed", key };
+  }
+
   try { window.iuEnsureArticlesView = iuEnsureArticlesView; } catch (e) {}
   try { window.iuShowQuickFeed = iuShowQuickFeed; } catch (e) {}
 
@@ -21935,13 +21987,21 @@ function buildVideoAsArticleCard(it) {
       if (t.closest('#iuQuickFeed')) return;
       const el = t.closest('[data-iuq]');
       if (!el) return;
-      const key = (el.getAttribute("data-iuq") || "").trim().toLowerCase();
-      if (key !== "nakup") {
-        e.preventDefault();
-        e.stopPropagation();
-        if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+      const resolved = iuResolveQuickAction(el);
+      if (resolved.actionType === "external") {
+        // Deterministic action guard: external links must never open overlays.
+        return;
       }
-      if (key) iuShowQuickFeed(key);
+      if (resolved.actionType !== "overlay" || !resolved.key) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+      iuCloseAllOverlaysExcept(resolved.overlayId || "quickfeed");
+      if (resolved.overlayId === "parcels" && typeof window.iuOpenParcelsModal === "function") {
+        try { window.iuOpenParcelsModal(); } catch (_) {}
+        return;
+      }
+      iuShowQuickFeed(resolved.key);
     }, true);
   }
 
