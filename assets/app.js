@@ -5656,6 +5656,14 @@ function buildVideoAsArticleCard(it) {
           if (mindMenu && mindMenu.parentElement !== mindMenuFlow) {
             mindMenuFlow.insertBefore(mindMenu, mindMenuFlow.firstChild || null);
           }
+          var grid = mindMenuFlow.querySelector(".iu-mmQuickGrid");
+          var toolsSection = grid ? (grid.closest("section.iu-mmQuickLinks") || grid.parentElement) : null;
+          if (mindMenu && toolsSection && mindMenu.contains(toolsSection)) {
+            mindMenuFlow.insertBefore(toolsSection, mindMenu.nextSibling);
+          }
+          if (mindMenu && toolsSection && toolsSection.parentElement === mindMenuFlow) {
+            mindMenuFlow.insertBefore(mindMenu, toolsSection);
+          }
           var staleWrapper = mindMenuFlow.querySelector(".mindMenu-scroll-wrapper");
           if (staleWrapper && !staleWrapper.querySelector(".mindMenu")) {
             staleWrapper.remove();
@@ -5697,6 +5705,10 @@ function buildVideoAsArticleCard(it) {
           var afterPwaDesktop = accordion.querySelector("#iuPwaDesktopFallbackOverlay");
           if (wrapperAlways) {
             if (!wrapperAlways.contains(mindMenuDesktopAlways)) wrapperAlways.appendChild(mindMenuDesktopAlways);
+            var toolsSectionDesktop = accordion.querySelector("section.iu-mmQuickLinks");
+            if (toolsSectionDesktop && !mindMenuDesktopAlways.contains(toolsSectionDesktop)) {
+              mindMenuDesktopAlways.appendChild(toolsSectionDesktop);
+            }
             accordion.insertBefore(wrapperAlways, afterPwaDesktop ? afterPwaDesktop.nextSibling : accordion.firstChild);
           } else {
             accordion.insertBefore(mindMenuDesktopAlways, afterPwaDesktop ? afterPwaDesktop.nextSibling : accordion.firstChild);

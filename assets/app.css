@@ -21156,7 +21156,8 @@ overflow:hidden !important;
     max-width: 100% !important;
   }
 
-  #iuMobileMindMenuFlow .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid{
+  #iuMobileMindMenuFlow .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid,
+  #iuMobileMindMenuFlow > section.iu-mmQuickLinks .iu-mmQuickGrid{
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px 12px !important;
