@@ -251,7 +251,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <span class="iu-leftNavLabel">Rádia</span>
                       </a>
 
-                      <a class="iu-leftNavItem" href="#" data-rail="svatky" data-accent="svatky">
+                      <a class="iu-leftNavItem" href="#" data-rail="svatky" data-accent="svatky" data-iu-calendar-trigger="1">
                         <span class="iu-leftNavIcon" aria-hidden="true">
                           <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-calendar"></use></svg>
                         </span>
@@ -3475,6 +3475,61 @@ style-src 'self' 'unsafe-inline' https:;
         <textarea id="iuNamedayWishTextarea" readonly rows="5" autocomplete="off" aria-label="Text přání"></textarea>
         <button type="button" id="iuNamedayWishCopy" class="silver-weather-btn">Kopírovat přání</button>
       </div>
+    </div>
+    <div id="iuCalendarOverlay" class="iu-calendarOverlay" hidden aria-hidden="true">
+      <div class="iu-calendarOverlay__backdrop" data-iu-calendar-close="backdrop"></div>
+      <section class="iu-calendarOverlay__dialog" role="dialog" aria-modal="true" aria-labelledby="iuCalendarTitle">
+        <header class="iu-calendarOverlay__header">
+          <h2 id="iuCalendarTitle">Kalendář</h2>
+          <div class="iu-calendarOverlay__controls">
+            <button type="button" class="iu-calendarOverlay__viewBtn" data-iu-cal-view="day" aria-label="Denní režim">Den</button>
+            <button type="button" class="iu-calendarOverlay__viewBtn" data-iu-cal-view="week" aria-label="Týdenní režim">Týden</button>
+            <button type="button" class="iu-calendarOverlay__viewBtn" data-iu-cal-view="month" aria-label="Měsíční režim">Měsíc</button>
+            <button type="button" class="iu-calendarOverlay__viewBtn" data-iu-cal-view="year" aria-label="Roční režim">Rok</button>
+            <button type="button" class="iu-calendarOverlay__close" data-iu-calendar-close="button" aria-label="Zavřít kalendář">×</button>
+          </div>
+        </header>
+        <div class="iu-calendarOverlay__body">
+          <section class="iu-calendarOverlay__main">
+            <div class="iu-calendarOverlay__toolbar">
+              <button type="button" data-iu-cal-nav="-1" aria-label="Předchozí období">‹</button>
+              <strong id="iuCalendarPeriodLabel" aria-live="polite"></strong>
+              <button type="button" data-iu-cal-nav="1" aria-label="Další období">›</button>
+              <button type="button" data-iu-cal-today="1">Dnes</button>
+            </div>
+            <div id="iuCalendarViewRoot" class="iu-calendarOverlay__viewRoot"></div>
+          </section>
+          <aside class="iu-calendarOverlay__side">
+            <form id="iuCalendarEventForm" class="iu-calendarOverlay__form">
+              <input type="hidden" name="id" />
+              <label>Datum <input type="date" name="date" required /></label>
+              <label>Čas <input type="time" name="time" required /></label>
+              <label>Název <input type="text" name="title" maxlength="120" required /></label>
+              <label>Poznámka <textarea name="note" rows="3" maxlength="1000"></textarea></label>
+              <label>Typ
+                <select name="type">
+                  <option value="personal">Osobní</option>
+                  <option value="work">Práce</option>
+                  <option value="health">Zdraví</option>
+                  <option value="other">Jiné</option>
+                </select>
+              </label>
+              <label>Fotky <input type="file" id="iuCalendarPhotoInput" accept="image/*" multiple /></label>
+              <div id="iuCalendarPhotoList" class="iu-calendarOverlay__photos"></div>
+              <div class="iu-calendarOverlay__formActions">
+                <button type="submit">Uložit</button>
+                <button type="button" data-iu-cal-delete="1">Smazat</button>
+                <button type="button" data-iu-cal-reset="1">Nová událost</button>
+              </div>
+              <p id="iuCalendarFormMsg" class="iu-calendarOverlay__msg" aria-live="polite"></p>
+            </form>
+            <section class="iu-calendarOverlay__listWrap">
+              <h3>Události dne</h3>
+              <ul id="iuCalendarDayEvents" class="iu-calendarOverlay__eventList"></ul>
+            </section>
+          </aside>
+        </div>
+      </section>
     </div>
     <div id="iuVideoModal" class="iuVideoModal" hidden aria-modal="true" aria-label="Přehrát video">
       <button type="button" class="iuVideoModalClose" aria-label="Zavřít">×</button>

@@ -26558,3 +26558,580 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 try { document.body.classList.remove("iu" + "RailHidden"); } catch (e) {}
 try { document.documentElement.classList.remove("iu" + "RailHidden"); } catch (e) {}
 try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
+
+// === Calendar overlay module (isolated, local-first, Silver API) ===
+(function(){
+  "use strict";
+
+  const CAL_NS = "iu.calendar";
+  const CAL_STYLE_ID = "iu-calendar-overlay-styles";
+  const CAL_STYLE_TEXT = ".iu-calendarOverlay{position:fixed;inset:0;z-index:10020;display:none;align-items:center;justify-content:center}.iu-calendarOverlay:not([hidden]){display:flex}.iu-calendarOverlay__backdrop{position:absolute;inset:0;background:rgba(8,14,22,.55)}.iu-calendarOverlay__dialog{position:relative;width:min(1080px,calc(100vw - 28px));height:min(88vh,860px);overflow:hidden;border-radius:12px;background:#f7f9fc;box-shadow:0 20px 52px rgba(7,12,19,.35);display:grid;grid-template-rows:auto 1fr}.iu-calendarOverlay__header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid #d7dfeb;background:#fff}.iu-calendarOverlay__controls,.iu-calendarOverlay__toolbar,.iu-calendarOverlay__formActions,.iu-calendarOverlay__photos{display:flex;align-items:center;gap:8px}.iu-calendarOverlay__viewBtn,.iu-calendarOverlay__close,.iu-calendarOverlay__eventBtn,.iu-calendarOverlay__photoChip button{border:1px solid #c6d2e5;border-radius:8px;background:#eef3fb;color:#203a59;padding:6px 9px;font-size:13px}.iu-calendarOverlay__close{width:34px;height:34px;border:0;font-size:24px;line-height:1;background:#e8eef7;padding:0}.iu-calendarOverlay__viewBtn.is-active{background:#203a59;color:#fff;border-color:#203a59}.iu-calendarOverlay__body{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:0;height:100%}.iu-calendarOverlay__main,.iu-calendarOverlay__side{min-height:0;padding:12px}.iu-calendarOverlay__side{border-left:1px solid #d7dfeb;background:#fff;overflow:auto}.iu-calendarOverlay__toolbar{margin-bottom:10px}.iu-calendarOverlay__toolbar strong{flex:1}.iu-calendarOverlay__viewRoot{border:1px solid #d2dcea;border-radius:10px;background:#fff;min-height:320px;height:calc(100% - 42px);overflow:auto}.iu-calendarOverlay__form{display:grid;gap:8px}.iu-calendarOverlay__form label{display:grid;gap:4px;font-size:13px;color:#234064}.iu-calendarOverlay__form input,.iu-calendarOverlay__form textarea,.iu-calendarOverlay__form select{width:100%;border:1px solid #c9d7ea;border-radius:8px;padding:8px;font-size:14px}.iu-calendarOverlay__photos{flex-wrap:wrap;gap:6px}.iu-calendarOverlay__photoChip{display:inline-flex;align-items:center;gap:6px;border-radius:7px;background:#e7eef9;padding:4px 6px;font-size:12px}.iu-calendarOverlay__photoChip button{border:0;background:#2a4568;color:#fff;border-radius:5px;padding:2px 5px}.iu-calendarOverlay__msg{min-height:16px;font-size:12px;color:#2a4568}.iu-calendarOverlay__eventList{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}.iu-calendarOverlay__eventBtn{width:100%;text-align:left;background:#f4f7fc;border-color:#d0daea;padding:8px}.iu-calGrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;padding:8px}.iu-calDayCell{border:1px solid #d6dfec;border-radius:8px;min-height:88px;padding:6px;background:#fff;font-size:12px}.iu-calDayCell.is-out{opacity:.45}.iu-calDayCell.is-weekend{background:#f7fbff}.iu-calDayCell.is-today{border-color:#2f9cf4;box-shadow:0 0 0 1px #2f9cf4 inset}.iu-calDayCell.is-holiday{background:#fff8f0}.iu-calDayCell__events{margin-top:6px;display:grid;gap:3px}.iu-calEventDot{border-radius:6px;background:#e7eef9;padding:2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-calYear{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:8px}.iu-calYearMonth,.iu-calTimelineItem{border:1px solid #d6dfec;border-radius:8px;padding:8px;background:#fff}.iu-calTimeline{padding:8px;display:grid;gap:4px}body.iu-calendarOverlay-open{overflow:hidden!important}@media (max-width:900px){.iu-calendarOverlay{align-items:stretch;justify-content:stretch}.iu-calendarOverlay__dialog{width:100vw;height:100vh;border-radius:0}.iu-calendarOverlay__body{grid-template-columns:1fr;grid-template-rows:minmax(260px,45vh) 1fr}.iu-calendarOverlay__side{border-left:0;border-top:1px solid #d7dfeb}.iu-calYear{grid-template-columns:repeat(2,minmax(0,1fr))}}";
+  const SCHEMA_VERSION = 1;
+  const STORE_KEY = CAL_NS + ".store.v1";
+  const MAX_ATTACHMENTS = 4;
+  const MAX_IMAGE_EDGE = 1600;
+  const MAX_IMAGE_BYTES = 420000;
+  const ALLOWED_VIEWS = new Set(["day", "week", "month", "year"]);
+  const FOCUSABLE_SELECTOR = 'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';
+
+  const CZ_FIXED_HOLIDAYS = new Set([
+    "01-01","05-01","05-08","07-05","07-06","09-28","10-28","11-17","12-24","12-25","12-26"
+  ]);
+
+  const state = {
+    inited: false,
+    dbReady: false,
+    db: null,
+    data: { schemaVersion: SCHEMA_VERSION, events: [] },
+    selectedDate: toDateOnly(new Date()),
+    view: "month",
+    cursorDate: toDateOnly(new Date()),
+    returnFocusEl: null,
+    currentEditId: "",
+    trapAttached: false
+  };
+
+  function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
+  function ensureStyles(){
+    try{
+      if (document.getElementById(CAL_STYLE_ID)) return;
+      const st = document.createElement("style");
+      st.id = CAL_STYLE_ID;
+      st.textContent = CAL_STYLE_TEXT;
+      document.head.appendChild(st);
+    }catch{}
+  }
+  function pad(n){ return String(n).padStart(2, "0"); }
+  function toDateOnly(d){ const x = new Date(d); return x.getFullYear() + "-" + pad(x.getMonth()+1) + "-" + pad(x.getDate()); }
+  function toTimeOnly(d){ const x = new Date(d); return pad(x.getHours()) + ":" + pad(x.getMinutes()); }
+  function parseDateTime(date, time){ return new Date(date + "T" + (time || "00:00") + ":00"); }
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, (m)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
+  function compareEvents(a, b){ return (a.date + "T" + a.time).localeCompare(b.date + "T" + b.time); }
+  function addDays(dateStr, days){ const d = new Date(dateStr + "T00:00:00"); d.setDate(d.getDate() + days); return toDateOnly(d); }
+  function startOfWeek(dateStr){ const d = new Date(dateStr + "T00:00:00"); const day = (d.getDay() + 6) % 7; d.setDate(d.getDate() - day); return toDateOnly(d); }
+  function sameYMD(a, b){ return String(a) === String(b); }
+
+  function isHoliday(dateStr){
+    const d = new Date(dateStr + "T00:00:00");
+    const mmdd = pad(d.getMonth()+1) + "-" + pad(d.getDate());
+    if (CZ_FIXED_HOLIDAYS.has(mmdd)) return true;
+    const year = d.getFullYear();
+    const easter = getEasterDate(year);
+    const goodFriday = addDays(toDateOnly(easter), -2);
+    const easterMonday = addDays(toDateOnly(easter), 1);
+    return sameYMD(dateStr, goodFriday) || sameYMD(dateStr, easterMonday);
+  }
+
+  function getEasterDate(year){
+    const a = year % 19;
+    const b = Math.floor(year / 100);
+    const c = year % 100;
+    const d = Math.floor(b / 4);
+    const e = b % 4;
+    const f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4);
+    const k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const month = Math.floor((h + l - 7 * m + 114) / 31);
+    const day = ((h + l - 7 * m + 114) % 31) + 1;
+    return new Date(year, month - 1, day);
+  }
+
+  function sanitizeEvent(evt){
+    if (!evt || typeof evt !== "object") return null;
+    const safe = {
+      id: String(evt.id || uid("evt")),
+      date: /^\d{4}-\d{2}-\d{2}$/.test(String(evt.date || "")) ? String(evt.date) : toDateOnly(new Date()),
+      time: /^\d{2}:\d{2}$/.test(String(evt.time || "")) ? String(evt.time) : "09:00",
+      title: String(evt.title || "").trim().slice(0, 120),
+      note: String(evt.note || "").trim().slice(0, 1000),
+      type: ["personal", "work", "health", "other"].includes(String(evt.type || "")) ? String(evt.type) : "personal",
+      attachments: Array.isArray(evt.attachments) ? evt.attachments.filter(sanitizeAttachment).slice(0, MAX_ATTACHMENTS) : [],
+      createdAt: Number.isFinite(Number(evt.createdAt)) ? Number(evt.createdAt) : Date.now(),
+      updatedAt: Number.isFinite(Number(evt.updatedAt)) ? Number(evt.updatedAt) : Date.now()
+    };
+    if (!safe.title) return null;
+    return safe;
+  }
+
+  function sanitizeAttachment(a){
+    if (!a || typeof a !== "object") return null;
+    if (a.kind !== "image") return null;
+    if (typeof a.data !== "string" || !a.data.startsWith("data:image/")) return null;
+    const size = Number(a.size) || 0;
+    if (size <= 0 || size > MAX_IMAGE_BYTES) return null;
+    return {
+      id: String(a.id || uid("att")),
+      kind: "image",
+      mimeType: String(a.mimeType || "image/jpeg"),
+      data: a.data,
+      width: Math.max(1, Number(a.width) || 1),
+      height: Math.max(1, Number(a.height) || 1),
+      size,
+      createdAt: Number.isFinite(Number(a.createdAt)) ? Number(a.createdAt) : Date.now()
+    };
+  }
+
+  async function initStorage(){
+    try{
+      const req = indexedDB.open(CAL_NS + ".idb", 1);
+      await new Promise((resolve, reject)=>{
+        req.onupgradeneeded = function(){
+          const db = req.result;
+          if (!db.objectStoreNames.contains("meta")) db.createObjectStore("meta");
+        };
+        req.onsuccess = ()=>resolve();
+        req.onerror = ()=>reject(req.error || new Error("IDB open failed"));
+      });
+      state.db = req.result;
+      state.dbReady = true;
+    }catch{
+      state.dbReady = false;
+    }
+  }
+
+  async function readStore(){
+    let raw = "";
+    if (state.dbReady && state.db){
+      try{
+        raw = await new Promise((resolve, reject)=>{
+          const tx = state.db.transaction("meta", "readonly");
+          const st = tx.objectStore("meta");
+          const rq = st.get(STORE_KEY);
+          rq.onsuccess = ()=>resolve(String(rq.result || ""));
+          rq.onerror = ()=>reject(rq.error);
+        });
+      }catch{}
+    }
+    if (!raw){
+      try{ raw = String(localStorage.getItem(STORE_KEY) || ""); }catch{}
+    }
+    let parsed = null;
+    try{ parsed = raw ? JSON.parse(raw) : null; }catch{}
+    if (!parsed || parsed.schemaVersion !== SCHEMA_VERSION || !Array.isArray(parsed.events)){
+      state.data = { schemaVersion: SCHEMA_VERSION, events: [] };
+      await writeStore();
+      return;
+    }
+    const clean = parsed.events.map(sanitizeEvent).filter(Boolean).sort(compareEvents);
+    state.data = { schemaVersion: SCHEMA_VERSION, events: clean };
+  }
+
+  async function writeStore(){
+    const payload = JSON.stringify({ schemaVersion: SCHEMA_VERSION, events: state.data.events });
+    try{ localStorage.setItem(STORE_KEY, payload); }catch{}
+    if (state.dbReady && state.db){
+      try{
+        await new Promise((resolve, reject)=>{
+          const tx = state.db.transaction("meta", "readwrite");
+          tx.objectStore("meta").put(payload, STORE_KEY);
+          tx.oncomplete = ()=>resolve();
+          tx.onerror = ()=>reject(tx.error);
+        });
+      }catch{}
+    }
+  }
+
+  function getEventsForDate(date){ return state.data.events.filter((e)=>e.date === date).sort(compareEvents); }
+  function setMessage(msg){ const el = document.getElementById("iuCalendarFormMsg"); if (el) el.textContent = msg || ""; }
+  function getOverlay(){ return document.getElementById("iuCalendarOverlay"); }
+
+  function openOverlay(originEl){
+    const ov = getOverlay();
+    if (!ov) return;
+    state.returnFocusEl = originEl || document.activeElement;
+    ov.hidden = false;
+    ov.setAttribute("aria-hidden", "false");
+    document.body.classList.add("iu-calendarOverlay-open");
+    render();
+    attachFocusTrap();
+    const first = ov.querySelector(FOCUSABLE_SELECTOR);
+    if (first) try{ first.focus({ preventScroll: true }); }catch{}
+  }
+
+  function closeOverlay(){
+    const ov = getOverlay();
+    if (!ov) return;
+    ov.hidden = true;
+    ov.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("iu-calendarOverlay-open");
+    detachFocusTrap();
+    if (state.returnFocusEl && typeof state.returnFocusEl.focus === "function"){
+      try{ state.returnFocusEl.focus({ preventScroll: true }); }catch{}
+    }
+  }
+
+  function attachFocusTrap(){
+    if (state.trapAttached) return;
+    state.trapAttached = true;
+    document.addEventListener("keydown", onGlobalKeyDown, true);
+  }
+  function detachFocusTrap(){
+    if (!state.trapAttached) return;
+    state.trapAttached = false;
+    document.removeEventListener("keydown", onGlobalKeyDown, true);
+  }
+
+  function onGlobalKeyDown(e){
+    const ov = getOverlay();
+    if (!ov || ov.hidden) return;
+    if (e.key === "Escape"){ e.preventDefault(); closeOverlay(); return; }
+    if (e.key !== "Tab") return;
+    const list = Array.from(ov.querySelectorAll(FOCUSABLE_SELECTOR)).filter((el)=>!el.disabled && el.offsetParent !== null);
+    if (!list.length) return;
+    const first = list[0];
+    const last = list[list.length - 1];
+    if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  }
+
+  function render(){
+    renderViewButtons();
+    renderPeriodLabel();
+    renderView();
+    renderDayList();
+    hydrateFormFromCurrent();
+  }
+
+  function renderViewButtons(){
+    document.querySelectorAll("[data-iu-cal-view]").forEach((btn)=>{
+      const active = btn.getAttribute("data-iu-cal-view") === state.view;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+  }
+
+  function renderPeriodLabel(){
+    const el = document.getElementById("iuCalendarPeriodLabel");
+    if (!el) return;
+    const d = new Date(state.cursorDate + "T00:00:00");
+    if (state.view === "day") el.textContent = d.toLocaleDateString("cs-CZ", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    else if (state.view === "week"){ const s = startOfWeek(state.cursorDate); const e = addDays(s, 6); el.textContent = s + " až " + e; }
+    else if (state.view === "month") el.textContent = d.toLocaleDateString("cs-CZ", { month: "long", year: "numeric" });
+    else el.textContent = String(d.getFullYear());
+  }
+
+  function renderView(){
+    const root = document.getElementById("iuCalendarViewRoot");
+    if (!root) return;
+    if (state.view === "day") root.innerHTML = renderTimeline([state.cursorDate]);
+    else if (state.view === "week"){
+      const s = startOfWeek(state.cursorDate);
+      root.innerHTML = renderTimeline(Array.from({ length: 7 }, (_, i)=>addDays(s, i)));
+    } else if (state.view === "month") root.innerHTML = renderMonthGrid(state.cursorDate);
+    else root.innerHTML = renderYearGrid(new Date(state.cursorDate + "T00:00:00").getFullYear());
+    root.querySelectorAll("[data-iu-cal-select-date]").forEach((el)=>el.addEventListener("click", ()=>{ state.selectedDate = el.getAttribute("data-iu-cal-select-date") || state.selectedDate; state.cursorDate = state.selectedDate; render(); }));
+    root.querySelectorAll("[data-iu-cal-open-event]").forEach((el)=>el.addEventListener("click", ()=>loadEventForEdit(el.getAttribute("data-iu-cal-open-event") || "")));
+  }
+
+  function renderTimeline(days){
+    let html = '<div class="iu-calTimeline">';
+    days.forEach((day)=>{
+      const items = getEventsForDate(day);
+      html += `<article class="iu-calTimelineItem"><strong>${esc(day)}</strong>`;
+      if (!items.length) html += '<div>Bez událostí</div>';
+      else items.forEach((ev)=>{ html += `<button type="button" class="iu-calendarOverlay__eventBtn" data-iu-cal-open-event="${esc(ev.id)}">${esc(ev.time)} · ${esc(ev.title)}</button>`; });
+      html += "</article>";
+    });
+    html += "</div>";
+    return html;
+  }
+
+  function renderMonthGrid(dateStr){
+    const pivot = new Date(dateStr + "T00:00:00");
+    const year = pivot.getFullYear();
+    const month = pivot.getMonth();
+    const first = new Date(year, month, 1);
+    const firstWeekday = (first.getDay() + 6) % 7;
+    const start = new Date(year, month, 1 - firstWeekday);
+    let html = '<div class="iu-calGrid">';
+    for (let i = 0; i < 42; i++){
+      const d = new Date(start); d.setDate(start.getDate() + i);
+      const ds = toDateOnly(d);
+      const isOut = d.getMonth() !== month;
+      const isToday = ds === toDateOnly(new Date());
+      const wk = d.getDay();
+      const weekend = wk === 0 || wk === 6;
+      const holiday = isHoliday(ds);
+      const items = getEventsForDate(ds).slice(0, 2);
+      html += `<button type="button" class="iu-calDayCell${isOut ? " is-out" : ""}${isToday ? " is-today" : ""}${weekend ? " is-weekend" : ""}${holiday ? " is-holiday" : ""}" data-iu-cal-select-date="${esc(ds)}"><div>${d.getDate()}</div><div class="iu-calDayCell__events">${items.map((ev)=>`<div class="iu-calEventDot">${esc(ev.time)} ${esc(ev.title)}</div>`).join("")}</div></button>`;
+    }
+    html += "</div>";
+    return html;
+  }
+
+  function renderYearGrid(year){
+    let html = '<div class="iu-calYear">';
+    for (let m = 0; m < 12; m++){
+      const d = new Date(year, m, 1);
+      html += `<button type="button" class="iu-calYearMonth" data-iu-cal-select-date="${year}-${pad(m+1)}-01">${esc(d.toLocaleDateString("cs-CZ", { month: "long" }))}<div>${getEventsForMonth(year, m)} událostí</div></button>`;
+    }
+    html += "</div>";
+    return html;
+  }
+  function getEventsForMonth(year, month){ return state.data.events.filter((e)=>{ const d = new Date(e.date + "T00:00:00"); return d.getFullYear() === year && d.getMonth() === month; }).length; }
+
+  function renderDayList(){
+    const list = document.getElementById("iuCalendarDayEvents");
+    if (!list) return;
+    const items = getEventsForDate(state.selectedDate);
+    list.innerHTML = items.map((ev)=>`<li><button type="button" class="iu-calendarOverlay__eventBtn" data-iu-cal-open-event="${esc(ev.id)}">${esc(ev.time)} · ${esc(ev.title)}</button></li>`).join("") || "<li>Bez událostí</li>";
+    list.querySelectorAll("[data-iu-cal-open-event]").forEach((el)=>el.addEventListener("click", ()=>loadEventForEdit(el.getAttribute("data-iu-cal-open-event") || "")));
+  }
+
+  function hydrateFormFromCurrent(){
+    const form = document.getElementById("iuCalendarEventForm");
+    if (!form) return;
+    const evt = state.currentEditId ? state.data.events.find((e)=>e.id === state.currentEditId) : null;
+    form.elements.id.value = evt ? evt.id : "";
+    form.elements.date.value = evt ? evt.date : state.selectedDate;
+    form.elements.time.value = evt ? evt.time : "09:00";
+    form.elements.title.value = evt ? evt.title : "";
+    form.elements.note.value = evt ? evt.note : "";
+    form.elements.type.value = evt ? evt.type : "personal";
+    renderAttachmentChips(evt ? evt.attachments : []);
+  }
+
+  function renderAttachmentChips(atts){
+    const el = document.getElementById("iuCalendarPhotoList");
+    if (!el) return;
+    el.innerHTML = (atts || []).map((a)=>`<span class="iu-calendarOverlay__photoChip">${esc(a.mimeType)} · ${Math.round(a.size / 1024)}kB <button type="button" data-iu-cal-remove-att="${esc(a.id)}">Smazat</button></span>`).join("");
+    el.querySelectorAll("[data-iu-cal-remove-att]").forEach((btn)=>btn.addEventListener("click", ()=>removeAttachment(btn.getAttribute("data-iu-cal-remove-att") || "")));
+  }
+
+  function loadEventForEdit(id){ state.currentEditId = id; hydrateFormFromCurrent(); }
+  async function removeAttachment(attId){
+    if (!state.currentEditId) return;
+    const ev = state.data.events.find((e)=>e.id === state.currentEditId);
+    if (!ev) return;
+    if (!confirm("Opravdu odstranit fotku?")) return;
+    ev.attachments = ev.attachments.filter((a)=>a.id !== attId);
+    ev.updatedAt = Date.now();
+    await writeStore();
+    render();
+  }
+
+  async function upsertEventFromForm(){
+    const form = document.getElementById("iuCalendarEventForm");
+    if (!form) return;
+    const id = String(form.elements.id.value || "");
+    const base = sanitizeEvent({
+      id: id || uid("evt"),
+      date: form.elements.date.value,
+      time: form.elements.time.value,
+      title: form.elements.title.value,
+      note: form.elements.note.value,
+      type: form.elements.type.value,
+      attachments: id ? (state.data.events.find((e)=>e.id === id)?.attachments || []) : [],
+      createdAt: id ? (state.data.events.find((e)=>e.id === id)?.createdAt || Date.now()) : Date.now(),
+      updatedAt: Date.now()
+    });
+    if (!base){ setMessage("Vyplňte název, datum a čas."); return; }
+    const idx = state.data.events.findIndex((e)=>e.id === base.id);
+    if (idx >= 0) state.data.events[idx] = base;
+    else state.data.events.push(base);
+    state.data.events.sort(compareEvents);
+    state.currentEditId = base.id;
+    state.selectedDate = base.date;
+    state.cursorDate = base.date;
+    await writeStore();
+    setMessage("Uloženo.");
+    render();
+  }
+
+  async function deleteCurrentEvent(){
+    if (!state.currentEditId){ setMessage("Vyberte událost."); return; }
+    if (!confirm("Smazat událost?")) return;
+    state.data.events = state.data.events.filter((e)=>e.id !== state.currentEditId);
+    state.currentEditId = "";
+    await writeStore();
+    setMessage("Smazáno.");
+    render();
+  }
+
+  async function handlePhotoAdd(files){
+    if (!state.currentEditId){ setMessage("Nejdřív uložte událost, pak přidejte fotky."); return; }
+    const ev = state.data.events.find((e)=>e.id === state.currentEditId);
+    if (!ev) return;
+    const list = Array.from(files || []);
+    for (const file of list){
+      if (ev.attachments.length >= MAX_ATTACHMENTS){ setMessage("Maximálně " + MAX_ATTACHMENTS + " fotky na událost."); break; }
+      try{
+        const att = await optimizeImage(file);
+        ev.attachments.push(att);
+      }catch(err){
+        setMessage(String(err && err.message ? err.message : "Fotku se nepodařilo zpracovat."));
+      }
+    }
+    ev.updatedAt = Date.now();
+    await writeStore();
+    render();
+  }
+
+  async function optimizeImage(file){
+    if (!file || !String(file.type || "").startsWith("image/")) throw new Error("Povoleny jsou jen obrázky.");
+    const img = await fileToImage(file);
+    const ratio = Math.min(1, MAX_IMAGE_EDGE / Math.max(img.width, img.height));
+    const w = Math.max(1, Math.round(img.width * ratio));
+    const h = Math.max(1, Math.round(img.height * ratio));
+    const canvas = document.createElement("canvas");
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Nelze zpracovat obrázek.");
+    ctx.drawImage(img, 0, 0, w, h);
+    let quality = 0.82;
+    let data = canvas.toDataURL("image/jpeg", quality);
+    while (estimateBase64Bytes(data) > MAX_IMAGE_BYTES && quality > 0.5){
+      quality -= 0.08;
+      data = canvas.toDataURL("image/jpeg", quality);
+    }
+    const size = estimateBase64Bytes(data);
+    if (size > MAX_IMAGE_BYTES) throw new Error("Optimalizovaná fotka je stále příliš velká.");
+    return { id: uid("att"), kind: "image", mimeType: "image/jpeg", data, width: w, height: h, size, createdAt: Date.now() };
+  }
+  function estimateBase64Bytes(data){ const b64 = String(data.split(",")[1] || ""); return Math.floor((b64.length * 3) / 4); }
+  function fileToImage(file){
+    return new Promise((resolve, reject)=>{
+      const fr = new FileReader();
+      fr.onerror = ()=>reject(new Error("Soubor nelze číst."));
+      fr.onload = ()=>{
+        const img = new Image();
+        img.onload = ()=>resolve(img);
+        img.onerror = ()=>reject(new Error("Soubor není validní obrázek."));
+        img.src = String(fr.result || "");
+      };
+      fr.readAsDataURL(file);
+    });
+  }
+
+  function navPeriod(delta){
+    const d = new Date(state.cursorDate + "T00:00:00");
+    if (state.view === "day") d.setDate(d.getDate() + delta);
+    else if (state.view === "week") d.setDate(d.getDate() + (7 * delta));
+    else if (state.view === "month") d.setMonth(d.getMonth() + delta, 1);
+    else d.setFullYear(d.getFullYear() + delta, 0, 1);
+    state.cursorDate = toDateOnly(d);
+    render();
+  }
+
+  function parseSilverCreate(text){
+    const src = String(text || "").trim().toLowerCase();
+    const m = src.match(/(?:ulo[žz].*|z[ií]tra|dnes|v\s+pond[ěe]l[ií]|v\s+út|v\s+stř|v\s+čt|v\s+p[aá]tek|v\s+sobotu|v\s+ned[ěe]li).*(\d{1,2})(?::|\\.)?(\d{0,2})/i);
+    if (!m) return { ok: false, reason: "need_clarification" };
+    const now = new Date();
+    let date = toDateOnly(now);
+    if (/\bz[ií]tra\b/i.test(src)) date = addDays(date, 1);
+    const weekdays = [{r:/pond/i,d:1},{r:/[uú]t/i,d:2},{r:/stř|str/i,d:3},{r:/čt|ct/i,d:4},{r:/p[aá]tek/i,d:5},{r:/sobot/i,d:6},{r:/ned[ěe]l/i,d:0}];
+    for (const it of weekdays){ if (it.r.test(src)){ const cur = now.getDay(); const add = (it.d - cur + 7) % 7 || 7; date = addDays(toDateOnly(now), add); break; } }
+    const hh = Math.max(0, Math.min(23, Number(m[1] || 9)));
+    const mm = Math.max(0, Math.min(59, Number(m[2] || 0)));
+    let title = src
+      .replace(/^(ulo[žz]\s+mi\s+sch[ůu]zku|ulo[žz]\s+mi|ulo[žz]|přidej|zapi[šs])\s*/i, "")
+      .replace(/\b(dnes|z[ií]tra|tento|tuto|v)\b/gi, " ")
+      .replace(/\b(pond[ěe]l[ií]|[uú]ter[yý]|středa|streda|čtvrtek|ctvrtek|p[aá]tek|sobota|ned[ěe]le)\b/gi, " ")
+      .replace(/\b\d{1,2}(?::|\\.)?\d{0,2}\b/g, " ")
+      .replace(/\bhod(?:in|\\.)?\b/gi, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 120);
+    if (!title) return { ok: false, reason: "need_clarification" };
+    return { ok: true, date, time: pad(hh)+":"+pad(mm), title };
+  }
+
+  function getTodayEvents(){ return getEventsForDate(toDateOnly(new Date())); }
+  function getTomorrowEvents(){ return getEventsForDate(addDays(toDateOnly(new Date()), 1)); }
+  function getNextEvent(){
+    const now = new Date();
+    const sorted = state.data.events.slice().sort(compareEvents);
+    return sorted.find((e)=>parseDateTime(e.date, e.time).getTime() >= now.getTime()) || null;
+  }
+
+  function installSilverHook(){
+    if (document.body && document.body.dataset.iuCalendarSilverHooked === "1") return;
+    if (document.body) document.body.dataset.iuCalendarSilverHooked = "1";
+    document.addEventListener("keydown", async (e)=>{
+      if (e.key !== "Enter") return;
+      const input = e.target && e.target.closest ? e.target.closest(".silver-input") : null;
+      if (!input) return;
+      const out = document.querySelector(".silver-output");
+      const text = String(input.value || "").trim();
+      if (!text) return;
+      if (!/\b(kalend[áa]ř|sch[ůu]zka|porada|ulo[žz])\b/i.test(text)) return;
+      e.preventDefault();
+      const parsed = parseSilverCreate(text);
+      if (!parsed.ok){
+        if (out) out.innerHTML = '<div class="iuSilverReply">Potřebuji upřesnit datum/čas. Nic neukládám.</div>';
+        return;
+      }
+      const ev = sanitizeEvent({ id: uid("evt"), date: parsed.date, time: parsed.time, title: parsed.title, note: "", type: "personal", attachments: [], createdAt: Date.now(), updatedAt: Date.now() });
+      if (!ev) return;
+      state.data.events.push(ev);
+      state.data.events.sort(compareEvents);
+      await writeStore();
+      if (out) out.innerHTML = '<div class="iuSilverReply">Uloženo: ' + esc(ev.date) + " " + esc(ev.time) + " · " + esc(ev.title) + "</div>";
+      input.value = "";
+      render();
+    }, true);
+  }
+
+  function bindUi(){
+    const overlay = getOverlay();
+    if (!overlay) return;
+    document.addEventListener("click", (e)=>{
+      const t = e.target;
+      const trigger = t && t.closest ? t.closest("[data-iu-calendar-trigger]") : null;
+      if (trigger){ e.preventDefault(); openOverlay(trigger); return; }
+      const close = t && t.closest ? t.closest("[data-iu-calendar-close]") : null;
+      if (close){ e.preventDefault(); closeOverlay(); return; }
+      const viewBtn = t && t.closest ? t.closest("[data-iu-cal-view]") : null;
+      if (viewBtn){ const v = String(viewBtn.getAttribute("data-iu-cal-view") || ""); if (ALLOWED_VIEWS.has(v)){ state.view = v; render(); } return; }
+      const navBtn = t && t.closest ? t.closest("[data-iu-cal-nav]") : null;
+      if (navBtn){ navPeriod(Number(navBtn.getAttribute("data-iu-cal-nav") || 0)); return; }
+      if (t && t.closest && t.closest("[data-iu-cal-today]")){ state.cursorDate = toDateOnly(new Date()); state.selectedDate = state.cursorDate; render(); return; }
+      if (t && t.closest && t.closest("[data-iu-cal-delete]")){ deleteCurrentEvent(); return; }
+      if (t && t.closest && t.closest("[data-iu-cal-reset]")){ state.currentEditId = ""; setMessage(""); hydrateFormFromCurrent(); return; }
+    });
+    const form = document.getElementById("iuCalendarEventForm");
+    if (form){ form.addEventListener("submit", (e)=>{ e.preventDefault(); upsertEventFromForm(); }); }
+    const photoInput = document.getElementById("iuCalendarPhotoInput");
+    if (photoInput){ photoInput.addEventListener("change", ()=>handlePhotoAdd(photoInput.files)); }
+  }
+
+  async function init(){
+    if (state.inited) return;
+    state.inited = true;
+    ensureStyles();
+    await initStorage();
+    await readStore();
+    bindUi();
+    installSilverHook();
+    render();
+    window.iuCalendarService = {
+      calendarCreateEvent: async function(payload){
+        const ev = sanitizeEvent({ ...payload, id: uid("evt"), createdAt: Date.now(), updatedAt: Date.now(), attachments: Array.isArray(payload?.attachments) ? payload.attachments : [] });
+        if (!ev) return { ok: false, reason: "validation_failed" };
+        state.data.events.push(ev);
+        state.data.events.sort(compareEvents);
+        await writeStore();
+        render();
+        return { ok: true, event: ev };
+      },
+      calendarGetTodayEvents: function(){ return getTodayEvents(); },
+      calendarGetTomorrowEvents: function(){ return getTomorrowEvents(); },
+      calendarGetNextEvent: function(){ return getNextEvent(); },
+      parseAndCreateFromText: async function(text){
+        const parsed = parseSilverCreate(text);
+        if (!parsed.ok) return parsed;
+        return this.calendarCreateEvent({ date: parsed.date, time: parsed.time, title: parsed.title, note: "", type: "personal", attachments: [] });
+      },
+      openOverlay: function(){ openOverlay(document.activeElement); },
+      closeOverlay: function(){ closeOverlay(); }
+    };
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
