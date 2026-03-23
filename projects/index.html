@@ -185,6 +185,7 @@ style-src 'self' 'unsafe-inline' https:;
                     <div id="iuMobileGatePanelTools" class="iu-mobileGatePanel" role="tabpanel" aria-labelledby="iuMobileGateTabTools" hidden></div>
                   </div>
                 </div>
+                <div id="iuMobileMindMenuFlow" class="iu-mobileMindMenuFlow" aria-label="MindMenu a nástroje"></div>
                 <div id="iuMobileFocus" class="iuMobileFocus" aria-label="Sekce (mobil)">
                   <div class="iuMobileFocusActive"></div>
                   <div class="iuMobileFocusTiles"></div>
@@ -2994,14 +2995,12 @@ style-src 'self' 'unsafe-inline' https:;
         var wrap = document.getElementById("iuMobileGateWrap");
         var silverSlot = document.getElementById("iuMobileSilverSlot");
         var panelNav = document.getElementById("iuMobileGatePanelNav");
-        var panelTools = document.getElementById("iuMobileGatePanelTools");
         var silver = document.getElementById("silver-slot");
         var rail = document.getElementById("iuLeftRail");
-        var mindMenuWrapper = document.querySelector(".mindMenu-scroll-wrapper");
         var newsList = document.getElementById("newsList");
         var feed = document.getElementById("feed");
         var accordion = document.querySelector(".layout > aside.accordionCol");
-        if (!wrap || !silverSlot || !panelNav || !panelTools || !silver || !rail || !newsList || !feed || !accordion) return;
+        if (!wrap || !silverSlot || !panelNav || !silver || !rail || !newsList || !feed || !accordion) return;
         wrap.setAttribute("aria-hidden", "false");
         if (!silverSlot.contains(silver)) {
           var articlesStage = feed.parentNode;
@@ -3011,9 +3010,6 @@ style-src 'self' 'unsafe-inline' https:;
         }
         if (!panelNav.contains(rail)) {
           panelNav.appendChild(rail);
-        }
-        if (mindMenuWrapper && !panelTools.contains(mindMenuWrapper)) {
-          panelTools.appendChild(mindMenuWrapper);
         }
       }catch(_){}
     })();
