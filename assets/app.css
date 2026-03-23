@@ -9748,48 +9748,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   }
   #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iuTile{
     min-width: 0 !important;
-    display: flex !important;
-  }
-  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iuTileLink{
-    width: 100% !important;
-    min-height: 44px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-  }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="datova-schranka"]{ --iu-ql-accent:#1D4ED8; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="internetove-bankovnictvi"]{ --iu-ql-accent:#047857; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="bakalari"]{ --iu-ql-accent:#7C3AED; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="zdravotni-pojistovna"]{ --iu-ql-accent:#0EA5A4; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="zasilky-a-sledovani"]{ --iu-ql-accent:#EA580C; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="nakup-domu"]{ --iu-ql-accent:#DB2777; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="ai-asistenti"]{ --iu-ql-accent:#2563EB; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="prekladac"]{ --iu-ql-accent:#0284C7; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="prevod-word-pdf"]{ --iu-ql-accent:#4B5563; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="financni-kalkulacky"]{ --iu-ql-accent:#CA8A04; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="vzory-smluv-plne-moci"]{ --iu-ql-accent:#9F1239; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="komunikace-vzdelavani"]{ --iu-ql-accent:#6366F1; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="katastr-nemovitosti"]{ --iu-ql-accent:#92400E; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="registr-smluv"]{ --iu-ql-accent:#4D7C0F; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="obchodni-rejstrik"]{ --iu-ql-accent:#0F766E; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="zivnostensky-rejstrik"]{ --iu-ql-accent:#DC2626; }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink{
-    border-color: var(--iu-ql-accent, rgba(0,0,0,0.06)) !important;
-    position: relative !important;
-    overflow: hidden !important;
-  }
-  #iuMobileGatePanelTools .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink::before{
-    content: "" !important;
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
-    width: 2px !important;
-    height: 100% !important;
-    background: var(--iu-ql-accent, transparent) !important;
-    border-top-left-radius: 8px !important;
-    border-bottom-left-radius: 8px !important;
-    pointer-events: none !important;
   }
   #iu-aiPanel,
   #iu-mojeSluzbyPanel{
@@ -20180,46 +20138,26 @@ overflow:hidden !important;
 }
 
 @media (max-width: 1023px){
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="datova-schranka"]{ --iu-ql-accent:#1D4ED8; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="internetove-bankovnictvi"]{ --iu-ql-accent:#047857; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="bakalari"]{ --iu-ql-accent:#7C3AED; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="zdravotni-pojistovna"]{ --iu-ql-accent:#0EA5A4; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="zasilky-a-sledovani"]{ --iu-ql-accent:#EA580C; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="nakup-domu"]{ --iu-ql-accent:#DB2777; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="ai-asistenti"]{ --iu-ql-accent:#2563EB; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="prekladac"]{ --iu-ql-accent:#0284C7; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="prevod-word-pdf"]{ --iu-ql-accent:#4B5563; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="financni-kalkulacky"]{ --iu-ql-accent:#CA8A04; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="vzory-smluv-plne-moci"]{ --iu-ql-accent:#9F1239; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="komunikace-vzdelavani"]{ --iu-ql-accent:#6366F1; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="katastr-nemovitosti"]{ --iu-ql-accent:#92400E; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="registr-smluv"]{ --iu-ql-accent:#4D7C0F; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="obchodni-rejstrik"]{ --iu-ql-accent:#0F766E; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="zivnostensky-rejstrik"]{ --iu-ql-accent:#DC2626; }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid .iuTile[data-iu-ql="naceneni-nakupu"]{ --iu-ql-accent:#2E3238; }
-
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid > .iuTile > a.iuTileLink,
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid > .iuTile > button.iuTileLink,
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid > .iuTile > .iuTileLink{
-    border: 1px solid var(--iu-ql-accent) !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
-    position: relative !important;
-  }
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid > .iuTile > a.iuTileLink::before,
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid > .iuTile > button.iuTileLink::before,
-  #iuMobileGatePanelTools #iuMobileMindMenuFlow .iu-mmQuickGrid > .iuTile > .iuTileLink::before{
-    content: "" !important;
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
-    height: 100% !important;
-    width: 2px !important;
-    background: var(--iu-ql-accent) !important;
-    border-top-left-radius: 8px !important;
-    border-bottom-left-radius: 8px !important;
-    pointer-events: none !important;
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="datova-schranka"]{ --iu-ql-accent:#1D4ED8; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="internetove-bankovnictvi"]{ --iu-ql-accent:#047857; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="bakalari"]{ --iu-ql-accent:#7C3AED; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="zdravotni-pojistovna"]{ --iu-ql-accent:#0EA5A4; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="zasilky-a-sledovani"]{ --iu-ql-accent:#EA580C; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="nakup-domu"]{ --iu-ql-accent:#DB2777; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="ai-asistenti"]{ --iu-ql-accent:#2563EB; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="prekladac"]{ --iu-ql-accent:#0284C7; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="prevod-word-pdf"]{ --iu-ql-accent:#4B5563; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="financni-kalkulacky"]{ --iu-ql-accent:#CA8A04; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="vzory-smluv-plne-moci"]{ --iu-ql-accent:#9F1239; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="komunikace-vzdelavani"]{ --iu-ql-accent:#6366F1; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="katastr-nemovitosti"]{ --iu-ql-accent:#92400E; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="registr-smluv"]{ --iu-ql-accent:#4D7C0F; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="obchodni-rejstrik"]{ --iu-ql-accent:#0F766E; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="zivnostensky-rejstrik"]{ --iu-ql-accent:#DC2626; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="naceneni-nakupu"]{ --iu-ql-accent:#2E3238; }
+  #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink{
+    border-color: var(--iu-ql-accent) !important;
   }
 }
 
-
+ 

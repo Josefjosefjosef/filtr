@@ -5673,14 +5673,7 @@ function buildVideoAsArticleCard(it) {
           if (mindMenu && mindMenu.parentElement !== mindMenuFlow) {
             mindMenuFlow.insertBefore(mindMenu, mindMenuFlow.firstChild || null);
           }
-          var grid = mindMenuFlow.querySelector(".iu-mmQuickGrid");
-          var toolsSection = grid ? (grid.closest("section.iu-mmQuickLinks") || grid.parentElement) : null;
-          if (mindMenu && toolsSection && mindMenu.contains(toolsSection)) {
-            mindMenuFlow.insertBefore(toolsSection, mindMenu.nextSibling);
-          }
-          if (mindMenu && toolsSection && toolsSection.parentElement === mindMenuFlow) {
-            mindMenuFlow.insertBefore(mindMenu, toolsSection);
-          }
+          var toolsSection = mindMenu ? mindMenu.querySelector("section.iu-mmQuickLinks") : null;
           if (toolsSection) {
             var gridInTools = toolsSection.querySelector(".iu-mmQuickGrid");
             if (gridInTools) {
@@ -5793,6 +5786,10 @@ function buildVideoAsArticleCard(it) {
         wrap.setAttribute("data-iu-mobile-gate", value || "");
         var bar = document.getElementById("iuMobileGateBackBar");
         if (bar) bar.hidden = !value;
+        if (panelTools && panelTools.classList) {
+          if (value === "tools") panelTools.classList.add("accordionCol");
+          else panelTools.classList.remove("accordionCol");
+        }
         if (value === "nav") {
           tabNav.setAttribute("aria-selected", "true");
           tabTools.setAttribute("aria-selected", "false");
