@@ -5816,9 +5816,40 @@ function buildVideoAsArticleCard(it) {
         setTab(cur === "nav" ? "" : "nav");
       });
       tabTools.addEventListener("click", function () {
-        var target = document.querySelector("#iuMobileMindMenuFlow .mindMenu-scroll-wrapper") || document.querySelector(".layout > aside.accordionCol .mindMenu-scroll-wrapper");
-        if (target && typeof target.scrollIntoView === "function") {
-          try { target.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (_) { target.scrollIntoView(); }
+        var isMobileOrTablet = false;
+        try {
+          var mq = window.matchMedia && window.matchMedia("(max-width: 1023px)");
+          isMobileOrTablet = mq ? mq.matches : (window.innerWidth <= 1023);
+        } catch (_) {}
+        if (isMobileOrTablet) {
+          var target =
+            document.getElementById("iuMobileMindMenuFlow") ||
+            document.querySelector("#iuMobileMindMenuFlow .mindMenu") ||
+            document.querySelector("#iuMobileMindMenuFlow .mindMenu-scroll-wrapper") ||
+            document.querySelector(".layout > aside.accordionCol .mindMenu") ||
+            document.querySelector(".layout > aside.accordionCol .mindMenu-scroll-wrapper");
+          if (target) {
+            var topbar = document.getElementById("topbarWrap") || document.getElementById("iuTopbar") || document.getElementById("iuTopbarRight");
+            var topOffset = 0;
+            try {
+              if (topbar) {
+                var topbarRect = topbar.getBoundingClientRect();
+                topOffset = Math.max(0, Math.ceil(topbarRect.height || topbar.offsetHeight || 0));
+              }
+            } catch (_) {}
+            try {
+              var y = target.getBoundingClientRect().top + (window.pageYOffset || window.scrollY || 0) - topOffset - 4;
+              if (typeof window.scrollTo === "function") {
+                window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+              } else if (typeof target.scrollIntoView === "function") {
+                target.scrollIntoView();
+              }
+            } catch (_) {
+              if (typeof target.scrollIntoView === "function") {
+                try { target.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (_) { target.scrollIntoView(); }
+              }
+            }
+          }
         }
         setTab("");
       });
