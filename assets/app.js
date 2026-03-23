@@ -5199,10 +5199,6 @@ function buildVideoAsArticleCard(it) {
           ta.select();
           document.execCommand("copy");
         }
-        try{
-          const a = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=");
-          void a.play().catch(() => {});
-        }catch{}
       }catch{}
     });
 
