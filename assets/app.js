@@ -27088,7 +27088,12 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     document.addEventListener("click", (e)=>{
       const t = e.target;
       const trigger = t && t.closest ? t.closest("[data-iu-calendar-trigger]") : null;
-      if (trigger){ e.preventDefault(); openOverlay(trigger); return; }
+      const mmCalTrigger = t && t.closest ? t.closest(".iu-mmTopTool--cal") : null;
+      if (trigger || mmCalTrigger){
+        e.preventDefault();
+        openOverlay((trigger || mmCalTrigger));
+        return;
+      }
       const close = t && t.closest ? t.closest("[data-iu-calendar-close]") : null;
       if (close){ e.preventDefault(); closeOverlay(); return; }
       const viewBtn = t && t.closest ? t.closest("[data-iu-cal-view]") : null;
