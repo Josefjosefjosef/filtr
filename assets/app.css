@@ -21125,87 +21125,15 @@ overflow:hidden !important;
   display: none !important;
 }
 
-/* P0 mobile/tablet right-rail parity: retire special gate and keep desktop component flow */
+/* Safe mobile/tablet re-implement scoped to MindMenu+tools panel only. */
 @media (max-width: 900px){
-  #iuMobileGateWrap,
-  #iuMobileFocus,
-  #iuMobileFirstBlock,
-  .iu-mobileStack,
-  #iuMobileMainBackBar{
-    display: none !important;
-  }
-
-  #leftContent{
-    display: block !important;
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
-  .layout > aside.accordionCol{
-    display: block !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-  }
-
-  .layout > aside.accordionCol{
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-  }
-
-  .layout > aside.accordionCol .mindMenu-scroll-wrapper{
-    order: 1;
-    width: 100% !important;
-  }
-
-  .layout > aside.accordionCol .iuRightTopCtas{
-    order: 2;
-  }
-
-  .layout > aside.accordionCol .mindMenu .iu-mmTopTools{
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  }
-
-  .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid{
+  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid{
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px 12px !important;
   }
 
-  body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid,
-  body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid{
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-
-  body.iu-modal-open #iu-aiPanel,
-  body.iu-modal-open #iu-mojeSluzbyPanel{
-    left: 0 !important;
-    top: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    inset: 0 !important;
-    transform: none !important;
-    width: 100vw !important;
-    height: 100dvh !important;
-    max-width: none !important;
-    max-height: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-    z-index: 10030 !important;
-  }
-
-  body.iu-modal-open #iu-aiPanel .iu-aiModal,
-  body.iu-modal-open #iu-mojeSluzbyPanel .iu-aiModal{
-    width: 100vw !important;
-    height: 100dvh !important;
-    max-width: none !important;
-    max-height: none !important;
-    border-radius: 0 !important;
-  }
-
-  #iuQuickToolsSettingsPanel:not([hidden]){
+  body.iu-mobileGateToolsQuickOpen #iuQuickFeed:not([hidden]){
     position: fixed !important;
     inset: 0 !important;
     left: 0 !important;
@@ -21215,34 +21143,9 @@ overflow:hidden !important;
     max-width: none !important;
     max-height: none !important;
     margin: 0 !important;
-    border-radius: 0 !important;
-    transform: none !important;
     z-index: 10030 !important;
     overflow: auto !important;
-  }
-
-  .iu-parcels-overlay.is-open{
-    inset: 0 !important;
-    left: 0 !important;
-    top: 0 !important;
-    width: 100vw !important;
-    height: 100dvh !important;
-    z-index: 10020 !important;
-  }
-
-  .iu-parcels-modal.is-open{
-    inset: 0 !important;
-    left: 0 !important;
-    top: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: 100vw !important;
-    height: 100dvh !important;
-    max-width: none !important;
-    max-height: none !important;
-    margin: 0 !important;
-    border-radius: 0 !important;
-    z-index: 10030 !important;
+    box-sizing: border-box !important;
   }
 }
 
