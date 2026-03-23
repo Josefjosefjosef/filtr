@@ -5841,10 +5841,144 @@ function buildVideoAsArticleCard(it) {
           return "unknown";
         }
       }
+      function iuEnsureMindMenuDebugPanel() {
+        try {
+          if (!iuMindMenuDebugEnabled()) return null;
+          var existing = document.getElementById("iuMindMenuDebugPanel");
+          if (existing) return existing;
+          var panel = document.createElement("div");
+          panel.id = "iuMindMenuDebugPanel";
+          panel.setAttribute("aria-label", "MindMenu debug panel");
+          panel.style.position = "fixed";
+          panel.style.left = "8px";
+          panel.style.right = "8px";
+          panel.style.bottom = "8px";
+          panel.style.zIndex = "2147483646";
+          panel.style.background = "#0f172a";
+          panel.style.color = "#e2e8f0";
+          panel.style.border = "1px solid rgba(148,163,184,0.45)";
+          panel.style.borderRadius = "10px";
+          panel.style.padding = "8px";
+          panel.style.maxHeight = "44vh";
+          panel.style.overflow = "auto";
+          panel.style.boxShadow = "0 8px 24px rgba(0,0,0,0.35)";
+          panel.style.font = "12px/1.35 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace";
+          var controls = document.createElement("div");
+          controls.style.display = "flex";
+          controls.style.gap = "6px";
+          controls.style.flexWrap = "wrap";
+          controls.style.marginBottom = "6px";
+          var btnShow = document.createElement("button");
+          btnShow.type = "button";
+          btnShow.id = "iuMindMenuDebugShow";
+          btnShow.textContent = "Zobraz debug";
+          var btnCopy = document.createElement("button");
+          btnCopy.type = "button";
+          btnCopy.id = "iuMindMenuDebugCopy";
+          btnCopy.textContent = "Kopírovat JSON";
+          var btnClose = document.createElement("button");
+          btnClose.type = "button";
+          btnClose.id = "iuMindMenuDebugClose";
+          btnClose.textContent = "Zavřít";
+          [btnShow, btnCopy, btnClose].forEach(function (b) {
+            b.style.border = "1px solid rgba(148,163,184,0.55)";
+            b.style.background = "#1e293b";
+            b.style.color = "#e2e8f0";
+            b.style.borderRadius = "8px";
+            b.style.padding = "6px 8px";
+            b.style.cursor = "pointer";
+          });
+          var pre = document.createElement("pre");
+          pre.id = "iuMindMenuDebugPre";
+          pre.hidden = true;
+          pre.style.margin = "0";
+          pre.style.whiteSpace = "pre-wrap";
+          pre.style.wordBreak = "break-word";
+          pre.style.maxHeight = "28vh";
+          pre.style.overflow = "auto";
+          pre.style.padding = "8px";
+          pre.style.borderRadius = "8px";
+          pre.style.background = "#020617";
+          var toast = document.createElement("div");
+          toast.id = "iuMindMenuDebugToast";
+          toast.hidden = true;
+          toast.textContent = "Zkopirovano";
+          toast.style.marginTop = "6px";
+          toast.style.fontWeight = "600";
+          toast.style.color = "#86efac";
+          controls.appendChild(btnShow);
+          controls.appendChild(btnCopy);
+          controls.appendChild(btnClose);
+          panel.appendChild(controls);
+          panel.appendChild(pre);
+          panel.appendChild(toast);
+          function render() {
+            try {
+              pre.textContent = JSON.stringify(window.__iuDumpMindMenuDebug ? window.__iuDumpMindMenuDebug() : null, null, 2) || "{}";
+            } catch (_) {
+              pre.textContent = "{}";
+            }
+          }
+          function showToast() {
+            toast.hidden = false;
+            window.setTimeout(function () { toast.hidden = true; }, 1200);
+          }
+          btnShow.addEventListener("click", function () {
+            render();
+            pre.hidden = false;
+          });
+          btnCopy.addEventListener("click", function () {
+            render();
+            var txt = pre.textContent || "{}";
+            var p = navigator && navigator.clipboard && navigator.clipboard.writeText
+              ? navigator.clipboard.writeText(txt)
+              : Promise.reject(new Error("no-clipboard"));
+            p.catch(function () {
+              try {
+                pre.hidden = false;
+                var sel = window.getSelection && window.getSelection();
+                if (!sel) return;
+                var range = document.createRange();
+                range.selectNodeContents(pre);
+                sel.removeAllRanges();
+                sel.addRange(range);
+                document.execCommand("copy");
+                sel.removeAllRanges();
+              } catch (_) {}
+            }).finally(showToast);
+          });
+          btnClose.addEventListener("click", function () {
+            panel.remove();
+          });
+          panel.__iuRender = render;
+          document.body.appendChild(panel);
+          return panel;
+        } catch (_) {
+          return null;
+        }
+      }
+      function iuMindMenuDebugRenderIfOpen() {
+        try {
+          if (!iuMindMenuDebugEnabled()) return;
+          var panel = document.getElementById("iuMindMenuDebugPanel") || iuEnsureMindMenuDebugPanel();
+          if (!panel || typeof panel.__iuRender !== "function") return;
+          var pre = document.getElementById("iuMindMenuDebugPre");
+          if (pre && !pre.hidden) panel.__iuRender();
+        } catch (_) {}
+      }
       try {
         window.__iuDumpMindMenuDebug = function () {
           return window.__iuMindMenuDebug || null;
         };
+      } catch (_) {}
+      try {
+        if (iuMindMenuDebugEnabled()) {
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", iuEnsureMindMenuDebugPanel, { once: true });
+          } else {
+            iuEnsureMindMenuDebugPanel();
+          }
+        }
       } catch (_) {}
       function iuHandleToolsTabClick(ev) {
         var now = Date.now();
@@ -6086,6 +6220,7 @@ function buildVideoAsArticleCard(it) {
                       lastMindMenuDebugAt = Date.now();
                       try { window.__iuMindMenuDebug = debugData; } catch (_) {}
                       try { console.log("IU_MINDMENU_DEBUG", window.__iuMindMenuDebug); } catch (_) {}
+                      iuMindMenuDebugRenderIfOpen();
                     } catch (_) {}
                   }, 320);
                 } catch (_) {}
