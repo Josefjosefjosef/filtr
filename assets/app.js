@@ -5624,6 +5624,7 @@ function buildVideoAsArticleCard(it) {
       var wrap = document.getElementById("iuMobileGateWrap");
       var silverSlot = document.getElementById("iuMobileSilverSlot");
       var panelNav = document.getElementById("iuMobileGatePanelNav");
+      var panelTools = document.getElementById("iuMobileGatePanelTools");
       var silver = document.getElementById("silver-slot");
       var topCardsStack = document.getElementById("iuSilverTopCardsStack");
       var rail = document.getElementById("iuLeftRail");
@@ -5631,11 +5632,20 @@ function buildVideoAsArticleCard(it) {
       var newsList = document.getElementById("newsList");
       var feed = document.getElementById("feed");
       var accordion = document.querySelector(".layout > aside.accordionCol");
-      if (!wrap || !silverSlot || !panelNav || !silver || !rail || !newsList || !feed) return;
+      if (!wrap || !silverSlot || !panelNav || !panelTools || !silver || !rail || !newsList || !feed) return;
       var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
       var mobile = mq ? mq.matches : (window.innerWidth <= 900);
       var mqMind = window.matchMedia && window.matchMedia("(max-width: 1023px)");
       var mobileMind = mqMind ? mqMind.matches : (window.innerWidth < 1024);
+      var flowHomeId = "iuMobileMindMenuFlowHome";
+      var flowHome = document.getElementById(flowHomeId);
+      if (!flowHome && mindMenuFlow && mindMenuFlow.parentElement) {
+        flowHome = document.createElement("div");
+        flowHome.id = flowHomeId;
+        flowHome.hidden = true;
+        flowHome.setAttribute("aria-hidden", "true");
+        mindMenuFlow.parentElement.insertBefore(flowHome, mindMenuFlow);
+      }
       if (mobile) {
         wrap.setAttribute("aria-hidden", "false");
         if (!silverSlot.contains(silver)) {
@@ -5648,7 +5658,10 @@ function buildVideoAsArticleCard(it) {
           panelNav.appendChild(rail);
         }
         if (mobileMind && mindMenuFlow) {
-          mindMenuFlow.style.display = "block";
+          if (!panelTools.contains(mindMenuFlow)) {
+            panelTools.appendChild(mindMenuFlow);
+          }
+          mindMenuFlow.style.setProperty("display", "block", "important");
           mindMenuFlow.style.width = "100%";
           mindMenuFlow.style.maxWidth = "100%";
           mindMenuFlow.style.minWidth = "0";
@@ -5717,11 +5730,14 @@ function buildVideoAsArticleCard(it) {
             accordion.insertBefore(mindMenuDesktop, afterPwa ? afterPwa.nextSibling : accordion.firstChild);
           }
         }
+        if (mindMenuFlow && flowHome && mindMenuFlow.parentElement !== flowHome.parentElement) {
+          flowHome.parentElement.insertBefore(mindMenuFlow, flowHome.nextSibling);
+        }
       }
       if (!mobileMind && accordion) {
         if (mindMenuFlow) {
           mindMenuFlow.style.minHeight = "";
-          mindMenuFlow.style.display = "";
+          mindMenuFlow.style.removeProperty("display");
           mindMenuFlow.style.width = "";
           mindMenuFlow.style.maxWidth = "";
           mindMenuFlow.style.minWidth = "";
@@ -5815,8 +5831,7 @@ function buildVideoAsArticleCard(it) {
         var cur = wrap.getAttribute("data-iu-mobile-gate");
         setTab(cur === "nav" ? "" : "nav");
       });
-      var lastToolsScrollTs = 0;
-      var lastMindMenuDebugAt = 0;
+      var lastToolsToggleTs = 0;
       function iuMindMenuDebugEnabled() {
         try {
           if (window.IU_MINDMENU_DEBUG === true) return true;
@@ -5982,271 +5997,13 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       function iuHandleToolsTabClick(ev) {
         var now = Date.now();
-        if (now - lastToolsScrollTs < 120) {
-          setTab("");
-          return;
-        }
-        lastToolsScrollTs = now;
+        if (now - lastToolsToggleTs < 120) return;
+        lastToolsToggleTs = now;
         if (ev && typeof ev.preventDefault === "function") ev.preventDefault();
-        var isMobileOrTablet = false;
-        try {
-          var mq = window.matchMedia && window.matchMedia("(max-width: 1023px)");
-          isMobileOrTablet = mq ? mq.matches : (window.innerWidth <= 1023);
-        } catch (_) {}
-        if (isMobileOrTablet) {
-          var debugOn = iuMindMenuDebugEnabled();
-          var debugData = {
-            clickedAt: new Date().toISOString(),
-            clickTargetTag: ev && ev.target && ev.target.tagName ? ev.target.tagName : null,
-            clickTargetId: ev && ev.target && ev.target.id ? ev.target.id : null,
-            selectedScrollerKind: null,
-            selectedScrollerScrollTopBefore: null,
-            selectedScrollerScrollTopAfter: null,
-            windowScrollYBefore: window.scrollY || 0,
-            windowScrollYAfter: null,
-            selectedAnchorKind: null,
-            selectedAnchorExists: false,
-            selectedAnchorHeight: null,
-            selectedAnchorTopBefore: null,
-            selectedAnchorTopAfter: null,
-            mindMenuFlowHeight: null,
-            mindMenuHeight: null,
-            topbarBottom: null,
-            landedBelowTopbar: false,
-            correctionApplied: false,
-            correctionDelta: 0,
-            repeatClickWorks: false,
-            anchorCandidates: [],
-            scrollerCandidates: []
-          };
-          var targetRoot =
-            document.getElementById("iuMobileMindMenuFlow") ||
-            document.querySelector("#iuMobileMindMenuFlow .mindMenu") ||
-            document.querySelector("#iuMobileMindMenuFlow .mindMenu-scroll-wrapper") ||
-            document.querySelector(".layout > aside.accordionCol .mindMenu") ||
-            document.querySelector(".layout > aside.accordionCol .mindMenu-scroll-wrapper");
-          if (debugOn) {
-            try {
-              var flowDbg = document.getElementById("iuMobileMindMenuFlow");
-              var mindDbg = document.querySelector("#iuMobileMindMenuFlow .mindMenu") || document.querySelector(".layout > aside.accordionCol .mindMenu");
-              debugData.mindMenuFlowHeight = flowDbg ? flowDbg.getBoundingClientRect().height : null;
-              debugData.mindMenuHeight = mindDbg ? mindDbg.getBoundingClientRect().height : null;
-            } catch (_) {}
-          }
-          if (targetRoot) {
-            var target = targetRoot;
-            try {
-              var anchorCandidateSelectors = [
-                ".mindMenu",
-                ".iu-mmTopTools",
-                "#iuMailboxList",
-                "section.iu-mailboxes",
-                ".iu-mmQuickGrid"
-              ];
-              var anchorCandidates = targetRoot.querySelectorAll(anchorCandidateSelectors.join(", "));
-              for (var i = 0; i < anchorCandidates.length; i++) {
-                var rectI = anchorCandidates[i].getBoundingClientRect();
-                if (debugOn) {
-                  debugData.anchorCandidates.push({
-                    name: iuMindMenuNodeLabel(anchorCandidates[i]),
-                    exists: true,
-                    height: rectI ? rectI.height : 0,
-                    top: rectI ? rectI.top : null,
-                    scrollable: false,
-                    chosen: false
-                  });
-                }
-                if (rectI && rectI.height > 8) {
-                  target = anchorCandidates[i];
-                  if (debugOn && debugData.anchorCandidates.length) {
-                    debugData.anchorCandidates[debugData.anchorCandidates.length - 1].chosen = true;
-                  }
-                  break;
-                }
-              }
-            } catch (_) {}
-            var topbar = document.getElementById("topbarWrap") || document.getElementById("iuTopbar") || document.getElementById("iuTopbarRight");
-            var topOffset = 0;
-            try {
-              if (topbar) {
-                var topbarRect = topbar.getBoundingClientRect();
-                topOffset = Math.max(0, Math.ceil(topbarRect.height || topbar.offsetHeight || 0));
-              }
-            } catch (_) {}
-            if (debugOn) {
-              try { debugData.topbarBottom = topbar ? topbar.getBoundingClientRect().bottom : 0; } catch (_) {}
-              try {
-                debugData.selectedAnchorKind = iuMindMenuNodeLabel(target);
-                debugData.selectedAnchorExists = !!target;
-                var beforeRect = target.getBoundingClientRect();
-                debugData.selectedAnchorHeight = beforeRect ? beforeRect.height : null;
-                debugData.selectedAnchorTopBefore = beforeRect ? beforeRect.top : null;
-              } catch (_) {}
-            }
-            try {
-              var desiredTop = topOffset + 8;
-              var targetRect = target.getBoundingClientRect();
-              if (targetRect && targetRect.top <= topOffset + 1) {
-                var anchorPool = [
-                  "#iuMobileMindMenuFlow .mindMenu .iu-mmTopTools",
-                  "#iuMobileMindMenuFlow .mindMenu #iuMailboxList",
-                  "#iuMobileMindMenuFlow .mindMenu section.iu-mailboxes",
-                  "#iuMobileMindMenuFlow .mindMenu .iu-mmQuickGrid",
-                  "#iuMobileMindMenuFlow .mindMenu",
-                  "#iuMobileMindMenuFlow .mindMenu button",
-                  "#iuMobileMindMenuFlow .mindMenu a"
-                ];
-                for (var p = 0; p < anchorPool.length; p++) {
-                  var candidate = document.querySelector(anchorPool[p]);
-                  if (debugOn) {
-                    var candRect = candidate ? candidate.getBoundingClientRect() : null;
-                    debugData.anchorCandidates.push({
-                      name: anchorPool[p],
-                      exists: !!candidate,
-                      height: candRect ? candRect.height : 0,
-                      top: candRect ? candRect.top : null,
-                      scrollable: false,
-                      chosen: false
-                    });
-                  }
-                  if (!candidate) continue;
-                  var cRect = candidate.getBoundingClientRect();
-                  if (!cRect || cRect.height < 6) continue;
-                  if (cRect.bottom <= topOffset + 2) continue;
-                  target = candidate;
-                  if (debugOn && debugData.anchorCandidates.length) {
-                    debugData.anchorCandidates[debugData.anchorCandidates.length - 1].chosen = true;
-                  }
-                  break;
-                }
-              }
-              var y = target.getBoundingClientRect().top + (window.pageYOffset || window.scrollY || 0) - topOffset - 4;
-              var scroller = null;
-              var tested = [];
-              function pushCandidate(el) {
-                if (!el) return;
-                if (tested.indexOf(el) !== -1) return;
-                tested.push(el);
-              }
-              var anc = target;
-              while (anc && anc !== document.body && anc !== document.documentElement) {
-                pushCandidate(anc);
-                anc = anc.parentElement;
-              }
-              pushCandidate(document.getElementById("page"));
-              pushCandidate(document.querySelector(".layout"));
-              pushCandidate(document.scrollingElement);
-              pushCandidate(document.documentElement);
-              pushCandidate(document.body);
-              for (var c = 0; c < tested.length; c++) {
-                var cand = tested[c];
-                if (!cand || typeof cand.scrollTop !== "number") continue;
-                var max = Math.max(0, (cand.scrollHeight || 0) - (cand.clientHeight || 0));
-                if (debugOn) {
-                  var candRectDbg = cand.getBoundingClientRect ? cand.getBoundingClientRect() : null;
-                  debugData.scrollerCandidates.push({
-                    name: iuMindMenuNodeLabel(cand),
-                    exists: true,
-                    height: candRectDbg ? candRectDbg.height : (cand.clientHeight || 0),
-                    top: candRectDbg ? candRectDbg.top : null,
-                    scrollable: max > 0,
-                    chosen: false
-                  });
-                }
-                if (max <= 0) continue;
-                var originalTop = cand.scrollTop;
-                var probeTop = Math.min(max, originalTop + 1);
-                cand.scrollTop = probeTop;
-                var moved = cand.scrollTop !== originalTop;
-                cand.scrollTop = originalTop;
-                if (moved) {
-                  scroller = cand;
-                  if (debugOn && debugData.scrollerCandidates.length) {
-                    debugData.scrollerCandidates[debugData.scrollerCandidates.length - 1].chosen = true;
-                  }
-                  break;
-                }
-              }
-              if (debugOn) {
-                debugData.selectedScrollerKind = iuMindMenuNodeLabel(scroller || window);
-                debugData.selectedScrollerScrollTopBefore = scroller && typeof scroller.scrollTop === "number" ? scroller.scrollTop : (window.scrollY || 0);
-                debugData.selectedAnchorKind = iuMindMenuNodeLabel(target);
-              }
-              if (scroller && typeof scroller.scrollTo === "function") {
-                var sy = target.getBoundingClientRect().top - (scroller.getBoundingClientRect().top || 0) + scroller.scrollTop - desiredTop;
-                scroller.scrollTo({ top: Math.max(0, sy), behavior: "smooth" });
-                try {
-                  window.setTimeout(function () {
-                    try {
-                      var rectNow = target.getBoundingClientRect();
-                      if (!rectNow) return;
-                      if (rectNow.top < topOffset || rectNow.top > topOffset + 24) {
-                        var correction = rectNow.top - desiredTop;
-                        var corrected = Math.max(0, (scroller.scrollTop || 0) + correction);
-                        if (debugOn) {
-                          debugData.correctionApplied = true;
-                          debugData.correctionDelta = correction;
-                        }
-                        if (typeof scroller.scrollTo === "function") {
-                          scroller.scrollTo({ top: corrected, behavior: "auto" });
-                        } else {
-                          scroller.scrollTop = corrected;
-                        }
-                      }
-                    } catch (_) {}
-                  }, 220);
-                } catch (_) {}
-              } else if (typeof window.scrollTo === "function") {
-                window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
-              } else if (typeof target.scrollIntoView === "function") {
-                target.scrollIntoView({ behavior: "smooth", block: "start" });
-              }
-              if (debugOn) {
-                try {
-                  window.setTimeout(function () {
-                    try {
-                      debugData.windowScrollYAfter = window.scrollY || 0;
-                      debugData.selectedScrollerScrollTopAfter =
-                        scroller && typeof scroller.scrollTop === "number" ? scroller.scrollTop : (window.scrollY || 0);
-                      var rectAfter = target.getBoundingClientRect();
-                      debugData.selectedAnchorTopAfter = rectAfter ? rectAfter.top : null;
-                      debugData.landedBelowTopbar =
-                        typeof debugData.selectedAnchorTopAfter === "number" &&
-                        typeof debugData.topbarBottom === "number" &&
-                        debugData.selectedAnchorTopAfter >= debugData.topbarBottom;
-                      debugData.repeatClickWorks =
-                        lastMindMenuDebugAt > 0 &&
-                        debugData.selectedScrollerScrollTopAfter !== debugData.selectedScrollerScrollTopBefore;
-                      lastMindMenuDebugAt = Date.now();
-                      try { window.__iuMindMenuDebug = debugData; } catch (_) {}
-                      try { console.log("IU_MINDMENU_DEBUG", window.__iuMindMenuDebug); } catch (_) {}
-                      iuMindMenuDebugRenderIfOpen();
-                    } catch (_) {}
-                  }, 320);
-                } catch (_) {}
-              }
-            } catch (_) {
-              if (typeof target.scrollIntoView === "function") {
-                try { target.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (_) { target.scrollIntoView(); }
-              }
-            }
-          }
-        }
-        setTab("");
+        var cur = wrap.getAttribute("data-iu-mobile-gate");
+        setTab(cur === "tools" ? "" : "tools");
       }
       tabTools.addEventListener("click", iuHandleToolsTabClick);
-      tabTools.addEventListener("pointerup", iuHandleToolsTabClick);
-      tabTools.addEventListener("touchend", iuHandleToolsTabClick, { passive: false });
-      function iuDelegatedToolsClick(ev) {
-        try {
-          var t = ev && ev.target && ev.target.closest ? ev.target.closest("#iuMobileGateTabTools") : null;
-          if (!t || t === tabTools) return;
-          iuHandleToolsTabClick(ev);
-        } catch (_) {}
-      }
-      document.addEventListener("click", iuDelegatedToolsClick, true);
-      document.addEventListener("pointerup", iuDelegatedToolsClick, true);
-      document.addEventListener("touchend", iuDelegatedToolsClick, { capture: true, passive: false });
       setTab("");
     } catch (_) {}
   }
