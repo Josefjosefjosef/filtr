@@ -4960,15 +4960,17 @@ function buildVideoAsArticleCard(it) {
         const w = typeof window.innerWidth === "number" ? window.innerWidth : 1024;
         const maxPx = w <= 480 ? 12 : w <= 900 ? 13 : 14;
         const minPx = 10;
-        let fs = maxPx;
+        /* P0 CLS: max 2 přepočty (maxPx → případně poměr → minPx); bez staré smyčky po 0.25px. */
+        metaEl.style.fontSize = maxPx + "px";
+        try{ void metaEl.offsetWidth; }catch{}
+        if (metaEl.scrollWidth <= metaEl.clientWidth + 0.75) return;
+        const ratio = (metaEl.clientWidth - 1) / metaEl.scrollWidth;
+        let fs = Math.max(minPx, Math.min(maxPx, maxPx * ratio));
+        fs = Math.round(fs * 100) / 100;
         metaEl.style.fontSize = fs + "px";
         try{ void metaEl.offsetWidth; }catch{}
-        let guard = 0;
-        while (fs > minPx && metaEl.scrollWidth > metaEl.clientWidth + 0.75 && guard < 80) {
-          fs -= 0.25;
-          metaEl.style.fontSize = fs + "px";
-          try{ void metaEl.offsetWidth; }catch{}
-          guard++;
+        if (metaEl.scrollWidth > metaEl.clientWidth + 0.75) {
+          metaEl.style.fontSize = minPx + "px";
         }
       }catch{}
     }
@@ -5031,7 +5033,7 @@ function buildVideoAsArticleCard(it) {
         metaEl.textContent = "Dnes je " + wLower + " " + dlong + " · " + nd;
         if (silverWelcomeUseJsMetaFit()) {
           try{ fitMetaFont(); }catch{}
-          scheduleSilverWelcomeFit();
+          /* Jedno fitMetaFont výše; další schedule jen při resize (ResizeObserver) — duplicitní 2× RAF dřív přidávalo CLS. */
         } else {
           try{ metaEl.style.removeProperty("font-size"); }catch{}
         }

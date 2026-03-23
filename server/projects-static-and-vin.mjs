@@ -18,6 +18,8 @@ function mime(f) {
   if (f.endsWith(".js")) return "application/javascript; charset=utf-8";
   if (f.endsWith(".css")) return "text/css; charset=utf-8";
   if (f.endsWith(".svg")) return "image/svg+xml";
+  /* P0: JSON musí být application/json — jinak SW (handleDataRequest) odmítne tělo a vrátí 503 → console errors při lokálním proof. */
+  if (f.endsWith(".json")) return "application/json; charset=utf-8";
   return "application/octet-stream";
 }
 

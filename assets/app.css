@@ -16602,6 +16602,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   align-items: center;
   margin-top: 8px;
   min-width: 0;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+/* P0 CLS: [hidden] = display:none — zobrazení fallback tlačítek posune výšku. Držet stejný slot i když je řádek skrytý. */
+.silver-weather-actions[hidden]{
+  display: flex !important;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .silver-weather-btn{
@@ -16664,12 +16673,41 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   border-color: rgba(255, 255, 255, 0.28);
 }
 
-/* Nameday CTA + přání (welcome box only) */
+/* Nameday CTA + přání (welcome box only) — absolutně vůči kartě: neovlivňuje výšku toku, slot rezervuje padding-bottom na kartě */
 .iu-nameday-cta{
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 8px;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 0;
+  box-sizing: border-box;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  align-items: center;
+  contain: layout;
+}
+
+@media (max-width: 900px){
+  /* Na úzkém layoutu zůstat v toku (delší meta + wrap CTA), ne absolutně přes text. */
+  .iuSilverWelcomeCard{
+    padding: 6px 12px 8px;
+    min-height: 0;
+  }
+  .iu-nameday-cta{
+    position: static;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 44px;
+    max-height: none;
+    margin-top: 10px;
+  }
 }
 
 .iu-nameday-cta .iu-btn-secondary{
@@ -16834,19 +16872,28 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   flex: 0 0 auto;
 }
 
+@media (min-width: 901px){
+  /* P0 CLS: stejná logika jako .silver-welcome-stack min-height — celý horní blok má stabilní výšku dřív než flex přepočítá .silver-shell. */
+  .iuSilverWelcomeSticky{
+    min-height: 260px;
+  }
+}
+
 .iuSilverWelcomeCard{
+  position: relative;
   width: 100%;
   max-height: none;
-  /* P0 CLS: headline + meta + CTA řádek — rezervovaná výška před prvním paint */
-  min-height: 118px;
+  /* P0 CLS: headline + meta + rezervace spodního pásu pro absolutní CTA (ne růst toku). */
+  min-height: 112px;
   box-sizing: border-box;
-  padding: 6px 12px 8px;
+  padding: 6px 12px 54px;
   border-radius: var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius) 0 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   gap: 2px;
   overflow: visible;
+  contain: layout style;
   border: none;
   box-shadow: none;
   background: transparent;
