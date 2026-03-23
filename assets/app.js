@@ -5815,20 +5815,41 @@ function buildVideoAsArticleCard(it) {
         var cur = wrap.getAttribute("data-iu-mobile-gate");
         setTab(cur === "nav" ? "" : "nav");
       });
-      tabTools.addEventListener("click", function () {
+      var lastToolsScrollTs = 0;
+      function iuHandleToolsTabClick(ev) {
+        var now = Date.now();
+        if (now - lastToolsScrollTs < 120) {
+          setTab("");
+          return;
+        }
+        lastToolsScrollTs = now;
+        if (ev && typeof ev.preventDefault === "function") ev.preventDefault();
         var isMobileOrTablet = false;
         try {
           var mq = window.matchMedia && window.matchMedia("(max-width: 1023px)");
           isMobileOrTablet = mq ? mq.matches : (window.innerWidth <= 1023);
         } catch (_) {}
         if (isMobileOrTablet) {
-          var target =
+          var targetRoot =
             document.getElementById("iuMobileMindMenuFlow") ||
             document.querySelector("#iuMobileMindMenuFlow .mindMenu") ||
             document.querySelector("#iuMobileMindMenuFlow .mindMenu-scroll-wrapper") ||
             document.querySelector(".layout > aside.accordionCol .mindMenu") ||
             document.querySelector(".layout > aside.accordionCol .mindMenu-scroll-wrapper");
-          if (target) {
+          if (targetRoot) {
+            var target = targetRoot;
+            try {
+              var anchorCandidates = targetRoot.querySelectorAll(
+                ".mindMenu, .iu-mmTopTools, #iuMailboxList, section.iu-mailboxes, .iu-mmQuickGrid"
+              );
+              for (var i = 0; i < anchorCandidates.length; i++) {
+                var rectI = anchorCandidates[i].getBoundingClientRect();
+                if (rectI && rectI.height > 8) {
+                  target = anchorCandidates[i];
+                  break;
+                }
+              }
+            } catch (_) {}
             var topbar = document.getElementById("topbarWrap") || document.getElementById("iuTopbar") || document.getElementById("iuTopbarRight");
             var topOffset = 0;
             try {
@@ -5839,10 +5860,33 @@ function buildVideoAsArticleCard(it) {
             } catch (_) {}
             try {
               var y = target.getBoundingClientRect().top + (window.pageYOffset || window.scrollY || 0) - topOffset - 4;
-              if (typeof window.scrollTo === "function") {
+              var scroller = null;
+              var anc = target;
+              while (anc && anc !== document.body && anc !== document.documentElement) {
+                var cs = window.getComputedStyle ? window.getComputedStyle(anc) : null;
+                var oy = cs ? (cs.overflowY || cs.overflow || "") : "";
+                var canScroll = anc.scrollHeight > anc.clientHeight + 2;
+                if (/(auto|scroll)/.test(oy) && canScroll) {
+                  scroller = anc;
+                  break;
+                }
+                anc = anc.parentElement;
+              }
+              if (!scroller) {
+                var pageRoot = document.getElementById("page");
+                if (pageRoot && pageRoot.scrollHeight > pageRoot.clientHeight + 2) scroller = pageRoot;
+              }
+              if (!scroller) {
+                var layoutRoot = document.querySelector(".layout");
+                if (layoutRoot && layoutRoot.scrollHeight > layoutRoot.clientHeight + 2) scroller = layoutRoot;
+              }
+              if (scroller && typeof scroller.scrollTo === "function") {
+                var sy = target.getBoundingClientRect().top - (scroller.getBoundingClientRect().top || 0) + scroller.scrollTop - topOffset - 4;
+                scroller.scrollTo({ top: Math.max(0, sy), behavior: "smooth" });
+              } else if (typeof window.scrollTo === "function") {
                 window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
               } else if (typeof target.scrollIntoView === "function") {
-                target.scrollIntoView();
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
               }
             } catch (_) {
               if (typeof target.scrollIntoView === "function") {
@@ -5852,7 +5896,20 @@ function buildVideoAsArticleCard(it) {
           }
         }
         setTab("");
-      });
+      }
+      tabTools.addEventListener("click", iuHandleToolsTabClick);
+      tabTools.addEventListener("pointerup", iuHandleToolsTabClick);
+      tabTools.addEventListener("touchend", iuHandleToolsTabClick, { passive: false });
+      function iuDelegatedToolsClick(ev) {
+        try {
+          var t = ev && ev.target && ev.target.closest ? ev.target.closest("#iuMobileGateTabTools") : null;
+          if (!t || t === tabTools) return;
+          iuHandleToolsTabClick(ev);
+        } catch (_) {}
+      }
+      document.addEventListener("click", iuDelegatedToolsClick, true);
+      document.addEventListener("pointerup", iuDelegatedToolsClick, true);
+      document.addEventListener("touchend", iuDelegatedToolsClick, { capture: true, passive: false });
       setTab("");
     } catch (_) {}
   }
