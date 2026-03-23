@@ -4815,6 +4815,64 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  /** Stejné pravidlo jako welcome meta: text za „svátek má …“. */
+  function iuParseNamedayTailFromRaw(raw){
+    if (!raw || raw === "—") return "";
+    const t = String(raw).trim();
+    if (!t) return "";
+    const m = t.match(/^svátek\s+má\s+(.+)$/i);
+    if (m && m[1]) {
+      const name = String(m[1]).trim();
+      if (!name || /^[—\-\s]+$/i.test(name)) return "";
+      return name;
+    }
+    const m2 = t.match(/^svátek\s*:\s*(.+)$/i);
+    if (m2 && m2[1]) {
+      const name = String(m2[1]).trim();
+      if (!name || /^[—\-\s]+$/i.test(name)) return "";
+      return name;
+    }
+    const rest = t.replace(/^svátek\s+má\s*/i, "").trim();
+    if (!rest || /^[—\-\s]+$/i.test(rest)) return "";
+    return rest;
+  }
+
+  /** Jedno křestní jméno → bezpečné oslovení (jen spolehlivá -a → -o); jinak "". */
+  function iuSafeVocativeSingleFirstName(tail){
+    const tail0 = String(tail || "").trim();
+    if (!tail0 || tail0 === "—") return "";
+    if (/[;,]/.test(tail0)) return "";
+    if (/\s+a\s+/i.test(tail0)) return "";
+    if (/\s{2,}/.test(tail0)) return "";
+    const parts = tail0.split(/\s+/).filter(Boolean);
+    if (parts.length !== 1) return "";
+    let w = parts[0].replace(/[.,;:]+$/g, "");
+    if (w.indexOf("-") >= 0) return "";
+    if (!/^[\p{L}]{2,40}$/u.test(w)) return "";
+    const low = w.toLowerCase();
+    if (/načítám|svátek|dnes|nikdo|—/.test(low)) return "";
+    if (/ia$/i.test(w)) return "";
+    if (/a$/i.test(w) && w.length >= 3) {
+      return w.slice(0, -1) + "o";
+    }
+    return "";
+  }
+
+  window.getNamedayPersonFromWelcomeBox = function(){
+    try{
+      const meta = document.getElementById("iuSilverWelcomeMeta");
+      if (!meta) return "";
+      const full = String(meta.textContent || "").trim();
+      const dotIdx = full.lastIndexOf("·");
+      const seg = (dotIdx >= 0 ? full.slice(dotIdx + 1) : full).trim();
+      const rawTail = iuParseNamedayTailFromRaw(seg);
+      const v = iuSafeVocativeSingleFirstName(rawTail);
+      return v ? String(v) : "";
+    }catch{
+      return "";
+    }
+  };
+
   /** P0 Silver: sticky welcome card — date + svátek reuse stejného zdroje jako topbar (#iuDailyNameday / #iuTopbarNameday + projects/data/namedays.json přes iuDailyPanelInit). */
   function iuSilverWelcomeInit(){
     try{
@@ -4846,27 +4904,6 @@ function buildVideoAsArticleCard(it) {
         return String(d.toLocaleDateString("cs-CZ"));
       }
     }
-    /** Plný text za „svátek má“ — JSON (iuDailyPanelInit) má přednost; DOM jen doplnění (celý zbytek řetězce, žádná singularizace). */
-    function parseNamedayTailFromRaw(raw){
-      if (!raw || raw === "—") return "";
-      const t = String(raw).trim();
-      if (!t) return "";
-      const m = t.match(/^svátek\s+má\s+(.+)$/i);
-      if (m && m[1]) {
-        const name = String(m[1]).trim();
-        if (!name || /^[—\-\s]+$/i.test(name)) return "";
-        return name;
-      }
-      const m2 = t.match(/^svátek\s*:\s*(.+)$/i);
-      if (m2 && m2[1]) {
-        const name = String(m2[1]).trim();
-        if (!name || /^[—\-\s]+$/i.test(name)) return "";
-        return name;
-      }
-      const rest = t.replace(/^svátek\s+má\s*/i, "").trim();
-      if (!rest || /^[—\-\s]+$/i.test(rest)) return "";
-      return rest;
-    }
     function readNamedaySuffixForMeta(){
       try{
         const g =
@@ -4881,7 +4918,7 @@ function buildVideoAsArticleCard(it) {
       const top = document.getElementById("iuTopbarNameday");
       let raw = (src && String(src.textContent || "").trim()) || "";
       if (!raw) raw = (top && String(top.textContent || "").trim()) || "";
-      const candidate = parseNamedayTailFromRaw(raw);
+      const candidate = iuParseNamedayTailFromRaw(raw);
       return candidate ? "svátek má " + candidate : "svátek má —";
     }
     function greetingKeyFromHour(h){
@@ -4970,6 +5007,7 @@ function buildVideoAsArticleCard(it) {
         const k = greetingKeyFromHour(h);
         applyVariantClass(k);
         const phrase = phraseFromKey(k);
+        try{ window.__iuSilverWelcomeLastPhrase = phrase; }catch{}
         const displayName = readSilverDisplayName();
         if (greetEl && userEl) {
           const nm = String(displayName || "").trim();
@@ -5045,6 +5083,182 @@ function buildVideoAsArticleCard(it) {
         },
         { passive: true }
       );
+    }catch{}
+  }
+
+  /** Silver welcome: přání k svátku — overlay Tykat/Vykat, kopírování, bez zásahu do weather/map. */
+  function iuNamedayWishInit(){
+    try{
+      if (window.__iuNamedayWishInit) return;
+      window.__iuNamedayWishInit = 1;
+    }catch{}
+
+    const overlay = document.getElementById("iuNamedayWishOverlay");
+    const btnWish = document.querySelector(".iu-nameday-wish");
+    const btnFlowers = document.querySelector(".iu-nameday-flowers");
+    const btnTykat = document.querySelector(".iu-nameday-wish-mode--tykat");
+    const btnVykat = document.querySelector(".iu-nameday-wish-mode--vykat");
+    const ta = document.getElementById("iuNamedayWishTextarea");
+    const btnCopy = document.getElementById("iuNamedayWishCopy");
+    if (!overlay || !btnWish || !btnTykat || !btnVykat || !ta || !btnCopy) return;
+
+    let mode = "tykat";
+
+    function readSilverSignatureForWish(){
+      try{
+        const el = document.getElementById("iuSilverWelcomeUser");
+        if (!el || el.hidden) return "";
+        const s = String(el.textContent || "").replace(/\s+/g, " ").trim();
+        return s || "";
+      }catch{
+        return "";
+      }
+    }
+
+    function greetingFromWelcomeBox(){
+      try{
+        const g = typeof window.__iuSilverWelcomeLastPhrase === "string" ? window.__iuSilverWelcomeLastPhrase.trim() : "";
+        if (g) return g;
+      }catch{}
+      const h = new Date().getHours();
+      if (h >= 5 && h < 9) return "Dobré ráno";
+      if (h >= 9 && h < 12) return "Hezké dopoledne";
+      if (h >= 12 && h < 18) return "Příjemné odpoledne";
+      return "Dobrý večer";
+    }
+
+    function buildFinalText(m){
+      const greeting = greetingFromWelcomeBox();
+      const name =
+        typeof window.getNamedayPersonFromWelcomeBox === "function"
+          ? String(window.getNamedayPersonFromWelcomeBox() || "").trim()
+          : "";
+      const greetingLine = name ? `${greeting}, ${name},` : `${greeting},`;
+      const baseText =
+        m === "tykat"
+          ? "přeju ti krásný svátek, hodně radosti, pohody a ať se ti dneska všechno daří. 🎉"
+          : "přeji Vám krásný sváteční den, hodně zdraví, pohody a spokojenosti.";
+      const signature = readSilverSignatureForWish();
+      if (signature) {
+        return `${greetingLine}\n${baseText}\n\n${signature}`;
+      }
+      return `${greetingLine}\n${baseText}`;
+    }
+
+    function syncTextarea(){
+      try{
+        ta.value = buildFinalText(mode);
+      }catch{}
+    }
+
+    function setMode(m){
+      mode = m === "vykat" ? "vykat" : "tykat";
+      try{
+        btnTykat.setAttribute("aria-pressed", mode === "tykat" ? "true" : "false");
+        btnVykat.setAttribute("aria-pressed", mode === "vykat" ? "true" : "false");
+      }catch{}
+      syncTextarea();
+    }
+
+    function openOverlay(){
+      try{
+        setMode("tykat");
+        overlay.removeAttribute("hidden");
+        overlay.setAttribute("aria-hidden", "false");
+        try{ ta.focus(); }catch{}
+      }catch{}
+    }
+
+    function closeOverlay(){
+      try{
+        overlay.setAttribute("hidden", "");
+        overlay.setAttribute("aria-hidden", "true");
+      }catch{}
+    }
+
+    btnWish.addEventListener("click", (e) => {
+      try{ e.preventDefault(); }catch{}
+      openOverlay();
+    });
+
+    if (btnFlowers) {
+      btnFlowers.addEventListener("click", (e) => {
+        try{ e.preventDefault(); }catch{}
+      });
+    }
+
+    btnTykat.addEventListener("click", () => setMode("tykat"));
+    btnVykat.addEventListener("click", () => setMode("vykat"));
+
+    btnCopy.addEventListener("click", async () => {
+      try{
+        const text = String(ta.value || "");
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          ta.select();
+          document.execCommand("copy");
+        }
+        try{
+          const a = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=");
+          void a.play().catch(() => {});
+        }catch{}
+      }catch{}
+    });
+
+    try{
+      overlay.addEventListener("click", (e) => {
+        try{
+          const t = e.target;
+          if (t === overlay || (t && t.classList && t.classList.contains("iu-nameday-wish-backdrop"))) {
+            closeOverlay();
+          }
+        }catch{}
+      });
+    }catch{}
+
+    try{
+      const dlg = overlay.querySelector(".iu-nameday-wish-dialog");
+      if (dlg) {
+        dlg.addEventListener("click", (e) => {
+          try{ e.stopPropagation(); }catch{}
+        });
+      }
+    }catch{}
+
+    try{
+      document.addEventListener(
+        "keydown",
+        (e) => {
+          try{
+            if (!overlay || overlay.hasAttribute("hidden")) return;
+            if (e.key === "Escape") {
+              e.preventDefault();
+              closeOverlay();
+            }
+          }catch{}
+        },
+        true
+      );
+    }catch{}
+
+    try{
+      const obs = document.getElementById("iuSilverWelcomeMeta");
+      if (obs) {
+        new MutationObserver(() => {
+          try{
+            if (!overlay.hasAttribute("hidden")) syncTextarea();
+          }catch{}
+        }).observe(obs, { childList: true, characterData: true, subtree: true });
+      }
+    }catch{}
+
+    try{
+      document.addEventListener("visibilitychange", () => {
+        try{
+          if (document.visibilityState === "visible" && !overlay.hasAttribute("hidden")) syncTextarea();
+        }catch{}
+      });
     }catch{}
   }
 
@@ -18289,6 +18503,7 @@ function buildVideoAsArticleCard(it) {
     try { initRightPanel(); } catch (e) { console.error("RightPanel init failed", e); if (typeof persistLastError === "function") persistLastError("RightPanel init failed"); }
 
     try{ iuSilverWelcomeInit(); }catch{}
+    try{ iuNamedayWishInit(); }catch{}
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
