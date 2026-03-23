@@ -16647,14 +16647,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   /* Na úzkém layoutu zůstat v toku (delší meta + wrap CTA), ne absolutně přes text. */
   .iuSilverWelcomeCard{
     padding: 6px 12px 8px;
-    min-height: 0;
+    /* CLS hotfix: držet stabilní výšku i před dopsáním headline/meta textu. */
+    min-height: 112px;
   }
   .iu-nameday-cta{
     position: static;
     left: auto;
     right: auto;
     bottom: auto;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     height: auto;
     min-height: 44px;
     max-height: none;
@@ -16662,7 +16663,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 }
 
-.iu-nameday-cta .silver-weather-btn{flex:1 1 180px;min-width:0}
+.iu-nameday-cta .silver-weather-btn{flex:1 1 0;min-width:0;min-height:44px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #iuNamedayWishOverlay.iuModal{z-index:99990;background:rgba(15,30,45,.45);padding:16px;box-sizing:border-box;contain:none!important}
 #iuNamedayWishCard{width:100%;max-width:420px;height:auto!important;max-height:none!important;min-height:min-content;overflow:visible!important;padding:18px 18px 16px;contain:none!important}
 #iuNamedayWishCard h2{margin:0 0 14px;font-size:18px;font-weight:700;line-height:1.2}
@@ -16681,6 +16682,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   box-sizing: border-box;
   margin: 0 0 8px 0;
   flex: 0 0 auto;
+  min-height: 332px;
 }
 
 @media (min-width: 901px){
@@ -16719,6 +16721,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   display: flex;
   flex-direction: row;
   align-items: baseline;
+  min-height: calc(1.15em + 1px);
   min-width: 0;
   width: 100%;
   white-space: nowrap;
@@ -16748,6 +16751,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .iuSilverWelcomeMeta{
   font-weight: 500;
   line-height: 1.2;
+  min-height: calc(1.2em + 1px);
   font-size: 14px;
   letter-spacing: -0.015em;
   color: rgba(30, 40, 55, 0.82);
