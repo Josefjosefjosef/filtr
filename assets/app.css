@@ -21142,7 +21142,13 @@ overflow:hidden !important;
 }
 
 /* Safe mobile/tablet re-implement scoped to MindMenu+tools panel only. */
-@media (max-width: 900px){
+@media (max-width: 1023px){
+  #iuMobileMindMenuFlow{
+    display: block !important;
+    content-visibility: auto;
+    contain-intrinsic-size: 1040px;
+  }
+
   .layout > aside.accordionCol{
     display: block !important;
     width: 100% !important;
@@ -21150,10 +21156,23 @@ overflow:hidden !important;
     max-width: 100% !important;
   }
 
-  .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid{
+  #iuMobileMindMenuFlow .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid{
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px 12px !important;
+  }
+
+  #iuMobileMindMenuFlow .mindMenu .iu-mmTopTools{
+    min-height: 56px;
+    height: 56px;
+  }
+
+  #iuMobileMindMenuFlow #iuMailboxList{
+    min-height: 262px;
+  }
+
+  #iuMobileMindMenuFlow .mindMenu section.iu-mailboxes{
+    min-height: 340px;
   }
 
   body.iu-mobileGateToolsQuickOpen #iuQuickFeed:not([hidden]){

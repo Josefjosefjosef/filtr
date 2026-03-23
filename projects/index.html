@@ -185,7 +185,6 @@ style-src 'self' 'unsafe-inline' https:;
                     <div id="iuMobileGatePanelTools" class="iu-mobileGatePanel" role="tabpanel" aria-labelledby="iuMobileGateTabTools" hidden></div>
                   </div>
                 </div>
-                <div id="iuMobileMindMenuFlow" class="iu-mobileMindMenuFlow" aria-label="MindMenu a nástroje"></div>
                 <div id="iuMobileFocus" class="iuMobileFocus" aria-label="Sekce (mobil)">
                   <div class="iuMobileFocusActive"></div>
                   <div class="iuMobileFocusTiles"></div>
@@ -1752,6 +1751,7 @@ style-src 'self' 'unsafe-inline' https:;
                 </div>
                   </div>
               </div>
+              <div id="iuMobileMindMenuFlow" class="iu-mobileMindMenuFlow" aria-label="MindMenu a nástroje"></div>
               <aside class="accordionCol" aria-label="Postranní panel">
                 <div class="iuRightTopCtas" aria-label="Inzerce a služby">
                   <button type="button" class="iuRightCta iuRightCta--services" aria-label="Inzerce a služby">
@@ -1879,6 +1879,21 @@ style-src 'self' 'unsafe-inline' https:;
                       </div>
                     </div>
               </aside>
+              <script>
+              (function(){
+                try{
+                  if (!window.matchMedia || !window.matchMedia("(max-width: 1023px)").matches) return;
+                  var flow = document.getElementById("iuMobileMindMenuFlow");
+                  var mindMenu = document.querySelector(".mindMenu");
+                  if (!flow || !mindMenu) return;
+                  var reserve = Math.ceil(mindMenu.getBoundingClientRect().height || mindMenu.offsetHeight || 0);
+                  if (reserve > 0) flow.style.minHeight = reserve + "px";
+                  if (mindMenu.parentElement !== flow) flow.insertBefore(mindMenu, flow.firstChild || null);
+                  var staleWrapper = flow.querySelector(".mindMenu-scroll-wrapper");
+                  if (staleWrapper && !staleWrapper.querySelector(".mindMenu")) staleWrapper.remove();
+                }catch(_){}
+              })();
+              </script>
             </div>
             <!-- Moje služby modaly (outside right rail, over center feed) -->
             <div id="iu-mojeSluzbyOverlay" class="iu-aiOverlay" hidden aria-hidden="true"></div>
