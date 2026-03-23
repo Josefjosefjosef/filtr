@@ -26760,7 +26760,12 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     document.body.classList.remove("iu-calendarOverlay-open");
     detachFocusTrap();
     if (state.returnFocusEl && typeof state.returnFocusEl.focus === "function"){
-      try{ state.returnFocusEl.focus({ preventScroll: true }); }catch{}
+      const el = state.returnFocusEl;
+      try{ el.focus({ preventScroll: true }); }catch{
+        try{ el.focus(); }catch{}
+      }
+      // Some pages restore focus to BODY on Escape; retry on next tick.
+      try{ setTimeout(() => { try{ el.focus({ preventScroll: true }); }catch{ try{ el.focus(); }catch{} } }, 0); }catch{}
     }
   }
 
