@@ -5648,6 +5648,10 @@ function buildVideoAsArticleCard(it) {
           panelNav.appendChild(rail);
         }
         if (mobileMind && mindMenuFlow) {
+          mindMenuFlow.style.display = "block";
+          mindMenuFlow.style.width = "100%";
+          mindMenuFlow.style.maxWidth = "100%";
+          mindMenuFlow.style.minWidth = "0";
           var mindMenu = document.querySelector(".mindMenu");
           if (mindMenu && !mindMenuFlow.style.minHeight) {
             var reserveH = Math.ceil(mindMenu.getBoundingClientRect().height || mindMenu.offsetHeight || 0);
@@ -5664,6 +5668,23 @@ function buildVideoAsArticleCard(it) {
           if (mindMenu && toolsSection && toolsSection.parentElement === mindMenuFlow) {
             mindMenuFlow.insertBefore(mindMenu, toolsSection);
           }
+          if (toolsSection) {
+            var gridInTools = toolsSection.querySelector(".iu-mmQuickGrid");
+            if (gridInTools) {
+              gridInTools.style.display = "grid";
+              gridInTools.style.gridTemplateColumns = "repeat(2, minmax(0, 1fr))";
+              gridInTools.style.gap = "10px 12px";
+            }
+          }
+          var topTools = mindMenu ? mindMenu.querySelector(".iu-mmTopTools") : null;
+          if (topTools) {
+            topTools.style.minHeight = "56px";
+            topTools.style.height = "56px";
+          }
+          var mailboxList = mindMenu ? mindMenu.querySelector("#iuMailboxList") : null;
+          if (mailboxList) mailboxList.style.minHeight = "262px";
+          var mailboxesSection = mindMenu ? mindMenu.querySelector("section.iu-mailboxes") : null;
+          if (mailboxesSection) mailboxesSection.style.minHeight = "340px";
           var staleWrapper = mindMenuFlow.querySelector(".mindMenu-scroll-wrapper");
           if (staleWrapper && !staleWrapper.querySelector(".mindMenu")) {
             staleWrapper.remove();
@@ -5698,7 +5719,13 @@ function buildVideoAsArticleCard(it) {
         }
       }
       if (!mobileMind && accordion) {
-        if (mindMenuFlow) mindMenuFlow.style.minHeight = "";
+        if (mindMenuFlow) {
+          mindMenuFlow.style.minHeight = "";
+          mindMenuFlow.style.display = "";
+          mindMenuFlow.style.width = "";
+          mindMenuFlow.style.maxWidth = "";
+          mindMenuFlow.style.minWidth = "";
+        }
         var mindMenuDesktopAlways = document.querySelector(".mindMenu");
         if (mindMenuDesktopAlways && !accordion.contains(mindMenuDesktopAlways)) {
           var wrapperAlways = accordion.querySelector(".mindMenu-scroll-wrapper");
@@ -5709,6 +5736,21 @@ function buildVideoAsArticleCard(it) {
             if (toolsSectionDesktop && !mindMenuDesktopAlways.contains(toolsSectionDesktop)) {
               mindMenuDesktopAlways.appendChild(toolsSectionDesktop);
             }
+            var gridDesktop = toolsSectionDesktop ? toolsSectionDesktop.querySelector(".iu-mmQuickGrid") : null;
+            if (gridDesktop) {
+              gridDesktop.style.display = "";
+              gridDesktop.style.gridTemplateColumns = "";
+              gridDesktop.style.gap = "";
+            }
+            var topToolsDesktop = mindMenuDesktopAlways.querySelector(".iu-mmTopTools");
+            if (topToolsDesktop) {
+              topToolsDesktop.style.minHeight = "";
+              topToolsDesktop.style.height = "";
+            }
+            var mailboxListDesktop = mindMenuDesktopAlways.querySelector("#iuMailboxList");
+            if (mailboxListDesktop) mailboxListDesktop.style.minHeight = "";
+            var mailboxesSectionDesktop = mindMenuDesktopAlways.querySelector("section.iu-mailboxes");
+            if (mailboxesSectionDesktop) mailboxesSectionDesktop.style.minHeight = "";
             accordion.insertBefore(wrapperAlways, afterPwaDesktop ? afterPwaDesktop.nextSibling : accordion.firstChild);
           } else {
             accordion.insertBefore(mindMenuDesktopAlways, afterPwaDesktop ? afterPwaDesktop.nextSibling : accordion.firstChild);
