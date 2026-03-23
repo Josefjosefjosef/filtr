@@ -5859,30 +5859,81 @@ function buildVideoAsArticleCard(it) {
               }
             } catch (_) {}
             try {
-              var y = target.getBoundingClientRect().top + (window.pageYOffset || window.scrollY || 0) - topOffset - 4;
-              var scroller = null;
-              var anc = target;
-              while (anc && anc !== document.body && anc !== document.documentElement) {
-                var cs = window.getComputedStyle ? window.getComputedStyle(anc) : null;
-                var oy = cs ? (cs.overflowY || cs.overflow || "") : "";
-                var canScroll = anc.scrollHeight > anc.clientHeight + 2;
-                if (/(auto|scroll)/.test(oy) && canScroll) {
-                  scroller = anc;
+              var desiredTop = topOffset + 8;
+              var targetRect = target.getBoundingClientRect();
+              if (targetRect && targetRect.top <= topOffset + 1) {
+                var anchorPool = [
+                  "#iuMobileMindMenuFlow .mindMenu .iu-mmTopTools",
+                  "#iuMobileMindMenuFlow .mindMenu #iuMailboxList",
+                  "#iuMobileMindMenuFlow .mindMenu section.iu-mailboxes",
+                  "#iuMobileMindMenuFlow .mindMenu .iu-mmQuickGrid",
+                  "#iuMobileMindMenuFlow .mindMenu",
+                  "#iuMobileMindMenuFlow .mindMenu button",
+                  "#iuMobileMindMenuFlow .mindMenu a"
+                ];
+                for (var p = 0; p < anchorPool.length; p++) {
+                  var candidate = document.querySelector(anchorPool[p]);
+                  if (!candidate) continue;
+                  var cRect = candidate.getBoundingClientRect();
+                  if (!cRect || cRect.height < 6) continue;
+                  if (cRect.bottom <= topOffset + 2) continue;
+                  target = candidate;
                   break;
                 }
+              }
+              var y = target.getBoundingClientRect().top + (window.pageYOffset || window.scrollY || 0) - topOffset - 4;
+              var scroller = null;
+              var tested = [];
+              function pushCandidate(el) {
+                if (!el) return;
+                if (tested.indexOf(el) !== -1) return;
+                tested.push(el);
+              }
+              var anc = target;
+              while (anc && anc !== document.body && anc !== document.documentElement) {
+                pushCandidate(anc);
                 anc = anc.parentElement;
               }
-              if (!scroller) {
-                var pageRoot = document.getElementById("page");
-                if (pageRoot && pageRoot.scrollHeight > pageRoot.clientHeight + 2) scroller = pageRoot;
-              }
-              if (!scroller) {
-                var layoutRoot = document.querySelector(".layout");
-                if (layoutRoot && layoutRoot.scrollHeight > layoutRoot.clientHeight + 2) scroller = layoutRoot;
+              pushCandidate(document.getElementById("page"));
+              pushCandidate(document.querySelector(".layout"));
+              pushCandidate(document.scrollingElement);
+              pushCandidate(document.documentElement);
+              pushCandidate(document.body);
+              for (var c = 0; c < tested.length; c++) {
+                var cand = tested[c];
+                if (!cand || typeof cand.scrollTop !== "number") continue;
+                var max = Math.max(0, (cand.scrollHeight || 0) - (cand.clientHeight || 0));
+                if (max <= 0) continue;
+                var originalTop = cand.scrollTop;
+                var probeTop = Math.min(max, originalTop + 1);
+                cand.scrollTop = probeTop;
+                var moved = cand.scrollTop !== originalTop;
+                cand.scrollTop = originalTop;
+                if (moved) {
+                  scroller = cand;
+                  break;
+                }
               }
               if (scroller && typeof scroller.scrollTo === "function") {
-                var sy = target.getBoundingClientRect().top - (scroller.getBoundingClientRect().top || 0) + scroller.scrollTop - topOffset - 4;
+                var sy = target.getBoundingClientRect().top - (scroller.getBoundingClientRect().top || 0) + scroller.scrollTop - desiredTop;
                 scroller.scrollTo({ top: Math.max(0, sy), behavior: "smooth" });
+                try {
+                  window.setTimeout(function () {
+                    try {
+                      var rectNow = target.getBoundingClientRect();
+                      if (!rectNow) return;
+                      if (rectNow.top < topOffset || rectNow.top > topOffset + 24) {
+                        var correction = rectNow.top - desiredTop;
+                        var corrected = Math.max(0, (scroller.scrollTop || 0) + correction);
+                        if (typeof scroller.scrollTo === "function") {
+                          scroller.scrollTo({ top: corrected, behavior: "auto" });
+                        } else {
+                          scroller.scrollTop = corrected;
+                        }
+                      }
+                    } catch (_) {}
+                  }, 220);
+                } catch (_) {}
               } else if (typeof window.scrollTo === "function") {
                 window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
               } else if (typeof target.scrollIntoView === "function") {
