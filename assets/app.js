@@ -5621,8 +5621,6 @@ function buildVideoAsArticleCard(it) {
   /** P0 Mobile gate: on mobile move Silver + rail + MindMenu into gate; on desktop restore. Tab state: nav | tools | none. */
   function iuMobileGateReorder() {
     try {
-      // Mobile/tablet special gate mode is retired; keep desktop DOM flow unchanged.
-      return;
       var wrap = document.getElementById("iuMobileGateWrap");
       var silverSlot = document.getElementById("iuMobileSilverSlot");
       var panelNav = document.getElementById("iuMobileGatePanelNav");
@@ -5678,8 +5676,6 @@ function buildVideoAsArticleCard(it) {
   /** P0 Mobile gate: tab click — only one section open; use existing left rail / MindMenu; back button. */
   function iuMobileGateTabInit() {
     try {
-      // Disabled with unified rail layout (desktop parity on mobile/tablet).
-      return;
       var wrap = document.getElementById("iuMobileGateWrap");
       var tabNav = document.getElementById("iuMobileGateTabNav");
       var tabTools = document.getElementById("iuMobileGateTabTools");
@@ -5770,8 +5766,6 @@ function buildVideoAsArticleCard(it) {
 
   function iuInitMobileFocusAccordion() {
     try {
-      // Disabled: no separate mobile-only render/reorder mode.
-      return;
       const root = document.getElementById("iuMobileFocus");
       if (!root) return;
 
@@ -11130,8 +11124,6 @@ function buildVideoAsArticleCard(it) {
 
   const IU_QUICKTOOLS_STORAGE_KEY = "infouzel_quicktools";
   const IU_QUICKTOOLS_CONFIG_VERSION = 1;
-  let iuQuickToolsPanelParent = null;
-  let iuQuickToolsPanelNext = null;
   const IU_QUICKTOOLS_REGISTRY = [
     { id: "datovka", label: "Datová schránka", accent: "#1F4B99" },
     { id: "bankovnictvi", label: "Internetové bankovnictví", accent: "#0066cc" },
@@ -11225,24 +11217,8 @@ function buildVideoAsArticleCard(it) {
   function iuQuickToolsSettingsOpen() {
     const panel = document.getElementById("iuQuickToolsSettingsPanel");
     if (!panel) return;
-    try {
-      if (!iuQuickToolsPanelParent) {
-        iuQuickToolsPanelParent = panel.parentElement || null;
-        iuQuickToolsPanelNext = panel.nextElementSibling || null;
-      }
-      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches && panel.parentElement !== document.body) {
-        document.body.appendChild(panel);
-      }
-    } catch (_) {}
     panel.hidden = false;
     panel.setAttribute("aria-hidden", "false");
-    try {
-      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
-        document.documentElement.style.overflow = "hidden";
-        document.body.style.overflow = "hidden";
-        document.body.classList.add("iu-modal-open");
-      }
-    } catch (_) {}
     if (typeof panel._iuQuickToolsSync === "function") panel._iuQuickToolsSync();
     document.body.addEventListener("keydown", iuQuickToolsSettingsOnEsc);
     document.addEventListener("click", iuQuickToolsSettingsOnOutside);
@@ -11253,18 +11229,6 @@ function buildVideoAsArticleCard(it) {
     if (!panel) return;
     panel.hidden = true;
     panel.setAttribute("aria-hidden", "true");
-    try {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
-      document.body.classList.remove("iu-modal-open");
-      if (iuQuickToolsPanelParent && panel.parentElement === document.body) {
-        if (iuQuickToolsPanelNext && iuQuickToolsPanelNext.parentElement === iuQuickToolsPanelParent) {
-          iuQuickToolsPanelParent.insertBefore(panel, iuQuickToolsPanelNext);
-        } else {
-          iuQuickToolsPanelParent.appendChild(panel);
-        }
-      }
-    } catch (_) {}
     document.body.removeEventListener("keydown", iuQuickToolsSettingsOnEsc);
     document.removeEventListener("click", iuQuickToolsSettingsOnOutside);
   }
@@ -19356,29 +19320,6 @@ function buildVideoAsArticleCard(it) {
   const parcelsBtnMobile = document.getElementById('iuParcelsBtnMobile');
   const modal = document.getElementById('iuParcelsPopover');
   const overlay = document.querySelector('.iu-parcels-overlay');
-  let prevDocOverflow = '';
-  let prevBodyOverflow = '';
-
-  function isMobileTablet() {
-    try { return !!(window.matchMedia && window.matchMedia('(max-width: 900px)').matches); } catch (_) { return false; }
-  }
-
-  function setParcelsScrollLock(lock) {
-    try {
-      if (!isMobileTablet()) return;
-      if (lock) {
-        prevDocOverflow = document.documentElement.style.overflow || '';
-        prevBodyOverflow = document.body.style.overflow || '';
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-        document.body.classList.add('iu-modal-open');
-      } else {
-        document.documentElement.style.overflow = prevDocOverflow || '';
-        document.body.style.overflow = prevBodyOverflow || '';
-        document.body.classList.remove('iu-modal-open');
-      }
-    } catch (_) {}
-  }
   
   const carriers = {
     packeta: {
@@ -19431,7 +19372,6 @@ function buildVideoAsArticleCard(it) {
     overlay.classList.add('is-open');
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
-    setParcelsScrollLock(true);
   }
   
   function closeParcels(){
@@ -19439,7 +19379,6 @@ function buildVideoAsArticleCard(it) {
     overlay.classList.remove('is-open');
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
-    setParcelsScrollLock(false);
   }
   
   function addParcelRow(carrierId){
@@ -19504,6 +19443,7 @@ function buildVideoAsArticleCard(it) {
     
     if(parcelsBtn){
       parcelsBtn.addEventListener('click', (e) => {
+        if (e.target.closest && e.target.closest('[data-iuq]')) return;
         e.preventDefault();
         e.stopPropagation();
         openParcels();
@@ -19511,6 +19451,7 @@ function buildVideoAsArticleCard(it) {
     }
     if(parcelsBtnMobile){
       parcelsBtnMobile.addEventListener('click', (e) => {
+        if (e.target.closest && e.target.closest('[data-iuq]')) return;
         e.preventDefault();
         e.stopPropagation();
         openParcels();
