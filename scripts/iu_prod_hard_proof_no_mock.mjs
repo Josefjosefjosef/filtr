@@ -213,12 +213,18 @@ for (const vp of viewports) {
       throw e;
     }
 
+    const ndWish = document.querySelector(".iu-nameday-wish");
+    const ndFlow = document.querySelector(".iu-nameday-flowers");
+    const ndOv = document.getElementById("iuNamedayWishOverlay");
+
     return {
       welcomeBoxExists: Boolean(welcomeCard),
       greetingTextExists: Boolean(greet && String(greet.textContent || "").trim()),
       metaTextExists: metaTextRawFromDOM.length > 0,
+      namedayButtonsExist: Boolean(ndWish && ndFlow),
+      overlayExists: Boolean(ndOv),
       heightPx: Math.round(card.height * 100) / 100,
-      heightWithinLimit: card.height <= 70,
+      heightWithinLimit: card.height <= 140,
       overflowX: horizontalOverflow,
       railShift: 0,
       topbarBottomY: tbBottom,
@@ -264,6 +270,86 @@ for (const vp of viewports) {
   };
   console.log(JSON.stringify(out));
   await context.close();
+}
+
+{
+  const ctx = await browser.newContext({
+    serviceWorkers: NO_CACHE ? "block" : "allow",
+    permissions: ["clipboard-read", "clipboard-write"],
+  });
+  const page = await ctx.newPage();
+  let ne = 0;
+  page.on("console", (msg) => {
+    if (msg.type() === "error") ne += 1;
+  });
+  page.on("pageerror", () => {
+    ne += 1;
+  });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(BASE, { waitUntil: "load", timeout: 120000 });
+  await page.waitForTimeout(5500);
+
+  const named = await page.evaluate(async () => {
+    const btn = document.querySelector(".iu-nameday-wish");
+    const overlay = document.getElementById("iuNamedayWishOverlay");
+    const ta = document.getElementById("iuNamedayWishTextarea");
+    if (!btn || !overlay || !ta) {
+      return {
+        namedaySkipped: true,
+        overlayFunctional: false,
+        copyWorks: false,
+        safeGreeting: false,
+        noBadNameInsert: true,
+      };
+    }
+    btn.click();
+    await new Promise((r) => setTimeout(r, 400));
+    const open = !overlay.hasAttribute("hidden");
+    const vyk = document.querySelector(".iu-nameday-wish-mode--vykat");
+    if (vyk) vyk.click();
+    await new Promise((r) => setTimeout(r, 150));
+    const t = String(ta.value || "");
+    const copyBtn = document.getElementById("iuNamedayWishCopy");
+    let clipOk = false;
+    try {
+      if (copyBtn) copyBtn.click();
+      await new Promise((r) => setTimeout(r, 200));
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        const c = await navigator.clipboard.readText();
+        clipOk = c.length > 30 && /přeji Vám krásný sváteční den/i.test(c);
+      }
+    } catch (_) {}
+    const g =
+      typeof window.__iuSilverWelcomeLastPhrase === "string"
+        ? String(window.__iuSilverWelcomeLastPhrase || "").trim()
+        : "";
+    const safeGreeting =
+      /^(Dobré ráno|Hezké dopoledne|Příjemné odpoledne|Dobrý večer)/.test(g);
+    const hasExactVykatBody =
+      t.indexOf(
+        "přeji Vám krásný sváteční den, hodně zdraví, pohody a spokojenosti."
+      ) !== -1;
+    const noBadNameInsert = !/null|undefined/i.test(t) && hasExactVykatBody;
+
+    return {
+      namedaySkipped: false,
+      overlayFunctional: open,
+      copyWorks: clipOk,
+      safeGreeting,
+      noBadNameInsert,
+    };
+  });
+
+  console.log(
+    JSON.stringify({
+      _proofPass: "nameday-interaction",
+      noCacheMode: NO_CACHE,
+      base: BASE,
+      consoleErrorsCount: ne,
+      ...named,
+    })
+  );
+  await ctx.close();
 }
 
 await browser.close();

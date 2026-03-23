@@ -8837,10 +8837,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   }
 }
 
-/* ==============================
-   LEFT RAIL ICON NAV (refactor)
-   ============================== */
-
 .iu-leftRail{
   /* Match center feed background (no panel effect) */
   background: var(--iuRailBg, var(--iu-page-bg));
@@ -8850,9 +8846,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   border-right: none;
 }
 
-/* ============================================================
-   Rail ÔÇö Theme controls (3 icons under topbar)
-   ============================================================ */
 .iuRailThemeRow{
   display:flex;
   gap:8px;
@@ -8893,11 +8886,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
 @media (max-width: 520px){
   .iuRailThemeRow{ padding-left:8px; padding-right:8px; }
 }
-
-/* ============================================================
-   M┼«J INFO UZEL ÔÇö left rail block (under Inzerce)
-   ============================================================ */
-
 
 .iuMyUzelBlock{
   width: 100%;
@@ -9572,14 +9560,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   .iuHamburger svg{ width: 22px; height: 22px; }
   .iuBrand{ font-size: 20px; }
 }
-
-/* ============================================================
-   FEED VIDEO EVERY 8 ÔÇö YouTube preview card (lazy embed, CLS=0)
-   ============================================================ */
-
-/* ============================================================
-   MOBILE ÔÇö Focus Accordion (active section under topbar)
-   ============================================================ */
 
 /* P0 Mobile gate: hidden on desktop */
 #iuMobileGateWrap.iu-mobileGateWrap{
@@ -10335,10 +10315,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   }
 }
 
-/* ============================================================
-   FIX ÔÇö video poster nesm├ş blokovat iframe
-   ============================================================ */
-
 /* po na─Źten├ş videa poster zmiz├ş */
 .iuVideoCard[data-iu-loaded="1"] .iuVideoPoster,
 .iuVideoCard[data-iu-loaded="1"] .iuVideoOverlay{
@@ -10356,10 +10332,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 .iuVideoPoster{
   z-index: 1;
 }
-
-/* ============================================================
-   FINAL FIX ÔÇö video poster must disappear after embed (UX)
-   ============================================================ */
 
 /* Jakmile je karta ozna─Źen├í jako loaded, poster/overlay mus├ş zmizet ├║pln─Ť,
    jinak to u┼żivateli vypad├í, ┼że se nic nep┼Öehr├ív├í. */
@@ -10382,10 +10354,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   min-height: 240px;
 }
 
-/* ============================================================
-   FINAL FIX ÔÇö loaded video must be clickable (force pointer-events)
-   ============================================================ */
-
 /* Po embedu mus├ş b├Żt player 100% klikac├ş/tapovateln├Ż i kdy┼ż n─Ťkde glob├íln─Ť
    existuje pointer-events: none (─Źasto s !important). */
 .iuVideoCard[data-iu-loaded="1"],
@@ -10407,10 +10375,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 .iuVideoCard[data-iu-loaded="1"]::after{
   pointer-events: none !important;
 }
-
-/* ============================================================
-   FINAL FIX ÔÇö video iframe must be on top (stacking context kill)
-   ============================================================ */
 
 /* izoluj video kartu od layoutu; z-index zůstává nízko — fixed topbar (1000) musí zůstat nad obsahem při scrollu */
 .iuVideoCard[data-iu-loaded="1"]{
@@ -10538,10 +10502,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   opacity: .6;
 }
 
-/* ============================================================
-   ALERT TITLES ÔÇö only middle feed
-   ============================================================ */
-
 #feed .iuTitle--alert{
   color:#d72638;
   font-weight:700;
@@ -10568,10 +10528,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 .iuMyUzelView .iuRadioChip{
   border-left: 4px solid var(--iuSectionAccent, #b9bcc2);
 }
-
-/* ======================================================================
-   FINAL UI ÔÇö SOLID CHIPS only in MAIN SECTION VIEWS (NOT MindMenu)
-   ====================================================================== */
 
 /* Helper: solid chip style (no tints/blends) */
 #newsList .iuRadioChip{
@@ -10705,10 +10661,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChip[data-iu-text="dark"] .iuRadioChipDesc{
   color: #0b1b2b !important;
 }
-
-/* ======================================================================
-   FINAL UI ÔÇö Notes (unified component across the whole web)
-   ====================================================================== */
 
 .iuNotesHost .iuNotes,
 .iuNotesHost [data-iu-notes],
@@ -16602,6 +16554,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   align-items: center;
   margin-top: 8px;
   min-width: 0;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+/* P0 CLS: [hidden] = display:none — zobrazení fallback tlačítek posune výšku. Držet stejný slot i když je řádek skrytý. */
+.silver-weather-actions[hidden]{
+  display: flex !important;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .silver-weather-btn{
@@ -16664,7 +16625,54 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   border-color: rgba(255, 255, 255, 0.28);
 }
 
-/* Silver welcome (P0): sticky card, max 70px height, 2 lines, date+svátek z iuDailyPanelInit */
+/* Nameday CTA + přání: řádek v kartě; CTA=.silver-weather-btn; overlay=#iuNamedayWishOverlay; karta=#iuNamedayWishCard */
+.iu-nameday-cta{
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 8px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  margin-top: 0;
+  box-sizing: border-box;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  align-items: center;
+  contain: layout;
+}
+
+@media (max-width: 900px){
+  /* Na úzkém layoutu zůstat v toku (delší meta + wrap CTA), ne absolutně přes text. */
+  .iuSilverWelcomeCard{
+    padding: 6px 12px 8px;
+    min-height: 0;
+  }
+  .iu-nameday-cta{
+    position: static;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 44px;
+    max-height: none;
+    margin-top: 10px;
+  }
+}
+
+.iu-nameday-cta .silver-weather-btn{flex:1 1 180px;min-width:0}
+#iuNamedayWishOverlay.iuModal{z-index:99990;background:rgba(15,30,45,.45);padding:16px;box-sizing:border-box;contain:none!important}
+#iuNamedayWishCard{width:100%;max-width:420px;height:auto!important;max-height:none!important;min-height:min-content;overflow:visible!important;padding:18px 18px 16px;contain:none!important}
+#iuNamedayWishCard h2{margin:0 0 14px;font-size:18px;font-weight:700;line-height:1.2}
+#iuNamedayWishCard .iu-nameday-wish-mode-row{display:flex;gap:10px;margin:0 0 12px}
+#iuNamedayWishCard .iu-nameday-wish-mode-row .silver-weather-btn{flex:1 1 0;min-height:36px}
+#iuNamedayWishCard .silver-weather-btn[aria-pressed="true"]{border-color:rgba(90,140,220,.85);background:rgba(90,140,220,.12)}
+#iuNamedayWishTextarea{width:100%;min-height:120px;box-sizing:border-box;margin:0 0 12px;padding:10px 12px;font-size:14px;line-height:1.45;border-radius:10px;border:1px solid rgba(15,35,55,.16);resize:none;font-family:inherit;color:rgba(15,30,45,.95);background:rgba(248,250,252,.95)}
+#iuNamedayWishCopy{width:100%}
+
+/* Silver welcome (P0): sticky card + nameday CTA řádek, date+svátek z iuDailyPanelInit */
 .iuSilverWelcomeSticky{
   position: sticky;
   top: calc(var(--topbarStackH, 72px) + 4px);
@@ -16675,19 +16683,28 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   flex: 0 0 auto;
 }
 
+@media (min-width: 901px){
+  /* P0 CLS: stejná logika jako .silver-welcome-stack min-height — celý horní blok má stabilní výšku dřív než flex přepočítá .silver-shell. */
+  .iuSilverWelcomeSticky{
+    min-height: 260px;
+  }
+}
+
 .iuSilverWelcomeCard{
+  position: relative;
   width: 100%;
-  max-height: 70px;
-  /* P0 CLS: reserve final two-line card height before first paint (flex sibling .silver-shell reflow) */
-  min-height: 58px;
+  max-height: none;
+  /* P0 CLS: headline + meta + rezervace spodního pásu pro absolutní CTA (ne růst toku). */
+  min-height: 112px;
   box-sizing: border-box;
-  padding: 6px 12px 7px;
+  padding: 6px 12px 54px;
   border-radius: var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius) 0 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 2px;
-  overflow: hidden;
+  overflow: visible;
+  contain: layout style;
   border: none;
   box-shadow: none;
   background: transparent;
@@ -17336,14 +17353,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem{
   position: relative;
 }
 
-/* ACTIVE ::before ÔÇö disabled (no oval tiles) */
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"]::before,
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active::before,
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::before{
-  content: none !important;
-  display: none !important;
-}
-
 /* ULTRA: micro-highlight hover ÔÇö disabled (no oval tiles) */
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:hover:not([aria-current="page"]):not(.active):not(.is-active)::before{
   content: none !important;
@@ -17366,22 +17375,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNa
   background: none !important;
   background-image: none !important;
 }
-
-/* ULTRA: focus-visible (premium, not disruptive) */
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
-  outline: 3px solid rgba(27,36,48,.22);
-  outline-offset: 2px;
-}
-
-/* ============================================================
-   RAIL MAX LEVEL v2 ÔÇö stretch + badges + micro-highlight + micro-glow
-   UI-only, CLS-safe (no width/height/margin/padding changes on hover/active)
-   ============================================================ */
-
-/* ============================================================
-   RAIL ÔÇö stretch to viewport under topbar (CLS-safe)
-   BG_OWNER: aside#iuLeftRail.iu-leftRail .iu-leftNav
-   ============================================================ */
 
 aside#iuLeftRail.iu-leftRail{
   align-self: stretch !important;
@@ -17930,9 +17923,6 @@ body #iuLeftRail{
   --iuRailSectionAccent: color-mix(in srgb, var(--iuRailAccent-quick) 55%, transparent) !important;
 }
 
-/* === P┼śEHLED DNE ===
-   Apply to icons after the SECOND section title.
-*/
 #iuLeftRail .iuLeftRailSectionTitle:nth-of-type(2){
   --iuRailSectionAccent: color-mix(in srgb, var(--iuRailAccent-day) 55%, transparent) !important;
 }
@@ -17988,10 +17978,6 @@ body #iuLeftRail{
 /* 0) Hard safety: keep item text + wrapper color silver so icon tile stays silver */
 #iuLeftRail .iu-leftNavItem{
   color:#D1D5DB !important; /* ensures wrappers using currentColor stay silver */
-}
-
-#iuLeftRail .iu-leftNavItem span{
-  color:#D1D5DB !important;
 }
 
 /* 1) Make sure ONLY glyph is colorable (FA <i> / SVG) */
@@ -18157,11 +18143,6 @@ body #iuLeftRail .iu-leftNav .iu-leftNavItem{
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.85),
     0 8px 18px rgba(0,0,0,0.10) !important;
-}
-
-/* (C) Hover – přepis pouze background (levý tile už má hover styl) */
-body #iuLeftRail .iu-leftNav .iu-leftNavItem:hover{
-  background: linear-gradient(180deg, #F4F5F7 0%, #E4E8ED 60%, #DFE3E9 100%) !important;
 }
 
 /* ===== TOPBAR: no hamburger, brand left, 44px info dot (CSS-only) ===== */
