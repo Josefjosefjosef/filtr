@@ -5816,6 +5816,36 @@ function buildVideoAsArticleCard(it) {
         setTab(cur === "nav" ? "" : "nav");
       });
       var lastToolsScrollTs = 0;
+      var lastMindMenuDebugAt = 0;
+      function iuMindMenuDebugEnabled() {
+        try {
+          if (window.IU_MINDMENU_DEBUG === true) return true;
+          var qs = new URLSearchParams(window.location.search || "");
+          return qs.get("iuMindMenuDebug") === "1";
+        } catch (_) {
+          return false;
+        }
+      }
+      function iuMindMenuNodeLabel(node) {
+        try {
+          if (!node) return "null";
+          if (node === window) return "window";
+          if (node === document) return "document";
+          if (node === document.scrollingElement) return "document.scrollingElement";
+          var tag = (node.tagName || "node").toLowerCase();
+          var id = node.id ? ("#" + node.id) : "";
+          var cls = "";
+          if (node.classList && node.classList.length) cls = "." + Array.from(node.classList).slice(0, 3).join(".");
+          return tag + id + cls;
+        } catch (_) {
+          return "unknown";
+        }
+      }
+      try {
+        window.__iuDumpMindMenuDebug = function () {
+          return window.__iuMindMenuDebug || null;
+        };
+      } catch (_) {}
       function iuHandleToolsTabClick(ev) {
         var now = Date.now();
         if (now - lastToolsScrollTs < 120) {
@@ -5830,22 +5860,73 @@ function buildVideoAsArticleCard(it) {
           isMobileOrTablet = mq ? mq.matches : (window.innerWidth <= 1023);
         } catch (_) {}
         if (isMobileOrTablet) {
+          var debugOn = iuMindMenuDebugEnabled();
+          var debugData = {
+            clickedAt: new Date().toISOString(),
+            clickTargetTag: ev && ev.target && ev.target.tagName ? ev.target.tagName : null,
+            clickTargetId: ev && ev.target && ev.target.id ? ev.target.id : null,
+            selectedScrollerKind: null,
+            selectedScrollerScrollTopBefore: null,
+            selectedScrollerScrollTopAfter: null,
+            windowScrollYBefore: window.scrollY || 0,
+            windowScrollYAfter: null,
+            selectedAnchorKind: null,
+            selectedAnchorExists: false,
+            selectedAnchorHeight: null,
+            selectedAnchorTopBefore: null,
+            selectedAnchorTopAfter: null,
+            mindMenuFlowHeight: null,
+            mindMenuHeight: null,
+            topbarBottom: null,
+            landedBelowTopbar: false,
+            correctionApplied: false,
+            correctionDelta: 0,
+            repeatClickWorks: false,
+            anchorCandidates: [],
+            scrollerCandidates: []
+          };
           var targetRoot =
             document.getElementById("iuMobileMindMenuFlow") ||
             document.querySelector("#iuMobileMindMenuFlow .mindMenu") ||
             document.querySelector("#iuMobileMindMenuFlow .mindMenu-scroll-wrapper") ||
             document.querySelector(".layout > aside.accordionCol .mindMenu") ||
             document.querySelector(".layout > aside.accordionCol .mindMenu-scroll-wrapper");
+          if (debugOn) {
+            try {
+              var flowDbg = document.getElementById("iuMobileMindMenuFlow");
+              var mindDbg = document.querySelector("#iuMobileMindMenuFlow .mindMenu") || document.querySelector(".layout > aside.accordionCol .mindMenu");
+              debugData.mindMenuFlowHeight = flowDbg ? flowDbg.getBoundingClientRect().height : null;
+              debugData.mindMenuHeight = mindDbg ? mindDbg.getBoundingClientRect().height : null;
+            } catch (_) {}
+          }
           if (targetRoot) {
             var target = targetRoot;
             try {
-              var anchorCandidates = targetRoot.querySelectorAll(
-                ".mindMenu, .iu-mmTopTools, #iuMailboxList, section.iu-mailboxes, .iu-mmQuickGrid"
-              );
+              var anchorCandidateSelectors = [
+                ".mindMenu",
+                ".iu-mmTopTools",
+                "#iuMailboxList",
+                "section.iu-mailboxes",
+                ".iu-mmQuickGrid"
+              ];
+              var anchorCandidates = targetRoot.querySelectorAll(anchorCandidateSelectors.join(", "));
               for (var i = 0; i < anchorCandidates.length; i++) {
                 var rectI = anchorCandidates[i].getBoundingClientRect();
+                if (debugOn) {
+                  debugData.anchorCandidates.push({
+                    name: iuMindMenuNodeLabel(anchorCandidates[i]),
+                    exists: true,
+                    height: rectI ? rectI.height : 0,
+                    top: rectI ? rectI.top : null,
+                    scrollable: false,
+                    chosen: false
+                  });
+                }
                 if (rectI && rectI.height > 8) {
                   target = anchorCandidates[i];
+                  if (debugOn && debugData.anchorCandidates.length) {
+                    debugData.anchorCandidates[debugData.anchorCandidates.length - 1].chosen = true;
+                  }
                   break;
                 }
               }
@@ -5858,6 +5939,16 @@ function buildVideoAsArticleCard(it) {
                 topOffset = Math.max(0, Math.ceil(topbarRect.height || topbar.offsetHeight || 0));
               }
             } catch (_) {}
+            if (debugOn) {
+              try { debugData.topbarBottom = topbar ? topbar.getBoundingClientRect().bottom : 0; } catch (_) {}
+              try {
+                debugData.selectedAnchorKind = iuMindMenuNodeLabel(target);
+                debugData.selectedAnchorExists = !!target;
+                var beforeRect = target.getBoundingClientRect();
+                debugData.selectedAnchorHeight = beforeRect ? beforeRect.height : null;
+                debugData.selectedAnchorTopBefore = beforeRect ? beforeRect.top : null;
+              } catch (_) {}
+            }
             try {
               var desiredTop = topOffset + 8;
               var targetRect = target.getBoundingClientRect();
@@ -5873,11 +5964,25 @@ function buildVideoAsArticleCard(it) {
                 ];
                 for (var p = 0; p < anchorPool.length; p++) {
                   var candidate = document.querySelector(anchorPool[p]);
+                  if (debugOn) {
+                    var candRect = candidate ? candidate.getBoundingClientRect() : null;
+                    debugData.anchorCandidates.push({
+                      name: anchorPool[p],
+                      exists: !!candidate,
+                      height: candRect ? candRect.height : 0,
+                      top: candRect ? candRect.top : null,
+                      scrollable: false,
+                      chosen: false
+                    });
+                  }
                   if (!candidate) continue;
                   var cRect = candidate.getBoundingClientRect();
                   if (!cRect || cRect.height < 6) continue;
                   if (cRect.bottom <= topOffset + 2) continue;
                   target = candidate;
+                  if (debugOn && debugData.anchorCandidates.length) {
+                    debugData.anchorCandidates[debugData.anchorCandidates.length - 1].chosen = true;
+                  }
                   break;
                 }
               }
@@ -5903,6 +6008,17 @@ function buildVideoAsArticleCard(it) {
                 var cand = tested[c];
                 if (!cand || typeof cand.scrollTop !== "number") continue;
                 var max = Math.max(0, (cand.scrollHeight || 0) - (cand.clientHeight || 0));
+                if (debugOn) {
+                  var candRectDbg = cand.getBoundingClientRect ? cand.getBoundingClientRect() : null;
+                  debugData.scrollerCandidates.push({
+                    name: iuMindMenuNodeLabel(cand),
+                    exists: true,
+                    height: candRectDbg ? candRectDbg.height : (cand.clientHeight || 0),
+                    top: candRectDbg ? candRectDbg.top : null,
+                    scrollable: max > 0,
+                    chosen: false
+                  });
+                }
                 if (max <= 0) continue;
                 var originalTop = cand.scrollTop;
                 var probeTop = Math.min(max, originalTop + 1);
@@ -5911,8 +6027,16 @@ function buildVideoAsArticleCard(it) {
                 cand.scrollTop = originalTop;
                 if (moved) {
                   scroller = cand;
+                  if (debugOn && debugData.scrollerCandidates.length) {
+                    debugData.scrollerCandidates[debugData.scrollerCandidates.length - 1].chosen = true;
+                  }
                   break;
                 }
+              }
+              if (debugOn) {
+                debugData.selectedScrollerKind = iuMindMenuNodeLabel(scroller || window);
+                debugData.selectedScrollerScrollTopBefore = scroller && typeof scroller.scrollTop === "number" ? scroller.scrollTop : (window.scrollY || 0);
+                debugData.selectedAnchorKind = iuMindMenuNodeLabel(target);
               }
               if (scroller && typeof scroller.scrollTo === "function") {
                 var sy = target.getBoundingClientRect().top - (scroller.getBoundingClientRect().top || 0) + scroller.scrollTop - desiredTop;
@@ -5925,6 +6049,10 @@ function buildVideoAsArticleCard(it) {
                       if (rectNow.top < topOffset || rectNow.top > topOffset + 24) {
                         var correction = rectNow.top - desiredTop;
                         var corrected = Math.max(0, (scroller.scrollTop || 0) + correction);
+                        if (debugOn) {
+                          debugData.correctionApplied = true;
+                          debugData.correctionDelta = correction;
+                        }
                         if (typeof scroller.scrollTo === "function") {
                           scroller.scrollTo({ top: corrected, behavior: "auto" });
                         } else {
@@ -5938,6 +6066,29 @@ function buildVideoAsArticleCard(it) {
                 window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
               } else if (typeof target.scrollIntoView === "function") {
                 target.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+              if (debugOn) {
+                try {
+                  window.setTimeout(function () {
+                    try {
+                      debugData.windowScrollYAfter = window.scrollY || 0;
+                      debugData.selectedScrollerScrollTopAfter =
+                        scroller && typeof scroller.scrollTop === "number" ? scroller.scrollTop : (window.scrollY || 0);
+                      var rectAfter = target.getBoundingClientRect();
+                      debugData.selectedAnchorTopAfter = rectAfter ? rectAfter.top : null;
+                      debugData.landedBelowTopbar =
+                        typeof debugData.selectedAnchorTopAfter === "number" &&
+                        typeof debugData.topbarBottom === "number" &&
+                        debugData.selectedAnchorTopAfter >= debugData.topbarBottom;
+                      debugData.repeatClickWorks =
+                        lastMindMenuDebugAt > 0 &&
+                        debugData.selectedScrollerScrollTopAfter !== debugData.selectedScrollerScrollTopBefore;
+                      lastMindMenuDebugAt = Date.now();
+                      try { window.__iuMindMenuDebug = debugData; } catch (_) {}
+                      try { console.log("IU_MINDMENU_DEBUG", window.__iuMindMenuDebug); } catch (_) {}
+                    } catch (_) {}
+                  }, 320);
+                } catch (_) {}
               }
             } catch (_) {
               if (typeof target.scrollIntoView === "function") {
