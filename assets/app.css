@@ -16617,6 +16617,25 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   cursor: pointer;
   box-sizing: border-box;
   max-width: 100%;
+  min-height: 30px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.silver-weather-btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 30, 45, 0.12);
+  background: rgba(255, 255, 255, 0.48);
+  border-color: rgba(15, 35, 55, 0.24);
+}
+
+.silver-weather-btn:focus-visible{
+  outline: 2px solid rgba(90, 140, 220, 0.85);
+  outline-offset: 2px;
+}
+
+.silver-weather-btn:active{
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(15, 30, 45, 0.1);
 }
 
 .silver-weather-btn--ghost{
@@ -16628,6 +16647,16 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   border-color: rgba(255, 255, 255, 0.22);
   background: rgba(255, 255, 255, 0.1);
   color: rgba(248, 252, 255, 0.95);
+}
+
+.silver-welcome-stack--evening .silver-weather-btn:hover{
+  background: rgba(255, 255, 255, 0.17);
+  border-color: rgba(255, 255, 255, 0.32);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.silver-welcome-stack--evening .silver-weather-btn:focus-visible{
+  outline-color: rgba(200, 230, 255, 0.95);
 }
 
 .silver-welcome-stack--evening .silver-weather-btn--ghost{
