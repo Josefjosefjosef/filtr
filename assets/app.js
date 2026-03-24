@@ -21441,6 +21441,40 @@ function buildVideoAsArticleCard(it) {
         }
         if (typeof window.iuLoadNakupDomu === "function") window.iuLoadNakupDomu().catch(function(){});
         try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
+      } else {
+        // Fallback when custom shopping card is unavailable: keep canonical quickfeed open path.
+        const fallbackData = (window.IU_QUICK_FEEDS || {}).nakup;
+        if (!fallbackData) return;
+        stage.setAttribute("data-iu-view", "quick");
+        quick.hidden = false;
+        try {
+          document.body.classList.add("iu-quickFeedOpen");
+          if (isMobileOverlayScope) {
+            document.documentElement.style.overflow = "hidden";
+            document.body.style.overflow = "hidden";
+            document.body.classList.add("iu-modal-open", "iu-mobileGateToolsQuickOpen");
+          }
+        } catch (_) {}
+        quick.innerHTML = `
+          <div class="iuQHead">
+            <div class="iuQTitle">${iuQfEscape(fallbackData.title || "Evidence nákupů")}</div>
+            <div class="iuQHeadActions"><button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">×</button></div>
+          </div>
+          <div class="iuQCard">
+            <div class="iuQGrid">
+              ${(fallbackData.items || []).map(it => `<a class="iuAiCard iuQItem" href="${iuQfEscape(it.url || "#")}" target="_blank" rel="noopener noreferrer">
+                <div class="iuAiInner">
+                  <div class="iuAiName">${iuQfEscape(it.name || "")}</div>
+                  ${it.desc ? `<div class="iuAiDesc">${iuQfEscape(it.desc)}</div>` : ""}
+                </div>
+              </a>`).join("")}
+            </div>
+          </div>
+        `;
+        const closeBtn = document.getElementById("iuQCloseBtn");
+        if (closeBtn) closeBtn.addEventListener("click", function() { quick.hidden = true; stage.removeAttribute("data-iu-view"); });
+        iuApplyMobileQuickFeedLayout(quick);
+        try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
       }
       return;
     }
@@ -21467,6 +21501,14 @@ function buildVideoAsArticleCard(it) {
     if (!data) return;
     stage.setAttribute("data-iu-view", "quick");
     quick.hidden = false;
+    try {
+      document.body.classList.add("iu-quickFeedOpen");
+      if (isMobileOverlayScope) {
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+        document.body.classList.add("iu-modal-open", "iu-mobileGateToolsQuickOpen");
+      }
+    } catch (_) {}
     const isTranslator = String(key || "").toLowerCase() === "deepl";
     const isConvert = String(key || "").toLowerCase() === "convert";
     const useFullCard = ["ai", "deepl", "convert"].includes(String(key || "").toLowerCase());
