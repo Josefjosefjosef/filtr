@@ -1399,6 +1399,9 @@
           draft: createEmptyDraft()
         });
         chatState.draft = createEmptyDraft();
+        requestAnimationFrame(function () {
+          closeChatOverlay();
+        });
       } else {
         appendAssistantTurn({
           processingState: "NEEDS_CLARIFICATION",
