@@ -38,6 +38,18 @@ style-src 'self' 'unsafe-inline' https:;
     <noscript>Pro zobrazení obsahu je potřeba JavaScript.</noscript>
     <script>
     (function(){
+      try {
+        var h = (location.hostname || "").toLowerCase();
+        window.__IU_PROD__ = (h === "infouzel.cz" || h === "www.infouzel.cz");
+      } catch (e) { window.__IU_PROD__ = false; }
+    })();
+    </script>
+    <script>
+    (function(){
+      if (window.__IU_PROD__) {
+        document.documentElement.removeAttribute("data-iu-debug");
+        return;
+      }
       const isDebug = new URLSearchParams(location.search || "").get("debug") === "1";
       if (isDebug) {
         document.documentElement.setAttribute("data-iu-debug", "1");
@@ -1815,9 +1827,9 @@ style-src 'self' 'unsafe-inline' https:;
                       </div>
                       <div class="iu-mmQuickGrid" role="list">
                         <div class="iuTile" role="listitem" data-quicktool-id="datovka" data-iu-ql="datova-schranka" data-ms="ds"><a class="iuTileLink" href="https://obcan.portal.gov.cz/prihlaseni" target="_blank" rel="noopener noreferrer" aria-label="Datová schránka"><span class="iuTileText">Datová schránka</span></a></div>
-                        <div class="iuTile" role="listitem" data-quicktool-id="bankovnictvi" data-iu-ql="internetove-bankovnictvi" data-ms="banka"><button class="iuTileLink" type="button" data-iu-modal="banka" aria-label="Internetové bankovnictví"><span class="iuTileText">Internetové bankovnictví</span></button></div>
-                        <div class="iuTile" role="listitem" data-quicktool-id="bakalari" data-iu-ql="bakalari" data-ms="bakalari"><button class="iuTileLink" type="button" data-iu-modal="bakalari" aria-label="Bakaláři"><span class="iuTileText">Bakaláři</span></button></div>
-                        <div class="iuTile" role="listitem" data-quicktool-id="zdravotni_pojistovna" data-iu-ql="zdravotni-pojistovna" data-ms="pojistovna"><button class="iuTileLink" type="button" data-iu-modal="pojistovna" aria-label="Zdravotní pojišťovna"><span class="iuTileText">Zdravotní pojišťovna</span></button></div>
+                        <div class="iuTile" role="listitem" data-quicktool-id="bankovnictvi" data-iu-ql="internetove-bankovnictvi" data-ms="banka"><button class="iuTileLink" type="button" data-iuq="banka" aria-label="Internetové bankovnictví"><span class="iuTileText">Internetové bankovnictví</span></button></div>
+                        <div class="iuTile" role="listitem" data-quicktool-id="bakalari" data-iu-ql="bakalari" data-ms="bakalari"><button class="iuTileLink" type="button" data-iuq="bakalari" aria-label="Bakaláři"><span class="iuTileText">Bakaláři</span></button></div>
+                        <div class="iuTile" role="listitem" data-quicktool-id="zdravotni_pojistovna" data-iu-ql="zdravotni-pojistovna" data-ms="pojistovna"><button class="iuTileLink" type="button" data-iuq="pojistovna" aria-label="Zdravotní pojišťovna"><span class="iuTileText">Zdravotní pojišťovna</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="zasilky" data-iu-ql="zasilky-a-sledovani"><button class="iuTileLink" type="button" data-iuq="baliky" data-ql="zasilky" aria-label="Zásilky a sledování" data-iu-action="parcels" id="iuParcelsBtn"><span class="iuTileText">Zásilky a sledování</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="nakup_domu" data-iu-ql="nakup-domu"><button class="iuTileLink" type="button" data-iuq="nakup" data-ql="nakup" id="iuOpenNakupDomu" aria-label="Evidence nákupů"><span class="iuTileText">Evidence nákupů</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="ai_asistenti" data-iu-ql="ai-asistenti"><button class="iuTileLink" type="button" data-iuq="ai" data-ql="ai" aria-label="AI asistenti"><span class="iuTileText">AI asistenti</span></button></div>
@@ -1880,27 +1892,13 @@ style-src 'self' 'unsafe-inline' https:;
                     </div>
               </aside>
             </div>
-            <!-- Moje služby modaly (outside right rail, over center feed) -->
-            <div id="iu-mojeSluzbyOverlay" class="iu-aiOverlay" hidden aria-hidden="true"></div>
-            <div id="iu-mojeSluzbyPanel" class="iu-aiPanel iuModalCenterFeed" hidden role="dialog" aria-modal="true" aria-label="Moje služby">
-              <div class="iu-aiModal iu-mojeSluzbyModal" data-iu-modal-content>
-                <div class="iu-aiPanelHeader">
-                  <span id="iu-mojeSluzbyTitle">Moje služby</span>
-                  <div class="iu-aiPanelHeaderActions">
-                    <button class="iuAiClose iuModalClose" type="button" data-iu-close aria-label="Zavřít">×</button>
-                  </div>
-                </div>
-                <div class="iu-aiPanelBody" id="iu-mojeSluzbyBody">
-                  <!-- JS-rendered: Banka / Bakaláři / Zdravotní pojišťovna -->
-                </div>
-              </div>
-            </div>
           </div>
         </main>
       </div>
     </div>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       const isDebug = new URLSearchParams(location.search || "").get("debug") === "1";
       const diagPanel = document.getElementById("iuDiagPanel");
       const troubleshootPanel = document.getElementById("iuTroubleshoot");
@@ -2262,6 +2260,7 @@ style-src 'self' 'unsafe-inline' https:;
       </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var qs = new URLSearchParams(location.search || "");
       if (!(qs.has("debug") && qs.get("debug") === "1")) return;
 
@@ -2543,6 +2542,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return;
       var readBtn = document.getElementById("iuReadLastError");
@@ -2621,6 +2621,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var qs = new URLSearchParams(location.search || "");
       if (!(qs.has("debug") && qs.get("debug") === "1")) return;
 
@@ -2653,6 +2654,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return;
       var out = document.getElementById("iuPipelineTelemetryOut");
@@ -2679,6 +2681,7 @@ style-src 'self' 'unsafe-inline' https:;
     <script>
     (function(){
       try {
+        if (window.__IU_PROD__) return;
         var params = new URLSearchParams(location.search || "");
         if (params.get("debug") !== "1") return;
 
@@ -2828,6 +2831,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return;
       window.__iuStorageSpy = { writes: [], reads: [], removes: [], errors: [] };
@@ -2859,6 +2863,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return;
 
@@ -2927,6 +2932,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return;
       if (typeof PerformanceObserver === "undefined") return;
@@ -3034,6 +3040,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function () {
+      if (window.__IU_PROD__) return;
       var params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return;
 

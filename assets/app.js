@@ -9,6 +9,17 @@ var iuIsProjectsRoute = function iuIsProjectsRoute(){
 };
 try { if (typeof window !== "undefined") window.iuIsProjectsRoute = iuIsProjectsRoute; } catch(e){}
 
+/** P0: production host — debug UI and ?debug=1 tooling must never activate on infouzel.cz */
+function iuIsProdHost() {
+  try {
+    var h = String(location.hostname || "").toLowerCase();
+    return h === "infouzel.cz" || h === "www.infouzel.cz";
+  } catch (_) {
+    return false;
+  }
+}
+try { if (typeof window !== "undefined") window.iuIsProdHost = iuIsProdHost; } catch (e) {}
+
 /* P0: reload always returns to top (like seznam.cz) */
 try {
   if (typeof history !== "undefined" && "scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -56,7 +67,7 @@ window.addEventListener("unhandledrejection", (e) => {
   } catch {}
 });
 
-if (new URLSearchParams(location.search || "").get("debug") === "1") {
+if (!iuIsProdHost() && new URLSearchParams(location.search || "").get("debug") === "1") {
   document.documentElement.classList.add("iu-debug-on");
 }
 
@@ -455,7 +466,7 @@ try {
   state.cachedItems ??= [];
   state.filteredItems ??= [];
   const ALLOWED_CONTENT_TYPES = new Set(["article", "video"]);
-  const isDebugLogging = location.search.includes("debug=1");
+  const isDebugLogging = !iuIsProdHost() && location.search.includes("debug=1");
 
   // ============================================================
   // DEBUG (forensic) — VIDEO PIPELINE COUNTERS (?debug=1 only)
@@ -753,8 +764,9 @@ try {
     // Output only to iuDebugBox, not console
   }
   const DEBUG =
-    location.search.includes("debug=1") || localStorage.getItem("iu_debug") === "1";
-  if (location.search.includes("debug=1")) {
+    !iuIsProdHost() &&
+    (location.search.includes("debug=1") || localStorage.getItem("iu_debug") === "1");
+  if (!iuIsProdHost() && location.search.includes("debug=1")) {
     localStorage.setItem("iu_debug", "1");
   }
   const diagScriptSrc =
@@ -816,6 +828,7 @@ try {
 
   function ensureDebugBox() {
     try {
+      if (iuIsProdHost()) return null;
       const params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return null;
       let box = document.getElementById("iuDebugBox");
@@ -2471,7 +2484,7 @@ try {
   }
 
   function iuUpdateVideoQueue(sectionKey, slotCount, videoPool, cfg) {
-    const iuDebug = Boolean(location.search.includes("debug=1"));
+    const iuDebug = !iuIsProdHost() && Boolean(location.search.includes("debug=1"));
     const n = Math.max(0, Math.min(25, Number(slotCount) || 0));
     if (n <= 0) return iuInitQueue(0);
 
@@ -2675,7 +2688,7 @@ try {
   }
 
   function iuEnsureVideoAnchors(sectionKey) {
-    const iuDebug = Boolean(location.search.includes("debug=1"));
+    const iuDebug = !iuIsProdHost() && Boolean(location.search.includes("debug=1"));
     const container = document.getElementById("feed");
     if (!container) return;
 
@@ -3313,7 +3326,7 @@ try {
     const N = Math.max(0, Math.min(25, Number(slotCount) || 0));
     if (!pool0.length || N <= 0) return [];
 
-    const iuDebug = Boolean(location.search.includes("debug=1"));
+    const iuDebug = !iuIsProdHost() && Boolean(location.search.includes("debug=1"));
     const seen = cfg && cfg.seen ? cfg.seen : null;
 
     function tsOf(it) {
@@ -5831,6 +5844,7 @@ function buildVideoAsArticleCard(it) {
       var lastToolsToggleTs = 0;
       function iuMindMenuDebugEnabled() {
         try {
+          if (typeof window.iuIsProdHost === "function" && window.iuIsProdHost()) return false;
           if (window.IU_MINDMENU_DEBUG === true) return true;
           var qs = new URLSearchParams(window.location.search || "");
           return qs.get("iuMindMenuDebug") === "1";
@@ -11964,7 +11978,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   try {
-    window.addEventListener('iu-open-panel', function(e){ if (e.detail === 'shopping') { if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } });
+    window.addEventListener('iu-open-panel', function(e){ if (e.detail === 'shopping') { if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("quickfeed", { key: "nakup" }); else if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } });
     window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'shopping') { if (typeof window.iuNakupCloseQuickView === "function") window.iuNakupCloseQuickView(); else iuNakupClose(); } });
   } catch {}
 
@@ -18679,7 +18693,7 @@ function buildVideoAsArticleCard(it) {
     iuEvidenceUploadInit();
     iuEvidenceCalendarInit();
     function openNakupPanel() {
-      try { if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } catch (_) {}
+      try { if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("quickfeed", { key: "nakup" }); else if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } catch (_) {}
       try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
     }
     openBtn?.addEventListener("click", (e) => {
@@ -18876,7 +18890,12 @@ function buildVideoAsArticleCard(it) {
     } catch {}
 
     function iuDebugEnabled() {
-      try { return Boolean(location.search && location.search.includes("debug=1")); } catch { return false; }
+      try {
+        if (typeof window.iuIsProdHost === "function" && window.iuIsProdHost()) return false;
+        return Boolean(location.search && location.search.includes("debug=1"));
+      } catch {
+        return false;
+      }
     }
 
     function iuGetNextVideoFromPool(currentId) {
@@ -19636,7 +19655,7 @@ function buildVideoAsArticleCard(it) {
     }
   };
   
-  function openParcels(){
+  function iuParcelsOpenSurface(){
     if(!modal || !overlay) return;
     try { iuCloseAllOverlaysExcept("parcels"); } catch (_) {}
     overlay.classList.add('is-open');
@@ -19671,6 +19690,14 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  function openParcels(){
+    if (typeof window.iuOpenOverlay === "function") {
+      window.iuOpenOverlay("parcels");
+    } else {
+      iuParcelsOpenSurface();
+    }
+  }
+  try { window.iuParcelsOpenSurface = iuParcelsOpenSurface; } catch (_) {}
   try { window.iuOpenParcelsModal = openParcels; } catch (_) {}
   
   function closeParcels(){
@@ -21345,14 +21372,14 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
-  function iuShowQuickFeed(key){
+  function iuShowQuickFeedCore(key){
     if (typeof window.__iuDebugRca === "undefined") window.__iuDebugRca = (typeof location !== "undefined" && location.search || "").indexOf("iuDebug=1") !== -1;
     if (window.__iuDebugRca) console.log("[iuShowQuickFeed] key=", key);
     const keyNorm = String(key || "").trim().toLowerCase();
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
     if (!stage || !quick) return;
-    try { iuCloseAllOverlaysExcept("quickfeed"); } catch (_) {}
+    try { quick.style.removeProperty("display"); } catch (_) {}
     const isMobileGateToolsOpen = (() => {
       try {
         const wrap = document.getElementById("iuMobileGateWrap");
@@ -21928,52 +21955,176 @@ function buildVideoAsArticleCard(it) {
     iuEnsureArticlesView();
   }
 
-  function iuCloseAllOverlaysExcept(targetId) {
-    const target = String(targetId || "").trim().toLowerCase();
+  let iuActiveOverlay = null;
+
+  function iuDetectOpenOverlays() {
+    const ids = [];
     try {
-      if (target !== "quickfeed") iuEnsureArticlesView();
-      if (target !== "parcels" && typeof window.iuCloseParcelsModal === "function") {
+      const vis = (el) => {
+        if (!el) return false;
+        if (el.hidden) return false;
+        const st = getComputedStyle(el);
+        if (st.display === "none" || st.visibility === "hidden") return false;
+        return true;
+      };
+      const quick = document.getElementById("iuQuickFeed");
+      if (quick && vis(quick)) ids.push("quickfeed");
+      const pp = document.getElementById("iuParcelsPopover");
+      if (pp && pp.classList.contains("is-open") && getComputedStyle(pp).display !== "none") ids.push("parcels");
+      const mjp = document.getElementById("iu-mojeSluzbyPanel");
+      const mjo = document.getElementById("iu-mojeSluzbyOverlay");
+      if ((mjp && vis(mjp)) || (mjo && vis(mjo))) ids.push("mojesluzby");
+      const aiPanel = document.getElementById("iu-aiPanel");
+      if (aiPanel && vis(aiPanel)) ids.push("ai");
+    } catch (_) {}
+    return ids;
+  }
+
+  function iuForceCloseAllOverlays() {
+    iuActiveOverlay = null;
+    try { window.__iuLastQuickfeedKey = null; } catch (_) {}
+    try { window.__iuLastMojeSluzbyKind = null; } catch (_) {}
+    try {
+      try {
+        if (typeof window.iuIsProdHost === "function" && window.iuIsProdHost()) {
+          ["iuMindMenuDebugPanel", "iuDebugBox", "iuVideoDebugPanel", "iuLayoutShiftBox"].forEach(function (rid) {
+            var rel = document.getElementById(rid);
+            if (rel && rel.parentNode) rel.parentNode.removeChild(rel);
+          });
+        }
+      } catch (_) {}
+      iuEnsureArticlesView();
+      var qf = document.getElementById("iuQuickFeed");
+      if (qf) {
+        qf.hidden = true;
+        try { qf.style.display = "none"; } catch (_) {}
+      }
+      document.querySelectorAll(".iu-parcels-overlay, #iuParcelsPopover").forEach(function (el) {
+        try {
+          el.classList.remove("is-open");
+          el.setAttribute("aria-hidden", "true");
+          if (el.classList.contains("iu-parcels-overlay")) {
+            el.hidden = true;
+            try { el.style.display = "none"; } catch (_) {}
+          }
+        } catch (_) {}
+      });
+      if (typeof window.iuCloseParcelsModal === "function") {
         try { window.iuCloseParcelsModal(); } catch (_) {}
       }
-      if (target !== "mojesluzby" && typeof window.iuCloseMojeSluzbyModal === "function") {
+      if (typeof window.iuCloseMojeSluzbyModal === "function") {
         try { window.iuCloseMojeSluzbyModal(); } catch (_) {}
       }
-      if (target !== "mojesluzby") {
-        const mojeOverlay = document.getElementById("iu-mojeSluzbyOverlay");
-        const mojePanel = document.getElementById("iu-mojeSluzbyPanel");
-        if (mojeOverlay) {
-          mojeOverlay.hidden = true;
-          mojeOverlay.setAttribute("aria-hidden", "true");
-          try { mojeOverlay.style.display = "none"; } catch (_) {}
-        }
-        if (mojePanel) {
-          mojePanel.hidden = true;
-          mojePanel.setAttribute("aria-hidden", "true");
-          try { mojePanel.style.display = "none"; } catch (_) {}
-        }
+      const mojeOverlay = document.getElementById("iu-mojeSluzbyOverlay");
+      const mojePanel = document.getElementById("iu-mojeSluzbyPanel");
+      if (mojeOverlay) {
+        mojeOverlay.hidden = true;
+        mojeOverlay.setAttribute("aria-hidden", "true");
+        try { mojeOverlay.style.display = "none"; } catch (_) {}
       }
-      if (target !== "ai") {
-        const aiPanel = document.getElementById("iu-aiPanel");
-        const aiOverlay = document.getElementById("iu-aiOverlay");
+      if (mojePanel) {
+        mojePanel.hidden = true;
+        mojePanel.setAttribute("aria-hidden", "true");
+        try { mojePanel.style.display = "none"; } catch (_) {}
+        try { mojePanel.classList.remove("is-open"); } catch (_) {}
+      }
+      const aiPanel = document.getElementById("iu-aiPanel");
+      const aiOverlay = document.getElementById("iu-aiOverlay");
+      if (typeof window.iuSetElOpenVisible === "function") {
+        try { window.iuSetElOpenVisible(aiPanel, false); window.iuSetElOpenVisible(aiOverlay, false); } catch (_) {}
+      } else {
         if (aiPanel) aiPanel.hidden = true;
         if (aiOverlay) aiOverlay.hidden = true;
       }
-      // Force-close stale generic overlays/backdrops to keep max-open invariant.
+      try {
+        if (aiPanel) {
+          aiPanel.dataset.open = "0";
+          aiPanel.classList.remove("is-open");
+        }
+      } catch (_) {}
+      var nak = document.getElementById("iuNakupModal");
+      if (nak) {
+        nak.hidden = true;
+        try { nak.style.display = "none"; } catch (_) {}
+        try { nak.classList.remove("is-open"); } catch (_) {}
+      }
       document.querySelectorAll('.iuModal, [data-iu-backdrop], .iuBackdrop, .iu-overlay, .iu-backdrop').forEach((el) => {
-        if (target && el.id && String(el.id).toLowerCase().indexOf(target) !== -1) return;
         el.hidden = true;
         try { el.style.display = "none"; } catch (_) {}
+        try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
-      if (target === "quickfeed") {
-        try {
-          document.documentElement.style.overflow = "hidden";
-          document.body.style.overflow = "hidden";
-          document.body.classList.add("iu-modal-open", "iu-quickFeedOpen");
-        } catch (_) {}
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen");
+    } catch (_) {}
+  }
+
+  function iuOpenOverlay(targetId, extra) {
+    const t = String(targetId || "").trim().toLowerCase();
+    iuForceCloseAllOverlays();
+    iuActiveOverlay = t;
+    try {
+      if (t === "quickfeed") {
+        const k = extra && typeof extra === "object" && extra.key != null ? extra.key : (extra != null && typeof extra !== "object" ? extra : null);
+        if (k == null) return;
+        const kn = String(k).trim().toLowerCase();
+        try { window.__iuLastQuickfeedKey = kn; } catch (_) {}
+        iuShowQuickFeedCore(k);
+        return;
+      }
+      if (t === "parcels") {
+        if (typeof window.iuParcelsOpenSurface === "function") window.iuParcelsOpenSurface();
+        return;
+      }
+      if (t === "ai") {
+        if (typeof window.iuAiPanelOpenSurface === "function") window.iuAiPanelOpenSurface();
+      }
+    } finally {
+      try {
+        setTimeout(function () {
+          try { iuOverlayFailSafeAfterGesture(); } catch (_) {}
+        }, 0);
+      } catch (_) {}
+    }
+  }
+
+  function iuShowQuickFeed(key) {
+    iuOpenOverlay("quickfeed", { key: key });
+  }
+
+  function iuOverlayFailSafeAfterGesture() {
+    try {
+      const open = iuDetectOpenOverlays();
+      try {
+        window.__iuLastPostOpenOverlayIds = open.slice();
+        window.__iuLastPostOpenOverlayCount = open.length;
+      } catch (_) {}
+      if (open.length <= 1) return;
+      try { window.__iuOverlayFailSafeTriggerCount = (window.__iuOverlayFailSafeTriggerCount || 0) + 1; } catch (_) {}
+      const snapQf = window.__iuLastQuickfeedKey;
+      iuForceCloseAllOverlays();
+      const last = open[open.length - 1];
+      iuActiveOverlay = last || null;
+      if (last === "quickfeed") {
+        const k = snapQf;
+        if (k) {
+          try { window.__iuLastQuickfeedKey = k; } catch (_) {}
+          iuShowQuickFeedCore(k);
+        }
+      } else if (last === "parcels") {
+        if (typeof window.iuParcelsOpenSurface === "function") window.iuParcelsOpenSurface();
+      } else if (last === "ai") {
+        if (typeof window.iuAiPanelOpenSurface === "function") window.iuAiPanelOpenSurface();
       }
     } catch (_) {}
   }
   try { window.iuEnforceSingleOverlay = iuCloseAllOverlaysExcept; } catch (_) {}
+
+  try { window.iuForceCloseAllOverlays = iuForceCloseAllOverlays; } catch (_) {}
+  try { window.iuOpenOverlay = iuOpenOverlay; } catch (_) {}
+  try { window.iuDetectOpenOverlays = iuDetectOpenOverlays; } catch (_) {}
+  try { window.iuOverlayFailSafeAfterGesture = iuOverlayFailSafeAfterGesture; } catch (_) {}
+  try { window.iuEnforceSingleOverlay = iuForceCloseAllOverlays; } catch (_) {}
 
   function iuResolveQuickAction(el) {
     if (!el) return { actionType: "none", key: "" };
@@ -21999,6 +22150,7 @@ function buildVideoAsArticleCard(it) {
       var t = e.target;
       if (t && t.nodeType === 3) t = t.parentElement;
       if (!t || typeof t.closest !== "function") return;
+      if (e.__iuHandled) return;
       if (t.closest('.iuQShareBtn')) return;
       if (t.closest('#iuQuickFeed')) return;
       const el = t.closest('[data-iuq]');
@@ -22012,12 +22164,12 @@ function buildVideoAsArticleCard(it) {
       e.preventDefault();
       e.stopPropagation();
       if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
-      iuCloseAllOverlaysExcept(resolved.overlayId || "quickfeed");
-      if (resolved.overlayId === "parcels" && typeof window.iuOpenParcelsModal === "function") {
-        try { window.iuOpenParcelsModal(); } catch (_) {}
-        return;
+      e.__iuHandled = true;
+      if (resolved.overlayId === "parcels") {
+        iuOpenOverlay("parcels");
+      } else {
+        iuOpenOverlay("quickfeed", { key: resolved.key });
       }
-      iuShowQuickFeed(resolved.key);
     }, true);
   }
 
@@ -22319,6 +22471,7 @@ function buildVideoAsArticleCard(it) {
         }
       } catch {}
     }
+    try { window.iuAiPanelOpenSurface = openPanel; } catch (_) {}
 
     function closePanel(){
       if (typeof window.iuSetElOpenVisible === "function") {
@@ -24186,6 +24339,10 @@ function buildVideoAsArticleCard(it) {
 
   function iuHideAllOverlaysNow(){
     try {
+      if (typeof window.iuForceCloseAllOverlays === "function") {
+        window.iuForceCloseAllOverlays();
+        return;
+      }
       const panel = document.getElementById("iu-aiPanel");
       const overlay = document.getElementById("iu-aiOverlay");
       if (panel) iuSetElOpenVisible(panel, false);
@@ -24228,7 +24385,8 @@ function buildVideoAsArticleCard(it) {
         return;
       }
       if (panel === "shopping") {
-        if (typeof window.iuShowQuickFeed === "function") { try { window.iuShowQuickFeed("nakup"); } catch (_) {} }
+        if (typeof window.iuOpenOverlay === "function") { try { window.iuOpenOverlay("quickfeed", { key: "nakup" }); } catch (_) {} }
+        else if (typeof window.iuShowQuickFeed === "function") { try { window.iuShowQuickFeed("nakup"); } catch (_) {} }
         __iuCurrentPanel = "shopping";
         return;
       }
@@ -24675,7 +24833,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       window.iuOpenPanel = function(id){
         id = String(id || '').trim().toLowerCase();
         if (id === 'ai') return;
+        if (id === 'shopping' && typeof window.iuOpenOverlay === 'function') {
+          try { window.iuOpenOverlay('quickfeed', { key: 'nakup' }); } catch (_) {}
+          try { setTimeout(function() { if (typeof window.iuOverlayFailSafeAfterGesture === 'function') window.iuOverlayFailSafeAfterGesture(); }, 0); } catch (_) {}
+          return;
+        }
         window.dispatchEvent(new CustomEvent('iu-open-panel', { detail: id }));
+        try { setTimeout(function() { if (typeof window.iuOverlayFailSafeAfterGesture === 'function') window.iuOverlayFailSafeAfterGesture(); }, 0); } catch (_) {}
       };
     } catch {}
 
@@ -25051,7 +25215,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     panel.style.top = topVal + "px";
   }
 
-  function openMojeSluzbyModal(kind) {
+  function iuMojeSluzbyOpenSurface(kind) {
     const overlay = document.getElementById("iu-mojeSluzbyOverlay");
     const panel = document.getElementById("iu-mojeSluzbyPanel");
     const titleEl = document.getElementById("iu-mojeSluzbyTitle");
@@ -25082,6 +25246,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     document.documentElement.style.overflow = "hidden";
     document.body.classList.add("iu-modal-open");
   }
+
+  function openMojeSluzbyModal(kind) {
+    if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("mojesluzby", { kind: kind });
+    else iuMojeSluzbyOpenSurface(kind);
+  }
+  try { window.iuMojeSluzbyOpenSurface = iuMojeSluzbyOpenSurface; } catch (_) {}
 
   function closeMojeSluzbyModal() {
     __iuActiveOverFeedModal = null;
@@ -25522,11 +25692,15 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       e.stopPropagation();
       const kind = btn.getAttribute("data-iu-modal");
       if (kind) {
+        if ((kind === "banka" || kind === "bakalari" || kind === "pojistovna") && typeof window.iuOpenOverlay === "function") {
+          window.iuOpenOverlay("quickfeed", { key: kind });
+          return;
+        }
         if ((kind === "banka" || kind === "bakalari" || kind === "pojistovna") && typeof window.iuShowQuickFeed === "function") {
           window.iuShowQuickFeed(kind);
           return;
         }
-        openMojeSluzbyModal(kind);
+        return;
       }
     });
     const closeBtn = panel && panel.querySelector("[data-iu-close]");
