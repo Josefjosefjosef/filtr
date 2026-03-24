@@ -1831,7 +1831,6 @@ style-src 'self' 'unsafe-inline' https:;
                         <div class="iuTile" role="listitem" data-quicktool-id="bakalari" data-iu-ql="bakalari" data-ms="bakalari"><button class="iuTileLink" type="button" data-iuq="bakalari" aria-label="Bakaláři"><span class="iuTileText">Bakaláři</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="zdravotni_pojistovna" data-iu-ql="zdravotni-pojistovna" data-ms="pojistovna"><button class="iuTileLink" type="button" data-iuq="pojistovna" aria-label="Zdravotní pojišťovna"><span class="iuTileText">Zdravotní pojišťovna</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="zasilky" data-iu-ql="zasilky-a-sledovani"><button class="iuTileLink" type="button" data-iuq="baliky" data-ql="zasilky" aria-label="Zásilky a sledování" data-iu-action="parcels" id="iuParcelsBtn"><span class="iuTileText">Zásilky a sledování</span></button></div>
-                        <div class="iuTile" role="listitem" data-quicktool-id="nakup_domu" data-iu-ql="nakup-domu"><button class="iuTileLink" type="button" data-iuq="nakup" data-ql="nakup" id="iuOpenNakupDomu" aria-label="Evidence nákupů"><span class="iuTileText">Evidence nákupů</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="ai_asistenti" data-iu-ql="ai-asistenti"><button class="iuTileLink" type="button" data-iuq="ai" data-ql="ai" aria-label="AI asistenti"><span class="iuTileText">AI asistenti</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="prekladac" data-iu-ql="prekladac"><a class="iuTileLink" href="https://www.deepl.com/" target="_blank" rel="noopener noreferrer" aria-label="Překladač"><span class="iuTileText">Překladač</span></a></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="word_pdf" data-iu-ql="prevod-word-pdf"><a class="iuTileLink" role="listitem" data-iuq="convert" data-ql="convert" href="https://www.ilovepdf.com" target="_blank" rel="noopener" aria-label="Převod Word / PDF"><span class="iuTileText">Převod Word / PDF</span></a></div>
@@ -3025,16 +3024,7 @@ style-src 'self' 'unsafe-inline' https:;
     (function(){
       try { document.documentElement.setAttribute("data-iu-html-after-appjs", "reached"); } catch(e){}
       var limit = 300, i = 0;
-      function check() {
-        try {
-          if (typeof window.iuEvidenceRunPipelineWithSimulatedText === "function") {
-            window.dispatchEvent(new CustomEvent("iuEvidenceReady"));
-            return;
-          }
-        } catch (_) {}
-        i++;
-        if (i < limit) setTimeout(check, 200);
-      }
+      function check() { i = limit; }
       setTimeout(check, 1500);
     })();
     </script>
@@ -3296,178 +3286,6 @@ style-src 'self' 'unsafe-inline' https:;
       </div>
     </div>
 
-    <div class="iuModal" id="iuNakupModal" hidden aria-modal="true" aria-labelledby="iuNakupModalTitle">
-      <div class="iuModalCard">
-        <div class="iuModalHead">
-          <span id="iuNakupModalTitle">Evidence nákupů</span>
-          <button id="iuNakupClose" type="button" class="iuNakupCloseBtn" aria-label="Zavřít">Zavřít</button>
-        </div>
-        <div class="iuModalBody">
-          <div class="iu-evidence-nakupu-top" data-iu="evidence-nakupu-top" data-iu-personal-evidence-only="true" role="region" aria-label="Evidence nákupů">
-            <div class="iu-evidence-cta-row" data-iu="evidence-cta-row">
-              <button type="button" class="iu-evidence-cta iu-evidence-cta-photo" data-iu="photo-receipt-cta" aria-label="Vyfoť nebo nahraj účtenku nebo fakturu"><span class="iu-evidence-cta-icon" aria-hidden="true">📷</span><span class="iu-evidence-cta-text">Vyfoť nebo nahraj účtenku / fakturu</span></button>
-            </div>
-            <div class="iu-evidence-upload-flow" data-iu="upload-flow-container" aria-label="Nahrání dokladu">
-              <input type="file" id="iu-evidence-receipt-input" class="iu-evidence-file-input" accept="image/*,application/pdf" capture="environment" data-iu="upload-receipt-input" hidden aria-label="Vyfoť nebo nahraj obrázek nebo PDF účtenky či faktury" />
-              <div class="iu-evidence-upload-states">
-                <div class="iu-evidence-upload-state iu-evidence-state-idle iu-evidence-idle-row" data-iu="upload-state-idle" role="status">
-                  <span class="iu-evidence-idle-text">Vyberte soubor nebo vyfoťte doklad.</span>
-                  <button type="button" class="iu-evidence-clear-cta" data-iu="evidence-clear-cta" aria-label="Vyčistit formulář">Vyčistit</button>
-                </div>
-                <div class="iu-evidence-upload-state iu-evidence-state-pending" data-iu="upload-state-pending" role="status" hidden aria-live="polite">…</div>
-                <div class="iu-evidence-upload-state iu-evidence-state-success" data-iu="upload-state-success" role="status" hidden>Doklad byl nahrán. Zpracování připraveno.</div>
-                <div class="iu-evidence-upload-state iu-evidence-state-failed" data-iu="upload-state-failed" role="status" hidden>Nahrání se nepodařilo. Zkuste jiný soubor.</div>
-              </div>
-              <div class="iu-evidence-validation" data-iu="validation-messages" aria-live="polite" hidden>
-                <span data-iu="file-type-validation" class="iu-evidence-validation-msg"></span>
-                <span data-iu="file-size-validation" class="iu-evidence-validation-msg"></span>
-              </div>
-              <div class="iu-evidence-preview-shell" data-iu="preview-shell" aria-label="Náhled vybraného souboru">
-                <h4 class="iu-evidence-preview-heading">Náhled</h4>
-                <p class="iu-evidence-preview-name" data-iu="preview-filename">—</p>
-                <p class="iu-evidence-preview-meta" data-iu="preview-meta">—</p>
-              </div>
-              <div class="iu-evidence-extraction-panel" data-iu="ocr-extraction-result" aria-label="Vytěžené údaje z dokladu" hidden>
-                <div data-iu-section="title_section"><h4 class="iu-evidence-extraction-heading">Základní údaje z dokladu</h4></div>
-                <div data-iu-section="subtitle_section" class="iu-evidence-subtitle" aria-live="polite" hidden></div>
-                <div data-iu-section="badges_section" class="iu-evidence-badges" aria-live="polite" hidden></div>
-                <div class="iu-evidence-review-fields" data-iu="review-fields" data-iu-section="primary_facts_section">
-                  <div class="iu-evidence-review-row" data-iu="review-store">
-                    <span class="iu-evidence-review-label">Obchod / firma</span>
-                    <span class="iu-evidence-review-value" data-iu="review-store-value">—</span>
-                    <input type="text" class="iu-evidence-review-edit-input" data-iu="review-store-edit" aria-label="Obchod / firma" hidden />
-                    <span class="iu-evidence-review-confidence" data-iu="review-store-confidence"></span>
-                    <span class="iu-evidence-review-needs" data-iu="review-store-needs"></span>
-                    <span class="iu-evidence-review-helper" data-iu="review-store-helper" hidden aria-live="polite"></span>
-                    <select class="iu-evidence-review-candidates" data-iu="review-store-candidates" aria-label="Vybrat variantu obchodu" hidden></select>
-                    <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-store-confirm" aria-label="Upravit">Upravit</button>
-                  </div>
-                  <div class="iu-evidence-review-row" data-iu="review-date">
-                    <span class="iu-evidence-review-label">Datum</span>
-                    <span class="iu-evidence-review-value" data-iu="review-date-value">—</span>
-                    <input type="text" class="iu-evidence-review-edit-input" data-iu="review-date-edit" aria-label="Datum" placeholder="DD.MM.YYYY" hidden />
-                    <span class="iu-evidence-review-confidence" data-iu="review-date-confidence"></span>
-                    <span class="iu-evidence-review-needs" data-iu="review-date-needs"></span>
-                    <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-date-confirm" aria-label="Upravit">Upravit</button>
-                  </div>
-                  <div class="iu-evidence-review-row" data-iu="review-time">
-                    <span class="iu-evidence-review-label">Čas</span>
-                    <span class="iu-evidence-review-value" data-iu="review-time-value">—</span>
-                    <input type="text" class="iu-evidence-review-edit-input" data-iu="review-time-edit" aria-label="Čas" placeholder="HH:MM" hidden />
-                    <span class="iu-evidence-review-confidence" data-iu="review-time-confidence"></span>
-                    <span class="iu-evidence-review-needs" data-iu="review-time-needs"></span>
-                    <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-time-confirm" aria-label="Upravit">Upravit</button>
-                  </div>
-                  <div class="iu-evidence-review-row" data-iu="review-total">
-                    <span class="iu-evidence-review-label">Celkem zaplaceno</span>
-                    <span class="iu-evidence-review-value" data-iu="review-total-value">—</span>
-                    <input type="text" class="iu-evidence-review-edit-input" data-iu="review-total-edit" aria-label="Celkem zaplaceno" hidden />
-                    <span class="iu-evidence-review-confidence" data-iu="review-total-confidence"></span>
-                    <span class="iu-evidence-review-needs" data-iu="review-total-needs"></span>
-                    <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-total-confirm" aria-label="Upravit">Upravit</button>
-                  </div>
-                  <div class="iu-evidence-review-row" data-iu="review-doctype">
-                    <span class="iu-evidence-review-label">Typ dokladu</span>
-                    <span class="iu-evidence-review-value" data-iu="review-doctype-value">—</span>
-                    <input type="text" class="iu-evidence-review-edit-input" data-iu="review-doctype-edit" aria-label="Typ dokladu" hidden />
-                    <span class="iu-evidence-review-confidence" data-iu="review-doctype-confidence"></span>
-                    <span class="iu-evidence-review-needs" data-iu="review-doctype-needs"></span>
-                    <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-doctype-confirm" aria-label="Upravit">Upravit</button>
-                  </div>
-                  <div class="iu-evidence-review-row" data-iu="review-payment">
-                    <span class="iu-evidence-review-label">Uhrazeno</span>
-                    <span class="iu-evidence-review-value" data-iu="review-payment-value">Neurčeno</span>
-                    <span class="iu-evidence-review-helper" data-iu="review-payment-helper" hidden aria-live="polite"></span>
-                    <select class="iu-evidence-review-edit-select" data-iu="review-payment-edit" aria-label="Uhrazeno" hidden>
-                      <option value="Hotovost">Hotovost</option>
-                      <option value="Karta">Karta</option>
-                      <option value="Převod">Převod</option>
-                      <option value="Stravenky">Stravenky</option>
-                      <option value="Jiné">Jiné</option>
-                      <option value="Neurčeno">Neurčeno</option>
-                    </select>
-                    <button type="button" class="iu-evidence-review-edit-btn" data-iu="review-payment-confirm" aria-label="Upravit">Upravit</button>
-                  </div>
-                </div>
-                <div data-iu-section="review_banner_section"><div class="iu-evidence-review-summary" data-iu="review-summary-visible" aria-live="polite"></div></div>
-                <div data-iu-section="warnings_section"><div class="iu-evidence-validation-summary" data-iu="validation-summary-visible" aria-live="polite"></div></div>
-                <div data-iu-section="blocked_notices_section" class="iu-evidence-blocked-notices" aria-live="polite" hidden></div>
-                <h4 class="iu-evidence-items-heading">Položky</h4>
-                <ul class="iu-evidence-items-list" data-iu="evidence-items-list" aria-label="Položky dokladu"></ul>
-                <p class="iu-evidence-unknown-hint" data-iu="unknown-state-works">Údaje, které OCR nerozpoznalo, je třeba zkontrolovat.</p>
-                <div class="iu-evidence-review-actions" data-iu-section="safe_actions_section">
-                  <button type="button" class="iu-evidence-save-cta" data-iu="evidence-save-cta" aria-label="Uložit do evidence">Uložit do evidence</button>
-                </div>
-              </div>
-            </div>
-            <script type="application/json" id="iu-evidence-upload-contract" data-iu="server-contract-shell" aria-hidden="true">{"contract":"receipt_photo,invoice_photo,receipt_pdf,invoice_pdf","receipt_photo":{"type":"image","accept":["image/*"]},"invoice_photo":{"type":"image","accept":["image/*"]},"receipt_pdf":{"type":"pdf","accept":["application/pdf"]},"invoice_pdf":{"type":"pdf","accept":["application/pdf"]}}</script>
-            <div class="iu-evidence-calendar-shell" data-iu="calendar-shell" aria-label="Kalendář nákupů">
-              <h3 class="iu-evidence-shell-heading">Kalendář nákupů</h3>
-              <div class="iu-evidence-calendar-nav" data-iu="calendar-nav" aria-label="Měsíc">
-                <button type="button" class="iu-evidence-calendar-prev" data-iu="calendar-prev" aria-label="Předchozí měsíc">‹</button>
-                <span class="iu-evidence-calendar-month" data-iu="calendar-month"></span>
-                <button type="button" class="iu-evidence-calendar-next" data-iu="calendar-next" aria-label="Následující měsíc">›</button>
-              </div>
-              <div class="iu-evidence-calendar-grid" data-iu="calendar-grid" role="grid" aria-label="Kalendář"></div>
-            </div>
-            <div class="iu-evidence-daily-list-shell" data-iu="daily-list-shell" aria-label="Seznam dokladů pro vybraný den">
-              <h3 class="iu-evidence-shell-heading">Záznamy pro vybraný den</h3>
-              <ul class="iu-evidence-daily-list" data-iu="daily-receipt-list" role="list" aria-label="Doklady"></ul>
-              <div class="iu-evidence-daily-empty" data-iu="daily-list-empty" role="status" hidden>Pro vybraný den nejsou žádné záznamy.</div>
-            </div>
-            <div class="iu-evidence-detail-panel" data-iu="receipt-detail" aria-label="Detail dokladu" hidden>
-              <h3 class="iu-evidence-shell-heading">Detail dokladu</h3>
-              <dl class="iu-evidence-detail-fields">
-                <dt data-iu="detail-label-store">Obchod / firma</dt>
-                <dd data-iu="receipt-detail-store"></dd>
-                <dt data-iu="detail-label-date">Datum</dt>
-                <dd data-iu="receipt-detail-date"></dd>
-                <dt data-iu="detail-label-time">Čas</dt>
-                <dd data-iu="receipt-detail-time"></dd>
-                <dt data-iu="detail-label-total">Celkem zaplaceno</dt>
-                <dd data-iu="receipt-detail-total"></dd>
-                <dt data-iu="detail-label-doctype">Typ dokladu</dt>
-                <dd data-iu="receipt-detail-doctype"></dd>
-                <dt data-iu="detail-label-payment">Uhrazeno</dt>
-                <dd data-iu="receipt-detail-payment"></dd>
-                <dt class="iu-evidence-detail-suppressed" data-iu="detail-label-vat-included">Cena včetně DPH</dt>
-                <dd class="iu-evidence-detail-suppressed" data-iu="receipt-detail-price-vat-included"></dd>
-                <dt class="iu-evidence-detail-suppressed" data-iu="detail-label-vat-excluded">Bez DPH</dt>
-                <dd class="iu-evidence-detail-suppressed"><span data-iu="receipt-detail-price-vat-excluded"></span> <span data-iu="receipt-detail-price-vat-excluded-state" class="iu-evidence-vat-state"></span></dd>
-                <dt class="iu-evidence-detail-suppressed" data-iu="detail-label-status">Stav zpracování</dt>
-                <dd class="iu-evidence-detail-suppressed" data-iu="receipt-detail-status"></dd>
-                <dt class="iu-evidence-detail-suppressed" data-iu="detail-label-confidence">Confidence</dt>
-                <dd class="iu-evidence-detail-suppressed" data-iu="receipt-detail-confidence"></dd>
-                <dt class="iu-evidence-detail-suppressed" data-iu="detail-label-needs-review">Vyžaduje kontrolu</dt>
-                <dd class="iu-evidence-detail-suppressed" data-iu="receipt-detail-needs-review"></dd>
-                <dt class="iu-evidence-detail-suppressed" data-iu="detail-label-items">Položky</dt>
-                <dd class="iu-evidence-detail-suppressed" data-iu="receipt-detail-items"></dd>
-              </dl>
-              <div class="iu-evidence-detail-actions">
-                <button type="button" class="iu-evidence-btn-back" data-iu="receipt-detail-back" aria-label="Zpět na seznam">Zpět na seznam</button>
-                <button type="button" class="iu-evidence-btn-delete" data-iu="receipt-detail-delete" aria-label="Smazat záznam">Smazat záznam</button>
-              </div>
-            </div>
-            <div class="iu-evidence-empty-state" data-iu="empty-state" role="status">
-              <p>Zatím žádné záznamy. Doklady se budou ukládat do osobní evidence.</p>
-            </div>
-            <div class="iu-evidence-warranty-layer" data-iu="warranty-reminder-layer" aria-label="Záruky a termíny">
-              <h3 class="iu-evidence-shell-heading">Záruky, termíny a upozornění</h3>
-              <div class="iu-evidence-reminder-shell" data-iu="reminder-shell" aria-label="Připomínky a hlídače">
-                <p class="iu-evidence-shell-placeholder">Připomínky a hlídání důležitých milníků (připraveno pro pozdější fázi).</p>
-              </div>
-              <div class="iu-evidence-timeline-shell" data-iu="timeline-shell" aria-label="Termíny a lhůty">
-                <p class="iu-evidence-shell-placeholder">Termíny, záruky a lhůta pro vrácení (připraveno).</p>
-              </div>
-            </div>
-            <p class="iu-evidence-disclaimer" data-iu="disclaimer">Doklady se ukládají do osobní evidence. Část anonymizovaných údajů může být později použita pro komunitní přehled.</p>
-            <div class="iu-evidence-layer-separation" data-iu="personal-community-separation" role="status" aria-label="Oddělení vrstev">
-              <p class="iu-evidence-separation-text">Osobní evidence a komunitní vrstva jsou oddělené. Do komunity neputují obrázky, PDF, raw text ani osobní údaje (jméno, e-mail, telefon, adresa, platební údaje).</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <div id="iuNamedayWishOverlay" class="iuModal" hidden aria-hidden="true">
       <div class="iuModalCard" id="iuNamedayWishCard" role="dialog" aria-modal="true" aria-labelledby="iuNamedayWishTitle">
         <h2 id="iuNamedayWishTitle">Vyber styl přání</h2>
