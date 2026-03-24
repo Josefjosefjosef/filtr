@@ -11978,8 +11978,21 @@ function buildVideoAsArticleCard(it) {
   }
 
   try {
-    window.addEventListener('iu-open-panel', function(e){ if (e.detail === 'shopping') { if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("quickfeed", { key: "nakup" }); else if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } });
-    window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'shopping') { if (typeof window.iuNakupCloseQuickView === "function") window.iuNakupCloseQuickView(); else iuNakupClose(); } });
+    window.addEventListener('iu-open-panel', function(e){
+      const id = String(e && e.detail || '').trim().toLowerCase();
+      if (id === 'evidence' && typeof window.iuOpenNakupDomu === "function") { window.iuOpenNakupDomu(); return; }
+      if (id === 'shopping') {
+        if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("quickfeed", { key: "nakup" });
+        else if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup");
+      }
+    });
+    window.addEventListener('iu-close-panel', function(e){
+      const id = String(e && e.detail || '').trim().toLowerCase();
+      if (id === 'evidence' || id === 'shopping') {
+        if (typeof window.iuNakupCloseQuickView === "function") window.iuNakupCloseQuickView();
+        else iuNakupClose();
+      }
+    });
   } catch {}
 
   async function iuLoadNakupDomu(){
@@ -12104,6 +12117,7 @@ function buildVideoAsArticleCard(it) {
       window.addEventListener("resize", window._iuNakupResizeHandler);
     } catch (_) {}
   }
+  try { window.iuOpenNakupDomu = iuOpenNakupDomu; } catch (_) {}
 
   function iuNakupCommunityPickerFilter(query){
     const q = (query || "").trim().toLowerCase();
@@ -18693,17 +18707,18 @@ function buildVideoAsArticleCard(it) {
     iuEvidenceUploadInit();
     iuEvidenceCalendarInit();
     function openNakupPanel() {
-      try { if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("quickfeed", { key: "nakup" }); else if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } catch (_) {}
-      try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
+      try {
+        if (typeof window.iuOpenNakupDomu === "function") window.iuOpenNakupDomu();
+        else if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("quickfeed", { key: "nakup" });
+        else if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup");
+      } catch (_) {}
+      try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("evidence"); } catch (_) {}
     }
     openBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
+      e.stopPropagation?.();
       openNakupPanel();
     });
-    openBtn?.addEventListener("touchend", (e) => {
-      e.preventDefault?.();
-      openNakupPanel();
-    }, { passive: false });
     closeBtn?.addEventListener("click", (e) => {
       e.preventDefault?.();
       const q = document.getElementById("iuQuickFeed");
@@ -24318,7 +24333,7 @@ function buildVideoAsArticleCard(it) {
       const id = String(p || '').trim().toLowerCase();
       if (id === 'ai') return null;
       // AI panel must NOT open from URL – overlay only via quicklink (data-iuq="ai")
-      const ALLOWED_PANELS = new Set(['shopping', 'services']);
+      const ALLOWED_PANELS = new Set(['evidence', 'shopping', 'services']);
       if (ALLOWED_PANELS.has(id)) return id;
       return null;
     }catch{ return null; }
@@ -24420,10 +24435,17 @@ function buildVideoAsArticleCard(it) {
       const panel = parsePanelFromUrl();
       if (panel === null && __iuCurrentPanel !== null) {
         const prev = __iuCurrentPanel;
-        if (prev === "shopping" && typeof window.iuNakupCloseQuickView === "function") { try { window.iuNakupCloseQuickView(); } catch (_) {} }
+        if ((prev === "shopping" || prev === "evidence") && typeof window.iuNakupCloseQuickView === "function") { try { window.iuNakupCloseQuickView(); } catch (_) {} }
         else iuHideAllOverlaysNow();
         try { window.dispatchEvent(new CustomEvent('iu-close-panel', { detail: prev })); } catch {}
         __iuCurrentPanel = null;
+        return;
+      }
+      if (panel === "evidence") {
+        if (typeof window.iuOpenNakupDomu === "function") { try { window.iuOpenNakupDomu(); } catch (_) {} }
+        else if (typeof window.iuOpenOverlay === "function") { try { window.iuOpenOverlay("quickfeed", { key: "nakup" }); } catch (_) {} }
+        else if (typeof window.iuShowQuickFeed === "function") { try { window.iuShowQuickFeed("nakup"); } catch (_) {} }
+        __iuCurrentPanel = "evidence";
         return;
       }
       if (panel === "shopping") {
@@ -24442,7 +24464,9 @@ function buildVideoAsArticleCard(it) {
   function setPanelInUrl(panel, { replace = false } = {}){
     try{
       const url = new URL(location.href);
-      if (panel) url.searchParams.set('panel', panel);
+      const p = String(panel || '').trim().toLowerCase();
+      if (p === 'shopping') url.searchParams.set('panel', 'evidence');
+      else if (panel) url.searchParams.set('panel', panel);
       else url.searchParams.delete('panel');
       if (replace) history.replaceState({}, '', url);
       else history.pushState({}, '', url);
@@ -24964,13 +24988,21 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     // Do not persist section to URL on init – keep URL clean (/projects/). Apply view from URL or default.
     applySectionFromURL();
     applyPanelFromUrl();
-    try { window.addEventListener('iu-panel-url-changed', applyPanelFromUrl); } catch {}
-    // PRELOAD overlay styles on page load
     try {
-      iuHideAllOverlaysNow();
-      requestAnimationFrame(() => {
+      if (parsePanelFromUrl() === 'evidence' && typeof window.iuOpenNakupDomu === 'function') {
+        requestAnimationFrame(function(){ try { window.iuOpenNakupDomu(); } catch (_) {} });
+      }
+    } catch {}
+    try { window.addEventListener('iu-panel-url-changed', applyPanelFromUrl); } catch {}
+    // PRELOAD overlay styles on page load (keep active URL panel open)
+    try {
+      const panelFromUrl = parsePanelFromUrl();
+      if (panelFromUrl === null) {
         iuHideAllOverlaysNow();
-      });
+        requestAnimationFrame(() => {
+          iuHideAllOverlaysNow();
+        });
+      }
     } catch {}
   }
 
