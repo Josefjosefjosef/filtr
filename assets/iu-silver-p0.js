@@ -79,8 +79,10 @@
     if (/\bpoz[ií]t[rř][ií]\b/i.test(raw)) return true;
     if (iuSilverReWeekdayOnce().test(raw)) return true;
     if (/\b\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(folded)) return true;
+    if (/\b\d{1,2}\s*[.\/\-]\s*\d{1,2}\b/.test(raw)) return true;
     if (/\b\d{1,2}\s*\.\s*[a-záéíóúůýščřďťň]+/i.test(raw)) return true;
     if (/\budalost/.test(folded)) return true;
+    if (/\bkontrola\b|\bnavsteva\b|\bnavštěva\b/.test(folded)) return true;
     return false;
   }
 
@@ -264,6 +266,10 @@
     return toDateOnly(cand);
   }
 
+  function iuSilverValidDayMonth(day, mo) {
+    return mo >= 1 && mo <= 12 && day >= 1 && day <= 31;
+  }
+
   function findAbsoluteDate(work, now) {
     let w = work;
     const reWord = /\b(\d{1,2})\.\s*([a-záéíóúůýščřďťňA-ZÁÉÍÓÚŮÝŠČŘĎŤŇ]+)\s*(?:(\d{2,4}))?\b/;
@@ -281,16 +287,31 @@
         return { date: ds, work: w.replace(/\s+/g, " ").trim() };
       }
     }
-    const reNum = /\b(\d{1,2})\.\s*(\d{1,2})\.(?:\s*(\d{2,4}))?\b/;
-    const mN = w.match(reNum);
-    if (mN) {
-      const day = Number(mN[1]);
-      const mo = Number(mN[2]);
-      let y = mN[3] ? Number(mN[3]) : now.getFullYear();
-      if (mN[3] && String(mN[3]).length === 2) y = 2000 + y;
-      const explicitY = !!mN[3];
-      const ds = resolveYMD(y, mo, day, now, !explicitY);
-      w = w.replace(reNum, " ");
+
+    const patterns = [
+      /\b(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{2,4})\b/,
+      /\b(\d{1,2})\.\s*(\d{1,2})\.(?!\s*\d)/,
+      /\b(\d{1,2})\.\s*(\d{1,2})(?!\.\d)/,
+      /\b(\d{1,2})\/\s*(\d{1,2})\b(?!\s*(?:hod|min|hodin|minut)\b)/i,
+      /\b(\d{1,2})-\s*(\d{1,2})\b(?!\s*(?:hod|min|hodin|minut)\b)/i
+    ];
+
+    for (let pi = 0; pi < patterns.length; pi++) {
+      const re = patterns[pi];
+      const m = w.match(re);
+      if (!m) continue;
+      const day = Number(m[1]);
+      const mo = Number(m[2]);
+      if (!iuSilverValidDayMonth(day, mo)) continue;
+      let y = now.getFullYear();
+      let explicit = false;
+      if (m[3] !== undefined && m[3] !== "") {
+        y = Number(m[3]);
+        if (String(m[3]).length === 2) y = 2000 + y;
+        explicit = true;
+      }
+      const ds = resolveYMD(y, mo, day, now, !explicit);
+      w = w.replace(re, " ");
       return { date: ds, work: w.replace(/\s+/g, " ").trim() };
     }
     return null;
@@ -337,19 +358,59 @@
 
   /** Drop trailing sentence(s) that are pure calendar commands (after ". "). */
   function iuSilverDropInstructionSentences(s) {
-    const parts = String(s)
+    let t = String(s);
+    const dmMask = [];
+    let mi = 0;
+    t = t.replace(/\b(\d{1,2}\.\s*\d{1,2}\.)\s*/g, function (full) {
+      const ph = "\uE000DM" + mi + "\uE001";
+      dmMask[mi] = full;
+      mi++;
+      return ph;
+    });
+    const parts = t
       .split(/\.\s+/)
       .map((p) => p.trim())
-      .filter(Boolean);
+      .filter(Boolean)
+      .map((p) => {
+        let x = p;
+        for (let j = 0; j < dmMask.length; j++) {
+          x = x.replace("\uE000DM" + j + "\uE001", dmMask[j] != null ? dmMask[j] : "");
+        }
+        return x.trim();
+      });
     if (parts.length < 2) return s;
     const kept = [];
     for (let i = 0; i < parts.length; i++) {
       const c = parts[i];
       const fc = foldCs(c);
-      if (/ulož|uloz|kalend|zapiš|zapis|přidej|pridej|mi\s+to|tak\s+mi|dej\s+to/.test(fc)) continue;
+      const isInstruction = /ulož|uloz|kalend|zapiš|zapis|přidej|pridej|mi\s+to|tak\s+mi|dej\s+to/.test(fc);
+      const hasEventHint =
+        /schuz|navstev|kontrol|zubar|pediatr|vyzvednout|\bmam\s+/.test(fc);
+      if (isInstruction && !hasEventHint) continue;
       kept.push(c);
     }
     return kept.length ? kept.join(". ") : s;
+  }
+
+  /** schůzku / návštěvu / kontrolu → nominative + rest (e.g. „s panem Novotným“). */
+  function iuSilverNormalizeEventTypeTitle(s) {
+    let t = iuSilverNormalizeWs(s);
+    const pairs = [
+      [/^\s*schůzek\b/i, "Schůzka"],
+      [/^\s*schůzk(u|y|a|e|i)\b/i, "Schůzka"],
+      [/^\s*návštěv(u|y|a|e|i)\b/i, "Návštěva"],
+      [/^\s*kontrol(u|y|a|e|i)\b/i, "Kontrola"]
+    ];
+    for (let i = 0; i < pairs.length; i++) {
+      const re = pairs[i][0];
+      const base = pairs[i][1];
+      const m = t.match(re);
+      if (m) {
+        const rest = t.slice(m[0].length).trim();
+        return rest ? base + " " + rest : base;
+      }
+    }
+    return t;
   }
 
   /** "mám zubaře" → "Zubař"; "mám vyzvednout …" → infinitive sentence title. */
@@ -414,8 +475,6 @@
       /\buloz(?:te)?\s+mi\b/gi,
       /\bdo\s+kalend[aá]r[eě]\b/gi,
       /\bnapl[áa]nuj(?:te)?\b/gi,
-      /\bsch[uů]zku\b/gi,
-      /\bsch[uů]zka\b/gi,
       /\bporad[uů]\b/gi,
       /\bul[oó]ž(?:te)?\s+mi\b/gi,
       /\bzapi[šs](?:te)?\b/gi,
@@ -437,13 +496,33 @@
     return t;
   }
 
+  function iuSilverStripNumericDateFragments(t0) {
+    let t = t0;
+    const patterns = [
+      /\b(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{2,4})\b/g,
+      /\b(\d{1,2})\.\s*(\d{1,2})\.(?!\s*\d)/g,
+      /\b(\d{1,2})\.\s*(\d{1,2})(?!\.\d)/g,
+      /\b(\d{1,2})\/\s*(\d{1,2})\b(?!\s*(?:hod|min|hodin|minut)\b)/gi,
+      /\b(\d{1,2})-\s*(\d{1,2})\b(?!\s*(?:hod|min|hodin|minut)\b)/gi
+    ];
+    for (let iter = 0; iter < 6; iter++) {
+      const prev = t;
+      for (let i = 0; i < patterns.length; i++) {
+        t = t.replace(patterns[i], " ");
+      }
+      t = iuSilverNormalizeWs(t);
+      if (t === prev) break;
+    }
+    return t;
+  }
+
   function iuSilverStripDateTokensFromTitle(s) {
     let t = iuSilverNormalizeWs(s);
     t = t.replace(/\bpoz[ií]t[rř][ií]\b/gi, " ");
     t = t.replace(/\bz[ií]tra\b/gi, " ");
     t = t.replace(/\bdnes\b/gi, " ");
     t = t.replace(iuSilverReWeekdayAll(), " ");
-    t = t.replace(/\b\d{1,2}\s*\.\s*\d{1,2}\.(?:\s*\d{2,4})?\b/g, " ");
+    t = iuSilverStripNumericDateFragments(t);
     t = t.replace(/\b\d{1,2}\s*\.\s*[a-záéíóúůýščřďťňA-ZÁÉÍÓÚŮÝŠČŘĎŤŇ]+\b/gi, " ");
     return iuSilverNormalizeWs(t);
   }
@@ -486,6 +565,10 @@
   function iuSilverValidateFinalTitle(t) {
     const f = foldCs(t);
     if (!t || t.length < 2) return false;
+    if (/\d{1,2}\s*[.\/\-]\s*\d{1,2}/.test(t)) return false;
+    if (/\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(t)) return false;
+    if (/\.\s*\./.test(t)) return false;
+    if (/^\s*s\s*$/i.test(t)) return false;
     if (/uloz|ulož|přidej|pridej|zapis|zapiš|kalend|napl[áa]nuj|vytvor|vytvoř/.test(f)) return false;
     if (/\bmám\b/.test(f)) return false;
     if (/\bto\b|\btak\b|\bmi\b/.test(f)) return false;
@@ -511,6 +594,7 @@
     t = iuSilverStripTimeTokensFromTitle(t);
     t = iuSilverStripCommandBoilerplateIterative(t);
     t = iuSilverStripGarbageOrphanTokens(t);
+    t = iuSilverNormalizeEventTypeTitle(t);
     t = iuSilverMamToEventTitle(t);
     t = iuSilverStripGarbageOrphanTokens(t);
     t = iuSilverStripOrphanParticles(t);
