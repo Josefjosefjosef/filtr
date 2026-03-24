@@ -667,7 +667,7 @@ html:not([data-iu-js]) .iuDailyWeather{
 }
 
 .iu-infoItem::before{
-  content: "â?¬Ä?";
+  content: "Ã¢?Â¬Ã„?";
   margin: 0 6px 0 2px;
   color: rgba(0,0,0,.35);
 }
@@ -1103,11 +1103,11 @@ aside.accordionCol{
   color: #10a37f;
 }
 
-.iu-mmQuickItem[aria-label="Pâ????ekladaâ????"] i{
+.iu-mmQuickItem[aria-label="PÃ¢????ekladaÃ¢????"] i{
   color: #0d2e4c;
 }
 
-.iu-mmQuickItem[aria-label="Balâ????ky"] i{
+.iu-mmQuickItem[aria-label="BalÃ¢????ky"] i{
   color: #e60012;
 }
 
@@ -1123,9 +1123,9 @@ aside.accordionCol{
   color: #ff0000;
 }
 
-.iu-mmQuickItem[aria-label="Z??silky a sledov??n?­"] i{ color: #e60012; }
-.iu-mmQuickItem[aria-label="Vzory smluv a pln?© moci"] i{ color: #ff0000; }
-.iu-mmQuickItem[aria-label="FinanÄ?n?­ kalkulaÄ?ky"] i{ color: #4285f4; }
+.iu-mmQuickItem[aria-label="Z??silky a sledov??n?Â­"] i{ color: #e60012; }
+.iu-mmQuickItem[aria-label="Vzory smluv a pln?Â© moci"] i{ color: #ff0000; }
+.iu-mmQuickItem[aria-label="FinanÃ„?n?Â­ kalkulaÃ„?ky"] i{ color: #4285f4; }
 .iu-mmQuickItem[aria-label="Registr smluv"] i{ color: #0066cc; }
 
 .iu-mmQuickItem--inert{ cursor: default; }
@@ -4177,7 +4177,7 @@ select.iuCtrl{
 @media (min-width: 901px){
   #feed > .news-card:first-child::after,
   #feed > article:first-child::after{
-    content: "Zprâ???­va dne";
+    content: "ZprÃ¢???Â­va dne";
     display: block;
     font-size: 12px;
     font-weight: 600;
@@ -7277,7 +7277,7 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
     place-items:center;
   }
   .searchBtn::before{
-    content: "???®Ä?";
+    content: "???Â®Ã„?";
     font-size: 16px;
     color: rgba(11,27,43,0.72);
   }
@@ -11349,7 +11349,7 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   height: 100%;
   display: block;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg{
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg{
   display: block !important;
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger .fa-solid.fa-gear{
@@ -13770,23 +13770,23 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
   display: block;
 }
 
-section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluâ????by"] .iu-mmQuickItemLink svg{
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluÃ¢????by"] .iu-mmQuickItemLink svg{
   display: none !important;
 }
-section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluâ????by"] .iu-mmQuickItemLink :is(.iuIcon,.iu-mmIcon,[class*="Icon"],[class*="icon"],[data-icon]){
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluÃ¢????by"] .iu-mmQuickItemLink :is(.iuIcon,.iu-mmIcon,[class*="Icon"],[class*="icon"],[data-icon]){
   display: none !important;
 }
-section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluâ????by"] .iu-mmQuickItemLink::before,
-section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluâ????by"] .iu-mmQuickItemLink::after{
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluÃ¢????by"] .iu-mmQuickItemLink::before,
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluÃ¢????by"] .iu-mmQuickItemLink::after{
   content: none !important;
   display: none !important;
 }
-section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluâ????by"] .iu-mmQuickGrid{
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluÃ¢????by"] .iu-mmQuickGrid{
   display: flex !important;
   flex-direction: column !important;
   gap: 6px !important;
 }
-section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluâ????by"] .iu-mmQuickItemLink{
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluÃ¢????by"] .iu-mmQuickItemLink{
   width: 100% !important;
   min-height: 40px !important;
   display: flex !important;
@@ -14366,15 +14366,15 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon
 }
 
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
   box-shadow: 0 6px 14px rgba(0,0,0,0.12), inset 0 2px 4px rgba(255,255,255,0.35) !important;
   transition: transform .18s ease, box-shadow .18s ease !important;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink:hover .iuQlIcon,
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink:active .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon {
   transform: translateY(-1px) !important;
@@ -14418,11 +14418,11 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
 }
 
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
   background: #E5E7EB !important;
   background-color: #E5E7EB !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem {
   display: grid !important;
   grid-template-columns: 32px minmax(0,1fr) !important;
@@ -14463,7 +14463,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   min-width: 0 !important;
 }
 
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink {
   background: transparent !important;
   background-color: transparent !important;
@@ -14482,22 +14482,22 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   padding: 0 !important;
   box-sizing: border-box !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:hover,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:active,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:hover,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:active,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:hover,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:active {
   background: transparent !important;
   background-color: transparent !important;
   box-shadow: none !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:hover {
   background: #D1D5DB !important;
   background-color: #D1D5DB !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > .iuIconTile,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > .iuIconTile,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink .iuQlIcon,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem > .iuIconTile {
   flex: 0 0 32px !important;
@@ -14512,7 +14512,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   align-items: center !important;
   justify-content: center !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
   width: 32px !important;
   height: 32px !important;
   min-width: 32px !important;
@@ -14527,50 +14527,50 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   background-image: none !important;
   box-shadow: 0 0 0 1px rgba(0,0,0,0.10) !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile > i {
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile > i {
   font-size: 17px !important;
   color: #fff !important;
 }
 
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
   background-image: none !important;
   box-shadow: 0 0 0 1px rgba(0,0,0,0.10) !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon {
   box-shadow: 0 0 0 1px rgba(0,0,0,0.12) !important;
 }
 
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="ds"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="ds"] .iuIconTile { background-color: #C44569 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="banka"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="banka"] .iuIconTile { background-color: #17C3B2 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="pojistovna"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="pojistovna"] .iuIconTile { background-color: #E8B923 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="bakalari"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="bakalari"] .iuIconTile { background-color: #7B68EE !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="ds"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="ds"] .iuIconTile { background-color: #C44569 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="banka"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="banka"] .iuIconTile { background-color: #17C3B2 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="pojistovna"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="pojistovna"] .iuIconTile { background-color: #E8B923 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="bakalari"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="bakalari"] .iuIconTile { background-color: #7B68EE !important; }
 
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="ai"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="ai"] .iuIconTile { background-color: #00BBF9 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="deepl"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="deepl"] .iuIconTile { background-color: #F15BB5 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="convert"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="convert"] .iuIconTile { background-color: #06D6A0 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="baliky"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="zasilky"] .iuQlIcon { background-color: #F77F00 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="sms"] .iuQlIcon { background-color: #2E86AB !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="youtube"] .iuQlIcon { background-color: #E63946 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="google"] .iuQlIcon { background-color: #7209B7 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="seznam"] .iuQlIcon { background-color: #3A86FF !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="katastr"] .iuQlIcon { background-color: #1D3557 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="rejstrik"] .iuQlIcon { background-color: #A8DADC !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="zivnost"] .iuQlIcon { background-color: #457B9D !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="platformy"] .iuQlIcon { background-color: #F4A261 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > span:not(.iuQlIcon):not(.iuIconTile) {
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="ai"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="ai"] .iuIconTile { background-color: #00BBF9 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="deepl"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="deepl"] .iuIconTile { background-color: #F15BB5 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="convert"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="convert"] .iuIconTile { background-color: #06D6A0 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="baliky"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="zasilky"] .iuQlIcon { background-color: #F77F00 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="sms"] .iuQlIcon { background-color: #2E86AB !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="youtube"] .iuQlIcon { background-color: #E63946 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="google"] .iuQlIcon { background-color: #7209B7 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="seznam"] .iuQlIcon { background-color: #3A86FF !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="katastr"] .iuQlIcon { background-color: #1D3557 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="rejstrik"] .iuQlIcon { background-color: #A8DADC !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="zivnost"] .iuQlIcon { background-color: #457B9D !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="platformy"] .iuQlIcon { background-color: #F4A261 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > span:not(.iuQlIcon):not(.iuIconTile) {
   font-size: 11px !important;
   font-weight: 600 !important;
   color: #2E3238 !important;
@@ -14583,8 +14583,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   min-width: 0 !important;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > span:not(.iuQlIcon):not(.iuIconTile) {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > span:not(.iuQlIcon):not(.iuIconTile) {
   font-size: 11px !important;
   font-weight: 600 !important;
   color: #2E3238 !important;
@@ -14630,8 +14630,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   padding-left: 36px !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlLabel {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlLabel {
   min-width: min-content !important;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
   font-size: 12.6px !important;
@@ -14649,11 +14649,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][
   overflow: hidden !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
   position: relative !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmCircle,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon.iu-mmCircle {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmCircle,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon.iu-mmCircle {
   position: absolute !important;
   left: 12px !important;
   top: 50% !important;
@@ -14672,7 +14672,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-la
   filter: none !important;
   outline: none !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
   width: 15px !important;
   height: 15px !important;
   min-width: 15px !important;
@@ -14688,7 +14688,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-la
   filter: none !important;
   outline: none !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
   flex: 0 0 15px !important;
   width: 15px !important;
   height: 15px !important;
@@ -14700,12 +14700,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-la
   box-shadow: none !important;
   background-image: none !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(> .iuQlIcon) {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(> .iuQlIcon) {
   padding-left: 36px !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:nth-child(-n+4) .iuIconTile {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:nth-child(-n+4) .iuIconTile {
   display: none !important;
   visibility: hidden !important;
   width: 0 !important;
@@ -14757,13 +14757,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   pointer-events: auto !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) {
   display: block !important;
   width: 100% !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) .iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) a.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) button.iu-mmQuickItemLink {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) .iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) button.iu-mmQuickItemLink {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
@@ -14774,7 +14774,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-la
   text-decoration: none !important;
   box-sizing: border-box !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) .iuQlText {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) .iuQlText {
   flex: 1 !important;
   min-width: 0 !important;
   margin-left: 10px !important;
@@ -14796,13 +14796,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   overflow: visible !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuIconTile i[class*="fa-"] {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuIconTile i[class*="fa-"] {
   display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;
   font-size: 0 !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuIconTile {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuIconTile {
   pointer-events: none !important;
 }
 
@@ -17531,8 +17531,8 @@ section.iu-mmQuickLinks .iu-mmQuickItem:is(a, button),
 .rightRail .quickLinks button.iu-mmQuickItemLink,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button),
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) {
   padding-left: 0 !important;
   text-indent: 0 !important;
   display: grid !important;
@@ -17549,8 +17549,8 @@ section.iu-mmQuickLinks .iu-mmQuickItem:is(a, button) span.iuQlIcon,
 .rightRail .quickLinks button.iu-mmQuickItemLink span.iuQlIcon,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlIcon,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlIcon {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlIcon {
   display: none !important;
 }
 
@@ -17562,8 +17562,8 @@ section.iu-mmQuickLinks .iu-mmQuickItem span.iuQlText,
 .rightRail .quickLinks button.iu-mmQuickItemLink span.iuQlText,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlText,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlText {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlText {
   margin: 0 !important;
   padding: 0 12px !important;
   font-weight: 600 !important;
@@ -17732,11 +17732,11 @@ body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItemLink span.iuQlText 
   --iu-ql-center-final-v2: 1;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink {
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
   text-indent: 0 !important;
@@ -17744,13 +17744,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   align-items: center !important;
   justify-content: center !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuIconTile,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuIcon {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuIcon {
   display: none !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItemLink span.iuQlText {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItemLink span.iuQlText {
   margin: 0 !important;
   padding: 0 12px !important;
   font-weight: 600 !important;
@@ -17766,29 +17766,29 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   --iu-ql-center-final-v3: 1;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem {
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItemLink {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItemLink {
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
   text-indent: 0 !important;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlIcon,
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIconTile {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlIcon,
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIconTile {
   display: none !important;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItemLink {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItemLink {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlText {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlText {
   margin: 0 !important;
   padding: 0 12px !important;
   font-weight: 600 !important;
@@ -17804,10 +17804,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   --iu-ql-center-realitem-v1: 1;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItem,
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItem,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItem,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItem {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItem,
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItem {
   padding: 10px 14px !important;
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
@@ -17817,7 +17817,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   justify-content: center !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem .iu-mmQuickItemLink {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem .iu-mmQuickItemLink {
   padding: 10px 14px !important;
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
@@ -17827,21 +17827,21 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   justify-content: center !important;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlIcon,
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIconTile,
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIcon,
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] i,
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] svg,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIconTile,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] i,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] svg {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlIcon,
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIconTile,
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIcon,
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] i,
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] svg,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] i,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] svg {
   display: none !important;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlText {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlText {
   margin: 0 !important;
   padding: 0 8px !important;
   font-weight: 600 !important;
@@ -17857,8 +17857,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   --iu-ql-center-realtiles-v2: 1;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem {
   padding: 10px 14px !important;
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
@@ -17869,14 +17869,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   box-sizing: border-box !important;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem > a.iu-mmQuickItemLink,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem > button.iu-mmQuickItemLink,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItemLink,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem > a.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem > button.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItemLink {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem > a.iu-mmQuickItemLink,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem > button.iu-mmQuickItemLink,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItemLink,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem > a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem > button.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItemLink {
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
   text-indent: 0 !important;
@@ -17887,21 +17887,21 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   justify-content: center !important;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlIcon,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIconTile,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIcon,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] i,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] svg,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIconTile,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] i,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] svg {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlIcon,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIconTile,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIcon,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] i,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] svg,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] i,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] svg {
   display: none !important;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlText {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlText {
   margin: 0 !important;
   padding: 0 8px !important;
   font-weight: 600 !important;
@@ -17917,10 +17917,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   --iu-ql-center-realtiles-v3: 1;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItem,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItem,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid a.iu-mmQuickItem,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid button.iu-mmQuickItem {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItem,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid a.iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid button.iu-mmQuickItem {
   padding: 10px 14px 10px 14px !important;
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
@@ -17931,12 +17931,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   box-sizing: border-box !important;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItem > a.iu-mmQuickItemLink,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItem > button.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > a.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > button.iu-mmQuickItemLink {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItem > a.iu-mmQuickItemLink,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItem > button.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > button.iu-mmQuickItemLink {
   padding: 0 !important;
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
@@ -17948,23 +17948,23 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   justify-content: center !important;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlIcon,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIconTile,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIcon,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] i,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] svg,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIconTile,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] i,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] svg {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlIcon,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIconTile,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIcon,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] i,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] svg,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] i,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] svg {
   display: none !important;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg {
   display: inline-block !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -17974,13 +17974,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   min-height: 14px !important;
   overflow: visible !important;
 }
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon {
   flex-shrink: 0 !important;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlText {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlText {
   margin: 0 !important;
   padding: 0 8px !important;
   font-weight: 600 !important;
@@ -17996,7 +17996,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   --iu-ql-center-realtiles-v4: 1;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) {
   padding: 10px 14px 10px 14px !important;
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
@@ -18006,15 +18006,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   box-sizing: border-box !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuIconTile,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid i,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid svg {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid i,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid svg {
   display: none !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuQlText {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuQlText {
   margin: 0 !important;
   padding: 0 8px !important;
   font-weight: 600 !important;
@@ -18028,7 +18028,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
 
 :root{ --iu-ql-center-realtiles-v5:1; }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iu-mmQuickItem:is(a,button){
 
   padding:10px 14px !important;
@@ -18043,7 +18043,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
 
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iu-mmQuickItem{
 
   padding:10px 14px !important;
@@ -18058,22 +18058,22 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
 
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iuIconTile,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iuIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid i,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid svg{
 
   display:none !important;
 
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iuQlText{
 
   margin:0 !important;
@@ -18095,7 +18095,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
 
 }
 
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem{
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem{
   padding:10px 14px !important;
   padding-left:0 !important;
   padding-inline-start:0 !important;
@@ -18104,14 +18104,14 @@ body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQu
   justify-content:center !important;
   box-sizing:border-box !important;
 }
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuQlIcon,
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuIconTile,
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuIcon,
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid i,
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid svg{
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuQlIcon,
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuIconTile,
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuIcon,
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid i,
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid svg{
   display:none !important;
 }
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuQlText{
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuQlText{
   margin:0 !important;
   padding:0 8px !important;
   text-align:center !important;
@@ -18125,7 +18125,7 @@ body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQu
   overflow-wrap:break-word !important;
 }
 
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem{
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem{
   padding:10px 14px !important;
   padding-left:0 !important;
   padding-inline-start:0 !important;
@@ -18134,14 +18134,14 @@ body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem{
   justify-content:center !important;
   box-sizing:border-box !important;
 }
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlIcon,
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIconTile,
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIcon,
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem i,
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem svg{
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlIcon,
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIconTile,
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIcon,
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem i,
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem svg{
   display:none !important;
 }
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlText{
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlText{
   margin:0 !important;
   padding:0 8px !important;
   text-align:center !important;
@@ -18157,20 +18157,20 @@ body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlText{
 
 :root{ --iu-ql-center-realtiles-v6:1; }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iu-mmQuickItem,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iu-mmQuickItem:is(a,button){
 
   padding-left:0 !important;
   padding-inline-start:0 !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iu-mmQuickItem:is(a,button){
 
   width:100% !important;
@@ -18186,21 +18186,21 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"
   justify-content:center !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iuIconTile,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iuIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid i,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid svg{
 
   display:none !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"]
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"]
 .iu-mmQuickGrid .iuQlText{
 
   margin:0 !important;
