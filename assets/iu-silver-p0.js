@@ -76,6 +76,7 @@
     if (/\bkalend/.test(folded)) return true;
     if (/schuz|schůz|porad/.test(folded)) return true;
     if (/\buloz|ulož|zapis|zapiš|přidej|pridej/.test(folded)) return true;
+    if (/\bpoz[ií]t[rř][ií]\b/i.test(raw)) return true;
     if (iuSilverReWeekdayOnce().test(raw)) return true;
     if (/\b\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(folded)) return true;
     if (/\b\d{1,2}\s*\.\s*[a-záéíóúůýščřďťň]+/i.test(raw)) return true;
@@ -199,6 +200,16 @@
       }
     }
     if (!time) {
+      const rOd = /\bod\s+(\d{1,2})\s*(?::(\d{2}))?\s*(?:hod(?:\.|in(?:y|a|u)?)?)?\b/i;
+      const hitOd = w.match(rOd);
+      if (hitOd) {
+        const hh = Math.min(23, Math.max(0, Number(hitOd[1])));
+        const mm = hitOd[2] != null && hitOd[2] !== "" ? Math.min(59, Math.max(0, Number(hitOd[2]))) : 0;
+        time = pad(hh) + ":" + pad(mm);
+        w = w.replace(rOd, " ");
+      }
+    }
+    if (!time) {
       const r3 = /\bv\s+(\d{1,2})\s*(?:hod(?:\.|in)?|hodin(?:y|a|u)?|hod\.)\b/i;
       const hit3 = w.match(r3);
       if (hit3) {
@@ -214,6 +225,24 @@
         const hh = Math.min(23, Math.max(0, Number(hit4[1])));
         time = pad(hh) + ":00";
         w = w.replace(r4, " ");
+      }
+    }
+    if (!time) {
+      const r5 = /\b(\d{1,2})\s*hod\.?\b/i;
+      const hit5 = w.match(r5);
+      if (hit5) {
+        const hh = Math.min(23, Math.max(0, Number(hit5[1])));
+        time = pad(hh) + ":00";
+        w = w.replace(r5, " ");
+      }
+    }
+    if (!time) {
+      const rBare = /\bv\s+(\d{1,2})\b(?!\s*:)(?!\s*hod)/i;
+      const hitB = w.match(rBare);
+      if (hitB) {
+        const hh = Math.min(23, Math.max(0, Number(hitB[1])));
+        time = pad(hh) + ":00";
+        w = w.replace(rBare, " ");
       }
     }
     return time ? { time, work: w.replace(/\s+/g, " ").trim() } : { time: null, work };
@@ -270,6 +299,10 @@
   function findRelativeDay(work, now, hasCertainTime, timeHHMM) {
     let w = work;
     const folded = foldCs(w);
+    if (/\bpoz[ií]t[rř][ií]\b/i.test(w)) {
+      w = w.replace(/\bpoz[ií]t[rř][ií]\b/i, " ");
+      return { date: addDays(toDateOnly(now), 2), work: w.replace(/\s+/g, " ").trim() };
+    }
     if (/\bzitra\b/.test(folded)) {
       w = w.replace(/\bz[ií]tra\b/i, " ");
       return { date: addDays(toDateOnly(now), 1), work: w.replace(/\s+/g, " ").trim() };
@@ -292,51 +325,161 @@
   }
 
   function stripBoilerplate(work) {
-    return String(work || "")
-      .replace(/\bulo[žz](?:te)?\s+(?:mi\s+)?do\s+kalend[aá]ře?\b/gi, " ")
-      .replace(/\bzapi[šs](?:te)?\s+(?:mi\s+)?do\s+kalend[aá]ře?\b/gi, " ")
-      .replace(/\bpřidej(?:te)?\s+do\s+kalend[aá]ře?\b/gi, " ")
-      .replace(/\buloz(?:te)?\s+mi\s+do\s+kalend[aá]r[eě]\b/gi, " ")
-      .replace(/\bzapis(?:te)?\s+mi\b/gi, " ")
-      .replace(/\buloz(?:te)?\s+mi\b/gi, " ")
-      .replace(/\bdo\s+kalend[aá]ře?\b/gi, " ")
-      .replace(/\bdo\s+kalend[aá]r[eě]\b/gi, " ")
-      .replace(/\bkalend[aá]ře?\b/gi, " ")
-      .replace(/\bkalend[aá]r[eě]\b/gi, " ")
-      .replace(/\bnapl[áa]nuj(?:te)?\b/gi, " ")
-      .replace(/\bvytvo[řr](?:te)?\s+ud[aá]lost\b/gi, " ")
-      .replace(/\bsch[uů]zku\b/gi, " ")
-      .replace(/\bsch[uů]zka\b/gi, " ")
-      .replace(/\bporad[uů]\b/gi, " ")
-      .replace(/\bpřidej(?:te)?\b/gi, " ")
+    return iuSilverNormalizeWs(iuSilverStripCommandBoilerplateIterative(String(work || "")));
+  }
+
+  function iuSilverNormalizeWs(s) {
+    return String(s || "")
       .replace(/\s+/g, " ")
+      .replace(/[\u00a0]+/g, " ")
       .trim();
   }
 
-  /** Remove leftover weekday/time/instruction tokens; never return raw user sentence as title. */
-  function iuSilverFinalizeTitle(work) {
-    let t = String(work || "").replace(/\s+/g, " ").trim();
-    t = stripBoilerplate(t);
+  /** Iterative removal of calendar command phrases (any position in sentence). */
+  function iuSilverStripCommandBoilerplateIterative(s) {
+    let t = iuSilverNormalizeWs(s);
+    const patterns = [
+      /\bul[oó]ž(?:te)?\s+mi\s+v\s+kalend[aá]ř[ei]\b/gi,
+      /\bul[oó]ž(?:te)?\s+mi\s+do\s+kalend[aá]ře?\b/gi,
+      /\bul[oó]ž(?:te)?\s+do\s+kalend[aá]ře?\b/gi,
+      /\bul[oó]ž(?:te)?\s+v\s+kalend[aá]ř[ei]\b/gi,
+      /\bzapi[šs](?:te)?\s+mi\s+do\s+kalend[aá]ře?\b/gi,
+      /\bzapi[šs](?:te)?\s+do\s+kalend[aá]ře?\b/gi,
+      /\bpřidej(?:te)?\s+mi\s+do\s+kalend[aá]ře?\b/gi,
+      /\bpřidej(?:te)?\s+do\s+kalend[aá]ře?\b/gi,
+      /\bdo\s+mého\s+kalend[aá]ře?\b/gi,
+      /\bdo\s+kalend[aá]ře?\s+mi\s+dej\b/gi,
+      /\bmi\s+ulož\b/gi,
+      /\bulož\s+do\b/gi,
+      /\bv\s+kalend[aá]ř[ei]\b/gi,
+      /\bdo\s+kalend[aá]ře?\b/gi,
+      /\bvytvo[řr](?:te)?\s+mi\s+ud[aá]lost\b/gi,
+      /\bvytvo[řr](?:te)?\s+ud[aá]lost\b/gi,
+      /\buloz(?:te)?\s+mi\s+do\s+kalend[aá]r[eě]\b/gi,
+      /\bzapis(?:te)?\s+mi\b/gi,
+      /\buloz(?:te)?\s+mi\b/gi,
+      /\bdo\s+kalend[aá]r[eě]\b/gi,
+      /\bnapl[áa]nuj(?:te)?\b/gi,
+      /\bsch[uů]zku\b/gi,
+      /\bsch[uů]zka\b/gi,
+      /\bporad[uů]\b/gi,
+      /\bul[oó]ž(?:te)?\s+mi\b/gi,
+      /\bzapi[šs](?:te)?\b/gi,
+      /\bpřidej(?:te)?\b/gi,
+      /\bul[oó]ž(?:te)?\b/gi,
+      /\bkalend[aá]ř[ei]?\b/gi,
+      /\bkalend[aá]r[eě]\b/gi
+    ];
+    for (let iter = 0; iter < 22; iter++) {
+      const prev = t;
+      for (let i = 0; i < patterns.length; i++) {
+        t = t.replace(patterns[i], " ");
+      }
+      t = iuSilverNormalizeWs(t);
+      if (t === prev) break;
+    }
+    return t;
+  }
+
+  function iuSilverStripDateTokensFromTitle(s) {
+    let t = iuSilverNormalizeWs(s);
+    t = t.replace(/\bpoz[ií]t[rř][ií]\b/gi, " ");
+    t = t.replace(/\bz[ií]tra\b/gi, " ");
+    t = t.replace(/\bdnes\b/gi, " ");
     t = t.replace(iuSilverReWeekdayAll(), " ");
+    t = t.replace(/\b\d{1,2}\s*\.\s*\d{1,2}\.(?:\s*\d{2,4})?\b/g, " ");
+    t = t.replace(/\b\d{1,2}\s*\.\s*[a-záéíóúůýščřďťňA-ZÁÉÍÓÚŮÝŠČŘĎŤŇ]+\b/gi, " ");
+    return iuSilverNormalizeWs(t);
+  }
+
+  function iuSilverStripTimeTokensFromTitle(s) {
+    let t = iuSilverNormalizeWs(s);
     t = t.replace(/\bv\s+\d{1,2}\s*:\s*\d{2}\b/gi, " ");
     t = t.replace(/\b\d{1,2}\s*:\s*\d{2}\b/g, " ");
+    t = t.replace(/\bv\s+\d{1,2}\b/gi, " ");
+    t = t.replace(/\bod\s+\d{1,2}\s*(?::\d{2})?\s*(?:hod(?:\.|in(?:y|a|u)?)?)?\b/gi, " ");
     t = t.replace(/\bv\s+\d{1,2}\s*(?:hod(?:\.|in(?:y|a|u)?)?|hodin(?:y|a|u)?|hod\.)\b/gi, " ");
     t = t.replace(/\b\d{1,2}\s*hodin(?:y|a|u)?\b/gi, " ");
-    t = t.replace(/\b(?:v|ve|na)\b/gi, " ");
-    t = t.replace(/\s+/g, " ").trim();
+    t = t.replace(/\b\d{1,2}\s*hod\.?\b/gi, " ");
+    return iuSilverNormalizeWs(t);
+  }
+
+  function iuSilverStripOrphanParticles(s) {
+    let t = iuSilverNormalizeWs(s);
+    for (let i = 0; i < 8; i++) {
+      const prev = t;
+      t = t.replace(/\b(?:v|ve|na|od|do|mi)\b/gi, " ");
+      t = iuSilverNormalizeWs(t);
+      if (t === prev) break;
+    }
     t = t.replace(/^[.,;:\u2026–\-]+/g, "").trim();
+    t = t.replace(/[.,;:\u2026–\-]+$/g, "").trim();
+    return t;
+  }
+
+  function iuSilverPolishTitleNoun(t) {
+    let x = t;
+    if (/^zubaře$/i.test(x)) x = "Zubař";
+    else if (/^pediatra$/i.test(x)) x = "Pediatr";
+    else if (x.length) {
+      x = x.charAt(0).toLocaleUpperCase("cs-CZ") + x.slice(1);
+    }
+    return x;
+  }
+
+  function iuSilverValidateFinalTitle(t) {
+    const f = foldCs(t);
+    if (!t || t.length < 2) return false;
+    if (/uloz|ulož|přidej|pridej|zapis|zapiš|kalend|napl[áa]nuj|vytvor|vytvoř/.test(f)) return false;
+    if (/\bsch[uů]zku\b/.test(f) && !/^schůzka u\b/i.test(t)) return false;
+    if (iuSilverReWeekdayOnce().test(t)) return false;
+    if (/\d{1,2}\s*:\s*\d{2}/.test(t)) return false;
+    if (/\d{1,2}\s*hod/.test(f)) return false;
+    if (/\bod\s*\d/.test(f)) return false;
+    if (/\bv\s*\d{1,2}\b/.test(f)) return false;
+    if (/\s\d{1,2}$/.test(t)) return false;
+    if (/\bzitra\b|\bdnes\b|\bpozit/.test(f)) return false;
+    if (/\b(ponděl|úter|střed|čtvrtek|pátek|sobota|neděl)/i.test(t)) return false;
+    return true;
+  }
+
+  /** Deterministic multi-step title pipeline — not a copy of user command text. */
+  function iuSilverTitlePipelineFull(work) {
+    let t = iuSilverNormalizeWs(work);
+    t = iuSilverStripCommandBoilerplateIterative(t);
+    t = iuSilverStripDateTokensFromTitle(t);
+    t = iuSilverStripTimeTokensFromTitle(t);
+    t = iuSilverStripCommandBoilerplateIterative(t);
+    t = iuSilverStripOrphanParticles(t);
+    t = iuSilverNormalizeWs(t);
     if (/^u\s+\S+/i.test(t) && !/^schůzka\b/i.test(t)) {
       t = "Schůzka " + t.charAt(0).toLowerCase() + t.slice(1);
     }
-    const f = foldCs(t);
-    if (!t || t.length < 2) return { text: "", ok: false };
-    if (/uloz|ulož|kalend|\bsch[uů]zku\b|naplanuj|naplánuj|vytvor|vytvoř|zapis|zapiš|pridej|přidej/.test(f)) {
-      return { text: "", ok: false };
-    }
-    if (iuSilverReWeekdayOnce().test(t)) return { text: "", ok: false };
-    if (/\d{1,2}\s*:\s*\d{2}/.test(t)) return { text: "", ok: false };
-    if (/\bv\s*\d{1,2}\b/.test(f)) return { text: "", ok: false };
+    t = iuSilverPolishTitleNoun(t);
+    t = iuSilverNormalizeWs(t);
+    if (!iuSilverValidateFinalTitle(t)) return { text: "", ok: false };
     return { text: t.slice(0, 120), ok: true };
+  }
+
+  function iuSilverFinalizeTitle(work) {
+    return iuSilverTitlePipelineFull(work);
+  }
+
+  function iuSilverSanitizeDraftTitle(draft) {
+    const rawT = String(draft.title || "").trim();
+    if (!rawT) {
+      draft.title = "";
+      draft.meta.title = "missing";
+      return;
+    }
+    const fin = iuSilverTitlePipelineFull(rawT);
+    if (fin.ok) {
+      draft.title = fin.text;
+      draft.meta.title = "certain";
+    } else {
+      draft.title = "";
+      draft.meta.title = "missing";
+    }
   }
 
   function extractFromUtterance(raw, now) {
@@ -396,11 +539,7 @@
       }
     }
 
-    work = stripBoilerplate(work);
-    work = work.replace(/\b(?:v|ve|na)\b/gi, " ");
-    work = work.replace(/\s+/g, " ").trim();
-
-    const fin = iuSilverFinalizeTitle(work);
+    const fin = iuSilverTitlePipelineFull(work);
     if (fin.ok) {
       values.title = fin.text;
       confidence.title = "certain";
@@ -468,7 +607,7 @@
       const onlyTime = findTime(line);
       const hasWd = iuSilverReWeekdayOnce().test(line);
       const hasAbs = !!findAbsoluteDate(line, now);
-      const hasRel = /\bzítra|zitra|dnes\b/i.test(foldCs(line));
+      const hasRel = /\bz[ií]tra|dnes|poz[ií]t[rř][ií]\b/i.test(foldCs(line));
       if (!onlyTime.time && !hasWd && !hasAbs && !hasRel) {
         const fin = iuSilverFinalizeTitle(line);
         if (fin.ok) {
@@ -522,6 +661,7 @@
         .slice(0, 1000);
       d.meta.note = d.note ? "certain" : "optional";
       d.activeCalendarSession = true;
+      iuSilverSanitizeDraftTitle(d);
       const processingState =
         d.meta.date === "certain" && d.meta.time === "certain" && d.meta.title === "certain" && String(d.title || "").trim()
           ? "READY_TO_SAVE"
@@ -565,6 +705,7 @@
     const extracted = extractFromUtterance(raw, now);
     draft = mergeIntoDraft(draft, extracted);
     draft = applyFragmentFallback(raw, draft, now);
+    iuSilverSanitizeDraftTitle(draft);
 
     let processingState = "NEEDS_CLARIFICATION";
     if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
