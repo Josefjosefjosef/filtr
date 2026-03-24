@@ -22,6 +22,17 @@
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"]/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
   }
+
+  /** Human date for UI (day. month. year); internal storage may stay ISO. */
+  function iuSilverFormatDateCs(iso) {
+    if (!iso || typeof iso !== "string") return "";
+    const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (!m) return "";
+    const y = Number(m[1]);
+    const mo = Number(m[2]);
+    const day = Number(m[3]);
+    return day + ". " + mo + ". " + y;
+  }
   function foldCs(s) {
     return String(s || "")
       .toLowerCase()
@@ -854,32 +865,6 @@
 
   function processUserTurn(text, prevDraft, ctx) {
     const now = ctx && ctx.now ? ctx.now : new Date();
-    if (ctx && ctx.expectNoteInput) {
-      const d = cloneDraft(prevDraft);
-      d.note = String(text || "")
-        .trim()
-        .slice(0, 1000);
-      d.meta.note = d.note ? "certain" : "optional";
-      d.activeCalendarSession = true;
-      iuSilverSanitizeDraftTitle(d);
-      const processingState =
-        d.meta.date === "certain" && d.meta.time === "certain" && d.meta.title === "certain" && String(d.title || "").trim()
-          ? "READY_TO_SAVE"
-          : "NEEDS_CLARIFICATION";
-      const ap = buildAssistantParts(d, processingState);
-      return {
-        normalizedIntent: "calendar.create",
-        processingState,
-        extractedFields: {},
-        missingFields: computeMissing(d),
-        ambiguousFields: [],
-        userFacingSummary: "",
-        assistantLead: ap.assistantLead,
-        clarificationText: ap.clarification,
-        draft: d
-      };
-    }
-
     const raw = String(text || "").trim();
     const folded = foldCs(raw);
     let draft = cloneDraft(prevDraft);
@@ -952,6 +937,19 @@
     } catch {}
   }
 
+  function isDraftSaveable(d) {
+    return (
+      d.meta.date === "certain" &&
+      d.meta.time === "certain" &&
+      d.meta.title === "certain" &&
+      String(d.title || "").trim().length > 0
+    );
+  }
+
+  function processingStateFromDraft(d) {
+    return isDraftSaveable(d) ? "READY_TO_SAVE" : "NEEDS_CLARIFICATION";
+  }
+
   function formatDraftRow(label, val, muted) {
     const v = val == null || String(val).trim() === "";
     const cls = v ? "iuSilverDraftV iuSilverDraftV--muted" : "iuSilverDraftV";
@@ -966,45 +964,72 @@
     return String(n) + " min";
   }
 
-  function renderDraftCard(turn) {
-    if (turn.confirmOnly) {
-      return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
-  <p class="iuSilverMsgLead">${esc(turn.assistantLead)}</p>
-</div>`;
-    }
-    const d = turn.draft;
-    const st = turn.processingState;
+  function renderDraftCardViewGrid(d) {
     const missingTime = d.meta.time !== "certain";
     const missingDate = d.meta.date !== "certain";
-    const addNote = !(d.note && d.meta.note === "certain");
-    const showSave = st === "READY_TO_SAVE";
-    const showCard = st !== "UNSUPPORTED";
-
-    let actions = "";
-    if (showCard) {
-      actions += `<button type="button" class="iuSilverDraftBtn iuSilverDraftBtn--primary" data-iu-silver-action="save" ${showSave ? "" : "disabled"}>Uložit</button>`;
-      actions += `<button type="button" class="iuSilverDraftBtn" data-iu-silver-action="edit">Upravit</button>`;
-      if (addNote) actions += `<button type="button" class="iuSilverDraftBtn" data-iu-silver-action="addNote">Přidat poznámku</button>`;
-    }
-
-    const dateDisp = d.meta.date === "certain" && d.date ? d.date : "";
+    const dateDisp = d.meta.date === "certain" && d.date ? iuSilverFormatDateCs(String(d.date)) : "";
     const timeDisp = d.meta.time === "certain" && d.time ? d.time : "";
     const titleDisp = d.meta.title === "certain" ? d.title : "";
     const noteDisp = d.meta.note === "certain" ? d.note : "";
     const locDisp = d.meta.location === "certain" ? d.location : "";
     const durDisp = d.meta.duration === "certain" ? formatDuration(d) : "";
-
-    const card = showCard
-      ? `<div class="iuSilverDraftCard" data-iu-silver-draft-card="1">
-  <div class="iuSilverDraftCardTitle">Návrh události</div>
-  <div class="iuSilverDraftGrid">
+    return `<div class="iuSilverDraftGrid">
     ${formatDraftRow("Datum", dateDisp, missingDate)}
     ${formatDraftRow("Čas", timeDisp, missingTime)}
     ${formatDraftRow("Název", titleDisp)}
     ${formatDraftRow("Poznámka", noteDisp)}
     ${formatDraftRow("Místo", locDisp)}
     ${formatDraftRow("Délka", durDisp)}
-  </div>
+  </div>`;
+  }
+
+  function renderDraftCardEditGrid(d) {
+    const dateVal = d.meta.date === "certain" && d.date ? String(d.date).slice(0, 10) : "";
+    const timeVal = d.meta.time === "certain" && d.time ? String(d.time).slice(0, 5) : "";
+    const titleVal = d.meta.title === "certain" ? String(d.title || "") : "";
+    const noteVal = d.meta.note === "certain" ? String(d.note || "") : "";
+    const locVal = d.meta.location === "certain" ? String(d.location || "") : "";
+    const durVal = d.durationMinutes != null ? String(d.durationMinutes) : "";
+    return `<div class="iuSilverDraftGrid iuSilverDraftGrid--edit">
+    <div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-field="date" value="${esc(dateVal)}" />
+    <div class="iuSilverDraftK">Čas</div><input type="time" step="60" class="iuSilverDraftInput" data-iu-silver-field="time" value="${esc(timeVal)}" />
+    <div class="iuSilverDraftK">Název</div><input type="text" maxlength="160" class="iuSilverDraftInput" data-iu-silver-field="title" value="${esc(titleVal)}" autocomplete="off" />
+    <div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="2" maxlength="1000" data-iu-silver-field="note">${esc(noteVal)}</textarea>
+    <div class="iuSilverDraftK">Místo</div><input type="text" maxlength="200" class="iuSilverDraftInput" data-iu-silver-field="location" value="${esc(locVal)}" autocomplete="off" />
+    <div class="iuSilverDraftK">Délka</div><input type="number" min="1" max="1440" class="iuSilverDraftInput" data-iu-silver-field="duration" placeholder="minuty" value="${esc(durVal)}" />
+  </div>`;
+  }
+
+  function renderDraftCard(turn, opts) {
+    opts = opts || {};
+    const editMode = !!opts.editMode;
+    if (turn.confirmOnly) {
+      return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
+  <p class="iuSilverMsgLead">${esc(turn.assistantLead)}</p>
+</div>`;
+    }
+    if (turn.processingState === "UNSUPPORTED") {
+      return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
+  <p class="iuSilverMsgLead">${esc(turn.assistantLead)}</p>
+</div>`;
+    }
+    const d = turn.draft;
+    const st = processingStateFromDraft(d);
+    const showSave = isDraftSaveable(d);
+    const showCard = true;
+
+    let actions = "";
+    if (showCard) {
+      actions += `<button type="button" class="iuSilverDraftBtn iuSilverDraftBtn--primary" data-iu-silver-action="save" ${showSave ? "" : "disabled"}>Uložit</button>`;
+      actions += `<button type="button" class="iuSilverDraftBtn" data-iu-silver-action="edit" aria-pressed="${editMode ? "true" : "false"}">Upravit</button>`;
+    }
+
+    const grid = editMode ? renderDraftCardEditGrid(d) : renderDraftCardViewGrid(d);
+
+    const card = showCard
+      ? `<div class="iuSilverDraftCard" data-iu-silver-draft-card="1" data-iu-silver-edit-mode="${editMode ? "1" : "0"}">
+  <div class="iuSilverDraftCardTitle">Návrh události</div>
+  ${grid}
   <div class="iuSilverDraftActions" data-iu-silver-actions="1">${actions}</div>
 </div>`
       : "";
@@ -1023,11 +1048,159 @@
 
   const chatState = {
     draft: createEmptyDraft(),
-    expectNoteInput: false,
+    lastDraftTurn: null,
+    cardEditMode: false,
     saveBusy: false,
     trapOn: false,
     opened: false
   };
+
+  function getLastDraftCardEl() {
+    const host = document.getElementById("iuSilverChatMessages");
+    if (!host) return null;
+    const cards = host.querySelectorAll("[data-iu-silver-draft-card]");
+    return cards.length ? cards[cards.length - 1] : null;
+  }
+
+  function patchDraftCardMessageCopy(cardEl) {
+    const msg = cardEl.closest(".iuSilverMsg--assistant");
+    if (!msg) return;
+    const d = cloneDraft(chatState.draft);
+    const ps = processingStateFromDraft(d);
+    const ap = buildAssistantParts(d, ps);
+    const lead = msg.querySelector(".iuSilverMsgLead");
+    if (lead) lead.textContent = ap.assistantLead;
+    const clar = msg.querySelector("[data-iu-silver-clarification]");
+    if (ps === "NEEDS_CLARIFICATION" && ap.clarification) {
+      if (clar) clar.textContent = ap.clarification;
+      else {
+        const p = document.createElement("p");
+        p.className = "iuSilverMsgClarification";
+        p.setAttribute("data-iu-silver-clarification", "1");
+        p.textContent = ap.clarification;
+        const leadEl = msg.querySelector(".iuSilverMsgLead");
+        if (leadEl && leadEl.parentNode) {
+          if (leadEl.nextSibling) leadEl.parentNode.insertBefore(p, leadEl.nextSibling);
+          else leadEl.parentNode.appendChild(p);
+        }
+      }
+    } else if (clar) clar.remove();
+  }
+
+  function syncDraftFromCardInputs(cardEl) {
+    if (!cardEl) return;
+    const d = cloneDraft(chatState.draft);
+    const dateIn = cardEl.querySelector('[data-iu-silver-field="date"]');
+    if (dateIn) {
+      if (dateIn.value) {
+        d.date = dateIn.value;
+        d.meta.date = "certain";
+      } else {
+        d.date = "";
+        d.meta.date = "missing";
+      }
+    }
+    const timeIn = cardEl.querySelector('[data-iu-silver-field="time"]');
+    if (timeIn) {
+      if (timeIn.value) {
+        d.time = timeIn.value;
+        d.meta.time = "certain";
+      } else {
+        d.time = "";
+        d.meta.time = "missing";
+      }
+    }
+    const titleIn = cardEl.querySelector('[data-iu-silver-field="title"]');
+    if (titleIn) {
+      d.title = String(titleIn.value || "")
+        .trim()
+        .slice(0, 160);
+      d.meta.title = d.title ? "certain" : "missing";
+    }
+    const noteIn = cardEl.querySelector('[data-iu-silver-field="note"]');
+    if (noteIn) {
+      d.note = String(noteIn.value || "")
+        .trim()
+        .slice(0, 1000);
+      d.meta.note = d.note ? "certain" : "optional";
+    }
+    const locIn = cardEl.querySelector('[data-iu-silver-field="location"]');
+    if (locIn) {
+      d.location = String(locIn.value || "")
+        .trim()
+        .slice(0, 200);
+      d.meta.location = d.location ? "certain" : "optional";
+    }
+    const durIn = cardEl.querySelector('[data-iu-silver-field="duration"]');
+    if (durIn) {
+      const raw = String(durIn.value || "").trim();
+      if (raw === "") {
+        d.durationMinutes = null;
+        d.meta.duration = "optional";
+      } else {
+        const n = parseInt(raw, 10);
+        if (!isNaN(n) && n > 0) {
+          d.durationMinutes = n;
+          d.meta.duration = "certain";
+        } else {
+          d.durationMinutes = null;
+          d.meta.duration = "missing";
+        }
+      }
+    }
+    iuSilverSanitizeDraftTitle(d);
+    chatState.draft = d;
+    const ps = processingStateFromDraft(d);
+    const ap = buildAssistantParts(d, ps);
+    if (chatState.lastDraftTurn) {
+      chatState.lastDraftTurn = {
+        ...chatState.lastDraftTurn,
+        draft: cloneDraft(d),
+        assistantLead: ap.assistantLead,
+        clarificationText: ap.clarification,
+        processingState: ps
+      };
+    }
+    patchDraftCardMessageCopy(cardEl);
+  }
+
+  function refreshLastDraftCard() {
+    const cardEl = getLastDraftCardEl();
+    if (!cardEl) return;
+    if (cardEl.querySelector("[data-iu-silver-field]")) {
+      syncDraftFromCardInputs(cardEl);
+    }
+    const msg = cardEl.closest(".iuSilverMsg--assistant");
+    if (!msg) return;
+    const turn = chatState.lastDraftTurn;
+    if (!turn) return;
+    const d = cloneDraft(chatState.draft);
+    const ps = processingStateFromDraft(d);
+    const ap = buildAssistantParts(d, ps);
+    const turnOut = {
+      ...turn,
+      draft: d,
+      processingState: ps,
+      assistantLead: ap.assistantLead,
+      clarificationText: ap.clarification
+    };
+    chatState.lastDraftTurn = turnOut;
+    const wrap = document.createElement("div");
+    wrap.innerHTML = renderDraftCard(turnOut, { editMode: chatState.cardEditMode }).trim();
+    const newNode = wrap.firstElementChild;
+    if (newNode) msg.replaceWith(newNode);
+    scrollMessagesToEnd();
+  }
+
+  function onOverlayDraftInput(e) {
+    const t = e.target;
+    if (!t || !t.getAttribute || !t.getAttribute("data-iu-silver-field")) return;
+    const card = t.closest("[data-iu-silver-draft-card]");
+    if (!card) return;
+    syncDraftFromCardInputs(card);
+    const saveBtn = card.querySelector('[data-iu-silver-action="save"]');
+    if (saveBtn) saveBtn.disabled = !isDraftSaveable(chatState.draft);
+  }
 
   function openChatOverlay(fromEl) {
     const ov = document.getElementById("iuSilverChatOverlay");
@@ -1118,8 +1291,15 @@
   function appendAssistantTurn(turn) {
     const host = document.getElementById("iuSilverChatMessages");
     if (!host) return;
+    if (turn.confirmOnly) {
+      chatState.lastDraftTurn = null;
+      chatState.cardEditMode = false;
+    } else if (turn.processingState !== "UNSUPPORTED") {
+      chatState.cardEditMode = false;
+      chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
+    }
     const wrap = document.createElement("div");
-    wrap.innerHTML = renderDraftCard(turn).trim();
+    wrap.innerHTML = renderDraftCard(turn, { editMode: chatState.cardEditMode }).trim();
     const node = wrap.firstElementChild;
     if (node) host.appendChild(node);
     scrollMessagesToEnd();
@@ -1149,14 +1329,13 @@
     const msgHost = document.getElementById("iuSilverChatMessages");
     if (msgHost) msgHost.innerHTML = "";
     chatState.draft = createEmptyDraft();
-    chatState.expectNoteInput = false;
     chatState.saveBusy = false;
     openChatOverlay(input);
     const first = drainPendingFirstMessage();
     if (first) {
       appendUserMessage(first);
       const eng = window.iuSilverCalendarEngine;
-      const turn = eng.processUserTurn(first, chatState.draft, { now: new Date(), expectNoteInput: !!chatState.expectNoteInput });
+      const turn = eng.processUserTurn(first, chatState.draft, { now: new Date() });
       chatState.draft = turn.draft;
       appendAssistantTurn(turn);
     }
@@ -1170,14 +1349,17 @@
     input.value = "";
     appendUserMessage(text);
     const eng = window.iuSilverCalendarEngine;
-    const turn = eng.processUserTurn(text, chatState.draft, { now: new Date(), expectNoteInput: !!chatState.expectNoteInput });
-    chatState.expectNoteInput = false;
+    const turn = eng.processUserTurn(text, chatState.draft, { now: new Date() });
     chatState.draft = turn.draft;
     appendAssistantTurn(turn);
   }
 
   async function handleSaveClick() {
     if (chatState.saveBusy) return;
+    const cardEl = getLastDraftCardEl();
+    if (cardEl && cardEl.querySelector("[data-iu-silver-field]")) {
+      syncDraftFromCardInputs(cardEl);
+    }
     const svc = window.iuCalendarService;
     if (!svc || typeof svc.calendarCreateEvent !== "function") {
       appendAssistantTurn({
@@ -1208,10 +1390,11 @@
       });
       if (res && res.ok && res.event) {
         const ev = res.event;
+        const dateHuman = iuSilverFormatDateCs(String(ev.date || "")) || String(ev.date || "");
         appendAssistantTurn({
           confirmOnly: true,
           processingState: "READY_TO_SAVE",
-          assistantLead: "Uloženo do kalendáře: " + ev.date + " v " + ev.time + " — " + ev.title + ".",
+          assistantLead: "Uloženo do kalendáře: " + dateHuman + " v " + ev.time + " — " + ev.title + ".",
           clarificationText: "",
           draft: createEmptyDraft()
         });
@@ -1245,21 +1428,8 @@
       void handleSaveClick();
     } else if (a === "edit") {
       e.preventDefault();
-      appendAssistantTurn({
-        processingState: "NEEDS_CLARIFICATION",
-        assistantLead: "Co chcete upravit? Napište například nový čas, datum nebo přesný název — upravím jen uvedené části návrhu.",
-        clarificationText: "",
-        draft: chatState.draft
-      });
-    } else if (a === "addNote") {
-      e.preventDefault();
-      chatState.expectNoteInput = true;
-      appendAssistantTurn({
-        processingState: "NEEDS_CLARIFICATION",
-        assistantLead: "Napište krátkou poznámku k události.",
-        clarificationText: "",
-        draft: chatState.draft
-      });
+      chatState.cardEditMode = !chatState.cardEditMode;
+      refreshLastDraftCard();
     }
   }
 
@@ -1297,7 +1467,11 @@
         handleComposerSubmit();
       });
     }
-    if (overlay) overlay.addEventListener("click", onOverlayClick);
+    if (overlay) {
+      overlay.addEventListener("click", onOverlayClick);
+      overlay.addEventListener("input", onOverlayDraftInput, true);
+      overlay.addEventListener("change", onOverlayDraftInput, true);
+    }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
