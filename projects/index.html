@@ -170,8 +170,13 @@ style-src 'self' 'unsafe-inline' https:;
                       <div class="silver-compose">
                         <div class="silver-output" aria-live="polite">
                         </div>
-                        <div class="silver-inputWrap">
-                          <input class="silver-input" type="text" inputmode="text" autocomplete="off" placeholder="Napiš Silverovi…" aria-label="Napiš Silverovi">
+                        <div class="silver-inputWrap iuSilverHomeInputWrap">
+                          <div class="iuSilverHomeInputRow">
+                            <input id="iuSilverHomeInput" class="silver-input iuSilverHomeInput" type="text" inputmode="text" autocomplete="off" placeholder="Napiš Silverovi…" aria-label="Napiš Silverovi">
+                            <button type="button" class="iuSilverHomeSend" id="iuSilverHomeSend" aria-label="Odeslat zprávu Silverovi">
+                              <svg class="iuSilverHomeSendIcon" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20"><path d="M4 12l16-8-6 8 6 8L4 12zm8-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -3012,7 +3017,8 @@ style-src 'self' 'unsafe-inline' https:;
       }catch(_){}
     })();
     </script>
-    <script type="module" src="/assets/app.js?v=1391a"></script>
+    <script type="module" src="/assets/iu-silver-p0.js?v=1392silver"></script>
+    <script type="module" src="/assets/app.js?v=1392silver"></script>
     <script>
     (function(){
       try { document.documentElement.setAttribute("data-iu-html-after-appjs", "reached"); } catch(e){}
@@ -3343,6 +3349,30 @@ style-src 'self' 'unsafe-inline' https:;
         </div>
       </section>
     </div>
+
+    <div id="iuSilverChatOverlay" class="iuSilverChatOverlay" hidden aria-hidden="true">
+      <div class="iuSilverChatBackdrop" data-iu-silver-chat-close="1"></div>
+      <div class="iuSilverChatShell" role="dialog" aria-modal="true" aria-labelledby="iuSilverChatTitle">
+        <header class="iuSilverChatHeader">
+          <div class="iuSilverChatHeaderText">
+            <h2 class="iuSilverChatTitle" id="iuSilverChatTitle">Silver</h2>
+            <p class="iuSilverChatSubtitle">Kalendářový asistent</p>
+          </div>
+          <button type="button" class="iuSilverChatClose" id="iuSilverChatClose" data-iu-silver-chat-close="1" aria-label="Zavřít chat Silver">×</button>
+        </header>
+        <div class="iuSilverChatMessages" id="iuSilverChatMessages" aria-live="polite"></div>
+        <footer class="iuSilverChatComposer">
+          <div class="iuSilverChatComposerRow">
+            <label class="iuSilverChatComposerLabel" for="iuSilverChatInput">Zpráva</label>
+            <input id="iuSilverChatInput" class="iuSilverChatInput" type="text" inputmode="text" autocomplete="off" placeholder="Napište zprávu…" aria-label="Zpráva pro Silver">
+            <button type="button" class="iuSilverChatSend" id="iuSilverChatSend" aria-label="Odeslat zprávu">
+              <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20"><path d="M4 12l16-8-6 8 6 8L4 12zm8-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </footer>
+      </div>
+    </div>
+
     <div id="iuVideoModal" class="iuVideoModal" hidden aria-modal="true" aria-label="Přehrát video">
       <button type="button" class="iuVideoModalClose" aria-label="Zavřít">×</button>
       <iframe id="iuVideoFrame" allowfullscreen></iframe>

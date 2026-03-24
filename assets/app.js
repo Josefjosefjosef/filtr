@@ -20633,64 +20633,12 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     render();
   }
 
-  function parseSilverCreate(text){
-    const src = String(text || "").trim().toLowerCase();
-    const m = src.match(/(?:ulo[žz].*|z[ií]tra|dnes|v\s+pond[ěe]l[ií]|v\s+út|v\s+stř|v\s+čt|v\s+p[aá]tek|v\s+sobotu|v\s+ned[ěe]li).*(\d{1,2})(?::|\\.)?(\d{0,2})/i);
-    if (!m) return { ok: false, reason: "need_clarification" };
-    const now = new Date();
-    let date = toDateOnly(now);
-    if (/\bz[ií]tra\b/i.test(src)) date = addDays(date, 1);
-    const weekdays = [{r:/pond/i,d:1},{r:/[uú]t/i,d:2},{r:/stř|str/i,d:3},{r:/čt|ct/i,d:4},{r:/p[aá]tek/i,d:5},{r:/sobot/i,d:6},{r:/ned[ěe]l/i,d:0}];
-    for (const it of weekdays){ if (it.r.test(src)){ const cur = now.getDay(); const add = (it.d - cur + 7) % 7 || 7; date = addDays(toDateOnly(now), add); break; } }
-    const hh = Math.max(0, Math.min(23, Number(m[1] || 9)));
-    const mm = Math.max(0, Math.min(59, Number(m[2] || 0)));
-    let title = src
-      .replace(/^(ulo[žz]\s+mi\s+sch[ůu]zku|ulo[žz]\s+mi|ulo[žz]|přidej|zapi[šs])\s*/i, "")
-      .replace(/\b(dnes|z[ií]tra|tento|tuto|v)\b/gi, " ")
-      .replace(/\b(pond[ěe]l[ií]|[uú]ter[yý]|středa|streda|čtvrtek|ctvrtek|p[aá]tek|sobota|ned[ěe]le)\b/gi, " ")
-      .replace(/\b\d{1,2}(?::|\\.)?\d{0,2}\b/g, " ")
-      .replace(/\bhod(?:in|\\.)?\b/gi, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .slice(0, 120);
-    if (!title) return { ok: false, reason: "need_clarification" };
-    return { ok: true, date, time: pad(hh)+":"+pad(mm), title };
-  }
-
   function getTodayEvents(){ return getEventsForDate(toDateOnly(new Date())); }
   function getTomorrowEvents(){ return getEventsForDate(addDays(toDateOnly(new Date()), 1)); }
   function getNextEvent(){
     const now = new Date();
     const sorted = state.data.events.slice().sort(compareEvents);
     return sorted.find((e)=>parseDateTime(e.date, e.time).getTime() >= now.getTime()) || null;
-  }
-
-  function installSilverHook(){
-    if (document.body && document.body.dataset.iuCalendarSilverHooked === "1") return;
-    if (document.body) document.body.dataset.iuCalendarSilverHooked = "1";
-    document.addEventListener("keydown", async (e)=>{
-      if (e.key !== "Enter") return;
-      const input = e.target && e.target.closest ? e.target.closest(".silver-input") : null;
-      if (!input) return;
-      const out = document.querySelector(".silver-output");
-      const text = String(input.value || "").trim();
-      if (!text) return;
-      if (!/\b(kalend[áa]ř|sch[ůu]zka|porada|ulo[žz])\b/i.test(text)) return;
-      e.preventDefault();
-      const parsed = parseSilverCreate(text);
-      if (!parsed.ok){
-        if (out) out.innerHTML = '<div class="iuSilverReply">Potřebuji upřesnit datum/čas. Nic neukládám.</div>';
-        return;
-      }
-      const ev = sanitizeEvent({ id: uid("evt"), date: parsed.date, time: parsed.time, title: parsed.title, note: "", type: "personal", attachments: [], createdAt: Date.now(), updatedAt: Date.now() });
-      if (!ev) return;
-      state.data.events.push(ev);
-      state.data.events.sort(compareEvents);
-      await writeStore();
-      if (out) out.innerHTML = '<div class="iuSilverReply">Uloženo: ' + esc(ev.date) + " " + esc(ev.time) + " · " + esc(ev.title) + "</div>";
-      input.value = "";
-      render();
-    }, true);
   }
 
   function bindUi(){
@@ -20728,7 +20676,6 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     await initStorage();
     await readStore();
     bindUi();
-    installSilverHook();
     render();
     window.iuCalendarService = {
       calendarCreateEvent: async function(payload){
@@ -20744,9 +20691,19 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
       calendarGetTomorrowEvents: function(){ return getTomorrowEvents(); },
       calendarGetNextEvent: function(){ return getNextEvent(); },
       parseAndCreateFromText: async function(text){
-        const parsed = parseSilverCreate(text);
-        if (!parsed.ok) return parsed;
-        return this.calendarCreateEvent({ date: parsed.date, time: parsed.time, title: parsed.title, note: "", type: "personal", attachments: [] });
+        const eng = window.iuSilverCalendarEngine;
+        if (!eng || typeof eng.processUserTurn !== "function") return { ok: false, reason: "iuSilverCalendarEngine_unavailable" };
+        const draft = eng.createEmptyDraft();
+        const turn = eng.processUserTurn(text, draft, { now: new Date(), expectNoteInput: false });
+        if (turn.processingState !== "READY_TO_SAVE"){
+          return { ok: false, reason: turn.processingState, missingFields: turn.missingFields, detail: turn };
+        }
+        const d = turn.draft;
+        const noteParts = [];
+        if (d.note) noteParts.push(d.note);
+        if (d.location) noteParts.push("Místo: " + d.location);
+        const noteJoined = noteParts.join("\n\n").slice(0, 1000);
+        return this.calendarCreateEvent({ date: d.date, time: d.time, title: d.title, note: noteJoined, type: "personal", attachments: [] });
       },
       openOverlay: function(){ openOverlay(document.activeElement); },
       closeOverlay: function(){ closeOverlay(); }
