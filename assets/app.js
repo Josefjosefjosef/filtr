@@ -12054,10 +12054,6 @@ function buildVideoAsArticleCard(it) {
   async function iuOpenNakupDomu(){
     const { modal, list } = iuNakupEls();
     if (!modal) return;
-    const feed = document.getElementById("feed");
-    if (feed) {
-      try { feed.hidden = true; feed.style.display = "none"; feed.setAttribute("data-iu-feed-hidden-by", "nakup"); window.__iuFeedHiddenByNakup = true; } catch (_) {}
-    }
     modal.hidden = false;
     modal.removeAttribute("aria-hidden");
     try { modal.style.display = ""; } catch (_) {}
