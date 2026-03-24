@@ -38,6 +38,18 @@ style-src 'self' 'unsafe-inline' https:;
     <noscript>Pro zobrazení obsahu je potřeba JavaScript.</noscript>
     <script>
     (function(){
+      try {
+        var h = (location.hostname || "").toLowerCase();
+        window.__IU_PROD__ = (h === "infouzel.cz" || h === "www.infouzel.cz");
+      } catch (e) { window.__IU_PROD__ = false; }
+    })();
+    </script>
+    <script>
+    (function(){
+      if (window.__IU_PROD__) {
+        document.documentElement.removeAttribute("data-iu-debug");
+        return;
+      }
       const isDebug = new URLSearchParams(location.search || "").get("debug") === "1";
       if (isDebug) {
         document.documentElement.setAttribute("data-iu-debug", "1");
@@ -1901,6 +1913,7 @@ style-src 'self' 'unsafe-inline' https:;
     </div>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       const isDebug = new URLSearchParams(location.search || "").get("debug") === "1";
       const diagPanel = document.getElementById("iuDiagPanel");
       const troubleshootPanel = document.getElementById("iuTroubleshoot");
@@ -2262,6 +2275,7 @@ style-src 'self' 'unsafe-inline' https:;
       </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var qs = new URLSearchParams(location.search || "");
       if (!(qs.has("debug") && qs.get("debug") === "1")) return;
 
@@ -2543,6 +2557,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return;
       var readBtn = document.getElementById("iuReadLastError");
@@ -2621,6 +2636,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var qs = new URLSearchParams(location.search || "");
       if (!(qs.has("debug") && qs.get("debug") === "1")) return;
 
@@ -2653,6 +2669,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return;
       var out = document.getElementById("iuPipelineTelemetryOut");
@@ -2679,6 +2696,7 @@ style-src 'self' 'unsafe-inline' https:;
     <script>
     (function(){
       try {
+        if (window.__IU_PROD__) return;
         var params = new URLSearchParams(location.search || "");
         if (params.get("debug") !== "1") return;
 
@@ -2828,6 +2846,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return;
       window.__iuStorageSpy = { writes: [], reads: [], removes: [], errors: [] };
@@ -2859,6 +2878,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return;
 
@@ -2927,6 +2947,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      if (window.__IU_PROD__) return;
       var params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return;
       if (typeof PerformanceObserver === "undefined") return;
@@ -3034,6 +3055,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function () {
+      if (window.__IU_PROD__) return;
       var params = new URLSearchParams(location.search || "");
       if (params.get("debug") !== "1") return;
 
