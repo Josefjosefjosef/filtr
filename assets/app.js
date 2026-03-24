@@ -11976,16 +11976,10 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
   }
-  try { window.iuNakupClose = iuNakupClose; } catch (_) {}
 
   try {
-    window.addEventListener('iu-open-panel', function(e){
-      if (e.detail === 'shopping' || e.detail === 'evidence') {
-        if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("quickfeed", { key: "evidence" });
-        else if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("evidence");
-      }
-    });
-    window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'shopping' || e.detail === 'evidence') { if (typeof window.iuNakupCloseQuickView === "function") window.iuNakupCloseQuickView(); else iuNakupClose(); } });
+    window.addEventListener('iu-open-panel', function(e){ if (e.detail === 'shopping') { if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("quickfeed", { key: "nakup" }); else if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } });
+    window.addEventListener('iu-close-panel', function(e){ if (e.detail === 'shopping') { if (typeof window.iuNakupCloseQuickView === "function") window.iuNakupCloseQuickView(); else iuNakupClose(); } });
   } catch {}
 
   async function iuLoadNakupDomu(){
@@ -12110,7 +12104,6 @@ function buildVideoAsArticleCard(it) {
       window.addEventListener("resize", window._iuNakupResizeHandler);
     } catch (_) {}
   }
-  try { window.iuOpenNakupDomu = iuOpenNakupDomu; } catch (_) {}
 
   function iuNakupCommunityPickerFilter(query){
     const q = (query || "").trim().toLowerCase();
@@ -18700,27 +18693,15 @@ function buildVideoAsArticleCard(it) {
     iuEvidenceUploadInit();
     iuEvidenceCalendarInit();
     function openNakupPanel() {
-      try {
-        if (typeof window.iuOpenNakupDomu === "function") window.iuOpenNakupDomu();
-        else if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("quickfeed", { key: "evidence" });
-        else if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("evidence");
-      } catch (_) {}
-      try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("evidence"); } catch (_) {}
+      try { if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("quickfeed", { key: "nakup" }); else if (typeof window.iuShowQuickFeed === "function") window.iuShowQuickFeed("nakup"); } catch (_) {}
+      try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
     }
     openBtn?.addEventListener("click", (e) => {
-      if (e && e.__iuHandled) return;
-      if (e) e.__iuHandled = true;
       e.preventDefault?.();
-      e.stopPropagation?.();
-      e.stopImmediatePropagation?.();
       openNakupPanel();
     });
     openBtn?.addEventListener("touchend", (e) => {
-      if (e && e.__iuHandled) return;
-      if (e) e.__iuHandled = true;
       e.preventDefault?.();
-      e.stopPropagation?.();
-      e.stopImmediatePropagation?.();
       openNakupPanel();
     }, { passive: false });
     closeBtn?.addEventListener("click", (e) => {
@@ -21419,11 +21400,81 @@ function buildVideoAsArticleCard(it) {
       } catch (_) { return false; }
     })();
     const isMobileOverlayScope = isMobileGateToolsOpen || isMobileMindMenuFlowSource;
-    if (keyNorm === "nakup" || keyNorm === "evidence") {
-      // Canonical Evidence route: open dedicated Evidence modal UI, never shopping quickfeed cards.
-      if (typeof window.iuOpenNakupDomu === "function") {
-        window.iuOpenNakupDomu();
-        try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("evidence"); } catch (_) {}
+    if (keyNorm === "nakup") {
+      const modal = document.getElementById("iuNakupModal");
+      let card = modal && modal.querySelector(".iuModalCard");
+      if (!card && quick) card = quick.querySelector(".iuModalCard");
+      if (card && quick) {
+        if (modal && card.parentElement === modal) {
+          modal.hidden = true;
+          quick.appendChild(card);
+        }
+        stage.setAttribute("data-iu-view", "quick");
+        quick.hidden = false;
+        quick.setAttribute("data-iu-quick-key", "nakup");
+        try {
+          document.body.classList.add("iu-quickFeedOpen");
+          if (isMobileOverlayScope) {
+            document.documentElement.style.overflow = "hidden";
+            document.body.style.overflow = "hidden";
+            document.body.classList.add("iu-modal-open", "iu-mobileGateToolsQuickOpen");
+          }
+        } catch (_) {}
+        if (window.innerWidth <= 900) {
+          var newsList = stage && stage.parentElement;
+          if (newsList && newsList.id === "newsList") {
+            newsList.style.setProperty("width", "100%", "important");
+            newsList.style.setProperty("min-width", "0", "important");
+          }
+          stage.style.setProperty("flex", "0 0 100%", "important");
+          stage.style.setProperty("width", "100%", "important");
+          stage.style.setProperty("min-width", "0", "important");
+          stage.style.setProperty("max-width", "100%", "important");
+          quick.style.setProperty("width", "100%", "important");
+          quick.style.setProperty("min-width", "0", "important");
+          quick.style.setProperty("display", "block", "important");
+          card.style.setProperty("width", "100%", "important");
+          card.style.setProperty("min-width", "0", "important");
+          card.style.setProperty("min-height", "0", "important");
+          card.style.setProperty("max-height", "none", "important");
+          if (newsList && newsList.id === "newsList") newsList.offsetHeight;
+        }
+        if (typeof window.iuLoadNakupDomu === "function") window.iuLoadNakupDomu().catch(function(){});
+        try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
+      } else {
+        // Fallback when custom shopping card is unavailable: keep canonical quickfeed open path.
+        const fallbackData = (window.IU_QUICK_FEEDS || {}).nakup;
+        if (!fallbackData) return;
+        stage.setAttribute("data-iu-view", "quick");
+        quick.hidden = false;
+        try {
+          document.body.classList.add("iu-quickFeedOpen");
+          if (isMobileOverlayScope) {
+            document.documentElement.style.overflow = "hidden";
+            document.body.style.overflow = "hidden";
+            document.body.classList.add("iu-modal-open", "iu-mobileGateToolsQuickOpen");
+          }
+        } catch (_) {}
+        quick.innerHTML = `
+          <div class="iuQHead">
+            <div class="iuQTitle">${iuQfEscape(fallbackData.title || "Evidence nákupů")}</div>
+            <div class="iuQHeadActions"><button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">×</button></div>
+          </div>
+          <div class="iuQCard">
+            <div class="iuQGrid">
+              ${(fallbackData.items || []).map(it => `<a class="iuAiCard iuQItem" href="${iuQfEscape(it.url || "#")}" target="_blank" rel="noopener noreferrer">
+                <div class="iuAiInner">
+                  <div class="iuAiName">${iuQfEscape(it.name || "")}</div>
+                  ${it.desc ? `<div class="iuAiDesc">${iuQfEscape(it.desc)}</div>` : ""}
+                </div>
+              </a>`).join("")}
+            </div>
+          </div>
+        `;
+        const closeBtn = document.getElementById("iuQCloseBtn");
+        if (closeBtn) closeBtn.addEventListener("click", function() { quick.hidden = true; stage.removeAttribute("data-iu-view"); });
+        iuApplyMobileQuickFeedLayout(quick);
+        try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("shopping"); } catch (_) {}
       }
       return;
     }
@@ -22126,7 +22177,7 @@ function buildVideoAsArticleCard(it) {
     const isExternalHref = !!href && /^https?:\/\//i.test(href);
     if (action === "parcels" || key === "baliky") return { actionType: "overlay", overlayId: "parcels", key };
     if (modal === "banka" || modal === "bakalari" || modal === "pojistovna") return { actionType: "overlay", overlayId: "quickfeed", key: modal };
-    if (key === "nakup" || key === "evidence" || key === "ai" || key === "deepl" || key === "convert" || key === "naceneni") {
+    if (key === "nakup" || key === "ai" || key === "deepl" || key === "convert" || key === "naceneni") {
       return { actionType: "overlay", overlayId: "quickfeed", key };
     }
     if (isExternalHref) return { actionType: "external", key, href };
@@ -24267,8 +24318,7 @@ function buildVideoAsArticleCard(it) {
       const id = String(p || '').trim().toLowerCase();
       if (id === 'ai') return null;
       // AI panel must NOT open from URL – overlay only via quicklink (data-iuq="ai")
-      const ALLOWED_PANELS = new Set(['evidence', 'services']);
-      if (id === 'shopping') return 'evidence';
+      const ALLOWED_PANELS = new Set(['shopping', 'services']);
       if (ALLOWED_PANELS.has(id)) return id;
       return null;
     }catch{ return null; }
@@ -24370,21 +24420,16 @@ function buildVideoAsArticleCard(it) {
       const panel = parsePanelFromUrl();
       if (panel === null && __iuCurrentPanel !== null) {
         const prev = __iuCurrentPanel;
-      if ((prev === "shopping" || prev === "evidence")) {
-        if (typeof window.iuNakupClose === "function") { try { window.iuNakupClose(); } catch (_) {} }
-        else if (typeof window.iuNakupCloseQuickView === "function") { try { window.iuNakupCloseQuickView(); } catch (_) {} }
-        else iuHideAllOverlaysNow();
-      }
+        if (prev === "shopping" && typeof window.iuNakupCloseQuickView === "function") { try { window.iuNakupCloseQuickView(); } catch (_) {} }
         else iuHideAllOverlaysNow();
         try { window.dispatchEvent(new CustomEvent('iu-close-panel', { detail: prev })); } catch {}
         __iuCurrentPanel = null;
         return;
       }
-      if (panel === "evidence") {
-        if (typeof window.iuOpenNakupDomu === "function") { try { window.iuOpenNakupDomu(); } catch (_) {} }
-        else if (typeof window.iuOpenOverlay === "function") { try { window.iuOpenOverlay("quickfeed", { key: "evidence" }); } catch (_) {} }
-        else if (typeof window.iuShowQuickFeed === "function") { try { window.iuShowQuickFeed("evidence"); } catch (_) {} }
-        __iuCurrentPanel = "evidence";
+      if (panel === "shopping") {
+        if (typeof window.iuOpenOverlay === "function") { try { window.iuOpenOverlay("quickfeed", { key: "nakup" }); } catch (_) {} }
+        else if (typeof window.iuShowQuickFeed === "function") { try { window.iuShowQuickFeed("nakup"); } catch (_) {} }
+        __iuCurrentPanel = "shopping";
         return;
       }
       if (panel !== null) safeOpenPanel(panel);
@@ -24397,8 +24442,7 @@ function buildVideoAsArticleCard(it) {
   function setPanelInUrl(panel, { replace = false } = {}){
     try{
       const url = new URL(location.href);
-      const safePanel = String(panel || '').trim().toLowerCase() === 'shopping' ? 'evidence' : panel;
-      if (safePanel) url.searchParams.set('panel', safePanel);
+      if (panel) url.searchParams.set('panel', panel);
       else url.searchParams.delete('panel');
       if (replace) history.replaceState({}, '', url);
       else history.pushState({}, '', url);
@@ -24923,19 +24967,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     try { window.addEventListener('iu-panel-url-changed', applyPanelFromUrl); } catch {}
     // PRELOAD overlay styles on page load
     try {
-      const panelFromUrl = parsePanelFromUrl();
-      if (panelFromUrl === null) {
+      iuHideAllOverlaysNow();
+      requestAnimationFrame(() => {
         iuHideAllOverlaysNow();
-        requestAnimationFrame(() => {
-          iuHideAllOverlaysNow();
-        });
-      }
-    } catch {}
-    try {
-      if (parsePanelFromUrl() === "evidence") {
-        setTimeout(() => { try { applyPanelFromUrl(); } catch {} }, 0);
-        setTimeout(() => { try { applyPanelFromUrl(); } catch {} }, 120);
-      }
+      });
     } catch {}
   }
 
