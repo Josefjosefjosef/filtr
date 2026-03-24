@@ -66,7 +66,6 @@
     if (/\bkalend/.test(folded)) return true;
     if (/schuz|schůz|porad/.test(folded)) return true;
     if (/\buloz|uloz|zapis|zapis|přidej|pridej/.test(folded)) return true;
-    if (/\bdnes\b|\bzitra\b|\bzítra\b/.test(folded)) return true;
     if (/\b(pondělí|pondeli|úterý|utery|středa|streda|čtvrtek|ctvrtek|pátek|patek|sobota|neděle|nedele)\b/i.test(raw)) return true;
     if (/\b\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(folded)) return true;
     if (/\b\d{1,2}\s*\.\s*[a-záéíóúůýščřďťň]+/i.test(raw)) return true;
