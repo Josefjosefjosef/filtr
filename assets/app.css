@@ -18863,3 +18863,12 @@ overflow:hidden !important;
 }
 
  
+
+/* TEMP HIDE: topbar ads CTA (Inzerce / Služby + Vložit inzerát zdarma) */
+#iuTopbarRight .iuRightTopCtas > .iuRightCta.iuRightCta--services,
+#iuTopbarRight .iuRightTopCtas > .iuRightCta.iuRightCta--submit,
+#topbarWrap .iuRightTopCtas > .iuRightCta.iuRightCta--services,
+#topbarWrap .iuRightTopCtas > .iuRightCta.iuRightCta--submit,
+#iuTopbarRight [data-iu-cta-submit]{
+  display: none !important;
+}
