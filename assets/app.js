@@ -19657,6 +19657,7 @@ function buildVideoAsArticleCard(it) {
   
   function iuParcelsOpenSurface(){
     if(!modal || !overlay) return;
+    try { iuCloseAllOverlaysExcept("parcels"); } catch (_) {}
     overlay.classList.add('is-open');
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
@@ -22075,13 +22076,6 @@ function buildVideoAsArticleCard(it) {
         if (typeof window.iuParcelsOpenSurface === "function") window.iuParcelsOpenSurface();
         return;
       }
-      if (t === "mojesluzby") {
-        const kind = extra && extra.kind != null ? extra.kind : (typeof extra === "string" ? extra : null);
-        if (kind == null) return;
-        try { window.__iuLastMojeSluzbyKind = String(kind); } catch (_) {}
-        if (typeof window.iuMojeSluzbyOpenSurface === "function") window.iuMojeSluzbyOpenSurface(kind);
-        return;
-      }
       if (t === "ai") {
         if (typeof window.iuAiPanelOpenSurface === "function") window.iuAiPanelOpenSurface();
       }
@@ -22108,7 +22102,6 @@ function buildVideoAsArticleCard(it) {
       if (open.length <= 1) return;
       try { window.__iuOverlayFailSafeTriggerCount = (window.__iuOverlayFailSafeTriggerCount || 0) + 1; } catch (_) {}
       const snapQf = window.__iuLastQuickfeedKey;
-      const snapMoje = window.__iuLastMojeSluzbyKind;
       iuForceCloseAllOverlays();
       const last = open[open.length - 1];
       iuActiveOverlay = last || null;
@@ -22120,17 +22113,12 @@ function buildVideoAsArticleCard(it) {
         }
       } else if (last === "parcels") {
         if (typeof window.iuParcelsOpenSurface === "function") window.iuParcelsOpenSurface();
-      } else if (last === "mojesluzby") {
-        const kind = snapMoje;
-        if (kind && typeof window.iuMojeSluzbyOpenSurface === "function") {
-          try { window.__iuLastMojeSluzbyKind = String(kind); } catch (_) {}
-          window.iuMojeSluzbyOpenSurface(kind);
-        }
       } else if (last === "ai") {
         if (typeof window.iuAiPanelOpenSurface === "function") window.iuAiPanelOpenSurface();
       }
     } catch (_) {}
   }
+  try { window.iuEnforceSingleOverlay = iuCloseAllOverlaysExcept; } catch (_) {}
 
   try { window.iuForceCloseAllOverlays = iuForceCloseAllOverlays; } catch (_) {}
   try { window.iuOpenOverlay = iuOpenOverlay; } catch (_) {}
@@ -25233,6 +25221,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const titleEl = document.getElementById("iu-mojeSluzbyTitle");
     const bodyEl = document.getElementById("iu-mojeSluzbyBody");
     if (!overlay || !panel || !bodyEl) return;
+    try { iuCloseAllOverlaysExcept("mojesluzby"); } catch (_) {}
     const titles = { banka: "Banka", bakalari: "Bakaláři", pojistovna: "Zdravotní pojišťovna" };
     if (titleEl) titleEl.textContent = titles[kind] || kind;
     bodyEl.innerHTML = "";
@@ -25711,7 +25700,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           window.iuShowQuickFeed(kind);
           return;
         }
-        openMojeSluzbyModal(kind);
+        return;
       }
     });
     const closeBtn = panel && panel.querySelector("[data-iu-close]");
