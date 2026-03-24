@@ -93,7 +93,7 @@
     if (/\b\d{1,2}\s*[.\/\-]\s*\d{1,2}\b/.test(raw)) return true;
     if (/\b\d{1,2}\s*\.\s*[a-záéíóúůýščřďťň]+/i.test(raw)) return true;
     if (/\budalost/.test(folded)) return true;
-    if (/\bkontrola\b|\bnavsteva\b|\bnavštěva\b/.test(folded)) return true;
+    if (/\bkontrola\b|\bnavstev/.test(folded)) return true;
     return false;
   }
 
