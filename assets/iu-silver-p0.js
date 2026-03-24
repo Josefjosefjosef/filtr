@@ -181,7 +181,7 @@
   function findTime(work) {
     let w = work;
     let time = null;
-    const r1 = /\bv\s+(\d{1,2})\s*:\s*(\d{2})\b/i;
+    const r1 = /\b(?:v|ve)\s+(\d{1,2})\s*:\s*(\d{2})\b/i;
     const hit1 = w.match(r1);
     if (hit1) {
       const hh = Math.min(23, Math.max(0, Number(hit1[1])));
@@ -210,7 +210,7 @@
       }
     }
     if (!time) {
-      const r3 = /\bv\s+(\d{1,2})\s*(?:hod(?:\.|in)?|hodin(?:y|a|u)?|hod\.)\b/i;
+      const r3 = /\b(?:v|ve)\s+(\d{1,2})\s*(?:hod(?:\.|in)?|hodin(?:y|a|u)?|hod\.)\b/i;
       const hit3 = w.match(r3);
       if (hit3) {
         const hh = Math.min(23, Math.max(0, Number(hit3[1])));
@@ -237,7 +237,7 @@
       }
     }
     if (!time) {
-      const rBare = /\bv\s+(\d{1,2})\b(?!\s*:)(?!\s*hod)/i;
+      const rBare = /\b(?:v|ve)\s+(\d{1,2})\b(?!\s*:)(?!\s*hod)/i;
       const hitB = w.match(rBare);
       if (hitB) {
         const hh = Math.min(23, Math.max(0, Number(hitB[1])));
@@ -335,10 +335,64 @@
       .trim();
   }
 
+  /** Drop trailing sentence(s) that are pure calendar commands (after ". "). */
+  function iuSilverDropInstructionSentences(s) {
+    const parts = String(s)
+      .split(/\.\s+/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+    if (parts.length < 2) return s;
+    const kept = [];
+    for (let i = 0; i < parts.length; i++) {
+      const c = parts[i];
+      const fc = foldCs(c);
+      if (/ulož|uloz|kalend|zapiš|zapis|přidej|pridej|mi\s+to|tak\s+mi|dej\s+to/.test(fc)) continue;
+      kept.push(c);
+    }
+    return kept.length ? kept.join(". ") : s;
+  }
+
+  /** "mám zubaře" → "Zubař"; "mám vyzvednout …" → infinitive sentence title. */
+  function iuSilverMamToEventTitle(s) {
+    let t = iuSilverNormalizeWs(s);
+    const m = t.match(/^\s*mám\s+(.+)$/i);
+    if (!m) return t;
+    let inner = m[1].trim();
+    inner = inner.replace(/[.,;]+$/g, "").trim();
+    if (/^zubaře$/i.test(inner)) return "Zubař";
+    if (/^pediatra$/i.test(inner)) return "Pediatr";
+    if (/^vyzvednout\b/i.test(inner)) {
+      return inner.charAt(0).toLocaleUpperCase("cs-CZ") + inner.slice(1);
+    }
+    return inner.charAt(0).toLocaleUpperCase("cs-CZ") + inner.slice(1);
+  }
+
+  function iuSilverStripGarbageOrphanTokens(s) {
+    let t = iuSilverNormalizeWs(s);
+    for (let i = 0; i < 12; i++) {
+      const prev = t;
+      t = t.replace(/\b(tak\s+mi\s+to|mi\s+to|tak\s+to|a\s+to)\b/gi, " ");
+      t = t.replace(/\b(to|tak|mi|a)\b/gi, " ");
+      t = t.replace(/\s+\.\s+/g, " ");
+      t = t.replace(/^\s*\.\s*/g, "");
+      t = t.replace(/\s*\.\s*$/g, "");
+      t = iuSilverNormalizeWs(t);
+      if (t === prev) break;
+    }
+    return t;
+  }
+
   /** Iterative removal of calendar command phrases (any position in sentence). */
   function iuSilverStripCommandBoilerplateIterative(s) {
     let t = iuSilverNormalizeWs(s);
     const patterns = [
+      /\btak\s+mi\s+to\s+ulož(?:te)?(?:\s+do\s+kalend[aá]ře?)?\b/gi,
+      /\bul[oó]ž(?:te)?\s+mi\s+to\b/gi,
+      /\bmi\s+to\s+ulož(?:te)?\b/gi,
+      /\btak\s+to\s+ulož(?:te)?\b/gi,
+      /\bdej\s+to\s+do\s+kalend[aá]ře?\b/gi,
+      /\ba\s+ulož(?:te)?\s+to\b/gi,
+      /\bul[oó]ž(?:te)?\s+to\b/gi,
       /\bul[oó]ž(?:te)?\s+mi\s+v\s+kalend[aá]ř[ei]\b/gi,
       /\bul[oó]ž(?:te)?\s+mi\s+do\s+kalend[aá]ře?\b/gi,
       /\bul[oó]ž(?:te)?\s+do\s+kalend[aá]ře?\b/gi,
@@ -368,7 +422,9 @@
       /\bpřidej(?:te)?\b/gi,
       /\bul[oó]ž(?:te)?\b/gi,
       /\bkalend[aá]ř[ei]?\b/gi,
-      /\bkalend[aá]r[eě]\b/gi
+      /\bkalend[aá]r[eě]\b/gi,
+      /\btak\s+to\b/gi,
+      /\bmi\s+to\b/gi
     ];
     for (let iter = 0; iter < 22; iter++) {
       const prev = t;
@@ -394,11 +450,11 @@
 
   function iuSilverStripTimeTokensFromTitle(s) {
     let t = iuSilverNormalizeWs(s);
-    t = t.replace(/\bv\s+\d{1,2}\s*:\s*\d{2}\b/gi, " ");
+    t = t.replace(/\b(?:v|ve)\s+\d{1,2}\s*:\s*\d{2}\b/gi, " ");
     t = t.replace(/\b\d{1,2}\s*:\s*\d{2}\b/g, " ");
-    t = t.replace(/\bv\s+\d{1,2}\b/gi, " ");
+    t = t.replace(/\b(?:v|ve)\s+\d{1,2}\b/gi, " ");
     t = t.replace(/\bod\s+\d{1,2}\s*(?::\d{2})?\s*(?:hod(?:\.|in(?:y|a|u)?)?)?\b/gi, " ");
-    t = t.replace(/\bv\s+\d{1,2}\s*(?:hod(?:\.|in(?:y|a|u)?)?|hodin(?:y|a|u)?|hod\.)\b/gi, " ");
+    t = t.replace(/\b(?:v|ve)\s+\d{1,2}\s*(?:hod(?:\.|in(?:y|a|u)?)?|hodin(?:y|a|u)?|hod\.)\b/gi, " ");
     t = t.replace(/\b\d{1,2}\s*hodin(?:y|a|u)?\b/gi, " ");
     t = t.replace(/\b\d{1,2}\s*hod\.?\b/gi, " ");
     return iuSilverNormalizeWs(t);
@@ -406,9 +462,9 @@
 
   function iuSilverStripOrphanParticles(s) {
     let t = iuSilverNormalizeWs(s);
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 10; i++) {
       const prev = t;
-      t = t.replace(/\b(?:v|ve|na|od|do|mi)\b/gi, " ");
+      t = t.replace(/\b(?:v|ve|na|od|do|mi|to|tak|a)\b/gi, " ");
       t = iuSilverNormalizeWs(t);
       if (t === prev) break;
     }
@@ -431,12 +487,15 @@
     const f = foldCs(t);
     if (!t || t.length < 2) return false;
     if (/uloz|ulož|přidej|pridej|zapis|zapiš|kalend|napl[áa]nuj|vytvor|vytvoř/.test(f)) return false;
+    if (/\bmám\b/.test(f)) return false;
+    if (/\bto\b|\btak\b|\bmi\b/.test(f)) return false;
     if (/\bsch[uů]zku\b/.test(f) && !/^schůzka u\b/i.test(t)) return false;
     if (iuSilverReWeekdayOnce().test(t)) return false;
     if (/\d{1,2}\s*:\s*\d{2}/.test(t)) return false;
     if (/\d{1,2}\s*hod/.test(f)) return false;
     if (/\bod\s*\d/.test(f)) return false;
     if (/\bv\s*\d{1,2}\b/.test(f)) return false;
+    if (/\bve\s*\d{1,2}\b/.test(f)) return false;
     if (/\s\d{1,2}$/.test(t)) return false;
     if (/\bzitra\b|\bdnes\b|\bpozit/.test(f)) return false;
     if (/\b(ponděl|úter|střed|čtvrtek|pátek|sobota|neděl)/i.test(t)) return false;
@@ -446,10 +505,14 @@
   /** Deterministic multi-step title pipeline — not a copy of user command text. */
   function iuSilverTitlePipelineFull(work) {
     let t = iuSilverNormalizeWs(work);
+    t = iuSilverDropInstructionSentences(t);
     t = iuSilverStripCommandBoilerplateIterative(t);
     t = iuSilverStripDateTokensFromTitle(t);
     t = iuSilverStripTimeTokensFromTitle(t);
     t = iuSilverStripCommandBoilerplateIterative(t);
+    t = iuSilverStripGarbageOrphanTokens(t);
+    t = iuSilverMamToEventTitle(t);
+    t = iuSilverStripGarbageOrphanTokens(t);
     t = iuSilverStripOrphanParticles(t);
     t = iuSilverNormalizeWs(t);
     if (/^u\s+\S+/i.test(t) && !/^schůzka\b/i.test(t)) {
