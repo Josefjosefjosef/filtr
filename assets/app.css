@@ -2735,10 +2735,10 @@ a.brand,
   padding: 18px;
 }
 
-body.iu-modal-open #iu-aiOverlay {
+body.iu-modal-open #iu-aiOverlay:not([hidden]) {
   display: block !important;
 }
-body.iu-modal-open #iu-aiPanel {
+body.iu-modal-open #iu-aiPanel[data-open="1"]:not([hidden]) {
   display: flex !important;
 }
 body.iu-modal-open #iu-mojeSluzbyOverlay {
@@ -20161,6 +20161,8 @@ overflow:hidden !important;
     z-index: 10030 !important;
     overflow: auto !important;
     box-sizing: border-box !important;
+    background: #eaf0f7 !important;
+    padding: calc(env(safe-area-inset-top, 0px) + 8px) 8px 8px !important;
   }
 }
 
