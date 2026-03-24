@@ -15415,7 +15415,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 .iuSilverChatComposer{
   flex: 0 0 auto;
-  padding: 10px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  padding: 10px 12px calc(24px + env(safe-area-inset-bottom, 0px));
   background: #fff;
   border-top: 1px solid #d7dfeb;
 }
@@ -15445,6 +15445,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   border: 1px solid #c9d7ea;
   padding: 0 14px;
   font: inherit;
+  font-size: max(16px, 1em);
+  -webkit-text-size-adjust: 100%;
   box-sizing: border-box;
   background: #fff;
 }
@@ -15579,6 +15581,30 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .iuSilverDraftBtn:focus{
   outline: 2px solid #2f9cf4;
   outline-offset: 1px;
+}
+
+.iuSilverDraftGrid--edit{
+  grid-template-columns: minmax(0, 120px) minmax(0, 1fr);
+  align-items: start;
+}
+.iuSilverDraftInput{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: max(16px, 1em);
+  -webkit-text-size-adjust: 100%;
+  border-radius: 10px;
+  border: 1px solid #c6d2e5;
+  padding: 8px 10px;
+  background: #fff;
+  color: #1f3a5f;
+  min-height: 40px;
+}
+.iuSilverDraftInput--note{
+  min-height: 72px;
+  resize: vertical;
+  font-family: inherit;
 }
 
 body.iuSilverChatOpen{
