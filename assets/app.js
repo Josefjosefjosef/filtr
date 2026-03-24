@@ -19638,6 +19638,7 @@ function buildVideoAsArticleCard(it) {
   
   function openParcels(){
     if(!modal || !overlay) return;
+    try { iuCloseAllOverlaysExcept("parcels"); } catch (_) {}
     overlay.classList.add('is-open');
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
@@ -21937,6 +21938,20 @@ function buildVideoAsArticleCard(it) {
       if (target !== "mojesluzby" && typeof window.iuCloseMojeSluzbyModal === "function") {
         try { window.iuCloseMojeSluzbyModal(); } catch (_) {}
       }
+      if (target !== "mojesluzby") {
+        const mojeOverlay = document.getElementById("iu-mojeSluzbyOverlay");
+        const mojePanel = document.getElementById("iu-mojeSluzbyPanel");
+        if (mojeOverlay) {
+          mojeOverlay.hidden = true;
+          mojeOverlay.setAttribute("aria-hidden", "true");
+          try { mojeOverlay.style.display = "none"; } catch (_) {}
+        }
+        if (mojePanel) {
+          mojePanel.hidden = true;
+          mojePanel.setAttribute("aria-hidden", "true");
+          try { mojePanel.style.display = "none"; } catch (_) {}
+        }
+      }
       if (target !== "ai") {
         const aiPanel = document.getElementById("iu-aiPanel");
         const aiOverlay = document.getElementById("iu-aiOverlay");
@@ -21958,6 +21973,7 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
   }
+  try { window.iuEnforceSingleOverlay = iuCloseAllOverlaysExcept; } catch (_) {}
 
   function iuResolveQuickAction(el) {
     if (!el) return { actionType: "none", key: "" };
@@ -25041,6 +25057,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const titleEl = document.getElementById("iu-mojeSluzbyTitle");
     const bodyEl = document.getElementById("iu-mojeSluzbyBody");
     if (!overlay || !panel || !bodyEl) return;
+    try { iuCloseAllOverlaysExcept("mojesluzby"); } catch (_) {}
     const titles = { banka: "Banka", bakalari: "Bakaláři", pojistovna: "Zdravotní pojišťovna" };
     if (titleEl) titleEl.textContent = titles[kind] || kind;
     bodyEl.innerHTML = "";
