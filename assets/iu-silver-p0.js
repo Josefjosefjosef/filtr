@@ -29,6 +29,16 @@
       .replace(/[\u0300-\u036f]/g, "");
   }
 
+  /** Inflected weekday forms (v/ve/na + nominative/locative/etc.) — "ve středu" MUST match. */
+  const IU_SILVER_WEEKDAY_INNER =
+    "pondělí|pondeli|úterý|utery|středu|středa|streda|stredu|čtvrtek|ctvrtek|pátek|patek|sobotu|sobota|neděli|neděle|nedeli|nedele";
+  function iuSilverReWeekdayOnce() {
+    return new RegExp("\\b(?:v|ve|na)?\\s*(" + IU_SILVER_WEEKDAY_INNER + ")\\b", "i");
+  }
+  function iuSilverReWeekdayAll() {
+    return new RegExp("\\b(?:v|ve|na)?\\s*(" + IU_SILVER_WEEKDAY_INNER + ")\\b", "gi");
+  }
+
   const CZ_MONTH = {
     ledna: 1, unora: 2, brezna: 3, dubna: 4, kvetna: 5, cervna: 6, cervence: 7, srpna: 8, zari: 9, rijna: 10, listopadu: 11, prosince: 12,
     leden: 1, unor: 2, brezen: 3, duben: 4, kveten: 5, cerven: 6, cervenec: 7, srpen: 8, rijen: 10, listopad: 11, prosinec: 12
@@ -65,8 +75,8 @@
   function hasCalendarIntent(folded, raw) {
     if (/\bkalend/.test(folded)) return true;
     if (/schuz|schůz|porad/.test(folded)) return true;
-    if (/\buloz|uloz|zapis|zapis|přidej|pridej/.test(folded)) return true;
-    if (/\b(pondělí|pondeli|úterý|utery|středa|streda|čtvrtek|ctvrtek|pátek|patek|sobota|neděle|nedele)\b/i.test(raw)) return true;
+    if (/\buloz|ulož|zapis|zapiš|přidej|pridej/.test(folded)) return true;
+    if (iuSilverReWeekdayOnce().test(raw)) return true;
     if (/\b\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(folded)) return true;
     if (/\b\d{1,2}\s*\.\s*[a-záéíóúůýščřďťň]+/i.test(raw)) return true;
     if (/\budalost/.test(folded)) return true;
@@ -268,7 +278,7 @@
       w = w.replace(/\bdnes\b/i, " ");
       return { date: toDateOnly(now), work: w.replace(/\s+/g, " ").trim() };
     }
-    const reWd = /\b(?:v|ve|na)?\s*(pondělí|pondeli|úterý|utery|středa|streda|čtvrtek|ctvrtek|pátek|patek|sobota|neděle|nedele)\b/i;
+    const reWd = iuSilverReWeekdayOnce();
     const m = w.match(reWd);
     if (m) {
       const dow = weekdayToDow(m[1]);
@@ -282,18 +292,51 @@
   }
 
   function stripBoilerplate(work) {
-    return work
+    return String(work || "")
+      .replace(/\bulo[žz](?:te)?\s+(?:mi\s+)?do\s+kalend[aá]ře?\b/gi, " ")
+      .replace(/\bzapi[šs](?:te)?\s+(?:mi\s+)?do\s+kalend[aá]ře?\b/gi, " ")
+      .replace(/\bpřidej(?:te)?\s+do\s+kalend[aá]ře?\b/gi, " ")
       .replace(/\buloz(?:te)?\s+mi\s+do\s+kalend[aá]r[eě]\b/gi, " ")
       .replace(/\bzapis(?:te)?\s+mi\b/gi, " ")
       .replace(/\buloz(?:te)?\s+mi\b/gi, " ")
+      .replace(/\bdo\s+kalend[aá]ře?\b/gi, " ")
       .replace(/\bdo\s+kalend[aá]r[eě]\b/gi, " ")
+      .replace(/\bkalend[aá]ře?\b/gi, " ")
       .replace(/\bkalend[aá]r[eě]\b/gi, " ")
+      .replace(/\bnapl[áa]nuj(?:te)?\b/gi, " ")
+      .replace(/\bvytvo[řr](?:te)?\s+ud[aá]lost\b/gi, " ")
       .replace(/\bsch[uů]zku\b/gi, " ")
       .replace(/\bsch[uů]zka\b/gi, " ")
       .replace(/\bporad[uů]\b/gi, " ")
       .replace(/\bpřidej(?:te)?\b/gi, " ")
       .replace(/\s+/g, " ")
       .trim();
+  }
+
+  /** Remove leftover weekday/time/instruction tokens; never return raw user sentence as title. */
+  function iuSilverFinalizeTitle(work) {
+    let t = String(work || "").replace(/\s+/g, " ").trim();
+    t = stripBoilerplate(t);
+    t = t.replace(iuSilverReWeekdayAll(), " ");
+    t = t.replace(/\bv\s+\d{1,2}\s*:\s*\d{2}\b/gi, " ");
+    t = t.replace(/\b\d{1,2}\s*:\s*\d{2}\b/g, " ");
+    t = t.replace(/\bv\s+\d{1,2}\s*(?:hod(?:\.|in(?:y|a|u)?)?|hodin(?:y|a|u)?|hod\.)\b/gi, " ");
+    t = t.replace(/\b\d{1,2}\s*hodin(?:y|a|u)?\b/gi, " ");
+    t = t.replace(/\b(?:v|ve|na)\b/gi, " ");
+    t = t.replace(/\s+/g, " ").trim();
+    t = t.replace(/^[.,;:\u2026–\-]+/g, "").trim();
+    if (/^u\s+\S+/i.test(t) && !/^schůzka\b/i.test(t)) {
+      t = "Schůzka " + t.charAt(0).toLowerCase() + t.slice(1);
+    }
+    const f = foldCs(t);
+    if (!t || t.length < 2) return { text: "", ok: false };
+    if (/uloz|ulož|kalend|\bsch[uů]zku\b|naplanuj|naplánuj|vytvor|vytvoř|zapis|zapiš|pridej|přidej/.test(f)) {
+      return { text: "", ok: false };
+    }
+    if (iuSilverReWeekdayOnce().test(t)) return { text: "", ok: false };
+    if (/\d{1,2}\s*:\s*\d{2}/.test(t)) return { text: "", ok: false };
+    if (/\bv\s*\d{1,2}\b/.test(f)) return { text: "", ok: false };
+    return { text: t.slice(0, 120), ok: true };
   }
 
   function extractFromUtterance(raw, now) {
@@ -357,9 +400,13 @@
     work = work.replace(/\b(?:v|ve|na)\b/gi, " ");
     work = work.replace(/\s+/g, " ").trim();
 
-    if (work.length >= 2) {
-      values.title = work.slice(0, 120);
+    const fin = iuSilverFinalizeTitle(work);
+    if (fin.ok) {
+      values.title = fin.text;
       confidence.title = "certain";
+    } else {
+      values.title = "";
+      confidence.title = "missing";
     }
 
     return { values, confidence };
@@ -419,12 +466,15 @@
     const line = String(raw || "").trim();
     if (d.meta.title !== "certain" && line.length >= 2 && line.length <= 100 && !/[?]/.test(line)) {
       const onlyTime = findTime(line);
-      const hasWd = /\b(pondělí|úterý|středa|čtvrtek|pátek|sobota|neděle)\b/i.test(line);
+      const hasWd = iuSilverReWeekdayOnce().test(line);
       const hasAbs = !!findAbsoluteDate(line, now);
       const hasRel = /\bzítra|zitra|dnes\b/i.test(foldCs(line));
       if (!onlyTime.time && !hasWd && !hasAbs && !hasRel) {
-        d.title = line.slice(0, 120);
-        d.meta.title = "certain";
+        const fin = iuSilverFinalizeTitle(line);
+        if (fin.ok) {
+          d.title = fin.text;
+          d.meta.title = "certain";
+        }
       }
     }
     return d;
