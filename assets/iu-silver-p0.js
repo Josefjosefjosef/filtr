@@ -221,24 +221,6 @@
       }
     }
     if (!time) {
-      const r4 = /\b(\d{1,2})\s*hodin(?:y|a|u)?\b/i;
-      const hit4 = w.match(r4);
-      if (hit4) {
-        const hh = Math.min(23, Math.max(0, Number(hit4[1])));
-        time = pad(hh) + ":00";
-        w = w.replace(r4, " ");
-      }
-    }
-    if (!time) {
-      const r5 = /\b(\d{1,2})\s*hod\.?\b/i;
-      const hit5 = w.match(r5);
-      if (hit5) {
-        const hh = Math.min(23, Math.max(0, Number(hit5[1])));
-        time = pad(hh) + ":00";
-        w = w.replace(r5, " ");
-      }
-    }
-    if (!time) {
       const rBare = /\b(?:v|ve)\s+(\d{1,2})\b(?!\s*:)(?!\s*hod)/i;
       const hitB = w.match(rBare);
       if (hitB) {
@@ -392,6 +374,58 @@
     return kept.length ? kept.join(". ") : s;
   }
 
+  /**
+   * Content-first: pull event title from known phrases (not from leftover command glue).
+   * Runs on work string after date/time tokens are removed from utterance elsewhere.
+   */
+  function iuSilverExtractEventCoreTitle(t0) {
+    const raw = iuSilverNormalizeWs(t0);
+    if (!raw || raw.length < 2) return null;
+
+    let m = raw.match(/\bpřijde\s+(\S+?)\s+na\s+n[áa]vštěvu\b/i);
+    if (m) {
+      const w = m[1].replace(/[.,]+$/g, "");
+      if (/^petr$/i.test(w)) return "Návštěva Petra";
+      return "Návštěva " + w;
+    }
+
+    m = raw.match(/\b(?:přijdou\s+)?montovat\s+(\S+)/i);
+    if (m) {
+      const o = m[1].replace(/[.,]+$/g, "");
+      if (/^vodoměr/i.test(o)) return "Montáž vodoměru";
+      return "Montáž " + o.charAt(0).toLocaleUpperCase("cs-CZ") + o.slice(1);
+    }
+
+    m = raw.match(/\bzubař(?:e)?\s+na\s+(\S+)/i);
+    if (m) {
+      const place = m[1].replace(/[.,]+$/g, "");
+      return "Zubař na " + place.charAt(0).toLocaleUpperCase("cs-CZ") + place.slice(1);
+    }
+
+    if (/\bmám\s+být\b/i.test(raw) && /\bu\s+zubaře\b/i.test(raw)) return "Zubař";
+    if (/\bu\s+zubaře\b/i.test(raw) && !/návštěvu/i.test(raw)) return "Zubař";
+
+    m = raw.match(/\boběd\s+u\s+rodičů/i);
+    if (m) return "Oběd u rodičů";
+
+    m = raw.match(/\bzoo\s+(\S+)/i);
+    if (m) {
+      const rest = m[1].replace(/[.,]+$/g, "");
+      return "Zoo " + rest;
+    }
+
+    m = raw.match(/^\s*návštěva\s+(.+)$/i);
+    if (m && m[1]) {
+      const rest = m[1].trim().replace(/[.,]+$/g, "");
+      if (rest.length) return "Návštěva " + rest;
+    }
+
+    m = raw.match(/^\s*mám\s+poradu\b/i);
+    if (m) return "Porada";
+
+    return null;
+  }
+
   /** schůzku / návštěvu / kontrolu → nominative + rest (e.g. „s panem Novotným“). */
   function iuSilverNormalizeEventTypeTitle(s) {
     let t = iuSilverNormalizeWs(s);
@@ -399,7 +433,8 @@
       [/^\s*schůzek\b/i, "Schůzka"],
       [/^\s*schůzk(u|y|a|e|i)\b/i, "Schůzka"],
       [/^\s*návštěv(u|y|a|e|i)\b/i, "Návštěva"],
-      [/^\s*kontrol(u|y|a|e|i)\b/i, "Kontrola"]
+      [/^\s*kontrol(u|y|a|e|i)\b/i, "Kontrola"],
+      [/^\s*porad(u|y|a|e|i)\b/i, "Porada"]
     ];
     for (let i = 0; i < pairs.length; i++) {
       const re = pairs[i][0];
@@ -421,6 +456,7 @@
     let inner = m[1].trim();
     inner = inner.replace(/[.,;]+$/g, "").trim();
     if (/^zubaře$/i.test(inner)) return "Zubař";
+    if (/^poradu$/i.test(inner)) return "Porada";
     if (/^pediatra$/i.test(inner)) return "Pediatr";
     if (/^vyzvednout\b/i.test(inner)) {
       return inner.charAt(0).toLocaleUpperCase("cs-CZ") + inner.slice(1);
@@ -433,7 +469,8 @@
     for (let i = 0; i < 12; i++) {
       const prev = t;
       t = t.replace(/\b(tak\s+mi\s+to|mi\s+to|tak\s+to|a\s+to)\b/gi, " ");
-      t = t.replace(/\b(to|tak|mi|a)\b/gi, " ");
+      t = t.replace(/\b(tento|tato|této|že)\b/gi, " ");
+      t = t.replace(/\b(to|tak|mi)\b/gi, " ");
       t = t.replace(/\s+\.\s+/g, " ");
       t = t.replace(/^\s*\.\s*/g, "");
       t = t.replace(/\s*\.\s*$/g, "");
@@ -447,6 +484,7 @@
   function iuSilverStripCommandBoilerplateIterative(s) {
     let t = iuSilverNormalizeWs(s);
     const patterns = [
+      /\btento\b/gi,
       /\btak\s+mi\s+to\s+ulož(?:te)?(?:\s+do\s+kalend[aá]ře?)?\b/gi,
       /\bul[oó]ž(?:te)?\s+mi\s+to\b/gi,
       /\bmi\s+to\s+ulož(?:te)?\b/gi,
@@ -475,7 +513,6 @@
       /\buloz(?:te)?\s+mi\b/gi,
       /\bdo\s+kalend[aá]r[eě]\b/gi,
       /\bnapl[áa]nuj(?:te)?\b/gi,
-      /\bporad[uů]\b/gi,
       /\bul[oó]ž(?:te)?\s+mi\b/gi,
       /\bzapi[šs](?:te)?\b/gi,
       /\bpřidej(?:te)?\b/gi,
@@ -543,7 +580,8 @@
     let t = iuSilverNormalizeWs(s);
     for (let i = 0; i < 10; i++) {
       const prev = t;
-      t = t.replace(/\b(?:v|ve|na|od|do|mi|to|tak|a)\b/gi, " ");
+      t = t.replace(/^(že|tento|tato|této|to|tak|mi|mám|je)\s+/gi, " ");
+      t = t.replace(/\s+(to|tak|mi|že)(\s*)$/gi, " ");
       t = iuSilverNormalizeWs(t);
       if (t === prev) break;
     }
@@ -565,12 +603,16 @@
   function iuSilverValidateFinalTitle(t) {
     const f = foldCs(t);
     if (!t || t.length < 2) return false;
+    if (t.length < 3) return false;
+    if (/^(že|tento|tato|mám|je|tak)\b/.test(f)) return false;
+    if (/\s+(to|tak|mi|že)\s*$/.test(t)) return false;
     if (/\d{1,2}\s*[.\/\-]\s*\d{1,2}/.test(t)) return false;
     if (/\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(t)) return false;
     if (/\.\s*\./.test(t)) return false;
     if (/^\s*s\s*$/i.test(t)) return false;
     if (/uloz|ulož|přidej|pridej|zapis|zapiš|kalend|napl[áa]nuj|vytvor|vytvoř/.test(f)) return false;
     if (/\bmám\b/.test(f)) return false;
+    if (/\b(že|tento)\b/.test(f)) return false;
     if (/\bto\b|\btak\b|\bmi\b/.test(f)) return false;
     if (/\bsch[uů]zku\b/.test(f) && !/^schůzka u\b/i.test(t)) return false;
     if (iuSilverReWeekdayOnce().test(t)) return false;
@@ -593,6 +635,17 @@
     t = iuSilverStripDateTokensFromTitle(t);
     t = iuSilverStripTimeTokensFromTitle(t);
     t = iuSilverStripCommandBoilerplateIterative(t);
+    t = iuSilverStripGarbageOrphanTokens(t);
+    const core = iuSilverExtractEventCoreTitle(t);
+    if (core && String(core).trim().length >= 2) {
+      t = iuSilverNormalizeWs(core);
+      t = iuSilverStripGarbageOrphanTokens(t);
+      t = iuSilverNormalizeWs(t);
+      t = iuSilverPolishTitleNoun(t);
+      t = iuSilverNormalizeWs(t);
+      if (!iuSilverValidateFinalTitle(t)) return { text: "", ok: false };
+      return { text: t.slice(0, 120), ok: true };
+    }
     t = iuSilverStripGarbageOrphanTokens(t);
     t = iuSilverNormalizeEventTypeTitle(t);
     t = iuSilverMamToEventTitle(t);
