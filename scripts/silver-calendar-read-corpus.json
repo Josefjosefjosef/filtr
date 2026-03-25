@@ -145,6 +145,12 @@
       "input": "co mám tenhle týden",
       "events": "default",
       "expect": { "queryIntent": "agenda_for_range", "count": 4, "type": "agenda_for_range", "ambiguity": true }
+    },
+    {
+      "id": "r-22",
+      "input": "co mám zítra?",
+      "events": [],
+      "expect": { "queryIntent": "agenda_for_day", "count": 0, "type": "agenda_for_day", "ambiguity": false }
     }
   ]
 }
