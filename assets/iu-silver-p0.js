@@ -1356,9 +1356,12 @@
 
     function baseClarification(reason, normIntent) {
       const lead = iuSilverClarificationCopy(reason);
+      let tc = "none";
+      if (normIntent === "notes.future_candidate") tc = "notes";
+      else if (normIntent === "tasks.future_candidate") tc = "tasks";
       return {
         normalizedIntent: normIntent || "clarification",
-        targetContainer: "none",
+        targetContainer: tc,
         processingState: "CLARIFICATION",
         clarificationReason: reason,
         futureIntentCandidate: normIntent === "notes.future_candidate" || normIntent === "tasks.future_candidate" ? normIntent : null,
