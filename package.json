@@ -4,6 +4,7 @@
   "scripts": {
     "check-site": "node scripts/check_site.js",
     "smoke": "node scripts/smoke.mjs",
+    "silver-regression": "node scripts/silver-calendar-create-regression.mjs",
     "verify-first-click-overlay": "node tools/verify-first-click-overlay.mjs",
     "vin-api": "node server/vin-decode-http.mjs",
     "serve-projects-vin": "node server/projects-static-and-vin.mjs",
