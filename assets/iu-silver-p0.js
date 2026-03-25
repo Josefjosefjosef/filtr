@@ -338,6 +338,29 @@
     return null;
   }
 
+  /**
+   * Utterances like "27 lékařů v 10 hod …" — bare day-of-month (10–31) at the start of remaining text.
+   * Resolves to the next future calendar occurrence (this month or later).
+   */
+  function tryConsumeLeadingCalendarDay(work, now) {
+    const w = String(work || "").trim();
+    const m = w.match(/^\s*((?:1[0-9]|2[0-9]|3[01]))\s+(?=\S)/);
+    if (!m) return null;
+    const day = Number(m[1]);
+    if (day < 10 || day > 31) return null;
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    for (let k = 0; k < 14; k++) {
+      const probe = new Date(now.getFullYear(), now.getMonth() + k, day);
+      if (probe.getDate() !== day) continue;
+      const ds = toDateOnly(probe);
+      const cand = new Date(ds + "T00:00:00");
+      if (cand < todayStart) continue;
+      const rest = w.slice(m[0].length).replace(/^\s+/, "").trim();
+      return { date: ds, work: rest };
+    }
+    return null;
+  }
+
   function stripBoilerplate(work) {
     return iuSilverNormalizeWs(iuSilverStripCommandBoilerplateIterative(String(work || "")));
   }
@@ -749,6 +772,14 @@
         work = rel.work;
       }
     }
+    if (confidence.date === "missing") {
+      const bare = tryConsumeLeadingCalendarDay(work, now);
+      if (bare) {
+        values.date = bare.date;
+        confidence.date = "certain";
+        work = bare.work;
+      }
+    }
 
     const fin = iuSilverTitlePipelineFull(work);
     if (fin.ok) {
@@ -955,6 +986,8 @@
     const v = val == null || String(val).trim() === "";
     let cls = v ? "iuSilverDraftV iuSilverDraftV--muted" : "iuSilverDraftV";
     if (rowOpts.warnMissingDate && v) cls += " iuSilverDraftV--warningMissing";
+    if (rowOpts.warnMissingTime && v) cls += " iuSilverDraftV--warningMissing";
+    if (rowOpts.warnMissingTitle && v) cls += " iuSilverDraftV--warningMissing";
     const disp = v ? "není zadáno" : String(val);
     return `<div class="iuSilverDraftK">${esc(label)}</div><div class="${cls}">${esc(disp)}</div>`;
   }
@@ -969,6 +1002,8 @@
   function renderDraftCardViewGrid(d) {
     const missingTime = d.meta.time !== "certain";
     const missingDate = d.meta.date !== "certain";
+    const st = processingStateFromDraft(d);
+    const warnCritical = st === "NEEDS_CLARIFICATION";
     const dateDisp = d.meta.date === "certain" && d.date ? iuSilverFormatDateCs(String(d.date)) : "";
     const timeDisp = d.meta.time === "certain" && d.time ? d.time : "";
     const titleDisp = d.meta.title === "certain" ? d.title : "";
@@ -976,9 +1011,9 @@
     const locDisp = d.meta.location === "certain" ? d.location : "";
     const durDisp = d.meta.duration === "certain" ? formatDuration(d) : "";
     return `<div class="iuSilverDraftGrid">
-    ${formatDraftRow("Datum", dateDisp, missingDate, { warnMissingDate: true })}
-    ${formatDraftRow("Čas", timeDisp, missingTime)}
-    ${formatDraftRow("Název", titleDisp)}
+    ${formatDraftRow("Datum", dateDisp, missingDate, { warnMissingDate: warnCritical })}
+    ${formatDraftRow("Čas", timeDisp, missingTime, { warnMissingTime: warnCritical })}
+    ${formatDraftRow("Název", titleDisp, false, { warnMissingTitle: warnCritical })}
     ${formatDraftRow("Poznámka", noteDisp)}
     ${formatDraftRow("Místo", locDisp)}
     ${formatDraftRow("Délka", durDisp)}
