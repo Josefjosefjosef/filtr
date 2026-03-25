@@ -950,9 +950,11 @@
     return isDraftSaveable(d) ? "READY_TO_SAVE" : "NEEDS_CLARIFICATION";
   }
 
-  function formatDraftRow(label, val, muted) {
+  function formatDraftRow(label, val, muted, rowOpts) {
+    rowOpts = rowOpts || {};
     const v = val == null || String(val).trim() === "";
-    const cls = v ? "iuSilverDraftV iuSilverDraftV--muted" : "iuSilverDraftV";
+    let cls = v ? "iuSilverDraftV iuSilverDraftV--muted" : "iuSilverDraftV";
+    if (rowOpts.warnMissingDate && v) cls += " iuSilverDraftV--warningMissing";
     const disp = v ? "není zadáno" : String(val);
     return `<div class="iuSilverDraftK">${esc(label)}</div><div class="${cls}">${esc(disp)}</div>`;
   }
@@ -974,7 +976,7 @@
     const locDisp = d.meta.location === "certain" ? d.location : "";
     const durDisp = d.meta.duration === "certain" ? formatDuration(d) : "";
     return `<div class="iuSilverDraftGrid">
-    ${formatDraftRow("Datum", dateDisp, missingDate)}
+    ${formatDraftRow("Datum", dateDisp, missingDate, { warnMissingDate: true })}
     ${formatDraftRow("Čas", timeDisp, missingTime)}
     ${formatDraftRow("Název", titleDisp)}
     ${formatDraftRow("Poznámka", noteDisp)}
@@ -1036,11 +1038,13 @@
 
     let clar = "";
     if (st === "NEEDS_CLARIFICATION" && turn.clarificationText) {
-      clar = `<p class="iuSilverMsgClarification" data-iu-silver-clarification="1">${esc(turn.clarificationText)}</p>`;
+      clar = `<p class="iuSilverMsgClarification iuSilverMsgClarification--warning" data-iu-silver-clarification="1">${esc(turn.clarificationText)}</p>`;
     }
 
+    const leadClass = st === "NEEDS_CLARIFICATION" ? "iuSilverMsgLead iuSilverMsgLead--warning" : "iuSilverMsgLead";
+
     return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
-  <p class="iuSilverMsgLead">${esc(turn.assistantLead)}</p>
+  <p class="${leadClass}">${esc(turn.assistantLead)}</p>
   ${clar}
   ${card}
 </div>`;
@@ -1069,13 +1073,18 @@
     const ps = processingStateFromDraft(d);
     const ap = buildAssistantParts(d, ps);
     const lead = msg.querySelector(".iuSilverMsgLead");
-    if (lead) lead.textContent = ap.assistantLead;
+    if (lead) {
+      lead.textContent = ap.assistantLead;
+      lead.classList.toggle("iuSilverMsgLead--warning", ps === "NEEDS_CLARIFICATION");
+    }
     const clar = msg.querySelector("[data-iu-silver-clarification]");
     if (ps === "NEEDS_CLARIFICATION" && ap.clarification) {
-      if (clar) clar.textContent = ap.clarification;
-      else {
+      if (clar) {
+        clar.textContent = ap.clarification;
+        clar.classList.add("iuSilverMsgClarification--warning");
+      } else {
         const p = document.createElement("p");
-        p.className = "iuSilverMsgClarification";
+        p.className = "iuSilverMsgClarification iuSilverMsgClarification--warning";
         p.setAttribute("data-iu-silver-clarification", "1");
         p.textContent = ap.clarification;
         const leadEl = msg.querySelector(".iuSilverMsgLead");
