@@ -1585,6 +1585,9 @@
   function openChatOverlay(fromEl) {
     const ov = document.getElementById("iuSilverChatOverlay");
     if (!ov) return;
+    try {
+      window.__iuSilverLastSaveResult = null;
+    } catch {}
     chatState.returnFocus = fromEl || document.activeElement;
     ov.hidden = false;
     ov.setAttribute("aria-hidden", "false");
@@ -1761,6 +1764,9 @@
     }
     const svc = window.iuCalendarService;
     if (!svc || typeof svc.calendarCreateEvent !== "function") {
+      try {
+        window.__iuSilverLastSaveResult = { ok: false, reason: "service_unavailable" };
+      } catch {}
       appendAssistantTurn({
         processingState: "NEEDS_CLARIFICATION",
         assistantLead: "Kalendářová služba ještě není připravena. Zkuste obnovit stránku.",
@@ -1789,6 +1795,9 @@
       });
       if (res && res.ok && res.event) {
         const ev = res.event;
+        try {
+          window.__iuSilverLastSaveResult = { ok: true, eventId: ev.id };
+        } catch {}
         const dateHuman = iuSilverFormatDateCs(String(ev.date || "")) || String(ev.date || "");
         appendAssistantTurn({
           confirmOnly: true,
@@ -1802,6 +1811,9 @@
           closeChatOverlay();
         });
       } else {
+        try {
+          window.__iuSilverLastSaveResult = { ok: false, reason: "calendarCreateEvent_failed" };
+        } catch {}
         appendAssistantTurn({
           processingState: "NEEDS_CLARIFICATION",
           assistantLead: "Nepodařilo se uložit. Zkuste to znovu.",
