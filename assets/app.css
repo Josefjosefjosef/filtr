@@ -15517,12 +15517,25 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   color: #b71c1c;
   font-weight: 700;
 }
+.iuSilverMsg--assistant > .iuSilverMsgLead--warning{
+  color: #b71c1c !important;
+  font-weight: 700;
+}
 .iuSilverMsgClarification.iuSilverMsgClarification--warning{
   color: #b71c1c;
   font-weight: 600;
 }
+.iuSilverMsg--assistant > .iuSilverMsgClarification.iuSilverMsgClarification--warning{
+  color: #b71c1c !important;
+  font-weight: 600;
+}
 .iuSilverDraftV--muted.iuSilverDraftV--warningMissing{
   color: #b71c1c;
+  font-style: normal;
+  font-weight: 600;
+}
+.iuSilverMsg--assistant .iuSilverDraftV--muted.iuSilverDraftV--warningMissing{
+  color: #b71c1c !important;
   font-style: normal;
   font-weight: 600;
 }
