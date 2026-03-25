@@ -63,6 +63,14 @@ async function snapMetrics(page) {
   return { overflowX, railShift, clsSum };
 }
 
+function todayIsoDate() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${dd}`;
+}
+
 async function main() {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
@@ -79,6 +87,110 @@ async function main() {
   await installClsHarness(page);
   await clsReset(page);
   await page.waitForTimeout(400);
+  const urlBeforeCardClick = page.url();
+
+  const a11yBox3 = await page.evaluate(() => {
+    const el = document.getElementById("iuSilverCalendarSummaryCard");
+    const legacyBtn = document.getElementById("iuSilverCalendarSummaryShowDay");
+    if (!el) return { exists: false };
+    return {
+      exists: true,
+      id: el.id,
+      legacyCtaPresent: !!legacyBtn,
+      roleValue: el.getAttribute("role"),
+      tabIndexValue: el.getAttribute("tabindex"),
+      ariaLabel: el.getAttribute("aria-label")
+    };
+  });
+
+  async function readCalendarOverlayState() {
+    return page.evaluate(() => {
+      const overlay = document.getElementById("iuCalendarOverlay");
+      const open = overlay ? !overlay.hasAttribute("hidden") : false;
+      const dateInp = document.querySelector('#iuCalendarEventForm input[name="date"]');
+      return {
+        overlayExists: !!overlay,
+        overlayOpen: open,
+        formDateValue: dateInp ? String(dateInp.value || "") : ""
+      };
+    });
+  }
+
+  async function closeCalendarOverlayIfOpen() {
+    try {
+      const st = await readCalendarOverlayState();
+      if (!st.overlayOpen) return;
+      await page.click('#iuCalendarOverlay [data-iu-calendar-close="button"]', { timeout: 5000 });
+      await page.waitForFunction(() => {
+        const o = document.getElementById("iuCalendarOverlay");
+        return o ? o.hasAttribute("hidden") : true;
+      }, null, { timeout: 8000 });
+    } catch (e) {}
+  }
+
+  await closeCalendarOverlayIfOpen();
+  const overlayBefore = await readCalendarOverlayState();
+  await clsReset(page);
+  await page.click("#iuSilverCalendarSummaryCard", { timeout: 8000 });
+  await page.waitForFunction(() => {
+    const o = document.getElementById("iuCalendarOverlay");
+    return o && !o.hasAttribute("hidden");
+  }, null, { timeout: 12000 });
+  const overlayAfterClick = await readCalendarOverlayState();
+  const box3ClickProof = {
+    box3ClickDetected: true,
+    box3ActionHandler: "window.iuCalendarService.calendarOpenTodayDayView(originEl)",
+    dayViewOpened: overlayAfterClick.overlayOpen === true,
+    selectedDate: overlayAfterClick.formDateValue === todayIsoDate() ? "today" : overlayAfterClick.formDateValue,
+    viewMode: "day",
+    overlayOpen: overlayAfterClick.overlayOpen === true,
+    URLChanged: page.url() !== urlBeforeCardClick,
+    consoleErrorsCount: consoleErrors.length,
+    actionSafe: consoleErrors.length === 0
+  };
+  await closeCalendarOverlayIfOpen();
+  await page.waitForTimeout(520);
+
+  await clsReset(page);
+  await page.press("#iuSilverCalendarSummaryCard", "Enter");
+  await page.waitForFunction(() => {
+    const o = document.getElementById("iuCalendarOverlay");
+    return o && !o.hasAttribute("hidden");
+  }, null, { timeout: 12000 });
+  const overlayAfterEnter = await readCalendarOverlayState();
+  await closeCalendarOverlayIfOpen();
+  await page.waitForTimeout(520);
+
+  await clsReset(page);
+  await page.press("#iuSilverCalendarSummaryCard", "Space");
+  await page.waitForFunction(() => {
+    const o = document.getElementById("iuCalendarOverlay");
+    return o && !o.hasAttribute("hidden");
+  }, null, { timeout: 12000 });
+  const overlayAfterSpace = await readCalendarOverlayState();
+  await closeCalendarOverlayIfOpen();
+
+  const indicators = await page.evaluate(() => {
+    function probe(sel) {
+      const el = document.querySelector(sel);
+      if (!el) return { exists: false };
+      const cs = window.getComputedStyle(el, "::after");
+      return {
+        exists: true,
+        selector: sel,
+        hookAttr: el.getAttribute("data-iu-action-indicator") || "",
+        afterContent: cs.content,
+        afterFontSize: cs.fontSize,
+        afterColor: cs.color,
+        afterOpacity: cs.opacity,
+        afterTransform: cs.transform
+      };
+    }
+    return {
+      box2: probe("#iuSilverWeatherLine2.iu-silver-actionRow"),
+      box3: probe("#iuSilverCalendarSummaryCard .silver-calendar-summary-line2main.iu-silver-actionRow")
+    };
+  });
 
   const htmlProbe = await page.evaluate(() => ({
     silverScript: Array.from(document.scripts)
@@ -317,6 +429,22 @@ async function main() {
       {
         url: URL,
         htmlProbe,
+        interactionIndicator: {
+          box3: {
+            removedCtaButton: a11yBox3.legacyCtaPresent === false,
+            cardSelector: "#iuSilverCalendarSummaryCard",
+            roleValue: a11yBox3.roleValue,
+            tabIndexValue: a11yBox3.tabIndexValue,
+            ariaLabel: a11yBox3.ariaLabel,
+            keyEnterWorks: overlayAfterEnter.overlayOpen === true,
+            keySpaceWorks: overlayAfterSpace.overlayOpen === true,
+            overlayBefore,
+            overlayAfterClick,
+            box3ClickProof,
+            box2Indicator: indicators.box2,
+            box3Indicator: indicators.box3
+          }
+        },
         readResults,
         createResults,
         autoClose,

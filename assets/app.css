@@ -14921,6 +14921,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
+.silver-weather-card[data-iu-silver-wx-phase="data"]{
+  cursor: pointer;
+}
+
 .silver-calendar-summary-card{
   width: 100%;
   max-width: 100%;
@@ -14938,6 +14942,35 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   border-radius: 0 0 var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius);
   overflow: hidden;
   contain: layout;
+}
+
+.silver-calendar-summary-card[role="button"]{
+  cursor: pointer;
+}
+
+.silver-calendar-summary-card[role="button"]:hover{
+  background: rgba(15, 35, 55, 0.06);
+}
+
+.silver-welcome-stack--evening .silver-calendar-summary-card[role="button"]:hover{
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.silver-calendar-summary-card[role="button"]:active{
+  background: rgba(15, 35, 55, 0.09);
+}
+
+.silver-welcome-stack--evening .silver-calendar-summary-card[role="button"]:active{
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.silver-calendar-summary-card[role="button"]:focus-visible{
+  outline: 2px solid rgba(15, 35, 55, 0.28);
+  outline-offset: -2px;
+}
+
+.silver-welcome-stack--evening .silver-calendar-summary-card[role="button"]:focus-visible{
+  outline-color: rgba(255, 255, 255, 0.28);
 }
 
 .silver-calendar-summary-row--1{
@@ -15002,6 +15035,38 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   gap: 8px;
   flex: 1 1 auto;
   min-width: 0;
+}
+
+.iu-silver-actionRow{
+  position: relative;
+}
+
+.iu-silver-actionRow[data-iu-action-indicator="chevron"]{
+  padding-right: 14px;
+}
+
+.iu-silver-actionRow[data-iu-action-indicator="chevron"]::after{
+  content: "↗";
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 13px;
+  line-height: 1.1;
+  opacity: 0.72;
+  color: currentColor;
+  user-select: none;
+  pointer-events: none;
+  transform: translateY(1px);
+}
+
+.silver-weather-card[data-iu-silver-wx-phase="data"]:hover .iu-silver-actionRow[data-iu-action-indicator="chevron"]::after,
+.silver-calendar-summary-card[role="button"]:hover .iu-silver-actionRow[data-iu-action-indicator="chevron"]::after{
+  opacity: 0.86;
+  transform: translate(1px, 0);
+}
+
+.silver-calendar-summary-card[role="button"]:focus-visible .iu-silver-actionRow[data-iu-action-indicator="chevron"]::after{
+  opacity: 0.9;
 }
 
 .silver-calendar-summary-cta{
