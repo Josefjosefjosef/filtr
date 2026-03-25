@@ -15055,6 +15055,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   transform: translateY(1px);
 }
 
+/* Calendar CTA arrow: row had no color; ::after currentColor inherited body text on dark evening gradient. */
+.silver-calendar-summary-card .iu-silver-actionRow[data-iu-action-indicator="chevron"]::after{
+  color: rgba(30, 40, 55, 0.82);
+}
+
+.silver-welcome-stack--evening .silver-calendar-summary-card .iu-silver-actionRow[data-iu-action-indicator="chevron"]::after{
+  color: rgba(230, 238, 248, 0.88);
+}
+
 .silver-weather-card[data-iu-silver-wx-phase="data"]:hover .iu-silver-actionRow[data-iu-action-indicator="chevron"]::after,
 .silver-calendar-summary-card[role="button"]:hover .iu-silver-actionRow[data-iu-action-indicator="chevron"]::after{
   opacity: 0.86;
