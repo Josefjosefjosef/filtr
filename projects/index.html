@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="iu-build" content="ff57115" />
     <meta name="iu-data-ver" content="iu-data-ver-placeholder" />
-    <!-- iu-build: ff57115 -->
+    <!-- iu-build: ff57115 — on prod, Pages rewrites CSS to /assets/app.HASH.css; compare that hash to git short hash for deploy forensics -->
     <title>infoUzel.cz</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
 
@@ -26,7 +26,7 @@ style-src 'self' 'unsafe-inline' https:;
       body::before, body::after, html::before, html::after { pointer-events: none !important; }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
-    <link rel="stylesheet" href="/assets/app.css?v=prod1401silverwarn" />
+    <link rel="stylesheet" href="/assets/app.css?v=prod1402silvermeta" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
@@ -3017,7 +3017,7 @@ style-src 'self' 'unsafe-inline' https:;
       }catch(_){}
     })();
     </script>
-    <script type="module" src="/assets/iu-silver-p0.js?v=1401silverwarn"></script>
+    <script type="module" src="/assets/iu-silver-p0.js?v=1402silvermeta"></script>
     <script type="module" src="/assets/app.js?v=1394silver"></script>
     <script>
     (function(){
