@@ -14942,6 +14942,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 
 .silver-calendar-summary-card[role="button"]{
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .silver-calendar-summary-card[role="button"]:hover{
@@ -15035,6 +15037,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 
 .iu-silver-actionRow{
   position: relative;
+  min-width: 0;
 }
 
 .iu-silver-actionRow[data-iu-action-indicator="chevron"]{
