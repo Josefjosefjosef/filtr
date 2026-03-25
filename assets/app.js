@@ -18811,7 +18811,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   const NOTES_NS = "iu.notes";
   const NOTES_STYLE_ID = "iu-notes-overlay-styles";
   const NOTES_STYLE_TEXT =
-    ".iu-notesOverlay{position:fixed;inset:0;z-index:10022;display:none;align-items:center;justify-content:center;overflow:hidden}.iu-notesOverlay:not([hidden]){display:flex}.iu-notesOverlay__backdrop{position:absolute;inset:0;background:rgba(8,14,22,.72)}.iu-notesOverlay__dialog{position:relative;z-index:1;width:min(1040px,calc(100% - 28px));height:min(86vh,840px);overflow:hidden;border-radius:12px;background:#f7f9fc;box-shadow:0 20px 52px rgba(7,12,19,.35);display:grid;grid-template-rows:auto 1fr}.iu-notesOverlay__header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid #d7dfeb;background:#fff}.iu-notesOverlay__titleWrap{min-width:0;display:grid;gap:2px}.iu-notesOverlay__title{margin:0;font-size:15px;line-height:1.2;color:#0b1f33}.iu-notesOverlay__sub{margin:0;font-size:12px;line-height:1.3;color:#405a78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}.iu-notesOverlay__btn,.iu-notesOverlay__close{border:1px solid #c6d2e5;border-radius:10px;background:#eef3fb;color:#203a59;padding:8px 10px;font-size:13px;touch-action:manipulation}.iu-notesOverlay__close{width:38px;height:38px;border:0;font-size:24px;line-height:1;background:#e8eef7;padding:0}.iu-notesOverlay__body{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:0;height:100%}.iu-notesOverlay__list{min-height:0;border-right:1px solid #d7dfeb;background:#fff;display:flex;flex-direction:column}.iu-notesOverlay__listHeader{padding:10px 12px;border-bottom:1px solid #eef2f8;display:flex;align-items:center;justify-content:space-between;gap:8px}.iu-notesOverlay__search{width:100%;border:1px solid #c9d7ea;border-radius:10px;padding:9px 10px;font-size:13px}.iu-notesOverlay__listScroll{overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:10px 10px 14px}.iu-notesOverlay__items{list-style:none;margin:0;padding:0;display:grid;gap:8px}.iu-notesOverlay__itemBtn{width:100%;text-align:left;border:1px solid #d6dfec;border-radius:12px;background:#f7f9fc;padding:10px 10px;display:grid;gap:4px}.iu-notesOverlay__itemBtn.is-active{border-color:#1f3a5f;box-shadow:0 0 0 2px rgba(31,58,95,.18) inset;background:#eef4ff}.iu-notesOverlay__itemTitle{font-size:13px;font-weight:700;color:#0b1f33;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__itemMeta{font-size:11px;color:#48637f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__detail{min-height:0;display:flex;flex-direction:column}.iu-notesOverlay__detailScroll{overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:12px}.iu-notesOverlay__empty{border:1px dashed #cbd7ea;border-radius:14px;background:#fff;padding:18px;color:#2a4568}.iu-notesOverlay__form{display:grid;gap:10px}.iu-notesOverlay__label{font-size:12px;color:#264264;display:grid;gap:5px}.iu-notesOverlay__input,.iu-notesOverlay__textarea{width:100%;border:1px solid #c9d7ea;border-radius:12px;padding:10px 12px;font-size:14px}.iu-notesOverlay__textarea{min-height:240px;resize:vertical;line-height:1.4;white-space:pre-wrap}.iu-notesOverlay__status{font-size:11px;color:#48637f;min-height:14px}body.iu-notesOverlay-open{overflow:hidden!important}@media (max-width:900px){.iu-notesOverlay{align-items:stretch;justify-content:stretch;overflow:auto;background:#f7f9fc}.iu-notesOverlay__backdrop{position:fixed;inset:0;background:rgba(8,14,22,.84)}.iu-notesOverlay__dialog{width:100%;min-height:100dvh;height:auto;max-height:none;border-radius:0;overflow:visible;display:flex;flex-direction:column;box-shadow:none;background:#f7f9fc}.iu-notesOverlay__header{position:relative;flex-wrap:wrap}.iu-notesOverlay__sub{white-space:normal}.iu-notesOverlay__close{margin-left:auto}.iu-notesOverlay__body{display:flex;flex-direction:column;height:auto;min-height:0}.iu-notesOverlay__list{border-right:0;border-bottom:1px solid #d7dfeb}.iu-notesOverlay__listHeader{gap:10px}.iu-notesOverlay__search{font-size:14px}.iu-notesOverlay__detailScroll{padding:12px 10px 18px}.iu-notesOverlay__textarea{min-height:220px}}";
+    ".iu-notesOverlay{position:fixed;inset:0;z-index:10022;display:none;align-items:center;justify-content:center;overflow:hidden}.iu-notesOverlay:not([hidden]){display:flex}.iu-notesOverlay__backdrop{position:absolute;inset:0;background:rgba(8,14,22,.72)}.iu-notesOverlay__dialog{position:relative;z-index:1;width:min(1040px,calc(100% - 28px));height:min(86vh,840px);overflow:hidden;border-radius:12px;background:#f7f9fc;box-shadow:0 20px 52px rgba(7,12,19,.35);display:grid;grid-template-rows:auto 1fr}.iu-notesOverlay__header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid #d7dfeb;background:#fff}.iu-notesOverlay__titleWrap{min-width:0;display:grid;gap:2px}.iu-notesOverlay__title{margin:0;font-size:15px;line-height:1.2;color:#0b1f33}.iu-notesOverlay__sub{margin:0;font-size:12px;line-height:1.3;color:#405a78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}.iu-notesOverlay__btn,.iu-notesOverlay__close,.iu-notesOverlay__back{border:1px solid #c6d2e5;border-radius:10px;background:#eef3fb;color:#203a59;padding:8px 10px;font-size:13px;touch-action:manipulation}.iu-notesOverlay__close{width:38px;height:38px;border:0;font-size:24px;line-height:1;background:#e8eef7;padding:0}.iu-notesOverlay__back{display:none}.iu-notesOverlay__body{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:0;height:100%}.iu-notesOverlay__list{min-height:0;border-right:1px solid #d7dfeb;background:#fff;display:flex;flex-direction:column}.iu-notesOverlay__listHeader{padding:10px 12px;border-bottom:1px solid #eef2f8;display:flex;align-items:center;justify-content:space-between;gap:8px}.iu-notesOverlay__search{width:100%;border:1px solid #c9d7ea;border-radius:10px;padding:9px 10px;font-size:13px}.iu-notesOverlay__listScroll{overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:10px 10px 14px}.iu-notesOverlay__items{list-style:none;margin:0;padding:0;display:grid;gap:8px}.iu-notesOverlay__itemRow{display:grid;grid-template-columns:minmax(0,1fr) 34px;gap:8px;align-items:stretch}.iu-notesOverlay__itemBtn{width:100%;text-align:left;border:1px solid #d6dfec;border-radius:12px;background:#f7f9fc;padding:10px 10px;display:grid;gap:4px}.iu-notesOverlay__itemBtn.is-active{border-color:#1f3a5f;box-shadow:0 0 0 2px rgba(31,58,95,.18) inset;background:#dfeaff}.iu-notesOverlay__itemTitle{font-size:13px;font-weight:700;color:#0b1f33;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__itemPreview{font-size:12px;color:#294463;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.iu-notesOverlay__itemMeta{font-size:11px;color:#48637f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__pin{width:34px;height:100%;min-height:44px;border:1px solid #d6dfec;border-radius:12px;background:#fff;color:#28435f;display:flex;align-items:center;justify-content:center;line-height:1;font-size:16px}.iu-notesOverlay__pin.is-on{background:#fff7d1;border-color:#f0d37a}.iu-notesOverlay__detail{min-height:0;display:flex;flex-direction:column}.iu-notesOverlay__detailScroll{overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:12px}.iu-notesOverlay__empty{border:1px dashed #cbd7ea;border-radius:14px;background:#fff;padding:18px;color:#2a4568}.iu-notesOverlay__empty strong{font-weight:800}.iu-notesOverlay__form{display:grid;gap:10px}.iu-notesOverlay__label{font-size:12px;color:#264264;display:grid;gap:5px}.iu-notesOverlay__input,.iu-notesOverlay__textarea{width:100%;border:1px solid #c9d7ea;border-radius:12px;padding:10px 12px;font-size:14px}.iu-notesOverlay__textarea{min-height:240px;resize:vertical;line-height:1.4;white-space:pre-wrap}.iu-notesOverlay__status{font-size:11px;color:#48637f;min-height:14px}body.iu-notesOverlay-open{overflow:hidden!important}@media (max-width:900px){.iu-notesOverlay{align-items:stretch;justify-content:stretch;overflow:auto;background:#f7f9fc}.iu-notesOverlay__backdrop{position:fixed;inset:0;background:rgba(8,14,22,.84)}.iu-notesOverlay__dialog{width:100%;min-height:100dvh;height:auto;max-height:none;border-radius:0;overflow:visible;display:flex;flex-direction:column;box-shadow:none;background:#f7f9fc}.iu-notesOverlay__header{position:relative;flex-wrap:wrap}.iu-notesOverlay__sub{white-space:normal}.iu-notesOverlay__close{margin-left:auto}.iu-notesOverlay__body{display:flex;flex-direction:column;height:auto;min-height:0}.iu-notesOverlay__list{border-right:0;border-bottom:1px solid #d7dfeb}.iu-notesOverlay__listHeader{gap:10px}.iu-notesOverlay__search{font-size:14px}.iu-notesOverlay__detailScroll{padding:12px 10px 18px}.iu-notesOverlay__textarea{min-height:220px}.iu-notesOverlay__pin{min-height:44px}}@media (max-width:768px){.iu-notesOverlay[data-iu-notes-mode='detail'] .iu-notesOverlay__list{display:none!important}.iu-notesOverlay[data-iu-notes-mode='detail'] .iu-notesOverlay__detail{flex:1 1 auto}.iu-notesOverlay[data-iu-notes-mode='detail'] .iu-notesOverlay__back{display:inline-flex}}";
 
   const SCHEMA_VERSION = 1;
   const STORE_KEY = NOTES_NS + ".store.v1";
@@ -18828,9 +18828,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     data: { schemaVersion: SCHEMA_VERSION, notes: [] },
     selectedId: "",
     searchQuery: "",
+    searchTimer: null,
     autosaveTimer: null,
     lastSavedAt: 0,
-    prevBodyPadRight: ""
+    prevBodyPadRight: "",
+    mobileDetailOpen: false
   };
 
   function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
@@ -18879,10 +18881,21 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       createdAt,
       updatedAt
     };
-    if (typeof n.pinned === "boolean") safe.pinned = n.pinned;
-    if (Array.isArray(n.tags)) safe.tags = n.tags.map((t)=>String(t || "").trim()).filter(Boolean).slice(0, 24);
-    if (typeof n.deleted === "boolean") safe.deleted = n.deleted;
+    safe.pinned = !!n.pinned;
+    safe.tags = Array.isArray(n.tags) ? n.tags.map((t)=>String(t || "").trim()).filter(Boolean).slice(0, 24) : [];
+    safe.deleted = !!n.deleted;
     return safe;
+  }
+
+  function sortNotesInPlace(list){
+    try{
+      list.sort((a,b)=>{
+        const ap = a && a.pinned ? 1 : 0;
+        const bp = b && b.pinned ? 1 : 0;
+        if (bp !== ap) return bp - ap;
+        return Number(b.updatedAt || 0) - Number(a.updatedAt || 0);
+      });
+    }catch{}
   }
 
   function normalizeStore(parsed){
@@ -18890,7 +18903,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (parsed.schemaVersion !== SCHEMA_VERSION) return null;
     if (!Array.isArray(parsed.notes)) return null;
     const clean = parsed.notes.map(sanitizeNote).filter(Boolean);
-    clean.sort((a,b)=>Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
+    sortNotesInPlace(clean);
     return { schemaVersion: SCHEMA_VERSION, notes: clean };
   }
 
@@ -18942,12 +18955,34 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function searchNotes(query){
     const q = foldCs(String(query || "")).trim();
     const list = state.data && Array.isArray(state.data.notes) ? state.data.notes : [];
-    if (!q) return list.slice();
-    return list.filter((n)=>{
+    const filtered = !q ? list.slice() : list.filter((n)=>{
       const t = foldCs(String(n.title || ""));
       const c = foldCs(String(n.content || ""));
       return t.includes(q) || c.includes(q);
     });
+    sortNotesInPlace(filtered);
+    return filtered;
+  }
+
+  function isMobileDetail(){
+    try{
+      return !!(window.matchMedia && window.matchMedia("(max-width: 768px)").matches);
+    }catch{
+      return (window.innerWidth || 0) <= 768;
+    }
+  }
+
+  function setMobileMode(mode){
+    const ov = getOverlay();
+    if (!ov) return;
+    const m = String(mode || "");
+    if (m === "detail") {
+      state.mobileDetailOpen = true;
+      ov.setAttribute("data-iu-notes-mode", "detail");
+    } else {
+      state.mobileDetailOpen = false;
+      ov.setAttribute("data-iu-notes-mode", "list");
+    }
   }
 
   function getOverlay(){ return document.getElementById("iuNotesOverlay"); }
@@ -18969,6 +19004,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
             '<p class="iu-notesOverlay__sub">Lokální poznámky (offline). Připraveno pro budoucí Silver čtení/zápis.</p>' +
           "</div>" +
           '<div class="iu-notesOverlay__actions">' +
+            '<button type="button" class="iu-notesOverlay__back" data-iu-notes-back="1" aria-label="Zpět">Zpět</button>' +
             '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-new="1">Nová poznámka</button>' +
             '<button type="button" class="iu-notesOverlay__close" data-iu-notes-close="1" aria-label="Zavřít poznámky">×</button>' +
           "</div>" +
@@ -18994,6 +19030,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const ov = getOverlay();
     if (!ov) return;
     state.returnFocusEl = originEl || document.activeElement;
+    setMobileMode("list");
     ov.hidden = false;
     ov.setAttribute("aria-hidden", "false");
     document.body.classList.add("iu-notesOverlay-open");
@@ -19016,6 +19053,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function closeOverlay(){
     const ov = getOverlay();
     if (!ov) return;
+    setMobileMode("list");
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
     document.body.classList.remove("iu-notesOverlay-open");
@@ -19081,19 +19119,26 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (!listEl) return;
     const items = searchNotes(state.searchQuery).filter((n)=>!n.deleted);
     if (!items.length){
-      listEl.innerHTML = '<li><div class="iu-notesOverlay__empty">Zatím tu nejsou žádné poznámky. Klikni na <strong>Nová poznámka</strong>.</div></li>';
+      listEl.innerHTML = '<li><div class="iu-notesOverlay__empty">Zatím nemáš žádné poznámky.<br><strong>Vytvořit první poznámku</strong></div></li>';
       return;
     }
     listEl.innerHTML = items.map((n)=>{
       const active = String(n.id) === String(state.selectedId);
       const title = String(n.title || "").trim() || "Bez názvu";
+      const content = String(n.content || "");
+      const prevLine = content.split(/\r?\n/).map((x)=>String(x || "").trim()).filter(Boolean)[0] || "";
       const meta = (n.updatedAt ? ("Upraveno: " + fmtDate(n.updatedAt)) : "");
+      const pinned = !!n.pinned;
       return (
         '<li>' +
-          '<button type="button" class="iu-notesOverlay__itemBtn' + (active ? " is-active" : "") + '" data-iu-note-id="' + esc(n.id) + '">' +
-            '<div class="iu-notesOverlay__itemTitle">' + esc(title) + "</div>" +
-            '<div class="iu-notesOverlay__itemMeta">' + esc(meta) + "</div>" +
-          "</button>" +
+          '<div class="iu-notesOverlay__itemRow">' +
+            '<button type="button" class="iu-notesOverlay__itemBtn' + (active ? " is-active" : "") + '" data-iu-note-id="' + esc(n.id) + '">' +
+              '<div class="iu-notesOverlay__itemTitle">' + esc(title) + "</div>" +
+              (prevLine ? ('<div class="iu-notesOverlay__itemPreview" data-iu-note-preview="1">' + esc(prevLine) + "</div>") : "") +
+              '<div class="iu-notesOverlay__itemMeta">' + esc(meta) + "</div>" +
+            "</button>" +
+            '<button type="button" class="iu-notesOverlay__pin' + (pinned ? " is-on" : "") + '" data-iu-note-pin="' + esc(n.id) + '" aria-label="' + (pinned ? "Odepnout" : "Připnout") + '">' + (pinned ? "★" : "☆") + "</button>" +
+          "</div>" +
         "</li>"
       );
     }).join("");
@@ -19129,6 +19174,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const n = createEmptyNote();
     state.data.notes.unshift(sanitizeNote(n));
     state.selectedId = n.id;
+    sortNotesInPlace(state.data.notes);
     saveNotes(state.data);
     render();
     const titleEl = document.getElementById("iuNoteTitle");
@@ -19147,8 +19193,18 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     note.title = nextTitle.trim() ? nextTitle : "Bez názvu";
     note.content = nextContent;
     note.updatedAt = Date.now();
-    state.data.notes.sort((a,b)=>Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
+    sortNotesInPlace(state.data.notes);
     scheduleAutosave();
+    renderList();
+  }
+
+  function togglePin(id){
+    const note = getNoteById(id);
+    if (!note) return;
+    note.pinned = !note.pinned;
+    note.updatedAt = Date.now();
+    sortNotesInPlace(state.data.notes);
+    saveNotes(state.data);
     renderList();
   }
 
@@ -19169,14 +19225,34 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const close = t && t.closest ? t.closest("[data-iu-notes-close]") : null;
       if (close){ e.preventDefault(); closeOverlay(); return; }
 
+      const back = t && t.closest ? t.closest("[data-iu-notes-back]") : null;
+      if (back){
+        e.preventDefault();
+        setMobileMode("list");
+        render();
+        const searchEl = document.getElementById("iuNotesSearch");
+        if (searchEl) try{ searchEl.focus({ preventScroll: true }); }catch{}
+        return;
+      }
+
       const newBtn = t && t.closest ? t.closest("[data-iu-notes-new]") : null;
       if (newBtn){ e.preventDefault(); createNewAndSelect(); return; }
+
+      const pin = t && t.closest ? t.closest("[data-iu-note-pin]") : null;
+      if (pin){
+        e.preventDefault();
+        e.stopPropagation();
+        const idPin = String(pin.getAttribute("data-iu-note-pin") || "");
+        togglePin(idPin);
+        return;
+      }
 
       const pick = t && t.closest ? t.closest("[data-iu-note-id]") : null;
       if (pick){
         e.preventDefault();
         const id = String(pick.getAttribute("data-iu-note-id") || "");
         state.selectedId = id;
+        if (isMobileDetail()) setMobileMode("detail");
         render();
         return;
       }
@@ -19192,8 +19268,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         return;
       }
       if (t.id === "iuNotesSearch"){
-        state.searchQuery = String(t.value || "");
-        renderList();
+        const next = String(t.value || "");
+        if (state.searchTimer) { try{ clearTimeout(state.searchTimer); }catch{} state.searchTimer = null; }
+        state.searchTimer = setTimeout(() => {
+          state.searchTimer = null;
+          state.searchQuery = next;
+          renderList();
+        }, 200);
         return;
       }
     });
@@ -19205,6 +19286,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     ensureStyles();
     mountOverlay();
     loadNotes();
+    sortNotesInPlace(state.data.notes);
     if (!state.selectedId){
       const first = state.data.notes.find((n)=>!n.deleted);
       if (first) state.selectedId = first.id;
