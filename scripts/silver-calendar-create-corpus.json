@@ -1,11 +1,11 @@
 {
-  "contractVersion": "1",
+  "contractVersion": "2",
   "fixedNow": "2026-03-27T12:00:00",
   "cases": [
     {
       "id": "A1",
       "group": "A-diacritics",
-      "input": "27.3. Zubar v 11 hod uloz",
+      "input": "do kalendáře 27.3. Zubar v 11 hod uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -17,7 +17,7 @@
     {
       "id": "A2",
       "group": "A-diacritics",
-      "input": "27.3. Zubař v 11 hod ulož",
+      "input": "do kalendáře 27.3. Zubař v 11 hod ulož",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -29,7 +29,7 @@
     {
       "id": "A3",
       "group": "A-diacritics",
-      "input": "27.3. Schuzka v 11 hod uloz",
+      "input": "do kalendáře 27.3. Schuzka v 11 hod uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -41,7 +41,7 @@
     {
       "id": "A4",
       "group": "A-diacritics",
-      "input": "27.3. Schůzka v 11 hod ulož",
+      "input": "do kalendáře 27.3. Schůzka v 11 hod ulož",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -53,7 +53,7 @@
     {
       "id": "B1",
       "group": "B-relative",
-      "input": "zitra zubar v 8 uloz",
+      "input": "do kalendáře zitra zubar v 8 uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-28",
@@ -65,7 +65,7 @@
     {
       "id": "B2",
       "group": "B-relative",
-      "input": "zítra zubař v 8 ulož",
+      "input": "do kalendáře zítra zubař v 8 ulož",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-28",
@@ -77,7 +77,7 @@
     {
       "id": "B3",
       "group": "B-relative",
-      "input": "dnes schuzka v 15 uloz",
+      "input": "do kalendáře dnes schuzka v 15 uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -89,7 +89,7 @@
     {
       "id": "B4",
       "group": "B-relative",
-      "input": "dnes schůzka v 15 ulož",
+      "input": "do kalendáře dnes schůzka v 15 ulož",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -101,7 +101,7 @@
     {
       "id": "C1",
       "group": "C-absolute-date",
-      "input": "27.3. kontrola v 11 uloz",
+      "input": "do kalendáře 27.3. kontrola v 11 uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -113,7 +113,7 @@
     {
       "id": "C2",
       "group": "C-absolute-date",
-      "input": "27.3. kontrola v 11:30 uloz",
+      "input": "do kalendáře 27.3. kontrola v 11:30 uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -125,7 +125,7 @@
     {
       "id": "C3",
       "group": "C-absolute-date",
-      "input": "27.3. kontrola v 11 hod uloz",
+      "input": "do kalendáře 27.3. kontrola v 11 hod uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -137,7 +137,7 @@
     {
       "id": "D1",
       "group": "D-missing",
-      "input": "27.3. v 11 hod uloz",
+      "input": "do kalendáře 27.3. v 11 hod uloz",
       "expect": {
         "processingState": "NEEDS_CLARIFICATION",
         "date": "2026-03-27",
@@ -149,7 +149,7 @@
     {
       "id": "D2",
       "group": "D-missing",
-      "input": "zitra zubar uloz",
+      "input": "do kalendáře zitra zubar uloz",
       "expect": {
         "processingState": "NEEDS_CLARIFICATION",
         "date": "2026-03-28",
@@ -161,7 +161,7 @@
     {
       "id": "D3",
       "group": "D-missing",
-      "input": "zubar v 11 hod uloz",
+      "input": "do kalendáře zubar v 11 hod uloz",
       "expect": {
         "processingState": "NEEDS_CLARIFICATION",
         "date": "",
@@ -173,7 +173,7 @@
     {
       "id": "D4",
       "group": "D-missing",
-      "input": "27.3. uloz",
+      "input": "do kalendáře 27.3. uloz",
       "expect": {
         "processingState": "NEEDS_CLARIFICATION",
         "date": "2026-03-27",
@@ -185,7 +185,7 @@
     {
       "id": "E1",
       "group": "E-title-position",
-      "input": "zubar 27.3. v 11 hod uloz",
+      "input": "do kalendáře zubar 27.3. v 11 hod uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -197,7 +197,7 @@
     {
       "id": "E2",
       "group": "E-title-position",
-      "input": "27.3. v 11 hod zubar uloz",
+      "input": "do kalendáře 27.3. v 11 hod zubar uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -209,7 +209,7 @@
     {
       "id": "E3",
       "group": "E-title-position",
-      "input": "uloz 27.3. zubar v 11 hod",
+      "input": "do kalendáře uloz 27.3. zubar v 11 hod",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -233,7 +233,7 @@
     {
       "id": "F1",
       "group": "F-commands",
-      "input": "27.3. test v 10 ulozit",
+      "input": "do kalendáře 27.3. test v 10 ulozit",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -245,7 +245,7 @@
     {
       "id": "F2",
       "group": "F-commands",
-      "input": "27.3. test v 10 ulozte",
+      "input": "do kalendáře 27.3. test v 10 ulozte",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -257,7 +257,7 @@
     {
       "id": "F3",
       "group": "F-commands",
-      "input": "27.3. test v 10 uložte",
+      "input": "do kalendáře 27.3. test v 10 uložte",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -293,7 +293,7 @@
     {
       "id": "G1",
       "group": "G-short-title",
-      "input": "zitra doktor v 8 uloz",
+      "input": "do kalendáře zitra doktor v 8 uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-28",
@@ -305,7 +305,7 @@
     {
       "id": "G2",
       "group": "G-short-title",
-      "input": "zitra ortoped v 9 uloz",
+      "input": "do kalendáře zitra ortoped v 9 uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-28",
@@ -317,7 +317,7 @@
     {
       "id": "G3",
       "group": "G-short-title",
-      "input": "27.3. servis v 10 uloz",
+      "input": "do kalendáře 27.3. servis v 10 uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -327,9 +327,45 @@
       }
     },
     {
+      "id": "G4",
+      "group": "G-short-title",
+      "input": "ulož do kalendáře 27.3. zubar v 11 hod",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "G5",
+      "group": "G-short-title",
+      "input": "ulož do kalendáře 27.3. v 11 hod",
+      "expect": {
+        "processingState": "NEEDS_CLARIFICATION",
+        "date": "2026-03-27",
+        "time": "11:00",
+        "title": "",
+        "missingFields": ["title"]
+      }
+    },
+    {
+      "id": "G6",
+      "group": "G-short-title",
+      "input": "ulož do kalendáře zítra zubař v 8",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "08:00",
+        "title": "Zubař",
+        "missingFields": []
+      }
+    },
+    {
       "id": "X1",
       "group": "X-whitespace",
-      "input": "  27.3.  Zubar  v  11  hod  uloz  ",
+      "input": "  do kalendáře 27.3.  Zubar  v  11  hod  uloz  ",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
@@ -341,7 +377,7 @@
     {
       "id": "X2",
       "group": "X-punctuation",
-      "input": "27.3. Zubar,v 11 hod uloz",
+      "input": "do kalendáře 27.3. Zubar,v 11 hod uloz",
       "expect": {
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",

@@ -83,24 +83,6 @@
     return cand;
   }
 
-  function hasCalendarIntent(folded, raw) {
-    if (/\bkalend/.test(folded)) return true;
-    if (/schuz|schůz|porad/.test(folded)) return true;
-    if (/\buloz|ulož|zapis|zapiš|přidej|pridej/.test(folded)) return true;
-    if (/\bpoz[ií]t[rř][ií]\b/i.test(raw)) return true;
-    if (iuSilverReWeekdayOnce().test(raw)) return true;
-    if (/\b\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(folded)) return true;
-    if (/\b\d{1,2}\s*[.\/\-]\s*\d{1,2}\b/.test(raw)) return true;
-    if (/\b\d{1,2}\s*\.\s*[a-záéíóúůýščřďťň]+/i.test(raw)) return true;
-    if (/\budalost/.test(folded)) return true;
-    if (/\bkontrola\b|\bnavstev/.test(folded)) return true;
-    return false;
-  }
-
-  /** Strong save/create verbs — wins over read patterns when both appear. */
-  function hasStrongCalendarCreateSignal(folded) {
-    return /\buloz|ulož|zapis|zapiš|přidej|pridej/.test(folded);
-  }
 
   /**
    * Normalize user text for calendar.read pattern matching only (create path still uses raw).
@@ -113,6 +95,119 @@
     t = t.replace(/\s+/g, " ").trim();
     t = t.replace(/[\uFF1F\uFF01?!\u2026]+$/u, "").trim();
     return t;
+  }
+
+  /** --- Explicit intent gating (P0): NEGATION / READ / targets / clarification --- */
+  function iuSilverIsNegatedWriteIntentNarrow(f) {
+    if (/nechci\s+to\s+do\s+kalend/.test(f)) return true;
+    if (/\bne\s+do\s+kalend/.test(f)) return true;
+    if (/\bdo\s+kalendare\s+ne\b/.test(f)) return true;
+    if (/\bne\s+do\s+pozn/.test(f)) return true;
+    if (/\bne\s+do\s+ukol/.test(f)) return true;
+    if (/nechci\s+to\s+do\s+pozn/.test(f)) return true;
+    if (/nechci\s+to\s+do\s+ukol/.test(f)) return true;
+    return false;
+  }
+
+  function iuSilverIsNegatedBroadVerb(f) {
+    return /neukladej|nezapis|nepridej|nepridavej|nevkladej|nedavej/.test(f);
+  }
+
+  /** foldCs() strips diacritics — match ASCII-safe tokens here. */
+  function iuSilverHasExplicitCalendarTarget(f) {
+    if (/\bdo\s+kalendare\b/.test(f) || /\bv\s+kalendare\b/.test(f) || /\bv\s+kalendari\b/.test(f)) return true;
+    if (/\bdo\s+diare\b/.test(f)) return true;
+    if (/\bdo\s+planovace\b/.test(f)) return true;
+    if (/\bdo\s+rozvrhu\b/.test(f)) return true;
+    if (/\b(?:uloz|zapis|pridej|vloz|naplanuj|vytvor|zaloz|napis|zaznamenej|eviduj|dopln|zanes)\s+do\s+kalend/.test(f)) return true;
+    return false;
+  }
+
+  function iuSilverHasExplicitNotesTarget(f) {
+    if (/\bdo\s+poznamek\b/.test(f)) return true;
+    if (/\bv\s+poznamkach\b/.test(f)) return true;
+    if (/\bdo\s+notes?\b/.test(f) || /\bdo\s+note\b/.test(f)) return true;
+    if (/\bdo\s+mema\b/.test(f) || /\bdo\s+memo\b/.test(f)) return true;
+    if (/\b(?:zapis|uloz)\s+do\s+pozn/.test(f)) return true;
+    if (/\badd\s+note\b/.test(f)) return true;
+    return false;
+  }
+
+  function iuSilverHasExplicitTasksTarget(f) {
+    if (/\bdo\s+ukolu\b/.test(f) || /\bdo\s+ukol\b/.test(f)) return true;
+    if (/\bv\s+ukolech\b/.test(f)) return true;
+    if (/\bdo\s+todo\b/.test(f) || /\bdo\s+to-do\b/.test(f)) return true;
+    if (/\bdo\s+tasks?\b/.test(f) || /\bdo\s+task\s+listu\b/.test(f)) return true;
+    if (/\bdo\s+seznamu\s+ukol/.test(f)) return true;
+    if (/\bzapis\s+do\s+ukol/.test(f)) return true;
+    if (/\badd\s+task\b/.test(f)) return true;
+    return false;
+  }
+
+  function iuSilverHasWriteVerb(f) {
+    return /\buloz|zapis|vloz|pridej|naplanuj|vytvor|zaloz|napis|zaznamenej|eviduj|dopln|zanes|pripis|\bhod\b|dej\s+mi|napis\s+mi|pridej\s+mi|poznamenej|zapamatuj/.test(f);
+  }
+
+  function iuSilverNotesFutureCandidate(f) {
+    if (!iuSilverHasExplicitNotesTarget(f)) return false;
+    if (iuSilverHasWriteVerb(f)) return true;
+    if (/\badd\s+note\b/.test(f)) return true;
+    return false;
+  }
+
+  function iuSilverTasksFutureCandidate(f) {
+    if (!iuSilverHasExplicitTasksTarget(f)) return false;
+    if (iuSilverHasWriteVerb(f)) return true;
+    if (/\badd\s+task\b/.test(f)) return true;
+    return false;
+  }
+
+  function iuSilverLooksLikeSchedulingFragment(f, raw) {
+    if (/\bz[ií]tra\b|\bdnes(?:ka|ek)?\b|\bpoz[ií]t[rř][ií]\b/.test(f)) return true;
+    if (iuSilverReWeekdayOnce().test(raw)) return true;
+    if (/\b\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(f)) return true;
+    if (/\b\d{1,2}\s*[.\/\-]\s*\d{1,2}\b/.test(f)) return true;
+    if (/\bv\s*\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(f) || /\bve\s+\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(f)) return true;
+    if (/\bschuz|schůz|porad|zubar|zub|kontrola|servis|ud[aá]lost/i.test(f)) return true;
+    return false;
+  }
+
+  function iuSilverStripCalendarTargetPhrases(raw) {
+    let t = String(raw || "").trim();
+    const pats = [
+      /\bpros[ií]m\s+/gi,
+      /\b(?:ulo[zž]|zapi[sš]|přidej|pridej|vlo[zž]|napl[aá]nuj|vytvoř|vytvor|zalo[zž]|napi[sš]|zaznamenej|eviduj|doplň|zanes)\s+do\s+(?:kalend[aá]r[eěi]|kalendare|di[aá]r[eěi]|diare|pl[aá]nova[cč]e|planovace|rozvrhu)\b/gi,
+      /\bdo\s+(?:kalend[aá]r[eěi]|kalendare|di[aá]r[eěi]|diare|pl[aá]nova[cč]e|planovace|rozvrhu)\b/gi,
+      /\bv\s+(?:kalend[aá]r[eěi]|kalendari)\b/gi
+    ];
+    for (let i = 0; i < 12; i++) {
+      const prev = t;
+      for (let j = 0; j < pats.length; j++) {
+        t = t.replace(pats[j], " ");
+      }
+      t = t.replace(/\s+/g, " ").trim();
+      if (t === prev) break;
+    }
+    return t;
+  }
+
+  function iuSilverClarificationCopy(reason) {
+    if (reason === "missing_explicit_target") {
+      return "Upřesni prosím, kam to chceš uložit: do kalendáře, do poznámek, nebo do úkolů.";
+    }
+    if (reason === "future_target_not_supported_yet") {
+      return "Rozumím, že to chceš uložit do poznámek nebo úkolů. Tato část zatím není aktivní. Zkus zatím kalendář, nebo požadavek upřesni.";
+    }
+    if (reason === "ambiguous_request") {
+      return "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle.";
+    }
+    if (reason === "negated_write_request") {
+      return "Rozumím, zápis neprovedu.";
+    }
+    if (reason === "unsupported_request") {
+      return "Tento požadavek teď neumím bezpečně zpracovat. Upřesni ho prosím.";
+    }
+    return "Upřesni prosím požadavek.";
   }
 
   function startOfWeekMondayFromDateStr(dateStr) {
@@ -161,11 +256,44 @@
     const r = iuSilverNormalizeUtteranceForReadParse(rawIn);
     const f = foldCs(r);
     if (!r) return null;
-    if (hasStrongCalendarCreateSignal(f)) return null;
 
     const coMam = /\bco\s+m[aá]m\b/.test(f);
     const kdyMam = /^\s*kdy\s+m[aá]m\s+/i.test(r) || /^\s*kdy\s+m[aá]m\s+/i.test(f);
     const kolik = /\bkolik\s+m[aá]m\b/.test(f);
+
+    if (/\bjak[aá]\s+je\s+moje\s+dal[sš][ií]\s+ud[aá]lost/i.test(f)) {
+      return { intent: "next_event", filter: null };
+    }
+    if (/\bkdy\s+m[aá]m\s+dal[sš][ií]\s+sch[uů]z/i.test(f)) {
+      return { intent: "next_event", filter: null };
+    }
+    if (/\bm[aá]m\s+dnes\s+n[eě]co/i.test(f)) {
+      return { intent: "agenda_for_day", dateRange: "today", filter: null };
+    }
+    if (/\bm[aá]m\s+z[ií]tra\s+n[eě]co/i.test(f)) {
+      return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+    }
+    if (/\bv\s+kolik\s+m[aá]m\b/i.test(f)) {
+      if (/\bprvn[ií]\s+sch[uů]z/i.test(f)) {
+        let dayKey = "today";
+        if (/\bz[ií]tra\b/i.test(f)) dayKey = "tomorrow";
+        return { intent: "first_event_time", dateRange: dayKey, filter: null };
+      }
+      const rest = r
+        .replace(/^\s*v\s+kolik\s+m[aá]m\s+/i, "")
+        .replace(/\s*[?.!]+\s*$/g, "")
+        .trim();
+      if (rest && rest.length > 1) {
+        const qFold = foldCs(rest);
+        return {
+          intent: "find_by_title",
+          query: rest,
+          normalizedQuery: rest,
+          diacriticInsensitive: true,
+          queryFolded: qFold
+        };
+      }
+    }
 
     if (/\bco\s+m[aá]m\s+jako\s+dal[sš][ií]\b/i.test(f)) {
       return { intent: "next_event", filter: null };
@@ -261,6 +389,14 @@
       return fut.length ? [fut[0]] : [];
     }
 
+    if (spec.intent === "first_event_time") {
+      const dr = spec.dateRange === "tomorrow" ? addDays(todayStr, 1) : todayStr;
+      const dayEvs = sorted.filter(function (e) {
+        return String(e.date).slice(0, 10) === dr;
+      });
+      return dayEvs.length ? [dayEvs[0]] : [];
+    }
+
     if (spec.intent === "find_by_title") {
       const qf = spec.queryFolded || foldCs(spec.query || "");
       return sorted.filter(function (e) {
@@ -308,6 +444,24 @@
       }
       const ev = evs[0];
       message = "Další je " + String(ev.title || "") + " v " + String(ev.time || "") + " (" + iuSilverFormatDateCs(String(ev.date || "")) + ").";
+      return { success: true, type: type, count: 1, events: [ev], message: message, ambiguity: false };
+    }
+
+    if (type === "first_event_time") {
+      const dayWord = spec.dateRange === "tomorrow" ? "zítra" : "dnes";
+      if (count === 0) {
+        message = "Na " + dayWord + " nemáš žádnou událost.";
+        return { success: true, type: type, count: 0, events: [], message: message, ambiguity: false };
+      }
+      const ev = evs[0];
+      message =
+        "První událost " +
+        (spec.dateRange === "tomorrow" ? "zítra" : "dnes") +
+        " je v " +
+        String(ev.time || "") +
+        " — " +
+        String(ev.title || "") +
+        ".";
       return { success: true, type: type, count: 1, events: [ev], message: message, ambiguity: false };
     }
 
@@ -415,7 +569,8 @@
         location: d.meta.location,
         duration: d.meta.duration
       },
-      activeCalendarSession: !!d.activeCalendarSession
+      activeCalendarSession: !!d.activeCalendarSession,
+      targetContainer: d.targetContainer == null ? null : d.targetContainer
     };
   }
 
@@ -435,7 +590,8 @@
         location: "optional",
         duration: "optional"
       },
-      activeCalendarSession: false
+      activeCalendarSession: false,
+      targetContainer: null
     };
   }
 
@@ -1175,13 +1331,6 @@
   }
 
   function buildAssistantParts(draft, processingState) {
-    if (processingState === "UNSUPPORTED") {
-      return {
-        assistantLead:
-          "Tato první verze Silvera zatím umí jen vytváření událostí v kalendáři. Napište prosím kalendářový pokyn — například den nebo datum, čas a název.",
-        clarification: ""
-      };
-    }
     if (processingState === "READY_TO_SAVE") {
       return { assistantLead: "Připravil jsem návrh události do kalendáře.", clarification: "" };
     }
@@ -1203,15 +1352,42 @@
     const now = ctx && ctx.now ? ctx.now : new Date();
     const raw = String(text || "").trim();
     const folded = foldCs(raw);
+    const empty = createEmptyDraft();
+
+    function baseClarification(reason, normIntent) {
+      const lead = iuSilverClarificationCopy(reason);
+      let tc = "none";
+      if (normIntent === "notes.future_candidate") tc = "notes";
+      else if (normIntent === "tasks.future_candidate") tc = "tasks";
+      return {
+        normalizedIntent: normIntent || "clarification",
+        targetContainer: tc,
+        processingState: "CLARIFICATION",
+        clarificationReason: reason,
+        futureIntentCandidate: normIntent === "notes.future_candidate" || normIntent === "tasks.future_candidate" ? normIntent : null,
+        readQuery: null,
+        readAnswer: null,
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: "",
+        assistantLead: lead,
+        clarificationText: "",
+        draft: createEmptyDraft()
+      };
+    }
+
     const readSpec = tryParseCalendarRead(raw, now);
     if (readSpec) {
       const snap = ctx && typeof ctx.getEventsSnapshot === "function" ? ctx.getEventsSnapshot() : [];
       const matched = iuSilverRetrieveReadQuery(readSpec, snap, now);
       const answer = iuSilverBuildReadAnswer(readSpec, matched, now);
-      const empty = createEmptyDraft();
       return {
         normalizedIntent: "calendar.read",
+        targetContainer: "none",
         processingState: "READ_OK",
+        clarificationReason: null,
+        futureIntentCandidate: null,
         readQuery: readSpec,
         readAnswer: answer,
         extractedFields: {},
@@ -1224,47 +1400,74 @@
       };
     }
 
-    let draft = cloneDraft(prevDraft);
-    const intent = hasCalendarIntent(folded, raw) || draft.activeCalendarSession;
+    if (iuSilverIsNegatedWriteIntentNarrow(folded)) {
+      return baseClarification("negated_write_request", "clarification");
+    }
+    if (
+      iuSilverIsNegatedBroadVerb(folded) &&
+      (iuSilverHasExplicitCalendarTarget(folded) ||
+        iuSilverHasExplicitNotesTarget(folded) ||
+        iuSilverHasExplicitTasksTarget(folded) ||
+        iuSilverLooksLikeSchedulingFragment(folded, raw))
+    ) {
+      return baseClarification("negated_write_request", "clarification");
+    }
 
-    if (!intent) {
-      draft.activeCalendarSession = false;
-      const ap = buildAssistantParts(draft, "UNSUPPORTED");
+    if (iuSilverNotesFutureCandidate(folded)) {
+      return baseClarification("future_target_not_supported_yet", "notes.future_candidate");
+    }
+
+    if (iuSilverTasksFutureCandidate(folded)) {
+      return baseClarification("future_target_not_supported_yet", "tasks.future_candidate");
+    }
+
+    const hasCalExplicit = iuSilverHasExplicitCalendarTarget(folded);
+    const prev = prevDraft || createEmptyDraft();
+    const inCalSession = !!prev.activeCalendarSession && prev.targetContainer === "calendar";
+
+    if (hasCalExplicit || inCalSession) {
+      const workRaw = hasCalExplicit ? iuSilverStripCalendarTargetPhrases(raw) : raw;
+      const eff = String(workRaw || "").trim();
+      if (!eff && !inCalSession) {
+        return baseClarification("ambiguous_request", "clarification");
+      }
+      let draft = cloneDraft(prev);
+      draft.targetContainer = "calendar";
+      draft.activeCalendarSession = true;
+      const parseRaw = eff || raw;
+      const extracted = extractFromUtterance(parseRaw, now);
+      draft = mergeIntoDraft(draft, extracted);
+      draft = applyFragmentFallback(parseRaw, draft, now);
+      iuSilverSanitizeDraftTitle(draft);
+
+      let processingState = "NEEDS_CLARIFICATION";
+      if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
+        processingState = "READY_TO_SAVE";
+      }
+      const ap = buildAssistantParts(draft, processingState);
       return {
-        normalizedIntent: null,
-        processingState: "UNSUPPORTED",
-        extractedFields: {},
-        missingFields: [],
+        normalizedIntent: "calendar.create",
+        targetContainer: "calendar",
+        processingState: processingState,
+        clarificationReason: null,
+        futureIntentCandidate: null,
+        readQuery: null,
+        readAnswer: null,
+        extractedFields: extracted.values,
+        missingFields: computeMissing(draft),
         ambiguousFields: [],
         userFacingSummary: "",
         assistantLead: ap.assistantLead,
         clarificationText: ap.clarification,
-        draft
+        draft: draft
       };
     }
 
-    draft.activeCalendarSession = true;
-    const extracted = extractFromUtterance(raw, now);
-    draft = mergeIntoDraft(draft, extracted);
-    draft = applyFragmentFallback(raw, draft, now);
-    iuSilverSanitizeDraftTitle(draft);
-
-    let processingState = "NEEDS_CLARIFICATION";
-    if (draft.meta.date === "certain" && draft.meta.time === "certain" && draft.meta.title === "certain" && String(draft.title || "").trim()) {
-      processingState = "READY_TO_SAVE";
+    if (iuSilverHasWriteVerb(folded) || iuSilverLooksLikeSchedulingFragment(folded, raw)) {
+      return baseClarification("missing_explicit_target", "clarification");
     }
-    const ap = buildAssistantParts(draft, processingState);
-    return {
-      normalizedIntent: "calendar.create",
-      processingState,
-      extractedFields: extracted.values,
-      missingFields: computeMissing(draft),
-      ambiguousFields: [],
-      userFacingSummary: "",
-      assistantLead: ap.assistantLead,
-      clarificationText: ap.clarification,
-      draft
-    };
+
+    return baseClarification("ambiguous_request", "clarification");
   }
 
   function proofWeekdayRuleSnippet() {
@@ -1381,9 +1584,14 @@
   <p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(turn.readAnswer.message).replace(/\n/g, "<br>")}</p>
 </div>`;
     }
-    if (turn.processingState === "UNSUPPORTED") {
+    if (
+      turn.processingState === "CLARIFICATION" ||
+      turn.normalizedIntent === "clarification" ||
+      turn.normalizedIntent === "notes.future_candidate" ||
+      turn.normalizedIntent === "tasks.future_candidate"
+    ) {
       return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
-  <p class="iuSilverMsgLead">${esc(turn.assistantLead)}</p>
+  <p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(turn.assistantLead)}</p>
 </div>`;
     }
     const d = turn.draft;
@@ -1685,7 +1893,16 @@
       chatState.lastDraftTurn = null;
       chatState.cardEditMode = false;
       chatState.draft = createEmptyDraft();
-    } else if (turn.processingState !== "UNSUPPORTED") {
+    } else if (
+      turn.processingState === "CLARIFICATION" ||
+      turn.normalizedIntent === "clarification" ||
+      turn.normalizedIntent === "notes.future_candidate" ||
+      turn.normalizedIntent === "tasks.future_candidate"
+    ) {
+      chatState.lastDraftTurn = null;
+      chatState.cardEditMode = false;
+      chatState.draft = createEmptyDraft();
+    } else if (turn.normalizedIntent === "calendar.create" || turn.processingState === "NEEDS_CLARIFICATION" || turn.processingState === "READY_TO_SAVE") {
       chatState.cardEditMode = false;
       chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
     }

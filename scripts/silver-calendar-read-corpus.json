@@ -9,10 +9,10 @@
     { "id": "e5", "date": "2026-03-24", "time": "16:00", "title": "Zubní hygiena" }
   ],
   "intentCases": [
-    { "id": "int-01", "input": "27.3. zubar v 11 hod uloz", "expectNormalizedIntent": "calendar.create" },
+    { "id": "int-01", "input": "do kalendáře 27.3. zubar v 11 hod uloz", "expectNormalizedIntent": "calendar.create" },
     { "id": "int-02", "input": "co mám dnes", "expectNormalizedIntent": "calendar.read" },
     { "id": "int-03", "input": "kdy mám zubaře", "expectNormalizedIntent": "calendar.read" },
-    { "id": "int-04", "input": "uloz schuzku zitra v 10", "expectNormalizedIntent": "calendar.create" }
+    { "id": "int-04", "input": "do kalendáře uloz schuzku zitra v 10", "expectNormalizedIntent": "calendar.create" }
   ],
   "readCases": [
     {

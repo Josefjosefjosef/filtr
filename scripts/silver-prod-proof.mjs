@@ -126,8 +126,8 @@ async function main() {
 
   const createResults = [];
   const createCases = [
-    ["G", "27.3. zubar v 11 hod uloz"],
-    ["H", "27.3. v 11 hod uloz"],
+    ["G", "do kalendáře 27.3. zubar v 11 hod uloz"],
+    ["H", "do kalendáře 27.3. v 11 hod uloz"],
     ["I", "zítra zubař v 8 ulož"]
   ];
   for (const [id, input] of createCases) {
@@ -171,7 +171,7 @@ async function main() {
   await page.evaluate(() => {
     const i = document.getElementById("iuSilverHomeInput");
     if (i) {
-      i.value = "27.3. zubar v 11 hod uloz";
+      i.value = "do kalendáře 27.3. zubar v 11 hod uloz";
       const s = document.getElementById("iuSilverHomeSend");
       if (s) s.click();
     }
@@ -250,7 +250,7 @@ async function main() {
       if (h) h.innerHTML = "";
       const inp = document.getElementById("iuSilverChatInput");
       if (inp) {
-        inp.value = "27.3. v 11 hod uloz";
+        inp.value = "do kalendáře 27.3. v 11 hod uloz";
         const send = document.getElementById("iuSilverChatSend");
         if (send) send.click();
       }
@@ -263,7 +263,33 @@ async function main() {
       if (h) h.innerHTML = "";
       const inp = document.getElementById("iuSilverChatInput");
       if (inp) {
-        inp.value = "27.3. zubar v 11 hod uloz";
+        inp.value = "do kalendáře 27.3. zubar v 11 hod uloz";
+        const send = document.getElementById("iuSilverChatSend");
+        if (send) send.click();
+      }
+    });
+  });
+
+  await step("clarification_shown", async () => {
+    await page.evaluate(() => {
+      const h = document.getElementById("iuSilverChatMessages");
+      if (h) h.innerHTML = "";
+      const inp = document.getElementById("iuSilverChatInput");
+      if (inp) {
+        inp.value = "zítra zubař v 8";
+        const send = document.getElementById("iuSilverChatSend");
+        if (send) send.click();
+      }
+    });
+  });
+
+  await step("future_target_shown", async () => {
+    await page.evaluate(() => {
+      const h = document.getElementById("iuSilverChatMessages");
+      if (h) h.innerHTML = "";
+      const inp = document.getElementById("iuSilverChatInput");
+      if (inp) {
+        inp.value = "zapiš do poznámek auto je v servisu";
         const send = document.getElementById("iuSilverChatSend");
         if (send) send.click();
       }
