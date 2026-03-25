@@ -5101,6 +5101,88 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  /** Silver dashboard box 3: dnešní kalendář (summary z calendarGetTodayEvents, ne chat router). */
+  function iuSilverCalendarSummaryInit(){
+    try{
+      if (window.__iuSilverCalendarSummaryInit) return;
+      window.__iuSilverCalendarSummaryInit = 1;
+    }catch{}
+
+    const line1 = document.getElementById("iuSilverCalendarSummaryLine1");
+    const line2 = document.getElementById("iuSilverCalendarSummaryLine2");
+    const btn = document.getElementById("iuSilverCalendarSummaryShowDay");
+    if (!line1 || !line2 || !btn) return;
+
+    function formatTimeCsHm(t){
+      if (!t || typeof t !== "string") return "";
+      const m = t.match(/^(\d{1,2}):(\d{2})/);
+      if (!m) return String(t).trim();
+      const hh = Number(m[1]);
+      const mm = m[2];
+      return String(hh) + ":" + mm + " hod.";
+    }
+
+    function line1Cs(count){
+      if (count === 0) return "Kalendář: Na dnešek nemáte uložený žádný záznam.";
+      if (count === 1) return "Kalendář: Na dnešek máte uložený 1 záznam.";
+      if (count >= 2 && count <= 4) return "Kalendář: Na dnešek máte uložené " + count + " záznamy.";
+      return "Kalendář: Na dnešek máte uložených " + count + " záznamů.";
+    }
+
+    function refresh(){
+      const svc = window.iuCalendarService;
+      if (!svc || typeof svc.calendarGetTodayEvents !== "function"){
+        line1.textContent = "Kalendář: Údaje se načítají…";
+        line2.textContent = "Chvíli strpení.";
+        try{ btn.disabled = true; }catch{}
+        return;
+      }
+      try{ btn.disabled = false; }catch{}
+      let evs = [];
+      try{
+        evs = svc.calendarGetTodayEvents() || [];
+      }catch{
+        evs = [];
+      }
+      const count = Array.isArray(evs) ? evs.length : 0;
+      const first = count > 0 ? evs[0] : null;
+      line1.textContent = line1Cs(count);
+      if (count === 0){
+        line2.textContent = "Dnes není naplánovaná žádná událost.";
+      } else if (first && first.time){
+        line2.textContent = "První událost v " + formatTimeCsHm(first.time);
+      } else {
+        line2.textContent = "Dnes není naplánovaná žádná událost.";
+      }
+    }
+
+    window.iuSilverCalendarSummaryRefresh = refresh;
+
+    btn.addEventListener("click", ()=>{
+      const svc = window.iuCalendarService;
+      if (svc && typeof svc.calendarOpenTodayDayView === "function"){
+        try{
+          svc.calendarOpenTodayDayView(btn);
+        }catch{}
+      }
+    });
+
+    btn.addEventListener("keydown", (e)=>{
+      if (e.key !== "Enter" && e.key !== " ") return;
+      e.preventDefault();
+      btn.click();
+    });
+
+    refresh();
+    try{ setTimeout(() => refresh(), 400); }catch{}
+    try{ setTimeout(() => refresh(), 1500); }catch{}
+    try{
+      document.addEventListener("visibilitychange", () => {
+        try{ if (document.visibilityState === "visible") refresh(); }catch{}
+      });
+    }catch{}
+  }
+
   /** Silver welcome: přání k svátku — overlay Tykat/Vykat, kopírování, bez zásahu do weather/map. */
   function iuNamedayWishInit(){
     try{
@@ -11315,6 +11397,7 @@ function buildVideoAsArticleCard(it) {
             try{ iuSetTopbarNameday(""); }catch{}
           }
           try{ if (typeof window.iuSilverWelcomeRefresh === "function") window.iuSilverWelcomeRefresh(); }catch{}
+          try{ if (typeof window.iuSilverCalendarSummaryRefresh === "function") window.iuSilverCalendarSummaryRefresh(); }catch{}
           try{ iuWeatherHideEmptyNameday(); }catch{}
         })
         .catch(function(){
@@ -11798,6 +11881,7 @@ function buildVideoAsArticleCard(it) {
     try { initRightPanel(); } catch (e) { console.error("RightPanel init failed", e); if (typeof persistLastError === "function") persistLastError("RightPanel init failed"); }
 
     try{ iuSilverWelcomeInit(); }catch{}
+    try{ iuSilverCalendarSummaryInit(); }catch{}
     try{ iuNamedayWishInit(); }catch{}
 
     if (btnToggleDebug) {
@@ -20343,6 +20427,13 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
         });
       }catch{}
     }
+    try{
+      queueMicrotask(()=>{
+        try{
+          if (typeof window.iuSilverCalendarSummaryRefresh === "function") window.iuSilverCalendarSummaryRefresh();
+        }catch{}
+      });
+    }catch{}
   }
 
   function getEventsForDate(date){ return state.data.events.filter((e)=>e.date === date).sort(compareEvents); }
@@ -20678,6 +20769,14 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     bindUi();
     render();
     window.iuCalendarService = {
+      calendarOpenTodayDayView: function(originEl){
+        const today = toDateOnly(new Date());
+        state.view = "day";
+        state.cursorDate = today;
+        state.selectedDate = today;
+        render();
+        openOverlay(originEl && typeof originEl.focus === "function" ? originEl : document.activeElement);
+      },
       calendarCreateEvent: async function(payload){
         const ev = sanitizeEvent({ ...payload, id: uid("evt"), createdAt: Date.now(), updatedAt: Date.now(), attachments: Array.isArray(payload?.attachments) ? payload.attachments : [] });
         if (!ev) return { ok: false, reason: "validation_failed" };
@@ -20711,6 +20810,7 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
       openOverlay: function(){ openOverlay(document.activeElement); },
       closeOverlay: function(){ closeOverlay(); }
     };
+    try{ if (typeof window.iuSilverCalendarSummaryRefresh === "function") window.iuSilverCalendarSummaryRefresh(); }catch{}
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
