@@ -18829,6 +18829,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     selectedId: "",
     searchQuery: "",
     searchTimer: null,
+    listView: "main",
     autosaveTimer: null,
     lastSavedAt: 0,
     prevBodyPadRight: "",
@@ -18935,7 +18936,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const now = Date.now();
     return {
       id: uid("note"),
-      title: "Nová poznámka",
+      title: "",
       content: "",
       createdAt: now,
       updatedAt: now,
@@ -18955,10 +18956,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function searchNotes(query){
     const q = foldCs(String(query || "")).trim();
     const list = state.data && Array.isArray(state.data.notes) ? state.data.notes : [];
-    const filtered = !q ? list.slice() : list.filter((n)=>{
+    const inTrash = state.listView === "trash";
+    const scoped = list.filter((n)=>!!n.deleted === inTrash);
+    const filtered = !q ? scoped.slice() : scoped.filter((n)=>{
       const t = foldCs(String(n.title || ""));
       const c = foldCs(String(n.content || ""));
-      return t.includes(q) || c.includes(q);
+      const tags = Array.isArray(n.tags) ? n.tags.map((x)=>foldCs(String(x || ""))).join(" ") : "";
+      return t.includes(q) || c.includes(q) || tags.includes(q);
     });
     sortNotesInPlace(filtered);
     return filtered;
@@ -19012,6 +19016,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         '<div class="iu-notesOverlay__body">' +
           '<aside class="iu-notesOverlay__list" aria-label="Seznam poznámek">' +
             '<div class="iu-notesOverlay__listHeader">' +
+              '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-view="main">Poznámky</button>' +
+              '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-view="trash">Koš</button>' +
               '<input class="iu-notesOverlay__search" id="iuNotesSearch" type="search" autocomplete="off" placeholder="Hledat v poznámkách…" aria-label="Hledat v poznámkách" />' +
             "</div>" +
             '<div class="iu-notesOverlay__listScroll">' +
@@ -19117,9 +19123,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function renderList(){
     const listEl = document.getElementById("iuNotesList");
     if (!listEl) return;
-    const items = searchNotes(state.searchQuery).filter((n)=>!n.deleted);
+    const items = searchNotes(state.searchQuery);
     if (!items.length){
-      listEl.innerHTML = '<li><div class="iu-notesOverlay__empty">Zatím nemáš žádné poznámky.<br><strong>Vytvořit první poznámku</strong></div></li>';
+      listEl.innerHTML = '<li><div class="iu-notesOverlay__empty">' + (state.listView === "trash" ? "Koš je prázdný." : "Zatím nemáš žádné poznámky.<br><strong>Vytvořit první poznámku</strong>") + "</div></li>";
       return;
     }
     listEl.innerHTML = items.map((n)=>{
@@ -19156,11 +19162,20 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       '<div class="iu-notesOverlay__form">' +
         '<div class="iu-notesOverlay__status" id="iuNotesStatus"></div>' +
         '<label class="iu-notesOverlay__label">Název' +
-          '<input class="iu-notesOverlay__input" id="iuNoteTitle" type="text" maxlength="' + MAX_TITLE + '" value="' + esc(note.title || "") + '" autocomplete="off" />' +
+          '<input class="iu-notesOverlay__input" id="iuNoteTitle" type="text" maxlength="' + MAX_TITLE + '" value="' + esc(note.title || "") + '" placeholder="Nová poznámka" autocomplete="off" />' +
         "</label>" +
         '<label class="iu-notesOverlay__label">Obsah' +
           '<textarea class="iu-notesOverlay__textarea" id="iuNoteContent" rows="10" maxlength="' + MAX_CONTENT + '">' + esc(note.content || "") + "</textarea>" +
         "</label>" +
+        '<label class="iu-notesOverlay__label">Tagy' +
+          '<input class="iu-notesOverlay__input" id="iuNoteTagInput" type="text" autocomplete="off" placeholder="#práce" />' +
+        "</label>" +
+        '<div class="iu-notesOverlay__itemMeta">' + (Array.isArray(note.tags) && note.tags.length ? esc(note.tags.join(" ")) : "Bez tagů") + "</div>" +
+        '<div class="iu-notesOverlay__actions">' +
+          (state.listView === "trash"
+            ? '<button type="button" class="iu-notesOverlay__btn" data-iu-note-restore="' + esc(note.id) + '">Obnovit z koše</button>'
+            : '<button type="button" class="iu-notesOverlay__btn" data-iu-note-delete="' + esc(note.id) + '">Přesunout do koše</button>') +
+        "</div>" +
       "</div>";
     renderStatus(state.lastSavedAt ? ("Uloženo " + fmtDate(state.lastSavedAt)) : "");
   }
@@ -19190,12 +19205,34 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const contentEl = document.getElementById("iuNoteContent");
     const nextTitle = titleEl ? String(titleEl.value || "").slice(0, MAX_TITLE) : String(note.title || "");
     const nextContent = contentEl ? String(contentEl.value || "").slice(0, MAX_CONTENT) : String(note.content || "");
-    note.title = nextTitle.trim() ? nextTitle : "Bez názvu";
+    note.title = nextTitle;
     note.content = nextContent;
     note.updatedAt = Date.now();
     sortNotesInPlace(state.data.notes);
     scheduleAutosave();
     renderList();
+  }
+
+  function normalizeTag(raw){
+    const t = String(raw || "").trim();
+    if (!t) return "";
+    const base = t.startsWith("#") ? t : ("#" + t);
+    return base.replace(/\s+/g, "");
+  }
+
+  function addTagToSelected(raw){
+    const note = getNoteById(state.selectedId);
+    if (!note) return;
+    const next = normalizeTag(raw);
+    if (!next) return;
+    const list = Array.isArray(note.tags) ? note.tags.slice() : [];
+    const has = list.some((x)=>foldCs(String(x || "")) === foldCs(next));
+    if (!has) list.push(next);
+    note.tags = list;
+    note.updatedAt = Date.now();
+    sortNotesInPlace(state.data.notes);
+    saveNotes(state.data);
+    render();
   }
 
   function togglePin(id){
@@ -19238,6 +19275,16 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const newBtn = t && t.closest ? t.closest("[data-iu-notes-new]") : null;
       if (newBtn){ e.preventDefault(); createNewAndSelect(); return; }
 
+      const viewBtn = t && t.closest ? t.closest("[data-iu-notes-view]") : null;
+      if (viewBtn){
+        e.preventDefault();
+        state.listView = String(viewBtn.getAttribute("data-iu-notes-view") || "main");
+        const first = searchNotes(state.searchQuery)[0];
+        state.selectedId = first ? first.id : "";
+        render();
+        return;
+      }
+
       const pin = t && t.closest ? t.closest("[data-iu-note-pin]") : null;
       if (pin){
         e.preventDefault();
@@ -19252,7 +19299,37 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         e.preventDefault();
         const id = String(pick.getAttribute("data-iu-note-id") || "");
         state.selectedId = id;
-        if (isMobileDetail()) setMobileMode("detail");
+        setMobileMode("detail");
+        render();
+        return;
+      }
+
+      const del = t && t.closest ? t.closest("[data-iu-note-delete]") : null;
+      if (del){
+        e.preventDefault();
+        const id = String(del.getAttribute("data-iu-note-delete") || "");
+        const note = getNoteById(id);
+        if (!note) return;
+        note.deleted = true;
+        note.updatedAt = Date.now();
+        saveNotes(state.data);
+        const first = searchNotes(state.searchQuery)[0];
+        state.selectedId = first ? first.id : "";
+        render();
+        return;
+      }
+
+      const restore = t && t.closest ? t.closest("[data-iu-note-restore]") : null;
+      if (restore){
+        e.preventDefault();
+        const id = String(restore.getAttribute("data-iu-note-restore") || "");
+        const note = getNoteById(id);
+        if (!note) return;
+        note.deleted = false;
+        note.updatedAt = Date.now();
+        saveNotes(state.data);
+        const first = searchNotes(state.searchQuery)[0];
+        state.selectedId = first ? first.id : "";
         render();
         return;
       }
@@ -19277,6 +19354,27 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         }, 200);
         return;
       }
+
+      if (t.id === "iuNoteTagInput"){
+        const val = String(t.value || "");
+        if (/[,\n]/.test(val) || /\s$/.test(val)){
+          addTagToSelected(val.replace(/[,\n]/g, "").trim());
+          t.value = "";
+        }
+        return;
+      }
+    });
+
+    document.addEventListener("keydown", (e)=>{
+      const t = e.target;
+      if (!t || t.id !== "iuNoteTagInput") return;
+      const ov = getOverlay();
+      if (!ov || ov.hidden) return;
+      if (e.key === "Enter"){
+        e.preventDefault();
+        addTagToSelected(t.value);
+        t.value = "";
+      }
     });
   }
 
@@ -19288,7 +19386,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     loadNotes();
     sortNotesInPlace(state.data.notes);
     if (!state.selectedId){
-      const first = state.data.notes.find((n)=>!n.deleted);
+      const first = searchNotes(state.searchQuery)[0];
       if (first) state.selectedId = first.id;
     }
     bindUi();
