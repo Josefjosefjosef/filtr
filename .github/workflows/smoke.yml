@@ -18,6 +18,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Silver calendar.create regression
+        run: npm run silver-regression
+
       - name: Install Playwright browsers
         run: node node_modules/playwright/cli.js install --with-deps chromium
 
