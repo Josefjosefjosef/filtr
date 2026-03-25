@@ -102,6 +102,19 @@
     return /\buloz|ulož|zapis|zapiš|přidej|pridej/.test(folded);
   }
 
+  /**
+   * Normalize user text for calendar.read pattern matching only (create path still uses raw).
+   * Strips ZWSP/BOM, collapses spaces, removes trailing sentence punctuation so
+   * "co mám zítra?" / fullwidth ？ / stray !… cannot miss read classification.
+   */
+  function iuSilverNormalizeUtteranceForReadParse(rawIn) {
+    let t = String(rawIn || "").trim();
+    t = t.replace(/[\u200b-\u200d\ufeff\u00ad]/g, "");
+    t = t.replace(/\s+/g, " ").trim();
+    t = t.replace(/[\uFF1F\uFF01?!\u2026]+$/u, "").trim();
+    return t;
+  }
+
   function startOfWeekMondayFromDateStr(dateStr) {
     const d = new Date(String(dateStr).slice(0, 10) + "T00:00:00");
     const day = (d.getDay() + 6) % 7;
@@ -144,9 +157,9 @@
   /**
    * Structured read query (P0). Returns null if utterance is not calendar.read.
    */
-  function tryParseCalendarRead(raw, folded, now) {
-    const r = String(raw || "").trim();
-    const f = String(folded || "");
+  function tryParseCalendarRead(rawIn, now) {
+    const r = iuSilverNormalizeUtteranceForReadParse(rawIn);
+    const f = foldCs(r);
     if (!r) return null;
     if (hasStrongCalendarCreateSignal(f)) return null;
 
@@ -376,8 +389,7 @@
   function calendarReadProbe(text, opts) {
     const now = opts && opts.now ? opts.now : new Date();
     const raw = String(text || "").trim();
-    const folded = foldCs(raw);
-    const spec = tryParseCalendarRead(raw, folded, now);
+    const spec = tryParseCalendarRead(raw, now);
     if (!spec) {
       return { detectedIntent: null, query: null, events: [], answer: null };
     }
@@ -1191,7 +1203,7 @@
     const now = ctx && ctx.now ? ctx.now : new Date();
     const raw = String(text || "").trim();
     const folded = foldCs(raw);
-    const readSpec = tryParseCalendarRead(raw, folded, now);
+    const readSpec = tryParseCalendarRead(raw, now);
     if (readSpec) {
       const snap = ctx && typeof ctx.getEventsSnapshot === "function" ? ctx.getEventsSnapshot() : [];
       const matched = iuSilverRetrieveReadQuery(readSpec, snap, now);
@@ -1360,7 +1372,11 @@
   <p class="iuSilverMsgLead">${esc(turn.assistantLead)}</p>
 </div>`;
     }
-    if (turn.processingState === "READ_OK" && turn.readAnswer && turn.readAnswer.message) {
+    if (
+      turn.readAnswer &&
+      turn.readAnswer.message &&
+      (turn.processingState === "READ_OK" || turn.normalizedIntent === "calendar.read")
+    ) {
       return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
   <p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(turn.readAnswer.message).replace(/\n/g, "<br>")}</p>
 </div>`;
@@ -1658,7 +1674,11 @@
     if (turn.confirmOnly) {
       chatState.lastDraftTurn = null;
       chatState.cardEditMode = false;
-    } else if (turn.processingState === "READ_OK" || turn.normalizedIntent === "calendar.read") {
+    } else if (
+      turn.processingState === "READ_OK" ||
+      turn.normalizedIntent === "calendar.read" ||
+      (turn.readAnswer && turn.readAnswer.message)
+    ) {
       chatState.lastDraftTurn = null;
       chatState.cardEditMode = false;
       chatState.draft = createEmptyDraft();
