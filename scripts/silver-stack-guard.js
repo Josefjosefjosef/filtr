@@ -1,0 +1,66 @@
+/**
+ * Silver dashboard stack guard: CTA source class, weather collapse CSS, spacing system.
+ * Run: node scripts/silver-stack-guard.js
+ */
+const fs = require("fs");
+const path = require("path");
+
+const ROOT = path.join(__dirname, "..");
+const cssPath = path.join(ROOT, "assets", "app.css");
+const htmlPath = path.join(ROOT, "projects", "index.html");
+
+function fail(msg) {
+  console.error(msg);
+  process.exit(1);
+}
+
+const css = fs.readFileSync(cssPath, "utf8");
+const html = fs.readFileSync(htmlPath, "utf8");
+
+if (!/\.silver-welcome-stack\s*\{[\s\S]*?gap\s*:\s*0\b/.test(css)) {
+  fail("❌ .silver-welcome-stack must use gap: 0 (spacing via divider + padding only)");
+}
+
+if (!/--iuSilverStackPad(?:X|Y)\s*:/.test(css)) {
+  fail("❌ Missing --iuSilverStackPadX / --iuSilverStackPadY on stack");
+}
+
+const hiddenBlock = css.match(/\.silver-weather-actions\[hidden\]\s*\{([\s\S]*?)\}/);
+if (!hiddenBlock || !/display\s*:\s*none\b/.test(hiddenBlock[1])) {
+  fail("❌ .silver-weather-actions[hidden] must use display: none (collapse, no reserved space)");
+}
+
+if (/\.iuSilverWelcomeSticky\s*\{[\s\S]*?min-height\s*:\s*(300|400)px\b/.test(css)) {
+  fail("❌ Remove fixed min-height (300/400px) from .iuSilverWelcomeSticky");
+}
+
+if (!/\.iuSilverWelcomeCard\s*\{[\s\S]*?min-height\s*:\s*0\b/.test(css)) {
+  fail("❌ .iuSilverWelcomeCard should use min-height: 0 (content-driven)");
+}
+
+if (!/\.silver-weather-card\s*\{[\s\S]*?min-height\s*:\s*0\b/.test(css)) {
+  fail("❌ .silver-weather-card should use min-height: 0 (content-driven)");
+}
+
+const sepCount = (html.match(/silver-welcome-stack__separator/g) || []).length;
+if (sepCount < 2) {
+  fail("❌ projects/index.html: expected ≥2 .silver-welcome-stack__separator between stack boxes");
+}
+
+if (html.indexOf("silver-weather-btn") < 0) {
+  fail("❌ Missing silver-weather-btn in projects/index.html");
+}
+
+if (!/<button[^>]*class="[^"]*\bsilver-weather-btn\b[^"]*\biu-nameday-wish\b/.test(html)) {
+  fail("❌ Box1 nameday CTA must combine .silver-weather-btn + .iu-nameday-wish on one button");
+}
+
+if (!/iuSilverWeatherBtnGeo[\s\S]*?silver-weather-btn/.test(html)) {
+  fail("❌ Weather CTA must use .silver-weather-btn");
+}
+
+if (!/iuSilverCalendarSummaryShowDay[\s\S]*?silver-weather-btn/.test(html)) {
+  fail("❌ Calendar CTA must use .silver-weather-btn");
+}
+
+console.log("✅ Silver stack guard OK");
