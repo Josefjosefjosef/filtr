@@ -18804,6 +18804,434 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   else init();
 })();
 
+// === Notes overlay module (local-first, Silver-ready storage contract) ===
+(function(){
+  "use strict";
+
+  const NOTES_NS = "iu.notes";
+  const NOTES_STYLE_ID = "iu-notes-overlay-styles";
+  const NOTES_STYLE_TEXT =
+    ".iu-notesOverlay{position:fixed;inset:0;z-index:10022;display:none;align-items:center;justify-content:center;overflow:hidden}.iu-notesOverlay:not([hidden]){display:flex}.iu-notesOverlay__backdrop{position:absolute;inset:0;background:rgba(8,14,22,.72)}.iu-notesOverlay__dialog{position:relative;z-index:1;width:min(1040px,calc(100% - 28px));height:min(86vh,840px);overflow:hidden;border-radius:12px;background:#f7f9fc;box-shadow:0 20px 52px rgba(7,12,19,.35);display:grid;grid-template-rows:auto 1fr}.iu-notesOverlay__header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid #d7dfeb;background:#fff}.iu-notesOverlay__titleWrap{min-width:0;display:grid;gap:2px}.iu-notesOverlay__title{margin:0;font-size:15px;line-height:1.2;color:#0b1f33}.iu-notesOverlay__sub{margin:0;font-size:12px;line-height:1.3;color:#405a78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}.iu-notesOverlay__btn,.iu-notesOverlay__close{border:1px solid #c6d2e5;border-radius:10px;background:#eef3fb;color:#203a59;padding:8px 10px;font-size:13px;touch-action:manipulation}.iu-notesOverlay__close{width:38px;height:38px;border:0;font-size:24px;line-height:1;background:#e8eef7;padding:0}.iu-notesOverlay__body{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:0;height:100%}.iu-notesOverlay__list{min-height:0;border-right:1px solid #d7dfeb;background:#fff;display:flex;flex-direction:column}.iu-notesOverlay__listHeader{padding:10px 12px;border-bottom:1px solid #eef2f8;display:flex;align-items:center;justify-content:space-between;gap:8px}.iu-notesOverlay__search{width:100%;border:1px solid #c9d7ea;border-radius:10px;padding:9px 10px;font-size:13px}.iu-notesOverlay__listScroll{overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:10px 10px 14px}.iu-notesOverlay__items{list-style:none;margin:0;padding:0;display:grid;gap:8px}.iu-notesOverlay__itemBtn{width:100%;text-align:left;border:1px solid #d6dfec;border-radius:12px;background:#f7f9fc;padding:10px 10px;display:grid;gap:4px}.iu-notesOverlay__itemBtn.is-active{border-color:#1f3a5f;box-shadow:0 0 0 2px rgba(31,58,95,.18) inset;background:#eef4ff}.iu-notesOverlay__itemTitle{font-size:13px;font-weight:700;color:#0b1f33;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__itemMeta{font-size:11px;color:#48637f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__detail{min-height:0;display:flex;flex-direction:column}.iu-notesOverlay__detailScroll{overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:12px}.iu-notesOverlay__empty{border:1px dashed #cbd7ea;border-radius:14px;background:#fff;padding:18px;color:#2a4568}.iu-notesOverlay__form{display:grid;gap:10px}.iu-notesOverlay__label{font-size:12px;color:#264264;display:grid;gap:5px}.iu-notesOverlay__input,.iu-notesOverlay__textarea{width:100%;border:1px solid #c9d7ea;border-radius:12px;padding:10px 12px;font-size:14px}.iu-notesOverlay__textarea{min-height:240px;resize:vertical;line-height:1.4;white-space:pre-wrap}.iu-notesOverlay__status{font-size:11px;color:#48637f;min-height:14px}body.iu-notesOverlay-open{overflow:hidden!important}@media (max-width:900px){.iu-notesOverlay{align-items:stretch;justify-content:stretch;overflow:auto;background:#f7f9fc}.iu-notesOverlay__backdrop{position:fixed;inset:0;background:rgba(8,14,22,.84)}.iu-notesOverlay__dialog{width:100%;min-height:100dvh;height:auto;max-height:none;border-radius:0;overflow:visible;display:flex;flex-direction:column;box-shadow:none;background:#f7f9fc}.iu-notesOverlay__header{position:relative;flex-wrap:wrap}.iu-notesOverlay__sub{white-space:normal}.iu-notesOverlay__close{margin-left:auto}.iu-notesOverlay__body{display:flex;flex-direction:column;height:auto;min-height:0}.iu-notesOverlay__list{border-right:0;border-bottom:1px solid #d7dfeb}.iu-notesOverlay__listHeader{gap:10px}.iu-notesOverlay__search{font-size:14px}.iu-notesOverlay__detailScroll{padding:12px 10px 18px}.iu-notesOverlay__textarea{min-height:220px}}";
+
+  const SCHEMA_VERSION = 1;
+  const STORE_KEY = NOTES_NS + ".store.v1";
+  const FOCUSABLE_SELECTOR = 'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';
+  const MAX_TITLE = 140;
+  const MAX_CONTENT = 50000;
+
+  const state = {
+    inited: false,
+    trapAttached: false,
+    overlayMounted: false,
+    bound: false,
+    returnFocusEl: null,
+    data: { schemaVersion: SCHEMA_VERSION, notes: [] },
+    selectedId: "",
+    searchQuery: "",
+    autosaveTimer: null,
+    lastSavedAt: 0,
+    prevBodyPadRight: ""
+  };
+
+  function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, (m)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
+  function foldCs(s){
+    return String(s || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+  function fmtDate(ts){
+    try{
+      const d = new Date(Number(ts) || 0);
+      if (!d || !Number.isFinite(d.getTime())) return "";
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const hh = String(d.getHours()).padStart(2, "0");
+      const mm = String(d.getMinutes()).padStart(2, "0");
+      return day + "." + m + "." + y + " " + hh + ":" + mm;
+    }catch{ return ""; }
+  }
+
+  function ensureStyles(){
+    try{
+      if (document.getElementById(NOTES_STYLE_ID)) return;
+      const st = document.createElement("style");
+      st.id = NOTES_STYLE_ID;
+      st.textContent = NOTES_STYLE_TEXT;
+      document.head.appendChild(st);
+    }catch{}
+  }
+
+  function sanitizeNote(n){
+    if (!n || typeof n !== "object") return null;
+    const id = String(n.id || "").trim();
+    if (!id) return null;
+    const createdAt = Number.isFinite(Number(n.createdAt)) ? Number(n.createdAt) : Date.now();
+    const updatedAt = Number.isFinite(Number(n.updatedAt)) ? Number(n.updatedAt) : createdAt;
+    const title = String(n.title || "").trim().slice(0, MAX_TITLE);
+    const content = String(n.content || "").slice(0, MAX_CONTENT);
+    const safe = {
+      id,
+      title,
+      content,
+      createdAt,
+      updatedAt
+    };
+    if (typeof n.pinned === "boolean") safe.pinned = n.pinned;
+    if (Array.isArray(n.tags)) safe.tags = n.tags.map((t)=>String(t || "").trim()).filter(Boolean).slice(0, 24);
+    if (typeof n.deleted === "boolean") safe.deleted = n.deleted;
+    return safe;
+  }
+
+  function normalizeStore(parsed){
+    if (!parsed || typeof parsed !== "object") return null;
+    if (parsed.schemaVersion !== SCHEMA_VERSION) return null;
+    if (!Array.isArray(parsed.notes)) return null;
+    const clean = parsed.notes.map(sanitizeNote).filter(Boolean);
+    clean.sort((a,b)=>Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
+    return { schemaVersion: SCHEMA_VERSION, notes: clean };
+  }
+
+  function loadNotes(){
+    let raw = "";
+    try{ raw = String(localStorage.getItem(STORE_KEY) || ""); }catch{}
+    let parsed = null;
+    try{ parsed = raw ? JSON.parse(raw) : null; }catch{}
+    const norm = normalizeStore(parsed);
+    if (!norm){
+      const empty = { schemaVersion: SCHEMA_VERSION, notes: [] };
+      try{ localStorage.setItem(STORE_KEY, JSON.stringify(empty)); }catch{}
+      state.data = empty;
+      return empty;
+    }
+    state.data = norm;
+    return norm;
+  }
+
+  function saveNotes(data){
+    const norm = normalizeStore(data) || { schemaVersion: SCHEMA_VERSION, notes: [] };
+    state.data = norm;
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(norm)); }catch{}
+    state.lastSavedAt = Date.now();
+    return norm;
+  }
+
+  function createEmptyNote(){
+    const now = Date.now();
+    return {
+      id: uid("note"),
+      title: "Nová poznámka",
+      content: "",
+      createdAt: now,
+      updatedAt: now,
+      pinned: false,
+      tags: [],
+      deleted: false
+    };
+  }
+
+  function getNoteById(id){
+    const key = String(id || "").trim();
+    if (!key) return null;
+    const list = state.data && Array.isArray(state.data.notes) ? state.data.notes : [];
+    return list.find((n)=>String(n.id) === key) || null;
+  }
+
+  function searchNotes(query){
+    const q = foldCs(String(query || "")).trim();
+    const list = state.data && Array.isArray(state.data.notes) ? state.data.notes : [];
+    if (!q) return list.slice();
+    return list.filter((n)=>{
+      const t = foldCs(String(n.title || ""));
+      const c = foldCs(String(n.content || ""));
+      return t.includes(q) || c.includes(q);
+    });
+  }
+
+  function getOverlay(){ return document.getElementById("iuNotesOverlay"); }
+
+  function mountOverlay(){
+    if (state.overlayMounted) return;
+    state.overlayMounted = true;
+    const ov = document.createElement("div");
+    ov.id = "iuNotesOverlay";
+    ov.className = "iu-notesOverlay";
+    ov.hidden = true;
+    ov.setAttribute("aria-hidden", "true");
+    ov.innerHTML =
+      '<div class="iu-notesOverlay__backdrop" data-iu-notes-close="1" aria-hidden="true"></div>' +
+      '<div class="iu-notesOverlay__dialog" role="dialog" aria-modal="true" aria-labelledby="iuNotesTitle">' +
+        '<div class="iu-notesOverlay__header">' +
+          '<div class="iu-notesOverlay__titleWrap">' +
+            '<h2 class="iu-notesOverlay__title" id="iuNotesTitle">Poznámky</h2>' +
+            '<p class="iu-notesOverlay__sub">Lokální poznámky (offline). Připraveno pro budoucí Silver čtení/zápis.</p>' +
+          "</div>" +
+          '<div class="iu-notesOverlay__actions">' +
+            '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-new="1">Nová poznámka</button>' +
+            '<button type="button" class="iu-notesOverlay__close" data-iu-notes-close="1" aria-label="Zavřít poznámky">×</button>' +
+          "</div>" +
+        "</div>" +
+        '<div class="iu-notesOverlay__body">' +
+          '<aside class="iu-notesOverlay__list" aria-label="Seznam poznámek">' +
+            '<div class="iu-notesOverlay__listHeader">' +
+              '<input class="iu-notesOverlay__search" id="iuNotesSearch" type="search" autocomplete="off" placeholder="Hledat v poznámkách…" aria-label="Hledat v poznámkách" />' +
+            "</div>" +
+            '<div class="iu-notesOverlay__listScroll">' +
+              '<ul class="iu-notesOverlay__items" id="iuNotesList"></ul>' +
+            "</div>" +
+          "</aside>" +
+          '<section class="iu-notesOverlay__detail" aria-label="Detail poznámky">' +
+            '<div class="iu-notesOverlay__detailScroll" id="iuNotesDetail"></div>' +
+          "</section>" +
+        "</div>" +
+      "</div>";
+    document.body.appendChild(ov);
+  }
+
+  function openOverlay(originEl){
+    const ov = getOverlay();
+    if (!ov) return;
+    state.returnFocusEl = originEl || document.activeElement;
+    ov.hidden = false;
+    ov.setAttribute("aria-hidden", "false");
+    document.body.classList.add("iu-notesOverlay-open");
+    try{
+      const sw = Math.max(0, (window.innerWidth || 0) - (document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth : 0));
+      state.prevBodyPadRight = String(document.body.style.paddingRight || "");
+      if (sw > 0) document.body.style.paddingRight = sw + "px";
+    }catch{}
+    render();
+    attachFocusTrap();
+    const searchEl = document.getElementById("iuNotesSearch");
+    if (searchEl) {
+      try{ searchEl.focus({ preventScroll: true }); }catch{ try{ searchEl.focus(); }catch{} }
+    } else {
+      const first = ov.querySelector(FOCUSABLE_SELECTOR);
+      if (first) try{ first.focus({ preventScroll: true }); }catch{}
+    }
+  }
+
+  function closeOverlay(){
+    const ov = getOverlay();
+    if (!ov) return;
+    ov.hidden = true;
+    ov.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("iu-notesOverlay-open");
+    try{ document.body.style.paddingRight = state.prevBodyPadRight || ""; }catch{}
+    detachFocusTrap();
+    if (state.returnFocusEl && typeof state.returnFocusEl.focus === "function"){
+      const el = state.returnFocusEl;
+      try{ el.focus({ preventScroll: true }); }catch{ try{ el.focus(); }catch{} }
+      try{ setTimeout(() => { try{ el.focus({ preventScroll: true }); }catch{ try{ el.focus(); }catch{} } }, 0); }catch{}
+    }
+  }
+
+  function attachFocusTrap(){
+    if (state.trapAttached) return;
+    state.trapAttached = true;
+    document.addEventListener("keydown", onGlobalKeyDown, true);
+  }
+  function detachFocusTrap(){
+    if (!state.trapAttached) return;
+    state.trapAttached = false;
+    document.removeEventListener("keydown", onGlobalKeyDown, true);
+  }
+
+  function onGlobalKeyDown(e){
+    const ov = getOverlay();
+    if (!ov || ov.hidden) return;
+    if (e.key === "Escape"){ e.preventDefault(); closeOverlay(); return; }
+    if (e.key !== "Tab") return;
+    const focusables = Array.from(ov.querySelectorAll(FOCUSABLE_SELECTOR)).filter((el)=>!el.hasAttribute("disabled") && el.getAttribute("aria-hidden") !== "true");
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = document.activeElement;
+    if (e.shiftKey){
+      if (active === first || active === ov){ e.preventDefault(); try{ last.focus(); }catch{} }
+    } else {
+      if (active === last){ e.preventDefault(); try{ first.focus(); }catch{} }
+    }
+  }
+
+  function scheduleAutosave(){
+    if (state.autosaveTimer) {
+      try{ clearTimeout(state.autosaveTimer); }catch{}
+      state.autosaveTimer = null;
+    }
+    state.autosaveTimer = setTimeout(() => {
+      state.autosaveTimer = null;
+      try{
+        saveNotes(state.data);
+        renderStatus("Uloženo " + fmtDate(state.lastSavedAt));
+      }catch{}
+    }, 450);
+    renderStatus("Ukládám…");
+  }
+
+  function renderStatus(text){
+    const el = document.getElementById("iuNotesStatus");
+    if (el) el.textContent = text || "";
+  }
+
+  function renderList(){
+    const listEl = document.getElementById("iuNotesList");
+    if (!listEl) return;
+    const items = searchNotes(state.searchQuery).filter((n)=>!n.deleted);
+    if (!items.length){
+      listEl.innerHTML = '<li><div class="iu-notesOverlay__empty">Zatím tu nejsou žádné poznámky. Klikni na <strong>Nová poznámka</strong>.</div></li>';
+      return;
+    }
+    listEl.innerHTML = items.map((n)=>{
+      const active = String(n.id) === String(state.selectedId);
+      const title = String(n.title || "").trim() || "Bez názvu";
+      const meta = (n.updatedAt ? ("Upraveno: " + fmtDate(n.updatedAt)) : "");
+      return (
+        '<li>' +
+          '<button type="button" class="iu-notesOverlay__itemBtn' + (active ? " is-active" : "") + '" data-iu-note-id="' + esc(n.id) + '">' +
+            '<div class="iu-notesOverlay__itemTitle">' + esc(title) + "</div>" +
+            '<div class="iu-notesOverlay__itemMeta">' + esc(meta) + "</div>" +
+          "</button>" +
+        "</li>"
+      );
+    }).join("");
+  }
+
+  function renderDetail(){
+    const root = document.getElementById("iuNotesDetail");
+    if (!root) return;
+    const note = getNoteById(state.selectedId);
+    if (!note){
+      root.innerHTML = '<div class="iu-notesOverlay__empty">Vyber poznámku vlevo, nebo vytvoř novou.</div>';
+      return;
+    }
+    root.innerHTML =
+      '<div class="iu-notesOverlay__form">' +
+        '<div class="iu-notesOverlay__status" id="iuNotesStatus"></div>' +
+        '<label class="iu-notesOverlay__label">Název' +
+          '<input class="iu-notesOverlay__input" id="iuNoteTitle" type="text" maxlength="' + MAX_TITLE + '" value="' + esc(note.title || "") + '" autocomplete="off" />' +
+        "</label>" +
+        '<label class="iu-notesOverlay__label">Obsah' +
+          '<textarea class="iu-notesOverlay__textarea" id="iuNoteContent" rows="10" maxlength="' + MAX_CONTENT + '">' + esc(note.content || "") + "</textarea>" +
+        "</label>" +
+      "</div>";
+    renderStatus(state.lastSavedAt ? ("Uloženo " + fmtDate(state.lastSavedAt)) : "");
+  }
+
+  function render(){
+    renderList();
+    renderDetail();
+  }
+
+  function createNewAndSelect(){
+    const n = createEmptyNote();
+    state.data.notes.unshift(sanitizeNote(n));
+    state.selectedId = n.id;
+    saveNotes(state.data);
+    render();
+    const titleEl = document.getElementById("iuNoteTitle");
+    if (titleEl) {
+      try{ titleEl.focus({ preventScroll: true }); titleEl.select(); }catch{}
+    }
+  }
+
+  function onInputChanged(){
+    const note = getNoteById(state.selectedId);
+    if (!note) return;
+    const titleEl = document.getElementById("iuNoteTitle");
+    const contentEl = document.getElementById("iuNoteContent");
+    const nextTitle = titleEl ? String(titleEl.value || "").slice(0, MAX_TITLE) : String(note.title || "");
+    const nextContent = contentEl ? String(contentEl.value || "").slice(0, MAX_CONTENT) : String(note.content || "");
+    note.title = nextTitle.trim() ? nextTitle : "Bez názvu";
+    note.content = nextContent;
+    note.updatedAt = Date.now();
+    state.data.notes.sort((a,b)=>Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
+    scheduleAutosave();
+    renderList();
+  }
+
+  function bindUi(){
+    if (state.bound) return;
+    state.bound = true;
+
+    document.addEventListener("click", (e)=>{
+      const t = e.target;
+      const mmNotesTrigger = t && t.closest ? t.closest(".iu-mmTopTool--notes") : null;
+      const trigger = t && t.closest ? t.closest("[data-iu-notes-trigger]") : null;
+      if (mmNotesTrigger || trigger){
+        e.preventDefault();
+        openOverlay(mmNotesTrigger || trigger);
+        return;
+      }
+
+      const close = t && t.closest ? t.closest("[data-iu-notes-close]") : null;
+      if (close){ e.preventDefault(); closeOverlay(); return; }
+
+      const newBtn = t && t.closest ? t.closest("[data-iu-notes-new]") : null;
+      if (newBtn){ e.preventDefault(); createNewAndSelect(); return; }
+
+      const pick = t && t.closest ? t.closest("[data-iu-note-id]") : null;
+      if (pick){
+        e.preventDefault();
+        const id = String(pick.getAttribute("data-iu-note-id") || "");
+        state.selectedId = id;
+        render();
+        return;
+      }
+    });
+
+    document.addEventListener("input", (e)=>{
+      const t = e.target;
+      if (!t || !t.id) return;
+      const ov = getOverlay();
+      if (!ov || ov.hidden) return;
+      if (t.id === "iuNoteTitle" || t.id === "iuNoteContent"){
+        onInputChanged();
+        return;
+      }
+      if (t.id === "iuNotesSearch"){
+        state.searchQuery = String(t.value || "");
+        renderList();
+        return;
+      }
+    });
+  }
+
+  function init(){
+    if (state.inited) return;
+    state.inited = true;
+    ensureStyles();
+    mountOverlay();
+    loadNotes();
+    if (!state.selectedId){
+      const first = state.data.notes.find((n)=>!n.deleted);
+      if (first) state.selectedId = first.id;
+    }
+    bindUi();
+
+    window.iuNotesStorage = {
+      storeKey: STORE_KEY,
+      schemaVersion: SCHEMA_VERSION,
+      loadNotes: function(){ return loadNotes(); },
+      saveNotes: function(data){ return saveNotes(data); },
+      createEmptyNote: function(){ return createEmptyNote(); },
+      getNoteById: function(id){ return getNoteById(id); },
+      searchNotes: function(q){ return searchNotes(q); }
+    };
+    window.iuNotesService = {
+      openOverlay: function(originEl){ openOverlay(originEl || document.activeElement); },
+      closeOverlay: function(){ closeOverlay(); },
+      notesGetSnapshot: function(){ return (state.data && Array.isArray(state.data.notes)) ? state.data.notes.slice() : []; },
+      notesSearch: function(q){ return searchNotes(q); }
+    };
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+
 } catch(e) {
   console.error("IU SAFE BOOT ERROR:", e);
 }
@@ -20313,7 +20741,8 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     cursorDate: toDateOnly(new Date()),
     returnFocusEl: null,
     currentEditId: "",
-    trapAttached: false
+    trapAttached: false,
+    prevBodyPadRight: ""
   };
 
   function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
@@ -20478,6 +20907,11 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     ov.hidden = false;
     ov.setAttribute("aria-hidden", "false");
     document.body.classList.add("iu-calendarOverlay-open");
+    try{
+      const sw = Math.max(0, (window.innerWidth || 0) - (document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth : 0));
+      state.prevBodyPadRight = String(document.body.style.paddingRight || "");
+      if (sw > 0) document.body.style.paddingRight = sw + "px";
+    }catch{}
     render();
     attachFocusTrap();
     const first = ov.querySelector(FOCUSABLE_SELECTOR);
@@ -20490,6 +20924,7 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
     document.body.classList.remove("iu-calendarOverlay-open");
+    try{ document.body.style.paddingRight = state.prevBodyPadRight || ""; }catch{}
     detachFocusTrap();
     if (state.returnFocusEl && typeof state.returnFocusEl.focus === "function"){
       const el = state.returnFocusEl;
