@@ -14913,10 +14913,139 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   border: none;
   background: transparent;
   background-image: none;
-  border-radius: 0 0 var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius);
+  border-radius: 0;
   overflow: hidden;
   
   contain: layout;
+}
+
+.silver-calendar-summary-card{
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px 12px;
+  margin: 0;
+  border: none;
+  background: transparent;
+  background-image: none;
+  border-radius: 0 0 var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius);
+  overflow: hidden;
+  contain: layout;
+}
+
+.silver-calendar-summary-row--1{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.silver-calendar-summary-iconCal{
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  color: rgba(30, 40, 55, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.silver-calendar-summary-iconPoint{
+  flex: 0 0 auto;
+  font-size: 15px;
+  line-height: 1.2;
+  margin-top: 0;
+}
+
+.silver-calendar-summary-text{
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.28;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: rgba(30, 40, 55, 0.88);
+}
+
+.silver-calendar-summary-text--line2{
+  color: rgba(30, 40, 55, 0.82);
+}
+
+.silver-calendar-summary-line2block{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px 12px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.silver-calendar-summary-line2main{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.silver-calendar-summary-cta{
+  flex: 0 0 auto;
+  align-self: flex-start;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+@media (min-width: 901px){
+  .silver-calendar-summary-line2block{
+    flex-wrap: nowrap;
+  }
+  .silver-calendar-summary-cta{
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 900px){
+  .silver-calendar-summary-line2block{
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+  }
+  .silver-calendar-summary-line2main{
+    width: 100%;
+  }
+  .silver-calendar-summary-cta{
+    align-self: stretch;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    order: 3;
+  }
+}
+
+.silver-welcome-stack--evening .silver-calendar-summary-iconCal{
+  color: rgba(240, 248, 255, 0.92);
+}
+
+.silver-welcome-stack--evening .silver-calendar-summary-text{
+  color: rgba(240, 248, 255, 0.92);
+}
+
+.silver-welcome-stack--evening .silver-calendar-summary-text--line2{
+  color: rgba(230, 238, 248, 0.88);
 }
 
 .silver-weather-line1,
@@ -14955,11 +15084,21 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .silver-calendar-summary-text{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 @media (max-width: 1024px){
   .silver-weather-line1,
   .silver-weather-line2{
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .silver-calendar-summary-text{
     white-space: normal;
     overflow-wrap: anywhere;
     word-break: break-word;
@@ -15116,13 +15255,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   box-sizing: border-box;
   margin: 0 0 8px 0;
   flex: 0 0 auto;
-  min-height: 332px;
+  min-height: 400px;
 }
 
 @media (min-width: 901px){
   
   .iuSilverWelcomeSticky{
-    min-height: 260px;
+    min-height: 300px;
   }
 }
 
