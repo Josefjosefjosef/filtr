@@ -986,6 +986,7 @@
     const v = val == null || String(val).trim() === "";
     let cls = v ? "iuSilverDraftV iuSilverDraftV--muted" : "iuSilverDraftV";
     if (rowOpts.warnMissingDate && v) cls += " iuSilverDraftV--warningMissing";
+    if (rowOpts.warnMissingTime && v) cls += " iuSilverDraftV--warningMissing";
     if (rowOpts.warnMissingTitle && v) cls += " iuSilverDraftV--warningMissing";
     const disp = v ? "není zadáno" : String(val);
     return `<div class="iuSilverDraftK">${esc(label)}</div><div class="${cls}">${esc(disp)}</div>`;
@@ -1011,7 +1012,7 @@
     const durDisp = d.meta.duration === "certain" ? formatDuration(d) : "";
     return `<div class="iuSilverDraftGrid">
     ${formatDraftRow("Datum", dateDisp, missingDate, { warnMissingDate: warnCritical })}
-    ${formatDraftRow("Čas", timeDisp, missingTime)}
+    ${formatDraftRow("Čas", timeDisp, missingTime, { warnMissingTime: warnCritical })}
     ${formatDraftRow("Název", titleDisp, false, { warnMissingTitle: warnCritical })}
     ${formatDraftRow("Poznámka", noteDisp)}
     ${formatDraftRow("Místo", locDisp)}
