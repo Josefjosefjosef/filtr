@@ -18856,6 +18856,16 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }catch{ return ""; }
   }
 
+  /** Local calendar day (aligned with calendar overlay day keys). */
+  function isNoteUpdatedToday(ts){
+    try{
+      const d = new Date(Number(ts) || 0);
+      if (!d || !Number.isFinite(d.getTime())) return false;
+      const now = new Date();
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+    }catch{ return false; }
+  }
+
   function ensureStyles(){
     try{
       if (document.getElementById(NOTES_STYLE_ID)) return;
@@ -18995,7 +19005,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     state.overlayMounted = true;
     const ov = document.createElement("div");
     ov.id = "iuNotesOverlay";
-    ov.className = "iu-notesOverlay";
+    ov.className = "iu-notesOverlay iuNotesRoot";
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
     ov.innerHTML =
@@ -19124,7 +19134,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (!listEl) return;
     const items = searchNotes(state.searchQuery);
     if (!items.length){
-      listEl.innerHTML = '<li><div class="iu-notesOverlay__empty">' + (state.listView === "trash" ? "Koš je prázdný." : "Zatím nemáš žádné poznámky.<br><strong>Vytvořit první poznámku</strong>") + "</div></li>";
+      listEl.innerHTML = '<li><div class="iu-notesOverlay__empty iuNotesState--empty">' + (state.listView === "trash" ? "Koš je prázdný." : "Zatím nemáš žádné poznámky.<br><strong>Vytvořit první poznámku</strong>") + "</div></li>";
       return;
     }
     listEl.innerHTML = items.map((n)=>{
@@ -19134,10 +19144,16 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const prevLine = content.split(/\r?\n/).map((x)=>String(x || "").trim()).filter(Boolean)[0] || "";
       const meta = (n.updatedAt ? ("Upraveno: " + fmtDate(n.updatedAt)) : "");
       const pinned = !!n.pinned;
+      const todayU = isNoteUpdatedToday(n.updatedAt);
+      let stateCls = "";
+      if (active) stateCls += " iuNotesState--selected";
+      if (pinned) stateCls += " iuNotesState--active";
+      if (todayU) stateCls += " iuNotesState--recent";
+      else if (Number(n.updatedAt)) stateCls += " iuNotesState--older";
       return (
         '<li>' +
           '<div class="iu-notesOverlay__itemRow">' +
-            '<button type="button" class="iu-notesOverlay__itemBtn' + (active ? " is-active" : "") + '" data-iu-note-id="' + esc(n.id) + '">' +
+            '<button type="button" class="iu-notesOverlay__itemBtn' + (active ? " is-active" : "") + stateCls + '" data-iu-note-id="' + esc(n.id) + '">' +
               '<div class="iu-notesOverlay__itemTitle">' + esc(title) + "</div>" +
               (prevLine ? ('<div class="iu-notesOverlay__itemPreview" data-iu-note-preview="1">' + esc(prevLine) + "</div>") : "") +
               '<div class="iu-notesOverlay__itemMeta">' + esc(meta) + "</div>" +
@@ -19154,7 +19170,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (!root) return;
     const note = getNoteById(state.selectedId);
     if (!note){
-      root.innerHTML = '<div class="iu-notesOverlay__empty">Vyber poznámku vlevo, nebo vytvoř novou.</div>';
+      root.innerHTML = '<div class="iu-notesOverlay__empty iuNotesState--empty">Vyber poznámku vlevo, nebo vytvoř novou.</div>';
       return;
     }
     root.innerHTML =
