@@ -15531,13 +15531,17 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 .iuSilverDraftV--muted.iuSilverDraftV--warningMissing{
   color: #b71c1c;
+  -webkit-text-fill-color: #b71c1c;
   font-style: normal;
   font-weight: 600;
+  opacity: 1;
 }
 .iuSilverMsg--assistant .iuSilverDraftV--muted.iuSilverDraftV--warningMissing{
   color: #b71c1c !important;
+  -webkit-text-fill-color: #b71c1c !important;
   font-style: normal;
   font-weight: 600;
+  opacity: 1;
 }
 
 .iuSilverDraftCard{
