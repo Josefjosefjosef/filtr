@@ -59,8 +59,12 @@ if (!/iuSilverWeatherBtnGeo[\s\S]*?silver-weather-btn/.test(html)) {
   fail("❌ Weather CTA must use .silver-weather-btn");
 }
 
-if (!/iuSilverCalendarSummaryShowDay[\s\S]*?silver-weather-btn/.test(html)) {
-  fail("❌ Calendar CTA must use .silver-weather-btn");
+if (html.indexOf("iuSilverCalendarSummaryShowDay") !== -1) {
+  fail("❌ Calendar box3 must not render legacy CTA button (iuSilverCalendarSummaryShowDay)");
+}
+
+if (!/silver-calendar-summary-line2main[^>]*data-iu-action-indicator="chevron"/.test(html)) {
+  fail("❌ Calendar box3 line2 must include action indicator hook (data-iu-action-indicator=\"chevron\")");
 }
 
 console.log("✅ Silver stack guard OK");

@@ -5108,10 +5108,17 @@ function buildVideoAsArticleCard(it) {
       window.__iuSilverCalendarSummaryInit = 1;
     }catch{}
 
+    const card = document.getElementById("iuSilverCalendarSummaryCard");
     const line1 = document.getElementById("iuSilverCalendarSummaryLine1");
     const line2 = document.getElementById("iuSilverCalendarSummaryLine2");
-    const btn = document.getElementById("iuSilverCalendarSummaryShowDay");
-    if (!line1 || !line2 || !btn) return;
+    const actionRow = card ? card.querySelector(".silver-calendar-summary-line2main") : null;
+    if (!card || !line1 || !line2) return;
+
+    try{
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("aria-label", "Zobrazit dnešní kalendář");
+    }catch{}
 
     function formatTimeCsHm(t){
       if (!t || typeof t !== "string") return "";
@@ -5131,13 +5138,18 @@ function buildVideoAsArticleCard(it) {
 
     function refresh(){
       const svc = window.iuCalendarService;
+      const actionable = !!(svc && typeof svc.calendarGetTodayEvents === "function" && typeof svc.calendarOpenTodayDayView === "function");
+      try{
+        if (actionRow){
+          if (actionable) actionRow.setAttribute("data-iu-action-indicator", "chevron");
+          else actionRow.removeAttribute("data-iu-action-indicator");
+        }
+      }catch{}
       if (!svc || typeof svc.calendarGetTodayEvents !== "function"){
         line1.textContent = "Kalendář: Údaje se načítají…";
         line2.textContent = "Chvíli strpení.";
-        try{ btn.disabled = true; }catch{}
         return;
       }
-      try{ btn.disabled = false; }catch{}
       let evs = [];
       try{
         evs = svc.calendarGetTodayEvents() || [];
@@ -5158,20 +5170,35 @@ function buildVideoAsArticleCard(it) {
 
     window.iuSilverCalendarSummaryRefresh = refresh;
 
-    btn.addEventListener("click", ()=>{
+    let inFlight = 0;
+    function openToday(triggerEl){
+      if (inFlight) return;
+      inFlight = 1;
+      try{ setTimeout(() => { inFlight = 0; }, 420); }catch{ inFlight = 0; }
       const svc = window.iuCalendarService;
       if (svc && typeof svc.calendarOpenTodayDayView === "function"){
-        try{
-          svc.calendarOpenTodayDayView(btn);
-        }catch{}
+        try{ svc.calendarOpenTodayDayView(triggerEl || card); }catch{}
       }
-    });
+    }
 
-    btn.addEventListener("keydown", (e)=>{
-      if (e.key !== "Enter" && e.key !== " ") return;
-      e.preventDefault();
-      btn.click();
-    });
+    try{
+      card.addEventListener("click", (ev)=>{
+        try{
+          const t = ev && ev.target;
+          const nested = t && t.closest ? t.closest("button, a, input, select, textarea, [role=\"button\"], [role=\"link\"]") : null;
+          if (nested && nested !== card) return;
+        }catch{}
+        openToday(card);
+      });
+    }catch{}
+
+    try{
+      card.addEventListener("keydown", (e)=>{
+        if (!e || (e.key !== "Enter" && e.key !== " ")) return;
+        try{ e.preventDefault(); }catch{}
+        openToday(card);
+      });
+    }catch{}
 
     refresh();
     try{ setTimeout(() => refresh(), 400); }catch{}
@@ -5610,6 +5637,11 @@ function buildVideoAsArticleCard(it) {
     function iuSilverWeatherRefresh(){
       try{
         const phase = iuSilverWeatherComputePhase();
+        try{
+          if (line2){
+            line2.setAttribute("data-iu-action-indicator", "chevron");
+          }
+        }catch{}
         iuSilverWeatherHideAllActions();
         if (phase === "denied"){
           iuSilverWeatherRenderDenied();
@@ -5644,8 +5676,7 @@ function buildVideoAsArticleCard(it) {
       card.addEventListener("click", (ev) => {
         try{
           if (ev.target && ev.target.closest && ev.target.closest("button, a")) return;
-          const ph = String(card.getAttribute("data-iu-silver-wx-phase") || "");
-          if (ph === "data") iuSilverWeatherNavigateToWeather();
+          iuSilverWeatherNavigateToWeather();
         }catch{}
       });
     }catch{}
