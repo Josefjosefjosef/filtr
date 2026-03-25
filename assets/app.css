@@ -14954,15 +14954,18 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 
 .silver-calendar-summary-card[role="button"]:hover{
   background: var(--iuSilverCardActionHoverBg);
+  transition: background 120ms ease;
 }
 
 .silver-calendar-summary-card[role="button"]:active{
   background: var(--iuSilverCardActionActiveBg);
+  transition: background 80ms ease;
 }
 
 .silver-calendar-summary-card[role="button"]:focus-visible{
   outline: 2px solid var(--iuSilverCardActionFocusOutline);
   outline-offset: -2px;
+  transition: outline-color 120ms ease;
 }
 
 .silver-calendar-summary-row--1{
