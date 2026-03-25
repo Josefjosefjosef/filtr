@@ -14847,6 +14847,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .silver-welcome-stack{
   --iuSilverStackPadX: 12px;
   --iuSilverStackPadY: 12px;
+  --iuSilverCardActionHoverBg: rgba(15, 35, 55, 0.06);
+  --iuSilverCardActionActiveBg: rgba(15, 35, 55, 0.09);
+  --iuSilverCardActionFocusOutline: rgba(15, 35, 55, 0.28);
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -14880,6 +14883,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   background: linear-gradient(135deg, #0f2438 0%, #162d45 55%, #203a52 100%);
   border-color: rgba(255, 255, 255, 0.12);
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+  --iuSilverCardActionHoverBg: rgba(255, 255, 255, 0.06);
+  --iuSilverCardActionActiveBg: rgba(255, 255, 255, 0.09);
+  --iuSilverCardActionFocusOutline: rgba(255, 255, 255, 0.28);
 }
 
 .silver-welcome-stack__separator{
@@ -14947,28 +14953,16 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .silver-calendar-summary-card[role="button"]:hover{
-  background: rgba(15, 35, 55, 0.06);
-}
-
-.silver-welcome-stack--evening .silver-calendar-summary-card[role="button"]:hover{
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--iuSilverCardActionHoverBg);
 }
 
 .silver-calendar-summary-card[role="button"]:active{
-  background: rgba(15, 35, 55, 0.09);
-}
-
-.silver-welcome-stack--evening .silver-calendar-summary-card[role="button"]:active{
-  background: rgba(255, 255, 255, 0.09);
+  background: var(--iuSilverCardActionActiveBg);
 }
 
 .silver-calendar-summary-card[role="button"]:focus-visible{
-  outline: 2px solid rgba(15, 35, 55, 0.28);
+  outline: 2px solid var(--iuSilverCardActionFocusOutline);
   outline-offset: -2px;
-}
-
-.silver-welcome-stack--evening .silver-calendar-summary-card[role="button"]:focus-visible{
-  outline-color: rgba(255, 255, 255, 0.28);
 }
 
 .silver-calendar-summary-row--1{
