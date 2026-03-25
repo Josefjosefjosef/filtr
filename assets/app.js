@@ -5142,7 +5142,6 @@ function buildVideoAsArticleCard(it) {
       try{
         if (actionRow){
           if (actionable) actionRow.setAttribute("data-iu-action-indicator", "chevron");
-          else actionRow.removeAttribute("data-iu-action-indicator");
         }
       }catch{}
       if (!svc || typeof svc.calendarGetTodayEvents !== "function"){
