@@ -20690,6 +20690,9 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
       calendarGetTodayEvents: function(){ return getTodayEvents(); },
       calendarGetTomorrowEvents: function(){ return getTomorrowEvents(); },
       calendarGetNextEvent: function(){ return getNextEvent(); },
+      calendarGetEventsSnapshot: function(){
+        return state.data.events.slice().sort(compareEvents);
+      },
       parseAndCreateFromText: async function(text){
         const eng = window.iuSilverCalendarEngine;
         if (!eng || typeof eng.processUserTurn !== "function") return { ok: false, reason: "iuSilverCalendarEngine_unavailable" };

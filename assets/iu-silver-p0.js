@@ -97,6 +97,296 @@
     return false;
   }
 
+  /** Strong save/create verbs — wins over read patterns when both appear. */
+  function hasStrongCalendarCreateSignal(folded) {
+    return /\buloz|ulož|zapis|zapiš|přidej|pridej/.test(folded);
+  }
+
+  function startOfWeekMondayFromDateStr(dateStr) {
+    const d = new Date(String(dateStr).slice(0, 10) + "T00:00:00");
+    const day = (d.getDay() + 6) % 7;
+    d.setDate(d.getDate() - day);
+    return toDateOnly(d);
+  }
+
+  function parseDateTimeIso(dateStr, timeStr) {
+    const t = String(timeStr || "00:00").slice(0, 5);
+    return new Date(String(dateStr).slice(0, 10) + "T" + t + ":00");
+  }
+
+  /**
+   * Diacritic-insensitive, deterministic: token prefix (4 chars) or full-string includes
+   * when length >= 4 — avoids "zub" → "zubní hygiena"; allows "zubaře" → "Zubař".
+   */
+  function iuSilverTitleMatchesReadQuery(title, queryFolded) {
+    const fq = String(queryFolded || "")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    if (fq.length < 2) return false;
+    const ft = foldCs(String(title || "").trim());
+    if (fq.length >= 4 && ft.includes(fq)) return true;
+    const prefixLen = Math.min(4, fq.length);
+    const prefix = fq.slice(0, prefixLen);
+    const tokens = ft.split(/[^a-z0-9]+/).filter(Boolean);
+    for (let i = 0; i < tokens.length; i++) {
+      const tok = tokens[i];
+      if (fq.length < 4) {
+        if (tok === fq) return true;
+      } else {
+        if (tok.startsWith(prefix) || prefix.startsWith(tok.slice(0, Math.min(prefixLen, tok.length)))) return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Structured read query (P0). Returns null if utterance is not calendar.read.
+   */
+  function tryParseCalendarRead(raw, folded, now) {
+    const r = String(raw || "").trim();
+    const f = String(folded || "");
+    if (!r) return null;
+    if (hasStrongCalendarCreateSignal(f)) return null;
+
+    const coMam = /\bco\s+m[aá]m\b/.test(f);
+    const kdyMam = /^\s*kdy\s+m[aá]m\s+/i.test(r) || /^\s*kdy\s+m[aá]m\s+/i.test(f);
+    const kolik = /\bkolik\s+m[aá]m\b/.test(f);
+
+    if (/\bco\s+m[aá]m\s+jako\s+dal[sš][ií]\b/i.test(f)) {
+      return { intent: "next_event", filter: null };
+    }
+    if (/\bkdy\s+m[aá]m\s+dal[sš][ií]/i.test(f)) {
+      return { intent: "next_event", filter: null };
+    }
+
+    if (kolik && /\bud[aá]lost/i.test(r)) {
+      let dayKey = "today";
+      if (/\bz[ií]tra\b/i.test(f) || /\bzitrek\b/.test(f)) dayKey = "tomorrow";
+      return { intent: "count_events", dateRange: dayKey, filter: null };
+    }
+
+    if (coMam && /\b(?:tento|tenhle|tomuto)\s+t[yý]den\b/i.test(f)) {
+      return { intent: "agenda_for_range", range: "week", filter: null };
+    }
+
+    if (coMam && /\bdnes(?:ka|ek)?\b/i.test(f)) {
+      return { intent: "agenda_for_day", dateRange: "today", filter: null };
+    }
+    if (coMam && /\bz[ií]tra\b/i.test(f)) {
+      return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+    }
+
+    if (kdyMam) {
+      const rest = r.replace(/^\s*kdy\s+m[aá]m\s+/i, "").replace(/\s*[?.!]+\s*$/g, "").trim();
+      if (rest && !/^\s*dal[sš][ií]\b/i.test(rest)) {
+        const qFold = foldCs(rest);
+        return {
+          intent: "find_by_title",
+          query: rest,
+          normalizedQuery: rest,
+          diacriticInsensitive: true,
+          queryFolded: qFold
+        };
+      }
+    }
+
+    const mamSch = r.match(/\bm[aá]m\s+sch[uů]zku\s+s\s+(.+?)\s*$/i);
+    if (mamSch && mamSch[1]) {
+      const rest = String(mamSch[1]).replace(/\s*[?.!]+\s*$/g, "").trim();
+      if (rest) {
+        const qFold = foldCs(rest);
+        return {
+          intent: "find_by_title",
+          query: rest,
+          normalizedQuery: rest,
+          diacriticInsensitive: true,
+          queryFolded: qFold
+        };
+      }
+    }
+
+    return null;
+  }
+
+  function iuSilverSortEventsChrono(events) {
+    return events
+      .slice()
+      .sort(function (a, b) {
+        return String(a.date + "T" + a.time).localeCompare(String(b.date + "T" + b.time));
+      });
+  }
+
+  function iuSilverRetrieveReadQuery(spec, allEvents, now) {
+    if (!spec || !spec.intent) return [];
+    const todayStr = toDateOnly(now);
+    const events = Array.isArray(allEvents) ? allEvents : [];
+    const sorted = iuSilverSortEventsChrono(events);
+
+    if (spec.intent === "agenda_for_day") {
+      const dr = spec.dateRange === "tomorrow" ? addDays(todayStr, 1) : todayStr;
+      return sorted.filter(function (e) {
+        return String(e.date).slice(0, 10) === dr;
+      });
+    }
+
+    if (spec.intent === "agenda_for_range" && spec.range === "week") {
+      const start = startOfWeekMondayFromDateStr(todayStr);
+      const end = addDays(start, 6);
+      return sorted.filter(function (e) {
+        const ds = String(e.date).slice(0, 10);
+        return ds >= start && ds <= end;
+      });
+    }
+
+    if (spec.intent === "next_event") {
+      const t0 = now.getTime();
+      const fut = sorted.filter(function (e) {
+        return parseDateTimeIso(e.date, e.time).getTime() >= t0;
+      });
+      return fut.length ? [fut[0]] : [];
+    }
+
+    if (spec.intent === "find_by_title") {
+      const qf = spec.queryFolded || foldCs(spec.query || "");
+      return sorted.filter(function (e) {
+        return iuSilverTitleMatchesReadQuery(e.title, qf);
+      });
+    }
+
+    if (spec.intent === "count_events") {
+      const dr = spec.dateRange === "tomorrow" ? addDays(todayStr, 1) : todayStr;
+      return sorted.filter(function (e) {
+        return String(e.date).slice(0, 10) === dr;
+      });
+    }
+
+    return [];
+  }
+
+  function iuSilverFormatEventLine(ev) {
+    const d = iuSilverFormatDateCs(String(ev.date || ""));
+    return (d ? d + " " : "") + String(ev.time || "") + " — " + String(ev.title || "");
+  }
+
+  function iuSilverBuildReadAnswer(spec, matched, now) {
+    const type = spec.intent;
+    const evs = iuSilverSortEventsChrono(matched);
+    const count = evs.length;
+    let ambiguity = false;
+    let message = "";
+    const todayStr = toDateOnly(now);
+    const tomorrowStr = addDays(todayStr, 1);
+
+    if (type === "count_events") {
+      const label = spec.dateRange === "tomorrow" ? "zítra" : "dnes";
+      if (count === 0) message = "Na " + label + " nemáš žádné události.";
+      else if (count === 1) message = "Na " + label + " máš 1 událost.";
+      else if (count < 5) message = "Na " + label + " máš " + count + " události.";
+      else message = "Na " + label + " máš " + count + " událostí.";
+      return { success: true, type: type, count: count, events: evs, message: message, ambiguity: false };
+    }
+
+    if (type === "next_event") {
+      if (count === 0) {
+        message = "Žádná nadcházející událost v kalendáři.";
+        return { success: true, type: type, count: 0, events: [], message: message, ambiguity: false };
+      }
+      const ev = evs[0];
+      message = "Další je " + String(ev.title || "") + " v " + String(ev.time || "") + " (" + iuSilverFormatDateCs(String(ev.date || "")) + ").";
+      return { success: true, type: type, count: 1, events: [ev], message: message, ambiguity: false };
+    }
+
+    if (type === "find_by_title") {
+      if (count === 0) {
+        message = "Nic takového v kalendáři nemám.";
+        return { success: true, type: type, count: 0, events: [], message: message, ambiguity: false };
+      }
+      if (count > 1) ambiguity = true;
+      if (count === 1) {
+        const ev = evs[0];
+        message = "Našel jsem: " + String(ev.title || "") + " v " + String(ev.time || "") + " (" + iuSilverFormatDateCs(String(ev.date || "")) + ").";
+      } else {
+        const show = evs.slice(0, 3);
+        const lines = show.map(function (e) {
+          return iuSilverFormatEventLine(e);
+        });
+        message =
+          "Našel jsem více událostí (" +
+          count +
+          ").\n" +
+          lines.join("\n") +
+          (count > 3 ? "\n… a další (" + (count - 3) + ")." : "");
+      }
+      return { success: true, type: type, count: count, events: evs, message: message, ambiguity: ambiguity };
+    }
+
+    if (type === "agenda_for_day") {
+      const dr = spec.dateRange === "tomorrow" ? tomorrowStr : todayStr;
+      const dayWord = spec.dateRange === "tomorrow" ? "zítra" : "dnes";
+      if (count === 0) {
+        message = (spec.dateRange === "tomorrow" ? "Na zítřek " : "Na dnešek ") + "nemáš žádné události.";
+        return { success: true, type: type, count: 0, events: [], message: message, ambiguity: false };
+      }
+      if (count === 1) {
+        const ev = evs[0];
+        const tit = String(ev.title || "");
+        message =
+          (spec.dateRange === "tomorrow" ? "Zítra máš " : "Dnes máš ") + tit + " v " + String(ev.time || "") + ".";
+        return { success: true, type: type, count: 1, events: evs, message: message, ambiguity: false };
+      }
+      ambiguity = count > 1;
+      const preview = evs.slice(0, 3);
+      const lines = preview.map(function (e) {
+        return String(e.time || "") + " — " + String(e.title || "");
+      });
+      message =
+        (spec.dateRange === "tomorrow" ? "Zítra " : "Dnes ") +
+        "máš " +
+        count +
+        " událostí. Například:\n" +
+        lines.join("\n") +
+        (count > 3 ? "\n… a další (" + (count - 3) + ")." : "");
+      return { success: true, type: type, count: count, events: evs, message: message, ambiguity: ambiguity };
+    }
+
+    if (type === "agenda_for_range") {
+      if (count === 0) {
+        message = "Tento týden nemáš žádné události.";
+        return { success: true, type: type, count: 0, events: [], message: message, ambiguity: false };
+      }
+      ambiguity = count > 1;
+      const preview = evs.slice(0, 3);
+      const lines = preview.map(function (e) {
+        return iuSilverFormatEventLine(e);
+      });
+      message =
+        "Tento týden máš " +
+        count +
+        " událostí. Ukázka:\n" +
+        lines.join("\n") +
+        (count > 3 ? "\n… a další (" + (count - 3) + ")." : "");
+      return { success: true, type: type, count: count, events: evs, message: message, ambiguity: ambiguity };
+    }
+
+    return { success: false, type: type, count: 0, events: [], message: "Nepodařilo se zpracovat dotaz.", ambiguity: false };
+  }
+
+  function calendarReadProbe(text, opts) {
+    const now = opts && opts.now ? opts.now : new Date();
+    const raw = String(text || "").trim();
+    const folded = foldCs(raw);
+    const spec = tryParseCalendarRead(raw, folded, now);
+    if (!spec) {
+      return { detectedIntent: null, query: null, events: [], answer: null };
+    }
+    const snap = opts && typeof opts.getEventsSnapshot === "function" ? opts.getEventsSnapshot() : opts && Array.isArray(opts.events) ? opts.events : [];
+    const matched = iuSilverRetrieveReadQuery(spec, snap, now);
+    const answer = iuSilverBuildReadAnswer(spec, matched, now);
+    return { detectedIntent: "calendar.read", query: spec, events: matched, answer: answer };
+  }
+
   function cloneDraft(d) {
     return {
       date: d.date || "",
@@ -901,6 +1191,27 @@
     const now = ctx && ctx.now ? ctx.now : new Date();
     const raw = String(text || "").trim();
     const folded = foldCs(raw);
+    const readSpec = tryParseCalendarRead(raw, folded, now);
+    if (readSpec) {
+      const snap = ctx && typeof ctx.getEventsSnapshot === "function" ? ctx.getEventsSnapshot() : [];
+      const matched = iuSilverRetrieveReadQuery(readSpec, snap, now);
+      const answer = iuSilverBuildReadAnswer(readSpec, matched, now);
+      const empty = createEmptyDraft();
+      return {
+        normalizedIntent: "calendar.read",
+        processingState: "READ_OK",
+        readQuery: readSpec,
+        readAnswer: answer,
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: answer.message,
+        assistantLead: answer.message,
+        clarificationText: "",
+        draft: empty
+      };
+    }
+
     let draft = cloneDraft(prevDraft);
     const intent = hasCalendarIntent(folded, raw) || draft.activeCalendarSession;
 
@@ -957,7 +1268,8 @@
   window.iuSilverCalendarEngine = {
     createEmptyDraft,
     processUserTurn,
-    proofWeekdayRuleSnippet
+    proofWeekdayRuleSnippet,
+    calendarReadProbe
   };
 
   /* --- Fullscreen chat UI (depends on DOM; calendar save via window.iuCalendarService) --- */
@@ -1046,6 +1358,11 @@
     if (turn.confirmOnly) {
       return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
   <p class="iuSilverMsgLead">${esc(turn.assistantLead)}</p>
+</div>`;
+    }
+    if (turn.processingState === "READ_OK" && turn.readAnswer && turn.readAnswer.message) {
+      return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
+  <p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(turn.readAnswer.message).replace(/\n/g, "<br>")}</p>
 </div>`;
     }
     if (turn.processingState === "UNSUPPORTED") {
@@ -1341,6 +1658,10 @@
     if (turn.confirmOnly) {
       chatState.lastDraftTurn = null;
       chatState.cardEditMode = false;
+    } else if (turn.processingState === "READ_OK" || turn.normalizedIntent === "calendar.read") {
+      chatState.lastDraftTurn = null;
+      chatState.cardEditMode = false;
+      chatState.draft = createEmptyDraft();
     } else if (turn.processingState !== "UNSUPPORTED") {
       chatState.cardEditMode = false;
       chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
@@ -1360,6 +1681,17 @@
     } catch {
       return "";
     }
+  }
+
+  function getSilverCalendarCtx() {
+    const svc = window.iuCalendarService;
+    return {
+      now: new Date(),
+      getEventsSnapshot: function () {
+        if (!svc || typeof svc.calendarGetEventsSnapshot !== "function") return [];
+        return svc.calendarGetEventsSnapshot();
+      }
+    };
   }
 
   function handleHomeSubmit() {
@@ -1382,7 +1714,7 @@
     if (first) {
       appendUserMessage(first);
       const eng = window.iuSilverCalendarEngine;
-      const turn = eng.processUserTurn(first, chatState.draft, { now: new Date() });
+      const turn = eng.processUserTurn(first, chatState.draft, getSilverCalendarCtx());
       chatState.draft = turn.draft;
       appendAssistantTurn(turn);
     }
@@ -1396,7 +1728,7 @@
     input.value = "";
     appendUserMessage(text);
     const eng = window.iuSilverCalendarEngine;
-    const turn = eng.processUserTurn(text, chatState.draft, { now: new Date() });
+    const turn = eng.processUserTurn(text, chatState.draft, getSilverCalendarCtx());
     chatState.draft = turn.draft;
     appendAssistantTurn(turn);
   }
