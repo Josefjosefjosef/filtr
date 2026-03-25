@@ -20898,6 +20898,8 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
   const CAL_NS = "iu.calendar";
   const CAL_STYLE_ID = "iu-calendar-overlay-styles";
   const CAL_STYLE_TEXT = ".iu-calendarOverlay{position:fixed;inset:0;z-index:10020;display:none;align-items:center;justify-content:center}.iu-calendarOverlay:not([hidden]){display:flex}.iu-calendarOverlay__backdrop{position:absolute;inset:0;background:rgba(8,14,22,.78)}.iu-calendarOverlay__dialog{position:relative;z-index:1;width:min(1080px,calc(100vw - 28px));height:min(88vh,860px);overflow:hidden;border-radius:12px;background:#f7f9fc;box-shadow:0 20px 52px rgba(7,12,19,.35);display:grid;grid-template-rows:auto 1fr}.iu-calendarOverlay__header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid #d7dfeb;background:#fff}.iu-calendarOverlay__controls,.iu-calendarOverlay__toolbar,.iu-calendarOverlay__formActions{display:flex;align-items:center;gap:8px}.iu-calendarOverlay__viewBtn,.iu-calendarOverlay__close,.iu-calendarOverlay__eventBtn{border:1px solid #c6d2e5;border-radius:8px;background:#eef3fb;color:#203a59;padding:8px 10px;font-size:13px}.iu-calendarOverlay__close{width:38px;height:38px;border:0;font-size:24px;line-height:1;background:#e8eef7;padding:0;touch-action:manipulation}.iu-calendarOverlay__viewBtn.is-active{background:#203a59;color:#fff;border-color:#203a59}.iu-calendarOverlay__body{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:0;height:100%}.iu-calendarOverlay__main,.iu-calendarOverlay__side{min-height:0;padding:12px}.iu-calendarOverlay__main{display:flex;flex-direction:column;gap:10px}.iu-calendarOverlay__side{border-left:1px solid #d7dfeb;background:#fff;overflow:auto}.iu-calendarOverlay__toolbar{margin-bottom:0;flex-wrap:wrap}.iu-calendarOverlay__toolbar strong{flex:1}.iu-calendarOverlay__viewRoot{border:1px solid #d2dcea;border-radius:10px;background:#fff;min-height:320px;height:calc(100% - 42px);overflow:auto}.iu-calendarOverlay__form{display:grid;gap:10px}.iu-calendarOverlay__form label{display:grid;gap:4px;font-size:13px;color:#234064}.iu-calendarOverlay__form input,.iu-calendarOverlay__form textarea,.iu-calendarOverlay__form select{width:100%;border:1px solid #c9d7ea;border-radius:8px;padding:10px;font-size:14px}.iu-calendarOverlay__formActions{flex-wrap:wrap}.iu-calendarOverlay__formActions button{flex:1 1 0;min-height:44px;touch-action:manipulation}.iu-calendarOverlay__msg{min-height:16px;font-size:12px;color:#2a4568}.iu-calendarOverlay__eventList{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}.iu-calendarOverlay__eventBtn{width:100%;text-align:left;background:#f4f7fc;border-color:#d0daea;padding:10px}.iu-calGrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;padding:8px}.iu-calDayCell{border:1px solid #d6dfec;border-radius:8px;min-height:88px;padding:6px;background:#fff;font-size:12px;display:block;text-align:left}.iu-calDayCell.is-out{opacity:.45}.iu-calDayCell.is-weekend{background:#f7fbff}.iu-calDayCell.is-today{border-color:#2f9cf4;box-shadow:0 0 0 1px #2f9cf4 inset}.iu-calDayCell.is-selected{border-color:#1f3a5f;box-shadow:0 0 0 2px rgba(31,58,95,.26) inset;background:#eef4ff}.iu-calDayCell.is-holiday{background:#fff8f0}.iu-calDayCell__events{margin-top:6px;display:grid;gap:3px}.iu-calEventDot{border-radius:6px;background:#e7eef9;padding:2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-calYear{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:8px}.iu-calYearMonth,.iu-calTimelineItem{border:1px solid #d6dfec;border-radius:8px;padding:10px;background:#fff}.iu-calTimeline{padding:8px;display:grid;gap:8px}.iu-calTimelineItem{display:grid;gap:8px}body.iu-calendarOverlay-open{overflow:hidden!important}@media (max-width:900px){.iu-calendarOverlay{align-items:stretch;justify-content:stretch;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#f7f9fc}.iu-calendarOverlay__backdrop{position:fixed;inset:0;background:rgba(8,14,22,.85)}.iu-calendarOverlay__dialog{width:100vw;min-height:100dvh;height:auto;max-height:none;border-radius:0;overflow:visible;display:flex;flex-direction:column;box-shadow:none;background:#f7f9fc}.iu-calendarOverlay__header{position:relative;top:auto;z-index:1;display:flex;align-items:center;gap:4px;flex-wrap:nowrap}.iu-calendarOverlay__header h2{margin:0;font-size:15px;line-height:1;white-space:nowrap;flex:0 0 auto;display:flex;align-items:center;min-height:34px}.iu-calendarOverlay__controls{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:4px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.iu-calendarOverlay__controls::-webkit-scrollbar{display:none}.iu-calendarOverlay__viewBtn{min-height:34px;padding:6px 6px;font-size:11px;line-height:1;white-space:nowrap;flex:0 0 auto}.iu-calendarOverlay__close{margin-left:auto;min-width:34px;min-height:34px;width:34px;height:34px;flex:0 0 auto}.iu-calendarOverlay__body{display:flex;flex-direction:column;height:auto;min-height:0;overflow:visible!important;flex:1 1 auto;background:#fff}.iu-calendarOverlay__main,.iu-calendarOverlay__side,.iu-calendarOverlay__viewRoot{height:auto!important;max-height:none!important;overflow:visible!important}.iu-calendarOverlay__main{padding:10px 10px 8px;flex:0 0 auto!important;background:#fff;display:flex;flex-direction:column}.iu-calendarOverlay__side{border-left:0;border-top:1px solid #d7dfeb;padding:12px 10px 16px;flex:0 0 auto!important;background:#fff}.iu-calendarOverlay__viewRoot{display:block;width:100%;min-height:320px!important}.iu-calendarOverlay__viewRoot[data-view='week'],.iu-calendarOverlay__viewRoot[data-view='year']{min-height:auto!important;height:auto!important;max-height:none!important;overflow:visible!important}.iu-calendarOverlay__viewRoot[data-view='week'] .iu-calTimeline,.iu-calendarOverlay__viewRoot[data-view='year'] .iu-calYear{margin-bottom:0;padding-bottom:0}.iu-calendarOverlay__form{order:1}.iu-calendarOverlay__formActions{gap:10px;position:relative}.iu-calendarOverlay__formActions button{min-height:48px;font-size:15px;position:relative}.iu-calendarOverlay__listWrap{order:2}.iu-calTimeline{padding:6px}.iu-calGrid{padding:6px;gap:6px}.iu-calDayCell{min-height:84px}.iu-calYear{grid-template-columns:repeat(2,minmax(0,1fr));padding:6px}}@media (max-width:640px){.iu-calendarOverlay__header h2{font-size:14px;min-height:32px}.iu-calendarOverlay__viewBtn{min-height:32px;padding:6px 5px;font-size:10px}.iu-calendarOverlay__close{min-width:32px;min-height:32px;width:32px;height:32px}.iu-calendarOverlay__toolbar button{min-height:42px}.iu-calendarOverlay__formActions button{flex:1 1 100%}.iu-calYear{grid-template-columns:1fr}.iu-calDayCell{min-height:72px;font-size:11px}}";
+  const CAL_VISUAL_STYLE_ID = "iu-calendar-visual-state-layer";
+  const CAL_VISUAL_LAYER_TEXT = "#iuCalendarOverlay{--iu-cal-accent:#15803d;--iu-cal-accent-soft:rgba(21,128,61,.12);--iu-cal-muted:rgba(15,23,42,.45);--iu-cal-surface:#ffffff;--iu-cal-border:#d6dfec}#iuCalendarOverlay .iu-calendarOverlay__viewBtn.is-active{background:linear-gradient(180deg,#1e3a5c 0%,#152a42 100%);color:#fff;border-color:#152a42;box-shadow:0 1px 0 rgba(255,255,255,.12) inset}#iuCalendarOverlay .iu-calendarOverlay__viewBtn:not(.is-active){background:#f8fafc;color:#334155;border-color:#cbd5e1}#iuCalendarOverlay .iu-calendarOverlay__viewBtn:not(.is-active):hover{background:#f1f5f9}#iuCalendarOverlay .iu-calendarOverlay__viewBtn:focus-visible{outline:2px solid var(--iu-cal-accent);outline-offset:2px}#iuCalendarOverlay .iu-calendarOverlay__toolbar>button{background:#f8fafc;border:1px solid #cbd5e1;color:#1e293b}#iuCalendarOverlay .iu-calendarOverlay__toolbar>button:hover{background:#f1f5f9}#iuCalendarOverlay .iu-calendarOverlay__toolbar>button:focus-visible{outline:2px solid var(--iu-cal-accent);outline-offset:2px}#iuCalendarOverlay .iu-calendarOverlay__close{background:#eef2f7;color:#0f172a}#iuCalendarOverlay .iu-calendarOverlay__close:hover{background:#e2e8f0}#iuCalendarOverlay .iu-calendarOverlay__close:focus-visible{outline:2px solid var(--iu-cal-accent);outline-offset:2px}#iuCalendarOverlay .iu-calTimelineItem.is-past{opacity:.72;background:#f8fafc;border-color:#e2e8f0}#iuCalendarOverlay .iu-calTimelineItem.is-future{background:#fff}#iuCalendarOverlay .iu-calTimelineItem.is-today{background:rgba(236,253,245,.85);border-color:rgba(21,128,61,.35);box-shadow:0 0 0 1px rgba(21,128,61,.2) inset}#iuCalendarOverlay .iu-calTimelineItem.is-empty:not(.is-today){color:var(--iu-cal-muted)}#iuCalendarOverlay .iu-calTimelineItem.has-events:not(.is-today){border-color:#cbd5e1}#iuCalendarOverlay .iu-calendarOverlay__eventBtn.is-past-event{opacity:.68;background:#f1f5f9;border-color:#e2e8f0;color:#475569}#iuCalendarOverlay .iu-calendarOverlay__eventBtn.is-nearest-upcoming{background:linear-gradient(180deg,rgba(236,253,245,.95),#ecfdf5);border-color:rgba(21,128,61,.45);color:#0f172a;box-shadow:0 0 0 1px rgba(21,128,61,.2) inset;font-weight:600}#iuCalendarOverlay .iu-calDayCell.is-past:not(.is-today){opacity:.68;background:#f8fafc}#iuCalendarOverlay .iu-calDayCell.is-future:not(.is-today){background:#fff}#iuCalendarOverlay .iu-calDayCell.is-today{border-color:rgba(21,128,61,.5);box-shadow:0 0 0 1px rgba(21,128,61,.35) inset;background:rgba(236,253,245,.75)}#iuCalendarOverlay .iu-calDayCell.is-selected:not(.is-today){border-color:#1e3a5c;box-shadow:0 0 0 2px rgba(30,58,92,.22) inset;background:#eef4ff}#iuCalendarOverlay .iu-calDayCell.is-today.is-selected{border-color:#1e3a5c;box-shadow:0 0 0 2px rgba(30,58,92,.25) inset,0 0 0 1px rgba(21,128,61,.25) inset;background:linear-gradient(145deg,rgba(236,253,245,.9),rgba(238,244,255,.95))}#iuCalendarOverlay .iu-calDayCell.has-events:not(.is-today):not(.is-selected){border-color:rgba(21,128,61,.28)}#iuCalendarOverlay .iu-calDayCell.has-events .iu-calEventDot{background:rgba(236,253,245,.9);border:1px solid rgba(21,128,61,.15)}#iuCalendarOverlay .iu-calYearMonth.is-current-month{border-color:rgba(21,128,61,.35);background:rgba(236,253,245,.5)}#iuCalendarOverlay .iu-calYearMonth.has-events:not(.is-current-month){border-color:#cbd5e1}#iuCalendarOverlay .iu-calYearMonth.is-empty:not(.is-current-month){opacity:.78;background:#fafafa}#iuCalendarOverlay .iu-calendarOverlay__form input:focus-visible,#iuCalendarOverlay .iu-calendarOverlay__form select:focus-visible,#iuCalendarOverlay .iu-calendarOverlay__form textarea:focus-visible{outline:2px solid var(--iu-cal-accent);outline-offset:0;border-color:rgba(21,128,61,.45)}#iuCalendarOverlay .iu-calendarOverlay__formActions button[type=submit]{background:linear-gradient(180deg,#1e3a5c,#152a42);color:#fff;border-color:#152a42;font-weight:600}#iuCalendarOverlay .iu-calendarOverlay__formActions button[type=submit]:hover{filter:brightness(1.03)}#iuCalendarOverlay .iu-calendarOverlay__formActions button[data-iu-cal-delete],#iuCalendarOverlay .iu-calendarOverlay__formActions button[data-iu-cal-reset]{background:#f8fafc;color:#334155;border-color:#cbd5e1}#iuCalendarOverlay .iu-calendarOverlay__listWrap{margin-top:4px;padding-top:10px;border-top:1px solid #e2e8f0}#iuCalendarOverlay .iu-calendarOverlay__listWrap h3{font-size:14px;color:#1e293b;margin:0 0 8px}";
   const SCHEMA_VERSION = 1;
   const STORE_KEY = CAL_NS + ".store.v1";
   const MAX_ATTACHMENTS = 4;
@@ -20927,11 +20929,18 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
   function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
   function ensureStyles(){
     try{
-      if (document.getElementById(CAL_STYLE_ID)) return;
-      const st = document.createElement("style");
-      st.id = CAL_STYLE_ID;
-      st.textContent = CAL_STYLE_TEXT;
-      document.head.appendChild(st);
+      if (!document.getElementById(CAL_STYLE_ID)){
+        const st = document.createElement("style");
+        st.id = CAL_STYLE_ID;
+        st.textContent = CAL_STYLE_TEXT;
+        document.head.appendChild(st);
+      }
+      if (!document.getElementById(CAL_VISUAL_STYLE_ID)){
+        const st2 = document.createElement("style");
+        st2.id = CAL_VISUAL_STYLE_ID;
+        st2.textContent = CAL_VISUAL_LAYER_TEXT;
+        document.head.appendChild(st2);
+      }
     }catch{}
   }
   function pad(n){ return String(n).padStart(2, "0"); }
@@ -21180,12 +21189,32 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
   }
 
   function renderTimeline(days){
+    const todayStr = toDateOnly(new Date());
+    const nowMs = Date.now();
     let html = '<div class="iu-calTimeline">';
     days.forEach((day)=>{
       const items = getEventsForDate(day);
-      html += `<article class="iu-calTimelineItem"><strong>${esc(day)}</strong>`;
+      let dayClass = "iu-calTimelineItem";
+      if (day < todayStr) dayClass += " is-past";
+      else if (day > todayStr) dayClass += " is-future";
+      else dayClass += " is-today";
+      dayClass += items.length ? " has-events" : " is-empty";
+      let nearestId = "";
+      if (day === todayStr && items.length){
+        for (let i = 0; i < items.length; i++){
+          const ev = items[i];
+          if (parseDateTime(ev.date, ev.time).getTime() >= nowMs){ nearestId = ev.id; break; }
+        }
+      }
+      html += `<article class="${dayClass}"><strong>${esc(day)}</strong>`;
       if (!items.length) html += '<div>Bez událostí</div>';
-      else items.forEach((ev)=>{ html += `<button type="button" class="iu-calendarOverlay__eventBtn" data-iu-cal-open-event="${esc(ev.id)}">${esc(ev.time)} · ${esc(ev.title)}</button>`; });
+      else items.forEach((ev)=>{
+        let btnCls = "iu-calendarOverlay__eventBtn";
+        if (ev.id === nearestId) btnCls += " is-nearest-upcoming";
+        if (day < todayStr) btnCls += " is-past-event";
+        else if (day === todayStr && parseDateTime(ev.date, ev.time).getTime() < nowMs) btnCls += " is-past-event";
+        html += `<button type="button" class="${btnCls}" data-iu-cal-open-event="${esc(ev.id)}">${esc(ev.time)} · ${esc(ev.title)}</button>`;
+      });
       html += "</article>";
     });
     html += "</div>";
@@ -21199,27 +21228,38 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     const first = new Date(year, month, 1);
     const firstWeekday = (first.getDay() + 6) % 7;
     const start = new Date(year, month, 1 - firstWeekday);
+    const todayCmp = toDateOnly(new Date());
     let html = '<div class="iu-calGrid">';
     for (let i = 0; i < 42; i++){
       const d = new Date(start); d.setDate(start.getDate() + i);
       const ds = toDateOnly(d);
       const isOut = d.getMonth() !== month;
-      const isToday = ds === toDateOnly(new Date());
+      const isToday = ds === todayCmp;
+      const isPastDay = !isToday && ds < todayCmp;
+      const isFutureDay = !isToday && ds > todayCmp;
       const wk = d.getDay();
       const weekend = wk === 0 || wk === 6;
       const holiday = isHoliday(ds);
-      const items = getEventsForDate(ds).slice(0, 2);
-      const isSelected = ds === state.selectedDate;      html += `<button type="button" class="iu-calDayCell${isOut ? " is-out" : ""}${isToday ? " is-today" : ""}${isSelected ? " is-selected" : ""}${weekend ? " is-weekend" : ""}${holiday ? " is-holiday" : ""}" data-iu-cal-select-date="${esc(ds)}"><div>${d.getDate()}</div><div class="iu-calDayCell__events">${items.map((ev)=>`<div class="iu-calEventDot">${esc(ev.time)} ${esc(ev.title)}</div>`).join("")}</div></button>`;
+      const evsAll = getEventsForDate(ds);
+      const items = evsAll.slice(0, 2);
+      const hasEvents = evsAll.length ? " has-events" : "";
+      const isSelected = ds === state.selectedDate;      html += `<button type="button" class="iu-calDayCell${isOut ? " is-out" : ""}${isToday ? " is-today" : ""}${isSelected ? " is-selected" : ""}${weekend ? " is-weekend" : ""}${holiday ? " is-holiday" : ""}${isPastDay ? " is-past" : ""}${isFutureDay ? " is-future" : ""}${hasEvents}" data-iu-cal-select-date="${esc(ds)}"><div>${d.getDate()}</div><div class="iu-calDayCell__events">${items.map((ev)=>`<div class="iu-calEventDot">${esc(ev.time)} ${esc(ev.title)}</div>`).join("")}</div></button>`;
     }
     html += "</div>";
     return html;
   }
 
   function renderYearGrid(year){
+    const cur = new Date();
+    const curY = cur.getFullYear();
+    const curM = cur.getMonth();
     let html = '<div class="iu-calYear">';
     for (let m = 0; m < 12; m++){
       const d = new Date(year, m, 1);
-      html += `<button type="button" class="iu-calYearMonth" data-iu-cal-select-date="${year}-${pad(m+1)}-01">${esc(d.toLocaleDateString("cs-CZ", { month: "long" }))}<div>${getEventsForMonth(year, m)} událostí</div></button>`;
+      const evc = getEventsForMonth(year, m);
+      const isCurMonth = year === curY && m === curM;
+      const monthCls = "iu-calYearMonth" + (isCurMonth ? " is-current-month" : "") + (evc ? " has-events" : " is-empty");
+      html += `<button type="button" class="${monthCls}" data-iu-cal-select-date="${year}-${pad(m+1)}-01">${esc(d.toLocaleDateString("cs-CZ", { month: "long" }))}<div>${evc} událostí</div></button>`;
     }
     html += "</div>";
     return html;
@@ -21230,7 +21270,21 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     const list = document.getElementById("iuCalendarDayEvents");
     if (!list) return;
     const items = getEventsForDate(state.selectedDate);
-    list.innerHTML = items.map((ev)=>`<li><button type="button" class="iu-calendarOverlay__eventBtn" data-iu-cal-open-event="${esc(ev.id)}">${esc(ev.time)} · ${esc(ev.title)}</button></li>`).join("") || "<li>Bez událostí</li>";
+    const todayStr = toDateOnly(new Date());
+    const nowMs = Date.now();
+    let nearestId = "";
+    if (state.selectedDate === todayStr && items.length){
+      for (let i = 0; i < items.length; i++){
+        const ev = items[i];
+        if (parseDateTime(ev.date, ev.time).getTime() >= nowMs){ nearestId = ev.id; break; }
+      }
+    }
+    list.innerHTML = items.map((ev)=>{
+      let cls = "iu-calendarOverlay__eventBtn";
+      if (ev.id === nearestId) cls += " is-nearest-upcoming";
+      if (parseDateTime(ev.date, ev.time).getTime() < nowMs) cls += " is-past-event";
+      return `<li><button type="button" class="${cls}" data-iu-cal-open-event="${esc(ev.id)}">${esc(ev.time)} · ${esc(ev.title)}</button></li>`;
+    }).join("") || "<li>Bez událostí</li>";
     list.querySelectorAll("[data-iu-cal-open-event]").forEach((el)=>el.addEventListener("click", ()=>loadEventForEdit(el.getAttribute("data-iu-cal-open-event") || "")));
   }
 
