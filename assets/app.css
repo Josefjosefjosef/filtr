@@ -10546,6 +10546,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   filter: brightness(0.97);
 }
 
+/* Notes mobile/tablet layout overrides live in app.js (NOTES_MOBILE_FIX_TEXT) appended after base notes styles for cascade. Visual state tokens remain below. */
+
 .iuMyUzelTitleLine1,
 .iuMyUzelTitleLine2{
   display: block;
