@@ -5438,6 +5438,157 @@ function buildVideoAsArticleCard(it) {
     try{ setTimeout(() => refresh(), 1500); }catch{}
   }
 
+  /**
+   * Horní stack box 4: souhrn úkolů (stejný vizuální systém jako kalendář).
+   * Počty z window.iuTasksService.tasksGetSnapshot — stejná logika „Dnes“ jako filtr „Dnes“ v Tasks (todo + dueAt + dueAt <= dnes).
+   */
+  function iuSilverTasksSummaryInit(){
+    try{
+      if (window.__iuSilverTasksSummaryInit) return;
+      window.__iuSilverTasksSummaryInit = 1;
+    }catch{}
+
+    const card = document.getElementById("iuSilverTasksSummaryCard");
+    const line1 = document.getElementById("iuSilverTasksSummaryLine1");
+    const line2 = document.getElementById("iuSilverTasksSummaryLine2");
+    const actionRow = card ? card.querySelector(".silver-calendar-summary-line2main") : null;
+    if (!card || !line1 || !line2) return;
+
+    try{
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("aria-label", "Zobrazit úkoly");
+    }catch{}
+
+    try{
+      if (actionRow) actionRow.setAttribute("data-iu-action-indicator", "chevron");
+    }catch{}
+
+    function localYmdTasksSum(d){
+      try{
+        const x = d instanceof Date ? d : new Date(d);
+        if (!x || !Number.isFinite(x.getTime())) return "";
+        const y = x.getFullYear();
+        const m = String(x.getMonth() + 1).padStart(2, "0");
+        const day = String(x.getDate()).padStart(2, "0");
+        return y + "-" + m + "-" + day;
+      }catch{ return ""; }
+    }
+
+    function countsFromSnapshot(tasks){
+      const arr = Array.isArray(tasks) ? tasks : [];
+      const today = localYmdTasksSum(new Date());
+      let totalTodo = 0;
+      let todaySolve = 0;
+      for (let i = 0; i < arr.length; i++){
+        const t = arr[i];
+        if (!t || t.status !== "todo") continue;
+        totalTodo++;
+        const da = t.dueAt;
+        if (da != null && String(da).trim() !== ""){
+          const ymd = String(da).trim().slice(0, 10);
+          if (/^\d{4}-\d{2}-\d{2}$/.test(ymd) && ymd <= today) todaySolve++;
+        }
+      }
+      return { totalTodo, todaySolve };
+    }
+
+    function refresh(){
+      const svc = window.iuTasksService;
+      let total = 0;
+      let todayN = 0;
+      if (svc && typeof svc.tasksGetSnapshot === "function"){
+        try{
+          const c = countsFromSnapshot(svc.tasksGetSnapshot());
+          total = Number.isFinite(c.totalTodo) ? c.totalTodo : 0;
+          todayN = Number.isFinite(c.todaySolve) ? c.todaySolve : 0;
+        }catch{
+          total = 0;
+          todayN = 0;
+        }
+      }
+      line1.textContent = "Úkoly: máte celkem " + total + " úkolů k vyřešení";
+      line2.textContent = "Dnes máte k řešení " + todayN + " úkolů";
+      try{
+        card.setAttribute("data-iu-tasks-summary-ts", String(Date.now()));
+      }catch{}
+    }
+
+    window.iuSilverTasksSummaryRefresh = refresh;
+
+    function tryAttachOverlayObserver(){
+      const ov = document.getElementById("iuTasksOverlay");
+      if (!ov || ov.__iuTasksSummaryObsAttached) return;
+      try{
+        ov.__iuTasksSummaryObsAttached = 1;
+        const obs = new MutationObserver(() => { try{ refresh(); }catch{} });
+        obs.observe(ov, { attributes: true, attributeFilter: ["hidden"] });
+      }catch{}
+    }
+
+    let inFlight = 0;
+    function openTasks(triggerEl){
+      if (inFlight) return;
+      inFlight = 1;
+      try{ setTimeout(() => { inFlight = 0; }, 420); }catch{ inFlight = 0; }
+      const svc = window.iuTasksService;
+      if (svc && typeof svc.openOverlay === "function"){
+        try{ svc.openOverlay(triggerEl || card); }catch{}
+      }
+      try{ setTimeout(() => refresh(), 0); }catch{}
+    }
+
+    try{
+      card.addEventListener("click", (ev)=>{
+        try{
+          const t = ev && ev.target;
+          const nested = t && t.closest ? t.closest("button, a, input, select, textarea, [role=\"button\"], [role=\"link\"]") : null;
+          if (nested && nested !== card) return;
+        }catch{}
+        openTasks(card);
+      });
+    }catch{}
+
+    try{
+      card.addEventListener("keydown", (e)=>{
+        if (!e || (e.key !== "Enter" && e.key !== " ")) return;
+        try{ e.preventDefault(); }catch{}
+        openTasks(card);
+      });
+    }catch{}
+
+    function onVisibilityOrFocus(){
+      try{
+        if (document.visibilityState === "visible") refresh();
+      }catch{}
+    }
+
+    try{
+      document.addEventListener("visibilitychange", onVisibilityOrFocus);
+    }catch{}
+    try{
+      window.addEventListener("focus", onVisibilityOrFocus);
+    }catch{}
+    try{
+      window.addEventListener("pageshow", () => {
+        try{ if (document.visibilityState === "visible") refresh(); }catch{}
+      });
+    }catch{}
+    try{
+      window.addEventListener("storage", (e)=>{
+        try{
+          if (!e || e.key !== "iu.tasks.mvp.v1") return;
+          refresh();
+        }catch{}
+      });
+    }catch{}
+
+    refresh();
+    try{ setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 0); }catch{}
+    try{ setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 400); }catch{}
+    try{ setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 1500); }catch{}
+  }
+
   /** Silver welcome: přání k svátku — overlay Tykat/Vykat, kopírování, bez zásahu do weather/map. */
   function iuNamedayWishInit(){
     try{
@@ -12141,6 +12292,7 @@ function buildVideoAsArticleCard(it) {
 
     try{ iuSilverWelcomeInit(); }catch{}
     try{ iuSilverCalendarSummaryInit(); }catch{}
+    try{ iuSilverTasksSummaryInit(); }catch{}
     try{ iuNamedayWishInit(); }catch{}
 
     if (btnToggleDebug) {
