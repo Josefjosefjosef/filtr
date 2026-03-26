@@ -18809,8 +18809,20 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
   const NOTES_NS = "iu.notes";
   const NOTES_STYLE_ID = "iu-notes-overlay-styles";
+  const NOTES_MOBILE_FIX_STYLE_ID = "iu-notes-overlay-mobile-fix";
+  /** Appended after NOTES_STYLE_TEXT; uses #iuNotesSearch / #iuNotesOverlay for cascade over base notes rules. */
+  const NOTES_MOBILE_FIX_TEXT =
+    "@media (max-width:900px){" +
+    "#iuNotesOverlay.iuNotesRoot{overflow:hidden!important}" +
+    "#iuNotesSearch{font-size:16px!important;line-height:1.35!important}" +
+    "#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__input,#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__textarea{font-size:16px!important;line-height:1.35!important}" +
+    "#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__detailScroll{overflow:visible!important;overflow-x:visible!important;overflow-y:visible!important;max-height:none!important;height:auto!important;min-height:0!important}" +
+    "#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__close{position:absolute!important;top:10px!important;right:12px!important;margin-left:0!important;z-index:8!important}" +
+    "#iuNotesOverlay.iuNotesRoot .iu-notesOverlay__header{position:sticky!important;top:0!important;z-index:6!important;padding-right:48px!important;box-sizing:border-box!important}" +
+    "}";
+
   const NOTES_STYLE_TEXT =
-    ".iu-notesOverlay{position:fixed;inset:0;z-index:10022;display:none;align-items:center;justify-content:center;overflow:hidden}.iu-notesOverlay:not([hidden]){display:flex}.iu-notesOverlay__backdrop{position:absolute;inset:0;background:rgba(8,14,22,.72)}.iu-notesOverlay__dialog{position:relative;z-index:1;width:min(1040px,calc(100% - 28px));height:min(86vh,840px);overflow:hidden;border-radius:12px;background:#f7f9fc;box-shadow:0 20px 52px rgba(7,12,19,.35);display:grid;grid-template-rows:auto 1fr}.iu-notesOverlay__header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid #d7dfeb;background:#fff}.iu-notesOverlay__titleWrap{min-width:0;display:grid;gap:2px}.iu-notesOverlay__title{margin:0;font-size:15px;line-height:1.2;color:#0b1f33}.iu-notesOverlay__sub{margin:0;font-size:12px;line-height:1.3;color:#405a78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}.iu-notesOverlay__btn,.iu-notesOverlay__close,.iu-notesOverlay__back{border:1px solid #c6d2e5;border-radius:10px;background:#eef3fb;color:#203a59;padding:8px 10px;font-size:13px;touch-action:manipulation}.iu-notesOverlay__close{width:38px;height:38px;border:0;font-size:24px;line-height:1;background:#e8eef7;padding:0}.iu-notesOverlay__back{display:none}.iu-notesOverlay__body{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:0;height:100%}.iu-notesOverlay__list{min-height:0;border-right:1px solid #d7dfeb;background:#fff;display:flex;flex-direction:column}.iu-notesOverlay__listHeader{padding:10px 12px;border-bottom:1px solid #eef2f8;display:flex;align-items:center;justify-content:space-between;gap:8px}.iu-notesOverlay__search{width:100%;border:1px solid #c9d7ea;border-radius:10px;padding:9px 10px;font-size:13px}.iu-notesOverlay__listScroll{overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:10px 10px 14px}.iu-notesOverlay__items{list-style:none;margin:0;padding:0;display:grid;gap:8px}.iu-notesOverlay__itemRow{display:grid;grid-template-columns:minmax(0,1fr) 34px;gap:8px;align-items:stretch}.iu-notesOverlay__itemBtn{width:100%;text-align:left;border:1px solid #d6dfec;border-radius:12px;background:#f7f9fc;padding:10px 10px;display:grid;gap:4px}.iu-notesOverlay__itemBtn.is-active{border-color:#1f3a5f;box-shadow:0 0 0 2px rgba(31,58,95,.18) inset;background:#dfeaff}.iu-notesOverlay__itemTitle{font-size:13px;font-weight:700;color:#0b1f33;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__itemPreview{font-size:12px;color:#294463;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.iu-notesOverlay__itemMeta{font-size:11px;color:#48637f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__pin{width:34px;height:100%;min-height:44px;border:1px solid #d6dfec;border-radius:12px;background:#fff;color:#28435f;display:flex;align-items:center;justify-content:center;line-height:1;font-size:16px}.iu-notesOverlay__pin.is-on{background:#fff7d1;border-color:#f0d37a}.iu-notesOverlay__detail{min-height:0;display:flex;flex-direction:column}.iu-notesOverlay__detailScroll{overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:12px}.iu-notesOverlay__empty{border:1px dashed #cbd7ea;border-radius:14px;background:#fff;padding:18px;color:#2a4568}.iu-notesOverlay__empty strong{font-weight:800}.iu-notesOverlay__form{display:grid;gap:10px}.iu-notesOverlay__label{font-size:12px;color:#264264;display:grid;gap:5px}.iu-notesOverlay__input,.iu-notesOverlay__textarea{width:100%;border:1px solid #c9d7ea;border-radius:12px;padding:10px 12px;font-size:14px}.iu-notesOverlay__textarea{min-height:240px;resize:vertical;line-height:1.4;white-space:pre-wrap}.iu-notesOverlay__status{font-size:11px;color:#48637f;min-height:14px}body.iu-notesOverlay-open{overflow:hidden!important}@media (max-width:900px){.iu-notesOverlay{align-items:stretch;justify-content:stretch;overflow:auto;background:#f7f9fc}.iu-notesOverlay__backdrop{position:fixed;inset:0;background:rgba(8,14,22,.84)}.iu-notesOverlay__dialog{width:100%;min-height:100dvh;height:auto;max-height:none;border-radius:0;overflow:visible;display:flex;flex-direction:column;box-shadow:none;background:#f7f9fc}.iu-notesOverlay__header{position:relative;flex-wrap:wrap}.iu-notesOverlay__sub{white-space:normal}.iu-notesOverlay__close{margin-left:auto}.iu-notesOverlay__body{display:flex;flex-direction:column;height:auto;min-height:0}.iu-notesOverlay__list{border-right:0;border-bottom:1px solid #d7dfeb}.iu-notesOverlay__listHeader{gap:10px}.iu-notesOverlay__search{font-size:14px}.iu-notesOverlay__detailScroll{padding:12px 10px 18px}.iu-notesOverlay__textarea{min-height:220px}.iu-notesOverlay__pin{min-height:44px}}@media (max-width:768px){.iu-notesOverlay[data-iu-notes-mode='detail'] .iu-notesOverlay__list{display:none!important}.iu-notesOverlay[data-iu-notes-mode='detail'] .iu-notesOverlay__detail{flex:1 1 auto}.iu-notesOverlay[data-iu-notes-mode='detail'] .iu-notesOverlay__back{display:inline-flex}}";
+    ".iu-notesOverlay{position:fixed;inset:0;z-index:10022;display:none;align-items:center;justify-content:center;overflow:hidden}.iu-notesOverlay:not([hidden]){display:flex}.iu-notesOverlay__backdrop{position:absolute;inset:0;background:rgba(8,14,22,.72)}.iu-notesOverlay__dialog{position:relative;z-index:1;width:min(1040px,calc(100% - 28px));height:min(86vh,840px);overflow:hidden;border-radius:12px;background:#f7f9fc;box-shadow:0 20px 52px rgba(7,12,19,.35);display:grid;grid-template-rows:auto 1fr}.iu-notesOverlay__header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid #d7dfeb;background:#fff}.iu-notesOverlay__titleWrap{min-width:0;display:grid;gap:2px}.iu-notesOverlay__title{margin:0;font-size:15px;line-height:1.2;color:#0b1f33}.iu-notesOverlay__sub{margin:0;font-size:12px;line-height:1.3;color:#405a78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}.iu-notesOverlay__btn,.iu-notesOverlay__close,.iu-notesOverlay__back{border:1px solid #c6d2e5;border-radius:10px;background:#eef3fb;color:#203a59;padding:8px 10px;font-size:13px;touch-action:manipulation}.iu-notesOverlay__close{width:38px;height:38px;border:0;font-size:24px;line-height:1;background:#e8eef7;padding:0}.iu-notesOverlay__back{display:none}.iu-notesOverlay__body{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:0;height:100%}.iu-notesOverlay__list{min-height:0;border-right:1px solid #d7dfeb;background:#fff;display:flex;flex-direction:column}.iu-notesOverlay__listHeader{padding:10px 12px;border-bottom:1px solid #eef2f8;display:flex;align-items:center;justify-content:space-between;gap:8px}.iu-notesOverlay__search{width:100%;border:1px solid #c9d7ea;border-radius:10px;padding:9px 10px;font-size:13px}.iu-notesOverlay__listScroll{overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:10px 10px 14px}.iu-notesOverlay__items{list-style:none;margin:0;padding:0;display:grid;gap:8px}.iu-notesOverlay__itemRow{display:grid;grid-template-columns:minmax(0,1fr) 34px;gap:8px;align-items:stretch}.iu-notesOverlay__itemBtn{width:100%;text-align:left;border:1px solid #d6dfec;border-radius:12px;background:#f7f9fc;padding:10px 10px;display:grid;gap:4px}.iu-notesOverlay__itemBtn.is-active{border-color:#1f3a5f;box-shadow:0 0 0 2px rgba(31,58,95,.18) inset;background:#dfeaff}.iu-notesOverlay__itemTitle{font-size:13px;font-weight:700;color:#0b1f33;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__itemPreview{font-size:12px;color:#294463;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.iu-notesOverlay__itemMeta{font-size:11px;color:#48637f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-notesOverlay__pin{width:34px;height:100%;min-height:44px;border:1px solid #d6dfec;border-radius:12px;background:#fff;color:#28435f;display:flex;align-items:center;justify-content:center;line-height:1;font-size:16px}.iu-notesOverlay__pin.is-on{background:#fff7d1;border-color:#f0d37a}.iu-notesOverlay__detail{min-height:0;display:flex;flex-direction:column}.iu-notesOverlay__detailScroll{overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:12px}.iu-notesOverlay__empty{border:1px dashed #cbd7ea;border-radius:14px;background:#fff;padding:18px;color:#2a4568}.iu-notesOverlay__empty strong{font-weight:800}.iu-notesOverlay__form{display:grid;gap:10px}.iu-notesOverlay__label{font-size:12px;color:#264264;display:grid;gap:5px}.iu-notesOverlay__input,.iu-notesOverlay__textarea{width:100%;border:1px solid #c9d7ea;border-radius:12px;padding:10px 12px;font-size:14px}.iu-notesOverlay__textarea{min-height:240px;resize:vertical;line-height:1.4;white-space:pre-wrap}.iu-notesOverlay__status{font-size:11px;color:#48637f;min-height:14px}body.iu-notesOverlay-open{overflow:hidden!important}@media (max-width:900px){.iu-notesOverlay{align-items:stretch;justify-content:stretch;overflow:hidden!important;background:#f7f9fc}.iu-notesOverlay__backdrop{position:fixed;inset:0;background:rgba(8,14,22,.84)}.iu-notesOverlay__dialog{width:100%;min-height:100dvh;height:100dvh;max-height:100dvh;border-radius:0;overflow-x:hidden;overflow-y:auto;display:flex;flex-direction:column;box-shadow:none;background:#f7f9fc;box-sizing:border-box;-webkit-overflow-scrolling:touch}.iu-notesOverlay__header{position:sticky;top:0;z-index:6;flex-shrink:0;flex-wrap:wrap;padding-right:48px;box-sizing:border-box;background:#fff;border-bottom:1px solid #d7dfeb}.iu-notesOverlay__sub{white-space:normal}.iu-notesOverlay__titleWrap{max-width:calc(100% - 44px);min-width:0}.iu-notesOverlay__close{position:absolute!important;top:10px!important;right:12px!important;margin-left:0!important;z-index:8}.iu-notesOverlay__body{display:flex!important;flex-direction:column!important;flex:1 1 auto!important;min-height:0!important;overflow:visible!important;height:auto!important}.iu-notesOverlay__list{border-right:0;border-bottom:1px solid #d7dfeb;flex:1 1 auto!important;min-height:0!important;max-height:46vh!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}.iu-notesOverlay__listScroll{flex:1 1 auto!important;min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}.iu-notesOverlay__listHeader{gap:10px}.iu-notesOverlay__detail{flex:0 0 auto!important;min-height:0!important;overflow:visible!important}.iu-notesOverlay__search{font-size:16px!important;line-height:1.35!important}.iu-notesOverlay__input,.iu-notesOverlay__textarea{font-size:16px!important;line-height:1.35!important}.iu-notesOverlay__detailScroll{overflow:visible!important;overflow-y:visible!important;min-height:0!important;height:auto!important;max-height:none!important;padding:12px 10px 18px}.iu-notesOverlay__textarea{min-height:220px}.iu-notesOverlay__pin{min-height:44px}}@media (max-width:768px){.iu-notesOverlay[data-iu-notes-mode='detail'] .iu-notesOverlay__list{display:none!important}.iu-notesOverlay[data-iu-notes-mode='detail'] .iu-notesOverlay__detail{flex:1 1 auto}.iu-notesOverlay[data-iu-notes-mode='detail'] .iu-notesOverlay__back{display:inline-flex}}";
 
   const SCHEMA_VERSION = 1;
   const STORE_KEY = NOTES_NS + ".store.v1";
@@ -18866,13 +18878,61 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }catch{ return false; }
   }
 
+  function ensureMobileFixStyles(){
+    try{
+      if (document.getElementById(NOTES_MOBILE_FIX_STYLE_ID)) return;
+      const st2 = document.createElement("style");
+      st2.id = NOTES_MOBILE_FIX_STYLE_ID;
+      st2.textContent = NOTES_MOBILE_FIX_TEXT;
+      document.head.appendChild(st2);
+    }catch{}
+  }
+
+  /** Reinforce mobile/tablet layout (scroll split, no detail scroll, 16px inputs, close position) — survives cascade issues. Desktop: no-op. */
+  function applyNotesMobileUiGuards(){
+    if (!isNotesNarrowViewport()) return;
+    const ov = getOverlay();
+    if (!ov) return;
+    try{
+      const se = document.getElementById("iuNotesSearch");
+      if (se){
+        se.style.setProperty("font-size", "16px", "important");
+        se.style.setProperty("line-height", "1.35", "important");
+      }
+      const ds = document.getElementById("iuNotesDetail");
+      if (ds){
+        ds.style.setProperty("overflow", "visible", "important");
+        ds.style.setProperty("overflow-y", "visible", "important");
+        ds.style.setProperty("overflow-x", "visible", "important");
+        ds.style.setProperty("max-height", "none", "important");
+        ds.style.setProperty("height", "auto", "important");
+      }
+      const closeBtn = ov.querySelector(".iu-notesOverlay__close");
+      if (closeBtn){
+        closeBtn.style.setProperty("position", "absolute", "important");
+        closeBtn.style.setProperty("top", "10px", "important");
+        closeBtn.style.setProperty("right", "12px", "important");
+        closeBtn.style.setProperty("margin-left", "0", "important");
+        closeBtn.style.setProperty("z-index", "8", "important");
+      }
+      const ti = document.getElementById("iuNoteTitle");
+      const tc = document.getElementById("iuNoteContent");
+      const ttag = document.getElementById("iuNoteTagInput");
+      if (ti){ ti.style.setProperty("font-size", "16px", "important"); ti.style.setProperty("line-height", "1.35", "important"); }
+      if (tc){ tc.style.setProperty("font-size", "16px", "important"); tc.style.setProperty("line-height", "1.35", "important"); }
+      if (ttag){ ttag.style.setProperty("font-size", "16px", "important"); ttag.style.setProperty("line-height", "1.35", "important"); }
+    }catch{}
+  }
+
   function ensureStyles(){
     try{
-      if (document.getElementById(NOTES_STYLE_ID)) return;
-      const st = document.createElement("style");
-      st.id = NOTES_STYLE_ID;
-      st.textContent = NOTES_STYLE_TEXT;
-      document.head.appendChild(st);
+      if (!document.getElementById(NOTES_STYLE_ID)){
+        const st = document.createElement("style");
+        st.id = NOTES_STYLE_ID;
+        st.textContent = NOTES_STYLE_TEXT;
+        document.head.appendChild(st);
+      }
+      ensureMobileFixStyles();
     }catch{}
   }
 
@@ -18985,6 +19045,21 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }
   }
 
+  /** True for mobile + tablet layout (≤900px). Aligns with @media (max-width:900px) in notes CSS. */
+  function isNotesNarrowViewport(){
+    try{
+      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) return true;
+      return (window.innerWidth || 0) <= 900;
+    }catch{
+      return (window.innerWidth || 0) <= 900;
+    }
+  }
+
+  /** Mobile/tablet: do not programmatically focus search on open (avoids auto keyboard). Desktop unchanged. */
+  function shouldSkipNotesOpenInputFocus(){
+    return isNotesNarrowViewport();
+  }
+
   function setMobileMode(mode){
     const ov = getOverlay();
     if (!ov) return;
@@ -19056,13 +19131,72 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }catch{}
     render();
     attachFocusTrap();
-    const searchEl = document.getElementById("iuNotesSearch");
-    if (searchEl) {
-      try{ searchEl.focus({ preventScroll: true }); }catch{ try{ searchEl.focus(); }catch{} }
+    if (!shouldSkipNotesOpenInputFocus()){
+      const searchEl = document.getElementById("iuNotesSearch");
+      if (searchEl) {
+        try{ searchEl.focus({ preventScroll: true }); }catch{ try{ searchEl.focus(); }catch{} }
+      } else {
+        const first = ov.querySelector(FOCUSABLE_SELECTOR);
+        if (first) try{ first.focus({ preventScroll: true }); }catch{}
+      }
     } else {
-      const first = ov.querySelector(FOCUSABLE_SELECTOR);
-      if (first) try{ first.focus({ preventScroll: true }); }catch{}
+      try{
+        const searchEl = document.getElementById("iuNotesSearch");
+        if (searchEl){
+          searchEl.setAttribute("tabindex", "-1");
+          const restoreTab = function(){
+            try{ searchEl.removeAttribute("tabindex"); }catch{}
+            try{ searchEl.removeEventListener("pointerdown", restoreTab, true); }catch{}
+          };
+          searchEl.addEventListener("pointerdown", restoreTab, true);
+        }
+        try{
+          requestAnimationFrame(function(){
+            requestAnimationFrame(function(){
+              try{
+                const ae = document.activeElement;
+                if (ae && ov.contains(ae) && (ae.tagName === "INPUT" || ae.tagName === "TEXTAREA")){
+                  ae.blur();
+                }
+              }catch{}
+            });
+          });
+        }catch{}
+      }catch{}
     }
+    applyNotesMobileUiGuards();
+    try{
+      if (isNotesNarrowViewport()){
+        const se = document.getElementById("iuNotesSearch");
+        if (se) se.style.setProperty("font-size", "16px", "important");
+        const ds = document.getElementById("iuNotesDetail");
+        if (ds){
+          ds.style.setProperty("overflow", "visible", "important");
+          ds.style.setProperty("overflow-y", "visible", "important");
+        }
+        const cb = ov.querySelector(".iu-notesOverlay__close");
+        if (cb){
+          cb.style.setProperty("position", "absolute", "important");
+          cb.style.setProperty("top", "10px", "important");
+          cb.style.setProperty("right", "12px", "important");
+          cb.style.setProperty("z-index", "8", "important");
+        }
+      }
+    }catch{}
+    try{
+      if (isNotesNarrowViewport()){
+        const se = document.getElementById("iuNotesSearch");
+        if (se && document.activeElement === se){
+          try{ se.blur(); }catch{}
+        }
+        const fb =
+          ov.querySelector('.iu-notesOverlay__btn[data-iu-notes-view="main"]') ||
+          ov.querySelector("[data-iu-notes-new]");
+        if (fb && typeof fb.focus === "function"){
+          try{ fb.focus({ preventScroll: true }); }catch{ try{ fb.focus(); }catch{} }
+        }
+      }
+    }catch{}
   }
 
   function closeOverlay(){
@@ -19198,6 +19332,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function render(){
     renderList();
     renderDetail();
+    applyNotesMobileUiGuards();
   }
 
   function createNewAndSelect(){
