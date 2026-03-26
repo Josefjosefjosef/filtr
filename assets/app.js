@@ -19924,12 +19924,22 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     ".iu-tasksOverlay__emptyTitle{margin:0;font-size:15px;font-weight:800}" +
     ".iu-tasksOverlay__emptySub{margin:0;font-size:13px;color:#405a78}" +
     ".iu-tasksOverlay__hint{margin:0;padding:12px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;color:#334155;font-size:13px;text-align:center}" +
+    ".iu-tasksOverlay__listToolbar{padding:0 0 10px;min-height:44px;box-sizing:border-box}" +
+    ".iu-tasksOverlay__search{width:100%;max-width:100%;border:1px solid #c9d7ea;border-radius:10px;padding:9px 12px;font-size:14px;box-sizing:border-box;background:#fff;color:#0f172a}" +
+    ".iu-tasksOverlay__search::placeholder{color:#64748b}" +
+    ".iu-tasksOverlay__search:focus{outline:2px solid #1e3a5c;outline-offset:0;border-color:#94a3b8}" +
+    ".iu-tasksOverlay__dateWrap{position:relative;display:block;width:100%}" +
+    ".iu-tasksOverlay__input--date{padding-right:44px!important;min-height:44px}" +
+    ".iu-tasksOverlay__dateIcon{position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;color:#475569;opacity:.88}" +
+    ".iu-tasksOverlay__btn--delete{border-color:#e2e8f0;background:#fff;color:#991b1b;font-weight:600}" +
+    ".iu-tasksOverlay__btn--delete:hover{background:#fef2f2;border-color:#fecaca}" +
     ".iu-tasksOverlay__form{display:grid;gap:10px;padding:4px 2px 8px}" +
     ".iu-tasksOverlay__label{display:grid;gap:5px;font-size:12px;color:#264264}" +
     ".iu-tasksOverlay__input,.iu-tasksOverlay__textarea,.iu-tasksOverlay__select{width:100%;border:1px solid #c9d7ea;border-radius:10px;padding:10px 12px;font-size:14px;box-sizing:border-box}" +
     ".iu-tasksOverlay__textarea{min-height:120px;resize:vertical;line-height:1.4;white-space:pre-wrap}" +
-    ".iu-tasksOverlay__formActions{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}" +
+    ".iu-tasksOverlay__formActions{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;align-items:stretch}" +
     ".iu-tasksOverlay__formActions button{flex:1 1 auto;min-height:44px;touch-action:manipulation}" +
+    ".iu-tasksOverlay__formRow2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-start}" +
     "body.iu-tasksOverlay-open{overflow:hidden!important}" +
     ".dark #iuTasksOverlay .iu-tasksOverlay__dialog{background:#0b1220;border:1px solid #1e293b}" +
     ".dark #iuTasksOverlay .iu-tasksOverlay__header,.dark #iuTasksOverlay .iu-tasksOverlay__filters{background:#0f172a;border-color:#1e293b}" +
@@ -19938,7 +19948,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     ".dark #iuTasksOverlay .iu-taskRow{background:#0f172a;border-color:#334155}" +
     ".dark #iuTasksOverlay .iu-taskRow__check{background:#111827;border-right-color:#334155}" +
     ".dark #iuTasksOverlay .iu-taskRow__title{color:#f1f5f9}" +
-    "@media (max-width:900px){.iu-tasksOverlay{align-items:stretch;justify-content:stretch;background:#f7f9fc}.iu-tasksOverlay__dialog{width:100%;min-height:100dvh;height:100dvh;max-height:100dvh;border-radius:0;overflow-x:hidden;overflow-y:auto;display:flex;flex-direction:column;box-shadow:none}.iu-tasksOverlay__input,.iu-tasksOverlay__textarea,.iu-tasksOverlay__select{font-size:16px!important;line-height:1.35!important}}";
+    ".dark #iuTasksOverlay .iu-tasksOverlay__search{background:#111827;border-color:#334155;color:#f1f5f9}" +
+    ".dark #iuTasksOverlay .iu-tasksOverlay__dateIcon{color:#94a3b8}" +
+    "@media (max-width:900px){.iu-tasksOverlay{align-items:stretch;justify-content:stretch;background:#f7f9fc}.iu-tasksOverlay__dialog{width:100%;min-height:100dvh;height:100dvh;max-height:100dvh;border-radius:0;overflow-x:hidden;overflow-y:auto;display:flex;flex-direction:column;box-shadow:none}.iu-tasksOverlay__input,.iu-tasksOverlay__textarea,.iu-tasksOverlay__select,.iu-tasksOverlay__search{font-size:16px!important;line-height:1.35!important}}";
 
   const state = {
     inited: false,
@@ -19951,7 +19963,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     filter: "all",
     panelMode: "list",
     editingId: "",
-    migrationDone: false
+    migrationDone: false,
+    searchQuery: "",
+    searchTimer: null
   };
 
   function uid(p){ return String(p || "t") + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
@@ -19959,6 +19973,19 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     return String(s == null ? "" : s).replace(/[&<>"]/g, function(m){
       return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]);
     });
+  }
+
+  function foldCs(s){
+    return String(s || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function matchesSearch(t, q){
+    const qq = foldCs(String(q || "").trim());
+    if (!qq) return true;
+    return foldCs(t.title).indexOf(qq) >= 0 || foldCs(t.note).indexOf(qq) >= 0;
   }
 
   function localYmd(d){
@@ -20120,7 +20147,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function getFilteredSorted(){
     const base = state.data && Array.isArray(state.data.tasks) ? state.data.tasks : [];
     const filtered = filterTasks(base);
-    return sortTasksInPlace(filtered);
+    const searched = filtered.filter(function(t){ return matchesSearch(t, state.searchQuery); });
+    return sortTasksInPlace(searched);
+  }
+
+  function getFilterOnlyTasks(){
+    const base = state.data && Array.isArray(state.data.tasks) ? state.data.tasks : [];
+    return filterTasks(base);
   }
 
   function ensureStyles(){
@@ -20189,7 +20222,14 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     if (!root) return;
 
     const allTasks = state.data && Array.isArray(state.data.tasks) ? state.data.tasks : [];
+    const filterOnly = getFilterOnlyTasks();
     const rows = getFilteredSorted();
+    const sq = String(state.searchQuery || "").trim();
+
+    const searchBar =
+      '<div class="iu-tasksOverlay__listToolbar" id="iuTasksSearchWrap">' +
+        '<input class="iu-tasksOverlay__search" id="iuTasksSearch" type="search" placeholder="Hledat úkol" autocomplete="off" value="' + esc(state.searchQuery || "") + '" aria-label="Hledat úkol" />' +
+      "</div>";
 
     if (!allTasks.length){
       root.innerHTML =
@@ -20201,14 +20241,22 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       return;
     }
 
-    if (!rows.length){
+    if (!filterOnly.length){
       root.innerHTML =
+        searchBar +
         '<p class="iu-tasksOverlay__hint" data-iu-tasks-filter-empty="1">Žádný úkol v tomto výběru. ' +
         '<button type="button" class="iu-tasksOverlay__btn" data-iu-tasks-filter-all="1">Zobrazit vše</button></p>';
       return;
     }
 
-    const parts = ['<ul class="iu-tasksOverlay__list" id="iuTasksList">'];
+    if (!rows.length && sq){
+      root.innerHTML =
+        searchBar +
+        '<p class="iu-tasksOverlay__hint" data-iu-tasks-search-empty="1">Nebyl nalezen žádný úkol</p>';
+      return;
+    }
+
+    const parts = [searchBar, '<ul class="iu-tasksOverlay__list" id="iuTasksList">'];
     for (let i = 0; i < rows.length; i++){
       const t = rows[i];
       const dm = dueMeta(t.dueAt, t.status);
@@ -20246,11 +20294,21 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const pr = t ? t.priority : "medium";
     const st = t ? t.status : "todo";
 
+    const dateIconSvg =
+      '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M7 4v4M17 4v4"/></svg>';
+    const deleteBlock = isEdit
+      ? '<button type="button" class="iu-tasksOverlay__btn iu-tasksOverlay__btn--delete" data-iu-tasks-delete="1">Odstranit</button>'
+      : "";
     root.innerHTML =
       '<form class="iu-tasksOverlay__form" id="iuTasksForm" autocomplete="off">' +
         '<label class="iu-tasksOverlay__label">Název<input class="iu-tasksOverlay__input" id="iuTaskTitle" type="text" maxlength="200" value="' + esc(title) + '" required /></label>' +
         '<label class="iu-tasksOverlay__label">Poznámka<textarea class="iu-tasksOverlay__textarea" id="iuTaskNote" maxlength="5000">' + esc(note) + "</textarea></label>" +
-        '<label class="iu-tasksOverlay__label">Termín<input class="iu-tasksOverlay__input" id="iuTaskDue" type="date" value="' + esc(due) + '" /></label>' +
+        '<label class="iu-tasksOverlay__label">Termín' +
+          '<span class="iu-tasksOverlay__dateWrap">' +
+            '<input class="iu-tasksOverlay__input iu-tasksOverlay__input--date" id="iuTaskDue" type="date" value="' + esc(due) + '" />' +
+            '<span class="iu-tasksOverlay__dateIcon" aria-hidden="true">' + dateIconSvg + "</span>" +
+          "</span>" +
+        "</label>" +
         '<label class="iu-tasksOverlay__label">Priorita' +
           '<select class="iu-tasksOverlay__select" id="iuTaskPriority">' +
             '<option value="low"' + (pr === "low" ? " selected" : "") + '>Nízká</option>' +
@@ -20268,6 +20326,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           '<button type="submit" class="iu-tasksOverlay__btn iu-tasksOverlay__btn--primary" data-iu-tasks-save="1">Uložit</button>' +
           '<button type="button" class="iu-tasksOverlay__btn" data-iu-tasks-cancel="1">Zrušit</button>' +
         "</div>" +
+        (deleteBlock ? '<div class="iu-tasksOverlay__formRow2">' + deleteBlock + "</div>" : "") +
       "</form>";
   }
 
@@ -20369,6 +20428,18 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     render();
   }
 
+  function deleteTask(){
+    if (!state.editingId) return;
+    if (!window.confirm("Opravdu odstranit tento úkol?")) return;
+    const id = state.editingId;
+    const tasks = (state.data.tasks || []).filter(function(x){ return x && x.id !== id; });
+    state.data.tasks = tasks;
+    saveTasks(state.data);
+    state.panelMode = "list";
+    state.editingId = "";
+    render();
+  }
+
   function openOverlay(originEl){
     mountOverlay();
     const ov = getOverlay();
@@ -20387,6 +20458,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     state.returnFocusEl = originEl && typeof originEl.focus === "function" ? originEl : document.activeElement;
     state.panelMode = "list";
     state.editingId = "";
+    state.searchQuery = "";
+    if (state.searchTimer){ try{ clearTimeout(state.searchTimer); }catch{} state.searchTimer = null; }
     loadTasks();
     ov.hidden = false;
     ov.setAttribute("aria-hidden", "false");
@@ -20501,6 +20574,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         return;
       }
 
+      const del = t && t.closest ? t.closest("[data-iu-tasks-delete]") : null;
+      if (del){
+        e.preventDefault();
+        deleteTask();
+        return;
+      }
+
       const cb = t && t.closest ? t.closest("[data-iu-task-checkbox]") : null;
       if (cb){
         e.preventDefault();
@@ -20526,6 +20606,20 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (!ov || ov.hidden) return;
       e.preventDefault();
       saveForm();
+    });
+
+    document.addEventListener("input", function(e){
+      const t = e.target;
+      if (!t || t.id !== "iuTasksSearch") return;
+      const ov = getOverlay();
+      if (!ov || ov.hidden) return;
+      const next = String(t.value || "");
+      if (state.searchTimer){ try{ clearTimeout(state.searchTimer); }catch{} state.searchTimer = null; }
+      state.searchTimer = setTimeout(function(){
+        state.searchTimer = null;
+        state.searchQuery = next;
+        render();
+      }, 200);
     });
   }
 
