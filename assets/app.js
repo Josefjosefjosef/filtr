@@ -5216,6 +5216,17 @@ function buildVideoAsArticleCard(it) {
     window.__iuGetTodayCalendarSummaryState = getTodayCalendarSummaryState;
   }catch{}
 
+  /** Non-prod only: optional `window.__iuCalendarSummaryNow = () => Date` for deterministic UI proof (no prod impact). */
+  function getNowForSilverCalendarSummary(){
+    try{
+      if (!iuIsProdHost() && typeof window.__iuCalendarSummaryNow === "function"){
+        const x = window.__iuCalendarSummaryNow();
+        if (x instanceof Date && !isNaN(x.getTime())) return x;
+      }
+    }catch{}
+    return new Date();
+  }
+
   /** Silver dashboard box 3: dnešní kalendář (summary z calendarGetTodayEvents, ne chat router). */
   function iuSilverCalendarSummaryInit(){
     try{
@@ -5300,14 +5311,16 @@ function buildVideoAsArticleCard(it) {
         evs = [];
       }
       if (!Array.isArray(evs)) evs = [];
-      const st = getTodayCalendarSummaryState(new Date(), evs);
+      const nowForSummary = getNowForSilverCalendarSummary();
+      const st = getTodayCalendarSummaryState(nowForSummary, evs);
       line1.textContent = line1Cs(st.totalTodayCount);
       line2.textContent = st.secondaryText;
       try{
         card.setAttribute("data-iu-silver-cal-summary-ts", String(Date.now()));
       }catch{}
+      const useMockNow = !iuIsProdHost() && typeof window.__iuCalendarSummaryNow === "function";
       if (st.nextRefreshDelayMs != null && typeof st.nextRefreshDelayMs === "number" && isFinite(st.nextRefreshDelayMs)){
-        scheduleSummaryRefresh(st.nextRefreshDelayMs);
+        if (!useMockNow) scheduleSummaryRefresh(st.nextRefreshDelayMs);
       }
     }
 
