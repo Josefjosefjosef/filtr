@@ -11946,38 +11946,40 @@ body.iu-quickFeedOpen{
   max-width: 100%;
   box-sizing: border-box;
 }
-html:has(#leftContent:has(#iuCenterStage[data-iu-view="quick"])),
-body:has(#leftContent:has(#iuCenterStage[data-iu-view="quick"])),
-#app:has(#iuCenterStage[data-iu-view="quick"]),
-#page:has(#iuCenterStage[data-iu-view="quick"]){
-  overflow-x: hidden !important;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-}
-.layout:has(#iuCenterStage[data-iu-view="quick"]),
-.layout:has(#iuCenterStage[data-iu-view="quick"]) > .mainCol,
-.layout:has(#iuCenterStage[data-iu-view="quick"]) .mainCol,
-.container:has(#iuCenterStage[data-iu-view="quick"]){
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  overflow-x: hidden;
-  box-sizing: border-box;
-}
+@media (max-width: 900px){
+  html:has(#leftContent:has(#iuCenterStage[data-iu-view="quick"])),
+  body:has(#leftContent:has(#iuCenterStage[data-iu-view="quick"])),
+  #app:has(#iuCenterStage[data-iu-view="quick"]),
+  #page:has(#iuCenterStage[data-iu-view="quick"]){
+    overflow-x: hidden !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .layout:has(#iuCenterStage[data-iu-view="quick"]),
+  .layout:has(#iuCenterStage[data-iu-view="quick"]) > .mainCol,
+  .layout:has(#iuCenterStage[data-iu-view="quick"]) .mainCol,
+  .container:has(#iuCenterStage[data-iu-view="quick"]){
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
 
-.container:has(#iuCenterStage[data-iu-view="quick"]),
-.layout:has(#iuCenterStage[data-iu-view="quick"]) > .mainCol,
-#leftContent:has(#iuCenterStage[data-iu-view="quick"]),
-#leftContent:has(#iuCenterStage[data-iu-view="quick"]) #newsList{
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-}
-#iuCenterStage[data-iu-view="quick"],
-#iuCenterStage[data-iu-view="quick"] #iuQuickFeed,
-#iuCenterStage[data-iu-view="quick"] #iuQuickFeed > .iuModalCard{
-  overflow-x: hidden;
+  .container:has(#iuCenterStage[data-iu-view="quick"]),
+  .layout:has(#iuCenterStage[data-iu-view="quick"]) > .mainCol,
+  #leftContent:has(#iuCenterStage[data-iu-view="quick"]),
+  #leftContent:has(#iuCenterStage[data-iu-view="quick"]) #newsList{
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+  }
+  #iuCenterStage[data-iu-view="quick"],
+  #iuCenterStage[data-iu-view="quick"] #iuQuickFeed,
+  #iuCenterStage[data-iu-view="quick"] #iuQuickFeed > .iuModalCard{
+    overflow-x: hidden;
+  }
 }
 
 .iuQuickFeed{
