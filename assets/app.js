@@ -20813,6 +20813,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     state.inited = true;
     ensureStyles();
     mountOverlay();
+    /* Hydrate in-memory store from localStorage before exposing tasksGetSnapshot (summary box, etc.). */
+    loadTasks();
     bindUi();
     window.iuTasksService = {
       tasksCreateFromSilver: tasksCreateFromSilver,
