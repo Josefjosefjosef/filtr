@@ -15006,6 +15006,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
+/* Kalendář už není poslední segment stacku — spodní zaoblení má box Úkoly pod ním. */
+#iuSilverCalendarSummaryCard.silver-calendar-summary-card{
+  border-radius: 0;
+}
+
+#iuSilverTasksSummaryCard.silver-calendar-summary-card{
+  border-radius: 0 0 var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius);
+}
+
 .silver-calendar-summary-card[role="button"]{
   cursor: pointer;
   touch-action: manipulation;
