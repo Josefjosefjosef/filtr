@@ -5101,6 +5101,121 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  /**
+   * Silver home: jeden deterministický stav z jednoho datasetu (calendarGetTodayEvents).
+   * Guard: source-of-truth, data validation, no-fake-time, time boundary (přes nextRefreshDelayMs).
+   */
+  function iuCalSumPad2(n){ return String(n).padStart(2, "0"); }
+  function iuDateOnlyLocal(d){
+    const x = d instanceof Date && !isNaN(d.getTime()) ? d : new Date();
+    return x.getFullYear() + "-" + iuCalSumPad2(x.getMonth() + 1) + "-" + iuCalSumPad2(x.getDate());
+  }
+  function iuValidYmd(s){
+    return typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s);
+  }
+  function iuValidHm(s){
+    if (typeof s !== "string") return false;
+    const m = s.match(/^(\d{1,2}):(\d{2})$/);
+    if (!m) return false;
+    const hh = Number(m[1]);
+    const mm = Number(m[2]);
+    if (!Number.isFinite(hh) || !Number.isFinite(mm)) return false;
+    if (hh < 0 || hh > 23 || mm < 0 || mm > 59) return false;
+    return true;
+  }
+  function iuNormalizeHm(s){
+    if (!iuValidHm(s)) return "";
+    const m = String(s).match(/^(\d{1,2}):(\d{2})$/);
+    return iuCalSumPad2(Number(m[1])) + ":" + m[2];
+  }
+  function iuEventStartMs(dateStr, timeStr){
+    if (!iuValidYmd(dateStr) || !iuValidHm(timeStr)) return NaN;
+    const hm = iuNormalizeHm(timeStr);
+    const d = new Date(dateStr + "T" + hm + ":00");
+    const t = d.getTime();
+    return isNaN(t) ? NaN : t;
+  }
+  function iuTomorrowMidnightLocalMs(now){
+    const x = now instanceof Date && !isNaN(now.getTime()) ? new Date(now.getTime()) : new Date();
+    x.setDate(x.getDate() + 1);
+    x.setHours(0, 0, 0, 0);
+    return x.getTime();
+  }
+  function getTodayCalendarSummaryState(now, items){
+    const out = {
+      totalTodayCount: 0,
+      nextUpcomingItem: null,
+      secondaryText: "",
+      nextRefreshDelayMs: null,
+      nextRefreshAt: null,
+      sourceDatasetValid: false,
+      sourceOfTruthSplit: false
+    };
+    const n = now instanceof Date && !isNaN(now.getTime()) ? now : new Date();
+    const nMs = n.getTime();
+    const todayStr = iuDateOnlyLocal(n);
+    if (!Array.isArray(items)){
+      out.secondaryText = "Chvíli strpení.";
+      return out;
+    }
+    out.sourceDatasetValid = true;
+    const todayItems = [];
+    for (let i = 0; i < items.length; i++){
+      const e = items[i];
+      if (!e || typeof e !== "object") continue;
+      if (!iuValidYmd(e.date)) continue;
+      if (e.date !== todayStr) continue;
+      todayItems.push(e);
+    }
+    out.totalTodayCount = todayItems.length;
+    let best = null;
+    let bestMs = Infinity;
+    for (let j = 0; j < todayItems.length; j++){
+      const e = todayItems[j];
+      if (!iuValidHm(e.time)) continue;
+      const ms = iuEventStartMs(e.date, e.time);
+      if (!isFinite(ms)) continue;
+      if (ms >= nMs && ms < bestMs){
+        bestMs = ms;
+        best = e;
+      }
+    }
+    out.nextUpcomingItem = best;
+    if (out.totalTodayCount === 0){
+      out.secondaryText = "Na dnešek nemáte žádný záznam.";
+    } else if (best){
+      out.secondaryText = "Další záznam v " + iuNormalizeHm(best.time) + " hod.";
+    } else {
+      out.secondaryText = "Další dnešní záznam už není.";
+    }
+    const midnightMs = iuTomorrowMidnightLocalMs(n);
+    let minDelay = Infinity;
+    for (let k = 0; k < todayItems.length; k++){
+      const e = todayItems[k];
+      if (!iuValidHm(e.time)) continue;
+      const ms = iuEventStartMs(e.date, e.time);
+      if (!isFinite(ms)) continue;
+      if (ms >= nMs){
+        const d = ms - nMs + 1;
+        if (d < minDelay) minDelay = d;
+      }
+    }
+    const toMidnight = Math.max(0, midnightMs - nMs);
+    if (toMidnight < minDelay) minDelay = toMidnight;
+    if (!isFinite(minDelay) || minDelay === Infinity){
+      out.nextRefreshDelayMs = null;
+      out.nextRefreshAt = null;
+    } else {
+      const cap = 24 * 60 * 60 * 1000;
+      out.nextRefreshDelayMs = Math.min(Math.max(1, minDelay), cap);
+      out.nextRefreshAt = new Date(nMs + out.nextRefreshDelayMs);
+    }
+    return out;
+  }
+  try{
+    window.__iuGetTodayCalendarSummaryState = getTodayCalendarSummaryState;
+  }catch{}
+
   /** Silver dashboard box 3: dnešní kalendář (summary z calendarGetTodayEvents, ne chat router). */
   function iuSilverCalendarSummaryInit(){
     try{
@@ -5120,20 +5235,48 @@ function buildVideoAsArticleCard(it) {
       card.setAttribute("aria-label", "Zobrazit dnešní kalendář");
     }catch{}
 
-    function formatTimeCsHm(t){
-      if (!t || typeof t !== "string") return "";
-      const m = t.match(/^(\d{1,2}):(\d{2})/);
-      if (!m) return String(t).trim();
-      const hh = Number(m[1]);
-      const mm = m[2];
-      return String(hh) + ":" + mm + " hod.";
-    }
-
     function line1Cs(count){
       if (count === 0) return "Kalendář: Na dnešek nemáte uložený žádný záznam.";
       if (count === 1) return "Kalendář: Na dnešek máte uložený 1 záznam.";
       if (count >= 2 && count <= 4) return "Kalendář: Na dnešek máte uložené " + count + " záznamy.";
       return "Kalendář: Na dnešek máte uložených " + count + " záznamů.";
+    }
+
+    let summaryScheduleTimer = null;
+    let summaryScheduleGen = 0;
+    try{
+      window.__iuSilverCalendarSummaryTimerState = { timeoutActive: 0, scheduleGeneration: 0 };
+    }catch{}
+
+    function clearSummarySchedule(){
+      if (summaryScheduleTimer !== null){
+        try{ clearTimeout(summaryScheduleTimer); }catch{}
+        summaryScheduleTimer = null;
+      }
+      try{
+        if (window.__iuSilverCalendarSummaryTimerState) window.__iuSilverCalendarSummaryTimerState.timeoutActive = 0;
+      }catch{}
+    }
+
+    function scheduleSummaryRefresh(delayMs){
+      clearSummarySchedule();
+      const cap = 24 * 60 * 60 * 1000;
+      const d = Math.min(Math.max(1, delayMs), cap);
+      const gen = ++summaryScheduleGen;
+      try{
+        if (window.__iuSilverCalendarSummaryTimerState){
+          window.__iuSilverCalendarSummaryTimerState.timeoutActive = 1;
+          window.__iuSilverCalendarSummaryTimerState.scheduleGeneration = gen;
+        }
+      }catch{}
+      summaryScheduleTimer = setTimeout(() => {
+        summaryScheduleTimer = null;
+        try{
+          if (window.__iuSilverCalendarSummaryTimerState) window.__iuSilverCalendarSummaryTimerState.timeoutActive = 0;
+        }catch{}
+        if (gen !== summaryScheduleGen) return;
+        refresh();
+      }, d);
     }
 
     function refresh(){
@@ -5144,6 +5287,7 @@ function buildVideoAsArticleCard(it) {
           if (actionable) actionRow.setAttribute("data-iu-action-indicator", "chevron");
         }
       }catch{}
+      clearSummarySchedule();
       if (!svc || typeof svc.calendarGetTodayEvents !== "function"){
         line1.textContent = "Kalendář: Údaje se načítají…";
         line2.textContent = "Chvíli strpení.";
@@ -5155,15 +5299,15 @@ function buildVideoAsArticleCard(it) {
       }catch{
         evs = [];
       }
-      const count = Array.isArray(evs) ? evs.length : 0;
-      const first = count > 0 ? evs[0] : null;
-      line1.textContent = line1Cs(count);
-      if (count === 0){
-        line2.textContent = "Dnes není naplánovaná žádná událost.";
-      } else if (first && first.time){
-        line2.textContent = "První událost v " + formatTimeCsHm(first.time);
-      } else {
-        line2.textContent = "Dnes není naplánovaná žádná událost.";
+      if (!Array.isArray(evs)) evs = [];
+      const st = getTodayCalendarSummaryState(new Date(), evs);
+      line1.textContent = line1Cs(st.totalTodayCount);
+      line2.textContent = st.secondaryText;
+      try{
+        card.setAttribute("data-iu-silver-cal-summary-ts", String(Date.now()));
+      }catch{}
+      if (st.nextRefreshDelayMs != null && typeof st.nextRefreshDelayMs === "number" && isFinite(st.nextRefreshDelayMs)){
+        scheduleSummaryRefresh(st.nextRefreshDelayMs);
       }
     }
 
@@ -5199,14 +5343,33 @@ function buildVideoAsArticleCard(it) {
       });
     }catch{}
 
-    refresh();
-    try{ setTimeout(() => refresh(), 400); }catch{}
-    try{ setTimeout(() => refresh(), 1500); }catch{}
+    function onVisibilityOrFocus(){
+      try{
+        if (document.visibilityState === "visible") refresh();
+      }catch{}
+    }
+
     try{
-      document.addEventListener("visibilitychange", () => {
+      document.addEventListener("visibilitychange", onVisibilityOrFocus);
+    }catch{}
+    try{
+      window.addEventListener("focus", onVisibilityOrFocus);
+    }catch{}
+    try{
+      window.addEventListener("pageshow", () => {
         try{ if (document.visibilityState === "visible") refresh(); }catch{}
       });
     }catch{}
+    try{
+      window.addEventListener("pagehide", () => { try{ clearSummarySchedule(); }catch{} });
+    }catch{}
+    try{
+      window.addEventListener("beforeunload", () => { try{ clearSummarySchedule(); }catch{} });
+    }catch{}
+
+    refresh();
+    try{ setTimeout(() => refresh(), 400); }catch{}
+    try{ setTimeout(() => refresh(), 1500); }catch{}
   }
 
   /** Silver welcome: přání k svátku — overlay Tykat/Vykat, kopírování, bez zásahu do weather/map. */
