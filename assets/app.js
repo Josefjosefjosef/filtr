@@ -14918,8 +14918,7 @@ function buildVideoAsArticleCard(it) {
       quick.hidden = false;
       try {
         if (isMobileOverlayScope) {
-          document.documentElement.style.overflow = "hidden";
-          document.body.style.overflow = "hidden";
+          iuSetViewportLock(true);
           document.body.classList.add("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen");
         }
       } catch (_) {}
@@ -14938,8 +14937,7 @@ function buildVideoAsArticleCard(it) {
     try {
       document.body.classList.add("iu-quickFeedOpen");
       if (isMobileOverlayScope) {
-        document.documentElement.style.overflow = "hidden";
-        document.body.style.overflow = "hidden";
+        iuSetViewportLock(true);
         document.body.classList.add("iu-modal-open", "iu-mobileGateToolsQuickOpen");
       }
     } catch (_) {}
@@ -15412,6 +15410,31 @@ function buildVideoAsArticleCard(it) {
   }
   iuNotesGlobalDelegation();
 
+  function iuSetViewportLock(locked) {
+    try {
+      const root = document.documentElement;
+      const body = document.body;
+      if (!root || !body) return;
+      const lockKey = "__iuViewportLockPadRight";
+      if (locked) {
+        if (!root.dataset[lockKey]) root.dataset[lockKey] = String(body.style.paddingRight || "");
+        const gap = Math.max(0, (window.innerWidth || 0) - (root.clientWidth || 0));
+        root.style.overflow = "hidden";
+        body.style.overflow = "hidden";
+        if (gap > 0) body.style.paddingRight = gap + "px";
+      } else {
+        root.style.overflow = "";
+        body.style.overflow = "";
+        if (root.dataset[lockKey] !== undefined) {
+          body.style.paddingRight = root.dataset[lockKey] || "";
+          delete root.dataset[lockKey];
+        } else {
+          body.style.paddingRight = "";
+        }
+      }
+    } catch (_) {}
+  }
+
   function iuEnsureArticlesView(){
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
@@ -15421,8 +15444,7 @@ function buildVideoAsArticleCard(it) {
       quick.innerHTML = "";
     }
     try {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
+      iuSetViewportLock(false);
       document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen");
     } catch (_) {}
   }
@@ -15529,8 +15551,7 @@ function buildVideoAsArticleCard(it) {
         try { el.style.display = "none"; } catch (_) {}
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
+      iuSetViewportLock(false);
       document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen");
     } catch (_) {}
   }
@@ -15838,7 +15859,7 @@ function buildVideoAsArticleCard(it) {
           if (ov) ov.hidden = true;
           modal.setAttribute('hidden', '');
         }
-        document.documentElement.style.overflow = '';
+        iuSetViewportLock(false);
       } else if (modal.id === 'iu-mojeSluzbyPanel' && typeof window.iuCloseMojeSluzbyModal === 'function') {
         window.iuCloseMojeSluzbyModal();
       } else {
@@ -15917,7 +15938,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     function lockScroll(lock){
-      document.documentElement.style.overflow = lock ? 'hidden' : '';
+      iuSetViewportLock(!!lock);
     }
 
     function openPanel(){
@@ -16843,7 +16864,7 @@ function buildVideoAsArticleCard(it) {
       if (overlay) overlay.hidden = true;
       if (modal) modal.hidden = true;
       if (body) body.innerHTML = "";
-      try { document.documentElement.style.overflow = ""; } catch {}
+      try { iuSetViewportLock(false); } catch {}
     }catch{}
   }
 
@@ -16855,7 +16876,7 @@ function buildVideoAsArticleCard(it) {
       body.innerHTML = String((opts && opts.html) || "");
       overlay.hidden = false;
       modal.hidden = false;
-      try { document.documentElement.style.overflow = "hidden"; } catch {}
+      try { iuSetViewportLock(true); } catch {}
 
       // focus first input
       try{
@@ -18712,7 +18733,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     };
     window.addEventListener("resize", _mojeSluzbyResizeHandler);
     window.addEventListener("scroll", _mojeSluzbyScrollHandler, true);
-    document.documentElement.style.overflow = "hidden";
+    iuSetViewportLock(true);
     document.body.classList.add("iu-modal-open");
   }
 
@@ -18740,7 +18761,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       window.iuSetElOpenVisible(panel, false);
       window.iuSetElOpenVisible(overlay, false);
     } else { overlay.hidden = true; panel.hidden = true; }
-    document.documentElement.style.overflow = "";
+    iuSetViewportLock(false);
     document.body.classList.remove("iu-modal-open");
   }
 
