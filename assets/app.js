@@ -19839,12 +19839,82 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       openOverlay: function(originEl){ openOverlay(originEl || document.activeElement); },
       closeOverlay: function(){ closeOverlay(); },
       notesGetSnapshot: function(){ return (state.data && Array.isArray(state.data.notes)) ? state.data.notes.slice() : []; },
-      notesSearch: function(q){ return searchNotes(q); }
+      notesSearch: function(q){ return searchNotes(q); },
+      notesCreateFromSilver: function(payload){
+        try{
+          loadNotes();
+          const o = payload && typeof payload === "object" ? payload : {};
+          let title = String(o.title || "").trim().slice(0, MAX_TITLE);
+          if (!title) title = "Poznámka";
+          const lines = [];
+          if (o.date) lines.push("Datum: " + String(o.date));
+          if (o.time) lines.push("Čas: " + String(o.time));
+          if (o.note) lines.push(String(o.note));
+          if (o.location) lines.push("Místo: " + String(o.location));
+          let content = lines.join("\n").trim().slice(0, MAX_CONTENT);
+          if (!content && o.rawInput) content = String(o.rawInput).trim().slice(0, MAX_CONTENT);
+          const n = createEmptyNote();
+          n.title = title;
+          n.content = content;
+          const tagList = Array.isArray(n.tags) ? n.tags.slice() : [];
+          if (!tagList.some((x)=>String(x || "").toLowerCase() === "#silver")) tagList.push("#silver");
+          n.tags = tagList;
+          state.data.notes.unshift(sanitizeNote(n));
+          sortNotesInPlace(state.data.notes);
+          saveNotes(state.data);
+          return { ok: true, note: n };
+        }catch(err){
+          return { ok: false, reason: String(err && err.message ? err.message : err) };
+        }
+      }
     };
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
+})();
+
+(function iuTasksServiceSilver(){
+  const TASKS_KEY = "iu.infoUzel.silverTasks.v1";
+  const TASKS_SCHEMA = 1;
+  function tasksLoad(){
+    try{
+      const t = localStorage.getItem(TASKS_KEY);
+      const p = t ? JSON.parse(t) : null;
+      if (!p || p.schemaVersion !== TASKS_SCHEMA || !Array.isArray(p.items)) return { schemaVersion: TASKS_SCHEMA, items: [] };
+      return p;
+    }catch{
+      return { schemaVersion: TASKS_SCHEMA, items: [] };
+    }
+  }
+  function tasksSave(st){
+    try{ localStorage.setItem(TASKS_KEY, JSON.stringify(st)); }catch{}
+  }
+  window.iuTasksService = {
+    tasksCreateFromSilver: function(payload){
+      const o = payload && typeof payload === "object" ? payload : {};
+      let title = String(o.title || "").trim().slice(0, 200);
+      if (!title) title = "Úkol";
+      const lines = [];
+      if (o.date) lines.push("Datum: " + String(o.date));
+      if (o.time) lines.push("Čas: " + String(o.time));
+      if (o.note) lines.push(String(o.note));
+      if (o.location) lines.push("Místo: " + String(o.location));
+      const detail = lines.join("\n").trim().slice(0, 2000);
+      const st = tasksLoad();
+      const item = {
+        id: "st_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 9),
+        title: title,
+        detail: detail,
+        rawInput: String(o.rawInput || "").slice(0, 500),
+        createdAt: Date.now()
+      };
+      st.items.unshift(item);
+      if (st.items.length > 500) st.items = st.items.slice(0, 500);
+      tasksSave(st);
+      return { ok: true, task: item };
+    }
+  };
 })();
 
 } catch(e) {

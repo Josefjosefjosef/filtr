@@ -15854,6 +15854,63 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   outline-offset: 1px;
 }
 
+.iuSilverDisambiguationCard{
+  margin-top: 10px;
+  padding: 12px 12px 14px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f8 100%);
+  border: 1px solid #c6d2e5;
+  box-sizing: border-box;
+}
+.iuSilverDisambiguationCard__actions{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media (min-width: 420px){
+  .iuSilverDisambiguationCard__actions{
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+}
+.iuSilverDisambiguationBtn{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #b8c6dc;
+  background: #fff;
+  color: #1a2f4d;
+  font: inherit;
+  font-size: max(16px, 0.95rem);
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  text-align: left;
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+.iuSilverDisambiguationBtn:hover{
+  background: #f1f5fb;
+  border-color: #9eb4d4;
+}
+.iuSilverDisambiguationBtn:focus{
+  outline: 2px solid #2f9cf4;
+  outline-offset: 2px;
+}
+.iuSilverDisambiguationBtn__icon{
+  flex: 0 0 auto;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+.iuSilverDisambiguationBtn__text{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .iuSilverDraftGrid--edit{
   grid-template-columns: minmax(0, 120px) minmax(0, 1fr);
   align-items: start;
