@@ -15385,6 +15385,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   min-height: 0;
 }
 
+@media (min-width: 901px){
+  .iuSilverWelcomeSticky{
+    position: static;
+    top: auto;
+  }
+}
+
 .iuSilverWelcomeCard{
   position: relative;
   width: 100%;
@@ -15475,6 +15482,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+@media (min-width: 901px){
+  .silver-slot{
+    /* Keep desktop flow natural when welcome stack grows during hydration. */
+    height: auto;
+    min-height: 542px;
+  }
 }
 
 .silver-shell{
