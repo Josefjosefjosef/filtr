@@ -5141,11 +5141,24 @@ function buildVideoAsArticleCard(it) {
     x.setHours(0, 0, 0, 0);
     return x.getTime();
   }
+  function line1CalendarTodayPresent(count){
+    if (count === 0) return "Kalendář: Na dnešek nemáte uložený žádný záznam.";
+    if (count === 1) return "Kalendář: Na dnešek máte uložený 1 záznam.";
+    if (count >= 2 && count <= 4) return "Kalendář: Na dnešek máte uložené " + count + " záznamy.";
+    return "Kalendář: Na dnešek máte uložených " + count + " záznamů.";
+  }
+  function line1CalendarTodayPast(count){
+    if (count === 1) return "Kalendář: Na dnešek jste měli uložený 1 záznam.";
+    if (count >= 2 && count <= 4) return "Kalendář: Na dnešek jste měli uložené " + count + " záznamy.";
+    return "Kalendář: Na dnešek jste měli uložených " + count + " záznamů.";
+  }
   function getTodayCalendarSummaryState(now, items){
     const out = {
       totalTodayCount: 0,
       nextUpcomingItem: null,
+      primaryText: "",
       secondaryText: "",
+      hideSecondaryLine: false,
       nextRefreshDelayMs: null,
       nextRefreshAt: null,
       sourceDatasetValid: false,
@@ -5156,6 +5169,7 @@ function buildVideoAsArticleCard(it) {
     const todayStr = iuDateOnlyLocal(n);
     if (!Array.isArray(items)){
       out.secondaryText = "Chvíli strpení.";
+      out.primaryText = "Kalendář: Údaje se načítají…";
       return out;
     }
     out.sourceDatasetValid = true;
@@ -5168,25 +5182,53 @@ function buildVideoAsArticleCard(it) {
       todayItems.push(e);
     }
     out.totalTodayCount = todayItems.length;
-    let best = null;
-    let bestMs = Infinity;
+    const timedToday = [];
     for (let j = 0; j < todayItems.length; j++){
       const e = todayItems[j];
       if (!iuValidHm(e.time)) continue;
       const ms = iuEventStartMs(e.date, e.time);
       if (!isFinite(ms)) continue;
-      if (ms >= nMs && ms < bestMs){
-        bestMs = ms;
-        best = e;
+      timedToday.push({ e: e, ms: ms });
+    }
+    timedToday.sort(function (a, b){ return a.ms - b.ms; });
+    let hasPast = false;
+    for (let h = 0; h < timedToday.length; h++){
+      if (timedToday[h].ms < nMs) hasPast = true;
+    }
+    let best = null;
+    let bestMs = Infinity;
+    for (let j = 0; j < timedToday.length; j++){
+      const row = timedToday[j];
+      if (row.ms >= nMs && row.ms < bestMs){
+        bestMs = row.ms;
+        best = row.e;
       }
     }
     out.nextUpcomingItem = best;
+    const allTimedPast = timedToday.length > 0 && timedToday.every(function (x){ return x.ms < nMs; });
     if (out.totalTodayCount === 0){
-      out.secondaryText = "Na dnešek nemáte žádný záznam.";
+      out.primaryText = line1CalendarTodayPresent(0);
+      out.secondaryText = "";
+      out.hideSecondaryLine = true;
     } else if (best){
-      out.secondaryText = "Další záznam v " + iuNormalizeHm(best.time) + " hod.";
+      out.primaryText = line1CalendarTodayPresent(out.totalTodayCount);
+      const hm = iuNormalizeHm(best.time);
+      if (!hasPast){
+        if (out.totalTodayCount === 1){
+          out.secondaryText = "Dnešní záznam v " + hm + " hod.";
+        } else {
+          out.secondaryText = "První dnešní záznam v " + hm + " hod.";
+        }
+      } else {
+        out.secondaryText = "Další záznam v " + hm + " hod.";
+      }
+    } else if (allTimedPast){
+      out.primaryText = line1CalendarTodayPast(out.totalTodayCount);
+      out.secondaryText = "Dnešní záznamy už proběhly.";
     } else {
-      out.secondaryText = "Další dnešní záznam už není.";
+      out.primaryText = line1CalendarTodayPresent(out.totalTodayCount);
+      out.secondaryText = "";
+      out.hideSecondaryLine = true;
     }
     const midnightMs = iuTomorrowMidnightLocalMs(n);
     let minDelay = Infinity;
@@ -5237,6 +5279,7 @@ function buildVideoAsArticleCard(it) {
     const card = document.getElementById("iuSilverCalendarSummaryCard");
     const line1 = document.getElementById("iuSilverCalendarSummaryLine1");
     const line2 = document.getElementById("iuSilverCalendarSummaryLine2");
+    const line2block = card ? card.querySelector(".silver-calendar-summary-line2block") : null;
     const actionRow = card ? card.querySelector(".silver-calendar-summary-line2main") : null;
     if (!card || !line1 || !line2) return;
 
@@ -5245,13 +5288,6 @@ function buildVideoAsArticleCard(it) {
       card.setAttribute("tabindex", "0");
       card.setAttribute("aria-label", "Zobrazit dnešní kalendář");
     }catch{}
-
-    function line1Cs(count){
-      if (count === 0) return "Kalendář: Na dnešek nemáte uložený žádný záznam.";
-      if (count === 1) return "Kalendář: Na dnešek máte uložený 1 záznam.";
-      if (count >= 2 && count <= 4) return "Kalendář: Na dnešek máte uložené " + count + " záznamy.";
-      return "Kalendář: Na dnešek máte uložených " + count + " záznamů.";
-    }
 
     let summaryScheduleTimer = null;
     let summaryScheduleGen = 0;
@@ -5302,6 +5338,12 @@ function buildVideoAsArticleCard(it) {
       if (!svc || typeof svc.calendarGetTodayEvents !== "function"){
         line1.textContent = "Kalendář: Údaje se načítají…";
         line2.textContent = "Chvíli strpení.";
+        try{
+          if (line2block){
+            line2block.hidden = false;
+            line2block.setAttribute("aria-hidden", "false");
+          }
+        }catch{}
         return;
       }
       let evs = [];
@@ -5313,8 +5355,19 @@ function buildVideoAsArticleCard(it) {
       if (!Array.isArray(evs)) evs = [];
       const nowForSummary = getNowForSilverCalendarSummary();
       const st = getTodayCalendarSummaryState(nowForSummary, evs);
-      line1.textContent = line1Cs(st.totalTodayCount);
-      line2.textContent = st.secondaryText;
+      line1.textContent = st.primaryText || "";
+      line2.textContent = st.secondaryText || "";
+      try{
+        if (line2block){
+          if (st.hideSecondaryLine){
+            line2block.hidden = true;
+            line2block.setAttribute("aria-hidden", "true");
+          } else {
+            line2block.hidden = false;
+            line2block.setAttribute("aria-hidden", "false");
+          }
+        }
+      }catch{}
       try{
         card.setAttribute("data-iu-silver-cal-summary-ts", String(Date.now()));
       }catch{}
@@ -19786,12 +19839,82 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       openOverlay: function(originEl){ openOverlay(originEl || document.activeElement); },
       closeOverlay: function(){ closeOverlay(); },
       notesGetSnapshot: function(){ return (state.data && Array.isArray(state.data.notes)) ? state.data.notes.slice() : []; },
-      notesSearch: function(q){ return searchNotes(q); }
+      notesSearch: function(q){ return searchNotes(q); },
+      notesCreateFromSilver: function(payload){
+        try{
+          loadNotes();
+          const o = payload && typeof payload === "object" ? payload : {};
+          let title = String(o.title || "").trim().slice(0, MAX_TITLE);
+          if (!title) title = "Poznámka";
+          const lines = [];
+          if (o.date) lines.push("Datum: " + String(o.date));
+          if (o.time) lines.push("Čas: " + String(o.time));
+          if (o.note) lines.push(String(o.note));
+          if (o.location) lines.push("Místo: " + String(o.location));
+          let content = lines.join("\n").trim().slice(0, MAX_CONTENT);
+          if (!content && o.rawInput) content = String(o.rawInput).trim().slice(0, MAX_CONTENT);
+          const n = createEmptyNote();
+          n.title = title;
+          n.content = content;
+          const tagList = Array.isArray(n.tags) ? n.tags.slice() : [];
+          if (!tagList.some((x)=>String(x || "").toLowerCase() === "#silver")) tagList.push("#silver");
+          n.tags = tagList;
+          state.data.notes.unshift(sanitizeNote(n));
+          sortNotesInPlace(state.data.notes);
+          saveNotes(state.data);
+          return { ok: true, note: n };
+        }catch(err){
+          return { ok: false, reason: String(err && err.message ? err.message : err) };
+        }
+      }
     };
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
+})();
+
+(function iuTasksServiceSilver(){
+  const TASKS_KEY = "iu.infoUzel.silverTasks.v1";
+  const TASKS_SCHEMA = 1;
+  function tasksLoad(){
+    try{
+      const t = localStorage.getItem(TASKS_KEY);
+      const p = t ? JSON.parse(t) : null;
+      if (!p || p.schemaVersion !== TASKS_SCHEMA || !Array.isArray(p.items)) return { schemaVersion: TASKS_SCHEMA, items: [] };
+      return p;
+    }catch{
+      return { schemaVersion: TASKS_SCHEMA, items: [] };
+    }
+  }
+  function tasksSave(st){
+    try{ localStorage.setItem(TASKS_KEY, JSON.stringify(st)); }catch{}
+  }
+  window.iuTasksService = {
+    tasksCreateFromSilver: function(payload){
+      const o = payload && typeof payload === "object" ? payload : {};
+      let title = String(o.title || "").trim().slice(0, 200);
+      if (!title) title = "Úkol";
+      const lines = [];
+      if (o.date) lines.push("Datum: " + String(o.date));
+      if (o.time) lines.push("Čas: " + String(o.time));
+      if (o.note) lines.push(String(o.note));
+      if (o.location) lines.push("Místo: " + String(o.location));
+      const detail = lines.join("\n").trim().slice(0, 2000);
+      const st = tasksLoad();
+      const item = {
+        id: "st_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 9),
+        title: title,
+        detail: detail,
+        rawInput: String(o.rawInput || "").slice(0, 500),
+        createdAt: Date.now()
+      };
+      st.items.unshift(item);
+      if (st.items.length > 500) st.items = st.items.slice(0, 500);
+      tasksSave(st);
+      return { ok: true, task: item };
+    }
+  };
 })();
 
 } catch(e) {
