@@ -19874,48 +19874,712 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   else init();
 })();
 
-(function iuTasksServiceSilver(){
-  const TASKS_KEY = "iu.infoUzel.silverTasks.v1";
-  const TASKS_SCHEMA = 1;
-  function tasksLoad(){
-    try{
-      const t = localStorage.getItem(TASKS_KEY);
-      const p = t ? JSON.parse(t) : null;
-      if (!p || p.schemaVersion !== TASKS_SCHEMA || !Array.isArray(p.items)) return { schemaVersion: TASKS_SCHEMA, items: [] };
-      return p;
-    }catch{
-      return { schemaVersion: TASKS_SCHEMA, items: [] };
-    }
-  }
-  function tasksSave(st){
-    try{ localStorage.setItem(TASKS_KEY, JSON.stringify(st)); }catch{}
-  }
-  window.iuTasksService = {
-    tasksCreateFromSilver: function(payload){
-      const o = payload && typeof payload === "object" ? payload : {};
-      let title = String(o.title || "").trim().slice(0, 200);
-      if (!title) title = "Úkol";
-      const lines = [];
-      if (o.date) lines.push("Datum: " + String(o.date));
-      if (o.time) lines.push("Čas: " + String(o.time));
-      if (o.note) lines.push(String(o.note));
-      if (o.location) lines.push("Místo: " + String(o.location));
-      const detail = lines.join("\n").trim().slice(0, 2000);
-      const st = tasksLoad();
-      const item = {
-        id: "st_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 9),
-        title: title,
-        detail: detail,
-        rawInput: String(o.rawInput || "").slice(0, 500),
-        createdAt: Date.now()
-      };
-      st.items.unshift(item);
-      if (st.items.length > 500) st.items = st.items.slice(0, 500);
-      tasksSave(st);
-      return { ok: true, task: item };
-    }
+// === Tasks overlay module (MVP, local-first) ===
+(function iuTasksOverlayModule(){
+  "use strict";
+
+  const TASKS_STORE_KEY = "iu.tasks.mvp.v1";
+  const LEGACY_SILVER_KEY = "iu.infoUzel.silverTasks.v1";
+  const SCHEMA_VERSION = 1;
+  const TASKS_STYLE_ID = "iu-tasks-overlay-styles";
+  const MAX_TASKS = 500;
+
+  const TASKS_STYLE_TEXT =
+    "#iuTasksOverlay{--iu-t-pri-low:#94a3b8;--iu-t-pri-med:#d97706;--iu-t-pri-high:#dc2626;--iu-t-today:#0284c7;--iu-t-overdue:#b91c1c;--iu-t-future:#64748b}" +
+    ".iu-tasksOverlay{position:fixed;inset:0;z-index:10024;display:none;align-items:center;justify-content:center;overflow:hidden}" +
+    ".iu-tasksOverlay:not([hidden]){display:flex}" +
+    ".iu-tasksOverlay__backdrop{position:absolute;inset:0;background:rgba(8,14,22,.72)}" +
+    ".iu-tasksOverlay__dialog{position:relative;z-index:1;width:min(1040px,calc(100% - 28px));height:min(86vh,840px);overflow:hidden;border-radius:12px;background:#f7f9fc;box-shadow:0 20px 52px rgba(7,12,19,.35);display:grid;grid-template-rows:auto auto 1fr;min-height:0}" +
+    ".iu-tasksOverlay__header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid #d7dfeb;background:#fff}" +
+    ".iu-tasksOverlay__titleWrap{min-width:0;display:grid;gap:2px}" +
+    ".iu-tasksOverlay__title{margin:0;font-size:15px;line-height:1.2;color:#0b1f33}" +
+    ".iu-tasksOverlay__sub{margin:0;font-size:12px;line-height:1.35;color:#405a78}" +
+    ".iu-tasksOverlay__actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}" +
+    ".iu-tasksOverlay__btn,.iu-tasksOverlay__close{border:1px solid #c6d2e5;border-radius:10px;background:#eef3fb;color:#203a59;padding:8px 12px;font-size:13px;touch-action:manipulation}" +
+    ".iu-tasksOverlay__btn--primary{background:#1e3a5c;color:#fff;border-color:#1e3a5c;font-weight:600}" +
+    ".iu-tasksOverlay__close{width:38px;height:38px;border:0;font-size:24px;line-height:1;background:#e8eef7;padding:0}" +
+    ".iu-tasksOverlay__filters{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;border-bottom:1px solid #eef2f8;background:#fff}" +
+    ".iu-tasksOverlay__filter{border:1px solid #c6d2e5;border-radius:999px;background:#f8fafc;color:#1e293b;padding:6px 12px;font-size:12px;touch-action:manipulation}" +
+    ".iu-tasksOverlay__filter.is-active{background:#1e3a5c;color:#fff;border-color:#1e3a5c}" +
+    ".iu-tasksOverlay__scroll{overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:10px 12px 14px;background:#f7f9fc}" +
+    ".iu-tasksOverlay__list{list-style:none;margin:0;padding:0;display:grid;gap:8px}" +
+    ".iu-taskRow{display:grid;grid-template-columns:44px minmax(0,1fr);gap:0;align-items:stretch;border:1px solid #d6dfec;border-radius:12px;background:#fff;overflow:hidden;min-height:48px}" +
+    ".iu-taskRow--done{opacity:.62}" +
+    ".iu-taskRow__check{width:44px;border:0;background:#f4f7fc;border-right:1px solid #e5edf7;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation}" +
+    ".iu-taskRow__check:focus-visible{outline:2px solid #1e3a5c;outline-offset:-2px;z-index:1}" +
+    ".iu-taskRow__body{text-align:left;border:0;background:transparent;padding:10px 12px;display:grid;gap:4px;cursor:pointer;width:100%;min-height:48px;touch-action:manipulation}" +
+    ".iu-taskRow__body:focus-visible{outline:2px solid #1e3a5c;outline-offset:-2px}" +
+    ".iu-taskRow__title{font-size:14px;font-weight:700;color:#0b1f33;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
+    ".iu-taskRow--done .iu-taskRow__title{text-decoration:line-through;color:#64748b;font-weight:600}" +
+    ".iu-taskRow__meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:11px;color:#48637f}" +
+    ".iu-taskChip{display:inline-flex;align-items:center;border-radius:999px;padding:2px 8px;font-size:11px;line-height:1.3;border:1px solid transparent;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
+    ".iu-taskChip--none{background:#f1f5f9;color:#475569;border-color:#e2e8f0}" +
+    ".iu-taskChip--future{background:#f8fafc;color:#475569;border-color:#e2e8f0}" +
+    ".iu-taskChip--today{background:rgba(2,132,199,.1);color:#0369a1;border-color:rgba(2,132,199,.28)}" +
+    ".iu-taskChip--overdue{background:rgba(185,28,28,.1);color:#991b1b;border-color:rgba(185,28,28,.35);font-weight:600}" +
+    ".iu-taskRow--pri-low{border-left:3px solid var(--iu-t-pri-low)}" +
+    ".iu-taskRow--pri-medium{border-left:3px solid var(--iu-t-pri-med)}" +
+    ".iu-taskRow--pri-high{border-left:3px solid var(--iu-t-pri-high)}" +
+    ".iu-tasksOverlay__empty{border:1px dashed #cbd7ea;border-radius:14px;background:#fff;padding:22px;color:#2a4568;text-align:center;display:grid;gap:10px;justify-items:center}" +
+    ".iu-tasksOverlay__emptyTitle{margin:0;font-size:15px;font-weight:800}" +
+    ".iu-tasksOverlay__emptySub{margin:0;font-size:13px;color:#405a78}" +
+    ".iu-tasksOverlay__hint{margin:0;padding:12px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;color:#334155;font-size:13px;text-align:center}" +
+    ".iu-tasksOverlay__form{display:grid;gap:10px;padding:4px 2px 8px}" +
+    ".iu-tasksOverlay__label{display:grid;gap:5px;font-size:12px;color:#264264}" +
+    ".iu-tasksOverlay__input,.iu-tasksOverlay__textarea,.iu-tasksOverlay__select{width:100%;border:1px solid #c9d7ea;border-radius:10px;padding:10px 12px;font-size:14px;box-sizing:border-box}" +
+    ".iu-tasksOverlay__textarea{min-height:120px;resize:vertical;line-height:1.4;white-space:pre-wrap}" +
+    ".iu-tasksOverlay__formActions{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}" +
+    ".iu-tasksOverlay__formActions button{flex:1 1 auto;min-height:44px;touch-action:manipulation}" +
+    "body.iu-tasksOverlay-open{overflow:hidden!important}" +
+    ".dark #iuTasksOverlay .iu-tasksOverlay__dialog{background:#0b1220;border:1px solid #1e293b}" +
+    ".dark #iuTasksOverlay .iu-tasksOverlay__header,.dark #iuTasksOverlay .iu-tasksOverlay__filters{background:#0f172a;border-color:#1e293b}" +
+    ".dark #iuTasksOverlay .iu-tasksOverlay__title{color:#f1f5f9}" +
+    ".dark #iuTasksOverlay .iu-tasksOverlay__sub,.dark #iuTasksOverlay .iu-tasksOverlay__empty{color:#cbd5e1}" +
+    ".dark #iuTasksOverlay .iu-taskRow{background:#0f172a;border-color:#334155}" +
+    ".dark #iuTasksOverlay .iu-taskRow__check{background:#111827;border-right-color:#334155}" +
+    ".dark #iuTasksOverlay .iu-taskRow__title{color:#f1f5f9}" +
+    "@media (max-width:900px){.iu-tasksOverlay{align-items:stretch;justify-content:stretch;background:#f7f9fc}.iu-tasksOverlay__dialog{width:100%;min-height:100dvh;height:100dvh;max-height:100dvh;border-radius:0;overflow-x:hidden;overflow-y:auto;display:flex;flex-direction:column;box-shadow:none}.iu-tasksOverlay__input,.iu-tasksOverlay__textarea,.iu-tasksOverlay__select{font-size:16px!important;line-height:1.35!important}}";
+
+  const state = {
+    inited: false,
+    bound: false,
+    overlayMounted: false,
+    trapAttached: false,
+    returnFocusEl: null,
+    prevBodyPadRight: "",
+    data: { schemaVersion: SCHEMA_VERSION, tasks: [] },
+    filter: "all",
+    panelMode: "list",
+    editingId: "",
+    migrationDone: false
   };
+
+  function uid(p){ return String(p || "t") + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(m){
+      return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]);
+    });
+  }
+
+  function localYmd(d){
+    try{
+      const x = d instanceof Date ? d : new Date(d);
+      if (!x || !Number.isFinite(x.getTime())) return "";
+      const y = x.getFullYear();
+      const m = String(x.getMonth() + 1).padStart(2, "0");
+      const day = String(x.getDate()).padStart(2, "0");
+      return y + "-" + m + "-" + day;
+    }catch{ return ""; }
+  }
+
+  function isYmd(s){
+    return typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s);
+  }
+
+  function dueMeta(ymd, status){
+    if (status === "done") return { cls: "iu-taskChip--none", label: "Hotovo" };
+    if (!ymd) return { cls: "iu-taskChip--none", label: "Bez termínu" };
+    const today = localYmd(new Date());
+    if (ymd < today) return { cls: "iu-taskChip--overdue", label: "Po termínu" };
+    if (ymd === today) return { cls: "iu-taskChip--today", label: "Dnes" };
+    return { cls: "iu-taskChip--future", label: "Termín " + fmtCsDate(ymd) };
+  }
+
+  function fmtCsDate(ymd){
+    if (!isYmd(ymd)) return "";
+    const p = ymd.split("-");
+    return p[2] + "." + p[1] + "." + p[0];
+  }
+
+  function priorityClass(p){
+    const x = String(p || "medium");
+    if (x === "low") return "iu-taskRow--pri-low";
+    if (x === "high") return "iu-taskRow--pri-high";
+    return "iu-taskRow--pri-medium";
+  }
+
+  function priorityLabel(p){
+    const x = String(p || "medium");
+    if (x === "low") return "Nízká";
+    if (x === "high") return "Vysoká";
+    return "Střední";
+  }
+
+  function sanitizeTask(t){
+    if (!t || typeof t !== "object") return null;
+    const id = String(t.id || "").trim() || uid("tsk");
+    const title = String(t.title || "").trim().slice(0, 200);
+    const note = String(t.note != null ? t.note : "").slice(0, 5000);
+    let dueAt = t.dueAt;
+    if (dueAt == null || dueAt === "") dueAt = null;
+    else {
+      dueAt = String(dueAt).trim().slice(0, 10);
+      if (!isYmd(dueAt)) dueAt = null;
+    }
+    const pr = String(t.priority || "medium");
+    const priority = pr === "low" || pr === "medium" || pr === "high" ? pr : "medium";
+    const status = t.status === "done" ? "done" : "todo";
+    const createdAt = Number.isFinite(Number(t.createdAt)) ? Number(t.createdAt) : Date.now();
+    const updatedAt = Number.isFinite(Number(t.updatedAt)) ? Number(t.updatedAt) : createdAt;
+    return { id, title, note, dueAt, priority, status, createdAt, updatedAt };
+  }
+
+  function loadRaw(){
+    try{
+      const raw = localStorage.getItem(TASKS_STORE_KEY);
+      const p = raw ? JSON.parse(raw) : null;
+      if (p && p.schemaVersion === SCHEMA_VERSION && Array.isArray(p.tasks)) return p;
+    }catch{}
+    return { schemaVersion: SCHEMA_VERSION, tasks: [] };
+  }
+
+  function migrateLegacySilverOnce(){
+    if (state.migrationDone) return;
+    state.migrationDone = true;
+    try{
+      const cur = loadRaw();
+      if (cur.tasks && cur.tasks.length) return;
+      const leg = localStorage.getItem(LEGACY_SILVER_KEY);
+      const p = leg ? JSON.parse(leg) : null;
+      if (!p || !Array.isArray(p.items) || !p.items.length) return;
+      const out = [];
+      for (let i = 0; i < p.items.length; i++){
+        const it = p.items[i];
+        if (!it || typeof it !== "object") continue;
+        const title = String(it.title || "Úkol").trim().slice(0, 200);
+        const note = String(it.detail || "").slice(0, 5000);
+        const createdAt = Number.isFinite(Number(it.createdAt)) ? Number(it.createdAt) : Date.now();
+        out.push(sanitizeTask({
+          id: String(it.id || "").trim() || uid("tsk"),
+          title: title || "Úkol",
+          note: note,
+          dueAt: null,
+          priority: "medium",
+          status: "todo",
+          createdAt: createdAt,
+          updatedAt: createdAt
+        }));
+      }
+      if (out.length){
+        state.data = { schemaVersion: SCHEMA_VERSION, tasks: out };
+        saveTasks(state.data);
+      }
+    }catch{}
+  }
+
+  function loadTasks(){
+    migrateLegacySilverOnce();
+    const p = loadRaw();
+    const tasks = Array.isArray(p.tasks) ? p.tasks.map(sanitizeTask).filter(Boolean) : [];
+    state.data = { schemaVersion: SCHEMA_VERSION, tasks: tasks };
+    return state.data;
+  }
+
+  function saveTasks(data){
+    try{
+      const copy = { schemaVersion: SCHEMA_VERSION, tasks: (data.tasks || []).map(sanitizeTask).filter(Boolean).slice(0, MAX_TASKS) };
+      localStorage.setItem(TASKS_STORE_KEY, JSON.stringify(copy));
+      state.data = copy;
+    }catch{}
+  }
+
+  function sortTasksInPlace(arr){
+    const list = arr.slice();
+    list.sort(function(a, b){
+      const ad = a.status === "done" ? 1 : 0;
+      const bd = b.status === "done" ? 1 : 0;
+      if (ad !== bd) return ad - bd;
+      if (ad === 1){
+        return (b.updatedAt || 0) - (a.updatedAt || 0);
+      }
+      const pa = a.priority === "high" ? 0 : a.priority === "medium" ? 1 : 2;
+      const pb = b.priority === "high" ? 0 : b.priority === "medium" ? 1 : 2;
+      if (pa !== pb) return pa - pb;
+      const da = a.dueAt || "9999-99-99";
+      const db = b.dueAt || "9999-99-99";
+      if (da !== db) return da < db ? -1 : da > db ? 1 : 0;
+      return (b.createdAt || 0) - (a.createdAt || 0);
+    });
+    return list;
+  }
+
+  function filterTasks(list){
+    const f = state.filter;
+    if (f === "done") return list.filter(function(t){ return t.status === "done"; });
+    if (f === "today"){
+      const today = localYmd(new Date());
+      return list.filter(function(t){
+        if (t.status !== "todo") return false;
+        if (!t.dueAt) return false;
+        return t.dueAt <= today;
+      });
+    }
+    return list.slice();
+  }
+
+  function getFilteredSorted(){
+    const base = state.data && Array.isArray(state.data.tasks) ? state.data.tasks : [];
+    const filtered = filterTasks(base);
+    return sortTasksInPlace(filtered);
+  }
+
+  function ensureStyles(){
+    try{
+      if (!document.getElementById(TASKS_STYLE_ID)){
+        const st = document.createElement("style");
+        st.id = TASKS_STYLE_ID;
+        st.textContent = TASKS_STYLE_TEXT;
+        document.head.appendChild(st);
+      }
+    }catch{}
+  }
+
+  function getOverlay(){ return document.getElementById("iuTasksOverlay"); }
+
+  function mountOverlay(){
+    if (state.overlayMounted) return;
+    state.overlayMounted = true;
+    const ov = document.createElement("div");
+    ov.id = "iuTasksOverlay";
+    ov.className = "iu-tasksOverlay";
+    ov.hidden = true;
+    ov.setAttribute("aria-hidden", "true");
+    ov.innerHTML =
+      '<div class="iu-tasksOverlay__backdrop" data-iu-tasks-close="1" aria-hidden="true"></div>' +
+      '<div class="iu-tasksOverlay__dialog" role="dialog" aria-modal="true" aria-labelledby="iuTasksHeading">' +
+        '<div class="iu-tasksOverlay__header">' +
+          '<div class="iu-tasksOverlay__titleWrap">' +
+            '<h2 class="iu-tasksOverlay__title" id="iuTasksHeading">Úkoly</h2>' +
+            '<p class="iu-tasksOverlay__sub">Co je potřeba udělat</p>' +
+          "</div>" +
+          '<div class="iu-tasksOverlay__actions">' +
+            '<button type="button" class="iu-tasksOverlay__btn iu-tasksOverlay__btn--primary" data-iu-tasks-new="1" data-iu-tasks-primary-cta="1">+ Nový úkol</button>' +
+            '<button type="button" class="iu-tasksOverlay__close" data-iu-tasks-close="1" aria-label="Zavřít úkoly">×</button>' +
+          "</div>" +
+        "</div>" +
+        '<div class="iu-tasksOverlay__filters" id="iuTasksFilters" role="tablist" aria-label="Filtry úkolů">' +
+          '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="all" role="tab">Vše</button>' +
+          '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="today" role="tab">Dnes</button>' +
+          '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="done" role="tab">Hotové</button>' +
+        "</div>" +
+        '<div class="iu-tasksOverlay__scroll" id="iuTasksScroll">' +
+          '<div id="iuTasksMain"></div>' +
+        "</div>" +
+      "</div>";
+    document.body.appendChild(ov);
+  }
+
+  function setFilterButtons(){
+    const bar = document.getElementById("iuTasksFilters");
+    if (!bar) return;
+    const f = state.filter;
+    const btns = bar.querySelectorAll("[data-iu-tasks-filter]");
+    for (let i = 0; i < btns.length; i++){
+      const b = btns[i];
+      const k = String(b.getAttribute("data-iu-tasks-filter") || "");
+      if (k === f) { b.classList.add("is-active"); b.setAttribute("aria-selected", "true"); }
+      else { b.classList.remove("is-active"); b.setAttribute("aria-selected", "false"); }
+    }
+  }
+
+  function renderListView(){
+    const root = document.getElementById("iuTasksMain");
+    const filters = document.getElementById("iuTasksFilters");
+    if (filters) filters.hidden = false;
+    if (!root) return;
+
+    const allTasks = state.data && Array.isArray(state.data.tasks) ? state.data.tasks : [];
+    const rows = getFilteredSorted();
+
+    if (!allTasks.length){
+      root.innerHTML =
+        '<div class="iu-tasksOverlay__empty" data-iu-tasks-empty="1">' +
+          '<p class="iu-tasksOverlay__emptyTitle">Zatím nemáte žádné úkoly</p>' +
+          '<p class="iu-tasksOverlay__emptySub">Přidejte první úkol…</p>' +
+          '<button type="button" class="iu-tasksOverlay__btn iu-tasksOverlay__btn--primary" data-iu-tasks-empty-cta="1">Vytvořit první úkol</button>' +
+        "</div>";
+      return;
+    }
+
+    if (!rows.length){
+      root.innerHTML =
+        '<p class="iu-tasksOverlay__hint" data-iu-tasks-filter-empty="1">Žádný úkol v tomto výběru. ' +
+        '<button type="button" class="iu-tasksOverlay__btn" data-iu-tasks-filter-all="1">Zobrazit vše</button></p>';
+      return;
+    }
+
+    const parts = ['<ul class="iu-tasksOverlay__list" id="iuTasksList">'];
+    for (let i = 0; i < rows.length; i++){
+      const t = rows[i];
+      const dm = dueMeta(t.dueAt, t.status);
+      const prc = priorityClass(t.priority);
+      const doneCls = t.status === "done" ? " iu-taskRow--done" : "";
+      const ariaCheck = t.status === "done" ? "true" : "false";
+      parts.push(
+        '<li class="iu-taskRow' + doneCls + " " + prc + '" data-iu-task-id="' + esc(t.id) + '">' +
+          '<button type="button" class="iu-taskRow__check" data-iu-task-checkbox="' + esc(t.id) + '" aria-label="Označit jako hotovo" aria-checked="' + ariaCheck + '" role="checkbox">' + (t.status === "done" ? "✓" : "") + "</button>" +
+          '<button type="button" class="iu-taskRow__body" data-iu-task-open="' + esc(t.id) + '">' +
+            '<span class="iu-taskRow__title">' + esc(t.title || "Bez názvu") + "</span>" +
+            '<span class="iu-taskRow__meta">' +
+              '<span class="iu-taskChip ' + dm.cls + '">' + esc(dm.label) + "</span>" +
+              '<span class="iu-taskChip iu-taskChip--none">' + esc(priorityLabel(t.priority)) + "</span>" +
+            "</span>" +
+          "</button>" +
+        "</li>"
+      );
+    }
+    parts.push("</ul>");
+    root.innerHTML = parts.join("");
+  }
+
+  function renderFormView(){
+    const filters = document.getElementById("iuTasksFilters");
+    if (filters) filters.hidden = true;
+    const root = document.getElementById("iuTasksMain");
+    if (!root) return;
+
+    const isEdit = !!state.editingId;
+    const t = isEdit ? sanitizeTask(state.data.tasks.find(function(x){ return x && x.id === state.editingId; }) || null) : null;
+    const title = t ? t.title : "";
+    const note = t ? t.note : "";
+    const due = t && t.dueAt ? t.dueAt : "";
+    const pr = t ? t.priority : "medium";
+    const st = t ? t.status : "todo";
+
+    root.innerHTML =
+      '<form class="iu-tasksOverlay__form" id="iuTasksForm" autocomplete="off">' +
+        '<label class="iu-tasksOverlay__label">Název<input class="iu-tasksOverlay__input" id="iuTaskTitle" type="text" maxlength="200" value="' + esc(title) + '" required /></label>' +
+        '<label class="iu-tasksOverlay__label">Poznámka<textarea class="iu-tasksOverlay__textarea" id="iuTaskNote" maxlength="5000">' + esc(note) + "</textarea></label>" +
+        '<label class="iu-tasksOverlay__label">Termín<input class="iu-tasksOverlay__input" id="iuTaskDue" type="date" value="' + esc(due) + '" /></label>' +
+        '<label class="iu-tasksOverlay__label">Priorita' +
+          '<select class="iu-tasksOverlay__select" id="iuTaskPriority">' +
+            '<option value="low"' + (pr === "low" ? " selected" : "") + '>Nízká</option>' +
+            '<option value="medium"' + (pr === "medium" ? " selected" : "") + '>Střední</option>' +
+            '<option value="high"' + (pr === "high" ? " selected" : "") + '>Vysoká</option>' +
+          "</select>" +
+        "</label>" +
+        '<label class="iu-tasksOverlay__label">Stav' +
+          '<select class="iu-tasksOverlay__select" id="iuTaskStatus">' +
+            '<option value="todo"' + (st === "todo" ? " selected" : "") + '>K udělání</option>' +
+            '<option value="done"' + (st === "done" ? " selected" : "") + '>Hotovo</option>' +
+          "</select>" +
+        "</label>" +
+        '<div class="iu-tasksOverlay__formActions">' +
+          '<button type="submit" class="iu-tasksOverlay__btn iu-tasksOverlay__btn--primary" data-iu-tasks-save="1">Uložit</button>' +
+          '<button type="button" class="iu-tasksOverlay__btn" data-iu-tasks-cancel="1">Zrušit</button>' +
+        "</div>" +
+      "</form>";
+  }
+
+  function render(){
+    const ov = getOverlay();
+    if (!ov) return;
+    setFilterButtons();
+    if (state.panelMode === "form") renderFormView();
+    else renderListView();
+  }
+
+  function openCreate(){
+    state.panelMode = "form";
+    state.editingId = "";
+    render();
+    const ti = document.getElementById("iuTaskTitle");
+    if (ti) try{ ti.focus({ preventScroll: true }); ti.select(); }catch{}
+  }
+
+  function openEdit(id){
+    state.panelMode = "form";
+    state.editingId = String(id || "");
+    render();
+    const ti = document.getElementById("iuTaskTitle");
+    if (ti) try{ ti.focus({ preventScroll: true }); }catch{}
+  }
+
+  function backToList(){
+    state.panelMode = "list";
+    state.editingId = "";
+    render();
+  }
+
+  function readForm(){
+    const titleEl = document.getElementById("iuTaskTitle");
+    const noteEl = document.getElementById("iuTaskNote");
+    const dueEl = document.getElementById("iuTaskDue");
+    const prEl = document.getElementById("iuTaskPriority");
+    const stEl = document.getElementById("iuTaskStatus");
+    const title = titleEl ? String(titleEl.value || "").trim().slice(0, 200) : "";
+    const note = noteEl ? String(noteEl.value || "").slice(0, 5000) : "";
+    let dueAt = dueEl ? String(dueEl.value || "").trim() : "";
+    if (!isYmd(dueAt)) dueAt = null;
+    let priority = "medium";
+    if (prEl && (prEl.value === "low" || prEl.value === "medium" || prEl.value === "high")) priority = prEl.value;
+    const status = stEl && stEl.value === "done" ? "done" : "todo";
+    return { title: title, note: note, dueAt: dueAt, priority: priority, status: status };
+  }
+
+  function saveForm(){
+    const r = readForm();
+    if (!r.title) return;
+    const now = Date.now();
+    const tasks = (state.data.tasks || []).slice();
+    if (state.editingId){
+      const idx = tasks.findIndex(function(x){ return x && x.id === state.editingId; });
+      if (idx < 0) return;
+      const prev = tasks[idx];
+      tasks[idx] = sanitizeTask({
+        id: prev.id,
+        title: r.title,
+        note: r.note,
+        dueAt: r.dueAt,
+        priority: r.priority,
+        status: r.status,
+        createdAt: prev.createdAt,
+        updatedAt: now
+      });
+    } else {
+      tasks.unshift(sanitizeTask({
+        id: uid("tsk"),
+        title: r.title,
+        note: r.note,
+        dueAt: r.dueAt,
+        priority: r.priority,
+        status: r.status,
+        createdAt: now,
+        updatedAt: now
+      }));
+    }
+    state.data.tasks = tasks.slice(0, MAX_TASKS);
+    saveTasks(state.data);
+    state.panelMode = "list";
+    state.editingId = "";
+    render();
+  }
+
+  function toggleDone(id){
+    const tid = String(id || "");
+    if (!tid) return;
+    const tasks = (state.data.tasks || []).slice();
+    const idx = tasks.findIndex(function(x){ return x && x.id === tid; });
+    if (idx < 0) return;
+    const t = tasks[idx];
+    const next = t.status === "done" ? "todo" : "done";
+    tasks[idx] = sanitizeTask({ ...t, status: next, updatedAt: Date.now() });
+    state.data.tasks = tasks;
+    saveTasks(state.data);
+    render();
+  }
+
+  function openOverlay(originEl){
+    mountOverlay();
+    const ov = getOverlay();
+    if (!ov) return;
+    if (!ov.hidden){
+      try{
+        if (state.panelMode === "form"){
+          const ti = document.getElementById("iuTaskTitle");
+          if (ti && typeof ti.focus === "function"){ ti.focus({ preventScroll: true }); return; }
+        }
+        const btn = ov.querySelector("[data-iu-tasks-new]");
+        if (btn && typeof btn.focus === "function") btn.focus({ preventScroll: true });
+      }catch{}
+      return;
+    }
+    state.returnFocusEl = originEl && typeof originEl.focus === "function" ? originEl : document.activeElement;
+    state.panelMode = "list";
+    state.editingId = "";
+    loadTasks();
+    ov.hidden = false;
+    ov.setAttribute("aria-hidden", "false");
+    document.body.classList.add("iu-tasksOverlay-open");
+    try{
+      const sw = Math.max(0, (window.innerWidth || 0) - (document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth : 0));
+      state.prevBodyPadRight = String(document.body.style.paddingRight || "");
+      if (sw > 0) document.body.style.paddingRight = sw + "px";
+    }catch{}
+    render();
+    attachTrap();
+    try{
+      const btn = ov.querySelector("[data-iu-tasks-new]");
+      if (btn) btn.focus({ preventScroll: true });
+    }catch{}
+  }
+
+  function closeOverlay(){
+    const ov = getOverlay();
+    if (!ov) return;
+    state.panelMode = "list";
+    state.editingId = "";
+    ov.hidden = true;
+    ov.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("iu-tasksOverlay-open");
+    try{ document.body.style.paddingRight = state.prevBodyPadRight || ""; }catch{}
+    detachTrap();
+    const el = state.returnFocusEl;
+    if (el && typeof el.focus === "function"){
+      try{ el.focus({ preventScroll: true }); }catch{}
+    }
+  }
+
+  function onTrapKey(e){
+    const ov = getOverlay();
+    if (!ov || ov.hidden) return;
+    if (e.key !== "Escape") return;
+    e.preventDefault();
+    if (state.panelMode === "form") backToList();
+    else closeOverlay();
+  }
+
+  function attachTrap(){
+    if (state.trapAttached) return;
+    state.trapAttached = true;
+    document.addEventListener("keydown", onTrapKey, true);
+  }
+
+  function detachTrap(){
+    if (!state.trapAttached) return;
+    state.trapAttached = false;
+    document.removeEventListener("keydown", onTrapKey, true);
+  }
+
+  function bindUi(){
+    if (state.bound) return;
+    state.bound = true;
+
+    document.addEventListener("click", function(e){
+      const t = e.target;
+      const mm = t && t.closest ? t.closest(".iu-mmTopTool--tasks") : null;
+      const tr = t && t.closest ? t.closest("[data-iu-tasks-trigger]") : null;
+      if (mm || tr){
+        e.preventDefault();
+        openOverlay(mm || tr);
+        return;
+      }
+
+      const ov = getOverlay();
+      if (!ov || ov.hidden) return;
+
+      if (t && t.closest && t.closest("[data-iu-tasks-close]")){
+        e.preventDefault();
+        closeOverlay();
+        return;
+      }
+
+      const filt = t && t.closest ? t.closest("[data-iu-tasks-filter]") : null;
+      if (filt && state.panelMode === "list"){
+        e.preventDefault();
+        const k = String(filt.getAttribute("data-iu-tasks-filter") || "all");
+        if (k === "all" || k === "today" || k === "done") state.filter = k;
+        render();
+        return;
+      }
+
+      if (t && t.closest && t.closest("[data-iu-tasks-filter-all]")){
+        e.preventDefault();
+        state.filter = "all";
+        render();
+        return;
+      }
+
+      const newBtn = t && t.closest ? t.closest("[data-iu-tasks-new]") : null;
+      if (newBtn){
+        e.preventDefault();
+        openCreate();
+        return;
+      }
+
+      const emptyCta = t && t.closest ? t.closest("[data-iu-tasks-empty-cta]") : null;
+      if (emptyCta){
+        e.preventDefault();
+        openCreate();
+        return;
+      }
+
+      const cancel = t && t.closest ? t.closest("[data-iu-tasks-cancel]") : null;
+      if (cancel){
+        e.preventDefault();
+        backToList();
+        return;
+      }
+
+      const cb = t && t.closest ? t.closest("[data-iu-task-checkbox]") : null;
+      if (cb){
+        e.preventDefault();
+        e.stopPropagation();
+        const id = String(cb.getAttribute("data-iu-task-checkbox") || "");
+        toggleDone(id);
+        return;
+      }
+
+      const openB = t && t.closest ? t.closest("[data-iu-task-open]") : null;
+      if (openB && state.panelMode === "list"){
+        e.preventDefault();
+        const id = String(openB.getAttribute("data-iu-task-open") || "");
+        if (id) openEdit(id);
+        return;
+      }
+    });
+
+    document.addEventListener("submit", function(e){
+      const f = e.target;
+      if (!f || f.id !== "iuTasksForm") return;
+      const ov = getOverlay();
+      if (!ov || ov.hidden) return;
+      e.preventDefault();
+      saveForm();
+    });
+  }
+
+  function tasksCreateFromSilver(payload){
+    const o = payload && typeof payload === "object" ? payload : {};
+    let title = String(o.title || "").trim().slice(0, 200);
+    if (!title) title = "Úkol";
+    let dueAt = null;
+    if (o.date){
+      const d = String(o.date).trim();
+      if (isYmd(d)) dueAt = d;
+    }
+    const lines = [];
+    if (o.time) lines.push("Čas: " + String(o.time));
+    if (o.note) lines.push(String(o.note));
+    if (o.location) lines.push("Místo: " + String(o.location));
+    const note = lines.join("\n").trim().slice(0, 5000);
+    loadTasks();
+    const now = Date.now();
+    const item = sanitizeTask({
+      id: uid("tsk"),
+      title: title,
+      note: note,
+      dueAt: dueAt,
+      priority: "medium",
+      status: "todo",
+      createdAt: now,
+      updatedAt: now
+    });
+    const tasks = (state.data.tasks || []).slice();
+    tasks.unshift(item);
+    state.data.tasks = tasks.slice(0, MAX_TASKS);
+    saveTasks(state.data);
+    return { ok: true, task: item };
+  }
+
+  function init(){
+    if (state.inited) return;
+    state.inited = true;
+    ensureStyles();
+    mountOverlay();
+    bindUi();
+    window.iuTasksService = {
+      tasksCreateFromSilver: tasksCreateFromSilver,
+      openOverlay: function(el){ openOverlay(el || document.activeElement); },
+      closeOverlay: closeOverlay,
+      tasksGetSnapshot: function(){ return (state.data && Array.isArray(state.data.tasks)) ? state.data.tasks.slice() : []; }
+    };
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
 })();
+
 
 } catch(e) {
   console.error("IU SAFE BOOT ERROR:", e);
