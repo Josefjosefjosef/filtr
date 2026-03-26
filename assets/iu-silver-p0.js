@@ -176,9 +176,10 @@
     let t = String(raw || "").trim();
     const pats = [
       /\bpros[ií]m\s+/gi,
-      /\b(?:ulo[zž]|zapi[sš]|přidej|pridej|vlo[zž]|napl[aá]nuj|vytvoř|vytvor|zalo[zž]|napi[sš]|zaznamenej|eviduj|doplň|zanes)\s+do\s+(?:kalend[aá]r[eěi]|kalendare|di[aá]r[eěi]|diare|pl[aá]nova[cč]e|planovace|rozvrhu)\b/gi,
-      /\bdo\s+(?:kalend[aá]r[eěi]|kalendare|di[aá]r[eěi]|diare|pl[aá]nova[cč]e|planovace|rozvrhu)\b/gi,
-      /\bv\s+(?:kalend[aá]r[eěi]|kalendari)\b/gi
+      /\b(?:ulo[zž]|uloz)(?:te)?\s+mi\s+do\s+(?:kalend[aá]ře?|kalendare|di[aá]ře?|diare|pl[aá]nova[cč]e|planovace|rozvrhu)\b/gi,
+      /\b(?:ulo[zž]|zapi[sš]|přidej|pridej|vlo[zž]|napl[aá]nuj|vytvoř|vytvor|zalo[zž]|napi[sš]|zaznamenej|eviduj|doplň|zanes)\s+do\s+(?:kalend[aá]ře?|kalendare|di[aá]ře?|diare|pl[aá]nova[cč]e|planovace|rozvrhu)\b/gi,
+      /\bdo\s+(?:kalend[aá]ře?|kalendare|di[aá]ře?|diare|pl[aá]nova[cč]e|planovace|rozvrhu)\b/gi,
+      /\bv\s+(?:kalend[aá]ř[ei]|kalendari)\b/gi
     ];
     for (let i = 0; i < 12; i++) {
       const prev = t;
@@ -250,12 +251,29 @@
   }
 
   /**
+   * calendar.create with explicit write-to-calendar must never be classified as calendar.read.
+   * (Fixes false read e.g. „… schůzku s Petrem ulož mi to do kalendáře“ → find_by_title.)
+   */
+  function iuSilverCalendarReadSuppressedForWriteIntent(f) {
+    if (!f) return false;
+    if (/\buloz|ulož|uložte|zapis|zapiš|zapište|pridej|přidej|vytvor|vytvoř|naplanuj|naplánuj|zanes|dej\s+to\s+do\s+kalend|dej\s+mi\s+to\s+do\s+kalend/.test(f)) {
+      if (/\bdo\s+kalend[aá]r[eě]\b|\bv\s+kalend[aá]r[eě]\b/i.test(f)) return true;
+    }
+    if (/\buloz\s+mi\s+to\s+do\s+kalend/.test(f)) return true;
+    if (/\buloz\s+do\s+kalend/.test(f)) return true;
+    if (/\b(?:zapis|zapiš|pridej|přidej|vytvor|vytvoř|naplanuj|naplánuj)\s+mi\s+do\s+kalend/.test(f)) return true;
+    if (/\b(?:zapis|zapiš|pridej|přidej|vytvor|vytvoř|naplanuj|naplánuj)\s+do\s+kalend/.test(f)) return true;
+    return false;
+  }
+
+  /**
    * Structured read query (P0). Returns null if utterance is not calendar.read.
    */
   function tryParseCalendarRead(rawIn, now) {
     const r = iuSilverNormalizeUtteranceForReadParse(rawIn);
     const f = foldCs(r);
     if (!r) return null;
+    if (iuSilverCalendarReadSuppressedForWriteIntent(f)) return null;
 
     const coMam = /\bco\s+m[aá]m\b/.test(f);
     const kdyMam = /^\s*kdy\s+m[aá]m\s+/i.test(r) || /^\s*kdy\s+m[aá]m\s+/i.test(f);
@@ -273,14 +291,17 @@
     if (/\bm[aá]m\s+z[ií]tra\s+n[eě]co/i.test(f)) {
       return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
     }
-    if (/\bv\s+kolik\s+m[aá]m\b/i.test(f)) {
+    if (/\bv\s+kolik(?:\s+hodin)?\s+m[aá]m\b/i.test(f)) {
+      if (/\bposledn/i.test(f) && /\bsch[uů]z/i.test(f) && /\bdnes\b/i.test(f)) {
+        return { intent: "last_event_today", filter: null };
+      }
       if (/\bprvn[ií]\s+sch[uů]z/i.test(f)) {
         let dayKey = "today";
         if (/\bz[ií]tra\b/i.test(f)) dayKey = "tomorrow";
         return { intent: "first_event_time", dateRange: dayKey, filter: null };
       }
       const rest = r
-        .replace(/^\s*v\s+kolik\s+m[aá]m\s+/i, "")
+        .replace(/^\s*v\s+kolik(?:\s+hodin)?\s+m[aá]m\s+/i, "")
         .replace(/\s*[?.!]+\s*$/g, "")
         .trim();
       if (rest && rest.length > 1) {
@@ -302,7 +323,7 @@
       return { intent: "next_event", filter: null };
     }
 
-    if (kolik && /\bud[aá]lost/i.test(r)) {
+    if (kolik && (/\bud[aá]lost/i.test(r) || /\bsch[uů]z/i.test(f))) {
       let dayKey = "today";
       if (/\bz[ií]tra\b/i.test(f) || /\bzitrek\b/.test(f)) dayKey = "tomorrow";
       return { intent: "count_events", dateRange: dayKey, filter: null };
@@ -333,7 +354,9 @@
       }
     }
 
-    const mamSch = r.match(/\bm[aá]m\s+sch[uů]zku\s+s\s+(.+?)\s*$/i);
+    const mamSch = r.match(
+      /\bm[aá]m\s+sch[uů]zku\s+s\s+(.+?)(?=\s+ulož|\s+uloz|\s+zapiš|\s+zapis|\s+přidej|\s+pridej|\s+do\s+kalend|\s*[.!?]|$)/i
+    );
     if (mamSch && mamSch[1]) {
       const rest = String(mamSch[1]).replace(/\s*[?.!]+\s*$/g, "").trim();
       if (rest) {
@@ -411,6 +434,14 @@
       });
     }
 
+    if (spec.intent === "last_event_today") {
+      const dayEvs = sorted.filter(function (e) {
+        return String(e.date).slice(0, 10) === todayStr;
+      });
+      if (!dayEvs.length) return [];
+      return [dayEvs[dayEvs.length - 1]];
+    }
+
     return [];
   }
 
@@ -435,6 +466,17 @@
       else if (count < 5) message = "Na " + label + " máš " + count + " události.";
       else message = "Na " + label + " máš " + count + " událostí.";
       return { success: true, type: type, count: count, events: evs, message: message, ambiguity: false };
+    }
+
+    if (type === "last_event_today") {
+      if (count === 0) {
+        message = "Dnes v kalendáři nemáš žádnou událost.";
+        return { success: true, type: type, count: 0, events: [], message: message, ambiguity: false };
+      }
+      const ev = evs[evs.length - 1];
+      message =
+        "Poslední dnešní událost je v " + String(ev.time || "") + " — " + String(ev.title || "") + ".";
+      return { success: true, type: type, count: 1, events: [ev], message: message, ambiguity: false };
     }
 
     if (type === "next_event") {
@@ -698,6 +740,9 @@
         w = w.replace(rBare, " ");
       }
     }
+    if (time) {
+      w = w.replace(/\s+\.\s+/g, " ");
+    }
     return time ? { time, work: w.replace(/\s+/g, " ").trim() } : { time: null, work };
   }
 
@@ -771,13 +816,17 @@
   function findRelativeDay(work, now, hasCertainTime, timeHHMM) {
     let w = work;
     const folded = foldCs(w);
-    if (/\bpoz[ií]t[rř][ií]\b/i.test(w)) {
-      w = w.replace(/\bpoz[ií]t[rř][ií]\b/i, " ");
-      return { date: addDays(toDateOnly(now), 2), work: w.replace(/\s+/g, " ").trim() };
+    if (/\bpozitri\b/.test(folded)) {
+      w = w.replace(/(^|\s)poz[ií]t[rř][ií](?=\s|$)/gi, " ").replace(/\s+/g, " ").trim();
+      return { date: addDays(toDateOnly(now), 2), work: w };
     }
     if (/\bzitra\b/.test(folded)) {
-      w = w.replace(/\bz[ií]tra\b/i, " ");
-      return { date: addDays(toDateOnly(now), 1), work: w.replace(/\s+/g, " ").trim() };
+      w = w.replace(/(^|\s)z[ií]tra(?=\s|$)/gi, " ").replace(/\s+/g, " ").trim();
+      return { date: addDays(toDateOnly(now), 1), work: w };
+    }
+    if (/\bdnesni\b/.test(folded)) {
+      w = w.replace(/(^|\s)dnešní(?=\s|$)/gi, " ").replace(/\s+/g, " ").trim();
+      return { date: toDateOnly(now), work: w };
     }
     if (/\bdnes\b/.test(folded)) {
       w = w.replace(/\bdnes\b/i, " ");
@@ -859,7 +908,7 @@
       const fc = foldCs(c);
       const isInstruction = /ulož|uloz|kalend|zapiš|zapis|přidej|pridej|mi\s+to|tak\s+mi|dej\s+to/.test(fc);
       const hasEventHint =
-        /schuz|navstev|kontrol|zubar|pediatr|vyzvednout|\bmam\s+/.test(fc);
+        /schuz|navstev|kontrol|zubar|pediatr|vyzvednout|\bmam\s+|zapl|platit|najem|nájem|porad|poradu/i.test(fc);
       if (isInstruction && !hasEventHint) continue;
       kept.push(c);
     }
@@ -1050,8 +1099,9 @@
 
   function iuSilverStripDateTokensFromTitle(s) {
     let t = iuSilverNormalizeWs(s);
-    t = t.replace(/\bpoz[ií]t[rř][ií]\b/gi, " ");
-    t = t.replace(/\bz[ií]tra\b/gi, " ");
+    t = t.replace(/(^|\s)poz[ií]t[rř][ií](?=\s|$)/gi, " ");
+    t = t.replace(/(^|\s)z[ií]tra(?=\s|$)/gi, " ");
+    t = t.replace(/(^|\s)dnešní(?=\s|$)/gi, " ");
     t = t.replace(/\bdnes\b/gi, " ");
     t = t.replace(iuSilverReWeekdayAll(), " ");
     t = iuSilverStripNumericDateFragments(t);
@@ -1061,6 +1111,7 @@
 
   function iuSilverStripTimeTokensFromTitle(s) {
     let t = iuSilverNormalizeWs(s);
+    t = t.replace(/\b(?:ráno|dopoledne|odpoledne|večer|vecer)\b/gi, " ");
     t = t.replace(/\b(?:v|ve)\s+\d{1,2}\s*:\s*\d{2}\b/gi, " ");
     t = t.replace(/\b\d{1,2}\s*:\s*\d{2}\b/g, " ");
     t = t.replace(/\b(?:v|ve)\s+\d{1,2}\b/gi, " ");
@@ -1109,7 +1160,7 @@
     if (/\bmám\b/.test(f)) return false;
     if (/\b(že|tento)\b/.test(f)) return false;
     if (/\bto\b|\btak\b|\bmi\b/.test(f)) return false;
-    if (/\bsch[uů]zku\b/.test(f) && !/^schůzka u\b/i.test(t)) return false;
+    if (/\bsch[uů]zku\b/.test(f) && !/\bsch[uů]zku\s+s\b/i.test(t) && !/^schůzka\s+u\b/i.test(t)) return false;
     if (iuSilverReWeekdayOnce().test(t)) return false;
     if (/\d{1,2}\s*:\s*\d{2}/.test(t)) return false;
     if (/\d{1,2}\s*hod/.test(f)) return false;
@@ -1117,7 +1168,8 @@
     if (/\bv\s*\d{1,2}\b/.test(f)) return false;
     if (/\bve\s*\d{1,2}\b/.test(f)) return false;
     if (/\s\d{1,2}$/.test(t)) return false;
-    if (/\bzitra\b|\bdnes\b|\bpozit/.test(f)) return false;
+    if (/\bzitra\b|\bdnes\b|\bdnesni\b|\bpozit/.test(f)) return false;
+    if (/^(dnes|zitra|pozitri|odpoledne|rano|vecer|dopoledne|dnesni)$/.test(f)) return false;
     if (/\b(ponděl|úter|střed|čtvrtek|pátek|sobota|neděl)/i.test(t)) return false;
     return true;
   }
@@ -1249,6 +1301,11 @@
     } else {
       values.title = "";
       confidence.title = "missing";
+    }
+
+    if (confidence.date === "missing" && confidence.time === "certain") {
+      values.date = toDateOnly(now);
+      confidence.date = "certain";
     }
 
     return { values, confidence };
@@ -1424,8 +1481,14 @@
     const hasCalExplicit = iuSilverHasExplicitCalendarTarget(folded);
     const prev = prevDraft || createEmptyDraft();
     const inCalSession = !!prev.activeCalendarSession && prev.targetContainer === "calendar";
+    const implicitCalCreate =
+      iuSilverHasWriteVerb(folded) &&
+      !iuSilverHasExplicitNotesTarget(folded) &&
+      !iuSilverHasExplicitTasksTarget(folded) &&
+      !iuSilverHasExplicitCalendarTarget(folded) &&
+      iuSilverLooksLikeSchedulingFragment(folded, raw);
 
-    if (hasCalExplicit || inCalSession) {
+    if (hasCalExplicit || inCalSession || implicitCalCreate) {
       const workRaw = hasCalExplicit ? iuSilverStripCalendarTargetPhrases(raw) : raw;
       const eff = String(workRaw || "").trim();
       if (!eff && !inCalSession) {
