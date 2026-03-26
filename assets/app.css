@@ -14989,6 +14989,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
+@media (min-width: 901px){
+  .silver-welcome-stack{
+    min-height: 385px;
+  }
+  .silver-weather-card{
+    min-height: 131px;
+  }
+}
+
 .silver-calendar-summary-card{
   width: 100%;
   max-width: 100%;
