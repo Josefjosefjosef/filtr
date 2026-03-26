@@ -20373,6 +20373,17 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     mountOverlay();
     const ov = getOverlay();
     if (!ov) return;
+    if (!ov.hidden){
+      try{
+        if (state.panelMode === "form"){
+          const ti = document.getElementById("iuTaskTitle");
+          if (ti && typeof ti.focus === "function"){ ti.focus({ preventScroll: true }); return; }
+        }
+        const btn = ov.querySelector("[data-iu-tasks-new]");
+        if (btn && typeof btn.focus === "function") btn.focus({ preventScroll: true });
+      }catch{}
+      return;
+    }
     state.returnFocusEl = originEl && typeof originEl.focus === "function" ? originEl : document.activeElement;
     state.panelMode = "list";
     state.editingId = "";
