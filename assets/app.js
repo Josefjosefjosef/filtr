@@ -15434,6 +15434,7 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
   }
+  try { window.iuSetViewportLock = iuSetViewportLock; } catch (_) {}
 
   function iuEnsureArticlesView(){
     const stage = document.getElementById("iuCenterStage");
@@ -15938,7 +15939,13 @@ function buildVideoAsArticleCard(it) {
     }
 
     function lockScroll(lock){
-      iuSetViewportLock(!!lock);
+      if (typeof iuSetViewportLock === "function") {
+        iuSetViewportLock(!!lock);
+        return;
+      }
+      if (typeof window.iuSetViewportLock === "function") {
+        window.iuSetViewportLock(!!lock);
+      }
     }
 
     function openPanel(){
