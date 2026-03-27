@@ -14989,9 +14989,16 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
-@media (min-width: 901px){
+/* P0 CLS: headless nightly uses ~800×600; weather min-height applied only ≥901px, so stack grew after
+   hydration and flex-sibling .silver-shell shrank (~154px) → CLS. Reserve weather + summary cards from
+   first paint (769+). IDs avoid duplicating bare .silver-calendar-summary-card selector (css_debt_guard). */
+@media (min-width: 769px){
   .silver-weather-card{
     min-height: 131px;
+  }
+  #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
+  #iuSilverTasksSummaryCard.silver-calendar-summary-card{
+    min-height: 92px;
   }
 }
 
