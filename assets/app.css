@@ -19413,3 +19413,51 @@ overflow:hidden !important;
 #iuMobileCtaSlot [data-iu-cta-submit]{
   display: none !important;
 }
+
+@media (min-width: 901px){
+  :root{
+    --iu-right-rail-width: 360px;
+  }
+
+  .layout{
+    grid-template-columns: minmax(0, 1fr) var(--iu-right-rail-width) !important;
+  }
+
+  .layout > aside.accordionCol{
+    grid-column: 2 !important;
+    width: var(--iu-right-rail-width) !important;
+    min-width: var(--iu-right-rail-width) !important;
+    max-width: var(--iu-right-rail-width) !important;
+    flex: 0 0 var(--iu-right-rail-width) !important;
+    justify-self: stretch !important;
+    box-sizing: border-box !important;
+    overflow-x: clip !important;
+  }
+
+  .layout > .mainCol{
+    min-width: 0 !important;
+  }
+
+  .layout > aside.accordionCol .mindMenu,
+  .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks,
+  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid,
+  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid > *,
+  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iu-mmQuickItem,
+  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iu-mmQuickItemLink{
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid{
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    justify-items: stretch !important;
+    align-items: start !important;
+  }
+
+  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iu-mmQuickItem span:last-of-type{
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
