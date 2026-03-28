@@ -9232,7 +9232,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     padding-right: 0 !important;
   }
   #iuMobileGateWrap #iuMobileSilverSlot .silver-shell.silver-shell--stackConnected{
-    margin-top: 10px !important;
+    margin-top: 0 !important;
+    padding-top: 6px !important;
   }
   
   #iuMobileSilverSlot .silver-slot,
@@ -15047,6 +15048,29 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 }
 
+/* P0 Mobile/tablet only (max-width 900px): first-viewport fit + Tasks↔Silver — desktop min-width 901px unchanged */
+@media (max-width: 900px){
+  #iuSilverTallScrollSection .iuSilverTallScrollViewport{
+    min-height: 72px !important;
+    max-height: min(18dvh, 132px) !important;
+  }
+  #iuSilverWelcomeStack:has(#iuSilverWeatherCard[data-iu-silver-wx-phase="firstVisit"]) .iuSilverTallScrollViewport,
+  #iuSilverWelcomeStack:has(#iuSilverWeatherCard[data-iu-silver-wx-phase="denied"]) .iuSilverTallScrollViewport{
+    min-height: 64px !important;
+    max-height: min(16dvh, 118px) !important;
+  }
+  .iuSilverTallScrollChromaFrame{
+    padding: 4px !important;
+  }
+  .iuSilverTallScrollSection{
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+  .iuSilverTallScrollLayoutSpacer{
+    height: 96px !important;
+  }
+}
+
 .silver-calendar-summary-card{
   width: 100%;
   max-width: 100%;
@@ -19800,4 +19824,16 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   color: #1d4ed8;
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+/* P0 Mobile/tablet only: content-sized Silver slot (overrides 500px/512px caps) so connected stack can fit first viewport */
+@media (max-width: 900px){
+  .silver-slot{
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  #iuMobileGateWrap #iuMobileSilverSlot,
+  #iuMobileSilverSlot.iu-mobileSilverSlot{
+    min-height: 0 !important;
+  }
 }
