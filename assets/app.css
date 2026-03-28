@@ -9150,6 +9150,13 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   display: none !important;
 }
 
+/* Gate tabs markup lives in .silver-inputWrap for mobile/tablet width parity; hidden on desktop */
+@media (min-width: 901px){
+  #iuMobileGateTabs.iu-mobileGateTabs{
+    display: none !important;
+  }
+}
+
 @media (max-width: 900px){
   :root{
     --iuMobileBtnH: 52px;
@@ -9213,10 +9220,16 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     margin-top: 0 !important;
     padding-top: 0 !important;
   }
-  #iuMobileGateWrap #iuMobileSilverSlot .silver-slot,
-  #iuMobileGateWrap #iuMobileSilverSlot .silver-shell{
+  #iuMobileGateWrap #iuMobileSilverSlot .silver-slot{
     margin-top: 0 !important;
     padding-top: 0 !important;
+  }
+  /* P0 Mobile/tablet: extra gap between horní Silver karty a Silver input frame; shell flush šířka s kartami */
+  #iuMobileGateWrap #iuMobileSilverSlot .silver-shell{
+    margin-top: 24px !important;
+    padding-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
   
   #iuMobileSilverSlot .silver-slot,
@@ -9347,7 +9360,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     flex-direction: column !important;
     --iu-mobile-cta-h: 52px !important;
   }
-  #iuMobileGateWrap .iu-mobileCtaGroup #iuMobileGateTabs,
   #iuMobileGateWrap .iu-mobileCtaGroup #iuMobileCtaSlot{
     width: 100% !important;
     max-width: 100% !important;
@@ -9458,11 +9470,33 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     justify-content: center !important;
     box-sizing: border-box !important;
   }
-  #iuMobileSilverSlot .silver-slot,
+  #iuMobileSilverSlot .silver-slot{
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
   #iuMobileSilverSlot .silver-shell{
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
+    box-sizing: border-box !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  #iuMobileSilverSlot .silver-output{
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    box-sizing: border-box !important;
+  }
+  #iuMobileSilverSlot .silver-inputWrap.iuSilverHomeInputWrap{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
     box-sizing: border-box !important;
   }
   
@@ -9472,7 +9506,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     gap: 8px !important;
     width: 100% !important;
     max-width: 100% !important;
-    padding: 12px 0 !important;
+    padding: 10px 0 0 0 !important;
+    margin: 0 !important;
     box-sizing: border-box !important;
   }
   
