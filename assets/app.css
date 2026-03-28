@@ -19819,6 +19819,13 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 
 /* P0 Mobile/tablet only: adaptive first-viewport stack + Silver bottom visible — --iu-silver-slot-max-h z visualViewport (app.js); desktop ≥901px beze změny */
 @media (max-width: 900px){
+  .iuSilverTopCardsStack #silver-slot.silver-slot,
+  #iuMobileSilverSlot .silver-slot{
+    flex: 0 0 auto !important;
+    align-self: stretch;
+    width: 100%;
+    max-width: 100%;
+  }
   .silver-slot{
     height: auto !important;
     min-height: 0 !important;
@@ -19907,8 +19914,22 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     padding-right: 0 !important;
     padding-bottom: 0 !important;
   }
-  #silver-slot .silver-output,
-  #iuMobileSilverSlot #silver-slot .silver-output{
+  /* Root cause (prázdný chat): .silver-compose/.silver-output flex-grow rezervoval výšku = falešný panel pod vstupem */
+  #silver-slot .silver-compose:has(.silver-output:empty),
+  #iuMobileSilverSlot #silver-slot .silver-compose:has(.silver-output:empty){
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+  #silver-slot .silver-output:empty,
+  #iuMobileSilverSlot #silver-slot .silver-output:empty{
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+  #silver-slot .silver-output:not(:empty),
+  #iuMobileSilverSlot #silver-slot .silver-output:not(:empty){
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
@@ -19918,9 +19939,11 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-width: 100% !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
+    margin-top: 0 !important;
     padding: 12px var(--iuSilverStackPadX, 12px) 12px var(--iuSilverStackPadX, 12px) !important;
-    border-radius: var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius) 0 0 !important;
+    border-radius: 0 0 var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius) !important;
     box-sizing: border-box !important;
+    box-shadow: none !important;
   }
   #silver-slot[data-iu-silver-welcome-variant="evening"] #iuMobileGateTabs.iu-mobileGateTabs{
     padding: 8px 0 0 0 !important;
