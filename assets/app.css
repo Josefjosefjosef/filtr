@@ -9229,7 +9229,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   }
   
   .iuSilverWelcomeSticky{
-    top: calc(var(--iuMobileBtnH, 52px) + 4px) !important;
+    top: calc(env(safe-area-inset-top, 0px) + 4px) !important;
   }
   
   #leftStickyHeader{
@@ -20084,5 +20084,68 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     flex: 0 1 auto !important;
     min-height: 48px !important;
     max-height: min(46vh, 280px) !important;
+  }
+}
+
+/* P0: mobile/tablet (≤900px) — topbar off layout; safe-area on first stack; info (i) only in welcome box */
+@media (max-width: 900px) {
+  html {
+    scroll-padding-top: max(env(safe-area-inset-top, 0px), 4px);
+  }
+  #leftStickyHeader {
+    display: none !important;
+  }
+  .iuSilverTopCardsStack {
+    padding-top: env(safe-area-inset-top, 0px);
+    box-sizing: border-box;
+  }
+  #iuTopbarInfoBtn.iuTopbarInfoBtn {
+    display: none !important;
+  }
+  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg {
+    width: 40px;
+    height: 40px;
+  }
+  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn:focus-visible {
+    outline: 2px solid rgba(37, 99, 235, 0.85);
+    outline-offset: 2px;
+  }
+  #iuSilverWelcomeCard {
+    padding-right: calc(var(--iuSilverStackPadX, 12px) + 44px);
+  }
+  .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > circle:nth-child(1) {
+    fill: rgba(255, 255, 255, 0.12);
+    stroke: rgba(255, 255, 255, 0.42);
+  }
+  .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > circle:nth-child(2) {
+    fill: rgba(248, 250, 252, 0.95);
+  }
+  .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > path {
+    stroke: rgba(248, 250, 252, 0.95);
+  }
+}
+
+@media (min-width: 901px) {
+  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
+    display: none !important;
   }
 }

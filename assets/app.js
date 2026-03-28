@@ -4774,31 +4774,44 @@ function buildVideoAsArticleCard(it) {
     try{
       if (iuTopbarInfoOverlayInited) return;
       iuTopbarInfoOverlayInited = true;
-      const btn = document.getElementById("iuTopbarInfoBtn");
+      const topbarBtn = document.getElementById("iuTopbarInfoBtn");
+      const welcomeBtn = document.getElementById("iuSilverWelcomeInfoBtn");
+      const triggers = [topbarBtn, welcomeBtn].filter(function(el){ return !!el; });
       const overlay = document.getElementById("iuTopbarInfoOverlay");
       const closeBtn = document.getElementById("iuTopbarInfoOverlayClose");
-      if (!btn || !overlay || !closeBtn) return;
+      if (!overlay || !closeBtn || triggers.length === 0) return;
 
       let lastFocus = null;
+      let lastTrigger = null;
       let isOpen = false;
+
+      function setTriggersExpanded(expanded){
+        const v = expanded ? "true" : "false";
+        for (let i = 0; i < triggers.length; i++) {
+          try{ triggers[i].setAttribute("aria-expanded", v); }catch{}
+        }
+      }
 
       function setOpen(open){
         isOpen = !!open;
         if (isOpen) {
           try{ overlay.hidden = false; }catch{}
           try{ overlay.removeAttribute("aria-hidden"); }catch{}
-          try{ btn.setAttribute("aria-expanded", "true"); }catch{}
+          try{ setTriggersExpanded(true); }catch{}
           try{ lastFocus = document.activeElement; }catch{}
           try{ closeBtn.focus({ preventScroll: true }); }catch{}
         } else {
           try{ overlay.hidden = true; }catch{}
           try{ overlay.setAttribute("aria-hidden", "true"); }catch{}
-          try{ btn.setAttribute("aria-expanded", "false"); }catch{}
+          try{ setTriggersExpanded(false); }catch{}
           try{
             if (lastFocus && typeof lastFocus.focus === "function") {
               lastFocus.focus({ preventScroll: true });
             } else {
-              btn.focus({ preventScroll: true });
+              const fb = lastTrigger || triggers[0];
+              if (fb && typeof fb.focus === "function") {
+                fb.focus({ preventScroll: true });
+              }
             }
           }catch{}
         }
@@ -4812,10 +4825,13 @@ function buildVideoAsArticleCard(it) {
         setOpen(false);
       }
 
-      btn.addEventListener("click", (e) => {
-        try{ e.preventDefault(); }catch{}
-        if (!isOpen) openOverlay();
-        else closeOverlay();
+      triggers.forEach(function(btnEl){
+        btnEl.addEventListener("click", function(e){
+          try{ e.preventDefault(); }catch{}
+          try{ lastTrigger = btnEl; }catch{}
+          if (!isOpen) openOverlay();
+          else closeOverlay();
+        });
       });
 
       try{
