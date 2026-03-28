@@ -1,3 +1,4 @@
+import { getExternalOriginMeta, isAllowedExternalOrigin, IU_OPEN_METEO_FORECAST_BASE } from "./iu-external-origins.js";
 /* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
   try{
@@ -7252,6 +7253,10 @@ function buildVideoAsArticleCard(it) {
   }
 
   function timeoutFetch(url, options = {}, ms = 10000) {
+    try {
+      void getExternalOriginMeta(url);
+      void isAllowedExternalOrigin(url);
+    } catch (_) {}
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), ms);
     return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(id));
@@ -9105,7 +9110,7 @@ function buildVideoAsArticleCard(it) {
     const la = Number(lat);
     const lo = Number(lon);
     return (
-      "https://api.open-meteo.com/v1/forecast" +
+      IU_OPEN_METEO_FORECAST_BASE +
       `?latitude=${encodeURIComponent(String(la))}&longitude=${encodeURIComponent(String(lo))}` +
       "&current=temperature_2m,apparent_temperature,weather_code,is_day,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,relative_humidity_2m,visibility" +
       "&hourly=temperature_2m,apparent_temperature,weather_code,is_day,precipitation_probability,precipitation,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,relative_humidity_2m,visibility,uv_index" +
