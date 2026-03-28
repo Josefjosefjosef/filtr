@@ -359,6 +359,8 @@ def build_compliance_report(
     lines.append("basic_measures: CSP present in projects/index.html; HTTPS assumed on production")
     lines.append("")
     lines.append("=== NIS2 / CYBER LAW ===")
+    lines.append("IN_SCOPE: UNKNOWN")
+    lines.append("OUT_OF_SCOPE: UNKNOWN")
     lines.append("classification: UNKNOWN (operator scope and sector not determined from repo)")
     lines.append("")
     lines.append("=== INCIDENT READINESS ===")
