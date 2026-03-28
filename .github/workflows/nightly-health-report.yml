@@ -65,10 +65,13 @@ jobs:
           python-version: "3.11"
 
       - name: Python compile gate
-        run: python -m py_compile scripts/health_report.py scripts/css_duplicate_audit.py scripts/css_debt_guard.py
+        run: python -m py_compile scripts/health_report.py scripts/css_duplicate_audit.py scripts/css_debt_guard.py scripts/generate_security_governance_reports.py
 
       - name: Health report selftest
         run: python3 scripts/health_report.py --selftest
+
+      - name: Security/governance reports selftest
+        run: python3 scripts/generate_security_governance_reports.py --selftest
 
       - name: Install Python deps (for robots proof)
         run: |
@@ -385,11 +388,54 @@ jobs:
             echo "- Viz příloha \`ultra_audit_report.txt\`"
           } > "$out"
 
+      - name: Generate security, compliance, and data governance reports
+        shell: bash
+        env:
+          HEAD_SHA: ${{ env.HEAD_SHA }}
+          HEAD_SHA_SHORT: ${{ env.HEAD_SHA_SHORT }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python3 scripts/generate_security_governance_reports.py
+          test -s reports/security_audit_report.txt
+          test -s reports/compliance_status_report.txt
+          test -s reports/data_governance_report.txt
+          echo "SECURITY_GOVERNANCE_REPORTS=OK"
+
+      - name: STOP-SHIP guard (regulatory reports must not contain PEM material)
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in reports/security_audit_report.txt reports/compliance_status_report.txt reports/data_governance_report.txt; do
+            if grep -q "BEGIN PRIVATE KEY" "$f" 2>/dev/null; then
+              echo "::error::STOP_SHIP: $f contains PEM marker"
+              exit 1
+            fi
+          done
+          echo "STOP_SHIP_REGULATORY_REPORTS=PASS"
+
       - name: Copy nightly report for email attachments
         shell: bash
         run: |
           cp reports/latest.md reports/nightly_health_report.txt
           test -f reports/nightly_health_report.txt
+
+      - name: Email attachments gate (6 files for nightly mail)
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in \
+            reports/nightly_health_report.txt \
+            reports/ultra_audit_report.txt \
+            reports/ultra_audit_wiki.md \
+            reports/security_audit_report.txt \
+            reports/compliance_status_report.txt \
+            reports/data_governance_report.txt; do
+            test -f "$f"
+            test -s "$f"
+          done
+          echo "EMAIL_ATTACHMENTS_SIX_FILES_GATE=PASS"
 
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
@@ -400,6 +446,9 @@ jobs:
             reports/nightly_health_report.txt
             reports/ultra_audit_report.txt
             reports/ultra_audit_wiki.md
+            reports/security_audit_report.txt
+            reports/compliance_status_report.txt
+            reports/data_governance_report.txt
             reports/health-*.md
             reports/health-*.json
             reports/check_site.json
@@ -458,3 +507,6 @@ jobs:
             reports/nightly_health_report.txt
             reports/ultra_audit_report.txt
             reports/ultra_audit_wiki.md
+            reports/security_audit_report.txt
+            reports/compliance_status_report.txt
+            reports/data_governance_report.txt
