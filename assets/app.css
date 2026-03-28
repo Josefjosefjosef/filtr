@@ -15035,10 +15035,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   .silver-weather-card{
     min-height: 131px;
   }
-  #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
-  #iuSilverTasksSummaryCard.silver-calendar-summary-card{
-    min-height: 92px;
-  }
   #iuSilverTallScrollSection .iuSilverTallScrollViewport{
     min-height: 220px;
   }
@@ -15659,6 +15655,19 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     height: auto;
     min-height: 542px;
   }
+  /* Desktop only: CLS reserve for summary cards (not mixed into <769px tablet/mobile) */
+  #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
+  #iuSilverTasksSummaryCard.silver-calendar-summary-card{
+    min-height: 92px;
+  }
+}
+
+/* Silver shell is last child of #iuSilverWelcomeStack: single column flow with cards + separator */
+#silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
+  flex: 0 0 auto;
+  min-height: 0;
+  height: auto;
+  align-self: stretch;
 }
 
 .silver-shell{
@@ -15692,13 +15701,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   background: linear-gradient(135deg, #0f2438 0%, #162d45 55%, #203a52 100%);
 }
 
-.iuSilverWelcomeSticky:has(+ .silver-shell--stackConnected){
-  margin-bottom: 0;
+/* Silver shell lives inside #iuSilverWelcomeStack — margin below sticky only on desktop ≥901px */
+@media (max-width: 900px){
+  #silver-slot .iuSilverWelcomeSticky{
+    margin-bottom: 0 !important;
+  }
 }
-
 @media (min-width: 901px){
-  .iuSilverWelcomeSticky:has(+ .silver-shell--stackConnected){
-    margin-bottom: 0;
+  #silver-slot .iuSilverWelcomeSticky{
+    margin-bottom: 50px;
   }
 }
 
@@ -19832,6 +19843,8 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-height: var(--iu-silver-slot-max-h, min(100dvh, 100vh));
     display: flex;
     flex-direction: column;
+    gap: 0;
+    row-gap: 0;
     box-sizing: border-box;
   }
   #iuMobileGateWrap #iuMobileSilverSlot,
@@ -19845,24 +19858,41 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    margin-bottom: 0 !important;
   }
   #silver-slot #iuSilverWelcomeStack{
     flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    row-gap: 0 !important;
   }
-  /* P0 stack seam: single hairline before Silver — stack card border + separator = double line / extra px */
+  /* Stack border + separator hairline = double seam; only one card border */
   #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
     border-bottom: none !important;
   }
-  /* P0 unify Chrome vs Safari-like: same min-height + no flex-shrink on Kalendář/Úkoly (769+ rule does not apply below 769px) */
+  /* P0 single column contract: Kalendář + Úkoly + Silver — same flex model, content-driven height */
   #silver-slot #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     flex: 0 0 auto !important;
-    align-self: stretch;
-    min-height: 92px !important;
+    align-self: stretch !important;
+    min-height: auto !important;
+    height: auto !important;
     box-sizing: border-box;
+  }
+  #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    align-self: stretch !important;
+  }
+  #silver-slot #iuSilverWelcomeStackSeparatorBeforeSilver.silver-welcome-stack__separator{
+    flex: 0 0 auto !important;
+    height: 1px !important;
+    min-height: 1px !important;
+    max-height: 1px !important;
+    margin: 0 !important;
   }
   #silver-slot #iuSilverTallScrollSection{
     flex: 1 1 auto;
@@ -19986,9 +20016,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot:not([data-iu-silver-welcome-variant="evening"]) #iuMobileGateTabs .iu-mobileGateTab[aria-selected="true"]{
     background: rgba(255, 255, 255, 0.75) !important;
     border-color: rgba(15, 35, 55, 0.22) !important;
-  }
-  #iuSilverWelcomeStack.silver-welcome-stack{
-    border-radius: var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius) 0 0 !important;
   }
   #silver-slot[data-iu-silver-welcome-variant="morning"]{
     background: linear-gradient(135deg, #fff5e8 0%, #ffe8cc 45%, #ffd8a8 100%);
