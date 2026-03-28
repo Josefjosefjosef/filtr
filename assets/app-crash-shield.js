@@ -445,38 +445,22 @@
   }
 
   // =========================
-  // === SERVICE WORKER REGISTER
+  // === SERVICE WORKER (crash-shield)
+  // Registration + update live in assets/app.js (iuEnsureServiceWorkerController) to avoid
+  // duplicate register/update races that surface as "Failed to update ... script ('Unknown')".
+  // Here: only ?nosw=1 kill switch (unregister).
   // =========================
 
-  async function registerSW() {
+  async function iuUnregisterServiceWorkersIfNosw() {
     try {
       if (!("serviceWorker" in navigator)) return;
-
       const NOSW = new URLSearchParams(location.search).get("nosw") === "1";
-      if (NOSW) {
-        try {
-          const regs = await navigator.serviceWorker.getRegistrations();
-          for (const reg of regs) {
-            await reg.unregister();
-          }
-        } catch (e) {}
-        return;
+      if (!NOSW) return;
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const reg of regs) {
+        await reg.unregister();
       }
-
-      const reg = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
-      if (reg && reg.update) reg.update().catch(() => {});
-
-      if (!navigator.serviceWorker.controller) {
-        const reloadKey = "iu_sw_reload_done";
-        if (!sessionStorage.getItem(reloadKey)) {
-          sessionStorage.setItem(reloadKey, "1");
-          location.reload();
-          return;
-        }
-      }
-    } catch (e) {
-      warn("SW register failed", e);
-    }
+    } catch (e) {}
   }
 
   // =========================
@@ -500,7 +484,7 @@
 
   async function bootstrap() {
     try {
-      await registerSW();
+      await iuUnregisterServiceWorkersIfNosw();
 
       window.addEventListener("online", () => setStatusBadge("", "ok"));
       window.addEventListener("offline", () => setStatusBadge("Offline – zobrazuji uložená data", "offline"));

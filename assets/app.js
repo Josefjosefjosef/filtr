@@ -206,6 +206,18 @@ try {
       var p = (typeof location !== "undefined" && location && location.pathname) ? String(location.pathname) : "";
       if (p !== "/projects/" && p !== "/projects" && p.indexOf("/projects/") !== 0) return;
       if (!("serviceWorker" in navigator)) return;
+      try {
+        if (new URLSearchParams(location.search).get("nosw") === "1") {
+          navigator.serviceWorker.getRegistrations().then(function (regs) {
+            return Promise.all(
+              regs.map(function (r) {
+                return r.unregister();
+              })
+            );
+          }).catch(function () {});
+          return;
+        }
+      } catch (eNosw) {}
       navigator.serviceWorker
         .register("/sw.js", { scope: "/" })
         .then(function (reg) {
@@ -222,7 +234,10 @@ try {
             if (reg.waiting && navigator.serviceWorker.controller) {
               iuShowSwUpdateBanner();
             }
-            reg.update();
+            try {
+              var u = reg.update();
+              if (u && typeof u.catch === "function") u.catch(function () {});
+            } catch (e2) {}
           } catch (e) {}
           return navigator.serviceWorker.ready;
         })
