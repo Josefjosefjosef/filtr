@@ -19945,17 +19945,24 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
   /* Root cause (prázdný chat): .silver-compose/.silver-output flex-grow rezervoval výšku = falešný panel pod vstupem */
   #silver-slot .silver-compose:has(.silver-output:empty),
-  #iuMobileSilverSlot #silver-slot .silver-compose:has(.silver-output:empty){
+  #iuMobileSilverSlot #silver-slot .silver-compose:has(.silver-output:empty),
+  #silver-slot .silver-compose:has(.silver-output:not(:has(> *))),
+  #iuMobileSilverSlot #silver-slot .silver-compose:has(.silver-output:not(:has(> *))){
     flex: 0 0 auto !important;
     min-height: 0 !important;
     height: auto !important;
   }
   #silver-slot .silver-output:empty,
-  #iuMobileSilverSlot #silver-slot .silver-output:empty{
+  #iuMobileSilverSlot #silver-slot .silver-output:empty,
+  #silver-slot .silver-output:not(:has(> *)),
+  #iuMobileSilverSlot #silver-slot .silver-output:not(:has(> *)){
     flex: 0 0 auto !important;
     min-height: 0 !important;
     padding: 0 !important;
+    margin: 0 !important;
+    height: 0 !important;
     overflow: hidden !important;
+    border-width: 0 !important;
   }
   #silver-slot .silver-output:not(:empty),
   #iuMobileSilverSlot #silver-slot .silver-output:not(:empty){
