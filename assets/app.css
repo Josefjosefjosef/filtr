@@ -9210,12 +9210,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     overflow-x: visible !important;
     overflow-y: visible !important;
   }
-  
-  
-  #iuMobileGateWrap #iuMobileSilverSlot,
-  #iuMobileSilverSlot.iu-mobileSilverSlot{
-    min-height: 512px !important;
-  }
   #iuMobileGateWrap #iuMobileSilverSlot{
     margin-top: 0 !important;
     padding-top: 0 !important;
@@ -9224,16 +9218,9 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     margin-top: 0 !important;
     padding-top: 0 !important;
   }
-  /* P0 Mobile/tablet: extra gap between horní Silver karty a Silver input frame; shell flush šířka s kartami */
-  #iuMobileGateWrap #iuMobileSilverSlot .silver-shell{
-    margin-top: 24px !important;
-    padding-top: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
   #iuMobileGateWrap #iuMobileSilverSlot .silver-shell.silver-shell--stackConnected{
     margin-top: 0 !important;
-    padding-top: 6px !important;
+    padding-top: 0 !important;
   }
   
   #iuMobileSilverSlot .silver-slot,
