@@ -19868,5 +19868,54 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot .silver-shell.silver-shell--stackConnected{
     flex: 0 0 auto !important;
     min-height: 0;
+    gap: 12px;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding-top: 0 !important;
+    padding-left: var(--iuSilverStackPadX, 12px) !important;
+    padding-right: var(--iuSilverStackPadX, 12px) !important;
+    padding-bottom: 12px !important;
+  }
+  #silver-slot[data-iu-silver-welcome-variant="morning"] .silver-shell--stackConnected,
+  #silver-slot[data-iu-silver-welcome-variant="lateMorning"] .silver-shell--stackConnected,
+  #silver-slot[data-iu-silver-welcome-variant="afternoon"] .silver-shell--stackConnected,
+  #silver-slot[data-iu-silver-welcome-variant="evening"] .silver-shell--stackConnected{
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding-top: 0 !important;
+    padding-left: var(--iuSilverStackPadX, 12px) !important;
+    padding-right: var(--iuSilverStackPadX, 12px) !important;
+    padding-bottom: 12px !important;
+  }
+  #iuMobileGateWrap #iuMobileSilverSlot .silver-shell.silver-shell--stackConnected{
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding-left: var(--iuSilverStackPadX, 12px) !important;
+    padding-right: var(--iuSilverStackPadX, 12px) !important;
+    padding-bottom: 12px !important;
+  }
+  #iuSilverWelcomeStack.silver-welcome-stack{
+    border-radius: var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius) 0 0 !important;
+  }
+  #silver-slot[data-iu-silver-welcome-variant="morning"]{
+    background: linear-gradient(135deg, #fff5e8 0%, #ffe8cc 45%, #ffd8a8 100%);
+  }
+  #silver-slot[data-iu-silver-welcome-variant="lateMorning"]{
+    background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 50%, #e4ecfa 100%);
+  }
+  #silver-slot[data-iu-silver-welcome-variant="afternoon"]{
+    background: linear-gradient(135deg, #fff9f0 0%, #fff0dc 55%, #ffe4c4 100%);
+  }
+  #silver-slot[data-iu-silver-welcome-variant="evening"]{
+    background: linear-gradient(135deg, #0f2438 0%, #162d45 55%, #203a52 100%);
+  }
+  #iuSilverTasksSummaryCard.silver-calendar-summary-card,
+  #iuMobileSilverSlot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
+    border-radius: 0 !important;
   }
 }
