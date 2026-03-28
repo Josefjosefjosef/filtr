@@ -134,6 +134,13 @@ style-src 'self' 'unsafe-inline' https:;
                         </div>
                       </div>
                     </div>
+                  <button type="button" id="iuTopbarInfoBtn" class="iuTopbarInfoBtn" aria-label="Informace o webu" aria-haspopup="dialog" aria-controls="iuTopbarInfoOverlay" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" aria-hidden="true" width="44" height="44" focusable="false">
+                      <circle cx="23" cy="23" r="22" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+                      <circle cx="23" cy="15" r="2.5" fill="#0B1F33"/>
+                      <path d="M23 20v14" stroke="#0B1F33" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                  </button>
                   </header>
                 </div>
                 <div id="iuSilverTopCardsStack" class="iuSilverTopCardsStack" aria-label="Silver horní boxy">
@@ -3418,6 +3425,37 @@ style-src 'self' 'unsafe-inline' https:;
     <div id="iuVideoModal" class="iuVideoModal" hidden aria-modal="true" aria-label="Přehrát video">
       <button type="button" class="iuVideoModalClose" aria-label="Zavřít">×</button>
       <iframe id="iuVideoFrame" allowfullscreen></iframe>
+    </div>
+
+    <div id="iuTopbarInfoOverlay" class="iuTopbarInfoOverlay" role="dialog" aria-modal="true" aria-labelledby="iuTopbarInfoOverlayTitle" hidden>
+      <div class="iuTopbarInfoOverlay__backdrop" data-iu-topbar-info-close="backdrop" aria-hidden="true"></div>
+      <div class="iuTopbarInfoOverlay__panel" role="document">
+        <header class="iuTopbarInfoOverlay__head">
+          <h2 id="iuTopbarInfoOverlayTitle" class="iuTopbarInfoOverlay__title">Informace</h2>
+          <button type="button" class="iuTopbarInfoOverlay__close" id="iuTopbarInfoOverlayClose" data-iu-topbar-info-close="button" aria-label="Zavřít">×</button>
+        </header>
+        <div class="iuTopbarInfoOverlay__body">
+          <section class="iuTopbarInfoOverlay__block" aria-labelledby="iuTopbarInfoHPrivacy">
+            <h3 id="iuTopbarInfoHPrivacy" class="iuTopbarInfoOverlay__h">Ochrana soukromí a data</h3>
+            <p>Web může ukládat technická data v prohlížeči, například localStorage, cache nebo data související se service workerem.</p>
+            <p>Tato data slouží především pro funkčnost webu a jeho částí.</p>
+            <p>Web může pracovat s externími zdroji dat podle aktuálně dostupných funkcí.</p>
+            <p>Rozsah práce s daty se může průběžně upřesňovat a doplňovat podle vývoje služby.</p>
+          </section>
+          <section class="iuTopbarInfoOverlay__block" aria-labelledby="iuTopbarInfoHCookies">
+            <h3 id="iuTopbarInfoHCookies" class="iuTopbarInfoOverlay__h">Cookies / technické ukládání</h3>
+            <p>Web může využívat technické ukládání dat pro zajištění funkčnosti.</p>
+            <p>Rozsah ukládání dat se může lišit podle konkrétní funkce webu.</p>
+            <p>Podrobnější informace budou doplňovány podle dalšího vývoje služby.</p>
+          </section>
+          <section class="iuTopbarInfoOverlay__block" aria-labelledby="iuTopbarInfoHContact">
+            <h3 id="iuTopbarInfoHContact" class="iuTopbarInfoOverlay__h">Provozovatel a kontakt</h3>
+            <p><strong>Provozovatel webu:</strong> Bude doplněno před oficiálním spuštěním služby.</p>
+            <p><strong>Kontakt:</strong> <a href="mailto:info@infouzel.cz" class="iuTopbarInfoOverlay__mailto">info@infouzel.cz</a></p>
+            <p>Podrobnější provozní a informační údaje budou doplňovány s rozšiřováním služby.</p>
+          </section>
+        </div>
+      </div>
     </div>
   </body>
 </html>

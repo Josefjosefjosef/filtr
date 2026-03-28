@@ -19468,3 +19468,152 @@ overflow:hidden !important;
     max-width: 100% !important;
   }
 }
+
+/* === Topbar info (i) — compliance foundation overlay; replaces non-interactive ::after === */
+header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
+  display: none !important;
+  content: none !important;
+}
+#iuTopbarInfoBtn.iuTopbarInfoBtn{
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+#iuTopbarInfoBtn.iuTopbarInfoBtn:focus-visible{
+  outline: 2px solid rgba(37, 99, 235, 0.85);
+  outline-offset: 2px;
+}
+#iuTopbarInfoBtn.iuTopbarInfoBtn:active{
+  opacity: 0.92;
+}
+.iuTopbarInfoOverlay{
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  overflow-x: hidden;
+}
+.iuTopbarInfoOverlay[hidden]{
+  display: none !important;
+}
+.iuTopbarInfoOverlay__backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+}
+.iuTopbarInfoOverlay__panel{
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: min(520px, calc(100vw - 24px));
+  max-height: min(88dvh, 900px);
+  margin: auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.iuTopbarInfoOverlay__head{
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(14, 42, 74, 0.12);
+  background: #f7f9fc;
+}
+.iuTopbarInfoOverlay__title{
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0b1f33;
+  line-height: 1.25;
+}
+.iuTopbarInfoOverlay__close{
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(14, 42, 74, 0.08);
+  color: #0b1f33;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.iuTopbarInfoOverlay__close:hover{
+  background: rgba(14, 42, 74, 0.14);
+}
+.iuTopbarInfoOverlay__body{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 14px 16px 18px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  color: #1f2937;
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+.iuTopbarInfoOverlay__block{
+  margin-bottom: 1.15rem;
+}
+.iuTopbarInfoOverlay__block:last-child{
+  margin-bottom: 0;
+}
+.iuTopbarInfoOverlay__h{
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0b1f33;
+}
+.iuTopbarInfoOverlay__body p{
+  margin: 0 0 0.55rem;
+}
+.iuTopbarInfoOverlay__body p:last-child{
+  margin-bottom: 0;
+}
+.iuTopbarInfoOverlay__mailto{
+  color: #1d4ed8;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+@media (max-width: 899px){
+  .iuTopbarInfoOverlay{
+    align-items: stretch;
+    padding: 0;
+  }
+  .iuTopbarInfoOverlay__panel{
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+  }
+}
