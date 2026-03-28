@@ -7727,11 +7727,13 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
   min-width: 0;
   box-sizing: border-box;
   justify-content: start;
-  padding-top: var(--iuTopbarHeight) !important;
+  /* P0 FINAL CLS: pre-reserve topbar + rail/header band (~30px) so mainCol does not jump post-load */
+  padding-top: calc(var(--iuTopbarHeight, 72px) + 30px) !important;
 }
 
 .layout:has(#leftStickyHeader){
-  padding-top: 0 !important;
+  /* Same offset as base .layout — avoid late vertical recompute (was padding-top: 0) */
+  padding-top: calc(var(--iuTopbarHeight, 72px) + 30px) !important;
 }
 
 .layout > .mainCol{
@@ -10943,13 +10945,21 @@ header#topbarWrap.topbar-new.iuTopbar::before{
 }
 
 main#content .layout{
-  padding-top: var(--iuTopbarHeight) !important;
+  padding-top: calc(var(--iuTopbarHeight, 72px) + 30px) !important;
   min-height: calc(100vh - var(--iuTopbarHeight)) !important;
 }
 
 main#content .layout:has(#leftStickyHeader){
-  padding-top: 0 !important;
+  padding-top: calc(var(--iuTopbarHeight, 72px) + 30px) !important;
   min-height: calc(100vh - var(--iuTopbarHeight)) !important;
+}
+
+@media (min-width: 901px){
+  /* mainCol must not shift after first paint (no late transform/top) */
+  .layout > .mainCol{
+    transform: none !important;
+    top: auto !important;
+  }
 }
 
 @media (max-width: 900px){
