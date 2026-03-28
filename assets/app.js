@@ -5195,11 +5195,12 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  /** P0 Mobile/tablet (≤900px): měřená max výška #silver-slot z visualViewport — tall box jako flex buffer, spodní hrana Silver v prvním viewportu. */
+  /** P0 Mobile/tablet (≤900px), jen portrait: měřená max výška #silver-slot z visualViewport — tall box jako jediný flex-shrink buffer; landscape = bez viewport squeeze (page scroll). */
   function iuSilverMobileStackFitApply(){
     try{
       var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
-      if (!mq || !mq.matches){
+      var mqPortrait = window.matchMedia && window.matchMedia("(orientation: portrait)");
+      if (!mq || !mq.matches || !mqPortrait || !mqPortrait.matches){
         var slotOff = document.getElementById("silver-slot");
         if (slotOff) slotOff.style.removeProperty("--iu-silver-slot-max-h");
         return;
@@ -5237,6 +5238,10 @@ function buildVideoAsArticleCard(it) {
     try{
       var mq = window.matchMedia("(max-width: 900px)");
       if (mq && mq.addEventListener) mq.addEventListener("change", iuSilverMobileStackFitSchedule);
+    }catch(_){}
+    try{
+      var mqPo = window.matchMedia("(orientation: portrait)");
+      if (mqPo && mqPo.addEventListener) mqPo.addEventListener("change", iuSilverMobileStackFitSchedule);
     }catch(_){}
     try{
       var slot = document.getElementById("silver-slot");
