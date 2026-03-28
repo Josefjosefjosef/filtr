@@ -5195,6 +5195,88 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  /** P0 Mobile/tablet (≤900px): měřená max výška #silver-slot z visualViewport — tall box jako flex buffer, spodní hrana Silver v prvním viewportu. */
+  function iuSilverMobileStackFitApply(){
+    try{
+      var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
+      if (!mq || !mq.matches){
+        var slotOff = document.getElementById("silver-slot");
+        if (slotOff) slotOff.style.removeProperty("--iu-silver-slot-max-h");
+        return;
+      }
+      var slot = document.getElementById("silver-slot");
+      if (!slot) return;
+      var vv = window.visualViewport;
+      var vh = vv && typeof vv.height === "number" ? vv.height : window.innerHeight;
+      var top = slot.getBoundingClientRect().top;
+      var pad = 6;
+      var maxH = Math.floor(vh - top - pad);
+      if (maxH < 120) maxH = 120;
+      slot.style.setProperty("--iu-silver-slot-max-h", maxH + "px");
+    }catch(_){}
+  }
+
+  function iuSilverMobileStackFitSchedule(){
+    try{
+      requestAnimationFrame(function(){
+        try{
+          requestAnimationFrame(function(){
+            try{ iuSilverMobileStackFitApply(); }catch(_){}
+          });
+        }catch(_){}
+      });
+    }catch(_){}
+  }
+
+  function iuSilverMobileStackFitInit(){
+    try{
+      if (window.__iuSilverMobileStackFitInit) return;
+      window.__iuSilverMobileStackFitInit = 1;
+    }catch(_){}
+    iuSilverMobileStackFitApply();
+    try{
+      var mq = window.matchMedia("(max-width: 900px)");
+      if (mq && mq.addEventListener) mq.addEventListener("change", iuSilverMobileStackFitSchedule);
+    }catch(_){}
+    try{
+      var slot = document.getElementById("silver-slot");
+      if (slot && typeof ResizeObserver !== "undefined"){
+        var roFit = new ResizeObserver(function(){
+          iuSilverMobileStackFitSchedule();
+        });
+        roFit.observe(slot);
+      }
+    }catch(_){}
+    try{
+      window.addEventListener("resize", iuSilverMobileStackFitSchedule, { passive: true });
+      window.addEventListener("orientationchange", iuSilverMobileStackFitSchedule);
+    }catch(_){}
+    try{
+      var vv2 = window.visualViewport;
+      if (vv2){
+        vv2.addEventListener("resize", iuSilverMobileStackFitSchedule);
+        vv2.addEventListener("scroll", iuSilverMobileStackFitSchedule);
+      }
+    }catch(_){}
+    try{
+      window.addEventListener("iu-silver-wx-refresh", iuSilverMobileStackFitSchedule);
+    }catch(_){}
+    try{
+      if (typeof window.iuSilverWelcomeRefresh === "function" && !window.__iuSilverMobileStackFitHookedWelcome){
+        window.__iuSilverMobileStackFitHookedWelcome = 1;
+        var prevWelcome = window.iuSilverWelcomeRefresh;
+        window.iuSilverWelcomeRefresh = function(opts){
+          try{ prevWelcome(opts); }catch(_){}
+          iuSilverMobileStackFitSchedule();
+        };
+      }
+    }catch(_){}
+    try{
+      setTimeout(iuSilverMobileStackFitSchedule, 400);
+      setTimeout(iuSilverMobileStackFitSchedule, 1200);
+    }catch(_){}
+  }
+
   /**
    * Silver home: jeden deterministický stav z jednoho datasetu (calendarGetTodayEvents).
    * Guard: source-of-truth, data validation, no-fake-time, time boundary (přes nextRefreshDelayMs).
@@ -12378,6 +12460,7 @@ function buildVideoAsArticleCard(it) {
     iuMirrorTodayToTopbar();
     iuMobileLayoutReorder();
     setTimeout(function() { iuMobileLayoutReorder(); }, 100);
+    setTimeout(function(){ try{ iuSilverMobileStackFitSchedule(); }catch(_){} }, 260);
     try {
       var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
       if (mq && mq.addEventListener) mq.addEventListener("change", function() { iuMobileLayoutReorder(); });
@@ -12390,6 +12473,7 @@ function buildVideoAsArticleCard(it) {
     try { initRightPanel(); } catch (e) { console.error("RightPanel init failed", e); if (typeof persistLastError === "function") persistLastError("RightPanel init failed"); }
 
     try{ iuSilverWelcomeInit(); }catch{}
+    try{ iuSilverMobileStackFitInit(); }catch{}
     try{ iuSilverCalendarSummaryInit(); }catch{}
     try{ iuSilverTasksSummaryInit(); }catch{}
     try{ iuNamedayWishInit(); }catch{}

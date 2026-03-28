@@ -15048,16 +15048,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 }
 
-/* P0 Mobile/tablet only (max-width 900px): first-viewport fit + Tasks↔Silver — desktop min-width 901px unchanged */
+/* P0 Mobile/tablet: inner scroll probe spacer — outer tall height z flex + --iu-silver-slot-max-h (app.js) */
 @media (max-width: 900px){
-  #iuSilverTallScrollSection .iuSilverTallScrollViewport{
-    min-height: 72px !important;
-    max-height: min(18dvh, 132px) !important;
-  }
-  #iuSilverWelcomeStack:has(#iuSilverWeatherCard[data-iu-silver-wx-phase="firstVisit"]) .iuSilverTallScrollViewport,
-  #iuSilverWelcomeStack:has(#iuSilverWeatherCard[data-iu-silver-wx-phase="denied"]) .iuSilverTallScrollViewport{
-    min-height: 64px !important;
-    max-height: min(16dvh, 118px) !important;
+  .iuSilverTallScrollLayoutSpacer{
+    height: 72px !important;
   }
   .iuSilverTallScrollChromaFrame{
     padding: 4px !important;
@@ -15065,9 +15059,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   .iuSilverTallScrollSection{
     padding-top: 8px !important;
     padding-bottom: 8px !important;
-  }
-  .iuSilverTallScrollLayoutSpacer{
-    height: 96px !important;
   }
 }
 
@@ -19826,14 +19817,56 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   text-underline-offset: 2px;
 }
 
-/* P0 Mobile/tablet only: content-sized Silver slot (overrides 500px/512px caps) so connected stack can fit first viewport */
+/* P0 Mobile/tablet only: adaptive first-viewport stack + Silver bottom visible — --iu-silver-slot-max-h z visualViewport (app.js); desktop ≥901px beze změny */
 @media (max-width: 900px){
   .silver-slot{
     height: auto !important;
     min-height: 0 !important;
+    max-height: var(--iu-silver-slot-max-h, min(100dvh, 100vh));
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
   }
   #iuMobileGateWrap #iuMobileSilverSlot,
   #iuMobileSilverSlot.iu-mobileSilverSlot{
     min-height: 0 !important;
+  }
+  #silver-slot .iuSilverWelcomeSticky{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0 !important;
+  }
+  #silver-slot #iuSilverWelcomeStack{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+  #silver-slot #iuSilverTallScrollSection{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  #silver-slot .iuSilverTallScrollChromaFrame{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  #silver-slot #iuSilverTallScrollViewport{
+    flex: 1 1 auto;
+    min-height: 48px !important;
+    max-height: none !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  #silver-slot .silver-shell.silver-shell--stackConnected{
+    flex: 0 0 auto !important;
+    min-height: 0;
   }
 }
