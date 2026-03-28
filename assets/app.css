@@ -9342,7 +9342,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     max-width: 100% !important;
     min-width: 0 !important;
     box-sizing: border-box !important;
-    padding: 0 12px !important;
+    padding: 10px 12px max(18px, env(safe-area-inset-bottom, 0px)) !important;
     display: flex !important;
     flex-direction: column !important;
     --iu-mobile-cta-h: 52px !important;
@@ -9485,9 +9485,9 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     padding: 0 12px !important;
     font-size: 13px !important;
     font-weight: 600 !important;
-    border-radius: 10px !important;
-    border: 1px solid rgba(0,0,0,.12) !important;
-    background: #c9c9c9 !important;
+    border-radius: 11px !important;
+    border: 1px solid rgba(15, 35, 55, 0.12) !important;
+    background: #eef2f7 !important;
     color: #1b2a4a !important;
     cursor: pointer !important;
     appearance: none !important;
@@ -9495,8 +9495,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     transition: background .15s ease, border-color .15s ease !important;
   }
   #iuMobileGateTabs .iu-mobileGateTab[aria-selected="true"]{
-    background: #b0b0b0 !important;
-    border-color: #888 !important;
+    background: #e2e8f0 !important;
+    border-color: rgba(15, 35, 55, 0.18) !important;
     color: #0d1520 !important;
   }
   
@@ -14892,6 +14892,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuSilverTopCardsGap: 8px;
   --iuSilverTopCardShadow: 0 4px 14px rgba(15, 35, 55, 0.1);
   --iuSilverTopCardBorder: 1px solid rgba(15, 35, 55, 0.12);
+  --iuSilverInfoContentMax: 42rem;
 }
 
 .iuSilverTopCardsStack{
@@ -15027,7 +15028,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 #iuSilverTasksSummaryCard.silver-calendar-summary-card{
-  border-radius: 0 0 var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius);
+  /* P0: flush bottom — no rounding; flows into white Silver info area */
+  border-radius: 0;
+  margin-bottom: 0;
 }
 
 .silver-calendar-summary-card[role="button"]{
@@ -15387,14 +15390,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   z-index: 4;
   width: 100%;
   box-sizing: border-box;
-  margin: 0 0 8px 0;
+  margin: 0;
   flex: 0 0 auto;
   min-height: 0;
 }
 
 @media (min-width: 901px){
   .iuSilverWelcomeSticky{
-    margin-bottom: 50px;
+    margin-bottom: 0;
   }
 }
 
@@ -15478,7 +15481,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .silver-slot{
   width: 100%;
   max-width: 100%;
-  height: 500px;
+  height: auto;
   min-height: 500px;
   box-sizing: border-box;
   margin: 0 0 12px 0;
@@ -15493,8 +15496,68 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 @media (min-width: 901px){
   .silver-slot{
     /* Keep desktop flow natural when welcome stack grows during hydration. */
-    height: auto;
     min-height: 542px;
+  }
+}
+
+/* Silver info surface: layout root (scroll + future content lives in .silver-info-content only) */
+.silver-info-area{
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+  background: #ffffff;
+  border-top: 1px solid rgba(15, 35, 55, 0.08);
+}
+
+.silver-info-content{
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.silver-info-content .silver-output{
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: min(var(--iuSilverInfoContentMax), calc(100% - 24px));
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 14px 16px 20px;
+  overflow: visible;
+  color: rgba(15, 30, 45, 0.92);
+  font-size: 15px;
+  line-height: 1.45;
+  /* scroll container is .silver-info-content */
+}
+
+.silver-info-content img,
+.silver-info-content video,
+.silver-info-content canvas,
+.silver-info-content svg{
+  max-width: 100%;
+  height: auto;
+}
+
+@media (min-width: 1200px){
+  :root{
+    --iuSilverInfoContentMax: 48rem;
   }
 }
 
@@ -15508,6 +15571,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   box-sizing: border-box;
 }
 
+.silver-shell.silver-shell--composer{
+  flex: 0 0 auto;
+  min-height: 0;
+  gap: 0;
+  padding: 10px 12px 12px;
+  margin-top: 0;
+}
+
 .silver-compose{
   flex: 1 1 auto;
   min-width: 0;
@@ -15515,6 +15586,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   display: flex;
   flex-direction: column;
   align-items: stretch;
+}
+
+.silver-compose.silver-compose--footer{
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
 }
 
 .silver-output{
@@ -15601,6 +15678,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 .iuSilverHomeSendIcon{
   display: block;
+}
+
+.silver-compose--footer .silver-inputWrap.iuSilverHomeInputWrap{
+  margin-top: 0;
+}
+
+.silver-shell--composer .silver-inputWrap.iuSilverHomeInputWrap{
+  border-color: rgba(15, 35, 55, 0.14);
+  background: #ffffff;
 }
 
 .iuSilverChatOverlay{
