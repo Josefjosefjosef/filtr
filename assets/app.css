@@ -19830,6 +19830,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #iuMobileGateWrap #iuMobileSilverSlot,
   #iuMobileSilverSlot.iu-mobileSilverSlot{
     min-height: 0 !important;
+    justify-content: flex-start !important;
   }
   #silver-slot .iuSilverWelcomeSticky{
     flex: 1 1 auto;
@@ -19865,17 +19866,24 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     overflow-x: hidden;
     overflow-y: auto;
   }
+  /* Full-width Silver: žádný shell inset — stejná horizontální logika jako stack boxy (padding jen uvnitř chroma rámu) */
+  #silver-slot.silver-slot,
+  #iuMobileSilverSlot .silver-slot{
+    border-radius: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
   #silver-slot .silver-shell.silver-shell--stackConnected{
     flex: 0 0 auto !important;
     min-height: 0;
-    gap: 12px;
+    gap: 0 !important;
     background: transparent !important;
     border-radius: 0 !important;
     box-shadow: none !important;
     padding-top: 0 !important;
-    padding-left: var(--iuSilverStackPadX, 12px) !important;
-    padding-right: var(--iuSilverStackPadX, 12px) !important;
-    padding-bottom: 12px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
   }
   #silver-slot[data-iu-silver-welcome-variant="morning"] .silver-shell--stackConnected,
   #silver-slot[data-iu-silver-welcome-variant="lateMorning"] .silver-shell--stackConnected,
@@ -19885,9 +19893,9 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     border-radius: 0 !important;
     box-shadow: none !important;
     padding-top: 0 !important;
-    padding-left: var(--iuSilverStackPadX, 12px) !important;
-    padding-right: var(--iuSilverStackPadX, 12px) !important;
-    padding-bottom: 12px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
   }
   #iuMobileGateWrap #iuMobileSilverSlot .silver-shell.silver-shell--stackConnected{
     margin-top: 0 !important;
@@ -19895,9 +19903,54 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     background: transparent !important;
     border-radius: 0 !important;
     box-shadow: none !important;
-    padding-left: var(--iuSilverStackPadX, 12px) !important;
-    padding-right: var(--iuSilverStackPadX, 12px) !important;
-    padding-bottom: 12px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  #silver-slot .silver-output,
+  #iuMobileSilverSlot #silver-slot .silver-output{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  #silver-slot .iuSilverStackChromaFrame.silver-inputWrap.iuSilverHomeInputWrap,
+  #iuMobileSilverSlot #silver-slot .iuSilverStackChromaFrame.silver-inputWrap.iuSilverHomeInputWrap{
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 12px var(--iuSilverStackPadX, 12px) 12px var(--iuSilverStackPadX, 12px) !important;
+    border-radius: var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius) 0 0 !important;
+    box-sizing: border-box !important;
+  }
+  #silver-slot[data-iu-silver-welcome-variant="evening"] #iuMobileGateTabs.iu-mobileGateTabs{
+    padding: 8px 0 0 0 !important;
+    gap: 8px !important;
+    background: transparent !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+  #silver-slot[data-iu-silver-welcome-variant="evening"] #iuMobileGateTabs .iu-mobileGateTab{
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+  }
+  #silver-slot[data-iu-silver-welcome-variant="evening"] #iuMobileGateTabs .iu-mobileGateTab[aria-selected="true"]{
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.28) !important;
+  }
+  #silver-slot:not([data-iu-silver-welcome-variant="evening"]) #iuMobileGateTabs.iu-mobileGateTabs{
+    padding: 8px 0 0 0 !important;
+    gap: 8px !important;
+    background: transparent !important;
+    border-top: 1px solid rgba(15, 35, 55, 0.1) !important;
+  }
+  #silver-slot:not([data-iu-silver-welcome-variant="evening"]) #iuMobileGateTabs .iu-mobileGateTab{
+    background: rgba(255, 255, 255, 0.55) !important;
+    border: 1px solid rgba(15, 35, 55, 0.14) !important;
+    color: rgba(15, 35, 55, 0.92) !important;
+  }
+  #silver-slot:not([data-iu-silver-welcome-variant="evening"]) #iuMobileGateTabs .iu-mobileGateTab[aria-selected="true"]{
+    background: rgba(255, 255, 255, 0.75) !important;
+    border-color: rgba(15, 35, 55, 0.22) !important;
   }
   #iuSilverWelcomeStack.silver-welcome-stack{
     border-radius: var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius) 0 0 !important;
