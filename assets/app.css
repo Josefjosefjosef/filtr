@@ -19859,14 +19859,23 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
     border-bottom: none !important;
   }
-  /* P0 single column contract: Kalendář + Úkoly + Silver — same flex model, content-driven height */
+  /* P0 single column contract: Počasí + Kalendář + Úkoly — unified min-height (matches .silver-weather-card ≥769px contract); seam Úkoly→Silver unchanged */
+  #silver-slot #iuSilverWeatherCard.silver-weather-card,
   #silver-slot #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     flex: 0 0 auto !important;
     align-self: stretch !important;
-    min-height: auto !important;
+    min-height: 131px !important;
     height: auto !important;
     box-sizing: border-box;
+    justify-content: center !important;
+  }
+  #silver-slot .silver-calendar-summary-row--1,
+  #silver-slot .silver-calendar-summary-line2main{
+    align-items: center !important;
+  }
+  #silver-slot .silver-calendar-summary-iconCal{
+    margin-top: 0 !important;
   }
   #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
     flex: 0 0 auto !important;
