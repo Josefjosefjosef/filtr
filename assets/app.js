@@ -5101,6 +5101,10 @@ function buildVideoAsArticleCard(it) {
           stackEl.classList.add(prefix + k);
           stackEl.setAttribute("data-iu-silver-welcome-variant", k);
         }
+        try{
+          const slotEl = document.getElementById("silver-slot");
+          if (slotEl) slotEl.setAttribute("data-iu-silver-welcome-variant", k);
+        }catch{}
         cardEl.setAttribute("data-iu-silver-welcome-variant", k);
       }catch{}
     }

@@ -144,7 +144,7 @@ style-src 'self' 'unsafe-inline' https:;
                   </header>
                 </div>
                 <div id="iuSilverTopCardsStack" class="iuSilverTopCardsStack" aria-label="Silver horní boxy">
-                  <section id="silver-slot" class="silver-slot" aria-label="Silver">
+                  <section id="silver-slot" class="silver-slot" aria-label="Silver" data-iu-silver-welcome-variant="evening">
                     <div class="iuSilverWelcomeSticky" id="iuSilverWelcomeSticky">
                       <div class="silver-welcome-stack silver-welcome-stack--evening" id="iuSilverWelcomeStack" data-iu-silver-welcome-stack data-iu-silver-welcome-variant="evening">
                         <div class="iuSilverWelcomeCard silver-welcome-card" id="iuSilverWelcomeCard" data-iu-silver-welcome-card data-iu-silver-welcome-variant="evening">
@@ -171,6 +171,16 @@ style-src 'self' 'unsafe-inline' https:;
                             <button type="button" class="silver-weather-btn" id="iuSilverWeatherBtnCity" data-iu-silver-wx-action="manual-city">Nastavit moje město</button>
                           </div>
                         </div>
+                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorTallBefore" aria-hidden="true"></div>
+                        <section class="iuSilverTallScrollSection" id="iuSilverTallScrollSection" aria-label="Infouzel náhled" data-iu-silver-tall-scroll>
+                          <div class="iuSilverStackChromaFrame iuSilverTallScrollChromaFrame" data-iu-silver-stack-chroma-frame>
+                            <div class="iuSilverTallScrollViewport" id="iuSilverTallScrollViewport" tabindex="0">
+                              <p class="iuSilverTallScrollPlaceholder" data-iu-silver-tall-scroll-placeholder>Obsah připravíme — zde bude scrollovací plocha.</p>
+                              <p class="iuSilverTallScrollProbeLines" aria-hidden="true" data-iu-silver-tall-scroll-probe>Řádek 2 · neutrální shell<br>Řádek 3 · neutrální shell<br>Řádek 4 · neutrální shell<br>Řádek 5 · neutrální shell<br>Řádek 6 · neutrální shell<br>Řádek 7 · neutrální shell<br>Řádek 8 · neutrální shell<br>Řádek 9 · neutrální shell<br>Řádek 10 · neutrální shell</p>
+                              <div class="iuSilverTallScrollLayoutSpacer" aria-hidden="true" data-iu-silver-tall-scroll-spacer></div>
+                            </div>
+                          </div>
+                        </section>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorCal" aria-hidden="true"></div>
                         <div class="silver-calendar-summary-card" id="iuSilverCalendarSummaryCard" data-iu-silver-calendar-summary>
                           <div class="silver-calendar-summary-row silver-calendar-summary-row--1">
@@ -213,13 +223,14 @@ style-src 'self' 'unsafe-inline' https:;
                             </div>
                           </div>
                         </div>
+                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorBeforeSilver" aria-hidden="true"></div>
                       </div>
                     </div>
-                    <div class="silver-shell">
+                    <div class="silver-shell silver-shell--stackConnected">
                       <div class="silver-compose">
                         <div class="silver-output" aria-live="polite">
                         </div>
-                        <div class="silver-inputWrap iuSilverHomeInputWrap">
+                        <div class="silver-inputWrap iuSilverHomeInputWrap iuSilverStackChromaFrame">
                           <div class="iuSilverHomeInputRow">
                             <input id="iuSilverHomeInput" class="silver-input iuSilverHomeInput" type="text" inputmode="text" autocomplete="off" placeholder="Napiš Silverovi…" aria-label="Napiš Silverovi">
                             <button type="button" class="iuSilverHomeSend" id="iuSilverHomeSend" aria-label="Odeslat zprávu Silverovi">
