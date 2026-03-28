@@ -29,8 +29,11 @@ function fail(msg) {
 function serveFile(urlPath) {
   let filePath = path.join(ROOT, (urlPath === "/" || urlPath === "") ? "index.html" : urlPath.replace(/^\//, "").replace(/\/$/, "") || "index.html");
   if (urlPath && urlPath !== "/" && !urlPath.startsWith("/projects")) {
-    const p = path.join(ROOT, urlPath.replace(/^\//, "").split("/")[0]);
-    if (fs.existsSync(p) && fs.statSync(p).isDirectory()) filePath = path.join(p, "index.html");
+    const lastSeg = (urlPath.split("?")[0] || "").split("/").filter(Boolean).pop() || "";
+    if (!path.extname(lastSeg)) {
+      const p = path.join(ROOT, urlPath.replace(/^\//, "").split("/")[0]);
+      if (fs.existsSync(p) && fs.statSync(p).isDirectory()) filePath = path.join(p, "index.html");
+    }
   }
   if (!path.resolve(filePath).startsWith(path.resolve(ROOT)) && !filePath.includes(ROOT)) return null;
   try {

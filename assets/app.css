@@ -15245,7 +15245,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .silver-calendar-summary-text{
   flex: 1 1 auto;
   min-width: 0;
-  margin: 0;
+  margin: 0 !important;
   padding: 0;
   font-size: 14px;
   line-height: 1.28;
@@ -19852,6 +19852,10 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     min-height: 0;
     overflow: hidden;
   }
+  /* P0 seam: separator hairline + stack bottom border = double line / +1px seam above Silver; keep separator only */
+  #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
+    border-bottom: none !important;
+  }
   #silver-slot #iuSilverTallScrollSection{
     flex: 1 1 auto;
     min-height: 0;
@@ -19993,5 +19997,19 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #iuSilverTasksSummaryCard.silver-calendar-summary-card,
   #iuMobileSilverSlot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     border-radius: 0 !important;
+  }
+  #silver-slot #iuSilverWelcomeStack.silver-welcome-stack,
+  #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    row-gap: 0 !important;
+  }
+  #silver-slot #iuSilverWelcomeStackSeparatorBeforeSilver.silver-welcome-stack__separator,
+  #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStackSeparatorBeforeSilver.silver-welcome-stack__separator{
+    flex: 0 0 auto !important;
+    height: 1px !important;
+    min-height: 1px !important;
+    max-height: 1px !important;
   }
 }
