@@ -9231,6 +9231,9 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+  #iuMobileGateWrap #iuMobileSilverSlot .silver-shell.silver-shell--stackConnected{
+    margin-top: 10px !important;
+  }
   
   #iuMobileSilverSlot .silver-slot,
   #iuMobileGateWrap #iuMobileSilverSlot .silver-slot{
@@ -15035,6 +15038,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     min-height: 92px;
   }
+  #iuSilverTallScrollSection .iuSilverTallScrollViewport{
+    min-height: 220px;
+  }
+  #iuSilverWelcomeStack:has(#iuSilverWeatherCard[data-iu-silver-wx-phase="firstVisit"]) .iuSilverTallScrollViewport,
+  #iuSilverWelcomeStack:has(#iuSilverWeatherCard[data-iu-silver-wx-phase="denied"]) .iuSilverTallScrollViewport{
+    min-height: 200px;
+  }
 }
 
 .silver-calendar-summary-card{
@@ -15056,13 +15066,116 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
-/* Kalendář už není poslední segment stacku — spodní zaoblení má box Úkoly pod ním. */
+/* Kalendář není poslední segmentem horního stacku — pod ním je Úkoly, pak Silver shell. */
 #iuSilverCalendarSummaryCard.silver-calendar-summary-card{
   border-radius: 0;
 }
 
 #iuSilverTasksSummaryCard.silver-calendar-summary-card{
-  border-radius: 0 0 var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius);
+  border-radius: 0;
+}
+
+/* P0: tall scroll shell (mezi Počasí a Kalendář) — chroma frame reuse stejné tokeny jako stack / box1 */
+.iuSilverTallScrollSection{
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--iuSilverStackPadY) var(--iuSilverStackPadX);
+  border: none;
+  background: transparent;
+  contain: layout;
+}
+
+.iuSilverStackChromaFrame{
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 12px;
+  border-color: rgba(15, 35, 55, 0.14);
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.silver-welcome-stack--morning .iuSilverStackChromaFrame{
+  border-color: rgba(15, 35, 55, 0.12);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.silver-welcome-stack--lateMorning .iuSilverStackChromaFrame{
+  border-color: rgba(15, 35, 55, 0.12);
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.silver-welcome-stack--afternoon .iuSilverStackChromaFrame{
+  border-color: rgba(15, 35, 55, 0.12);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.silver-welcome-stack--evening .iuSilverStackChromaFrame{
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.iuSilverTallScrollChromaFrame{
+  padding: 8px;
+}
+
+.iuSilverTallScrollViewport{
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 180px;
+  max-height: min(42vh, 360px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  border-radius: 8px;
+}
+
+.iuSilverTallScrollPlaceholder{
+  margin: 0;
+  padding: 6px 4px 10px 4px;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  color: rgba(30, 40, 55, 0.72);
+}
+
+.silver-welcome-stack--evening .iuSilverTallScrollPlaceholder{
+  color: rgba(230, 238, 248, 0.72);
+}
+
+.silver-welcome-stack--evening .iuSilverTallScrollProbeLines{
+  color: rgba(230, 238, 248, 0.5);
+}
+
+.iuSilverTallScrollProbeLines{
+  margin: 0;
+  padding: 0 4px 8px 4px;
+  font-size: 12px;
+  line-height: 1.45;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: rgba(30, 40, 55, 0.55);
+}
+
+/* P0: prázdný rezervovaný prostor — vynutí scroll uvnitř viewportu (shell, ne produktový obsah) */
+.iuSilverTallScrollLayoutSpacer{
+  width: 100%;
+  height: 280px;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.silver-welcome-stack--evening .iuSilverTallScrollViewport{
+  scrollbar-color: rgba(255, 255, 255, 0.28) rgba(255, 255, 255, 0.06);
 }
 
 .silver-calendar-summary-card[role="button"]{
@@ -15541,6 +15654,53 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   gap: 12px;
   padding: 14px;
   box-sizing: border-box;
+}
+
+/* P0: Úkoly → Silver jako jeden propojený blok (stejný gradient / radius jako stack) */
+.silver-shell.silver-shell--stackConnected{
+  border-radius: 0 0 var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius);
+}
+
+#silver-slot[data-iu-silver-welcome-variant="morning"] .silver-shell--stackConnected{
+  background: linear-gradient(135deg, #fff5e8 0%, #ffe8cc 45%, #ffd8a8 100%);
+}
+
+#silver-slot[data-iu-silver-welcome-variant="lateMorning"] .silver-shell--stackConnected{
+  background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 50%, #e4ecfa 100%);
+}
+
+#silver-slot[data-iu-silver-welcome-variant="afternoon"] .silver-shell--stackConnected{
+  background: linear-gradient(135deg, #fff9f0 0%, #fff0dc 55%, #ffe4c4 100%);
+}
+
+#silver-slot[data-iu-silver-welcome-variant="evening"] .silver-shell--stackConnected{
+  background: linear-gradient(135deg, #0f2438 0%, #162d45 55%, #203a52 100%);
+}
+
+.iuSilverWelcomeSticky:has(+ .silver-shell--stackConnected){
+  margin-bottom: 0;
+}
+
+@media (min-width: 901px){
+  .iuSilverWelcomeSticky:has(+ .silver-shell--stackConnected){
+    margin-bottom: 0;
+  }
+}
+
+#silver-slot[data-iu-silver-welcome-variant="morning"] .silver-shell--stackConnected .iuSilverStackChromaFrame.iuSilverHomeInputWrap,
+#silver-slot[data-iu-silver-welcome-variant="lateMorning"] .silver-shell--stackConnected .iuSilverStackChromaFrame.iuSilverHomeInputWrap,
+#silver-slot[data-iu-silver-welcome-variant="afternoon"] .silver-shell--stackConnected .iuSilverStackChromaFrame.iuSilverHomeInputWrap{
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgba(15, 35, 55, 0.16);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+#silver-slot[data-iu-silver-welcome-variant="evening"] .silver-shell--stackConnected .iuSilverStackChromaFrame.iuSilverHomeInputWrap{
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .silver-compose{
