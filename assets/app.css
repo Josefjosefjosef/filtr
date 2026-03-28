@@ -15384,6 +15384,19 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 #iuNamedayWishTextarea{width:100%;min-height:120px;box-sizing:border-box;margin:0 0 12px;padding:10px 12px;font-size:14px;line-height:1.45;border-radius:10px;border:1px solid rgba(15,35,55,.16);resize:none;font-family:inherit;color:rgba(15,30,45,.95);background:rgba(248,250,252,.95)}
 #iuNamedayWishCopy{width:100%}
 
+/* Grid row 1 wrapper: must not be position:sticky — sticky on the grid item under-sizes the row in
+   some engines and places .silver-info-area (row 2) under the painted stack (false overlap / -gap). */
+.iuSilverWelcomeStickyHost{
+  grid-row: 1;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
 .iuSilverWelcomeSticky{
   position: sticky;
   top: calc(var(--topbarStackH, 72px) + 4px);
@@ -15489,8 +15502,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   background: transparent;
   background-image: none;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  /* Grid (not flex): position:sticky on row 1 must not share the flex sizing bug where the next
+     sibling's layout Y can sit above the painted bottom of the sticky item (false overlap vs Úkoly). */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  align-content: stretch;
+  min-width: 0;
 }
 
 @media (min-width: 901px){
@@ -15502,7 +15520,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 
 /* Silver info surface: layout root (scroll + future content lives in .silver-info-content only) */
 .silver-info-area{
-  flex: 1 1 auto;
+  grid-row: 2;
   min-height: 0;
   width: 100%;
   max-width: 100%;
@@ -15572,6 +15590,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .silver-shell.silver-shell--composer{
+  grid-row: 3;
   flex: 0 0 auto;
   min-height: 0;
   gap: 0;
