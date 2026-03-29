@@ -19933,6 +19933,13 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     row-gap: 0;
     box-sizing: border-box;
   }
+  /* P0 CLS (768×1024): reserve slot max-height in CSS — JS iuSilverMobileStackFitApply was setting --iu-silver-slot-max-h after first paint when computed max-height had no "px" token → inline var churn → #leftContent strip shift ~0.00136. Tablet portrait: no JS fit; match floor(vh - top - 6) ≈ calc(100vh - 10px). */
+  @media (min-width: 768px) and (max-aspect-ratio: 1/1) {
+    #silver-slot.silver-slot,
+    #iuMobileSilverSlot .silver-slot{
+      --iu-silver-slot-max-h: calc(100vh - 10px);
+    }
+  }
   #iuMobileGateWrap #iuMobileSilverSlot,
   #iuMobileSilverSlot.iu-mobileSilverSlot{
     min-height: 0 !important;
@@ -19962,6 +19969,16 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverWeatherCard.silver-weather-card{
     flex: 0 0 auto !important;
     flex-shrink: 0 !important;
+  }
+  /* P0 CLS (768×1024): async wx + calendar/tasks hydrate ~200ms; last px growth can push #leftContent edge / zero-size fragment → residual CLS. Reserve final tablet portrait stack band (strict proof CLS=0). */
+  @media (min-width: 768px) and (max-width: 900px) and (orientation: portrait) {
+    #silver-slot #iuSilverWeatherCard.silver-weather-card{
+      min-height: 240px !important;
+    }
+    #silver-slot #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
+    #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
+      min-height: 140px !important;
+    }
   }
   #silver-slot #iuSilverWelcomeStack > .silver-welcome-stack__separator{
     flex: 0 0 auto !important;

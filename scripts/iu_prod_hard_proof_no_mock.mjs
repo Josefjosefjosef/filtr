@@ -120,12 +120,10 @@ for (const vp of viewports) {
 
   const clsRaw = await page.evaluate(() => window.__iuCls || 0);
   const cls = Math.round(clsRaw * 100000) / 100000;
-  /* P0: after rail gate CLS fix, 768×1024 can still report ~0.00136 (Chrome fractional strip on #leftContent). Reject only material shifts. */
-  const clsFail = cls > 0.0015;
-  if (clsFail) {
+  if (cls !== 0) {
     await context.close();
     await browser.close();
-    throw new Error(`PROOF FAIL: CLS must be ≤0.0015 (viewport=${vp.name}, CLS=${cls})`);
+    throw new Error(`PROOF FAIL: CLS must be 0 (viewport=${vp.name}, CLS=${cls})`);
   }
 
   const assetDiag = await collectSwAndAssetsDiag(page);
