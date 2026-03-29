@@ -37,6 +37,18 @@ if (!/calc\(var\(--iuSilverStackRowMinH\)\s*\+\s*var\(--iuSilverStackRowExtra/.t
   fail("❌ Weather/calendar/tasks must share calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra");
 }
 
+if (!/--iuSilverStackThirdLift\s*:\s*\d+px\b/.test(css)) {
+  fail("❌ Missing --iuSilverStackThirdLift (third stack box must exceed row band)");
+}
+
+if (!/--iuSilverStackThirdMinH\s*:\s*calc\(var\(--iuSilverStackRowMinH\)/.test(css)) {
+  fail("❌ Missing --iuSilverStackThirdMinH calc on #silver-slot (tall scroll section height model)");
+}
+
+if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*var\(--iuSilverStackThirdMinH\)/.test(css)) {
+  fail("❌ #iuSilverTallScrollSection must use min-height: var(--iuSilverStackThirdMinH) in mobile stack");
+}
+
 const hiddenBlock = css.match(/\.silver-weather-actions\[hidden\]\s*\{([\s\S]*?)\}/);
 if (!hiddenBlock || !/display\s*:\s*none\b/.test(hiddenBlock[1])) {
   fail("❌ .silver-weather-actions[hidden] must use display: none (collapse, no reserved space)");

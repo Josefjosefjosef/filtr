@@ -219,6 +219,8 @@ for (const vp of viewports) {
 
     let silverStackRowMinHeightDiffPx = null;
     let silverStackRowMinHeightDiffOk = null;
+    let silverThirdBoxHeights = null;
+    let silverThirdBoxIsTallest = null;
     try {
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
         const ids = ["iuSilverWeatherCard", "iuSilverCalendarSummaryCard", "iuSilverTasksSummaryCard"];
@@ -235,6 +237,26 @@ for (const vp of viewports) {
           silverStackRowMinHeightDiffPx = Math.round((hi - lo) * 100) / 100;
           silverStackRowMinHeightDiffOk = silverStackRowMinHeightDiffPx <= 1;
         }
+        const tallEl = document.getElementById("iuSilverTallScrollSection");
+        const wxEl = document.getElementById("iuSilverWeatherCard");
+        const calEl = document.getElementById("iuSilverCalendarSummaryCard");
+        const tasksEl = document.getElementById("iuSilverTasksSummaryCard");
+        const hTall = tallEl ? tallEl.getBoundingClientRect().height : 0;
+        const hWx = wxEl ? wxEl.getBoundingClientRect().height : 0;
+        const hCal = calEl ? calEl.getBoundingClientRect().height : 0;
+        const hTasks = tasksEl ? tasksEl.getBoundingClientRect().height : 0;
+        const r = (x) => Math.round(x * 100) / 100;
+        silverThirdBoxHeights = {
+          thirdBox: r(hTall),
+          weather: r(hWx),
+          calendar: r(hCal),
+          tasks: r(hTasks),
+        };
+        const tol = 1.5;
+        silverThirdBoxIsTallest =
+          hTall + 1e-6 >= hWx - tol &&
+          hTall + 1e-6 >= hCal - tol &&
+          hTall + 1e-6 >= hTasks - tol;
       }
     } catch (_) {}
 
@@ -273,6 +295,8 @@ for (const vp of viewports) {
       rightColumnAtBaseline,
       silverStackRowMinHeightDiffPx,
       silverStackRowMinHeightDiffOk,
+      silverThirdBoxHeights,
+      silverThirdBoxIsTallest,
     };
   });
 
@@ -284,6 +308,17 @@ for (const vp of viewports) {
     await browser.close();
     throw new Error(
       `PROOF FAIL: silver stack row min-height must match (viewport=${vp.name}, diffPx=${String(data.silverStackRowMinHeightDiffPx)}, ok=${String(data.silverStackRowMinHeightDiffOk)})`
+    );
+  }
+
+  if (
+    (vp.name === "mobile" || vp.name === "tablet") &&
+    data.silverThirdBoxIsTallest !== true
+  ) {
+    await context.close();
+    await browser.close();
+    throw new Error(
+      `PROOF FAIL: third stack box (#iuSilverTallScrollSection) must be tallest vs weather/calendar/tasks (viewport=${vp.name}, heights=${JSON.stringify(data.silverThirdBoxHeights)})`
     );
   }
 
