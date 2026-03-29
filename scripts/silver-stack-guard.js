@@ -25,6 +25,18 @@ if (!/--iuSilverStackPad(?:X|Y)\s*:/.test(css)) {
   fail("❌ Missing --iuSilverStackPadX / --iuSilverStackPadY on stack");
 }
 
+if (!/--iuSilverStackRowMinH\s*:\s*131px\b/.test(css) || !/--iuSilverStackRowExtra\s*:/.test(css)) {
+  fail("❌ Missing unified stack row tokens --iuSilverStackRowMinH / --iuSilverStackRowExtra");
+}
+
+if (/--iu-tablet-wx-extra\b|--iu-tablet-cal-extra\b/.test(css)) {
+  fail("❌ Split tablet wx/cal extras forbidden — use --iuSilverStackRowExtra on #silver-slot only");
+}
+
+if (!/calc\(var\(--iuSilverStackRowMinH\)\s*\+\s*var\(--iuSilverStackRowExtra/.test(css)) {
+  fail("❌ Weather/calendar/tasks must share calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra");
+}
+
 const hiddenBlock = css.match(/\.silver-weather-actions\[hidden\]\s*\{([\s\S]*?)\}/);
 if (!hiddenBlock || !/display\s*:\s*none\b/.test(hiddenBlock[1])) {
   fail("❌ .silver-weather-actions[hidden] must use display: none (collapse, no reserved space)");

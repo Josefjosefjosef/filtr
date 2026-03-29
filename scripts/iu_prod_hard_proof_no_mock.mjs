@@ -217,6 +217,27 @@ for (const vp of viewports) {
     const ndFlow = document.querySelector(".iu-nameday-flowers");
     const ndOv = document.getElementById("iuNamedayWishOverlay");
 
+    let silverStackRowMinHeightDiffPx = null;
+    let silverStackRowMinHeightDiffOk = null;
+    try {
+      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+        const ids = ["iuSilverWeatherCard", "iuSilverCalendarSummaryCard", "iuSilverTasksSummaryCard"];
+        const parseMinH = (el) => {
+          if (!el) return null;
+          const raw = getComputedStyle(el).minHeight;
+          if (!raw || raw === "none" || raw === "auto") return 0;
+          return parseFloat(raw) || 0;
+        };
+        const vals = ids.map((id) => parseMinH(document.getElementById(id))).filter((v) => v !== null);
+        if (vals.length === 3) {
+          const lo = Math.min(vals[0], vals[1], vals[2]);
+          const hi = Math.max(vals[0], vals[1], vals[2]);
+          silverStackRowMinHeightDiffPx = Math.round((hi - lo) * 100) / 100;
+          silverStackRowMinHeightDiffOk = silverStackRowMinHeightDiffPx <= 1;
+        }
+      }
+    } catch (_) {}
+
     return {
       welcomeBoxExists: Boolean(welcomeCard),
       greetingTextExists: Boolean(greet && String(greet.textContent || "").trim()),
@@ -250,8 +271,21 @@ for (const vp of viewports) {
       asidePaddingTopPx,
       rightColumnMovedDownBy15px,
       rightColumnAtBaseline,
+      silverStackRowMinHeightDiffPx,
+      silverStackRowMinHeightDiffOk,
     };
   });
+
+  if (
+    (vp.name === "mobile" || vp.name === "tablet") &&
+    data.silverStackRowMinHeightDiffOk !== true
+  ) {
+    await context.close();
+    await browser.close();
+    throw new Error(
+      `PROOF FAIL: silver stack row min-height must match (viewport=${vp.name}, diffPx=${String(data.silverStackRowMinHeightDiffPx)}, ok=${String(data.silverStackRowMinHeightDiffOk)})`
+    );
+  }
 
   const out = {
     _proofPass: "viewport-metrics",

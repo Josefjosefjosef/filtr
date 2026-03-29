@@ -14940,6 +14940,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuSilverTopCardsGap: 8px;
   --iuSilverTopCardShadow: 0 4px 14px rgba(15, 35, 55, 0.1);
   --iuSilverTopCardBorder: 1px solid rgba(15, 35, 55, 0.12);
+  /* Unified mobile/tablet stack row band (weather + calendar + tasks) — one base + one optional tablet extra */
+  --iuSilverStackRowMinH: 131px;
+  --iuSilverStackRowExtra: 0px;
 }
 
 .iuSilverTopCardsStack{
@@ -15041,7 +15044,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
    missed it → ~103px stack shift (iuSilverWeatherCard → siblings). Apply from first px so narrow portrait matches. */
 @media (min-width: 1px){
   .silver-weather-card{
-    min-height: 131px;
+    min-height: var(--iuSilverStackRowMinH);
   }
   #iuSilverTallScrollSection .iuSilverTallScrollViewport{
     min-height: 220px;
@@ -19933,13 +19936,12 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     row-gap: 0;
     box-sizing: border-box;
   }
-  /* P0 CLS (768×1024): reserve slot max-height + tablet stack bands — JS fit churn; wx/calendar extras (240/140) from global 131/118 via calc on cards. */
+  /* P0 CLS (768×1024): single tablet row band — same extra for all stack rows (was split wx+109 vs cal+22 → uneven heights). */
   @media (min-width: 768px) and (max-aspect-ratio: 1/1) {
     /* id + class only — avoids duplicate prelude with later #silver-slot.silver-slot, #iuMobileSilverSlot .silver-slot block */
     #silver-slot.silver-slot{
       --iu-silver-slot-max-h: calc(100vh - 10px);
-      --iu-tablet-wx-extra: 109px;
-      --iu-tablet-cal-extra: 22px;
+      --iuSilverStackRowExtra: 109px;
     }
   }
   #iuMobileGateWrap #iuMobileSilverSlot,
@@ -19967,25 +19969,20 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
     border-bottom: none !important;
   }
-  /* P0: Počasí + separátory nesmí flex-shrinkovat — při 2 řádcích wx zkracuje jen tall box; min-height 131+tablet extra z .silver-slot vars */
-  #silver-slot #iuSilverWeatherCard.silver-weather-card{
+  /* P0: Počasí + Kalendář + Úkoly — jeden min-height model (tokeny :root + #silver-slot tablet band). */
+  #silver-slot #iuSilverWeatherCard.silver-weather-card,
+  #silver-slot #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
+  #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     flex: 0 0 auto !important;
     flex-shrink: 0 !important;
-    min-height: calc(131px + var(--iu-tablet-wx-extra, 0px)) !important;
+    align-self: stretch !important;
+    min-height: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px)) !important;
+    height: auto !important;
+    box-sizing: border-box;
   }
   #silver-slot #iuSilverWelcomeStack > .silver-welcome-stack__separator{
     flex: 0 0 auto !important;
     flex-shrink: 0 !important;
-  }
-  /* P0 single column contract: Kalendář + Úkoly + Silver — same flex model, content-driven height */
-  #silver-slot #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
-  #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
-    flex: 0 0 auto !important;
-    align-self: stretch !important;
-    /* P0 CLS: hydrate finishes ~114px tall; 118+tablet extra z .silver-slot vars */
-    min-height: calc(118px + var(--iu-tablet-cal-extra, 0px)) !important;
-    height: auto !important;
-    box-sizing: border-box;
   }
   /* P0 CLS (768×1024): first paint had min-height 0 → inline script bumped to 141px → layout shift. Reserve in CSS. */
   #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
