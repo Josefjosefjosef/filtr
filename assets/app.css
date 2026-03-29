@@ -20087,17 +20087,31 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
 }
 
-/* P0: mobile/tablet (≤900px) — topbar off layout; safe-area on first stack; info (i) only in welcome box */
-@media (max-width: 900px) {
+/* P0: mobile/tablet (≤1024px) — suppress REAL fixed topbar (header#topbarWrap… display:flex !important); iPad/desktop-narrow included */
+@media (max-width: 1024px) {
   html {
     scroll-padding-top: max(env(safe-area-inset-top, 0px), 4px);
   }
-  #leftStickyHeader {
+  #leftStickyHeader,
+  header#topbarWrap.topbar-new.iuTopbar,
+  #topbarWrap.topbar-new.iuTopbar {
     display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-width: 0 !important;
+    overflow: hidden !important;
   }
   .iuSilverTopCardsStack {
     padding-top: env(safe-area-inset-top, 0px);
     box-sizing: border-box;
+  }
+  .iuSilverWelcomeSticky {
+    top: calc(env(safe-area-inset-top, 0px) + 4px) !important;
   }
   #iuTopbarInfoBtn.iuTopbarInfoBtn {
     display: none !important;
@@ -20144,7 +20158,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
 }
 
-@media (min-width: 901px) {
+@media (min-width: 1025px) {
   #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
     display: none !important;
   }
