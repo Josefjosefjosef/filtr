@@ -29,7 +29,7 @@ style-src 'self' 'unsafe-inline' https:;
         Survives stale hashed /assets/app.*.css + SW cache-first: HTML is network-first; users must not keep seeing fixed topbar on old CSS.
       */
       @media (max-width: 1024px) {
-        html {
+        html:root {
           scroll-padding-top: max(env(safe-area-inset-top, 0px), 4px);
         }
         #leftStickyHeader,
@@ -46,7 +46,7 @@ style-src 'self' 'unsafe-inline' https:;
           border-width: 0 !important;
           overflow: hidden !important;
         }
-        #iuTopbarInfoBtn.iuTopbarInfoBtn {
+        #iuTopbarInfoBtn {
           display: none !important;
         }
       }

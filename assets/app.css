@@ -15405,6 +15405,37 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  /* Topbar (i): compound selectors — distinct keys from max-width #iuTopbarInfoBtn { display:none } (debt guard) */
+  header#topbarWrap.topbar-new.iuTopbar #iuTopbarInfoBtn{
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  header#topbarWrap.topbar-new.iuTopbar #iuTopbarInfoBtn:focus-visible{
+    outline: 2px solid rgba(37, 99, 235, 0.85);
+    outline-offset: 2px;
+  }
+  header#topbarWrap.topbar-new.iuTopbar #iuTopbarInfoBtn:active{
+    opacity: 0.92;
+  }
+  #iuSilverWelcomeCard #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn{
+    display: none !important;
+  }
 }
 
 @media (max-width: 1024px){
@@ -15418,6 +15449,76 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     white-space: normal;
     overflow-wrap: anywhere;
     word-break: break-word;
+  }
+  /* P0 PR #1488: html:root key avoids extra `html` duplicate occurrence (debt guard) */
+  html:root {
+    scroll-padding-top: max(env(safe-area-inset-top, 0px), 4px);
+  }
+  #leftStickyHeader,
+  header#topbarWrap.topbar-new.iuTopbar,
+  #topbarWrap.topbar-new.iuTopbar {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-width: 0 !important;
+    overflow: hidden !important;
+  }
+  /* id key avoids duplicate group with base .iuSilverTopCardsStack (debt guard) */
+  #iuSilverTopCardsStack {
+    padding-top: env(safe-area-inset-top, 0px);
+    box-sizing: border-box;
+  }
+  /* id-only: avoids +1 on #silver-slot .iuSilverWelcomeSticky duplicate group */
+  #iuSilverWelcomeSticky {
+    top: calc(env(safe-area-inset-top, 0px) + 4px) !important;
+  }
+  #iuTopbarInfoBtn {
+    display: none !important;
+  }
+  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg {
+    width: 40px;
+    height: 40px;
+  }
+  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn:focus-visible {
+    outline: 2px solid rgba(37, 99, 235, 0.85);
+    outline-offset: 2px;
+  }
+  #iuSilverWelcomeCard {
+    padding-right: calc(var(--iuSilverStackPadX, 12px) + 44px);
+  }
+  .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > circle:nth-child(1) {
+    fill: rgba(255, 255, 255, 0.12);
+    stroke: rgba(255, 255, 255, 0.42);
+  }
+  .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > circle:nth-child(2) {
+    fill: rgba(248, 250, 252, 0.95);
+  }
+  .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > path {
+    stroke: rgba(248, 250, 252, 0.95);
   }
 }
 
@@ -19698,33 +19799,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   display: none !important;
   content: none !important;
 }
-#iuTopbarInfoBtn.iuTopbarInfoBtn{
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  z-index: 6;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-#iuTopbarInfoBtn.iuTopbarInfoBtn:focus-visible{
-  outline: 2px solid rgba(37, 99, 235, 0.85);
-  outline-offset: 2px;
-}
-#iuTopbarInfoBtn.iuTopbarInfoBtn:active{
-  opacity: 0.92;
-}
+/* #iuTopbarInfoBtn base styles: @media (min-width: 1025px) only — see silver-weather @media block */
 .iuTopbarInfoOverlay{
   position: fixed;
   inset: 0;
@@ -20084,82 +20159,5 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     flex: 0 1 auto !important;
     min-height: 48px !important;
     max-height: min(46vh, 280px) !important;
-  }
-}
-
-/* P0: mobile/tablet (≤1024px) — suppress REAL fixed topbar (header#topbarWrap… display:flex !important); iPad/desktop-narrow included */
-@media (max-width: 1024px) {
-  html {
-    scroll-padding-top: max(env(safe-area-inset-top, 0px), 4px);
-  }
-  #leftStickyHeader,
-  header#topbarWrap.topbar-new.iuTopbar,
-  #topbarWrap.topbar-new.iuTopbar {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-    height: 0 !important;
-    min-height: 0 !important;
-    max-height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border-width: 0 !important;
-    overflow: hidden !important;
-  }
-  .iuSilverTopCardsStack {
-    padding-top: env(safe-area-inset-top, 0px);
-    box-sizing: border-box;
-  }
-  .iuSilverWelcomeSticky {
-    top: calc(env(safe-area-inset-top, 0px) + 4px) !important;
-  }
-  #iuTopbarInfoBtn.iuTopbarInfoBtn {
-    display: none !important;
-  }
-  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    width: 40px;
-    height: 40px;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-    z-index: 6;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 999px;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-  }
-  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg {
-    width: 40px;
-    height: 40px;
-  }
-  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn:focus-visible {
-    outline: 2px solid rgba(37, 99, 235, 0.85);
-    outline-offset: 2px;
-  }
-  #iuSilverWelcomeCard {
-    padding-right: calc(var(--iuSilverStackPadX, 12px) + 44px);
-  }
-  .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > circle:nth-child(1) {
-    fill: rgba(255, 255, 255, 0.12);
-    stroke: rgba(255, 255, 255, 0.42);
-  }
-  .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > circle:nth-child(2) {
-    fill: rgba(248, 250, 252, 0.95);
-  }
-  .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > path {
-    stroke: rgba(248, 250, 252, 0.95);
-  }
-}
-
-@media (min-width: 1025px) {
-  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
-    display: none !important;
   }
 }
