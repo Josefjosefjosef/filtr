@@ -60,7 +60,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
   </head>
 
-  <body>
+  <body class="iuTopbarFlushRight">
     <noscript>Pro zobrazení obsahu je potřeba JavaScript.</noscript>
     <script>
     (function(){
@@ -283,6 +283,20 @@ style-src 'self' 'unsafe-inline' https:;
                 <!-- P0 Mobile/tablet: topbar → Silver → 2-tab gate (Navigace | MindMenu); only one section open at a time -->
                 <div id="iuMobileGateWrap" class="iu-mobileGateWrap" aria-hidden="true" data-iu-mobile-gate="">
                   <div id="iuMobileSilverSlot" class="iu-mobileSilverSlot" aria-label="Silver"></div>
+                  <script>
+                  (function(){
+                    try {
+                      if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return;
+                      var wrap = document.getElementById("iuMobileGateWrap");
+                      var silverSlot = document.getElementById("iuMobileSilverSlot");
+                      var silver = document.getElementById("silver-slot");
+                      if (!wrap || !silverSlot || !silver) return;
+                      wrap.setAttribute("aria-hidden", "false");
+                      /* P0 CLS (768×1024): move Silver before #leftContent parses so #leftContent is not laid out then reflowed. */
+                      if (!silverSlot.contains(silver)) silverSlot.appendChild(silver);
+                    } catch (e) {}
+                  })();
+                  </script>
                   <!-- P0 Mobile/tablet: dual CTA ads slot (gate tabs moved inside .silver-inputWrap) -->
                   <div class="iu-mobileCtaGroup" aria-label="Navigace a inzerce">
                     <!-- P0 Mobile/tablet: CTA block below main entry buttons (dual 50/50); JS moves .iuRightTopCtas here on mobile -->
@@ -924,20 +938,9 @@ style-src 'self' 'unsafe-inline' https:;
                     try {
                       if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return;
                       var wrap = document.getElementById("iuMobileGateWrap");
-                      var silverSlot = document.getElementById("iuMobileSilverSlot");
-                      var panelNav = document.getElementById("iuMobileGatePanelNav");
-                      var silver = document.getElementById("silver-slot");
-                      var rail = document.getElementById("iuLeftRail");
-                      var feed = document.getElementById("feed");
-                      if (!wrap || !silverSlot || !panelNav || !silver || !rail || !feed) return;
+                      if (!wrap) return;
                       wrap.setAttribute("aria-hidden", "false");
-                      if (!silverSlot.contains(silver)) {
-                        var articlesStage = feed.parentNode;
-                        if (articlesStage) silverSlot.appendChild(silver);
-                      }
-                      if (!panelNav.contains(rail)) {
-                        panelNav.appendChild(rail);
-                      }
+                      /* Rail → panelNav: iuMobileGateReorder in app.js (tablet 768×1024 skips rail move for CLS). */
                     } catch (e) {}
                   })();
                   </script>
@@ -3105,7 +3108,11 @@ style-src 'self' 'unsafe-inline' https:;
             silverSlot.appendChild(silver);
           }
         }
-        if (!panelNav.contains(rail)) {
+        /* P0 CLS (768×1024): same as app.js iuMobileGateReorder — do not move rail to panelNav on tablet portrait (max-aspect-ratio 1/1). */
+        var mqTabSync =
+          window.matchMedia &&
+          window.matchMedia("(min-width: 768px) and (max-width: 900px) and (max-aspect-ratio: 1/1)");
+        if (!(mqTabSync && mqTabSync.matches) && !panelNav.contains(rail)) {
           panelNav.appendChild(rail);
         }
       }catch(_){}

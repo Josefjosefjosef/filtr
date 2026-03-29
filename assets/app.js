@@ -5245,6 +5245,15 @@ function buildVideoAsArticleCard(it) {
       var pad = 6;
       var maxH = Math.floor(vh - top - pad);
       if (maxH < 120) maxH = 120;
+      try {
+        var mhStr = getComputedStyle(slot).maxHeight;
+        if (mhStr && mhStr.indexOf("px") !== -1) {
+          var curPx = parseFloat(mhStr);
+          if (!isNaN(curPx) && Math.abs(curPx - maxH) <= 28) {
+            return;
+          }
+        }
+      } catch (_) {}
       slot.style.setProperty("--iu-silver-slot-max-h", maxH + "px");
     }catch(_){}
   }
@@ -6372,7 +6381,11 @@ function buildVideoAsArticleCard(it) {
             silverSlot.appendChild(silver);
           }
         }
-        if (!panelNav.contains(rail)) {
+        /* P0 CLS: must match projects/index.html sync gate script — tablet portrait (max-aspect-ratio 1/1) keeps rail in #newsList. */
+        var mqRailTablet =
+          window.matchMedia &&
+          window.matchMedia("(min-width: 768px) and (max-width: 900px) and (max-aspect-ratio: 1/1)");
+        if (!(mqRailTablet && mqRailTablet.matches) && !panelNav.contains(rail)) {
           panelNav.appendChild(rail);
         }
         if (mobileMind && mindMenuFlow) {
@@ -12465,7 +12478,11 @@ function buildVideoAsArticleCard(it) {
     installCLSObserver();
     renderSectionsBar();
     setSectionsFromHash();
-    try{ document.body.classList.add("iuTopbarFlushRight"); }catch{}
+    try{
+      if (document.body && !document.body.classList.contains("iuTopbarFlushRight")) {
+        document.body.classList.add("iuTopbarFlushRight");
+      }
+    }catch{}
     iuInitTopbarSearchToggle();
     iuInitTopbarInfoOverlay();
     iuMirrorTodayToTopbar();
