@@ -380,7 +380,17 @@ try {
   }
   try { window.iuHasExplicitNavInUrl = iuHasExplicitNavInUrl; } catch(e){}
 
-  // === PERSIST SCROLL (reload keeps position, same URL only) ===
+  // === PERSIST SCROLL (same URL only; skip on full reload — matches P0 scroll-to-top + avoids reload blink) ===
+  function iuIsReloadNavigation() {
+    try {
+      var list = typeof performance !== "undefined" && performance.getEntriesByType ? performance.getEntriesByType("navigation") : null;
+      var n = list && list[0];
+      if (n && n.type) return String(n.type) === "reload";
+      var legacy = typeof performance !== "undefined" && performance.navigation ? performance.navigation.type : null;
+      if (legacy === 1) return true;
+    } catch (_) {}
+    return false;
+  }
   window.addEventListener("beforeunload", () => {
     try{
       sessionStorage.setItem("iu:lastUrl", window.location.href);
@@ -389,6 +399,7 @@ try {
   });
   window.addEventListener("load", () => {
     try{
+      if (iuIsReloadNavigation()) return;
       const lastUrl = sessionStorage.getItem("iu:lastUrl") || "";
       if (lastUrl !== window.location.href) return;
       const y = parseInt(sessionStorage.getItem("iu:lastScrollY") || "0", 10);
