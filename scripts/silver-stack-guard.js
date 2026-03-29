@@ -53,6 +53,16 @@ if (!/--iuSilverStackThirdBudgetReserve\b/.test(css)) {
   fail("❌ Missing --iuSilverStackThirdBudgetReserve (stack budget vs 100dvh)");
 }
 
+if (!/--iuSilverStackThirdEffective:[\s\S]*?40svh[\s\S]*?100svh/.test(css)) {
+  fail(
+    "❌ --iuSilverStackThirdEffective must include 40svh + 100svh caps (cross-browser dvh/WKWebView safety)"
+  );
+}
+
+if (!/#iuSilverTallScrollViewport[\s\S]*?34svh[\s\S]*?34dvh/.test(css)) {
+  fail("❌ #iuSilverTallScrollViewport max-height must cap with 34svh + 34dvh (inner scroll vs Edge/Safari)");
+}
+
 if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*var\(--iuSilverStackThirdEffective\)/.test(css)) {
   fail("❌ #iuSilverTallScrollSection must use min-height: var(--iuSilverStackThirdEffective) in mobile stack");
 }

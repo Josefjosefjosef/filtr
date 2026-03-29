@@ -12001,8 +12001,15 @@ function buildVideoAsArticleCard(it) {
         elNameday.setAttribute("aria-hidden","true");
       }
       try{ iuWeatherHideEmptyNameday(); }catch{}
-      var _ndOrigin = typeof location !== "undefined" && location.origin ? location.origin : "";
-      var _ndUrl = _ndOrigin ? _ndOrigin + "/projects/data/namedays.json" : "";
+      /* Same-origin relative path (not origin + absolute) — WebKit/Playwright can reject absolute /projects/data/* with "access control checks"; mirror /filtr/projects vs /projects like iuDailyPanelInit peers. */
+      var _ndUrl = "";
+      try {
+        if (typeof location !== "undefined" && location && location.protocol !== "file:") {
+          var _ndPath = String(location.pathname || "").toLowerCase();
+          var _ndBase = _ndPath.indexOf("/filtr/") >= 0 ? "/filtr/projects/data/" : "/projects/data/";
+          _ndUrl = _ndBase + "namedays.json";
+        }
+      } catch (_) {}
       if (!_ndUrl) {
         try{ window.__iuNamedaySuffixFromSource = ""; }catch{}
         if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
@@ -12010,7 +12017,17 @@ function buildVideoAsArticleCard(it) {
         return;
       }
       fetch(_ndUrl, { headers: { "accept": "application/json" }, cache: "no-store" })
-        .then(r => { try { return r.ok ? r.json() : null; } catch { return null; } }).catch(function(){ return null; })
+        .then(function (r) {
+          try {
+            if (!r || !r.ok) return null;
+            return r.json();
+          } catch (_) {
+            return null;
+          }
+        })
+        .catch(function () {
+          return null;
+        })
         .then(function(d){
           var nm = "";
           try {
