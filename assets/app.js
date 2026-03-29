@@ -21,6 +21,43 @@ function iuIsProdHost() {
 }
 try { if (typeof window !== "undefined") window.iuIsProdHost = iuIsProdHost; } catch (e) {}
 
+/** Debounce duplicate skipWaiting reloads in one burst — must NOT block a later new waiting worker in the same tab session (10 min sessionStorage was too aggressive). */
+var __iuSilentSwReloadLastMs = 0;
+
+function iuSwReloadGuardShouldSkip() {
+  try {
+    var now = Date.now();
+    if (now - __iuSilentSwReloadLastMs < 2500) return true;
+    __iuSilentSwReloadLastMs = now;
+    return false;
+  } catch (_) {
+    return false;
+  }
+}
+
+/** SKIP_WAITING + one reload — no bottom banner / manual CTA. */
+function iuSilentSwReloadFromWorker(worker) {
+  if (!worker) return;
+  if (iuSwReloadGuardShouldSkip()) return;
+  try {
+    worker.postMessage({ type: "SKIP_WAITING" });
+  } catch (_) {}
+  try {
+    if (typeof requestAnimationFrame === "function") {
+      requestAnimationFrame(function () {
+        location.reload();
+      });
+    } else {
+      location.reload();
+    }
+  } catch (_) {
+    location.reload();
+  }
+}
+try {
+  if (typeof window !== "undefined") window.iuSilentSwReloadFromWorker = iuSilentSwReloadFromWorker;
+} catch (_) {}
+
 /* P0: reload always returns to top (like seznam.cz) */
 try {
   if (typeof history !== "undefined" && "scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -89,27 +126,6 @@ try {
   try { document.documentElement.setAttribute("data-iu-path", location.pathname + location.search); } catch {}
   try { document.documentElement.setAttribute("data-iu-buildstamp", document.querySelector('meta[name="iu-build"]')?.content || "no-meta"); } catch {}
   const $ = (sel) => document.querySelector(sel);
-
-  /** P0: banner když je nový SW nainstalovaný, ale starý ještě řídí stránku (PWA update UX) */
-  function iuShowSwUpdateBanner() {
-    try {
-      if (document.getElementById("iu-update-banner")) return;
-      var el = document.createElement("div");
-      el.id = "iu-update-banner";
-      el.setAttribute("role", "status");
-      el.style.cssText =
-        "position:fixed;bottom:0;left:0;right:0;z-index:2147483646;padding:12px 16px;background:#0B1F33;color:#fff;font:14px/1.4 system-ui,-apple-system,sans-serif;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;box-shadow:0 -4px 24px rgba(0,0,0,.2);box-sizing:border-box;";
-      el.innerHTML =
-        '<span>Nová verze je připravena.</span><button type="button" id="iu-update-btn" style="padding:8px 14px;border-radius:8px;border:0;background:#fff;color:#0B1F33;font:inherit;font-weight:600;cursor:pointer;">Aktualizovat</button>';
-      document.body.appendChild(el);
-      var btn = document.getElementById("iu-update-btn");
-      if (btn) {
-        btn.addEventListener("click", function () {
-          location.reload();
-        });
-      }
-    } catch (e) {}
-  }
 
   /** P0: shell vs CSS build mismatch → unregister SW, smazat iu-* caches, jeden hard navigation (bez nekonečné smyčky) */
   function iuMaybeShellStaleRecovery(onContinue) {
@@ -227,13 +243,13 @@ try {
               var nw = reg.installing;
               if (!nw) return;
               nw.addEventListener("statechange", function () {
-                if (nw.state === "installed" && navigator.serviceWorker.controller) {
-                  iuShowSwUpdateBanner();
+                if (nw.state === "installed" && navigator.serviceWorker.controller && reg.waiting) {
+                  iuSilentSwReloadFromWorker(reg.waiting);
                 }
               });
             });
             if (reg.waiting && navigator.serviceWorker.controller) {
-              iuShowSwUpdateBanner();
+              iuSilentSwReloadFromWorker(reg.waiting);
             }
             try {
               var u = reg.update();
@@ -5223,12 +5239,31 @@ function buildVideoAsArticleCard(it) {
       }
       var slot = document.getElementById("silver-slot");
       if (!slot) return;
+      /* P0 CLS (768×1024): skip inline --iu-silver-slot-max-h; CSS sets calc(100vh-10px). JS getComputedStyle(maxHeight) often not "NNpx" → early-return failed → setProperty → layout shift. */
+      var mqTabFit =
+        window.matchMedia &&
+        window.matchMedia("(min-width: 768px) and (max-width: 900px) and (max-aspect-ratio: 1/1)");
+      if (mqTabFit && mqTabFit.matches) {
+        try {
+          slot.style.removeProperty("--iu-silver-slot-max-h");
+        } catch (_) {}
+        return;
+      }
       var vv = window.visualViewport;
       var vh = vv && typeof vv.height === "number" ? vv.height : window.innerHeight;
       var top = slot.getBoundingClientRect().top;
       var pad = 6;
       var maxH = Math.floor(vh - top - pad);
       if (maxH < 120) maxH = 120;
+      try {
+        var mhStr = getComputedStyle(slot).maxHeight;
+        if (mhStr && mhStr.indexOf("px") !== -1) {
+          var curPx = parseFloat(mhStr);
+          if (!isNaN(curPx) && Math.abs(curPx - maxH) <= 28) {
+            return;
+          }
+        }
+      } catch (_) {}
       slot.style.setProperty("--iu-silver-slot-max-h", maxH + "px");
     }catch(_){}
   }
@@ -6356,7 +6391,11 @@ function buildVideoAsArticleCard(it) {
             silverSlot.appendChild(silver);
           }
         }
-        if (!panelNav.contains(rail)) {
+        /* P0 CLS: must match projects/index.html sync gate script — tablet portrait (max-aspect-ratio 1/1) keeps rail in #newsList. */
+        var mqRailTablet =
+          window.matchMedia &&
+          window.matchMedia("(min-width: 768px) and (max-width: 900px) and (max-aspect-ratio: 1/1)");
+        if (!(mqRailTablet && mqRailTablet.matches) && !panelNav.contains(rail)) {
           panelNav.appendChild(rail);
         }
         if (mobileMind && mindMenuFlow) {
@@ -8607,33 +8646,11 @@ function buildVideoAsArticleCard(it) {
     label.textContent = `Debug: ${isDebugOn() ? "ON" : "OFF"}`;
   }
 
-  const SW_RELOAD_KEY = "iu:swReloaded";
-  const SW_RELOAD_AT_KEY = "iu:swReloadedAt";
-
-  function clearStaleReloadGuard() {
-    const at = Number(sessionStorage.getItem(SW_RELOAD_AT_KEY) || "0");
-    if (!at) return false;
-    if (Date.now() - at > 10 * 60 * 1000) {
-      sessionStorage.removeItem(SW_RELOAD_KEY);
-      sessionStorage.removeItem(SW_RELOAD_AT_KEY);
-      debugLog("[SW] reload guard cleared");
-      return false;
-    }
-    return Boolean(sessionStorage.getItem(SW_RELOAD_KEY));
-  }
-
   function scheduleSWReload(worker) {
-    if (!worker || !("sessionStorage" in window)) return;
-    if (clearStaleReloadGuard()) return;
+    iuSilentSwReloadFromWorker(worker);
     try {
-      worker.postMessage({ type: "SKIP_WAITING" });
       addTelemetryEvent("sw", "skip waiting");
-    } catch (error) {
-      debugWarn("[SW]", "skip waiting message failed", error);
-    }
-    sessionStorage.setItem(SW_RELOAD_KEY, "1");
-    sessionStorage.setItem(SW_RELOAD_AT_KEY, Date.now().toString());
-    window.location.reload();
+    } catch (_) {}
   }
 
   function watchForSWUpdates() {
@@ -8642,7 +8659,7 @@ function buildVideoAsArticleCard(it) {
       if (!reg) return;
       selfDiag.swController = navigator.serviceWorker?.controller ? "yes" : "no";
       if (reg.waiting) {
-      addTelemetryEvent("sw", "waiting");
+        addTelemetryEvent("sw", "waiting");
         selfDiag.swWaiting = "yes";
         logSelfStatus();
         scheduleSWReload(reg.waiting);
@@ -8650,11 +8667,7 @@ function buildVideoAsArticleCard(it) {
       }
       selfDiag.swWaiting = "no";
       logSelfStatus();
-    updateSwStatusLabel();
-      if (reg.waiting) {
-        scheduleSWReload(reg.waiting);
-        return;
-      }
+      updateSwStatusLabel();
       const onUpdateFound = () => {
         const installing = reg.installing;
         if (!installing) return;
@@ -12475,7 +12488,11 @@ function buildVideoAsArticleCard(it) {
     installCLSObserver();
     renderSectionsBar();
     setSectionsFromHash();
-    try{ document.body.classList.add("iuTopbarFlushRight"); }catch{}
+    try{
+      if (document.body && !document.body.classList.contains("iuTopbarFlushRight")) {
+        document.body.classList.add("iuTopbarFlushRight");
+      }
+    }catch{}
     iuInitTopbarSearchToggle();
     iuInitTopbarInfoOverlay();
     iuMirrorTodayToTopbar();

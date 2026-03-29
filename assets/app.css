@@ -9267,9 +9267,11 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     #iuMobileGateWrap.iu-mobileGateWrap{
       min-height: 656px;
     }
+    /* P0 CLS (768×1024): height:auto + max-height caused #leftContent box to settle ~220ms → CLS≈0.0014. Lock viewport column height. */
     #leftContent{
       display: block !important;
       height: calc(100vh - 120px);
+      min-height: calc(100vh - 120px);
       max-height: calc(100vh - 120px);
       overflow: hidden;
     }
@@ -11171,8 +11173,11 @@ main#content .layout:has(#leftStickyHeader){
   }
 }
 
-#leftContent{
-  overflow: visible !important;
+/* P0 CLS: overflow:visible was global !important → tablet portrait #leftContent could not lock overflow:hidden (9265+), late reflow ~200ms. */
+@media (min-width: 901px){
+  #leftContent{
+    overflow: visible !important;
+  }
 }
 
 .iu-rightContent .iuToolIcon,
@@ -15032,10 +15037,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
-/* P0 CLS: headless nightly uses ~800×600; weather min-height applied only ≥901px, so stack grew after
-   hydration and flex-sibling .silver-shell shrank (~154px) → CLS. Reserve weather + summary cards from
-   first paint (769+). IDs avoid duplicating bare .silver-calendar-summary-card selector (css_debt_guard). */
-@media (min-width: 769px){
+/* P0 CLS: reserve weather + tall viewport height before wx hydration. Was (min-width:769px) only — 390/768
+   missed it → ~103px stack shift (iuSilverWeatherCard → siblings). Apply from first px so narrow portrait matches. */
+@media (min-width: 1px){
   .silver-weather-card{
     min-height: 131px;
   }
@@ -15337,6 +15341,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 @media (max-width: 900px){
+  #silver-slot .silver-calendar-summary-row.silver-calendar-summary-row--1{
+    min-height: 48px;
+  }
   .silver-calendar-summary-line2block{
     flex-direction: column;
     align-items: stretch;
@@ -19926,6 +19933,15 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     row-gap: 0;
     box-sizing: border-box;
   }
+  /* P0 CLS (768×1024): reserve slot max-height + tablet stack bands — JS fit churn; wx/calendar extras (240/140) from global 131/118 via calc on cards. */
+  @media (min-width: 768px) and (max-aspect-ratio: 1/1) {
+    /* id + class only — avoids duplicate prelude with later #silver-slot.silver-slot, #iuMobileSilverSlot .silver-slot block */
+    #silver-slot.silver-slot{
+      --iu-silver-slot-max-h: calc(100vh - 10px);
+      --iu-tablet-wx-extra: 109px;
+      --iu-tablet-cal-extra: 22px;
+    }
+  }
   #iuMobileGateWrap #iuMobileSilverSlot,
   #iuMobileSilverSlot.iu-mobileSilverSlot{
     min-height: 0 !important;
@@ -19951,10 +19967,11 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
     border-bottom: none !important;
   }
-  /* P0: Počasí + separátory nesmí flex-shrinkovat — při 2 řádcích wx zkracuje jen tall box */
+  /* P0: Počasí + separátory nesmí flex-shrinkovat — při 2 řádcích wx zkracuje jen tall box; min-height 131+tablet extra z .silver-slot vars */
   #silver-slot #iuSilverWeatherCard.silver-weather-card{
     flex: 0 0 auto !important;
     flex-shrink: 0 !important;
+    min-height: calc(131px + var(--iu-tablet-wx-extra, 0px)) !important;
   }
   #silver-slot #iuSilverWelcomeStack > .silver-welcome-stack__separator{
     flex: 0 0 auto !important;
@@ -19965,13 +19982,15 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     flex: 0 0 auto !important;
     align-self: stretch !important;
-    min-height: auto !important;
+    /* P0 CLS: hydrate finishes ~114px tall; 118+tablet extra z .silver-slot vars */
+    min-height: calc(118px + var(--iu-tablet-cal-extra, 0px)) !important;
     height: auto !important;
     box-sizing: border-box;
   }
+  /* P0 CLS (768×1024): first paint had min-height 0 → inline script bumped to 141px → layout shift. Reserve in CSS. */
   #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
     flex: 0 0 auto !important;
-    min-height: 0 !important;
+    min-height: 141px !important;
     height: auto !important;
     align-self: stretch !important;
   }
