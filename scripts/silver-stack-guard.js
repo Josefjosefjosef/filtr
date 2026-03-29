@@ -45,8 +45,16 @@ if (!/--iuSilverStackThirdMinH\s*:\s*calc\(var\(--iuSilverStackRowMinH\)/.test(c
   fail("❌ Missing --iuSilverStackThirdMinH calc on #silver-slot (tall scroll section height model)");
 }
 
-if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*var\(--iuSilverStackThirdMinH\)/.test(css)) {
-  fail("❌ #iuSilverTallScrollSection must use min-height: var(--iuSilverStackThirdMinH) in mobile stack");
+if (!/--iuSilverStackThirdEffective\b/.test(css)) {
+  fail("❌ Missing --iuSilverStackThirdEffective (viewport budget + third dominance)");
+}
+
+if (!/--iuSilverStackThirdBudgetReserve\b/.test(css)) {
+  fail("❌ Missing --iuSilverStackThirdBudgetReserve (stack budget vs 100dvh)");
+}
+
+if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*var\(--iuSilverStackThirdEffective\)/.test(css)) {
+  fail("❌ #iuSilverTallScrollSection must use min-height: var(--iuSilverStackThirdEffective) in mobile stack");
 }
 
 const hiddenBlock = css.match(/\.silver-weather-actions\[hidden\]\s*\{([\s\S]*?)\}/);

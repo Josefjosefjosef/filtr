@@ -221,6 +221,9 @@ for (const vp of viewports) {
     let silverStackRowMinHeightDiffOk = null;
     let silverThirdBoxHeights = null;
     let silverThirdBoxIsTallest = null;
+    let silverStackOverflowDeltaPx = null;
+    let silverStackFitsViewport = null;
+    let silverStackMetrics = null;
     try {
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
         const ids = ["iuSilverWeatherCard", "iuSilverCalendarSummaryCard", "iuSilverTasksSummaryCard"];
@@ -257,6 +260,37 @@ for (const vp of viewports) {
           hTall + 1e-6 >= hWx - tol &&
           hTall + 1e-6 >= hCal - tol &&
           hTall + 1e-6 >= hTasks - tol;
+
+        const slot = document.getElementById("silver-slot");
+        const sticky = document.getElementById("iuSilverWelcomeSticky");
+        const welcomeEl = document.getElementById("iuSilverWelcomeCard");
+        const inputEl =
+          document.querySelector("#silver-slot .silver-compose") ||
+          document.querySelector("#silver-slot .iuSilverHomeInputWrap");
+        const vv = window.visualViewport;
+        const vh = vv ? vv.height : window.innerHeight;
+        let overflow = 0;
+        if (slot && slot.scrollHeight > slot.clientHeight + 1) {
+          overflow = Math.round((slot.scrollHeight - slot.clientHeight) * 100) / 100;
+        }
+        let bleedBelowVh = 0;
+        if (sticky) {
+          bleedBelowVh = Math.round((sticky.getBoundingClientRect().bottom - vh) * 100) / 100;
+        }
+        silverStackOverflowDeltaPx = Math.round(Math.max(overflow, Math.max(0, bleedBelowVh)) * 100) / 100;
+        silverStackFitsViewport = silverStackOverflowDeltaPx <= 2;
+        silverStackMetrics = {
+          viewportInnerHeightPx: Math.round(vh * 100) / 100,
+          totalStackHeightPx: sticky
+            ? Math.round(sticky.getBoundingClientRect().height * 100) / 100
+            : 0,
+          welcomeHeightPx: welcomeEl
+            ? Math.round(welcomeEl.getBoundingClientRect().height * 100) / 100
+            : 0,
+          inputAreaHeightPx: inputEl
+            ? Math.round(inputEl.getBoundingClientRect().height * 100) / 100
+            : 0,
+        };
       }
     } catch (_) {}
 
@@ -297,6 +331,9 @@ for (const vp of viewports) {
       silverStackRowMinHeightDiffOk,
       silverThirdBoxHeights,
       silverThirdBoxIsTallest,
+      silverStackOverflowDeltaPx,
+      silverStackFitsViewport,
+      silverStackMetrics,
     };
   });
 
@@ -319,6 +356,17 @@ for (const vp of viewports) {
     await browser.close();
     throw new Error(
       `PROOF FAIL: third stack box (#iuSilverTallScrollSection) must be tallest vs weather/calendar/tasks (viewport=${vp.name}, heights=${JSON.stringify(data.silverThirdBoxHeights)})`
+    );
+  }
+
+  if (
+    (vp.name === "mobile" || vp.name === "tablet") &&
+    data.silverStackFitsViewport !== true
+  ) {
+    await context.close();
+    await browser.close();
+    throw new Error(
+      `PROOF FAIL: silver-slot must fit viewport (overflow delta, tol=2px) viewport=${vp.name}, delta=${String(data.silverStackOverflowDeltaPx)}, metrics=${JSON.stringify(data.silverStackMetrics)}`
     );
   }
 
