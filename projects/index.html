@@ -24,6 +24,32 @@ style-src 'self' 'unsafe-inline' https:;
     <style>
       /* pointer-events: diag overlays must not steal clicks */
       body::before, body::after, html::before, html::after { pointer-events: none !important; }
+      /*
+        P0 PR #1488: document-level topbar suppress (must stay in sync with assets/app.css @media max-width:1024).
+        Survives stale hashed /assets/app.*.css + SW cache-first: HTML is network-first; users must not keep seeing fixed topbar on old CSS.
+      */
+      @media (max-width: 1024px) {
+        html:root {
+          scroll-padding-top: max(env(safe-area-inset-top, 0px), 4px);
+        }
+        #leftStickyHeader,
+        header#topbarWrap.topbar-new.iuTopbar,
+        #topbarWrap.topbar-new.iuTopbar {
+          display: none !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
+          height: 0 !important;
+          min-height: 0 !important;
+          max-height: 0 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          border-width: 0 !important;
+          overflow: hidden !important;
+        }
+        #iuTopbarInfoBtn {
+          display: none !important;
+        }
+      }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
     <link rel="stylesheet" href="/assets/app.css?v=prod1411silverstack" />
@@ -148,6 +174,13 @@ style-src 'self' 'unsafe-inline' https:;
                     <div class="iuSilverWelcomeSticky" id="iuSilverWelcomeSticky">
                       <div class="silver-welcome-stack silver-welcome-stack--evening" id="iuSilverWelcomeStack" data-iu-silver-welcome-stack data-iu-silver-welcome-variant="evening">
                         <div class="iuSilverWelcomeCard silver-welcome-card" id="iuSilverWelcomeCard" data-iu-silver-welcome-card data-iu-silver-welcome-variant="evening">
+                          <button type="button" id="iuSilverWelcomeInfoBtn" class="iuTopbarInfoBtn iuSilverWelcomeInfoBtn" aria-label="Informace o webu" aria-haspopup="dialog" aria-controls="iuTopbarInfoOverlay" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" aria-hidden="true" width="44" height="44" focusable="false">
+                              <circle cx="23" cy="23" r="22" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+                              <circle cx="23" cy="15" r="2.5" fill="#0B1F33"/>
+                              <path d="M23 20v14" stroke="#0B1F33" stroke-width="2.5" stroke-linecap="round"/>
+                            </svg>
+                          </button>
                           <div class="iuSilverWelcomeHeadline" id="iuSilverWelcomeHeadline" aria-live="polite">
                             <span class="iuSilverWelcomeGreet" id="iuSilverWelcomeGreet"></span><span class="iuSilverWelcomeUser" id="iuSilverWelcomeUser" hidden></span>
                           </div>

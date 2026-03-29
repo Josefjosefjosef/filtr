@@ -1,24 +1,24 @@
 {
   "schema": "css_debt_guard_v1",
-  "duplicate_selector_groups": 269,
-  "duplicate_rule_occurrences_in_groups": 709,
+  "duplicate_selector_groups": 276,
+  "duplicate_rule_occurrences_in_groups": 733,
   "classification_counts": {
-    "identical_duplicate": 12,
-    "breakpoint_specific": 128,
-    "risky_layout_coupled": 105,
-    "intentional_cascade_candidate": 24
+    "identical_duplicate": 5,
+    "breakpoint_specific": 144,
+    "risky_layout_coupled": 102,
+    "intentional_cascade_candidate": 25
   },
   "debt_verdict_counts": {
-    "intentional_non_debt": 80,
-    "risk_now": 177,
-    "unresolved_needs_review": 12
+    "intentional_non_debt": 98,
+    "risk_now": 173,
+    "unresolved_needs_review": 5
   },
   "debt_occurrence_counts": {
-    "intentional_non_debt": 228,
-    "risk_now": 456,
-    "unresolved_needs_review": 25
+    "intentional_non_debt": 275,
+    "risk_now": 448,
+    "unresolved_needs_review": 10
   },
-  "app_css_bytes": 603261,
+  "app_css_bytes": 532485,
   "css_size_guard_budget_bytes": 4096,
   "risk_zone_duplicate_groups": [
     {
@@ -90,10 +90,6 @@
       "classification": "intentional_cascade_candidate"
     },
     {
-      "selector_normalized": "#iuLeftRail .iu-leftNavItem span",
-      "classification": "identical_duplicate"
-    },
-    {
       "selector_normalized": "#iuLeftRail .iu-leftNavItem[aria-current=\"page\"] .iu-leftNavIcon, #iuLeftRail .iu-leftNavItem.is-active .iu-leftNavIcon",
       "classification": "identical_duplicate"
     },
@@ -112,10 +108,6 @@
     {
       "selector_normalized": "#iuLeftRail .iuMyUzelLabel",
       "classification": "intentional_cascade_candidate"
-    },
-    {
-      "selector_normalized": "#iuNakupModal .iuModalCard",
-      "classification": "breakpoint_specific"
     },
     {
       "selector_normalized": "#iuRailToggleBtn::before",
@@ -402,15 +394,7 @@
       "classification": "risky_layout_coupled"
     },
     {
-      "selector_normalized": "aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible",
-      "classification": "identical_duplicate"
-    },
-    {
       "selector_normalized": "aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current=\"page\"] .iu-leftNavIcon, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active .iu-leftNavIcon, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNavIcon",
-      "classification": "identical_duplicate"
-    },
-    {
-      "selector_normalized": "aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current=\"page\"]::before, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active::before, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active::before",
       "classification": "identical_duplicate"
     },
     {
@@ -436,10 +420,6 @@
     {
       "selector_normalized": "body #iuLeftRail .iu-leftNav .iu-leftNavItem",
       "classification": "intentional_cascade_candidate"
-    },
-    {
-      "selector_normalized": "body #iuLeftRail .iu-leftNav .iu-leftNavItem:hover",
-      "classification": "identical_duplicate"
     },
     {
       "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid",
@@ -530,18 +510,6 @@
       "classification": "risky_layout_coupled"
     },
     {
-      "selector_normalized": "body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iu-mmQuickGrid .iu-mmQuickItem",
-      "classification": "risky_layout_coupled"
-    },
-    {
-      "selector_normalized": "body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iu-mmQuickGrid .iuQlIcon, body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iu-mmQuickGrid .iuIconTile, body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iu-mmQuickGrid .iuIcon, body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iu-mmQuickGrid i, body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iu-mmQuickGrid svg",
-      "classification": "identical_duplicate"
-    },
-    {
-      "selector_normalized": "body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iu-mmQuickGrid .iuQlText",
-      "classification": "risky_layout_coupled"
-    },
-    {
       "selector_normalized": "body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid",
       "classification": "breakpoint_specific"
     },
@@ -600,14 +568,6 @@
     {
       "selector_normalized": "body .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iuIconTile, body .layout > aside.accordionCol .mindMenu .iu-mmServicesGrid .iuIconTile",
       "classification": "risky_layout_coupled"
-    },
-    {
-      "selector_normalized": "body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iuQlIcon, body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iuIconTile, body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iuIcon, body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] i, body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] svg, body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iuQlIcon, body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iuIconTile, body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iuIcon, body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] i, body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] svg",
-      "classification": "identical_duplicate"
-    },
-    {
-      "selector_normalized": "body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iuQlText, body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iuQlText",
-      "classification": "identical_duplicate"
     },
     {
       "selector_normalized": "body aside#iuLeftRail.iu-leftRail .iu-leftNav .iu-leftNavItem[class] .iu-leftNavLabel, body #iuLeftRail .iu-leftNav .iu-leftNavItem .iu-leftNavLabel, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel",

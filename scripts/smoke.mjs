@@ -100,6 +100,15 @@ async function runSmoke() {
     for (const url of urls) {
       const res = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
       if (!res || res.status() >= 400) fail(`HTTP ${res?.status() || "?"} for ${url}`);
+      // Root index.html runs location.replace("/projects/") after parse; domcontentloaded can return
+      // before that navigation commits — next goto would race and interrupt (?section=media) with /projects/.
+      if (url === `${BASE}/`) {
+        try {
+          await page.waitForURL((u) => u.pathname.includes("/projects"), { timeout: 10000 });
+        } catch (e) {
+          fail(`Root redirect did not settle on /projects/: ${e && e.message ? e.message : String(e)}`);
+        }
+      }
       await page.waitForTimeout(500);
     }
 

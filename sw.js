@@ -8,7 +8,8 @@
 // 2026-03-22: bust app shell po gap-align CSS (PR #1362) — klienti se starým SW mohli držet zastaralé /assets cache
 // 2026-03-22: bump — app.js iuShowSwUpdateBanner (nový SW → banner „Aktualizovat“)
 // 2026-03-22: HTML document = network-first (žádný preferovaný starý shell)
-const CACHE_VERSION = "2026-03-22-html-network-first-v1";
+// 2026-03-29: PR #1488 — nový SW + vyprázdnění APP_SHELL_CACHE po deployi (staré app.*.css v cache)
+const CACHE_VERSION = "2026-03-29-pr1488-topbar-inline-css-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
