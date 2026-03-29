@@ -6,7 +6,7 @@
 
 // Verze cache (měnit při každé významné změně)
 // 2026-03-22: bust app shell po gap-align CSS (PR #1362) — klienti se starým SW mohli držet zastaralé /assets cache
-// 2026-03-22: bump — app.js iuShowSwUpdateBanner (nový SW → banner „Aktualizovat“)
+// 2026-03-22: bump — app.js silent SW activation (SKIP_WAITING + jeden reload, bez spodního CTA)
 // 2026-03-22: HTML document = network-first (žádný preferovaný starý shell)
 // 2026-03-29: PR #1488 — nový SW + vyprázdnění APP_SHELL_CACHE po deployi (staré app.*.css v cache)
 const CACHE_VERSION = "2026-03-29-pr1488-topbar-inline-css-v1";
