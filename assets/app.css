@@ -19933,11 +19933,13 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     row-gap: 0;
     box-sizing: border-box;
   }
-  /* P0 CLS (768×1024): reserve slot max-height in CSS — JS iuSilverMobileStackFitApply was setting --iu-silver-slot-max-h after first paint when computed max-height had no "px" token → inline var churn → #leftContent strip shift ~0.00136. Tablet portrait: no JS fit; match floor(vh - top - 6) ≈ calc(100vh - 10px). */
+  /* P0 CLS (768×1024): reserve slot max-height + tablet stack bands — JS fit churn; wx/calendar extras (240/140) from global 131/118 via calc on cards. */
   @media (min-width: 768px) and (max-aspect-ratio: 1/1) {
-    #silver-slot.silver-slot,
-    #iuMobileSilverSlot .silver-slot{
+    /* id + class only — avoids duplicate prelude with later #silver-slot.silver-slot, #iuMobileSilverSlot .silver-slot block */
+    #silver-slot.silver-slot{
       --iu-silver-slot-max-h: calc(100vh - 10px);
+      --iu-tablet-wx-extra: 109px;
+      --iu-tablet-cal-extra: 22px;
     }
   }
   #iuMobileGateWrap #iuMobileSilverSlot,
@@ -19965,20 +19967,11 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
     border-bottom: none !important;
   }
-  /* P0: Počasí + separátory nesmí flex-shrinkovat — při 2 řádcích wx zkracuje jen tall box */
+  /* P0: Počasí + separátory nesmí flex-shrinkovat — při 2 řádcích wx zkracuje jen tall box; min-height 131+tablet extra z .silver-slot vars */
   #silver-slot #iuSilverWeatherCard.silver-weather-card{
     flex: 0 0 auto !important;
     flex-shrink: 0 !important;
-  }
-  /* P0 CLS (768×1024): async wx + calendar/tasks hydrate ~200ms; last px growth can push #leftContent edge / zero-size fragment → residual CLS. Reserve final tablet portrait stack band (strict proof CLS=0). */
-  @media (min-width: 768px) and (max-width: 900px) and (orientation: portrait) {
-    #silver-slot #iuSilverWeatherCard.silver-weather-card{
-      min-height: 240px !important;
-    }
-    #silver-slot #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
-    #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
-      min-height: 140px !important;
-    }
+    min-height: calc(131px + var(--iu-tablet-wx-extra, 0px)) !important;
   }
   #silver-slot #iuSilverWelcomeStack > .silver-welcome-stack__separator{
     flex: 0 0 auto !important;
@@ -19989,8 +19982,8 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     flex: 0 0 auto !important;
     align-self: stretch !important;
-    /* P0 CLS: hydrate finishes ~114px tall; reserve ≥ final */
-    min-height: 118px !important;
+    /* P0 CLS: hydrate finishes ~114px tall; 118+tablet extra z .silver-slot vars */
+    min-height: calc(118px + var(--iu-tablet-cal-extra, 0px)) !important;
     height: auto !important;
     box-sizing: border-box;
   }
