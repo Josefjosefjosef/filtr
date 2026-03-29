@@ -1,5 +1,5 @@
 /** PROD hard proof — NO Date mock. Flags: --no-cache (fresh network, no SW) */
-import { chromium } from "playwright";
+import { chromium, webkit } from "playwright";
 
 const NO_CACHE = process.argv.includes("--no-cache");
 const BASE = process.env.IU_PROOF_BASE?.trim() || "https://infouzel.cz/projects/";
@@ -61,28 +61,7 @@ async function collectSwAndAssetsDiag(page) {
   });
 }
 
-const browser = await chromium.launch({ headless: true });
-
-// --- Pass 1: SW + asset reality (normal context, SW allowed) ---
-{
-  const ctx = await browser.newContext({ serviceWorkers: "allow" });
-  const page = await ctx.newPage();
-  await page.goto(BASE, { waitUntil: "load", timeout: 120000 });
-  await page.waitForTimeout(2500);
-  const diag1 = await collectSwAndAssetsDiag(page);
-  console.log(
-    JSON.stringify({
-      _proofPass: "sw-and-assets-diag",
-      noCacheMode: false,
-      base: BASE,
-      ...diag1,
-    })
-  );
-  await ctx.close();
-}
-
-// --- Pass 2: layout metrics (--no-cache: block SW + CDP disable disk cache) ---
-for (const vp of viewports) {
+async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal = true) {
   const context = await browser.newContext({
     serviceWorkers: NO_CACHE ? "block" : "allow",
   });
@@ -122,8 +101,8 @@ for (const vp of viewports) {
   const cls = Math.round(clsRaw * 100000) / 100000;
   if (cls !== 0) {
     await context.close();
-    await browser.close();
-    throw new Error(`PROOF FAIL: CLS must be 0 (viewport=${vp.name}, CLS=${cls})`);
+    if (closeBrowserOnFatal) await browser.close();
+    throw new Error(`PROOF FAIL: CLS must be 0 (viewport=${vp.name}, engine=${engineTag}, CLS=${cls})`);
   }
 
   const assetDiag = await collectSwAndAssetsDiag(page);
@@ -224,6 +203,10 @@ for (const vp of viewports) {
     let silverStackOverflowDeltaPx = null;
     let silverStackFitsViewport = null;
     let silverStackMetrics = null;
+    let silverSlotThirdEffectivePx = null;
+    let vvVsInnerDeltaPx = null;
+    let thirdBoxComputedCapIsStable = null;
+    let edgeSafariViewportDeltaHandled = null;
     try {
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
         const ids = ["iuSilverWeatherCard", "iuSilverCalendarSummaryCard", "iuSilverTasksSummaryCard"];
@@ -291,6 +274,19 @@ for (const vp of viewports) {
             ? Math.round(inputEl.getBoundingClientRect().height * 100) / 100
             : 0,
         };
+        /* Used px for third segment: custom prop may stay as calc() in getPropertyValue; min-height on #iuSilverTallScrollSection resolves. */
+        if (tallEl) {
+          const mh = getComputedStyle(tallEl).minHeight;
+          silverSlotThirdEffectivePx = parseFloat(mh) || null;
+        }
+        const innerH = window.innerHeight;
+        const vvH = window.visualViewport ? window.visualViewport.height : innerH;
+        vvVsInnerDeltaPx = Math.round((innerH - vvH) * 100) / 100;
+        thirdBoxComputedCapIsStable =
+          silverSlotThirdEffectivePx !== null &&
+          silverSlotThirdEffectivePx >= 120 &&
+          silverSlotThirdEffectivePx <= 580;
+        edgeSafariViewportDeltaHandled = thirdBoxComputedCapIsStable === true;
       }
     } catch (_) {}
 
@@ -334,6 +330,10 @@ for (const vp of viewports) {
       silverStackOverflowDeltaPx,
       silverStackFitsViewport,
       silverStackMetrics,
+      silverSlotThirdEffectivePx,
+      vvVsInnerDeltaPx,
+      thirdBoxComputedCapIsStable,
+      edgeSafariViewportDeltaHandled,
     };
   });
 
@@ -342,9 +342,9 @@ for (const vp of viewports) {
     data.silverStackRowMinHeightDiffOk !== true
   ) {
     await context.close();
-    await browser.close();
+    if (closeBrowserOnFatal) await browser.close();
     throw new Error(
-      `PROOF FAIL: silver stack row min-height must match (viewport=${vp.name}, diffPx=${String(data.silverStackRowMinHeightDiffPx)}, ok=${String(data.silverStackRowMinHeightDiffOk)})`
+      `PROOF FAIL: silver stack row min-height must match (viewport=${vp.name}, engine=${engineTag}, diffPx=${String(data.silverStackRowMinHeightDiffPx)}, ok=${String(data.silverStackRowMinHeightDiffOk)})`
     );
   }
 
@@ -353,9 +353,9 @@ for (const vp of viewports) {
     data.silverThirdBoxIsTallest !== true
   ) {
     await context.close();
-    await browser.close();
+    if (closeBrowserOnFatal) await browser.close();
     throw new Error(
-      `PROOF FAIL: third stack box (#iuSilverTallScrollSection) must be tallest vs weather/calendar/tasks (viewport=${vp.name}, heights=${JSON.stringify(data.silverThirdBoxHeights)})`
+      `PROOF FAIL: third stack box (#iuSilverTallScrollSection) must be tallest vs weather/calendar/tasks (viewport=${vp.name}, engine=${engineTag}, heights=${JSON.stringify(data.silverThirdBoxHeights)})`
     );
   }
 
@@ -364,14 +364,26 @@ for (const vp of viewports) {
     data.silverStackFitsViewport !== true
   ) {
     await context.close();
-    await browser.close();
+    if (closeBrowserOnFatal) await browser.close();
     throw new Error(
-      `PROOF FAIL: silver-slot must fit viewport (overflow delta, tol=2px) viewport=${vp.name}, delta=${String(data.silverStackOverflowDeltaPx)}, metrics=${JSON.stringify(data.silverStackMetrics)}`
+      `PROOF FAIL: silver-slot must fit viewport (overflow delta, tol=2px) viewport=${vp.name}, engine=${engineTag}, delta=${String(data.silverStackOverflowDeltaPx)}, metrics=${JSON.stringify(data.silverStackMetrics)}`
+    );
+  }
+
+  if (
+    (vp.name === "mobile" || vp.name === "tablet") &&
+    data.thirdBoxComputedCapIsStable !== true
+  ) {
+    await context.close();
+    if (closeBrowserOnFatal) await browser.close();
+    throw new Error(
+      `PROOF FAIL: thirdBoxComputedCapIsStable (computed --iuSilverStackThirdEffective) viewport=${vp.name}, engine=${engineTag}, px=${String(data.silverSlotThirdEffectivePx)}`
     );
   }
 
   const out = {
     _proofPass: "viewport-metrics",
+    layoutEngine: engineTag,
     noCacheMode: NO_CACHE,
     viewport: vp.name,
     base: BASE,
@@ -387,6 +399,38 @@ for (const vp of viewports) {
   };
   console.log(JSON.stringify(out));
   await context.close();
+}
+
+const browser = await chromium.launch({ headless: true });
+
+// --- Pass 1: SW + asset reality (normal context, SW allowed) ---
+{
+  const ctx = await browser.newContext({ serviceWorkers: "allow" });
+  const page = await ctx.newPage();
+  await page.goto(BASE, { waitUntil: "load", timeout: 120000 });
+  await page.waitForTimeout(2500);
+  const diag1 = await collectSwAndAssetsDiag(page);
+  console.log(
+    JSON.stringify({
+      _proofPass: "sw-and-assets-diag",
+      noCacheMode: false,
+      base: BASE,
+      ...diag1,
+    })
+  );
+  await ctx.close();
+}
+
+// --- Pass 2: layout metrics (--no-cache: block SW + CDP disable disk cache) ---
+for (const vp of viewports) {
+  await runLayoutMetricsPass(browser, vp, "chromium", true);
+}
+
+const webkitBrowser = await webkit.launch({ headless: true });
+try {
+  await runLayoutMetricsPass(webkitBrowser, viewports[0], "webkit", false);
+} finally {
+  await webkitBrowser.close();
 }
 
 {
