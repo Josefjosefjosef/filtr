@@ -21,20 +21,15 @@ function iuIsProdHost() {
 }
 try { if (typeof window !== "undefined") window.iuIsProdHost = iuIsProdHost; } catch (e) {}
 
-/** Same session keys as legacy scheduleSWReload — one guard for early SW + feed watch. */
-var IU_SW_RELOAD_KEY = "iu:swReloaded";
-var IU_SW_RELOAD_AT_KEY = "iu:swReloadedAt";
+/** Debounce duplicate skipWaiting reloads in one burst — must NOT block a later new waiting worker in the same tab session (10 min sessionStorage was too aggressive). */
+var __iuSilentSwReloadLastMs = 0;
 
 function iuSwReloadGuardShouldSkip() {
   try {
-    var at = Number(sessionStorage.getItem(IU_SW_RELOAD_AT_KEY) || "0");
-    if (!at) return false;
-    if (Date.now() - at > 10 * 60 * 1000) {
-      sessionStorage.removeItem(IU_SW_RELOAD_KEY);
-      sessionStorage.removeItem(IU_SW_RELOAD_AT_KEY);
-      return false;
-    }
-    return Boolean(sessionStorage.getItem(IU_SW_RELOAD_KEY));
+    var now = Date.now();
+    if (now - __iuSilentSwReloadLastMs < 2500) return true;
+    __iuSilentSwReloadLastMs = now;
+    return false;
   } catch (_) {
     return false;
   }
@@ -42,14 +37,10 @@ function iuSwReloadGuardShouldSkip() {
 
 /** SKIP_WAITING + one reload — no bottom banner / manual CTA. */
 function iuSilentSwReloadFromWorker(worker) {
-  if (!worker || !("sessionStorage" in window)) return;
+  if (!worker) return;
   if (iuSwReloadGuardShouldSkip()) return;
   try {
     worker.postMessage({ type: "SKIP_WAITING" });
-  } catch (_) {}
-  try {
-    sessionStorage.setItem(IU_SW_RELOAD_KEY, "1");
-    sessionStorage.setItem(IU_SW_RELOAD_AT_KEY, String(Date.now()));
   } catch (_) {}
   try {
     if (typeof requestAnimationFrame === "function") {
