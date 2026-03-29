@@ -69,21 +69,37 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
   await attachNoCacheCdp(context, page);
 
   let consoleErrorsCount = 0;
+  const consoleErrorRecords = [];
   page.on("console", (msg) => {
-    if (msg.type() === "error") consoleErrorsCount += 1;
-  });
-  page.on("pageerror", () => {
+    if (msg.type() !== "error") return;
     consoleErrorsCount += 1;
+    consoleErrorRecords.push({
+      source: "console",
+      text: msg.text(),
+      location: msg.location(),
+    });
+  });
+  page.on("pageerror", (err) => {
+    consoleErrorsCount += 1;
+    consoleErrorRecords.push({
+      source: "pageerror",
+      text: String(err && err.message ? err.message : err),
+      stack: String(err && err.stack ? err.stack : ""),
+    });
   });
 
+  /* CLS: avoid buffered:true — WebKit can surface internal console noise; gate on supportedEntryTypes. */
   await page.addInitScript(() => {
     window.__iuCls = 0;
     try {
+      const PO = window.PerformanceObserver;
+      if (!PO) return;
+      if (PO.supportedEntryTypes && PO.supportedEntryTypes.indexOf("layout-shift") === -1) return;
       new PerformanceObserver((list) => {
         for (const e of list.getEntries()) {
           if (!e.hadRecentInput) window.__iuCls += e.value || 0;
         }
-      }).observe({ type: "layout-shift", buffered: true });
+      }).observe({ type: "layout-shift" });
     } catch (_) {}
   });
 
@@ -381,6 +397,14 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     );
   }
 
+  if (consoleErrorsCount > 0) {
+    await context.close();
+    if (closeBrowserOnFatal) await browser.close();
+    throw new Error(
+      `PROOF FAIL: console errors must be 0 (viewport=${vp.name}, engine=${engineTag}, count=${consoleErrorsCount}, records=${JSON.stringify(consoleErrorRecords)})`
+    );
+  }
+
   const out = {
     _proofPass: "viewport-metrics",
     layoutEngine: engineTag,
@@ -390,6 +414,7 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     dateMock: false,
     CLS: cls,
     consoleErrorsCount,
+    consoleErrorRecords,
     appErrorsCount: 0,
     cssHrefResolved: assetDiag.cssHrefResolved,
     iuDataVer: assetDiag.iuDataVer,
@@ -440,11 +465,19 @@ try {
   });
   const page = await ctx.newPage();
   let ne = 0;
+  const namedayConsoleErrorRecords = [];
   page.on("console", (msg) => {
-    if (msg.type() === "error") ne += 1;
-  });
-  page.on("pageerror", () => {
+    if (msg.type() !== "error") return;
     ne += 1;
+    namedayConsoleErrorRecords.push({ source: "console", text: msg.text(), location: msg.location() });
+  });
+  page.on("pageerror", (err) => {
+    ne += 1;
+    namedayConsoleErrorRecords.push({
+      source: "pageerror",
+      text: String(err && err.message ? err.message : err),
+      stack: String(err && err.stack ? err.stack : ""),
+    });
   });
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(BASE, { waitUntil: "load", timeout: 120000 });
@@ -501,12 +534,21 @@ try {
     };
   });
 
+  if (ne > 0) {
+    await ctx.close();
+    await browser.close();
+    throw new Error(
+      `PROOF FAIL: nameday pass console errors must be 0 (count=${ne}, records=${JSON.stringify(namedayConsoleErrorRecords)})`
+    );
+  }
+
   console.log(
     JSON.stringify({
       _proofPass: "nameday-interaction",
       noCacheMode: NO_CACHE,
       base: BASE,
       consoleErrorsCount: ne,
+      namedayConsoleErrorRecords,
       ...named,
     })
   );
