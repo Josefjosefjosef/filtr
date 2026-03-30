@@ -4,17 +4,23 @@ import { chromium, webkit } from "playwright";
 const NO_CACHE = process.argv.includes("--no-cache");
 const BASE = process.env.IU_PROOF_BASE?.trim() || "https://infouzel.cz/projects/";
 const viewports = [
-  { name: "mobile", width: 390, height: 844 },
-  { name: "tablet", width: 768, height: 1024 },
+  /* Mobile must cover real device-like shorter heights to avoid false positives. */
+  { name: "mobileShort", group: "mobile", width: 390, height: 664, deviceLike: true },
+  { name: "mobileTall", group: "mobile", width: 390, height: 844, deviceLike: false },
+  { name: "tablet", group: "tablet", width: 768, height: 1024 },
   { name: "desktop", width: 1440, height: 900 },
   { name: "desktopWide", width: 1920, height: 1080 },
 ];
 
 async function attachNoCacheCdp(context, page) {
   if (!NO_CACHE) return;
-  const session = await context.newCDPSession(page);
-  await session.send("Network.enable");
-  await session.send("Network.setCacheDisabled", { cacheDisabled: true });
+  try {
+    const session = await context.newCDPSession(page);
+    await session.send("Network.enable");
+    await session.send("Network.setCacheDisabled", { cacheDisabled: true });
+  } catch (_) {
+    /* CDP is Chromium-only; keep harness usable even if NO_CACHE used with non-Chromium contexts. */
+  }
 }
 
 async function collectSwAndAssetsDiag(page) {
@@ -64,6 +70,13 @@ async function collectSwAndAssetsDiag(page) {
 async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal = true) {
   const context = await browser.newContext({
     serviceWorkers: NO_CACHE ? "block" : "allow",
+    ...(vp && vp.group === "mobile"
+      ? {
+          isMobile: true,
+          hasTouch: true,
+          deviceScaleFactor: 3,
+        }
+      : {}),
   });
   const page = await context.newPage();
   await attachNoCacheCdp(context, page);
@@ -216,6 +229,8 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     let silverStackRowMinHeightDiffOk = null;
     let silverThirdBoxHeights = null;
     let silverThirdBoxIsTallest = null;
+    let silverThirdBoxDominanceOk = null;
+    let silverThirdBoxDominance = null;
     let silverStackOverflowDeltaPx = null;
     let silverStackFitsViewport = null;
     let silverStackMetrics = null;
@@ -276,6 +291,23 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
           document.querySelector("#silver-slot .iuSilverHomeInputWrap");
         const vv = window.visualViewport;
         const vh = vv ? vv.height : window.innerHeight;
+
+        /* Stop-ship: third box must be dominant, not merely "tallest within 1.5px". */
+        const maxRow = Math.max(hWx, Math.max(hCal, hTasks));
+        const dominanceMinDeltaPx = 40;
+        const dominanceMinThirdPx = Math.max(220, Math.round(vh * 0.28));
+        silverThirdBoxDominance = {
+          maxRowPx: r(maxRow),
+          thirdPx: r(hTall),
+          deltaPx: r(hTall - maxRow),
+          minDeltaPx: dominanceMinDeltaPx,
+          minThirdPx: dominanceMinThirdPx,
+          vhPx: r(vh),
+        };
+        silverThirdBoxDominanceOk =
+          hTall + 1e-6 >= maxRow + dominanceMinDeltaPx &&
+          hTall + 1e-6 >= dominanceMinThirdPx;
+
         let overflow = 0;
         if (slot && slot.scrollHeight > slot.clientHeight + 1) {
           overflow = Math.round((slot.scrollHeight - slot.clientHeight) * 100) / 100;
@@ -366,6 +398,8 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
       silverStackRowMinHeightDiffOk,
       silverThirdBoxHeights,
       silverThirdBoxIsTallest,
+      silverThirdBoxDominanceOk,
+      silverThirdBoxDominance,
       silverStackOverflowDeltaPx,
       silverStackFitsViewport,
       silverStackMetrics,
@@ -385,7 +419,7 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
   });
 
   if (
-    (vp.name === "mobile" || vp.name === "tablet") &&
+    ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") &&
     data.silverStackRowMinHeightDiffOk !== true
   ) {
     await context.close();
@@ -396,7 +430,7 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
   }
 
   if (
-    (vp.name === "mobile" || vp.name === "tablet") &&
+    ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") &&
     data.silverThirdBoxIsTallest !== true
   ) {
     await context.close();
@@ -407,7 +441,18 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
   }
 
   if (
-    (vp.name === "mobile" || vp.name === "tablet") &&
+    ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") &&
+    data.silverThirdBoxDominanceOk !== true
+  ) {
+    await context.close();
+    if (closeBrowserOnFatal) await browser.close();
+    throw new Error(
+      `PROOF FAIL: third stack box must be dominant (viewport=${vp.name}, engine=${engineTag}, dominance=${JSON.stringify(data.silverThirdBoxDominance)})`
+    );
+  }
+
+  if (
+    ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") &&
     data.silverStackFitsViewport !== true
   ) {
     await context.close();
@@ -418,7 +463,7 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
   }
 
   if (
-    (vp.name === "mobile" || vp.name === "tablet") &&
+    ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") &&
     data.thirdBoxComputedCapIsStable !== true
   ) {
     await context.close();
@@ -428,7 +473,10 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     );
   }
 
-  if ((vp.name === "mobile" || vp.name === "tablet") && data.thirdBoxNotGrowingWithContent !== true) {
+  if (
+    (((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") &&
+      data.thirdBoxNotGrowingWithContent !== true)
+  ) {
     await context.close();
     if (closeBrowserOnFatal) await browser.close();
     throw new Error(
