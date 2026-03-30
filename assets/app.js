@@ -5270,7 +5270,8 @@ function buildVideoAsArticleCard(it) {
       try {
         var vStr = getComputedStyle(slot).getPropertyValue("--iu-silver-slot-max-h").trim();
         var vPx = vStr && vStr.endsWith("px") ? parseFloat(vStr) : NaN;
-        if (!isNaN(vPx) && Math.abs(vPx - maxH) <= 2) {
+        /* Inline script + rAF: až ~8px rozdíl bez změny UX — méně zbytečných setProperty → nižší CLS */
+        if (!isNaN(vPx) && Math.abs(vPx - maxH) <= 8) {
           return;
         }
       } catch (_) {}
