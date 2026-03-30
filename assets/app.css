@@ -14940,17 +14940,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuSilverTopCardsGap: 8px;
   --iuSilverTopCardShadow: 0 4px 14px rgba(15, 35, 55, 0.1);
   --iuSilverTopCardBorder: 1px solid rgba(15, 35, 55, 0.12);
-  /* Guard-required stack tokens (CI silver-stack-guard.js); values match post-PR1489 row bands + third cap */
+  /* Guard-required stack tokens (CI silver-stack-guard.js); row bands + third lift (dominance vs weather/calendar/tasks — no CSS viewport height on third box; slot cap = JS visualViewport → --iu-silver-slot-max-h) */
   --iuSilverStackRowMinH: 131px;
   --iuSilverStackRowExtra: 0px;
   --iuSilverStackThirdLift: 40px;
   --iuSilverStackThirdMinH: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px) + var(--iuSilverStackThirdLift));
-  /* Reserve for welcome + separators + input shell (not in legacy 3×row+141); −91px → 100svh−R ≈ 221px @ short portrait so WebKit subpixel rounding still clears dominance minThirdPx=220 */
-  --iuSilverStackThirdBudgetReserve: calc((var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px)) * 3 + 141px - 91px);
-  --iuSilverStackThirdEffective: min(
-    max(var(--iuSilverStackThirdMinH), 40svh),
-    max(0px, calc(100svh - var(--iuSilverStackThirdBudgetReserve)))
-  );
 }
 
 .iuSilverTopCardsStack{
@@ -19934,19 +19928,18 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   .silver-slot{
     height: auto !important;
     min-height: 0 !important;
-    /* P0 hard-proof: visualViewport bottom tol=2px — JS sets --iu-silver-slot-max-h from vv−top−6px; −4px avoids sticky.bottom > vv (Chromium mobile rounding). */
-    max-height: calc(var(--iu-silver-slot-max-h, min(100dvh, 100vh)) - 4px);
+    /* Single source of truth: app.js sets --iu-silver-slot-max-h from visualViewport; −4px avoids sticky.bottom > vv (Chromium mobile rounding). */
+    max-height: calc(var(--iu-silver-slot-max-h) - 4px);
     display: flex;
     flex-direction: column;
     gap: 0;
     row-gap: 0;
     box-sizing: border-box;
   }
-  /* P0 CLS (768×1024): single tablet row band — same extra for wx/cal/tasks (guard: no split wx/cal extras). */
+  /* P0 CLS (768×1024): single tablet row band — same extra for wx/cal/tasks (guard: no split wx/cal extras). Slot max-height = JS --iu-silver-slot-max-h only. */
   @media (min-width: 768px) and (max-aspect-ratio: 1/1) {
     /* id + class only — avoids duplicate prelude with later #silver-slot.silver-slot, #iuMobileSilverSlot .silver-slot block */
     #silver-slot.silver-slot{
-      --iu-silver-slot-max-h: calc(100vh - 10px);
       --iuSilverStackRowExtra: 109px;
     }
   }
@@ -19963,11 +19956,12 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     flex-direction: column;
   }
   #silver-slot #iuSilverWelcomeStack{
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100%;
     flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
-    display: flex !important;
-    flex-direction: column !important;
     gap: 0 !important;
     row-gap: 0 !important;
   }
@@ -20006,8 +20000,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
   #silver-slot #iuSilverTallScrollSection{
     flex: 1 1 auto;
-    height: var(--iuSilverStackThirdEffective);
-    min-height: var(--iuSilverStackThirdEffective);
+    min-height: 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -20173,7 +20166,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverTallScrollSection{
     flex: 0 0 auto !important;
     min-height: 0 !important;
-    max-height: min(52vh, 320px) !important;
+    max-height: 320px !important;
   }
   #silver-slot .iuSilverTallScrollChromaFrame{
     flex: 0 1 auto !important;
@@ -20182,6 +20175,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverTallScrollViewport{
     flex: 0 1 auto !important;
     min-height: 48px !important;
-    max-height: min(46vh, 280px) !important;
+    max-height: 280px !important;
   }
 }

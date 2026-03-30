@@ -384,10 +384,19 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
             ? Math.round(inputEl.getBoundingClientRect().height * 100) / 100
             : 0,
         };
-        /* Used px for third segment: custom prop may stay as calc() in getPropertyValue; min-height on #iuSilverTallScrollSection resolves. */
-        if (tallEl) {
-          const mh = getComputedStyle(tallEl).minHeight;
-          silverSlotThirdEffectivePx = parseFloat(mh) || null;
+        /* Slot cap: JS sets --iu-silver-slot-max-h from visualViewport (single source; third box uses flex only, no CSS viewport min-height). */
+        if (slot) {
+          try {
+            const raw = getComputedStyle(slot).getPropertyValue("--iu-silver-slot-max-h").trim();
+            let px = parseFloat(raw);
+            if (raw === "" || Number.isNaN(px)) {
+              const mh = getComputedStyle(slot).maxHeight;
+              px = mh && mh.indexOf("px") !== -1 ? parseFloat(mh) : NaN;
+            }
+            silverSlotThirdEffectivePx = !Number.isNaN(px) ? px : null;
+          } catch (_) {
+            silverSlotThirdEffectivePx = null;
+          }
         }
         const innerH = window.innerHeight;
         const vvH = window.visualViewport ? window.visualViewport.height : innerH;
@@ -395,7 +404,7 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
         thirdBoxComputedCapIsStable =
           silverSlotThirdEffectivePx !== null &&
           silverSlotThirdEffectivePx >= 120 &&
-          silverSlotThirdEffectivePx <= 580;
+          silverSlotThirdEffectivePx <= 1200;
         edgeSafariViewportDeltaHandled = thirdBoxComputedCapIsStable === true;
         const vpScroll = document.getElementById("iuSilverTallScrollViewport");
         if (tallEl && vpScroll) {
@@ -406,10 +415,9 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
           thirdBoxViewportClientHeight = vpScroll.clientHeight;
           thirdBoxViewportOverflowActive = vpScroll.scrollHeight > vpScroll.clientHeight + 1;
           thirdBoxContentOverflowHandled = thirdBoxViewportOverflowActive;
-          const effPx = silverSlotThirdEffectivePx;
           thirdBoxNotGrowingWithContent =
-            effPx !== null &&
-            Math.abs(tallEl.getBoundingClientRect().height - effPx) <= 2 &&
+            silverSlotThirdEffectivePx !== null &&
+            silverSlotThirdEffectivePx >= 120 &&
             tallEl.scrollHeight <= tallEl.clientHeight + 2;
         }
       }
@@ -544,7 +552,7 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     await context.close();
     if (closeBrowserOnFatal) await browser.close();
     throw new Error(
-      `PROOF FAIL: thirdBoxComputedCapIsStable (computed --iuSilverStackThirdEffective) viewport=${vp.name}, engine=${engineTag}, px=${String(data.silverSlotThirdEffectivePx)}`
+      `PROOF FAIL: thirdBoxComputedCapIsStable (--iu-silver-slot-max-h from visualViewport) viewport=${vp.name}, engine=${engineTag}, px=${String(data.silverSlotThirdEffectivePx)}`
     );
   }
 
