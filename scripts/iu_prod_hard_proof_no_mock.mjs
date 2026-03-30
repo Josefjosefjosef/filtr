@@ -266,6 +266,7 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     let silverThirdBoxIsTrueRemainderOk = null;
     let silverThirdBoxRemainderDeltaPx = null;
     let silverThirdBoxHasNoFixedHeightOk = null;
+    let silverIsFixedOk = null;
     try {
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
         const ids = ["iuSilverWeatherCard", "iuSilverCalendarSummaryCard", "iuSilverTasksSummaryCard"];
@@ -383,6 +384,18 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
         silverThirdBoxDominanceOk = hTall + 1e-6 >= maxRow + dominanceMinDeltaPx;
 
         const stackEl = document.getElementById("iuSilverWelcomeStack");
+        if (stackEl) {
+          const shellW = stackEl.querySelector(".silver-shell.silver-shell--stackConnected");
+          if (shellW) {
+            const csW = getComputedStyle(shellW);
+            silverIsFixedOk =
+              String(csW.flexGrow || "") === "0" && String(csW.flexShrink || "") === "0";
+          } else {
+            silverIsFixedOk = false;
+          }
+        } else {
+          silverIsFixedOk = false;
+        }
         if (stackEl && tallEl) {
           let sumExclTall = 0;
           for (let i = 0; i < stackEl.children.length; i++) {
@@ -528,6 +541,7 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
       silverThirdBoxIsTrueRemainderOk,
       silverThirdBoxRemainderDeltaPx,
       silverThirdBoxHasNoFixedHeightOk,
+      silverIsFixedOk,
     };
   });
 
@@ -550,6 +564,17 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     if (closeBrowserOnFatal) await browser.close();
     throw new Error(
       `PROOF FAIL: third box must have no fixed floor / no vh height (computed min-height < 0.5px, no vh on height/max-height) viewport=${vp.name}, engine=${engineTag}`
+    );
+  }
+
+  if (
+    ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") &&
+    data.silverIsFixedOk !== true
+  ) {
+    await context.close();
+    if (closeBrowserOnFatal) await browser.close();
+    throw new Error(
+      `PROOF FAIL: Silver stack shell must be fixed block (flex-grow 0, flex-shrink 0) viewport=${vp.name}, engine=${engineTag}`
     );
   }
 
@@ -662,6 +687,236 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     ...data,
   };
   console.log(JSON.stringify(out));
+  await context.close();
+}
+
+async function runWeatherDualStateStackProof(browser) {
+  const vp = viewports[0];
+  let consoleErrorsCount = 0;
+  const consoleErrorRecords = [];
+  const context = await browser.newContext({
+    serviceWorkers: NO_CACHE ? "block" : "allow",
+    isMobile: true,
+    hasTouch: true,
+    deviceScaleFactor: 3,
+  });
+  const page = await context.newPage();
+  await attachNoCacheCdp(context, page);
+  page.on("console", (msg) => {
+    if (msg.type() !== "error") return;
+    consoleErrorsCount += 1;
+    consoleErrorRecords.push({ source: "console", text: msg.text(), location: msg.location() });
+  });
+  page.on("pageerror", (err) => {
+    consoleErrorsCount += 1;
+    consoleErrorRecords.push({
+      source: "pageerror",
+      text: String(err && err.message ? err.message : err),
+      stack: String(err && err.stack ? err.stack : ""),
+    });
+  });
+
+  await page.addInitScript(() => {
+    window.__iuCls = 0;
+    try {
+      const PO = window.PerformanceObserver;
+      if (
+        PO &&
+        PO.supportedEntryTypes &&
+        PO.supportedEntryTypes.indexOf("layout-shift") !== -1
+      ) {
+        new PO((list) => {
+          for (const e of list.getEntries()) {
+            if (!e.hadRecentInput) window.__iuCls += e.value || 0;
+          }
+        }).observe({ type: "layout-shift" });
+      }
+    } catch (_) {}
+    try {
+      window.__iuWeatherGeoFlowFeedback = null;
+      localStorage.removeItem("iu_location_mode");
+      localStorage.removeItem("iu_manual_location");
+      localStorage.removeItem("iuWeatherGpsSelectedV1");
+      localStorage.removeItem("iuWeatherCitySelectedV1");
+    } catch (_) {}
+  });
+
+  await page.setViewportSize({ width: vp.width, height: vp.height });
+  await page.goto(BASE, { waitUntil: "load", timeout: 120000 });
+  await page.waitForTimeout(6000);
+  await page.evaluate(() => {
+    try {
+      window.scrollTo(0, 0);
+    } catch (_) {}
+  });
+  await page.evaluate(() => {
+    window.__iuCls = 0;
+  });
+  await page.waitForTimeout(2000);
+
+  let clsRaw = await page.evaluate(() => window.__iuCls || 0);
+  let cls = Math.round(clsRaw * 100000) / 100000;
+  if (cls !== 0) {
+    await context.close();
+    throw new Error(`PROOF FAIL weather dual-state: CLS must be 0 (CLS=${cls})`);
+  }
+
+  const measureStack = () => {
+    const card = document.getElementById("iuSilverWeatherCard");
+    const actions = document.getElementById("iuSilverWeatherActions");
+    const wxEl = document.getElementById("iuSilverWeatherCard");
+    const tallEl = document.getElementById("iuSilverTallScrollSection");
+    const slot = document.getElementById("silver-slot");
+    const sticky = document.getElementById("iuSilverWelcomeSticky");
+    const vv = window.visualViewport;
+    const vvOffsetTopPx =
+      vv && typeof vv.offsetTop === "number" ? Math.round(vv.offsetTop * 100) / 100 : 0;
+    let safeAreaBottomPx = 0;
+    try {
+      const probe = document.createElement("div");
+      probe.style.cssText =
+        "position:fixed;left:0;bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none;z-index:-1;";
+      document.body.appendChild(probe);
+      safeAreaBottomPx = Math.round((parseFloat(getComputedStyle(probe).paddingBottom) || 0) * 100) / 100;
+      probe.remove();
+    } catch (_) {}
+    const firstScreenVisibleBottomPx = vv
+      ? Math.round((vvOffsetTopPx + vv.height - safeAreaBottomPx) * 100) / 100
+      : Math.round((window.innerHeight - safeAreaBottomPx) * 100) / 100;
+    const inputField = sticky ? sticky.querySelector("#iuSilverHomeInput") : null;
+    const inputBottomPx = inputField
+      ? Math.round(inputField.getBoundingClientRect().bottom * 100) / 100
+      : 0;
+    const stackBottomPx = sticky
+      ? Math.round(sticky.getBoundingClientRect().bottom * 100) / 100
+      : 0;
+    const inputBottomForFoldPx =
+      sticky && stackBottomPx !== null ? Math.min(inputBottomPx, stackBottomPx) : inputBottomPx;
+    const foldOk = inputBottomForFoldPx <= firstScreenVisibleBottomPx + 2;
+    let overflow = 0;
+    if (slot && slot.scrollHeight > slot.clientHeight + 1) {
+      overflow = Math.round((slot.scrollHeight - slot.clientHeight) * 100) / 100;
+    }
+    let bleed = 0;
+    if (sticky) {
+      bleed = Math.round(
+        (sticky.getBoundingClientRect().bottom - firstScreenVisibleBottomPx) * 100
+      ) / 100;
+    }
+    const overflowDelta = Math.round(Math.max(overflow, Math.max(0, bleed)) * 100) / 100;
+    const stackFitsViewport = overflowDelta <= 2;
+    let actionsVisible = false;
+    if (actions) {
+      const cs = getComputedStyle(actions);
+      actionsVisible = cs.display !== "none" && cs.visibility !== "hidden";
+    }
+    return {
+      layout: card ? card.getAttribute("data-iu-silver-wx-layout") : null,
+      phase: card ? card.getAttribute("data-iu-silver-wx-phase") : null,
+      wxH: wxEl ? Math.round(wxEl.getBoundingClientRect().height * 100) / 100 : 0,
+      thirdH: tallEl ? Math.round(tallEl.getBoundingClientRect().height * 100) / 100 : 0,
+      stackFitsViewport,
+      foldOk,
+      actionsVisible,
+    };
+  };
+
+  const setupProbe = await page.evaluate(measureStack);
+
+  await page.evaluate(() => {
+    try {
+      window.__iuWeatherGeoFlowFeedback = null;
+      localStorage.setItem("iu_location_mode", "gps");
+      localStorage.setItem(
+        "iuWeatherGpsSelectedV1",
+        JSON.stringify({ name: "Praha", lat: 50.0755, lon: 14.4378 })
+      );
+      window.__iuWeatherState = {
+        lat: 50.0755,
+        lon: 14.4378,
+        current: {
+          temperatureC: 12,
+          feelsLikeC: 10,
+          weatherCode: 1,
+          isDay: true,
+        },
+        nextHours: [],
+        rawDaily: null,
+      };
+      if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh();
+      if (typeof window.iuSilverMobileStackFitSchedule === "function") {
+        window.iuSilverMobileStackFitSchedule();
+      }
+    } catch (_) {}
+  });
+  await page.waitForTimeout(400);
+  await page.evaluate(() => {
+    window.__iuCls = 0;
+  });
+  await page.waitForTimeout(1500);
+
+  clsRaw = await page.evaluate(() => window.__iuCls || 0);
+  cls = Math.round(clsRaw * 100000) / 100000;
+  if (cls !== 0) {
+    await context.close();
+    throw new Error(`PROOF FAIL weather dual-state (ready): CLS must be 0 (CLS=${cls})`);
+  }
+
+  const readyProbe = await page.evaluate(measureStack);
+
+  if (consoleErrorsCount > 0) {
+    await context.close();
+    throw new Error(
+      `PROOF FAIL weather dual-state: console errors (count=${consoleErrorsCount}, records=${JSON.stringify(consoleErrorRecords)})`
+    );
+  }
+
+  const weatherSetupStateFitsViewport =
+    setupProbe.layout === "setup" &&
+    setupProbe.actionsVisible === true &&
+    setupProbe.stackFitsViewport === true &&
+    setupProbe.foldOk === true;
+  const weatherReadyStateFitsViewport =
+    readyProbe.layout === "ready" &&
+    readyProbe.actionsVisible === false &&
+    readyProbe.stackFitsViewport === true &&
+    readyProbe.foldOk === true;
+  const weatherSetupToReadyReallocationOk =
+    setupProbe.wxH > readyProbe.wxH + 5 &&
+    readyProbe.thirdH > setupProbe.thirdH + 5;
+
+  if (!weatherSetupStateFitsViewport) {
+    await context.close();
+    throw new Error(
+      `PROOF FAIL WEATHER_SETUP_STATE_FITS_VIEWPORT setupProbe=${JSON.stringify(setupProbe)}`
+    );
+  }
+  if (!weatherReadyStateFitsViewport) {
+    await context.close();
+    throw new Error(
+      `PROOF FAIL WEATHER_READY_STATE_FITS_VIEWPORT readyProbe=${JSON.stringify(readyProbe)}`
+    );
+  }
+  if (!weatherSetupToReadyReallocationOk) {
+    await context.close();
+    throw new Error(
+      `PROOF FAIL WEATHER_SETUP_TO_READY_REALLOCATION_OK setup=${JSON.stringify(setupProbe)} ready=${JSON.stringify(readyProbe)}`
+    );
+  }
+
+  console.log(
+    JSON.stringify({
+      _proofPass: "weather-dual-state-stack",
+      noCacheMode: NO_CACHE,
+      base: BASE,
+      viewport: vp.name,
+      weatherSetupStateFitsViewport: true,
+      weatherReadyStateFitsViewport: true,
+      weatherSetupToReadyReallocationOk: true,
+      setupProbe,
+      readyProbe,
+    })
+  );
   await context.close();
 }
 
@@ -793,5 +1048,7 @@ try {
   );
   await ctx.close();
 }
+
+await runWeatherDualStateStackProof(browser);
 
 await browser.close();

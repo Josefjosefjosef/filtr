@@ -19899,6 +19899,17 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   text-underline-offset: 2px;
 }
 
+/* ========================================================================
+   STOP-SHIP — SILVER STACK GEOMETRY (LOCKED; měň jen styl, ne layout)
+   - Box1 → Počasí → třetí box → Kalendář → Úkoly → Silver: vždy na 1. obrazovce (≤900px).
+   - Malé karty (Počasí / Kalendář / Úkoly): výhradně podle obsahu (2 řádky + ~5px padding).
+     Zakázáno: row-band min-height tokeny na malé karty, umělé nafouknutí řádků.
+   - #iuSilverTallScrollSection: jediný pružný „remainder“; flex: 1 1 auto; min-height: 0;
+     zakázáno: px floor, vh/svh/dvh na tomto boxu, fixní height.
+   - Počasí: data-iu-silver-wx-layout="setup" (tlačítka) | "ready" (jen 2 řádky); oba stavy musí vejít do slotu.
+   - Silver shell (stack): fixní blok vstup + 2 tlačítka (záložky); flex-grow 0 — žádné nafukování.
+   - Jediný viewport-driven rozpočet: #silver-slot max/min height přes var(--iu-silver-slot-max-h) z app.js.
+   ======================================================================== */
 /* P0 Mobile/tablet only: adaptive first-viewport stack + Silver bottom visible — --iu-silver-slot-max-h z visualViewport (app.js); desktop ≥901px beze změny */
 @media (max-width: 900px){
   .iuSilverTopCardsStack #silver-slot.silver-slot,
@@ -19984,9 +19995,11 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     flex: 0 0 auto !important;
     flex-shrink: 0 !important;
   }
-  /* Silver: jen input + 2 tlačítka — bez fixního min-height px */
+  /* Silver: LOCK — vstup + 2 tlačítka (záložky); bez vertikálního flex-grow (fixní výška bloku) */
   #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
     flex: 0 0 auto !important;
+    flex-grow: 0 !important;
+    flex-shrink: 0 !important;
     min-height: 0 !important;
     height: auto !important;
     align-self: stretch !important;
@@ -19998,23 +20011,23 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-height: 1px !important;
     margin: 0 !important;
   }
-  /* Jediný pružný sloupec: basis 0 + grow/shrink = skutečný zbytek po ostatních (scroll uvnitř viewportu) */
+  /* Jediný pružný remainder sloupec (basis auto + grow 1; min-height 0 = může se zmenšit při SETUP počasí) */
   #silver-slot #iuSilverTallScrollSection{
-    flex: 1 1 0;
+    flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
   #silver-slot .iuSilverTallScrollChromaFrame{
-    flex: 1 1 0;
+    flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
   #silver-slot #iuSilverTallScrollViewport{
-    flex: 1 1 0;
+    flex: 1 1 auto;
     min-height: 0 !important;
     max-height: none !important;
     overflow-x: hidden;
@@ -20166,16 +20179,16 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     overflow: visible !important;
   }
   #silver-slot #iuSilverTallScrollSection{
-    flex: 1 1 0 !important;
+    flex: 1 1 auto !important;
     min-height: 0 !important;
     max-height: none !important;
   }
   #silver-slot .iuSilverTallScrollChromaFrame{
-    flex: 1 1 0 !important;
+    flex: 1 1 auto !important;
     min-height: 0 !important;
   }
   #silver-slot #iuSilverTallScrollViewport{
-    flex: 1 1 0 !important;
+    flex: 1 1 auto !important;
     min-height: 0 !important;
     max-height: none !important;
   }

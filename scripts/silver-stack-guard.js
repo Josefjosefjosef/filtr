@@ -53,8 +53,8 @@ if (!/#silver-slot\s+#iuSilverTallScrollViewport[\s\S]*?max-height:\s*none\b/.te
   fail("❌ #silver-slot #iuSilverTallScrollViewport must set max-height: none");
 }
 
-if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?flex:\s*1\s+1\s+0\b/.test(css)) {
-  fail("❌ #silver-slot #iuSilverTallScrollSection must use flex: 1 1 0 (true flex remainder)");
+if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?flex:\s*1\s+1\s+auto\b/.test(css)) {
+  fail("❌ #silver-slot #iuSilverTallScrollSection must use flex: 1 1 auto (sole remainder; min-height 0)");
 }
 
 if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*0\b/.test(css)) {
@@ -101,6 +101,10 @@ if (!/<button[^>]*class="[^"]*\bsilver-weather-btn\b[^"]*\biu-nameday-wish\b/.te
 
 if (!/iuSilverWeatherBtnGeo[\s\S]*?silver-weather-btn/.test(html)) {
   fail("❌ Weather CTA must use .silver-weather-btn");
+}
+
+if (!/data-iu-silver-wx-layout/.test(html)) {
+  fail("❌ Weather card must expose data-iu-silver-wx-layout (setup vs ready) for stack contract");
 }
 
 if (html.indexOf("iuSilverCalendarSummaryShowDay") !== -1) {
