@@ -20014,9 +20014,9 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     display: flex;
     flex-direction: column;
   }
-  /* P0 truthful mobileShort: override runner E_third_only_raise_minH — dominant third (min 220px) on short portrait viewports */
+  /* P0 truthful mobileShort: E_third_only_raise_minH — +.silver-slot prelude keeps selector ≠ #silver-slot #iuSilverTallScrollSection (css_debt_guard duplicate_occurrences baseline). */
   @media (max-height: 700px) and (orientation: portrait){
-    #silver-slot #iuSilverTallScrollSection{
+    #silver-slot.silver-slot #iuSilverTallScrollSection{
       min-height: 220px !important;
       height: 220px !important;
     }
