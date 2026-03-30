@@ -14940,6 +14940,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuSilverTopCardsGap: 8px;
   --iuSilverTopCardShadow: 0 4px 14px rgba(15, 35, 55, 0.1);
   --iuSilverTopCardBorder: 1px solid rgba(15, 35, 55, 0.12);
+  --iuSilverStackRowMinH: 131px;
+  --iuSilverStackRowExtra: 0px;
+  --iuSilverStackThirdLift: 40px;
 }
 
 .iuSilverTopCardsStack{
@@ -19916,6 +19919,14 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 
 /* P0 Mobile/tablet only: adaptive first-viewport stack + Silver bottom visible — --iu-silver-slot-max-h z visualViewport (app.js); desktop ≥901px beze změny */
 @media (max-width: 900px){
+  #silver-slot.silver-slot{
+    --iuSilverStackThirdMinH: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px) + var(--iuSilverStackThirdLift));
+    --iuSilverStackThirdBudgetReserve: calc((var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px)) * 3 + 141px);
+    --iuSilverStackThirdEffective: min(
+      max(var(--iuSilverStackThirdMinH), 40svh),
+      max(0px, calc(100svh - var(--iuSilverStackThirdBudgetReserve)))
+    );
+  }
   .iuSilverTopCardsStack #silver-slot.silver-slot,
   #iuMobileSilverSlot .silver-slot{
     flex: 0 0 auto !important;
@@ -19938,8 +19949,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     /* id + class only — avoids duplicate prelude with later #silver-slot.silver-slot, #iuMobileSilverSlot .silver-slot block */
     #silver-slot.silver-slot{
       --iu-silver-slot-max-h: calc(100vh - 10px);
-      --iu-tablet-wx-extra: 109px;
-      --iu-tablet-cal-extra: 22px;
+      --iuSilverStackRowExtra: 109px;
     }
   }
   #iuMobileGateWrap #iuMobileSilverSlot,
@@ -19967,25 +19977,20 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
     border-bottom: none !important;
   }
-  /* P0: Počasí + separátory nesmí flex-shrinkovat — při 2 řádcích wx zkracuje jen tall box; min-height 131+tablet extra z .silver-slot vars */
-  #silver-slot #iuSilverWeatherCard.silver-weather-card{
+  /* P0: Počasí + Kalendář + Úkoly — unified row band (base :root + tablet extra on #silver-slot) */
+  #silver-slot #iuSilverWeatherCard.silver-weather-card,
+  #silver-slot #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
+  #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     flex: 0 0 auto !important;
     flex-shrink: 0 !important;
-    min-height: calc(131px + var(--iu-tablet-wx-extra, 0px)) !important;
+    align-self: stretch !important;
+    min-height: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px)) !important;
+    height: auto !important;
+    box-sizing: border-box;
   }
   #silver-slot #iuSilverWelcomeStack > .silver-welcome-stack__separator{
     flex: 0 0 auto !important;
     flex-shrink: 0 !important;
-  }
-  /* P0 single column contract: Kalendář + Úkoly + Silver — same flex model, content-driven height */
-  #silver-slot #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
-  #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
-    flex: 0 0 auto !important;
-    align-self: stretch !important;
-    /* P0 CLS: hydrate finishes ~114px tall; 118+tablet extra z .silver-slot vars */
-    min-height: calc(118px + var(--iu-tablet-cal-extra, 0px)) !important;
-    height: auto !important;
-    box-sizing: border-box;
   }
   /* P0 CLS (768×1024): first paint had min-height 0 → inline script bumped to 141px → layout shift. Reserve in CSS. */
   #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
@@ -20003,7 +20008,8 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
   #silver-slot #iuSilverTallScrollSection{
     flex: 1 1 auto;
-    min-height: 0;
+    height: var(--iuSilverStackThirdEffective);
+    min-height: var(--iuSilverStackThirdEffective);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -20017,7 +20023,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
   #silver-slot #iuSilverTallScrollViewport{
     flex: 1 1 auto;
-    min-height: 48px !important;
+    min-height: 0 !important;
     max-height: none !important;
     overflow-x: hidden;
     overflow-y: auto;
