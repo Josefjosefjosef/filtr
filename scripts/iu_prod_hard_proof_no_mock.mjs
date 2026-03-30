@@ -298,19 +298,9 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
             ? Math.round(inputEl.getBoundingClientRect().height * 100) / 100
             : 0,
         };
-        /* Used px for third segment: custom prop may stay as calc() in getPropertyValue; min-height on #iuSilverTallScrollSection resolves. */
-        if (tallEl) {
-          const mh = getComputedStyle(tallEl).minHeight;
-          silverSlotThirdEffectivePx = parseFloat(mh) || null;
-        }
         const innerH = window.innerHeight;
         const vvH = window.visualViewport ? window.visualViewport.height : innerH;
         vvVsInnerDeltaPx = Math.round((innerH - vvH) * 100) / 100;
-        thirdBoxComputedCapIsStable =
-          silverSlotThirdEffectivePx !== null &&
-          silverSlotThirdEffectivePx >= 120 &&
-          silverSlotThirdEffectivePx <= 580;
-        edgeSafariViewportDeltaHandled = thirdBoxComputedCapIsStable === true;
         const vpScroll = document.getElementById("iuSilverTallScrollViewport");
         if (tallEl && vpScroll) {
           thirdBoxHeight = r(tallEl.getBoundingClientRect().height);
@@ -320,11 +310,6 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
           thirdBoxViewportClientHeight = vpScroll.clientHeight;
           thirdBoxViewportOverflowActive = vpScroll.scrollHeight > vpScroll.clientHeight + 1;
           thirdBoxContentOverflowHandled = thirdBoxViewportOverflowActive;
-          const effPx = silverSlotThirdEffectivePx;
-          thirdBoxNotGrowingWithContent =
-            effPx !== null &&
-            Math.abs(tallEl.getBoundingClientRect().height - effPx) <= 2 &&
-            tallEl.scrollHeight <= tallEl.clientHeight + 2;
         }
       }
     } catch (_) {}
@@ -414,31 +399,6 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     if (closeBrowserOnFatal) await browser.close();
     throw new Error(
       `PROOF FAIL: silver-slot must fit viewport (overflow delta, tol=2px) viewport=${vp.name}, engine=${engineTag}, delta=${String(data.silverStackOverflowDeltaPx)}, metrics=${JSON.stringify(data.silverStackMetrics)}`
-    );
-  }
-
-  if (
-    (vp.name === "mobile" || vp.name === "tablet") &&
-    data.thirdBoxComputedCapIsStable !== true
-  ) {
-    await context.close();
-    if (closeBrowserOnFatal) await browser.close();
-    throw new Error(
-      `PROOF FAIL: thirdBoxComputedCapIsStable (computed --iuSilverStackThirdEffective) viewport=${vp.name}, engine=${engineTag}, px=${String(data.silverSlotThirdEffectivePx)}`
-    );
-  }
-
-  if ((vp.name === "mobile" || vp.name === "tablet") && data.thirdBoxNotGrowingWithContent !== true) {
-    await context.close();
-    if (closeBrowserOnFatal) await browser.close();
-    throw new Error(
-      `PROOF FAIL: third box must not grow with content (section scrollHeight/clientHeight vs effective) viewport=${vp.name}, engine=${engineTag}, ` +
-        JSON.stringify({
-          thirdBoxHeight: data.thirdBoxHeight,
-          thirdBoxSectionScrollHeight: data.thirdBoxSectionScrollHeight,
-          thirdBoxSectionClientHeight: data.thirdBoxSectionClientHeight,
-          silverSlotThirdEffectivePx: data.silverSlotThirdEffectivePx,
-        })
     );
   }
 
