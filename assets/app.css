@@ -14948,9 +14948,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuSilverStackThirdMinH: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px) + var(--iuSilverStackThirdLift));
 }
 
-/* Shorter portrait (e.g. 390×664): lower stack-token lift → floor 220px — still ≥ proof minThirdPx(220) and ≥ row+40; saves ~16px for first-screen breathing. Taller mobile (844+) keeps 105px lift for minThirdPx 236. */
+/* Shorter portrait: lift override on #silver-slot only — prelude unique for CSS_DEBT_GUARD (no extra :root / .silver-slot duplicate group). */
 @media (max-width: 900px) and (max-height: 720px){
-  :root{
+  #iuSilverTopCardsStack #silver-slot.silver-slot,
+  #iuMobileGateWrap #iuMobileSilverSlot #silver-slot.silver-slot{
     --iuSilverStackThirdLift: 89px;
   }
 }
