@@ -5238,6 +5238,8 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  /* STACK GEOMETRY CONTRACT (LOCKED): viz assets/app.css STOP-SHIP u #silver-slot. Malé karty = obsah;
+     #iuSilverTallScrollSection = jediný remainder; Silver shell = fixní blok (flex-grow 0); jediný vv token = --iu-silver-slot-max-h níže. */
   /** P0 Mobile/tablet (≤900px), jen portrait: měřená max výška #silver-slot z visualViewport — tall box jako jediný flex-shrink buffer; landscape = bez viewport squeeze (page scroll). */
   function iuSilverMobileStackFitApply(){
     try{
@@ -6021,6 +6023,13 @@ function buildVideoAsArticleCard(it) {
     const btnCity = document.getElementById("iuSilverWeatherBtnCity");
     if (!card || !line1 || !line2) return;
 
+    function iuSilverWeatherSyncLayoutAttr(phase){
+      try{
+        const setup = phase === "firstVisit" || phase === "denied";
+        card.setAttribute("data-iu-silver-wx-layout", setup ? "setup" : "ready");
+      }catch{}
+    }
+
     function iuSilverWeatherNavigateToWeather(){
       try{
         const el = document.querySelector('.iu-leftNavItem[data-accent="pocasi"]');
@@ -6208,6 +6217,7 @@ function buildVideoAsArticleCard(it) {
       try{
         card.setAttribute("data-iu-silver-wx-phase", "data");
         card.setAttribute("data-iu-silver-wx-tip", iuSilverWeatherTipCategory(st));
+        iuSilverWeatherSyncLayoutAttr("data");
       }catch{}
     }
 
@@ -6216,7 +6226,10 @@ function buildVideoAsArticleCard(it) {
         `<span class="silver-weather-dpart" aria-hidden="true">🌤️</span> ` +
         `<span data-iu-silver-weather-hook="summary">Počasí se načítá…</span>`;
       line2.innerHTML = `<span data-iu-silver-weather-hook="tip">💡 Za chvíli ho ukážeme tady.</span>`;
-      try{ card.setAttribute("data-iu-silver-wx-phase", "loading"); }catch{}
+      try{
+        card.setAttribute("data-iu-silver-wx-phase", "loading");
+        iuSilverWeatherSyncLayoutAttr("loading");
+      }catch{}
     }
 
     function iuSilverWeatherRenderFirstVisit(){
@@ -6230,6 +6243,7 @@ function buildVideoAsArticleCard(it) {
         if (actionsFirst) actionsFirst.hidden = false;
         if (btnGeo) btnGeo.hidden = false;
         if (btnCity) btnCity.hidden = false;
+        iuSilverWeatherSyncLayoutAttr("firstVisit");
       }catch{}
     }
 
@@ -6244,6 +6258,7 @@ function buildVideoAsArticleCard(it) {
         if (actionsFirst) actionsFirst.hidden = false;
         if (btnGeo) btnGeo.hidden = true;
         if (btnCity) btnCity.hidden = false;
+        iuSilverWeatherSyncLayoutAttr("denied");
       }catch{}
     }
 
