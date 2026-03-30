@@ -15505,6 +15505,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
   #iuSilverWelcomeCard .iu-nameday-cta{
     margin-top: 14px;
+    width: calc(100% - 44px);
+    margin-left: 44px;
+    margin-right: 0;
+    box-sizing: border-box;
+    justify-content: center;
   }
   .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > circle:nth-child(1) {
     fill: rgba(255, 255, 255, 0.12);
