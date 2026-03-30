@@ -14940,6 +14940,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuSilverTopCardsGap: 8px;
   --iuSilverTopCardShadow: 0 4px 14px rgba(15, 35, 55, 0.1);
   --iuSilverTopCardBorder: 1px solid rgba(15, 35, 55, 0.12);
+  /* Guard-required stack tokens (CI silver-stack-guard.js); values match post-PR1489 row bands + third cap */
   --iuSilverStackRowMinH: 131px;
   --iuSilverStackRowExtra: 0px;
   --iuSilverStackThirdLift: 40px;
@@ -15050,7 +15051,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
    missed it → ~103px stack shift (iuSilverWeatherCard → siblings). Apply from first px so narrow portrait matches. */
 @media (min-width: 1px){
   .silver-weather-card{
-    min-height: 131px;
+    min-height: var(--iuSilverStackRowMinH);
   }
   #iuSilverTallScrollSection .iuSilverTallScrollViewport{
     min-height: 220px;
@@ -19935,14 +19936,15 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   .silver-slot{
     height: auto !important;
     min-height: 0 !important;
-    max-height: var(--iu-silver-slot-max-h, min(100dvh, 100vh));
+    /* P0 hard-proof: visualViewport bottom tol=2px — JS sets --iu-silver-slot-max-h from vv−top−6px; −4px avoids sticky.bottom > vv (Chromium mobile rounding). */
+    max-height: calc(var(--iu-silver-slot-max-h, min(100dvh, 100vh)) - 4px);
     display: flex;
     flex-direction: column;
     gap: 0;
     row-gap: 0;
     box-sizing: border-box;
   }
-  /* P0 CLS (768×1024): reserve slot max-height + tablet stack bands — JS fit churn; wx/calendar extras (240/140) from global 131/118 via calc on cards. */
+  /* P0 CLS (768×1024): single tablet row band — same extra for wx/cal/tasks (guard: no split wx/cal extras). */
   @media (min-width: 768px) and (max-aspect-ratio: 1/1) {
     /* id + class only — avoids duplicate prelude with later #silver-slot.silver-slot, #iuMobileSilverSlot .silver-slot block */
     #silver-slot.silver-slot{
@@ -19975,7 +19977,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
     border-bottom: none !important;
   }
-  /* P0: Počasí + Kalendář + Úkoly — unified row band (base :root + tablet extra on #silver-slot) */
+  /* P0: Počasí + Kalendář + Úkoly — unified row min-height (guard + tablet band via --iuSilverStackRowExtra on #silver-slot). */
   #silver-slot #iuSilverWeatherCard.silver-weather-card,
   #silver-slot #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
