@@ -14943,7 +14943,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   /* Guard-required stack tokens (CI silver-stack-guard.js); row bands + third lift (dominance vs weather/calendar/tasks — no CSS viewport height on third box; slot cap = JS visualViewport → --iu-silver-slot-max-h) */
   --iuSilverStackRowMinH: 131px;
   --iuSilverStackRowExtra: 0px;
-  --iuSilverStackThirdLift: 40px;
+  /* 131 + 105 = 236px @ mobile extra=0 — covers proof minThirdPx on mobileShort (220) and mobileTall (236); not svh/vh. */
+  --iuSilverStackThirdLift: 105px;
   --iuSilverStackThirdMinH: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px) + var(--iuSilverStackThirdLift));
 }
 
@@ -19928,6 +19929,8 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   .silver-slot{
     height: auto !important;
     min-height: 0 !important;
+    /* Rebind on slot so --iuSilverStackRowExtra (tablet band) flows into third min — same formula as :root, no viewport units. */
+    --iuSilverStackThirdMinH: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px) + var(--iuSilverStackThirdLift));
     /* Single source of truth: app.js sets --iu-silver-slot-max-h from visualViewport; −4px avoids sticky.bottom > vv (Chromium mobile rounding). */
     max-height: calc(var(--iu-silver-slot-max-h) - 4px);
     display: flex;
@@ -20000,7 +20003,8 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
   #silver-slot #iuSilverTallScrollSection{
     flex: 1 1 auto;
-    min-height: 0;
+    /* Stack-token floor (row band + third lift): stops flex-column collapse to padding-only; not svh/vh — JS still owns slot max-height. */
+    min-height: var(--iuSilverStackThirdMinH);
     overflow: hidden;
     display: flex;
     flex-direction: column;

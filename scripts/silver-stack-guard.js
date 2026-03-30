@@ -42,7 +42,11 @@ if (!/--iuSilverStackThirdLift\s*:\s*\d+px\b/.test(css)) {
 }
 
 if (!/--iuSilverStackThirdMinH\s*:\s*calc\(var\(--iuSilverStackRowMinH\)/.test(css)) {
-  fail("❌ Missing --iuSilverStackThirdMinH calc on #silver-slot (tall scroll section height model)");
+  fail("❌ Missing --iuSilverStackThirdMinH calc (tall scroll section min height model)");
+}
+
+if (!/\.silver-slot\s*\{[\s\S]*?--iuSilverStackThirdMinH\s*:\s*calc\(var\(--iuSilverStackRowMinH\)/.test(css)) {
+  fail("❌ .silver-slot must rebind --iuSilverStackThirdMinH with row extra (tablet band)");
 }
 
 if (!/#silver-slot\s+#iuSilverTallScrollViewport[\s\S]*?min-height:\s*0\b/.test(css)) {
@@ -57,8 +61,8 @@ if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?flex:\s*1\s+1\s+auto
   fail("❌ #silver-slot #iuSilverTallScrollSection must use flex: 1 1 auto (JS-driven stack; no CSS viewport height)");
 }
 
-if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*0\b/.test(css)) {
-  fail("❌ #silver-slot #iuSilverTallScrollSection must use min-height: 0 (flex shrink + inner scroll)");
+if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*var\(--iuSilverStackThirdMinH\)/.test(css)) {
+  fail("❌ #silver-slot #iuSilverTallScrollSection must use min-height: var(--iuSilverStackThirdMinH) (stack-token floor; no viewport height)");
 }
 
 if (!/#silver-slot\s+#iuSilverWelcomeStack\s*\{[\s\S]*?height:\s*100%/.test(css)) {

@@ -12539,6 +12539,8 @@ function buildVideoAsArticleCard(it) {
     try { initRightPanel(); } catch (e) { console.error("RightPanel init failed", e); if (typeof persistLastError === "function") persistLastError("RightPanel init failed"); }
 
     try{ iuSilverWelcomeInit(); }catch{}
+    /* P0: measure slot max-h once welcome DOM settled — before listeners-only init reduces first paint vs late reflow (CLS). */
+    try{ iuSilverMobileStackFitApply(); }catch{}
     try{ iuSilverMobileStackFitInit(); }catch{}
     try{ iuSilverCalendarSummaryInit(); }catch{}
     try{ iuSilverTasksSummaryInit(); }catch{}
