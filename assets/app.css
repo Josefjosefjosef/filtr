@@ -15810,14 +15810,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 }
 
-/* Outer composer chrome: splývá se slot gradientem (#silver-slot); zvýraznění jen bílý input + zelený send */
-#silver-slot[data-iu-silver-welcome-variant="morning"] .silver-shell--stackConnected .iuSilverStackChromaFrame.iuSilverHomeInputWrap,
-#silver-slot[data-iu-silver-welcome-variant="lateMorning"] .silver-shell--stackConnected .iuSilverStackChromaFrame.iuSilverHomeInputWrap,
-#silver-slot[data-iu-silver-welcome-variant="afternoon"] .silver-shell--stackConnected .iuSilverStackChromaFrame.iuSilverHomeInputWrap,
-#silver-slot[data-iu-silver-welcome-variant="evening"] .silver-shell--stackConnected .iuSilverStackChromaFrame.iuSilverHomeInputWrap{
-  border-width: 0 !important;
-  border-style: solid !important;
-  border-color: transparent !important;
+#silver-slot .silver-shell--stackConnected .iuSilverStackChromaFrame.iuSilverHomeInputWrap{
+  border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
 }
@@ -15852,7 +15846,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   border: 2px solid #7A5C48; 
   background: rgba(255,255,255,0.85);
 }
-/* Silver stack: outer wrap splývá se slotem — ne hnědý legacy rám */
 #silver-slot.silver-slot .silver-shell--stackConnected .silver-inputWrap.iuSilverHomeInputWrap{
   border: none !important;
   background: transparent !important;
@@ -15889,7 +15882,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   font-size: max(16px, 1em);
   -webkit-text-size-adjust: 100%;
 }
-/* Bílý vnitřek pole — všechny varianty; čitelný text na bílé ploše */
 #silver-slot .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput,
 #iuMobileSilverSlot #silver-slot .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput{
   background: #ffffff !important;
@@ -20128,7 +20120,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     border-width: 0 !important;
     border-color: transparent !important;
   }
-  /* P0 Mobile/tablet: řádek vstup+send; bez inset panelu — zvýraznění jen bílý input (globální pravidlo výše) */
   #silver-slot .iuSilverHomeInputRow.iuSilverHomeComposerShell,
   #iuMobileSilverSlot #silver-slot .iuSilverHomeInputRow.iuSilverHomeComposerShell{
     gap: 0 !important;
@@ -20162,10 +20153,12 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     align-self: stretch !important;
     box-shadow: none !important;
   }
-  #silver-slot[data-iu-silver-welcome-variant="evening"] #iuMobileGateTabs.iu-mobileGateTabs{
+  #silver-slot #iuMobileGateTabs.iu-mobileGateTabs{
     padding: 8px 0 0 0 !important;
     gap: 8px !important;
     background: transparent !important;
+  }
+  #silver-slot[data-iu-silver-welcome-variant="evening"] #iuMobileGateTabs.iu-mobileGateTabs{
     border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
   }
   #silver-slot[data-iu-silver-welcome-variant="evening"] #iuMobileGateTabs .iu-mobileGateTab{
@@ -20182,9 +20175,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     box-shadow: none !important;
   }
   #silver-slot:not([data-iu-silver-welcome-variant="evening"]) #iuMobileGateTabs.iu-mobileGateTabs{
-    padding: 8px 0 0 0 !important;
-    gap: 8px !important;
-    background: transparent !important;
     border-top: 1px solid rgba(15, 35, 55, 0.1) !important;
   }
   #silver-slot:not([data-iu-silver-welcome-variant="evening"]) #iuMobileGateTabs .iu-mobileGateTab{

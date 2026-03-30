@@ -139,13 +139,22 @@ async function runSmoke() {
       if (!urlChanged && !hasFocus) fail("Click did not change URL or focus");
     }
 
-    // Route persist test
+    // Route reset (home landing): startup strips section/panel/radarOpen — after reload URL must not keep ?section=
     await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
     await page.waitForTimeout(500);
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForTimeout(500);
     const finalUrl = page.url();
-    if (!finalUrl.includes("section=media")) fail(`Route reset: URL is ${finalUrl}`);
+    let u;
+    try {
+      u = new URL(finalUrl);
+    } catch (e) {
+      fail(`Route reset: invalid URL ${finalUrl}`);
+    }
+    if (!u.pathname.includes("/projects")) fail(`Route reset: expected /projects path, got ${finalUrl}`);
+    if (u.searchParams.has("section") || u.searchParams.has("panel") || u.searchParams.has("radarOpen")) {
+      fail(`Route reset: stripped nav params still present: ${finalUrl}`);
+    }
 
     await browser.close();
   } finally {
