@@ -9,7 +9,14 @@ import vm from "vm";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
-const SILVER = fs.readFileSync(path.join(ROOT, "assets", "iu-silver-p0.js"), "utf8");
+
+function readSilverEngineFromApp() {
+  const app = fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8");
+  const m = app.match(/\/\* IU_SILVER_P0_ENGINE_START \*\/([\s\S]*?)\/\* IU_SILVER_P0_ENGINE_END \*\//);
+  if (!m) throw new Error("IU_SILVER_P0_ENGINE_START/END markers missing in assets/app.js");
+  return m[1].trim();
+}
+const SILVER = readSilverEngineFromApp();
 
 const FIXED_NOW = "2026-03-27T12:00:00";
 

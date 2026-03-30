@@ -1,7 +1,7 @@
 /**
  * Hardened Silver prod proof (Playwright):
  * - CLS: observer after load + fonts.ready, buffered:false, reset sum before each step (avoids load harness noise).
- * - Save success: window.__iuSilverLastSaveResult.ok (set by iu-silver-p0.js on save).
+ * - Save success: window.__iuSilverLastSaveResult.ok (set by Silver bundle in assets/app.js on save).
  *
  * Usage: npm run silver-prod-proof
  * Env: SILVER_PROD_URL (default https://infouzel.cz/projects/)
@@ -195,7 +195,7 @@ async function main() {
   const htmlProbe = await page.evaluate(() => ({
     silverScript: Array.from(document.scripts)
       .map((s) => s.src)
-      .find((u) => u && u.includes("iu-silver-p0.js"))
+      .find((u) => u && u.includes("app.js"))
   }));
 
   const readResults = [];
