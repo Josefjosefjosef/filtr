@@ -18174,6 +18174,29 @@ function buildVideoAsArticleCard(it) {
   }
   try { window.iuSetPanelInUrl = setPanelInUrl; } catch {}
 
+  /** P0: při otevření / návratu (vč. BFCache) vždy hlavní stránka — odstraní ?section= / ?panel= / ?radarOpen= z URL (root cause: browser restore poslední URL). */
+  function iuStripProjectsNavParamsForHomeLanding(){
+    try{
+      if (typeof window.iuIsProjectsRoute !== "function" || !window.iuIsProjectsRoute()) return;
+      const u = new URL(location.href);
+      if (!u.search) return;
+      const keys = ["section", "panel", "radarOpen"];
+      let changed = false;
+      for (let i = 0; i < keys.length; i++){
+        const k = keys[i];
+        if (u.searchParams.has(k)){
+          u.searchParams.delete(k);
+          changed = true;
+        }
+      }
+      if (changed){
+        const q = u.searchParams.toString();
+        history.replaceState(null, "", u.pathname + (q ? "?" + q : "") + u.hash);
+      }
+    }catch(_){}
+  }
+  try { window.iuStripProjectsNavParamsForHomeLanding = iuStripProjectsNavParamsForHomeLanding; } catch(_){}
+
   function applySectionFromURL(accentOverride){
     if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
     // Gate C: ?section= has priority; when accentOverride (e.g. hex click) use it so URL is not changed
@@ -18592,6 +18615,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function initNavRouter(){
+    iuStripProjectsNavParamsForHomeLanding();
     const feedEl = document.getElementById('feed');
     const viewEl = document.getElementById('iuRadioView');
     try {
@@ -18666,6 +18690,17 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }
     window.addEventListener('popstate', onUrlChange);
     window.addEventListener('hashchange', onUrlChange);
+
+    try{
+      window.addEventListener("pageshow", function(ev){
+        if (!ev.persisted) return;
+        try{
+          iuStripProjectsNavParamsForHomeLanding();
+          applySectionFromURL();
+          applyPanelFromUrl();
+        }catch(_){}
+      });
+    }catch(_){}
 
     if (!feedEl || !viewEl) return;
 
