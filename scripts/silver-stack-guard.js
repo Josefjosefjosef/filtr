@@ -29,28 +29,16 @@ if (!/--iuSilverStackRowMinH\s*:\s*131px\b/.test(css) || !/--iuSilverStackRowExt
   fail("❌ Missing unified stack row tokens --iuSilverStackRowMinH / --iuSilverStackRowExtra");
 }
 
+if (/--iuSilverStackThird(MinH|Lift)\b/.test(css)) {
+  fail("❌ Forbidden --iuSilverStackThirdMinH / --iuSilverStackThirdLift (third box = flex + min-height:0 only)");
+}
+
 if (/--iu-tablet-wx-extra\b|--iu-tablet-cal-extra\b/.test(css)) {
   fail("❌ Split tablet wx/cal extras forbidden — use --iuSilverStackRowExtra on #silver-slot only");
 }
 
 if (!/calc\(var\(--iuSilverStackRowMinH\)\s*\+\s*var\(--iuSilverStackRowExtra/.test(css)) {
   fail("❌ Weather/calendar/tasks must share calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra");
-}
-
-if (!/--iuSilverStackThirdLift\s*:\s*\d+px\b/.test(css)) {
-  fail("❌ Missing --iuSilverStackThirdLift (third stack box must exceed row band)");
-}
-
-if (!/@media\s*\(\s*max-width:\s*900px\s*\)\s*and\s*\(\s*max-height:\s*720px\s*\)\s*\{[\s\S]*?--iuSilverStackThirdLift:\s*89px\b/.test(css)) {
-  fail("❌ Short portrait (max-height 720px) must set --iuSilverStackThirdLift: 89px for lower third floor");
-}
-
-if (!/--iuSilverStackThirdMinH\s*:\s*calc\(var\(--iuSilverStackRowMinH\)/.test(css)) {
-  fail("❌ Missing --iuSilverStackThirdMinH calc (tall scroll section min height model)");
-}
-
-if (!/\.silver-slot\s*\{[\s\S]*?--iuSilverStackThirdMinH\s*:\s*calc\(var\(--iuSilverStackRowMinH\)/.test(css)) {
-  fail("❌ .silver-slot must rebind --iuSilverStackThirdMinH with row extra (tablet band)");
 }
 
 if (!/#silver-slot\s+#iuSilverTallScrollViewport[\s\S]*?min-height:\s*0\b/.test(css)) {
@@ -61,12 +49,12 @@ if (!/#silver-slot\s+#iuSilverTallScrollViewport[\s\S]*?max-height:\s*none\b/.te
   fail("❌ #silver-slot #iuSilverTallScrollViewport must set max-height: none (override global .iuSilverTallScrollViewport 42vh cap)");
 }
 
-if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?flex:\s*1\s+1\s+auto\b/.test(css)) {
-  fail("❌ #silver-slot #iuSilverTallScrollSection must use flex: 1 1 auto (JS-driven stack; no CSS viewport height)");
+if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?flex:\s*1\s+0\s+auto\b/.test(css)) {
+  fail("❌ #silver-slot #iuSilverTallScrollSection must use flex: 1 0 auto (no shrink; no ThirdMinH token)");
 }
 
-if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*var\(--iuSilverStackThirdMinH\)/.test(css)) {
-  fail("❌ #silver-slot #iuSilverTallScrollSection must use min-height: var(--iuSilverStackThirdMinH) (stack-token floor; no viewport height)");
+if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*0\b/.test(css)) {
+  fail("❌ #silver-slot #iuSilverTallScrollSection must use min-height: 0 (flex child; no ThirdMinH floor)");
 }
 
 if (!/#silver-slot\s+#iuSilverWelcomeStack\s*\{[\s\S]*?height:\s*100%/.test(css)) {

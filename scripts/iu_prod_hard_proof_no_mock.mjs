@@ -345,18 +345,16 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
         /* Stop-ship: third box must be dominant, not merely "tallest within 1.5px". */
         const maxRow = Math.max(hWx, Math.max(hCal, hTasks));
         const dominanceMinDeltaPx = 40;
-        const dominanceMinThirdPx = Math.max(220, Math.round(vh * 0.28));
         silverThirdBoxDominance = {
           maxRowPx: r(maxRow),
           thirdPx: r(hTall),
           deltaPx: r(hTall - maxRow),
           minDeltaPx: dominanceMinDeltaPx,
-          minThirdPx: dominanceMinThirdPx,
+          minThirdPx: null,
           vhPx: r(vh),
         };
-        silverThirdBoxDominanceOk =
-          hTall + 1e-6 >= maxRow + dominanceMinDeltaPx &&
-          hTall + 1e-6 >= dominanceMinThirdPx;
+        /* Third box fills flex remainder — must clearly exceed small rows; no 220/vh floor (content-driven rows). */
+        silverThirdBoxDominanceOk = hTall + 1e-6 >= maxRow + dominanceMinDeltaPx;
 
         let overflow = 0;
         if (slot && slot.scrollHeight > slot.clientHeight + 1) {
