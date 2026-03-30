@@ -37,6 +37,44 @@ if (!/calc\(var\(--iuSilverStackRowMinH\)\s*\+\s*var\(--iuSilverStackRowExtra/.t
   fail("❌ Weather/calendar/tasks must share calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra");
 }
 
+if (!/--iuSilverStackThirdLift\s*:\s*\d+px\b/.test(css)) {
+  fail("❌ Missing --iuSilverStackThirdLift (third stack box must exceed row band)");
+}
+
+if (!/--iuSilverStackThirdMinH\s*:\s*calc\(var\(--iuSilverStackRowMinH\)/.test(css)) {
+  fail("❌ Missing --iuSilverStackThirdMinH calc on #silver-slot (tall scroll section height model)");
+}
+
+if (!/--iuSilverStackThirdEffective\b/.test(css)) {
+  fail("❌ Missing --iuSilverStackThirdEffective (viewport budget + third dominance)");
+}
+
+if (!/--iuSilverStackThirdBudgetReserve\b/.test(css)) {
+  fail("❌ Missing --iuSilverStackThirdBudgetReserve (stack budget vs 100dvh)");
+}
+
+if (!/--iuSilverStackThirdEffective:[\s\S]*?40svh[\s\S]*?100svh/.test(css)) {
+  fail(
+    "❌ --iuSilverStackThirdEffective must include 40svh + 100svh caps (cross-browser dvh/WKWebView safety)"
+  );
+}
+
+if (!/#silver-slot\s+#iuSilverTallScrollViewport[\s\S]*?min-height:\s*0\b/.test(css)) {
+  fail("❌ #silver-slot #iuSilverTallScrollViewport must use min-height: 0 (flex inner scroll; no content-driven min)");
+}
+
+if (!/#silver-slot\s+#iuSilverTallScrollViewport[\s\S]*?max-height:\s*none\b/.test(css)) {
+  fail("❌ #silver-slot #iuSilverTallScrollViewport must set max-height: none (override global .iuSilverTallScrollViewport 42vh cap)");
+}
+
+if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?height:\s*var\(--iuSilverStackThirdEffective\)/.test(css)) {
+  fail("❌ #iuSilverTallScrollSection must use height: var(--iuSilverStackThirdEffective) (hard cap)");
+}
+
+if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*var\(--iuSilverStackThirdEffective\)/.test(css)) {
+  fail("❌ #iuSilverTallScrollSection must use min-height: var(--iuSilverStackThirdEffective) in mobile stack");
+}
+
 const hiddenBlock = css.match(/\.silver-weather-actions\[hidden\]\s*\{([\s\S]*?)\}/);
 if (!hiddenBlock || !/display\s*:\s*none\b/.test(hiddenBlock[1])) {
   fail("❌ .silver-weather-actions[hidden] must use display: none (collapse, no reserved space)");
