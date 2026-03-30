@@ -5266,13 +5266,12 @@ function buildVideoAsArticleCard(it) {
       }catch(_){}
       var maxH = Math.floor(vh - top - pad - safeB);
       if (maxH < 120) maxH = 120;
+      /* Skip no-op updates: compare target to --iu-silver-slot-max-h (same space as setProperty). Old logic compared computed max-height (budget−4px from CSS) to maxH — systematic mismatch invited extra setProperty + layout thrash / flaky CLS on mobileTall. */
       try {
-        var mhStr = getComputedStyle(slot).maxHeight;
-        if (mhStr && mhStr.indexOf("px") !== -1) {
-          var curPx = parseFloat(mhStr);
-          if (!isNaN(curPx) && Math.abs(curPx - maxH) <= 28) {
-            return;
-          }
+        var vStr = getComputedStyle(slot).getPropertyValue("--iu-silver-slot-max-h").trim();
+        var vPx = vStr && vStr.endsWith("px") ? parseFloat(vStr) : NaN;
+        if (!isNaN(vPx) && Math.abs(vPx - maxH) <= 2) {
+          return;
         }
       } catch (_) {}
       slot.style.setProperty("--iu-silver-slot-max-h", maxH + "px");
