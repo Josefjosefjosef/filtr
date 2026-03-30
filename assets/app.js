@@ -5264,7 +5264,16 @@ function buildVideoAsArticleCard(it) {
       var vh = vv && typeof vv.height === "number" ? vv.height : window.innerHeight;
       var top = slot.getBoundingClientRect().top;
       var pad = 6;
-      var maxH = Math.floor(vh - top - pad);
+      /* Real device: reserve home-indicator / safe-area so slot max-height matches usable fold (proof: firstScreenVisibleBottomPx). */
+      var safeB = 0;
+      try{
+        var probe = document.createElement("div");
+        probe.style.cssText = "position:fixed;left:0;bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none;z-index:-1;";
+        document.body.appendChild(probe);
+        safeB = parseFloat(getComputedStyle(probe).paddingBottom) || 0;
+        document.body.removeChild(probe);
+      }catch(_){}
+      var maxH = Math.floor(vh - top - pad - safeB);
       if (maxH < 120) maxH = 120;
       try {
         var mhStr = getComputedStyle(slot).maxHeight;
