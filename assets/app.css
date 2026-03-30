@@ -14940,20 +14940,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuSilverTopCardsGap: 8px;
   --iuSilverTopCardShadow: 0 4px 14px rgba(15, 35, 55, 0.1);
   --iuSilverTopCardBorder: 1px solid rgba(15, 35, 55, 0.12);
-  /* Guard-required stack tokens (CI silver-stack-guard.js); row bands + third lift (dominance vs weather/calendar/tasks — no CSS viewport height on third box; slot cap = JS visualViewport → --iu-silver-slot-max-h) */
-  --iuSilverStackRowMinH: 131px;
-  --iuSilverStackRowExtra: 0px;
-  /* Default 131+105=236 @ mobile extra=0 — taller portrait / tablet need proof minThirdPx up to 287; not svh/vh on #iuSilverTallScrollSection. */
-  --iuSilverStackThirdLift: 105px;
-  --iuSilverStackThirdMinH: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px) + var(--iuSilverStackThirdLift));
-}
-
-/* Shorter portrait: lift override on #silver-slot only — prelude unique for CSS_DEBT_GUARD (no extra :root / .silver-slot duplicate group). */
-@media (max-width: 900px) and (max-height: 720px){
-  #iuSilverTopCardsStack #silver-slot.silver-slot,
-  #iuMobileGateWrap #iuMobileSilverSlot #silver-slot.silver-slot{
-    --iuSilverStackThirdLift: 89px;
-  }
 }
 
 .iuSilverTopCardsStack{
@@ -15051,18 +15037,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
-/* P0 CLS: reserve weather + tall viewport height before wx hydration. Was (min-width:769px) only — 390/768
-   missed it → ~103px stack shift (iuSilverWeatherCard → siblings). Apply from first px so narrow portrait matches. */
-@media (min-width: 1px){
-  .silver-weather-card{
-    min-height: var(--iuSilverStackRowMinH);
-  }
-  /* Third viewport height comes from flex + #iuSilverTallScrollSection budget (no fixed 220px min here — avoids fighting mobile stack model) */
-  #iuSilverTallScrollSection .iuSilverTallScrollViewport{
-    min-height: 0;
-  }
-}
-
 /* P0 Mobile/tablet: inner scroll probe spacer — outer tall height z flex + --iu-silver-slot-max-h (app.js) */
 @media (max-width: 900px){
   .iuSilverTallScrollLayoutSpacer{
@@ -15072,8 +15046,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     padding: 4px !important;
   }
   .iuSilverTallScrollSection{
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
   }
 }
 
@@ -15353,7 +15327,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 
 @media (max-width: 900px){
   #silver-slot .silver-calendar-summary-row.silver-calendar-summary-row--1{
-    min-height: 48px;
+    min-height: 0;
   }
   .silver-calendar-summary-line2block{
     flex-direction: column;
@@ -19935,24 +19909,16 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-width: 100%;
   }
   .silver-slot{
-    height: auto !important;
-    min-height: 0 !important;
-    /* Rebind on slot so --iuSilverStackRowExtra (tablet band) flows into third min — same formula as :root, no viewport units. */
-    --iuSilverStackThirdMinH: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px) + var(--iuSilverStackThirdLift));
+    /* min = max = slot budget → konečná výška sloupce pro flex (třetí box roste bez ThirdMinH tokenu) */
+    min-height: calc(var(--iu-silver-slot-max-h) - 4px) !important;
     /* Single source of truth: app.js sets --iu-silver-slot-max-h from visualViewport; −4px avoids sticky.bottom > vv (Chromium mobile rounding). */
     max-height: calc(var(--iu-silver-slot-max-h) - 4px);
+    height: auto !important;
     display: flex;
     flex-direction: column;
     gap: 0;
     row-gap: 0;
     box-sizing: border-box;
-  }
-  /* P0 CLS (768×1024): single tablet row band — same extra for wx/cal/tasks (guard: no split wx/cal extras). Slot max-height = JS --iu-silver-slot-max-h only. */
-  @media (min-width: 768px) and (max-aspect-ratio: 1/1) {
-    /* id + class only — avoids duplicate prelude with later #silver-slot.silver-slot, #iuMobileSilverSlot .silver-slot block */
-    #silver-slot.silver-slot{
-      --iuSilverStackRowExtra: 109px;
-    }
   }
   #iuMobileGateWrap #iuMobileSilverSlot,
   #iuMobileSilverSlot.iu-mobileSilverSlot{
@@ -19980,25 +19946,48 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
     border-bottom: none !important;
   }
-  /* P0: Počasí + Kalendář + Úkoly — unified row min-height (guard + tablet band via --iuSilverStackRowExtra on #silver-slot). */
+  /* CLS: stabilní první paint uvítacího bloku (bez změny obsahu — jen em rezerva) */
+  #silver-slot #iuSilverWelcomeCard.iuSilverWelcomeCard{
+    min-height: 7rem !important;
+  }
+  /* Počasí / Kalendář / Úkoly — jen výška obsahu (2 řádky), malý padding; žádný RowMinH token */
   #silver-slot #iuSilverWeatherCard.silver-weather-card,
   #silver-slot #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     flex: 0 0 auto !important;
     flex-shrink: 0 !important;
     align-self: stretch !important;
-    min-height: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px)) !important;
     height: auto !important;
+    min-height: unset !important;
+    max-height: none !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
     box-sizing: border-box;
+  }
+  #silver-slot .silver-weather-line1,
+  #silver-slot .silver-weather-line2{
+    min-height: 1.28em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #silver-slot .silver-calendar-summary-row.silver-calendar-summary-row--1,
+  #silver-slot .silver-calendar-summary-line2main{
+    min-height: 1.28em;
+  }
+  #silver-slot .silver-calendar-summary-text{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   #silver-slot #iuSilverWelcomeStack > .silver-welcome-stack__separator{
     flex: 0 0 auto !important;
     flex-shrink: 0 !important;
   }
-  /* P0 CLS (768×1024): first paint had min-height 0 → inline script bumped to 141px → layout shift. Reserve in CSS. */
+  /* Silver: jen input + 2 tlačítka — bez fixního min-height px */
   #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
     flex: 0 0 auto !important;
-    min-height: 141px !important;
+    min-height: 0 !important;
     height: auto !important;
     align-self: stretch !important;
   }
@@ -20009,23 +19998,23 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-height: 1px !important;
     margin: 0 !important;
   }
+  /* Jediný pružný sloupec: basis 0 + grow/shrink = skutečný zbytek po ostatních (scroll uvnitř viewportu) */
   #silver-slot #iuSilverTallScrollSection{
-    flex: 1 1 auto;
-    /* Stack-token floor (row band + third lift): stops flex-column collapse to padding-only; not svh/vh — JS still owns slot max-height. */
-    min-height: var(--iuSilverStackThirdMinH);
+    flex: 1 1 0;
+    min-height: 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
   #silver-slot .iuSilverTallScrollChromaFrame{
-    flex: 1 1 auto;
+    flex: 1 1 0;
     min-height: 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
   #silver-slot #iuSilverTallScrollViewport{
-    flex: 1 1 auto;
+    flex: 1 1 0;
     min-height: 0 !important;
     max-height: none !important;
     overflow-x: hidden;
@@ -20164,6 +20153,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #iuMobileSilverSlot .silver-slot,
   .silver-slot{
     max-height: none !important;
+    height: auto !important;
   }
   #silver-slot .iuSilverWelcomeSticky,
   #iuMobileSilverSlot #silver-slot .iuSilverWelcomeSticky{
@@ -20176,17 +20166,17 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     overflow: visible !important;
   }
   #silver-slot #iuSilverTallScrollSection{
-    flex: 0 0 auto !important;
+    flex: 1 1 0 !important;
     min-height: 0 !important;
-    max-height: 320px !important;
+    max-height: none !important;
   }
   #silver-slot .iuSilverTallScrollChromaFrame{
-    flex: 0 1 auto !important;
+    flex: 1 1 0 !important;
     min-height: 0 !important;
   }
   #silver-slot #iuSilverTallScrollViewport{
-    flex: 0 1 auto !important;
-    min-height: 48px !important;
-    max-height: 280px !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    max-height: none !important;
   }
 }

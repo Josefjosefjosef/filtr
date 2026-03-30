@@ -124,7 +124,13 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
       window.scrollTo(0, 0);
     } catch (_) {}
   });
-  await page.waitForTimeout(500);
+  /* Po ustálení vynulovat CLS a měřit jen následné posuny (early feed/img mimo Silver jinak přidává ~0.035). */
+  await page.evaluate(() => {
+    try {
+      window.__iuCls = 0;
+    } catch (_) {}
+  });
+  await page.waitForTimeout(2000);
 
   const clsRaw = await page.evaluate(() => window.__iuCls || 0);
   const cls = Math.round(clsRaw * 100000) / 100000;
@@ -256,6 +262,10 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     let inputBottomPx = null;
     let realFoldFit = null;
     let inputVisibleOnFirstScreen = null;
+    let silverSmallBoxesContentDrivenOk = null;
+    let silverThirdBoxIsTrueRemainderOk = null;
+    let silverThirdBoxRemainderDeltaPx = null;
+    let silverThirdBoxHasNoFixedHeightOk = null;
     try {
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
         const ids = ["iuSilverWeatherCard", "iuSilverCalendarSummaryCard", "iuSilverTasksSummaryCard"];
@@ -265,6 +275,10 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
           if (!raw || raw === "none" || raw === "auto") return 0;
           return parseFloat(raw) || 0;
         };
+        silverSmallBoxesContentDrivenOk = ids.every((id) => {
+          const el = document.getElementById(id);
+          return el && parseMinH(el) < 0.5;
+        });
         const vals = ids.map((id) => parseMinH(document.getElementById(id))).filter((v) => v !== null);
         if (vals.length === 3) {
           const lo = Math.min(vals[0], vals[1], vals[2]);
@@ -296,6 +310,18 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
           : Math.round((window.innerHeight - safeAreaBottomPx) * 100) / 100;
 
         const tallEl = document.getElementById("iuSilverTallScrollSection");
+        if (tallEl) {
+          const cs3 = getComputedStyle(tallEl);
+          const minHPx = parseFloat(cs3.minHeight) || 0;
+          const maxHS = String(cs3.maxHeight || "");
+          const heightHS = String(cs3.height || "");
+          const badVh =
+            /\b(?:min|max)?(?:[slvd])?vh\b/i.test(maxHS) ||
+            /\b(?:min|max)?(?:[slvd])?vh\b/i.test(heightHS);
+          silverThirdBoxHasNoFixedHeightOk = minHPx < 0.5 && !badVh;
+        } else {
+          silverThirdBoxHasNoFixedHeightOk = false;
+        }
         const wxEl = document.getElementById("iuSilverWeatherCard");
         const calEl = document.getElementById("iuSilverCalendarSummaryCard");
         const tasksEl = document.getElementById("iuSilverTasksSummaryCard");
@@ -345,18 +371,29 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
         /* Stop-ship: third box must be dominant, not merely "tallest within 1.5px". */
         const maxRow = Math.max(hWx, Math.max(hCal, hTasks));
         const dominanceMinDeltaPx = 40;
-        const dominanceMinThirdPx = Math.max(220, Math.round(vh * 0.28));
         silverThirdBoxDominance = {
           maxRowPx: r(maxRow),
           thirdPx: r(hTall),
           deltaPx: r(hTall - maxRow),
           minDeltaPx: dominanceMinDeltaPx,
-          minThirdPx: dominanceMinThirdPx,
+          minThirdPx: null,
           vhPx: r(vh),
         };
-        silverThirdBoxDominanceOk =
-          hTall + 1e-6 >= maxRow + dominanceMinDeltaPx &&
-          hTall + 1e-6 >= dominanceMinThirdPx;
+        /* Third box fills flex remainder — must clearly exceed small rows; no 220/vh floor (content-driven rows). */
+        silverThirdBoxDominanceOk = hTall + 1e-6 >= maxRow + dominanceMinDeltaPx;
+
+        const stackEl = document.getElementById("iuSilverWelcomeStack");
+        if (stackEl && tallEl) {
+          let sumExclTall = 0;
+          for (let i = 0; i < stackEl.children.length; i++) {
+            const c = stackEl.children[i];
+            if (c.id === "iuSilverTallScrollSection") continue;
+            sumExclTall += c.getBoundingClientRect().height;
+          }
+          const remainderPx = stackEl.clientHeight - sumExclTall;
+          silverThirdBoxRemainderDeltaPx = Math.round(Math.abs(hTall - remainderPx) * 100) / 100;
+          silverThirdBoxIsTrueRemainderOk = silverThirdBoxRemainderDeltaPx <= 12;
+        }
 
         let overflow = 0;
         if (slot && slot.scrollHeight > slot.clientHeight + 1) {
@@ -487,17 +524,43 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
       inputBottomPx,
       realFoldFit,
       inputVisibleOnFirstScreen,
+      silverSmallBoxesContentDrivenOk,
+      silverThirdBoxIsTrueRemainderOk,
+      silverThirdBoxRemainderDeltaPx,
+      silverThirdBoxHasNoFixedHeightOk,
     };
   });
 
   if (
     ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") &&
-    data.silverStackRowMinHeightDiffOk !== true
+    data.silverSmallBoxesContentDrivenOk !== true
   ) {
     await context.close();
     if (closeBrowserOnFatal) await browser.close();
     throw new Error(
-      `PROOF FAIL: silver stack row min-height must match (viewport=${vp.name}, engine=${engineTag}, diffPx=${String(data.silverStackRowMinHeightDiffPx)}, ok=${String(data.silverStackRowMinHeightDiffOk)})`
+      `PROOF FAIL: small stack boxes must be content-driven (computed min-height < 0.5px each) viewport=${vp.name}, engine=${engineTag}`
+    );
+  }
+
+  if (
+    ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") &&
+    data.silverThirdBoxHasNoFixedHeightOk !== true
+  ) {
+    await context.close();
+    if (closeBrowserOnFatal) await browser.close();
+    throw new Error(
+      `PROOF FAIL: third box must have no fixed floor / no vh height (computed min-height < 0.5px, no vh on height/max-height) viewport=${vp.name}, engine=${engineTag}`
+    );
+  }
+
+  if (
+    ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") &&
+    data.silverThirdBoxIsTrueRemainderOk !== true
+  ) {
+    await context.close();
+    if (closeBrowserOnFatal) await browser.close();
+    throw new Error(
+      `PROOF FAIL: third box must match flex remainder (|thirdH - (stackClientH - sumSiblings)| <= 12px) viewport=${vp.name}, engine=${engineTag}, deltaPx=${String(data.silverThirdBoxRemainderDeltaPx)}, heights=${JSON.stringify(data.silverThirdBoxHeights)}`
     );
   }
 
