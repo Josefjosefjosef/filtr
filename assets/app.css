@@ -14945,7 +14945,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuSilverStackRowExtra: 0px;
   --iuSilverStackThirdLift: 40px;
   --iuSilverStackThirdMinH: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px) + var(--iuSilverStackThirdLift));
-  --iuSilverStackThirdBudgetReserve: calc((var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px)) * 3 + 141px);
+  /* Reserve for welcome + separators + input shell (not in legacy 3×row+141); −91px → 100svh−R ≈ 221px @ short portrait so WebKit subpixel rounding still clears dominance minThirdPx=220 */
+  --iuSilverStackThirdBudgetReserve: calc((var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px)) * 3 + 141px - 91px);
   --iuSilverStackThirdEffective: min(
     max(var(--iuSilverStackThirdMinH), 40svh),
     max(0px, calc(100svh - var(--iuSilverStackThirdBudgetReserve)))
@@ -15053,12 +15054,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   .silver-weather-card{
     min-height: var(--iuSilverStackRowMinH);
   }
+  /* Third viewport height comes from flex + #iuSilverTallScrollSection budget (no fixed 220px min here — avoids fighting mobile stack model) */
   #iuSilverTallScrollSection .iuSilverTallScrollViewport{
-    min-height: 220px;
-  }
-  #iuSilverWelcomeStack:has(#iuSilverWeatherCard[data-iu-silver-wx-phase="firstVisit"]) .iuSilverTallScrollViewport,
-  #iuSilverWelcomeStack:has(#iuSilverWeatherCard[data-iu-silver-wx-phase="denied"]) .iuSilverTallScrollViewport{
-    min-height: 200px;
+    min-height: 0;
   }
 }
 
@@ -20013,13 +20011,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     overflow: hidden;
     display: flex;
     flex-direction: column;
-  }
-  /* P0 truthful mobileShort: E_third_only_raise_minH — +.silver-slot prelude keeps selector ≠ #silver-slot #iuSilverTallScrollSection (css_debt_guard duplicate_occurrences baseline). */
-  @media (max-height: 700px) and (orientation: portrait){
-    #silver-slot.silver-slot #iuSilverTallScrollSection{
-      min-height: 220px !important;
-      height: 220px !important;
-    }
   }
   #silver-slot .iuSilverTallScrollChromaFrame{
     flex: 1 1 auto;
