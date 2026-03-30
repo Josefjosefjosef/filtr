@@ -223,6 +223,14 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     let vvVsInnerDeltaPx = null;
     let thirdBoxComputedCapIsStable = null;
     let edgeSafariViewportDeltaHandled = null;
+    let thirdBoxHeight = null;
+    let thirdBoxSectionScrollHeight = null;
+    let thirdBoxSectionClientHeight = null;
+    let thirdBoxViewportScrollHeight = null;
+    let thirdBoxViewportClientHeight = null;
+    let thirdBoxViewportOverflowActive = null;
+    let thirdBoxNotGrowingWithContent = null;
+    let thirdBoxContentOverflowHandled = null;
     try {
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
         const ids = ["iuSilverWeatherCard", "iuSilverCalendarSummaryCard", "iuSilverTasksSummaryCard"];
@@ -303,6 +311,21 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
           silverSlotThirdEffectivePx >= 120 &&
           silverSlotThirdEffectivePx <= 580;
         edgeSafariViewportDeltaHandled = thirdBoxComputedCapIsStable === true;
+        const vpScroll = document.getElementById("iuSilverTallScrollViewport");
+        if (tallEl && vpScroll) {
+          thirdBoxHeight = r(tallEl.getBoundingClientRect().height);
+          thirdBoxSectionScrollHeight = tallEl.scrollHeight;
+          thirdBoxSectionClientHeight = tallEl.clientHeight;
+          thirdBoxViewportScrollHeight = vpScroll.scrollHeight;
+          thirdBoxViewportClientHeight = vpScroll.clientHeight;
+          thirdBoxViewportOverflowActive = vpScroll.scrollHeight > vpScroll.clientHeight + 1;
+          thirdBoxContentOverflowHandled = thirdBoxViewportOverflowActive;
+          const effPx = silverSlotThirdEffectivePx;
+          thirdBoxNotGrowingWithContent =
+            effPx !== null &&
+            Math.abs(tallEl.getBoundingClientRect().height - effPx) <= 2 &&
+            tallEl.scrollHeight <= tallEl.clientHeight + 2;
+        }
       }
     } catch (_) {}
 
@@ -350,6 +373,14 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
       vvVsInnerDeltaPx,
       thirdBoxComputedCapIsStable,
       edgeSafariViewportDeltaHandled,
+      thirdBoxHeight,
+      thirdBoxSectionScrollHeight,
+      thirdBoxSectionClientHeight,
+      thirdBoxViewportScrollHeight,
+      thirdBoxViewportClientHeight,
+      thirdBoxViewportOverflowActive,
+      thirdBoxContentOverflowHandled,
+      thirdBoxNotGrowingWithContent,
     };
   });
 
@@ -394,6 +425,20 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     if (closeBrowserOnFatal) await browser.close();
     throw new Error(
       `PROOF FAIL: thirdBoxComputedCapIsStable (computed --iuSilverStackThirdEffective) viewport=${vp.name}, engine=${engineTag}, px=${String(data.silverSlotThirdEffectivePx)}`
+    );
+  }
+
+  if ((vp.name === "mobile" || vp.name === "tablet") && data.thirdBoxNotGrowingWithContent !== true) {
+    await context.close();
+    if (closeBrowserOnFatal) await browser.close();
+    throw new Error(
+      `PROOF FAIL: third box must not grow with content (section scrollHeight/clientHeight vs effective) viewport=${vp.name}, engine=${engineTag}, ` +
+        JSON.stringify({
+          thirdBoxHeight: data.thirdBoxHeight,
+          thirdBoxSectionScrollHeight: data.thirdBoxSectionScrollHeight,
+          thirdBoxSectionClientHeight: data.thirdBoxSectionClientHeight,
+          silverSlotThirdEffectivePx: data.silverSlotThirdEffectivePx,
+        })
     );
   }
 

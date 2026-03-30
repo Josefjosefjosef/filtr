@@ -20015,13 +20015,15 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-height: 1px !important;
     margin: 0 !important;
   }
+  /* P0: fixed band — never content-driven height; scroll lives in #iuSilverTallScrollViewport only */
   #silver-slot #iuSilverTallScrollSection{
-    flex: 0 1 auto !important;
+    flex: 0 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: var(--iuSilverStackThirdEffective) !important;
     min-height: var(--iuSilverStackThirdEffective) !important;
     max-height: var(--iuSilverStackThirdEffective) !important;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    overflow: hidden !important;
   }
   #silver-slot .iuSilverTallScrollChromaFrame{
     flex: 1 1 auto;
@@ -20030,18 +20032,13 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     display: flex;
     flex-direction: column;
   }
-  /* Inner scroll: follow capped third segment; limit flex growth vs global 42vh/.iuSilverTallScrollViewport */
+  /* Inner scroll: min-height:0 + flex lets WebKit/Edge clip; override global .iuSilverTallScrollViewport 42vh/180px caps */
   #silver-slot #iuSilverTallScrollViewport{
-    flex: 1 1 auto;
-    min-height: max(48px, calc(var(--iuSilverStackThirdEffective) - 52px)) !important;
-    max-height: min(
-      calc(var(--iuSilverStackThirdEffective) - 28px),
-      34svh,
-      34dvh,
-      280px
-    ) !important;
-    overflow-x: hidden;
-    overflow-y: auto;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
   }
   /* Full-width Silver: žádný shell inset — stejná horizontální logika jako stack boxy (padding jen uvnitř chroma rámu) */
   #silver-slot.silver-slot,
@@ -20189,16 +20186,22 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
   #silver-slot #iuSilverTallScrollSection{
     flex: 0 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: min(var(--iuSilverStackThirdEffective, 200px), 52svh, 52vh, 320px) !important;
     min-height: min(var(--iuSilverStackThirdEffective, 200px), 52svh, 52vh, 320px) !important;
     max-height: min(52svh, 52vh, 320px) !important;
+    overflow: hidden !important;
   }
   #silver-slot .iuSilverTallScrollChromaFrame{
     flex: 0 1 auto !important;
     min-height: 0 !important;
   }
   #silver-slot #iuSilverTallScrollViewport{
-    flex: 0 1 auto !important;
-    min-height: min(max(48px, calc(var(--iuSilverStackThirdEffective, 200px) - 52px)), 46svh, 46vh, 280px) !important;
-    max-height: min(46svh, 46vh, 280px) !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
   }
 }

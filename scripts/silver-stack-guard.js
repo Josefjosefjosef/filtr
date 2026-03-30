@@ -59,8 +59,16 @@ if (!/--iuSilverStackThirdEffective:[\s\S]*?40svh[\s\S]*?100svh/.test(css)) {
   );
 }
 
-if (!/#iuSilverTallScrollViewport[\s\S]*?34svh[\s\S]*?34dvh/.test(css)) {
-  fail("❌ #iuSilverTallScrollViewport max-height must cap with 34svh + 34dvh (inner scroll vs Edge/Safari)");
+if (!/#silver-slot\s+#iuSilverTallScrollViewport[\s\S]*?min-height:\s*0\b/.test(css)) {
+  fail("❌ #silver-slot #iuSilverTallScrollViewport must use min-height: 0 (flex inner scroll; no content-driven min)");
+}
+
+if (!/#silver-slot\s+#iuSilverTallScrollViewport[\s\S]*?max-height:\s*none\b/.test(css)) {
+  fail("❌ #silver-slot #iuSilverTallScrollViewport must set max-height: none (override global .iuSilverTallScrollViewport 42vh cap)");
+}
+
+if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?height:\s*var\(--iuSilverStackThirdEffective\)/.test(css)) {
+  fail("❌ #iuSilverTallScrollSection must use height: var(--iuSilverStackThirdEffective) (hard cap)");
 }
 
 if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*var\(--iuSilverStackThirdEffective\)/.test(css)) {
