@@ -6,6 +6,15 @@
   "use strict";
 
   const PENDING_KEY = "iuSilver.pendingFirstMessage.v1";
+  const SILVER_HOME_INPUT_MAX = 150;
+
+  function clampSilverHomeInput(el) {
+    if (!el) return;
+    const v = String(el.value || "");
+    if (v.length > SILVER_HOME_INPUT_MAX) {
+      el.value = v.slice(0, SILVER_HOME_INPUT_MAX);
+    }
+  }
 
   function pad(n) {
     return String(n).padStart(2, "0");
@@ -2089,7 +2098,8 @@
   function handleHomeSubmit() {
     const input = document.getElementById("iuSilverHomeInput") || document.querySelector("#silver-slot .silver-input");
     if (!input) return;
-    const text = String(input.value || "").trim();
+    clampSilverHomeInput(input);
+    const text = String(input.value || "").trim().slice(0, SILVER_HOME_INPUT_MAX);
     if (!text) return;
     try {
       sessionStorage.setItem(PENDING_KEY, text);
@@ -2338,6 +2348,17 @@
       });
     }
     if (homeIn) {
+      try {
+        homeIn.setAttribute("maxlength", String(SILVER_HOME_INPUT_MAX));
+      } catch {}
+      homeIn.addEventListener("input", function () {
+        clampSilverHomeInput(homeIn);
+      });
+      homeIn.addEventListener("paste", function () {
+        setTimeout(function () {
+          clampSilverHomeInput(homeIn);
+        }, 0);
+      });
       homeIn.addEventListener("keydown", (e) => {
         if (e.key !== "Enter") return;
         e.preventDefault();

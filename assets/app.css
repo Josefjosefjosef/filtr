@@ -20112,6 +20112,72 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     box-sizing: border-box !important;
     box-shadow: none !important;
   }
+  /* P0 Mobile/tablet: jeden vizuální shell — vstup + send; levý okraj vstupu beze změny, rozšíření doprava (gap 0), stejný chroma stack jako boxy nad tím */
+  #silver-slot .iuSilverHomeInputRow.iuSilverHomeComposerShell,
+  #iuMobileSilverSlot #silver-slot .iuSilverHomeInputRow.iuSilverHomeComposerShell{
+    gap: 0 !important;
+    align-items: stretch !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    box-shadow: inset 0 0 0 1px rgba(15, 35, 55, 0.12) !important;
+  }
+  #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeInputRow.iuSilverHomeComposerShell,
+  #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeInputRow.iuSilverHomeComposerShell{
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14) !important;
+  }
+  #silver-slot .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput,
+  #iuMobileSilverSlot #silver-slot .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput{
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    height: 52px !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: rgba(255, 255, 255, 0.22) !important;
+    padding-left: 14px !important;
+    padding-right: 12px !important;
+    color: rgba(15, 35, 55, 0.95) !important;
+  }
+  #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput,
+  #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput{
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: rgba(240, 246, 255, 0.96) !important;
+  }
+  #silver-slot[data-iu-silver-welcome-variant="morning"] .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput,
+  #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="morning"] .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput{
+    background: rgba(255, 255, 255, 0.4) !important;
+  }
+  #silver-slot[data-iu-silver-welcome-variant="lateMorning"] .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput,
+  #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="lateMorning"] .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput{
+    background: rgba(255, 255, 255, 0.38) !important;
+  }
+  #silver-slot[data-iu-silver-welcome-variant="afternoon"] .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput,
+  #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="afternoon"] .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput{
+    background: rgba(255, 255, 255, 0.36) !important;
+  }
+  #silver-slot .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput::placeholder,
+  #iuMobileSilverSlot #silver-slot .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput::placeholder{
+    color: rgba(15, 35, 55, 0.45) !important;
+    opacity: 1 !important;
+  }
+  #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput::placeholder,
+  #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput::placeholder{
+    color: rgba(230, 238, 248, 0.42) !important;
+  }
+  #silver-slot .iuSilverHomeComposerShell .iuSilverHomeSend,
+  #iuMobileSilverSlot #silver-slot .iuSilverHomeComposerShell .iuSilverHomeSend{
+    flex: 0 0 auto !important;
+    width: 52px !important;
+    min-width: 52px !important;
+    height: 52px !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    align-self: stretch !important;
+    box-shadow: none !important;
+  }
   #silver-slot[data-iu-silver-welcome-variant="evening"] #iuMobileGateTabs.iu-mobileGateTabs{
     padding: 8px 0 0 0 !important;
     gap: 8px !important;
@@ -20119,13 +20185,17 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
   }
   #silver-slot[data-iu-silver-welcome-variant="evening"] #iuMobileGateTabs .iu-mobileGateTab{
-    background: rgba(255, 255, 255, 0.06) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: rgba(255, 255, 255, 0.92) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.24) !important;
+    color: rgba(255, 255, 255, 0.96) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
   }
   #silver-slot[data-iu-silver-welcome-variant="evening"] #iuMobileGateTabs .iu-mobileGateTab[aria-selected="true"]{
-    background: rgba(255, 255, 255, 0.12) !important;
-    border-color: rgba(255, 255, 255, 0.28) !important;
+    background: rgba(255, 255, 255, 0.14) !important;
+    border-color: rgba(255, 255, 255, 0.34) !important;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
   }
   #silver-slot:not([data-iu-silver-welcome-variant="evening"]) #iuMobileGateTabs.iu-mobileGateTabs{
     padding: 8px 0 0 0 !important;
@@ -20134,13 +20204,17 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     border-top: 1px solid rgba(15, 35, 55, 0.1) !important;
   }
   #silver-slot:not([data-iu-silver-welcome-variant="evening"]) #iuMobileGateTabs .iu-mobileGateTab{
-    background: rgba(255, 255, 255, 0.55) !important;
-    border: 1px solid rgba(15, 35, 55, 0.14) !important;
-    color: rgba(15, 35, 55, 0.92) !important;
+    background: rgba(255, 255, 255, 0.62) !important;
+    border: 1px solid rgba(15, 35, 55, 0.18) !important;
+    color: rgba(12, 28, 48, 0.96) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    box-shadow: 0 2px 10px rgba(15, 35, 55, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.65) !important;
   }
   #silver-slot:not([data-iu-silver-welcome-variant="evening"]) #iuMobileGateTabs .iu-mobileGateTab[aria-selected="true"]{
-    background: rgba(255, 255, 255, 0.75) !important;
-    border-color: rgba(15, 35, 55, 0.22) !important;
+    background: rgba(255, 255, 255, 0.82) !important;
+    border-color: rgba(15, 35, 55, 0.26) !important;
+    box-shadow: 0 2px 12px rgba(15, 35, 55, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
   }
   #silver-slot[data-iu-silver-welcome-variant="morning"]{
     background: linear-gradient(135deg, #fff5e8 0%, #ffe8cc 45%, #ffd8a8 100%);
