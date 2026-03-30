@@ -246,6 +246,16 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     let thirdBoxViewportOverflowActive = null;
     let thirdBoxNotGrowingWithContent = null;
     let thirdBoxContentOverflowHandled = null;
+    let layoutViewportHeightPx = null;
+    let visualViewportHeightPx = null;
+    let safeAreaBottomPx = null;
+    let firstScreenVisibleBottomPx = null;
+    let stackTopPx = null;
+    let stackBottomPx = null;
+    let inputTopPx = null;
+    let inputBottomPx = null;
+    let realFoldFit = null;
+    let inputVisibleOnFirstScreen = null;
     try {
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
         const ids = ["iuSilverWeatherCard", "iuSilverCalendarSummaryCard", "iuSilverTasksSummaryCard"];
@@ -262,6 +272,29 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
           silverStackRowMinHeightDiffPx = Math.round((hi - lo) * 100) / 100;
           silverStackRowMinHeightDiffOk = silverStackRowMinHeightDiffPx <= 1;
         }
+        const vv0 = window.visualViewport;
+        layoutViewportHeightPx = Math.round(window.innerHeight * 100) / 100;
+        visualViewportHeightPx =
+          vv0 && typeof vv0.height === "number"
+            ? Math.round(vv0.height * 100) / 100
+            : layoutViewportHeightPx;
+        const vvOffsetTopPx =
+          vv0 && typeof vv0.offsetTop === "number" ? Math.round(vv0.offsetTop * 100) / 100 : 0;
+        try {
+          const probe = document.createElement("div");
+          probe.setAttribute("data-iu-proof-safe-area", "1");
+          probe.style.cssText =
+            "position:fixed;left:0;bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none;z-index:-1;";
+          document.body.appendChild(probe);
+          safeAreaBottomPx = Math.round((parseFloat(getComputedStyle(probe).paddingBottom) || 0) * 100) / 100;
+          probe.remove();
+        } catch (_) {
+          safeAreaBottomPx = 0;
+        }
+        firstScreenVisibleBottomPx = vv0
+          ? Math.round((vvOffsetTopPx + vv0.height - safeAreaBottomPx) * 100) / 100
+          : Math.round((window.innerHeight - safeAreaBottomPx) * 100) / 100;
+
         const tallEl = document.getElementById("iuSilverTallScrollSection");
         const wxEl = document.getElementById("iuSilverWeatherCard");
         const calEl = document.getElementById("iuSilverCalendarSummaryCard");
@@ -287,10 +320,27 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
         const sticky = document.getElementById("iuSilverWelcomeSticky");
         const welcomeEl = document.getElementById("iuSilverWelcomeCard");
         const inputEl =
-          document.querySelector("#silver-slot .silver-compose") ||
-          document.querySelector("#silver-slot .iuSilverHomeInputWrap");
+          (slot && slot.querySelector(".silver-compose")) ||
+          (slot && slot.querySelector(".iuSilverHomeInputWrap"));
         const vv = window.visualViewport;
         const vh = vv ? vv.height : window.innerHeight;
+
+        const inputField = sticky ? sticky.querySelector("#iuSilverHomeInput") : null;
+        const inputFoldRect = inputField ? inputField.getBoundingClientRect() : { top: 0, bottom: 0 };
+        inputTopPx = Math.round(inputFoldRect.top * 100) / 100;
+        inputBottomPx = Math.round(inputFoldRect.bottom * 100) / 100;
+        if (sticky) {
+          const sbr = sticky.getBoundingClientRect();
+          stackTopPx = Math.round(sbr.top * 100) / 100;
+          stackBottomPx = Math.round(sbr.bottom * 100) / 100;
+        }
+        /* Input rect can diverge from ancestor sticky in some engines (transforms); fold cannot be below stack bottom. */
+        const inputBottomForFoldPx =
+          sticky && stackBottomPx !== null
+            ? Math.min(inputBottomPx, stackBottomPx)
+            : inputBottomPx;
+        realFoldFit = inputBottomForFoldPx <= firstScreenVisibleBottomPx + 2;
+        inputVisibleOnFirstScreen = realFoldFit;
 
         /* Stop-ship: third box must be dominant, not merely "tallest within 1.5px". */
         const maxRow = Math.max(hWx, Math.max(hCal, hTasks));
@@ -312,11 +362,15 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
         if (slot && slot.scrollHeight > slot.clientHeight + 1) {
           overflow = Math.round((slot.scrollHeight - slot.clientHeight) * 100) / 100;
         }
-        let bleedBelowVh = 0;
+        let bleedBelowVisibleFold = 0;
         if (sticky) {
-          bleedBelowVh = Math.round((sticky.getBoundingClientRect().bottom - vh) * 100) / 100;
+          bleedBelowVisibleFold = Math.round(
+            (sticky.getBoundingClientRect().bottom - firstScreenVisibleBottomPx) * 100
+          ) / 100;
         }
-        silverStackOverflowDeltaPx = Math.round(Math.max(overflow, Math.max(0, bleedBelowVh)) * 100) / 100;
+        silverStackOverflowDeltaPx = Math.round(
+          Math.max(overflow, Math.max(0, bleedBelowVisibleFold)) * 100
+        ) / 100;
         silverStackFitsViewport = silverStackOverflowDeltaPx <= 2;
         silverStackMetrics = {
           viewportInnerHeightPx: Math.round(vh * 100) / 100,
@@ -415,6 +469,16 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
       thirdBoxViewportOverflowActive,
       thirdBoxContentOverflowHandled,
       thirdBoxNotGrowingWithContent,
+      layoutViewportHeightPx,
+      visualViewportHeightPx,
+      safeAreaBottomPx,
+      firstScreenVisibleBottomPx,
+      stackTopPx,
+      stackBottomPx,
+      inputTopPx,
+      inputBottomPx,
+      realFoldFit,
+      inputVisibleOnFirstScreen,
     };
   });
 
@@ -459,6 +523,17 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     if (closeBrowserOnFatal) await browser.close();
     throw new Error(
       `PROOF FAIL: silver-slot must fit viewport (overflow delta, tol=2px) viewport=${vp.name}, engine=${engineTag}, delta=${String(data.silverStackOverflowDeltaPx)}, metrics=${JSON.stringify(data.silverStackMetrics)}`
+    );
+  }
+
+  if (
+    ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") &&
+    data.realFoldFit !== true
+  ) {
+    await context.close();
+    if (closeBrowserOnFatal) await browser.close();
+    throw new Error(
+      `PROOF FAIL: first-screen fold — Silver input bottom must be within visible visual viewport minus safe-area (viewport=${vp.name}, engine=${engineTag}, inputBottom=${String(data.inputBottomPx)}, stackBottom=${String(data.stackBottomPx)}, visibleBottom=${String(data.firstScreenVisibleBottomPx)}, layoutInnerH=${String(data.layoutViewportHeightPx)}, vvH=${String(data.visualViewportHeightPx)}, safeBottom=${String(data.safeAreaBottomPx)})`
     );
   }
 
