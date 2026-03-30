@@ -14943,9 +14943,16 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   /* Guard-required stack tokens (CI silver-stack-guard.js); row bands + third lift (dominance vs weather/calendar/tasks — no CSS viewport height on third box; slot cap = JS visualViewport → --iu-silver-slot-max-h) */
   --iuSilverStackRowMinH: 131px;
   --iuSilverStackRowExtra: 0px;
-  /* 131 + 105 = 236px @ mobile extra=0 — covers proof minThirdPx on mobileShort (220) and mobileTall (236); not svh/vh. */
+  /* Default 131+105=236 @ mobile extra=0 — taller portrait / tablet need proof minThirdPx up to 287; not svh/vh on #iuSilverTallScrollSection. */
   --iuSilverStackThirdLift: 105px;
   --iuSilverStackThirdMinH: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px) + var(--iuSilverStackThirdLift));
+}
+
+/* Shorter portrait (e.g. 390×664): lower stack-token lift → floor 220px — still ≥ proof minThirdPx(220) and ≥ row+40; saves ~16px for first-screen breathing. Taller mobile (844+) keeps 105px lift for minThirdPx 236. */
+@media (max-width: 900px) and (max-height: 720px){
+  :root{
+    --iuSilverStackThirdLift: 89px;
+  }
 }
 
 .iuSilverTopCardsStack{

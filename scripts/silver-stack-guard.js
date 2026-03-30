@@ -41,6 +41,10 @@ if (!/--iuSilverStackThirdLift\s*:\s*\d+px\b/.test(css)) {
   fail("❌ Missing --iuSilverStackThirdLift (third stack box must exceed row band)");
 }
 
+if (!/@media\s*\(\s*max-width:\s*900px\s*\)\s*and\s*\(\s*max-height:\s*720px\s*\)\s*\{[\s\S]*?--iuSilverStackThirdLift:\s*89px\b/.test(css)) {
+  fail("❌ Short portrait (max-height 720px) must set --iuSilverStackThirdLift: 89px for lower third floor");
+}
+
 if (!/--iuSilverStackThirdMinH\s*:\s*calc\(var\(--iuSilverStackRowMinH\)/.test(css)) {
   fail("❌ Missing --iuSilverStackThirdMinH calc (tall scroll section min height model)");
 }
