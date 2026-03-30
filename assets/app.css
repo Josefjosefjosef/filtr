@@ -15493,8 +15493,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     -webkit-tap-highlight-color: transparent;
   }
   #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg {
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
   }
   #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn:focus-visible {
     outline: 2px solid rgba(37, 99, 235, 0.85);
@@ -15502,6 +15502,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
   #iuSilverWelcomeCard {
     padding-right: calc(var(--iuSilverStackPadX, 12px) + 44px);
+  }
+  #iuSilverWelcomeCard .iu-nameday-cta{
+    margin-top: 14px;
   }
   .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > circle:nth-child(1) {
     fill: rgba(255, 255, 255, 0.12);
