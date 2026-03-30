@@ -14943,6 +14943,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuSilverStackRowMinH: 131px;
   --iuSilverStackRowExtra: 0px;
   --iuSilverStackThirdLift: 40px;
+  --iuSilverStackThirdMinH: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px) + var(--iuSilverStackThirdLift));
+  --iuSilverStackThirdBudgetReserve: calc((var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px)) * 3 + 141px);
+  --iuSilverStackThirdEffective: min(
+    max(var(--iuSilverStackThirdMinH), 40svh),
+    max(0px, calc(100svh - var(--iuSilverStackThirdBudgetReserve)))
+  );
 }
 
 .iuSilverTopCardsStack{
@@ -19919,14 +19925,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 
 /* P0 Mobile/tablet only: adaptive first-viewport stack + Silver bottom visible — --iu-silver-slot-max-h z visualViewport (app.js); desktop ≥901px beze změny */
 @media (max-width: 900px){
-  #silver-slot.silver-slot{
-    --iuSilverStackThirdMinH: calc(var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px) + var(--iuSilverStackThirdLift));
-    --iuSilverStackThirdBudgetReserve: calc((var(--iuSilverStackRowMinH) + var(--iuSilverStackRowExtra, 0px)) * 3 + 141px);
-    --iuSilverStackThirdEffective: min(
-      max(var(--iuSilverStackThirdMinH), 40svh),
-      max(0px, calc(100svh - var(--iuSilverStackThirdBudgetReserve)))
-    );
-  }
   .iuSilverTopCardsStack #silver-slot.silver-slot,
   #iuMobileSilverSlot .silver-slot{
     flex: 0 0 auto !important;
