@@ -5250,16 +5250,7 @@ function buildVideoAsArticleCard(it) {
       }
       var slot = document.getElementById("silver-slot");
       if (!slot) return;
-      /* P0 CLS (768×1024): skip inline --iu-silver-slot-max-h; CSS sets calc(100vh-10px). JS getComputedStyle(maxHeight) often not "NNpx" → early-return failed → setProperty → layout shift. */
-      var mqTabFit =
-        window.matchMedia &&
-        window.matchMedia("(min-width: 768px) and (max-width: 900px) and (max-aspect-ratio: 1/1)");
-      if (mqTabFit && mqTabFit.matches) {
-        try {
-          slot.style.removeProperty("--iu-silver-slot-max-h");
-        } catch (_) {}
-        return;
-      }
+      /* Portrait ≤900px: slot max-height = only --iu-silver-slot-max-h from visualViewport (single source; CSS has no vh fallback). */
       var vv = window.visualViewport;
       var vh = vv && typeof vv.height === "number" ? vv.height : window.innerHeight;
       var top = slot.getBoundingClientRect().top;
@@ -12548,6 +12539,8 @@ function buildVideoAsArticleCard(it) {
     try { initRightPanel(); } catch (e) { console.error("RightPanel init failed", e); if (typeof persistLastError === "function") persistLastError("RightPanel init failed"); }
 
     try{ iuSilverWelcomeInit(); }catch{}
+    /* P0: measure slot max-h once welcome DOM settled — before listeners-only init reduces first paint vs late reflow (CLS). */
+    try{ iuSilverMobileStackFitApply(); }catch{}
     try{ iuSilverMobileStackFitInit(); }catch{}
     try{ iuSilverCalendarSummaryInit(); }catch{}
     try{ iuSilverTasksSummaryInit(); }catch{}

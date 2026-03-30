@@ -3115,6 +3115,25 @@ style-src 'self' 'unsafe-inline' https:;
         if (!(mqTabSync && mqTabSync.matches) && !panelNav.contains(rail)) {
           panelNav.appendChild(rail);
         }
+        /* P0 CLS: set --iu-silver-slot-max-h before module app.js (same formula as iuSilverMobileStackFitApply in assets/app.js). */
+        var mqPo = window.matchMedia && window.matchMedia("(orientation: portrait)");
+        if (mqPo && mqPo.matches) {
+          var vv0 = window.visualViewport;
+          var vh0 = vv0 && typeof vv0.height === "number" ? vv0.height : window.innerHeight;
+          var top0 = silver.getBoundingClientRect().top;
+          var pad0 = 6;
+          var safeB0 = 0;
+          try {
+            var probe0 = document.createElement("div");
+            probe0.style.cssText = "position:fixed;left:0;bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none;z-index:-1;";
+            document.body.appendChild(probe0);
+            safeB0 = parseFloat(getComputedStyle(probe0).paddingBottom) || 0;
+            document.body.removeChild(probe0);
+          } catch (_) {}
+          var maxH0 = Math.floor(vh0 - top0 - pad0 - safeB0);
+          if (maxH0 < 120) maxH0 = 120;
+          silver.style.setProperty("--iu-silver-slot-max-h", maxH0 + "px");
+        }
       }catch(_){}
     })();
     </script>

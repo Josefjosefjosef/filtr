@@ -42,21 +42,11 @@ if (!/--iuSilverStackThirdLift\s*:\s*\d+px\b/.test(css)) {
 }
 
 if (!/--iuSilverStackThirdMinH\s*:\s*calc\(var\(--iuSilverStackRowMinH\)/.test(css)) {
-  fail("❌ Missing --iuSilverStackThirdMinH calc on #silver-slot (tall scroll section height model)");
+  fail("❌ Missing --iuSilverStackThirdMinH calc (tall scroll section min height model)");
 }
 
-if (!/--iuSilverStackThirdEffective\b/.test(css)) {
-  fail("❌ Missing --iuSilverStackThirdEffective (viewport budget + third dominance)");
-}
-
-if (!/--iuSilverStackThirdBudgetReserve\b/.test(css)) {
-  fail("❌ Missing --iuSilverStackThirdBudgetReserve (stack budget vs 100dvh)");
-}
-
-if (!/--iuSilverStackThirdEffective:[\s\S]*?40svh[\s\S]*?100svh/.test(css)) {
-  fail(
-    "❌ --iuSilverStackThirdEffective must include 40svh + 100svh caps (cross-browser dvh/WKWebView safety)"
-  );
+if (!/\.silver-slot\s*\{[\s\S]*?--iuSilverStackThirdMinH\s*:\s*calc\(var\(--iuSilverStackRowMinH\)/.test(css)) {
+  fail("❌ .silver-slot must rebind --iuSilverStackThirdMinH with row extra (tablet band)");
 }
 
 if (!/#silver-slot\s+#iuSilverTallScrollViewport[\s\S]*?min-height:\s*0\b/.test(css)) {
@@ -67,12 +57,20 @@ if (!/#silver-slot\s+#iuSilverTallScrollViewport[\s\S]*?max-height:\s*none\b/.te
   fail("❌ #silver-slot #iuSilverTallScrollViewport must set max-height: none (override global .iuSilverTallScrollViewport 42vh cap)");
 }
 
-if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?height:\s*var\(--iuSilverStackThirdEffective\)/.test(css)) {
-  fail("❌ #iuSilverTallScrollSection must use height: var(--iuSilverStackThirdEffective) (hard cap)");
+if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?flex:\s*1\s+1\s+auto\b/.test(css)) {
+  fail("❌ #silver-slot #iuSilverTallScrollSection must use flex: 1 1 auto (JS-driven stack; no CSS viewport height)");
 }
 
-if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*var\(--iuSilverStackThirdEffective\)/.test(css)) {
-  fail("❌ #iuSilverTallScrollSection must use min-height: var(--iuSilverStackThirdEffective) in mobile stack");
+if (!/#silver-slot\s+#iuSilverTallScrollSection\s*\{[\s\S]*?min-height:\s*var\(--iuSilverStackThirdMinH\)/.test(css)) {
+  fail("❌ #silver-slot #iuSilverTallScrollSection must use min-height: var(--iuSilverStackThirdMinH) (stack-token floor; no viewport height)");
+}
+
+if (!/#silver-slot\s+#iuSilverWelcomeStack\s*\{[\s\S]*?height:\s*100%/.test(css)) {
+  fail("❌ #silver-slot #iuSilverWelcomeStack must use height: 100% (column fills slot)");
+}
+
+if (!/max-height:\s*calc\(var\(--iu-silver-slot-max-h\)\s*-\s*4px\)/.test(css)) {
+  fail("❌ #silver-slot max-height must be calc(var(--iu-silver-slot-max-h) - 4px) only (no vh/dvh fallback)");
 }
 
 const hiddenBlock = css.match(/\.silver-weather-actions\[hidden\]\s*\{([\s\S]*?)\}/);
