@@ -29,3 +29,6 @@ jobs:
           if [ -f node_modules/.bin/playwright ]; then chmod +x node_modules/.bin/playwright || true; fi
 
       - run: npm run smoke
+
+      - name: Weather outside-temp emphasis guard
+        run: npm run weather-emphasis-guard
