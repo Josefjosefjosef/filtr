@@ -128,8 +128,12 @@ if (!/iu-mmTopTool--cal[^>]*\biuMindMenuButton\b/.test(html) && !/iuMindMenuButt
   fail("❌ Mind Menu Kalendář button must combine .iu-mmTopTool--cal + .iuMindMenuButton");
 }
 
-if (!/--iu-calendar-accent\s*:\s*#15803d\b/.test(css)) {
-  fail("❌ :root --iu-calendar-accent must be #15803d (calendar overlay accent token)");
+if (/--iu-calendar-accent\s*:\s*#15803d\b/.test(css)) {
+  fail("❌ Retired #15803d for --iu-calendar-accent (too dark on Silver + Mind Menu surfaces)");
+}
+
+if (!/--iu-calendar-accent\s*:\s*#1c8748\b/.test(css)) {
+  fail("❌ :root --iu-calendar-accent must be #1c8748 (lightened calendar/Mind Menu accent)");
 }
 
 if (!/#iuSilverCalendarSummaryCard\s+\.iuCalendarSummary__label\s*\{[\s\S]*?font-weight\s*:\s*700\b/.test(css)) {
@@ -154,6 +158,26 @@ if (!/#iuSilverCalendarSummaryCard\s+\.iuCalendarSummary__rest\s*\{[\s\S]*?color
 
 if (!/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s*\{[\s\S]*?background-color\s*:\s*var\(--iu-calendar-accent\)/.test(css)) {
   fail("❌ Mind Menu calendar button must use background-color: var(--iu-calendar-accent)");
+}
+
+if (!/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s*\{[\s\S]*?color\s*:\s*#fff\b/.test(css)) {
+  fail("❌ Mind Menu calendar button must set color: #fff for readable contrast on accent");
+}
+
+if (
+  !/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s+\.iu-mmTopToolText\s*,\s*\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s+\.iu-mmTopToolIcon\s*\{[\s\S]*?color\s*:\s*#fff\b/.test(
+    css
+  )
+) {
+  fail("❌ Mind Menu calendar button text + icon must force color: #fff (readable on accent)");
+}
+
+if (
+  !/\.accordionCol\s+\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s+\.iu-mmTopToolText\s*,\s*\.accordionCol\s+\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s+\.iu-mmTopToolIcon\s*\{[\s\S]*?color\s*:\s*#fff\b/.test(
+    css
+  )
+) {
+  fail("❌ Mind Menu calendar button text + icon must stay #fff under .accordionCol");
 }
 
 console.log("✅ Silver stack guard OK");
