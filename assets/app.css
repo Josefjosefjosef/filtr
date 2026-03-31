@@ -15764,33 +15764,15 @@ je ZAKÁZANÝ bez explicitního P0 tasku.
 Porušení = regres + CLS risk
 */
 
-/* === WELCOME BOX HARD LOCK (DO NOT MODIFY ANYWHERE ELSE) === */
-
-.iuWelcomeBox--LOCKED{
-  contain: layout style;
-}
-
-/* texty — zamčené váhy (spec „inherit“ by na spanech zrušilo 700 → použito 500/700) */
-.iuWelcomeBox--LOCKED .iuSilverWelcomeMeta{
-  font-weight: 500;
-}
+/* === WELCOME BOX HARD LOCK (DO NOT MODIFY ANYWHERE ELSE) — narrow: weights + info icon only === */
 
 .iuWelcomeBox--LOCKED .iuSilverWelcomeMeta .iuDateStrong,
 .iuWelcomeBox--LOCKED .iuSilverWelcomeMeta .iuNameStrong{
   font-weight: 700;
 }
 
-/* tlačítka (Přání / Květiny) — projekt používá #iuNamedayCta, ne .iuSilverWelcomeActions */
-.iuWelcomeBox--LOCKED .iu-nameday-cta button{
-  transform: none !important;
-}
-
 .iuWelcomeBox--LOCKED #iuSilverWelcomeInfoBtn{
   transform: translate(7px, -7px) scale(0.8) !important;
-}
-
-.iuWelcomeBox--LOCKED *{
-  max-width: 100%;
 }
 
 .silver-slot{
