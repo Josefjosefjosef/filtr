@@ -15035,72 +15035,77 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .silver-welcome-stack--morning{
+  /* Depth: vzdušná mlha + sunrise glow mimo levé textové těžiště (horní pravá část); bez doslovného objektu */
   --iu-stack-ambient-bg:
-    radial-gradient(ellipse 125% 90% at 50% -14%, rgba(255, 165, 85, 0.5) 0%, transparent 54%),
-    radial-gradient(ellipse 100% 70% at -10% 100%, rgba(255, 195, 130, 0.32) 0%, transparent 52%),
-    radial-gradient(ellipse 72% 48% at 102% 16%, rgba(255, 210, 155, 0.26) 0%, transparent 46%),
+    linear-gradient(180deg, rgba(255, 252, 248, 0.42) 0%, rgba(255, 244, 232, 0.06) 34%, rgba(255, 214, 170, 0.12) 100%),
+    linear-gradient(115deg, transparent 0%, rgba(255, 200, 140, 0.09) 48%, transparent 72%),
+    radial-gradient(ellipse 135% 78% at 94% 4%, rgba(255, 188, 120, 0.36) 0%, transparent 46%),
+    radial-gradient(ellipse 95% 72% at -8% 98%, rgba(255, 200, 145, 0.26) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 50% at 45% 108%, rgba(255, 175, 110, 0.14) 0%, transparent 44%),
     linear-gradient(135deg, #fff5e8 0%, #ffe8cc 45%, #ffd8a8 100%);
   background: var(--iu-stack-ambient-bg);
-  --iuAmbientSeparator: rgba(175, 88, 42, 0.22);
-  --iuSilverCardActionFocusOutline: rgba(200, 110, 55, 0.38);
-  --iuBtnAccentRing: rgba(210, 105, 52, 0.82);
-  --iuBtnShadowHover: 0 4px 16px rgba(120, 70, 40, 0.18);
+  --iuAmbientSeparator: rgba(168, 85, 40, 0.24);
+  --iuSilverCardActionFocusOutline: rgba(200, 108, 52, 0.4);
+  --iuBtnAccentRing: rgba(208, 102, 48, 0.84);
+  --iuBtnShadowHover: 0 6px 18px rgba(115, 68, 38, 0.16), 0 2px 8px rgba(15, 35, 55, 0.06);
   --iuBtnShadowActive: 0 2px 6px rgba(120, 70, 40, 0.14);
-  --iuSilverTopCardShadow: 0 4px 20px rgba(160, 85, 45, 0.14), 0 2px 10px rgba(15, 35, 55, 0.07);
-  --iu-calendar-accent: color-mix(in srgb, #1c8748 82%, #c2410c 18%);
-  --iuTasksAccent: color-mix(in srgb, #8b5cf6 82%, #c2410c 18%);
+  --iuSilverTopCardShadow: 0 6px 22px rgba(155, 80, 42, 0.13), 0 2px 12px rgba(15, 35, 55, 0.07);
+  --iu-calendar-accent: color-mix(in srgb, #1c8748 80%, #c2410c 20%);
+  --iuTasksAccent: color-mix(in srgb, #8b5cf6 80%, #c2410c 20%);
 }
 
 .silver-welcome-stack--lateMorning{
   --iu-stack-ambient-bg:
-    radial-gradient(ellipse 118% 96% at 50% 36%, rgba(210, 230, 255, 0.62) 0%, transparent 58%),
-    radial-gradient(ellipse 78% 62% at 12% 6%, rgba(255, 255, 255, 0.78) 0%, transparent 46%),
+    linear-gradient(188deg, rgba(250, 252, 255, 0.9) 0%, rgba(236, 243, 252, 0.28) 46%, rgba(228, 236, 250, 0.5) 100%),
+    radial-gradient(ellipse 105% 68% at 52% 20%, rgba(255, 255, 255, 0.72) 0%, transparent 54%),
+    radial-gradient(ellipse 72% 58% at 14% 4%, rgba(255, 255, 255, 0.88) 0%, transparent 44%),
+    radial-gradient(ellipse 55% 45% at 88% 78%, rgba(220, 232, 248, 0.35) 0%, transparent 50%),
     linear-gradient(135deg, #f8fbff 0%, #eef5ff 50%, #e4ecfa 100%);
   background: var(--iu-stack-ambient-bg);
-  --iuAmbientSeparator: rgba(15, 35, 55, 0.11);
-  --iuSilverTopCardShadow: 0 4px 18px rgba(15, 35, 55, 0.09);
-  --iu-calendar-accent: color-mix(in srgb, #1c8748 88%, #2563eb 12%);
-  --iuTasksAccent: color-mix(in srgb, #8b5cf6 86%, #2563eb 14%);
+  --iuAmbientSeparator: rgba(20, 45, 75, 0.1);
+  --iuSilverTopCardShadow: 0 6px 22px rgba(15, 35, 55, 0.085), 0 2px 10px rgba(255, 255, 255, 0.35);
+  --iu-calendar-accent: color-mix(in srgb, #1c8748 86%, #2563eb 14%);
+  --iuTasksAccent: color-mix(in srgb, #8b5cf6 84%, #2563eb 16%);
 }
 
 .silver-welcome-stack--afternoon{
   --iu-stack-ambient-bg:
-    radial-gradient(ellipse 118% 92% at 50% 104%, rgba(255, 128, 55, 0.26) 0%, transparent 52%),
-    radial-gradient(ellipse 68% 58% at 8% 4%, rgba(255, 185, 110, 0.22) 0%, transparent 48%),
-    radial-gradient(ellipse 88% 52% at 92% 20%, rgba(255, 165, 85, 0.18) 0%, transparent 44%),
+    linear-gradient(180deg, rgba(255, 252, 246, 0.45) 0%, rgba(255, 238, 215, 0.08) 38%, rgba(255, 210, 165, 0.16) 100%),
+    radial-gradient(ellipse 125% 82% at 90% 8%, rgba(255, 175, 105, 0.22) 0%, transparent 44%),
+    radial-gradient(ellipse 88% 72% at 4% 96%, rgba(255, 195, 135, 0.18) 0%, transparent 48%),
+    radial-gradient(ellipse 95% 62% at 52% 104%, rgba(255, 140, 70, 0.11) 0%, transparent 50%),
     linear-gradient(135deg, #fff9f0 0%, #fff0dc 55%, #ffe4c4 100%);
   background: var(--iu-stack-ambient-bg);
-  --iuAmbientSeparator: rgba(185, 100, 48, 0.2);
-  --iuSilverCardActionFocusOutline: rgba(200, 100, 50, 0.36);
-  --iuBtnAccentRing: rgba(205, 95, 48, 0.78);
-  --iuBtnShadowHover: 0 4px 16px rgba(140, 80, 40, 0.16);
+  --iuAmbientSeparator: rgba(178, 95, 44, 0.22);
+  --iuSilverCardActionFocusOutline: rgba(198, 98, 48, 0.38);
+  --iuBtnAccentRing: rgba(205, 92, 44, 0.8);
+  --iuBtnShadowHover: 0 6px 18px rgba(132, 75, 38, 0.15), 0 2px 8px rgba(15, 35, 55, 0.05);
   --iuBtnShadowActive: 0 2px 7px rgba(140, 80, 40, 0.12);
-  --iuSilverTopCardShadow: 0 4px 20px rgba(170, 95, 50, 0.12), 0 2px 10px rgba(15, 35, 55, 0.06);
-  --iu-calendar-accent: color-mix(in srgb, #1c8748 78%, #ea580c 22%);
-  --iuTasksAccent: color-mix(in srgb, #8b5cf6 78%, #ea580c 22%);
+  --iuSilverTopCardShadow: 0 6px 22px rgba(165, 88, 45, 0.11), 0 2px 10px rgba(15, 35, 55, 0.06);
+  --iu-calendar-accent: color-mix(in srgb, #1c8748 76%, #ea580c 24%);
+  --iuTasksAccent: color-mix(in srgb, #8b5cf6 76%, #ea580c 24%);
 }
 
 .silver-welcome-stack--evening{
+  /* Noční hloubka + měkký luminance halo (ne kreslený měsíc); tři mikroskopické body, bez twinkle */
   --iu-stack-ambient-bg:
-    radial-gradient(circle at 91% 10%, rgba(220, 238, 255, 0.36) 0%, rgba(220, 238, 255, 0.1) 10%, transparent 15%),
-    radial-gradient(circle 1.2px at 14% 23%, rgba(255, 255, 255, 0.34) 50%, transparent 52%),
-    radial-gradient(circle 1.2px at 26% 11%, rgba(255, 255, 255, 0.22) 50%, transparent 52%),
-    radial-gradient(circle 1.2px at 71% 17%, rgba(255, 255, 255, 0.3) 50%, transparent 52%),
-    radial-gradient(circle 1.2px at 84% 29%, rgba(255, 255, 255, 0.2) 50%, transparent 52%),
-    radial-gradient(circle 1.2px at 53% 8%, rgba(255, 255, 255, 0.18) 50%, transparent 52%),
-    radial-gradient(ellipse 118% 90% at 50% 112%, rgba(12, 38, 68, 0.58) 0%, transparent 56%),
+    radial-gradient(ellipse 100% 58% at 90% 10%, rgba(210, 228, 250, 0.26) 0%, rgba(210, 228, 250, 0.06) 32%, transparent 46%),
+    radial-gradient(circle 1px at 17% 31%, rgba(255, 255, 255, 0.13) 50%, transparent 51%),
+    radial-gradient(circle 1px at 79% 19%, rgba(255, 255, 255, 0.11) 50%, transparent 51%),
+    radial-gradient(circle 1px at 44% 8%, rgba(255, 255, 255, 0.09) 50%, transparent 51%),
+    radial-gradient(ellipse 130% 95% at 50% 110%, rgba(6, 24, 48, 0.62) 0%, transparent 58%),
     linear-gradient(135deg, #0f2438 0%, #162d45 55%, #203a52 100%);
   background: var(--iu-stack-ambient-bg);
   border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 5px 22px rgba(0, 0, 0, 0.24);
   --iuSilverCardActionHoverBg: rgba(255, 255, 255, 0.06);
   --iuSilverCardActionActiveBg: rgba(255, 255, 255, 0.09);
-  --iuSilverCardActionFocusOutline: rgba(255, 255, 255, 0.34);
+  --iuSilverCardActionFocusOutline: rgba(255, 255, 255, 0.36);
   --iuTasksAccent: #a78bfa;
-  --iuAmbientSeparator: rgba(255, 255, 255, 0.2);
-  --iuAmbientSeparatorOpacity: 0.82;
-  --iuBtnAccentRing: rgba(200, 230, 255, 0.92);
-  --iuBtnShadowHover: 0 4px 14px rgba(0, 0, 0, 0.22);
+  --iuAmbientSeparator: rgba(255, 255, 255, 0.22);
+  --iuAmbientSeparatorOpacity: 0.85;
+  --iuBtnAccentRing: rgba(198, 228, 255, 0.94);
+  --iuBtnShadowHover: 0 5px 16px rgba(0, 0, 0, 0.24);
   --iuBtnShadowActive: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
 
@@ -15212,23 +15217,27 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .silver-welcome-stack--morning .iuSilverStackChromaFrame{
-  border-color: rgba(15, 35, 55, 0.12);
-  background: rgba(255, 255, 255, 0.45);
+  border-color: rgba(15, 35, 55, 0.11);
+  background: rgba(255, 253, 250, 0.48);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset;
 }
 
 .silver-welcome-stack--lateMorning .iuSilverStackChromaFrame{
-  border-color: rgba(15, 35, 55, 0.12);
-  background: rgba(255, 255, 255, 0.42);
+  border-color: rgba(15, 35, 55, 0.1);
+  background: rgba(255, 255, 255, 0.46);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55) inset;
 }
 
 .silver-welcome-stack--afternoon .iuSilverStackChromaFrame{
-  border-color: rgba(15, 35, 55, 0.12);
-  background: rgba(255, 255, 255, 0.4);
+  border-color: rgba(15, 35, 55, 0.11);
+  background: rgba(255, 252, 247, 0.44);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.32) inset;
 }
 
 .silver-welcome-stack--evening .iuSilverStackChromaFrame{
-  border-color: rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
 }
 
 .iuSilverTallScrollChromaFrame{
