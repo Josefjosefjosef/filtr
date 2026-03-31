@@ -15008,12 +15008,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuSilverCardActionHoverBg: rgba(15, 35, 55, 0.06);
   --iuSilverCardActionActiveBg: rgba(15, 35, 55, 0.09);
   --iuSilverCardActionFocusOutline: rgba(15, 35, 55, 0.28);
-  /* Premium ambient: jeden host layer (pseudos), tokeny přepíná time-of-day třída / data-iu-silver-welcome-variant */
-  --iuAmbientLayer1: none;
-  --iuAmbientLayer2: none;
-  --iuAmbientLayer2Opacity: 0;
+  /* Premium ambient: jeden host = multi-layer background na stacku (+ inherit na desktop shell); tokeny času: třída / data-iu-silver-welcome-variant */
+  --iu-stack-ambient-bg: none;
   --iuAmbientSeparator: rgba(15, 35, 55, 0.1);
-  --iuAmbientSeparatorOpacity: 0.82;
+  --iuAmbientSeparatorOpacity: 0.88;
   --iuBtnAccentRing: rgba(90, 140, 220, 0.85);
   --iuBtnShadowHover: 0 4px 12px rgba(15, 30, 45, 0.12);
   --iuBtnShadowActive: 0 2px 6px rgba(15, 30, 45, 0.1);
@@ -15037,95 +15035,79 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .silver-welcome-stack--morning{
-  background: linear-gradient(135deg, #fff5e8 0%, #ffe8cc 45%, #ffd8a8 100%);
-  --iuAmbientLayer1:
-    radial-gradient(ellipse 130% 95% at 52% -8%, rgba(255, 190, 120, 0.28) 0%, transparent 58%),
-    radial-gradient(ellipse 90% 60% at -5% 105%, rgba(255, 210, 160, 0.14) 0%, transparent 48%);
-  --iuAmbientLayer2: radial-gradient(ellipse 70% 45% at 95% 15%, rgba(255, 220, 170, 0.1) 0%, transparent 50%);
-  --iuAmbientLayer2Opacity: 1;
-  --iuAmbientSeparator: rgba(180, 95, 50, 0.14);
-  --iuSilverCardActionFocusOutline: rgba(200, 110, 55, 0.35);
-  --iuBtnAccentRing: rgba(200, 115, 60, 0.75);
-  --iuBtnShadowHover: 0 4px 14px rgba(120, 70, 40, 0.14);
-  --iuBtnShadowActive: 0 2px 6px rgba(120, 70, 40, 0.12);
-  --iuSilverTopCardShadow: 0 4px 18px rgba(160, 85, 45, 0.11), 0 2px 8px rgba(15, 35, 55, 0.06);
-  --iu-calendar-accent: color-mix(in srgb, #1c8748 88%, #c2410c 12%);
-  --iuTasksAccent: color-mix(in srgb, #8b5cf6 88%, #c2410c 12%);
+  --iu-stack-ambient-bg:
+    radial-gradient(ellipse 125% 90% at 50% -14%, rgba(255, 165, 85, 0.5) 0%, transparent 54%),
+    radial-gradient(ellipse 100% 70% at -10% 100%, rgba(255, 195, 130, 0.32) 0%, transparent 52%),
+    radial-gradient(ellipse 72% 48% at 102% 16%, rgba(255, 210, 155, 0.26) 0%, transparent 46%),
+    linear-gradient(135deg, #fff5e8 0%, #ffe8cc 45%, #ffd8a8 100%);
+  background: var(--iu-stack-ambient-bg);
+  --iuAmbientSeparator: rgba(175, 88, 42, 0.22);
+  --iuSilverCardActionFocusOutline: rgba(200, 110, 55, 0.38);
+  --iuBtnAccentRing: rgba(210, 105, 52, 0.82);
+  --iuBtnShadowHover: 0 4px 16px rgba(120, 70, 40, 0.18);
+  --iuBtnShadowActive: 0 2px 6px rgba(120, 70, 40, 0.14);
+  --iuSilverTopCardShadow: 0 4px 20px rgba(160, 85, 45, 0.14), 0 2px 10px rgba(15, 35, 55, 0.07);
+  --iu-calendar-accent: color-mix(in srgb, #1c8748 82%, #c2410c 18%);
+  --iuTasksAccent: color-mix(in srgb, #8b5cf6 82%, #c2410c 18%);
 }
 
 .silver-welcome-stack--lateMorning{
-  background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 50%, #e4ecfa 100%);
-  --iuAmbientLayer1: radial-gradient(ellipse 120% 100% at 50% 45%, rgba(255, 255, 255, 0.4) 0%, transparent 62%);
-  --iuAmbientLayer2: none;
-  --iuAmbientLayer2Opacity: 0;
-  --iuAmbientSeparator: rgba(15, 35, 55, 0.09);
-  --iuSilverTopCardShadow: 0 4px 16px rgba(15, 35, 55, 0.08);
-  --iu-calendar-accent: color-mix(in srgb, #1c8748 92%, #2563eb 8%);
-  --iuTasksAccent: color-mix(in srgb, #8b5cf6 90%, #2563eb 10%);
+  --iu-stack-ambient-bg:
+    radial-gradient(ellipse 118% 96% at 50% 36%, rgba(210, 230, 255, 0.62) 0%, transparent 58%),
+    radial-gradient(ellipse 78% 62% at 12% 6%, rgba(255, 255, 255, 0.78) 0%, transparent 46%),
+    linear-gradient(135deg, #f8fbff 0%, #eef5ff 50%, #e4ecfa 100%);
+  background: var(--iu-stack-ambient-bg);
+  --iuAmbientSeparator: rgba(15, 35, 55, 0.11);
+  --iuSilverTopCardShadow: 0 4px 18px rgba(15, 35, 55, 0.09);
+  --iu-calendar-accent: color-mix(in srgb, #1c8748 88%, #2563eb 12%);
+  --iuTasksAccent: color-mix(in srgb, #8b5cf6 86%, #2563eb 14%);
 }
 
 .silver-welcome-stack--afternoon{
-  background: linear-gradient(135deg, #fff9f0 0%, #fff0dc 55%, #ffe4c4 100%);
-  --iuAmbientLayer1:
-    radial-gradient(ellipse 115% 90% at 48% 100%, rgba(255, 170, 90, 0.11) 0%, transparent 52%),
-    radial-gradient(ellipse 65% 55% at 12% 8%, rgba(255, 200, 140, 0.08) 0%, transparent 48%);
-  --iuAmbientLayer2: radial-gradient(ellipse 80% 50% at 85% 20%, rgba(255, 185, 110, 0.07) 0%, transparent 45%);
-  --iuAmbientLayer2Opacity: 1;
-  --iuAmbientSeparator: rgba(190, 110, 55, 0.13);
-  --iuSilverCardActionFocusOutline: rgba(200, 100, 50, 0.32);
-  --iuBtnAccentRing: rgba(200, 105, 55, 0.72);
-  --iuBtnShadowHover: 0 4px 14px rgba(140, 80, 40, 0.12);
-  --iuBtnShadowActive: 0 2px 6px rgba(140, 80, 40, 0.1);
-  --iuSilverTopCardShadow: 0 4px 18px rgba(170, 95, 50, 0.1), 0 2px 8px rgba(15, 35, 55, 0.06);
-  --iu-calendar-accent: color-mix(in srgb, #1c8748 85%, #ea580c 15%);
-  --iuTasksAccent: color-mix(in srgb, #8b5cf6 85%, #ea580c 15%);
+  --iu-stack-ambient-bg:
+    radial-gradient(ellipse 118% 92% at 50% 104%, rgba(255, 128, 55, 0.26) 0%, transparent 52%),
+    radial-gradient(ellipse 68% 58% at 8% 4%, rgba(255, 185, 110, 0.22) 0%, transparent 48%),
+    radial-gradient(ellipse 88% 52% at 92% 20%, rgba(255, 165, 85, 0.18) 0%, transparent 44%),
+    linear-gradient(135deg, #fff9f0 0%, #fff0dc 55%, #ffe4c4 100%);
+  background: var(--iu-stack-ambient-bg);
+  --iuAmbientSeparator: rgba(185, 100, 48, 0.2);
+  --iuSilverCardActionFocusOutline: rgba(200, 100, 50, 0.36);
+  --iuBtnAccentRing: rgba(205, 95, 48, 0.78);
+  --iuBtnShadowHover: 0 4px 16px rgba(140, 80, 40, 0.16);
+  --iuBtnShadowActive: 0 2px 7px rgba(140, 80, 40, 0.12);
+  --iuSilverTopCardShadow: 0 4px 20px rgba(170, 95, 50, 0.12), 0 2px 10px rgba(15, 35, 55, 0.06);
+  --iu-calendar-accent: color-mix(in srgb, #1c8748 78%, #ea580c 22%);
+  --iuTasksAccent: color-mix(in srgb, #8b5cf6 78%, #ea580c 22%);
 }
 
 .silver-welcome-stack--evening{
-  background: linear-gradient(135deg, #0f2438 0%, #162d45 55%, #203a52 100%);
+  --iu-stack-ambient-bg:
+    radial-gradient(circle at 91% 10%, rgba(220, 238, 255, 0.36) 0%, rgba(220, 238, 255, 0.1) 10%, transparent 15%),
+    radial-gradient(circle 1.2px at 14% 23%, rgba(255, 255, 255, 0.34) 50%, transparent 52%),
+    radial-gradient(circle 1.2px at 26% 11%, rgba(255, 255, 255, 0.22) 50%, transparent 52%),
+    radial-gradient(circle 1.2px at 71% 17%, rgba(255, 255, 255, 0.3) 50%, transparent 52%),
+    radial-gradient(circle 1.2px at 84% 29%, rgba(255, 255, 255, 0.2) 50%, transparent 52%),
+    radial-gradient(circle 1.2px at 53% 8%, rgba(255, 255, 255, 0.18) 50%, transparent 52%),
+    radial-gradient(ellipse 118% 90% at 50% 112%, rgba(12, 38, 68, 0.58) 0%, transparent 56%),
+    linear-gradient(135deg, #0f2438 0%, #162d45 55%, #203a52 100%);
+  background: var(--iu-stack-ambient-bg);
   border-color: rgba(255, 255, 255, 0.12);
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
   --iuSilverCardActionHoverBg: rgba(255, 255, 255, 0.06);
   --iuSilverCardActionActiveBg: rgba(255, 255, 255, 0.09);
-  --iuSilverCardActionFocusOutline: rgba(255, 255, 255, 0.32);
+  --iuSilverCardActionFocusOutline: rgba(255, 255, 255, 0.34);
   --iuTasksAccent: #a78bfa;
-  --iuAmbientLayer1: radial-gradient(ellipse 110% 85% at 50% 108%, rgba(25, 55, 95, 0.42) 0%, transparent 55%);
-  --iuAmbientLayer2:
-    radial-gradient(circle at 90% 9%, rgba(235, 245, 255, 0.16) 0%, rgba(235, 245, 255, 0.05) 7%, transparent 11%),
-    radial-gradient(circle 1px at 14% 22%, rgba(255, 255, 255, 0.22) 50%, transparent 52%),
-    radial-gradient(circle 1px at 24% 11%, rgba(255, 255, 255, 0.14) 50%, transparent 52%),
-    radial-gradient(circle 1px at 68% 16%, rgba(255, 255, 255, 0.18) 50%, transparent 52%),
-    radial-gradient(circle 1px at 82% 28%, rgba(255, 255, 255, 0.12) 50%, transparent 52%),
-    radial-gradient(circle 1px at 54% 8%, rgba(255, 255, 255, 0.1) 50%, transparent 52%);
-  --iuAmbientLayer2Opacity: 1;
-  --iuAmbientSeparator: rgba(255, 255, 255, 0.14);
-  --iuAmbientSeparatorOpacity: 0.75;
+  --iuAmbientSeparator: rgba(255, 255, 255, 0.2);
+  --iuAmbientSeparatorOpacity: 0.82;
   --iuBtnAccentRing: rgba(200, 230, 255, 0.92);
   --iuBtnShadowHover: 0 4px 14px rgba(0, 0, 0, 0.22);
   --iuBtnShadowActive: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
 
-/* Jeden souvislý ambient pod celým stackem (ne per-box); pointer-events none, mimo hit-test */
-.silver-welcome-stack::before,
-.silver-welcome-stack::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  box-sizing: border-box;
-}
-.silver-welcome-stack::before{
-  background: var(--iuAmbientLayer1);
-}
-.silver-welcome-stack::after{
-  opacity: var(--iuAmbientLayer2Opacity);
-  background: var(--iuAmbientLayer2);
-}
+/* Ambient je v multi-layer background na .silver-welcome-stack--* (spolehlivý paint na mobilu). */
 .silver-welcome-stack > *{
   position: relative;
-  z-index: 1;
+  z-index: 0;
 }
 
 .silver-welcome-stack__separator{
@@ -15994,19 +15976,19 @@ Porušení = regres + CLS risk
 }
 
 #silver-slot[data-iu-silver-welcome-variant="morning"] .silver-shell--stackConnected{
-  background: linear-gradient(135deg, #fff5e8 0%, #ffe8cc 45%, #ffd8a8 100%);
+  background: var(--iu-stack-ambient-bg);
 }
 
 #silver-slot[data-iu-silver-welcome-variant="lateMorning"] .silver-shell--stackConnected{
-  background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 50%, #e4ecfa 100%);
+  background: var(--iu-stack-ambient-bg);
 }
 
 #silver-slot[data-iu-silver-welcome-variant="afternoon"] .silver-shell--stackConnected{
-  background: linear-gradient(135deg, #fff9f0 0%, #fff0dc 55%, #ffe4c4 100%);
+  background: var(--iu-stack-ambient-bg);
 }
 
 #silver-slot[data-iu-silver-welcome-variant="evening"] .silver-shell--stackConnected{
-  background: linear-gradient(135deg, #0f2438 0%, #162d45 55%, #203a52 100%);
+  background: var(--iu-stack-ambient-bg);
 }
 
 /* Silver shell lives inside #iuSilverWelcomeStack — margin below sticky only on desktop ≥901px */
@@ -16155,11 +16137,6 @@ Porušení = regres + CLS risk
 }
 
 @media (prefers-reduced-motion: reduce){
-  #silver-slot .silver-welcome-stack::before,
-  #silver-slot .silver-welcome-stack::after{
-    animation: none !important;
-    transition: none !important;
-  }
   #silver-slot .silver-weather-btn,
   #silver-slot .silver-calendar-summary-card[role="button"],
   #silver-slot .iuSilverHomeSend{
