@@ -6260,7 +6260,7 @@ function buildVideoAsArticleCard(it) {
       const flStr = fl != null ? `Pocitově ${fl} °C` : "Pocitově —°C";
       line1.innerHTML =
         `<span class="silver-weather-dpart" aria-hidden="true">${escapeHtml(dp)}</span> ` +
-        `<span data-iu-silver-weather-hook="temp">${escapeHtml(tStr)}</span>` +
+        `<span class="silver-weather-outside-temp" data-iu-silver-weather-hook="temp">${escapeHtml(tStr)}</span>` +
         `<span class="silver-weather-line__sep" aria-hidden="true"> | </span>` +
         `<span data-iu-silver-weather-hook="feels">${escapeHtml(flStr)}</span>` +
         `<span class="silver-weather-line__sep" aria-hidden="true"> | </span>` +
