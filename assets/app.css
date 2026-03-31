@@ -20320,3 +20320,33 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-height: none !important;
   }
 }
+
+/* === CALENDAR ACCENT HARD LOCK (DO NOT MODIFY) === */
+
+:root {
+  --iu-calendar-accent: #1c8748;
+}
+
+/* label */
+#iuSilverCalendarSummaryCard .iuCalendarSummary__label {
+  font-weight: 700;
+  color: var(--iu-calendar-accent);
+}
+
+/* icon */
+#iuSilverCalendarSummaryCard .iuCalendarSummary__icon {
+  color: var(--iu-calendar-accent);
+  font-weight: 400;
+}
+
+#iuSilverCalendarSummaryCard .iuCalendarSummary__icon svg {
+  fill: currentColor;
+  stroke: currentColor;
+  font-weight: 400;
+}
+
+/* mind menu button */
+.mindMenu .iu-mmTopTool--cal.iuMindMenuButton {
+  background-color: var(--iu-calendar-accent);
+  color: #ffffff !important;
+}

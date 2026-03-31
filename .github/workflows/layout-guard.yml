@@ -12,5 +12,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: node node_modules/playwright/cli.js install --with-deps chromium
       - run: node scripts/check_layout.js
       - run: node scripts/silver-stack-guard.js
+      - name: Silver summary + calendar accent UI proof
+        run: node scripts/silver-summary-ui-proof.mjs
