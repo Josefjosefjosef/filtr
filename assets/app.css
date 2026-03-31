@@ -15017,6 +15017,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .silver-weather-card{
+  --iu-silver-wx-outside-temp-fg: color-mix(in srgb, var(--iuNavAccent-pocasi, #38BDF8) 20%, #0b3d5c 80%);
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -15035,6 +15036,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   overflow: hidden;
   
   contain: layout;
+}
+
+.silver-welcome-stack--evening .silver-weather-card{
+  --iu-silver-wx-outside-temp-fg: color-mix(in srgb, var(--iuNavAccent-pocasi, #38BDF8) 82%, #e0f2fe 18%);
 }
 
 /* P0 Mobile/tablet: inner scroll probe spacer — outer tall height z flex + --iu-silver-slot-max-h (app.js) */
@@ -15372,6 +15377,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 
 .silver-weather-line1{
   color: rgba(30, 40, 55, 0.88);
+}
+
+.silver-weather-line1 .silver-weather-outside-temp{
+  font-weight: 700;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: var(--iu-silver-wx-outside-temp-fg);
 }
 
 .silver-weather-line2{
