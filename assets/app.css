@@ -15473,16 +15473,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuTopbarInfoBtn {
     display: none !important;
   }
-  #iuSilverWelcomeCard{
-    --iuWiH:40px;
-    --iuWiR:8px;
-    --iuWiG:calc(var(--iuWiR) + var(--iuWiH));
-    padding-right:calc(var(--iuSilverStackPadX, 12px) + var(--iuWiG));
-  }
+  #iuSilverWelcomeCard{--iuWiH:40px;--iuWiR:8px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto;column-gap:var(--iuWiR);align-items:start}
   #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
-    position: absolute;
-    top: 6px;
-    right: var(--iuWiR,8px);
+    position: relative;
+    grid-column:2;
+    grid-row:1;
+    justify-self:end;
+    align-self:start;
     width: var(--iuWiH,40px);
     height: var(--iuWiH,40px);
     margin: 0;
@@ -15506,7 +15503,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     outline: 2px solid rgba(37, 99, 235, 0.85);
     outline-offset: 2px;
   }
-  #iuSilverWelcomeCard .iu-nameday-cta{margin-top:14px;width:calc(100% - var(--iuWiG));margin-left:var(--iuWiG)}
+  #iuSilverWelcomeCard #iuNamedayCta{grid-column:1 / -1;grid-row:3;margin-top:14px;width:100%}
   .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > circle:nth-child(1) {
     fill: rgba(255, 255, 255, 0.12);
     stroke: rgba(255, 255, 255, 0.42);
@@ -15677,6 +15674,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   background: transparent;
   background-image: none;
 }
+
+#iuSilverWelcomeTextBlock{display:flex;flex-direction:column;gap:2px;min-width:0;grid-column:1;grid-row:1/span 2}
 
 .silver-welcome-stack .iuSilverWelcomeCard{
   flex: 0 0 auto;
@@ -19962,11 +19961,9 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     gap: 0 !important;
     row-gap: 0 !important;
   }
-  /* Stack border + separator hairline = double seam; only one card border */
   #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
     border-bottom: none !important;
   }
-  /* CLS: stabilní první paint uvítacího bloku (bez změny obsahu — jen em rezerva) */
   #silver-slot #iuSilverWelcomeCard.iuSilverWelcomeCard{
     min-height: 7rem !important;
   }
