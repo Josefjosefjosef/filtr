@@ -219,13 +219,13 @@ style-src 'self' 'unsafe-inline' https:;
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorCal" aria-hidden="true"></div>
                         <div class="silver-calendar-summary-card" id="iuSilverCalendarSummaryCard" data-iu-silver-calendar-summary>
                           <div class="silver-calendar-summary-row silver-calendar-summary-row--1">
-                            <span class="silver-calendar-summary-iconCal" aria-hidden="true">
+                            <span class="silver-calendar-summary-iconCal iuCalendarSummary__icon" aria-hidden="true">
                               <svg class="silver-calendar-summary-svg" viewBox="0 0 24 24" width="20" height="20" focusable="false" aria-hidden="true">
                                 <rect x="4" y="5.5" width="16" height="14.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/>
                                 <path d="M4 9.5h16M8 3.5v4M16 3.5v4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                               </svg>
                             </span>
-                            <p class="silver-calendar-summary-text" id="iuSilverCalendarSummaryLine1"></p>
+                            <p class="silver-calendar-summary-text" id="iuSilverCalendarSummaryLine1"><span class="iuCalendarSummary__label">Kalendář:</span><span class="iuCalendarSummary__rest" id="iuSilverCalendarSummaryLine1Rest"></span></p>
                           </div>
                           <div class="silver-calendar-summary-line2block">
                             <div class="silver-calendar-summary-line2main iu-silver-actionRow" data-iu-action-indicator="chevron">
@@ -1899,7 +1899,7 @@ style-src 'self' 'unsafe-inline' https:;
                     </section>
                     <!-- Top tools: Kalendář, Poznámky, Úkoly -->
                     <div class="iu-mmTopTools" role="group" aria-label="Nástroje">
-                      <button type="button" class="iu-mmTopTool iu-mmTopTool--cal" aria-label="Kalendář">
+                      <button type="button" class="iu-mmTopTool iu-mmTopTool--cal iuMindMenuButton" aria-label="Kalendář">
                         <span class="iu-mmTopToolIcon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M7 4v4M17 4v4"/></svg></span>
                         <span class="iu-mmTopToolText">Kalendář</span>
                       </button>

@@ -115,4 +115,45 @@ if (!/silver-calendar-summary-line2main[^>]*data-iu-action-indicator="chevron"/.
   fail("❌ Calendar box3 line2 must include action indicator hook (data-iu-action-indicator=\"chevron\")");
 }
 
+const calLabelMatches = html.match(/class="[^"]*\biuCalendarSummary__label\b[^"]*"/g) || [];
+if (calLabelMatches.length !== 1) {
+  fail("❌ Expected exactly one .iuCalendarSummary__label in projects/index.html (found " + calLabelMatches.length + ")");
+}
+
+if ((html.match(/\biuCalendarSummary__rest\b/g) || []).length !== 1) {
+  fail("❌ Expected exactly one .iuCalendarSummary__rest / id iuSilverCalendarSummaryLine1Rest hook");
+}
+
+if (!/iu-mmTopTool--cal[^>]*\biuMindMenuButton\b/.test(html) && !/iuMindMenuButton[^>]*iu-mmTopTool--cal/.test(html)) {
+  fail("❌ Mind Menu Kalendář button must combine .iu-mmTopTool--cal + .iuMindMenuButton");
+}
+
+if (!/--iu-calendar-accent\s*:\s*#15803d\b/.test(css)) {
+  fail("❌ :root --iu-calendar-accent must be #15803d (calendar overlay accent token)");
+}
+
+if (!/#iuSilverCalendarSummaryCard\s+\.iuCalendarSummary__label\s*\{[\s\S]*?font-weight\s*:\s*700\b/.test(css)) {
+  fail("❌ #iuSilverCalendarSummaryCard .iuCalendarSummary__label must use font-weight: 700");
+}
+
+if (!/#iuSilverCalendarSummaryCard\s+\.iuCalendarSummary__label\s*\{[\s\S]*?color\s*:\s*var\(--iu-calendar-accent\)/.test(css)) {
+  fail("❌ Calendar summary label must use color: var(--iu-calendar-accent)");
+}
+
+if (!/#iuSilverCalendarSummaryCard\s+\.iuCalendarSummary__icon\s*\{[\s\S]*?color\s*:\s*var\(--iu-calendar-accent\)/.test(css)) {
+  fail("❌ Calendar summary icon must use color: var(--iu-calendar-accent)");
+}
+
+if (!/#iuSilverCalendarSummaryCard\s+\.iuCalendarSummary__icon\s*\{[\s\S]*?font-weight\s*:\s*400\b/.test(css)) {
+  fail("❌ Calendar summary icon must use font-weight: 400 (not bold)");
+}
+
+if (!/#iuSilverCalendarSummaryCard\s+\.iuCalendarSummary__rest\s*\{[\s\S]*?color\s*:\s*inherit/.test(css)) {
+  fail("❌ .iuCalendarSummary__rest must keep color: inherit (body of line not green)");
+}
+
+if (!/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s*\{[\s\S]*?background-color\s*:\s*var\(--iu-calendar-accent\)/.test(css)) {
+  fail("❌ Mind Menu calendar button must use background-color: var(--iu-calendar-accent)");
+}
+
 console.log("✅ Silver stack guard OK");

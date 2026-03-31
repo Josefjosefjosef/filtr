@@ -70,6 +70,9 @@
   --iu-convert-accent: #00c9a7;
   --iu-convert-glow: rgba(0,201,167,.35);
 
+  /* Calendar overlay “today” / accent green (#iuCalendarOverlay --iu-cal-accent in app.js uses this token). */
+  --iu-calendar-accent: #15803d;
+
   
   --gold-main: #C9A24D;
   --gold-soft: rgba(201,162,77,0.35);
@@ -11334,9 +11337,9 @@ main#content .layout:has(#leftStickyHeader){
   overflow-wrap: break-word;
   min-width: 0;
 }
-.accordionCol .mindMenu .iu-mmTopTool--cal{
-  background: #EFF6FF;
-  color: #1D4ED8;
+.mindMenu .iu-mmTopTool--cal.iuMindMenuButton{
+  background-color: var(--iu-calendar-accent);
+  color: #fff;
 }
 .accordionCol .mindMenu .iu-mmTopTool--notes{
   background: #F5F3FF;
@@ -15211,6 +15214,28 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   gap: 8px;
   width: 100%;
   min-width: 0;
+}
+
+/* Silver kalendář box: štítek + ikona = calendar accent (viz :root --iu-calendar-accent / overlay „dnes“). */
+#iuSilverCalendarSummaryCard .iuCalendarSummary__label{
+  font-weight: 700;
+  color: var(--iu-calendar-accent);
+}
+#iuSilverCalendarSummaryCard .iuCalendarSummary__label::after{
+  content: " ";
+}
+#iuSilverCalendarSummaryCard .iuCalendarSummary__rest{
+  font-weight: inherit;
+  color: inherit;
+}
+#iuSilverCalendarSummaryCard .iuCalendarSummary__icon{
+  color: var(--iu-calendar-accent);
+  font-weight: 400;
+}
+#iuSilverCalendarSummaryCard .iuCalendarSummary__icon svg{
+  fill: currentColor;
+  stroke: currentColor;
+  font-weight: 400;
 }
 
 .silver-calendar-summary-iconCal{
