@@ -3736,18 +3736,6 @@ try {
     return effectiveSections.some((section) => section === sectionValue);
   }
 
-  /** Drip release: články s releaseAt v budoucnu se nezobrazí (videa nejsou omezena — YT hard lock). */
-  function iuArticleReleased(item) {
-    if (!item) return false;
-    const type = String(item.contentType || "article").toLowerCase();
-    if (type === "video") return true;
-    const r = item.releaseAt || item.release_at;
-    if (!r) return true;
-    const t = Number(new Date(r).getTime());
-    if (!Number.isFinite(t)) return true;
-    return t <= Date.now();
-  }
-
   function ensureFeedTarget() {
     let feed = document.getElementById("feed");
     if (feed) return feed;
@@ -7148,8 +7136,18 @@ function buildVideoAsArticleCard(it) {
     const hasQuery = !!(state && typeof state.searchQuery === "string" && state.searchQuery.trim().length);
 
     if (!hasTopic && !hasSection && !hasFilter && !hasQuery) {
+      state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
+      if (doRender) renderItems(state.filteredItems);
+      return;
+    }
+
+    if (
+      !state.activeSection &&
+      !state.activeTopic &&
+      !state.activeFilter
+    ) {
       state.filteredItems = Array.isArray(state.cachedItems)
-        ? state.cachedItems.filter((item) => iuArticleReleased(item))
+        ? state.cachedItems.slice()
         : [];
       if (doRender) renderItems(state.filteredItems);
       return;
@@ -7161,19 +7159,7 @@ function buildVideoAsArticleCard(it) {
       !state.activeFilter
     ) {
       state.filteredItems = Array.isArray(state.cachedItems)
-        ? state.cachedItems.filter((item) => iuArticleReleased(item))
-        : [];
-      if (doRender) renderItems(state.filteredItems);
-      return;
-    }
-
-    if (
-      !state.activeSection &&
-      !state.activeTopic &&
-      !state.activeFilter
-    ) {
-      state.filteredItems = Array.isArray(state.cachedItems)
-        ? state.cachedItems.filter((item) => iuArticleReleased(item))
+        ? state.cachedItems.slice()
         : [];
       if (doRender) renderItems(state.filteredItems);
       return;
@@ -7190,9 +7176,7 @@ function buildVideoAsArticleCard(it) {
     const query = state.searchQuery || "";
     const normalizedQuery = query.toLowerCase();
     const sectionsToUse = activeSections && activeSections.length ? activeSections : ["vse"];
-    let filtered = state.cachedItems.filter(
-      (item) => matchesSections(item, sectionsToUse) && iuArticleReleased(item),
-    );
+    let filtered = state.cachedItems.filter((item) => matchesSections(item, sectionsToUse));
     if (normalizedQuery) {
       filtered = filtered.filter((item) => {
         const type = String(item.contentType || "article").toLowerCase();
@@ -8338,21 +8322,8 @@ function buildVideoAsArticleCard(it) {
       if (!Array.isArray(state.cachedItems)) state.cachedItems = [];
       state.hasLoadedData = true;
       state.consecutiveLoadFailures = 0;
-      state.filteredItems = Array.isArray(state.cachedItems)
-        ? state.cachedItems.filter((item) => iuArticleReleased(item))
-        : [];
+      state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
       renderItems(state.filteredItems);
-      try {
-        if (!window.__iuDripReleaseTimer) {
-          window.__iuDripReleaseTimer = setInterval(() => {
-            try {
-              if (!state.hasLoadedData) return;
-              if (document.visibilityState !== "visible") return;
-              applyFilter({ resetPage: false, render: true });
-            } catch (e) {}
-          }, 60000);
-        }
-      } catch (e) {}
       if (isDebugLogging) {
         debugLog(
           "[CACHE] total",

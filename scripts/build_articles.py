@@ -67,8 +67,6 @@ GLOBAL_MIN_REQUEST_INTERVAL_SEC = 2.0
 MAX_TOPIC_DEDUPE_PER_KEY = 2
 MAX_ARTICLES_PER_SOURCE_DISPLAY = 2
 NICHE_MAX_FRACTION = 0.38
-DRIP_GAP_MIN_SEC = 180
-DRIP_GAP_MAX_SEC = 360
 
 # Retence denních shardů v projects/data/articles (počet dnů dozadu včetně dneška)
 # Safe default: 45 dní (dost historie, ale repo neroste do nekonečna).
@@ -415,25 +413,6 @@ def apply_niche_fraction_limit(articles: list) -> list:
     merged = rest + niche_sorted
     merged.sort(key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
     return merged
-
-
-def assign_drip_release(articles: list, generated_at_iso: str) -> list:
-    if not articles:
-        return articles
-    try:
-        base = datetime.fromisoformat(generated_at_iso.replace("Z", "+00:00"))
-    except Exception:
-        base = datetime.now(timezone.utc)
-    sorted_newest_first = sorted(articles, key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
-    offset_sec = 0
-    for idx, a in enumerate(sorted_newest_first):
-        title = str(a.get("title") or "")
-        h = int(hashlib.sha1(title.encode("utf-8", errors="ignore")).hexdigest()[:8], 16)
-        gap = DRIP_GAP_MIN_SEC + (h % (DRIP_GAP_MAX_SEC - DRIP_GAP_MIN_SEC + 1))
-        offset_sec += 0 if idx == 0 else gap
-        rel = base + timedelta(seconds=offset_sec)
-        a["releaseAt"] = rel.isoformat().replace("+00:00", "Z")
-    return sorted_newest_first
 
 
 def _retention_key(it: dict) -> str:
@@ -1664,7 +1643,7 @@ def main() -> int:
 
     out_articles = apply_topic_and_source_limits(out_articles)
     out_articles = apply_niche_fraction_limit(out_articles)
-    out_articles = assign_drip_release(out_articles, generated_at)
+    # Drip (releaseAt v budoucnu) schová většinu článků v UI — nesmí blokovat čerstvý feed; čas publikace zůstává v publishedAt.
 
     try:
         save_transport_state(transport_state)
