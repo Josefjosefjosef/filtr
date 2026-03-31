@@ -73,6 +73,9 @@
   /* Calendar UI accent (also --iu-cal-accent via #iuCalendarOverlay in app.js). Lightened from #15803d for Silver „Kalendář:“ + Mind Menu Kalendář; WCAG ~4.56:1 vs white both directions at 14px. */
   --iu-calendar-accent: #1c8748;
 
+  /* Silver „Úkoly:“ + řádková ikona — adaptivní fialová (evening stack / prefers-color-scheme). */
+  --iuTasksAccent: #8b5cf6;
+
   
   --gold-main: #C9A24D;
   --gold-soft: rgba(201,162,77,0.35);
@@ -180,6 +183,12 @@
   --iuRailIconCircle: 44px;
   --iuRailIconGlyph: 22px;
   --iuRailLabelSize: 12px;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --iuTasksAccent: #a78bfa;
+  }
 }
 
 *{ box-sizing:border-box; }
@@ -11368,9 +11377,27 @@ body .rightCol .mindMenu .iu-mmTopTool--cal.iuMindMenuButton .iu-mmTopToolIcon{
   fill: none;
   stroke: currentColor;
 }
-.accordionCol .mindMenu .iu-mmTopTool--tasks{
-  background: #ECFDF5;
-  color: #047857;
+
+/* MINDMENU — Tasks button fixed purple (scope: Úkoly tool only). */
+.mindMenu .iu-mmTopTool.iuMindMenuTasksBtn{
+  background: #7c3aed;
+  color: #fff;
+}
+.mindMenu .iu-mmTopTool.iuMindMenuTasksBtn .iu-mmTopToolText,
+.mindMenu .iu-mmTopTool.iuMindMenuTasksBtn .iu-mmTopToolIcon{
+  color: #fff;
+}
+body .layout > aside.accordionCol .mindMenu .iu-mmTopTool.iuMindMenuTasksBtn .iu-mmTopToolText,
+body .layout > aside.accordionCol .mindMenu .iu-mmTopTool.iuMindMenuTasksBtn .iu-mmTopToolIcon{
+  color: #fff !important;
+}
+body .rightCol .mindMenu .iu-mmTopTool.iuMindMenuTasksBtn .iu-mmTopToolText,
+body .rightCol .mindMenu .iu-mmTopTool.iuMindMenuTasksBtn .iu-mmTopToolIcon{
+  color: #fff !important;
+}
+.accordionCol .mindMenu .iu-mmTopTool.iuMindMenuTasksBtn:hover,
+#iuMobileGatePanelTools .mindMenu .iu-mmTopTool.iuMindMenuTasksBtn:hover{
+  filter: brightness(1.05);
 }
 @media (max-width: 420px){
   .accordionCol .mindMenu .iu-mmTopTools{
@@ -15017,6 +15044,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuSilverCardActionHoverBg: rgba(255, 255, 255, 0.06);
   --iuSilverCardActionActiveBg: rgba(255, 255, 255, 0.09);
   --iuSilverCardActionFocusOutline: rgba(255, 255, 255, 0.28);
+  --iuTasksAccent: #a78bfa;
 }
 
 .silver-welcome-stack__separator{
@@ -15252,6 +15280,27 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 #iuSilverCalendarSummaryCard .iuCalendarSummary__icon svg{
   fill: currentColor;
+  stroke: currentColor;
+  font-weight: 400;
+}
+
+/* Silver úkoly box: tučný štítek + ikona = stejný accent token (--iuTasksAccent). */
+#iuSilverTasksSummaryCard .iuTasksLabel{
+  font-weight: 700;
+  color: var(--iuTasksAccent, #8b5cf6);
+}
+#iuSilverTasksSummaryCard .iuTasksLabel::after{
+  content: " ";
+}
+#iuSilverTasksSummaryCard #iuSilverTasksSummaryLine1Rest{
+  font-weight: inherit;
+  color: inherit;
+}
+#iuSilverTasksSummaryCard .iuTasksIcon{
+  font-weight: 400;
+  color: var(--iuTasksAccent, #8b5cf6);
+}
+#iuSilverTasksSummaryCard .iuTasksIcon svg{
   stroke: currentColor;
   font-weight: 400;
 }
