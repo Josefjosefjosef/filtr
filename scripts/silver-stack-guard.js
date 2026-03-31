@@ -129,23 +129,7 @@ if (!/iu-mmTopTool--cal[^>]*\biuMindMenuButton\b/.test(html) && !/iuMindMenuButt
 }
 
 if (!css.includes("/* === CALENDAR ACCENT HARD LOCK (DO NOT MODIFY) === */")) {
-  fail("❌ assets/app.css must contain CALENDAR ACCENT HARD LOCK banner (anti-regression)");
-}
-
-const lockIdx = css.indexOf("/* === CALENDAR ACCENT HARD LOCK (DO NOT MODIFY) === */");
-if (lockIdx < 0) {
-  fail("❌ CALENDAR ACCENT HARD LOCK block missing in app.css");
-}
-const cssAfterLock = css.slice(lockIdx);
-if (
-  !/:root\s*\{[\s\S]*?--iu-calendar-accent\s*:\s*#1c8748\b/.test(cssAfterLock) ||
-  !/#iuSilverCalendarSummaryCard\s+\.iuCalendarSummary__label\s*\{[\s\S]*?font-weight\s*:\s*700/.test(cssAfterLock) ||
-  !/#iuSilverCalendarSummaryCard\s+\.iuCalendarSummary__icon\s*\{[\s\S]*?font-weight\s*:\s*400/.test(cssAfterLock) ||
-  !/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s*\{[\s\S]*?background-color\s*:\s*var\(--iu-calendar-accent\)[\s\S]*?color\s*:\s*#fff(?:fff)?\b\s*!important/.test(
-    cssAfterLock
-  )
-) {
-  fail("❌ CALENDAR ACCENT HARD LOCK tail block must define :root #1c8748, label 700, icon 400, mind button fill + white !important");
+  fail("❌ assets/app.css must contain CALENDAR ACCENT HARD LOCK banner (anti-regression; EOF docs only — no duplicate rules)");
 }
 
 if (!/<span class="iuCalendarSummary__label">Kalendář:<\/span>/.test(html)) {
@@ -202,8 +186,8 @@ if (!/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s*\{[\s\S]*?background-
   fail("❌ Mind Menu calendar button must use background-color: var(--iu-calendar-accent)");
 }
 
-if (!/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s*\{[\s\S]*?color\s*:\s*#fff(?:fff)?\b/.test(css)) {
-  fail("❌ Mind Menu calendar button must set color: #fff or #ffffff for readable contrast on accent");
+if (!/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s*\{[\s\S]*?color\s*:\s*#fff(?:fff)?\b\s*!important/.test(css)) {
+  fail("❌ Mind Menu calendar button must set color: #fff or #ffffff !important (readable on accent; cascade lock)");
 }
 
 if (
