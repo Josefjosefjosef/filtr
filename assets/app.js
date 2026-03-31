@@ -5050,6 +5050,15 @@ function buildVideoAsArticleCard(it) {
         return String(d.toLocaleDateString("cs-CZ"));
       }
     }
+    /** Rozpad „31. března 2026“ pro selektivní .iuDateStrong (den v týdnu / číslo / měsíc / rok zvlášť). */
+    function splitDlongCsParts(d){
+      try{
+        const s = fmtDateLong(d);
+        const m = String(s).match(/^(\d+\.)\s+(.+?)\s+(\d{4})$/);
+        if (m) return { dayNum: m[1], month: m[2], year: m[3] };
+      }catch{}
+      return null;
+    }
     function readNamedaySuffixForMeta(){
       try{
         const g =
@@ -5180,7 +5189,8 @@ function buildVideoAsArticleCard(it) {
         const dlong = fmtDateLong(refDate);
         /* P0: Nemazat window.__iuNamedaySuffixFromSource v welcome — vlastní iuDailyPanelInit; mazání způsobovalo závod a ořez plného textu. */
         const nd = readNamedaySuffixForMeta();
-        const datePart = wLower + " " + dlong;
+        const dlongParts = splitDlongCsParts(refDate);
+        const datePartFallback = wLower + " " + dlong;
         let namePart = "—";
         try{
           const n = iuParseNamedayTailFromRaw(String(nd || ""));
@@ -5190,10 +5200,34 @@ function buildVideoAsArticleCard(it) {
           const doc = metaEl.ownerDocument;
           metaEl.textContent = "";
           metaEl.appendChild(doc.createTextNode("Dnes je "));
-          const spanDate = doc.createElement("span");
-          spanDate.className = "iuDateStrong";
-          spanDate.textContent = datePart;
-          metaEl.appendChild(spanDate);
+          if (dlongParts){
+            if (wLower){
+              const spanWd = doc.createElement("span");
+              spanWd.className = "iuDateStrong";
+              spanWd.textContent = wLower;
+              metaEl.appendChild(spanWd);
+              metaEl.appendChild(doc.createTextNode(" "));
+            }
+            const spanDn = doc.createElement("span");
+            spanDn.className = "iuDateStrong";
+            spanDn.textContent = dlongParts.dayNum;
+            metaEl.appendChild(spanDn);
+            metaEl.appendChild(doc.createTextNode(" "));
+            const spanMo = doc.createElement("span");
+            spanMo.className = "iuDateStrong";
+            spanMo.textContent = dlongParts.month;
+            metaEl.appendChild(spanMo);
+            metaEl.appendChild(doc.createTextNode(" "));
+            const spanYr = doc.createElement("span");
+            spanYr.className = "iuDateStrong";
+            spanYr.textContent = dlongParts.year;
+            metaEl.appendChild(spanYr);
+          } else {
+            const spanDate = doc.createElement("span");
+            spanDate.className = "iuDateStrong";
+            spanDate.textContent = datePartFallback;
+            metaEl.appendChild(spanDate);
+          }
           metaEl.appendChild(doc.createTextNode(" · svátek má "));
           const spanName = doc.createElement("span");
           spanName.className = "iuNameStrong";
