@@ -11339,7 +11339,7 @@ main#content .layout:has(#leftStickyHeader){
 }
 .mindMenu .iu-mmTopTool--cal.iuMindMenuButton{
   background-color: var(--iu-calendar-accent);
-  color: #fff;
+  color: #fff !important;
 }
 .mindMenu .iu-mmTopTool--cal.iuMindMenuButton .iu-mmTopToolText,
 .mindMenu .iu-mmTopTool--cal.iuMindMenuButton .iu-mmTopToolIcon{
@@ -20320,3 +20320,10 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-height: none !important;
   }
 }
+
+/* === CALENDAR ACCENT HARD LOCK (DO NOT MODIFY) === */
+/* Canonical rules only — no duplicate selectors here (css_debt_guard / risk-zone patterns).
+ * --iu-calendar-accent: #1c8748 in :root above.
+ * Silver row: #iuSilverCalendarSummaryCard .iuCalendarSummary__label | __icon | __rest (~silver kalendář box).
+ * Mind Menu Kalendář: .mindMenu .iu-mmTopTool--cal.iuMindMenuButton (+ text/icon overrides) in Mind Menu section above.
+ * To change accent behavior: edit those blocks only, never add a second copy at EOF. */

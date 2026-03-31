@@ -128,6 +128,32 @@ if (!/iu-mmTopTool--cal[^>]*\biuMindMenuButton\b/.test(html) && !/iuMindMenuButt
   fail("❌ Mind Menu Kalendář button must combine .iu-mmTopTool--cal + .iuMindMenuButton");
 }
 
+if (!css.includes("/* === CALENDAR ACCENT HARD LOCK (DO NOT MODIFY) === */")) {
+  fail("❌ assets/app.css must contain CALENDAR ACCENT HARD LOCK banner (anti-regression; EOF docs only — no duplicate rules)");
+}
+
+if (!/<span class="iuCalendarSummary__label">Kalendář:<\/span>/.test(html)) {
+  fail("❌ Calendar label inner HTML must be exactly Kalendář: (single label span)");
+}
+
+if (!/id="iuSilverCalendarSummaryLine1Rest"/.test(html)) {
+  fail("❌ Missing #iuSilverCalendarSummaryLine1Rest hook");
+}
+
+if (!/id="iuSilverCalendarSummaryCard"[\s\S]*?iuCalendarSummary__icon/.test(html)) {
+  fail("❌ Calendar summary icon class must exist in markup under iuSilverCalendarSummaryCard");
+}
+
+const calSvg = html.match(/id="iuSilverCalendarSummaryCard"[\s\S]*?<\/svg>/);
+if (!calSvg || (calSvg[0].match(/stroke-width="1\.6"/g) || []).length < 2) {
+  fail("❌ Calendar summary SVG must keep baseline stroke-width=\"1.6\" (no optical thicken)");
+}
+
+const restBlock = css.match(/#iuSilverCalendarSummaryCard\s+\.iuCalendarSummary__rest\s*\{([^}]*)\}/);
+if (!restBlock || /color\s*:\s*#1c8748\b|color\s*:\s*var\(\s*--iu-calendar-accent\s*\)/.test(restBlock[1])) {
+  fail("❌ #iuSilverCalendarSummaryCard .iuCalendarSummary__rest must not set accent green as text color (use inherit only)");
+}
+
 if (/--iu-calendar-accent\s*:\s*#15803d\b/.test(css)) {
   fail("❌ Retired #15803d for --iu-calendar-accent (too dark on Silver + Mind Menu surfaces)");
 }
@@ -160,24 +186,24 @@ if (!/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s*\{[\s\S]*?background-
   fail("❌ Mind Menu calendar button must use background-color: var(--iu-calendar-accent)");
 }
 
-if (!/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s*\{[\s\S]*?color\s*:\s*#fff\b/.test(css)) {
-  fail("❌ Mind Menu calendar button must set color: #fff for readable contrast on accent");
+if (!/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s*\{[\s\S]*?color\s*:\s*#fff(?:fff)?\b\s*!important/.test(css)) {
+  fail("❌ Mind Menu calendar button must set color: #fff or #ffffff !important (readable on accent; cascade lock)");
 }
 
 if (
-  !/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s+\.iu-mmTopToolText\s*,\s*\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s+\.iu-mmTopToolIcon\s*\{[\s\S]*?color\s*:\s*#fff\b/.test(
+  !/\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s+\.iu-mmTopToolText\s*,\s*\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s+\.iu-mmTopToolIcon\s*\{[\s\S]*?color\s*:\s*#fff(?:fff)?\b/.test(
     css
   )
 ) {
-  fail("❌ Mind Menu calendar button text + icon must force color: #fff (readable on accent)");
+  fail("❌ Mind Menu calendar button text + icon must force color: #fff/#ffffff (readable on accent)");
 }
 
 if (
-  !/\.accordionCol\s+\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s+\.iu-mmTopToolText\s*,\s*\.accordionCol\s+\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s+\.iu-mmTopToolIcon\s*\{[\s\S]*?color\s*:\s*#fff\b/.test(
+  !/\.accordionCol\s+\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s+\.iu-mmTopToolText\s*,\s*\.accordionCol\s+\.mindMenu\s+\.iu-mmTopTool--cal\.iuMindMenuButton\s+\.iu-mmTopToolIcon\s*\{[\s\S]*?color\s*:\s*#fff(?:fff)?\b/.test(
     css
   )
 ) {
-  fail("❌ Mind Menu calendar button text + icon must stay #fff under .accordionCol");
+  fail("❌ Mind Menu calendar button text + icon must stay #fff/#ffffff under .accordionCol");
 }
 
 console.log("✅ Silver stack guard OK");
