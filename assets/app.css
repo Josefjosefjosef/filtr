@@ -15017,7 +15017,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .silver-weather-card{
-  --iu-silver-wx-outside-temp-fg: color-mix(in srgb, var(--iuNavAccent-pocasi, #38BDF8) 20%, #0b3d5c 80%);
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -15036,10 +15035,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   overflow: hidden;
   
   contain: layout;
-}
-
-.silver-welcome-stack--evening .silver-weather-card{
-  --iu-silver-wx-outside-temp-fg: color-mix(in srgb, var(--iuNavAccent-pocasi, #38BDF8) 82%, #e0f2fe 18%);
 }
 
 /* P0 Mobile/tablet: inner scroll probe spacer — outer tall height z flex + --iu-silver-slot-max-h (app.js) */
@@ -15379,12 +15374,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   color: rgba(30, 40, 55, 0.88);
 }
 
-.silver-weather-line1 .silver-weather-outside-temp{
-  font-weight: 700;
-  line-height: inherit;
-  letter-spacing: inherit;
-  color: var(--iu-silver-wx-outside-temp-fg);
-}
+.silver-weather-line1 .silver-weather-outside-temp{font-weight:700;line-height:inherit;letter-spacing:inherit;color:color-mix(in srgb,var(--iuNavAccent-pocasi,#38BDF8) 20%,#0b3d5c 80%)}
+
+.silver-welcome-stack--evening .silver-weather-line1 .silver-weather-outside-temp{color:color-mix(in srgb,var(--iuNavAccent-pocasi,#38BDF8) 82%,#e0f2fe 18%)}
 
 .silver-weather-line2{
   color: rgba(30, 40, 55, 0.82);
@@ -19960,17 +19952,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   text-underline-offset: 2px;
 }
 
-/* ========================================================================
-   STOP-SHIP — SILVER STACK GEOMETRY (LOCKED; měň jen styl, ne layout)
-   - Box1 → Počasí → třetí box → Kalendář → Úkoly → Silver: vždy na 1. obrazovce (≤900px).
-   - Malé karty (Počasí / Kalendář / Úkoly): výhradně podle obsahu (2 řádky + ~5px padding).
-     Zakázáno: row-band min-height tokeny na malé karty, umělé nafouknutí řádků.
-   - #iuSilverTallScrollSection: jediný pružný „remainder“; flex: 1 1 auto; min-height: 0;
-     zakázáno: px floor, vh/svh/dvh na tomto boxu, fixní height.
-   - Počasí: data-iu-silver-wx-layout="setup" (tlačítka) | "ready" (jen 2 řádky); oba stavy musí vejít do slotu.
-   - Silver shell (stack): fixní blok vstup + 2 tlačítka (záložky); flex-grow 0 — žádné nafukování.
-   - Jediný viewport-driven rozpočet: #silver-slot max/min height přes var(--iu-silver-slot-max-h) z app.js.
-   ======================================================================== */
+/* STOP-SHIP: Silver stack geometry locked (≤900px slot); měň jen styl — layout token --iu-silver-slot-max-h v app.js */
 /* P0 Mobile/tablet only: adaptive first-viewport stack + Silver bottom visible — --iu-silver-slot-max-h z visualViewport (app.js); desktop ≥901px beze změny */
 @media (max-width: 900px){
   .iuSilverTopCardsStack #silver-slot.silver-slot,
