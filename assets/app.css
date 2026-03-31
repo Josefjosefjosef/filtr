@@ -15473,12 +15473,18 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuTopbarInfoBtn {
     display: none !important;
   }
+  #iuSilverWelcomeCard{
+    --iuWiH:40px;
+    --iuWiR:8px;
+    padding-left:calc(var(--iuSilverStackPadX, 12px) + var(--iuWiR) + var(--iuWiH));
+    padding-right:calc(var(--iuSilverStackPadX, 12px) + var(--iuWiR) + var(--iuWiH));
+  }
   #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
     position: absolute;
     top: 6px;
-    right: 8px;
-    width: 40px;
-    height: 40px;
+    right: var(--iuWiR,8px);
+    width: var(--iuWiH,40px);
+    height: var(--iuWiH,40px);
     margin: 0;
     padding: 0;
     border: 0;
@@ -15493,23 +15499,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     -webkit-tap-highlight-color: transparent;
   }
   #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg {
-    width: 34px;
-    height: 34px;
+    width: calc(var(--iuWiH,40px)*0.85);
+    height: calc(var(--iuWiH,40px)*0.85);
   }
   #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn:focus-visible {
     outline: 2px solid rgba(37, 99, 235, 0.85);
     outline-offset: 2px;
   }
-  #iuSilverWelcomeCard {
-    padding-right: calc(var(--iuSilverStackPadX, 12px) + 44px);
-  }
   #iuSilverWelcomeCard .iu-nameday-cta{
     margin-top: 14px;
-    width: calc(100% - 44px);
-    margin-left: 44px;
-    margin-right: 0;
-    box-sizing: border-box;
-    justify-content: center;
   }
   .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > circle:nth-child(1) {
     fill: rgba(255, 255, 255, 0.12);
