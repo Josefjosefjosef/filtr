@@ -15495,7 +15495,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
     /* welcome card info icon: corner nudge + −20% (transform keeps layout box / grid) */
-    transform: translate(4px, -4px) scale(0.8);
+    transform: translate(7px, -7px) scale(0.8);
     transform-origin: center;
   }
   #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg {
@@ -15737,15 +15737,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   color: rgba(230, 238, 248, 0.88);
 }
 
-.iuDateStrong{
-  font-weight: 600;
-}
-
+.iuSilverWelcomeMeta .iuDateStrong,
 .iuSilverWelcomeMeta .iuNameStrong{
   font-weight: 700;
   color: rgba(18, 28, 44, 0.94);
 }
 
+.silver-welcome-stack--evening .iuSilverWelcomeMeta .iuDateStrong,
 .silver-welcome-stack--evening .iuSilverWelcomeMeta .iuNameStrong{
   font-weight: 700;
   color: rgba(255, 255, 255, 0.96);
