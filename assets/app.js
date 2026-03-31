@@ -5180,7 +5180,26 @@ function buildVideoAsArticleCard(it) {
         const dlong = fmtDateLong(refDate);
         /* P0: Nemazat window.__iuNamedaySuffixFromSource v welcome — vlastní iuDailyPanelInit; mazání způsobovalo závod a ořez plného textu. */
         const nd = readNamedaySuffixForMeta();
-        metaEl.textContent = "Dnes je " + wLower + " " + dlong + " · " + nd;
+        const datePart = wLower + " " + dlong;
+        let namePart = "—";
+        try{
+          const n = iuParseNamedayTailFromRaw(String(nd || ""));
+          if (n) namePart = n;
+        }catch{}
+        try{
+          const doc = metaEl.ownerDocument;
+          metaEl.textContent = "";
+          metaEl.appendChild(doc.createTextNode("Dnes je "));
+          const spanDate = doc.createElement("span");
+          spanDate.className = "iuDateStrong";
+          spanDate.textContent = datePart;
+          metaEl.appendChild(spanDate);
+          metaEl.appendChild(doc.createTextNode(" · svátek má "));
+          const spanName = doc.createElement("span");
+          spanName.className = "iuNameStrong";
+          spanName.textContent = namePart;
+          metaEl.appendChild(spanName);
+        }catch{}
         if (silverWelcomeUseJsMetaFit()) {
           try{ fitMetaFont(); }catch{}
           /* Jedno fitMetaFont výše; další schedule jen při resize (ResizeObserver) — duplicitní 2× RAF dřív přidávalo CLS. */
