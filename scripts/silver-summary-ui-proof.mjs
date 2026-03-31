@@ -21,8 +21,9 @@ const VIEWPORTS = [
   [1920, 1080]
 ];
 
-/** Must match :root --iu-calendar-accent (#15803d). */
-const CALENDAR_ACCENT_RGB = { r: 21, g: 128, b: 61 };
+/** Must match :root --iu-calendar-accent (lightened vs former #15803d). */
+const CALENDAR_ACCENT_RGB = { r: 28, g: 135, b: 72 };
+const RETIRED_ACCENT_RGB = { r: 21, g: 128, b: 61 };
 
 const DAY = "2026-03-26";
 const ev4 = [
@@ -106,46 +107,87 @@ async function snapMetrics(page) {
 }
 
 async function auditCalendarAccentUi(page) {
-  return page.evaluate((exp) => {
-    function parseRgbProp(el, prop) {
-      const raw = getComputedStyle(el)[prop];
-      const m = String(raw).match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
-      if (!m) return null;
-      return { r: +m[1], g: +m[2], b: +m[3] };
-    }
-    function numFontWeight(el) {
-      const w = getComputedStyle(el).fontWeight;
-      if (w === "bold" || w === "bolder") return 700;
-      const n = Number(w);
-      return Number.isFinite(n) ? n : 400;
-    }
-    function rgbEq(a, b) {
-      return a && b && a.r === b.r && a.g === b.g && a.b === b.b;
-    }
-    const labels = document.querySelectorAll(".iuCalendarSummary__label");
-    if (labels.length !== 1) return { ok: false, reason: "label_count_" + labels.length };
-    const label = labels[0];
-    const icon = document.querySelector("#iuSilverCalendarSummaryCard .iuCalendarSummary__icon");
-    const rest = document.querySelector("#iuSilverCalendarSummaryCard .iuCalendarSummary__rest");
-    const btn = document.querySelector(".iu-mmTopTool--cal.iuMindMenuButton");
-    if (!icon || !rest || !btn) return { ok: false, reason: "missing_dom" };
-    const rootVar = getComputedStyle(document.documentElement).getPropertyValue("--iu-calendar-accent").trim();
-    const lc = parseRgbProp(label, "color");
-    const ic = parseRgbProp(icon, "color");
-    const rc = parseRgbProp(rest, "color");
-    const bc = parseRgbProp(btn, "backgroundColor");
-    const lw = numFontWeight(label);
-    const iw = numFontWeight(icon);
-    const ok =
-      rootVar === "#15803d" &&
-      rgbEq(lc, exp) &&
-      rgbEq(ic, exp) &&
-      !rgbEq(rc, exp) &&
-      rgbEq(bc, exp) &&
-      lw >= 700 &&
-      iw !== 700;
-    return { ok, rootVar, lc, ic, rc, bc, lw, iw };
-  }, CALENDAR_ACCENT_RGB);
+  return page.evaluate(
+    ({ exp, retired }) => {
+      function parseRgbProp(el, prop) {
+        const raw = getComputedStyle(el)[prop];
+        const m = String(raw).match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+        if (!m) return null;
+        return { r: +m[1], g: +m[2], b: +m[3] };
+      }
+      function numFontWeight(el) {
+        const w = getComputedStyle(el).fontWeight;
+        if (w === "bold" || w === "bolder") return 700;
+        const n = Number(w);
+        return Number.isFinite(n) ? n : 400;
+      }
+      function rgbEq(a, b) {
+        return a && b && a.r === b.r && a.g === b.g && a.b === b.b;
+      }
+      function relLum(rgb) {
+        if (!rgb) return 0;
+        function f(c) {
+          const x = c / 255;
+          return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+        }
+        const R = f(rgb.r),
+          G = f(rgb.g),
+          B = f(rgb.b);
+        return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+      }
+      function contrastRgb(a, b) {
+        const L1 = relLum(a),
+          L2 = relLum(b);
+        const x = Math.max(L1, L2),
+          y = Math.min(L1, L2);
+        return (x + 0.05) / (y + 0.05);
+      }
+      const labels = document.querySelectorAll(".iuCalendarSummary__label");
+      if (labels.length !== 1) return { ok: false, reason: "label_count_" + labels.length };
+      const label = labels[0];
+      const icon = document.querySelector("#iuSilverCalendarSummaryCard .iuCalendarSummary__icon");
+      const rest = document.querySelector("#iuSilverCalendarSummaryCard .iuCalendarSummary__rest");
+      const btn = document.querySelector(".mindMenu .iu-mmTopTool--cal.iuMindMenuButton");
+      if (!icon || !rest || !btn) return { ok: false, reason: "missing_dom" };
+      const rootVar = getComputedStyle(document.documentElement).getPropertyValue("--iu-calendar-accent").trim();
+      const lc = parseRgbProp(label, "color");
+      const ic = parseRgbProp(icon, "color");
+      const rc = parseRgbProp(rest, "color");
+      const bc = parseRgbProp(btn, "backgroundColor");
+      const btnFg = parseRgbProp(btn, "color");
+      const btnTxt = btn.querySelector(".iu-mmTopToolText");
+      const btnTxtRgb = btnTxt ? parseRgbProp(btnTxt, "color") : null;
+      const lw = numFontWeight(label);
+      const iw = numFontWeight(icon);
+      const mindContrast = bc && btnFg ? contrastRgb(bc, btnFg) : 0;
+      const notRetired = lc && !rgbEq(lc, retired) && ic && !rgbEq(ic, retired);
+      const readableMind = mindContrast >= 4.5 && btnTxtRgb && rgbEq(btnTxtRgb, { r: 255, g: 255, b: 255 });
+      const ok =
+        rootVar === "#1c8748" &&
+        notRetired &&
+        rgbEq(lc, exp) &&
+        rgbEq(ic, exp) &&
+        !rgbEq(rc, exp) &&
+        rgbEq(bc, exp) &&
+        lw >= 700 &&
+        iw !== 700 &&
+        readableMind;
+      return {
+        ok,
+        rootVar,
+        lc,
+        ic,
+        rc,
+        bc,
+        btnFg,
+        btnTxtRgb,
+        mindContrast,
+        lw,
+        iw
+      };
+    },
+    { exp: CALENDAR_ACCENT_RGB, retired: RETIRED_ACCENT_RGB }
+  );
 }
 
 async function main() {

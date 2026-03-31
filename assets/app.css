@@ -70,8 +70,8 @@
   --iu-convert-accent: #00c9a7;
   --iu-convert-glow: rgba(0,201,167,.35);
 
-  /* Calendar overlay “today” / accent green (#iuCalendarOverlay --iu-cal-accent in app.js uses this token). */
-  --iu-calendar-accent: #15803d;
+  /* Calendar UI accent (also --iu-cal-accent via #iuCalendarOverlay in app.js). Lightened from #15803d for Silver „Kalendář:“ + Mind Menu Kalendář; WCAG ~4.56:1 vs white both directions at 14px. */
+  --iu-calendar-accent: #1c8748;
 
   
   --gold-main: #C9A24D;
@@ -11340,6 +11340,24 @@ main#content .layout:has(#leftStickyHeader){
 .mindMenu .iu-mmTopTool--cal.iuMindMenuButton{
   background-color: var(--iu-calendar-accent);
   color: #fff;
+}
+.mindMenu .iu-mmTopTool--cal.iuMindMenuButton .iu-mmTopToolText,
+.mindMenu .iu-mmTopTool--cal.iuMindMenuButton .iu-mmTopToolIcon{
+  color: #fff;
+}
+.accordionCol .mindMenu .iu-mmTopTool--cal.iuMindMenuButton .iu-mmTopToolText,
+.accordionCol .mindMenu .iu-mmTopTool--cal.iuMindMenuButton .iu-mmTopToolIcon{
+  color: #fff;
+}
+body .layout > aside.accordionCol .mindMenu .iu-mmTopTool--cal.iuMindMenuButton,
+body .layout > aside.accordionCol .mindMenu .iu-mmTopTool--cal.iuMindMenuButton .iu-mmTopToolText,
+body .layout > aside.accordionCol .mindMenu .iu-mmTopTool--cal.iuMindMenuButton .iu-mmTopToolIcon{
+  color: #fff !important;
+}
+body .rightCol .mindMenu .iu-mmTopTool--cal.iuMindMenuButton,
+body .rightCol .mindMenu .iu-mmTopTool--cal.iuMindMenuButton .iu-mmTopToolText,
+body .rightCol .mindMenu .iu-mmTopTool--cal.iuMindMenuButton .iu-mmTopToolIcon{
+  color: #fff !important;
 }
 .accordionCol .mindMenu .iu-mmTopTool--notes{
   background: #F5F3FF;
