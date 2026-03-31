@@ -15494,6 +15494,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     border-radius: 999px;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    /* welcome card info icon: visual −20% (transform keeps layout box / grid) */
+    transform: scale(0.8);
+    transform-origin: center;
   }
   #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg {
     width: calc(var(--iuWiH,40px)*0.85);
