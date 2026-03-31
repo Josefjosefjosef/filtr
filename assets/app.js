@@ -5763,6 +5763,7 @@ function buildVideoAsArticleCard(it) {
 
     const card = document.getElementById("iuSilverTasksSummaryCard");
     const line1 = document.getElementById("iuSilverTasksSummaryLine1");
+    const line1Rest = document.getElementById("iuSilverTasksSummaryLine1Rest");
     const line2 = document.getElementById("iuSilverTasksSummaryLine2");
     const actionRow = card ? card.querySelector(".silver-calendar-summary-line2main") : null;
     if (!card || !line1 || !line2) return;
@@ -5820,7 +5821,12 @@ function buildVideoAsArticleCard(it) {
           todayN = 0;
         }
       }
-      line1.textContent = "Úkoly: máte celkem " + total + " úkolů k vyřešení";
+      const line1Full = "Úkoly: máte celkem " + total + " úkolů k vyřešení";
+      if (line1Rest){
+        line1Rest.textContent = line1Full.indexOf("Úkoly: ") === 0 ? line1Full.slice("Úkoly: ".length) : line1Full;
+      } else if (line1){
+        line1.textContent = line1Full;
+      }
       line2.textContent = "Dnes máte k řešení " + todayN + " úkolů";
       try{
         card.setAttribute("data-iu-tasks-summary-ts", String(Date.now()));

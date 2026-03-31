@@ -237,14 +237,14 @@ style-src 'self' 'unsafe-inline' https:;
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorTasks" aria-hidden="true"></div>
                         <div class="silver-calendar-summary-card" id="iuSilverTasksSummaryCard" data-iu-tasks-summary>
                           <div class="silver-calendar-summary-row silver-calendar-summary-row--1">
-                            <span class="silver-calendar-summary-iconCal" aria-hidden="true">
+                            <span class="silver-calendar-summary-iconCal iuTasksIcon" aria-hidden="true">
                               <svg class="silver-calendar-summary-svg" viewBox="0 0 24 24" width="20" height="20" focusable="false" aria-hidden="true">
                                 <rect x="3" y="5" width="5" height="5" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.5"/>
                                 <path d="M9 11l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M11 7h10M11 12h10M11 17h7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                               </svg>
                             </span>
-                            <p class="silver-calendar-summary-text" id="iuSilverTasksSummaryLine1"></p>
+                            <p class="silver-calendar-summary-text" id="iuSilverTasksSummaryLine1"><span class="iuTasksLabel">Úkoly:</span><span id="iuSilverTasksSummaryLine1Rest"></span></p>
                           </div>
                           <div class="silver-calendar-summary-line2block">
                             <div class="silver-calendar-summary-line2main iu-silver-actionRow" data-iu-action-indicator="chevron">
@@ -1907,7 +1907,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <span class="iu-mmTopToolIcon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 9h8M8 13h6M8 17h5"/></svg></span>
                         <span class="iu-mmTopToolText">Poznámky</span>
                       </button>
-                      <button type="button" class="iu-mmTopTool iu-mmTopTool--tasks" aria-label="Úkoly" data-iu-tasks-trigger="1">
+                      <button type="button" class="iu-mmTopTool iu-mmTopTool--tasks iuMindMenuTasksBtn" aria-label="Úkoly" data-iu-tasks-trigger="1">
                         <span class="iu-mmTopToolIcon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M3 5h2v2H3V5zm4 0h14v2H7V5zm0 6h14v2H7v-2zm0 6h14v2H7v-2zm-4-6h2v2H3v-2zm0 6h2v2H3v-2z"/></svg></span>
                         <span class="iu-mmTopToolText">Úkoly</span>
                       </button>
