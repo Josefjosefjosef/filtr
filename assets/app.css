@@ -186,7 +186,7 @@
 }
 
 @media (prefers-color-scheme: dark){
-  :root{
+  :where(html){
     --iuTasksAccent: #a78bfa;
   }
 }
