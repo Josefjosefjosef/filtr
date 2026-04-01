@@ -1,0 +1,59 @@
+name: Pages publish from main data
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "*/11 * * * *"
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: pages-publish-from-main-data
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Compare main generatedAt vs production
+        id: cmp
+        shell: bash
+        run: |
+          set -euo pipefail
+          MAIN_AT=$(jq -r '.generatedAt // empty' projects/data/articles.json)
+          if [ -z "$MAIN_AT" ]; then
+            echo "ERROR: main articles.json missing generatedAt"
+            exit 1
+          fi
+          PROD_JSON=$(curl -sS -m 20 -H 'Cache-Control: no-cache' "https://infouzel.cz/projects/data/articles.json" || true)
+          PROD_AT=$(echo "$PROD_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
+          echo "main_generatedAt=$MAIN_AT" >> "$GITHUB_OUTPUT"
+          echo "prod_generatedAt=$PROD_AT" >> "$GITHUB_OUTPUT"
+          echo "[MAIN] generatedAt=$MAIN_AT"
+          echo "[PROD] generatedAt=$PROD_AT"
+          if [ -n "$PROD_AT" ] && [ "$PROD_AT" = "$MAIN_AT" ]; then
+            echo "needs_publish=false" >> "$GITHUB_OUTPUT"
+            echo "[PUBLISH] Up-to-date, no dispatch"
+          else
+            echo "needs_publish=true" >> "$GITHUB_OUTPUT"
+            echo "[PUBLISH] Stale prod, will dispatch pages.yml"
+          fi
+
+      - name: Dispatch pages.yml (main)
+        if: steps.cmp.outputs.needs_publish == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh workflow run pages.yml --ref main --repo "${{ github.repository }}"
+          echo "[PAGES] Dispatched pages.yml on main"
+
