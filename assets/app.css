@@ -6589,6 +6589,45 @@ body[data-section="travel"] #feed,
 html[data-section="travel"] #feed{
   display: none !important;
 }
+/* Travel „média“ režim: feed viditelný, poradna skrytá */
+body[data-section="travel"][data-travel-feed="1"] #iuTravelView,
+html[data-section="travel"][data-travel-feed="1"] #iuTravelView{
+  display: none !important;
+}
+body[data-section="travel"][data-travel-feed="1"] #feed,
+html[data-section="travel"][data-travel-feed="1"] #feed{
+  display: block !important;
+}
+
+/* P1: přepínač Cestování média / poradna */
+.iuTravelNavBar{
+  margin: 0 0 12px;
+}
+.iuTravelModeSwitch{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.iuTravelModeSwitch--inView{
+  margin-top: 2px;
+  margin-bottom: 12px;
+}
+.iuTravelModeBtn{
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  cursor: pointer;
+}
+.iuTravelModeBtn.is-active{
+  border-color: rgba(59, 130, 246, 0.65);
+  background: rgba(59, 130, 246, 0.16);
+}
 
 body[data-section="travel"] #iuTravelView .iuSectionSubTitle,
 html[data-section="travel"] #iuTravelView .iuSectionSubTitle{

@@ -99,7 +99,9 @@ async function runSmoke() {
 
     for (const url of urls) {
       const res = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
-      if (!res || res.status() >= 400) fail(`HTTP ${res?.status() || "?"} for ${url}`);
+      // Playwright may return null when navigation commits without a main-frame Response (client redirect / race).
+      const st = res ? res.status() : null;
+      if (st !== null && st >= 400) fail(`HTTP ${st} for ${url}`);
       // Root index.html runs location.replace("/projects/") after parse; domcontentloaded can return
       // before that navigation commits — next goto would race and interrupt (?section=media) with /projects/.
       if (url === `${BASE}/`) {
@@ -139,8 +141,8 @@ async function runSmoke() {
       if (!urlChanged && !hasFocus) fail("Click did not change URL or focus");
     }
 
-    // Route reset (home landing): startup strips section/panel/radarOpen — after reload URL must not keep ?section=
-    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    // Route reset: panel/radarOpen stripped on reload; section/topic/mode may persist (media nav deep links)
+    await page.goto(`${BASE}/projects/?section=media&panel=services`, { waitUntil: "domcontentloaded", timeout: 15000 });
     await page.waitForTimeout(500);
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForTimeout(500);
@@ -152,8 +154,8 @@ async function runSmoke() {
       fail(`Route reset: invalid URL ${finalUrl}`);
     }
     if (!u.pathname.includes("/projects")) fail(`Route reset: expected /projects path, got ${finalUrl}`);
-    if (u.searchParams.has("section") || u.searchParams.has("panel") || u.searchParams.has("radarOpen")) {
-      fail(`Route reset: stripped nav params still present: ${finalUrl}`);
+    if (u.searchParams.has("panel") || u.searchParams.has("radarOpen")) {
+      fail(`Route reset: stripped overlay params still present: ${finalUrl}`);
     }
 
     await browser.close();

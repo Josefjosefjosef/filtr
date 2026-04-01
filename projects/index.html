@@ -382,42 +382,49 @@ style-src 'self' 'unsafe-inline' https:;
                         PŘEHLED DNE
                       </div>
 
-                      <a class="iu-leftNavItem is-active" href="#" data-rail="media" data-accent="media" aria-current="page">
+                      <a class="iu-leftNavItem is-active" href="#" data-rail="media-all" data-accent="media" data-media-topic="all" aria-current="page">
+                        <span class="iu-leftNavIcon" aria-hidden="true">
+                          <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-news"></use></svg>
+                        </span>
+                        <span class="iu-leftNavLabel">Média</span>
+                      </a>
+
+                      <a class="iu-leftNavItem" href="#" data-rail="zpravy" data-accent="zpravy" data-media-topic="zpravy">
                         <span class="iu-leftNavIcon" aria-hidden="true">
                           <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-news"></use></svg>
                         </span>
                         <span class="iu-leftNavLabel">Zprávy</span>
                       </a>
 
-                      <a class="iu-leftNavItem" href="#" data-rail="sport" data-accent="sport">
+                      <a class="iu-leftNavItem" href="#" data-rail="sport" data-accent="sport" data-media-topic="sport">
                         <span class="iu-leftNavIcon" aria-hidden="true">
                           <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-sport"></use></svg>
                         </span>
                         <span class="iu-leftNavLabel">Sport</span>
                       </a>
 
-                      <a class="iu-leftNavItem" href="#" data-rail="tech" data-accent="tech">
+                      <a class="iu-leftNavItem" href="#" data-rail="tech" data-accent="tech" data-media-topic="tech">
                         <span class="iu-leftNavIcon" aria-hidden="true">
                           <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-tech-internet"></use></svg>
                         </span>
                         <span class="iu-leftNavLabel">Technologie &amp; Internet</span>
                       </a>
 
-                      <a class="iu-leftNavItem" href="#" data-rail="finance" data-accent="finance">
+                      <a class="iu-leftNavItem" href="#" data-rail="finance" data-accent="finance" data-media-topic="finance">
                         <span class="iu-leftNavIcon" aria-hidden="true">
                           <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-finance"></use></svg>
                         </span>
                         <span class="iu-leftNavLabel">Finance</span>
                       </a>
 
-                      <a class="iu-leftNavItem" href="#" data-rail="home" data-accent="home">
+                      <a class="iu-leftNavItem" href="#" data-rail="bydleni" data-accent="bydleni" data-media-topic="bydleni">
                         <span class="iu-leftNavIcon" aria-hidden="true">
                           <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-home-hobby"></use></svg>
                         </span>
                         <span class="iu-leftNavLabel">Bydlení &amp; Hobby</span>
                       </a>
 
-                      <a class="iu-leftNavItem" href="#" data-rail="zdravi" data-accent="zdravi">
+                      <a class="iu-leftNavItem" href="#" data-rail="zdravi" data-accent="zdravi" data-media-topic="zdravi">
                         <span class="iu-leftNavIcon" aria-hidden="true">
                           <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-health"></use></svg>
                         </span>
@@ -932,6 +939,12 @@ style-src 'self' 'unsafe-inline' https:;
                       <!-- HOME MODULES (under hex grid; must not overlap) -->
                       <div class="iuHomeModules">
                       </div>
+                    </div>
+                  </div>
+                  <div id="iuTravelNavBar" class="iuTravelNavBar" hidden>
+                    <div class="iuTravelModeSwitch" role="tablist" aria-label="Režim Cestování">
+                      <button type="button" class="iuTravelModeBtn" data-travel-mode="media" id="iuTravelModeMediaFeed">Cestování média</button>
+                      <button type="button" class="iuTravelModeBtn is-active" data-travel-mode="guide" id="iuTravelModeGuideFeed">Cestování poradna</button>
                     </div>
                   </div>
                   <div id="feed" data-view-host="media" data-feed-ready="false"></div>
@@ -1498,6 +1511,11 @@ style-src 'self' 'unsafe-inline' https:;
                     <div class="iuSectionHeader iuSectionHeader--travel">
                       <h2>Cestování</h2>
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+
+                    <div id="iuTravelModeSwitchInView" class="iuTravelModeSwitch iuTravelModeSwitch--inView" role="tablist" aria-label="Režim Cestování" hidden>
+                      <button type="button" class="iuTravelModeBtn" data-travel-mode="media">Cestování média</button>
+                      <button type="button" class="iuTravelModeBtn is-active" data-travel-mode="guide">Cestování poradna</button>
                     </div>
 
                     <p class="iuSectionSubtitle">
