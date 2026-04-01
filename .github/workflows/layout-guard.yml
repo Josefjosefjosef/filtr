@@ -1,5 +1,8 @@
 name: Layout guard
 
+permissions:
+  statuses: write
+
 on:
   pull_request:
   pull_request_target:
@@ -32,3 +35,18 @@ jobs:
       - run: node scripts/silver-stack-guard.js
       - name: Silver summary + calendar accent UI proof
         run: node scripts/silver-summary-ui-proof.mjs
+
+      - name: Set required status context (layout-guard)
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          STATE="success"
+          if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
+          SHA="${GITHUB_SHA}"
+          gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
+            -f state="$STATE" \
+            -f context="layout-guard" \
+            -f description="Required status context (layout-guard)" \
+            -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

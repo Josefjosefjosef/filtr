@@ -1,5 +1,8 @@
 name: Repo guard
 
+permissions:
+  statuses: write
+
 on:
   push:
     branches:
@@ -36,3 +39,18 @@ jobs:
 
       - name: Run repo guard
         run: python scripts/repo_guard.py
+
+      - name: Set required status context (repo-guard)
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          STATE="success"
+          if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
+          SHA="${GITHUB_SHA}"
+          gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
+            -f state="$STATE" \
+            -f context="repo-guard" \
+            -f description="Required status context (repo-guard)" \
+            -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
