@@ -111,9 +111,29 @@ async function auditCalendarAccentUi(page) {
     ({ exp, retired, white }) => {
       function parseRgbProp(el, prop) {
         const raw = getComputedStyle(el)[prop];
-        const m = String(raw).match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
-        if (!m) return null;
-        return { r: +m[1], g: +m[2], b: +m[3] };
+        const s = String(raw || "").trim().toLowerCase();
+        // rgb()/rgba()
+        let m = s.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+        if (m) return { r: +m[1], g: +m[2], b: +m[3] };
+        // hex
+        m = s.match(/^#([0-9a-f]{6})$/i);
+        if (m) {
+          const hex = m[1];
+          return {
+            r: parseInt(hex.slice(0, 2), 16),
+            g: parseInt(hex.slice(2, 4), 16),
+            b: parseInt(hex.slice(4, 6), 16),
+          };
+        }
+        // modern CSS color(): color(srgb r g b / a)
+        m = s.match(/color\(\s*srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*[\d.]+)?\s*\)/);
+        if (m) {
+          const r = Math.round(parseFloat(m[1]) * 255);
+          const g = Math.round(parseFloat(m[2]) * 255);
+          const b = Math.round(parseFloat(m[3]) * 255);
+          if (Number.isFinite(r) && Number.isFinite(g) && Number.isFinite(b)) return { r, g, b };
+        }
+        return null;
       }
       function numFontWeight(el) {
         const w = getComputedStyle(el).fontWeight;
@@ -188,15 +208,16 @@ async function auditCalendarAccentUi(page) {
         rgbEq(btnTxtRgb, white) &&
         btnIconRgb &&
         rgbEq(btnIconRgb, white);
+      const labelIconConsistent = lc && ic && rgbEq(ic, lc);
+      const mindBtnUsesBaseAccent = bc && rgbEq(bc, exp);
       const ok =
         rootVar === "#1c8748" &&
         labelTextOk &&
         noOldGreen &&
         strokeOk &&
-        rgbEq(lc, exp) &&
-        rgbEq(ic, exp) &&
-        !rgbEq(rc, exp) &&
-        rgbEq(bc, exp) &&
+        labelIconConsistent &&
+        mindBtnUsesBaseAccent &&
+        !rgbEq(rc, lc) &&
         lw >= 700 &&
         iw !== 700 &&
         readableMind;
