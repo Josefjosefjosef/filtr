@@ -1,5 +1,5 @@
-# Bot/user squash-merge of data PRs often does not trigger pages.yml via push.
-# This workflow runs on merge to main when projects/data changed and dispatches Pages deploy.
+# Merges performed via GITHUB_TOKEN (e.g. update-articles auto-merge) do not trigger push workflows.
+# Path filters on pull_request closed can skip long-lived automation PRs; verify files via API instead.
 name: Pages deploy after data PR merge
 
 on:
@@ -7,11 +7,10 @@ on:
     types: [closed]
     branches:
       - main
-    paths:
-      - "projects/data/**"
 
 permissions:
   actions: write
+  pull-requests: read
 
 concurrency:
   group: pages-dispatch-after-data-merge
@@ -22,10 +21,16 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: Dispatch Deploy to GitHub Pages
+      - name: Dispatch Deploy to GitHub Pages when PR touched projects/data
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          gh workflow run pages.yml --ref main --repo "${{ github.repository }}"
-          echo "Dispatched pages.yml for merged data PR #${{ github.event.pull_request.number }}"
+          PR_NUM="${{ github.event.pull_request.number }}"
+          REPO="${{ github.repository }}"
+          if ! gh api "repos/${REPO}/pulls/${PR_NUM}/files" --paginate --jq '.[].filename' | grep -q '^projects/data/'; then
+            echo "SKIP: no projects/data files in PR #${PR_NUM}"
+            exit 0
+          fi
+          gh workflow run pages.yml --ref main --repo "${REPO}"
+          echo "OK: Dispatched pages.yml for merged data PR #${PR_NUM}"

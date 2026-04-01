@@ -10,6 +10,7 @@ concurrency:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 on:
   workflow_dispatch: {}
@@ -135,6 +136,19 @@ jobs:
           git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
+      - name: Dispatch required checks (GITHUB_TOKEN push does not start push-triggered workflows)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          REF="${{ env.AUTOMATION_BRANCH }}"
+          REPO="${{ github.repository }}"
+          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
+          gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
+          gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
+          echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
+
       - name: Create or update PR
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
         id: pr
@@ -256,6 +270,15 @@ jobs:
           echo "same_cycle_pending=true" >> "$GITHUB_OUTPUT"
           echo "[SAME-CYCLE] Timeout waiting for merge — auto-merge still pending; workflow continues (no false-fail)"
           exit 0
+
+      - name: Dispatch Pages deploy (merge via GITHUB_TOKEN may not trigger push → pages.yml)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && (steps.merge_now.outputs.merged_now == 'true' || steps.wait_merge.outputs.pr_merged == 'true')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh workflow run pages.yml --ref main --repo "${{ github.repository }}"
+          echo "[PAGES] Dispatched pages.yml after data PR merge"
 
       - name: Wait for Pages deploy and verify prod
         id: deploy_verify
