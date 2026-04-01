@@ -74,6 +74,12 @@ style-src 'self' 'unsafe-inline' https:;
           display: none !important;
         }
       }
+      /* P0 CLS desktop: match assets/app.css — mobile MindMenu flow placeholder must not participate in .layout grid before/without late CSS (see #iuMobileMindMenuFlow). */
+      @media (min-width: 901px) {
+        #iuMobileMindMenuFlow {
+          display: none !important;
+        }
+      }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
     <link rel="stylesheet" href="/assets/app.css?v=prod1546topbarflowspacer" />

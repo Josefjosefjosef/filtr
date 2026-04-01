@@ -7841,6 +7841,13 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
     display: none !important;
   }
 }
+
+/* P0 CLS desktop: #iuMobileMindMenuFlow is mobile/tablet-only plumbing; on desktop it must not occupy a grid track beside .mainCol (implicit row + row-gap: 20px → .mainCol vertical jump / non-zero CLS). */
+@media (min-width: 901px){
+  #iuMobileMindMenuFlow{
+    display: none !important;
+  }
+}
 @media (max-width: 768px){
   .layout{
     grid-template-columns: 1fr;
