@@ -7178,8 +7178,14 @@ function buildVideoAsArticleCard(it) {
     const hasSection = !!(state && state.activeSection);
     const hasFilter = !!(state && state.activeFilter);
     const hasQuery = !!(state && typeof state.searchQuery === "string" && state.searchQuery.trim().length);
+    const hasMediaTopicFilter = !!(
+      state &&
+      state.mediaTopicKey &&
+      String(state.mediaTopicKey).trim() !== "" &&
+      state.mediaTopicKey !== "all"
+    );
 
-    if (!hasTopic && !hasSection && !hasFilter && !hasQuery) {
+    if (!hasTopic && !hasSection && !hasFilter && !hasQuery && !hasMediaTopicFilter) {
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
       if (doRender) renderItems(state.filteredItems);
       return;
@@ -7188,7 +7194,8 @@ function buildVideoAsArticleCard(it) {
     if (
       !state.activeSection &&
       !state.activeTopic &&
-      !state.activeFilter
+      !state.activeFilter &&
+      !hasMediaTopicFilter
     ) {
       state.filteredItems = Array.isArray(state.cachedItems)
         ? state.cachedItems.slice()
@@ -7200,7 +7207,8 @@ function buildVideoAsArticleCard(it) {
     if (
       !state.activeSection &&
       !state.activeTopic &&
-      !state.activeFilter
+      !state.activeFilter &&
+      !hasMediaTopicFilter
     ) {
       state.filteredItems = Array.isArray(state.cachedItems)
         ? state.cachedItems.slice()
@@ -7254,6 +7262,12 @@ function buildVideoAsArticleCard(it) {
       } else {
         if (doRender) hideSearchModal();
         renderInlineError("Filtry nenašly žádné články.");
+        // Clear stale DOM from loadData's pre-filter renderItems(cachedItems) pass.
+        if (doRender) {
+          try {
+            renderItems([]);
+          } catch (_) {}
+        }
       }
       if (doRender) setStatus(`Stav dat: OK (zobrazeno: 0 / celkem: ${state.cachedItems.length})`);
       if (isDebugOn()) {
@@ -8400,6 +8414,18 @@ function buildVideoAsArticleCard(it) {
       }
       // Non-blocking: load retention index for historical day-shards
       initRetentionIndex();
+      // URL is source of truth: init() may finish loadData before initNavRouter runs (module defer race).
+      // Inline parse only — loadData lives in a different IIFE than normalizeSection/readUrlNavState.
+      try {
+        const p = new URLSearchParams(typeof location !== "undefined" ? location.search || "" : "");
+        const sec = (p.get("section") || "media").trim().toLowerCase();
+        const topic = (p.get("topic") || "").trim().toLowerCase();
+        let mode = (p.get("mode") || "guide").trim().toLowerCase();
+        if (mode !== "media") mode = "guide";
+        state.mediaTopicKey = null;
+        if (sec === "travel" && mode === "media") state.mediaTopicKey = "cestovani";
+        else if (sec === "media" && topic && topic !== "all") state.mediaTopicKey = topic;
+      } catch (_) {}
       applyFilter();
       const countArticles = state.cachedItems.filter((entry) => entry?.contentType === "article").length;
       const countVideos = state.cachedItems.filter((entry) => entry?.contentType === "video").length;
