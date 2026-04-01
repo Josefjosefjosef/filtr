@@ -50,17 +50,33 @@ style-src 'self' 'unsafe-inline' https:;
           display: none !important;
         }
       }
-      /* P0 CLS desktop: před app.css — stabilní in-flow výška obalu topbaru (fixed child); bez toho může .mainCol při prvním paintu skočit ~30px. */
+      /* P0 CLS desktop: první dítě .iuTopbarFlowSpacer drží in-flow výšku — fixed #topbarWrap se z flow nepočítá; bez reálného boxu může obal ustát později (.mainCol y 0→30). */
       @media (min-width: 901px) {
         #leftStickyHeader {
-          min-height: var(--iuTopbarHeight, 72px) !important;
-          height: var(--iuTopbarHeight, 72px) !important;
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: stretch !important;
+          min-height: 0 !important;
+          height: auto !important;
           box-sizing: border-box !important;
+          overflow: visible !important;
+        }
+        .iuTopbarFlowSpacer {
+          flex: 0 0 72px;
+          height: 72px;
+          width: 100%;
+          pointer-events: none;
+          overflow: hidden;
+        }
+      }
+      @media (max-width: 900px) {
+        .iuTopbarFlowSpacer {
+          display: none !important;
         }
       }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
-    <link rel="stylesheet" href="/assets/app.css?v=prod1544desktopclscloseout" />
+    <link rel="stylesheet" href="/assets/app.css?v=prod1546topbarflowspacer" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
@@ -140,6 +156,7 @@ style-src 'self' 'unsafe-inline' https:;
             <div class="layout">
               <div class="mainCol">
                 <div id="leftStickyHeader">
+                  <div class="iuTopbarFlowSpacer" aria-hidden="true"></div>
                   <header class="topbar-new iuTopbar" id="topbarWrap">
                     <div class="topbar-new-inner">
                       <div class="topbar-new-main">

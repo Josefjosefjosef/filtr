@@ -347,12 +347,29 @@ html:not([data-iu-js]) .iuDailyWeather{
   min-height: 68px;
 }
 
-/* P0 CLS: desktop lock hned po base #leftStickyHeader — fixed topbar neplní flow; bez toho první paint může mít jinou y než po načtení zbytku CSS (~30px skok .mainCol). */
+/* P0 CLS desktop: .iuTopbarFlowSpacer (první dítě v HTML) drží in-flow výšku — fixed #topbarWrap se do výšky obalu nepočítá. */
 @media (min-width: 901px){
   #leftStickyHeader{
-    min-height: var(--iuTopbarHeight) !important;
-    height: var(--iuTopbarHeight) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    min-height: 0 !important;
+    height: auto !important;
     box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+  .iuTopbarFlowSpacer{
+    flex: 0 0 72px;
+    min-height: 72px;
+    height: 72px;
+    width: 100%;
+    pointer-events: none;
+    overflow: hidden;
+  }
+}
+@media (max-width: 900px){
+  .iuTopbarFlowSpacer{
+    display: none !important;
   }
 }
 
