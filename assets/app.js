@@ -500,6 +500,10 @@ try {
     // FEED pagination (render-only; no pipeline touch)
     pageSize: 200,
     page: 1,
+    /** Media topic filter (?section=media&topic=) — null = všechny články */
+    mediaTopicKey: null,
+    /** Režim travel stránky: guide = poradna, media = články o cestování */
+    travelUiMode: "guide",
     // DATA retention (optional sharded history under /projects/data/articles/)
     retentionDays: [],
     retentionCursor: 0,
@@ -3734,6 +3738,46 @@ try {
     if (effectiveSections.includes("vse")) return true;
     const sectionValue = ((item.section || item.topic) || "").toLowerCase();
     return effectiveSections.some((section) => section === sectionValue);
+  }
+
+  /** Zdroje podle feeds.json (kategorie tech / bydlení / cestování) — klient filtruje bez změny generátoru */
+  const IU_TECH_SOURCES_LIST = ["Lupa.cz", "Root.cz", "Živě.cz", "MobilMania.cz", "CNews.cz"];
+  const IU_BYDLENI_SOURCE_NAMES =
+    /Deník Bydlení|Novinky Bydlení|Dům a zahrada|Recepty\.cz|Chatař|irozhlas.*životní/i;
+  const IU_CESTOVANI_SOURCE_NAMES =
+    /Novinky Cestování|Deník Cestování|Kudyznudy|Hedvábná|Travel Bible|irozhlas.*cestov/i;
+
+  function iuArticleMatchesMediaTopicKey(item, key) {
+    if (!key || key === "all") return true;
+    const t = String(item.topic || item.section || "").toLowerCase();
+    const src0 = Array.isArray(item.sources) && item.sources[0] ? String(item.sources[0].name || "") : "";
+    const url = String(item.url || "");
+    const hay = (src0 + " " + url).toLowerCase();
+    switch (key) {
+      case "zpravy":
+        return t === "aktualne" || t === "krimi";
+      case "sport":
+        return t === "sport";
+      case "tech": {
+        const s = src0.trim();
+        if (IU_TECH_SOURCES_LIST.some((x) => s === x || s.indexOf(x) === 0)) return true;
+        return /lupa\.cz|root\.cz|zive\.cz|mobilmania|cnews\.cz/i.test(hay);
+      }
+      case "finance":
+        return t === "finance";
+      case "bydleni":
+        return IU_BYDLENI_SOURCE_NAMES.test(src0 + url) || /bydleni|dumazahrada|recepty|chalupar|zivotni-styl/i.test(hay);
+      case "zdravi":
+        return t === "zdravi";
+      case "cestovani":
+        return (
+          t === "doprava" ||
+          IU_CESTOVANI_SOURCE_NAMES.test(src0 + url) ||
+          /cestovani|kudyznudy|hedvabnastezka|travelbible/i.test(hay)
+        );
+      default:
+        return true;
+    }
   }
 
   function ensureFeedTarget() {
@@ -7175,8 +7219,14 @@ function buildVideoAsArticleCard(it) {
     );
     const query = state.searchQuery || "";
     const normalizedQuery = query.toLowerCase();
-    const sectionsToUse = activeSections && activeSections.length ? activeSections : ["vse"];
+    let sectionsToUse = activeSections && activeSections.length ? activeSections : ["vse"];
+    if (state.mediaTopicKey) {
+      sectionsToUse = ["vse"];
+    }
     let filtered = state.cachedItems.filter((item) => matchesSections(item, sectionsToUse));
+    if (state.mediaTopicKey) {
+      filtered = filtered.filter((item) => iuArticleMatchesMediaTopicKey(item, state.mediaTopicKey));
+    }
     if (normalizedQuery) {
       filtered = filtered.filter((item) => {
         const type = String(item.contentType || "article").toLowerCase();
@@ -16419,10 +16469,12 @@ function buildVideoAsArticleCard(it) {
     radio: "#9B8CFF",
     svatky: "#34E7A1",
     media: "#B38BFF",
+    zpravy: "#B38BFF",
     sport: "#FF6FD8",
     tech: "#6AA8FF",
     finance: "#FFD34D",
     home: "#FF9B5E",
+    bydleni: "#FF9B5E",
     zdravi: "#4CFFB3",
     travel: "#42D3FF",
     hry: "#FF6B3D",
@@ -17930,7 +17982,7 @@ function buildVideoAsArticleCard(it) {
       const iconHtml = s.svgHtml ? `<span class="iuHomeHexIcon" aria-hidden="true">${s.svgHtml}</span>` : '';
       btn.innerHTML = `${iconHtml}<span class="iuHomeHexLabel">${escapeHtml(s.label || s.key)}</span>`;
       btn.addEventListener('click', () => {
-        persistSection(s.key);
+        persistNavStateFromHexKey(s.key);
         applySectionFromURL();
       });
       grid.appendChild(btn);
@@ -18071,6 +18123,36 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function setLeftNavForUrlState(nav){
+    try{
+      const items = document.querySelectorAll('.iu-leftNav .iu-leftNavItem');
+      items.forEach((el) => {
+        el.classList.remove('is-active');
+        el.removeAttribute('aria-current');
+      });
+      if (nav.section === 'media') {
+        const tk = nav.topic && nav.topic !== 'all' ? nav.topic : 'all';
+        const el = document.querySelector('.iu-leftNav .iu-leftNavItem[data-media-topic="' + tk + '"]');
+        if (el) {
+          el.classList.add('is-active');
+          el.setAttribute('aria-current', 'page');
+        }
+      } else if (nav.section === 'travel') {
+        const el = document.querySelector('.iu-leftNav .iu-leftNavItem[data-accent="travel"]');
+        if (el) {
+          el.classList.add('is-active');
+          el.setAttribute('aria-current', 'page');
+        }
+      } else {
+        const el = document.querySelector('.iu-leftNav .iu-leftNavItem[data-accent="' + nav.section + '"]');
+        if (el) {
+          el.classList.add('is-active');
+          el.setAttribute('aria-current', 'page');
+        }
+      }
+    }catch{}
+  }
+
   function showView(key){
     const center = document.getElementById('iuCenterStage');
     if (!center) return;
@@ -18094,6 +18176,8 @@ function buildVideoAsArticleCard(it) {
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
     const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','tvprogram','culture','ads','jr','myuzel-1','myuzel-2','myuzel-3','myuzel-4','myuzel-5']);
     if (k === 'home') return 'media';
+    // topic-only accents (URL uses ?section=media&topic=…)
+    if (['zpravy','sport','tech','finance','bydleni','zdravi'].indexOf(k) !== -1) return 'media';
     return allowed.has(k) ? k : 'media';
   }
 
@@ -18108,10 +18192,57 @@ function buildVideoAsArticleCard(it) {
 
   function persistSection(section){
     try{
-      const url = new URL(window.location.href);
-      url.searchParams.set('section', section);
-      history.replaceState(null, '', url);
+      persistNavState({ section: String(section || 'media').toLowerCase() });
     }catch{}
+  }
+
+  function readUrlNavState(){
+    try{
+      const p = new URLSearchParams(window.location.search || "");
+      const rawSec = (p.get("section") || "media").trim().toLowerCase();
+      const section = normalizeSection(rawSec);
+      const topic = (p.get("topic") || "").trim().toLowerCase();
+      let mode = (p.get("mode") || "guide").trim().toLowerCase();
+      if (mode !== "media") mode = "guide";
+      return { section, topic, mode };
+    }catch{
+      return { section: "media", topic: "", mode: "guide" };
+    }
+  }
+
+  function persistNavState(o){
+    try{
+      const u = new URL(window.location.href);
+      const sec = String(o.section || "media").toLowerCase();
+      u.searchParams.set("section", sec);
+      if (sec === "media") {
+        const t = String(o.topic || "").trim().toLowerCase();
+        if (t && t !== "all") u.searchParams.set("topic", t);
+        else u.searchParams.delete("topic");
+        u.searchParams.delete("mode");
+      } else if (sec === "travel") {
+        u.searchParams.delete("topic");
+        u.searchParams.set("mode", String(o.mode || "guide").toLowerCase() === "media" ? "media" : "guide");
+      } else {
+        u.searchParams.delete("topic");
+        u.searchParams.delete("mode");
+      }
+      history.replaceState(null, "", u);
+    }catch{}
+  }
+
+  function persistNavStateFromHexKey(key){
+    const k = String(key || "").trim().toLowerCase();
+    const MEDIA_TOPIC_KEYS = new Set(["all", "zpravy", "sport", "tech", "finance", "bydleni", "zdravi", "media"]);
+    if (k === "media" || k === "all") {
+      persistNavState({ section: "media", topic: "all" });
+    } else if (MEDIA_TOPIC_KEYS.has(k)) {
+      persistNavState({ section: "media", topic: k });
+    } else if (k === "travel") {
+      persistNavState({ section: "travel", mode: "guide" });
+    } else {
+      persistNavState({ section: normalizeSection(k) });
+    }
   }
 
   function parsePanelFromUrl(){
@@ -18254,7 +18385,8 @@ function buildVideoAsArticleCard(it) {
       if (typeof window.iuIsProjectsRoute !== "function" || !window.iuIsProjectsRoute()) return;
       const u = new URL(location.href);
       if (!u.search) return;
-      const keys = ["section", "panel", "radarOpen"];
+      /* section/topic/mode: deep links must survive (media topic filter + travel mode) */
+      const keys = ["panel", "radarOpen"];
       let changed = false;
       for (let i = 0; i < keys.length; i++){
         const k = keys[i];
@@ -18273,21 +18405,93 @@ function buildVideoAsArticleCard(it) {
 
   function applySectionFromURL(accentOverride){
     if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
-    // Gate C: ?section= has priority; when accentOverride (e.g. hex click) use it so URL is not changed
-    const fromUrl = getInitialSection();
-    const accentKey = (accentOverride && String(accentOverride).trim().toLowerCase()) ? normalizeSection(accentOverride) : fromUrl;
-    const section = accentKey;
+    void accentOverride;
+    const nav = readUrlNavState();
+    const section = nav.section;
+    try {
+      state.mediaTopicKey = null;
+      state.travelUiMode = nav.mode || "guide";
+      if (section === "travel" && nav.mode === "media") {
+        state.mediaTopicKey = "cestovani";
+      } else if (section === "media") {
+        if (nav.topic && nav.topic !== "all") state.mediaTopicKey = nav.topic;
+      }
+    } catch (_) {}
+    const accentColorKey =
+      section === "media" && nav.topic && nav.topic !== "all" ? nav.topic : section;
     // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
     try{ document.body && (document.body.dataset.section = section); }catch{}
     try{ document.documentElement && (document.documentElement.dataset.section = section); }catch{}
     try{
-      const color = IU_CONTENT_ACCENTS[accentKey] || "";
+      if (document.body) {
+        if (section === "travel" && nav.mode === "media") document.body.dataset.travelFeed = "1";
+        else delete document.body.dataset.travelFeed;
+      }
+      if (document.documentElement) {
+        if (section === "travel" && nav.mode === "media") document.documentElement.dataset.travelFeed = "1";
+        else delete document.documentElement.dataset.travelFeed;
+      }
+    }catch{}
+    try{
+      const color = IU_CONTENT_ACCENTS[accentColorKey] || IU_CONTENT_ACCENTS[section] || "";
       document.body && document.body.style.setProperty("--iuContentAccent", color);
     }catch{}
     // feed paging must reset on section change
     try{ state.page = 1; }catch{}
-    setLeftNavActive(section);
-    showView(VIEW_MAP[section] ?? 'media');
+    let viewKey = "media";
+    if (section === "travel") {
+      viewKey = nav.mode === "media" ? "media" : "travel";
+    } else {
+      viewKey = VIEW_MAP[section] ?? "media";
+    }
+    setLeftNavForUrlState(nav);
+    showView(viewKey);
+
+    try {
+      const barFeed = document.getElementById("iuTravelNavBar");
+      const barInView = document.getElementById("iuTravelModeSwitchInView");
+      if (section === "travel") {
+        if (barFeed) barFeed.hidden = false;
+        if (barInView) barInView.hidden = false;
+        document.querySelectorAll("[data-travel-mode]").forEach((el) => {
+          const m = String(el.getAttribute("data-travel-mode") || "").toLowerCase();
+          const isSel =
+            (m === "media" && nav.mode === "media") || (m === "guide" && nav.mode === "guide");
+          el.classList.toggle("is-active", isSel);
+          el.setAttribute("aria-selected", isSel ? "true" : "false");
+        });
+      } else {
+        if (barFeed) barFeed.hidden = true;
+        if (barInView) barInView.hidden = true;
+      }
+    } catch (_) {}
+
+    try {
+      const sl = document.getElementById("sectionLabel");
+      if (sl) {
+        const labels = {
+          all: "Média",
+          zpravy: "Zprávy",
+          sport: "Sport",
+          tech: "Technologie & Internet",
+          finance: "Finance",
+          bydleni: "Bydlení & Hobby",
+          zdravi: "Zdraví",
+        };
+        let txt = "";
+        if (section === "travel") {
+          txt = nav.mode === "media" ? "Cestování média" : "Cestování poradna";
+        } else if (section === "media") {
+          txt = labels[nav.topic] || "Média";
+        }
+        if (txt) {
+          sl.textContent = "Sekce: " + txt;
+          sl.style.display = "";
+        } else {
+          sl.style.display = "none";
+        }
+      }
+    } catch (_) {}
 
     // P0 mobile: #leftContent is display:none below 900px until iu-mobileMainVisible (rail click).
     // Direct URL (?section=pocasi etc.) must reveal main or center views measure 0×0 (CLS/Playwright).
@@ -18348,7 +18552,8 @@ function buildVideoAsArticleCard(it) {
           else if (section === "tvonline") root = document.getElementById("iuTvOnlineView");
           else if (section === "jr") root = document.getElementById("iuJrEmptyView");
           else if (section === "mapy") root = document.getElementById("iuMapyView") || document.getElementById("iuMapsView");
-          else if (section === "travel") root = document.getElementById("iuTravelView");
+          else if (section === "travel" && nav.mode === "guide") root = document.getElementById("iuTravelView");
+          else if (section === "travel" && nav.mode === "media") root = document.getElementById("feed");
           else if (String(section || "").toLowerCase().startsWith("myuzel-")) {
             const slot = parseInt(String(section).split("-")[1], 10);
             if (Number.isFinite(slot)) root = document.getElementById(`iuMyUzelView${slot}`);
@@ -18385,6 +18590,7 @@ function buildVideoAsArticleCard(it) {
         }
       }
     }catch{}
+    try{ if (typeof applyFilter === "function") applyFilter(); }catch{}
     // Always: keep feed data loaded + auto-refresh running (idempotent, UI-only)
     try{ window.__iuLoadData && window.__iuLoadData(); }catch{}
     try{ window.__iuStartAutoRefresh && window.__iuStartAutoRefresh(); }catch{}
@@ -18722,12 +18928,20 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         const isInternal = !isExternal && (href === "#" || href === "" || !!rail);
         if (isInternal) e.preventDefault();
       }catch{}
-      const accent = (item.getAttribute('data-accent') || item.dataset?.accent || "").trim().toLowerCase();
-      const section = normalizeSection(accent);
+      const mediaTopic = (item.getAttribute("data-media-topic") || "").trim().toLowerCase();
       iuHideAllOverlaysNow();
-      persistSection(section);
+      if (mediaTopic !== "") {
+        persistNavState({ section: "media", topic: mediaTopic });
+      } else {
+        const accent = (item.getAttribute("data-accent") || item.dataset?.accent || "").trim().toLowerCase();
+        if (accent === "travel") {
+          persistNavState({ section: "travel", mode: "guide" });
+        } else {
+          persistNavState({ section: normalizeSection(accent) });
+        }
+      }
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
-      applySectionFromURL(accent);
+      applySectionFromURL();
       applyPanelFromUrl();
       try {
         if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
@@ -18752,9 +18966,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const sectionAttr = String(hex.getAttribute('data-section') || '').trim().toLowerCase();
       const cls = Array.from(hex.classList).find(c => c.startsWith('iuHex--'));
       const sectionFromClass = cls ? cls.slice('iuHex--'.length).toLowerCase() : '';
-      const section = normalizeSection(sectionAttr || sectionFromClass);
+      const rawHexKey = sectionAttr || sectionFromClass;
       iuHideAllOverlaysNow();
-      applySectionFromURL(section);
+      persistNavStateFromHexKey(rawHexKey);
+      applySectionFromURL();
       try{ requestAnimationFrame(() => { try{ iuScrollMainToTopSmooth(); }catch{} }); }catch{}
     }, true);
     function onUrlChange(){
@@ -18764,6 +18979,15 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }
     window.addEventListener('popstate', onUrlChange);
     window.addEventListener('hashchange', onUrlChange);
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target && e.target.closest ? e.target.closest('.iuTravelModeBtn') : null;
+      if (!btn) return;
+      e.preventDefault();
+      const mode = String(btn.getAttribute('data-travel-mode') || '').toLowerCase();
+      persistNavState({ section: 'travel', mode: mode === 'media' ? 'media' : 'guide' });
+      applySectionFromURL();
+    });
 
     try{
       window.addEventListener("pageshow", function(ev){
