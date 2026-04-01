@@ -290,6 +290,7 @@ style-src 'self' 'unsafe-inline' https:;
                   (function(){
                     try {
                       if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return;
+                      if (!window.matchMedia("(orientation: portrait)").matches) return;
                       var wrap = document.getElementById("iuMobileGateWrap");
                       var silverSlot = document.getElementById("iuMobileSilverSlot");
                       var silver = document.getElementById("silver-slot");
@@ -297,6 +298,22 @@ style-src 'self' 'unsafe-inline' https:;
                       wrap.setAttribute("aria-hidden", "false");
                       /* P0 CLS (768×1024): move Silver before #leftContent parses so #leftContent is not laid out then reflowed. */
                       if (!silverSlot.contains(silver)) silverSlot.appendChild(silver);
+                      /* P0 global CLS: same formula as iuSilverMobileStackFitApply — set --iu-silver-slot-max-h immediately after move so .silver-slot flex budget matches first paint (no late rAF thrash). */
+                      var vv = window.visualViewport;
+                      var vh = vv && typeof vv.height === "number" ? vv.height : window.innerHeight;
+                      var top = silver.getBoundingClientRect().top;
+                      var pad = 6;
+                      var safeB = 0;
+                      try {
+                        var probe = document.createElement("div");
+                        probe.style.cssText = "position:fixed;left:0;bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none;z-index:-1;";
+                        document.body.appendChild(probe);
+                        safeB = parseFloat(window.getComputedStyle(probe).paddingBottom) || 0;
+                        document.body.removeChild(probe);
+                      } catch (_) {}
+                      var maxH = Math.floor(vh - top - pad - safeB);
+                      if (maxH < 120) maxH = 120;
+                      silver.style.setProperty("--iu-silver-slot-max-h", maxH + "px");
                     } catch (e) {}
                   })();
                   </script>
