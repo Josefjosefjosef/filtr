@@ -7836,14 +7836,11 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
 .iu-mobileStack{
   display: none;
 }
+/* P0 CLS desktop: hide mobile-only #iuMobileMindMenuFlow from .layout grid (≥901px); merge with one @media to limit CSS debt. */
 @media (min-width: 901px){
   .iu-mobileFirstBlock{
     display: none !important;
   }
-}
-
-/* P0 CLS desktop: #iuMobileMindMenuFlow is mobile/tablet-only plumbing; on desktop it must not occupy a grid track beside .mainCol (implicit row + row-gap: 20px → .mainCol vertical jump / non-zero CLS). */
-@media (min-width: 901px){
   #iuMobileMindMenuFlow{
     display: none !important;
   }
@@ -12650,9 +12647,8 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
 
   
   .layout:has(#leftStickyHeader) > aside.accordionCol{
-    
     padding-top: 0 !important;
-    margin-top: calc(var(--iuTopbarHeight) + 4px) !important;
+    margin-top: var(--iuTopbarHeight) !important;
     box-sizing: border-box;
   }
 
