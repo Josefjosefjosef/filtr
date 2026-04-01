@@ -2,6 +2,8 @@ name: Layout guard
 
 on:
   pull_request:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
   push:
     branches:
       - automation/update-articles-data
@@ -11,7 +13,15 @@ jobs:
   layout-guard:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout (PR head for pull_request_target)
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Checkout
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
