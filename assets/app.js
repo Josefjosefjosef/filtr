@@ -3741,6 +3741,7 @@ try {
   }
 
   /** Zdroje podle feeds.json (kategorie tech / bydlení / cestování) — klient filtruje bez změny generátoru */
+  const IU_DISABLED_MEDIA_TOPIC_KEYS = new Set(["tech", "bydleni"]);
   const IU_TECH_SOURCES_LIST = ["Lupa.cz", "Root.cz", "Živě.cz", "MobilMania.cz", "CNews.cz"];
   const IU_BYDLENI_SOURCE_NAMES =
     /Deník Bydlení|Novinky Bydlení|Dům a zahrada|Recepty\.cz|Chatař|irozhlas.*životní/i;
@@ -3749,6 +3750,7 @@ try {
 
   function iuArticleMatchesMediaTopicKey(item, key) {
     if (!key || key === "all") return true;
+    if (IU_DISABLED_MEDIA_TOPIC_KEYS.has(String(key).toLowerCase())) return false;
     const t = String(item.topic || item.section || "").toLowerCase();
     const src0 = Array.isArray(item.sources) && item.sources[0] ? String(item.sources[0].name || "") : "";
     const url = String(item.url || "");
@@ -8176,6 +8178,16 @@ function buildVideoAsArticleCard(it) {
         contentType: "article",
         suspiciousTitle: isSuspiciousTitle(item.title),
       }));
+      // P0 SAFE DISABLE: tech + bydleni články nesmí do globálního media poolu ani do "Média".
+      try {
+        sanitizedArticles = sanitizedArticles.filter((item) => {
+          if (!item) return false;
+          return !(
+            iuArticleMatchesMediaTopicKey(item, "tech") ||
+            iuArticleMatchesMediaTopicKey(item, "bydleni")
+          );
+        });
+      } catch (_) {}
       if (DEBUG) {
         sanitizedArticles.forEach((item) => {
           if (!item.contentType) {
@@ -8418,10 +8430,17 @@ function buildVideoAsArticleCard(it) {
       // Inline parse only — loadData lives in a different IIFE than normalizeSection/readUrlNavState.
       try {
         const p = new URLSearchParams(typeof location !== "undefined" ? location.search || "" : "");
-        const sec = (p.get("section") || "media").trim().toLowerCase();
-        const topic = (p.get("topic") || "").trim().toLowerCase();
+        let sec = (p.get("section") || "media").trim().toLowerCase();
+        let topic = (p.get("topic") || "").trim().toLowerCase();
         let mode = (p.get("mode") || "guide").trim().toLowerCase();
         if (mode !== "media") mode = "guide";
+        if (sec === "tech" || sec === "bydleni") {
+          sec = "media";
+          topic = "all";
+        }
+        if (topic === "tech" || topic === "bydleni") {
+          topic = "all";
+        }
         state.mediaTopicKey = null;
         if (sec === "travel" && mode === "media") state.mediaTopicKey = "cestovani";
         else if (sec === "media" && topic && topic !== "all") state.mediaTopicKey = topic;
@@ -18202,8 +18221,10 @@ function buildVideoAsArticleCard(it) {
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
     const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','tvprogram','culture','ads','jr','myuzel-1','myuzel-2','myuzel-3','myuzel-4','myuzel-5']);
     if (k === 'home') return 'media';
+    // P0 SAFE DISABLE: historické sekce (tech/bydleni) nesmí být routovatelné jako veřejné sekce
+    if (k === 'tech' || k === 'bydleni') return 'media';
     // topic-only accents (URL uses ?section=media&topic=…)
-    if (['zpravy','sport','tech','finance','bydleni','zdravi'].indexOf(k) !== -1) return 'media';
+    if (['zpravy','sport','finance','zdravi'].indexOf(k) !== -1) return 'media';
     return allowed.has(k) ? k : 'media';
   }
 
@@ -18227,9 +18248,17 @@ function buildVideoAsArticleCard(it) {
       const p = new URLSearchParams(window.location.search || "");
       const rawSec = (p.get("section") || "media").trim().toLowerCase();
       const section = normalizeSection(rawSec);
-      const topic = (p.get("topic") || "").trim().toLowerCase();
+      let topic = (p.get("topic") || "").trim().toLowerCase();
       let mode = (p.get("mode") || "guide").trim().toLowerCase();
       if (mode !== "media") mode = "guide";
+      // P0 SAFE DISABLE: fallback pro staré URL (topic=tech/bydleni nebo section=tech/bydleni)
+      const hadDisabledSection = rawSec === "tech" || rawSec === "bydleni";
+      const hadDisabledTopic = topic === "tech" || topic === "bydleni";
+      if (hadDisabledSection) topic = "all";
+      if (hadDisabledTopic) topic = "all";
+      if (hadDisabledSection || hadDisabledTopic) {
+        try { persistNavState({ section: "media", topic: "all" }); } catch (_) {}
+      }
       return { section, topic, mode };
     }catch{
       return { section: "media", topic: "", mode: "guide" };
@@ -18259,8 +18288,10 @@ function buildVideoAsArticleCard(it) {
 
   function persistNavStateFromHexKey(key){
     const k = String(key || "").trim().toLowerCase();
-    const MEDIA_TOPIC_KEYS = new Set(["all", "zpravy", "sport", "tech", "finance", "bydleni", "zdravi", "media"]);
+    const MEDIA_TOPIC_KEYS = new Set(["all", "zpravy", "sport", "finance", "zdravi", "media"]);
     if (k === "media" || k === "all") {
+      persistNavState({ section: "media", topic: "all" });
+    } else if (k === "tech" || k === "bydleni") {
       persistNavState({ section: "media", topic: "all" });
     } else if (MEDIA_TOPIC_KEYS.has(k)) {
       persistNavState({ section: "media", topic: k });
@@ -18499,9 +18530,7 @@ function buildVideoAsArticleCard(it) {
           all: "Média",
           zpravy: "Zprávy",
           sport: "Sport",
-          tech: "Technologie & Internet",
           finance: "Finance",
-          bydleni: "Bydlení & Hobby",
           zdravi: "Zdraví",
         };
         let txt = "";

@@ -766,6 +766,8 @@ def load_feeds(path: str) -> list:
                 continue
             url = url.strip()
             meta = _meta_from_any(url, meta_any)
+            if not meta.get("enabled", True):
+                continue
             feed_items.append((url, meta))
 
     elif isinstance(data, list):
@@ -775,12 +777,16 @@ def load_feeds(path: str) -> list:
                 if not url:
                     continue
                 meta = _meta_from_any(url, {})
+                if not meta.get("enabled", True):
+                    continue
                 feed_items.append((url, meta))
             elif isinstance(item, dict):
                 url = (item.get("url") or item.get("feed") or item.get("rss") or "").strip()
                 if not url:
                     continue
                 meta = _meta_from_any(url, item)
+                if not meta.get("enabled", True):
+                    continue
                 feed_items.append((url, meta))
             else:
                 continue
