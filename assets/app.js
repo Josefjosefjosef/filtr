@@ -514,6 +514,7 @@ try {
   state.filteredItems ??= [];
   const ALLOWED_CONTENT_TYPES = new Set(["article", "video"]);
   const isDebugLogging = !iuIsProdHost() && location.search.includes("debug=1");
+  try { if (isDebugLogging) window.__iuFeedState = state; } catch (_) {}
 
   // ============================================================
   // DEBUG (forensic) — VIDEO PIPELINE COUNTERS (?debug=1 only)
@@ -5442,6 +5443,236 @@ function buildVideoAsArticleCard(it) {
     try{
       setTimeout(iuSilverMobileStackFitSchedule, 400);
       setTimeout(iuSilverMobileStackFitSchedule, 1200);
+    }catch(_){}
+  }
+
+  function iuNewsPreviewParsePublishedMs(item){
+    try{
+      if (!item || typeof item !== "object") return NaN;
+      const direct = typeof item._ts === "number" ? item._ts : NaN;
+      if (Number.isFinite(direct) && direct > 0) return direct;
+      const raw = (item && String(item.publishedAt || item.published || item.date || item.createdAt || item.uploadedAt || item.time)) || "";
+      if (!raw) return NaN;
+      const ms = Date.parse(raw);
+      return Number.isFinite(ms) ? ms : NaN;
+    }catch(_){
+      return NaN;
+    }
+  }
+
+  function iuCsRelativeFreshnessFromMs(publishedMs, nowMs){
+    try{
+      const t = typeof publishedMs === "number" ? publishedMs : NaN;
+      if (!Number.isFinite(t) || t <= 0) return "";
+      const now = typeof nowMs === "number" ? nowMs : Date.now();
+      const d = Math.max(0, now - t);
+      if (d < 60 * 1000) return "právě teď";
+      const min = Math.floor(d / (60 * 1000));
+      if (min < 60) return min === 1 ? "před 1 min." : ("před " + min + " min.");
+      const h = Math.floor(min / 60);
+      if (h < 24) return h === 1 ? "před 1 hod." : ("před " + h + " hod.");
+      const days = Math.floor(h / 24);
+      if (days === 1) return "před 1 dnem";
+      return "před " + days + " dny";
+    }catch(_){
+      return "";
+    }
+  }
+
+  function iuNewsPreviewPickLatestTwoFromState(){
+    try{
+      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
+      if (!items.length) return { latest: null, second: null, latestMs: NaN };
+      const filtered = items.filter((it) => {
+        try{
+          if (!it) return false;
+          if (String(it.contentType || "article").toLowerCase() !== "article") return false;
+          return iuArticleMatchesMediaTopicKey(it, "zpravy");
+        }catch(_){
+          return false;
+        }
+      });
+      if (!filtered.length) return { latest: null, second: null, latestMs: NaN };
+      const ranked = filtered
+        .map((it) => {
+          const ms = iuNewsPreviewParsePublishedMs(it);
+          return { it, ms: Number.isFinite(ms) ? ms : 0 };
+        })
+        .sort((a, b) => (b.ms || 0) - (a.ms || 0));
+      const a = ranked[0] ? ranked[0].it : null;
+      const b = ranked[1] ? ranked[1].it : null;
+      const ms = ranked[0] ? ranked[0].ms : NaN;
+      return { latest: a, second: b, latestMs: ms };
+    }catch(_){
+      return { latest: null, second: null, latestMs: NaN };
+    }
+  }
+
+  function iuNewsPreviewEnsureDom(){
+    try{
+      const viewport = document.getElementById("iuSilverTallScrollViewport");
+      if (!viewport) return null;
+      let card = viewport.querySelector('[data-iu-news-preview-card="1"]');
+      if (card) return card;
+
+      card = document.createElement("button");
+      card.type = "button";
+      card.className = "iuNewsPreviewCard";
+      card.setAttribute("data-iu-news-preview-card", "1");
+      card.setAttribute("aria-label", "Otevřít sekci Zprávy");
+
+      card.innerHTML = `
+        <div class="iuNewsPreviewHeader" data-iu-news-preview-header>
+          <div class="iuNewsPreviewTitleRow">
+            <span class="iuNewsPreviewLabel">Zprávy</span>
+            <span class="iuNewsPreviewBadge" data-iu-news-preview-badge hidden>NOVÉ</span>
+            <span class="iuNewsPreviewFreshness" data-iu-news-preview-freshness></span>
+          </div>
+          <svg class="iuNewsPreviewChevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="M7.5 4.5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="iuNewsPreviewBody">
+          <div class="iuNewsPreviewImgWrap" aria-hidden="true">
+            <img class="iuNewsPreviewImg" src="/assets/iu-news-preview-placeholder.svg" width="112" height="84" loading="lazy" decoding="async" alt="" />
+          </div>
+          <div class="iuNewsPreviewText">
+            <p class="iuNewsPreviewHeadline" data-iu-news-preview-title-1>Zprávy se načítají</p>
+            <p class="iuNewsPreviewHeadline2" data-iu-news-preview-title-2 hidden></p>
+          </div>
+        </div>
+      `.trim();
+
+      const placeholder = viewport.querySelector("[data-iu-silver-tall-scroll-placeholder]");
+      if (placeholder && placeholder.hidden !== true) placeholder.hidden = true;
+      const probe = viewport.querySelector("[data-iu-silver-tall-scroll-probe]");
+      if (probe && probe.hidden !== true) probe.hidden = true;
+
+      viewport.insertBefore(card, viewport.firstChild || null);
+
+      card.addEventListener("click", function(){
+        try{
+          iuHideAllOverlaysNow();
+        }catch{}
+        try{
+          persistNavState({ section: "media", topic: "zpravy" });
+        }catch{}
+        try{
+          applySectionFromURL();
+        }catch{}
+        try{
+          applyPanelFromUrl();
+        }catch{}
+        try{
+          if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+            document.body.classList.add("iu-mobileMainVisible");
+            var mb = document.getElementById("iuMobileMainBackBar");
+            if (mb) mb.hidden = false;
+          }
+        }catch{}
+        try{
+          requestAnimationFrame(function(){ try{ requestAnimationFrame(function(){ try{ iuScrollMainToTopSmooth(); }catch{} }); }catch{} });
+        }catch{
+          try{ iuScrollMainToTopSmooth(); }catch{}
+        }
+      }, { passive: true });
+
+      return card;
+    }catch(_){
+      return null;
+    }
+  }
+
+  function iuNewsPreviewRefresh(){
+    try{
+      const card = iuNewsPreviewEnsureDom();
+      if (!card) return;
+      const badge = card.querySelector("[data-iu-news-preview-badge]");
+      const elFresh = card.querySelector("[data-iu-news-preview-freshness]");
+      const elT1 = card.querySelector("[data-iu-news-preview-title-1]");
+      const elT2 = card.querySelector("[data-iu-news-preview-title-2]");
+      if (!elT1 || !elT2 || !elFresh) return;
+
+      const picked = iuNewsPreviewPickLatestTwoFromState();
+      const latest = picked.latest;
+      const second = picked.second;
+      const latestTitle = latest && latest.title ? String(latest.title) : "";
+      const secondTitle = second && second.title ? String(second.title) : "";
+      const hasLatest = !!latestTitle;
+
+      // DATA GUARD markers (testable / proof hooks)
+      if (hasLatest) {
+        card.setAttribute("data-iu-news-preview-has-latest", "1");
+        card.setAttribute("data-iu-news-preview-latest-title", latestTitle);
+      } else {
+        card.setAttribute("data-iu-news-preview-has-latest", "0");
+        card.removeAttribute("data-iu-news-preview-latest-title");
+      }
+      if (secondTitle) card.setAttribute("data-iu-news-preview-second-title", secondTitle);
+      else card.removeAttribute("data-iu-news-preview-second-title");
+
+      if (!hasLatest) {
+        if (badge) badge.hidden = true;
+        elFresh.textContent = "";
+        elFresh.setAttribute("data-iu-news-preview-has-freshness", "0");
+        card.removeAttribute("data-iu-news-preview-latest-ms");
+        elT1.textContent = "Zprávy se načítají";
+        elT2.textContent = "";
+        elT2.hidden = true;
+        return;
+      }
+
+      // Titles
+      elT1.textContent = latestTitle;
+      if (secondTitle) {
+        elT2.textContent = secondTitle;
+        elT2.hidden = false;
+      } else {
+        elT2.textContent = "";
+        elT2.hidden = true;
+      }
+
+      // Freshness + badge (NO fake: only if we have valid timestamp)
+      const ms = picked.latestMs;
+      const fresh = iuCsRelativeFreshnessFromMs(ms, Date.now());
+      if (fresh) {
+        elFresh.textContent = fresh;
+        elFresh.setAttribute("data-iu-news-preview-has-freshness", "1");
+        card.setAttribute("data-iu-news-preview-latest-ms", String(ms));
+      } else {
+        elFresh.textContent = "";
+        elFresh.setAttribute("data-iu-news-preview-has-freshness", "0");
+        card.removeAttribute("data-iu-news-preview-latest-ms");
+      }
+      if (badge) badge.hidden = false;
+    }catch(_){}
+  }
+
+  function iuNewsPreviewInit(){
+    try{
+      if (window.__iuNewsPreviewInit) return;
+      window.__iuNewsPreviewInit = 1;
+    }catch(_){}
+    try{ if (!iuIsProdHost()) window.iuNewsPreviewRefresh = iuNewsPreviewRefresh; }catch(_){}
+    try{ iuNewsPreviewRefresh(); }catch(_){}
+    try{ setInterval(() => { try{ iuNewsPreviewRefresh(); }catch{} }, 30000); }catch(_){}
+    try{
+      const feed = document.getElementById("feed");
+      if (feed && typeof MutationObserver !== "undefined") {
+        let t = 0;
+        const mo = new MutationObserver(() => {
+          try{
+            clearTimeout(t);
+            t = setTimeout(() => { try{ iuNewsPreviewRefresh(); }catch{} }, 80);
+          }catch(_){}
+        });
+        mo.observe(feed, { childList: true, subtree: true });
+      }
+    }catch(_){}
+    try{
+      document.addEventListener("visibilitychange", () => {
+        try{ if (document.visibilityState === "visible") iuNewsPreviewRefresh(); }catch{}
+      });
     }catch(_){}
   }
 
@@ -12726,6 +12957,7 @@ function buildVideoAsArticleCard(it) {
     /* P0: measure slot max-h once welcome DOM settled — before listeners-only init reduces first paint vs late reflow (CLS). */
     try{ iuSilverMobileStackFitApply(); }catch{}
     try{ iuSilverMobileStackFitInit(); }catch{}
+    try{ iuNewsPreviewInit(); }catch{}
     try{ iuSilverCalendarSummaryInit(); }catch{}
     try{ iuSilverTasksSummaryInit(); }catch{}
     try{ iuNamedayWishInit(); }catch{}
