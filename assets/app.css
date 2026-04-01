@@ -347,6 +347,15 @@ html:not([data-iu-js]) .iuDailyWeather{
   min-height: 68px;
 }
 
+/* P0 CLS: desktop lock hned po base #leftStickyHeader — fixed topbar neplní flow; bez toho první paint může mít jinou y než po načtení zbytku CSS (~30px skok .mainCol). */
+@media (min-width: 901px){
+  #leftStickyHeader{
+    min-height: var(--iuTopbarHeight) !important;
+    height: var(--iuTopbarHeight) !important;
+    box-sizing: border-box !important;
+  }
+}
+
 .topbar-new{
   position: relative;
   top: 0;
@@ -9019,15 +9028,21 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   border-radius: 8px;
 }
 
+/* Transparent shell — collapse rules only on mobile; desktop needs stable in-flow height for .mainCol (fixed topbar does not fill #leftStickyHeader). */
 #leftStickyHeader{
   background: transparent !important;
   box-shadow: none !important;
   border: 0 !important;
-  min-height: 0 !important;
-  height: auto !important;
   padding: 0 !important;
   margin: 0 !important;
   align-items: stretch !important;
+}
+
+@media (max-width: 900px){
+  #leftStickyHeader{
+    min-height: 0 !important;
+    height: auto !important;
+  }
 }
 
 .topbar-new{
@@ -11046,6 +11061,13 @@ main#content .layout{
 main#content .layout:has(#leftStickyHeader){
   padding-top: 0 !important;
   min-height: calc(100vh - var(--iuTopbarHeight)) !important;
+}
+
+/* P0 CLS desktop: bez čekání na :has() — první frame neměl mít jiný padding-top než steady (topbar je fixed + #leftStickyHeader drží výšku v .mainCol). */
+@media (min-width: 901px){
+  main#content .layout{
+    padding-top: 0 !important;
+  }
 }
 
 @media (max-width: 900px){
@@ -16015,11 +16037,19 @@ Porušení = regres + CLS risk
   }
   /* Desktop only: CLS reserve for summary cards (not mixed into <769px tablet/mobile) */
   #iuSilverWeatherCard.silver-weather-card{
-    min-height: 7.5rem;
+    min-height: 9.25rem;
   }
   #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     min-height: 155px;
+  }
+  /* P0 CLS desktop: stejný 1px lock jako tablet — zabraňuje odchylce separatoru při flex dopočtu. */
+  #silver-slot #iuSilverWelcomeStackSeparatorTallBefore.silver-welcome-stack__separator{
+    flex: 0 0 auto !important;
+    height: 1px !important;
+    min-height: 1px !important;
+    max-height: 1px !important;
+    margin: 0 !important;
   }
   /* P0 CLS: separator mezi kalendářem a úkoly — stabilní 1px (desktop stack attribution). */
   #silver-slot #iuSilverWelcomeStackSeparatorTasks.silver-welcome-stack__separator{

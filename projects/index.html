@@ -50,9 +50,17 @@ style-src 'self' 'unsafe-inline' https:;
           display: none !important;
         }
       }
+      /* P0 CLS desktop: před app.css — stabilní in-flow výška obalu topbaru (fixed child); bez toho může .mainCol při prvním paintu skočit ~30px. */
+      @media (min-width: 901px) {
+        #leftStickyHeader {
+          min-height: var(--iuTopbarHeight, 72px) !important;
+          height: var(--iuTopbarHeight, 72px) !important;
+          box-sizing: border-box !important;
+        }
+      }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
-    <link rel="stylesheet" href="/assets/app.css?v=prod1427welcomelockcleanup" />
+    <link rel="stylesheet" href="/assets/app.css?v=prod1544desktopclscloseout" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
