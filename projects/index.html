@@ -2898,21 +2898,21 @@ style-src 'self' 'unsafe-inline' https:;
         window.fetch = function(input, init){
           try{
             if (typeof input === "string") {
-              return origFetch.call(this, rewriteUrl(input), init);
+              return origFetch(rewriteUrl(input), init);
             }
             if (input && typeof input === "object" && input.url) {
               var ru = rewriteUrl(input.url);
               if (ru !== input.url) {
                 try{
                   var req = new Request(ru, input);
-                  return origFetch.call(this, req, init);
+                  return origFetch(req, init);
                 }catch(_){
-                  return origFetch.call(this, ru, init);
+                  return origFetch(ru, init);
                 }
               }
             }
           }catch(_){}
-          return origFetch.call(this, input, init);
+          return origFetch(input, init);
         };
       }catch(_){}
     })();

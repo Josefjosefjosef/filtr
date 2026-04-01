@@ -5585,6 +5585,55 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /** Silver tall preview cards: same URL/nav outcome as matching left-rail .iu-leftNavItem[data-media-topic]. */
+  function iuMediaPreviewNavClick(mediaTopicKey) {
+    const k = String(mediaTopicKey || "").trim().toLowerCase();
+    try {
+      iuHideAllOverlaysNow();
+    } catch (_) {}
+    let peer = null;
+    try {
+      peer = document.querySelector('.iu-leftNavItem[data-media-topic="' + k + '"]');
+    } catch (_) {}
+    if (peer) {
+      try {
+        peer.click();
+      } catch (_) {}
+      return;
+    }
+    try {
+      persistNavState({ section: "media", topic: k });
+    } catch (_) {}
+    try {
+      applySectionFromURL();
+    } catch (_) {}
+    try {
+      applyPanelFromUrl();
+    } catch (_) {}
+    try {
+      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+        document.body.classList.add("iu-mobileMainVisible");
+        var mb = document.getElementById("iuMobileMainBackBar");
+        if (mb) mb.hidden = false;
+      }
+    } catch (_) {}
+    try {
+      requestAnimationFrame(function () {
+        try {
+          requestAnimationFrame(function () {
+            try {
+              iuScrollMainToTopSmooth();
+            } catch (_) {}
+          });
+        } catch (_) {}
+      });
+    } catch (_) {
+      try {
+        iuScrollMainToTopSmooth();
+      } catch (_) {}
+    }
+  }
+
   function iuNewsPreviewEnsureDom(){
     try{
       const viewport = document.getElementById("iuSilverTallScrollViewport");
@@ -5644,32 +5693,13 @@ function buildVideoAsArticleCard(it) {
         viewport.insertBefore(card, viewport.firstChild || null);
       }
 
-      card.addEventListener("click", function(){
-        try{
-          iuHideAllOverlaysNow();
-        }catch{}
-        try{
-          persistNavState({ section: "media", topic: "zpravy" });
-        }catch{}
-        try{
-          applySectionFromURL();
-        }catch{}
-        try{
-          applyPanelFromUrl();
-        }catch{}
-        try{
-          if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
-            document.body.classList.add("iu-mobileMainVisible");
-            var mb = document.getElementById("iuMobileMainBackBar");
-            if (mb) mb.hidden = false;
-          }
-        }catch{}
-        try{
-          requestAnimationFrame(function(){ try{ requestAnimationFrame(function(){ try{ iuScrollMainToTopSmooth(); }catch{} }); }catch{} });
-        }catch{
-          try{ iuScrollMainToTopSmooth(); }catch{}
-        }
-      }, { passive: true });
+      card.addEventListener(
+        "click",
+        function () {
+          iuMediaPreviewNavClick("zpravy");
+        },
+        { passive: true }
+      );
 
       const img0 = card.querySelector(".iuNewsPreviewImg");
       if (img0 && !img0.getAttribute("data-iu-news-preview-err-bound")) {
@@ -5835,32 +5865,13 @@ function buildVideoAsArticleCard(it) {
         viewport.insertBefore(card, viewport.firstChild || null);
       }
 
-      card.addEventListener("click", function(){
-        try{
-          iuHideAllOverlaysNow();
-        }catch{}
-        try{
-          persistNavState({ section: "media", topic: "sport" });
-        }catch{}
-        try{
-          applySectionFromURL();
-        }catch{}
-        try{
-          applyPanelFromUrl();
-        }catch{}
-        try{
-          if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
-            document.body.classList.add("iu-mobileMainVisible");
-            var mb = document.getElementById("iuMobileMainBackBar");
-            if (mb) mb.hidden = false;
-          }
-        }catch{}
-        try{
-          requestAnimationFrame(function(){ try{ requestAnimationFrame(function(){ try{ iuScrollMainToTopSmooth(); }catch{} }); }catch{} });
-        }catch{
-          try{ iuScrollMainToTopSmooth(); }catch{}
-        }
-      }, { passive: true });
+      card.addEventListener(
+        "click",
+        function () {
+          iuMediaPreviewNavClick("sport");
+        },
+        { passive: true }
+      );
 
       const img0 = card.querySelector(".iuNewsPreviewImg");
       if (img0 && !img0.getAttribute("data-iu-sport-preview-err-bound")) {
