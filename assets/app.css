@@ -15341,7 +15341,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 
 .iuSilverTallScrollViewport .iuNewsPreviewCardMount{min-height:168px;width:100%;box-sizing:border-box}
 .iuSilverTallScrollViewport .iuNewsPreviewCard{
-  appearance:none;-webkit-appearance:none;width:100%;max-width:100%;min-width:0;display:grid;grid-template-rows:auto 1fr;border:1px solid rgba(15,35,55,.16);border-radius:12px;background:rgba(255,255,255,.78);box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 10px 26px rgba(8,14,22,.1);color:#0b1f33;padding:0;margin:6px 2px 10px 2px;cursor:pointer;overflow:hidden
+  appearance:none;-webkit-appearance:none;width:100%;max-width:100%;min-width:0;display:grid;grid-template-rows:auto 1fr;border:1px solid rgba(15,35,55,.16);border-radius:12px;background:rgba(255,255,255,.78);box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 10px 26px rgba(8,14,22,.1);color:#0b1f33;text-align:left;padding:0;margin:6px 2px 10px 2px;cursor:pointer;overflow:hidden
 }
 .silver-welcome-stack--evening .iuSilverTallScrollViewport .iuNewsPreviewCard{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:rgba(230,238,248,.92)}
 .iuSilverTallScrollViewport .iuNewsPreviewHeader{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(15,35,55,.14);min-width:0}
@@ -15351,7 +15351,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .iuSilverTallScrollViewport .iuNewsPreviewCard .iuNewsPreviewBadge--off{visibility:hidden;pointer-events:none}
 .iuSilverTallScrollViewport .iuNewsPreviewFreshness{flex:1 1 auto;min-width:0;font-size:12px;line-height:1.2;font-weight:600;color:currentColor;opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .iuSilverTallScrollViewport .iuNewsPreviewChevron{flex:0 0 auto;width:18px;height:18px;opacity:.62;color:currentColor}
-.iuSilverTallScrollViewport .iuNewsPreviewBody{display:grid;grid-template-columns:min(112px,28vw) 1fr;gap:12px;padding:12px;min-width:0}
+.iuSilverTallScrollViewport .iuNewsPreviewBody{display:grid;grid-template-columns:min(112px,28vw) 1fr;gap:12px;padding:12px;min-width:0;justify-items:start;align-items:start}
 .iuSilverTallScrollViewport .iuNewsPreviewCard .iuNewsPreviewImgWrap{display:block;width:100%;height:84px;min-height:84px;max-height:84px;overflow:hidden;border-radius:0 !important;background:rgba(15,35,55,.08);box-sizing:border-box;flex-shrink:0}
 .iuSilverTallScrollViewport .iuNewsPreviewCard .iuNewsPreviewImg{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 35%;border-radius:0 !important}
 .iuSilverTallScrollViewport .iuNewsPreviewText{min-width:0;display:grid;grid-template-rows:auto auto;gap:8px;align-content:start}
@@ -16057,9 +16057,6 @@ Porušení = regres + CLS risk
     min-height: 542px;
   }
   /* Desktop only: CLS reserve for summary cards (not mixed into <769px tablet/mobile) */
-  #iuSilverWeatherCard.silver-weather-card{
-    min-height: 9.25rem;
-  }
   #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     min-height: 155px;
@@ -20330,10 +20327,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     padding-top: 5px !important;
     padding-bottom: 5px !important;
     box-sizing: border-box;
-  }
-  /* P0 CLS: combined rule výše obsahuje min-height: unset (silver-stack-guard); tady jen počasí — stabilní flex před loading→data. */
-  #silver-slot #iuSilverWeatherCard.silver-weather-card{
-    min-height: 7.5rem !important;
   }
   #silver-slot .silver-weather-line1,
   #silver-slot .silver-weather-line2{
