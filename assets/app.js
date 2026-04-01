@@ -5497,6 +5497,18 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /** News preview thumb: non-empty http(s), root-relative path, or data:image URL. */
+  function iuNewsPreviewIsValidImage(v) {
+    if (v === null || v === undefined) return false;
+    if (typeof v !== "string") return false;
+    const s = v.trim();
+    if (!s) return false;
+    if (s.startsWith("data:image/")) return true;
+    if (/^https?:\/\//i.test(s)) return true;
+    if (s.charAt(0) === "/" && s.length > 1) return true;
+    return false;
+  }
+
   function iuNewsPreviewPickLatestTwoFromState(){
     try{
       const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
@@ -5557,7 +5569,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img class="iuNewsPreviewImg" src="/assets/iu-news-preview-placeholder.svg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+            <img class="iuNewsPreviewImg" src="/assets/images/news-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
           </div>
           <div class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-news-preview-title-1>Zprávy se načítají</p>
@@ -5614,6 +5626,22 @@ function buildVideoAsArticleCard(it) {
         }
       }, { passive: true });
 
+      const img0 = card.querySelector(".iuNewsPreviewImg");
+      if (img0 && !img0.getAttribute("data-iu-news-preview-err-bound")) {
+        img0.setAttribute("data-iu-news-preview-err-bound", "1");
+        img0.onerror = function () {
+          const fb = "/assets/images/news-default.jpg";
+          try {
+            const cur = String(img0.getAttribute("src") || "");
+            if (cur.indexOf("news-default.jpg") !== -1) {
+              img0.onerror = null;
+              return;
+            }
+          } catch (_) {}
+          img0.src = fb;
+        };
+      }
+
       return card;
     }catch(_){
       return null;
@@ -5628,8 +5656,10 @@ function buildVideoAsArticleCard(it) {
       const elFresh = card.querySelector("[data-iu-news-preview-freshness]");
       const elT1 = card.querySelector("[data-iu-news-preview-title-1]");
       const elT2 = card.querySelector("[data-iu-news-preview-title-2]");
+      const elImg = card.querySelector(".iuNewsPreviewImg");
       if (!elT1 || !elT2 || !elFresh) return;
 
+      const fallbackThumb = "/assets/images/news-default.jpg";
       const picked = iuNewsPreviewPickLatestTwoFromState();
       const latest = picked.latest;
       const second = picked.second;
@@ -5657,6 +5687,9 @@ function buildVideoAsArticleCard(it) {
         elT1.textContent = "Zprávy se načítají";
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+        try {
+          if (elImg) elImg.src = fallbackThumb;
+        } catch (_) {}
         return;
       }
 
@@ -5687,6 +5720,14 @@ function buildVideoAsArticleCard(it) {
         card.removeAttribute("data-iu-news-preview-published-raw");
       }
       if (badge) badge.hidden = false;
+
+      try {
+        if (elImg) {
+          const rawIm = latest && latest.image !== undefined && latest.image !== null ? latest.image : "";
+          const thumbSrc = iuNewsPreviewIsValidImage(rawIm) ? String(rawIm).trim() : fallbackThumb;
+          elImg.src = thumbSrc;
+        }
+      } catch (_) {}
     }catch(_){}
   }
 
