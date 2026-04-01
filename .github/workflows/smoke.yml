@@ -3,7 +3,10 @@ name: Smoke
 on:
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+      # Force-pushes z update-articles.yml často nespustí pull_request synchronize → povinné checky na data PR zůstaly viset (mergeStateStatus BLOCKED).
+      - automation/update-articles-data
   workflow_dispatch:
 
 jobs:

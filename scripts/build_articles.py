@@ -3,6 +3,7 @@
 
 import json
 import os
+import random
 import re
 import hashlib
 import sys
@@ -60,6 +61,12 @@ REQUEST_TIMEOUT_SEC = 20
 
 MAX_ITEMS_PER_FEED = 40
 MAX_OUTPUT_ARTICLES = 220  # aby web zůstal svižný
+
+# Anti-block + výstupní limity
+GLOBAL_MIN_REQUEST_INTERVAL_SEC = 2.0
+MAX_TOPIC_DEDUPE_PER_KEY = 2
+MAX_ARTICLES_PER_SOURCE_DISPLAY = 2
+NICHE_MAX_FRACTION = 0.38
 
 # Retence denních shardů v projects/data/articles (počet dnů dozadu včetně dneška)
 # Safe default: 45 dní (dost historie, ale repo neroste do nekonečna).
@@ -186,6 +193,226 @@ def _atomic_write_json(path: str, payload) -> None:
         json.dump(payload, f, ensure_ascii=False, indent=2)
         f.write("\n")
     os.replace(tmp, path)
+
+
+def _feed_transport_state_path() -> str:
+    return os.path.join(OUTPUT_DIR, "feed_transport_state.json")
+
+
+def _feed_snapshot_dir() -> str:
+    d = os.path.join(OUTPUT_DIR, "feed_snapshots")
+    os.makedirs(d, exist_ok=True)
+    return d
+
+
+def _url_fingerprint(url: str) -> str:
+    return hashlib.sha256((url or "").encode("utf-8")).hexdigest()
+
+
+def load_transport_state() -> dict:
+    data = _safe_read_json(_feed_transport_state_path())
+    if not isinstance(data, dict):
+        return {"feeds": {}}
+    if "feeds" not in data:
+        data["feeds"] = {}
+    return data
+
+
+def save_transport_state(state: dict) -> None:
+    _atomic_write_json(_feed_transport_state_path(), state)
+
+
+def _rate_limit_sleep(last_req_ts: list, stagger_sec: float = 0.0) -> None:
+    if stagger_sec > 0:
+        time.sleep(stagger_sec)
+    now = time.time()
+    elapsed = now - last_req_ts[0]
+    need = GLOBAL_MIN_REQUEST_INTERVAL_SEC - elapsed
+    if need > 0:
+        time.sleep(need + random.uniform(0, 0.35))
+    last_req_ts[0] = time.time()
+
+
+def http_fetch_rss_body(url: str, transport: dict, last_req_ts: list) -> tuple:
+    """
+    Vrací (text, diagnostics, updated_etag, updated_lastmod).
+    text je tělo RSS nebo prázdné při fatální chybě.
+    """
+    diag = {
+        "httpStatus": 0,
+        "contentType": "",
+        "finalUrl": url,
+        "bytes": 0,
+        "reason": "",
+        "bozo": False,
+        "bozoException": "",
+    }
+    fp = _url_fingerprint(url)
+    snap_path = os.path.join(_feed_snapshot_dir(), fp + ".xml")
+    feeds_map = transport.setdefault("feeds", {})
+    entry = feeds_map.get(url) if isinstance(feeds_map.get(url), dict) else {}
+    etag = (entry.get("etag") or "").strip()
+    last_mod = (entry.get("last_modified") or "").strip()
+
+    def _do_get(use_conditional: bool):
+        headers = {
+            "User-Agent": USER_AGENT,
+            "From": BOT_FROM_HEADER,
+            "Accept": "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1",
+            "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.3",
+            "Cache-Control": "no-cache",
+        }
+        if use_conditional:
+            if etag:
+                headers["If-None-Match"] = etag
+            if last_mod:
+                headers["If-Modified-Since"] = last_mod
+        stagger = random.uniform(0, 2.2)
+        _rate_limit_sleep(last_req_ts, stagger_sec=stagger)
+        return requests.get(
+            url,
+            headers=headers,
+            timeout=REQUEST_TIMEOUT_SEC,
+            allow_redirects=True,
+            stream=False,
+        )
+
+    new_etag = etag
+    new_lm = last_mod
+    backoff = 1.0
+
+    for attempt in range(4):
+        try:
+            response = _do_get(use_conditional=(attempt == 0))
+            status_code = response.status_code
+            diag["httpStatus"] = status_code
+            diag["finalUrl"] = response.url or url
+            ct = (response.headers.get("Content-Type") or "").lower()
+            diag["contentType"] = ct
+            new_etag = (response.headers.get("ETag") or new_etag or "").strip() or new_etag
+            new_lm = (response.headers.get("Last-Modified") or new_lm or "").strip() or new_lm
+
+            if status_code == 304:
+                if os.path.isfile(snap_path):
+                    with open(snap_path, "r", encoding="utf-8", errors="replace") as sf:
+                        text = sf.read()
+                    diag["bytes"] = len((text or "").encode("utf-8", errors="ignore"))
+                    feeds_map[url] = {"etag": new_etag, "last_modified": new_lm}
+                    return text, diag, new_etag, new_lm
+                response = _do_get(use_conditional=False)
+                status_code = response.status_code
+                diag["httpStatus"] = status_code
+                diag["finalUrl"] = response.url or url
+                ct = (response.headers.get("Content-Type") or "").lower()
+                diag["contentType"] = ct
+                new_etag = (response.headers.get("ETag") or new_etag or "").strip() or new_etag
+                new_lm = (response.headers.get("Last-Modified") or new_lm or "").strip() or new_lm
+
+            if status_code >= 400:
+                diag["reason"] = f"http_{status_code}"
+                if attempt < 3:
+                    time.sleep(backoff + random.uniform(0, 0.45))
+                    backoff *= 2
+                    continue
+                return "", diag, new_etag, new_lm
+
+            if status_code != 200:
+                diag["reason"] = f"http_{status_code}"
+                if attempt < 3:
+                    time.sleep(backoff + random.uniform(0, 0.45))
+                    backoff *= 2
+                    continue
+                return "", diag, new_etag, new_lm
+
+            text = response.text or ""
+            diag["bytes"] = len(text.encode("utf-8", errors="ignore"))
+            try:
+                with open(snap_path, "w", encoding="utf-8") as sf:
+                    sf.write(text)
+            except Exception:
+                pass
+            feeds_map[url] = {"etag": new_etag, "last_modified": new_lm}
+            return text, diag, new_etag, new_lm
+
+        except requests.exceptions.Timeout:
+            diag["reason"] = "fetch_timeout"
+        except requests.exceptions.RequestException:
+            diag["reason"] = "fetch_failed"
+        except Exception as e:
+            diag["reason"] = "exception"
+            diag["bozoException"] = str(e)
+
+        if attempt < 3:
+            time.sleep(backoff + random.uniform(0, 0.45))
+            backoff *= 2
+
+    return "", diag, new_etag, new_lm
+
+
+def topic_hash_from_title(title: str) -> str:
+    toks = tokenize_title(title or "")
+    joined = " ".join(sorted(toks))[:240]
+    return hashlib.sha1(joined.encode("utf-8", errors="ignore")).hexdigest()[:16]
+
+
+def _primary_category_from_cluster_items(items: list) -> str:
+    for it in sorted(items, key=lambda x: x["dt"], reverse=True):
+        fc = (it.get("feedCategory") or "").strip()
+        if fc:
+            return fc
+    return "aktualne"
+
+
+def _feed_type_from_cluster_items(items: list) -> str:
+    for it in sorted(items, key=lambda x: x["dt"], reverse=True):
+        ft = (it.get("feedType") or "").strip()
+        if ft:
+            return ft
+    return "general"
+
+
+def apply_topic_and_source_limits(articles: list) -> list:
+    """Max N stejného topicHash v rámci primaryCategory; max M článků na zdroj (jméno)."""
+    if not articles:
+        return articles
+
+    out = []
+    topic_counts = {}
+    source_counts = {}
+
+    for a in articles:
+        th = (a.get("topicHash") or "").strip()
+        pc = (a.get("primaryCategory") or "aktualne").strip()
+        src0 = (a.get("sources") or [{}])[0] if isinstance(a.get("sources"), list) else {}
+        sname = normalize_media_name(str((src0.get("name") if isinstance(src0, dict) else "") or "").strip())
+        if not sname:
+            sname = "unknown"
+
+        tk = (pc, th) if th else (pc, a.get("url") or a.get("title"))
+        if topic_counts.get(tk, 0) >= MAX_TOPIC_DEDUPE_PER_KEY:
+            continue
+        if source_counts.get(sname, 0) >= MAX_ARTICLES_PER_SOURCE_DISPLAY:
+            continue
+
+        topic_counts[tk] = topic_counts.get(tk, 0) + 1
+        source_counts[sname] = source_counts.get(sname, 0) + 1
+        out.append(a)
+    return out
+
+
+def apply_niche_fraction_limit(articles: list) -> list:
+    niche = [a for a in articles if str(a.get("feedType") or "") == "niche"]
+    rest = [a for a in articles if str(a.get("feedType") or "") != "niche"]
+    if not niche or not articles:
+        return articles
+    max_niche = int(len(articles) * NICHE_MAX_FRACTION + 0.999)
+    max_niche = max(1, max_niche)
+    if len(niche) <= max_niche:
+        return articles
+    niche_sorted = sorted(niche, key=lambda x: str(x.get("publishedAt") or ""), reverse=True)[:max_niche]
+    merged = rest + niche_sorted
+    merged.sort(key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+    return merged
 
 
 def _retention_key(it: dict) -> str:
@@ -518,6 +745,12 @@ def _meta_from_any(url: str, meta_any) -> dict:
         except Exception:
             meta["source"] = url
 
+    if "category" not in meta:
+        meta["category"] = str(meta.get("topic") or "aktualne")
+    if "type" not in meta:
+        meta["type"] = "general"
+    if "id" not in meta:
+        meta["id"] = ""
     return meta
 
 
@@ -873,10 +1106,10 @@ def is_html_content(text: str, content_type: str) -> bool:
     return False
 
 
-def fetch_feed(url: str) -> tuple:
+def fetch_feed(url: str, transport: dict = None, last_req_ts: list = None) -> tuple:
     """
-    Nová fetch_feed: vrací (feed_dict, diagnostics_dict)
-    diagnostics obsahuje: httpStatus, contentType, finalUrl, bytes, reason, bozo, bozoException
+    Vrací (feed_dict, diagnostics_dict).
+    S transport + last_req_ts: If-Modified-Since / ETag, globální odstup 2 s, snapshoty.
     """
     diagnostics = {
         "httpStatus": 0,
@@ -887,42 +1120,58 @@ def fetch_feed(url: str) -> tuple:
         "bozo": False,
         "bozoException": "",
     }
-    
+
     try:
-        status_code, final_url, content_type, text = robust_fetch(url)
-        diagnostics["httpStatus"] = status_code
-        diagnostics["contentType"] = content_type
-        diagnostics["finalUrl"] = final_url
-        diagnostics["bytes"] = len(text.encode("utf-8", errors="ignore"))
+        if transport is None or last_req_ts is None:
+            status_code, final_url, content_type, text = robust_fetch(url)
+            diagnostics["httpStatus"] = status_code
+            diagnostics["contentType"] = content_type
+            diagnostics["finalUrl"] = final_url
+            diagnostics["bytes"] = len((text or "").encode("utf-8", errors="ignore"))
 
-        if status_code == 0:
-            diagnostics["reason"] = "fetch_failed"
-            return (None, diagnostics)
+            if status_code == 0:
+                diagnostics["reason"] = "fetch_failed"
+                return (None, diagnostics)
 
-        if status_code != 200:
-            diagnostics["reason"] = f"http_{status_code}"
-            return (None, diagnostics)
+            if status_code != 200:
+                diagnostics["reason"] = f"http_{status_code}"
+                return (None, diagnostics)
 
+            if not text:
+                diagnostics["reason"] = "empty_content"
+                return (None, diagnostics)
+
+            if is_html_content(text, content_type):
+                diagnostics["reason"] = "not_xml_or_html"
+                return (None, diagnostics)
+
+            feed_dict = feedparser.parse(text)
+            bozo = bool(getattr(feed_dict, "bozo", False))
+            diagnostics["bozo"] = bozo
+            if bozo:
+                try:
+                    bozo_exc = getattr(feed_dict, "bozo_exception", None)
+                    if bozo_exc:
+                        diagnostics["bozoException"] = str(bozo_exc)
+                except Exception:
+                    pass
+            return (feed_dict, diagnostics)
+
+        text, tdiag, _, _ = http_fetch_rss_body(url, transport, last_req_ts)
+        diagnostics.update(tdiag)
         if not text:
-            diagnostics["reason"] = "empty_content"
+            if not diagnostics.get("reason"):
+                diagnostics["reason"] = "empty_content"
             return (None, diagnostics)
-        
-        if not text:
-            diagnostics["reason"] = "empty_content"
-            return (None, diagnostics)
-        
-        # Detekce HTML místo XML
+
+        content_type = diagnostics.get("contentType") or ""
         if is_html_content(text, content_type):
             diagnostics["reason"] = "not_xml_or_html"
             return (None, diagnostics)
-        
-        # Parsování feedparserem
+
         feed_dict = feedparser.parse(text)
-        
-        # Bozo informace
         bozo = bool(getattr(feed_dict, "bozo", False))
         diagnostics["bozo"] = bozo
-        
         if bozo:
             try:
                 bozo_exc = getattr(feed_dict, "bozo_exception", None)
@@ -930,9 +1179,8 @@ def fetch_feed(url: str) -> tuple:
                     diagnostics["bozoException"] = str(bozo_exc)
             except Exception:
                 pass
-        
         return (feed_dict, diagnostics)
-        
+
     except Exception as e:
         diagnostics["reason"] = "exception"
         diagnostics["bozoException"] = str(e)
@@ -1145,16 +1393,17 @@ def main() -> int:
 
     # ✅ sběr YouTube videí (půjde do data/videos.json)
     yt_videos = []
-    last_feed_domain = None
+    transport_state = load_transport_state()
+    last_req_ts = [0.0]
+    parsed_feed_cache = {}
 
     for feed_url, meta in feed_items:
-        feed_domain = (urlparse(feed_url).hostname or "").lower()
-        if last_feed_domain and feed_domain == last_feed_domain:
-            time.sleep(8)
-        last_feed_domain = feed_domain
-
         fallback_topic = stable_section(meta.get("topic", "aktualne"))
         source = fix_cz_mojibake(str(meta.get("source") or meta.get("name") or meta.get("title") or feed_url))
+        feed_category = str(meta.get("category") or meta.get("topic") or "aktualne")
+        feed_type = str(meta.get("type") or "general")
+        feed_id = str(meta.get("id") or "")
+
         if meta.get("disabled"):
             per_feed_report.append({
                 "feed": feed_url,
@@ -1172,9 +1421,22 @@ def main() -> int:
             })
             continue
 
-        # Nový robustní fetch
-        d, diagnostics = fetch_feed(feed_url)
-        
+        if feed_url in parsed_feed_cache:
+            d = parsed_feed_cache[feed_url]
+            diagnostics = {
+                "httpStatus": 200,
+                "contentType": "",
+                "finalUrl": feed_url,
+                "bytes": 0,
+                "reason": "shared_fetch_cache",
+                "bozo": False,
+                "bozoException": "",
+            }
+        else:
+            d, diagnostics = fetch_feed(feed_url, transport_state, last_req_ts)
+            if d is not None:
+                parsed_feed_cache[feed_url] = d
+
         # Základní report data
         report_base = {
             "feed": feed_url,
@@ -1289,6 +1551,9 @@ def main() -> int:
                 "media_raw": media_raw,
                 "media_norm": media_norm,
                 "tokens": tokenize_title(title),
+                "feedCategory": feed_category,
+                "feedType": feed_type,
+                "feedId": feed_id,
             }
             all_items.append(item)
             accepted += 1
@@ -1346,15 +1611,21 @@ def main() -> int:
             else:
                 title_out = choose_neutral_title(c.titles(), section=c.section)
 
-            article_out = {
-            "topic": c.section,          # topic = section (stabilně)
+        pcat = _primary_category_from_cluster_items(c.items)
+        ftype = _feed_type_from_cluster_items(c.items)
+        thash = topic_hash_from_title(title_out)
+
+        article_out = {
+            "topic": c.section,
             "section": c.section,
             "contentType": c.content_type,
-                "title": fix_cz_mojibake(title_out),
+            "title": fix_cz_mojibake(title_out),
             "publishedAt": published,
-            "sources": sources
+            "sources": sources,
+            "primaryCategory": pcat,
+            "topicHash": thash,
+            "feedType": ftype,
         }
-        # ensure top-level url mirrors first source (if valid http(s))
         src0 = (sources or [{}])[0]
         candidate = (src0.get("url", "") or "").strip()
         if candidate.lower().startswith("http://") or candidate.lower().startswith("https://"):
@@ -1369,6 +1640,15 @@ def main() -> int:
 
     # Timestamp shared by all outputs in this run
     generated_at = iso_now_z()
+
+    out_articles = apply_topic_and_source_limits(out_articles)
+    out_articles = apply_niche_fraction_limit(out_articles)
+    # Drip (releaseAt v budoucnu) schová většinu článků v UI — nesmí blokovat čerstvý feed; čas publikace zůstává v publishedAt.
+
+    try:
+        save_transport_state(transport_state)
+    except Exception:
+        pass
 
     # ===== RETENTION (ARTICLES) =====
     # Store ALL articles by day under projects/data/articles/YYYY-MM-DD.json (+ index.json).

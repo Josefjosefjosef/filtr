@@ -2,6 +2,9 @@ name: Layout guard
 
 on:
   pull_request:
+  push:
+    branches:
+      - automation/update-articles-data
   workflow_dispatch:
 
 jobs:
