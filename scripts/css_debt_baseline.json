@@ -1,24 +1,24 @@
 {
   "schema": "css_debt_guard_v1",
-  "duplicate_selector_groups": 276,
-  "duplicate_rule_occurrences_in_groups": 733,
+  "duplicate_selector_groups": 279,
+  "duplicate_rule_occurrences_in_groups": 742,
   "classification_counts": {
     "identical_duplicate": 5,
-    "breakpoint_specific": 144,
+    "breakpoint_specific": 147,
     "risky_layout_coupled": 102,
     "intentional_cascade_candidate": 25
   },
   "debt_verdict_counts": {
-    "intentional_non_debt": 98,
-    "risk_now": 173,
+    "intentional_non_debt": 99,
+    "risk_now": 175,
     "unresolved_needs_review": 5
   },
   "debt_occurrence_counts": {
-    "intentional_non_debt": 275,
-    "risk_now": 448,
+    "intentional_non_debt": 280,
+    "risk_now": 452,
     "unresolved_needs_review": 10
   },
-  "app_css_bytes": 546960,
+  "app_css_bytes": 553648,
   "css_size_guard_budget_bytes": 4096,
   "risk_zone_duplicate_groups": [
     {
@@ -108,6 +108,10 @@
     {
       "selector_normalized": "#iuLeftRail .iuMyUzelLabel",
       "classification": "intentional_cascade_candidate"
+    },
+    {
+      "selector_normalized": "#iuMobileMindMenuFlow",
+      "classification": "breakpoint_specific"
     },
     {
       "selector_normalized": "#iuRailToggleBtn::before",
@@ -312,6 +316,10 @@
     {
       "selector_normalized": ".iuTopbarDay",
       "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": ".iuTopbarFlowSpacer",
+      "classification": "breakpoint_specific"
     },
     {
       "selector_normalized": ".iuTopbarNameday",

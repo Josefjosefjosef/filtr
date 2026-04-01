@@ -50,9 +50,39 @@ style-src 'self' 'unsafe-inline' https:;
           display: none !important;
         }
       }
+      /* P0 CLS desktop: první dítě .iuTopbarFlowSpacer drží in-flow výšku — fixed #topbarWrap se z flow nepočítá; bez reálného boxu může obal ustát později (.mainCol y 0→30). */
+      @media (min-width: 901px) {
+        #leftStickyHeader {
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: stretch !important;
+          min-height: 0 !important;
+          height: auto !important;
+          box-sizing: border-box !important;
+          overflow: visible !important;
+        }
+        .iuTopbarFlowSpacer {
+          flex: 0 0 72px;
+          height: 72px;
+          width: 100%;
+          pointer-events: none;
+          overflow: hidden;
+        }
+      }
+      @media (max-width: 900px) {
+        .iuTopbarFlowSpacer {
+          display: none !important;
+        }
+      }
+      /* P0 CLS desktop: match assets/app.css — mobile MindMenu flow placeholder must not participate in .layout grid before/without late CSS (see #iuMobileMindMenuFlow). */
+      @media (min-width: 901px) {
+        #iuMobileMindMenuFlow {
+          display: none !important;
+        }
+      }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets -->
-    <link rel="stylesheet" href="/assets/app.css?v=prod1427welcomelockcleanup" />
+    <link rel="stylesheet" href="/assets/app.css?v=prod1546topbarflowspacer" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
@@ -132,6 +162,7 @@ style-src 'self' 'unsafe-inline' https:;
             <div class="layout">
               <div class="mainCol">
                 <div id="leftStickyHeader">
+                  <div class="iuTopbarFlowSpacer" aria-hidden="true"></div>
                   <header class="topbar-new iuTopbar" id="topbarWrap">
                     <div class="topbar-new-inner">
                       <div class="topbar-new-main">
@@ -210,6 +241,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <section class="iuSilverTallScrollSection" id="iuSilverTallScrollSection" aria-label="Infouzel náhled" data-iu-silver-tall-scroll>
                           <div class="iuSilverStackChromaFrame iuSilverTallScrollChromaFrame" data-iu-silver-stack-chroma-frame>
                             <div class="iuSilverTallScrollViewport" id="iuSilverTallScrollViewport" tabindex="0">
+                              <div class="iuNewsPreviewCardMount" id="iuNewsPreviewCardMount" data-iu-news-preview-mount></div>
                               <p class="iuSilverTallScrollPlaceholder" data-iu-silver-tall-scroll-placeholder>Obsah připravíme — zde bude scrollovací plocha.</p>
                               <p class="iuSilverTallScrollProbeLines" aria-hidden="true" data-iu-silver-tall-scroll-probe>Řádek 2 · neutrální shell<br>Řádek 3 · neutrální shell<br>Řádek 4 · neutrální shell<br>Řádek 5 · neutrální shell<br>Řádek 6 · neutrální shell<br>Řádek 7 · neutrální shell<br>Řádek 8 · neutrální shell<br>Řádek 9 · neutrální shell<br>Řádek 10 · neutrální shell</p>
                               <div class="iuSilverTallScrollLayoutSpacer" aria-hidden="true" data-iu-silver-tall-scroll-spacer></div>
@@ -289,6 +321,7 @@ style-src 'self' 'unsafe-inline' https:;
                   (function(){
                     try {
                       if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return;
+                      if (!window.matchMedia("(orientation: portrait)").matches) return;
                       var wrap = document.getElementById("iuMobileGateWrap");
                       var silverSlot = document.getElementById("iuMobileSilverSlot");
                       var silver = document.getElementById("silver-slot");
@@ -296,6 +329,22 @@ style-src 'self' 'unsafe-inline' https:;
                       wrap.setAttribute("aria-hidden", "false");
                       /* P0 CLS (768×1024): move Silver before #leftContent parses so #leftContent is not laid out then reflowed. */
                       if (!silverSlot.contains(silver)) silverSlot.appendChild(silver);
+                      /* P0 global CLS: same formula as iuSilverMobileStackFitApply — set --iu-silver-slot-max-h immediately after move so .silver-slot flex budget matches first paint (no late rAF thrash). */
+                      var vv = window.visualViewport;
+                      var vh = vv && typeof vv.height === "number" ? vv.height : window.innerHeight;
+                      var top = silver.getBoundingClientRect().top;
+                      var pad = 6;
+                      var safeB = 0;
+                      try {
+                        var probe = document.createElement("div");
+                        probe.style.cssText = "position:fixed;left:0;bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none;z-index:-1;";
+                        document.body.appendChild(probe);
+                        safeB = parseFloat(window.getComputedStyle(probe).paddingBottom) || 0;
+                        document.body.removeChild(probe);
+                      } catch (_) {}
+                      var maxH = Math.floor(vh - top - pad - safeB);
+                      if (maxH < 120) maxH = 120;
+                      silver.style.setProperty("--iu-silver-slot-max-h", maxH + "px");
                     } catch (e) {}
                   })();
                   </script>

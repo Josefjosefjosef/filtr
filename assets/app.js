@@ -5446,12 +5446,30 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
   }
 
+  function iuNewsPreviewPublishedRaw(item) {
+    try {
+      if (!item || typeof item !== "object") return "";
+      return String(
+        item.publishedAt ||
+          item.published ||
+          item.pubDate ||
+          item.date ||
+          item.createdAt ||
+          item.uploadedAt ||
+          item.time ||
+          ""
+      ).trim();
+    } catch (_) {
+      return "";
+    }
+  }
+
   function iuNewsPreviewParsePublishedMs(item){
     try{
       if (!item || typeof item !== "object") return NaN;
       const direct = typeof item._ts === "number" ? item._ts : NaN;
       if (Number.isFinite(direct) && direct > 0) return direct;
-      const raw = (item && String(item.publishedAt || item.published || item.date || item.createdAt || item.uploadedAt || item.time)) || "";
+      const raw = iuNewsPreviewPublishedRaw(item);
       if (!raw) return NaN;
       const ms = Date.parse(raw);
       return Number.isFinite(ms) ? ms : NaN;
@@ -5483,26 +5501,28 @@ function buildVideoAsArticleCard(it) {
     try{
       const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
       if (!items.length) return { latest: null, second: null, latestMs: NaN };
-      const filtered = items.filter((it) => {
+      /** Same order as feed pipeline: walk cachedItems (already newest-first) and take first two Zprávy articles. */
+      let latest = null;
+      let second = null;
+      for (let i = 0; i < items.length; i++) {
+        const it = items[i];
         try{
-          if (!it) return false;
-          if (String(it.contentType || "article").toLowerCase() !== "article") return false;
-          return iuArticleMatchesMediaTopicKey(it, "zpravy");
-        }catch(_){
-          return false;
-        }
-      });
-      if (!filtered.length) return { latest: null, second: null, latestMs: NaN };
-      const ranked = filtered
-        .map((it) => {
-          const ms = iuNewsPreviewParsePublishedMs(it);
-          return { it, ms: Number.isFinite(ms) ? ms : 0 };
-        })
-        .sort((a, b) => (b.ms || 0) - (a.ms || 0));
-      const a = ranked[0] ? ranked[0].it : null;
-      const b = ranked[1] ? ranked[1].it : null;
-      const ms = ranked[0] ? ranked[0].ms : NaN;
-      return { latest: a, second: b, latestMs: ms };
+          if (!it) continue;
+          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
+          if (!iuArticleMatchesMediaTopicKey(it, "zpravy")) continue;
+          if (!latest) {
+            latest = it;
+            continue;
+          }
+          if (!second) {
+            second = it;
+            break;
+          }
+        }catch(_){}
+      }
+      if (!latest) return { latest: null, second: null, latestMs: NaN };
+      const latestMs = iuNewsPreviewParsePublishedMs(latest);
+      return { latest, second, latestMs };
     }catch(_){
       return { latest: null, second: null, latestMs: NaN };
     }
@@ -5512,7 +5532,10 @@ function buildVideoAsArticleCard(it) {
     try{
       const viewport = document.getElementById("iuSilverTallScrollViewport");
       if (!viewport) return null;
-      let card = viewport.querySelector('[data-iu-news-preview-card="1"]');
+      const mount = document.getElementById("iuNewsPreviewCardMount");
+      let card = mount
+        ? mount.querySelector('[data-iu-news-preview-card="1"]')
+        : viewport.querySelector('[data-iu-news-preview-card="1"]');
       if (card) return card;
 
       card = document.createElement("button");
@@ -5534,21 +5557,35 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img class="iuNewsPreviewImg" src="/assets/iu-news-preview-placeholder.svg" width="112" height="84" loading="lazy" decoding="async" alt="" />
+            <img class="iuNewsPreviewImg" src="/assets/iu-news-preview-placeholder.svg" width="112" height="84" loading="eager" decoding="sync" alt="" />
           </div>
           <div class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-news-preview-title-1>Zprávy se načítají</p>
-            <p class="iuNewsPreviewHeadline2" data-iu-news-preview-title-2 hidden></p>
+            <p class="iuNewsPreviewHeadline2 iuNewsPreviewHeadline2--empty" data-iu-news-preview-title-2></p>
           </div>
         </div>
       `.trim();
 
       const placeholder = viewport.querySelector("[data-iu-silver-tall-scroll-placeholder]");
-      if (placeholder && placeholder.hidden !== true) placeholder.hidden = true;
+      if (placeholder) {
+        try {
+          placeholder.style.visibility = "hidden";
+          placeholder.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+      }
       const probe = viewport.querySelector("[data-iu-silver-tall-scroll-probe]");
-      if (probe && probe.hidden !== true) probe.hidden = true;
+      if (probe) {
+        try {
+          probe.style.visibility = "hidden";
+          probe.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+      }
 
-      viewport.insertBefore(card, viewport.firstChild || null);
+      if (mount) {
+        mount.appendChild(card);
+      } else {
+        viewport.insertBefore(card, viewport.firstChild || null);
+      }
 
       card.addEventListener("click", function(){
         try{
@@ -5616,9 +5653,10 @@ function buildVideoAsArticleCard(it) {
         elFresh.textContent = "";
         elFresh.setAttribute("data-iu-news-preview-has-freshness", "0");
         card.removeAttribute("data-iu-news-preview-latest-ms");
+        card.removeAttribute("data-iu-news-preview-published-raw");
         elT1.textContent = "Zprávy se načítají";
         elT2.textContent = "";
-        elT2.hidden = true;
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
         return;
       }
 
@@ -5626,23 +5664,27 @@ function buildVideoAsArticleCard(it) {
       elT1.textContent = latestTitle;
       if (secondTitle) {
         elT2.textContent = secondTitle;
-        elT2.hidden = false;
+        try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
       } else {
         elT2.textContent = "";
-        elT2.hidden = true;
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
       }
 
       // Freshness + badge (NO fake: only if we have valid timestamp)
+      const publishedRaw = iuNewsPreviewPublishedRaw(latest);
       const ms = picked.latestMs;
       const fresh = iuCsRelativeFreshnessFromMs(ms, Date.now());
       if (fresh) {
         elFresh.textContent = fresh;
         elFresh.setAttribute("data-iu-news-preview-has-freshness", "1");
         card.setAttribute("data-iu-news-preview-latest-ms", String(ms));
+        if (publishedRaw) card.setAttribute("data-iu-news-preview-published-raw", publishedRaw);
+        else card.removeAttribute("data-iu-news-preview-published-raw");
       } else {
         elFresh.textContent = "";
         elFresh.setAttribute("data-iu-news-preview-has-freshness", "0");
         card.removeAttribute("data-iu-news-preview-latest-ms");
+        card.removeAttribute("data-iu-news-preview-published-raw");
       }
       if (badge) badge.hidden = false;
     }catch(_){}
@@ -13250,8 +13292,11 @@ function buildVideoAsArticleCard(it) {
           "position:fixed",
           "right:12px",
           "bottom:12px",
+          "width:min(460px,calc(100vw - 24px))",
           "max-width:460px",
-          "min-height:120px",
+          "box-sizing:border-box",
+          "height:120px",
+          "min-height:0",
           "max-height:45vh",
           "overflow:auto",
           "z-index:2147483647",

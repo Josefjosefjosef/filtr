@@ -347,6 +347,32 @@ html:not([data-iu-js]) .iuDailyWeather{
   min-height: 68px;
 }
 
+/* P0 CLS desktop: .iuTopbarFlowSpacer (první dítě v HTML) drží in-flow výšku — fixed #topbarWrap se do výšky obalu nepočítá. */
+@media (min-width: 901px){
+  #leftStickyHeader{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    min-height: 0 !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+  .iuTopbarFlowSpacer{
+    flex: 0 0 72px;
+    min-height: 72px;
+    height: 72px;
+    width: 100%;
+    pointer-events: none;
+    overflow: hidden;
+  }
+}
+@media (max-width: 900px){
+  .iuTopbarFlowSpacer{
+    display: none !important;
+  }
+}
+
 .topbar-new{
   position: relative;
   top: 0;
@@ -7810,8 +7836,12 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
 .iu-mobileStack{
   display: none;
 }
+/* P0 CLS desktop: hide mobile-only #iuMobileMindMenuFlow from .layout grid (≥901px); merge with one @media to limit CSS debt. */
 @media (min-width: 901px){
   .iu-mobileFirstBlock{
+    display: none !important;
+  }
+  #iuMobileMindMenuFlow{
     display: none !important;
   }
 }
@@ -9019,15 +9049,21 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   border-radius: 8px;
 }
 
+/* Transparent shell — collapse rules only on mobile; desktop needs stable in-flow height for .mainCol (fixed topbar does not fill #leftStickyHeader). */
 #leftStickyHeader{
   background: transparent !important;
   box-shadow: none !important;
   border: 0 !important;
-  min-height: 0 !important;
-  height: auto !important;
   padding: 0 !important;
   margin: 0 !important;
   align-items: stretch !important;
+}
+
+@media (max-width: 900px){
+  #leftStickyHeader{
+    min-height: 0 !important;
+    height: auto !important;
+  }
 }
 
 .topbar-new{
@@ -11048,6 +11084,13 @@ main#content .layout:has(#leftStickyHeader){
   min-height: calc(100vh - var(--iuTopbarHeight)) !important;
 }
 
+/* P0 CLS desktop: bez čekání na :has() — první frame neměl mít jiný padding-top než steady (topbar je fixed + #leftStickyHeader drží výšku v .mainCol). */
+@media (min-width: 901px){
+  main#content .layout{
+    padding-top: 0 !important;
+  }
+}
+
 @media (max-width: 900px){
   main#content .layout{
     padding-top: 0 !important;
@@ -12604,9 +12647,8 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
 
   
   .layout:has(#leftStickyHeader) > aside.accordionCol{
-    
     padding-top: 0 !important;
-    margin-top: calc(var(--iuTopbarHeight) + 4px) !important;
+    margin-top: var(--iuTopbarHeight) !important;
     box-sizing: border-box;
   }
 
@@ -15297,24 +15339,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   border-radius: 8px;
 }
 
-/* ZPRÁVY preview card */
+.iuSilverTallScrollViewport .iuNewsPreviewCardMount{min-height:168px;width:100%;box-sizing:border-box}
 .iuSilverTallScrollViewport .iuNewsPreviewCard{
-  appearance:none;-webkit-appearance:none;
-  width:100%;max-width:100%;min-width:0;
-  display:grid;grid-template-rows:auto 1fr;
-  border:1px solid rgba(15,35,55,.16);
-  border-radius:12px;
-  background:rgba(255,255,255,.78);
-  box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 10px 26px rgba(8,14,22,.10);
-  color:#0b1f33;text-align:left;
-  padding:0;margin:6px 2px 10px 2px;
-  cursor:pointer;overflow:hidden;
+  appearance:none;-webkit-appearance:none;width:100%;max-width:100%;min-width:0;display:grid;grid-template-rows:auto 1fr;border:1px solid rgba(15,35,55,.16);border-radius:12px;background:rgba(255,255,255,.78);box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 10px 26px rgba(8,14,22,.1);color:#0b1f33;padding:0;margin:6px 2px 10px 2px;cursor:pointer;overflow:hidden
 }
 .silver-welcome-stack--evening .iuSilverTallScrollViewport .iuNewsPreviewCard{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:rgba(230,238,248,.92)}
 .iuSilverTallScrollViewport .iuNewsPreviewHeader{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(15,35,55,.14);min-width:0}
-.silver-welcome-stack--evening .iuSilverTallScrollViewport .iuNewsPreviewHeader{border-bottom-color:rgba(255,255,255,.14)}
 .iuSilverTallScrollViewport .iuNewsPreviewTitleRow{display:flex;align-items:center;gap:10px;min-width:0;flex:1 1 auto}
-.iuSilverTallScrollViewport .iuNewsPreviewLabel{font-weight:800;letter-spacing:-.015em;flex:0 0 auto}
+.iuSilverTallScrollViewport .iuNewsPreviewLabel{font-weight:800;flex:0 0 auto}
 .iuSilverTallScrollViewport .iuNewsPreviewBadge{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;height:18px;padding:0 8px;border-radius:6px;background:#d91c1c;color:#fff;font-size:11px;font-weight:800;letter-spacing:.03em;line-height:1;white-space:nowrap}
 .iuSilverTallScrollViewport .iuNewsPreviewFreshness{flex:1 1 auto;min-width:0;font-size:12px;line-height:1.2;font-weight:600;color:currentColor;opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .iuSilverTallScrollViewport .iuNewsPreviewChevron{flex:0 0 auto;width:18px;height:18px;opacity:.62;color:currentColor}
@@ -15322,9 +15354,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .iuSilverTallScrollViewport .iuNewsPreviewImgWrap{width:100%;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:rgba(15,35,55,.08)}
 .iuSilverTallScrollViewport .iuNewsPreviewImg{display:block;width:100%;height:100%;object-fit:cover}
 .iuSilverTallScrollViewport .iuNewsPreviewText{min-width:0;display:grid;grid-template-rows:auto auto;gap:8px;align-content:start}
-.iuSilverTallScrollViewport .iuNewsPreviewHeadline,.iuSilverTallScrollViewport .iuNewsPreviewHeadline2{margin:0;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical}
+.iuSilverTallScrollViewport .iuNewsPreviewHeadline,.iuSilverTallScrollViewport .iuNewsPreviewHeadline2{margin:0;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;min-height:32px}
 .iuSilverTallScrollViewport .iuNewsPreviewHeadline{font-size:13px;font-weight:800;-webkit-line-clamp:2;color:inherit}
 .iuSilverTallScrollViewport .iuNewsPreviewHeadline2{font-size:12.5px;font-weight:700;-webkit-line-clamp:2;color:currentColor;opacity:.82}
+.iuSilverTallScrollViewport .iuNewsPreviewHeadline2--empty{visibility:hidden;pointer-events:none}
 
 .iuSilverTallScrollPlaceholder{
   margin: 0;
@@ -16023,9 +16056,28 @@ Porušení = regres + CLS risk
     min-height: 542px;
   }
   /* Desktop only: CLS reserve for summary cards (not mixed into <769px tablet/mobile) */
+  #iuSilverWeatherCard.silver-weather-card{
+    min-height: 9.25rem;
+  }
   #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #iuSilverTasksSummaryCard.silver-calendar-summary-card{
-    min-height: 92px;
+    min-height: 155px;
+  }
+  /* P0 CLS desktop: stejný 1px lock jako tablet — zabraňuje odchylce separatoru při flex dopočtu. */
+  #silver-slot #iuSilverWelcomeStackSeparatorTallBefore.silver-welcome-stack__separator{
+    flex: 0 0 auto !important;
+    height: 1px !important;
+    min-height: 1px !important;
+    max-height: 1px !important;
+    margin: 0 !important;
+  }
+  /* P0 CLS: separator mezi kalendářem a úkoly — stabilní 1px (desktop stack attribution). */
+  #silver-slot #iuSilverWelcomeStackSeparatorTasks.silver-welcome-stack__separator{
+    flex: 0 0 auto !important;
+    height: 1px !important;
+    min-height: 1px !important;
+    max-height: 1px !important;
+    margin: 0 !important;
   }
 }
 
@@ -20278,6 +20330,10 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     padding-bottom: 5px !important;
     box-sizing: border-box;
   }
+  /* P0 CLS: combined rule výše obsahuje min-height: unset (silver-stack-guard); tady jen počasí — stabilní flex před loading→data. */
+  #silver-slot #iuSilverWeatherCard.silver-weather-card{
+    min-height: 7.5rem !important;
+  }
   #silver-slot .silver-weather-line1,
   #silver-slot .silver-weather-line2{
     min-height: 1.28em;
@@ -20308,6 +20364,14 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     align-self: stretch !important;
   }
   #silver-slot #iuSilverWelcomeStackSeparatorBeforeSilver.silver-welcome-stack__separator{
+    flex: 0 0 auto !important;
+    height: 1px !important;
+    min-height: 1px !important;
+    max-height: 1px !important;
+    margin: 0 !important;
+  }
+  /* P0 CLS: tall-before separator must not settle 2px→1px after flex distribution (layout-shift source). */
+  #silver-slot #iuSilverWelcomeStackSeparatorTallBefore.silver-welcome-stack__separator{
     flex: 0 0 auto !important;
     height: 1px !important;
     min-height: 1px !important;
