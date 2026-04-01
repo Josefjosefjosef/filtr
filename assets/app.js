@@ -5497,6 +5497,33 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /** Avoid redundant img.src writes (decode churn / extra work). */
+  function iuNewsPreviewImgSrcIsSame(img, nextSrc) {
+    try {
+      if (!img || nextSrc == null) return false;
+      const next = String(nextSrc).trim();
+      const curAttr = String(img.getAttribute("src") || "").trim();
+      if (curAttr === next) return true;
+      const a = new URL(curAttr || "", location.href).href;
+      const b = new URL(next, location.href).href;
+      return a === b;
+    } catch (_) {
+      return String(img.getAttribute("src") || "") === String(nextSrc);
+    }
+  }
+
+  /** News preview thumb: non-empty http(s), root-relative path, or data:image URL. */
+  function iuNewsPreviewIsValidImage(v) {
+    if (v === null || v === undefined) return false;
+    if (typeof v !== "string") return false;
+    const s = v.trim();
+    if (!s) return false;
+    if (s.startsWith("data:image/")) return true;
+    if (/^https?:\/\//i.test(s)) return true;
+    if (s.charAt(0) === "/" && s.length > 1) return true;
+    return false;
+  }
+
   function iuNewsPreviewPickLatestTwoFromState(){
     try{
       const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
@@ -5548,7 +5575,7 @@ function buildVideoAsArticleCard(it) {
         <div class="iuNewsPreviewHeader" data-iu-news-preview-header>
           <div class="iuNewsPreviewTitleRow">
             <span class="iuNewsPreviewLabel">Zprávy</span>
-            <span class="iuNewsPreviewBadge" data-iu-news-preview-badge hidden>NOVÉ</span>
+            <span class="iuNewsPreviewBadge iuNewsPreviewBadge--off" data-iu-news-preview-badge>NOVÉ</span>
             <span class="iuNewsPreviewFreshness" data-iu-news-preview-freshness></span>
           </div>
           <svg class="iuNewsPreviewChevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
@@ -5557,7 +5584,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img class="iuNewsPreviewImg" src="/assets/iu-news-preview-placeholder.svg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+            <img class="iuNewsPreviewImg" src="/assets/images/news-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
           </div>
           <div class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-news-preview-title-1>Zprávy se načítají</p>
@@ -5614,6 +5641,22 @@ function buildVideoAsArticleCard(it) {
         }
       }, { passive: true });
 
+      const img0 = card.querySelector(".iuNewsPreviewImg");
+      if (img0 && !img0.getAttribute("data-iu-news-preview-err-bound")) {
+        img0.setAttribute("data-iu-news-preview-err-bound", "1");
+        img0.onerror = function () {
+          const fb = "/assets/images/news-default.jpg";
+          try {
+            const cur = String(img0.getAttribute("src") || "");
+            if (cur.indexOf("news-default.jpg") !== -1) {
+              img0.onerror = null;
+              return;
+            }
+          } catch (_) {}
+          img0.src = fb;
+        };
+      }
+
       return card;
     }catch(_){
       return null;
@@ -5628,8 +5671,10 @@ function buildVideoAsArticleCard(it) {
       const elFresh = card.querySelector("[data-iu-news-preview-freshness]");
       const elT1 = card.querySelector("[data-iu-news-preview-title-1]");
       const elT2 = card.querySelector("[data-iu-news-preview-title-2]");
+      const elImg = card.querySelector(".iuNewsPreviewImg");
       if (!elT1 || !elT2 || !elFresh) return;
 
+      const fallbackThumb = "/assets/images/news-default.jpg";
       const picked = iuNewsPreviewPickLatestTwoFromState();
       const latest = picked.latest;
       const second = picked.second;
@@ -5649,7 +5694,7 @@ function buildVideoAsArticleCard(it) {
       else card.removeAttribute("data-iu-news-preview-second-title");
 
       if (!hasLatest) {
-        if (badge) badge.hidden = true;
+        if (badge) badge.classList.add("iuNewsPreviewBadge--off");
         elFresh.textContent = "";
         elFresh.setAttribute("data-iu-news-preview-has-freshness", "0");
         card.removeAttribute("data-iu-news-preview-latest-ms");
@@ -5657,6 +5702,9 @@ function buildVideoAsArticleCard(it) {
         elT1.textContent = "Zprávy se načítají";
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+        try {
+          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fallbackThumb)) elImg.src = fallbackThumb;
+        } catch (_) {}
         return;
       }
 
@@ -5686,7 +5734,15 @@ function buildVideoAsArticleCard(it) {
         card.removeAttribute("data-iu-news-preview-latest-ms");
         card.removeAttribute("data-iu-news-preview-published-raw");
       }
-      if (badge) badge.hidden = false;
+      if (badge) badge.classList.remove("iuNewsPreviewBadge--off");
+
+      try {
+        if (elImg) {
+          const rawIm = latest && latest.image !== undefined && latest.image !== null ? latest.image : "";
+          const thumbSrc = iuNewsPreviewIsValidImage(rawIm) ? String(rawIm).trim() : fallbackThumb;
+          if (!iuNewsPreviewImgSrcIsSame(elImg, thumbSrc)) elImg.src = thumbSrc;
+        }
+      } catch (_) {}
     }catch(_){}
   }
 
