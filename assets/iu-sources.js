@@ -57,4 +57,13 @@ export const IU_SOURCES = [
   { id: "kudyznudy", url: "https://www.kudyznudy.cz/rss", category: "cestovani", type: "section", intervalMin: 30, intervalMax: 45 },
   { id: "hedvabnastezka", url: "https://www.hedvabnastezka.cz/rss/", category: "cestovani", type: "niche", intervalMin: 35, intervalMax: 50 },
   { id: "travelbible", url: "https://travelbible.cz/feed/", category: "cestovani", type: "niche", intervalMin: 35, intervalMax: 50 },
+  // CZ vertikály (kanonické klíče: hry / kultura / veda / vzdelavani) — viz scripts/feeds.json
+  { id: "novinky_hry", url: "https://www.novinky.cz/rss/hry", category: "hry", type: "section", intervalMin: 20, intervalMax: 35 },
+  { id: "vortex", url: "https://www.vortex.cz/feed/", category: "hry", type: "section", intervalMin: 25, intervalMax: 40 },
+  { id: "irozhlas_kultura", url: "https://www.irozhlas.cz/rss/irozhlas/section/kultura", category: "kultura", type: "section", intervalMin: 15, intervalMax: 25 },
+  { id: "novinky_kultura", url: "https://www.novinky.cz/rss/kultura", category: "kultura", type: "section", intervalMin: 18, intervalMax: 30 },
+  { id: "irozhlas_veda_tech", url: "https://www.irozhlas.cz/rss/irozhlas/section/veda-technologie", category: "veda", type: "section", intervalMin: 15, intervalMax: 25 },
+  { id: "novinky_veda", url: "https://www.novinky.cz/rss/veda", category: "veda", type: "section", intervalMin: 18, intervalMax: 30 },
+  { id: "novinky_skolstvi", url: "https://www.novinky.cz/rss/skolstvi", category: "vzdelavani", type: "section", intervalMin: 20, intervalMax: 35 },
+  { id: "edu_cz", url: "https://edu.cz/rss", category: "vzdelavani", type: "section", intervalMin: 25, intervalMax: 40 },
 ];

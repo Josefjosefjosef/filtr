@@ -129,6 +129,10 @@ style-src 'self' 'unsafe-inline' https:;
           u.searchParams.set("section", "travel");
           history.replaceState(null, "", u.toString());
         }
+        if (section === "culture") {
+          u.searchParams.set("section", "kultura");
+          history.replaceState(null, "", u.toString());
+        }
         if (section === "weather") {
           u.searchParams.set("section", "pocasi");
           history.replaceState(null, "", u.toString());
@@ -142,7 +146,7 @@ style-src 'self' 'unsafe-inline' https:;
         var k = String(s || "").trim().toLowerCase();
         if (k === "radio") return "radio";
         if (k === "jr") return "jr";
-        var allowed = {media:1,tv:1,tvonline:1,mapy:1,travel:1,pocasi:1,tvprogram:1,culture:1,ads:1,jr:1,radio:1,"myuzel-1":1,"myuzel-2":1,"myuzel-3":1,"myuzel-4":1,"myuzel-5":1};
+        var allowed = {media:1,tv:1,tvonline:1,mapy:1,travel:1,pocasi:1,tvprogram:1,hry:1,kultura:1,veda:1,vzdelavani:1,ads:1,jr:1,radio:1,"myuzel-1":1,"myuzel-2":1,"myuzel-3":1,"myuzel-4":1,"myuzel-5":1};
         if (k === "home") return "media";
         return allowed[k] ? k : "media";
       }
@@ -488,7 +492,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <span class="iu-leftNavLabel">Hry</span>
                       </a>
 
-                      <a class="iu-leftNavItem" href="#" data-rail="culture" data-accent="culture">
+                      <a class="iu-leftNavItem" href="#" data-rail="kultura" data-accent="kultura">
                         <span class="iu-leftNavIcon" aria-hidden="true">
                           <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-culture-events"></use></svg>
                         </span>
@@ -904,7 +908,7 @@ style-src 'self' 'unsafe-inline' https:;
                         </div>
 
                         <div class="iuHexRow iuHexRow--3">
-                          <a class="iuHex iuHex--culture" href="#" data-section="culture">
+                          <a class="iuHex iuHex--kultura" href="#" data-section="kultura">
                             <span class="iuHex__icon" aria-hidden="true">
                               <svg viewBox="0 0 24 24" role="img" focusable="false">
                                 <path d="M4 8h16v10H4z" fill="none" stroke="currentColor" stroke-width="2"/>
