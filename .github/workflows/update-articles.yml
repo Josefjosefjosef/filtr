@@ -56,6 +56,9 @@ jobs:
           RETENTION_DAYS: "45"
         run: python scripts/build_articles.py
 
+      - name: CZ vertical data guard (ingest vs articles.json)
+        run: node scripts/cz-vertical-data-guard.mjs
+
       - name: Build videos JSON (optional)
         shell: bash
         run: |

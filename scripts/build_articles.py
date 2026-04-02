@@ -479,7 +479,9 @@ def apply_staggered_section_release(articles: list, generated_at: str) -> list:
 
 
 def apply_topic_and_source_limits(articles: list) -> list:
-    """Max N stejného topicHash v rámci primaryCategory; max M článků na zdroj (jméno)."""
+    """Max N stejného topicHash v rámci primaryCategory; max M článků na zdroj (jméno) v rámci topic/section.
+    Klíč (zdroj × topic): stejný RSS zdroj (Novinky, iROZHLAS) nesmí vyčerpat limit v zprávách a zároveň
+    vyřadit položky jiných sekcí (hry/kultura/veda/vzdelavani)."""
     if not articles:
         return articles
 
@@ -490,6 +492,7 @@ def apply_topic_and_source_limits(articles: list) -> list:
     for a in articles:
         th = (a.get("topicHash") or "").strip()
         pc = (a.get("primaryCategory") or "aktualne").strip()
+        sec = str(a.get("topic") or a.get("section") or "").strip() or "_"
         src0 = (a.get("sources") or [{}])[0] if isinstance(a.get("sources"), list) else {}
         sname = normalize_media_name(str((src0.get("name") if isinstance(src0, dict) else "") or "").strip())
         if not sname:
@@ -498,11 +501,12 @@ def apply_topic_and_source_limits(articles: list) -> list:
         tk = (pc, th) if th else (pc, a.get("url") or a.get("title"))
         if topic_counts.get(tk, 0) >= MAX_TOPIC_DEDUPE_PER_KEY:
             continue
-        if source_counts.get(sname, 0) >= MAX_ARTICLES_PER_SOURCE_DISPLAY:
+        src_key = (sname, sec)
+        if source_counts.get(src_key, 0) >= MAX_ARTICLES_PER_SOURCE_DISPLAY:
             continue
 
         topic_counts[tk] = topic_counts.get(tk, 0) + 1
-        source_counts[sname] = source_counts.get(sname, 0) + 1
+        source_counts[src_key] = source_counts.get(src_key, 0) + 1
         out.append(a)
     return out
 
