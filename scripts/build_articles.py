@@ -132,9 +132,16 @@ KW_ZDRAVI = {
 }
 
 # Pořadí sekcí (video NENÍ sekce; je to contentType)
-SECTION_ORDER = ["pocasi", "doprava", "aktualne", "krimi", "zdravi", "finance", "sport"]
+SECTION_ORDER = ["pocasi", "doprava", "aktualne", "krimi", "zdravi", "finance", "sport", "hry", "kultura", "veda", "vzdelavani"]
 
-VALID_SECTIONS = {"pocasi","doprava","aktualne","krimi","finance","sport","zdravi"}
+VALID_SECTIONS = {"pocasi","doprava","aktualne","krimi","finance","sport","zdravi","hry","kultura","veda","vzdelavani"}
+
+# Kanonické CZ vertikály — RSS topic v feeds.json musí přesně odpovídat (infer_section se přeskakuje).
+FORCED_FEED_TOPICS = frozenset({"hry", "kultura", "veda", "vzdelavani"})
+
+# Postupné uvolňování do veřejného JSON (per sekce za běh buildu)
+SECTION_RELEASE_STATE_PATH = os.path.join(OUTPUT_DIR, "section_release_state.json")
+MAX_SECTION_RELEASE_PER_RUN = 5
 
 
 # =========================
@@ -369,6 +376,106 @@ def _feed_type_from_cluster_items(items: list) -> str:
         if ft:
             return ft
     return "general"
+
+
+def apply_staggered_section_release(articles: list, generated_at: str) -> list:
+    """
+    Throttle nových položek pro CZ vertikály: backlog v section_release_state.json,
+    max MAX_SECTION_RELEASE_PER_RUN nových URL na sekci za běh.
+    publishedAt zůstává z RSS; iuReleaseAt je interní gate (nezaměňovat se zdrojem).
+    """
+    if not articles:
+        return articles
+
+    state_root = _safe_read_json(SECTION_RELEASE_STATE_PATH) or {}
+    if not isinstance(state_root, dict):
+        state_root = {}
+    sec_state_in = state_root.get("sections")
+    if not isinstance(sec_state_in, dict):
+        sec_state_in = {}
+
+    normal = []
+    by_sec = {k: [] for k in FORCED_FEED_TOPICS}
+    for a in articles:
+        t = str(a.get("topic") or a.get("section") or "").strip().lower()
+        if t in FORCED_FEED_TOPICS:
+            by_sec[t].append(a)
+        else:
+            normal.append(a)
+
+    out_vertical = []
+    new_sections_state = {}
+
+    try:
+        base_dt = datetime.fromisoformat(str(generated_at).replace("Z", "+00:00"))
+    except Exception:
+        base_dt = datetime.now(timezone.utc)
+
+    for sec in sorted(FORCED_FEED_TOPICS):
+        candidates = by_sec.get(sec) or []
+        prev = sec_state_in.get(sec)
+        if not isinstance(prev, dict):
+            prev = {}
+        released_list = list(prev.get("released") or [])
+        if not isinstance(released_list, list):
+            released_list = []
+        released_set = set(str(x).strip() for x in released_list if str(x).strip())
+
+        pending_in = prev.get("pending")
+        pending = {}
+        if isinstance(pending_in, dict):
+            pending = dict(pending_in)
+
+        for a in candidates:
+            url = canonicalize_url(a.get("url") or "")
+            if not url:
+                continue
+            old = pending.get(url)
+            merged = dict(a)
+            if isinstance(old, dict) and old.get("iuReleaseAt"):
+                merged["iuReleaseAt"] = old["iuReleaseAt"]
+            pending[url] = merged
+
+        released_set = {u for u in released_set if u in pending}
+
+        ordered_unreleased = sorted(
+            [u for u in pending.keys() if u not in released_set],
+            key=lambda u: str(pending[u].get("publishedAt") or ""),
+        )
+        newly = ordered_unreleased[:MAX_SECTION_RELEASE_PER_RUN]
+        for u in newly:
+            released_set.add(u)
+
+        new_idx = {u: i for i, u in enumerate(newly)}
+        sec_out = []
+        for u in sorted(released_set, key=lambda x: str(pending.get(x, {}).get("publishedAt") or ""), reverse=True):
+            if u not in pending:
+                continue
+            art = dict(pending[u])
+            if u in new_idx:
+                rel_dt = base_dt + timedelta(seconds=new_idx[u])
+                art["iuReleaseAt"] = rel_dt.isoformat().replace("+00:00", "Z")
+            elif not art.get("iuReleaseAt"):
+                art["iuReleaseAt"] = generated_at
+            sec_out.append(art)
+
+        out_vertical.extend(sec_out)
+        new_sections_state[sec] = {
+            "released": sorted(released_set),
+            "pending": pending,
+        }
+
+    out_root = dict(state_root)
+    out_root["generatedAt"] = generated_at
+    out_root["sections"] = new_sections_state
+    try:
+        _atomic_write_json(SECTION_RELEASE_STATE_PATH, out_root)
+    except Exception as e:
+        print("WARN: section_release_state write failed:", str(e))
+
+    merged = normal + out_vertical
+    merged.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+    return merged
 
 
 def apply_topic_and_source_limits(articles: list) -> list:
@@ -1302,6 +1409,10 @@ def _section_label(section: str) -> str:
         "zdravi": "Zdraví",
         "finance": "Finance",
         "sport": "Sport",
+        "hry": "Hry",
+        "kultura": "Kultura / Akce",
+        "veda": "Věda & Historie",
+        "vzdelavani": "Vzdělávání",
     }
     return m.get(section, section)
 
@@ -1545,7 +1656,10 @@ def main() -> int:
             is_video = _is_video_entry(entry)
             content_type = "video" if is_video else "article"
 
-            section = infer_section(link, title, fallback_topic=fallback_topic)
+            if fallback_topic in FORCED_FEED_TOPICS:
+                section = fallback_topic
+            else:
+                section = infer_section(link, title, fallback_topic=fallback_topic)
             section = stable_section(section)
 
             item = {
@@ -1641,11 +1755,12 @@ def main() -> int:
 
         out_articles.append(article_out)
 
-    # ===== SORT (ARTICLES) =====
-    out_articles = sorted(out_articles, key=lambda a: a["publishedAt"], reverse=True)
-
     # Timestamp shared by all outputs in this run
     generated_at = iso_now_z()
+    out_articles = apply_staggered_section_release(out_articles, generated_at)
+
+    # ===== SORT (ARTICLES) =====
+    out_articles = sorted(out_articles, key=lambda a: a["publishedAt"], reverse=True)
 
     out_articles = apply_topic_and_source_limits(out_articles)
     out_articles = apply_niche_fraction_limit(out_articles)

@@ -147,7 +147,10 @@
   --iuNavAccent-pocasi: #38BDF8;
   --iuNavAccent-namedays: #F59E0B;
   --iuNavAccent-tvprogram: #10B981;
-  --iuNavAccent-culture: #6366F1;
+  --iuNavAccent-hry: #FF6B3D;
+  --iuNavAccent-kultura: #6366F1;
+  --iuNavAccent-veda: #7CFF6B;
+  --iuNavAccent-vzdelavani: #55FFA6;
   --iuNavAccent-ads: #94A3B8;
   --iu-accent-media: var(--iuNavAccent-media, #3B82F6);
   --iu-accent-tv: var(--iuNavAccent-tv, #EF4444);
@@ -4741,7 +4744,7 @@ body[data-section="home"] .iuHomeCanvas{
 .iuHomeHex434 .iuHex--namedays{  background: var(--iuNavAccent-namedays, #7C3AED); }
 .iuHomeHex434 .iuHex--tvonline{  background: var(--iuNavAccent-tvonline, #DC2626); }
 .iuHomeHex434 .iuHex--mapy{      background: var(--iuNavAccent-mapy, #16A34A); }
-.iuHomeHex434 .iuHex--culture{   background: var(--iuNavAccent-culture, #EA580C); }
+.iuHomeHex434 .iuHex--kultura{   background: var(--iuNavAccent-kultura, #EA580C); }
 .iuHomeHex434 .iuHex--radio{     background: var(--iuNavAccent-radio, #6D28D9); }
 .iuHomeHex434 .iuHex--ads{       background: var(--iuNavAccent-ads, #0EA5A4); }
 .iuHomeHex434 .iuHex--media{     background: var(--iuNavAccent-media, #111827); }
@@ -10148,7 +10151,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   .iuMobileFocusBtn[data-accent="travel"]{    --iuMobileFocusAccent: var(--iuNavAccent-travel, #EA580C); }
   .iuMobileFocusBtn[data-accent="pocasi"]{    --iuMobileFocusAccent: var(--iuNavAccent-pocasi, #2563EB); }
   .iuMobileFocusBtn[data-accent="tvprogram"]{ --iuMobileFocusAccent: var(--iuNavAccent-tvprogram, #DC2626); }
-  .iuMobileFocusBtn[data-accent="culture"]{   --iuMobileFocusAccent: var(--iuNavAccent-culture, #EA580C); }
+  .iuMobileFocusBtn[data-accent="kultura"]{   --iuMobileFocusAccent: var(--iuNavAccent-kultura, #EA580C); }
   .iuMobileFocusBtn[data-accent="ads"]{       --iuMobileFocusAccent: var(--iuNavAccent-ads, #111827); }
   .iuMobileFocusBtn[data-accent="mindmenu"]{  --iuMobileFocusAccent: #000; }
 
@@ -10160,7 +10163,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   .iuMobileTile[data-accent="travel"]{    --iuMobileFocusAccent: var(--iuNavAccent-travel, #EA580C); }
   .iuMobileTile[data-accent="pocasi"]{    --iuMobileFocusAccent: var(--iuNavAccent-pocasi, #2563EB); }
   .iuMobileTile[data-accent="tvprogram"]{ --iuMobileFocusAccent: var(--iuNavAccent-tvprogram, #DC2626); }
-  .iuMobileTile[data-accent="culture"]{   --iuMobileFocusAccent: var(--iuNavAccent-culture, #EA580C); }
+  .iuMobileTile[data-accent="kultura"]{   --iuMobileFocusAccent: var(--iuNavAccent-kultura, #EA580C); }
   .iuMobileTile[data-accent="ads"]{       --iuMobileFocusAccent: var(--iuNavAccent-ads, #111827); }
   .iuMobileTile[data-accent="mindmenu"]{  --iuMobileFocusAccent: #000; }
 
@@ -10389,7 +10392,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #newsList #iuMapsView .iuRadioChip,
 #newsList #iuTravelView .iuRadioChip,
 #newsList #iuTvProgramView .iuRadioChip,
-#newsList #iuCultureView .iuRadioChip,
+#newsList #iuKulturaView .iuRadioChip,
 #newsList #iuAdsView .iuRadioChip{
   background: var(--iuSectionAccent, #b9bcc2) !important;
   border: 0 !important;
@@ -10412,8 +10415,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #newsList #iuTravelView .iuRadioChipDesc,
 #newsList #iuTvProgramView .iuRadioChipTitle,
 #newsList #iuTvProgramView .iuRadioChipDesc,
-#newsList #iuCultureView .iuRadioChipTitle,
-#newsList #iuCultureView .iuRadioChipDesc,
+#newsList #iuKulturaView .iuRadioChipTitle,
+#newsList #iuKulturaView .iuRadioChipDesc,
 #newsList #iuAdsView .iuRadioChipTitle,
 #newsList #iuAdsView .iuRadioChipDesc{
   color: #ffffff !important;
@@ -10434,7 +10437,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #newsList #iuMapsView .iuRadioChip:hover,
 #newsList #iuTravelView .iuRadioChip:hover,
 #newsList #iuTvProgramView .iuRadioChip:hover,
-#newsList #iuCultureView .iuRadioChip:hover,
+#newsList #iuKulturaView .iuRadioChip:hover,
 #newsList #iuAdsView .iuRadioChip:hover,
 #newsList #iuRadioView .iuRadioChip:active,
 #newsList #iuJrEmptyView .iuRadioChip:active,
@@ -10444,7 +10447,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #newsList #iuMapsView .iuRadioChip:active,
 #newsList #iuTravelView .iuRadioChip:active,
 #newsList #iuTvProgramView .iuRadioChip:active,
-#newsList #iuCultureView .iuRadioChip:active,
+#newsList #iuKulturaView .iuRadioChip:active,
 #newsList #iuAdsView .iuRadioChip:active{
   background: var(--iuSectionAccent, #b9bcc2) !important;
   box-shadow: none !important;
@@ -10458,7 +10461,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #newsList #iuMapsView .iuRadioChip:focus-visible,
 #newsList #iuTravelView .iuRadioChip:focus-visible,
 #newsList #iuTvProgramView .iuRadioChip:focus-visible,
-#newsList #iuCultureView .iuRadioChip:focus-visible,
+#newsList #iuKulturaView .iuRadioChip:focus-visible,
 #newsList #iuAdsView .iuRadioChip:focus-visible{
   outline: 3px solid #0b1b2b !important;
   outline-offset: 2px !important;
@@ -17004,7 +17007,10 @@ html, body,
 
 .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"]{ --iuNavAccent: var(--iuNavAccent-tvprogram); }
 
-.iu-leftNav .iu-leftNavItem[data-accent="culture"]{ --iuNavAccent: var(--iuNavAccent-culture); }
+.iu-leftNav .iu-leftNavItem[data-accent="kultura"]{ --iuNavAccent: var(--iuNavAccent-kultura); }
+.iu-leftNav .iu-leftNavItem[data-accent="hry"]{ --iuNavAccent: var(--iuNavAccent-hry); }
+.iu-leftNav .iu-leftNavItem[data-accent="veda"]{ --iuNavAccent: var(--iuNavAccent-veda); }
+.iu-leftNav .iu-leftNavItem[data-accent="vzdelavani"]{ --iuNavAccent: var(--iuNavAccent-vzdelavani); }
 
 .iu-leftNav .iu-leftNavItem[data-accent="ads"]{ --iuNavAccent: var(--iuNavAccent-ads); }
 
@@ -17699,8 +17705,8 @@ body #iuLeftRail{
 
 #iuLeftRail .iu-leftNavItem[data-rail="hry"] i,
 #iuLeftRail .iu-leftNavItem[data-rail="hry"] svg,
-#iuLeftRail .iu-leftNavItem[data-rail="culture"] i,
-#iuLeftRail .iu-leftNavItem[data-rail="culture"] svg,
+#iuLeftRail .iu-leftNavItem[data-rail="kultura"] i,
+#iuLeftRail .iu-leftNavItem[data-rail="kultura"] svg,
 #iuLeftRail .iu-leftNavItem[data-rail="veda"] i,
 #iuLeftRail .iu-leftNavItem[data-rail="veda"] svg,
 #iuLeftRail .iu-leftNavItem[data-rail="vzdelavani"] i,
@@ -18543,14 +18549,14 @@ html, body{
 }
 
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="hry"],
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="culture"],
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="kultura"],
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="veda"],
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="vzdelavani"]{
   border-color: #F59E0B !important;
 }
 
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="hry"] .iu-leftNavIcon svg,
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="culture"] .iu-leftNavIcon svg,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="kultura"] .iu-leftNavIcon svg,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="veda"] .iu-leftNavIcon svg,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-rail="vzdelavani"] .iu-leftNavIcon svg{
   filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(10deg) brightness(98%) contrast(92%) !important;
