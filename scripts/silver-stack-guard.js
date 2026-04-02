@@ -115,6 +115,10 @@ if (!/id="iuHealthPreviewCardMount"[\s\S]*?data-iu-health-preview-mount/.test(ht
   fail("❌ Silver tall viewport must include Zdraví preview mount (#iuHealthPreviewCardMount + data-iu-health-preview-mount)");
 }
 
+if (!/id="iuTravelPreviewCardMount"[\s\S]*?data-iu-travel-preview-mount/.test(html)) {
+  fail("❌ Silver tall viewport must include Cestování preview mount (#iuTravelPreviewCardMount + data-iu-travel-preview-mount)");
+}
+
 if (html.indexOf("iuSilverCalendarSummaryShowDay") !== -1) {
   fail("❌ Calendar box3 must not render legacy CTA button (iuSilverCalendarSummaryShowDay)");
 }

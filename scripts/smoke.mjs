@@ -170,6 +170,32 @@ async function runSmoke() {
     if (!healthProbe || !healthProbe.ok) {
       fail(`Health preview regression: ${JSON.stringify(healthProbe)}`);
     }
+    try {
+      await page.waitForSelector("#iuTravelPreviewCard", { timeout: 10000 });
+    } catch (e) {
+      fail(`Travel preview card missing: ${e && e.message ? e.message : String(e)}`);
+    }
+    const travelProbe = await page.evaluate(() => {
+      const card = document.getElementById("iuTravelPreviewCard");
+      if (!card) return { ok: false, reason: "no_card" };
+      if (card.tagName !== "BUTTON" || card.getAttribute("type") !== "button") return { ok: false, reason: "not_button" };
+      const nBad = card.querySelectorAll(".iuNewsPreviewBadge, .iuSportPreviewLiveBadge").length;
+      if (nBad !== 0) return { ok: false, reason: "extra_badge", nBad };
+      const badge = card.querySelector(".iu-previewBadge--travel");
+      if (!badge || String(badge.textContent || "").trim() !== "Cestování") return { ok: false, reason: "badge" };
+      const img = document.getElementById("iuTravelPreviewImage");
+      const src = img ? String(img.getAttribute("src") || "") : "";
+      if (src.indexOf("cestovani-default.jpg") < 0) return { ok: false, reason: "img", src };
+      const titles = document.getElementById("iuTravelPreviewTitles");
+      if (!titles) return { ok: false, reason: "titles_host" };
+      const slots = titles.querySelectorAll("[data-iu-travel-preview-title-1], [data-iu-travel-preview-title-2]");
+      if (slots.length !== 2) return { ok: false, reason: "title_slots", n: slots.length };
+      if (card.getAttribute("data-iu-travel-preview-route") !== "cestovani") return { ok: false, reason: "route" };
+      return { ok: true };
+    });
+    if (!travelProbe || !travelProbe.ok) {
+      fail(`Travel preview regression: ${JSON.stringify(travelProbe)}`);
+    }
     await page.click("#iuFinancePreviewCard");
     await page.waitForTimeout(500);
     const afterFinanceClick = page.url();
@@ -185,6 +211,16 @@ async function runSmoke() {
     const afterHealthClick = page.url();
     if (afterHealthClick.indexOf("topic=zdravi") === -1) {
       fail(`Health preview click did not set topic=zdravi: ${afterHealthClick}`);
+    }
+
+    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await page.waitForTimeout(800);
+    await page.waitForSelector("#iuTravelPreviewCard", { timeout: 10000 });
+    await page.click("#iuTravelPreviewCard");
+    await page.waitForTimeout(500);
+    const afterTravelClick = page.url();
+    if (afterTravelClick.indexOf("section=travel") === -1 || afterTravelClick.indexOf("mode=media") === -1) {
+      fail(`Travel preview click did not set section=travel&mode=media: ${afterTravelClick}`);
     }
 
     const navSelectors = ["a.iu-leftNavItem", "a[data-rail]", ".iuLeftNav a", "nav a"];
