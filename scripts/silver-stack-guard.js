@@ -107,6 +107,10 @@ if (!/data-iu-silver-wx-layout/.test(html)) {
   fail("❌ Weather card must expose data-iu-silver-wx-layout (setup vs ready) for stack contract");
 }
 
+if (!/id="iuFinancePreviewCardMount"[\s\S]*?data-iu-finance-preview-mount/.test(html)) {
+  fail("❌ Silver tall viewport must include Finance preview mount (#iuFinancePreviewCardMount + data-iu-finance-preview-mount)");
+}
+
 if (html.indexOf("iuSilverCalendarSummaryShowDay") !== -1) {
   fail("❌ Calendar box3 must not render legacy CTA button (iuSilverCalendarSummaryShowDay)");
 }
