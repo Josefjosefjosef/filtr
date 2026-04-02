@@ -123,6 +123,11 @@ async function runSmoke() {
     } catch (e) {
       fail(`Finance preview card missing: ${e && e.message ? e.message : String(e)}`);
     }
+    try {
+      await page.waitForSelector("#iuHealthPreviewCard", { timeout: 10000 });
+    } catch (e) {
+      fail(`Health preview card missing: ${e && e.message ? e.message : String(e)}`);
+    }
     const financeProbe = await page.evaluate(() => {
       const card = document.getElementById("iuFinancePreviewCard");
       if (!card) return { ok: false, reason: "no_card" };
@@ -144,11 +149,42 @@ async function runSmoke() {
     if (!financeProbe || !financeProbe.ok) {
       fail(`Finance preview regression: ${JSON.stringify(financeProbe)}`);
     }
+    const healthProbe = await page.evaluate(() => {
+      const card = document.getElementById("iuHealthPreviewCard");
+      if (!card) return { ok: false, reason: "no_card" };
+      if (card.tagName !== "BUTTON" || card.getAttribute("type") !== "button") return { ok: false, reason: "not_button" };
+      const nBad = card.querySelectorAll(".iuNewsPreviewBadge, .iuSportPreviewLiveBadge").length;
+      if (nBad !== 0) return { ok: false, reason: "extra_badge", nBad };
+      const badge = card.querySelector(".iu-previewBadge--health");
+      if (!badge || String(badge.textContent || "").trim() !== "Zdraví") return { ok: false, reason: "badge" };
+      const img = document.getElementById("iuHealthPreviewImage");
+      const src = img ? String(img.getAttribute("src") || "") : "";
+      if (src.indexOf("zdravi-default.jpg") < 0) return { ok: false, reason: "img", src };
+      const titles = document.getElementById("iuHealthPreviewTitles");
+      if (!titles) return { ok: false, reason: "titles_host" };
+      const slots = titles.querySelectorAll("[data-iu-health-preview-title-1], [data-iu-health-preview-title-2]");
+      if (slots.length !== 2) return { ok: false, reason: "title_slots", n: slots.length };
+      if (card.getAttribute("data-iu-health-route") !== "zdravi") return { ok: false, reason: "route" };
+      return { ok: true };
+    });
+    if (!healthProbe || !healthProbe.ok) {
+      fail(`Health preview regression: ${JSON.stringify(healthProbe)}`);
+    }
     await page.click("#iuFinancePreviewCard");
     await page.waitForTimeout(500);
     const afterFinanceClick = page.url();
     if (afterFinanceClick.indexOf("topic=finance") === -1) {
       fail(`Finance preview click did not set topic=finance: ${afterFinanceClick}`);
+    }
+
+    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await page.waitForTimeout(800);
+    await page.waitForSelector("#iuHealthPreviewCard", { timeout: 10000 });
+    await page.click("#iuHealthPreviewCard");
+    await page.waitForTimeout(500);
+    const afterHealthClick = page.url();
+    if (afterHealthClick.indexOf("topic=zdravi") === -1) {
+      fail(`Health preview click did not set topic=zdravi: ${afterHealthClick}`);
     }
 
     const navSelectors = ["a.iu-leftNavItem", "a[data-rail]", ".iuLeftNav a", "nav a"];
