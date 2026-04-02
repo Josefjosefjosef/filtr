@@ -118,6 +118,39 @@ async function runSmoke() {
     await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
     await page.waitForTimeout(800);
 
+    try {
+      await page.waitForSelector("#iuFinancePreviewCard", { timeout: 10000 });
+    } catch (e) {
+      fail(`Finance preview card missing: ${e && e.message ? e.message : String(e)}`);
+    }
+    const financeProbe = await page.evaluate(() => {
+      const card = document.getElementById("iuFinancePreviewCard");
+      if (!card) return { ok: false, reason: "no_card" };
+      if (card.tagName !== "BUTTON" || card.getAttribute("type") !== "button") return { ok: false, reason: "not_button" };
+      const nBad = card.querySelectorAll(".iuNewsPreviewBadge, .iuSportPreviewLiveBadge").length;
+      if (nBad !== 0) return { ok: false, reason: "extra_badge", nBad };
+      const badge = card.querySelector(".iu-previewBadge--finance");
+      if (!badge || String(badge.textContent || "").trim() !== "Finance") return { ok: false, reason: "badge" };
+      const img = document.getElementById("iuFinancePreviewImage");
+      const src = img ? String(img.getAttribute("src") || "") : "";
+      if (src.indexOf("finance-default.jpg") < 0) return { ok: false, reason: "img", src };
+      const titles = document.getElementById("iuFinancePreviewTitles");
+      if (!titles) return { ok: false, reason: "titles_host" };
+      const slots = titles.querySelectorAll("[data-iu-finance-preview-title-1], [data-iu-finance-preview-title-2]");
+      if (slots.length !== 2) return { ok: false, reason: "title_slots", n: slots.length };
+      if (card.getAttribute("data-iu-finance-route") !== "finance") return { ok: false, reason: "route" };
+      return { ok: true };
+    });
+    if (!financeProbe || !financeProbe.ok) {
+      fail(`Finance preview regression: ${JSON.stringify(financeProbe)}`);
+    }
+    await page.click("#iuFinancePreviewCard");
+    await page.waitForTimeout(500);
+    const afterFinanceClick = page.url();
+    if (afterFinanceClick.indexOf("topic=finance") === -1) {
+      fail(`Finance preview click did not set topic=finance: ${afterFinanceClick}`);
+    }
+
     const navSelectors = ["a.iu-leftNavItem", "a[data-rail]", ".iuLeftNav a", "nav a"];
     let navEl = null;
     for (const sel of navSelectors) {

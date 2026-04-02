@@ -5585,9 +5585,42 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuFinancePreviewPickLatestTwoFromState(){
+    try{
+      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
+      if (!items.length) return { latest: null, second: null, latestMs: NaN };
+      let latest = null;
+      let second = null;
+      for (let i = 0; i < items.length; i++) {
+        const it = items[i];
+        try{
+          if (!it) continue;
+          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
+          if (!iuArticleMatchesMediaTopicKey(it, "finance")) continue;
+          if (!latest) {
+            latest = it;
+            continue;
+          }
+          if (!second) {
+            second = it;
+            break;
+          }
+        }catch(_){}
+      }
+      if (!latest) return { latest: null, second: null, latestMs: NaN };
+      const latestMs = iuNewsPreviewParsePublishedMs(latest);
+      return { latest, second, latestMs };
+    }catch(_){
+      return { latest: null, second: null, latestMs: NaN };
+    }
+  }
+
   /** Silver tall preview cards: same URL/nav outcome as matching left-rail .iu-leftNavItem[data-media-topic]. */
   function iuMediaPreviewNavClick(mediaTopicKey) {
     const k = String(mediaTopicKey || "").trim().toLowerCase();
+    try{
+      if (typeof window !== "undefined" && !iuIsProdHost()) window.__iuLastMediaPreviewNavKey = k;
+    }catch(_){}
     try {
       iuHideAllOverlaysNow();
     } catch (_) {}
@@ -5968,9 +6001,260 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
   }
 
+  /** Runtime regression snapshot for Finance tall preview (stable IDs / no second badge / finance-only titles). */
+  function iuFinancePreviewRegressionAudit(){
+    const out = {
+      financeCardExists: false,
+      financeBadgeText: "",
+      financeSecondBadgeCount: -1,
+      financeTimeExists: false,
+      financeImageSrc: "",
+      financeTitleSlotCount: -1,
+      financeArticleTitleLines: 0,
+      financeTitles: [],
+      financeCardClickable: false,
+      financeClickOpensFinance: null,
+      financeDataCategoryLeak: false,
+      financeImageIsFinanceDefault: false,
+    };
+    try{
+      const card = document.getElementById("iuFinancePreviewCard");
+      out.financeCardExists = !!card;
+      if (!card) return out;
+      out.financeCardClickable = card.tagName === "BUTTON" && card.getAttribute("type") === "button";
+      const badge = card.querySelector(".iu-previewBadge--finance");
+      out.financeBadgeText = badge ? String(badge.textContent || "").trim() : "";
+      try{
+        out.financeSecondBadgeCount = card.querySelectorAll(".iuNewsPreviewBadge, .iuSportPreviewLiveBadge").length;
+      }catch(_){
+        out.financeSecondBadgeCount = -1;
+      }
+      const timeEl = document.getElementById("iuFinancePreviewTime");
+      out.financeTimeExists = !!timeEl;
+      const img = document.getElementById("iuFinancePreviewImage");
+      const src = img ? String(img.getAttribute("src") || "").trim() : "";
+      out.financeImageSrc = src;
+      out.financeImageIsFinanceDefault = src.indexOf("finance-default.jpg") !== -1;
+      const titlesHost = document.getElementById("iuFinancePreviewTitles");
+      const t1 = card.querySelector("[data-iu-finance-preview-title-1]");
+      const t2 = card.querySelector("[data-iu-finance-preview-title-2]");
+      out.financeTitleSlotCount = titlesHost ? titlesHost.querySelectorAll(".iuNewsPreviewHeadline, .iuNewsPreviewHeadline2").length : -1;
+      const lines = [];
+      let articleLines = 0;
+      const loadingPhrase = "Finance se načítají";
+      if (t1) {
+        const a = String(t1.textContent || "").trim();
+        lines.push(a);
+        if (a && a !== loadingPhrase) articleLines++;
+      }
+      if (t2) {
+        const b = String(t2.textContent || "").trim();
+        if (b && !t2.classList.contains("iuNewsPreviewHeadline2--empty")) {
+          lines.push(b);
+          articleLines++;
+        }
+      }
+      out.financeArticleTitleLines = articleLines;
+      out.financeTitles = lines;
+      const picked = iuFinancePreviewPickLatestTwoFromState();
+      let leak = false;
+      if (picked.latest && picked.latest.title) {
+        const expect = String(picked.latest.title).trim();
+        const shown = t1 ? String(t1.textContent || "").trim() : "";
+        if (expect && shown && shown !== loadingPhrase && shown !== expect) leak = true;
+        try{
+          if (shown && shown !== loadingPhrase && !iuArticleMatchesMediaTopicKey(picked.latest, "finance")) leak = true;
+        }catch(_){}
+      }
+      if (card.getAttribute("data-iu-finance-preview-has-latest") === "1" && picked.latest && picked.latest.title) {
+        const shown = t1 ? String(t1.textContent || "").trim() : "";
+        if (shown !== String(picked.latest.title).trim()) leak = true;
+      }
+      out.financeDataCategoryLeak = leak;
+    }catch(_){}
+    try{
+      if (typeof window !== "undefined" && !iuIsProdHost()) window.__iuFinancePreviewLastAudit = out;
+    }catch(_){}
+    return out;
+  }
+
+  function iuFinancePreviewEnsureDom(){
+    try{
+      const viewport = document.getElementById("iuSilverTallScrollViewport");
+      if (!viewport) return null;
+      const mount = document.getElementById("iuFinancePreviewCardMount");
+      let card = mount
+        ? mount.querySelector('[data-iu-finance-preview-card="1"]')
+        : viewport.querySelector('[data-iu-finance-preview-card="1"]');
+      if (card) return card;
+
+      card = document.createElement("button");
+      card.type = "button";
+      card.id = "iuFinancePreviewCard";
+      card.className = "box-finance";
+      card.setAttribute("data-iu-finance-preview-card", "1");
+      card.setAttribute("data-iu-finance-route", "finance");
+      card.setAttribute("aria-label", "Otevřít sekci Finance");
+
+      card.innerHTML = `
+        <div class="iuNewsPreviewHeader" data-iu-finance-preview-header>
+          <div class="iuNewsPreviewTitleRow">
+            <span class="iu-previewBadge--finance">Finance</span>
+            <span class="iuNewsPreviewFreshness" id="iuFinancePreviewTime" data-iu-finance-preview-freshness></span>
+          </div>
+          <svg class="iuNewsPreviewChevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="M7.5 4.5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="iuNewsPreviewBody">
+          <div class="iuNewsPreviewImgWrap" aria-hidden="true">
+            <img id="iuFinancePreviewImage" class="iuNewsPreviewImg" src="/assets/images/finance-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+          </div>
+          <div id="iuFinancePreviewTitles" class="iuNewsPreviewText">
+            <p class="iuNewsPreviewHeadline" data-iu-finance-preview-title-1>Finance se načítají</p>
+            <p class="iuNewsPreviewHeadline2 iuNewsPreviewHeadline2--empty" data-iu-finance-preview-title-2></p>
+          </div>
+        </div>
+      `.trim();
+
+      const placeholder = viewport.querySelector("[data-iu-silver-tall-scroll-placeholder]");
+      if (placeholder) {
+        try {
+          placeholder.style.visibility = "hidden";
+          placeholder.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+      }
+      const probe = viewport.querySelector("[data-iu-silver-tall-scroll-probe]");
+      if (probe) {
+        try {
+          probe.style.visibility = "hidden";
+          probe.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+      }
+
+      if (mount) {
+        mount.appendChild(card);
+      } else {
+        viewport.insertBefore(card, viewport.firstChild || null);
+      }
+
+      card.addEventListener(
+        "click",
+        function () {
+          iuMediaPreviewNavClick("finance");
+        },
+        { passive: true }
+      );
+
+      const img0 = card.querySelector("#iuFinancePreviewImage");
+      if (img0 && !img0.getAttribute("data-iu-finance-preview-err-bound")) {
+        img0.setAttribute("data-iu-finance-preview-err-bound", "1");
+        img0.onerror = function () {
+          const fb = "/assets/images/finance-default.jpg";
+          try {
+            const cur = String(img0.getAttribute("src") || "");
+            if (cur.indexOf("finance-default.jpg") !== -1) {
+              img0.onerror = null;
+              return;
+            }
+          } catch (_) {}
+          img0.src = fb;
+        };
+      }
+
+      return card;
+    }catch(_){
+      return null;
+    }
+  }
+
+  function iuFinancePreviewRefresh(){
+    try{
+      const card = iuFinancePreviewEnsureDom();
+      if (!card) return;
+      const elFresh = card.querySelector("[data-iu-finance-preview-freshness]");
+      const elT1 = card.querySelector("[data-iu-finance-preview-title-1]");
+      const elT2 = card.querySelector("[data-iu-finance-preview-title-2]");
+      const elImg = document.getElementById("iuFinancePreviewImage");
+      if (!elT1 || !elT2 || !elFresh) return;
+
+      const fixedThumb = "/assets/images/finance-default.jpg";
+      const picked = iuFinancePreviewPickLatestTwoFromState();
+      const latest = picked.latest;
+      const second = picked.second;
+      let latestTitle = latest && latest.title ? String(latest.title) : "";
+      const secondTitle = second && second.title ? String(second.title) : "";
+      if (latest && !iuArticleMatchesMediaTopicKey(latest, "finance")) {
+        latestTitle = "";
+      }
+      const hasLatest = !!latestTitle;
+
+      if (hasLatest) {
+        card.setAttribute("data-iu-finance-preview-has-latest", "1");
+        card.setAttribute("data-iu-finance-preview-latest-title", latestTitle);
+        card.setAttribute("data-iu-finance-preview-guard-topic", "finance");
+      } else {
+        card.setAttribute("data-iu-finance-preview-has-latest", "0");
+        card.removeAttribute("data-iu-finance-preview-latest-title");
+        card.removeAttribute("data-iu-finance-preview-guard-topic");
+      }
+      if (secondTitle) {
+        card.setAttribute("data-iu-finance-preview-second-title", secondTitle);
+      } else {
+        card.removeAttribute("data-iu-finance-preview-second-title");
+      }
+
+      if (!hasLatest) {
+        elFresh.textContent = "";
+        elFresh.setAttribute("data-iu-finance-preview-has-freshness", "0");
+        card.removeAttribute("data-iu-finance-preview-latest-ms");
+        card.removeAttribute("data-iu-finance-preview-published-raw");
+        elT1.textContent = "Finance se načítají";
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+        try {
+          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+        } catch (_) {}
+        try { iuFinancePreviewRegressionAudit(); } catch (_) {}
+        return;
+      }
+
+      elT1.textContent = latestTitle;
+      if (secondTitle) {
+        elT2.textContent = secondTitle;
+        try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      }
+
+      const publishedRaw = iuNewsPreviewPublishedRaw(latest);
+      const ms = picked.latestMs;
+      const fresh = iuCsRelativeFreshnessFromMs(ms, Date.now());
+      if (fresh) {
+        elFresh.textContent = fresh;
+        elFresh.setAttribute("data-iu-finance-preview-has-freshness", "1");
+        card.setAttribute("data-iu-finance-preview-latest-ms", String(ms));
+        if (publishedRaw) card.setAttribute("data-iu-finance-preview-published-raw", publishedRaw);
+        else card.removeAttribute("data-iu-finance-preview-published-raw");
+      } else {
+        elFresh.textContent = "";
+        elFresh.setAttribute("data-iu-finance-preview-has-freshness", "0");
+        card.removeAttribute("data-iu-finance-preview-latest-ms");
+        card.removeAttribute("data-iu-finance-preview-published-raw");
+      }
+
+      try {
+        if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+      } catch (_) {}
+      try { iuFinancePreviewRegressionAudit(); } catch (_) {}
+    }catch(_){}
+  }
+
   function iuSilverTallMediaPreviewsRefresh(){
     try{ iuNewsPreviewRefresh(); }catch(_){}
     try{ iuSportPreviewRefresh(); }catch(_){}
+    try{ iuFinancePreviewRefresh(); }catch(_){}
   }
 
   function iuNewsPreviewInit(){
@@ -5980,6 +6264,8 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
     try{ if (!iuIsProdHost()) window.iuNewsPreviewRefresh = iuNewsPreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuSportPreviewRefresh = iuSportPreviewRefresh; }catch(_){}
+    try{ if (!iuIsProdHost()) window.iuFinancePreviewRefresh = iuFinancePreviewRefresh; }catch(_){}
+    try{ if (!iuIsProdHost()) window.iuFinancePreviewRegressionAudit = iuFinancePreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuSilverTallMediaPreviewsRefresh = iuSilverTallMediaPreviewsRefresh; }catch(_){}
     try{ iuSilverTallMediaPreviewsRefresh(); }catch(_){}
     try{ setInterval(() => { try{ iuSilverTallMediaPreviewsRefresh(); }catch{} }, 30000); }catch(_){}
