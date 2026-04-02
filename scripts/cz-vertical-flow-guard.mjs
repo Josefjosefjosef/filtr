@@ -35,9 +35,11 @@ function normSource(name) {
 
 const ingestedByTopic = {};
 const healthSourceNamesByTopic = {};
+const healthFeedUrlsByTopic = {};
 for (const k of VERT) {
   ingestedByTopic[k] = 0;
   healthSourceNamesByTopic[k] = new Set();
+  healthFeedUrlsByTopic[k] = new Set();
 }
 
 for (const url of Object.keys(feeds)) {
@@ -48,6 +50,7 @@ for (const url of Object.keys(feeds)) {
   const kept = Number(meta.itemsKept || meta.accepted || 0);
   if (kept > 0) {
     ingestedByTopic[topic] += kept;
+    healthFeedUrlsByTopic[topic].add(url);
     const sn = normSource(meta.source);
     if (sn) healthSourceNamesByTopic[topic].add(sn);
   }
@@ -77,8 +80,30 @@ for (const k of VERT) {
   }
 
   const hs = healthSourceNamesByTopic[k];
-  /* Až při větším výřezu: první stagger batch může mít 2–4 řádky ze stejného zdroje. */
-  if (hs && hs.size >= 2 && cnt >= 5) {
+  const hf = healthFeedUrlsByTopic[k];
+  const ingestFeedCount = hf ? hf.size : 0;
+  /* ingest: ≥2 RSS URL s itemsKept; výstup: ≥2 feedId (nebo normalizované jméno bez feedId). */
+  if (ingestFeedCount >= 2 && cnt >= 2) {
+    const feedIds = new Set();
+    const normNames = new Set();
+    let allHaveFeedId = true;
+    for (const it of items) {
+      const fid = String(it.feedId || "").trim();
+      if (fid) feedIds.add(fid);
+      else allHaveFeedId = false;
+      const s0 = Array.isArray(it.sources) && it.sources[0] ? it.sources[0].name : "";
+      normNames.add(normSource(s0));
+    }
+    const diverse = allHaveFeedId && feedIds.size > 0 ? feedIds.size : normNames.size;
+    if (diverse < 2) {
+      console.error(
+        `[cz-vertical-flow-guard] SOURCE_DIVERSITY FAIL: topic=${k} ingest feeds=${ingestFeedCount} but output diversity=${diverse} (feedIds=${[...feedIds].join(",")} norms=${[...normNames].join(",")})`,
+      );
+      failed = true;
+    }
+  }
+  /* Legacy: velký výřez jen display-name ingest vs výstup (když health měl jen normalizované názvy). */
+  if (hs && hs.size >= 2 && cnt >= 5 && ingestFeedCount < 2) {
     const srcs = new Set();
     for (const it of items) {
       const s0 = Array.isArray(it.sources) && it.sources[0] ? it.sources[0].name : "";
@@ -86,7 +111,7 @@ for (const k of VERT) {
     }
     if (srcs.size < 2) {
       console.error(
-        `[cz-vertical-flow-guard] SOURCE_DIVERSITY FAIL: topic=${k} ${hs.size} distinct ingest sources but output uses one (${[...srcs].join(",")})`,
+        `[cz-vertical-flow-guard] SOURCE_DIVERSITY FAIL (display): topic=${k} ${hs.size} distinct ingest sources but output uses one (${[...srcs].join(",")})`,
       );
       failed = true;
     }

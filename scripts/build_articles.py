@@ -8,6 +8,7 @@ import re
 import hashlib
 import sys
 import time
+from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 
@@ -378,6 +379,40 @@ def _feed_type_from_cluster_items(items: list) -> str:
     return "general"
 
 
+def _pick_stagger_release_urls(unreleased: list, pending: dict, max_n: int) -> list:
+    """
+    Round-robin výběr nejstarších pending URL napříč feedId (diversity),
+    místo sekvenčního řezu jen podle publishedAt (který soustředí jeden zdroj).
+    """
+    if not unreleased or max_n <= 0:
+        return []
+
+    by_fid = defaultdict(list)
+    for u in unreleased:
+        art = pending.get(u) or {}
+        fid = str(art.get("feedId") or "").strip() or "_"
+        by_fid[fid].append(u)
+    for fid in by_fid:
+        by_fid[fid].sort(key=lambda u: str((pending.get(u) or {}).get("publishedAt") or ""))
+
+    fids = sorted(
+        by_fid.keys(),
+        key=lambda f: str((pending.get(by_fid[f][0]) or {}).get("publishedAt") or "") if by_fid[f] else "",
+    )
+    picked = []
+    while len(picked) < max_n:
+        progressed = False
+        for fid in fids:
+            if len(picked) >= max_n:
+                break
+            if by_fid[fid]:
+                picked.append(by_fid[fid].pop(0))
+                progressed = True
+        if not progressed:
+            break
+    return picked
+
+
 def apply_staggered_section_release(articles: list, generated_at: str) -> list:
     """
     Throttle nových položek pro CZ vertikály: backlog v section_release_state.json,
@@ -438,11 +473,8 @@ def apply_staggered_section_release(articles: list, generated_at: str) -> list:
 
         released_set = {u for u in released_set if u in pending}
 
-        ordered_unreleased = sorted(
-            [u for u in pending.keys() if u not in released_set],
-            key=lambda u: str(pending[u].get("publishedAt") or ""),
-        )
-        newly = ordered_unreleased[:MAX_SECTION_RELEASE_PER_RUN]
+        unreleased_urls = [u for u in pending.keys() if u not in released_set]
+        newly = _pick_stagger_release_urls(unreleased_urls, pending, MAX_SECTION_RELEASE_PER_RUN)
         for u in newly:
             released_set.add(u)
 
@@ -501,7 +533,13 @@ def apply_topic_and_source_limits(articles: list) -> list:
         tk = (pc, th) if th else (pc, a.get("url") or a.get("title"))
         if topic_counts.get(tk, 0) >= MAX_TOPIC_DEDUPE_PER_KEY:
             continue
-        src_key = (sname, sec)
+        fid = str(a.get("feedId") or "").strip()
+        # CZ vertikály: limit per RSS feed (id), ne per normalizované jméno — jinak sdílí bucket
+        # např. „Novinky.cz – Věda“ + „Novinky.cz – Historie“ → stejný display prefix.
+        if sec in FORCED_FEED_TOPICS and fid:
+            src_key = ("feed:" + fid, sec)
+        else:
+            src_key = (sname, sec)
         if source_counts.get(src_key, 0) >= MAX_ARTICLES_PER_SOURCE_DISPLAY:
             continue
 
@@ -1750,6 +1788,10 @@ def main() -> int:
             "topicHash": thash,
             "feedType": ftype,
         }
+        primary_item = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]
+        _fid = str(primary_item.get("feedId") or "").strip()
+        if _fid:
+            article_out["feedId"] = _fid
         src0 = (sources or [{}])[0]
         candidate = (src0.get("url", "") or "").strip()
         if candidate.lower().startswith("http://") or candidate.lower().startswith("https://"):
