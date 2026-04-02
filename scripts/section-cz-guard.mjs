@@ -58,11 +58,22 @@ must(
   "assets/images/vzdelavani-default.jpg must exist",
 );
 
-const feeds = fs.readFileSync(path.join(root, "scripts", "feeds.json"), "utf8");
+const feedsPath = path.join(root, "scripts", "feeds.json");
+const feeds = fs.readFileSync(feedsPath, "utf8");
 must(/"topic":\s*"hry"/.test(feeds), "feeds.json must include hry topic");
 must(/"topic":\s*"kultura"/.test(feeds), "feeds.json must include kultura topic");
 must(/"topic":\s*"veda"/.test(feeds), "feeds.json must include veda topic");
 must(/"topic":\s*"vzdelavani"/.test(feeds), "feeds.json must include vzdelavani topic");
+try {
+  const feedArr = JSON.parse(feeds);
+  const n = (t) => (Array.isArray(feedArr) ? feedArr.filter((x) => x && x.topic === t).length : 0);
+  must(n("hry") >= 3, "feeds.json must list at least 3 feeds for topic hry");
+  must(n("kultura") >= 3, "feeds.json must list at least 3 feeds for topic kultura");
+  must(n("veda") >= 3, "feeds.json must list at least 3 feeds for topic veda");
+  must(n("vzdelavani") >= 3, "feeds.json must list at least 3 feeds for topic vzdelavani");
+} catch (e) {
+  must(false, "feeds.json must be valid JSON: " + String(e && e.message));
+}
 
 const scan = appJs + idx + feeds;
 must(!/\.jpg\.jpeg/i.test(scan), "must not reference .jpg.jpeg");

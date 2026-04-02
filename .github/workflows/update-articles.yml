@@ -59,6 +59,9 @@ jobs:
       - name: CZ vertical data guard (ingest vs articles.json)
         run: node scripts/cz-vertical-data-guard.mjs
 
+      - name: CZ vertical flow guard (min items, diversity, liveness warn)
+        run: node scripts/cz-vertical-flow-guard.mjs
+
       - name: Build videos JSON (optional)
         shell: bash
         run: |

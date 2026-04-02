@@ -3781,24 +3781,37 @@ try {
       case "hry": {
         const tt = String(item.topic || item.section || "").toLowerCase();
         if (tt !== "hry") return false;
-        return /novinky\.cz\/(rss\/)?hry|vortex\.cz/i.test(hay) || /Novinky\.cz.*Hry|Vortex/i.test(src0);
+        return (
+          /novinky\.cz\/(rss\/)?hry|vortex\.cz|zing\.cz/i.test(hay) ||
+          /Novinky\.cz.*Hry|Vortex|Zing/i.test(src0)
+        );
       }
       case "kultura": {
         const tt = String(item.topic || item.section || "").toLowerCase();
         if (tt !== "kultura") return false;
-        return /irozhlas\.cz\/(rss\/)?irozhlas\/section\/kultura|novinky\.cz\/(rss\/)?kultura|\/kultura\//i.test(hay);
+        return (
+          /irozhlas\.cz\/(rss\/)?irozhlas\/section\/kultura|novinky\.cz\/(rss\/)?kultura|aktualne\.cz\/rss\/kultura|denik\.cz\/rss\/kultura|idnes\.cz\/.*kultura/i.test(
+            hay,
+          ) || /\/kultura\//i.test(hay)
+        );
       }
       case "veda": {
         const tt = String(item.topic || item.section || "").toLowerCase();
         if (tt !== "veda") return false;
-        return /irozhlas\.cz\/(rss\/)?irozhlas\/section\/veda-technologie|novinky\.cz\/(rss\/)?veda|\/veda-technologie\/|\/veda\//i.test(hay);
+        return (
+          /irozhlas\.cz\/(rss\/)?irozhlas\/section\/veda-technologie|novinky\.cz\/(rss\/)?(veda|historie)|denik\.cz\/rss\/veda|aktualne\.cz\/rss\/veda|e15\.cz\/rss\/veda/i.test(
+            hay,
+          ) ||
+          /\/veda-technologie\/|\/veda\//i.test(hay)
+        );
       }
       case "vzdelavani": {
         const tt = String(item.topic || item.section || "").toLowerCase();
         if (tt !== "vzdelavani") return false;
         return (
-          /novinky\.cz\/(rss\/)?skolstvi|edu\.cz|\/skolstvi\//i.test(hay) ||
-          /Novinky\.cz.*[ŠS]kolstv|EDU\.cz/i.test(src0)
+          /novinky\.cz\/(rss\/)?skolstvi|edu\.cz|denik\.cz\/rss\/vzdelavani|idnes\.cz\/.*\b(skoly|skolstvi)\b/i.test(hay) ||
+          /\/skolstvi\/|\/vzdelavani/i.test(hay) ||
+          /Novinky\.cz.*[ŠS]kolstv|EDU\.cz|Den[ií]k.*[Vv]zd/i.test(src0)
         );
       }
       default:
