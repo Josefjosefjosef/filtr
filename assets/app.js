@@ -5645,6 +5645,36 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuTravelPreviewPickLatestTwoFromState(){
+    try{
+      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
+      if (!items.length) return { latest: null, second: null, latestMs: NaN };
+      let latest = null;
+      let second = null;
+      for (let i = 0; i < items.length; i++) {
+        const it = items[i];
+        try{
+          if (!it) continue;
+          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
+          if (!iuArticleMatchesMediaTopicKey(it, "cestovani")) continue;
+          if (!latest) {
+            latest = it;
+            continue;
+          }
+          if (!second) {
+            second = it;
+            break;
+          }
+        }catch(_){}
+      }
+      if (!latest) return { latest: null, second: null, latestMs: NaN };
+      const latestMs = iuNewsPreviewParsePublishedMs(latest);
+      return { latest, second, latestMs };
+    }catch(_){
+      return { latest: null, second: null, latestMs: NaN };
+    }
+  }
+
   /** Silver tall preview cards: same URL/nav outcome as matching left-rail .iu-leftNavItem[data-media-topic]. */
   function iuMediaPreviewNavClick(mediaTopicKey) {
     const k = String(mediaTopicKey || "").trim().toLowerCase();
@@ -5652,7 +5682,9 @@ function buildVideoAsArticleCard(it) {
       if (typeof window !== "undefined" && !iuIsProdHost()) window.__iuLastMediaPreviewNavKey = k;
     }catch(_){}
     try {
-      iuHideAllOverlaysNow();
+      if (typeof window !== "undefined" && typeof window.iuHideAllOverlaysNow === "function") {
+        window.iuHideAllOverlaysNow();
+      }
     } catch (_) {}
     let peer = null;
     try {
@@ -5664,14 +5696,65 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       return;
     }
+    /* Cestování články: kanonické URL je ?section=travel&mode=media (žádný left-rail peer s data-media-topic). */
+    if (k === "cestovani") {
+      try {
+        if (typeof window !== "undefined" && typeof window.iuPersistNavState === "function") {
+          window.iuPersistNavState({ section: "travel", mode: "media" });
+        }
+      } catch (_) {}
+      try {
+        if (typeof window !== "undefined" && typeof window.iuApplySectionFromURL === "function") {
+          window.iuApplySectionFromURL();
+        }
+      } catch (_) {}
+      try {
+        if (typeof window !== "undefined" && typeof window.iuApplyPanelFromUrl === "function") {
+          window.iuApplyPanelFromUrl();
+        }
+      } catch (_) {}
+      try {
+        if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+          document.body.classList.add("iu-mobileMainVisible");
+          var mb2 = document.getElementById("iuMobileMainBackBar");
+          if (mb2) mb2.hidden = false;
+        }
+      } catch (_) {}
+      try {
+        requestAnimationFrame(function () {
+          try {
+            requestAnimationFrame(function () {
+              try {
+                if (typeof window !== "undefined" && typeof window.iuScrollMainToTopSmooth === "function") {
+                  window.iuScrollMainToTopSmooth();
+                }
+              } catch (_) {}
+            });
+          } catch (_) {}
+        });
+      } catch (_) {
+        try {
+          if (typeof window !== "undefined" && typeof window.iuScrollMainToTopSmooth === "function") {
+            window.iuScrollMainToTopSmooth();
+          }
+        } catch (_) {}
+      }
+      return;
+    }
     try {
-      persistNavState({ section: "media", topic: k });
+      if (typeof window !== "undefined" && typeof window.iuPersistNavState === "function") {
+        window.iuPersistNavState({ section: "media", topic: k });
+      }
     } catch (_) {}
     try {
-      applySectionFromURL();
+      if (typeof window !== "undefined" && typeof window.iuApplySectionFromURL === "function") {
+        window.iuApplySectionFromURL();
+      }
     } catch (_) {}
     try {
-      applyPanelFromUrl();
+      if (typeof window !== "undefined" && typeof window.iuApplyPanelFromUrl === "function") {
+        window.iuApplyPanelFromUrl();
+      }
     } catch (_) {}
     try {
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
@@ -5685,14 +5768,18 @@ function buildVideoAsArticleCard(it) {
         try {
           requestAnimationFrame(function () {
             try {
-              iuScrollMainToTopSmooth();
+              if (typeof window !== "undefined" && typeof window.iuScrollMainToTopSmooth === "function") {
+                window.iuScrollMainToTopSmooth();
+              }
             } catch (_) {}
           });
         } catch (_) {}
       });
     } catch (_) {
       try {
-        iuScrollMainToTopSmooth();
+        if (typeof window !== "undefined" && typeof window.iuScrollMainToTopSmooth === "function") {
+          window.iuScrollMainToTopSmooth();
+        }
       } catch (_) {}
     }
   }
@@ -6185,6 +6272,83 @@ function buildVideoAsArticleCard(it) {
     return out;
   }
 
+  /** Runtime regression snapshot for Cestování tall preview (stable IDs / no second badge / cestovani-only titles). */
+  function iuTravelPreviewRegressionAudit(){
+    const out = {
+      travelCardExists: false,
+      travelBadgeText: "",
+      travelSecondBadgeCount: -1,
+      travelTimeExists: false,
+      travelImageSrc: "",
+      travelTitleCount: -1,
+      travelArticleTitleLines: 0,
+      travelTitles: [],
+      travelCardClickable: false,
+      travelClickOpensTravel: null,
+      travelDataCategoryLeak: false,
+      travelImageIsCestovaniDefault: false,
+    };
+    try{
+      const card = document.getElementById("iuTravelPreviewCard");
+      out.travelCardExists = !!card;
+      if (!card) return out;
+      out.travelCardClickable = card.tagName === "BUTTON" && card.getAttribute("type") === "button";
+      const badge = card.querySelector(".iu-previewBadge--travel");
+      out.travelBadgeText = badge ? String(badge.textContent || "").trim() : "";
+      try{
+        out.travelSecondBadgeCount = card.querySelectorAll(".iuNewsPreviewBadge, .iuSportPreviewLiveBadge").length;
+      }catch(_){
+        out.travelSecondBadgeCount = -1;
+      }
+      const timeEl = document.getElementById("iuTravelPreviewTime");
+      out.travelTimeExists = !!timeEl;
+      const img = document.getElementById("iuTravelPreviewImage");
+      const src = img ? String(img.getAttribute("src") || "").trim() : "";
+      out.travelImageSrc = src;
+      out.travelImageIsCestovaniDefault = src.indexOf("cestovani-default.jpg") !== -1;
+      const titlesHost = document.getElementById("iuTravelPreviewTitles");
+      const t1 = card.querySelector("[data-iu-travel-preview-title-1]");
+      const t2 = card.querySelector("[data-iu-travel-preview-title-2]");
+      out.travelTitleCount = titlesHost ? titlesHost.querySelectorAll(".iuNewsPreviewHeadline, .iuNewsPreviewHeadline2").length : -1;
+      const lines = [];
+      let articleLines = 0;
+      const loadingPhrase = "Cestování se načítá";
+      if (t1) {
+        const a = String(t1.textContent || "").trim();
+        lines.push(a);
+        if (a && a !== loadingPhrase) articleLines++;
+      }
+      if (t2) {
+        const b = String(t2.textContent || "").trim();
+        if (b && !t2.classList.contains("iuNewsPreviewHeadline2--empty")) {
+          lines.push(b);
+          articleLines++;
+        }
+      }
+      out.travelArticleTitleLines = articleLines;
+      out.travelTitles = lines;
+      const picked = iuTravelPreviewPickLatestTwoFromState();
+      let leak = false;
+      if (picked.latest && picked.latest.title) {
+        const expect = String(picked.latest.title).trim();
+        const shown = t1 ? String(t1.textContent || "").trim() : "";
+        if (expect && shown && shown !== loadingPhrase && shown !== expect) leak = true;
+        try{
+          if (shown && shown !== loadingPhrase && !iuArticleMatchesMediaTopicKey(picked.latest, "cestovani")) leak = true;
+        }catch(_){}
+      }
+      if (card.getAttribute("data-iu-travel-preview-has-latest") === "1" && picked.latest && picked.latest.title) {
+        const shown = t1 ? String(t1.textContent || "").trim() : "";
+        if (shown !== String(picked.latest.title).trim()) leak = true;
+      }
+      out.travelDataCategoryLeak = leak;
+    }catch(_){}
+    try{
+      if (typeof window !== "undefined" && !iuIsProdHost()) window.__iuTravelPreviewLastAudit = out;
+    }catch(_){}
+    return out;
+  }
+
   function iuFinancePreviewEnsureDom(){
     try{
       const viewport = document.getElementById("iuSilverTallScrollViewport");
@@ -6531,11 +6695,185 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
   }
 
+  function iuTravelPreviewEnsureDom(){
+    try{
+      const viewport = document.getElementById("iuSilverTallScrollViewport");
+      if (!viewport) return null;
+      const mount = document.getElementById("iuTravelPreviewCardMount");
+      let card = mount
+        ? mount.querySelector('[data-iu-travel-preview-card="1"]')
+        : viewport.querySelector('[data-iu-travel-preview-card="1"]');
+      if (card) return card;
+
+      card = document.createElement("button");
+      card.type = "button";
+      card.id = "iuTravelPreviewCard";
+      card.className = "box-travel";
+      card.setAttribute("data-iu-travel-preview-card", "1");
+      card.setAttribute("data-iu-travel-preview-route", "cestovani");
+      card.setAttribute("aria-label", "Otevřít sekci Cestování s články");
+
+      card.innerHTML = `
+        <div class="iuNewsPreviewHeader" data-iu-travel-preview-header>
+          <div class="iuNewsPreviewTitleRow">
+            <span class="iu-previewBadge--travel">Cestování</span>
+            <span class="iuNewsPreviewFreshness" id="iuTravelPreviewTime" data-iu-travel-preview-freshness></span>
+          </div>
+          <svg class="iuNewsPreviewChevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="M7.5 4.5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="iuNewsPreviewBody">
+          <div class="iuNewsPreviewImgWrap" aria-hidden="true">
+            <img id="iuTravelPreviewImage" class="iuNewsPreviewImg" src="/assets/images/cestovani-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+          </div>
+          <div id="iuTravelPreviewTitles" class="iuNewsPreviewText">
+            <p class="iuNewsPreviewHeadline" data-iu-travel-preview-title-1>Cestování se načítá</p>
+            <p class="iuNewsPreviewHeadline2 iuNewsPreviewHeadline2--empty" data-iu-travel-preview-title-2></p>
+          </div>
+        </div>
+      `.trim();
+
+      const placeholder = viewport.querySelector("[data-iu-silver-tall-scroll-placeholder]");
+      if (placeholder) {
+        try {
+          placeholder.style.visibility = "hidden";
+          placeholder.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+      }
+      const probe = viewport.querySelector("[data-iu-silver-tall-scroll-probe]");
+      if (probe) {
+        try {
+          probe.style.visibility = "hidden";
+          probe.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+      }
+
+      if (mount) {
+        mount.appendChild(card);
+      } else {
+        viewport.insertBefore(card, viewport.firstChild || null);
+      }
+
+      card.addEventListener(
+        "click",
+        function () {
+          iuMediaPreviewNavClick("cestovani");
+        },
+        { passive: true }
+      );
+
+      const img0 = card.querySelector("#iuTravelPreviewImage");
+      if (img0 && !img0.getAttribute("data-iu-travel-preview-err-bound")) {
+        img0.setAttribute("data-iu-travel-preview-err-bound", "1");
+        img0.onerror = function () {
+          const fb = "/assets/images/cestovani-default.jpg";
+          try {
+            const cur = String(img0.getAttribute("src") || "");
+            if (cur.indexOf("cestovani-default.jpg") !== -1) {
+              img0.onerror = null;
+              return;
+            }
+          } catch (_) {}
+          img0.src = fb;
+        };
+      }
+
+      return card;
+    }catch(_){
+      return null;
+    }
+  }
+
+  function iuTravelPreviewRefresh(){
+    try{
+      const card = iuTravelPreviewEnsureDom();
+      if (!card) return;
+      const elFresh = card.querySelector("[data-iu-travel-preview-freshness]");
+      const elT1 = card.querySelector("[data-iu-travel-preview-title-1]");
+      const elT2 = card.querySelector("[data-iu-travel-preview-title-2]");
+      const elImg = document.getElementById("iuTravelPreviewImage");
+      if (!elT1 || !elT2 || !elFresh) return;
+
+      const fixedThumb = "/assets/images/cestovani-default.jpg";
+      const picked = iuTravelPreviewPickLatestTwoFromState();
+      const latest = picked.latest;
+      const second = picked.second;
+      let latestTitle = latest && latest.title ? String(latest.title) : "";
+      const secondTitle = second && second.title ? String(second.title) : "";
+      if (latest && !iuArticleMatchesMediaTopicKey(latest, "cestovani")) {
+        latestTitle = "";
+      }
+      const hasLatest = !!latestTitle;
+
+      if (hasLatest) {
+        card.setAttribute("data-iu-travel-preview-has-latest", "1");
+        card.setAttribute("data-iu-travel-preview-latest-title", latestTitle);
+        card.setAttribute("data-iu-travel-preview-guard-topic", "cestovani");
+      } else {
+        card.setAttribute("data-iu-travel-preview-has-latest", "0");
+        card.removeAttribute("data-iu-travel-preview-latest-title");
+        card.removeAttribute("data-iu-travel-preview-guard-topic");
+      }
+      if (secondTitle) {
+        card.setAttribute("data-iu-travel-preview-second-title", secondTitle);
+      } else {
+        card.removeAttribute("data-iu-travel-preview-second-title");
+      }
+
+      if (!hasLatest) {
+        elFresh.textContent = "";
+        elFresh.setAttribute("data-iu-travel-preview-has-freshness", "0");
+        card.removeAttribute("data-iu-travel-preview-latest-ms");
+        card.removeAttribute("data-iu-travel-preview-published-raw");
+        elT1.textContent = "Cestování se načítá";
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+        try {
+          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+        } catch (_) {}
+        try { iuTravelPreviewRegressionAudit(); } catch (_) {}
+        return;
+      }
+
+      elT1.textContent = latestTitle;
+      if (secondTitle) {
+        elT2.textContent = secondTitle;
+        try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      }
+
+      const publishedRaw = iuNewsPreviewPublishedRaw(latest);
+      const ms = picked.latestMs;
+      const fresh = iuCsRelativeFreshnessFromMs(ms, Date.now());
+      if (fresh) {
+        elFresh.textContent = fresh;
+        elFresh.setAttribute("data-iu-travel-preview-has-freshness", "1");
+        card.setAttribute("data-iu-travel-preview-latest-ms", String(ms));
+        if (publishedRaw) card.setAttribute("data-iu-travel-preview-published-raw", publishedRaw);
+        else card.removeAttribute("data-iu-travel-preview-published-raw");
+      } else {
+        elFresh.textContent = "";
+        elFresh.setAttribute("data-iu-travel-preview-has-freshness", "0");
+        card.removeAttribute("data-iu-travel-preview-latest-ms");
+        card.removeAttribute("data-iu-travel-preview-published-raw");
+      }
+
+      try {
+        if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+      } catch (_) {}
+      try { iuTravelPreviewRegressionAudit(); } catch (_) {}
+    }catch(_){}
+  }
+
   function iuSilverTallMediaPreviewsRefresh(){
     try{ iuNewsPreviewRefresh(); }catch(_){}
     try{ iuSportPreviewRefresh(); }catch(_){}
     try{ iuFinancePreviewRefresh(); }catch(_){}
     try{ iuHealthPreviewRefresh(); }catch(_){}
+    try{ iuTravelPreviewRefresh(); }catch(_){}
   }
 
   function iuNewsPreviewInit(){
@@ -6547,8 +6885,10 @@ function buildVideoAsArticleCard(it) {
     try{ if (!iuIsProdHost()) window.iuSportPreviewRefresh = iuSportPreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuFinancePreviewRefresh = iuFinancePreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuHealthPreviewRefresh = iuHealthPreviewRefresh; }catch(_){}
+    try{ if (!iuIsProdHost()) window.iuTravelPreviewRefresh = iuTravelPreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuFinancePreviewRegressionAudit = iuFinancePreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuHealthPreviewRegressionAudit = iuHealthPreviewRegressionAudit; }catch(_){}
+    try{ if (!iuIsProdHost()) window.iuTravelPreviewRegressionAudit = iuTravelPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuSilverTallMediaPreviewsRefresh = iuSilverTallMediaPreviewsRefresh; }catch(_){}
     try{ iuSilverTallMediaPreviewsRefresh(); }catch(_){}
     try{ setInterval(() => { try{ iuSilverTallMediaPreviewsRefresh(); }catch{} }, 30000); }catch(_){}
@@ -19782,6 +20122,10 @@ function buildVideoAsArticleCard(it) {
     try{ window.__iuStartAutoRefresh && window.__iuStartAutoRefresh(); }catch{}
   }
   try { window.iuApplySectionFromURL = applySectionFromURL; } catch (e) {}
+  try { window.iuPersistNavState = persistNavState; } catch (e) {}
+  try { window.iuApplyPanelFromUrl = applyPanelFromUrl; } catch (e) {}
+  try { window.iuHideAllOverlaysNow = iuHideAllOverlaysNow; } catch (e) {}
+  try { window.iuScrollMainToTopSmooth = iuScrollMainToTopSmooth; } catch (e) {}
 
   function initRadioWish(viewEl){
     const accEl = document.getElementById("iuRadioWish");
