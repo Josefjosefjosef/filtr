@@ -111,6 +111,10 @@ if (!/id="iuFinancePreviewCardMount"[\s\S]*?data-iu-finance-preview-mount/.test(
   fail("❌ Silver tall viewport must include Finance preview mount (#iuFinancePreviewCardMount + data-iu-finance-preview-mount)");
 }
 
+if (!/id="iuHealthPreviewCardMount"[\s\S]*?data-iu-health-preview-mount/.test(html)) {
+  fail("❌ Silver tall viewport must include Zdraví preview mount (#iuHealthPreviewCardMount + data-iu-health-preview-mount)");
+}
+
 if (html.indexOf("iuSilverCalendarSummaryShowDay") !== -1) {
   fail("❌ Calendar box3 must not render legacy CTA button (iuSilverCalendarSummaryShowDay)");
 }
