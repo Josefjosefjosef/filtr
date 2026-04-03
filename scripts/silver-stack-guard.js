@@ -131,6 +131,10 @@ if (!/id="iuScienceHistoryPreviewCardMount"[\s\S]*?data-iu-science-history-previ
   fail("❌ Silver tall viewport must include Věda & Historie preview mount (#iuScienceHistoryPreviewCardMount + data-iu-science-history-preview-mount)");
 }
 
+if (!/id="iuEducationPreviewCardMount"[\s\S]*?data-iu-education-preview-mount/.test(html)) {
+  fail("❌ Silver tall viewport must include Vzdělávání preview mount (#iuEducationPreviewCardMount + data-iu-education-preview-mount)");
+}
+
 if (html.indexOf("iuSilverCalendarSummaryShowDay") !== -1) {
   fail("❌ Calendar box3 must not render legacy CTA button (iuSilverCalendarSummaryShowDay)");
 }
