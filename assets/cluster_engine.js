@@ -96,7 +96,7 @@ export function detectTopic(title) {
     }
   }
 
-  return bestScore >= 2 ? bestTopic : null;
+  return bestScore >= 1 ? bestTopic : null;
 }
 
 /** @param {string} title */
