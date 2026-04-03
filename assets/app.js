@@ -5142,10 +5142,8 @@ function buildVideoAsArticleCard(it) {
     try{
       const meta = document.getElementById("iuSilverWelcomeMeta");
       if (!meta) return "";
-      const full = String(meta.textContent || "").trim();
-      const dotIdx = full.lastIndexOf("·");
-      const seg = (dotIdx >= 0 ? full.slice(dotIdx + 1) : full).trim();
-      const rawTail = iuParseNamedayTailFromRaw(seg);
+      const nameEl = meta.querySelector(".iuNameStrong");
+      const rawTail = nameEl ? String(nameEl.textContent || "").trim() : "";
       const v = iuSafeVocativeSingleFirstName(rawTail);
       return v ? String(v) : "";
     }catch{
@@ -5378,15 +5376,14 @@ function buildVideoAsArticleCard(it) {
             }catch{}
           }
           spanName.appendChild(doc.createTextNode(namePart));
-          if (namedayGender === "male" || namedayGender === "female") {
-            const wrap = doc.createElement("span");
-            wrap.className = "iuNamedayConfettiWrap";
-            wrap.setAttribute("aria-hidden", "true");
-            wrap.innerHTML =
-              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false" class="iuNamedayConfettiSvg"><g fill="currentColor"><circle cx="3.2" cy="5.1" r="1.05" opacity=".88"/><circle cx="13.1" cy="6.4" r=".95" opacity=".9"/><path d="M7.8 2.3l1 1.4-.9.5-1-.1.5-1 .4-.8z" opacity=".92"/><rect x="5.2" y="10.5" width="2.4" height="2.4" rx=".45" transform="rotate(-20 6.4 11.7)" opacity=".85"/><rect x="11" y="11.2" width="2" height="2" rx=".35" transform="rotate(12 12 12.2)" opacity=".87"/></g></svg>';
-            spanName.appendChild(wrap);
-          }
           metaEl.appendChild(spanName);
+          if (namedayGender === "male" || namedayGender === "female") {
+            const emojiEl = doc.createElement("span");
+            emojiEl.className = "iuNamedayEmoji";
+            emojiEl.setAttribute("aria-hidden", "true");
+            emojiEl.appendChild(doc.createTextNode("\uD83C\uDF89"));
+            metaEl.appendChild(emojiEl);
+          }
         }catch{}
         if (silverWelcomeUseJsMetaFit()) {
           try{ fitMetaFont(); }catch{}
