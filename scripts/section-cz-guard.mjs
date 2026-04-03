@@ -69,6 +69,10 @@ must(
   "assets/images/kultura-default.jpg must exist",
 );
 must(
+  fs.existsSync(path.join(root, "assets", "images", "culture-default.jpg")),
+  "assets/images/culture-default.jpg must exist",
+);
+must(
   fs.existsSync(path.join(root, "assets", "images", "veda-default.jpg")),
   "assets/images/veda-default.jpg must exist",
 );

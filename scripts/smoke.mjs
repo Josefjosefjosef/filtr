@@ -222,6 +222,32 @@ async function runSmoke() {
     if (!gamesProbe || !gamesProbe.ok) {
       fail(`Games preview regression: ${JSON.stringify(gamesProbe)}`);
     }
+    try {
+      await page.waitForSelector("#iuCulturePreviewCard", { timeout: 10000 });
+    } catch (e) {
+      fail(`Culture preview card missing: ${e && e.message ? e.message : String(e)}`);
+    }
+    const cultureProbe = await page.evaluate(() => {
+      const card = document.getElementById("iuCulturePreviewCard");
+      if (!card) return { ok: false, reason: "no_card" };
+      if (card.tagName !== "BUTTON" || card.getAttribute("type") !== "button") return { ok: false, reason: "not_button" };
+      const nBad = card.querySelectorAll(".iuNewsPreviewBadge, .iuSportPreviewLiveBadge").length;
+      if (nBad !== 0) return { ok: false, reason: "extra_badge", nBad };
+      const badge = card.querySelector(".iu-previewBadge--culture");
+      if (!badge || String(badge.textContent || "").trim() !== "Kultura / Akce") return { ok: false, reason: "badge" };
+      const img = document.getElementById("iuCulturePreviewImage");
+      const src = img ? String(img.getAttribute("src") || "") : "";
+      if (src.indexOf("culture-default.jpg") < 0) return { ok: false, reason: "img", src };
+      const titles = document.getElementById("iuCulturePreviewTitles");
+      if (!titles) return { ok: false, reason: "titles_host" };
+      const slots = titles.querySelectorAll("[data-iu-culture-preview-title-1], [data-iu-culture-preview-title-2]");
+      if (slots.length !== 2) return { ok: false, reason: "title_slots", n: slots.length };
+      if (card.getAttribute("data-iu-culture-route") !== "kultura") return { ok: false, reason: "route" };
+      return { ok: true };
+    });
+    if (!cultureProbe || !cultureProbe.ok) {
+      fail(`Culture preview regression: ${JSON.stringify(cultureProbe)}`);
+    }
     await page.click("#iuFinancePreviewCard");
     await page.waitForTimeout(500);
     const afterFinanceClick = page.url();
@@ -257,6 +283,16 @@ async function runSmoke() {
     const afterGamesClick = page.url();
     if (afterGamesClick.indexOf("section=hry") === -1) {
       fail(`Games preview click did not set section=hry: ${afterGamesClick}`);
+    }
+
+    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await page.waitForTimeout(800);
+    await page.waitForSelector("#iuCulturePreviewCard", { timeout: 10000 });
+    await page.click("#iuCulturePreviewCard");
+    await page.waitForTimeout(500);
+    const afterCultureClick = page.url();
+    if (afterCultureClick.indexOf("section=kultura") === -1) {
+      fail(`Culture preview click did not set section=kultura: ${afterCultureClick}`);
     }
 
     const navSelectors = ["a.iu-leftNavItem", "a[data-rail]", ".iuLeftNav a", "nav a"];
