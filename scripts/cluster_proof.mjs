@@ -17,9 +17,15 @@ const j = JSON.parse(raw);
 const articles = Array.isArray(j.articles) ? j.articles : [];
 const out = clusterAndPickFinalArticles(articles);
 
+const rawCount = articles.length;
+const finalCount = out.final.length;
+const efficiency =
+  rawCount > 0 ? (1 - finalCount / rawCount).toFixed(2) : "0.00";
+
 console.log("CLUSTER CHECK");
-console.log("TOTAL_ARTICLES_RAW=" + articles.length);
-console.log("TOTAL_ARTICLES_AFTER_CLUSTER=" + out.final.length);
+console.log("TOTAL_ARTICLES_RAW=" + rawCount);
+console.log("TOTAL_ARTICLES_AFTER_CLUSTER=" + finalCount);
+console.log("CLUSTER_EFFICIENCY=" + efficiency);
 console.log("CLUSTER_COUNT=" + out.clusterCount);
 console.log("DROPPED_WITHIN_CLUSTER=" + out.droppedCount);
 console.log("CHECK DUPLICATES");

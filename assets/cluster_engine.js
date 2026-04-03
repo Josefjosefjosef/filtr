@@ -5,7 +5,7 @@
  * Max velikost clusteru: 10.
  */
 
-const DEFAULT_SIMILARITY = 0.75;
+const DEFAULT_SIMILARITY = 0.6;
 const DEFAULT_HOURS = 6;
 const DEFAULT_MAX_CLUSTER = 10;
 
@@ -15,7 +15,12 @@ export function normalizeTitle(title) {
   return title
     .toLowerCase()
     .replace(/[^\w\s]/g, "")
-    .replace(/\b(a|i|o|u|v|na|do|se|je|jsou)\b/g, "")
+    .replace(/\d+/g, "")
+    .replace(
+      /\b(a|i|o|u|v|na|do|se|je|jsou|který|která|které|už|byl|byla|bude)\b/g,
+      "",
+    )
+    .replace(/\s+/g, " ")
     .trim();
 }
 
@@ -29,6 +34,19 @@ export function similarity(a, b) {
     if (bw.has(w)) intersection++;
   });
   return intersection / Math.max(aw.size, bw.size);
+}
+
+/**
+ * Doplňková heuristika: stejný „úvod“ titulku (jiná formulace).
+ * @param {string} a
+ * @param {string} b
+ */
+export function roughMatch(a, b) {
+  if (!a || !b || typeof a !== "string" || typeof b !== "string") return false;
+  const pb = b.slice(0, 20);
+  const pa = a.slice(0, 20);
+  if (!pb.length || !pa.length) return false;
+  return a.includes(pb) || b.includes(pa);
 }
 
 function publishedMs(article) {
@@ -109,12 +127,12 @@ export function clusterArticles(articles, options = {}) {
       let found = false;
       for (const cluster of clusters) {
         const sim = similarity(norm, cluster.norm);
-        if (sim < simTh) continue;
+        const match = sim >= simTh || roughMatch(norm, cluster.norm);
+        if (!match) continue;
 
-        const times = cluster.items.map((it) => publishedMs(it));
-        const minT = Math.min(...times, t);
-        const maxT = Math.max(...times, t);
-        if (maxT - minT > windowMs) continue;
+        const t0 = publishedMs(cluster.items[0]);
+        const timeDiff = Math.abs(t - t0);
+        if (timeDiff > windowMs) continue;
 
         if (cluster.items.length >= maxSize) continue;
 
@@ -144,8 +162,10 @@ export function pickBest(cluster) {
   const items = cluster?.items;
   if (!Array.isArray(items) || items.length === 0) return null;
   return [...items].sort((a, b) => {
-    const scoreA = Number(a?.displayScore ?? 0);
-    const scoreB = Number(b?.displayScore ?? 0);
+    const scoreA =
+      Number(a?.displayScore ?? 0) * Number(a?.sourceDisplayWeight ?? 1);
+    const scoreB =
+      Number(b?.displayScore ?? 0) * Number(b?.sourceDisplayWeight ?? 1);
     if (scoreB !== scoreA) return scoreB - scoreA;
     return publishedMs(b) - publishedMs(a);
   })[0];
