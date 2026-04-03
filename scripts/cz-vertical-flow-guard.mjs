@@ -120,11 +120,16 @@ for (const k of VERT) {
   if (cnt >= 1) {
     let newest = 0;
     for (const it of items) {
-      const t0 = Date.parse(String(it.publishedAt || ""));
-      if (Number.isFinite(t0) && t0 > newest) newest = t0;
+      const pub = Date.parse(String(it.publishedAt || ""));
+      const iu = Date.parse(String(it.iuReleaseAt || ""));
+      let eff = 0;
+      if (Number.isFinite(pub) && Number.isFinite(iu)) eff = Math.max(pub, iu);
+      else if (Number.isFinite(iu)) eff = iu;
+      else if (Number.isFinite(pub)) eff = pub;
+      if (eff > newest) newest = eff;
     }
     if (newest > 0 && now - newest > livenessMs) {
-      const msg = `[cz-vertical-flow-guard] LIVENESS WARN: topic=${k} newest publishedAt older than ${LIVENESS_H}h`;
+      const msg = `[cz-vertical-flow-guard] LIVENESS WARN: topic=${k} newest effective time (publishedAt/iuReleaseAt) older than ${LIVENESS_H}h`;
       if (process.env.CZ_VERTICAL_LIVENESS_FAIL === "1") {
         console.error(msg + " (strict FAIL)");
         failed = true;
@@ -133,6 +138,30 @@ for (const k of VERT) {
       }
     }
   }
+}
+
+const staleTopics = [];
+for (const k of VERT) {
+  const items = byTopic[k] || [];
+  if (items.length < 1) continue;
+  let newest = 0;
+  for (const it of items) {
+    const pub = Date.parse(String(it.publishedAt || ""));
+    const iu = Date.parse(String(it.iuReleaseAt || ""));
+    let eff = 0;
+    if (Number.isFinite(pub) && Number.isFinite(iu)) eff = Math.max(pub, iu);
+    else if (Number.isFinite(iu)) eff = iu;
+    else if (Number.isFinite(pub)) eff = pub;
+    if (eff > newest) newest = eff;
+  }
+  if (newest > 0 && now - newest > livenessMs) staleTopics.push(k);
+}
+if (staleTopics.length) {
+  console.warn(
+    `[cz-vertical-flow-guard] LIVENESS_SUMMARY: stale_topics=${staleTopics.join(",")} (threshold ${LIVENESS_H}h, effective date)`,
+  );
+} else {
+  console.log(`[cz-vertical-flow-guard] LIVENESS_SUMMARY: stale_topics= (threshold ${LIVENESS_H}h)`);
 }
 
 if (failed) process.exit(1);

@@ -59,6 +59,50 @@ def check_cache_bust(index_path: Path):
     return issues
 
 
+def check_blocked_hedvabnastezka():
+    """Hard ban on real leaks: active registry feed_url + shipped article URLs.
+
+    assets/app.js is NOT scanned: the substring appears only in client-side
+    blocklist / deny / purge helpers (iuIsHardBlocked*, purity), not as an active source.
+    """
+    needle = "hedvabnastezka"
+    issues = []
+    reg = ROOT / "projects" / "data" / "source_registry.json"
+    if reg.exists():
+        try:
+            payload = json.loads(reg.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            issues.append(f"{reg} invalid JSON: {exc}")
+        else:
+            for e in payload.get("entries") or []:
+                if not isinstance(e, dict):
+                    continue
+                if e.get("blocked") or e.get("active") is False:
+                    continue
+                u = str(e.get("feed_url") or "").lower()
+                if needle in u:
+                    issues.append(f"source_registry.json has active entry with {needle}: {e.get('id')}")
+    art = ROOT / "projects" / "data" / "articles.json"
+    if art.exists():
+        try:
+            payload = json.loads(art.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            pass
+        else:
+            for row in payload.get("articles") or []:
+                if not isinstance(row, dict):
+                    continue
+                u = str(row.get("url") or "").lower()
+                if needle in u:
+                    issues.append("articles.json contains article url with hedvabnastezka")
+                    break
+                for s in row.get("sources") or []:
+                    if isinstance(s, dict) and needle in str(s.get("url") or "").lower():
+                        issues.append("articles.json contains source url with hedvabnastezka")
+                        break
+    return issues
+
+
 def check_fetch_paths(app_js: Path):
     text = app_js.read_text(encoding="utf-8")
     issues = []
@@ -85,6 +129,8 @@ def main():
     app_js = ROOT / "assets" / "app.js"
     if app_js.exists():
         issues += check_fetch_paths(app_js)
+
+    issues += check_blocked_hedvabnastezka()
 
     data_dir = ROOT / "projects" / "data"
     issues += validate_json(data_dir / "articles.json", "articles")

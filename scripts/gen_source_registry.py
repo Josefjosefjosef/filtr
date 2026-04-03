@@ -165,7 +165,7 @@ ENTRIES.append(base("fin_novinky_ekonomika", "Novinky / Ekonomika", "novinky.cz"
 ENTRIES.append(base("fin_idnes_ekonomika", "iDNES / Ekonomika", "idnes.cz", "rubric", "finance", [], 25, 1.05, "https://servis.idnes.cz/rss.aspx?c=ekonomika", slot=26))
 ENTRIES.append(base("fin_hn", "HN / Ekonomika", "hn.cz", "rss", "finance", [], 40, 1.00, "https://hn.cz/?m=rss", cooldown=25))
 ENTRIES.append(base("fin_e15", "E15", "e15.cz", "rss", "finance", [], 40, 1.00, "https://www.e15.cz/rss"))
-ENTRIES.append(base("fin_ekonom", "Ekonom", "ekonom.cz", "rss", "finance", [], 40, 0.95, "https://www.ekonom.cz/rss"))
+ENTRIES.append(base("fin_ekonom", "Ekonom (HN)", "ekonom.cz", "rss", "finance", [], 40, 0.95, "https://ekonom.cz/?p=400000_rss"))
 ENTRIES.append(base("fin_ekonomickydenik", "Ekonomický deník", "ekonomickydenik.cz", "rss", "finance", [], 90, 0.85, "https://www.ekonomickydenik.cz/feed/"))
 ENTRIES.append(base("fin_penize", "Peníze.cz", "penize.cz", "rss", "finance", [], 90, 0.85, "https://www.penize.cz/rss"))
 ENTRIES.append(base("fin_mesec", "Měšec.cz", "mesec.cz", "rss", "finance", [], 90, 0.85, "https://www.mesec.cz/rss/"))
@@ -195,18 +195,18 @@ ENTRIES.append(base("ces_travelbible", "TravelBible", "travelbible.cz", "rss", "
 ENTRIES.append(base("ces_letenky", "Letenky.cz", "letenky.cz", "rss", "cestovani", [], 180, 0.70, "https://www.letenky.cz/rss"))
 ENTRIES.append(base("ces_ng_cestovani", "National Geographic / travel", "national-geographic.cz", "rss", "cestovani", [], 180, 0.70, "https://www.national-geographic.cz/rss"))
 
-# 5.6 HRY
-ENTRIES.append(base("hry_games", "Games.cz", "games.cz", "rss", "hry", [], 40, 1.00, "https://www.games.cz/rss"))
+# 5.6 HRY (games.cz/rss mrtvé → iDNES/Novinky rubriky; zing kanonický feed)
+ENTRIES.append(base("hry_idnes", "iDNES / Hry", "idnes.cz", "rubric", "hry", [], 25, 1.10, "https://servis.idnes.cz/rss.aspx?c=hry", cooldown=20, slot=8))
+ENTRIES.append(base("hry_novinky", "Novinky / Hry", "novinky.cz", "rubric", "hry", [], 25, 1.05, "https://www.novinky.cz/rss/hry", slot=20))
 ENTRIES.append(base("hry_indian", "Indian", "indian-tv.cz", "rss", "hry", [], 90, 0.90, "https://indian-tv.cz/feed/"))
 ENTRIES.append(base("hry_vortex", "Vortex", "vortex.cz", "rss", "hry", [], 90, 0.90, "https://www.vortex.cz/feed/"))
-ENTRIES.append(base("hry_zing", "Zing", "zing.cz", "rss", "hry", [], 90, 0.85, "https://www.zing.cz/feed/"))
+ENTRIES.append(base("hry_zing", "Zing", "zing.cz", "rss", "hry", [], 90, 0.85, "https://zing.cz/rss/all"))
 ENTRIES.append(base("hry_sector", "Sector", "sector.sk", "rss", "hry", [], 180, 0.75, "https://sector.sk/feed/"))
 ENTRIES.append(base("hry_nedd", "Nedd", "nedd.cz", "rss", "hry", [], 180, 0.70, "https://www.nedd.cz/feed/"))
-ENTRIES.append(base("hry_dotyk", "Dotyk / gaming", "dotyk.cz", "rss", "hry", [], 180, 0.65, "https://www.dotyk.cz/rss/hry"))
 
 # 5.7 KULTURA
 ENTRIES.append(base("kul_ctart", "ČT art", "ceskatelevize.cz", "rss", "kultura", [], 40, 1.05, "https://www.ceskatelevize.cz/art/rss", cooldown=20))
-ENTRIES.append(base("kul_kinobox", "Kinobox", "kinobox.cz", "rss", "kultura", [], 90, 0.95, "https://www.kinobox.cz/rss"))
+ENTRIES.append(base("kul_kinobox", "Kinobox", "kinobox.cz", "rss", "kultura", [], 90, 0.95, "https://www.kinobox.cz/api/rss"))
 ENTRIES.append(base("kul_kinotip2", "Kinotip2", "kinotip2.cz", "rss", "kultura", [], 90, 0.85, "https://www.kinotip2.cz/feed/"))
 ENTRIES.append(base("kul_vtelce", "vTelce", "vtelce.cz", "rss", "kultura", [], 180, 0.75, "https://www.vtelce.cz/feed/"))
 ENTRIES.append(base("kul_vipzivot", "VIPživot", "vipzivot.cz", "rss", "kultura", [], 180, 0.70, "https://www.vipzivot.cz/feed/"))
@@ -217,6 +217,7 @@ ENTRIES.append(base("kul_kafe", "Kafe.cz", "kafe.cz", "rss", "kultura", [], 180,
 
 # 5.8 VĚDA
 ENTRIES.append(base("ved_ct24_veda", "ČT24 / Věda", "ct24.ceskatelevize.cz", "rubric", "veda", [], 25, 1.10, "https://www.ceskatelevize.cz/rss/veda/", slot=10))
+ENTRIES.append(base("ved_novinky", "Novinky / Věda a škola", "novinky.cz", "rubric", "veda", [], 25, 1.05, "https://www.novinky.cz/rss/veda", slot=18))
 ENTRIES.append(base("ved_technet", "iDNES / Technet", "idnes.cz", "rubric", "veda", [], 40, 1.00, "https://servis.idnes.cz/rss.aspx?c=technet", cooldown=20))
 ENTRIES.append(base("ved_vtm", "VTM", "vtm.zive.cz", "rss", "veda", [], 40, 0.95, "https://vtm.zive.cz/rss"))
 ENTRIES.append(base("ved_osel", "Osel", "osel.cz", "rss", "veda", [], 90, 0.90, "https://osel.cz/rss"))
@@ -227,6 +228,8 @@ ENTRIES.append(base("ved_stoplusjednicka", "100+1", "stoplusjednicka.cz", "rss",
 
 # 5.9 VZDĚLÁVÁNÍ
 ENTRIES.append(base("vzd_ctedu", "ČT edu", "edu.ceskatelevize.cz", "rss", "vzdelavani", [], 40, 1.00, "https://edu.ceskatelevize.cz/rss", cooldown=20))
+ENTRIES.append(base("vzd_seznam", "Seznam Zprávy / Vzdělávání", "seznamzpravy.cz", "rubric", "vzdelavani", [], 25, 1.05, "https://www.seznamzpravy.cz/rss/vzdelavani", slot=12))
+ENTRIES.append(base("vzd_novinky_skola", "Novinky / Škola", "novinky.cz", "rubric", "vzdelavani", [], 25, 1.00, "https://www.novinky.cz/rss/skola", slot=24))
 ENTRIES.append(base("vzd_jsmeuspesni", "JsmeÚspěšní", "jsmeuspesni.cz", "rss", "vzdelavani", [], 180, 0.80, "https://www.jsmeuspesni.cz/feed/"))
 ENTRIES.append(base("vzd_nespechej", "Nespěchej", "nespechej.cz", "rss", "vzdelavani", [], 180, 0.75, "https://www.nespechej.cz/feed/"))
 ENTRIES.append(base("vzd_seduo", "Seduo", "seduo.cz", "rss", "vzdelavani", [], 180, 0.80, "https://www.seduo.cz/feed/"))
