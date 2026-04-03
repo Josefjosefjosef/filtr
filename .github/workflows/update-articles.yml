@@ -15,7 +15,8 @@ permissions:
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "*/2 * * * *"
+    # GitHub Actions: minimum schedule interval is once every 5 minutes.
+    - cron: "*/5 * * * *"
 
 env:
   AUTOMATION_BRANCH: automation/update-articles-data
@@ -241,7 +242,7 @@ jobs:
           echo "sameCyclePending=false"
           echo "deployVerifyRan=false"
           echo "wasPublishedInSameCycle=false"
-          echo "[PUBLISH] Closeout path: merge data PR -> main updates projects/data -> 'Pages publish from main data' (schedule */3 min) compares main generatedAt vs prod and dispatches pages.yml when stale."
+          echo "[PUBLISH] Closeout path: merge data PR -> main updates projects/data -> 'Pages publish from main data' (schedule */5 min, GitHub minimum) compares main generatedAt vs prod and dispatches pages.yml when stale."
           echo "[PUBLISH] Optional: pages-on-data-pr-merge.yml fires on pull_request merged when the merge is not attributed to GITHUB_TOKEN-only automation (otherwise rely on the scheduled publish job above)."
 
       - name: Notify completion (beep)

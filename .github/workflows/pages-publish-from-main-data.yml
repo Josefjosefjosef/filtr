@@ -1,12 +1,14 @@
 # Compares projects/data/articles.json on main vs production; dispatches pages.yml when stale.
-# Cadence: every 3 min (GitHub schedule min ~1 min; this is the real “prod catch-up” loop because
-# merges done via GITHUB_TOKEN in Actions do not reliably trigger pull_request/push downstream workflows.)
+# Cadence: every 5 min (GitHub Actions minimum interval for scheduled workflows).
+# This is the reliable “prod catch-up” loop because merges done via GITHUB_TOKEN in Actions
+# do not reliably trigger pull_request/push downstream workflows.
+# Ingestion still uses the registry-driven due queue inside build_articles.py each run.
 name: Pages publish from main data
 
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "*/3 * * * *"
+    - cron: "*/5 * * * *"
 
 permissions:
   actions: write
