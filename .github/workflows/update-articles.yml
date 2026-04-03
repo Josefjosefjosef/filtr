@@ -63,6 +63,9 @@ jobs:
       - name: CZ vertical flow guard (min items, diversity, liveness warn)
         run: node scripts/cz-vertical-flow-guard.mjs
 
+      - name: Section purity guard (finance/zdravi vs URL)
+        run: python scripts/section_purity_guard.py
+
       - name: Build videos JSON (optional)
         shell: bash
         run: |
