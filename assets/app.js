@@ -1,4 +1,5 @@
 import { getExternalOriginMeta, isAllowedExternalOrigin, IU_OPEN_METEO_FORECAST_BASE } from "./iu-external-origins.js";
+import { clusterAndPickFinalArticles } from "./cluster_engine.js";
 /* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
   try{
@@ -10537,10 +10538,11 @@ function buildVideoAsArticleCard(it) {
     return bad.some((t) => s.includes(t));
   }
 
-  // === TOPIC GROUPING FEATURE ===
-  const ENABLE_TOPIC_GROUPING = true;
+  // === TOPIC CLUSTER (1 téma = 1 článek, 1 zdroj) — viz assets/cluster_engine.js ===
+  const ENABLE_TOPIC_GROUPING = false;
+  const ENABLE_CLUSTER_DEDUP = true;
   const TOPIC_GROUPING_TIME_WINDOW_HOURS = 12;
-  const TOPIC_GROUPING_MAX_OTHERS = 999; // žádný limit na počet sloučených článků
+  const TOPIC_GROUPING_MAX_OTHERS = 999;
 
   function normalizeTitleForKey(title) {
     if (!title || typeof title !== "string") return "";
@@ -11024,50 +11026,58 @@ function buildVideoAsArticleCard(it) {
       
       // === TOPIC GROUPING ===
       let articlesForFeed = sanitizedArticles;
-      if (ENABLE_TOPIC_GROUPING) {
+      if (ENABLE_CLUSTER_DEDUP) {
+        try {
+          const out = clusterAndPickFinalArticles(sanitizedArticles);
+          articlesForFeed = out.final;
+          try {
+            if (typeof window !== "undefined") {
+              window.__IU_CLUSTER_DEDUP__ = {
+                rawCount: out.rawCount,
+                urlDedupCount: out.urlDedupCount,
+                clusterCount: out.clusterCount,
+                finalCount: out.final.length,
+                droppedCount: out.droppedCount,
+              };
+            }
+          } catch (_) {}
+          if (isDebugLogging) {
+            debugLog(
+              "[CLUSTER] raw=",
+              out.rawCount,
+              "urlDedup=",
+              out.urlDedupCount,
+              "clusters=",
+              out.clusterCount,
+              "final=",
+              out.final.length,
+            );
+          }
+        } catch (err) {
+          debugWarn("[CLUSTER] Error, using sanitized articles:", err);
+          articlesForFeed = sanitizedArticles;
+        }
+      } else if (ENABLE_TOPIC_GROUPING) {
         try {
           const grouped = groupArticlesByTopic(sanitizedArticles, TOPIC_GROUPING_TIME_WINDOW_HOURS);
-          
-          // Validace výstupu
-          const isValid = Array.isArray(grouped) && grouped.every(item => 
-            item && 
-            typeof item.title === "string" && 
-            typeof item.url === "string" && 
-            Array.isArray(item.sources)
-          );
-          
+          const isValid =
+            Array.isArray(grouped) &&
+            grouped.every(
+              (item) =>
+                item &&
+                typeof item.title === "string" &&
+                typeof item.url === "string" &&
+                Array.isArray(item.sources),
+            );
           if (isValid) {
             articlesForFeed = grouped;
-            
-            // Debug telemetrie pro seskupování (jen v debug režimu)
-            if (isDebugLogging) {
-              debugLog("[GROUP] articles grouped:", sanitizedArticles.length, "->", grouped.length);
-              const groupsWithMeta = grouped.filter(a => a._groupMeta && a._groupMeta.relatedCount > 0);
-              const topGroups = groupsWithMeta
-                .sort((a, b) => (b._groupMeta.relatedCount || 0) - (a._groupMeta.relatedCount || 0))
-                .slice(0, 10);
-              
-              debugLog(`[GROUP] === TOP ${topGroups.length} GROUPS ===`);
-              topGroups.forEach((g, idx) => {
-                const sources = Array.isArray(g.sources) ? g.sources.map(s => s.name).filter(Boolean) : [];
-                const primaryTime = g.publishedAt || g.date || g.published || "";
-                const relatedCount = g._groupMeta.relatedCount || 0;
-                const timeWindow = g._groupMeta.timeWindow || "12h";
-                const keyDisplay = g._groupMeta.topicKey.substring(0, 60) + (g._groupMeta.topicKey.length > 60 ? "..." : "");
-                
-                debugLog(`[GROUP] #${idx + 1}: key="${keyDisplay}"`);
-                debugLog(`[GROUP]   count: ${relatedCount + 1} articles, timeWindow: ${timeWindow}, primaryTime: ${primaryTime}`);
-                debugLog(`[GROUP]   sources (${sources.length}): ${sources.slice(0, 8).join(", ")}${sources.length > 8 ? "..." : ""}`);
-              });
-              debugLog(`[GROUP] === END TOP GROUPS ===`);
-            }
           } else {
             debugWarn("[GROUP] Validation failed, using original articles");
             articlesForFeed = sanitizedArticles;
           }
         } catch (err) {
           debugWarn("[GROUP] Error during grouping:", err);
-          articlesForFeed = sanitizedArticles; // Fallback na původní
+          articlesForFeed = sanitizedArticles;
         }
       }
       
