@@ -5784,6 +5784,36 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuScienceHistoryPreviewPickLatestTwoFromState(){
+    try{
+      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
+      if (!items.length) return { latest: null, second: null, latestMs: NaN };
+      let latest = null;
+      let second = null;
+      for (let i = 0; i < items.length; i++) {
+        const it = items[i];
+        try{
+          if (!it) continue;
+          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
+          if (!iuArticleMatchesMediaTopicKey(it, "veda")) continue;
+          if (!latest) {
+            latest = it;
+            continue;
+          }
+          if (!second) {
+            second = it;
+            break;
+          }
+        }catch(_){}
+      }
+      if (!latest) return { latest: null, second: null, latestMs: NaN };
+      const latestMs = iuNewsPreviewParsePublishedMs(latest);
+      return { latest, second, latestMs };
+    }catch(_){
+      return { latest: null, second: null, latestMs: NaN };
+    }
+  }
+
   /** Silver tall preview cards: same URL/nav outcome as matching left-rail .iu-leftNavItem[data-media-topic]. */
   function iuMediaPreviewNavClick(mediaTopicKey) {
     const k = String(mediaTopicKey || "").trim().toLowerCase();
@@ -6621,6 +6651,83 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
     try{
       if (typeof window !== "undefined" && !iuIsProdHost()) window.__iuCulturePreviewLastAudit = out;
+    }catch(_){}
+    return out;
+  }
+
+  /** Runtime regression snapshot for Věda & Historie tall preview (stable IDs / no second badge / veda-only titles / fixed thumb). */
+  function iuScienceHistoryPreviewRegressionAudit(){
+    const out = {
+      scienceHistoryCardExists: false,
+      scienceHistoryBadgeText: "",
+      scienceHistorySecondBadgeCount: -1,
+      scienceHistoryTimeExists: false,
+      scienceHistoryImageSrc: "",
+      scienceHistoryTitleCount: -1,
+      scienceHistoryArticleTitleLines: 0,
+      scienceHistoryTitles: [],
+      scienceHistoryCardClickable: false,
+      scienceHistoryClickOpensScienceHistorySection: null,
+      scienceHistoryDataCategoryLeak: false,
+      scienceHistoryImageUsesVedaDefault: false,
+    };
+    try{
+      const card = document.getElementById("iuScienceHistoryPreviewCard");
+      out.scienceHistoryCardExists = !!card;
+      if (!card) return out;
+      out.scienceHistoryCardClickable = card.tagName === "BUTTON" && card.getAttribute("type") === "button";
+      const badge = card.querySelector(".iu-previewBadge--science-history");
+      out.scienceHistoryBadgeText = badge ? String(badge.textContent || "").trim() : "";
+      try{
+        out.scienceHistorySecondBadgeCount = card.querySelectorAll(".iuNewsPreviewBadge, .iuSportPreviewLiveBadge").length;
+      }catch(_){
+        out.scienceHistorySecondBadgeCount = -1;
+      }
+      const timeEl = document.getElementById("iuScienceHistoryPreviewTime");
+      out.scienceHistoryTimeExists = !!timeEl;
+      const img = document.getElementById("iuScienceHistoryPreviewImage");
+      const src = img ? String(img.getAttribute("src") || "").trim() : "";
+      out.scienceHistoryImageSrc = src;
+      out.scienceHistoryImageUsesVedaDefault = /veda-default\.jpg(?:\?|$)/i.test(src);
+      const titlesHost = document.getElementById("iuScienceHistoryPreviewTitles");
+      const t1 = card.querySelector("[data-iu-science-history-preview-title-1]");
+      const t2 = card.querySelector("[data-iu-science-history-preview-title-2]");
+      out.scienceHistoryTitleCount = titlesHost ? titlesHost.querySelectorAll(".iuNewsPreviewHeadline, .iuNewsPreviewHeadline2").length : -1;
+      const lines = [];
+      let articleLines = 0;
+      const loadingPhrase = "Věda & Historie se načítá";
+      if (t1) {
+        const a = String(t1.textContent || "").trim();
+        lines.push(a);
+        if (a && a !== loadingPhrase) articleLines++;
+      }
+      if (t2) {
+        const b = String(t2.textContent || "").trim();
+        if (b && !t2.classList.contains("iuNewsPreviewHeadline2--empty")) {
+          lines.push(b);
+          articleLines++;
+        }
+      }
+      out.scienceHistoryArticleTitleLines = articleLines;
+      out.scienceHistoryTitles = lines;
+      const picked = iuScienceHistoryPreviewPickLatestTwoFromState();
+      let leak = false;
+      if (picked.latest && picked.latest.title) {
+        const expect = String(picked.latest.title).trim();
+        const shown = t1 ? String(t1.textContent || "").trim() : "";
+        if (expect && shown && shown !== loadingPhrase && shown !== expect) leak = true;
+        try{
+          if (shown && shown !== loadingPhrase && !iuArticleMatchesMediaTopicKey(picked.latest, "veda")) leak = true;
+        }catch(_){}
+      }
+      if (card.getAttribute("data-iu-science-history-preview-has-latest") === "1" && picked.latest && picked.latest.title) {
+        const shown = t1 ? String(t1.textContent || "").trim() : "";
+        if (shown !== String(picked.latest.title).trim()) leak = true;
+      }
+      out.scienceHistoryDataCategoryLeak = leak;
+    }catch(_){}
+    try{
+      if (typeof window !== "undefined" && !iuIsProdHost()) window.__iuScienceHistoryPreviewLastAudit = out;
     }catch(_){}
     return out;
   }
@@ -7496,6 +7603,182 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
   }
 
+  function iuScienceHistoryPreviewEnsureDom(){
+    try{
+      const viewport = document.getElementById("iuSilverTallScrollViewport");
+      if (!viewport) return null;
+      const mount = document.getElementById("iuScienceHistoryPreviewCardMount");
+      let card = mount
+        ? mount.querySelector('[data-iu-science-history-preview-card="1"]')
+        : viewport.querySelector('[data-iu-science-history-preview-card="1"]');
+      if (card) return card;
+
+      card = document.createElement("button");
+      card.type = "button";
+      card.id = "iuScienceHistoryPreviewCard";
+      card.className = "box-science-history";
+      card.setAttribute("data-iu-science-history-preview-card", "1");
+      card.setAttribute("data-iu-science-history-route", "veda");
+      card.setAttribute("aria-label", "Otevřít sekci Věda & Historie s články");
+
+      card.innerHTML = `
+        <div class="iuNewsPreviewHeader" data-iu-science-history-preview-header>
+          <div class="iuNewsPreviewTitleRow">
+            <span class="iu-previewBadge--science-history">Věda & Historie</span>
+            <span class="iuNewsPreviewFreshness" id="iuScienceHistoryPreviewTime" data-iu-science-history-preview-freshness></span>
+          </div>
+          <svg class="iuNewsPreviewChevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="M7.5 4.5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="iuNewsPreviewBody">
+          <div class="iuNewsPreviewImgWrap" aria-hidden="true">
+            <img id="iuScienceHistoryPreviewImage" class="iuNewsPreviewImg" src="/assets/images/veda-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+          </div>
+          <div id="iuScienceHistoryPreviewTitles" class="iuNewsPreviewText">
+            <p class="iuNewsPreviewHeadline" data-iu-science-history-preview-title-1>Věda & Historie se načítá</p>
+            <p class="iuNewsPreviewHeadline2 iuNewsPreviewHeadline2--empty" data-iu-science-history-preview-title-2></p>
+          </div>
+        </div>
+      `.trim();
+
+      const placeholder = viewport.querySelector("[data-iu-silver-tall-scroll-placeholder]");
+      if (placeholder) {
+        try {
+          placeholder.style.visibility = "hidden";
+          placeholder.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+      }
+      const probe = viewport.querySelector("[data-iu-silver-tall-scroll-probe]");
+      if (probe) {
+        try {
+          probe.style.visibility = "hidden";
+          probe.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+      }
+
+      if (mount) {
+        mount.appendChild(card);
+      } else {
+        viewport.insertBefore(card, viewport.firstChild || null);
+      }
+
+      card.addEventListener(
+        "click",
+        function () {
+          iuMediaPreviewNavClick("veda");
+        },
+        { passive: true }
+      );
+
+      const img0 = card.querySelector("#iuScienceHistoryPreviewImage");
+      if (img0 && !img0.getAttribute("data-iu-science-history-preview-err-bound")) {
+        img0.setAttribute("data-iu-science-history-preview-err-bound", "1");
+        img0.onerror = function () {
+          const fb = "/assets/images/veda-default.jpg";
+          try {
+            const cur = String(img0.getAttribute("src") || "");
+            if (cur.indexOf("veda-default.jpg") !== -1) {
+              img0.onerror = null;
+              return;
+            }
+          } catch (_) {}
+          img0.src = fb;
+        };
+      }
+
+      return card;
+    }catch(_){
+      return null;
+    }
+  }
+
+  function iuScienceHistoryPreviewRefresh(){
+    try{
+      const card = iuScienceHistoryPreviewEnsureDom();
+      if (!card) return;
+      const elFresh = card.querySelector("[data-iu-science-history-preview-freshness]");
+      const elT1 = card.querySelector("[data-iu-science-history-preview-title-1]");
+      const elT2 = card.querySelector("[data-iu-science-history-preview-title-2]");
+      const elImg = document.getElementById("iuScienceHistoryPreviewImage");
+      if (!elT1 || !elT2 || !elFresh) return;
+
+      const fixedThumb = "/assets/images/veda-default.jpg";
+      const picked = iuScienceHistoryPreviewPickLatestTwoFromState();
+      const latest = picked.latest;
+      const second = picked.second;
+      let latestTitle = latest && latest.title ? String(latest.title) : "";
+      let secondTitle = second && second.title ? String(second.title) : "";
+      if (latest && !iuArticleMatchesMediaTopicKey(latest, "veda")) {
+        latestTitle = "";
+      }
+      if (second && !iuArticleMatchesMediaTopicKey(second, "veda")) {
+        secondTitle = "";
+      }
+      const hasLatest = !!latestTitle;
+
+      if (hasLatest) {
+        card.setAttribute("data-iu-science-history-preview-has-latest", "1");
+        card.setAttribute("data-iu-science-history-preview-latest-title", latestTitle);
+        card.setAttribute("data-iu-science-history-preview-guard-topic", "veda");
+      } else {
+        card.setAttribute("data-iu-science-history-preview-has-latest", "0");
+        card.removeAttribute("data-iu-science-history-preview-latest-title");
+        card.removeAttribute("data-iu-science-history-preview-guard-topic");
+      }
+      if (secondTitle) {
+        card.setAttribute("data-iu-science-history-preview-second-title", secondTitle);
+      } else {
+        card.removeAttribute("data-iu-science-history-preview-second-title");
+      }
+
+      if (!hasLatest) {
+        elFresh.textContent = "";
+        elFresh.setAttribute("data-iu-science-history-preview-has-freshness", "0");
+        card.removeAttribute("data-iu-science-history-preview-latest-ms");
+        card.removeAttribute("data-iu-science-history-preview-published-raw");
+        elT1.textContent = "Věda & Historie se načítá";
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+        try {
+          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+        } catch (_) {}
+        try { iuScienceHistoryPreviewRegressionAudit(); } catch (_) {}
+        return;
+      }
+
+      elT1.textContent = latestTitle;
+      if (secondTitle) {
+        elT2.textContent = secondTitle;
+        try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      }
+
+      const publishedRaw = iuNewsPreviewPublishedRaw(latest);
+      const ms = picked.latestMs;
+      const fresh = iuCsRelativeFreshnessFromMs(ms, Date.now());
+      if (fresh) {
+        elFresh.textContent = fresh;
+        elFresh.setAttribute("data-iu-science-history-preview-has-freshness", "1");
+        card.setAttribute("data-iu-science-history-preview-latest-ms", String(ms));
+        if (publishedRaw) card.setAttribute("data-iu-science-history-preview-published-raw", publishedRaw);
+        else card.removeAttribute("data-iu-science-history-preview-published-raw");
+      } else {
+        elFresh.textContent = "";
+        elFresh.setAttribute("data-iu-science-history-preview-has-freshness", "0");
+        card.removeAttribute("data-iu-science-history-preview-latest-ms");
+        card.removeAttribute("data-iu-science-history-preview-published-raw");
+      }
+
+      try {
+        if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+      } catch (_) {}
+      try { iuScienceHistoryPreviewRegressionAudit(); } catch (_) {}
+    }catch(_){}
+  }
+
   function iuSilverTallMediaPreviewsRefresh(){
     try{ iuNewsPreviewRefresh(); }catch(_){}
     try{ iuSportPreviewRefresh(); }catch(_){}
@@ -7504,6 +7787,7 @@ function buildVideoAsArticleCard(it) {
     try{ iuTravelPreviewRefresh(); }catch(_){}
     try{ iuGamesPreviewRefresh(); }catch(_){}
     try{ iuCulturePreviewRefresh(); }catch(_){}
+    try{ iuScienceHistoryPreviewRefresh(); }catch(_){}
   }
 
   function iuNewsPreviewInit(){
@@ -7518,11 +7802,13 @@ function buildVideoAsArticleCard(it) {
     try{ if (!iuIsProdHost()) window.iuTravelPreviewRefresh = iuTravelPreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuGamesPreviewRefresh = iuGamesPreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuCulturePreviewRefresh = iuCulturePreviewRefresh; }catch(_){}
+    try{ if (!iuIsProdHost()) window.iuScienceHistoryPreviewRefresh = iuScienceHistoryPreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuFinancePreviewRegressionAudit = iuFinancePreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuHealthPreviewRegressionAudit = iuHealthPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuTravelPreviewRegressionAudit = iuTravelPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuGamesPreviewRegressionAudit = iuGamesPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuCulturePreviewRegressionAudit = iuCulturePreviewRegressionAudit; }catch(_){}
+    try{ if (!iuIsProdHost()) window.iuScienceHistoryPreviewRegressionAudit = iuScienceHistoryPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuSilverTallMediaPreviewsRefresh = iuSilverTallMediaPreviewsRefresh; }catch(_){}
     try{ iuSilverTallMediaPreviewsRefresh(); }catch(_){}
     try{ setInterval(() => { try{ iuSilverTallMediaPreviewsRefresh(); }catch{} }, 30000); }catch(_){}
