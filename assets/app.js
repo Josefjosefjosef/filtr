@@ -3773,49 +3773,28 @@ try {
       case "zdravi":
         return t === "zdravi";
       case "cestovani":
-        return (
-          t === "doprava" ||
-          IU_CESTOVANI_SOURCE_NAMES.test(src0 + url) ||
-          /cestovani|kudyznudy|hedvabnastezka|travelbible/i.test(hay)
-        );
-      case "hry": {
-        const tt = String(item.topic || item.section || "").toLowerCase();
-        if (tt !== "hry") return false;
-        return (
-          /novinky\.cz\/(rss\/)?hry|vortex\.cz|zing\.cz/i.test(hay) ||
-          /Novinky\.cz.*Hry|Vortex|Zing/i.test(src0)
-        );
-      }
-      case "kultura": {
-        const tt = String(item.topic || item.section || "").toLowerCase();
-        if (tt !== "kultura") return false;
-        return (
-          /irozhlas\.cz\/(rss\/)?irozhlas\/section\/kultura|novinky\.cz\/(rss\/)?kultura|aktualne\.cz\/rss\/kultura|denik\.cz\/rss\/kultura|idnes\.cz\/.*kultura/i.test(
-            hay,
-          ) || /\/kultura\//i.test(hay)
-        );
-      }
-      case "veda": {
-        const tt = String(item.topic || item.section || "").toLowerCase();
-        if (tt !== "veda") return false;
-        return (
-          /irozhlas\.cz\/(rss\/)?irozhlas\/section\/veda-technologie|novinky\.cz\/(rss\/)?(veda|historie)|denik\.cz\/rss\/veda|aktualne\.cz\/rss\/veda|e15\.cz\/rss\/veda/i.test(
-            hay,
-          ) ||
-          /\/veda-technologie\/|\/veda\//i.test(hay)
-        );
-      }
-      case "vzdelavani": {
-        const tt = String(item.topic || item.section || "").toLowerCase();
-        if (tt !== "vzdelavani") return false;
-        return (
-          /novinky\.cz\/(rss\/)?skolstvi|edu\.cz|denik\.cz\/rss\/vzdelavani|idnes\.cz\/.*\b(skoly|skolstvi)\b/i.test(hay) ||
-          /\/skolstvi\/|\/vzdelavani/i.test(hay) ||
-          /Novinky\.cz.*[ŠS]kolstv|EDU\.cz|Den[ií]k.*[Vv]zd/i.test(src0)
-        );
-      }
+        if (t === "cestovani") return true;
+        return false;
+      case "hry":
+        return String(item.topic || item.section || "").toLowerCase() === "hry";
+      case "kultura":
+        return String(item.topic || item.section || "").toLowerCase() === "kultura";
+      case "veda":
+        return String(item.topic || item.section || "").toLowerCase() === "veda";
+      case "vzdelavani":
+        return String(item.topic || item.section || "").toLowerCase() === "vzdelavani";
       default:
         return true;
+    }
+  }
+
+  /** Tvrdý zákaz domény (ingest + render pojistka). */
+  function iuIsHardBlockedArticleUrl(url) {
+    try {
+      const u = String(url || "").toLowerCase();
+      return u.indexOf("hedvabnastezka") !== -1;
+    } catch (_) {
+      return false;
     }
   }
 
@@ -10919,6 +10898,7 @@ function buildVideoAsArticleCard(it) {
       try {
         sanitizedArticles = sanitizedArticles.filter((item) => {
           if (!item) return false;
+          if (iuIsHardBlockedArticleUrl(item.url)) return false;
           return !(
             iuArticleMatchesMediaTopicKey(item, "tech") ||
             iuArticleMatchesMediaTopicKey(item, "bydleni")

@@ -1,7 +1,7 @@
 /**
- * Kompletní registr RSS zdrojů (infoUzel.cz).
- * Kanonický seznam pro dokumentaci a synchronizaci se scripts/feeds.json.
- * Duplicitní URL (stejný feed pro více sekcí) řeší build (jeden HTTP fetch na URL).
+ * Dokumentační výpis RSS zdrojů (infoUzel.cz).
+ * Kanonický zdroj pravdy: projects/data/source_registry.json + scripts/gen_source_registry.py.
+ * Duplicitní URL řeší build (jeden HTTP fetch na URL).
  */
 export const IU_SOURCES = [
   // ZPRÁVY — GENERAL CORE
@@ -55,7 +55,6 @@ export const IU_SOURCES = [
   { id: "novinky_cestovani", url: "https://www.novinky.cz/rss/cestovani", category: "cestovani", type: "section", intervalMin: 25, intervalMax: 40 },
   { id: "denik_cestovani", url: "https://www.denik.cz/rss/cestovani.html", category: "cestovani", type: "section", intervalMin: 30, intervalMax: 45 },
   { id: "kudyznudy", url: "https://www.kudyznudy.cz/rss", category: "cestovani", type: "section", intervalMin: 30, intervalMax: 45 },
-  { id: "hedvabnastezka", url: "https://www.hedvabnastezka.cz/rss/", category: "cestovani", type: "niche", intervalMin: 35, intervalMax: 50 },
   { id: "travelbible", url: "https://travelbible.cz/feed/", category: "cestovani", type: "niche", intervalMin: 35, intervalMax: 50 },
   // CZ vertikály (kanonické klíče: hry / kultura / veda / vzdelavani) — viz scripts/feeds.json
   { id: "novinky_hry", url: "https://www.novinky.cz/rss/hry", category: "hry", type: "section", intervalMin: 20, intervalMax: 35 },
