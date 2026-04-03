@@ -5127,6 +5127,7 @@ function buildVideoAsArticleCard(it) {
     const parts = tail0.split(/\s+/).filter(Boolean);
     if (parts.length !== 1) return "";
     let w = parts[0].replace(/[.,;:]+$/g, "");
+    w = w.replace(/\uD83C\uDF89\uFE0F?$/u, "");
     if (w.indexOf("-") >= 0) return "";
     if (!/^[\p{L}]{2,40}$/u.test(w)) return "";
     const low = w.toLowerCase();
@@ -5382,8 +5383,7 @@ function buildVideoAsArticleCard(it) {
             const wrap = doc.createElement("span");
             wrap.className = "iuNamedayConfettiWrap";
             wrap.setAttribute("aria-hidden", "true");
-            wrap.innerHTML =
-              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false" class="iuNamedayConfettiSvg"><g fill="currentColor"><circle cx="3.2" cy="5.1" r="1.05" opacity=".88"/><circle cx="13.1" cy="6.4" r=".95" opacity=".9"/><path d="M7.8 2.3l1 1.4-.9.5-1-.1.5-1 .4-.8z" opacity=".92"/><rect x="5.2" y="10.5" width="2.4" height="2.4" rx=".45" transform="rotate(-20 6.4 11.7)" opacity=".85"/><rect x="11" y="11.2" width="2" height="2" rx=".35" transform="rotate(12 12 12.2)" opacity=".87"/></g></svg>';
+            wrap.appendChild(doc.createTextNode("\uD83C\uDF89"));
             spanName.appendChild(wrap);
           }
           metaEl.appendChild(spanName);

@@ -16091,16 +16091,13 @@ Porušení = regres + CLS risk
   color: var(--iuNamedayFemaleAccent);
 }
 #iuSilverWelcomeCard .iuNamedayConfettiWrap{
-  display: inline-flex;
-  vertical-align: middle;
+  display: inline-block;
+  vertical-align: baseline;
   margin-left: 4px;
-  line-height: 0;
-}
-#iuSilverWelcomeCard .iuNamedayConfettiSvg{
-  display: block;
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
+  font-size: 0.82em;
+  line-height: 1;
+  position: relative;
+  top: 0.04em;
 }
 #iuSilverWelcomeCard[data-iu-nameday-gender="male"] #iuNamedayCta .silver-weather-btn,
 #iuSilverWelcomeCard[data-iu-nameday-gender="male"] #iuNamedayCta .silver-weather-btn:hover,
