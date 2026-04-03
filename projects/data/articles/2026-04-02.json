@@ -1,6 +1,6 @@
 {
   "date": "2026-04-02",
-  "generatedAt": "2026-04-03T18:21:31.237101Z",
+  "generatedAt": "2026-04-03T21:54:39.029313Z",
   "items": [
     {
       "topic": "aktualne",
@@ -60,7 +60,7 @@
       "feedId": "idnes_zdravi",
       "url": "https://www.idnes.cz/onadnes/zdravi/potraviny-hubnuti-dieta-jidelnicek.A260330_101422_zdravi_pet/foto",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.2276290186938909
+      "displayScore": 0.20059615536386144
     },
     {
       "topic": "zdravi",
@@ -787,7 +787,7 @@
       "feedId": "idnes_zdravi",
       "url": "https://www.idnes.cz/onadnes/zdravi/nador-ve-streve-dnes-odhalime-v-pocatku-a-bez-kolonoskopie-vedkyne-vypravi.A260319_155227_zdravi_tvrk",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.1976370646341652
+      "displayScore": 0.17693456032424013
     },
     {
       "topic": "sport",
@@ -1073,17 +1073,20 @@
       "publishedAt": "2026-04-02T17:30:00Z",
       "sources": [
         {
-          "name": "Hospodářské noviny",
+          "name": "HN / Ekonomika",
           "url": "https://domaci.hn.cz/c1-67863060-soud-se-zastal-insolvencniho-spravce-ktereho-valkova-nezakonne-odstavila-muze-dostat-desitky-milionu"
         }
       ],
       "primaryCategory": "finance",
       "topicHash": "78cf0120b2fe6b28",
-      "feedType": "general",
-      "feedId": "hn",
+      "feedType": "rss",
+      "sourceDisplayWeight": 1.0,
+      "sectionPrimary": "finance",
+      "sourceLabel": "HN / Ekonomika",
+      "feedId": "fin_hn",
       "url": "https://domaci.hn.cz/c1-67863060-soud-se-zastal-insolvencniho-spravce-ktereho-valkova-nezakonne-odstavila-muze-dostat-desitky-milionu",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.19443477150534616
+      "displayScore": 0.17436364737667184
     },
     {
       "topic": "finance",
@@ -1320,7 +1323,7 @@
       "feedId": "idnes_krimi",
       "url": "https://www.idnes.cz/praha/zpravy/dejvice-zeleznicni-prejezd-vlak-srazil-cloveka.A260402_175819_praha-zpravy_ikul",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.19052450928274217
+      "displayScore": 0.1712124729615415
     },
     {
       "topic": "sport",
@@ -1671,7 +1674,7 @@
       "feedId": "travelbible",
       "url": "https://travelbible.cz/sevilla-pruvodce/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.18434085744029083
+      "displayScore": 0.16620238639052495
     },
     {
       "topic": "finance",
@@ -2279,7 +2282,7 @@
       "feedId": "idnes_krimi",
       "url": "https://www.idnes.cz/praha/zpravy/mestska-policie-praha-zlodej-lekarna.A260402_154200_praha-zpravy_bur",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.17582240014101724
+      "displayScore": 0.15924619591568048
     },
     {
       "topic": "aktualne",
@@ -2385,7 +2388,7 @@
       "feedId": "denik_cestovani",
       "url": "https://www.denik.cz/cestujeme-do-sveta/kde-zije-isobell-neobycejna-cesta-za-pravou-irskou-whiskey-a-ceskym-medem-202703.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.1746283720448666
+      "displayScore": 0.15826606877023947
     },
     {
       "topic": "krimi",
@@ -2708,7 +2711,7 @@
       "feedId": "idnes_krimi",
       "url": "https://www.idnes.cz/plzen/zpravy/plzen-vinice-sebevrazda-muz-zena-strelba.A260402_123333_plzen-zpravy_vb",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.17130452424157547
+      "displayScore": 0.15553103701131626
     },
     {
       "topic": "krimi",
@@ -2851,7 +2854,7 @@
       "feedId": "idnes_krimi",
       "url": "https://www.idnes.cz/brno/zpravy/ustavni-soud-stiznost-muz-srazeni-tramvaj-brno-odskodne.A260402_142340_brno-zpravy_krut",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.16921104628805636
+      "displayScore": 0.15380339468067306
     },
     {
       "topic": "doprava",
@@ -3418,6 +3421,29 @@
       "topicHash": "42cb941f58fad5f0",
       "feedType": "general",
       "url": "https://www.seznamzpravy.cz/clanek/domaci-zivot-v-cesku-lekar-kritizoval-zachranku-dostal-okamzitou-vypoved-soud-ji-zneplatnil-303034"
+    },
+    {
+      "topic": "zdravi",
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Sasanky, bledule a sněženky jsou nejen krásné, ale i jedovaté",
+      "publishedAt": "2026-04-02T11:16:14Z",
+      "sources": [
+        {
+          "name": "ZdravéZprávy",
+          "url": "https://www.zdravezpravy.cz/2026/04/02/sasanky-ale-i-bledule-a-snezenky-zpusobuji-i-vaznou-otravu/"
+        }
+      ],
+      "primaryCategory": "zdravi",
+      "topicHash": "1c643022ce3fe9b4",
+      "feedType": "rss",
+      "sourceDisplayWeight": 1.05,
+      "sectionPrimary": "zdravi",
+      "sourceLabel": "ZdravéZprávy",
+      "feedId": "zdr_zdravezpravy",
+      "url": "https://www.zdravezpravy.cz/2026/04/02/sasanky-ale-i-bledule-a-snezenky-zpusobuji-i-vaznou-otravu/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.15501859064651877
     },
     {
       "topic": "aktualne",
@@ -4956,7 +4982,7 @@
       "feedId": "idnes_krimi",
       "url": "https://www.idnes.cz/jihlava/zpravy/zbourane-posedy-myslivci-policie-neznamy-pachatel-chotebor.A260402_090827_jihlava-zpravy_evs",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.147328403302481
+      "displayScore": 0.13550897775058068
     },
     {
       "topic": "finance",
@@ -5483,7 +5509,7 @@
       "feedId": "roklen",
       "url": "https://roklen24.cz/alpha-tydne-nervozita-vrcholi-dojde-ke-smiru/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.13999498545946984
+      "displayScore": 0.12928013543666617
     },
     {
       "topic": "sport",
@@ -6114,7 +6140,7 @@
       "feedId": "e15",
       "url": "https://www.e15.cz/videoporady/flow/u-dvoreckeho-mostu-vyroste-unikatni-benzinka-od-sochare-kintery-jidlo-doda-ambiente-1431849",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.13375338442113846
+      "displayScore": 0.1239391775465802
     },
     {
       "topic": "pocasi",
