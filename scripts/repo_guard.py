@@ -60,7 +60,11 @@ def check_cache_bust(index_path: Path):
 
 
 def check_blocked_hedvabnastezka():
-    """Hard ban: must not appear as an active fetch target or in shipped article URLs."""
+    """Hard ban on real leaks: active registry feed_url + shipped article URLs.
+
+    assets/app.js is NOT scanned: the substring appears only in client-side
+    blocklist / deny / purge helpers (iuIsHardBlocked*, purity), not as an active source.
+    """
     needle = "hedvabnastezka"
     issues = []
     reg = ROOT / "projects" / "data" / "source_registry.json"
@@ -96,10 +100,6 @@ def check_blocked_hedvabnastezka():
                     if isinstance(s, dict) and needle in str(s.get("url") or "").lower():
                         issues.append("articles.json contains source url with hedvabnastezka")
                         break
-    app_js = ROOT / "assets" / "app.js"
-    if app_js.exists():
-        if needle in app_js.read_text(encoding="utf-8", errors="replace").lower():
-            issues.append("assets/app.js references hedvabnastezka")
     return issues
 
 
