@@ -6455,7 +6455,7 @@ function buildVideoAsArticleCard(it) {
       gamesCardClickable: false,
       gamesClickOpensGames: null,
       gamesDataCategoryLeak: false,
-      gamesImageIsHryDefault: false,
+      gamesImageUsesJpg: false,
     };
     try{
       const card = document.getElementById("iuGamesPreviewCard");
@@ -6474,7 +6474,7 @@ function buildVideoAsArticleCard(it) {
       const img = document.getElementById("iuGamesPreviewImage");
       const src = img ? String(img.getAttribute("src") || "").trim() : "";
       out.gamesImageSrc = src;
-      out.gamesImageIsHryDefault = src.indexOf("hry-default.jpg.jpeg") !== -1;
+      out.gamesImageUsesJpg = /hry-default\.jpg(?:\?|$)/i.test(src);
       const titlesHost = document.getElementById("iuGamesPreviewTitles");
       const t1 = card.querySelector("[data-iu-games-preview-title-1]");
       const t2 = card.querySelector("[data-iu-games-preview-title-2]");
@@ -7067,7 +7067,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img id="iuGamesPreviewImage" class="iuNewsPreviewImg" src="/assets/images/hry-default.jpg.jpeg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+            <img id="iuGamesPreviewImage" class="iuNewsPreviewImg" src="/assets/images/hry-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
           </div>
           <div id="iuGamesPreviewTitles" class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-games-preview-title-1>Hry se načítají</p>
@@ -7109,10 +7109,10 @@ function buildVideoAsArticleCard(it) {
       if (img0 && !img0.getAttribute("data-iu-games-preview-err-bound")) {
         img0.setAttribute("data-iu-games-preview-err-bound", "1");
         img0.onerror = function () {
-          const fb = "/assets/images/hry-default.jpg.jpeg";
+          const fb = "/assets/images/hry-default.jpg";
           try {
             const cur = String(img0.getAttribute("src") || "");
-            if (cur.indexOf("hry-default.jpg.jpeg") !== -1) {
+            if (cur.indexOf("hry-default.jpg") !== -1) {
               img0.onerror = null;
               return;
             }
@@ -7137,7 +7137,7 @@ function buildVideoAsArticleCard(it) {
       const elImg = document.getElementById("iuGamesPreviewImage");
       if (!elT1 || !elT2 || !elFresh) return;
 
-      const fixedThumb = "/assets/images/hry-default.jpg.jpeg";
+      const fixedThumb = "/assets/images/hry-default.jpg";
       const picked = iuGamesPreviewPickLatestTwoFromState();
       const latest = picked.latest;
       const second = picked.second;

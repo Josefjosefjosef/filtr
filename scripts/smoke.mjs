@@ -211,7 +211,7 @@ async function runSmoke() {
       if (!badge || String(badge.textContent || "").trim() !== "Hry") return { ok: false, reason: "badge" };
       const img = document.getElementById("iuGamesPreviewImage");
       const src = img ? String(img.getAttribute("src") || "") : "";
-      if (src.indexOf("hry-default.jpg.jpeg") < 0) return { ok: false, reason: "img", src };
+      if (src.indexOf("hry-default.jpg") < 0) return { ok: false, reason: "img", src };
       const titles = document.getElementById("iuGamesPreviewTitles");
       if (!titles) return { ok: false, reason: "titles_host" };
       const slots = titles.querySelectorAll("[data-iu-games-preview-title-1], [data-iu-games-preview-title-2]");
