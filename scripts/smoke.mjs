@@ -119,6 +119,35 @@ async function runSmoke() {
     await page.waitForTimeout(800);
 
     try {
+      await page.waitForSelector('[data-iu-news-preview-card="1"]', { timeout: 10000 });
+    } catch (e) {
+      fail(`News preview card missing: ${e && e.message ? e.message : String(e)}`);
+    }
+    try {
+      await page.waitForSelector('[data-iu-sport-preview-card="1"]', { timeout: 10000 });
+    } catch (e) {
+      fail(`Sport preview card missing: ${e && e.message ? e.message : String(e)}`);
+    }
+    const newsSportBadgeProbe = await page.evaluate(() => {
+      const news = document.querySelector('[data-iu-news-preview-card="1"]');
+      const sport = document.querySelector('[data-iu-sport-preview-card="1"]');
+      if (!news || !sport) return { ok: false, reason: "missing_card" };
+      const nb = news.querySelector("[data-iu-news-preview-badge]");
+      const sb = sport.querySelector("[data-iu-sport-preview-live]");
+      if (!nb || String(nb.textContent || "").trim() !== "Zprávy") {
+        return { ok: false, reason: "news_badge", t: nb ? String(nb.textContent || "").trim() : "" };
+      }
+      if (!sb || String(sb.textContent || "").trim() !== "Sport") {
+        return { ok: false, reason: "sport_badge", t: sb ? String(sb.textContent || "").trim() : "" };
+      }
+      if (String(nb.textContent || "").indexOf("NOVÉ") >= 0) return { ok: false, reason: "nové_in_badge" };
+      if (String(sb.textContent || "").indexOf("LIVE") >= 0) return { ok: false, reason: "live_in_badge" };
+      return { ok: true };
+    });
+    if (!newsSportBadgeProbe || !newsSportBadgeProbe.ok) {
+      fail(`News/Sport first-row badge regression: ${JSON.stringify(newsSportBadgeProbe)}`);
+    }
+    try {
       await page.waitForSelector("#iuFinancePreviewCard", { timeout: 10000 });
     } catch (e) {
       fail(`Finance preview card missing: ${e && e.message ? e.message : String(e)}`);

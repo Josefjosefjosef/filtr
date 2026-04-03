@@ -33,6 +33,7 @@ jobs:
         run: node node_modules/playwright/cli.js install --with-deps chromium
       - run: node scripts/check_layout.js
       - run: node scripts/silver-stack-guard.js
+      - run: node scripts/tall-preview-first-row-badge-guard.js
       - name: Silver summary + calendar accent UI proof
         run: node scripts/silver-summary-ui-proof.mjs
 
