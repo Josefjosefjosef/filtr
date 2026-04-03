@@ -133,14 +133,16 @@ KW_POCASI = {
     "počasí","mráz","mrzne","ledovka","námraza","sníh","sněžení","blizard","vítr","bouře","výstraha",
     "teplot","stupň","předpověď","chmu","meteorolog","tání","náledí",
 }
+# Pozor: žádné příliš krátké substringy („trh“ zasahuje do „na trhu“ v nesouvisejících článcích).
 KW_FINANCE = {
-    "akcie","burza","invest","dluhopis","úrok","sazby","inflace","zisk","ztrát","tržb","čez","koruna","kurz",
-    "davos","fond","valuace","prospekt","ipo","bank","měna","trh","byznys","ekonom","reality","stavebnictv",
-    "jackpot","sportka","loterie",
+    "akcie", "burza", "investic", "dluhopis", "úrok", "sazby", "inflace", "zisk", "ztrát", "tržb", "čez",
+    "koruna", "kurz", "davos", "fond", "valuace", "prospekt", "ipo", "banka", "bankov", "měnov", "byznys",
+    "ekonomika", "ekonomick", "ministerstvo financ", "hypoték", "úvěr", "spořicí", "stavebnictv", "reality",
+    "burzovn", "devizov", "účetn",
 }
 KW_SPORT = {
-    "liga","mistrů","zápas","gól","hokej","fotbal","tenis","biatlon","olymp","nhl","f1","grand slam",
-    "extraliga","kvalifik","turnaj","trenér","brankář","střelec",
+    "liga", "mistrů", "zápas", "gól", "hokej", "fotbal", "tenis", "biatlon", "olymp", "nhl", "f1", "grand slam",
+    "extraliga", "kvalifik", "turnaj", "trenér", "brankář", "střelec", "mma", "ufc", "box", "zápasník",
 }
 KW_KRIMI = {
     "policie","soud","obvin","trest","vězení","zavražd","vražd","pobod","střelb","přestřelk","únos","drogy","kokain",
@@ -687,6 +689,77 @@ def _host_path(url: str) -> tuple:
         return ("", "")
 
 
+def _adjust_fallback_topic_for_path(url: str, fallback: str) -> str:
+    """
+    RSS často označí celý feed jako „finance“, ale položky odkazují na obecné zprávy (/zpravy/…).
+    Bez této úpravy infer_section skončí na slepém fallback_topic=finance i pro nerelevantní URL.
+    """
+    host, path = _host_path(url or "")
+    u = (url or "").lower()
+    fb = (fallback or "aktualne").strip().lower()
+    if fb not in VALID_SECTIONS:
+        fb = "aktualne"
+
+    economy_signals = (
+        "/ekonomika" in path
+        or "/finance" in path
+        or "/byznys" in path
+        or "byznys.hn.cz" in u
+        or "e15.cz" in u
+        or "roklen24.cz" in u
+        or "patria.cz" in u
+        or "mesec.cz" in u
+        or "penize.cz" in u
+        or "faei.cz" in u
+        or "ekonomickydenik" in u
+        or "investicni" in u
+    )
+
+    if fb == "finance":
+        if "mmamag.cz" in host or "fights.cz" in host:
+            return "sport"
+        if host.startswith("tech.") and host.endswith("hn.cz"):
+            return "aktualne"
+        if economy_signals:
+            return "finance"
+        if "/zpravy/" in path or "zpravy-domov" in u or "zpravy-domaci" in u:
+            return "aktualne"
+        if "/zahranicni/" in path or "/domaci/" in path:
+            if "/ekonomika" not in path:
+                return "aktualne"
+        if "irozhlas.cz" in u and "ekonomika" not in path and "byznys" not in path and "/zpravy" in path:
+            return "aktualne"
+        if "seznamzpravy.cz" in u and "ekonomika" not in path and "byznys" not in path:
+            if "/clanek/zahranicni" in path or "/clanek/domaci" in path:
+                return "aktualne"
+
+    if fb == "zdravi":
+        if "/zdravi" in path or "zdravi." in host or host.startswith("zdravi."):
+            return "zdravi"
+        if "/zpravy/" in path or "zpravy-domov" in u:
+            return "aktualne"
+
+    return fb
+
+
+def remap_article_section_if_url_mismatch(a: dict) -> dict:
+    """Oprava starých / špatně zařazených řádků ve sdíleném poolu podle URL (bez rozbití nového řazení)."""
+    if not isinstance(a, dict):
+        return a
+    sec = str(a.get("topic") or a.get("section") or "").strip().lower()
+    if sec not in ("finance", "zdravi"):
+        return a
+    u = (a.get("url") or "").strip()
+    if not u:
+        return a
+    new_sec = _adjust_fallback_topic_for_path(u, sec)
+    if new_sec == sec:
+        return a
+    o = dict(a)
+    o["topic"] = o["section"] = new_sec
+    return o
+
+
 def infer_section(url: str, title: str, fallback_topic: str) -> str:
     t = (title or "").lower()
     host, path = _host_path(url)
@@ -706,6 +779,8 @@ def infer_section(url: str, title: str, fallback_topic: str) -> str:
 
     # SPORT (vč. subdomén typu sport.aktualne.cz)
     if host.startswith("sport.") or "/sport" in path or "/fotbal" in path or "/hokej" in path or "/tenis" in path:
+        return "sport"
+    if "mmamag.cz" in host or "fights.cz" in host or host.startswith("isport."):
         return "sport"
 
     # FINANCE (vč. byznys/ekonomika/reality)
@@ -732,23 +807,24 @@ def infer_section(url: str, title: str, fallback_topic: str) -> str:
                 return True
         return False
 
-    # --- keyword signály v titulku ---
+    # --- keyword signály v titulku (sport před finance — předejde falešným finance z titulku) ---
     if contains_kw(KW_POCASI):
         return "pocasi"
     if contains_kw(KW_DOPRAVA):
         return "doprava"
     if contains_kw(KW_ZDRAVI):
         return "zdravi"
-    if contains_kw(KW_FINANCE):
-        return "finance"
     if contains_kw(KW_SPORT):
         return "sport"
+    if contains_kw(KW_FINANCE):
+        return "finance"
     if contains_kw(KW_KRIMI):
         return "krimi"
 
     fb = (fallback_topic or "aktualne").strip().lower()
     if fb not in VALID_SECTIONS:
         fb = "aktualne"
+    fb = _adjust_fallback_topic_for_path(url, fb)
     return fb
 
 
@@ -1883,6 +1959,7 @@ def main() -> int:
     prev_list = list(prev_payload.get("articles") or [])
     merged_articles = merge_article_lists(prev_list, out_articles, max(500, MAX_OUTPUT_ARTICLES * 3))
     merged_articles = purge_blocked_articles(merged_articles)
+    merged_articles = [remap_article_section_if_url_mismatch(a) for a in merged_articles]
     for a in merged_articles:
         a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
         a["displayScore"] = compute_display_score(a)
