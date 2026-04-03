@@ -3748,6 +3748,9 @@ try {
   const IU_BYDLENI_SOURCE_NAMES =
     /Deník Bydlení|Novinky Bydlení|Dům a zahrada|Recepty\.cz|Chatař|irozhlas.*životní/i;
 
+  /** Počítadlo dropů blokovaných položek při finálním filtru (globální render guard). */
+  let __iuBlockedRenderDrops = 0;
+
   function iuArticleMatchesMediaTopicKey(item, key) {
     if (!key || key === "all") return true;
     if (IU_DISABLED_MEDIA_TOPIC_KEYS.has(String(key).toLowerCase())) return false;
@@ -3771,9 +3774,14 @@ try {
         return IU_BYDLENI_SOURCE_NAMES.test(src0 + url) || /bydleni|dumazahrada|recepty|chalupar|zivotni-styl/i.test(hay);
       case "zdravi":
         return t === "zdravi";
-      case "cestovani":
+      case "cestovani": {
         if (t === "cestovani") return true;
+        if (/novinky\.cz\/cestovani|denik\.cz\/cestovani|kudyznudy|cestovani\.novinky|i\.globus\.cz\/cestovani/i.test(hay))
+          return true;
+        if (/novinky\s+cestov|deník\s+cestov|denik\s+cestov/i.test(hay)) return true;
+        if (/irozhlas\.cz\/cestovani|irozhlas.*cestov/i.test(hay)) return true;
         return false;
+      }
       case "hry": {
         return String(item.topic || item.section || "").toLowerCase() === "hry";
       }
@@ -3801,19 +3809,53 @@ try {
     }
   }
 
-  /** Blokace článku včetně URL ve zdrojích (stejně jako purge_blocked_articles na serveru). */
+  /** Legacy data: blokace podle názvu zdroje (Hedvábná stezka apod.). */
+  function iuIsHardBlockedSourceLabel(name) {
+    try {
+      const s = String(name || "");
+      const sl = s.toLowerCase();
+      if (sl.indexOf("hedvabnastezka") !== -1) return true;
+      if ((/hedvábná|hedvabn/i.test(s) || sl.indexOf("hedvabna") !== -1) && /stezka/i.test(sl)) return true;
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /** Blokace článku včetně URL a názvu ve zdrojích (stejně jako purge + legacy názvy). */
   function iuArticleIsHardBlocked(item) {
     try {
       if (!item || typeof item !== "object") return false;
       if (iuIsHardBlockedArticleUrl(item.url)) return true;
+      if (iuIsHardBlockedSourceLabel(item.title || "")) return true;
       const src = Array.isArray(item.sources) ? item.sources : [];
       for (let i = 0; i < src.length; i++) {
         const s = src[i];
         if (s && iuIsHardBlockedArticleUrl(s.url || "")) return true;
+        if (s && iuIsHardBlockedSourceLabel(s.name || s.title || "")) return true;
       }
       return false;
     } catch (_) {
       return false;
+    }
+  }
+
+  /** Finální čistota sekce Zprávy (runtime, nezávisle na ingest). */
+  function iuArticlePassesZpravyPurity(item) {
+    try {
+      const t = String(item.topic || item.section || "").toLowerCase();
+      if (t === "cestovani") return false;
+      const src0 = Array.isArray(item.sources) && item.sources[0] ? String(item.sources[0].name || "") : "";
+      const url = String(item.url || "");
+      const hay = (src0 + " " + url).toLowerCase();
+      if (/hedvabnastezka/i.test(hay)) return false;
+      if ((/hedvábná|hedvabn/i.test(src0 + url) && /stezka/i.test(hay))) return false;
+      if (/novinky\s+cestování|deník\s+cestování|denik\s+cestování|kudyznudy/i.test(hay)) return false;
+      if (/cestovani\.denik|cestovani\.novinky|globus\.cz\/cestovani/i.test(hay)) return false;
+      if (/irozhlas\.cz\/cestovani|irozhlas.*\/cestov/i.test(hay)) return false;
+      return true;
+    } catch (_) {
+      return true;
     }
   }
 
@@ -4569,6 +4611,7 @@ try {
       const url = (s?.url || "").trim();
       if (!name || !url) continue;
       if (iuIsHardBlockedArticleUrl(url)) continue;
+      if (iuIsHardBlockedSourceLabel(name)) continue;
 
       // Normalizace URL: base URL bez query params a hash
       const urlBase = url.split('?')[0].split('#')[0].toLowerCase();
@@ -4600,6 +4643,9 @@ try {
   }
 
   function buildArticleHtml(it) {
+    if (iuArticleIsHardBlocked(it)) {
+      return "";
+    }
     const title = safeText(it.title || it.name || "(bez názvu)");
     let linkUrl =
       it.url ||
@@ -9916,33 +9962,18 @@ function buildVideoAsArticleCard(it) {
     );
 
     if (!hasTopic && !hasSection && !hasFilter && !hasQuery && !hasMediaTopicFilter) {
-      state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
-      if (doRender) renderItems(state.filteredItems);
-      return;
-    }
-
-    if (
-      !state.activeSection &&
-      !state.activeTopic &&
-      !state.activeFilter &&
-      !hasMediaTopicFilter
-    ) {
-      state.filteredItems = Array.isArray(state.cachedItems)
-        ? state.cachedItems.slice()
-        : [];
-      if (doRender) renderItems(state.filteredItems);
-      return;
-    }
-
-    if (
-      !state.activeSection &&
-      !state.activeTopic &&
-      !state.activeFilter &&
-      !hasMediaTopicFilter
-    ) {
-      state.filteredItems = Array.isArray(state.cachedItems)
-        ? state.cachedItems.slice()
-        : [];
+      let pass = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
+      pass = pass.filter((item) => {
+        if (iuArticleIsHardBlocked(item)) {
+          __iuBlockedRenderDrops++;
+          try {
+            window.__IU_BLOCKED_RENDER_DROPS__ = __iuBlockedRenderDrops;
+          } catch (_) {}
+          return false;
+        }
+        return true;
+      });
+      state.filteredItems = pass;
       if (doRender) renderItems(state.filteredItems);
       return;
     }
@@ -9962,8 +9993,21 @@ function buildVideoAsArticleCard(it) {
       sectionsToUse = ["vse"];
     }
     let filtered = state.cachedItems.filter((item) => matchesSections(item, sectionsToUse));
+    filtered = filtered.filter((item) => {
+      if (iuArticleIsHardBlocked(item)) {
+        __iuBlockedRenderDrops++;
+        try {
+          window.__IU_BLOCKED_RENDER_DROPS__ = __iuBlockedRenderDrops;
+        } catch (_) {}
+        return false;
+      }
+      return true;
+    });
     if (state.mediaTopicKey) {
       filtered = filtered.filter((item) => iuArticleMatchesMediaTopicKey(item, state.mediaTopicKey));
+    }
+    if (state.mediaTopicKey === "zpravy") {
+      filtered = filtered.filter((item) => iuArticlePassesZpravyPurity(item));
     }
     if (normalizedQuery) {
       filtered = filtered.filter((item) => {
@@ -10636,7 +10680,9 @@ function buildVideoAsArticleCard(it) {
         const url = String(source.url || source.link || "").trim();
         
         if (!name || !url) continue;
-        
+        if (iuIsHardBlockedArticleUrl(url)) continue;
+        if (iuIsHardBlockedSourceLabel(name)) continue;
+
         // Normalizace URL: base URL bez query params a hash
         const urlBase = url.split('?')[0].split('#')[0].toLowerCase();
         
@@ -10748,7 +10794,19 @@ function buildVideoAsArticleCard(it) {
         ...group.related.map(a => Array.isArray(a.sources) ? a.sources : [])
       ];
       const mergedSources = mergeSourcesDedup(allSources);
-      
+      let singleSources = mergedSources;
+      try {
+        const ok = mergedSources.find(
+          (s) =>
+            s &&
+            !iuIsHardBlockedArticleUrl(s.url || "") &&
+            !iuIsHardBlockedSourceLabel(s.name || s.title || ""),
+        );
+        singleSources = ok ? [ok] : mergedSources.length ? [mergedSources[0]] : [];
+      } catch (_) {
+        singleSources = mergedSources.length ? [mergedSources[0]] : [];
+      }
+
       // Validace výstupního článku
       if (!primary.title || !primary.url || !Array.isArray(mergedSources)) {
         debugWarn("[GROUP] Invalid grouped article, skipping", { topicKey, primary });
@@ -10760,7 +10818,7 @@ function buildVideoAsArticleCard(it) {
       // Vytvořit seskupený článek
       const groupedArticle = {
         ...primary,
-        sources: mergedSources,
+        sources: singleSources,
         // Volitelné metadata pro debug
         _groupMeta: {
           relatedCount: group.related.length,
@@ -10785,6 +10843,10 @@ function buildVideoAsArticleCard(it) {
   async function loadData() {
     const startedAt = new Date();
     if (state.isLoadingData) return;
+    __iuBlockedRenderDrops = 0;
+    try {
+      window.__IU_BLOCKED_RENDER_DROPS__ = 0;
+    } catch (_) {}
     state.isLoadingData = true;
     const requestToken = ++state.loadRequestId;
     state.cachedItems = [];
@@ -11273,8 +11335,8 @@ function buildVideoAsArticleCard(it) {
         const prev = document.getElementById("iuDebugBox")?.textContent || "";
         debugBoxSet(`${prev}\niu debug: DOM\nfeedExists=${Boolean(feed)}\ncardsInDom=${cards}`);
         if (feed) {
-          const hasData = (state.cachedItems?.length || 0) > 0;
-          if (hasData && cards === 0) {
+          const hasRenderable = (state.filteredItems?.length || 0) > 0;
+          if (hasRenderable && cards === 0 && isDebugOn()) {
             const warning = document.createElement("div");
             warning.style.cssText = "padding:12px;margin:12px 0;border:1px dashed #999;border-radius:10px;";
             warning.textContent = "IU: DATA JSOU NAČTENÁ, ALE NIC SE NERENDERUJE (debug=1). Zkontroluj konzoli a iuDebugBox.";
