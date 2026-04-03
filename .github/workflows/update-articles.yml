@@ -241,7 +241,8 @@ jobs:
           echo "sameCyclePending=false"
           echo "deployVerifyRan=false"
           echo "wasPublishedInSameCycle=false"
-          echo "[PUBLISH] Publish truth is post-merge: Pages deploy is dispatched by pages-on-data-pr-merge.yml on pull_request closed (merged) to main."
+          echo "[PUBLISH] Closeout path: merge data PR -> main updates projects/data -> 'Pages publish from main data' (schedule */3 min) compares main generatedAt vs prod and dispatches pages.yml when stale."
+          echo "[PUBLISH] Optional: pages-on-data-pr-merge.yml fires on pull_request merged when the merge is not attributed to GITHUB_TOKEN-only automation (otherwise rely on the scheduled publish job above)."
 
       - name: Notify completion (beep)
         if: always()

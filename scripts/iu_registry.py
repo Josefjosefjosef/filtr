@@ -15,6 +15,11 @@ BLOCKED_HOST_FRAGMENTS = (
     "www.hedvabnastezka.cz",
 )
 
+# CZ vertikály — alespoň jeden slot na tick směřuje sem (pokud existuje due kandidát),
+# aby jeden globální due queue nepřehlížel hry/kultura/věda/vzdělávání při 2–3 feedech/tick.
+VERTICAL_TOPICS = frozenset({"hry", "kultura", "veda", "vzdelavani"})
+VERTICAL_TOPIC_ORDER = ("hry", "kultura", "veda", "vzdelavani")
+
 
 def _iso_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -161,23 +166,51 @@ def select_feeds_for_tick(
 
     candidates.sort(key=lambda x: (-x[0], x[1]))
 
+    def _domain_cooldown_ok(e: dict) -> bool:
+        dom = (e.get("domain") or "").strip().lower()
+        if not dom:
+            return True
+        cooldown = int(e.get("per_domain_cooldown_min") or 15)
+        cooldown = max(5, cooldown)
+        last_dom = _parse_iso(domain_last.get(dom))
+        if last_dom is None:
+            return True
+        return (now - last_dom).total_seconds() >= cooldown * 60
+
     picked: list[dict] = []
     seen_urls: set[str] = set()
 
+    # --- Fáze 1: rotující priorita vertikál (1 slot pokud n_pick >= 2 a existuje due vertikální feed) ---
+    vertical_filled = False
+    if n_pick >= 2:
+        rot = int(tick_index) % len(VERTICAL_TOPIC_ORDER)
+        v_order = VERTICAL_TOPIC_ORDER[rot:] + VERTICAL_TOPIC_ORDER[:rot]
+        for vt in v_order:
+            if vertical_filled:
+                break
+            for _score, eid, e in candidates:
+                tp = str(e.get("topic") or "").strip().lower()
+                if tp != vt or tp not in VERTICAL_TOPICS:
+                    continue
+                url = (e.get("feed_url") or "").strip()
+                if not url or url in seen_urls:
+                    continue
+                if not _domain_cooldown_ok(e):
+                    continue
+                picked.append(e)
+                seen_urls.add(url)
+                vertical_filled = True
+                break
+
+    # --- Fáze 2: doplnit globálním due řazením (stejné pravidlo jako dřív) ---
     for _score, eid, e in candidates:
         if len(picked) >= n_pick:
             break
         url = (e.get("feed_url") or "").strip()
         if not url or url in seen_urls:
             continue
-        dom = (e.get("domain") or "").strip().lower()
-        cooldown = int(e.get("per_domain_cooldown_min") or 15)
-        cooldown = max(5, cooldown)
-
-        last_dom = _parse_iso(domain_last.get(dom))
-        if last_dom is not None:
-            if (now - last_dom).total_seconds() < cooldown * 60:
-                continue
+        if not _domain_cooldown_ok(e):
+            continue
 
         picked.append(e)
         seen_urls.add(url)
