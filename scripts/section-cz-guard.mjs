@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const appJs = fs.readFileSync(path.join(root, "assets", "app.js"), "utf8");
+const appCss = fs.readFileSync(path.join(root, "assets", "app.css"), "utf8");
 const idx = fs.readFileSync(path.join(root, "projects", "index.html"), "utf8");
 
 let failed = false;
@@ -40,6 +41,18 @@ must(
 );
 
 must(/function iuArticleReleaseEligible/.test(appJs), "iuArticleReleaseEligible must exist");
+
+/* #feed nesmí být display:none jen proto, že data-section je hry/kultura/veda/vzdelavani (stejný renderer jako media témata). */
+must(
+  /body:is\(\[data-section="media"\],\[data-section="hry"\],\[data-section="kultura"\],\[data-section="veda"\],\[data-section="vzdelavani"\]\)\s*#feed/.test(
+    appCss,
+  ),
+  "app.css must use body:is(...media,hry,kultura,veda,vzdelavani) #feed for shared article list chrome",
+);
+must(
+  /:not\(\[data-section="media"\]\):not\(\[data-section="hry"\]\)/.test(appCss),
+  "app.css #feed hide rule must exclude vertical section keys",
+);
 
 must(
   fs.existsSync(path.join(root, "assets", "images", "hry-default.jpg")),
