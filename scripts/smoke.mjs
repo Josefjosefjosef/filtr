@@ -248,6 +248,32 @@ async function runSmoke() {
     if (!cultureProbe || !cultureProbe.ok) {
       fail(`Culture preview regression: ${JSON.stringify(cultureProbe)}`);
     }
+    try {
+      await page.waitForSelector("#iuScienceHistoryPreviewCard", { timeout: 10000 });
+    } catch (e) {
+      fail(`Science-history preview card missing: ${e && e.message ? e.message : String(e)}`);
+    }
+    const scienceHistoryProbe = await page.evaluate(() => {
+      const card = document.getElementById("iuScienceHistoryPreviewCard");
+      if (!card) return { ok: false, reason: "no_card" };
+      if (card.tagName !== "BUTTON" || card.getAttribute("type") !== "button") return { ok: false, reason: "not_button" };
+      const nBad = card.querySelectorAll(".iuNewsPreviewBadge, .iuSportPreviewLiveBadge").length;
+      if (nBad !== 0) return { ok: false, reason: "extra_badge", nBad };
+      const badge = card.querySelector(".iu-previewBadge--science-history");
+      if (!badge || String(badge.textContent || "").trim() !== "Věda & Historie") return { ok: false, reason: "badge" };
+      const img = document.getElementById("iuScienceHistoryPreviewImage");
+      const src = img ? String(img.getAttribute("src") || "") : "";
+      if (src.indexOf("veda-default.jpg") < 0) return { ok: false, reason: "img", src };
+      const titles = document.getElementById("iuScienceHistoryPreviewTitles");
+      if (!titles) return { ok: false, reason: "titles_host" };
+      const slots = titles.querySelectorAll("[data-iu-science-history-preview-title-1], [data-iu-science-history-preview-title-2]");
+      if (slots.length !== 2) return { ok: false, reason: "title_slots", n: slots.length };
+      if (card.getAttribute("data-iu-science-history-route") !== "veda") return { ok: false, reason: "route" };
+      return { ok: true };
+    });
+    if (!scienceHistoryProbe || !scienceHistoryProbe.ok) {
+      fail(`Science-history preview regression: ${JSON.stringify(scienceHistoryProbe)}`);
+    }
     await page.click("#iuFinancePreviewCard");
     await page.waitForTimeout(500);
     const afterFinanceClick = page.url();
@@ -293,6 +319,16 @@ async function runSmoke() {
     const afterCultureClick = page.url();
     if (afterCultureClick.indexOf("section=kultura") === -1) {
       fail(`Culture preview click did not set section=kultura: ${afterCultureClick}`);
+    }
+
+    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await page.waitForTimeout(800);
+    await page.waitForSelector("#iuScienceHistoryPreviewCard", { timeout: 10000 });
+    await page.click("#iuScienceHistoryPreviewCard");
+    await page.waitForTimeout(500);
+    const afterScienceHistoryClick = page.url();
+    if (afterScienceHistoryClick.indexOf("section=veda") === -1) {
+      fail(`Science-history preview click did not set section=veda: ${afterScienceHistoryClick}`);
     }
 
     const navSelectors = ["a.iu-leftNavItem", "a[data-rail]", ".iuLeftNav a", "nav a"];
