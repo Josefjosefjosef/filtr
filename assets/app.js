@@ -5079,6 +5079,44 @@ function buildVideoAsArticleCard(it) {
     return rest;
   }
 
+  /** Deterministická mapa křestní jméno → pohlaví (CZ kalendář; žádné hádání z koncovky). */
+  const IU_NAMEDAY_GENDER_MALE = new Set(
+    "adolf alan albert aleš alexandr alexej alois ambrož andrej antonín arnošt artur augustýn bartoloměj bedřich benedikt bernard blahoslav blažej bohdan bohumil bohumír bohuslav boleslav bonifác boris bořek bořivoj bronislav bruno břetislav ctibor ctirad čeněk čestmír dalibor dalimil daniel david dobroslav dominik dušan drahoslav eduard emanuel emil erik evžen felix ferdinand filip františek gabriel gustav hanuš havel heřman hubert hugo hynek ignác igor ilja ivan ivo jáchym jakub jan jarmil jaromír jaroslav jeroným jindřich jiří jonáš josef julius kamil karel kazimír klement kristián kryštof květoslav kvido ladislav leopold leoš libor lubomír lubor luboš luděk ludvík lukáš lumír marek marián marcel martin matěj matouš maxmilián medard michal mikuláš milan miloslav miloš miroslav mojmír norbert oleg oldřich ondřej oskar otakar otmar oto pankrác patrik petr pravoslav prokop přemysl radek radim radomír radoslav radovan rené richard robert robin roland roman rostislav rudolf řehoř sáva servác silvestr slavomír soběslav stanislav svatopluk svatoslav šimon štefan štěpán tadeáš teodor tibor tomáš václav valdemar valentýn vavřinec věnceslav vendelín viktor vincenc vít vítězslav vladan vladimír vladislav vlastimil vlastislav vilém vojtěch vratislav věroslav zbyněk zbyšek zdeněk zikmund".split(
+      /\s+/
+    )
+  );
+  const IU_NAMEDAY_GENDER_FEMALE = new Set(
+    "adéla adriana agáta albína alena alice alžběta anastázie andrea anděla aneta anežka anna antonie apolena alexandra barbora beáta běla blažena blanka berta bohdana bohumila bohuslava božena brigita cecílie dagmar dana daniela darja darina denisa diana dita dobromila doubravka drahomíra drahoslava dorota edita elena eliška ema emílie erika ester evelína evženie františka gabriela gita gizela hana hedvika helena ida ilona ingrid irena irma iva ivana iveta ivona izabela jana jarmila jaroslava jindřiška jiřina jitka johana jolana judita julie justýna kamila karina karolína kateřina klára klaudie kristýna květa květoslava lada laura lenka leona liběna libuše liliana linda ljuba lucie ludmila lýdie magdaléna mahulena marcela mariana marie marika marina markéta marta martina matylda michaela milada milena miloslava miluše miriam miroslava monika naděžda natálie natáša nela nina nora oldřiška olga olívie otýlie patricie pavla petra pavlína radana radmila radka regína renáta romana růžena sabina sandra saskie silvie simona slavěna soňa stanislava stela svatava světlana šárka šarlota štěpánka tamara taťána tereza vanda valerie vendula věra veronika viktorie vilma viola vladěna vlasta xenie zdislava zita zlata zina zora zuzana zdeňka žaneta žofie".split(
+      /\s+/
+    )
+  );
+  const IU_NAMEDAY_GENDER_UNCERTAIN = new Set(["nikola"]);
+
+  /** Vrátí "male" | "female" | "unknown" — jen jedno jednoznačné křestní jméno; jinak unknown. */
+  function iuResolveNamedayGenderForWelcome(namePart){
+    try{
+      const raw = String(namePart || "").trim();
+      if (!raw || raw === "—") return "unknown";
+      if (/[;,]/.test(raw) || /\s+a\s+/i.test(raw)) return "unknown";
+      if (raw.indexOf("-") >= 0) return "unknown";
+      const parts = raw.split(/\s+/).filter(Boolean);
+      if (parts.length !== 1) return "unknown";
+      const token = parts[0].replace(/[.,;:]+$/g, "");
+      if (!token) return "unknown";
+      const key = token.normalize("NFC").toLowerCase();
+      if (!/^[\p{L}]+$/u.test(key)) return "unknown";
+      if (IU_NAMEDAY_GENDER_UNCERTAIN.has(key)) return "unknown";
+      const isM = IU_NAMEDAY_GENDER_MALE.has(key);
+      const isF = IU_NAMEDAY_GENDER_FEMALE.has(key);
+      if (isM && isF) return "unknown";
+      if (isM) return "male";
+      if (isF) return "female";
+      return "unknown";
+    }catch{
+      return "unknown";
+    }
+  }
+
   /** Jedno křestní jméno → bezpečné oslovení (jen spolehlivá -a → -o); jinak "". */
   function iuSafeVocativeSingleFirstName(tail){
     const tail0 = String(tail || "").trim();
@@ -5292,6 +5330,10 @@ function buildVideoAsArticleCard(it) {
           const n = iuParseNamedayTailFromRaw(String(nd || ""));
           if (n) namePart = n;
         }catch{}
+        const namedayGender = iuResolveNamedayGenderForWelcome(namePart);
+        try{
+          cardEl.setAttribute("data-iu-nameday-gender", namedayGender);
+        }catch{}
         try{
           const doc = metaEl.ownerDocument;
           metaEl.textContent = "";
@@ -5327,7 +5369,23 @@ function buildVideoAsArticleCard(it) {
           metaEl.appendChild(doc.createTextNode(" · svátek má "));
           const spanName = doc.createElement("span");
           spanName.className = "iuNameStrong";
-          spanName.textContent = namePart;
+          if (namedayGender === "male" || namedayGender === "female") {
+            spanName.classList.add("iuNameStrong--namedayGender");
+            spanName.setAttribute("data-iu-nameday-name-gender", namedayGender);
+          } else {
+            try{
+              spanName.removeAttribute("data-iu-nameday-name-gender");
+            }catch{}
+          }
+          spanName.appendChild(doc.createTextNode(namePart));
+          if (namedayGender === "male" || namedayGender === "female") {
+            const wrap = doc.createElement("span");
+            wrap.className = "iuNamedayConfettiWrap";
+            wrap.setAttribute("aria-hidden", "true");
+            wrap.innerHTML =
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false" class="iuNamedayConfettiSvg"><g fill="currentColor"><circle cx="3.2" cy="5.1" r="1.05" opacity=".88"/><circle cx="13.1" cy="6.4" r=".95" opacity=".9"/><path d="M7.8 2.3l1 1.4-.9.5-1-.1.5-1 .4-.8z" opacity=".92"/><rect x="5.2" y="10.5" width="2.4" height="2.4" rx=".45" transform="rotate(-20 6.4 11.7)" opacity=".85"/><rect x="11" y="11.2" width="2" height="2" rx=".35" transform="rotate(12 12 12.2)" opacity=".87"/></g></svg>';
+            spanName.appendChild(wrap);
+          }
           metaEl.appendChild(spanName);
         }catch{}
         if (silverWelcomeUseJsMetaFit()) {
