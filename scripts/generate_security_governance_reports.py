@@ -26,6 +26,21 @@ except ImportError:
 ROOT = Path(__file__).resolve().parent.parent
 REPORTS = ROOT / "reports"
 
+
+def _refresh_ultra_audit_wiki() -> None:
+    """
+    Nightly workflow keeps the legacy bash block for ultra_audit_wiki.md, then runs this script.
+    Overwrite with the Python generator so SECTIONS/cadence/metrics stay without changing workflows.
+    """
+    script = ROOT / "scripts" / "generate_ultra_audit_wiki.py"
+    if not script.is_file():
+        return
+    subprocess.run(
+        [sys.executable, str(script)],
+        cwd=str(ROOT),
+        check=True,
+    )
+
 # Secret-like search labels (avoid contiguous forbidden tokens in output narrative)
 PAT_LABELS = [
     ("PAT_AK", r"(?i)(api[_-]?key|apikey)\s*[:=]\s*['\"]?[a-zA-Z0-9_\-]{6,}"),
@@ -577,6 +592,7 @@ def main() -> int:
         build_data_governance_report(repo, run_id, sha_full, branch),
         encoding="utf-8",
     )
+    _refresh_ultra_audit_wiki()
     print("GENERATE_SECURITY_GOVERNANCE_REPORTS_OK")
     return 0
 

@@ -24,6 +24,27 @@ FEEDS_JSON = REPO_ROOT / "scripts" / "feeds.json"
 ARTICLES_JSON = REPO_ROOT / "projects" / "data" / "articles.json"
 WORKFLOWS_DIR = REPO_ROOT / ".github" / "workflows"
 
+
+def env_or_git_sha() -> str:
+    """Prefer GITHUB_SHA; else current HEAD (nightly security step has no GITHUB_SHA)."""
+    sha = (os.environ.get("GITHUB_SHA") or "").strip()
+    if sha and sha.lower() != "unknown":
+        return sha
+    try:
+        r = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if r.returncode == 0 and r.stdout.strip():
+            return r.stdout.strip()
+    except OSError:
+        pass
+    return "unknown"
+
+
 # Display order and labels for feeds.json category -> section heading
 SECTION_ORDER = [
     "zpravy",
@@ -498,7 +519,7 @@ def build_report() -> str:
     stats = compute_source_stats_last_24h(feeds, articles, now=now)
 
     repo = os.environ.get("GITHUB_REPOSITORY", "unknown/repo")
-    sha = os.environ.get("GITHUB_SHA", "unknown")
+    sha = env_or_git_sha()
     run_id = os.environ.get("GITHUB_RUN_ID", "unknown")
     utc = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 

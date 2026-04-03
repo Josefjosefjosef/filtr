@@ -33,7 +33,7 @@ jobs:
           python3 -c "import tinycss2; print('TINYCSS2_IMPORT_OK', getattr(tinycss2, '__version__', 'unknown'))"
 
       - name: Python compile gate (audit + report + css debt guard)
-        run: python -m py_compile scripts/health_report.py scripts/css_duplicate_audit.py scripts/css_debt_guard.py scripts/generate_security_governance_reports.py scripts/generate_ultra_audit_wiki.py
+        run: python -m py_compile scripts/health_report.py scripts/css_duplicate_audit.py scripts/css_debt_guard.py scripts/generate_security_governance_reports.py
 
       - name: Run health report
         env:
