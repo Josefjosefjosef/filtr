@@ -155,6 +155,9 @@ style-src 'self' 'unsafe-inline' https:;
         var sec = normSection(u.searchParams.get("section") || "media");
         document.documentElement.setAttribute("data-section", sec);
         document.body.setAttribute("data-section", sec);
+        var iuFc = (sec === "media" || sec === "hry" || sec === "kultura" || sec === "veda" || sec === "vzdelavani") ? "1" : "0";
+        document.documentElement.setAttribute("data-iu-fc", iuFc);
+        document.body.setAttribute("data-iu-fc", iuFc);
       }catch(e){}
     })();
     </script>

@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const appJs = fs.readFileSync(path.join(root, "assets", "app.js"), "utf8");
+const appCss = fs.readFileSync(path.join(root, "assets", "app.css"), "utf8");
 const idx = fs.readFileSync(path.join(root, "projects", "index.html"), "utf8");
 
 let failed = false;
@@ -40,6 +41,24 @@ must(
 );
 
 must(/function iuArticleReleaseEligible/.test(appJs), "iuArticleReleaseEligible must exist");
+
+/* #feed chrome: data-iu-fc=1 pro media + 4 CZ vertikály (krátký atribut kvůli CSS size budgetu). */
+must(
+  /body\[data-iu-fc="1"\]\s*#feed/.test(appCss),
+  "app.css must use body[data-iu-fc=\"1\"] #feed for shared article list chrome",
+);
+must(
+  /:not\(\[data-iu-fc="1"\]\)/.test(appCss),
+  "app.css #feed hide rule must use :not([data-iu-fc=\"1\"])",
+);
+must(
+  /setAttribute\("data-iu-fc"/.test(idx),
+  "index.html boot must set data-iu-fc on html/body",
+);
+must(
+  /setAttribute\("data-iu-fc"/.test(appJs),
+  "app.js applySectionFromURL must sync data-iu-fc on html/body",
+);
 
 must(
   fs.existsSync(path.join(root, "assets", "images", "hry-default.jpg")),

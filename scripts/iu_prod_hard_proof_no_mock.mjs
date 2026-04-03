@@ -1000,11 +1000,37 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
         `.iu-leftNav .iu-leftNavItem[data-accent="${exp}"].is-active`
       );
       const feed = document.getElementById("feed");
+      let feedDisplay = "";
+      let feedVisible = false;
+      if (feed) {
+        try {
+          const cs = getComputedStyle(feed);
+          feedDisplay = (cs && cs.display) || "";
+          feedVisible =
+            feedDisplay !== "none" &&
+            (cs.visibility || "") !== "hidden" &&
+            parseFloat(cs.opacity || "1") > 0.02;
+        } catch (_) {}
+      }
       const feedLinks = feed ? feed.querySelectorAll("a[href]").length : 0;
+      const titleLinks = feed ? feed.querySelectorAll("a.news-titleLink[href]") : [];
+      let titleLinksBlank = 0;
+      let sampleHref = "";
+      titleLinks.forEach((a) => {
+        if (String(a.getAttribute("target") || "").toLowerCase() === "_blank") titleLinksBlank += 1;
+        if (!sampleHref && /^https?:\/\//i.test(a.getAttribute("href") || "")) {
+          sampleHref = String(a.getAttribute("href") || "").slice(0, 120);
+        }
+      });
       return {
         dataSection: String(ds).toLowerCase(),
         hasActiveRail: !!active,
+        feedDisplay,
+        feedVisible,
         feedLinkCount: feedLinks,
+        titleLinkCount: titleLinks.length,
+        titleLinksBlank,
+        sampleHref,
       };
     }, expected);
   }
@@ -1018,8 +1044,16 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
     } catch (_) {}
     await page.waitForTimeout(7000);
     const direct = await readSectionProbe(sec);
+    const okTitlesDirect =
+      direct.titleLinkCount > 0 &&
+      direct.titleLinksBlank > 0 &&
+      /^https?:\/\//i.test(direct.sampleHref || "");
     const okDirect =
-      direct.dataSection === sec && direct.hasActiveRail && direct.feedLinkCount > 0;
+      direct.dataSection === sec &&
+      direct.hasActiveRail &&
+      direct.feedVisible === true &&
+      direct.feedLinkCount > 0 &&
+      okTitlesDirect;
 
     await page.reload({ waitUntil: "load", timeout: 120000 });
     try {
@@ -1027,10 +1061,16 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
     } catch (_) {}
     await page.waitForTimeout(7000);
     const afterReload = await readSectionProbe(sec);
+    const okTitlesReload =
+      afterReload.titleLinkCount > 0 &&
+      afterReload.titleLinksBlank > 0 &&
+      /^https?:\/\//i.test(afterReload.sampleHref || "");
     const okReload =
       afterReload.dataSection === sec &&
       afterReload.hasActiveRail &&
-      afterReload.feedLinkCount > 0;
+      afterReload.feedVisible === true &&
+      afterReload.feedLinkCount > 0 &&
+      okTitlesReload;
 
     const noMediaFallback = okDirect && okReload;
 
@@ -1042,6 +1082,7 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
         reload: okReload,
         activeUi: okDirect && okReload,
         renderedFeed: okDirect && okReload,
+        clickableArticleTitles: okTitlesDirect && okTitlesReload,
         noMediaFallback,
         detail: { direct, afterReload },
       })
@@ -1052,6 +1093,68 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
       throw new Error(
         `PROOF FAIL cz-vertical-deep-link section=${sec} okDirect=${okDirect} okReload=${okReload}`
       );
+    }
+  }
+
+  /* Referenční stejná šablona jako Zprávy (media + topic=zpravy). */
+  {
+    const uRef = new URL(baseUrl.href);
+    uRef.searchParams.set("section", "media");
+    uRef.searchParams.set("topic", "zpravy");
+    await page.goto(uRef.href, { waitUntil: "load", timeout: 120000 });
+    try {
+      await page.waitForLoadState("networkidle", { timeout: 90000 });
+    } catch (_) {}
+    await page.waitForTimeout(7000);
+    const ref = await page.evaluate(() => {
+      const feed = document.getElementById("feed");
+      let feedVisible = false;
+      let feedDisplay = "";
+      if (feed) {
+        try {
+          const cs = getComputedStyle(feed);
+          feedDisplay = (cs && cs.display) || "";
+          feedVisible =
+            feedDisplay !== "none" &&
+            (cs.visibility || "") !== "hidden" &&
+            parseFloat(cs.opacity || "1") > 0.02;
+        } catch (_) {}
+      }
+      const links = feed ? feed.querySelectorAll("a.news-titleLink[href]") : [];
+      let blank = 0;
+      let href0 = "";
+      links.forEach((a) => {
+        if (String(a.getAttribute("target") || "").toLowerCase() === "_blank") blank += 1;
+        if (!href0 && /^https?:\/\//i.test(a.getAttribute("href") || "")) {
+          href0 = String(a.getAttribute("href") || "").slice(0, 120);
+        }
+      });
+      return {
+        dataSection: String(document.body?.getAttribute("data-section") || "").toLowerCase(),
+        feedDisplay,
+        feedVisible,
+        titleLinkCount: links.length,
+        titleLinksBlank: blank,
+        sampleHref: href0,
+      };
+    });
+    const refOk =
+      ref.dataSection === "media" &&
+      ref.feedVisible === true &&
+      ref.titleLinkCount > 0 &&
+      ref.titleLinksBlank > 0 &&
+      /^https?:\/\//i.test(ref.sampleHref || "");
+    console.log(
+      JSON.stringify({
+        _proofPass: "cz-vertical-reference-zpravy",
+        referenceTopic: "zpravy",
+        ok: refOk,
+        detail: ref,
+      })
+    );
+    if (!refOk) {
+      await ctx.close();
+      throw new Error(`PROOF FAIL cz-vertical-reference-zpravy ${JSON.stringify(ref)}`);
     }
   }
 
