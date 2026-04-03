@@ -4586,7 +4586,7 @@ try {
 
     if (!src.length) return "";
 
-    /* 1 článek = 1 zdroj v UI — žádné „Píší také“ / multi-source řádek. */
+    /* 1 článek = 1 zdroj v meta řádku (bez sekundárních zdrojů). */
     const primary = src[0];
 
     const dateText = fmtDate(it.publishedAt || it.date || it.published || "");
