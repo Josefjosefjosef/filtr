@@ -3750,6 +3750,8 @@ try {
 
   /** Počítadlo dropů blokovaných položek při finálním filtru (globální render guard). */
   let __iuBlockedRenderDrops = 0;
+  /** Počítadlo nesouladu sources[0].name vs pipeline sourceLabel (stale JSON / drift). */
+  let __iuSourceLabelMismatchDrops = 0;
 
   function iuArticleMatchesMediaTopicKey(item, key) {
     if (!key || key === "all") return true;
@@ -4631,11 +4633,20 @@ try {
 
     /* 1 článek = 1 zdroj v meta řádku (bez sekundárních zdrojů). */
     const primary = src[0];
+    const labelFromArticle = String(it.sourceLabel || "").trim();
+    const primaryNameRaw = String(primary.name || "").trim();
+    if (labelFromArticle && primaryNameRaw && labelFromArticle !== primaryNameRaw) {
+      __iuSourceLabelMismatchDrops++;
+      try {
+        window.__IU_SOURCE_LABEL_MISMATCH_DROPS__ = __iuSourceLabelMismatchDrops;
+      } catch (_) {}
+    }
+    const displayName = labelFromArticle || primaryNameRaw;
 
     const dateText = fmtDate(it.publishedAt || it.date || it.published || "");
     const datePart = dateText ? `<span class="iu-meta-date">${escapeHtml(dateText)}</span>` : "";
     const primaryUrl = normalizeArticleUrl(primary.url) || primary.url;
-    const primaryPart = `<span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primaryUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(primary.name)}</a></span>`;
+    const primaryPart = `<span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primaryUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayName)}</a></span>`;
 
     const sep = datePart ? `<span class="iu-meta-sep"> | </span>` : "";
 
@@ -10844,8 +10855,12 @@ function buildVideoAsArticleCard(it) {
     const startedAt = new Date();
     if (state.isLoadingData) return;
     __iuBlockedRenderDrops = 0;
+    __iuSourceLabelMismatchDrops = 0;
     try {
       window.__IU_BLOCKED_RENDER_DROPS__ = 0;
+    } catch (_) {}
+    try {
+      window.__IU_SOURCE_LABEL_MISMATCH_DROPS__ = 0;
     } catch (_) {}
     state.isLoadingData = true;
     const requestToken = ++state.loadRequestId;
