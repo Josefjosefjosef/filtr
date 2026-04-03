@@ -15353,18 +15353,18 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   padding-right: 8px;
 }
 
-.iuSilverTallScrollViewport :is(.iuNewsPreviewCardMount,.iuSportPreviewCardMount,.iuFinancePreviewCardMount,.iuHealthPreviewCardMount,.iuTravelPreviewCardMount,.iuGamesPreviewCardMount,.iuCulturePreviewCardMount,.iuScienceHistoryPreviewCardMount,.iuEducationPreviewCardMount){min-height:168px;width:100%;box-sizing:border-box}
+/* P0: mezery mezi řádky tall window = mezery mezi mounty (50%: 5px card bottom + 3px mount top = 8px); karty zůstávají margin: 6px 0 5px 0 */
+#iuSilverTallScrollViewport [class$="PreviewCardMount"]{
+  min-height:168px;
+  width:100%;
+  box-sizing:border-box;
+  margin-top:0;
+}
+#iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"]{
+  margin-top:3px;
+}
 .iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
   appearance:none;-webkit-appearance:none;width:100%;max-width:100%;min-width:0;display:grid;grid-template-rows:auto 1fr;border:1px solid rgba(15,35,55,.16);border-radius:12px;background:rgba(255,255,255,.78);box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 10px 26px rgba(8,14,22,.1);color:#0b1f33;text-align:left;padding:0;margin:6px 0 5px 0;cursor:pointer;overflow:hidden
-}
-/* P0: mezery mezi kartami −50% (16px→8px); první karta margin-top:6px — další karty 3px (5+3=8). */
-/* Běžný režim: karty v oddělených mountech — obecný sibling mezi [class$="PreviewCardMount"] (bez vazby na konkrétní mount). */
-#iuSilverTallScrollViewport [class$="PreviewCardMount"] ~ [class$="PreviewCardMount"] :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
-  margin-top:3px;
-}
-/* Fallback: karty jako přímí sourozenci ve viewportu (mount == null v app.js). */
-#iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education) + :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
-  margin-top:3px;
 }
 .silver-welcome-stack--evening .iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:rgba(230,238,248,.92)}
 .iuSilverTallScrollViewport .iuNewsPreviewHeader{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(15,35,55,.14);min-width:0}
