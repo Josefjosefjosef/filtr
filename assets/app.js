@@ -3776,14 +3776,18 @@ try {
       case "cestovani":
         if (t === "cestovani") return true;
         return false;
-      case "hry":
+      case "hry": {
         return String(item.topic || item.section || "").toLowerCase() === "hry";
-      case "kultura":
+      }
+      case "kultura": {
         return String(item.topic || item.section || "").toLowerCase() === "kultura";
-      case "veda":
+      }
+      case "veda": {
         return String(item.topic || item.section || "").toLowerCase() === "veda";
-      case "vzdelavani":
+      }
+      case "vzdelavani": {
         return String(item.topic || item.section || "").toLowerCase() === "vzdelavani";
+      }
       default:
         return true;
     }
