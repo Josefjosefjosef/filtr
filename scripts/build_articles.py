@@ -1401,23 +1401,17 @@ class Cluster:
                 "url": it["url"]
             }]
 
-        # ARTICLE: unikátní zdroje v clusteru
+        # ARTICLE: unikátní zdroje v clusteru — každá položka musí nést vlastní media_raw
+        # (stejná doména po normalize_media_name nesmí sdílet jeden společný label).
         seen = set()
         out = []
-        display_by_norm = {}
-        for it in self.items:
-            normn = it["media_norm"]
-            raw = it["media_raw"]
-            if normn not in display_by_norm or len(raw) < len(display_by_norm[normn]):
-                display_by_norm[normn] = raw
-
         for it in sorted(self.items, key=lambda x: x["dt"], reverse=True):
             key = (it["media_norm"], it["url"])
             if key in seen:
                 continue
             seen.add(key)
             out.append({
-                "name": display_by_norm.get(it["media_norm"], it["media_norm"]),
+                "name": it["media_raw"],
                 "url": it["url"]
             })
 
@@ -1855,6 +1849,7 @@ def main() -> int:
         thash = topic_hash_from_title(title_out)
 
         primary_item = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]
+        _sl = fix_cz_mojibake(str(primary_item.get("media_raw") or "")).strip()
         article_out = {
             "topic": c.section,
             "section": c.section,
@@ -1867,6 +1862,7 @@ def main() -> int:
             "feedType": ftype,
             "sourceDisplayWeight": float(primary_item.get("sourceDisplayWeight") or 1.0),
             "sectionPrimary": str(primary_item.get("feedCategory") or ""),
+            "sourceLabel": _sl,
         }
         _fid = str(primary_item.get("feedId") or "").strip()
         if _fid:
