@@ -1,10 +1,12 @@
 /**
  * infoUzel — 1 téma = 1 článek (cluster + pick best).
- * String + rough + sémantika (klíčová slova + entity), bez API.
+ * String + rough + sémantika (klíčová slova + entity + ENTITY_MAP), bez API.
  * Sekce: jen uvnitř stejného topic/section.
  * Čas: max rozpětí publikace v clusteru ±6 h vůči prvnímu článku.
  * Max velikost clusteru: 10.
  */
+
+import { ENTITY_LOOKUP } from "./entity_map.js";
 
 const DEFAULT_SIMILARITY = 0.6;
 const DEFAULT_HOURS = 6;
@@ -50,23 +52,38 @@ export function roughMatch(a, b) {
   return a.includes(pb) || b.includes(pa);
 }
 
+/**
+ * @param {string} w jedno slovo
+ */
+function normalizeEntityToken(w) {
+  const lw = String(w)
+    .toLowerCase()
+    .replace(/[.,:;!?()[\]{}'"]/g, "")
+    .trim();
+  if (!lw) return lw;
+  return ENTITY_LOOKUP.has(lw) ? ENTITY_LOOKUP.get(lw) : lw;
+}
+
+/**
+ * @param {string[]} words
+ */
+function normalizeEntities(words) {
+  return words.map((w) => normalizeEntityToken(w));
+}
+
 /** @param {string} title */
 export function extractKeywords(title) {
-  return normalizeTitle(title)
+  const words = normalizeTitle(title)
     .split(" ")
     .filter((w) => w.length > 3);
+  return normalizeEntities(words);
 }
 
 /** @param {string} title */
 export function extractEntities(title) {
   if (!title || typeof title !== "string") return [];
-  const words = title.split(" ");
-  return words.filter(
-    (w) =>
-      w.length > 2 &&
-      w[0] === w[0].toUpperCase() &&
-      !["Článek", "Zpráva", "VIDEO"].includes(w),
-  );
+  const words = title.split(" ").filter((w) => w.length > 2);
+  return normalizeEntities(words);
 }
 
 /**
@@ -97,8 +114,14 @@ export function semanticSimilarityMeta(a, b) {
   const entityScore =
     entityOverlap / Math.max(aEntities.size, bEntities.size || 1);
 
-  const score = keywordScore * 0.7 + entityScore * 0.3;
-  return { score, entityOverlap, keywordScore, entityScore };
+  const boosted = keywordScore * 0.6 + entityScore * 0.4;
+  return {
+    score: boosted,
+    boosted,
+    entityOverlap,
+    keywordScore,
+    entityScore,
+  };
 }
 
 /** @param {string} a @param {string} b */
@@ -188,12 +211,12 @@ export function clusterArticles(articles, options = {}) {
         const articleTitle = String(article.title || "");
         const sem = semanticSimilarityMeta(articleTitle, primaryTitle);
 
-        if (sem.score > 0.5 && sem.entityOverlap === 0) continue;
+        if (sem.boosted > 0.5 && sem.entityOverlap === 0) continue;
 
         const match =
           sim >= simTh ||
           roughMatch(norm, cluster.norm) ||
-          sem.score >= 0.5;
+          sem.boosted >= 0.5;
         if (!match) continue;
 
         const t0 = publishedMs(cluster.items[0]);

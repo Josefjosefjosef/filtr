@@ -23,7 +23,8 @@ const efficiency =
   rawCount > 0 ? (1 - finalCount / rawCount).toFixed(2) : "0.00";
 
 console.log("CLUSTER CHECK");
-console.log("SEMANTIC_CLUSTERING=ON");
+console.log("ENTITY_MAP=ON");
+console.log("SEMANTIC_CLUSTERING=BOOSTED");
 console.log("TOTAL_ARTICLES_RAW=" + rawCount);
 console.log("TOTAL_ARTICLES_AFTER_CLUSTER=" + finalCount);
 console.log("CLUSTER_EFFICIENCY=" + efficiency);
