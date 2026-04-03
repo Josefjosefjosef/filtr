@@ -5127,7 +5127,6 @@ function buildVideoAsArticleCard(it) {
     const parts = tail0.split(/\s+/).filter(Boolean);
     if (parts.length !== 1) return "";
     let w = parts[0].replace(/[.,;:]+$/g, "");
-    w = w.replace(/\uD83C\uDF89\uFE0F?$/u, "");
     if (w.indexOf("-") >= 0) return "";
     if (!/^[\p{L}]{2,40}$/u.test(w)) return "";
     const low = w.toLowerCase();
@@ -5143,10 +5142,8 @@ function buildVideoAsArticleCard(it) {
     try{
       const meta = document.getElementById("iuSilverWelcomeMeta");
       if (!meta) return "";
-      const full = String(meta.textContent || "").trim();
-      const dotIdx = full.lastIndexOf("·");
-      const seg = (dotIdx >= 0 ? full.slice(dotIdx + 1) : full).trim();
-      const rawTail = iuParseNamedayTailFromRaw(seg);
+      const nameEl = meta.querySelector(".iuNameStrong");
+      const rawTail = nameEl ? String(nameEl.textContent || "").trim() : "";
       const v = iuSafeVocativeSingleFirstName(rawTail);
       return v ? String(v) : "";
     }catch{
@@ -5379,14 +5376,14 @@ function buildVideoAsArticleCard(it) {
             }catch{}
           }
           spanName.appendChild(doc.createTextNode(namePart));
-          if (namedayGender === "male" || namedayGender === "female") {
-            const wrap = doc.createElement("span");
-            wrap.className = "iuNamedayConfettiWrap";
-            wrap.setAttribute("aria-hidden", "true");
-            wrap.appendChild(doc.createTextNode("\uD83C\uDF89"));
-            spanName.appendChild(wrap);
-          }
           metaEl.appendChild(spanName);
+          if (namedayGender === "male" || namedayGender === "female") {
+            const emojiEl = doc.createElement("span");
+            emojiEl.className = "iuNamedayEmoji";
+            emojiEl.setAttribute("aria-hidden", "true");
+            emojiEl.appendChild(doc.createTextNode("\uD83C\uDF89"));
+            metaEl.appendChild(emojiEl);
+          }
         }catch{}
         if (silverWelcomeUseJsMetaFit()) {
           try{ fitMetaFont(); }catch{}

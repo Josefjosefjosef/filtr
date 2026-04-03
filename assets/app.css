@@ -16090,7 +16090,13 @@ Porušení = regres + CLS risk
 #iuSilverWelcomeCard .iuSilverWelcomeMeta .iuNameStrong.iuNameStrong--namedayGender[data-iu-nameday-name-gender="female"]{
   color: var(--iuNamedayFemaleAccent);
 }
-#iuSilverWelcomeCard .iuNamedayConfettiWrap{
+#iuSilverWelcomeCard .iuSilverWelcomeMeta .iuNameStrong.iuNameStrong--namedayGender[data-iu-nameday-name-gender="male"] + .iuNamedayEmoji{
+  color: var(--iuNamedayMaleAccent);
+}
+#iuSilverWelcomeCard .iuSilverWelcomeMeta .iuNameStrong.iuNameStrong--namedayGender[data-iu-nameday-name-gender="female"] + .iuNamedayEmoji{
+  color: var(--iuNamedayFemaleAccent);
+}
+#iuSilverWelcomeCard .iuNamedayEmoji{
   display: inline-block;
   vertical-align: baseline;
   margin-left: 4px;
