@@ -15,7 +15,7 @@ permissions:
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "*/11 * * * *"
+    - cron: "*/2 * * * *"
 
 env:
   AUTOMATION_BRANCH: automation/update-articles-data

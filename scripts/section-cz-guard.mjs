@@ -81,24 +81,26 @@ must(
   "assets/images/vzdelavani-default.jpg must exist",
 );
 
-const feedsPath = path.join(root, "scripts", "feeds.json");
-const feeds = fs.readFileSync(feedsPath, "utf8");
-must(/"topic":\s*"hry"/.test(feeds), "feeds.json must include hry topic");
-must(/"topic":\s*"kultura"/.test(feeds), "feeds.json must include kultura topic");
-must(/"topic":\s*"veda"/.test(feeds), "feeds.json must include veda topic");
-must(/"topic":\s*"vzdelavani"/.test(feeds), "feeds.json must include vzdelavani topic");
+const registryPath = path.join(root, "projects", "data", "source_registry.json");
+const registryRaw = fs.readFileSync(registryPath, "utf8");
+must(/"topic":\s*"hry"/.test(registryRaw), "source_registry.json must include hry topic");
+must(/"topic":\s*"kultura"/.test(registryRaw), "source_registry.json must include kultura topic");
+must(/"topic":\s*"veda"/.test(registryRaw), "source_registry.json must include veda topic");
+must(/"topic":\s*"vzdelavani"/.test(registryRaw), "source_registry.json must include vzdelavani topic");
 try {
-  const feedArr = JSON.parse(feeds);
-  const n = (t) => (Array.isArray(feedArr) ? feedArr.filter((x) => x && x.topic === t).length : 0);
-  must(n("hry") >= 3, "feeds.json must list at least 3 feeds for topic hry");
-  must(n("kultura") >= 3, "feeds.json must list at least 3 feeds for topic kultura");
-  must(n("veda") >= 3, "feeds.json must list at least 3 feeds for topic veda");
-  must(n("vzdelavani") >= 3, "feeds.json must list at least 3 feeds for topic vzdelavani");
+  const reg = JSON.parse(registryRaw);
+  const feedArr = Array.isArray(reg.entries) ? reg.entries : [];
+  const n = (t) =>
+    feedArr.filter((x) => x && !x.blocked && x.active !== false && String(x.topic || "") === t).length;
+  must(n("hry") >= 3, "source_registry.json must list at least 3 active feeds for topic hry");
+  must(n("kultura") >= 3, "source_registry.json must list at least 3 active feeds for topic kultura");
+  must(n("veda") >= 3, "source_registry.json must list at least 3 active feeds for topic veda");
+  must(n("vzdelavani") >= 3, "source_registry.json must list at least 3 active feeds for topic vzdelavani");
 } catch (e) {
-  must(false, "feeds.json must be valid JSON: " + String(e && e.message));
+  must(false, "source_registry.json must be valid JSON: " + String(e && e.message));
 }
 
-const scan = appJs + idx + feeds;
+const scan = appJs + idx + registryRaw;
 must(!/\.jpg\.jpeg/i.test(scan), "must not reference .jpg.jpeg");
 
 if (failed) {

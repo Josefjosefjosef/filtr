@@ -31,8 +31,28 @@ except Exception:
 # Konfigurace
 # =========================
 
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+if _SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPTS_DIR)
+
+from iu_registry import (
+    collapse_feeds_by_url,
+    compute_display_score,
+    is_hard_blocked_url,
+    load_registry,
+    load_scheduler_state,
+    mark_feed_error,
+    mark_feeds_fetched,
+    merge_article_lists,
+    purge_blocked_articles,
+    save_scheduler_state,
+    select_feeds_for_tick,
+)
+
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # repo root
 FEEDS_PATH = os.path.join(ROOT_DIR, "scripts", "feeds.json")
+REGISTRY_PATH = os.path.join(ROOT_DIR, "projects", "data", "source_registry.json")
+SCHEDULER_STATE_PATH = os.path.join(ROOT_DIR, "projects", "data", "scheduler_state.json")
 
 # ✅ YouTube playlisty – samostatný soubor
 FEEDS_YOUTUBE_PATH = os.path.join(ROOT_DIR, "scripts", "feeds_youtube.json")
@@ -133,12 +153,12 @@ KW_ZDRAVI = {
 }
 
 # Pořadí sekcí (video NENÍ sekce; je to contentType)
-SECTION_ORDER = ["pocasi", "doprava", "aktualne", "krimi", "zdravi", "finance", "sport", "hry", "kultura", "veda", "vzdelavani"]
+SECTION_ORDER = ["pocasi", "doprava", "aktualne", "krimi", "finance", "sport", "zdravi", "cestovani", "hry", "kultura", "veda", "vzdelavani"]
 
-VALID_SECTIONS = {"pocasi","doprava","aktualne","krimi","finance","sport","zdravi","hry","kultura","veda","vzdelavani"}
+VALID_SECTIONS = {"pocasi","doprava","aktualne","krimi","finance","sport","zdravi","cestovani","hry","kultura","veda","vzdelavani"}
 
-# Kanonické CZ vertikály — RSS topic v feeds.json musí přesně odpovídat (infer_section se přeskakuje).
-FORCED_FEED_TOPICS = frozenset({"hry", "kultura", "veda", "vzdelavani"})
+# Kanonické CZ vertikály — RSS topic v registru musí přesně odpovídat (infer_section se přeskakuje).
+FORCED_FEED_TOPICS = frozenset({"hry", "kultura", "veda", "vzdelavani", "cestovani"})
 
 # Postupné uvolňování do veřejného JSON (per sekce za běh buildu)
 SECTION_RELEASE_STATE_PATH = os.path.join(OUTPUT_DIR, "section_release_state.json")
@@ -680,6 +700,10 @@ def infer_section(url: str, title: str, fallback_topic: str) -> str:
     if "doprava" in host or "/doprava" in path or "/auto" in path or "/nehody" in path or "/nehoda" in path:
         return "doprava"
 
+    # CESTOVÁNÍ — nesmí spadnout do Zpráv jen kvůli „zahraniční“ klíčovým slovům
+    if "/cestovani" in path or "/cestovan" in path or "cestovani" in host:
+        return "cestovani"
+
     # SPORT (vč. subdomén typu sport.aktualne.cz)
     if host.startswith("sport.") or "/sport" in path or "/fotbal" in path or "/hokej" in path or "/tenis" in path:
         return "sport"
@@ -697,6 +721,10 @@ def infer_section(url: str, title: str, fallback_topic: str) -> str:
     # ZDRAVÍ
     if "/zdravi" in path or "/zdrav" in path or "zdravi" in host:
         return "zdravi"
+
+    # CESTOVÁNÍ (doplňující signály v URL)
+    if "travel" in path or "letenk" in path or "pelipeck" in host:
+        return "cestovani"
 
     def contains_kw(kwset: set) -> bool:
         for k in kwset:
@@ -1449,6 +1477,7 @@ def _section_label(section: str) -> str:
         "aktualne": "Aktuálně",
         "krimi": "Krimi",
         "zdravi": "Zdraví",
+        "cestovani": "Cestování",
         "finance": "Finance",
         "sport": "Sport",
         "hry": "Hry",
@@ -1541,11 +1570,30 @@ def build_brief(generated_at: str, articles: list) -> dict:
 # =========================
 
 def main() -> int:
-    if not os.path.exists(FEEDS_PATH):
-        print(f"ERROR: missing {FEEDS_PATH}", file=sys.stderr)
+    if not os.path.exists(REGISTRY_PATH):
+        print(f"ERROR: missing {REGISTRY_PATH}", file=sys.stderr)
         return 2
 
-    feed_items = load_all_feeds()
+    registry = load_registry(REGISTRY_PATH)
+    sched_state = load_scheduler_state(SCHEDULER_STATE_PATH)
+    picked, sched_state = select_feeds_for_tick(registry, sched_state)
+    grouped = collapse_feeds_by_url(picked)
+    feed_items = []
+    for _url, entry_group in grouped:
+        fe = entry_group[0]
+        meta = {
+            "topic": stable_section(str(fe.get("topic") or "aktualne")),
+            "source": fe.get("label") or fe.get("id"),
+            "category": str(fe.get("section_primary") or "zpravy"),
+            "type": str(fe.get("entry_type") or "rss"),
+            "id": str(fe.get("id") or ""),
+            "displayWeight": float(fe.get("display_weight") or 1.0),
+            "registryGroup": entry_group,
+        }
+        feed_items.append((_url, meta))
+
+    if os.path.exists(FEEDS_YOUTUBE_PATH):
+        feed_items.extend(load_youtube_feeds(FEEDS_YOUTUBE_PATH))
 
     all_items = []
     per_feed_report = []
@@ -1557,11 +1605,29 @@ def main() -> int:
     parsed_feed_cache = {}
 
     for feed_url, meta in feed_items:
+        if is_hard_blocked_url(feed_url):
+            per_feed_report.append({
+                "feed": feed_url,
+                "source": "",
+                "topic": "aktualne",
+                "status": "SKIPPED_BLOCKED",
+                "reason": "hard_blocked_domain",
+                "httpStatus": 0,
+                "contentType": "",
+                "finalUrl": feed_url,
+                "bytes": 0,
+                "itemsParsed": 0,
+                "itemsKept": 0,
+                "accepted": 0,
+            })
+            continue
+
         fallback_topic = stable_section(meta.get("topic", "aktualne"))
         source = fix_cz_mojibake(str(meta.get("source") or meta.get("name") or meta.get("title") or feed_url))
         feed_category = str(meta.get("category") or meta.get("topic") or "aktualne")
         feed_type = str(meta.get("type") or "general")
         feed_id = str(meta.get("id") or "")
+        src_dw = float(meta.get("displayWeight") or 1.0)
 
         if meta.get("disabled"):
             per_feed_report.append({
@@ -1621,6 +1687,10 @@ def main() -> int:
             status = "BOZO" if reason else "ERROR"
             report_base["status"] = status
             report_base["reason"] = reason
+            rg = meta.get("registryGroup")
+            if rg:
+                for e in rg:
+                    mark_feed_error(sched_state, str(e.get("id") or ""))
             per_feed_report.append(report_base)
             continue
         
@@ -1663,6 +1733,8 @@ def main() -> int:
             dt = parse_dt(entry)
 
             if not link or not title:
+                continue
+            if is_hard_blocked_url(link):
                 continue
 
             media_raw = fix_cz_mojibake(str(source).strip())
@@ -1716,6 +1788,7 @@ def main() -> int:
                 "feedCategory": feed_category,
                 "feedType": feed_type,
                 "feedId": feed_id,
+                "sourceDisplayWeight": src_dw,
             }
             all_items.append(item)
             accepted += 1
@@ -1738,6 +1811,10 @@ def main() -> int:
             report_base["bozo_but_used"] = True
         else:
             report_base["status"] = "OK"
+
+        rg = meta.get("registryGroup")
+        if rg and not is_youtube_feed:
+            mark_feeds_fetched(sched_state, rg)
         
         per_feed_report.append(report_base)
 
@@ -1777,6 +1854,7 @@ def main() -> int:
         ftype = _feed_type_from_cluster_items(c.items)
         thash = topic_hash_from_title(title_out)
 
+        primary_item = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]
         article_out = {
             "topic": c.section,
             "section": c.section,
@@ -1787,8 +1865,9 @@ def main() -> int:
             "primaryCategory": pcat,
             "topicHash": thash,
             "feedType": ftype,
+            "sourceDisplayWeight": float(primary_item.get("sourceDisplayWeight") or 1.0),
+            "sectionPrimary": str(primary_item.get("feedCategory") or ""),
         }
-        primary_item = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]
         _fid = str(primary_item.get("feedId") or "").strip()
         if _fid:
             article_out["feedId"] = _fid
@@ -1803,19 +1882,33 @@ def main() -> int:
 
     # Timestamp shared by all outputs in this run
     generated_at = iso_now_z()
-    out_articles = apply_staggered_section_release(out_articles, generated_at)
 
-    # ===== SORT (ARTICLES) =====
-    out_articles = sorted(out_articles, key=lambda a: a["publishedAt"], reverse=True)
+    prev_payload = _safe_read_json(OUT_PATH) or {}
+    prev_list = list(prev_payload.get("articles") or [])
+    merged_articles = merge_article_lists(prev_list, out_articles, max(500, MAX_OUTPUT_ARTICLES * 3))
+    merged_articles = purge_blocked_articles(merged_articles)
+    for a in merged_articles:
+        a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
+        a["displayScore"] = compute_display_score(a)
 
-    out_articles = apply_topic_and_source_limits(out_articles)
-    out_articles = apply_niche_fraction_limit(out_articles)
+    merged_articles.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+    merged_articles = apply_staggered_section_release(merged_articles, generated_at)
+    merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+
+    merged_articles = apply_topic_and_source_limits(merged_articles)
+    merged_articles = apply_niche_fraction_limit(merged_articles)
+    out_articles = merged_articles
     # Drip (releaseAt v budoucnu) schová většinu článků v UI — nesmí blokovat čerstvý feed; čas publikace zůstává v publishedAt.
 
     try:
         save_transport_state(transport_state)
     except Exception:
         pass
+
+    try:
+        save_scheduler_state(SCHEDULER_STATE_PATH, sched_state)
+    except Exception as e:
+        print("WARN: scheduler_state write failed:", str(e))
 
     # ===== RETENTION (ARTICLES) =====
     # Store ALL articles by day under projects/data/articles/YYYY-MM-DD.json (+ index.json).
@@ -1874,6 +1967,9 @@ def main() -> int:
             for src in (by_day_new.get(day) or []) + (existing_items or []):
                 if not isinstance(src, dict):
                     continue
+                u0 = (src.get("url") or "").strip()
+                if is_hard_blocked_url(u0):
+                    continue
                 k = _retention_key(src)
                 if k in seen:
                     continue
@@ -1930,7 +2026,10 @@ def main() -> int:
 
     payload = {
         "generatedAt": generated_at,
-        "articles": final
+        "articles": final,
+        "mappingSingleSourceOfTruth": True,
+        "homepagePreviewUsesSectionMapper": True,
+        "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
     }
 
     # articles.json
