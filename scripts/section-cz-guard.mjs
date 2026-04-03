@@ -42,16 +42,22 @@ must(
 
 must(/function iuArticleReleaseEligible/.test(appJs), "iuArticleReleaseEligible must exist");
 
-/* #feed nesmí být display:none jen proto, že data-section je hry/kultura/veda/vzdelavani (stejný renderer jako media témata). */
+/* #feed chrome: data-iu-fc=1 pro media + 4 CZ vertikály (krátký atribut kvůli CSS size budgetu). */
 must(
-  /body:is\(\[data-section="media"\],\[data-section="hry"\],\[data-section="kultura"\],\[data-section="veda"\],\[data-section="vzdelavani"\]\)\s*#feed/.test(
-    appCss,
-  ),
-  "app.css must use body:is(...media,hry,kultura,veda,vzdelavani) #feed for shared article list chrome",
+  /body\[data-iu-fc="1"\]\s*#feed/.test(appCss),
+  "app.css must use body[data-iu-fc=\"1\"] #feed for shared article list chrome",
 );
 must(
-  /:not\(\[data-section="media"\]\):not\(\[data-section="hry"\]\)/.test(appCss),
-  "app.css #feed hide rule must exclude vertical section keys",
+  /:not\(\[data-iu-fc="1"\]\)/.test(appCss),
+  "app.css #feed hide rule must use :not([data-iu-fc=\"1\"])",
+);
+must(
+  /setAttribute\("data-iu-fc"/.test(idx),
+  "index.html boot must set data-iu-fc on html/body",
+);
+must(
+  /setAttribute\("data-iu-fc"/.test(appJs),
+  "app.js applySectionFromURL must sync data-iu-fc on html/body",
 );
 
 must(

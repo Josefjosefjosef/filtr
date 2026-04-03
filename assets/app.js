@@ -20024,6 +20024,11 @@ function buildVideoAsArticleCard(it) {
     try{ document.body && (document.body.dataset.section = section); }catch{}
     try{ document.documentElement && (document.documentElement.dataset.section = section); }catch{}
     try{
+      const iuFc = ["media", "hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1 ? "1" : "0";
+      if (document.body) document.body.setAttribute("data-iu-fc", iuFc);
+      if (document.documentElement) document.documentElement.setAttribute("data-iu-fc", iuFc);
+    }catch{}
+    try{
       if (document.body) {
         if (section === "travel" && nav.mode === "media") document.body.dataset.travelFeed = "1";
         else delete document.body.dataset.travelFeed;
