@@ -15353,9 +15353,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   padding-right: 8px;
 }
 
-/* P0: mezery mezi řádky tall window jen vnější margin (karta bottom 2px + mount top 2px ≈ 50 % oproti 5+3); bez zásahu do .iuNewsPreviewBody */
+/* P0: mezery mezi řádky tall window — vnější margin karet + mount; mount min-height 152px snižuje slack oproti 168px; bez zásahu do .iuNewsPreviewBody */
 #iuSilverTallScrollViewport [class$="PreviewCardMount"]{
-  min-height:168px;
+  min-height:152px;
   width:100%;
   box-sizing:border-box;
   margin-top:0;
