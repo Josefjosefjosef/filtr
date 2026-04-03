@@ -15288,6 +15288,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
+/* P0 tall window: clip any subpixel overflow; pairs with symmetric insets + scrollbar-gutter on viewport */
+#iuSilverTallScrollSection{
+  overflow-x: hidden;
+}
+
 .iuSilverStackChromaFrame{
   box-sizing: border-box;
   width: 100%;
@@ -15336,6 +15341,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   max-height: min(42vh, 360px);
   overflow-x: hidden;
   overflow-y: auto;
+  scrollbar-gutter: stable;
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
@@ -15344,7 +15350,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 
 .iuSilverTallScrollViewport :is(.iuNewsPreviewCardMount,.iuSportPreviewCardMount,.iuFinancePreviewCardMount,.iuHealthPreviewCardMount,.iuTravelPreviewCardMount,.iuGamesPreviewCardMount,.iuCulturePreviewCardMount,.iuScienceHistoryPreviewCardMount,.iuEducationPreviewCardMount){min-height:168px;width:100%;box-sizing:border-box}
 .iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
-  appearance:none;-webkit-appearance:none;width:100%;max-width:100%;min-width:0;display:grid;grid-template-rows:auto 1fr;border:1px solid rgba(15,35,55,.16);border-radius:12px;background:rgba(255,255,255,.78);box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 10px 26px rgba(8,14,22,.1);color:#0b1f33;text-align:left;padding:0;margin:6px 2px 10px 2px;cursor:pointer;overflow:hidden
+  appearance:none;-webkit-appearance:none;width:100%;max-width:100%;min-width:0;display:grid;grid-template-rows:auto 1fr;border:1px solid rgba(15,35,55,.16);border-radius:12px;background:rgba(255,255,255,.78);box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 10px 26px rgba(8,14,22,.1);color:#0b1f33;text-align:left;padding:0;margin:6px 2px 5px 2px;cursor:pointer;overflow:hidden
+}
+/* P0: mezery mezi kartami −50% (16px→8px); první karta zůstává margin-top:6px — jen následující mounty */
+#iuSilverTallScrollViewport .iuNewsPreviewCardMount ~ div[class$="PreviewCardMount"] :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
+  margin-top:3px;
 }
 .silver-welcome-stack--evening .iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:rgba(230,238,248,.92)}
 .iuSilverTallScrollViewport .iuNewsPreviewHeader{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(15,35,55,.14);min-width:0}
