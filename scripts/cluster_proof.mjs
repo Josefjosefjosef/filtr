@@ -25,6 +25,7 @@ const efficiency =
 console.log("CLUSTER CHECK");
 console.log("ENTITY_MAP=ON");
 console.log("SEMANTIC_CLUSTERING=BOOSTED");
+console.log("TOPIC_MAP_EXPANDED=YES");
 console.log("TOPIC_TAGGING=ON");
 console.log("TOPIC_MATCH_USED=YES");
 console.log("TOPIC_THRESHOLD=1");
