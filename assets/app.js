@@ -5383,7 +5383,7 @@ function buildVideoAsArticleCard(it) {
             wrap.className = "iuNamedayConfettiWrap";
             wrap.setAttribute("aria-hidden", "true");
             wrap.innerHTML =
-              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false" class="iuNamedayConfettiSvg"><g fill="currentColor"><path d="M2.5 12.7L6.8 3.8c.16-.38.7-.38.86 0l4.3 8.9H2.5z" opacity=".93"/></g><g fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round" opacity=".78"><path d="M9.8 5.3l3.5-2.7"/><path d="M10.6 7.5l4.2-1.2"/><path d="M11.2 9.7l4.5.6"/></g><g fill="currentColor"><circle cx="13.5" cy="3.5" r="1" opacity=".9"/><circle cx="15.1" cy="6" r=".7" opacity=".85"/><rect x="12.4" y="7.3" width="2" height="2" rx=".4" transform="rotate(-22 13.4 8.3)" opacity=".82"/><path d="M11.6 4.5l.7-.35.5.85-.75.35z" opacity=".8"/></g></svg>';
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false" class="iuNamedayConfettiSvg"><g fill="currentColor"><circle cx="3.2" cy="5.1" r="1.05" opacity=".88"/><circle cx="13.1" cy="6.4" r=".95" opacity=".9"/><path d="M7.8 2.3l1 1.4-.9.5-1-.1.5-1 .4-.8z" opacity=".92"/><rect x="5.2" y="10.5" width="2.4" height="2.4" rx=".45" transform="rotate(-20 6.4 11.7)" opacity=".85"/><rect x="11" y="11.2" width="2" height="2" rx=".35" transform="rotate(12 12 12.2)" opacity=".87"/></g></svg>';
             spanName.appendChild(wrap);
           }
           metaEl.appendChild(spanName);
