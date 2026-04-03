@@ -1,7 +1,8 @@
 /**
  * infoUzel — 1 téma = 1 článek (cluster + pick best).
+ * String + rough + sémantika (klíčová slova + entity), bez API.
  * Sekce: jen uvnitř stejného topic/section.
- * Čas: max rozpětí publikace v clusteru ±6 h.
+ * Čas: max rozpětí publikace v clusteru ±6 h vůči prvnímu článku.
  * Max velikost clusteru: 10.
  */
 
@@ -47,6 +48,62 @@ export function roughMatch(a, b) {
   const pa = a.slice(0, 20);
   if (!pb.length || !pa.length) return false;
   return a.includes(pb) || b.includes(pa);
+}
+
+/** @param {string} title */
+export function extractKeywords(title) {
+  return normalizeTitle(title)
+    .split(" ")
+    .filter((w) => w.length > 3);
+}
+
+/** @param {string} title */
+export function extractEntities(title) {
+  if (!title || typeof title !== "string") return [];
+  const words = title.split(" ");
+  return words.filter(
+    (w) =>
+      w.length > 2 &&
+      w[0] === w[0].toUpperCase() &&
+      !["Článek", "Zpráva", "VIDEO"].includes(w),
+  );
+}
+
+/**
+ * Sémantická podobnost (heuristika, bez síťových volání).
+ * @returns {{ score: number, entityOverlap: number, keywordScore: number, entityScore: number }}
+ */
+export function semanticSimilarityMeta(a, b) {
+  const sa = String(a || "");
+  const sb = String(b || "");
+  const aKeywords = new Set(extractKeywords(sa));
+  const bKeywords = new Set(extractKeywords(sb));
+
+  let keywordOverlap = 0;
+  aKeywords.forEach((w) => {
+    if (bKeywords.has(w)) keywordOverlap++;
+  });
+
+  const aEntities = new Set(extractEntities(sa));
+  const bEntities = new Set(extractEntities(sb));
+
+  let entityOverlap = 0;
+  aEntities.forEach((e) => {
+    if (bEntities.has(e)) entityOverlap++;
+  });
+
+  const keywordScore =
+    keywordOverlap / Math.max(aKeywords.size, bKeywords.size || 1);
+  const entityScore =
+    entityOverlap / Math.max(aEntities.size, bEntities.size || 1);
+
+  const score = keywordScore * 0.7 + entityScore * 0.3;
+  return { score, entityOverlap, keywordScore, entityScore };
+}
+
+/** @param {string} a @param {string} b */
+export function semanticSimilarity(a, b) {
+  return semanticSimilarityMeta(a, b).score;
 }
 
 function publishedMs(article) {
@@ -127,7 +184,16 @@ export function clusterArticles(articles, options = {}) {
       let found = false;
       for (const cluster of clusters) {
         const sim = similarity(norm, cluster.norm);
-        const match = sim >= simTh || roughMatch(norm, cluster.norm);
+        const primaryTitle = String(cluster.items[0]?.title || "");
+        const articleTitle = String(article.title || "");
+        const sem = semanticSimilarityMeta(articleTitle, primaryTitle);
+
+        if (sem.score > 0.5 && sem.entityOverlap === 0) continue;
+
+        const match =
+          sim >= simTh ||
+          roughMatch(norm, cluster.norm) ||
+          sem.score >= 0.5;
         if (!match) continue;
 
         const t0 = publishedMs(cluster.items[0]);
