@@ -123,6 +123,10 @@ if (!/id="iuGamesPreviewCardMount"[\s\S]*?data-iu-games-preview-mount/.test(html
   fail("❌ Silver tall viewport must include Hry preview mount (#iuGamesPreviewCardMount + data-iu-games-preview-mount)");
 }
 
+if (!/id="iuCulturePreviewCardMount"[\s\S]*?data-iu-culture-preview-mount/.test(html)) {
+  fail("❌ Silver tall viewport must include Kultura / Akce preview mount (#iuCulturePreviewCardMount + data-iu-culture-preview-mount)");
+}
+
 if (html.indexOf("iuSilverCalendarSummaryShowDay") !== -1) {
   fail("❌ Calendar box3 must not render legacy CTA button (iuSilverCalendarSummaryShowDay)");
 }

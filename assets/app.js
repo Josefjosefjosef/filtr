@@ -5754,6 +5754,36 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuCulturePreviewPickLatestTwoFromState(){
+    try{
+      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
+      if (!items.length) return { latest: null, second: null, latestMs: NaN };
+      let latest = null;
+      let second = null;
+      for (let i = 0; i < items.length; i++) {
+        const it = items[i];
+        try{
+          if (!it) continue;
+          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
+          if (!iuArticleMatchesMediaTopicKey(it, "kultura")) continue;
+          if (!latest) {
+            latest = it;
+            continue;
+          }
+          if (!second) {
+            second = it;
+            break;
+          }
+        }catch(_){}
+      }
+      if (!latest) return { latest: null, second: null, latestMs: NaN };
+      const latestMs = iuNewsPreviewParsePublishedMs(latest);
+      return { latest, second, latestMs };
+    }catch(_){
+      return { latest: null, second: null, latestMs: NaN };
+    }
+  }
+
   /** Silver tall preview cards: same URL/nav outcome as matching left-rail .iu-leftNavItem[data-media-topic]. */
   function iuMediaPreviewNavClick(mediaTopicKey) {
     const k = String(mediaTopicKey || "").trim().toLowerCase();
@@ -6518,6 +6548,83 @@ function buildVideoAsArticleCard(it) {
     return out;
   }
 
+  /** Runtime regression snapshot for Kultura / Akce tall preview (stable IDs / no second badge / kultura-only titles / fixed thumb). */
+  function iuCulturePreviewRegressionAudit(){
+    const out = {
+      cultureCardExists: false,
+      cultureBadgeText: "",
+      cultureSecondBadgeCount: -1,
+      cultureTimeExists: false,
+      cultureImageSrc: "",
+      cultureTitleCount: -1,
+      cultureArticleTitleLines: 0,
+      cultureTitles: [],
+      cultureCardClickable: false,
+      cultureClickOpensCultureSection: null,
+      cultureDataCategoryLeak: false,
+      cultureImageUsesCultureDefault: false,
+    };
+    try{
+      const card = document.getElementById("iuCulturePreviewCard");
+      out.cultureCardExists = !!card;
+      if (!card) return out;
+      out.cultureCardClickable = card.tagName === "BUTTON" && card.getAttribute("type") === "button";
+      const badge = card.querySelector(".iu-previewBadge--culture");
+      out.cultureBadgeText = badge ? String(badge.textContent || "").trim() : "";
+      try{
+        out.cultureSecondBadgeCount = card.querySelectorAll(".iuNewsPreviewBadge, .iuSportPreviewLiveBadge").length;
+      }catch(_){
+        out.cultureSecondBadgeCount = -1;
+      }
+      const timeEl = document.getElementById("iuCulturePreviewTime");
+      out.cultureTimeExists = !!timeEl;
+      const img = document.getElementById("iuCulturePreviewImage");
+      const src = img ? String(img.getAttribute("src") || "").trim() : "";
+      out.cultureImageSrc = src;
+      out.cultureImageUsesCultureDefault = /culture-default\.jpg(?:\?|$)/i.test(src);
+      const titlesHost = document.getElementById("iuCulturePreviewTitles");
+      const t1 = card.querySelector("[data-iu-culture-preview-title-1]");
+      const t2 = card.querySelector("[data-iu-culture-preview-title-2]");
+      out.cultureTitleCount = titlesHost ? titlesHost.querySelectorAll(".iuNewsPreviewHeadline, .iuNewsPreviewHeadline2").length : -1;
+      const lines = [];
+      let articleLines = 0;
+      const loadingPhrase = "Kultura / Akce se načítá";
+      if (t1) {
+        const a = String(t1.textContent || "").trim();
+        lines.push(a);
+        if (a && a !== loadingPhrase) articleLines++;
+      }
+      if (t2) {
+        const b = String(t2.textContent || "").trim();
+        if (b && !t2.classList.contains("iuNewsPreviewHeadline2--empty")) {
+          lines.push(b);
+          articleLines++;
+        }
+      }
+      out.cultureArticleTitleLines = articleLines;
+      out.cultureTitles = lines;
+      const picked = iuCulturePreviewPickLatestTwoFromState();
+      let leak = false;
+      if (picked.latest && picked.latest.title) {
+        const expect = String(picked.latest.title).trim();
+        const shown = t1 ? String(t1.textContent || "").trim() : "";
+        if (expect && shown && shown !== loadingPhrase && shown !== expect) leak = true;
+        try{
+          if (shown && shown !== loadingPhrase && !iuArticleMatchesMediaTopicKey(picked.latest, "kultura")) leak = true;
+        }catch(_){}
+      }
+      if (card.getAttribute("data-iu-culture-preview-has-latest") === "1" && picked.latest && picked.latest.title) {
+        const shown = t1 ? String(t1.textContent || "").trim() : "";
+        if (shown !== String(picked.latest.title).trim()) leak = true;
+      }
+      out.cultureDataCategoryLeak = leak;
+    }catch(_){}
+    try{
+      if (typeof window !== "undefined" && !iuIsProdHost()) window.__iuCulturePreviewLastAudit = out;
+    }catch(_){}
+    return out;
+  }
+
   function iuFinancePreviewEnsureDom(){
     try{
       const viewport = document.getElementById("iuSilverTallScrollViewport");
@@ -7213,6 +7320,182 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
   }
 
+  function iuCulturePreviewEnsureDom(){
+    try{
+      const viewport = document.getElementById("iuSilverTallScrollViewport");
+      if (!viewport) return null;
+      const mount = document.getElementById("iuCulturePreviewCardMount");
+      let card = mount
+        ? mount.querySelector('[data-iu-culture-preview-card="1"]')
+        : viewport.querySelector('[data-iu-culture-preview-card="1"]');
+      if (card) return card;
+
+      card = document.createElement("button");
+      card.type = "button";
+      card.id = "iuCulturePreviewCard";
+      card.className = "box-culture";
+      card.setAttribute("data-iu-culture-preview-card", "1");
+      card.setAttribute("data-iu-culture-route", "kultura");
+      card.setAttribute("aria-label", "Otevřít sekci Kultura / Akce s články");
+
+      card.innerHTML = `
+        <div class="iuNewsPreviewHeader" data-iu-culture-preview-header>
+          <div class="iuNewsPreviewTitleRow">
+            <span class="iu-previewBadge--culture">Kultura / Akce</span>
+            <span class="iuNewsPreviewFreshness" id="iuCulturePreviewTime" data-iu-culture-preview-freshness></span>
+          </div>
+          <svg class="iuNewsPreviewChevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="M7.5 4.5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="iuNewsPreviewBody">
+          <div class="iuNewsPreviewImgWrap" aria-hidden="true">
+            <img id="iuCulturePreviewImage" class="iuNewsPreviewImg" src="/assets/images/culture-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+          </div>
+          <div id="iuCulturePreviewTitles" class="iuNewsPreviewText">
+            <p class="iuNewsPreviewHeadline" data-iu-culture-preview-title-1>Kultura / Akce se načítá</p>
+            <p class="iuNewsPreviewHeadline2 iuNewsPreviewHeadline2--empty" data-iu-culture-preview-title-2></p>
+          </div>
+        </div>
+      `.trim();
+
+      const placeholder = viewport.querySelector("[data-iu-silver-tall-scroll-placeholder]");
+      if (placeholder) {
+        try {
+          placeholder.style.visibility = "hidden";
+          placeholder.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+      }
+      const probe = viewport.querySelector("[data-iu-silver-tall-scroll-probe]");
+      if (probe) {
+        try {
+          probe.style.visibility = "hidden";
+          probe.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+      }
+
+      if (mount) {
+        mount.appendChild(card);
+      } else {
+        viewport.insertBefore(card, viewport.firstChild || null);
+      }
+
+      card.addEventListener(
+        "click",
+        function () {
+          iuMediaPreviewNavClick("kultura");
+        },
+        { passive: true }
+      );
+
+      const img0 = card.querySelector("#iuCulturePreviewImage");
+      if (img0 && !img0.getAttribute("data-iu-culture-preview-err-bound")) {
+        img0.setAttribute("data-iu-culture-preview-err-bound", "1");
+        img0.onerror = function () {
+          const fb = "/assets/images/culture-default.jpg";
+          try {
+            const cur = String(img0.getAttribute("src") || "");
+            if (cur.indexOf("culture-default.jpg") !== -1) {
+              img0.onerror = null;
+              return;
+            }
+          } catch (_) {}
+          img0.src = fb;
+        };
+      }
+
+      return card;
+    }catch(_){
+      return null;
+    }
+  }
+
+  function iuCulturePreviewRefresh(){
+    try{
+      const card = iuCulturePreviewEnsureDom();
+      if (!card) return;
+      const elFresh = card.querySelector("[data-iu-culture-preview-freshness]");
+      const elT1 = card.querySelector("[data-iu-culture-preview-title-1]");
+      const elT2 = card.querySelector("[data-iu-culture-preview-title-2]");
+      const elImg = document.getElementById("iuCulturePreviewImage");
+      if (!elT1 || !elT2 || !elFresh) return;
+
+      const fixedThumb = "/assets/images/culture-default.jpg";
+      const picked = iuCulturePreviewPickLatestTwoFromState();
+      const latest = picked.latest;
+      const second = picked.second;
+      let latestTitle = latest && latest.title ? String(latest.title) : "";
+      let secondTitle = second && second.title ? String(second.title) : "";
+      if (latest && !iuArticleMatchesMediaTopicKey(latest, "kultura")) {
+        latestTitle = "";
+      }
+      if (second && !iuArticleMatchesMediaTopicKey(second, "kultura")) {
+        secondTitle = "";
+      }
+      const hasLatest = !!latestTitle;
+
+      if (hasLatest) {
+        card.setAttribute("data-iu-culture-preview-has-latest", "1");
+        card.setAttribute("data-iu-culture-preview-latest-title", latestTitle);
+        card.setAttribute("data-iu-culture-preview-guard-topic", "kultura");
+      } else {
+        card.setAttribute("data-iu-culture-preview-has-latest", "0");
+        card.removeAttribute("data-iu-culture-preview-latest-title");
+        card.removeAttribute("data-iu-culture-preview-guard-topic");
+      }
+      if (secondTitle) {
+        card.setAttribute("data-iu-culture-preview-second-title", secondTitle);
+      } else {
+        card.removeAttribute("data-iu-culture-preview-second-title");
+      }
+
+      if (!hasLatest) {
+        elFresh.textContent = "";
+        elFresh.setAttribute("data-iu-culture-preview-has-freshness", "0");
+        card.removeAttribute("data-iu-culture-preview-latest-ms");
+        card.removeAttribute("data-iu-culture-preview-published-raw");
+        elT1.textContent = "Kultura / Akce se načítá";
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+        try {
+          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+        } catch (_) {}
+        try { iuCulturePreviewRegressionAudit(); } catch (_) {}
+        return;
+      }
+
+      elT1.textContent = latestTitle;
+      if (secondTitle) {
+        elT2.textContent = secondTitle;
+        try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      }
+
+      const publishedRaw = iuNewsPreviewPublishedRaw(latest);
+      const ms = picked.latestMs;
+      const fresh = iuCsRelativeFreshnessFromMs(ms, Date.now());
+      if (fresh) {
+        elFresh.textContent = fresh;
+        elFresh.setAttribute("data-iu-culture-preview-has-freshness", "1");
+        card.setAttribute("data-iu-culture-preview-latest-ms", String(ms));
+        if (publishedRaw) card.setAttribute("data-iu-culture-preview-published-raw", publishedRaw);
+        else card.removeAttribute("data-iu-culture-preview-published-raw");
+      } else {
+        elFresh.textContent = "";
+        elFresh.setAttribute("data-iu-culture-preview-has-freshness", "0");
+        card.removeAttribute("data-iu-culture-preview-latest-ms");
+        card.removeAttribute("data-iu-culture-preview-published-raw");
+      }
+
+      try {
+        if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+      } catch (_) {}
+      try { iuCulturePreviewRegressionAudit(); } catch (_) {}
+    }catch(_){}
+  }
+
   function iuSilverTallMediaPreviewsRefresh(){
     try{ iuNewsPreviewRefresh(); }catch(_){}
     try{ iuSportPreviewRefresh(); }catch(_){}
@@ -7220,6 +7503,7 @@ function buildVideoAsArticleCard(it) {
     try{ iuHealthPreviewRefresh(); }catch(_){}
     try{ iuTravelPreviewRefresh(); }catch(_){}
     try{ iuGamesPreviewRefresh(); }catch(_){}
+    try{ iuCulturePreviewRefresh(); }catch(_){}
   }
 
   function iuNewsPreviewInit(){
@@ -7233,10 +7517,12 @@ function buildVideoAsArticleCard(it) {
     try{ if (!iuIsProdHost()) window.iuHealthPreviewRefresh = iuHealthPreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuTravelPreviewRefresh = iuTravelPreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuGamesPreviewRefresh = iuGamesPreviewRefresh; }catch(_){}
+    try{ if (!iuIsProdHost()) window.iuCulturePreviewRefresh = iuCulturePreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuFinancePreviewRegressionAudit = iuFinancePreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuHealthPreviewRegressionAudit = iuHealthPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuTravelPreviewRegressionAudit = iuTravelPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuGamesPreviewRegressionAudit = iuGamesPreviewRegressionAudit; }catch(_){}
+    try{ if (!iuIsProdHost()) window.iuCulturePreviewRegressionAudit = iuCulturePreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuSilverTallMediaPreviewsRefresh = iuSilverTallMediaPreviewsRefresh; }catch(_){}
     try{ iuSilverTallMediaPreviewsRefresh(); }catch(_){}
     try{ setInterval(() => { try{ iuSilverTallMediaPreviewsRefresh(); }catch{} }, 30000); }catch(_){}
