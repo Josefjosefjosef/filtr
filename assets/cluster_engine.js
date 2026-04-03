@@ -7,6 +7,7 @@
  */
 
 import { ENTITY_LOOKUP } from "./entity_map.js";
+import { TOPIC_MAP } from "./topic_map.js";
 
 const DEFAULT_SIMILARITY = 0.6;
 const DEFAULT_HOURS = 6;
@@ -69,6 +70,33 @@ function normalizeEntityToken(w) {
  */
 function normalizeEntities(words) {
   return words.map((w) => normalizeEntityToken(w));
+}
+
+/**
+ * Přiřadí kanonické topicId podle klíčových slov v normalizovaném titulku.
+ * @param {string} title
+ * @returns {string | null}
+ */
+export function detectTopic(title) {
+  const norm = normalizeTitle(title);
+
+  let bestTopic = null;
+  let bestScore = 0;
+
+  for (const [topic, keywords] of Object.entries(TOPIC_MAP)) {
+    let score = 0;
+
+    for (const k of keywords) {
+      if (norm.includes(k)) score++;
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestTopic = topic;
+    }
+  }
+
+  return bestScore >= 2 ? bestTopic : null;
 }
 
 /** @param {string} title */
@@ -211,9 +239,14 @@ export function clusterArticles(articles, options = {}) {
         const articleTitle = String(article.title || "");
         const sem = semanticSimilarityMeta(articleTitle, primaryTitle);
 
-        if (sem.boosted > 0.5 && sem.entityOverlap === 0) continue;
+        const topicA = detectTopic(articleTitle);
+        const topicB = detectTopic(primaryTitle);
+        const sameTopic = topicA && topicB && topicA === topicB;
+
+        if (!sameTopic && sem.boosted > 0.5 && sem.entityOverlap === 0) continue;
 
         const match =
+          sameTopic ||
           sim >= simTh ||
           roughMatch(norm, cluster.norm) ||
           sem.boosted >= 0.5;
@@ -268,7 +301,13 @@ export function clusterAndPickFinalArticles(articles) {
   const rawCount = Array.isArray(articles) ? articles.length : 0;
   const urlDeduped = dedupeCanonicalUrl(articles);
   const clusters = clusterArticles(urlDeduped);
-  const final = clusters.map(pickBest).filter(Boolean);
+  const final = clusters
+    .map(pickBest)
+    .filter(Boolean)
+    .map((a) => ({
+      ...a,
+      topicId: detectTopic(String(a.title || "")),
+    }));
   return {
     final,
     clusters,
