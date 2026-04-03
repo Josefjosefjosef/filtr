@@ -3747,8 +3747,6 @@ try {
   const IU_TECH_SOURCES_LIST = ["Lupa.cz", "Root.cz", "Živě.cz", "MobilMania.cz", "CNews.cz"];
   const IU_BYDLENI_SOURCE_NAMES =
     /Deník Bydlení|Novinky Bydlení|Dům a zahrada|Recepty\.cz|Chatař|irozhlas.*životní/i;
-  const IU_CESTOVANI_SOURCE_NAMES =
-    /Novinky Cestování|Deník Cestování|Kudyznudy|Hedvábná|Travel Bible|irozhlas.*cestov/i;
 
   function iuArticleMatchesMediaTopicKey(item, key) {
     if (!key || key === "all") return true;
@@ -3798,6 +3796,22 @@ try {
     try {
       const u = String(url || "").toLowerCase();
       return u.indexOf("hedvabnastezka") !== -1;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /** Blokace článku včetně URL ve zdrojích (stejně jako purge_blocked_articles na serveru). */
+  function iuArticleIsHardBlocked(item) {
+    try {
+      if (!item || typeof item !== "object") return false;
+      if (iuIsHardBlockedArticleUrl(item.url)) return true;
+      const src = Array.isArray(item.sources) ? item.sources : [];
+      for (let i = 0; i < src.length; i++) {
+        const s = src[i];
+        if (s && iuIsHardBlockedArticleUrl(s.url || "")) return true;
+      }
+      return false;
     } catch (_) {
       return false;
     }
@@ -4554,6 +4568,7 @@ try {
       const name = (s?.name || "").trim();
       const url = (s?.url || "").trim();
       if (!name || !url) continue;
+      if (iuIsHardBlockedArticleUrl(url)) continue;
 
       // Normalizace URL: base URL bez query params a hash
       const urlBase = url.split('?')[0].split('#')[0].toLowerCase();
@@ -4571,25 +4586,17 @@ try {
 
     if (!src.length) return "";
 
+    /* 1 článek = 1 zdroj v UI — žádné „Píší také“ / multi-source řádek. */
     const primary = src[0];
-    const others = src.slice(1);
 
     const dateText = fmtDate(it.publishedAt || it.date || it.published || "");
     const datePart = dateText ? `<span class="iu-meta-date">${escapeHtml(dateText)}</span>` : "";
     const primaryUrl = normalizeArticleUrl(primary.url) || primary.url;
     const primaryPart = `<span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primaryUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(primary.name)}</a></span>`;
 
-    const othersPart = others.length
-      ? `<span class="iu-meta-others">Píší také: ${others.map(o => {
-          const ou = normalizeArticleUrl(o.url) || o.url;
-          return `<a class="iu-meta-link iu-meta-link-secondary" href="${escapeHtml(ou)}" target="_blank" rel="noopener noreferrer">${escapeHtml(o.name)}</a>`;
-        }).join(", ")}</span>`
-      : "";
-
     const sep = datePart ? `<span class="iu-meta-sep"> | </span>` : "";
-    const sep2 = othersPart ? `<span class="iu-meta-sep"> | </span>` : "";
 
-    return `<div class="iu-meta-line">${datePart}${sep}${primaryPart}${sep2}${othersPart}</div>`;
+    return `<div class="iu-meta-line">${datePart}${sep}${primaryPart}</div>`;
   }
 
   function buildArticleHtml(it) {
@@ -10904,7 +10911,7 @@ function buildVideoAsArticleCard(it) {
       try {
         sanitizedArticles = sanitizedArticles.filter((item) => {
           if (!item) return false;
-          if (iuIsHardBlockedArticleUrl(item.url)) return false;
+          if (iuArticleIsHardBlocked(item)) return false;
           return !(
             iuArticleMatchesMediaTopicKey(item, "tech") ||
             iuArticleMatchesMediaTopicKey(item, "bydleni")
