@@ -196,6 +196,32 @@ async function runSmoke() {
     if (!travelProbe || !travelProbe.ok) {
       fail(`Travel preview regression: ${JSON.stringify(travelProbe)}`);
     }
+    try {
+      await page.waitForSelector("#iuGamesPreviewCard", { timeout: 10000 });
+    } catch (e) {
+      fail(`Games preview card missing: ${e && e.message ? e.message : String(e)}`);
+    }
+    const gamesProbe = await page.evaluate(() => {
+      const card = document.getElementById("iuGamesPreviewCard");
+      if (!card) return { ok: false, reason: "no_card" };
+      if (card.tagName !== "BUTTON" || card.getAttribute("type") !== "button") return { ok: false, reason: "not_button" };
+      const nBad = card.querySelectorAll(".iuNewsPreviewBadge, .iuSportPreviewLiveBadge").length;
+      if (nBad !== 0) return { ok: false, reason: "extra_badge", nBad };
+      const badge = card.querySelector(".iu-previewBadge--games");
+      if (!badge || String(badge.textContent || "").trim() !== "Hry") return { ok: false, reason: "badge" };
+      const img = document.getElementById("iuGamesPreviewImage");
+      const src = img ? String(img.getAttribute("src") || "") : "";
+      if (src.indexOf("hry-default.jpg.jpeg") < 0) return { ok: false, reason: "img", src };
+      const titles = document.getElementById("iuGamesPreviewTitles");
+      if (!titles) return { ok: false, reason: "titles_host" };
+      const slots = titles.querySelectorAll("[data-iu-games-preview-title-1], [data-iu-games-preview-title-2]");
+      if (slots.length !== 2) return { ok: false, reason: "title_slots", n: slots.length };
+      if (card.getAttribute("data-iu-games-route") !== "hry") return { ok: false, reason: "route" };
+      return { ok: true };
+    });
+    if (!gamesProbe || !gamesProbe.ok) {
+      fail(`Games preview regression: ${JSON.stringify(gamesProbe)}`);
+    }
     await page.click("#iuFinancePreviewCard");
     await page.waitForTimeout(500);
     const afterFinanceClick = page.url();
@@ -221,6 +247,16 @@ async function runSmoke() {
     const afterTravelClick = page.url();
     if (afterTravelClick.indexOf("section=travel") === -1 || afterTravelClick.indexOf("mode=media") === -1) {
       fail(`Travel preview click did not set section=travel&mode=media: ${afterTravelClick}`);
+    }
+
+    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await page.waitForTimeout(800);
+    await page.waitForSelector("#iuGamesPreviewCard", { timeout: 10000 });
+    await page.click("#iuGamesPreviewCard");
+    await page.waitForTimeout(500);
+    const afterGamesClick = page.url();
+    if (afterGamesClick.indexOf("section=hry") === -1) {
+      fail(`Games preview click did not set section=hry: ${afterGamesClick}`);
     }
 
     const navSelectors = ["a.iu-leftNavItem", "a[data-rail]", ".iuLeftNav a", "nav a"];
