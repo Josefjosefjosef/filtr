@@ -26,11 +26,33 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+          echo "[CLOSEOUT] merged_at_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "[CLOSEOUT] pr_number=${{ github.event.pull_request.number }}"
+          echo "[CLOSEOUT] merge_commit_sha=${{ github.event.pull_request.merge_commit_sha }}"
           PR_NUM="${{ github.event.pull_request.number }}"
           REPO="${{ github.repository }}"
           if ! gh api "repos/${REPO}/pulls/${PR_NUM}/files" --paginate --jq '.[].filename' | grep -q '^projects/data/'; then
             echo "SKIP: no projects/data files in PR #${PR_NUM}"
             exit 0
           fi
+          echo "[CLOSEOUT] publish_dispatch_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           gh workflow run pages.yml --ref main --repo "${REPO}"
           echo "OK: Dispatched pages.yml for merged data PR #${PR_NUM}"
+
+      - name: Job summary (telemetry)
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "## Pages deploy after data PR merge — closeout telemetry"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| pr_number | ${{ github.event.pull_request.number }} |"
+            echo "| merge_commit_sha | ${{ github.event.pull_request.merge_commit_sha }} |"
+            echo "| this_run_id | ${{ github.run_id }} |"
+            echo "| this_run_url | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |"
+            echo ""
+            echo "Triggers Pages publish immediately after merge (pull_request closed); scheduled **Pages publish from main data** remains fallback."
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -245,22 +245,77 @@ jobs:
           gh pr merge "$NUM" --auto --squash
           echo "[AUTO-MERGE] Enabled for PR #$NUM"
 
-      - name: Deploy summary
+      - name: Closeout telemetry (build + PR state + chain facts)
         if: always()
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+          BUILD_AT="${{ steps.capture_ts.outputs.generated_at }}"
+          RUN_ID="${{ github.run_id }}"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          NOW_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "[CHAIN] update_articles_run_id=$RUN_ID"
+          echo "[CHAIN] update_articles_run_url=$RUN_URL"
+          echo "[CHAIN] build_generatedAt=$BUILD_AT"
+          echo "[CHAIN] telemetry_captured_utc=$NOW_UTC"
           echo "[DEPLOY] data_changed=${{ steps.no_diff.outputs.data_changed }}"
           echo "[DEPLOY] commit_skipped=${{ steps.no_diff.outputs.commit_skipped }}"
           echo "[DEPLOY] push_skipped=${{ steps.no_diff.outputs.push_skipped }}"
           echo "[DEPLOY] pr_skipped=${{ steps.no_diff.outputs.pr_skipped }}"
           echo "[DEPLOY] direct_push_to_main=false"
-          echo "prMergedSameCycle=false"
-          echo "sameCyclePending=false"
-          echo "deployVerifyRan=false"
-          echo "wasPublishedInSameCycle=false"
-          echo "[PUBLISH] Closeout path: merge data PR -> main updates projects/data -> 'Pages publish from main data' (schedule */5 min, GitHub minimum) compares main generatedAt vs prod and dispatches pages.yml when stale."
-          echo "[PUBLISH] Optional: pages-on-data-pr-merge.yml fires on pull_request merged when the merge is not attributed to GITHUB_TOKEN-only automation (otherwise rely on the scheduled publish job above)."
+          PR_NUM="${{ steps.pr.outputs.pr_number }}"
+          if [ -n "$PR_NUM" ]; then
+            JSON=$(gh pr view "$PR_NUM" --json number,updatedAt,state,mergedAt,mergeable,mergeStateStatus,autoMergeRequest,url 2>/dev/null || echo "{}")
+            PR_UPDATED=$(echo "$JSON" | jq -r '.updatedAt // empty')
+            PR_STATE=$(echo "$JSON" | jq -r '.state // empty')
+            PR_MERGED_AT=$(echo "$JSON" | jq -r '.mergedAt // empty')
+            MERGEABLE=$(echo "$JSON" | jq -r '.mergeable // empty')
+            MERGE_STATE=$(echo "$JSON" | jq -r '.mergeStateStatus // empty')
+            AUTO_MERGE=$(echo "$JSON" | jq -r 'if (.autoMergeRequest != null) then "true" else "false" end')
+            PR_URL=$(echo "$JSON" | jq -r '.url // empty')
+            echo "[PR] number=$PR_NUM url=$PR_URL"
+            echo "$JSON" | jq -r '"[PR] updatedAt=\(.updatedAt // "n/a") state=\(.state // "n/a") mergedAt=\(.mergedAt // "n/a") mergeable=\(.mergeable // "n/a") mergeStateStatus=\(.mergeStateStatus // "n/a")"'
+            echo "pr_number=$PR_NUM"
+            echo "pr_updatedAt=$PR_UPDATED"
+            echo "pr_state=$PR_STATE"
+            echo "pr_mergedAt=$PR_MERGED_AT"
+            echo "pr_mergeable=$MERGEABLE"
+            echo "pr_mergeStateStatus=$MERGE_STATE"
+            echo "pr_autoMerge_enabled=$AUTO_MERGE"
+          else
+            echo "[PR] no PR number in this run (no push or PR step skipped)"
+          fi
+          echo "[CHAIN] prMergedSameCycle=false"
+          echo "[CHAIN] prMergedSameCycle_reason=merge_is_async_after_required_checks_smoke_layout_repo_guard"
+          echo "[CHAIN] wasPublishedInSameCycle=false"
+          echo "[CHAIN] wasPublishedInSameCycle_reason=this_job_ends_before_merge_and_pages_deploy_complete_see_pages_on_data_pr_merge_and_after_merge_articles_freshness"
+          echo "[PUBLISH] Primary: pages-on-data-pr-merge.yml (pull_request closed) + after-merge-articles-freshness dispatches pages.yml; fallback: Pages publish from main data (schedule */5 + workflow_run after merge closeout)."
+          {
+            echo "## Update articles data — closeout telemetry (same-run)"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| build_generatedAt | ${BUILD_AT:-n/a} |"
+            echo "| this_workflow_run_id | $RUN_ID |"
+            echo "| this_workflow_run_url | $RUN_URL |"
+            echo "| data_changed | ${{ steps.no_diff.outputs.data_changed }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "${PR_NUM:-}" ]; then
+            {
+              echo "| pr_number | $PR_NUM |"
+              echo "| pr_updatedAt (API) | ${PR_UPDATED:-n/a} |"
+              echo "| pr_mergeStateStatus | ${MERGE_STATE:-n/a} |"
+              echo "| pr_autoMerge_requested | ${AUTO_MERGE:-n/a} |"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          {
+            echo "| prMergedSameCycle | false (merge async) |"
+            echo "| wasPublishedInSameCycle | false (publish after merge) |"
+            echo ""
+            echo "Next: required checks → auto-merge → **Pages deploy after data PR merge** / **After-merge articles freshness** → prod poll."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Notify completion (beep)
         if: always()
