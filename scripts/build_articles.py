@@ -162,6 +162,13 @@ VALID_SECTIONS = {"pocasi","doprava","aktualne","krimi","finance","sport","zdrav
 # Kanonické CZ vertikály — RSS topic v registru musí přesně odpovídat (infer_section se přeskakuje).
 FORCED_FEED_TOPICS = frozenset({"hry", "kultura", "veda", "vzdelavani", "cestovani"})
 
+# MODEL_2: vertical purity guard — kandidátní sekce jako dosud, vertikály mohou spadnout do aktualne nebo být vyřazeny.
+VERTICAL_PURITY_SECTIONS = frozenset({"vzdelavani", "cestovani", "veda", "kultura", "hry"})
+VERTICAL_STALE_MAX_AGE_HOURS = 168
+# Cestování: dealové články často >7 dní v RSS; 168h by vyprázdnilo sekci (viz produktové důkazy).
+VERTICAL_STALE_MAX_AGE_HOURS_CESTOVANI = 720
+EXTREME_ARCHIVE_DAYS_VERTICAL = 365
+
 # Postupné uvolňování do veřejného JSON (per sekce za běh buildu)
 SECTION_RELEASE_STATE_PATH = os.path.join(OUTPUT_DIR, "section_release_state.json")
 MAX_SECTION_RELEASE_PER_RUN = 5
@@ -833,6 +840,254 @@ def stable_section(section: str) -> str:
     if s not in VALID_SECTIONS:
         return "aktualne"
     return s
+
+
+def _purity_haystack(title: str, url: str) -> str:
+    return ((url or "") + " " + (title or "")).lower()
+
+
+def _purity_has_any(hay: str, needles: tuple[str, ...]) -> bool:
+    return any(n in hay for n in needles)
+
+
+def vertical_purity_final_section(
+    candidate_section: str,
+    title: str,
+    url: str,
+    dt: datetime,
+    now: datetime | None = None,
+) -> str | None:
+    """
+    MODEL_2: vertikální kandidát (forced nebo infer) projde deterministickým guardem.
+    Vrací finální sekci, nebo None = položku neappendovat (extrémní archiv ve vertikále).
+    """
+    sec = stable_section(candidate_section)
+    if sec not in VERTICAL_PURITY_SECTIONS:
+        return sec
+
+    now = now or datetime.now(timezone.utc)
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+
+    age_sec = (now - dt).total_seconds()
+    if age_sec > EXTREME_ARCHIVE_DAYS_VERTICAL * 86400:
+        return None
+
+    stale_limit_h = (
+        VERTICAL_STALE_MAX_AGE_HOURS_CESTOVANI
+        if sec == "cestovani"
+        else VERTICAL_STALE_MAX_AGE_HOURS
+    )
+    if age_sec > stale_limit_h * 3600:
+        return "aktualne"
+
+    hay = _purity_haystack(title, url)
+
+    if sec == "vzdelavani":
+        edu_ok = _purity_has_any(
+            hay,
+            (
+                "/skola",
+                "/vzdelavani",
+                "skola",
+                "škol",
+                "skol",
+                "matur",
+                "přijíma",
+                "prijima",
+                "univerzit",
+                "student",
+                "učitel",
+                "ucitel",
+                "školstv",
+                "skolst",
+                "vzdelav",
+                "vzděl",
+            ),
+        )
+        geo_bad = _purity_has_any(
+            hay,
+            (
+                "/zahranicni",
+                "zahranicni",
+                "válk",
+                "valk",
+                "armád",
+                "armad",
+                "tanker",
+                "írán",
+                "iran",
+                "rusko",
+                "ukrajin",
+                "nato",
+                "konflikt",
+                "sankc",
+            ),
+        )
+        if geo_bad and not edu_ok:
+            return "aktualne"
+        return sec
+
+    if sec == "cestovani":
+        trav_ok = _purity_has_any(
+            hay,
+            (
+                "/cestovani",
+                "letenk",
+                "dovol",
+                "hotel",
+                "ubytov",
+                "destinac",
+                "cestov",
+                "letišt",
+                "letist",
+                "aerolink",
+                "etihad",
+                "asie",
+                "vietnam",
+                "thajsk",
+                "dubai",
+            ),
+        )
+        bad = _purity_has_any(
+            hay,
+            (
+                "vražd",
+                "vrazd",
+                "soud",
+                "obžal",
+                "obzal",
+                "polic",
+                "nehoda",
+                "požár",
+                "pozar",
+                "vláda",
+                "vlada",
+                "volb",
+                "premiér",
+                "premier",
+            ),
+        )
+        if bad and not trav_ok:
+            return "aktualne"
+        return sec
+
+    if sec == "veda":
+        sci_ok = _purity_has_any(
+            hay,
+            (
+                "/veda",
+                "výzkum",
+                "vyzkum",
+                "vědc",
+                "vedc",
+                "studie",
+                "vesmír",
+                "vesmir",
+                "archeolog",
+                "objev",
+                "historie",
+                "histor",
+                "planeta",
+                "galax",
+                "fosil",
+                "přírod",
+                "prirod",
+            ),
+        )
+        sport_bad = _purity_has_any(
+            hay,
+            (
+                "mma",
+                "ufc",
+                "zápas",
+                "zapas",
+                "liga",
+                "trenér",
+                "trener",
+                "gól",
+                "gol",
+                "extraliga",
+                "fotbal",
+                "hokej",
+            ),
+        )
+        if sport_bad and not sci_ok:
+            return "aktualne"
+        return sec
+
+    if sec == "kultura":
+        cul_ok = _purity_has_any(
+            hay,
+            (
+                "/kultura",
+                "film",
+                "seriál",
+                "serial",
+                "hudb",
+                "divadl",
+                "kniha",
+                "festival",
+                "výstav",
+                "vystav",
+                "koncert",
+                "literatura",
+            ),
+        )
+        bad = _purity_has_any(
+            hay,
+            (
+                "policie",
+                "vražd",
+                "vrazd",
+                "soud",
+                "extraliga",
+                "fotbal",
+                "hokej",
+                "mma",
+            ),
+        )
+        if bad and not cul_ok:
+            return "aktualne"
+        return sec
+
+    if sec == "hry":
+        game_ok = _purity_has_any(
+            hay,
+            (
+                "/hry",
+                "gaming",
+                "gamer",
+                "playstation",
+                "xbox",
+                "nintendo",
+                "steam",
+                "konzole",
+                "videohra",
+                "videohry",
+                "call of duty",
+            ),
+        )
+        bad = _purity_has_any(
+            hay,
+            (
+                "mma",
+                "ufc",
+                "extraliga",
+                "fotbal",
+                "hokej",
+                "policie",
+                "vražd",
+                "vrazd",
+                "premiér",
+                "premier",
+            ),
+        )
+        if bad and not game_ok:
+            return "aktualne"
+        return sec
+
+    return sec
 
 
 def _parse_day_yyyy_mm_dd(day: str):
@@ -1845,6 +2100,11 @@ def main() -> int:
             else:
                 section = infer_section(link, title, fallback_topic=fallback_topic)
             section = stable_section(section)
+
+            purity_sec = vertical_purity_final_section(section, title, link, dt)
+            if purity_sec is None:
+                continue
+            section = stable_section(purity_sec)
 
             item = {
                 "section": section,
