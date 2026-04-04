@@ -1,9 +1,13 @@
-# Merges performed via GITHUB_TOKEN (e.g. update-articles auto-merge) do not trigger push workflows.
-# Path filters on pull_request closed can skip long-lived automation PRs; verify files via API instead.
+# ROOT_CAUSE (P0): pull_request alone can be unreliable for long-lived automation branches where the
+# merge ref / workflow resolution does not consistently trigger after squash auto-merge; merges
+# performed via the default GITHUB_TOKEN also do not trigger push → pages.yml downstream.
+# FIX: use pull_request_target so this workflow always runs from default branch (main) context on
+# PR closed, then dispatch pages.yml after verifying projects/data (no checkout of PR head code).
+# Security: only merged PRs; steps use gh API + workflow dispatch — do not checkout untrusted PR code.
 name: Pages deploy after data PR merge
 
 on:
-  pull_request:
+  pull_request_target:
     types: [closed]
     branches:
       - main
@@ -11,6 +15,7 @@ on:
 permissions:
   actions: write
   pull-requests: read
+  contents: read
 
 concurrency:
   group: pages-dispatch-after-data-merge
@@ -26,6 +31,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+          echo "[CLOSEOUT] trigger_event=${{ github.event_name }}"
           echo "[CLOSEOUT] merged_at_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "[CLOSEOUT] pr_number=${{ github.event.pull_request.number }}"
           echo "[CLOSEOUT] merge_commit_sha=${{ github.event.pull_request.merge_commit_sha }}"
@@ -38,6 +44,13 @@ jobs:
           echo "[CLOSEOUT] publish_dispatch_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           gh workflow run pages.yml --ref main --repo "${REPO}"
           echo "OK: Dispatched pages.yml for merged data PR #${PR_NUM}"
+          # Best-effort: newest Pages deploy run on main (may still be queued)
+          sleep 3
+          PAGES_RUN=$(gh run list --workflow "Deploy to GitHub Pages" --branch main --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || echo "")
+          echo "[CLOSEOUT] pages_workflow_run_id=${PAGES_RUN:-pending}"
+          if [ -n "${PAGES_RUN:-}" ]; then
+            echo "[CLOSEOUT] pages_workflow_url=${GITHUB_SERVER_URL}/${REPO}/actions/runs/${PAGES_RUN}"
+          fi
 
       - name: Job summary (telemetry)
         if: always()
@@ -49,10 +62,11 @@ jobs:
             echo ""
             echo "| Field | Value |"
             echo "| --- | --- |"
+            echo "| trigger | ${{ github.event_name }} (pull_request_target = workflow from main) |"
             echo "| pr_number | ${{ github.event.pull_request.number }} |"
             echo "| merge_commit_sha | ${{ github.event.pull_request.merge_commit_sha }} |"
             echo "| this_run_id | ${{ github.run_id }} |"
             echo "| this_run_url | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |"
             echo ""
-            echo "Triggers Pages publish immediately after merge (pull_request closed); scheduled **Pages publish from main data** remains fallback."
+            echo "Primary automatic publish path after data PR merge. **Pages publish from main data** (cron */5) remains fallback if this ever skips."
           } >> "$GITHUB_STEP_SUMMARY"
