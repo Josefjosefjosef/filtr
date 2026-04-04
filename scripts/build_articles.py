@@ -8,6 +8,7 @@ import re
 import hashlib
 import sys
 import time
+import unicodedata
 from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
@@ -104,6 +105,11 @@ MAX_OUTPUT_VIDEOS = 120
 
 # Jaccard práh pro shlukování "stejného tématu" napříč médii (titulek podobný)
 CLUSTER_JACCARD_THRESHOLD = 0.56
+
+# --- Conservative story clustering (post second-layer; same section + high-confidence only) ---
+STORY_CLUSTER_JACCARD_STRONG = 0.34
+STORY_CLUSTER_JACCARD_WEAK = 0.25
+STORY_CLUSTER_MIN_SHARED_TOKENS_WEAK = 4
 
 STOPWORDS_CS = {
     "a","i","v","ve","na","do","z","ze","u","o","od","po","za","pro","se","si","k","ke","s","by","aby","že",
@@ -1274,6 +1280,136 @@ def _apply_second_layer_targeted_section_cleanup(article: dict) -> dict:
     return article
 
 
+_STOPWORDS_CLUSTER_FOLD = None
+
+
+def _fold_cs_for_cluster(s: str) -> str:
+    if not s:
+        return ""
+    nfd = unicodedata.normalize("NFD", s)
+    ascii_like = "".join(c for c in nfd if unicodedata.category(c) != "Mn")
+    return ascii_like.lower()
+
+
+def _stopwords_cluster_fold():
+    global _STOPWORDS_CLUSTER_FOLD
+    if _STOPWORDS_CLUSTER_FOLD is None:
+        _STOPWORDS_CLUSTER_FOLD = frozenset(_fold_cs_for_cluster(w) for w in STOPWORDS_CS)
+    return _STOPWORDS_CLUSTER_FOLD
+
+
+def _tokenize_story_cluster_title(title: str) -> set:
+    """Folded tokens for conservative same-story match (independent of ingest cluster tokens)."""
+    t = clean_title_basic(title or "")
+    t = _fold_cs_for_cluster(t)
+    t = re.sub(r"[^0-9a-z]+", " ", t, flags=re.IGNORECASE)
+    parts = [p.strip() for p in t.split() if p.strip()]
+    sw = _stopwords_cluster_fold()
+    out = set()
+    for p in parts:
+        if len(p) <= 2:
+            continue
+        if p in sw:
+            continue
+        out.add(p)
+    return out
+
+
+def _story_pair_high_confidence_topic(t1: str, t2: str) -> bool:
+    a = _tokenize_story_cluster_title(t1)
+    b = _tokenize_story_cluster_title(t2)
+    if not a or not b:
+        return False
+    sim = jaccard(a, b)
+    if sim >= STORY_CLUSTER_JACCARD_STRONG:
+        return True
+    inter = len(a & b)
+    if sim >= STORY_CLUSTER_JACCARD_WEAK and inter >= STORY_CLUSTER_MIN_SHARED_TOKENS_WEAK:
+        return True
+    return False
+
+
+def _article_url_canonical(a: dict) -> str:
+    u = str(a.get("url") or "").strip()
+    if not u:
+        src0 = (a.get("sources") or [{}])[0]
+        if isinstance(src0, dict):
+            u = str(src0.get("url") or "").strip()
+    return u
+
+
+def _pick_story_cluster_winner(group: list) -> dict:
+    """Deterministic: displayScore, publishedAt, source weight, title length, URL."""
+    if len(group) == 1:
+        return group[0]
+
+    def sort_key(ad: dict):
+        ds = float(compute_display_score(ad))
+        pa = str(ad.get("publishedAt") or "")
+        sw = float(ad.get("sourceDisplayWeight") or 1.0)
+        title = str(ad.get("title") or "").strip()
+        tq = min(200, max(0, len(title)))
+        u = _article_url_canonical(ad)
+        return (ds, pa, sw, tq, u)
+
+    return max(group, key=sort_key)
+
+
+def _apply_conservative_topic_clustering(articles: list) -> list:
+    """
+    MODEL_3: same section only, different URLs, high-confidence title match → one winner.
+    Does not change sections (CLUSTERING_MUST_NOT_OVERRIDE_SECTION_TRUTH).
+    """
+    if not articles:
+        return articles
+    clean = [a for a in articles if isinstance(a, dict)]
+    if len(clean) <= 1:
+        return clean
+
+    by_sec: dict[str, list] = defaultdict(list)
+    for a in clean:
+        sec = stable_section(str(a.get("topic") or a.get("section") or "aktualne"))
+        by_sec[sec].append(a)
+
+    winners = []
+    for _sec, arts in by_sec.items():
+        n = len(arts)
+        if n == 1:
+            winners.append(arts[0])
+            continue
+        uf = list(range(n))
+
+        def uf_find(x: int) -> int:
+            r = x
+            while uf[r] != r:
+                r = uf[r]
+            return r
+
+        def uf_union(x: int, y: int) -> None:
+            rx, ry = uf_find(x), uf_find(y)
+            if rx != ry:
+                uf[rx] = ry
+
+        for i in range(n):
+            for j in range(i + 1, n):
+                if _article_url_canonical(arts[i]) == _article_url_canonical(arts[j]):
+                    continue
+                t1 = str(arts[i].get("title") or "")
+                t2 = str(arts[j].get("title") or "")
+                if _story_pair_high_confidence_topic(t1, t2):
+                    uf_union(i, j)
+
+        clusters: dict[int, list] = defaultdict(list)
+        for i in range(n):
+            clusters[uf_find(i)].append(arts[i])
+
+        for _r, grp in clusters.items():
+            winners.append(_pick_story_cluster_winner(grp))
+
+    winners.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+    return winners
+
+
 def _parse_day_yyyy_mm_dd(day: str):
     try:
         s = str(day or "").strip()
@@ -2412,6 +2548,7 @@ def main() -> int:
     merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
     merged_articles = [a for a in merged_articles if a is not None]
     merged_articles = [_apply_second_layer_targeted_section_cleanup(a) for a in merged_articles]
+    merged_articles = _apply_conservative_topic_clustering(merged_articles)
     for a in merged_articles:
         a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
         a["displayScore"] = compute_display_score(a)
