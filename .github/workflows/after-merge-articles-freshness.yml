@@ -13,7 +13,7 @@ on:
 
 permissions:
   contents: read
-  actions: read
+  actions: write
 
 concurrency:
   group: after-merge-articles-freshness
@@ -29,6 +29,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - name: Dispatch pages.yml (post-merge closeout)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "[CLOSEOUT] merge_commit_sha=${{ github.sha }}"
+          echo "[CLOSEOUT] publish_dispatch_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          gh workflow run pages.yml --ref main --repo "${{ github.repository }}"
+          echo "[CLOSEOUT] pages.yml dispatched (covers cases where push-to-main does not trigger Deploy to GitHub Pages)"
+
       - name: Checkout (merge commit)
         uses: actions/checkout@v4
         with:
@@ -233,6 +243,30 @@ jobs:
           echo "staleAfterDeploy=${{ steps.live_match.outputs.stale_after_deploy }}"
           echo "freshnessProdPass=${{ steps.live_match.outputs.freshness_prod_pass }}"
           echo "status=${{ steps.live_match.outputs.status }}"
+
+      - name: Closeout chain summary (GitHub Step Summary)
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          GEN_AT=""
+          if [ -f projects/data/articles.json ]; then
+            GEN_AT=$(jq -r '.generatedAt // empty' projects/data/articles.json)
+          fi
+          {
+            echo "## After-merge articles freshness — closeout telemetry"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| merge_commit_sha | ${{ github.sha }} |"
+            echo "| repo_articles_generatedAt | ${GEN_AT} |"
+            echo "| pages_run_id | ${{ steps.pages_deploy.outputs.pages_run_id }} |"
+            echo "| pages_deploy_url | ${{ steps.pages_deploy.outputs.pages_deploy_url }} |"
+            echo "| freshness_prod_pass | ${{ steps.live_match.outputs.freshness_prod_pass }} |"
+            echo "| propagation_attempts | ${{ steps.live_match.outputs.propagation_attempts }} |"
+            echo ""
+            echo "Deltas: use log timestamps above for merge → Pages finished → prod visible; this job polls prod until JSON hash matches repo."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Notify completion (beep)
         if: always()
