@@ -45,6 +45,7 @@ from iu_registry import (
     mark_feeds_fetched,
     merge_article_lists,
     purge_blocked_articles,
+    registry_active_entries,
     save_scheduler_state,
     select_feeds_for_tick,
 )
@@ -850,6 +851,33 @@ def _purity_has_any(hay: str, needles: tuple[str, ...]) -> bool:
     return any(n in hay for n in needles)
 
 
+def _vzdelavani_edu_positive(hay: str) -> bool:
+    """Pozitivní signál školy / vzdělávání — při něm nestřílíme stale downgrade (RSS může mít týdny staré edu články)."""
+    return _purity_has_any(
+        hay,
+        (
+            "/skola",
+            "/vzdelavani",
+            "skola",
+            "škol",
+            "skol",
+            "matur",
+            "přijíma",
+            "prijima",
+            "univerzit",
+            "student",
+            "učitel",
+            "ucitel",
+            "školstv",
+            "skolst",
+            "vzdelav",
+            "vzděl",
+            "metodick",
+            "desegreg",
+        ),
+    )
+
+
 def vertical_purity_final_section(
     candidate_section: str,
     title: str,
@@ -873,38 +901,20 @@ def vertical_purity_final_section(
     if age_sec > EXTREME_ARCHIVE_DAYS_VERTICAL * 86400:
         return None
 
+    hay = _purity_haystack(title, url)
+
     stale_limit_h = (
         VERTICAL_STALE_MAX_AGE_HOURS_CESTOVANI
         if sec == "cestovani"
         else VERTICAL_STALE_MAX_AGE_HOURS
     )
-    if age_sec > stale_limit_h * 3600:
+    # vzdelavani: u jasných edu signálů neřežeme jen stářím (jinak sekce spadne na 0 při zdravém obsahu).
+    skip_stale_for_edu = sec == "vzdelavani" and _vzdelavani_edu_positive(hay)
+    if not skip_stale_for_edu and age_sec > stale_limit_h * 3600:
         return "aktualne"
 
-    hay = _purity_haystack(title, url)
-
     if sec == "vzdelavani":
-        edu_ok = _purity_has_any(
-            hay,
-            (
-                "/skola",
-                "/vzdelavani",
-                "skola",
-                "škol",
-                "skol",
-                "matur",
-                "přijíma",
-                "prijima",
-                "univerzit",
-                "student",
-                "učitel",
-                "ucitel",
-                "školstv",
-                "skolst",
-                "vzdelav",
-                "vzděl",
-            ),
-        )
+        edu_ok = _vzdelavani_edu_positive(hay)
         geo_bad = _purity_has_any(
             hay,
             (
@@ -1088,6 +1098,36 @@ def vertical_purity_final_section(
         return sec
 
     return sec
+
+
+def _apply_output_vertical_purity(article: dict) -> dict | None:
+    """
+    Po merge: stejný MODEL_2 guard na finální záznam.
+    Nutné, aby staré sekce u URL přežívajících z předchozího articles.json
+    neobcházely ingest guard (merge preferuje nové položky jen když URL přijde v tomto běhu).
+    """
+    if not isinstance(article, dict):
+        return article
+    sec = str(article.get("topic") or article.get("section") or "aktualne")
+    title = str(article.get("title") or "")
+    url = str(article.get("url") or "").strip()
+    if not url:
+        src0 = (article.get("sources") or [{}])[0]
+        if isinstance(src0, dict):
+            url = str(src0.get("url") or "").strip()
+    try:
+        dt = datetime.fromisoformat(str(article.get("publishedAt") or "").replace("Z", "+00:00"))
+    except Exception:
+        dt = datetime.now(timezone.utc)
+    fin = vertical_purity_final_section(sec, title, url, dt)
+    if fin is None:
+        return None
+    fin = stable_section(fin)
+    if fin == stable_section(sec):
+        return article
+    o = dict(article)
+    o["topic"] = o["section"] = fin
+    return o
 
 
 def _parse_day_yyyy_mm_dd(day: str):
@@ -1901,7 +1941,12 @@ def main() -> int:
 
     registry = load_registry(REGISTRY_PATH)
     sched_state = load_scheduler_state(SCHEDULER_STATE_PATH)
-    picked, sched_state = select_feeds_for_tick(registry, sched_state)
+    # IU_BUILD_ALL_FEEDS=1: jeden běh přes všechny aktivní registry feedy (ne 2–3/tick).
+    _full_feed = os.getenv("IU_BUILD_ALL_FEEDS", "").strip().lower() in ("1", "true", "yes")
+    if _full_feed:
+        picked = registry_active_entries(registry)
+    else:
+        picked, sched_state = select_feeds_for_tick(registry, sched_state)
     grouped = collapse_feeds_by_url(picked)
     feed_items = []
     for _url, entry_group in grouped:
@@ -2220,6 +2265,8 @@ def main() -> int:
     merged_articles = merge_article_lists(prev_list, out_articles, max(500, MAX_OUTPUT_ARTICLES * 3))
     merged_articles = purge_blocked_articles(merged_articles)
     merged_articles = [remap_article_section_if_url_mismatch(a) for a in merged_articles]
+    merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
+    merged_articles = [a for a in merged_articles if a is not None]
     for a in merged_articles:
         a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
         a["displayScore"] = compute_display_score(a)
