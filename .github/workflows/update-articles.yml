@@ -26,7 +26,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Build is fast; includes optional poll until data PR auto-merge + Pages dispatch (same GITHUB_TOKEN as check dispatch).
+    timeout-minutes: 60
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -245,6 +246,42 @@ jobs:
           gh pr merge "$NUM" --auto --squash
           echo "[AUTO-MERGE] Enabled for PR #$NUM"
 
+      # pull_request(_target) closed does not reliably fire after bot/auto-merge; push to main also does not
+      # chain to pages.yml. Same-workflow gh workflow run already works for smoke/layout/repo-guard — reuse for Pages.
+      - name: Wait for merge then dispatch Pages (same-run closeout, no manual workflow_dispatch)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true' && steps.pr.outputs.pr_number != ''
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          REPO="${{ github.repository }}"
+          echo "[CLOSEOUT] poll_merge_publish_pr=$NUM"
+          for attempt in $(seq 1 90); do
+            MERGED_AT=$(gh pr view "$NUM" --json mergedAt --jq '.mergedAt // empty' 2>/dev/null || echo "")
+            if [ -n "$MERGED_AT" ]; then
+              echo "[CLOSEOUT] merged_at=$MERGED_AT"
+              SHA=$(gh pr view "$NUM" --json mergeCommit --jq '.mergeCommit.oid // empty' 2>/dev/null || echo "")
+              echo "[CLOSEOUT] merge_commit_sha=$SHA"
+              echo "[CLOSEOUT] publish_dispatch_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+              gh workflow run pages.yml --ref main --repo "$REPO"
+              sleep 3
+              PAGES_RUN=$(gh run list --workflow "Deploy to GitHub Pages" --branch main --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || echo "")
+              echo "[CLOSEOUT] pages_workflow_run_id=${PAGES_RUN:-pending}"
+              exit 0
+            fi
+            STATE=$(gh pr view "$NUM" --json state --jq '.state // empty' 2>/dev/null || echo "")
+            if [ "$STATE" = "CLOSED" ]; then
+              echo "[CLOSEOUT] PR #$NUM closed without merge record — skip Pages dispatch"
+              exit 0
+            fi
+            echo "[CLOSEOUT] poll_attempt=$attempt state=${STATE:-unknown} waiting_for_merge"
+            sleep 30
+          done
+          echo "[CLOSEOUT] WARN: timeout waiting for merge (45m); Pages publish from main data (cron) will catch up"
+          exit 0
+
       - name: Closeout telemetry (build + PR state + chain facts)
         if: always()
         shell: bash
@@ -289,9 +326,9 @@ jobs:
           fi
           echo "[CHAIN] prMergedSameCycle=false"
           echo "[CHAIN] prMergedSameCycle_reason=merge_is_async_after_required_checks_smoke_layout_repo_guard"
-          echo "[CHAIN] wasPublishedInSameCycle=false"
-          echo "[CHAIN] wasPublishedInSameCycle_reason=this_job_ends_before_merge_and_pages_deploy_complete_see_pages_on_data_pr_merge_and_after_merge_articles_freshness"
-          echo "[PUBLISH] Primary: pages-on-data-pr-merge.yml (pull_request closed) + after-merge-articles-freshness dispatches pages.yml; fallback: Pages publish from main data (schedule */5 + workflow_run after merge closeout)."
+          echo "[CHAIN] wasPublishedInSameCycle=see_step_wait_for_merge_then_dispatch_pages"
+          echo "[CHAIN] wasPublishedInSameCycle_note=same_run_poll_dispatches_pages_after_mergedAt_non_null"
+          echo "[PUBLISH] Primary: Wait for merge then dispatch Pages (this workflow) + pages-on-data-pr-merge (pull_request_target); fallback: Pages publish from main data (cron */5)."
           {
             echo "## Update articles data — closeout telemetry (same-run)"
             echo ""
@@ -311,10 +348,10 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
           {
-            echo "| prMergedSameCycle | false (merge async) |"
-            echo "| wasPublishedInSameCycle | false (publish after merge) |"
+            echo "| prMergedSameCycle | false until merged (poll step dispatches Pages after merge) |"
+            echo "| wasPublishedInSameCycle | see log: Wait for merge then dispatch Pages |"
             echo ""
-            echo "Next: required checks → auto-merge → **Pages deploy after data PR merge** / **After-merge articles freshness** → prod poll."
+            echo "Merge async: poll step waits for mergedAt, then gh workflow run pages.yml (no manual workflow_dispatch)."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Notify completion (beep)
