@@ -1130,6 +1130,150 @@ def _apply_output_vertical_purity(article: dict) -> dict | None:
     return o
 
 
+# --- Second layer: targeted post-merge section cleanup (MODEL_3) ---
+# Runs after first-layer vertical purity. Does not change merge_article_lists contract.
+# Uses vertical_purity_final_section(...) as gate for vertical targets so we never override
+# intentional first-layer downgrades (tanker-like cases must not be re-promoted via loose URL rules).
+
+
+def _second_layer_is_nato_babis_aktualne_title(title: str) -> bool:
+    """Known prod case: NATO summit + Babiš must stay in aktualne; do not reclassify."""
+    t = (title or "").lower()
+    if "nato" not in t:
+        return False
+    if "babiš" not in t and "babis" not in t:
+        return False
+    return True
+
+
+def _second_layer_blocks_tanker_style_cestovani_promotion(title: str, url: str) -> bool:
+    """
+    Intentional first-layer story: tanker + aviation fuel — must NOT be forced into cestovani
+    from aktualne/finance by path-like rules (URL may lack /cestovani/).
+    """
+    hay = _purity_haystack(title, url)
+    if "tanker" in hay and ("palivem" in hay or "paliva" in hay or "leteck" in hay or "leteckým" in hay):
+        return True
+    if "do evropy" in hay and "připluje" in hay and "tanker" in hay:
+        return True
+    if "do evropy" in hay and "pripluje" in hay and "tanker" in hay:
+        return True
+    return False
+
+
+def _second_layer_path_has_cestovani_segment(path: str) -> bool:
+    pl = (path or "").lower()
+    return "/cestovani/" in pl or pl.rstrip("/").endswith("/cestovani") or "/cestovan" in pl
+
+
+def _second_layer_sport_url_high_confidence(url: str) -> bool:
+    host, path = _host_path(url or "")
+    u = (url or "").lower()
+    h = (host or "").lower()
+    if h.startswith("sport.") or h.startswith("isport."):
+        return True
+    if "mmamag.cz" in h or "fights.cz" in h:
+        return True
+    if "isport.blesk.cz" in u:
+        return True
+    for seg in ("/sport/", "/hokej/", "/fotbal/", "/tenis/", "/mma/", "/golf/"):
+        if seg in path.lower():
+            return True
+    return False
+
+
+def _second_layer_gaming_url_high_confidence(url: str, title: str) -> bool:
+    """Narrow: path /hry/ or known gaming outlet + title hints (no broad keyword net)."""
+    host, path = _host_path(url or "")
+    pl = path.lower()
+    if "/hry/" in pl or pl.rstrip("/").endswith("/hry"):
+        return True
+    if "indian-tv.cz" in (host or "").lower():
+        tl = (title or "").lower()
+        if any(
+            k in tl
+            for k in (
+                "xbox",
+                "playstation",
+                "nintendo",
+                "steam",
+                "videohra",
+                "videohry",
+                "gaming",
+                "microsoft",
+                "konzol",
+            )
+        ):
+            return True
+    return False
+
+
+def _second_layer_path_veda_high_confidence(path: str) -> bool:
+    pl = (path or "").lower()
+    return "/veda/" in pl or pl.rstrip("/").endswith("/veda")
+
+
+def _apply_second_layer_targeted_section_cleanup(article: dict) -> dict:
+    """
+    MODEL_3: high-confidence fixes for prev-only / history leaks only.
+    Order: cestovani path → sport URL → hry URL → /veda path. First match wins.
+    """
+    if not isinstance(article, dict):
+        return article
+    title = str(article.get("title") or "")
+    url = str(article.get("url") or "").strip()
+    if not url:
+        src0 = (article.get("sources") or [{}])[0]
+        if isinstance(src0, dict):
+            url = str(src0.get("url") or "").strip()
+    if not url:
+        return article
+
+    if _second_layer_is_nato_babis_aktualne_title(title):
+        return article
+
+    cur = stable_section(str(article.get("topic") or article.get("section") or "aktualne"))
+    try:
+        dt = datetime.fromisoformat(str(article.get("publishedAt") or "").replace("Z", "+00:00"))
+    except Exception:
+        dt = datetime.now(timezone.utc)
+
+    host, path = _host_path(url)
+
+    wrong_for_cestovani = cur in frozenset({"aktualne", "finance", "doprava", "krimi"})
+    if wrong_for_cestovani and _second_layer_path_has_cestovani_segment(path):
+        if not _second_layer_blocks_tanker_style_cestovani_promotion(title, url):
+            fin = vertical_purity_final_section("cestovani", title, url, dt)
+            if fin == "cestovani":
+                o = dict(article)
+                o["topic"] = o["section"] = "cestovani"
+                return o
+
+    wrong_for_sport = cur in frozenset({"aktualne", "doprava", "krimi"})
+    if wrong_for_sport and _second_layer_sport_url_high_confidence(url):
+        o = dict(article)
+        o["topic"] = o["section"] = "sport"
+        return o
+
+    wrong_for_hry = cur in frozenset({"aktualne", "sport", "doprava", "krimi"})
+    if wrong_for_hry and _second_layer_gaming_url_high_confidence(url, title):
+        fin = vertical_purity_final_section("hry", title, url, dt)
+        if fin == "hry":
+            o = dict(article)
+            o["topic"] = o["section"] = "hry"
+            return o
+
+    wrong_for_veda = cur in frozenset({"aktualne", "doprava", "krimi", "sport"})
+    if wrong_for_veda and _second_layer_path_veda_high_confidence(path):
+        fin = vertical_purity_final_section("veda", title, url, dt)
+        if fin == "veda":
+            o = dict(article)
+            o["topic"] = o["section"] = "veda"
+            return o
+
+    return article
+
+
 def _parse_day_yyyy_mm_dd(day: str):
     try:
         s = str(day or "").strip()
@@ -2267,6 +2411,7 @@ def main() -> int:
     merged_articles = [remap_article_section_if_url_mismatch(a) for a in merged_articles]
     merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
     merged_articles = [a for a in merged_articles if a is not None]
+    merged_articles = [_apply_second_layer_targeted_section_cleanup(a) for a in merged_articles]
     for a in merged_articles:
         a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
         a["displayScore"] = compute_display_score(a)
