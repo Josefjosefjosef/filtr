@@ -37,6 +37,7 @@ if _SCRIPTS_DIR not in sys.path:
     sys.path.insert(0, _SCRIPTS_DIR)
 
 from iu_registry import (
+    SOURCE_BATCH_INTERNAL_GAP_MS_DEFAULT,
     collapse_feeds_by_url,
     compute_display_score,
     is_hard_blocked_url,
@@ -48,6 +49,7 @@ from iu_registry import (
     purge_blocked_articles,
     registry_active_entries,
     save_scheduler_state,
+    scheduler_cooldown_key,
     select_feeds_for_tick,
 )
 
@@ -2323,8 +2325,22 @@ def main() -> int:
     transport_state = load_transport_state()
     last_req_ts = [0.0]
     parsed_feed_cache = {}
+    try:
+        _gap_ms = int(
+            os.getenv("IU_SOURCE_BATCH_INTERNAL_GAP_MS", "").strip() or str(SOURCE_BATCH_INTERNAL_GAP_MS_DEFAULT)
+        )
+    except ValueError:
+        _gap_ms = SOURCE_BATCH_INTERNAL_GAP_MS_DEFAULT
+    _gap_ms = max(50, min(_gap_ms, 5000))
+    _gap_sec = _gap_ms / 1000.0
+    last_rss_ck_for_gap = ""
 
     for feed_url, meta in feed_items:
+        rg_meta = meta.get("registryGroup")
+        batch_ck = ""
+        if isinstance(rg_meta, list) and rg_meta and isinstance(rg_meta[0], dict):
+            batch_ck = scheduler_cooldown_key(rg_meta[0]) or ""
+
         if is_hard_blocked_url(feed_url):
             per_feed_report.append({
                 "feed": feed_url,
@@ -2378,7 +2394,11 @@ def main() -> int:
                 "bozoException": "",
             }
         else:
+            if batch_ck and last_rss_ck_for_gap and last_rss_ck_for_gap == batch_ck:
+                time.sleep(_gap_sec)
             d, diagnostics = fetch_feed(feed_url, transport_state, last_req_ts)
+            if batch_ck:
+                last_rss_ck_for_gap = batch_ck
             if d is not None:
                 parsed_feed_cache[feed_url] = d
 
