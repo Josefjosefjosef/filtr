@@ -120,6 +120,45 @@ def _checkout_main(repo: str) -> None:
     _run(["git", "checkout", "main"], repo)
 
 
+def _stash_worktree_if_dirty_for_handoff_checkout(repo: str) -> bool:
+    """
+    Stash local modifications so git checkout -B / --orphan cannot fail with
+    'would be overwritten by checkout'. Must run only AFTER build(dest) so
+    push-staging can still copy data_dir/scheduler_state.json (and peers) into dest.
+    """
+    st = subprocess.run(
+        ["git", "status", "--porcelain"],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+    )
+    if not (st.stdout or "").strip():
+        return False
+    _run(
+        ["git", "stash", "push", "-u", "-m", "iu-pipeline-handoff-checkout-preflight"],
+        repo,
+    )
+    return True
+
+
+def _stash_pop_after_handoff_checkout(repo: str, stashed: bool) -> None:
+    """Restore working tree after handoff branch operations (retry paths, local runs)."""
+    if not stashed:
+        return
+    r = subprocess.run(
+        ["git", "stash", "pop"],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+    )
+    if r.returncode != 0:
+        sys.stderr.write(
+            "WARNING: git stash pop after pipeline-handoff checkout failed: "
+            + (r.stderr or r.stdout or "").strip()
+            + "\n"
+        )
+
+
 def _extract_handoff_from_ref(repo: str, ref: str) -> str:
     """Extract pipeline-handoff/ from ref into temp dir; return path to handoff folder."""
     ar = subprocess.run(
@@ -205,10 +244,12 @@ def _commit_handoff_tree_with_retry(repo: str, branch: str, message: str, build)
     last_err: str | None = None
     for attempt in range(1, MAX_PUSH_ATTEMPTS + 1):
         td = tempfile.mkdtemp()
+        stashed = False
         try:
             dest = os.path.join(td, HANDOFF_DIR)
             os.makedirs(dest, exist_ok=True)
             build(dest)
+            stashed = _stash_worktree_if_dirty_for_handoff_checkout(repo)
             _run(["git", "fetch", "origin"], repo)
             if not remote_branch_exists(repo, branch):
                 _run(["git", "checkout", "--orphan", branch], repo)
@@ -239,6 +280,7 @@ def _commit_handoff_tree_with_retry(repo: str, branch: str, message: str, build)
                 time.sleep(min(2.0, 0.25 * attempt))
                 continue
         finally:
+            _stash_pop_after_handoff_checkout(repo, stashed)
             shutil.rmtree(td, ignore_errors=True)
     sys.stderr.write("ERROR: push failed after retries: %s\n" % (last_err or "unknown"))
     _checkout_main(repo)
@@ -473,6 +515,8 @@ def cmd_push_aggregate(args: argparse.Namespace) -> int:
     if out == "error":
         return 2
     print("[pipeline-handoff] push-aggregate OK branch=%s outcome=%s" % (branch, out))
+    print("AGGREGATE_PERSIST_DIRTY_WORKTREE_SAFE=YES", flush=True)
+    print("LOCAL_BUILD_CHANGES_CAN_BLOCK_HANDOFF_CHECKOUT=NO", flush=True)
     print("MULTI_RUN_RACE_SAFE=YES", flush=True)
     print("OLDER_RUN_CAN_OVERRIDE_NEWER=NO", flush=True)
     return 0
