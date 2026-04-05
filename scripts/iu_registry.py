@@ -215,9 +215,11 @@ def entry_fixed_slot_key(e: dict) -> str | None:
             return "technet.cz"
         return "idnes.cz"
 
-    # ČT: only ct24/rss is fixed-slot; art/veda/other paths stay unmapped (interval pool).
+    # ČT: ct24.ceskatelevize.cz RSS + legacy www path /ct24/rss share the same fixed grid.
     if host == "sport.ceskatelevize.cz":
         return None
+    if host == "ct24.ceskatelevize.cz":
+        return "ceskatelevize.cz"
     if host == "ceskatelevize.cz":
         if "/ct24/rss" in url:
             return "ceskatelevize.cz"
