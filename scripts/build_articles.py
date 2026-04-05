@@ -2295,8 +2295,9 @@ def build_brief(generated_at: str, articles: list) -> dict:
 
 def _pipeline_phase() -> str:
     """
-    Production CI (update-articles.yml): three separate jobs; handoff via artifacts iu-ingest-handoff /
-    iu-aggregate-handoff — not same-runner workspace. Phases: ingest | aggregate | publish.
+    Production CI (update-articles.yml): three separate jobs; durable handoff is the git tree
+    pipeline-handoff/ on branch automation/pipeline-handoff (manifest + blobs per commit), not
+    ephemeral Actions artifacts. Jobs may run on different runners; phases: ingest | aggregate | publish.
     Default 'all' runs ingest→aggregate→publish in one process (local convenience only).
     """
     p = (os.getenv("IU_ARTICLE_PIPELINE_PHASE") or "all").strip().lower()

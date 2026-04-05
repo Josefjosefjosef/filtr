@@ -1,0 +1,334 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Cross-run persisted pipeline handoff on branch automation/pipeline-handoff.
+
+Primary source-of-truth: git tree pipeline-handoff/ on that branch (manifest + blobs per commit).
+Survives across workflow runs. Actions artifacts are not the durable truth.
+"""
+
+from __future__ import annotations
+
+import argparse
+import io
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tarfile
+import tempfile
+from datetime import datetime, timezone
+
+HANDOFF_DIR = "pipeline-handoff"
+STAGING_REL = "staging"
+AGGREGATE_REL = os.path.join("aggregate", "aggregated_checkpoint.json")
+MANIFEST_NAME = "manifest.json"
+DEFAULT_BRANCH = "automation/pipeline-handoff"
+
+
+def _repo_root() -> str:
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def _now_utc() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _run(cmd: list[str], cwd: str) -> None:
+    r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, env=os.environ.copy())
+    if r.returncode != 0:
+        sys.stderr.write(r.stderr or "")
+        sys.stderr.write(r.stdout or "")
+        raise subprocess.CalledProcessError(r.returncode, cmd, r.stdout, r.stderr)
+
+
+def remote_branch_exists(repo: str, branch: str) -> bool:
+    r = subprocess.run(
+        ["git", "ls-remote", "--heads", "origin", branch],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+    )
+    return bool(r.stdout.strip())
+
+
+def _atomic_write_json(path: str, payload: dict) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    os.replace(tmp, path)
+
+
+def _dir_size_approx(path: str) -> int:
+    n = 0
+    if not os.path.isdir(path):
+        return 0
+    for root, _, files in os.walk(path):
+        for fn in files:
+            try:
+                n += os.path.getsize(os.path.join(root, fn))
+            except OSError:
+                pass
+    return n
+
+
+def _checkout_main(repo: str) -> None:
+    _run(["git", "checkout", "main"], repo)
+
+
+def _extract_handoff_from_ref(repo: str, ref: str) -> str:
+    """Extract pipeline-handoff/ from ref into temp dir; return path to handoff folder."""
+    ar = subprocess.run(
+        ["git", "archive", ref, HANDOFF_DIR],
+        cwd=repo,
+        capture_output=True,
+    )
+    if ar.returncode != 0:
+        raise RuntimeError("git archive failed: " + (ar.stderr.decode() if ar.stderr else ""))
+    td = tempfile.mkdtemp()
+    tarfile.open(fileobj=io.BytesIO(ar.stdout), mode="r|").extractall(td)
+    return os.path.join(td, HANDOFF_DIR)
+
+
+def _commit_handoff_tree(repo: str, branch: str, message: str, build) -> None:
+    """build(dest_handoff: str) writes pipeline-handoff contents."""
+    td = tempfile.mkdtemp()
+    try:
+        dest = os.path.join(td, HANDOFF_DIR)
+        os.makedirs(dest, exist_ok=True)
+        build(dest)
+        _run(["git", "fetch", "origin"], repo)
+        if remote_branch_exists(repo, branch):
+            _run(["git", "checkout", "-B", branch, f"origin/{branch}"], repo)
+        else:
+            _run(["git", "checkout", "--orphan", branch], repo)
+            subprocess.run(
+                ["git", "rm", "-rf", "--ignore-unmatch", "."],
+                cwd=repo,
+                capture_output=True,
+            )
+        final = os.path.join(repo, HANDOFF_DIR)
+        shutil.rmtree(final, ignore_errors=True)
+        shutil.copytree(dest, final)
+        _run(["git", "add", "-f", HANDOFF_DIR], repo)
+        r = subprocess.run(["git", "diff", "--staged", "--quiet"], cwd=repo)
+        if r.returncode == 0:
+            _checkout_main(repo)
+            return
+        _run(["git", "commit", "-m", message], repo)
+        _run(["git", "push", "-u", "origin", branch], repo)
+    finally:
+        shutil.rmtree(td, ignore_errors=True)
+        _checkout_main(repo)
+
+
+def cmd_push_staging(args: argparse.Namespace) -> int:
+    repo = _repo_root()
+    branch = os.environ.get("PIPELINE_HANDOFF_BRANCH", DEFAULT_BRANCH).strip() or DEFAULT_BRANCH
+    data_dir = os.path.join(repo, os.environ.get("OUTPUT_DIR", "projects/data"))
+    staging_src = os.path.join(data_dir, "staging")
+    if not os.path.isdir(staging_src):
+        print("ERROR: missing staging after ingest", file=sys.stderr)
+        return 2
+    rid = os.environ.get("GITHUB_RUN_ID", "") or "local"
+
+    def build(dest: str) -> None:
+        shutil.copytree(staging_src, os.path.join(dest, STAGING_REL))
+        sched = os.path.join(data_dir, "scheduler_state.json")
+        if os.path.isfile(sched):
+            shutil.copy2(sched, os.path.join(dest, "scheduler_state.json"))
+        tr = os.path.join(data_dir, "feed_transport_state.json")
+        if os.path.isfile(tr):
+            shutil.copy2(tr, os.path.join(dest, "feed_transport_state.json"))
+        manifest = {
+            "schemaVersion": 2,
+            "updatedAtUtc": _now_utc(),
+            "handoffComplete": True,
+            "stagingReady": True,
+            "aggregateReady": False,
+            "publishReady": False,
+            "ingestRunId": rid,
+            "stagingBytesApprox": _dir_size_approx(os.path.join(dest, STAGING_REL)),
+            "pointerNote": "atomic commit: staging tree + manifest",
+        }
+        _atomic_write_json(os.path.join(dest, MANIFEST_NAME), manifest)
+
+    _commit_handoff_tree(repo, branch, f"pipeline-handoff: staging after ingest (run {rid})", build)
+    print("[pipeline-handoff] push-staging OK branch=%s" % branch)
+    return 0
+
+
+def cmd_push_aggregate(args: argparse.Namespace) -> int:
+    repo = _repo_root()
+    branch = os.environ.get("PIPELINE_HANDOFF_BRANCH", DEFAULT_BRANCH).strip() or DEFAULT_BRANCH
+    data_dir = os.path.join(repo, os.environ.get("OUTPUT_DIR", "projects/data"))
+    ck_src = os.path.join(data_dir, "staging", "aggregated_checkpoint.json")
+    if not os.path.isfile(ck_src):
+        print("ERROR: missing aggregated_checkpoint.json", file=sys.stderr)
+        return 2
+    if not remote_branch_exists(repo, branch):
+        print("ERROR: handoff branch missing", file=sys.stderr)
+        return 2
+
+    _run(["git", "fetch", "origin", branch], repo)
+    ref = f"origin/{branch}"
+    rid = os.environ.get("GITHUB_RUN_ID", "") or "local"
+
+    def build(dest: str) -> None:
+        parent = os.path.dirname(dest)
+        shutil.rmtree(dest, ignore_errors=True)
+        ar = subprocess.run(
+            ["git", "archive", ref, HANDOFF_DIR],
+            cwd=repo,
+            capture_output=True,
+        )
+        if ar.returncode != 0:
+            raise RuntimeError("git archive failed for push-aggregate")
+        tarfile.open(fileobj=io.BytesIO(ar.stdout), mode="r|").extractall(parent)
+        if not os.path.isdir(os.path.join(dest, STAGING_REL)):
+            raise RuntimeError("handoff missing staging tree after archive")
+        prev = {}
+        with open(os.path.join(dest, MANIFEST_NAME), encoding="utf-8") as f:
+            prev = json.load(f)
+        if not prev.get("stagingReady"):
+            raise RuntimeError("manifest stagingReady false")
+        os.makedirs(os.path.join(dest, "aggregate"), exist_ok=True)
+        shutil.copy2(ck_src, os.path.join(dest, AGGREGATE_REL))
+        manifest = {
+            "schemaVersion": 2,
+            "updatedAtUtc": _now_utc(),
+            "handoffComplete": True,
+            "stagingReady": True,
+            "aggregateReady": True,
+            "publishReady": False,
+            "ingestRunId": prev.get("ingestRunId", ""),
+            "aggregateRunId": rid,
+            "stagingBytesApprox": prev.get("stagingBytesApprox", 0),
+            "pointerNote": "atomic commit: aggregate checkpoint + manifest",
+        }
+        _atomic_write_json(os.path.join(dest, MANIFEST_NAME), manifest)
+
+    _commit_handoff_tree(repo, branch, f"pipeline-handoff: aggregate checkpoint (run {rid})", build)
+    print("[pipeline-handoff] push-aggregate OK branch=%s" % branch)
+    return 0
+
+
+def cmd_pull_staging(args: argparse.Namespace) -> int:
+    repo = _repo_root()
+    branch = os.environ.get("PIPELINE_HANDOFF_BRANCH", DEFAULT_BRANCH).strip() or DEFAULT_BRANCH
+    data_dir = os.path.join(repo, os.environ.get("OUTPUT_DIR", "projects/data"))
+    if not remote_branch_exists(repo, branch):
+        print("ERROR: handoff branch missing on remote", file=sys.stderr)
+        return 2
+    _run(["git", "fetch", "origin", branch], repo)
+    ref = f"origin/{branch}"
+    handoff = _extract_handoff_from_ref(repo, ref)
+    try:
+        with open(os.path.join(handoff, MANIFEST_NAME), encoding="utf-8") as f:
+            man = json.load(f)
+        if not man.get("stagingReady"):
+            print("ERROR: stagingReady false in manifest", file=sys.stderr)
+            return 2
+        staging_dst = os.path.join(data_dir, "staging")
+        shutil.rmtree(staging_dst, ignore_errors=True)
+        shutil.copytree(os.path.join(handoff, STAGING_REL), staging_dst)
+        sched = os.path.join(handoff, "scheduler_state.json")
+        if os.path.isfile(sched):
+            os.makedirs(data_dir, exist_ok=True)
+            shutil.copy2(sched, os.path.join(data_dir, "scheduler_state.json"))
+        tr = os.path.join(handoff, "feed_transport_state.json")
+        if os.path.isfile(tr):
+            shutil.copy2(tr, os.path.join(data_dir, "feed_transport_state.json"))
+    finally:
+        shutil.rmtree(os.path.dirname(handoff), ignore_errors=True)
+    print("[pipeline-handoff] pull-staging OK %s" % ref)
+    return 0
+
+
+def cmd_pull_for_publish(args: argparse.Namespace) -> int:
+    repo = _repo_root()
+    branch = os.environ.get("PIPELINE_HANDOFF_BRANCH", DEFAULT_BRANCH).strip() or DEFAULT_BRANCH
+    data_dir = os.path.join(repo, os.environ.get("OUTPUT_DIR", "projects/data"))
+    if not remote_branch_exists(repo, branch):
+        print("ERROR: handoff branch missing on remote", file=sys.stderr)
+        return 2
+    _run(["git", "fetch", "origin", branch], repo)
+    ref = f"origin/{branch}"
+    handoff = _extract_handoff_from_ref(repo, ref)
+    try:
+        with open(os.path.join(handoff, MANIFEST_NAME), encoding="utf-8") as f:
+            man = json.load(f)
+        if not man.get("aggregateReady"):
+            print("ERROR: aggregateReady false", file=sys.stderr)
+            return 2
+        ck = os.path.join(handoff, AGGREGATE_REL)
+        if not os.path.isfile(ck):
+            print("ERROR: checkpoint file missing", file=sys.stderr)
+            return 2
+        os.makedirs(os.path.join(data_dir, "staging"), exist_ok=True)
+        shutil.copy2(ck, os.path.join(data_dir, "staging", "aggregated_checkpoint.json"))
+        sched = os.path.join(handoff, "scheduler_state.json")
+        if os.path.isfile(sched):
+            shutil.copy2(sched, os.path.join(data_dir, "scheduler_state.json"))
+        tr = os.path.join(handoff, "feed_transport_state.json")
+        if os.path.isfile(tr):
+            shutil.copy2(tr, os.path.join(data_dir, "feed_transport_state.json"))
+    finally:
+        shutil.rmtree(os.path.dirname(handoff), ignore_errors=True)
+    print("[pipeline-handoff] pull-for-publish OK %s" % ref)
+    return 0
+
+
+def cmd_mark_publish_done(args: argparse.Namespace) -> int:
+    repo = _repo_root()
+    branch = os.environ.get("PIPELINE_HANDOFF_BRANCH", DEFAULT_BRANCH).strip() or DEFAULT_BRANCH
+    if not remote_branch_exists(repo, branch):
+        return 0
+    rid = os.environ.get("GITHUB_RUN_ID", "") or "local"
+    _run(["git", "fetch", "origin", branch], repo)
+    _run(["git", "checkout", "-B", branch, f"origin/{branch}"], repo)
+    man_path = os.path.join(repo, HANDOFF_DIR, MANIFEST_NAME)
+    if os.path.isfile(man_path):
+        with open(man_path, encoding="utf-8") as f:
+            man = json.load(f)
+        man["publishReady"] = True
+        man["updatedAtUtc"] = _now_utc()
+        man["publishRunId"] = rid
+        _atomic_write_json(man_path, man)
+        _run(["git", "add", "-f", HANDOFF_DIR], repo)
+        r = subprocess.run(["git", "diff", "--staged", "--quiet"], cwd=repo)
+        if r.returncode != 0:
+            _run(["git", "commit", "-m", f"pipeline-handoff: publish done (run {rid})"], repo)
+            _run(["git", "push", "origin", branch], repo)
+    _checkout_main(repo)
+    print("[pipeline-handoff] mark-publish-done OK")
+    return 0
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(description="Git cross-run pipeline handoff")
+    sub = p.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("push-staging")
+    sub.add_parser("push-aggregate")
+    sub.add_parser("pull-staging")
+    sub.add_parser("pull-for-publish")
+    sub.add_parser("mark-publish-done")
+    args = p.parse_args()
+    if args.cmd == "push-staging":
+        return cmd_push_staging(args)
+    if args.cmd == "push-aggregate":
+        return cmd_push_aggregate(args)
+    if args.cmd == "pull-staging":
+        return cmd_pull_staging(args)
+    if args.cmd == "pull-for-publish":
+        return cmd_pull_for_publish(args)
+    if args.cmd == "mark-publish-done":
+        return cmd_mark_publish_done(args)
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

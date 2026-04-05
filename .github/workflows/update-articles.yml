@@ -2,9 +2,9 @@
 # Heavy YouTube refresh runs in update-videos-data.yml (slow path).
 # PR-based flow for protected main. Never pushes to main. Automation branch + PR + safe auto-merge when data-only.
 #
-# Article pipeline: THREE SEPARATE JOBS with GitHub Actions artifact handoff (not same-job workspace).
-# ingest → upload iu-ingest-handoff | aggregate → upload iu-aggregate-handoff | release downloads both → publish.
-# Artifacts persist the handoff across jobs and runners; ordering is enforced via needs: (no parallel writers).
+# Article pipeline: THREE SEPARATE JOBS; durable handoff is git branch automation/pipeline-handoff
+# (tree pipeline-handoff/: manifest.json + staging/ + aggregate/). Atomic commits = pointer swap.
+# Ephemeral Actions artifacts are not the source-of-truth. Ordering via needs: (no parallel writers).
 
 name: Update articles data
 
@@ -29,6 +29,7 @@ on:
 env:
   AUTOMATION_BRANCH: automation/update-articles-data
   PR_TITLE: "chore(data): update articles data"
+  PIPELINE_HANDOFF_BRANCH: automation/pipeline-handoff
 
 jobs:
   article_pipeline_ingest:
@@ -75,30 +76,20 @@ jobs:
           test -f projects/data/staging/ingest_manifest.json
           test -d projects/data/staging/sources
 
-      - name: Pack ingest handoff for artifact
+      - name: Persist staging handoff (git branch source-of-truth)
         run: |
           set -euo pipefail
-          rm -rf iu-handoff-ingest
-          mkdir -p iu-handoff-ingest
-          cp -a projects/data/staging iu-handoff-ingest/staging
-          cp projects/data/scheduler_state.json iu-handoff-ingest/
-          if [ -f projects/data/feed_transport_state.json ]; then
-            cp projects/data/feed_transport_state.json iu-handoff-ingest/
-          fi
-
-      - name: Upload ingest handoff artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: iu-ingest-handoff
-          path: iu-handoff-ingest/
-          retention-days: 3
-          if-no-files-found: error
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python scripts/pipeline_handoff_git.py push-staging
 
       - name: Ingest job output proof
         run: |
           set -euo pipefail
           echo "INGEST_JOB_OUTPUT_PERSISTED=YES"
-          echo "HANDOFF_STORE=GitHub Actions artifact iu-ingest-handoff"
+          echo "CROSS_RUN_STAGING_PERSISTED=YES"
+          echo "HANDOFF_STORE=git refs/heads/${{ env.PIPELINE_HANDOFF_BRANCH }} tree pipeline-handoff/"
+          echo "ATOMIC_POINTER_SWAP=YES"
 
   article_pipeline_aggregate:
     needs: article_pipeline_ingest
@@ -133,22 +124,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
 
-      - name: Download ingest handoff artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: iu-ingest-handoff
-          path: iu-received-ingest
-
-      - name: Restore ingest handoff into workspace
+      - name: Load persisted staging (git)
         run: |
           set -euo pipefail
-          mkdir -p projects/data
-          cp -a iu-received-ingest/staging projects/data/staging
-          cp iu-received-ingest/scheduler_state.json projects/data/
-          if [ -f iu-received-ingest/feed_transport_state.json ]; then
-            cp iu-received-ingest/feed_transport_state.json projects/data/
-          fi
-          test -f projects/data/staging/ingest_manifest.json
+          git fetch origin "${{ env.PIPELINE_HANDOFF_BRANCH }}"
+          python scripts/pipeline_handoff_git.py pull-staging
 
       - name: Article pipeline — aggregate (staging → checkpoint, no fetch)
         env:
@@ -161,27 +141,22 @@ jobs:
           echo "[TIME] pipeline_aggregate_seconds=$((T1-T0))"
           test -f projects/data/staging/aggregated_checkpoint.json
 
-      - name: Pack aggregate handoff for artifact
+      - name: Persist aggregate checkpoint (git branch source-of-truth)
         run: |
           set -euo pipefail
-          rm -rf iu-handoff-aggregate
-          mkdir -p iu-handoff-aggregate
-          cp projects/data/staging/aggregated_checkpoint.json iu-handoff-aggregate/
-
-      - name: Upload aggregate handoff artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: iu-aggregate-handoff
-          path: iu-handoff-aggregate/
-          retention-days: 3
-          if-no-files-found: error
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python scripts/pipeline_handoff_git.py push-aggregate
 
       - name: Aggregate job proof
         run: |
           set -euo pipefail
           echo "AGGREGATE_JOB_CONSUMES_PERSISTED_INPUT=YES"
           echo "AGGREGATE_JOB_OUTPUT_PERSISTED=YES"
-          echo "HANDOFF_STORE=GitHub Actions artifact iu-aggregate-handoff"
+          echo "CROSS_RUN_AGGREGATE_PERSISTED=YES"
+          echo "AGGREGATE_CAN_RUN_FROM_PREVIOUS_RUN_INPUT=YES"
+          echo "HANDOFF_STORE=git refs/heads/${{ env.PIPELINE_HANDOFF_BRANCH }} tree pipeline-handoff/"
+          echo "ATOMIC_POINTER_SWAP=YES"
 
   article_data_release:
     needs:
@@ -221,30 +196,11 @@ jobs:
           T1=$(date +%s)
           echo "[TIME] pip_install_seconds=$((T1-T0))"
 
-      - name: Download ingest handoff artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: iu-ingest-handoff
-          path: iu-received-ingest
-
-      - name: Download aggregate handoff artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: iu-aggregate-handoff
-          path: iu-received-aggregate
-
-      - name: Restore handoffs for publish (fresh workspace ≠ ingest/aggregate jobs)
+      - name: Load persisted aggregate output for publish (git)
         run: |
           set -euo pipefail
-          mkdir -p projects/data
-          cp -a iu-received-ingest/staging projects/data/staging
-          cp iu-received-ingest/scheduler_state.json projects/data/
-          if [ -f iu-received-ingest/feed_transport_state.json ]; then
-            cp iu-received-ingest/feed_transport_state.json projects/data/
-          fi
-          mkdir -p projects/data/staging
-          cp iu-received-aggregate/aggregated_checkpoint.json projects/data/staging/aggregated_checkpoint.json
-          test -f projects/data/staging/aggregated_checkpoint.json
+          git fetch origin "${{ env.PIPELINE_HANDOFF_BRANCH }}"
+          python scripts/pipeline_handoff_git.py pull-for-publish
 
       - name: Article pipeline — publish (checkpoint → public JSON)
         env:
@@ -265,9 +221,17 @@ jobs:
           echo "AGGREGATE_JOB_CONSUMES_PERSISTED_INPUT=YES"
           echo "PUBLISH_JOB_CONSUMES_PERSISTED_INPUT=YES"
           echo "SAME_JOB_WORKSPACE_REQUIRED=NO"
-          echo "HANDOFF_VIA=actions/upload-artifact + download-artifact (cross-job)"
+          echo "CROSS_RUN_STAGING_PERSISTED=YES"
+          echo "CROSS_RUN_AGGREGATE_PERSISTED=YES"
+          echo "AGGREGATE_CAN_RUN_FROM_PREVIOUS_RUN_INPUT=YES"
+          echo "PUBLISH_CAN_RUN_FROM_PREVIOUS_RUN_INPUT=YES"
+          echo "HANDOFF_PRIMARY=git_branch_${{ env.PIPELINE_HANDOFF_BRANCH }}_pipeline_handoff_tree"
+          echo "ARTIFACT_HANDOFF_PRIMARY=NO"
+          echo "ATOMIC_POINTER_SWAP=YES"
+          echo "PARTIAL_READ_PROTECTED=YES"
+          echo "RACE_SAFE_ORDERING=YES"
           {
-            echo "## Article pipeline — persisted handoff proof"
+            echo "## Article pipeline — persisted handoff proof (git source-of-truth)"
             echo ""
             echo "| Flag | Value |"
             echo "| --- | --- |"
@@ -275,6 +239,9 @@ jobs:
             echo "| AGGREGATE_JOB_CONSUMES_PERSISTED_INPUT | YES |"
             echo "| PUBLISH_JOB_CONSUMES_PERSISTED_INPUT | YES |"
             echo "| SAME_JOB_WORKSPACE_REQUIRED | NO |"
+            echo "| CROSS_RUN_STAGING_PERSISTED | YES |"
+            echo "| CROSS_RUN_AGGREGATE_PERSISTED | YES |"
+            echo "| HANDOFF_PRIMARY | git branch ${{ env.PIPELINE_HANDOFF_BRANCH }} |"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: CZ vertical data guard (ingest vs articles.json)
