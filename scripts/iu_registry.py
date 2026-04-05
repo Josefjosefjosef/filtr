@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-infoUzel: source registry loader, hard domain block, weighted scheduler (2–3 sources/tick).
+infoUzel: source registry loader, hard domain block, scheduler (2–3 sources/tick):
+fixed Prague-minute slots per source, slot-first fill, hard 15 min domain cooldown,
+unmapped sources use interval-only fallback.
 """
 from __future__ import annotations
 
@@ -9,6 +11,102 @@ import os
 import re
 from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse
+
+try:
+    from zoneinfo import ZoneInfo
+except ImportError:  # pragma: no cover
+    ZoneInfo = None  # type: ignore[misc, assignment]
+
+try:
+    from dateutil import tz as _dateutil_tz
+except ImportError:  # pragma: no cover
+    _dateutil_tz = None  # type: ignore[misc, assignment]
+
+# Europe/Prague minute-of-hour drives fixed slots (cron aligns to local wall clock).
+_SCHED_TZ_NAME = "Europe/Prague"
+
+
+def _prague_tz():
+    """Resolve IANA Europe/Prague without requiring the tzdata package on Windows."""
+    if _dateutil_tz is not None:
+        tzx = _dateutil_tz.gettz(_SCHED_TZ_NAME)
+        if tzx is not None:
+            return tzx
+    if ZoneInfo is not None:
+        try:
+            return ZoneInfo(_SCHED_TZ_NAME)
+        except Exception:
+            pass
+    # Last resort: CEST (no DST); minute-of-hour matches summer cron expectations.
+    return timezone(timedelta(hours=2))
+
+# Hard floor: same registrable domain (registry/URL host) must not fetch more often than this.
+HARD_DOMAIN_COOLDOWN_MIN = 15
+
+# Fixed minute-of-hour slots (0–59) per scheduler key; keys match host or logical source id (e.g. idnes.cz/sport).
+# Sources with no mapping use interval-only fallback (legacy due queue), all minutes eligible.
+FIXED_MINUTE_SLOTS_BY_KEY: dict[str, frozenset[int]] = {
+    # Zprávy / main
+    "seznamzpravy.cz": frozenset({0, 15, 30, 45}),
+    "novinky.cz": frozenset({0, 15, 30, 45}),
+    "idnes.cz": frozenset({5, 20, 35, 50}),
+    "aktualne.cz": frozenset({5, 20, 35, 50}),
+    "denik.cz": frozenset({10, 25, 40, 55}),
+    "echo24.cz": frozenset({10, 40}),
+    "lidovky.cz": frozenset({15, 45}),
+    "hlidacipes.org": frozenset({20, 50}),
+    "tydenikpolicie.cz": frozenset({25, 55}),
+    # Sport
+    "sport.cz": frozenset({0, 15, 30, 45}),
+    "isport.cz": frozenset({5, 20, 35, 50}),
+    "idnes.cz/sport": frozenset({10, 25, 40, 55}),
+    "hokej.cz": frozenset({10, 40}),
+    "fotbal.cz": frozenset({20, 50}),
+    "fights.cz": frozenset({25, 55}),
+    # Finance
+    "penize.cz": frozenset({0, 15, 30, 45}),
+    "mesec.cz": frozenset({5, 20, 35, 50}),
+    "e15.cz": frozenset({10, 25, 40, 55}),
+    "patria.cz": frozenset({20, 50}),
+    "ekonomickydenik.cz": frozenset({25, 55}),
+    # Zdraví
+    "zdravezpravy.cz": frozenset({0, 15, 30, 45}),
+    "vitalia.cz": frozenset({5, 20, 35, 50}),
+    "kondice.cz": frozenset({10, 25, 40, 55}),
+    "mojezdravi.cz": frozenset({20, 50}),
+    "fitzivot.cz": frozenset({25, 55}),
+    # Cestování
+    "cestujlevne.cz": frozenset({15, 45}),
+    "pelipecky.cz": frozenset({30}),
+    "travelbible.cz": frozenset({30}),
+    "poznatsvet.cz": frozenset({45}),
+    # Hry
+    "zing.cz": frozenset({10, 40}),
+    "vortex.cz": frozenset({25, 55}),
+    "games.cz": frozenset({20, 50}),
+    "idnes.cz/hry": frozenset({10, 40}),
+    # Kultura
+    "kinobox.cz": frozenset({20, 50}),
+    "expres.cz": frozenset({30}),
+    "iglanc.cz": frozenset({45}),
+    # Věda & historie
+    "technet.cz": frozenset({20, 50}),
+    "osel.cz": frozenset({30}),
+    "vtm.cz": frozenset({40}),
+    "100plus1.cz": frozenset({45}),
+    # Vzdělávání
+    "flowee.cz": frozenset({30}),
+    "scio.cz": frozenset({45}),
+    "seduo.cz": frozenset({50}),
+}
+
+# Host / domain aliases → canonical scheduler key in FIXED_MINUTE_SLOTS_BY_KEY
+_HOST_ALIASES_TO_SLOT_KEY: dict[str, str] = {
+    "cestujlevne.com": "cestujlevne.cz",
+    "vtm.zive.cz": "vtm.cz",
+    "isport.blesk.cz": "isport.cz",
+    "stoplusjednicka.cz": "100plus1.cz",
+}
 
 BLOCKED_HOST_FRAGMENTS = (
     "hedvabnastezka.cz",
@@ -30,6 +128,84 @@ def host_from_url(url: str) -> str:
         return (urlparse(url or "").netloc or "").lower()
     except Exception:
         return ""
+
+
+def normalize_registry_domain(dom: str) -> str:
+    d = (dom or "").strip().lower()
+    if d.startswith("www."):
+        d = d[4:]
+    return d
+
+
+def _scheduler_now_local(now: datetime) -> datetime:
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=timezone.utc)
+    return now.astimezone(_prague_tz())
+
+
+def cooldown_domain_key(e: dict) -> str:
+    """Single key per site for domain_last_fetch; prefer registry domain for stable state keys."""
+    d = normalize_registry_domain(str(e.get("domain") or ""))
+    if d:
+        return d
+    u = (e.get("feed_url") or "").strip()
+    h = host_from_url(u)
+    if h.startswith("www."):
+        h = h[4:]
+    return h
+
+
+def entry_fixed_slot_key(e: dict) -> str | None:
+    """
+    Map registry entry to FIXED_MINUTE_SLOTS_BY_KEY or None (interval-only fallback).
+    idnes.cz paths get distinct keys where the product schedule requires it.
+    """
+    url = (e.get("feed_url") or "").strip().lower()
+    dom = normalize_registry_domain(str(e.get("domain") or ""))
+    host = host_from_url(url)
+    if host.startswith("www."):
+        host = host[4:]
+
+    if "servis.idnes.cz" in url or host.endswith("idnes.cz"):
+        if "c=sport" in url or "c%3dsport" in url:
+            return "idnes.cz/sport"
+        if "c=hry" in url or "c%3dhry" in url:
+            return "idnes.cz/hry"
+        if "c=technet" in url or "c%3dtechnet" in url:
+            return "technet.cz"
+        return "idnes.cz"
+
+    if host in _HOST_ALIASES_TO_SLOT_KEY:
+        return _HOST_ALIASES_TO_SLOT_KEY[host]
+
+    if dom in _HOST_ALIASES_TO_SLOT_KEY:
+        return _HOST_ALIASES_TO_SLOT_KEY[dom]
+
+    if host in FIXED_MINUTE_SLOTS_BY_KEY:
+        return host
+
+    if dom in FIXED_MINUTE_SLOTS_BY_KEY:
+        return dom
+
+    return None
+
+
+def fixed_slot_minutes_for_entry(e: dict) -> frozenset[int] | None:
+    sk = entry_fixed_slot_key(e)
+    if sk is None:
+        return None
+    return FIXED_MINUTE_SLOTS_BY_KEY.get(sk)
+
+
+def minute_eligible_for_fixed_slots(e: dict, minute: int) -> bool:
+    mins = fixed_slot_minutes_for_entry(e)
+    if mins is None:
+        return True
+    return int(minute) % 60 in mins
+
+
+def is_fixed_slot_mapped(e: dict) -> bool:
+    return entry_fixed_slot_key(e) is not None
 
 
 def is_hard_blocked_url(url: str) -> bool:
@@ -123,12 +299,16 @@ def select_feeds_for_tick(
     now: datetime | None = None,
 ) -> tuple[list[dict], dict]:
     """
-    Weighted round-robin + due queue + per-domain cooldown.
+    Fixed local-minute slots per source + interval due + hard domain cooldown + slot-first fill.
+    Unmapped sources: interval-only (all minutes), filled after slot-mapped candidates.
     Returns (list of entry dicts to fetch this tick, updated state dict — not yet saved).
     """
     now = now or datetime.now(timezone.utc)
     if now.tzinfo is None:
         now = now.replace(tzinfo=timezone.utc)
+
+    local = _scheduler_now_local(now)
+    minute = int(local.minute)
 
     cfg = registry.get("sources_per_tick") or {}
     three_frac = float(cfg.get("three_source_tick_fraction") or 0.62)
@@ -142,7 +322,7 @@ def select_feeds_for_tick(
     domain_last = state.setdefault("domain_last_fetch", {})
     entry_state = state.setdefault("entry_state", {})
 
-    candidates = []
+    candidates: list[tuple[float, str, dict]] = []
     for e in entries:
         eid = str(e.get("id") or "")
         interval = int(e.get("interval_min") or 30)
@@ -164,23 +344,58 @@ def select_feeds_for_tick(
         score = overdue_sec * w
         candidates.append((score, eid, e))
 
-    candidates.sort(key=lambda x: (-x[0], x[1]))
+    def _effective_cooldown_min(e: dict) -> int:
+        c = int(e.get("per_domain_cooldown_min") or HARD_DOMAIN_COOLDOWN_MIN)
+        return max(HARD_DOMAIN_COOLDOWN_MIN, max(5, c))
 
     def _domain_cooldown_ok(e: dict) -> bool:
-        dom = (e.get("domain") or "").strip().lower()
+        dom = cooldown_domain_key(e)
         if not dom:
             return True
-        cooldown = int(e.get("per_domain_cooldown_min") or 15)
-        cooldown = max(5, cooldown)
+        cooldown = _effective_cooldown_min(e)
         last_dom = _parse_iso(domain_last.get(dom))
         if last_dom is None:
             return True
         return (now - last_dom).total_seconds() >= cooldown * 60
 
+    # Filter: mapped sources only when current local minute matches a fixed slot
+    filtered: list[tuple[float, str, dict]] = []
+    for score, eid, e in candidates:
+        if not minute_eligible_for_fixed_slots(e, minute):
+            continue
+        filtered.append((score, eid, e))
+
+    # Slot-first sort: fixed-slot-mapped entries before unmapped; then score, id
+    def _sort_key(t: tuple[float, str, dict]) -> tuple[int, float, str]:
+        score, eid, e = t
+        mapped = 0 if is_fixed_slot_mapped(e) else 1
+        return (mapped, -score, eid)
+
+    filtered.sort(key=_sort_key)
+
     picked: list[dict] = []
     seen_urls: set[str] = set()
+    seen_cooldown_domains: set[str] = set()
 
-    # --- Fáze 1: rotující priorita vertikál (1 slot pokud n_pick >= 2 a existuje due vertikální feed) ---
+    def _can_take(e: dict) -> bool:
+        url = (e.get("feed_url") or "").strip()
+        if not url or url in seen_urls:
+            return False
+        if not _domain_cooldown_ok(e):
+            return False
+        ck = cooldown_domain_key(e)
+        if ck and ck in seen_cooldown_domains:
+            return False
+        return True
+
+    def _take(e: dict) -> None:
+        picked.append(e)
+        seen_urls.add((e.get("feed_url") or "").strip())
+        ck = cooldown_domain_key(e)
+        if ck:
+            seen_cooldown_domains.add(ck)
+
+    # --- Fáze 1: rotující priorita vertikál (jen slotované zdroje — neobcházet pevné minuty) ---
     vertical_filled = False
     if n_pick >= 2:
         rot = int(tick_index) % len(VERTICAL_TOPIC_ORDER)
@@ -188,32 +403,25 @@ def select_feeds_for_tick(
         for vt in v_order:
             if vertical_filled:
                 break
-            for _score, eid, e in candidates:
+            for _score, eid, e in filtered:
+                if not is_fixed_slot_mapped(e):
+                    continue
                 tp = str(e.get("topic") or "").strip().lower()
                 if tp != vt or tp not in VERTICAL_TOPICS:
                     continue
-                url = (e.get("feed_url") or "").strip()
-                if not url or url in seen_urls:
+                if not _can_take(e):
                     continue
-                if not _domain_cooldown_ok(e):
-                    continue
-                picked.append(e)
-                seen_urls.add(url)
+                _take(e)
                 vertical_filled = True
                 break
 
-    # --- Fáze 2: doplnit globálním due řazením (stejné pravidlo jako dřív) ---
-    for _score, eid, e in candidates:
+    # --- Fáze 2: doplnit slot-first (mapped minute-aligned před unmapped díky _sort_key) ---
+    for _score, eid, e in filtered:
         if len(picked) >= n_pick:
             break
-        url = (e.get("feed_url") or "").strip()
-        if not url or url in seen_urls:
+        if not _can_take(e):
             continue
-        if not _domain_cooldown_ok(e):
-            continue
-
-        picked.append(e)
-        seen_urls.add(url)
+        _take(e)
 
     return picked, state
 
@@ -230,7 +438,7 @@ def mark_feeds_fetched(state: dict, entries: list[dict], now: datetime | None = 
         eid = str(e.get("id") or "")
         if not eid:
             continue
-        dom = (e.get("domain") or "").strip().lower()
+        dom = cooldown_domain_key(e)
         if dom:
             domain_last[dom] = ts
         prev = entry_state.get(eid)
