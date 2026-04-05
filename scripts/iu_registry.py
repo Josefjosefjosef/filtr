@@ -65,6 +65,10 @@ FIXED_MINUTE_SLOTS_BY_KEY: dict[str, frozenset[int]] = {
     "idnes.cz": frozenset({5, 20, 35, 50}),
     "aktualne.cz": frozenset({5, 20, 35, 50}),
     "denik.cz": frozenset({10, 25, 40, 55}),
+    # ČTK + ČT: news-grade; minutes offset from 0/15/30/45 and 5/20/35/50 grids to limit burst
+    "ceskenoviny.cz": frozenset({7, 22, 37, 52}),
+    "ceskatelevize.cz": frozenset({8, 23, 38, 53}),
+    "sport.ceskatelevize.cz": frozenset({9, 24, 39, 54}),
     "echo24.cz": frozenset({10, 40}),
     "lidovky.cz": frozenset({15, 45}),
     "hlidacipes.org": frozenset({20, 50}),
