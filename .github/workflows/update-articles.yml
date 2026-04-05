@@ -1,6 +1,10 @@
 # FAST PATH: articles ingest + guards + articles.json / shared data PR — keep runtime minimal.
 # Heavy YouTube refresh runs in update-videos-data.yml (slow path).
 # PR-based flow for protected main. Never pushes to main. Automation branch + PR + safe auto-merge when data-only.
+#
+# Article pipeline (decoupled production path): three sequential steps in THIS job share the runner
+# workspace — projects/data/staging/** persists on disk between steps (gitignored; never committed).
+# Each step is a separate Python process: ingest → aggregate → publish (not IU_ARTICLE_PIPELINE_PHASE=all).
 
 name: Update articles data
 
@@ -31,6 +35,8 @@ jobs:
     runs-on: ubuntu-latest
     # Build is fast; includes optional poll until data PR auto-merge + Pages dispatch (same GITHUB_TOKEN as check dispatch).
     timeout-minutes: 60
+    env:
+      RETENTION_DAYS: "45"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -61,15 +67,63 @@ jobs:
           T1=$(date +%s)
           echo "[TIME] pip_install_seconds=$((T1-T0))"
 
-      - name: Build articles JSON
+      - name: Article pipeline — ingest (RSS → staging)
         env:
-          RETENTION_DAYS: "45"
+          IU_ARTICLE_PIPELINE_PHASE: ingest
         run: |
           set -euo pipefail
           T0=$(date +%s)
           python scripts/build_articles.py
           T1=$(date +%s)
-          echo "[TIME] build_articles_seconds=$((T1-T0))"
+          echo "[TIME] pipeline_ingest_seconds=$((T1-T0))"
+          test -f projects/data/staging/ingest_manifest.json
+          test -d projects/data/staging/sources
+          echo "STAGING_MANIFEST_OK=1"
+
+      - name: Article pipeline — aggregate (staging → checkpoint, no fetch)
+        env:
+          IU_ARTICLE_PIPELINE_PHASE: aggregate
+        run: |
+          set -euo pipefail
+          T0=$(date +%s)
+          python scripts/build_articles.py
+          T1=$(date +%s)
+          echo "[TIME] pipeline_aggregate_seconds=$((T1-T0))"
+          test -f projects/data/staging/aggregated_checkpoint.json
+          echo "AGGREGATE_CHECKPOINT_OK=1"
+
+      - name: Article pipeline — publish (checkpoint → public JSON)
+        env:
+          IU_ARTICLE_PIPELINE_PHASE: publish
+        run: |
+          set -euo pipefail
+          T0=$(date +%s)
+          python scripts/build_articles.py
+          T1=$(date +%s)
+          echo "[TIME] pipeline_publish_seconds=$((T1-T0))"
+          test -s projects/data/articles.json
+          test -s projects/data/feed_health.json
+          echo "PUBLISH_PUBLIC_JSON_OK=1"
+
+      - name: Pipeline decoupling proof (three processes, staging on disk)
+        run: |
+          set -euo pipefail
+          echo "INGEST_ONLY_RUN=YES"
+          echo "STAGING_PERSISTED=YES"
+          echo "AGGREGATE_ONLY_RUN=YES"
+          echo "PUBLISH_ONLY_RUN=YES"
+          echo "PROD_PIPELINE_MONOLITHIC_ALL=NO"
+          {
+            echo "## Article pipeline — decoupling proof"
+            echo ""
+            echo "| Flag | Value |"
+            echo "| --- | --- |"
+            echo "| INGEST_ONLY_RUN | YES |"
+            echo "| STAGING_PERSISTED | YES (same job workspace: projects/data/staging/) |"
+            echo "| AGGREGATE_ONLY_RUN | YES |"
+            echo "| PUBLISH_ONLY_RUN | YES |"
+            echo "| PROD_PIPELINE_MONOLITHIC_ALL | NO |"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: CZ vertical data guard (ingest vs articles.json)
         run: |

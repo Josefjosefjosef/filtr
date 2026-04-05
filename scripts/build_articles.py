@@ -2294,6 +2294,10 @@ def build_brief(generated_at: str, articles: list) -> dict:
 
 
 def _pipeline_phase() -> str:
+    """
+    Production CI: set IU_ARTICLE_PIPELINE_PHASE to ingest, aggregate, or publish (three processes).
+    Default 'all' runs ingest→aggregate→publish in one process (local convenience only).
+    """
     p = (os.getenv("IU_ARTICLE_PIPELINE_PHASE") or "all").strip().lower()
     if p in ("ingest", "aggregate", "publish", "all"):
         return p
@@ -2742,6 +2746,7 @@ def main() -> int:
     registry = load_registry(REGISTRY_PATH)
 
     if phase == "publish":
+        print("[iu-pipeline] phase=publish reads aggregated_checkpoint only; no RSS fetch", flush=True)
         cp = read_aggregated_checkpoint(OUTPUT_DIR)
         if not isinstance(cp, dict) or not cp.get("generated_at"):
             print("ERROR: missing aggregated checkpoint (run aggregate first)", file=sys.stderr)
@@ -2753,6 +2758,7 @@ def main() -> int:
         return _publish_article_outputs(bundle)
 
     if phase == "aggregate":
+        print("[iu-pipeline] phase=aggregate reads staging only; no RSS fetch", flush=True)
         loaded = load_staging_for_aggregate(OUTPUT_DIR)
         bundle = _aggregate_pipeline(
             loaded["all_items"],
@@ -2767,6 +2773,7 @@ def main() -> int:
         print(f"ERROR: unknown IU_ARTICLE_PIPELINE_PHASE={phase!r}", file=sys.stderr)
         return 2
 
+    print(f"[iu-pipeline] phase={phase} RSS fetch → staging (scheduler unchanged)", flush=True)
     sched_state = load_scheduler_state(SCHEDULER_STATE_PATH)
     # IU_BUILD_ALL_FEEDS=1: jeden běh přes všechny aktivní registry feedy (ne 2–3/tick).
     _full_feed = os.getenv("IU_BUILD_ALL_FEEDS", "").strip().lower() in ("1", "true", "yes")
