@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-infoUzel: source registry loader, hard domain block, scheduler (2–3 sources/tick).
+infoUzel: source registry loader, hard domain block, fixed-slot domain scheduler.
 
-Single scheduler path (no parallel due-queue bypass):
-  • interval + display_weight → candidate score (incl. slot_offset_min stagger when never fetched);
-  • FIXED_MINUTE_SLOTS_BY_KEY + entry_fixed_slot_key → minute filter for mapped keys;
-  • sort: mapped rows first, then score, id;
-  • vertical rotation (mapped only) → fill → one feed per cooldown_domain_key per tick;
-  • hard domain cooldown max(15, registry); unmapped minute filter = always on.
+Single scheduler path:
+  • FIXED_MINUTE_SLOTS_BY_KEY + entry_fixed_slot_key (Europe/Prague minute) = source of truth;
+  • slot-first: all mapped entries due at this minute are selected (deterministic order by entry id);
+  • mapped entries: interval gate ignored — slot + cooldown only;
+  • scheduler_cooldown_key(e): slot key when mapped (isolates idnes.cz vs idnes.cz/sport), else registry domain;
+  • hard cooldown floor 15 min (max with per-entry per_domain_cooldown_min);
+  • unmapped feeds: interval-due only, max max_unmapped_per_tick (registry sources_per_tick.max_unmapped_per_tick, default 2), deterministic by id;
+  • no random score pick, no vertical rotation steal, no 2–3 cap on mapped feeds.
 """
 from __future__ import annotations
 
@@ -159,6 +161,17 @@ def cooldown_domain_key(e: dict) -> str:
     return h
 
 
+def scheduler_cooldown_key(e: dict) -> str:
+    """
+    Cooldown bucket for fetch spacing: fixed slot key when mapped (e.g. idnes.cz vs idnes.cz/sport),
+    else same as cooldown_domain_key. Used in select_feeds_for_tick and mark_feeds_fetched.
+    """
+    sk = entry_fixed_slot_key(e)
+    if sk:
+        return sk
+    return cooldown_domain_key(e) or ""
+
+
 def _slot_key_from_host_or_dom_registry(host: str, dom: str) -> str | None:
     """Host/domain → canonical FIXED_MINUTE_SLOTS_BY_KEY key (single lookup path, aliases first)."""
     if host in _HOST_ALIASES_TO_SLOT_KEY:
@@ -289,7 +302,7 @@ def _parse_iso(ts: str | None) -> datetime | None:
 
 
 def sources_per_tick(tick_index: int, three_frac: float = 0.62) -> int:
-    """62 % ticks = 3 sources, 38 % = 2 sources (deterministic)."""
+    """Legacy helper (unused by fixed-slot scheduler); kept for tooling compatibility."""
     mod = tick_index % 100
     threshold = int(three_frac * 100 + 0.5)
     return 3 if mod < threshold else 2
@@ -301,9 +314,8 @@ def select_feeds_for_tick(
     now: datetime | None = None,
 ) -> tuple[list[dict], dict]:
     """
-    Fixed local-minute slots per source + interval due + hard domain cooldown + slot-first fill.
-    Unmapped sources: interval-only (all minutes), filled after slot-mapped candidates.
-    Returns (list of entry dicts to fetch this tick, updated state dict — not yet saved).
+    Fixed-slot-first (Prague minute): all mapped entries whose slot contains this minute,
+    plus up to max_unmapped_per_tick interval-due unmapped entries (deterministic by id).
     """
     now = now or datetime.now(timezone.utc)
     if now.tzinfo is None:
@@ -312,119 +324,83 @@ def select_feeds_for_tick(
     local = _scheduler_now_local(now)
     minute = int(local.minute)
 
-    cfg = registry.get("sources_per_tick") or {}
-    three_frac = float(cfg.get("three_source_tick_fraction") or 0.62)
-
     tick_index = int(state.get("tick_index") or 0) + 1
     state["tick_index"] = tick_index
     state["last_tick_at"] = _iso_now()
 
-    n_pick = sources_per_tick(tick_index, three_frac=three_frac)
+    cfg = registry.get("sources_per_tick") or {}
+    max_unmapped = int(cfg.get("max_unmapped_per_tick") or 2)
+
     entries = registry_active_entries(registry)
     domain_last = state.setdefault("domain_last_fetch", {})
     entry_state = state.setdefault("entry_state", {})
-
-    candidates: list[tuple[float, str, dict]] = []
-    for e in entries:
-        eid = str(e.get("id") or "")
-        interval = int(e.get("interval_min") or 30)
-        interval = max(5, interval)
-        st = entry_state.get(eid) if isinstance(entry_state.get(eid), dict) else {}
-        last_fetch = _parse_iso(st.get("last_fetch_at") if isinstance(st, dict) else None)
-        slot_off = int(e.get("slot_offset_min") or 0) % 40
-
-        if last_fetch is None:
-            overdue_sec = 86400.0 * 365 + slot_off * 60.0
-        else:
-            due_at = last_fetch + timedelta(minutes=interval)
-            overdue_sec = (now - due_at).total_seconds()
-
-        if overdue_sec < 0:
-            continue
-
-        w = float(e.get("display_weight") or 1.0)
-        score = overdue_sec * w
-        candidates.append((score, eid, e))
 
     def _effective_cooldown_min(e: dict) -> int:
         c = int(e.get("per_domain_cooldown_min") or HARD_DOMAIN_COOLDOWN_MIN)
         return max(HARD_DOMAIN_COOLDOWN_MIN, max(5, c))
 
-    def _domain_cooldown_ok(e: dict) -> bool:
-        dom = cooldown_domain_key(e)
-        if not dom:
+    def _cooldown_ok(cool_key: str, eff_min: int) -> bool:
+        if not cool_key:
             return True
-        cooldown = _effective_cooldown_min(e)
-        last_dom = _parse_iso(domain_last.get(dom))
-        if last_dom is None:
+        last = _parse_iso(domain_last.get(cool_key))
+        if last is None:
             return True
-        return (now - last_dom).total_seconds() >= cooldown * 60
+        return (now - last).total_seconds() >= eff_min * 60
 
-    # Minute gate: mapped keys must match Prague minute; unmapped pass through.
-    filtered: list[tuple[float, str, dict]] = []
-    for score, eid, e in candidates:
-        if not minute_eligible_for_fixed_slots(e, minute):
-            continue
-        filtered.append((score, eid, e))
+    def _interval_due(e: dict) -> bool:
+        eid = str(e.get("id") or "")
+        interval = max(5, int(e.get("interval_min") or 30))
+        st = entry_state.get(eid) if isinstance(entry_state.get(eid), dict) else {}
+        last_fetch = _parse_iso(st.get("last_fetch_at") if isinstance(st, dict) else None)
+        if last_fetch is None:
+            return True
+        return (now - last_fetch).total_seconds() >= interval * 60
 
-    # Slot-first sort: fixed-slot-mapped entries before unmapped; then score, id
-    def _sort_key(t: tuple[float, str, dict]) -> tuple[int, float, str]:
-        score, eid, e = t
-        mapped = 0 if is_fixed_slot_mapped(e) else 1
-        return (mapped, -score, eid)
-
-    filtered.sort(key=_sort_key)
-
-    picked: list[dict] = []
     seen_urls: set[str] = set()
-    seen_cooldown_domains: set[str] = set()
 
-    def _can_take(e: dict) -> bool:
-        url = (e.get("feed_url") or "").strip()
-        if not url or url in seen_urls:
-            return False
-        if not _domain_cooldown_ok(e):
-            return False
-        ck = cooldown_domain_key(e)
-        if ck and ck in seen_cooldown_domains:
-            return False
-        return True
-
-    def _take(e: dict) -> None:
-        picked.append(e)
-        seen_urls.add((e.get("feed_url") or "").strip())
-        ck = cooldown_domain_key(e)
-        if ck:
-            seen_cooldown_domains.add(ck)
-
-    # --- Fáze 1: rotující priorita vertikál (jen slotované zdroje — neobcházet pevné minuty) ---
-    vertical_filled = False
-    if n_pick >= 2:
-        rot = int(tick_index) % len(VERTICAL_TOPIC_ORDER)
-        v_order = VERTICAL_TOPIC_ORDER[rot:] + VERTICAL_TOPIC_ORDER[:rot]
-        for vt in v_order:
-            if vertical_filled:
-                break
-            for _score, eid, e in filtered:
-                if not is_fixed_slot_mapped(e):
-                    continue
-                tp = str(e.get("topic") or "").strip().lower()
-                if tp != vt or tp not in VERTICAL_TOPICS:
-                    continue
-                if not _can_take(e):
-                    continue
-                _take(e)
-                vertical_filled = True
-                break
-
-    # --- Fáze 2: doplnit slot-first (mapped minute-aligned před unmapped díky _sort_key) ---
-    for _score, eid, e in filtered:
-        if len(picked) >= n_pick:
-            break
-        if not _can_take(e):
+    # --- 1) Fixed-slot mapped: this minute ∈ slots; no interval gate; dedupe URL only; cooldown from state (between ticks) ---
+    fixed_picks: list[dict] = []
+    for e in sorted(
+        [x for x in entries if is_fixed_slot_mapped(x)],
+        key=lambda x: str(x.get("id") or ""),
+    ):
+        sk = entry_fixed_slot_key(e)
+        if sk is None:
             continue
-        _take(e)
+        mins = FIXED_MINUTE_SLOTS_BY_KEY.get(sk)
+        if mins is None or minute not in mins:
+            continue
+        u = (e.get("feed_url") or "").strip()
+        if not u or u in seen_urls:
+            continue
+        ck = scheduler_cooldown_key(e)
+        eff = _effective_cooldown_min(e)
+        if ck and not _cooldown_ok(ck, eff):
+            continue
+        fixed_picks.append(e)
+        seen_urls.add(u)
 
+    # --- 2) Unmapped: interval only; deterministic id order; cap max_unmapped; cooldown from state ---
+    unmapped_picks: list[dict] = []
+    for e in sorted(
+        [x for x in entries if not is_fixed_slot_mapped(x)],
+        key=lambda x: str(x.get("id") or ""),
+    ):
+        if len(unmapped_picks) >= max(0, max_unmapped):
+            break
+        if not _interval_due(e):
+            continue
+        u = (e.get("feed_url") or "").strip()
+        if not u or u in seen_urls:
+            continue
+        ck = scheduler_cooldown_key(e)
+        eff = _effective_cooldown_min(e)
+        if ck and not _cooldown_ok(ck, eff):
+            continue
+        unmapped_picks.append(e)
+        seen_urls.add(u)
+
+    picked = fixed_picks + unmapped_picks
     return picked, state
 
 
@@ -440,9 +416,9 @@ def mark_feeds_fetched(state: dict, entries: list[dict], now: datetime | None = 
         eid = str(e.get("id") or "")
         if not eid:
             continue
-        dom = cooldown_domain_key(e)
-        if dom:
-            domain_last[dom] = ts
+        ck = scheduler_cooldown_key(e)
+        if ck:
+            domain_last[ck] = ts
         prev = entry_state.get(eid)
         if not isinstance(prev, dict):
             prev = {}
