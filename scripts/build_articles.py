@@ -842,6 +842,76 @@ def infer_section(url: str, title: str, fallback_topic: str) -> str:
     return fb
 
 
+def _infer_section_strong_explicit_url_signals(url: str) -> str | None:
+    """
+    Pouze host/path — žádné klíčové slovo z titulku.
+    Slouží jako tvrdý „non-news“ signál pro registry feedy s fallback aktualne (Zprávy).
+    Vrací sekci nebo None, pokud URL nenasvědčuje jasné vertikále.
+    """
+    host, path = _host_path(url or "")
+    pl = (path or "").lower()
+    u = (url or "").lower()
+    h = (host or "").lower()
+
+    if "pocasi" in h or "/pocasi" in pl or "/pocasi-" in pl or pl.startswith("/pocasi"):
+        return "pocasi"
+
+    # Doprava: bez holého „/auto“ v cestě (falešné trefy na obecné zprávy, např. D11).
+    if "doprava" in h or "/doprava" in pl or "/nehody" in pl or "/nehoda" in pl:
+        return "doprava"
+
+    if "/cestovani" in pl or "/cestovan" in pl or "cestovani" in h:
+        return "cestovani"
+
+    if h.startswith("sport.") or "/sport" in pl or "/fotbal" in pl or "/hokej" in pl or "/tenis" in pl:
+        return "sport"
+    if "mmamag.cz" in h or "fights.cz" in h or h.startswith("isport."):
+        return "sport"
+
+    if "/ekonomika" in pl or "/finance" in pl or "/byznys" in pl or "/byznys/" in pl or "/reality" in pl:
+        return "finance"
+    if h.startswith("byznys.") or h.startswith("ekonomika.") or h.startswith("finance."):
+        return "finance"
+
+    if "/krimi" in pl or "/crime" in pl:
+        return "krimi"
+
+    if "/zdravi" in pl or "/zdrav" in pl or "zdravi" in h:
+        return "zdravi"
+
+    if "/veda/" in pl or pl.rstrip("/").endswith("/veda"):
+        return "veda"
+
+    if "/kultura/" in pl or pl.rstrip("/").endswith("/kultura"):
+        return "kultura"
+
+    if "/vzdelavani/" in pl or pl.rstrip("/").endswith("/vzdelavani") or "/skola/" in pl or pl.rstrip("/").endswith("/skola"):
+        return "vzdelavani"
+
+    if "/hry/" in pl or pl.rstrip("/").endswith("/hry"):
+        return "hry"
+
+    if "travel" in pl or "letenk" in pl or "pelipeck" in h:
+        return "cestovani"
+
+    return None
+
+
+def enforce_news_source_section_truth(url: str, title: str, fallback_topic: str) -> str:
+    """
+    Pro feedy zařazené jako obecné zpravodajství (registry topic aktualne):
+    výchozí sekce = aktualne; přepsání jen při silném explicitním signálu v URL/hostu.
+    Ostatní fallback topic = beze změny (finance, zdravi, vynucené vertikály, …).
+    """
+    fb0 = stable_section((fallback_topic or "aktualne").strip().lower())
+    if fb0 != "aktualne":
+        return infer_section(url, title, fallback_topic)
+    strong = _infer_section_strong_explicit_url_signals(url)
+    if strong is not None:
+        return strong
+    return _adjust_fallback_topic_for_path(url, "aktualne")
+
+
 def stable_section(section: str) -> str:
     s = (section or "aktualne").strip().lower()
     if s not in VALID_SECTIONS:
@@ -2423,7 +2493,7 @@ def main() -> int:
             if fallback_topic in FORCED_FEED_TOPICS:
                 section = fallback_topic
             else:
-                section = infer_section(link, title, fallback_topic=fallback_topic)
+                section = enforce_news_source_section_truth(link, title, fallback_topic=fallback_topic)
             section = stable_section(section)
 
             purity_sec = vertical_purity_final_section(section, title, link, dt)
