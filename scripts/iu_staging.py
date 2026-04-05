@@ -60,17 +60,21 @@ def _parse_iso(s: str | None) -> datetime | None:
 
 
 def serialize_feed_item(item: dict) -> dict:
-    """Prepare ingest item dict for JSON (datetime → ISO)."""
+    """Prepare ingest item dict for JSON (datetime → ISO; token sets → sorted list)."""
     out = dict(item)
     dt = out.get("dt")
     if isinstance(dt, datetime):
         out["dt"] = _iso(dt)
         out["_dt_serialized"] = True
+    # build_articles tokenize_title() returns a set; json.dump requires list/str/…
+    tok = out.get("tokens")
+    if isinstance(tok, set):
+        out["tokens"] = sorted(tok)
     return out
 
 
 def deserialize_feed_item(item: dict) -> dict:
-    """Restore dt from staging JSON."""
+    """Restore dt from staging JSON; token lists → set for in-memory clustering."""
     out = dict(item)
     if out.get("_dt_serialized") and isinstance(out.get("dt"), str):
         p = _parse_iso(out["dt"])
@@ -81,6 +85,9 @@ def deserialize_feed_item(item: dict) -> dict:
         p = _parse_iso(out["dt"])
         if p is not None:
             out["dt"] = p
+    tok = out.get("tokens")
+    if isinstance(tok, list):
+        out["tokens"] = set(tok)
     return out
 
 
