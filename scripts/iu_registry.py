@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-infoUzel: source registry loader, hard domain block, fixed-slot domain scheduler.
+infoUzel: source registry loader, hard domain block, fixed-slot source-batch scheduler.
 
 Single scheduler path:
-  • FIXED_MINUTE_SLOTS_BY_KEY + entry_fixed_slot_key (Europe/Prague minute) = source of truth;
-  • slot-first: mapped entries due at this minute are grouped by scheduler_cooldown_key; exactly one feed per key per tick (deterministic: lexicographically smallest registry entry id);
-  • mapped entries: interval gate ignored — slot + between-tick cooldown only;
+  • FIXED_MINUTE_SLOTS_BY_KEY + entry_fixed_slot_key (Europe/Prague minute) = timing source of truth;
+  • slot-first: which scheduler_cooldown_key sources are due this minute (Prague wall clock);
+  • when a mapped source is due, ALL its registry feeds in that slot run (deterministic order by entry id);
   • scheduler_cooldown_key(e): slot key when mapped (isolates idnes.cz vs idnes.cz/sport), else registry domain;
-  • hard cooldown floor 15 min (max with per-entry per_domain_cooldown_min);
-  • unmapped feeds: same one-feed-per-key rule, then cap max_unmapped_per_tick (default 2) by sorted id;
-  • no random score pick, no vertical rotation steal, no 2–3 cap on mapped feeds.
+  • hard source cooldown floor 15 min on scheduler_cooldown_key (max with per_domain_cooldown_min);
+  • mapped entries: no per-feed interval gate — slot + source cooldown only;
+  • unmapped: per-source batch when any feed in the source is interval-due; cap how many unmapped
+    *sources* run per tick via max_unmapped_per_tick (default 2), deterministic key order;
+  • HTTP pacing between feeds of the same source is handled in build_articles (small fixed gap);
+  • no random score pick, no weighted partial selection, no one-feed-per-source truncation.
 """
 from __future__ import annotations
 
@@ -47,8 +50,11 @@ def _prague_tz():
     # Last resort: CEST (no DST); minute-of-hour matches summer cron expectations.
     return timezone(timedelta(hours=2))
 
-# Hard floor: same registrable domain (registry/URL host) must not fetch more often than this.
+# Hard floor: same source (scheduler_cooldown_key) must not fetch more often than this between runs.
 HARD_DOMAIN_COOLDOWN_MIN = 15
+
+# Default small gap between HTTP fetches inside one source batch (build_articles); override via IU_SOURCE_BATCH_INTERNAL_GAP_MS.
+SOURCE_BATCH_INTERNAL_GAP_MS_DEFAULT = 400
 
 # Fixed minute-of-hour slots (0–59) per scheduler key; keys match host or logical source id (e.g. idnes.cz/sport).
 # Unmapped keys: interval-only eligibility (all minutes); ordering still by score within that pool.
@@ -315,9 +321,11 @@ def select_feeds_for_tick(
     now: datetime | None = None,
 ) -> tuple[list[dict], dict]:
     """
-    Fixed-slot-first (Prague minute): per scheduler_cooldown_key at most one feed when the slot matches;
-    tie-break: smallest registry entry id (deterministic, not random).
-    Unmapped: same one-per-key, then cap max_unmapped_per_tick.
+    Source-level slot scheduler (Prague minute):
+    • Mapped: collect due scheduler_cooldown_key groups (minute in FIXED slots, cooldown ok);
+      return every feed in each due group, sorted by registry entry id.
+    • Unmapped: groups whose cooldown is ok and at least one feed is interval-due; take up to
+      max_unmapped_per_tick *sources* (sorted keys), each source contributes all its feeds.
     """
     now = now or datetime.now(timezone.utc)
     if now.tzinfo is None:
@@ -360,7 +368,7 @@ def select_feeds_for_tick(
 
     seen_urls: set[str] = set()
 
-    # --- 1) Fixed-slot mapped: minute ∈ slots; one fetch per scheduler_cooldown_key; winner = min(entry id) per key ---
+    # --- 1) Fixed-slot mapped: minute ∈ slots; full batch per scheduler_cooldown_key (sorted entry ids) ---
     by_ck: dict[str, list[dict]] = defaultdict(list)
     for e in entries:
         if not is_fixed_slot_mapped(e):
@@ -385,21 +393,19 @@ def select_feeds_for_tick(
     fixed_picks: list[dict] = []
     for ck in sorted(by_ck.keys()):
         group = sorted(by_ck[ck], key=lambda x: str(x.get("id") or ""))
-        w = group[0]
-        u = (w.get("feed_url") or "").strip()
-        if u and u not in seen_urls:
-            fixed_picks.append(w)
-            seen_urls.add(u)
+        for w in group:
+            u = (w.get("feed_url") or "").strip()
+            if u and u not in seen_urls:
+                fixed_picks.append(w)
+                seen_urls.add(u)
 
-    # --- 2) Unmapped: interval + between-tick cooldown; one per key; then cap max_unmapped by sorted id ---
+    # --- 2) Unmapped: cooldown per source; source runs if any feed is interval-due; cap = max unmapped *sources* ---
     by_um: dict[str, list[dict]] = defaultdict(list)
     for e in entries:
         if is_fixed_slot_mapped(e):
             continue
-        if not _interval_due(e):
-            continue
         u = (e.get("feed_url") or "").strip()
-        if not u or u in seen_urls:
+        if not u:
             continue
         ck = scheduler_cooldown_key(e) or cooldown_domain_key(e)
         if not ck:
@@ -409,17 +415,19 @@ def select_feeds_for_tick(
             continue
         by_um[ck].append(e)
 
-    unmapped_winners: list[dict] = []
-    for ck in sorted(by_um.keys()):
+    unmapped_picks: list[dict] = []
+    due_um_keys = [
+        ck
+        for ck in sorted(by_um.keys())
+        if any(_interval_due(e) for e in by_um[ck])
+    ]
+    for ck in due_um_keys[: max(0, max_unmapped)]:
         group = sorted(by_um[ck], key=lambda x: str(x.get("id") or ""))
-        w = group[0]
-        u = (w.get("feed_url") or "").strip()
-        if u and u not in seen_urls:
-            unmapped_winners.append(w)
-            seen_urls.add(u)
-
-    unmapped_winners.sort(key=lambda x: str(x.get("id") or ""))
-    unmapped_picks = unmapped_winners[: max(0, max_unmapped)]
+        for w in group:
+            u = (w.get("feed_url") or "").strip()
+            if u and u not in seen_urls:
+                unmapped_picks.append(w)
+                seen_urls.add(u)
 
     picked = fixed_picks + unmapped_picks
     return picked, state
