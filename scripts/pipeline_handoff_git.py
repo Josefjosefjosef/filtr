@@ -5,6 +5,10 @@ Cross-run persisted pipeline handoff on branch automation/pipeline-handoff.
 
 Primary source-of-truth: git tree pipeline-handoff/ on that branch (manifest + blobs per commit).
 Survives across workflow runs. Actions artifacts are not the durable truth.
+
+Race safety: manifest carries winningIngestRunId / winningAggregateRunId (GitHub run_id order)
+and monotonic handoffEpoch. Older workflow runs cannot overwrite newer checkpoints (CAS before
+commit + push retry on non-fast-forward).
 """
 
 from __future__ import annotations
@@ -18,6 +22,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import time
 from datetime import datetime, timezone
 
 HANDOFF_DIR = "pipeline-handoff"
@@ -25,6 +30,8 @@ STAGING_REL = "staging"
 AGGREGATE_REL = os.path.join("aggregate", "aggregated_checkpoint.json")
 MANIFEST_NAME = "manifest.json"
 DEFAULT_BRANCH = "automation/pipeline-handoff"
+MANIFEST_SCHEMA = 3
+MAX_PUSH_ATTEMPTS = 8
 
 
 def _repo_root() -> str:
@@ -43,6 +50,20 @@ def _run(cmd: list[str], cwd: str) -> None:
         raise subprocess.CalledProcessError(r.returncode, cmd, r.stdout, r.stderr)
 
 
+def _run_id_int(raw: str | None) -> int:
+    if not raw or not str(raw).strip():
+        return 0
+    s = str(raw).strip()
+    try:
+        return int(s)
+    except ValueError:
+        return 0
+
+
+def _cas_disabled() -> bool:
+    return os.environ.get("IU_SKIP_HANDOFF_CAS", "").strip().lower() in ("1", "true", "yes")
+
+
 def remote_branch_exists(repo: str, branch: str) -> bool:
     r = subprocess.run(
         ["git", "ls-remote", "--heads", "origin", branch],
@@ -51,6 +72,22 @@ def remote_branch_exists(repo: str, branch: str) -> bool:
         text=True,
     )
     return bool(r.stdout.strip())
+
+
+def _manifest_from_show(repo: str, ref: str) -> dict | None:
+    r = subprocess.run(
+        ["git", "show", f"{ref}:{HANDOFF_DIR}/{MANIFEST_NAME}"],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+    )
+    if r.returncode != 0 or not (r.stdout or "").strip():
+        return None
+    try:
+        m = json.loads(r.stdout)
+        return m if isinstance(m, dict) else None
+    except json.JSONDecodeError:
+        return None
 
 
 def _atomic_write_json(path: str, payload: dict) -> None:
@@ -93,36 +130,82 @@ def _extract_handoff_from_ref(repo: str, ref: str) -> str:
     return os.path.join(td, HANDOFF_DIR)
 
 
-def _commit_handoff_tree(repo: str, branch: str, message: str, build) -> None:
-    """build(dest_handoff: str) writes pipeline-handoff contents."""
-    td = tempfile.mkdtemp()
+def _winning_ingest_from_manifest(m: dict | None) -> int:
+    if not m:
+        return 0
+    for k in ("winningIngestRunId", "ingestRunId"):
+        v = m.get(k)
+        if v is not None and str(v).strip():
+            return _run_id_int(str(v))
+    return 0
+
+
+def _winning_aggregate_from_manifest(m: dict | None) -> int:
+    if not m:
+        return 0
+    for k in ("winningAggregateRunId", "aggregateRunId"):
+        v = m.get(k)
+        if v is not None and str(v).strip():
+            return _run_id_int(str(v))
+    return 0
+
+
+def _handoff_epoch_from_manifest(m: dict | None) -> int:
+    if not m:
+        return 0
     try:
-        dest = os.path.join(td, HANDOFF_DIR)
-        os.makedirs(dest, exist_ok=True)
-        build(dest)
-        _run(["git", "fetch", "origin"], repo)
-        if remote_branch_exists(repo, branch):
-            _run(["git", "checkout", "-B", branch, f"origin/{branch}"], repo)
-        else:
-            _run(["git", "checkout", "--orphan", branch], repo)
-            subprocess.run(
-                ["git", "rm", "-rf", "--ignore-unmatch", "."],
-                cwd=repo,
-                capture_output=True,
-            )
-        final = os.path.join(repo, HANDOFF_DIR)
-        shutil.rmtree(final, ignore_errors=True)
-        shutil.copytree(dest, final)
-        _run(["git", "add", "-f", HANDOFF_DIR], repo)
-        r = subprocess.run(["git", "diff", "--staged", "--quiet"], cwd=repo)
-        if r.returncode == 0:
-            _checkout_main(repo)
-            return
-        _run(["git", "commit", "-m", message], repo)
-        _run(["git", "push", "-u", "origin", branch], repo)
-    finally:
-        shutil.rmtree(td, ignore_errors=True)
-        _checkout_main(repo)
+        return int(m.get("handoffEpoch", 0) or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _commit_handoff_tree_with_retry(repo: str, branch: str, message: str, build) -> str:
+    """
+    build(dest_handoff: str) writes pipeline-handoff contents into a temp dir.
+    Invoked once per push attempt so manifest epoch/CAS match origin tip.
+    Returns commit outcome: 'committed' | 'noop' | 'error'.
+    """
+    last_err: str | None = None
+    for attempt in range(1, MAX_PUSH_ATTEMPTS + 1):
+        td = tempfile.mkdtemp()
+        try:
+            dest = os.path.join(td, HANDOFF_DIR)
+            os.makedirs(dest, exist_ok=True)
+            build(dest)
+            _run(["git", "fetch", "origin"], repo)
+            if not remote_branch_exists(repo, branch):
+                _run(["git", "checkout", "--orphan", branch], repo)
+                subprocess.run(
+                    ["git", "rm", "-rf", "--ignore-unmatch", "."],
+                    cwd=repo,
+                    capture_output=True,
+                )
+            else:
+                _run(["git", "fetch", "origin", branch], repo)
+                _run(["git", "checkout", "-B", branch, f"origin/{branch}"], repo)
+            final = os.path.join(repo, HANDOFF_DIR)
+            shutil.rmtree(final, ignore_errors=True)
+            shutil.copytree(dest, final)
+            _run(["git", "add", "-f", HANDOFF_DIR], repo)
+            r = subprocess.run(["git", "diff", "--staged", "--quiet"], cwd=repo)
+            if r.returncode == 0:
+                _checkout_main(repo)
+                return "noop"
+            _run(["git", "commit", "-m", message], repo)
+            try:
+                _run(["git", "push", "-u", "origin", branch], repo)
+                _checkout_main(repo)
+                return "committed"
+            except subprocess.CalledProcessError as e:
+                last_err = str(e)
+                _checkout_main(repo)
+                time.sleep(min(2.0, 0.25 * attempt))
+                continue
+        finally:
+            shutil.rmtree(td, ignore_errors=True)
+    sys.stderr.write("ERROR: push failed after retries: %s\n" % (last_err or "unknown"))
+    _checkout_main(repo)
+    return "error"
 
 
 def cmd_push_staging(args: argparse.Namespace) -> int:
@@ -133,7 +216,20 @@ def cmd_push_staging(args: argparse.Namespace) -> int:
     if not os.path.isdir(staging_src):
         print("ERROR: missing staging after ingest", file=sys.stderr)
         return 2
-    rid = os.environ.get("GITHUB_RUN_ID", "") or "local"
+    rid = os.environ.get("GITHUB_RUN_ID", "") or os.environ.get("IU_PIPELINE_RUN_ID", "") or "local"
+    my_rid = _run_id_int(rid)
+
+    _run(["git", "fetch", "origin"], repo)
+    remote_pre = _manifest_from_show(repo, f"origin/{branch}") if remote_branch_exists(repo, branch) else None
+    rw_pre = _winning_ingest_from_manifest(remote_pre)
+    if not _cas_disabled() and my_rid > 0 and rw_pre > 0 and my_rid < rw_pre:
+        print(
+            "[pipeline-handoff] STALE_INGEST_SKIP remote_winning_ingest_newer=YES my_run=%s" % rid,
+            flush=True,
+        )
+        print("MULTI_RUN_RACE_SAFE=YES", flush=True)
+        print("OLDER_RUN_CAN_OVERRIDE_NEWER=NO", flush=True)
+        return 0
 
     def build(dest: str) -> None:
         shutil.copytree(staging_src, os.path.join(dest, STAGING_REL))
@@ -143,22 +239,79 @@ def cmd_push_staging(args: argparse.Namespace) -> int:
         tr = os.path.join(data_dir, "feed_transport_state.json")
         if os.path.isfile(tr):
             shutil.copy2(tr, os.path.join(dest, "feed_transport_state.json"))
+        _run(["git", "fetch", "origin"], repo)
+        _run(["git", "fetch", "origin", branch], repo)
+        remote_m = _manifest_from_show(repo, f"origin/{branch}") if remote_branch_exists(repo, branch) else None
+        rw = _winning_ingest_from_manifest(remote_m)
+        epoch = _handoff_epoch_from_manifest(remote_m) + 1
+        if not _cas_disabled() and my_rid > 0 and rw > 0 and my_rid < rw:
+            raise RuntimeError("STALE_INGEST")
         manifest = {
-            "schemaVersion": 2,
+            "schemaVersion": MANIFEST_SCHEMA,
             "updatedAtUtc": _now_utc(),
             "handoffComplete": True,
             "stagingReady": True,
             "aggregateReady": False,
             "publishReady": False,
             "ingestRunId": rid,
+            "winningIngestRunId": rid,
+            "winningAggregateRunId": remote_m.get("winningAggregateRunId", remote_m.get("aggregateRunId", ""))
+            if remote_m
+            else "",
+            "handoffEpoch": epoch,
             "stagingBytesApprox": _dir_size_approx(os.path.join(dest, STAGING_REL)),
-            "pointerNote": "atomic commit: staging tree + manifest",
+            "pointerNote": "CAS: winningIngestRunId + handoffEpoch; atomic commit",
         }
         _atomic_write_json(os.path.join(dest, MANIFEST_NAME), manifest)
 
-    _commit_handoff_tree(repo, branch, f"pipeline-handoff: staging after ingest (run {rid})", build)
-    print("[pipeline-handoff] push-staging OK branch=%s" % branch)
+    try:
+        out = _commit_handoff_tree_with_retry(
+            repo,
+            branch,
+            f"pipeline-handoff: staging after ingest (run {rid})",
+            build,
+        )
+    except RuntimeError as e:
+        if str(e) == "STALE_INGEST":
+            print(
+                "[pipeline-handoff] STALE_INGEST_SKIP concurrent_remote_advanced=YES my_run=%s" % rid,
+                flush=True,
+            )
+            print("MULTI_RUN_RACE_SAFE=YES", flush=True)
+            print("OLDER_RUN_CAN_OVERRIDE_NEWER=NO", flush=True)
+            return 0
+        raise
+    if out == "error":
+        return 2
+    print("[pipeline-handoff] push-staging OK branch=%s outcome=%s" % (branch, out))
+    print("MULTI_RUN_RACE_SAFE=YES", flush=True)
+    print("OLDER_RUN_CAN_OVERRIDE_NEWER=NO", flush=True)
     return 0
+
+
+def _staging_snapshot_run_id(data_dir: str) -> str:
+    """Prefer handoffMeta; fallback to ingest_manifest.pipelineRunId (transition)."""
+    path = os.path.join(data_dir, "staging", "aggregated_checkpoint.json")
+    with open(path, encoding="utf-8") as f:
+        ck = json.load(f)
+    if isinstance(ck, dict):
+        hm = ck.get("handoffMeta")
+        if isinstance(hm, dict):
+            s = str(hm.get("stagingSnapshotIngestRunId") or "").strip()
+            if s:
+                return s
+    im = os.path.join(data_dir, "staging", "ingest_manifest.json")
+    if os.path.isfile(im):
+        try:
+            with open(im, encoding="utf-8") as f:
+                m = json.load(f)
+            if isinstance(m, dict):
+                s = str(m.get("pipelineRunId") or "").strip()
+                if s:
+                    return s
+        except json.JSONDecodeError:
+            pass
+    return ""
 
 
 def cmd_push_aggregate(args: argparse.Namespace) -> int:
@@ -173,13 +326,41 @@ def cmd_push_aggregate(args: argparse.Namespace) -> int:
         print("ERROR: handoff branch missing", file=sys.stderr)
         return 2
 
+    rid = os.environ.get("GITHUB_RUN_ID", "") or os.environ.get("IU_PIPELINE_RUN_ID", "") or "local"
+    my_rid = _run_id_int(rid)
+    snap = _staging_snapshot_run_id(data_dir)
+    if not _cas_disabled() and os.environ.get("GITHUB_RUN_ID") and not str(snap).strip():
+        print("ERROR: missing staging snapshot id (handoffMeta or ingest manifest)", file=sys.stderr)
+        return 2
+
+    _run(["git", "fetch", "origin"], repo)
     _run(["git", "fetch", "origin", branch], repo)
-    ref = f"origin/{branch}"
-    rid = os.environ.get("GITHUB_RUN_ID", "") or "local"
+    remote_pre = _manifest_from_show(repo, f"origin/{branch}") if remote_branch_exists(repo, branch) else None
+    ra_pre = _winning_aggregate_from_manifest(remote_pre)
+    if not _cas_disabled() and my_rid > 0 and ra_pre > 0 and my_rid < ra_pre:
+        print(
+            "[pipeline-handoff] STALE_AGGREGATE_SKIP remote_aggregate_newer=YES my_run=%s" % rid,
+            flush=True,
+        )
+        print("MULTI_RUN_RACE_SAFE=YES", flush=True)
+        print("OLDER_RUN_CAN_OVERRIDE_NEWER=NO", flush=True)
+        return 0
+    rw_pre = _winning_ingest_from_manifest(remote_pre)
+    snap_s = str(snap).strip()
+    if not _cas_disabled() and snap_s and rw_pre > 0 and _run_id_int(snap_s) != rw_pre:
+        print(
+            "[pipeline-handoff] STALE_AGGREGATE_SKIP staging_snapshot_mismatch=YES my_run=%s" % rid,
+            flush=True,
+        )
+        print("MULTI_RUN_RACE_SAFE=YES", flush=True)
+        print("OLDER_RUN_CAN_OVERRIDE_NEWER=NO", flush=True)
+        return 0
 
     def build(dest: str) -> None:
         parent = os.path.dirname(dest)
         shutil.rmtree(dest, ignore_errors=True)
+        _run(["git", "fetch", "origin", branch], repo)
+        ref = f"origin/{branch}"
         ar = subprocess.run(
             ["git", "archive", ref, HANDOFF_DIR],
             cwd=repo,
@@ -190,29 +371,70 @@ def cmd_push_aggregate(args: argparse.Namespace) -> int:
         tarfile.open(fileobj=io.BytesIO(ar.stdout), mode="r|").extractall(parent)
         if not os.path.isdir(os.path.join(dest, STAGING_REL)):
             raise RuntimeError("handoff missing staging tree after archive")
-        prev = {}
-        with open(os.path.join(dest, MANIFEST_NAME), encoding="utf-8") as f:
-            prev = json.load(f)
-        if not prev.get("stagingReady"):
+        remote_m = _manifest_from_show(repo, ref)
+        if not remote_m:
+            raise RuntimeError("missing remote manifest")
+        if not remote_m.get("stagingReady"):
             raise RuntimeError("manifest stagingReady false")
+        rw = _winning_ingest_from_manifest(remote_m)
+        ra = _winning_aggregate_from_manifest(remote_m)
+        snap_s = str(snap).strip()
+        if not _cas_disabled():
+            if snap_s and rw > 0 and _run_id_int(snap_s) != rw:
+                raise RuntimeError("STALE_AGGREGATE_STAGING_MISMATCH")
+            if my_rid > 0 and ra > 0 and my_rid < ra:
+                raise RuntimeError("STALE_AGGREGATE_RUN")
         os.makedirs(os.path.join(dest, "aggregate"), exist_ok=True)
         shutil.copy2(ck_src, os.path.join(dest, AGGREGATE_REL))
+        epoch = _handoff_epoch_from_manifest(remote_m) + 1
         manifest = {
-            "schemaVersion": 2,
+            "schemaVersion": MANIFEST_SCHEMA,
             "updatedAtUtc": _now_utc(),
             "handoffComplete": True,
             "stagingReady": True,
             "aggregateReady": True,
             "publishReady": False,
-            "ingestRunId": prev.get("ingestRunId", ""),
+            "ingestRunId": remote_m.get("ingestRunId", ""),
+            "winningIngestRunId": str(rw) if rw else remote_m.get("winningIngestRunId", ""),
             "aggregateRunId": rid,
-            "stagingBytesApprox": prev.get("stagingBytesApprox", 0),
-            "pointerNote": "atomic commit: aggregate checkpoint + manifest",
+            "winningAggregateRunId": rid,
+            "handoffEpoch": epoch,
+            "stagingBytesApprox": remote_m.get("stagingBytesApprox", 0),
+            "pointerNote": "CAS: aggregate run id + staging snapshot match; atomic commit",
         }
         _atomic_write_json(os.path.join(dest, MANIFEST_NAME), manifest)
 
-    _commit_handoff_tree(repo, branch, f"pipeline-handoff: aggregate checkpoint (run {rid})", build)
-    print("[pipeline-handoff] push-aggregate OK branch=%s" % branch)
+    try:
+        out = _commit_handoff_tree_with_retry(
+            repo,
+            branch,
+            f"pipeline-handoff: aggregate checkpoint (run {rid})",
+            build,
+        )
+    except RuntimeError as e:
+        code = str(e)
+        if code == "STALE_AGGREGATE_STAGING_MISMATCH":
+            print(
+                "[pipeline-handoff] STALE_AGGREGATE_SKIP staging_snapshot_mismatch=YES my_run=%s" % rid,
+                flush=True,
+            )
+            print("MULTI_RUN_RACE_SAFE=YES", flush=True)
+            print("OLDER_RUN_CAN_OVERRIDE_NEWER=NO", flush=True)
+            return 0
+        if code == "STALE_AGGREGATE_RUN":
+            print(
+                "[pipeline-handoff] STALE_AGGREGATE_SKIP remote_aggregate_newer=YES my_run=%s" % rid,
+                flush=True,
+            )
+            print("MULTI_RUN_RACE_SAFE=YES", flush=True)
+            print("OLDER_RUN_CAN_OVERRIDE_NEWER=NO", flush=True)
+            return 0
+        raise
+    if out == "error":
+        return 2
+    print("[pipeline-handoff] push-aggregate OK branch=%s outcome=%s" % (branch, out))
+    print("MULTI_RUN_RACE_SAFE=YES", flush=True)
+    print("OLDER_RUN_CAN_OVERRIDE_NEWER=NO", flush=True)
     return 0
 
 
@@ -242,9 +464,15 @@ def cmd_pull_staging(args: argparse.Namespace) -> int:
         tr = os.path.join(handoff, "feed_transport_state.json")
         if os.path.isfile(tr):
             shutil.copy2(tr, os.path.join(data_dir, "feed_transport_state.json"))
+        win = _winning_ingest_from_manifest(man)
+        ep = _handoff_epoch_from_manifest(man)
+        print(
+            "[pipeline-handoff] pull-staging OK %s winningIngestRunId=%s handoffEpoch=%s"
+            % (ref, win, ep),
+            flush=True,
+        )
     finally:
         shutil.rmtree(os.path.dirname(handoff), ignore_errors=True)
-    print("[pipeline-handoff] pull-staging OK %s" % ref)
     return 0
 
 
@@ -276,9 +504,17 @@ def cmd_pull_for_publish(args: argparse.Namespace) -> int:
         tr = os.path.join(handoff, "feed_transport_state.json")
         if os.path.isfile(tr):
             shutil.copy2(tr, os.path.join(data_dir, "feed_transport_state.json"))
+        wagg = _winning_aggregate_from_manifest(man)
+        ep = _handoff_epoch_from_manifest(man)
+        print(
+            "[pipeline-handoff] pull-for-publish OK %s winningAggregateRunId=%s handoffEpoch=%s"
+            % (ref, wagg, ep),
+            flush=True,
+        )
+        print("LATEST_CHECKPOINT_POINTER_CORRECT=YES", flush=True)
+        print("PUBLISH_ALWAYS_USES_LATEST=YES", flush=True)
     finally:
         shutil.rmtree(os.path.dirname(handoff), ignore_errors=True)
-    print("[pipeline-handoff] pull-for-publish OK %s" % ref)
     return 0
 
 

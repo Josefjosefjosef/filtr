@@ -147,6 +147,9 @@ def write_ingest_manifest(output_dir: str, batch_keys: list[str], ingested_at: s
         "ingestedAt": ingested_at,
         "sourceBatchKeys": sorted(set(batch_keys)),
     }
+    pr = (os.environ.get("GITHUB_RUN_ID") or os.environ.get("IU_PIPELINE_RUN_ID") or "").strip()
+    if pr:
+        payload["pipelineRunId"] = pr
     _atomic_write_json(path, payload)
     return path
 

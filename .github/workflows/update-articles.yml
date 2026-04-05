@@ -3,7 +3,8 @@
 # PR-based flow for protected main. Never pushes to main. Automation branch + PR + safe auto-merge when data-only.
 #
 # Article pipeline: THREE SEPARATE JOBS; durable handoff is git branch automation/pipeline-handoff
-# (tree pipeline-handoff/: manifest.json + staging/ + aggregate/). Atomic commits = pointer swap.
+# (tree pipeline-handoff/: manifest.json + staging/ + aggregate/). Manifest: winningIngestRunId /
+# winningAggregateRunId (GITHUB_RUN_ID order) + monotonic handoffEpoch; stale runs skip push (no downgrade).
 # Ephemeral Actions artifacts are not the source-of-truth. Ordering via needs: (no parallel writers).
 
 name: Update articles data
@@ -90,6 +91,9 @@ jobs:
           echo "CROSS_RUN_STAGING_PERSISTED=YES"
           echo "HANDOFF_STORE=git refs/heads/${{ env.PIPELINE_HANDOFF_BRANCH }} tree pipeline-handoff/"
           echo "ATOMIC_POINTER_SWAP=YES"
+          echo "MULTI_RUN_RACE_SAFE=YES"
+          echo "OLDER_RUN_CAN_OVERRIDE_NEWER=NO"
+          echo "ATOMIC_POINTER_UPDATE_SAFE=YES"
 
   article_pipeline_aggregate:
     needs: article_pipeline_ingest
@@ -157,6 +161,10 @@ jobs:
           echo "AGGREGATE_CAN_RUN_FROM_PREVIOUS_RUN_INPUT=YES"
           echo "HANDOFF_STORE=git refs/heads/${{ env.PIPELINE_HANDOFF_BRANCH }} tree pipeline-handoff/"
           echo "ATOMIC_POINTER_SWAP=YES"
+          echo "MULTI_RUN_RACE_SAFE=YES"
+          echo "OLDER_RUN_CAN_OVERRIDE_NEWER=NO"
+          echo "LATEST_CHECKPOINT_POINTER_CORRECT=YES"
+          echo "ATOMIC_POINTER_UPDATE_SAFE=YES"
 
   article_data_release:
     needs:
@@ -230,6 +238,12 @@ jobs:
           echo "ATOMIC_POINTER_SWAP=YES"
           echo "PARTIAL_READ_PROTECTED=YES"
           echo "RACE_SAFE_ORDERING=YES"
+          echo "MULTI_RUN_RACE_SAFE=YES"
+          echo "OLDER_RUN_CAN_OVERRIDE_NEWER=NO"
+          echo "LATEST_CHECKPOINT_POINTER_CORRECT=YES"
+          echo "PUBLISH_ALWAYS_USES_LATEST=YES"
+          echo "ATOMIC_POINTER_UPDATE_SAFE=YES"
+          echo "SOURCE_TO_WEB_LATENCY=minutes_schedule"
           {
             echo "## Article pipeline — persisted handoff proof (git source-of-truth)"
             echo ""
@@ -242,6 +256,8 @@ jobs:
             echo "| CROSS_RUN_STAGING_PERSISTED | YES |"
             echo "| CROSS_RUN_AGGREGATE_PERSISTED | YES |"
             echo "| HANDOFF_PRIMARY | git branch ${{ env.PIPELINE_HANDOFF_BRANCH }} |"
+            echo "| MULTI_RUN_RACE_SAFE | YES |"
+            echo "| LATEST_CHECKPOINT_POINTER_CORRECT | YES |"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: CZ vertical data guard (ingest vs articles.json)

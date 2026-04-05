@@ -2695,13 +2695,24 @@ def _publish_article_outputs(bundle: dict) -> int:
     return 0
 
 
-def _checkpoint_bundle_for_disk(bundle: dict) -> dict:
+def _handoff_meta_from_staging_manifest(loaded: dict) -> dict:
+    """Race-safe linkage: checkpoint ties to ingest snapshot (pipelineRunId) + this workflow run."""
+    man = loaded.get("manifest") if isinstance(loaded.get("manifest"), dict) else {}
+    pr = str(man.get("pipelineRunId") or os.environ.get("GITHUB_RUN_ID") or "").strip()
+    ar = (os.environ.get("GITHUB_RUN_ID") or "").strip() or "local"
+    return {
+        "stagingSnapshotIngestRunId": pr,
+        "aggregateWorkflowRunId": ar,
+    }
+
+
+def _checkpoint_bundle_for_disk(bundle: dict, handoff_meta: dict | None = None) -> dict:
     """JSON-safe aggregate bundle for aggregated_checkpoint.json (youtube _dt as ISO)."""
     yt = bundle.get("youtube_pool") or []
     rows = [serialize_youtube_row(r) for r in yt if isinstance(r, dict)]
     reg = bundle.get("registry")
     rv = reg.get("version") if isinstance(reg, dict) else None
-    return {
+    out = {
         "generated_at": bundle["generated_at"],
         "articles_full": bundle["articles_full"],
         "articles_final": bundle["articles_final"],
@@ -2709,6 +2720,9 @@ def _checkpoint_bundle_for_disk(bundle: dict) -> dict:
         "youtube_pool": rows,
         "registry_version": rv,
     }
+    if handoff_meta:
+        out["handoffMeta"] = handoff_meta
+    return out
 
 
 def _bundle_from_checkpoint(cp: dict) -> dict | None:
@@ -2768,7 +2782,8 @@ def main() -> int:
             loaded["youtube_rows"],
             registry,
         )
-        write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle))
+        hm = _handoff_meta_from_staging_manifest(loaded)
+        write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle, hm))
         return 0
 
     if phase not in ("ingest", "all"):
@@ -3088,8 +3103,10 @@ def main() -> int:
     if phase == "ingest":
         return 0
 
+    loaded = load_staging_for_aggregate(OUTPUT_DIR)
     bundle = _aggregate_pipeline(all_items, per_feed_report, yt_videos, registry)
-    write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle))
+    hm = _handoff_meta_from_staging_manifest(loaded)
+    write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle, hm))
     return _publish_article_outputs(bundle)
 
 
