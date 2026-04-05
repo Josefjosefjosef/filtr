@@ -4,17 +4,18 @@ infoUzel: source registry loader, hard domain block, fixed-slot domain scheduler
 
 Single scheduler path:
   • FIXED_MINUTE_SLOTS_BY_KEY + entry_fixed_slot_key (Europe/Prague minute) = source of truth;
-  • slot-first: all mapped entries due at this minute are selected (deterministic order by entry id);
-  • mapped entries: interval gate ignored — slot + cooldown only;
+  • slot-first: mapped entries due at this minute are grouped by scheduler_cooldown_key; exactly one feed per key per tick (deterministic: lexicographically smallest registry entry id);
+  • mapped entries: interval gate ignored — slot + between-tick cooldown only;
   • scheduler_cooldown_key(e): slot key when mapped (isolates idnes.cz vs idnes.cz/sport), else registry domain;
   • hard cooldown floor 15 min (max with per-entry per_domain_cooldown_min);
-  • unmapped feeds: interval-due only, max max_unmapped_per_tick (registry sources_per_tick.max_unmapped_per_tick, default 2), deterministic by id;
+  • unmapped feeds: same one-feed-per-key rule, then cap max_unmapped_per_tick (default 2) by sorted id;
   • no random score pick, no vertical rotation steal, no 2–3 cap on mapped feeds.
 """
 from __future__ import annotations
 
 import json
 import os
+from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse
 
@@ -314,8 +315,9 @@ def select_feeds_for_tick(
     now: datetime | None = None,
 ) -> tuple[list[dict], dict]:
     """
-    Fixed-slot-first (Prague minute): all mapped entries whose slot contains this minute,
-    plus up to max_unmapped_per_tick interval-due unmapped entries (deterministic by id).
+    Fixed-slot-first (Prague minute): per scheduler_cooldown_key at most one feed when the slot matches;
+    tie-break: smallest registry entry id (deterministic, not random).
+    Unmapped: same one-per-key, then cap max_unmapped_per_tick.
     """
     now = now or datetime.now(timezone.utc)
     if now.tzinfo is None:
@@ -358,12 +360,11 @@ def select_feeds_for_tick(
 
     seen_urls: set[str] = set()
 
-    # --- 1) Fixed-slot mapped: this minute ∈ slots; no interval gate; dedupe URL only; cooldown from state (between ticks) ---
-    fixed_picks: list[dict] = []
-    for e in sorted(
-        [x for x in entries if is_fixed_slot_mapped(x)],
-        key=lambda x: str(x.get("id") or ""),
-    ):
+    # --- 1) Fixed-slot mapped: minute ∈ slots; one fetch per scheduler_cooldown_key; winner = min(entry id) per key ---
+    by_ck: dict[str, list[dict]] = defaultdict(list)
+    for e in entries:
+        if not is_fixed_slot_mapped(e):
+            continue
         sk = entry_fixed_slot_key(e)
         if sk is None:
             continue
@@ -371,34 +372,54 @@ def select_feeds_for_tick(
         if mins is None or minute not in mins:
             continue
         u = (e.get("feed_url") or "").strip()
-        if not u or u in seen_urls:
+        if not u:
             continue
         ck = scheduler_cooldown_key(e)
         eff = _effective_cooldown_min(e)
-        if ck and not _cooldown_ok(ck, eff):
+        if not ck:
             continue
-        fixed_picks.append(e)
-        seen_urls.add(u)
+        if not _cooldown_ok(ck, eff):
+            continue
+        by_ck[ck].append(e)
 
-    # --- 2) Unmapped: interval only; deterministic id order; cap max_unmapped; cooldown from state ---
-    unmapped_picks: list[dict] = []
-    for e in sorted(
-        [x for x in entries if not is_fixed_slot_mapped(x)],
-        key=lambda x: str(x.get("id") or ""),
-    ):
-        if len(unmapped_picks) >= max(0, max_unmapped):
-            break
+    fixed_picks: list[dict] = []
+    for ck in sorted(by_ck.keys()):
+        group = sorted(by_ck[ck], key=lambda x: str(x.get("id") or ""))
+        w = group[0]
+        u = (w.get("feed_url") or "").strip()
+        if u and u not in seen_urls:
+            fixed_picks.append(w)
+            seen_urls.add(u)
+
+    # --- 2) Unmapped: interval + between-tick cooldown; one per key; then cap max_unmapped by sorted id ---
+    by_um: dict[str, list[dict]] = defaultdict(list)
+    for e in entries:
+        if is_fixed_slot_mapped(e):
+            continue
         if not _interval_due(e):
             continue
         u = (e.get("feed_url") or "").strip()
         if not u or u in seen_urls:
             continue
-        ck = scheduler_cooldown_key(e)
-        eff = _effective_cooldown_min(e)
-        if ck and not _cooldown_ok(ck, eff):
+        ck = scheduler_cooldown_key(e) or cooldown_domain_key(e)
+        if not ck:
             continue
-        unmapped_picks.append(e)
-        seen_urls.add(u)
+        eff = _effective_cooldown_min(e)
+        if not _cooldown_ok(ck, eff):
+            continue
+        by_um[ck].append(e)
+
+    unmapped_winners: list[dict] = []
+    for ck in sorted(by_um.keys()):
+        group = sorted(by_um[ck], key=lambda x: str(x.get("id") or ""))
+        w = group[0]
+        u = (w.get("feed_url") or "").strip()
+        if u and u not in seen_urls:
+            unmapped_winners.append(w)
+            seen_urls.add(u)
+
+    unmapped_winners.sort(key=lambda x: str(x.get("id") or ""))
+    unmapped_picks = unmapped_winners[: max(0, max_unmapped)]
 
     picked = fixed_picks + unmapped_picks
     return picked, state
