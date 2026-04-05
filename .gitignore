@@ -66,6 +66,9 @@ tools/_artifacts/
 # infoUzel: never track artifacts/proofs
 artifacts/
 
+# infoUzel: article pipeline staging (ephemeral; never commit)
+projects/data/staging/
+
 # infoUzel: generated monitoring (never commit)
 projects/data/fetch_monitor.json
 projects/data/feed_snapshots/

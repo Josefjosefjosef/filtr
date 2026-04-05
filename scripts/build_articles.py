@@ -52,6 +52,17 @@ from iu_registry import (
     scheduler_cooldown_key,
     select_feeds_for_tick,
 )
+from iu_staging import (
+    deserialize_youtube_row,
+    ensure_staging_dirs,
+    load_staging_for_aggregate,
+    read_aggregated_checkpoint,
+    serialize_youtube_row,
+    write_aggregated_checkpoint,
+    write_ingest_manifest,
+    write_source_staging,
+    write_youtube_staging,
+)
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # repo root
 FEEDS_PATH = os.path.join(ROOT_DIR, "scripts", "feeds.json")
@@ -2282,16 +2293,480 @@ def build_brief(generated_at: str, articles: list) -> dict:
     }
 
 
+def _pipeline_phase() -> str:
+    p = (os.getenv("IU_ARTICLE_PIPELINE_PHASE") or "all").strip().lower()
+    if p in ("ingest", "aggregate", "publish", "all"):
+        return p
+    return "all"
+
+
+def _aggregate_pipeline(
+    all_items: list,
+    per_feed_report: list,
+    yt_videos: list,
+    registry: dict,
+) -> dict:
+    """
+    Staging / in-memory raw items → merged + limited article lists (no RSS fetch).
+    """
+    seen_pre = set()
+    deduped_items = []
+    for it in sorted(all_items, key=lambda x: x["dt"], reverse=True):
+        key = (it["media_norm"], it["url"])
+        if key in seen_pre:
+            continue
+        seen_pre.add(key)
+        deduped_items.append(it)
+
+    clusters = cluster_items(deduped_items)
+
+    new_articles = []
+
+    sec_rank = {s: i for i, s in enumerate(SECTION_ORDER)}
+    clusters.sort(key=lambda c: (c.published_at(), -sec_rank.get(c.section, 999)), reverse=True)
+
+    for c in clusters:
+        sources = c.sources_unique()
+        published = c.published_at().isoformat().replace("+00:00", "Z")
+
+        if c.content_type == "video":
+            t = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]["title"]
+            title_out = _ensure_video_prefix(t)
+        else:
+            if c.unique_media_count() == 1:
+                t = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]["title"]
+                title_out = clean_single_source_title(t)
+            else:
+                title_out = choose_neutral_title(c.titles(), section=c.section)
+
+        pcat = _primary_category_from_cluster_items(c.items)
+        ftype = _feed_type_from_cluster_items(c.items)
+        thash = topic_hash_from_title(title_out)
+
+        primary_item = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]
+        _sl = fix_cz_mojibake(str(primary_item.get("media_raw") or "")).strip()
+        article_out = {
+            "topic": c.section,
+            "section": c.section,
+            "contentType": c.content_type,
+            "title": fix_cz_mojibake(title_out),
+            "publishedAt": published,
+            "sources": sources,
+            "primaryCategory": pcat,
+            "topicHash": thash,
+            "feedType": ftype,
+            "sourceDisplayWeight": float(primary_item.get("sourceDisplayWeight") or 1.0),
+            "sectionPrimary": str(primary_item.get("feedCategory") or ""),
+            "sourceLabel": _sl,
+        }
+        _fid = str(primary_item.get("feedId") or "").strip()
+        if _fid:
+            article_out["feedId"] = _fid
+        src0 = (sources or [{}])[0]
+        candidate = (src0.get("url", "") or "").strip()
+        if candidate.lower().startswith("http://") or candidate.lower().startswith("https://"):
+            article_out["url"] = candidate
+        else:
+            article_out["url"] = ""
+
+        new_articles.append(article_out)
+
+    generated_at = iso_now_z()
+
+    prev_payload = _safe_read_json(OUT_PATH) or {}
+    prev_list = list(prev_payload.get("articles") or [])
+    merged_articles = merge_article_lists(prev_list, new_articles, max(500, MAX_OUTPUT_ARTICLES * 3))
+    merged_articles = purge_blocked_articles(merged_articles)
+    merged_articles = [remap_article_section_if_url_mismatch(a) for a in merged_articles]
+    merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
+    merged_articles = [a for a in merged_articles if a is not None]
+    merged_articles = [_apply_second_layer_targeted_section_cleanup(a) for a in merged_articles]
+    merged_articles = _apply_conservative_topic_clustering(merged_articles)
+    for a in merged_articles:
+        a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
+        a["displayScore"] = compute_display_score(a)
+
+    merged_articles.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+    merged_articles = apply_staggered_section_release(merged_articles, generated_at)
+    merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+
+    merged_articles = apply_topic_and_source_limits(merged_articles)
+    merged_articles = apply_niche_fraction_limit(merged_articles)
+    out_articles = merged_articles
+    final = out_articles[:MAX_OUTPUT_ARTICLES]
+
+    return {
+        "generated_at": generated_at,
+        "articles_full": out_articles,
+        "articles_final": final,
+        "per_feed_report": per_feed_report,
+        "youtube_pool": yt_videos,
+        "registry": registry,
+    }
+
+
+def _publish_article_outputs(bundle: dict) -> int:
+    """Write public JSON (articles.json, shards, health, meta, brief, videos) from an aggregate bundle."""
+    generated_at = bundle["generated_at"]
+    out_articles = bundle["articles_full"]
+    final = bundle["articles_final"]
+    per_feed_report = bundle["per_feed_report"]
+    yt_videos = bundle["youtube_pool"]
+    registry = bundle.get("registry") or {}
+
+    # ===== RETENTION (ARTICLES) =====
+    try:
+        os.makedirs(ARTICLES_SHARD_DIR, exist_ok=True)
+
+        existing_index = _safe_read_json(ARTICLES_INDEX_PATH) or {}
+        prev_days = existing_index.get("days") if isinstance(existing_index, dict) else None
+        prev_days = prev_days if isinstance(prev_days, list) else []
+
+        prev_counts = {}
+        prev_order = []
+        for d in prev_days:
+            if not isinstance(d, dict):
+                continue
+            date = str(d.get("date") or "").strip()
+            if not date:
+                continue
+            prev_order.append(date)
+            try:
+                prev_counts[date] = int(d.get("count") or 0)
+            except Exception:
+                prev_counts[date] = 0
+
+        days_in_new = set()
+        by_day_new = {}
+        for it in out_articles:
+            pub = str(it.get("publishedAt") or "").strip()
+            if len(pub) < 10:
+                continue
+            day = pub[:10]
+            days_in_new.add(day)
+            by_day_new.setdefault(day, []).append(it)
+
+        new_counts = dict(prev_counts)
+        all_days = set(prev_order)
+
+        for day in sorted(days_in_new):
+            all_days.add(day)
+            day_path = os.path.join(ARTICLES_SHARD_DIR, f"{day}.json")
+            day_payload = _safe_read_json(day_path) or {}
+
+            existing_items = []
+            if isinstance(day_payload, dict):
+                if isinstance(day_payload.get("items"), list):
+                    existing_items = day_payload.get("items")
+                elif isinstance(day_payload.get("articles"), list):
+                    existing_items = day_payload.get("articles")
+            elif isinstance(day_payload, list):
+                existing_items = day_payload
+
+            merged = []
+            seen = set()
+            for src in (by_day_new.get(day) or []) + (existing_items or []):
+                if not isinstance(src, dict):
+                    continue
+                u0 = (src.get("url") or "").strip()
+                if is_hard_blocked_url(u0):
+                    continue
+                k = _retention_key(src)
+                if k in seen:
+                    continue
+                seen.add(k)
+                merged.append(src)
+
+            merged.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+            _atomic_write_json(day_path, {"date": day, "generatedAt": generated_at, "items": merged})
+            new_counts[day] = len(merged)
+
+        ordered_days = sorted(all_days, reverse=True)
+
+        cutoff = (datetime.now(timezone.utc).date() - timedelta(days=RETENTION_DAYS - 1))
+        keep_days = []
+        for d in ordered_days:
+            dt_day = _parse_day_yyyy_mm_dd(d)
+            if not dt_day:
+                continue
+            if dt_day.date() >= cutoff:
+                keep_days.append(d)
+
+        keep_set = set(keep_days)
+
+        try:
+            for fn in os.listdir(ARTICLES_SHARD_DIR):
+                if fn == "index.json":
+                    continue
+                if not re.match(r"^\d{4}-\d{2}-\d{2}\.json$", fn):
+                    continue
+                day = fn[:-5]
+                if day in keep_set:
+                    continue
+                try:
+                    os.remove(os.path.join(ARTICLES_SHARD_DIR, fn))
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+        index_payload = {
+            "generatedAt": generated_at,
+            "days": [{"date": d, "count": int(new_counts.get(d, 0) or 0)} for d in keep_days],
+        }
+        _atomic_write_json(ARTICLES_INDEX_PATH, index_payload)
+    except Exception as e:
+        print("WARN: retention shards failed:", str(e))
+
+    payload = {
+        "generatedAt": generated_at,
+        "articles": final,
+        "mappingSingleSourceOfTruth": True,
+        "homepagePreviewUsesSectionMapper": True,
+        "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
+    }
+
+    _atomic_write_json(OUT_PATH, payload)
+
+    health_payload = {
+        "updatedAt": generated_at,
+        "feeds": {
+            r["feed"]: {
+                "topic": r.get("topic", "aktualne"),
+                "source": r.get("source", ""),
+                "accepted": int(r.get("accepted", 0) or 0),
+                "status": r.get("status", "OK"),
+                "itemsParsed": int(r.get("itemsParsed", 0) or 0),
+                "itemsKept": int(r.get("itemsKept", 0) or 0),
+                "httpStatus": int(r.get("httpStatus", 0) or 0),
+                "contentType": r.get("contentType", ""),
+                "finalUrl": r.get("finalUrl", r["feed"]),
+                "bytes": int(r.get("bytes", 0) or 0),
+                "reason": r.get("reason", ""),
+                "bozo": bool(r.get("bozo", False)),
+                "bozoException": r.get("bozoException", ""),
+                "bozo_but_used": bool(r.get("bozo_but_used", False)),
+            }
+            for r in per_feed_report
+        },
+    }
+    _atomic_write_json(HEALTH_PATH, health_payload)
+
+    meta_payload = build_meta(generated_at, final)
+    _atomic_write_json(META_PATH, meta_payload)
+
+    brief_payload = build_brief(generated_at, final)
+    _atomic_write_json(BRIEF_PATH, brief_payload)
+
+    yt_sorted = sorted(
+        yt_videos,
+        key=lambda v: (v.get("_dt") or datetime.now(timezone.utc), int(v.get("categoryWeight") or 0)),
+        reverse=True,
+    )
+
+    allow_meta = {}
+    allow_cfg = {}
+
+    cfg_version = int(allow_meta.get("version") or (allow_cfg.get("version") if isinstance(allow_cfg, dict) else 1) or 1)
+    primary_days = int(allow_meta.get("freshDaysPrimary") or 14)
+    fallback_days = int(allow_meta.get("freshDaysFallback") or 60)
+    target_share = float(allow_meta.get("freshTargetShare") or 0.7)
+    max_per_source = int(allow_meta.get("maxPerSource") or 25)
+    max_total = int(allow_meta.get("maxTotal") or 240)
+    if primary_days < 1:
+        primary_days = 14
+    if fallback_days < primary_days:
+        fallback_days = max(60, primary_days)
+    if target_share <= 0 or target_share > 1:
+        target_share = 0.7
+    if max_per_source < 1:
+        max_per_source = 25
+    if max_total < 1:
+        max_total = 240
+
+    def _age_days(dt_any) -> int:
+        try:
+            if isinstance(dt_any, datetime):
+                d = dt_any
+            else:
+                d = datetime.fromisoformat(str(dt_any).replace("Z", "+00:00"))
+            return int((datetime.now(timezone.utc) - d).total_seconds() // 86400)
+        except Exception:
+            return 999999
+
+    seen_vid = set()
+    per_source = {}
+    primary = []
+    fallback = []
+    older = []
+    for v in yt_sorted:
+        vid = (v.get("videoId") or "").strip()
+        if not vid or vid in seen_vid:
+            continue
+        src_key = str(v.get("sourceKey") or v.get("channel") or "YouTube")
+        if per_source.get(src_key, 0) >= max_per_source:
+            continue
+        age = _age_days(v.get("_dt") or v.get("publishedAt") or "")
+        row = {
+            "title": v.get("title") or "",
+            "url": v.get("url") or "",
+            "videoId": vid,
+            "publishedAt": v.get("publishedAt") or "",
+            "channel": (v.get("channel") or "YouTube").strip() or "YouTube",
+            "category": (v.get("category") or "").strip(),
+            "thumb": v.get("thumb") or youtube_thumb_from_id(vid),
+        }
+        if age <= primary_days:
+            primary.append(row)
+        elif age <= fallback_days:
+            fallback.append(row)
+        else:
+            older.append(row)
+
+    target_primary = int((max_total * target_share) + 0.9999)
+    out_vid = []
+    used_sources = {}
+
+    def _take_from(bucket: list, limit: int = None):
+        nonlocal out_vid, seen_vid, used_sources
+        for row in bucket:
+            if limit is not None and len(out_vid) >= limit:
+                break
+            if len(out_vid) >= max_total:
+                break
+            vid = (row.get("videoId") or "").strip()
+            if not vid or vid in seen_vid:
+                continue
+            src_key = str(row.get("channel") or "YouTube")
+            if used_sources.get(src_key, 0) >= max_per_source:
+                continue
+            seen_vid.add(vid)
+            used_sources[src_key] = used_sources.get(src_key, 0) + 1
+            out_vid.append(row)
+
+    _take_from(primary, limit=min(max_total, target_primary))
+    _take_from(fallback)
+    _take_from(older)
+
+    primary_count = 0
+    fallback_count = 0
+    older_count = 0
+    for row in out_vid:
+        age = _age_days(row.get("publishedAt") or "")
+        if age <= primary_days:
+            primary_count += 1
+        elif age <= fallback_days:
+            fallback_count += 1
+        else:
+            older_count += 1
+
+    videos_payload = {
+        "generatedAt": generated_at,
+        "allowlistVersion": cfg_version,
+        "freshTargetShare": target_share,
+        "dedupeDays": int(allow_meta.get("dedupeDays") or 30),
+        "maxPerSource": max_per_source,
+        "maxTotal": max_total,
+        "freshness": {
+            "primaryDays": primary_days,
+            "fallbackDays": fallback_days,
+            "primaryCount": primary_count,
+            "fallbackCount": fallback_count,
+            "olderCount": older_count,
+            "total": len(out_vid),
+        },
+        "categories": allow_meta.get("categories") if isinstance(allow_meta.get("categories"), list) else [],
+        "videos": out_vid,
+    }
+
+    _atomic_write_json(VIDEOS_OUT_PATH, videos_payload)
+    print(f"VIDEOS_FRESHNESS primary14={primary_count} fallback60={fallback_count} older={older_count} total={len(out_vid)}")
+    print("=== FEED REPORT ===")
+    print(json.dumps(health_payload, ensure_ascii=False, indent=2))
+    print(f"=== OUTPUT === wrote {len(final)} items to {OUT_PATH}")
+    print(f"=== OUTPUT === wrote {len(out_vid)} videos to {VIDEOS_OUT_PATH}")
+
+    return 0
+
+
+def _checkpoint_bundle_for_disk(bundle: dict) -> dict:
+    """JSON-safe aggregate bundle for aggregated_checkpoint.json (youtube _dt as ISO)."""
+    yt = bundle.get("youtube_pool") or []
+    rows = [serialize_youtube_row(r) for r in yt if isinstance(r, dict)]
+    reg = bundle.get("registry")
+    rv = reg.get("version") if isinstance(reg, dict) else None
+    return {
+        "generated_at": bundle["generated_at"],
+        "articles_full": bundle["articles_full"],
+        "articles_final": bundle["articles_final"],
+        "per_feed_report": bundle["per_feed_report"],
+        "youtube_pool": rows,
+        "registry_version": rv,
+    }
+
+
+def _bundle_from_checkpoint(cp: dict) -> dict | None:
+    """Restore publish bundle from checkpoint + live registry file."""
+    if not isinstance(cp, dict):
+        return None
+    try:
+        reg = load_registry(REGISTRY_PATH)
+    except Exception:
+        reg = {}
+    yt_rows = cp.get("youtube_pool") or []
+    yt_restored = []
+    if isinstance(yt_rows, list):
+        for r in yt_rows:
+            if isinstance(r, dict):
+                yt_restored.append(deserialize_youtube_row(r))
+    return {
+        "generated_at": cp["generated_at"],
+        "articles_full": cp["articles_full"],
+        "articles_final": cp["articles_final"],
+        "per_feed_report": cp["per_feed_report"],
+        "youtube_pool": yt_restored,
+        "registry": reg,
+    }
+
+
 # =========================
 # Main
 # =========================
 
 def main() -> int:
+    phase = _pipeline_phase()
     if not os.path.exists(REGISTRY_PATH):
         print(f"ERROR: missing {REGISTRY_PATH}", file=sys.stderr)
         return 2
 
     registry = load_registry(REGISTRY_PATH)
+
+    if phase == "publish":
+        cp = read_aggregated_checkpoint(OUTPUT_DIR)
+        if not isinstance(cp, dict) or not cp.get("generated_at"):
+            print("ERROR: missing aggregated checkpoint (run aggregate first)", file=sys.stderr)
+            return 2
+        cp_clean = {k: v for k, v in cp.items() if k != "schemaVersion"}
+        bundle = _bundle_from_checkpoint(cp_clean)
+        if bundle is None:
+            return 2
+        return _publish_article_outputs(bundle)
+
+    if phase == "aggregate":
+        loaded = load_staging_for_aggregate(OUTPUT_DIR)
+        bundle = _aggregate_pipeline(
+            loaded["all_items"],
+            loaded["per_feed_report"],
+            loaded["youtube_rows"],
+            registry,
+        )
+        write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle))
+        return 0
+
+    if phase not in ("ingest", "all"):
+        print(f"ERROR: unknown IU_ARTICLE_PIPELINE_PHASE={phase!r}", file=sys.stderr)
+        return 2
+
     sched_state = load_scheduler_state(SCHEDULER_STATE_PATH)
     # IU_BUILD_ALL_FEEDS=1: jeden běh přes všechny aktivní registry feedy (ne 2–3/tick).
     _full_feed = os.getenv("IU_BUILD_ALL_FEEDS", "").strip().lower() in ("1", "true", "yes")
@@ -2319,6 +2794,8 @@ def main() -> int:
 
     all_items = []
     per_feed_report = []
+    items_by_batch = defaultdict(list)
+    reports_by_batch = defaultdict(list)
 
     # ✅ sběr YouTube videí (půjde do data/videos.json)
     yt_videos = []
@@ -2341,8 +2818,12 @@ def main() -> int:
         if isinstance(rg_meta, list) and rg_meta and isinstance(rg_meta[0], dict):
             batch_ck = scheduler_cooldown_key(rg_meta[0]) or ""
 
+        staging_batch_key = batch_ck
+        if not staging_batch_key:
+            staging_batch_key = "unbatched_" + hashlib.sha256(feed_url.encode("utf-8")).hexdigest()[:24]
+
         if is_hard_blocked_url(feed_url):
-            per_feed_report.append({
+            rep = {
                 "feed": feed_url,
                 "source": "",
                 "topic": "aktualne",
@@ -2355,7 +2836,9 @@ def main() -> int:
                 "itemsParsed": 0,
                 "itemsKept": 0,
                 "accepted": 0,
-            })
+            }
+            per_feed_report.append(rep)
+            reports_by_batch[staging_batch_key].append(rep)
             continue
 
         fallback_topic = stable_section(meta.get("topic", "aktualne"))
@@ -2366,7 +2849,7 @@ def main() -> int:
         src_dw = float(meta.get("displayWeight") or 1.0)
 
         if meta.get("disabled"):
-            per_feed_report.append({
+            rep = {
                 "feed": feed_url,
                 "source": source,
                 "topic": fallback_topic,
@@ -2379,7 +2862,9 @@ def main() -> int:
                 "itemsParsed": 0,
                 "itemsKept": 0,
                 "accepted": 0,
-            })
+            }
+            per_feed_report.append(rep)
+            reports_by_batch[staging_batch_key].append(rep)
             continue
 
         if feed_url in parsed_feed_cache:
@@ -2432,6 +2917,7 @@ def main() -> int:
                 for e in rg:
                     mark_feed_error(sched_state, str(e.get("id") or ""))
             per_feed_report.append(report_base)
+            reports_by_batch[staging_batch_key].append(report_base)
             continue
         
         entries = getattr(d, "entries", []) or []
@@ -2534,8 +3020,10 @@ def main() -> int:
                 "feedType": feed_type,
                 "feedId": feed_id,
                 "sourceDisplayWeight": src_dw,
+                "sourceBatchKey": staging_batch_key,
             }
             all_items.append(item)
+            items_by_batch[staging_batch_key].append(item)
             accepted += 1
 
         report_base["itemsKept"] = accepted
@@ -2560,97 +3048,23 @@ def main() -> int:
         rg = meta.get("registryGroup")
         if rg and not is_youtube_feed:
             mark_feeds_fetched(sched_state, rg)
-        
+
         per_feed_report.append(report_base)
+        reports_by_batch[staging_batch_key].append(report_base)
 
-    # dedup v rámci jednoho média + URL (ARTICLES)
-    seen_pre = set()
-    deduped_items = []
-    for it in sorted(all_items, key=lambda x: x["dt"], reverse=True):
-        key = (it["media_norm"], it["url"])
-        if key in seen_pre:
-            continue
-        seen_pre.add(key)
-        deduped_items.append(it)
-
-    clusters = cluster_items(deduped_items)
-
-    out_articles = []
-
-    sec_rank = {s: i for i, s in enumerate(SECTION_ORDER)}
-    clusters.sort(key=lambda c: (c.published_at(), -sec_rank.get(c.section, 999)), reverse=True)
-
-    for c in clusters:
-        sources = c.sources_unique()
-        published = c.published_at().isoformat().replace("+00:00", "Z")
-
-        # TITLE pravidla
-        if c.content_type == "video":
-            t = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]["title"]
-            title_out = _ensure_video_prefix(t)
-        else:
-            if c.unique_media_count() == 1:
-                t = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]["title"]
-                title_out = clean_single_source_title(t)
-            else:
-                title_out = choose_neutral_title(c.titles(), section=c.section)
-
-        pcat = _primary_category_from_cluster_items(c.items)
-        ftype = _feed_type_from_cluster_items(c.items)
-        thash = topic_hash_from_title(title_out)
-
-        primary_item = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]
-        _sl = fix_cz_mojibake(str(primary_item.get("media_raw") or "")).strip()
-        article_out = {
-            "topic": c.section,
-            "section": c.section,
-            "contentType": c.content_type,
-            "title": fix_cz_mojibake(title_out),
-            "publishedAt": published,
-            "sources": sources,
-            "primaryCategory": pcat,
-            "topicHash": thash,
-            "feedType": ftype,
-            "sourceDisplayWeight": float(primary_item.get("sourceDisplayWeight") or 1.0),
-            "sectionPrimary": str(primary_item.get("feedCategory") or ""),
-            "sourceLabel": _sl,
-        }
-        _fid = str(primary_item.get("feedId") or "").strip()
-        if _fid:
-            article_out["feedId"] = _fid
-        src0 = (sources or [{}])[0]
-        candidate = (src0.get("url", "") or "").strip()
-        if candidate.lower().startswith("http://") or candidate.lower().startswith("https://"):
-            article_out["url"] = candidate
-        else:
-            article_out["url"] = ""
-
-        out_articles.append(article_out)
-
-    # Timestamp shared by all outputs in this run
-    generated_at = iso_now_z()
-
-    prev_payload = _safe_read_json(OUT_PATH) or {}
-    prev_list = list(prev_payload.get("articles") or [])
-    merged_articles = merge_article_lists(prev_list, out_articles, max(500, MAX_OUTPUT_ARTICLES * 3))
-    merged_articles = purge_blocked_articles(merged_articles)
-    merged_articles = [remap_article_section_if_url_mismatch(a) for a in merged_articles]
-    merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
-    merged_articles = [a for a in merged_articles if a is not None]
-    merged_articles = [_apply_second_layer_targeted_section_cleanup(a) for a in merged_articles]
-    merged_articles = _apply_conservative_topic_clustering(merged_articles)
-    for a in merged_articles:
-        a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
-        a["displayScore"] = compute_display_score(a)
-
-    merged_articles.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
-    merged_articles = apply_staggered_section_release(merged_articles, generated_at)
-    merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
-
-    merged_articles = apply_topic_and_source_limits(merged_articles)
-    merged_articles = apply_niche_fraction_limit(merged_articles)
-    out_articles = merged_articles
-    # Drip (releaseAt v budoucnu) schová většinu článků v UI — nesmí blokovat čerstvý feed; čas publikace zůstává v publishedAt.
+    ingested_at = iso_now_z()
+    ensure_staging_dirs(OUTPUT_DIR)
+    all_batch_keys = sorted(set(items_by_batch.keys()) | set(reports_by_batch.keys()))
+    for bk in all_batch_keys:
+        write_source_staging(
+            OUTPUT_DIR,
+            bk,
+            list(items_by_batch.get(bk, [])),
+            list(reports_by_batch.get(bk, [])),
+            ingested_at,
+        )
+    write_youtube_staging(OUTPUT_DIR, yt_videos, ingested_at)
+    write_ingest_manifest(OUTPUT_DIR, all_batch_keys, ingested_at)
 
     try:
         save_transport_state(transport_state)
@@ -2662,294 +3076,12 @@ def main() -> int:
     except Exception as e:
         print("WARN: scheduler_state write failed:", str(e))
 
-    # ===== RETENTION (ARTICLES) =====
-    # Store ALL articles by day under projects/data/articles/YYYY-MM-DD.json (+ index.json).
-    # Keep legacy projects/data/articles.json as a fast, limited payload for initial page load.
-    try:
-        os.makedirs(ARTICLES_SHARD_DIR, exist_ok=True)
+    if phase == "ingest":
+        return 0
 
-        existing_index = _safe_read_json(ARTICLES_INDEX_PATH) or {}
-        prev_days = existing_index.get("days") if isinstance(existing_index, dict) else None
-        prev_days = prev_days if isinstance(prev_days, list) else []
-
-        prev_counts = {}
-        prev_order = []
-        for d in prev_days:
-            if not isinstance(d, dict):
-                continue
-            date = str(d.get("date") or "").strip()
-            if not date:
-                continue
-            prev_order.append(date)
-            try:
-                prev_counts[date] = int(d.get("count") or 0)
-            except Exception:
-                prev_counts[date] = 0
-
-        days_in_new = set()
-        by_day_new = {}
-        for it in out_articles:
-            pub = str(it.get("publishedAt") or "").strip()
-            if len(pub) < 10:
-                continue
-            day = pub[:10]
-            days_in_new.add(day)
-            by_day_new.setdefault(day, []).append(it)
-
-        # Update only days that appear in new output; keep other shard files untouched.
-        new_counts = dict(prev_counts)
-        all_days = set(prev_order)
-
-        for day in sorted(days_in_new):
-            all_days.add(day)
-            day_path = os.path.join(ARTICLES_SHARD_DIR, f"{day}.json")
-            day_payload = _safe_read_json(day_path) or {}
-
-            existing_items = []
-            if isinstance(day_payload, dict):
-                if isinstance(day_payload.get("items"), list):
-                    existing_items = day_payload.get("items")
-                elif isinstance(day_payload.get("articles"), list):
-                    existing_items = day_payload.get("articles")
-            elif isinstance(day_payload, list):
-                existing_items = day_payload
-
-            merged = []
-            seen = set()
-            for src in (by_day_new.get(day) or []) + (existing_items or []):
-                if not isinstance(src, dict):
-                    continue
-                u0 = (src.get("url") or "").strip()
-                if is_hard_blocked_url(u0):
-                    continue
-                k = _retention_key(src)
-                if k in seen:
-                    continue
-                seen.add(k)
-                merged.append(src)
-
-            merged.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
-            _atomic_write_json(day_path, {"date": day, "generatedAt": generated_at, "items": merged})
-            new_counts[day] = len(merged)
-
-        # Write/refresh index (append-only)
-        ordered_days = sorted(all_days, reverse=True)
-
-        # Retention: keep only last N days (including today, UTC).
-        cutoff = (datetime.now(timezone.utc).date() - timedelta(days=RETENTION_DAYS - 1))
-        keep_days = []
-        for d in ordered_days:
-            dt_day = _parse_day_yyyy_mm_dd(d)
-            if not dt_day:
-                continue
-            if dt_day.date() >= cutoff:
-                keep_days.append(d)
-
-        keep_set = set(keep_days)
-
-        # Delete old shard files not in keep_set.
-        try:
-            for fn in os.listdir(ARTICLES_SHARD_DIR):
-                if fn == "index.json":
-                    continue
-                if not re.match(r"^\d{4}-\d{2}-\d{2}\.json$", fn):
-                    continue
-                day = fn[:-5]
-                if day in keep_set:
-                    continue
-                try:
-                    os.remove(os.path.join(ARTICLES_SHARD_DIR, fn))
-                except Exception:
-                    pass
-        except Exception:
-            pass
-
-        index_payload = {
-            "generatedAt": generated_at,
-            "days": [{"date": d, "count": int(new_counts.get(d, 0) or 0)} for d in keep_days],
-        }
-        _atomic_write_json(ARTICLES_INDEX_PATH, index_payload)
-    except Exception as e:
-        # Retention must never break the main output.
-        print("WARN: retention shards failed:", str(e))
-
-    # ===== FAST OUTPUT (ARTICLES) =====
-    final = out_articles[:MAX_OUTPUT_ARTICLES]
-
-    payload = {
-        "generatedAt": generated_at,
-        "articles": final,
-        "mappingSingleSourceOfTruth": True,
-        "homepagePreviewUsesSectionMapper": True,
-        "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
-    }
-
-    # articles.json
-    _atomic_write_json(OUT_PATH, payload)
-
-    # feed_health.json (zachováváme kompatibilitu, ale přidáváme nové klíče)
-    health_payload = {
-        "updatedAt": generated_at,
-        "feeds": {
-            r["feed"]: {
-                "topic": r.get("topic", "aktualne"),
-                "source": r.get("source", ""),
-                "accepted": int(r.get("accepted", 0) or 0),
-                "status": r.get("status", "OK"),
-                # Nové diagnostické klíče
-                "itemsParsed": int(r.get("itemsParsed", 0) or 0),
-                "itemsKept": int(r.get("itemsKept", 0) or 0),
-                "httpStatus": int(r.get("httpStatus", 0) or 0),
-                "contentType": r.get("contentType", ""),
-                "finalUrl": r.get("finalUrl", r["feed"]),
-                "bytes": int(r.get("bytes", 0) or 0),
-                "reason": r.get("reason", ""),
-                "bozo": bool(r.get("bozo", False)),
-                "bozoException": r.get("bozoException", ""),
-                "bozo_but_used": bool(r.get("bozo_but_used", False)),
-            } for r in per_feed_report
-        }
-    }
-    _atomic_write_json(HEALTH_PATH, health_payload)
-
-    # meta.json
-    meta_payload = build_meta(generated_at, final)
-    _atomic_write_json(META_PATH, meta_payload)
-
-    # brief.json
-    brief_payload = build_brief(generated_at, final)
-    _atomic_write_json(BRIEF_PATH, brief_payload)
-
-    # ✅ videos.json (YouTube allowlist / legacy)
-    # dedup podle videoId + maxPerSource + maxTotal + freshness-first
-    yt_sorted = sorted(
-        yt_videos,
-        key=lambda v: (v.get("_dt") or datetime.now(timezone.utc), int(v.get("categoryWeight") or 0)),
-        reverse=True
-    )
-
-    # NOTE: YouTube allowlist videos are generated in scripts/build_videos.py.
-    # build_articles.py may still see legacy YouTube playlist feeds (feeds_youtube.json).
-    # Keep this section robust even when allowlist meta isn't present.
-    allow_meta = {}
-    allow_cfg = {}
-
-    cfg_version = int(allow_meta.get("version") or (allow_cfg.get("version") if isinstance(allow_cfg, dict) else 1) or 1)
-    primary_days = int(allow_meta.get("freshDaysPrimary") or 14)
-    fallback_days = int(allow_meta.get("freshDaysFallback") or 60)
-    target_share = float(allow_meta.get("freshTargetShare") or 0.7)
-    max_per_source = int(allow_meta.get("maxPerSource") or 25)
-    max_total = int(allow_meta.get("maxTotal") or 240)
-    if primary_days < 1: primary_days = 14
-    if fallback_days < primary_days: fallback_days = max(60, primary_days)
-    if target_share <= 0 or target_share > 1: target_share = 0.7
-    if max_per_source < 1: max_per_source = 25
-    if max_total < 1: max_total = 240
-
-    def _age_days(dt_any) -> int:
-        try:
-            if isinstance(dt_any, datetime):
-                d = dt_any
-            else:
-                d = datetime.fromisoformat(str(dt_any).replace("Z", "+00:00"))
-            return int((datetime.now(timezone.utc) - d).total_seconds() // 86400)
-        except Exception:
-            return 999999
-
-    seen_vid = set()
-    per_source = {}
-    primary = []
-    fallback = []
-    older = []
-    for v in yt_sorted:
-        vid = (v.get("videoId") or "").strip()
-        if not vid or vid in seen_vid:
-            continue
-        src_key = str(v.get("sourceKey") or v.get("channel") or "YouTube")
-        if per_source.get(src_key, 0) >= max_per_source:
-            continue
-        age = _age_days(v.get("_dt") or v.get("publishedAt") or "")
-        row = {
-            "title": v.get("title") or "",
-            "url": v.get("url") or "",
-            "videoId": vid,
-            "publishedAt": v.get("publishedAt") or "",
-            "channel": (v.get("channel") or "YouTube").strip() or "YouTube",
-            "category": (v.get("category") or "").strip(),
-            "thumb": v.get("thumb") or youtube_thumb_from_id(vid),
-        }
-        if age <= primary_days:
-            primary.append(row)
-        elif age <= fallback_days:
-            fallback.append(row)
-        else:
-            older.append(row)
-        # mark for global/per-source limits at the end of selection (not here)
-
-    target_primary = int((max_total * target_share) + 0.9999)  # ceil
-    out_vid = []
-    used_sources = {}
-    def _take_from(bucket: list, limit: int = None):
-        nonlocal out_vid, seen_vid, used_sources
-        for row in bucket:
-            if limit is not None and len(out_vid) >= limit:
-                break
-            if len(out_vid) >= max_total:
-                break
-            vid = (row.get("videoId") or "").strip()
-            if not vid or vid in seen_vid:
-                continue
-            src_key = str(row.get("channel") or "YouTube")
-            if used_sources.get(src_key, 0) >= max_per_source:
-                continue
-            seen_vid.add(vid)
-            used_sources[src_key] = used_sources.get(src_key, 0) + 1
-            out_vid.append(row)
-
-    # Fill primary first to reach the target share, then fallback, then older.
-    _take_from(primary, limit=min(max_total, target_primary))
-    _take_from(fallback)
-    _take_from(older)
-
-    primary_count = 0
-    fallback_count = 0
-    older_count = 0
-    for row in out_vid:
-        age = _age_days(row.get("publishedAt") or "")
-        if age <= primary_days:
-            primary_count += 1
-        elif age <= fallback_days:
-            fallback_count += 1
-        else:
-            older_count += 1
-
-    videos_payload = {
-        "generatedAt": generated_at,
-        "allowlistVersion": cfg_version,
-        "freshTargetShare": target_share,
-        "dedupeDays": int(allow_meta.get("dedupeDays") or 30),
-        "maxPerSource": max_per_source,
-        "maxTotal": max_total,
-        "freshness": {
-            "primaryDays": primary_days,
-            "fallbackDays": fallback_days,
-            "primaryCount": primary_count,
-            "fallbackCount": fallback_count,
-            "olderCount": older_count,
-            "total": len(out_vid),
-        },
-        "categories": allow_meta.get("categories") if isinstance(allow_meta.get("categories"), list) else [],
-        "videos": out_vid,
-    }
-
-    _atomic_write_json(VIDEOS_OUT_PATH, videos_payload)
-    print(f"VIDEOS_FRESHNESS primary14={primary_count} fallback60={fallback_count} older={older_count} total={len(out_vid)}")
-    print("=== FEED REPORT ===")
-    print(json.dumps(health_payload, ensure_ascii=False, indent=2))
-    print(f"=== OUTPUT === wrote {len(final)} items to {OUT_PATH}")
-    print(f"=== OUTPUT === wrote {len(out_vid)} videos to {VIDEOS_OUT_PATH}")
-
-    return 0
+    bundle = _aggregate_pipeline(all_items, per_feed_report, yt_videos, registry)
+    write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle))
+    return _publish_article_outputs(bundle)
 
 
 if __name__ == "__main__":
