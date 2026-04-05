@@ -4,9 +4,12 @@
 
 name: Update articles data
 
+# Serial runs only: do NOT cancel an in-progress ingest. With cancel-in-progress: true, each new
+# scheduled tick (*/5) could cancel the previous run if it was still building/waiting on PR merge,
+# producing long gaps and missing schedule records. Queued runs wait instead (safe cadence).
 concurrency:
   group: update-articles-data
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
