@@ -113,6 +113,26 @@ def check_fetch_paths(app_js: Path):
     return issues
 
 
+def check_section_feed_header(app_js: Path, index_html: Path):
+    """Regresní guard: feed #dataUpdatedAt nesmí používat globální dataset generatedAt ani starý text."""
+    issues = []
+    if app_js.exists():
+        t = app_js.read_text(encoding="utf-8")
+        if "Poslední aktualizace dat" in t:
+            issues.append(
+                "assets/app.js must not contain legacy label 'Poslední aktualizace dat' (use section-derived header)"
+            )
+        if "iuMaxPublishedMsFromItems" not in t or "iuUpdateSectionDataUpdatedAtEl" not in t:
+            issues.append(
+                "assets/app.js must define iuMaxPublishedMsFromItems + iuUpdateSectionDataUpdatedAtEl for feed header"
+            )
+    if index_html.exists():
+        ix = index_html.read_text(encoding="utf-8")
+        if 'id="dataUpdatedAt"' in ix and "Poslední aktualizace sekce" not in ix:
+            issues.append("projects/index.html #dataUpdatedAt must use section-level placeholder (Poslední aktualizace sekce)")
+    return issues
+
+
 def main():
     issues = []
 
@@ -129,6 +149,8 @@ def main():
     app_js = ROOT / "assets" / "app.js"
     if app_js.exists():
         issues += check_fetch_paths(app_js)
+
+    issues += check_section_feed_header(app_js, projects_index)
 
     issues += check_blocked_hedvabnastezka()
 

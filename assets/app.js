@@ -9948,6 +9948,79 @@ function buildVideoAsArticleCard(it) {
     applyFilter();
   }
 
+  /** Max valid published time from an item (articles + videos). */
+  function iuItemBestPublishedMs(item) {
+    if (!item || typeof item !== "object") return null;
+    const n = Number(item.publishedAtTs || item.published_at_ts || 0);
+    if (Number.isFinite(n) && n > 0) return n;
+    const fields = [
+      item.publishedAt,
+      item.published,
+      item.date,
+      item.createdAt,
+      item.uploadedAt,
+      item.time,
+    ];
+    let best = null;
+    for (let fi = 0; fi < fields.length; fi++) {
+      const d = iuSafeParseDate(fields[fi]);
+      if (!d) continue;
+      const t = d.getTime();
+      if (!Number.isFinite(t)) continue;
+      if (best === null || t > best) best = t;
+    }
+    return best;
+  }
+
+  /** Latest content time among visible feed items (section-derived; not dataset generatedAt). */
+  function iuMaxPublishedMsFromItems(items) {
+    if (!Array.isArray(items) || items.length === 0) return null;
+    let max = null;
+    for (let ii = 0; ii < items.length; ii++) {
+      const t = iuItemBestPublishedMs(items[ii]);
+      if (t === null || t === undefined) continue;
+      if (max === null || t > max) max = t;
+    }
+    return max;
+  }
+
+  /** Local time, no seconds, no raw ISO in UI. Shorter label when the newest item is from today. */
+  function iuFormatSectionLastUpdateLine(ms) {
+    if (ms === null || ms === undefined || !Number.isFinite(ms)) return null;
+    const d = new Date(ms);
+    if (Number.isNaN(d.getTime())) return null;
+    const now = new Date();
+    const sameDay =
+      d.getFullYear() === now.getFullYear() &&
+      d.getMonth() === now.getMonth() &&
+      d.getDate() === now.getDate();
+    const hm =
+      String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+    if (sameDay) {
+      return "Poslední aktualizace sekce: " + hm;
+    }
+    const day = d.getDate();
+    const month = d.getMonth() + 1;
+    const year = d.getFullYear();
+    return "Poslední aktualizace sekce: " + day + ". " + month + ". " + year + " " + hm;
+  }
+
+  /** Feed header: odvozeno z položek aktuálně zobrazené sekce / filtru (state.filteredItems). */
+  function iuUpdateSectionDataUpdatedAtEl() {
+    const elUpdated = document.getElementById("dataUpdatedAt");
+    if (!elUpdated) return;
+    const items = Array.isArray(state.filteredItems) ? state.filteredItems : [];
+    const maxMs = iuMaxPublishedMsFromItems(items);
+    const line = iuFormatSectionLastUpdateLine(maxMs);
+    if (line) {
+      elUpdated.textContent = line;
+      elUpdated.classList.remove("iu-date-pending");
+    } else {
+      elUpdated.textContent = "Poslední aktualizace sekce: —";
+      elUpdated.classList.add("iu-date-pending");
+    }
+  }
+
   // === LOCKED PIPELINE ===
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
@@ -9986,6 +10059,7 @@ function buildVideoAsArticleCard(it) {
       });
       state.filteredItems = pass;
       if (doRender) renderItems(state.filteredItems);
+      iuUpdateSectionDataUpdatedAtEl();
       return;
     }
 
@@ -10064,6 +10138,7 @@ function buildVideoAsArticleCard(it) {
           filtered: 0,
         });
       }
+      iuUpdateSectionDataUpdatedAtEl();
       return;
     }
     if (!Array.isArray(state.filteredItems)) {
@@ -10085,6 +10160,7 @@ function buildVideoAsArticleCard(it) {
         filtered: filtered.length,
       });
     }
+    iuUpdateSectionDataUpdatedAtEl();
   }
 
     ensureFallbackMessage();
@@ -11328,13 +11404,7 @@ function buildVideoAsArticleCard(it) {
         }
         setStatus(statusParts.join(" • "));
       }
-      const elUpdated = document.getElementById("dataUpdatedAt");
-      if (elUpdated && (state.lastArticlesGeneratedAt || state.lastVideosGeneratedAt)) {
-        const stamp = state.lastArticlesGeneratedAt || state.lastVideosGeneratedAt;
-        const displayDate = stamp.substring(0, 16).replace("T", " ");
-        elUpdated.textContent = "Poslední aktualizace dat: " + displayDate;
-        elUpdated.classList.remove("iu-date-pending");
-      }
+      // Sekční řádek „Poslední aktualizace sekce“: výhradně z iuUpdateSectionDataUpdatedAtEl() po applyFilter().
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 
       debugLog("[DATA] combined count=", state.cachedItems.length);
