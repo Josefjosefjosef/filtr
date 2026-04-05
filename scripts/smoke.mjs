@@ -65,6 +65,20 @@ function startServer() {
   });
 }
 
+/** One retry when client navigation races domcontentloaded (e.g. /projects/?section=media vs /projects/). */
+async function gotoDomContentLoaded(page, url) {
+  try {
+    return await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
+  } catch (e) {
+    const msg = String(e && e.message ? e.message : e);
+    if (/interrupted/i.test(msg)) {
+      await page.waitForTimeout(500);
+      return await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
+    }
+    throw e;
+  }
+}
+
 async function runSmoke() {
   const { chromium } = await import("playwright");
 
@@ -98,7 +112,7 @@ async function runSmoke() {
     ];
 
     for (const url of urls) {
-      const res = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
+      const res = await gotoDomContentLoaded(page, url);
       // Playwright may return null when navigation commits without a main-frame Response (client redirect / race).
       const st = res ? res.status() : null;
       if (st !== null && st >= 400) fail(`HTTP ${st} for ${url}`);
@@ -115,7 +129,7 @@ async function runSmoke() {
     }
 
     // Click test on /projects/?section=media
-    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
     await page.waitForTimeout(800);
 
     try {
@@ -336,7 +350,7 @@ async function runSmoke() {
       fail(`Finance preview click did not set topic=finance: ${afterFinanceClick}`);
     }
 
-    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
     await page.waitForTimeout(800);
     await page.waitForSelector("#iuHealthPreviewCard", { timeout: 10000 });
     await page.click("#iuHealthPreviewCard");
@@ -346,7 +360,7 @@ async function runSmoke() {
       fail(`Health preview click did not set topic=zdravi: ${afterHealthClick}`);
     }
 
-    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
     await page.waitForTimeout(800);
     await page.waitForSelector("#iuTravelPreviewCard", { timeout: 10000 });
     await page.click("#iuTravelPreviewCard");
@@ -356,7 +370,7 @@ async function runSmoke() {
       fail(`Travel preview click did not set section=travel&mode=media: ${afterTravelClick}`);
     }
 
-    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
     await page.waitForTimeout(800);
     await page.waitForSelector("#iuGamesPreviewCard", { timeout: 10000 });
     await page.click("#iuGamesPreviewCard");
@@ -366,7 +380,7 @@ async function runSmoke() {
       fail(`Games preview click did not set section=hry: ${afterGamesClick}`);
     }
 
-    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
     await page.waitForTimeout(800);
     await page.waitForSelector("#iuCulturePreviewCard", { timeout: 10000 });
     await page.click("#iuCulturePreviewCard");
@@ -376,7 +390,7 @@ async function runSmoke() {
       fail(`Culture preview click did not set section=kultura: ${afterCultureClick}`);
     }
 
-    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
     await page.waitForTimeout(800);
     await page.waitForSelector("#iuScienceHistoryPreviewCard", { timeout: 10000 });
     await page.click("#iuScienceHistoryPreviewCard");
@@ -386,7 +400,7 @@ async function runSmoke() {
       fail(`Science-history preview click did not set section=veda: ${afterScienceHistoryClick}`);
     }
 
-    await page.goto(`${BASE}/projects/?section=media`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
     await page.waitForTimeout(800);
     await page.waitForSelector("#iuEducationPreviewCard", { timeout: 10000 });
     await page.click("#iuEducationPreviewCard");
@@ -420,7 +434,7 @@ async function runSmoke() {
     }
 
     // Route reset: panel/radarOpen stripped on reload; section/topic/mode may persist (media nav deep links)
-    await page.goto(`${BASE}/projects/?section=media&panel=services`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&panel=services`);
     await page.waitForTimeout(500);
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForTimeout(500);
