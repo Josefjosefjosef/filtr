@@ -1999,13 +1999,38 @@ def decode_with_fallback(raw_bytes: bytes) -> str:
     return raw_bytes.decode("latin-1", errors="replace")
 
 
+def looks_like_xml_or_feed(text: str) -> bool:
+    """
+    True when the body is RSS/Atom/XML even if Content-Type wrongly says text/html.
+    (Časté u CDN / starších serverů — bez toho končíme na not_xml_or_html při validním feedu.)
+    """
+    if not text:
+        return False
+    s = text.lstrip("\ufeff\u200b\u200c\u200d").strip()
+    if not s:
+        return False
+    low = s[:240].lower()
+    if low.startswith("<?xml"):
+        return True
+    if low.startswith("<rss"):
+        return True
+    if low.startswith("<feed"):
+        return True
+    if low.startswith("<rdf:") or low.startswith("<rdf:rdf"):
+        return True
+    return False
+
+
 def is_html_content(text: str, content_type: str) -> bool:
     """
     Detekce HTML místo XML/RSS.
     """
     if not text:
         return False
-    
+
+    if looks_like_xml_or_feed(text):
+        return False
+
     text_lower = text.strip().lower()
     
     # content-type kontrola

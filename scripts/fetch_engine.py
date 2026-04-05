@@ -365,11 +365,32 @@ class FetchEngine:
         
         return raw_bytes.decode("latin-1", errors="replace")
     
+    def _looks_like_xml_or_feed(self, text: str) -> bool:
+        """RSS/Atom/XML body even when Content-Type is mislabeled as HTML."""
+        if not text:
+            return False
+        s = text.lstrip("\ufeff\u200b\u200c\u200d").strip()
+        if not s:
+            return False
+        low = s[:240].lower()
+        if low.startswith("<?xml"):
+            return True
+        if low.startswith("<rss"):
+            return True
+        if low.startswith("<feed"):
+            return True
+        if low.startswith("<rdf:") or low.startswith("<rdf:rdf"):
+            return True
+        return False
+
     def _is_html_content(self, text: str, content_type: str) -> bool:
         """Detekce HTML místo XML."""
         if not text:
             return False
-        
+
+        if self._looks_like_xml_or_feed(text):
+            return False
+
         text_lower = text.strip().lower()
         
         if "text/html" in content_type:
