@@ -5,6 +5,7 @@
 # Article pipeline: THREE SEPARATE JOBS; durable handoff is git branch automation/pipeline-handoff
 # (tree pipeline-handoff/: manifest.json + staging/ + aggregate/). Manifest: winningIngestRunId /
 # winningAggregateRunId (GITHUB_RUN_ID order) + monotonic handoffEpoch; stale runs skip push (no downgrade).
+# Publish: expect file at pull + verify-publish-latest before projects/data commit — no stale release after newer aggregate.
 # Ephemeral Actions artifacts are not the source-of-truth. Ordering via needs: (no parallel writers).
 
 name: Update articles data
@@ -205,6 +206,8 @@ jobs:
           echo "[TIME] pip_install_seconds=$((T1-T0))"
 
       - name: Load persisted aggregate output for publish (git)
+        env:
+          IU_HANDOFF_EXPECT_PATH: ${{ runner.temp }}/iu_handoff_publish_expect.json
         run: |
           set -euo pipefail
           git fetch origin "${{ env.PIPELINE_HANDOFF_BRANCH }}"
@@ -328,8 +331,18 @@ jobs:
           { echo "data_changed=true"; echo "commit_skipped=false"; echo "push_skipped=false"; echo "pr_skipped=false"; } >> "$GITHUB_OUTPUT"
           echo "[DATA] Diff detected — will commit to ${{ env.AUTOMATION_BRANCH }} and open/update PR"
 
-      - name: Commit to automation branch and push
+      - name: Final revalidate handoff aggregate before public data commit
         if: steps.no_diff.outputs.data_changed == 'true'
+        id: publish_final_verify
+        env:
+          IU_HANDOFF_EXPECT_PATH: ${{ runner.temp }}/iu_handoff_publish_expect.json
+          PIPELINE_HANDOFF_BRANCH: ${{ env.PIPELINE_HANDOFF_BRANCH }}
+        run: |
+          set -euo pipefail
+          python scripts/pipeline_handoff_git.py verify-publish-latest
+
+      - name: Commit to automation branch and push
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.publish_final_verify.outputs.stale_publish == 'false'
         id: commit_push
         shell: bash
         run: |

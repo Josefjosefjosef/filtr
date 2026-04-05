@@ -9,11 +9,15 @@ Survives across workflow runs. Actions artifacts are not the durable truth.
 Race safety: manifest carries winningIngestRunId / winningAggregateRunId (GitHub run_id order)
 and monotonic handoffEpoch. Older workflow runs cannot overwrite newer checkpoints (CAS before
 commit + push retry on non-fast-forward).
+
+Publish release: pull-for-publish writes an expect file (aggregate run id + handoffEpoch + branch tip).
+verify-publish-latest re-fetches origin and aborts public data commit if remote advanced (newer aggregate).
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import io
 import json
 import os
@@ -157,6 +161,39 @@ def _handoff_epoch_from_manifest(m: dict | None) -> int:
         return int(m.get("handoffEpoch", 0) or 0)
     except (TypeError, ValueError):
         return 0
+
+
+def _default_expect_path() -> str:
+    base = os.environ.get("RUNNER_TEMP") or os.environ.get("TEMP") or tempfile.gettempdir()
+    return os.path.join(base, "iu_handoff_publish_expect.json")
+
+
+def _branch_tip_sha(repo: str, ref: str) -> str:
+    r = subprocess.run(
+        ["git", "rev-parse", ref],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+    )
+    if r.returncode != 0:
+        return ""
+    return (r.stdout or "").strip()
+
+
+def _file_sha256(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _append_github_output(key: str, value: str) -> None:
+    path = os.environ.get("GITHUB_OUTPUT")
+    if not path:
+        return
+    with open(path, "a", encoding="utf-8") as f:
+        f.write("%s=%s\n" % (key, value))
 
 
 def _commit_handoff_tree_with_retry(repo: str, branch: str, message: str, build) -> str:
@@ -506,15 +543,94 @@ def cmd_pull_for_publish(args: argparse.Namespace) -> int:
             shutil.copy2(tr, os.path.join(data_dir, "feed_transport_state.json"))
         wagg = _winning_aggregate_from_manifest(man)
         ep = _handoff_epoch_from_manifest(man)
+        tip = _branch_tip_sha(repo, ref)
+        ck_sha = _file_sha256(ck)
+        expect_path = os.environ.get("IU_HANDOFF_EXPECT_PATH") or _default_expect_path()
+        expect_payload = {
+            "schemaVersion": 1,
+            "pipelineHandoffBranch": branch,
+            "branchTipSha": tip,
+            "winningAggregateRunIdInt": wagg,
+            "handoffEpoch": ep,
+            "aggregateCheckpointSha256": ck_sha,
+        }
+        _atomic_write_json(expect_path, expect_payload)
         print(
             "[pipeline-handoff] pull-for-publish OK %s winningAggregateRunId=%s handoffEpoch=%s"
             % (ref, wagg, ep),
             flush=True,
         )
+        print("[pipeline-handoff] publish expect fingerprint -> %s" % expect_path, flush=True)
         print("LATEST_CHECKPOINT_POINTER_CORRECT=YES", flush=True)
         print("PUBLISH_ALWAYS_USES_LATEST=YES", flush=True)
     finally:
         shutil.rmtree(os.path.dirname(handoff), ignore_errors=True)
+    return 0
+
+
+def cmd_verify_publish_latest(args: argparse.Namespace) -> int:
+    """
+    Re-fetch handoff branch; if aggregate truth advanced since pull-for-publish, mark stale.
+    Caller must skip public data commit when stale_publish=true.
+    """
+    repo = _repo_root()
+    branch = os.environ.get("PIPELINE_HANDOFF_BRANCH", DEFAULT_BRANCH).strip() or DEFAULT_BRANCH
+    expect_path = os.environ.get("IU_HANDOFF_EXPECT_PATH") or _default_expect_path()
+    if not os.path.isfile(expect_path):
+        print("ERROR: missing IU_HANDOFF_EXPECT file: %s" % expect_path, file=sys.stderr)
+        return 2
+    try:
+        with open(expect_path, encoding="utf-8") as f:
+            exp = json.load(f)
+    except json.JSONDecodeError as e:
+        print("ERROR: invalid expect JSON: %s" % e, file=sys.stderr)
+        return 2
+    expect_ra = int(exp.get("winningAggregateRunIdInt") or 0)
+    expect_ep = int(exp.get("handoffEpoch") or 0)
+    expect_ck = str(exp.get("aggregateCheckpointSha256") or "").strip()
+
+    _run(["git", "fetch", "origin"], repo)
+    _run(["git", "fetch", "origin", branch], repo)
+    ref = f"origin/{branch}"
+    if not remote_branch_exists(repo, branch):
+        print("ERROR: handoff branch missing", file=sys.stderr)
+        return 2
+    remote_m = _manifest_from_show(repo, ref)
+    if not remote_m or not remote_m.get("aggregateReady"):
+        print("ERROR: remote manifest missing or aggregate not ready", file=sys.stderr)
+        return 2
+    ra = _winning_aggregate_from_manifest(remote_m)
+    ep = _handoff_epoch_from_manifest(remote_m)
+
+    stale = False
+    if ra > expect_ra or ep > expect_ep:
+        stale = True
+    if not stale and expect_ck:
+        handoff = _extract_handoff_from_ref(repo, ref)
+        try:
+            ck_path = os.path.join(handoff, AGGREGATE_REL)
+            if os.path.isfile(ck_path):
+                remote_ck = _file_sha256(ck_path)
+                if remote_ck != expect_ck:
+                    stale = True
+        finally:
+            shutil.rmtree(os.path.dirname(handoff), ignore_errors=True)
+
+    if stale:
+        print("[pipeline-handoff] STALE_PUBLISH_SKIP aggregate truth advanced after pull-for-publish", flush=True)
+        print("STALE_PUBLISH_SKIP=YES", flush=True)
+        print("OLDER_PUBLISH_CAN_RELEASE_AFTER_NEWER_AGGREGATE_EXISTS=NO", flush=True)
+        print("PUBLISH_REVALIDATES_LATEST_BEFORE_RELEASE=YES", flush=True)
+        print("FINAL_RELEASE_USES_EXPECTED_AGGREGATE_FINGERPRINT=YES", flush=True)
+        _append_github_output("stale_publish", "true")
+        return 0
+
+    print("[pipeline-handoff] verify-publish-latest OK still latest aggregate", flush=True)
+    print("STALE_PUBLISH_SKIP=NO", flush=True)
+    print("OLDER_PUBLISH_CAN_RELEASE_AFTER_NEWER_AGGREGATE_EXISTS=NO", flush=True)
+    print("PUBLISH_REVALIDATES_LATEST_BEFORE_RELEASE=YES", flush=True)
+    print("FINAL_RELEASE_USES_EXPECTED_AGGREGATE_FINGERPRINT=YES", flush=True)
+    _append_github_output("stale_publish", "false")
     return 0
 
 
@@ -551,6 +667,7 @@ def main() -> int:
     sub.add_parser("push-aggregate")
     sub.add_parser("pull-staging")
     sub.add_parser("pull-for-publish")
+    sub.add_parser("verify-publish-latest")
     sub.add_parser("mark-publish-done")
     args = p.parse_args()
     if args.cmd == "push-staging":
@@ -561,6 +678,8 @@ def main() -> int:
         return cmd_pull_staging(args)
     if args.cmd == "pull-for-publish":
         return cmd_pull_for_publish(args)
+    if args.cmd == "verify-publish-latest":
+        return cmd_verify_publish_latest(args)
     if args.cmd == "mark-publish-done":
         return cmd_mark_publish_done(args)
     return 2
