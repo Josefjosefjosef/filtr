@@ -277,7 +277,10 @@ def cmd_push_staging(args: argparse.Namespace) -> int:
         if os.path.isfile(tr):
             shutil.copy2(tr, os.path.join(dest, "feed_transport_state.json"))
         _run(["git", "fetch", "origin"], repo)
-        _run(["git", "fetch", "origin", branch], repo)
+        # First-run bootstrap: origin may not have automation/pipeline-handoff yet; do not fetch a missing ref.
+        # _commit_handoff_tree_with_retry creates orphan branch + push when remote_branch_exists is false.
+        if remote_branch_exists(repo, branch):
+            _run(["git", "fetch", "origin", branch], repo)
         remote_m = _manifest_from_show(repo, f"origin/{branch}") if remote_branch_exists(repo, branch) else None
         rw = _winning_ingest_from_manifest(remote_m)
         epoch = _handoff_epoch_from_manifest(remote_m) + 1
@@ -590,11 +593,11 @@ def cmd_verify_publish_latest(args: argparse.Namespace) -> int:
     expect_ck = str(exp.get("aggregateCheckpointSha256") or "").strip()
 
     _run(["git", "fetch", "origin"], repo)
-    _run(["git", "fetch", "origin", branch], repo)
-    ref = f"origin/{branch}"
     if not remote_branch_exists(repo, branch):
         print("ERROR: handoff branch missing", file=sys.stderr)
         return 2
+    _run(["git", "fetch", "origin", branch], repo)
+    ref = f"origin/{branch}"
     remote_m = _manifest_from_show(repo, ref)
     if not remote_m or not remote_m.get("aggregateReady"):
         print("ERROR: remote manifest missing or aggregate not ready", file=sys.stderr)
