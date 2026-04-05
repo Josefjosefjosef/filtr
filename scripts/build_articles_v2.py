@@ -3,6 +3,9 @@
 """
 build_articles_v2.py - Profesionální verze s data layer, fetch engine, validací
 END-TO-END pipeline: sources → fetch → normalize/dedupe → validate → write(next) → promote(prod) → update(lkg) → health
+
+NOTE: Production CI uses scripts/build_articles.py (source ingest → staging → aggregate → publish).
+This file is legacy / experimental; do not wire it into workflows alongside build_articles.py.
 """
 
 import json
