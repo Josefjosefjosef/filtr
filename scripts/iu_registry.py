@@ -65,6 +65,9 @@ FIXED_MINUTE_SLOTS_BY_KEY: dict[str, frozenset[int]] = {
     "idnes.cz": frozenset({5, 20, 35, 50}),
     "aktualne.cz": frozenset({5, 20, 35, 50}),
     "denik.cz": frozenset({10, 25, 40, 55}),
+    # ČTK + ČT24 main RSS: reuse same 4×/h grid as idnes.cz / aktualne.cz (5,20,35,50)
+    "ceskenoviny.cz": frozenset({5, 20, 35, 50}),
+    "ceskatelevize.cz": frozenset({5, 20, 35, 50}),
     "echo24.cz": frozenset({10, 40}),
     "lidovky.cz": frozenset({15, 45}),
     "hlidacipes.org": frozenset({20, 50}),
@@ -211,6 +214,14 @@ def entry_fixed_slot_key(e: dict) -> str | None:
         if "c=technet" in url or "c%3dtechnet" in url:
             return "technet.cz"
         return "idnes.cz"
+
+    # ČT: only ct24/rss is fixed-slot; art/veda/other paths stay unmapped (interval pool).
+    if host == "sport.ceskatelevize.cz":
+        return None
+    if host == "ceskatelevize.cz":
+        if "/ct24/rss" in url:
+            return "ceskatelevize.cz"
+        return None
 
     return _slot_key_from_host_or_dom_registry(host, dom)
 
