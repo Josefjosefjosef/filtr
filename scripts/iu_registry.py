@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-infoUzel: source registry loader, hard domain block, scheduler (2–3 sources/tick):
-fixed Prague-minute slots per source, slot-first fill, hard 15 min domain cooldown,
-unmapped sources use interval-only fallback.
+infoUzel: source registry loader, hard domain block, scheduler (2–3 sources/tick).
+
+Single scheduler path (no parallel due-queue bypass):
+  • interval + display_weight → candidate score (incl. slot_offset_min stagger when never fetched);
+  • FIXED_MINUTE_SLOTS_BY_KEY + entry_fixed_slot_key → minute filter for mapped keys;
+  • sort: mapped rows first, then score, id;
+  • vertical rotation (mapped only) → fill → one feed per cooldown_domain_key per tick;
+  • hard domain cooldown max(15, registry); unmapped minute filter = always on.
 """
 from __future__ import annotations
 
 import json
 import os
-import re
 from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse
 
@@ -44,7 +48,7 @@ def _prague_tz():
 HARD_DOMAIN_COOLDOWN_MIN = 15
 
 # Fixed minute-of-hour slots (0–59) per scheduler key; keys match host or logical source id (e.g. idnes.cz/sport).
-# Sources with no mapping use interval-only fallback (legacy due queue), all minutes eligible.
+# Unmapped keys: interval-only eligibility (all minutes); ordering still by score within that pool.
 FIXED_MINUTE_SLOTS_BY_KEY: dict[str, frozenset[int]] = {
     # Zprávy / main
     "seznamzpravy.cz": frozenset({0, 15, 30, 45}),
@@ -113,8 +117,8 @@ BLOCKED_HOST_FRAGMENTS = (
     "www.hedvabnastezka.cz",
 )
 
-# CZ vertikály — alespoň jeden slot na tick směřuje sem (pokud existuje due kandidát),
-# aby jeden globální due queue nepřehlížel hry/kultura/věda/vzdělávání při 2–3 feedech/tick.
+# CZ vertikály — Fáze 1 rotace: jeden výběr mezi hry/kultura/věda/vzdělávání, jen ze slotovaných feedů
+# (stejná priorita jako dřív, ale bez obcházení pevných minut).
 VERTICAL_TOPICS = frozenset({"hry", "kultura", "veda", "vzdelavani"})
 VERTICAL_TOPIC_ORDER = ("hry", "kultura", "veda", "vzdelavani")
 
@@ -155,6 +159,19 @@ def cooldown_domain_key(e: dict) -> str:
     return h
 
 
+def _slot_key_from_host_or_dom_registry(host: str, dom: str) -> str | None:
+    """Host/domain → canonical FIXED_MINUTE_SLOTS_BY_KEY key (single lookup path, aliases first)."""
+    if host in _HOST_ALIASES_TO_SLOT_KEY:
+        return _HOST_ALIASES_TO_SLOT_KEY[host]
+    if dom in _HOST_ALIASES_TO_SLOT_KEY:
+        return _HOST_ALIASES_TO_SLOT_KEY[dom]
+    if host in FIXED_MINUTE_SLOTS_BY_KEY:
+        return host
+    if dom in FIXED_MINUTE_SLOTS_BY_KEY:
+        return dom
+    return None
+
+
 def entry_fixed_slot_key(e: dict) -> str | None:
     """
     Map registry entry to FIXED_MINUTE_SLOTS_BY_KEY or None (interval-only fallback).
@@ -175,30 +192,15 @@ def entry_fixed_slot_key(e: dict) -> str | None:
             return "technet.cz"
         return "idnes.cz"
 
-    if host in _HOST_ALIASES_TO_SLOT_KEY:
-        return _HOST_ALIASES_TO_SLOT_KEY[host]
-
-    if dom in _HOST_ALIASES_TO_SLOT_KEY:
-        return _HOST_ALIASES_TO_SLOT_KEY[dom]
-
-    if host in FIXED_MINUTE_SLOTS_BY_KEY:
-        return host
-
-    if dom in FIXED_MINUTE_SLOTS_BY_KEY:
-        return dom
-
-    return None
-
-
-def fixed_slot_minutes_for_entry(e: dict) -> frozenset[int] | None:
-    sk = entry_fixed_slot_key(e)
-    if sk is None:
-        return None
-    return FIXED_MINUTE_SLOTS_BY_KEY.get(sk)
+    return _slot_key_from_host_or_dom_registry(host, dom)
 
 
 def minute_eligible_for_fixed_slots(e: dict, minute: int) -> bool:
-    mins = fixed_slot_minutes_for_entry(e)
+    """Fixed-slot keys: only when Prague local minute matches; unmapped → all minutes (fallback)."""
+    sk = entry_fixed_slot_key(e)
+    if sk is None:
+        return True
+    mins = FIXED_MINUTE_SLOTS_BY_KEY.get(sk)
     if mins is None:
         return True
     return int(minute) % 60 in mins
@@ -358,7 +360,7 @@ def select_feeds_for_tick(
             return True
         return (now - last_dom).total_seconds() >= cooldown * 60
 
-    # Filter: mapped sources only when current local minute matches a fixed slot
+    # Minute gate: mapped keys must match Prague minute; unmapped pass through.
     filtered: list[tuple[float, str, dict]] = []
     for score, eid, e in candidates:
         if not minute_eligible_for_fixed_slots(e, minute):
