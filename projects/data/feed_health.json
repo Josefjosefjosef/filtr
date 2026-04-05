@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-05T23:24:17.932103Z",
+  "updatedAt": "2026-04-05T23:52:14.299737Z",
   "feeds": {
     "https://www.betterlife.cz/feed/": {
       "topic": "vzdelavani",
@@ -17,17 +17,33 @@
       "bozoException": "",
       "bozo_but_used": false
     },
-    "https://www.ceska-justice.cz/feed/": {
-      "topic": "aktualne",
-      "source": "Česká justice",
-      "accepted": 10,
+    "https://edu.ceskatelevize.cz/rss": {
+      "topic": "vzdelavani",
+      "source": "ČT edu",
+      "accepted": 0,
+      "status": "BOZO",
+      "itemsParsed": 0,
+      "itemsKept": 0,
+      "httpStatus": 404,
+      "contentType": "text/html; charset=utf-8",
+      "finalUrl": "https://edu.ceskatelevize.cz/rss",
+      "bytes": 0,
+      "reason": "http_404",
+      "bozo": false,
+      "bozoException": "",
+      "bozo_but_used": false
+    },
+    "https://ekonom.cz/?p=400000_rss": {
+      "topic": "finance",
+      "source": "Ekonom (HN)",
+      "accepted": 21,
       "status": "OK",
-      "itemsParsed": 10,
-      "itemsKept": 10,
+      "itemsParsed": 21,
+      "itemsKept": 21,
       "httpStatus": 200,
-      "contentType": "application/rss+xml; charset=utf-8",
-      "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 97074,
+      "contentType": "text/xml; charset=utf-8",
+      "finalUrl": "https://ekonom.cz/?p=400000_rss",
+      "bytes": 25560,
       "reason": "",
       "bozo": false,
       "bozoException": "",
