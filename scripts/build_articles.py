@@ -718,6 +718,75 @@ def apply_per_section_limits_then_cap(articles: list, max_per_section: int) -> l
     return merged[:MAX_MEDIA_AGGREGATION_POOL]
 
 
+def apply_published_public_retention(prev_public: list, capped_feed: list) -> list:
+    """
+    NO-REMOVAL: any article that was already present in the previous public articles.json (same
+    canonical URL) must remain in the next publish. Selection, dedupe, and per-section limits still
+    run first on capped_feed; this step only re-injects previously shipped URLs that the cap would
+    have dropped. When both exist, the pipeline row from capped_feed wins (fresher metadata).
+    Global pool trim (MAX_MEDIA_AGGREGATION_POOL) may only drop rows whose URL was not in
+    prev_public; if only-preserved count exceeds the pool, all preserved rows are kept (soft cap).
+    """
+    prev_by: dict[str, dict] = {}
+    for a in prev_public or []:
+        if not isinstance(a, dict):
+            continue
+        u = canonicalize_url((a.get("url") or "").strip())
+        if not u or is_hard_blocked_url(u):
+            continue
+        prev_by[u] = dict(a)
+
+    preserved_keys = frozenset(prev_by.keys())
+    merged: dict[str, dict] = {}
+
+    for a in capped_feed or []:
+        if not isinstance(a, dict):
+            continue
+        u = canonicalize_url((a.get("url") or "").strip())
+        if not u or is_hard_blocked_url(u):
+            continue
+        merged[u] = dict(a)
+
+    for u, a in prev_by.items():
+        if u not in merged:
+            merged[u] = a
+
+    out = list(merged.values())
+    out.sort(key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+
+    if len(out) <= MAX_MEDIA_AGGREGATION_POOL:
+        return out
+
+    preserved_list = [
+        a
+        for a in out
+        if canonicalize_url((a.get("url") or "").strip()) in preserved_keys
+    ]
+    non_preserved = [
+        a
+        for a in out
+        if canonicalize_url((a.get("url") or "").strip()) not in preserved_keys
+    ]
+    non_preserved.sort(key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+
+    if len(preserved_list) >= MAX_MEDIA_AGGREGATION_POOL:
+        # Never drop previously published rows; still ship new URLs from this run (may exceed pool).
+        print(
+            "WARN: apply_published_public_retention: preserved count %d >= MAX_MEDIA_AGGREGATION_POOL=%d; appending new rows anyway"
+            % (len(preserved_list), MAX_MEDIA_AGGREGATION_POOL),
+            flush=True,
+        )
+        result = preserved_list + non_preserved
+        result.sort(key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+        return result
+
+    budget = MAX_MEDIA_AGGREGATION_POOL - len(preserved_list)
+    kept_new = non_preserved[: max(0, budget)]
+    result = preserved_list + kept_new
+    result.sort(key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+    return result
+
+
 def _retention_key(it: dict) -> str:
     """
     Dedup key for retention:
@@ -2529,6 +2598,7 @@ def _aggregate_pipeline(
     out_articles = apply_per_section_limits_then_cap(
         merged_articles, MAX_ARTICLES_PER_CANONICAL_SECTION
     )
+    out_articles = apply_published_public_retention(prev_list, out_articles)
     final = out_articles
 
     return {
