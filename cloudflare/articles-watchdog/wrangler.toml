@@ -1,0 +1,18 @@
+# Articles pipeline watchdog: Cloudflare Cron → GitHub workflow_dispatch (no GitHub schedule).
+# Deploy: cd cloudflare/articles-watchdog && npm ci && npx wrangler deploy
+# Secret: npx wrangler secret put GITHUB_TOKEN
+# Optional manual smoke: POST /run with Authorization: Bearer <MANUAL_TRIGGER_SECRET>
+name = "infouzel-articles-watchdog"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+[vars]
+GITHUB_REPOSITORY = "Josefjosefjosef/filtr"
+WORKFLOW_FILE = "update-articles.yml"
+FRESHNESS_URL = "https://infouzel.cz/projects/data/articles/index.json"
+STALE_AFTER_MINUTES = "10"
+
+# Optional: wrangler secret put MANUAL_TRIGGER_SECRET — then POST /run works for smoke tests.

@@ -1,6 +1,6 @@
 # FAST PATH: articles ingest + guards + articles.json / shared data PR — keep runtime minimal.
-# Automatic cadence: workflow_dispatch only here; schedule autorun is triggered from
-# pages-publish-from-main-data.yml (proven */5 schedule → gh workflow run update-articles.yml).
+# Automatic cadence: workflow_dispatch only here; autorun is triggered by the Cloudflare Worker
+# cloudflare/articles-watchdog (prod freshness + GitHub Actions API), not GitHub schedule.
 # Heavy YouTube refresh runs in update-videos-data.yml (slow path).
 # PR-based flow for protected main. Never pushes to main. Automation branch + PR + safe auto-merge when data-only.
 #
