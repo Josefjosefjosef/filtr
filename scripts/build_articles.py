@@ -96,7 +96,6 @@ BOT_FROM_HEADER = "admin@infouzel.cz"
 REQUEST_TIMEOUT_SEC = 20
 
 MAX_ITEMS_PER_FEED = 40
-MAX_OUTPUT_ARTICLES = 220  # aby web zůstal svižný
 
 # Anti-block + výstupní limity
 GLOBAL_MIN_REQUEST_INTERVAL_SEC = 2.0
@@ -178,6 +177,11 @@ KW_ZDRAVI = {
 SECTION_ORDER = ["pocasi", "doprava", "aktualne", "krimi", "finance", "sport", "zdravi", "cestovani", "hry", "kultura", "veda", "vzdelavani"]
 
 VALID_SECTIONS = {"pocasi","doprava","aktualne","krimi","finance","sport","zdravi","cestovani","hry","kultura","veda","vzdelavani"}
+
+# Veřejný articles.json: každá kanonická sekce drží až N nejnovějších (publishedAt); odpad je jen uvnitř sekce při překročení N.
+# „Zprávy“ v UI = topic/section aktualne (+ krimi dle frontendu). Pool pro merge musí pojmout všechny sekce × limit (žádný globální řez 220).
+MAX_ARTICLES_PER_SECTION = 1000
+MAX_MERGED_ARTICLES_POOL = MAX_ARTICLES_PER_SECTION * len(SECTION_ORDER)
 
 # Kanonické CZ vertikály — RSS topic v registru musí přesně odpovídat (infer_section se přeskakuje).
 FORCED_FEED_TOPICS = frozenset({"hry", "kultura", "veda", "vzdelavani", "cestovani"})
@@ -611,6 +615,65 @@ def apply_niche_fraction_limit(articles: list) -> list:
     merged = rest + niche_sorted
     merged.sort(key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
     return merged
+
+
+def _retention_section_key(article: dict) -> str:
+    """Kanonický klíč sekce pro výstupní retenci (shodné s stable_section / frontend topic)."""
+    if not isinstance(article, dict):
+        return "aktualne"
+    return stable_section(str(article.get("topic") or article.get("section") or "aktualne"))
+
+
+def apply_per_section_output_retention(articles: list, max_per_section: int) -> list:
+    """
+    Nezávislý strop na sekci: v rámci každé sekce seřadí podle publishedAt sestupně,
+    dedupe na canonical URL, vezme max_per_section. Staré v dané sekci vypadnou až po překročení limitu,
+    ne kvůli jednomu globálnímu oknu přes všechny sekce.
+    """
+    if not articles or max_per_section <= 0:
+        return []
+    by_sec: dict[str, list] = defaultdict(list)
+    for a in articles:
+        if not isinstance(a, dict):
+            continue
+        by_sec[_retention_section_key(a)].append(a)
+
+    out: list = []
+    seen_sec: set[str] = set()
+    for sec in SECTION_ORDER:
+        if sec not in by_sec:
+            continue
+        seen_sec.add(sec)
+        rows = sorted(by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+        url_seen: set[str] = set()
+        deduped: list = []
+        for r in rows:
+            u = canonicalize_url((r.get("url") or "").strip())
+            if not u:
+                continue
+            if u in url_seen:
+                continue
+            url_seen.add(u)
+            deduped.append(r)
+        out.extend(deduped[:max_per_section])
+
+    for sec in sorted(by_sec.keys()):
+        if sec in seen_sec:
+            continue
+        rows = sorted(by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+        url_seen = set()
+        deduped = []
+        for r in rows:
+            u = canonicalize_url((r.get("url") or "").strip())
+            if not u:
+                continue
+            if u in url_seen:
+                continue
+            url_seen.add(u)
+            deduped.append(r)
+        out.extend(deduped[:max_per_section])
+
+    return out
 
 
 def _retention_key(it: dict) -> str:
@@ -2406,7 +2469,7 @@ def _aggregate_pipeline(
 
     prev_payload = _safe_read_json(OUT_PATH) or {}
     prev_list = list(prev_payload.get("articles") or [])
-    merged_articles = merge_article_lists(prev_list, new_articles, max(500, MAX_OUTPUT_ARTICLES * 3))
+    merged_articles = merge_article_lists(prev_list, new_articles, MAX_MERGED_ARTICLES_POOL)
     merged_articles = purge_blocked_articles(merged_articles)
     merged_articles = [remap_article_section_if_url_mismatch(a) for a in merged_articles]
     merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
@@ -2424,7 +2487,7 @@ def _aggregate_pipeline(
     merged_articles = apply_topic_and_source_limits(merged_articles)
     merged_articles = apply_niche_fraction_limit(merged_articles)
     out_articles = merged_articles
-    final = out_articles[:MAX_OUTPUT_ARTICLES]
+    final = apply_per_section_output_retention(out_articles, MAX_ARTICLES_PER_SECTION)
 
     return {
         "generated_at": generated_at,
@@ -3205,7 +3268,7 @@ def _legacy_main_removed_placeholder():
 
     prev_payload = _safe_read_json(OUT_PATH) or {}
     prev_list = list(prev_payload.get("articles") or [])
-    merged_articles = merge_article_lists(prev_list, out_articles, max(500, MAX_OUTPUT_ARTICLES * 3))
+    merged_articles = merge_article_lists(prev_list, out_articles, MAX_MERGED_ARTICLES_POOL)
     merged_articles = purge_blocked_articles(merged_articles)
     merged_articles = [remap_article_section_if_url_mismatch(a) for a in merged_articles]
     merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
@@ -3347,7 +3410,7 @@ def _legacy_main_removed_placeholder():
         print("WARN: retention shards failed:", str(e))
 
     # ===== FAST OUTPUT (ARTICLES) =====
-    final = out_articles[:MAX_OUTPUT_ARTICLES]
+    final = apply_per_section_output_retention(out_articles, MAX_ARTICLES_PER_SECTION)
 
     payload = {
         "generatedAt": generated_at,
