@@ -718,6 +718,76 @@ def apply_per_section_limits_then_cap(articles: list, max_per_section: int) -> l
     return merged[:MAX_MEDIA_AGGREGATION_POOL]
 
 
+def apply_per_section_published_retention(prev_public: list, capped_feed: list) -> list:
+    """
+    Per-section append-only semantics for already shipped URLs (stable canonical URL identity).
+    Runs after apply_per_section_limits_then_cap (current curated feed).
+
+    1) Merge previous public articles.json with this run's capped output by URL; capped_feed wins
+       on collision (newer pipeline metadata / section).
+    2) Bucket by canonical section (_retention_section_key).
+    3) Within each section: sort newest first, hard cap MAX_ARTICLES_PER_CANONICAL_SECTION — trim
+       only the oldest tail (same URL cannot appear twice in a section).
+    4) Flatten, global sort by publishedAt, URL dedupe, final hard cap MAX_MEDIA_AGGREGATION_POOL
+       (12 × 12.5k = 150k; no soft-exceed beyond this).
+    """
+    by_url: dict[str, dict] = {}
+    for a in prev_public or []:
+        if not isinstance(a, dict):
+            continue
+        u = canonicalize_url((a.get("url") or "").strip())
+        if not u or is_hard_blocked_url(u):
+            continue
+        by_url[u] = dict(a)
+    for a in capped_feed or []:
+        if not isinstance(a, dict):
+            continue
+        u = canonicalize_url((a.get("url") or "").strip())
+        if not u or is_hard_blocked_url(u):
+            continue
+        by_url[u] = dict(a)
+
+    by_sec: dict[str, list] = defaultdict(list)
+    for _u, a in by_url.items():
+        by_sec[_retention_section_key(a)].append(a)
+
+    cap = MAX_ARTICLES_PER_CANONICAL_SECTION
+    flat: list = []
+    seen_sec: set[str] = set()
+    for sec in SECTION_ORDER:
+        if sec not in by_sec:
+            continue
+        seen_sec.add(sec)
+        rows = sorted(
+            by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True
+        )
+        if len(rows) > cap:
+            rows = rows[:cap]
+        flat.extend(rows)
+    for sec in sorted(by_sec.keys()):
+        if sec in seen_sec:
+            continue
+        rows = sorted(
+            by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True
+        )
+        if len(rows) > cap:
+            rows = rows[:cap]
+        flat.extend(rows)
+
+    flat.sort(key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+    seen_g: set[str] = set()
+    out: list = []
+    for r in flat:
+        u = canonicalize_url((r.get("url") or "").strip())
+        if not u or u in seen_g:
+            continue
+        seen_g.add(u)
+        out.append(r)
+    if len(out) > MAX_MEDIA_AGGREGATION_POOL:
+        out = out[:MAX_MEDIA_AGGREGATION_POOL]
+    return out
+
+
 def _retention_key(it: dict) -> str:
     """
     Dedup key for retention:
@@ -2529,6 +2599,7 @@ def _aggregate_pipeline(
     out_articles = apply_per_section_limits_then_cap(
         merged_articles, MAX_ARTICLES_PER_CANONICAL_SECTION
     )
+    out_articles = apply_per_section_published_retention(prev_list, out_articles)
     final = out_articles
 
     return {
