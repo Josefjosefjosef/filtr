@@ -4283,10 +4283,7 @@ try {
     } catch {}
   }
 
-  /**
-   * Média bez podtématu (?section=media a bez topic / topic=all): dávkování feedu po 100 + tlačítko „Další“.
-   * Ostatní sekce a Média s konkrétním topic (Zprávy, Sport, …) ponechávají pageSize 200.
-   */
+  /** Mapuje aliasy `section` z URL na kanonické klíče pro feed (paging, navigace). */
   function iuFeedPagingNormalizeSectionRaw(raw) {
     const k = String(raw || "").trim().toLowerCase();
     if (k === "home") return "media";
@@ -4317,6 +4314,11 @@ try {
     return allowed.has(k) ? k : "media";
   }
 
+  /**
+   * Média bez podtématu / topic=all: 100 článků na obrazovku + tlačítko „Další“ (render-only, data už v cache).
+   * Sekce Zprávy (?section=media&topic=zpravy): stejné chování — bez nového fetchu, jen posun `state.page`.
+   * Ostatní Média témata (Sport, Finance, …) a ostatní sekce: pageSize 200.
+   */
   function iuIsMediaHubFullFeedPaging() {
     try {
       if (document.body && document.body.classList.contains("iu-home")) return false;
@@ -4325,7 +4327,9 @@ try {
       if (section !== "media") return false;
       let topic = (p.get("topic") || "").trim().toLowerCase();
       if (topic === "tech" || topic === "bydleni") topic = "all";
-      return !topic || topic === "all";
+      if (!topic || topic === "all") return true;
+      if (topic === "zpravy") return true;
+      return false;
     } catch (_) {
       return false;
     }
