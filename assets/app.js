@@ -11392,7 +11392,10 @@ function buildVideoAsArticleCard(it) {
       
       // === TOPIC GROUPING ===
       let articlesForFeed = sanitizedArticles;
-      if (ENABLE_CLUSTER_DEDUP) {
+      // Média = agregace všech sekcí z articles.json — cluster dedup na /projects/ by globálně zúžil pool (jedna sekce „vyhrává“ v hlavě feedu).
+      const skipClusterForProjectsFullPool =
+        typeof iuIsProjectsRoute === "function" && iuIsProjectsRoute();
+      if (ENABLE_CLUSTER_DEDUP && !skipClusterForProjectsFullPool) {
         try {
           const out = clusterAndPickFinalArticles(sanitizedArticles);
           articlesForFeed = out.final;
@@ -11422,6 +11425,19 @@ function buildVideoAsArticleCard(it) {
         } catch (err) {
           debugWarn("[CLUSTER] Error, using sanitized articles:", err);
           articlesForFeed = sanitizedArticles;
+        }
+      } else if (ENABLE_CLUSTER_DEDUP && skipClusterForProjectsFullPool) {
+        try {
+          if (typeof window !== "undefined") {
+            window.__IU_CLUSTER_DEDUP__ = {
+              skippedForProjectsFullPool: true,
+              rawCount: sanitizedArticles.length,
+              finalCount: sanitizedArticles.length,
+            };
+          }
+        } catch (_) {}
+        if (isDebugLogging) {
+          debugLog("[CLUSTER] skipped on /projects/ — full aggregation pool for Média");
         }
       } else if (ENABLE_TOPIC_GROUPING) {
         try {

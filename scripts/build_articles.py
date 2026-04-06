@@ -676,6 +676,86 @@ def apply_per_section_output_retention(articles: list, max_per_section: int) -> 
     return out
 
 
+def _apply_niche_fraction_if_mixed_feedtypes(rows: list) -> list:
+    """
+    Globální NICHE_MAX_FRACTION je myšlený pro smíšený feed. V sekci, kde jsou jen niche feedy,
+    by 38 % řez zničilo celý vertikální pool — v takovém případě nic nedělej.
+    """
+    if not rows:
+        return rows
+    types = [str((r.get("feedType") or "") if isinstance(r, dict) else "") for r in rows]
+    all_niche = bool(types) and all(t == "niche" for t in types)
+    no_niche = not any(t == "niche" for t in types)
+    if all_niche or no_niche:
+        return rows
+    return apply_niche_fraction_limit(rows)
+
+
+def apply_per_section_limits_then_cap(articles: list, max_per_section: int) -> list:
+    """
+    Agregace pro Média / articles.json: limity se neaplikují v jednom globálním průchodu (kde by
+    „silnější“ sekce v čase vyžraly sloty jiných), ale zvlášť v každé kanonické sekci — niche fraction
+    a topic/source limity jen uvnitř dané sekce. Poté až max_per_section článků na sekci, dedupe URL
+    v sekci, sloučení všech sekcí a finální globální řazení podle publishedAt + dedupe URL napříč sekcemi.
+    """
+    if not articles or max_per_section <= 0:
+        return []
+    by_sec: dict[str, list] = defaultdict(list)
+    for a in articles:
+        if not isinstance(a, dict):
+            continue
+        by_sec[_retention_section_key(a)].append(a)
+
+    out: list = []
+    seen_sec: set[str] = set()
+    for sec in SECTION_ORDER:
+        if sec not in by_sec:
+            continue
+        seen_sec.add(sec)
+        rows = sorted(by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+        rows = apply_topic_and_source_limits(rows)
+        rows = _apply_niche_fraction_if_mixed_feedtypes(rows)
+        url_seen: set[str] = set()
+        deduped: list = []
+        for r in rows:
+            u = canonicalize_url((r.get("url") or "").strip())
+            if not u:
+                continue
+            if u in url_seen:
+                continue
+            url_seen.add(u)
+            deduped.append(r)
+        out.extend(deduped[:max_per_section])
+
+    for sec in sorted(by_sec.keys()):
+        if sec in seen_sec:
+            continue
+        rows = sorted(by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+        rows = apply_topic_and_source_limits(rows)
+        rows = _apply_niche_fraction_if_mixed_feedtypes(rows)
+        url_seen = set()
+        deduped = []
+        for r in rows:
+            u = canonicalize_url((r.get("url") or "").strip())
+            if not u:
+                continue
+            if u in url_seen:
+                continue
+            url_seen.add(u)
+            deduped.append(r)
+        out.extend(deduped[:max_per_section])
+
+    url_global: set[str] = set()
+    merged: list = []
+    for r in sorted(out, key=lambda x: str(x.get("publishedAt") or ""), reverse=True):
+        u = canonicalize_url((r.get("url") or "").strip())
+        if not u or u in url_global:
+            continue
+        url_global.add(u)
+        merged.append(r)
+    return merged
+
+
 def _retention_key(it: dict) -> str:
     """
     Dedup key for retention:
@@ -2484,10 +2564,8 @@ def _aggregate_pipeline(
     merged_articles = apply_staggered_section_release(merged_articles, generated_at)
     merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
 
-    merged_articles = apply_topic_and_source_limits(merged_articles)
-    merged_articles = apply_niche_fraction_limit(merged_articles)
-    out_articles = merged_articles
-    final = apply_per_section_output_retention(out_articles, MAX_ARTICLES_PER_SECTION)
+    out_articles = apply_per_section_limits_then_cap(merged_articles, MAX_ARTICLES_PER_SECTION)
+    final = out_articles
 
     return {
         "generated_at": generated_at,
@@ -3283,9 +3361,7 @@ def _legacy_main_removed_placeholder():
     merged_articles = apply_staggered_section_release(merged_articles, generated_at)
     merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
 
-    merged_articles = apply_topic_and_source_limits(merged_articles)
-    merged_articles = apply_niche_fraction_limit(merged_articles)
-    out_articles = merged_articles
+    out_articles = apply_per_section_limits_then_cap(merged_articles, MAX_ARTICLES_PER_SECTION)
     # Drip (releaseAt v budoucnu) schová většinu článků v UI — nesmí blokovat čerstvý feed; čas publikace zůstává v publishedAt.
 
     try:
@@ -3410,7 +3486,7 @@ def _legacy_main_removed_placeholder():
         print("WARN: retention shards failed:", str(e))
 
     # ===== FAST OUTPUT (ARTICLES) =====
-    final = apply_per_section_output_retention(out_articles, MAX_ARTICLES_PER_SECTION)
+    final = out_articles
 
     payload = {
         "generatedAt": generated_at,
