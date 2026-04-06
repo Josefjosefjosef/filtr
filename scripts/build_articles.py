@@ -191,7 +191,7 @@ EXTREME_ARCHIVE_DAYS_VERTICAL = 365
 
 # Postupné uvolňování do veřejného JSON (per sekce za běh buildu)
 SECTION_RELEASE_STATE_PATH = os.path.join(OUTPUT_DIR, "section_release_state.json")
-MAX_SECTION_RELEASE_PER_RUN = 5
+MAX_SECTION_RELEASE_PER_RUN = 15
 
 
 # =========================
