@@ -1,8 +1,7 @@
 # Compares projects/data/articles.json on main vs production; dispatches pages.yml when stale.
 # Cadence: every 5 min (GitHub Actions minimum interval for scheduled workflows).
-# Article pipeline autorun: on schedule only, dispatches update-articles.yml via workflow_dispatch.
-# Forensics: standalone scheduled workflows that only wrapped dispatch did not receive schedule events;
-# this workflow’s schedule is proven in Actions history, so piggyback keeps the same */5 cadence without a second cron file.
+# Article pipeline autorun is NOT driven by GitHub schedule — use Cloudflare Worker
+# cloudflare/articles-watchdog (cron → workflow_dispatch) so Actions stays the engine only.
 # Reliable “prod catch-up” loop: merges done via GITHUB_TOKEN in Actions do not reliably
 # trigger push-triggered downstream workflows, so scheduled + post-merge hooks keep publish deterministic.
 # workflow_run: re-check immediately after data-merge closeout workflows finish (faster than next cron tick).
@@ -36,17 +35,6 @@ jobs:
         with:
           ref: main
           fetch-depth: 1
-
-      # Schedule-only: avoids duplicate dispatches on workflow_run closeouts and prevents coupling loops.
-      - name: Dispatch Update articles data (schedule autorun)
-        if: github.event_name == 'schedule'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          echo "[ARTICLES] workflow_dispatch update-articles.yml (piggyback on proven schedule)"
-          gh workflow run update-articles.yml --repo "${{ github.repository }}" --ref main
 
       - name: Compare main generatedAt vs production
         id: cmp
@@ -105,8 +93,6 @@ jobs:
           set -euo pipefail
           PARENT_ID="${{ github.event_name == 'workflow_run' && github.event.workflow_run.id || '' }}"
           PARENT_URL="${{ github.event_name == 'workflow_run' && github.event.workflow_run.html_url || '' }}"
-          AD="n/a"
-          if [ "$TRIGGER_EVENT" = "schedule" ]; then AD="yes"; fi
           {
             echo "## Pages publish from main data — closeout telemetry"
             echo ""
@@ -120,7 +106,6 @@ jobs:
             echo "| main_generatedAt | ${{ steps.cmp.outputs.main_generatedAt }} |"
             echo "| prod_generatedAt | ${{ steps.cmp.outputs.prod_generatedAt }} |"
             echo "| needs_publish | ${{ steps.cmp.outputs.needs_publish }} |"
-            echo "| articles_dispatch_on_schedule | ${AD} |"
             echo ""
             echo "ROOT_CAUSE_NOTE: scheduled + workflow_run re-check closes gap when push-triggered Pages is suppressed after bot merge."
           } >> "$GITHUB_STEP_SUMMARY"

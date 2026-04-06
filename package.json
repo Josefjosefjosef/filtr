@@ -23,7 +23,8 @@
     "vin-hard-proof": "node scripts/vin-hard-proof.mjs",
     "build:cz-localities-picker": "node scripts/build-cz-localities-picker.mjs",
     "build:cz-map-allowlist": "node scripts/build-cz-map-allowlist.mjs",
-    "deploy:vin-worker": "npx wrangler deploy --config cloudflare/vin-worker/wrangler.toml"
+    "deploy:vin-worker": "npx wrangler deploy --config cloudflare/vin-worker/wrangler.toml",
+    "deploy:articles-watchdog": "npx wrangler deploy --config cloudflare/articles-watchdog/wrangler.toml"
   },
   "devDependencies": {
     "playwright": "^1.49.0",
