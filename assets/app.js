@@ -2110,6 +2110,82 @@ try {
     }
   }
 
+  /** Topics shown as Silver tall preview cards on the default media landing (need ≥1 article each when possible). */
+  const IU_SILVER_PREVIEW_TOPIC_KEYS = ["cestovani", "vzdelavani", "hry", "kultura", "veda", "zdravi"];
+
+  function iuSilverPreviewTopicsNeedRetentionBoost() {
+    const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
+    if (!items.length) return false;
+    try {
+      for (let i = 0; i < IU_SILVER_PREVIEW_TOPIC_KEYS.length; i++) {
+        const key = IU_SILVER_PREVIEW_TOPIC_KEYS[i];
+        let hit = false;
+        for (let j = 0; j < items.length; j++) {
+          const it = items[j];
+          if (!it || String(it.contentType || "article").toLowerCase() !== "article") continue;
+          if (iuArticleMatchesMediaTopicKey(it, key)) {
+            hit = true;
+            break;
+          }
+        }
+        if (!hit) return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
+  /**
+   * Merge older day-shards into cache until each Silver preview vertical has at least one article.
+   * Does not call applyFilter (caller runs it). Same dedupe/sort rules as loadRetentionUntilVisibleCount.
+   */
+  async function loadRetentionForSilverHomePreviews() {
+    if (!Array.isArray(state.retentionDays) || state.retentionDays.length === 0) return false;
+    if (state.retentionIsLoading) return false;
+    if (!iuSilverPreviewTopicsNeedRetentionBoost()) return false;
+    state.retentionIsLoading = true;
+    try {
+      const seen = new Set(
+        (Array.isArray(state.cachedItems) ? state.cachedItems : [])
+          .filter((x) => x && String(x.contentType || "article").toLowerCase() === "article")
+          .map(retentionKey)
+      );
+
+      while (state.retentionCursor < state.retentionDays.length) {
+        if (!iuSilverPreviewTopicsNeedRetentionBoost()) break;
+
+        const day = state.retentionDays[state.retentionCursor++];
+        if (!day) continue;
+        if (state.retentionLoadedDays.has(day)) continue;
+        state.retentionLoadedDays.add(day);
+
+        const dayUrl = iuDataUrl("articles/" + day + ".json");
+        const dayJson = await fetchDiag(dayUrl, "articles");
+        const dayItems = normalizeFeedJson(dayJson);
+        if (!Array.isArray(dayItems) || dayItems.length === 0) continue;
+
+        for (const it of dayItems) {
+          if (!it || typeof it !== "object") continue;
+          if (!it.contentType) it.contentType = "article";
+          const k = retentionKey(it);
+          if (seen.has(k)) continue;
+          seen.add(k);
+          state.cachedItems.push(it);
+        }
+
+        state.cachedItems = (state.cachedItems || []).map((item) => {
+          const published =
+            (item && String(item.publishedAt || item.published || item.date || item.createdAt || item.uploadedAt || item.time)) ||
+            "";
+          return { ...item, _ts: published ? Date.parse(published) || 0 : 0 };
+        }).sort((a, b) => (b._ts || 0) - (a._ts || 0));
+      }
+
+      return true;
+    } finally {
+      state.retentionIsLoading = false;
+    }
+  }
+
   function getBaseRoot() {
     let p = location.pathname.replace(/\\/g, "/");
     if (p.endsWith("index.html")) {
@@ -11317,6 +11393,8 @@ function buildVideoAsArticleCard(it) {
       }
       // URL is source of truth: init() may finish loadData before initNavRouter runs (module defer race).
       // Inline parse only — loadData lives in a different IIFE than normalizeSection/readUrlNavState.
+      let parsedNavSec = "media";
+      let parsedNavTopic = "";
       try {
         const p = new URLSearchParams(typeof location !== "undefined" ? location.search || "" : "");
         let sec = (p.get("section") || "media").trim().toLowerCase();
@@ -11330,6 +11408,8 @@ function buildVideoAsArticleCard(it) {
         if (topic === "tech" || topic === "bydleni") {
           topic = "all";
         }
+        parsedNavSec = sec;
+        parsedNavTopic = topic;
         state.mediaTopicKey = null;
         if (sec === "travel" && mode === "media") state.mediaTopicKey = "cestovani";
         else if (sec === "media" && topic && topic !== "all") state.mediaTopicKey = topic;
@@ -11340,6 +11420,10 @@ function buildVideoAsArticleCard(it) {
       const hashSectionsActive =
         Array.isArray(activeSections) && activeSections.length > 0 && !activeSections.includes("vse");
       const navNeedsShardMerge = mediaTopicActive || hashSectionsActive;
+      const silverStackPreviewsLikelyVisible =
+        !navNeedsShardMerge &&
+        parsedNavSec === "media" &&
+        (!parsedNavTopic || parsedNavTopic === "all");
       // Niche sections: articles often live only in older day-shards. Index + shards must load before
       // first filter, or the feed stays empty until "Načíst další stránku" (retention was never tied to first paint).
       if (navNeedsShardMerge) {
@@ -11354,6 +11438,11 @@ function buildVideoAsArticleCard(it) {
           if (fi === 0 && hasRetention) {
             await loadRetentionUntilVisibleCount(pageSizeNav);
           }
+        } catch (_) {}
+      } else if (silverStackPreviewsLikelyVisible) {
+        await initRetentionIndex();
+        try {
+          await loadRetentionForSilverHomePreviews();
         } catch (_) {}
       } else {
         initRetentionIndex();
