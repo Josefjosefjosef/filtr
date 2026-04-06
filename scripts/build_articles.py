@@ -178,10 +178,23 @@ SECTION_ORDER = ["pocasi", "doprava", "aktualne", "krimi", "finance", "sport", "
 
 VALID_SECTIONS = {"pocasi","doprava","aktualne","krimi","finance","sport","zdravi","cestovani","hry","kultura","veda","vzdelavani"}
 
-# Veřejný articles.json: každá kanonická sekce drží až N nejnovějších (publishedAt); odpad je jen uvnitř sekce při překročení N.
-# „Zprávy“ v UI = topic/section aktualne (+ krimi dle frontendu). Pool pro merge musí pojmout všechny sekce × limit (žádný globální řez 220).
-MAX_ARTICLES_PER_SECTION = 1000
-MAX_MERGED_ARTICLES_POOL = MAX_ARTICLES_PER_SECTION * len(SECTION_ORDER)
+# Veřejný articles.json — Média hub: agregovaný pool napříč kanonickými sekcemi (SECTION_ORDER).
+# Každá sekce si drží vlastní retenci (topic/source/niche limity uvnitř sekce v apply_per_section_limits_then_cap).
+# Horní strop agregace (ne „9000“ / náhodné 12×1000): jedna konstanta + odvozený strop na sekci.
+MAX_MEDIA_AGGREGATION_POOL = 150_000
+MAX_ARTICLES_PER_CANONICAL_SECTION = (MAX_MEDIA_AGGREGATION_POOL + len(SECTION_ORDER) - 1) // len(
+    SECTION_ORDER
+)
+MAX_MERGED_ARTICLES_POOL = MAX_MEDIA_AGGREGATION_POOL
+
+
+def _media_aggregation_manifest() -> dict:
+    """Stabilní metadata ve výstupu pro ověření zdroje pravdy (bez dalších paralelních limitů)."""
+    return {
+        "maxPool": MAX_MEDIA_AGGREGATION_POOL,
+        "maxPerCanonicalSection": MAX_ARTICLES_PER_CANONICAL_SECTION,
+        "canonicalSectionCount": len(SECTION_ORDER),
+    }
 
 # Kanonické CZ vertikály — RSS topic v registru musí přesně odpovídat (infer_section se přeskakuje).
 FORCED_FEED_TOPICS = frozenset({"hry", "kultura", "veda", "vzdelavani", "cestovani"})
@@ -624,58 +637,6 @@ def _retention_section_key(article: dict) -> str:
     return stable_section(str(article.get("topic") or article.get("section") or "aktualne"))
 
 
-def apply_per_section_output_retention(articles: list, max_per_section: int) -> list:
-    """
-    Nezávislý strop na sekci: v rámci každé sekce seřadí podle publishedAt sestupně,
-    dedupe na canonical URL, vezme max_per_section. Staré v dané sekci vypadnou až po překročení limitu,
-    ne kvůli jednomu globálnímu oknu přes všechny sekce.
-    """
-    if not articles or max_per_section <= 0:
-        return []
-    by_sec: dict[str, list] = defaultdict(list)
-    for a in articles:
-        if not isinstance(a, dict):
-            continue
-        by_sec[_retention_section_key(a)].append(a)
-
-    out: list = []
-    seen_sec: set[str] = set()
-    for sec in SECTION_ORDER:
-        if sec not in by_sec:
-            continue
-        seen_sec.add(sec)
-        rows = sorted(by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
-        url_seen: set[str] = set()
-        deduped: list = []
-        for r in rows:
-            u = canonicalize_url((r.get("url") or "").strip())
-            if not u:
-                continue
-            if u in url_seen:
-                continue
-            url_seen.add(u)
-            deduped.append(r)
-        out.extend(deduped[:max_per_section])
-
-    for sec in sorted(by_sec.keys()):
-        if sec in seen_sec:
-            continue
-        rows = sorted(by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
-        url_seen = set()
-        deduped = []
-        for r in rows:
-            u = canonicalize_url((r.get("url") or "").strip())
-            if not u:
-                continue
-            if u in url_seen:
-                continue
-            url_seen.add(u)
-            deduped.append(r)
-        out.extend(deduped[:max_per_section])
-
-    return out
-
-
 def _apply_niche_fraction_if_mixed_feedtypes(rows: list) -> list:
     """
     Globální NICHE_MAX_FRACTION je myšlený pro smíšený feed. V sekci, kde jsou jen niche feedy,
@@ -697,6 +658,7 @@ def apply_per_section_limits_then_cap(articles: list, max_per_section: int) -> l
     „silnější“ sekce v čase vyžraly sloty jiných), ale zvlášť v každé kanonické sekci — niche fraction
     a topic/source limity jen uvnitř dané sekce. Poté až max_per_section článků na sekci, dedupe URL
     v sekci, sloučení všech sekcí a finální globální řazení podle publishedAt + dedupe URL napříč sekcemi.
+    Finální výstup je navíc omezený na MAX_MEDIA_AGGREGATION_POOL (aktuálně 150k).
     """
     if not articles or max_per_section <= 0:
         return []
@@ -753,7 +715,7 @@ def apply_per_section_limits_then_cap(articles: list, max_per_section: int) -> l
             continue
         url_global.add(u)
         merged.append(r)
-    return merged
+    return merged[:MAX_MEDIA_AGGREGATION_POOL]
 
 
 def _retention_key(it: dict) -> str:
@@ -2564,7 +2526,9 @@ def _aggregate_pipeline(
     merged_articles = apply_staggered_section_release(merged_articles, generated_at)
     merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
 
-    out_articles = apply_per_section_limits_then_cap(merged_articles, MAX_ARTICLES_PER_SECTION)
+    out_articles = apply_per_section_limits_then_cap(
+        merged_articles, MAX_ARTICLES_PER_CANONICAL_SECTION
+    )
     final = out_articles
 
     return {
@@ -2696,6 +2660,7 @@ def _publish_article_outputs(bundle: dict) -> int:
         "mappingSingleSourceOfTruth": True,
         "homepagePreviewUsesSectionMapper": True,
         "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
+        "mediaAggregation": _media_aggregation_manifest(),
     }
 
     _atomic_write_json(OUT_PATH, payload)
@@ -3361,7 +3326,9 @@ def _legacy_main_removed_placeholder():
     merged_articles = apply_staggered_section_release(merged_articles, generated_at)
     merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
 
-    out_articles = apply_per_section_limits_then_cap(merged_articles, MAX_ARTICLES_PER_SECTION)
+    out_articles = apply_per_section_limits_then_cap(
+        merged_articles, MAX_ARTICLES_PER_CANONICAL_SECTION
+    )
     # Drip (releaseAt v budoucnu) schová většinu článků v UI — nesmí blokovat čerstvý feed; čas publikace zůstává v publishedAt.
 
     try:
@@ -3494,6 +3461,7 @@ def _legacy_main_removed_placeholder():
         "mappingSingleSourceOfTruth": True,
         "homepagePreviewUsesSectionMapper": True,
         "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
+        "mediaAggregation": _media_aggregation_manifest(),
     }
 
     # articles.json
