@@ -10119,10 +10119,10 @@ function buildVideoAsArticleCard(it) {
       if (query) {
         if (doRender) openSearchModal();
       } else {
-        if (doRender) hideSearchModal();
-        renderInlineError("Filtry nenašly žádné články.");
-        // Clear stale DOM from loadData's pre-filter renderItems(cachedItems) pass.
         if (doRender) {
+          hideSearchModal();
+          renderInlineError("Filtry nenašly žádné články.");
+          // Clear stale DOM from loadData's pre-filter renderItems(cachedItems) pass.
           try {
             renderItems([]);
           } catch (_) {}
@@ -11315,8 +11315,6 @@ function buildVideoAsArticleCard(it) {
           })),
         );
       }
-      // Non-blocking: load retention index for historical day-shards
-      initRetentionIndex();
       // URL is source of truth: init() may finish loadData before initNavRouter runs (module defer race).
       // Inline parse only — loadData lives in a different IIFE than normalizeSection/readUrlNavState.
       try {
@@ -11337,6 +11335,29 @@ function buildVideoAsArticleCard(it) {
         else if (sec === "media" && topic && topic !== "all") state.mediaTopicKey = topic;
         else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(sec) !== -1) state.mediaTopicKey = sec;
       } catch (_) {}
+      const pageSizeNav = Number(state.pageSize) > 0 ? Number(state.pageSize) : 200;
+      const mediaTopicActive = !!(state.mediaTopicKey && String(state.mediaTopicKey).trim() && state.mediaTopicKey !== "all");
+      const hashSectionsActive =
+        Array.isArray(activeSections) && activeSections.length > 0 && !activeSections.includes("vse");
+      const navNeedsShardMerge = mediaTopicActive || hashSectionsActive;
+      // Niche sections: articles often live only in older day-shards. Index + shards must load before
+      // first filter, or the feed stays empty until "Načíst další stránku" (retention was never tied to first paint).
+      if (navNeedsShardMerge) {
+        await initRetentionIndex();
+        applyFilter({ resetPage: true, render: false });
+        try {
+          const fi = Array.isArray(state.filteredItems) ? state.filteredItems.length : 0;
+          const hasRetention =
+            Array.isArray(state.retentionDays) &&
+            state.retentionDays.length > 0 &&
+            state.retentionCursor < state.retentionDays.length;
+          if (fi === 0 && hasRetention) {
+            await loadRetentionUntilVisibleCount(pageSizeNav);
+          }
+        } catch (_) {}
+      } else {
+        initRetentionIndex();
+      }
       applyFilter();
       const countArticles = state.cachedItems.filter((entry) => entry?.contentType === "article").length;
       const countVideos = state.cachedItems.filter((entry) => entry?.contentType === "video").length;
