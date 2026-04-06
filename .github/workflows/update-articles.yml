@@ -1,4 +1,7 @@
 # FAST PATH: articles ingest + guards + articles.json / shared data PR — keep runtime minimal.
+# Automatic cadence: schedule was moved to update-articles-schedule-dispatch.yml (cron */5 →
+# workflow_dispatch) after GitHub stopped enqueueing native schedule runs for this file while
+# other repo schedules still fired; manual runs still use workflow_dispatch on this workflow.
 # Heavy YouTube refresh runs in update-videos-data.yml (slow path).
 # PR-based flow for protected main. Never pushes to main. Automation branch + PR + safe auto-merge when data-only.
 #
@@ -24,9 +27,6 @@ permissions:
 
 on:
   workflow_dispatch: {}
-  schedule:
-    # GitHub Actions: minimum schedule interval is once every 5 minutes.
-    - cron: "*/5 * * * *"
 
 env:
   AUTOMATION_BRANCH: automation/update-articles-data
