@@ -4283,6 +4283,99 @@ try {
     } catch {}
   }
 
+  /**
+   * Média bez podtématu (?section=media a bez topic / topic=all): dávkování feedu po 100 + tlačítko „Další“.
+   * Ostatní sekce a Média s konkrétním topic (Zprávy, Sport, …) ponechávají pageSize 200.
+   */
+  function iuFeedPagingNormalizeSectionRaw(raw) {
+    const k = String(raw || "").trim().toLowerCase();
+    if (k === "home") return "media";
+    if (k === "culture") return "kultura";
+    if (k === "tech" || k === "bydleni") return "media";
+    if (["zpravy", "sport", "finance", "zdravi"].indexOf(k) !== -1) return "media";
+    const allowed = new Set([
+      "media",
+      "tv",
+      "tvonline",
+      "mapy",
+      "travel",
+      "pocasi",
+      "tvprogram",
+      "hry",
+      "kultura",
+      "veda",
+      "vzdelavani",
+      "radio",
+      "jr",
+      "ads",
+      "myuzel-1",
+      "myuzel-2",
+      "myuzel-3",
+      "myuzel-4",
+      "myuzel-5",
+    ]);
+    return allowed.has(k) ? k : "media";
+  }
+
+  function iuIsMediaHubFullFeedPaging() {
+    try {
+      if (document.body && document.body.classList.contains("iu-home")) return false;
+      const p = new URLSearchParams(location.search || "");
+      const section = iuFeedPagingNormalizeSectionRaw(p.get("section") || "media");
+      if (section !== "media") return false;
+      let topic = (p.get("topic") || "").trim().toLowerCase();
+      if (topic === "tech" || topic === "bydleni") topic = "all";
+      return !topic || topic === "all";
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuCountFeedArticles(items) {
+    if (!Array.isArray(items)) return 0;
+    let n = 0;
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      if (String(it && it.contentType ? it.contentType : "article").toLowerCase() === "article") n += 1;
+    }
+    return n;
+  }
+
+  /** Prvních `articleBudget` článků v pořadí `items` + všechny vložené videokarty před nimi (zachová mix z loadData). */
+  function iuSliceItemsByArticleBudget(items, articleBudget) {
+    if (!Array.isArray(items) || articleBudget <= 0) return [];
+    let counted = 0;
+    const out = [];
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      const kind = String(it && it.contentType ? it.contentType : "article").toLowerCase();
+      if (kind === "article") {
+        counted += 1;
+        if (counted > articleBudget) break;
+      }
+      out.push(it);
+    }
+    return out;
+  }
+
+  /**
+   * Minimální délka prefixu items, který už obsahuje `articleBudget` článků.
+   * Pokud v `items` článků nedostatek, vrátí items.length + 1 (signál pro donačtení shardů).
+   */
+  function iuMinLengthForArticleBudget(items, articleBudget) {
+    if (!Array.isArray(items) || articleBudget <= 0) return 0;
+    let counted = 0;
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      const kind = String(it && it.contentType ? it.contentType : "article").toLowerCase();
+      if (kind === "article") {
+        counted += 1;
+        if (counted >= articleBudget) return i + 1;
+      }
+    }
+    return items.length + 1;
+  }
+
   // === LOCKED PIPELINE ===
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
@@ -4323,13 +4416,37 @@ try {
     feedEl.setAttribute("data-feed-ready", "false");
 
     // Render-only paging: show at most pageSize*page items, no other slicing elsewhere
-    const pageSize = Number(state.pageSize) > 0 ? Number(state.pageSize) : 200;
+    const mediaHub100 = iuIsMediaHubFullFeedPaging();
+    const pageSize = mediaHub100 ? 100 : Number(state.pageSize) > 0 ? Number(state.pageSize) : 200;
     const page = Number(state.page) >= 1 ? Number(state.page) : 1;
-    const visibleCount = page * pageSize;
-    const visibleItems = items.slice(0, visibleCount);
-    const hasMore = visibleItems.length < items.length;
+    const articleBudget = page * pageSize;
+    const totalArticlesInFeed = iuCountFeedArticles(items);
+    let visibleItems;
+    let visibleCount;
+    if (mediaHub100) {
+      visibleItems = iuSliceItemsByArticleBudget(items, articleBudget);
+      visibleCount = visibleItems.length;
+    } else {
+      visibleCount = articleBudget;
+      visibleItems = items.slice(0, visibleCount);
+    }
+    const hasMore = mediaHub100
+      ? iuCountFeedArticles(visibleItems) < totalArticlesInFeed || visibleItems.length < items.length
+      : visibleItems.length < items.length;
     // debug/gate-friendly snapshot (read-only)
-    try{ window.__iuFeedPaging = { pageSize, page, visibleCount, totalCount: items.length, visibleCountRendered: visibleItems.length, hasMore }; }catch{}
+    try{
+      window.__iuFeedPaging = {
+        pageSize,
+        page,
+        visibleCount,
+        visibleArticleCount: iuCountFeedArticles(visibleItems),
+        totalCount: items.length,
+        totalArticleCount: totalArticlesInFeed,
+        visibleCountRendered: visibleItems.length,
+        hasMore,
+        mediaHub100,
+      };
+    }catch{}
 
     // CLS mitigation: žádný mezistav "prázdný feed" (clear + append v cyklu).
     // Postav nový obsah mimo DOM a jednorázově ho vyměň přes replaceChildren().
@@ -4496,12 +4613,18 @@ try {
     const canLoadRetention =
       Boolean(state.retentionIsLoading) ||
       (Array.isArray(state.retentionDays) && state.retentionCursor < state.retentionDays.length);
-    if (hasMore || canLoadRetention) {
+    // Média (100+Další): po vyčerpání aktuálního seznamu neukazovat „Další“ jen kvůli shardům — působilo by to jako falešně aktivní tlačítko.
+    const canShowLoadMore =
+      hasMore ||
+      (canLoadRetention && (!mediaHub100 || iuCountFeedArticles(items) === 0));
+    if (canShowLoadMore) {
       const wrap = document.createElement("div");
       wrap.className = "iuLoadMoreWrap";
+      const loadMoreBtnLabel = mediaHub100 ? "Další" : "Načíst další stránku";
+      const loadMoreAria = mediaHub100 ? "Načíst další články" : "Načíst další stránku";
       wrap.innerHTML = `
-        <button type="button" class="iuLoadMoreBtn" aria-label="Načíst další stránku">
-          Načíst další stránku
+        <button type="button" class="iuLoadMoreBtn" aria-label="${loadMoreAria}">
+          ${loadMoreBtnLabel}
         </button>
         <div class="iuLoadMoreMeta">${visibleItems.length} / ${items.length}${canLoadRetention ? "+" : ""}</div>
       `.trim();
@@ -4601,7 +4724,10 @@ try {
         btn.addEventListener("click", () => {
           const nextPage = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
           state.page = nextPage;
-          const desiredVisible = nextPage * pageSize;
+          const artNeed = nextPage * pageSize;
+          const desiredVisible = mediaHub100
+            ? iuMinLengthForArticleBudget(state.filteredItems || [], artNeed)
+            : artNeed;
           (async () => {
             // If we need older data beyond the current cache, fetch day-shards lazily (no auto-load).
             if (desiredVisible > (state.filteredItems?.length ?? 0)) {
