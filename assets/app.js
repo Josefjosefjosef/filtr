@@ -4316,8 +4316,8 @@ try {
 
   /**
    * Média bez podtématu / topic=all: 100 článků na obrazovku + tlačítko „Další“ (render-only, data už v cache).
-   * Zprávy, Sport, Finance (?section=media&topic=…): stejné chování.
-   * Ostatní Média témata (Zdraví, …) a ostatní sekce: pageSize 200.
+   * Zprávy, Sport, Finance, Zdraví (?section=media&topic=…): stejné chování.
+   * Ostatní Média témata a ostatní sekce: pageSize 200.
    */
   function iuIsMediaHubFullFeedPaging() {
     try {
@@ -4331,6 +4331,7 @@ try {
       if (topic === "zpravy") return true;
       if (topic === "sport") return true;
       if (topic === "finance") return true;
+      if (topic === "zdravi") return true;
       return false;
     } catch (_) {
       return false;
