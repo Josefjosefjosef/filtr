@@ -9835,13 +9835,14 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   body.iu-mobileMainVisible #iuMobileMainBackBar[hidden]{
     display: none !important;
   }
-  /* P0 WebNav: detail z „Navigace po webu“ — fixed k viewportu (JS přesune uzel na body kvůli overflow:hidden na #leftContent / Edge+WebKit). */
+  /* P0 WebNav: detail z „Navigace po webu“ — fixed k viewportu (JS přesune uzel na body kvůli overflow:hidden na #leftContent / Edge+WebKit).
+     --iuWebNavDetailMainBackTop: buď spodní hrana #topbarWrap (když je viditelný), nebo safe-area (≤1024px je topbar často display:none). */
   body.iu-mobileMainVisible.iu-webnavDetailFromGate #iuMobileMainBackBar:not([hidden]){
     position: fixed !important;
     inset-inline: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    top: calc(env(safe-area-inset-top, 0px) + var(--iuMobileBtnH, 52px)) !important;
+    top: var(--iuWebNavDetailMainBackTop, 0px) !important;
     z-index: 10060 !important;
     width: 100% !important;
     max-width: none !important;

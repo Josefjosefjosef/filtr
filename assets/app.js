@@ -9691,6 +9691,81 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  /** P0: přečti env(safe-area-inset-top) v px (JS neumí env() přímo — krátký probe na <html>). */
+  function iuReadSafeAreaInsetTopPx() {
+    try {
+      var p = document.createElement("div");
+      p.setAttribute("data-iu-safe-area-probe", "1");
+      p.style.cssText =
+        "position:fixed;left:0;top:0;width:0;height:0;margin:0;border:0;padding:0;visibility:hidden;pointer-events:none;z-index:-1;padding-top:env(safe-area-inset-top,0px);";
+      document.documentElement.appendChild(p);
+      var pt = parseFloat(window.getComputedStyle(p).paddingTop) || 0;
+      document.documentElement.removeChild(p);
+      return pt;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  /**
+   * P0 WebNav detail back bar — měřený top offset (reálná zařízení + Playwright):
+   * - Na ≤1024px je #topbarWrap často display:none (Silver shell, viz app.css) → getBoundingClientRect().bottom === 0.
+   *   Dřív JS padal na fallback --iuMobileBtnH (52px) → lišta vizuálně „níž“, ačkoliv horní lišta webu není zobrazená.
+   * - Je-li topbar viditelný: top = spodní hrana #topbarWrap.
+   * - Jinak: top = safe-area-inset-top (probe), ne fiktivních 52px.
+   * Re-sync při visualViewport / resize.
+   */
+  function iuWebNavDetailBackBarTopSync() {
+    try {
+      var bar = document.getElementById("iuMobileMainBackBar");
+      if (!bar || bar.hidden) {
+        try {
+          document.documentElement.style.removeProperty("--iuWebNavDetailMainBackTop");
+        } catch (_) {}
+        return;
+      }
+      var active =
+        document.body.classList.contains("iu-webnavDetailFromGate") &&
+        document.body.classList.contains("iu-mobileMainVisible");
+      if (!active) {
+        try {
+          document.documentElement.style.removeProperty("--iuWebNavDetailMainBackTop");
+        } catch (_) {}
+        return;
+      }
+      var tb = document.getElementById("topbarWrap");
+      var v = 0;
+      var useTopbar = false;
+      if (tb && typeof tb.getBoundingClientRect === "function") {
+        try {
+          var cs = window.getComputedStyle(tb);
+          var rr = tb.getBoundingClientRect();
+          useTopbar =
+            cs.display !== "none" &&
+            cs.visibility !== "hidden" &&
+            rr.height > 4 &&
+            rr.width > 4;
+          if (useTopbar) {
+            v = Math.round(rr.bottom * 1000) / 1000;
+          }
+        } catch (_) {}
+      }
+      if (!useTopbar) {
+        v = iuReadSafeAreaInsetTopPx();
+      }
+      var innerH = 0;
+      try {
+        innerH = window.innerHeight || 0;
+      } catch (_) {}
+      if (innerH && (v < 0 || v > innerH * 0.45)) {
+        v = useTopbar ? Math.min(v, innerH * 0.35) : iuReadSafeAreaInsetTopPx();
+      }
+      try {
+        document.documentElement.style.setProperty("--iuWebNavDetailMainBackTop", v + "px");
+      } catch (_) {}
+    } catch (_) {}
+  }
+
   /**
    * P0 WebNav detail back bar: drž tlačítko #iuMobileMainBackBar na document.body, když je aktivní detail z „Navigace po webu“.
    * Důvod: #leftContent má na tabletu portrait overflow:hidden — fixed potomci bývají ořezaní/posunutí (Edge) nebo špatný hit-target (Safari).
@@ -9709,10 +9784,16 @@ function buildVideoAsArticleCard(it) {
         if (bar.parentElement !== document.body) {
           document.body.appendChild(bar);
         }
+        try {
+          iuWebNavDetailBackBarTopSync();
+        } catch (_) {}
       } else {
         if (bar.parentElement === document.body) {
           lc.insertBefore(bar, lc.firstChild);
         }
+        try {
+          document.documentElement.style.removeProperty("--iuWebNavDetailMainBackTop");
+        } catch (_) {}
       }
     } catch (_) {}
   }
@@ -9727,10 +9808,16 @@ function buildVideoAsArticleCard(it) {
             try {
               iuWebNavDetailBackBarHostSync();
             } catch (_) {}
+            try {
+              iuWebNavDetailBackBarTopSync();
+            } catch (_) {}
           });
         } catch (_) {
           try {
             iuWebNavDetailBackBarHostSync();
+          } catch (_) {}
+          try {
+            iuWebNavDetailBackBarTopSync();
           } catch (_) {}
         }
       };
@@ -9740,11 +9827,25 @@ function buildVideoAsArticleCard(it) {
       if (bar0) {
         mo.observe(bar0, { attributes: true, attributeFilter: ["hidden"] });
       }
+      try {
+        if (window.visualViewport && typeof window.visualViewport.addEventListener === "function") {
+          window.visualViewport.addEventListener("resize", schedule, { passive: true });
+          window.visualViewport.addEventListener("scroll", schedule, { passive: true });
+        }
+      } catch (_) {}
+      try {
+        window.addEventListener("orientationchange", schedule, { passive: true });
+      } catch (_) {}
+      try {
+        window.addEventListener("resize", schedule, { passive: true });
+      } catch (_) {}
       schedule();
     } catch (_) {}
   }
   try {
     window.iuWebNavDetailBackBarHostSync = iuWebNavDetailBackBarHostSync;
+    window.iuWebNavDetailBackBarTopSync = iuWebNavDetailBackBarTopSync;
+    window.iuReadSafeAreaInsetTopPx = iuReadSafeAreaInsetTopPx;
   } catch (_) {}
 
   /** P0 Mobile gate: tab click — only one section open; use existing left rail / MindMenu; back button. */
