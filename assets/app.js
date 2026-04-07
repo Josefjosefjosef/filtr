@@ -5513,21 +5513,8 @@ function buildVideoAsArticleCard(it) {
           try{ metaEl.style.removeProperty("font-size"); }catch{}
           return;
         }
-        const w = typeof window.innerWidth === "number" ? window.innerWidth : 1024;
-        const maxPx = w <= 480 ? 12 : w <= 900 ? 13 : 14;
-        const minPx = 10;
-        /* P0 CLS: max 2 přepočty (maxPx → případně poměr → minPx); bez staré smyčky po 0.25px. */
-        metaEl.style.fontSize = maxPx + "px";
-        try{ void metaEl.offsetWidth; }catch{}
-        if (metaEl.scrollWidth <= metaEl.clientWidth + 0.75) return;
-        const ratio = (metaEl.clientWidth - 1) / metaEl.scrollWidth;
-        let fs = Math.max(minPx, Math.min(maxPx, maxPx * ratio));
-        fs = Math.round(fs * 100) / 100;
-        metaEl.style.fontSize = fs + "px";
-        try{ void metaEl.offsetWidth; }catch{}
-        if (metaEl.scrollWidth > metaEl.clientWidth + 0.75) {
-          metaEl.style.fontSize = minPx + "px";
-        }
+        /* P0 CLS desktop: scrollWidth-based font shrink runs after nameday hydrate (~400–500ms) — tiny residual CLS; CSS 14px + nowrap is acceptable. */
+        try{ metaEl.style.removeProperty("font-size"); }catch{}
       }catch{}
     }
     function scheduleSilverWelcomeFit(){
@@ -5682,8 +5669,9 @@ function buildVideoAsArticleCard(it) {
       });
     }catch{}
     /* P0 CLS: na ≤900px neopakujeme refresh zbytečně po 400/1500 ms — MutationObserver + fetch callback stačí; méně layout passů. */
+    /* P0 CLS desktop (≥901px): žádné timed refresh — stejný zdroj jako mobile (MutationObserver na #iuDailyNameday); vyloučí druhý fitMetaFont pass po async nameday. */
     try{
-      if (silverWelcomeUseJsMetaFit()) {
+      if (!silverWelcomeUseJsMetaFit()) {
         setTimeout(() => refresh(), 400);
         setTimeout(() => refresh(), 1500);
       }

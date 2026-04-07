@@ -723,10 +723,6 @@ html:not([data-iu-js]) .iuDailyWeather{
   }
 }
 
-.checkItem input:checked{
-  accent-color: var(--gold-main);
-}
-
 .news-card, .videoRow{ contain: content; }
 
 @media (prefers-reduced-motion: reduce){
@@ -5600,11 +5596,6 @@ html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip:focus-vis
   background: #fff;
   color: var(--iuWxHoverText, #0b1b2b);
 }
-body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip *,
-html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip *{
-  color: inherit;
-}
-
 body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotes,
 html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotes{
   border: 1px solid var(--iuWxBorder, rgba(255,255,255,0.85));
@@ -16137,6 +16128,13 @@ Porušení = regres + CLS risk
     height: auto;
     min-height: 542px;
   }
+  /* P0 CLS desktop: lock weather strip box (ready layout) — loading→data innerHTML swap must not change outer height (see iuSilverWeatherRefresh). */
+  #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"]{
+    min-height: 132px;
+    max-height: 132px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
   /* Desktop only: CLS reserve for summary cards (not mixed into <769px tablet/mobile) */
   #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #iuSilverTasksSummaryCard.silver-calendar-summary-card{
@@ -17221,14 +17219,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav .iu-leftNavIcon{
   box-shadow: none !important;
 }
 
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active .iu-leftNavIcon,
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNavIcon{
-  border: none !important;
-  background: none !important;
-  background-image: none !important;
-}
-
 aside#iuLeftRail.iu-leftRail{
   align-self: stretch !important;
   min-height: calc(100vh - var(--iuTopbarHeight)) !important;
@@ -17419,11 +17409,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 
 #iuLeftRail .iu-leftNavItem:hover .iu-leftNavIcon{
   filter: drop-shadow(0 0 14px rgba(31,182,166,0.28)) !important;
-}
-
-#iuLeftRail .iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
-#iuLeftRail .iu-leftNavItem.is-active .iu-leftNavIcon{
-  filter: drop-shadow(0 0 18px rgba(31,182,166,0.35)) !important;
 }
 
 #iuLeftRail{
@@ -20013,25 +19998,6 @@ body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > a.iuTileLink:hover,
 body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > button.iuTileLink:hover,
 body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink:hover{
   background-color:#D1D5DB !important;
-}
-
-body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink .iuTileText{
-  width:100% !important;
-  padding:0 14px !important;
-
-  font-size:12.6px !important;
-  line-height:18px !important;
-  font-weight:600 !important;
-  color:#2E3238 !important;
-  text-align:center !important;
-
-  display:-webkit-box !important;
-  -webkit-box-orient:vertical !important;
-  -webkit-line-clamp:2 !important;
-  overflow:hidden !important;
-
-  overflow-wrap:break-word !important;
-  word-break:normal !important;
 }
 
 body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > span.iuTileText,
