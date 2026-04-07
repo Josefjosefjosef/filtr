@@ -11763,6 +11763,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   outline-offset: 2px;
 }
 
+.iu-quicktools-settings-backdrop[hidden]{display:none!important}
+@media (max-width:1023px){
+.iu-quicktools-settings-backdrop:not([hidden]){position:fixed!important;inset:0!important;z-index:10019!important;background:rgba(15,23,42,.42)!important;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.mindMenu .iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]){position:fixed!important;left:50%!important;top:50%!important;width:min(400px,calc(100vw - 24px))!important;max-height:min(520px,70dvh)!important;margin:0!important;transform:translate(-50%,-50%)!important;z-index:10020!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#iuMobileGatePanelTools .mindMenu :is(input[type=text],input[type=url],input[type=search],textarea,select),.iu-quicktools-settings-panel :is(input,textarea,select),#iu-mailbox-edit-overlay input[type=text]{font-size:16px!important}
+}
+
 .accordionCol .mindMenu .iu-mmQuickLinks{
   --iu-rr-gapY: 6px;
   --iu-rr-py: 8px;

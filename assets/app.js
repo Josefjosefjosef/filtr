@@ -15077,7 +15077,7 @@ function buildVideoAsArticleCard(it) {
       }).join("");
       const overlay = document.createElement("div");
       overlay.setAttribute("id", "iu-mailbox-edit-overlay");
-      overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:9999;";
+      overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:10025;";
       const form = document.createElement("form");
       form.style.cssText = "background:#fff;padding:20px;border-radius:12px;min-width:280px;box-shadow:0 10px 40px rgba(0,0,0,0.2);";
       form.innerHTML = `
@@ -15619,14 +15619,40 @@ function buildVideoAsArticleCard(it) {
     return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order, visible: visible };
   }
 
+  function iuQuickToolsUseMobileModalLayer() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuEnsureQuickToolsSettingsBackdrop() {
+    let el = document.getElementById("iuQuickToolsSettingsBackdrop");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "iuQuickToolsSettingsBackdrop";
+      el.className = "iu-quicktools-settings-backdrop";
+      el.hidden = true;
+      el.setAttribute("aria-hidden", "true");
+      el.addEventListener("click", function() {
+        iuQuickToolsSettingsClose();
+      });
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+
   function iuQuickToolsApplyConfig() {
     const panelEl = document.getElementById("iuQuickToolsSettingsPanel");
-    const grid = panelEl && panelEl.nextElementSibling && panelEl.nextElementSibling.classList.contains("iu-mmQuickGrid")
-      ? panelEl.nextElementSibling
-      : (function(){
-          const section = panelEl ? panelEl.closest("section.iu-mmQuickLinks") : (document.querySelector("aside.accordionCol .mindMenu section.iu-mmQuickLinks") || document.querySelector("aside.accordionCol section.iu-mmQuickLinks"));
-          return section ? section.querySelector(".iu-mmQuickGrid") : null;
-        })();
+    let grid = null;
+    if (panelEl && panelEl.nextElementSibling && panelEl.nextElementSibling.classList.contains("iu-mmQuickGrid")) {
+      grid = panelEl.nextElementSibling;
+    }
+    if (!grid) {
+      const section = (panelEl && panelEl.closest("section.iu-mmQuickLinks")) || document.querySelector(".mindMenu section.iu-mmQuickLinks") || document.querySelector("aside.accordionCol section.iu-mmQuickLinks");
+      grid = section ? section.querySelector(".iu-mmQuickGrid") : null;
+    }
     if (!grid) return;
     const stored = loadQuickToolsConfig();
     const cfg = stored ? sanitizeQuickToolsConfig(stored) : getDefaultQuickToolsConfig();
@@ -15652,6 +15678,20 @@ function buildVideoAsArticleCard(it) {
   function iuQuickToolsSettingsOpen() {
     const panel = document.getElementById("iuQuickToolsSettingsPanel");
     if (!panel) return;
+    if (iuQuickToolsUseMobileModalLayer()) {
+      if (!panel.__iuQtRestoreParent) {
+        panel.__iuQtRestoreParent = panel.parentElement;
+        panel.__iuQtRestoreNext = panel.nextSibling;
+      }
+      const backdrop = iuEnsureQuickToolsSettingsBackdrop();
+      backdrop.hidden = false;
+      backdrop.removeAttribute("aria-hidden");
+      document.body.classList.add("iu-quicktools-settings-mobile-open");
+      panel.classList.add("iu-quicktools-settings-panel--mobileFixed");
+      if (panel.parentElement !== document.body) {
+        document.body.appendChild(panel);
+      }
+    }
     panel.hidden = false;
     panel.setAttribute("aria-hidden", "false");
     if (typeof panel._iuQuickToolsSync === "function") panel._iuQuickToolsSync();
@@ -15662,6 +15702,25 @@ function buildVideoAsArticleCard(it) {
   function iuQuickToolsSettingsClose() {
     const panel = document.getElementById("iuQuickToolsSettingsPanel");
     if (!panel) return;
+    if (panel.classList.contains("iu-quicktools-settings-panel--mobileFixed")) {
+      panel.classList.remove("iu-quicktools-settings-panel--mobileFixed");
+      const par = panel.__iuQtRestoreParent;
+      const next = panel.__iuQtRestoreNext;
+      if (par) {
+        try {
+          if (next && next.parentNode === par) par.insertBefore(panel, next);
+          else par.appendChild(panel);
+        } catch (_) {
+          try { par.appendChild(panel); } catch (_) {}
+        }
+      }
+      const backdrop = document.getElementById("iuQuickToolsSettingsBackdrop");
+      if (backdrop) {
+        backdrop.hidden = true;
+        backdrop.setAttribute("aria-hidden", "true");
+      }
+      document.body.classList.remove("iu-quicktools-settings-mobile-open");
+    }
     panel.hidden = true;
     panel.setAttribute("aria-hidden", "true");
     document.body.removeEventListener("keydown", iuQuickToolsSettingsOnEsc);
@@ -15742,10 +15801,10 @@ function buildVideoAsArticleCard(it) {
     if (window.__iuQuickToolsInitDone) return;
     window.__iuQuickToolsInitDone = 1;
     iuQuickToolsApplyConfig();
-    const section = document.querySelector("aside.accordionCol .mindMenu section.iu-mmQuickLinks");
-    const trigger = section ? section.querySelector(".iu-quicktools-settings-trigger") : null;
+    const section = document.querySelector(".mindMenu section.iu-mmQuickLinks");
+    const trigger = section ? section.querySelector(".iu-quicktools-settings-trigger") : document.querySelector(".iu-quicktools-settings-trigger");
     const panel = document.getElementById("iuQuickToolsSettingsPanel");
-    if (!section || !panel) return;
+    if (!panel || !trigger) return;
     let cfg = loadQuickToolsConfig();
     if (!cfg) cfg = getDefaultQuickToolsConfig();
     cfg = sanitizeQuickToolsConfig(cfg);
