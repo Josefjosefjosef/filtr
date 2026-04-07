@@ -6230,6 +6230,9 @@ function buildVideoAsArticleCard(it) {
             if (fromWebNavGateCest) document.body.classList.add("iu-webnavDetailFromGate");
             else document.body.classList.remove("iu-webnavDetailFromGate");
           } catch (_) {}
+          try {
+            if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
+          } catch (_) {}
         }
       } catch (_) {}
       try {
@@ -6295,6 +6298,9 @@ function buildVideoAsArticleCard(it) {
         try {
           if (fromWebNavGateHub) document.body.classList.add("iu-webnavDetailFromGate");
           else document.body.classList.remove("iu-webnavDetailFromGate");
+        } catch (_) {}
+        try {
+          if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
         } catch (_) {}
       }
     } catch (_) {}
@@ -9684,6 +9690,62 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
   }
+
+  /**
+   * P0 WebNav detail back bar: drž tlačítko #iuMobileMainBackBar na document.body, když je aktivní detail z „Navigace po webu“.
+   * Důvod: #leftContent má na tabletu portrait overflow:hidden — fixed potomci bývají ořezaní/posunutí (Edge) nebo špatný hit-target (Safari).
+   * Mimo tento stav vrať prvek zpět jako první dítě #leftContent (desktop / ne-webnav flow).
+   */
+  function iuWebNavDetailBackBarHostSync() {
+    try {
+      var bar = document.getElementById("iuMobileMainBackBar");
+      var lc = document.getElementById("leftContent");
+      if (!bar || !lc) return;
+      var active =
+        document.body.classList.contains("iu-webnavDetailFromGate") &&
+        document.body.classList.contains("iu-mobileMainVisible") &&
+        !bar.hidden;
+      if (active) {
+        if (bar.parentElement !== document.body) {
+          document.body.appendChild(bar);
+        }
+      } else {
+        if (bar.parentElement === document.body) {
+          lc.insertBefore(bar, lc.firstChild);
+        }
+      }
+    } catch (_) {}
+  }
+
+  function iuWebNavDetailBackBarHostInstall() {
+    try {
+      if (window.__iuWebNavBackBarHostInstalled) return;
+      window.__iuWebNavBackBarHostInstalled = true;
+      var schedule = function () {
+        try {
+          window.requestAnimationFrame(function () {
+            try {
+              iuWebNavDetailBackBarHostSync();
+            } catch (_) {}
+          });
+        } catch (_) {
+          try {
+            iuWebNavDetailBackBarHostSync();
+          } catch (_) {}
+        }
+      };
+      var mo = new MutationObserver(schedule);
+      mo.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+      var bar0 = document.getElementById("iuMobileMainBackBar");
+      if (bar0) {
+        mo.observe(bar0, { attributes: true, attributeFilter: ["hidden"] });
+      }
+      schedule();
+    } catch (_) {}
+  }
+  try {
+    window.iuWebNavDetailBackBarHostSync = iuWebNavDetailBackBarHostSync;
+  } catch (_) {}
 
   /** P0 Mobile gate: tab click — only one section open; use existing left rail / MindMenu; back button. */
   function iuMobileGateTabInit() {
@@ -16142,6 +16204,9 @@ function buildVideoAsArticleCard(it) {
       if (mq && mq.addEventListener) mq.addEventListener("change", function() { iuMobileLayoutReorder(); });
     } catch (_) {}
     iuMobileGateTabInit();
+    try {
+      iuWebNavDetailBackBarHostInstall();
+    } catch (_) {}
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
 
@@ -22024,12 +22089,18 @@ function buildVideoAsArticleCard(it) {
           try {
             document.body.classList.remove("iu-webnavDetailFromGate");
           } catch (_) {}
+          try {
+            if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
+          } catch (_) {}
         } else {
           try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_) {}
           var mbHid = document.getElementById("iuMobileMainBackBar");
           if (mbHid) mbHid.hidden = true;
           try {
             document.body.classList.remove("iu-webnavDetailFromGate");
+          } catch (_) {}
+          try {
+            if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
           } catch (_) {}
         }
       }
@@ -22486,6 +22557,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           try {
             if (fromWebNavGateNav) document.body.classList.add("iu-webnavDetailFromGate");
             else document.body.classList.remove("iu-webnavDetailFromGate");
+          } catch (_) {}
+          try {
+            if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
           } catch (_) {}
         }
       } catch (_) {}

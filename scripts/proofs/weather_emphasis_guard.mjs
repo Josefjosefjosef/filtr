@@ -45,7 +45,8 @@ function startStaticServer() {
       let rel = decodeURIComponent(u.replace(/^\//, "")).replace(/\\/g, "/");
       if (rel.endsWith("/")) rel += "index.html";
       const fp = path.resolve(rootResolved, rel);
-      if (!fp.startsWith(rootResolved)) {
+      const relToRoot = path.relative(rootResolved, fp);
+      if (relToRoot.startsWith("..") || path.isAbsolute(relToRoot)) {
         res.statusCode = 403;
         res.end();
         return;
