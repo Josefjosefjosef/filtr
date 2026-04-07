@@ -17186,8 +17186,8 @@ html, body,
   stroke-width: 2.6;
 }
 
-/* P0: left-rail weather tile — image with caption below, stable box (no CLS) */
-.iu-tile{
+/* P0: weather rail tile — image + caption; only items with .iu-tile-image (scoped: other .iu-leftNavItem stay centered) */
+.iu-leftNav .iu-leftNavItem:has(.iu-tile-image){
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -17195,10 +17195,7 @@ html, body,
 
 .iu-tile-image{
   width: 100%;
-  height: 52px;
-  flex-shrink: 0;
-  overflow: hidden;
-  border-radius: 8px;
+  flex: 1;
 }
 
 .iu-tile-image img{
@@ -17212,11 +17209,6 @@ html, body,
   text-align: center;
   padding: 6px 4px;
   font-size: 13px;
-}
-
-.iu-leftNav .iu-leftNavItem.iu-tile{
-  justify-content: space-between;
-  gap: 4px;
 }
 
 .iu-leftNav .iu-tile-text{
@@ -17600,7 +17592,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
   gap: 0 !important;
 }
 
-#iuLeftRail .iu-leftNav > a.iu-leftNavItem.iu-tile{
+#iuLeftRail .iu-leftNav > a.iu-leftNavItem:has(.iu-tile-image){
   justify-content: space-between !important;
   gap: 4px !important;
 }
@@ -17733,7 +17725,7 @@ body #iuLeftRail{
   outline-offset: -1px;
 }
 
-.iu-leftNavItem:not(.iu-tile) img,
+.iu-leftNavItem:not(:has(.iu-tile-image)) img,
 .iu-leftNavItem svg,
 .iu-leftNavItem i,
 .iu-leftNavItem .iuNavIcon {
@@ -17757,7 +17749,7 @@ body #iuLeftRail{
   box-shadow: none !important;
 }
 
-.iu-leftNavItem:not(.iu-tile):hover img,
+.iu-leftNavItem:not(:has(.iu-tile-image)):hover img,
 .iu-leftNavItem:hover svg,
 .iu-leftNavItem:hover i {
   filter: grayscale(100%) brightness(1.8) !important;
