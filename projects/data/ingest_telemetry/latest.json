@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-07T19:56:56.225326Z",
-  "run_time_utc": "2026-04-07T19:56:56.225326Z",
+  "generatedAt": "2026-04-07T20:11:58.426302Z",
+  "run_time_utc": "2026-04-07T20:11:58.426302Z",
   "summary": {
     "schemaVersion": 1,
-    "generatedAt": "2026-04-07T19:56:56.225326Z",
-    "run_time_utc": "2026-04-07T19:56:56.225326Z",
-    "sources_checked": 5,
+    "generatedAt": "2026-04-07T20:11:58.426302Z",
+    "run_time_utc": "2026-04-07T20:11:58.426302Z",
+    "sources_checked": 4,
     "sources_with_new_items": 1,
-    "total_raw_items": 49,
-    "total_parsed_items": 49,
-    "total_normalized_items": 49,
+    "total_raw_items": 29,
+    "total_parsed_items": 29,
+    "total_normalized_items": 29,
     "total_after_dedupe_items": 0,
     "total_written_articles_feed_attributed": 0,
     "written_by_section": {
@@ -23,18 +23,13 @@
     "newest_written_publishedAt": "2026-04-07T19:38:34Z",
     "top_sources_by_new_items": [
       {
-        "source_id": "https://sport.ceskatelevize.cz/rss",
-        "feed_url": "https://sport.ceskatelevize.cz/rss",
-        "raw_feed_new_item_count": 30
+        "source_id": "https://www.betterlife.cz/feed/",
+        "feed_url": "https://www.betterlife.cz/feed/",
+        "raw_feed_new_item_count": 10
       },
       {
-        "source_id": "https://www.ceskatelevize.cz/art/rss",
-        "feed_url": "https://www.ceskatelevize.cz/art/rss",
-        "raw_feed_new_item_count": 0
-      },
-      {
-        "source_id": "https://www.crzpravy.cz/rss/sport/",
-        "feed_url": "https://www.crzpravy.cz/rss/sport/",
+        "source_id": "https://www.ceskatelevize.cz/rss/veda/",
+        "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
         "raw_feed_new_item_count": 0
       },
       {
@@ -50,18 +45,13 @@
     ],
     "top_sources_by_written_items": [
       {
-        "source_id": "https://sport.ceskatelevize.cz/rss",
-        "feed_url": "https://sport.ceskatelevize.cz/rss",
+        "source_id": "https://www.betterlife.cz/feed/",
+        "feed_url": "https://www.betterlife.cz/feed/",
         "written_to_articles_json_count": 0
       },
       {
-        "source_id": "https://www.ceskatelevize.cz/art/rss",
-        "feed_url": "https://www.ceskatelevize.cz/art/rss",
-        "written_to_articles_json_count": 0
-      },
-      {
-        "source_id": "https://www.crzpravy.cz/rss/sport/",
-        "feed_url": "https://www.crzpravy.cz/rss/sport/",
+        "source_id": "https://www.ceskatelevize.cz/rss/veda/",
+        "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
         "written_to_articles_json_count": 0
       },
       {
@@ -77,14 +67,14 @@
     ],
     "top_drop_sources": [
       {
-        "source_id": "https://sport.ceskatelevize.cz/rss",
-        "feed_url": "https://sport.ceskatelevize.cz/rss",
-        "raw_minus_written": 30
-      },
-      {
         "source_id": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
         "raw_minus_written": 15
+      },
+      {
+        "source_id": "https://www.betterlife.cz/feed/",
+        "feed_url": "https://www.betterlife.cz/feed/",
+        "raw_minus_written": 10
       },
       {
         "source_id": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -92,110 +82,35 @@
         "raw_minus_written": 4
       },
       {
-        "source_id": "https://www.ceskatelevize.cz/art/rss",
-        "feed_url": "https://www.ceskatelevize.cz/art/rss",
-        "raw_minus_written": 0
-      },
-      {
-        "source_id": "https://www.crzpravy.cz/rss/sport/",
-        "feed_url": "https://www.crzpravy.cz/rss/sport/",
+        "source_id": "https://www.ceskatelevize.cz/rss/veda/",
+        "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
         "raw_minus_written": 0
       }
     ]
   },
   "sources": [
     {
-      "source_id": "https://sport.ceskatelevize.cz/rss",
-      "source_label": "ČT sport",
-      "feed_url": "https://sport.ceskatelevize.cz/rss",
-      "topic": "sport",
-      "section_primary": "sport",
-      "generatedAt": "2026-04-07T19:56:56.225326Z",
-      "run_time_utc": "2026-04-07T19:56:56.225326Z",
-      "raw_feed_item_count": 30,
-      "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-07T19:38:34Z",
-      "ingested_item_count": 30,
-      "parsed_item_count": 30,
-      "normalized_item_count": 30,
-      "valid_publishedAt_count": 30,
-      "mapped_to_section_count": {
-        "zpravy": 0,
-        "sport": 30,
-        "finance": 0,
-        "zdravi": 0,
-        "cestovani": 0,
-        "other": 0
-      },
-      "release_eligible_count": 0,
-      "written_to_articles_json_count": 0,
-      "newest_written_publishedAt": "",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 0,
-        "dedupe": 30,
-        "other": 0
-      },
-      "sample_titles": [
-        {
-          "title": "Nymburk v Lize mistrů končí, s Vilniusem padl i napodruhé",
-          "publishedAt": "2026-04-07T19:38:34Z"
-        },
-        {
-          "title": "Basketbalistky SBŠ Ostrava obrátily sérii s Chomutovem a jsou v semifinále",
-          "publishedAt": "2026-04-07T19:21:37Z"
-        },
-        {
-          "title": "Rulík: Mladí kluci určitě dostanou šanci. Na mistrovství světa to nemají zavřené",
-          "publishedAt": "2026-04-07T19:14:18Z"
-        },
-        {
-          "title": "Karlovarsko odstartovalo do semifinále výhrou nad libereckými volejbalisty",
-          "publishedAt": "2026-04-07T18:16:21Z"
-        },
-        {
-          "title": "Semifinále play-off extraligy Sparta – Pardubice. Třinci chybí jedna výhra k postupu",
-          "publishedAt": "2026-04-07T17:13:00Z"
-        },
-        {
-          "title": "FAČR bude mít k dispozici jen jednotky tisíců lístků na české zápasy na MS",
-          "publishedAt": "2026-04-07T16:49:29Z"
-        },
-        {
-          "title": "Reprezentace řeší aklimatizaci týmu před MS, u Dallasu by měl trénovat už před turnajem",
-          "publishedAt": "2026-04-07T15:06:44Z"
-        },
-        {
-          "title": "Zlín opět srovnal krok, proti Jihlavě rozhodl ve vypjaté druhé třetině",
-          "publishedAt": "2026-04-07T14:30:00Z"
-        }
-      ]
-    },
-    {
-      "source_id": "https://www.ceskatelevize.cz/art/rss",
-      "source_label": "ČT art",
-      "feed_url": "https://www.ceskatelevize.cz/art/rss",
-      "topic": "kultura",
-      "section_primary": "kultura",
-      "generatedAt": "2026-04-07T19:56:56.225326Z",
-      "run_time_utc": "2026-04-07T19:56:56.225326Z",
-      "raw_feed_item_count": 0,
-      "raw_feed_new_item_count": 0,
-      "raw_feed_latest_publishedAt": "",
-      "ingested_item_count": 0,
-      "parsed_item_count": 0,
-      "normalized_item_count": 0,
-      "valid_publishedAt_count": 0,
+      "source_id": "https://www.betterlife.cz/feed/",
+      "source_label": "BetterLife (edu)",
+      "feed_url": "https://www.betterlife.cz/feed/",
+      "topic": "vzdelavani",
+      "section_primary": "vzdelavani",
+      "generatedAt": "2026-04-07T20:11:58.426302Z",
+      "run_time_utc": "2026-04-07T20:11:58.426302Z",
+      "raw_feed_item_count": 10,
+      "raw_feed_new_item_count": 10,
+      "raw_feed_latest_publishedAt": "2026-04-06T12:05:05Z",
+      "ingested_item_count": 10,
+      "parsed_item_count": 10,
+      "normalized_item_count": 10,
+      "valid_publishedAt_count": 10,
       "mapped_to_section_count": {
         "zpravy": 0,
         "sport": 0,
         "finance": 0,
         "zdravi": 0,
         "cestovani": 0,
-        "other": 0
+        "other": 10
       },
       "release_eligible_count": 0,
       "written_to_articles_json_count": 0,
@@ -206,19 +121,52 @@
         "parser_drop": 0,
         "section_remap": 0,
         "release_gate": 0,
-        "dedupe": 0,
+        "dedupe": 10,
         "other": 0
       },
-      "sample_titles": []
+      "sample_titles": [
+        {
+          "title": "Vesničko má středisková: Původní herecké obsazení, smrtelná nehoda a film vznikl jako záchrana před finančním průšvihem",
+          "publishedAt": "2026-04-06T12:05:05Z"
+        },
+        {
+          "title": "Neobvyklé velikonoční tradice ve světě: Dobrovolné utrpení na kříži, hony na králíky a v hlavní roli kriminálky",
+          "publishedAt": "2026-04-06T09:22:52Z"
+        },
+        {
+          "title": "Velikonoční pondělí: Omlazení, kraslice, šupání prutem a pozor na polévání vodou",
+          "publishedAt": "2026-04-06T06:28:26Z"
+        },
+        {
+          "title": "Ulice: Adriana čelí minulosti a v případě Evžena se s reakcí hodně přepočítala. V ohrožení je i Prokop",
+          "publishedAt": "2026-04-05T15:58:16Z"
+        },
+        {
+          "title": "Velikonoce u sousedů: Slovenské svátky jara bodují divokým folklorem a úterní odplatou",
+          "publishedAt": "2026-04-05T09:58:14Z"
+        },
+        {
+          "title": "Boží hod velikonoční velí odložit veškerou práci. Zákaz úklidu a praní chrání rodinu před celoročním neštěstím",
+          "publishedAt": "2026-04-05T06:58:13Z"
+        },
+        {
+          "title": "Velikonoční beránek podle Laďky Něrgešové",
+          "publishedAt": "2026-04-04T13:35:07Z"
+        },
+        {
+          "title": "Příští týden v seriálu Ulice: Petr zahnaný do kouta, Vandu sžírá žárlivost, Vilma způsobí poprask a Adriana pod tlakem",
+          "publishedAt": "2026-04-04T09:28:53Z"
+        }
+      ]
     },
     {
-      "source_id": "https://www.crzpravy.cz/rss/sport/",
-      "source_label": "ČR Zprávy / Sport",
-      "feed_url": "https://www.crzpravy.cz/rss/sport/",
-      "topic": "sport",
-      "section_primary": "sport",
-      "generatedAt": "2026-04-07T19:56:56.225326Z",
-      "run_time_utc": "2026-04-07T19:56:56.225326Z",
+      "source_id": "https://www.ceskatelevize.cz/rss/veda/",
+      "source_label": "ČT24 / Věda",
+      "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
+      "topic": "veda",
+      "section_primary": "veda",
+      "generatedAt": "2026-04-07T20:11:58.426302Z",
+      "run_time_utc": "2026-04-07T20:11:58.426302Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -254,8 +202,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-07T19:56:56.225326Z",
-      "run_time_utc": "2026-04-07T19:56:56.225326Z",
+      "generatedAt": "2026-04-07T20:11:58.426302Z",
+      "run_time_utc": "2026-04-07T20:11:58.426302Z",
       "raw_feed_item_count": 4,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2026-01-20T08:01:05Z",
@@ -291,8 +239,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-07T19:56:56.225326Z",
-      "run_time_utc": "2026-04-07T19:56:56.225326Z",
+      "generatedAt": "2026-04-07T20:11:58.426302Z",
+      "run_time_utc": "2026-04-07T20:11:58.426302Z",
       "raw_feed_item_count": 15,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2024-07-19T09:05:16Z",
