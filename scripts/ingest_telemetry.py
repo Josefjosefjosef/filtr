@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 
-TELEMETRY_SCHEMA_VERSION = 1
+TELEMETRY_SCHEMA_VERSION = 2
 
 VERTICAL_BUCKETS = frozenset({"sport", "finance", "zdravi", "cestovani"})
 OTHER_VERTICAL = frozenset({"hry", "kultura", "veda", "vzdelavani", "tech", "bydleni"})
@@ -103,6 +103,22 @@ def _merge_drops(dst: dict[str, int], src: dict | None) -> None:
                 pass
 
 
+def _canonical_source_id_from_report(r: dict, feed_u: str) -> str:
+    """
+    Must match article item feedId / registry id. Prefer explicit registryId on the feed report,
+    then registryGroup[0].id; URL is last-resort fallback (legacy / YouTube-style rows).
+    """
+    sid = str(r.get("registryId") or "").strip()
+    if sid:
+        return sid
+    rg = r.get("registryGroup")
+    if isinstance(rg, list) and rg and isinstance(rg[0], dict):
+        sid = str(rg[0].get("id") or "").strip()
+    if sid:
+        return sid
+    return (feed_u or "").strip() or "_unknown"
+
+
 def build_telemetry_payload(
     *,
     per_feed_report: list[dict],
@@ -159,12 +175,7 @@ def build_telemetry_payload(
 
     for r in per_feed_report:
         feed_u = str(r.get("feed") or "")
-        rg = r.get("registryGroup")
-        sid = ""
-        if isinstance(rg, list) and rg and isinstance(rg[0], dict):
-            sid = str(rg[0].get("id") or "").strip()
-        if not sid:
-            sid = feed_u or "_unknown"
+        sid = _canonical_source_id_from_report(r, feed_u)
 
         reg_e = reg.get(sid, {})
         label = str(r.get("source") or reg_e.get("label") or sid)
@@ -184,6 +195,7 @@ def build_telemetry_payload(
         if sid not in acc:
             acc[sid] = {
                 "source_id": sid,
+                "registry_id": sid,
                 "source_label": label,
                 "feed_url": feed_u,
                 "topic": topic,
