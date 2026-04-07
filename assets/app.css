@@ -9706,7 +9706,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     overflow: hidden !important;
     background: var(--iu-bg, #f8fafc) !important;
     box-sizing: border-box !important;
-    -webkit-overflow-scrolling: touch;
   }
   body.iu-mobileGateOverlayOpen #iuMobileGateBackBar:not([hidden]){
     flex: 0 0 auto !important;
@@ -9738,14 +9737,31 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     align-items: center !important;
   }
   body.iu-mobileGateOverlayOpen #iuMobileGateContent .iu-mobileGatePanel:not([hidden]){
-    flex: 1 1 auto !important;
+    flex: 1 1 0% !important;
     min-height: 0 !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
-    overscroll-behavior: contain !important;
+    overscroll-behavior-y: contain !important;
+    touch-action: pan-y !important;
     display: flex !important;
     flex-direction: column !important;
+  }
+  /* P0 Navigace po webu: jediný scroll host = panel; display:block + zrušení ~100vh min-height na railu (jinak boj s výškou overlaye → sekání) */
+  body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav.iu-mobileGatePanel:not([hidden]){
+    display: block !important;
+  }
+  body.iu-mobileGateOverlayOpen #iuMobileGateContent #iuLeftRail.iu-leftRail,
+  body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav #iuLeftRail,
+  body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav aside#iuLeftRail.iu-leftRail{
+    min-height: 0 !important;
+    height: auto !important;
+    align-self: stretch !important;
+  }
+  body.iu-mobileGateOverlayOpen #iuMobileGateContent #iuLeftRail.iu-leftRail .iu-leftNav,
+  body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav .iu-leftNav{
+    min-height: 0 !important;
+    height: auto !important;
   }
   #iuMobileGateContent .iu-mobileGatePanel{
     width: 100% !important;
