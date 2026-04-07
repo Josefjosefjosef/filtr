@@ -9720,6 +9720,11 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     border-bottom: 1px solid rgba(0,0,0,.1) !important;
     background: #eceff3 !important;
   }
+  /* GUARD:
+     - applies ONLY to overlay header (Navigace + MindMenu)
+     - MUST NOT affect global back buttons
+     - MUST NOT change layout, only text alignment
+     */
   body.iu-mobileGateOverlayOpen #iuMobileGateBackBar:not([hidden]) .iu-mobileGateBackBtn{
     width: 100% !important;
     max-width: 100% !important;
@@ -9731,8 +9736,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     border-top: 0 !important;
     box-sizing: border-box !important;
     font-size: 16px !important;
-    text-align: center !important;
-    justify-content: center !important;
+    text-align: right !important;
+    justify-content: flex-end !important;
     display: inline-flex !important;
     align-items: center !important;
   }
