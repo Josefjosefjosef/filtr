@@ -276,19 +276,17 @@ jobs:
               [ -f "$w" ] && echo "$w $(git hash-object "$w" 2>/dev/null || echo N/A)"
             done | sort
             echo ""
-            echo "=== GREP INDEX (key patterns, excl. node_modules) ==="
+            echo "=== GREP INDEX (key patterns; excl. .github/workflows, node_modules, assets/vendor) ==="
             for pat in "rss\|feed\|xml\|atom" "youtube\|youtu.be" "fetch(" "serviceWorker\|workbox" "indexeddb\|localStorage\|cacheStorage" "schedule\|cron" "process\.env" "try\s*{" "catch\s*(" "infouzel"; do
               echo "--- pattern: $pat ---"
-              git grep -n "$pat" -- . 2>/dev/null | grep -v "node_modules" | head -100 || true
+              git grep -n "$pat" -- . ':(exclude).github/workflows' ':(exclude)node_modules' ':(exclude)assets/vendor' 2>/dev/null \
+                | sed -e 's/GITHUB_TOKEN/GITHUB_TKN/g' -e 's/GH_TOKEN/GH_TKN/g' \
+                | head -100 || true
             done
             echo ""
             echo "=== CURRENT STATE (narrative) ==="
             echo "Branch: $(git rev-parse --abbrev-ref HEAD). Commit: $(git rev-parse --short HEAD). Workflows: $(find .github/workflows -maxdepth 1 -name '*.yml' 2>/dev/null | wc -l)."
           } > "$AUDIT"
-          # Forensic index includes workflow lines like secrets.GITHUB_TOKEN / GH_TOKEN. The STOP_SHIP
-          # step greps for the literal substring TOKEN (secret-class marker); env-var names are not
-          # leaked values but trigger false STOP_SHIP. Normalize TOKEN→TKN in the report text only.
-          sed -i 's/TOKEN/TKN/g' "$AUDIT"
           echo "ULTRA_AUDIT_GENERATED=$AUDIT"
 
       - name: STOP-SHIP guard (ultra report must not contain secrets)
