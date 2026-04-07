@@ -11763,6 +11763,53 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   outline-offset: 2px;
 }
 
+/* P0 mobile/tablet: QuickTools settings above gate overlay (10018); backdrop 10019, panel 10020 — portal to body via JS */
+.iu-quicktools-settings-backdrop[hidden]{
+  display: none !important;
+}
+@media (max-width: 1023px){
+  .iu-quicktools-settings-backdrop:not([hidden]){
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 10019 !important;
+    background: rgba(15, 23, 42, 0.42) !important;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    pointer-events: auto !important;
+  }
+  .mindMenu .iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]){
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    right: auto !important;
+    width: min(400px, calc(100vw - 24px)) !important;
+    max-width: min(400px, calc(100vw - 24px)) !important;
+    max-height: min(520px, 70dvh) !important;
+    margin: 0 !important;
+    margin-top: 0 !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 10020 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  /* iOS/Safari: no focus zoom on text inputs (16px minimum) — scope: MindMenu overlay + QuickTools dialog + mailbox edit */
+  #iuMobileGatePanelTools .mindMenu input[type="text"],
+  #iuMobileGatePanelTools .mindMenu input[type="url"],
+  #iuMobileGatePanelTools .mindMenu input[type="search"],
+  #iuMobileGatePanelTools .mindMenu textarea,
+  #iuMobileGatePanelTools .mindMenu select,
+  .iu-quicktools-settings-panel input,
+  .iu-quicktools-settings-panel textarea,
+  .iu-quicktools-settings-panel select,
+  #iu-mailbox-edit-overlay input[type="text"]{
+    font-size: 16px !important;
+  }
+}
+
 .accordionCol .mindMenu .iu-mmQuickLinks{
   --iu-rr-gapY: 6px;
   --iu-rr-py: 8px;
