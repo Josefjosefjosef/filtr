@@ -507,7 +507,7 @@ try {
     // FEED pagination (render-only; no pipeline touch)
     pageSize: 200,
     page: 1,
-    /** Topic filter v článkovém hubu (?section=feed&topic=zpravy|sport|…) — null jen mimo hub */
+    /** Hub topic filter (?topic=zpravy|sport|…). null = globální feed (všechny aktivní sekce), ne jen Zprávy. */
     mediaTopicKey: null,
     /** Režim travel stránky: guide = poradna, media = články o cestování */
     travelUiMode: "guide",
@@ -11612,7 +11612,7 @@ function buildVideoAsArticleCard(it) {
         if (topic === "tech" || topic === "bydleni") {
           topic = "zpravy";
         }
-        if (iuArticleHubSectionP(sec) && (!topic || topic === "all")) topic = "zpravy";
+        /* Default hub URL = global feed (all active sections). Explicit ?topic=… narrows via mediaTopicKey. */
         parsedNavSec = sec;
         parsedNavTopic = topic;
         state.mediaTopicKey = null;
@@ -21486,7 +21486,7 @@ function buildVideoAsArticleCard(it) {
         el.removeAttribute('aria-current');
       });
       if (iuArticleHubSectionP(nav.section)) {
-        const tk = nav.topic && nav.topic !== 'all' ? nav.topic : 'zpravy';
+        const tk = nav.topic && nav.topic !== "all" ? nav.topic : "all";
         const el = document.querySelector('.iu-leftNav .iu-leftNavItem[data-media-topic="' + tk + '"]');
         if (el) {
           el.classList.add('is-active');
@@ -21568,13 +21568,13 @@ function buildVideoAsArticleCard(it) {
       const hadDisabledTopic = topic === "tech" || topic === "bydleni";
       if (hadDisabledSection) topic = "zpravy";
       if (hadDisabledTopic) topic = "zpravy";
-      if (iuArticleHubSectionP(section) && (!topic || topic === "all")) topic = "zpravy";
+      /* Missing/empty topic = global media feed (no implicit zpravy-only filter). */
       if (hadDisabledSection || hadDisabledTopic) {
         try { persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: "zpravy" }); } catch (_) {}
       }
       return { section, topic, mode };
     }catch{
-      return { section: IU_ARTICLE_HUB_SECTION, topic: "zpravy", mode: "guide" };
+      return { section: IU_ARTICLE_HUB_SECTION, topic: "", mode: "guide" };
     }
   }
 
@@ -21585,10 +21585,9 @@ function buildVideoAsArticleCard(it) {
       if (sec === "media") sec = IU_ARTICLE_HUB_SECTION;
       u.searchParams.set("section", sec);
       if (sec === IU_ARTICLE_HUB_SECTION) {
-        let t = String(o.topic || "").trim().toLowerCase();
-        if (t === "all") t = "zpravy";
+        const t = String(o.topic || "").trim().toLowerCase();
         if (t && t !== "all") u.searchParams.set("topic", t);
-        else u.searchParams.set("topic", "zpravy");
+        else u.searchParams.delete("topic");
         u.searchParams.delete("mode");
       } else if (sec === "travel") {
         u.searchParams.delete("topic");
@@ -21605,11 +21604,11 @@ function buildVideoAsArticleCard(it) {
     const k = String(key || "").trim().toLowerCase();
     const MEDIA_TOPIC_KEYS = new Set(["all", "zpravy", "sport", "finance", "zdravi", "media", "feed"]);
     if (k === "feed" || k === "media" || k === "all") {
-      persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: "zpravy" });
+      persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: "" });
     } else if (k === "tech" || k === "bydleni") {
       persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: "zpravy" });
     } else if (MEDIA_TOPIC_KEYS.has(k)) {
-      persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: k === "all" ? "zpravy" : k });
+      persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: k });
     } else if (k === "travel") {
       persistNavState({ section: "travel", mode: "guide" });
     } else {
@@ -21849,7 +21848,7 @@ function buildVideoAsArticleCard(it) {
       const sl = document.getElementById("sectionLabel");
       if (sl) {
         const labels = {
-          all: "Zprávy",
+          all: "Vše",
           zpravy: "Zprávy",
           sport: "Sport",
           finance: "Finance",
@@ -21863,7 +21862,8 @@ function buildVideoAsArticleCard(it) {
         if (section === "travel") {
           txt = nav.mode === "media" ? "Cestování média" : "Cestování poradna";
         } else if (iuArticleHubSectionP(section)) {
-          txt = labels[nav.topic] || labels.zpravy;
+          if (!nav.topic || nav.topic === "all") txt = labels.all;
+          else txt = labels[nav.topic] || labels.zpravy;
         } else if (labels[section]) {
           txt = labels[section];
         }
