@@ -21593,7 +21593,7 @@ function buildVideoAsArticleCard(it) {
       if (seen.has(key)) continue;
       seen.add(key);
 
-      const labelEl = it.querySelector('.iu-leftNavLabel');
+      const labelEl = it.querySelector('.iu-leftNavLabel, .iu-tile-text');
       const label = (labelEl ? labelEl.textContent : it.textContent || '').trim();
 
       // Icon SVG: reuse exact markup from left rail (sanitized: drop any on* attributes).
@@ -21612,6 +21612,18 @@ function buildVideoAsArticleCard(it) {
             }catch{}
           });
           svgHtml = clone.outerHTML;
+        } else {
+          const tileImg = it.querySelector('.iu-tile-image img');
+          if (tileImg) {
+            const clone = tileImg.cloneNode(true);
+            try{
+              Array.from(clone.attributes || []).forEach((a) => {
+                if (!a || !a.name) return;
+                if (/^on/i.test(a.name)) clone.removeAttribute(a.name);
+              });
+            }catch{}
+            svgHtml = clone.outerHTML;
+          }
         }
       }catch{}
 
