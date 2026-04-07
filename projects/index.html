@@ -1002,7 +1002,7 @@ style-src 'self' 'unsafe-inline' https:;
                       var wrap = document.getElementById("iuMobileGateWrap");
                       if (!wrap) return;
                       wrap.setAttribute("aria-hidden", "false");
-                      /* Rail → panelNav: iuMobileGateReorder in app.js (tablet 768×1024 skips rail move for CLS). */
+                      /* Rail → panelNav: iuMobileGateReorder v app.js; stejné jako early sync (≤900px vždy do panelNav). */
                     } catch (e) {}
                   })();
                   </script>
@@ -3175,11 +3175,8 @@ style-src 'self' 'unsafe-inline' https:;
             silverSlot.appendChild(silver);
           }
         }
-        /* P0 CLS (768×1024): same as app.js iuMobileGateReorder — do not move rail to panelNav on tablet portrait (max-aspect-ratio 1/1). */
-        var mqTabSync =
-          window.matchMedia &&
-          window.matchMedia("(min-width: 768px) and (max-width: 900px) and (max-aspect-ratio: 1/1)");
-        if (!(mqTabSync && mqTabSync.matches) && !panelNav.contains(rail)) {
+        /* P0 WebNav: stejně jako iuMobileGateReorder — při ≤900px vždy přesunout rail do panelNav (tablet 768×1024 má funkční overlay grid). */
+        if (!panelNav.contains(rail)) {
           panelNav.appendChild(rail);
         }
         /* P0 CLS: set --iu-silver-slot-max-h before module app.js (same formula as iuSilverMobileStackFitApply in assets/app.js). */
