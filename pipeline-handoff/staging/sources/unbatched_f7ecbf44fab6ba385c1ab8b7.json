@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "unbatched_f7ecbf44fab6ba385c1ab8b7",
-  "ingestedAt": "2026-04-07T00:32:11.852044Z",
+  "ingestedAt": "2026-04-07T00:36:39.801612Z",
   "items": [],
   "feedReports": [
     {
       "feed": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "source": "YouTube – ČT24",
       "topic": "aktualne",
-      "httpStatus": 200,
-      "contentType": "text/xml; charset=utf-8",
+      "httpStatus": 500,
+      "contentType": "text/html; charset=utf-8",
       "finalUrl": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
-      "bytes": 21580,
-      "reason": "",
+      "bytes": 0,
+      "reason": "http_500",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 15,
-      "itemsKept": 15,
-      "accepted": 15,
-      "status": "OK",
+      "itemsParsed": 0,
+      "itemsKept": 0,
+      "accepted": 0,
+      "status": "BOZO",
       "bozo_but_used": false
     }
   ]
