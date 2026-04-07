@@ -6198,6 +6198,9 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       try {
         if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+          try {
+            if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
+          } catch (_) {}
           document.body.classList.add("iu-mobileMainVisible");
           var mb2 = document.getElementById("iuMobileMainBackBar");
           if (mb2) mb2.hidden = false;
@@ -6254,6 +6257,9 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
     try {
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+        try {
+          if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
+        } catch (_) {}
         document.body.classList.add("iu-mobileMainVisible");
         var mb = document.getElementById("iuMobileMainBackBar");
         if (mb) mb.hidden = false;
@@ -9692,6 +9698,31 @@ function buildVideoAsArticleCard(it) {
           var mb = document.getElementById("iuMobileMainBackBar");
           if (mb) mb.hidden = true;
         }
+        /* P0 mobile/tablet: fullscreen overlay host — lock background scroll; CSS uses body/html.iu-mobileGateOverlayOpen */
+        try {
+          if (value === "nav" || value === "tools") {
+            document.documentElement.classList.add("iu-mobileGateOverlayOpen");
+            document.body.classList.add("iu-mobileGateOverlayOpen");
+          } else {
+            document.documentElement.classList.remove("iu-mobileGateOverlayOpen");
+            document.body.classList.remove("iu-mobileGateOverlayOpen");
+          }
+        } catch (_) {}
+        try {
+          if (value === "nav" || value === "tools") {
+            window.requestAnimationFrame(function () {
+              try {
+                content.scrollTop = 0;
+                if (panelNav) panelNav.scrollTop = 0;
+                if (panelTools) panelTools.scrollTop = 0;
+              } catch (_) {}
+              try {
+                var bb = document.getElementById("iuMobileGateBack");
+                if (bb && typeof bb.focus === "function") bb.focus({ preventScroll: true });
+              } catch (_) {}
+            });
+          }
+        } catch (_) {}
       }
       if (backBtn) {
         backBtn.addEventListener("click", function () {
@@ -9882,9 +9913,30 @@ function buildVideoAsArticleCard(it) {
         setTab(cur === "tools" ? "" : "tools");
       }
       tabTools.addEventListener("click", iuHandleToolsTabClick);
+      try {
+        wrap.__iuMobileGateSetTab = setTab;
+      } catch (_) {}
       setTab("");
     } catch (_) {}
   }
+
+  /** Close mobile gate overlay + tabs state (call before iu-mobileMainVisible so fixed layer never stacks over feed). */
+  function iuMobileGateCloseForMainNav() {
+    try {
+      var w = document.getElementById("iuMobileGateWrap");
+      if (w && typeof w.__iuMobileGateSetTab === "function") {
+        w.__iuMobileGateSetTab("");
+        return;
+      }
+    } catch (_) {}
+    try {
+      document.documentElement.classList.remove("iu-mobileGateOverlayOpen");
+      document.body.classList.remove("iu-mobileGateOverlayOpen");
+    } catch (_) {}
+  }
+  try {
+    window.iuMobileGateCloseForMainNav = iuMobileGateCloseForMainNav;
+  } catch (_) {}
 
   /** P0 Mobile layout: reorder — on mobile use gate (Silver first + 2-tab); on desktop restore. */
   function iuMobileLayoutReorder() {
@@ -21771,6 +21823,9 @@ function buildVideoAsArticleCard(it) {
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
         const sec = String(section || "").toLowerCase();
         if (sec && !iuArticleHubSectionP(sec)) {
+          try {
+            if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
+          } catch (_) {}
           document.body.classList.add("iu-mobileMainVisible");
           var mbVis = document.getElementById("iuMobileMainBackBar");
           if (mbVis) mbVis.hidden = false;
@@ -22221,6 +22276,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       applyPanelFromUrl();
       try {
         if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+          try {
+            if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
+          } catch (_) {}
           document.body.classList.add("iu-mobileMainVisible");
           var mb = document.getElementById("iuMobileMainBackBar");
           if (mb) mb.hidden = false;
