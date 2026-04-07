@@ -175,6 +175,19 @@ function sectionKey(article) {
  * Dedup stejné kanonické URL (bez query/hash).
  * @param {object[]} articles
  */
+/** Canonical URL key for dedupe + publication history (host+path, lowercase). */
+export function canonicalArticleUrlKey(article) {
+  if (!article || typeof article !== "object") return "";
+  const raw = String(article.url || "").trim();
+  if (!raw) return "";
+  try {
+    const u = new URL(raw, "https://infouzel.cz/");
+    return `${u.hostname}${u.pathname}`.toLowerCase().replace(/\/$/, "");
+  } catch (_) {
+    return raw.split("?")[0].split("#")[0].toLowerCase();
+  }
+}
+
 export function dedupeCanonicalUrl(articles) {
   if (!Array.isArray(articles)) return [];
   const seen = new Set();
@@ -186,18 +199,14 @@ export function dedupeCanonicalUrl(articles) {
       out.push(a);
       continue;
     }
-    try {
-      const u = new URL(raw, "https://infouzel.cz/");
-      const canon = `${u.hostname}${u.pathname}`.toLowerCase().replace(/\/$/, "");
-      if (seen.has(canon)) continue;
-      seen.add(canon);
+    const canon = canonicalArticleUrlKey(a);
+    if (!canon) {
       out.push(a);
-    } catch (_) {
-      const fallback = raw.split("?")[0].split("#")[0].toLowerCase();
-      if (seen.has(fallback)) continue;
-      seen.add(fallback);
-      out.push(a);
+      continue;
     }
+    if (seen.has(canon)) continue;
+    seen.add(canon);
+    out.push(a);
   }
   return out;
 }
@@ -275,6 +284,127 @@ export function clusterArticles(articles, options = {}) {
   }
 
   return allClusters;
+}
+
+/**
+ * Stejná logika jako clusterArticles, ale jeden globální proud (čas ↓), bez splitu podle section.
+ * Pro publikační dedup napříč zdroji u stejné události (např. více médií, stejná sekce / téma).
+ */
+export function clusterArticlesUnified(articles, options = {}) {
+  const simTh = Number(options.similarityThreshold) || DEFAULT_SIMILARITY;
+  const hours = Number(options.hoursWindow) || DEFAULT_HOURS;
+  const windowMs = hours * 3600 * 1000;
+  const maxSize = Number(options.maxClusterSize) || DEFAULT_MAX_CLUSTER;
+
+  if (!Array.isArray(articles) || articles.length === 0) return [];
+
+  const sorted = [...articles].sort((a, b) => publishedMs(b) - publishedMs(a));
+  const clusters = [];
+
+  for (const article of sorted) {
+    if (!article || typeof article !== "object") continue;
+    const norm = normalizeTitle(article.title || "");
+    const t = publishedMs(article);
+
+    let found = false;
+    for (const cluster of clusters) {
+      const sim = similarity(norm, cluster.norm);
+      const primaryTitle = String(cluster.items[0]?.title || "");
+      const articleTitle = String(article.title || "");
+      const sem = semanticSimilarityMeta(articleTitle, primaryTitle);
+
+      const topicA = detectTopic(articleTitle);
+      const topicB = detectTopic(primaryTitle);
+      const sameTopic = topicA && topicB && topicA === topicB;
+
+      if (!sameTopic && sem.boosted > 0.5 && sem.entityOverlap === 0) continue;
+
+      const match =
+        sameTopic || sim >= simTh || roughMatch(norm, cluster.norm) || sem.boosted >= 0.5;
+      if (!match) continue;
+
+      const t0 = publishedMs(cluster.items[0]);
+      const timeDiff = Math.abs(t - t0);
+      if (timeDiff > windowMs) continue;
+
+      if (cluster.items.length >= maxSize) continue;
+
+      cluster.items.push(article);
+      found = true;
+      break;
+    }
+
+    if (!found) {
+      clusters.push({
+        norm,
+        items: [article],
+        sectionKey: sectionKey(article),
+      });
+    }
+  }
+
+  return clusters;
+}
+
+/**
+ * Přiřadí každému článku stabilní clusterId podle clusterArticlesUnified (po URL dedup).
+ * @returns {Map<string, string>} canonicalArticleUrlKey → clusterId
+ */
+export function buildPublicationClusterUrlMap(articles, options = {}) {
+  const map = new Map();
+  const deduped = dedupeCanonicalUrl(articles);
+  const clusters = clusterArticlesUnified(deduped, options);
+  for (let i = 0; i < clusters.length; i++) {
+    const cl = clusters[i];
+    const id = `pubc:${i}:${cl.sectionKey}:${publishedMs(cl.items[0])}`;
+    for (const it of cl.items) {
+      const k = canonicalArticleUrlKey(it);
+      if (k) map.set(k, id);
+    }
+  }
+  return map;
+}
+
+/** Klíč zdroje: primárně sources[0].name, jinak host z URL. */
+export function publicationSourceKey(item) {
+  try {
+    const src0 =
+      Array.isArray(item?.sources) && item.sources[0]
+        ? String(item.sources[0].name || "").trim()
+        : "";
+    if (src0) return src0.toLowerCase().replace(/\s+/g, " ").slice(0, 120);
+    const u = new URL(String(item?.url || ""), "https://infouzel.cz/");
+    return String(u.hostname || "")
+      .replace(/^www\./i, "")
+      .toLowerCase();
+  } catch (_) {
+    return "";
+  }
+}
+
+/**
+ * Max 2 články na publikační cluster, max 1 na zdroj v rámci clusteru.
+ * @param {object[]} sortedArts pořadí priorit (např. nejdřív ne-prev, pak čas ↓)
+ * @param {Map<string,string>} clusterMap z buildPublicationClusterUrlMap(deduped)
+ */
+export function pickPublicationKeptUrlKeys(sortedArts, clusterMap) {
+  const per = new Map();
+  const kept = new Set();
+  for (const it of sortedArts) {
+    const k = canonicalArticleUrlKey(it);
+    if (!k) continue;
+    const cid = clusterMap.get(k) || "solo:" + k;
+    const src = publicationSourceKey(it);
+    let st = per.get(cid);
+    if (!st) st = { n: 0, sources: new Set() };
+    if (st.n >= 2) continue;
+    if (src && st.sources.has(src)) continue;
+    if (src) st.sources.add(src);
+    st.n += 1;
+    per.set(cid, st);
+    kept.add(k);
+  }
+  return kept;
 }
 
 /**

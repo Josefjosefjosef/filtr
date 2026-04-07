@@ -1,5 +1,11 @@
 import { getExternalOriginMeta, isAllowedExternalOrigin, IU_OPEN_METEO_FORECAST_BASE } from "./iu-external-origins.js";
-import { clusterAndPickFinalArticles } from "./cluster_engine.js";
+import {
+  buildPublicationClusterUrlMap,
+  canonicalArticleUrlKey,
+  clusterAndPickFinalArticles,
+  dedupeCanonicalUrl,
+  pickPublicationKeptUrlKeys,
+} from "./cluster_engine.js";
 /* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
   try{
@@ -3843,8 +3849,21 @@ try {
     const url = String(item.url || "");
     const hay = (src0 + " " + url).toLowerCase();
     switch (key) {
-      case "zpravy":
-        return t === "aktualne" || t === "krimi";
+      case "zpravy": {
+        const verticals = new Set([
+          "sport",
+          "finance",
+          "zdravi",
+          "cestovani",
+          "hry",
+          "kultura",
+          "veda",
+          "vzdelavani",
+          "tech",
+          "bydleni",
+        ]);
+        return !verticals.has(t);
+      }
       case "sport":
         return t === "sport";
       case "tech": {
@@ -10247,6 +10266,88 @@ function buildVideoAsArticleCard(it) {
     return max;
   }
 
+  const IU_FEED_PREV_PUBLISHED_KEY = "iu_feed_prev_pub_v1";
+
+  function iuPublicationReadPrevSet() {
+    try {
+      const raw = sessionStorage.getItem(IU_FEED_PREV_PUBLISHED_KEY);
+      if (!raw) return new Set();
+      const arr = JSON.parse(raw);
+      return new Set(Array.isArray(arr) ? arr.map((x) => String(x || "")) : []);
+    } catch (_) {
+      return new Set();
+    }
+  }
+
+  function iuPublicationWritePrevFromItems(articles, maxN) {
+    const lim = Number(maxN) > 0 ? Number(maxN) : 120;
+    const keys = [];
+    for (let i = 0; i < articles.length; i++) {
+      const it = articles[i];
+      const k = canonicalArticleUrlKey(it);
+      if (k) keys.push(k);
+      if (keys.length >= lim) break;
+    }
+    try {
+      sessionStorage.setItem(IU_FEED_PREV_PUBLISHED_KEY, JSON.stringify(keys));
+    } catch (_) {}
+  }
+
+  /**
+   * Publikační filtr: session „už zobrazené“ deprioritizace + max 2 články / story cluster + max 1 / zdroj v clusteru.
+   * Videokarty a reklamy nechává beze změny; pracuje jen s contentType === article.
+   */
+  function iuApplyPublicationFeedFilterMixed(items) {
+    if (!Array.isArray(items) || items.length === 0) return items;
+    const isArticle = (it) => String(it && it.contentType ? it.contentType : "article").toLowerCase() === "article";
+    const arts = items.filter(isArticle);
+    if (arts.length === 0) return items;
+
+    const urlDedupedArts = dedupeCanonicalUrl(arts);
+    const clusterMap = buildPublicationClusterUrlMap(urlDedupedArts, {});
+    const prevSet = iuPublicationReadPrevSet();
+
+    const sortedArts = [...urlDedupedArts].sort((a, b) => {
+      const ka = canonicalArticleUrlKey(a);
+      const kb = canonicalArticleUrlKey(b);
+      const pa = ka && prevSet.has(ka) ? 1 : 0;
+      const pb = kb && prevSet.has(kb) ? 1 : 0;
+      if (pa !== pb) return pa - pb;
+      const ta = iuItemBestPublishedMs(a) || 0;
+      const tb = iuItemBestPublishedMs(b) || 0;
+      return tb - ta;
+    });
+
+    const keptKeys = pickPublicationKeptUrlKeys(sortedArts, clusterMap);
+
+    const out = items.filter((it) => {
+      if (!isArticle(it)) return true;
+      const k = canonicalArticleUrlKey(it);
+      if (!k) return true;
+      return keptKeys.has(k);
+    });
+
+    try {
+      const keptInFeedOrder = items.filter((it) => {
+        if (!isArticle(it)) return false;
+        const kk = canonicalArticleUrlKey(it);
+        return kk && keptKeys.has(kk);
+      });
+      iuPublicationWritePrevFromItems(keptInFeedOrder, 120);
+    } catch (_) {}
+
+    try {
+      window.__iuPublicationFeedFilter = {
+        articlesIn: arts.length,
+        articlesAfterUrlDedupe: urlDedupedArts.length,
+        uniqueClusters: new Set(clusterMap.values()).size,
+        keptArticles: keptKeys.size,
+      };
+    } catch (_) {}
+
+    return out;
+  }
+
   /** Local time, no seconds, no raw ISO in UI. Shorter label when the newest item is from today. */
   function iuFormatSectionLastUpdateLine(ms) {
     if (ms === null || ms === undefined || !Number.isFinite(ms)) return null;
@@ -10320,6 +10421,7 @@ function buildVideoAsArticleCard(it) {
         }
         return true;
       });
+      pass = iuApplyPublicationFeedFilterMixed(pass);
       state.filteredItems = pass;
       if (doRender) renderItems(state.filteredItems);
       iuUpdateSectionDataUpdatedAtEl();
@@ -10375,6 +10477,8 @@ function buildVideoAsArticleCard(it) {
           .toLowerCase();
         return haystackData.includes(normalizedQuery);
       });
+    } else {
+      filtered = iuApplyPublicationFeedFilterMixed(filtered);
     }
     state.filteredItems = filtered;
 
