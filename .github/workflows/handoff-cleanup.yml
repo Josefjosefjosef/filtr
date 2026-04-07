@@ -1,0 +1,151 @@
+# Isolated: prune Git history on automation/pipeline-handoff to reduce unbounded commit growth.
+# Does NOT touch ingest logic, scheduler, publish, or staging snapshot semantics (tip is still full replace per push-staging).
+# Requires: branch protection must allow GITHUB_TOKEN to force-push (or use a PAT via secrets).
+# RETENTION_DAYS = 7 (hardcoded in the script below).
+
+name: Handoff history cleanup (7d retention)
+
+on:
+  schedule:
+    - cron: "15 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: handoff-history-cleanup
+  cancel-in-progress: false
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prune automation/pipeline-handoff (keep commits from last 7 days)
+        run: |
+          set -euo pipefail
+          python3 << 'PY'
+          import json
+          import os
+          import subprocess
+          import sys
+
+          REPO = os.environ["GITHUB_WORKSPACE"]
+          BRANCH = "automation/pipeline-handoff"
+          RETENTION_DAYS = 7
+
+          def run(args):
+              r = subprocess.run(
+                  args,
+                  cwd=REPO,
+                  capture_output=True,
+                  text=True,
+                  encoding="utf-8",
+                  errors="replace",
+              )
+              if r.returncode != 0:
+                  sys.stderr.write(r.stderr or r.stdout or "")
+                  raise subprocess.CalledProcessError(r.returncode, args)
+              return (r.stdout or "").strip()
+
+          subprocess.check_call(
+              ["git", "fetch", "origin", BRANCH],
+              cwd=REPO,
+          )
+          subprocess.check_call(
+              ["git", "checkout", "-B", "handoff-prune-work", f"origin/{BRANCH}"],
+              cwd=REPO,
+          )
+          boundary = run(
+              [
+                  "git",
+                  "-C",
+                  REPO,
+                  "rev-list",
+                  "-1",
+                  f"--before={RETENTION_DAYS} days ago",
+                  "HEAD",
+              ]
+          )
+          total = int(run(["git", "-C", REPO, "rev-list", "--count", "HEAD"]) or "0")
+          summary = {
+              "branch": BRANCH,
+              "retention_days": RETENTION_DAYS,
+              "total_commits_before": total,
+              "boundary": boundary or None,
+          }
+          if not boundary:
+              summary["commits_kept"] = total
+              summary["commits_removed"] = 0
+              summary["action"] = "noop_all_within_window"
+              print(json.dumps(summary, indent=2))
+              sys.exit(0)
+
+          kept_lines = [
+              x
+              for x in run(
+                  ["git", "-C", REPO, "rev-list", "--reverse", f"{boundary}..HEAD"]
+              ).splitlines()
+              if x.strip()
+          ]
+          kept = len(kept_lines)
+          removed = total - kept
+          summary["commits_kept"] = kept
+          summary["commits_removed"] = removed
+
+          if removed <= 0:
+              summary["action"] = "noop_nothing_to_drop"
+              print(json.dumps(summary, indent=2))
+              sys.exit(0)
+
+          subprocess.check_call(
+              ["git", "-C", REPO, "checkout", "--orphan", "handoff-pruned"],
+              cwd=REPO,
+          )
+          subprocess.run(
+              ["git", "-C", REPO, "rm", "-rf", "--ignore-unmatch", "."],
+              cwd=REPO,
+              capture_output=True,
+              text=True,
+          )
+          subprocess.check_call(
+              ["git", "-C", REPO, "cherry-pick", f"{boundary}..HEAD"],
+              cwd=REPO,
+          )
+          subprocess.check_call(
+              [
+                  "git",
+                  "-C",
+                  REPO,
+                  "push",
+                  "--force-with-lease",
+                  "origin",
+                  f"handoff-pruned:{BRANCH}",
+              ],
+              cwd=REPO,
+          )
+          subprocess.check_call(
+              ["git", "fetch", "origin", BRANCH],
+              cwd=REPO,
+          )
+          summary["action"] = "pruned_and_pushed"
+          total_after = int(
+              run(
+                  [
+                      "git",
+                      "-C",
+                      REPO,
+                      "rev-list",
+                      "--count",
+                      f"origin/{BRANCH}",
+                  ]
+              )
+              or "0"
+          )
+          summary["total_commits_after"] = total_after
+          print(json.dumps(summary, indent=2))
+          PY
