@@ -2,6 +2,9 @@
 /**
  * Regression: „Navigace po webu“ → detail nástroje → fixed full-width „Zpět“ → návrat do gridu (ne homepage).
  * Run: node scripts/proofs/webnav_detail_backbar_guard.mjs
+ *
+ * Pozn.: emulace v Playwright nemusí mít stejné safe-area / dynamic browser chrome jako fyzické zařízení.
+ * Guard proto kontroluje svislé zarovnání lišty k #topbarWrap.getBoundingClientRect().bottom (stejný model jako produkční JS).
  */
 import http from "http";
 import fs from "fs/promises";
@@ -153,46 +156,162 @@ async function runFlow(page, baseUrl, label, consoleErrors) {
   await openWebNavOverlay(page);
   await openMapyDetail(page, label);
 
-  const hostProbe = await page.evaluate(() => {
-    const bar = document.getElementById("iuMobileMainBackBar");
-    if (!bar || bar.hidden) return { ok: false };
-    const r = bar.getBoundingClientRect();
-    return {
-      ok: bar.parentElement === document.body,
-      parentTag: bar.parentElement ? bar.parentElement.tagName : "",
-      top: r.top,
-      width: r.width,
-      innerWidth: window.innerWidth,
-    };
+  await page.evaluate(() => {
+    try {
+      if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
+    } catch (_) {}
+    try {
+      if (typeof window.iuWebNavDetailBackBarTopSync === "function") window.iuWebNavDetailBackBarTopSync();
+    } catch (_) {}
   });
-  if (!hostProbe.ok || hostProbe.parentTag !== "BODY") {
-    fail(label + ": back bar must be reparented to body, got " + JSON.stringify(hostProbe));
+  await page.evaluate(
+    () =>
+      new Promise(function (resolve) {
+        requestAnimationFrame(function () {
+          requestAnimationFrame(resolve);
+        });
+      })
+  );
+
+  /* Stejný model jako iuWebNavDetailBackBarTopSync: viditelný topbar → jeho spodek; jinak safe-area (topbar je na ≤1024px často display:none). */
+  let aligned = false;
+  for (let attempt = 0; attempt < 40; attempt++) {
+    aligned = await page.evaluate(() => {
+      function iuGuardTargetTopPx() {
+        var tb = document.getElementById("topbarWrap");
+        if (tb) {
+          var cs = window.getComputedStyle(tb);
+          var tr = tb.getBoundingClientRect();
+          if (cs.display !== "none" && cs.visibility !== "hidden" && tr.height > 4 && tr.width > 4) {
+            return tr.bottom;
+          }
+        }
+        var p = document.createElement("div");
+        p.style.cssText =
+          "position:fixed;left:0;top:0;width:0;height:0;margin:0;border:0;padding:0;visibility:hidden;pointer-events:none;z-index:-1;padding-top:env(safe-area-inset-top,0px);";
+        document.documentElement.appendChild(p);
+        var s = parseFloat(window.getComputedStyle(p).paddingTop) || 0;
+        document.documentElement.removeChild(p);
+        return s;
+      }
+      const bar = document.getElementById("iuMobileMainBackBar");
+      if (!bar || bar.hidden) return false;
+      try {
+        if (typeof window.iuWebNavDetailBackBarTopSync === "function") window.iuWebNavDetailBackBarTopSync();
+      } catch (_) {}
+      const targetTop = iuGuardTargetTopPx();
+      const d = Math.abs(bar.getBoundingClientRect().top - targetTop);
+      return d <= 12;
+    });
+    if (aligned) break;
+    await page.waitForTimeout(120);
   }
-  if (typeof hostProbe.top === "number" && hostProbe.top > 80) {
-    fail(label + ": back bar top-lock fail top=" + hostProbe.top);
+  if (!aligned) {
+    const dump = await page.evaluate(() => {
+      const bar = document.getElementById("iuMobileMainBackBar");
+      const tb = document.getElementById("topbarWrap");
+      const br = bar ? bar.getBoundingClientRect() : null;
+      const tr = tb ? tb.getBoundingClientRect() : null;
+      var target = 0;
+      var usedTopbar = false;
+      if (tb) {
+        var cs = window.getComputedStyle(tb);
+        if (cs.display !== "none" && cs.visibility !== "hidden" && tr && tr.height > 4 && tr.width > 4) {
+          target = tr.bottom;
+          usedTopbar = true;
+        }
+      }
+      if (!usedTopbar) {
+        var p2 = document.createElement("div");
+        p2.style.cssText =
+          "position:fixed;left:0;top:0;width:0;height:0;margin:0;border:0;padding:0;visibility:hidden;pointer-events:none;z-index:-1;padding-top:env(safe-area-inset-top,0px);";
+        document.documentElement.appendChild(p2);
+        target = parseFloat(window.getComputedStyle(p2).paddingTop) || 0;
+        document.documentElement.removeChild(p2);
+      }
+      return {
+        barHidden: bar ? bar.hidden : null,
+        barParent: bar && bar.parentElement ? bar.parentElement.tagName : null,
+        cssVarTop: getComputedStyle(document.documentElement).getPropertyValue("--iuWebNavDetailMainBackTop").trim(),
+        barTop: br ? br.top : null,
+        topbarBottom: tr ? tr.bottom : null,
+        targetTopUsed: target,
+        delta: br ? Math.abs(br.top - target) : null,
+        topbarHeight: tr ? tr.height : null,
+        topbarDisplay: tb ? getComputedStyle(tb).display : null,
+      };
+    });
+    fail(label + ": topbar/backbar align timeout " + JSON.stringify(dump));
   }
 
-  const domProbe = await page.evaluate(() => {
+  const snap = await page.evaluate(() => {
     const bar = document.getElementById("iuMobileMainBackBar");
+    const tb = document.getElementById("topbarWrap");
+    const lc = document.getElementById("leftContent");
     if (!bar || bar.hidden) return { ok: false, reason: "no_bar" };
+    const br = bar.getBoundingClientRect();
+    const tr = tb ? tb.getBoundingClientRect() : null;
+    var targetTopPx = 0;
+    var usedTopbarSnap = false;
+    if (tb) {
+      var csTb = window.getComputedStyle(tb);
+      if (csTb.display !== "none" && csTb.visibility !== "hidden" && tr && tr.height > 4 && tr.width > 4) {
+        targetTopPx = tr.bottom;
+        usedTopbarSnap = true;
+      }
+    }
+    if (!usedTopbarSnap) {
+      var pr = document.createElement("div");
+      pr.style.cssText =
+        "position:fixed;left:0;top:0;width:0;height:0;margin:0;border:0;padding:0;visibility:hidden;pointer-events:none;z-index:-1;padding-top:env(safe-area-inset-top,0px);";
+      document.documentElement.appendChild(pr);
+      targetTopPx = parseFloat(window.getComputedStyle(pr).paddingTop) || 0;
+      document.documentElement.removeChild(pr);
+    }
+    const deltaTop = Math.abs(br.top - targetTopPx);
     const cs = window.getComputedStyle(bar);
-    const r = bar.getBoundingClientRect();
     const vw = window.innerWidth;
     const txt = String(bar.textContent || "").trim();
     const alignOk = cs.textAlign === "right" || cs.justifyContent === "flex-end";
+    const cssVarTop = window.getComputedStyle(document.documentElement).getPropertyValue("--iuWebNavDetailMainBackTop").trim();
+    const lcPad = lc ? parseFloat(window.getComputedStyle(lc).paddingTop) || 0 : 0;
     return {
-      ok: cs.position === "fixed" && r.width >= vw * 0.92 && txt === "Zpět" && alignOk,
-      pos: cs.position,
-      w: r.width,
-      vw,
-      txt,
-      textAlign: cs.textAlign,
+      okHost: bar.parentElement === document.body,
+      parentTag: bar.parentElement ? bar.parentElement.tagName : "",
+      okTopAlign: deltaTop <= 12,
+      okDom:
+        cs.position === "fixed" &&
+        br.width >= vw * 0.92 &&
+        txt === "Zpět" &&
+        alignOk,
+      barTop: br.top,
+      topbarBottom: tr ? tr.bottom : null,
+      targetTopPx,
+      usedTopbarForTop: usedTopbarSnap,
+      deltaTop,
+      cssVarTop,
+      innerWidth: vw,
+      barWidth: br.width,
+      position: cs.position,
+      topComputed: cs.top,
+      left: cs.left,
+      right: cs.right,
       justifyContent: cs.justifyContent,
+      textAlign: cs.textAlign,
+      zIndex: cs.zIndex,
+      pointerEvents: cs.pointerEvents,
+      leftContentPaddingTop: lcPad,
     };
   });
 
-  if (!domProbe.ok) {
-    fail(label + ": back bar probe " + JSON.stringify(domProbe));
+  if (!snap.okHost || snap.parentTag !== "BODY") {
+    fail(label + ": back bar host " + JSON.stringify(snap));
+  }
+  if (!snap.okTopAlign) {
+    fail(label + ": back bar vertical align (topbar bottom or safe-area) " + JSON.stringify(snap));
+  }
+  if (!snap.okDom) {
+    fail(label + ": back bar dom probe " + JSON.stringify(snap));
   }
 
   const clickFracs = [0.08, 0.5, 0.92];
@@ -227,6 +346,8 @@ async function runFlow(page, baseUrl, label, consoleErrors) {
   if (appErr) fail(label + ": appErrors iu:lastError=" + appErr);
 
   if (consoleErrors.length) fail(label + ": console errors: " + consoleErrors.join(" | "));
+
+  return snap;
 }
 
 async function runDesktopUnchanged(page, baseUrl) {
@@ -276,8 +397,8 @@ async function main() {
             consoleErrors.push(String(err && err.message ? err.message : err));
           });
 
-          await runFlow(page, base, eng.id + "/" + vp.label, consoleErrors);
-          summary.engines[eng.id].viewports[vp.label] = "PASS";
+          const diag = await runFlow(page, base, eng.id + "/" + vp.label, consoleErrors);
+          summary.engines[eng.id].viewports[vp.label] = { pass: true, diag };
           await context.close();
         }
 
