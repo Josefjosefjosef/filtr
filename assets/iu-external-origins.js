@@ -22,7 +22,7 @@ export const IU_EXTERNAL_ORIGINS_REGISTRY = Object.freeze([
   { origin: "https://i.ytimg.com", classification: "third_party", purpose: "YouTube thumbnail images", source_of_truth: IU_EXTERNAL_ORIGINS_SOURCE_OF_TRUTH, active: true },
   { origin: "https://www.youtube.com", classification: "third_party", purpose: "YouTube embeds and links", source_of_truth: IU_EXTERNAL_ORIGINS_SOURCE_OF_TRUTH, active: true },
   { origin: "https://www.youtube-nocookie.com", classification: "third_party", purpose: "YouTube privacy-enhanced embeds", source_of_truth: IU_EXTERNAL_ORIGINS_SOURCE_OF_TRUTH, active: true },
-  { origin: "https://use.fontawesome.com", classification: "third_party", purpose: "Font Awesome CSS CDN", source_of_truth: IU_EXTERNAL_ORIGINS_SOURCE_OF_TRUTH, active: true },
+  { origin: "https://use.fontawesome.com", classification: "third_party", purpose: "Font Awesome CDN (removed from /projects/; inline SVG icons)", source_of_truth: IU_EXTERNAL_ORIGINS_SOURCE_OF_TRUTH, active: false },
   { origin: "https://www.google.com", classification: "third_party", purpose: "external search links", source_of_truth: IU_EXTERNAL_ORIGINS_SOURCE_OF_TRUTH, active: true },
   { origin: "https://tracking.app.packeta.com", classification: "third_party", purpose: "Zásilkovna tracking", source_of_truth: IU_EXTERNAL_ORIGINS_SOURCE_OF_TRUTH, active: true },
   { origin: "https://tracking.packeta.com", classification: "third_party", purpose: "Packeta tracking fallback", source_of_truth: IU_EXTERNAL_ORIGINS_SOURCE_OF_TRUTH, active: true },

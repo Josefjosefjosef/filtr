@@ -1,24 +1,21 @@
 {
   "schema": "css_debt_guard_v1",
-  "duplicate_selector_groups": 279,
-  "duplicate_rule_occurrences_in_groups": 742,
+  "duplicate_selector_groups": 274,
+  "duplicate_rule_occurrences_in_groups": 732,
   "classification_counts": {
-    "identical_duplicate": 5,
     "breakpoint_specific": 147,
     "risky_layout_coupled": 102,
     "intentional_cascade_candidate": 25
   },
   "debt_verdict_counts": {
     "intentional_non_debt": 99,
-    "risk_now": 175,
-    "unresolved_needs_review": 5
+    "risk_now": 175
   },
   "debt_occurrence_counts": {
     "intentional_non_debt": 280,
-    "risk_now": 452,
-    "unresolved_needs_review": 10
+    "risk_now": 452
   },
-  "app_css_bytes": 557710,
+  "app_css_bytes": 560772,
   "css_size_guard_budget_bytes": 4096,
   "risk_zone_duplicate_groups": [
     {
@@ -88,10 +85,6 @@
     {
       "selector_normalized": "#iuLeftRail .iu-leftNavItem",
       "classification": "intentional_cascade_candidate"
-    },
-    {
-      "selector_normalized": "#iuLeftRail .iu-leftNavItem[aria-current=\"page\"] .iu-leftNavIcon, #iuLeftRail .iu-leftNavItem.is-active .iu-leftNavIcon",
-      "classification": "identical_duplicate"
     },
     {
       "selector_normalized": "#iuLeftRail .iuLeftRailSectionTitle",
@@ -232,10 +225,6 @@
     {
       "selector_normalized": ".accordionCol section.iu-mmQuickLinks",
       "classification": "risky_layout_coupled"
-    },
-    {
-      "selector_normalized": ".checkItem input:checked",
-      "classification": "identical_duplicate"
     },
     {
       "selector_normalized": ".iu-infoItem::before",
@@ -402,10 +391,6 @@
       "classification": "risky_layout_coupled"
     },
     {
-      "selector_normalized": "aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current=\"page\"] .iu-leftNavIcon, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active .iu-leftNavIcon, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNavIcon",
-      "classification": "identical_duplicate"
-    },
-    {
       "selector_normalized": "aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent=\"finance\"] .iu-leftNavIcon svg, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent=\"home\"] .iu-leftNavIcon svg, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent=\"zdravi\"] .iu-leftNavIcon svg, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent=\"travel\"] .iu-leftNavIcon svg",
       "classification": "intentional_cascade_candidate"
     },
@@ -452,10 +437,6 @@
     {
       "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink",
       "classification": "risky_layout_coupled"
-    },
-    {
-      "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink .iuTileText",
-      "classification": "identical_duplicate"
     },
     {
       "selector_normalized": "body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink:hover",
@@ -620,10 +601,6 @@
     {
       "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotesInput, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotesInput",
       "classification": "intentional_cascade_candidate"
-    },
-    {
-      "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuRadioChip *, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherFeed .iuRadioChip *",
-      "classification": "identical_duplicate"
     },
     {
       "selector_normalized": "body[data-section=\"pocasi\"] #iuWeatherView .iuWeatherQuickChip, html[data-section=\"pocasi\"] #iuWeatherView .iuWeatherQuickChip",

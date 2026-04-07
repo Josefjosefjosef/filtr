@@ -248,23 +248,12 @@ img, svg, video, iframe{
 .accordionCol .mindMenu .iu-mailboxes{
   min-height: 255px;
 }
-i.fa-solid,
-i.fa-regular,
-i.fa-brands{
+.iu-mmQuickLinks .iuIconTile > svg{
   display: inline-block;
   width: 1.25em;
   min-width: 1.25em;
   height: 1.25em;
-  text-align: center;
-  line-height: 1;
-}
-.iu-mmQuickLinks .iuIconTile > i{
-  display: inline-block;
-  width: 1.25em;
-  min-width: 1.25em;
-  height: 1.25em;
-  text-align: center;
-  line-height: 1;
+  vertical-align: middle;
 }
 
 html, body{
@@ -721,10 +710,6 @@ html:not([data-iu-js]) .iuDailyWeather{
   .iu-infoItem::before{
     margin: 0 5px 0 2px;
   }
-}
-
-.checkItem input:checked{
-  accent-color: var(--gold-main);
 }
 
 .news-card, .videoRow{ contain: content; }
@@ -5600,11 +5585,6 @@ html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip:focus-vis
   background: #fff;
   color: var(--iuWxHoverText, #0b1b2b);
 }
-body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip *,
-html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuRadioChip *{
-  color: inherit;
-}
-
 body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotes,
 html[data-section="pocasi"] #iuWeatherView .iuWeatherFeed .iuNotesHost .iuNotes{
   border: 1px solid var(--iuWxBorder, rgba(255,255,255,0.85));
@@ -11593,9 +11573,6 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
 body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg{
   display: block !important;
 }
-.accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger .fa-solid.fa-gear{
-  display: none;
-}
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger:focus-visible{
   outline: 2px solid currentColor;
   outline-offset: 2px;
@@ -11828,9 +11805,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   font-size: 0;
 }
 
-.accordionCol .mindMenu .iu-mailbox-gear i{
-  font-size: 12px;
+.accordionCol .mindMenu .iu-mailbox-gear svg{
   opacity: 0.75;
+  display: block;
 }
 
 .accordionCol .mindMenu .iu-mailbox-cta{
@@ -12862,7 +12839,6 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 .layout > aside.accordionCol .iu-mailbox-gear{
   color: var(--iu-rr-silver-text) !important;
 }
-.layout > aside.accordionCol .iu-mailbox-gear i,
 .layout > aside.accordionCol .iu-mailbox-gear svg{
   color: inherit !important;
   fill: currentColor !important;
@@ -12881,9 +12857,6 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   background-color: revert !important;
 }
 
-.layout > aside.accordionCol section.iu-mmQuickLinks .iuIconTile > i{
-  color: rgb(75, 85, 99) !important;
-}
 .layout > aside.accordionCol section.iu-mmQuickLinks .iuIconTile svg{
   color: rgb(75, 85, 99) !important;
   fill: currentColor !important;
@@ -12932,7 +12905,7 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   color: rgba(170, 176, 184, 0.95) !important;
 }
 
-.layout > aside.accordionCol .mindMenu .iu-mailbox-gear i{
+.layout > aside.accordionCol .mindMenu .iu-mailbox-gear svg{
   color: inherit;
   opacity: 1;
 }
@@ -13053,6 +13026,10 @@ section.iu-mojeSluzby{
   font-size: 26px;
   margin-bottom: 6px;
   color: var(--iu-bank-accent);
+}
+.iuBankIcon svg{
+  display: block;
+  margin: 0 auto;
 }
 .iuBankIconGold{
   color: var(--iu-gold);
@@ -15678,7 +15655,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   letter-spacing: -0.015em;
   min-height: 0;
 }
-
 .silver-weather-line1{
   color: rgba(30, 40, 55, 0.88);
 }
@@ -16136,6 +16112,13 @@ Porušení = regres + CLS risk
     /* Keep desktop flow natural when welcome stack grows during hydration. */
     height: auto;
     min-height: 542px;
+  }
+  /* P0 CLS desktop: lock weather strip box (ready layout) — loading→data innerHTML swap must not change outer height (see iuSilverWeatherRefresh). */
+  #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"]{
+    min-height: 132px;
+    max-height: 132px;
+    box-sizing: border-box;
+    overflow: hidden;
   }
   /* Desktop only: CLS reserve for summary cards (not mixed into <769px tablet/mobile) */
   #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
@@ -17221,14 +17204,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav .iu-leftNavIcon{
   box-shadow: none !important;
 }
 
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.active .iu-leftNavIcon,
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem.is-active .iu-leftNavIcon{
-  border: none !important;
-  background: none !important;
-  background-image: none !important;
-}
-
 aside#iuLeftRail.iu-leftRail{
   align-self: stretch !important;
   min-height: calc(100vh - var(--iuTopbarHeight)) !important;
@@ -17419,11 +17394,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 
 #iuLeftRail .iu-leftNavItem:hover .iu-leftNavIcon{
   filter: drop-shadow(0 0 14px rgba(31,182,166,0.28)) !important;
-}
-
-#iuLeftRail .iu-leftNavItem[aria-current="page"] .iu-leftNavIcon,
-#iuLeftRail .iu-leftNavItem.is-active .iu-leftNavIcon{
-  filter: drop-shadow(0 0 18px rgba(31,182,166,0.35)) !important;
 }
 
 #iuLeftRail{
@@ -18728,10 +18698,8 @@ body .rightCol .mindMenu .iu-mailbox-pill * {
   -webkit-text-fill-color: var(--iu-rightcol-text) !important;
 }
 body .layout > aside.accordionCol .mindMenu .iu-mailbox-gear,
-body .layout > aside.accordionCol .mindMenu .iu-mailbox-gear i,
 body .layout > aside.accordionCol .mindMenu .iu-mailbox-gear svg,
 body .rightCol .mindMenu .iu-mailbox-gear,
-body .rightCol .mindMenu .iu-mailbox-gear i,
 body .rightCol .mindMenu .iu-mailbox-gear svg {
   color: var(--iu-rightcol-text) !important;
   fill: var(--iu-rightcol-text) !important;
@@ -18746,11 +18714,11 @@ body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-sett
   opacity: 1 !important;
 }
 body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile,
-body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile i,
+body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile svg,
 body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItemLink,
 body .layout > aside.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem,
 body .rightCol .mindMenu .iu-mmQuickLinks .iuIconTile,
-body .rightCol .mindMenu .iu-mmQuickLinks .iuIconTile i,
+body .rightCol .mindMenu .iu-mmQuickLinks .iuIconTile svg,
 body .rightCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItemLink,
 body .rightCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem {
   color: var(--iu-rightcol-text) !important;
@@ -20013,25 +19981,6 @@ body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > a.iuTileLink:hover,
 body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > button.iuTileLink:hover,
 body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink:hover{
   background-color:#D1D5DB !important;
-}
-
-body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink .iuTileText{
-  width:100% !important;
-  padding:0 14px !important;
-
-  font-size:12.6px !important;
-  line-height:18px !important;
-  font-weight:600 !important;
-  color:#2E3238 !important;
-  text-align:center !important;
-
-  display:-webkit-box !important;
-  -webkit-box-orient:vertical !important;
-  -webkit-line-clamp:2 !important;
-  overflow:hidden !important;
-
-  overflow-wrap:break-word !important;
-  word-break:normal !important;
 }
 
 body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > span.iuTileText,
