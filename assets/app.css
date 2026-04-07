@@ -9232,6 +9232,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     --iuMobileBtnH: 52px;
     --iu-brief-gap-top: 18px;
     --iu-brief-gap-bottom: 8px;
+    /* P0 WebNav detail (mobile/tablet): fixed main back bar height — matches touch target + padding */
+    --iuWebNavDetailMainBackH: 52px;
   }
 
   
@@ -9816,6 +9818,15 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     padding: 10px 12px;
     border-bottom: 1px solid rgba(0,0,0,.08);
     background: #f0f0f0;
+    box-sizing: border-box !important;
+    font: inherit !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: left;
+    cursor: pointer;
+    -webkit-appearance: none !important;
+    appearance: none !important;
   }
   body.iu-mobileMainVisible #iuMobileMainBackBar{
     display: flex !important;
@@ -9823,6 +9834,30 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   }
   body.iu-mobileMainVisible #iuMobileMainBackBar[hidden]{
     display: none !important;
+  }
+  /* P0 WebNav: detail view opened from „Navigace po webu“ — fixed full-width back row; Zpět vpravo; obsah scrolluje pod lištou */
+  body.iu-mobileMainVisible.iu-webnavDetailFromGate #iuMobileMainBackBar:not([hidden]){
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: calc(env(safe-area-inset-top, 0px) + var(--iuMobileBtnH, 52px)) !important;
+    z-index: 10050 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: var(--iuWebNavDetailMainBackH, 52px) !important;
+    padding: 0 14px !important;
+    margin: 0 !important;
+    justify-content: flex-end !important;
+    text-align: right !important;
+    border-radius: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-top: 0 !important;
+    box-shadow: 0 1px 0 rgba(0,0,0,.08) !important;
+  }
+  body.iu-mobileMainVisible.iu-webnavDetailFromGate #leftContent{
+    padding-top: var(--iuWebNavDetailMainBackH, 52px) !important;
+    box-sizing: border-box !important;
   }
   
   #iuMobileGatePanelNav #iuLeftRail,
