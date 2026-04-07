@@ -6200,6 +6200,9 @@ function buildVideoAsArticleCard(it) {
     }
     /* Cestování články: kanonické URL je ?section=travel&mode=media (žádný left-rail peer s data-media-topic). */
     if (k === "cestovani") {
+      var gateWrapCestEarly = document.getElementById("iuMobileGateWrap");
+      var fromWebNavGateCest =
+        gateWrapCestEarly && String(gateWrapCestEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
       try {
         if (typeof window !== "undefined" && typeof window.iuPersistNavState === "function") {
           window.iuPersistNavState({ section: "travel", mode: "media" });
@@ -6223,6 +6226,10 @@ function buildVideoAsArticleCard(it) {
           document.body.classList.add("iu-mobileMainVisible");
           var mb2 = document.getElementById("iuMobileMainBackBar");
           if (mb2) mb2.hidden = false;
+          try {
+            if (fromWebNavGateCest) document.body.classList.add("iu-webnavDetailFromGate");
+            else document.body.classList.remove("iu-webnavDetailFromGate");
+          } catch (_) {}
         }
       } catch (_) {}
       try {
@@ -6264,6 +6271,9 @@ function buildVideoAsArticleCard(it) {
         window.iuPersistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: k });
       }
     } catch (_) {}
+    var gateWrapHubEarly = document.getElementById("iuMobileGateWrap");
+    var fromWebNavGateHub =
+      gateWrapHubEarly && String(gateWrapHubEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
     try {
       if (typeof window !== "undefined" && typeof window.iuApplySectionFromURL === "function") {
         window.iuApplySectionFromURL();
@@ -6282,6 +6292,10 @@ function buildVideoAsArticleCard(it) {
         document.body.classList.add("iu-mobileMainVisible");
         var mb = document.getElementById("iuMobileMainBackBar");
         if (mb) mb.hidden = false;
+        try {
+          if (fromWebNavGateHub) document.body.classList.add("iu-webnavDetailFromGate");
+          else document.body.classList.remove("iu-webnavDetailFromGate");
+        } catch (_) {}
       }
     } catch (_) {}
     try {
@@ -9685,10 +9699,15 @@ function buildVideoAsArticleCard(it) {
       var content = document.getElementById("iuMobileGateContent");
       var backBar = document.getElementById("iuMobileGateBackBar");
       var backBtn = document.getElementById("iuMobileGateBack");
-      var mainBackBtn = document.getElementById("iuMobileMainBack");
+      var mainBackBtn = document.getElementById("iuMobileMainBackBar");
       if (!wrap || !tabNav || !tabTools || !panelNav || !panelTools || !content) return;
       function setTab(value) {
         wrap.setAttribute("data-iu-mobile-gate", value || "");
+        if (!value) {
+          try {
+            document.body.classList.remove("iu-webnavDetailFromGate");
+          } catch (_) {}
+        }
         var bar = document.getElementById("iuMobileGateBackBar");
         if (bar) bar.hidden = !value;
         if (panelTools && panelTools.classList) {
@@ -9750,8 +9769,21 @@ function buildVideoAsArticleCard(it) {
       }
       if (mainBackBtn) {
         mainBackBtn.addEventListener("click", function () {
-          try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_) {}
-          setTab("");
+          var returnToWebNavGrid = false;
+          try {
+            returnToWebNavGrid = document.body.classList.contains("iu-webnavDetailFromGate");
+          } catch (_) {}
+          try {
+            document.body.classList.remove("iu-mobileMainVisible");
+          } catch (_) {}
+          try {
+            document.body.classList.remove("iu-webnavDetailFromGate");
+          } catch (_) {}
+          if (returnToWebNavGrid) {
+            setTab("nav");
+          } else {
+            setTab("");
+          }
         });
       }
       tabNav.addEventListener("click", function () {
@@ -21992,10 +22024,16 @@ function buildVideoAsArticleCard(it) {
           document.body.classList.add("iu-mobileMainVisible");
           var mbVis = document.getElementById("iuMobileMainBackBar");
           if (mbVis) mbVis.hidden = false;
+          try {
+            document.body.classList.remove("iu-webnavDetailFromGate");
+          } catch (_) {}
         } else {
           try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_) {}
           var mbHid = document.getElementById("iuMobileMainBackBar");
           if (mbHid) mbHid.hidden = true;
+          try {
+            document.body.classList.remove("iu-webnavDetailFromGate");
+          } catch (_) {}
         }
       }
     }catch{}
@@ -22435,6 +22473,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         }
       }
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
+      var gateWrapNavEarly = document.getElementById("iuMobileGateWrap");
+      var fromWebNavGateNav =
+        gateWrapNavEarly && String(gateWrapNavEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
       applySectionFromURL();
       applyPanelFromUrl();
       try {
@@ -22445,6 +22486,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           document.body.classList.add("iu-mobileMainVisible");
           var mb = document.getElementById("iuMobileMainBackBar");
           if (mb) mb.hidden = false;
+          try {
+            if (fromWebNavGateNav) document.body.classList.add("iu-webnavDetailFromGate");
+            else document.body.classList.remove("iu-webnavDetailFromGate");
+          } catch (_) {}
         }
       } catch (_) {}
       try{
