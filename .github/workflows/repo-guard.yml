@@ -35,6 +35,7 @@ jobs:
       - name: Python syntax check (data generators)
         run: |
           python -m py_compile scripts/build_articles.py
+          python -m py_compile scripts/ingest_telemetry.py
           python -m py_compile scripts/build_videos.py
 
       - name: Run repo guard

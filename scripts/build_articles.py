@@ -63,6 +63,7 @@ from iu_staging import (
     write_source_staging,
     write_youtube_staging,
 )
+from ingest_telemetry import build_telemetry_payload, print_compact_audit, section_bucket
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # repo root
 FEEDS_PATH = os.path.join(ROOT_DIR, "scripts", "feeds.json")
@@ -83,6 +84,7 @@ OUT_PATH = os.path.join(OUTPUT_DIR, "articles.json")
 HEALTH_PATH = os.path.join(OUTPUT_DIR, "feed_health.json")
 BRIEF_PATH = os.path.join(OUTPUT_DIR, "brief.json")
 META_PATH = os.path.join(OUTPUT_DIR, "meta.json")
+INGEST_TELEMETRY_PATH = os.path.join(OUTPUT_DIR, "ingest_telemetry", "latest.json")
 
 # ✅ Retention storage (sharded by day; append-only with dedup)
 ARTICLES_SHARD_DIR = os.path.join(OUTPUT_DIR, "articles")
@@ -2614,6 +2616,16 @@ def _aggregate_pipeline(
     out_articles = apply_per_section_published_retention(prev_list, out_articles)
     final = out_articles
 
+    tel_detail, tel_summary = build_telemetry_payload(
+        per_feed_report=per_feed_report,
+        deduped_items=deduped_items,
+        clusters=clusters,
+        new_articles=new_articles,
+        final_articles=final,
+        registry=registry,
+        generated_at=generated_at,
+    )
+
     return {
         "generated_at": generated_at,
         "articles_full": out_articles,
@@ -2621,6 +2633,8 @@ def _aggregate_pipeline(
         "per_feed_report": per_feed_report,
         "youtube_pool": yt_videos,
         "registry": registry,
+        "ingest_telemetry": tel_detail,
+        "ingest_telemetry_summary": tel_summary,
     }
 
 
@@ -2771,6 +2785,17 @@ def _publish_article_outputs(bundle: dict) -> int:
         },
     }
     _atomic_write_json(HEALTH_PATH, health_payload)
+
+    try:
+        tele = bundle.get("ingest_telemetry")
+        if isinstance(tele, dict) and tele.get("schemaVersion"):
+            os.makedirs(os.path.dirname(INGEST_TELEMETRY_PATH), exist_ok=True)
+            _atomic_write_json(INGEST_TELEMETRY_PATH, tele)
+            tsum = bundle.get("ingest_telemetry_summary")
+            if isinstance(tsum, dict):
+                print_compact_audit(tsum)
+    except Exception as e:
+        print("WARN: ingest telemetry write failed:", str(e))
 
     meta_payload = build_meta(generated_at, final)
     _atomic_write_json(META_PATH, meta_payload)
@@ -2934,6 +2959,10 @@ def _checkpoint_bundle_for_disk(bundle: dict, handoff_meta: dict | None = None) 
         "youtube_pool": rows,
         "registry_version": rv,
     }
+    if bundle.get("ingest_telemetry"):
+        out["ingest_telemetry"] = bundle["ingest_telemetry"]
+    if bundle.get("ingest_telemetry_summary"):
+        out["ingest_telemetry_summary"] = bundle["ingest_telemetry_summary"]
     if handoff_meta:
         out["handoffMeta"] = handoff_meta
     return out
@@ -2960,6 +2989,8 @@ def _bundle_from_checkpoint(cp: dict) -> dict | None:
         "per_feed_report": cp["per_feed_report"],
         "youtube_pool": yt_restored,
         "registry": reg,
+        "ingest_telemetry": cp.get("ingest_telemetry"),
+        "ingest_telemetry_summary": cp.get("ingest_telemetry_summary"),
     }
 
 
@@ -3191,14 +3222,44 @@ def main() -> int:
         except Exception:
             pass
 
+        iu_tel = {
+            "raw_feed_new_item_count": 0,
+            "raw_feed_latest_publishedAt": "",
+            "valid_publishedAt_count": 0,
+            "mapped_to_section_count": defaultdict(int),
+            "drop_counts": {
+                "missing_publishedAt": 0,
+                "invalid_publishedAt": 0,
+                "parser_drop": 0,
+                "section_remap": 0,
+                "release_gate": 0,
+                "dedupe": 0,
+                "other": 0,
+            },
+            "sample_titles": [],
+        }
+
         for entry in entries[:MAX_ITEMS_PER_FEED]:
             link = canonicalize_url(getattr(entry, "link", "") or "")
             title = fix_cz_mojibake(getattr(entry, "title", "") or "")
             dt = parse_dt(entry)
+            has_rss_dt = bool(
+                getattr(entry, "published_parsed", None) or getattr(entry, "updated_parsed", None)
+            )
+
+            if link and title:
+                iso_edge = dt.isoformat().replace("+00:00", "Z")
+                cur = iu_tel["raw_feed_latest_publishedAt"]
+                if not cur or iso_edge > cur:
+                    iu_tel["raw_feed_latest_publishedAt"] = iso_edge
+                if not is_youtube_feed:
+                    iu_tel["raw_feed_new_item_count"] += 1
 
             if not link or not title:
+                iu_tel["drop_counts"]["parser_drop"] += 1
                 continue
             if is_hard_blocked_url(link):
+                iu_tel["drop_counts"]["parser_drop"] += 1
                 continue
 
             media_raw = fix_cz_mojibake(str(source).strip())
@@ -3234,6 +3295,11 @@ def main() -> int:
             is_video = _is_video_entry(entry)
             content_type = "video" if is_video else "article"
 
+            if has_rss_dt:
+                iu_tel["valid_publishedAt_count"] += 1
+            else:
+                iu_tel["drop_counts"]["missing_publishedAt"] += 1
+
             if fallback_topic in FORCED_FEED_TOPICS:
                 section = fallback_topic
             else:
@@ -3242,6 +3308,7 @@ def main() -> int:
 
             purity_sec = vertical_purity_final_section(section, title, link, dt)
             if purity_sec is None:
+                iu_tel["drop_counts"]["section_remap"] += 1
                 continue
             section = stable_section(purity_sec)
 
@@ -3260,13 +3327,30 @@ def main() -> int:
                 "sourceDisplayWeight": src_dw,
                 "sourceBatchKey": staging_batch_key,
             }
+            _bk = section_bucket(section)
+            iu_tel["mapped_to_section_count"][_bk] += 1
+            if len(iu_tel["sample_titles"]) < 8:
+                iu_tel["sample_titles"].append(
+                    {
+                        "title": fix_cz_mojibake(title),
+                        "publishedAt": dt.isoformat().replace("+00:00", "Z"),
+                    }
+                )
             all_items.append(item)
             items_by_batch[staging_batch_key].append(item)
             accepted += 1
 
         report_base["itemsKept"] = accepted
         report_base["accepted"] = accepted
-        
+        report_base["iuTelemetry"] = {
+            "raw_feed_new_item_count": int(iu_tel["raw_feed_new_item_count"]),
+            "raw_feed_latest_publishedAt": str(iu_tel["raw_feed_latest_publishedAt"]),
+            "valid_publishedAt_count": int(iu_tel["valid_publishedAt_count"]),
+            "mapped_to_section_count": {k: int(v) for k, v in iu_tel["mapped_to_section_count"].items()},
+            "drop_counts": {k: int(v) for k, v in iu_tel["drop_counts"].items()},
+            "sample_titles": list(iu_tel["sample_titles"])[:8],
+        }
+
         # Status logika
         if bozo and accepted == 0:
             report_base["status"] = "BOZO"
