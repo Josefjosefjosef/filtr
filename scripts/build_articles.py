@@ -2102,11 +2102,17 @@ def load_youtube_feeds(path: str) -> list:
         # source do FEED REPORTu
         source = f"YouTube – {channel}".strip()
 
+        qd = dict(parse_qsl(urlparse(url).query, keep_blank_values=True))
+        pl = (qd.get("playlist_id") or "").strip()
+        yt_canonical = f"yt_playlist_{pl}" if pl else "yt_" + hashlib.sha256(url.encode("utf-8")).hexdigest()[:24]
+
         meta = {
             "topic": topic,
             "source": source,
             "type": "youtube",
             "channel": channel,   # ✅ čistý název kanálu pro videos.json
+            "id": yt_canonical,
+            "registryGroup": [{"id": yt_canonical, "label": channel, "feed_url": url}],
         }
         out.append((url, meta))
 
@@ -2994,6 +3000,16 @@ def _bundle_from_checkpoint(cp: dict) -> dict | None:
     }
 
 
+def _feed_report_attach_registry(rep: dict, meta: dict) -> None:
+    """Attach canonical registry identity for telemetry joins (must match article feedId)."""
+    fid = str(meta.get("id") or "").strip()
+    if fid:
+        rep["registryId"] = fid
+    rg = meta.get("registryGroup")
+    if isinstance(rg, list) and rg:
+        rep["registryGroup"] = rg
+
+
 # =========================
 # Main
 # =========================
@@ -3106,6 +3122,7 @@ def main() -> int:
                 "itemsKept": 0,
                 "accepted": 0,
             }
+            _feed_report_attach_registry(rep, meta)
             per_feed_report.append(rep)
             reports_by_batch[staging_batch_key].append(rep)
             continue
@@ -3132,6 +3149,7 @@ def main() -> int:
                 "itemsKept": 0,
                 "accepted": 0,
             }
+            _feed_report_attach_registry(rep, meta)
             per_feed_report.append(rep)
             reports_by_batch[staging_batch_key].append(rep)
             continue
@@ -3174,7 +3192,8 @@ def main() -> int:
             "status": "OK",
             "bozo_but_used": False,
         }
-        
+        _feed_report_attach_registry(report_base, meta)
+
         # Pokud fetch selhal nebo vrátil HTML
         if d is None:
             reason = diagnostics.get("reason", "unknown")
