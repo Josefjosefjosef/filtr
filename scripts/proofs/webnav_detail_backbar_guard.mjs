@@ -12,13 +12,11 @@ import { chromium } from "playwright";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
 
-/** 768x700: v rámci (max-width:900) a poměru stran > 1/1 je rail v panelu (768x1024 portrait ho nechává v #newsList). */
+/** Mobil + tablet portrait 768×1024: plný webnav overlay flow (rail v #iuMobileGatePanelNav). */
 const VIEWPORTS_FLOW = [
   { w: 390, h: 844, label: "390x844" },
-  { w: 768, h: 700, label: "768x700_tablet_rail_in_panel" },
+  { w: 768, h: 1024, label: "768x1024" },
 ];
-
-const VIEWPORT_LAYOUT_768 = { w: 768, h: 1024, label: "768x1024_layout_probe" };
 
 function mime(p) {
   if (p.endsWith(".html")) return "text/html; charset=utf-8";
@@ -87,7 +85,7 @@ async function runFlow(page, baseUrl, label, consoleErrors) {
     Boolean(document.querySelector('#iuMobileGatePanelNav .iu-leftNavItem[data-accent="mapy"]'))
   );
   if (!inPanel) {
-    fail(label + ": expected Mapy link inside #iuMobileGatePanelNav (viewport may keep rail out of panel)");
+    fail(label + ": expected Mapy link inside #iuMobileGatePanelNav");
   }
 
   await page.click('#iuMobileGatePanelNav .iu-leftNavItem[data-accent="mapy"]');
@@ -163,35 +161,17 @@ async function runFlow(page, baseUrl, label, consoleErrors) {
   const overflowX = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
   if (overflowX) fail(label + ": overflowX");
 
+  const appErr = await page.evaluate(() => {
+    try {
+      const s = localStorage.getItem("iu:lastError");
+      return s && String(s).trim() ? String(s).slice(0, 200) : "";
+    } catch {
+      return "(localStorage)";
+    }
+  });
+  if (appErr) fail(label + ": appErrors iu:lastError=" + appErr);
+
   if (consoleErrors.length) fail(label + ": console errors: " + consoleErrors.join(" | "));
-}
-
-async function runLayout768(page, baseUrl, consoleErrors) {
-  await page.setViewportSize({ width: VIEWPORT_LAYOUT_768.w, height: VIEWPORT_LAYOUT_768.h });
-  await page.goto(baseUrl + "/projects/", { waitUntil: "load", timeout: 120000 });
-  await page.waitForTimeout(2000);
-
-  await page.evaluate(() => {
-    document.body.classList.add("iu-mobileMainVisible", "iu-webnavDetailFromGate");
-    const b = document.getElementById("iuMobileMainBackBar");
-    if (b) b.hidden = false;
-  });
-
-  const probe = await page.evaluate(() => {
-    const bar = document.getElementById("iuMobileMainBackBar");
-    if (!bar) return { ok: false };
-    const cs = window.getComputedStyle(bar);
-    const r = bar.getBoundingClientRect();
-    return {
-      ok: cs.position === "fixed" && r.width >= window.innerWidth * 0.92,
-      position: cs.position,
-      width: r.width,
-      innerWidth: window.innerWidth,
-    };
-  });
-
-  if (!probe.ok) fail("768x1024_layout_probe: " + JSON.stringify(probe));
-  if (consoleErrors.length) fail("768x1024_layout: console " + consoleErrors.join(" | "));
 }
 
 async function runDesktopUnchanged(page, baseUrl) {
@@ -233,21 +213,6 @@ async function main() {
       await runFlow(page, base, vp.label, consoleErrors);
       await context.close();
     }
-
-    const console768 = [];
-    const ctx768 = await browser.newContext({
-      viewport: { width: VIEWPORT_LAYOUT_768.w, height: VIEWPORT_LAYOUT_768.h },
-      serviceWorkers: "block",
-    });
-    const page768 = await ctx768.newPage();
-    page768.on("console", (msg) => {
-      if (msg.type() === "error") console768.push(msg.text());
-    });
-    page768.on("pageerror", (err) => {
-      console768.push(String(err && err.message ? err.message : err));
-    });
-    await runLayout768(page768, base, console768);
-    await ctx768.close();
 
     const ctxD = await browser.newContext({ viewport: { width: 1366, height: 768 }, serviceWorkers: "block" });
     const pageD = await ctxD.newPage();

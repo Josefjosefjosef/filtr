@@ -9569,11 +9569,8 @@ function buildVideoAsArticleCard(it) {
             silverSlot.appendChild(silver);
           }
         }
-        /* P0 CLS: must match projects/index.html sync gate script — tablet portrait (max-aspect-ratio 1/1) keeps rail in #newsList. */
-        var mqRailTablet =
-          window.matchMedia &&
-          window.matchMedia("(min-width: 768px) and (max-width: 900px) and (max-aspect-ratio: 1/1)");
-        if (!(mqRailTablet && mqRailTablet.matches) && !panelNav.contains(rail)) {
+        /* P0 WebNav: rail vždy v #iuMobileGatePanelNav při ≤900px (vč. tablet 768×1024) — overlay „Navigace po webu“ musí mít grid. Sync s projects/index.html (early gate script). */
+        if (!panelNav.contains(rail)) {
           panelNav.appendChild(rail);
         }
         if (mobileMind && mindMenuFlow) {
