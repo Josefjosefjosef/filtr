@@ -68,17 +68,12 @@ FIXED_MINUTE_SLOTS_BY_KEY: dict[str, frozenset[int]] = {
     # ČTK + ČT24 main RSS: reuse same 4×/h grid as idnes.cz / aktualne.cz (5,20,35,50)
     "ceskenoviny.cz": frozenset({5, 20, 35, 50}),
     "ceskatelevize.cz": frozenset({5, 20, 35, 50}),
-    "echo24.cz": frozenset({10, 40}),
-    "lidovky.cz": frozenset({15, 45}),
     "hlidacipes.org": frozenset({20, 50}),
     "tydenikpolicie.cz": frozenset({25, 55}),
     # Sport
     "sport.cz": frozenset({0, 15, 30, 45}),
     "isport.cz": frozenset({5, 20, 35, 50}),
     "idnes.cz/sport": frozenset({10, 25, 40, 55}),
-    "hokej.cz": frozenset({10, 40}),
-    "fotbal.cz": frozenset({20, 50}),
-    "fights.cz": frozenset({25, 55}),
     # Finance
     "penize.cz": frozenset({0, 15, 30, 45}),
     "mesec.cz": frozenset({5, 20, 35, 50}),
@@ -87,10 +82,6 @@ FIXED_MINUTE_SLOTS_BY_KEY: dict[str, frozenset[int]] = {
     "ekonomickydenik.cz": frozenset({25, 55}),
     # Zdraví
     "zdravezpravy.cz": frozenset({0, 15, 30, 45}),
-    "vitalia.cz": frozenset({5, 20, 35, 50}),
-    "kondice.cz": frozenset({10, 25, 40, 55}),
-    "mojezdravi.cz": frozenset({20, 50}),
-    "fitzivot.cz": frozenset({25, 55}),
     # Cestování
     "cestujlevne.cz": frozenset({15, 45}),
     "pelipecky.cz": frozenset({30}),
@@ -100,11 +91,8 @@ FIXED_MINUTE_SLOTS_BY_KEY: dict[str, frozenset[int]] = {
     "zing.cz": frozenset({10, 40}),
     "vortex.cz": frozenset({25, 55}),
     "games.cz": frozenset({20, 50}),
-    "idnes.cz/hry": frozenset({10, 40}),
     # Kultura
     "kinobox.cz": frozenset({20, 50}),
-    "expres.cz": frozenset({30}),
-    "iglanc.cz": frozenset({45}),
     # Věda & historie
     "technet.cz": frozenset({20, 50}),
     "osel.cz": frozenset({30}),
@@ -121,7 +109,6 @@ _HOST_ALIASES_TO_SLOT_KEY: dict[str, str] = {
     "cestujlevne.com": "cestujlevne.cz",
     "vtm.zive.cz": "vtm.cz",
     "isport.blesk.cz": "isport.cz",
-    "stoplusjednicka.cz": "100plus1.cz",
 }
 
 BLOCKED_HOST_FRAGMENTS = (
