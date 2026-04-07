@@ -34,7 +34,9 @@ def _refresh_ultra_audit_wiki() -> None:
     """
     script = ROOT / "scripts" / "generate_ultra_audit_wiki.py"
     if not script.is_file():
-        return
+        raise FileNotFoundError(
+            f"Ultra Audit wiki generator missing (STOP, no silent skip): {script}"
+        )
     subprocess.run(
         [sys.executable, str(script)],
         cwd=str(ROOT),
