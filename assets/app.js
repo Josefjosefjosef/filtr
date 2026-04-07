@@ -477,6 +477,12 @@ try {
   const modalCancel = document.getElementById("modalCancel");
 
   const SECTION_KEYS = ["vse", "aktualne", "doprava", "pocasi", "sport", "finance", "krimi", "zdravi", "video"];
+  /** Kanonický `section` pro článkový přehled (nahrazuje legacy `media`; bez samostatného „všechno dohromady“ poolu). */
+  const IU_ARTICLE_HUB_SECTION = "feed";
+  function iuArticleHubSectionP(sec) {
+    const s = String(sec || "").trim().toLowerCase();
+    return s === IU_ARTICLE_HUB_SECTION || s === "media";
+  }
   let activeSections = ["vse"];
   const state = {
     cachedItems: [],
@@ -501,7 +507,7 @@ try {
     // FEED pagination (render-only; no pipeline touch)
     pageSize: 200,
     page: 1,
-    /** Media topic filter (?section=media&topic=) — null = všechny články */
+    /** Topic filter v článkovém hubu (?section=feed&topic=zpravy|sport|…) — null jen mimo hub */
     mediaTopicKey: null,
     /** Režim travel stránky: guide = poradna, media = články o cestování */
     travelUiMode: "guide",
@@ -4286,12 +4292,13 @@ try {
   /** Mapuje aliasy `section` z URL na kanonické klíče pro feed (paging, navigace). */
   function iuFeedPagingNormalizeSectionRaw(raw) {
     const k = String(raw || "").trim().toLowerCase();
-    if (k === "home") return "media";
+    if (k === "home") return IU_ARTICLE_HUB_SECTION;
     if (k === "culture") return "kultura";
-    if (k === "tech" || k === "bydleni") return "media";
-    if (["zpravy", "sport", "finance", "zdravi"].indexOf(k) !== -1) return "media";
+    if (k === "tech" || k === "bydleni") return IU_ARTICLE_HUB_SECTION;
+    if (k === "media") return IU_ARTICLE_HUB_SECTION;
+    if (["zpravy", "sport", "finance", "zdravi"].indexOf(k) !== -1) return IU_ARTICLE_HUB_SECTION;
     const allowed = new Set([
-      "media",
+      IU_ARTICLE_HUB_SECTION,
       "tv",
       "tvonline",
       "mapy",
@@ -4311,20 +4318,20 @@ try {
       "myuzel-4",
       "myuzel-5",
     ]);
-    return allowed.has(k) ? k : "media";
+    return allowed.has(k) ? k : IU_ARTICLE_HUB_SECTION;
   }
 
   /**
-   * Média bez podtématu / topic=all: 100 článků na obrazovku + tlačítko „Další“ (render-only, data už v cache).
-   * Zprávy, Sport, Finance, Zdraví, Cestování, Hry, Kultura / Akce, Věda & Historie, Vzdělávání (?section=media&topic=…): stejné chování.
-   * Ostatní Média témata a ostatní sekce: pageSize 200.
+   * Článkový hub (?section=feed&topic=…): 100 článků na obrazovku + tlačítko „Další“ (render-only, data už v cache).
+   * Zprávy, Sport, Finance, Zdraví, Cestování, Hry, Kultura / Akce, Věda & Historie, Vzdělávání: stejné chování.
+   * Ostatní témata a ostatní sekce: pageSize 200.
    */
   function iuIsMediaHubFullFeedPaging() {
     try {
       if (document.body && document.body.classList.contains("iu-home")) return false;
       const p = new URLSearchParams(location.search || "");
-      const section = iuFeedPagingNormalizeSectionRaw(p.get("section") || "media");
-      if (section !== "media") return false;
+      const section = iuFeedPagingNormalizeSectionRaw(p.get("section") || IU_ARTICLE_HUB_SECTION);
+      if (!iuArticleHubSectionP(section)) return false;
       let topic = (p.get("topic") || "").trim().toLowerCase();
       if (topic === "tech" || topic === "bydleni") topic = "all";
       if (!topic || topic === "all") return true;
@@ -6242,7 +6249,7 @@ function buildVideoAsArticleCard(it) {
     }
     try {
       if (typeof window !== "undefined" && typeof window.iuPersistNavState === "function") {
-        window.iuPersistNavState({ section: "media", topic: k });
+        window.iuPersistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: k });
       }
     } catch (_) {}
     try {
@@ -11547,26 +11554,28 @@ function buildVideoAsArticleCard(it) {
       }
       // URL is source of truth: init() may finish loadData before initNavRouter runs (module defer race).
       // Inline parse only — loadData lives in a different IIFE than normalizeSection/readUrlNavState.
-      let parsedNavSec = "media";
+      let parsedNavSec = IU_ARTICLE_HUB_SECTION;
       let parsedNavTopic = "";
       try {
         const p = new URLSearchParams(typeof location !== "undefined" ? location.search || "" : "");
-        let sec = (p.get("section") || "media").trim().toLowerCase();
+        let sec = (p.get("section") || IU_ARTICLE_HUB_SECTION).trim().toLowerCase();
+        if (sec === "media") sec = IU_ARTICLE_HUB_SECTION;
         let topic = (p.get("topic") || "").trim().toLowerCase();
         let mode = (p.get("mode") || "guide").trim().toLowerCase();
         if (mode !== "media") mode = "guide";
         if (sec === "tech" || sec === "bydleni") {
-          sec = "media";
-          topic = "all";
+          sec = IU_ARTICLE_HUB_SECTION;
+          topic = "zpravy";
         }
         if (topic === "tech" || topic === "bydleni") {
-          topic = "all";
+          topic = "zpravy";
         }
+        if (iuArticleHubSectionP(sec) && (!topic || topic === "all")) topic = "zpravy";
         parsedNavSec = sec;
         parsedNavTopic = topic;
         state.mediaTopicKey = null;
         if (sec === "travel" && mode === "media") state.mediaTopicKey = "cestovani";
-        else if (sec === "media" && topic && topic !== "all") state.mediaTopicKey = topic;
+        else if (iuArticleHubSectionP(sec) && topic && topic !== "all") state.mediaTopicKey = topic;
         else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(sec) !== -1) state.mediaTopicKey = sec;
       } catch (_) {}
       const pageSizeNav = Number(state.pageSize) > 0 ? Number(state.pageSize) : 200;
@@ -11576,8 +11585,8 @@ function buildVideoAsArticleCard(it) {
       const navNeedsShardMerge = mediaTopicActive || hashSectionsActive;
       const silverStackPreviewsLikelyVisible =
         !navNeedsShardMerge &&
-        parsedNavSec === "media" &&
-        (!parsedNavTopic || parsedNavTopic === "all");
+        iuArticleHubSectionP(parsedNavSec) &&
+        (!parsedNavTopic || parsedNavTopic === "all" || parsedNavTopic === "zpravy");
       // Niche sections: articles often live only in older day-shards. Index + shards must load before
       // first filter, or the feed stays empty until "Načíst další stránku" (retention was never tied to first paint).
       if (navNeedsShardMerge) {
@@ -19645,6 +19654,13 @@ function buildVideoAsArticleCard(it) {
 (function(){
   'use strict';
 
+  /** Must mirror feed IIFE — this block is a separate scope (no shared closure). */
+  const IU_ARTICLE_HUB_SECTION = "feed";
+  function iuArticleHubSectionP(sec) {
+    const s = String(sec || "").trim().toLowerCase();
+    return s === IU_ARTICLE_HUB_SECTION || s === "media";
+  }
+
   const RADIO_ITEMS = [
     { title: "Radiožurnál", url: "https://radiozurnal.rozhlas.cz/", desc: "Zpravodajství ČRo" },
     { title: "Dvojka", url: "https://dvojka.rozhlas.cz/", desc: "Mluvené slovo" },
@@ -19667,6 +19683,7 @@ function buildVideoAsArticleCard(it) {
     tvonline: "#00C2FF",
     radio: "#9B8CFF",
     svatky: "#34E7A1",
+    feed: "#B38BFF",
     media: "#B38BFF",
     zpravy: "#B38BFF",
     sport: "#FF6FD8",
@@ -19683,6 +19700,7 @@ function buildVideoAsArticleCard(it) {
   };
 
   const VIEW_MAP = {
+    feed: 'media',
     media: 'media',
     radio: 'radio',
     tvonline: 'tvonline',
@@ -21333,8 +21351,8 @@ function buildVideoAsArticleCard(it) {
         el.classList.remove('is-active');
         el.removeAttribute('aria-current');
       });
-      if (nav.section === 'media') {
-        const tk = nav.topic && nav.topic !== 'all' ? nav.topic : 'all';
+      if (iuArticleHubSectionP(nav.section)) {
+        const tk = nav.topic && nav.topic !== 'all' ? nav.topic : 'zpravy';
         const el = document.querySelector('.iu-leftNav .iu-leftNavItem[data-media-topic="' + tk + '"]');
         if (el) {
           el.classList.add('is-active');
@@ -21376,36 +21394,37 @@ function buildVideoAsArticleCard(it) {
     const k = String(raw || '').trim().toLowerCase();
     if (k === 'radio') return 'radio';
     if (k === 'jr') return 'jr';
+    if (k === 'media') return IU_ARTICLE_HUB_SECTION;
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
-    const allowed = new Set(['media','tv','tvonline','mapy','travel','pocasi','tvprogram','hry','kultura','veda','vzdelavani','ads','jr','myuzel-1','myuzel-2','myuzel-3','myuzel-4','myuzel-5']);
-    if (k === 'home') return 'media';
+    const allowed = new Set([IU_ARTICLE_HUB_SECTION,'tv','tvonline','mapy','travel','pocasi','tvprogram','hry','kultura','veda','vzdelavani','ads','jr','myuzel-1','myuzel-2','myuzel-3','myuzel-4','myuzel-5']);
+    if (k === 'home') return IU_ARTICLE_HUB_SECTION;
     if (k === 'culture') return 'kultura';
     // P0 SAFE DISABLE: historické sekce (tech/bydleni) nesmí být routovatelné jako veřejné sekce
-    if (k === 'tech' || k === 'bydleni') return 'media';
-    // topic-only accents (URL uses ?section=media&topic=…)
-    if (['zpravy','sport','finance','zdravi'].indexOf(k) !== -1) return 'media';
-    return allowed.has(k) ? k : 'media';
+    if (k === 'tech' || k === 'bydleni') return IU_ARTICLE_HUB_SECTION;
+    // topic-only accents (URL uses ?section=feed&topic=…)
+    if (['zpravy','sport','finance','zdravi'].indexOf(k) !== -1) return IU_ARTICLE_HUB_SECTION;
+    return allowed.has(k) ? k : IU_ARTICLE_HUB_SECTION;
   }
 
   function getInitialSection(){
     try{
       const params = new URLSearchParams(window.location.search);
-      return normalizeSection(params.get('section') || 'media');
+      return normalizeSection(params.get('section') || IU_ARTICLE_HUB_SECTION);
     }catch{
-      return 'media';
+      return IU_ARTICLE_HUB_SECTION;
     }
   }
 
   function persistSection(section){
     try{
-      persistNavState({ section: String(section || 'media').toLowerCase() });
+      persistNavState({ section: String(section || IU_ARTICLE_HUB_SECTION).toLowerCase() });
     }catch{}
   }
 
   function readUrlNavState(){
     try{
       const p = new URLSearchParams(window.location.search || "");
-      const rawSec = (p.get("section") || "media").trim().toLowerCase();
+      const rawSec = (p.get("section") || IU_ARTICLE_HUB_SECTION).trim().toLowerCase();
       const section = normalizeSection(rawSec);
       let topic = (p.get("topic") || "").trim().toLowerCase();
       let mode = (p.get("mode") || "guide").trim().toLowerCase();
@@ -21413,26 +21432,29 @@ function buildVideoAsArticleCard(it) {
       // P0 SAFE DISABLE: fallback pro staré URL (topic=tech/bydleni nebo section=tech/bydleni)
       const hadDisabledSection = rawSec === "tech" || rawSec === "bydleni";
       const hadDisabledTopic = topic === "tech" || topic === "bydleni";
-      if (hadDisabledSection) topic = "all";
-      if (hadDisabledTopic) topic = "all";
+      if (hadDisabledSection) topic = "zpravy";
+      if (hadDisabledTopic) topic = "zpravy";
+      if (iuArticleHubSectionP(section) && (!topic || topic === "all")) topic = "zpravy";
       if (hadDisabledSection || hadDisabledTopic) {
-        try { persistNavState({ section: "media", topic: "all" }); } catch (_) {}
+        try { persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: "zpravy" }); } catch (_) {}
       }
       return { section, topic, mode };
     }catch{
-      return { section: "media", topic: "", mode: "guide" };
+      return { section: IU_ARTICLE_HUB_SECTION, topic: "zpravy", mode: "guide" };
     }
   }
 
   function persistNavState(o){
     try{
       const u = new URL(window.location.href);
-      const sec = String(o.section || "media").toLowerCase();
+      let sec = String(o.section || IU_ARTICLE_HUB_SECTION).toLowerCase();
+      if (sec === "media") sec = IU_ARTICLE_HUB_SECTION;
       u.searchParams.set("section", sec);
-      if (sec === "media") {
-        const t = String(o.topic || "").trim().toLowerCase();
+      if (sec === IU_ARTICLE_HUB_SECTION) {
+        let t = String(o.topic || "").trim().toLowerCase();
+        if (t === "all") t = "zpravy";
         if (t && t !== "all") u.searchParams.set("topic", t);
-        else u.searchParams.delete("topic");
+        else u.searchParams.set("topic", "zpravy");
         u.searchParams.delete("mode");
       } else if (sec === "travel") {
         u.searchParams.delete("topic");
@@ -21447,13 +21469,13 @@ function buildVideoAsArticleCard(it) {
 
   function persistNavStateFromHexKey(key){
     const k = String(key || "").trim().toLowerCase();
-    const MEDIA_TOPIC_KEYS = new Set(["all", "zpravy", "sport", "finance", "zdravi", "media"]);
-    if (k === "media" || k === "all") {
-      persistNavState({ section: "media", topic: "all" });
+    const MEDIA_TOPIC_KEYS = new Set(["all", "zpravy", "sport", "finance", "zdravi", "media", "feed"]);
+    if (k === "feed" || k === "media" || k === "all") {
+      persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: "zpravy" });
     } else if (k === "tech" || k === "bydleni") {
-      persistNavState({ section: "media", topic: "all" });
+      persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: "zpravy" });
     } else if (MEDIA_TOPIC_KEYS.has(k)) {
-      persistNavState({ section: "media", topic: k });
+      persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: k === "all" ? "zpravy" : k });
     } else if (k === "travel") {
       persistNavState({ section: "travel", mode: "guide" });
     } else {
@@ -21629,19 +21651,19 @@ function buildVideoAsArticleCard(it) {
       state.travelUiMode = nav.mode || "guide";
       if (section === "travel" && nav.mode === "media") {
         state.mediaTopicKey = "cestovani";
-      } else if (section === "media") {
+      } else if (iuArticleHubSectionP(section)) {
         if (nav.topic && nav.topic !== "all") state.mediaTopicKey = nav.topic;
       } else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1) {
         state.mediaTopicKey = section;
       }
     } catch (_) {}
     const accentColorKey =
-      section === "media" && nav.topic && nav.topic !== "all" ? nav.topic : section;
+      iuArticleHubSectionP(section) && nav.topic && nav.topic !== "all" ? nav.topic : section;
     // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
     try{ document.body && (document.body.dataset.section = section); }catch{}
     try{ document.documentElement && (document.documentElement.dataset.section = section); }catch{}
     try{
-      const iuFc = ["media", "hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1 ? "1" : "0";
+      const iuFc = ["media", "feed", "hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1 ? "1" : "0";
       if (document.body) document.body.setAttribute("data-iu-fc", iuFc);
       if (document.documentElement) document.documentElement.setAttribute("data-iu-fc", iuFc);
     }catch{}
@@ -21693,7 +21715,7 @@ function buildVideoAsArticleCard(it) {
       const sl = document.getElementById("sectionLabel");
       if (sl) {
         const labels = {
-          all: "Média",
+          all: "Zprávy",
           zpravy: "Zprávy",
           sport: "Sport",
           finance: "Finance",
@@ -21706,8 +21728,8 @@ function buildVideoAsArticleCard(it) {
         let txt = "";
         if (section === "travel") {
           txt = nav.mode === "media" ? "Cestování média" : "Cestování poradna";
-        } else if (section === "media") {
-          txt = labels[nav.topic] || "Média";
+        } else if (iuArticleHubSectionP(section)) {
+          txt = labels[nav.topic] || labels.zpravy;
         } else if (labels[section]) {
           txt = labels[section];
         }
@@ -21725,7 +21747,7 @@ function buildVideoAsArticleCard(it) {
     try{
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
         const sec = String(section || "").toLowerCase();
-        if (sec && sec !== "media") {
+        if (sec && !iuArticleHubSectionP(sec)) {
           document.body.classList.add("iu-mobileMainVisible");
           var mbVis = document.getElementById("iuMobileMainBackBar");
           if (mbVis) mbVis.hidden = false;
@@ -22162,7 +22184,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const mediaTopic = (item.getAttribute("data-media-topic") || "").trim().toLowerCase();
       iuHideAllOverlaysNow();
       if (mediaTopic !== "") {
-        persistNavState({ section: "media", topic: mediaTopic });
+        persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: mediaTopic });
       } else {
         const accent = (item.getAttribute("data-accent") || item.dataset?.accent || "").trim().toLowerCase();
         if (accent === "travel") {

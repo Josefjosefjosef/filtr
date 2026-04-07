@@ -178,21 +178,36 @@ SECTION_ORDER = ["pocasi", "doprava", "aktualne", "krimi", "finance", "sport", "
 
 VALID_SECTIONS = {"pocasi","doprava","aktualne","krimi","finance","sport","zdravi","cestovani","hry","kultura","veda","vzdelavani"}
 
-# Veřejný articles.json — Média hub: agregovaný pool napříč kanonickými sekcemi (SECTION_ORDER).
-# Každá sekce si drží vlastní retenci (topic/source/niche limity uvnitř sekce v apply_per_section_limits_then_cap).
-# Horní strop agregace (ne „9000“ / náhodné 12×1000): jedna konstanta + odvozený strop na sekci.
-MAX_MEDIA_AGGREGATION_POOL = 150_000
-MAX_ARTICLES_PER_CANONICAL_SECTION = (MAX_MEDIA_AGGREGATION_POOL + len(SECTION_ORDER) - 1) // len(
-    SECTION_ORDER
-)
-MAX_MERGED_ARTICLES_POOL = MAX_MEDIA_AGGREGATION_POOL
+# Per-sekční retence ve veřejném articles.json (žádný globální „media pool“ / finální globální řez po retenci).
+SECTION_RETENTION_CAP_DEFAULT = 12_500
+SECTION_RETENTION_CAP_OVERRIDES: dict[str, int] = {
+    "aktualne": 30_000,
+    "sport": 20_000,
+}
 
 
-def _media_aggregation_manifest() -> dict:
-    """Stabilní metadata ve výstupu pro ověření zdroje pravdy (bez dalších paralelních limitů)."""
+def section_retention_cap(canonical_section: str) -> int:
+    """Tvrdý strop počtu článků v kanonické sekci po limitech a po sloučení s veřejným předchozím datasetem."""
+    s = (canonical_section or "").strip().lower()
+    v = SECTION_RETENTION_CAP_OVERRIDES.get(s)
+    if v is not None:
+        return int(v)
+    return int(SECTION_RETENTION_CAP_DEFAULT)
+
+
+# merge_article_lists(): horní mez jen proti nekonečnému růstu working setu před per-sekčním zpracováním;
+# nesmí globálně „useknout“ články dřív než per-sekční retence (žádný finální globální pool cut).
+MAX_MERGED_ARTICLES_POOL = 2_000_000
+
+
+def _section_retention_manifest() -> dict:
+    """Metadata ve výstupu — výhradně per-sekční capy (žádný globální maxPool)."""
+    caps = {s: section_retention_cap(s) for s in SECTION_ORDER}
     return {
-        "maxPool": MAX_MEDIA_AGGREGATION_POOL,
-        "maxPerCanonicalSection": MAX_ARTICLES_PER_CANONICAL_SECTION,
+        "model": "per-section-only",
+        "defaultCap": SECTION_RETENTION_CAP_DEFAULT,
+        "capsByCanonicalSection": caps,
+        "overrides": dict(SECTION_RETENTION_CAP_OVERRIDES),
         "canonicalSectionCount": len(SECTION_ORDER),
     }
 
@@ -652,15 +667,14 @@ def _apply_niche_fraction_if_mixed_feedtypes(rows: list) -> list:
     return apply_niche_fraction_limit(rows)
 
 
-def apply_per_section_limits_then_cap(articles: list, max_per_section: int) -> list:
+def apply_per_section_limits_then_cap(articles: list) -> list:
     """
-    Agregace pro Média / articles.json: limity se neaplikují v jednom globálním průchodu (kde by
-    „silnější“ sekce v čase vyžraly sloty jiných), ale zvlášť v každé kanonické sekci — niche fraction
-    a topic/source limity jen uvnitř dané sekce. Poté až max_per_section článků na sekci, dedupe URL
-    v sekci, sloučení všech sekcí a finální globální řazení podle publishedAt + dedupe URL napříč sekcemi.
-    Finální výstup je navíc omezený na MAX_MEDIA_AGGREGATION_POOL (aktuálně 150k).
+    Výstup pro articles.json: limity zvlášť v každé kanonické sekci — niche fraction
+    a topic/source limity jen uvnitř dané sekce. Poté až per-sekční cap (section_retention_cap),
+    dedupe URL v sekci, sloučení všech sekcí a řazení podle publishedAt + dedupe URL napříč sekcemi.
+    Žádný globální finální pool cut.
     """
-    if not articles or max_per_section <= 0:
+    if not articles:
         return []
     by_sec: dict[str, list] = defaultdict(list)
     for a in articles:
@@ -674,6 +688,7 @@ def apply_per_section_limits_then_cap(articles: list, max_per_section: int) -> l
         if sec not in by_sec:
             continue
         seen_sec.add(sec)
+        cap = section_retention_cap(sec)
         rows = sorted(by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
         rows = apply_topic_and_source_limits(rows)
         rows = _apply_niche_fraction_if_mixed_feedtypes(rows)
@@ -687,11 +702,12 @@ def apply_per_section_limits_then_cap(articles: list, max_per_section: int) -> l
                 continue
             url_seen.add(u)
             deduped.append(r)
-        out.extend(deduped[:max_per_section])
+        out.extend(deduped[:cap])
 
     for sec in sorted(by_sec.keys()):
         if sec in seen_sec:
             continue
+        cap = section_retention_cap(sec)
         rows = sorted(by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
         rows = apply_topic_and_source_limits(rows)
         rows = _apply_niche_fraction_if_mixed_feedtypes(rows)
@@ -705,7 +721,7 @@ def apply_per_section_limits_then_cap(articles: list, max_per_section: int) -> l
                 continue
             url_seen.add(u)
             deduped.append(r)
-        out.extend(deduped[:max_per_section])
+        out.extend(deduped[:cap])
 
     url_global: set[str] = set()
     merged: list = []
@@ -715,7 +731,7 @@ def apply_per_section_limits_then_cap(articles: list, max_per_section: int) -> l
             continue
         url_global.add(u)
         merged.append(r)
-    return merged[:MAX_MEDIA_AGGREGATION_POOL]
+    return merged
 
 
 def apply_per_section_published_retention(prev_public: list, capped_feed: list) -> list:
@@ -726,10 +742,9 @@ def apply_per_section_published_retention(prev_public: list, capped_feed: list) 
     1) Merge previous public articles.json with this run's capped output by URL; capped_feed wins
        on collision (newer pipeline metadata / section).
     2) Bucket by canonical section (_retention_section_key).
-    3) Within each section: sort newest first, hard cap MAX_ARTICLES_PER_CANONICAL_SECTION — trim
+    3) Within each section: sort newest first, hard cap section_retention_cap(sec) — trim
        only the oldest tail (same URL cannot appear twice in a section).
-    4) Flatten, global sort by publishedAt, URL dedupe, final hard cap MAX_MEDIA_AGGREGATION_POOL
-       (12 × 12.5k = 150k; no soft-exceed beyond this).
+    4) Flatten, global sort by publishedAt, URL dedupe — no global pool cut after retention.
     """
     by_url: dict[str, dict] = {}
     for a in prev_public or []:
@@ -751,13 +766,13 @@ def apply_per_section_published_retention(prev_public: list, capped_feed: list) 
     for _u, a in by_url.items():
         by_sec[_retention_section_key(a)].append(a)
 
-    cap = MAX_ARTICLES_PER_CANONICAL_SECTION
     flat: list = []
     seen_sec: set[str] = set()
     for sec in SECTION_ORDER:
         if sec not in by_sec:
             continue
         seen_sec.add(sec)
+        cap = section_retention_cap(sec)
         rows = sorted(
             by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True
         )
@@ -767,6 +782,7 @@ def apply_per_section_published_retention(prev_public: list, capped_feed: list) 
     for sec in sorted(by_sec.keys()):
         if sec in seen_sec:
             continue
+        cap = section_retention_cap(sec)
         rows = sorted(
             by_sec[sec], key=lambda x: str(x.get("publishedAt") or ""), reverse=True
         )
@@ -783,8 +799,6 @@ def apply_per_section_published_retention(prev_public: list, capped_feed: list) 
             continue
         seen_g.add(u)
         out.append(r)
-    if len(out) > MAX_MEDIA_AGGREGATION_POOL:
-        out = out[:MAX_MEDIA_AGGREGATION_POOL]
     return out
 
 
@@ -2596,9 +2610,7 @@ def _aggregate_pipeline(
     merged_articles = apply_staggered_section_release(merged_articles, generated_at)
     merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
 
-    out_articles = apply_per_section_limits_then_cap(
-        merged_articles, MAX_ARTICLES_PER_CANONICAL_SECTION
-    )
+    out_articles = apply_per_section_limits_then_cap(merged_articles)
     out_articles = apply_per_section_published_retention(prev_list, out_articles)
     final = out_articles
 
@@ -2731,7 +2743,7 @@ def _publish_article_outputs(bundle: dict) -> int:
         "mappingSingleSourceOfTruth": True,
         "homepagePreviewUsesSectionMapper": True,
         "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
-        "mediaAggregation": _media_aggregation_manifest(),
+        "sectionRetention": _section_retention_manifest(),
     }
 
     _atomic_write_json(OUT_PATH, payload)
@@ -3397,9 +3409,8 @@ def _legacy_main_removed_placeholder():
     merged_articles = apply_staggered_section_release(merged_articles, generated_at)
     merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
 
-    out_articles = apply_per_section_limits_then_cap(
-        merged_articles, MAX_ARTICLES_PER_CANONICAL_SECTION
-    )
+    out_articles = apply_per_section_limits_then_cap(merged_articles)
+    out_articles = apply_per_section_published_retention(prev_list, out_articles)
     # Drip (releaseAt v budoucnu) schová většinu článků v UI — nesmí blokovat čerstvý feed; čas publikace zůstává v publishedAt.
 
     try:
@@ -3532,7 +3543,7 @@ def _legacy_main_removed_placeholder():
         "mappingSingleSourceOfTruth": True,
         "homepagePreviewUsesSectionMapper": True,
         "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
-        "mediaAggregation": _media_aggregation_manifest(),
+        "sectionRetention": _section_retention_manifest(),
     }
 
     # articles.json
