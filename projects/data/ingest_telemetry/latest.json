@@ -1,36 +1,36 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-04-07T23:26:53.040227Z",
-  "run_time_utc": "2026-04-07T23:26:53.040227Z",
+  "generatedAt": "2026-04-07T23:41:51.730013Z",
+  "run_time_utc": "2026-04-07T23:41:51.730013Z",
   "summary": {
     "schemaVersion": 2,
-    "generatedAt": "2026-04-07T23:26:53.040227Z",
-    "run_time_utc": "2026-04-07T23:26:53.040227Z",
+    "generatedAt": "2026-04-07T23:41:51.730013Z",
+    "run_time_utc": "2026-04-07T23:41:51.730013Z",
     "sources_checked": 4,
     "sources_with_new_items": 2,
-    "total_raw_items": 49,
-    "total_parsed_items": 49,
-    "total_normalized_items": 49,
-    "total_after_dedupe_items": 30,
-    "total_written_articles_feed_attributed": 10,
+    "total_raw_items": 51,
+    "total_parsed_items": 51,
+    "total_normalized_items": 51,
+    "total_after_dedupe_items": 32,
+    "total_written_articles_feed_attributed": 13,
     "written_by_section": {
       "zpravy": 221,
       "sport": 60,
-      "finance": 60,
+      "finance": 63,
       "zdravi": 28,
       "cestovani": 7
     },
-    "newest_written_publishedAt": "2026-04-07T21:16:59Z",
+    "newest_written_publishedAt": "2026-04-07T23:00:18Z",
     "top_sources_by_new_items": [
       {
-        "source_id": "fin_ekonom",
-        "feed_url": "https://ekonom.cz/?p=400000_rss",
+        "source_id": "fin_epenize",
+        "feed_url": "https://www.epenize.eu/rss",
         "raw_feed_new_item_count": 20
       },
       {
-        "source_id": "vzd_betterlife",
-        "feed_url": "https://www.betterlife.cz/feed/",
-        "raw_feed_new_item_count": 10
+        "source_id": "fin_faei",
+        "feed_url": "https://www.faei.cz/feed/",
+        "raw_feed_new_item_count": 12
       },
       {
         "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -45,14 +45,14 @@
     ],
     "top_sources_by_written_items": [
       {
-        "source_id": "vzd_betterlife",
-        "feed_url": "https://www.betterlife.cz/feed/",
-        "written_to_articles_json_count": 6
+        "source_id": "fin_faei",
+        "feed_url": "https://www.faei.cz/feed/",
+        "written_to_articles_json_count": 7
       },
       {
-        "source_id": "fin_ekonom",
-        "feed_url": "https://ekonom.cz/?p=400000_rss",
-        "written_to_articles_json_count": 4
+        "source_id": "fin_epenize",
+        "feed_url": "https://www.epenize.eu/rss",
+        "written_to_articles_json_count": 6
       },
       {
         "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -67,19 +67,19 @@
     ],
     "top_drop_sources": [
       {
-        "source_id": "fin_ekonom",
-        "feed_url": "https://ekonom.cz/?p=400000_rss",
-        "raw_minus_written": 16
-      },
-      {
         "source_id": "yt_playlist_PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
         "raw_minus_written": 15
       },
       {
-        "source_id": "vzd_betterlife",
-        "feed_url": "https://www.betterlife.cz/feed/",
-        "raw_minus_written": 4
+        "source_id": "fin_epenize",
+        "feed_url": "https://www.epenize.eu/rss",
+        "raw_minus_written": 14
+      },
+      {
+        "source_id": "fin_faei",
+        "feed_url": "https://www.faei.cz/feed/",
+        "raw_minus_written": 5
       },
       {
         "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -90,17 +90,17 @@
   },
   "sources": [
     {
-      "source_id": "fin_ekonom",
-      "registry_id": "fin_ekonom",
-      "source_label": "Ekonom (HN)",
-      "feed_url": "https://ekonom.cz/?p=400000_rss",
+      "source_id": "fin_epenize",
+      "registry_id": "fin_epenize",
+      "source_label": "ePeníze",
+      "feed_url": "https://www.epenize.eu/rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-07T23:26:53.040227Z",
-      "run_time_utc": "2026-04-07T23:26:53.040227Z",
+      "generatedAt": "2026-04-07T23:41:51.730013Z",
+      "run_time_utc": "2026-04-07T23:41:51.730013Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
-      "raw_feed_latest_publishedAt": "2026-04-01T22:00:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-07T23:00:18Z",
       "ingested_item_count": 20,
       "parsed_item_count": 20,
       "normalized_item_count": 20,
@@ -108,14 +108,14 @@
       "mapped_to_section_count": {
         "zpravy": 0,
         "sport": 0,
-        "finance": 17,
-        "zdravi": 3,
+        "finance": 20,
+        "zdravi": 0,
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 4,
-      "written_to_articles_json_count": 4,
-      "newest_written_publishedAt": "2026-04-01T22:00:00Z",
+      "release_eligible_count": 6,
+      "written_to_articles_json_count": 6,
+      "newest_written_publishedAt": "2026-04-07T23:00:18Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -127,107 +127,107 @@
       },
       "sample_titles": [
         {
-          "title": "Na vlně podnikání s Janem Piharem, šéfem společnosti Dachser Czech Republic",
-          "publishedAt": "2026-04-01T16:00:00Z"
+          "title": "Trump jako komiksový padouch: Když už i Alex Jones a MTG volají po jeho odstranění",
+          "publishedAt": "2026-04-07T23:00:18Z"
         },
         {
-          "title": "Nenahraditelná a zranitelná. Námořní doprava vládne globální ekonomice, její narušení může zdražit potraviny i hypotéky",
-          "publishedAt": "2026-03-31T17:45:00Z"
+          "title": "České firmy přicházejí o stovky hodin ročně. Řešení přitom existuje",
+          "publishedAt": "2026-04-07T12:27:53Z"
         },
         {
-          "title": "Skončí zaklekávání na inovativní firmy? Havlíček přichází s dalším pokusem, firmy se ale bojí o své know-how",
-          "publishedAt": "2026-03-31T17:38:00Z"
+          "title": "Dominik Hašek na síti: Strach Macinky a Babiše nezná mezí",
+          "publishedAt": "2026-04-07T06:21:50Z"
         },
         {
-          "title": "Ceny bytů v Praze nespadnou ani při vyšší výstavbě, klesnout by mohly jedině po strašném ekonomickém šoku",
-          "publishedAt": "2026-04-01T16:00:00Z"
+          "title": "Vymazat Írán z mapy za jedinou noc: Chce snad Trump apokalypsu?",
+          "publishedAt": "2026-04-06T23:00:48Z"
         },
         {
-          "title": "Nejžhavější IT pozice současnosti: Poradce a ajťák v jednom, kterého si klienti půjčují. Co skvěle placená práce obnáší?",
-          "publishedAt": "2026-03-31T17:32:00Z"
+          "title": "Zkrácení konce školního roku. Rozlícení rodiče mají smůlu",
+          "publishedAt": "2026-04-05T23:00:12Z"
         },
         {
-          "title": "Letem světem",
-          "publishedAt": "2026-04-01T22:00:00Z"
+          "title": "Ze školství mizí přísnost. Hry ale lenochy nic nenaučí",
+          "publishedAt": "2026-04-04T23:00:35Z"
         },
         {
-          "title": "Babiš Česko táhne do&nbsp;francouzské pasti, která je inspirovaná Sovětským svazem",
-          "publishedAt": "2026-04-01T16:00:00Z"
+          "title": "Porušuje Turek zákon o střetu zájmů? Asi ano, ale nikdo to neřeší",
+          "publishedAt": "2026-04-04T07:59:08Z"
         },
         {
-          "title": "Foto týdne",
-          "publishedAt": "2026-04-01T16:00:00Z"
+          "title": "Přijímací zkoušky za rohem: Byznys, který tahá z rodičů peníze",
+          "publishedAt": "2026-04-03T23:00:50Z"
         }
       ]
     },
     {
-      "source_id": "vzd_betterlife",
-      "registry_id": "vzd_betterlife",
-      "source_label": "BetterLife (edu)",
-      "feed_url": "https://www.betterlife.cz/feed/",
-      "topic": "vzdelavani",
-      "section_primary": "vzdelavani",
-      "generatedAt": "2026-04-07T23:26:53.040227Z",
-      "run_time_utc": "2026-04-07T23:26:53.040227Z",
-      "raw_feed_item_count": 10,
-      "raw_feed_new_item_count": 10,
-      "raw_feed_latest_publishedAt": "2026-04-06T12:05:05Z",
-      "ingested_item_count": 10,
-      "parsed_item_count": 10,
-      "normalized_item_count": 10,
-      "valid_publishedAt_count": 10,
+      "source_id": "fin_faei",
+      "registry_id": "fin_faei",
+      "source_label": "FAEI",
+      "feed_url": "https://www.faei.cz/feed/",
+      "topic": "finance",
+      "section_primary": "finance",
+      "generatedAt": "2026-04-07T23:41:51.730013Z",
+      "run_time_utc": "2026-04-07T23:41:51.730013Z",
+      "raw_feed_item_count": 12,
+      "raw_feed_new_item_count": 12,
+      "raw_feed_latest_publishedAt": "2026-04-07T20:30:09Z",
+      "ingested_item_count": 12,
+      "parsed_item_count": 12,
+      "normalized_item_count": 12,
+      "valid_publishedAt_count": 12,
       "mapped_to_section_count": {
         "zpravy": 0,
         "sport": 0,
-        "finance": 0,
+        "finance": 12,
         "zdravi": 0,
         "cestovani": 0,
-        "other": 10
+        "other": 0
       },
-      "release_eligible_count": 4,
-      "written_to_articles_json_count": 6,
-      "newest_written_publishedAt": "2026-04-06T12:05:05Z",
+      "release_eligible_count": 7,
+      "written_to_articles_json_count": 7,
+      "newest_written_publishedAt": "2026-04-07T20:30:09Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
         "parser_drop": 0,
         "section_remap": 0,
-        "release_gate": 2,
+        "release_gate": 0,
         "dedupe": 0,
         "other": 0
       },
       "sample_titles": [
         {
-          "title": "Vesničko má středisková: Původní herecké obsazení, smrtelná nehoda a film vznikl jako záchrana před finančním průšvihem",
-          "publishedAt": "2026-04-06T12:05:05Z"
+          "title": "Zahraniční obchod v únoru zklamal",
+          "publishedAt": "2026-04-07T20:30:09Z"
         },
         {
-          "title": "Neobvyklé velikonoční tradice ve světě: Dobrovolné utrpení na kříži, hony na králíky a v hlavní roli kriminálky",
-          "publishedAt": "2026-04-06T09:22:52Z"
+          "title": "Zlevnění potravin v březnu tlumilo prudký růst cen pohonných hmot",
+          "publishedAt": "2026-04-07T20:00:51Z"
         },
         {
-          "title": "Velikonoční pondělí: Omlazení, kraslice, šupání prutem a pozor na polévání vodou",
-          "publishedAt": "2026-04-06T06:28:26Z"
+          "title": "Jaké šrámy zanechá íránský šok na tuzemské spotřebě domácností?",
+          "publishedAt": "2026-04-07T19:30:23Z"
         },
         {
-          "title": "Ulice: Adriana čelí minulosti a v případě Evžena se s reakcí hodně přepočítala. V ohrožení je i Prokop",
-          "publishedAt": "2026-04-05T15:58:16Z"
+          "title": "Investiční byty ztrácejí dech. Nastupují stavební parcely",
+          "publishedAt": "2026-04-07T12:00:33Z"
         },
         {
-          "title": "Velikonoce u sousedů: Slovenské svátky jara bodují divokým folklorem a úterní odplatou",
-          "publishedAt": "2026-04-05T09:58:14Z"
+          "title": "Upadá sláva plyšového fenoménu Labubu?",
+          "publishedAt": "2026-04-07T08:00:55Z"
         },
         {
-          "title": "Boží hod velikonoční velí odložit veškerou práci. Zákaz úklidu a praní chrání rodinu před celoročním neštěstím",
-          "publishedAt": "2026-04-05T06:58:13Z"
+          "title": "Jakub Jirovský, Linda Coufalová, Eva Pavelková a Ondřej Špičák povýšili v Rowan Legal",
+          "publishedAt": "2026-04-07T06:00:14Z"
         },
         {
-          "title": "Velikonoční beránek podle Laďky Něrgešové",
-          "publishedAt": "2026-04-04T13:35:07Z"
+          "title": "Česko vymírá. Porodnost padla na historické dno",
+          "publishedAt": "2026-04-07T04:00:39Z"
         },
         {
-          "title": "Příští týden v seriálu Ulice: Petr zahnaný do kouta, Vandu sžírá žárlivost, Vilma způsobí poprask a Adriana pod tlakem",
-          "publishedAt": "2026-04-04T09:28:53Z"
+          "title": "ERÚ pomáhá spotřebitelům zorientovat se v nabídkách energií",
+          "publishedAt": "2026-04-06T14:00:56Z"
         }
       ]
     },
@@ -238,8 +238,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-07T23:26:53.040227Z",
-      "run_time_utc": "2026-04-07T23:26:53.040227Z",
+      "generatedAt": "2026-04-07T23:41:51.730013Z",
+      "run_time_utc": "2026-04-07T23:41:51.730013Z",
       "raw_feed_item_count": 4,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2026-01-20T08:01:05Z",
@@ -276,8 +276,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-07T23:26:53.040227Z",
-      "run_time_utc": "2026-04-07T23:26:53.040227Z",
+      "generatedAt": "2026-04-07T23:41:51.730013Z",
+      "run_time_utc": "2026-04-07T23:41:51.730013Z",
       "raw_feed_item_count": 15,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2024-07-19T09:05:16Z",
