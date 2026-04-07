@@ -12589,21 +12589,42 @@ function buildVideoAsArticleCard(it) {
     const key = `${Number(lat)},${Number(lon)}`;
     const now = Date.now();
     const cached = __iuOpenMeteoCache.get(key);
-    if (cached && cached.data && (now - cached.t) < 5 * 60 * 1000) return cached.data;
+    if (cached && cached.data != null && (now - cached.t) < 5 * 60 * 1000) return cached.data;
     if (cached && cached.p) return await cached.p;
     const url = iuOpenMeteoUrl(lat, lon);
-    const p = fetch(url, { cache: "no-store" })
-      .then((r) => r.json())
-      .then((d) => {
-        __iuOpenMeteoCache.set(key, { t: Date.now(), data: d });
+    const p = (async () => {
+      try{
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res || !res.ok) return null;
+        let text = "";
+        try{
+          text = await res.text();
+        }catch{
+          return null;
+        }
+        const trimmed = String(text || "").trim();
+        if (!trimmed) return null;
+        let d = null;
+        try{
+          d = JSON.parse(trimmed);
+        }catch{
+          return null;
+        }
+        if (!d || typeof d !== "object" || Array.isArray(d)) return null;
         return d;
-      })
-      .finally(() => {
-        const cur = __iuOpenMeteoCache.get(key);
-        if (cur && cur.p) __iuOpenMeteoCache.set(key, { t: cur.t || now, data: cur.data || null });
-      });
+      }catch{
+        return null;
+      }
+    })();
     __iuOpenMeteoCache.set(key, { t: now, p });
-    return await p;
+    try{
+      const d = await p;
+      __iuOpenMeteoCache.set(key, { t: Date.now(), data: d });
+      return d;
+    }finally{
+      const cur = __iuOpenMeteoCache.get(key);
+      if (cur && cur.p) __iuOpenMeteoCache.set(key, { t: cur.t || now, data: cur.data !== undefined ? cur.data : null });
+    }
   }
 
   function iuWxNormalizeWeatherCode(code){
@@ -14655,6 +14676,18 @@ function buildVideoAsArticleCard(it) {
         ? window.iuWeatherEnsureState()
         : (async () => {
             const d = await iuFetchOpenMeteo(city.lat, city.lon);
+            if (!d){
+              const existingState = window.__iuWeatherState;
+              const keepActiveLayer = (function(){
+                try{
+                  if (existingState && existingState.map && typeof existingState.map.activeLayer === "string"){
+                    return iuWxSanitizeMapLayerKey(existingState.map.activeLayer);
+                  }
+                }catch{}
+                return iuWxSanitizeMapLayerKey(iuWxReadPersistedMapLayer());
+              })();
+              return iuWxBuildWeatherState(city, null, locationMode, keepActiveLayer);
+            }
             const cur = d && d.current;
             const hourly = d && d.hourly;
             const daily = d && d.daily;
@@ -14912,7 +14945,7 @@ function buildVideoAsArticleCard(it) {
         ? `<a href="${escapeHtml(socialUrl)}" class="iu-pill-social-slot" data-mailbox-social="${i}" data-social="${escapeHtml(social)}" aria-label="${escapeHtml(social)}" rel="noopener noreferrer" target="_blank"><span class="iu-pill-social-icon iu-social-ios40">${iuMailboxSocialIconSvg(social)}</span></a>`
         : "";
       row.innerHTML = `<button class="iu-mailbox-pill" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
-        `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><i class="fa-solid fa-gear" aria-hidden="true"></i></button>` +
+        `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><svg class="iu-mailbox-gear-svg" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>` +
         socialSlotHtml;
       frag.appendChild(row);
     });
@@ -22655,7 +22688,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         var btns = editMode ? "<span class=\"iu-mojeSluzbyMoveBtns\"><button type=\"button\" data-move-left data-idx=\"" + idx + "\" aria-label=\"Doleva\">←</button><button type=\"button\" data-move-right data-idx=\"" + idx + "\" aria-label=\"Doprava\">→</button></span>" : "";
         var loginUrl = bank.loginUrl || bank.url;
         return "<div class=\"iuBankCard\" data-fav-id=\"" + esc(id) + "\" data-bank-id=\"" + esc(id) + "\">" + btns +
-          "<button type=\"button\" class=\"iuBankCardMain\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
+          "<button type=\"button\" class=\"iuBankCardMain\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\" aria-hidden=\"true\"><svg class=\"iu-bank-building-svg\" viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" focusable=\"false\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 21h18\"/><path d=\"M5 21V7l7-4v18\"/><path d=\"M19 21V11l-7-4\"/><path d=\"M9 9v.01\"/><path d=\"M9 12v.01\"/><path d=\"M9 15v.01\"/><path d=\"M9 18v.01\"/></svg></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
           "<button type=\"button\" data-bank-id=\"" + esc(id) + "\" class=\"iuBankMiniActionBtn iuBankRemove\">ODEBRAT</button></div>";
       }).join("");
     }
@@ -22668,7 +22701,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       allGrid.innerHTML = otherBanks.map(function(bank) {
         var loginUrl = bank.loginUrl || bank.url;
         return "<div class=\"iuBankCard\" data-bank-id=\"" + esc(bank.id) + "\">" +
-          "<button type=\"button\" class=\"iuBankCardMain\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\"><i class=\"fa-solid fa-building-columns\"></i></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
+          "<button type=\"button\" class=\"iuBankCardMain\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\" aria-hidden=\"true\"><svg class=\"iu-bank-building-svg\" viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" focusable=\"false\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 21h18\"/><path d=\"M5 21V7l7-4v18\"/><path d=\"M19 21V11l-7-4\"/><path d=\"M9 9v.01\"/><path d=\"M9 12v.01\"/><path d=\"M9 15v.01\"/><path d=\"M9 18v.01\"/></svg></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
           "<button type=\"button\" data-bank-id=\"" + esc(bank.id) + "\" class=\"iuBankMiniActionBtn iuBankAdd\">PŘIDAT</button></div>";
       }).join("");
     }
@@ -22790,7 +22823,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
     function renderSlots() {
       slotsEl.innerHTML = slots.map(function(s, i) {
-        return "<div class=\"iu-mojeSluzbyBakalariSlot\" data-slot=\"" + i + "\"><span class=\"iuIconTile\"><i class=\"fa-solid fa-graduation-cap\"></i></span><input placeholder=\"Jméno dítěte\" data-name maxlength=\"30\" value=\"" + esc(s.name) + "\" /><input placeholder=\"URL (https://...)\" data-url value=\"" + esc(s.url) + "\" /></div>";
+        return "<div class=\"iu-mojeSluzbyBakalariSlot\" data-slot=\"" + i + "\"><span class=\"iuIconTile\" aria-hidden=\"true\"><svg class=\"iu-grad-cap-svg\" viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" focusable=\"false\" fill=\"currentColor\"><path d=\"M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm5 8.99l-5 2.73-5-2.73V13l5 2.73L17 13v-1.01z\"/></svg></span><input placeholder=\"Jméno dítěte\" data-name maxlength=\"30\" value=\"" + esc(s.name) + "\" /><input placeholder=\"URL (https://...)\" data-url value=\"" + esc(s.url) + "\" /></div>";
       }).join("");
       slotsEl.querySelectorAll("[data-name]").forEach(function(inp, i) {
         var idx = i;

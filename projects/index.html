@@ -81,9 +81,8 @@ style-src 'self' 'unsafe-inline' https:;
         }
       }
     </style>
-    <!-- IMPORTANT: /projects/ musí načítat root assets -->
+    <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=prod1546topbarflowspacer" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
     (function(){ try { window.__iuBipEvent = null; window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); window.__iuBipEvent = e; }, { passive: false }); } catch(err) {} })();
