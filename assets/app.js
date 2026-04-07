@@ -5676,8 +5676,9 @@ function buildVideoAsArticleCard(it) {
         setTimeout(() => refresh(), 1500);
       }
     }catch{}
+    /* P0 CLS: ResizeObserver na welcome kartě jen ≤900px (meta font-fit). Desktop: žádný RO — sousední Silver sloupec mění výšku karty → zbytečné schedule + mikroshift bez sources. */
     try{
-      if (typeof ResizeObserver !== "undefined" && cardEl && silverWelcomeUseJsMetaFit()) {
+      if (typeof ResizeObserver !== "undefined" && cardEl && !silverWelcomeUseJsMetaFit()) {
         const ro = new ResizeObserver(() => {
           try{ scheduleSilverWelcomeFit(); }catch{}
         });
@@ -5690,6 +5691,7 @@ function buildVideoAsArticleCard(it) {
         "resize",
         () => {
           try{
+            if (silverWelcomeUseJsMetaFit()) return;
             clearTimeout(t);
             t = setTimeout(() => scheduleSilverWelcomeFit(), 80);
           }catch{}
