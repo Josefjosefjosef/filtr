@@ -2740,225 +2740,10 @@ a.brand,
 }
 
 .iu-aiOverlay[hidden],
-.iu-aiPanel[hidden]{
+.iu-aiPanel[hidden],
+#iuDsOverlay[hidden],
+#iuDsPanel[hidden]{
   display: none !important;
-}
-
-/* === Datová schránka — lokální profily (overlay) === */
-#iuDsOverlay.iu-ds-overlay{
-  position: fixed;
-  inset: 0;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 10027;
-  background: rgba(0,0,0,.35);
-  box-sizing: border-box;
-}
-#iuDsPanel.iu-ds-panel{
-  position: fixed;
-  z-index: 10028;
-  left: 50%;
-  top: 84px;
-  transform: translateX(-50%);
-  width: min(920px, calc(100vw - 24px));
-  max-height: calc(100vh - 108px);
-  padding: 18px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  overflow: hidden;
-  min-width: 0;
-}
-@media (max-width: 640px) {
-  #iuDsPanel.iu-ds-panel{
-    top: 64px;
-    width: calc(100vw - 16px);
-    max-height: calc(100vh - 80px);
-    padding: 12px;
-  }
-}
-body.iu-modal-open #iuDsOverlay:not([hidden]){
-  display: block !important;
-}
-body.iu-modal-open #iuDsPanel[data-open="1"]:not([hidden]){
-  display: flex !important;
-}
-.iu-ds-modal{
-  width: min(520px, calc(100vw - 36px));
-  max-height: min(78vh, calc(100vh - 120px));
-  min-height: 0;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 24px 48px rgba(0,0,0,.22);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-.iu-ds-panelHeader{
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 16px;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
-  flex: 0 0 auto;
-  gap: 10px;
-  min-width: 0;
-}
-.iu-ds-panelHeader span{
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.iu-ds-panelBody{
-  padding: 14px 16px 16px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  flex: 1 1 auto;
-  min-height: 0;
-  -webkit-overflow-scrolling: touch;
-}
-.iu-ds-helper{
-  margin: 0 0 10px;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--muted, rgba(11,27,43,0.6));
-}
-.iu-ds-status{
-  margin: 0 0 14px;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--muted, rgba(11,27,43,0.72));
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: rgba(31,75,153,0.06);
-  border: 1px solid rgba(31,75,153,0.12);
-  word-break: break-word;
-}
-.iu-ds-profile-list{
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  min-width: 0;
-}
-.iu-ds-profile{
-  border: 1px solid rgba(0,0,0,0.1);
-  border-radius: 12px;
-  padding: 12px;
-  background: rgba(247,248,250,0.85);
-  min-width: 0;
-  box-sizing: border-box;
-}
-.iu-ds-open-btn{
-  display: block;
-  width: 100%;
-  margin: 0 0 12px;
-  padding: 10px 14px;
-  font-size: 14px;
-  font-family: inherit;
-  font-weight: 600;
-  border: none;
-  border-radius: 10px;
-  background: #1D4ED8;
-  color: #fff;
-  cursor: pointer;
-  text-align: center;
-  box-sizing: border-box;
-}
-.iu-ds-open-btn:hover{
-  background: #1e40af;
-}
-.iu-ds-open-btn:focus-visible{
-  outline: 2px solid #1D4ED8;
-  outline-offset: 2px;
-}
-.iu-ds-field{
-  margin-bottom: 10px;
-  min-width: 0;
-}
-.iu-ds-field:last-of-type{
-  margin-bottom: 0;
-}
-.iu-ds-label{
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: var(--text, rgba(11,27,43,0.88));
-}
-.iu-ds-profile .iu-ds-f-label,
-.iu-ds-profile .iu-ds-f-user,
-.iu-ds-profile .iu-ds-f-pass{
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  padding: 9px 10px;
-  font-size: 14px;
-  font-family: inherit;
-  border: 1px solid rgba(0,0,0,0.14);
-  border-radius: 8px;
-  background: #fff;
-  min-width: 0;
-}
-.iu-ds-profile .iu-ds-f-label,
-.iu-ds-profile .iu-ds-f-user{
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.iu-ds-row-actions{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-  align-items: center;
-}
-.iu-ds-toggle-pass,
-.iu-ds-delete{
-  padding: 6px 10px;
-  font-size: 13px;
-  font-family: inherit;
-  border-radius: 8px;
-  border: 1px solid rgba(0,0,0,0.12);
-  background: #fff;
-  cursor: pointer;
-  color: #111;
-}
-.iu-ds-delete{
-  color: #b91c1c;
-  border-color: rgba(185,28,28,0.25);
-}
-.iu-ds-add{
-  display: block;
-  width: 100%;
-  margin-top: 14px;
-  padding: 10px 14px;
-  font-size: 14px;
-  font-family: inherit;
-  border-radius: 10px;
-  border: 1px dashed rgba(0,0,0,0.22);
-  background: transparent;
-  cursor: pointer;
-  color: inherit;
-  box-sizing: border-box;
-}
-.iu-ds-add:disabled{
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-.iu-ds-limit-note{
-  margin: 8px 0 0;
-  font-size: 12px;
-  color: var(--muted, rgba(11,27,43,0.55));
-  text-align: center;
-}
-.iu-ds-close{
-  flex-shrink: 0;
 }
 
 .iu-aiOverlay{
@@ -2978,10 +2763,12 @@ body.iu-modal-open #iuDsPanel[data-open="1"]:not([hidden]){
   padding: 18px;
 }
 
-body.iu-modal-open #iu-aiOverlay:not([hidden]) {
+body.iu-modal-open #iu-aiOverlay:not([hidden]),
+body.iu-modal-open #iuDsOverlay:not([hidden]) {
   display: block !important;
 }
-body.iu-modal-open #iu-aiPanel[data-open="1"]:not([hidden]) {
+body.iu-modal-open #iu-aiPanel[data-open="1"]:not([hidden]),
+body.iu-modal-open #iuDsPanel[data-open="1"]:not([hidden]) {
   display: flex !important;
 }
 body.iu-modal-open #iu-mojeSluzbyOverlay {
@@ -3030,29 +2817,43 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   box-sizing: border-box;
 }
 
-#iu-aiOverlay {
+#iu-aiOverlay, #iuDsOverlay.iu-ds-overlay {
   position: fixed;
   inset: 0;
   left: 0;
   top: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 9998;
+  box-sizing: border-box;
+  background: rgba(0,0,0,.35);
 }
-#iu-aiPanel {
+#iu-aiOverlay { z-index: 9998; }
+#iuDsOverlay.iu-ds-overlay { z-index: 10027; }
+#iu-aiPanel, #iuDsPanel.iu-ds-panel {
   position: fixed;
-  z-index: 9999;
   left: 50%;
-  top: 84px;
   transform: translateX(-50%);
-  width: min(920px, calc(100vw - 24px));
-  max-height: calc(100vh - 108px);
-  overflow: auto;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 18px;
   box-sizing: border-box;
+  min-width: 0;
+}
+#iu-aiPanel {
+  z-index: 9999;
+  top: 84px;
+  width: min(920px, calc(100vw - 24px));
+  max-height: calc(100vh - 108px);
+  overflow: auto;
+  padding: 18px;
+}
+#iuDsPanel.iu-ds-panel {
+  z-index: 10028;
+  top: max(64px, min(84px, 12vw));
+  width: min(920px, calc(100vw - clamp(16px, 4.2vw, 24px)));
+  max-height: calc(100vh - clamp(80px, 14vh, 108px));
+  overflow: hidden;
+  padding: clamp(12px, 3.5vw, 18px);
 }
 
 @media (max-width: 640px) {
@@ -3063,18 +2864,26 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   }
 }
 
-.iu-aiModal{
-  width: min(560px, calc(100vw - 36px));
-  max-height: min(80vh, calc(100vh - 36px));
+.iu-aiModal, .iu-ds-modal {
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 24px 48px rgba(0,0,0,.22);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+}
+.iu-aiModal{
+  width: min(560px, calc(100vw - 36px));
+  max-height: min(80vh, calc(100vh - 36px));
+}
+.iu-ds-modal{
+  width: min(520px, calc(100vw - 36px));
+  max-height: min(78vh, calc(100vh - 120px));
+  min-height: 0;
 }
 
-.iu-aiPanelHeader{
+.iu-aiPanelHeader, .iu-ds-panelHeader{
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -3083,6 +2892,31 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   font-weight: 600;
   border-bottom: 1px solid rgba(0,0,0,.08);
 }
+.iu-ds-panelHeader{
+  flex: 0 0 auto;
+  gap: 10px;
+  min-width: 0;
+}
+.iu-ds-panelHeader span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.iu-ds-panelBody{padding:14px 16px 16px;overflow-y:auto;overflow-x:hidden;flex:1 1 auto;min-height:0;-webkit-overflow-scrolling:touch}
+.iu-ds-helper{margin:0 0 10px;font-size:13px;line-height:1.45;color:var(--muted,rgba(11,27,43,0.6))}
+.iu-ds-status{margin:0 0 14px;font-size:13px;line-height:1.45;color:var(--muted,rgba(11,27,43,0.72));padding:10px 12px;border-radius:10px;background:rgba(31,75,153,0.06);border:1px solid rgba(31,75,153,0.12);word-break:break-word}
+.iu-ds-profile-list{display:flex;flex-direction:column;gap:14px;min-width:0}
+.iu-ds-profile{border:1px solid rgba(0,0,0,0.1);border-radius:12px;padding:12px;background:rgba(247,248,250,0.85);min-width:0;box-sizing:border-box}
+.iu-ds-open-btn{display:block;width:100%;margin:0 0 12px;padding:10px 14px;font-size:14px;font-family:inherit;font-weight:600;border:0;border-radius:10px;background:#1D4ED8;color:#fff;cursor:pointer;text-align:center;box-sizing:border-box}
+.iu-ds-open-btn:hover{background:#1e40af}
+.iu-ds-open-btn:focus-visible{outline:2px solid #1D4ED8;outline-offset:2px}
+.iu-ds-field{margin-bottom:10px;min-width:0}
+.iu-ds-field:last-of-type{margin-bottom:0}
+.iu-ds-label{display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:var(--text,rgba(11,27,43,0.88))}
+.iu-ds-profile .iu-ds-f-label,.iu-ds-profile .iu-ds-f-user,.iu-ds-profile .iu-ds-f-pass{width:100%;max-width:100%;box-sizing:border-box;padding:9px 10px;font-size:14px;font-family:inherit;border:1px solid rgba(0,0,0,0.14);border-radius:8px;background:#fff;min-width:0}
+.iu-ds-profile .iu-ds-f-label,.iu-ds-profile .iu-ds-f-user{overflow:hidden;text-overflow:ellipsis}
+.iu-ds-row-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.iu-ds-toggle-pass,.iu-ds-delete{padding:6px 10px;font-size:13px;font-family:inherit;border-radius:8px;border:1px solid rgba(0,0,0,0.12);background:#fff;cursor:pointer;color:#111}
+.iu-ds-delete{color:#b91c1c;border-color:rgba(185,28,28,0.25)}
+.iu-ds-add{display:block;width:100%;margin-top:14px;padding:10px 14px;font-size:14px;font-family:inherit;border-radius:10px;border:1px dashed rgba(0,0,0,0.22);background:transparent;cursor:pointer;color:inherit;box-sizing:border-box}
+.iu-ds-add:disabled{opacity:.45;cursor:not-allowed}
+.iu-ds-limit-note{margin:8px 0 0;font-size:12px;color:var(--muted,rgba(11,27,43,0.55));text-align:center}
 
 .iu-aiPanelHeaderActions{
   display: flex;
@@ -13173,7 +13007,7 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   display: block !important;
 }
 
-.iuModal[hidden],#iu-aiPanel[hidden],#iu-aiOverlay[hidden],#iuDsPanel[hidden],#iuDsOverlay[hidden],[data-iu-backdrop][hidden]{ display:none !important; }
+.iuModal[hidden],#iu-aiPanel[hidden],#iu-aiOverlay[hidden],[data-iu-backdrop][hidden]{ display:none !important; }
 
 .iuModal, [data-iu-backdrop] { contain: layout paint; }
 
