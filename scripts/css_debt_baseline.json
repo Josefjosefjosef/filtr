@@ -1,21 +1,21 @@
 {
   "schema": "css_debt_guard_v1",
-  "duplicate_selector_groups": 273,
-  "duplicate_rule_occurrences_in_groups": 730,
+  "duplicate_selector_groups": 275,
+  "duplicate_rule_occurrences_in_groups": 734,
   "classification_counts": {
     "breakpoint_specific": 147,
-    "risky_layout_coupled": 101,
+    "risky_layout_coupled": 103,
     "intentional_cascade_candidate": 25
   },
   "debt_verdict_counts": {
     "intentional_non_debt": 99,
-    "risk_now": 174
+    "risk_now": 176
   },
   "debt_occurrence_counts": {
     "intentional_non_debt": 280,
-    "risk_now": 450
+    "risk_now": 454
   },
-  "app_css_bytes": 566313,
+  "app_css_bytes": 573061,
   "css_size_guard_budget_bytes": 4096,
   "risk_zone_duplicate_groups": [
     {
@@ -51,6 +51,10 @@
       "classification": "breakpoint_specific"
     },
     {
+      "selector_normalized": "#iu-aiOverlay",
+      "classification": "risky_layout_coupled"
+    },
+    {
       "selector_normalized": "#iuCenterStage #iuHomeView",
       "classification": "breakpoint_specific"
     },
@@ -65,6 +69,10 @@
     {
       "selector_normalized": "#iuCenterStage[data-iu-view=\"quick\"] #iuQuickFeed",
       "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#iuDsOverlay.iu-ds-overlay",
+      "classification": "risky_layout_coupled"
     },
     {
       "selector_normalized": "#iuLeftRail",
@@ -273,10 +281,6 @@
     {
       "selector_normalized": ".iu-mmQuickLinks .iuIconTile",
       "classification": "breakpoint_specific"
-    },
-    {
-      "selector_normalized": ".iu-mmQuickLinks .iuIconTile > i",
-      "classification": "risky_layout_coupled"
     },
     {
       "selector_normalized": ".iu-mobileFirstBlock .iuLeftRailSectionTitle",

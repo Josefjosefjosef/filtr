@@ -18866,6 +18866,25 @@ function buildVideoAsArticleCard(it) {
   function iuApplyMobileQuickFeedLayout(quick) {
     try {
       if (!quick) return;
+      var close38 = quick.querySelector("button#iuQCloseBtn.iu-overlayCloseBtn38");
+      if (close38) {
+        close38.style.setProperty("width", "38px");
+        close38.style.setProperty("height", "38px");
+        close38.style.setProperty("min-width", "38px");
+        close38.style.setProperty("min-height", "38px");
+        close38.style.setProperty("padding", "0");
+        close38.style.setProperty("box-sizing", "border-box");
+        close38.style.setProperty("display", "inline-flex");
+        close38.style.setProperty("align-items", "center");
+        close38.style.setProperty("justify-content", "center");
+        close38.style.setProperty("background", "#EEF2F7");
+        close38.style.setProperty("color", "#0F172A");
+        close38.style.setProperty("border", "0");
+        close38.style.setProperty("border-radius", "10px");
+        close38.style.setProperty("font-size", "24px");
+        close38.style.setProperty("line-height", "1");
+        close38.style.setProperty("-webkit-tap-highlight-color", "transparent");
+      }
       const isMobile = !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
       if (!isMobile) return;
       const head = quick.querySelector(".iuQHead");
@@ -18897,7 +18916,7 @@ function buildVideoAsArticleCard(it) {
         secondary.style.setProperty("margin", "0");
         secondary.style.setProperty("white-space", "nowrap");
       }
-      if (close) {
+      if (close && !(close.classList && close.classList.contains("iu-overlayCloseBtn38"))) {
         close.style.setProperty("width", "32px");
         close.style.setProperty("height", "32px");
         close.style.setProperty("min-width", "32px");
@@ -18908,6 +18927,73 @@ function buildVideoAsArticleCard(it) {
         close.style.setProperty("justify-content", "center");
       }
       if (bodyCard) bodyCard.style.setProperty("padding", "14px 12px 16px");
+    } catch (_) {}
+  }
+
+  /** P0: #iuQuickFeed lives under #leftContent; dock to body for true fullscreen (Moje služby quick routes only). */
+  var __iuQuickFeedDock = null;
+  function iuDockQuickFeedToBodyForMojeFullscreen(quick) {
+    try {
+      if (!quick) return;
+      if (!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches)) return;
+      if (quick.parentNode === document.body) return;
+      __iuQuickFeedDock = { parent: quick.parentNode, next: quick.nextSibling };
+      document.body.appendChild(quick);
+      try { quick.setAttribute("data-iu-qf-docked", "1"); } catch (_) {}
+    } catch (_) {}
+  }
+  function iuUndockQuickFeedFromBody(quick) {
+    try {
+      if (!quick) return;
+      if (!__iuQuickFeedDock) {
+        try { quick.removeAttribute("data-iu-qf-docked"); } catch (_) {}
+        return;
+      }
+      var par = __iuQuickFeedDock.parent;
+      var next = __iuQuickFeedDock.next;
+      __iuQuickFeedDock = null;
+      try {
+        if (par) {
+          if (next && next.parentNode === par) par.insertBefore(quick, next);
+          else par.appendChild(quick);
+        }
+      } catch (_) {
+        try {
+          if (par) par.appendChild(quick);
+        } catch (_) {}
+      }
+      try { quick.removeAttribute("data-iu-qf-docked"); } catch (_) {}
+    } catch (_) {}
+  }
+
+  var __iuMojeQuickFeedFsProps = [
+    "position", "inset", "left", "top", "width", "height", "max-width", "max-height", "margin",
+    "z-index", "overflow", "box-sizing", "background", "padding", "display"
+  ];
+  function iuApplyMojeQuickFeedFullscreenLayer(quick, on) {
+    try {
+      if (!quick) return;
+      if (!on) {
+        for (var i = 0; i < __iuMojeQuickFeedFsProps.length; i++) {
+          try { quick.style.removeProperty(__iuMojeQuickFeedFsProps[i]); } catch (_) {}
+        }
+        return;
+      }
+      quick.style.setProperty("position", "fixed", "important");
+      quick.style.setProperty("inset", "0", "important");
+      quick.style.setProperty("left", "0", "important");
+      quick.style.setProperty("top", "0", "important");
+      quick.style.setProperty("width", "100vw", "important");
+      quick.style.setProperty("height", "100dvh", "important");
+      quick.style.setProperty("max-width", "none", "important");
+      quick.style.setProperty("max-height", "none", "important");
+      quick.style.setProperty("margin", "0", "important");
+      quick.style.setProperty("z-index", "10075", "important");
+      quick.style.setProperty("overflow", "auto", "important");
+      quick.style.setProperty("box-sizing", "border-box", "important");
+      quick.style.setProperty("background", "#eaf0f7", "important");
+      quick.style.setProperty("padding", "calc(env(safe-area-inset-top, 0px) + 8px) 8px 8px", "important");
+      quick.style.setProperty("display", "block", "important");
     } catch (_) {}
   }
 
@@ -18945,20 +19031,27 @@ function buildVideoAsArticleCard(it) {
     }
     if (keyNorm === "banka" || keyNorm === "bakalari" || keyNorm === "pojistovna") {
       const titles = { banka: "Banka", bakalari: "Bakaláři", pojistovna: "Zdravotní pojišťovna" };
+      const isNarrowMojeFs = !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
       stage.setAttribute("data-iu-view", "quick");
       quick.hidden = false;
       try {
-        if (isMobileOverlayScope) {
+        if (isNarrowMojeFs) {
+          iuDockQuickFeedToBodyForMojeFullscreen(quick);
+          iuSetViewportLock(true);
+          document.body.classList.add("iu-modal-open", "iu-quickFeedOpen", "iu-quickFeedMojeFullscreen");
+          if (isMobileOverlayScope) document.body.classList.add("iu-mobileGateToolsQuickOpen");
+        } else if (isMobileOverlayScope) {
           iuSetViewportLock(true);
           document.body.classList.add("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen");
         }
       } catch (_) {}
-      quick.innerHTML = "<div class=\"iuQHead\"><div class=\"iuQTitle\">" + iuQfEscape(titles[keyNorm] || keyNorm) + "</div><div class=\"iuQHeadActions\"><button class=\"iuQClose\" type=\"button\" id=\"iuQCloseBtn\" aria-label=\"Zavřít\">×</button></div></div><div class=\"iuQCard\" id=\"iuQuickFeedMojeSluzbyBody\"></div>";
+      quick.innerHTML = "<div class=\"iuQHead\"><div class=\"iuQTitle\">" + iuQfEscape(titles[keyNorm] || keyNorm) + "</div><div class=\"iuQHeadActions\"><button class=\"iuQClose iu-overlayCloseBtn38\" type=\"button\" id=\"iuQCloseBtn\" aria-label=\"Zavřít\">×</button></div></div><div class=\"iuQCard\" id=\"iuQuickFeedMojeSluzbyBody\"></div>";
       const body = document.getElementById("iuQuickFeedMojeSluzbyBody");
       if (body && typeof window.iuRenderMojeSluzbyInQuickFeed === "function") window.iuRenderMojeSluzbyInQuickFeed(keyNorm, body);
       const closeBtn = document.getElementById("iuQCloseBtn");
-      if (closeBtn) closeBtn.addEventListener("click", function() { quick.hidden = true; stage.removeAttribute("data-iu-view"); });
+      if (closeBtn) closeBtn.addEventListener("click", iuHideQuickFeed, { once: true });
       iuApplyMobileQuickFeedLayout(quick);
+      if (isNarrowMojeFs) iuApplyMojeQuickFeedFullscreenLayer(quick, true);
       return;
     }
     const data = (window.IU_QUICK_FEEDS || {})[keyNorm];
@@ -18980,7 +19073,7 @@ function buildVideoAsArticleCard(it) {
       quick.innerHTML = `
         <div class="iuQHead">
           <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-          <div class="iuQHeadActions"><button type="button" class="iuTrHeaderPreposlat" id="iuTrHeaderPreposlat" aria-label="Přeposlat">PŘEPOSLAT</button><button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
+          <div class="iuQHeadActions"><button type="button" class="iuTrHeaderPreposlat" id="iuTrHeaderPreposlat" aria-label="Přeposlat">PŘEPOSLAT</button><button class="iuQClose iu-overlayCloseBtn38" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
         </div>
         <div class="iuQCard">
           <div class="iuQGrid">
@@ -19112,7 +19205,7 @@ function buildVideoAsArticleCard(it) {
         quick.innerHTML = `
           <div class="iuQHead">
             <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-            <div class="iuQHeadActions">${shareBtnHtml}<button class="iuQClose" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
+            <div class="iuQHeadActions">${shareBtnHtml}<button class="iuQClose iu-overlayCloseBtn38" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
           </div>
           ${toolsBlock}
           <div class="iuQCard">
@@ -19478,12 +19571,14 @@ function buildVideoAsArticleCard(it) {
     const quick = document.getElementById("iuQuickFeed");
     if (stage) stage.setAttribute("data-iu-view", "articles");
     if (quick) {
+      try { iuApplyMojeQuickFeedFullscreenLayer(quick, false); } catch (_) {}
       quick.hidden = true;
+      iuUndockQuickFeedFromBody(quick);
       quick.innerHTML = "";
     }
     try {
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-ds-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-ds-overlay-open");
     } catch (_) {}
   }
 
@@ -19610,7 +19705,7 @@ function buildVideoAsArticleCard(it) {
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-ds-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-ds-overlay-open");
     } catch (_) {}
   }
 
