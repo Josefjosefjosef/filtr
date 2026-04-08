@@ -12514,6 +12514,28 @@ body.iu-quickFeedOpen{
   font-family: inherit;
   line-height: 1;
 }
+
+/* P0 guard: shared 38×38 overlay close (QuickFeed detail X only; do not reuse on unrelated small controls) */
+#iuQuickFeed .iuQClose.iu-overlayCloseBtn38{
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #EEF2F7;
+  color: #0F172A;
+  border: 0;
+  border-radius: 10px;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
 .iuQuickFeed .iuTrHeaderPreposlat{
   padding: 6px 12px;
   font-size: 14px;
@@ -20399,7 +20421,9 @@ overflow:hidden !important;
 }
 
 @media (max-width: 1023px){
-  body.iu-mobileGateToolsQuickOpen #iuQuickFeed:not([hidden]){
+  /* Moje služby quick (Banka / Bakaláři / Pojišťovna): true fullscreen; above mobile gate MindMenu (10018) + legacy bars */
+  body.iu-mobileGateToolsQuickOpen #iuQuickFeed:not([hidden]),
+  body.iu-quickFeedMojeFullscreen #iuQuickFeed:not([hidden]){
     position: fixed !important;
     inset: 0 !important;
     left: 0 !important;
@@ -20409,11 +20433,12 @@ overflow:hidden !important;
     max-width: none !important;
     max-height: none !important;
     margin: 0 !important;
-    z-index: 10030 !important;
+    z-index: 10075 !important;
     overflow: auto !important;
     box-sizing: border-box !important;
     background: #eaf0f7 !important;
     padding: calc(env(safe-area-inset-top, 0px) + 8px) 8px 8px !important;
+    display: block !important;
   }
 }
 
