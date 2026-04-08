@@ -4573,6 +4573,14 @@ body.iu-home .iu-leftRail{
   color: currentColor;
   flex-shrink: 0;
 }
+.iuHomeHexIcon img{
+  width: 48px;
+  height: 48px;
+  display: block;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
 .iuHomeHexLabel{
   line-height: 1.15;
   max-width: 170px;
@@ -17178,6 +17186,42 @@ html, body,
   stroke-width: 2.6;
 }
 
+/* P0: weather rail tile — explicit guard class (no :has) */
+.iu-leftNavItem.iu-has-image{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.iu-tile-image{
+  width: 100%;
+  flex: 1;
+}
+
+.iu-tile-image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.iu-tile-text{
+  text-align: center;
+  padding: 6px 4px;
+  font-size: 13px;
+}
+
+.iu-leftNav .iu-tile-text{
+  color: inherit;
+}
+
+.iu-leftNav .iu-leftNavItem:hover .iu-tile-text,
+.iu-leftNav .iu-leftNavItem:focus-visible .iu-tile-text,
+.iu-leftNav .iu-leftNavItem.is-active .iu-tile-text{
+  color: var(--iuNavAccent, currentColor);
+  font-weight: 700;
+}
+
 .iu-leftNav .iu-leftNavIcon,
 .iu-leftNav .iu-leftNavItem{
   transform: none !important;
@@ -17528,6 +17572,16 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
   margin: 0 !important;
 }
 
+#iuLeftRail .iu-tile-text{
+  text-align: center !important;
+  font-weight: 700 !important;
+  letter-spacing: .2px !important;
+  line-height: 1.15 !important;
+  font-size: 13px !important;
+  margin: 0 !important;
+  padding: 6px 4px !important;
+}
+
 #iuLeftRail .iu-leftNavItem,
 #iuLeftRail .iu-leftNav > a.iu-leftNavItem{
   display: flex !important;
@@ -17536,6 +17590,11 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
   justify-content: center !important;
   padding: 12px 10px !important;
   gap: 0 !important;
+}
+
+#iuLeftRail .iu-leftNav > a.iu-leftNavItem.iu-has-image{
+  justify-content: space-between !important;
+  gap: 4px !important;
 }
 
 #iuLeftRail .iu-leftNavItem:hover .iu-leftNavIcon{
@@ -17585,7 +17644,8 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 #iuLeftRail .iu-leftNavIcon,
 #iuLeftRail .iu-leftNavIcon svg,
 #iuLeftRail .iu-leftNavIcon i,
-#iuLeftRail .iu-leftNavLabel{
+#iuLeftRail .iu-leftNavLabel,
+#iuLeftRail .iu-tile-text{
   color: #CBD5E1 !important;
   fill: currentColor !important;
   opacity: 1 !important;
@@ -17665,7 +17725,7 @@ body #iuLeftRail{
   outline-offset: -1px;
 }
 
-.iu-leftNavItem img,
+.iu-leftNavItem:not(.iu-has-image) img,
 .iu-leftNavItem svg,
 .iu-leftNavItem i,
 .iu-leftNavItem .iuNavIcon {
@@ -17689,7 +17749,7 @@ body #iuLeftRail{
   box-shadow: none !important;
 }
 
-.iu-leftNavItem:hover img,
+.iu-leftNavItem:not(.iu-has-image):hover img,
 .iu-leftNavItem:hover svg,
 .iu-leftNavItem:hover i {
   filter: grayscale(100%) brightness(1.8) !important;
@@ -18034,8 +18094,15 @@ header#topbarWrap.topbar-new.iuTopbar::after{
 #iuLeftRail .iuMyUzelLabel{
   color: var(--iuTopbarBrandColor) !important;
 }
-#iuLeftRail .iu-leftNav .iu-leftNavLabel{
+#iuLeftRail .iu-leftNav .iu-leftNavLabel,
+#iuLeftRail .iu-leftNav .iu-tile-text{
   color: var(--iuTopbarBrandColor) !important;
+}
+
+#iuLeftRail .iu-leftNav .iu-leftNavItem:hover .iu-tile-text,
+#iuLeftRail .iu-leftNav .iu-leftNavItem:focus-visible .iu-tile-text,
+#iuLeftRail .iu-leftNav .iu-leftNavItem.is-active .iu-tile-text{
+  color: var(--iuNavAccent, currentColor) !important;
 }
 
 body #iuLeftRail .iu-leftNav .iu-leftNavItem{
