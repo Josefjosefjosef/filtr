@@ -18866,6 +18866,25 @@ function buildVideoAsArticleCard(it) {
   function iuApplyMobileQuickFeedLayout(quick) {
     try {
       if (!quick) return;
+      var close38 = quick.querySelector("button#iuQCloseBtn.iu-overlayCloseBtn38");
+      if (close38) {
+        close38.style.setProperty("width", "38px");
+        close38.style.setProperty("height", "38px");
+        close38.style.setProperty("min-width", "38px");
+        close38.style.setProperty("min-height", "38px");
+        close38.style.setProperty("padding", "0");
+        close38.style.setProperty("box-sizing", "border-box");
+        close38.style.setProperty("display", "inline-flex");
+        close38.style.setProperty("align-items", "center");
+        close38.style.setProperty("justify-content", "center");
+        close38.style.setProperty("background", "#EEF2F7");
+        close38.style.setProperty("color", "#0F172A");
+        close38.style.setProperty("border", "0");
+        close38.style.setProperty("border-radius", "10px");
+        close38.style.setProperty("font-size", "24px");
+        close38.style.setProperty("line-height", "1");
+        close38.style.setProperty("-webkit-tap-highlight-color", "transparent");
+      }
       const isMobile = !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
       if (!isMobile) return;
       const head = quick.querySelector(".iuQHead");
@@ -18947,6 +18966,37 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  var __iuMojeQuickFeedFsProps = [
+    "position", "inset", "left", "top", "width", "height", "max-width", "max-height", "margin",
+    "z-index", "overflow", "box-sizing", "background", "padding", "display"
+  ];
+  function iuApplyMojeQuickFeedFullscreenLayer(quick, on) {
+    try {
+      if (!quick) return;
+      if (!on) {
+        for (var i = 0; i < __iuMojeQuickFeedFsProps.length; i++) {
+          try { quick.style.removeProperty(__iuMojeQuickFeedFsProps[i]); } catch (_) {}
+        }
+        return;
+      }
+      quick.style.setProperty("position", "fixed", "important");
+      quick.style.setProperty("inset", "0", "important");
+      quick.style.setProperty("left", "0", "important");
+      quick.style.setProperty("top", "0", "important");
+      quick.style.setProperty("width", "100vw", "important");
+      quick.style.setProperty("height", "100dvh", "important");
+      quick.style.setProperty("max-width", "none", "important");
+      quick.style.setProperty("max-height", "none", "important");
+      quick.style.setProperty("margin", "0", "important");
+      quick.style.setProperty("z-index", "10075", "important");
+      quick.style.setProperty("overflow", "auto", "important");
+      quick.style.setProperty("box-sizing", "border-box", "important");
+      quick.style.setProperty("background", "#eaf0f7", "important");
+      quick.style.setProperty("padding", "calc(env(safe-area-inset-top, 0px) + 8px) 8px 8px", "important");
+      quick.style.setProperty("display", "block", "important");
+    } catch (_) {}
+  }
+
   function iuShowQuickFeedCore(key){
     if (typeof window.__iuDebugRca === "undefined") window.__iuDebugRca = (typeof location !== "undefined" && location.search || "").indexOf("iuDebug=1") !== -1;
     if (window.__iuDebugRca) console.log("[iuShowQuickFeed] key=", key);
@@ -19001,6 +19051,7 @@ function buildVideoAsArticleCard(it) {
       const closeBtn = document.getElementById("iuQCloseBtn");
       if (closeBtn) closeBtn.addEventListener("click", iuHideQuickFeed, { once: true });
       iuApplyMobileQuickFeedLayout(quick);
+      if (isNarrowMojeFs) iuApplyMojeQuickFeedFullscreenLayer(quick, true);
       return;
     }
     const data = (window.IU_QUICK_FEEDS || {})[keyNorm];
@@ -19520,6 +19571,7 @@ function buildVideoAsArticleCard(it) {
     const quick = document.getElementById("iuQuickFeed");
     if (stage) stage.setAttribute("data-iu-view", "articles");
     if (quick) {
+      try { iuApplyMojeQuickFeedFullscreenLayer(quick, false); } catch (_) {}
       quick.hidden = true;
       iuUndockQuickFeedFromBody(quick);
       quick.innerHTML = "";
