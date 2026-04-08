@@ -19506,6 +19506,8 @@ function buildVideoAsArticleCard(it) {
       if ((mjp && vis(mjp)) || (mjo && vis(mjo))) ids.push("mojesluzby");
       const aiPanel = document.getElementById("iu-aiPanel");
       if (aiPanel && vis(aiPanel)) ids.push("ai");
+      const dsPanel = document.getElementById("iuDsPanel");
+      if (dsPanel && vis(dsPanel) && String(dsPanel.dataset.open || "") === "1") ids.push("datovka");
     } catch (_) {}
     return ids;
   }
@@ -19572,6 +19574,24 @@ function buildVideoAsArticleCard(it) {
           aiPanel.classList.remove("is-open");
         }
       } catch (_) {}
+      if (typeof window.iuDatovkaCloseSurface === "function") {
+        try { window.iuDatovkaCloseSurface(); } catch (_) {}
+      } else {
+        const dsPanel = document.getElementById("iuDsPanel");
+        const dsOv = document.getElementById("iuDsOverlay");
+        if (typeof window.iuSetElOpenVisible === "function") {
+          try { window.iuSetElOpenVisible(dsPanel, false); window.iuSetElOpenVisible(dsOv, false); } catch (_) {}
+        } else {
+          if (dsPanel) dsPanel.hidden = true;
+          if (dsOv) dsOv.hidden = true;
+        }
+        try {
+          if (dsPanel) {
+            dsPanel.dataset.open = "0";
+            dsPanel.classList.remove("is-open");
+          }
+        } catch (_) {}
+      }
       var nak = document.getElementById("iuNakupModal");
       if (nak) {
         nak.hidden = true;
@@ -19607,6 +19627,9 @@ function buildVideoAsArticleCard(it) {
       }
       if (t === "ai") {
         if (typeof window.iuAiPanelOpenSurface === "function") window.iuAiPanelOpenSurface();
+      }
+      if (t === "datovka") {
+        if (typeof window.iuDatovkaOpenSurface === "function") window.iuDatovkaOpenSurface();
       }
     } finally {
       try {
@@ -19644,6 +19667,8 @@ function buildVideoAsArticleCard(it) {
         if (typeof window.iuParcelsOpenSurface === "function") window.iuParcelsOpenSurface();
       } else if (last === "ai") {
         if (typeof window.iuAiPanelOpenSurface === "function") window.iuAiPanelOpenSurface();
+      } else if (last === "datovka") {
+        if (typeof window.iuDatovkaOpenSurface === "function") window.iuDatovkaOpenSurface();
       }
     } catch (_) {}
   }
@@ -19663,6 +19688,7 @@ function buildVideoAsArticleCard(it) {
     const modal = String(el.getAttribute("data-iu-modal") || "").trim().toLowerCase();
     const isExternalHref = !!href && /^https?:\/\//i.test(href);
     if (action === "parcels" || key === "baliky") return { actionType: "overlay", overlayId: "parcels", key };
+    if (key === "datovka") return { actionType: "overlay", overlayId: "datovka", key: "datovka" };
     if (modal === "banka" || modal === "bakalari" || modal === "pojistovna") return { actionType: "overlay", overlayId: "quickfeed", key: modal };
     if (key === "ai" || key === "deepl" || key === "convert" || key === "naceneni") {
       return { actionType: "overlay", overlayId: "quickfeed", key };
@@ -19696,6 +19722,8 @@ function buildVideoAsArticleCard(it) {
       e.__iuHandled = true;
       if (resolved.overlayId === "parcels") {
         iuOpenOverlay("parcels");
+      } else if (resolved.overlayId === "datovka") {
+        iuOpenOverlay("datovka");
       } else {
         iuOpenOverlay("quickfeed", { key: resolved.key });
       }
@@ -19880,7 +19908,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     // 2) Modal (#iu-aiPanel or .iuModal or #iu-mojeSluzbyPanel)
-    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel') || closeEl.closest('#iu-mojeSluzbyPanel'));
+    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel') || closeEl.closest('#iuDsPanel') || closeEl.closest('#iu-mojeSluzbyPanel'));
     if (modal) {
       if (modal.id === 'iu-aiPanel') {
         const ov = document.getElementById('iu-aiOverlay');
@@ -19892,6 +19920,8 @@ function buildVideoAsArticleCard(it) {
           modal.setAttribute('hidden', '');
         }
         iuSetViewportLock(false);
+      } else if (modal.id === 'iuDsPanel' && typeof window.iuDatovkaCloseSurface === 'function') {
+        window.iuDatovkaCloseSurface();
       } else if (modal.id === 'iu-mojeSluzbyPanel' && typeof window.iuCloseMojeSluzbyModal === 'function') {
         window.iuCloseMojeSluzbyModal();
       } else {
@@ -20077,6 +20107,390 @@ function buildVideoAsArticleCard(it) {
     initAiPanel();
   }
 
+})();
+
+// === DATOVÁ SCHRÁNKA — lokální profily (overlay; hesla jen localStorage v prohlížeči) ===
+(function () {
+  "use strict";
+
+  const IU_DS_LOGIN_URL = "https://obcan.portal.gov.cz/prihlaseni";
+  const IU_DS_STORAGE_KEY = "infouzel_datovka_profiles_v1";
+  const IU_DS_MAX = 10;
+
+  try {
+    window.__IU_DS_AUTOFILL_SUPPORTED = false;
+  } catch (_) {}
+
+  let iuDsProfiles = [];
+  let iuDsSaveTimer = 0;
+  let iuDsLastFocus = null;
+
+  function iuDsIsPanelOpen() {
+    const p = document.getElementById("iuDsPanel");
+    if (!p) return false;
+    if (p.hasAttribute("hidden")) return false;
+    return String(p.dataset.open || "") === "1";
+  }
+
+  function iuDsNow() {
+    return Date.now();
+  }
+
+  function iuDsNewId() {
+    return "iu_ds_" + iuDsNow().toString(36) + "_" + Math.random().toString(36).slice(2, 9);
+  }
+
+  function iuDsNormalizeProfile(row, t) {
+    const id = row && typeof row.id === "string" && row.id ? row.id : iuDsNewId();
+    const label = row && typeof row.label === "string" ? row.label : "";
+    const username = row && typeof row.username === "string" ? row.username : "";
+    const password = row && typeof row.password === "string" ? row.password : "";
+    const c0 = typeof row.createdAt === "number" && row.createdAt > 0 ? row.createdAt : t;
+    const u0 = typeof row.updatedAt === "number" && row.updatedAt > 0 ? row.updatedAt : t;
+    return { id: id, label: label, username: username, password: password, createdAt: c0, updatedAt: u0 };
+  }
+
+  function iuDsLoadFromStorage() {
+    let raw = null;
+    try {
+      raw = localStorage.getItem(IU_DS_STORAGE_KEY);
+    } catch (_) {
+      iuDsProfiles = [];
+      return;
+    }
+    if (raw == null || raw === "") {
+      iuDsProfiles = [];
+      return;
+    }
+    let parsed = null;
+    try {
+      parsed = JSON.parse(raw);
+    } catch (_) {
+      try {
+        localStorage.removeItem(IU_DS_STORAGE_KEY);
+      } catch (_) {}
+      iuDsProfiles = [];
+      return;
+    }
+    const t = iuDsNow();
+    let rows = [];
+    if (parsed && Array.isArray(parsed.profiles)) rows = parsed.profiles;
+    else if (Array.isArray(parsed)) rows = parsed;
+    else if (parsed && typeof parsed === "object") {
+      const maybe = parsed.items || parsed.list;
+      if (Array.isArray(maybe)) rows = maybe;
+    }
+    const out = [];
+    if (Array.isArray(rows)) {
+      for (let i = 0; i < rows.length && i < IU_DS_MAX + 2; i++) {
+        if (!rows[i] || typeof rows[i] !== "object") continue;
+        out.push(iuDsNormalizeProfile(rows[i], t));
+      }
+    }
+    if (out.length > IU_DS_MAX) out.length = IU_DS_MAX;
+    iuDsProfiles = out;
+  }
+
+  function iuDsPersist() {
+    const payload = { v: 1, profiles: iuDsProfiles };
+    try {
+      localStorage.setItem(IU_DS_STORAGE_KEY, JSON.stringify(payload));
+    } catch (_) {}
+  }
+
+  function iuDsScheduleSave() {
+    if (iuDsSaveTimer) clearTimeout(iuDsSaveTimer);
+    iuDsSaveTimer = setTimeout(function () {
+      iuDsSaveTimer = 0;
+      iuDsSyncFromDomIfOpen();
+    }, 220);
+  }
+
+  function iuDsFindPrev(id) {
+    for (let i = 0; i < iuDsProfiles.length; i++) {
+      if (iuDsProfiles[i].id === id) return iuDsProfiles[i];
+    }
+    return null;
+  }
+
+  function iuDsSyncFromDomIfOpen() {
+    if (!iuDsIsPanelOpen()) return;
+    const host = document.getElementById("iuDsProfileListHost");
+    if (!host) return;
+    const cards = host.querySelectorAll(".iu-ds-profile[data-profile-id]");
+    const next = [];
+    const t = iuDsNow();
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
+      const id = card.getAttribute("data-profile-id");
+      if (!id) continue;
+      const prev = iuDsFindPrev(id);
+      const labelEl = card.querySelector(".iu-ds-f-label");
+      const userEl = card.querySelector(".iu-ds-f-user");
+      const passEl = card.querySelector(".iu-ds-f-pass");
+      next.push({
+        id: id,
+        label: labelEl ? String(labelEl.value || "") : "",
+        username: userEl ? String(userEl.value || "") : "",
+        password: passEl ? String(passEl.value || "") : "",
+        createdAt: prev ? prev.createdAt : t,
+        updatedAt: t,
+      });
+    }
+    iuDsProfiles = next;
+    iuDsPersist();
+  }
+
+  function iuDsUpdateAddUi() {
+    const addBtn = document.getElementById("iuDsAddBtn");
+    const note = document.getElementById("iuDsLimitNote");
+    const n = iuDsProfiles.length;
+    if (!addBtn) return;
+    const atCap = n >= IU_DS_MAX;
+    addBtn.disabled = !!atCap;
+    if (note) {
+      note.hidden = !atCap;
+      if (atCap) note.textContent = "Maximálně " + String(IU_DS_MAX) + " profilů.";
+    }
+  }
+
+  function iuDsBuildProfileCard(p) {
+    const card = document.createElement("div");
+    card.className = "iu-ds-profile iu-ds-tool";
+    card.setAttribute("data-profile-id", p.id);
+
+    const openBtn = document.createElement("button");
+    openBtn.type = "button";
+    openBtn.className = "iu-ds-open-btn";
+    openBtn.textContent = "Otevřít a přihlásit do datové schránky";
+
+    function field(labelText, className, inputType, value, idSuffix) {
+      const wrap = document.createElement("div");
+      wrap.className = "iu-ds-field";
+      const lab = document.createElement("label");
+      lab.className = "iu-ds-label";
+      const inpId = "iu-ds-" + idSuffix + "-" + p.id;
+      lab.setAttribute("for", inpId);
+      lab.textContent = labelText;
+      const inp = document.createElement("input");
+      inp.id = inpId;
+      inp.type = inputType;
+      inp.className = className;
+      inp.value = value || "";
+      inp.setAttribute("autocomplete", inputType === "password" ? "new-password" : "off");
+      inp.setAttribute("autocapitalize", "off");
+      inp.setAttribute("spellcheck", "false");
+      if (className === "iu-ds-f-label") inp.setAttribute("maxlength", "120");
+      if (className === "iu-ds-f-user") inp.setAttribute("maxlength", "200");
+      wrap.appendChild(lab);
+      wrap.appendChild(inp);
+      return wrap;
+    }
+
+    openBtn.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      try {
+        window.open(IU_DS_LOGIN_URL, "_blank", "noopener,noreferrer");
+      } catch (_) {}
+    });
+
+    card.appendChild(openBtn);
+    card.appendChild(field("Název přihlášení", "iu-ds-f-label", "text", p.label, "lbl"));
+    card.appendChild(field("Uživatelské jméno", "iu-ds-f-user", "text", p.username, "usr"));
+    const passWrap = field("Heslo", "iu-ds-f-pass", "password", p.password, "pwd");
+    card.appendChild(passWrap);
+    const passInput = passWrap.querySelector(".iu-ds-f-pass");
+
+    const row = document.createElement("div");
+    row.className = "iu-ds-row-actions";
+
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "iu-ds-toggle-pass";
+    toggle.textContent = "Zobrazit heslo";
+
+    toggle.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      if (!passInput) return;
+      const showing = passInput.getAttribute("type") === "text";
+      passInput.setAttribute("type", showing ? "password" : "text");
+      toggle.textContent = showing ? "Zobrazit heslo" : "Skrýt heslo";
+    });
+
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "iu-ds-delete";
+    del.textContent = "Smazat profil";
+    del.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      iuDsSyncFromDomIfOpen();
+      const id = card.getAttribute("data-profile-id");
+      iuDsProfiles = iuDsProfiles.filter(function (r) {
+        return r.id !== id;
+      });
+      iuDsPersist();
+      iuDsRender();
+    });
+
+    row.appendChild(toggle);
+    row.appendChild(del);
+    card.appendChild(row);
+
+    card.addEventListener(
+      "input",
+      function () {
+        iuDsScheduleSave();
+      },
+      true
+    );
+
+    return card;
+  }
+
+  function iuDsRender() {
+    const host = document.getElementById("iuDsProfileListHost");
+    if (!host) return;
+    host.textContent = "";
+    for (let i = 0; i < iuDsProfiles.length; i++) {
+      host.appendChild(iuDsBuildProfileCard(iuDsProfiles[i]));
+    }
+    iuDsUpdateAddUi();
+  }
+
+  function iuDsLockScroll(on) {
+    if (typeof window.iuSetViewportLock === "function") window.iuSetViewportLock(!!on);
+  }
+
+  function iuDatovkaCloseSurface() {
+    const panel = document.getElementById("iuDsPanel");
+    const overlay = document.getElementById("iuDsOverlay");
+    if (!panel || !overlay) return;
+    try {
+      iuDsSyncFromDomIfOpen();
+    } catch (_) {}
+    if (typeof window.iuSetElOpenVisible === "function") {
+      try {
+        window.iuSetElOpenVisible(panel, false);
+        window.iuSetElOpenVisible(overlay, false);
+      } catch (_) {}
+    } else {
+      panel.setAttribute("hidden", "");
+      overlay.setAttribute("hidden", "");
+    }
+    panel.dataset.open = "0";
+    try {
+      panel.classList.remove("is-open");
+    } catch (_) {}
+    iuDsLockScroll(false);
+    try {
+      document.body.classList.remove("iu-modal-open");
+    } catch (_) {}
+    try {
+      if (iuDsLastFocus && typeof iuDsLastFocus.focus === "function") iuDsLastFocus.focus();
+    } catch (_) {}
+    iuDsLastFocus = null;
+  }
+
+  function iuDatovkaOpenSurface() {
+    const panel = document.getElementById("iuDsPanel");
+    const overlay = document.getElementById("iuDsOverlay");
+    if (!panel || !overlay) return;
+    try {
+      iuDsLastFocus = document.activeElement;
+    } catch (_) {
+      iuDsLastFocus = null;
+    }
+    if (typeof window.ensureDatovkaModalInBody === "function") window.ensureDatovkaModalInBody();
+    iuDsLoadFromStorage();
+    iuDsRender();
+    if (typeof window.iuSetElOpenVisible === "function") {
+      try {
+        window.iuSetElOpenVisible(overlay, true);
+        window.iuSetElOpenVisible(panel, true);
+      } catch (_) {}
+    } else {
+      overlay.removeAttribute("hidden");
+      panel.removeAttribute("hidden");
+    }
+    panel.dataset.open = "1";
+    try {
+      document.body.classList.add("iu-modal-open");
+    } catch (_) {}
+    iuDsLockScroll(true);
+    try {
+      const host = document.getElementById("iuDsProfileListHost");
+      const first = host ? host.querySelector("input, button.iu-ds-open-btn") : null;
+      const closer = panel.querySelector(".iu-ds-close");
+      if (first) first.focus();
+      else if (closer) closer.focus();
+    } catch (_) {}
+  }
+
+  try {
+    window.iuDatovkaOpenSurface = iuDatovkaOpenSurface;
+  } catch (_) {}
+  try {
+    window.iuDatovkaCloseSurface = iuDatovkaCloseSurface;
+  } catch (_) {}
+
+  function iuDsInit() {
+    const addBtn = document.getElementById("iuDsAddBtn");
+    const overlay = document.getElementById("iuDsOverlay");
+    const panel = document.getElementById("iuDsPanel");
+    const modalInner = panel ? panel.querySelector(".iu-ds-modal") : null;
+
+    iuDsLoadFromStorage();
+
+    if (addBtn) {
+      addBtn.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        iuDsSyncFromDomIfOpen();
+        if (iuDsProfiles.length >= IU_DS_MAX) return;
+        const t = iuDsNow();
+        iuDsProfiles.push({ id: iuDsNewId(), label: "", username: "", password: "", createdAt: t, updatedAt: t });
+        iuDsPersist();
+        iuDsRender();
+        try {
+          const host = document.getElementById("iuDsProfileListHost");
+          const last = host ? host.querySelector(".iu-ds-profile:last-of-type .iu-ds-f-label") : null;
+          if (last) last.focus();
+        } catch (_) {}
+      });
+    }
+
+    if (overlay) {
+      overlay.addEventListener("click", function () {
+        iuDatovkaCloseSurface();
+      });
+    }
+    if (panel) {
+      panel.addEventListener("click", function (e) {
+        if (e.target === panel) iuDatovkaCloseSurface();
+      });
+    }
+    if (modalInner) {
+      modalInner.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+    }
+
+    document.addEventListener(
+      "keydown",
+      function (e) {
+        if (e.key !== "Escape") return;
+        if (!iuDsIsPanelOpen()) return;
+        e.preventDefault();
+        iuDatovkaCloseSurface();
+      },
+      true
+    );
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iuDsInit);
+  } else {
+    iuDsInit();
+  }
 })();
 
 // === RADIO VIEW (left rail) — middle column toggle (UI-only) ===
@@ -21981,6 +22395,23 @@ function buildVideoAsArticleCard(it) {
     return true;
   }
   try { window.ensureAiModalInBody = ensureAiModalInBody; } catch (_) {}
+
+  function ensureDatovkaModalInBody() {
+    const overlays = document.querySelectorAll("#iuDsOverlay");
+    const panels = document.querySelectorAll("#iuDsPanel");
+    const overlay = overlays[0] || null;
+    const panel = panels[0] || null;
+    if (!overlay || !panel) return false;
+    for (let i = 1; i < overlays.length; i++) overlays[i].setAttribute("data-iu-dup", "1");
+    for (let i = 1; i < panels.length; i++) panels[i].setAttribute("data-iu-dup", "1");
+    if (overlay.parentElement === document.body && panel.parentElement === document.body) return true;
+    const frag = document.createDocumentFragment();
+    frag.appendChild(overlay);
+    frag.appendChild(panel);
+    document.body.appendChild(frag);
+    return true;
+  }
+  try { window.ensureDatovkaModalInBody = ensureDatovkaModalInBody; } catch (_) {}
 
   function iuHideAllOverlaysNow(){
     try {
