@@ -1988,7 +1988,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <div id="iuQuickToolsSettingsPanel" class="iu-quicktools-settings-panel" role="dialog" aria-modal="true" aria-label="Nastavení rychlých odkazů" hidden data-iu-quicktools-settings-panel></div>
                       </div>
                       <div class="iu-mmQuickGrid" role="list">
-                        <div class="iuTile" role="listitem" data-quicktool-id="datovka" data-iu-ql="datova-schranka" data-ms="ds"><a class="iuTileLink" href="https://obcan.portal.gov.cz/prihlaseni" target="_blank" rel="noopener noreferrer" aria-label="Datová schránka"><span class="iuTileText">Datová schránka</span></a></div>
+                        <div class="iuTile" role="listitem" data-quicktool-id="datovka" data-iu-ql="datova-schranka" data-ms="ds"><button type="button" class="iuTileLink" data-iuq="datovka" aria-label="Datová schránka"><span class="iuTileText">Datová schránka</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="bankovnictvi" data-iu-ql="internetove-bankovnictvi" data-ms="banka"><button class="iuTileLink" type="button" data-iuq="banka" aria-label="Internetové bankovnictví"><span class="iuTileText">Internetové bankovnictví</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="bakalari" data-iu-ql="bakalari" data-ms="bakalari"><button class="iuTileLink" type="button" data-iuq="bakalari" aria-label="Bakaláři"><span class="iuTileText">Bakaláři</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="zdravotni_pojistovna" data-iu-ql="zdravotni-pojistovna" data-ms="pojistovna"><button class="iuTileLink" type="button" data-iuq="pojistovna" aria-label="Zdravotní pojišťovna"><span class="iuTileText">Zdravotní pojišťovna</span></button></div>
@@ -2048,6 +2048,23 @@ style-src 'self' 'unsafe-inline' https:;
                             Ne. infoUzel.cz poskytuje odkazy na oficiální stránky nástrojů,
                             které se otevřou v nové kartě.</p>
                           </section>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="iuDsOverlay" class="iu-ds-tool iu-ds-overlay" hidden></div>
+                    <div id="iuDsPanel" class="iu-ds-tool iu-ds-panel iuSectionDS" hidden role="dialog" aria-modal="true" aria-labelledby="iuDsPanelTitle" data-open="0">
+                      <div class="iu-ds-modal">
+                        <div class="iu-ds-panelHeader">
+                          <span id="iuDsPanelTitle">Datové schránky</span>
+                          <button type="button" class="iuModalClose iu-ds-close" data-iu-close aria-label="Zavřít">×</button>
+                        </div>
+                        <div class="iu-ds-panelBody">
+                          <p class="iu-ds-helper">Údaje se ukládají pouze v tomto prohlížeči na tomto zařízení. Nikdy se neodesílají na server infoUzel.cz.</p>
+                          <p id="iuDsAutofillStatus" class="iu-ds-status" aria-live="polite">Externí přihlašovací stránka běží na jiné doméně — prohlížeč z bezpečnostních důvodů neumožňuje automatické vyplnění jména a hesla z infoUzel.cz. Po otevření přihlášení zkopírujte údaje z polí níže ručně.</p>
+                          <div id="iuDsProfileListHost" class="iu-ds-profile-list"></div>
+                          <button type="button" id="iuDsAddBtn" class="iu-ds-add">+ Přidat další</button>
+                          <p id="iuDsLimitNote" class="iu-ds-limit-note" hidden>Maximálně 10 profilů.</p>
                         </div>
                       </div>
                     </div>
