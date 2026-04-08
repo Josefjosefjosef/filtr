@@ -20184,9 +20184,10 @@ function buildVideoAsArticleCard(it) {
     s.id = "iuDsMobileTabletCss";
     s.textContent =
       "@media (max-width:1024px){" +
-      "body.iu-modal-open #iuDsOverlay.iu-ds-overlay:not([hidden]){z-index:10039!important;inset:0!important;width:100%!important;height:100dvh!important;height:100vh!important}" +
-      "body.iu-modal-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open=\"1\"]:not([hidden]){position:fixed!important;inset:0!important;transform:none!important;width:100%!important;max-width:none!important;height:100dvh!important;height:100vh!important;max-height:none!important;padding:0!important;margin:0!important;box-sizing:border-box!important;overflow:hidden!important;z-index:10040!important}" +
-      "#iuDsPanel.iu-ds-panel .iu-ds-modal{width:100%!important;max-width:none!important;height:100%!important;max-height:none!important;min-height:0!important;border-radius:0!important;box-shadow:none!important}" +
+      "body.iu-modal-open #iuDsOverlay.iu-ds-overlay:not([hidden]){z-index:10039!important;position:fixed!important;inset:0!important;width:100%!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;box-sizing:border-box!important}" +
+      "body.iu-modal-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open=\"1\"]:not([hidden]){position:fixed!important;inset:0!important;left:0!important;transform:none!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;width:100%!important;max-width:none!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;padding:0!important;margin:0!important;box-sizing:border-box!important;overflow:hidden!important;z-index:10040!important}" +
+      "#iuDsPanel.iu-ds-panel .iu-ds-modal{flex:1 1 auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;overflow:hidden!important;border-radius:0!important;box-shadow:none!important}" +
+      "#iuDsPanel.iu-ds-panel .iu-ds-panelHeader{flex:0 0 auto!important}" +
       "#iuDsPanel.iu-ds-panel .iu-ds-panelBody{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;touch-action:pan-y!important}" +
       ".iu-ds-profile .iu-ds-f-label,.iu-ds-profile .iu-ds-f-user,.iu-ds-profile .iu-ds-f-pass,.iu-ds-open-btn,.iu-ds-toggle-pass,.iu-ds-delete,.iu-ds-add{font-size:16px!important}" +
       "}";
