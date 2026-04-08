@@ -1,24 +1,47 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-08T12:56:17.525252Z",
+  "ingestedAt": "2026-04-08T13:11:13.563029Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Cenové stropy paliv ve čtvrtek mírně klesnou, oznámilo ministerstvo",
-      "url": "https://www.denik.cz/z_domova/cesko-maximalni-ceny-paliv-ministerstvo-financi-rozhodnuti-ctvrtek.html",
+      "title": "OBRAZEM: Lednice a Velikonoční jarmark na kolonádě",
+      "url": "https://www.denik.cz/ctenar-reporter/lednice-a-velikonocni-jarmark-na-kolonade-20260407.html",
+      "dt": "2026-04-08T13:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jarmark",
+        "kolonádě",
+        "lednice",
+        "obrazem",
+        "velikonoční"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Maximální ceny benzinu a nafty ve čtvrtek mírně klesnou, oznámilo ministerstvo",
+      "url": "https://www.denik.cz/ekonomika/cesko-maximalni-ceny-paliv-ministerstvo-financi-rozhodnuti-ctvrtek.html",
       "dt": "2026-04-08T12:13:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "cenové",
+        "benzinu",
+        "ceny",
         "klesnou",
+        "maximální",
         "ministerstvo",
         "mírně",
+        "nafty",
         "oznámilo",
-        "paliv",
-        "stropy",
         "čtvrtek"
       ],
       "feedCategory": "zpravy",
@@ -423,32 +446,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Řidiči jsou zklamaní. Ceny nafty a benzinu na pumpách jsou stejné nebo i vyšší",
-      "url": "https://www.denik.cz/ekonomika/cerpaci-stanice-benzin-nafta-maximalni-cena.html",
-      "dt": "2026-04-08T08:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "nafty",
-        "nebo",
-        "pumpách",
-        "stejné",
-        "vyšší",
-        "zklamaní",
-        "řidiči"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "krimi",
       "contentType": "article",
       "title": "Po rizikovém domácím porodu zemřelo dítě. Trest pro matku potvrdil Nejvyšší soud",
@@ -467,6 +464,32 @@
         "soud",
         "trest",
         "zemřelo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Řidiči jsou zklamaní. Ceny nafty a benzinu na pumpách jsou stejné nebo i vyšší",
+      "url": "https://www.denik.cz/ekonomika/cerpaci-stanice-benzin-nafta-maximalni-cena.html",
+      "dt": "2026-04-08T08:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "nafty",
+        "nebo",
+        "pumpách",
+        "stejné",
+        "vyšší",
+        "zklamaní",
+        "řidiči"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -636,31 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kamionová přeprava v Česku roste. Vlaky vezly pětinu nákladu",
-      "url": "https://www.denik.cz/z_domova/cesko-kamionova-preprava-narust.html",
-      "dt": "2026-04-08T05:13:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "kamionová",
-        "nákladu",
-        "pětinu",
-        "přeprava",
-        "roste",
-        "vezly",
-        "vlaky",
-        "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -671,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29424,
+      "bytes": 29810,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -708,11 +706,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-08T12:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-08T13:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 1
+          "zpravy": 23,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -725,7 +723,11 @@
         },
         "sample_titles": [
           {
-            "title": "Cenové stropy paliv ve čtvrtek mírně klesnou, oznámilo ministerstvo",
+            "title": "OBRAZEM: Lednice a Velikonoční jarmark na kolonádě",
+            "publishedAt": "2026-04-08T13:00:00Z"
+          },
+          {
+            "title": "Maximální ceny benzinu a nafty ve čtvrtek mírně klesnou, oznámilo ministerstvo",
             "publishedAt": "2026-04-08T12:13:00Z"
           },
           {
@@ -751,10 +753,6 @@
           {
             "title": "Šance maďarské opozice rostou. Odhad naznačuje, že Tisza sahá po ústavní většině",
             "publishedAt": "2026-04-08T10:48:00Z"
-          },
-          {
-            "title": "Sanitka se v Jihlavě nedostala k pacientovi. Záchranáři s ním proto jeli vlakem",
-            "publishedAt": "2026-04-08T10:25:00Z"
           }
         ]
       }
