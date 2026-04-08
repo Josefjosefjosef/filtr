@@ -20125,6 +20125,189 @@ function buildVideoAsArticleCard(it) {
   let iuDsProfiles = [];
   let iuDsSaveTimer = 0;
   let iuDsLastFocus = null;
+  let iuDsPendingDeleteId = null;
+  let iuDsDeleteActionBusy = false;
+
+  function iuDsEnsureAtLeastOneProfileIfEmpty() {
+    if (iuDsProfiles.length > 0) return;
+    const t = iuDsNow();
+    iuDsProfiles.push({
+      id: iuDsNewId(),
+      label: "",
+      username: "",
+      password: "",
+      createdAt: t,
+      updatedAt: t,
+    });
+    iuDsPersist();
+  }
+
+  function iuDsDeleteConfirmEl() {
+    return document.getElementById("iuDsDeleteConfirm");
+  }
+
+  function iuDsDeleteConfirmIsOpen() {
+    const el = iuDsDeleteConfirmEl();
+    if (!el) return false;
+    if (el.hasAttribute("hidden")) return false;
+    try {
+      const st = getComputedStyle(el);
+      if (st.display === "none" || st.visibility === "hidden") return false;
+    } catch (_) {}
+    return true;
+  }
+
+  function iuDsCloseDeleteConfirm() {
+    const el = iuDsDeleteConfirmEl();
+    if (el) el.setAttribute("hidden", "");
+    iuDsPendingDeleteId = null;
+    iuDsDeleteActionBusy = false;
+  }
+
+  function iuDsOpenDeleteConfirm(profileId) {
+    const el = iuDsDeleteConfirmEl();
+    if (!el || !profileId) return;
+    iuDsPendingDeleteId = String(profileId);
+    el.removeAttribute("hidden");
+    try {
+      const cancel = document.getElementById("iuDsDeleteConfirmCancel");
+      const ok = document.getElementById("iuDsDeleteConfirmOk");
+      if (cancel) cancel.disabled = false;
+      if (ok) ok.disabled = false;
+      if (cancel && typeof cancel.focus === "function") cancel.focus();
+    } catch (_) {}
+  }
+
+  function iuDsInjectMobileTabletCssOnce() {
+    if (document.getElementById("iuDsMobileTabletCss")) return;
+    const s = document.createElement("style");
+    s.id = "iuDsMobileTabletCss";
+    s.textContent =
+      "@media (max-width:1024px){" +
+      "body.iu-modal-open #iuDsOverlay.iu-ds-overlay:not([hidden]){z-index:10039!important;inset:0!important;width:100%!important;height:100dvh!important;height:100vh!important}" +
+      "body.iu-modal-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open=\"1\"]:not([hidden]){position:fixed!important;inset:0!important;transform:none!important;width:100%!important;max-width:none!important;height:100dvh!important;height:100vh!important;max-height:none!important;padding:0!important;margin:0!important;box-sizing:border-box!important;overflow:hidden!important;z-index:10040!important}" +
+      "#iuDsPanel.iu-ds-panel .iu-ds-modal{width:100%!important;max-width:none!important;height:100%!important;max-height:none!important;min-height:0!important;border-radius:0!important;box-shadow:none!important}" +
+      "#iuDsPanel.iu-ds-panel .iu-ds-panelBody{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;touch-action:pan-y!important}" +
+      ".iu-ds-profile .iu-ds-f-label,.iu-ds-profile .iu-ds-f-user,.iu-ds-profile .iu-ds-f-pass,.iu-ds-open-btn,.iu-ds-toggle-pass,.iu-ds-delete,.iu-ds-add{font-size:16px!important}" +
+      "}";
+    try {
+      document.head.appendChild(s);
+    } catch (_) {}
+  }
+
+  function iuDsInjectDeleteConfirmCssOnce() {
+    if (document.getElementById("iuDsDeleteConfirmCss")) return;
+    const s = document.createElement("style");
+    s.id = "iuDsDeleteConfirmCss";
+    s.textContent =
+      ".iu-ds-deleteConfirm{position:absolute;inset:0;z-index:6;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box}" +
+      ".iu-ds-deleteConfirm:not([hidden]){display:flex!important}" +
+      ".iu-ds-deleteConfirm__backdrop{position:absolute;inset:0;background:rgba(15,23,42,.48);-webkit-tap-highlight-color:transparent}" +
+      ".iu-ds-deleteConfirm__box{position:relative;z-index:1;width:100%;max-width:400px;box-sizing:border-box;padding:16px 18px;border-radius:14px;background:#fff;box-shadow:0 18px 44px rgba(0,0,0,.22);max-height:min(70dvh,520px);overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}" +
+      ".iu-ds-deleteConfirm__title{margin:0 0 10px;font-size:17px;font-weight:700}" +
+      ".iu-ds-deleteConfirm__text{margin:0 0 16px;font-size:14px;line-height:1.45;color:rgba(11,27,43,.75)}" +
+      ".iu-ds-deleteConfirm__actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}" +
+      ".iu-ds-deleteConfirm__cancel,.iu-ds-deleteConfirm__ok{padding:10px 16px;font-size:16px;font-family:inherit;font-weight:600;border-radius:10px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}" +
+      ".iu-ds-deleteConfirm__cancel{border:1px solid rgba(0,0,0,.14);background:#f8fafc;color:#111}" +
+      ".iu-ds-deleteConfirm__ok{border:0;background:#b91c1c;color:#fff}" +
+      ".iu-ds-deleteConfirm__ok:disabled,.iu-ds-deleteConfirm__cancel:disabled{opacity:.55;cursor:not-allowed}";
+    try {
+      document.head.appendChild(s);
+    } catch (_) {}
+  }
+
+  function iuDsMountDeleteConfirm() {
+    iuDsInjectMobileTabletCssOnce();
+    iuDsInjectDeleteConfirmCssOnce();
+    const panel = document.getElementById("iuDsPanel");
+    const modal = panel ? panel.querySelector(".iu-ds-modal") : null;
+    if (!modal || document.getElementById("iuDsDeleteConfirm")) return;
+    const wrap = document.createElement("div");
+    wrap.id = "iuDsDeleteConfirm";
+    wrap.className = "iu-ds-deleteConfirm";
+    wrap.setAttribute("hidden", "");
+    wrap.setAttribute("role", "dialog");
+    wrap.setAttribute("aria-modal", "true");
+    wrap.setAttribute("aria-labelledby", "iuDsDeleteConfirmTitle");
+
+    const back = document.createElement("div");
+    back.className = "iu-ds-deleteConfirm__backdrop";
+    back.tabIndex = -1;
+
+    const box = document.createElement("div");
+    box.className = "iu-ds-deleteConfirm__box";
+
+    const title = document.createElement("div");
+    title.className = "iu-ds-deleteConfirm__title";
+    title.id = "iuDsDeleteConfirmTitle";
+    title.textContent = "Smazat profil?";
+
+    const text = document.createElement("p");
+    text.className = "iu-ds-deleteConfirm__text";
+    text.textContent =
+      "Opravdu chcete smazat tento profil? Údaje se odstraní pouze z tohoto prohlížeče na tomto zařízení.";
+
+    const actions = document.createElement("div");
+    actions.className = "iu-ds-deleteConfirm__actions";
+
+    const cancel = document.createElement("button");
+    cancel.type = "button";
+    cancel.id = "iuDsDeleteConfirmCancel";
+    cancel.className = "iu-ds-deleteConfirm__cancel";
+    cancel.textContent = "Zrušit";
+
+    const ok = document.createElement("button");
+    ok.type = "button";
+    ok.id = "iuDsDeleteConfirmOk";
+    ok.className = "iu-ds-deleteConfirm__ok";
+    ok.textContent = "Ano, smazat";
+
+    actions.appendChild(cancel);
+    actions.appendChild(ok);
+    box.appendChild(title);
+    box.appendChild(text);
+    box.appendChild(actions);
+    wrap.appendChild(back);
+    wrap.appendChild(box);
+    modal.appendChild(wrap);
+
+    back.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      iuDsCloseDeleteConfirm();
+    });
+    cancel.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      iuDsCloseDeleteConfirm();
+    });
+    ok.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      if (iuDsDeleteActionBusy) return;
+      const delId = iuDsPendingDeleteId;
+      if (!delId) {
+        iuDsCloseDeleteConfirm();
+        return;
+      }
+      iuDsDeleteActionBusy = true;
+      try {
+        if (ok) ok.disabled = true;
+        if (cancel) cancel.disabled = true;
+      } catch (_) {}
+      iuDsSyncFromDomIfOpen();
+      iuDsProfiles = iuDsProfiles.filter(function (r) {
+        return r.id !== delId;
+      });
+      iuDsPersist();
+      iuDsEnsureAtLeastOneProfileIfEmpty();
+      iuDsRender();
+      iuDsCloseDeleteConfirm();
+    });
+    wrap.addEventListener("click", function (e) {
+      e.stopPropagation();
+    });
+  }
 
   function iuDsIsPanelOpen() {
     const p = document.getElementById("iuDsPanel");
@@ -20275,7 +20458,7 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  function iuDsBuildProfileCard(p) {
+  function iuDsBuildProfileCard(p, isFirstProfile) {
     const card = document.createElement("div");
     card.className = "iu-ds-profile iu-ds-tool";
     card.setAttribute("data-profile-id", p.id);
@@ -20303,6 +20486,9 @@ function buildVideoAsArticleCard(it) {
       inp.setAttribute("spellcheck", "false");
       if (className === "iu-ds-f-label") inp.setAttribute("maxlength", "120");
       if (className === "iu-ds-f-user") inp.setAttribute("maxlength", "200");
+      if (className === "iu-ds-f-label" && isFirstProfile) {
+        inp.setAttribute("placeholder", "např. Osobní nebo OSVČ");
+      }
       wrap.appendChild(lab);
       wrap.appendChild(inp);
       return wrap;
@@ -20342,13 +20528,12 @@ function buildVideoAsArticleCard(it) {
     del.textContent = "Smazat profil";
     del.addEventListener("click", function (ev) {
       ev.preventDefault();
+      ev.stopPropagation();
+      if (iuDsDeleteConfirmIsOpen()) return;
       iuDsSyncFromDomIfOpen();
       const id = card.getAttribute("data-profile-id");
-      iuDsProfiles = iuDsProfiles.filter(function (r) {
-        return r.id !== id;
-      });
-      iuDsPersist();
-      iuDsRender();
+      if (!id) return;
+      iuDsOpenDeleteConfirm(id);
     });
 
     row.appendChild(toggle);
@@ -20371,7 +20556,7 @@ function buildVideoAsArticleCard(it) {
     if (!host) return;
     host.textContent = "";
     for (let i = 0; i < iuDsProfiles.length; i++) {
-      host.appendChild(iuDsBuildProfileCard(iuDsProfiles[i]));
+      host.appendChild(iuDsBuildProfileCard(iuDsProfiles[i], i === 0));
     }
     iuDsUpdateAddUi();
   }
@@ -20384,6 +20569,9 @@ function buildVideoAsArticleCard(it) {
     const panel = document.getElementById("iuDsPanel");
     const overlay = document.getElementById("iuDsOverlay");
     if (!panel || !overlay) return;
+    try {
+      iuDsCloseDeleteConfirm();
+    } catch (_) {}
     try {
       iuDsSyncFromDomIfOpen();
     } catch (_) {}
@@ -20420,8 +20608,11 @@ function buildVideoAsArticleCard(it) {
       iuDsLastFocus = null;
     }
     if (typeof window.ensureDatovkaModalInBody === "function") window.ensureDatovkaModalInBody();
-    iuDsLoadFromStorage();
-    iuDsRender();
+    try {
+      iuDsCloseDeleteConfirm();
+    } catch (_) {}
+
+    /* P0: show overlay shell synchronously (immediate open); then load + first-card init + render. */
     if (typeof window.iuSetElOpenVisible === "function") {
       try {
         window.iuSetElOpenVisible(overlay, true);
@@ -20436,6 +20627,11 @@ function buildVideoAsArticleCard(it) {
       document.body.classList.add("iu-modal-open");
     } catch (_) {}
     iuDsLockScroll(true);
+
+    iuDsLoadFromStorage();
+    iuDsEnsureAtLeastOneProfileIfEmpty();
+    iuDsRender();
+
     try {
       const host = document.getElementById("iuDsProfileListHost");
       const first = host ? host.querySelector("input, button.iu-ds-open-btn") : null;
@@ -20458,6 +20654,8 @@ function buildVideoAsArticleCard(it) {
     const panel = document.getElementById("iuDsPanel");
     const modalInner = panel ? panel.querySelector(".iu-ds-modal") : null;
 
+    iuDsMountDeleteConfirm();
+
     iuDsLoadFromStorage();
 
     if (addBtn) {
@@ -20479,12 +20677,22 @@ function buildVideoAsArticleCard(it) {
 
     if (overlay) {
       overlay.addEventListener("click", function () {
+        if (iuDsDeleteConfirmIsOpen()) {
+          iuDsCloseDeleteConfirm();
+          return;
+        }
         iuDatovkaCloseSurface();
       });
     }
     if (panel) {
       panel.addEventListener("click", function (e) {
-        if (e.target === panel) iuDatovkaCloseSurface();
+        if (e.target === panel) {
+          if (iuDsDeleteConfirmIsOpen()) {
+            iuDsCloseDeleteConfirm();
+            return;
+          }
+          iuDatovkaCloseSurface();
+        }
       });
     }
     if (modalInner) {
@@ -20499,6 +20707,10 @@ function buildVideoAsArticleCard(it) {
         if (e.key !== "Escape") return;
         if (!iuDsIsPanelOpen()) return;
         e.preventDefault();
+        if (iuDsDeleteConfirmIsOpen()) {
+          iuDsCloseDeleteConfirm();
+          return;
+        }
         iuDatovkaCloseSurface();
       },
       true
