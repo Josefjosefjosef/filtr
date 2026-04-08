@@ -1,18 +1,18 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-04-08T04:12:10.855239Z",
-  "run_time_utc": "2026-04-08T04:12:10.855239Z",
+  "generatedAt": "2026-04-08T04:27:12.485600Z",
+  "run_time_utc": "2026-04-08T04:27:12.485600Z",
   "summary": {
     "schemaVersion": 2,
-    "generatedAt": "2026-04-08T04:12:10.855239Z",
-    "run_time_utc": "2026-04-08T04:12:10.855239Z",
+    "generatedAt": "2026-04-08T04:27:12.485600Z",
+    "run_time_utc": "2026-04-08T04:27:12.485600Z",
     "sources_checked": 4,
-    "sources_with_new_items": 1,
+    "sources_with_new_items": 2,
     "total_raw_items": 20,
     "total_parsed_items": 20,
     "total_normalized_items": 20,
     "total_after_dedupe_items": 20,
-    "total_written_articles_feed_attributed": 14,
+    "total_written_articles_feed_attributed": 12,
     "written_by_section": {
       "zpravy": 235,
       "sport": 64,
@@ -23,14 +23,14 @@
     "newest_written_publishedAt": "2026-04-08T05:05:00Z",
     "top_sources_by_new_items": [
       {
-        "source_id": "fin_epenize",
-        "feed_url": "https://www.epenize.eu/rss",
-        "raw_feed_new_item_count": 20
+        "source_id": "vzd_betterlife",
+        "feed_url": "https://www.betterlife.cz/feed/",
+        "raw_feed_new_item_count": 10
       },
       {
-        "source_id": "ved_ct24_veda",
-        "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
-        "raw_feed_new_item_count": 0
+        "source_id": "zpr_ceskajustice",
+        "feed_url": "https://www.ceska-justice.cz/feed/",
+        "raw_feed_new_item_count": 10
       },
       {
         "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -45,13 +45,13 @@
     ],
     "top_sources_by_written_items": [
       {
-        "source_id": "ved_ct24_veda",
-        "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
-        "written_to_articles_json_count": 8
+        "source_id": "vzd_betterlife",
+        "feed_url": "https://www.betterlife.cz/feed/",
+        "written_to_articles_json_count": 6
       },
       {
-        "source_id": "fin_epenize",
-        "feed_url": "https://www.epenize.eu/rss",
+        "source_id": "zpr_ceskajustice",
+        "feed_url": "https://www.ceska-justice.cz/feed/",
         "written_to_articles_json_count": 6
       },
       {
@@ -67,9 +67,14 @@
     ],
     "top_drop_sources": [
       {
-        "source_id": "fin_epenize",
-        "feed_url": "https://www.epenize.eu/rss",
-        "raw_minus_written": 14
+        "source_id": "vzd_betterlife",
+        "feed_url": "https://www.betterlife.cz/feed/",
+        "raw_minus_written": 4
+      },
+      {
+        "source_id": "zpr_ceskajustice",
+        "feed_url": "https://www.ceska-justice.cz/feed/",
+        "raw_minus_written": 4
       },
       {
         "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -80,113 +85,37 @@
         "source_id": "yt_playlist_PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
         "raw_minus_written": 0
-      },
-      {
-        "source_id": "ved_ct24_veda",
-        "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
-        "raw_minus_written": -8
       }
     ]
   },
   "sources": [
     {
-      "source_id": "fin_epenize",
-      "registry_id": "fin_epenize",
-      "source_label": "ePeníze",
-      "feed_url": "https://www.epenize.eu/rss",
-      "topic": "finance",
-      "section_primary": "finance",
-      "generatedAt": "2026-04-08T04:12:10.855239Z",
-      "run_time_utc": "2026-04-08T04:12:10.855239Z",
-      "raw_feed_item_count": 20,
-      "raw_feed_new_item_count": 20,
-      "raw_feed_latest_publishedAt": "2026-04-07T23:00:18Z",
-      "ingested_item_count": 20,
-      "parsed_item_count": 20,
-      "normalized_item_count": 20,
-      "valid_publishedAt_count": 20,
-      "mapped_to_section_count": {
-        "zpravy": 0,
-        "sport": 0,
-        "finance": 20,
-        "zdravi": 0,
-        "cestovani": 0,
-        "other": 0
-      },
-      "release_eligible_count": 6,
-      "written_to_articles_json_count": 6,
-      "newest_written_publishedAt": "2026-04-07T23:00:18Z",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 0,
-        "dedupe": 0,
-        "other": 0
-      },
-      "sample_titles": [
-        {
-          "title": "Trump jako komiksový padouch: Když už i Alex Jones a MTG volají po jeho odstranění",
-          "publishedAt": "2026-04-07T23:00:18Z"
-        },
-        {
-          "title": "České firmy přicházejí o stovky hodin ročně. Řešení přitom existuje",
-          "publishedAt": "2026-04-07T12:27:53Z"
-        },
-        {
-          "title": "Dominik Hašek na síti: Strach Macinky a Babiše nezná mezí",
-          "publishedAt": "2026-04-07T06:21:50Z"
-        },
-        {
-          "title": "Vymazat Írán z mapy za jedinou noc: Chce snad Trump apokalypsu?",
-          "publishedAt": "2026-04-06T23:00:48Z"
-        },
-        {
-          "title": "Zkrácení konce školního roku. Rozlícení rodiče mají smůlu",
-          "publishedAt": "2026-04-05T23:00:12Z"
-        },
-        {
-          "title": "Ze školství mizí přísnost. Hry ale lenochy nic nenaučí",
-          "publishedAt": "2026-04-04T23:00:35Z"
-        },
-        {
-          "title": "Porušuje Turek zákon o střetu zájmů? Asi ano, ale nikdo to neřeší",
-          "publishedAt": "2026-04-04T07:59:08Z"
-        },
-        {
-          "title": "Přijímací zkoušky za rohem: Byznys, který tahá z rodičů peníze",
-          "publishedAt": "2026-04-03T23:00:50Z"
-        }
-      ]
-    },
-    {
-      "source_id": "ved_ct24_veda",
-      "registry_id": "ved_ct24_veda",
-      "source_label": "ČT24 / Věda",
-      "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
-      "topic": "veda",
-      "section_primary": "veda",
-      "generatedAt": "2026-04-08T04:12:10.855239Z",
-      "run_time_utc": "2026-04-08T04:12:10.855239Z",
-      "raw_feed_item_count": 0,
-      "raw_feed_new_item_count": 0,
-      "raw_feed_latest_publishedAt": "",
-      "ingested_item_count": 0,
-      "parsed_item_count": 0,
-      "normalized_item_count": 0,
-      "valid_publishedAt_count": 0,
+      "source_id": "vzd_betterlife",
+      "registry_id": "vzd_betterlife",
+      "source_label": "BetterLife (edu)",
+      "feed_url": "https://www.betterlife.cz/feed/",
+      "topic": "vzdelavani",
+      "section_primary": "vzdelavani",
+      "generatedAt": "2026-04-08T04:27:12.485600Z",
+      "run_time_utc": "2026-04-08T04:27:12.485600Z",
+      "raw_feed_item_count": 10,
+      "raw_feed_new_item_count": 10,
+      "raw_feed_latest_publishedAt": "2026-04-06T12:05:05Z",
+      "ingested_item_count": 10,
+      "parsed_item_count": 10,
+      "normalized_item_count": 10,
+      "valid_publishedAt_count": 10,
       "mapped_to_section_count": {
         "zpravy": 0,
         "sport": 0,
         "finance": 0,
         "zdravi": 0,
         "cestovani": 0,
-        "other": 0
+        "other": 10
       },
-      "release_eligible_count": 6,
-      "written_to_articles_json_count": 8,
-      "newest_written_publishedAt": "2026-04-03T05:00:00Z",
+      "release_eligible_count": 4,
+      "written_to_articles_json_count": 6,
+      "newest_written_publishedAt": "2026-04-06T12:05:05Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -196,7 +125,40 @@
         "dedupe": 0,
         "other": 0
       },
-      "sample_titles": []
+      "sample_titles": [
+        {
+          "title": "Vesničko má středisková: Původní herecké obsazení, smrtelná nehoda a film vznikl jako záchrana před finančním průšvihem",
+          "publishedAt": "2026-04-06T12:05:05Z"
+        },
+        {
+          "title": "Neobvyklé velikonoční tradice ve světě: Dobrovolné utrpení na kříži, hony na králíky a v hlavní roli kriminálky",
+          "publishedAt": "2026-04-06T09:22:52Z"
+        },
+        {
+          "title": "Velikonoční pondělí: Omlazení, kraslice, šupání prutem a pozor na polévání vodou",
+          "publishedAt": "2026-04-06T06:28:26Z"
+        },
+        {
+          "title": "Ulice: Adriana čelí minulosti a v případě Evžena se s reakcí hodně přepočítala. V ohrožení je i Prokop",
+          "publishedAt": "2026-04-05T15:58:16Z"
+        },
+        {
+          "title": "Velikonoce u sousedů: Slovenské svátky jara bodují divokým folklorem a úterní odplatou",
+          "publishedAt": "2026-04-05T09:58:14Z"
+        },
+        {
+          "title": "Boží hod velikonoční velí odložit veškerou práci. Zákaz úklidu a praní chrání rodinu před celoročním neštěstím",
+          "publishedAt": "2026-04-05T06:58:13Z"
+        },
+        {
+          "title": "Velikonoční beránek podle Laďky Něrgešové",
+          "publishedAt": "2026-04-04T13:35:07Z"
+        },
+        {
+          "title": "Příští týden v seriálu Ulice: Petr zahnaný do kouta, Vandu sžírá žárlivost, Vilma způsobí poprask a Adriana pod tlakem",
+          "publishedAt": "2026-04-04T09:28:53Z"
+        }
+      ]
     },
     {
       "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -205,8 +167,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-08T04:12:10.855239Z",
-      "run_time_utc": "2026-04-08T04:12:10.855239Z",
+      "generatedAt": "2026-04-08T04:27:12.485600Z",
+      "run_time_utc": "2026-04-08T04:27:12.485600Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -243,8 +205,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-08T04:12:10.855239Z",
-      "run_time_utc": "2026-04-08T04:12:10.855239Z",
+      "generatedAt": "2026-04-08T04:27:12.485600Z",
+      "run_time_utc": "2026-04-08T04:27:12.485600Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -273,6 +235,77 @@
         "other": 0
       },
       "sample_titles": []
+    },
+    {
+      "source_id": "zpr_ceskajustice",
+      "registry_id": "zpr_ceskajustice",
+      "source_label": "Česká justice",
+      "feed_url": "https://www.ceska-justice.cz/feed/",
+      "topic": "aktualne",
+      "section_primary": "zpravy",
+      "generatedAt": "2026-04-08T04:27:12.485600Z",
+      "run_time_utc": "2026-04-08T04:27:12.485600Z",
+      "raw_feed_item_count": 10,
+      "raw_feed_new_item_count": 10,
+      "raw_feed_latest_publishedAt": "2026-04-07T10:12:25Z",
+      "ingested_item_count": 10,
+      "parsed_item_count": 10,
+      "normalized_item_count": 10,
+      "valid_publishedAt_count": 10,
+      "mapped_to_section_count": {
+        "zpravy": 10,
+        "sport": 0,
+        "finance": 0,
+        "zdravi": 0,
+        "cestovani": 0,
+        "other": 0
+      },
+      "release_eligible_count": 6,
+      "written_to_articles_json_count": 6,
+      "newest_written_publishedAt": "2026-04-07T10:12:25Z",
+      "drop_counts": {
+        "missing_publishedAt": 0,
+        "invalid_publishedAt": 0,
+        "parser_drop": 0,
+        "section_remap": 0,
+        "release_gate": 0,
+        "dedupe": 0,
+        "other": 0
+      },
+      "sample_titles": [
+        {
+          "title": "Chybí přes 20 miliardy na bydlení. Hasíme akutní požáry, říká expert Motoristů",
+          "publishedAt": "2026-04-07T10:12:25Z"
+        },
+        {
+          "title": "Týrání dětí jako přestupek? Ústavní soud zasáhl a případ vrací na začátek",
+          "publishedAt": "2026-04-07T09:29:08Z"
+        },
+        {
+          "title": "Tejc promluvil o dusnu mezi státními zástupci. Trvá na zřízení inspekce",
+          "publishedAt": "2026-04-07T06:00:00Z"
+        },
+        {
+          "title": "Tejc připouští odklad slučování soudů. Ve hře jsou dvě varianty",
+          "publishedAt": "2026-04-07T04:30:00Z"
+        },
+        {
+          "title": "Stát vzkazuje soudům: „Přibrzděte.“ Nový zákon překresluje hranice švarcsystému",
+          "publishedAt": "2026-04-06T11:00:00Z"
+        },
+        {
+          "title": "Firmy utíkají z Evropy do USA. Nová pravidla je nezastaví, varují odborníci",
+          "publishedAt": "2026-04-06T04:30:00Z"
+        },
+        {
+          "title": "Daňové podvody a promlčení: Unikne Babiš francouzským vyšetřovatelům?",
+          "publishedAt": "2026-04-05T08:31:00Z"
+        },
+        {
+          "title": "Hejno slepic poničilo dům souseda. Majitelka se u soudu bránila tradicí",
+          "publishedAt": "2026-04-05T04:30:00Z"
+        }
+      ]
     }
   ]
 }
