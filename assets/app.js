@@ -20113,7 +20113,8 @@ function buildVideoAsArticleCard(it) {
 (function () {
   "use strict";
 
-  const IU_DS_LOGIN_URL = "https://obcan.portal.gov.cz/prihlaseni";
+  /** Single source of truth — oficiální vstup do služby (ne Portál občana). */
+  const DATOVKA_LOGIN_URL = "https://info.mojedatovaschranka.cz/info/cs/";
   const IU_DS_STORAGE_KEY = "infouzel_datovka_profiles_v1";
   const IU_DS_MAX = 10;
 
@@ -20241,6 +20242,26 @@ function buildVideoAsArticleCard(it) {
     iuDsPersist();
   }
 
+  function iuDsGetSafeLoginUrl() {
+    const raw = String(DATOVKA_LOGIN_URL || "").trim();
+    if (!raw || raw.indexOf("https://") !== 0) return "";
+    try {
+      const u = new URL(raw);
+      if (u.protocol !== "https:") return "";
+      return u.href;
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function iuDsOpenLoginInNewTab() {
+    const url = iuDsGetSafeLoginUrl();
+    if (!url) return;
+    try {
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (_) {}
+  }
+
   function iuDsUpdateAddUi() {
     const addBtn = document.getElementById("iuDsAddBtn");
     const note = document.getElementById("iuDsLimitNote");
@@ -20289,9 +20310,7 @@ function buildVideoAsArticleCard(it) {
 
     openBtn.addEventListener("click", function (ev) {
       ev.preventDefault();
-      try {
-        window.open(IU_DS_LOGIN_URL, "_blank", "noopener,noreferrer");
-      } catch (_) {}
+      iuDsOpenLoginInNewTab();
     });
 
     card.appendChild(openBtn);
