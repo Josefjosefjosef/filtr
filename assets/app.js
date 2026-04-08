@@ -19453,6 +19453,9 @@ function buildVideoAsArticleCard(it) {
         root.style.overflow = "hidden";
         body.style.overflow = "hidden";
         if (gap > 0) body.style.paddingRight = gap + "px";
+        try {
+          window.__iuRailShiftProbe = 0;
+        } catch (_) {}
       } else {
         root.style.overflow = "";
         body.style.overflow = "";
@@ -19462,6 +19465,9 @@ function buildVideoAsArticleCard(it) {
         } else {
           body.style.paddingRight = "";
         }
+        try {
+          window.__iuRailShiftProbe = 0;
+        } catch (_) {}
       }
     } catch (_) {}
   }
@@ -19477,7 +19483,7 @@ function buildVideoAsArticleCard(it) {
     }
     try {
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-ds-overlay-open");
     } catch (_) {}
   }
 
@@ -19604,7 +19610,7 @@ function buildVideoAsArticleCard(it) {
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-ds-overlay-open");
     } catch (_) {}
   }
 
@@ -19928,7 +19934,7 @@ function buildVideoAsArticleCard(it) {
         modal.setAttribute('hidden', '');
       }
       modal.classList.remove('is-open');
-      document.body.classList.remove('iu-modal-open');
+      document.body.classList.remove('iu-modal-open', 'iu-ds-overlay-open');
     }
   }, true);
 
@@ -20115,6 +20121,7 @@ function buildVideoAsArticleCard(it) {
 
   /** Single source of truth — oficiální vstup do služby (ne Portál občana). */
   const DATOVKA_LOGIN_URL = "https://info.mojedatovaschranka.cz/info/cs/";
+  const IU_DS_LABEL_PLACEHOLDER = "např. Osobní nebo OSVČ";
   const IU_DS_STORAGE_KEY = "infouzel_datovka_profiles_v1";
   const IU_DS_MAX = 10;
 
@@ -20188,7 +20195,7 @@ function buildVideoAsArticleCard(it) {
       "body.iu-modal-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open=\"1\"]:not([hidden]){position:fixed!important;inset:0!important;left:0!important;transform:none!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;width:100%!important;max-width:none!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;padding:0!important;margin:0!important;box-sizing:border-box!important;overflow:hidden!important;z-index:10040!important}" +
       "#iuDsPanel.iu-ds-panel .iu-ds-modal{flex:1 1 auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;overflow:hidden!important;border-radius:0!important;box-shadow:none!important}" +
       "#iuDsPanel.iu-ds-panel .iu-ds-panelHeader{flex:0 0 auto!important}" +
-      "#iuDsPanel.iu-ds-panel .iu-ds-panelBody{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;touch-action:pan-y!important}" +
+      "#iuDsPanel.iu-ds-panel .iu-ds-panelBody,#iuDsPanel.iu-ds-panel .iu-datovka-scroll-host{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;touch-action:pan-y!important}" +
       ".iu-ds-profile .iu-ds-f-label,.iu-ds-profile .iu-ds-f-user,.iu-ds-profile .iu-ds-f-pass,.iu-ds-open-btn,.iu-ds-toggle-pass,.iu-ds-delete,.iu-ds-add{font-size:16px!important}" +
       "}";
     try {
@@ -20437,13 +20444,28 @@ function buildVideoAsArticleCard(it) {
       return "";
     }
   }
+  try {
+    window.iuDsResolveDatovkaLoginUrl = function () {
+      return iuDsGetSafeLoginUrl();
+    };
+  } catch (_) {}
 
+  let iuDsOpenLoginBusy = false;
   function iuDsOpenLoginInNewTab() {
+    if (iuDsOpenLoginBusy) return;
     const url = iuDsGetSafeLoginUrl();
     if (!url) return;
+    iuDsOpenLoginBusy = true;
     try {
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (_) {}
+    try {
+      setTimeout(function () {
+        iuDsOpenLoginBusy = false;
+      }, 900);
+    } catch (_) {
+      iuDsOpenLoginBusy = false;
+    }
   }
 
   function iuDsUpdateAddUi() {
@@ -20487,8 +20509,8 @@ function buildVideoAsArticleCard(it) {
       inp.setAttribute("spellcheck", "false");
       if (className === "iu-ds-f-label") inp.setAttribute("maxlength", "120");
       if (className === "iu-ds-f-user") inp.setAttribute("maxlength", "200");
-      if (className === "iu-ds-f-label" && isFirstProfile) {
-        inp.setAttribute("placeholder", "např. Osobní nebo OSVČ");
+      if (className === "iu-ds-f-label") {
+        inp.setAttribute("placeholder", IU_DS_LABEL_PLACEHOLDER);
       }
       wrap.appendChild(lab);
       wrap.appendChild(inp);
@@ -20591,7 +20613,7 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
     iuDsLockScroll(false);
     try {
-      document.body.classList.remove("iu-modal-open");
+      document.body.classList.remove("iu-modal-open", "iu-ds-overlay-open");
     } catch (_) {}
     try {
       if (iuDsLastFocus && typeof iuDsLastFocus.focus === "function") iuDsLastFocus.focus();
@@ -20603,6 +20625,7 @@ function buildVideoAsArticleCard(it) {
     const panel = document.getElementById("iuDsPanel");
     const overlay = document.getElementById("iuDsOverlay");
     if (!panel || !overlay) return;
+    iuDsEnsureGuardClasses();
     try {
       iuDsLastFocus = document.activeElement;
     } catch (_) {
@@ -20625,7 +20648,7 @@ function buildVideoAsArticleCard(it) {
     }
     panel.dataset.open = "1";
     try {
-      document.body.classList.add("iu-modal-open");
+      document.body.classList.add("iu-modal-open", "iu-ds-overlay-open");
     } catch (_) {}
     iuDsLockScroll(true);
 
@@ -20637,8 +20660,24 @@ function buildVideoAsArticleCard(it) {
       const host = document.getElementById("iuDsProfileListHost");
       const first = host ? host.querySelector("input, button.iu-ds-open-btn") : null;
       const closer = panel.querySelector(".iu-ds-close");
-      if (first) first.focus();
-      else if (closer) closer.focus();
+      const fo = { preventScroll: true };
+      if (first && typeof first.focus === "function") {
+        try {
+          first.focus(fo);
+        } catch (_) {
+          try {
+            first.focus();
+          } catch (_) {}
+        }
+      } else if (closer && typeof closer.focus === "function") {
+        try {
+          closer.focus(fo);
+        } catch (_) {
+          try {
+            closer.focus();
+          } catch (_) {}
+        }
+      }
     } catch (_) {}
   }
 
@@ -20649,12 +20688,30 @@ function buildVideoAsArticleCard(it) {
     window.iuDatovkaCloseSurface = iuDatovkaCloseSurface;
   } catch (_) {}
 
+  function iuDsEnsureGuardClasses() {
+    try {
+      const ov = document.getElementById("iuDsOverlay");
+      const pan = document.getElementById("iuDsPanel");
+      const scrollHost = pan ? pan.querySelector(".iu-ds-panelBody") : null;
+      if (ov) ov.classList.add("iu-datovka-overlay-root");
+      if (pan) pan.classList.add("iu-datovka-overlay-root");
+      if (scrollHost) scrollHost.classList.add("iu-datovka-scroll-host");
+      const closer = pan ? pan.querySelector(".iu-ds-close") : null;
+      if (closer) closer.classList.add("iu-close-btn-38");
+      const calClose = document.querySelector("#iuCalendarOverlay .iu-calendarOverlay__close");
+      if (calClose) calClose.classList.add("iu-close-btn-38");
+    } catch (_) {}
+  }
+
   function iuDsInit() {
+    if (window.__iuDsInitOnce) return;
+    window.__iuDsInitOnce = true;
     const addBtn = document.getElementById("iuDsAddBtn");
     const overlay = document.getElementById("iuDsOverlay");
     const panel = document.getElementById("iuDsPanel");
     const modalInner = panel ? panel.querySelector(".iu-ds-modal") : null;
 
+    iuDsEnsureGuardClasses();
     iuDsMountDeleteConfirm();
 
     iuDsLoadFromStorage();

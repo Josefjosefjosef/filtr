@@ -2817,13 +2817,24 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   box-sizing: border-box;
 }
 
-#iu-aiOverlay, #iuDsOverlay.iu-ds-overlay {
+#iu-aiOverlay {
   position: fixed;
   inset: 0;
   left: 0;
   top: 0;
   width: 100vw;
   height: 100vh;
+  box-sizing: border-box;
+  background: rgba(0,0,0,.35);
+}
+#iuDsOverlay.iu-ds-overlay {
+  position: fixed;
+  inset: 0;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
   box-sizing: border-box;
   background: rgba(0,0,0,.35);
 }
@@ -2900,6 +2911,7 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
 }
 .iu-ds-panelHeader span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .iu-ds-panelBody{padding:14px 16px 16px;overflow-y:auto;overflow-x:hidden;flex:1 1 auto;min-height:0;-webkit-overflow-scrolling:touch}
+.iu-datovka-scroll-host{min-height:0}
 .iu-ds-helper{margin:0 0 10px;font-size:13px;line-height:1.45;color:var(--muted,rgba(11,27,43,0.6))}
 .iu-ds-status{margin:0 0 14px;font-size:13px;line-height:1.45;color:var(--muted,rgba(11,27,43,0.72));padding:10px 12px;border-radius:10px;background:rgba(31,75,153,0.06);border:1px solid rgba(31,75,153,0.12);word-break:break-word}
 .iu-ds-profile-list{display:flex;flex-direction:column;gap:14px;min-width:0}
@@ -2918,6 +2930,112 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
 .iu-ds-add{display:block;width:100%;margin-top:14px;padding:10px 14px;font-size:14px;font-family:inherit;border-radius:10px;border:1px dashed rgba(0,0,0,0.22);background:transparent;cursor:pointer;color:inherit;box-sizing:border-box}
 .iu-ds-add:disabled{opacity:.45;cursor:not-allowed}
 .iu-ds-limit-note{margin:8px 0 0;font-size:12px;color:var(--muted,rgba(11,27,43,0.55));text-align:center}
+
+/* Shared 38×38 close control — Datovka + calendar (explicit guard class) */
+button.iu-close-btn-38{
+  box-sizing:border-box;
+  width:38px;
+  min-width:38px;
+  max-width:38px;
+  height:38px;
+  min-height:38px;
+  max-height:38px;
+  flex-shrink:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  margin:0;
+  border:0;
+  border-radius:10px;
+  background:#EEF2F7;
+  color:#0F172A;
+  font-size:24px;
+  line-height:1;
+  font-family:inherit;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  transition:background-color .12s ease,opacity .12s ease;
+}
+button.iu-close-btn-38:hover{background:#E2E8F0}
+button.iu-close-btn-38:active{background:#CBD5E1}
+button.iu-close-btn-38:focus{outline:none}
+button.iu-close-btn-38:focus-visible{
+  outline:2px solid #1D4ED8;
+  outline-offset:2px;
+}
+
+/* Calendar header close: override injected toolbar styles when using shared class */
+#iuCalendarOverlay button.iu-calendarOverlay__close.iu-close-btn-38{
+  width:38px;
+  min-width:38px;
+  max-width:38px;
+  height:38px;
+  min-height:38px;
+  max-height:38px;
+  padding:0;
+  border:0;
+  border-radius:10px;
+  background:#EEF2F7;
+  color:#0F172A;
+  font-size:24px;
+  line-height:1;
+}
+
+/* Datovka: desktop full-viewport overlay + single scroll host (min-width 1025px matches mobile/tablet inject max 1024px) */
+@media (min-width: 1025px){
+  body.iu-modal-open #iuDsOverlay.iu-datovka-overlay-root:not([hidden]){
+    height:100dvh;
+    max-height:100dvh;
+    width:100%;
+  }
+  body.iu-modal-open #iuDsPanel.iu-datovka-overlay-root[data-open="1"]:not([hidden]){
+    position:fixed;
+    inset:0;
+    left:0;
+    top:0;
+    transform:none;
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    justify-content:flex-start;
+    width:100%;
+    max-width:none;
+    height:100dvh;
+    max-height:100dvh;
+    min-height:0;
+    padding:0;
+    margin:0;
+    overflow:hidden;
+    box-sizing:border-box;
+  }
+  body.iu-modal-open #iuDsPanel.iu-datovka-overlay-root .iu-ds-modal{
+    flex:1 1 auto;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    width:100%;
+    max-width:none;
+    height:auto;
+    max-height:none;
+    border-radius:0;
+    box-shadow:none;
+  }
+  body.iu-modal-open #iuDsPanel.iu-datovka-overlay-root .iu-ds-panelHeader{
+    flex:0 0 auto;
+    padding:14px 16px;
+  }
+  body.iu-modal-open #iuDsPanel.iu-datovka-overlay-root .iu-datovka-scroll-host{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-y:contain;
+    padding:14px 16px 16px;
+  }
+}
 
 .iu-aiPanelHeaderActions{
   display: flex;
