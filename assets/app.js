@@ -23917,9 +23917,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       "  <div class=\"iu-mojeSluzbyBankaAll\"><h3>VŠECHNY BANKY</h3>",
       "  <input type=\"text\" class=\"iu-mojeSluzbySearch\" placeholder=\"Hledat banku\" data-bank-search />",
       "  <div class=\"iuBanksGrid iu-mojeSluzbyAllGrid\" data-all-grid role=\"list\"></div></div>",
-      "  <div class=\"iu-mojeSluzbyBankaCustom\"><h3>Přidat vlastní banku</h3>",
-      "  <input type=\"text\" placeholder=\"Název\" data-custom-name /><input type=\"text\" placeholder=\"URL (https://...)\" data-custom-url />",
-      "  <button type=\"button\" data-custom-add>Přidat</button></div>",
+      "  <div class=\"iu-mojeSluzbyBankaCustom iu-ibBankCustomForm\" data-iu-ib-custom-form=\"1\"><h3>Přidat vlastní banku</h3>",
+      "  <input type=\"text\" class=\"iu-ibBankCustomName\" placeholder=\"Název\" data-custom-name /><input type=\"text\" class=\"iu-ibBankCustomUrl\" placeholder=\"URL (https://...)\" data-custom-url />",
+      "  <button type=\"button\" class=\"iu-ibBankCustomAdd\" data-custom-add>Přidat</button></div>",
       "</div>"
     ].join("");
     container.innerHTML = html;
@@ -23941,7 +23941,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         var btns = editMode ? "<span class=\"iu-mojeSluzbyMoveBtns\"><button type=\"button\" data-move-left data-idx=\"" + idx + "\" aria-label=\"Doleva\">←</button><button type=\"button\" data-move-right data-idx=\"" + idx + "\" aria-label=\"Doprava\">→</button></span>" : "";
         var loginUrl = bank.loginUrl || bank.url;
         return "<div class=\"iuBankCard\" data-fav-id=\"" + esc(id) + "\" data-bank-id=\"" + esc(id) + "\">" + btns +
-          "<button type=\"button\" class=\"iuBankCardMain\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\" aria-hidden=\"true\"><svg class=\"iu-bank-building-svg\" viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" focusable=\"false\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 21h18\"/><path d=\"M5 21V7l7-4v18\"/><path d=\"M19 21V11l-7-4\"/><path d=\"M9 9v.01\"/><path d=\"M9 12v.01\"/><path d=\"M9 15v.01\"/><path d=\"M9 18v.01\"/></svg></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
+          "<button type=\"button\" class=\"iuBankCardMain iu-ibBankCardClickTop\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\" aria-hidden=\"true\"><svg class=\"iu-bank-building-svg\" viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" focusable=\"false\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 21h18\"/><path d=\"M5 21V7l7-4v18\"/><path d=\"M19 21V11l-7-4\"/><path d=\"M9 9v.01\"/><path d=\"M9 12v.01\"/><path d=\"M9 15v.01\"/><path d=\"M9 18v.01\"/></svg></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
           "<button type=\"button\" data-bank-id=\"" + esc(id) + "\" class=\"iuBankMiniActionBtn iuBankRemove\">ODEBRAT</button></div>";
       }).join("");
     }
@@ -23954,7 +23954,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       allGrid.innerHTML = otherBanks.map(function(bank) {
         var loginUrl = bank.loginUrl || bank.url;
         return "<div class=\"iuBankCard\" data-bank-id=\"" + esc(bank.id) + "\">" +
-          "<button type=\"button\" class=\"iuBankCardMain\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\" aria-hidden=\"true\"><svg class=\"iu-bank-building-svg\" viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" focusable=\"false\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 21h18\"/><path d=\"M5 21V7l7-4v18\"/><path d=\"M19 21V11l-7-4\"/><path d=\"M9 9v.01\"/><path d=\"M9 12v.01\"/><path d=\"M9 15v.01\"/><path d=\"M9 18v.01\"/></svg></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
+          "<button type=\"button\" class=\"iuBankCardMain iu-ibBankCardClickTop\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\" aria-hidden=\"true\"><svg class=\"iu-bank-building-svg\" viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" focusable=\"false\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 21h18\"/><path d=\"M5 21V7l7-4v18\"/><path d=\"M19 21V11l-7-4\"/><path d=\"M9 9v.01\"/><path d=\"M9 12v.01\"/><path d=\"M9 15v.01\"/><path d=\"M9 18v.01\"/></svg></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
           "<button type=\"button\" data-bank-id=\"" + esc(bank.id) + "\" class=\"iuBankMiniActionBtn iuBankAdd\">PŘIDAT</button></div>";
       }).join("");
     }
