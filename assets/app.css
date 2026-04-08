@@ -4573,14 +4573,6 @@ body.iu-home .iu-leftRail{
   color: currentColor;
   flex-shrink: 0;
 }
-.iuHomeHexIcon img{
-  width: 48px;
-  height: 48px;
-  display: block;
-  object-fit: cover;
-  border-radius: 10px;
-  flex-shrink: 0;
-}
 .iuHomeHexLabel{
   line-height: 1.15;
   max-width: 170px;
@@ -9906,10 +9898,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     background: var(--iu-frame-bg, #f5f5f5);
     box-shadow: 0 1px 2px rgba(0,0,0,.06);
   }
-  #iuMobileGatePanelNav .iu-leftNavItem.iu-has-image{
-    padding: 0 !important;
-    overflow: hidden !important;
-  }
   
   #iuMobileGatePanelTools .mindMenu-scroll-wrapper{
     width: 100% !important;
@@ -10148,10 +10136,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     border-radius: 10px;
     background: var(--iu-frame-bg, #f5f5f5);
     box-shadow: 0 1px 2px rgba(0,0,0,.06);
-  }
-  .iu-mobileFirstBlock .iu-leftNavItem.iu-has-image{
-    padding: 0 !important;
-    overflow: hidden !important;
   }
   .iu-mobileFirstBlock .iuLeftRailSectionTitle{
     font-size: 11px;
@@ -17194,48 +17178,6 @@ html, body,
   stroke-width: 2.6;
 }
 
-/* P0: weather rail tile — scoped .iu-has-image only (no :has on this feature) */
-.iu-leftNavItem.iu-has-image{
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  padding: 0;
-}
-
-.iu-leftNavItem.iu-has-image .iu-tile-image{
-  width: 100%;
-  height: 72px;
-  flex: 0 0 72px;
-  overflow: hidden;
-}
-
-.iu-leftNavItem.iu-has-image .iu-tile-image img{
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-.iu-leftNavItem.iu-has-image .iu-tile-text{
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 6px 6px 8px;
-  font-size: 13px;
-  line-height: 1.15;
-  min-height: 28px;
-  color: inherit;
-}
-
-.iu-leftNav .iu-leftNavItem.iu-has-image:hover .iu-tile-text,
-.iu-leftNav .iu-leftNavItem.iu-has-image:focus-visible .iu-tile-text,
-.iu-leftNav .iu-leftNavItem.iu-has-image.is-active .iu-tile-text{
-  color: var(--iuNavAccent, currentColor);
-  font-weight: 700;
-}
-
 .iu-leftNav .iu-leftNavIcon,
 .iu-leftNav .iu-leftNavItem{
   transform: none !important;
@@ -17586,21 +17528,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
   margin: 0 !important;
 }
 
-#iuLeftRail .iu-leftNavItem.iu-has-image .iu-tile-text{
-  flex: 1 1 auto !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  padding: 6px 6px 8px !important;
-  font-size: 13px !important;
-  line-height: 1.15 !important;
-  min-height: 28px !important;
-  margin: 0 !important;
-  letter-spacing: .2px !important;
-  font-weight: 700 !important;
-}
-
 #iuLeftRail .iu-leftNavItem,
 #iuLeftRail .iu-leftNav > a.iu-leftNavItem{
   display: flex !important;
@@ -17609,14 +17536,6 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
   justify-content: center !important;
   padding: 12px 10px !important;
   gap: 0 !important;
-}
-
-#iuLeftRail .iu-leftNav > a.iu-leftNavItem.iu-has-image{
-  justify-content: flex-start !important;
-  align-items: stretch !important;
-  gap: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
 }
 
 #iuLeftRail .iu-leftNavItem:hover .iu-leftNavIcon{
@@ -17666,8 +17585,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem:focus-visible{
 #iuLeftRail .iu-leftNavIcon,
 #iuLeftRail .iu-leftNavIcon svg,
 #iuLeftRail .iu-leftNavIcon i,
-#iuLeftRail .iu-leftNavLabel,
-#iuLeftRail .iu-leftNavItem.iu-has-image .iu-tile-text{
+#iuLeftRail .iu-leftNavLabel{
   color: #CBD5E1 !important;
   fill: currentColor !important;
   opacity: 1 !important;
@@ -17747,7 +17665,7 @@ body #iuLeftRail{
   outline-offset: -1px;
 }
 
-.iu-leftNavItem:not(.iu-has-image) img,
+.iu-leftNavItem img,
 .iu-leftNavItem svg,
 .iu-leftNavItem i,
 .iu-leftNavItem .iuNavIcon {
@@ -17771,7 +17689,7 @@ body #iuLeftRail{
   box-shadow: none !important;
 }
 
-.iu-leftNavItem:not(.iu-has-image):hover img,
+.iu-leftNavItem:hover img,
 .iu-leftNavItem:hover svg,
 .iu-leftNavItem:hover i {
   filter: grayscale(100%) brightness(1.8) !important;
@@ -18116,15 +18034,8 @@ header#topbarWrap.topbar-new.iuTopbar::after{
 #iuLeftRail .iuMyUzelLabel{
   color: var(--iuTopbarBrandColor) !important;
 }
-#iuLeftRail .iu-leftNav .iu-leftNavLabel,
-#iuLeftRail .iu-leftNav .iu-leftNavItem.iu-has-image .iu-tile-text{
+#iuLeftRail .iu-leftNav .iu-leftNavLabel{
   color: var(--iuTopbarBrandColor) !important;
-}
-
-#iuLeftRail .iu-leftNav .iu-leftNavItem.iu-has-image:hover .iu-tile-text,
-#iuLeftRail .iu-leftNav .iu-leftNavItem.iu-has-image:focus-visible .iu-tile-text,
-#iuLeftRail .iu-leftNav .iu-leftNavItem.iu-has-image.is-active .iu-tile-text{
-  color: var(--iuNavAccent, currentColor) !important;
 }
 
 body #iuLeftRail .iu-leftNav .iu-leftNavItem{
@@ -18313,7 +18224,6 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   color: #2563EB;
 }
 #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"] .iu-leftNavLabel,
-#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"] .iu-tile-text,
 #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="mapy"] .iu-leftNavLabel,
 #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="jr"] .iu-leftNavLabel,
 #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavLabel,
