@@ -23786,7 +23786,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         var name = String(s.name || "").trim().slice(0, 30);
         var url = normalizeBakalariUrl(s.url || "");
         if (!name && !String(s.url || "").trim()) continue;
-        out.push({ id: "mig_" + t + "_" + i, name: name, url: url, username: "", password: "" });
+        out.push({ id: "mig_" + t + "_" + i, name: name, url: url, username: "", password: "", locked: false });
       }
       if (out.length) {
         try { localStorage.setItem(BAKALARI_PROFILES_KEY, JSON.stringify(out)); } catch (_) {}
@@ -23808,7 +23808,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           name: String(p.name || "").slice(0, 30),
           url: String(p.url || ""),
           username: String(p.username || ""),
-          password: String(p.password || "")
+          password: String(p.password || ""),
+          locked: p.locked === true
         };
       }).filter(function (p) { return !isBakalariProfileEmpty(p); });
     } catch (_) {}
@@ -24171,16 +24172,32 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function renderBakalariModal(container) {
+    var PH_NAME = "Jméno dítěte";
+    var PH_URL = "https://...";
+    var PH_USER = "Uživatelské jméno";
+    var PH_PASS = "Heslo";
+
     var profiles = getBakalariProfilesFromStorage().slice();
     if (!profiles.length) {
-      profiles = [{ id: "bak_" + Date.now(), name: "", url: "", username: "", password: "" }];
+      profiles = [{ id: "bak_" + Date.now(), name: "", url: "", username: "", password: "", locked: false }];
     }
 
     var rootHtml = [
       "<div class=\"iu-mojeSluzbyBakalari bakalari-root\">",
+      "  <p class=\"bakalari-privacy-note\" data-bakalari-privacy>Údaje se ukládají pouze ve vašem zařízení (prohlížeči). Nikam se neposílají.</p>",
       "  <div class=\"bakalari-cards-container\" data-bakalari-cards></div>",
       "  <button type=\"button\" class=\"bakalari-add-another\" data-bakalari-add>Přidat další</button>",
       "  <div class=\"bakalari-global-feedback\" data-bakalari-global-feedback aria-live=\"polite\"></div>",
+      "  <div class=\"bakalari-delete-layer\" hidden data-bakalari-delete-layer role=\"presentation\">",
+      "    <div class=\"bakalari-delete-dialog\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"bakalari-delete-title\">",
+      "      <p id=\"bakalari-delete-title\" class=\"bakalari-delete-title\">Opravdu chcete kartu odstranit?</p>",
+      "      <p class=\"bakalari-delete-hint\" data-bakalari-delete-hint></p>",
+      "      <div class=\"bakalari-delete-actions\">",
+      "        <button type=\"button\" class=\"bakalari-btn bakalari-btn--danger\" data-bakalari-delete-confirm>Odstranit</button>",
+      "        <button type=\"button\" class=\"bakalari-btn bakalari-btn--ghost\" data-bakalari-delete-cancel>Zrušit</button>",
+      "      </div>",
+      "    </div>",
+      "  </div>",
       "</div>"
     ].join("");
     container.innerHTML = rootHtml;
@@ -24188,6 +24205,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     var cardsEl = container.querySelector("[data-bakalari-cards]");
     var addAnotherBtn = container.querySelector("[data-bakalari-add]");
     var globalFb = container.querySelector("[data-bakalari-global-feedback]");
+    var deleteLayer = container.querySelector("[data-bakalari-delete-layer]");
+    var deleteHint = container.querySelector("[data-bakalari-delete-hint]");
+    var deleteConfirmBtn = container.querySelector("[data-bakalari-delete-confirm]");
+    var deleteCancelBtn = container.querySelector("[data-bakalari-delete-cancel]");
+    var pendingDeleteCardEl = null;
 
     function showGlobalFb(text, ms) {
       if (!globalFb) return;
@@ -24199,6 +24221,12 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       }
     }
 
+    function stripPlaceholder(val, ph) {
+      var t = String(val || "").trim();
+      if (ph && t === ph) return "";
+      return t;
+    }
+
     function readCardFromDom(cardEl) {
       var id = cardEl.getAttribute("data-bakalari-id") || "";
       var nameInp = cardEl.querySelector("[data-field=\"name\"]");
@@ -24207,24 +24235,42 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       var passInp = cardEl.querySelector("[data-field=\"password\"]");
       return {
         id: id,
-        name: (nameInp && nameInp.value) ? nameInp.value.trim().slice(0, 30) : "",
-        url: (urlInp && urlInp.value) ? urlInp.value.trim() : "",
-        username: (userInp && userInp.value) ? userInp.value.trim() : "",
-        password: (passInp && passInp.value) ? passInp.value : ""
+        name: stripPlaceholder(nameInp && nameInp.value, PH_NAME).slice(0, 30),
+        url: stripPlaceholder(urlInp && urlInp.value, PH_URL),
+        username: stripPlaceholder(userInp && userInp.value, PH_USER),
+        password: stripPlaceholder(passInp && passInp.value, PH_PASS)
       };
     }
 
     function profileFromCardEl(cardEl) {
       var o = readCardFromDom(cardEl);
       o.url = normalizeBakalariUrl(o.url);
+      o.locked = cardEl.classList.contains("bakalari-card--locked");
       return o;
+    }
+
+    function applyCardLock(cardEl, locked) {
+      cardEl.classList.toggle("bakalari-card--locked", !!locked);
+      var inputs = cardEl.querySelectorAll(".bakalari-input");
+      for (var i = 0; i < inputs.length; i++) {
+        if (locked) inputs[i].setAttribute("readonly", "readonly");
+        else inputs[i].removeAttribute("readonly");
+      }
+      var passInp = cardEl.querySelector("[data-field=\"password\"]");
+      var togglePw = cardEl.querySelector("[data-toggle-password]");
+      if (togglePw) togglePw.disabled = false;
+      if (passInp && locked && passInp.getAttribute("type") === "text") {
+        passInp.setAttribute("type", "password");
+        if (togglePw) togglePw.textContent = "Zobrazit heslo";
+      }
     }
 
     function setOpenButtonState(cardEl) {
       var urlInp = cardEl.querySelector("[data-field=\"url\"]");
       var openBtn = cardEl.querySelector("[data-bakalari-open]");
       if (!openBtn || !urlInp) return;
-      var ok = isValidBakalariUrl(urlInp.value);
+      var raw = stripPlaceholder(urlInp.value, PH_URL);
+      var ok = isValidBakalariUrl(raw);
       openBtn.disabled = !ok;
       openBtn.setAttribute("aria-disabled", ok ? "false" : "true");
     }
@@ -24249,9 +24295,70 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (addAnotherBtn) addAnotherBtn.disabled = n >= BAKALARI_MAX_CARDS;
     }
 
+    function showDeleteLayer(cardEl) {
+      pendingDeleteCardEl = cardEl;
+      var all = cardsEl.querySelectorAll(".bakalari-card");
+      if (deleteHint) {
+        deleteHint.textContent = all.length <= 1
+          ? "Zbude jedna prázdná karta (údaje se vymažou)."
+          : "Karta bude trvale odebrána z tohoto zařízení.";
+      }
+      if (deleteLayer) deleteLayer.hidden = false;
+    }
+
+    function hideDeleteLayer() {
+      pendingDeleteCardEl = null;
+      if (deleteLayer) deleteLayer.hidden = true;
+    }
+
+    function runPendingDelete() {
+      var cardEl = pendingDeleteCardEl;
+      hideDeleteLayer();
+      if (!cardEl) return;
+      var all = cardsEl.querySelectorAll(".bakalari-card");
+      if (all.length <= 1) {
+        var inpName = cardEl.querySelector("[data-field=\"name\"]");
+        var inpUrl = cardEl.querySelector("[data-field=\"url\"]");
+        var inpUser = cardEl.querySelector("[data-field=\"username\"]");
+        var inpPass = cardEl.querySelector("[data-field=\"password\"]");
+        if (inpName) inpName.value = "";
+        if (inpUrl) inpUrl.value = "";
+        if (inpUser) inpUser.value = "";
+        if (inpPass) { inpPass.value = ""; inpPass.setAttribute("type", "password"); }
+        try {
+          cardEl.setAttribute("data-bakalari-id", "bak_" + Date.now());
+        } catch (_) {}
+        applyCardLock(cardEl, false);
+        setOpenButtonState(cardEl);
+        setBakalariProfilesToStorage([]);
+        showGlobalFb("Karta vyčištěna.", 1800);
+        return;
+      }
+      cardEl.parentNode.removeChild(cardEl);
+      persistAllFromDom();
+      updateAddButtonState();
+    }
+
+    function bakalariCopyToClipboard(text) {
+      var t = String(text || "");
+      try {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+          var p = navigator.clipboard.writeText(t);
+          if (p && typeof p.then === "function") {
+            p.catch(function () {});
+          }
+          return true;
+        }
+      } catch (_) {}
+      return false;
+    }
+
     function bindCard(cardEl) {
       var urlInp = cardEl.querySelector("[data-field=\"url\"]");
       var openBtn = cardEl.querySelector("[data-bakalari-open]");
+      var passInp = cardEl.querySelector("[data-field=\"password\"]");
+      var userInp = cardEl.querySelector("[data-field=\"username\"]");
+      var togglePw = cardEl.querySelector("[data-toggle-password]");
 
       if (urlInp) {
         urlInp.addEventListener("input", function () { setOpenButtonState(cardEl); });
@@ -24260,9 +24367,32 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
       if (openBtn) {
         openBtn.addEventListener("click", function () {
-          var u = urlInp ? urlInp.value : "";
-          if (!isValidBakalariUrl(u)) return;
-          openBakalariUrlSafe(u);
+          var raw = urlInp ? stripPlaceholder(urlInp.value, PH_URL) : "";
+          if (!isValidBakalariUrl(raw)) return;
+          openBakalariUrlSafe(raw);
+        });
+      }
+
+      if (togglePw && passInp) {
+        togglePw.addEventListener("click", function () {
+          var isPw = passInp.getAttribute("type") === "password";
+          passInp.setAttribute("type", isPw ? "text" : "password");
+          togglePw.textContent = isPw ? "Skrýt heslo" : "Zobrazit heslo";
+        });
+      }
+
+      var copyUser = cardEl.querySelector("[data-copy-username]");
+      if (copyUser && userInp) {
+        copyUser.addEventListener("click", function () {
+          var v = stripPlaceholder(userInp.value, PH_USER);
+          if (v) bakalariCopyToClipboard(v);
+        });
+      }
+      var copyPass = cardEl.querySelector("[data-copy-password]");
+      if (copyPass && passInp) {
+        copyPass.addEventListener("click", function () {
+          var v = stripPlaceholder(passInp.value, PH_PASS);
+          if (v) bakalariCopyToClipboard(v);
         });
       }
 
@@ -24278,6 +24408,16 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
             }
             return;
           }
+          var urlRaw = stripPlaceholder(urlInp ? urlInp.value : "", PH_URL);
+          if (urlRaw && !isValidBakalariUrl(urlRaw)) {
+            var msgUrl = cardEl.querySelector("[data-bakalari-card-feedback]");
+            if (msgUrl) {
+              msgUrl.textContent = "Zadejte platnou adresu URL (https://…).";
+              window.setTimeout(function () { if (msgUrl.textContent.indexOf("platnou") !== -1) msgUrl.textContent = ""; }, 2800);
+            }
+            return;
+          }
+          applyCardLock(cardEl, true);
           persistAllFromDom();
           showGlobalFb("Uloženo.", 2200);
           var cf = cardEl.querySelector("[data-bakalari-card-feedback]");
@@ -24288,13 +24428,15 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       var editBtn = cardEl.querySelector("[data-action=\"edit\"]");
       if (editBtn) {
         editBtn.addEventListener("click", function () {
+          applyCardLock(cardEl, false);
+          persistAllFromDom();
           cardEl.classList.remove("bakalari-card--highlight");
           void cardEl.offsetWidth;
           cardEl.classList.add("bakalari-card--highlight");
           window.setTimeout(function () { cardEl.classList.remove("bakalari-card--highlight"); }, 600);
           var urlField = cardEl.querySelector("[data-field=\"url\"]");
           var first = cardEl.querySelector("[data-field=\"name\"]");
-          var target = (urlField && !String(urlField.value || "").trim()) ? urlField : (first || urlField);
+          var target = (urlField && !String(stripPlaceholder(urlField.value, PH_URL) || "").trim()) ? urlField : (first || urlField);
           if (target) {
             try { target.focus(); } catch (_) {}
           }
@@ -24304,41 +24446,33 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       var delBtn = cardEl.querySelector("[data-action=\"delete\"]");
       if (delBtn) {
         delBtn.addEventListener("click", function () {
-          var all = cardsEl.querySelectorAll(".bakalari-card");
-          if (all.length <= 1) {
-            var inpName = cardEl.querySelector("[data-field=\"name\"]");
-            var inpUrl = cardEl.querySelector("[data-field=\"url\"]");
-            var inpUser = cardEl.querySelector("[data-field=\"username\"]");
-            var inpPass = cardEl.querySelector("[data-field=\"password\"]");
-            if (inpName) inpName.value = "";
-            if (inpUrl) inpUrl.value = "";
-            if (inpUser) inpUser.value = "";
-            if (inpPass) inpPass.value = "";
-            try {
-              cardEl.setAttribute("data-bakalari-id", "bak_" + Date.now());
-            } catch (_) {}
-            setOpenButtonState(cardEl);
-            setBakalariProfilesToStorage([]);
-            showGlobalFb("Karta vyčištěna.", 1800);
-            return;
-          }
-          cardEl.parentNode.removeChild(cardEl);
-          persistAllFromDom();
-          updateAddButtonState();
+          showDeleteLayer(cardEl);
         });
       }
     }
 
     function cardHtml(p) {
       var id = esc(p.id);
+      var locked = !!p.locked;
+      var ro = locked ? " readonly" : "";
+      var nameV = p.name ? esc(p.name) : "";
+      var urlV = p.url ? esc(p.url) : "";
+      var userV = p.username ? esc(p.username) : "";
+      var passV = p.password ? esc(p.password) : "";
+      var lockClass = locked ? " bakalari-card--locked" : "";
       return (
-        "<section class=\"bakalari-card\" data-bakalari-id=\"" + id + "\">" +
+        "<section class=\"bakalari-card" + lockClass + "\" data-bakalari-id=\"" + id + "\">" +
         "  <button type=\"button\" class=\"bakalari-open-btn\" data-bakalari-open disabled aria-disabled=\"true\">Otevřít Bakaláře</button>" +
         "  <div class=\"bakalari-fields\">" +
-        "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Jméno dítěte</span><input type=\"text\" class=\"bakalari-input\" data-field=\"name\" maxlength=\"30\" autocomplete=\"name\" value=\"" + esc(p.name) + "\" placeholder=\"Jméno\" /></label>" +
-        "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Odkaz na Bakaláře</span><input type=\"url\" class=\"bakalari-input\" data-field=\"url\" inputmode=\"url\" autocomplete=\"url\" value=\"" + esc(p.url) + "\" placeholder=\"https://…\" /></label>" +
-        "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Uživatelské jméno (volitelné)</span><input type=\"text\" class=\"bakalari-input\" data-field=\"username\" autocomplete=\"username\" value=\"" + esc(p.username) + "\" /></label>" +
-        "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Heslo (volitelné)</span><input type=\"password\" class=\"bakalari-input\" data-field=\"password\" autocomplete=\"current-password\" value=\"" + esc(p.password) + "\" /></label>" +
+        "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Jméno dítěte</span><input type=\"text\" class=\"bakalari-input\" data-field=\"name\" maxlength=\"30\" autocomplete=\"name\"" + ro + " value=\"" + nameV + "\" placeholder=\"" + esc(PH_NAME) + "\" /></label>" +
+        "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Odkaz na Bakaláře</span><input type=\"text\" class=\"bakalari-input\" data-field=\"url\" inputmode=\"url\" autocomplete=\"url\"" + ro + " value=\"" + urlV + "\" placeholder=\"" + esc(PH_URL) + "\" /></label>" +
+        "    <div class=\"bakalari-field\"><span class=\"bakalari-label\">Uživatelské jméno (volitelné)</span><div class=\"bakalari-inline-row\">" +
+        "<input type=\"text\" class=\"bakalari-input\" data-field=\"username\" autocomplete=\"username\"" + ro + " value=\"" + userV + "\" placeholder=\"" + esc(PH_USER) + "\" />" +
+        "<button type=\"button\" class=\"bakalari-btn bakalari-btn--mini bakalari-btn--ghost\" data-copy-username>Kopírovat</button></div></div>" +
+        "    <div class=\"bakalari-field\"><span class=\"bakalari-label\">Heslo (volitelné)</span><div class=\"bakalari-inline-row\">" +
+        "<input type=\"password\" class=\"bakalari-input\" data-field=\"password\" autocomplete=\"current-password\"" + ro + " value=\"" + passV + "\" placeholder=\"" + esc(PH_PASS) + "\" />" +
+        "<button type=\"button\" class=\"bakalari-btn bakalari-btn--mini bakalari-btn--ghost\" data-copy-password>Kopírovat</button></div>" +
+        "<button type=\"button\" class=\"bakalari-btn bakalari-btn--ghost bakalari-toggle-pw\" data-toggle-password>Zobrazit heslo</button></div>" +
         "  </div>" +
         "  <div class=\"bakalari-card-actions\">" +
         "    <button type=\"button\" class=\"bakalari-btn bakalari-btn--secondary\" data-action=\"save\">Uložit</button>" +
@@ -24353,10 +24487,25 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     function renderAllCards() {
       cardsEl.innerHTML = profiles.map(function (p) { return cardHtml(p); }).join("");
       cardsEl.querySelectorAll(".bakalari-card").forEach(function (el) {
+        if (el.classList.contains("bakalari-card--locked")) {
+          applyCardLock(el, true);
+        }
         bindCard(el);
         setOpenButtonState(el);
       });
       updateAddButtonState();
+    }
+
+    if (deleteConfirmBtn) {
+      deleteConfirmBtn.addEventListener("click", function () { runPendingDelete(); });
+    }
+    if (deleteCancelBtn) {
+      deleteCancelBtn.addEventListener("click", function () { hideDeleteLayer(); });
+    }
+    if (deleteLayer) {
+      deleteLayer.addEventListener("click", function (e) {
+        if (e.target === deleteLayer) hideDeleteLayer();
+      });
     }
 
     if (addAnotherBtn) {
@@ -24364,7 +24513,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         var n = cardsEl.querySelectorAll(".bakalari-card").length;
         if (n >= BAKALARI_MAX_CARDS) return;
         syncProfilesFromDom();
-        profiles.push({ id: "bak_" + Date.now(), name: "", url: "", username: "", password: "" });
+        profiles.push({ id: "bak_" + Date.now(), name: "", url: "", username: "", password: "", locked: false });
         renderAllCards();
         var last = cardsEl.querySelector(".bakalari-card:last-of-type");
         if (last) {
