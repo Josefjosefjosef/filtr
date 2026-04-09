@@ -2817,32 +2817,9 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   box-sizing: border-box;
 }
 
-/* Bakaláři: fullscreen overlay na úzkém panelu (scoped přes data-moje-kind, bez zásahu do globálního overlay API). */
+/* Bakaláři + Zdravotní pojišťovna: fullscreen overlay na úzkém panelu (data-moje-kind; sdílené pravidla). */
 @media (max-width: 1023px) {
-  #iu-mojeSluzbyOverlay[data-moje-kind="bakalari"] {
-    left: 0 !important;
-    width: 100vw !important;
-    max-width: none !important;
-    right: auto !important;
-    transform: none !important;
-  }
-  #iu-mojeSluzbyPanel[data-moje-kind="bakalari"] {
-    left: 0 !important;
-    width: 100vw !important;
-    max-width: none !important;
-    right: auto !important;
-    transform: none !important;
-    top: 0 !important;
-    height: 100vh !important;
-    height: 100dvh !important;
-    max-height: 100dvh !important;
-    padding: calc(env(safe-area-inset-top, 0px) + 12px) 12px 12px !important;
-    align-items: stretch !important;
-    justify-content: flex-start !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    box-sizing: border-box !important;
-  }
+  #iu-mojeSluzbyOverlay[data-moje-kind="bakalari"],
   #iu-mojeSluzbyOverlay[data-moje-kind="pojistovna"] {
     left: 0 !important;
     width: 100vw !important;
@@ -2850,6 +2827,7 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
     right: auto !important;
     transform: none !important;
   }
+  #iu-mojeSluzbyPanel[data-moje-kind="bakalari"],
   #iu-mojeSluzbyPanel[data-moje-kind="pojistovna"] {
     left: 0 !important;
     width: 100vw !important;
