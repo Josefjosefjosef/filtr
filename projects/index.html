@@ -82,7 +82,7 @@ style-src 'self' 'unsafe-inline' https:;
       }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=prod1546topbarflowspacer" />
+    <link rel="stylesheet" href="/assets/app.css?v=prod1547financial-calc-overlay-v1" />
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
     (function(){ try { window.__iuBipEvent = null; window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); window.__iuBipEvent = e; }, { passive: false }); } catch(err) {} })();
@@ -1996,7 +1996,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <div class="iuTile" role="listitem" data-quicktool-id="ai_asistenti" data-iu-ql="ai-asistenti"><button class="iuTileLink" type="button" data-iuq="ai" data-ql="ai" aria-label="AI asistenti"><span class="iuTileText">AI asistenti</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="prekladac" data-iu-ql="prekladac"><a class="iuTileLink" href="https://www.deepl.com/" target="_blank" rel="noopener noreferrer" aria-label="Překladač"><span class="iuTileText">Překladač</span></a></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="word_pdf" data-iu-ql="prevod-word-pdf"><a class="iuTileLink" role="listitem" data-iuq="convert" data-ql="convert" href="https://www.ilovepdf.com" target="_blank" rel="noopener" aria-label="Převod Word / PDF"><span class="iuTileText">Převod Word / PDF</span></a></div>
-                        <div class="iuTile" role="listitem" data-quicktool-id="financni_kalkulacky" data-iu-ql="financni-kalkulacky"><a class="iuTileLink" role="listitem" data-iuq="google" data-ql="google" href="https://www.google.com/" target="_blank" rel="noopener noreferrer" aria-label="Finanční kalkulačky"><span class="iuTileText">Finanční kalkulačky</span></a></div>
+                        <div class="iuTile" role="listitem" data-quicktool-id="financni_kalkulacky" data-iu-ql="financni-kalkulacky"><button type="button" class="iuTileLink" data-iuq="fincalc" aria-label="Finanční kalkulačky"><span class="iuTileText">Finanční kalkulačky</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="vzory_smluv" data-iu-ql="vzory-smluv-plne-moci"><a class="iuTileLink" role="listitem" data-iuq="youtube" data-ql="youtube" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="Vzory smluv a plné moci"><span class="iuTileText">Vzory smluv a plné moci</span></a></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="komunikace_vzdelavani" data-iu-ql="komunikace-vzdelavani"><span class="iuTileLink" role="listitem" data-ql="platformy" aria-label="Komunikace a vzdělávání"><span class="iuTileText">Komunikace a vzdělávání</span></span></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="katastr_nemovitosti" data-iu-ql="katastr-nemovitosti"><span class="iuTileLink" role="listitem" data-ql="katastr" aria-label="Katastr nemovitostí"><span class="iuTileText">Katastr nemovitostí</span></span></div>
@@ -2008,6 +2008,25 @@ style-src 'self' 'unsafe-inline' https:;
                     </section>
                     <!-- AI Panel (Modal) -->
                     <div id="iu-aiOverlay" class="iu-aiOverlay" hidden></div>
+
+                    <div id="iuFinancialCalcBackdrop" class="iu-financial-overlay iu-financial-overlay-backdrop" hidden aria-hidden="true"></div>
+                    <div id="iuFinancialCalcPanel" class="iu-financial-overlay iu-financial-overlay-panel" role="dialog" aria-modal="true" aria-labelledby="iuFinancialCalcTitle" hidden data-open="0" aria-hidden="true">
+                      <div class="iu-financial-overlay-cardShell">
+                        <div class="iu-financial-overlay-inner">
+                          <header class="iu-financial-overlay-header">
+                            <button type="button" id="iuFinancialCalcBack" class="iu-financial-overlay-backBtn" hidden>Zpět na přehled</button>
+                            <div class="iu-financial-overlay-heading">
+                              <h2 id="iuFinancialCalcTitle" class="iu-financial-overlay-h2">Finanční kalkulačky</h2>
+                              <p id="iuFinancialCalcSub" class="iu-financial-overlay-sub">Praktické výpočty pro běžné finance</p>
+                            </div>
+                            <button type="button" id="iuFinancialCalcClose" class="iu-overlayCloseBtn38 iu-close-btn-38" aria-label="Zavřít" data-iu-close>×</button>
+                          </header>
+                          <div id="iuFinancialCalcScrollHost" class="iu-financial-overlay-scrollHost">
+                            <div id="iuFinancialCalcViews"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
                     <div id="iu-aiPanel" class="iu-aiPanel iuSectionAI" hidden role="dialog" aria-modal="true" aria-label="AI asistenti">
                       <div class="iu-aiModal">
@@ -3218,7 +3237,7 @@ style-src 'self' 'unsafe-inline' https:;
       }catch(_){}
     })();
     </script>
-    <script type="module" src="/assets/app.js?v=1428source-label-binding"></script>
+    <script type="module" src="/assets/app.js?v=1429financial-calc-overlay-v1"></script>
     <script>
     (function(){
       try { document.documentElement.setAttribute("data-iu-html-after-appjs", "reached"); } catch(e){}

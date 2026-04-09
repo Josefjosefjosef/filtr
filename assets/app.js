@@ -6,6 +6,7 @@ import {
   dedupeCanonicalUrl,
   pickPublicationKeptUrlKeys,
 } from "./cluster_engine.js";
+import { initIuFinancialCalculatorsOverlay } from "./iu-financial-calculators-module.js";
 /* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
   try{
@@ -19578,7 +19579,7 @@ function buildVideoAsArticleCard(it) {
     }
     try {
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-ds-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-ds-overlay-open", "iu-financial-overlay-open");
     } catch (_) {}
   }
 
@@ -19609,6 +19610,8 @@ function buildVideoAsArticleCard(it) {
       if (aiPanel && vis(aiPanel)) ids.push("ai");
       const dsPanel = document.getElementById("iuDsPanel");
       if (dsPanel && vis(dsPanel) && String(dsPanel.dataset.open || "") === "1") ids.push("datovka");
+      const finPanel = document.getElementById("iuFinancialCalcPanel");
+      if (finPanel && vis(finPanel) && String(finPanel.dataset.open || "") === "1") ids.push("financial");
     } catch (_) {}
     return ids;
   }
@@ -19693,6 +19696,22 @@ function buildVideoAsArticleCard(it) {
           }
         } catch (_) {}
       }
+      if (typeof window.iuFinancialCalcCloseSurface === "function") {
+        try { window.iuFinancialCalcCloseSurface(); } catch (_) {}
+      } else {
+        const finBd = document.getElementById("iuFinancialCalcBackdrop");
+        const finPn = document.getElementById("iuFinancialCalcPanel");
+        if (typeof window.iuSetElOpenVisible === "function") {
+          try { window.iuSetElOpenVisible(finBd, false); window.iuSetElOpenVisible(finPn, false); } catch (_) {}
+        } else {
+          if (finBd) finBd.hidden = true;
+          if (finPn) finPn.hidden = true;
+        }
+        try {
+          if (finPn) finPn.dataset.open = "0";
+          document.body.classList.remove("iu-financial-overlay-open");
+        } catch (_) {}
+      }
       var nak = document.getElementById("iuNakupModal");
       if (nak) {
         nak.hidden = true;
@@ -19705,7 +19724,7 @@ function buildVideoAsArticleCard(it) {
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-ds-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-ds-overlay-open", "iu-financial-overlay-open");
     } catch (_) {}
   }
 
@@ -19731,6 +19750,10 @@ function buildVideoAsArticleCard(it) {
       }
       if (t === "datovka") {
         if (typeof window.iuDatovkaOpenSurface === "function") window.iuDatovkaOpenSurface();
+      }
+      if (t === "financial") {
+        if (typeof window.ensureFinancialModalInBody === "function") window.ensureFinancialModalInBody();
+        if (typeof window.iuFinancialCalcOpenSurface === "function") window.iuFinancialCalcOpenSurface(extra && typeof extra === "object" ? extra : null);
       }
     } finally {
       try {
@@ -19770,6 +19793,9 @@ function buildVideoAsArticleCard(it) {
         if (typeof window.iuAiPanelOpenSurface === "function") window.iuAiPanelOpenSurface();
       } else if (last === "datovka") {
         if (typeof window.iuDatovkaOpenSurface === "function") window.iuDatovkaOpenSurface();
+      } else if (last === "financial") {
+        if (typeof window.ensureFinancialModalInBody === "function") window.ensureFinancialModalInBody();
+        if (typeof window.iuFinancialCalcOpenSurface === "function") window.iuFinancialCalcOpenSurface(null);
       }
     } catch (_) {}
   }
@@ -19790,6 +19816,7 @@ function buildVideoAsArticleCard(it) {
     const isExternalHref = !!href && /^https?:\/\//i.test(href);
     if (action === "parcels" || key === "baliky") return { actionType: "overlay", overlayId: "parcels", key };
     if (key === "datovka") return { actionType: "overlay", overlayId: "datovka", key: "datovka" };
+    if (key === "fincalc") return { actionType: "overlay", overlayId: "financial", key: "fincalc" };
     if (modal === "banka" || modal === "bakalari" || modal === "pojistovna") return { actionType: "overlay", overlayId: "quickfeed", key: modal };
     if (key === "ai" || key === "deepl" || key === "convert" || key === "naceneni") {
       return { actionType: "overlay", overlayId: "quickfeed", key };
@@ -19825,6 +19852,8 @@ function buildVideoAsArticleCard(it) {
         iuOpenOverlay("parcels");
       } else if (resolved.overlayId === "datovka") {
         iuOpenOverlay("datovka");
+      } else if (resolved.overlayId === "financial") {
+        iuOpenOverlay("financial", null);
       } else {
         iuOpenOverlay("quickfeed", { key: resolved.key });
       }
@@ -20009,7 +20038,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     // 2) Modal (#iu-aiPanel or .iuModal or #iu-mojeSluzbyPanel)
-    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel') || closeEl.closest('#iuDsPanel') || closeEl.closest('#iu-mojeSluzbyPanel'));
+    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel') || closeEl.closest('#iuDsPanel') || closeEl.closest('#iu-mojeSluzbyPanel') || closeEl.closest('#iuFinancialCalcPanel'));
     if (modal) {
       if (modal.id === 'iu-aiPanel') {
         const ov = document.getElementById('iu-aiOverlay');
@@ -20025,11 +20054,13 @@ function buildVideoAsArticleCard(it) {
         window.iuDatovkaCloseSurface();
       } else if (modal.id === 'iu-mojeSluzbyPanel' && typeof window.iuCloseMojeSluzbyModal === 'function') {
         window.iuCloseMojeSluzbyModal();
+      } else if (modal.id === 'iuFinancialCalcPanel' && typeof window.iuFinancialCalcCloseSurface === 'function') {
+        window.iuFinancialCalcCloseSurface();
       } else {
         modal.setAttribute('hidden', '');
       }
       modal.classList.remove('is-open');
-      document.body.classList.remove('iu-modal-open', 'iu-ds-overlay-open');
+      document.body.classList.remove('iu-modal-open', 'iu-ds-overlay-open', 'iu-financial-overlay-open');
     }
   }, true);
 
@@ -22796,6 +22827,23 @@ function buildVideoAsArticleCard(it) {
     return true;
   }
   try { window.ensureDatovkaModalInBody = ensureDatovkaModalInBody; } catch (_) {}
+
+  function ensureFinancialModalInBody() {
+    const backs = document.querySelectorAll("#iuFinancialCalcBackdrop");
+    const panels = document.querySelectorAll("#iuFinancialCalcPanel");
+    const back = backs[0] || null;
+    const panel = panels[0] || null;
+    if (!back || !panel) return false;
+    for (let i = 1; i < backs.length; i++) backs[i].setAttribute("data-iu-dup", "1");
+    for (let i = 1; i < panels.length; i++) panels[i].setAttribute("data-iu-dup", "1");
+    if (back.parentElement === document.body && panel.parentElement === document.body) return true;
+    const frag = document.createDocumentFragment();
+    frag.appendChild(back);
+    frag.appendChild(panel);
+    document.body.appendChild(frag);
+    return true;
+  }
+  try { window.ensureFinancialModalInBody = ensureFinancialModalInBody; } catch (_) {}
 
   function iuHideAllOverlaysNow(){
     try {
@@ -30514,6 +30562,20 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
+})();
+
+(function iuBootFinancialCalculatorsOverlay() {
+  function run() {
+    try {
+      initIuFinancialCalculatorsOverlay({});
+    } catch (e) {
+      try {
+        console.warn("[iu] financial calculators overlay init failed", e);
+      } catch (_) {}
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
+  else run();
 })();
 
 /* IU_SILVER_P0_ENGINE_END */
