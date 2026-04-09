@@ -17138,224 +17138,550 @@ function buildVideoAsArticleCard(it) {
 // Jakákoli změna nad tímto bodem vyžaduje nový checkpoint
 
 // === POPOVER PRO SLEDOVÁNÍ ZÁSILEK (IZOLOVANÁ FUNKCIONALITA) ===
-(function(){
-  'use strict';
-  
+(function () {
+  "use strict";
+
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => Array.from(document.querySelectorAll(sel));
-  
-  const parcelsBtn = document.getElementById('iuParcelsBtn');
-  const parcelsBtnMobile = document.getElementById('iuParcelsBtnMobile');
-  const modal = document.getElementById('iuParcelsPopover');
-  const overlay = document.querySelector('.iu-parcels-overlay');
-  
+
+  const parcelsBtn = document.getElementById("iuParcelsBtn");
+  const parcelsBtnMobile = document.getElementById("iuParcelsBtnMobile");
+  const modal = document.getElementById("iuParcelsPopover");
+  const overlay = document.querySelector(".iu-parcels-overlay");
+  const quickInput = document.getElementById("iuParcelQuickInput");
+  const quickPostal = document.getElementById("iuParcelQuickPostal");
+  const quickPostalRow = document.getElementById("iuParcelQuickPostalRow");
+  const quickMessage = document.getElementById("iuParcelQuickMessage");
+  const quickSearchBtn = document.getElementById("iuParcelQuickSearch");
+  const fallbackBanner = document.getElementById("iuParcelFallbackBanner");
+
+  let __iuParcelsDock = null;
+  let manualCarrierHint = "";
+  let __parcelLastPreview = null;
+
   const carriers = {
     packeta: {
-      name: 'Zásilkovna',
-      baseUrl: 'https://tracking.app.packeta.com/cs/',
+      name: "Zásilkovna",
+      baseUrl: "https://tracking.app.packeta.com/cs/",
       deepUrl: (code) => `https://tracking.app.packeta.com/cs/${encodeURIComponent(code)}`,
-      urlFallback: (code) => `https://tracking.packeta.com/cs/${encodeURIComponent(code)}`
+      urlFallback: (code) => `https://tracking.packeta.com/cs/${encodeURIComponent(code)}`,
     },
     balikovna: {
-      name: 'Balíkovna / Česká pošta',
-      baseUrl: 'https://www.balikovna.cz/cs/sledovat-balik',
-      deepUrl: (code) => `https://www.balikovna.cz/cs/sledovat-balik/-/balik/${encodeURIComponent(code)}`
+      name: "Balíkovna / Česká pošta",
+      baseUrl: "https://www.balikovna.cz/cs/sledovat-balik",
+      deepUrl: (code) =>
+        `https://www.balikovna.cz/cs/sledovat-balik/-/balik/${encodeURIComponent(code)}`,
     },
     ppl: {
-      name: 'PPL',
-      baseUrl: 'https://www.ppl.cz/vyhledat-zasilku',
-      useClipboard: true
+      name: "PPL",
+      baseUrl: "https://www.ppl.cz/vyhledat-zasilku",
+      useClipboard: true,
     },
     dpd: {
-      name: 'DPD',
-      baseUrl: 'https://tracking.dpd.de/status/cs_CZ/',
-      deepUrl: (code) => `https://tracking.dpd.de/status/cs_CZ/parcel/${encodeURIComponent(code)}`,
-      useClipboard: true
+      name: "DPD",
+      baseUrl: "https://tracking.dpd.de/status/cs_CZ/",
+      deepUrl: (code) =>
+        `https://tracking.dpd.de/status/cs_CZ/parcel/${encodeURIComponent(code)}`,
+      useClipboard: true,
     },
     gls: {
-      name: 'GLS',
-      baseUrl: 'https://gls-group.com/CZ/cs/sledovani-zasilek',
-      useClipboard: true
+      name: "GLS",
+      baseUrl: "https://gls-group.com/CZ/cs/sledovani-zasilek",
+      useClipboard: true,
     },
     wedo: {
-      name: 'WE|DO',
-      baseUrl: 'https://trace.wedo.cz/',
+      name: "WE|DO",
+      baseUrl: "https://trace.wedo.cz/",
       deepUrl: (code) => `https://trace.wedo.cz/?orderNumber=${encodeURIComponent(code)}`,
-      urlFallback: () => 'https://trace.wedo.cz/'
+      urlFallback: () => "https://trace.wedo.cz/",
     },
     dhl: {
-      name: 'DHL',
-      baseUrl: 'https://www.dhl.com/cz-en/home/tracking.html',
-      useClipboard: true
+      name: "DHL",
+      baseUrl: "https://www.dhl.com/cz-en/home/tracking.html",
+      useClipboard: true,
     },
     messenger: {
-      name: 'Messenger',
-      baseUrl: 'https://www.msng.cz/',
-      useClipboard: true
-    }
+      name: "Messenger",
+      baseUrl: "https://www.msng.cz/",
+      useClipboard: true,
+    },
   };
-  
-  function iuParcelsOpenSurface(){
-    if(!modal || !overlay) return;
-    try { iuCloseAllOverlaysExcept("parcels"); } catch (_) {}
-    overlay.classList.add('is-open');
-    modal.classList.add('is-open');
-    modal.setAttribute('aria-hidden', 'false');
-    try {
-      const isMobile = !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
-      if (isMobile) {
-        const header = modal.querySelector(".iu-parcels-modal-header");
-        const title = modal.querySelector(".iu-parcels-modal-title");
-        const close = modal.querySelector(".iu-parcels-modal-close");
-        const body = modal.querySelector(".iu-parcels-modal-content");
-        modal.style.setProperty("inset", "10px");
-        modal.style.setProperty("max-height", "calc(100dvh - 20px)");
-        if (header) {
-          header.style.setProperty("display", "flex");
-          header.style.setProperty("align-items", "flex-start");
-          header.style.setProperty("gap", "8px");
-          header.style.setProperty("padding", "12px");
-        }
-        if (title) {
-          title.style.setProperty("flex", "1 1 auto");
-          title.style.setProperty("min-width", "0");
-          title.style.setProperty("line-height", "1.3");
-        }
-        if (close) {
-          close.style.setProperty("align-self", "flex-start");
-          close.style.setProperty("margin", "0");
-        }
-        if (body) body.style.setProperty("padding", "14px 12px 16px");
-      }
-    } catch (_) {}
+
+  function iuParcelsIsNarrow() {
+    return !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
   }
 
-  function openParcels(){
-    if (typeof window.iuOpenOverlay === "function") {
-      window.iuOpenOverlay("parcels");
-    } else {
-      iuParcelsOpenSurface();
+  function iuParcelsDockToBody() {
+    if (!modal || !overlay || !iuParcelsIsNarrow()) return;
+    if (overlay.parentNode === document.body && modal.parentNode === document.body) return;
+    __iuParcelsDock = { parent: overlay.parentNode, anchor: modal.nextSibling };
+    document.body.appendChild(overlay);
+    document.body.appendChild(modal);
+  }
+
+  function iuParcelsUndockFromBody() {
+    if (!__iuParcelsDock || !modal || !overlay) {
+      __iuParcelsDock = null;
+      return;
+    }
+    const par = __iuParcelsDock.parent;
+    const anchor = __iuParcelsDock.anchor;
+    __iuParcelsDock = null;
+    try {
+      if (par) {
+        if (anchor) {
+          par.insertBefore(overlay, anchor);
+          par.insertBefore(modal, overlay.nextSibling);
+        } else {
+          par.appendChild(overlay);
+          par.appendChild(modal);
+        }
+      }
+    } catch (_) {
+      try {
+        if (par) {
+          par.appendChild(overlay);
+          par.appendChild(modal);
+        }
+      } catch (_) {}
     }
   }
-  try { window.iuParcelsOpenSurface = iuParcelsOpenSurface; } catch (_) {}
-  try { window.iuOpenParcelsModal = openParcels; } catch (_) {}
-  
-  function closeParcels(){
-    if(!modal || !overlay) return;
-    overlay.classList.remove('is-open');
-    modal.classList.remove('is-open');
-    modal.setAttribute('aria-hidden', 'true');
+
+  function setQuickMessage(text, kind) {
+    if (!quickMessage) return;
+    quickMessage.textContent = text || "";
+    quickMessage.classList.remove(
+      "iu-parcels-quicktrack-message--warn",
+      "iu-parcels-quicktrack-message--ok",
+    );
+    if (kind === "warn") quickMessage.classList.add("iu-parcels-quicktrack-message--warn");
+    if (kind === "ok") quickMessage.classList.add("iu-parcels-quicktrack-message--ok");
   }
-  try { window.iuCloseParcelsModal = closeParcels; } catch (_) {}
-  
-  function addParcelRow(carrierId){
+
+  function clearCarrierVisualState() {
+    $$(".iu-parcel-carrier").forEach((el) => {
+      el.classList.remove(
+        "iu-parcel-carrier--selected",
+        "iu-parcel-carrier--auto",
+        "iu-parcel-carrier--neutral",
+        "iu-parcel-carrier--needs-extra",
+      );
+      const badge = el.querySelector("[data-iu-parcel-badge]");
+      if (badge) badge.hidden = true;
+    });
+  }
+
+  function updateGlsNeedsExtraClass() {
+    const glsCard = document.querySelector('.iu-parcel-carrier[data-iu-carrier-key="gls"]');
+    if (!glsCard) return;
+    const pc = quickPostal && quickPostal.value ? String(quickPostal.value).replace(/\D/g, "") : "";
+    const needs = pc.length < 4;
+    const active =
+      glsCard.classList.contains("iu-parcel-carrier--selected") ||
+      glsCard.classList.contains("iu-parcel-carrier--auto");
+    if (active && needs) glsCard.classList.add("iu-parcel-carrier--needs-extra");
+    else glsCard.classList.remove("iu-parcel-carrier--needs-extra");
+  }
+
+  function highlightDetection(det) {
+    clearCarrierVisualState();
+    if (!det || !det.carrierKey) {
+      $$(".iu-parcel-carrier").forEach((el) => {
+        el.classList.add("iu-parcel-carrier--neutral");
+      });
+      updateGlsNeedsExtraClass();
+      return;
+    }
+    const key = det.carrierKey;
+    const card = document.querySelector(`.iu-parcel-carrier[data-iu-carrier-key="${key}"]`);
+    $$(".iu-parcel-carrier").forEach((el) => {
+      if (el !== card) el.classList.add("iu-parcel-carrier--neutral");
+    });
+    if (card) {
+      card.classList.remove("iu-parcel-carrier--neutral");
+      card.classList.add("iu-parcel-carrier--auto");
+      const badge = card.querySelector("[data-iu-parcel-badge]");
+      if (badge) badge.hidden = false;
+    }
+    updateGlsNeedsExtraClass();
+  }
+
+  function setSelectedManualCarrier(key) {
+    manualCarrierHint = key || "";
+    clearCarrierVisualState();
+    if (!key) return;
+    const card = document.querySelector(`.iu-parcel-carrier[data-iu-carrier-key="${key}"]`);
+    $$(".iu-parcel-carrier").forEach((el) => {
+      const sel = el === card;
+      el.classList.toggle("iu-parcel-carrier--selected", sel);
+      if (!sel) el.classList.add("iu-parcel-carrier--neutral");
+    });
+    if (key === "gls") {
+      if (quickPostalRow) quickPostalRow.hidden = false;
+      setQuickMessage(
+        "GLS vyžaduje PSČ doručovací adresy nebo výdejního místa. Doplňte PSČ a stiskněte „Vyhledat zásilku“ nahoře nebo „Vyhledat“ u GLS.",
+        "warn",
+      );
+    } else if (quickPostalRow) {
+      quickPostalRow.hidden = true;
+    }
+    updateGlsNeedsExtraClass();
+  }
+
+  function applyDestinationPlan(plan) {
+    if (!plan || plan.action === "none" || plan.action === "need_input") return;
+    if (plan.action === "open_url" && plan.url) {
+      window.open(plan.url, "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (plan.action === "open_base_clipboard" && plan.url) {
+      try {
+        if (plan.clipPlain && navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(plan.clipPlain).catch(() => {});
+        }
+      } catch (_) {}
+      window.open(plan.url, "_blank", "noopener,noreferrer");
+    }
+  }
+
+  function onQuickSearch() {
+    const eng = window.IU_PARCEL_TRACKING_ENGINE;
+    if (!eng) {
+      setQuickMessage("Modul bezpečné detekce není načtený. Obnovte stránku.", "warn");
+      return;
+    }
+    const raw = quickInput ? quickInput.value : "";
+    const postalDigits = quickPostal ? String(quickPostal.value || "").replace(/\D/g, "") : "";
+    const hint = manualCarrierHint || "";
+    const det = eng.getCarrierDetectionResult(raw, postalDigits, hint);
+    __parcelLastPreview = { detection: det, destination: eng.buildTrackingDestination(det, postalDigits) };
+
+    if (det.state === "needs_extra_input" && det.requiresPostalCode) {
+      if (quickPostalRow) quickPostalRow.hidden = false;
+      if (quickPostal) quickPostal.focus();
+      setQuickMessage(det.reason, "warn");
+      highlightDetection(det);
+      if (fallbackBanner) fallbackBanner.hidden = true;
+      return;
+    }
+
+    if (det.carrierKey !== "gls" && quickPostalRow) quickPostalRow.hidden = true;
+
+    if (det.state === "no_safe_match" || det.state === "unsupported") {
+      setQuickMessage(det.reason || "Zkuste ruční výběr dopravce.", "warn");
+      if (fallbackBanner) fallbackBanner.hidden = false;
+      clearCarrierVisualState();
+      $$(".iu-parcel-carrier").forEach((el) => {
+        el.classList.remove("iu-parcel-carrier--neutral");
+      });
+      updateGlsNeedsExtraClass();
+      return;
+    }
+
+    if (fallbackBanner) fallbackBanner.hidden = true;
+    const msgKind = det.state === "exact_match" ? "ok" : "warn";
+    setQuickMessage(det.reason, msgKind);
+    highlightDetection(det);
+    const plan = eng.buildTrackingDestination(det, postalDigits);
+    applyDestinationPlan(plan);
+  }
+
+  function resetParcelsUiState() {
+    manualCarrierHint = "";
+    __parcelLastPreview = null;
+    if (quickPostalRow) quickPostalRow.hidden = true;
+    if (quickPostal) quickPostal.value = "";
+    if (quickInput) quickInput.value = "";
+    setQuickMessage("", "");
+    if (fallbackBanner) fallbackBanner.hidden = true;
+    clearCarrierVisualState();
+  }
+
+  function iuParcelsOpenSurface() {
+    if (!modal || !overlay) return;
+    try {
+      overlay.removeAttribute("hidden");
+      overlay.style.removeProperty("display");
+      modal.removeAttribute("hidden");
+      modal.style.removeProperty("display");
+    } catch (_) {}
+    try {
+      if (iuParcelsIsNarrow()) {
+        iuParcelsDockToBody();
+        document.body.classList.add("iu-parcels-overlay-open");
+        if (typeof window.iuSetViewportLock === "function") window.iuSetViewportLock(true);
+        document.body.classList.add("iu-modal-open");
+      }
+    } catch (_) {}
+    overlay.classList.add("is-open");
+    overlay.setAttribute("aria-hidden", "false");
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+  }
+
+  function openParcels() {
+    if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("parcels");
+    else iuParcelsOpenSurface();
+  }
+  try {
+    window.iuParcelsOpenSurface = iuParcelsOpenSurface;
+  } catch (_) {}
+  try {
+    window.iuOpenParcelsModal = openParcels;
+  } catch (_) {}
+
+  function closeParcels() {
+    if (!modal || !overlay) return;
+    overlay.classList.remove("is-open");
+    modal.classList.remove("is-open");
+    overlay.setAttribute("aria-hidden", "true");
+    modal.setAttribute("aria-hidden", "true");
+    try {
+      document.body.classList.remove("iu-parcels-overlay-open");
+      iuParcelsUndockFromBody();
+      if (typeof window.iuSetViewportLock === "function") {
+        let others = [];
+        try {
+          if (typeof window.iuDetectOpenOverlays === "function")
+            others = window.iuDetectOpenOverlays().filter((x) => x !== "parcels");
+        } catch (_) {}
+        if (others.length === 0) {
+          window.iuSetViewportLock(false);
+          document.body.classList.remove("iu-modal-open");
+        }
+      } else {
+        document.body.classList.remove("iu-modal-open");
+      }
+    } catch (_) {}
+    try {
+      resetParcelsUiState();
+    } catch (_) {}
+  }
+  try {
+    window.iuCloseParcelsModal = closeParcels;
+  } catch (_) {}
+
+  function addParcelRow(carrierId) {
     const rowsContainer = $(`.iu-parcelRows[data-carrier="${carrierId}"]`);
-    if(!rowsContainer) return;
-    
-    const row = document.createElement('div');
-    row.className = 'iu-parcel-row';
+    if (!rowsContainer) return;
+
+    const row = document.createElement("div");
+    row.className = "iu-parcel-row";
     row.innerHTML = `
       <div class="iu-parcel-row-inputs">
         <input type="text" class="iu-parcel-input" placeholder="Číslo zásilky" data-carrier="${carrierId}">
         <button class="iu-parcel-search-btn" type="button">Vyhledat</button>
       </div>
     `;
-    
-    const searchBtn = row.querySelector('.iu-parcel-search-btn');
-    searchBtn.addEventListener('click', () => handleSearch(carrierId, row.querySelector('.iu-parcel-input')));
-    
+
+    const searchBtn = row.querySelector(".iu-parcel-search-btn");
+    searchBtn.addEventListener("click", () =>
+      handleSearch(carrierId, row.querySelector(".iu-parcel-input")),
+    );
+
     rowsContainer.appendChild(row);
   }
-  
-  function openCarrierUrl(url){
-    window.open(url, '_blank', 'noopener,noreferrer');
+
+  function openCarrierUrl(url) {
+    window.open(url, "_blank", "noopener,noreferrer");
   }
-  
-  function getFirstFilledCode(carrierId){
+
+  function getFirstFilledCode(carrierId) {
     const inputs = $$(`.iu-parcel-input[data-carrier="${carrierId}"]`);
-    for(const input of inputs){
-      const code = (input.value || '').trim();
-      if(code) return code;
+    for (const input of inputs) {
+      const code = (input.value || "").trim();
+      if (code) return code;
     }
     return null;
   }
-  
-  function handleSearch(carrierId, input){
-    const code = (input.value || '').trim();
+
+  function handleSearch(carrierId, input) {
+    const code = (input.value || "").trim();
     const carrier = carriers[carrierId];
-    if(!carrier || !carrier.baseUrl) return;
-    
-    let urlToOpen = carrier.baseUrl;
-    
-    if(code && carrier.deepUrl){
-      urlToOpen = carrier.deepUrl(code);
+    if (!carrier || !carrier.baseUrl) return;
+
+    if (carrierId === "gls") {
+      const pd = quickPostal ? String(quickPostal.value || "").replace(/\D/g, "") : "";
+      if (pd.length < 4) {
+        setQuickMessage("Pro GLS doplňte PSČ v horním poli (požadavek GLS).", "warn");
+        if (quickPostalRow) quickPostalRow.hidden = false;
+        if (quickPostal) quickPostal.focus();
+        setSelectedManualCarrier("gls");
+        return;
+      }
+      const eng = window.IU_PARCEL_TRACKING_ENGINE;
+      if (eng) {
+        const det = eng.getCarrierDetectionResult(code, pd, "gls");
+        const plan = eng.buildTrackingDestination(det, pd);
+        applyDestinationPlan(plan);
+      } else {
+        openCarrierUrl(carrier.baseUrl);
+      }
+      return;
     }
-    
+
+    if (!code) {
+      openCarrierUrl(carrier.baseUrl);
+      return;
+    }
+
+    let urlToOpen = carrier.baseUrl;
+    if (carrier.deepUrl) urlToOpen = carrier.deepUrl(code);
     openCarrierUrl(urlToOpen);
+    if (carrier.useClipboard && navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        navigator.clipboard.writeText(code).catch(() => {});
+      } catch (_) {}
+    }
   }
-  
-  function handleFallback(carrierId){
+
+  function handleFallback(carrierId) {
     const code = getFirstFilledCode(carrierId);
-    if(!code) return;
-    
+    if (!code) return;
+
     const carrier = carriers[carrierId];
-    if(!carrier || !carrier.urlFallback) return;
-    
+    if (!carrier || !carrier.urlFallback) return;
+
     const fallbackUrl = carrier.urlFallback(code);
     openCarrierUrl(fallbackUrl);
   }
-  
-  function initParcelsModal(){
-    if(!modal || !overlay) return;
-    
-    if(parcelsBtn){
-      parcelsBtn.addEventListener('click', (e) => {
-        if (e.target.closest && e.target.closest('[data-iuq]')) return;
+
+  function createTrackingWatchCandidate() {
+    return {
+      trackingNumber: "",
+      carrierKey: "",
+      carrierConfidence: 0,
+      lastKnownStatus: "unknown",
+      lastKnownStatusAt: null,
+      watchMode: "inactive",
+      requiresUserConsent: true,
+      lastPublicSourceKind: "none",
+      lastOfficialUrl: "",
+    };
+  }
+
+  function runTrackingLookup(opts) {
+    const eng = window.IU_PARCEL_TRACKING_ENGINE;
+    const o = opts && typeof opts === "object" ? opts : {};
+    if (!eng) return { ok: false };
+    const tn = o.trackingNumber != null ? String(o.trackingNumber) : "";
+    const pc = o.postalCode != null ? String(o.postalCode) : "";
+    const hint = o.carrierHint != null ? String(o.carrierHint) : "";
+    const det = eng.getCarrierDetectionResult(tn, pc, hint);
+    const dest = eng.buildTrackingDestination(
+      det,
+      String(pc || "").replace(/\D/g, ""),
+    );
+    __parcelLastPreview = { detection: det, destination: dest, at: Date.now() };
+    if (o.open) applyDestinationPlan(dest);
+    return { ok: true, detection: det, destination: dest };
+  }
+
+  function prefillTrackingInput(value) {
+    if (!quickInput) return;
+    quickInput.value = value != null ? String(value) : "";
+  }
+
+  try {
+    window.IU_SILVER_PARCEL_FACADE = {
+      prefillTrackingInput,
+      runTrackingLookup,
+      getTrackingLookupPreviewResult: () => __parcelLastPreview,
+      createTrackingWatchCandidate,
+      openTrackingDestination: (detectionResult, postalDigits) => {
+        const eng = window.IU_PARCEL_TRACKING_ENGINE;
+        if (!eng || !detectionResult) return;
+        const pd =
+          postalDigits != null ? String(postalDigits).replace(/\D/g, "") : "";
+        const plan = eng.buildTrackingDestination(detectionResult, pd);
+        applyDestinationPlan(plan);
+      },
+    };
+  } catch (_) {}
+
+  function initParcelsModal() {
+    if (!modal || !overlay) return;
+
+    if (parcelsBtn) {
+      parcelsBtn.addEventListener("click", (e) => {
+        if (e.target.closest && e.target.closest("[data-iuq]")) return;
         e.preventDefault();
         e.stopPropagation();
         openParcels();
       });
     }
-    if(parcelsBtnMobile){
-      parcelsBtnMobile.addEventListener('click', (e) => {
-        if (e.target.closest && e.target.closest('[data-iuq]')) return;
+    if (parcelsBtnMobile) {
+      parcelsBtnMobile.addEventListener("click", (e) => {
+        if (e.target.closest && e.target.closest("[data-iuq]")) return;
         e.preventDefault();
         e.stopPropagation();
         openParcels();
       });
     }
 
-    overlay.addEventListener('click', closeParcels);
+    overlay.addEventListener("click", closeParcels);
 
-    const closeBtn = modal.querySelector('.iu-parcels-modal-close');
-    if(closeBtn) closeBtn.addEventListener('click', closeParcels);
+    const closeBtn = modal.querySelector(".iu-parcels-modal-close");
+    if (closeBtn) closeBtn.addEventListener("click", closeParcels);
 
-    document.addEventListener('keydown', (e) => {
-      if(e.key === 'Escape') closeParcels();
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      if (!modal.classList.contains("is-open")) return;
+      closeParcels();
     });
-    
-    $$('.iu-parcel-add-btn').forEach(btn => {
-      const carrierId = btn.getAttribute('data-carrier');
-      btn.addEventListener('click', () => addParcelRow(carrierId));
+
+    $$(".iu-parcel-carrier").forEach((card) => {
+      card.addEventListener("click", (e) => {
+        if (e.target.closest && e.target.closest("input, button, a, textarea, select")) return;
+        const key = card.getAttribute("data-iu-carrier-key");
+        if (key) setSelectedManualCarrier(key);
+      });
+      card.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        if (e.target.closest && e.target.closest("input, button")) return;
+        e.preventDefault();
+        const key = card.getAttribute("data-iu-carrier-key");
+        if (key) setSelectedManualCarrier(key);
+      });
     });
-    
-    $$('.iu-parcel-search-btn').forEach(btn => {
-      const row = btn.closest('.iu-parcel-row');
-      const input = row?.querySelector('.iu-parcel-input');
-      const carrierId = input?.getAttribute('data-carrier');
-      if(carrierId){
-        btn.addEventListener('click', () => handleSearch(carrierId, input));
+
+    if (quickSearchBtn) quickSearchBtn.addEventListener("click", onQuickSearch);
+    if (quickInput) {
+      quickInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          onQuickSearch();
+        }
+      });
+    }
+    if (quickPostal) {
+      quickPostal.addEventListener("input", () => {
+        updateGlsNeedsExtraClass();
+      });
+    }
+
+    $$(".iu-parcel-add-btn").forEach((btn) => {
+      const carrierId = btn.getAttribute("data-carrier");
+      btn.addEventListener("click", () => addParcelRow(carrierId));
+    });
+
+    $$(".iu-parcel-search-btn").forEach((btn) => {
+      const row = btn.closest(".iu-parcel-row");
+      const input = row && row.querySelector(".iu-parcel-input");
+      const carrierId = input && input.getAttribute("data-carrier");
+      if (carrierId) {
+        btn.addEventListener("click", () => handleSearch(carrierId, input));
       }
     });
-    
-    $$('.iu-parcel-fallback-btn').forEach(btn => {
-      const carrierId = btn.getAttribute('data-carrier');
-      if(carrierId){
-        btn.addEventListener('click', () => handleFallback(carrierId));
+
+    $$(".iu-parcel-fallback-btn").forEach((btn) => {
+      const carrierId = btn.getAttribute("data-carrier");
+      if (carrierId) {
+        btn.addEventListener("click", () => handleFallback(carrierId));
       }
     });
   }
-  
+
   initParcelsModal();
 })();
 
