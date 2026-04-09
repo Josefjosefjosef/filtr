@@ -84,6 +84,7 @@ style-src 'self' 'unsafe-inline' https:;
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=prod1548financial-overlay-split-css" />
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1548financial-overlay-split-css" />
+    <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
     (function(){ try { window.__iuBipEvent = null; window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); window.__iuBipEvent = e; }, { passive: false }); } catch(err) {} })();
@@ -3238,6 +3239,7 @@ style-src 'self' 'unsafe-inline' https:;
       }catch(_){}
     })();
     </script>
+    <script defer src="/assets/iu-parcel-tracking-engine.js?v=1"></script>
     <script type="module" src="/assets/app.js?v=1430financial-overlay-split-css"></script>
     <script>
     (function(){
@@ -3369,17 +3371,59 @@ style-src 'self' 'unsafe-inline' https:;
     })();
     </script>
     <!-- Popover pro sledování zásilek -->
-    <div class="iu-parcels-overlay" aria-hidden="true"></div>
-    <div id="iuParcelsPopover" class="iu-parcels-modal" role="dialog" aria-label="Sledování zásilek" aria-hidden="true">
-      <div class="iu-parcels-modal-header">
+    <div class="iu-parcels-overlay iu-parcels-guard-layer" aria-hidden="true"></div>
+    <div id="iuParcelsPopover" class="iu-parcels-modal iu-parcels-guard-layer" role="dialog" aria-label="Sledování zásilek" aria-hidden="true">
+      <div class="iu-parcels-modal-header iu-parcels-guard-fs-header">
         <h3 class="iu-parcels-modal-title">Sledování zásilek</h3>
-        <button class="iu-parcels-modal-close" aria-label="Zavřít" type="button">×</button>
+        <button class="iu-parcels-modal-close iu-overlayCloseBtn38" aria-label="Zavřít" type="button">×</button>
       </div>
       <div class="iu-parcels-modal-content">
         <div class="iu-parcels-content-inner">
+          <section class="iu-parcels-quicktrack iu-parcels-guard-quicktrack" aria-label="Vyhledání zásilky podle čísla">
+            <h4 class="iu-parcels-quicktrack-title">Vyhledání zásilky podle čísla</h4>
+            <p class="iu-parcels-quicktrack-lead">
+              Zadejte číslo — otevřeme oficiální sledování u dopravce (bez scrapování a bez ukládání údajů o zásilkách).
+            </p>
+            <div class="iu-parcels-quicktrack-row">
+              <input
+                type="text"
+                id="iuParcelQuickInput"
+                class="iu-parcel-input iu-parcels-quicktrack-input"
+                autocomplete="off"
+                autocorrect="off"
+                spellcheck="false"
+                inputmode="text"
+                placeholder="Např. Z1234567890 / 12345678901 / 12345678901234"
+                aria-label="Číslo zásilky"
+              />
+              <button type="button" class="iu-parcel-search-btn iu-parcels-quicktrack-submit" id="iuParcelQuickSearch">
+                Vyhledat zásilku
+              </button>
+            </div>
+            <div class="iu-parcels-quicktrack-postal" id="iuParcelQuickPostalRow" hidden>
+              <label class="iu-parcels-quicktrack-postal-label" for="iuParcelQuickPostal">PSČ (doručovací adresa nebo výdejní místo)</label>
+              <input
+                type="text"
+                id="iuParcelQuickPostal"
+                class="iu-parcel-input iu-parcels-quicktrack-postal-input"
+                autocomplete="postal-code"
+                inputmode="numeric"
+                placeholder="např. 60200"
+                maxlength="12"
+                aria-label="PSČ pro GLS"
+              />
+            </div>
+            <div class="iu-parcels-quicktrack-message" id="iuParcelQuickMessage" role="status" aria-live="polite"></div>
+          </section>
+          <div class="iu-parcels-fallback-banner" id="iuParcelFallbackBanner" hidden>
+            Dopravce se nepodařilo bezpečně určit podle čísla zásilky. Vyberte ho ručně v seznamu níže.
+          </div>
             <!-- Zásilkovna -->
-            <div class="iu-parcel-carrier" data-carrier="packeta">
-              <h4 class="iu-parcel-carrier-name">Zásilkovna</h4>
+            <div class="iu-parcel-carrier iu-parcel-carrier--packeta" data-carrier="packeta" data-iu-carrier-key="packeta" tabindex="0" role="group" aria-label="Zásilkovna">
+              <div class="iu-parcel-carrier-head">
+                <h4 class="iu-parcel-carrier-name">Zásilkovna</h4>
+                <span class="iu-parcel-carrier-badge" data-iu-parcel-badge hidden>Rozpoznáno</span>
+              </div>
               <div class="iu-parcelRows" data-carrier="packeta">
                 <div class="iu-parcel-row">
                   <div class="iu-parcel-row-inputs">
@@ -3393,8 +3437,11 @@ style-src 'self' 'unsafe-inline' https:;
             </div>
 
             <!-- Balíkovna / Česká pošta -->
-            <div class="iu-parcel-carrier" data-carrier="balikovna">
-              <h4 class="iu-parcel-carrier-name">Balíkovna / Česká pošta</h4>
+            <div class="iu-parcel-carrier iu-parcel-carrier--balikovna" data-carrier="balikovna" data-iu-carrier-key="balikovna" tabindex="0" role="group" aria-label="Balíkovna Česká pošta">
+              <div class="iu-parcel-carrier-head">
+                <h4 class="iu-parcel-carrier-name">Balíkovna / Česká pošta</h4>
+                <span class="iu-parcel-carrier-badge" data-iu-parcel-badge hidden>Rozpoznáno</span>
+              </div>
               <div class="iu-parcelRows" data-carrier="balikovna">
                 <div class="iu-parcel-row">
                   <div class="iu-parcel-row-inputs">
@@ -3407,8 +3454,11 @@ style-src 'self' 'unsafe-inline' https:;
             </div>
 
             <!-- PPL -->
-            <div class="iu-parcel-carrier" data-carrier="ppl">
-              <h4 class="iu-parcel-carrier-name">PPL</h4>
+            <div class="iu-parcel-carrier iu-parcel-carrier--ppl" data-carrier="ppl" data-iu-carrier-key="ppl" tabindex="0" role="group" aria-label="PPL">
+              <div class="iu-parcel-carrier-head">
+                <h4 class="iu-parcel-carrier-name">PPL</h4>
+                <span class="iu-parcel-carrier-badge" data-iu-parcel-badge hidden>Rozpoznáno</span>
+              </div>
               <div class="iu-parcelRows" data-carrier="ppl">
                 <div class="iu-parcel-row">
                   <div class="iu-parcel-row-inputs">
@@ -3421,8 +3471,11 @@ style-src 'self' 'unsafe-inline' https:;
             </div>
 
             <!-- DPD -->
-            <div class="iu-parcel-carrier" data-carrier="dpd">
-              <h4 class="iu-parcel-carrier-name">DPD</h4>
+            <div class="iu-parcel-carrier iu-parcel-carrier--dpd" data-carrier="dpd" data-iu-carrier-key="dpd" tabindex="0" role="group" aria-label="DPD">
+              <div class="iu-parcel-carrier-head">
+                <h4 class="iu-parcel-carrier-name">DPD</h4>
+                <span class="iu-parcel-carrier-badge" data-iu-parcel-badge hidden>Rozpoznáno</span>
+              </div>
               <div class="iu-parcelRows" data-carrier="dpd">
                 <div class="iu-parcel-row">
                   <div class="iu-parcel-row-inputs">
@@ -3435,8 +3488,12 @@ style-src 'self' 'unsafe-inline' https:;
             </div>
 
             <!-- GLS -->
-            <div class="iu-parcel-carrier" data-carrier="gls">
-              <h4 class="iu-parcel-carrier-name">GLS</h4>
+            <div class="iu-parcel-carrier iu-parcel-carrier--gls" data-carrier="gls" data-iu-carrier-key="gls" data-iu-parcel-needs-psc="1" tabindex="0" role="group" aria-label="GLS">
+              <div class="iu-parcel-carrier-head">
+                <h4 class="iu-parcel-carrier-name">GLS</h4>
+                <span class="iu-parcel-carrier-badge" data-iu-parcel-badge hidden>Rozpoznáno</span>
+              </div>
+              <p class="iu-parcel-carrier-note">Veřejné sledování GLS vyžaduje i PSČ — použijte horní pole nebo zadejte PSČ u vyhledání.</p>
               <div class="iu-parcelRows" data-carrier="gls">
                 <div class="iu-parcel-row">
                   <div class="iu-parcel-row-inputs">
@@ -3449,8 +3506,11 @@ style-src 'self' 'unsafe-inline' https:;
             </div>
 
             <!-- WE|DO -->
-            <div class="iu-parcel-carrier" data-carrier="wedo">
-              <h4 class="iu-parcel-carrier-name">WE|DO</h4>
+            <div class="iu-parcel-carrier iu-parcel-carrier--wedo" data-carrier="wedo" data-iu-carrier-key="wedo" tabindex="0" role="group" aria-label="WE DO">
+              <div class="iu-parcel-carrier-head">
+                <h4 class="iu-parcel-carrier-name">WE|DO</h4>
+                <span class="iu-parcel-carrier-badge" data-iu-parcel-badge hidden>Rozpoznáno</span>
+              </div>
               <div class="iu-parcelRows" data-carrier="wedo">
                 <div class="iu-parcel-row">
                   <div class="iu-parcel-row-inputs">
@@ -3463,8 +3523,11 @@ style-src 'self' 'unsafe-inline' https:;
             </div>
 
             <!-- DHL -->
-            <div class="iu-parcel-carrier" data-carrier="dhl">
-              <h4 class="iu-parcel-carrier-name">DHL</h4>
+            <div class="iu-parcel-carrier iu-parcel-carrier--dhl" data-carrier="dhl" data-iu-carrier-key="dhl" tabindex="0" role="group" aria-label="DHL">
+              <div class="iu-parcel-carrier-head">
+                <h4 class="iu-parcel-carrier-name">DHL</h4>
+                <span class="iu-parcel-carrier-badge" data-iu-parcel-badge hidden>Rozpoznáno</span>
+              </div>
               <div class="iu-parcelRows" data-carrier="dhl">
                 <div class="iu-parcel-row">
                   <div class="iu-parcel-row-inputs">
@@ -3477,8 +3540,11 @@ style-src 'self' 'unsafe-inline' https:;
             </div>
 
             <!-- Messenger -->
-            <div class="iu-parcel-carrier" data-carrier="messenger">
-              <h4 class="iu-parcel-carrier-name">Messenger</h4>
+            <div class="iu-parcel-carrier iu-parcel-carrier--messenger" data-carrier="messenger" data-iu-carrier-key="messenger" tabindex="0" role="group" aria-label="Messenger">
+              <div class="iu-parcel-carrier-head">
+                <h4 class="iu-parcel-carrier-name">Messenger</h4>
+                <span class="iu-parcel-carrier-badge" data-iu-parcel-badge hidden>Rozpoznáno</span>
+              </div>
               <div class="iu-parcelRows" data-carrier="messenger">
                 <div class="iu-parcel-row">
                   <div class="iu-parcel-row-inputs">
