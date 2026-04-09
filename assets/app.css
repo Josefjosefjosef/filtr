@@ -2817,16 +2817,18 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   box-sizing: border-box;
 }
 
-/* Bakaláři: fullscreen overlay na úzkém panelu (scoped přes data-moje-kind, bez zásahu do globálního overlay API). */
+/* Bakaláři + Zdravotní pojišťovna: fullscreen overlay na úzkém panelu (data-moje-kind; sdílené pravidla). */
 @media (max-width: 1023px) {
-  #iu-mojeSluzbyOverlay[data-moje-kind="bakalari"] {
+  #iu-mojeSluzbyOverlay[data-moje-kind="bakalari"],
+  #iu-mojeSluzbyOverlay[data-moje-kind="pojistovna"] {
     left: 0 !important;
     width: 100vw !important;
     max-width: none !important;
     right: auto !important;
     transform: none !important;
   }
-  #iu-mojeSluzbyPanel[data-moje-kind="bakalari"] {
+  #iu-mojeSluzbyPanel[data-moje-kind="bakalari"],
+  #iu-mojeSluzbyPanel[data-moje-kind="pojistovna"] {
     left: 0 !important;
     width: 100vw !important;
     max-width: none !important;
@@ -13103,7 +13105,7 @@ section.iu-mojeSluzby{
 }
 .iu-mojeSluzbyBanka,
 .iu-mojeSluzbyBakalari,
-.iu-mojeSluzbyPojistovna{
+.iu-health-root{
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -13635,102 +13637,396 @@ section.iu-mojeSluzby{
 #iuQuickFeed .bakalari-card-feedback{
   color: #1a5bb5;
 }
-.iu-mojeSluzbyPojistovna{
+/* Zdravotní pojišťovna — pouze prefix .iu-health-* + [data-iu-health-*] */
+.iu-health-root{
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 14px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  position: relative;
 }
-.iu-pojistovnaForm{
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-.iu-pojistovnaLabel{
+.iu-health-notice{
+  margin: 0 0 4px;
+  padding: 10px 12px;
   font-size: 13px;
-  color: rgba(255,255,255,.85);
-}
-.iu-pojistovnaSelect,
-.iu-pojistovnaInput{
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,.2);
-  background: rgba(255,255,255,.06);
-  color: inherit;
-  font-size: 14px;
-  max-width: 100%;
-}
-.iu-pojistovnaSaveBtn{
-  padding: 10px 20px;
+  line-height: 1.4;
+  color: rgba(255,255,255,.78);
+  background: rgba(0,0,0,.18);
   border-radius: 10px;
-  font-weight: 600;
-  font-size: 13px;
+  border: 1px solid rgba(255,255,255,.1);
+}
+.iu-health-cards{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.iu-health-card{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  border-top: 4px solid var(--iu-health-accent, #1a5bb5);
+  box-sizing: border-box;
+  max-width: 100%;
+  transition: box-shadow .2s ease;
+}
+.iu-health-card--highlight{
+  box-shadow: 0 0 0 2px rgba(42,125,224,.55);
+}
+.iu-health-card-title{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: inherit;
+}
+.iu-health-open-btn{
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 15px;
   border: none;
   cursor: pointer;
   background: linear-gradient(180deg, #2a7de0, #1a5bb5);
   color: #fff;
   box-shadow: 0 4px 14px rgba(42,125,224,.35);
-  transition: .18s;
-  align-self: flex-start;
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.iu-pojistovnaSaveBtn:hover{
+.iu-health-open-btn:hover:not(:disabled){
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(42,125,224,.45);
 }
-.iu-pojistovnaMessage{
-  min-height: 1.4em;
-  font-size: 13px;
-  color: var(--iu-gold);
-  opacity: 0;
-  transition: opacity .2s;
-  margin-bottom: 4px;
+.iu-health-open-btn:disabled{
+  opacity: .45;
+  cursor: not-allowed;
+  box-shadow: none;
 }
-.iu-pojistovnaMessage--visible{
-  opacity: 1;
+.iu-health-copy-row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
 }
-.iu-pojistovnaSaved{
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255,255,255,.08);
-}
-.iu-pojistovnaSavedGrid{
-  margin-top: 8px;
-}
-.iu-pojistovnaTileBtn{
+.iu-health-field{
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 4px;
+  margin: 0;
+}
+.iu-health-label{
+  font-size: 12px;
+  color: rgba(255,255,255,.72);
+}
+.iu-health-input{
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(0,0,0,.2);
+  color: inherit;
+  font-size: 16px;
+  line-height: 1.35;
+}
+.iu-health-input:focus{
+  outline: 2px solid rgba(42,125,224,.55);
+  outline-offset: 1px;
+}
+.iu-health-provider-trigger{
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(0,0,0,.22);
+  color: inherit;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  border-radius: 14px;
-  border: none;
-  padding: 12px;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.iu-health-provider-trigger:disabled{
+  opacity: .65;
+  cursor: not-allowed;
+}
+.iu-health-url-row[hidden]{
+  display: none !important;
+}
+.iu-health-inline-row{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.iu-health-inline-row .iu-health-input{
+  flex: 1;
+  min-width: 0;
+}
+.iu-health-helper{
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(255,255,255,.62);
+}
+.iu-health-helper[hidden]{
+  display: none !important;
+}
+.iu-health-card-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.iu-health-btn{
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.iu-health-btn--mini{
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.iu-health-btn--secondary{
+  background: linear-gradient(180deg, #2a7de0, #1a5bb5);
   color: #fff;
-  box-shadow: 0 6px 18px rgba(0,0,0,.35);
-  transition: .18s;
+  border-color: rgba(255,255,255,.12);
 }
-.iu-pojistovnaTileBtn:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(0,0,0,.45);
+.iu-health-btn--ghost{
+  background: rgba(255,255,255,.08);
+  color: inherit;
+  border-color: rgba(255,255,255,.2);
 }
-.iu-pojistovnaTileAbbr{
+.iu-health-btn--danger{
+  background-color: #fee2e2 !important;
+  color: #b91c1c !important;
+  border: 1px solid #fecaca !important;
+}
+.iu-health-btn--danger:hover:not(:disabled){
+  background-color: #fecaca !important;
+  color: #991b1b !important;
+  border-color: #f87171 !important;
+}
+.iu-health-btn--danger:focus-visible{
+  outline: 2px solid #b91c1c;
+  outline-offset: 2px;
+}
+.iu-health-add{
+  align-self: flex-start;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(255,255,255,.08);
+  color: inherit;
+  font-family: inherit;
+}
+.iu-health-add:disabled{
+  opacity: .45;
+  cursor: not-allowed;
+}
+.iu-health-global-feedback,
+.iu-health-card-feedback{
+  min-height: 1.2em;
+  font-size: 13px;
+  color: #7ab8ff;
+}
+.iu-health-picker-layer{
+  position: fixed;
+  inset: 0;
+  z-index: 10100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  background: rgba(0,0,0,.5);
+}
+.iu-health-picker-layer[hidden]{
+  display: none !important;
+}
+.iu-health-picker-dialog{
+  width: 100%;
+  max-width: 400px;
+  max-height: min(80dvh, 520px);
+  overflow: auto;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(22,28,40,.98);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 16px 48px rgba(0,0,0,.45);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.iu-health-picker-title{
+  margin: 0 0 4px;
   font-size: 16px;
   font-weight: 700;
-  margin-bottom: 4px;
+  color: inherit;
 }
-.iu-pojistovnaTileName{
-  font-size: 12px;
-  opacity: .95;
+.iu-health-picker-list{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
-.iu-pojistovnaRemove{
-  margin-top: 8px;
-  padding: 6px 12px;
-  font-size: 11px;
-  border: 1px solid rgba(192,192,192,.5);
-  background: rgba(255,255,255,.1);
-  color: var(--iu-silver);
+.iu-health-picker-item{
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  color: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
 }
-.iu-pojistovnaRemove:hover{
-  background: rgba(255,255,255,.18);
+.iu-health-picker-item:hover{
+  background: rgba(255,255,255,.12);
+}
+.iu-health-picker-close{
+  align-self: flex-end;
+  margin-top: 4px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.08);
+  color: inherit;
+  cursor: pointer;
+  font-family: inherit;
+}
+.iu-health-delete-layer{
+  position: fixed;
+  inset: 0;
+  z-index: 10105;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  background: rgba(0,0,0,.5);
+}
+.iu-health-delete-layer[hidden]{
+  display: none !important;
+}
+.iu-health-delete-dialog{
+  width: 100%;
+  max-width: 360px;
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(22,28,40,.98);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 16px 48px rgba(0,0,0,.45);
+}
+.iu-health-delete-title{
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: inherit;
+}
+.iu-health-delete-hint{
+  margin: 0 0 16px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: rgba(255,255,255,.65);
+}
+.iu-health-delete-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+#iuQuickFeed .iu-health-root{
+  max-width: min(800px, 100%);
+}
+#iuQuickFeed .iu-health-notice{
+  color: rgba(15, 23, 42, 0.75);
+  background: rgba(15, 23, 42, 0.06);
+  border-color: rgba(15, 23, 42, 0.1);
+}
+#iuQuickFeed .iu-health-card{
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(15, 23, 42, 0.12);
+  border-top-color: var(--iu-health-accent, #1a5bb5);
+}
+#iuQuickFeed .iu-health-label{
+  color: rgba(15, 23, 42, 0.65);
+}
+#iuQuickFeed .iu-health-input{
+  background: #fff;
+  border-color: rgba(15, 23, 42, 0.18);
+  color: #0f172a;
+}
+#iuQuickFeed .iu-health-provider-trigger{
+  background: #fff;
+  border-color: rgba(15, 23, 42, 0.18);
+  color: #0f172a;
+}
+#iuQuickFeed .iu-health-provider-trigger:disabled{
+  background: #f1f5f9;
+  color: rgba(15, 23, 42, 0.55);
+}
+#iuQuickFeed .iu-health-helper{
+  color: rgba(15, 23, 42, 0.58);
+}
+#iuQuickFeed .iu-health-add{
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.14);
+  color: #0f172a;
+}
+#iuQuickFeed .iu-health-btn--ghost{
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: rgba(15, 23, 42, 0.14);
+}
+#iuQuickFeed .iu-health-global-feedback,
+#iuQuickFeed .iu-health-card-feedback{
+  color: #1a5bb5;
+}
+#iuQuickFeed .iu-health-picker-dialog{
+  background: #fff;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+  box-shadow: 0 16px 48px rgba(0,0,0,.18);
+}
+#iuQuickFeed .iu-health-picker-item{
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+#iuQuickFeed .iu-health-picker-item:hover{
+  background: #e2e8f0;
+}
+#iuQuickFeed .iu-health-delete-dialog{
+  background: #fff;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+  box-shadow: 0 16px 48px rgba(0,0,0,.18);
+}
+#iuQuickFeed .iu-health-delete-hint{
+  color: rgba(15, 23, 42, 0.6);
 }
 
 .accordionCol .mindMenu {
