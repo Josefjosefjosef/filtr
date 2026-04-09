@@ -23619,7 +23619,10 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   "use strict";
   const BANKS_KEY = "iu_moje_sluzby_banks_state_v1";
   const IU_BANKS_KEY = "iuUserBanks";
-  const BAKALARI_KEY = "iu_moje_sluzby_bakalari_v1";
+  const BAKALARI_PROFILES_KEY = "iu_bakalari_profiles";
+  const BAKALARI_LEGACY_KEY = "iu_moje_sluzby_bakalari_v1";
+  const BAKALARI_MAX_CARDS = 10;
+  var _bakalariLegacyMigrated = false;
   const POJISTOVNY_KEY = "iu_moje_sluzby_pojistovny_names_v1";
   /** Legacy + removed presets — must never reappear as active IB tiles or favorites. */
   const IU_BANKS_BLOCKED_IDS = ["citi", "equa", "sberbank", "max", "creditas"];
@@ -23754,24 +23757,83 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     try { localStorage.setItem(BANKS_KEY, JSON.stringify({ customBanks: (s && s.customBanks) ? s.customBanks : [] })); } catch (_) {}
   }
 
-  function getBakalariState() {
+  function isBakalariProfileEmpty(p) {
+    if (!p) return true;
+    return !String(p.name || "").trim() && !String(p.url || "").trim() && !String(p.username || "").trim() && !String(p.password || "").trim();
+  }
+
+  function migrateBakalariLegacyOnce() {
+    if (_bakalariLegacyMigrated) return;
+    _bakalariLegacyMigrated = true;
     try {
-      const raw = localStorage.getItem(BAKALARI_KEY);
-      if (raw) {
-        const a = JSON.parse(raw);
-        if (Array.isArray(a)) {
-          if (a.length && (a[0].enabled !== undefined)) {
-            return a.filter(function(s) { return s.enabled && String(s.name || "").trim() && String(s.url || "").trim(); }).map(function(s) { return { name: String(s.name).trim().slice(0, 30), url: String(s.url).trim() }; });
-          }
-          return a.map(function(s) { return { name: String(s.name || "").slice(0, 30), url: String(s.url || "") }; });
-        }
+      var existingRaw = localStorage.getItem(BAKALARI_PROFILES_KEY);
+      if (existingRaw) {
+        try {
+          var ex = JSON.parse(existingRaw);
+          if (Array.isArray(ex) && ex.length > 0) return;
+        } catch (_) {}
       }
+      var raw = localStorage.getItem(BAKALARI_LEGACY_KEY);
+      if (!raw) return;
+      var a = JSON.parse(raw);
+      if (!Array.isArray(a) || !a.length) return;
+      var t = Date.now();
+      var out = [];
+      for (var i = 0; i < a.length; i++) {
+        var s = a[i];
+        if (!s) continue;
+        if (s.enabled !== undefined && !s.enabled) continue;
+        var name = String(s.name || "").trim().slice(0, 30);
+        var url = normalizeBakalariUrl(s.url || "");
+        if (!name && !String(s.url || "").trim()) continue;
+        out.push({ id: "mig_" + t + "_" + i, name: name, url: url, username: "", password: "" });
+      }
+      if (out.length) {
+        try { localStorage.setItem(BAKALARI_PROFILES_KEY, JSON.stringify(out)); } catch (_) {}
+      }
+      try { localStorage.removeItem(BAKALARI_LEGACY_KEY); } catch (_) {}
+    } catch (_) {}
+  }
+
+  function getBakalariProfilesFromStorage() {
+    migrateBakalariLegacyOnce();
+    try {
+      var raw = localStorage.getItem(BAKALARI_PROFILES_KEY);
+      if (!raw) return [];
+      var a = JSON.parse(raw);
+      if (!Array.isArray(a)) return [];
+      return a.map(function (p) {
+        return {
+          id: String(p.id || ("bak_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8))),
+          name: String(p.name || "").slice(0, 30),
+          url: String(p.url || ""),
+          username: String(p.username || ""),
+          password: String(p.password || "")
+        };
+      }).filter(function (p) { return !isBakalariProfileEmpty(p); });
     } catch (_) {}
     return [];
   }
 
-  function setBakalariState(a) {
-    try { localStorage.setItem(BAKALARI_KEY, JSON.stringify(Array.isArray(a) ? a : [])); } catch (_) {}
+  function setBakalariProfilesToStorage(arr) {
+    var list = Array.isArray(arr) ? arr : [];
+    var cleaned = list.filter(function (p) { return p && !isBakalariProfileEmpty(p); });
+    try { localStorage.setItem(BAKALARI_PROFILES_KEY, JSON.stringify(cleaned)); } catch (_) {}
+  }
+
+  function openBakalariUrlSafe(urlRaw) {
+    if (!isValidBakalariUrl(urlRaw)) return;
+    var url = normalizeBakalariUrl(urlRaw);
+    var win = null;
+    try {
+      win = window.open(url, "_blank", "noopener,noreferrer");
+    } catch (_) { return; }
+    if (!win) return;
+    try {
+      if (win.location && win.location.origin === window.location.origin) {
+        /* Same-origin only: reserved for future safe autofill hook. */
+      }
+    } catch (_) {}
   }
 
   function normalizeBakalariUrl(url) {
@@ -23930,6 +23992,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const titles = { banka: "Banka", bakalari: "Bakaláři", pojistovna: "Zdravotní pojišťovna" };
     if (titleEl) titleEl.textContent = titles[kind] || kind;
     bodyEl.innerHTML = "";
+    if (panel) panel.setAttribute("data-moje-kind", kind);
+    if (overlay) overlay.setAttribute("data-moje-kind", kind);
     if (kind === "banka") renderBankaModal(bodyEl);
     else if (kind === "bakalari") renderBakalariModal(bodyEl);
     else if (kind === "pojistovna") renderPojistovnaModal(bodyEl);
@@ -23963,6 +24027,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     const overlay = document.getElementById("iu-mojeSluzbyOverlay");
     const panel = document.getElementById("iu-mojeSluzbyPanel");
     if (!overlay || !panel) return;
+    try { overlay.removeAttribute("data-moje-kind"); } catch (_) {}
+    try { panel.removeAttribute("data-moje-kind"); } catch (_) {}
     if (_mojeSluzbyResizeHandler) {
       window.removeEventListener("resize", _mojeSluzbyResizeHandler);
       _mojeSluzbyResizeHandler = null;
@@ -24105,134 +24171,210 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function renderBakalariModal(container) {
-    var saved = getBakalariState();
-    var slots = saved.length ? saved.map(function(s) { return { name: s.name, url: s.url }; }) : [{ name: "", url: "" }];
-    var savedFeedbackUntil = 0;
-
-    function getSlotsFromDom() {
-      var rows = container.querySelectorAll(".iu-mojeSluzbyBakalariSlot");
-      var out = [];
-      for (var i = 0; i < rows.length; i++) {
-        var nameInp = rows[i].querySelector("[data-name]");
-        var urlInp = rows[i].querySelector("[data-url]");
-        out.push({ name: (nameInp && nameInp.value) ? nameInp.value.trim().slice(0, 30) : "", url: (urlInp && urlInp.value) ? urlInp.value.trim() : "" });
-      }
-      return out;
+    var profiles = getBakalariProfilesFromStorage().slice();
+    if (!profiles.length) {
+      profiles = [{ id: "bak_" + Date.now(), name: "", url: "", username: "", password: "" }];
     }
 
-    function canSave() {
-      var rows = getSlotsFromDom();
-      return rows.length > 0;
-    }
-
-    function updateSaveButton() {
-      var btn = container.querySelector("[data-bakalari-save]");
-      if (btn) btn.disabled = !canSave();
-    }
-
-    var html = [
-      "<div class=\"iu-mojeSluzbyBakalari\">",
-      "  <div class=\"iu-mojeSluzbyBakalariSlots\" data-slots></div>",
-      "  <div class=\"iu-mojeSluzbyBakalariActions\">",
-      "    <button type=\"button\" data-add-slot>Přidat</button>",
-      "    <button type=\"button\" data-remove-slot>Odebrat</button>",
-      "    <button type=\"button\" class=\"iu-bakalariSaveBtn\" data-bakalari-save disabled>Uložit</button>",
-      "  </div>",
-      "  <div class=\"iu-bakalariSavedFeedback\" data-bakalari-feedback aria-live=\"polite\"></div>",
-      "  <div class=\"iu-bakalariSavedSection\">",
-      "    <div class=\"iu-bakalariSavedLabel\">Uložené</div>",
-      "    <div class=\"iu-bakalariSavedChips\" data-bakalari-chips></div>",
-      "  </div>",
+    var rootHtml = [
+      "<div class=\"iu-mojeSluzbyBakalari bakalari-root\">",
+      "  <div class=\"bakalari-cards-container\" data-bakalari-cards></div>",
+      "  <button type=\"button\" class=\"bakalari-add-another\" data-bakalari-add>Přidat další</button>",
+      "  <div class=\"bakalari-global-feedback\" data-bakalari-global-feedback aria-live=\"polite\"></div>",
       "</div>"
     ].join("");
-    container.innerHTML = html;
+    container.innerHTML = rootHtml;
 
-    var slotsEl = container.querySelector("[data-slots]");
-    var addBtn = container.querySelector("[data-add-slot]");
-    var removeBtn = container.querySelector("[data-remove-slot]");
-    var saveBtn = container.querySelector("[data-bakalari-save]");
-    var feedbackEl = container.querySelector("[data-bakalari-feedback]");
-    var chipsEl = container.querySelector("[data-bakalari-chips]");
+    var cardsEl = container.querySelector("[data-bakalari-cards]");
+    var addAnotherBtn = container.querySelector("[data-bakalari-add]");
+    var globalFb = container.querySelector("[data-bakalari-global-feedback]");
 
-    function renderSlots() {
-      slotsEl.innerHTML = slots.map(function(s, i) {
-        return "<div class=\"iu-mojeSluzbyBakalariSlot\" data-slot=\"" + i + "\"><span class=\"iuIconTile\" aria-hidden=\"true\"><svg class=\"iu-grad-cap-svg\" viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" focusable=\"false\" fill=\"currentColor\"><path d=\"M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm5 8.99l-5 2.73-5-2.73V13l5 2.73L17 13v-1.01z\"/></svg></span><input placeholder=\"Jméno dítěte\" data-name maxlength=\"30\" value=\"" + esc(s.name) + "\" /><input placeholder=\"URL (https://...)\" data-url value=\"" + esc(s.url) + "\" /></div>";
-      }).join("");
-      slotsEl.querySelectorAll("[data-name]").forEach(function(inp, i) {
-        var idx = i;
-        inp.addEventListener("input", function() {
-          if (slots[idx]) slots[idx].name = inp.value.slice(0, 30);
-          updateSaveButton();
-        });
-      });
-      slotsEl.querySelectorAll("[data-url]").forEach(function(inp, i) {
-        var idx = i;
-        inp.addEventListener("input", function() {
-          if (slots[idx]) slots[idx].url = inp.value;
-          updateSaveButton();
-        });
-      });
-      updateSaveButton();
-    }
-
-    function renderSavedChips() {
-      var list = getBakalariState();
-      chipsEl.innerHTML = list.map(function(item, i) {
-        var label = item.name.length > 24 ? item.name.slice(0, 21) + "..." : item.name;
-        return "<button type=\"button\" class=\"iu-bakalariChip\" data-bakalari-chip-url=\"" + esc(normalizeBakalariUrl(item.url)) + "\">" + esc(label) + "</button>";
-      }).join("");
-      chipsEl.querySelectorAll(".iu-bakalariChip").forEach(function(btn) {
-        var url = btn.getAttribute("data-bakalari-chip-url");
-        btn.addEventListener("click", function() {
-          if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
-        });
-      });
-    }
-
-    function showSavedFeedback() {
-      if (!feedbackEl) return;
-      feedbackEl.textContent = "Uloženo";
-      feedbackEl.classList.add("iu-bakalariSavedFeedback--visible");
-      savedFeedbackUntil = Date.now() + 2500;
-      setTimeout(function() {
-        feedbackEl.classList.remove("iu-bakalariSavedFeedback--visible");
-        feedbackEl.textContent = "";
-      }, 2500);
-    }
-
-    addBtn.addEventListener("click", function() {
-      slots.push({ name: "", url: "" });
-      renderSlots();
-    });
-
-    removeBtn.addEventListener("click", function() {
-      if (slots.length <= 1) return;
-      slots.pop();
-      renderSlots();
-    });
-
-    saveBtn.addEventListener("click", function() {
-      var rows = getSlotsFromDom();
-      if (!rows.length) return;
-      var toSave = [];
-      for (var i = 0; i < rows.length; i++) {
-        var name = rows[i].name.trim().slice(0, 30);
-        var url = normalizeBakalariUrl(rows[i].url);
-        if (name.length === 0) continue;
-        if (!isValidBakalariUrl(rows[i].url)) continue;
-        toSave.push({ name: name, url: url });
+    function showGlobalFb(text, ms) {
+      if (!globalFb) return;
+      globalFb.textContent = text || "";
+      if (ms) {
+        window.setTimeout(function () {
+          if (globalFb.textContent === text) globalFb.textContent = "";
+        }, ms);
       }
-      setBakalariState(toSave);
-      saved = toSave;
-      slots = toSave.length ? toSave.slice() : [{ name: "", url: "" }];
-      renderSlots();
-      renderSavedChips();
-      showSavedFeedback();
-      updateSaveButton();
-    });
+    }
 
-    renderSlots();
-    renderSavedChips();
+    function readCardFromDom(cardEl) {
+      var id = cardEl.getAttribute("data-bakalari-id") || "";
+      var nameInp = cardEl.querySelector("[data-field=\"name\"]");
+      var urlInp = cardEl.querySelector("[data-field=\"url\"]");
+      var userInp = cardEl.querySelector("[data-field=\"username\"]");
+      var passInp = cardEl.querySelector("[data-field=\"password\"]");
+      return {
+        id: id,
+        name: (nameInp && nameInp.value) ? nameInp.value.trim().slice(0, 30) : "",
+        url: (urlInp && urlInp.value) ? urlInp.value.trim() : "",
+        username: (userInp && userInp.value) ? userInp.value.trim() : "",
+        password: (passInp && passInp.value) ? passInp.value : ""
+      };
+    }
+
+    function profileFromCardEl(cardEl) {
+      var o = readCardFromDom(cardEl);
+      o.url = normalizeBakalariUrl(o.url);
+      return o;
+    }
+
+    function setOpenButtonState(cardEl) {
+      var urlInp = cardEl.querySelector("[data-field=\"url\"]");
+      var openBtn = cardEl.querySelector("[data-bakalari-open]");
+      if (!openBtn || !urlInp) return;
+      var ok = isValidBakalariUrl(urlInp.value);
+      openBtn.disabled = !ok;
+      openBtn.setAttribute("aria-disabled", ok ? "false" : "true");
+    }
+
+    function syncProfilesFromDom() {
+      var cardNodes = cardsEl.querySelectorAll(".bakalari-card");
+      var next = [];
+      for (var i = 0; i < cardNodes.length; i++) {
+        next.push(profileFromCardEl(cardNodes[i]));
+      }
+      profiles = next;
+    }
+
+    function persistAllFromDom() {
+      syncProfilesFromDom();
+      var cleaned = profiles.filter(function (p) { return !isBakalariProfileEmpty(p); });
+      setBakalariProfilesToStorage(cleaned);
+    }
+
+    function updateAddButtonState() {
+      var n = cardsEl.querySelectorAll(".bakalari-card").length;
+      if (addAnotherBtn) addAnotherBtn.disabled = n >= BAKALARI_MAX_CARDS;
+    }
+
+    function bindCard(cardEl) {
+      var urlInp = cardEl.querySelector("[data-field=\"url\"]");
+      var openBtn = cardEl.querySelector("[data-bakalari-open]");
+
+      if (urlInp) {
+        urlInp.addEventListener("input", function () { setOpenButtonState(cardEl); });
+      }
+      setOpenButtonState(cardEl);
+
+      if (openBtn) {
+        openBtn.addEventListener("click", function () {
+          var u = urlInp ? urlInp.value : "";
+          if (!isValidBakalariUrl(u)) return;
+          openBakalariUrlSafe(u);
+        });
+      }
+
+      var saveBtn = cardEl.querySelector("[data-action=\"save\"]");
+      if (saveBtn) {
+        saveBtn.addEventListener("click", function () {
+          var data = profileFromCardEl(cardEl);
+          if (isBakalariProfileEmpty(data)) {
+            var msgEl = cardEl.querySelector("[data-bakalari-card-feedback]");
+            if (msgEl) {
+              msgEl.textContent = "Vyplňte alespoň jedno pole.";
+              window.setTimeout(function () { if (msgEl.textContent === "Vyplňte alespoň jedno pole.") msgEl.textContent = ""; }, 2200);
+            }
+            return;
+          }
+          persistAllFromDom();
+          showGlobalFb("Uloženo.", 2200);
+          var cf = cardEl.querySelector("[data-bakalari-card-feedback]");
+          if (cf) cf.textContent = "";
+        });
+      }
+
+      var editBtn = cardEl.querySelector("[data-action=\"edit\"]");
+      if (editBtn) {
+        editBtn.addEventListener("click", function () {
+          cardEl.classList.remove("bakalari-card--highlight");
+          void cardEl.offsetWidth;
+          cardEl.classList.add("bakalari-card--highlight");
+          window.setTimeout(function () { cardEl.classList.remove("bakalari-card--highlight"); }, 600);
+          var urlField = cardEl.querySelector("[data-field=\"url\"]");
+          var first = cardEl.querySelector("[data-field=\"name\"]");
+          var target = (urlField && !String(urlField.value || "").trim()) ? urlField : (first || urlField);
+          if (target) {
+            try { target.focus(); } catch (_) {}
+          }
+        });
+      }
+
+      var delBtn = cardEl.querySelector("[data-action=\"delete\"]");
+      if (delBtn) {
+        delBtn.addEventListener("click", function () {
+          var all = cardsEl.querySelectorAll(".bakalari-card");
+          if (all.length <= 1) {
+            var inpName = cardEl.querySelector("[data-field=\"name\"]");
+            var inpUrl = cardEl.querySelector("[data-field=\"url\"]");
+            var inpUser = cardEl.querySelector("[data-field=\"username\"]");
+            var inpPass = cardEl.querySelector("[data-field=\"password\"]");
+            if (inpName) inpName.value = "";
+            if (inpUrl) inpUrl.value = "";
+            if (inpUser) inpUser.value = "";
+            if (inpPass) inpPass.value = "";
+            try {
+              cardEl.setAttribute("data-bakalari-id", "bak_" + Date.now());
+            } catch (_) {}
+            setOpenButtonState(cardEl);
+            setBakalariProfilesToStorage([]);
+            showGlobalFb("Karta vyčištěna.", 1800);
+            return;
+          }
+          cardEl.parentNode.removeChild(cardEl);
+          persistAllFromDom();
+          updateAddButtonState();
+        });
+      }
+    }
+
+    function cardHtml(p) {
+      var id = esc(p.id);
+      return (
+        "<section class=\"bakalari-card\" data-bakalari-id=\"" + id + "\">" +
+        "  <button type=\"button\" class=\"bakalari-open-btn\" data-bakalari-open disabled aria-disabled=\"true\">Otevřít Bakaláře</button>" +
+        "  <div class=\"bakalari-fields\">" +
+        "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Jméno dítěte</span><input type=\"text\" class=\"bakalari-input\" data-field=\"name\" maxlength=\"30\" autocomplete=\"name\" value=\"" + esc(p.name) + "\" placeholder=\"Jméno\" /></label>" +
+        "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Odkaz na Bakaláře</span><input type=\"url\" class=\"bakalari-input\" data-field=\"url\" inputmode=\"url\" autocomplete=\"url\" value=\"" + esc(p.url) + "\" placeholder=\"https://…\" /></label>" +
+        "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Uživatelské jméno (volitelné)</span><input type=\"text\" class=\"bakalari-input\" data-field=\"username\" autocomplete=\"username\" value=\"" + esc(p.username) + "\" /></label>" +
+        "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Heslo (volitelné)</span><input type=\"password\" class=\"bakalari-input\" data-field=\"password\" autocomplete=\"current-password\" value=\"" + esc(p.password) + "\" /></label>" +
+        "  </div>" +
+        "  <div class=\"bakalari-card-actions\">" +
+        "    <button type=\"button\" class=\"bakalari-btn bakalari-btn--secondary\" data-action=\"save\">Uložit</button>" +
+        "    <button type=\"button\" class=\"bakalari-btn bakalari-btn--ghost\" data-action=\"edit\">Upravit</button>" +
+        "    <button type=\"button\" class=\"bakalari-btn bakalari-btn--danger\" data-action=\"delete\">Odstranit</button>" +
+        "  </div>" +
+        "  <div class=\"bakalari-card-feedback\" data-bakalari-card-feedback aria-live=\"polite\"></div>" +
+        "</section>"
+      );
+    }
+
+    function renderAllCards() {
+      cardsEl.innerHTML = profiles.map(function (p) { return cardHtml(p); }).join("");
+      cardsEl.querySelectorAll(".bakalari-card").forEach(function (el) {
+        bindCard(el);
+        setOpenButtonState(el);
+      });
+      updateAddButtonState();
+    }
+
+    if (addAnotherBtn) {
+      addAnotherBtn.addEventListener("click", function () {
+        var n = cardsEl.querySelectorAll(".bakalari-card").length;
+        if (n >= BAKALARI_MAX_CARDS) return;
+        syncProfilesFromDom();
+        profiles.push({ id: "bak_" + Date.now(), name: "", url: "", username: "", password: "" });
+        renderAllCards();
+        var last = cardsEl.querySelector(".bakalari-card:last-of-type");
+        if (last) {
+          var u = last.querySelector("[data-field=\"url\"]");
+          if (u) try { u.focus(); } catch (_) {}
+        }
+      });
+    }
+
+    renderAllCards();
   }
 
   function renderPojistovnaModal(container) {
