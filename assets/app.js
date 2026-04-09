@@ -23573,21 +23573,41 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   const IU_BANKS_KEY = "iuUserBanks";
   const BAKALARI_KEY = "iu_moje_sluzby_bakalari_v1";
   const POJISTOVNY_KEY = "iu_moje_sluzby_pojistovny_names_v1";
-  /** Legacy retail banks removed from active IB overlay — must never reappear as clickable presets. */
-  const IU_BANKS_LEGACY_IDS = ["citi", "equa", "sberbank"];
-  function iuIsLegacyBankId(id) {
-    return IU_BANKS_LEGACY_IDS.indexOf(String(id || "")) !== -1;
+  /** Legacy + removed presets — must never reappear as active IB tiles or favorites. */
+  const IU_BANKS_BLOCKED_IDS = ["citi", "equa", "sberbank", "max", "creditas"];
+  function iuIsBlockedBankId(id) {
+    return IU_BANKS_BLOCKED_IDS.indexOf(String(id || "")) !== -1;
   }
-  function iuFilterLegacyFromFavorites(arr) {
+  function iuFilterBlockedFromFavorites(arr) {
     if (!Array.isArray(arr)) return [];
-    return arr.filter(function (bid) { return !iuIsLegacyBankId(bid); });
+    return arr.filter(function (bid) { return !iuIsBlockedBankId(bid); });
+  }
+  var IU_BANK_LOGIN_PRESS_MS = 130;
+  function iuOpenBankLoginAfterPress(mainBtn, url) {
+    if (!mainBtn || mainBtn.getAttribute("data-iu-ib-opening") === "1") return;
+    var u = String(url || "");
+    if (!/^https?:\/\//i.test(u)) return;
+    mainBtn.setAttribute("data-iu-ib-opening", "1");
+    try {
+      if (typeof navigator.vibrate === "function") {
+        navigator.vibrate(10);
+      }
+    } catch (_) {}
+    mainBtn.classList.add("iu-clickable-feedback", "iu-pressed");
+    window.setTimeout(function () {
+      window.open(u, "_blank", "noopener,noreferrer");
+      window.setTimeout(function () {
+        mainBtn.classList.remove("iu-clickable-feedback", "iu-pressed");
+        mainBtn.removeAttribute("data-iu-ib-opening");
+      }, 60);
+    }, IU_BANK_LOGIN_PRESS_MS);
   }
 
   function iuGetBanks() {
     try {
       let arr = JSON.parse(localStorage.getItem(IU_BANKS_KEY) || "[]");
       if (!Array.isArray(arr)) arr = [];
-      var cleaned = iuFilterLegacyFromFavorites(arr);
+      var cleaned = iuFilterBlockedFromFavorites(arr);
       if (cleaned.length !== arr.length) {
         arr = cleaned;
         try { localStorage.setItem(IU_BANKS_KEY, JSON.stringify(arr)); } catch (_) {}
@@ -23598,7 +23618,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           if (raw) {
             const o = JSON.parse(raw);
             if (o && Array.isArray(o.favorites) && o.favorites.length) {
-              arr = iuFilterLegacyFromFavorites(o.favorites);
+              arr = iuFilterBlockedFromFavorites(o.favorites);
               localStorage.setItem(IU_BANKS_KEY, JSON.stringify(arr));
             }
           }
@@ -23615,7 +23635,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     try { localStorage.setItem(IU_BANKS_KEY, JSON.stringify(arr)); } catch (_) {}
   }
   function iuAddBank(id) {
-    if (iuIsLegacyBankId(id)) return;
+    if (iuIsBlockedBankId(id)) return;
     const banks = iuGetBanks();
     if (!banks.includes(id)) {
       banks.push(id);
@@ -23638,18 +23658,17 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   const IU_BANKS_ALL = [
-    { id: "csas", label: "ČSOB", url: "https://www.csob.cz/", loginUrl: "https://www.csob.cz/prihlaseni", color: "#1a1a1a" },
-    /* Komerční banka: jediný overlay preset je retail osobní IB (MojeBanka) přes /cs/online-banking/ — není KB+ ani firemní produkt. */
-    { id: "kb", label: "Komerční banka", url: "https://www.kb.cz/", loginUrl: "https://www.kb.cz/cs/online-banking/", color: "#c41230" },
+    /* ČSOB: přímé retail IB (bez marketingové stránky /prihlaseni). */
+    { id: "csas", label: "ČSOB", url: "https://www.csob.cz/", loginUrl: "https://online.csob.cz/", color: "#1a1a1a" },
+    /* Komerční banka: retail MojeBanka — stabilní vstup (kb.cz/cs/online-banking často 404). */
+    { id: "kb", label: "Komerční banka", url: "https://www.kb.cz/", loginUrl: "https://mojebanka.kb.cz/", color: "#c41230" },
     { id: "air", label: "Air Bank", url: "https://www.airbank.cz/", loginUrl: "https://ib.airbank.cz/", color: "#e6007e" },
     { id: "fio", label: "Fio banka", url: "https://www.fio.cz/", loginUrl: "https://ib.fio.cz/", color: "#00a651" },
     { id: "mb", label: "mBank", url: "https://www.mbank.cz/", loginUrl: "https://online.mbank.cz/cs/Login", color: "#e30613" },
     { id: "rb", label: "Raiffeisenbank", url: "https://www.rb.cz/", loginUrl: "https://www.rb.cz/vstup-na-ucet", color: "#ffed00" },
     { id: "cs", label: "ČS", url: "https://www.csas.cz/", loginUrl: "https://george.csas.cz/", color: "#1a1a1a" },
     { id: "moneta", label: "Moneta", url: "https://www.moneta.cz/", loginUrl: "https://ib.moneta.cz/", color: "#e30613" },
-    { id: "unicredit", label: "UniCredit", url: "https://www.unicreditbank.cz/", loginUrl: "https://cz.unicreditbanking.eu/cs/login_form", color: "#e30613" },
-    { id: "max", label: "Max banka", url: "https://www.maxbanka.cz/", loginUrl: "https://ib.maxbanka.eu/", color: "#00a651" },
-    { id: "creditas", label: "Creditas", url: "https://www.creditas.cz/", loginUrl: "https://banking.creditas.cz/", color: "#1a1a1a" }
+    { id: "unicredit", label: "UniCredit", url: "https://www.unicreditbank.cz/", loginUrl: "https://cz.unicreditbanking.eu/cs/login_form", color: "#e30613" }
   ];
 
   const POJISTOVNY = [
@@ -23954,7 +23973,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         var btns = editMode ? "<span class=\"iu-mojeSluzbyMoveBtns\"><button type=\"button\" data-move-left data-idx=\"" + idx + "\" aria-label=\"Doleva\">←</button><button type=\"button\" data-move-right data-idx=\"" + idx + "\" aria-label=\"Doprava\">→</button></span>" : "";
         var loginUrl = bank.loginUrl || bank.url;
         return "<div class=\"iuBankCard\" data-fav-id=\"" + esc(id) + "\" data-bank-id=\"" + esc(id) + "\">" + btns +
-          "<button type=\"button\" class=\"iuBankCardMain iu-ibBankCardClickTop\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\" aria-hidden=\"true\"><svg class=\"iu-bank-building-svg\" viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" focusable=\"false\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 21h18\"/><path d=\"M5 21V7l7-4v18\"/><path d=\"M19 21V11l-7-4\"/><path d=\"M9 9v.01\"/><path d=\"M9 12v.01\"/><path d=\"M9 15v.01\"/><path d=\"M9 18v.01\"/></svg></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
+          "<button type=\"button\" class=\"iuBankCardMain iu-ibBankCardClickTop iu-clickable-feedback\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\" aria-hidden=\"true\"><svg class=\"iu-bank-building-svg\" viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" focusable=\"false\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 21h18\"/><path d=\"M5 21V7l7-4v18\"/><path d=\"M19 21V11l-7-4\"/><path d=\"M9 9v.01\"/><path d=\"M9 12v.01\"/><path d=\"M9 15v.01\"/><path d=\"M9 18v.01\"/></svg></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
           "<button type=\"button\" data-bank-id=\"" + esc(id) + "\" class=\"iuBankMiniActionBtn iuBankRemove\">ODEBRAT</button></div>";
       }).join("");
     }
@@ -23967,7 +23986,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       allGrid.innerHTML = otherBanks.map(function(bank) {
         var loginUrl = bank.loginUrl || bank.url;
         return "<div class=\"iuBankCard\" data-bank-id=\"" + esc(bank.id) + "\">" +
-          "<button type=\"button\" class=\"iuBankCardMain iu-ibBankCardClickTop\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\" aria-hidden=\"true\"><svg class=\"iu-bank-building-svg\" viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" focusable=\"false\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 21h18\"/><path d=\"M5 21V7l7-4v18\"/><path d=\"M19 21V11l-7-4\"/><path d=\"M9 9v.01\"/><path d=\"M9 12v.01\"/><path d=\"M9 15v.01\"/><path d=\"M9 18v.01\"/></svg></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
+          "<button type=\"button\" class=\"iuBankCardMain iu-ibBankCardClickTop iu-clickable-feedback\" data-bank-login-url=\"" + esc(loginUrl) + "\"><span class=\"iuBankIcon iuBankIconGold\" aria-hidden=\"true\"><svg class=\"iu-bank-building-svg\" viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" focusable=\"false\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 21h18\"/><path d=\"M5 21V7l7-4v18\"/><path d=\"M19 21V11l-7-4\"/><path d=\"M9 9v.01\"/><path d=\"M9 12v.01\"/><path d=\"M9 15v.01\"/><path d=\"M9 18v.01\"/></svg></span><span class=\"iuBankLabel iuBankLabelGold\">" + esc(bank.label) + "</span></button>" +
           "<button type=\"button\" data-bank-id=\"" + esc(bank.id) + "\" class=\"iuBankMiniActionBtn iuBankAdd\">PŘIDAT</button></div>";
       }).join("");
     }
@@ -24007,17 +24026,17 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           iuRenderBanks();
         }
       } else if (mainBtn && !editMode) {
-        var url = mainBtn.getAttribute("data-bank-login-url");
-        if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
+        var urlFav = mainBtn.getAttribute("data-bank-login-url");
+        iuOpenBankLoginAfterPress(mainBtn, urlFav);
       }
     });
 
     allGrid.addEventListener("click", function(e) {
       if (e.target.closest("button.iuBankAdd")) return;
-      var mainBtn = e.target.closest("button.iuBankCardMain");
-      if (mainBtn) {
-        var url = mainBtn.getAttribute("data-bank-login-url");
-        if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
+      var mainBtnAll = e.target.closest("button.iuBankCardMain");
+      if (mainBtnAll) {
+        var urlAll = mainBtnAll.getAttribute("data-bank-login-url");
+        iuOpenBankLoginAfterPress(mainBtnAll, urlAll);
       }
     });
 

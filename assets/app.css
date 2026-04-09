@@ -13367,6 +13367,44 @@ section.iu-mojeSluzby{
   flex-direction: column;
   align-items: center;
 }
+/* Internetové bankovnictví: press feedback na horní části karty (bez :has(), bez globálního přepisu tlačítek). */
+.iuBankCard .iuBankCardMain.iu-clickable-feedback{
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.15s ease;
+}
+.iuBankCard .iuBankCardMain.iu-clickable-feedback.iu-pressed{
+  transform: scale(0.98);
+}
+.iuBankCard .iuBankCardMain.iu-clickable-feedback.iu-pressed::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(0, 0, 0, 0.14);
+  pointer-events: none;
+}
+@keyframes iu-bank-ripple-fade{
+  0%{ opacity: 0.35; transform: scale(0.25); }
+  100%{ opacity: 0; transform: scale(1.35); }
+}
+.iuBankCard .iuBankCardMain.iu-clickable-feedback.iu-pressed::after{
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 140%;
+  height: 140%;
+  margin-left: -70%;
+  margin-top: -70%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, transparent 68%);
+  pointer-events: none;
+  animation: iu-bank-ripple-fade 0.28s ease-out forwards;
+}
 .iuBankCard .iuBankMiniActionBtn{
   display: block;
   margin-top: 8px;
