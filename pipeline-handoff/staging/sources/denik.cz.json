@@ -1,8 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-09T20:11:13.253251Z",
+  "ingestedAt": "2026-04-09T20:26:18.232977Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump zvažuje stažení části vojáků z Evropy, je naštvaný na spojence",
+      "url": "https://www.denik.cz/ze_sveta/donald-trump-vojaci-v-evrope-iran-spojenci.html",
+      "dt": "2026-04-09T19:57:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "evropy",
+        "naštvaný",
+        "spojence",
+        "stažení",
+        "trump",
+        "vojáků",
+        "zvažuje",
+        "části"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Putin vyhlásil na pravoslavné Velikonoce příměří na Ukrajině",
+      "url": "https://www.denik.cz/staty-mimo-eu/valka-na-ukrajine-vladimir-putin-velikonoce-primeri.html",
+      "dt": "2026-04-09T19:54:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "pravoslavné",
+        "putin",
+        "příměří",
+        "ukrajině",
+        "velikonoce",
+        "vyhlásil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -604,58 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš vyzval Orlen a MOL ke zlevnění. Firmy podle něj nepochopitelně zdražovaly",
-      "url": "https://www.denik.cz/ekonomika/andrej-babis-orlen-mol-ceny-benzinu.html",
-      "dt": "2026-04-09T08:31:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "firmy",
-        "mol",
-        "nepochopitelně",
-        "něj",
-        "orlen",
-        "podle",
-        "vyzval",
-        "zdražovaly",
-        "zlevnění"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Olomouci se o Velikonocích narodila žirafa. Nejprve spadla ze dvou metrů",
-      "url": "https://www.denik.cz/regiony/zoo-olomouc-zirafi-mlade.html",
-      "dt": "2026-04-09T08:28:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dvou",
-        "metrů",
-        "narodila",
-        "nejprve",
-        "olomouci",
-        "spadla",
-        "velikonocích",
-        "žirafa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -666,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29467,
+      "bytes": 29784,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -703,11 +699,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-09T18:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-09T19:57:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 19,
-          "finance": 6
+          "zpravy": 20,
+          "finance": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -719,6 +715,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump zvažuje stažení části vojáků z Evropy, je naštvaný na spojence",
+            "publishedAt": "2026-04-09T19:57:00Z"
+          },
+          {
+            "title": "Putin vyhlásil na pravoslavné Velikonoce příměří na Ukrajině",
+            "publishedAt": "2026-04-09T19:54:00Z"
+          },
           {
             "title": "Na Špicberkách hledají tělo ztraceného Čecha. Zřejmě jde o polárníka Jakeše",
             "publishedAt": "2026-04-09T18:55:00Z"
@@ -742,14 +746,6 @@
           {
             "title": "Strop pro naftu klesne o 4 koruny. Napětí ale trvá, ceny mohou kdykoliv vyletět",
             "publishedAt": "2026-04-09T14:15:00Z"
-          },
-          {
-            "title": "Lascívní pózy na policejním autě? Soud vyměřil čtyři měsíce vězení. Natvrdo",
-            "publishedAt": "2026-04-09T14:00:00Z"
-          },
-          {
-            "title": "Česká nádraží čeká změna, týká se všech cestujících. Některá hlášení utichnou",
-            "publishedAt": "2026-04-09T13:17:00Z"
           }
         ]
       }
