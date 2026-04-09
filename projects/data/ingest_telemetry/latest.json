@@ -1,36 +1,36 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-04-09T10:36:53.414522Z",
-  "run_time_utc": "2026-04-09T10:36:53.414522Z",
+  "generatedAt": "2026-04-09T10:51:51.753758Z",
+  "run_time_utc": "2026-04-09T10:51:51.753758Z",
   "summary": {
     "schemaVersion": 2,
-    "generatedAt": "2026-04-09T10:36:53.414522Z",
-    "run_time_utc": "2026-04-09T10:36:53.414522Z",
+    "generatedAt": "2026-04-09T10:51:51.753758Z",
+    "run_time_utc": "2026-04-09T10:51:51.753758Z",
     "sources_checked": 4,
     "sources_with_new_items": 2,
-    "total_raw_items": 171,
-    "total_parsed_items": 71,
-    "total_normalized_items": 71,
-    "total_after_dedupe_items": 52,
-    "total_written_articles_feed_attributed": 41,
+    "total_raw_items": 39,
+    "total_parsed_items": 39,
+    "total_normalized_items": 39,
+    "total_after_dedupe_items": 20,
+    "total_written_articles_feed_attributed": 23,
     "written_by_section": {
-      "zpravy": 373,
+      "zpravy": 374,
       "sport": 139,
       "finance": 140,
       "zdravi": 38,
       "cestovani": 12
     },
-    "newest_written_publishedAt": "2026-04-09T10:07:00Z",
+    "newest_written_publishedAt": "2026-04-09T10:41:20Z",
     "top_sources_by_new_items": [
       {
-        "source_id": "fin_hn",
-        "feed_url": "https://hn.cz/?m=rss",
-        "raw_feed_new_item_count": 40
+        "source_id": "vzd_betterlife",
+        "feed_url": "https://www.betterlife.cz/feed/",
+        "raw_feed_new_item_count": 10
       },
       {
-        "source_id": "fin_faei",
-        "feed_url": "https://www.faei.cz/feed/",
-        "raw_feed_new_item_count": 12
+        "source_id": "zpr_ceskajustice",
+        "feed_url": "https://www.ceska-justice.cz/feed/",
+        "raw_feed_new_item_count": 10
       },
       {
         "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -45,14 +45,14 @@
     ],
     "top_sources_by_written_items": [
       {
-        "source_id": "fin_hn",
-        "feed_url": "https://hn.cz/?m=rss",
-        "written_to_articles_json_count": 27
+        "source_id": "zpr_ceskajustice",
+        "feed_url": "https://www.ceska-justice.cz/feed/",
+        "written_to_articles_json_count": 16
       },
       {
-        "source_id": "fin_faei",
-        "feed_url": "https://www.faei.cz/feed/",
-        "written_to_articles_json_count": 14
+        "source_id": "vzd_betterlife",
+        "feed_url": "https://www.betterlife.cz/feed/",
+        "written_to_articles_json_count": 7
       },
       {
         "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -67,11 +67,6 @@
     ],
     "top_drop_sources": [
       {
-        "source_id": "fin_hn",
-        "feed_url": "https://hn.cz/?m=rss",
-        "raw_minus_written": 113
-      },
-      {
         "source_id": "yt_playlist_PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
         "raw_minus_written": 15
@@ -82,152 +77,86 @@
         "raw_minus_written": 4
       },
       {
-        "source_id": "fin_faei",
-        "feed_url": "https://www.faei.cz/feed/",
-        "raw_minus_written": -2
+        "source_id": "vzd_betterlife",
+        "feed_url": "https://www.betterlife.cz/feed/",
+        "raw_minus_written": 3
+      },
+      {
+        "source_id": "zpr_ceskajustice",
+        "feed_url": "https://www.ceska-justice.cz/feed/",
+        "raw_minus_written": -6
       }
     ]
   },
   "sources": [
     {
-      "source_id": "fin_faei",
-      "registry_id": "fin_faei",
-      "source_label": "FAEI",
-      "feed_url": "https://www.faei.cz/feed/",
-      "topic": "finance",
-      "section_primary": "finance",
-      "generatedAt": "2026-04-09T10:36:53.414522Z",
-      "run_time_utc": "2026-04-09T10:36:53.414522Z",
-      "raw_feed_item_count": 12,
-      "raw_feed_new_item_count": 12,
-      "raw_feed_latest_publishedAt": "2026-04-09T10:00:00Z",
-      "ingested_item_count": 12,
-      "parsed_item_count": 12,
-      "normalized_item_count": 12,
-      "valid_publishedAt_count": 12,
+      "source_id": "vzd_betterlife",
+      "registry_id": "vzd_betterlife",
+      "source_label": "BetterLife (edu)",
+      "feed_url": "https://www.betterlife.cz/feed/",
+      "topic": "vzdelavani",
+      "section_primary": "vzdelavani",
+      "generatedAt": "2026-04-09T10:51:51.753758Z",
+      "run_time_utc": "2026-04-09T10:51:51.753758Z",
+      "raw_feed_item_count": 10,
+      "raw_feed_new_item_count": 10,
+      "raw_feed_latest_publishedAt": "2026-04-09T10:25:12Z",
+      "ingested_item_count": 10,
+      "parsed_item_count": 10,
+      "normalized_item_count": 10,
+      "valid_publishedAt_count": 10,
       "mapped_to_section_count": {
         "zpravy": 0,
         "sport": 0,
-        "finance": 12,
+        "finance": 0,
         "zdravi": 0,
         "cestovani": 0,
-        "other": 0
+        "other": 10
       },
-      "release_eligible_count": 14,
-      "written_to_articles_json_count": 14,
-      "newest_written_publishedAt": "2026-04-09T10:00:00Z",
+      "release_eligible_count": 5,
+      "written_to_articles_json_count": 7,
+      "newest_written_publishedAt": "2026-04-06T12:05:05Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
         "parser_drop": 0,
         "section_remap": 0,
-        "release_gate": 0,
+        "release_gate": 2,
         "dedupe": 0,
         "other": 0
       },
       "sample_titles": [
         {
-          "title": "Banka Creditas v historicky nejvyšším zisku",
-          "publishedAt": "2026-04-09T10:00:00Z"
+          "title": "Odepření přístupu do online světa situaci zhoršuje. Rodiče musí zvolit zcela odlišnou strategii",
+          "publishedAt": "2026-04-09T10:25:12Z"
         },
         {
-          "title": "Křehké příměří na Blízkém východě. Trhy slaví, realita se ale příliš nemění",
-          "publishedAt": "2026-04-09T08:00:47Z"
+          "title": "Filip Turek tvrdě narazil v debatě o větrnících. Analytik mu vmetl nedostatek odbornosti",
+          "publishedAt": "2026-04-09T08:59:23Z"
         },
         {
-          "title": "Další íránské TACO potvrzuje existující vazbu středoevropských měn na ropu",
-          "publishedAt": "2026-04-09T06:00:30Z"
+          "title": "Bývalý moderátor zpráv žije sen mnoha Čechů v důchodu. Utrácí štědré úspory a cestuje po světě",
+          "publishedAt": "2026-04-08T15:57:47Z"
         },
         {
-          "title": "Nejoblíbenější papež, nejhorší Putin. A jak Češi hodnotí Zelenského?",
-          "publishedAt": "2026-04-09T04:00:15Z"
+          "title": "Cukr v nápojích: Každý druhý dětský kaz souvisí s pitím limonád nebo ovocných džusů",
+          "publishedAt": "2026-04-08T10:09:44Z"
         },
         {
-          "title": "Proč Trump zase ucuknul?",
-          "publishedAt": "2026-04-08T11:00:48Z"
+          "title": "Lednice plné barevných vajec: Zelený okraj žloutku není problém, ten je spíše ve formě skladování",
+          "publishedAt": "2026-04-08T07:43:15Z"
         },
         {
-          "title": "Velký politický omyl: Peníze na obranu nejsou pro Trumpa, ale pro Evropu",
-          "publishedAt": "2026-04-08T10:00:24Z"
+          "title": "Vesničko má středisková: Původní herecké obsazení, smrtelná nehoda a film vznikl jako záchrana před finančním průšvihem",
+          "publishedAt": "2026-04-06T12:05:05Z"
         },
         {
-          "title": "Jak zdražování ropy ovlivní cenu letní dovolené?",
-          "publishedAt": "2026-04-08T08:00:41Z"
+          "title": "Neobvyklé velikonoční tradice ve světě: Dobrovolné utrpení na kříži, hony na králíky a v hlavní roli kriminálky",
+          "publishedAt": "2026-04-06T09:22:52Z"
         },
         {
-          "title": "Martin Durčák členem představenstva Colt CZ Group",
-          "publishedAt": "2026-04-08T06:00:08Z"
-        }
-      ]
-    },
-    {
-      "source_id": "fin_hn",
-      "registry_id": "fin_hn",
-      "source_label": "HN / Ekonomika",
-      "feed_url": "https://hn.cz/?m=rss",
-      "topic": "finance",
-      "section_primary": "finance",
-      "generatedAt": "2026-04-09T10:36:53.414522Z",
-      "run_time_utc": "2026-04-09T10:36:53.414522Z",
-      "raw_feed_item_count": 140,
-      "raw_feed_new_item_count": 40,
-      "raw_feed_latest_publishedAt": "2026-04-09T10:07:00Z",
-      "ingested_item_count": 40,
-      "parsed_item_count": 40,
-      "normalized_item_count": 40,
-      "valid_publishedAt_count": 40,
-      "mapped_to_section_count": {
-        "zpravy": 5,
-        "sport": 1,
-        "finance": 33,
-        "zdravi": 1,
-        "cestovani": 0,
-        "other": 0
-      },
-      "release_eligible_count": 27,
-      "written_to_articles_json_count": 27,
-      "newest_written_publishedAt": "2026-04-09T10:07:00Z",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 0,
-        "dedupe": 0,
-        "other": 0
-      },
-      "sample_titles": [
-        {
-          "title": "Zlevněte, vyzval Babiš Orlen a MOL. Firmy podle něj nepochopitelně zdražily, premiér čeká, že teď ceny dramaticky sníží",
-          "publishedAt": "2026-04-09T10:07:00Z"
-        },
-        {
-          "title": "Seriál Harry Hole neví, kdy přestat. V nové krimi podle Joa Nesb&#248;ho jde víc o detektiva než o vraždy",
-          "publishedAt": "2026-04-09T10:00:00Z"
-        },
-        {
-          "title": "Rozprodávali obrazy, dotkli se dna. Jiří Grund líčí, jak výrobce designového textilu do koupelen znovu roste a bojuje s Čínou",
-          "publishedAt": "2026-04-09T10:00:00Z"
-        },
-        {
-          "title": "&bdquo;Strategická investice do budoucnosti české energetiky.&ldquo; ČEZ bude vyvíjet palivo pro Dukovany s francouzskou Framatome",
-          "publishedAt": "2026-04-09T08:46:00Z"
-        },
-        {
-          "title": "Příměří není vítězství, Írán však stále drží obohacený uran a rakety. Teprve skončilo druhé dějství tohoto představení",
-          "publishedAt": "2026-04-09T08:44:00Z"
-        },
-        {
-          "title": "Argentinci se mají špatně. Prezident Milei je ale pořád mezinárodní hvězdou, kterou brzy navštíví i Petr Pavel",
-          "publishedAt": "2026-04-09T08:37:00Z"
-        },
-        {
-          "title": "Začal 31. ročník Pražského studentského summitu, který simuluje fungování OSN, NATO, EU nebo G20",
-          "publishedAt": "2026-04-09T08:23:00Z"
-        },
-        {
-          "title": "Český odborník na migraci nastoupil na špičkový post v Bruselu. Bude mít vliv na podobu společné migrační politiky EU",
-          "publishedAt": "2026-04-09T08:15:00Z"
+          "title": "Velikonoční pondělí: Omlazení, kraslice, šupání prutem a pozor na polévání vodou",
+          "publishedAt": "2026-04-06T06:28:26Z"
         }
       ]
     },
@@ -238,8 +167,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-09T10:36:53.414522Z",
-      "run_time_utc": "2026-04-09T10:36:53.414522Z",
+      "generatedAt": "2026-04-09T10:51:51.753758Z",
+      "run_time_utc": "2026-04-09T10:51:51.753758Z",
       "raw_feed_item_count": 4,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2026-01-20T08:01:05Z",
@@ -276,8 +205,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-09T10:36:53.414522Z",
-      "run_time_utc": "2026-04-09T10:36:53.414522Z",
+      "generatedAt": "2026-04-09T10:51:51.753758Z",
+      "run_time_utc": "2026-04-09T10:51:51.753758Z",
       "raw_feed_item_count": 15,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2024-07-19T09:05:16Z",
@@ -306,6 +235,77 @@
         "other": 0
       },
       "sample_titles": []
+    },
+    {
+      "source_id": "zpr_ceskajustice",
+      "registry_id": "zpr_ceskajustice",
+      "source_label": "Česká justice",
+      "feed_url": "https://www.ceska-justice.cz/feed/",
+      "topic": "aktualne",
+      "section_primary": "zpravy",
+      "generatedAt": "2026-04-09T10:51:51.753758Z",
+      "run_time_utc": "2026-04-09T10:51:51.753758Z",
+      "raw_feed_item_count": 10,
+      "raw_feed_new_item_count": 10,
+      "raw_feed_latest_publishedAt": "2026-04-09T10:41:20Z",
+      "ingested_item_count": 10,
+      "parsed_item_count": 10,
+      "normalized_item_count": 10,
+      "valid_publishedAt_count": 10,
+      "mapped_to_section_count": {
+        "zpravy": 10,
+        "sport": 0,
+        "finance": 0,
+        "zdravi": 0,
+        "cestovani": 0,
+        "other": 0
+      },
+      "release_eligible_count": 16,
+      "written_to_articles_json_count": 16,
+      "newest_written_publishedAt": "2026-04-09T10:41:20Z",
+      "drop_counts": {
+        "missing_publishedAt": 0,
+        "invalid_publishedAt": 0,
+        "parser_drop": 0,
+        "section_remap": 0,
+        "release_gate": 0,
+        "dedupe": 0,
+        "other": 0
+      },
+      "sample_titles": [
+        {
+          "title": "5 dní samotky za pití alkoholu na svobodě. Soud rozhodl spor s věznicí",
+          "publishedAt": "2026-04-09T10:41:20Z"
+        },
+        {
+          "title": "Odejdeš ze třídy na toaletu a končíš. Ombudsman zpochybnil pravidlo přijímaček",
+          "publishedAt": "2026-04-09T09:10:37Z"
+        },
+        {
+          "title": "Prodával Hitlera na hrncích, hrozilo mu 10 let. Teď jde jen o přestupek",
+          "publishedAt": "2026-04-09T09:03:23Z"
+        },
+        {
+          "title": "Dvanáct let čekání na fiasko: Proč soud rozmetal ostravský korupční příběh?",
+          "publishedAt": "2026-04-09T05:00:00Z"
+        },
+        {
+          "title": "Autopilot na českých dálnicích. Jen začátek, přicházejí vozy bez řidiče",
+          "publishedAt": "2026-04-09T04:30:00Z"
+        },
+        {
+          "title": "Koudelka: Česko vymírá. Stát nemůže držet stejný počet soudů",
+          "publishedAt": "2026-04-08T13:47:44Z"
+        },
+        {
+          "title": "Čachry v CzechTourism: Exmanažer dostal podmínku a má zaplatit pětimilionovou škodu",
+          "publishedAt": "2026-04-08T11:12:19Z"
+        },
+        {
+          "title": "Stamilionový podvod na inovace: Detektivové vtrhli na ministerstvo a stavební úřad",
+          "publishedAt": "2026-04-08T09:00:31Z"
+        }
+      ]
     }
   ]
 }
