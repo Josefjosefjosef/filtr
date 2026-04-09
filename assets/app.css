@@ -13443,6 +13443,79 @@ section.iu-mojeSluzby{
   padding: 6px 10px;
   min-width: 100px;
 }
+
+/* Internetové bankovnictví (QuickFeed): mobile/tablet — vertikální stack „Přidat vlastní banku“ + zelená horní část karty.
+   Guard: #iuQuickFeed + max-width 1023px — desktop layout beze změny. Bez :has(). */
+@media (max-width: 1023px) {
+  #iuQuickFeed .iu-ibBankCustomForm[data-iu-ib-custom-form="1"]{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  #iuQuickFeed .iu-ibBankCustomForm[data-iu-ib-custom-form="1"] > h3{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    flex: 0 0 auto;
+  }
+  #iuQuickFeed .iu-ibBankCustomName,
+  #iuQuickFeed .iu-ibBankCustomUrl{
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+  }
+  #iuQuickFeed .iu-ibBankCustomAdd{
+    width: 100%;
+    max-width: 100%;
+    margin-top: 2px;
+    flex: 0 0 auto;
+    padding: 11px 18px;
+    font-size: 15px;
+    font-weight: 650;
+    line-height: 1.2;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    background: linear-gradient(180deg, #f8fafc, #eef2f7);
+    color: #0f172a;
+    box-sizing: border-box;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #iuQuickFeed .iu-ibBankCustomAdd:focus-visible{
+    outline: 2px solid #047857;
+    outline-offset: 2px;
+  }
+  #iuQuickFeed .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop{
+    margin-top: 0;
+    padding: 12px 10px;
+    border-radius: 12px;
+    box-sizing: border-box;
+    background: linear-gradient(180deg, #059669, #047857);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    color: #ecfdf5;
+  }
+  #iuQuickFeed .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop:hover{
+    background: linear-gradient(180deg, #10b981, #059669);
+  }
+  #iuQuickFeed .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop:focus-visible{
+    outline: 2px solid #a7f3d0;
+    outline-offset: 2px;
+  }
+  #iuQuickFeed .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop .iuBankIconGold{
+    color: #d1fae5;
+  }
+  #iuQuickFeed .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop .iuBankLabelGold{
+    color: #ecfdf5;
+  }
+}
 .iu-mojeSluzbyBakalariSlots{
   display: flex;
   flex-direction: column;
