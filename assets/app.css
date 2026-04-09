@@ -2817,6 +2817,34 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   box-sizing: border-box;
 }
 
+/* Bakaláři: fullscreen overlay na úzkém panelu (scoped přes data-moje-kind, bez zásahu do globálního overlay API). */
+@media (max-width: 1023px) {
+  #iu-mojeSluzbyOverlay[data-moje-kind="bakalari"] {
+    left: 0 !important;
+    width: 100vw !important;
+    max-width: none !important;
+    right: auto !important;
+    transform: none !important;
+  }
+  #iu-mojeSluzbyPanel[data-moje-kind="bakalari"] {
+    left: 0 !important;
+    width: 100vw !important;
+    max-width: none !important;
+    right: auto !important;
+    transform: none !important;
+    top: 0 !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    padding: calc(env(safe-area-inset-top, 0px) + 12px) 12px 12px !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+}
+
 #iu-aiOverlay {
   position: fixed;
   inset: 0;
@@ -13554,93 +13582,173 @@ section.iu-mojeSluzby{
     color: #ecfdf5;
   }
 }
-.iu-mojeSluzbyBakalariSlots{
+/* Bakaláři multi-card launcher — výhradně prefix .bakalari- */
+.bakalari-root{
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 14px;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
-.iu-mojeSluzbyBakalariSlot{
+.bakalari-cards-container{
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 14px;
 }
-.iu-mojeSluzbyBakalariSlot input{
-  flex: 1;
-  min-width: 0;
-  padding: 6px 10px;
-}
-.iu-mojeSluzbyBakalariActions{
+.bakalari-card{
   display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  box-sizing: border-box;
+  max-width: 100%;
+  transition: box-shadow .2s ease;
 }
-.iu-bakalariSaveBtn{
-  padding: 10px 20px;
+.bakalari-card--highlight{
+  box-shadow: 0 0 0 2px rgba(42,125,224,.55);
+}
+.bakalari-open-btn{
+  width: 100%;
+  padding: 12px 18px;
   border-radius: 12px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 15px;
   border: none;
   cursor: pointer;
   background: linear-gradient(180deg, #2a7de0, #1a5bb5);
   color: #fff;
   box-shadow: 0 4px 14px rgba(42,125,224,.35);
-  transition: .18s;
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.iu-bakalariSaveBtn:hover:not(:disabled){
+.bakalari-open-btn:hover:not(:disabled){
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(42,125,224,.45);
 }
-.iu-bakalariSaveBtn:disabled{
-  opacity: .5;
+.bakalari-open-btn:disabled{
+  opacity: .45;
   cursor: not-allowed;
+  box-shadow: none;
 }
-.iu-bakalariSavedFeedback{
-  min-height: 1.2em;
-  opacity: 0;
-  transition: opacity .2s;
-  font-size: 13px;
-  color: #2a7de0;
-  pointer-events: none;
+.bakalari-fields{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-.iu-bakalariSavedFeedback--visible{
-  opacity: 1;
+.bakalari-field{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
 }
-.iu-bakalariSavedSection{
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255,255,255,.08);
+.bakalari-label{
+  font-size: 12px;
+  color: rgba(255,255,255,.72);
 }
-.iu-bakalariSavedLabel{
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  color: rgba(255,255,255,.5);
-  margin-bottom: 10px;
+.bakalari-input{
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(0,0,0,.2);
+  color: inherit;
+  font-size: 14px;
 }
-.iu-bakalariSavedChips{
+.bakalari-input:focus{
+  outline: 2px solid rgba(42,125,224,.55);
+  outline-offset: 1px;
+}
+.bakalari-card-actions{
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-}
-.iu-bakalariChip{
-  display: inline-flex;
   align-items: center;
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.2);
-  background: rgba(255,255,255,.06);
-  color: inherit;
-  font-size: 13px;
-  cursor: pointer;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  transition: .15s;
 }
-.iu-bakalariChip:hover{
-  background: rgba(255,255,255,.12);
-  border-color: rgba(255,255,255,.3);
+.bakalari-btn{
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.bakalari-btn--secondary{
+  background: linear-gradient(180deg, #2a7de0, #1a5bb5);
+  color: #fff;
+  border-color: rgba(255,255,255,.12);
+}
+.bakalari-btn--ghost{
+  background: rgba(255,255,255,.08);
+  color: inherit;
+  border-color: rgba(255,255,255,.2);
+}
+.bakalari-btn--danger{
+  background: rgba(180,40,40,.25);
+  color: #fecaca;
+  border-color: rgba(248,113,113,.35);
+}
+.bakalari-add-another{
+  align-self: flex-start;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(255,255,255,.08);
+  color: inherit;
+  font-family: inherit;
+}
+.bakalari-add-another:disabled{
+  opacity: .45;
+  cursor: not-allowed;
+}
+.bakalari-global-feedback,
+.bakalari-card-feedback{
+  min-height: 1.2em;
+  font-size: 13px;
+  color: #7ab8ff;
+}
+#iuQuickFeed .bakalari-root{
+  max-width: min(860px, 100%);
+}
+/* QuickFeed (světlé pozadí .iuQCard): kontrast pro .bakalari-* */
+#iuQuickFeed .bakalari-card{
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(15, 23, 42, 0.12);
+}
+#iuQuickFeed .bakalari-label{
+  color: rgba(15, 23, 42, 0.65);
+}
+#iuQuickFeed .bakalari-input{
+  background: #fff;
+  border-color: rgba(15, 23, 42, 0.18);
+  color: #0f172a;
+}
+#iuQuickFeed .bakalari-add-another{
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.14);
+  color: #0f172a;
+}
+#iuQuickFeed .bakalari-btn--ghost{
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: rgba(15, 23, 42, 0.14);
+}
+#iuQuickFeed .bakalari-global-feedback,
+#iuQuickFeed .bakalari-card-feedback{
+  color: #1a5bb5;
 }
 .iu-mojeSluzbyPojistovna{
   display: flex;
