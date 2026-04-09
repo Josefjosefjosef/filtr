@@ -236,7 +236,8 @@ async function main() {
       if (typeof window.iuCloseMojeSluzbyModal === "function") window.iuCloseMojeSluzbyModal();
     });
     await page.waitForTimeout(200);
-    await page.evaluate(() => { try { localStorage.removeItem("iu_health_insurance_v2"); } catch (_) {} });
+    await page.evaluate(() => { try { localStorage.removeItem("iu_moje_sluzby_pojistovny_names_v1"); } catch (_) {} });
+    await page.evaluate(() => { try { localStorage.removeItem("iu_moje_sluzby_pojistovny_buttons_v1"); } catch (_) {} });
 
     await page.evaluate(() => {
       const btn = document.querySelector('[data-iuq="pojistovna"]');
@@ -244,39 +245,30 @@ async function main() {
     });
     await page.waitForTimeout(500);
 
-    await page.evaluate(() => {
-      const tr = document.querySelector("[data-iu-health-provider-trigger]");
-      if (tr) tr.click();
+    const pojCount = await page.evaluate(() => {
+      const sel = document.querySelector("[data-poj-insurer]");
+      if (!sel) return 0;
+      return sel.querySelectorAll("option").length;
     });
-    await page.waitForTimeout(200);
-
-    const pojCount = await page.evaluate(() => document.querySelectorAll(".iu-health-picker-item").length);
     lines.push("pojistovna_itemCount=" + pojCount);
 
     await page.evaluate(() => {
-      const vzp = document.querySelector('[data-iu-health-pick-id="vzp"]');
-      if (vzp) vzp.click();
-    });
-    await page.waitForTimeout(300);
-
-    await page.evaluate(() => {
-      const card = document.querySelector(".iu-health-card");
-      const personInp = card && card.querySelector("[data-iu-health-person]");
-      const loginInp = card && card.querySelector("[data-iu-health-login]");
-      const passInp = card && card.querySelector("[data-iu-health-password]");
-      const saveBtn = card && card.querySelector("[data-iu-health-save]");
-      if (personInp) {
-        personInp.focus();
-        personInp.value = "Jan Novák";
-        personInp.dispatchEvent(new Event("input", { bubbles: true }));
+      const sel = document.querySelector("[data-poj-insurer]");
+      const nameInp = document.querySelector("[data-poj-name]");
+      const colorSel = document.querySelector("[data-poj-color]");
+      const saveBtn = document.querySelector("[data-poj-save]");
+      if (sel) {
+        sel.value = "vzp";
+        sel.dispatchEvent(new Event("change", { bubbles: true }));
       }
-      if (loginInp) {
-        loginInp.value = "jan@example.cz";
-        loginInp.dispatchEvent(new Event("input", { bubbles: true }));
+      if (nameInp) {
+        nameInp.focus();
+        nameInp.value = "Jan Novák";
+        nameInp.dispatchEvent(new Event("input", { bubbles: true }));
       }
-      if (passInp) {
-        passInp.value = "TestHeslo123";
-        passInp.dispatchEvent(new Event("input", { bubbles: true }));
+      if (colorSel) {
+        colorSel.value = "c01";
+        colorSel.dispatchEvent(new Event("change", { bubbles: true }));
       }
       if (saveBtn) saveBtn.click();
     });
@@ -297,7 +289,7 @@ async function main() {
     await page.waitForTimeout(500);
 
     const pojPersist = await page.evaluate(() => {
-      const el = document.querySelector("[data-iu-health-card-title]");
+      const el = document.querySelector(".iu-pojistovnaTileName");
       return !!(el && (el.textContent || "").includes("Jan"));
     });
     lines.push("pojistovna_persist=" + pojPersist);
@@ -323,7 +315,7 @@ async function main() {
       favAfterReload >= 1 &&
       bakalariCardCount >= 1 &&
       bakalariPersist &&
-      pojCount >= 8 &&
+      pojCount >= 7 &&
       pojPersist &&
       consoleErrors.length === 0 &&
       pageErrors.length === 0 &&
