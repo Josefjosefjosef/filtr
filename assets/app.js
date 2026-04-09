@@ -23658,9 +23658,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   const IU_BANKS_ALL = [
-    /* ČSOB: přímé retail IB (bez marketingové stránky /prihlaseni). */
-    { id: "csas", label: "ČSOB", url: "https://www.csob.cz/", loginUrl: "https://online.csob.cz/", color: "#1a1a1a" },
-    /* Komerční banka: retail MojeBanka — stabilní vstup (kb.cz/cs/online-banking často 404). */
+    /* ČSOB: oficiální přihlášení (ČSOB ID / identita — retail IB vstup; online.csob může skončit na error v některých prohlížečích). */
+    { id: "csas", label: "ČSOB", url: "https://www.csob.cz/", loginUrl: "https://identita.csob.cz/", color: "#1a1a1a" },
+    /* Komerční banka: retail MojeBanka (ne KB+ / ne plus.kb.cz). */
     { id: "kb", label: "Komerční banka", url: "https://www.kb.cz/", loginUrl: "https://mojebanka.kb.cz/", color: "#c41230" },
     { id: "air", label: "Air Bank", url: "https://www.airbank.cz/", loginUrl: "https://ib.airbank.cz/", color: "#e6007e" },
     { id: "fio", label: "Fio banka", url: "https://www.fio.cz/", loginUrl: "https://ib.fio.cz/", color: "#00a651" },
