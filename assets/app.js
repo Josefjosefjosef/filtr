@@ -23949,7 +23949,6 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   const BAKALARI_LEGACY_KEY = "iu_moje_sluzby_bakalari_v1";
   const BAKALARI_MAX_CARDS = 10;
   var _bakalariLegacyMigrated = false;
-  const POJISTOVNY_KEY = "iu_moje_sluzby_pojistovny_names_v1";
   /** Legacy + removed presets — must never reappear as active IB tiles or favorites. */
   const IU_BANKS_BLOCKED_IDS = ["citi", "equa", "sberbank", "max", "creditas"];
   function iuIsBlockedBankId(id) {
@@ -24048,26 +24047,193 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     { id: "unicredit", label: "UniCredit", url: "https://www.unicreditbank.cz/", loginUrl: "https://cz.unicreditbanking.eu/cs/login_form", color: "#e30613" }
   ];
 
-  const POJISTOVNY = [
-    { id: "vzp", label: "VZP (111)", abbr: "VZP", loginUrl: "https://moje.vzp.cz/home/signin" },
-    { id: "vozp", label: "VoZP (201)", abbr: "VoZP", loginUrl: "https://www.vozp.cz/pojistenci/prihlaseni" },
-    { id: "cpzp", label: "ČPZP (205)", abbr: "ČPZP", loginUrl: "https://www.cpzp.cz/pojistenci/prihlaseni" },
-    { id: "ozp", label: "OZP (207)", abbr: "OZP", loginUrl: "https://portal.ozp.cz/app/prihlaseni" },
-    { id: "zps", label: "ZPŠ (209)", abbr: "ZPŠ", loginUrl: "https://portal.zpskoda.cz/app/prihlaseni" },
-    { id: "zpmv", label: "ZP MV ČR (211)", abbr: "ZPMV", loginUrl: "https://www.zpmvcr.cz/pojistenci/prihlaseni" },
-    { id: "rbp", label: "RBP (213)", abbr: "RBP", loginUrl: "https://www.rbp.cz/pojistenci/prihlaseni" }
+  const HEALTH_INSURANCE_STORAGE_KEY = "iu_health_insurance_v2";
+  const HEALTH_INSURANCE_SCHEMA_VERSION = 1;
+  const HEALTH_MAX_CARDS = 10;
+  const HEALTH_COLOR_PALETTE = ["#1a5bb5", "#c41230", "#00a651", "#e6007e", "#056da1", "#e30613", "#6b4c9a", "#16a085", "#e67e22", "#2c3e50"];
+  const HEALTH_PROVIDER_REGISTRY = [
+    { id: "vzp", name: "VZP", loginUrl: "https://auth.vzp.cz/signin", loginType: "email", passwordMode: "normal", loginLabel: "E-mail", openLabel: "Otevřít pojišťovnu", copyLoginLabel: "Kopírovat e-mail", requiresCustomUrl: false },
+    { id: "vozp", name: "VoZP", loginUrl: "https://www.vozp.cz/klientsky-portal", loginType: "username", passwordMode: "normal", loginLabel: "Přihlašovací jméno", openLabel: "Otevřít pojišťovnu", copyLoginLabel: "Kopírovat přihlašovací jméno", requiresCustomUrl: false },
+    { id: "cpzp", name: "ČPZP", loginUrl: "https://portal.cpzp.cz/", loginType: "username", passwordMode: "not_primary", loginLabel: "Přihlašovací jméno", openLabel: "Otevřít pojišťovnu", copyLoginLabel: "Kopírovat přihlašovací jméno", requiresCustomUrl: false, helperText: "Webové přihlášení může po otevření vyžadovat SMS kód." },
+    { id: "ozp", name: "OZP", loginUrl: "https://www.ozp.cz/elektronicka-komunikace/informace/vitakarta-online-informace", loginType: "username", passwordMode: "normal", loginLabel: "Uživatelské jméno", openLabel: "Otevřít pojišťovnu", copyLoginLabel: "Kopírovat uživatelské jméno", requiresCustomUrl: false, helperText: "Uživatelským jménem bývá ve většině případů e-mail." },
+    { id: "zps", name: "ZPŠ", loginUrl: "https://www.zpskoda.cz/karta-meho-srdce", loginType: "username", passwordMode: "normal", loginLabel: "Přihlašovací jméno", openLabel: "Otevřít pojišťovnu", copyLoginLabel: "Kopírovat přihlašovací jméno", requiresCustomUrl: false, helperText: "Web může po otevření vyžadovat i SMS kód." },
+    { id: "zpmv", name: "ZP MV ČR", loginUrl: "https://eforms.zpmvcr.cz/eforms/ekomunikace", loginType: "pin", passwordMode: "normal", loginLabel: "PIN", openLabel: "Otevřít pojišťovnu", copyLoginLabel: "Kopírovat PIN", requiresCustomUrl: false },
+    { id: "rbp", name: "RBP", loginUrl: "https://www.my213.cz/prihlaseni", loginType: "email", passwordMode: "normal", loginLabel: "E-mail", openLabel: "Otevřít pojišťovnu", copyLoginLabel: "Kopírovat e-mail", requiresCustomUrl: false },
+    { id: "custom", name: "Vlastní", loginUrl: "", loginType: "generic", passwordMode: "normal", loginLabel: "Přihlašovací údaj", openLabel: "Otevřít pojišťovnu", copyLoginLabel: "Kopírovat přihlašovací údaj", requiresCustomUrl: true }
   ];
-  const POJISTOVNY_BUTTONS_KEY = "iu_moje_sluzby_pojistovny_buttons_v1";
-  const POJISTOVNY_MAX = 24;
-  const POJISTOVNY_COLORS = [
-    { id: "c01", value: "#1a5bb5" }, { id: "c02", value: "#c41230" }, { id: "c03", value: "#00a651" },
-    { id: "c04", value: "#e6007e" }, { id: "c05", value: "#056da1" }, { id: "c06", value: "#e30613" },
-    { id: "c07", value: "#ffed00" }, { id: "c08", value: "#1a1a1a" }, { id: "c09", value: "#6b4c9a" },
-    { id: "c10", value: "#e67e22" }, { id: "c11", value: "#16a085" }, { id: "c12", value: "#8e44ad" },
-    { id: "c13", value: "#2c3e50" }, { id: "c14", value: "#c0392b" }, { id: "c15", value: "#27ae60" },
-    { id: "c16", value: "#2980b9" }, { id: "c17", value: "#d35400" }, { id: "c18", value: "#7f8c8d" },
-    { id: "c19", value: "#bdc3c7" }, { id: "c20", value: "#95a5a6" }
-  ];
+
+  function healthRegistryById(id) {
+    var sid = String(id || "");
+    for (var hi = 0; hi < HEALTH_PROVIDER_REGISTRY.length; hi++) {
+      if (HEALTH_PROVIDER_REGISTRY[hi].id === sid) return HEALTH_PROVIDER_REGISTRY[hi];
+    }
+    return null;
+  }
+
+  function healthPickNextColorToken(prevHex) {
+    var prev = String(prevHex || "");
+    for (var ci = 0; ci < HEALTH_COLOR_PALETTE.length; ci++) {
+      if (HEALTH_COLOR_PALETTE[ci] !== prev) return HEALTH_COLOR_PALETTE[ci];
+    }
+    return HEALTH_COLOR_PALETTE[0];
+  }
+
+  function healthNewCardModel(prevColorHex) {
+    return {
+      id: "hi_" + Date.now() + "_" + Math.random().toString(36).slice(2, 9),
+      providerId: "",
+      providerName: "",
+      url: "",
+      personLabel: "",
+      loginValue: "",
+      passwordValue: "",
+      loginType: "generic",
+      passwordMode: "normal",
+      colorToken: healthPickNextColorToken(prevColorHex),
+      isSaved: false
+    };
+  }
+
+  function healthApplyRegistryToCard(card) {
+    var pr = healthRegistryById(card.providerId);
+    if (!pr) return;
+    card.providerName = pr.name;
+    card.loginType = pr.loginType;
+    card.passwordMode = pr.passwordMode;
+    if (!pr.requiresCustomUrl) card.url = pr.loginUrl || "";
+  }
+
+  function healthSanitizeLoadedCard(c) {
+    if (!c || typeof c !== "object") return null;
+    var nid = String(c.id || "").trim();
+    if (!nid) return null;
+    var pid = String(c.providerId || "").trim();
+    var pr = healthRegistryById(pid);
+    var personLabel = String(c.personLabel != null ? c.personLabel : "").slice(0, 120);
+    var loginValue = String(c.loginValue != null ? c.loginValue : "");
+    var passwordValue = String(c.passwordValue != null ? c.passwordValue : "");
+    var colorToken = String(c.colorToken || "").trim();
+    if (HEALTH_COLOR_PALETTE.indexOf(colorToken) === -1) colorToken = HEALTH_COLOR_PALETTE[0];
+    var isSaved = c.isSaved === true;
+    if (!pr) {
+      return {
+        id: nid,
+        providerId: "",
+        providerName: "",
+        url: "",
+        personLabel: personLabel,
+        loginValue: loginValue,
+        passwordValue: passwordValue,
+        loginType: "generic",
+        passwordMode: "normal",
+        colorToken: colorToken,
+        isSaved: false
+      };
+    }
+    var url = String(c.url || "").trim();
+    if (!pr.requiresCustomUrl) url = pr.loginUrl || "";
+    return {
+      id: nid,
+      providerId: pr.id,
+      providerName: pr.name,
+      url: url,
+      personLabel: personLabel,
+      loginValue: loginValue,
+      passwordValue: passwordValue,
+      loginType: pr.loginType,
+      passwordMode: pr.passwordMode,
+      colorToken: colorToken,
+      isSaved: isSaved
+    };
+  }
+
+  function healthDefaultCards() {
+    return [healthNewCardModel(undefined)];
+  }
+
+  function healthLoadCardsFromStorage() {
+    try {
+      var raw = localStorage.getItem(HEALTH_INSURANCE_STORAGE_KEY);
+      if (!raw) return healthDefaultCards();
+      var p = JSON.parse(raw);
+      if (!p || typeof p !== "object") return healthDefaultCards();
+      if (Number(p.schemaVersion) !== HEALTH_INSURANCE_SCHEMA_VERSION) return healthDefaultCards();
+      if (!Array.isArray(p.cards)) return healthDefaultCards();
+      var out = [];
+      for (var li = 0; li < p.cards.length && out.length < HEALTH_MAX_CARDS; li++) {
+        var sc = healthSanitizeLoadedCard(p.cards[li]);
+        if (sc) out.push(sc);
+      }
+      if (out.length === 0) return healthDefaultCards();
+      return out;
+    } catch (_) {
+      return healthDefaultCards();
+    }
+  }
+
+  function healthSaveCardsToStorage(cards) {
+    try {
+      var list = Array.isArray(cards) ? cards.slice(0, HEALTH_MAX_CARDS) : [];
+      localStorage.setItem(HEALTH_INSURANCE_STORAGE_KEY, JSON.stringify({ schemaVersion: HEALTH_INSURANCE_SCHEMA_VERSION, cards: list }));
+    } catch (_) {}
+  }
+
+  function normalizeHealthUrl(url) {
+    var u = String(url || "").trim();
+    if (!u) return "";
+    if (/^https?:\/\//i.test(u)) return u;
+    return "https://" + u;
+  }
+
+  function isValidHealthOpenUrl(urlRaw) {
+    var u = normalizeHealthUrl(urlRaw);
+    if (!u) return false;
+    try {
+      var parsed = new URL(u);
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return false;
+      if (!parsed.hostname || String(parsed.hostname).length < 2) return false;
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function healthResolveOpenUrl(card) {
+    var pr = healthRegistryById(card.providerId);
+    if (!pr) return "";
+    if (pr.requiresCustomUrl) return normalizeHealthUrl(card.url);
+    return normalizeHealthUrl(pr.loginUrl || "");
+  }
+
+  function healthCopyLoginFeedback(loginType) {
+    var t = String(loginType || "");
+    if (t === "email") return "E-mail zkopírován";
+    if (t === "pin") return "PIN zkopírován";
+    if (t === "username") return "Přihlašovací jméno zkopírováno";
+    if (t === "generic") return "Přihlašovací údaj zkopírován";
+    return "Údaj zkopírován";
+  }
+
+  function healthValidateSave(card) {
+    var pr = healthRegistryById(card.providerId);
+    if (!pr) return { ok: false, msg: "Vyberte pojišťovnu." };
+    if (!String(card.loginValue || "").trim()) return { ok: false, msg: "Vyplňte přihlašovací údaj." };
+    if (pr.passwordMode === "normal" && !String(card.passwordValue || "").trim()) return { ok: false, msg: "Vyplňte heslo." };
+    if (pr.requiresCustomUrl && !isValidHealthOpenUrl(card.url)) return { ok: false, msg: "Zadejte platnou adresu URL (https://…)." };
+    return { ok: true, msg: "" };
+  }
+
+  function healthCopyToClipboard(text) {
+    var t = String(text || "");
+    try {
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+        var p = navigator.clipboard.writeText(t);
+        if (p && typeof p.then === "function") p.catch(function () {});
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
 
   function getBanksState() {
     try {
@@ -24173,36 +24339,6 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   function isValidBakalariUrl(url) {
     var u = normalizeBakalariUrl(url);
     return u.length >= 10 && /^https?:\/\/./i.test(u);
-  }
-
-  function getPojistovnyNames() {
-    try {
-      const raw = localStorage.getItem(POJISTOVNY_KEY);
-      if (raw) {
-        const o = JSON.parse(raw);
-        if (o && typeof o === "object") return o;
-      }
-    } catch (_) {}
-    return {};
-  }
-
-  function setPojistovnyNames(o) {
-    try { localStorage.setItem(POJISTOVNY_KEY, JSON.stringify(o)); } catch (_) {}
-  }
-
-  function getPojistovnyButtonsState() {
-    try {
-      var raw = localStorage.getItem(POJISTOVNY_BUTTONS_KEY);
-      if (raw) {
-        var a = JSON.parse(raw);
-        if (Array.isArray(a)) return a.slice(0, POJISTOVNY_MAX).filter(function(x) { return x && x.id && x.insurerId && x.loginUrl; });
-      }
-    } catch (_) {}
-    return [];
-  }
-
-  function setPojistovnyButtonsState(a) {
-    try { localStorage.setItem(POJISTOVNY_BUTTONS_KEY, JSON.stringify(Array.isArray(a) ? a.slice(0, POJISTOVNY_MAX) : [])); } catch (_) {}
   }
 
   function esc(s) { return String(s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
@@ -24853,127 +24989,426 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   function renderPojistovnaModal(container) {
-    var list = getPojistovnyButtonsState();
+    var NOTICE_TEXT = "Údaje se ukládají pouze ve vašem zařízení. infoUzel.cz žádná data nestahuje ani nikam neposílá.";
+    var profiles = healthLoadCardsFromStorage().slice();
 
-    var insurerOpts = "<option value=\"\">— Pojišťovna —</option>" + POJISTOVNY.map(function(p) {
-      return "<option value=\"" + esc(p.id) + "\" data-abbr=\"" + esc(p.abbr) + "\" data-url=\"" + esc(p.loginUrl) + "\">" + esc(p.label) + "</option>";
-    }).join("");
-    var colorOpts = "<option value=\"\">— Barva —</option>" + POJISTOVNY_COLORS.map(function(c) {
-      return "<option value=\"" + esc(c.id) + "\" data-value=\"" + esc(c.value) + "\">" + esc(c.value) + "</option>";
-    }).join("");
+    function healthCardTitleLine(card) {
+      var pr = healthRegistryById(card.providerId);
+      if (!pr) return "Nová pojišťovna";
+      var pl = String(card.personLabel || "").trim();
+      if (pl) return pr.name + " – " + pl;
+      return pr.name;
+    }
 
-    var html = [
-      "<div class=\"iu-mojeSluzbyPojistovna\">",
-      "  <div class=\"iu-pojistovnaForm\">",
-      "    <label class=\"iu-pojistovnaLabel\">Pojišťovna</label>",
-      "    <select class=\"iu-pojistovnaSelect\" data-poj-insurer>" + insurerOpts + "</select>",
-      "    <label class=\"iu-pojistovnaLabel\">Jméno</label>",
-      "    <input type=\"text\" class=\"iu-pojistovnaInput\" placeholder=\"Jméno\" data-poj-name maxlength=\"20\" />",
-      "    <label class=\"iu-pojistovnaLabel\">Barva</label>",
-      "    <select class=\"iu-pojistovnaSelect\" data-poj-color>" + colorOpts + "</select>",
-      "    <button type=\"button\" class=\"iu-pojistovnaSaveBtn\" data-poj-save>Uložit</button>",
+    function syncProfilesFromDom() {
+      var nodes = cardsEl.querySelectorAll(".iu-health-card");
+      for (var si = 0; si < nodes.length; si++) {
+        var ix = parseInt(nodes[si].getAttribute("data-iu-health-index") || "0", 10);
+        if (!profiles[ix]) continue;
+        var c = profiles[ix];
+        var personInp = nodes[si].querySelector("[data-iu-health-person]");
+        var urlInp = nodes[si].querySelector("[data-iu-health-custom-url]");
+        var loginInp = nodes[si].querySelector("[data-iu-health-login]");
+        var passInp = nodes[si].querySelector("[data-iu-health-password]");
+        if (personInp) c.personLabel = String(personInp.value || "").slice(0, 120);
+        if (urlInp) c.url = normalizeHealthUrl(urlInp.value);
+        if (loginInp) c.loginValue = String(loginInp.value || "");
+        if (passInp) c.passwordValue = String(passInp.value || "");
+      }
+    }
+
+    function persistAllFromDom() {
+      syncProfilesFromDom();
+      healthSaveCardsToStorage(profiles);
+    }
+
+    var rootHtml = [
+      "<div class=\"iu-health-root\" data-iu-health-root>",
+      "  <p class=\"iu-health-notice\" data-iu-health-notice>" + esc(NOTICE_TEXT) + "</p>",
+      "  <div class=\"iu-health-cards\" data-iu-health-cards></div>",
+      "  <button type=\"button\" class=\"iu-health-add\" data-iu-health-add>Přidat další</button>",
+      "  <div class=\"iu-health-global-feedback\" data-iu-health-global-feedback aria-live=\"polite\"></div>",
+      "  <div class=\"iu-health-picker-layer\" hidden data-iu-health-picker-layer role=\"presentation\">",
+      "    <div class=\"iu-health-picker-dialog\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"iu-health-picker-title\">",
+      "      <p id=\"iu-health-picker-title\" class=\"iu-health-picker-title\">Vyberte pojišťovnu</p>",
+      "      <div class=\"iu-health-picker-list\" data-iu-health-picker-list></div>",
+      "      <button type=\"button\" class=\"iu-health-picker-close\" data-iu-health-picker-close>Zavřít</button>",
+      "    </div>",
       "  </div>",
-      "  <div class=\"iu-pojistovnaMessage\" data-poj-message aria-live=\"polite\"></div>",
-      "  <div class=\"iu-pojistovnaSaved\">",
-      "    <div class=\"iuBanksGrid iu-pojistovnaSavedGrid\" data-poj-saved></div>",
+      "  <div class=\"iu-health-delete-layer\" hidden data-iu-health-delete-layer role=\"presentation\">",
+      "    <div class=\"iu-health-delete-dialog\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"iu-health-delete-title\">",
+      "      <p id=\"iu-health-delete-title\" class=\"iu-health-delete-title\">Opravdu chcete kartu odstranit?</p>",
+      "      <p class=\"iu-health-delete-hint\" data-iu-health-delete-hint></p>",
+      "      <div class=\"iu-health-delete-actions\">",
+      "        <button type=\"button\" class=\"iu-health-btn iu-health-btn--danger\" data-iu-health-delete-confirm>Odstranit</button>",
+      "        <button type=\"button\" class=\"iu-health-btn iu-health-btn--ghost\" data-iu-health-delete-cancel>Zrušit</button>",
+      "      </div>",
+      "    </div>",
       "  </div>",
       "</div>"
     ].join("");
-    container.innerHTML = html;
+    container.innerHTML = rootHtml;
 
-    var insurerSelect = container.querySelector("[data-poj-insurer]");
-    var nameInput = container.querySelector("[data-poj-name]");
-    var colorSelect = container.querySelector("[data-poj-color]");
-    var saveBtn = container.querySelector("[data-poj-save]");
-    var messageEl = container.querySelector("[data-poj-message]");
-    var savedEl = container.querySelector("[data-poj-saved]");
+    var cardsEl = container.querySelector("[data-iu-health-cards]");
+    var addAnotherBtn = container.querySelector("[data-iu-health-add]");
+    var globalFb = container.querySelector("[data-iu-health-global-feedback]");
+    var pickerLayer = container.querySelector("[data-iu-health-picker-layer]");
+    var pickerList = container.querySelector("[data-iu-health-picker-list]");
+    var pickerClose = container.querySelector("[data-iu-health-picker-close]");
+    var deleteLayer = container.querySelector("[data-iu-health-delete-layer]");
+    var deleteHint = container.querySelector("[data-iu-health-delete-hint]");
+    var deleteConfirmBtn = container.querySelector("[data-iu-health-delete-confirm]");
+    var deleteCancelBtn = container.querySelector("[data-iu-health-delete-cancel]");
+    var pendingDeleteIndex = -1;
+    var pickerTargetIndex = -1;
+    var pickerReturnFocusEl = null;
+    var pickerKeyHandler = null;
 
-    function setMessage(text, visible) {
-      if (!messageEl) return;
-      messageEl.textContent = text || "";
-      messageEl.classList.toggle("iu-pojistovnaMessage--visible", !!visible);
+    function showGlobalFb(text, ms) {
+      if (!globalFb) return;
+      globalFb.textContent = text || "";
+      if (ms) {
+        window.setTimeout(function () {
+          if (globalFb.textContent === text) globalFb.textContent = "";
+        }, ms);
+      }
     }
 
-    function renderSaved() {
-      list = getPojistovnyButtonsState();
-      savedEl.innerHTML = list.map(function(item) {
-        var style = "background:linear-gradient(180deg," + (item.colorValue || "#1a5bb5") + ",#0d2d5c);";
-        return "<div class=\"iuBankCard iu-pojistovnaTile\" data-poj-id=\"" + esc(item.id) + "\">" +
-          "<button type=\"button\" class=\"iuBankCardMain iu-pojistovnaTileBtn\" data-poj-login-url=\"" + esc(item.loginUrl) + "\" style=\"" + esc(style) + "\">" +
-          "<span class=\"iu-pojistovnaTileAbbr\">" + esc(item.abbr) + "</span>" +
-          "<span class=\"iu-pojistovnaTileName\">" + esc(item.name) + "</span></button>" +
-          "<button type=\"button\" class=\"iuBankMiniActionBtn iu-pojistovnaRemove\" data-poj-remove-id=\"" + esc(item.id) + "\">Odstranit</button></div>";
-      }).join("");
-      savedEl.querySelectorAll("[data-poj-login-url]").forEach(function(btn) {
-        var url = btn.getAttribute("data-poj-login-url");
-        btn.addEventListener("click", function() {
-          if (url && /^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
-        });
+    function showCardFb(cardEl, text, ms) {
+      var el = cardEl.querySelector("[data-iu-health-card-feedback]");
+      if (!el) return;
+      el.textContent = text || "";
+      if (ms) {
+        window.setTimeout(function () {
+          if (el.textContent === text) el.textContent = "";
+        }, ms);
+      }
+    }
+
+    function updateAddButtonState() {
+      var n = cardsEl.querySelectorAll(".iu-health-card").length;
+      if (addAnotherBtn) {
+        addAnotherBtn.disabled = n >= HEALTH_MAX_CARDS;
+        addAnotherBtn.setAttribute("aria-disabled", n >= HEALTH_MAX_CARDS ? "true" : "false");
+      }
+    }
+
+    function setOpenButtonState(cardEl, card) {
+      var openBtn = cardEl.querySelector("[data-iu-health-open]");
+      if (!openBtn) return;
+      var u = healthResolveOpenUrl(card);
+      var ok = isValidHealthOpenUrl(u);
+      openBtn.disabled = !ok;
+      openBtn.setAttribute("aria-disabled", ok ? "false" : "true");
+    }
+
+    function cardHtml(p, ix) {
+      var pr = healthRegistryById(p.providerId);
+      var lockClass = p.isSaved ? " iu-health-card--locked" : "";
+      var ro = p.isSaved ? " readonly" : "";
+      var showUrl = pr && pr.requiresCustomUrl;
+      var loginLab = pr ? esc(pr.loginLabel) : esc("Přihlašovací údaj");
+      var copyLoginLab = pr ? esc(pr.copyLoginLabel) : esc("Kopírovat přihlašovací údaj");
+      var openLab = pr ? esc(pr.openLabel) : esc("Otevřít pojišťovnu");
+      var provLabel = pr ? esc(pr.name) : esc("Vyberte pojišťovnu");
+      var provDisabled = p.isSaved ? " disabled aria-disabled=\"true\"" : "";
+      var helper = pr && pr.helperText ? "<p class=\"iu-health-helper\" data-iu-health-helper>" + esc(pr.helperText) + "</p>" : "<p class=\"iu-health-helper\" data-iu-health-helper hidden></p>";
+      var urlRowHidden = showUrl ? "" : " hidden";
+      var urlVal = esc(p.url || "");
+      var personV = esc(p.personLabel || "");
+      var loginV = esc(p.loginValue || "");
+      var passV = esc(p.passwordValue || "");
+      var accent = esc(p.colorToken || HEALTH_COLOR_PALETTE[0]);
+      return (
+        "<section class=\"iu-health-card" + lockClass + "\" data-iu-health-index=\"" + ix + "\" style=\"--iu-health-accent:" + accent + "\">" +
+        "  <h3 class=\"iu-health-card-title\" data-iu-health-card-title>" + esc(healthCardTitleLine(p)) + "</h3>" +
+        "  <button type=\"button\" class=\"iu-health-open-btn\" data-iu-health-open disabled aria-disabled=\"true\">" + openLab + "</button>" +
+        "  <div class=\"iu-health-copy-row\">" +
+        "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-copy-login>" + copyLoginLab + "</button>" +
+        "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-copy-password>Kopírovat heslo</button>" +
+        "  </div>" +
+        "  <label class=\"iu-health-field\">" +
+        "    <span class=\"iu-health-label\">Pojišťovna</span>" +
+        "    <button type=\"button\" class=\"iu-health-provider-trigger\" data-iu-health-provider-trigger" + provDisabled + ">" + provLabel + "</button>" +
+        "  </label>" +
+        "  <div class=\"iu-health-field iu-health-url-row\"" + urlRowHidden + " data-iu-health-url-row>" +
+        "    <span class=\"iu-health-label\">URL pojišťovny</span>" +
+        "    <input type=\"text\" class=\"iu-health-input\" data-iu-health-custom-url inputmode=\"url\" autocomplete=\"url\" placeholder=\"https://…\"" + ro + " value=\"" + urlVal + "\" />" +
+        "  </div>" +
+        "  <label class=\"iu-health-field\">" +
+        "    <span class=\"iu-health-label\">Pro koho</span>" +
+        "    <input type=\"text\" class=\"iu-health-input\" data-iu-health-person maxlength=\"120\" autocomplete=\"name\" placeholder=\"např. Josef, Dcera…\"" + ro + " value=\"" + personV + "\" />" +
+        "  </label>" +
+        "  <label class=\"iu-health-field\">" +
+        "    <span class=\"iu-health-label\" data-iu-health-login-label>" + loginLab + "</span>" +
+        "    <input type=\"text\" class=\"iu-health-input\" data-iu-health-login autocomplete=\"username\" spellcheck=\"false\"" + ro + " value=\"" + loginV + "\" />" +
+        "  </label>" +
+        "  <label class=\"iu-health-field\">" +
+        "    <span class=\"iu-health-label\">Heslo</span>" +
+        "    <div class=\"iu-health-inline-row\">" +
+        "      <input type=\"password\" class=\"iu-health-input\" data-iu-health-password autocomplete=\"current-password\"" + ro + " value=\"" + passV + "\" />" +
+        "      <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-toggle-pw aria-pressed=\"false\">Zobrazit heslo</button>" +
+        "    </div>" +
+        "  </label>" +
+        helper +
+        "  <div class=\"iu-health-card-actions\">" +
+        "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--secondary\" data-iu-health-save>Uložit</button>" +
+        "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--ghost\" data-iu-health-edit>Upravit</button>" +
+        "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--danger\" data-iu-health-delete>Odstranit</button>" +
+        "  </div>" +
+        "  <div class=\"iu-health-card-feedback\" data-iu-health-card-feedback aria-live=\"polite\"></div>" +
+        "</section>"
+      );
+    }
+
+    function renderAllCards() {
+      cardsEl.innerHTML = profiles.map(function (p, ix) { return cardHtml(p, ix); }).join("");
+      cardsEl.querySelectorAll(".iu-health-card").forEach(function (el) {
+        bindCard(el);
+        var ix = parseInt(el.getAttribute("data-iu-health-index") || "0", 10);
+        if (profiles[ix]) setOpenButtonState(el, profiles[ix]);
       });
-      savedEl.querySelectorAll("[data-poj-remove-id]").forEach(function(btn) {
-        btn.addEventListener("click", function(e) {
+      updateAddButtonState();
+    }
+
+    function hidePicker() {
+      if (pickerLayer) pickerLayer.hidden = true;
+      if (pickerKeyHandler) {
+        document.removeEventListener("keydown", pickerKeyHandler, true);
+        pickerKeyHandler = null;
+      }
+      if (pickerReturnFocusEl && typeof pickerReturnFocusEl.focus === "function") {
+        try { pickerReturnFocusEl.focus(); } catch (_) {}
+      }
+      pickerReturnFocusEl = null;
+      pickerTargetIndex = -1;
+    }
+
+    function showPicker(ix, triggerEl) {
+      pickerTargetIndex = ix;
+      pickerReturnFocusEl = triggerEl || null;
+      if (!pickerList || !pickerLayer) return;
+      pickerList.innerHTML = HEALTH_PROVIDER_REGISTRY.map(function (pr) {
+        return "<button type=\"button\" class=\"iu-health-picker-item\" data-iu-health-pick-id=\"" + esc(pr.id) + "\">" + esc(pr.name) + "</button>";
+      }).join("");
+      pickerLayer.hidden = false;
+      pickerKeyHandler = function (e) {
+        if (e.key === "Escape") {
           e.preventDefault();
           e.stopPropagation();
-          var id = btn.getAttribute("data-poj-remove-id");
-          if (!id) return;
-          list = list.filter(function(x) { return x.id !== id; });
-          setPojistovnyButtonsState(list);
-          renderSaved();
-          setMessage("", false);
+          hidePicker();
+        }
+      };
+      document.addEventListener("keydown", pickerKeyHandler, true);
+      var first = pickerList.querySelector(".iu-health-picker-item");
+      if (first) {
+        window.setTimeout(function () {
+          try { first.focus(); } catch (_) {}
+        }, 0);
+      }
+    }
+
+    if (pickerList) {
+      pickerList.addEventListener("click", function (e) {
+        var btn = e.target && e.target.closest && e.target.closest("[data-iu-health-pick-id]");
+        if (!btn) return;
+        e.preventDefault();
+        var pid = btn.getAttribute("data-iu-health-pick-id");
+        if (pickerTargetIndex < 0 || !profiles[pickerTargetIndex]) {
+          hidePicker();
+          return;
+        }
+        profiles[pickerTargetIndex].providerId = pid;
+        healthApplyRegistryToCard(profiles[pickerTargetIndex]);
+        hidePicker();
+        renderAllCards();
+      });
+    }
+    if (pickerLayer) {
+      pickerLayer.addEventListener("click", function (e) {
+        if (e.target === pickerLayer) hidePicker();
+      });
+    }
+    if (pickerClose) pickerClose.addEventListener("click", function () { hidePicker(); });
+
+    function hideDeleteLayer() {
+      pendingDeleteIndex = -1;
+      if (deleteLayer) deleteLayer.hidden = true;
+    }
+
+    function showDeleteLayer(ix) {
+      pendingDeleteIndex = ix;
+      var allN = cardsEl.querySelectorAll(".iu-health-card").length;
+      if (deleteHint) {
+        deleteHint.textContent = allN <= 1
+          ? "Zbude jedna prázdná karta (údaje se vymažou)."
+          : "Karta bude trvale odebrána z tohoto zařízení.";
+      }
+      if (deleteLayer) deleteLayer.hidden = false;
+    }
+
+    function runPendingDelete() {
+      var ix = pendingDeleteIndex;
+      hideDeleteLayer();
+      if (ix < 0) return;
+      var nodes = cardsEl.querySelectorAll(".iu-health-card");
+      if (nodes.length <= 1) {
+        profiles = [healthNewCardModel(undefined)];
+        healthSaveCardsToStorage(profiles);
+        renderAllCards();
+        showGlobalFb("Karta vyčištěna.", 1800);
+        return;
+      }
+      profiles.splice(ix, 1);
+      healthSaveCardsToStorage(profiles);
+      renderAllCards();
+    }
+
+    function bindCard(cardEl) {
+      var ix = parseInt(cardEl.getAttribute("data-iu-health-index") || "0", 10);
+      var card = profiles[ix];
+      if (!card) return;
+
+      var openBtn = cardEl.querySelector("[data-iu-health-open]");
+      var provTrigger = cardEl.querySelector("[data-iu-health-provider-trigger]");
+      var urlInp = cardEl.querySelector("[data-iu-health-custom-url]");
+      var personInp = cardEl.querySelector("[data-iu-health-person]");
+      var loginInp = cardEl.querySelector("[data-iu-health-login]");
+      var passInp = cardEl.querySelector("[data-iu-health-password]");
+      var togglePw = cardEl.querySelector("[data-iu-health-toggle-pw]");
+      var saveBtn = cardEl.querySelector("[data-iu-health-save]");
+      var editBtn = cardEl.querySelector("[data-iu-health-edit]");
+      var delBtn = cardEl.querySelector("[data-iu-health-delete]");
+      var copyLoginBtn = cardEl.querySelector("[data-iu-health-copy-login]");
+      var copyPassBtn = cardEl.querySelector("[data-iu-health-copy-password]");
+
+      function refreshFromInputs() {
+        syncProfilesFromDom();
+        setOpenButtonState(cardEl, profiles[ix]);
+      }
+
+      if (urlInp) urlInp.addEventListener("input", refreshFromInputs);
+      if (loginInp) loginInp.addEventListener("input", refreshFromInputs);
+      if (personInp) personInp.addEventListener("input", function () {
+        syncProfilesFromDom();
+        var t = cardEl.querySelector("[data-iu-health-card-title]");
+        if (t) t.textContent = healthCardTitleLine(profiles[ix]);
+      });
+
+      setOpenButtonState(cardEl, card);
+
+      if (openBtn) {
+        openBtn.addEventListener("click", function () {
+          syncProfilesFromDom();
+          var u = healthResolveOpenUrl(profiles[ix]);
+          if (!isValidHealthOpenUrl(u)) return;
+          try { window.open(u, "_blank", "noopener,noreferrer"); } catch (_) {}
         });
+      }
+
+      if (provTrigger) {
+        provTrigger.addEventListener("click", function () {
+          if (profiles[ix].isSaved) return;
+          showPicker(ix, provTrigger);
+        });
+      }
+
+      if (togglePw && passInp) {
+        togglePw.addEventListener("click", function () {
+          var isPw = passInp.getAttribute("type") === "password";
+          passInp.setAttribute("type", isPw ? "text" : "password");
+          togglePw.textContent = isPw ? "Skrýt heslo" : "Zobrazit heslo";
+          togglePw.setAttribute("aria-pressed", isPw ? "true" : "false");
+        });
+      }
+
+      if (copyLoginBtn && loginInp) {
+        copyLoginBtn.addEventListener("click", function () {
+          syncProfilesFromDom();
+          var v = String(profiles[ix].loginValue || "").trim();
+          if (!v) return;
+          healthCopyToClipboard(v);
+          var pr = healthRegistryById(profiles[ix].providerId);
+          var msg = pr ? healthCopyLoginFeedback(pr.loginType) : "Údaj zkopírován";
+          showCardFb(cardEl, msg, 2200);
+        });
+      }
+      if (copyPassBtn && passInp) {
+        copyPassBtn.addEventListener("click", function () {
+          syncProfilesFromDom();
+          var v = String(profiles[ix].passwordValue || "").trim();
+          if (!v) return;
+          healthCopyToClipboard(v);
+          showCardFb(cardEl, "Heslo zkopírováno", 2200);
+        });
+      }
+
+      if (saveBtn) {
+        saveBtn.addEventListener("click", function () {
+          syncProfilesFromDom();
+          var chk = healthValidateSave(profiles[ix]);
+          if (!chk.ok) {
+            showCardFb(cardEl, chk.msg, 3200);
+            return;
+          }
+          profiles[ix].isSaved = true;
+          healthApplyRegistryToCard(profiles[ix]);
+          persistAllFromDom();
+          renderAllCards();
+          showGlobalFb("Uloženo.", 2200);
+        });
+      }
+
+      if (editBtn) {
+        editBtn.addEventListener("click", function () {
+          profiles[ix].isSaved = false;
+          persistAllFromDom();
+          renderAllCards();
+          var el = cardsEl.querySelector(".iu-health-card[data-iu-health-index=\"" + ix + "\"]");
+          if (el) {
+            el.classList.remove("iu-health-card--highlight");
+            void el.offsetWidth;
+            el.classList.add("iu-health-card--highlight");
+            window.setTimeout(function () { el.classList.remove("iu-health-card--highlight"); }, 600);
+            var first = el.querySelector("[data-iu-health-provider-trigger]");
+            if (first) try { first.focus(); } catch (_) {}
+          }
+        });
+      }
+
+      if (delBtn) {
+        delBtn.addEventListener("click", function () {
+          showDeleteLayer(ix);
+        });
+      }
+    }
+
+    if (deleteConfirmBtn) deleteConfirmBtn.addEventListener("click", runPendingDelete);
+    if (deleteCancelBtn) deleteCancelBtn.addEventListener("click", hideDeleteLayer);
+    if (deleteLayer) {
+      deleteLayer.addEventListener("click", function (e) {
+        if (e.target === deleteLayer) hideDeleteLayer();
       });
     }
 
-    saveBtn.addEventListener("click", function() {
-      var insurerId = (insurerSelect.value || "").trim();
-      var name = (nameInput.value || "").trim();
-      var nameSlice = name.slice(0, 20);
-      var colorId = (colorSelect.value || "").trim();
-      setMessage("", false);
-      if (!insurerId) {
-        setMessage("Vyberte pojišťovnu.", true);
-        return;
-      }
-      if (nameSlice.length === 0) {
-        setMessage("Zadejte jméno (1–20 znaků).", true);
-        return;
-      }
-      if (name.length > 20) {
-        setMessage("Jméno může mít nejvýše 20 znaků.", true);
-        return;
-      }
-      if (!colorId) {
-        setMessage("Vyberte barvu.", true);
-        return;
-      }
-      if (list.length >= POJISTOVNY_MAX) {
-        setMessage("Uloženo je již maximálně " + POJISTOVNY_MAX + " tlačítek. Nejprve nějaké odeberte.", true);
-        return;
-      }
-      var insurer = POJISTOVNY.filter(function(p) { return p.id === insurerId; })[0];
-      var color = POJISTOVNY_COLORS.filter(function(c) { return c.id === colorId; })[0];
-      if (!insurer || !color) return;
-      var newItem = {
-        id: "zp_" + Date.now() + "_" + Math.random().toString(36).slice(2),
-        insurerId: insurer.id,
-        abbr: insurer.abbr,
-        name: nameSlice,
-        colorId: color.id,
-        colorValue: color.value,
-        loginUrl: insurer.loginUrl
-      };
-      list = list.slice();
-      list.push(newItem);
-      setPojistovnyButtonsState(list);
-      nameInput.value = "";
-      insurerSelect.value = "";
-      colorSelect.value = "";
-      renderSaved();
-      setMessage("Uloženo.", true);
-      setTimeout(function() { setMessage("", false); }, 2500);
-    });
+    if (addAnotherBtn) {
+      addAnotherBtn.addEventListener("click", function () {
+        var n = cardsEl.querySelectorAll(".iu-health-card").length;
+        if (n >= HEALTH_MAX_CARDS) return;
+        syncProfilesFromDom();
+        var prevCol = profiles.length ? profiles[profiles.length - 1].colorToken : undefined;
+        profiles.push(healthNewCardModel(prevCol));
+        healthSaveCardsToStorage(profiles);
+        renderAllCards();
+        var last = cardsEl.querySelector(".iu-health-card:last-of-type");
+        if (last) {
+          var tr = last.querySelector("[data-iu-health-provider-trigger]");
+          if (tr) try { tr.focus(); } catch (_) {}
+        }
+      });
+    }
 
-    renderSaved();
+    renderAllCards();
   }
 
   function iuRenderMojeSluzbyInQuickFeed(key, container) {
