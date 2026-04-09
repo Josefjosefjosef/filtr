@@ -13768,10 +13768,32 @@ section.iu-mojeSluzby{
   color: inherit;
   border-color: rgba(255,255,255,.2);
 }
+/* Bakaláři: destruktivní akce — vždy čitelný text (scoped, bez globálního danger systému). */
 .bakalari-btn--danger{
-  background: rgba(180,40,40,.25);
-  color: #fecaca;
-  border-color: rgba(248,113,113,.35);
+  background-color: #fee2e2 !important;
+  color: #b91c1c !important;
+  border: 1px solid #fecaca !important;
+}
+.bakalari-btn--danger:hover:not(:disabled){
+  background-color: #fecaca !important;
+  color: #991b1b !important;
+  border-color: #f87171 !important;
+}
+.bakalari-btn--danger:active:not(:disabled){
+  background-color: #fca5a5 !important;
+  color: #7f1d1d !important;
+  border-color: #ef4444 !important;
+}
+.bakalari-btn--danger:focus-visible{
+  outline: 2px solid #b91c1c;
+  outline-offset: 2px;
+}
+.bakalari-btn--danger:disabled{
+  opacity: 0.72 !important;
+  cursor: not-allowed;
+  background-color: #e5e7eb !important;
+  color: #4b5563 !important;
+  border-color: #d1d5db !important;
 }
 .bakalari-add-another{
   align-self: flex-start;
