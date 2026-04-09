@@ -19905,7 +19905,7 @@ function buildVideoAsArticleCard(it) {
     }
     try {
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-ds-overlay-open", "iu-financial-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-ai-narrow-fullscreen");
     } catch (_) {}
   }
 
@@ -20050,7 +20050,7 @@ function buildVideoAsArticleCard(it) {
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-ds-overlay-open", "iu-financial-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-ai-narrow-fullscreen");
     } catch (_) {}
   }
 
@@ -20144,7 +20144,14 @@ function buildVideoAsArticleCard(it) {
     if (key === "datovka") return { actionType: "overlay", overlayId: "datovka", key: "datovka" };
     if (key === "fincalc") return { actionType: "overlay", overlayId: "financial", key: "fincalc" };
     if (modal === "banka" || modal === "bakalari" || modal === "pojistovna") return { actionType: "overlay", overlayId: "quickfeed", key: modal };
-    if (key === "ai" || key === "deepl" || key === "convert" || key === "naceneni") {
+    /* P0: mobile/tablet — open #iu-aiPanel (body-mounted modal); desktop — unchanged QuickFeed flow */
+    if (key === "ai") {
+      const aiNarrow =
+        typeof window.matchMedia === "function" && window.matchMedia("(max-width: 1023px)").matches;
+      if (aiNarrow) return { actionType: "overlay", overlayId: "ai", key: "ai" };
+      return { actionType: "overlay", overlayId: "quickfeed", key: "ai" };
+    }
+    if (key === "deepl" || key === "convert" || key === "naceneni") {
       return { actionType: "overlay", overlayId: "quickfeed", key };
     }
     if (isExternalHref) return { actionType: "external", key, href };
@@ -20180,6 +20187,8 @@ function buildVideoAsArticleCard(it) {
         iuOpenOverlay("datovka");
       } else if (resolved.overlayId === "financial") {
         iuOpenOverlay("financial", null);
+      } else if (resolved.overlayId === "ai") {
+        iuOpenOverlay("ai");
       } else {
         iuOpenOverlay("quickfeed", { key: resolved.key });
       }
@@ -20467,6 +20476,14 @@ function buildVideoAsArticleCard(it) {
       }
     }
 
+    function iuAiIsNarrowViewport() {
+      try {
+        return !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
+      } catch (_) {
+        return false;
+      }
+    }
+
     function openPanel(){
       /* P0: AI asistenti = quick card in middle column; do not open modal when quick view already shows AI */
       const stage = document.getElementById("iuCenterStage");
@@ -20485,6 +20502,10 @@ function buildVideoAsArticleCard(it) {
       }
       lockScroll(true);
       try { document.body.classList.add('iu-modal-open'); } catch {}
+      try {
+        if (iuAiIsNarrowViewport()) document.body.classList.add("iu-ai-narrow-fullscreen");
+        else document.body.classList.remove("iu-ai-narrow-fullscreen");
+      } catch (_) {}
       aiPanel.dataset.open = '1';
       setExpanded(true);
       try {
@@ -20506,6 +20527,7 @@ function buildVideoAsArticleCard(it) {
       }
       lockScroll(false);
       try { document.body.style.overflow = ''; document.body.classList.remove('iu-modal-open'); } catch {}
+      try { document.body.classList.remove("iu-ai-narrow-fullscreen"); } catch (_) {}
       aiPanel.dataset.open = '0';
       setExpanded(false);
     }
