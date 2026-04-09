@@ -23573,18 +23573,32 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   const IU_BANKS_KEY = "iuUserBanks";
   const BAKALARI_KEY = "iu_moje_sluzby_bakalari_v1";
   const POJISTOVNY_KEY = "iu_moje_sluzby_pojistovny_names_v1";
+  /** Legacy retail banks removed from active IB overlay — must never reappear as clickable presets. */
+  const IU_BANKS_LEGACY_IDS = ["citi", "equa", "sberbank"];
+  function iuIsLegacyBankId(id) {
+    return IU_BANKS_LEGACY_IDS.indexOf(String(id || "")) !== -1;
+  }
+  function iuFilterLegacyFromFavorites(arr) {
+    if (!Array.isArray(arr)) return [];
+    return arr.filter(function (bid) { return !iuIsLegacyBankId(bid); });
+  }
 
   function iuGetBanks() {
     try {
       let arr = JSON.parse(localStorage.getItem(IU_BANKS_KEY) || "[]");
       if (!Array.isArray(arr)) arr = [];
+      var cleaned = iuFilterLegacyFromFavorites(arr);
+      if (cleaned.length !== arr.length) {
+        arr = cleaned;
+        try { localStorage.setItem(IU_BANKS_KEY, JSON.stringify(arr)); } catch (_) {}
+      }
       if (arr.length === 0) {
         try {
           const raw = localStorage.getItem(BANKS_KEY);
           if (raw) {
             const o = JSON.parse(raw);
             if (o && Array.isArray(o.favorites) && o.favorites.length) {
-              arr = o.favorites;
+              arr = iuFilterLegacyFromFavorites(o.favorites);
               localStorage.setItem(IU_BANKS_KEY, JSON.stringify(arr));
             }
           }
@@ -23601,6 +23615,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     try { localStorage.setItem(IU_BANKS_KEY, JSON.stringify(arr)); } catch (_) {}
   }
   function iuAddBank(id) {
+    if (iuIsLegacyBankId(id)) return;
     const banks = iuGetBanks();
     if (!banks.includes(id)) {
       banks.push(id);
@@ -23623,20 +23638,18 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
   }
 
   const IU_BANKS_ALL = [
-    { id: "csas", label: "ČSOB", url: "https://www.csob.cz/portal/", loginUrl: "https://www.csob.cz/portal/", color: "#1a1a1a" },
+    { id: "csas", label: "ČSOB", url: "https://www.csob.cz/", loginUrl: "https://www.csob.cz/prihlaseni", color: "#1a1a1a" },
+    /* Komerční banka: jediný overlay preset je retail osobní IB (MojeBanka) přes /cs/online-banking/ — není KB+ ani firemní produkt. */
     { id: "kb", label: "Komerční banka", url: "https://www.kb.cz/", loginUrl: "https://www.kb.cz/cs/online-banking/", color: "#c41230" },
-    { id: "air", label: "Air Bank", url: "https://www.airbank.cz/", loginUrl: "https://www.airbank.cz/cs/prihlaseni/", color: "#e6007e" },
-    { id: "fio", label: "Fio banka", url: "https://www.fio.cz/", loginUrl: "https://www.fio.cz/ib2/portal/", color: "#00a651" },
-    { id: "mb", label: "mBank", url: "https://www.mbank.cz/", loginUrl: "https://www.mbank.cz/cs/prihlaseni/", color: "#e30613" },
-    { id: "rb", label: "Raiffeisenbank", url: "https://www.rb.cz/", loginUrl: "https://www.rb.cz/cs/prihlaseni/", color: "#ffed00" },
-    { id: "cs", label: "ČS", url: "https://www.csas.cz/", loginUrl: "https://www.csas.cz/cs/prihlaseni.html", color: "#1a1a1a" },
-    { id: "moneta", label: "Moneta", url: "https://www.moneta.cz/", loginUrl: "https://www.moneta.cz/ib/", color: "#e30613" },
-    { id: "unicredit", label: "UniCredit", url: "https://www.unicreditbank.cz/", loginUrl: "https://www.unicreditbank.cz/cs/prihlaseni.html", color: "#e30613" },
-    { id: "citi", label: "Citibank", url: "https://www.citibank.cz/", loginUrl: "https://www.citibank.cz/cs/prihlaseni.htm", color: "#056da1" },
-    { id: "max", label: "Max banka", url: "https://www.maxbanka.cz/", loginUrl: "https://www.maxbanka.cz/prihlaseni/", color: "#00a651" },
-    { id: "equa", label: "Equa bank", url: "https://www.equabank.cz/", loginUrl: "https://www.equabank.cz/prihlaseni/", color: "#00a651" },
-    { id: "creditas", label: "Creditas", url: "https://www.creditas.cz/", loginUrl: "https://www.creditas.cz/prihlaseni/", color: "#1a1a1a" },
-    { id: "sberbank", label: "Sberbank", url: "https://www.sberbank.cz/", loginUrl: "https://www.sberbank.cz/cs/prihlaseni/", color: "#21a038" }
+    { id: "air", label: "Air Bank", url: "https://www.airbank.cz/", loginUrl: "https://ib.airbank.cz/", color: "#e6007e" },
+    { id: "fio", label: "Fio banka", url: "https://www.fio.cz/", loginUrl: "https://ib.fio.cz/", color: "#00a651" },
+    { id: "mb", label: "mBank", url: "https://www.mbank.cz/", loginUrl: "https://online.mbank.cz/cs/Login", color: "#e30613" },
+    { id: "rb", label: "Raiffeisenbank", url: "https://www.rb.cz/", loginUrl: "https://www.rb.cz/vstup-na-ucet", color: "#ffed00" },
+    { id: "cs", label: "ČS", url: "https://www.csas.cz/", loginUrl: "https://george.csas.cz/", color: "#1a1a1a" },
+    { id: "moneta", label: "Moneta", url: "https://www.moneta.cz/", loginUrl: "https://ib.moneta.cz/", color: "#e30613" },
+    { id: "unicredit", label: "UniCredit", url: "https://www.unicreditbank.cz/", loginUrl: "https://cz.unicreditbanking.eu/cs/login_form", color: "#e30613" },
+    { id: "max", label: "Max banka", url: "https://www.maxbanka.cz/", loginUrl: "https://ib.maxbanka.eu/", color: "#00a651" },
+    { id: "creditas", label: "Creditas", url: "https://www.creditas.cz/", loginUrl: "https://banking.creditas.cz/", color: "#1a1a1a" }
   ];
 
   const POJISTOVNY = [
