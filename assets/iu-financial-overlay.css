@@ -287,12 +287,13 @@
     width: 100%;
     max-width: none;
     max-height: none;
-    height: 100dvh;
     height: 100vh;
+    height: 100svh;
+    height: 100dvh;
     border-radius: 0;
   }
   #iuFinancialCalcScrollHost.iu-financial-overlay-scrollHost{
-    padding: 14px 14px 18px;
+    padding: 14px 14px calc(18px + env(safe-area-inset-bottom, 0px));
   }
   #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-overlay-panel--mobile .iu-financial-overlay-hubGrid{
     grid-template-columns: 1fr;
