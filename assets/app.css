@@ -19567,6 +19567,17 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   font-weight: 600 !important;
 }
 
+/* Convert quick feed: disclaimer between in-browser tool and external link tiles */
+.iuQuickFeed .iu-external-notice{
+  margin: 12px 16px 4px;
+  font-size: 13px;
+  color: #64748B;
+  line-height: 1.4;
+}
+.iuQuickFeed .iu-external-notice::before{
+  content: "ℹ️ ";
+}
+
 #iuQuickFeed [data-iu="pdfconvert-tools"] {
   outline: 1px solid rgba(0,120,0,0.4);
   outline-offset: 2px;

@@ -19565,7 +19565,11 @@ function buildVideoAsArticleCard(it) {
                 : `${shareBtnHtml}<button class="iuQClose iu-overlayCloseBtn38" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button>`
             }</div>
           </div>
-          ${toolsBlock}
+          ${toolsBlock}${
+            isConvert
+              ? '<div class="iu-external-notice">Další převody níže jsou externí služby mimo infoUzel.cz.</div>'
+              : ""
+          }
           <div class="iuQCard">
             <div class="iuQGrid">
               ${renderCards(services || data.items)}
