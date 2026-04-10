@@ -529,6 +529,10 @@ try {
   const ALLOWED_CONTENT_TYPES = new Set(["article", "video"]);
   const isDebugLogging = !iuIsProdHost() && location.search.includes("debug=1");
   try { if (isDebugLogging) window.__iuFeedState = state; } catch (_) {}
+  /** Canonical feed pipeline object for guards (must match loadData/applyFilter `state`). */
+  try {
+    window.__iuFeedPipelineState = state;
+  } catch (_) {}
 
   // ============================================================
   // DEBUG (forensic) — VIDEO PIPELINE COUNTERS (?debug=1 only)
@@ -23540,10 +23544,23 @@ function buildVideoAsArticleCard(it) {
     }catch{}
     try{ if (typeof applyFilter === "function") applyFilter(); }catch{}
     // P0 perf: do not full-reload articles.json on every section switch when cache is already valid.
-    // Home → feed (or any first load) still runs loadData because state.hasLoadedData is false until success.
+    // loadData() clears hasLoadedData + cache at entry — use loadedOk (hasLoadedData===true && cachedItems.length>0)
+    // and !isLoadingData so in-flight loads do not look "empty". applyFilter narrows filteredItems from cache.
     // Explicit refresh / auto-refresh / retry paths still call loadData() directly.
     try {
-      if (!state.hasLoadedData && typeof window.__iuLoadData === "function") {
+      const pl =
+        typeof window !== "undefined" && window.__iuFeedPipelineState
+          ? window.__iuFeedPipelineState
+          : state;
+      const loadedOk =
+        pl.hasLoadedData === true &&
+        Array.isArray(pl.cachedItems) &&
+        pl.cachedItems.length > 0;
+      const needFeedBootstrap =
+        typeof window.__iuLoadData === "function" &&
+        !pl.isLoadingData &&
+        !loadedOk;
+      if (needFeedBootstrap) {
         window.__iuLoadData();
       }
     } catch (_) {}
