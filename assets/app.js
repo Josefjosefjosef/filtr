@@ -9862,7 +9862,26 @@ function buildVideoAsArticleCard(it) {
       var backBtn = document.getElementById("iuMobileGateBack");
       var mainBackBtn = document.getElementById("iuMobileMainBackBar");
       if (!wrap || !tabNav || !tabTools || !panelNav || !panelTools || !content) return;
+      function iuCloseNarrowAiOverlayWhenLeavingTools() {
+        try {
+          if (typeof window.matchMedia !== "function" || !window.matchMedia("(max-width: 1023px)").matches) return;
+          var p = document.getElementById("iu-aiPanel");
+          if (!p || p.hidden) return;
+          if (String(p.dataset.open || "") !== "1") return;
+          if (typeof window.iuAiPanelCloseSurface === "function") {
+            window.iuAiPanelCloseSurface();
+          } else {
+            try {
+              window.dispatchEvent(new CustomEvent("iu-close-panel", { detail: "ai" }));
+            } catch (_) {}
+          }
+        } catch (_) {}
+      }
       function setTab(value) {
+        var gateVal = value || "";
+        if (gateVal !== "tools") {
+          iuCloseNarrowAiOverlayWhenLeavingTools();
+        }
         wrap.setAttribute("data-iu-mobile-gate", value || "");
         if (!value) {
           try {
@@ -20531,6 +20550,7 @@ function buildVideoAsArticleCard(it) {
       aiPanel.dataset.open = '0';
       setExpanded(false);
     }
+    try { window.iuAiPanelCloseSurface = closePanel; } catch (_) {}
 
     try {
       window.addEventListener('iu-open-panel', function(e){ var id = String(e.detail || '').trim().toLowerCase(); if (id === 'ai') return; /* AI modal hard-deny */ });
@@ -23150,11 +23170,10 @@ function buildVideoAsArticleCard(it) {
     if (!overlay || !panel) return false;
     for (let i = 1; i < overlays.length; i++) overlays[i].setAttribute("data-iu-dup", "1");
     for (let i = 1; i < panels.length; i++) panels[i].setAttribute("data-iu-dup", "1");
-    if (overlay.parentElement === document.body && panel.parentElement === document.body) return true;
-    const frag = document.createDocumentFragment();
-    frag.appendChild(overlay);
-    frag.appendChild(panel);
-    document.body.appendChild(frag);
+    try {
+      document.body.appendChild(overlay);
+      document.body.appendChild(panel);
+    } catch (_) {}
     return true;
   }
   try { window.ensureAiModalInBody = ensureAiModalInBody; } catch (_) {}

@@ -2915,6 +2915,7 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
     height: 100dvh !important;
     max-height: 100dvh !important;
     box-sizing: border-box !important;
+    z-index: 10080 !important;
   }
   body.iu-ai-narrow-fullscreen #iu-aiPanel[data-open="1"]:not([hidden]) {
     position: fixed !important;
@@ -2935,6 +2936,7 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
     overflow: hidden !important;
     overflow-x: hidden !important;
     box-sizing: border-box !important;
+    z-index: 10081 !important;
   }
   body.iu-ai-narrow-fullscreen #iu-aiPanel .iu-aiModal {
     width: 100% !important;
@@ -2942,6 +2944,11 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
     max-height: 100% !important;
     min-height: 0;
     flex: 1 1 auto;
+  }
+  body.iu-ai-narrow-fullscreen #iu-aiPanel #iu-aiPanelCards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 }
 
@@ -3111,6 +3118,21 @@ button.iu-close-btn-38:focus-visible{
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: 0 0 auto;
+}
+/* P0 #iu-aiPanel: close stays in header row — no overlap with Přeposlat (.iuAiClose was position:absolute to panel) */
+#iu-aiPanel .iu-aiPanelHeader > span:first-child{
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#iu-aiPanel .iu-aiPanelHeaderActions .iuAiClose{
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  flex-shrink: 0;
 }
 
 #iu-aiPanel .iuAiShareBtn{
