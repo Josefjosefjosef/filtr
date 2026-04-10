@@ -8724,26 +8724,40 @@ function buildVideoAsArticleCard(it) {
           if (window.__iuSilverCalendarSummaryTimerState) window.__iuSilverCalendarSummaryTimerState.timeoutActive = 0;
         }catch{}
         if (gen !== summaryScheduleGen) return;
-        refresh();
+        refresh("scheduled");
       }, d);
     }
 
-    function refresh(){
+    function refresh(probeReason){
+      const pr = typeof probeReason === "string" ? probeReason : "other";
+      const probe = window.__IU_PERF_PROBE__ === true;
+      let t0 = 0;
+      let domWrites = 0;
+      if (probe) t0 = performance.now();
+      function dw(){
+        if (probe) domWrites++;
+      }
+      try{
       const svc = window.iuCalendarService;
       const actionable = !!(svc && typeof svc.calendarGetTodayEvents === "function" && typeof svc.calendarOpenTodayDayView === "function");
       try{
         if (actionRow){
           if (actionable) actionRow.setAttribute("data-iu-action-indicator", "chevron");
+          dw();
         }
       }catch{}
       clearSummarySchedule();
       if (!svc || typeof svc.calendarGetTodayEvents !== "function"){
         setSilverCalendarSummaryLine1("Kalendář: Údaje se načítají…");
+        dw();
         line2.textContent = "Chvíli strpení.";
+        dw();
         try{
           if (line2block){
             line2block.hidden = false;
             line2block.setAttribute("aria-hidden", "false");
+            dw();
+            dw();
           }
         }catch{}
         return;
@@ -8758,24 +8772,49 @@ function buildVideoAsArticleCard(it) {
       const nowForSummary = getNowForSilverCalendarSummary();
       const st = getTodayCalendarSummaryState(nowForSummary, evs);
       setSilverCalendarSummaryLine1(st.primaryText || "");
+      dw();
       line2.textContent = st.secondaryText || "";
+      dw();
       try{
         if (line2block){
           if (st.hideSecondaryLine){
             line2block.hidden = true;
             line2block.setAttribute("aria-hidden", "true");
+            dw();
+            dw();
           } else {
             line2block.hidden = false;
             line2block.setAttribute("aria-hidden", "false");
+            dw();
+            dw();
           }
         }
       }catch{}
       try{
         card.setAttribute("data-iu-silver-cal-summary-ts", String(Date.now()));
+        dw();
       }catch{}
       const useMockNow = !iuIsProdHost() && typeof window.__iuCalendarSummaryNow === "function";
       if (st.nextRefreshDelayMs != null && typeof st.nextRefreshDelayMs === "number" && isFinite(st.nextRefreshDelayMs)){
         if (!useMockNow) scheduleSummaryRefresh(st.nextRefreshDelayMs);
+      }
+      } finally {
+        if (probe) {
+          try{
+            const log = window.__IU_PERF_PROBE_LOG__ = window.__IU_PERF_PROBE_LOG__ || [];
+            const visPerf = window.__iuPerfTabVisiblePerf;
+            const now = performance.now();
+            const within5sAfterVisible = typeof visPerf === "number" && (now - visPerf) >= 0 && (now - visPerf) <= 5000;
+            log.push({
+              module: "calendarSummary",
+              reason: pr,
+              startTime: t0,
+              durationMs: now - t0,
+              domWrites: domWrites,
+              within5sAfterVisible: within5sAfterVisible
+            });
+          }catch(_){}
+        }
       }
     }
 
@@ -8813,7 +8852,7 @@ function buildVideoAsArticleCard(it) {
 
     function onVisibilityOrFocus(){
       try{
-        if (document.visibilityState === "visible") refresh();
+        if (document.visibilityState === "visible") refresh("visibilitychange");
       }catch{}
     }
 
@@ -8830,9 +8869,9 @@ function buildVideoAsArticleCard(it) {
       window.addEventListener("beforeunload", () => { try{ clearSummarySchedule(); }catch{} });
     }catch{}
 
-    refresh();
-    try{ setTimeout(() => refresh(), 400); }catch{}
-    try{ setTimeout(() => refresh(), 1500); }catch{}
+    refresh("initial");
+    try{ setTimeout(() => refresh("initial-t400"), 400); }catch{}
+    try{ setTimeout(() => refresh("initial-t1500"), 1500); }catch{}
   }
 
   /**
@@ -8891,7 +8930,16 @@ function buildVideoAsArticleCard(it) {
       return { totalTodo, todaySolve };
     }
 
-    function refresh(){
+    function refresh(probeReason){
+      const pr = typeof probeReason === "string" ? probeReason : "other";
+      const probe = window.__IU_PERF_PROBE__ === true;
+      let t0 = 0;
+      let domWrites = 0;
+      if (probe) t0 = performance.now();
+      function dw(){
+        if (probe) domWrites++;
+      }
+      try{
       const svc = window.iuTasksService;
       let total = 0;
       let todayN = 0;
@@ -8908,13 +8956,35 @@ function buildVideoAsArticleCard(it) {
       const line1Full = "Úkoly: máte celkem " + total + " úkolů k vyřešení";
       if (line1Rest){
         line1Rest.textContent = line1Full.indexOf("Úkoly: ") === 0 ? line1Full.slice("Úkoly: ".length) : line1Full;
+        dw();
       } else if (line1){
         line1.textContent = line1Full;
+        dw();
       }
       line2.textContent = "Dnes máte k řešení " + todayN + " úkolů";
+      dw();
       try{
         card.setAttribute("data-iu-tasks-summary-ts", String(Date.now()));
+        dw();
       }catch{}
+      } finally {
+        if (probe) {
+          try{
+            const log = window.__IU_PERF_PROBE_LOG__ = window.__IU_PERF_PROBE_LOG__ || [];
+            const visPerf = window.__iuPerfTabVisiblePerf;
+            const now = performance.now();
+            const within5sAfterVisible = typeof visPerf === "number" && (now - visPerf) >= 0 && (now - visPerf) <= 5000;
+            log.push({
+              module: "tasksSummary",
+              reason: pr,
+              startTime: t0,
+              durationMs: now - t0,
+              domWrites: domWrites,
+              within5sAfterVisible: within5sAfterVisible
+            });
+          }catch(_){}
+        }
+      }
     }
 
     window.iuSilverTasksSummaryRefresh = refresh;
@@ -8924,7 +8994,7 @@ function buildVideoAsArticleCard(it) {
       if (!ov || ov.__iuTasksSummaryObsAttached) return;
       try{
         ov.__iuTasksSummaryObsAttached = 1;
-        const obs = new MutationObserver(() => { try{ refresh(); }catch{} });
+        const obs = new MutationObserver(() => { try{ refresh("overlay-attr"); }catch{} });
         obs.observe(ov, { attributes: true, attributeFilter: ["hidden"] });
       }catch{}
     }
@@ -8938,7 +9008,7 @@ function buildVideoAsArticleCard(it) {
       if (svc && typeof svc.openOverlay === "function"){
         try{ svc.openOverlay(triggerEl || card); }catch{}
       }
-      try{ setTimeout(() => refresh(), 0); }catch{}
+      try{ setTimeout(() => refresh("after-open"), 0); }catch{}
     }
 
     try{
@@ -8962,7 +9032,7 @@ function buildVideoAsArticleCard(it) {
 
     function onVisibilityOrFocus(){
       try{
-        if (document.visibilityState === "visible") refresh();
+        if (document.visibilityState === "visible") refresh("visibilitychange");
       }catch{}
     }
 
@@ -8974,15 +9044,15 @@ function buildVideoAsArticleCard(it) {
       window.addEventListener("storage", (e)=>{
         try{
           if (!e || e.key !== "iu.tasks.mvp.v1") return;
-          refresh();
+          refresh("storage");
         }catch{}
       });
     }catch{}
 
-    refresh();
-    try{ setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 0); }catch{}
-    try{ setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 400); }catch{}
-    try{ setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 1500); }catch{}
+    refresh("initial");
+    try{ setTimeout(() => { refresh("initial-t0"); tryAttachOverlayObserver(); }, 0); }catch{}
+    try{ setTimeout(() => { refresh("initial-t400"); tryAttachOverlayObserver(); }, 400); }catch{}
+    try{ setTimeout(() => { refresh("initial-t1500"); tryAttachOverlayObserver(); }, 1500); }catch{}
   }
 
   /** Silver welcome: přání k svátku — overlay Tykat/Vykat, kopírování, bez zásahu do weather/map. */
