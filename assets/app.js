@@ -23539,8 +23539,14 @@ function buildVideoAsArticleCard(it) {
       }
     }catch{}
     try{ if (typeof applyFilter === "function") applyFilter(); }catch{}
-    // Always: keep feed data loaded + auto-refresh running (idempotent, UI-only)
-    try{ window.__iuLoadData && window.__iuLoadData(); }catch{}
+    // P0 perf: do not full-reload articles.json on every section switch when cache is already valid.
+    // Home → feed (or any first load) still runs loadData because state.hasLoadedData is false until success.
+    // Explicit refresh / auto-refresh / retry paths still call loadData() directly.
+    try {
+      if (!state.hasLoadedData && typeof window.__iuLoadData === "function") {
+        window.__iuLoadData();
+      }
+    } catch (_) {}
     try{ window.__iuStartAutoRefresh && window.__iuStartAutoRefresh(); }catch{}
   }
   try { window.iuApplySectionFromURL = applySectionFromURL; } catch (e) {}
