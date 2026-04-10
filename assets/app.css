@@ -2905,6 +2905,46 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   }
 }
 
+/* P0 mobile/tablet: true fullscreen AI overlay (same breakpoint intent as parcels dock); desktop unchanged — guard class from JS */
+@media (max-width: 1023px) {
+  body.iu-ai-narrow-fullscreen #iu-aiOverlay:not([hidden]) {
+    left: 0 !important;
+    top: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    box-sizing: border-box !important;
+  }
+  body.iu-ai-narrow-fullscreen #iu-aiPanel[data-open="1"]:not([hidden]) {
+    position: fixed !important;
+    inset: 0 !important;
+    left: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    transform: none !important;
+    width: 100vw !important;
+    max-width: none !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    padding: calc(env(safe-area-inset-top, 0px) + 12px) 12px calc(env(safe-area-inset-bottom, 0px) + 12px) !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    overflow: hidden !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+  body.iu-ai-narrow-fullscreen #iu-aiPanel .iu-aiModal {
+    width: 100% !important;
+    max-width: none !important;
+    max-height: 100% !important;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+}
+
 .iu-aiModal, .iu-ds-modal {
   background: #fff;
   border-radius: 16px;
