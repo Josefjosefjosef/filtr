@@ -130,13 +130,17 @@
   line-height: 1.45;
   color: rgba(15, 23, 42, 0.62);
 }
-#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-accent--vat{ border-left: 4px solid #14b8a6; }
-#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-accent--loan{ border-left: 4px solid #22c55e; }
-#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-accent--mortgage{ border-left: 4px solid #1e3a8a; }
-#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-accent--savings{ border-left: 4px solid #d97706; }
-#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-accent--inflation{ border-left: 4px solid #ea580c; }
-#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-accent--discount{ border-left: 4px solid #9333ea; }
-#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-accent--budget{ border-left: 4px solid #9f1239; }
+/* Hub cards only: left accent strip (detail uses .iu-fin-calc-detail without accent classes). */
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--vat{ border-left: 4px solid #14b8a6; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--loan{ border-left: 4px solid #22c55e; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--mortgage{ border-left: 4px solid #1e3a8a; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--savings{ border-left: 4px solid #d97706; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--inflation{ border-left: 4px solid #ea580c; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--discount{ border-left: 4px solid #9333ea; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-card.iu-financial-accent--budget{ border-left: 4px solid #9f1239; }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-detail.iu-fin-calc-detail{
+  border-left: 0 none;
+}
 #iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-detail{
   border-radius: 12px;
   padding: 0;
