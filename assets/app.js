@@ -19235,7 +19235,7 @@ function buildVideoAsArticleCard(it) {
       const title = quick.querySelector(".iuQTitle");
       const actions = quick.querySelector(".iuQHeadActions");
       const close = quick.querySelector(".iuQHeadActions #iuQCloseBtn, .iuQHeadActions .iuQClose");
-      const secondary = quick.querySelector(".iuQHeadActions .iuAiShareBtn, .iuQHeadActions .iuTrHeaderPreposlat");
+      const secondary = quick.querySelector(".iuQHeadActions .iuAiShareBtn, .iuQHeadActions .iu-forward-btn, .iuQHeadActions .iuTrHeaderPreposlat");
       const bodyCard = quick.querySelector(".iuQCard");
       if (head) {
         head.style.setProperty("display", "grid");
@@ -19497,7 +19497,8 @@ function buildVideoAsArticleCard(it) {
       }
     } else {
       const isAi = (key || "").toLowerCase() === "ai";
-      const shareBtnHtml = (isAi || isConvert) ? `<button type="button" class="iuAiShareBtn iuQClose" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button>` : "";
+      /* AI: keep legacy markup. Convert: separate wrapper — never put iuQClose on forward (it strips border and looks text-only). */
+      const shareBtnHtml = isAi ? `<button type="button" class="iuAiShareBtn iuQClose" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button>` : "";
       const aiSeoBlock = isAi ? `
         <div class="iuFeedSeoBlock iuFeedSeoAI">
           <h2>AI asistenti – přehled nástrojů ChatGPT, Gemini, Copilot a další</h2>
@@ -19558,7 +19559,11 @@ function buildVideoAsArticleCard(it) {
         quick.innerHTML = `
           <div class="iuQHead">
             <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-            <div class="iuQHeadActions">${shareBtnHtml}<button class="iuQClose iu-overlayCloseBtn38" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>
+            <div class="iuQHeadActions">${
+              isConvert
+                ? `<div class="iu-header-actions"><button type="button" class="iu-forward-btn iuAiShareBtn" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button><button class="iuQClose iu-overlayCloseBtn38" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>`
+                : `${shareBtnHtml}<button class="iuQClose iu-overlayCloseBtn38" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button>`
+            }</div>
           </div>
           ${toolsBlock}
           <div class="iuQCard">

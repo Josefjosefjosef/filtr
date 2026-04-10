@@ -12354,6 +12354,33 @@ body.iu-quickFeedOpen{
   gap: 8px;
 }
 
+/* Word/PDF convert: forward + close separated (no iuQClose on forward — avoids text-only look) */
+.iuQuickFeed .iu-header-actions{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  margin-right: 6px;
+}
+.iuQuickFeed .iu-header-actions .iu-forward-btn.iuAiShareBtn{
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1.2;
+  border: 1px solid rgba(20,40,70,0.22);
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  cursor: pointer;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+.iuQuickFeed .iu-header-actions .iu-forward-btn.iuAiShareBtn:hover{
+  background: #eef2f7;
+}
+
 .iuQuickFeed .iuAiShareBtn{
   padding: 6px 12px;
   font-size: 14px;
