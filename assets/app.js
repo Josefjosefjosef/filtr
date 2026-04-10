@@ -8804,14 +8804,14 @@ function buildVideoAsArticleCard(it) {
             const log = window.__IU_PERF_PROBE_LOG__ = window.__IU_PERF_PROBE_LOG__ || [];
             const visPerf = window.__iuPerfTabVisiblePerf;
             const now = performance.now();
-            const within5sAfterVisible = typeof visPerf === "number" && (now - visPerf) >= 0 && (now - visPerf) <= 5000;
+            const whetherWithin5sAfterVisible = typeof visPerf === "number" && (now - visPerf) >= 0 && (now - visPerf) <= 5000;
             log.push({
               module: "calendarSummary",
               reason: pr,
               startTime: t0,
               durationMs: now - t0,
               domWrites: domWrites,
-              within5sAfterVisible: within5sAfterVisible
+              whetherWithin5sAfterVisible: whetherWithin5sAfterVisible
             });
           }catch(_){}
         }
@@ -8973,14 +8973,14 @@ function buildVideoAsArticleCard(it) {
             const log = window.__IU_PERF_PROBE_LOG__ = window.__IU_PERF_PROBE_LOG__ || [];
             const visPerf = window.__iuPerfTabVisiblePerf;
             const now = performance.now();
-            const within5sAfterVisible = typeof visPerf === "number" && (now - visPerf) >= 0 && (now - visPerf) <= 5000;
+            const whetherWithin5sAfterVisible = typeof visPerf === "number" && (now - visPerf) >= 0 && (now - visPerf) <= 5000;
             log.push({
               module: "tasksSummary",
               reason: pr,
               startTime: t0,
               durationMs: now - t0,
               domWrites: domWrites,
-              within5sAfterVisible: within5sAfterVisible
+              whetherWithin5sAfterVisible: whetherWithin5sAfterVisible
             });
           }catch(_){}
         }
