@@ -499,7 +499,8 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     if (backBtn) backBtn.hidden = false;
     panel.classList.add("iu-financial-overlay-panel--detail");
     panel.classList.remove("iu-financial-overlay-panel--hub");
-    views.innerHTML = `<div class="iu-financial-overlay-detail ${esc(def.accentClass)}">
+    /** Detail wrapper: no iu-financial-accent--* — left strip is hub-card-only (see iu-financial-overlay.css). */
+    views.innerHTML = `<div class="iu-financial-overlay-detail iu-fin-calc-detail" data-iu-fin-calc-detail="1">
       <div class="iu-financial-overlay-detailInner" data-iu-fin-active="${esc(id)}"></div>
       <div class="iu-financial-overlay-actions">
         <button type="button" class="iu-financial-overlay-reset" data-iu-fin-reset>Reset</button>
