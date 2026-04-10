@@ -8817,16 +8817,11 @@ function buildVideoAsArticleCard(it) {
       }catch{}
     }
 
+    /* P0 desktop tab return: do not also listen to window focus + pageshow — on return they fire in a burst
+       with visibilitychange and each called refresh(), duplicating calendarGetTodayEvents + summary DOM work
+       before the first click is handled. visibilitychange alone matches “tab became visible”. */
     try{
       document.addEventListener("visibilitychange", onVisibilityOrFocus);
-    }catch{}
-    try{
-      window.addEventListener("focus", onVisibilityOrFocus);
-    }catch{}
-    try{
-      window.addEventListener("pageshow", () => {
-        try{ if (document.visibilityState === "visible") refresh(); }catch{}
-      });
     }catch{}
     try{
       window.addEventListener("pagehide", () => { try{ clearSummarySchedule(); }catch{} });
@@ -8971,16 +8966,9 @@ function buildVideoAsArticleCard(it) {
       }catch{}
     }
 
+    /* Same as calendar summary: focus + pageshow duplicated visibilitychange on tab foreground → triple refresh. */
     try{
       document.addEventListener("visibilitychange", onVisibilityOrFocus);
-    }catch{}
-    try{
-      window.addEventListener("focus", onVisibilityOrFocus);
-    }catch{}
-    try{
-      window.addEventListener("pageshow", () => {
-        try{ if (document.visibilityState === "visible") refresh(); }catch{}
-      });
     }catch{}
     try{
       window.addEventListener("storage", (e)=>{
