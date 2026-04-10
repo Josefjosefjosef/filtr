@@ -17791,9 +17791,7 @@ function buildVideoAsArticleCard(it) {
         { name: "PDF → Word", url: "https://www.ilovepdf.com/pdf_to_word", external: true },
         { name: "Word → PDF", url: "https://www.ilovepdf.com/word_to_pdf", external: true },
         { name: "PDF → JPG", url: "https://www.ilovepdf.com/pdf_to_jpg", external: true },
-        { name: "JPG → PDF", url: "https://smallpdf.com/jpg-to-pdf", external: true },
-        { name: "Sloučit PDF", url: "https://pdf24.org/en/merge-pdf", external: true },
-        { name: "Komprese PDF", url: "https://pdf24.org/en/compress-pdf", external: true }
+        { name: "JPG → PDF", url: "https://smallpdf.com/jpg-to-pdf", external: true }
       ]
     },
     nakup: {
@@ -19276,7 +19274,7 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
-  /** P0: #iuQuickFeed lives under #leftContent; dock to body for true fullscreen (Moje služby quick routes only). */
+  /** P0: #iuQuickFeed lives under #leftContent; dock to body for true fullscreen (Moje služby + Word/PDF convert on ≤1023px). */
   var __iuQuickFeedDock = null;
   function iuDockQuickFeedToBodyForMojeFullscreen(quick) {
     try {
@@ -19409,6 +19407,15 @@ function buildVideoAsArticleCard(it) {
       if (isMobileOverlayScope) {
         iuSetViewportLock(true);
         document.body.classList.add("iu-modal-open", "iu-mobileGateToolsQuickOpen");
+      }
+    } catch (_) {}
+    /* P0 Word/PDF: same dock + fixed fullscreen layer as Moje služby (≤1023px); avoids overlay under MindMenu. */
+    try {
+      if (keyNorm === "convert" && window.matchMedia && window.matchMedia("(max-width: 1023px)").matches) {
+        iuDockQuickFeedToBodyForMojeFullscreen(quick);
+        iuSetViewportLock(true);
+        document.body.classList.add("iu-modal-open", "iu-quickFeedMojeFullscreen");
+        if (isMobileOverlayScope) document.body.classList.add("iu-mobileGateToolsQuickOpen");
       }
     } catch (_) {}
     const isTranslator = String(key || "").toLowerCase() === "deepl";
@@ -19608,6 +19615,11 @@ function buildVideoAsArticleCard(it) {
     }
     const closeBtn = document.getElementById("iuQCloseBtn");
     iuApplyMobileQuickFeedLayout(quick);
+    try {
+      if (keyNorm === "convert" && window.matchMedia && window.matchMedia("(max-width: 1023px)").matches) {
+        iuApplyMojeQuickFeedFullscreenLayer(quick, true);
+      }
+    } catch (_) {}
     if (closeBtn) closeBtn.addEventListener("click", iuHideQuickFeed, { once: true });
     try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) { window.scrollTo(0, 0); }
   }
