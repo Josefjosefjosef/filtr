@@ -1,35 +1,40 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-04-10T19:57:02.352867Z",
-  "run_time_utc": "2026-04-10T19:57:02.352867Z",
+  "generatedAt": "2026-04-10T20:12:11.733721Z",
+  "run_time_utc": "2026-04-10T20:12:11.733721Z",
   "summary": {
     "schemaVersion": 2,
-    "generatedAt": "2026-04-10T19:57:02.352867Z",
-    "run_time_utc": "2026-04-10T19:57:02.352867Z",
-    "sources_checked": 4,
-    "sources_with_new_items": 1,
-    "total_raw_items": 29,
-    "total_parsed_items": 29,
-    "total_normalized_items": 29,
-    "total_after_dedupe_items": 10,
-    "total_written_articles_feed_attributed": 10,
+    "generatedAt": "2026-04-10T20:12:11.733721Z",
+    "run_time_utc": "2026-04-10T20:12:11.733721Z",
+    "sources_checked": 5,
+    "sources_with_new_items": 2,
+    "total_raw_items": 59,
+    "total_parsed_items": 59,
+    "total_normalized_items": 59,
+    "total_after_dedupe_items": 40,
+    "total_written_articles_feed_attributed": 67,
     "written_by_section": {
       "zpravy": 467,
-      "sport": 207,
+      "sport": 208,
       "finance": 183,
       "zdravi": 46,
       "cestovani": 14
     },
-    "newest_written_publishedAt": "2026-04-10T19:27:20Z",
+    "newest_written_publishedAt": "2026-04-10T19:55:31Z",
     "top_sources_by_new_items": [
+      {
+        "source_id": "spt_ctsport",
+        "feed_url": "https://sport.ceskatelevize.cz/rss",
+        "raw_feed_new_item_count": 30
+      },
       {
         "source_id": "vzd_betterlife",
         "feed_url": "https://www.betterlife.cz/feed/",
         "raw_feed_new_item_count": 10
       },
       {
-        "source_id": "spt_crzpravy_sport",
-        "feed_url": "https://www.crzpravy.cz/rss/sport/",
+        "source_id": "kul_ctart",
+        "feed_url": "https://www.ceskatelevize.cz/art/rss",
         "raw_feed_new_item_count": 0
       },
       {
@@ -45,14 +50,19 @@
     ],
     "top_sources_by_written_items": [
       {
+        "source_id": "spt_ctsport",
+        "feed_url": "https://sport.ceskatelevize.cz/rss",
+        "written_to_articles_json_count": 55
+      },
+      {
         "source_id": "vzd_betterlife",
         "feed_url": "https://www.betterlife.cz/feed/",
         "written_to_articles_json_count": 7
       },
       {
-        "source_id": "spt_crzpravy_sport",
-        "feed_url": "https://www.crzpravy.cz/rss/sport/",
-        "written_to_articles_json_count": 3
+        "source_id": "kul_ctart",
+        "feed_url": "https://www.ceskatelevize.cz/art/rss",
+        "written_to_articles_json_count": 5
       },
       {
         "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -82,22 +92,27 @@
         "raw_minus_written": 3
       },
       {
-        "source_id": "spt_crzpravy_sport",
-        "feed_url": "https://www.crzpravy.cz/rss/sport/",
-        "raw_minus_written": -3
+        "source_id": "kul_ctart",
+        "feed_url": "https://www.ceskatelevize.cz/art/rss",
+        "raw_minus_written": -5
+      },
+      {
+        "source_id": "spt_ctsport",
+        "feed_url": "https://sport.ceskatelevize.cz/rss",
+        "raw_minus_written": -25
       }
     ]
   },
   "sources": [
     {
-      "source_id": "spt_crzpravy_sport",
-      "registry_id": "spt_crzpravy_sport",
-      "source_label": "ČR Zprávy / Sport",
-      "feed_url": "https://www.crzpravy.cz/rss/sport/",
-      "topic": "sport",
-      "section_primary": "sport",
-      "generatedAt": "2026-04-10T19:57:02.352867Z",
-      "run_time_utc": "2026-04-10T19:57:02.352867Z",
+      "source_id": "kul_ctart",
+      "registry_id": "kul_ctart",
+      "source_label": "ČT art",
+      "feed_url": "https://www.ceskatelevize.cz/art/rss",
+      "topic": "kultura",
+      "section_primary": "kultura",
+      "generatedAt": "2026-04-10T20:12:11.733721Z",
+      "run_time_utc": "2026-04-10T20:12:11.733721Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -113,9 +128,9 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 3,
-      "written_to_articles_json_count": 3,
-      "newest_written_publishedAt": "2024-09-04T08:27:16Z",
+      "release_eligible_count": 5,
+      "written_to_articles_json_count": 5,
+      "newest_written_publishedAt": "2026-04-03T15:00:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -128,14 +143,85 @@
       "sample_titles": []
     },
     {
+      "source_id": "spt_ctsport",
+      "registry_id": "spt_ctsport",
+      "source_label": "ČT sport",
+      "feed_url": "https://sport.ceskatelevize.cz/rss",
+      "topic": "sport",
+      "section_primary": "sport",
+      "generatedAt": "2026-04-10T20:12:11.733721Z",
+      "run_time_utc": "2026-04-10T20:12:11.733721Z",
+      "raw_feed_item_count": 30,
+      "raw_feed_new_item_count": 30,
+      "raw_feed_latest_publishedAt": "2026-04-10T19:55:31Z",
+      "ingested_item_count": 30,
+      "parsed_item_count": 30,
+      "normalized_item_count": 30,
+      "valid_publishedAt_count": 30,
+      "mapped_to_section_count": {
+        "zpravy": 0,
+        "sport": 30,
+        "finance": 0,
+        "zdravi": 0,
+        "cestovani": 0,
+        "other": 0
+      },
+      "release_eligible_count": 55,
+      "written_to_articles_json_count": 55,
+      "newest_written_publishedAt": "2026-04-10T19:55:31Z",
+      "drop_counts": {
+        "missing_publishedAt": 0,
+        "invalid_publishedAt": 0,
+        "parser_drop": 0,
+        "section_remap": 0,
+        "release_gate": 0,
+        "dedupe": 0,
+        "other": 0
+      },
+      "sample_titles": [
+        {
+          "title": "Dukla zdolala Lvice, Šelmy ji čekají ve finále",
+          "publishedAt": "2026-04-10T19:55:31Z"
+        },
+        {
+          "title": "Bratři Králové na ME končí, české maximum nepřekonali",
+          "publishedAt": "2026-04-10T19:27:20Z"
+        },
+        {
+          "title": "Dukla v prvním semifinále extraligy házenkářů porazila Plzeň 32:26",
+          "publishedAt": "2026-04-10T19:16:23Z"
+        },
+        {
+          "title": "Zlín vyhrál v Jihlavě a je krok od baráže o extraligu",
+          "publishedAt": "2026-04-10T18:46:54Z"
+        },
+        {
+          "title": "Basketbalistkám KP Brno k lepšímu výsledku nepomohlo ani domácí prostředí",
+          "publishedAt": "2026-04-10T17:53:34Z"
+        },
+        {
+          "title": "V čele Chorvatské rallye je Pajari, Evans a Solberg odstoupili",
+          "publishedAt": "2026-04-10T17:14:30Z"
+        },
+        {
+          "title": "Do přípravy se zapojí Tomášek, Kubalík a Měchura. Tři hráči národní tým opustí",
+          "publishedAt": "2026-04-10T13:33:10Z"
+        },
+        {
+          "title": "Nosková dotáhla český nápor, po úvodních dvouhrách je tak stav shodný",
+          "publishedAt": "2026-04-10T11:09:51Z"
+        }
+      ]
+    },
+    {
       "source_id": "vzd_betterlife",
       "registry_id": "vzd_betterlife",
       "source_label": "BetterLife (edu)",
       "feed_url": "https://www.betterlife.cz/feed/",
       "topic": "vzdelavani",
       "section_primary": "vzdelavani",
-      "generatedAt": "2026-04-10T19:57:02.352867Z",
-      "run_time_utc": "2026-04-10T19:57:02.352867Z",
+      "generatedAt": "2026-04-10T20:12:11.733721Z",
+      "run_time_utc": "2026-04-10T20:12:11.733721Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-10T15:56:38Z",
@@ -205,8 +291,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-10T19:57:02.352867Z",
-      "run_time_utc": "2026-04-10T19:57:02.352867Z",
+      "generatedAt": "2026-04-10T20:12:11.733721Z",
+      "run_time_utc": "2026-04-10T20:12:11.733721Z",
       "raw_feed_item_count": 4,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2026-01-20T08:01:05Z",
@@ -243,8 +329,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-10T19:57:02.352867Z",
-      "run_time_utc": "2026-04-10T19:57:02.352867Z",
+      "generatedAt": "2026-04-10T20:12:11.733721Z",
+      "run_time_utc": "2026-04-10T20:12:11.733721Z",
       "raw_feed_item_count": 15,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2024-07-19T09:05:16Z",
