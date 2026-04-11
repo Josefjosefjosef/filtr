@@ -10576,7 +10576,8 @@ function buildVideoAsArticleCard(it) {
   }
 
   /** Homepage: cap CPU for clusterArticlesUnified (buildPublicationClusterUrlMap); tail uses solo cluster ids via pickPublicationKeptUrlKeys. */
-  const IU_HOME_PUB_CLUSTER_CAP = 4000;
+  const IU_HOME_PUB_CLUSTER_MIN_ARTICLES_FOR_CAP = 500;
+  const IU_HOME_PUB_CLUSTER_INPUT_CAP = 800;
 
   function iuDomBodyIsHomeHub() {
     try {
@@ -10607,7 +10608,9 @@ function buildVideoAsArticleCard(it) {
       function iuHomeFullPublicationClusterIdle() {
         try {
           if (!state.hasLoadedData) return;
-          if (!iuDomBodyIsHomeHub()) return;
+          // Router helper lives in a later IIFE — bare name threw ReferenceError and was swallowed (no idle full pass).
+          const hubFn = typeof window !== "undefined" ? window.iuGlobalArticleHubFromNav : null;
+          if (typeof hubFn !== "function" || !hubFn()) return;
           state.__iuFullPublicationClusterPass = true;
           state.__iuHomeFullPubClusterIdleScheduled = false;
           applyFilter({ resetPage: false, render: true });
@@ -10810,13 +10813,12 @@ function buildVideoAsArticleCard(it) {
             (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tHard0;
           auditRun.itemCountProcessed = pass.length;
         }
-        const homeHub = iuDomBodyIsHomeHub();
         const nArt = iuCountArticlesInList(pass);
+        // Global default-feed branch: do not require body.iu-home (class toggles after nav; first loadData applyFilter ran uncapped).
         const usePubClusterCap =
-          homeHub &&
           !state.__iuFullPublicationClusterPass &&
-          nArt > IU_HOME_PUB_CLUSTER_CAP;
-        const pubOpts = usePubClusterCap ? { clusterArticleCap: IU_HOME_PUB_CLUSTER_CAP } : undefined;
+          nArt > IU_HOME_PUB_CLUSTER_MIN_ARTICLES_FOR_CAP;
+        const pubOpts = usePubClusterCap ? { clusterArticleCap: IU_HOME_PUB_CLUSTER_INPUT_CAP } : undefined;
         const tPub0 =
           auditRun && typeof performance !== "undefined" && performance.now ? performance.now() : 0;
         pass = iuApplyPublicationFeedFilterMixed(pass, pubOpts);
@@ -10898,8 +10900,8 @@ function buildVideoAsArticleCard(it) {
       const usePubClusterCap2 =
         homeHub2 &&
         !state.__iuFullPublicationClusterPass &&
-        nArt2 > IU_HOME_PUB_CLUSTER_CAP;
-      const pubOpts2 = usePubClusterCap2 ? { clusterArticleCap: IU_HOME_PUB_CLUSTER_CAP } : undefined;
+        nArt2 > IU_HOME_PUB_CLUSTER_MIN_ARTICLES_FOR_CAP;
+      const pubOpts2 = usePubClusterCap2 ? { clusterArticleCap: IU_HOME_PUB_CLUSTER_INPUT_CAP } : undefined;
       filtered = iuApplyPublicationFeedFilterMixed(filtered, pubOpts2);
       if (usePubClusterCap2 && !state.__iuHomeFullPubClusterIdleScheduled) {
         state.__iuHomeFullPubClusterIdleScheduled = true;
@@ -10968,6 +10970,28 @@ function buildVideoAsArticleCard(it) {
           auditRun.renderItemsDurationMs = ph.renderItemsMs;
           auditRun.renderFeedDurationMs = ph.renderItemsMs;
           auditRun.domPatchDurationMs = ph.domPatchMs;
+          auditRun.itemCountRendered = auditRun.itemCountRendered != null ? auditRun.itemCountRendered : ph.itemCountRendered;
+          auditRun.clusterMapInputArticles = pub.clusterMapInputArticles;
+          auditRun.clusterCapApplied = pub.clusterCapApplied === true;
+          auditRun.passTag = state.__iuFullPublicationClusterPass
+            ? "post_idle_full"
+            : pub.clusterCapApplied
+              ? "capped_initial"
+              : "full_initial";
+          try {
+            window.__IU_APPLYFILTER_AUDIT_LAST__ = {
+              passTag: auditRun.passTag,
+              applyFilterDurationMs: auditRun.applyFilterDurationMs,
+              groupPhaseDurationMs: auditRun.groupPhaseDurationMs,
+              clusterMapInputArticles: auditRun.clusterMapInputArticles,
+              clusterCapApplied: auditRun.clusterCapApplied,
+              publicationMixedTotalMs: ph.publicationMixedTotalMs,
+              renderItemsDurationMs: auditRun.renderItemsDurationMs,
+              domPatchDurationMs: auditRun.domPatchDurationMs,
+              itemCountProcessed: auditRun.itemCountProcessed,
+              itemCountRendered: auditRun.itemCountRendered,
+            };
+          } catch (_) {}
         } catch (_) {}
         try {
           window.__IU_APPLYFILTER_AUDIT_ACTIVE_RUN = null;
@@ -23439,6 +23463,21 @@ function buildVideoAsArticleCard(it) {
       return { section: IU_ARTICLE_HUB_SECTION, topic: "", mode: "guide" };
     }
   }
+
+  /** Global article hub from URL (section media + no topic / topic all) — body.iu-home can lag first applyFilter. */
+  function iuGlobalArticleHubFromNav() {
+    try {
+      const n = readUrlNavState();
+      const topic = String(n.topic || "").trim().toLowerCase();
+      const sec = String(n.section || "").trim().toLowerCase();
+      return iuArticleHubSectionP(sec) && (!topic || topic === "all");
+    } catch (_) {
+      return false;
+    }
+  }
+  try {
+    window.iuGlobalArticleHubFromNav = iuGlobalArticleHubFromNav;
+  } catch (_) {}
 
   function persistNavState(o){
     try{
