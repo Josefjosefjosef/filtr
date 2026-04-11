@@ -17128,7 +17128,14 @@ function buildVideoAsArticleCard(it) {
     debugLog("[VIS]", document.visibilityState);
     if (document.visibilityState === "visible") {
       if (!(document.body && document.body.classList && document.body.classList.contains("iu-home"))) {
-        loadData();
+        try {
+          if (typeof window.__iuLoadData === "function") window.__iuLoadData();
+          else loadData();
+        } catch (_) {
+          try {
+            loadData();
+          } catch (__) {}
+        }
         startAutoRefresh();
       }
     } else if (iuRefreshTimer) {
