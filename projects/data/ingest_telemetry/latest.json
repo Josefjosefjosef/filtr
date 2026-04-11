@@ -1,18 +1,18 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-04-11T06:02:11.331275Z",
-  "run_time_utc": "2026-04-11T06:02:11.331275Z",
+  "generatedAt": "2026-04-11T06:16:54.522057Z",
+  "run_time_utc": "2026-04-11T06:16:54.522057Z",
   "summary": {
     "schemaVersion": 2,
-    "generatedAt": "2026-04-11T06:02:11.331275Z",
-    "run_time_utc": "2026-04-11T06:02:11.331275Z",
-    "sources_checked": 5,
-    "sources_with_new_items": 2,
-    "total_raw_items": 59,
-    "total_parsed_items": 59,
-    "total_normalized_items": 59,
-    "total_after_dedupe_items": 40,
-    "total_written_articles_feed_attributed": 72,
+    "generatedAt": "2026-04-11T06:16:54.522057Z",
+    "run_time_utc": "2026-04-11T06:16:54.522057Z",
+    "sources_checked": 4,
+    "sources_with_new_items": 1,
+    "total_raw_items": 20,
+    "total_parsed_items": 20,
+    "total_normalized_items": 20,
+    "total_after_dedupe_items": 1,
+    "total_written_articles_feed_attributed": 13,
     "written_by_section": {
       "zpravy": 473,
       "sport": 215,
@@ -23,18 +23,13 @@
     "newest_written_publishedAt": "2026-04-11T04:15:00Z",
     "top_sources_by_new_items": [
       {
-        "source_id": "spt_ctsport",
-        "feed_url": "https://sport.ceskatelevize.cz/rss",
-        "raw_feed_new_item_count": 30
+        "source_id": "fin_ekonom",
+        "feed_url": "https://ekonom.cz/?p=400000_rss",
+        "raw_feed_new_item_count": 1
       },
       {
-        "source_id": "vzd_betterlife",
-        "feed_url": "https://www.betterlife.cz/feed/",
-        "raw_feed_new_item_count": 10
-      },
-      {
-        "source_id": "kul_ctart",
-        "feed_url": "https://www.ceskatelevize.cz/art/rss",
+        "source_id": "ved_ct24_veda",
+        "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
         "raw_feed_new_item_count": 0
       },
       {
@@ -50,18 +45,13 @@
     ],
     "top_sources_by_written_items": [
       {
-        "source_id": "spt_ctsport",
-        "feed_url": "https://sport.ceskatelevize.cz/rss",
-        "written_to_articles_json_count": 60
+        "source_id": "ved_ct24_veda",
+        "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
+        "written_to_articles_json_count": 8
       },
       {
-        "source_id": "vzd_betterlife",
-        "feed_url": "https://www.betterlife.cz/feed/",
-        "written_to_articles_json_count": 7
-      },
-      {
-        "source_id": "kul_ctart",
-        "feed_url": "https://www.ceskatelevize.cz/art/rss",
+        "source_id": "fin_ekonom",
+        "feed_url": "https://ekonom.cz/?p=400000_rss",
         "written_to_articles_json_count": 5
       },
       {
@@ -87,32 +77,70 @@
         "raw_minus_written": 4
       },
       {
-        "source_id": "vzd_betterlife",
-        "feed_url": "https://www.betterlife.cz/feed/",
-        "raw_minus_written": 3
+        "source_id": "fin_ekonom",
+        "feed_url": "https://ekonom.cz/?p=400000_rss",
+        "raw_minus_written": -4
       },
       {
-        "source_id": "kul_ctart",
-        "feed_url": "https://www.ceskatelevize.cz/art/rss",
-        "raw_minus_written": -5
-      },
-      {
-        "source_id": "spt_ctsport",
-        "feed_url": "https://sport.ceskatelevize.cz/rss",
-        "raw_minus_written": -30
+        "source_id": "ved_ct24_veda",
+        "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
+        "raw_minus_written": -8
       }
     ]
   },
   "sources": [
     {
-      "source_id": "kul_ctart",
-      "registry_id": "kul_ctart",
-      "source_label": "ČT art",
-      "feed_url": "https://www.ceskatelevize.cz/art/rss",
-      "topic": "kultura",
-      "section_primary": "kultura",
-      "generatedAt": "2026-04-11T06:02:11.331275Z",
-      "run_time_utc": "2026-04-11T06:02:11.331275Z",
+      "source_id": "fin_ekonom",
+      "registry_id": "fin_ekonom",
+      "source_label": "Ekonom (HN)",
+      "feed_url": "https://ekonom.cz/?p=400000_rss",
+      "topic": "finance",
+      "section_primary": "finance",
+      "generatedAt": "2026-04-11T06:16:54.522057Z",
+      "run_time_utc": "2026-04-11T06:16:54.522057Z",
+      "raw_feed_item_count": 1,
+      "raw_feed_new_item_count": 1,
+      "raw_feed_latest_publishedAt": "2026-04-08T16:00:00Z",
+      "ingested_item_count": 1,
+      "parsed_item_count": 1,
+      "normalized_item_count": 1,
+      "valid_publishedAt_count": 1,
+      "mapped_to_section_count": {
+        "zpravy": 0,
+        "sport": 0,
+        "finance": 1,
+        "zdravi": 0,
+        "cestovani": 0,
+        "other": 0
+      },
+      "release_eligible_count": 5,
+      "written_to_articles_json_count": 5,
+      "newest_written_publishedAt": "2026-04-08T16:00:00Z",
+      "drop_counts": {
+        "missing_publishedAt": 0,
+        "invalid_publishedAt": 0,
+        "parser_drop": 0,
+        "section_remap": 0,
+        "release_gate": 0,
+        "dedupe": 0,
+        "other": 0
+      },
+      "sample_titles": [
+        {
+          "title": "Nejen o tom, jak se podniká na Blízkém východě a na co si dát pozor, s Gabrielou Teissing z Creative Docku",
+          "publishedAt": "2026-04-08T16:00:00Z"
+        }
+      ]
+    },
+    {
+      "source_id": "ved_ct24_veda",
+      "registry_id": "ved_ct24_veda",
+      "source_label": "ČT24 / Věda",
+      "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
+      "topic": "veda",
+      "section_primary": "veda",
+      "generatedAt": "2026-04-11T06:16:54.522057Z",
+      "run_time_utc": "2026-04-11T06:16:54.522057Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -128,9 +156,9 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 5,
-      "written_to_articles_json_count": 5,
-      "newest_written_publishedAt": "2026-04-03T15:00:00Z",
+      "release_eligible_count": 8,
+      "written_to_articles_json_count": 8,
+      "newest_written_publishedAt": "2026-04-03T05:00:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -143,156 +171,14 @@
       "sample_titles": []
     },
     {
-      "source_id": "spt_ctsport",
-      "registry_id": "spt_ctsport",
-      "source_label": "ČT sport",
-      "feed_url": "https://sport.ceskatelevize.cz/rss",
-      "topic": "sport",
-      "section_primary": "sport",
-      "generatedAt": "2026-04-11T06:02:11.331275Z",
-      "run_time_utc": "2026-04-11T06:02:11.331275Z",
-      "raw_feed_item_count": 30,
-      "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-11T04:00:00Z",
-      "ingested_item_count": 30,
-      "parsed_item_count": 30,
-      "normalized_item_count": 30,
-      "valid_publishedAt_count": 30,
-      "mapped_to_section_count": {
-        "zpravy": 0,
-        "sport": 30,
-        "finance": 0,
-        "zdravi": 0,
-        "cestovani": 0,
-        "other": 0
-      },
-      "release_eligible_count": 60,
-      "written_to_articles_json_count": 60,
-      "newest_written_publishedAt": "2026-04-11T04:00:00Z",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 0,
-        "dedupe": 0,
-        "other": 0
-      },
-      "sample_titles": [
-        {
-          "title": "Strýcová po prvním dni se Švýcarskem: Šla jsem do toho bez plánu, stav 1:1 beru",
-          "publishedAt": "2026-04-11T04:00:00Z"
-        },
-        {
-          "title": "Součkův West Ham deklasoval Krejčího Wolverhampton 4:0",
-          "publishedAt": "2026-04-10T21:31:47Z"
-        },
-        {
-          "title": "Hranáčův premiérový bundesligový gól přispěl k remíze Hoffenheimu v Augsburgu",
-          "publishedAt": "2026-04-10T21:17:16Z"
-        },
-        {
-          "title": "Volejbalisté Karlovarska vyhráli v Liberci a mají extraligové finále na dosah",
-          "publishedAt": "2026-04-10T20:55:27Z"
-        },
-        {
-          "title": "Plíšková v Linci dohrála, Malečková a Škoch jsou ve finále debla",
-          "publishedAt": "2026-04-10T20:33:46Z"
-        },
-        {
-          "title": "Táborsko s poslední Spartou jen remizovalo a může vypadnout z barážových příček",
-          "publishedAt": "2026-04-10T20:20:38Z"
-        },
-        {
-          "title": "Dukla zdolala Lvice, Šelmy ji čekají ve finále",
-          "publishedAt": "2026-04-10T19:55:31Z"
-        },
-        {
-          "title": "Bratři Králové na ME končí, české maximum nepřekonali",
-          "publishedAt": "2026-04-10T19:27:20Z"
-        }
-      ]
-    },
-    {
-      "source_id": "vzd_betterlife",
-      "registry_id": "vzd_betterlife",
-      "source_label": "BetterLife (edu)",
-      "feed_url": "https://www.betterlife.cz/feed/",
-      "topic": "vzdelavani",
-      "section_primary": "vzdelavani",
-      "generatedAt": "2026-04-11T06:02:11.331275Z",
-      "run_time_utc": "2026-04-11T06:02:11.331275Z",
-      "raw_feed_item_count": 10,
-      "raw_feed_new_item_count": 10,
-      "raw_feed_latest_publishedAt": "2026-04-10T15:56:38Z",
-      "ingested_item_count": 10,
-      "parsed_item_count": 10,
-      "normalized_item_count": 10,
-      "valid_publishedAt_count": 10,
-      "mapped_to_section_count": {
-        "zpravy": 0,
-        "sport": 0,
-        "finance": 0,
-        "zdravi": 0,
-        "cestovani": 0,
-        "other": 10
-      },
-      "release_eligible_count": 5,
-      "written_to_articles_json_count": 7,
-      "newest_written_publishedAt": "2026-04-06T12:05:05Z",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 2,
-        "dedupe": 0,
-        "other": 0
-      },
-      "sample_titles": [
-        {
-          "title": "Stanislav Hložek odhalil reálnou výši svého důchodu",
-          "publishedAt": "2026-04-10T15:56:38Z"
-        },
-        {
-          "title": "Zástava krevního oběhu vyžaduje okamžitý zásah profesionálů. Návody ze sociálních sítí pacienty poškozují",
-          "publishedAt": "2026-04-10T06:58:51Z"
-        },
-        {
-          "title": "Odepření přístupu do online světa situaci zhoršuje. Rodiče musí zvolit zcela odlišnou strategii",
-          "publishedAt": "2026-04-09T10:25:12Z"
-        },
-        {
-          "title": "Filip Turek tvrdě narazil v debatě o větrnících. Analytik mu vmetl nedostatek odbornosti",
-          "publishedAt": "2026-04-09T08:59:23Z"
-        },
-        {
-          "title": "Bývalý moderátor zpráv žije sen mnoha Čechů v důchodu. Utrácí štědré úspory a cestuje po světě",
-          "publishedAt": "2026-04-08T15:57:47Z"
-        },
-        {
-          "title": "Cukr v nápojích: Každý druhý dětský kaz souvisí s pitím limonád nebo ovocných džusů",
-          "publishedAt": "2026-04-08T10:09:44Z"
-        },
-        {
-          "title": "Lednice plné barevných vajec: Zelený okraj žloutku není problém, ten je spíše ve formě skladování",
-          "publishedAt": "2026-04-08T07:43:15Z"
-        },
-        {
-          "title": "Vesničko má středisková: Původní herecké obsazení, smrtelná nehoda a film vznikl jako záchrana před finančním průšvihem",
-          "publishedAt": "2026-04-06T12:05:05Z"
-        }
-      ]
-    },
-    {
       "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "registry_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "source_label": "YouTube – ČT24",
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-11T06:02:11.331275Z",
-      "run_time_utc": "2026-04-11T06:02:11.331275Z",
+      "generatedAt": "2026-04-11T06:16:54.522057Z",
+      "run_time_utc": "2026-04-11T06:16:54.522057Z",
       "raw_feed_item_count": 4,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2026-01-20T08:01:05Z",
@@ -329,8 +215,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-11T06:02:11.331275Z",
-      "run_time_utc": "2026-04-11T06:02:11.331275Z",
+      "generatedAt": "2026-04-11T06:16:54.522057Z",
+      "run_time_utc": "2026-04-11T06:16:54.522057Z",
       "raw_feed_item_count": 15,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2024-07-19T09:05:16Z",
