@@ -33,7 +33,8 @@
     "home-load-audit-proof": "node scripts/home-load-audit-proof.mjs",
     "apply-filter-audit-proof": "node scripts/apply-filter-audit-proof.mjs",
     "feed-classification-audit": "node scripts/audit-feed-classification.mjs",
-    "test:feed-classification": "python scripts/test_iu_feed_classification.py"
+    "test:feed-classification": "python scripts/test_iu_feed_classification.py",
+    "validate:feed-classification": "python scripts/validate_feed_classification.py --skip-missing"
   },
   "devDependencies": {
     "playwright": "^1.49.0",

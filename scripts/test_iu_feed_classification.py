@@ -18,20 +18,20 @@ def _assert(cond, msg=""):
 
 def test_sport_topic():
     a = {"topic": "sport", "section": "sport", "url": "https://sport.example/a", "sources": [{"name": "Test"}]}
-    k, _, _ = classify_media_topic_key(a)
+    k, _, _, _ = classify_media_topic_key(a)
     _assert(k == "sport", k)
 
 
 def test_zpravy_general():
     a = {"topic": "aktualne", "section": "aktualne", "url": "https://zpravy.example/", "sources": [{"name": "Novinky"}]}
-    k, _, c = classify_media_topic_key(a)
+    k, _, c, _ = classify_media_topic_key(a)
     _assert(k == "zpravy", k)
     _assert(c >= 0.5, str(c))
 
 
 def test_tech_source():
     a = {"topic": "aktualne", "url": "https://lupa.cz/a", "sources": [{"name": "Lupa.cz"}]}
-    k, r, _ = classify_media_topic_key(a)
+    k, r, _, _ = classify_media_topic_key(a)
     _assert(k == "tech", (k, r))
 
 
@@ -58,6 +58,18 @@ def test_conflicting_priority_tech_over_general_topic():
     _assert(classify_media_topic_key(a)[0] == "tech")
 
 
+def test_url_sport_overrides_wrong_topic():
+    a = {
+        "topic": "finance",
+        "section": "finance",
+        "url": "https://sport.example.cz/fotbal/zapas",
+        "sources": [{"name": "SportTest"}],
+    }
+    k, r, _, flags = classify_media_topic_key(a)
+    _assert(k == "sport", (k, r))
+    _assert("topic_url_conflict" in flags, str(flags))
+
+
 def run():
     test_sport_topic()
     test_zpravy_general()
@@ -65,6 +77,7 @@ def run():
     test_finance_topic()
     test_attach_schema()
     test_conflicting_priority_tech_over_general_topic()
+    test_url_sport_overrides_wrong_topic()
     print("PASS iu_feed_classification tests")
 
 

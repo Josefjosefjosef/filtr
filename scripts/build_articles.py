@@ -64,7 +64,7 @@ from iu_staging import (
     write_youtube_staging,
 )
 from ingest_telemetry import build_telemetry_payload, print_compact_audit, section_bucket
-from iu_feed_classification import enrich_article_list
+from iu_feed_classification import classification_coverage_stats, enrich_article_list
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # repo root
 FEEDS_PATH = os.path.join(ROOT_DIR, "scripts", "feeds.json")
@@ -2758,6 +2758,10 @@ def _publish_article_outputs(bundle: dict) -> int:
     except Exception as e:
         print("WARN: retention shards failed:", str(e))
 
+    _fcov = classification_coverage_stats(final)
+    _fc_req = int(_fcov.get("total") or 0) > 0 and int(_fcov.get("withClassification") or 0) == int(
+        _fcov.get("total") or 0
+    )
     payload = {
         "generatedAt": generated_at,
         "articles": final,
@@ -2765,6 +2769,8 @@ def _publish_article_outputs(bundle: dict) -> int:
         "homepagePreviewUsesSectionMapper": True,
         "feedClassificationSchemaVersion": 1,
         "feedClassificationSource": "iu_feed_classification.py",
+        "feedClassificationCoveragePct": _fcov.get("coveragePct"),
+        "feedClassificationRequired": bool(_fc_req),
         "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
         "sectionRetention": _section_retention_manifest(),
     }
@@ -3644,6 +3650,10 @@ def _legacy_main_removed_placeholder():
     # ===== FAST OUTPUT (ARTICLES) =====
     final = out_articles
 
+    _fcov = classification_coverage_stats(final)
+    _fc_req = int(_fcov.get("total") or 0) > 0 and int(_fcov.get("withClassification") or 0) == int(
+        _fcov.get("total") or 0
+    )
     payload = {
         "generatedAt": generated_at,
         "articles": final,
@@ -3651,6 +3661,8 @@ def _legacy_main_removed_placeholder():
         "homepagePreviewUsesSectionMapper": True,
         "feedClassificationSchemaVersion": 1,
         "feedClassificationSource": "iu_feed_classification.py",
+        "feedClassificationCoveragePct": _fcov.get("coveragePct"),
+        "feedClassificationRequired": bool(_fc_req),
         "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
         "sectionRetention": _section_retention_manifest(),
     }

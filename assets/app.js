@@ -523,6 +523,8 @@ try {
     retentionCursor: 0,
     retentionLoadedDays: new Set(),
     retentionIsLoading: false,
+    /** Set in loadData from articles.json root: pipeline classification meta (not per-article). */
+    feedClassificationMeta: null,
   };
   state.cachedItems ??= [];
   state.filteredItems ??= [];
@@ -3881,63 +3883,83 @@ try {
   /** Počítadlo nesouladu sources[0].name vs pipeline sourceLabel (stale JSON / drift). */
   let __iuSourceLabelMismatchDrops = 0;
 
+  function iuFeedClassificationPipelineRequired() {
+    try {
+      return Boolean(state.feedClassificationMeta && state.feedClassificationMeta.required === true);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuApplyFeedClassificationBranch(cf, key) {
+    const t = String(cf.mediaTopicKey).toLowerCase();
+    switch (key) {
+      case "zpravy": {
+        const verticals = new Set([
+          "sport",
+          "finance",
+          "zdravi",
+          "cestovani",
+          "hry",
+          "kultura",
+          "veda",
+          "vzdelavani",
+          "tech",
+          "bydleni",
+        ]);
+        return !verticals.has(t);
+      }
+      case "sport":
+        return t === "sport";
+      case "tech": {
+        return t === "tech";
+      }
+      case "finance":
+        return t === "finance";
+      case "bydleni":
+        return t === "bydleni";
+      case "zdravi":
+        return t === "zdravi";
+      case "cestovani":
+        return t === "cestovani";
+      case "hry":
+        return t === "hry";
+      case "kultura":
+        return t === "kultura";
+      case "veda":
+        return t === "veda";
+      case "vzdelavani":
+        return t === "vzdelavani";
+      default:
+        return true;
+    }
+  }
+
   /**
    * Media hub topic chip match. Prefer iuFeedClassification from build pipeline (authoritative);
-   * legacy client heuristics only when missing or low confidence.
+   * legacy client heuristics only when missing or low confidence, unless feedClassificationRequired.
    */
   function iuArticleMatchesMediaTopicKey(item, key) {
     if (!key || key === "all") return true;
     if (IU_DISABLED_MEDIA_TOPIC_KEYS.has(String(key).toLowerCase())) return false;
     const cf = item && item.iuFeedClassification;
-    if (
+    const pipelineReq = iuFeedClassificationPipelineRequired();
+    const cfOk =
       cf &&
       cf.v === 1 &&
       typeof cf.mediaTopicKey === "string" &&
       cf.mediaTopicKey.length > 0 &&
       typeof cf.confidence === "number" &&
-      cf.confidence >= 0.5
-    ) {
-      const t = String(cf.mediaTopicKey).toLowerCase();
-      switch (key) {
-        case "zpravy": {
-          const verticals = new Set([
-            "sport",
-            "finance",
-            "zdravi",
-            "cestovani",
-            "hry",
-            "kultura",
-            "veda",
-            "vzdelavani",
-            "tech",
-            "bydleni",
-          ]);
-          return !verticals.has(t);
-        }
-        case "sport":
-          return t === "sport";
-        case "tech": {
-          return t === "tech";
-        }
-        case "finance":
-          return t === "finance";
-        case "bydleni":
-          return t === "bydleni";
-        case "zdravi":
-          return t === "zdravi";
-        case "cestovani":
-          return t === "cestovani";
-        case "hry":
-          return t === "hry";
-        case "kultura":
-          return t === "kultura";
-        case "veda":
-          return t === "veda";
-        case "vzdelavani":
-          return t === "vzdelavani";
-        default:
-          return true;
+      cf.confidence >= 0.5;
+    if (pipelineReq) {
+      if (cfOk) {
+        return iuApplyFeedClassificationBranch(cf, key);
       }
+      if (key === "zpravy") return true;
+      return false;
+    }
+    if (cfOk) {
+      return iuApplyFeedClassificationBranch(cf, key);
     }
     const t = String(item.topic || item.section || "").toLowerCase();
     const src0 = Array.isArray(item.sources) && item.sources[0] ? String(item.sources[0].name || "") : "";
@@ -11948,6 +11970,28 @@ function buildVideoAsArticleCard(it) {
       const articlesUpdatedAt = typeof articlesData?.updatedAt === "string" ? articlesData.updatedAt : null;
       state.lastArticlesUpdatedAt = articlesUpdatedAt;
       state.articlesRaw = articlesData;
+      try {
+        const root =
+          articlesData && typeof articlesData === "object" && !Array.isArray(articlesData)
+            ? articlesData
+            : null;
+        const sch = root && root.feedClassificationSchemaVersion;
+        const covRaw = root && root.feedClassificationCoveragePct;
+        const cov = Number(covRaw);
+        const covOk = Number.isFinite(cov) && cov >= 99;
+        const arts = root && Array.isArray(root.articles) ? root.articles : [];
+        const reqExplicit = root && root.feedClassificationRequired === true;
+        state.feedClassificationMeta = {
+          schemaVersion: sch,
+          source: root && root.feedClassificationSource,
+          required: Boolean(
+            reqExplicit || ((sch === 1 || sch === "1") && covOk && arts.length > 0),
+          ),
+          coveragePct: Number.isFinite(cov) ? cov : null,
+        };
+      } catch (_) {
+        state.feedClassificationMeta = null;
+      }
 
       const safeArticlesArray = Array.isArray(articlesArr) ? articlesArr : [];
       if (isDebugLogging) {
