@@ -18222,35 +18222,26 @@ function buildVideoAsArticleCard(it) {
       title: "Nákup potravin online",
       groups: [
         {
-          title: "Hlavní služby",
+          title: "Nákup potravin s doručením domů",
           items: [
-            { name: "Rohlík.cz", url: "https://www.rohlik.cz/", desc: "Možnost doručení ještě v den objednání", accent: "rohlik", external: true },
-            { name: "Košík.cz", url: "https://www.kosik.cz/", desc: "Možnost doručení ještě v den objednání i plánovaných termínů", accent: "kosik", external: true },
-            { name: "Tesco Online", url: "https://nakup.itesco.cz/", desc: "Nákup potravin s doručením domů", accent: "tesco", external: true },
-            { name: "Albert Online", url: "https://www.albert.cz/", desc: "Nákup potravin s doručením domů", accent: "albert", external: true }
+            { name: "Rohlík.cz", url: "https://www.rohlik.cz/", accent: "rohlik", external: true },
+            { name: "Košík.cz", url: "https://www.kosik.cz/", accent: "kosik", external: true }
           ]
         },
         {
-          title: "Rychlý rozvoz",
+          title: "Partneři pro rozvoz potravin",
           items: [
-            { name: "Wolt Market", url: "https://market.wolt.com/cs/cze", desc: "Rychlý nákup z obchodů s doručením domů", accent: "wolt", external: true },
-            { name: "foodora", url: "https://www.foodora.cz/", desc: "Rozvoz z obchodů a vlastního marketu", accent: "foodora", external: true },
-            { name: "Bolt Food", url: "https://bolt.eu/cs-cz/food/", desc: "Rozvoz z obchodů a restaurací", accent: "bolt", external: true }
-          ]
-        },
-        {
-          title: "Další možnosti",
-          items: [
-            { name: "Billa e-shop", url: "https://shop.billa.cz/", desc: "Nákup potravin s doručením domů", accent: "billa", external: true },
-            { name: "PENNY (přes partnery)", url: "https://www.penny.cz/", desc: "Možnost nákupu s doručením domů", accent: "penny", external: true }
+            { name: "Wolt", url: "https://market.wolt.com/cs/cze", accent: "wolt", external: true },
+            { name: "foodora", url: "https://www.foodora.cz/", accent: "foodora", external: true },
+            { name: "Bolt", url: "https://bolt.eu/cs-cz/food/", accent: "bolt", external: true }
           ]
         },
         {
           title: "Speciální potraviny",
           items: [
-            { name: "Scuk.cz", url: "https://www.scuk.cz/", desc: "Farmářské a lokální potraviny s rozvozem", accent: "scuk", external: true },
-            { name: "Grizly.cz", url: "https://www.grizly.cz/", desc: "Ořechy, zdravá výživa a potraviny s doručením", accent: "grizly", external: true },
-            { name: "Aktin.cz", url: "https://www.aktin.cz/", desc: "Zdravá výživa a sportovní produkty s doručením", accent: "aktin", external: true }
+            { name: "Scuk.cz", url: "https://www.scuk.cz/", accent: "scuk", external: true },
+            { name: "Grizly.cz", url: "https://www.grizly.cz/", accent: "grizly", external: true },
+            { name: "Aktin.cz", url: "https://www.aktin.cz/", accent: "aktin", external: true }
           ]
         }
       ]
@@ -19704,6 +19695,7 @@ function buildVideoAsArticleCard(it) {
   function iuApplyMobileQuickFeedLayout(quick) {
     try {
       if (!quick) return;
+      var nakupRoot = quick.classList && quick.classList.contains("iu-nakup-online-feed-root");
       var close38 = quick.querySelector("button#iuQCloseBtn.iu-overlayCloseBtn38");
       if (close38) {
         close38.style.setProperty("width", "38px");
@@ -19764,7 +19756,7 @@ function buildVideoAsArticleCard(it) {
         close.style.setProperty("align-items", "center");
         close.style.setProperty("justify-content", "center");
       }
-      if (bodyCard) bodyCard.style.setProperty("padding", "14px 12px 16px");
+      if (bodyCard && !nakupRoot) bodyCard.style.setProperty("padding", "14px 12px 16px");
     } catch (_) {}
   }
 
@@ -19835,13 +19827,36 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
-  /** P0: Nákup potravin online — true viewport overlay (all breakpoints), opaque, above other surfaces. */
+  var __iuNakupOnlineFsProps = [
+    "position", "inset", "left", "top", "width", "height", "max-width", "max-height", "margin",
+    "z-index", "overflow", "overflow-x", "overflow-y", "box-sizing", "background", "padding",
+    "display", "flex-direction", "min-height", "overscroll-behavior", "touch-action",
+    "-webkit-overflow-scrolling"
+  ];
+  function iuNakupOnlineIsDesktopViewport() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(min-width: 1024px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+  /** P0: Nákup potravin online — fullscreen opaque overlay. No-scroll lock pouze desktop (≥1024px); mobile/tablet = scrollovatelné. */
   function iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, on) {
     try {
       if (!quick) return;
       if (!on) {
-        for (var ni = 0; ni < __iuMojeQuickFeedFsProps.length; ni++) {
-          try { quick.style.removeProperty(__iuMojeQuickFeedFsProps[ni]); } catch (_) {}
+        try {
+          if (quick.__iuNakupOnlineResizeBound && typeof quick.__iuNakupOnlineOnResize === "function") {
+            window.removeEventListener("resize", quick.__iuNakupOnlineOnResize);
+          }
+        } catch (_) {}
+        try {
+          quick.__iuNakupOnlineResizeBound = false;
+          quick.__iuNakupOnlineOnResize = null;
+        } catch (_) {}
+        try { quick.classList.remove("iu-nakup-online--desktop-fit"); } catch (_) {}
+        for (var ni = 0; ni < __iuNakupOnlineFsProps.length; ni++) {
+          try { quick.style.removeProperty(__iuNakupOnlineFsProps[ni]); } catch (_) {}
         }
         return;
       }
@@ -19851,16 +19866,43 @@ function buildVideoAsArticleCard(it) {
       quick.style.setProperty("top", "0", "important");
       quick.style.setProperty("width", "100vw", "important");
       quick.style.setProperty("height", "100dvh", "important");
-      quick.style.setProperty("max-width", "none", "important");
-      quick.style.setProperty("max-height", "none", "important");
+      quick.style.setProperty("max-width", "100vw", "important");
+      quick.style.setProperty("max-height", "100dvh", "important");
       quick.style.setProperty("margin", "0", "important");
       quick.style.setProperty("z-index", "10170", "important");
-      quick.style.setProperty("overflow", "auto", "important");
-      quick.style.setProperty("overflow-x", "hidden", "important");
       quick.style.setProperty("box-sizing", "border-box", "important");
       quick.style.setProperty("background", "#eaf0f7", "important");
-      quick.style.setProperty("padding", "calc(env(safe-area-inset-top, 0px) + 8px) 8px 8px", "important");
-      quick.style.setProperty("display", "block", "important");
+      quick.style.setProperty("padding", "calc(env(safe-area-inset-top, 0px) + 4px) 6px calc(env(safe-area-inset-bottom, 0px) + 4px)", "important");
+      quick.style.setProperty("display", "flex", "important");
+      quick.style.setProperty("flex-direction", "column", "important");
+      quick.style.setProperty("min-height", "0", "important");
+      var desk = iuNakupOnlineIsDesktopViewport();
+      if (desk) {
+        try { quick.classList.add("iu-nakup-online--desktop-fit"); } catch (_) {}
+        quick.style.setProperty("overflow", "hidden", "important");
+        quick.style.setProperty("overflow-x", "hidden", "important");
+        quick.style.setProperty("overflow-y", "hidden", "important");
+        quick.style.setProperty("overscroll-behavior", "none", "important");
+        try { quick.style.removeProperty("touch-action"); } catch (_) {}
+        try { quick.style.removeProperty("-webkit-overflow-scrolling"); } catch (_) {}
+      } else {
+        try { quick.classList.remove("iu-nakup-online--desktop-fit"); } catch (_) {}
+        quick.style.setProperty("overflow-x", "hidden", "important");
+        quick.style.setProperty("overflow-y", "auto", "important");
+        try { quick.style.setProperty("-webkit-overflow-scrolling", "touch"); } catch (_) {}
+        try { quick.style.removeProperty("overscroll-behavior"); } catch (_) {}
+        try { quick.style.removeProperty("touch-action"); } catch (_) {}
+      }
+      if (!quick.__iuNakupOnlineResizeBound) {
+        quick.__iuNakupOnlineOnResize = function() {
+          try {
+            if (quick.hidden || !quick.classList.contains("iu-nakup-online-feed-root")) return;
+            iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, true);
+          } catch (_) {}
+        };
+        window.addEventListener("resize", quick.__iuNakupOnlineOnResize);
+        quick.__iuNakupOnlineResizeBound = true;
+      }
     } catch (_) {}
   }
 
@@ -19892,7 +19934,6 @@ function buildVideoAsArticleCard(it) {
           '<div class="iu-nakup-online-card" data-iu-grocery-accent="' + accent + '" role="listitem">' +
           '<div class="iu-nakup-online-cardInner">' +
           "<strong class=\"iu-nakup-online-name\">" + iuQfEscape(it.name || "") + "</strong>" +
-          '<p class="iu-nakup-online-oneLiner">' + iuQfEscape(it.desc || "") + "</p>" +
           '<a class="iuQBtn iu-nakup-online-cta" href="' + url + '" target="_blank" rel="noopener noreferrer">Otevřít</a>' +
           "</div></div>"
         );
@@ -19906,10 +19947,11 @@ function buildVideoAsArticleCard(it) {
     }).join("");
     return (
       head +
+      '<div class="iu-nakup-online-fill">' +
       '<div class="iuQCard iu-nakup-online-outerCard">' +
       '<div class="iu-nakup-online-feed" role="region" aria-label="' + iuQfEscape(data.title || "Nákup potravin online") + '">' +
       sections +
-      "</div></div>"
+      "</div></div></div>"
     );
   }
 
@@ -20532,7 +20574,7 @@ function buildVideoAsArticleCard(it) {
     if (quick) {
       try { iuApplyMojeQuickFeedFullscreenLayer(quick, false); } catch (_) {}
       try { iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, false); } catch (_) {}
-      try { quick.classList.remove("iu-nakup-online-feed-root"); } catch (_) {}
+      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit"); } catch (_) {}
       try { quick.removeAttribute("data-iu-qf-key"); } catch (_) {}
       quick.hidden = true;
       iuUndockQuickFeedFromBody(quick);
