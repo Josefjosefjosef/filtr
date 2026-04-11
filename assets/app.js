@@ -4709,12 +4709,28 @@ try {
       loadMoreWrap = wrap;
     }
 
+    const auditRf = (() => {
+      try {
+        return window.__IU_APPLYFILTER_AUDIT_ACTIVE_RUN;
+      } catch (_) {
+        return null;
+      }
+    })();
+    const tDomPatch0 =
+      auditRf && typeof performance !== "undefined" && performance.now ? performance.now() : 0;
     if (sectionsBar) {
       if (loadMoreWrap) safeTarget.replaceChildren(sectionsBar, ...nextNodes, loadMoreWrap);
       else safeTarget.replaceChildren(sectionsBar, ...nextNodes);
     } else {
       if (loadMoreWrap) safeTarget.replaceChildren(...nextNodes, loadMoreWrap);
       else safeTarget.replaceChildren(...nextNodes);
+    }
+    if (auditRf) {
+      try {
+        const t1 = typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
+        auditRf.phases.domPatchMs = t1 - tDomPatch0;
+        auditRf.itemCountRendered = nextNodes.length;
+      } catch (_) {}
     }
 
     // DOM re-anchor pass: ensure video cards are exactly after 8/16/24... rendered articles.
@@ -10559,20 +10575,91 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  /** Homepage: cap CPU for clusterArticlesUnified (buildPublicationClusterUrlMap); tail uses solo cluster ids via pickPublicationKeptUrlKeys. */
+  const IU_HOME_PUB_CLUSTER_CAP = 4000;
+
+  function iuDomBodyIsHomeHub() {
+    try {
+      return !!(document.body && document.body.classList && document.body.classList.contains("iu-home"));
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuCountArticlesInList(arr) {
+    if (!Array.isArray(arr)) return 0;
+    let n = 0;
+    for (let i = 0; i < arr.length; i++) {
+      const ct = String(arr[i] && arr[i].contentType ? arr[i].contentType : "article").toLowerCase();
+      if (ct === "article") n++;
+    }
+    return n;
+  }
+
+  function iuScheduleHomeFullPublicationCluster() {
+    const ric =
+      typeof requestIdleCallback === "function"
+        ? requestIdleCallback
+        : function (cb) {
+            return setTimeout(cb, 1);
+          };
+    ric(
+      function iuHomeFullPublicationClusterIdle() {
+        try {
+          if (!state.hasLoadedData) return;
+          if (!iuDomBodyIsHomeHub()) return;
+          state.__iuFullPublicationClusterPass = true;
+          state.__iuHomeFullPubClusterIdleScheduled = false;
+          applyFilter({ resetPage: false, render: true });
+        } catch (_) {}
+      },
+      { timeout: 5000 }
+    );
+  }
+
   /**
    * Publikační filtr: session „už zobrazené“ deprioritizace + max 2 články / story cluster + max 1 / zdroj v clusteru.
    * Videokarty a reklamy nechává beze změny; pracuje jen s contentType === article.
+   * @param {object} [opts] optional: { clusterArticleCap: number } limits buildPublicationClusterUrlMap input size (homepage fast path).
    */
-  function iuApplyPublicationFeedFilterMixed(items) {
+  function iuApplyPublicationFeedFilterMixed(items, opts) {
     if (!Array.isArray(items) || items.length === 0) return items;
+    const opt = opts && typeof opts === "object" ? opts : {};
     const isArticle = (it) => String(it && it.contentType ? it.contentType : "article").toLowerCase() === "article";
     const arts = items.filter(isArticle);
     if (arts.length === 0) return items;
 
+    const audit = (() => {
+      try {
+        return window.__IU_APPLYFILTER_AUDIT_ACTIVE_RUN;
+      } catch (_) {
+        return null;
+      }
+    })();
+
+    const tDedupe0 = audit ? (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) : 0;
     const urlDedupedArts = dedupeCanonicalUrl(arts);
-    const clusterMap = buildPublicationClusterUrlMap(urlDedupedArts, {});
+    if (audit) {
+      audit.publication.dedupeMs =
+        (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tDedupe0;
+    }
+
+    const cap = Number(opt.clusterArticleCap);
+    const clusterInput =
+      Number.isFinite(cap) && cap > 0 && urlDedupedArts.length > cap ? urlDedupedArts.slice(0, cap) : urlDedupedArts;
+
+    const tCluster0 = audit ? (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) : 0;
+    const clusterMap = buildPublicationClusterUrlMap(clusterInput, {});
+    if (audit) {
+      audit.publication.clusterMapMs =
+        (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tCluster0;
+      audit.publication.clusterMapInputArticles = clusterInput.length;
+      audit.publication.clusterCapApplied = clusterInput !== urlDedupedArts;
+    }
+
     const prevSet = iuPublicationReadPrevSet();
 
+    const tSort0 = audit ? (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) : 0;
     const sortedArts = [...urlDedupedArts].sort((a, b) => {
       const ka = canonicalArticleUrlKey(a);
       const kb = canonicalArticleUrlKey(b);
@@ -10583,15 +10670,29 @@ function buildVideoAsArticleCard(it) {
       const tb = iuItemBestPublishedMs(b) || 0;
       return tb - ta;
     });
+    if (audit) {
+      audit.publication.sortMs =
+        (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tSort0;
+    }
 
+    const tPick0 = audit ? (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) : 0;
     const keptKeys = pickPublicationKeptUrlKeys(sortedArts, clusterMap);
+    if (audit) {
+      audit.publication.pickMs =
+        (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tPick0;
+    }
 
+    const tOut0 = audit ? (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) : 0;
     const out = items.filter((it) => {
       if (!isArticle(it)) return true;
       const k = canonicalArticleUrlKey(it);
       if (!k) return true;
       return keptKeys.has(k);
     });
+    if (audit) {
+      audit.publication.outFilterMs =
+        (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tOut0;
+    }
 
     try {
       const keptInFeedOrder = items.filter((it) => {
@@ -10608,6 +10709,8 @@ function buildVideoAsArticleCard(it) {
         articlesAfterUrlDedupe: urlDedupedArts.length,
         uniqueClusters: new Set(clusterMap.values()).size,
         keptArticles: keptKeys.size,
+        clusterMapInputArticles: clusterInput.length,
+        clusterCapApplied: clusterInput.length < urlDedupedArts.length,
       };
     } catch (_) {}
 
@@ -10658,41 +10761,87 @@ function buildVideoAsArticleCard(it) {
     const options = opts && typeof opts === "object" ? opts : {};
     const resetPage = options.resetPage !== false; // default: reset
     const doRender = options.render !== false;     // default: render
-    if (!state.hasLoadedData) return;
-    state.searchQuery = (searchInputEl && searchInputEl.value.trim()) || "";
-    // paging reset on any filter/search change (render-only)
-    if (resetPage) state.page = 1;
-
-    // SAFETY: pokud není aktivní žádné téma/sekce/filtr ani hledání, zobraz rovnou celý cache feed
-    const hasTopic = !!(state && state.activeTopic);
-    const hasSection = !!(state && state.activeSection);
-    const hasFilter = !!(state && state.activeFilter);
-    const hasQuery = !!(state && typeof state.searchQuery === "string" && state.searchQuery.trim().length);
-    const hasMediaTopicFilter = !!(
-      state &&
-      state.mediaTopicKey &&
-      String(state.mediaTopicKey).trim() !== "" &&
-      state.mediaTopicKey !== "all"
-    );
-
-    if (!hasTopic && !hasSection && !hasFilter && !hasQuery && !hasMediaTopicFilter) {
-      let pass = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
-      pass = pass.filter((item) => {
-        if (iuArticleIsHardBlocked(item)) {
-          __iuBlockedRenderDrops++;
+    let auditRun = null;
+    try {
+      try {
+        if (window.__IU_APPLYFILTER_AUDIT__ === true) {
+          const t0 = typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
+          auditRun = { t0, phases: {}, publication: {} };
           try {
-            window.__IU_BLOCKED_RENDER_DROPS__ = __iuBlockedRenderDrops;
+            window.__IU_APPLYFILTER_AUDIT_REPORT__ = window.__IU_APPLYFILTER_AUDIT_REPORT__ || { runs: [] };
+            window.__IU_APPLYFILTER_AUDIT_REPORT__.runs.push(auditRun);
+            window.__IU_APPLYFILTER_AUDIT_ACTIVE_RUN = auditRun;
           } catch (_) {}
-          return false;
         }
-        return true;
-      });
-      pass = iuApplyPublicationFeedFilterMixed(pass);
-      state.filteredItems = pass;
-      if (doRender) renderItems(state.filteredItems);
-      iuUpdateSectionDataUpdatedAtEl();
-      return;
-    }
+      } catch (_) {}
+      if (!state.hasLoadedData) return;
+      state.searchQuery = (searchInputEl && searchInputEl.value.trim()) || "";
+      // paging reset on any filter/search change (render-only)
+      if (resetPage) state.page = 1;
+
+      // SAFETY: pokud není aktivní žádné téma/sekce/filtr ani hledání, zobraz rovnou celý cache feed
+      const hasTopic = !!(state && state.activeTopic);
+      const hasSection = !!(state && state.activeSection);
+      const hasFilter = !!(state && state.activeFilter);
+      const hasQuery = !!(state && typeof state.searchQuery === "string" && state.searchQuery.trim().length);
+      const hasMediaTopicFilter = !!(
+        state &&
+        state.mediaTopicKey &&
+        String(state.mediaTopicKey).trim() !== "" &&
+        state.mediaTopicKey !== "all"
+      );
+
+      if (!hasTopic && !hasSection && !hasFilter && !hasQuery && !hasMediaTopicFilter) {
+        let pass = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
+        const tHard0 =
+          auditRun && typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+        pass = pass.filter((item) => {
+          if (iuArticleIsHardBlocked(item)) {
+            __iuBlockedRenderDrops++;
+            try {
+              window.__IU_BLOCKED_RENDER_DROPS__ = __iuBlockedRenderDrops;
+            } catch (_) {}
+            return false;
+          }
+          return true;
+        });
+        if (auditRun) {
+          auditRun.phases.hardBlockFilterMs =
+            (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tHard0;
+          auditRun.itemCountProcessed = pass.length;
+        }
+        const homeHub = iuDomBodyIsHomeHub();
+        const nArt = iuCountArticlesInList(pass);
+        const usePubClusterCap =
+          homeHub &&
+          !state.__iuFullPublicationClusterPass &&
+          nArt > IU_HOME_PUB_CLUSTER_CAP;
+        const pubOpts = usePubClusterCap ? { clusterArticleCap: IU_HOME_PUB_CLUSTER_CAP } : undefined;
+        const tPub0 =
+          auditRun && typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+        pass = iuApplyPublicationFeedFilterMixed(pass, pubOpts);
+        if (auditRun) {
+          auditRun.phases.publicationMixedTotalMs =
+            (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tPub0;
+        }
+        state.filteredItems = pass;
+        if (auditRun) {
+          auditRun.filteredLen = pass.length;
+        }
+        const tRi0 =
+          auditRun && typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+        if (doRender) renderItems(state.filteredItems);
+        if (auditRun) {
+          auditRun.phases.renderItemsMs =
+            (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tRi0;
+        }
+        iuUpdateSectionDataUpdatedAtEl();
+        if (usePubClusterCap && !state.__iuHomeFullPubClusterIdleScheduled) {
+          state.__iuHomeFullPubClusterIdleScheduled = true;
+          iuScheduleHomeFullPublicationCluster();
+        }
+        return;
+      }
 
     debugLog(
       "[FILTER]",
@@ -10744,7 +10893,18 @@ function buildVideoAsArticleCard(it) {
         return haystackData.includes(normalizedQuery);
       });
     } else {
-      filtered = iuApplyPublicationFeedFilterMixed(filtered);
+      const homeHub2 = iuDomBodyIsHomeHub();
+      const nArt2 = iuCountArticlesInList(filtered);
+      const usePubClusterCap2 =
+        homeHub2 &&
+        !state.__iuFullPublicationClusterPass &&
+        nArt2 > IU_HOME_PUB_CLUSTER_CAP;
+      const pubOpts2 = usePubClusterCap2 ? { clusterArticleCap: IU_HOME_PUB_CLUSTER_CAP } : undefined;
+      filtered = iuApplyPublicationFeedFilterMixed(filtered, pubOpts2);
+      if (usePubClusterCap2 && !state.__iuHomeFullPubClusterIdleScheduled) {
+        state.__iuHomeFullPubClusterIdleScheduled = true;
+        iuScheduleHomeFullPublicationCluster();
+      }
     }
     state.filteredItems = filtered;
 
@@ -10794,6 +10954,26 @@ function buildVideoAsArticleCard(it) {
       });
     }
     iuUpdateSectionDataUpdatedAtEl();
+    } finally {
+      if (auditRun) {
+        try {
+          const t1 = typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
+          auditRun.applyFilterTotalMs = t1 - auditRun.t0;
+          auditRun.applyFilterDurationMs = auditRun.applyFilterTotalMs;
+          const ph = auditRun.phases || {};
+          const pub = auditRun.publication || {};
+          auditRun.filterPhaseDurationMs = ph.hardBlockFilterMs;
+          auditRun.sortPhaseDurationMs = pub.sortMs;
+          auditRun.groupPhaseDurationMs = pub.clusterMapMs;
+          auditRun.renderItemsDurationMs = ph.renderItemsMs;
+          auditRun.renderFeedDurationMs = ph.renderItemsMs;
+          auditRun.domPatchDurationMs = ph.domPatchMs;
+        } catch (_) {}
+        try {
+          window.__IU_APPLYFILTER_AUDIT_ACTIVE_RUN = null;
+        } catch (_) {}
+      }
+    }
   }
 
     ensureFallbackMessage();
@@ -11944,6 +12124,8 @@ function buildVideoAsArticleCard(it) {
 
       const mixedEligible = (mixed.length ? mixed : combined).filter((entry) => iuArticleReleaseEligible(entry));
       state.cachedItems = mixedEligible;
+      state.__iuFullPublicationClusterPass = false;
+      state.__iuHomeFullPubClusterIdleScheduled = false;
       if (!Array.isArray(state.cachedItems)) state.cachedItems = [];
       state.hasLoadedData = true;
       state.consecutiveLoadFailures = 0;
