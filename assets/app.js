@@ -1621,6 +1621,16 @@ try {
     } catch (_) {}
   }
 
+  /** Opt-in homepage audit hooks (?iuHomeAudit=1) — zero overhead unless window.__IU_HOME_LOAD_AUDIT__ === true. */
+  function iuHomeLoadAuditNotify(phase) {
+    try {
+      if (typeof window === "undefined" || window.__IU_HOME_LOAD_AUDIT__ !== true) return;
+      if (typeof window.__iuHomeLoadAuditHook === "function") {
+        window.__iuHomeLoadAuditHook(String(phase || ""));
+      }
+    } catch (_) {}
+  }
+
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
   window.iuSetDataStatus = function(articlesCount, videosCount){
     const el = document.getElementById("dataStatus");
@@ -9419,6 +9429,9 @@ function buildVideoAsArticleCard(it) {
         card.setAttribute("data-iu-silver-wx-tip", iuSilverWeatherTipCategory(st));
         iuSilverWeatherSyncLayoutAttr("data");
       }catch{}
+      try {
+        iuHomeLoadAuditNotify("weather:data");
+      } catch (_) {}
     }
 
     function iuSilverWeatherRenderLoading(){
@@ -11944,8 +11957,10 @@ function buildVideoAsArticleCard(it) {
         iuSilverTallMediaPreviewsRefresh();
       } catch (_) {}
       iuPreviewFeedProbeTick("earlyPreviewRefreshDone");
+      iuHomeLoadAuditNotify("loadData:earlyPreviewRefreshDone");
       renderItems(state.filteredItems);
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
+      iuHomeLoadAuditNotify("loadData:afterFirstRender");
       if (isDebugLogging) {
         debugLog(
           "[CACHE] total",
@@ -12021,15 +12036,89 @@ function buildVideoAsArticleCard(it) {
           }
         } catch (_) {}
       } else if (silverStackPreviewsLikelyVisible) {
-        await initRetentionIndex();
+        // P0: Do not block first homepage settle on sequential day-shard retention (was ~21–23s before first applyFilter).
+        // Retention boost runs after first applyFilter + status; second applyFilter + preview refresh when merge completes.
         try {
-          await loadRetentionForSilverHomePreviews();
+          window.__iuSilverRetentionDeferredScheduled = true;
         } catch (_) {}
+        void (async function iuSilverRetentionBoostDeferred() {
+          try {
+            await initRetentionIndex();
+            if (!isLatestLoadRequest(requestToken)) return;
+            await loadRetentionForSilverHomePreviews();
+            if (!isLatestLoadRequest(requestToken)) return;
+            try {
+              applyFilter({ resetPage: false });
+            } catch (_) {}
+            try {
+              iuSilverTallMediaPreviewsRefresh();
+            } catch (_) {}
+            try {
+              const ca2 = state.cachedItems.filter((entry) => entry?.contentType === "article").length;
+              const cv2 = state.cachedItems.filter((entry) => entry?.contentType === "video").length;
+              const fc2 = elFeed?.children?.length ?? 0;
+              const pu2 = Boolean(
+                preferredEntry?.status === "ok" &&
+                  chosenArticlesUrl === preferredEntry?.articlesUrl &&
+                  chosenVideosUrl === preferredEntry?.videosUrl
+              );
+              const pm2 = pu2 ? "preferred" : "fallback";
+              const stLine2 = iuBuildDiagStatusLine({
+                preferredSaved,
+                preferredModeUsed: pm2,
+                articlesOk,
+                videosOk,
+                chosenArticlesUrl,
+                chosenVideosUrl,
+                countArticles: ca2,
+                countVideos: cv2,
+                feedChildren: fc2,
+                generatedAtArticles: state.lastArticlesGeneratedAt,
+                generatedAtVideos: state.lastVideosGeneratedAt,
+                articlesKeys: state.lastArticlesKeys,
+                videosKeys: state.lastVideosKeys,
+                effectiveUpdatedAtArticles:
+                  state.lastArticlesGeneratedAt || state.lastArticlesUpdatedAt || "none",
+                effectiveUpdatedAtVideos:
+                  state.lastVideosGeneratedAt || state.lastVideosUpdatedAt || "none",
+              });
+              if (!iuHasStatusPlaceholders(stLine2)) {
+                const aSt2 = state.lastArticlesGeneratedAt
+                  ? state.lastArticlesGeneratedAt.substring(0, 16).replace(/T/, " ")
+                  : null;
+                const vSt2 = state.lastVideosGeneratedAt
+                  ? state.lastVideosGeneratedAt.substring(0, 16).replace(/T/, " ")
+                  : null;
+                const seg2 = fc2 ? ` • feed ${fc2}` : "";
+                const parts2 = ["Stav dat: OK"];
+                if (aSt2 && vSt2 && aSt2 === vSt2) {
+                  parts2.push(`build ${aSt2}`);
+                  parts2.push(`články ${ca2}`);
+                  parts2.push(`videa ${cv2}`);
+                } else {
+                  parts2.push(`články ${ca2}${aSt2 ? ` (build ${aSt2})` : ""}`);
+                  parts2.push(`videa ${cv2}${vSt2 ? ` (build ${vSt2})` : ""}`);
+                }
+                if (seg2.trim()) parts2.push(seg2.replace(/^ • /, ""));
+                if (state.lastProbe) parts2.push(`probe ${state.lastProbe}`);
+                setStatus(parts2.join(" • "));
+              }
+            } catch (_) {}
+            try {
+              iuPreviewFeedProbeTick("afterRetentionBoostLoadData");
+            } catch (_) {}
+            try {
+              iuHomeLoadAuditNotify("loadData:afterRetentionBoost");
+            } catch (_) {}
+          } catch (_) {}
+        })();
       } else {
         initRetentionIndex();
       }
+      iuHomeLoadAuditNotify("loadData:beforeApplyFilter");
       applyFilter();
       iuPreviewFeedProbeTick("afterApplyFilterLoadData");
+      iuHomeLoadAuditNotify("loadData:afterApplyFilter");
       try {
         iuSilverTallMediaPreviewsRefresh();
       } catch (_) {}
@@ -12101,6 +12190,8 @@ function buildVideoAsArticleCard(it) {
       }
       // Sekční řádek „Poslední aktualizace sekce“: výhradně z iuUpdateSectionDataUpdatedAtEl() po applyFilter().
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
+
+      iuHomeLoadAuditNotify("loadData:complete");
 
       debugLog("[DATA] combined count=", state.cachedItems.length);
       debugLog("[DATA] combined first type=", state.cachedItems[0]?.contentType, state.cachedItems[0]?.title);
@@ -16359,6 +16450,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function init() {
+    iuHomeLoadAuditNotify("init:start");
     if (sessionStorage.getItem("iu:firstLoadDone")) {
       debugLog("[LOAD] repeat");
     } else {
