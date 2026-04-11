@@ -7,6 +7,7 @@ Layers (order):
 2) Tech / bydlení source + URL heuristics (mirror frontend)
 3) RSS topic/section field (ingest truth)
 4) General news bucket -> zpravy
+5) Vertical quality guards (topic/feed errors vs title/domain — deterministic)
 
 Deterministic: same input -> same output.
 """
@@ -57,6 +58,15 @@ _CEST_HAY = re.compile(
     r"novinky\s+cestov|deník\s+cestov|denik\s+cestov|irozhlas.*cestov", re.I
 )
 
+# Quality guards — audited mis-tagged RSS verticals (HN archiv, Ekonomický deník, …)
+_RE_ARCHIV_HN = re.compile(r"archiv\.hn\.cz|archiv\.hn\.", re.I)
+_RE_EKONOMICKY_DENIK = re.compile(r"ekonomickydenik\.cz", re.I)
+_RE_BYZNYS_LEADING = re.compile(r"^\s*Byznys\b", re.I)
+_RE_HEALTH_TITLE = re.compile(
+    r"\b(nemoc|nemocnic|lékař|lekars|pacient|zdraví|zdravi|očkov|covid|onkolog|operac|chorob|léč|lecba|vakcín|antibiot|psychiatr|rehabilit|epidemi|ambulanc|lék\s)",
+    re.I,
+)
+
 
 def _hay(item: Dict[str, Any]) -> tuple[str, str, str]:
     src0 = ""
@@ -75,6 +85,10 @@ def _topic_lower(item: Dict[str, Any]) -> str:
     return str(item.get("topic") or item.get("section") or "").strip().lower()
 
 
+def _title_str(item: Dict[str, Any]) -> str:
+    return str(item.get("title") or "")
+
+
 def _host_path(url: str) -> tuple[str, str]:
     try:
         p = urlparse(url)
@@ -83,6 +97,64 @@ def _host_path(url: str) -> tuple[str, str]:
         return h, path
     except Exception:
         return "", ""
+
+
+def _finance_title_signals(title: str) -> bool:
+    tl = title.lower()
+    needles = (
+        "byznys ",
+        " byznys",
+        " akcie",
+        "burz",
+        "investic",
+        "hypoték",
+        "inflace",
+        " orlen",
+        " mol ",
+        "stellantis",
+        " ekonomik",
+        "financ",
+        "výdejní box",
+        "čerpacích stanic",
+        "ministerstvo financ",
+        "úrok",
+        "reality ",
+        " zisk ",
+        "ztrát",
+    )
+    if _RE_BYZNYS_LEADING.search(title):
+        return True
+    return any(x in tl for x in needles)
+
+
+def _energy_or_infra_not_health_title(title: str) -> bool:
+    tl = title.lower()
+    needles = (
+        "energetick",
+        "elektřin",
+        "elektrár",
+        "superdálnic",
+        "veřejné osvětlení",
+        "verejne osvetleni",
+        "doktorand",
+        " do vědy",
+        " do vedy",
+        "stojící elektr",
+        "kubánsk",
+    )
+    return any(x in tl for x in needles)
+
+
+def _sport_event_title_signals(title: str) -> bool:
+    tl = title.lower()
+    return bool(
+        re.search(
+            r"\b(liga|zápas|zapas|hokej|fotbal|sparta|slavia|gól|gol|nhl|extraliga|olympi|"
+            r"tenis|mistrov|trenér|trener|basket|mma|ufc|bundesliga|premier league)\b",
+            tl,
+            re.I,
+        )
+    )
 
 
 def infer_strong_media_vertical_from_url(url: str) -> Optional[str]:
@@ -98,6 +170,10 @@ def infer_strong_media_vertical_from_url(url: str) -> Optional[str]:
         return None
     if "doprava" in h or "/doprava" in pl or "/nehody" in pl:
         return None
+    # HN archiv: slug often encodes section (byznys, …) without /byznys/ path prefix
+    if "archiv.hn.cz" in h or (h.endswith("hn.cz") and "archiv" in url.lower()):
+        if re.search(r"(byznys|ekonomika|ekonomicky-postoj)", pl, re.I):
+            return "finance"
     if "/cestovani" in pl or "/cestovan" in pl or "cestovani" in h:
         return "cestovani"
     if h.startswith("sport.") or "/sport" in pl or "/fotbal" in pl or "/hokej" in pl or "/tenis" in pl:
@@ -123,7 +199,7 @@ def infer_strong_media_vertical_from_url(url: str) -> Optional[str]:
     return None
 
 
-def classify_media_topic_key(item: Dict[str, Any]) -> tuple[str, str, float, list[str]]:
+def _classify_media_topic_key_inner(item: Dict[str, Any]) -> tuple[str, str, float, list[str]]:
     """
     Returns (media_topic_key, reason, confidence, guard_flags).
     """
@@ -181,6 +257,73 @@ def classify_media_topic_key(item: Dict[str, Any]) -> tuple[str, str, float, lis
         return "zpravy", "fallback_non_vertical", 0.55, flags
 
     return "zpravy", "fallback_guard", 0.5, flags
+
+
+def apply_vertical_quality_guards(
+    item: Dict[str, Any],
+    mk: str,
+    reason: str,
+    conf: float,
+    flags: list[str],
+) -> tuple[str, str, float, list[str]]:
+    """
+    Post-pass: demote obvious RSS/topic mis-tags (audited: HN archiv zdravi, Ekonomický deník sport, …).
+    Does not override url_strong_* or dedicated source/url truth layers.
+    """
+    fl = list(flags)
+    if reason in (
+        "url_strong_vertical",
+        "url_strong_overrides_topic",
+        "tech_source_list",
+        "tech_url_regex",
+        "bydleni_pattern",
+        "cestovani_url_hay",
+    ):
+        return mk, reason, conf, fl
+
+    title = _title_str(item)
+    url = str(item.get("url") or "")
+    h, path = _host_path(url)
+
+    # Ekonomický deník: business domain — RSS "sport" is often wrong; require sport-like URL path
+    if mk == "sport" and _RE_EKONOMICKY_DENIK.search(url):
+        if not re.search(
+            r"/(sport|fotbal|hokej|tenis|liga|mladifotbal|fight|bojov|zápas|zapas)/",
+            url,
+            re.I,
+        ):
+            if _finance_title_signals(title) or _RE_BYZNYS_LEADING.search(title):
+                fl.append("guard_ekonomicky_denik_sport_to_finance")
+                return "finance", "guard_domain_topic_sport_mismatch", 0.9, fl
+            fl.append("guard_ekonomicky_denik_sport_to_zpravy")
+            return "zpravy", "guard_domain_topic_sport_mismatch", 0.82, fl
+
+    # Global: sport from RSS but title is clearly business/finance and not a sports event
+    if mk == "sport" and reason == "topic_field":
+        if _RE_BYZNYS_LEADING.search(title) or (
+            _finance_title_signals(title) and not _sport_event_title_signals(title)
+        ):
+            fl.append("guard_business_title_overrides_sport_topic")
+            return "finance", "guard_title_finance_over_sport_topic", 0.88, fl
+
+    # HN archiv: RSS "zdravi" is frequently wrong — path/title must support health
+    if mk == "zdravi" and _RE_ARCHIV_HN.search(url) and reason == "topic_field":
+        path_ok = "/zdravi" in path or "/zdrav" in path
+        title_ok = bool(_RE_HEALTH_TITLE.search(title))
+        if not path_ok and not title_ok:
+            if _finance_title_signals(title):
+                fl.append("guard_hn_archiv_fake_zdravi_finance")
+                return "finance", "guard_hn_zdravi_to_finance", 0.86, fl
+            if _energy_or_infra_not_health_title(title):
+                fl.append("guard_hn_archiv_fake_zdravi_zpravy")
+                return "zpravy", "guard_hn_zdravi_to_zpravy", 0.8, fl
+
+    return mk, reason, conf, fl
+
+
+def classify_media_topic_key(item: Dict[str, Any]) -> tuple[str, str, float, list[str]]:
+    mk, reason, conf, flags = _classify_media_topic_key_inner(item)
+    return apply_vertical_quality_guards(item, mk, reason, conf, flags)
 
 
 def attach_feed_classification_to_article(article: Dict[str, Any]) -> Dict[str, Any]:

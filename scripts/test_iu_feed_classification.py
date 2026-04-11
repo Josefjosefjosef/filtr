@@ -70,6 +70,67 @@ def test_url_sport_overrides_wrong_topic():
     _assert("topic_url_conflict" in flags, str(flags))
 
 
+def test_hn_archiv_fake_zdravi_energy_to_zpravy():
+    a = {
+        "topic": "zdravi",
+        "section": "zdravi",
+        "url": "https://archiv.hn.cz/c1-67863180-stojici-elektrarny-kuba",
+        "title": "Stojící elektrárny a tisíce lidí bez příjmu. Kolaps kubánské energetiky",
+        "sources": [{"name": "HN"}],
+    }
+    k, r, _, fl = classify_media_topic_key(a)
+    _assert(k == "zpravy", (k, r))
+    _assert("guard_hn_archiv_fake_zdravi_zpravy" in fl or "guard_hn" in r, (r, fl))
+
+
+def test_hn_archiv_fake_zdravi_finance_title():
+    a = {
+        "topic": "zdravi",
+        "section": "zdravi",
+        "url": "https://archiv.hn.cz/c1-67864820-zlevnete-orlen",
+        "title": "Zlevněte, vyzval Babiš Orlen a MOL. Firmy podle něj zdražily",
+        "sources": [{"name": "HN"}],
+    }
+    k, r, _, _ = classify_media_topic_key(a)
+    _assert(k == "finance", (k, r))
+
+
+def test_ekonomicky_denik_sport_topic_business_to_finance():
+    a = {
+        "topic": "sport",
+        "section": "sport",
+        "url": "https://ekonomickydenik.cz/oblibene-vydejni-boxy-v-ohrozeni/",
+        "title": "Oblíbené výdejní boxy v ohrožení? Chystá se změna zákona",
+        "sources": [{"name": "Ekonomický deník"}],
+    }
+    k, r, _, _ = classify_media_topic_key(a)
+    _assert(k == "finance", (k, r))
+
+
+def test_byznys_title_overrides_sport_topic():
+    a = {
+        "topic": "sport",
+        "section": "sport",
+        "url": "https://crzpravy.cz/celebrity/byznys-strnada-vstupuje/",
+        "title": "Byznys Jaroslava Strnada vstupuje do nové éry. Rekordní růst",
+        "sources": [{"name": "X"}],
+    }
+    k, r, _, _ = classify_media_topic_key(a)
+    _assert(k == "finance", (k, r))
+
+
+def test_url_strong_not_overridden_by_quality_guard():
+    a = {
+        "topic": "zdravi",
+        "section": "zdravi",
+        "url": "https://ct24.ceskatelevize.cz/clanek/veda/orion-astronauti-371992",
+        "title": "Orion míří k Měsíci",
+        "sources": [{"name": "ČT24"}],
+    }
+    k, _, _, _ = classify_media_topic_key(a)
+    _assert(k == "veda", k)
+
+
 def run():
     test_sport_topic()
     test_zpravy_general()
@@ -78,6 +139,11 @@ def run():
     test_attach_schema()
     test_conflicting_priority_tech_over_general_topic()
     test_url_sport_overrides_wrong_topic()
+    test_hn_archiv_fake_zdravi_energy_to_zpravy()
+    test_hn_archiv_fake_zdravi_finance_title()
+    test_ekonomicky_denik_sport_topic_business_to_finance()
+    test_byznys_title_overrides_sport_topic()
+    test_url_strong_not_overridden_by_quality_guard()
     print("PASS iu_feed_classification tests")
 
 
