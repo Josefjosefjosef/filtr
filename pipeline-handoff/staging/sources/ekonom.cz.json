@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "sourceBatchKey": "ekonom.cz",
+  "ingestedAt": "2026-04-11T12:41:20.542388Z",
+  "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejen o tom, jak se podniká na Blízkém východě a na co si dát pozor, s Gabrielou Teissing z Creative Docku",
+      "url": "https://podcasty.ekonom.cz/c1-67863830-nejen-o-tom-jak-se-podnika-na-blizkem-vychode-a-na-co-si-dat-pozor-s-gabrielou-teissing-z-creative-docku",
+      "dt": "2026-04-08T16:00:00Z",
+      "media_raw": "Ekonom (HN)",
+      "media_norm": "Ekonom (HN)",
+      "tokens": [
+        "blízkém",
+        "creative",
+        "docku",
+        "dát",
+        "gabrielou",
+        "nejen",
+        "podniká",
+        "pozor",
+        "teissing",
+        "tom",
+        "východě"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonom",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "ekonom.cz",
+      "_dt_serialized": true
+    }
+  ],
+  "feedReports": [
+    {
+      "feed": "https://ekonom.cz/?p=400000_rss",
+      "source": "Ekonom (HN)",
+      "topic": "finance",
+      "httpStatus": 200,
+      "contentType": "text/xml; charset=utf-8",
+      "finalUrl": "https://ekonom.cz/?p=400000_rss",
+      "bytes": 1910,
+      "reason": "",
+      "bozo": false,
+      "bozoException": "",
+      "itemsParsed": 1,
+      "itemsKept": 1,
+      "accepted": 1,
+      "status": "OK",
+      "bozo_but_used": false,
+      "registryId": "fin_ekonom",
+      "registryGroup": [
+        {
+          "id": "fin_ekonom",
+          "label": "Ekonom (HN)",
+          "domain": "ekonom.cz",
+          "entry_type": "rss",
+          "section_primary": "finance",
+          "section_secondary": [],
+          "interval_min": 40,
+          "display_weight": 0.95,
+          "active": true,
+          "blocked": false,
+          "official_only": true,
+          "fetch_mode": "rss_or_official_rubric_only",
+          "per_domain_cooldown_min": 12,
+          "slot_offset_min": 30,
+          "max_items_per_fetch": 40,
+          "last_fetch_at": null,
+          "last_success_at": null,
+          "error_streak": 0,
+          "backoff_multiplier": 1.0,
+          "feed_url": "https://ekonom.cz/?p=400000_rss",
+          "topic": "finance"
+        }
+      ],
+      "iuTelemetry": {
+        "raw_feed_new_item_count": 1,
+        "raw_feed_latest_publishedAt": "2026-04-08T16:00:00Z",
+        "valid_publishedAt_count": 1,
+        "mapped_to_section_count": {
+          "finance": 1
+        },
+        "drop_counts": {
+          "missing_publishedAt": 0,
+          "invalid_publishedAt": 0,
+          "parser_drop": 0,
+          "section_remap": 0,
+          "release_gate": 0,
+          "dedupe": 0,
+          "other": 0
+        },
+        "sample_titles": [
+          {
+            "title": "Nejen o tom, jak se podniká na Blízkém východě a na co si dát pozor, s Gabrielou Teissing z Creative Docku",
+            "publishedAt": "2026-04-08T16:00:00Z"
+          }
+        ]
+      }
+    }
+  ]
+}
