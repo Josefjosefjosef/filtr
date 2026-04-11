@@ -34,10 +34,9 @@ function loadEngine() {
   };
   ctx.window.document = ctx.document;
   vm.createContext(ctx);
-  vm.runInContext(
-    SILVER.replace(/document\.readyState/g, '"complete"').replace(/document\.addEventListener\([^)]+\)/g, "void 0"),
-    ctx
-  );
+  // Do not strip addEventListener via regex: arrow/listener bodies break `[^)]+` and yield `void 0 => {` (SyntaxError).
+  // A no-op addEventListener on ctx.document is enough; listener bodies are not invoked at eval time.
+  vm.runInContext(SILVER.replace(/document\.readyState/g, '"complete"'), ctx);
   return ctx.window.iuSilverCalendarEngine;
 }
 
