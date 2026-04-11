@@ -75,8 +75,20 @@ function startServer() {
 /** Projects global hub: wait for Silver tall viewport (mount targets exist) before preview assertions. */
 async function gotoProjectsMediaForSmoke(page) {
   await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
-  await page.waitForSelector("#iuSilverTallScrollViewport", { timeout: 20000 });
-  await page.waitForTimeout(1000);
+  // Locator re-resolves after DOM swaps; page.waitForSelector can time out when the same id is
+  // detach/replaced during Silver shell paint — CI logs showed "visible" + 20s timeout on #iuSilverTallScrollViewport.
+  const tallViewport = page.locator("#iuSilverTallScrollViewport").first();
+  await tallViewport.waitFor({ state: "visible", timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+  await page.waitForFunction(
+    () => {
+      const el = document.getElementById("iuSilverTallScrollViewport");
+      if (!el || !document.documentElement.contains(el)) return false;
+      const r = el.getBoundingClientRect();
+      return r.width >= 2 && r.height >= 2;
+    },
+    { timeout: 10000 }
+  );
+  await page.waitForTimeout(600);
 }
 
 /** One retry when client navigation races domcontentloaded (e.g. /projects/?section=media vs /projects/). */
