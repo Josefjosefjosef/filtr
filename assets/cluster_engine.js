@@ -286,61 +286,124 @@ export function clusterArticles(articles, options = {}) {
   return allClusters;
 }
 
+function clusterEngineAuditEnabled() {
+  try {
+    return typeof window !== "undefined" && window.__IU_CLUSTER_ENGINE_AUDIT__ === true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function nowMs() {
+  return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
+}
+
 /**
  * Stejná logika jako clusterArticles, ale jeden globální proud (čas ↓), bez splitu podle section.
  * Pro publikační dedup napříč zdroji u stejné události (např. více médií, stejná sekce / téma).
+ *
+ * CPU: časové okno ±hoursWindow je kontrolováno před drahým similarity/semantic (stejné výsledky jako dřív).
+ * options._audit — interní měření (nastaví buildPublicationClusterUrlMap při window.__IU_CLUSTER_ENGINE_AUDIT__).
  */
 export function clusterArticlesUnified(articles, options = {}) {
   const simTh = Number(options.similarityThreshold) || DEFAULT_SIMILARITY;
   const hours = Number(options.hoursWindow) || DEFAULT_HOURS;
   const windowMs = hours * 3600 * 1000;
   const maxSize = Number(options.maxClusterSize) || DEFAULT_MAX_CLUSTER;
+  const audit = options._audit && typeof options._audit === "object" ? options._audit : null;
 
   if (!Array.isArray(articles) || articles.length === 0) return [];
 
+  const tSort0 = audit ? nowMs() : 0;
   const sorted = [...articles].sort((a, b) => publishedMs(b) - publishedMs(a));
+  if (audit) {
+    audit.sortDurationMs = nowMs() - tSort0;
+  }
+
   const clusters = [];
+  let pairCompareCount = 0;
+  let timeRejectCount = 0;
+  let pairCompareMsAcc = 0;
+  let assignMsAcc = 0;
+
+  const tLoop0 = audit ? nowMs() : 0;
 
   for (const article of sorted) {
     if (!article || typeof article !== "object") continue;
     const norm = normalizeTitle(article.title || "");
     const t = publishedMs(article);
+    const articleTitle = String(article.title || "");
+    const topicA = detectTopic(articleTitle);
 
     let found = false;
     for (const cluster of clusters) {
-      const sim = similarity(norm, cluster.norm);
+      const tPair0 = audit ? nowMs() : 0;
+      pairCompareCount += 1;
+
+      const t0 = cluster.primaryMs != null ? cluster.primaryMs : publishedMs(cluster.items[0]);
+      const timeDiff = Math.abs(t - t0);
+      if (timeDiff > windowMs) {
+        timeRejectCount += 1;
+        if (audit) pairCompareMsAcc += nowMs() - tPair0;
+        continue;
+      }
+
       const primaryTitle = String(cluster.items[0]?.title || "");
-      const articleTitle = String(article.title || "");
+      const sim = similarity(norm, cluster.norm);
       const sem = semanticSimilarityMeta(articleTitle, primaryTitle);
 
-      const topicA = detectTopic(articleTitle);
-      const topicB = detectTopic(primaryTitle);
+      const topicB =
+        cluster.topicPrimary !== undefined ? cluster.topicPrimary : detectTopic(primaryTitle);
       const sameTopic = topicA && topicB && topicA === topicB;
 
-      if (!sameTopic && sem.boosted > 0.5 && sem.entityOverlap === 0) continue;
+      if (!sameTopic && sem.boosted > 0.5 && sem.entityOverlap === 0) {
+        if (audit) pairCompareMsAcc += nowMs() - tPair0;
+        continue;
+      }
 
       const match =
         sameTopic || sim >= simTh || roughMatch(norm, cluster.norm) || sem.boosted >= 0.5;
-      if (!match) continue;
+      if (!match) {
+        if (audit) pairCompareMsAcc += nowMs() - tPair0;
+        continue;
+      }
 
-      const t0 = publishedMs(cluster.items[0]);
-      const timeDiff = Math.abs(t - t0);
-      if (timeDiff > windowMs) continue;
+      if (cluster.items.length >= maxSize) {
+        if (audit) pairCompareMsAcc += nowMs() - tPair0;
+        continue;
+      }
 
-      if (cluster.items.length >= maxSize) continue;
-
+      const tAssign0 = audit ? nowMs() : 0;
       cluster.items.push(article);
+      if (audit) {
+        assignMsAcc += nowMs() - tAssign0;
+        pairCompareMsAcc += nowMs() - tPair0;
+      }
       found = true;
       break;
     }
 
     if (!found) {
+      const tNew0 = audit ? nowMs() : 0;
+      const primaryMs = t;
+      const topicPrimary = topicA;
       clusters.push({
         norm,
         items: [article],
         sectionKey: sectionKey(article),
+        primaryMs,
+        topicPrimary,
       });
+      if (audit) assignMsAcc += nowMs() - tNew0;
     }
+  }
+
+  if (audit) {
+    audit.pairCompareCount = pairCompareCount;
+    audit.timeRejectBeforeSemanticCount = timeRejectCount;
+    audit.pairCompareDurationMs = pairCompareMsAcc;
+    audit.clusterAssignDurationMs = assignMsAcc;
+    audit.clusterUnifiedLoopWallMs = nowMs() - tLoop0;
   }
 
   return clusters;
@@ -352,8 +415,25 @@ export function clusterArticlesUnified(articles, options = {}) {
  */
 export function buildPublicationClusterUrlMap(articles, options = {}) {
   const map = new Map();
+  const audit = clusterEngineAuditEnabled() ? {} : null;
+  const opts = audit ? { ...options, _audit: audit } : options;
+
+  const t0 = audit ? nowMs() : 0;
   const deduped = dedupeCanonicalUrl(articles);
-  const clusters = clusterArticlesUnified(deduped, options);
+  const tAfterDedupe = audit ? nowMs() : 0;
+  if (audit) {
+    audit.clusterInputCount = deduped.length;
+    audit.dedupeWallMs = tAfterDedupe - t0;
+  }
+
+  const clusters = clusterArticlesUnified(deduped, opts);
+  const tAfterUnified = audit ? nowMs() : 0;
+  if (audit) {
+    audit.clusterArticlesUnifiedWallMs = tAfterUnified - tAfterDedupe;
+    audit.clusterMapMs = tAfterUnified - tAfterDedupe;
+  }
+
+  const tMap0 = audit ? nowMs() : 0;
   for (let i = 0; i < clusters.length; i++) {
     const cl = clusters[i];
     const id = `pubc:${i}:${cl.sectionKey}:${publishedMs(cl.items[0])}`;
@@ -362,6 +442,13 @@ export function buildPublicationClusterUrlMap(articles, options = {}) {
       if (k) map.set(k, id);
     }
   }
+  if (audit) {
+    audit.resultMapDurationMs = nowMs() - tMap0;
+    try {
+      window.__IU_CLUSTER_ENGINE_AUDIT_LAST__ = audit;
+    } catch (_) {}
+  }
+
   return map;
 }
 

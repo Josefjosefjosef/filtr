@@ -107,6 +107,12 @@ style-src 'self' 'unsafe-inline' https:;
         if (new URLSearchParams(location.search || "").get("iuHomeAudit") === "1") {
           window.__IU_HOME_LOAD_AUDIT__ = true;
         }
+        if (new URLSearchParams(location.search || "").get("iuApplyFilterAudit") === "1") {
+          window.__IU_APPLYFILTER_AUDIT__ = true;
+        }
+        if (new URLSearchParams(location.search || "").get("iuClusterEngineAudit") === "1") {
+          window.__IU_CLUSTER_ENGINE_AUDIT__ = true;
+        }
       } catch (e) {}
     })();
     </script>
