@@ -17127,7 +17127,18 @@ function buildVideoAsArticleCard(it) {
   document.addEventListener("visibilitychange", () => {
     debugLog("[VIS]", document.visibilityState);
     if (document.visibilityState === "visible") {
+      try {
+        if (window.__IU_HOME_RESUME_PROBE__ === true && typeof window.__IU_HOME_RESUME_MARK__ === "function") {
+          var hom = !!(document.body && document.body.classList && document.body.classList.contains("iu-home"));
+          window.__IU_HOME_RESUME_MARK__(hom ? "feed_branch_iuHome_no_feed_loadData" : "feed_branch_not_iuHome");
+        }
+      } catch (_) {}
       if (!(document.body && document.body.classList && document.body.classList.contains("iu-home"))) {
+        try {
+          if (window.__IU_HOME_RESUME_PROBE__ === true && typeof window.__IU_HOME_RESUME_MARK__ === "function") {
+            window.__IU_HOME_RESUME_MARK__("feed_loadData_direct_invoke");
+          }
+        } catch (_) {}
         loadData();
         startAutoRefresh();
       }
@@ -31713,6 +31724,323 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
   else run();
+})();
+
+/**
+ * Homepage tab-return diagnostics (opt-in). Set window.__IU_HOME_RESUME_PROBE__ = true before app.js loads.
+ * Does not change Silver calendar/tasks summary logic; wraps window-level entry points + fetch + lifecycle order.
+ */
+(function iuHomeResumeProbeInstall() {
+  try {
+    if (typeof window === "undefined" || window.__IU_HOME_RESUME_PROBE__ !== true) return;
+  } catch (_) {
+    return;
+  }
+
+  var HR = {
+    eventOrder: [],
+    isHome: false,
+    visiblePerf: 0,
+    windowNs: 5000,
+    profileNs: 30000,
+    counts: {},
+    durMs: {},
+    fetchN: 0,
+    fetchUrls: [],
+    domMut: 0,
+    longTaskN: 0,
+    maxLongMs: 0,
+    blockedSum: 0,
+    cls: 0,
+    firstPointer: null,
+    firstHexPointer: null,
+    firstLeftNavPointer: null,
+    firstClick: null
+  };
+
+  function home() {
+    try {
+      return !!(document.body && document.body.classList && document.body.classList.contains("iu-home"));
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function inWin() {
+    return HR.visiblePerf > 0 && performance.now() - HR.visiblePerf < HR.windowNs;
+  }
+
+  function inProfileWin() {
+    return HR.visiblePerf > 0 && performance.now() - HR.visiblePerf < HR.profileNs;
+  }
+
+  function ev(name, extra) {
+    try {
+      HR.eventOrder.push({
+        n: name,
+        t: Math.round(performance.now() * 10) / 10,
+        h: home(),
+        x: extra || null
+      });
+      if (HR.eventOrder.length > 120) HR.eventOrder.shift();
+    } catch (_) {}
+  }
+
+  function bump(key) {
+    if (!inWin()) return;
+    HR.counts[key] = (HR.counts[key] || 0) + 1;
+  }
+
+  function addDur(key, ms) {
+    if (!inWin()) return;
+    HR.durMs[key] = (HR.durMs[key] || 0) + ms;
+  }
+
+  function onVis() {
+    HR.isHome = home();
+    ev("visibilitychange", { s: document.visibilityState });
+    if (document.visibilityState === "visible") {
+      HR.visiblePerf = performance.now();
+      HR.counts = {};
+      HR.durMs = {};
+      HR.fetchN = 0;
+      HR.fetchUrls = [];
+      HR.domMut = 0;
+      HR.longTaskN = 0;
+      HR.maxLongMs = 0;
+      HR.blockedSum = 0;
+      HR.cls = 0;
+      HR.firstPointer = null;
+      HR.firstHexPointer = null;
+      HR.firstLeftNavPointer = null;
+      HR.firstClick = null;
+    }
+  }
+
+  try {
+    document.addEventListener("visibilitychange", onVis, true);
+  } catch (_) {}
+  try {
+    window.addEventListener(
+      "focus",
+      function () {
+        ev("window_focus", {});
+      },
+      true
+    );
+  } catch (_) {}
+  try {
+    window.addEventListener(
+      "pageshow",
+      function (e) {
+        ev("pageshow", { p: e && e.persisted ? 1 : 0 });
+      },
+      true
+    );
+  } catch (_) {}
+  try {
+    window.addEventListener(
+      "pagehide",
+      function () {
+        ev("pagehide", {});
+      },
+      true
+    );
+  } catch (_) {}
+
+  try {
+    var poLt = new PerformanceObserver(function (list) {
+      var entries = list.getEntries();
+      for (var i = 0; i < entries.length; i++) {
+        var e = entries[i];
+        if (!HR.visiblePerf) continue;
+        if (e.startTime < HR.visiblePerf) continue;
+        if (e.startTime > HR.visiblePerf + HR.profileNs) continue;
+        HR.longTaskN++;
+        if (e.duration > HR.maxLongMs) HR.maxLongMs = e.duration;
+        HR.blockedSum += e.duration;
+      }
+    });
+    poLt.observe({ entryTypes: ["longtask"] });
+  } catch (_) {}
+
+  try {
+    var mo = new MutationObserver(function () {
+      if (!inProfileWin()) return;
+      HR.domMut++;
+      if (HR.domMut > 200000) HR.domMut = 200000;
+    });
+    mo.observe(document.documentElement, { subtree: true, childList: true, attributes: true, characterData: true });
+  } catch (_) {}
+
+  try {
+    var of = window.fetch;
+    if (typeof of === "function") {
+      window.fetch = function () {
+        var u = "";
+        try {
+          u =
+            typeof arguments[0] === "string"
+              ? arguments[0]
+              : arguments[0] && arguments[0].url
+                ? String(arguments[0].url)
+                : "";
+        } catch (_) {}
+        if (inWin()) {
+          HR.fetchN++;
+          if (HR.fetchUrls.length < 80) HR.fetchUrls.push(u.slice(0, 200));
+        }
+        return of.apply(this, arguments);
+      };
+    }
+  } catch (_) {}
+
+  function wrapGlobal(key, label) {
+    try {
+      var orig = window[key];
+      if (typeof orig !== "function" || orig.__iuHrProbe) return;
+      window[key] = function () {
+        var t0 = performance.now();
+        bump(label);
+        try {
+          var r = orig.apply(this, arguments);
+          if (r && typeof r.then === "function") {
+            return r.then(
+              function (v) {
+                addDur(label, performance.now() - t0);
+                return v;
+              },
+              function (err) {
+                addDur(label, performance.now() - t0);
+                throw err;
+              }
+            );
+          }
+          addDur(label, performance.now() - t0);
+          return r;
+        } catch (e) {
+          addDur(label, performance.now() - t0);
+          throw e;
+        }
+      };
+      window[key].__iuHrProbe = 1;
+    } catch (_) {}
+  }
+
+  var pollN = 0;
+  function pollWrap() {
+    pollN++;
+    if (pollN > 600) return;
+    wrapGlobal("__iuLoadData", "loadData_viaWindow");
+    wrapGlobal("iuWeatherEnsureState", "iuWeatherEnsureState");
+    wrapGlobal("iuWeatherLoadAndRender", "iuWeatherLoadAndRender");
+    wrapGlobal("iuSilverWeatherRefresh", "iuSilverWeatherRefresh");
+    wrapGlobal("iuSilverWelcomeRefresh", "iuSilverWelcomeRefresh");
+    wrapGlobal("iuSilverTallMediaPreviewsRefresh", "iuSilverTallMediaPreviewsRefresh");
+  }
+  try {
+    setInterval(pollWrap, 200);
+    pollWrap();
+  } catch (_) {}
+
+  try {
+    window.__IU_HOME_RESUME_MARK__ = function (key) {
+      bump(key);
+    };
+  } catch (_) {}
+
+  try {
+    window.__IU_HOME_RESUME_FORCE_VISIBLE_ANCHOR__ = function () {
+      HR.isHome = home();
+      ev("probe_force_visible_anchor", { synthetic: 1 });
+      HR.visiblePerf = performance.now();
+      HR.counts = {};
+      HR.durMs = {};
+      HR.fetchN = 0;
+      HR.fetchUrls = [];
+      HR.domMut = 0;
+      HR.longTaskN = 0;
+      HR.maxLongMs = 0;
+      HR.blockedSum = 0;
+      HR.cls = 0;
+      HR.firstPointer = null;
+      HR.firstHexPointer = null;
+      HR.firstLeftNavPointer = null;
+      HR.firstClick = null;
+    };
+  } catch (_) {}
+
+  try {
+    document.addEventListener(
+      "pointerdown",
+      function (e) {
+        if (!HR.visiblePerf) return;
+        if (HR.firstPointer == null) HR.firstPointer = performance.now();
+        try {
+          var hex = e.target && e.target.closest ? e.target.closest(".iuHex") : null;
+          if (hex && HR.firstHexPointer == null) HR.firstHexPointer = performance.now();
+        } catch (_) {}
+        try {
+          var nav = e.target && e.target.closest ? e.target.closest(".iu-leftNavItem") : null;
+          if (nav && HR.firstLeftNavPointer == null) HR.firstLeftNavPointer = performance.now();
+        } catch (_) {}
+      },
+      true
+    );
+  } catch (_) {}
+  try {
+    document.addEventListener(
+      "click",
+      function () {
+        if (!HR.visiblePerf) return;
+        if (HR.firstClick == null) HR.firstClick = performance.now();
+      },
+      true
+    );
+  } catch (_) {}
+
+  try {
+    var poCls = new PerformanceObserver(function (list) {
+      var entries = list.getEntries();
+      for (var j = 0; j < entries.length; j++) {
+        var e = entries[j];
+        if (e && !e.hadRecentInput) HR.cls += e.value;
+      }
+    });
+    poCls.observe({ type: "layout-shift", buffered: true });
+  } catch (_) {}
+
+  window.__IU_HOME_RESUME_SNAP__ = function () {
+    var vis = HR.visiblePerf;
+    var fp = HR.firstPointer;
+    var fh = HR.firstHexPointer;
+    var fn = HR.firstLeftNavPointer;
+    var fc = HR.firstClick;
+    var ox = false;
+    try {
+      ox = document.documentElement.scrollWidth > document.documentElement.clientWidth + 1;
+    } catch (_) {}
+    return {
+      eventOrderTail: HR.eventOrder.slice(-40),
+      isHome: HR.isHome,
+      candidateFunctionCountsWithin5s: HR.counts,
+      candidateFunctionDurationsWithin5s: HR.durMs,
+      requestsAfterVisible: HR.fetchN,
+      requestUrlSampleAfterVisible: HR.fetchUrls.slice(0, 40),
+      DOMMutationsAfterVisible: HR.domMut,
+      longTaskCountAfterVisible: HR.longTaskN,
+      maxLongTaskMs: Math.round(HR.maxLongMs || 0),
+      totalBlockedMsAfterVisible: Math.round(HR.blockedSum || 0),
+      firstPointerMsAfterVisible: fp != null && vis ? Math.round(fp - vis) : null,
+      firstHexPointerMsAfterVisible: fh != null && vis ? Math.round(fh - vis) : null,
+      firstLeftNavPointerMsAfterVisible: fn != null && vis ? Math.round(fn - vis) : null,
+      firstClickMsAfterVisible: fc != null && vis ? Math.round(fc - vis) : null,
+      cls: Math.round(HR.cls * 100000) / 100000,
+      overflowX: ox,
+      probeWindowNs: HR.windowNs,
+      profileWindowNs: HR.profileNs
+    };
+  };
 })();
 
 /* IU_SILVER_P0_ENGINE_END */
