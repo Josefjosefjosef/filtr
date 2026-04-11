@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-11T11:56:12.782346Z",
+  "ingestedAt": "2026-04-11T12:11:24.849961Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Střelba v Polsku u českých hranic skončila smrtí. Střelce zadrželi policisté",
+      "url": "https://www.denik.cz/staty-eu/polsko-strelba-jeden-mrtvy.html",
+      "dt": "2026-04-11T11:47:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hranic",
+        "policisté",
+        "polsku",
+        "skončila",
+        "smrtí",
+        "střelba",
+        "střelce",
+        "zadrželi",
+        "českých"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -611,30 +637,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Benzín a nafta na víkend podraží. Stát zvedl stropy",
-      "url": "https://www.denik.cz/ekonomika/cesko-maximalni-ceny-paliv-ministerstvo-financi-rozhodnuti-vikend.html",
-      "dt": "2026-04-10T12:10:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "benzín",
-        "nafta",
-        "podraží",
-        "stropy",
-        "stát",
-        "víkend",
-        "zvedl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -645,7 +647,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29815,
+      "bytes": 29693,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -682,11 +684,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-11T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-11T11:47:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 2
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -698,6 +700,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Střelba v Polsku u českých hranic skončila smrtí. Střelce zadrželi policisté",
+            "publishedAt": "2026-04-11T11:47:00Z"
+          },
           {
             "title": "Orbánovi se podařilo vytvořit gulášový kapitalismus. Důchodcům to většinou stačí",
             "publishedAt": "2026-04-11T11:30:00Z"
@@ -725,10 +731,6 @@
           {
             "title": "Noční požár v Třebíči napáchal škody za milion korun. Majitel domu je zraněný",
             "publishedAt": "2026-04-11T06:08:00Z"
-          },
-          {
-            "title": "Maďarské volby budou mít vliv na postavení země v Evropské unii, soudí experti",
-            "publishedAt": "2026-04-11T06:05:00Z"
           }
         ]
       }
