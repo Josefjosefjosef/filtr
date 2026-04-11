@@ -64,6 +64,7 @@ from iu_staging import (
     write_youtube_staging,
 )
 from ingest_telemetry import build_telemetry_payload, print_compact_audit, section_bucket
+from iu_feed_classification import enrich_article_list
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # repo root
 FEEDS_PATH = os.path.join(ROOT_DIR, "scripts", "feeds.json")
@@ -2647,8 +2648,8 @@ def _aggregate_pipeline(
 def _publish_article_outputs(bundle: dict) -> int:
     """Write public JSON (articles.json, shards, health, meta, brief, videos) from an aggregate bundle."""
     generated_at = bundle["generated_at"]
-    out_articles = bundle["articles_full"]
-    final = bundle["articles_final"]
+    out_articles = enrich_article_list(bundle["articles_full"])
+    final = enrich_article_list(bundle["articles_final"])
     per_feed_report = bundle["per_feed_report"]
     yt_videos = bundle["youtube_pool"]
     registry = bundle.get("registry") or {}
@@ -2762,6 +2763,8 @@ def _publish_article_outputs(bundle: dict) -> int:
         "articles": final,
         "mappingSingleSourceOfTruth": True,
         "homepagePreviewUsesSectionMapper": True,
+        "feedClassificationSchemaVersion": 1,
+        "feedClassificationSource": "iu_feed_classification.py",
         "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
         "sectionRetention": _section_retention_manifest(),
     }
@@ -3515,6 +3518,7 @@ def _legacy_main_removed_placeholder():
     out_articles = apply_per_section_limits_then_cap(merged_articles)
     out_articles = apply_per_section_published_retention(prev_list, out_articles)
     # Drip (releaseAt v budoucnu) schová většinu článků v UI — nesmí blokovat čerstvý feed; čas publikace zůstává v publishedAt.
+    out_articles = enrich_article_list(out_articles)
 
     try:
         save_transport_state(transport_state)
@@ -3645,6 +3649,8 @@ def _legacy_main_removed_placeholder():
         "articles": final,
         "mappingSingleSourceOfTruth": True,
         "homepagePreviewUsesSectionMapper": True,
+        "feedClassificationSchemaVersion": 1,
+        "feedClassificationSource": "iu_feed_classification.py",
         "registryVersion": registry.get("version") if isinstance(registry, dict) else None,
         "sectionRetention": _section_retention_manifest(),
     }

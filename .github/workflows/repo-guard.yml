@@ -37,6 +37,10 @@ jobs:
           python -m py_compile scripts/build_articles.py
           python -m py_compile scripts/ingest_telemetry.py
           python -m py_compile scripts/build_videos.py
+          python -m py_compile scripts/iu_feed_classification.py
+
+      - name: Feed classification unit tests
+        run: python scripts/test_iu_feed_classification.py
 
       - name: Run repo guard
         run: python scripts/repo_guard.py
