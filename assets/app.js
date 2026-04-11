@@ -1621,6 +1621,16 @@ try {
     } catch (_) {}
   }
 
+  /** Guarded: only when window.__IU_HOME_LOAD_AUDIT__ === true + iu-home-load-audit.js hook present. */
+  function iuHomeLoadAuditNotify(phase) {
+    try {
+      if (typeof window === "undefined" || window.__IU_HOME_LOAD_AUDIT__ !== true) return;
+      if (typeof window.__iuHomeLoadAuditHook === "function") {
+        window.__iuHomeLoadAuditHook(String(phase || ""));
+      }
+    } catch (_) {}
+  }
+
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
   window.iuSetDataStatus = function(articlesCount, videosCount){
     const el = document.getElementById("dataStatus");
@@ -9419,6 +9429,9 @@ function buildVideoAsArticleCard(it) {
         card.setAttribute("data-iu-silver-wx-tip", iuSilverWeatherTipCategory(st));
         iuSilverWeatherSyncLayoutAttr("data");
       }catch{}
+      try {
+        iuHomeLoadAuditNotify("weather:data");
+      } catch (_) {}
     }
 
     function iuSilverWeatherRenderLoading(){
@@ -11944,8 +11957,10 @@ function buildVideoAsArticleCard(it) {
         iuSilverTallMediaPreviewsRefresh();
       } catch (_) {}
       iuPreviewFeedProbeTick("earlyPreviewRefreshDone");
+      iuHomeLoadAuditNotify("loadData:earlyPreviewRefreshDone");
       renderItems(state.filteredItems);
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
+      iuHomeLoadAuditNotify("loadData:afterFirstRender");
       if (isDebugLogging) {
         debugLog(
           "[CACHE] total",
@@ -12030,6 +12045,7 @@ function buildVideoAsArticleCard(it) {
       }
       applyFilter();
       iuPreviewFeedProbeTick("afterApplyFilterLoadData");
+      iuHomeLoadAuditNotify("loadData:afterApplyFilter");
       try {
         iuSilverTallMediaPreviewsRefresh();
       } catch (_) {}
@@ -12101,6 +12117,8 @@ function buildVideoAsArticleCard(it) {
       }
       // Sekční řádek „Poslední aktualizace sekce“: výhradně z iuUpdateSectionDataUpdatedAtEl() po applyFilter().
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
+
+      iuHomeLoadAuditNotify("loadData:complete");
 
       debugLog("[DATA] combined count=", state.cachedItems.length);
       debugLog("[DATA] combined first type=", state.cachedItems[0]?.contentType, state.cachedItems[0]?.title);
@@ -16359,6 +16377,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function init() {
+    iuHomeLoadAuditNotify("init:start");
     if (sessionStorage.getItem("iu:firstLoadDone")) {
       debugLog("[LOAD] repeat");
     } else {
