@@ -34,5 +34,8 @@
 ```bash
 node scripts/audit-feed-classification.mjs
 python scripts/test_iu_feed_classification.py
-python scripts/validate_feed_classification.py --skip-missing
+# CI / legacy JSON on disk: apply same enrich as build, then measure coverage
+python scripts/validate_feed_classification.py --skip-missing --enrich
+# On-disk only (after full build wrote iuFeedClassification into articles.json):
+python scripts/validate_feed_classification.py --articles projects/data/articles.json
 ```

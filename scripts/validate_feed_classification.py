@@ -5,6 +5,9 @@ Validate articles.json feed classification (optional CI / local audit).
 
 Exit 0: schema OK, coverage meets threshold, or --skip-missing with no file.
 Exit 1: missing classifications, low coverage, or invalid shapes.
+
+CI note: committed articles.json may predate iuFeedClassification. Use --enrich to apply the
+same enrich_article_list() pass as build_articles.py before counting coverage (integration check).
 """
 
 from __future__ import annotations
@@ -16,6 +19,11 @@ import sys
 from typing import Any
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_SCRIPTS = os.path.dirname(os.path.abspath(__file__))
+if _SCRIPTS not in sys.path:
+    sys.path.insert(0, _SCRIPTS)
+
+from iu_feed_classification import classification_coverage_stats, enrich_article_list
 
 
 def _load(path: str) -> dict[str, Any]:
@@ -80,6 +88,24 @@ def validate_payload(data: dict[str, Any], min_coverage: float) -> tuple[bool, d
     return True, report
 
 
+def apply_build_enrich(data: dict[str, Any]) -> dict[str, Any]:
+    """Mirror build_articles: enrich_article_list + root coverage fields."""
+    out = dict(data)
+    arts = out.get("articles")
+    if not isinstance(arts, list):
+        return out
+    enriched = enrich_article_list(arts)
+    out["articles"] = enriched
+    cov = classification_coverage_stats(enriched)
+    out["feedClassificationSchemaVersion"] = 1
+    out["feedClassificationSource"] = "iu_feed_classification.py"
+    out["feedClassificationCoveragePct"] = cov.get("coveragePct")
+    total = int(cov.get("total") or 0)
+    w = int(cov.get("withClassification") or 0)
+    out["feedClassificationRequired"] = bool(total > 0 and w == total)
+    return out
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -93,6 +119,11 @@ def main() -> int:
         action="store_true",
         help="Exit 0 if file does not exist (for CI without data checkout).",
     )
+    ap.add_argument(
+        "--enrich",
+        action="store_true",
+        help="Apply enrich_article_list (same as build_articles) before validation; use in CI on legacy JSON.",
+    )
     args = ap.parse_args()
     path = os.path.abspath(args.articles)
     if not os.path.isfile(path):
@@ -105,8 +136,15 @@ def main() -> int:
     if not isinstance(data, dict):
         print(json.dumps({"status": "FAIL", "error": "root_not_object"}, ensure_ascii=False))
         return 1
+    enriched_before = bool(args.enrich)
+    if enriched_before:
+        data = apply_build_enrich(data)
     ok, report = validate_payload(data, args.min_coverage)
-    out = {"status": "PASS" if ok else "FAIL", **report}
+    out = {
+        "status": "PASS" if ok else "FAIL",
+        "enrichedBeforeValidate": enriched_before,
+        **report,
+    }
     print(json.dumps(out, ensure_ascii=False))
     return 0 if ok else 1
 
