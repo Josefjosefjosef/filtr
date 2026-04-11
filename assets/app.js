@@ -23328,6 +23328,33 @@ function buildVideoAsArticleCard(it) {
   }
   try { window.iuStripProjectsNavParamsForHomeLanding = iuStripProjectsNavParamsForHomeLanding; } catch(_){}
 
+  /**
+   * P0: Keep body.iu-home in sync with URL: global article hub (section feed/media, no topic filter).
+   * Feed visibility handler skips full loadData() when iu-home is set (tab return on default /projects/ hub).
+   */
+  function iuSyncBodyIuHomeFromProjectsNav(nav) {
+    try {
+      if (typeof window.iuIsProjectsRoute !== "function" || !window.iuIsProjectsRoute()) {
+        if (document.body) document.body.classList.remove("iu-home");
+        return;
+      }
+      const n = nav && typeof nav === "object" ? nav : readUrlNavState();
+      const topic = String(n.topic || "").trim().toLowerCase();
+      const sec = String(n.section || "").trim().toLowerCase();
+      const globalArticleHub = iuArticleHubSectionP(sec) && (!topic || topic === "all");
+      if (document.body) {
+        document.body.classList.toggle("iu-home", globalArticleHub === true);
+      }
+    } catch (_) {
+      try {
+        if (document.body) document.body.classList.remove("iu-home");
+      } catch (__) {}
+    }
+  }
+  try {
+    window.iuSyncBodyIuHomeFromProjectsNav = iuSyncBodyIuHomeFromProjectsNav;
+  } catch (_) {}
+
   function applySectionFromURL(accentOverride){
     if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
     void accentOverride;
@@ -23565,6 +23592,9 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
     try{ window.__iuStartAutoRefresh && window.__iuStartAutoRefresh(); }catch{}
+    try {
+      iuSyncBodyIuHomeFromProjectsNav(nav);
+    } catch (_) {}
   }
   try { window.iuApplySectionFromURL = applySectionFromURL; } catch (e) {}
   try { window.iuPersistNavState = persistNavState; } catch (e) {}
