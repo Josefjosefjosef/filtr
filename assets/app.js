@@ -1596,6 +1596,31 @@ try {
     return `${kind}: status=${diag.status} ok=${diag.ok} ct=${diag.contentType} final=${diag.finalUrl} len=${diag.length} head="${diag.head}"`;
   }
 
+  /**
+   * Opt-in preview pipeline timing (set window.__IU_PREVIEW_FEED_PROBE__ = true before app.js runs, or early in console).
+   * Does nothing unless the flag is strictly true — zero overhead on production.
+   */
+  function iuPreviewFeedProbeTick(phase, detail) {
+    try {
+      if (typeof window === "undefined" || window.__IU_PREVIEW_FEED_PROBE__ !== true) return;
+      const o = (window.__iuPreviewFeedProbe = window.__iuPreviewFeedProbe || {});
+      if (typeof o.tLoadData0 !== "number") {
+        o.tLoadData0 = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+      }
+      const t = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+      const row = { phase: String(phase || ""), t, at: new Date().toISOString() };
+      if (detail && typeof detail === "object") {
+        const keys = Object.keys(detail);
+        for (let i = 0; i < keys.length; i++) {
+          row[keys[i]] = detail[keys[i]];
+        }
+      }
+      const a = (o.log = o.log || []);
+      a.push(row);
+      if (phase) o["t_" + String(phase)] = t;
+    } catch (_) {}
+  }
+
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
   window.iuSetDataStatus = function(articlesCount, videosCount){
     const el = document.getElementById("dataStatus");
@@ -6476,6 +6501,18 @@ function buildVideoAsArticleCard(it) {
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
       }
+      try {
+        if (
+          typeof window !== "undefined" &&
+          window.__IU_PREVIEW_FEED_PROBE__ === true &&
+          latestTitle &&
+          !window.__iuPreviewFeedProbe?._zpravyDomLogged
+        ) {
+          window.__iuPreviewFeedProbe = window.__iuPreviewFeedProbe || {};
+          window.__iuPreviewFeedProbe._zpravyDomLogged = true;
+          iuPreviewFeedProbeTick("zpravyPreviewDomPatched", { second: Boolean(secondTitle) });
+        }
+      } catch (_) {}
 
       // Freshness + badge (NO fake: only if we have valid timestamp)
       const publishedRaw = iuNewsPreviewPublishedRaw(latest);
@@ -11522,6 +11559,7 @@ function buildVideoAsArticleCard(it) {
       window.__IU_SOURCE_LABEL_MISMATCH_DROPS__ = 0;
     } catch (_) {}
     state.isLoadingData = true;
+    iuPreviewFeedProbeTick("loadDataStart");
     const requestToken = ++state.loadRequestId;
     state.cachedItems = [];
     state.hasLoadedData = false;
@@ -11577,9 +11615,17 @@ function buildVideoAsArticleCard(it) {
 
       const probeText = await probePromise.catch(() => null);
       state.lastProbe = probeText;
+      iuPreviewFeedProbeTick("probeDone");
 
-      const articlesData = await fetchDiag(articlesUrl, "articles");
-      const videosData = await fetchDiag(videosUrl, "videos");
+      iuPreviewFeedProbeTick("fetchStart", { articlesUrl, videosUrl });
+      const [articlesData, videosData] = await Promise.all([
+        fetchDiag(articlesUrl, "articles"),
+        fetchDiag(videosUrl, "videos"),
+      ]);
+      iuPreviewFeedProbeTick("fetchDone", {
+        articlesOk: Boolean(articlesData),
+        videosOk: Boolean(videosData),
+      });
 
       const articlesArr = Array.isArray(articlesData)
         ? articlesData
@@ -11889,7 +11935,17 @@ function buildVideoAsArticleCard(it) {
       state.hasLoadedData = true;
       state.consecutiveLoadFailures = 0;
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
+      iuPreviewFeedProbeTick("combinedFeedReady", {
+        cachedLen: Array.isArray(state.cachedItems) ? state.cachedItems.length : 0,
+        sanitizedArticles: Array.isArray(sanitizedArticles) ? sanitizedArticles.length : 0,
+      });
+      /* Preview cards read state.cachedItems only — refresh before heavy feed DOM so titles are not blocked behind renderFeed(). */
+      try {
+        iuSilverTallMediaPreviewsRefresh();
+      } catch (_) {}
+      iuPreviewFeedProbeTick("earlyPreviewRefreshDone");
       renderItems(state.filteredItems);
+      iuPreviewFeedProbeTick("afterFirstRenderFeed");
       if (isDebugLogging) {
         debugLog(
           "[CACHE] total",
@@ -11973,6 +12029,10 @@ function buildVideoAsArticleCard(it) {
         initRetentionIndex();
       }
       applyFilter();
+      iuPreviewFeedProbeTick("afterApplyFilterLoadData");
+      try {
+        iuSilverTallMediaPreviewsRefresh();
+      } catch (_) {}
       const countArticles = state.cachedItems.filter((entry) => entry?.contentType === "article").length;
       const countVideos = state.cachedItems.filter((entry) => entry?.contentType === "video").length;
       const feedChildren = elFeed?.children?.length ?? 0;
