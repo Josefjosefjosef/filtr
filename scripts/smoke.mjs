@@ -17,6 +17,10 @@ const BASE = `http://127.0.0.1:${PORT}`;
 
 /** Preview cards mount async after app init + Silver tall shell; CI runners need headroom (not a weaker assertion). */
 const PREVIEW_SELECTOR_TIMEOUT_MS = 30000;
+/** Root `index.html` → `/projects/` redirect must settle before the next navigation (avoid racing `?section=media`). */
+const ROOT_REDIRECT_TIMEOUT_MS = 20000;
+/** `page.goto` — large `app.js` / client nav can delay `domcontentloaded` on cold runs (match preview-tier headroom). */
+const GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS = 30000;
 
 let server = null;
 let failed = false;
@@ -78,12 +82,12 @@ async function gotoProjectsMediaForSmoke(page) {
 /** One retry when client navigation races domcontentloaded (e.g. /projects/?section=media vs /projects/). */
 async function gotoDomContentLoaded(page, url) {
   try {
-    return await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
+    return await page.goto(url, { waitUntil: "domcontentloaded", timeout: GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS });
   } catch (e) {
     const msg = String(e && e.message ? e.message : e);
     if (/interrupted/i.test(msg)) {
       await page.waitForTimeout(500);
-      return await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
+      return await page.goto(url, { waitUntil: "domcontentloaded", timeout: GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS });
     }
     throw e;
   }
@@ -132,7 +136,7 @@ async function runSmoke() {
       // before that navigation commits — next goto would race and interrupt (?section=media) with /projects/.
       if (url === `${BASE}/`) {
         try {
-          await page.waitForURL((u) => u.pathname.includes("/projects"), { timeout: 10000 });
+          await page.waitForURL((u) => u.pathname.includes("/projects"), { timeout: ROOT_REDIRECT_TIMEOUT_MS });
         } catch (e) {
           fail(`Root redirect did not settle on /projects/: ${e && e.message ? e.message : String(e)}`);
         }
