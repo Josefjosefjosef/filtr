@@ -1,26 +1,26 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-04-11T12:12:07.766673Z",
-  "run_time_utc": "2026-04-11T12:12:07.766673Z",
+  "generatedAt": "2026-04-11T12:42:02.629625Z",
+  "run_time_utc": "2026-04-11T12:42:02.629625Z",
   "summary": {
     "schemaVersion": 2,
-    "generatedAt": "2026-04-11T12:12:07.766673Z",
-    "run_time_utc": "2026-04-11T12:12:07.766673Z",
-    "sources_checked": 8,
-    "sources_with_new_items": 4,
-    "total_raw_items": 321,
-    "total_parsed_items": 154,
-    "total_normalized_items": 154,
-    "total_after_dedupe_items": 135,
-    "total_written_articles_feed_attributed": 232,
+    "generatedAt": "2026-04-11T12:42:02.629625Z",
+    "run_time_utc": "2026-04-11T12:42:02.629625Z",
+    "sources_checked": 9,
+    "sources_with_new_items": 6,
+    "total_raw_items": 357,
+    "total_parsed_items": 190,
+    "total_normalized_items": 190,
+    "total_after_dedupe_items": 171,
+    "total_written_articles_feed_attributed": 245,
     "written_by_section": {
-      "zpravy": 494,
-      "sport": 226,
-      "finance": 193,
+      "zpravy": 496,
+      "sport": 227,
+      "finance": 194,
       "zdravi": 49,
       "cestovani": 16
     },
-    "newest_written_publishedAt": "2026-04-11T11:47:00Z",
+    "newest_written_publishedAt": "2026-04-11T12:18:28Z",
     "top_sources_by_new_items": [
       {
         "source_id": "fin_e15",
@@ -33,6 +33,11 @@
         "raw_feed_new_item_count": 40
       },
       {
+        "source_id": "ved_vtm",
+        "feed_url": "https://vtm.zive.cz/rss",
+        "raw_feed_new_item_count": 35
+      },
+      {
         "source_id": "spt_ctsport",
         "feed_url": "https://sport.ceskatelevize.cz/rss",
         "raw_feed_new_item_count": 30
@@ -43,13 +48,13 @@
         "raw_feed_new_item_count": 25
       },
       {
-        "source_id": "kul_ctart",
-        "feed_url": "https://www.ceskatelevize.cz/art/rss",
-        "raw_feed_new_item_count": 0
+        "source_id": "fin_ekonom",
+        "feed_url": "https://ekonom.cz/?p=400000_rss",
+        "raw_feed_new_item_count": 1
       },
       {
-        "source_id": "spt_crzpravy_sport",
-        "feed_url": "https://www.crzpravy.cz/rss/sport/",
+        "source_id": "kul_ctart",
+        "feed_url": "https://www.ceskatelevize.cz/art/rss",
         "raw_feed_new_item_count": 0
       },
       {
@@ -85,14 +90,19 @@
         "written_to_articles_json_count": 24
       },
       {
-        "source_id": "kul_ctart",
-        "feed_url": "https://www.ceskatelevize.cz/art/rss",
+        "source_id": "ved_vtm",
+        "feed_url": "https://vtm.zive.cz/rss",
+        "written_to_articles_json_count": 11
+      },
+      {
+        "source_id": "fin_ekonom",
+        "feed_url": "https://ekonom.cz/?p=400000_rss",
         "written_to_articles_json_count": 5
       },
       {
-        "source_id": "spt_crzpravy_sport",
-        "feed_url": "https://www.crzpravy.cz/rss/sport/",
-        "written_to_articles_json_count": 3
+        "source_id": "kul_ctart",
+        "feed_url": "https://www.ceskatelevize.cz/art/rss",
+        "written_to_articles_json_count": 5
       },
       {
         "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -112,6 +122,11 @@
         "raw_minus_written": 176
       },
       {
+        "source_id": "ved_vtm",
+        "feed_url": "https://vtm.zive.cz/rss",
+        "raw_minus_written": 24
+      },
+      {
         "source_id": "yt_playlist_PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
         "raw_minus_written": 15
@@ -127,9 +142,9 @@
         "raw_minus_written": -2
       },
       {
-        "source_id": "spt_crzpravy_sport",
-        "feed_url": "https://www.crzpravy.cz/rss/sport/",
-        "raw_minus_written": -3
+        "source_id": "fin_ekonom",
+        "feed_url": "https://ekonom.cz/?p=400000_rss",
+        "raw_minus_written": -4
       },
       {
         "source_id": "kul_ctart",
@@ -156,8 +171,8 @@
       "feed_url": "https://www.e15.cz/rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-11T12:12:07.766673Z",
-      "run_time_utc": "2026-04-11T12:12:07.766673Z",
+      "generatedAt": "2026-04-11T12:42:02.629625Z",
+      "run_time_utc": "2026-04-11T12:42:02.629625Z",
       "raw_feed_item_count": 47,
       "raw_feed_new_item_count": 40,
       "raw_feed_latest_publishedAt": "2026-04-11T10:00:00Z",
@@ -221,14 +236,57 @@
       ]
     },
     {
+      "source_id": "fin_ekonom",
+      "registry_id": "fin_ekonom",
+      "source_label": "Ekonom (HN)",
+      "feed_url": "https://ekonom.cz/?p=400000_rss",
+      "topic": "finance",
+      "section_primary": "finance",
+      "generatedAt": "2026-04-11T12:42:02.629625Z",
+      "run_time_utc": "2026-04-11T12:42:02.629625Z",
+      "raw_feed_item_count": 1,
+      "raw_feed_new_item_count": 1,
+      "raw_feed_latest_publishedAt": "2026-04-08T16:00:00Z",
+      "ingested_item_count": 1,
+      "parsed_item_count": 1,
+      "normalized_item_count": 1,
+      "valid_publishedAt_count": 1,
+      "mapped_to_section_count": {
+        "zpravy": 0,
+        "sport": 0,
+        "finance": 1,
+        "zdravi": 0,
+        "cestovani": 0,
+        "other": 0
+      },
+      "release_eligible_count": 5,
+      "written_to_articles_json_count": 5,
+      "newest_written_publishedAt": "2026-04-08T16:00:00Z",
+      "drop_counts": {
+        "missing_publishedAt": 0,
+        "invalid_publishedAt": 0,
+        "parser_drop": 0,
+        "section_remap": 0,
+        "release_gate": 0,
+        "dedupe": 0,
+        "other": 0
+      },
+      "sample_titles": [
+        {
+          "title": "Nejen o tom, jak se podniká na Blízkém východě a na co si dát pozor, s Gabrielou Teissing z Creative Docku",
+          "publishedAt": "2026-04-08T16:00:00Z"
+        }
+      ]
+    },
+    {
       "source_id": "hry_zing",
       "registry_id": "hry_zing",
       "source_label": "Zing",
       "feed_url": "https://zing.cz/rss/all",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-11T12:12:07.766673Z",
-      "run_time_utc": "2026-04-11T12:12:07.766673Z",
+      "generatedAt": "2026-04-11T12:42:02.629625Z",
+      "run_time_utc": "2026-04-11T12:42:02.629625Z",
       "raw_feed_item_count": 200,
       "raw_feed_new_item_count": 40,
       "raw_feed_latest_publishedAt": "2026-04-11T12:00:00Z",
@@ -298,8 +356,8 @@
       "feed_url": "https://www.ceskatelevize.cz/art/rss",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-04-11T12:12:07.766673Z",
-      "run_time_utc": "2026-04-11T12:12:07.766673Z",
+      "generatedAt": "2026-04-11T12:42:02.629625Z",
+      "run_time_utc": "2026-04-11T12:42:02.629625Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -330,52 +388,14 @@
       "sample_titles": []
     },
     {
-      "source_id": "spt_crzpravy_sport",
-      "registry_id": "spt_crzpravy_sport",
-      "source_label": "ČR Zprávy / Sport",
-      "feed_url": "https://www.crzpravy.cz/rss/sport/",
-      "topic": "sport",
-      "section_primary": "sport",
-      "generatedAt": "2026-04-11T12:12:07.766673Z",
-      "run_time_utc": "2026-04-11T12:12:07.766673Z",
-      "raw_feed_item_count": 0,
-      "raw_feed_new_item_count": 0,
-      "raw_feed_latest_publishedAt": "",
-      "ingested_item_count": 0,
-      "parsed_item_count": 0,
-      "normalized_item_count": 0,
-      "valid_publishedAt_count": 0,
-      "mapped_to_section_count": {
-        "zpravy": 0,
-        "sport": 0,
-        "finance": 0,
-        "zdravi": 0,
-        "cestovani": 0,
-        "other": 0
-      },
-      "release_eligible_count": 3,
-      "written_to_articles_json_count": 3,
-      "newest_written_publishedAt": "2024-09-04T08:27:16Z",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 0,
-        "dedupe": 0,
-        "other": 0
-      },
-      "sample_titles": []
-    },
-    {
       "source_id": "spt_ctsport",
       "registry_id": "spt_ctsport",
       "source_label": "ČT sport",
       "feed_url": "https://sport.ceskatelevize.cz/rss",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-11T12:12:07.766673Z",
-      "run_time_utc": "2026-04-11T12:12:07.766673Z",
+      "generatedAt": "2026-04-11T12:42:02.629625Z",
+      "run_time_utc": "2026-04-11T12:42:02.629625Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
       "raw_feed_latest_publishedAt": "2026-04-11T09:36:09Z",
@@ -439,14 +459,85 @@
       ]
     },
     {
+      "source_id": "ved_vtm",
+      "registry_id": "ved_vtm",
+      "source_label": "VTM",
+      "feed_url": "https://vtm.zive.cz/rss",
+      "topic": "veda",
+      "section_primary": "veda",
+      "generatedAt": "2026-04-11T12:42:02.629625Z",
+      "run_time_utc": "2026-04-11T12:42:02.629625Z",
+      "raw_feed_item_count": 35,
+      "raw_feed_new_item_count": 35,
+      "raw_feed_latest_publishedAt": "2026-04-11T11:45:00Z",
+      "ingested_item_count": 35,
+      "parsed_item_count": 35,
+      "normalized_item_count": 35,
+      "valid_publishedAt_count": 35,
+      "mapped_to_section_count": {
+        "zpravy": 0,
+        "sport": 0,
+        "finance": 0,
+        "zdravi": 0,
+        "cestovani": 0,
+        "other": 35
+      },
+      "release_eligible_count": 9,
+      "written_to_articles_json_count": 11,
+      "newest_written_publishedAt": "2026-04-07T17:45:00Z",
+      "drop_counts": {
+        "missing_publishedAt": 0,
+        "invalid_publishedAt": 0,
+        "parser_drop": 0,
+        "section_remap": 0,
+        "release_gate": 2,
+        "dedupe": 0,
+        "other": 0
+      },
+      "sample_titles": [
+        {
+          "title": "Nizozemský vývojář oživil Doom pomocí CSS a ukázal, že i webový prohlížeč zvládne plnohodnotný 3D engine",
+          "publishedAt": "2026-04-11T11:45:00Z"
+        },
+        {
+          "title": "Masakr cen u Applu. MacBook Air M4 pod 20 tisíc, Mac mini M2 za 8 tisíc a AirTag za 300 Kč",
+          "publishedAt": "2026-04-11T09:20:00Z"
+        },
+        {
+          "title": "Toto je 50 nejstahovanějších a nejoblíbenějších aplikací pro iPhone a Android v Česku",
+          "publishedAt": "2026-04-11T08:45:00Z"
+        },
+        {
+          "title": "MacBook Neo je nejdůležitější počítač roku. Levné notebooky s Windows, tohle musíte okopírovat (Podcast Živě)",
+          "publishedAt": "2026-04-10T16:45:00Z"
+        },
+        {
+          "title": "AI tak dobrá, že ji museli zakázat. Claude Mythos odhalil takové zranitelnosti, až si vynutil přísné omezení dostupnosti",
+          "publishedAt": "2026-04-09T18:45:00Z"
+        },
+        {
+          "title": "Výrobce čipů Onsemi rozšíří aktivity v Česku, kupuje brněnskou firmu navrhující procesory",
+          "publishedAt": "2026-04-11T07:45:00Z"
+        },
+        {
+          "title": "Český simulátor hackera Zero Trust vychází z reálné praxe. Pomůžete zákonu, nebo zbohatnete na dark webu?",
+          "publishedAt": "2026-04-11T06:45:00Z"
+        },
+        {
+          "title": "Netflix a další na víkend: Žraločí smršť, Star Wars: Maul nebo Privilegia. A Banda začala finální sezónu",
+          "publishedAt": "2026-04-10T13:45:00Z"
+        }
+      ]
+    },
+    {
       "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "registry_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "source_label": "YouTube – ČT24",
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-11T12:12:07.766673Z",
-      "run_time_utc": "2026-04-11T12:12:07.766673Z",
+      "generatedAt": "2026-04-11T12:42:02.629625Z",
+      "run_time_utc": "2026-04-11T12:42:02.629625Z",
       "raw_feed_item_count": 4,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2026-01-20T08:01:05Z",
@@ -483,8 +574,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-11T12:12:07.766673Z",
-      "run_time_utc": "2026-04-11T12:12:07.766673Z",
+      "generatedAt": "2026-04-11T12:42:02.629625Z",
+      "run_time_utc": "2026-04-11T12:42:02.629625Z",
       "raw_feed_item_count": 15,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2024-07-19T09:05:16Z",
@@ -521,8 +612,8 @@
       "feed_url": "https://www.denik.cz/rss/zpravy.html",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-11T12:12:07.766673Z",
-      "run_time_utc": "2026-04-11T12:12:07.766673Z",
+      "generatedAt": "2026-04-11T12:42:02.629625Z",
+      "run_time_utc": "2026-04-11T12:42:02.629625Z",
       "raw_feed_item_count": 25,
       "raw_feed_new_item_count": 25,
       "raw_feed_latest_publishedAt": "2026-04-11T11:47:00Z",
