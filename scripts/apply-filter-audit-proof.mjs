@@ -16,7 +16,7 @@ const ROOT = path.resolve(__dirname, "..");
 const PORT = Number(process.env.APPLY_FILTER_AUDIT_PORT || 8080);
 const BASE =
   process.env.APPLY_FILTER_AUDIT_URL ||
-  `http://127.0.0.1:${PORT}/projects/?section=media&iuApplyFilterAudit=1`;
+  `http://127.0.0.1:${PORT}/projects/?section=media&iuApplyFilterAudit=1&iuClusterEngineAudit=1`;
 const RUNS = Math.max(1, parseInt(process.env.APPLY_FILTER_AUDIT_RUNS || "5", 10));
 const USE_LOCAL_SERVER = String(process.env.APPLY_FILTER_AUDIT_LOCAL_SERVER || "1") === "1";
 
@@ -137,6 +137,7 @@ async function oneRun(page, vw) {
   } catch (_) {}
 
   const rep = await page.evaluate(() => window.__IU_APPLYFILTER_AUDIT_REPORT__ || null);
+  const clusterEngineAuditLast = await page.evaluate(() => window.__IU_CLUSTER_ENGINE_AUDIT_LAST__ || null);
   const clickMs = await page.evaluate(() => {
     try {
       const hb = document.querySelector(".iuHamburger");
@@ -150,6 +151,7 @@ async function oneRun(page, vw) {
     viewport: vw.name,
     url: BASE,
     runs: rep && rep.runs ? rep.runs : [],
+    clusterEngineAuditLast,
     consoleErrorsCount: consoleErrors.length,
     appErrorsCount: 0,
     cls,
@@ -188,6 +190,9 @@ async function main() {
 
   const capped = [];
   const idleFull = [];
+  const idleClusterMapMs = [];
+  const idlePairCompareMs = [];
+  const idleTimeReject = [];
   for (const row of allRows) {
     const runs = row.runs || [];
     for (let j = 0; j < runs.length; j++) {
@@ -197,6 +202,10 @@ async function main() {
       if (tag === "capped_initial" && typeof ms === "number") capped.push(ms);
       if (tag === "post_idle_full" && typeof ms === "number") idleFull.push(ms);
     }
+    const ce = row.clusterEngineAuditLast;
+    if (ce && typeof ce.clusterMapMs === "number") idleClusterMapMs.push(ce.clusterMapMs);
+    if (ce && typeof ce.pairCompareDurationMs === "number") idlePairCompareMs.push(ce.pairCompareDurationMs);
+    if (ce && typeof ce.timeRejectBeforeSemanticCount === "number") idleTimeReject.push(ce.timeRejectBeforeSemanticCount);
   }
 
   console.log(
@@ -204,8 +213,12 @@ async function main() {
       aggregate: {
         cappedApplyFilterMs: stats(capped),
         postIdleFullApplyFilterMs: stats(idleFull),
+        postIdleClusterMapMs: stats(idleClusterMapMs),
+        postIdlePairCompareDurationMs: stats(idlePairCompareMs),
+        timeRejectBeforeSemanticCount: stats(idleTimeReject),
       },
-      note: "capped_initial = first pass with cluster cap when nArt>cap; post_idle_full = requestIdleCallback full clustering",
+      note:
+        "capped_initial = first pass with cluster cap when nArt>cap; post_idle_full = requestIdleCallback full clustering; clusterEngineAuditLast = last buildPublicationClusterUrlMap (idle full pass)",
     })
   );
   try {
