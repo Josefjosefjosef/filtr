@@ -17128,7 +17128,14 @@ function buildVideoAsArticleCard(it) {
     debugLog("[VIS]", document.visibilityState);
     if (document.visibilityState === "visible") {
       if (!(document.body && document.body.classList && document.body.classList.contains("iu-home"))) {
-        loadData();
+        try {
+          if (typeof window.__iuLoadData === "function") window.__iuLoadData();
+          else loadData();
+        } catch (_) {
+          try {
+            loadData();
+          } catch (__) {}
+        }
         startAutoRefresh();
       }
     } else if (iuRefreshTimer) {
@@ -23328,6 +23335,33 @@ function buildVideoAsArticleCard(it) {
   }
   try { window.iuStripProjectsNavParamsForHomeLanding = iuStripProjectsNavParamsForHomeLanding; } catch(_){}
 
+  /**
+   * P0: Keep body.iu-home in sync with URL: global article hub (section feed/media, no topic filter).
+   * Feed visibility handler skips full loadData() when iu-home is set (tab return on default /projects/ hub).
+   */
+  function iuSyncBodyIuHomeFromProjectsNav(nav) {
+    try {
+      if (typeof window.iuIsProjectsRoute !== "function" || !window.iuIsProjectsRoute()) {
+        if (document.body) document.body.classList.remove("iu-home");
+        return;
+      }
+      const n = nav && typeof nav === "object" ? nav : readUrlNavState();
+      const topic = String(n.topic || "").trim().toLowerCase();
+      const sec = String(n.section || "").trim().toLowerCase();
+      const globalArticleHub = iuArticleHubSectionP(sec) && (!topic || topic === "all");
+      if (document.body) {
+        document.body.classList.toggle("iu-home", globalArticleHub === true);
+      }
+    } catch (_) {
+      try {
+        if (document.body) document.body.classList.remove("iu-home");
+      } catch (__) {}
+    }
+  }
+  try {
+    window.iuSyncBodyIuHomeFromProjectsNav = iuSyncBodyIuHomeFromProjectsNav;
+  } catch (_) {}
+
   function applySectionFromURL(accentOverride){
     if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
     void accentOverride;
@@ -23565,6 +23599,9 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
     try{ window.__iuStartAutoRefresh && window.__iuStartAutoRefresh(); }catch{}
+    try {
+      iuSyncBodyIuHomeFromProjectsNav(nav);
+    } catch (_) {}
   }
   try { window.iuApplySectionFromURL = applySectionFromURL; } catch (e) {}
   try { window.iuPersistNavState = persistNavState; } catch (e) {}
@@ -31713,6 +31750,134 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
   else run();
+})();
+
+/**
+ * Opt-in probe for feed visibility guard (body.iu-home vs loadData on tab return). Set before app.js loads.
+ * window.__IU_HOME_GUARD_PROBE__ = true
+ */
+(function iuHomeGuardProbeInstall() {
+  try {
+    if (typeof window === "undefined" || window.__IU_HOME_GUARD_PROBE__ !== true) return;
+  } catch (_) {
+    return;
+  }
+  var G = {
+    homeStateAtLoad: null,
+    homeStateAtReturn: null,
+    loadDataWillRun: null,
+    loadDataTriggeredAfterVisible: false,
+    loadDataReason: "",
+    loadDataDurationMs: null,
+    requestsAfterVisible: 0,
+    DOMMutationsAfterVisible: 0,
+    lastVisiblePerf: 0,
+    windowNs: 5000,
+  };
+  function readIuHome() {
+    try {
+      return !!(document.body && document.body.classList && document.body.classList.contains("iu-home"));
+    } catch (_) {
+      return false;
+    }
+  }
+  try {
+    G.homeStateAtLoad = readIuHome();
+  } catch (_) {}
+  try {
+    var of = window.fetch;
+    if (typeof of === "function") {
+      window.fetch = function () {
+        if (G.lastVisiblePerf && performance.now() - G.lastVisiblePerf < G.windowNs) {
+          G.requestsAfterVisible++;
+        }
+        return of.apply(this, arguments);
+      };
+    }
+  } catch (_) {}
+  try {
+    var mo = new MutationObserver(function () {
+      if (G.lastVisiblePerf && performance.now() - G.lastVisiblePerf < G.windowNs) {
+        G.DOMMutationsAfterVisible++;
+        if (G.DOMMutationsAfterVisible > 200000) G.DOMMutationsAfterVisible = 200000;
+      }
+    });
+    mo.observe(document.documentElement, { subtree: true, childList: true, attributes: true, characterData: true });
+  } catch (_) {}
+  var poll = 0;
+  function wrapLoadData() {
+    poll++;
+    if (poll > 400) return;
+    var fn = window.__iuLoadData;
+    if (typeof fn !== "function" || fn.__iuGuardWrapped) return;
+    var orig = fn;
+    window.__iuLoadData = function () {
+      var t0 = performance.now();
+      var vis = !!(G.lastVisiblePerf && performance.now() - G.lastVisiblePerf < G.windowNs);
+      try {
+        var r = orig.apply(this, arguments);
+        if (vis) {
+          G.loadDataTriggeredAfterVisible = true;
+          G.loadDataReason = readIuHome() ? "unexpected_with_iu_home" : "visibility_resume_or_bootstrap";
+        }
+        if (r && typeof r.then === "function") {
+          return r.then(
+            function (v) {
+              if (vis) G.loadDataDurationMs = Math.round(performance.now() - t0);
+              return v;
+            },
+            function (e) {
+              if (vis) G.loadDataDurationMs = Math.round(performance.now() - t0);
+              throw e;
+            }
+          );
+        }
+        if (vis) G.loadDataDurationMs = Math.round(performance.now() - t0);
+        return r;
+      } catch (e) {
+        if (vis) G.loadDataDurationMs = Math.round(performance.now() - t0);
+        throw e;
+      }
+    };
+    window.__iuLoadData.__iuGuardWrapped = 1;
+  }
+  try {
+    setInterval(wrapLoadData, 120);
+    wrapLoadData();
+  } catch (_) {}
+  try {
+    document.addEventListener(
+      "visibilitychange",
+      function () {
+        if (document.visibilityState !== "visible") return;
+        G.lastVisiblePerf = performance.now();
+        G.requestsAfterVisible = 0;
+        G.DOMMutationsAfterVisible = 0;
+        G.loadDataTriggeredAfterVisible = false;
+        G.loadDataDurationMs = null;
+        G.loadDataReason = "";
+        try {
+          G.homeStateAtReturn = readIuHome();
+          G.loadDataWillRun = !readIuHome();
+        } catch (_) {
+          G.loadDataWillRun = null;
+        }
+      },
+      true
+    );
+  } catch (_) {}
+  window.__IU_HOME_GUARD_SNAP__ = function () {
+    return {
+      homeStateAtLoad: G.homeStateAtLoad,
+      homeStateAtReturn: G.homeStateAtReturn,
+      loadDataTriggeredAfterVisible: G.loadDataTriggeredAfterVisible,
+      loadDataReason: G.loadDataReason,
+      loadDataDurationMs: G.loadDataDurationMs,
+      requestsAfterVisible: G.requestsAfterVisible,
+      DOMMutationsAfterVisible: G.DOMMutationsAfterVisible,
+      loadDataWillRun: G.loadDataWillRun,
+    };
+  };
 })();
 
 /* IU_SILVER_P0_ENGINE_END */

@@ -15,6 +15,13 @@ const ROOT = path.resolve(__dirname, "..");
 const PORT = 8080;
 const BASE = `http://127.0.0.1:${PORT}`;
 
+/** Preview cards mount async after app init + Silver tall shell; CI runners need headroom (not a weaker assertion). */
+const PREVIEW_SELECTOR_TIMEOUT_MS = 30000;
+/** Root `index.html` → `/projects/` redirect must settle before the next navigation (avoid racing `?section=media`). */
+const ROOT_REDIRECT_TIMEOUT_MS = 20000;
+/** `page.goto` — large `app.js` / client nav can delay `domcontentloaded` on cold runs (match preview-tier headroom). */
+const GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS = 30000;
+
 let server = null;
 let failed = false;
 const errors = [];
@@ -65,15 +72,22 @@ function startServer() {
   });
 }
 
+/** Projects global hub: wait for Silver tall viewport (mount targets exist) before preview assertions. */
+async function gotoProjectsMediaForSmoke(page) {
+  await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
+  await page.waitForSelector("#iuSilverTallScrollViewport", { timeout: 20000 });
+  await page.waitForTimeout(1000);
+}
+
 /** One retry when client navigation races domcontentloaded (e.g. /projects/?section=media vs /projects/). */
 async function gotoDomContentLoaded(page, url) {
   try {
-    return await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
+    return await page.goto(url, { waitUntil: "domcontentloaded", timeout: GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS });
   } catch (e) {
     const msg = String(e && e.message ? e.message : e);
     if (/interrupted/i.test(msg)) {
       await page.waitForTimeout(500);
-      return await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
+      return await page.goto(url, { waitUntil: "domcontentloaded", timeout: GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS });
     }
     throw e;
   }
@@ -86,7 +100,9 @@ async function runSmoke() {
 
   try {
     const browser = await chromium.launch({ headless: true });
-    const context = await browser.newContext();
+    const context = await browser.newContext({
+      viewport: { width: 1366, height: 768 }
+    });
     const page = await context.newPage();
 
     page.on("pageerror", (err) => {
@@ -120,7 +136,7 @@ async function runSmoke() {
       // before that navigation commits — next goto would race and interrupt (?section=media) with /projects/.
       if (url === `${BASE}/`) {
         try {
-          await page.waitForURL((u) => u.pathname.includes("/projects"), { timeout: 10000 });
+          await page.waitForURL((u) => u.pathname.includes("/projects"), { timeout: ROOT_REDIRECT_TIMEOUT_MS });
         } catch (e) {
           fail(`Root redirect did not settle on /projects/: ${e && e.message ? e.message : String(e)}`);
         }
@@ -129,16 +145,15 @@ async function runSmoke() {
     }
 
     // Click test on /projects/?section=media
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
-    await page.waitForTimeout(800);
+    await gotoProjectsMediaForSmoke(page);
 
     try {
-      await page.waitForSelector('[data-iu-news-preview-card="1"]', { timeout: 10000 });
+      await page.waitForSelector('[data-iu-news-preview-card="1"]', { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     } catch (e) {
       fail(`News preview card missing: ${e && e.message ? e.message : String(e)}`);
     }
     try {
-      await page.waitForSelector('[data-iu-sport-preview-card="1"]', { timeout: 10000 });
+      await page.waitForSelector('[data-iu-sport-preview-card="1"]', { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     } catch (e) {
       fail(`Sport preview card missing: ${e && e.message ? e.message : String(e)}`);
     }
@@ -162,12 +177,12 @@ async function runSmoke() {
       fail(`News/Sport first-row badge regression: ${JSON.stringify(newsSportBadgeProbe)}`);
     }
     try {
-      await page.waitForSelector("#iuFinancePreviewCard", { timeout: 10000 });
+      await page.waitForSelector("#iuFinancePreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     } catch (e) {
       fail(`Finance preview card missing: ${e && e.message ? e.message : String(e)}`);
     }
     try {
-      await page.waitForSelector("#iuHealthPreviewCard", { timeout: 10000 });
+      await page.waitForSelector("#iuHealthPreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     } catch (e) {
       fail(`Health preview card missing: ${e && e.message ? e.message : String(e)}`);
     }
@@ -214,7 +229,7 @@ async function runSmoke() {
       fail(`Health preview regression: ${JSON.stringify(healthProbe)}`);
     }
     try {
-      await page.waitForSelector("#iuTravelPreviewCard", { timeout: 10000 });
+      await page.waitForSelector("#iuTravelPreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     } catch (e) {
       fail(`Travel preview card missing: ${e && e.message ? e.message : String(e)}`);
     }
@@ -240,7 +255,7 @@ async function runSmoke() {
       fail(`Travel preview regression: ${JSON.stringify(travelProbe)}`);
     }
     try {
-      await page.waitForSelector("#iuGamesPreviewCard", { timeout: 10000 });
+      await page.waitForSelector("#iuGamesPreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     } catch (e) {
       fail(`Games preview card missing: ${e && e.message ? e.message : String(e)}`);
     }
@@ -266,7 +281,7 @@ async function runSmoke() {
       fail(`Games preview regression: ${JSON.stringify(gamesProbe)}`);
     }
     try {
-      await page.waitForSelector("#iuCulturePreviewCard", { timeout: 10000 });
+      await page.waitForSelector("#iuCulturePreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     } catch (e) {
       fail(`Culture preview card missing: ${e && e.message ? e.message : String(e)}`);
     }
@@ -292,7 +307,7 @@ async function runSmoke() {
       fail(`Culture preview regression: ${JSON.stringify(cultureProbe)}`);
     }
     try {
-      await page.waitForSelector("#iuScienceHistoryPreviewCard", { timeout: 10000 });
+      await page.waitForSelector("#iuScienceHistoryPreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     } catch (e) {
       fail(`Science-history preview card missing: ${e && e.message ? e.message : String(e)}`);
     }
@@ -318,7 +333,7 @@ async function runSmoke() {
       fail(`Science-history preview regression: ${JSON.stringify(scienceHistoryProbe)}`);
     }
     try {
-      await page.waitForSelector("#iuEducationPreviewCard", { timeout: 10000 });
+      await page.waitForSelector("#iuEducationPreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     } catch (e) {
       fail(`Education preview card missing: ${e && e.message ? e.message : String(e)}`);
     }
@@ -350,9 +365,8 @@ async function runSmoke() {
       fail(`Finance preview click did not set topic=finance: ${afterFinanceClick}`);
     }
 
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
-    await page.waitForTimeout(800);
-    await page.waitForSelector("#iuHealthPreviewCard", { timeout: 10000 });
+    await gotoProjectsMediaForSmoke(page);
+    await page.waitForSelector("#iuHealthPreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     await page.click("#iuHealthPreviewCard");
     await page.waitForTimeout(500);
     const afterHealthClick = page.url();
@@ -360,9 +374,8 @@ async function runSmoke() {
       fail(`Health preview click did not set topic=zdravi: ${afterHealthClick}`);
     }
 
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
-    await page.waitForTimeout(800);
-    await page.waitForSelector("#iuTravelPreviewCard", { timeout: 10000 });
+    await gotoProjectsMediaForSmoke(page);
+    await page.waitForSelector("#iuTravelPreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     await page.click("#iuTravelPreviewCard");
     await page.waitForTimeout(500);
     const afterTravelClick = page.url();
@@ -370,9 +383,8 @@ async function runSmoke() {
       fail(`Travel preview click did not set section=travel&mode=media: ${afterTravelClick}`);
     }
 
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
-    await page.waitForTimeout(800);
-    await page.waitForSelector("#iuGamesPreviewCard", { timeout: 10000 });
+    await gotoProjectsMediaForSmoke(page);
+    await page.waitForSelector("#iuGamesPreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     await page.click("#iuGamesPreviewCard");
     await page.waitForTimeout(500);
     const afterGamesClick = page.url();
@@ -380,9 +392,8 @@ async function runSmoke() {
       fail(`Games preview click did not set section=hry: ${afterGamesClick}`);
     }
 
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
-    await page.waitForTimeout(800);
-    await page.waitForSelector("#iuCulturePreviewCard", { timeout: 10000 });
+    await gotoProjectsMediaForSmoke(page);
+    await page.waitForSelector("#iuCulturePreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     await page.click("#iuCulturePreviewCard");
     await page.waitForTimeout(500);
     const afterCultureClick = page.url();
@@ -390,9 +401,8 @@ async function runSmoke() {
       fail(`Culture preview click did not set section=kultura: ${afterCultureClick}`);
     }
 
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
-    await page.waitForTimeout(800);
-    await page.waitForSelector("#iuScienceHistoryPreviewCard", { timeout: 10000 });
+    await gotoProjectsMediaForSmoke(page);
+    await page.waitForSelector("#iuScienceHistoryPreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     await page.click("#iuScienceHistoryPreviewCard");
     await page.waitForTimeout(500);
     const afterScienceHistoryClick = page.url();
@@ -400,9 +410,8 @@ async function runSmoke() {
       fail(`Science-history preview click did not set section=veda: ${afterScienceHistoryClick}`);
     }
 
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
-    await page.waitForTimeout(800);
-    await page.waitForSelector("#iuEducationPreviewCard", { timeout: 10000 });
+    await gotoProjectsMediaForSmoke(page);
+    await page.waitForSelector("#iuEducationPreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     await page.click("#iuEducationPreviewCard");
     await page.waitForTimeout(500);
     const afterEducationClick = page.url();
