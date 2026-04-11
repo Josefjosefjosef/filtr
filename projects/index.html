@@ -103,6 +103,15 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script>
     (function(){
+      try {
+        if (new URLSearchParams(location.search || "").get("iuHomeAudit") === "1") {
+          window.__IU_HOME_LOAD_AUDIT__ = true;
+        }
+      } catch (e) {}
+    })();
+    </script>
+    <script>
+    (function(){
       if (window.__IU_PROD__) {
         document.documentElement.removeAttribute("data-iu-debug");
         return;
@@ -3240,6 +3249,7 @@ style-src 'self' 'unsafe-inline' https:;
     })();
     </script>
     <script defer src="/assets/iu-parcel-tracking-engine.js?v=1"></script>
+    <script defer src="/assets/iu-home-load-audit.js?v=home-audit-1"></script>
     <script type="module" src="/assets/app.js?v=1431fin-calc-detail-no-strip"></script>
     <script>
     (function(){
