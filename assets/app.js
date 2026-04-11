@@ -19840,7 +19840,7 @@ function buildVideoAsArticleCard(it) {
       return false;
     }
   }
-  /** P0: Nákup potravin online — fullscreen opaque overlay. No-scroll lock pouze desktop (≥1024px); mobile/tablet = scrollovatelné. */
+  /** P0: Nákup potravin online — fullscreen opaque overlay. Desktop ≥1024px: bezpečný vnitřní scroll (overflow-y auto) pokud obsah nepřesně sedí; mobile/tablet = scrollovatelné. */
   function iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, on) {
     try {
       if (!quick) return;
@@ -19879,12 +19879,12 @@ function buildVideoAsArticleCard(it) {
       var desk = iuNakupOnlineIsDesktopViewport();
       if (desk) {
         try { quick.classList.add("iu-nakup-online--desktop-fit"); } catch (_) {}
-        quick.style.setProperty("overflow", "hidden", "important");
         quick.style.setProperty("overflow-x", "hidden", "important");
-        quick.style.setProperty("overflow-y", "hidden", "important");
-        quick.style.setProperty("overscroll-behavior", "none", "important");
+        quick.style.setProperty("overflow-y", "auto", "important");
+        try { quick.style.setProperty("-webkit-overflow-scrolling", "touch"); } catch (_) {}
+        quick.style.setProperty("overscroll-behavior", "contain", "important");
+        try { quick.style.removeProperty("overflow"); } catch (_) {}
         try { quick.style.removeProperty("touch-action"); } catch (_) {}
-        try { quick.style.removeProperty("-webkit-overflow-scrolling"); } catch (_) {}
       } else {
         try { quick.classList.remove("iu-nakup-online--desktop-fit"); } catch (_) {}
         quick.style.setProperty("overflow-x", "hidden", "important");
@@ -19946,12 +19946,13 @@ function buildVideoAsArticleCard(it) {
       );
     }).join("");
     return (
+      '<div class="iu-nakup-online-premiumShell">' +
       head +
       '<div class="iu-nakup-online-fill">' +
       '<div class="iuQCard iu-nakup-online-outerCard">' +
       '<div class="iu-nakup-online-feed" role="region" aria-label="' + iuQfEscape(data.title || "Nákup potravin online") + '">' +
       sections +
-      "</div></div></div>"
+      "</div></div></div></div>"
     );
   }
 
