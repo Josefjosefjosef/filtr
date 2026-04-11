@@ -18220,14 +18220,40 @@ function buildVideoAsArticleCard(it) {
     youtube: { title: "YouTube", items: [{ name: "YouTube", url: "https://www.youtube.com/", desc: "Videa a streamy", external: true }] },
     naceneni: {
       title: "Nákup potravin online",
-      items: [
-        { name: "Rohlík.cz", url: "https://www.rohlik.cz", desc: "Online nákup potravin s dovozem", external: true },
-        { name: "Košík.cz", url: "https://www.kosik.cz", desc: "Online nákup potravin", external: true },
-        { name: "Tesco Online", url: "https://nakup.itesco.cz", desc: "Online nákup Tesco", external: true },
-        { name: "Albert Online", url: "https://www.albert.cz", desc: "Online nákup Albert", external: true },
-        { name: "Wolt Market", url: "https://market.wolt.com/cs/cze", desc: "Rychlé donášky jídla a zboží", external: true }
-      ],
-      toolsHtml: '<div class="iuQCard iu-nakup-online-card"><p class="iu-nakup-online-desc">Rychlé odkazy na online nákup potravin.</p><ul class="iu-nakup-online-links" aria-label="Odkazy na obchody"><li><a href="https://www.rohlik.cz/" target="_blank" rel="noopener noreferrer">Rohlík.cz</a></li><li><a href="https://www.kosik.cz/" target="_blank" rel="noopener noreferrer">Košík.cz</a></li><li><a href="https://nakup.itesco.cz/" target="_blank" rel="noopener noreferrer">Tesco Online</a></li><li><a href="https://www.albert.cz/" target="_blank" rel="noopener noreferrer">Albert Online</a></li><li><a href="https://market.wolt.com/cs/cze" target="_blank" rel="noopener noreferrer">Wolt Market</a></li></ul></div>'
+      groups: [
+        {
+          title: "Hlavní služby",
+          items: [
+            { name: "Rohlík.cz", url: "https://www.rohlik.cz/", desc: "Možnost doručení ještě v den objednání", accent: "rohlik", external: true },
+            { name: "Košík.cz", url: "https://www.kosik.cz/", desc: "Možnost doručení ještě v den objednání i plánovaných termínů", accent: "kosik", external: true },
+            { name: "Tesco Online", url: "https://nakup.itesco.cz/", desc: "Nákup potravin s doručením domů", accent: "tesco", external: true },
+            { name: "Albert Online", url: "https://www.albert.cz/", desc: "Nákup potravin s doručením domů", accent: "albert", external: true }
+          ]
+        },
+        {
+          title: "Rychlý rozvoz",
+          items: [
+            { name: "Wolt Market", url: "https://market.wolt.com/cs/cze", desc: "Rychlý nákup z obchodů s doručením domů", accent: "wolt", external: true },
+            { name: "foodora", url: "https://www.foodora.cz/", desc: "Rozvoz z obchodů a vlastního marketu", accent: "foodora", external: true },
+            { name: "Bolt Food", url: "https://bolt.eu/cs-cz/food/", desc: "Rozvoz z obchodů a restaurací", accent: "bolt", external: true }
+          ]
+        },
+        {
+          title: "Další možnosti",
+          items: [
+            { name: "Billa e-shop", url: "https://shop.billa.cz/", desc: "Nákup potravin s doručením domů", accent: "billa", external: true },
+            { name: "PENNY (přes partnery)", url: "https://www.penny.cz/", desc: "Možnost nákupu s doručením domů", accent: "penny", external: true }
+          ]
+        },
+        {
+          title: "Speciální potraviny",
+          items: [
+            { name: "Scuk.cz", url: "https://www.scuk.cz/", desc: "Farmářské a lokální potraviny s rozvozem", accent: "scuk", external: true },
+            { name: "Grizly.cz", url: "https://www.grizly.cz/", desc: "Ořechy, zdravá výživa a potraviny s doručením", accent: "grizly", external: true },
+            { name: "Aktin.cz", url: "https://www.aktin.cz/", desc: "Zdravá výživa a sportovní produkty s doručením", accent: "aktin", external: true }
+          ]
+        }
+      ]
     },
     convert: {
       title: "Převod na Word, PDF",
@@ -19809,6 +19835,84 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  /** P0: Nákup potravin online — true viewport overlay (all breakpoints), opaque, above other surfaces. */
+  function iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, on) {
+    try {
+      if (!quick) return;
+      if (!on) {
+        for (var ni = 0; ni < __iuMojeQuickFeedFsProps.length; ni++) {
+          try { quick.style.removeProperty(__iuMojeQuickFeedFsProps[ni]); } catch (_) {}
+        }
+        return;
+      }
+      quick.style.setProperty("position", "fixed", "important");
+      quick.style.setProperty("inset", "0", "important");
+      quick.style.setProperty("left", "0", "important");
+      quick.style.setProperty("top", "0", "important");
+      quick.style.setProperty("width", "100vw", "important");
+      quick.style.setProperty("height", "100dvh", "important");
+      quick.style.setProperty("max-width", "none", "important");
+      quick.style.setProperty("max-height", "none", "important");
+      quick.style.setProperty("margin", "0", "important");
+      quick.style.setProperty("z-index", "10170", "important");
+      quick.style.setProperty("overflow", "auto", "important");
+      quick.style.setProperty("overflow-x", "hidden", "important");
+      quick.style.setProperty("box-sizing", "border-box", "important");
+      quick.style.setProperty("background", "#eaf0f7", "important");
+      quick.style.setProperty("padding", "calc(env(safe-area-inset-top, 0px) + 8px) 8px 8px", "important");
+      quick.style.setProperty("display", "block", "important");
+    } catch (_) {}
+  }
+
+  function iuDockQuickFeedToBodyForced(quick) {
+    try {
+      if (!quick) return;
+      if (quick.parentNode === document.body) return;
+      __iuQuickFeedDock = { parent: quick.parentNode, next: quick.nextSibling };
+      document.body.appendChild(quick);
+      try { quick.setAttribute("data-iu-qf-docked", "1"); } catch (_) {}
+    } catch (_) {}
+  }
+
+  function iuRenderNakupOnlineQuickFeedHtml(data) {
+    const groups = (data && Array.isArray(data.groups)) ? data.groups : [];
+    const head =
+      '<div class="iuQHead">' +
+      '<div class="iuQTitle">' + iuQfEscape(data.title || "") + "</div>" +
+      '<div class="iuQHeadActions">' +
+      '<button class="iuQClose iu-overlayCloseBtn38" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button>' +
+      "</div></div>";
+    const sections = groups.map(function(g, gi) {
+      const gid = "iu-nakup-grp-" + gi;
+      const items = Array.isArray(g.items) ? g.items : [];
+      const cards = items.map(function(it) {
+        const url = iuQfEscape(it.url || "#");
+        const accent = iuQfEscape(it.accent || "neutral");
+        return (
+          '<div class="iu-nakup-online-card" data-iu-grocery-accent="' + accent + '" role="listitem">' +
+          '<div class="iu-nakup-online-cardInner">' +
+          "<strong class=\"iu-nakup-online-name\">" + iuQfEscape(it.name || "") + "</strong>" +
+          '<p class="iu-nakup-online-oneLiner">' + iuQfEscape(it.desc || "") + "</p>" +
+          '<a class="iuQBtn iu-nakup-online-cta" href="' + url + '" target="_blank" rel="noopener noreferrer">Otevřít</a>' +
+          "</div></div>"
+        );
+      }).join("");
+      return (
+        '<section class="iu-nakup-online-group" aria-labelledby="' + gid + '">' +
+        '<h3 class="iu-nakup-online-h3" id="' + gid + '">' + iuQfEscape(g.title || "") + "</h3>" +
+        '<div class="iu-nakup-online-grid" role="list">' + cards + "</div>" +
+        "</section>"
+      );
+    }).join("");
+    return (
+      head +
+      '<div class="iuQCard iu-nakup-online-outerCard">' +
+      '<div class="iu-nakup-online-feed" role="region" aria-label="' + iuQfEscape(data.title || "Nákup potravin online") + '">' +
+      sections +
+      "</div></div>"
+    );
+  }
+
   function iuShowQuickFeedCore(key){
     if (typeof window.__iuDebugRca === "undefined") window.__iuDebugRca = (typeof location !== "undefined" && location.search || "").indexOf("iuDebug=1") !== -1;
     if (window.__iuDebugRca) console.log("[iuShowQuickFeed] key=", key);
@@ -19872,6 +19976,13 @@ function buildVideoAsArticleCard(it) {
     quick.hidden = false;
     try {
       document.body.classList.add("iu-quickFeedOpen");
+      if (keyNorm === "naceneni") {
+        iuDockQuickFeedToBodyForced(quick);
+        iuSetViewportLock(true);
+        document.body.classList.add("iu-modal-open", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open");
+        try { quick.classList.add("iu-nakup-online-feed-root"); } catch (_) {}
+        try { quick.setAttribute("data-iu-qf-key", "naceneni"); } catch (_) {}
+      }
       if (isMobileOverlayScope) {
         iuSetViewportLock(true);
         document.body.classList.add("iu-modal-open", "iu-mobileGateToolsQuickOpen");
@@ -19964,6 +20075,7 @@ function buildVideoAsArticleCard(it) {
         preposlatBtn.addEventListener("click", iuForwardActionSameAsTranslator);
       }
     } else {
+      const isNaceneni = keyNorm === "naceneni";
       const isAi = (key || "").toLowerCase() === "ai";
       /* AI: keep legacy markup. Convert: separate wrapper — never put iuQClose on forward (it strips border and looks text-only). */
       const shareBtnHtml = isAi ? `<button type="button" class="iuAiShareBtn iuQClose" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button>` : "";
@@ -20022,8 +20134,13 @@ function buildVideoAsArticleCard(it) {
           </div>`;
         }).join("");
       };
-      const toolsBlock = (data.toolsHtml != null && data.toolsHtml !== "") ? data.toolsHtml : "";
+      const toolsBlock = isNaceneni ? "" : ((data.toolsHtml != null && data.toolsHtml !== "") ? data.toolsHtml : "");
       const doRender = (services) => {
+        if (isNaceneni) {
+          quick.innerHTML = iuRenderNakupOnlineQuickFeedHtml(data);
+          iuNakupCenyBootstrap(quick);
+          return;
+        }
         quick.innerHTML = `
           <div class="iuQHead">
             <div class="iuQTitle">${iuQfEscape(data.title)}</div>
@@ -20081,11 +20198,15 @@ function buildVideoAsArticleCard(it) {
           })
           .catch(() => {});
       } else {
-        doRender(data.items);
-        if (isConvert && typeof window.iuForwardActionSameAsTranslator === "function") {
-          const convertShareBtn = quick.querySelector(".iuAiShareBtn");
-          if (convertShareBtn) {
-            convertShareBtn.addEventListener("click", iuForwardActionSameAsTranslator);
+        if (isNaceneni) {
+          doRender();
+        } else {
+          doRender(data.items);
+          if (isConvert && typeof window.iuForwardActionSameAsTranslator === "function") {
+            const convertShareBtn = quick.querySelector(".iuAiShareBtn");
+            if (convertShareBtn) {
+              convertShareBtn.addEventListener("click", iuForwardActionSameAsTranslator);
+            }
           }
         }
       }
@@ -20095,6 +20216,9 @@ function buildVideoAsArticleCard(it) {
     try {
       if (keyNorm === "convert" && window.matchMedia && window.matchMedia("(max-width: 1023px)").matches) {
         iuApplyMojeQuickFeedFullscreenLayer(quick, true);
+      }
+      if (keyNorm === "naceneni") {
+        iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, true);
       }
     } catch (_) {}
     if (closeBtn) closeBtn.addEventListener("click", iuHideQuickFeed, { once: true });
@@ -20407,13 +20531,16 @@ function buildVideoAsArticleCard(it) {
     if (stage) stage.setAttribute("data-iu-view", "articles");
     if (quick) {
       try { iuApplyMojeQuickFeedFullscreenLayer(quick, false); } catch (_) {}
+      try { iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, false); } catch (_) {}
+      try { quick.classList.remove("iu-nakup-online-feed-root"); } catch (_) {}
+      try { quick.removeAttribute("data-iu-qf-key"); } catch (_) {}
       quick.hidden = true;
       iuUndockQuickFeedFromBody(quick);
       quick.innerHTML = "";
     }
     try {
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-ai-narrow-fullscreen");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-ai-narrow-fullscreen");
     } catch (_) {}
   }
 
@@ -20558,7 +20685,7 @@ function buildVideoAsArticleCard(it) {
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-ai-narrow-fullscreen");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-ai-narrow-fullscreen");
     } catch (_) {}
   }
 
