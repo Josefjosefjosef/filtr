@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-12T20:29:34.868657Z",
+  "ingestedAt": "2026-04-12T20:45:02.720979Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Těžký večer v Průhonicích: Fiala po pádu Orbána zesměšňuje Babiše videem",
+      "url": "https://ekonomickydenik.cz/tezky-vecer-v-pruhonicich-fiala-orban-babis/",
+      "dt": "2026-04-12T20:34:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiše",
+        "fiala",
+        "orbána",
+        "průhonicích",
+        "pádu",
+        "těžký",
+        "večer",
+        "videem",
+        "zesměšňuje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -736,31 +762,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Železnice jde naproti byznysu. Uhlí mají nahradit e-shopy",
-      "url": "https://ekonomickydenik.cz/sprava-zeleznic-dopravci-infrastruktura/",
-      "dt": "2026-04-10T10:38:50Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "byznysu",
-        "jde",
-        "mají",
-        "nahradit",
-        "naproti",
-        "shopy",
-        "uhlí",
-        "železnice"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -771,7 +772,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73680,
+      "bytes": 73830,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -808,11 +809,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T19:41:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T20:34:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
-          "zpravy": 3,
+          "finance": 27,
+          "zpravy": 2,
           "cestovani": 1
         },
         "drop_counts": {
@@ -825,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Těžký večer v Průhonicích: Fiala po pádu Orbána zesměšňuje Babiše videem",
+            "publishedAt": "2026-04-12T20:34:00Z"
+          },
           {
             "title": "Orbán uznal porážku. Příštímu premiérovi Magyarovi gratuloval k vítězství",
             "publishedAt": "2026-04-12T19:41:27Z"
@@ -852,10 +857,6 @@
           {
             "title": "Trump chce námořní blokádu. Mírové rozhovory s Íránem skončily",
             "publishedAt": "2026-04-12T09:31:06Z"
-          },
-          {
-            "title": "Narazí vyšší rodičovská? Schillerová víc peněz nedá, musí se šetřit",
-            "publishedAt": "2026-04-12T07:42:44Z"
           }
         ]
       }

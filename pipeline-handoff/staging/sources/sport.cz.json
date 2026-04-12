@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-12T20:29:34.868657Z",
+  "ingestedAt": "2026-04-12T20:45:02.720979Z",
   "items": [
     {
       "section": "sport",
@@ -23,6 +23,29 @@
         "reprezentace",
         "sní",
         "viděl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Olomouc po prohře v Pardubicích odvolala trenéra Janotku!",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-olomouc-po-prohre-v-pardubicich-odvolala-trenera-janotku-5436352",
+      "dt": "2026-04-12T20:35:34Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "janotku",
+        "odvolala",
+        "olomouc",
+        "pardubicích",
+        "prohře",
+        "trenéra"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -768,29 +791,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Haraslín zařídil výhru Letenských v Teplicích",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-haraslin-zaridil-vyhru-letenskych-v-teplicich-5436209",
-      "dt": "2026-04-12T15:34:04Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "haraslín",
-        "letenských",
-        "sestřih",
-        "teplicích",
-        "výhru",
-        "zařídil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46642,
+      "bytes": 45885,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T19:54:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T20:35:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,6 +856,10 @@
           {
             "title": "Plzeňské eso sní o MS. Po návratu z reprezentace jsem viděl jiného hráče, chválí Hyský",
             "publishedAt": "2026-04-12T19:39:53Z"
+          },
+          {
+            "title": "Olomouc po prohře v Pardubicích odvolala trenéra Janotku!",
+            "publishedAt": "2026-04-12T20:35:34Z"
           },
           {
             "title": "Další šílený exces? Chorý plivnul na bývalého spoluhráče a šel pod sprchy",
@@ -880,10 +884,6 @@
           {
             "title": "Juříčková sedmým místem na ME ve skocích na trampolíně vyrovnala svou matku",
             "publishedAt": "2026-04-12T19:22:23Z"
-          },
-          {
-            "title": "Basketbalistky USK Praha jsou opět ve finále, budou hrát o 16. titul v řadě",
-            "publishedAt": "2026-04-12T11:00:16Z"
           }
         ]
       }
