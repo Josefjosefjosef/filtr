@@ -1,26 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-12T19:14:49.875079Z",
+  "ingestedAt": "2026-04-12T19:32:39.720786Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Volby v Maďarsku ONLINE: Opoziční Tisza atakuje ústavní většinu, sčítání pokračuje",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/volby-v-madarsku-2026-vysledky-viktor-orban-peter-magyar-fidesz-tisza.A260412_172042_zahranicni_dtt",
-      "dt": "2026-04-12T19:08:00Z",
+      "title": "Bude mít Magyar volné ruce? Co znamená ústavní většina v maďarském parlamentu",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/bude-mit-magyar-volne-ruce-co-znamena-ustavni-vetsina-v-madarskem-parlamentu.A260412_210537_zahranicni_skr",
+      "dt": "2026-04-12T19:21:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "atakuje",
+        "magyar",
+        "maďarském",
+        "mít",
+        "parlamentu",
+        "ruce",
+        "volné",
+        "většina",
+        "znamená",
+        "ústavní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Volby v Maďarsku ONLINE: Opoziční Tisza získá ústavní většinu, naznačují výsledky",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/volby-v-madarsku-2026-vysledky-viktor-orban-peter-magyar-fidesz-tisza.A260412_172042_zahranicni_dtt",
+      "dt": "2026-04-12T19:17:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
         "maďarsku",
+        "naznačují",
         "online",
         "opoziční",
-        "pokračuje",
-        "sčítání",
         "tisza",
         "volby",
+        "výsledky",
         "většinu",
+        "získá",
         "ústavní"
       ],
       "feedCategory": "zpravy",
@@ -756,31 +782,6 @@
         "tisících",
         "ukrajina",
         "velikonočního"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Koukněte na ty blbečky, jak se radují, smál se Petr Fiala s Andělem v náručí",
-      "url": "https://www.idnes.cz/kultura/hudba/andele-ceny-2025-mnaga-a-zdorp-petr-fiala.A260412_104042_hudba_jgo",
-      "dt": "2026-04-12T11:05:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "andělem",
-        "blbečky",
-        "fiala",
-        "koukněte",
-        "náručí",
-        "petr",
-        "radují",
-        "smál"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1577,7 +1578,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49505,
+      "bytes": 49214,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1614,12 +1615,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T19:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T19:21:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "zpravy": 26,
           "finance": 3,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1632,8 +1633,12 @@
         },
         "sample_titles": [
           {
-            "title": "Volby v Maďarsku ONLINE: Opoziční Tisza atakuje ústavní většinu, sčítání pokračuje",
-            "publishedAt": "2026-04-12T19:08:00Z"
+            "title": "Bude mít Magyar volné ruce? Co znamená ústavní většina v maďarském parlamentu",
+            "publishedAt": "2026-04-12T19:21:00Z"
+          },
+          {
+            "title": "Volby v Maďarsku ONLINE: Opoziční Tisza získá ústavní většinu, naznačují výsledky",
+            "publishedAt": "2026-04-12T19:17:00Z"
           },
           {
             "title": "Sledujte výsledky maďarských voleb ONLINE: Data a interaktivní grafika",
@@ -1658,10 +1663,6 @@
           {
             "title": "Na Blanensku hořely necelé čtyři hektary lesa, situaci komplikoval nedostupný terén",
             "publishedAt": "2026-04-12T17:46:56Z"
-          },
-          {
-            "title": "Děti s Downovým syndromem milují karate i společnost. Pomoci jim může sbírka",
-            "publishedAt": "2026-04-12T17:17:00Z"
           }
         ]
       }
