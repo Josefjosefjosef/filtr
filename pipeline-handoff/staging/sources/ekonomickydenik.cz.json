@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-12T19:32:39.720786Z",
+  "ingestedAt": "2026-04-12T19:50:08.704139Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Orbán uznal porážku. Příštímu premiérovi Magyarovi gratuloval k vítězství",
+      "url": "https://ekonomickydenik.cz/orban-uznal-porazku-magyarovi-gratuloval/",
+      "dt": "2026-04-12T19:41:27Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "gratuloval",
+        "magyarovi",
+        "orbán",
+        "porážku",
+        "premiérovi",
+        "příštímu",
+        "uznal",
+        "vítězství"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -736,29 +761,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Práce je nejvíc v průmyslu a na stavbách. Nezaměstnanost klesla",
-      "url": "https://ekonomickydenik.cz/prace-je-nejvic-v-prumyslu-a-na-stavbach-nezamestnanost-klesla/",
-      "dt": "2026-04-10T09:43:44Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "klesla",
-        "nejvíc",
-        "nezaměstnanost",
-        "práce",
-        "průmyslu",
-        "stavbách"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -769,7 +771,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73608,
+      "bytes": 73680,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -806,7 +808,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T17:55:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T19:41:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -823,6 +825,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Orbán uznal porážku. Příštímu premiérovi Magyarovi gratuloval k vítězství",
+            "publishedAt": "2026-04-12T19:41:27Z"
+          },
           {
             "title": "Estonci našli na pláži kus dronu. Zřejmě ukrajinského",
             "publishedAt": "2026-04-12T17:55:12Z"
@@ -850,10 +856,6 @@
           {
             "title": "Narazí vyšší rodičovská? Schillerová víc peněz nedá, musí se šetřit",
             "publishedAt": "2026-04-12T07:42:44Z"
-          },
-          {
-            "title": "Motoristé se propadají a Starostové nejsilnější z opozice. Další trendy ukazuje průzkum",
-            "publishedAt": "2026-04-12T06:52:20Z"
           }
         ]
       }
