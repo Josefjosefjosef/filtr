@@ -12515,10 +12515,12 @@ body.iu-quickFeedOpen{
   margin: 2px 0 5px !important;
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-premiumShell{
-  padding: 10px 32px 22px;
+  padding: 10px 28px 18px;
+  width: min(100%, 1080px);
+  max-width: 1080px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iuQHead{
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-fill{
   flex: 1 1 auto;
@@ -12540,7 +12542,7 @@ body.iu-quickFeedOpen{
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-outerCard{
   margin-top: 2px;
-  padding: 20px 22px 24px;
+  padding: 16px 18px 18px;
   border-radius: 18px;
   box-shadow: 0 12px 40px rgba(15, 23, 42, 0.09);
 }
@@ -12553,7 +12555,33 @@ body.iu-quickFeedOpen{
   overflow: visible;
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-feed{
-  gap: 24px;
+  gap: 0;
+}
+/* 3 sekce: mobil/tablet pod sebou; desktop ≥1024px (.iu-nakup-online--desktop-fit) dvě logické kolony */
+.iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-twoColShell{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+.iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-desktopCol{
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-desktopCol--left{
+  gap: 12px;
+}
+.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-twoColShell{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 28px;
+  row-gap: 0;
+  align-items: start;
+}
+.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-desktopCol--left{
+  gap: 20px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-group{
   margin: 0;
@@ -12571,7 +12599,7 @@ body.iu-quickFeedOpen{
   margin-top: 1px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-h3{
-  margin: 0 0 11px;
+  margin: 0 0 9px;
   font-size: 0.78rem;
   letter-spacing: 0.04em;
 }
@@ -12584,7 +12612,7 @@ body.iu-quickFeedOpen{
   list-style: none;
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-grid{
-  gap: 11px;
+  gap: 9px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-card{
   border-radius: 12px;
@@ -12607,10 +12635,12 @@ body.iu-quickFeedOpen{
   box-sizing: border-box;
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-cardInner{
-  min-height: 52px;
-  padding: 12px 16px 12px 18px;
+  min-height: 48px;
+  padding: 10px 14px 10px 16px;
   border-radius: 12px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  justify-content: flex-start;
+  gap: 8px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-card[data-iu-grocery-accent="rohlik"]{ --iu-grocery-accent: #2e7d32; }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-card[data-iu-grocery-accent="kosik"]{ --iu-grocery-accent: #ef6c00; }
@@ -12648,9 +12678,10 @@ body.iu-quickFeedOpen{
   -webkit-tap-highlight-color: transparent;
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-cta{
-  padding: 9px 16px;
+  padding: 8px 14px;
   font-size: 13px;
   border-radius: 12px;
+  margin-left: auto;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-cta:hover{
   background: #43a047;
