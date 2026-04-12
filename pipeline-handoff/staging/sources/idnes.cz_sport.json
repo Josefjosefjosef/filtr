@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-12T16:14:48.501495Z",
+  "ingestedAt": "2026-04-12T16:29:39.455556Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Střídání na tenisovém trůnu. Sinner porazil Alcaraze v Monte Carlu a bude jedničkou",
+      "url": "https://www.idnes.cz/sport/tenis/jannik-sinner-carlos-alcaraz-finale-monte-carlo-masters.A260412_175919_tenis_ivt",
+      "dt": "2026-04-12T16:08:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "alcaraze",
+        "carlu",
+        "jedničkou",
+        "monte",
+        "porazil",
+        "sinner",
+        "střídání",
+        "tenisovém",
+        "trůnu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,32 +784,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hořké KO. Procházka druhý titul v UFC nezískal. Přitom soupeř byl zraněný",
-      "url": "https://www.idnes.cz/sport/mma/prochazka-prohral-v-ufc-s-ulbergem-zapas-o-titul.A260411_130838_sport-mma_malu",
-      "dt": "2026-04-12T05:42:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "druhý",
-        "hořké",
-        "nezískal",
-        "procházka",
-        "přitom",
-        "soupeř",
-        "titul",
-        "ufc",
-        "zraněný"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44854,
+      "bytes": 44600,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T15:54:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T16:08:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Střídání na tenisovém trůnu. Sinner porazil Alcaraze v Monte Carlu a bude jedničkou",
+            "publishedAt": "2026-04-12T16:08:00Z"
+          },
           {
             "title": "Doba je nejistá, ale my řešíme jen fotbal, řekl Jarolím. Šiguta podpořil",
             "publishedAt": "2026-04-12T15:54:00Z"
@@ -873,10 +877,6 @@
           {
             "title": "POHLED: Žalování, zákaz, tresty. Vyhlížená série se kazí, vinu nese i extraliga",
             "publishedAt": "2026-04-12T15:30:00Z"
-          },
-          {
-            "title": "Teplice - Sparta 0:1, hosté zvládli tlak v závěru, rozhodl kapitán Haraslín",
-            "publishedAt": "2026-04-12T15:26:00Z"
           }
         ]
       }
