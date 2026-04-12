@@ -16095,7 +16095,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuSilverCardActionHoverBg: rgba(15, 35, 55, 0.06);
   --iuSilverCardActionActiveBg: rgba(15, 35, 55, 0.09);
   --iuSilverCardActionFocusOutline: rgba(15, 35, 55, 0.28);
-  /* Premium ambient: jeden host = multi-layer background na stacku (+ inherit na desktop shell); tokeny času: třída / data-iu-silver-welcome-variant */
   --iu-stack-ambient-bg: none;
   --iuAmbientSeparator: rgba(15, 35, 55, 0.1);
   --iuAmbientSeparatorOpacity: 0.88;
@@ -16122,7 +16121,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .silver-welcome-stack--morning{
-  /* Depth: vzdušná mlha + sunrise glow mimo levé textové těžiště (horní pravá část); bez doslovného objektu */
   --iu-stack-ambient-bg:
     linear-gradient(180deg, rgba(255, 252, 248, 0.42) 0%, rgba(255, 244, 232, 0.06) 34%, rgba(255, 214, 170, 0.12) 100%),
     linear-gradient(115deg, transparent 0%, rgba(255, 200, 140, 0.09) 48%, transparent 72%),
@@ -16180,7 +16178,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .silver-welcome-stack--evening{
-  /* Noční hloubka + měkký luminance halo (ne kreslený měsíc); tři mikroskopické body, bez twinkle */
   --iu-stack-ambient-bg:
     radial-gradient(ellipse 100% 58% at 90% 10%, rgba(210, 228, 250, 0.26) 0%, rgba(210, 228, 250, 0.06) 32%, transparent 46%),
     radial-gradient(circle 1px at 17% 31%, rgba(255, 255, 255, 0.13) 50%, transparent 51%),
@@ -16204,7 +16201,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuNamedayFemaleAccent: color-mix(in srgb, #fbcfe8 86%, var(--iuTasksAccent) 14%);
 }
 
-/* Ambient je v multi-layer background na .silver-welcome-stack--* (spolehlivý paint na mobilu). */
 .silver-welcome-stack > *{
   position: relative;
   z-index: 0;
@@ -16244,7 +16240,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
-/* P0 Mobile/tablet: inner scroll probe spacer — outer tall height z flex + --iu-silver-slot-max-h (app.js) */
 @media (max-width: 900px){
   .iuSilverTallScrollLayoutSpacer{
     height: 72px !important;
@@ -16277,7 +16272,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
-/* Kalendář není poslední segmentem horního stacku — pod ním je Úkoly, pak Silver shell. */
 #iuSilverCalendarSummaryCard.silver-calendar-summary-card{
   border-radius: 0;
 }
@@ -16286,7 +16280,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   border-radius: 0;
 }
 
-/* P0: tall scroll shell (mezi Počasí a Kalendář) — chroma frame reuse stejné tokeny jako stack / box1 */
 .iuSilverTallScrollSection{
   width: 100%;
   max-width: 100%;
@@ -16299,7 +16292,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
-/* P0 tall window: clip horizontal overflow; symmetric insets via #iuSilverTallScrollViewport padding + card margin-inline 0 */
 #iuSilverTallScrollSection{
   overflow-x: hidden;
 }
@@ -16358,13 +16350,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   border-radius: 8px;
 }
 
-/* P0: pixel-equal horizontal insets (no scrollbar-gutter workaround) */
 #iuSilverTallScrollViewport{
   padding-left: 8px;
   padding-right: 8px;
 }
 
-/* P0: mezery mezi řádky tall window — vnější margin karet + mount; mount min-height 152px snižuje slack oproti 168px; bez zásahu do .iuNewsPreviewBody */
 #iuSilverTallScrollViewport [class$="PreviewCardMount"]{
   min-height:152px;
   width:100%;
@@ -16439,7 +16429,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   color: rgba(30, 40, 55, 0.55);
 }
 
-/* P0: prázdný rezervovaný prostor — vynutí scroll uvnitř viewportu (shell, ne produktový obsah) */
 .iuSilverTallScrollLayoutSpacer{
   width: 100%;
   height: 280px;
@@ -16997,8 +16986,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .iuSilverWelcomeHeadline{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:6px;min-height:calc(1.15em + 1px);min-width:0;width:100%;white-space:nowrap;font-weight:600;line-height:1.15;letter-spacing:-0.01em;font-size:clamp(16px,.55vw + 14px,20px);color:rgba(15,30,45,.98)}
 .iuSilverWelcomeGreet,.iuSilverWelcomeUser{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .iuSilverWelcomeHeadline[data-iu-user-address="capture"] .iuSilverWelcomeGreet{flex:0 1 auto}
-.iuSilverWelcomeAddressSlot{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;min-width:0}
-.iuSilverWelcomeAddressSlot:empty{display:none}
+.iuSilverWelcomeAddressSlot{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;min-width:0;min-height:28px;align-self:center}
+.iu-address-slot-empty{visibility:hidden;pointer-events:none}
 input.iuSilverWelcomeAddressInput,button.iuSilverWelcomeAddressSubmit{box-sizing:border-box;margin:0}
 input.iuSilverWelcomeAddressInput{padding:2px 8px;width:auto;min-width:37ch;max-width:min(100%,42ch);font-family:inherit;font-weight:500;font-size:16px;line-height:1.15;border-radius:8px;border:1px solid #0002;background:#fff;color:#0f1e2d;outline:0;white-space:nowrap}
 .silver-welcome-stack--evening input.iuSilverWelcomeAddressInput{border-color:#0003}
