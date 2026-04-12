@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-12T16:59:24.169935Z",
+  "ingestedAt": "2026-04-12T17:14:58.437457Z",
   "items": [
     {
       "section": "aktualne",
@@ -349,18 +349,18 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Maďaři volí parlament. Účast už překonala rekord",
+      "title": "Maďaři v rekordní účasti hlasovali v parlamentních volbách",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-madarsku-se-otevrely-volebni-mistnosti-372287",
       "dt": "2026-04-12T04:00:00Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
+        "hlasovali",
         "maďaři",
-        "parlament",
-        "překonala",
-        "rekord",
-        "volí",
-        "účast"
+        "parlamentních",
+        "rekordní",
+        "volbách",
+        "účasti"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -742,6 +742,29 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Betis už je sedm zápasů bez výhry, v Pamploně remizoval 1:1",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/la-liga/betis-uz-je-sedm-zapasu-bez-vyhry-v-pamplone-remizoval-11-156255",
+      "dt": "2026-04-12T16:59:59Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "betis",
+        "pamploně",
+        "remizoval",
+        "sedm",
+        "výhry",
+        "zápasů"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Sinner porazil v Monte Carlu Alcaraze a bude znovu světovou jedničkou",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/sinner-porazil-v-monte-carlu-alcaraze-a-bude-znovu-svetovou-jednickou-156254",
       "dt": "2026-04-12T16:31:25Z",
@@ -890,7 +913,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Finále play-off první hokejové ligy Berani Zlín – Dukla Jihlava 1:1",
+      "title": "Finále play-off první hokejové ligy Berani Zlín – Dukla Jihlava 1:2",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/finale-play-off-prvni-hokejove-ligy-berani-zlin-dukla-jihlava-156248",
       "dt": "2026-04-12T14:20:00Z",
       "media_raw": "ČT sport",
@@ -997,18 +1020,17 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Žabiny deklasovaly Ostravu podruhé za sebou a v sérii vedou 2:0",
+      "title": "Žabiny i podruhé deklasovaly Ostravu, USK je ve finále",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/zabiny-deklasovaly-ostravu-podruhe-za-sebou-a-v-serii-vedou-20-156244",
       "dt": "2026-04-12T11:20:41Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
         "deklasovaly",
+        "finále",
         "ostravu",
         "podruhé",
-        "sebou",
-        "sérii",
-        "vedou",
+        "usk",
         "žabiny"
       ],
       "feedCategory": "sport",
@@ -1466,30 +1488,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sinner s Alcarazem se v Monte Carlu utkají o tenisový trůn",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/sinner-opet-vyradil-zvereva-a-je-v-monte-carlu-ve-finale-156223",
-      "dt": "2026-04-11T13:54:36Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "alcarazem",
-        "carlu",
-        "monte",
-        "sinner",
-        "tenisový",
-        "trůn",
-        "utkají"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1500,7 +1498,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41794,
+      "bytes": 41922,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1619,7 +1617,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39219,
+      "bytes": 39016,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1656,7 +1654,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T16:31:25Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T16:59:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1671,6 +1669,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Betis už je sedm zápasů bez výhry, v Pamploně remizoval 1:1",
+            "publishedAt": "2026-04-12T16:59:59Z"
+          },
           {
             "title": "Sinner porazil v Monte Carlu Alcaraze a bude znovu světovou jedničkou",
             "publishedAt": "2026-04-12T16:31:25Z"
@@ -1696,12 +1698,8 @@
             "publishedAt": "2026-04-12T14:25:34Z"
           },
           {
-            "title": "Finále play-off první hokejové ligy Berani Zlín – Dukla Jihlava 1:1",
+            "title": "Finále play-off první hokejové ligy Berani Zlín – Dukla Jihlava 1:2",
             "publishedAt": "2026-04-12T14:20:00Z"
-          },
-          {
-            "title": "Karviná v lize poprvé na jaře vyhrála, Sparta uspěla v Teplicích díky Haraslínovi",
-            "publishedAt": "2026-04-12T13:43:25Z"
           }
         ]
       }
@@ -1713,7 +1711,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76825,
+      "bytes": 76880,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

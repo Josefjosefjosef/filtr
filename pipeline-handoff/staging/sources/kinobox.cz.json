@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-12T16:59:24.169935Z",
+  "ingestedAt": "2026-04-12T17:14:58.437457Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Přednosta stanice slaví 85 let. Natáčení navštívilo gestapo, režiséra zlynčoval dav",
+      "url": "https://www.kinobox.cz/clanky/filmy/52570-prednosta-stanice-s-burianem-slavi-85-let-nataceni-navstivilo-gestapo-rezisera-zlyncoval-dav",
+      "dt": "2026-04-12T17:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "dav",
+        "gestapo",
+        "let",
+        "natáčení",
+        "navštívilo",
+        "přednosta",
+        "režiséra",
+        "slaví",
+        "stanice",
+        "zlynčoval"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -526,33 +553,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "27 seriálových tipů na prima+ v dubnu 2026. Služba je rájem detektivek i českých hitů",
-      "url": "https://www.kinobox.cz/clanky/tema/48390-nejlepsi-serialy-na-prima-plus-prave-ted",
-      "dt": "2026-04-10T06:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "2026",
-        "detektivek",
-        "dubnu",
-        "hitů",
-        "prima",
-        "rájem",
-        "seriálových",
-        "služba",
-        "tipů",
-        "českých"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -563,7 +563,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28945,
+      "bytes": 28855,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -600,7 +600,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-12T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T17:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -615,6 +615,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přednosta stanice slaví 85 let. Natáčení navštívilo gestapo, režiséra zlynčoval dav",
+            "publishedAt": "2026-04-12T17:00:00Z"
+          },
           {
             "title": "Nejděsivější říkanky, jaké jste kdy slyšeli. Druhý Kaštánek útočí se znepokojivým trailerem",
             "publishedAt": "2026-04-12T14:00:00Z"
@@ -642,10 +646,6 @@
           {
             "title": "„Anál nathrach, orth’ bháis's bethad…“ Excalibur je po 45 letech nejstylovějším mýtem kinematografie",
             "publishedAt": "2026-04-11T14:00:00Z"
-          },
-          {
-            "title": "Kvíz: Máte rádi nostalgii? Ověřte si, jak dobře znáte slavné pořady a jejich moderátory",
-            "publishedAt": "2026-04-11T12:00:00Z"
           }
         ]
       }
