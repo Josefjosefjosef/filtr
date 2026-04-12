@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-04-12T22:10:31.569527Z",
+  "ingestedAt": "2026-04-12T22:30:11.002994Z",
   "items": [
     {
       "section": "aktualne",
@@ -20,33 +20,6 @@
         "stal",
         "systému",
         "vítězí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Magyar: Maďaři řekli jasné ano Evropě. Chce obnovit spolupráci ve Visegrádu",
-      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-stredni-evropa-volby-madarsko-2026-online-303414",
-      "dt": "2026-04-12T03:00:00Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy / Domácí",
-      "tokens": [
-        "ano",
-        "chce",
-        "evropě",
-        "jasné",
-        "magyar",
-        "maďaři",
-        "obnovit",
-        "spolupráci",
-        "visegrádu",
-        "řekli"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -763,6 +736,33 @@
         "stal",
         "systému",
         "vítězí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rubric",
+      "feedId": "fin_sz_byznys",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Magyar: Maďaři řekli jasné ano Evropě. Chce obnovit spolupráci ve Visegrádu",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-stredni-evropa-volby-madarsko-2026-online-303414",
+      "dt": "2026-04-12T03:00:00Z",
+      "media_raw": "Seznam Zprávy / Byznys",
+      "media_norm": "Seznam Zprávy / Byznys",
+      "tokens": [
+        "ano",
+        "chce",
+        "evropě",
+        "jasné",
+        "magyar",
+        "maďaři",
+        "obnovit",
+        "spolupráci",
+        "visegrádu",
+        "řekli"
       ],
       "feedCategory": "finance",
       "feedType": "rubric",
@@ -2187,13 +2187,13 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 34690,
+      "bytes": 33633,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 30,
-      "itemsKept": 30,
-      "accepted": 30,
+      "itemsParsed": 29,
+      "itemsKept": 29,
+      "accepted": 29,
       "status": "OK",
       "bozo_but_used": false,
       "registryId": "zpr_seznam_domaci",
@@ -2223,110 +2223,13 @@
         }
       ],
       "iuTelemetry": {
-        "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T21:25:00Z",
-        "valid_publishedAt_count": 30,
-        "mapped_to_section_count": {
-          "zpravy": 25,
-          "sport": 2,
-          "finance": 3
-        },
-        "drop_counts": {
-          "missing_publishedAt": 0,
-          "invalid_publishedAt": 0,
-          "parser_drop": 0,
-          "section_remap": 0,
-          "release_gate": 0,
-          "dedupe": 0,
-          "other": 0
-        },
-        "sample_titles": [
-          {
-            "title": "Magyar vítězí: Z Orbánova spojence se stal ničitel jeho systému",
-            "publishedAt": "2026-04-12T19:30:00Z"
-          },
-          {
-            "title": "Magyar: Maďaři řekli jasné ano Evropě. Chce obnovit spolupráci ve Visegrádu",
-            "publishedAt": "2026-04-12T03:00:00Z"
-          },
-          {
-            "title": "Fotky: Jásot u Magyara, slzy a smutek u Orbána",
-            "publishedAt": "2026-04-12T20:26:25Z"
-          },
-          {
-            "title": "Hodně prohrál Orbán, trochu Trump, Babiš a další",
-            "publishedAt": "2026-04-12T21:25:00Z"
-          },
-          {
-            "title": "Plivl na něj Chorý schválně? Pohled do duše fotbalového raubíře",
-            "publishedAt": "2026-04-12T21:00:00Z"
-          },
-          {
-            "title": "Kdo už blahopřál Magyarovi k vítězství",
-            "publishedAt": "2026-04-12T20:52:51Z"
-          },
-          {
-            "title": "Orbánův „bolestivý“ pád. Zhroutí se i systém, který 16 let budoval?",
-            "publishedAt": "2026-04-12T19:55:00Z"
-          },
-          {
-            "title": "Uvázlá velryba dýchá stále slaběji",
-            "publishedAt": "2026-04-12T19:50:00Z"
-          }
-        ]
-      }
-    },
-    {
-      "feed": "https://www.seznamzpravy.cz/rss/byznys",
-      "source": "Seznam Zprávy / Byznys",
-      "topic": "finance",
-      "httpStatus": 200,
-      "contentType": "application/rss+xml; charset=utf-8",
-      "finalUrl": "https://www.seznamzpravy.cz/rss/byznys",
-      "bytes": 33633,
-      "reason": "",
-      "bozo": false,
-      "bozoException": "",
-      "itemsParsed": 29,
-      "itemsKept": 29,
-      "accepted": 29,
-      "status": "OK",
-      "bozo_but_used": false,
-      "registryId": "fin_sz_byznys",
-      "registryGroup": [
-        {
-          "id": "fin_sz_byznys",
-          "label": "Seznam Zprávy / Byznys",
-          "domain": "seznamzpravy.cz",
-          "entry_type": "rubric",
-          "section_primary": "finance",
-          "section_secondary": [],
-          "interval_min": 25,
-          "display_weight": 1.15,
-          "active": true,
-          "blocked": false,
-          "official_only": true,
-          "fetch_mode": "rss_or_official_rubric_only",
-          "per_domain_cooldown_min": 20,
-          "slot_offset_min": 6,
-          "max_items_per_fetch": 40,
-          "last_fetch_at": null,
-          "last_success_at": null,
-          "error_streak": 0,
-          "backoff_multiplier": 1.0,
-          "feed_url": "https://www.seznamzpravy.cz/rss/byznys",
-          "topic": "finance"
-        }
-      ],
-      "iuTelemetry": {
         "raw_feed_new_item_count": 29,
         "raw_feed_latest_publishedAt": "2026-04-12T21:25:00Z",
         "valid_publishedAt_count": 29,
         "mapped_to_section_count": {
-          "zpravy": 19,
+          "zpravy": 24,
           "sport": 2,
-          "finance": 7,
-          "zdravi": 1
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2369,6 +2272,103 @@
           {
             "title": "Imitátor, nebo exprezidentova dcera. V Peru začaly prezidentské volby",
             "publishedAt": "2026-04-12T18:40:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "feed": "https://www.seznamzpravy.cz/rss/byznys",
+      "source": "Seznam Zprávy / Byznys",
+      "topic": "finance",
+      "httpStatus": 200,
+      "contentType": "application/rss+xml; charset=utf-8",
+      "finalUrl": "https://www.seznamzpravy.cz/rss/byznys",
+      "bytes": 34690,
+      "reason": "",
+      "bozo": false,
+      "bozoException": "",
+      "itemsParsed": 30,
+      "itemsKept": 30,
+      "accepted": 30,
+      "status": "OK",
+      "bozo_but_used": false,
+      "registryId": "fin_sz_byznys",
+      "registryGroup": [
+        {
+          "id": "fin_sz_byznys",
+          "label": "Seznam Zprávy / Byznys",
+          "domain": "seznamzpravy.cz",
+          "entry_type": "rubric",
+          "section_primary": "finance",
+          "section_secondary": [],
+          "interval_min": 25,
+          "display_weight": 1.15,
+          "active": true,
+          "blocked": false,
+          "official_only": true,
+          "fetch_mode": "rss_or_official_rubric_only",
+          "per_domain_cooldown_min": 20,
+          "slot_offset_min": 6,
+          "max_items_per_fetch": 40,
+          "last_fetch_at": null,
+          "last_success_at": null,
+          "error_streak": 0,
+          "backoff_multiplier": 1.0,
+          "feed_url": "https://www.seznamzpravy.cz/rss/byznys",
+          "topic": "finance"
+        }
+      ],
+      "iuTelemetry": {
+        "raw_feed_new_item_count": 30,
+        "raw_feed_latest_publishedAt": "2026-04-12T21:25:00Z",
+        "valid_publishedAt_count": 30,
+        "mapped_to_section_count": {
+          "zpravy": 20,
+          "sport": 2,
+          "finance": 7,
+          "zdravi": 1
+        },
+        "drop_counts": {
+          "missing_publishedAt": 0,
+          "invalid_publishedAt": 0,
+          "parser_drop": 0,
+          "section_remap": 0,
+          "release_gate": 0,
+          "dedupe": 0,
+          "other": 0
+        },
+        "sample_titles": [
+          {
+            "title": "Magyar vítězí: Z Orbánova spojence se stal ničitel jeho systému",
+            "publishedAt": "2026-04-12T19:30:00Z"
+          },
+          {
+            "title": "Magyar: Maďaři řekli jasné ano Evropě. Chce obnovit spolupráci ve Visegrádu",
+            "publishedAt": "2026-04-12T03:00:00Z"
+          },
+          {
+            "title": "Fotky: Jásot u Magyara, slzy a smutek u Orbána",
+            "publishedAt": "2026-04-12T20:26:25Z"
+          },
+          {
+            "title": "Hodně prohrál Orbán, trochu Trump, Babiš a další",
+            "publishedAt": "2026-04-12T21:25:00Z"
+          },
+          {
+            "title": "Plivl na něj Chorý schválně? Pohled do duše fotbalového raubíře",
+            "publishedAt": "2026-04-12T21:00:00Z"
+          },
+          {
+            "title": "Kdo už blahopřál Magyarovi k vítězství",
+            "publishedAt": "2026-04-12T20:52:51Z"
+          },
+          {
+            "title": "Orbánův „bolestivý“ pád. Zhroutí se i systém, který 16 let budoval?",
+            "publishedAt": "2026-04-12T19:55:00Z"
+          },
+          {
+            "title": "Uvázlá velryba dýchá stále slaběji",
+            "publishedAt": "2026-04-12T19:50:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-12T22:10:31.569527Z",
+  "ingestedAt": "2026-04-12T22:30:11.002994Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Úkoly a letadla podniku ČSA Agrolet. Nejen u Galanty to bylo jako na frontě",
+      "url": "https://www.idnes.cz/technet/technika/letecke-praskovani-odstepny-zavod-csa-agrolet.A231226_001133_tec_technika_erp",
+      "dt": "2026-04-12T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "agrolet",
+        "frontě",
+        "galanty",
+        "jako",
+        "letadla",
+        "nejen",
+        "podniku",
+        "úkoly",
+        "čsa"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -749,30 +775,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Znáte železniční spodky? Zodpovězte jednoduché otázky a vyhrajte",
-      "url": "https://www.idnes.cz/technet/znate-zeleznicni-spodky-zodpovezte-jednoduche-otazky-a-vyhrajte.Q260401_114449_technet_erp",
-      "dt": "2026-04-04T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "jednoduché",
-        "otázky",
-        "spodky",
-        "vyhrajte",
-        "znáte",
-        "zodpovězte",
-        "železniční"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -783,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 49099,
+      "bytes": 49591,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -820,11 +822,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 25,
-          "zpravy": 5
+          "other": 26,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -836,6 +838,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Úkoly a letadla podniku ČSA Agrolet. Nejen u Galanty to bylo jako na frontě",
+            "publishedAt": "2026-04-12T22:00:00Z"
+          },
           {
             "title": "Zařídil, aby výtahy nepadaly. Úspěch svého objevu si však vynálezce neužil",
             "publishedAt": "2026-04-12T18:00:00Z"
@@ -863,10 +869,6 @@
           {
             "title": "Čeští studenti byli u startu mise Artemis II. V Rozstřelu popsali ohlušující výbuch",
             "publishedAt": "2026-04-10T09:00:00Z"
-          },
-          {
-            "title": "Webbův teleskop našel hvězdy z doby jen 400 milionů let po velkém třesku",
-            "publishedAt": "2026-04-10T08:02:03Z"
           }
         ]
       }
