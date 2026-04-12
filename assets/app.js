@@ -5943,8 +5943,8 @@ function buildVideoAsArticleCard(it) {
 
     try{
       iuUserAddressClearCaptureSlot();
-      iuUserAddressBuildCaptureSlotIfNeeded();
     }catch{}
+    /* Capture input se vkládá jen z iuSilverWelcomeRefresh — až po doplnění pozdravu; předčasný build v init způsoboval prázdný greet + layout skok. */
   }
 
   /** P0 Silver: sticky welcome card — date + svátek reuse stejného zdroje jako topbar (#iuDailyNameday / #iuTopbarNameday + projects/data/namedays.json přes iuDailyPanelInit). */
@@ -6062,11 +6062,25 @@ function buildVideoAsArticleCard(it) {
       try{
         const variants = ["morning", "lateMorning", "afternoon", "evening"];
         const prefix = "silver-welcome-stack--";
+        const want = prefix + k;
+        try{
+          const slotEl0 = document.getElementById("silver-slot");
+          if (
+            stackEl &&
+            stackEl.classList.contains(want) &&
+            stackEl.getAttribute("data-iu-silver-welcome-variant") === k &&
+            slotEl0 &&
+            slotEl0.getAttribute("data-iu-silver-welcome-variant") === k &&
+            cardEl.getAttribute("data-iu-silver-welcome-variant") === k
+          ){
+            return;
+          }
+        }catch{}
         if (stackEl) {
           for (let i = 0; i < variants.length; i++) {
             stackEl.classList.remove(prefix + variants[i]);
           }
-          stackEl.classList.add(prefix + k);
+          stackEl.classList.add(want);
           stackEl.setAttribute("data-iu-silver-welcome-variant", k);
         }
         try{
