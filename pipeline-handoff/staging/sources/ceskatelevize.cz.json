@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-12T17:14:58.437457Z",
+  "ingestedAt": "2026-04-12T17:35:10.183598Z",
   "items": [
     {
       "section": "aktualne",
@@ -338,29 +338,6 @@
         "kampani",
         "maďarské",
         "videa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Maďaři v rekordní účasti hlasovali v parlamentních volbách",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-madarsku-se-otevrely-volebni-mistnosti-372287",
-      "dt": "2026-04-12T04:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "hlasovali",
-        "maďaři",
-        "parlamentních",
-        "rekordní",
-        "volbách",
-        "účasti"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -740,6 +717,57 @@
       "_dt_serialized": true
     },
     {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ministerstvo financí je proti vyšší rodičovské. Resort práce musí najít peníze",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/ministerstvo-financi-nesouhlasi-s-vyssi-rodicovskou-pokud-na-ni-resort-prace-nenajde-penize-372271",
+      "dt": "2026-04-11T09:22:33Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "financí",
+        "ministerstvo",
+        "musí",
+        "najít",
+        "peníze",
+        "proti",
+        "práce",
+        "resort",
+        "rodičovské",
+        "vyšší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Neapol v Parmě jen remizovala, Janov zdolal Sassuolo",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/serie-a/neapol-v-parme-jen-remizovala-janov-zdolal-sassuolo-156256",
+      "dt": "2026-04-12T17:20:16Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "janov",
+        "jen",
+        "neapol",
+        "parmě",
+        "remizovala",
+        "sassuolo",
+        "zdolal"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "sport",
       "contentType": "article",
       "title": "Betis už je sedm zápasů bez výhry, v Pamploně remizoval 1:1",
@@ -913,22 +941,20 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Finále play-off první hokejové ligy Berani Zlín – Dukla Jihlava 1:2",
+      "title": "Jihlava přetlačila v šestém zápase Zlín a zdramatizovala finálovou sérii",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/finale-play-off-prvni-hokejove-ligy-berani-zlin-dukla-jihlava-156248",
       "dt": "2026-04-12T14:20:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "berani",
-        "dukla",
-        "finále",
-        "hokejové",
+        "finálovou",
         "jihlava",
-        "ligy",
-        "off",
-        "play",
-        "první",
-        "zlín"
+        "přetlačila",
+        "sérii",
+        "zdramatizovala",
+        "zlín",
+        "zápase",
+        "šestém"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1464,30 +1490,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Arsenal padl po osmi kolech, Liverpool si poradil s Fulhamem",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/arsenal-padl-po-osmi-kolech-156224",
-      "dt": "2026-04-11T14:00:02Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "arsenal",
-        "fulhamem",
-        "kolech",
-        "liverpool",
-        "osmi",
-        "padl",
-        "poradil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1498,7 +1500,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41922,
+      "bytes": 42333,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1619,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39016,
+      "bytes": 38962,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1654,7 +1656,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T16:59:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T17:20:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1669,6 +1671,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neapol v Parmě jen remizovala, Janov zdolal Sassuolo",
+            "publishedAt": "2026-04-12T17:20:16Z"
+          },
           {
             "title": "Betis už je sedm zápasů bez výhry, v Pamploně remizoval 1:1",
             "publishedAt": "2026-04-12T16:59:59Z"
@@ -1696,10 +1702,6 @@
           {
             "title": "Čeští 3x3 basketbalisté si po 12 letech zahrají mistrovství světa",
             "publishedAt": "2026-04-12T14:25:34Z"
-          },
-          {
-            "title": "Finále play-off první hokejové ligy Berani Zlín – Dukla Jihlava 1:2",
-            "publishedAt": "2026-04-12T14:20:00Z"
           }
         ]
       }

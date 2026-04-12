@@ -1,27 +1,25 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-12T17:14:58.437457Z",
+  "ingestedAt": "2026-04-12T17:35:10.183598Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Slavia - Plzeň 0:0, oba týmy drží gólmani. Velké šance měli hosté",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-29-kolo-slavia-praha-viktoria-plzen-online-vysledek.A260412_104933_fotbal_duff",
-      "dt": "2026-04-12T16:57:00Z",
+      "title": "Kinský inkasoval, Tottenham je blízko sestupu. City se dál dotahuje na Arsenal",
+      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-32-kolo-online-vysledky.A260412_105831_fot_zahranici_duff",
+      "dt": "2026-04-12T17:28:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "drží",
-        "gólmani",
-        "hosté",
-        "měli",
-        "oba",
-        "plzeň",
-        "slavia",
-        "týmy",
-        "velké",
-        "šance"
+        "arsenal",
+        "blízko",
+        "city",
+        "dotahuje",
+        "inkasoval",
+        "kinský",
+        "sestupu",
+        "tottenham"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -33,20 +31,51 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Kinský inkasoval a Tottenham je blízko sestupu. City zvyšuje na Chelsea",
-      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-32-kolo-online-vysledky.A260412_105831_fot_zahranici_duff",
-      "dt": "2026-04-12T16:40:00Z",
+      "title": "Třetí jasná výhra v sérii, USK je opět ve finále. Do boje o titul míří také Žabiny",
+      "url": "https://www.idnes.cz/sport/basket/basketbalova-liga-zen-semifinale-druhe-zapasy.A260412_125657_sport-basket_ald",
+      "dt": "2026-04-12T17:17:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "blízko",
-        "chelsea",
-        "city",
-        "inkasoval",
-        "kinský",
-        "sestupu",
-        "tottenham",
-        "zvyšuje"
+        "boje",
+        "finále",
+        "jasná",
+        "míří",
+        "opět",
+        "sérii",
+        "také",
+        "titul",
+        "třetí",
+        "usk",
+        "výhra",
+        "žabiny"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Slavia - Plzeň 0:0, hosté měli velké šance, pak Sanyang před bránou selhává",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-29-kolo-slavia-praha-viktoria-plzen-online-vysledek.A260412_104933_fotbal_duff",
+      "dt": "2026-04-12T17:09:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bránou",
+        "hosté",
+        "měli",
+        "pak",
+        "plzeň",
+        "sanyang",
+        "selhává",
+        "slavia",
+        "velké",
+        "šance"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -388,30 +417,6 @@
         "přiblížili",
         "zdolali",
         "žižkova"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Suverénní Žabiny. Ostrava schytala debakl i ve druhém semifinále",
-      "url": "https://www.idnes.cz/sport/basket/basketbalova-liga-zen-semifinale-druhe-zapasy.A260412_125657_sport-basket_ald",
-      "dt": "2026-04-12T11:12:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "debakl",
-        "druhém",
-        "ostrava",
-        "schytala",
-        "semifinále",
-        "suverénní",
-        "žabiny"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -795,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44600,
+      "bytes": 44888,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T16:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T17:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,12 +853,16 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Slavia - Plzeň 0:0, oba týmy drží gólmani. Velké šance měli hosté",
-            "publishedAt": "2026-04-12T16:57:00Z"
+            "title": "Kinský inkasoval, Tottenham je blízko sestupu. City se dál dotahuje na Arsenal",
+            "publishedAt": "2026-04-12T17:28:00Z"
           },
           {
-            "title": "ONLINE: Kinský inkasoval a Tottenham je blízko sestupu. City zvyšuje na Chelsea",
-            "publishedAt": "2026-04-12T16:40:00Z"
+            "title": "Třetí jasná výhra v sérii, USK je opět ve finále. Do boje o titul míří také Žabiny",
+            "publishedAt": "2026-04-12T17:17:00Z"
+          },
+          {
+            "title": "ONLINE: Slavia - Plzeň 0:0, hosté měli velké šance, pak Sanyang před bránou selhává",
+            "publishedAt": "2026-04-12T17:09:00Z"
           },
           {
             "title": "Střídání na tenisovém trůnu. Sinner porazil Alcaraze v Monte Carlu a bude jedničkou",
@@ -874,10 +883,6 @@
           {
             "title": "Dokázal to! Van Aert prolomil smůlu a po sprintu s Pogačarem vítězí na Roubaix",
             "publishedAt": "2026-04-12T15:33:07Z"
-          },
-          {
-            "title": "POHLED: Žalování, zákaz, tresty. Vyhlížená série se kazí, vinu nese i extraliga",
-            "publishedAt": "2026-04-12T15:30:00Z"
           }
         ]
       }

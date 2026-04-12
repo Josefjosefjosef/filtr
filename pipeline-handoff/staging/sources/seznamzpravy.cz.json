@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-04-12T17:14:58.437457Z",
+  "ingestedAt": "2026-04-12T17:35:10.183598Z",
   "items": [
     {
       "section": "aktualne",
@@ -762,6 +762,27 @@
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Orbán vs. Magyar. V Maďarsku je rozhodnuto",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-stredni-evropa-volby-madarsko-2026-online-303414",
+      "dt": "2026-04-12T03:00:00Z",
+      "media_raw": "Seznam Zprávy / Byznys",
+      "media_norm": "Seznam Zprávy / Byznys",
+      "tokens": [
+        "magyar",
+        "maďarsku",
+        "orbán",
+        "rozhodnuto"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rubric",
+      "feedId": "fin_sz_byznys",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Vzdušné údery na severovýchodě Nigérie zřejmě zabily nejméně 100 lidí",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-vzdusne-udery-na-severovychode-nigerie-zrejme-zabily-nejmene-100-lidi-303844",
       "dt": "2026-04-12T16:45:00Z",
@@ -1491,6 +1512,27 @@
       "feedType": "rubric",
       "feedId": "fin_sz_byznys",
       "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Orbán vs. Magyar. V Maďarsku je rozhodnuto",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-stredni-evropa-volby-madarsko-2026-online-303414",
+      "dt": "2026-04-12T03:00:00Z",
+      "media_raw": "Seznam Zprávy / Vzdělávání",
+      "media_norm": "Seznam Zprávy / Vzdělávání",
+      "tokens": [
+        "magyar",
+        "maďarsku",
+        "orbán",
+        "rozhodnuto"
+      ],
+      "feedCategory": "vzdelavani",
+      "feedType": "rubric",
+      "feedId": "vzd_seznam",
+      "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "seznamzpravy.cz",
       "_dt_serialized": true
     },
@@ -2334,13 +2376,13 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/byznys",
-      "bytes": 35136,
+      "bytes": 36188,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 29,
-      "itemsKept": 29,
-      "accepted": 29,
+      "itemsParsed": 30,
+      "itemsKept": 30,
+      "accepted": 30,
       "status": "OK",
       "bozo_but_used": false,
       "registryId": "fin_sz_byznys",
@@ -2370,11 +2412,11 @@
         }
       ],
       "iuTelemetry": {
-        "raw_feed_new_item_count": 29,
+        "raw_feed_new_item_count": 30,
         "raw_feed_latest_publishedAt": "2026-04-12T16:45:00Z",
-        "valid_publishedAt_count": 29,
+        "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 15,
+          "zpravy": 16,
           "finance": 12,
           "zdravi": 1,
           "sport": 1
@@ -2389,6 +2431,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Orbán vs. Magyar. V Maďarsku je rozhodnuto",
+            "publishedAt": "2026-04-12T03:00:00Z"
+          },
           {
             "title": "Vzdušné údery na severovýchodě Nigérie zřejmě zabily nejméně 100 lidí",
             "publishedAt": "2026-04-12T16:45:00Z"
@@ -2416,10 +2462,6 @@
           {
             "title": "Recenze: Všichni hrajeme nějaké role. Dejvické divadlo hledá novou tvář",
             "publishedAt": "2026-04-12T13:30:00Z"
-          },
-          {
-            "title": "Buď proplují všichni, nebo nikdo. Trump chce blokovat Hormuzský průliv",
-            "publishedAt": "2026-04-12T13:22:20Z"
           }
         ]
       }
@@ -2431,13 +2473,13 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/vzdelavani",
-      "bytes": 35136,
+      "bytes": 36187,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 29,
-      "itemsKept": 29,
-      "accepted": 29,
+      "itemsParsed": 30,
+      "itemsKept": 30,
+      "accepted": 30,
       "status": "OK",
       "bozo_but_used": false,
       "registryId": "vzd_seznam",
@@ -2467,11 +2509,11 @@
         }
       ],
       "iuTelemetry": {
-        "raw_feed_new_item_count": 29,
+        "raw_feed_new_item_count": 30,
         "raw_feed_latest_publishedAt": "2026-04-12T16:45:00Z",
-        "valid_publishedAt_count": 29,
+        "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 12,
+          "zpravy": 13,
           "other": 17
         },
         "drop_counts": {
@@ -2484,6 +2526,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Orbán vs. Magyar. V Maďarsku je rozhodnuto",
+            "publishedAt": "2026-04-12T03:00:00Z"
+          },
           {
             "title": "Vzdušné údery na severovýchodě Nigérie zřejmě zabily nejméně 100 lidí",
             "publishedAt": "2026-04-12T16:45:00Z"
@@ -2511,10 +2557,6 @@
           {
             "title": "Recenze: Všichni hrajeme nějaké role. Dejvické divadlo hledá novou tvář",
             "publishedAt": "2026-04-12T13:30:00Z"
-          },
-          {
-            "title": "Buď proplují všichni, nebo nikdo. Trump chce blokovat Hormuzský průliv",
-            "publishedAt": "2026-04-12T13:22:20Z"
           }
         ]
       }

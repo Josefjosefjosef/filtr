@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-12T17:14:58.437457Z",
+  "ingestedAt": "2026-04-12T17:35:10.183598Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejen dražší paliva. Kvůli válce se zřejmě zvedne i cena oblíbených sladkostí",
+      "url": "https://www.denik.cz/ekonomika/valka-iran-usa-persky-zaliv-dopady-evropa-ekonomika-zdrazeni-cena-pistacie.html",
+      "dt": "2026-04-12T17:12:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cena",
+        "dražší",
+        "kvůli",
+        "nejen",
+        "oblíbených",
+        "paliva",
+        "sladkostí",
+        "válce",
+        "zvedne",
+        "zřejmě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -266,19 +293,18 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Volby v Maďarsku: Dorazili Orbán i Magyar. Účast je nejvyšší od pádu komunismu",
+      "title": "Volby v Maďarsku: Místnosti se uzavřely. Účast je nejvyšší od pádu komunismu",
       "url": "https://www.denik.cz/staty-eu/madarsko-volby-orban-magyar-20260412.html",
       "dt": "2026-04-12T07:44:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "dorazili",
         "komunismu",
-        "magyar",
         "maďarsku",
+        "místnosti",
         "nejvyšší",
-        "orbán",
         "pádu",
+        "uzavřely",
         "volby",
         "účast"
       ],
@@ -628,30 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Šimpanzi v Ugandě vedou občanskou válku. Zabíjejí i mláďata",
-      "url": "https://www.denik.cz/ze_sveta/uganda-simpanzi-obcanska-valka-konflikt-studie.html",
-      "dt": "2026-04-11T15:02:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "mláďata",
-        "občanskou",
-        "ugandě",
-        "vedou",
-        "válku",
-        "zabíjejí",
-        "šimpanzi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30909,
+      "bytes": 30912,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,10 +701,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-12T15:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T17:12:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "finance": 1,
+          "zpravy": 23,
           "zdravi": 1
         },
         "drop_counts": {
@@ -715,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejen dražší paliva. Kvůli válce se zřejmě zvedne i cena oblíbených sladkostí",
+            "publishedAt": "2026-04-12T17:12:00Z"
+          },
           {
             "title": "Orbán je jako Havel, řekl Turek. Hranatá nula, vzkázala mu Nerudová",
             "publishedAt": "2026-04-12T15:08:00Z"
@@ -742,10 +749,6 @@
           {
             "title": "MAPA: Předpověď počasí slibuje návrat jara. Přinese oteplení i bouřky a déšť",
             "publishedAt": "2026-04-12T12:05:00Z"
-          },
-          {
-            "title": "Prodejna potravin v průšvihu, inspektoři její část kvůli špatné hygieně zavřeli",
-            "publishedAt": "2026-04-12T10:30:00Z"
           }
         ]
       }

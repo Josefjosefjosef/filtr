@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-12T17:14:58.437457Z",
+  "ingestedAt": "2026-04-12T17:35:10.183598Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Odvoleno. Maďaři si vybrali příští vládu. Poslední průzkum výrazně favorizuje Tiszu",
+      "url": "https://zpravy.aktualne.cz/zahranici/odvoleno-madari-si-vybrali-pristi-vladu-k-urnam-prislo-nejvic-lidi-od-padu-komunismu/r~aaa29918ffd8cefbe5ff4b1eb68e56e2/",
+      "dt": "2026-04-12T17:14:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "favorizuje",
+        "maďaři",
+        "odvoleno",
+        "poslední",
+        "průzkum",
+        "příští",
+        "tiszu",
+        "vládu",
+        "vybrali",
+        "výrazně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -60,7 +87,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Slavia - Plzeň 0:0. Sešívaní pod tlakem, Markovič čaroval proti Aduovi",
+      "title": "Slavia - Plzeň 0:0. Sešívaní zatím pálí mimo, Markovič čaroval proti Aduovi",
       "url": "https://sport.aktualne.cz/fotbal/ceska-liga/slavia-plzen-viktoria-chce-ve-slagru-na-hristi-mistra-napravit-predchozi-zavahani/r~aaa29e02b2d35ba20e57eb2a85e58491/",
       "dt": "2026-04-12T16:02:00Z",
       "media_raw": "Aktuálně",
@@ -68,11 +95,13 @@
       "tokens": [
         "aduovi",
         "markovič",
+        "mimo",
         "plzeň",
         "proti",
+        "pálí",
         "sešívaní",
         "slavia",
-        "tlakem",
+        "zatím",
         "čaroval"
       ],
       "feedCategory": "zpravy",
@@ -510,32 +539,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Smrtící motivace aneb Jakou manažerskou lekci si vzít od německé luftwaffe",
-      "url": "https://zpravy.aktualne.cz/ekonomika/smrtici-motivace-aneb-jakou-manazerskou-lekci-si-vzit-od-nemecke-luftwaffe/r~aaa2914a23eaf0c49d80e5025a29e997/",
-      "dt": "2026-04-12T10:41:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "aneb",
-        "jakou",
-        "lekci",
-        "luftwaffe",
-        "manažerskou",
-        "motivace",
-        "německé",
-        "smrtící",
-        "vzít"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -546,7 +549,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21816,
+      "bytes": 21977,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -583,12 +586,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-12T16:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T17:14:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 11,
-          "sport": 8,
-          "finance": 1
+          "zpravy": 12,
+          "sport": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -601,6 +603,10 @@
         },
         "sample_titles": [
           {
+            "title": "Odvoleno. Maďaři si vybrali příští vládu. Poslední průzkum výrazně favorizuje Tiszu",
+            "publishedAt": "2026-04-12T17:14:00Z"
+          },
+          {
             "title": "Maďarské volby skončily, účast trhá letité rekordy. Padají ale i obvinění z podvodů",
             "publishedAt": "2026-04-12T07:42:00Z"
           },
@@ -609,7 +615,7 @@
             "publishedAt": "2026-04-12T16:19:00Z"
           },
           {
-            "title": "Slavia - Plzeň 0:0. Sešívaní pod tlakem, Markovič čaroval proti Aduovi",
+            "title": "Slavia - Plzeň 0:0. Sešívaní zatím pálí mimo, Markovič čaroval proti Aduovi",
             "publishedAt": "2026-04-12T16:02:00Z"
           },
           {
@@ -627,10 +633,6 @@
           {
             "title": "Ministerstvo zahraničí se ohradilo proti Pavlovým výrokům na adresu Trumpa",
             "publishedAt": "2026-04-12T11:47:00Z"
-          },
-          {
-            "title": "Pogačar prohrál závěrečný spurt Paříž-Roubaix. Triumf slaví Wout van Aert",
-            "publishedAt": "2026-04-12T14:52:00Z"
           }
         ]
       }
