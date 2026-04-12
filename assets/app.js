@@ -5814,6 +5814,46 @@ function buildVideoAsArticleCard(it) {
       if (!slot) return;
       while (slot.firstChild) slot.removeChild(slot.firstChild);
     }catch{}
+    iuUserAddressSyncWelcomeAddressSlot();
+  }
+
+  /** Viz app.css .iu-address-slot-empty — bez :empty (CSS debt guard); capture + prázdný slot drží řádek, saved + prázdný = hidden. */
+  function iuUserAddressSyncWelcomeAddressSlot(){
+    try{
+      const slot = document.getElementById("iuSilverWelcomeAddressSlot");
+      const headline = document.getElementById("iuSilverWelcomeHeadline");
+      if (!slot || !headline) return;
+      const mode = String(headline.getAttribute("data-iu-user-address") || "");
+      const hasInput = !!slot.querySelector("input");
+      const isEmpty = !String(slot.textContent || "").trim() && !hasInput;
+      if (mode === "saved"){
+        try{
+          slot.classList.remove("iu-address-slot-empty");
+        }catch{}
+        if (isEmpty) {
+          try{
+            slot.setAttribute("hidden", "");
+          }catch{}
+        } else {
+          try{
+            slot.removeAttribute("hidden");
+          }catch{}
+        }
+        return;
+      }
+      try{
+        slot.removeAttribute("hidden");
+      }catch{}
+      if (mode === "capture" && isEmpty) {
+        try{
+          slot.classList.add("iu-address-slot-empty");
+        }catch{}
+      } else {
+        try{
+          slot.classList.remove("iu-address-slot-empty");
+        }catch{}
+      }
+    }catch{}
   }
 
   function iuUserAddressBuildCaptureSlotIfNeeded(){
@@ -5870,6 +5910,7 @@ function buildVideoAsArticleCard(it) {
       });
       slot.appendChild(inp);
       slot.appendChild(btn);
+      iuUserAddressSyncWelcomeAddressSlot();
     }catch{}
   }
 
@@ -6119,6 +6160,9 @@ function buildVideoAsArticleCard(it) {
         }catch{}
         try{
           if (typeof window.iuUserAddressBuildCaptureSlotIfNeeded === "function") window.iuUserAddressBuildCaptureSlotIfNeeded();
+        }catch{}
+        try{
+          if (typeof iuUserAddressSyncWelcomeAddressSlot === "function") iuUserAddressSyncWelcomeAddressSlot();
         }catch{}
         const w = fmtDayForMeta(refDate);
         const wLower = w ? w.charAt(0).toLowerCase() + w.slice(1) : "";
