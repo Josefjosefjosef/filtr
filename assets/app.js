@@ -5769,6 +5769,7 @@ function buildVideoAsArticleCard(it) {
       inp.setAttribute("spellcheck", "false");
       inp.setAttribute("aria-label", IU_USER_ADDRESS_PLACEHOLDER);
       inp.placeholder = IU_USER_ADDRESS_PLACEHOLDER;
+      inp.setAttribute("size", "36");
       const btn = doc.createElement("button");
       btn.type = "button";
       btn.className = "iuSilverWelcomeAddressSubmit";
