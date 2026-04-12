@@ -1,19 +1,18 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-12T15:09:40.958447Z",
+  "ingestedAt": "2026-04-12T15:24:49.616272Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Sparta vede v Teplicích, Dukla zaskočila Boleslav. Pardubice otočily. Karviná přemohla Liberec. Slavia vyzve Plzeň",
+      "title": "FOTBAL ONLINE: Sparta vede v Teplicích, Boleslav vyrovnala. Pardubice otočily. Karviná přemohla Liberec. Slavia vyzve Plzeň",
       "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-slavia-v-jizde-za-titulem-vyzve-plzen-sparta-hraje-v-teplicich-5435761",
       "dt": "2026-04-12T05:51:55Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "boleslav",
-        "dukla",
         "fotbal",
         "karviná",
         "liberec",
@@ -26,8 +25,54 @@
         "sparta",
         "teplicích",
         "vede",
-        "vyzve",
-        "zaskočila"
+        "vyrovnala",
+        "vyzve"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mistrovská Neapol ztratila body v Parmě",
+      "url": "https://www.sport.cz/clanek/fotbal-serie-a-mistrovska-neapol-ztratila-body-v-parme-5436158",
+      "dt": "2026-04-12T15:11:30Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "body",
+        "mistrovská",
+        "neapol",
+        "parmě",
+        "ztratila"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Florbalisté Střešovic první mečbol na postup do superfinále nevyužili",
+      "url": "https://www.sport.cz/clanek/florbal-florbaliste-stresovic-prvni-mecbol-na-postup-do-superfinale-nevyuzili-5436069",
+      "dt": "2026-04-12T14:35:34Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "florbalisté",
+        "mečbol",
+        "nevyužili",
+        "postup",
+        "první",
+        "střešovic",
+        "superfinále"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -55,30 +100,6 @@
         "triumf",
         "unikl",
         "van"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Florbalisté Střešovic první mečbol na postup do superfinále nevyužili",
-      "url": "https://www.sport.cz/clanek/florbal-florbaliste-stresovic-prvni-mecbol-na-postup-do-superfinale-nevyuzili-5436069",
-      "dt": "2026-04-12T14:35:34Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "florbalisté",
-        "mečbol",
-        "nevyužili",
-        "postup",
-        "první",
-        "střešovic",
-        "superfinále"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -754,29 +775,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Stoper na hrot? Bohemians chystají šokující tah",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-stoper-na-hrot-bohemians-chystaji-sokujici-tah-5435758",
-      "dt": "2026-04-12T07:11:23Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bohemians",
-        "chystají",
-        "hrot",
-        "stoper",
-        "tah",
-        "šokující"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44395,
+      "bytes": 44101,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,7 +822,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T14:54:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T15:11:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -840,16 +838,20 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Sparta vede v Teplicích, Dukla zaskočila Boleslav. Pardubice otočily. Karviná přemohla Liberec. Slavia vyzve Plzeň",
+            "title": "FOTBAL ONLINE: Sparta vede v Teplicích, Boleslav vyrovnala. Pardubice otočily. Karviná přemohla Liberec. Slavia vyzve Plzeň",
             "publishedAt": "2026-04-12T05:51:55Z"
           },
           {
-            "title": "Pogačarovi triumf na Paříž-Roubaix opět unikl, ve finiši prohrál s Van Aertem",
-            "publishedAt": "2026-04-12T14:54:49Z"
+            "title": "Mistrovská Neapol ztratila body v Parmě",
+            "publishedAt": "2026-04-12T15:11:30Z"
           },
           {
             "title": "Florbalisté Střešovic první mečbol na postup do superfinále nevyužili",
             "publishedAt": "2026-04-12T14:35:34Z"
+          },
+          {
+            "title": "Pogačarovi triumf na Paříž-Roubaix opět unikl, ve finiši prohrál s Van Aertem",
+            "publishedAt": "2026-04-12T14:54:49Z"
           },
           {
             "title": "SESTŘIH: Karviná si připsala první jarní ligovou výhru",
@@ -866,10 +868,6 @@
           {
             "title": "Fotbalisté Betisu remizovali v Pamploně a  mohou přijít o klíčové páté místo",
             "publishedAt": "2026-04-12T14:20:20Z"
-          },
-          {
-            "title": "Šéf rozhodčích připustil chybu. Na Krejčíka se měl v prodloužení pískat faul",
-            "publishedAt": "2026-04-12T14:08:02Z"
           }
         ]
       }

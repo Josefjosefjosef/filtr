@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-12T15:09:40.958447Z",
+  "ingestedAt": "2026-04-12T15:24:49.616272Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poskytl ženě azyl u sebe doma. Když chtěl, aby odešla, honila ho po domě s nožem v ruce",
+      "url": "https://tydenikpolicie.cz/poskytl-zene-azyl-u-sebe-doma-kdyz-chtel-aby-odesla-honila-ho-po-dome-s-nozem-v-ruce/",
+      "dt": "2026-04-12T15:15:17Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "azyl",
+        "chtěl",
+        "doma",
+        "domě",
+        "honila",
+        "když",
+        "nožem",
+        "odešla",
+        "poskytl",
+        "ruce",
+        "sebe",
+        "ženě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -220,31 +249,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Při srážce s autem u Dubé na Českolipsku zemřela řidička motocyklu",
-      "url": "https://tydenikpolicie.cz/pri-srazce-s-autem-u-dube-na-ceskolipsku-zemrela-ridicka-motocyklu/",
-      "dt": "2026-04-11T17:52:56Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "autem",
-        "dubé",
-        "motocyklu",
-        "při",
-        "srážce",
-        "zemřela",
-        "českolipsku",
-        "řidička"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -255,7 +259,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15775,
+      "bytes": 15686,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -292,7 +296,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-12T14:13:28Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T15:15:17Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -307,6 +311,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poskytl ženě azyl u sebe doma. Když chtěl, aby odešla, honila ho po domě s nožem v ruce",
+            "publishedAt": "2026-04-12T15:15:17Z"
+          },
           {
             "title": "Hasiči v Dobré likvidovali požár neobydlené roubenky",
             "publishedAt": "2026-04-12T14:13:28Z"
@@ -334,10 +342,6 @@
           {
             "title": "Tři záchrany v náročném terénu v Ústeckém kraji",
             "publishedAt": "2026-04-11T18:09:14Z"
-          },
-          {
-            "title": "Slunečné počasí přineslo na jižní Moravě zvýšený počet dopravních nehod",
-            "publishedAt": "2026-04-11T18:03:46Z"
           }
         ]
       }
