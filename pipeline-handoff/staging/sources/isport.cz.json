@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-04-12T21:30:04.697287Z",
+  "ingestedAt": "2026-04-12T21:49:55.983760Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "NHL ONLINE: Boston s Čechy může stvrdit postup do play off, v akci i Palát nebo Hronek",
+      "url": "https://isport.blesk.cz/clanek/hokej-nhl/474328/nhl-online-boston-s-cechy-muze-stvrdit-postup-do-play-off-v-akci-i-palat-nebo-hronek.html",
+      "dt": "2026-04-12T21:23:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "akci",
+        "boston",
+        "hronek",
+        "nebo",
+        "nhl",
+        "off",
+        "online",
+        "palát",
+        "play",
+        "postup",
+        "stvrdit",
+        "čechy"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -373,35 +402,6 @@
         "slova",
         "smrti",
         "čelil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "NHL ONLINE: Boston s Čechy může stvrdit postup do play off, v akci i Palát nebo Hronek",
-      "url": "https://isport.blesk.cz/clanek/hokej-nhl/474328/nhl-online-boston-s-cechy-muze-stvrdit-postup-do-play-off-v-akci-i-palat-nebo-hronek.html",
-      "dt": "2026-04-12T16:00:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "akci",
-        "boston",
-        "hronek",
-        "nebo",
-        "nhl",
-        "off",
-        "online",
-        "palát",
-        "play",
-        "postup",
-        "stvrdit",
-        "čechy"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1106,7 +1106,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 64545,
+      "bytes": 64528,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1143,7 +1143,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-12T21:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T21:23:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1158,6 +1158,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "NHL ONLINE: Boston s Čechy může stvrdit postup do play off, v akci i Palát nebo Hronek",
+            "publishedAt": "2026-04-12T21:23:00Z"
+          },
           {
             "title": "Trpišovský: Dietní zápas, čekal jsem víc. Chorého červená? Velké vaření z vody",
             "publishedAt": "2026-04-12T21:05:00Z"
@@ -1185,10 +1189,6 @@
           {
             "title": "Charatišvili deptal Sigmu, fanoušci ostře kritizují Janotku. Pardubice se bojí o lídra",
             "publishedAt": "2026-04-12T18:10:00Z"
-          },
-          {
-            "title": "Zlín - Jihlava 1:2. Je tu sedmý zápas! Vítězný gól se dlouho zkoumal. Šermovali jsme tam...",
-            "publishedAt": "2026-04-12T18:05:00Z"
           }
         ]
       }
