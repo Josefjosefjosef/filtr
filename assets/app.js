@@ -30405,7 +30405,7 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
   const PENDING_KEY = "iuSilver.pendingFirstMessage.v1";
   const SILVER_HOME_INPUT_MAX = 150;
   /** Musí odpovídat scripts/test_salutation_intent.js (grep guard). */
-  const IU_SILVER_SALUTATION_SYNC_TAG = "IU_SILVER_SALUTATION_SYNC_V1=2026-04-12b";
+  const IU_SILVER_SALUTATION_SYNC_TAG = "IU_SILVER_SALUTATION_SYNC_V1=2026-04-12c";
   /** JSON: { mode: "none"|"formal"|"informal"|"name", at?: number } — doplnění k iu_user_address pro tón. */
   const IU_SILVER_SALUTATION_PREF_KEY = "iuSilver.salutationPreference.v1";
   /** Kompatibilní klíč s modulem iu_user_address (IU_USER_ADDRESS_STORAGE_KEY). */
@@ -31900,6 +31900,9 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
       return false;
     }
     if (raw && iuSilverLooksLikeSchedulingFragment(foldCs(raw), raw) && !iuSilverIsSalutationHowQuestion(f)) {
+      return false;
+    }
+    if (/\b(napis|napiste|zapis|uloz)\b/.test(f) && /\bformalni\s+zpr/.test(f)) {
       return false;
     }
     if (iuSilverIsSalutationHowQuestion(f)) {

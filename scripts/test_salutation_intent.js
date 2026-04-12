@@ -9,7 +9,7 @@ const path = require("path");
 const ROOT = path.join(__dirname, "..");
 const APP = fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8");
 
-const SYNC = "IU_SILVER_SALUTATION_SYNC_V1=2026-04-12b";
+const SYNC = "IU_SILVER_SALUTATION_SYNC_V1=2026-04-12c";
 const PREF_KEY = "iuSilver.salutationPreference.v1";
 const ADDR_KEY = "iu_user_address";
 
@@ -124,6 +124,9 @@ function iuSilverIsSalutationIntent(f, raw) {
   if (raw && iuSilverLooksLikeSchedulingFragmentSimple(folded) && !iuSilverIsSalutationHowQuestion(f)) {
     return false;
   }
+  if (/\b(napis|napiste|zapis|uloz)\b/.test(f) && /\bformalni\s+zpr/.test(f)) {
+    return false;
+  }
   if (iuSilverIsSalutationHowQuestion(f)) {
     return true;
   }
@@ -231,6 +234,10 @@ if (!APP.includes("Jasně 👍 Stačí mi napsat")) {
 
 const reg = "zapiš poznámku na zítra";
 if (iuSilverIsSalutationIntent(fold(reg), reg)) {
+  passRegression = false;
+}
+const regFormalLetter = "napiš formální zprávu klientovi";
+if (iuSilverIsSalutationIntent(fold(regFormalLetter), regFormalLetter)) {
   passRegression = false;
 }
 
