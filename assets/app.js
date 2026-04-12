@@ -19840,7 +19840,7 @@ function buildVideoAsArticleCard(it) {
       return false;
     }
   }
-  /** P0: Nákup potravin online — fullscreen opaque overlay. Desktop ≥1024px: bezpečný vnitřní scroll (overflow-y auto) pokud obsah nepřesně sedí; mobile/tablet = scrollovatelné. */
+  /** P0: Nákup potravin online — fullscreen opaque overlay. Desktop ≥1024px: dvousloupcová kompozice + overflow-y auto jako záloha; mobile/tablet = scrollovatelné. */
   function iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, on) {
     try {
       if (!quick) return;
@@ -19924,7 +19924,7 @@ function buildVideoAsArticleCard(it) {
       '<div class="iuQHeadActions">' +
       '<button class="iuQClose iu-overlayCloseBtn38" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button>' +
       "</div></div>";
-    const sections = groups.map(function(g, gi) {
+    const sectionParts = groups.map(function(g, gi) {
       const gid = "iu-nakup-grp-" + gi;
       const items = Array.isArray(g.items) ? g.items : [];
       const cards = items.map(function(it) {
@@ -19944,7 +19944,21 @@ function buildVideoAsArticleCard(it) {
         '<div class="iu-nakup-online-grid" role="list">' + cards + "</div>" +
         "</section>"
       );
-    }).join("");
+    });
+    var sections = "";
+    if (sectionParts.length === 3) {
+      sections =
+        '<div class="iu-nakup-online-twoColShell">' +
+        '<div class="iu-nakup-online-desktopCol iu-nakup-online-desktopCol--left">' +
+        sectionParts[0] +
+        sectionParts[1] +
+        "</div>" +
+        '<div class="iu-nakup-online-desktopCol iu-nakup-online-desktopCol--right">' +
+        sectionParts[2] +
+        "</div></div>";
+    } else {
+      sections = sectionParts.join("");
+    }
     return (
       '<div class="iu-nakup-online-premiumShell">' +
       head +
