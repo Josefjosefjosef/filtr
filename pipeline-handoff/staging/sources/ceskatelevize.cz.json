@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-12T21:04:34.243086Z",
+  "ingestedAt": "2026-04-12T21:14:24.825546Z",
   "items": [
     {
       "section": "aktualne",
@@ -742,6 +742,33 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Po prohře s Pardubicemi skončil v Olomouci trenér Janotka, tým dočasně povede Hapal",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/po-prohre-v-pardubicich-skoncil-u-fotbalistu-sigmy-janotka-docasne-tym-povede-hapal-156260",
+      "dt": "2026-04-12T21:03:12Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "dočasně",
+        "hapal",
+        "janotka",
+        "olomouci",
+        "pardubicemi",
+        "povede",
+        "prohře",
+        "skončil",
+        "trenér",
+        "tým"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Když na někoho křičíte a máte v sobě emoce, tak ty sliny vám z pusy stříkají, popírá plivnutí Chorý",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/kdyz-na-nekoho-kricite-a-mate-v-sobe-emoce-tak-ty-sliny-vam-z-pusy-strikaji-popira-plivnuti-chory-156259",
       "dt": "2026-04-12T20:18:30Z",
@@ -1472,29 +1499,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jablonec zdolal Baník, Zlín nestačil na Bohemians",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/jablonec-zdolal-banik-zlin-nestacil-na-bohemians-156228",
-      "dt": "2026-04-11T15:59:01Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "baník",
-        "bohemians",
-        "jablonec",
-        "nestačil",
-        "zdolal",
-        "zlín"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1624,7 +1628,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40048,
+      "bytes": 40026,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1661,7 +1665,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T20:18:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T21:03:12Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1676,6 +1680,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po prohře s Pardubicemi skončil v Olomouci trenér Janotka, tým dočasně povede Hapal",
+            "publishedAt": "2026-04-12T21:03:12Z"
+          },
           {
             "title": "Když na někoho křičíte a máte v sobě emoce, tak ty sliny vám z pusy stříkají, popírá plivnutí Chorý",
             "publishedAt": "2026-04-12T20:18:30Z"
@@ -1703,10 +1711,6 @@
           {
             "title": "Bulldogs míří poprvé do superfinále, úřadující šampionky odvrátily vyřazení",
             "publishedAt": "2026-04-12T15:47:19Z"
-          },
-          {
-            "title": "Kinský při návratu do branky nezabránil prohře Tottenhamu se Sunderlandem",
-            "publishedAt": "2026-04-12T15:43:40Z"
           }
         ]
       }
@@ -1718,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76880,
+      "bytes": 76886,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-12T21:04:34.243086Z",
+  "ingestedAt": "2026-04-12T21:14:24.825546Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Lyonu vyhrál po devíti zápasech, Češi u toho nebyli",
+      "url": "https://www.sport.cz/clanek/fotbal-ligue-1-lyonu-vyhral-po-deviti-zapasech-cesi-u-toho-nebyli-5436353",
+      "dt": "2026-04-12T21:07:18Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "devíti",
+        "lyonu",
+        "nebyli",
+        "toho",
+        "vyhrál",
+        "zápasech",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -766,32 +790,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Boleslav bodovala posedmé v řadě, s poslední Duklou uhrála remízu",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-boleslav-bodovala-posedme-v-rade-5436216",
-      "dt": "2026-04-12T15:38:50Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bodovala",
-        "boleslav",
-        "duklou",
-        "posedmé",
-        "poslední",
-        "remízu",
-        "sestřih",
-        "uhrála",
-        "řadě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46430,
+      "bytes": 45821,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T20:49:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T21:07:18Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -854,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lyonu vyhrál po devíti zápasech, Češi u toho nebyli",
+            "publishedAt": "2026-04-12T21:07:18Z"
+          },
           {
             "title": "Gólové hody v Comu. Inter smazal dvougólové mamko a zvítězil",
             "publishedAt": "2026-04-12T15:11:30Z"
@@ -881,10 +883,6 @@
           {
             "title": "Kolín nad Rýnem v bundeslize vyhrál po osmi kolech, Stuttgart deklasoval Hamburk",
             "publishedAt": "2026-04-12T16:03:24Z"
-          },
-          {
-            "title": "Trenér Colorada vynechá v NHL dva duely kvůli zranění v obličeji po zásahu pukem",
-            "publishedAt": "2026-04-12T19:27:58Z"
           }
         ]
       }
