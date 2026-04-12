@@ -30404,6 +30404,12 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
 
   const PENDING_KEY = "iuSilver.pendingFirstMessage.v1";
   const SILVER_HOME_INPUT_MAX = 150;
+  /** Musí odpovídat scripts/test_salutation_intent.js (grep guard). */
+  const IU_SILVER_SALUTATION_SYNC_TAG = "IU_SILVER_SALUTATION_SYNC_V1=2026-04-12c";
+  /** JSON: { mode: "none"|"formal"|"informal"|"name", at?: number } — doplnění k iu_user_address pro tón. */
+  const IU_SILVER_SALUTATION_PREF_KEY = "iuSilver.salutationPreference.v1";
+  /** Kompatibilní klíč s modulem iu_user_address (IU_USER_ADDRESS_STORAGE_KEY). */
+  const IU_SILVER_USER_ADDR_STORAGE_COMPAT = "iu_user_address";
 
   function clampSilverHomeInput(el) {
     if (!el) return;
@@ -31835,6 +31841,210 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     };
   }
 
+  function iuSilverSalutationFoldForMatch(raw) {
+    return foldCs(String(raw || "").trim()).replace(/\s+/g, " ");
+  }
+
+  function iuSilverSalutationPrefRead() {
+    try {
+      const j = window.localStorage.getItem(IU_SILVER_SALUTATION_PREF_KEY);
+      if (!j) return null;
+      const o = JSON.parse(j);
+      if (!o || typeof o !== "object") return null;
+      return o;
+    } catch {
+      return null;
+    }
+  }
+
+  function iuSilverSalutationPrefWrite(next) {
+    try {
+      const cur = iuSilverSalutationPrefRead() || {};
+      const merged = Object.assign({}, cur, next, { at: Date.now() });
+      window.localStorage.setItem(IU_SILVER_SALUTATION_PREF_KEY, JSON.stringify(merged));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function iuSilverSalutationHardBlockCalendar(f) {
+    if (/\b(pridej|uloz|zapis|vloz|odeber|presun|presunout)\b/.test(f) && /\b(do\s+kalend|v\s+kalend|kalendari|kalendare)\b/.test(f)) {
+      return true;
+    }
+    if (/\b(poznam|ukol|pripomenout)\b/.test(f) && /\bkalend/.test(f)) {
+      return true;
+    }
+    return false;
+  }
+
+  function iuSilverIsSalutationHowQuestion(f) {
+    return (
+      /^jak\s+m(uz|u)u\s+zmen(it|im|is|i)?\s+osloven/.test(f) ||
+      /^jak\s+zmen(it|im|is|i)?\s+osloven/.test(f) ||
+      /^jak\s+si\s+nastav(im|it|is|i)?\s+osloven/.test(f) ||
+      /^kde\s+(m(uz|u)u\s+)?zmen(it|im|is|i)?\s+(moje\s+)?osloven/.test(f) ||
+      /^jak\s+.*\boslovovat\b/.test(f) ||
+      /^jak\s+me\s+budes\s+oslovovat/.test(f) ||
+      /^proc\s+.*\bosloven/.test(f) ||
+      /^jaky\s+.*\bosloven/.test(f) ||
+      /^co\s+(je|znamena)\s+.*\bosloven/.test(f)
+    );
+  }
+
+  function iuSilverIsSalutationIntent(f, raw) {
+    if (!f || f.length < 4) {
+      return false;
+    }
+    if (iuSilverSalutationHardBlockCalendar(f)) {
+      return false;
+    }
+    if (raw && iuSilverLooksLikeSchedulingFragment(foldCs(raw), raw) && !iuSilverIsSalutationHowQuestion(f)) {
+      return false;
+    }
+    if (/\b(napis|napiste|zapis|uloz)\b/.test(f) && /\bformalni\s+zpr/.test(f)) {
+      return false;
+    }
+    if (iuSilverIsSalutationHowQuestion(f)) {
+      return true;
+    }
+    if (/\bneoslovuj\b/.test(f) || (/\bnechci\b/.test(f) && /\bosloven/.test(f)) || /\bnepouzivej\s+osloven/.test(f)) {
+      return true;
+    }
+    if (/\b(mluv|mluvej)\s+na\s+m(e|ě)\s+neformal/.test(f) || /\bneformal(in|ni|nej)?\b/.test(f) || /\binformal/.test(f)) {
+      return true;
+    }
+    if (/\b(mluv|mluvej)\s+na\s+m(e|ě)\s+formal/.test(f) || (/\bformal(in|ni|nej)?\b/.test(f) && !/\bneformal/.test(f))) {
+      return true;
+    }
+    if (/\brikej\s+mi\b|\boslovuj\s+me\b|\boslovujte\s+me\b/.test(f)) {
+      return true;
+    }
+    if (/^(formal|neformal|neformalnej)(ni)?!?$/.test(f)) {
+      return true;
+    }
+    if (/\bosloven(i|y|e|a|u)?\b/.test(f) && (/\bzmen(it|im|is|i)?\b/.test(f) || /\boslovuj\b/.test(f) || /^jak\b/.test(f))) {
+      return true;
+    }
+    return false;
+  }
+
+  function iuSilverSalutationReadOkTurn(msg) {
+    const m = String(msg || "");
+    return {
+      normalizedIntent: "silver.salutation_preference",
+      targetContainer: "none",
+      processingState: "READ_OK",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: null,
+      readAnswer: { message: m },
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: m,
+      assistantLead: m,
+      clarificationText: "",
+      draft: createEmptyDraft()
+    };
+  }
+
+  function iuSilverTryConsumeUserAddressConfirmationTurn(raw) {
+    if (typeof window.iuTryConsumeUserAddressIntentFromSilverInput !== "function") {
+      return null;
+    }
+    if (!window.iuTryConsumeUserAddressIntentFromSilverInput(raw)) {
+      return null;
+    }
+    iuSilverSalutationPrefWrite({ mode: "name" });
+    let voc = "";
+    try {
+      if (typeof window.iuGetUserAddressVocativeForWelcome === "function") {
+        voc = String(window.iuGetUserAddressVocativeForWelcome() || "").trim();
+      }
+    } catch {}
+    const msg = voc ? "Hotovo 👍 Budu ti říkat " + voc + "." : "Hotovo 👍 Oslovení jsem si uložil.";
+    return {
+      normalizedIntent: "silver.user_address_set",
+      targetContainer: "none",
+      processingState: "READ_OK",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: null,
+      readAnswer: { message: msg },
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: msg,
+      assistantLead: msg,
+      clarificationText: "",
+      draft: createEmptyDraft()
+    };
+  }
+
+  function iuSilverBuildSalutationPreferenceTurn(raw) {
+    const f = iuSilverSalutationFoldForMatch(raw);
+    if (!iuSilverIsSalutationIntent(f, raw)) {
+      return null;
+    }
+    if (iuSilverSalutationHardBlockCalendar(f)) {
+      return null;
+    }
+    if (iuSilverIsSalutationHowQuestion(f)) {
+      return iuSilverSalutationReadOkTurn(
+        "Jasně 👍 Stačí mi napsat, jak tě mám oslovovat — třeba „říkej mi Pepo“, „oslovuj mě pane Nováku“ nebo „nechci oslovení“. Hned si to zapamatuju."
+      );
+    }
+    if (/\bneoslovuj\b/.test(f) || (/\bnechci\b/.test(f) && /\bosloven/.test(f))) {
+      iuSilverSalutationPrefWrite({ mode: "none" });
+      try {
+        window.localStorage.removeItem(IU_SILVER_USER_ADDR_STORAGE_COMPAT);
+      } catch {}
+      return iuSilverSalutationReadOkTurn("Rozumím. Nebudu používat oslovení 👍");
+    }
+    if (/\b(mluv|mluvej)\s+na\s+m(e|ě)\s+neformal\b/.test(f) || /\bneformal(in|ni|nej)?\b/.test(f) || /\binformal\b/.test(f)) {
+      iuSilverSalutationPrefWrite({ mode: "informal" });
+      return iuSilverSalutationReadOkTurn("Rozumím. Budu mluvit neformálně 👍");
+    }
+    if (/\b(mluv|mluvej)\s+na\s+m(e|ě)\s+formal\b/.test(f) || (/\bformal(in|ni|nej)?\b/.test(f) && !/\bneformal/.test(f))) {
+      iuSilverSalutationPrefWrite({ mode: "formal" });
+      return iuSilverSalutationReadOkTurn("Rozumím. Budu tě oslovovat formálně.");
+    }
+    return iuSilverSalutationReadOkTurn(
+      "Napiš mi prosím, jak chceš, abych tě oslovoval — třeba „říkej mi…“, „formálně“ nebo „nechci oslovení“."
+    );
+  }
+
+  function iuSilverDecorateAssistantLead(text) {
+    let s = String(text == null ? "" : text);
+    try {
+      const pref = iuSilverSalutationPrefRead();
+      if (!pref || pref.mode !== "name") {
+        return s;
+      }
+      if (typeof window.iuGetUserAddressVocativeForWelcome !== "function") {
+        return s;
+      }
+      const v = String(window.iuGetUserAddressVocativeForWelcome() || "").trim();
+      if (!v) {
+        return s;
+      }
+      const t = s.trim();
+      if (!t) {
+        return s;
+      }
+      const escRe = function (x) {
+        return x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      };
+      if (new RegExp("^" + escRe(v) + "\\b", "i").test(t)) {
+        return s;
+      }
+      return v + ", " + s;
+    } catch {
+      return s;
+    }
+  }
+
   function processUserTurn(text, prevDraft, ctx) {
     const now = ctx && ctx.now ? ctx.now : new Date();
     const raw = String(text || "").trim();
@@ -31862,6 +32072,16 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
         clarificationText: "",
         draft: createEmptyDraft()
       };
+    }
+
+    const addrEarly = iuSilverTryConsumeUserAddressConfirmationTurn(raw);
+    if (addrEarly) {
+      return addrEarly;
+    }
+
+    const salEarly = iuSilverBuildSalutationPreferenceTurn(raw);
+    if (salEarly) {
+      return salEarly;
     }
 
     const readSpec = tryParseCalendarRead(raw, now);
@@ -32092,7 +32312,7 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     const editMode = !!opts.editMode;
     if (turn.confirmOnly) {
       return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
-  <p class="iuSilverMsgLead">${esc(turn.assistantLead)}</p>
+  <p class="iuSilverMsgLead">${esc(iuSilverDecorateAssistantLead(turn.assistantLead))}</p>
 </div>`;
     }
     if (
@@ -32101,7 +32321,7 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
       (turn.processingState === "READ_OK" || turn.normalizedIntent === "calendar.read")
     ) {
       return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
-  <p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(turn.readAnswer.message).replace(/\n/g, "<br>")}</p>
+  <p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(iuSilverDecorateAssistantLead(turn.readAnswer.message)).replace(/\n/g, "<br>")}</p>
 </div>`;
     }
     if (turn.processingState === "STORAGE_DISAMBIGUATION" || turn.storageDisambiguation) {
@@ -32123,7 +32343,7 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
       turn.normalizedIntent === "tasks.future_candidate"
     ) {
       return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
-  <p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(turn.assistantLead)}</p>
+  <p class="iuSilverMsgLead iuSilverMsgLead--read">${esc(iuSilverDecorateAssistantLead(turn.assistantLead))}</p>
 </div>`;
     }
     const d = turn.draft;
@@ -32155,7 +32375,7 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     const leadClass = st === "NEEDS_CLARIFICATION" ? "iuSilverMsgLead iuSilverMsgLead--warning" : "iuSilverMsgLead";
 
     return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
-  <p class="${leadClass}">${esc(turn.assistantLead)}</p>
+  <p class="${leadClass}">${esc(iuSilverDecorateAssistantLead(turn.assistantLead))}</p>
   ${clar}
   ${card}
 </div>`;
@@ -32499,16 +32719,6 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     const text = String(input.value || "").trim().slice(0, SILVER_HOME_INPUT_MAX);
     if (!text) return;
     try {
-      if (typeof window.iuTryConsumeUserAddressIntentFromSilverInput === "function") {
-        if (window.iuTryConsumeUserAddressIntentFromSilverInput(text)) {
-          try {
-            input.value = "";
-          } catch {}
-          return;
-        }
-      }
-    } catch {}
-    try {
       sessionStorage.setItem(PENDING_KEY, text);
     } catch {}
     input.value = "";
@@ -32535,16 +32745,6 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     if (!input) return;
     const text = String(input.value || "").trim();
     if (!text) return;
-    try {
-      if (typeof window.iuTryConsumeUserAddressIntentFromSilverInput === "function") {
-        if (window.iuTryConsumeUserAddressIntentFromSilverInput(text)) {
-          try {
-            input.value = "";
-          } catch {}
-          return;
-        }
-      }
-    } catch {}
     clearPendingStorageDisambiguation();
     input.value = "";
     appendUserMessage(text);
