@@ -12498,7 +12498,7 @@ body.iu-quickFeedOpen{
   width: min(100%, 1120px);
   max-width: 1120px;
   margin-inline: auto;
-  padding: 4px 14px 12px;
+  padding: 2px 14px 12px;
   box-sizing: border-box;
   flex: 1 1 auto;
   min-height: 0;
@@ -12508,13 +12508,17 @@ body.iu-quickFeedOpen{
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iuQHead{
   flex-shrink: 0;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
+}
+/* Mobile/tablet: sjednotit horní rytmus (inline margin z iuApplyMobileQuickFeedLayout jen zde přebijeme) */
+.iuQuickFeed.iu-nakup-online-feed-root:not(.iu-nakup-online--desktop-fit) .iuQHead{
+  margin: 2px 0 5px !important;
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-premiumShell{
-  padding: 8px 28px 20px;
+  padding: 10px 32px 22px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iuQHead{
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-fill{
   flex: 1 1 auto;
@@ -12525,7 +12529,7 @@ body.iu-quickFeedOpen{
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-outerCard{
   flex: 1 1 auto;
   min-height: 0;
-  margin: 6px 0 0;
+  margin: 3px 0 0;
   padding: 10px 8px 12px;
   display: flex;
   flex-direction: column;
@@ -12535,8 +12539,8 @@ body.iu-quickFeedOpen{
   box-shadow: 0 10px 36px rgba(15, 23, 42, 0.08);
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-outerCard{
-  margin-top: 4px;
-  padding: 18px 20px 22px;
+  margin-top: 2px;
+  padding: 20px 22px 24px;
   border-radius: 18px;
   box-shadow: 0 12px 40px rgba(15, 23, 42, 0.09);
 }
@@ -12545,26 +12549,29 @@ body.iu-quickFeedOpen{
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   overflow: visible;
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-feed{
-  gap: 22px;
+  gap: 24px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-group{
   margin: 0;
   flex: 0 0 auto;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-h3{
-  margin: 0 0 7px;
+  margin: 0 0 6px;
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.03em;
   color: #475569;
   line-height: 1.25;
 }
+.iuQuickFeed.iu-nakup-online-feed-root:not(.iu-nakup-online--desktop-fit) .iu-nakup-online-group + .iu-nakup-online-group .iu-nakup-online-h3{
+  margin-top: 1px;
+}
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-h3{
-  margin: 0 0 10px;
+  margin: 0 0 11px;
   font-size: 0.78rem;
   letter-spacing: 0.04em;
 }
@@ -12577,7 +12584,7 @@ body.iu-quickFeedOpen{
   list-style: none;
 }
 .iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-grid{
-  gap: 10px;
+  gap: 11px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-card{
   border-radius: 12px;
