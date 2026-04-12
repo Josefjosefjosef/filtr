@@ -11529,6 +11529,9 @@ function buildVideoAsArticleCard(it) {
 
     ensureFallbackMessage();
 
+  try {
+    window.__iuApplyFeedFilter = applyFilter;
+  } catch (_) {}
 
   let firstLoadQuiet = false;
 
@@ -24475,14 +24478,17 @@ function buildVideoAsArticleCard(it) {
     const nav = readUrlNavState();
     const section = nav.section;
     try {
-      state.mediaTopicKey = null;
-      state.travelUiMode = nav.mode || "guide";
-      if (section === "travel" && nav.mode === "media") {
-        state.mediaTopicKey = "cestovani";
-      } else if (iuArticleHubSectionP(section)) {
-        if (nav.topic && nav.topic !== "all") state.mediaTopicKey = nav.topic;
-      } else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1) {
-        state.mediaTopicKey = section;
+      const fp = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
+      if (fp) {
+        fp.mediaTopicKey = null;
+        fp.travelUiMode = nav.mode || "guide";
+        if (section === "travel" && nav.mode === "media") {
+          fp.mediaTopicKey = "cestovani";
+        } else if (iuArticleHubSectionP(section)) {
+          if (nav.topic && nav.topic !== "all") fp.mediaTopicKey = nav.topic;
+        } else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1) {
+          fp.mediaTopicKey = section;
+        }
       }
     } catch (_) {}
     const accentColorKey =
@@ -24510,7 +24516,10 @@ function buildVideoAsArticleCard(it) {
       document.body && document.body.style.setProperty("--iuContentAccent", color);
     }catch{}
     // feed paging must reset on section change
-    try{ state.page = 1; }catch{}
+    try {
+      const fp = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
+      if (fp) fp.page = 1;
+    } catch (_) {}
     let viewKey = "media";
     if (section === "travel") {
       viewKey = nav.mode === "media" ? "media" : "travel";
@@ -24683,26 +24692,29 @@ function buildVideoAsArticleCard(it) {
         }
       }
     }catch{}
-    try{ if (typeof applyFilter === "function") applyFilter(); }catch{}
+    try {
+      if (typeof window !== "undefined" && typeof window.__iuApplyFeedFilter === "function") {
+        window.__iuApplyFeedFilter();
+      }
+    } catch (_) {}
     // P0 perf: do not full-reload articles.json on every section switch when cache is already valid.
     // loadData() clears hasLoadedData + cache at entry — use loadedOk (hasLoadedData===true && cachedItems.length>0)
     // and !isLoadingData so in-flight loads do not look "empty". applyFilter narrows filteredItems from cache.
     // Explicit refresh / auto-refresh / retry paths still call loadData() directly.
     try {
-      const pl =
-        typeof window !== "undefined" && window.__iuFeedPipelineState
-          ? window.__iuFeedPipelineState
-          : state;
-      const loadedOk =
-        pl.hasLoadedData === true &&
-        Array.isArray(pl.cachedItems) &&
-        pl.cachedItems.length > 0;
-      const needFeedBootstrap =
-        typeof window.__iuLoadData === "function" &&
-        !pl.isLoadingData &&
-        !loadedOk;
-      if (needFeedBootstrap) {
-        window.__iuLoadData();
+      const pl = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
+      if (pl) {
+        const loadedOk =
+          pl.hasLoadedData === true &&
+          Array.isArray(pl.cachedItems) &&
+          pl.cachedItems.length > 0;
+        const needFeedBootstrap =
+          typeof window.__iuLoadData === "function" &&
+          !pl.isLoadingData &&
+          !loadedOk;
+        if (needFeedBootstrap) {
+          window.__iuLoadData();
+        }
       }
     } catch (_) {}
     try{ window.__iuStartAutoRefresh && window.__iuStartAutoRefresh(); }catch{}
