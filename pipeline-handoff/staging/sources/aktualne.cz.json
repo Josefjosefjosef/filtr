@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-12T20:10:23.385931Z",
+  "ingestedAt": "2026-04-12T20:29:34.868657Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Obrat v Maďarsku: Tisza slaví, přesvědčivě míří k ústavní většině. Orbán uznal prohru",
+      "title": "Obrat v Maďarsku: Tisza slaví, míří k ústavní většině. Orbán uznal prohru",
       "url": "https://zpravy.aktualne.cz/zahranici/odvoleno-madari-si-vybrali-pristi-vladu-k-urnam-prislo-nejvic-lidi-od-padu-komunismu/r~aaa29918ffd8cefbe5ff4b1eb68e56e2/",
       "dt": "2026-04-12T17:14:00Z",
       "media_raw": "Aktuálně",
@@ -17,12 +17,38 @@
         "obrat",
         "orbán",
         "prohru",
-        "přesvědčivě",
         "slaví",
         "tisza",
         "uznal",
         "většině",
         "ústavní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Na nikoho jsem neplivl, hájí se Chorý. Sudí viděl na videu jasný důkaz",
+      "url": "https://sport.aktualne.cz/fotbal/na-nikoho-jsem-neplivl-haji-se-chory-sudi-videl-na-videu-jasny-dukaz/r~aaa2991868f8bdf13c5d47a9945b3ded/",
+      "dt": "2026-04-12T20:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chorý",
+        "důkaz",
+        "hájí",
+        "jasný",
+        "jsem",
+        "neplivl",
+        "nikoho",
+        "sudí",
+        "videu",
+        "viděl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -512,33 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Škoda tyhle fotky minout: Knokaut, prezidentský zajíček nebo kočka ve škvíře",
-      "url": "https://zpravy.aktualne.cz/galerie-a-videa/skoda-tyhle-fotky-minout-knokaut-prezidentsky-zajicek-nebo-kocka-ve-skvire/r~aaa291fbfd9497cb1bbbb52a2060697c/",
-      "dt": "2026-04-12T11:36:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "fotky",
-        "knokaut",
-        "kočka",
-        "minout",
-        "nebo",
-        "prezidentský",
-        "tyhle",
-        "zajíček",
-        "škoda",
-        "škvíře"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -549,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21848,
+      "bytes": 21708,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -586,11 +585,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-12T18:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T20:04:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 11,
-          "sport": 9
+          "zpravy": 10,
+          "sport": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -603,8 +602,12 @@
         },
         "sample_titles": [
           {
-            "title": "Obrat v Maďarsku: Tisza slaví, přesvědčivě míří k ústavní většině. Orbán uznal prohru",
+            "title": "Obrat v Maďarsku: Tisza slaví, míří k ústavní většině. Orbán uznal prohru",
             "publishedAt": "2026-04-12T17:14:00Z"
+          },
+          {
+            "title": "Na nikoho jsem neplivl, hájí se Chorý. Sudí viděl na videu jasný důkaz",
+            "publishedAt": "2026-04-12T20:04:00Z"
           },
           {
             "title": "Írán vydírá celý svět, řekl Trump. Spojené státy zahájí blokádu Hormuzu",
@@ -629,10 +632,6 @@
           {
             "title": "Slavia - Plzeň 0:0. Sešívaní dohrávali v deseti, ale udrželi remízu",
             "publishedAt": "2026-04-12T16:02:00Z"
-          },
-          {
-            "title": "Bitva titánů v Monte Carlu skončila triumfem Sinnera. Ital se vrátí na trůn",
-            "publishedAt": "2026-04-12T15:58:00Z"
           }
         ]
       }
