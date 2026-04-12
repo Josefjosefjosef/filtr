@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-12T01:11:50.422935Z",
+  "updatedAt": "2026-04-12T01:41:53.161439Z",
   "feeds": {
     "https://www.ceskatelevize.cz/art/rss": {
       "topic": "kultura",
@@ -33,17 +33,17 @@
       "bozoException": "",
       "bozo_but_used": false
     },
-    "https://www.ceskatelevize.cz/rss/veda/": {
-      "topic": "veda",
-      "source": "ČT24 / Věda",
+    "https://www.crzpravy.cz/rss/sport/": {
+      "topic": "sport",
+      "source": "ČR Zprávy / Sport",
       "accepted": 0,
       "status": "BOZO",
       "itemsParsed": 0,
       "itemsKept": 0,
       "httpStatus": 200,
-      "contentType": "text/html",
-      "finalUrl": "https://www.ceskatelevize.cz/rss/",
-      "bytes": 61482,
+      "contentType": "text/html; charset=utf-8",
+      "finalUrl": "https://crzpravy.cz/zpravy/sportka-razantne-zdrazi-sdelila-sazka-zaroven-snizi-sanci-na-nejvyssi-vyhru/",
+      "bytes": 479939,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
@@ -60,6 +60,22 @@
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
       "bytes": 30706,
+      "reason": "",
+      "bozo": false,
+      "bozoException": "",
+      "bozo_but_used": false
+    },
+    "https://vtm.zive.cz/rss": {
+      "topic": "veda",
+      "source": "VTM",
+      "accepted": 35,
+      "status": "OK",
+      "itemsParsed": 35,
+      "itemsKept": 35,
+      "httpStatus": 200,
+      "contentType": "application/xml; charset=utf-8",
+      "finalUrl": "https://vtm.zive.cz/rss",
+      "bytes": 22441,
       "reason": "",
       "bozo": false,
       "bozoException": "",

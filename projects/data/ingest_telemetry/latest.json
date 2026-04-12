@@ -1,18 +1,18 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-04-12T01:11:50.422935Z",
-  "run_time_utc": "2026-04-12T01:11:50.422935Z",
+  "generatedAt": "2026-04-12T01:41:53.161439Z",
+  "run_time_utc": "2026-04-12T01:41:53.161439Z",
   "summary": {
     "schemaVersion": 2,
-    "generatedAt": "2026-04-12T01:11:50.422935Z",
-    "run_time_utc": "2026-04-12T01:11:50.422935Z",
-    "sources_checked": 7,
-    "sources_with_new_items": 3,
-    "total_raw_items": 274,
-    "total_parsed_items": 114,
-    "total_normalized_items": 114,
-    "total_after_dedupe_items": 95,
-    "total_written_articles_feed_attributed": 212,
+    "generatedAt": "2026-04-12T01:41:53.161439Z",
+    "run_time_utc": "2026-04-12T01:41:53.161439Z",
+    "sources_checked": 8,
+    "sources_with_new_items": 4,
+    "total_raw_items": 309,
+    "total_parsed_items": 149,
+    "total_normalized_items": 149,
+    "total_after_dedupe_items": 130,
+    "total_written_articles_feed_attributed": 218,
     "written_by_section": {
       "zpravy": 534,
       "sport": 266,
@@ -26,6 +26,11 @@
         "source_id": "hry_zing",
         "feed_url": "https://zing.cz/rss/all",
         "raw_feed_new_item_count": 40
+      },
+      {
+        "source_id": "ved_vtm",
+        "feed_url": "https://vtm.zive.cz/rss",
+        "raw_feed_new_item_count": 35
       },
       {
         "source_id": "spt_ctsport",
@@ -43,8 +48,8 @@
         "raw_feed_new_item_count": 0
       },
       {
-        "source_id": "ved_ct24_veda",
-        "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
+        "source_id": "spt_crzpravy_sport",
+        "feed_url": "https://www.crzpravy.cz/rss/sport/",
         "raw_feed_new_item_count": 0
       },
       {
@@ -75,14 +80,19 @@
         "written_to_articles_json_count": 26
       },
       {
-        "source_id": "ved_ct24_veda",
-        "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
-        "written_to_articles_json_count": 8
+        "source_id": "ved_vtm",
+        "feed_url": "https://vtm.zive.cz/rss",
+        "written_to_articles_json_count": 11
       },
       {
         "source_id": "kul_ctart",
         "feed_url": "https://www.ceskatelevize.cz/art/rss",
         "written_to_articles_json_count": 5
+      },
+      {
+        "source_id": "spt_crzpravy_sport",
+        "feed_url": "https://www.crzpravy.cz/rss/sport/",
+        "written_to_articles_json_count": 3
       },
       {
         "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -102,6 +112,11 @@
         "raw_minus_written": 174
       },
       {
+        "source_id": "ved_vtm",
+        "feed_url": "https://vtm.zive.cz/rss",
+        "raw_minus_written": 24
+      },
+      {
         "source_id": "yt_playlist_PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
         "raw_minus_written": 15
@@ -112,14 +127,14 @@
         "raw_minus_written": 4
       },
       {
+        "source_id": "spt_crzpravy_sport",
+        "feed_url": "https://www.crzpravy.cz/rss/sport/",
+        "raw_minus_written": -3
+      },
+      {
         "source_id": "kul_ctart",
         "feed_url": "https://www.ceskatelevize.cz/art/rss",
         "raw_minus_written": -5
-      },
-      {
-        "source_id": "ved_ct24_veda",
-        "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
-        "raw_minus_written": -8
       },
       {
         "source_id": "spt_ctsport",
@@ -141,8 +156,8 @@
       "feed_url": "https://zing.cz/rss/all",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-12T01:11:50.422935Z",
-      "run_time_utc": "2026-04-12T01:11:50.422935Z",
+      "generatedAt": "2026-04-12T01:41:53.161439Z",
+      "run_time_utc": "2026-04-12T01:41:53.161439Z",
       "raw_feed_item_count": 200,
       "raw_feed_new_item_count": 40,
       "raw_feed_latest_publishedAt": "2026-04-11T18:00:00Z",
@@ -212,8 +227,8 @@
       "feed_url": "https://www.ceskatelevize.cz/art/rss",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-04-12T01:11:50.422935Z",
-      "run_time_utc": "2026-04-12T01:11:50.422935Z",
+      "generatedAt": "2026-04-12T01:41:53.161439Z",
+      "run_time_utc": "2026-04-12T01:41:53.161439Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -244,14 +259,52 @@
       "sample_titles": []
     },
     {
+      "source_id": "spt_crzpravy_sport",
+      "registry_id": "spt_crzpravy_sport",
+      "source_label": "ČR Zprávy / Sport",
+      "feed_url": "https://www.crzpravy.cz/rss/sport/",
+      "topic": "sport",
+      "section_primary": "sport",
+      "generatedAt": "2026-04-12T01:41:53.161439Z",
+      "run_time_utc": "2026-04-12T01:41:53.161439Z",
+      "raw_feed_item_count": 0,
+      "raw_feed_new_item_count": 0,
+      "raw_feed_latest_publishedAt": "",
+      "ingested_item_count": 0,
+      "parsed_item_count": 0,
+      "normalized_item_count": 0,
+      "valid_publishedAt_count": 0,
+      "mapped_to_section_count": {
+        "zpravy": 0,
+        "sport": 0,
+        "finance": 0,
+        "zdravi": 0,
+        "cestovani": 0,
+        "other": 0
+      },
+      "release_eligible_count": 3,
+      "written_to_articles_json_count": 3,
+      "newest_written_publishedAt": "2024-09-04T08:27:16Z",
+      "drop_counts": {
+        "missing_publishedAt": 0,
+        "invalid_publishedAt": 0,
+        "parser_drop": 0,
+        "section_remap": 0,
+        "release_gate": 0,
+        "dedupe": 0,
+        "other": 0
+      },
+      "sample_titles": []
+    },
+    {
       "source_id": "spt_ctsport",
       "registry_id": "spt_ctsport",
       "source_label": "ČT sport",
       "feed_url": "https://sport.ceskatelevize.cz/rss",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-12T01:11:50.422935Z",
-      "run_time_utc": "2026-04-12T01:11:50.422935Z",
+      "generatedAt": "2026-04-12T01:41:53.161439Z",
+      "run_time_utc": "2026-04-12T01:41:53.161439Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
       "raw_feed_latest_publishedAt": "2026-04-11T20:17:13Z",
@@ -315,42 +368,75 @@
       ]
     },
     {
-      "source_id": "ved_ct24_veda",
-      "registry_id": "ved_ct24_veda",
-      "source_label": "ČT24 / Věda",
-      "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
+      "source_id": "ved_vtm",
+      "registry_id": "ved_vtm",
+      "source_label": "VTM",
+      "feed_url": "https://vtm.zive.cz/rss",
       "topic": "veda",
       "section_primary": "veda",
-      "generatedAt": "2026-04-12T01:11:50.422935Z",
-      "run_time_utc": "2026-04-12T01:11:50.422935Z",
-      "raw_feed_item_count": 0,
-      "raw_feed_new_item_count": 0,
-      "raw_feed_latest_publishedAt": "",
-      "ingested_item_count": 0,
-      "parsed_item_count": 0,
-      "normalized_item_count": 0,
-      "valid_publishedAt_count": 0,
+      "generatedAt": "2026-04-12T01:41:53.161439Z",
+      "run_time_utc": "2026-04-12T01:41:53.161439Z",
+      "raw_feed_item_count": 35,
+      "raw_feed_new_item_count": 35,
+      "raw_feed_latest_publishedAt": "2026-04-11T15:45:00Z",
+      "ingested_item_count": 35,
+      "parsed_item_count": 35,
+      "normalized_item_count": 35,
+      "valid_publishedAt_count": 35,
       "mapped_to_section_count": {
         "zpravy": 0,
         "sport": 0,
         "finance": 0,
         "zdravi": 0,
         "cestovani": 0,
-        "other": 0
+        "other": 35
       },
-      "release_eligible_count": 8,
-      "written_to_articles_json_count": 8,
-      "newest_written_publishedAt": "2026-04-03T05:00:00Z",
+      "release_eligible_count": 9,
+      "written_to_articles_json_count": 11,
+      "newest_written_publishedAt": "2026-04-07T17:45:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
         "parser_drop": 0,
         "section_remap": 0,
-        "release_gate": 0,
+        "release_gate": 2,
         "dedupe": 0,
         "other": 0
       },
-      "sample_titles": []
+      "sample_titles": [
+        {
+          "title": "Masakr cen u Applu. MacBook Air M4 pod 20 tisíc, Mac mini M2 za 8 tisíc a AirTag za 300 Kč",
+          "publishedAt": "2026-04-11T09:20:00Z"
+        },
+        {
+          "title": "Nahradí to kameramany? Pás kamer zvládne švenkování lépe než člověk",
+          "publishedAt": "2026-04-11T15:45:00Z"
+        },
+        {
+          "title": "Nizozemský vývojář oživil Doom pomocí CSS a ukázal, že i webový prohlížeč zvládne plnohodnotný 3D engine",
+          "publishedAt": "2026-04-11T11:45:00Z"
+        },
+        {
+          "title": "Toto je 50 nejstahovanějších a nejoblíbenějších aplikací pro iPhone a Android v Česku",
+          "publishedAt": "2026-04-11T08:45:00Z"
+        },
+        {
+          "title": "MacBook Neo je nejdůležitější počítač roku. Levné notebooky s Windows, tohle musíte okopírovat (Podcast Živě)",
+          "publishedAt": "2026-04-10T16:45:00Z"
+        },
+        {
+          "title": "Tohle jsou nejoblíbenější nové filmy a seriály. Bez vykopávek, které jste už dávno viděli",
+          "publishedAt": "2026-04-10T15:45:00Z"
+        },
+        {
+          "title": "AI tak dobrá, že ji museli zakázat. Claude Mythos odhalil takové zranitelnosti, až si vynutil přísné omezení dostupnosti",
+          "publishedAt": "2026-04-09T18:45:00Z"
+        },
+        {
+          "title": "Netflix a další na víkend: Žraločí smršť, Star Wars: Maul nebo Privilegia. A Banda začala finální sezónu",
+          "publishedAt": "2026-04-10T13:45:00Z"
+        }
+      ]
     },
     {
       "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -359,8 +445,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-12T01:11:50.422935Z",
-      "run_time_utc": "2026-04-12T01:11:50.422935Z",
+      "generatedAt": "2026-04-12T01:41:53.161439Z",
+      "run_time_utc": "2026-04-12T01:41:53.161439Z",
       "raw_feed_item_count": 4,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2026-01-20T08:01:05Z",
@@ -397,8 +483,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-12T01:11:50.422935Z",
-      "run_time_utc": "2026-04-12T01:11:50.422935Z",
+      "generatedAt": "2026-04-12T01:41:53.161439Z",
+      "run_time_utc": "2026-04-12T01:41:53.161439Z",
       "raw_feed_item_count": 15,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2024-07-19T09:05:16Z",
@@ -435,8 +521,8 @@
       "feed_url": "https://www.denik.cz/rss/zpravy.html",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-12T01:11:50.422935Z",
-      "run_time_utc": "2026-04-12T01:11:50.422935Z",
+      "generatedAt": "2026-04-12T01:41:53.161439Z",
+      "run_time_utc": "2026-04-12T01:41:53.161439Z",
       "raw_feed_item_count": 25,
       "raw_feed_new_item_count": 25,
       "raw_feed_latest_publishedAt": "2026-04-11T20:01:00Z",
