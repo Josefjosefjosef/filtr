@@ -5667,18 +5667,29 @@ function buildVideoAsArticleCard(it) {
     return { base: capOne, vocative: capOne };
   }
 
+  /** Společné prefixy (nejdelší první) — strip pro normalizaci + test intentu na spodním Silver vstupu. */
+  function iuUserAddressIntentPrefixPatterns(){
+    return [
+      /^říkej\s+mi\s+prosím\s+/i,
+      /^říkej\s+mi\s+/i,
+      /^jmenuji\s+se\s+/i,
+      /^odteď\s+mě\s+oslovuj\s+/i,
+      /^oslovuj\s+mě\s+/i,
+      /^změň\s+oslovení\s+na\s+/i,
+      /^změn\s+oslovení\s+na\s+/i,
+      /^nastav\s+oslovení\s+na\s+/i,
+      /^používej\s+jméno\s+/i,
+      /^můžeš\s+mi\s+říkat\s+/i,
+      /^jsem\s+/i
+    ];
+  }
+
   function iuNormalizeUserAddressInput(raw){
     const s0 = iuUserAddressCollapseSpaces(String(raw || ""));
     if (!s0) return "";
 
     let rest = s0;
-    const prefs = [
-      /^jmenuji\s+se\s+/i,
-      /^odteď\s+mě\s+oslovuj\s+/i,
-      /^oslovuj\s+mě\s+/i,
-      /^říkej\s+mi\s+/i,
-      /^jsem\s+/i
-    ];
+    const prefs = iuUserAddressIntentPrefixPatterns();
     for (let i = 0; i < prefs.length; i++){
       if (prefs[i].test(rest)){
         rest = rest.replace(prefs[i], "").trim();
@@ -5717,10 +5728,20 @@ function buildVideoAsArticleCard(it) {
     return token.charAt(0).toUpperCase() + token.slice(1).toLowerCase();
   }
 
+  function iuUserAddressLineMatchesIntentPrefix(t){
+    const s = iuUserAddressCollapseSpaces(String(t || ""));
+    if (!s) return false;
+    const prefs = iuUserAddressIntentPrefixPatterns();
+    for (let i = 0; i < prefs.length; i++){
+      if (prefs[i].test(s)) return true;
+    }
+    return false;
+  }
+
   function iuUserAddressMaybeIntentFromSilverLine(raw){
     const t = iuUserAddressCollapseSpaces(String(raw || ""));
     if (!t) return null;
-    if (!/^(jmenuji\s+se|odteď\s+mě\s+oslovuj|oslovuj\s+mě|říkej\s+mi|jsem)\s+/i.test(t)) return null;
+    if (!iuUserAddressLineMatchesIntentPrefix(t)) return null;
     const base = iuNormalizeUserAddressInput(t);
     if (!base) return null;
     return base;
