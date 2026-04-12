@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-12T17:54:44.916919Z",
+  "ingestedAt": "2026-04-12T18:09:18.966168Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Smíšené výsledky z německé ekonomiky",
+      "url": "https://profitonline.cz/smisene-vysledky-z-nemecke-ekonomiky/",
+      "dt": "2026-04-12T18:00:05Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "ekonomiky",
+        "německé",
+        "smíšené",
+        "výsledky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -258,34 +279,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Okamžiky dějin: Apollo 13 – když se rutinní mise proměnila v nejdramatičtější záchrannou operaci kosmonautiky",
-      "url": "https://profitonline.cz/okamziky-dejin-apollo-13-kdyz-se-rutinni-mise-promenila-v-nejdramatictejsi-zachrannou-operaci-kosmonautiky/",
-      "dt": "2026-04-11T10:00:21Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "apollo",
-        "dějin",
-        "když",
-        "kosmonautiky",
-        "mise",
-        "nejdramatičtější",
-        "okamžiky",
-        "operaci",
-        "proměnila",
-        "rutinní",
-        "záchrannou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +289,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18913,
+      "bytes": 18609,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -333,11 +326,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-12T17:00:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T18:00:05Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 11,
-          "zdravi": 1
+          "finance": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -349,6 +341,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Smíšené výsledky z německé ekonomiky",
+            "publishedAt": "2026-04-12T18:00:05Z"
+          },
           {
             "title": "Rafinační marže Orlenu a MOL se citelně propadají",
             "publishedAt": "2026-04-12T17:00:52Z"
@@ -376,10 +372,6 @@
           {
             "title": "Hypotéky zdražily nejvíce za poslední čtyři roky",
             "publishedAt": "2026-04-12T06:00:06Z"
-          },
-          {
-            "title": "Tip na výlet: Po krkonošské stezce za medvědy",
-            "publishedAt": "2026-04-12T04:00:18Z"
           }
         ]
       }
