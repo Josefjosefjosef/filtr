@@ -22,6 +22,16 @@ style-src 'self' 'unsafe-inline' https:;
 ">
 
     <style>
+      /*
+        P0 initial paint: match :root --iu-page-bg before external /assets/app.css applies.
+        Proof (Playwright after-commit): without this, html had background-image none while only the
+        inline stylesheet was present — default canvas white, then gradient → visible chroma flash.
+      */
+      html,
+      body {
+        background: linear-gradient(180deg, #e5eef6 0%, #f2f6fa 100%);
+        background-color: #e5eef6;
+      }
       /* pointer-events: diag overlays must not steal clicks */
       body::before, body::after, html::before, html::after { pointer-events: none !important; }
       /*
