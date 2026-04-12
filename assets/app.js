@@ -5667,39 +5667,91 @@ function buildVideoAsArticleCard(it) {
     return { base: capOne, vocative: capOne };
   }
 
-  /** Společné prefixy (nejdelší první) — strip pro normalizaci + test intentu na spodním Silver vstupu. */
-  function iuUserAddressIntentPrefixPatterns(){
-    return [
-      /^říkej\s+mi\s+prosím\s+/i,
-      /^říkej\s+mi\s+/i,
-      /^jmenuji\s+se\s+/i,
-      /^odteď\s+mě\s+oslovuj\s+/i,
-      /^oslovuj\s+mě\s+/i,
-      /^změň\s+oslovení\s+na\s+/i,
-      /^změn\s+oslovení\s+na\s+/i,
-      /^nastav\s+oslovení\s+na\s+/i,
-      /^používej\s+jméno\s+/i,
-      /^můžeš\s+mi\s+říkat\s+/i,
-      /^jsem\s+/i
-    ];
+  /** Jednotná ASCII normalizace pro intent matching (diakritika pryč, lower, mezery). */
+  function iuNormalizeIntentParsingText(raw){
+    let t = iuUserAddressCollapseSpaces(String(raw || ""));
+    if (!t) return "";
+    t = t.replace(/^[\s.,!?;:]+|[\s.,!?;:]+$/g, "");
+    t = t.toLowerCase();
+    t = t.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return iuUserAddressCollapseSpaces(t.replace(/\s+/g, " "));
   }
 
-  function iuNormalizeUserAddressInput(raw){
-    const s0 = iuUserAddressCollapseSpaces(String(raw || ""));
-    if (!s0) return "";
+  function iuUserAddressIntentDenyLookup(lk){
+    if (IU_USER_ADDRESS_INTENT_DENY[lk]) return true;
+    const nt = iuNormalizeIntentParsingText(lk);
+    let k;
+    for (k in IU_USER_ADDRESS_INTENT_DENY){
+      if (!Object.prototype.hasOwnProperty.call(IU_USER_ADDRESS_INTENT_DENY, k)) continue;
+      if (iuNormalizeIntentParsingText(k) === nt) return true;
+    }
+    return false;
+  }
 
-    let rest = s0;
-    const prefs = iuUserAddressIntentPrefixPatterns();
+  function iuUserAddressVocToBaseResolve(lk){
+    if (IU_USER_ADDRESS_VOC_TO_BASE[lk]) return IU_USER_ADDRESS_VOC_TO_BASE[lk];
+    const nt = iuNormalizeIntentParsingText(lk);
+    let k;
+    for (k in IU_USER_ADDRESS_VOC_TO_BASE){
+      if (!Object.prototype.hasOwnProperty.call(IU_USER_ADDRESS_VOC_TO_BASE, k)) continue;
+      if (iuNormalizeIntentParsingText(k) === nt) return IU_USER_ADDRESS_VOC_TO_BASE[k];
+    }
+    return null;
+  }
+
+  /** Společné prefixy po iuNormalizeIntentParsingText — jen ASCII, nejdelší první (řadí se podle délky). */
+  function iuUserAddressIntentPrefixesOrdered(){
+    const p = [
+      "zmen moje osloveni na ",
+      "nastav osloveni na ",
+      "zmen osloveni na ",
+      "zmen oslveni na ",
+      "odted me oslovuj ",
+      "odted mi rikej ",
+      "rikej mi prosim ",
+      "pouzivej jmeno ",
+      "muzes mi rikat ",
+      "jmenuji se ",
+      "oslovuj me ",
+      "rikej mi ",
+      "jsem "
+    ];
+    return p.slice().sort(function (a, b){
+      return b.length - a.length;
+    });
+  }
+
+  /** Najde konec prefixu v původním řetězci (stejná normalizace jako u prefixů). */
+  function iuUserAddressSliceRestAfterIntentPrefix(collapsed, prefixNorm){
+    const n = iuNormalizeIntentParsingText(collapsed);
+    if (!n.startsWith(prefixNorm)) return null;
+    for (let cut = 0; cut <= collapsed.length; cut++){
+      const head = collapsed.slice(0, cut);
+      if (iuNormalizeIntentParsingText(head) === prefixNorm) return collapsed.slice(cut).trim();
+    }
+    return iuUserAddressCollapseSpaces(n.slice(prefixNorm.length));
+  }
+
+  /** Odstraní nejvýše jeden intent prefix; jinak vrátí celý řetězec. */
+  function iuUserAddressStripIntentPrefix(collapsed){
+    const n = iuNormalizeIntentParsingText(collapsed);
+    if (!n) return collapsed;
+    const prefs = iuUserAddressIntentPrefixesOrdered();
     for (let i = 0; i < prefs.length; i++){
-      if (prefs[i].test(rest)){
-        rest = rest.replace(prefs[i], "").trim();
-        break;
+      const pr = prefs[i];
+      if (n.startsWith(pr)){
+        const rest = iuUserAddressSliceRestAfterIntentPrefix(collapsed, pr);
+        if (rest !== null && rest !== undefined) return rest;
       }
     }
-    rest = iuUserAddressCollapseSpaces(rest);
-    if (!rest) return "";
+    return collapsed;
+  }
 
-    const parts = rest.split(/\s+/);
+  function iuNormalizeUserAddressValue(rest){
+    const rest0 = iuUserAddressCollapseSpaces(String(rest || ""));
+    if (!rest0) return "";
+
+    const parts = rest0.split(/\s+/);
     if (parts.length > 1){
       if (!/^pane\b/i.test(parts[0])) return "";
       return parts
@@ -5712,8 +5764,8 @@ function buildVideoAsArticleCard(it) {
 
     let token = parts[0];
     const lk = token.normalize("NFC").toLowerCase();
-    if (IU_USER_ADDRESS_INTENT_DENY[lk]) return "";
-    const rev = IU_USER_ADDRESS_VOC_TO_BASE[lk];
+    if (iuUserAddressIntentDenyLookup(lk)) return "";
+    const rev = iuUserAddressVocToBaseResolve(lk);
     if (rev) return rev;
 
     if (!/^[\p{L}\-]{2,48}$/u.test(token)) return "";
@@ -5728,12 +5780,21 @@ function buildVideoAsArticleCard(it) {
     return token.charAt(0).toUpperCase() + token.slice(1).toLowerCase();
   }
 
+  function iuNormalizeUserAddressInput(raw){
+    const s0 = iuUserAddressCollapseSpaces(String(raw || ""));
+    if (!s0) return "";
+
+    const rest = iuUserAddressStripIntentPrefix(s0);
+    return iuNormalizeUserAddressValue(rest);
+  }
+
   function iuUserAddressLineMatchesIntentPrefix(t){
     const s = iuUserAddressCollapseSpaces(String(t || ""));
     if (!s) return false;
-    const prefs = iuUserAddressIntentPrefixPatterns();
+    const n = iuNormalizeIntentParsingText(s);
+    const prefs = iuUserAddressIntentPrefixesOrdered();
     for (let i = 0; i < prefs.length; i++){
-      if (prefs[i].test(s)) return true;
+      if (n.startsWith(prefs[i])) return true;
     }
     return false;
   }
