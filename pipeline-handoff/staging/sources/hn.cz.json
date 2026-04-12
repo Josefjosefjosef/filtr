@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-12T15:44:52.201073Z",
+  "ingestedAt": "2026-04-12T15:55:48.398124Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jednání USA a Íránu o míru skončilo krachem. Prezident Trump navíc nařídil americkému námořnictvu zablokovat Hormuzský průliv",
+      "url": "https://zahranicni.hn.cz/c1-67865580-jednani-usa-a-iranu-o-miru-skoncilo-krachem-prezident-trump-navic-naridil-americkemu-namornictvu-zablokovat-hormuzsky-pruliv",
+      "dt": "2026-04-12T15:50:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "americkému",
+        "hormuzský",
+        "jednání",
+        "krachem",
+        "míru",
+        "navíc",
+        "nařídil",
+        "námořnictvu",
+        "prezident",
+        "průliv",
+        "skončilo",
+        "trump",
+        "usa",
+        "zablokovat",
+        "íránu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1153,34 +1185,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Prezidentova velká hra. Dopisem přitlačil Babiše do kouta, premiér si bude muset zvolit stranu",
-      "url": "https://archiv.hn.cz/c1-67865030-prezidentova-velka-hra-dopisem-pritlacil-babise-do-kouta-premier-si-bude-muset-zvolit-stranu",
-      "dt": "2026-04-09T17:14:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "babiše",
-        "dopisem",
-        "hra",
-        "kouta",
-        "muset",
-        "premiér",
-        "prezidentova",
-        "přitlačil",
-        "stranu",
-        "velká",
-        "zvolit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1191,7 +1195,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184971,
+      "bytes": 185718,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1228,7 +1232,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-12T14:17:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T15:50:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1246,6 +1250,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jednání USA a Íránu o míru skončilo krachem. Prezident Trump navíc nařídil americkému námořnictvu zablokovat Hormuzský průliv",
+            "publishedAt": "2026-04-12T15:50:00Z"
+          },
           {
             "title": "Babišovy limity na ceny nafty otřásají trhem benzinek. Někde ji vůbec neprodávají, hrozí žaloby na stát",
             "publishedAt": "2026-04-12T14:17:00Z"
@@ -1273,10 +1281,6 @@
           {
             "title": "Hon na stvořitele bitcoinu: nová stopa vede ke známému jménu. O pravdu ale ve skutečnosti nikdo nestojí",
             "publishedAt": "2026-04-12T07:00:00Z"
-          },
-          {
-            "title": "Herní tip: Starfield vás dostane na měsíc už i na PlayStation 5, vesmírná opera Microsoftu má ale hned dva nové soky",
-            "publishedAt": "2026-04-11T13:28:00Z"
           }
         ]
       }
