@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-12T18:40:44.867405Z",
+  "ingestedAt": "2026-04-12T18:59:25.770845Z",
   "items": [
     {
       "section": "aktualne",
@@ -742,6 +742,31 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Karlovarsko porazilo Liberec i ve třetím utkání a po roce je opět ve finále",
+      "url": "https://sport.ceskatelevize.cz/clanek/volejbal/karlovarsko-porazilo-liberec-i-ve-tretim-utkani-a-po-roce-je-opet-ve-finale-156258",
+      "dt": "2026-04-12T18:38:55Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "finále",
+        "karlovarsko",
+        "liberec",
+        "opět",
+        "porazilo",
+        "roce",
+        "třetím",
+        "utkání"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Stuttgart vyprovodil nováčka z Hamburku čtyřmi brankami",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/bundesliga/stuttgart-vyprovodil-novacka-z-hamburku-ctyrmi-brankami-156257",
       "dt": "2026-04-12T17:51:09Z",
@@ -1464,28 +1489,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rampula si na SP v Granadě vystřílel šesté místo",
-      "url": "https://sport.ceskatelevize.cz/clanek/sportovni-strelba/rampula-si-na-sp-v-granade-vystrilel-seste-misto-156226",
-      "dt": "2026-04-11T15:34:50Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "granadě",
-        "místo",
-        "rampula",
-        "vystřílel",
-        "šesté"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1615,7 +1618,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39327,
+      "bytes": 39318,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1652,7 +1655,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T17:51:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T18:38:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1667,6 +1670,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Karlovarsko porazilo Liberec i ve třetím utkání a po roce je opět ve finále",
+            "publishedAt": "2026-04-12T18:38:55Z"
+          },
           {
             "title": "Stuttgart vyprovodil nováčka z Hamburku čtyřmi brankami",
             "publishedAt": "2026-04-12T17:51:09Z"
@@ -1694,10 +1701,6 @@
           {
             "title": "Van Aert triumfoval na Paříž-Roubaix. Ve finiši překonal Pogačara",
             "publishedAt": "2026-04-12T15:18:20Z"
-          },
-          {
-            "title": "Florbalisté Bohemians odvrátili první semifinálový mečbol Tatranu, Boleslav je ve finále",
-            "publishedAt": "2026-04-12T14:41:36Z"
           }
         ]
       }
@@ -1709,7 +1712,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76815,
+      "bytes": 76819,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

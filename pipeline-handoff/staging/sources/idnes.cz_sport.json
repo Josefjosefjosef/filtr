@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-12T18:40:44.867405Z",
+  "ingestedAt": "2026-04-12T18:59:25.770845Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Slavia - Plzeň 0:0, chabý šlágr. Domácí kvůli plivanci ztratili vyloučeného Chorého",
+      "title": "Slavia - Plzeň 0:0, chabý šlágr, domácí kvůli plivanci přišli o vyloučeného Chorého",
       "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-29-kolo-slavia-praha-viktoria-plzen-online-vysledek.A260412_104933_fotbal_duff",
-      "dt": "2026-04-12T18:31:55Z",
+      "dt": "2026-04-12T18:48:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -18,10 +18,39 @@
         "kvůli",
         "plivanci",
         "plzeň",
+        "přišli",
         "slavia",
         "vyloučeného",
-        "ztratili",
         "šlágr"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Třetí jasná výhra v sérii, USK je opět ve finále. Do boje o titul míří také Žabiny",
+      "url": "https://www.idnes.cz/sport/basket/basketbalova-liga-zen-semifinale-druhe-zapasy.A260412_125657_sport-basket_ald",
+      "dt": "2026-04-12T18:44:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "boje",
+        "finále",
+        "jasná",
+        "míří",
+        "opět",
+        "sérii",
+        "také",
+        "titul",
+        "třetí",
+        "usk",
+        "výhra",
+        "žabiny"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -100,35 +129,6 @@
         "kinský",
         "sestupu",
         "tottenham"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Třetí jasná výhra v sérii, USK je opět ve finále. Do boje o titul míří také Žabiny",
-      "url": "https://www.idnes.cz/sport/basket/basketbalova-liga-zen-semifinale-druhe-zapasy.A260412_125657_sport-basket_ald",
-      "dt": "2026-04-12T17:17:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "boje",
-        "finále",
-        "jasná",
-        "míří",
-        "opět",
-        "sérii",
-        "také",
-        "titul",
-        "třetí",
-        "usk",
-        "výhra",
-        "žabiny"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -801,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45463,
+      "bytes": 45464,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T18:31:55Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T18:48:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -854,8 +854,12 @@
         },
         "sample_titles": [
           {
-            "title": "Slavia - Plzeň 0:0, chabý šlágr. Domácí kvůli plivanci ztratili vyloučeného Chorého",
-            "publishedAt": "2026-04-12T18:31:55Z"
+            "title": "Slavia - Plzeň 0:0, chabý šlágr, domácí kvůli plivanci přišli o vyloučeného Chorého",
+            "publishedAt": "2026-04-12T18:48:00Z"
+          },
+          {
+            "title": "Třetí jasná výhra v sérii, USK je opět ve finále. Do boje o titul míří také Žabiny",
+            "publishedAt": "2026-04-12T18:44:00Z"
           },
           {
             "title": "Priske o sparťanském objevu Sochůrkovi: On je voják! A Vojta? Gól už brzy dá",
@@ -868,10 +872,6 @@
           {
             "title": "Kinský inkasoval, Tottenham je blízko sestupu. City se dál dotahuje na Arsenal",
             "publishedAt": "2026-04-12T17:38:00Z"
-          },
-          {
-            "title": "Třetí jasná výhra v sérii, USK je opět ve finále. Do boje o titul míří také Žabiny",
-            "publishedAt": "2026-04-12T17:17:00Z"
           },
           {
             "title": "Střídání na tenisovém trůnu. Sinner porazil Alcaraze v Monte Carlu a bude jedničkou",
