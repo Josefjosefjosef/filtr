@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-12T16:29:39.455556Z",
+  "ingestedAt": "2026-04-12T16:44:37.337451Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Slavia - Plzeň 0:0, domácí bez Chytila, zato s Bořilem. Hosté sází na Adua",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-29-kolo-slavia-praha-viktoria-plzen-online-vysledek.A260412_104933_fotbal_duff",
+      "dt": "2026-04-12T16:31:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "adua",
+        "bořilem",
+        "chytila",
+        "domácí",
+        "hosté",
+        "plzeň",
+        "slavia",
+        "sází",
+        "zato"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Kinský inkasoval a Tottenham je blízko sestupu. V akci Chelsea se City",
+      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-32-kolo-online-vysledky.A260412_105831_fot_zahranici_duff",
+      "dt": "2026-04-12T16:26:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "akci",
+        "blízko",
+        "chelsea",
+        "city",
+        "inkasoval",
+        "kinský",
+        "sestupu",
+        "tottenham"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -110,32 +161,6 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Slavia - Plzeň, domácí s Bořilem i Sanyangem. Hosté sází na Adua s Tourem",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-29-kolo-slavia-praha-viktoria-plzen-online-vysledek.A260412_104933_fotbal_duff",
-      "dt": "2026-04-12T15:40:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "adua",
-        "bořilem",
-        "domácí",
-        "hosté",
-        "plzeň",
-        "sanyangem",
-        "slavia",
-        "sází",
-        "tourem"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
       "title": "Dokázal to! Van Aert prolomil smůlu a po sprintu s Pogačarem vítězí na Roubaix",
       "url": "https://www.idnes.cz/sport/cyklistika/pariz-roubaix-wout-van-aert-tadej-pogacar.A260412_165201_cyklistika_mrg",
       "dt": "2026-04-12T15:33:07Z",
@@ -151,31 +176,6 @@
         "sprintu",
         "van",
         "vítězí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ONLINE: Kinský inkasoval a Tottenham je blízko sestupu. V akci Chelsea se City",
-      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-32-kolo-online-vysledky.A260412_105831_fot_zahranici_duff",
-      "dt": "2026-04-12T15:31:38Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "akci",
-        "blízko",
-        "chelsea",
-        "city",
-        "inkasoval",
-        "kinský",
-        "sestupu",
-        "tottenham"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -794,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44600,
+      "bytes": 44601,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T16:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T16:31:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +846,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ONLINE: Slavia - Plzeň 0:0, domácí bez Chytila, zato s Bořilem. Hosté sází na Adua",
+            "publishedAt": "2026-04-12T16:31:00Z"
+          },
+          {
+            "title": "ONLINE: Kinský inkasoval a Tottenham je blízko sestupu. V akci Chelsea se City",
+            "publishedAt": "2026-04-12T16:26:00Z"
+          },
           {
             "title": "Střídání na tenisovém trůnu. Sinner porazil Alcaraze v Monte Carlu a bude jedničkou",
             "publishedAt": "2026-04-12T16:08:00Z"
@@ -863,16 +871,8 @@
             "publishedAt": "2026-04-12T15:48:00Z"
           },
           {
-            "title": "ONLINE: Slavia - Plzeň, domácí s Bořilem i Sanyangem. Hosté sází na Adua s Tourem",
-            "publishedAt": "2026-04-12T15:40:00Z"
-          },
-          {
             "title": "Dokázal to! Van Aert prolomil smůlu a po sprintu s Pogačarem vítězí na Roubaix",
             "publishedAt": "2026-04-12T15:33:07Z"
-          },
-          {
-            "title": "ONLINE: Kinský inkasoval a Tottenham je blízko sestupu. V akci Chelsea se City",
-            "publishedAt": "2026-04-12T15:31:38Z"
           },
           {
             "title": "POHLED: Žalování, zákaz, tresty. Vyhlížená série se kazí, vinu nese i extraliga",

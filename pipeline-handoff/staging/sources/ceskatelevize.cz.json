@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-12T16:29:39.455556Z",
+  "ingestedAt": "2026-04-12T16:44:37.337451Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události neděle 12. dubna",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-nedele-12-dubna-372296",
+      "dt": "2026-04-12T16:28:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dubna",
+        "neděle",
+        "souhrn",
+        "události",
+        "zásadní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -718,28 +740,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Ministerstvo financí je proti vyšší rodičovské. Resort práce musí najít peníze",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/ministerstvo-financi-nesouhlasi-s-vyssi-rodicovskou-pokud-na-ni-resort-prace-nenajde-penize-372271",
-      "dt": "2026-04-11T09:22:33Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Sinner porazil v Monte Carlu Alcaraze a bude znovu světovou jedničkou",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/sinner-porazil-v-monte-carlu-alcaraze-a-bude-znovu-svetovou-jednickou-156254",
+      "dt": "2026-04-12T16:31:25Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "financí",
-        "ministerstvo",
-        "musí",
-        "najít",
-        "peníze",
-        "proti",
-        "práce",
-        "resort",
-        "rodičovské",
-        "vyšší"
+        "alcaraze",
+        "carlu",
+        "jedničkou",
+        "monte",
+        "porazil",
+        "sinner",
+        "světovou",
+        "znovu"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1470,33 +1490,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dědek žádá kvůli pokřiku fanoušků rezignaci Loukoty: Nechci, aby mi tu brečel syn",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/dedek-zada-kvuli-pokriku-fanousku-rezignaci-loukoty-nechci-aby-mi-tu-brecel-syn-156222",
-      "dt": "2026-04-11T13:00:18Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "brečel",
-        "dědek",
-        "fanoušků",
-        "kvůli",
-        "loukoty",
-        "nechci",
-        "pokřiku",
-        "rezignaci",
-        "syn",
-        "žádá"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1507,7 +1500,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42212,
+      "bytes": 41794,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1567,7 +1560,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T16:19:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T16:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1584,6 +1577,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události neděle 12. dubna",
+            "publishedAt": "2026-04-12T16:28:00Z"
+          },
           {
             "title": "Vzdušné údery na severovýchodě Nigérie zřejmě zabily nejméně sto lidí",
             "publishedAt": "2026-04-12T16:19:57Z"
@@ -1611,10 +1608,6 @@
           {
             "title": "Role si nehledám, najdou si mě, říká herečka Jana Nagyová",
             "publishedAt": "2026-04-12T08:00:00Z"
-          },
-          {
-            "title": "Ukrajina a Rusko hlásí tisíce případů porušení klidu zbraní",
-            "publishedAt": "2026-04-12T07:13:13Z"
           }
         ]
       }
@@ -1626,7 +1619,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39327,
+      "bytes": 39219,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1663,7 +1656,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T15:47:19Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T16:31:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1678,6 +1671,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sinner porazil v Monte Carlu Alcaraze a bude znovu světovou jedničkou",
+            "publishedAt": "2026-04-12T16:31:25Z"
+          },
           {
             "title": "Bulldogs míří poprvé do superfinále, úřadující šampionky odvrátily vyřazení",
             "publishedAt": "2026-04-12T15:47:19Z"
@@ -1705,10 +1702,6 @@
           {
             "title": "Karviná v lize poprvé na jaře vyhrála, Sparta uspěla v Teplicích díky Haraslínovi",
             "publishedAt": "2026-04-12T13:43:25Z"
-          },
-          {
-            "title": "Chorvatskou rallye vyhrál po nehodě Neuvillea Kacuta a má druhý triumf v MS za sebou",
-            "publishedAt": "2026-04-12T13:38:20Z"
           }
         ]
       }
@@ -1720,7 +1713,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76823,
+      "bytes": 76829,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
