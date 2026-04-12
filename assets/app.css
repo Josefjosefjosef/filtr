@@ -17008,16 +17008,67 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   color: rgba(15, 30, 45, 0.98);
 }
 
-.iuSilverWelcomeGreet{
-  flex: 0 1 auto;
-  min-width: 0;
-}
-
+.iuSilverWelcomeGreet,
 .iuSilverWelcomeUser{
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.iuSilverWelcomeAddressSlot{
+  flex: 0 1 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  max-width: min(200px, 34vw);
+}
+.iuSilverWelcomeAddressSlot:empty{display:none}
+input.iuSilverWelcomeAddressInput,
+button.iuSilverWelcomeAddressSubmit{
+  box-sizing: border-box;
+  margin: 0;
+}
+input.iuSilverWelcomeAddressInput{
+  padding: 0 7px;
+  width: clamp(90px, 28vw, 188px);
+  max-width: 100%;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: max(12px,.82em);
+  line-height: 1.15;
+  height: 1.15em;
+  border-radius: 999px;
+  border: 1px solid rgba(60,72,88,.28);
+  background: rgba(255,255,255,.55);
+  color: inherit;
+  outline: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.silver-welcome-stack--evening input.iuSilverWelcomeAddressInput{
+  border-color: rgba(255,255,255,.32);
+  background: rgba(255,255,255,.1);
+}
+button.iuSilverWelcomeAddressSubmit{
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(180deg,#22c55e 0%,#16a34a 100%);
+  color: rgba(255,255,255,.98);
+  cursor: pointer;
+  line-height: 0;
+}
+button.iuSilverWelcomeAddressSubmit:focus-visible{
+  outline: 2px solid rgba(34,197,94,.65);
+  outline-offset: 1px;
 }
 
 .iuSilverWelcomeUser[hidden]{

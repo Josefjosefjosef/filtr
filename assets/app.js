@@ -5572,6 +5572,298 @@ function buildVideoAsArticleCard(it) {
     }
   };
 
+  /** P0 Silver: jedna vrstva pro oslovení uživatele (localStorage base + lokální 5. pád pro header). */
+  const IU_USER_ADDRESS_STORAGE_KEY = "iu_user_address";
+  const IU_USER_ADDRESS_PLACEHOLDER = "Jak ti mám říkat? Ja jsem Silver";
+
+  const IU_USER_ADDRESS_VOC_TO_BASE = {
+    petře: "Petr",
+    pavle: "Pavel",
+    martine: "Martin",
+    jane: "Jan",
+    honzo: "Honza",
+    tomeši: "Tomáš",
+    lukáši: "Lukáš",
+    davide: "David",
+    jakube: "Jakub",
+    matěji: "Matěj",
+    vojtěchu: "Vojtěch",
+    kryštofe: "Kryštof"
+  };
+
+  const IU_USER_ADDRESS_INTENT_DENY = {
+    zvědavý: 1,
+    zvědavá: 1,
+    spokojený: 1,
+    spokojená: 1,
+    šťastný: 1,
+    šťastná: 1,
+    unavený: 1,
+    unavená: 1,
+    zklamaný: 1,
+    zklamaná: 1,
+    rád: 1,
+    ráda: 1
+  };
+
+  function iuUserAddressCollapseSpaces(s){
+    return String(s || "").replace(/\s+/g, " ").trim();
+  }
+
+  function iuUserAddressReadStoredBase(){
+    try{
+      const v = window.localStorage.getItem(IU_USER_ADDRESS_STORAGE_KEY);
+      return v ? String(v).trim() : "";
+    }catch{
+      return "";
+    }
+  }
+
+  function iuUserAddressWriteStoredBase(base){
+    try{
+      window.localStorage.setItem(IU_USER_ADDRESS_STORAGE_KEY, String(base || "").trim());
+      return true;
+    }catch{
+      return false;
+    }
+  }
+
+  function iuDeriveUserAddressForms(baseRaw){
+    const baseTrim = iuUserAddressCollapseSpaces(String(baseRaw || ""));
+    if (!baseTrim) return { base: "", vocative: "" };
+    if (/\s/.test(baseTrim)) return { base: baseTrim, vocative: baseTrim };
+    if (/^pane\s/i.test(baseTrim)) return { base: baseTrim, vocative: baseTrim };
+
+    const baseOne = baseTrim;
+    const low = baseOne.normalize("NFC").toLowerCase();
+
+    const hardVoc = {
+      petr: "Petře",
+      pavel: "Pavle",
+      jan: "Jane",
+      honza: "Honzo",
+      martin: "Martine",
+      lukáš: "Lukáši",
+      tomáš: "Tomeši",
+      david: "Davide",
+      jakub: "Jakube",
+      matěj: "Matěji",
+      vojtěch: "Vojtěchu",
+      kryštof: "Kryštofe"
+    };
+    if (hardVoc[low]){
+      const cap = baseOne.charAt(0).toUpperCase() + baseOne.slice(1).toLowerCase();
+      return { base: cap, vocative: hardVoc[low] };
+    }
+
+    if (/a$/i.test(baseOne) && baseOne.length >= 3){
+      const v = baseOne.slice(0, -1) + "o";
+      const capB = baseOne.charAt(0).toUpperCase() + baseOne.slice(1).toLowerCase();
+      const capV = v.charAt(0).toUpperCase() + v.slice(1);
+      return { base: capB, vocative: capV };
+    }
+
+    const capOne = baseOne.charAt(0).toUpperCase() + baseOne.slice(1).toLowerCase();
+    return { base: capOne, vocative: capOne };
+  }
+
+  function iuNormalizeUserAddressInput(raw){
+    const s0 = iuUserAddressCollapseSpaces(String(raw || ""));
+    if (!s0) return "";
+
+    let rest = s0;
+    const prefs = [
+      /^jmenuji\s+se\s+/i,
+      /^odteď\s+mě\s+oslovuj\s+/i,
+      /^oslovuj\s+mě\s+/i,
+      /^říkej\s+mi\s+/i,
+      /^jsem\s+/i
+    ];
+    for (let i = 0; i < prefs.length; i++){
+      if (prefs[i].test(rest)){
+        rest = rest.replace(prefs[i], "").trim();
+        break;
+      }
+    }
+    rest = iuUserAddressCollapseSpaces(rest);
+    if (!rest) return "";
+
+    const parts = rest.split(/\s+/);
+    if (parts.length > 1){
+      if (!/^pane\b/i.test(parts[0])) return "";
+      return parts
+        .map(function (p, idx){
+          if (idx === 0) return p.charAt(0).toLowerCase() + p.slice(1);
+          return p.charAt(0).toLowerCase() + p.slice(1);
+        })
+        .join(" ");
+    }
+
+    let token = parts[0];
+    const lk = token.normalize("NFC").toLowerCase();
+    if (IU_USER_ADDRESS_INTENT_DENY[lk]) return "";
+    const rev = IU_USER_ADDRESS_VOC_TO_BASE[lk];
+    if (rev) return rev;
+
+    if (!/^[\p{L}\-]{2,48}$/u.test(token)) return "";
+    if (token.indexOf("-") >= 0){
+      return token
+        .split("-")
+        .map(function (x){
+          return x.charAt(0).toUpperCase() + x.slice(1).toLowerCase();
+        })
+        .join("-");
+    }
+    return token.charAt(0).toUpperCase() + token.slice(1).toLowerCase();
+  }
+
+  function iuUserAddressMaybeIntentFromSilverLine(raw){
+    const t = iuUserAddressCollapseSpaces(String(raw || ""));
+    if (!t) return null;
+    if (!/^(jmenuji\s+se|odteď\s+mě\s+oslovuj|oslovuj\s+mě|říkej\s+mi|jsem)\s+/i.test(t)) return null;
+    const base = iuNormalizeUserAddressInput(t);
+    if (!base) return null;
+    return base;
+  }
+
+  function iuUserAddressClearCaptureSlot(){
+    try{
+      const slot = document.getElementById("iuSilverWelcomeAddressSlot");
+      if (!slot) return;
+      while (slot.firstChild) slot.removeChild(slot.firstChild);
+    }catch{}
+  }
+
+  function iuUserAddressBuildCaptureSlotIfNeeded(){
+    try{
+      if (iuUserAddressReadStoredBase()) return;
+      const slot = document.getElementById("iuSilverWelcomeAddressSlot");
+      if (!slot || slot.firstChild) return;
+      const doc = slot.ownerDocument;
+      const inp = doc.createElement("input");
+      inp.type = "text";
+      inp.className = "iuSilverWelcomeAddressInput";
+      inp.setAttribute("data-iu-user-address-input", "1");
+      inp.setAttribute("autocomplete", "off");
+      inp.setAttribute("spellcheck", "false");
+      inp.setAttribute("aria-label", IU_USER_ADDRESS_PLACEHOLDER);
+      inp.placeholder = IU_USER_ADDRESS_PLACEHOLDER;
+      const btn = doc.createElement("button");
+      btn.type = "button";
+      btn.className = "iuSilverWelcomeAddressSubmit";
+      btn.setAttribute("data-iu-user-address-submit", "1");
+      btn.setAttribute("aria-label", "Uložit oslovení");
+      const svg = doc.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.setAttribute("aria-hidden", "true");
+      svg.setAttribute("width", "16");
+      svg.setAttribute("height", "16");
+      const p = doc.createElementNS("http://www.w3.org/2000/svg", "path");
+      p.setAttribute("fill", "currentColor");
+      p.setAttribute("d", "M12 4 18 12h-4v8h-4v-8H6l6-8z");
+      svg.appendChild(p);
+      btn.appendChild(svg);
+
+      function submitCapture(){
+        try{
+          const v = iuNormalizeUserAddressInput(String(inp.value || ""));
+          if (!v) return;
+          iuUserAddressSetCore(v);
+        }catch{}
+      }
+
+      btn.addEventListener("click", function (e){
+        try{
+          e.preventDefault();
+        }catch{}
+        submitCapture();
+      });
+      inp.addEventListener("keydown", function (e){
+        if (!e || e.key !== "Enter") return;
+        try{
+          e.preventDefault();
+        }catch{}
+        submitCapture();
+      });
+      slot.appendChild(inp);
+      slot.appendChild(btn);
+    }catch{}
+  }
+
+  function iuUserAddressSetCore(base){
+    const b = iuUserAddressCollapseSpaces(String(base || ""));
+    if (!b) return false;
+    const forms = iuDeriveUserAddressForms(b);
+    if (!forms.base) return false;
+    if (!iuUserAddressWriteStoredBase(forms.base)) return false;
+    iuUserAddressClearCaptureSlot();
+    try{
+      if (typeof window.iuSilverWelcomeRefresh === "function") window.iuSilverWelcomeRefresh();
+    }catch{}
+    try{
+      if (typeof window.iuNamedayWishSyncTextarea === "function") window.iuNamedayWishSyncTextarea();
+    }catch{}
+    return true;
+  }
+
+  function iuUserAddressTryConsumeSilverLine(text){
+    const intentBase = iuUserAddressMaybeIntentFromSilverLine(text);
+    if (!intentBase) return false;
+    return iuUserAddressSetCore(intentBase);
+  }
+
+  function iuUserAddressInit(){
+    try{
+      if (window.__iuUserAddressInit) return;
+      window.__iuUserAddressInit = 1;
+    }catch{}
+
+    try{
+      window.iuGetUserAddressVocativeForWelcome = function (){
+        try{
+          const b = iuUserAddressReadStoredBase();
+          if (!b) return "";
+          return iuDeriveUserAddressForms(b).vocative || "";
+        }catch{
+          return "";
+        }
+      };
+    }catch{}
+
+    try{
+      window.iuGetUserAddress = function (){
+        return iuUserAddressReadStoredBase();
+      };
+    }catch{}
+
+    try{
+      window.iuSetUserAddress = function (raw){
+        try{
+          const base = iuNormalizeUserAddressInput(String(raw || ""));
+          if (!base) return false;
+          return iuUserAddressSetCore(base);
+        }catch{
+          return false;
+        }
+      };
+    }catch{}
+
+    try{
+      window.iuTryConsumeUserAddressIntentFromSilverInput = function (line){
+        return iuUserAddressTryConsumeSilverLine(line);
+      };
+    }catch{}
+
+    try{
+      window.iuUserAddressBuildCaptureSlotIfNeeded = iuUserAddressBuildCaptureSlotIfNeeded;
+    }catch{}
+
+    try{
+      iuUserAddressClearCaptureSlot();
+      iuUserAddressBuildCaptureSlotIfNeeded();
+    }catch{}
+  }
+
   /** P0 Silver: sticky welcome card — date + svátek reuse stejného zdroje jako topbar (#iuDailyNameday / #iuTopbarNameday + projects/data/namedays.json přes iuDailyPanelInit). */
   function iuSilverWelcomeInit(){
     try{
@@ -5641,13 +5933,14 @@ function buildVideoAsArticleCard(it) {
       if (k === "afternoon") return "Příjemné odpoledne";
       return "Dobrý večer";
     }
-    /** Žádný samostatný profil — pokud později přibude zdroj jména v appce, doplnit zde. */
+    /** Oslovení uživatele — jeden zdroj přes window.iuGetUserAddressVocativeForWelcome (iu_user_address). */
     function readSilverDisplayName(){
       try{
-        return "";
-      }catch{
-        return "";
-      }
+        if (typeof window.iuGetUserAddressVocativeForWelcome === "function"){
+          return String(window.iuGetUserAddressVocativeForWelcome() || "").trim();
+        }
+      }catch{}
+      return "";
     }
     /** P0 CLS: na mobile/tablet (≤900px) nepoužívat iterativní měření fontu — každý krok mění layout-shift; CSS clamp v app.css. */
     function silverWelcomeUseJsMetaFit(){
@@ -5713,9 +6006,9 @@ function buildVideoAsArticleCard(it) {
         if (greetEl && userEl) {
           const nm = String(displayName || "").trim();
           if (nm) {
-            greetEl.textContent = phrase + ",";
-            userEl.textContent = " " + nm;
-            try{ userEl.hidden = false; }catch{}
+            greetEl.textContent = phrase + ",\u00A0" + nm;
+            userEl.textContent = "";
+            try{ userEl.hidden = true; }catch{}
           } else {
             greetEl.textContent = phrase;
             userEl.textContent = "";
@@ -5724,6 +6017,9 @@ function buildVideoAsArticleCard(it) {
         } else {
           headlineEl.textContent = phrase;
         }
+        try{
+          if (typeof window.iuUserAddressBuildCaptureSlotIfNeeded === "function") window.iuUserAddressBuildCaptureSlotIfNeeded();
+        }catch{}
         const w = fmtDayForMeta(refDate);
         const wLower = w ? w.charAt(0).toLowerCase() + w.slice(1) : "";
         const dlong = fmtDateLong(refDate);
@@ -9157,6 +9453,12 @@ function buildVideoAsArticleCard(it) {
 
     function readSilverSignatureForWish(){
       try{
+        if (typeof window.iuGetUserAddress === "function"){
+          const s = String(window.iuGetUserAddress() || "").replace(/\s+/g, " ").trim();
+          if (s) return s;
+        }
+      }catch{}
+      try{
         const el = document.getElementById("iuSilverWelcomeUser");
         if (!el || el.hidden) return "";
         const s = String(el.textContent || "").replace(/\s+/g, " ").trim();
@@ -9299,6 +9601,10 @@ function buildVideoAsArticleCard(it) {
           }catch{}
         }).observe(obs, { childList: true, characterData: true, subtree: true });
       }
+    }catch{}
+
+    try{
+      window.iuNamedayWishSyncTextarea = syncTextarea;
     }catch{}
 
     try{
@@ -16795,6 +17101,7 @@ function buildVideoAsArticleCard(it) {
     try{ iuSilverWeatherInit(); }catch{}
     try { initRightPanel(); } catch (e) { console.error("RightPanel init failed", e); if (typeof persistLastError === "function") persistLastError("RightPanel init failed"); }
 
+    try{ iuUserAddressInit(); }catch{}
     try{ iuSilverWelcomeInit(); }catch{}
     /* P0: measure slot max-h once welcome DOM settled — before listeners-only init reduces first paint vs late reflow (CLS). */
     try{ iuSilverMobileStackFitApply(); }catch{}
@@ -32106,6 +32413,16 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     const text = String(input.value || "").trim().slice(0, SILVER_HOME_INPUT_MAX);
     if (!text) return;
     try {
+      if (typeof window.iuTryConsumeUserAddressIntentFromSilverInput === "function") {
+        if (window.iuTryConsumeUserAddressIntentFromSilverInput(text)) {
+          try {
+            input.value = "";
+          } catch {}
+          return;
+        }
+      }
+    } catch {}
+    try {
       sessionStorage.setItem(PENDING_KEY, text);
     } catch {}
     input.value = "";
@@ -32132,6 +32449,16 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     if (!input) return;
     const text = String(input.value || "").trim();
     if (!text) return;
+    try {
+      if (typeof window.iuTryConsumeUserAddressIntentFromSilverInput === "function") {
+        if (window.iuTryConsumeUserAddressIntentFromSilverInput(text)) {
+          try {
+            input.value = "";
+          } catch {}
+          return;
+        }
+      }
+    } catch {}
     clearPendingStorageDisambiguation();
     input.value = "";
     appendUserMessage(text);
