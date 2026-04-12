@@ -1,27 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-12T18:59:25.770845Z",
+  "ingestedAt": "2026-04-12T19:14:49.875079Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Volby v Maďarsku ONLINE: Opoziční Tisza získá většinu, naznačují první výsledky",
+      "title": "Volby v Maďarsku ONLINE: Opoziční Tisza atakuje ústavní většinu, sčítání pokračuje",
       "url": "https://www.idnes.cz/zpravy/zahranicni/volby-v-madarsku-2026-vysledky-viktor-orban-peter-magyar-fidesz-tisza.A260412_172042_zahranicni_dtt",
-      "dt": "2026-04-12T18:51:00Z",
+      "dt": "2026-04-12T19:08:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
+        "atakuje",
         "maďarsku",
-        "naznačují",
         "online",
         "opoziční",
-        "první",
+        "pokračuje",
+        "sčítání",
         "tisza",
         "volby",
-        "výsledky",
         "většinu",
-        "získá"
+        "ústavní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sledujte výsledky maďarských voleb ONLINE: Data a interaktivní grafika",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/volby-v-madarsku-2026-vysledky-viktor-orban-peter-magyar.A260412_204509_zahranicni_dtt",
+      "dt": "2026-04-12T18:55:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "data",
+        "grafika",
+        "interaktivní",
+        "maďarských",
+        "online",
+        "sledujte",
+        "voleb",
+        "výsledky"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -756,33 +781,6 @@
         "petr",
         "radují",
         "smál"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Návštěvníky až lituji, říká Kinský coby průvodce zámkem. Synovi svěří lesy",
-      "url": "https://www.idnes.cz/hradec-kralove/zpravy/frantisek-kinsky-kostelec-nad-orlici-zamek-modra-krev-rozhovor.A260410_133414_hradec-zpravy_tuu",
-      "dt": "2026-04-12T11:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "coby",
-        "kinský",
-        "lesy",
-        "lituji",
-        "návštěvníky",
-        "průvodce",
-        "svěří",
-        "synovi",
-        "zámkem",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1579,7 +1577,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49466,
+      "bytes": 49505,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1616,7 +1614,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T18:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T19:08:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1634,8 +1632,12 @@
         },
         "sample_titles": [
           {
-            "title": "Volby v Maďarsku ONLINE: Opoziční Tisza získá většinu, naznačují první výsledky",
-            "publishedAt": "2026-04-12T18:51:00Z"
+            "title": "Volby v Maďarsku ONLINE: Opoziční Tisza atakuje ústavní většinu, sčítání pokračuje",
+            "publishedAt": "2026-04-12T19:08:00Z"
+          },
+          {
+            "title": "Sledujte výsledky maďarských voleb ONLINE: Data a interaktivní grafika",
+            "publishedAt": "2026-04-12T18:55:00Z"
           },
           {
             "title": "Trump nařídil blokádu Hormuzského průlivu. Írán obvinil z vydírání",
@@ -1660,10 +1662,6 @@
           {
             "title": "Děti s Downovým syndromem milují karate i společnost. Pomoci jim může sbírka",
             "publishedAt": "2026-04-12T17:17:00Z"
-          },
-          {
-            "title": "Autonomní veřejná doprava přijde do Česka okolo roku 2040, míní lídr trhu",
-            "publishedAt": "2026-04-12T17:00:00Z"
           }
         ]
       }
