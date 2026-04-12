@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-12T15:55:48.398124Z",
+  "ingestedAt": "2026-04-12T16:14:48.501495Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trhy věří v Orbánovu porážku",
+      "url": "https://profitonline.cz/trhy-veri-v-orbanovu-porazku/",
+      "dt": "2026-04-12T16:00:41Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "orbánovu",
+        "porážku",
+        "trhy",
+        "věří"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -266,28 +287,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dolar vůči euru výrazně oslabil",
-      "url": "https://profitonline.cz/dolar-vuci-euru-vyrazne-oslabil/",
-      "dt": "2026-04-11T08:00:54Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dolar",
-        "euru",
-        "oslabil",
-        "výrazně",
-        "vůči"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +297,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18850,
+      "bytes": 18845,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -335,7 +334,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-12T14:00:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T16:00:41Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -351,6 +350,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trhy věří v Orbánovu porážku",
+            "publishedAt": "2026-04-12T16:00:41Z"
+          },
           {
             "title": "Ceny potravin porostou, budou totiž chybět hnojiva",
             "publishedAt": "2026-04-12T14:00:45Z"
@@ -378,10 +381,6 @@
           {
             "title": "Prahu v bytové výstavbě předběhla jižní Morava",
             "publishedAt": "2026-04-11T14:00:46Z"
-          },
-          {
-            "title": "Drobní investoři se hrnou do ropy, vzácných kovů a softwarových akcií",
-            "publishedAt": "2026-04-11T12:00:00Z"
           }
         ]
       }

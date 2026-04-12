@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-12T15:55:48.398124Z",
+  "ingestedAt": "2026-04-12T16:14:48.501495Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Blizzard vyhrál soud: Turtle WoW musí skončit",
+      "url": "https://zing.cz/article/blizzard-vyhral-soud-turtle-wow-musi-skoncit",
+      "dt": "2026-04-12T16:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "blizzard",
+        "musí",
+        "skončit",
+        "soud",
+        "turtle",
+        "vyhrál",
+        "wow"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -952,32 +976,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Představení hry Assassin's Creed IV: Black Flag Resynced má být na spadnutí",
-      "url": "https://zing.cz/article/predstaveni-hry-assassin-s-creed-iv-black-flag-resynced-ma-byt-na-spadnuti",
-      "dt": "2026-04-08T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "assassin",
-        "black",
-        "být",
-        "creed",
-        "flag",
-        "hry",
-        "představení",
-        "resynced",
-        "spadnutí"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -988,7 +986,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125084,
+      "bytes": 125159,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1025,7 +1023,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-12T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T16:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1040,6 +1038,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Blizzard vyhrál soud: Turtle WoW musí skončit",
+            "publishedAt": "2026-04-12T16:00:00Z"
+          },
           {
             "title": "Vývojář z malé vesnice slaví 250 000 prodejů na Steamu",
             "publishedAt": "2026-04-12T14:00:00Z"
@@ -1067,10 +1069,6 @@
           {
             "title": "Valve asi vyvíjí SteamGPT. AI pro podporu i anti-cheat",
             "publishedAt": "2026-04-11T18:00:00Z"
-          },
-          {
-            "title": "Witcher 3 online mod 2.0 nabízí obchod, lodě nebo morphing",
-            "publishedAt": "2026-04-11T16:00:00Z"
           }
         ]
       }

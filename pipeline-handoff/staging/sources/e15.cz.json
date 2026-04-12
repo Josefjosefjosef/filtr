@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-12T15:55:48.398124Z",
+  "ingestedAt": "2026-04-12T16:14:48.501495Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Akcie CSG padají, Křetínský řeší Casino a Jadran láká na investiční boom",
+      "url": "https://www.e15.cz/videoporady/co-vam-ne-uteklo/akcie-csg-padaji-kretinsky-resi-casino-a-jadran-laka-na-investicni-boom-1432065",
+      "dt": "2026-04-12T16:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "akcie",
+        "boom",
+        "casino",
+        "csg",
+        "investiční",
+        "jadran",
+        "křetínský",
+        "láká",
+        "padají",
+        "řeší"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -1049,33 +1076,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Olympia Teplice se rozrůstá. Nový retail park je plně obsazen a sází na udržitelnost",
-      "url": "https://www.e15.cz/tiskove-zpravy/olympia-teplice-se-rozrusta-novy-retail-park-je-plne-obsazen-a-sazi-na-udrzitelnost-1432028",
-      "dt": "2026-04-09T17:16:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "nový",
-        "obsazen",
-        "olympia",
-        "park",
-        "plně",
-        "retail",
-        "rozrůstá",
-        "sází",
-        "teplice",
-        "udržitelnost"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1086,7 +1086,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 51728,
+      "bytes": 51658,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1123,13 +1123,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-12T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T16:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "finance": 31,
           "zpravy": 7,
-          "finance": 30,
           "zdravi": 1,
-          "sport": 2
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1141,6 +1141,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Akcie CSG padají, Křetínský řeší Casino a Jadran láká na investiční boom",
+            "publishedAt": "2026-04-12T16:00:00Z"
+          },
           {
             "title": "USA míří k blokádě Hormuzu, Trump po krachu jednání stupňuje tlak",
             "publishedAt": "2026-04-12T14:00:00Z"
@@ -1168,10 +1172,6 @@
           {
             "title": "Gepard na kapotě, klient na vrcholu. Pavel Fellner staví miliardový byznys na zážitcích",
             "publishedAt": "2026-04-12T03:30:00Z"
-          },
-          {
-            "title": "Svatý grál pro startupy? Projekt von der Leyenové naráží na zájmy států EU",
-            "publishedAt": "2026-04-12T03:00:00Z"
           }
         ]
       }

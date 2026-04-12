@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-12T15:55:48.398124Z",
+  "ingestedAt": "2026-04-12T16:14:48.501495Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,38 @@
         "sám",
         "test",
         "vyřeší"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nejtěžší vozidlo na Zemi spotřebuje 400 litrů nafty na kilometr. Pásový transportér NASA slouží déle než 50 let",
+      "url": "https://www.zive.cz/clanky/nejtezsi-vozidlo-na-zemi-spotrebuje-400-litru-nafty-na-kilometr-pasovy-transporter-nasa-slouzi-dele-nez-50-let/sc-3-a-240629/default.aspx",
+      "dt": "2026-04-12T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "400",
+        "déle",
+        "kilometr",
+        "let",
+        "litrů",
+        "nafty",
+        "nasa",
+        "nejtěžší",
+        "než",
+        "pásový",
+        "slouží",
+        "spotřebuje",
+        "transportér",
+        "vozidlo",
+        "zemi"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -940,33 +972,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "TikTok, YouTube, Instagram a hry. Dvě třetiny dětí tráví dvě a více hodin online",
-      "url": "https://www.zive.cz/clanky/tiktok-youtube-instagram-a-hry-dve-tretiny-deti-travi-dve-a-vice-hodin-online/sc-3-a-240182/default.aspx",
-      "dt": "2026-04-10T06:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "dvě",
-        "dětí",
-        "hodin",
-        "hry",
-        "instagram",
-        "online",
-        "tiktok",
-        "tráví",
-        "třetiny",
-        "youtube"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -977,7 +982,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22379,
+      "bytes": 22457,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1014,7 +1019,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-12T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1032,6 +1037,10 @@
           {
             "title": "Hororový captcha test v katastru nemovitostí podlehl. Skript ho vyřeší sám jedním kliknutím",
             "publishedAt": "2026-04-12T10:39:00Z"
+          },
+          {
+            "title": "Nejtěžší vozidlo na Zemi spotřebuje 400 litrů nafty na kilometr. Pásový transportér NASA slouží déle než 50 let",
+            "publishedAt": "2026-04-12T15:45:00Z"
           },
           {
             "title": "Jak za 10 let rostla frekvence mobilních procesorů. Letos poprvé překoná hranici 5 GHz",
@@ -1056,10 +1065,6 @@
           {
             "title": "iPhone si pamatuje víc, než byste čekali. Oživil i smazané zprávy ze Signalu",
             "publishedAt": "2026-04-12T08:45:00Z"
-          },
-          {
-            "title": "Dohrajete je za víkend. Vybrali jsme nejlepší hry do deseti hodin",
-            "publishedAt": "2026-04-12T05:10:00Z"
           }
         ]
       }
