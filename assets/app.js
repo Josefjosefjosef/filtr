@@ -6003,8 +6003,8 @@ function buildVideoAsArticleCard(it) {
         const phrase = phraseFromKey(k);
         try{ window.__iuSilverWelcomeLastPhrase = phrase; }catch{}
         const displayName = readSilverDisplayName();
+        const nm = String(displayName || "").trim();
         if (greetEl && userEl) {
-          const nm = String(displayName || "").trim();
           if (nm) {
             greetEl.textContent = phrase + ",\u00A0" + nm;
             userEl.textContent = "";
@@ -6017,6 +6017,9 @@ function buildVideoAsArticleCard(it) {
         } else {
           headlineEl.textContent = phrase;
         }
+        try{
+          if (headlineEl) headlineEl.setAttribute("data-iu-user-address", nm ? "saved" : "capture");
+        }catch{}
         try{
           if (typeof window.iuUserAddressBuildCaptureSlotIfNeeded === "function") window.iuUserAddressBuildCaptureSlotIfNeeded();
         }catch{}
