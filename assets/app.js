@@ -5767,8 +5767,9 @@ function buildVideoAsArticleCard(it) {
       inp.setAttribute("data-iu-user-address-input", "1");
       inp.setAttribute("autocomplete", "off");
       inp.setAttribute("spellcheck", "false");
-      inp.setAttribute("aria-label", IU_USER_ADDRESS_PLACEHOLDER);
+      inp.setAttribute("aria-label", "Oslovení");
       inp.placeholder = IU_USER_ADDRESS_PLACEHOLDER;
+      inp.setAttribute("size", "34");
       const btn = doc.createElement("button");
       btn.type = "button";
       btn.className = "iuSilverWelcomeAddressSubmit";
