@@ -1,11 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-04-12T21:49:55.983760Z",
+  "ingestedAt": "2026-04-12T22:10:31.569527Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Osvobodili jsme Maďarsko, děkoval Magyar voličům",
+      "url": "https://www.novinky.cz/clanek/volby-osvobodili-jsme-madarsko-dekoval-magyar-volicum-40572932",
+      "dt": "2026-04-12T21:46:08Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky / Domácí",
+      "tokens": [
+        "děkoval",
+        "jsme",
+        "magyar",
+        "maďarsko",
+        "osvobodili",
+        "voličům"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Příznivci opozice slaví vítězství na dunajském nábřeží v Budapešti",
       "url": "https://www.novinky.cz/clanek/volby-priznivci-opozice-slavi-vitezstvi-na-dunajskem-nabrezi-v-budapesti-40572920",
       "dt": "2026-04-12T20:54:14Z",
@@ -730,25 +753,24 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Schillerová: Vláda dál počítá se zastropováním důchodového věku na 65 letech",
-      "url": "https://www.novinky.cz/clanek/ekonomika-schillerova-vlada-dal-pocita-se-zastropovanim-duchodoveho-veku-na-65-letech-40572863",
-      "dt": "2026-04-12T13:02:21Z",
-      "media_raw": "Novinky / Domácí",
-      "media_norm": "Novinky / Domácí",
+      "title": "Osvobodili jsme Maďarsko, děkoval Magyar voličům",
+      "url": "https://www.novinky.cz/clanek/volby-osvobodili-jsme-madarsko-dekoval-magyar-volicum-40572932",
+      "dt": "2026-04-12T21:46:08Z",
+      "media_raw": "Novinky / Zahraniční",
+      "media_norm": "Novinky / Zahraniční",
       "tokens": [
-        "důchodového",
-        "letech",
-        "počítá",
-        "schillerová",
-        "vláda",
-        "věku",
-        "zastropováním"
+        "děkoval",
+        "jsme",
+        "magyar",
+        "maďarsko",
+        "osvobodili",
+        "voličům"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1471,30 +1493,6 @@
         "shořela",
         "tři",
         "škoda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Schillerová: Vláda dál počítá se zastropováním důchodového věku na 65 letech",
-      "url": "https://www.novinky.cz/clanek/ekonomika-schillerova-vlada-dal-pocita-se-zastropovanim-duchodoveho-veku-na-65-letech-40572863",
-      "dt": "2026-04-12T13:02:21Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky / Zahraniční",
-      "tokens": [
-        "důchodového",
-        "letech",
-        "počítá",
-        "schillerová",
-        "vláda",
-        "věku",
-        "zastropováním"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -5257,7 +5255,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 42365,
+      "bytes": 42122,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5294,11 +5292,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T20:54:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T21:46:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "finance": 4
+          "zpravy": 27,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -5310,6 +5308,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Osvobodili jsme Maďarsko, děkoval Magyar voličům",
+            "publishedAt": "2026-04-12T21:46:08Z"
+          },
           {
             "title": "Příznivci opozice slaví vítězství na dunajském nábřeží v Budapešti",
             "publishedAt": "2026-04-12T20:54:14Z"
@@ -5337,10 +5339,6 @@
           {
             "title": "Lidské safari. Nejvíc mrtvých civilistů na Ukrajině připadá na cílené útoky dronů",
             "publishedAt": "2026-04-12T16:29:41Z"
-          },
-          {
-            "title": "Severokorejský gastronomický bizár: Dorty ve tvaru vojenské techniky",
-            "publishedAt": "2026-04-12T16:24:00Z"
           }
         ]
       }
@@ -5352,7 +5350,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 42365,
+      "bytes": 42122,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5389,11 +5387,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T20:54:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T21:46:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "finance": 4
+          "zpravy": 27,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -5405,6 +5403,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Osvobodili jsme Maďarsko, děkoval Magyar voličům",
+            "publishedAt": "2026-04-12T21:46:08Z"
+          },
           {
             "title": "Příznivci opozice slaví vítězství na dunajském nábřeží v Budapešti",
             "publishedAt": "2026-04-12T20:54:14Z"
@@ -5432,10 +5434,6 @@
           {
             "title": "Lidské safari. Nejvíc mrtvých civilistů na Ukrajině připadá na cílené útoky dronů",
             "publishedAt": "2026-04-12T16:29:41Z"
-          },
-          {
-            "title": "Severokorejský gastronomický bizár: Dorty ve tvaru vojenské techniky",
-            "publishedAt": "2026-04-12T16:24:00Z"
           }
         ]
       }
@@ -5447,7 +5445,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/ekonomika",
-      "bytes": 42121,
+      "bytes": 42122,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5543,7 +5541,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/cestovani",
-      "bytes": 42121,
+      "bytes": 42122,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5638,7 +5636,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/hry",
-      "bytes": 42121,
+      "bytes": 42122,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5733,7 +5731,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/veda",
-      "bytes": 42121,
+      "bytes": 42122,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5827,7 +5825,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/skola",
-      "bytes": 42121,
+      "bytes": 42122,
       "reason": "",
       "bozo": false,
       "bozoException": "",
