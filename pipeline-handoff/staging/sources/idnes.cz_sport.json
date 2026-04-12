@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-12T20:45:02.720979Z",
+  "ingestedAt": "2026-04-12T21:04:34.243086Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Porážka s Pardubicemi a konec. Olomouc odvolala Janotku, mužstvo přebírá Hapal",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/tomas-janotka-trener-sigma-olomouc-odvolani.A260412_224204_fotbal_ivt",
+      "dt": "2026-04-12T20:55:40Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "hapal",
+        "janotku",
+        "konec",
+        "mužstvo",
+        "odvolala",
+        "olomouc",
+        "pardubicemi",
+        "porážka",
+        "přebírá"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -768,31 +794,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pardubický útočník Tanko: Sigma? Spolehněte se, že do toho dáme všechno",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/abdullahi-tanko.A260411_085345_fotbal_ald",
-      "dt": "2026-04-12T07:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dáme",
-        "pardubický",
-        "sigma",
-        "spolehněte",
-        "tanko",
-        "toho",
-        "všechno",
-        "útočník"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46332,
+      "bytes": 46822,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T20:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T20:55:40Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -855,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Porážka s Pardubicemi a konec. Olomouc odvolala Janotku, mužstvo přebírá Hapal",
+            "publishedAt": "2026-04-12T20:55:40Z"
+          },
           {
             "title": "Dělám chyby, ale plivnutí? To je nesmysl. Sliny jsem vtahoval zpátky, bránil se Chorý",
             "publishedAt": "2026-04-12T20:15:00Z"
@@ -882,10 +887,6 @@
           {
             "title": "Kinský inkasoval, Tottenham je blízko sestupu. City se dál dotahuje na Arsenal",
             "publishedAt": "2026-04-12T17:38:00Z"
-          },
-          {
-            "title": "Střídání na tenisovém trůnu. Sinner porazil Alcaraze v Monte Carlu a bude jedničkou",
-            "publishedAt": "2026-04-12T16:08:00Z"
           }
         ]
       }

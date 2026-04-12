@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-12T20:45:02.720979Z",
+  "ingestedAt": "2026-04-12T21:04:34.243086Z",
   "items": [
     {
       "section": "aktualne",
@@ -22,6 +22,59 @@
         "uznal",
         "většině",
         "ústavní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Evropské srdce dnes v Maďarsku bije silněji, přivítala von der Leyenová vítězství opozice",
+      "url": "https://zpravy.aktualne.cz/zahranici/evropske-srdce-dnes-v-madarsku-bije-silneji-privitala-von-der-leyenova-vitezstvi-opozice/r~aaa290ec4f3a0e2eaaa325469d93208d/",
+      "dt": "2026-04-12T20:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bije",
+        "der",
+        "evropské",
+        "leyenová",
+        "maďarsku",
+        "opozice",
+        "přivítala",
+        "silněji",
+        "srdce",
+        "von",
+        "vítězství"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "U fotbalistů Olomouce skončil trenér Janotka, dočasně je povede Hapal",
+      "url": "https://sport.aktualne.cz/fotbal/u-fotbalistu-olomouce-skoncil-trener-janotka-docasne-je-povede-hapal/r~aaa2923a369c6f805ac4fa42cff2f5a7/",
+      "dt": "2026-04-12T20:42:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dočasně",
+        "fotbalistů",
+        "hapal",
+        "janotka",
+        "olomouce",
+        "povede",
+        "skončil",
+        "trenér"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -483,61 +536,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Zkrat rodiče nevyloučíte.“ Tragédiím má předcházet komise pro výjimečná úmrtí dětí",
-      "url": "https://zpravy.aktualne.cz/domaci/zkrat-rodice-nevyloucite-tragediim-ma-predchazet-komise-pro-vyjimecna-umrti-deti/r~aaa2941413266abdcdb1da1cf79af45c/",
-      "dt": "2026-04-12T12:02:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dětí",
-        "komise",
-        "nevyloučíte",
-        "předcházet",
-        "rodiče",
-        "tragédiím",
-        "výjimečná",
-        "zkrat",
-        "úmrtí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kritizovali ho, že fotí „šik porno“. Král perverze se feministkám smál, jeho fotky pobuřují dodnes",
-      "url": "https://magazin.aktualne.cz/kritizovali-ho-ze-foti-sik-porno-kral-perverze-se-feministkam-smal-jeho-fotky-poburuji-dodnes/r~aaa2981c1937c030d5f4adc02eb500e2/",
-      "dt": "2026-03-25T04:59:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dodnes",
-        "feministkám",
-        "fotky",
-        "fotí",
-        "jeho",
-        "kritizovali",
-        "král",
-        "perverze",
-        "pobuřují",
-        "porno",
-        "smál",
-        "šik"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -548,7 +546,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21708,
+      "bytes": 21480,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -585,11 +583,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-12T20:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T20:45:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 10,
-          "sport": 10
+          "zpravy": 9,
+          "sport": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -604,6 +602,14 @@
           {
             "title": "Obrat v Maďarsku: Tisza slaví, míří k ústavní většině. Orbán uznal prohru",
             "publishedAt": "2026-04-12T17:14:00Z"
+          },
+          {
+            "title": "Evropské srdce dnes v Maďarsku bije silněji, přivítala von der Leyenová vítězství opozice",
+            "publishedAt": "2026-04-12T20:45:00Z"
+          },
+          {
+            "title": "U fotbalistů Olomouce skončil trenér Janotka, dočasně je povede Hapal",
+            "publishedAt": "2026-04-12T20:42:00Z"
           },
           {
             "title": "Na nikoho jsem neplivl, hájí se Chorý. Sudí viděl na videu jasný důkaz",
@@ -624,14 +630,6 @@
           {
             "title": "Maďarské volby skončily, účast trhá letité rekordy. Padají ale i obvinění z podvodů",
             "publishedAt": "2026-04-12T07:42:00Z"
-          },
-          {
-            "title": "Dron doručil neobvyklou zásilku. Z bojiště zachránil opuštěné domácí mazlíčky",
-            "publishedAt": "2026-04-12T16:19:00Z"
-          },
-          {
-            "title": "Slavia - Plzeň 0:0. Sešívaní dohrávali v deseti, ale udrželi remízu",
-            "publishedAt": "2026-04-12T16:02:00Z"
           }
         ]
       }
