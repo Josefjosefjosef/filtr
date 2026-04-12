@@ -38,6 +38,9 @@ jobs:
     timeout-minutes: 30
     env:
       RETENTION_DAYS: "45"
+      # Full registry fetch every run (scripts/build_articles.py). Without this, select_feeds_for_tick
+      # only hits a few sources per tick — multi-hour gaps before major feeds refresh → stale publishedAt on web.
+      IU_BUILD_ALL_FEEDS: "1"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
