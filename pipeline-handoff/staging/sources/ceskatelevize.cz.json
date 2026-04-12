@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-12T18:24:18.973817Z",
+  "ingestedAt": "2026-04-12T18:40:44.867405Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Archeologové mají výhrady k novele stavebního zákona",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/archeologove-maji-vyhrady-k-novele-stavebniho-zakona-372300",
+      "dt": "2026-04-12T18:25:06Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "archeologové",
+        "mají",
+        "novele",
+        "stavebního",
+        "výhrady",
+        "zákona"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -717,33 +740,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ministerstvo financí je proti vyšší rodičovské. Resort práce musí najít peníze",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/ministerstvo-financi-nesouhlasi-s-vyssi-rodicovskou-pokud-na-ni-resort-prace-nenajde-penize-372271",
-      "dt": "2026-04-11T09:22:33Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "financí",
-        "ministerstvo",
-        "musí",
-        "najít",
-        "peníze",
-        "proti",
-        "práce",
-        "resort",
-        "rodičovské",
-        "vyšší"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Stuttgart vyprovodil nováčka z Hamburku čtyřmi brankami",
@@ -916,13 +912,15 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Florbalisté Bohemians odvrátili první semifinálový mečbol Tatranu",
+      "title": "Florbalisté Bohemians odvrátili první semifinálový mečbol Tatranu, Boleslav je ve finále",
       "url": "https://sport.ceskatelevize.cz/clanek/florbal/florbaliste-bohemians-odvratili-prvni-semifinalovy-mecbol-tatranu-156250",
       "dt": "2026-04-12T14:41:36Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
         "bohemians",
+        "boleslav",
+        "finále",
         "florbalisté",
         "mečbol",
         "odvrátili",
@@ -1498,7 +1496,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42317,
+      "bytes": 42334,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1558,7 +1556,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T16:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-12T18:25:06Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1575,6 +1573,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Archeologové mají výhrady k novele stavebního zákona",
+            "publishedAt": "2026-04-12T18:25:06Z"
+          },
           {
             "title": "SOUHRN: Zásadní události neděle 12. dubna",
             "publishedAt": "2026-04-12T16:28:00Z"
@@ -1602,10 +1604,6 @@
           {
             "title": "Je brzy sčítat škody, zaznělo v ekonomické debatě o Íránu",
             "publishedAt": "2026-04-12T10:43:25Z"
-          },
-          {
-            "title": "Role si nehledám, najdou si mě, říká herečka Jana Nagyová",
-            "publishedAt": "2026-04-12T08:00:00Z"
           }
         ]
       }
@@ -1617,7 +1615,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39348,
+      "bytes": 39327,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1698,7 +1696,7 @@
             "publishedAt": "2026-04-12T15:18:20Z"
           },
           {
-            "title": "Florbalisté Bohemians odvrátili první semifinálový mečbol Tatranu",
+            "title": "Florbalisté Bohemians odvrátili první semifinálový mečbol Tatranu, Boleslav je ve finále",
             "publishedAt": "2026-04-12T14:41:36Z"
           }
         ]
@@ -1711,7 +1709,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76825,
+      "bytes": 76815,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
