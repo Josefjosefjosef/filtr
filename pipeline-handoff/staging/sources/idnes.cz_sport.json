@@ -1,24 +1,78 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T19:19:24.461972Z",
+  "ingestedAt": "2026-04-13T19:34:31.109565Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Manchester United prohrává v dohrávce anglické ligy s Leedsem",
+      "title": "ONLINE: Manchester United prohrává o dva góly v dohrávce anglické ligy s Leedsem",
       "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-32-kolo-manchester-united-leeds-online-vysledek.A260413_144430_fot_zahranici_duff",
-      "dt": "2026-04-13T19:04:00Z",
+      "dt": "2026-04-13T19:28:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
         "anglické",
         "dohrávce",
+        "dva",
+        "góly",
         "leedsem",
         "ligy",
         "manchester",
         "prohrává",
         "united"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Play off hokejové extraligy 2026: program, systém, dvojice v semifinále, kde sledovat",
+      "url": "https://www.idnes.cz/hokej/extraliga/play-off-tipsport-extraliga-2026-program-zapasu-kde-sledovat.A260305_093915_hokej_hrj",
+      "dt": "2026-04-13T19:27:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "dvojice",
+        "extraligy",
+        "hokejové",
+        "off",
+        "play",
+        "program",
+        "semifinále",
+        "sledovat",
+        "systém"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sparta - Pardubice 3:2. Série pokračuje, výhru zařídili Špaček s Chlapíkem",
+      "url": "https://www.idnes.cz/hokej/extraliga/6-zapas-semifinale-online-zpravodajstvi-souhrn-sparta-pardubice.A260413_112241_hokej_luji",
+      "dt": "2026-04-13T19:21:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chlapíkem",
+        "pardubice",
+        "pokračuje",
+        "sparta",
+        "série",
+        "výhru",
+        "zařídili",
+        "špaček"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -45,30 +99,6 @@
         "ostrá",
         "pardubicemi",
         "spartou"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ONLINE: Sparta - Pardubice 3:2. Domácí zpět ve vedení, trefil se Chlapík",
-      "url": "https://www.idnes.cz/hokej/extraliga/6-zapas-semifinale-online-zpravodajstvi-souhrn-sparta-pardubice.A260413_112241_hokej_luji",
-      "dt": "2026-04-13T18:48:13Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chlapík",
-        "domácí",
-        "pardubice",
-        "sparta",
-        "trefil",
-        "vedení",
-        "zpět"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -762,32 +792,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Tvrďák s IQ 136. Basketbalista Landa: Snažil jsem se soupeřům vstoupit do hlav",
-      "url": "https://www.idnes.cz/sport/basket/basketbal-robert-landa-bk-decin-valecnici.A260407_205109_sport-basket_pbi",
-      "dt": "2026-04-13T10:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "136",
-        "basketbalista",
-        "hlav",
-        "jsem",
-        "landa",
-        "snažil",
-        "soupeřům",
-        "tvrďák",
-        "vstoupit"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47805,
+      "bytes": 47779,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T19:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T19:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -852,16 +856,20 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Manchester United prohrává v dohrávce anglické ligy s Leedsem",
-            "publishedAt": "2026-04-13T19:04:00Z"
+            "title": "ONLINE: Manchester United prohrává o dva góly v dohrávce anglické ligy s Leedsem",
+            "publishedAt": "2026-04-13T19:28:00Z"
+          },
+          {
+            "title": "Play off hokejové extraligy 2026: program, systém, dvojice v semifinále, kde sledovat",
+            "publishedAt": "2026-04-13T19:27:00Z"
+          },
+          {
+            "title": "Sparta - Pardubice 3:2. Série pokračuje, výhru zařídili Špaček s Chlapíkem",
+            "publishedAt": "2026-04-13T19:21:00Z"
           },
           {
             "title": "Choreo na Dědka i další ostrá hesla. Emoce mezi Spartou a Pardubicemi neutichají",
             "publishedAt": "2026-04-13T18:55:00Z"
-          },
-          {
-            "title": "ONLINE: Sparta - Pardubice 3:2. Domácí zpět ve vedení, trefil se Chlapík",
-            "publishedAt": "2026-04-13T18:48:13Z"
           },
           {
             "title": "Sedm ran Medveděvových. Ruský tenista za výbuch emocí zaplatí pokutu 6000 eur",
@@ -878,10 +886,6 @@
           {
             "title": "Nešla byste se mnou na rande? Moderátor žertoval s olympijskou medailistkou",
             "publishedAt": "2026-04-13T16:45:00Z"
-          },
-          {
-            "title": "Budoucí slávista Halinský po Spartě: Báli jsme se. Bral jsem to jako derby",
-            "publishedAt": "2026-04-13T15:36:00Z"
           }
         ]
       }

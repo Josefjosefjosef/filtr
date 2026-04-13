@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T19:19:24.461972Z",
+  "ingestedAt": "2026-04-13T19:34:31.109565Z",
   "items": [
     {
       "section": "sport",
@@ -23,6 +23,65 @@
         "videomomenty",
         "zvládla",
         "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dukla má ze sedmého finále šrám, Zlín také cítí tlak. Favorit nejsme, zní z Jihlavy",
+      "url": "https://www.sport.cz/clanek/hokej-ceska-1-liga-dukla-ma-ze-sedmeho-finale-sram-zlin-take-citi-tlak-favorit-nejsme-zni-z-jihlavy-5436391",
+      "dt": "2026-04-13T19:23:56Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "cítí",
+        "dukla",
+        "favorit",
+        "finále",
+        "jihlavy",
+        "nejsme",
+        "sedmého",
+        "také",
+        "tlak",
+        "zlín",
+        "zní",
+        "šrám"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Program a výsledky semifinále play off Tipsport extraligy. Třinec je ve finále, čeká na soupeře z očekávané bitvy",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-play-off-2026-program-rozpis-vysledky-pavouk-5422623",
+      "dt": "2026-04-13T05:03:00Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bitvy",
+        "extraligy",
+        "finále",
+        "off",
+        "očekávané",
+        "play",
+        "program",
+        "semifinále",
+        "soupeře",
+        "tipsport",
+        "třinec",
+        "výsledky",
+        "čeká"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -707,56 +766,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dubaj angažovala bývalého nymburského kouče Sekuliče",
-      "url": "https://www.sport.cz/clanek/basketbal-dubaj-angazovala-byvaleho-nymburskeho-kouce-sekulice-5436396",
-      "dt": "2026-04-13T12:34:04Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "angažovala",
-        "bývalého",
-        "dubaj",
-        "kouče",
-        "nymburského",
-        "sekuliče"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Češka zaútočí na historický zápis, který nesvedl ani Krpálek. V přípravě ztřískala pět Japonek",
-      "url": "https://www.sport.cz/clanek/ostatni-ceska-zautoci-na-historicky-zapis-ktery-nesvedl-ani-krpalek-v-priprave-ztriskala-pet-japonek-5436386",
-      "dt": "2026-04-13T11:52:10Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "historický",
-        "japonek",
-        "krpálek",
-        "nesvedl",
-        "pět",
-        "přípravě",
-        "zaútočí",
-        "ztřískala",
-        "zápis",
-        "češka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -767,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42451,
+      "bytes": 42624,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -804,13 +813,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T18:41:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T19:23:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 25,
+          "sport": 26,
           "finance": 1,
           "zpravy": 2,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -825,6 +834,14 @@
           {
             "title": "Videomomenty. Sparta zvládla i další zápas nad propastí! O druhém finalistovi rozhodne sedmý duel",
             "publishedAt": "2026-04-13T12:00:12Z"
+          },
+          {
+            "title": "Dukla má ze sedmého finále šrám, Zlín také cítí tlak. Favorit nejsme, zní z Jihlavy",
+            "publishedAt": "2026-04-13T19:23:56Z"
+          },
+          {
+            "title": "Program a výsledky semifinále play off Tipsport extraligy. Třinec je ve finále, čeká na soupeře z očekávané bitvy",
+            "publishedAt": "2026-04-13T05:03:00Z"
           },
           {
             "title": "To myslíš vážně? žasnou mladíci z Krpálka. Tělo má zmordované, kouče zničil na tréninku",
@@ -845,14 +862,6 @@
           {
             "title": "Sparťanští fanoušci Dědka nešetří: opět vulgární pokřik, do toho i hokejoví klauni z Pardubic",
             "publishedAt": "2026-04-13T17:48:53Z"
-          },
-          {
-            "title": "NHL zažije jedno velké loučení. Trojnásobný vítěz Stanley Cupu ukončí kariéru",
-            "publishedAt": "2026-04-13T17:39:55Z"
-          },
-          {
-            "title": "Hvězdami týdne v NHL byli švédští brankáři Forsberg a Ullmark",
-            "publishedAt": "2026-04-13T17:31:22Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-04-13T19:19:24.461972Z",
+  "ingestedAt": "2026-04-13T19:34:31.109565Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "EU chce po Orbánově porážce odblokovat 90 miliard eur pro Ukrajinu",
+      "url": "https://www.novinky.cz/clanek/zahranicni-evropa-eu-chce-po-orbanove-porazce-odblokovat-90-miliard-eur-pro-ukrajinu-40573120",
+      "dt": "2026-04-13T19:15:43Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky / Domácí",
+      "tokens": [
+        "chce",
+        "eur",
+        "miliard",
+        "odblokovat",
+        "orbánově",
+        "porážce",
+        "ukrajinu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -713,33 +737,6 @@
         "vyzývá",
         "zapojte",
         "švédské"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Muži obvinění kvůli odpálení bankomatů v Praze měli doma přes kilo TNT",
-      "url": "https://www.novinky.cz/clanek/krimi-muzi-obvineni-kvuli-odpaleni-bankomatu-v-praze-meli-doma-pres-kilo-tnt-40573099",
-      "dt": "2026-04-13T13:16:46Z",
-      "media_raw": "Novinky / Domácí",
-      "media_norm": "Novinky / Domácí",
-      "tokens": [
-        "bankomatů",
-        "doma",
-        "kilo",
-        "kvůli",
-        "muži",
-        "měli",
-        "obvinění",
-        "odpálení",
-        "praze",
-        "tnt"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -5209,7 +5206,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 41999,
+      "bytes": 41362,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5246,7 +5243,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T18:34:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T19:15:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -5263,6 +5260,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "EU chce po Orbánově porážce odblokovat 90 miliard eur pro Ukrajinu",
+            "publishedAt": "2026-04-13T19:15:43Z"
+          },
           {
             "title": "Absurdní, cenzura. Hrad se opřel do ministerstva obrany za to, že zakázalo rozhovor s Pavlem",
             "publishedAt": "2026-04-13T18:34:52Z"
@@ -5290,10 +5291,6 @@
           {
             "title": "Ukrajinci v Rusku udeřili na největší závod na výrobu fosforových hnojiv v Evropě",
             "publishedAt": "2026-04-13T17:33:05Z"
-          },
-          {
-            "title": "Česko má výzbroj na špici, ale těžkopádné řízení, ukázala studie",
-            "publishedAt": "2026-04-13T17:19:41Z"
           }
         ]
       }
@@ -5305,7 +5302,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 41361,
+      "bytes": 41362,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5401,7 +5398,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/ekonomika",
-      "bytes": 41361,
+      "bytes": 41362,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5498,7 +5495,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/cestovani",
-      "bytes": 41361,
+      "bytes": 41362,
       "reason": "",
       "bozo": false,
       "bozoException": "",
