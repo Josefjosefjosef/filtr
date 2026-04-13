@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-13T22:49:48.075946Z",
+  "ingestedAt": "2026-04-13T23:09:54.668679Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Trump napadl papeže a pak se na sítích vyobrazil jako Ježíš",
+      "url": "https://www.epenize.eu/trump-napadl-papeze-a-pak-se-na-sitich-vyobrazil-jako-jezis/",
+      "dt": "2026-04-13T23:00:40Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "jako",
+        "ježíš",
+        "napadl",
+        "pak",
+        "papeže",
+        "sítích",
+        "trump",
+        "vyobrazil"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -484,33 +509,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Porušuje Turek zákon o střetu zájmů? Asi ano, ale nikdo to neřeší",
-      "url": "https://www.epenize.eu/porusuje-turek-zakon-o-stretu-zajmu-asi-ano-ale-nikdo-to-neresi/",
-      "dt": "2026-04-04T07:59:08Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "ale",
-        "ano",
-        "asi",
-        "neřeší",
-        "nikdo",
-        "porušuje",
-        "střetu",
-        "turek",
-        "zájmů",
-        "zákon"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -521,7 +519,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 107379,
+      "bytes": 107586,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -558,10 +556,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T06:16:38Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T23:00:40Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 19,
+          "zpravy": 1,
+          "finance": 18,
           "zdravi": 1
         },
         "drop_counts": {
@@ -574,6 +573,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump napadl papeže a pak se na sítích vyobrazil jako Ježíš",
+            "publishedAt": "2026-04-13T23:00:40Z"
+          },
           {
             "title": "Zruší vláda opatření a omluví se? Kalousek si nedělá iluze",
             "publishedAt": "2026-04-13T06:16:38Z"
@@ -601,10 +604,6 @@
           {
             "title": "Dezoláti útočí na prezidenta kvůli Zemanovi. Na summit nejel",
             "publishedAt": "2026-04-10T08:20:49Z"
-          },
-          {
-            "title": "„Jsem politickým bezdomovcem“: Trumpovi dává sbohem i jeden z nejpopulárnějších podcasterů na světě",
-            "publishedAt": "2026-04-09T23:00:32Z"
           }
         ]
       }
