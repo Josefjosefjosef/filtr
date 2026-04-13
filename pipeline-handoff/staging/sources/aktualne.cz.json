@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-13T20:44:10.447933Z",
+  "ingestedAt": "2026-04-13T21:00:51.565919Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Špaček se proměnil z viníka na hrdinu. Spartě vystřelil naději",
+      "url": "https://sport.aktualne.cz/hokej/spacek-se-promenil-z-vinika-na-hrdinu-sparte-vystrelil-nadeji/r~aaa29cec5b69269022489d011afb95b1/",
+      "dt": "2026-04-13T20:44:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hrdinu",
+        "naději",
+        "proměnil",
+        "spartě",
+        "viníka",
+        "vystřelil",
+        "špaček"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -500,33 +524,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Navrhl ho osmiletý kluk, teď ho chce celý svět. Plyšák z mise Artemis II už je na prodej",
-      "url": "https://magazin.aktualne.cz/navrhl-ho-osmilety-kluk-ted-ho-chce-cely-svet-plysak-z-mise-artemis-ii-uz-je-na-prodej/r~aaa29ae560d2bfac4123001f2b43f961/",
-      "dt": "2026-04-13T14:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "artemis",
-        "celý",
-        "chce",
-        "kluk",
-        "mise",
-        "navrhl",
-        "osmiletý",
-        "plyšák",
-        "prodej",
-        "svět"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -537,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22439,
+      "bytes": 22223,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -574,11 +571,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T19:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T20:44:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 6,
+          "sport": 7,
+          "zpravy": 12,
           "finance": 1
         },
         "drop_counts": {
@@ -591,6 +588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Špaček se proměnil z viníka na hrdinu. Spartě vystřelil naději",
+            "publishedAt": "2026-04-13T20:44:00Z"
+          },
           {
             "title": "Vítěz voleb Magyar odmítá rychlý vstup Ukrajiny do EU, prosazuje referendum",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -618,10 +619,6 @@
           {
             "title": "Konec Orbána, staré problémy. Pro Magyara to bude těžké, až na jednu věc",
             "publishedAt": "2026-04-13T18:18:00Z"
-          },
-          {
-            "title": "„Je to lokální věc.“ Babiš se po ostrém sporu vyjádřil k účasti prezidenta na summitu",
-            "publishedAt": "2026-04-13T13:22:00Z"
           }
         ]
       }
