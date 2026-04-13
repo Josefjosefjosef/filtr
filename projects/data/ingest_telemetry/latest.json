@@ -1,32 +1,27 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-04-13T04:05:22.723253Z",
-  "run_time_utc": "2026-04-13T04:05:22.723253Z",
+  "generatedAt": "2026-04-13T04:23:31.599106Z",
+  "run_time_utc": "2026-04-13T04:23:31.599106Z",
   "summary": {
     "schemaVersion": 2,
-    "generatedAt": "2026-04-13T04:05:22.723253Z",
-    "run_time_utc": "2026-04-13T04:05:22.723253Z",
+    "generatedAt": "2026-04-13T04:23:31.599106Z",
+    "run_time_utc": "2026-04-13T04:23:31.599106Z",
     "sources_checked": 60,
-    "sources_with_new_items": 49,
-    "total_raw_items": 1640,
-    "total_parsed_items": 1211,
-    "total_normalized_items": 1211,
-    "total_after_dedupe_items": 1192,
-    "total_written_articles_feed_attributed": 1307,
+    "sources_with_new_items": 47,
+    "total_raw_items": 1546,
+    "total_parsed_items": 1131,
+    "total_normalized_items": 1131,
+    "total_after_dedupe_items": 1112,
+    "total_written_articles_feed_attributed": 1312,
     "written_by_section": {
-      "zpravy": 646,
-      "sport": 366,
+      "zpravy": 648,
+      "sport": 368,
       "finance": 249,
-      "zdravi": 70,
+      "zdravi": 71,
       "cestovani": 21
     },
     "newest_written_publishedAt": "2026-04-13T05:05:00Z",
     "top_sources_by_new_items": [
-      {
-        "source_id": "fin_e15",
-        "feed_url": "https://www.e15.cz/rss",
-        "raw_feed_new_item_count": 40
-      },
       {
         "source_id": "fin_hn",
         "feed_url": "https://hn.cz/?m=rss",
@@ -48,11 +43,6 @@
         "raw_feed_new_item_count": 40
       },
       {
-        "source_id": "spt_isport",
-        "feed_url": "https://isport.blesk.cz/rss",
-        "raw_feed_new_item_count": 40
-      },
-      {
         "source_id": "spt_mmamag",
         "feed_url": "https://www.mmamag.cz/feed/",
         "raw_feed_new_item_count": 40
@@ -71,6 +61,16 @@
         "source_id": "fin_ekonomickydenik",
         "feed_url": "https://www.ekonomickydenik.cz/feed/",
         "raw_feed_new_item_count": 30
+      },
+      {
+        "source_id": "fin_idnes_ekonomika",
+        "feed_url": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
+        "raw_feed_new_item_count": 30
+      },
+      {
+        "source_id": "fin_novinky_ekonomika",
+        "feed_url": "https://www.novinky.cz/rss/ekonomika",
+        "raw_feed_new_item_count": 30
       }
     ],
     "top_sources_by_written_items": [
@@ -87,7 +87,7 @@
       {
         "source_id": "zpr_idnes_zpravy",
         "feed_url": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-        "written_to_articles_json_count": 97
+        "written_to_articles_json_count": 98
       },
       {
         "source_id": "spt_ctsport",
@@ -97,12 +97,12 @@
       {
         "source_id": "spt_sportcz",
         "feed_url": "https://www.sport.cz/rss",
-        "written_to_articles_json_count": 84
+        "written_to_articles_json_count": 85
       },
       {
         "source_id": "spt_idnes",
         "feed_url": "https://servis.idnes.cz/rss.aspx?c=sport",
-        "written_to_articles_json_count": 70
+        "written_to_articles_json_count": 71
       },
       {
         "source_id": "spt_isport",
@@ -112,7 +112,7 @@
       {
         "source_id": "zpr_ct24_domaci",
         "feed_url": "https://www.ceskatelevize.cz/ct24/rss",
-        "written_to_articles_json_count": 68
+        "written_to_articles_json_count": 69
       },
       {
         "source_id": "fin_sz_byznys",
@@ -186,8 +186,8 @@
       "feed_url": "https://www.cestujlevne.com/feed/",
       "topic": "cestovani",
       "section_primary": "cestovani",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-10T16:00:13Z",
@@ -257,11 +257,11 @@
       "feed_url": "https://www.novinky.cz/rss/cestovani",
       "topic": "cestovani",
       "section_primary": "cestovani",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-13T03:55:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:09:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -287,6 +287,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Cestující na asijském letišti vítá obří pohyblivá kočka",
+          "publishedAt": "2026-04-13T04:09:00Z"
+        },
         {
           "title": "Odmítnutí je fyzicky bolí. Jaký je život s RSD",
           "publishedAt": "2026-04-13T03:55:00Z"
@@ -314,10 +318,6 @@
         {
           "title": "Anne Hathawayová a Ewan McGregor zápasí na život a na smrt s dinosaury",
           "publishedAt": "2026-04-13T03:23:00Z"
-        },
-        {
-          "title": "Pacientka pět měsíců odmítala opustit nemocnici, zabrala až hrozba soudem",
-          "publishedAt": "2026-04-13T03:20:00Z"
         }
       ]
     },
@@ -328,8 +328,8 @@
       "feed_url": "https://www.pelipecky.cz/feed/",
       "topic": "cestovani",
       "section_primary": "cestovani",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-12T19:47:50Z",
@@ -399,8 +399,8 @@
       "feed_url": "https://www.svetcestovatele.cz/feed/",
       "topic": "cestovani",
       "section_primary": "cestovani",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-13T04:00:02Z",
@@ -470,8 +470,8 @@
       "feed_url": "https://travelbible.cz/feed/",
       "topic": "cestovani",
       "section_primary": "cestovani",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-06T08:54:55Z",
@@ -541,20 +541,20 @@
       "feed_url": "https://www.e15.cz/rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
-      "raw_feed_item_count": 45,
-      "raw_feed_new_item_count": 40,
-      "raw_feed_latest_publishedAt": "2026-04-13T03:00:00Z",
-      "ingested_item_count": 40,
-      "parsed_item_count": 40,
-      "normalized_item_count": 40,
-      "valid_publishedAt_count": 40,
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
+      "raw_feed_item_count": 0,
+      "raw_feed_new_item_count": 0,
+      "raw_feed_latest_publishedAt": "",
+      "ingested_item_count": 0,
+      "parsed_item_count": 0,
+      "normalized_item_count": 0,
+      "valid_publishedAt_count": 0,
       "mapped_to_section_count": {
-        "zpravy": 7,
-        "sport": 1,
-        "finance": 31,
-        "zdravi": 1,
+        "zpravy": 0,
+        "sport": 0,
+        "finance": 0,
+        "zdravi": 0,
         "cestovani": 0,
         "other": 0
       },
@@ -570,40 +570,7 @@
         "dedupe": 0,
         "other": 0
       },
-      "sample_titles": [
-        {
-          "title": "Kde se Češi dožívají vysokého věku ve zdraví? První český longevity index ovládlo pět krajů",
-          "publishedAt": "2026-04-13T03:00:00Z"
-        },
-        {
-          "title": "Orbán si neporadil se svým žákem. Dílčí změny mohou být pro Maďarsko lepší cestou než stálé mocenské zvraty",
-          "publishedAt": "2026-04-12T19:30:00Z"
-        },
-        {
-          "title": "Fidesz podle průběžných výsledků maďarských voleb ztrácí většinu. Tisza míří k ovládnutí parlamentu",
-          "publishedAt": "2026-04-12T19:05:00Z"
-        },
-        {
-          "title": "Akcie CSG zažily strmý propad, Křetínský řeší Casino a Jadran láká na investiční boom",
-          "publishedAt": "2026-04-12T16:00:00Z"
-        },
-        {
-          "title": "USA míří k blokádě Hormuzu, Trump po krachu jednání stupňuje tlak",
-          "publishedAt": "2026-04-12T14:00:00Z"
-        },
-        {
-          "title": "Vláda trvá na důchodu v 65 letech. Náklady podle propočtů výrazně porostou",
-          "publishedAt": "2026-04-12T13:05:00Z"
-        },
-        {
-          "title": "Volby v Maďarsku skončily, provázela je mimořádná účast",
-          "publishedAt": "2026-04-12T12:10:00Z"
-        },
-        {
-          "title": "Laser místo oběda. Ben Cristovao se společníky staví byznys na každodenní péči o pleť",
-          "publishedAt": "2026-04-12T10:00:00Z"
-        }
-      ]
+      "sample_titles": []
     },
     {
       "source_id": "fin_ekonom",
@@ -612,8 +579,8 @@
       "feed_url": "https://ekonom.cz/?p=400000_rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 1,
       "raw_feed_new_item_count": 1,
       "raw_feed_latest_publishedAt": "2026-04-08T16:00:00Z",
@@ -655,11 +622,11 @@
       "feed_url": "https://www.ekonomickydenik.cz/feed/",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-12T20:34:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:05:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -667,14 +634,14 @@
       "mapped_to_section_count": {
         "zpravy": 2,
         "sport": 0,
-        "finance": 27,
-        "zdravi": 0,
+        "finance": 26,
+        "zdravi": 1,
         "cestovani": 1,
         "other": 0
       },
-      "release_eligible_count": 53,
-      "written_to_articles_json_count": 53,
-      "newest_written_publishedAt": "2026-04-12T20:34:00Z",
+      "release_eligible_count": 54,
+      "written_to_articles_json_count": 54,
+      "newest_written_publishedAt": "2026-04-13T04:05:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -685,6 +652,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Havlíček: Nesázejme na dovoz levné elektřiny ze Švédska či Francie. Co je doma, to se počítá",
+          "publishedAt": "2026-04-13T04:05:00Z"
+        },
         {
           "title": "Těžký večer v Průhonicích: Fiala po pádu Orbána zesměšňuje Babiše videem",
           "publishedAt": "2026-04-12T20:34:00Z"
@@ -712,10 +683,6 @@
         {
           "title": "Maďaři rozhodují o budoucnosti. Vyzyvatel Orbána chce užší spolupráci s Českem",
           "publishedAt": "2026-04-12T11:14:52Z"
-        },
-        {
-          "title": "Trump chce námořní blokádu. Mírové rozhovory s Íránem skončily",
-          "publishedAt": "2026-04-12T09:31:06Z"
         }
       ]
     },
@@ -726,8 +693,8 @@
       "feed_url": "https://www.epenize.eu/rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-12T23:00:44Z",
@@ -797,8 +764,8 @@
       "feed_url": "https://www.faei.cz/feed/",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 12,
       "raw_feed_new_item_count": 12,
       "raw_feed_latest_publishedAt": "2026-04-13T04:00:34Z",
@@ -868,8 +835,8 @@
       "feed_url": "https://hn.cz/?m=rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 150,
       "raw_feed_new_item_count": 40,
       "raw_feed_latest_publishedAt": "2026-04-12T22:00:00Z",
@@ -939,8 +906,8 @@
       "feed_url": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
       "raw_feed_latest_publishedAt": "2026-04-12T22:00:00Z",
@@ -1010,21 +977,21 @@
       "feed_url": "https://www.novinky.cz/rss/ekonomika",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-13T03:55:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:09:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 9,
+        "zpravy": 8,
         "sport": 1,
         "finance": 17,
         "zdravi": 3,
-        "cestovani": 0,
+        "cestovani": 1,
         "other": 0
       },
       "release_eligible_count": 2,
@@ -1040,6 +1007,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Cestující na asijském letišti vítá obří pohyblivá kočka",
+          "publishedAt": "2026-04-13T04:09:00Z"
+        },
         {
           "title": "Odmítnutí je fyzicky bolí. Jaký je život s RSD",
           "publishedAt": "2026-04-13T03:55:00Z"
@@ -1067,10 +1038,6 @@
         {
           "title": "Anne Hathawayová a Ewan McGregor zápasí na život a na smrt s dinosaury",
           "publishedAt": "2026-04-13T03:23:00Z"
-        },
-        {
-          "title": "Pacientka pět měsíců odmítala opustit nemocnici, zabrala až hrozba soudem",
-          "publishedAt": "2026-04-13T03:20:00Z"
         }
       ]
     },
@@ -1081,8 +1048,8 @@
       "feed_url": "https://www.penize.cz/rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-13T05:05:00Z",
@@ -1152,8 +1119,8 @@
       "feed_url": "https://www.seznamzpravy.cz/rss/byznys",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 29,
       "raw_feed_new_item_count": 29,
       "raw_feed_latest_publishedAt": "2026-04-13T03:59:00Z",
@@ -1191,7 +1158,7 @@
           "publishedAt": "2026-04-13T03:00:00Z"
         },
         {
-          "title": "Paradox obletu Měsíce: Rekordní mise bude úspěšná, když se na ni zapomene",
+          "title": "Paradox obletu Měsíce. Rekordní mise bude úspěšná, když se na ni zapomene",
           "publishedAt": "2026-04-13T03:59:00Z"
         },
         {
@@ -1223,8 +1190,8 @@
       "feed_url": "https://indian-tv.cz/feed/",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 57,
       "raw_feed_new_item_count": 40,
       "raw_feed_latest_publishedAt": "2026-04-12T17:14:37Z",
@@ -1294,8 +1261,8 @@
       "feed_url": "https://www.nedd.cz/feed/",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -1332,11 +1299,11 @@
       "feed_url": "https://www.novinky.cz/rss/hry",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-13T03:55:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:09:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -1362,6 +1329,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Cestující na asijském letišti vítá obří pohyblivá kočka",
+          "publishedAt": "2026-04-13T04:09:00Z"
+        },
         {
           "title": "Odmítnutí je fyzicky bolí. Jaký je život s RSD",
           "publishedAt": "2026-04-13T03:55:00Z"
@@ -1389,10 +1360,6 @@
         {
           "title": "Anne Hathawayová a Ewan McGregor zápasí na život a na smrt s dinosaury",
           "publishedAt": "2026-04-13T03:23:00Z"
-        },
-        {
-          "title": "Pacientka pět měsíců odmítala opustit nemocnici, zabrala až hrozba soudem",
-          "publishedAt": "2026-04-13T03:20:00Z"
         }
       ]
     },
@@ -1403,8 +1370,8 @@
       "feed_url": "https://sector.sk/feed/",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -1441,8 +1408,8 @@
       "feed_url": "https://www.vortex.cz/feed/",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2025-08-31T18:05:31Z",
@@ -1512,8 +1479,8 @@
       "feed_url": "https://zing.cz/rss/all",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 200,
       "raw_feed_new_item_count": 40,
       "raw_feed_latest_publishedAt": "2026-04-13T04:00:00Z",
@@ -1583,8 +1550,8 @@
       "feed_url": "https://www.ceskatelevize.cz/art/rss",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -1621,8 +1588,8 @@
       "feed_url": "https://www.kinobox.cz/api/rss",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-12T17:00:00Z",
@@ -1692,11 +1659,11 @@
       "feed_url": "https://www.vipzivot.cz/feed/",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
-      "raw_feed_latest_publishedAt": "2026-04-13T04:03:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:12:00Z",
       "ingested_item_count": 10,
       "parsed_item_count": 10,
       "normalized_item_count": 10,
@@ -1723,6 +1690,14 @@
       },
       "sample_titles": [
         {
+          "title": "Vanda Hybnerová se opřela do bulvárních časopisů. „Nikomu není nic do toho, s kým žiju, jaká jsem matka a babička,“ vzkázala",
+          "publishedAt": "2026-04-13T04:12:00Z"
+        },
+        {
+          "title": "Celý život odváděl daně, důchod mu sotva pokryje složenky. Felix Slováček udělal chybu, které se dopouštějí tisíce Čechů",
+          "publishedAt": "2026-04-13T04:06:00Z"
+        },
+        {
           "title": "Nevěry, dluhy a útěky na Bali. Agáta Hanychová vystřídala dvanáct mužů, štěstí u nich ale nenašla. Vyjde to s Dopitou?",
           "publishedAt": "2026-04-13T04:03:00Z"
         },
@@ -1745,14 +1720,6 @@
         {
           "title": "Co dnes dělá Martin Harich? Hvězda SuperStar se stala otcem, jeho slova o partnerce by dojala i největšího tvrďáka",
           "publishedAt": "2026-04-11T04:16:00Z"
-        },
-        {
-          "title": "Sekala by jim prsty! Kateřině Brožové vykradli auto, policie na místě řešila rozsáhlé škody",
-          "publishedAt": "2026-04-11T04:12:00Z"
-        },
-        {
-          "title": "Dvacet minut o ní básnil jako blbec. Libuše Šafránková udělala na Vorlíčka podraz, který jí nikdy neodpustil",
-          "publishedAt": "2026-04-11T04:11:00Z"
         }
       ]
     },
@@ -1763,11 +1730,11 @@
       "feed_url": "https://www.vlasta.cz/feed/",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 108,
       "raw_feed_new_item_count": 40,
-      "raw_feed_latest_publishedAt": "2026-04-12T07:04:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:03:00Z",
       "ingested_item_count": 40,
       "parsed_item_count": 40,
       "normalized_item_count": 40,
@@ -1793,6 +1760,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Horoskop na 13.–19. dubna: Lvi, čeká vás úspěch, Panny, nenechte se ovlivnit okolím",
+          "publishedAt": "2026-04-13T04:03:00Z"
+        },
         {
           "title": "Test, který napoví, zda lze vztah s partnerem ještě zachránit. Odpovězte na 36 otázek",
           "publishedAt": "2026-04-12T07:04:00Z"
@@ -1820,10 +1791,6 @@
         {
           "title": "„Ježiš, ty jsi cíťa!“ Psycholog radí, jak přežít den s extrémní citlivostí. Důležitý je plán",
           "publishedAt": "2026-04-11T07:03:00Z"
-        },
-        {
-          "title": "Jak vzniká seriál Ulice: Kdo vymýšlí příběhy a jsou inspirované skutečností? Nahlédněte do zákulisí",
-          "publishedAt": "2026-04-11T06:35:00Z"
         }
       ]
     },
@@ -1834,8 +1801,8 @@
       "feed_url": "https://www.vtelce.cz/feed/",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-12T17:28:05Z",
@@ -1905,8 +1872,8 @@
       "feed_url": "https://www.crzpravy.cz/rss/sport/",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -1943,8 +1910,8 @@
       "feed_url": "https://sport.ceskatelevize.cz/rss",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
       "raw_feed_latest_publishedAt": "2026-04-12T21:03:12Z",
@@ -2014,11 +1981,11 @@
       "feed_url": "https://servis.idnes.cz/rss.aspx?c=sport",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-12T22:33:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:00:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -2031,9 +1998,9 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 70,
-      "written_to_articles_json_count": 70,
-      "newest_written_publishedAt": "2026-04-12T22:33:00Z",
+      "release_eligible_count": 71,
+      "written_to_articles_json_count": 71,
+      "newest_written_publishedAt": "2026-04-13T04:00:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -2044,6 +2011,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Nymburk, Slavia a jiné sňatky z rozumu. Turkům přinesl tituly, PSG brzký krach",
+          "publishedAt": "2026-04-13T04:00:00Z"
+        },
         {
           "title": "Senzace pro český basketbal! Hamzová a Čechová zabojují o šanci hrát WNBA",
           "publishedAt": "2026-04-12T22:33:00Z"
@@ -2071,10 +2042,6 @@
         {
           "title": "Třetí jasná výhra v sérii, USK je opět ve finále. Do boje o titul míří také Žabiny",
           "publishedAt": "2026-04-12T18:44:00Z"
-        },
-        {
-          "title": "Priske o sparťanském objevu Sochůrkovi: On je voják! A Vojta? Gól už brzy dá",
-          "publishedAt": "2026-04-12T18:00:00Z"
         }
       ]
     },
@@ -2085,18 +2052,18 @@
       "feed_url": "https://isport.blesk.cz/rss",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
-      "raw_feed_item_count": 49,
-      "raw_feed_new_item_count": 40,
-      "raw_feed_latest_publishedAt": "2026-04-13T03:00:00Z",
-      "ingested_item_count": 40,
-      "parsed_item_count": 40,
-      "normalized_item_count": 40,
-      "valid_publishedAt_count": 40,
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
+      "raw_feed_item_count": 0,
+      "raw_feed_new_item_count": 0,
+      "raw_feed_latest_publishedAt": "",
+      "ingested_item_count": 0,
+      "parsed_item_count": 0,
+      "normalized_item_count": 0,
+      "valid_publishedAt_count": 0,
       "mapped_to_section_count": {
         "zpravy": 0,
-        "sport": 40,
+        "sport": 0,
         "finance": 0,
         "zdravi": 0,
         "cestovani": 0,
@@ -2114,40 +2081,7 @@
         "dedupe": 0,
         "other": 0
       },
-      "sample_titles": [
-        {
-          "title": "Naštvaný Petr Nedvěd: Za bráchu pokutu zaplatím, pošlu 200 tisíc. Pro příště a za pravdu!",
-          "publishedAt": "2026-04-13T03:00:00Z"
-        },
-        {
-          "title": "Opava vstřebává aféru i Nádvorníka. Veliký šok! Říkal, že nikam nejde, zní z kabiny",
-          "publishedAt": "2026-04-13T03:00:00Z"
-        },
-        {
-          "title": "Bijec Procházka po šokující prohře v UFC: Nekompromisní reakce!",
-          "publishedAt": "2026-04-13T03:00:00Z"
-        },
-        {
-          "title": "ZNÁMKY Slavie: Jistota Markovič, Holeš za Aduem jen vlál. Kušej svůj úkol nesplnil",
-          "publishedAt": "2026-04-13T03:00:00Z"
-        },
-        {
-          "title": "NHL ONLINE: Boston s Čechy může stvrdit postup do play off, v akci i Palát nebo Hronek",
-          "publishedAt": "2026-04-12T21:23:00Z"
-        },
-        {
-          "title": "Trpišovský: Dietní zápas, čekal jsem víc. Chorého červená? Velké vaření z vody",
-          "publishedAt": "2026-04-12T21:05:00Z"
-        },
-        {
-          "title": "Janotka končí v Sigmě, dočasně ho nahrazuje Hapal! Mluví se o špatné atmosféře v týmu",
-          "publishedAt": "2026-04-12T20:35:00Z"
-        },
-        {
-          "title": "Hyský: Vrátil se jiný Adu. Sestava měla vypadat jinak, od výkonu se dá odrazit",
-          "publishedAt": "2026-04-12T20:00:00Z"
-        }
-      ]
+      "sample_titles": []
     },
     {
       "source_id": "spt_mmamag",
@@ -2156,8 +2090,8 @@
       "feed_url": "https://www.mmamag.cz/feed/",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 100,
       "raw_feed_new_item_count": 40,
       "raw_feed_latest_publishedAt": "2026-04-12T04:20:45Z",
@@ -2227,11 +2161,11 @@
       "feed_url": "https://www.sport.cz/rss",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-12T21:07:18Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:00:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -2244,9 +2178,9 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 84,
-      "written_to_articles_json_count": 84,
-      "newest_written_publishedAt": "2026-04-12T21:07:18Z",
+      "release_eligible_count": 85,
+      "written_to_articles_json_count": 85,
+      "newest_written_publishedAt": "2026-04-13T04:00:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -2257,6 +2191,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Pastrňák znovu na stý bod nedosáhl. Hronek pomohl k výhře",
+          "publishedAt": "2026-04-13T04:00:00Z"
+        },
         {
           "title": "Gólové hody v Comu. Inter smazal dvougólové manko a zvítězil",
           "publishedAt": "2026-04-12T15:11:30Z"
@@ -2284,10 +2222,6 @@
         {
           "title": "Plzeňské eso sní o MS. Po návratu z reprezentace jsem viděl jiného hráče, chválí Hyský",
           "publishedAt": "2026-04-12T19:39:53Z"
-        },
-        {
-          "title": "Další šílený exces? Chorý plivnul na bývalého spoluhráče a šel pod sprchy",
-          "publishedAt": "2026-04-12T18:41:38Z"
         }
       ]
     },
@@ -2298,8 +2232,8 @@
       "feed_url": "https://www.tenisportal.cz/rss",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -2336,8 +2270,8 @@
       "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
       "topic": "veda",
       "section_primary": "veda",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -2374,11 +2308,11 @@
       "feed_url": "https://www.novinky.cz/rss/veda",
       "topic": "veda",
       "section_primary": "veda",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-13T03:55:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:09:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -2404,6 +2338,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Cestující na asijském letišti vítá obří pohyblivá kočka",
+          "publishedAt": "2026-04-13T04:09:00Z"
+        },
         {
           "title": "Odmítnutí je fyzicky bolí. Jaký je život s RSD",
           "publishedAt": "2026-04-13T03:55:00Z"
@@ -2431,10 +2369,6 @@
         {
           "title": "Anne Hathawayová a Ewan McGregor zápasí na život a na smrt s dinosaury",
           "publishedAt": "2026-04-13T03:23:00Z"
-        },
-        {
-          "title": "Pacientka pět měsíců odmítala opustit nemocnici, zabrala až hrozba soudem",
-          "publishedAt": "2026-04-13T03:20:00Z"
         }
       ]
     },
@@ -2445,8 +2379,8 @@
       "feed_url": "https://servis.idnes.cz/rss.aspx?c=technet",
       "topic": "veda",
       "section_primary": "veda",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
       "raw_feed_latest_publishedAt": "2026-04-12T22:00:00Z",
@@ -2516,8 +2450,8 @@
       "feed_url": "https://vtm.zive.cz/rss",
       "topic": "veda",
       "section_primary": "veda",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 35,
       "raw_feed_new_item_count": 35,
       "raw_feed_latest_publishedAt": "2026-04-12T15:45:00Z",
@@ -2587,8 +2521,8 @@
       "feed_url": "https://www.nespechej.cz/feed/",
       "topic": "vzdelavani",
       "section_primary": "vzdelavani",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -2625,11 +2559,11 @@
       "feed_url": "https://www.novinky.cz/rss/skola",
       "topic": "vzdelavani",
       "section_primary": "vzdelavani",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-13T03:55:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:09:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -2655,6 +2589,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Cestující na asijském letišti vítá obří pohyblivá kočka",
+          "publishedAt": "2026-04-13T04:09:00Z"
+        },
         {
           "title": "Odmítnutí je fyzicky bolí. Jaký je život s RSD",
           "publishedAt": "2026-04-13T03:55:00Z"
@@ -2682,10 +2620,6 @@
         {
           "title": "Anne Hathawayová a Ewan McGregor zápasí na život a na smrt s dinosaury",
           "publishedAt": "2026-04-13T03:23:00Z"
-        },
-        {
-          "title": "Pacientka pět měsíců odmítala opustit nemocnici, zabrala až hrozba soudem",
-          "publishedAt": "2026-04-13T03:20:00Z"
         }
       ]
     },
@@ -2696,22 +2630,22 @@
       "feed_url": "https://www.seznamzpravy.cz/rss/vzdelavani",
       "topic": "vzdelavani",
       "section_primary": "vzdelavani",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-13T03:59:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:20:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 17,
+        "zpravy": 16,
         "sport": 0,
         "finance": 0,
         "zdravi": 0,
         "cestovani": 0,
-        "other": 13
+        "other": 14
       },
       "release_eligible_count": 11,
       "written_to_articles_json_count": 11,
@@ -2735,7 +2669,11 @@
           "publishedAt": "2026-04-13T03:00:00Z"
         },
         {
-          "title": "Paradox obletu Měsíce: Rekordní mise bude úspěšná, když se na ni zapomene",
+          "title": "Může zachraňovat životy. Klíčová strategie ale po letech stále čeká na změnu",
+          "publishedAt": "2026-04-13T04:20:00Z"
+        },
+        {
+          "title": "Paradox obletu Měsíce. Rekordní mise bude úspěšná, když se na ni zapomene",
           "publishedAt": "2026-04-13T03:59:00Z"
         },
         {
@@ -2753,10 +2691,6 @@
         {
           "title": "Hodně prohrál Orbán, trochu Trump, Babiš a další",
           "publishedAt": "2026-04-12T21:25:00Z"
-        },
-        {
-          "title": "Plivl na něj Chorý schválně? Pohled do duše fotbalového raubíře",
-          "publishedAt": "2026-04-12T21:00:00Z"
         }
       ]
     },
@@ -2767,8 +2701,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 4,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2026-01-20T08:01:05Z",
@@ -2805,8 +2739,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 15,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "2024-07-19T09:05:16Z",
@@ -2843,8 +2777,8 @@
       "feed_url": "https://www.betterlife.cz/feed/",
       "topic": "zdravi",
       "section_primary": "zdravi",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-12T10:29:51Z",
@@ -2914,8 +2848,8 @@
       "feed_url": "https://www.plnezdravi.cz/feed/",
       "topic": "zdravi",
       "section_primary": "zdravi",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-12T23:00:35Z",
@@ -2985,8 +2919,8 @@
       "feed_url": "https://www.prozeny.cz/rss/zdravi",
       "topic": "zdravi",
       "section_primary": "zdravi",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
       "raw_feed_latest_publishedAt": "2026-04-13T03:00:00Z",
@@ -3056,8 +2990,8 @@
       "feed_url": "https://www.zdrave.cz/feed/",
       "topic": "zdravi",
       "section_primary": "zdravi",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -3094,8 +3028,8 @@
       "feed_url": "https://www.zdravezpravy.cz/feed/",
       "topic": "zdravi",
       "section_primary": "zdravi",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-11T06:00:53Z",
@@ -3165,8 +3099,8 @@
       "feed_url": "https://www.zdravotnickydenik.cz/feed/",
       "topic": "zdravi",
       "section_primary": "zdravi",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-12T14:30:00Z",
@@ -3236,8 +3170,8 @@
       "feed_url": "https://www.aktualne.cz/rss/",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-13T04:00:00Z",
@@ -3307,8 +3241,8 @@
       "feed_url": "https://www.ceska-justice.cz/feed/",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-12T20:48:27Z",
@@ -3378,11 +3312,11 @@
       "feed_url": "https://www.ceskatelevize.cz/ct24/rss",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-13T02:41:31Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:02:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -3395,9 +3329,9 @@
         "cestovani": 0,
         "other": 3
       },
-      "release_eligible_count": 68,
-      "written_to_articles_json_count": 68,
-      "newest_written_publishedAt": "2026-04-13T02:41:31Z",
+      "release_eligible_count": 69,
+      "written_to_articles_json_count": 69,
+      "newest_written_publishedAt": "2026-04-13T04:02:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -3408,6 +3342,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "„Odlidštění Palestinců“ a dvojí metr. Trest smrti v Izraeli budí vášně",
+          "publishedAt": "2026-04-13T04:02:00Z"
+        },
         {
           "title": "Trump kritizoval papeže",
           "publishedAt": "2026-04-13T02:41:31Z"
@@ -3435,10 +3373,6 @@
         {
           "title": "Hrad a Černínský palác se střetly kvůli výrokům na adresu Trumpa",
           "publishedAt": "2026-04-12T15:36:59Z"
-        },
-        {
-          "title": "Trump nařídil námořní blokádu Hormuzského průlivu",
-          "publishedAt": "2026-04-12T13:09:16Z"
         }
       ]
     },
@@ -3449,8 +3383,8 @@
       "feed_url": "https://www.ceskenoviny.cz/rss/",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -3487,8 +3421,8 @@
       "feed_url": "https://www.denik.cz/rss/zpravy.html",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 25,
       "raw_feed_new_item_count": 25,
       "raw_feed_latest_publishedAt": "2026-04-13T02:30:00Z",
@@ -3558,8 +3492,8 @@
       "feed_url": "https://hlidacipes.org/feed/",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-12T05:30:41Z",
@@ -3629,11 +3563,11 @@
       "feed_url": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-13T03:23:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:00:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -3646,9 +3580,9 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 97,
-      "written_to_articles_json_count": 97,
-      "newest_written_publishedAt": "2026-04-13T03:23:00Z",
+      "release_eligible_count": 98,
+      "written_to_articles_json_count": 98,
+      "newest_written_publishedAt": "2026-04-13T04:00:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -3659,6 +3593,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Vláda chce zákon, který jí umožní regulovat ceny paliv jejím nařízením",
+          "publishedAt": "2026-04-13T04:00:00Z"
+        },
         {
           "title": "OBRAZEM: Prasátko jako dalmatin. V přírodě by nepřežilo, v oboře je atrakcí",
           "publishedAt": "2026-04-13T03:23:00Z"
@@ -3686,10 +3624,6 @@
         {
           "title": "ONLINE: Osvobodili jsme Maďarsko, slaví Magyar. Má ústavní většinu, Orbán prohrál",
           "publishedAt": "2026-04-12T21:45:00Z"
-        },
-        {
-          "title": "Ze spojence Orbánovým pokořitelem. Kdo je Péter Magyar, příští maďarský premiér",
-          "publishedAt": "2026-04-12T21:03:00Z"
         }
       ]
     },
@@ -3700,8 +3634,8 @@
       "feed_url": "https://www.kverulant.org/feed/",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-12T22:07:00Z",
@@ -3771,21 +3705,21 @@
       "feed_url": "https://www.novinky.cz/rss/domaci",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-13T03:55:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:09:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 29,
+        "zpravy": 28,
         "sport": 0,
         "finance": 0,
         "zdravi": 1,
-        "cestovani": 0,
+        "cestovani": 1,
         "other": 0
       },
       "release_eligible_count": 3,
@@ -3802,6 +3736,10 @@
       },
       "sample_titles": [
         {
+          "title": "Cestující na asijském letišti vítá obří pohyblivá kočka",
+          "publishedAt": "2026-04-13T04:09:00Z"
+        },
+        {
           "title": "Odmítnutí je fyzicky bolí. Jaký je život s RSD",
           "publishedAt": "2026-04-13T03:55:00Z"
         },
@@ -3828,10 +3766,6 @@
         {
           "title": "Anne Hathawayová a Ewan McGregor zápasí na život a na smrt s dinosaury",
           "publishedAt": "2026-04-13T03:23:00Z"
-        },
-        {
-          "title": "Pacientka pět měsíců odmítala opustit nemocnici, zabrala až hrozba soudem",
-          "publishedAt": "2026-04-13T03:20:00Z"
         }
       ]
     },
@@ -3842,21 +3776,21 @@
       "feed_url": "https://www.novinky.cz/rss/zahranicni",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-13T03:55:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-13T04:09:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 29,
+        "zpravy": 28,
         "sport": 0,
         "finance": 0,
         "zdravi": 1,
-        "cestovani": 0,
+        "cestovani": 1,
         "other": 0
       },
       "release_eligible_count": 0,
@@ -3873,6 +3807,10 @@
       },
       "sample_titles": [
         {
+          "title": "Cestující na asijském letišti vítá obří pohyblivá kočka",
+          "publishedAt": "2026-04-13T04:09:00Z"
+        },
+        {
           "title": "Odmítnutí je fyzicky bolí. Jaký je život s RSD",
           "publishedAt": "2026-04-13T03:55:00Z"
         },
@@ -3899,10 +3837,6 @@
         {
           "title": "Anne Hathawayová a Ewan McGregor zápasí na život a na smrt s dinosaury",
           "publishedAt": "2026-04-13T03:23:00Z"
-        },
-        {
-          "title": "Pacientka pět měsíců odmítala opustit nemocnici, zabrala až hrozba soudem",
-          "publishedAt": "2026-04-13T03:20:00Z"
         }
       ]
     },
@@ -3913,8 +3847,8 @@
       "feed_url": "https://www.seznamzpravy.cz/rss/domaci",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
       "raw_feed_latest_publishedAt": "2026-04-13T03:59:00Z",
@@ -3952,7 +3886,7 @@
           "publishedAt": "2026-04-13T03:00:00Z"
         },
         {
-          "title": "Paradox obletu Měsíce: Rekordní mise bude úspěšná, když se na ni zapomene",
+          "title": "Paradox obletu Měsíce. Rekordní mise bude úspěšná, když se na ni zapomene",
           "publishedAt": "2026-04-13T03:59:00Z"
         },
         {
@@ -3984,8 +3918,8 @@
       "feed_url": "https://www.tydenikpolicie.cz/feed/",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-13T04:05:22.723253Z",
-      "run_time_utc": "2026-04-13T04:05:22.723253Z",
+      "generatedAt": "2026-04-13T04:23:31.599106Z",
+      "run_time_utc": "2026-04-13T04:23:31.599106Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-12T20:07:31Z",
