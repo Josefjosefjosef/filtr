@@ -22587,6 +22587,33 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  /**
+   * P0 perf: SOLID chip contrast used to run on every section switch against many large views,
+   * calling getComputedStyle per chip (layout thrash) before first paint. Only the view that
+   * matches the active section needs a refresh (same chips; hidden views keep prior attrs).
+   */
+  function iuSolidChipContrastRootForSection(section, nav){
+    try{
+      const s = String(section || "").trim().toLowerCase();
+      const mode = nav && nav.mode === "media" ? "media" : "guide";
+      if (s === "radio") return document.getElementById("iuRadioView");
+      if (s === "tvonline") return document.getElementById("iuTvOnlineView");
+      if (s === "pocasi") return document.getElementById("iuWeatherView");
+      if (s === "mapy") return document.getElementById("iuMapyView") || document.getElementById("iuMapsView");
+      if (s === "tvprogram") return document.getElementById("iuTvProgramView");
+      if (s === "jr") return document.getElementById("iuJrEmptyView");
+      if (s === "travel") {
+        if (mode === "media") return document.getElementById("feed");
+        return document.getElementById("iuTravelView");
+      }
+      if (/^myuzel-[1-5]$/.test(s)) {
+        const slot = s.split("-")[1];
+        return document.getElementById("iuMyUzelView" + slot);
+      }
+    }catch(_){}
+    return null;
+  }
+
   function iuScrollMainToTopSmooth(){
     try{
       // Prefer: scroll within the main feed container if it exists and scrolls.
@@ -24665,16 +24692,8 @@ function buildVideoAsArticleCard(it) {
 
     // SOLID chips: runtime contrast for default WHITE text (MindMenu unaffected)
     try{
-      const views = [
-        document.getElementById("iuRadioView"),
-        document.getElementById("iuTvOnlineView"),
-        document.getElementById("iuWeatherView"),
-        document.getElementById("iuMapsView") || document.getElementById("iuMapyView"),
-        document.getElementById("iuTravelView"),
-        document.getElementById("iuTvProgramView"),
-        document.getElementById("iuKulturaView"),
-      ];
-      views.forEach(v => iuApplySolidChipTextContrastInView(v));
+      const contrastRoot = iuSolidChipContrastRootForSection(section, nav);
+      iuApplySolidChipTextContrastInView(contrastRoot);
     }catch{}
 
     // Notes: mount for current section + render all declared notes hosts (no MindMenu impact)
