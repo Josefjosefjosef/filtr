@@ -6750,7 +6750,7 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  /** Silver tall preview cards: same URL/nav outcome as matching left-rail .iu-leftNavItem[data-media-topic]. */
+  /** Silver tall preview cards: stejná navigační cesta jako „Navigace po webu“ — přímo persist + apply (ne syntetický peer.click() na <a>, který je na mobilu/WebKit nespolehlivý vs skutečný tap). */
   function iuMediaPreviewNavClick(mediaTopicKey) {
     const k = String(mediaTopicKey || "").trim().toLowerCase();
     try{
@@ -6761,16 +6761,6 @@ function buildVideoAsArticleCard(it) {
         window.iuHideAllOverlaysNow();
       }
     } catch (_) {}
-    let peer = null;
-    try {
-      peer = document.querySelector('.iu-leftNavItem[data-media-topic="' + k + '"]');
-    } catch (_) {}
-    if (peer) {
-      try {
-        peer.click();
-      } catch (_) {}
-      return;
-    }
     /* Cestování články: kanonické URL je ?section=travel&mode=media (žádný left-rail peer s data-media-topic). */
     if (k === "cestovani") {
       var gateWrapCestEarly = document.getElementById("iuMobileGateWrap");
