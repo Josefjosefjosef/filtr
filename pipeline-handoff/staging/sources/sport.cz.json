@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T09:59:23.451709Z",
+  "ingestedAt": "2026-04-13T10:14:18.027719Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vondroušová se kvůli zranění ramene odhlásila z turnaje v Rouen",
+      "url": "https://www.sport.cz/clanek/tenis-vondrousova-se-kvuli-zraneni-ramene-odhlasila-z-turnaje-v-rouen-5436378",
+      "dt": "2026-04-13T09:59:32Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "kvůli",
+        "odhlásila",
+        "ramene",
+        "rouen",
+        "turnaje",
+        "vondroušová",
+        "zranění"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -753,29 +777,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Olomouc po prohře v Pardubicích odvolala trenéra Janotku!",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-olomouc-po-prohre-v-pardubicich-odvolala-trenera-janotku-5436352",
-      "dt": "2026-04-12T20:35:34Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "janotku",
-        "odvolala",
-        "olomouc",
-        "pardubicích",
-        "prohře",
-        "trenéra"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41770,
+      "bytes": 41801,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T09:24:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T09:59:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -839,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vondroušová se kvůli zranění ramene odhlásila z turnaje v Rouen",
+            "publishedAt": "2026-04-13T09:59:32Z"
+          },
           {
             "title": "MotoGP 2026: Program závodů a průběžné pořadí sezony prestižního seriálu",
             "publishedAt": "2026-02-24T16:19:09Z"
@@ -866,10 +871,6 @@
           {
             "title": "Aktuální tabulka nejlepších střelců Chance Ligy v sezoně 2025/2026",
             "publishedAt": "2026-04-07T04:03:00Z"
-          },
-          {
-            "title": "Trapné rozhodnutí! Fanoušci se pustili do ženské trenérky Unionu. Klub tvrdě reagoval",
-            "publishedAt": "2026-04-13T08:17:24Z"
           }
         ]
       }

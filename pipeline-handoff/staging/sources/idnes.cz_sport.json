@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T09:59:23.451709Z",
+  "ingestedAt": "2026-04-13T10:14:18.027719Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Krejčí po měsíci ve hře. Jokič si řekl o ceny, nedraftovaný nováček útočil na rekordy",
+      "url": "https://www.idnes.cz/sport/basket/nba-konec-zakladni-cast-portland-denver-vit-krejci.A260413_070755_sport-basket_ten",
+      "dt": "2026-04-13T10:09:32Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ceny",
+        "hře",
+        "jokič",
+        "krejčí",
+        "měsíci",
+        "nedraftovaný",
+        "nováček",
+        "rekordy",
+        "útočil",
+        "řekl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tvrďák s IQ 136. Basketbalista Landa: Snažil jsem se soupeřům vstoupit do hlav",
+      "url": "https://www.idnes.cz/sport/basket/basketbal-robert-landa-bk-decin-valecnici.A260407_205109_sport-basket_pbi",
+      "dt": "2026-04-13T10:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "136",
+        "basketbalista",
+        "hlav",
+        "jsem",
+        "landa",
+        "snažil",
+        "soupeřům",
+        "tvrďák",
+        "vstoupit"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -78,33 +131,6 @@
         "trousila",
         "výhra",
         "štvalo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Krejčí po měsíci ve hře. Jokič si řekl o ceny, nedraftovaný nováček útočil na rekordy",
-      "url": "https://www.idnes.cz/sport/basket/nba-konec-zakladni-cast-portland-denver-vit-krejci.A260413_070755_sport-basket_ten",
-      "dt": "2026-04-13T08:53:02Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ceny",
-        "hře",
-        "jokič",
-        "krejčí",
-        "měsíci",
-        "nedraftovaný",
-        "nováček",
-        "rekordy",
-        "útočil",
-        "řekl"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -776,33 +802,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Doba je nejistá, ale my řešíme jen fotbal, řekl Jarolím. Šiguta podpořil",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/mfk-karvina-marek-jarolim.A260412_172217_fotbal_jsl",
-      "dt": "2026-04-12T15:54:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ale",
-        "doba",
-        "fotbal",
-        "jarolím",
-        "jen",
-        "nejistá",
-        "podpořil",
-        "řekl",
-        "řešíme",
-        "šiguta"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -813,7 +812,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47922,
+      "bytes": 48572,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -850,7 +849,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T09:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T10:09:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -866,6 +865,14 @@
         },
         "sample_titles": [
           {
+            "title": "Krejčí po měsíci ve hře. Jokič si řekl o ceny, nedraftovaný nováček útočil na rekordy",
+            "publishedAt": "2026-04-13T10:09:32Z"
+          },
+          {
+            "title": "Tvrďák s IQ 136. Basketbalista Landa: Snažil jsem se soupeřům vstoupit do hlav",
+            "publishedAt": "2026-04-13T10:00:00Z"
+          },
+          {
             "title": "NEJ Z LIGY: Sochůrek jako Lobotka i bitva gólmanů. A kdo nechce do elitní šestky?",
             "publishedAt": "2026-04-13T09:30:00Z"
           },
@@ -878,10 +885,6 @@
             "publishedAt": "2026-04-13T09:00:00Z"
           },
           {
-            "title": "Krejčí po měsíci ve hře. Jokič si řekl o ceny, nedraftovaný nováček útočil na rekordy",
-            "publishedAt": "2026-04-13T08:53:02Z"
-          },
-          {
             "title": "Kinský zpět v bráně, ale kolos se nadále topí. Vyhne se ještě Tottenham propasti?",
             "publishedAt": "2026-04-13T08:02:00Z"
           },
@@ -892,10 +895,6 @@
           {
             "title": "Sinner se po triumfu v Monte Carlu vrátil do čela žebříčku, Alcaraz je těsně druhý",
             "publishedAt": "2026-04-13T07:57:00Z"
-          },
-          {
-            "title": "Moulis: Na „psy“ nám to nešlo. Proti fotbalovým týmům je to lepší",
-            "publishedAt": "2026-04-13T07:55:00Z"
           }
         ]
       }
