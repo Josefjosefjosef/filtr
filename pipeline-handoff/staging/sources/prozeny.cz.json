@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-13T11:09:33.362486Z",
+  "ingestedAt": "2026-04-13T11:29:52.688008Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Chcete hnízdečko lásky Jennifer Lopez a Bena Afflecka? Je ve slevě! Za 52 milionů dolarů může být vaše",
+      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-chcete-hnizdecko-lasky-jennifer-lopez-a-bena-afflecka-je-ve-sleve-za-52-milionu-dolaru-muze-byt-vase-103072",
+      "dt": "2026-04-13T11:23:14Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "afflecka",
+        "bena",
+        "být",
+        "chcete",
+        "dolarů",
+        "hnízdečko",
+        "jennifer",
+        "lopez",
+        "lásky",
+        "milionů",
+        "slevě",
+        "vaše"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -801,32 +830,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Sténáním ke slasti: Jak neznít jako z pornofilmu a přitom partnera pořádně vzrušit",
-      "url": "https://www.prozeny.cz/clanek/zvuky-sexu-jak-v-posteli-stenat-a-znit-jeste-lepe-70523",
-      "dt": "2026-04-10T20:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "jako",
-        "neznít",
-        "partnera",
-        "pornofilmu",
-        "pořádně",
-        "přitom",
-        "slasti",
-        "sténáním",
-        "vzrušit"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -837,7 +840,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 40202,
+      "bytes": 40311,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -874,11 +877,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T11:23:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "zdravi": 28
+          "zdravi": 28,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -890,6 +893,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chcete hnízdečko lásky Jennifer Lopez a Bena Afflecka? Je ve slevě! Za 52 milionů dolarů může být vaše",
+            "publishedAt": "2026-04-13T11:23:14Z"
+          },
           {
             "title": "Domácí prádelna pro každou situaci. Jak ji zařídit v koupelně i samostatné místnosti",
             "publishedAt": "2026-04-13T03:00:00Z"
@@ -916,10 +923,6 @@
           },
           {
             "title": "„Jestli mám partnera? Já mám skoro dospělé děti, mě už nechte bejt!“ říká Lucie Vondráčková",
-            "publishedAt": "2026-04-13T03:00:00Z"
-          },
-          {
-            "title": "Nemovitost se nedaří prodat? Nejčastější chyby a jak prodej znovu nastartovat",
             "publishedAt": "2026-04-13T03:00:00Z"
           }
         ]

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-13T11:09:33.362486Z",
+  "ingestedAt": "2026-04-13T11:29:52.688008Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kuba se domluvil s Netolickým, do komunálních voleb půjdou společně. Nejde o ideologii, říká jihočeský hejtman",
+      "url": "https://domaci.hn.cz/c1-67865920-kuba-se-domluvil-s-netolickym-do-komunalnich-voleb-pujdou-spolecne-nejde-o-ideologii-rika-jihocesky-hejtman",
+      "dt": "2026-04-13T10:54:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "domluvil",
+        "hejtman",
+        "ideologii",
+        "jihočeský",
+        "komunálních",
+        "kuba",
+        "nejde",
+        "netolickým",
+        "půjdou",
+        "společně",
+        "voleb",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1154,39 +1183,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "AI &bdquo;tipař&ldquo; pro berňák. Stát vyostřuje boj proti krácení DPH, na podezřele levné zboží upozorní umělá inteligence",
-      "url": "https://archiv.hn.cz/c1-67864880-ai-bdquo-tipar-ldquo-pro-bernak-stat-vyostruje-boj-proti-kraceni-dph-na-podezrele-levne-zbozi-upozorni-umela-inteligence",
-      "dt": "2026-04-10T13:09:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bdquo",
-        "berňák",
-        "boj",
-        "dph",
-        "inteligence",
-        "krácení",
-        "ldquo",
-        "levné",
-        "podezřele",
-        "proti",
-        "stát",
-        "tipař",
-        "umělá",
-        "upozorní",
-        "vyostřuje",
-        "zboží"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1197,7 +1193,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185712,
+      "bytes": 185667,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1234,7 +1230,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T10:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T10:54:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1252,6 +1248,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kuba se domluvil s Netolickým, do komunálních voleb půjdou společně. Nejde o ideologii, říká jihočeský hejtman",
+            "publishedAt": "2026-04-13T10:54:00Z"
+          },
           {
             "title": "Sto tisíc korun rozbořilo mýty o bezdomovcích. Na ulici není dobrovolně nikdo a průšvih hrozí i mladým",
             "publishedAt": "2026-04-13T10:50:00Z"
@@ -1279,10 +1279,6 @@
           {
             "title": "Narodilo se nejméně dětí v historii. Diví se tomu ještě někdo?",
             "publishedAt": "2026-04-13T06:57:00Z"
-          },
-          {
-            "title": "Dobrá zpráva pro Evropu, byť Orbánova porážka může změnit méně, než si myslíme",
-            "publishedAt": "2026-04-13T06:44:00Z"
           }
         ]
       }
