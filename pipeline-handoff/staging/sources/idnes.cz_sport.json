@@ -1,14 +1,65 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T05:39:36.316247Z",
+  "ingestedAt": "2026-04-13T05:59:18.615821Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pastrňák se stovky nedočkal ani napodruhé, Hronek uspěl proti Dostálovi",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-pastrnak-vanecek-hronek-dostal.A260413_071146_nhl_mkr",
+      "dt": "2026-04-13T05:51:15Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dostálovi",
+        "hronek",
+        "napodruhé",
+        "nedočkal",
+        "pastrňák",
+        "proti",
+        "stovky",
+        "uspěl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "McIlroy obhájil titul na Masters. Jako teprve čtvrtý golfista v historii",
+      "url": "https://www.idnes.cz/sport/ostatni/golf-rory-mcilroy-ze-severniho-ctvrty-hrac-v-historii-obhajoba-masters.A260413_074524_sporty_ten",
+      "dt": "2026-04-13T05:46:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "golfista",
+        "historii",
+        "jako",
+        "masters",
+        "mcilroy",
+        "obhájil",
+        "teprve",
+        "titul",
+        "čtvrtý"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
       "title": "Krejčí po měsíci ve hře. Jokič si řekl o ceny, nedraftovaný nováček útočil na rekordy",
       "url": "https://www.idnes.cz/sport/basket/nba-konec-zakladni-cast-portland-denver-vit-krejci.A260413_070755_sport-basket_ten",
-      "dt": "2026-04-13T05:33:42Z",
+      "dt": "2026-04-13T05:42:53Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -22,31 +73,6 @@
         "rekordy",
         "útočil",
         "řekl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pastrňák se stovky nedočkal ani napodruhé, Hronek uspěl proti Dostálovi",
-      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-pastrnak-vanecek-hronek-dostal.A260413_071146_nhl_mkr",
-      "dt": "2026-04-13T05:30:32Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dostálovi",
-        "hronek",
-        "napodruhé",
-        "nedočkal",
-        "pastrňák",
-        "proti",
-        "stovky",
-        "uspěl"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -771,33 +797,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Procházka po prohře v UFC: Ten můj soucit! Omlouvám se za výkon, chci odvetu",
-      "url": "https://www.idnes.cz/sport/mma/jiri-prochazka-porazka-ufc-ulberg-soucit.A260412_095842_sport-mma_malu",
-      "dt": "2026-04-12T10:17:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chci",
-        "můj",
-        "odvetu",
-        "omlouvám",
-        "procházka",
-        "prohře",
-        "soucit",
-        "ten",
-        "ufc",
-        "výkon"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -808,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47530,
+      "bytes": 47110,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -845,7 +844,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T05:33:42Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T05:51:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -861,12 +860,16 @@
         },
         "sample_titles": [
           {
-            "title": "Krejčí po měsíci ve hře. Jokič si řekl o ceny, nedraftovaný nováček útočil na rekordy",
-            "publishedAt": "2026-04-13T05:33:42Z"
+            "title": "Pastrňák se stovky nedočkal ani napodruhé, Hronek uspěl proti Dostálovi",
+            "publishedAt": "2026-04-13T05:51:15Z"
           },
           {
-            "title": "Pastrňák se stovky nedočkal ani napodruhé, Hronek uspěl proti Dostálovi",
-            "publishedAt": "2026-04-13T05:30:32Z"
+            "title": "McIlroy obhájil titul na Masters. Jako teprve čtvrtý golfista v historii",
+            "publishedAt": "2026-04-13T05:46:00Z"
+          },
+          {
+            "title": "Krejčí po měsíci ve hře. Jokič si řekl o ceny, nedraftovaný nováček útočil na rekordy",
+            "publishedAt": "2026-04-13T05:42:53Z"
           },
           {
             "title": "Haraslín zpátky v gólovém vagonu. Slavia? Koukáme hlavně na sebe, řekl v Teplicích",
@@ -887,10 +890,6 @@
           {
             "title": "Porážka s Pardubicemi a konec. Olomouc odvolala Janotku, mužstvo přebírá Hapal",
             "publishedAt": "2026-04-12T20:55:40Z"
-          },
-          {
-            "title": "Dělám chyby, ale plivnutí? To je nesmysl. Sliny jsem vtahoval zpátky, bránil se Chorý",
-            "publishedAt": "2026-04-12T20:15:00Z"
           }
         ]
       }

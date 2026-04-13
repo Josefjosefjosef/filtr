@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-13T05:39:36.316247Z",
+  "ingestedAt": "2026-04-13T05:59:18.615821Z",
   "items": [
     {
       "section": "aktualne",
@@ -282,6 +282,28 @@
         "stále",
         "ztrácí",
         "čechů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Od Juditina k Dvoreckému. Znáte pražské mosty?",
+      "url": "https://www.idnes.cz/praha/od-juditina-k-dvoreckemu-znate-prazske-mosty.Q180426_145305_prahah_jan",
+      "dt": "2026-04-12T22:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dvoreckému",
+        "juditina",
+        "mosty",
+        "pražské",
+        "znáte"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -756,31 +778,6 @@
         "vyznamenání",
         "říká",
         "životě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "H&M bojuje o návrat na výsluní. Hledá rovnováhu mezi cenou, kvalitou a rychlostí",
-      "url": "https://www.idnes.cz/ekonomika/podniky/h-m-trzby-konkurence.A260407_100025_ekoakcie_rie",
-      "dt": "2026-04-12T15:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bojuje",
-        "cenou",
-        "hledá",
-        "kvalitou",
-        "návrat",
-        "rovnováhu",
-        "rychlostí",
-        "výsluní"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1577,7 +1574,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48859,
+      "bytes": 48693,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,8 +1614,8 @@
         "raw_feed_latest_publishedAt": "2026-04-13T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "finance": 3
+          "zpravy": 28,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,

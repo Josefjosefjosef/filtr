@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-13T05:39:36.316247Z",
+  "ingestedAt": "2026-04-13T05:59:18.615821Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Starší byty zdražily, metr už stojí přes 83 tisíc",
+      "url": "https://www.e15.cz/finexpert/bydleni/starsi-byty-zdrazily-metr-uz-stoji-pres-83-tisic-1432070",
+      "dt": "2026-04-13T05:50:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "byty",
+        "metr",
+        "starší",
+        "stojí",
+        "tisíc",
+        "zdražily"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1049,34 +1072,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Pumpaři zlevnili naftu až o čtyři koruny, zpravidla na cenový strop. Benzin se drží níž",
-      "url": "https://www.e15.cz/byznys/prumysl-a-energetika/pumpari-zlevnili-naftu-az-o-ctyri-koruny-zpravidla-na-cenovy-strop-benzin-se-drzi-niz-1432035",
-      "dt": "2026-04-10T07:19:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "benzin",
-        "cenový",
-        "drží",
-        "koruny",
-        "naftu",
-        "níž",
-        "pumpaři",
-        "strop",
-        "zlevnili",
-        "zpravidla",
-        "čtyři"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1087,7 +1082,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 50406,
+      "bytes": 50123,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1124,7 +1119,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T05:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T05:50:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 31,
@@ -1142,6 +1137,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Starší byty zdražily, metr už stojí přes 83 tisíc",
+            "publishedAt": "2026-04-13T05:50:00Z"
+          },
           {
             "title": "USA spouštějí blokádu íránských přístavů, ropa se vrací nad 100 dolarů",
             "publishedAt": "2026-04-13T05:15:00Z"
@@ -1169,10 +1168,6 @@
           {
             "title": "Akcie CSG zažily strmý propad, Křetínský řeší Casino a Jadran láká na investiční boom",
             "publishedAt": "2026-04-12T16:00:00Z"
-          },
-          {
-            "title": "USA míří k blokádě Hormuzu, Trump po krachu jednání stupňuje tlak",
-            "publishedAt": "2026-04-12T14:00:00Z"
           }
         ]
       }
