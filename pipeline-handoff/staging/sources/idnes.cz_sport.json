@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T06:29:54.841172Z",
+  "ingestedAt": "2026-04-13T06:50:13.670511Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Trpišovský o Chorém: Není svatoušek, ale úmysl tam nevidím. Je to vaření z vody",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/trener-jindrich-trpisovsky-slavia-plzen-tomas-chory-cervena-karta-plivnuti.A260412_224028_fotbal_min",
+      "dt": "2026-04-13T06:28:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "chorém",
+        "nevidím",
+        "svatoušek",
+        "tam",
+        "trpišovský",
+        "vaření",
+        "vody",
+        "úmysl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -773,30 +799,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Házenkáři Plzně porazili Duklu a v extraligovém semifinále srovnali",
-      "url": "https://www.idnes.cz/sport/ostatni/extraliga-hazenkaru-semifinale.A260412_122241_sporty_ald",
-      "dt": "2026-04-12T10:22:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "duklu",
-        "extraligovém",
-        "házenkáři",
-        "plzně",
-        "porazili",
-        "semifinále",
-        "srovnali"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +809,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47110,
+      "bytes": 47639,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,7 +846,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T06:13:26Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T06:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -859,6 +861,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trpišovský o Chorém: Není svatoušek, ale úmysl tam nevidím. Je to vaření z vody",
+            "publishedAt": "2026-04-13T06:28:00Z"
+          },
           {
             "title": "Pastrňák se stovky nedočkal ani napodruhé, Hronek uspěl proti Dostálovi",
             "publishedAt": "2026-04-13T06:13:26Z"
@@ -886,10 +892,6 @@
           {
             "title": "Strýcová tým stmelila. Další cíl? Ukončit osmileté čekání na titul. Šance je velká",
             "publishedAt": "2026-04-12T22:00:00Z"
-          },
-          {
-            "title": "Porážka s Pardubicemi a konec. Olomouc odvolala Janotku, mužstvo přebírá Hapal",
-            "publishedAt": "2026-04-12T20:55:40Z"
           }
         ]
       }

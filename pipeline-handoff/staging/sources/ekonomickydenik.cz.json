@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T06:29:54.841172Z",
+  "ingestedAt": "2026-04-13T06:50:13.670511Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "USA zablokují íránské přístavy. Barel za 100 dolarů je zpět",
+      "url": "https://ekonomickydenik.cz/usa-zablokuji-iranske-pristavy/",
+      "dt": "2026-04-13T06:43:27Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "100",
+        "barel",
+        "dolarů",
+        "přístavy",
+        "usa",
+        "zablokují",
+        "zpět",
+        "íránské"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -739,31 +764,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kvůli cenám neotevřely. Čerpací stanice se brání vládním stropům",
-      "url": "https://ekonomickydenik.cz/kvuli-cenam-neotevrely-cerpaci-stanice/",
-      "dt": "2026-04-10T12:14:22Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "brání",
-        "cenám",
-        "kvůli",
-        "neotevřely",
-        "stanice",
-        "stropům",
-        "vládním",
-        "čerpací"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -774,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73399,
+      "bytes": 73241,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -811,7 +811,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T04:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T06:43:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -829,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA zablokují íránské přístavy. Barel za 100 dolarů je zpět",
+            "publishedAt": "2026-04-13T06:43:27Z"
+          },
           {
             "title": "Metnar chce zastavit personální krizi: nástupní plat 50 tisíc a půlmiliarda pro dobrovolné hasiče",
             "publishedAt": "2026-04-13T04:55:00Z"
@@ -856,10 +860,6 @@
           {
             "title": "Žádné čínské auto za vojenskou závorou. Poláci vysvětlují tvrdý zákaz kvůli špionáži",
             "publishedAt": "2026-04-12T13:37:36Z"
-          },
-          {
-            "title": "Ministerstvo zahraničí popírá prezidenta. Vadí slova o Trumpovi",
-            "publishedAt": "2026-04-12T12:18:34Z"
           }
         ]
       }

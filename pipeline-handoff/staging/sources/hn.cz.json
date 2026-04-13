@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-13T06:29:54.841172Z",
+  "ingestedAt": "2026-04-13T06:50:13.670511Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Genesis kupuje podíl v POS Media, která vládne reklamě v hypermarketech. Podpoří akviziční ambice jejího zakladatele",
+      "url": "https://byznys.hn.cz/c1-67865340-genesis-kupuje-podil-v-pos-media-ktera-vladne-reklame-v-hypermarketech-podpori-akvizicni-ambice-jejiho-zakladatele",
+      "dt": "2026-04-13T06:35:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "akviziční",
+        "ambice",
+        "genesis",
+        "hypermarketech",
+        "jejího",
+        "kupuje",
+        "media",
+        "podpoří",
+        "podíl",
+        "pos",
+        "reklamě",
+        "vládne",
+        "zakladatele"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -745,15 +775,13 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Aktuální ceny benzinu a nafty jsou reálně o třetinu nižší než po začátku války na Ukrajině. Proč by cenová regulace měla trvat co nejkratší dobu",
+      "title": "Ceny benzinu a nafty jsou reálně o třetinu nižší než po začátku války na Ukrajině. Proč by regulace měla trvat co nejkratší dobu",
       "url": "https://archiv.hn.cz/c1-67865420-aktualni-ceny-benzinu-a-nafty-jsou-realne-o-tretinu-nizsi-nez-po-zacatku-valky-na-ukrajine-proc-by-cenova-regulace-mela-trvat-co-nejkratsi-dobu",
       "dt": "2026-04-10T13:42:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
-        "aktuální",
         "benzinu",
-        "cenová",
         "ceny",
         "dobu",
         "měla",
@@ -1175,38 +1203,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "J&T s Dušanem Palcrem šlape do reklamního byznysu. Koupili podíl v dravém českém start-upu, který rozpohyboval reklamu v tunelech metra",
-      "url": "https://archiv.hn.cz/c1-67865180-j-t-s-dusanem-palcrem-slape-do-reklamniho-byznysu-spolecne-koupili-podil-v-dravem-ceskem-start-upu-z-prahy-s-nim-jdou-do-evropy",
-      "dt": "2026-04-10T09:02:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "byznysu",
-        "dravém",
-        "dušanem",
-        "koupili",
-        "metra",
-        "palcrem",
-        "podíl",
-        "reklamního",
-        "reklamu",
-        "rozpohyboval",
-        "start",
-        "tunelech",
-        "upu",
-        "českém",
-        "šlape"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1217,7 +1213,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185607,
+      "bytes": 185557,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1254,11 +1250,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T04:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T06:35:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 32,
-          "zpravy": 5,
+          "finance": 33,
+          "zpravy": 4,
           "sport": 1,
           "zdravi": 2
         },
@@ -1272,6 +1268,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Genesis kupuje podíl v POS Media, která vládne reklamě v hypermarketech. Podpoří akviziční ambice jejího zakladatele",
+            "publishedAt": "2026-04-13T06:35:00Z"
+          },
           {
             "title": "Prázdná kasa a rozdělená společnost: &bdquo;My Maďaři máme rádi výzvy!&ldquo; Jaké úkoly čekají muže, který porazil Viktora Orbána",
             "publishedAt": "2026-04-13T04:40:00Z"
@@ -1298,10 +1298,6 @@
           },
           {
             "title": "Děti došly: školky a dětské skupiny končí i tam, kde se dříve bojovalo o místa. Obcím navíc hrozí, že budou vracet dotace",
-            "publishedAt": "2026-04-12T22:00:00Z"
-          },
-          {
-            "title": "Evropská digitální &bdquo;dokladovka&ldquo; se blíží. Česko musí aplikaci zprovoznit do konce roku, stát nyní vybírá klíčového dodavatele",
             "publishedAt": "2026-04-12T22:00:00Z"
           }
         ]
