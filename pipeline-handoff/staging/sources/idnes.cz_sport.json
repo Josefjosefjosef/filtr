@@ -1,24 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T18:04:44.442855Z",
+  "ingestedAt": "2026-04-13T18:24:38.544724Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Sparta - Pardubice 1:1. Domácí ve druhé třetině srovnali, trefil se Špaček",
+      "title": "Rulík oznámil tři omluvenky ze zámoří. Na kempu už trénují Kubalík a Tomášek",
+      "url": "https://www.idnes.cz/hokej/ms-2026/kampf-palat-nosek-radim-zohorna-omluvenka-ms-rulik.A260413_185903_ms-hokej-2026_czo",
+      "dt": "2026-04-13T18:10:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "kempu",
+        "kubalík",
+        "omluvenky",
+        "oznámil",
+        "rulík",
+        "tomášek",
+        "trénují",
+        "tři",
+        "zámoří"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Sparta - Pardubice 2:1. Domácí čelí mečbolu, Špaček dvěma góly otáčí skóre",
       "url": "https://www.idnes.cz/hokej/extraliga/6-zapas-semifinale-online-zpravodajstvi-souhrn-sparta-pardubice.A260413_112241_hokej_luji",
-      "dt": "2026-04-13T17:53:35Z",
+      "dt": "2026-04-13T18:05:21Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
         "domácí",
-        "druhé",
+        "dvěma",
+        "góly",
+        "mečbolu",
+        "otáčí",
         "pardubice",
+        "skóre",
         "sparta",
-        "srovnali",
-        "trefil",
-        "třetině",
+        "čelí",
         "špaček"
       ],
       "feedCategory": "sport",
@@ -48,34 +76,6 @@
         "tímhle",
         "vyhrát",
         "výlety"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rulík oznámil tři omluvenky ze zámoří. Se Šlégrem vyhlíží konec základní části NHL",
-      "url": "https://www.idnes.cz/hokej/ms-2026/kampf-palat-nosek-radim-zohorna-omluvenka-ms-rulik.A260413_185903_ms-hokej-2026_czo",
-      "dt": "2026-04-13T17:10:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "konec",
-        "nhl",
-        "omluvenky",
-        "oznámil",
-        "rulík",
-        "tři",
-        "vyhlíží",
-        "základní",
-        "zámoří",
-        "části",
-        "šlégrem"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -806,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47873,
+      "bytes": 47880,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -843,7 +843,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T17:53:35Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T18:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -860,16 +860,16 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Sparta - Pardubice 1:1. Domácí ve druhé třetině srovnali, trefil se Špaček",
-            "publishedAt": "2026-04-13T17:53:35Z"
+            "title": "Rulík oznámil tři omluvenky ze zámoří. Na kempu už trénují Kubalík a Tomášek",
+            "publishedAt": "2026-04-13T18:10:00Z"
+          },
+          {
+            "title": "ONLINE: Sparta - Pardubice 2:1. Domácí čelí mečbolu, Špaček dvěma góly otáčí skóre",
+            "publishedAt": "2026-04-13T18:05:21Z"
           },
           {
             "title": "Tati, mami, koukejte. McIlroy sám nevěřil: S tímhle vyhrát? Pomohly i výlety tryskáčem",
             "publishedAt": "2026-04-13T17:45:00Z"
-          },
-          {
-            "title": "Rulík oznámil tři omluvenky ze zámoří. Se Šlégrem vyhlíží konec základní části NHL",
-            "publishedAt": "2026-04-13T17:10:00Z"
           },
           {
             "title": "Nešla byste se mnou na rande? Moderátor žertoval s olympijskou medailistkou",
