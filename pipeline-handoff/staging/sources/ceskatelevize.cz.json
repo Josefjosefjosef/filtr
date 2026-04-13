@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-13T07:10:41.954204Z",
+  "ingestedAt": "2026-04-13T07:29:54.324046Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Provoz aerolinek Lufthansa ochromila stávka pilotů. Zrušena jsou i spojení s Prahou",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/provoz-aerolinek-lufthansa-ochromila-stavka-pilotu-zrusena-jsou-i-spojeni-s-prahou-372312",
+      "dt": "2026-04-13T07:11:59Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "aerolinek",
+        "lufthansa",
+        "ochromila",
+        "pilotů",
+        "prahou",
+        "provoz",
+        "spojení",
+        "stávka",
+        "zrušena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -698,29 +724,6 @@
         "kampani",
         "maďarské",
         "videa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Maďaři v rekordní účasti hlasovali v parlamentních volbách",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-madarsku-se-otevrely-volebni-mistnosti-372287",
-      "dt": "2026-04-12T04:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "hlasovali",
-        "maďaři",
-        "parlamentních",
-        "rekordní",
-        "volbách",
-        "účasti"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1505,7 +1508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42270,
+      "bytes": 42260,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1565,11 +1568,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T06:39:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T07:11:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 4,
           "zpravy": 24,
+          "other": 4,
           "finance": 2
         },
         "drop_counts": {
@@ -1582,6 +1585,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Provoz aerolinek Lufthansa ochromila stávka pilotů. Zrušena jsou i spojení s Prahou",
+            "publishedAt": "2026-04-13T07:11:59Z"
+          },
           {
             "title": "Zemřel trumpetista Václav Hybš. Spolupracoval s Gottem i Matuškou",
             "publishedAt": "2026-04-13T06:39:37Z"
@@ -1609,10 +1616,6 @@
           {
             "title": "Trump kritizoval papeže",
             "publishedAt": "2026-04-13T02:41:31Z"
-          },
-          {
-            "title": "Příznivci maďarské opozice slavili vítězství ve volbách",
-            "publishedAt": "2026-04-13T02:07:52Z"
           }
         ]
       }
@@ -1718,7 +1721,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76782,
+      "bytes": 76784,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

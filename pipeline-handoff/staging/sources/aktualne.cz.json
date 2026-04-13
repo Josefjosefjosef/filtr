@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-13T07:10:41.954204Z",
+  "ingestedAt": "2026-04-13T07:29:54.324046Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Interní jednání.“ Armáda natočila rozhovor s Petrem Pavlem, odvysílat jej nemohla",
+      "url": "https://zpravy.aktualne.cz/domaci/interni-jednani-armada-natocila-rozhovor-s-petrem-pavlem-odvysilat-jej-nemohla/r~aaa2900e834fde1b5a0de6487d7cfe02/",
+      "dt": "2026-04-13T07:17:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "armáda",
+        "interní",
+        "jednání",
+        "jej",
+        "natočila",
+        "nemohla",
+        "odvysílat",
+        "pavlem",
+        "petrem",
+        "rozhovor"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -511,33 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Mezi skálou a řekou. Černá chata povstala z popela a možná překvapivě zapadá do přírody",
-      "url": "https://magazin.aktualne.cz/bydleni/mezi-skalou-a-rekou-cerna-chata-povstala-z-popela-a-mozna-prekvapive-zapada-do-prirody/r~aaa29cb8e33695435dfa6fea0d642b5d/",
-      "dt": "2026-04-13T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "chata",
-        "možná",
-        "popela",
-        "povstala",
-        "překvapivě",
-        "přírody",
-        "skálou",
-        "zapadá",
-        "černá",
-        "řekou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -548,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21392,
+      "bytes": 21337,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -585,12 +585,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T06:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T07:17:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 13,
           "finance": 2,
           "other": 2,
-          "zpravy": 13,
           "sport": 3
         },
         "drop_counts": {
@@ -603,6 +603,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Interní jednání.“ Armáda natočila rozhovor s Petrem Pavlem, odvysílat jej nemohla",
+            "publishedAt": "2026-04-13T07:17:00Z"
+          },
           {
             "title": "Provoz aerolinek Lufthansa ochromila stávka pilotů, lety ruší i Praha",
             "publishedAt": "2026-04-13T06:58:00Z"
@@ -630,10 +634,6 @@
           {
             "title": "Prezident odletěl na návštěvu Argentiny, potká se s Mileiem",
             "publishedAt": "2026-04-13T05:51:00Z"
-          },
-          {
-            "title": "Vítězství zajistila Magayrovi touha po ekonomické reformě i demontáži Orbána, míní experti",
-            "publishedAt": "2026-04-13T05:38:00Z"
           }
         ]
       }
