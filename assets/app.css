@@ -15953,8 +15953,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     right: 15px;
     top: 50%;
     transform: translateY(-50%);
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
     margin: 0;
     padding: 0;
     border: 0;
@@ -15968,6 +15968,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
   }
+  header#topbarWrap.topbar-new.iuTopbar #iuTopbarInfoBtn svg{
+    width: 34px;
+    height: 34px;
+    display: block;
+  }
   header#topbarWrap.topbar-new.iuTopbar #iuTopbarInfoBtn:focus-visible{
     outline: 2px solid rgba(37, 99, 235, 0.85);
     outline-offset: 2px;
@@ -15977,6 +15982,103 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
   #iuSilverWelcomeCard #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn{
     display: none !important;
+  }
+
+  /* P0 desktop-only: odstranit „Přidat na plochu“ z topbaru (bez rezervy místa) */
+  #topbarWrap #iuPwaInstallCta.iuPwaInstallCta--byLogo{
+    display: none !important;
+  }
+
+  /* P0 desktop-only: prémiový text gradient na brandu — stejná velikost/pozice, čitelný fallback */
+  header#topbarWrap.topbar-new.iuTopbar .iuBrand{
+    color: #0b1f33 !important;
+  }
+  header#topbarWrap.topbar-new.iuTopbar .iuBrand:hover{
+    color: #0a2540 !important;
+  }
+  @supports ((-webkit-background-clip: text) or (background-clip: text)){
+    header#topbarWrap.topbar-new.iuTopbar .iuBrand{
+      background-image: linear-gradient(118deg, #0b1f33 0%, #1e4a8c 32%, #2563eb 52%, #38bdf8 78%, #0ea5e9 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent;
+    }
+    header#topbarWrap.topbar-new.iuTopbar .iuBrand:hover{
+      background-image: linear-gradient(118deg, #0f2744 0%, #1d4ed8 38%, #3b82f6 55%, #7dd3fc 82%, #38bdf8 100%);
+      color: transparent !important;
+      -webkit-text-fill-color: transparent;
+      filter: saturate(1.06);
+    }
+  }
+
+  /* P0 desktop-only: uvítání + počasí v jednom řádku; zbytek stacku beze změny pořadí */
+  #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 36%);
+    column-gap: 0;
+    align-items: start;
+    width: 100%;
+    max-width: 100%;
+  }
+  #silver-slot #iuSilverWelcomeCard{
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+  #silver-slot #iuSilverWelcomeStackSeparator{
+    display: none !important;
+  }
+  #silver-slot #iuSilverWeatherCard{
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  #silver-slot #iuSilverWelcomeStackSeparatorTallBefore{
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  #silver-slot #iuSilverTallScrollSection{
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+  #silver-slot #iuSilverWelcomeStackSeparatorCal{
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+  #silver-slot #iuSilverCalendarSummaryCard{
+    grid-column: 1 / -1;
+    grid-row: 5;
+  }
+  #silver-slot #iuSilverWelcomeStackSeparatorTasks{
+    grid-column: 1 / -1;
+    grid-row: 6;
+  }
+  #silver-slot #iuSilverTasksSummaryCard{
+    grid-column: 1 / -1;
+    grid-row: 7;
+  }
+  #silver-slot #iuSilverWelcomeStackSeparatorBeforeSilver{
+    grid-column: 1 / -1;
+    grid-row: 8;
+  }
+  #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
+    grid-column: 1 / -1;
+    grid-row: 9;
+  }
+
+  /* P0 desktop-only: skrýt „Přání k svátku“; „Poslat květiny“ vlevo bez roztažení na celou šířku */
+  #iuSilverWelcomeCard .iu-nameday-wish{
+    display: none !important;
+  }
+  #iuSilverWelcomeCard #iuNamedayCta.iu-nameday-cta{
+    justify-content: flex-start;
+  }
+  #iuSilverWelcomeCard #iuNamedayCta .iu-nameday-flowers{
+    flex: 0 1 auto;
   }
 }
 
