@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T16:10:12.562725Z",
+  "ingestedAt": "2026-04-13T16:30:47.639586Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bitva o biliony: Západní zbrojaři chtějí ovládnout rekordní balík dotací",
+      "url": "https://ekonomickydenik.cz/biliony-zbrojari-nemecko-francie-dotace/",
+      "dt": "2026-04-13T16:17:27Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "balík",
+        "biliony",
+        "bitva",
+        "chtějí",
+        "dotací",
+        "ovládnout",
+        "rekordní",
+        "zbrojaři",
+        "západní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -750,32 +776,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Vlaky bez strojvedoucích a tramvaje, které brzdí samy. Jak na autonomní dopravu sází Češi",
-      "url": "https://ekonomickydenik.cz/vlaky-bez-strojvedoucich-tramvaje-brzdi-samy/",
-      "dt": "2026-04-11T13:05:48Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "autonomní",
-        "brzdí",
-        "dopravu",
-        "samy",
-        "strojvedoucích",
-        "sází",
-        "tramvaje",
-        "vlaky",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73109,
+      "bytes": 73056,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,11 +823,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T16:01:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T16:17:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 24,
-          "zpravy": 3,
+          "finance": 25,
+          "zpravy": 2,
           "zdravi": 3
         },
         "drop_counts": {
@@ -840,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bitva o biliony: Západní zbrojaři chtějí ovládnout rekordní balík dotací",
+            "publishedAt": "2026-04-13T16:17:27Z"
+          },
           {
             "title": "Roste tlak na využití dřeva ve stavbách. Vláda chce i volné ruce pro majitele lesů",
             "publishedAt": "2026-04-13T16:01:57Z"
@@ -867,10 +871,6 @@
           {
             "title": "Ceny nafty a benzinu v rukou vlády? Babiš k tomu chce protlačit nový zákon",
             "publishedAt": "2026-04-13T12:01:47Z"
-          },
-          {
-            "title": "Konec „temných chodeb Kremlu“? Nový maďarský vůdce slibuje revoluci, má to ale háček",
-            "publishedAt": "2026-04-13T11:32:29Z"
           }
         ]
       }
