@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T15:39:21.668754Z",
+  "ingestedAt": "2026-04-13T15:54:21.815068Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Dvojnásobný olympijský vítěz Ingebrigtsen se po operaci vrátí na dráhu nejdříve v červenci",
+      "url": "https://www.sport.cz/clanek/atletika-dvojnasobny-olympijsky-vitez-ingebrigtsen-se-po-operaci-vrati-na-drahu-nejdrive-v-cervenci-5436438",
+      "dt": "2026-04-13T15:43:42Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dráhu",
+        "dvojnásobný",
+        "ingebrigtsen",
+        "nejdříve",
+        "olympijský",
+        "operaci",
+        "vrátí",
+        "vítěz",
+        "červenci"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -725,32 +751,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ŤUKES: Proč to dělá? Diviš v kauze plivnutí nechápe Chorého ani rozhodčí",
-      "url": "https://www.sport.cz/clanek/podcasty-tukes-tukes-proc-to-dela-divis-v-kauze-flusanec-nechape-choreho-ani-rozhodci-5436374",
-      "dt": "2026-04-13T09:13:46Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "chorého",
-        "diviš",
-        "dělá",
-        "kauze",
-        "nechápe",
-        "plivnutí",
-        "proč",
-        "rozhodčí",
-        "ťukes"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -761,7 +761,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42506,
+      "bytes": 41771,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -798,12 +798,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T15:26:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T15:43:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 28,
-          "zpravy": 1,
-          "zdravi": 1
+          "zdravi": 2,
+          "sport": 27,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -815,6 +815,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dvojnásobný olympijský vítěz Ingebrigtsen se po operaci vrátí na dráhu nejdříve v červenci",
+            "publishedAt": "2026-04-13T15:43:42Z"
+          },
           {
             "title": "Bizarnější gól snad nemůže padnout. Po zahozené penaltě se děly věci",
             "publishedAt": "2026-04-13T15:26:33Z"
@@ -842,10 +846,6 @@
           {
             "title": "GLOSA: Pohádka skončit musela. Janotkovo odvolání bylo na místě",
             "publishedAt": "2026-04-13T13:50:53Z"
-          },
-          {
-            "title": "Zásadní rozhodnutí. Rusové a Bělorusové budou v plaveckých sportech závodit pod svou vlajkou",
-            "publishedAt": "2026-04-13T13:00:22Z"
           }
         ]
       }

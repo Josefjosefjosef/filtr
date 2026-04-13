@@ -1,12 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-13T15:39:21.668754Z",
+  "ingestedAt": "2026-04-13T15:54:21.815068Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Zničíme íránské lodě, které se přiblíží k americké námořní blokádě, varuje Trump",
+      "title": "Magyar chce pozastavit zprávy veřejnoprávních médií, dokud nebudou nestranné",
+      "url": "https://zpravy.aktualne.cz/zahranici/magyar-chce-pozastavit-zpravy-verejnopravnich-medii-dokud-nebudou-nestranne/r~aaa29428cbcb675856fece45b2c0067b/",
+      "dt": "2026-04-13T15:33:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chce",
+        "dokud",
+        "magyar",
+        "médií",
+        "nebudou",
+        "nestranné",
+        "pozastavit",
+        "veřejnoprávních",
+        "zprávy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zničíme íránské lodě, které se přiblíží k americké námořní blokádě, vyhrožuje Trump",
       "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
       "dt": "2026-02-28T14:04:00Z",
       "media_raw": "Aktuálně",
@@ -18,7 +44,7 @@
         "námořní",
         "přiblíží",
         "trump",
-        "varuje",
+        "vyhrožuje",
         "zničíme",
         "íránské"
       ],
@@ -505,31 +531,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Do Krkonoš se vrátili medvědi. Narazit na ně není těžké, vyskytují se na jediném místě",
-      "url": "https://magazin.aktualne.cz/do-krkonos-se-vratili-medvedi-narazit-na-ne-neni-tezke-vyskytuji-se-na-jedinem-miste/r~aaa29d8eeefc951c78cae6b04ed35ba5/",
-      "dt": "2026-04-13T11:49:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "jediném",
-        "krkonoš",
-        "medvědi",
-        "místě",
-        "narazit",
-        "těžké",
-        "vrátili",
-        "vyskytují"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -540,7 +541,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22261,
+      "bytes": 22111,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,7 +578,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T15:33:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 14,
@@ -595,7 +596,11 @@
         },
         "sample_titles": [
           {
-            "title": "Zničíme íránské lodě, které se přiblíží k americké námořní blokádě, varuje Trump",
+            "title": "Magyar chce pozastavit zprávy veřejnoprávních médií, dokud nebudou nestranné",
+            "publishedAt": "2026-04-13T15:33:00Z"
+          },
+          {
+            "title": "Zničíme íránské lodě, které se přiblíží k americké námořní blokádě, vyhrožuje Trump",
             "publishedAt": "2026-02-28T14:04:00Z"
           },
           {
@@ -621,10 +626,6 @@
           {
             "title": "Odstupte, žádá zostra Orbánův kat, Maďaři chtějí změnu režimu. Už oznámil první kroky",
             "publishedAt": "2026-04-13T12:21:00Z"
-          },
-          {
-            "title": "„Je to lokální věc.“ Babiš se po ostrém sporu vyjádřil k účasti prezidenta na summitu",
-            "publishedAt": "2026-04-13T13:22:00Z"
           }
         ]
       }
