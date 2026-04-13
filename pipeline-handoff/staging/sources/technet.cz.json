@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-13T21:49:30.361345Z",
+  "ingestedAt": "2026-04-13T22:12:46.067590Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Proleťte se kolem Měsíce s posádkou Artemis II, ale pozpátku",
+      "url": "https://www.idnes.cz/technet/vesmir/artemis-ii-2-vesmir-oblet-mesice-sls-orion-integrity.A260413_115112_tec_vesmir_vse/foto",
+      "dt": "2026-04-13T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "ale",
+        "artemis",
+        "kolem",
+        "měsíce",
+        "posádkou",
+        "pozpátku",
+        "proleťte"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -646,7 +670,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Microsoft uklízí největší současné problémy Windows, ale na toto zapomněl",
       "url": "https://www.idnes.cz/technet/software/windows-11-zmeny-hlavni-panel-ai-inteligence-aktualizace-pruzkumnik-insider-telemetrie-prihlasovani.A260402_103822_software_dvr",
@@ -746,35 +770,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zkoumají parfémy i hvězdy. Vědci z ciziny si v Česku cení bezpečí, vadí jim útoční řidiči",
-      "url": "https://www.idnes.cz/technet/veda/veda-zahranicni-vedci-akademie-ved-granty-cesko.A260331_897323_domaci_krou",
-      "dt": "2026-04-04T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "bezpečí",
-        "cení",
-        "ciziny",
-        "hvězdy",
-        "jim",
-        "parfémy",
-        "vadí",
-        "vědci",
-        "zkoumají",
-        "útoční",
-        "česku",
-        "řidiči"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +780,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 49591,
+      "bytes": 49715,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +817,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 26,
@@ -838,6 +833,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Proleťte se kolem Měsíce s posádkou Artemis II, ale pozpátku",
+            "publishedAt": "2026-04-13T22:00:00Z"
+          },
           {
             "title": "Úkoly a letadla podniku ČSA Agrolet. Nejen u Galanty to bylo jako na frontě",
             "publishedAt": "2026-04-12T22:00:00Z"
@@ -865,10 +864,6 @@
           {
             "title": "Bestie v uniformě vyvraždila před 100 lety samotu nedaleko Lázní Kynžvart",
             "publishedAt": "2026-04-10T22:00:00Z"
-          },
-          {
-            "title": "Čeští studenti byli u startu mise Artemis II. V Rozstřelu popsali ohlušující výbuch",
-            "publishedAt": "2026-04-10T09:00:00Z"
           }
         ]
       }
