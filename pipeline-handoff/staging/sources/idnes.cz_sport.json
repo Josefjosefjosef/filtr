@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T20:12:36.694824Z",
+  "ingestedAt": "2026-04-13T20:29:30.495088Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Manchester United je v deseti, s Leedsem doma prohrává o dva góly",
+      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-32-kolo-manchester-united-leeds-online-vysledek.A260413_144430_fot_zahranici_duff",
+      "dt": "2026-04-13T20:15:10Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "deseti",
+        "doma",
+        "dva",
+        "góly",
+        "leedsem",
+        "manchester",
+        "prohrává",
+        "united"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Špačkův zápas. Dva góly a sekera do krku soupeře. Najel mi do hokejky, řekl",
+      "url": "https://www.idnes.cz/hokej/extraliga/michael-spacek-seste-semifinale-sekera-dva-goly-sparta-pardubice.A260413_213315_hokej_czo",
+      "dt": "2026-04-13T20:04:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dva",
+        "góly",
+        "hokejky",
+        "krku",
+        "najel",
+        "sekera",
+        "soupeře",
+        "zápas",
+        "řekl",
+        "špačkův"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -20,32 +72,6 @@
         "výhru",
         "zařídili",
         "špaček"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ONLINE: Manchester United prohrává o dva góly v dohrávce anglické ligy s Leedsem",
-      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-32-kolo-manchester-united-leeds-online-vysledek.A260413_144430_fot_zahranici_duff",
-      "dt": "2026-04-13T19:28:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "anglické",
-        "dohrávce",
-        "dva",
-        "góly",
-        "leedsem",
-        "ligy",
-        "manchester",
-        "prohrává",
-        "united"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -765,33 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Krejčí po měsíci ve hře. Jokič si řekl o ceny, nedraftovaný nováček útočil na rekordy",
-      "url": "https://www.idnes.cz/sport/basket/nba-konec-zakladni-cast-portland-denver-vit-krejci.A260413_070755_sport-basket_ten",
-      "dt": "2026-04-13T10:09:32Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ceny",
-        "hře",
-        "jokič",
-        "krejčí",
-        "měsíci",
-        "nedraftovaný",
-        "nováček",
-        "rekordy",
-        "útočil",
-        "řekl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47741,
+      "bytes": 47611,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T19:31:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T20:15:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -856,12 +855,16 @@
         },
         "sample_titles": [
           {
-            "title": "Sparta - Pardubice 3:2. Série pokračuje, výhru zařídili Špaček s Chlapíkem",
-            "publishedAt": "2026-04-13T19:31:57Z"
+            "title": "ONLINE: Manchester United je v deseti, s Leedsem doma prohrává o dva góly",
+            "publishedAt": "2026-04-13T20:15:10Z"
           },
           {
-            "title": "ONLINE: Manchester United prohrává o dva góly v dohrávce anglické ligy s Leedsem",
-            "publishedAt": "2026-04-13T19:28:00Z"
+            "title": "Špačkův zápas. Dva góly a sekera do krku soupeře. Najel mi do hokejky, řekl",
+            "publishedAt": "2026-04-13T20:04:00Z"
+          },
+          {
+            "title": "Sparta - Pardubice 3:2. Série pokračuje, výhru zařídili Špaček s Chlapíkem",
+            "publishedAt": "2026-04-13T19:31:57Z"
           },
           {
             "title": "Play off hokejové extraligy 2026: program, systém, dvojice v semifinále, kde sledovat",
@@ -882,10 +885,6 @@
           {
             "title": "Tati, mami, koukejte. McIlroy sám nevěřil: S tímhle vyhrát? Pomohly i výlety tryskáčem",
             "publishedAt": "2026-04-13T17:45:00Z"
-          },
-          {
-            "title": "Nešla byste se mnou na rande? Moderátor žertoval s olympijskou medailistkou",
-            "publishedAt": "2026-04-13T16:45:00Z"
           }
         ]
       }

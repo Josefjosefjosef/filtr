@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T20:12:36.694824Z",
+  "ingestedAt": "2026-04-13T20:29:30.495088Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fotbalisty Ghany povede na MS zkušený Portugalec",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-fotbalisty-ghany-povede-na-ms-zkuseny-portugalec-5436569",
+      "dt": "2026-04-13T20:08:45Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fotbalisty",
+        "ghany",
+        "portugalec",
+        "povede",
+        "zkušený"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -742,30 +764,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Argentinského fotbalistu vyvedli z letadla v poutech. Vyhrožoval bombou",
-      "url": "https://www.sport.cz/clanek/fotbal-argentinskeho-fotbalistu-vyvedli-z-letadla-v-poutech-vyhrozoval-bombou-5436395",
-      "dt": "2026-04-13T12:44:06Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "argentinského",
-        "bombou",
-        "fotbalistu",
-        "letadla",
-        "poutech",
-        "vyhrožoval",
-        "vyvedli"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42618,
+      "bytes": 42448,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,7 +811,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T19:23:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T20:08:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 26,
@@ -831,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fotbalisty Ghany povede na MS zkušený Portugalec",
+            "publishedAt": "2026-04-13T20:08:45Z"
+          },
           {
             "title": "SESTŘIH: Sparta zvládla i další zápas nad propastí! O druhém finalistovi rozhodne sedmý duel",
             "publishedAt": "2026-04-13T12:00:12Z"
@@ -858,10 +860,6 @@
           {
             "title": "Medveděv za svůj emotivní výlev vyfasoval tučnou pokutu",
             "publishedAt": "2026-04-13T18:13:01Z"
-          },
-          {
-            "title": "Sparťanští fanoušci Dědka nešetří: opět vulgární pokřik, do toho i hokejoví klauni z Pardubic",
-            "publishedAt": "2026-04-13T17:48:53Z"
           }
         ]
       }
