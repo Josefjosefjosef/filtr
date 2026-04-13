@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-13T09:40:22.800643Z",
+  "ingestedAt": "2026-04-13T09:59:23.451709Z",
   "items": [
     {
       "section": "veda",
@@ -20,6 +20,35 @@
         "retro",
         "snímač",
         "vložte"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Apple žádá soud o citlivá data Samsungu. Chce dokázat, že nekomplikuje uživatelům přechod ke konkurenci",
+      "url": "https://mobilmania.zive.cz/clanky/apple-zada-soud-o-citliva-data-samsungu-chce-dokazat-ze-nekomplikuje-uzivatelum-prechod-ke-konkurenci/sc-3-a-1364546/default.aspx",
+      "dt": "2026-04-13T09:15:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "apple",
+        "chce",
+        "citlivá",
+        "data",
+        "dokázat",
+        "konkurenci",
+        "nekomplikuje",
+        "přechod",
+        "samsungu",
+        "soud",
+        "uživatelům",
+        "žádá"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -939,33 +968,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Skvělý šroubovák za dosud nejnižší cenu. AlzaTools s 61 díly stojí jen 200 Kč",
-      "url": "https://www.zive.cz/clanky/nejlevneji-sada-alzapower-toolkit-tk610/sc-3-a-240543/default.aspx",
-      "dt": "2026-04-07T07:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "200",
-        "alzatools",
-        "cenu",
-        "dosud",
-        "díly",
-        "jen",
-        "nejnižší",
-        "skvělý",
-        "stojí",
-        "šroubovák"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -976,7 +978,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22466,
+      "bytes": 22569,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1013,7 +1015,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-13T08:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T09:15:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1031,6 +1033,10 @@
           {
             "title": "Více retro to už nejde. Vložte si digitální snímač do klasického analogového foťáku",
             "publishedAt": "2026-04-13T06:45:00Z"
+          },
+          {
+            "title": "Apple žádá soud o citlivá data Samsungu. Chce dokázat, že nekomplikuje uživatelům přechod ke konkurenci",
+            "publishedAt": "2026-04-13T09:15:00Z"
           },
           {
             "title": "Lidl má Bluetooth lokátory pro Android i iOS jen za 57 Kč. Musíte si ale koupit rovnou tři",
@@ -1055,10 +1061,6 @@
           {
             "title": "Masakr cen u Applu. MacBook Air M4 pod 20 tisíc, Mac mini M2 za 8 tisíc a AirTag za 300 Kč",
             "publishedAt": "2026-04-11T09:20:00Z"
-          },
-          {
-            "title": "Hororový captcha test v katastru nemovitostí na chvíli podlehl. Skript ho vyřešil sám jedním kliknutím",
-            "publishedAt": "2026-04-12T10:39:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T09:40:22.800643Z",
+  "ingestedAt": "2026-04-13T09:59:23.451709Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "NEJ Z LIGY: Sochůrek jako Lobotka i bitva gólmanů. A kdo nechce do elitní šestky?",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/nej-z-ligy-sochurek-jako-lobotka-i-bitva-golmanu-a-kdo-nechce-do-elitni-sestky.A260411_205847_fotbal_duff",
+      "dt": "2026-04-13T09:30:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bitva",
+        "elitní",
+        "gólmanů",
+        "jako",
+        "ligy",
+        "lobotka",
+        "nechce",
+        "nej",
+        "sochůrek",
+        "šestky"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -776,32 +803,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ml. Boleslav - Dukla 1:1, hosté se na Baník nedotáhli, dělbu bodů zařídil Ševčík",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-29-kolo-mlada-boleslav-dukla-online-vysledek.A260412_102449_fotbal_duff",
-      "dt": "2026-04-12T15:50:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "baník",
-        "bodů",
-        "boleslav",
-        "dukla",
-        "dělbu",
-        "hosté",
-        "nedotáhli",
-        "zařídil",
-        "ševčík"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -812,7 +813,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47774,
+      "bytes": 47922,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -849,7 +850,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T09:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T09:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -864,6 +865,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "NEJ Z LIGY: Sochůrek jako Lobotka i bitva gólmanů. A kdo nechce do elitní šestky?",
+            "publishedAt": "2026-04-13T09:30:00Z"
+          },
           {
             "title": "Škoda, že jsme nevyužili přesilovku. Ale bod bereme, řekl Hyský po remíze na Slavii",
             "publishedAt": "2026-04-13T09:05:00Z"
@@ -891,10 +896,6 @@
           {
             "title": "Moulis: Na „psy“ nám to nešlo. Proti fotbalovým týmům je to lepší",
             "publishedAt": "2026-04-13T07:55:00Z"
-          },
-          {
-            "title": "Slavia protestuje proti vyloučení Chorého: Plivnutí nelze prokázat, kartu zrušte",
-            "publishedAt": "2026-04-13T07:52:38Z"
           }
         ]
       }

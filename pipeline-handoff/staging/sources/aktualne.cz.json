@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-13T09:40:22.800643Z",
+  "ingestedAt": "2026-04-13T09:59:23.451709Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "„Lže, je labilní.“ Američané šijí do Procházky, jeho verzi nevěří ani kontroverzní Rus",
+      "url": "https://sport.aktualne.cz/ostatni-sporty/lze-je-labilni-americane-siji-do-prochazky-jeho-verzi-neveri-ani-kontroverzni-rus/r~aaa290bd3bb8910a8ab0efdb9cc0fab2/",
+      "dt": "2026-04-13T09:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "američané",
+        "jeho",
+        "kontroverzní",
+        "labilní",
+        "lže",
+        "nevěří",
+        "procházky",
+        "rus",
+        "verzi",
+        "šijí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -494,35 +521,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vítejte zpět v Evropě, gratuloval Magyarovi Tusk. Woke vůdce bez koulí, pustil se do něj Wilders",
-      "url": "https://zpravy.aktualne.cz/zahranici/evropske-srdce-dnes-v-madarsku-bije-silneji-privitala-von-der-leyenova-vitezstvi-opozice/r~aaa290ec4f3a0e2eaaa325469d93208d/",
-      "dt": "2026-04-12T20:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "evropě",
-        "gratuloval",
-        "koulí",
-        "magyarovi",
-        "něj",
-        "pustil",
-        "tusk",
-        "vítejte",
-        "vůdce",
-        "wilders",
-        "woke",
-        "zpět"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -533,7 +531,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 20860,
+      "bytes": 20977,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -570,12 +568,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T09:18:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T09:45:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 6,
           "other": 2,
-          "zpravy": 12,
-          "sport": 5,
+          "zpravy": 11,
           "finance": 1
         },
         "drop_counts": {
@@ -588,6 +586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Lže, je labilní.“ Američané šijí do Procházky, jeho verzi nevěří ani kontroverzní Rus",
+            "publishedAt": "2026-04-13T09:45:00Z"
+          },
           {
             "title": "Pilipovo nakladatelství Bourdon koupilo Práh dosud vlastněný spisovatelem Vopěnkou",
             "publishedAt": "2026-04-13T09:18:00Z"
@@ -615,10 +617,6 @@
           {
             "title": "Německo sníží na dva měsíce daň na benzin a naftu, oznámil Merz",
             "publishedAt": "2026-04-13T08:53:00Z"
-          },
-          {
-            "title": "Tragédie v Ghaně. Střelba na autobus zabila mladého fotbalistu, další jsou nezvěstní",
-            "publishedAt": "2026-04-13T08:51:00Z"
           }
         ]
       }
