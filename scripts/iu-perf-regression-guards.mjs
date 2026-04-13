@@ -19,6 +19,7 @@ const PORT = parseInt(process.env.IU_GUARD_PORT || "8892", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const SKIP_LATENCY = process.env.IU_PERF_GUARDS_SKIP_LATENCY === "1";
 const SKIP_CALENDAR = process.env.IU_PERF_GUARDS_SKIP_CALENDAR === "1";
+const SKIP_UI = process.env.IU_PERF_GUARDS_SKIP_UI === "1";
 
 const BUTTONS = [
   { name: "Počasí & Radar", accent: "pocasi", nonFeed: true, expect: { section: "pocasi", view: "pocasi", topic: null } },
@@ -269,6 +270,27 @@ async function runCalendarSilverSurface(page) {
   return { summary, disambig };
 }
 
+async function runDesktopUiSanity(page) {
+  await page.goto(BASE, { waitUntil: "networkidle", timeout: 120000 });
+  await page.waitForTimeout(500);
+  return page.evaluate(() => {
+    const rail = !!document.getElementById("iuLeftRail");
+    const mm = !!(document.querySelector(".mindMenu") || document.querySelector("aside.accordionCol"));
+    let aiSized = false;
+    if (typeof window.iuAiPanelOpenSurface === "function") {
+      try {
+        window.iuAiPanelOpenSurface();
+        const p = document.getElementById("iu-aiPanel");
+        const r = p ? p.getBoundingClientRect() : null;
+        aiSized = !!(p && r && r.width > 4 && r.height > 4);
+      } catch (e) {
+        aiSized = false;
+      }
+    }
+    return { leftRail: rail, mindMenuOrAccordion: mm, aiPanelSized: aiSized };
+  });
+}
+
 async function main() {
   const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static-and-vin.mjs")], {
     cwd: REPO,
@@ -295,13 +317,18 @@ async function main() {
       fails.push("flicker visualPhaseCount " + flick.visualPhaseCount + " > " + FLICKER_PHASES_MAX);
     }
 
-    console.log(
-      JSON.stringify({
-        flicker: flick && flick.visualPhaseCount != null
-          ? { visualPhaseCount: flick.visualPhaseCount, transitionSamples: (flick.transitions || []).length }
-          : flick,
-      })
-    );
+    const flickOut =
+      flick && flick.visualPhaseCount != null
+        ? {
+            visualPhaseCount: flick.visualPhaseCount,
+            transitionSamples: (flick.transitions || []).length,
+            firstPhaseChangedKeys:
+              flick.transitions && flick.transitions[0] && flick.transitions[0].changed
+                ? Object.keys(flick.transitions[0].changed)
+                : [],
+          }
+        : flick;
+    console.log(JSON.stringify({ flicker: flickOut }));
 
     if (!SKIP_LATENCY) {
       const ctx = await browser.newContext();
@@ -348,6 +375,24 @@ async function main() {
       }
 
       console.log(JSON.stringify({ calendarSilverSurface: cal }));
+    }
+
+    if (!SKIP_UI) {
+      const pUi = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
+      let ui;
+      try {
+        ui = await runDesktopUiSanity(pUi);
+      } catch (e) {
+        fails.push("desktop UI: " + (e && e.message ? e.message : e));
+        ui = null;
+      }
+      await pUi.close();
+      if (ui) {
+        if (!ui.leftRail) fails.push("desktop UI: left rail missing");
+        if (!ui.mindMenuOrAccordion) fails.push("desktop UI: mind menu / accordion missing");
+        if (!ui.aiPanelSized) fails.push("desktop UI: AI panel not sized after open");
+        console.log(JSON.stringify({ desktopUi: ui }));
+      }
     }
 
     if (fails.length) {
