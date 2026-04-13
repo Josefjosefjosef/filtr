@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-13T14:44:29.455920Z",
+  "ingestedAt": "2026-04-13T15:39:21.668754Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Operace některých nádorů čeká zásadní omezení. Ministerstvo oznámilo, kde se budou dělat",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/operace-nekterych-nadoru-ceka-zasadni-omezeni/",
+      "dt": "2026-04-13T14:51:54Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dělat",
+        "ministerstvo",
+        "nádorů",
+        "některých",
+        "omezení",
+        "operace",
+        "oznámilo",
+        "zásadní",
+        "čeká"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -241,31 +267,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Další pandemie začne u zvířat. A svět není připraven, varuje Macron",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/dalsi-pandemie-zacne-u-zvirat-a-svet-neni-pripraven-varuje-macron/",
-      "dt": "2026-04-12T14:30:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "další",
-        "macron",
-        "pandemie",
-        "připraven",
-        "svět",
-        "varuje",
-        "začne",
-        "zvířat"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 101272,
+      "bytes": 101168,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T14:22:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T14:51:54Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -328,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Operace některých nádorů čeká zásadní omezení. Ministerstvo oznámilo, kde se budou dělat",
+            "publishedAt": "2026-04-13T14:51:54Z"
+          },
           {
             "title": "V Nemocnici Na Františku skončil audit. Praha 1 popsala zjištěné chyby",
             "publishedAt": "2026-04-13T14:22:29Z"
@@ -355,10 +360,6 @@
           {
             "title": "Svědění k zešílení: Nemoc jater ničí spánek i psychiku. Nové léky mění pravidla hry",
             "publishedAt": "2026-04-13T07:00:00Z"
-          },
-          {
-            "title": "V Polsku levně, v Německu za 24 tisíc. Podívejte se, kde se loni Češi léčili nejčastěji a za kolik",
-            "publishedAt": "2026-04-13T06:00:00Z"
           }
         ]
       }

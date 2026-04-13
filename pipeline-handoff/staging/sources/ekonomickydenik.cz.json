@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T14:44:29.455920Z",
+  "ingestedAt": "2026-04-13T15:39:21.668754Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Přijde Kreml o dalšího spojence? Sofie spoléhá v boji proti Putinovi na Brusel",
+      "url": "https://ekonomickydenik.cz/prijde-kreml-spojenec-sofie-putin-brusel/",
+      "dt": "2026-04-13T15:02:18Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "boji",
+        "brusel",
+        "dalšího",
+        "kreml",
+        "proti",
+        "putinovi",
+        "přijde",
+        "sofie",
+        "spojence",
+        "spoléhá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -747,32 +774,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Rudý nok“ zaútočil na Novotného. Znovu v ODS a hned čelil napadení",
-      "url": "https://ekonomickydenik.cz/rudy-nok-zautocil-novotny-ods/",
-      "dt": "2026-04-11T10:24:57Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "hned",
-        "napadení",
-        "nok",
-        "novotného",
-        "ods",
-        "rudý",
-        "zaútočil",
-        "znovu",
-        "čelil"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -783,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72237,
+      "bytes": 72578,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -820,11 +821,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T14:37:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T15:02:18Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 3,
           "finance": 24,
+          "zpravy": 3,
           "zdravi": 3
         },
         "drop_counts": {
@@ -837,6 +838,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přijde Kreml o dalšího spojence? Sofie spoléhá v boji proti Putinovi na Brusel",
+            "publishedAt": "2026-04-13T15:02:18Z"
+          },
           {
             "title": "Dálnice v ohrožení? Cena všeho spojeného s ropou neúměrně roste, varuje šéf silničářů",
             "publishedAt": "2026-04-13T14:37:46Z"
@@ -864,10 +869,6 @@
           {
             "title": "Škodovka šlape na plyn, rekordní zájem je o elektroauta. V Číně se nedařilo",
             "publishedAt": "2026-04-13T11:19:00Z"
-          },
-          {
-            "title": "V sevření elektronického boje: Armáda testuje scénáře přežití v moderní válce",
-            "publishedAt": "2026-04-13T09:32:42Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T14:44:29.455920Z",
+  "ingestedAt": "2026-04-13T15:39:21.668754Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ovečkin proti Crosbymu, posté v NHL! A možná naposled. Zvážím ještě rok, říká Rus",
+      "url": "https://www.idnes.cz/hokej/nhl/alecandr-ovecin-crosby-nhl-100-zapas-louceni-washington-pittsburgh.A260413_094949_nhl_huda",
+      "dt": "2026-04-13T15:01:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "crosbymu",
+        "ještě",
+        "možná",
+        "naposled",
+        "nhl",
+        "ovečkin",
+        "posté",
+        "proti",
+        "rok",
+        "rus",
+        "zvážím",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -767,33 +796,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hamzová o nabídce z WNBA: Docela šok, mám i obavy. Zaujalo je, že jsem atypická",
-      "url": "https://www.idnes.cz/sport/basket/eliska-hamzova-rozhovor-sance-v-wnba-smlouva-minnesota-lynx.A260412_225125_sport-basket_ikuc",
-      "dt": "2026-04-13T07:26:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "atypická",
-        "docela",
-        "hamzová",
-        "jsem",
-        "mám",
-        "nabídce",
-        "obavy",
-        "wnba",
-        "zaujalo",
-        "šok"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47872,
+      "bytes": 48224,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +843,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T14:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T15:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -857,6 +859,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ovečkin proti Crosbymu, posté v NHL! A možná naposled. Zvážím ještě rok, říká Rus",
+            "publishedAt": "2026-04-13T15:01:00Z"
+          },
           {
             "title": "V lednu podržen, teď odvolán. Za Janotkův konec údajně nemohou jenom výsledky",
             "publishedAt": "2026-04-13T14:35:00Z"
@@ -884,10 +890,6 @@
           {
             "title": "Co čeká Češky v WNBA: úspěšný klub, boj o místo a doba obřího růstu příjmů",
             "publishedAt": "2026-04-13T13:30:00Z"
-          },
-          {
-            "title": "Nejkrásnější tajemství! Tenista s partnerkou odhalili narození dcery",
-            "publishedAt": "2026-04-13T13:05:00Z"
           }
         ]
       }
