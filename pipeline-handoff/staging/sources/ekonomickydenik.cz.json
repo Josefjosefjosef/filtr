@@ -1,25 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T11:57:54.870222Z",
+  "ingestedAt": "2026-04-13T12:14:15.959471Z",
   "items": [
     {
-      "section": "zdravi",
+      "section": "finance",
       "contentType": "article",
-      "title": "Škodovka šlape na plyn, rekordní zájem je o elektroauta. V Číně se nedařilo",
-      "url": "https://ekonomickydenik.cz/skodovka-slape-na-plyn-zajem-o-elektroauta/",
-      "dt": "2026-04-13T11:39:53Z",
+      "title": "Ceny nafty a benzinu v rukou vlády? Babiš k tomu chce protlačit nový zákon",
+      "url": "https://ekonomickydenik.cz/ceny-nafty-benzinu-babis-vlada/",
+      "dt": "2026-04-13T12:01:47Z",
       "media_raw": "Ekonomický deník",
       "media_norm": "Ekonomický deník",
       "tokens": [
-        "elektroauta",
-        "nedařilo",
-        "plyn",
-        "rekordní",
-        "zájem",
-        "číně",
-        "škodovka",
-        "šlape"
+        "babiš",
+        "benzinu",
+        "ceny",
+        "chce",
+        "nafty",
+        "nový",
+        "protlačit",
+        "rukou",
+        "tomu",
+        "vlády",
+        "zákon"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -48,6 +51,31 @@
         "slibuje",
         "temných",
         "vůdce"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Škodovka šlape na plyn, rekordní zájem je o elektroauta. V Číně se nedařilo",
+      "url": "https://ekonomickydenik.cz/skodovka-slape-na-plyn-zajem-o-elektroauta/",
+      "dt": "2026-04-13T11:19:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "elektroauta",
+        "nedařilo",
+        "plyn",
+        "rekordní",
+        "zájem",
+        "číně",
+        "škodovka",
+        "šlape"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -742,31 +770,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nový bezpečnostní deštník pro Evropu? „Plameňák“ funguje a nahradí i Patriot",
-      "url": "https://ekonomickydenik.cz/novy-protikraketovy-destnik-plamenak/",
-      "dt": "2026-04-11T04:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bezpečnostní",
-        "deštník",
-        "evropu",
-        "funguje",
-        "nahradí",
-        "nový",
-        "patriot",
-        "plameňák"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +780,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71983,
+      "bytes": 71872,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,11 +817,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T11:39:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T12:01:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 3,
           "finance": 26,
+          "zdravi": 3,
           "zpravy": 1
         },
         "drop_counts": {
@@ -832,12 +835,16 @@
         },
         "sample_titles": [
           {
-            "title": "Škodovka šlape na plyn, rekordní zájem je o elektroauta. V Číně se nedařilo",
-            "publishedAt": "2026-04-13T11:39:53Z"
+            "title": "Ceny nafty a benzinu v rukou vlády? Babiš k tomu chce protlačit nový zákon",
+            "publishedAt": "2026-04-13T12:01:47Z"
           },
           {
             "title": "Konec „temných chodeb Kremlu“? Nový maďarský vůdce slibuje revoluci, má to ale háček",
             "publishedAt": "2026-04-13T11:32:29Z"
+          },
+          {
+            "title": "Škodovka šlape na plyn, rekordní zájem je o elektroauta. V Číně se nedařilo",
+            "publishedAt": "2026-04-13T11:19:00Z"
           },
           {
             "title": "V sevření elektronického boje: Armáda testuje scénáře přežití v moderní válce",
@@ -858,10 +865,6 @@
           {
             "title": "USA zablokují íránské přístavy. Barel za 100 dolarů je zpět",
             "publishedAt": "2026-04-13T06:43:27Z"
-          },
-          {
-            "title": "Metnar chce zastavit personální krizi: nástupní plat 50 tisíc a půlmiliarda pro dobrovolné hasiče",
-            "publishedAt": "2026-04-13T04:55:00Z"
           }
         ]
       }

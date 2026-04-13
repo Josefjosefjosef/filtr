@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T11:57:54.870222Z",
+  "ingestedAt": "2026-04-13T12:14:15.959471Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Videomomenty. Dynamo je krok od finále, potřebuje udolat Spartu na jejím ledě",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-dynamo-je-krok-od-finale-potrebuje-udolat-spartu-na-jejim-lede-5436382",
+      "dt": "2026-04-13T12:00:12Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dynamo",
+        "finále",
+        "jejím",
+        "krok",
+        "ledě",
+        "potřebuje",
+        "spartu",
+        "udolat",
+        "videomomenty"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Češka zaútočí na historický zápis, který nesvedl ani Krpálek. V přípravě ztřískala pět Japonek",
+      "url": "https://www.sport.cz/clanek/ostatni-ceska-zautoci-na-historicky-zapis-ktery-nesvedl-ani-krpalek-v-priprave-ztriskala-pet-japonek-5436386",
+      "dt": "2026-04-13T11:52:10Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "historický",
+        "japonek",
+        "krpálek",
+        "nesvedl",
+        "pět",
+        "přípravě",
+        "zaútočí",
+        "ztřískala",
+        "zápis",
+        "češka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -718,56 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kontroverzní Rus se pustil do Procházky. Čech má ale i zastánce",
-      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-kontroverzni-rus-se-pustil-do-prochazky-cech-ma-ale-i-zastance-5436282",
-      "dt": "2026-04-13T05:44:13Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ale",
-        "kontroverzní",
-        "procházky",
-        "pustil",
-        "rus",
-        "zastánce",
-        "čech"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "McIlroy jako teprve čtvrtý golfista v historii obhájil titul na Masters",
-      "url": "https://www.sport.cz/clanek/golf-mcilroy-jako-teprve-ctvrty-golfista-v-historii-obhajil-titul-na-masters-5436364",
-      "dt": "2026-04-13T05:16:31Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "golfista",
-        "historii",
-        "jako",
-        "masters",
-        "mcilroy",
-        "obhájil",
-        "teprve",
-        "titul",
-        "čtvrtý"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41838,
+      "bytes": 42618,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,11 +818,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T11:37:48Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T12:00:12Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "zdravi": 1
+          "sport": 28,
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -831,6 +834,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Videomomenty. Dynamo je krok od finále, potřebuje udolat Spartu na jejím ledě",
+            "publishedAt": "2026-04-13T12:00:12Z"
+          },
+          {
+            "title": "Češka zaútočí na historický zápis, který nesvedl ani Krpálek. V přípravě ztřískala pět Japonek",
+            "publishedAt": "2026-04-13T11:52:10Z"
+          },
           {
             "title": "Slavia podává protest proti Chorého vyloučení",
             "publishedAt": "2026-04-13T07:43:41Z"
@@ -854,14 +865,6 @@
           {
             "title": "Hapal jen dočasně. Sigma chce zkušeného kouče, hledá i v zahraničí",
             "publishedAt": "2026-04-13T11:16:57Z"
-          },
-          {
-            "title": "Přebujelá ega poškozují celou extraligu. Zákulisní bitva Sparty s Pardubicemi už se vymkla kontrole",
-            "publishedAt": "2026-04-13T11:05:47Z"
-          },
-          {
-            "title": "Čechová a Hamzová se budou v kempu Minnesoty ucházet o angažmá ve WNBA",
-            "publishedAt": "2026-04-13T07:30:05Z"
           }
         ]
       }

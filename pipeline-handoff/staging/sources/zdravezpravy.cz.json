@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-13T11:57:54.870222Z",
+  "ingestedAt": "2026-04-13T12:14:15.959471Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zubní kaz u dětí podporují slazené i kyselé nápoje narušující pH v ústech",
+      "url": "https://www.zdravezpravy.cz/2026/04/13/zubni-kaz-u-deti-podporuji-slazene-i-kysele-napoje-narusujici-ph-v-ustech/",
+      "dt": "2026-04-13T11:30:09Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "dětí",
+        "kaz",
+        "kyselé",
+        "narušující",
+        "nápoje",
+        "podporují",
+        "slazené",
+        "zubní",
+        "ústech"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -472,31 +498,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Komentář: Očkování není ideologie. Návrhy hnutí SPD nedávají smysl",
-      "url": "https://www.zdravezpravy.cz/2026/04/02/komentar-ockovani-neni-ideologie-navrhy-hnuti-spd-nedavaji-smysl/",
-      "dt": "2026-04-02T06:03:41Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "hnutí",
-        "ideologie",
-        "komentář",
-        "nedávají",
-        "návrhy",
-        "očkování",
-        "smysl",
-        "spd"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -507,7 +508,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 223519,
+      "bytes": 225831,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -544,7 +545,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T07:18:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T11:30:09Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -560,6 +561,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zubní kaz u dětí podporují slazené i kyselé nápoje narušující pH v ústech",
+            "publishedAt": "2026-04-13T11:30:09Z"
+          },
           {
             "title": "Interrupcí v ČR rok od roku ubývá. To díky osvětě i moderní antikoncepci",
             "publishedAt": "2026-04-13T07:18:41Z"
@@ -587,10 +592,6 @@
           {
             "title": "Žena, která dodala Perrymu smrtelný ketamin, dostala 15 let",
             "publishedAt": "2026-04-09T13:29:58Z"
-          },
-          {
-            "title": "Irena Storová: Lékárník naočkovat pacienta zvládne, to není problém",
-            "publishedAt": "2026-04-09T04:26:35Z"
           }
         ]
       }

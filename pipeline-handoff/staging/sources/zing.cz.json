@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-13T11:57:54.870222Z",
+  "ingestedAt": "2026-04-13T12:14:15.959471Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Souboji s GTA VI se bude chtít zřejmě vyhnout také nové Call of Duty",
+      "url": "https://zing.cz/article/souboji-s-gta-vi-se-bude-chtit-zrejme-vyhnout-take-nove-call-of-duty",
+      "dt": "2026-04-13T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "call",
+        "chtít",
+        "duty",
+        "gta",
+        "nové",
+        "souboji",
+        "také",
+        "vyhnout",
+        "zřejmě"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -959,30 +985,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Samson je po vydání plný nepřijatelných bugů, studio reaguje",
-      "url": "https://zing.cz/article/samson-je-po-vydani-plny-neprijatelnych-bugu-studio-reaguje",
-      "dt": "2026-04-09T14:30:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "bugů",
-        "nepřijatelných",
-        "plný",
-        "reaguje",
-        "samson",
-        "studio",
-        "vydání"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -993,7 +995,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125442,
+      "bytes": 125461,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1030,11 +1032,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "other": 39
+          "other": 39,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1046,6 +1048,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Souboji s GTA VI se bude chtít zřejmě vyhnout také nové Call of Duty",
+            "publishedAt": "2026-04-13T12:00:00Z"
+          },
           {
             "title": "Spartu a Pardubice dnes čeká hokejová bitva o vše, sledujte ji zdarma na TV Tipsport",
             "publishedAt": "2026-04-13T11:00:00Z"
@@ -1073,10 +1079,6 @@
           {
             "title": "Blizzard vyhrál soud: Turtle WoW musí skončit",
             "publishedAt": "2026-04-12T16:00:00Z"
-          },
-          {
-            "title": "Vývojář z malé vesnice slaví 250 000 prodejů na Steamu",
-            "publishedAt": "2026-04-12T14:00:00Z"
           }
         ]
       }

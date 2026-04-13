@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T11:57:54.870222Z",
+  "ingestedAt": "2026-04-13T12:14:15.959471Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hapal: Vždy jsem byl odvolávaný a dnes jsem jedním z těch, kdo trenéra odvolal",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/sigma-olomouc-pavel-hapal-tomas-janotka-novy-trener.A260413_130544_fotbal_jaku",
+      "dt": "2026-04-13T11:58:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "hapal",
+        "jedním",
+        "jsem",
+        "odvolal",
+        "odvolávaný",
+        "trenéra",
+        "těch",
+        "vždy"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -772,35 +797,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chorý předvedl další zkrat. Ale nešlo o úmysl, míní experti. Jaký mu hrozí trest?",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-29-kolo-slavia-plzen-tomas-chory-plivnuti.A260412_210224_fotbal_tals",
-      "dt": "2026-04-12T19:45:24Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ale",
-        "chorý",
-        "další",
-        "experti",
-        "hrozí",
-        "jaký",
-        "míní",
-        "nešlo",
-        "předvedl",
-        "trest",
-        "zkrat",
-        "úmysl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -811,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49031,
+      "bytes": 48627,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -848,7 +844,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T11:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T11:58:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -864,6 +860,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hapal: Vždy jsem byl odvolávaný a dnes jsem jedním z těch, kdo trenéra odvolal",
+            "publishedAt": "2026-04-13T11:58:00Z"
+          },
           {
             "title": "Tajná oslava pro Maděrovou. Rodina olympioničky ji chystala dva měsíce",
             "publishedAt": "2026-04-13T11:40:00Z"
@@ -891,10 +891,6 @@
           {
             "title": "Krejčí po měsíci ve hře. Jokič si řekl o ceny, nedraftovaný nováček útočil na rekordy",
             "publishedAt": "2026-04-13T10:09:32Z"
-          },
-          {
-            "title": "Tvrďák s IQ 136. Basketbalista Landa: Snažil jsem se soupeřům vstoupit do hlav",
-            "publishedAt": "2026-04-13T10:00:00Z"
           }
         ]
       }
