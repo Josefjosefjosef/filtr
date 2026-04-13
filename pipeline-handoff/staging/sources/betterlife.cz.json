@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-04-13T06:14:29.515386Z",
+  "ingestedAt": "2026-04-13T06:29:54.841172Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ulice: Blanka v přestrojení, důkazy pro policii a Koníček v roli vyděrače",
+      "url": "https://www.betterlife.cz/ulice-blanka-v-prestrojeni-dukazy-pro-policii-a-konicek-v-roli-vyderace/",
+      "dt": "2026-04-13T06:13:09Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "blanka",
+        "důkazy",
+        "koníček",
+        "policii",
+        "přestrojení",
+        "roli",
+        "ulice",
+        "vyděrače"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -257,36 +282,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Vesničko má středisková: Původní herecké obsazení, smrtelná nehoda a film vznikl jako záchrana před finančním průšvihem",
-      "url": "https://www.betterlife.cz/vesnicko-ma-strediskova-puvodni-herecke-obsazeni-smrtelna-nehoda-a-film-vznikl-jako-zachrana-pred-fianncnim-prusvihem/",
-      "dt": "2026-04-06T12:05:05Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "film",
-        "finančním",
-        "herecké",
-        "jako",
-        "nehoda",
-        "obsazení",
-        "průšvihem",
-        "původní",
-        "smrtelná",
-        "středisková",
-        "vesničko",
-        "vznikl",
-        "záchrana"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -297,7 +292,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 71098,
+      "bytes": 68660,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -357,11 +352,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-12T10:29:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T06:13:09Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
-          "zpravy": 1
+          "zdravi": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -373,6 +367,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ulice: Blanka v přestrojení, důkazy pro policii a Koníček v roli vyděrače",
+            "publishedAt": "2026-04-13T06:13:09Z"
+          },
           {
             "title": "Pět supermarketů Billa zavře své dveře. Nakupující musí využít náhradní obchody",
             "publishedAt": "2026-04-12T10:29:51Z"
@@ -400,10 +398,6 @@
           {
             "title": "Bývalý moderátor zpráv žije sen mnoha Čechů v důchodu. Utrácí štědré úspory a cestuje po světě",
             "publishedAt": "2026-04-08T15:57:47Z"
-          },
-          {
-            "title": "Cukr v nápojích: Každý druhý dětský kaz souvisí s pitím limonád nebo ovocných džusů",
-            "publishedAt": "2026-04-08T10:09:44Z"
           }
         ]
       }
