@@ -10185,9 +10185,11 @@ function buildVideoAsArticleCard(it) {
           mindMenuFlow.style.width = "100%";
           mindMenuFlow.style.maxWidth = "100%";
           mindMenuFlow.style.minWidth = "0";
-          /* P0 mobile/tablet: never pin #iuMobileMindMenuFlow min-height to first paint — after mailbox/tool rows shrink, stale min-height left a dead gap above following sections. */
-          mindMenuFlow.style.minHeight = "";
           var mindMenu = document.querySelector(".mindMenu");
+          if (mindMenu && !mindMenuFlow.style.minHeight) {
+            var reserveH = Math.ceil(mindMenu.getBoundingClientRect().height || mindMenu.offsetHeight || 0);
+            if (reserveH > 0) mindMenuFlow.style.minHeight = reserveH + "px";
+          }
           if (mindMenu && mindMenu.parentElement !== mindMenuFlow) {
             mindMenuFlow.insertBefore(mindMenu, mindMenuFlow.firstChild || null);
           }
@@ -10206,10 +10208,9 @@ function buildVideoAsArticleCard(it) {
             topTools.style.removeProperty("height");
           }
           var mailboxList = mindMenu ? mindMenu.querySelector("#iuMailboxList") : null;
-          /* P0 mobile/tablet visible gap: do not reserve 262px/340px on list/section — after removing mailbox rows inline min-height left a large empty band above Nástroje; flowDeadPx vs #iuMobileMindMenuFlow missed it because .mindMenu still wrapped the tall section. */
-          if (mailboxList) mailboxList.style.minHeight = "";
+          if (mailboxList) mailboxList.style.minHeight = "262px";
           var mailboxesSection = mindMenu ? mindMenu.querySelector("section.iu-mailboxes") : null;
-          if (mailboxesSection) mailboxesSection.style.minHeight = "";
+          if (mailboxesSection) mailboxesSection.style.minHeight = "340px";
           var staleWrapper = mindMenuFlow.querySelector(".mindMenu-scroll-wrapper");
           if (staleWrapper && !staleWrapper.querySelector(".mindMenu")) {
             staleWrapper.remove();
