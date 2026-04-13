@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-13T14:10:04.083629Z",
+  "ingestedAt": "2026-04-13T14:29:29.175846Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "V Nemocnici Na Františku skončil audit. Praha 1 popsala zjištěné chyby",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/v-nemocnici-na-frantisku-skoncil-audit-praha-1-popsala-zjistene-chyby/",
+      "dt": "2026-04-13T14:22:29Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "audit",
+        "chyby",
+        "františku",
+        "nemocnici",
+        "popsala",
+        "praha",
+        "skončil",
+        "zjištěné"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -241,32 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Tichá daň pandemie. Long Covid nás bude stát miliardy ročně",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/ticha-dan-pandemie-long-covid-miliardy-rocne/",
-      "dt": "2026-04-12T10:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "covid",
-        "daň",
-        "long",
-        "miliardy",
-        "nás",
-        "pandemie",
-        "ročně",
-        "stát",
-        "tichá"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -277,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 102860,
+      "bytes": 101272,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T14:22:29Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -329,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Nemocnici Na Františku skončil audit. Praha 1 popsala zjištěné chyby",
+            "publishedAt": "2026-04-13T14:22:29Z"
+          },
           {
             "title": "Tančící ortoped, který chce překopat maďarské zdravotnictví. Kdo je pravděpodobný příští ministr?",
             "publishedAt": "2026-04-13T11:30:00Z"
@@ -356,10 +359,6 @@
           {
             "title": "V Polsku levně, v Německu za 24 tisíc. Podívejte se, kde se loni Češi léčili nejčastěji a za kolik",
             "publishedAt": "2026-04-13T06:00:00Z"
-          },
-          {
-            "title": "Konec monopolu specializovaných center? Stát, pojišťovny i firmy chtějí změnu",
-            "publishedAt": "2026-04-13T05:00:00Z"
           }
         ]
       }
