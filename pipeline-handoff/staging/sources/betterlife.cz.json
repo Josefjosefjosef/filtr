@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-04-13T09:19:51.654678Z",
+  "ingestedAt": "2026-04-13T09:40:22.800643Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Světloplachost trápí většinu populace. Roli hrají léky i nošení slunečních brýlí",
+      "url": "https://www.betterlife.cz/svetloplachost-trapi-vetsinu-populace-roli-hraji-leky-i-noseni-slunecnich-bryli/",
+      "dt": "2026-04-13T09:26:30Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "brýlí",
+        "hrají",
+        "léky",
+        "nošení",
+        "populace",
+        "roli",
+        "slunečních",
+        "světloplachost",
+        "trápí",
+        "většinu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -253,35 +280,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Lednice plné barevných vajec: Zelený okraj žloutku není problém, ten je spíše ve formě skladování",
-      "url": "https://www.betterlife.cz/lednice-plne-barevnych-vajec-zeleny-okraj-zloutku-neni-problem-ten-je-spise-ve-forme-skladovani/",
-      "dt": "2026-04-08T07:43:15Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "barevných",
-        "formě",
-        "lednice",
-        "okraj",
-        "plné",
-        "problém",
-        "skladování",
-        "spíše",
-        "ten",
-        "vajec",
-        "zelený",
-        "žloutku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -292,7 +290,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 68660,
+      "bytes": 68324,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -352,7 +350,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T06:13:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T09:26:30Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -367,6 +365,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Světloplachost trápí většinu populace. Roli hrají léky i nošení slunečních brýlí",
+            "publishedAt": "2026-04-13T09:26:30Z"
+          },
           {
             "title": "Ulice: Blanka v přestrojení, důkazy pro policii a Koníček v roli vyděrače",
             "publishedAt": "2026-04-13T06:13:09Z"
@@ -394,10 +396,6 @@
           {
             "title": "Filip Turek tvrdě narazil v debatě o větrnících. Analytik mu vmetl nedostatek odbornosti",
             "publishedAt": "2026-04-09T08:59:23Z"
-          },
-          {
-            "title": "Bývalý moderátor zpráv žije sen mnoha Čechů v důchodu. Utrácí štědré úspory a cestuje po světě",
-            "publishedAt": "2026-04-08T15:57:47Z"
           }
         ]
       }

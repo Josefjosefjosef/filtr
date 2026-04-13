@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T09:19:51.654678Z",
+  "ingestedAt": "2026-04-13T09:40:22.800643Z",
   "items": [
     {
       "section": "sport",
@@ -21,6 +21,29 @@
         "proč",
         "rozhodčí",
         "ťukes"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vzteklý García rozmlátil na Masters důležitou hůl",
+      "url": "https://www.sport.cz/clanek/golf-vztekly-garcia-rozmlatil-na-masters-dulezitou-hul-5436377",
+      "dt": "2026-04-13T09:24:57Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "důležitou",
+        "garcía",
+        "hůl",
+        "masters",
+        "rozmlátil",
+        "vzteklý"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -755,32 +778,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Další šílený exces? Chorý plivnul na bývalého spoluhráče a šel pod sprchy",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-dalsi-sileny-exces-chory-plivnul-na-byvaleho-spoluhrace-a-sel-pod-sprchy-5436340",
-      "dt": "2026-04-12T18:41:38Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bývalého",
-        "chorý",
-        "další",
-        "exces",
-        "plivnul",
-        "spoluhráče",
-        "sprchy",
-        "šel",
-        "šílený"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43066,
+      "bytes": 42337,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T09:13:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T09:24:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -847,6 +844,10 @@
           {
             "title": "ŤUKES: Proč to dělá? Diviš v kauze flusanec nechápe Chorého ani rozhodčí",
             "publishedAt": "2026-04-13T09:13:46Z"
+          },
+          {
+            "title": "Vzteklý García rozmlátil na Masters důležitou hůl",
+            "publishedAt": "2026-04-13T09:24:57Z"
           },
           {
             "title": "Při přepadení týmového autobusu byl v Ghaně zastřelen mladý fotbalista",
@@ -871,10 +872,6 @@
           {
             "title": "Program a výsledky semifinále play off Tipsport extraligy. Třinec je ve finále, čeká na soupeře z očekávané bitvy",
             "publishedAt": "2026-04-13T05:03:00Z"
-          },
-          {
-            "title": "Ulbergův tým přiznal paniku. Šampion zřejmě bude muset na operaci",
-            "publishedAt": "2026-04-13T08:11:53Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-13T09:19:51.654678Z",
+  "ingestedAt": "2026-04-13T09:40:22.800643Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Prohru Orbána Babiš oželí rychle. Magyara potřebuje pro byznys, soudí experti",
+      "url": "https://www.denik.cz/cesko-a-eu/volby-madarsko-vysledky-peter-magyar-tisza-co-na-to-andrej-babis-cesko.html",
+      "dt": "2026-04-13T09:01:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "babiš",
+        "byznys",
+        "experti",
+        "magyara",
+        "orbána",
+        "oželí",
+        "potřebuje",
+        "prohru",
+        "rychle",
+        "soudí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -620,30 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pavel k volbám v Maďarsku: Rekordní účast je vítězstvím demokracie",
-      "url": "https://www.denik.cz/staty-eu/volby-madarsko-vitezstvi-tisza-prezident-petr-pavel.html",
-      "dt": "2026-04-12T19:48:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "demokracie",
-        "maďarsku",
-        "pavel",
-        "rekordní",
-        "volbám",
-        "vítězstvím",
-        "účast"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -654,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30487,
+      "bytes": 30742,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -691,7 +694,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-13T08:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T09:01:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -708,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prohru Orbána Babiš oželí rychle. Magyara potřebuje pro byznys, soudí experti",
+            "publishedAt": "2026-04-13T09:01:00Z"
+          },
           {
             "title": "Pilot slavil a vyděsil tím sousedy. S obřím boeingem prolétl nízko nad střechami",
             "publishedAt": "2026-04-13T08:42:00Z"
@@ -735,10 +742,6 @@
           {
             "title": "Opilý agresor pod vlivem drog v Chebu napadl seniora, vyhrožoval mu smrtí",
             "publishedAt": "2026-04-13T07:19:00Z"
-          },
-          {
-            "title": "Magyar a Tisza vymazali Orbána, mají ústavní většinu. Moc má ale stále Orbán",
-            "publishedAt": "2026-04-13T06:43:00Z"
           }
         ]
       }

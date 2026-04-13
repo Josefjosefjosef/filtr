@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T09:19:51.654678Z",
+  "ingestedAt": "2026-04-13T09:40:22.800643Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "V sevření elektronického boje: Armáda testuje scénáře přežití v moderní válce",
+      "url": "https://ekonomickydenik.cz/v-sevreni-elektronickeho-boje-armada-valka-spojeni/",
+      "dt": "2026-04-13T09:32:42Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "armáda",
+        "boje",
+        "elektronického",
+        "moderní",
+        "přežití",
+        "scénáře",
+        "sevření",
+        "testuje",
+        "válce"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -741,30 +767,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Babiš chválí evropskou půjčku. Bude na D11 i na nové tanky",
-      "url": "https://ekonomickydenik.cz/babis-chvali-pujcku-d11-tanky/",
-      "dt": "2026-04-10T15:14:20Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "chválí",
-        "d11",
-        "evropskou",
-        "nové",
-        "půjčku",
-        "tanky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -775,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72891,
+      "bytes": 72723,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,12 +814,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T08:36:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T09:32:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zdravi": 2,
           "finance": 27,
-          "zdravi": 1,
-          "zpravy": 2
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -829,6 +831,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V sevření elektronického boje: Armáda testuje scénáře přežití v moderní válce",
+            "publishedAt": "2026-04-13T09:32:42Z"
+          },
           {
             "title": "Maďarsko po volbách: Forint na čtyřletém maximu, Ukrajina zrušila doporučení necestovat",
             "publishedAt": "2026-04-13T08:36:00Z"
@@ -856,10 +862,6 @@
           {
             "title": "Těžký večer v Průhonicích: Fiala po pádu Orbána zesměšňuje Babiše videem",
             "publishedAt": "2026-04-12T20:34:00Z"
-          },
-          {
-            "title": "Orbán uznal porážku. Příštímu premiérovi Magyarovi gratuloval k vítězství",
-            "publishedAt": "2026-04-12T19:41:27Z"
           }
         ]
       }
