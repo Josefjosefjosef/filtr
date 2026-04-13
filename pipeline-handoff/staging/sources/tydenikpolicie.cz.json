@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-13T18:45:08.970354Z",
+  "ingestedAt": "2026-04-13T19:04:38.171403Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté pátrají po čtrnáctileté dívce z Pelhřimovska",
+      "url": "https://tydenikpolicie.cz/policiste-patraji-po-ctrnactilete-divce-z-pelhrimovska/",
+      "dt": "2026-04-13T19:01:17Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dívce",
+        "pelhřimovska",
+        "policisté",
+        "pátrají",
+        "čtrnáctileté"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -227,36 +249,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zásahová jednotka zadržela čtyři podezřelé z odpálení bankomatů v Praze. Tři z nich následně obvinili kriminalisté",
-      "url": "https://tydenikpolicie.cz/zasahova-jednotka-zadrzela-ctyri-podezrele-z-odpaleni-bankomatu-v-praze-tri-z-nich-nasledne-obvinili-kriminaliste/",
-      "dt": "2026-04-13T12:22:45Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "bankomatů",
-        "jednotka",
-        "kriminalisté",
-        "nich",
-        "následně",
-        "obvinili",
-        "odpálení",
-        "podezřelé",
-        "praze",
-        "tři",
-        "zadržela",
-        "zásahová",
-        "čtyři"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -267,7 +259,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15915,
+      "bytes": 15481,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -304,7 +296,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T14:15:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T19:01:17Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -319,6 +311,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté pátrají po čtrnáctileté dívce z Pelhřimovska",
+            "publishedAt": "2026-04-13T19:01:17Z"
+          },
           {
             "title": "Strážníci v Jihlavě vyjížděli k hlášené rvačce. Na ulici našli ležet muže v bezvědomí",
             "publishedAt": "2026-04-13T14:15:12Z"
@@ -346,10 +342,6 @@
           {
             "title": "Řidič motocyklu utekl ve Slaném od nehody",
             "publishedAt": "2026-04-13T13:09:48Z"
-          },
-          {
-            "title": "Řidič audi se při předjíždění na Jindřichohradecku srazil s traktorem",
-            "publishedAt": "2026-04-13T13:00:57Z"
           }
         ]
       }

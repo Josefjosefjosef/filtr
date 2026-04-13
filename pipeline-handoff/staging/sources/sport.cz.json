@@ -1,27 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T18:45:08.970354Z",
+  "ingestedAt": "2026-04-13T19:04:38.171403Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Videomomenty. Sparta otáčí důležitý zápas! V O2 areně kraluje Špaček",
+      "title": "HOKEJ ONLINE: Videomomenty. Vyrovnaný stav dlouho netrval, Sparta se vrací do vedení",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-dynamo-je-krok-od-finale-potrebuje-udolat-spartu-na-jejim-lede-5436382",
       "dt": "2026-04-13T12:00:12Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "areně",
-        "důležitý",
+        "dlouho",
         "hokej",
-        "kraluje",
+        "netrval",
         "online",
-        "otáčí",
         "sparta",
+        "stav",
+        "vedení",
         "videomomenty",
-        "zápas",
-        "špaček"
+        "vrací",
+        "vyrovnaný"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Prostějov rok po zisku titulu vybojoval páté místo v lize volejbalistek",
+      "url": "https://www.sport.cz/clanek/volejbal-prostejov-rok-po-zisku-titulu-vybojoval-pate-misto-v-lize-volejbalistek-5436532",
+      "dt": "2026-04-13T18:41:56Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "lize",
+        "místo",
+        "prostějov",
+        "páté",
+        "rok",
+        "titulu",
+        "volejbalistek",
+        "vybojoval",
+        "zisku"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -725,30 +751,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Do korupční kauzy se měl údajně zapojit i olomoucký Elbel",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-do-korupcni-kauzy-se-mel-udajne-zapojit-i-olomoucky-elbel-5436390",
-      "dt": "2026-04-13T11:37:48Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "elbel",
-        "kauzy",
-        "korupční",
-        "měl",
-        "olomoucký",
-        "zapojit",
-        "údajně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -759,7 +761,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42415,
+      "bytes": 42282,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -796,10 +798,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T18:13:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T18:41:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 26,
+          "sport": 25,
+          "finance": 1,
           "zpravy": 2,
           "zdravi": 2
         },
@@ -814,8 +817,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Videomomenty. Sparta otáčí důležitý zápas! V O2 areně kraluje Špaček",
+            "title": "HOKEJ ONLINE: Videomomenty. Vyrovnaný stav dlouho netrval, Sparta se vrací do vedení",
             "publishedAt": "2026-04-13T12:00:12Z"
+          },
+          {
+            "title": "Prostějov rok po zisku titulu vybojoval páté místo v lize volejbalistek",
+            "publishedAt": "2026-04-13T18:41:56Z"
           },
           {
             "title": "Chorý byl vyloučen správně, míní komise rozhodčích",
@@ -840,10 +847,6 @@
           {
             "title": "Verstappen v Red Bullu nezůstane, soudí bývalý pilot",
             "publishedAt": "2026-04-13T17:25:13Z"
-          },
-          {
-            "title": "Slováci jednají o trenérovi reprezentace, v komisi je i bývalý Hapalův asistent",
-            "publishedAt": "2026-04-13T16:52:33Z"
           }
         ]
       }
