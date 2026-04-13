@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-13T10:29:41.979059Z",
+  "ingestedAt": "2026-04-13T10:50:14.283457Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Potravinový doplněk obsahuje sildenafil na léčbu erektilní dysfunkce. Inspekce upozorňuje na riziko",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/potravinovy-doplnek-obsahuje-sildenafil-na-lecbu-erektilni-dysfunkce/",
+      "dt": "2026-04-13T10:34:39Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "doplněk",
+        "dysfunkce",
+        "erektilní",
+        "inspekce",
+        "léčbu",
+        "obsahuje",
+        "potravinový",
+        "riziko",
+        "sildenafil",
+        "upozorňuje"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,34 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Manželství jako štít: Svobodní čelí téměř dvojnásobnému riziku rakoviny, zjistili vědci",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/manzelstvi-jako-stit-svobodni-celi-temer-dvojnasobnemu-riziku-rakoviny-zjistili-vedci/",
-      "dt": "2026-04-11T14:30:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dvojnásobnému",
-        "jako",
-        "manželství",
-        "rakoviny",
-        "riziku",
-        "svobodní",
-        "téměř",
-        "vědci",
-        "zjistili",
-        "čelí",
-        "štít"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 107777,
+      "bytes": 103668,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T10:02:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T10:34:39Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Potravinový doplněk obsahuje sildenafil na léčbu erektilní dysfunkce. Inspekce upozorňuje na riziko",
+            "publishedAt": "2026-04-13T10:34:39Z"
+          },
           {
             "title": "Olomoucký kraj spojuje síly s Agelem: Společný podnik má nově zahrnout další nemocnici",
             "publishedAt": "2026-04-13T10:02:57Z"
@@ -359,10 +362,6 @@
           {
             "title": "Další pandemie začne u zvířat. A svět není připraven, varuje Macron",
             "publishedAt": "2026-04-12T14:30:00Z"
-          },
-          {
-            "title": "Tichá daň pandemie. Long Covid nás bude stát miliardy ročně",
-            "publishedAt": "2026-04-12T10:00:00Z"
           }
         ]
       }

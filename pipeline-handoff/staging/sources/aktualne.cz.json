@@ -1,8 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-13T10:29:41.979059Z",
+  "ingestedAt": "2026-04-13T10:50:14.283457Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "\"Británie se nenechá zatáhnout do Trumpovy války.\" Jeho blokádu Perského zálivu nepodpoří",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "blokádu",
+        "británie",
+        "jeho",
+        "nenechá",
+        "nepodpoří",
+        "perského",
+        "trumpovy",
+        "války",
+        "zatáhnout",
+        "zálivu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump: Lev XIV. je papežem díky mně. Měl by se vzpamatovat a přestat dělat politiku",
+      "url": "https://zpravy.aktualne.cz/zahranici/trump-lev-xiv-je-papezem-diky-mne-mel-by-se-vzpamatovat-a-prestat-delat-politiku/r~aaa29fa09ce47c8f42a386f4d1841d5b/",
+      "dt": "2026-04-13T04:56:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "díky",
+        "dělat",
+        "lev",
+        "mně",
+        "měl",
+        "papežem",
+        "politiku",
+        "přestat",
+        "trump",
+        "vzpamatovat",
+        "xiv"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -318,35 +373,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Íránský režim popravil nejvíc lidí od roku 1989, USA zahájily blokádu jeho přístavů",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "1989",
-        "blokádu",
-        "jeho",
-        "lidí",
-        "nejvíc",
-        "popravil",
-        "přístavů",
-        "režim",
-        "roku",
-        "usa",
-        "zahájily",
-        "íránský"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Mužský tenis má staronovou jedničku. Sinner vystřídal Alcaraze",
@@ -501,32 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Provoz aerolinek Lufthansa ochromila stávka pilotů, lety ruší i Praha",
-      "url": "https://zpravy.aktualne.cz/ekonomika/provoz-aerolinek-lufthansa-ochromila-stavka-pilotu-lety-rusi-i-praha/r~aaa29fdc1687b34897dfdf19bea6f59e/",
-      "dt": "2026-04-13T06:58:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "aerolinek",
-        "lety",
-        "lufthansa",
-        "ochromila",
-        "pilotů",
-        "praha",
-        "provoz",
-        "ruší",
-        "stávka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -537,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21336,
+      "bytes": 21119,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,9 +577,9 @@
         "raw_feed_latest_publishedAt": "2026-04-13T10:10:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 2,
+          "zpravy": 11,
+          "finance": 1,
           "other": 2,
-          "zpravy": 10,
           "sport": 6
         },
         "drop_counts": {
@@ -592,6 +592,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "\"Británie se nenechá zatáhnout do Trumpovy války.\" Jeho blokádu Perského zálivu nepodpoří",
+            "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
+            "title": "Trump: Lev XIV. je papežem díky mně. Měl by se vzpamatovat a přestat dělat politiku",
+            "publishedAt": "2026-04-13T04:56:00Z"
+          },
           {
             "title": "Čínská značka chystá nabíječky s drsnou podmínkou. Na některé řidiče může čekat pokuta",
             "publishedAt": "2026-04-13T10:10:00Z"
@@ -615,14 +623,6 @@
           {
             "title": "Na ředitele OpenAI Altmana někdo střílel, policie zatkla dva podezřelé",
             "publishedAt": "2026-04-13T09:13:00Z"
-          },
-          {
-            "title": "Nezkrotný Gudas. Jen co se vrátil do sestavy Anaheimu, hned se porval",
-            "publishedAt": "2026-04-13T04:58:00Z"
-          },
-          {
-            "title": "Demokrat ukončil kampaň na guvernéra Kalifornie po obvinění ze sexuálního násilí",
-            "publishedAt": "2026-04-13T09:05:00Z"
           }
         ]
       }

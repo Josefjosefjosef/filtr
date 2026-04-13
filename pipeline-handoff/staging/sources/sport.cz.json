@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T10:29:41.979059Z",
+  "ingestedAt": "2026-04-13T10:50:14.283457Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "To myslíš vážně? žasnou mladíci z Krpálka. Tělo má zmordované, kouče zničil na tréninku",
+      "url": "https://www.sport.cz/clanek/ostatni-to-myslis-vazne-zasnou-mladici-z-krpalka-telo-ma-zmordovane-kouce-znicil-na-treninku-5436380",
+      "dt": "2026-04-13T10:30:35Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "kouče",
+        "krpálka",
+        "mladíci",
+        "myslíš",
+        "tréninku",
+        "tělo",
+        "vážně",
+        "zmordované",
+        "zničil",
+        "žasnou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -747,30 +774,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Lyon vyhrál po devíti zápasech, Češi u toho nebyli",
-      "url": "https://www.sport.cz/clanek/fotbal-ligue-1-lyonu-vyhral-po-deviti-zapasech-cesi-u-toho-nebyli-5436353",
-      "dt": "2026-04-12T21:07:18Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "devíti",
-        "lyon",
-        "nebyli",
-        "toho",
-        "vyhrál",
-        "zápasech",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41510,
+      "bytes": 41481,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T10:23:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T10:30:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -834,6 +837,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "To myslíš vážně? žasnou mladíci z Krpálka. Tělo má zmordované, kouče zničil na tréninku",
+            "publishedAt": "2026-04-13T10:30:35Z"
+          },
           {
             "title": "Lotyšský hokejový obránce Freibergs vymění Vítkovice za Olomouc",
             "publishedAt": "2026-04-13T10:23:59Z"
@@ -861,10 +868,6 @@
           {
             "title": "Při přepadení týmového autobusu byl v Ghaně zastřelen mladý fotbalista",
             "publishedAt": "2026-04-13T08:52:22Z"
-          },
-          {
-            "title": "Poničené záchody i konflikt s policií. Fanoušci Zbrojovky řádili v Opavě, klub se omluvil",
-            "publishedAt": "2026-04-13T08:39:20Z"
           }
         ]
       }
