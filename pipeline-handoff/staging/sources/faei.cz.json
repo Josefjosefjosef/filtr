@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-13T14:29:29.175846Z",
+  "ingestedAt": "2026-04-13T14:44:29.455920Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "V úterý zřejmě neotevře více čerpacích stanic než v pátek",
+      "url": "https://profitonline.cz/v-utery-zrejme-neotevre-vice-cerpacich-stanic-nez-v-patek/",
+      "dt": "2026-04-13T14:30:26Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "neotevře",
+        "než",
+        "pátek",
+        "stanic",
+        "zřejmě",
+        "úterý",
+        "čerpacích"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -260,27 +284,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Inflační tlaky v USA sílí",
-      "url": "https://profitonline.cz/inflacni-tlaky-v-usa-sili/",
-      "dt": "2026-04-12T08:00:43Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "inflační",
-        "sílí",
-        "tlaky",
-        "usa"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -291,7 +294,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18631,
+      "bytes": 18779,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -328,7 +331,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-13T14:00:43Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T14:30:26Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -344,6 +347,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V úterý zřejmě neotevře více čerpacích stanic než v pátek",
+            "publishedAt": "2026-04-13T14:30:26Z"
+          },
           {
             "title": "Justin Bieber na koncertě vyvracel, že trpí duševní chorobou",
             "publishedAt": "2026-04-13T14:00:43Z"
@@ -371,10 +378,6 @@
           {
             "title": "Rafinační marže Orlenu a MOL se citelně propadají",
             "publishedAt": "2026-04-12T17:00:52Z"
-          },
-          {
-            "title": "Trhy věří v Orbánovu porážku",
-            "publishedAt": "2026-04-12T16:00:41Z"
           }
         ]
       }
