@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T08:25:31.269020Z",
+  "ingestedAt": "2026-04-13T09:19:51.654678Z",
   "items": [
     {
       "section": "finance",
       "contentType": "article",
       "title": "Maďarsko po volbách: Forint na čtyřletém maximu, Ukrajina zrušila doporučení necestovat",
       "url": "https://ekonomickydenik.cz/madarsko-po-volbach-forint-na-ctyrletem-maximu/",
-      "dt": "2026-04-13T08:16:42Z",
+      "dt": "2026-04-13T08:36:00Z",
       "media_raw": "Ekonomický deník",
       "media_norm": "Ekonomický deník",
       "tokens": [
@@ -21,6 +21,30 @@
         "volbách",
         "zrušila",
         "čtyřletém"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Fico děkuje Orbánovi, Babiš vyhlíží spolupráci s Magyarem",
+      "url": "https://ekonomickydenik.cz/fico-dekuje-orbanovi-babis/",
+      "dt": "2026-04-13T08:28:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiš",
+        "děkuje",
+        "fico",
+        "magyarem",
+        "orbánovi",
+        "spolupráci",
+        "vyhlíží"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -741,32 +765,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Za otravu Bečvy pokuta pět milionů. Pro firmu Energoaqua ji potvrdilo ministerstvo",
-      "url": "https://ekonomickydenik.cz/otrava-becvy-pokuta-pet-milionu/",
-      "dt": "2026-04-10T14:16:52Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bečvy",
-        "energoaqua",
-        "firmu",
-        "milionů",
-        "ministerstvo",
-        "otravu",
-        "pokuta",
-        "potvrdilo",
-        "pět"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73490,
+      "bytes": 72891,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,7 +812,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T08:16:42Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T08:36:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -833,7 +831,11 @@
         "sample_titles": [
           {
             "title": "Maďarsko po volbách: Forint na čtyřletém maximu, Ukrajina zrušila doporučení necestovat",
-            "publishedAt": "2026-04-13T08:16:42Z"
+            "publishedAt": "2026-04-13T08:36:00Z"
+          },
+          {
+            "title": "Fico děkuje Orbánovi, Babiš vyhlíží spolupráci s Magyarem",
+            "publishedAt": "2026-04-13T08:28:00Z"
           },
           {
             "title": "Colt CZ na dvou akciových hřištích. Pražskou burzu doplní prestižní Amsterdam",
@@ -858,10 +860,6 @@
           {
             "title": "Orbán uznal porážku. Příštímu premiérovi Magyarovi gratuloval k vítězství",
             "publishedAt": "2026-04-12T19:41:27Z"
-          },
-          {
-            "title": "Estonci našli na pláži kus dronu. Zřejmě ukrajinského",
-            "publishedAt": "2026-04-12T17:55:12Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-13T08:25:31.269020Z",
+  "ingestedAt": "2026-04-13T09:19:51.654678Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Buy & Fly: Týden na Lanzarote s all-inclusive z Prahy. Zájezd od 10 790 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/buy-fly-tyden-na-lanzarote-s-all-inclusive-z-prahy",
+      "dt": "2026-04-13T08:37:50Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "790",
+        "all",
+        "buy",
+        "fly",
+        "inclusive",
+        "lanzarote",
+        "prahy",
+        "týden",
+        "zájezd"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -469,29 +495,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Do italského Bari z Bratislavy na jaře. Letenky od 738 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/do-italskeho-bari-z-bratislavy-na-jare",
-      "dt": "2026-04-02T17:07:13Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "738",
-        "bari",
-        "bratislavy",
-        "italského",
-        "jaře",
-        "letenky"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -502,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 39953,
+      "bytes": 42456,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -539,7 +542,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-10T16:00:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T08:37:50Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -554,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Buy & Fly: Týden na Lanzarote s all-inclusive z Prahy. Zájezd od 10 790 Kč",
+            "publishedAt": "2026-04-13T08:37:50Z"
+          },
           {
             "title": "Dubnový týden na Madeiře s polopenzí z Prahy. Zájezd od 12 990 Kč",
             "publishedAt": "2026-04-10T16:00:13Z"
@@ -581,10 +588,6 @@
           {
             "title": "Týden na Rhodosu: letenky, ubytování s kuchyňkou a pronájem auta. Balíček od 4 614 Kč",
             "publishedAt": "2026-04-09T09:45:57Z"
-          },
-          {
-            "title": "Turecký Marmaris – týden v 5* resortu s all-inclusive z Prahy. Zájezd od 13 490 Kč",
-            "publishedAt": "2026-04-09T08:32:36Z"
           }
         ]
       }

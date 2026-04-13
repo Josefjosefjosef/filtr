@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-13T08:25:31.269020Z",
+  "ingestedAt": "2026-04-13T09:19:51.654678Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Znásilnil pacientku po anestezii, vinu popíral. Část kolegů ho hájila peticí",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/znasilnil-pacientku-po-anestezii-vinu-popiral-ustavni-soud-definitivne-rozhodl/",
+      "dt": "2026-04-13T08:26:19Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "anestezii",
+        "hájila",
+        "kolegů",
+        "pacientku",
+        "peticí",
+        "popíral",
+        "vinu",
+        "znásilnil",
+        "část"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,31 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Parkinsonova choroba přichází nenápadně. Podívejte se, jaké jsou první příznaky",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/parkinsonova-choroba-rozpoznejte-priznaky/",
-      "dt": "2026-04-11T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "choroba",
-        "jaké",
-        "nenápadně",
-        "parkinsonova",
-        "podívejte",
-        "první",
-        "přichází",
-        "příznaky"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 108832,
+      "bytes": 108795,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T08:26:19Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Znásilnil pacientku po anestezii, vinu popíral. Část kolegů ho hájila peticí",
+            "publishedAt": "2026-04-13T08:26:19Z"
+          },
           {
             "title": "Flash disky s „odměnami“ i fingované e-maily: Jak v Motole testují zaměstnance",
             "publishedAt": "2026-04-13T08:00:00Z"
@@ -359,10 +364,6 @@
           {
             "title": "Miliony žen v datech: Antikoncepce může zvýšit riziko rakoviny prsu. Rozdíly jsou ale významné",
             "publishedAt": "2026-04-12T05:00:00Z"
-          },
-          {
-            "title": "Manželství jako štít: Svobodní čelí téměř dvojnásobnému riziku rakoviny, zjistili vědci",
-            "publishedAt": "2026-04-11T14:30:00Z"
           }
         ]
       }
