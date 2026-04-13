@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-13T23:10:41.089134Z",
+  "updatedAt": "2026-04-13T23:30:26.146375Z",
   "feeds": {
     "https://www.aktualne.cz/rss/": {
       "topic": "aktualne",
@@ -388,15 +388,15 @@
     "https://www.kverulant.org/feed/": {
       "topic": "aktualne",
       "source": "Kverulant",
-      "accepted": 0,
-      "status": "BOZO",
-      "itemsParsed": 0,
-      "itemsKept": 0,
+      "accepted": 10,
+      "status": "OK",
+      "itemsParsed": 10,
+      "itemsKept": 10,
       "httpStatus": 200,
-      "contentType": "text/html",
+      "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.kverulant.org/feed/",
-      "bytes": 1931,
-      "reason": "not_xml_or_html",
+      "bytes": 102400,
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "bozo_but_used": false
