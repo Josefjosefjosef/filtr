@@ -10464,6 +10464,21 @@ header.iuTopbar .iuHamburger svg,
   font-weight: 600;
   margin-top: 2px;
 }
+#topbarWrap.iuTopbarPaint .iuBrandSubtitle__menu,
+#topbarWrap.iuTopbarPaint .iuBrandSubtitle__sep,
+#topbarWrap.iuTopbarPaint .iuBrandSubtitle__silver,
+#topbarWrap.iuTopbarPaint .iuBrandSubtitle__tail{
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  text-decoration: inherit;
+  vertical-align: baseline;
+}
 @media (max-width: 700px){
   .iuBrandSubtitle{ display: none; }
 }
@@ -15998,26 +16013,57 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     display: none !important;
   }
 
-  /* P0 desktop-only: prémiový text gradient na brandu — stejná velikost/pozice, čitelný fallback */
-  header#topbarWrap.topbar-new.iuTopbar .iuBrand{
+  /* P0 desktop-only: prémiový brand gradient + meta řádek — pouze paint pod .iuTopbarPaint, čitelný fallback, bez layout dopadu */
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand{
     color: #0b1f33 !important;
   }
-  header#topbarWrap.topbar-new.iuTopbar .iuBrand:hover{
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover{
     color: #0a2540 !important;
   }
   @supports ((-webkit-background-clip: text) or (background-clip: text)){
-    header#topbarWrap.topbar-new.iuTopbar .iuBrand{
-      background-image: linear-gradient(118deg, #0b1f33 0%, #1e4a8c 32%, #2563eb 52%, #38bdf8 78%, #0ea5e9 100%);
+    header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand{
+      background-image: linear-gradient(96deg, #1e40af 0%, #2563EB 14%, #0e7490 32%, #06B6D4 46%, #0f766e 58%, #22C55E 72%, #ca8a04 88%, #F59E0B 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent !important;
       -webkit-text-fill-color: transparent;
     }
-    header#topbarWrap.topbar-new.iuTopbar .iuBrand:hover{
-      background-image: linear-gradient(118deg, #0f2744 0%, #1d4ed8 38%, #3b82f6 55%, #7dd3fc 82%, #38bdf8 100%);
+    header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover{
+      background-image: linear-gradient(96deg, #1d4ed8 0%, #2563EB 12%, #0891b2 30%, #22d3ee 44%, #14b8a6 56%, #4ade80 70%, #eab308 86%, #fbbf24 100%);
       color: transparent !important;
       -webkit-text-fill-color: transparent;
-      filter: saturate(1.06);
+    }
+  }
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__menu{
+    color: #5b6e86 !important;
+    -webkit-text-fill-color: currentColor;
+  }
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__sep{
+    color: rgba(11, 27, 43, 0.4) !important;
+    -webkit-text-fill-color: currentColor;
+  }
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__silver{
+    color: #4a5f72 !important;
+    -webkit-text-fill-color: currentColor;
+  }
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__tail{
+    color: #2d3748 !important;
+    -webkit-text-fill-color: currentColor;
+  }
+  @supports ((-webkit-background-clip: text) or (background-clip: text)){
+    header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__menu{
+      background-image: linear-gradient(92deg, #4b5e75 0%, #5a7aa3 42%, #4d647c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent;
+    }
+    header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__silver{
+      background-image: linear-gradient(118deg, #64748b 0%, #94a3b8 28%, #e2e8f0 48%, #b45309 72%, #F59E0B 92%, #fcd34d 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent;
     }
   }
 
