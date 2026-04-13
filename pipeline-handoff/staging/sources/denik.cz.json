@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-13T02:09:43.028896Z",
+  "ingestedAt": "2026-04-13T02:24:34.268536Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Snížení firemní daně se ANO už nehodí do krámu. Couvá z ekonomického slibu",
+      "url": "https://www.denik.cz/ekonomika/snizeni-dane-rychlejsi-odpisy-pro-firmy-ekonomika-vlada.html",
+      "dt": "2026-04-13T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ano",
+        "couvá",
+        "daně",
+        "ekonomického",
+        "firemní",
+        "krámu",
+        "nehodí",
+        "slibu",
+        "snížení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "(Ne)snižování firemní daně? Havlíček chtěl být ministrem odpisů, řekl ekonom",
+      "url": "https://www.denik.cz/ekonomika/ne-snizovani-firemni-dane-havlicek-chtel-byt-ministrem-odpisu-rekl-ekonom-202704.html",
+      "dt": "2026-04-13T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "být",
+        "chtěl",
+        "daně",
+        "ekonom",
+        "firemní",
+        "havlíček",
+        "ministrem",
+        "odpisů",
+        "snižování",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -597,59 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Školáci uklízeli Český ráj: Příroda potěšila nečekaně dobrým výsledkem",
-      "url": "https://www.denik.cz/ctenar-reporter/skolaci-uklizeli-cesky-raj-priroda-potesila-necekane-dobrym-vysledkem-20260410.html",
-      "dt": "2026-04-12T03:58:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dobrým",
-        "nečekaně",
-        "potěšila",
-        "příroda",
-        "ráj",
-        "uklízeli",
-        "výsledkem",
-        "český",
-        "školáci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Jak ušetřit při palivové krizi: Lehká noha na plynu, pryč se zbytečnostmi z auta",
-      "url": "https://www.denik.cz/doprava/cena-ropy-benzinu-nafty-cesko-jak-usetrit-penize-pri-cestovani-autem-vlakem.html",
-      "dt": "2026-04-12T03:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "auta",
-        "krizi",
-        "lehká",
-        "noha",
-        "palivové",
-        "plynu",
-        "pryč",
-        "při",
-        "ušetřit",
-        "zbytečnostmi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30978,
+      "bytes": 31079,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,11 +697,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-12T20:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 1,
+          "finance": 3,
+          "zpravy": 21,
           "zdravi": 1
         },
         "drop_counts": {
@@ -714,6 +714,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Snížení firemní daně se ANO už nehodí do krámu. Couvá z ekonomického slibu",
+            "publishedAt": "2026-04-13T02:00:00Z"
+          },
+          {
+            "title": "(Ne)snižování firemní daně? Havlíček chtěl být ministrem odpisů, řekl ekonom",
+            "publishedAt": "2026-04-13T02:00:00Z"
+          },
           {
             "title": "Maďarsko si vybralo Evropu. Von der Leyenová a Macron oslavují pád Orbána",
             "publishedAt": "2026-04-12T20:15:00Z"
@@ -737,14 +745,6 @@
           {
             "title": "Jak dopadnou maďarské volby? Vítězstvím Tiszy, říká poslední předvolební průzkum",
             "publishedAt": "2026-04-12T17:32:00Z"
-          },
-          {
-            "title": "Nejen dražší paliva. Kvůli válce se zřejmě zvedne i cena oblíbených sladkostí",
-            "publishedAt": "2026-04-12T17:12:00Z"
-          },
-          {
-            "title": "Orbán je jako Havel, řekl Turek. Hranatá nula, vzkázala mu Nerudová",
-            "publishedAt": "2026-04-12T15:08:00Z"
           }
         ]
       }
