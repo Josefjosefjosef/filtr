@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-13T15:54:21.815068Z",
+  "ingestedAt": "2026-04-13T16:10:12.562725Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Operace nádorů slinivky, jícnu a jater se soustředí do několika center",
+      "url": "https://www.zdravezpravy.cz/2026/04/13/operace-nadoru-slinivky-jicnu-a-jater-se-soustredi-do-nekolika-center/",
+      "dt": "2026-04-13T14:55:08Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "center",
+        "jater",
+        "jícnu",
+        "nádorů",
+        "několika",
+        "operace",
+        "slinivky",
+        "soustředí"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -472,32 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Exšéf VFN Feltl nově vede Národní onkologické centrum v Motole",
-      "url": "https://www.zdravezpravy.cz/2026/04/02/exsef-vfn-feltl-nove-vede-narodni-onkologicke-centrum-v-motole/",
-      "dt": "2026-04-02T09:42:02Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "centrum",
-        "exšéf",
-        "feltl",
-        "motole",
-        "nově",
-        "národní",
-        "onkologické",
-        "vede",
-        "vfn"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -508,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 225831,
+      "bytes": 226561,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -545,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T11:30:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T14:55:08Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -561,6 +560,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Operace nádorů slinivky, jícnu a jater se soustředí do několika center",
+            "publishedAt": "2026-04-13T14:55:08Z"
+          },
           {
             "title": "Zubní kaz u dětí podporují slazené i kyselé nápoje narušující pH v ústech",
             "publishedAt": "2026-04-13T11:30:09Z"
@@ -588,10 +591,6 @@
           {
             "title": "Operace žaludku vede ke zhubnutí. Lidé po ní totiž méně jedí",
             "publishedAt": "2026-04-09T14:52:47Z"
-          },
-          {
-            "title": "Žena, která dodala Perrymu smrtelný ketamin, dostala 15 let",
-            "publishedAt": "2026-04-09T13:29:58Z"
           }
         ]
       }

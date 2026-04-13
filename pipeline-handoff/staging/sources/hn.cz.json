@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-13T15:54:21.815068Z",
+  "ingestedAt": "2026-04-13T16:10:12.562725Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Pay gap i 40 procent a přeplácení nových lidí. První audity ukázaly, jak jsou na tom firmy s (ne)rovnými odměnami",
+      "url": "https://domaci.hn.cz/c1-67865760-pay-gap-i-40-procent-a-preplaceni-novych-lidi-prvni-audity-ukazaly-jak-jsou-na-tom-firmy-s-ne-rovnymi-odmenami",
+      "dt": "2026-04-13T15:51:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "audity",
+        "firmy",
+        "gap",
+        "lidí",
+        "nových",
+        "odměnami",
+        "pay",
+        "procent",
+        "první",
+        "přeplácení",
+        "rovnými",
+        "tom",
+        "ukázaly"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1167,38 +1197,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Herní tip: Starfield vás dostane na měsíc už i na PlayStation 5, vesmírná opera Microsoftu má ale hned dva nové soky",
-      "url": "https://tech.hn.cz/c1-67865490-herni-tip-starfield-vas-dostane-na-mesic-uz-i-na-playstation-5-vesmirna-opera-microsoftu-ma-ale-hned-dva-nove-soky",
-      "dt": "2026-04-11T13:28:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "dostane",
-        "dva",
-        "herní",
-        "hned",
-        "microsoftu",
-        "měsíc",
-        "nové",
-        "opera",
-        "playstation",
-        "soky",
-        "starfield",
-        "tip",
-        "vesmírná",
-        "vás"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1209,7 +1207,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185685,
+      "bytes": 185692,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1246,11 +1244,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T14:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T15:51:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
-          "zpravy": 3
+          "finance": 38,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1262,6 +1260,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pay gap i 40 procent a přeplácení nových lidí. První audity ukázaly, jak jsou na tom firmy s (ne)rovnými odměnami",
+            "publishedAt": "2026-04-13T15:51:00Z"
+          },
           {
             "title": "Děti v Guatemale pijí kávu už od tří let. Jak se země sopek stala výrazným hráčem na trhu a proč šla cena kávových zrn nahoru?",
             "publishedAt": "2026-04-13T14:58:00Z"
@@ -1289,10 +1291,6 @@
           {
             "title": "Kdo pojede na summit NATO? Určitě vládní delegace, účast prezidenta Pavla není logická, řekl Babiš",
             "publishedAt": "2026-04-13T13:21:00Z"
-          },
-          {
-            "title": "Pokaždé pípám na letišti, prý jsem podvodník a hledá mě Interpol. Jak českému podnikateli ukradli identitu",
-            "publishedAt": "2026-04-13T13:18:00Z"
           }
         ]
       }

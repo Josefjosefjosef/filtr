@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T15:54:21.815068Z",
+  "ingestedAt": "2026-04-13T16:10:12.562725Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Roste tlak na využití dřeva ve stavbách. Vláda chce i volné ruce pro majitele lesů",
+      "url": "https://ekonomickydenik.cz/drevo-staveby-majitele-lesu/",
+      "dt": "2026-04-13T16:01:57Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chce",
+        "dřeva",
+        "lesů",
+        "majitele",
+        "roste",
+        "ruce",
+        "stavbách",
+        "tlak",
+        "vláda",
+        "volné",
+        "využití"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -748,32 +776,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Síť falešných účtů se snaží ovlivnit volby v Maďarsku. Už to zkoušela jinde",
-      "url": "https://ekonomickydenik.cz/sit-falesnych-uctu-volby-madarsko/",
-      "dt": "2026-04-11T12:15:24Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "falešných",
-        "jinde",
-        "maďarsku",
-        "ovlivnit",
-        "snaží",
-        "síť",
-        "volby",
-        "zkoušela",
-        "účtů"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72578,
+      "bytes": 73109,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T15:02:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T16:01:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -838,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Roste tlak na využití dřeva ve stavbách. Vláda chce i volné ruce pro majitele lesů",
+            "publishedAt": "2026-04-13T16:01:57Z"
+          },
           {
             "title": "Přijde Kreml o dalšího spojence? Sofie spoléhá v boji proti Putinovi na Brusel",
             "publishedAt": "2026-04-13T15:02:18Z"
@@ -865,10 +871,6 @@
           {
             "title": "Konec „temných chodeb Kremlu“? Nový maďarský vůdce slibuje revoluci, má to ale háček",
             "publishedAt": "2026-04-13T11:32:29Z"
-          },
-          {
-            "title": "Škodovka šlape na plyn, rekordní zájem je o elektroauta. V Číně se nedařilo",
-            "publishedAt": "2026-04-13T11:19:00Z"
           }
         ]
       }

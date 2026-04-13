@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-13T15:54:21.815068Z",
+  "ingestedAt": "2026-04-13T16:10:12.562725Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Alza má nové powerbanky. Ta největší láká na kapacitu 40 000 mAh a výkon 100 W",
+      "url": "https://www.zive.cz/clanky/alza-ma-nove-powerbanky-ta-nejvetsi-laka-na-kapacitu-40-000-mah-a-vykon-100-w/sc-3-a-240660/default.aspx",
+      "dt": "2026-04-13T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "000",
+        "100",
+        "alza",
+        "kapacitu",
+        "láká",
+        "mah",
+        "největší",
+        "nové",
+        "powerbanky",
+        "výkon"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -943,30 +970,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Škoda vyvinula zvonek, kterým cyklisté přelstí sluchátka s ANC",
-      "url": "https://avmania.zive.cz/skoda-vyvinula-zvonek-kterym-cykliste-prelsti-sluchatka-s-anc",
-      "dt": "2026-04-09T08:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "anc",
-        "cyklisté",
-        "přelstí",
-        "sluchátka",
-        "vyvinula",
-        "zvonek",
-        "škoda"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -977,7 +980,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22837,
+      "bytes": 23072,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1014,7 +1017,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-13T12:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1029,6 +1032,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Alza má nové powerbanky. Ta největší láká na kapacitu 40 000 mAh a výkon 100 W",
+            "publishedAt": "2026-04-13T15:45:00Z"
+          },
           {
             "title": "Recenze filmu Krvavá nevěsta. Satira mocných, která balancuje mezi chaosem a zábavou",
             "publishedAt": "2026-04-13T12:45:00Z"
@@ -1056,10 +1063,6 @@
           {
             "title": "Hororový captcha test v katastru nemovitostí na chvíli podlehl. Skript ho vyřešil sám jedním kliknutím",
             "publishedAt": "2026-04-12T10:39:00Z"
-          },
-          {
-            "title": "Apple žádá soud o citlivá data Samsungu. Chce dokázat, že nekomplikuje uživatelům přechod ke konkurenci",
-            "publishedAt": "2026-04-13T09:15:00Z"
           }
         ]
       }

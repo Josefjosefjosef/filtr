@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-13T15:54:21.815068Z",
+  "ingestedAt": "2026-04-13T16:10:12.562725Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Magyar chce pozastavit zprávy veřejnoprávních médií, dokud nebudou nestranné",
+      "url": "https://www.denik.cz/staty-eu/magyar-chce-pozastavit-zpravy-verejnopravnich-medii-dokud-nebudou-nestranne.html",
+      "dt": "2026-04-13T15:34:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chce",
+        "dokud",
+        "magyar",
+        "médií",
+        "nebudou",
+        "nestranné",
+        "pozastavit",
+        "veřejnoprávních",
+        "zprávy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -634,33 +660,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pilot slavil a vyděsil tím sousedy. S obřím boeingem prolétl nízko nad střechami",
-      "url": "https://www.denik.cz/staty-mimo-eu/pilot-slavil-a-vydesil-tim-sousedy-s-obrim-boeingem-letel-nad-domy-icelandair.html",
-      "dt": "2026-04-13T08:42:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "boeingem",
-        "nízko",
-        "obřím",
-        "pilot",
-        "prolétl",
-        "slavil",
-        "sousedy",
-        "střechami",
-        "tím",
-        "vyděsil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -671,7 +670,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30320,
+      "bytes": 30294,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -708,7 +707,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-13T15:09:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T15:34:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -724,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Magyar chce pozastavit zprávy veřejnoprávních médií, dokud nebudou nestranné",
+            "publishedAt": "2026-04-13T15:34:00Z"
+          },
           {
             "title": "Letadlo Smartwings při odletu z Madeiry škrtlo o ranvej a pokračovalo v cestě",
             "publishedAt": "2026-04-13T15:09:00Z"
@@ -751,10 +754,6 @@
           {
             "title": "Babiš: Co by prezident na summitu NATO dělal? Určitě tam pojede vládní delegace",
             "publishedAt": "2026-04-13T12:57:00Z"
-          },
-          {
-            "title": "Cizinec v pražském bytě ukryl kokain, peníze i zbraně. Drogy objevil elektrikář",
-            "publishedAt": "2026-04-13T12:56:00Z"
           }
         ]
       }
