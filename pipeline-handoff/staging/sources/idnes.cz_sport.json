@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T13:30:21.366563Z",
+  "ingestedAt": "2026-04-13T13:53:10.530328Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Co čeká Češky v WNBA: úspěšný klub, boj o místo a doba obřího růstu příjmů",
+      "url": "https://www.idnes.cz/sport/basket/emma-cechova-eliska-hamzova.A260410_130340_sport-basket_ikuc",
+      "dt": "2026-04-13T13:30:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "boj",
+        "doba",
+        "klub",
+        "místo",
+        "obřího",
+        "příjmů",
+        "růstu",
+        "wnba",
+        "úspěšný",
+        "čeká",
+        "češky"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -763,32 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "McIlroy obhájil titul na Masters. Jako teprve čtvrtý golfista v historii",
-      "url": "https://www.idnes.cz/sport/ostatni/golf-rory-mcilroy-ze-severniho-ctvrty-hrac-v-historii-obhajoba-masters.A260413_074524_sporty_ten",
-      "dt": "2026-04-13T05:46:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "golfista",
-        "historii",
-        "jako",
-        "masters",
-        "mcilroy",
-        "obhájil",
-        "teprve",
-        "titul",
-        "čtvrtý"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47521,
+      "bytes": 47651,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T13:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T13:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -852,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co čeká Češky v WNBA: úspěšný klub, boj o místo a doba obřího růstu příjmů",
+            "publishedAt": "2026-04-13T13:30:00Z"
+          },
           {
             "title": "Rusové a Bělorusové budou plavat pod svou vlajkou, může jim hrát i hymna",
             "publishedAt": "2026-04-13T13:14:00Z"
@@ -879,10 +885,6 @@
           {
             "title": "Hapal: Vždy jsem byl odvolávaný a dnes jsem jedním z těch, kdo trenéra odvolal",
             "publishedAt": "2026-04-13T11:58:00Z"
-          },
-          {
-            "title": "Tajná oslava pro Maděrovou. Rodina olympioničky ji chystala dva měsíce",
-            "publishedAt": "2026-04-13T11:40:00Z"
           }
         ]
       }

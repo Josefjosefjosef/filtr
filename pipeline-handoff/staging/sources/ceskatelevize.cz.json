@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-13T13:30:21.366563Z",
+  "ingestedAt": "2026-04-13T13:53:10.530328Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ministerstvo zakázalo armádě odvysílat rozhovor s Pavlem, píše Aktuálně.cz",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/ministerstvo-zakazalo-armade-odvysilat-rozhovor-s-pavlem-pise-aktualnecz-372326",
+      "dt": "2026-04-13T13:25:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "aktuálně",
+        "armádě",
+        "ministerstvo",
+        "odvysílat",
+        "pavlem",
+        "píše",
+        "rozhovor",
+        "zakázalo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -725,30 +750,6 @@
         "stavebního",
         "výhrady",
         "zákona"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Končí Orbánova éra. Tisza se těší z „bezprecedentního mandátu“",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-madarsku-zacalo-scitani-hlasu-372297",
-      "dt": "2026-04-12T17:00:09Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "bezprecedentního",
-        "končí",
-        "mandátu",
-        "orbánova",
-        "tisza",
-        "těší",
-        "éra"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1591,11 +1592,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T12:48:48Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T13:25:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 4,
           "zpravy": 25,
+          "other": 4,
           "finance": 1
         },
         "drop_counts": {
@@ -1608,6 +1609,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ministerstvo zakázalo armádě odvysílat rozhovor s Pavlem, píše Aktuálně.cz",
+            "publishedAt": "2026-04-13T13:25:00Z"
+          },
           {
             "title": "Čína se potýká s virem, který útočí na zrak. Na lidi se přenáší od mořských tvorů",
             "publishedAt": "2026-04-13T12:48:48Z"
@@ -1635,10 +1640,6 @@
           {
             "title": "Lidé umírali i během příměří, tvrdí ukrajinský představitel",
             "publishedAt": "2026-04-13T10:55:45Z"
-          },
-          {
-            "title": "Praha chce od státu pořídit zámek Veleslavín i Národní dům na Vinohradech",
-            "publishedAt": "2026-04-13T10:55:42Z"
           }
         ]
       }
@@ -1744,7 +1745,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76834,
+      "bytes": 76836,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

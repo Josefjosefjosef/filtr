@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-13T13:30:21.366563Z",
+  "ingestedAt": "2026-04-13T13:53:10.530328Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Je to oficiálně venku. Ve čtvrtek uvidíme Metro 2039 - INDIAN",
+      "url": "https://indian-tv.cz/clanek/je-to-oficialne-venku-ve-ctvrtek-uvidime-metro-2039-n5kedi",
+      "dt": "2026-04-13T13:37:06Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "2039",
+        "indian",
+        "metro",
+        "oficiálně",
+        "uvidíme",
+        "venku",
+        "čtvrtek"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1049,35 +1073,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Samson vstupuje na trh. Tvůrci varují před bugy, gameplay záběry jsou rozpačité a recenze špatné - INDIAN",
-      "url": "https://indian-tv.cz/clanek/samson-vstupuje-na-trh-tvurci-varuji-pred-bugy-p8487w",
-      "dt": "2026-04-08T15:38:35Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "bugy",
-        "gameplay",
-        "indian",
-        "recenze",
-        "rozpačité",
-        "samson",
-        "trh",
-        "tvůrci",
-        "varují",
-        "vstupuje",
-        "záběry",
-        "špatné"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1088,7 +1083,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 195946,
+      "bytes": 194400,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1125,7 +1120,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T13:37:06Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1140,6 +1135,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Je to oficiálně venku. Ve čtvrtek uvidíme Metro 2039 - INDIAN",
+            "publishedAt": "2026-04-13T13:37:06Z"
+          },
           {
             "title": "DiRT Rally 2.0 přijde o klíčovou online funkci - INDIAN",
             "publishedAt": "2026-04-13T13:00:00Z"
@@ -1167,10 +1166,6 @@
           {
             "title": "Tvůrci chtějí Samson opravit a získat zpět důvěru hráčů - INDIAN",
             "publishedAt": "2026-04-13T06:41:46Z"
-          },
-          {
-            "title": "Tlapková patrola v nové hře vyráží na dinosauří ostrov - INDIAN",
-            "publishedAt": "2026-04-13T06:38:09Z"
           }
         ]
       }
