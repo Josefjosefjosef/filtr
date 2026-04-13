@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-13T13:53:10.530328Z",
+  "ingestedAt": "2026-04-13T14:10:04.083629Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Justin Bieber na koncertě vyvracel, že trpí duševní chorobou",
+      "url": "https://profitonline.cz/justin-bieber-na-koncerte-vyvracel-ze-trpi-dusevni-chorobou/",
+      "dt": "2026-04-13T14:00:43Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bieber",
+        "chorobou",
+        "duševní",
+        "justin",
+        "koncertě",
+        "trpí",
+        "vyvracel"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -257,29 +281,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hypotéky zdražily nejvíce za poslední čtyři roky",
-      "url": "https://profitonline.cz/hypoteky-zdrazily-nejvice-za-posledni-ctyri-roky/",
-      "dt": "2026-04-12T06:00:06Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "hypotéky",
-        "nejvíce",
-        "poslední",
-        "roky",
-        "zdražily",
-        "čtyři"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -290,7 +291,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18608,
+      "bytes": 18631,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -327,7 +328,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-13T10:00:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T14:00:43Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -343,6 +344,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Justin Bieber na koncertě vyvracel, že trpí duševní chorobou",
+            "publishedAt": "2026-04-13T14:00:43Z"
+          },
           {
             "title": "Jak Trump stvořil novou velmoc, která cvičí s celým světem",
             "publishedAt": "2026-04-13T10:00:18Z"
@@ -370,10 +375,6 @@
           {
             "title": "Trhy věří v Orbánovu porážku",
             "publishedAt": "2026-04-12T16:00:41Z"
-          },
-          {
-            "title": "Ceny potravin porostou, budou totiž chybět hnojiva",
-            "publishedAt": "2026-04-12T14:00:45Z"
           }
         ]
       }

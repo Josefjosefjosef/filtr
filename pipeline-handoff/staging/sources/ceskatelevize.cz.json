@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-13T13:53:10.530328Z",
+  "ingestedAt": "2026-04-13T14:10:04.083629Z",
   "items": [
     {
       "section": "aktualne",
@@ -761,6 +761,29 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Plavání vrací ruské a běloruské sportovce na scénu",
+      "url": "https://sport.ceskatelevize.cz/clanek/plavani/plavani-vraci-ruske-a-beloruske-sportovce-na-scenu-156273",
+      "dt": "2026-04-13T14:05:26Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "běloruské",
+        "plavání",
+        "ruské",
+        "scénu",
+        "sportovce",
+        "vrací"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Nitra po velkém obratu vyhrála v Přerově, Vysočina zůstává bez porážky",
       "url": "https://sport.ceskatelevize.cz/clanek/americky-fotbal/nitra-po-velkem-obratu-vyhrala-v-prerove-vysocina-zustava-bez-porazky-156272",
       "dt": "2026-04-13T12:43:42Z",
@@ -1496,32 +1519,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "McIlroy přišel o náskok. Před posledním kolem Masters vede společně s Youngem",
-      "url": "https://sport.ceskatelevize.cz/clanek/golf/mcilroy-prisel-o-naskok-pred-poslednim-kolem-masters-vede-spolecne-s-youngem-156241",
-      "dt": "2026-04-12T06:57:34Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "kolem",
-        "masters",
-        "mcilroy",
-        "náskok",
-        "posledním",
-        "přišel",
-        "společně",
-        "vede",
-        "youngem"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1651,7 +1648,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40157,
+      "bytes": 40071,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1688,7 +1685,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T12:43:42Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T14:05:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1703,6 +1700,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Plavání vrací ruské a běloruské sportovce na scénu",
+            "publishedAt": "2026-04-13T14:05:26Z"
+          },
           {
             "title": "Nitra po velkém obratu vyhrála v Přerově, Vysočina zůstává bez porážky",
             "publishedAt": "2026-04-13T12:43:42Z"
@@ -1730,10 +1731,6 @@
           {
             "title": "Hyský po remíze: Je to moment, od kterého se dá odrazit, čerpat energii a poučit se",
             "publishedAt": "2026-04-13T06:30:00Z"
-          },
-          {
-            "title": "Portland zakončil základní část výhrou. Krejčí si po měsíci zahrál a zapsal dva body",
-            "publishedAt": "2026-04-13T06:01:58Z"
           }
         ]
       }
@@ -1745,7 +1742,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76836,
+      "bytes": 76869,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
