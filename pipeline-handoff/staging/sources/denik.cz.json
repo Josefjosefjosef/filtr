@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-13T02:39:34.040426Z",
+  "ingestedAt": "2026-04-13T02:55:24.266943Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "V dětství měl nádor na mozku, žije díky včasnému odhalení. Na následky si zvyká",
+      "url": "https://www.denik.cz/zdravotnictvi/zdravi-tomas-rakovina-mozku-onkologicke-onemocneni-vcasna-diagnostika.html",
+      "dt": "2026-04-13T02:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "díky",
+        "dětství",
+        "mozku",
+        "měl",
+        "nádor",
+        "následky",
+        "odhalení",
+        "včasnému",
+        "zvyká",
+        "žije"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Martina Šmuková z Pink Bubble: Nemocní si přejí počítač nebo třeba pejska",
+      "url": "https://www.denik.cz/zdravotnictvi/martina-smukova-pink-bubble-nemocni-si-preji-pocitac-nebo-treba-pejska.html",
+      "dt": "2026-04-13T02:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bubble",
+        "martina",
+        "nebo",
+        "nemocní",
+        "pejska",
+        "pink",
+        "počítač",
+        "přejí",
+        "třeba",
+        "šmuková"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -599,55 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Tragédie na Haiti. Tlačenice v historické pevnosti má nejméně 30 obětí",
-      "url": "https://www.denik.cz/ze_sveta/tlacenice-mrtvi-citadelle-laferriere-na-severu-haiti.html",
-      "dt": "2026-04-12T06:14:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "haiti",
-        "historické",
-        "nejméně",
-        "obětí",
-        "pevnosti",
-        "tlačenice",
-        "tragédie"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Můj život byl jak na eskalátoru, říká pohádková Arabela Jana Nagyová",
-      "url": "https://www.denik.cz/film-a-televize/herecka-jana-nagyova-film-sampion-princezna-arabela.html",
-      "dt": "2026-04-12T06:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "arabela",
-        "eskalátoru",
-        "jana",
-        "můj",
-        "nagyová",
-        "pohádková",
-        "říká",
-        "život"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30724,
+      "bytes": 31106,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,12 +700,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-13T02:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T02:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 21,
-          "finance": 3,
-          "zdravi": 1
+          "zdravi": 3,
+          "zpravy": 19,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -712,6 +717,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V dětství měl nádor na mozku, žije díky včasnému odhalení. Na následky si zvyká",
+            "publishedAt": "2026-04-13T02:30:00Z"
+          },
+          {
+            "title": "Martina Šmuková z Pink Bubble: Nemocní si přejí počítač nebo třeba pejska",
+            "publishedAt": "2026-04-13T02:30:00Z"
+          },
           {
             "title": "Zahájení hradní sezóny ve Štramberku, Trúba v obležení rytířů",
             "publishedAt": "2026-04-13T02:20:00Z"
@@ -735,14 +748,6 @@
           {
             "title": "Pavel k volbám v Maďarsku: Rekordní účast je vítězstvím demokracie",
             "publishedAt": "2026-04-12T19:48:00Z"
-          },
-          {
-            "title": "Maďarské volby: Tisza kráčí pro ústavní většinu, Orbán pogratuloval Magyarovi",
-            "publishedAt": "2026-04-12T18:45:00Z"
-          },
-          {
-            "title": "Maďarsko přepsalo dějiny. Rekordní účast dá vítězi silný demokratický mandát",
-            "publishedAt": "2026-04-12T18:05:00Z"
           }
         ]
       }
