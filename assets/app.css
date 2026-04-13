@@ -16039,15 +16039,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     -webkit-text-fill-color: currentColor;
   }
   header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__sep{
-    color: rgba(11, 27, 43, 0.4) !important;
+    color: #5f7389 !important;
     -webkit-text-fill-color: currentColor;
   }
   header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__silver{
-    color: #4a5f72 !important;
+    color: #5e7594 !important;
     -webkit-text-fill-color: currentColor;
   }
   header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__tail{
-    color: #2d3748 !important;
+    color: #5b6e86 !important;
     -webkit-text-fill-color: currentColor;
   }
   @supports ((-webkit-background-clip: text) or (background-clip: text)){
@@ -16058,8 +16058,22 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
       color: transparent !important;
       -webkit-text-fill-color: transparent;
     }
+    header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__sep{
+      background-image: linear-gradient(92deg, #4b5e75 0%, #5a7aa3 42%, #4d647c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent;
+    }
     header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__silver{
-      background-image: linear-gradient(118deg, #64748b 0%, #94a3b8 28%, #e2e8f0 48%, #b45309 72%, #F59E0B 92%, #fcd34d 100%);
+      background-image: linear-gradient(92deg, #4d6379 0%, #678fbf 42%, #556b86 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent;
+    }
+    header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__tail{
+      background-image: linear-gradient(92deg, #4b5e75 0%, #5a7aa3 42%, #4d647c 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent !important;
