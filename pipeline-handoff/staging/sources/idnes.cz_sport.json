@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T04:04:38.670069Z",
+  "ingestedAt": "2026-04-13T04:22:41.345750Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nymburk, Slavia a jiné sňatky z rozumu. Turkům přinesl tituly, PSG brzký krach",
+      "url": "https://www.idnes.cz/sport/basket/slavia-nymburk-spojeni-maxa-nbl-nastrahy.A260409_134159_sport-basket_czo",
+      "dt": "2026-04-13T04:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "brzký",
+        "jiné",
+        "krach",
+        "nymburk",
+        "psg",
+        "přinesl",
+        "rozumu",
+        "slavia",
+        "sňatky",
+        "tituly",
+        "turkům"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -772,33 +800,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nečas se dotáhl na Pastrňáka a přiblížil se stému bodu, Nosek zazářil dvěma góly",
-      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-pastrnak-zacha-necas-nosek.A260411_210839_nhl_mkr",
-      "dt": "2026-04-12T08:34:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bodu",
-        "dotáhl",
-        "dvěma",
-        "góly",
-        "nečas",
-        "nosek",
-        "pastrňáka",
-        "přiblížil",
-        "stému",
-        "zazářil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -809,7 +810,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47601,
+      "bytes": 47795,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -846,7 +847,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T22:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -861,6 +862,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nymburk, Slavia a jiné sňatky z rozumu. Turkům přinesl tituly, PSG brzký krach",
+            "publishedAt": "2026-04-13T04:00:00Z"
+          },
           {
             "title": "Senzace pro český basketbal! Hamzová a Čechová zabojují o šanci hrát WNBA",
             "publishedAt": "2026-04-12T22:33:00Z"
@@ -888,10 +893,6 @@
           {
             "title": "Třetí jasná výhra v sérii, USK je opět ve finále. Do boje o titul míří také Žabiny",
             "publishedAt": "2026-04-12T18:44:00Z"
-          },
-          {
-            "title": "Priske o sparťanském objevu Sochůrkovi: On je voják! A Vojta? Gól už brzy dá",
-            "publishedAt": "2026-04-12T18:00:00Z"
           }
         ]
       }

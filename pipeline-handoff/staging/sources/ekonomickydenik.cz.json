@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T04:04:38.670069Z",
+  "ingestedAt": "2026-04-13T04:22:41.345750Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Havlíček: Nesázejme na dovoz levné elektřiny ze Švédska či Francie. Co je doma, to se počítá",
+      "url": "https://ekonomickydenik.cz/havlicek-dovoz-levne-elektriny/",
+      "dt": "2026-04-13T04:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "doma",
+        "dovoz",
+        "elektřiny",
+        "francie",
+        "havlíček",
+        "levné",
+        "nesázejme",
+        "počítá",
+        "švédska"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -736,32 +762,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Krkonošský národní park chce vést 13 lidí. Vybírá se z místních i ze správy",
-      "url": "https://ekonomickydenik.cz/krkonossky-narodni-park-13-lidi/",
-      "dt": "2026-04-10T11:02:23Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chce",
-        "krkonošský",
-        "lidí",
-        "místních",
-        "národní",
-        "park",
-        "správy",
-        "vybírá",
-        "vést"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -772,7 +772,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73830,
+      "bytes": 73536,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -809,10 +809,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T20:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T04:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 27,
+          "zdravi": 1,
+          "finance": 26,
           "zpravy": 2,
           "cestovani": 1
         },
@@ -826,6 +827,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Havlíček: Nesázejme na dovoz levné elektřiny ze Švédska či Francie. Co je doma, to se počítá",
+            "publishedAt": "2026-04-13T04:05:00Z"
+          },
           {
             "title": "Těžký večer v Průhonicích: Fiala po pádu Orbána zesměšňuje Babiše videem",
             "publishedAt": "2026-04-12T20:34:00Z"
@@ -853,10 +858,6 @@
           {
             "title": "Maďaři rozhodují o budoucnosti. Vyzyvatel Orbána chce užší spolupráci s Českem",
             "publishedAt": "2026-04-12T11:14:52Z"
-          },
-          {
-            "title": "Trump chce námořní blokádu. Mírové rozhovory s Íránem skončily",
-            "publishedAt": "2026-04-12T09:31:06Z"
           }
         ]
       }
