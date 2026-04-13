@@ -1,6 +1,6 @@
 {
   "date": "2026-04-02",
-  "generatedAt": "2026-04-13T05:09:57.185539Z",
+  "generatedAt": "2026-04-13T05:25:13.962885Z",
   "items": [
     {
       "topic": "aktualne",
@@ -122,7 +122,7 @@
       "feedId": "idnes_zdravi",
       "url": "https://www.idnes.cz/onadnes/zdravi/potraviny-hubnuti-dieta-jidelnicek.A260330_101422_zdravi_pet/foto",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.023699320742717068,
+      "displayScore": 0.023675508048614114,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -889,7 +889,7 @@
       "feedId": "idnes_zdravi",
       "url": "https://www.idnes.cz/onadnes/zdravi/nador-ve-streve-dnes-odhalime-v-pocatku-a-bez-kolonoskopie-vedkyne-vypravi.A260319_155227_zdravi_tvrk",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.02333070615044673,
+      "displayScore": 0.02330762809084708,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -1364,8 +1364,8 @@
       "feedId": "ces_cestujlevne",
       "url": "https://www.cestujlevne.com/akcni-letenky/do-italskeho-bari-z-bratislavy-na-jare",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.020926052599049578,
-      "iuReleaseAt": "2026-04-13T05:10:09.185539Z",
+      "displayScore": 0.020905423650017147,
+      "iuReleaseAt": "2026-04-13T05:25:25.962885Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "cestovani",
@@ -1497,7 +1497,7 @@
       "feedId": "idnes_krimi",
       "url": "https://www.idnes.cz/praha/zpravy/dejvice-zeleznicni-prejezd-vlak-srazil-cloveka.A260402_175819_praha-zpravy_ikul",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.023228340915396998,
+      "displayScore": 0.023205464825725518,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -1903,24 +1903,36 @@
       "url": "https://www.irozhlas.cz/zpravy-domov/firma-eldis-v-pardubicich-rozsiruje-sve-pusobeni-v-nove-hale-v-cerne-za-bory_2604021751_vsl"
     },
     {
-      "topic": "aktualne",
-      "section": "aktualne",
+      "topic": "cestovani",
+      "section": "cestovani",
       "contentType": "article",
       "title": "Průvodce Sevilla: co vidět, zažít a ochutnat + praktické tipy",
       "publishedAt": "2026-04-02T15:48:37Z",
       "sources": [
         {
-          "name": "Travel Bible",
+          "name": "TravelBible",
           "url": "https://travelbible.cz/sevilla-pruvodce/"
         }
       ],
       "primaryCategory": "cestovani",
       "topicHash": "a922624a9a1d69ec",
-      "feedType": "niche",
-      "feedId": "travelbible",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.75,
+      "sectionPrimary": "cestovani",
+      "sourceLabel": "TravelBible",
+      "feedId": "ces_travelbible",
       "url": "https://travelbible.cz/sevilla-pruvodce/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.11298806258487178
+      "displayScore": 0.017333280626142384,
+      "iuReleaseAt": "2026-04-13T05:25:26.962885Z",
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "cestovani",
+        "reason": "topic_field",
+        "confidence": 0.92,
+        "railSectionKey": "cestovani",
+        "guardFlags": []
+      }
     },
     {
       "topic": "finance",
@@ -2551,7 +2563,7 @@
       "feedId": "idnes_krimi",
       "url": "https://www.idnes.cz/praha/zpravy/mestska-policie-praha-zlodej-lekarna.A260402_154200_praha-zpravy_bur",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.0229939256442388,
+      "displayScore": 0.02297150872286276,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -2688,7 +2700,7 @@
       "feedId": "denik_cestovani",
       "url": "https://www.denik.cz/cestujeme-do-sveta/kde-zije-isobell-neobycejna-cesta-za-pravou-irskou-whiskey-a-ceskym-medem-202703.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.02297338265658869,
+      "displayScore": 0.02295100575280315,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "cestovani",
@@ -3051,7 +3063,7 @@
       "feedId": "idnes_krimi",
       "url": "https://www.idnes.cz/plzen/zpravy/plzen-vinice-sebevrazda-muz-zena-strelba.A260402_123333_plzen-zpravy_vb",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.022914890152022818,
+      "displayScore": 0.022892626995584586,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -3202,7 +3214,7 @@
       "feedId": "idnes_krimi",
       "url": "https://www.idnes.cz/brno/zpravy/ustavni-soud-stiznost-muz-srazeni-tramvaj-brno-odskodne.A260402_142340_brno-zpravy_krut",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.022877029485143516,
+      "displayScore": 0.022854839799991887,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -4965,7 +4977,7 @@
       "feedId": "ved_ct24_veda",
       "url": "https://ct24.ceskatelevize.cz/clanek/veda/orion-se-ctyrmi-astronauty-miri-k-mesici-371992",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.024813389759938888,
+      "displayScore": 0.024789657599993214,
       "iuReleaseAt": "2026-04-09T09:02:17.092198Z",
       "iuFeedClassification": {
         "v": 1,
@@ -5582,7 +5594,7 @@
       "feedId": "idnes_krimi",
       "url": "https://www.idnes.cz/jihlava/zpravy/zbourane-posedy-myslivci-policie-neznamy-pachatel-chotebor.A260402_090827_jihlava-zpravy_evs",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.022426680477809467,
+      "displayScore": 0.02240535542283612,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -6261,7 +6273,7 @@
       "feedId": "roklen",
       "url": "https://roklen24.cz/alpha-tydne-nervozita-vrcholi-dojde-ke-smiru/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.022249266366271128,
+      "displayScore": 0.022228277217491127,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -6595,7 +6607,7 @@
       "feedId": "ved_vtm",
       "url": "https://sportrevue.isport.blesk.cz/vsichni-zlinsti-rodaci-6-hokejistu-kteri-se-narodili-v-batove-meste-a-zahrali-si-v-nhl",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.02107818128909681,
+      "displayScore": 0.02105835199577003,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
