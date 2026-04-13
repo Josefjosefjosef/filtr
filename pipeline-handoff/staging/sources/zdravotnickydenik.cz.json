@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-13T07:49:20.779995Z",
+  "ingestedAt": "2026-04-13T08:05:27.070245Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Flash disky s „odměnami“ i fingované e-maily: Jak v Motole testují zaměstnance",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/jak-v-motole-testuji-zamestnance/",
+      "dt": "2026-04-13T08:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "disky",
+        "fingované",
+        "flash",
+        "maily",
+        "motole",
+        "odměnami",
+        "testují",
+        "zaměstnance"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Konec unikátu v centru Prahy? Magistrát chce převzít Nemocnici Na Františku",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/konec-unikatu-v-centru-prahy-magistrat-chce-prevzit-nemocnici-na-frantisku/",
-      "dt": "2026-04-10T16:42:55Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "centru",
-        "chce",
-        "františku",
-        "konec",
-        "magistrát",
-        "nemocnici",
-        "prahy",
-        "převzít",
-        "unikátu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 105186,
+      "bytes": 108832,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T08:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -333,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Flash disky s „odměnami“ i fingované e-maily: Jak v Motole testují zaměstnance",
+            "publishedAt": "2026-04-13T08:00:00Z"
+          },
           {
             "title": "Svědění k zešílení: Nemoc jater ničí spánek i psychiku. Nové léky mění pravidla hry",
             "publishedAt": "2026-04-13T07:00:00Z"
@@ -360,10 +363,6 @@
           {
             "title": "Manželství jako štít: Svobodní čelí téměř dvojnásobnému riziku rakoviny, zjistili vědci",
             "publishedAt": "2026-04-11T14:30:00Z"
-          },
-          {
-            "title": "Evropa přebírá otěže: Unie investuje miliardy do globálního zdraví, zatímco Washington vyklízí pole",
-            "publishedAt": "2026-04-11T10:00:00Z"
           }
         ]
       }

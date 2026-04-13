@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-13T07:49:20.779995Z",
+  "ingestedAt": "2026-04-13T08:05:27.070245Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kauza trafik pro exposlance skončila, soud odmítl stížnost bývalého náměstka Bočka",
+      "url": "https://www.idnes.cz/zpravy/domaci/ustavni-soud-trafiky-kauza-ods-bocek-necas.A260413_093915_domaci_aoc",
+      "dt": "2026-04-13T07:48:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bočka",
+        "bývalého",
+        "exposlance",
+        "kauza",
+        "náměstka",
+        "odmítl",
+        "skončila",
+        "soud",
+        "stížnost",
+        "trafik"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -742,33 +769,6 @@
         "trhala",
         "volilo",
         "účast"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zítra se můžeme probudit do úplně nové reality. Egyptolog Bárta o kolapsu civilizací",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/miroslav-barta-egyptologie-civilizace-zanik-leadership.A260401_165130_xman-rozhovory_bury",
-      "dt": "2026-04-12T18:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bárta",
-        "civilizací",
-        "egyptolog",
-        "kolapsu",
-        "můžeme",
-        "nové",
-        "probudit",
-        "reality",
-        "zítra",
-        "úplně"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1565,7 +1565,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49310,
+      "bytes": 48921,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1602,7 +1602,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T07:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T07:48:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1619,6 +1619,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kauza trafik pro exposlance skončila, soud odmítl stížnost bývalého náměstka Bočka",
+            "publishedAt": "2026-04-13T07:48:00Z"
+          },
           {
             "title": "Finální pokus. Deváťáci píšou podruhé přijímačky. Snad to dopadne lépe, doufají",
             "publishedAt": "2026-04-13T07:34:00Z"
@@ -1646,10 +1650,6 @@
           {
             "title": "RECENZE: Sněhobílý dort vězněnou dívku neobměkčil. Dejvičtí hrají o manipulaci",
             "publishedAt": "2026-04-13T07:12:00Z"
-          },
-          {
-            "title": "Úspěch školáků z Litoměřic. Podruhé jedou do USA na světové finále robotické soutěže",
-            "publishedAt": "2026-04-13T07:05:00Z"
           }
         ]
       }

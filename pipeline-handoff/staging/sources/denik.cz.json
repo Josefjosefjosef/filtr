@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-13T07:49:20.779995Z",
+  "ingestedAt": "2026-04-13T08:05:27.070245Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Opilý agresor pod vlivem drog v Chebu napadl seniora, vyhrožoval mu smrtí",
+      "url": "https://www.denik.cz/krimi/nocni-mura-v-chebu-za-bileho-dne-agresor-pod-vlivem-drog-napadl-seniora-20260413.html",
+      "dt": "2026-04-13T07:19:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "agresor",
+        "chebu",
+        "drog",
+        "napadl",
+        "opilý",
+        "seniora",
+        "smrtí",
+        "vlivem",
+        "vyhrožoval"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -108,7 +134,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Premiér Babiš pogratulovat Magyarovi k vítězství. Nesmíte zklamat, vzkázal mu",
+      "title": "Premiér Babiš pogratuloval Magyarovi k vítězství. Nesmíte zklamat, vzkázal mu",
       "url": "https://www.denik.cz/z_domova/andrej-babis-gratulace-peter-magyar-volby-v-madarsku.html",
       "dt": "2026-04-13T05:21:00Z",
       "media_raw": "Deník",
@@ -117,7 +143,7 @@
         "babiš",
         "magyarovi",
         "nesmíte",
-        "pogratulovat",
+        "pogratuloval",
         "premiér",
         "vzkázal",
         "vítězství",
@@ -622,33 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bitva o Maďarsko. V Praze odvolilo přes 700 lidí, účast doma láme rekordy",
-      "url": "https://www.denik.cz/staty-eu/volby-madarsko-viktor-orban-cesko-praha.html",
-      "dt": "2026-04-12T14:25:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "700",
-        "bitva",
-        "doma",
-        "lidí",
-        "láme",
-        "maďarsko",
-        "odvolilo",
-        "praze",
-        "rekordy",
-        "účast"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31247,
+      "bytes": 31238,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +695,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-13T06:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T07:19:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 19,
@@ -714,6 +713,10 @@
         },
         "sample_titles": [
           {
+            "title": "Opilý agresor pod vlivem drog v Chebu napadl seniora, vyhrožoval mu smrtí",
+            "publishedAt": "2026-04-13T07:19:00Z"
+          },
+          {
             "title": "Magyar a Tisza vymazali Orbána, mají ústavní většinu. Moc má ale stále Orbán",
             "publishedAt": "2026-04-13T06:43:00Z"
           },
@@ -730,7 +733,7 @@
             "publishedAt": "2026-04-13T05:53:00Z"
           },
           {
-            "title": "Premiér Babiš pogratulovat Magyarovi k vítězství. Nesmíte zklamat, vzkázal mu",
+            "title": "Premiér Babiš pogratuloval Magyarovi k vítězství. Nesmíte zklamat, vzkázal mu",
             "publishedAt": "2026-04-13T05:21:00Z"
           },
           {
@@ -740,10 +743,6 @@
           {
             "title": "Volby v Maďarsku: Tisza po sečtení drtivé většiny okrsků míří k ústavní většině",
             "publishedAt": "2026-04-13T04:59:00Z"
-          },
-          {
-            "title": "Lev XIV. je papežem díky mně. Nefandím mu, je příliš slabý, prohlásil Trump",
-            "publishedAt": "2026-04-13T04:54:00Z"
           }
         ]
       }

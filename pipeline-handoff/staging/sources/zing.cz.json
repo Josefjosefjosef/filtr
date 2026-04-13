@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-13T07:49:20.779995Z",
+  "ingestedAt": "2026-04-13T08:05:27.070245Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Nové Metro by mohlo být představeno ještě tento týden",
+      "url": "https://zing.cz/article/nove-metro-by-mohlo-byt-predstaveno-jeste-tento-tyden",
+      "dt": "2026-04-13T08:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "být",
+        "ještě",
+        "metro",
+        "nové",
+        "představeno",
+        "tento",
+        "týden"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -953,29 +977,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Další State of Play je údajně již za rohem",
-      "url": "https://zing.cz/article/dalsi-state-of-play-je-udajne-jiz-za-rohem",
-      "dt": "2026-04-09T08:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "další",
-        "již",
-        "play",
-        "rohem",
-        "state",
-        "údajně"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -986,7 +987,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125028,
+      "bytes": 124873,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1023,7 +1024,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1038,6 +1039,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nové Metro by mohlo být představeno ještě tento týden",
+            "publishedAt": "2026-04-13T08:00:00Z"
+          },
           {
             "title": "Fable údajně postihl interní odklad, Microsoft se chce vyhnout střetu s GTA VI",
             "publishedAt": "2026-04-13T06:00:00Z"
@@ -1065,10 +1070,6 @@
           {
             "title": "GTA 6: Úniky odhalují náplň vedlejších úkolů",
             "publishedAt": "2026-04-12T08:00:00Z"
-          },
-          {
-            "title": "Marvel Rivals obléká Deadpoola do kostýmu služebné",
-            "publishedAt": "2026-04-12T06:00:00Z"
           }
         ]
       }
