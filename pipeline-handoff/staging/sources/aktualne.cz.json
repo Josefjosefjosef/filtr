@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-13T03:44:59.992822Z",
+  "ingestedAt": "2026-04-13T04:04:38.670069Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Pivo jako hybatel dějin? Garrettova kniha vidí historii světa skrze orosený půllitr",
+      "url": "https://magazin.aktualne.cz/kultura/literatura/pivo-jako-hybatel-dejin-garrettova-kniha-vidi-historii-sveta-skrze-oroseny-pullitr/r~aaa29a08fb78f5e1d0cecf729b18a3b5/",
+      "dt": "2026-04-13T04:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dějin",
+        "garrettova",
+        "historii",
+        "hybatel",
+        "jako",
+        "kniha",
+        "orosený",
+        "pivo",
+        "půllitr",
+        "skrze",
+        "světa",
+        "vidí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -514,34 +543,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pogačar prohrál závěrečný spurt Paříž-Roubaix. Triumf slaví Wout van Aert",
-      "url": "https://sport.aktualne.cz/ostatni-sporty/pogacar-prohral-zaverecny-spurt-pariz-roubaix-triumf-slavi-wout-van-aert/r~aaa298d8c00083c42df88bcce7ededd6/",
-      "dt": "2026-04-12T14:52:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "aert",
-        "paříž",
-        "pogačar",
-        "prohrál",
-        "roubaix",
-        "slaví",
-        "spurt",
-        "triumf",
-        "van",
-        "wout",
-        "závěrečný"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -552,7 +553,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21473,
+      "bytes": 21539,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -589,12 +590,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T03:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T04:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "other": 1,
           "finance": 1,
           "zpravy": 11,
-          "sport": 8
+          "sport": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -606,6 +608,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pivo jako hybatel dějin? Garrettova kniha vidí historii světa skrze orosený půllitr",
+            "publishedAt": "2026-04-13T04:00:00Z"
+          },
           {
             "title": "LPG stále žije. Dacia Duster na propan-butan je nejlevnější verzí, za kolik jezdí?",
             "publishedAt": "2026-04-13T03:40:00Z"
@@ -633,10 +639,6 @@
           {
             "title": "Evropské srdce dnes v Maďarsku bije silněji, píše von der Leyenová. Gratuluje i Zelenskyj",
             "publishedAt": "2026-04-12T20:45:00Z"
-          },
-          {
-            "title": "U fotbalistů Olomouce skončil trenér Janotka, dočasně je povede Hapal",
-            "publishedAt": "2026-04-12T20:42:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-13T03:44:59.992822Z",
+  "ingestedAt": "2026-04-13T04:04:38.670069Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Otec zaplatil výživné dvakrát, úřady za to potrestaly matku",
+      "url": "https://profitonline.cz/otec-zaplatil-vyzivne-dvakrat-urady-za-to-potrestaly-matku/",
+      "dt": "2026-04-13T04:00:34Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dvakrát",
+        "matku",
+        "otec",
+        "potrestaly",
+        "výživné",
+        "zaplatil",
+        "úřady"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -255,30 +279,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Čerpací stanice, které v pátek zavřely, nejpozději v neděli otevřou",
-      "url": "https://profitonline.cz/cerpaci-stanice-ktere-v-patek-zavrely-nejpozdeji-v-nedeli-otevrou/",
-      "dt": "2026-04-11T11:30:49Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "neděli",
-        "nejpozději",
-        "otevřou",
-        "pátek",
-        "stanice",
-        "zavřely",
-        "čerpací"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -289,7 +289,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18609,
+      "bytes": 18635,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -326,10 +326,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-12T18:00:05Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T04:00:34Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 12
+          "zpravy": 1,
+          "finance": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -341,6 +342,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Otec zaplatil výživné dvakrát, úřady za to potrestaly matku",
+            "publishedAt": "2026-04-13T04:00:34Z"
+          },
           {
             "title": "Smíšené výsledky z německé ekonomiky",
             "publishedAt": "2026-04-12T18:00:05Z"
@@ -368,10 +373,6 @@
           {
             "title": "Inflační tlaky v USA sílí",
             "publishedAt": "2026-04-12T08:00:43Z"
-          },
-          {
-            "title": "Hypotéky zdražily nejvíce za poslední čtyři roky",
-            "publishedAt": "2026-04-12T06:00:06Z"
           }
         ]
       }
