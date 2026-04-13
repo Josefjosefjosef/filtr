@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T04:39:09.793449Z",
+  "ingestedAt": "2026-04-13T04:54:14.599288Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kouč Pardubic byl po výhře kritický: Náš výkon byl do očí bijící",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-kouc-pardubic-byl-po-vyhre-kriticky-nas-vykon-byl-do-oci-bijici-5436337",
+      "dt": "2026-04-13T04:42:30Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bijící",
+        "kouč",
+        "kritický",
+        "náš",
+        "očí",
+        "pardubic",
+        "výhře",
+        "výkon"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,32 +783,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kuchta nebyl v základu ani v Teplicích. Údajně se o něj zajímá polský gigant",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-kuchta-nebyl-v-zakladu-ani-v-teplicich-udajne-se-o-nej-zajima-polsky-gigant-5435760",
-      "dt": "2026-04-12T17:16:22Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "gigant",
-        "kuchta",
-        "nebyl",
-        "něj",
-        "polský",
-        "teplicích",
-        "zajímá",
-        "základu",
-        "údajně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44389,
+      "bytes": 44858,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T04:30:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T04:42:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kouč Pardubic byl po výhře kritický: Náš výkon byl do očí bijící",
+            "publishedAt": "2026-04-13T04:42:30Z"
+          },
           {
             "title": "Moje éra skončila, oznámil legendární Becker",
             "publishedAt": "2026-04-13T04:30:49Z"
@@ -873,10 +876,6 @@
           {
             "title": "Někdo to chtěl vidět. Úmysl? Vaření z vody, rozčiluje se Trpišovský kvůli vyloučení Chorého",
             "publishedAt": "2026-04-12T20:49:22Z"
-          },
-          {
-            "title": "Olomouc po prohře v Pardubicích odvolala trenéra Janotku!",
-            "publishedAt": "2026-04-12T20:35:34Z"
           }
         ]
       }
