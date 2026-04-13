@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-04-13T17:24:44.432199Z",
+  "ingestedAt": "2026-04-13T17:45:01.331733Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Šimon a Matouš: Soud o ukradené jméno, indický slon v Africe a triky vychytralé produkce na diváky",
+      "url": "https://www.vtelce.cz/simon-a-matous-soud-o-ukradene-jmeno-indicky-slon-v-africe-a-triky-vychytrale-produkce-na-divaky/",
+      "dt": "2026-04-13T17:28:06Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "africe",
+        "diváky",
+        "indický",
+        "jméno",
+        "matouš",
+        "produkce",
+        "slon",
+        "soud",
+        "triky",
+        "ukradené",
+        "vychytralé",
+        "šimon"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -257,37 +286,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Tento týden v Prostřeno: Severočeská kuchařská výzva nabídne litry alkoholu, SOS mamince i udušené luxusní hovězí",
-      "url": "https://www.vtelce.cz/tento-tyden-v-prostreno-severoceska-kucharska-vyzva-nabidne-litry-alkoholu-sos-mamince-i-udusene-luxusni-hovezi/",
-      "dt": "2026-04-13T07:29:09Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "alkoholu",
-        "hovězí",
-        "kuchařská",
-        "litry",
-        "luxusní",
-        "mamince",
-        "nabídne",
-        "prostřeno",
-        "severočeská",
-        "sos",
-        "tento",
-        "týden",
-        "udušené",
-        "výzva"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,8 +296,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 75937,
-      "reason": "",
+      "bytes": 75922,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -335,10 +333,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T17:12:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T17:28:06Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "other": 10
+          "zpravy": 1,
+          "other": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -350,6 +349,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šimon a Matouš: Soud o ukradené jméno, indický slon v Africe a triky vychytralé produkce na diváky",
+            "publishedAt": "2026-04-13T17:28:06Z"
+          },
           {
             "title": "Pád Třetí říše: Skuteční neonacisté v komparzu, psychické kolapsy hvězd i historické chyby ve filmu",
             "publishedAt": "2026-04-13T17:12:09Z"
@@ -377,10 +380,6 @@
           {
             "title": "Karel: Snímek zachycuje intimní zpověď hudební legendy, boj s vážnou nemocí i lítost nad podpisem Anticharty",
             "publishedAt": "2026-04-13T08:58:32Z"
-          },
-          {
-            "title": "Nemocnice 24/7: Na urgentním příjmu se bude řešit bodnutí nožem i postřelení z brokovnice",
-            "publishedAt": "2026-04-13T08:28:44Z"
           }
         ]
       }

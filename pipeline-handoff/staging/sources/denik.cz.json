@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-13T17:24:44.432199Z",
+  "ingestedAt": "2026-04-13T17:45:01.331733Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump kritizoval papeže. Pak sdílel obrázek, na němž byl vyobrazen jako spasitel",
+      "url": "https://www.denik.cz/ze_sveta/donald-trump-papez-obrazek-ai-spasitel.html",
+      "dt": "2026-04-13T17:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jako",
+        "kritizoval",
+        "němž",
+        "obrázek",
+        "pak",
+        "papeže",
+        "sdílel",
+        "spasitel",
+        "trump",
+        "vyobrazen"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -609,33 +636,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Prohru Orbána Babiš oželí rychle. Magyara potřebuje pro byznys, soudí experti",
-      "url": "https://www.denik.cz/cesko-a-eu/volby-madarsko-vysledky-peter-magyar-tisza-co-na-to-andrej-babis-cesko.html",
-      "dt": "2026-04-13T09:01:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "byznys",
-        "experti",
-        "magyara",
-        "orbána",
-        "oželí",
-        "potřebuje",
-        "prohru",
-        "rychle",
-        "soudí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "krimi",
       "contentType": "article",
       "title": "Není Monarch jako Monarch. Místo vraždy kolotočáře Kočky hledají lidé jinde",
@@ -670,7 +670,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30294,
+      "bytes": 30313,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -707,7 +707,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-13T15:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T17:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -723,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump kritizoval papeže. Pak sdílel obrázek, na němž byl vyobrazen jako spasitel",
+            "publishedAt": "2026-04-13T17:00:00Z"
+          },
           {
             "title": "Magyar chce pozastavit zprávy veřejnoprávních médií, dokud nebudou nestranné",
             "publishedAt": "2026-04-13T15:34:00Z"
@@ -750,10 +754,6 @@
           {
             "title": "Stříbrská brána: tajemný skalní útvar se záhadnými symboly u Myšího kopce v lese",
             "publishedAt": "2026-04-13T13:00:00Z"
-          },
-          {
-            "title": "Babiš: Co by prezident na summitu NATO dělal? Určitě tam pojede vládní delegace",
-            "publishedAt": "2026-04-13T12:57:00Z"
           }
         ]
       }
