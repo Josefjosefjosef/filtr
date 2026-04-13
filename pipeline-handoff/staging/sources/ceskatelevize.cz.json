@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-13T10:14:18.027719Z",
+  "ingestedAt": "2026-04-13T10:29:41.979059Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Žena trpěla třemi nevyléčitelnými nemocemi. Jedna genová terapie ji zbavila všech",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/zena-trpela-tremi-nevylecitelnymi-nemocemi-jedna-genove-terapie-ji-zbavila-vsech-372314",
+      "dt": "2026-04-13T10:18:30Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "genová",
+        "jedna",
+        "nemocemi",
+        "nevyléčitelnými",
+        "terapie",
+        "trpěla",
+        "třemi",
+        "všech",
+        "zbavila",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -713,30 +740,6 @@
         "oběti",
         "raketomet",
         "zničil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pohlavní nemoci jsou na vzestupu. Češi se víc testují i riskují",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pohlavni-nemoci-jsou-na-vzestupu-cesi-se-vic-testuji-i-riskuji-372203",
-      "dt": "2026-04-12T06:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "nemoci",
-        "pohlavní",
-        "riskují",
-        "testují",
-        "vzestupu",
-        "víc",
-        "češi"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1527,7 +1530,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42725,
+      "bytes": 42519,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1587,11 +1590,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T09:41:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T10:18:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "other": 4,
+          "other": 5,
+          "zpravy": 23,
           "finance": 2
         },
         "drop_counts": {
@@ -1604,6 +1607,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Žena trpěla třemi nevyléčitelnými nemocemi. Jedna genová terapie ji zbavila všech",
+            "publishedAt": "2026-04-13T10:18:30Z"
+          },
           {
             "title": "Maďarský forint po Orbánově porážce vystoupil na čtyřleté maximum",
             "publishedAt": "2026-04-13T09:41:32Z"
@@ -1631,10 +1638,6 @@
           {
             "title": "KGB, petro-rubl a Potěmkinovy reaktory. Historik vysvětluje příčiny katastrofy v Černobylu",
             "publishedAt": "2026-04-13T05:00:00Z"
-          },
-          {
-            "title": "Přibývá případů týrání zvířat. S odhalením má pomoci nový registr",
-            "publishedAt": "2026-04-13T04:30:00Z"
           }
         ]
       }
@@ -1740,7 +1743,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76906,
+      "bytes": 76902,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

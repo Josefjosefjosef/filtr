@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-13T10:14:18.027719Z",
+  "ingestedAt": "2026-04-13T10:29:41.979059Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Čínská značka chystá nabíječky s drsnou podmínkou. Na některé řidiče může čekat pokuta",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/elektromobilita/cinska-znacka-chysta-nabijecky-s-drsnou-podminkou-na-nektere-ridice-muze-cekat-pokuta/r~aaa290f84ca189ab38a1702c06eee9bd/",
+      "dt": "2026-04-13T10:10:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chystá",
+        "drsnou",
+        "nabíječky",
+        "některé",
+        "podmínkou",
+        "pokuta",
+        "značka",
+        "čekat",
+        "čínská",
+        "řidiče"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -59,7 +86,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "„Lže, je labilní.“ Američané šijí do Procházky, jeho verzi nevěří ani kontroverzní Rus",
+      "title": "„Lže, je labilní.“ Američané šijí do Procházky, jeho verzi nevěří ani ruský nepřítel",
       "url": "https://sport.aktualne.cz/ostatni-sporty/lze-je-labilni-americane-siji-do-prochazky-jeho-verzi-neveri-ani-kontroverzni-rus/r~aaa290bd3bb8910a8ab0efdb9cc0fab2/",
       "dt": "2026-04-13T09:45:00Z",
       "media_raw": "Aktuálně",
@@ -67,12 +94,12 @@
       "tokens": [
         "američané",
         "jeho",
-        "kontroverzní",
         "labilní",
         "lže",
+        "nepřítel",
         "nevěří",
         "procházky",
-        "rus",
+        "ruský",
         "verzi",
         "šijí"
       ],
@@ -500,29 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Zemřel trumpetista a kapelník, který spolupracoval s Gottem i Matuškou",
-      "url": "https://magazin.aktualne.cz/kultura/zemrel-trumpetista-a-kapelnik-vaclav-hybs-spolupracoval-s-gottem-i-matuskou/r~aaa29bcf5cbf70ef80263c5ca35fc7ad/",
-      "dt": "2026-04-13T06:18:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "gottem",
-        "kapelník",
-        "matuškou",
-        "spolupracoval",
-        "trumpetista",
-        "zemřel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -533,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21075,
+      "bytes": 21336,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -570,13 +574,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T10:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T10:10:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "other": 3,
+          "finance": 2,
+          "other": 2,
           "zpravy": 10,
-          "sport": 6,
-          "finance": 1
+          "sport": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -589,6 +593,10 @@
         },
         "sample_titles": [
           {
+            "title": "Čínská značka chystá nabíječky s drsnou podmínkou. Na některé řidiče může čekat pokuta",
+            "publishedAt": "2026-04-13T10:10:00Z"
+          },
+          {
             "title": "Lhoták i císařské hodiny. V Mánesu vystavují mistrovská díla za stovky milionů korun",
             "publishedAt": "2026-04-13T10:04:00Z"
           },
@@ -597,7 +605,7 @@
             "publishedAt": "2026-04-13T08:53:00Z"
           },
           {
-            "title": "„Lže, je labilní.“ Američané šijí do Procházky, jeho verzi nevěří ani kontroverzní Rus",
+            "title": "„Lže, je labilní.“ Američané šijí do Procházky, jeho verzi nevěří ani ruský nepřítel",
             "publishedAt": "2026-04-13T09:45:00Z"
           },
           {
@@ -615,10 +623,6 @@
           {
             "title": "Demokrat ukončil kampaň na guvernéra Kalifornie po obvinění ze sexuálního násilí",
             "publishedAt": "2026-04-13T09:05:00Z"
-          },
-          {
-            "title": "Vítězství Tiszy může inspirovat další politiky v Evropě i USA, píší polská média",
-            "publishedAt": "2026-04-13T09:00:00Z"
           }
         ]
       }
