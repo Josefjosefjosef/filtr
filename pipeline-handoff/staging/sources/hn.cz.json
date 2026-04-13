@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-13T17:04:51.164167Z",
+  "ingestedAt": "2026-04-13T17:24:44.432199Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Horečka v Hormuzu: Američané začali blokovat úzké hrdlo námořního obchodu, Írán vyhrožuje odvetou",
+      "url": "https://archiv.hn.cz/c1-67866100-horecka-v-hormuzu-americane-zacali-blokovat-uzke-hrdlo-namorniho-obchodu-iran-vyhrozuje-odvetou",
+      "dt": "2026-04-13T17:05:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "američané",
+        "blokovat",
+        "horečka",
+        "hormuzu",
+        "hrdlo",
+        "námořního",
+        "obchodu",
+        "odvetou",
+        "vyhrožuje",
+        "začali",
+        "írán",
+        "úzké"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1171,34 +1200,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Na co vědu? Přistání na Měsíci Trumpa zajímá, výzkum sluneční soustavy chce ale zaškrtit",
-      "url": "https://archiv.hn.cz/c1-67865560-na-co-vedu-pristani-na-mesici-trumpa-zajima-vyzkum-slunecni-soustavy-chce-ale-zaskrtit",
-      "dt": "2026-04-12T12:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "chce",
-        "měsíci",
-        "přistání",
-        "sluneční",
-        "soustavy",
-        "trumpa",
-        "výzkum",
-        "vědu",
-        "zajímá",
-        "zaškrtit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1209,7 +1210,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185677,
+      "bytes": 186307,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1246,11 +1247,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T16:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T17:05:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 38,
-          "zpravy": 2
+          "finance": 39,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1262,6 +1263,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Horečka v Hormuzu: Američané začali blokovat úzké hrdlo námořního obchodu, Írán vyhrožuje odvetou",
+            "publishedAt": "2026-04-13T17:05:00Z"
+          },
           {
             "title": "Zbaví se Maďaři forintu a přejdou k euru? Hlavní překážkou je podinvestovaná ekonomika a obří díra ve státní kase",
             "publishedAt": "2026-04-13T16:29:00Z"
@@ -1289,10 +1294,6 @@
           {
             "title": "Obnovu šluknovského ghetta nezaplatíme, cukla vláda. Na přelomový projekt předchozího kabinetu shání evropské peníze",
             "publishedAt": "2026-04-13T14:43:00Z"
-          },
-          {
-            "title": "Zkrachovalý Solek Holding má schválený reorganizační plán. Počítá s částkou 30 milionů korun",
-            "publishedAt": "2026-04-13T14:11:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T17:04:51.164167Z",
+  "ingestedAt": "2026-04-13T17:24:44.432199Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Drtivý dopad války s Íránem. Evropanům vytáhla z peněženek už přes půl bilionu",
+      "url": "https://ekonomickydenik.cz/valka-iran-pul-bilionu/",
+      "dt": "2026-04-13T17:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bilionu",
+        "dopad",
+        "drtivý",
+        "evropanům",
+        "peněženek",
+        "půl",
+        "vytáhla",
+        "války",
+        "íránem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -750,32 +776,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Právo na potrat, nebo právo na život? Oba tábory se střetly v centru Prahy",
-      "url": "https://ekonomickydenik.cz/pravo-potrat-zivot-strety/",
-      "dt": "2026-04-11T13:43:59Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "centru",
-        "nebo",
-        "oba",
-        "potrat",
-        "prahy",
-        "právo",
-        "střetly",
-        "tábory",
-        "život"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73056,
+      "bytes": 73152,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T16:17:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T17:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -840,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Drtivý dopad války s Íránem. Evropanům vytáhla z peněženek už přes půl bilionu",
+            "publishedAt": "2026-04-13T17:05:00Z"
+          },
           {
             "title": "Bitva o biliony: Západní zbrojaři chtějí ovládnout rekordní balík dotací",
             "publishedAt": "2026-04-13T16:17:27Z"
@@ -867,10 +871,6 @@
           {
             "title": "Stát ušetří na dávkách miliony, životní minimum vzroste později",
             "publishedAt": "2026-04-13T13:02:56Z"
-          },
-          {
-            "title": "Ceny nafty a benzinu v rukou vlády? Babiš k tomu chce protlačit nový zákon",
-            "publishedAt": "2026-04-13T12:01:47Z"
           }
         ]
       }
