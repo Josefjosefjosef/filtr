@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-04-13T21:12:54.786363Z",
+  "ingestedAt": "2026-04-13T21:29:42.855673Z",
   "items": [
     {
       "section": "krimi",
@@ -3721,6 +3721,31 @@
     {
       "section": "veda",
       "contentType": "article",
+      "title": "Ostravský experiment se podařil. Nejvyšší radnici v Česku obývají včely",
+      "url": "https://www.novinky.cz/clanek/koktejl-ostravsky-experiment-se-podaril-nejvyssi-radnici-v-cesku-obyvaji-vcely-40573063",
+      "dt": "2026-04-13T21:28:00Z",
+      "media_raw": "Novinky / Věda a škola",
+      "media_norm": "Novinky / Věda a škola",
+      "tokens": [
+        "experiment",
+        "nejvyšší",
+        "obývají",
+        "ostravský",
+        "podařil",
+        "radnici",
+        "včely",
+        "česku"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_novinky",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
       "title": "Policie pátrá po čtrnáctileté dívce z Pelhřimovska. Nepřišla ze školy domů",
       "url": "https://www.novinky.cz/clanek/krimi-policie-patra-po-ctrnactilete-divce-z-pelhrimovska-neprisla-ze-skoly-domu-40573166",
       "dt": "2026-04-13T20:49:33Z",
@@ -4439,25 +4464,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "vzdelavani",
       "contentType": "article",
-      "title": "Íránský jaderný program přežil, píše WSJ",
-      "url": "https://www.novinky.cz/clanek/zahranicni-blizky-a-stredni-vychod-iransky-jaderny-program-prezil-pise-wsj-40573103",
-      "dt": "2026-04-13T13:23:48Z",
-      "media_raw": "Novinky / Věda a škola",
-      "media_norm": "Novinky / Věda a škola",
+      "title": "Ostravský experiment se podařil. Nejvyšší radnici v Česku obývají včely",
+      "url": "https://www.novinky.cz/clanek/koktejl-ostravsky-experiment-se-podaril-nejvyssi-radnici-v-cesku-obyvaji-vcely-40573063",
+      "dt": "2026-04-13T21:28:00Z",
+      "media_raw": "Novinky / Škola",
+      "media_norm": "Novinky / Škola",
       "tokens": [
-        "jaderný",
-        "program",
-        "píše",
-        "přežil",
-        "wsj",
-        "íránský"
+        "experiment",
+        "nejvyšší",
+        "obývají",
+        "ostravský",
+        "podařil",
+        "radnici",
+        "včely",
+        "česku"
       ],
-      "feedCategory": "veda",
+      "feedCategory": "vzdelavani",
       "feedType": "rubric",
-      "feedId": "ved_novinky",
-      "sourceDisplayWeight": 1.05,
+      "feedId": "vzd_novinky_skola",
+      "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
     },
@@ -5173,29 +5200,6 @@
         "průměrná",
         "tmě",
         "výstřel"
-      ],
-      "feedCategory": "vzdelavani",
-      "feedType": "rubric",
-      "feedId": "vzd_novinky_skola",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Íránský jaderný program přežil, píše WSJ",
-      "url": "https://www.novinky.cz/clanek/zahranicni-blizky-a-stredni-vychod-iransky-jaderny-program-prezil-pise-wsj-40573103",
-      "dt": "2026-04-13T13:23:48Z",
-      "media_raw": "Novinky / Škola",
-      "media_norm": "Novinky / Škola",
-      "tokens": [
-        "jaderný",
-        "program",
-        "píše",
-        "přežil",
-        "wsj",
-        "íránský"
       ],
       "feedCategory": "vzdelavani",
       "feedType": "rubric",
@@ -5689,7 +5693,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/veda",
-      "bytes": 41594,
+      "bytes": 41623,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5726,7 +5730,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T20:49:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T21:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -5741,6 +5745,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ostravský experiment se podařil. Nejvyšší radnici v Česku obývají včely",
+            "publishedAt": "2026-04-13T21:28:00Z"
+          },
           {
             "title": "Policie pátrá po čtrnáctileté dívce z Pelhřimovska. Nepřišla ze školy domů",
             "publishedAt": "2026-04-13T20:49:33Z"
@@ -5768,10 +5776,6 @@
           {
             "title": "PŘEHLEDNĚ: Co čekat od vítěze maďarských voleb",
             "publishedAt": "2026-04-13T18:04:43Z"
-          },
-          {
-            "title": "Zemřel herec Richard Donat",
-            "publishedAt": "2026-04-13T17:57:02Z"
           }
         ]
       }
@@ -5783,7 +5787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/skola",
-      "bytes": 41594,
+      "bytes": 41623,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5820,11 +5824,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T20:49:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T21:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 21,
-          "zpravy": 9
+          "other": 22,
+          "zpravy": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -5836,6 +5840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ostravský experiment se podařil. Nejvyšší radnici v Česku obývají včely",
+            "publishedAt": "2026-04-13T21:28:00Z"
+          },
           {
             "title": "Policie pátrá po čtrnáctileté dívce z Pelhřimovska. Nepřišla ze školy domů",
             "publishedAt": "2026-04-13T20:49:33Z"
@@ -5863,10 +5871,6 @@
           {
             "title": "PŘEHLEDNĚ: Co čekat od vítěze maďarských voleb",
             "publishedAt": "2026-04-13T18:04:43Z"
-          },
-          {
-            "title": "Zemřel herec Richard Donat",
-            "publishedAt": "2026-04-13T17:57:02Z"
           }
         ]
       }
