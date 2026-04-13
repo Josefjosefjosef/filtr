@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-13T02:24:34.268536Z",
+  "ingestedAt": "2026-04-13T02:39:34.040426Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zahájení hradní sezóny ve Štramberku, Trúba v obležení rytířů",
+      "url": "https://novojicinsky.denik.cz/ctenar-reporter/zahajeni-hrad-akce-stramberk-truba-turiste-sezona-2026.html",
+      "dt": "2026-04-13T02:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hradní",
+        "obležení",
+        "rytířů",
+        "sezóny",
+        "trúba",
+        "zahájení",
+        "štramberku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -624,32 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Volby v Maďarsku: Lidé rozhodují, zda po 16 letech skončí Orbánova vláda",
-      "url": "https://www.denik.cz/z_domova/madari-v-parlamentnich-volbach-rozhoduji-zda-po-16-letech-skonci-orbanova-vlada.html",
-      "dt": "2026-04-12T05:09:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "letech",
-        "lidé",
-        "maďarsku",
-        "orbánova",
-        "rozhodují",
-        "skončí",
-        "vláda",
-        "volby",
-        "zda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31079,
+      "bytes": 30724,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,11 +695,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-13T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T02:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 3,
           "zpravy": 21,
+          "finance": 3,
           "zdravi": 1
         },
         "drop_counts": {
@@ -714,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zahájení hradní sezóny ve Štramberku, Trúba v obležení rytířů",
+            "publishedAt": "2026-04-13T02:20:00Z"
+          },
           {
             "title": "Snížení firemní daně se ANO už nehodí do krámu. Couvá z ekonomického slibu",
             "publishedAt": "2026-04-13T02:00:00Z"
@@ -741,10 +743,6 @@
           {
             "title": "Maďarsko přepsalo dějiny. Rekordní účast dá vítězi silný demokratický mandát",
             "publishedAt": "2026-04-12T18:05:00Z"
-          },
-          {
-            "title": "Jak dopadnou maďarské volby? Vítězstvím Tiszy, říká poslední předvolební průzkum",
-            "publishedAt": "2026-04-12T17:32:00Z"
           }
         ]
       }
