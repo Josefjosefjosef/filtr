@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-13T08:05:27.070245Z",
+  "ingestedAt": "2026-04-13T08:25:31.269020Z",
   "items": [
     {
       "section": "aktualne",
@@ -728,6 +728,30 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Čechová a Hamzová zabojují na kempu Minnesoty o angažmá ve WNBA",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/cechova-a-hamzova-zabojuji-na-kempu-minnesoty-o-angazma-ve-wnba-156266",
+      "dt": "2026-04-13T08:02:21Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "angažmá",
+        "hamzová",
+        "kempu",
+        "minnesoty",
+        "wnba",
+        "zabojují",
+        "čechová"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1475,29 +1499,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "AC Milán zaváhal s Udine, Juventus uspěl v Bergamu",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/ac-milan-zavahal-s-udine-156233",
-      "dt": "2026-04-11T18:55:22Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bergamu",
-        "juventus",
-        "milán",
-        "udine",
-        "uspěl",
-        "zaváhal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1627,7 +1628,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39960,
+      "bytes": 39986,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1664,7 +1665,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T06:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T08:02:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1679,6 +1680,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čechová a Hamzová zabojují na kempu Minnesoty o angažmá ve WNBA",
+            "publishedAt": "2026-04-13T08:02:21Z"
+          },
           {
             "title": "Hyský po remíze: Je to moment, od kterého se dá odrazit, čerpat energii a poučit se",
             "publishedAt": "2026-04-13T06:30:00Z"
@@ -1706,10 +1711,6 @@
           {
             "title": "Karlovarsko porazilo Liberec i ve třetím utkání a po roce je opět ve finále",
             "publishedAt": "2026-04-12T18:38:55Z"
-          },
-          {
-            "title": "Stuttgart vyprovodil nováčka z Hamburku čtyřmi brankami",
-            "publishedAt": "2026-04-12T17:51:09Z"
           }
         ]
       }
@@ -1721,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76787,
+      "bytes": 76789,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

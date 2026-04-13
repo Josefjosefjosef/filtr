@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-13T08:05:27.070245Z",
+  "ingestedAt": "2026-04-13T08:25:31.269020Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Německo dočasně zlevní paliva. Merz kvůli válce sníží daň z benzinu a nafty",
+      "url": "https://www.e15.cz/zahranicni/nemecko-docasne-zlevni-paliva-merz-kvuli-valce-snizi-dan-z-benzinu-a-nafty-1432080",
+      "dt": "2026-04-13T08:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "benzinu",
+        "daň",
+        "dočasně",
+        "kvůli",
+        "merz",
+        "nafty",
+        "německo",
+        "paliva",
+        "sníží",
+        "válce",
+        "zlevní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -109,6 +137,32 @@
     {
       "section": "finance",
       "contentType": "article",
+      "title": "USA spouštějí blokádu íránských přístavů, ropa se vrací nad 100 dolarů",
+      "url": "https://www.e15.cz/zahranicni/geopolitika/usa-spousteji-blokadu-iranskych-pristavu-ropa-se-vraci-nad-100-dolaru-1432071",
+      "dt": "2026-04-13T05:15:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "100",
+        "blokádu",
+        "dolarů",
+        "přístavů",
+        "ropa",
+        "spouštějí",
+        "usa",
+        "vrací",
+        "íránských"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
       "title": "INVESTIČNÍ ONLINE: Ceny ropy reagovaly na oznámení americké blokády íránských přístavů nárůstem",
       "url": "https://www.e15.cz/investice/investicni-online-ceny-ropy-reagovaly-na-oznameni-americke-blokady-iranskych-pristavu-narustem-1424330",
       "dt": "2026-04-13T05:15:00Z",
@@ -125,32 +179,6 @@
         "přístavů",
         "reagovaly",
         "ropy",
-        "íránských"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "USA spouštějí blokádu íránských přístavů, ropa se vrací nad 100 dolarů",
-      "url": "https://www.e15.cz/zahranicni/geopolitika/usa-spousteji-blokadu-iranskych-pristavu-ropa-se-vraci-nad-100-dolaru-1432071",
-      "dt": "2026-04-13T05:15:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "100",
-        "blokádu",
-        "dolarů",
-        "přístavů",
-        "ropa",
-        "spouštějí",
-        "usa",
-        "vrací",
         "íránských"
       ],
       "feedCategory": "finance",
@@ -1050,30 +1078,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Výdejní boxy čeká regulace. Firmy se obávají o dostupnost",
-      "url": "https://www.e15.cz/finexpert/servis/vydejni-boxy-ceka-regulace-firmy-se-obavaji-o-dostupnost-1432038",
-      "dt": "2026-04-10T08:47:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "boxy",
-        "dostupnost",
-        "firmy",
-        "obávají",
-        "regulace",
-        "výdejní",
-        "čeká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1084,7 +1088,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 51393,
+      "bytes": 51303,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1121,13 +1125,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T07:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 31,
+          "finance": 32,
           "zpravy": 7,
-          "zdravi": 1,
-          "sport": 1
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1139,6 +1142,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Německo dočasně zlevní paliva. Merz kvůli válce sníží daň z benzinu a nafty",
+            "publishedAt": "2026-04-13T08:00:00Z"
+          },
           {
             "title": "Colt CZ míří na amsterodamskou burzu, obchodování začne v úterý",
             "publishedAt": "2026-04-13T07:20:00Z"
@@ -1156,20 +1163,16 @@
             "publishedAt": "2026-04-13T05:50:00Z"
           },
           {
-            "title": "INVESTIČNÍ ONLINE: Ceny ropy reagovaly na oznámení americké blokády íránských přístavů nárůstem",
+            "title": "USA spouštějí blokádu íránských přístavů, ropa se vrací nad 100 dolarů",
             "publishedAt": "2026-04-13T05:15:00Z"
           },
           {
-            "title": "USA spouštějí blokádu íránských přístavů, ropa se vrací nad 100 dolarů",
+            "title": "INVESTIČNÍ ONLINE: Ceny ropy reagovaly na oznámení americké blokády íránských přístavů nárůstem",
             "publishedAt": "2026-04-13T05:15:00Z"
           },
           {
             "title": "Stamiliony nepřitekly. Lázně i státní hotel Thermal přišly o blízkovýchodní poklad",
             "publishedAt": "2026-04-13T04:00:00Z"
-          },
-          {
-            "title": "Kde se Češi dožívají vysokého věku ve zdraví? První český longevity index ovládlo pět krajů",
-            "publishedAt": "2026-04-13T03:00:00Z"
           }
         ]
       }

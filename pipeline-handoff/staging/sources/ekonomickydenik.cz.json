@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T08:05:27.070245Z",
+  "ingestedAt": "2026-04-13T08:25:31.269020Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Maďarsko po volbách: Forint na čtyřletém maximu, Ukrajina zrušila doporučení necestovat",
+      "url": "https://ekonomickydenik.cz/madarsko-po-volbach-forint-na-ctyrletem-maximu/",
+      "dt": "2026-04-13T08:16:42Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "doporučení",
+        "forint",
+        "maximu",
+        "maďarsko",
+        "necestovat",
+        "ukrajina",
+        "volbách",
+        "zrušila",
+        "čtyřletém"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -741,31 +767,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Příměří trhy neuklidnilo, Evropě hrozí inflace i prázdné zásobníky",
-      "url": "https://ekonomickydenik.cz/ropa-na-rekordu-evropa-prazdne-zasobniky/",
-      "dt": "2026-04-10T12:58:55Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "evropě",
-        "hrozí",
-        "inflace",
-        "neuklidnilo",
-        "prázdné",
-        "příměří",
-        "trhy",
-        "zásobníky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73510,
+      "bytes": 73490,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T07:37:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T08:16:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -830,6 +831,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maďarsko po volbách: Forint na čtyřletém maximu, Ukrajina zrušila doporučení necestovat",
+            "publishedAt": "2026-04-13T08:16:42Z"
+          },
           {
             "title": "Colt CZ na dvou akciových hřištích. Pražskou burzu doplní prestižní Amsterdam",
             "publishedAt": "2026-04-13T07:37:52Z"
@@ -857,10 +862,6 @@
           {
             "title": "Estonci našli na pláži kus dronu. Zřejmě ukrajinského",
             "publishedAt": "2026-04-12T17:55:12Z"
-          },
-          {
-            "title": "Starší byty skokově zdražily. Nejrychleji v levnějších městech",
-            "publishedAt": "2026-04-12T14:43:15Z"
           }
         ]
       }

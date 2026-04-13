@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-13T08:05:27.070245Z",
+  "ingestedAt": "2026-04-13T08:25:31.269020Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Interrupcí v ČR rok od roku ubývá. To díky osvětě i moderní antikoncepci",
+      "url": "https://www.zdravezpravy.cz/2026/04/13/interrupci-v-cesku-rok-od-roku-ubyva-to-diky-osvete-i-moderni-antikoncepci/",
+      "dt": "2026-04-13T07:18:41Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "antikoncepci",
+        "díky",
+        "interrupcí",
+        "moderní",
+        "osvětě",
+        "rok",
+        "roku",
+        "ubývá"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -472,30 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Péče o pacienty v závěru života je v Česku dlouhodobě nepředvídatelná",
-      "url": "https://www.zdravezpravy.cz/2026/04/01/pece-o-pacienty-v-zaveru-zivota-v-cesku-je-hodne-nepredvidatelna/",
-      "dt": "2026-04-01T15:47:07Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "dlouhodobě",
-        "nepředvídatelná",
-        "pacienty",
-        "péče",
-        "závěru",
-        "česku",
-        "života"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -506,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 226659,
+      "bytes": 223519,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -543,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-11T06:00:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T07:18:41Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -559,6 +560,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Interrupcí v ČR rok od roku ubývá. To díky osvětě i moderní antikoncepci",
+            "publishedAt": "2026-04-13T07:18:41Z"
+          },
           {
             "title": "Richtrová z FN Brno získala cenu za obturátor pro děti s rozštěpem",
             "publishedAt": "2026-04-11T06:00:53Z"
@@ -586,10 +591,6 @@
           {
             "title": "Irena Storová: Lékárník naočkovat pacienta zvládne, to není problém",
             "publishedAt": "2026-04-09T04:26:35Z"
-          },
-          {
-            "title": "Žádostí o posouzení změny pohlaví přibylo za deset let trojnásobně",
-            "publishedAt": "2026-04-08T14:58:32Z"
           }
         ]
       }
