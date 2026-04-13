@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-13T18:24:38.544724Z",
+  "ingestedAt": "2026-04-13T18:45:08.970354Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Konec Orbána, staré problémy. Pro Magyara to bude těžké, až na jednu věc",
+      "url": "https://zpravy.aktualne.cz/zahranici/konec-orbana-stare-problemy-pro-magyara-to-bude-tezke-az-na-jednu-vec/r~aaa29d173f2e6a3ee55574a13de47f46/",
+      "dt": "2026-04-13T18:18:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "jednu",
+        "konec",
+        "magyara",
+        "orbána",
+        "problémy",
+        "staré",
+        "těžké",
+        "věc"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -319,20 +344,20 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Sparta - Pardubice 2:1. Pražané otočili zápas, hostům přesilovka nevyšla",
+      "title": "Sparta - Pardubice 2:1. Pražané soupeře totálně přestříleli a otočili skóre",
       "url": "https://sport.aktualne.cz/hokej/sparta-pardubice-dojde-semifinale-az-k-sedmemu-zapasu-o-tom-se-rozhodne-v-praze/r~aaa298d8eeb9fda2e80461d270457df0/",
       "dt": "2026-04-13T16:18:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "hostům",
-        "nevyšla",
         "otočili",
         "pardubice",
         "pražané",
-        "přesilovka",
+        "přestříleli",
+        "skóre",
+        "soupeře",
         "sparta",
-        "zápas"
+        "totálně"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -500,32 +525,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Konec sankcí v bazénu. Ruští a běloruští plavci mohou startovat pod svou vlajkou",
-      "url": "https://sport.aktualne.cz/ostatni-sporty/dalsi-zmirneni-sankci-rusti-a-belorusti-plavci-mohou-startovat-pod-svou-vlajkou/r~aaa29dfc2a2bcd17b1e12d096ae13281/",
-      "dt": "2026-04-13T13:23:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bazénu",
-        "běloruští",
-        "konec",
-        "plavci",
-        "ruští",
-        "sankcí",
-        "startovat",
-        "svou",
-        "vlajkou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -536,7 +535,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22231,
+      "bytes": 22392,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -573,11 +572,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T18:18:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 6,
+          "zpravy": 14,
+          "sport": 5,
           "finance": 1
         },
         "drop_counts": {
@@ -590,6 +589,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec Orbána, staré problémy. Pro Magyara to bude těžké, až na jednu věc",
+            "publishedAt": "2026-04-13T18:18:00Z"
+          },
           {
             "title": "„Je to lokální věc.“ Babiš se po ostrém sporu vyjádřil k účasti prezidenta na summitu",
             "publishedAt": "2026-04-13T13:22:00Z"
@@ -617,10 +620,6 @@
           {
             "title": "Rulíkovi se začínají scházet omluvenky na MS. Jsou mezi nimi i mistři světa",
             "publishedAt": "2026-04-13T17:10:00Z"
-          },
-          {
-            "title": "Magyar se rozjel: Szijjártó skartuje citlivé zprávy a televize připomíná Goebbelse",
-            "publishedAt": "2026-04-13T15:33:00Z"
           }
         ]
       }

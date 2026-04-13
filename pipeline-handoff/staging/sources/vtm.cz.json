@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-13T18:24:38.544724Z",
+  "ingestedAt": "2026-04-13T18:45:08.970354Z",
   "items": [
     {
       "section": "veda",
@@ -49,6 +49,33 @@
         "nové",
         "powerbanky",
         "výkon"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Z Lidlu se stává virtuální operátor. V Evropě chce nabízet volání i datové služby",
+      "url": "https://mobilmania.zive.cz/clanky/z-lidlu-se-stava-virtualni-operator-v-evrope-chce-nabizet-volani-i-datove-sluzby/sc-3-a-1364559/default.aspx",
+      "dt": "2026-04-13T17:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "chce",
+        "datové",
+        "evropě",
+        "lidlu",
+        "nabízet",
+        "operátor",
+        "služby",
+        "stává",
+        "virtuální",
+        "volání"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -943,33 +970,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Rusové ovládli sítě v Česku i na Slovensku. Využili k tomu děravé routery TP-Link",
-      "url": "https://www.zive.cz/clanky/rusove-ovladli-site-v-cesku-i-na-slovensku-vyuzili-k-tomu-derave-routery-tp-link/sc-3-a-240580/default.aspx",
-      "dt": "2026-04-08T16:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "děravé",
-        "link",
-        "ovládli",
-        "routery",
-        "rusové",
-        "slovensku",
-        "sítě",
-        "tomu",
-        "využili",
-        "česku"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -980,7 +980,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23108,
+      "bytes": 22906,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1041,6 +1041,10 @@
             "publishedAt": "2026-04-13T15:45:00Z"
           },
           {
+            "title": "Z Lidlu se stává virtuální operátor. V Evropě chce nabízet volání i datové služby",
+            "publishedAt": "2026-04-13T17:45:00Z"
+          },
+          {
             "title": "Recenze hry Pragmata. Sci-fi boj proti umělé inteligenci bezchybně míchá akci s taktikou",
             "publishedAt": "2026-04-13T17:45:00Z"
           },
@@ -1059,10 +1063,6 @@
           {
             "title": "Srovnali jsme Pixel 10a a iPhone 17e. Google vítězí u displeje, Apple ve výkonu",
             "publishedAt": "2026-04-13T11:45:00Z"
-          },
-          {
-            "title": "Lidl má Bluetooth lokátory pro Android i iOS jen za 57 Kč. Musíte si ale koupit rovnou tři",
-            "publishedAt": "2026-04-13T08:50:00Z"
           }
         ]
       }

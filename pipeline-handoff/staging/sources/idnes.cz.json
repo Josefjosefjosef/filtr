@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-13T18:24:38.544724Z",
+  "ingestedAt": "2026-04-13T18:45:08.970354Z",
   "items": [
     {
       "section": "finance",
       "contentType": "article",
       "title": "Do svého cíle míří poslední dodávky ropy z Blízkého východu z předválečného období",
       "url": "https://www.idnes.cz/ekonomika/zahranicni/ropa-valka-usa-iran-spojene-staty-trump-palivo-vycerpani-tanker-tankery-hormuzsky-pruliv.A260413_191844_eko-zahranicni_fohl",
-      "dt": "2026-04-13T18:14:00Z",
+      "dt": "2026-04-13T18:35:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -22,6 +22,31 @@
         "ropy",
         "svého",
         "východu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Připomínka historie i aktuální podpora. Ministr Macinka míří do Izraele",
+      "url": "https://www.idnes.cz/zpravy/domaci/macinka-izrael-cesta-jom-ha-soa.A260413_164011_domaci_rtn",
+      "dt": "2026-04-13T18:28:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "aktuální",
+        "historie",
+        "izraele",
+        "macinka",
+        "ministr",
+        "míří",
+        "podpora",
+        "připomínka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -259,31 +284,6 @@
         "turek",
         "větrné",
         "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Připomínka historie i aktuální podpora. Ministr Macinka míří do Izraele",
-      "url": "https://www.idnes.cz/zpravy/domaci/macinka-izrael-cesta-jom-ha-soa.A260413_164011_domaci_rtn",
-      "dt": "2026-04-13T15:26:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "aktuální",
-        "historie",
-        "izraele",
-        "macinka",
-        "ministr",
-        "míří",
-        "podpora",
-        "připomínka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1587,7 +1587,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51545,
+      "bytes": 51683,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1624,7 +1624,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T18:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T18:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 1,
@@ -1643,7 +1643,11 @@
         "sample_titles": [
           {
             "title": "Do svého cíle míří poslední dodávky ropy z Blízkého východu z předválečného období",
-            "publishedAt": "2026-04-13T18:14:00Z"
+            "publishedAt": "2026-04-13T18:35:00Z"
+          },
+          {
+            "title": "Připomínka historie i aktuální podpora. Ministr Macinka míří do Izraele",
+            "publishedAt": "2026-04-13T18:28:00Z"
           },
           {
             "title": "Ministerstvo obrany zakázalo publikovat rozhovor s Pavlem. Absurdní, reagoval Hrad",
@@ -1668,10 +1672,6 @@
           {
             "title": "Zničíme íránské lodě, které se během blokády přiblíží k americkým, řekl Trump",
             "publishedAt": "2026-04-13T16:31:00Z"
-          },
-          {
-            "title": "Nemoc, která se nevyhnula ani princezně. Čeští lékaři se na plicní fibrózu více zaměří",
-            "publishedAt": "2026-04-13T16:16:00Z"
           }
         ]
       }
