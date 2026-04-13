@@ -10206,9 +10206,10 @@ function buildVideoAsArticleCard(it) {
             topTools.style.removeProperty("height");
           }
           var mailboxList = mindMenu ? mindMenu.querySelector("#iuMailboxList") : null;
-          if (mailboxList) mailboxList.style.minHeight = "262px";
+          /* P0 mobile/tablet visible gap: do not reserve 262px/340px on list/section — after removing mailbox rows inline min-height left a large empty band above Nástroje; flowDeadPx vs #iuMobileMindMenuFlow missed it because .mindMenu still wrapped the tall section. */
+          if (mailboxList) mailboxList.style.minHeight = "";
           var mailboxesSection = mindMenu ? mindMenu.querySelector("section.iu-mailboxes") : null;
-          if (mailboxesSection) mailboxesSection.style.minHeight = "340px";
+          if (mailboxesSection) mailboxesSection.style.minHeight = "";
           var staleWrapper = mindMenuFlow.querySelector(".mindMenu-scroll-wrapper");
           if (staleWrapper && !staleWrapper.querySelector(".mindMenu")) {
             staleWrapper.remove();
