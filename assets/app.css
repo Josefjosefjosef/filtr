@@ -8298,12 +8298,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   outline-offset: 2px;
 }
 
-html, body{
-  background: #fff !important;
-  background-color: #fff !important;
-  background-image: none !important;
-}
-
 #feed iframe,
 .news-card iframe{
   background: #fff !important;
@@ -8318,7 +8312,7 @@ body.iuRailHidden #newsList > #iuCenterStage{
   min-width: 0;
 }
 
-#iuHomeView{
+#iuHomeView[hidden]{
   display: none !important;
 }
 
@@ -17972,6 +17966,18 @@ body #iuLeftRail{
 .iu-leftNavItem:hover {
   background: linear-gradient(180deg,#10263E 0%,#173B5C 100%) !important;
   transform: none !important;
+}
+
+.iu-leftNav .iu-leftNavItem.iu-press-active{
+  filter: brightness(0.94);
+  transition: filter 0.05s ease;
+}
+
+.iuHomeHex434 .iuHex.iu-press-active{
+  transform: translateY(0) scale(0.985);
+  filter: brightness(0.92);
+  box-shadow: 0 6px 16px rgba(0,0,0,.22);
+  transition: transform 0.05s ease, filter 0.05s ease, box-shadow 0.05s ease;
 }
 
 .iu-leftNavItem.is-active {

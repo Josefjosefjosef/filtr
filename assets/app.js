@@ -24589,6 +24589,9 @@ function buildVideoAsArticleCard(it) {
     }
     setLeftNavForUrlState(nav);
     showView(viewKey);
+    try {
+      iuSyncBodyIuHomeFromProjectsNav(nav);
+    } catch (_) {}
 
     try {
       const barFeed = document.getElementById("iuTravelNavBar");
@@ -24690,11 +24693,39 @@ function buildVideoAsArticleCard(it) {
       }
     }catch{}
 
-    // SOLID chips: runtime contrast for default WHITE text (MindMenu unaffected)
-    try{
-      const contrastRoot = iuSolidChipContrastRootForSection(section, nav);
-      iuApplySolidChipTextContrastInView(contrastRoot);
-    }catch{}
+    // P0 perf: defer feed filter + chip contrast until after the browser paints nav + view switch (input latency).
+    try {
+      requestAnimationFrame(() => {
+        try {
+          const contrastRoot = iuSolidChipContrastRootForSection(section, nav);
+          iuApplySolidChipTextContrastInView(contrastRoot);
+        } catch (_) {}
+        try {
+          if (typeof window !== "undefined" && typeof window.__iuApplyFeedFilter === "function") {
+            window.__iuApplyFeedFilter();
+          }
+        } catch (_) {}
+        try {
+          const pl = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
+          if (pl) {
+            const loadedOk =
+              pl.hasLoadedData === true &&
+              Array.isArray(pl.cachedItems) &&
+              pl.cachedItems.length > 0;
+            const needFeedBootstrap =
+              typeof window.__iuLoadData === "function" &&
+              !pl.isLoadingData &&
+              !loadedOk;
+            if (needFeedBootstrap) {
+              window.__iuLoadData();
+            }
+          }
+        } catch (_) {}
+        try {
+          window.__iuStartAutoRefresh && window.__iuStartAutoRefresh();
+        } catch (_) {}
+      });
+    } catch (_) {}
 
     // Notes: mount for current section + render all declared notes hosts (no MindMenu impact)
     try{
@@ -24744,35 +24775,6 @@ function buildVideoAsArticleCard(it) {
         }
       }
     }catch{}
-    try {
-      if (typeof window !== "undefined" && typeof window.__iuApplyFeedFilter === "function") {
-        window.__iuApplyFeedFilter();
-      }
-    } catch (_) {}
-    // P0 perf: do not full-reload articles.json on every section switch when cache is already valid.
-    // loadData() clears hasLoadedData + cache at entry — use loadedOk (hasLoadedData===true && cachedItems.length>0)
-    // and !isLoadingData so in-flight loads do not look "empty". applyFilter narrows filteredItems from cache.
-    // Explicit refresh / auto-refresh / retry paths still call loadData() directly.
-    try {
-      const pl = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
-      if (pl) {
-        const loadedOk =
-          pl.hasLoadedData === true &&
-          Array.isArray(pl.cachedItems) &&
-          pl.cachedItems.length > 0;
-        const needFeedBootstrap =
-          typeof window.__iuLoadData === "function" &&
-          !pl.isLoadingData &&
-          !loadedOk;
-        if (needFeedBootstrap) {
-          window.__iuLoadData();
-        }
-      }
-    } catch (_) {}
-    try{ window.__iuStartAutoRefresh && window.__iuStartAutoRefresh(); }catch{}
-    try {
-      iuSyncBodyIuHomeFromProjectsNav(nav);
-    } catch (_) {}
   }
   try { window.iuApplySectionFromURL = applySectionFromURL; } catch (e) {}
   try { window.iuPersistNavState = persistNavState; } catch (e) {}
@@ -25100,6 +25102,40 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         }, true);
       } catch {}
     }
+    let iuNavPressEl = null;
+    function iuClearNavPress() {
+      try {
+        if (iuNavPressEl) {
+          iuNavPressEl.classList.remove("iu-press-active");
+          iuNavPressEl = null;
+        }
+      } catch (_) {}
+    }
+    document.addEventListener(
+      "pointerdown",
+      (e) => {
+        const item =
+          e.target && e.target.closest
+            ? e.target.closest(".iu-leftNavItem")
+            : null;
+        const hex =
+          e.target && e.target.closest ? e.target.closest(".iuHex") : null;
+        const el = item || hex;
+        if (!el) return;
+        try {
+          if (iuNavPressEl && iuNavPressEl !== el) {
+            iuNavPressEl.classList.remove("iu-press-active");
+          }
+        } catch (_) {}
+        iuNavPressEl = el;
+        try {
+          el.classList.add("iu-press-active");
+        } catch (_) {}
+      },
+      true
+    );
+    document.addEventListener("pointerup", iuClearNavPress, true);
+    document.addEventListener("pointercancel", iuClearNavPress, true);
     document.addEventListener('click', (e) => {
       if (e.target.closest && e.target.closest('[data-iuq="ai"]')) return;
       const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
