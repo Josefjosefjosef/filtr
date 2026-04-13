@@ -21034,8 +21034,24 @@ function buildVideoAsArticleCard(it) {
       try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit"); } catch (_) {}
       try { quick.removeAttribute("data-iu-qf-key"); } catch (_) {}
       quick.hidden = true;
+      try { quick.style.display = "none"; } catch (_) {}
       iuUndockQuickFeedFromBody(quick);
-      quick.innerHTML = "";
+      /* P0 perf: clearing large QuickFeed HTML synchronously blocked main-thread nav for ~1–2s. */
+      try {
+        const html = quick.innerHTML;
+        if (html && String(html).length > 0) {
+          const flush = function () {
+            try {
+              quick.innerHTML = "";
+            } catch (_) {}
+          };
+          if (typeof requestIdleCallback === "function") {
+            requestIdleCallback(flush, { timeout: 400 });
+          } else {
+            setTimeout(flush, 0);
+          }
+        }
+      } catch (_) {}
     }
     try {
       iuSetViewportLock(false);
@@ -21673,6 +21689,14 @@ function buildVideoAsArticleCard(it) {
       aiPanel.dataset.open = '1';
       setExpanded(true);
       try {
+        aiPanel.style.visibility = "visible";
+        aiPanel.style.opacity = "1";
+        if (aiOverlay) {
+          aiOverlay.style.visibility = "visible";
+          aiOverlay.style.opacity = "1";
+        }
+      } catch (_) {}
+      try {
         const body = aiPanel.querySelector('.iu-aiPanelBody');
         if (body && typeof window.iuPersistScrollPanels === 'function') {
           requestAnimationFrame(() => window.iuPersistScrollPanels());
@@ -21694,6 +21718,14 @@ function buildVideoAsArticleCard(it) {
       try { document.body.classList.remove("iu-ai-narrow-fullscreen"); } catch (_) {}
       aiPanel.dataset.open = '0';
       setExpanded(false);
+      try {
+        aiPanel.style.visibility = "";
+        aiPanel.style.opacity = "";
+        if (aiOverlay) {
+          aiOverlay.style.visibility = "";
+          aiOverlay.style.opacity = "";
+        }
+      } catch (_) {}
     }
     try { window.iuAiPanelCloseSurface = closePanel; } catch (_) {}
 
@@ -24433,6 +24465,61 @@ function buildVideoAsArticleCard(it) {
       document.body.style.overflow = '';
     } catch {}
   }
+
+  /** P0 perf: left-rail / hex nav — avoid synchronous iuForceCloseAllOverlays (QuickFeed innerHTML, modal sweep). */
+  function iuNavRailHideOverlaysFast() {
+    try {
+      const panel = document.getElementById("iu-aiPanel");
+      const overlay = document.getElementById("iu-aiOverlay");
+      if (typeof iuSetElOpenVisible === "function") {
+        iuSetElOpenVisible(panel, false);
+        iuSetElOpenVisible(overlay, false);
+      } else {
+        if (panel) panel.hidden = true;
+        if (overlay) overlay.hidden = true;
+      }
+      try {
+        if (panel) {
+          panel.dataset.open = "0";
+          panel.classList.remove("is-open");
+        }
+      } catch (_) {}
+      const qf = document.getElementById("iuQuickFeed");
+      if (qf) {
+        qf.hidden = true;
+        try {
+          qf.style.display = "none";
+        } catch (_) {}
+      }
+      try {
+        document.body.classList.remove("iu-modal-open", "iu-ai-narrow-fullscreen");
+        document.body.style.overflow = "";
+      } catch (_) {}
+    } catch (_) {}
+    try {
+      var ricNav =
+        typeof requestIdleCallback !== "undefined"
+          ? requestIdleCallback
+          : function (cb, opt) {
+              return setTimeout(function () {
+                try {
+                  cb({ didTimeout: true, timeRemaining: function () { return 5; } });
+                } catch (_) {}
+              }, opt && opt.timeout ? Math.min(opt.timeout, 64) : 48);
+            };
+      ricNav(
+        function () {
+          try {
+            if (typeof window.iuForceCloseAllOverlays === "function") {
+              window.iuForceCloseAllOverlays();
+            }
+          } catch (_) {}
+        },
+        { timeout: 900 }
+      );
+    } catch (_) {}
+  }
+
   // FORCE STYLE CACHE so first click has no flash
   try {
     requestAnimationFrame(() => {
@@ -24533,11 +24620,23 @@ function buildVideoAsArticleCard(it) {
     window.iuSyncBodyIuHomeFromProjectsNav = iuSyncBodyIuHomeFromProjectsNav;
   } catch (_) {}
 
+  /** True when URL state uses the article feed pipeline (filter / loadData / auto-refresh). Non-feed sections must skip these. */
+  function iuProjectsNavUsesFeedPipeline(nav) {
+    try {
+      const section = String(nav.section || "").trim().toLowerCase();
+      const mode = String(nav.mode || "guide").trim().toLowerCase();
+      if (iuArticleHubSectionP(section)) return true;
+      if (["hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1) return true;
+      if (section === "travel" && mode === "media") return true;
+    } catch (_) {}
+    return false;
+  }
+
   function applySectionFromURL(accentOverride){
-    if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
     void accentOverride;
     const nav = readUrlNavState();
     const section = nav.section;
+    const usesFeed = iuProjectsNavUsesFeedPipeline(nav);
     try {
       const fp = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
       if (fp) {
@@ -24587,11 +24686,19 @@ function buildVideoAsArticleCard(it) {
     } else {
       viewKey = VIEW_MAP[section] ?? "media";
     }
-    setLeftNavForUrlState(nav);
     showView(viewKey);
     try {
       iuSyncBodyIuHomeFromProjectsNav(nav);
     } catch (_) {}
+
+    try {
+      requestAnimationFrame(function iuApplySectionPostPaint() {
+        try {
+          if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
+        } catch (_) {}
+        try {
+          setLeftNavForUrlState(nav);
+        } catch (_) {}
 
     try {
       const barFeed = document.getElementById("iuTravelNavBar");
@@ -24676,55 +24783,84 @@ function buildVideoAsArticleCard(it) {
       }
     }catch{}
 
-    // Weather (UI-only): ensure render + radarOpen works after view switch.
+    // Weather (UI-only): defer fetch/render so first paint is not blocked on non-feed Počasí.
     try{
       if (section === "pocasi") {
-        try{
-          const fn = (typeof window !== "undefined" && window.iuWeatherLoadAndRender);
-          if (typeof fn === "function") fn();
-        }catch{}
-        try{ iuWeatherHideEmptyNameday(); }catch{}
-        try{
-          const params = new URLSearchParams(location.search || "");
-          if (params.get("radarOpen") === "1") {
-            iuWeatherRadarEnsure();
-          }
-        }catch{}
+        var ricWx =
+          typeof requestIdleCallback !== "undefined"
+            ? requestIdleCallback
+            : function (cb, opt) {
+                return setTimeout(function () {
+                  try {
+                    cb({ didTimeout: true, timeRemaining: function () { return 5; } });
+                  } catch (_) {}
+                }, opt && opt.timeout ? Math.min(opt.timeout, 40) : 1);
+              };
+        ricWx(
+          function () {
+            try{
+              const fn = (typeof window !== "undefined" && window.iuWeatherLoadAndRender);
+              if (typeof fn === "function") fn();
+            }catch{}
+            try{ iuWeatherHideEmptyNameday(); }catch{}
+            try{
+              const params = new URLSearchParams(location.search || "");
+              if (params.get("radarOpen") === "1") {
+                iuWeatherRadarEnsure();
+              }
+            }catch{}
+          },
+          { timeout: 450 }
+        );
       }
     }catch{}
 
-    // P0 perf: defer feed filter + chip contrast until after the browser paints nav + view switch (input latency).
+    // P0 perf: chip contrast + feed pipeline in idle — skip feed filter/bootstrap/refresh when section is not feed pipeline.
     try {
-      requestAnimationFrame(() => {
-        try {
-          const contrastRoot = iuSolidChipContrastRootForSection(section, nav);
-          iuApplySolidChipTextContrastInView(contrastRoot);
-        } catch (_) {}
-        try {
-          if (typeof window !== "undefined" && typeof window.__iuApplyFeedFilter === "function") {
-            window.__iuApplyFeedFilter();
-          }
-        } catch (_) {}
-        try {
-          const pl = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
-          if (pl) {
-            const loadedOk =
-              pl.hasLoadedData === true &&
-              Array.isArray(pl.cachedItems) &&
-              pl.cachedItems.length > 0;
-            const needFeedBootstrap =
-              typeof window.__iuLoadData === "function" &&
-              !pl.isLoadingData &&
-              !loadedOk;
-            if (needFeedBootstrap) {
-              window.__iuLoadData();
+      var ricFeed =
+        typeof requestIdleCallback !== "undefined"
+          ? requestIdleCallback
+          : function (cb, opt) {
+              return setTimeout(function () {
+                try {
+                  cb({ didTimeout: true, timeRemaining: function () { return 5; } });
+                } catch (_) {}
+              }, opt && opt.timeout ? Math.min(opt.timeout, 48) : 1);
+            };
+      ricFeed(
+        function () {
+          try {
+            var contrastRoot = iuSolidChipContrastRootForSection(section, nav);
+            if (contrastRoot) iuApplySolidChipTextContrastInView(contrastRoot);
+          } catch (_) {}
+          if (!usesFeed) return;
+          try {
+            if (typeof window !== "undefined" && typeof window.__iuApplyFeedFilter === "function") {
+              window.__iuApplyFeedFilter();
             }
-          }
-        } catch (_) {}
-        try {
-          window.__iuStartAutoRefresh && window.__iuStartAutoRefresh();
-        } catch (_) {}
-      });
+          } catch (_) {}
+          try {
+            var pl = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
+            if (pl) {
+              var loadedOk =
+                pl.hasLoadedData === true &&
+                Array.isArray(pl.cachedItems) &&
+                pl.cachedItems.length > 0;
+              var needFeedBootstrap =
+                typeof window.__iuLoadData === "function" &&
+                !pl.isLoadingData &&
+                !loadedOk;
+              if (needFeedBootstrap) {
+                window.__iuLoadData();
+              }
+            }
+          } catch (_) {}
+          try {
+            window.__iuStartAutoRefresh && window.__iuStartAutoRefresh();
+          } catch (_) {}
+        },
+        { timeout: 500 }
+      );
     } catch (_) {}
 
     // Notes: mount for current section + render all declared notes hosts (no MindMenu impact)
@@ -24775,11 +24911,14 @@ function buildVideoAsArticleCard(it) {
         }
       }
     }catch{}
+      });
+    } catch (_) {}
   }
   try { window.iuApplySectionFromURL = applySectionFromURL; } catch (e) {}
   try { window.iuPersistNavState = persistNavState; } catch (e) {}
   try { window.iuApplyPanelFromUrl = applyPanelFromUrl; } catch (e) {}
   try { window.iuHideAllOverlaysNow = iuHideAllOverlaysNow; } catch (e) {}
+  try { window.iuNavRailHideOverlaysFast = iuNavRailHideOverlaysFast; } catch (e) {}
   try { window.iuScrollMainToTopSmooth = iuScrollMainToTopSmooth; } catch (e) {}
 
   function initRadioWish(viewEl){
@@ -25148,7 +25287,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         if (isInternal) e.preventDefault();
       }catch{}
       const mediaTopic = (item.getAttribute("data-media-topic") || "").trim().toLowerCase();
-      iuHideAllOverlaysNow();
+      if (typeof window.iuNavRailHideOverlaysFast === "function") {
+        window.iuNavRailHideOverlaysFast();
+      } else {
+        iuHideAllOverlaysNow();
+      }
       if (mediaTopic !== "") {
         persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: mediaTopic });
       } else {
@@ -25199,7 +25342,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const cls = Array.from(hex.classList).find(c => c.startsWith('iuHex--'));
       const sectionFromClass = cls ? cls.slice('iuHex--'.length).toLowerCase() : '';
       const rawHexKey = sectionAttr || sectionFromClass;
-      iuHideAllOverlaysNow();
+      if (typeof window.iuNavRailHideOverlaysFast === "function") {
+        window.iuNavRailHideOverlaysFast();
+      } else {
+        iuHideAllOverlaysNow();
+      }
       persistNavStateFromHexKey(rawHexKey);
       applySectionFromURL();
       try{ requestAnimationFrame(() => { try{ iuScrollMainToTopSmooth(); }catch{} }); }catch{}
