@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T13:10:01.134368Z",
+  "ingestedAt": "2026-04-13T13:30:21.366563Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Rusové a Bělorusové budou plavat pod svou vlajkou, může jim hrát i hymna",
+      "url": "https://www.idnes.cz/sport/ostatni/plavani-rusko-belorusko-vlajka-hymna-navrat.A260413_151000_sporty_czo",
+      "dt": "2026-04-13T13:14:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bělorusové",
+        "hrát",
+        "hymna",
+        "jim",
+        "plavat",
+        "rusové",
+        "svou",
+        "vlajkou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nejkrásnější tajemství! Tenista s partnerkou odhalili narození dcery",
+      "url": "https://www.idnes.cz/sport/trendy/nejkrasnejsi-tajemstvi-tenista-s-partnerkou-odhalili-narozeni-dcery.A260413_110126_trendy_blah",
+      "dt": "2026-04-13T13:05:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dcery",
+        "narození",
+        "nejkrásnější",
+        "odhalili",
+        "partnerkou",
+        "tajemství",
+        "tenista"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -740,61 +789,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Haraslín zpátky v gólovém vagonu. Slavia? Koukáme hlavně na sebe, řekl v Teplicích",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/sparta-teplice-ohlas-lukas-haraslin.A260412_190145_fotbal_duff",
-      "dt": "2026-04-13T05:05:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "gólovém",
-        "haraslín",
-        "hlavně",
-        "koukáme",
-        "sebe",
-        "slavia",
-        "teplicích",
-        "vagonu",
-        "zpátky",
-        "řekl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nymburk, Slavia a jiné sňatky z rozumu. Turkům přinesl tituly, PSG brzký krach",
-      "url": "https://www.idnes.cz/sport/basket/slavia-nymburk-spojeni-maxa-nbl-nastrahy.A260409_134159_sport-basket_czo",
-      "dt": "2026-04-13T04:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "brzký",
-        "jiné",
-        "krach",
-        "nymburk",
-        "psg",
-        "přinesl",
-        "rozumu",
-        "slavia",
-        "sňatky",
-        "tituly",
-        "turkům"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48174,
+      "bytes": 47521,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T12:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T13:14:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -858,6 +852,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusové a Bělorusové budou plavat pod svou vlajkou, může jim hrát i hymna",
+            "publishedAt": "2026-04-13T13:14:00Z"
+          },
+          {
+            "title": "Nejkrásnější tajemství! Tenista s partnerkou odhalili narození dcery",
+            "publishedAt": "2026-04-13T13:05:00Z"
+          },
           {
             "title": "Ranní vstávání bolí, Krpálka ale žene vidina LA. Ty jsi tu pořád? žasnou soupeři",
             "publishedAt": "2026-04-13T12:50:00Z"
@@ -881,14 +883,6 @@
           {
             "title": "Tajná oslava pro Maděrovou. Rodina olympioničky ji chystala dva měsíce",
             "publishedAt": "2026-04-13T11:40:00Z"
-          },
-          {
-            "title": "Chorý v průšvihu. Červená karta udělena správně, řekla komise. Jaký dostane trest?",
-            "publishedAt": "2026-04-13T11:20:00Z"
-          },
-          {
-            "title": "Další prvoligový hráč v korupční kauze. Zapleten je i olomoucký Elbel, tvrdí policie",
-            "publishedAt": "2026-04-13T11:14:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T13:10:01.134368Z",
+  "ingestedAt": "2026-04-13T13:30:21.366563Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Po maďarských volbách za mříže? Dva politiky budou řešit soudy",
+      "url": "https://ekonomickydenik.cz/po-madarskych-volbach-za-mrize/",
+      "dt": "2026-04-13T13:21:18Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dva",
+        "maďarských",
+        "mříže",
+        "politiky",
+        "soudy",
+        "volbách",
+        "řešit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -747,30 +771,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš podpořil Orbána. Od opozice to schytal i kvůli Putinovi",
-      "url": "https://ekonomickydenik.cz/babis-podporil-orbana/",
-      "dt": "2026-04-11T07:21:35Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "kvůli",
-        "opozice",
-        "orbána",
-        "podpořil",
-        "putinovi",
-        "schytal"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71740,
+      "bytes": 71906,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,12 +818,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T13:02:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T13:21:18Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
-          "zdravi": 3,
-          "zpravy": 1
+          "zpravy": 2,
+          "finance": 25,
+          "zdravi": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -835,6 +835,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po maďarských volbách za mříže? Dva politiky budou řešit soudy",
+            "publishedAt": "2026-04-13T13:21:18Z"
+          },
           {
             "title": "Stát ušetří na dávkách miliony, životní minimum vzroste později",
             "publishedAt": "2026-04-13T13:02:56Z"
@@ -862,10 +866,6 @@
           {
             "title": "Fico děkuje Orbánovi, Babiš vyhlíží spolupráci s Magyarem",
             "publishedAt": "2026-04-13T08:28:00Z"
-          },
-          {
-            "title": "Colt CZ na dvou akciových hřištích. Pražskou burzu doplní prestižní Amsterdam",
-            "publishedAt": "2026-04-13T07:37:52Z"
           }
         ]
       }

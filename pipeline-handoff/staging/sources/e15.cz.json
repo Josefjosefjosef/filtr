@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-13T13:10:01.134368Z",
+  "ingestedAt": "2026-04-13T13:30:21.366563Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evropské konzervativce zdiskreditovali Putin a Trump. Teď se musí vypořádat s Orbánovým pádem",
+      "url": "https://www.e15.cz/nazory-a-analyzy/evropske-konzervativce-zdiskreditovali-putin-a-trump-ted-se-musi-vyporadat-s-orbanovym-padem-1432095",
+      "dt": "2026-04-13T13:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "evropské",
+        "konzervativce",
+        "musí",
+        "orbánovým",
+        "putin",
+        "pádem",
+        "trump",
+        "vypořádat",
+        "zdiskreditovali"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1050,30 +1076,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "V Islámábádu přistálo letadlo s delegací USA pro jednání s Íránem",
-      "url": "https://www.e15.cz/zahranicni/v-islamabadu-pristalo-letadlo-s-delegaci-usa-pro-jednani-s-iranem-1432055",
-      "dt": "2026-04-11T05:56:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "delegací",
-        "islámábádu",
-        "jednání",
-        "letadlo",
-        "přistálo",
-        "usa",
-        "íránem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1084,7 +1086,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52636,
+      "bytes": 52839,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1121,11 +1123,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T12:37:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T13:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
-          "zpravy": 2,
+          "finance": 38,
+          "zpravy": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1138,6 +1140,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropské konzervativce zdiskreditovali Putin a Trump. Teď se musí vypořádat s Orbánovým pádem",
+            "publishedAt": "2026-04-13T13:00:00Z"
+          },
           {
             "title": "Summit NATO teď není téma, Motoristé nerozchodili, že Pavel nejmenoval Turka ministrem, řekl Babiš",
             "publishedAt": "2026-04-13T12:37:00Z"
@@ -1165,10 +1171,6 @@
           {
             "title": "Praha chce dorovnat vítěznou nabídku a koupit Národní dům na Vinohradech za 399 milionů",
             "publishedAt": "2026-04-13T10:10:00Z"
-          },
-          {
-            "title": "Škoda roste navzdory útlumu Volkswagenu. Odbyt jí v prvním čtvrtletí stoupl o 14 procent",
-            "publishedAt": "2026-04-13T10:00:00Z"
           }
         ]
       }

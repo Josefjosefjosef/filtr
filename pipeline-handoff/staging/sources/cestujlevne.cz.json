@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-13T13:10:01.134368Z",
+  "ingestedAt": "2026-04-13T13:30:21.366563Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Palau z Prahy přes Tchaj-pej s China Airlines. Letenky od 21 990 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/palau-z-prahy-pres-tchaj-pej-s-china-airlines",
+      "dt": "2026-04-13T13:12:46Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "990",
+        "airlines",
+        "china",
+        "letenky",
+        "palau",
+        "pej",
+        "prahy",
+        "tchaj"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -477,30 +502,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Last minute letenka z Prahy do Skotska. Letenky od 968 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/last-minute-letenka-z-prahy-do-skotska",
-      "dt": "2026-04-07T08:11:57Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "968",
-        "last",
-        "letenka",
-        "letenky",
-        "minute",
-        "prahy",
-        "skotska"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 44002,
+      "bytes": 44586,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,7 +549,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T11:38:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T13:12:46Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -563,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Palau z Prahy přes Tchaj-pej s China Airlines. Letenky od 21 990 Kč",
+            "publishedAt": "2026-04-13T13:12:46Z"
+          },
           {
             "title": "Týden na Sardinii s all-inclusive a přímým letem z Prahy na přelomu května a června. Zájezd od 16 890 Kč",
             "publishedAt": "2026-04-13T11:38:51Z"
@@ -590,10 +595,6 @@
           {
             "title": "Termální ostrov Ischia – týden se snídaní z Prahy. Zájezd od 14 990 Kč",
             "publishedAt": "2026-04-09T17:54:05Z"
-          },
-          {
-            "title": "Chorvatský Dubrovník z Vídně během jara. Letenky od 735 Kč",
-            "publishedAt": "2026-04-09T12:27:35Z"
           }
         ]
       }
