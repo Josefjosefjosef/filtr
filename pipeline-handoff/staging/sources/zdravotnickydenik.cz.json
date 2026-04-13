@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-13T05:59:18.615821Z",
+  "ingestedAt": "2026-04-13T06:14:29.515386Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "V Polsku levně, v Německu za 24 tisíc. Podívejte se, kde se loni Češi léčili nejčastěji a za kolik",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/kde-se-loni-cesi-lecili-nejcasteji-a-za-kolik/",
+      "dt": "2026-04-13T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "kolik",
+        "levně",
+        "loni",
+        "léčili",
+        "nejčastěji",
+        "německu",
+        "podívejte",
+        "polsku",
+        "tisíc",
+        "češi"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -239,36 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Žahadla z horoucího pekla, jejichž jed vás donutí prosit o smrt. Kde si dát pozor při koupání?",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/jedovati-morsti-tvorove-kde-si-dat-pozor-pri-koupani/",
-      "dt": "2026-04-10T13:32:54Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "donutí",
-        "dát",
-        "horoucího",
-        "jed",
-        "jejichž",
-        "koupání",
-        "pekla",
-        "pozor",
-        "prosit",
-        "při",
-        "smrt",
-        "vás",
-        "žahadla"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 105497,
+      "bytes": 102846,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -331,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Polsku levně, v Německu za 24 tisíc. Podívejte se, kde se loni Češi léčili nejčastěji a za kolik",
+            "publishedAt": "2026-04-13T06:00:00Z"
+          },
           {
             "title": "Konec monopolu specializovaných center? Stát, pojišťovny i firmy chtějí změnu",
             "publishedAt": "2026-04-13T05:00:00Z"
@@ -358,10 +359,6 @@
           {
             "title": "Parkinsonova choroba přichází nenápadně. Podívejte se, jaké jsou první příznaky",
             "publishedAt": "2026-04-11T05:00:00Z"
-          },
-          {
-            "title": "Konec unikátu v centru Prahy? Magistrát chce převzít Nemocnici Na Františku",
-            "publishedAt": "2026-04-10T16:42:55Z"
           }
         ]
       }

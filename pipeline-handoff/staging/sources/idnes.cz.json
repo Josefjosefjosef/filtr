@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-13T05:59:18.615821Z",
+  "ingestedAt": "2026-04-13T06:14:29.515386Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Zemřel kapelník Václav Hybš, doprovázel zlaté slavíky i populární estrády",
+      "url": "https://www.idnes.cz/kultura/hudba/zemrel-vaclav-hybs.A260413_073833_hudba_bur",
+      "dt": "2026-04-13T05:42:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "doprovázel",
+        "estrády",
+        "hybš",
+        "kapelník",
+        "populární",
+        "slavíky",
+        "václav",
+        "zemřel",
+        "zlaté"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -751,33 +777,6 @@
         "připlatila",
         "sněhu",
         "zimě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Stát mi dal vyznamenání, ale ne jistotu a podporu, říká Dita o životě s postižením",
-      "url": "https://www.idnes.cz/zpravy/domaci/dita-horochovcova-silou-slova-postizeni-vyznamenani.A260303_114310_domaci_tty",
-      "dt": "2026-04-12T15:29:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "ale",
-        "dal",
-        "dita",
-        "jistotu",
-        "podporu",
-        "postižením",
-        "stát",
-        "vyznamenání",
-        "říká",
-        "životě"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1574,7 +1573,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48693,
+      "bytes": 48423,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1611,10 +1610,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T05:42:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
+          "other": 1,
+          "zpravy": 27,
           "finance": 2
         },
         "drop_counts": {
@@ -1627,6 +1627,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zemřel kapelník Václav Hybš, doprovázel zlaté slavíky i populární estrády",
+            "publishedAt": "2026-04-13T05:42:00Z"
+          },
           {
             "title": "ONLINE: Osvobodili jsme Maďarsko, slaví Magyar. Má ústavní většinu, Orbán prohrál",
             "publishedAt": "2026-04-13T05:00:00Z"
@@ -1654,10 +1658,6 @@
           {
             "title": "Vláda chce zákon, který jí umožní regulovat ceny paliv jejím nařízením",
             "publishedAt": "2026-04-13T04:00:00Z"
-          },
-          {
-            "title": "OBRAZEM: Prasátko jako dalmatin. V přírodě by nepřežilo, v oboře je atrakcí",
-            "publishedAt": "2026-04-13T03:23:00Z"
           }
         ]
       }
