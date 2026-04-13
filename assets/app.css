@@ -15942,6 +15942,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  /* P0 desktop-only: první řádek — plná šířka textu počasí bez ellipsis/clippingu v #iuSilverWeatherCard */
+  #silver-slot #iuSilverWeatherCard .silver-weather-line1,
+  #silver-slot #iuSilverWeatherCard .silver-weather-line2{
+    white-space: normal;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    text-overflow: unset;
+  }
   .silver-calendar-summary-text{
     white-space: nowrap;
     overflow: hidden;
@@ -16012,11 +16021,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     }
   }
 
-  /* P0 desktop-only: uvítání + počasí v jednom řádku; zbytek stacku beze změny pořadí */
+  /* P0 desktop-only: uvítání + počasí v jednom řádku; větší podíl + gap → počasí více vlevo, text se vejde */
   #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(220px, 36%);
-    column-gap: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 46%);
+    column-gap: 12px;
     align-items: start;
     width: 100%;
     max-width: 100%;
@@ -16487,6 +16496,20 @@ Porušení = regres + CLS risk
     min-height: 1px !important;
     max-height: 1px !important;
     margin: 0 !important;
+  }
+}
+
+@media (min-width: 1025px){
+  /* P0 desktop-only: weather v první řádce — přepis 901px locku; zalamování + vyšší box, bez horizontálního ořezu */
+  #silver-slot #iuSilverWeatherCard.silver-weather-card{
+    overflow-x: visible;
+    overflow-y: visible;
+  }
+  #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"]{
+    min-height: 132px;
+    max-height: 172px;
+    box-sizing: border-box;
+    overflow: visible;
   }
 }
 
