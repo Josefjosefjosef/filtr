@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-13T04:54:14.599288Z",
+  "ingestedAt": "2026-04-13T05:09:12.039214Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Konec monopolu specializovaných center? Stát, pojišťovny i firmy chtějí změnu",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/konec-monopolu-specializovanych-center-stat-pojistovny-firmy/",
+      "dt": "2026-04-13T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "center",
+        "chtějí",
+        "firmy",
+        "konec",
+        "monopolu",
+        "pojišťovny",
+        "specializovaných",
+        "stát",
+        "změnu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,32 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Válka, terorismus a česká improvizace: Proč je neefektivita nemocnic v krizi výhodou?",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/valka-terorismus-a-ceska-improvizace/",
-      "dt": "2026-04-10T11:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "improvizace",
-        "krizi",
-        "neefektivita",
-        "nemocnic",
-        "proč",
-        "terorismus",
-        "válka",
-        "výhodou",
-        "česká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 99475,
+      "bytes": 105497,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-12T14:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -331,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec monopolu specializovaných center? Stát, pojišťovny i firmy chtějí změnu",
+            "publishedAt": "2026-04-13T05:00:00Z"
+          },
           {
             "title": "Další pandemie začne u zvířat. A svět není připraven, varuje Macron",
             "publishedAt": "2026-04-12T14:30:00Z"
@@ -358,10 +362,6 @@
           {
             "title": "Konec unikátu v centru Prahy? Magistrát chce převzít Nemocnici Na Františku",
             "publishedAt": "2026-04-10T16:42:55Z"
-          },
-          {
-            "title": "Přehled týdne: Tohle se teď děje ve zdravotnictví napříč Českem",
-            "publishedAt": "2026-04-10T14:30:00Z"
           }
         ]
       }

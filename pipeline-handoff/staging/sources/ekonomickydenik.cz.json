@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T04:54:14.599288Z",
+  "ingestedAt": "2026-04-13T05:09:12.039214Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Metnar chce zastavit personální krizi: nástupní plat 50 tisíc a půlmiliarda pro dobrovolné hasiče",
+      "url": "https://ekonomickydenik.cz/metnar-50-tisic-pulmiliarda-hasice/",
+      "dt": "2026-04-13T04:55:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chce",
+        "dobrovolné",
+        "hasiče",
+        "krizi",
+        "metnar",
+        "nástupní",
+        "personální",
+        "plat",
+        "půlmiliarda",
+        "tisíc",
+        "zastavit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -736,32 +764,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zemědělský rozpočet v troskách? Kvůli drastickým škrtům hrozí farmáři vzpourou",
-      "url": "https://ekonomickydenik.cz/zemedelsky-rozpocet-v-troskach-vzpoura/",
-      "dt": "2026-04-10T11:08:41Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "drastickým",
-        "farmáři",
-        "hrozí",
-        "kvůli",
-        "rozpočet",
-        "troskách",
-        "vzpourou",
-        "zemědělský",
-        "škrtům"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -772,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73536,
+      "bytes": 73399,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -809,11 +811,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T04:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 1,
           "finance": 26,
+          "zdravi": 1,
           "zpravy": 2,
           "cestovani": 1
         },
@@ -827,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Metnar chce zastavit personální krizi: nástupní plat 50 tisíc a půlmiliarda pro dobrovolné hasiče",
+            "publishedAt": "2026-04-13T04:55:00Z"
+          },
           {
             "title": "Havlíček: Nesázejme na dovoz levné elektřiny ze Švédska či Francie. Co je doma, to se počítá",
             "publishedAt": "2026-04-13T04:05:00Z"
@@ -854,10 +860,6 @@
           {
             "title": "Ministerstvo zahraničí popírá prezidenta. Vadí slova o Trumpovi",
             "publishedAt": "2026-04-12T12:18:34Z"
-          },
-          {
-            "title": "Maďaři rozhodují o budoucnosti. Vyzyvatel Orbána chce užší spolupráci s Českem",
-            "publishedAt": "2026-04-12T11:14:52Z"
           }
         ]
       }

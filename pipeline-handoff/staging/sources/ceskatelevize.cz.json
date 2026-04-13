@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-13T04:54:14.599288Z",
+  "ingestedAt": "2026-04-13T05:09:12.039214Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "KGB, petro-rubl a Potěmkinovy reaktory. Historik vysvětluje příčiny katastrofy v Černobylu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/kgb-petro-rubl-a-potemkinovy-reaktory-historik-vysvetluje-priciny-katastrofy-v-cernobylu-372234",
+      "dt": "2026-04-13T05:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "historik",
+        "katastrofy",
+        "kgb",
+        "petro",
+        "potěmkinovy",
+        "příčiny",
+        "reaktory",
+        "rubl",
+        "vysvětluje",
+        "černobylu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -704,32 +731,6 @@
         "souhrn",
         "události",
         "zásadní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Náměstek MŠMT Kettner se omluvil Minářovi a Halíkovi za sdílení falešného snímku",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/namestek-msmt-kettner-se-omluvil-minarovi-a-halikovi-za-sdileni-falesneho-snimku-372278",
-      "dt": "2026-04-11T14:57:25Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "falešného",
-        "halíkovi",
-        "kettner",
-        "minářovi",
-        "mšmt",
-        "náměstek",
-        "omluvil",
-        "sdílení",
-        "snímku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1508,7 +1509,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42464,
+      "bytes": 42171,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1568,12 +1569,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "finance": 2,
-          "other": 3
+          "other": 4,
+          "zpravy": 24,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1585,6 +1586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "KGB, petro-rubl a Potěmkinovy reaktory. Historik vysvětluje příčiny katastrofy v Černobylu",
+            "publishedAt": "2026-04-13T05:00:00Z"
+          },
           {
             "title": "Přibývá případů týrání zvířat. S odhalením má pomoci nový registr",
             "publishedAt": "2026-04-13T04:30:00Z"
@@ -1612,10 +1617,6 @@
           {
             "title": "SOUHRN: Zásadní události neděle 12. dubna",
             "publishedAt": "2026-04-12T16:28:00Z"
-          },
-          {
-            "title": "Vzdušné údery na severovýchodě Nigérie zřejmě zabily nejméně sto lidí",
-            "publishedAt": "2026-04-12T16:19:57Z"
           }
         ]
       }
@@ -1721,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76729,
+      "bytes": 76795,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

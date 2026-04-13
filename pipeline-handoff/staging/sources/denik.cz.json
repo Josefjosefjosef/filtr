@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-13T04:54:14.599288Z",
+  "ingestedAt": "2026-04-13T05:09:12.039214Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Fico blahopřál vítězi voleb v Maďarsku, Orbánovi poděkoval za spolupráci",
+      "url": "https://www.denik.cz/staty-eu/volby-v-madarsku-robert-fico-reakce.html",
+      "dt": "2026-04-13T04:41:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "blahopřál",
+        "fico",
+        "maďarsku",
+        "orbánovi",
+        "poděkoval",
+        "spolupráci",
+        "voleb",
+        "vítězi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -627,31 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ukrajina a Rusko se obviňují z porušování příměří. Dron zaútočil na sanitku",
-      "url": "https://www.denik.cz/z_domova/ukrajina-a-rusko-se-obvinuji-z-porusovani-primeri-dron-zautocil-na-sanitku.html",
-      "dt": "2026-04-12T07:27:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dron",
-        "obviňují",
-        "porušování",
-        "příměří",
-        "rusko",
-        "sanitku",
-        "ukrajina",
-        "zaútočil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31097,
+      "bytes": 31058,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,11 +699,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-13T02:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T04:41:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zdravi": 3,
           "zpravy": 19,
+          "zdravi": 3,
           "finance": 3
         },
         "drop_counts": {
@@ -716,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fico blahopřál vítězi voleb v Maďarsku, Orbánovi poděkoval za spolupráci",
+            "publishedAt": "2026-04-13T04:41:00Z"
+          },
           {
             "title": "Martina Šmuková z Pink Bubble: Nemocní si přejí počítač nebo třeba pejska",
             "publishedAt": "2026-04-13T02:30:00Z"
@@ -743,10 +747,6 @@
           {
             "title": "Viktor Orbán prohrál. Nového premiéra Magyara slavilo v Budapešti plné nábřeží",
             "publishedAt": "2026-04-12T20:04:00Z"
-          },
-          {
-            "title": "Pavel k volbám v Maďarsku: Rekordní účast je vítězstvím demokracie",
-            "publishedAt": "2026-04-12T19:48:00Z"
           }
         ]
       }

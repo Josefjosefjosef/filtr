@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T04:54:14.599288Z",
+  "ingestedAt": "2026-04-13T05:09:12.039214Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Zlín nevyužil mečbol, ale na sporný gól reagoval s klidem. Máme velké sebevědomí, řekl trenér",
+      "url": "https://www.sport.cz/clanek/hokej-ceska-1-liga-zlin-nevyuzil-mecbol-ale-na-sporny-gol-reagoval-s-klidem-mame-velke-sebevedomi-rekl-trener-5436351",
+      "dt": "2026-04-13T04:52:20Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ale",
+        "gól",
+        "klidem",
+        "mečbol",
+        "máme",
+        "nevyužil",
+        "reagoval",
+        "sebevědomí",
+        "sporný",
+        "trenér",
+        "velké",
+        "zlín",
+        "řekl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,31 +788,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dukla zchladila zlínskou hokejovou horečku a vynutila si rozhodující finále",
-      "url": "https://www.sport.cz/clanek/hokej-ceska-1-liga-dukla-zchladila-zlinskou-hokejovou-horecku-a-vynutila-si-rozhodujici-finale-5436257",
-      "dt": "2026-04-12T17:14:04Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dukla",
-        "finále",
-        "hokejovou",
-        "horečku",
-        "rozhodující",
-        "vynutila",
-        "zchladila",
-        "zlínskou"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44858,
+      "bytes": 44840,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T04:42:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T04:52:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -845,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zlín nevyužil mečbol, ale na sporný gól reagoval s klidem. Máme velké sebevědomí, řekl trenér",
+            "publishedAt": "2026-04-13T04:52:20Z"
+          },
           {
             "title": "Kouč Pardubic byl po výhře kritický: Náš výkon byl do očí bijící",
             "publishedAt": "2026-04-13T04:42:30Z"
@@ -872,10 +881,6 @@
           {
             "title": "Fotbalisté Betisu remizovali v Pamploně, klíčové páté místo ale udrželi",
             "publishedAt": "2026-04-12T14:20:20Z"
-          },
-          {
-            "title": "Někdo to chtěl vidět. Úmysl? Vaření z vody, rozčiluje se Trpišovský kvůli vyloučení Chorého",
-            "publishedAt": "2026-04-12T20:49:22Z"
           }
         ]
       }
