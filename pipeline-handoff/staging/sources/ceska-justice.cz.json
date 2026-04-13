@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-04-13T04:22:41.345750Z",
+  "ingestedAt": "2026-04-13T04:39:09.793449Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tejcův náměstek Koudelka: Soud si v kauze Čapí hnízdo vynucuje odsouzení Babiše",
+      "url": "https://www.ceska-justice.cz/2026/04/tejcuv-namestek-koudelka-soud-babis/",
+      "dt": "2026-04-13T04:30:00Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "babiše",
+        "hnízdo",
+        "kauze",
+        "koudelka",
+        "náměstek",
+        "odsouzení",
+        "soud",
+        "tejcův",
+        "vynucuje",
+        "čapí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,31 +266,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Už 39 let v cele. Nejdéle vězněný Čech na svobodu zatím nejde",
-      "url": "https://www.ceska-justice.cz/2026/04/nejdele-vezneny-cech-na-svobodu-zatim-nejde/",
-      "dt": "2026-04-09T12:53:55Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "cele",
-        "let",
-        "nejde",
-        "nejdéle",
-        "svobodu",
-        "vězněný",
-        "zatím",
-        "čech"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 94635,
+      "bytes": 104846,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-12T20:48:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T04:30:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -326,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tejcův náměstek Koudelka: Soud si v kauze Čapí hnízdo vynucuje odsouzení Babiše",
+            "publishedAt": "2026-04-13T04:30:00Z"
+          },
           {
             "title": "Maďarské volby ovládl advokát. Magyar slíbil, že Orbána rozebere „cihlu po cihle“",
             "publishedAt": "2026-04-12T20:48:27Z"
@@ -353,10 +359,6 @@
           {
             "title": "V hledáčku EU: České a slovenské firmy masivně krátily DPH u módy z Číny",
             "publishedAt": "2026-04-10T11:33:57Z"
-          },
-          {
-            "title": "Až 10 milionů pokuty a stopka na 5 let. ÚOHS chce za tajné dohody trestat i zaměstnance",
-            "publishedAt": "2026-04-10T04:30:00Z"
           }
         ]
       }

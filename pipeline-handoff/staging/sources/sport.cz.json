@@ -1,25 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T04:22:41.345750Z",
+  "ingestedAt": "2026-04-13T04:39:09.793449Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Pastrňák znovu na stý bod nedosáhl. Hronek pomohl k výhře",
+      "title": "Moje éra skončila, oznámil legendární Becker",
+      "url": "https://www.sport.cz/clanek/tenis-moje-era-skoncila-oznamil-legendarni-becker-5432859",
+      "dt": "2026-04-13T04:30:49Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "becker",
+        "legendární",
+        "moje",
+        "oznámil",
+        "skončila",
+        "éra"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Gudas se při návratu porval. Hronek pomohl k výhře, Pastrňák se stovky nedočkal",
       "url": "https://www.sport.cz/clanek/hokej-nhl-pastrnak-znovu-na-sty-bod-nedosahl-hronek-pomohl-k-vyhre-5436358",
       "dt": "2026-04-13T04:00:00Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "bod",
+        "gudas",
         "hronek",
-        "nedosáhl",
+        "nedočkal",
+        "návratu",
         "pastrňák",
         "pomohl",
-        "stý",
-        "výhře",
-        "znovu"
+        "porval",
+        "při",
+        "stovky",
+        "výhře"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -759,35 +784,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dostali jsme tvrdé K.O.! Mohli jsme dát klidně pět branek, mrzelo Janotku po prohře v Pardubicích",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-dostali-jsme-tvrde-k-o-mohli-jsme-dat-klidne-pet-branek-mrzelo-janotku-po-prohre-v-pardubicich-5436256",
-      "dt": "2026-04-12T17:07:35Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "branek",
-        "dostali",
-        "dát",
-        "janotku",
-        "jsme",
-        "klidně",
-        "mohli",
-        "mrzelo",
-        "pardubicích",
-        "prohře",
-        "pět",
-        "tvrdé"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45129,
+      "bytes": 44389,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T04:30:49Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -851,7 +847,11 @@
         },
         "sample_titles": [
           {
-            "title": "Pastrňák znovu na stý bod nedosáhl. Hronek pomohl k výhře",
+            "title": "Moje éra skončila, oznámil legendární Becker",
+            "publishedAt": "2026-04-13T04:30:49Z"
+          },
+          {
+            "title": "Gudas se při návratu porval. Hronek pomohl k výhře, Pastrňák se stovky nedočkal",
             "publishedAt": "2026-04-13T04:00:00Z"
           },
           {
@@ -877,10 +877,6 @@
           {
             "title": "Olomouc po prohře v Pardubicích odvolala trenéra Janotku!",
             "publishedAt": "2026-04-12T20:35:34Z"
-          },
-          {
-            "title": "Plzeňské eso sní o MS. Po návratu z reprezentace jsem viděl jiného hráče, chválí Hyský",
-            "publishedAt": "2026-04-12T19:39:53Z"
           }
         ]
       }
