@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T05:09:12.039214Z",
+  "ingestedAt": "2026-04-13T05:24:32.874481Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "McIlroy jako teprve čtvrtý golfista v historii obhájil titul na Masters",
+      "url": "https://www.sport.cz/clanek/golf-mcilroy-jako-teprve-ctvrty-golfista-v-historii-obhajil-titul-na-masters-5436364",
+      "dt": "2026-04-13T05:16:31Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "golfista",
+        "historii",
+        "jako",
+        "masters",
+        "mcilroy",
+        "obhájil",
+        "teprve",
+        "titul",
+        "čtvrtý"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Portland v NBA uhájil osmou příčku, Krejčí si po měsíci zahrál",
+      "url": "https://www.sport.cz/clanek/basketbal-portland-v-nba-uhajil-osmou-pricku-krejci-si-po-mesici-zahral-5436363",
+      "dt": "2026-04-13T05:11:38Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "krejčí",
+        "měsíci",
+        "nba",
+        "osmou",
+        "portland",
+        "příčku",
+        "uhájil",
+        "zahrál"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -737,57 +788,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Můj nejhezčí gól v sezoně, uznal nejlepší střelec Boleslavi",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-muj-nejhezci-gol-v-sezone-uznal-nejlepsi-strelec-boleslavi-5436275",
-      "dt": "2026-04-12T17:26:04Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "boleslavi",
-        "gól",
-        "můj",
-        "nejhezčí",
-        "nejlepší",
-        "sezoně",
-        "střelec",
-        "uznal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sinner porazil v Monte Carlu obhájce trofeje Alcaraze a vystřídá ho na trůnu",
-      "url": "https://www.sport.cz/clanek/tenis-sinner-porazil-v-monte-carlu-obhajce-trofeje-alcaraze-a-vystrida-ho-na-trunu-5436222",
-      "dt": "2026-04-12T16:07:25Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "alcaraze",
-        "carlu",
-        "monte",
-        "obhájce",
-        "porazil",
-        "sinner",
-        "trofeje",
-        "trůnu",
-        "vystřídá"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44840,
+      "bytes": 44217,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T04:52:20Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T05:16:31Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -850,6 +850,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "McIlroy jako teprve čtvrtý golfista v historii obhájil titul na Masters",
+            "publishedAt": "2026-04-13T05:16:31Z"
+          },
+          {
+            "title": "Portland v NBA uhájil osmou příčku, Krejčí si po měsíci zahrál",
+            "publishedAt": "2026-04-13T05:11:38Z"
+          },
           {
             "title": "Zlín nevyužil mečbol, ale na sporný gól reagoval s klidem. Máme velké sebevědomí, řekl trenér",
             "publishedAt": "2026-04-13T04:52:20Z"
@@ -873,14 +881,6 @@
           {
             "title": "Haraslín zlomil střelecké sucho. Balon mi skákal, ale zvládnul jsem to, smál se kapitán Sparty",
             "publishedAt": "2026-04-12T16:57:38Z"
-          },
-          {
-            "title": "Lyon vyhrál po devíti zápasech, Češi u toho nebyli",
-            "publishedAt": "2026-04-12T21:07:18Z"
-          },
-          {
-            "title": "Fotbalisté Betisu remizovali v Pamploně, klíčové páté místo ale udrželi",
-            "publishedAt": "2026-04-12T14:20:20Z"
           }
         ]
       }

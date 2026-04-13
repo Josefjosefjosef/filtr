@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-13T05:09:12.039214Z",
+  "ingestedAt": "2026-04-13T05:24:32.874481Z",
   "items": [
     {
       "section": "aktualne",
@@ -20,6 +20,32 @@
         "spolupráci",
         "voleb",
         "vítězi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pád stožáru narušil provoz italského ropovodu. Policie vyšetřuje sabotáž",
+      "url": "https://www.denik.cz/staty-eu/ropovod-tal-italie-rakousko-sabotaz-vysetrovani.html",
+      "dt": "2026-04-13T04:39:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "italského",
+        "narušil",
+        "policie",
+        "provoz",
+        "pád",
+        "ropovodu",
+        "sabotáž",
+        "stožáru",
+        "vyšetřuje"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -625,33 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "KVÍZ: Andy García slaví 70. Jak dobře znáte hvězdu Kmotra a Dannyho parťáků?",
-      "url": "https://www.denik.cz/film-a-televize/kviz-andy-garcia-slavi-70-jak-dobre-znate-hvezdu-kmotra-i-dannyho-partaku-202704.html",
-      "dt": "2026-04-12T07:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "andy",
-        "dannyho",
-        "dobře",
-        "garcía",
-        "hvězdu",
-        "kmotra",
-        "kvíz",
-        "parťáků",
-        "slaví",
-        "znáte"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31058,
+      "bytes": 31134,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -721,6 +720,10 @@
             "publishedAt": "2026-04-13T04:41:00Z"
           },
           {
+            "title": "Pád stožáru narušil provoz italského ropovodu. Policie vyšetřuje sabotáž",
+            "publishedAt": "2026-04-13T04:39:00Z"
+          },
+          {
             "title": "Martina Šmuková z Pink Bubble: Nemocní si přejí počítač nebo třeba pejska",
             "publishedAt": "2026-04-13T02:30:00Z"
           },
@@ -743,10 +746,6 @@
           {
             "title": "Maďarsko si vybralo Evropu. Von der Leyenová a Macron oslavují pád Orbána",
             "publishedAt": "2026-04-12T20:15:00Z"
-          },
-          {
-            "title": "Viktor Orbán prohrál. Nového premiéra Magyara slavilo v Budapešti plné nábřeží",
-            "publishedAt": "2026-04-12T20:04:00Z"
           }
         ]
       }
