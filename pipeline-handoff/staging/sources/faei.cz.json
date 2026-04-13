@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-13T19:49:37.597356Z",
+  "ingestedAt": "2026-04-13T20:12:36.694824Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Moody’s vrací ČEZ rating na úroveň A3",
+      "url": "https://profitonline.cz/moodys-vraci-cez-rating-na-uroven-a3/",
+      "dt": "2026-04-13T20:00:33Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "moody",
+        "rating",
+        "vrací",
+        "úroveň",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -258,32 +280,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Novinky v osobních financích: Naprostá většina Čechů preferuje digitální platby",
-      "url": "https://profitonline.cz/novinky-v-osobnich-financich-naprosta-vetsina-cechu-preferuje-digitalni-platby/",
-      "dt": "2026-04-12T10:00:38Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "digitální",
-        "financích",
-        "naprostá",
-        "novinky",
-        "osobních",
-        "platby",
-        "preferuje",
-        "většina",
-        "čechů"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +290,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18779,
+      "bytes": 18449,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -331,7 +327,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-13T14:30:26Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T20:00:33Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -347,6 +343,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Moody’s vrací ČEZ rating na úroveň A3",
+            "publishedAt": "2026-04-13T20:00:33Z"
+          },
           {
             "title": "V úterý zřejmě neotevře více čerpacích stanic než v pátek",
             "publishedAt": "2026-04-13T14:30:26Z"
@@ -374,10 +374,6 @@
           {
             "title": "Smíšené výsledky z německé ekonomiky",
             "publishedAt": "2026-04-12T18:00:05Z"
-          },
-          {
-            "title": "Rafinační marže Orlenu a MOL se citelně propadají",
-            "publishedAt": "2026-04-12T17:00:52Z"
           }
         ]
       }
