@@ -5908,6 +5908,20 @@ html[data-section="tvprogram"] #feed{
   display: none !important;
 }
 
+/* P0: mapy / jr / radio — stejný vzor jako pocasi/tvprogram: [hidden] na view = UA display:none !important, bez explicitního display:block se detail nevykreslí. */
+body[data-section="mapy"] #iuMapyView,
+html[data-section="mapy"] #iuMapyView{
+  display: block !important;
+}
+body[data-section="jr"] #iuJrEmptyView,
+html[data-section="jr"] #iuJrEmptyView{
+  display: block !important;
+}
+body[data-section="radio"] #iuRadioView,
+html[data-section="radio"] #iuRadioView{
+  display: block !important;
+}
+
 #iuTvProgramView .iuViewBody{ display:block; }
 
 body[data-section="tvprogram"] #iuCenterStage #iuTvProgramView,
