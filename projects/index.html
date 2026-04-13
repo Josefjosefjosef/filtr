@@ -94,6 +94,7 @@ style-src 'self' 'unsafe-inline' https:;
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=silver-address-slot-class-no-empty" />
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1549fin-calc-detail-no-strip" />
+    <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
@@ -2024,7 +2025,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <div class="iuTile" role="listitem" data-quicktool-id="prekladac" data-iu-ql="prekladac"><a class="iuTileLink" href="https://www.deepl.com/" target="_blank" rel="noopener noreferrer" aria-label="Překladač"><span class="iuTileText">Překladač</span></a></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="word_pdf" data-iu-ql="prevod-word-pdf"><a class="iuTileLink" role="listitem" data-iuq="convert" data-ql="convert" href="https://www.ilovepdf.com" target="_blank" rel="noopener" aria-label="Převod Word / PDF"><span class="iuTileText">Převod Word / PDF</span></a></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="financni_kalkulacky" data-iu-ql="financni-kalkulacky"><button type="button" class="iuTileLink" data-iuq="fincalc" aria-label="Finanční kalkulačky"><span class="iuTileText">Finanční kalkulačky</span></button></div>
-                        <div class="iuTile" role="listitem" data-quicktool-id="vzory_smluv" data-iu-ql="vzory-smluv-plne-moci"><a class="iuTileLink" role="listitem" data-iuq="youtube" data-ql="youtube" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="Vzory smluv a plné moci"><span class="iuTileText">Vzory smluv a plné moci</span></a></div>
+                        <div class="iuTile" role="listitem" data-quicktool-id="vzory_smluv" data-iu-ql="vzory-smluv-plne-moci"><button type="button" class="iuTileLink" role="listitem" data-iuq="legaldocs" aria-label="Vzory smluv a plné moci"><span class="iuTileText">Vzory smluv a plné moci</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="komunikace_vzdelavani" data-iu-ql="komunikace-vzdelavani"><span class="iuTileLink" role="listitem" data-ql="platformy" aria-label="Komunikace a vzdělávání"><span class="iuTileText">Komunikace a vzdělávání</span></span></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="katastr_nemovitosti" data-iu-ql="katastr-nemovitosti"><span class="iuTileLink" role="listitem" data-ql="katastr" aria-label="Katastr nemovitostí"><span class="iuTileText">Katastr nemovitostí</span></span></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="registr_smluv" data-iu-ql="registr-smluv"><a class="iuTileLink" role="listitem" data-iuq="seznam" data-ql="seznam" href="https://www.seznam.cz/" target="_blank" rel="noopener noreferrer" aria-label="Registr smluv"><span class="iuTileText">Registr smluv</span></a></div>
@@ -2050,6 +2051,25 @@ style-src 'self' 'unsafe-inline' https:;
                           </header>
                           <div id="iuFinancialCalcScrollHost" class="iu-financial-overlay-scrollHost">
                             <div id="iuFinancialCalcViews"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="iuLegalDocsBackdrop" class="iu-legal-overlay iu-legal-overlay-backdrop" hidden aria-hidden="true"></div>
+                    <div id="iuLegalDocsPanel" class="iu-legal-overlay iu-legal-overlay-panel" role="dialog" aria-modal="true" aria-labelledby="iuLegalDocsTitle" hidden data-open="0" aria-hidden="true">
+                      <div class="iu-legal-overlay-cardShell">
+                        <div class="iu-legal-overlay-inner">
+                          <header class="iu-legal-overlay-header">
+                            <button type="button" id="iuLegalDocsBack" class="iu-legal-overlay-backBtn" hidden>Zpět</button>
+                            <div class="iu-legal-overlay-heading">
+                              <h2 id="iuLegalDocsTitle" class="iu-legal-overlay-h2">Vzory smluv a plné moci</h2>
+                              <p id="iuLegalDocsSub" class="iu-legal-overlay-sub">Generátor strukturovaných dokumentů</p>
+                            </div>
+                            <button type="button" id="iuLegalDocsClose" class="iu-overlayCloseBtn38 iu-close-btn-38" aria-label="Zavřít" data-iu-close>×</button>
+                          </header>
+                          <div id="iuLegalDocsScrollHost" class="iu-legal-overlay-scrollHost">
+                            <div id="iuLegalDocsViews"></div>
                           </div>
                         </div>
                       </div>
