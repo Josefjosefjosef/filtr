@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-13T06:50:13.670511Z",
+  "ingestedAt": "2026-04-13T07:10:41.954204Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,31 @@
         "sám",
         "test",
         "vyřešil"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Více retro to už nejde. Vložte si digitální snímač do klasického analogového foťáku",
+      "url": "https://digiarena.zive.cz/vice-retro-to-uz-nejde-vlozte-si-digitalni-snimac-do-klasickeho-analogoveho-fotaku",
+      "dt": "2026-04-13T06:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "analogového",
+        "digitální",
+        "foťáku",
+        "klasického",
+        "nejde",
+        "retro",
+        "snímač",
+        "vložte"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -946,33 +971,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Do Chromu míří vertikální karty, jako mají i jiné prohlížeče. Takhle vypadají",
-      "url": "https://www.zive.cz/clanky/do-chromu-miri-vertikalni-karty-jako-maji-i-jine-prohlizece-takhle-vypadaji/sc-3-a-240568/default.aspx",
-      "dt": "2026-04-08T15:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "chromu",
-        "jako",
-        "jiné",
-        "karty",
-        "mají",
-        "míří",
-        "prohlížeče",
-        "takhle",
-        "vertikální",
-        "vypadají"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -983,7 +981,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22468,
+      "bytes": 22277,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1020,7 +1018,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-12T15:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T06:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1038,6 +1036,10 @@
           {
             "title": "Hororový captcha test v katastru nemovitostí na chvíli podlehl. Skript ho vyřešil sám jedním kliknutím",
             "publishedAt": "2026-04-12T10:39:00Z"
+          },
+          {
+            "title": "Více retro to už nejde. Vložte si digitální snímač do klasického analogového foťáku",
+            "publishedAt": "2026-04-13T06:45:00Z"
           },
           {
             "title": "Nejtěžší vozidlo na Zemi spotřebuje 400 litrů nafty na kilometr. Pásový transportér NASA slouží déle než 50 let",
@@ -1062,10 +1064,6 @@
           {
             "title": "Masakr cen u Applu. MacBook Air M4 pod 20 tisíc, Mac mini M2 za 8 tisíc a AirTag za 300 Kč",
             "publishedAt": "2026-04-11T09:20:00Z"
-          },
-          {
-            "title": "iPhone si pamatuje víc, než byste čekali. Oživil i smazané zprávy ze Signalu",
-            "publishedAt": "2026-04-12T08:45:00Z"
           }
         ]
       }

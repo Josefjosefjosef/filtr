@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-13T06:50:13.670511Z",
+  "ingestedAt": "2026-04-13T07:10:41.954204Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Prachatičtí policisté prověřují znečištění Volarského potoka neznámou látkou",
+      "url": "https://tydenikpolicie.cz/prachaticti-policiste-proveruji-znecisteni-volarskeho-potoka-neznamou-latkou/",
+      "dt": "2026-04-13T06:46:58Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "látkou",
+        "neznámou",
+        "policisté",
+        "potoka",
+        "prachatičtí",
+        "prověřují",
+        "volarského",
+        "znečištění"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -226,32 +251,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Slunečné počasí přineslo na jižní Moravě zvýšený počet dopravních nehod",
-      "url": "https://tydenikpolicie.cz/slunecne-pocasi-prineslo-na-jizni-morave-zvyseny-pocet-dopravnich-nehod/",
-      "dt": "2026-04-11T18:03:46Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "dopravních",
-        "jižní",
-        "moravě",
-        "nehod",
-        "počasí",
-        "počet",
-        "přineslo",
-        "slunečné",
-        "zvýšený"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -262,7 +261,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15726,
+      "bytes": 15798,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -299,7 +298,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-12T20:07:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T06:46:58Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -314,6 +313,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prachatičtí policisté prověřují znečištění Volarského potoka neznámou látkou",
+            "publishedAt": "2026-04-13T06:46:58Z"
+          },
           {
             "title": "Motorkáři na Žďársku vběhla do cesty srna. Zvíře uhynulo, řidič skončil v nemocnici",
             "publishedAt": "2026-04-12T20:07:31Z"
@@ -341,10 +344,6 @@
           {
             "title": "Chtěl výhodně investovat. Naletěl podvodníkům a přišel o 130 tisíc korun",
             "publishedAt": "2026-04-12T08:23:44Z"
-          },
-          {
-            "title": "Falešná kriminalistka s bankéřem připravila muže o téměř 100 tisíc korun",
-            "publishedAt": "2026-04-12T08:22:18Z"
           }
         ]
       }

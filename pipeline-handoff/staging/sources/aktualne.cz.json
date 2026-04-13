@@ -1,24 +1,48 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-13T06:50:13.670511Z",
+  "ingestedAt": "2026-04-13T07:10:41.954204Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Provoz aerolinek Lufthansa ochromila stávka pilotů, lety ruší i Praha",
+      "url": "https://zpravy.aktualne.cz/ekonomika/provoz-aerolinek-lufthansa-ochromila-stavka-pilotu-lety-rusi-i-praha/r~aaa29fdc1687b34897dfdf19bea6f59e/",
+      "dt": "2026-04-13T06:58:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "aerolinek",
+        "lety",
+        "lufthansa",
+        "ochromila",
+        "pilotů",
+        "praha",
+        "provoz",
+        "ruší",
+        "stávka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
-      "title": "Zemřel trumpetista a kapelník Václav Hybš, spolupracoval s Gottem i Matuškou",
+      "title": "Zemřel trumpetista a kapelník, který spolupracoval s Gottem i Matuškou",
       "url": "https://magazin.aktualne.cz/kultura/zemrel-trumpetista-a-kapelnik-vaclav-hybs-spolupracoval-s-gottem-i-matuskou/r~aaa29bcf5cbf70ef80263c5ca35fc7ad/",
       "dt": "2026-04-13T06:18:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
         "gottem",
-        "hybš",
         "kapelník",
         "matuškou",
         "spolupracoval",
         "trumpetista",
-        "václav",
         "zemřel"
       ],
       "feedCategory": "zpravy",
@@ -514,34 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Hlasovali jste pro Evropu.“ Magyarova Tisza slaví ústavní většinu, Orbán uznal prohru",
-      "url": "https://zpravy.aktualne.cz/zahranici/odvoleno-madari-si-vybrali-pristi-vladu-k-urnam-prislo-nejvic-lidi-od-padu-komunismu/r~aaa29918ffd8cefbe5ff4b1eb68e56e2/",
-      "dt": "2026-04-12T17:14:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "evropu",
-        "hlasovali",
-        "jste",
-        "magyarova",
-        "orbán",
-        "prohru",
-        "slaví",
-        "tisza",
-        "uznal",
-        "většinu",
-        "ústavní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -552,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21407,
+      "bytes": 21392,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -589,13 +585,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T06:18:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T06:58:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 2,
           "other": 2,
-          "zpravy": 14,
-          "sport": 3,
-          "finance": 1
+          "zpravy": 13,
+          "sport": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -608,7 +604,11 @@
         },
         "sample_titles": [
           {
-            "title": "Zemřel trumpetista a kapelník Václav Hybš, spolupracoval s Gottem i Matuškou",
+            "title": "Provoz aerolinek Lufthansa ochromila stávka pilotů, lety ruší i Praha",
+            "publishedAt": "2026-04-13T06:58:00Z"
+          },
+          {
+            "title": "Zemřel trumpetista a kapelník, který spolupracoval s Gottem i Matuškou",
             "publishedAt": "2026-04-13T06:18:00Z"
           },
           {
@@ -634,10 +634,6 @@
           {
             "title": "Vítězství zajistila Magayrovi touha po ekonomické reformě i demontáži Orbána, míní experti",
             "publishedAt": "2026-04-13T05:38:00Z"
-          },
-          {
-            "title": "Teprve čtvrtá obhajoba v historii Masters. McIlroy znovu oblékl zelené sako",
-            "publishedAt": "2026-04-13T05:15:00Z"
           }
         ]
       }
