@@ -1,27 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T19:04:38.171403Z",
+  "ingestedAt": "2026-04-13T19:19:24.461972Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Videomomenty. Vyrovnaný stav dlouho netrval, Sparta se vrací do vedení",
+      "title": "Videomomenty. Sparta zvládla i další zápas nad propastí! O druhém finalistovi rozhodne sedmý duel",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-dynamo-je-krok-od-finale-potrebuje-udolat-spartu-na-jejim-lede-5436382",
       "dt": "2026-04-13T12:00:12Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "dlouho",
-        "hokej",
-        "netrval",
-        "online",
+        "další",
+        "druhém",
+        "duel",
+        "finalistovi",
+        "propastí",
+        "rozhodne",
+        "sedmý",
         "sparta",
-        "stav",
-        "vedení",
         "videomomenty",
-        "vrací",
-        "vyrovnaný"
+        "zvládla",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "To myslíš vážně? žasnou mladíci z Krpálka. Tělo má zmordované, kouče zničil na tréninku",
+      "url": "https://www.sport.cz/clanek/ostatni-to-myslis-vazne-zasnou-mladici-z-krpalka-telo-ma-zmordovane-kouce-znicil-na-treninku-5436380",
+      "dt": "2026-04-13T10:30:35Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "kouče",
+        "krpálka",
+        "mladíci",
+        "myslíš",
+        "tréninku",
+        "tělo",
+        "vážně",
+        "zmordované",
+        "zničil",
+        "žasnou"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -729,28 +757,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sinner se vrátil na post světové jedničky",
-      "url": "https://www.sport.cz/clanek/tenis-sinner-se-vratil-na-post-svetove-jednicky-5436365",
-      "dt": "2026-04-13T06:32:46Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "jedničky",
-        "post",
-        "sinner",
-        "světové",
-        "vrátil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -761,7 +767,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42282,
+      "bytes": 42451,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,8 +823,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Videomomenty. Vyrovnaný stav dlouho netrval, Sparta se vrací do vedení",
+            "title": "Videomomenty. Sparta zvládla i další zápas nad propastí! O druhém finalistovi rozhodne sedmý duel",
             "publishedAt": "2026-04-13T12:00:12Z"
+          },
+          {
+            "title": "To myslíš vážně? žasnou mladíci z Krpálka. Tělo má zmordované, kouče zničil na tréninku",
+            "publishedAt": "2026-04-13T10:30:35Z"
           },
           {
             "title": "Prostějov rok po zisku titulu vybojoval páté místo v lize volejbalistek",
@@ -843,10 +853,6 @@
           {
             "title": "Hvězdami týdne v NHL byli švédští brankáři Forsberg a Ullmark",
             "publishedAt": "2026-04-13T17:31:22Z"
-          },
-          {
-            "title": "Verstappen v Red Bullu nezůstane, soudí bývalý pilot",
-            "publishedAt": "2026-04-13T17:25:13Z"
           }
         ]
       }
