@@ -1,8 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-13T07:29:54.324046Z",
+  "ingestedAt": "2026-04-13T07:49:20.779995Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Slavia podává protest proti Chorého vyloučení",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-slavia-podava-protest-proti-choreho-vylouceni-5436368",
+      "dt": "2026-04-13T07:43:41Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chorého",
+        "podává",
+        "protest",
+        "proti",
+        "slavia",
+        "vyloučení"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Čechová a Hamzová se budou v kempu Minnesoty ucházet o angažmá ve WNBA",
+      "url": "https://www.sport.cz/clanek/basketbal-cechova-a-hamzova-se-budou-v-kempu-minnesoty-uchazet-o-angazma-ve-wnba-5436367",
+      "dt": "2026-04-13T07:30:05Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "angažmá",
+        "hamzová",
+        "kempu",
+        "minnesoty",
+        "ucházet",
+        "wnba",
+        "čechová"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -728,60 +775,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sportovní gymnastka Mašová byla třetí ve Světovém poháru",
-      "url": "https://www.sport.cz/clanek/ostatni-sportovni-gymnastka-masova-byla-treti-ve-svetovem-poharu-5436225",
-      "dt": "2026-04-12T16:17:32Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "gymnastka",
-        "mašová",
-        "poháru",
-        "sportovní",
-        "světovém",
-        "třetí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dukla odmítla konec sezony díky diskutované trefě a zahraje si sedmé finále. Za mě nic není víc, řekl trenér",
-      "url": "https://www.sport.cz/clanek/hokej-ceska-1-liga-dukla-odmitla-konec-sezony-diky-diskutovane-trefe-a-zahraje-si-sedme-finale-za-me-nic-neni-vic-rekl-trener-5436330",
-      "dt": "2026-04-12T18:43:01Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "diskutované",
-        "dukla",
-        "díky",
-        "finále",
-        "konec",
-        "nic",
-        "odmítla",
-        "sedmé",
-        "sezony",
-        "trefě",
-        "trenér",
-        "víc",
-        "zahraje",
-        "řekl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43599,
+      "bytes": 43313,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +822,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T07:18:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T07:43:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,6 +837,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slavia podává protest proti Chorého vyloučení",
+            "publishedAt": "2026-04-13T07:43:41Z"
+          },
+          {
+            "title": "Čechová a Hamzová se budou v kempu Minnesoty ucházet o angažmá ve WNBA",
+            "publishedAt": "2026-04-13T07:30:05Z"
+          },
           {
             "title": "Krutý konec! Vítězka US Open v klíčové chvíli BJK Cupu totálně selhala",
             "publishedAt": "2026-04-13T07:18:41Z"
@@ -867,14 +868,6 @@
           {
             "title": "GLOSA: Bez debat, Chorý udělal kravinu. Další dění už ale provází značná pachuť",
             "publishedAt": "2026-04-13T06:02:55Z"
-          },
-          {
-            "title": "Kouč Pardubic nešetřil po výhře kritikou: Náš výkon byl do očí bijící",
-            "publishedAt": "2026-04-13T04:42:30Z"
-          },
-          {
-            "title": "Kontroverzní Rus se pustil do Procházky. Čech má ale i zastánce",
-            "publishedAt": "2026-04-13T05:44:13Z"
           }
         ]
       }

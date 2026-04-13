@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vipzivot.cz",
-  "ingestedAt": "2026-04-13T07:29:54.324046Z",
+  "ingestedAt": "2026-04-13T07:49:20.779995Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Známé písně, které poznáte během vteřiny podle melodie. Ve chvíli, kdy máte doplnit text, už to tak samozřejmé není",
+      "url": "https://vipzivot.cz/p/zname-pisne-ktere-poznate-behem-vteriny-podle-melodie-ve-chvili-kdy-mate-doplnit-text-uz-to-tak-samozrejme-neni/",
+      "dt": "2026-04-13T07:35:56Z",
+      "media_raw": "VIPživot",
+      "media_norm": "VIPživot",
+      "tokens": [
+        "během",
+        "chvíli",
+        "doplnit",
+        "melodie",
+        "máte",
+        "podle",
+        "poznáte",
+        "písně",
+        "samozřejmé",
+        "tak",
+        "text",
+        "vteřiny",
+        "známé"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vipzivot",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vipzivot.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -281,35 +311,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vipzivot.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Sekala by jim prsty! Kateřině Brožové vykradli auto, policie na místě řešila rozsáhlé škody",
-      "url": "https://vipzivot.cz/p/katerina-brozova-auto-kradez-cennosti-trest/",
-      "dt": "2026-04-11T04:12:00Z",
-      "media_raw": "VIPživot",
-      "media_norm": "VIPživot",
-      "tokens": [
-        "auto",
-        "brožové",
-        "jim",
-        "kateřině",
-        "místě",
-        "policie",
-        "prsty",
-        "rozsáhlé",
-        "sekala",
-        "vykradli",
-        "řešila",
-        "škody"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vipzivot",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vipzivot.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -320,7 +321,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://vipzivot.cz/feed/",
-      "bytes": 108427,
+      "bytes": 118547,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -357,11 +358,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T04:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T07:35:56Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 3,
-          "other": 7
+          "other": 8,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -373,6 +374,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Známé písně, které poznáte během vteřiny podle melodie. Ve chvíli, kdy máte doplnit text, už to tak samozřejmé není",
+            "publishedAt": "2026-04-13T07:35:56Z"
+          },
           {
             "title": "S kým žije Petra Hřebíčková: Po jejím boku stojí herec z Policie Modrava, ani 11 let po zásnubách se ale k svatbě zatím nechystá",
             "publishedAt": "2026-04-13T04:28:00Z"
@@ -400,10 +405,6 @@
           {
             "title": "Šest let od smrti Karla Gotta: Jitka Zelenková popsala chvíle, kdy ani přes špatné zdraví Mistr neodmítl své fanoušky",
             "publishedAt": "2026-04-12T04:13:00Z"
-          },
-          {
-            "title": "Máma si brala půjčky na hokejky a plakala v koupelně. Dnes jí David Pastrňák může posílat miliony korun",
-            "publishedAt": "2026-04-12T04:07:00Z"
           }
         ]
       }

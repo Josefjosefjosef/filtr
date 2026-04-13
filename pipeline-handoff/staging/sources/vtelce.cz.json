@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-04-13T07:29:54.324046Z",
+  "ingestedAt": "2026-04-13T07:49:20.779995Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Tento týden v Prostřeno: Severočeská kuchařská výzva nabídne litry alkoholu, SOS mamince i udušené luxusní hovězí",
+      "url": "https://www.vtelce.cz/tento-tyden-v-prostreno-severoceska-kucharska-vyzva-nabidne-litry-alkoholu-sos-mamince-i-udusene-luxusni-hovezi/",
+      "dt": "2026-04-13T07:29:09Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "alkoholu",
+        "hovězí",
+        "kuchařská",
+        "litry",
+        "luxusní",
+        "mamince",
+        "nabídne",
+        "prostřeno",
+        "severočeská",
+        "sos",
+        "tento",
+        "týden",
+        "udušené",
+        "výzva"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -258,35 +289,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Robin Hood: Král zbojníků: Vyměněné zámky u střižny, tajné scénáře u pizzy a válka o slávu",
-      "url": "https://www.vtelce.cz/robin-hood-kral-zbojniku-vymenene-zamky-u-strizny-tajne-scenare-u-pizzy-a-valka-o-slavu/",
-      "dt": "2026-04-11T17:28:04Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "hood",
-        "král",
-        "pizzy",
-        "robin",
-        "scénáře",
-        "slávu",
-        "střižny",
-        "tajné",
-        "vyměněné",
-        "válka",
-        "zbojníků",
-        "zámky"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -297,8 +299,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 85856,
-      "reason": "fetch_timeout",
+      "bytes": 82305,
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -334,7 +336,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-12T17:28:05Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T07:29:09Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 10
@@ -349,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tento týden v Prostřeno: Severočeská kuchařská výzva nabídne litry alkoholu, SOS mamince i udušené luxusní hovězí",
+            "publishedAt": "2026-04-13T07:29:09Z"
+          },
           {
             "title": "Demolition Man: Nahý Stallone v ledovém gelu, vyhazov hlavní hrdinky a obvinění z krádeže námětu",
             "publishedAt": "2026-04-12T17:28:05Z"
@@ -376,10 +382,6 @@
           {
             "title": "Detektivní seriál Očko spojí slepého kriminalistu s prostořekou matkou samoživitelkou",
             "publishedAt": "2026-04-12T09:33:16Z"
-          },
-          {
-            "title": "Ulice: Koníček v roli vyděrače a do odhalení množírny se zapojí i Blanka",
-            "publishedAt": "2026-04-12T08:35:40Z"
           }
         ]
       }

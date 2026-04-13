@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-13T07:29:54.324046Z",
+  "ingestedAt": "2026-04-13T07:49:20.779995Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Forint citelně posiluje. Co čekat od vítěze voleb?",
+      "url": "https://profitonline.cz/forint-citelne-posiluje-co-cekat-od-viteze-voleb/",
+      "dt": "2026-04-13T07:30:48Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "citelně",
+        "forint",
+        "posiluje",
+        "voleb",
+        "vítěze",
+        "čekat"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -254,31 +277,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Drobní investoři se hrnou do ropy, vzácných kovů a softwarových akcií",
-      "url": "https://profitonline.cz/drobni-investori-se-hrnou-do-ropy-vzacnych-kovu-a-softwarovych-akcii/",
-      "dt": "2026-04-11T12:00:00Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "akcií",
-        "drobní",
-        "hrnou",
-        "investoři",
-        "kovů",
-        "ropy",
-        "softwarových",
-        "vzácných"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -289,7 +287,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18635,
+      "bytes": 18532,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -326,11 +324,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-13T04:00:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T07:30:48Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "finance": 11
+          "finance": 11,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -342,6 +340,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Forint citelně posiluje. Co čekat od vítěze voleb?",
+            "publishedAt": "2026-04-13T07:30:48Z"
+          },
           {
             "title": "Otec zaplatil výživné dvakrát, úřady za to potrestaly matku",
             "publishedAt": "2026-04-13T04:00:34Z"
@@ -369,10 +371,6 @@
           {
             "title": "Novinky v osobních financích: Naprostá většina Čechů preferuje digitální platby",
             "publishedAt": "2026-04-12T10:00:38Z"
-          },
-          {
-            "title": "Inflační tlaky v USA sílí",
-            "publishedAt": "2026-04-12T08:00:43Z"
           }
         ]
       }
