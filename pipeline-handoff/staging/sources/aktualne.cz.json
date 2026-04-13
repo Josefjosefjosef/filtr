@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-13T21:00:51.565919Z",
+  "ingestedAt": "2026-04-13T21:12:54.786363Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Leeds bojující o záchranu šokoval Old Trafford. Senzaci zařídil Okafor",
+      "url": "https://sport.aktualne.cz/fotbal/leeds-bojujici-o-zachranu-sokoval-old-trafford-senzaci-zaridil-okafor/r~aaa29cbfa74ccac48f5970754f0cde99/",
+      "dt": "2026-04-13T21:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bojující",
+        "leeds",
+        "okafor",
+        "old",
+        "senzaci",
+        "trafford",
+        "zařídil",
+        "záchranu",
+        "šokoval"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -496,34 +522,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Politická šikana: Dřív nebo později přijde konec. Zlomí Babišovi vaz to, co Orbánovi?",
-      "url": "https://www.aktualne.cz/podcasty/politicka-sikana/politicka-sikana-zakaz-potratu-u-nas-neni-tema-zlomi-babisovi-vaz-to-co-orbanovi/r~aaa29c1ccb1bba0234b4f702c195603f/",
-      "dt": "2026-04-13T15:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "babišovi",
-        "dřív",
-        "konec",
-        "nebo",
-        "orbánovi",
-        "politická",
-        "později",
-        "přijde",
-        "vaz",
-        "zlomí",
-        "šikana"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +532,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22223,
+      "bytes": 21914,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,11 +569,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T20:44:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T21:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 7,
-          "zpravy": 12,
+          "sport": 8,
+          "zpravy": 11,
           "finance": 1
         },
         "drop_counts": {
@@ -588,6 +586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Leeds bojující o záchranu šokoval Old Trafford. Senzaci zařídil Okafor",
+            "publishedAt": "2026-04-13T21:00:00Z"
+          },
           {
             "title": "Špaček se proměnil z viníka na hrdinu. Spartě vystřelil naději",
             "publishedAt": "2026-04-13T20:44:00Z"
@@ -615,10 +617,6 @@
           {
             "title": "Magyar se rozjel: Szijjártó skartuje citlivé zprávy a televize připomíná Goebbelse",
             "publishedAt": "2026-04-13T15:33:00Z"
-          },
-          {
-            "title": "Konec Orbána, staré problémy. Pro Magyara to bude těžké, až na jednu věc",
-            "publishedAt": "2026-04-13T18:18:00Z"
           }
         ]
       }

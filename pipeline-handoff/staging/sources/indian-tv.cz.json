@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-13T21:00:51.565919Z",
+  "ingestedAt": "2026-04-13T21:12:54.786363Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Rockstar odmítl zaplatit hackerům. Ukradená data se začínají objevovat na internetu - INDIAN",
+      "url": "https://indian-tv.cz/clanek/rockstar-odmitl-zaplatit-hackerum-ukradena-data-jsou-na-internetu",
+      "dt": "2026-04-13T21:02:13Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "data",
+        "hackerům",
+        "indian",
+        "internetu",
+        "objevovat",
+        "odmítl",
+        "rockstar",
+        "ukradená",
+        "zaplatit",
+        "začínají"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1039,34 +1066,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Příští týden má proběhnout State of Play. PlayStation se údajně zaměří na hry od partnerů - INDIAN",
-      "url": "https://indian-tv.cz/clanek/pristi-tyden-ma-probehnout-state-of-play-5wlaec",
-      "dt": "2026-04-09T06:59:42Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "hry",
-        "indian",
-        "partnerů",
-        "play",
-        "playstation",
-        "proběhnout",
-        "příští",
-        "state",
-        "týden",
-        "zaměří",
-        "údajně"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1077,7 +1076,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 192972,
+      "bytes": 194232,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1114,7 +1113,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T15:11:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T21:02:13Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1129,6 +1128,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rockstar odmítl zaplatit hackerům. Ukradená data se začínají objevovat na internetu - INDIAN",
+            "publishedAt": "2026-04-13T21:02:13Z"
+          },
           {
             "title": "Prequel God of War s Faye má být brzy odhalen - INDIAN",
             "publishedAt": "2026-04-13T15:11:52Z"
@@ -1156,10 +1159,6 @@
           {
             "title": "Přijde Game Pass o Call of Duty v den vydání? Microsoft má zvažovat změnu strategie - INDIAN",
             "publishedAt": "2026-04-13T10:29:22Z"
-          },
-          {
-            "title": "Studio The Farm 51, které stojí za Chernobylite 2, vyhlásilo bankrot - INDIAN",
-            "publishedAt": "2026-04-13T09:06:36Z"
           }
         ]
       }
