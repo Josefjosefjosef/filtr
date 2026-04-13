@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-13T03:29:32.350978Z",
+  "ingestedAt": "2026-04-13T03:44:59.992822Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "OBRAZEM: Prasátko jako dalmatin. V přírodě by nepřežilo, v oboře je atrakcí",
+      "url": "https://www.idnes.cz/brno/zpravy/sele-divoke-prase-puntiky-obora-holedna-brno.A260410_163742_brno-zpravy_krut/foto",
+      "dt": "2026-04-13T03:23:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "atrakcí",
+        "dalmatin",
+        "jako",
+        "nepřežilo",
+        "oboře",
+        "obrazem",
+        "prasátko",
+        "přírodě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -752,33 +777,6 @@
         "stropem",
         "vláda",
         "věku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Poptávka klesá, výroba roste. Výrobci amerického bourbonu věří v lepší zítřky",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/alkohol-bourbon-poptavka-prodeje-kapacity-usa-investice.A260408_082243_eko-zahranicni_jla",
-      "dt": "2026-04-12T13:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "amerického",
-        "bourbonu",
-        "klesá",
-        "lepší",
-        "poptávka",
-        "roste",
-        "výroba",
-        "výrobci",
-        "věří",
-        "zítřky"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1575,7 +1573,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49055,
+      "bytes": 49401,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1612,11 +1610,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-12T22:09:23Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T03:23:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "finance": 4
+          "zpravy": 27,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1628,6 +1626,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "OBRAZEM: Prasátko jako dalmatin. V přírodě by nepřežilo, v oboře je atrakcí",
+            "publishedAt": "2026-04-13T03:23:00Z"
+          },
           {
             "title": "Česko v Orbánovi ztratilo spojence, řekl Macinka. Pavel věří v dobré vztahy",
             "publishedAt": "2026-04-12T22:09:23Z"
@@ -1655,10 +1657,6 @@
           {
             "title": "Ze spojence Orbánovým pokořitelem. Kdo je Péter Magyar, příští maďarský premiér",
             "publishedAt": "2026-04-12T21:03:00Z"
-          },
-          {
-            "title": "Volby by suverénně ovládlo ANO, uvádí průzkum. Motoristé by se dostali těsně",
-            "publishedAt": "2026-04-12T19:38:00Z"
           }
         ]
       }
