@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-13T17:45:01.331733Z",
+  "ingestedAt": "2026-04-13T18:04:44.442855Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Letenky zdražují o stokoruny až jednotky tisíc. Zájezdy se zatím neruší",
+      "url": "https://ekonomickydenik.cz/letenky-zdrazuji-stokoruny-jednotky-tisic/",
+      "dt": "2026-04-13T17:53:58Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "jednotky",
+        "letenky",
+        "neruší",
+        "stokoruny",
+        "tisíc",
+        "zatím",
+        "zdražují",
+        "zájezdy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -752,30 +777,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Omluva za vylhanou fotku. Náměstek ministra se musel kát",
-      "url": "https://ekonomickydenik.cz/omluva-za-vylhanou-fotku-namestek/",
-      "dt": "2026-04-11T15:14:20Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "fotku",
-        "kát",
-        "ministra",
-        "musel",
-        "náměstek",
-        "omluva",
-        "vylhanou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73152,
+      "bytes": 73794,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,10 +824,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T17:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T17:53:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
+          "cestovani": 1,
+          "finance": 24,
           "zpravy": 2,
           "zdravi": 3
         },
@@ -840,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Letenky zdražují o stokoruny až jednotky tisíc. Zájezdy se zatím neruší",
+            "publishedAt": "2026-04-13T17:53:58Z"
+          },
           {
             "title": "Drtivý dopad války s Íránem. Evropanům vytáhla z peněženek už přes půl bilionu",
             "publishedAt": "2026-04-13T17:05:00Z"
@@ -867,10 +873,6 @@
           {
             "title": "Po maďarských volbách za mříže? Dva politiky budou řešit soudy",
             "publishedAt": "2026-04-13T13:21:18Z"
-          },
-          {
-            "title": "Stát ušetří na dávkách miliony, životní minimum vzroste později",
-            "publishedAt": "2026-04-13T13:02:56Z"
           }
         ]
       }

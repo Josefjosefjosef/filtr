@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-13T17:45:01.331733Z",
+  "ingestedAt": "2026-04-13T18:04:44.442855Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Srážka autobusu a dalších aut na dálnici D2 u Lanžhotu si vyžádala dva zraněné",
+      "url": "https://www.idnes.cz/brno/zpravy/nehoda-dalnice-d2-lanzhot-brno-autobus.A260413_190816_brno-zpravy_meli",
+      "dt": "2026-04-13T17:31:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "aut",
+        "autobusu",
+        "dalších",
+        "dva",
+        "dálnici",
+        "lanžhotu",
+        "srážka",
+        "vyžádala",
+        "zraněné"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -764,32 +790,6 @@
         "soros",
         "sázely",
         "usa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Praha koupí zámek Veleslavín i Národní dům na Vinohradech, rozhodli radní",
-      "url": "https://www.idnes.cz/praha/zpravy/zamek-veleslavin-narodni-dum-na-vinohradech-praha-odkup-rada.A260413_114009_praha-zpravy_meli",
-      "dt": "2026-04-13T12:33:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dům",
-        "koupí",
-        "národní",
-        "praha",
-        "radní",
-        "rozhodli",
-        "veleslavín",
-        "vinohradech",
-        "zámek"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1587,7 +1587,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51965,
+      "bytes": 51428,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1624,7 +1624,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T17:21:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T17:31:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1640,6 +1640,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Srážka autobusu a dalších aut na dálnici D2 u Lanžhotu si vyžádala dva zraněné",
+            "publishedAt": "2026-04-13T17:31:00Z"
+          },
           {
             "title": "Maďaři chtějí naprostou změnu režimu, řekl Magyar. Poděkoval Rusku a Číně",
             "publishedAt": "2026-04-13T17:21:03Z"
@@ -1667,10 +1671,6 @@
           {
             "title": "Připomínka historie i aktuální podpora. Ministr Macinka míří do Izraele",
             "publishedAt": "2026-04-13T15:26:00Z"
-          },
-          {
-            "title": "Vláda chce zákon kvůli regulaci cen paliv. Okamura vyhlásil legislativní nouzi",
-            "publishedAt": "2026-04-13T15:21:39Z"
           }
         ]
       }
