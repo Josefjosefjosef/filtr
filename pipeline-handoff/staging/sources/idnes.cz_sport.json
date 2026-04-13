@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-13T10:50:14.283457Z",
+  "ingestedAt": "2026-04-13T11:09:33.362486Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Přijde Arsenal o titul? Pořád je to nejlepší klub v Anglii, přesvědčuje Guardiola",
+      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-city-arsenal-titul-naskok-souboj-zapas.A260413_101106_fot_zahranici_tals",
+      "dt": "2026-04-13T10:50:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "anglii",
+        "arsenal",
+        "guardiola",
+        "klub",
+        "nejlepší",
+        "pořád",
+        "přesvědčuje",
+        "přijde",
+        "titul"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -776,31 +802,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kinský inkasoval, Tottenham je blízko sestupu. City se dál dotahuje na Arsenal",
-      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-32-kolo-online-vysledky.A260412_105831_fot_zahranici_duff",
-      "dt": "2026-04-12T17:38:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "arsenal",
-        "blízko",
-        "city",
-        "dotahuje",
-        "inkasoval",
-        "kinský",
-        "sestupu",
-        "tottenham"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -811,7 +812,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48861,
+      "bytes": 48904,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -848,7 +849,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T10:22:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T10:50:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -863,6 +864,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přijde Arsenal o titul? Pořád je to nejlepší klub v Anglii, přesvědčuje Guardiola",
+            "publishedAt": "2026-04-13T10:50:00Z"
+          },
           {
             "title": "Shiffrinová na svahu s mladými lyžařkami. Pomáhá rozjet milionový projekt",
             "publishedAt": "2026-04-13T10:22:00Z"
@@ -890,10 +895,6 @@
           {
             "title": "Kinský zpět v bráně, ale kolos se nadále topí. Vyhne se ještě Tottenham propasti?",
             "publishedAt": "2026-04-13T08:02:00Z"
-          },
-          {
-            "title": "Sporné momenty z prodloužení Sparty a Pardubic. Měli sudí rozhodnout jinak?",
-            "publishedAt": "2026-04-13T07:59:00Z"
           }
         ]
       }
