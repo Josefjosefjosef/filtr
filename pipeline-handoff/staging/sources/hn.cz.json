@@ -1,8 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-13T12:14:15.959471Z",
+  "ingestedAt": "2026-04-13T13:10:01.134368Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "&bdquo;Nedovolili nám to. Co víc k tomu mám říct.&ldquo; Armáda nemohla odvysílat rozhovor s prezidentem Pavlem, ministerstvo jí to zakázalo",
+      "url": "https://domaci.hn.cz/c1-67865950-bdquo-nedovolili-nam-to-co-vic-k-tomu-mam-rict-ldquo-armada-nemohla-odvysilat-rozhovor-s-prezidentem-pavlem-ministerstvo-ji-to-zakazalo",
+      "dt": "2026-04-13T12:28:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "armáda",
+        "bdquo",
+        "ldquo",
+        "ministerstvo",
+        "mám",
+        "nedovolili",
+        "nemohla",
+        "nám",
+        "odvysílat",
+        "pavlem",
+        "prezidentem",
+        "rozhovor",
+        "tomu",
+        "víc",
+        "zakázalo",
+        "říct"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1152,37 +1185,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Prodejce bytového textilu se prosadil i v Evropě, teď ale hasí problémy. Doplatil na konkurenci z Číny i vysoké skladové zásoby",
-      "url": "https://archiv.hn.cz/c1-67865140-prodejce-bytoveho-textilu-se-prosadil-i-v-evrope-ted-ale-hasi-problemy-doplatil-na-konkurenci-z-ciny-i-vysoke-skladove-zasoby",
-      "dt": "2026-04-10T13:10:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "bytového",
-        "doplatil",
-        "evropě",
-        "hasí",
-        "konkurenci",
-        "problémy",
-        "prodejce",
-        "prosadil",
-        "skladové",
-        "textilu",
-        "vysoké",
-        "zásoby",
-        "číny"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1193,7 +1195,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185667,
+      "bytes": 185827,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1230,7 +1232,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T10:54:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T12:28:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1248,6 +1250,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "&bdquo;Nedovolili nám to. Co víc k tomu mám říct.&ldquo; Armáda nemohla odvysílat rozhovor s prezidentem Pavlem, ministerstvo jí to zakázalo",
+            "publishedAt": "2026-04-13T12:28:00Z"
+          },
           {
             "title": "Kuba se domluvil s Netolickým, do komunálních voleb půjdou společně. Nejde o ideologii, říká jihočeský hejtman",
             "publishedAt": "2026-04-13T10:54:00Z"
@@ -1275,10 +1281,6 @@
           {
             "title": "&bdquo;Těžký večer v Průhonicích.&ldquo; Andreje Babiše z prohry Viktora Orbána bolí hlava a není to jen kvůli ztrátě spojence",
             "publishedAt": "2026-04-13T07:10:00Z"
-          },
-          {
-            "title": "Narodilo se nejméně dětí v historii. Diví se tomu ještě někdo?",
-            "publishedAt": "2026-04-13T06:57:00Z"
           }
         ]
       }

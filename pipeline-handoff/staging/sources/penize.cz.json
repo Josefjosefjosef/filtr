@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-13T12:14:15.959471Z",
+  "ingestedAt": "2026-04-13T13:10:01.134368Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zvýšení životního minima se znovu odkládá, potvrdila vláda",
+      "url": "https://www.penize.cz/davky-v-hmotne-nouzi/481095-zvyseni-zivotniho-minima-se-znovu-odklada-potvrdila-vlada",
+      "dt": "2026-04-13T14:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "minima",
+        "odkládá",
+        "potvrdila",
+        "vláda",
+        "znovu",
+        "zvýšení",
+        "životního"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -87,20 +111,21 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Jednodušší cestu k občance a pasu projedná vláda. Poplatky porostou",
+      "title": "Snazší vyzvednutí občanky, pas po 15 i bez souhlasu rodičů. Změny schválila vláda",
       "url": "https://www.penize.cz/spotrebitel/488167-jednodussi-cestu-k-obcance-a-pasu-projedna-vlada-poplatky-porostou",
       "dt": "2026-04-13T04:55:00Z",
       "media_raw": "Peníze.cz",
       "media_norm": "Peníze.cz",
       "tokens": [
-        "cestu",
-        "jednodušší",
-        "občance",
-        "pasu",
-        "poplatky",
-        "porostou",
-        "projedná",
-        "vláda"
+        "občanky",
+        "pas",
+        "rodičů",
+        "schválila",
+        "snazší",
+        "souhlasu",
+        "vláda",
+        "vyzvednutí",
+        "změny"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -498,32 +523,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Stárnoucí tsunami se blíží. Proč se Češi bojí důchodu, i když ho mohou ovlivnit",
-      "url": "https://www.penize.cz/zajisteni-na-duchod/487175-starnouci-tsunami-se-blizi-proc-se-cesi-boji-duchodu-i-kdyz-ho-mohou-ovlivnit",
-      "dt": "2026-04-08T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "blíží",
-        "bojí",
-        "důchodu",
-        "když",
-        "ovlivnit",
-        "proč",
-        "stárnoucí",
-        "tsunami",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +533,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18293,
+      "bytes": 17913,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,11 +570,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T13:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T14:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 6,
-          "finance": 14
+          "finance": 14,
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -587,6 +586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zvýšení životního minima se znovu odkládá, potvrdila vláda",
+            "publishedAt": "2026-04-13T14:00:00Z"
+          },
           {
             "title": "Zase o kus levněji. Maximální ceny benzinu a nafty na úterý 14. dubna",
             "publishedAt": "2026-04-13T13:59:00Z"
@@ -600,7 +603,7 @@
             "publishedAt": "2026-04-13T05:05:00Z"
           },
           {
-            "title": "Jednodušší cestu k občance a pasu projedná vláda. Poplatky porostou",
+            "title": "Snazší vyzvednutí občanky, pas po 15 i bez souhlasu rodičů. Změny schválila vláda",
             "publishedAt": "2026-04-13T04:55:00Z"
           },
           {
@@ -614,10 +617,6 @@
           {
             "title": "Natankujte ještě před víkendem. Nové maximální ceny benzinu a nafty",
             "publishedAt": "2026-04-10T13:58:00Z"
-          },
-          {
-            "title": "Otec poslal výživné omylem dvakrát. Matka kvůli tomu přišla o dávky",
-            "publishedAt": "2026-04-10T10:05:00Z"
           }
         ]
       }
