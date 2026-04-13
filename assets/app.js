@@ -7,6 +7,7 @@ import {
   pickPublicationKeptUrlKeys,
 } from "./cluster_engine.js";
 import { initIuFinancialCalculatorsOverlay } from "./iu-financial-calculators-module.js";
+import { initIuLegalDocumentsOverlay } from "./iu-legal-documents-module.js";
 /* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
   try{
@@ -21051,7 +21052,7 @@ function buildVideoAsArticleCard(it) {
     }
     try {
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-ai-narrow-fullscreen");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen");
     } catch (_) {}
   }
 
@@ -21084,6 +21085,8 @@ function buildVideoAsArticleCard(it) {
       if (dsPanel && vis(dsPanel) && String(dsPanel.dataset.open || "") === "1") ids.push("datovka");
       const finPanel = document.getElementById("iuFinancialCalcPanel");
       if (finPanel && vis(finPanel) && String(finPanel.dataset.open || "") === "1") ids.push("financial");
+      const legPanel = document.getElementById("iuLegalDocsPanel");
+      if (legPanel && vis(legPanel) && String(legPanel.dataset.open || "") === "1") ids.push("legal");
     } catch (_) {}
     return ids;
   }
@@ -21184,6 +21187,22 @@ function buildVideoAsArticleCard(it) {
           document.body.classList.remove("iu-financial-overlay-open");
         } catch (_) {}
       }
+      if (typeof window.iuLegalDocsCloseSurface === "function") {
+        try { window.iuLegalDocsCloseSurface(); } catch (_) {}
+      } else {
+        const legBd = document.getElementById("iuLegalDocsBackdrop");
+        const legPn = document.getElementById("iuLegalDocsPanel");
+        if (typeof window.iuSetElOpenVisible === "function") {
+          try { window.iuSetElOpenVisible(legBd, false); window.iuSetElOpenVisible(legPn, false); } catch (_) {}
+        } else {
+          if (legBd) legBd.hidden = true;
+          if (legPn) legPn.hidden = true;
+        }
+        try {
+          if (legPn) legPn.dataset.open = "0";
+          document.body.classList.remove("iu-legal-docs-overlay-open");
+        } catch (_) {}
+      }
       var nak = document.getElementById("iuNakupModal");
       if (nak) {
         nak.hidden = true;
@@ -21196,7 +21215,7 @@ function buildVideoAsArticleCard(it) {
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-ai-narrow-fullscreen");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen");
     } catch (_) {}
   }
 
@@ -21226,6 +21245,10 @@ function buildVideoAsArticleCard(it) {
       if (t === "financial") {
         if (typeof window.ensureFinancialModalInBody === "function") window.ensureFinancialModalInBody();
         if (typeof window.iuFinancialCalcOpenSurface === "function") window.iuFinancialCalcOpenSurface(extra && typeof extra === "object" ? extra : null);
+      }
+      if (t === "legal") {
+        if (typeof window.ensureLegalDocsModalInBody === "function") window.ensureLegalDocsModalInBody();
+        if (typeof window.iuLegalDocsOpenSurface === "function") window.iuLegalDocsOpenSurface();
       }
     } finally {
       try {
@@ -21268,6 +21291,9 @@ function buildVideoAsArticleCard(it) {
       } else if (last === "financial") {
         if (typeof window.ensureFinancialModalInBody === "function") window.ensureFinancialModalInBody();
         if (typeof window.iuFinancialCalcOpenSurface === "function") window.iuFinancialCalcOpenSurface(null);
+      } else if (last === "legal") {
+        if (typeof window.ensureLegalDocsModalInBody === "function") window.ensureLegalDocsModalInBody();
+        if (typeof window.iuLegalDocsOpenSurface === "function") window.iuLegalDocsOpenSurface();
       }
     } catch (_) {}
   }
@@ -21289,6 +21315,7 @@ function buildVideoAsArticleCard(it) {
     if (action === "parcels" || key === "baliky") return { actionType: "overlay", overlayId: "parcels", key };
     if (key === "datovka") return { actionType: "overlay", overlayId: "datovka", key: "datovka" };
     if (key === "fincalc") return { actionType: "overlay", overlayId: "financial", key: "fincalc" };
+    if (key === "legaldocs") return { actionType: "overlay", overlayId: "legal", key: "legaldocs" };
     if (modal === "banka" || modal === "bakalari" || modal === "pojistovna") return { actionType: "overlay", overlayId: "quickfeed", key: modal };
     /* P0: mobile/tablet — open #iu-aiPanel (body-mounted modal); desktop — unchanged QuickFeed flow */
     if (key === "ai") {
@@ -21333,6 +21360,8 @@ function buildVideoAsArticleCard(it) {
         iuOpenOverlay("datovka");
       } else if (resolved.overlayId === "financial") {
         iuOpenOverlay("financial", null);
+      } else if (resolved.overlayId === "legal") {
+        iuOpenOverlay("legal", null);
       } else if (resolved.overlayId === "ai") {
         iuOpenOverlay("ai");
       } else {
@@ -21519,7 +21548,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     // 2) Modal (#iu-aiPanel or .iuModal or #iu-mojeSluzbyPanel)
-    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel') || closeEl.closest('#iuDsPanel') || closeEl.closest('#iu-mojeSluzbyPanel') || closeEl.closest('#iuFinancialCalcPanel'));
+    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel') || closeEl.closest('#iuDsPanel') || closeEl.closest('#iu-mojeSluzbyPanel') || closeEl.closest('#iuFinancialCalcPanel') || closeEl.closest('#iuLegalDocsPanel'));
     if (modal) {
       if (modal.id === 'iu-aiPanel') {
         const ov = document.getElementById('iu-aiOverlay');
@@ -21537,11 +21566,13 @@ function buildVideoAsArticleCard(it) {
         window.iuCloseMojeSluzbyModal();
       } else if (modal.id === 'iuFinancialCalcPanel' && typeof window.iuFinancialCalcCloseSurface === 'function') {
         window.iuFinancialCalcCloseSurface();
+      } else if (modal.id === 'iuLegalDocsPanel' && typeof window.iuLegalDocsCloseSurface === 'function') {
+        window.iuLegalDocsCloseSurface();
       } else {
         modal.setAttribute('hidden', '');
       }
       modal.classList.remove('is-open');
-      document.body.classList.remove('iu-modal-open', 'iu-ds-overlay-open', 'iu-financial-overlay-open');
+      document.body.classList.remove('iu-modal-open', 'iu-ds-overlay-open', 'iu-financial-overlay-open', 'iu-legal-docs-overlay-open');
     }
   }, true);
 
@@ -24353,6 +24384,23 @@ function buildVideoAsArticleCard(it) {
     return true;
   }
   try { window.ensureFinancialModalInBody = ensureFinancialModalInBody; } catch (_) {}
+
+  function ensureLegalDocsModalInBody() {
+    const backs = document.querySelectorAll("#iuLegalDocsBackdrop");
+    const panels = document.querySelectorAll("#iuLegalDocsPanel");
+    const back = backs[0] || null;
+    const panel = panels[0] || null;
+    if (!back || !panel) return false;
+    for (let i = 1; i < backs.length; i++) backs[i].setAttribute("data-iu-dup", "1");
+    for (let i = 1; i < panels.length; i++) panels[i].setAttribute("data-iu-dup", "1");
+    if (back.parentElement === document.body && panel.parentElement === document.body) return true;
+    const frag = document.createDocumentFragment();
+    frag.appendChild(back);
+    frag.appendChild(panel);
+    document.body.appendChild(frag);
+    return true;
+  }
+  try { window.ensureLegalDocsModalInBody = ensureLegalDocsModalInBody; } catch (_) {}
 
   function iuHideAllOverlaysNow(){
     try {
@@ -33084,6 +33132,20 @@ try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
     } catch (e) {
       try {
         console.warn("[iu] financial calculators overlay init failed", e);
+      } catch (_) {}
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
+  else run();
+})();
+
+(function iuBootLegalDocumentsOverlay() {
+  function run() {
+    try {
+      initIuLegalDocumentsOverlay({});
+    } catch (e) {
+      try {
+        console.warn("[iu] legal documents overlay init failed", e);
       } catch (_) {}
     }
   }
