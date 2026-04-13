@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-13T11:29:52.688008Z",
+  "ingestedAt": "2026-04-13T11:57:54.870222Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vláda schválila návrh zákona ke snazší regulaci paliv, oznámila Schillerová",
+      "url": "https://www.denik.cz/ekonomika/zakon-regulace-ceny-paliv.html",
+      "dt": "2026-04-13T11:17:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "návrh",
+        "oznámila",
+        "paliv",
+        "regulaci",
+        "schillerová",
+        "schválila",
+        "snazší",
+        "vláda",
+        "zákona"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Britney Spearsová nastoupila léčení. Je stíhaná pro řízení v opilosti",
+      "url": "https://www.denik.cz/ze_sveta/britney-spears-rizeni-pod-vlivem-odvykaci-lecba.html",
+      "dt": "2026-04-13T11:12:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "britney",
+        "léčení",
+        "nastoupila",
+        "opilosti",
+        "spearsová",
+        "stíhaná",
+        "řízení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -594,59 +644,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pád stožáru narušil provoz italského ropovodu. Policie vyšetřuje sabotáž",
-      "url": "https://www.denik.cz/staty-eu/ropovod-tal-italie-rakousko-sabotaz-vysetrovani.html",
-      "dt": "2026-04-13T04:39:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "italského",
-        "narušil",
-        "policie",
-        "provoz",
-        "pád",
-        "ropovodu",
-        "sabotáž",
-        "stožáru",
-        "vyšetřuje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Martina Šmuková z Pink Bubble: Nemocní si přejí počítač nebo třeba pejska",
-      "url": "https://www.denik.cz/zdravotnictvi/martina-smukova-pink-bubble-nemocni-si-preji-pocitac-nebo-treba-pejska.html",
-      "dt": "2026-04-13T02:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bubble",
-        "martina",
-        "nebo",
-        "nemocní",
-        "pejska",
-        "pink",
-        "počítač",
-        "přejí",
-        "třeba",
-        "šmuková"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +654,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30428,
+      "bytes": 29614,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,11 +691,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-13T10:37:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T11:17:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "zdravi": 1
+          "finance": 1,
+          "zpravy": 24
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -710,6 +707,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vláda schválila návrh zákona ke snazší regulaci paliv, oznámila Schillerová",
+            "publishedAt": "2026-04-13T11:17:00Z"
+          },
+          {
+            "title": "Britney Spearsová nastoupila léčení. Je stíhaná pro řízení v opilosti",
+            "publishedAt": "2026-04-13T11:12:00Z"
+          },
           {
             "title": "Cizinci v Praze odpálili bankomaty a zmizeli i s penězi. Obvinění jsou ve vazbě",
             "publishedAt": "2026-04-13T10:37:00Z"
@@ -733,14 +738,6 @@
           {
             "title": "Není Monarch jako Monarch. Místo vraždy kolotočáře Kočky hledají lidé jinde",
             "publishedAt": "2026-04-13T09:01:00Z"
-          },
-          {
-            "title": "Prohru Orbána Babiš oželí rychle. Magyara potřebuje pro byznys, soudí experti",
-            "publishedAt": "2026-04-13T09:01:00Z"
-          },
-          {
-            "title": "Pilot slavil a vyděsil tím sousedy. S obřím boeingem prolétl nízko nad střechami",
-            "publishedAt": "2026-04-13T08:42:00Z"
           }
         ]
       }

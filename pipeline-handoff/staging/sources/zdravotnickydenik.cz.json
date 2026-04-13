@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-13T11:29:52.688008Z",
+  "ingestedAt": "2026-04-13T11:57:54.870222Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Tančící ortoped, který chce překopat maďarské zdravotnictví. Kdo je pravděpodobný příští ministr?",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/tancici-ortoped-kdo-je-pristi-madarsky-ministr/",
+      "dt": "2026-04-13T11:30:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chce",
+        "maďarské",
+        "ministr",
+        "ortoped",
+        "pravděpodobný",
+        "překopat",
+        "příští",
+        "tančící",
+        "zdravotnictví"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -241,34 +267,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Miliony žen v datech: Antikoncepce může zvýšit riziko rakoviny prsu. Rozdíly jsou ale významné",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/riziko-rakoviny-prsu-antikoncepce-rozdily/",
-      "dt": "2026-04-12T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "antikoncepce",
-        "datech",
-        "miliony",
-        "prsu",
-        "rakoviny",
-        "riziko",
-        "rozdíly",
-        "významné",
-        "zvýšit",
-        "žen"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 103668,
+      "bytes": 102860,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T10:34:39Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T11:30:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -331,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tančící ortoped, který chce překopat maďarské zdravotnictví. Kdo je pravděpodobný příští ministr?",
+            "publishedAt": "2026-04-13T11:30:00Z"
+          },
           {
             "title": "Potravinový doplněk obsahuje sildenafil na léčbu erektilní dysfunkce. Inspekce upozorňuje na riziko",
             "publishedAt": "2026-04-13T10:34:39Z"
@@ -358,10 +360,6 @@
           {
             "title": "Konec monopolu specializovaných center? Stát, pojišťovny i firmy chtějí změnu",
             "publishedAt": "2026-04-13T05:00:00Z"
-          },
-          {
-            "title": "Další pandemie začne u zvířat. A svět není připraven, varuje Macron",
-            "publishedAt": "2026-04-12T14:30:00Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-04-13T11:29:52.688008Z",
+  "ingestedAt": "2026-04-13T11:57:54.870222Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "7 pádů Honzy Dědka: Problém vejít se do Trávníčkových punčocháčů a vzpomínky na spolupráci s mladým Leošem Marešem",
+      "url": "https://www.vtelce.cz/7-padu-honzy-dedka-problem-vejit-se-do-travnickovych-puncochacu-a-vzpominky-na-spolupraci-s-mladym-leosem-maresem/",
+      "dt": "2026-04-13T11:27:07Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "dědka",
+        "honzy",
+        "leošem",
+        "marešem",
+        "mladým",
+        "problém",
+        "punčocháčů",
+        "pádů",
+        "spolupráci",
+        "trávníčkových",
+        "vejít",
+        "vzpomínky"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -262,36 +291,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Ecce homo Homolka: Baletní kariéra Růžičkové, debut ve 49 letech, dvojčata Miloše Formana a nemocný Šebánek",
-      "url": "https://www.vtelce.cz/ecce-homo-homolka-baletni-kariera-ruzickove-debut-ve-49-letech-dvojcata-milose-formana-a-nemocny-sebanek/",
-      "dt": "2026-04-12T11:59:25Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "baletní",
-        "debut",
-        "dvojčata",
-        "ecce",
-        "formana",
-        "homo",
-        "homolka",
-        "kariéra",
-        "letech",
-        "miloše",
-        "nemocný",
-        "růžičkové",
-        "šebánek"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -302,8 +301,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 76396,
-      "reason": "",
+      "bytes": 77286,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -339,7 +338,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T09:29:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-13T11:27:07Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 10
@@ -354,6 +353,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "7 pádů Honzy Dědka: Problém vejít se do Trávníčkových punčocháčů a vzpomínky na spolupráci s mladým Leošem Marešem",
+            "publishedAt": "2026-04-13T11:27:07Z"
+          },
           {
             "title": "Diváky čekají skutečné kriminální kauzy a televizní případy, které odhalí ty nejznámější české kauzy",
             "publishedAt": "2026-04-13T09:29:29Z"
@@ -381,10 +384,6 @@
           {
             "title": "Nový dokument A jede se furt dál odhaluje soukromí Jiřiny Bohdalové u příležitosti jejích pětadevadesátých narozenin",
             "publishedAt": "2026-04-12T16:28:46Z"
-          },
-          {
-            "title": "Sanitka: Cenzurní zásahy, konec s kariérou kvůli svetru i technické problémy s dobovými vozy",
-            "publishedAt": "2026-04-12T14:44:16Z"
           }
         ]
       }
