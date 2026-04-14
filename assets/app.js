@@ -1634,6 +1634,18 @@ try {
     } catch (_) {}
   }
 
+  /** Opt-in perf marks (?iuPerfProbe=1) — cheap URL check per call; used by local/TEMP harness timing. */
+  function iuHomePerfMark(name) {
+    try {
+      if (typeof location === "undefined" || String(location.search || "").indexOf("iuPerfProbe=1") === -1) return;
+      const arr = (window.__iuHomePerfMarks = window.__iuHomePerfMarks || []);
+      arr.push({
+        name: String(name || ""),
+        t: typeof performance !== "undefined" && performance.now ? performance.now() : 0,
+      });
+    } catch (_) {}
+  }
+
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
   window.iuSetDataStatus = function(articlesCount, videosCount){
     const el = document.getElementById("dataStatus");
@@ -12442,11 +12454,12 @@ function buildVideoAsArticleCard(it) {
       emptyBox.style.display = "block";
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
-    const preferredEntry = await evaluatePreferredPair();
+    const preferredEntryPromise = evaluatePreferredPair();
     const baseArticleUrls = [iuDataUrl("articles.json")];
     const baseVideoUrls = [iuDataUrl("videos.json")];
-    const articleUrls = buildCandidateListFromPair(preferredEntry, "articles", baseArticleUrls);
-    const videoUrls = buildCandidateListFromPair(preferredEntry, "videos", baseVideoUrls);
+    let preferredEntry = { articlesUrl: null, videosUrl: null, status: "missing" };
+    let articleUrls = baseArticleUrls.slice();
+    let videoUrls = baseVideoUrls.slice();
     let preferredSaved = false;
     let preferredSavedReason = "";
     let preferredUpdatedToRoot = false;
@@ -12487,11 +12500,15 @@ function buildVideoAsArticleCard(it) {
         .catch(() => null);
 
       iuPreviewFeedProbeTick("fetchStart", { articlesUrl, videosUrl });
-      /* Perf: probe + articles + videos in parallel — was sequential probe then fetch (extra RTT on critical path). */
-      const [[articlesData, videosData], probeText] = await Promise.all([
+      /* Perf: probe + articles + videos GET + preferred-pair eval (HEAD checks) in parallel — was sequential await preferredEntry, then probe+fetch. */
+      const [[articlesData, videosData], probeText, preferredEntryResolved] = await Promise.all([
         Promise.all([fetchDiag(articlesUrl, "articles"), fetchDiag(videosUrl, "videos")]),
         probePromise,
+        preferredEntryPromise,
       ]);
+      preferredEntry = preferredEntryResolved;
+      articleUrls = buildCandidateListFromPair(preferredEntry, "articles", baseArticleUrls);
+      videoUrls = buildCandidateListFromPair(preferredEntry, "videos", baseVideoUrls);
       state.lastProbe = probeText;
       iuPreviewFeedProbeTick("probeDone");
       iuPreviewFeedProbeTick("fetchDone", {
@@ -12831,14 +12848,17 @@ function buildVideoAsArticleCard(it) {
       state.hasLoadedData = true;
       state.consecutiveLoadFailures = 0;
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
+      iuHomePerfMark("cachedItemsReady");
       iuPreviewFeedProbeTick("combinedFeedReady", {
         cachedLen: Array.isArray(state.cachedItems) ? state.cachedItems.length : 0,
         sanitizedArticles: Array.isArray(sanitizedArticles) ? sanitizedArticles.length : 0,
       });
       /* Preview cards read state.cachedItems only — refresh before heavy feed DOM so titles are not blocked behind renderFeed(). */
+      iuHomePerfMark("beforeEarlyPreviewRefresh");
       try {
         iuSilverTallMediaPreviewsRefresh();
       } catch (_) {}
+      iuHomePerfMark("afterEarlyPreviewRefresh");
       iuPreviewFeedProbeTick("earlyPreviewRefreshDone");
       iuHomeLoadAuditNotify("loadData:earlyPreviewRefreshDone");
       renderItems(state.filteredItems);
